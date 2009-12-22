@@ -40,7 +40,14 @@ Other details
 </th></tr>
 <tr><td>
 Max distance:</td><td>
-<input name = "txtDistance" value = "<?=$txtDistance?>" style = "width:2em;"> miles</td>
+<select name = "txtDistance">
+<option value = "2">2 miles</option>
+<option value = "5">5 miles</option>
+<option value = "10">10 miles</option>
+<option value = "25">25 miles</option>
+<option value = "50">50 miles</option>
+<option value = "100">100 miles</option>
+</td>
 </tr><tr>
 <td>Current time:</td>
 <td>

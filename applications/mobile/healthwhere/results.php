@@ -81,19 +81,12 @@ function AddPharmHospital (&$asPharmacies, &$ph, &$node, $user_lat, $user_lon, $
 		else
 			$sPharmacy .= "$sname$soperator</a><br>";
 		if ($bOpen === True)
-			$sPharmacy .= "Open, ";
+			$sPharmacy .= "<b>Open</b>, ";
 		elseif ($bOpen === False)
-			$sPharmacy .= "Closed, ";
+			$sPharmacy .= "<b>Closed</b>, ";
 		$sPharmacy .= "$dist miles away<br>";
 		if ($search == "hospital" && $ph ["emergency"] != "")
 			$sPharmacy .= "Emergency: {$ph ["emergency"]}<br>";
-		if ($ph ["addr_housename"] != "")
-			$sPharmacy .= "{$ph ['addr_housename']}<br>\n";
-		if ($ph ["addr_street"] != "") {
-			if ($ph ["addr_housenumber"] != "")
-				$sPharmacy .= "{$ph ['addr_housenumber']} ";
-			$sPharmacy .= "{$ph ['addr_street']}<br>\n";
-		}
 		if ($ph ["phone"] != "")
 			$sPharmacy .= "{$ph ['phone']}<br>\n";
 		// Increment counters
@@ -260,9 +253,14 @@ file_put_contents ($access_log, "$log_string\n", FILE_APPEND);
 
 require_once ("inc_head_html.php");
 
-echo "<p>" . count ($asPharmacies);
-if ($search == "pharmacy")
+$numfound = count ($asPharmacies);
+echo "<p>" . $numfound;
+if ($numfound == 1 && $search == "pharmacy")
+	echo " pharmacy";
+elseif ($numfound > 1 && $search == "pharmacy")
 	echo " pharmacies";
+elseif ($numfound == 1 && $search == "hospital")
+	echo " hospital";
 else
 	echo " hospitals";
 echo " found within $maxdist miles";
@@ -282,15 +280,8 @@ echo "Click on a name to see details</p>\n";
 
 // Sort array
 sort ($asPharmacies);
-echo "<p><b>Open</b></p>\n";
 foreach ($asPharmacies as $sPharm)
-	if (substr ($sPharm, 0, 6) == "<!-- 0")
-		echo "<p>$sPharm</p>\n";
-
-echo "<p><b>Closed or Unknown</b></p>\n";
-foreach ($asPharmacies as $sPharm)
-	if (substr ($sPharm, 0, 6) == "<!-- 1")
-		echo "<p>$sPharm</p>\n";
+	echo "<p>$sPharm</p>\n";
 
 echo "<p><a href = 'index.php'>Search again</a></p>\n";
 

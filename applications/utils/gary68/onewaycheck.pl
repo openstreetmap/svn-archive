@@ -23,7 +23,7 @@ use Time::localtime;
 
 my $programName = "onewaycheck" ; 
 my $usage = "onewaycheck.pl file.osm out.htm" ;
-my $version = "1.0" ;
+my $version = "1.1" ;
 
 my $wayId ;
 my $wayUser ;
@@ -45,8 +45,9 @@ my $numCritical = 0 ;
 
 my %to = () ;
 my %from = () ;
-my %wayNodeNumber ;
-my %nodeWays ;
+my %wayNodeNumber = () ;
+my %nodeWays = () ;
+my %neededWayNodes = () ;
 
 my %criticalNodes = () ;
 my %nodesLon ;
@@ -57,12 +58,14 @@ my $time1 ;
 my $i ;
 my $key ;
 my $num ;
+my $oneways = 0 ;
 
 my $APIcount = 0 ;
 my $APIerrors = 0 ;
 my $APIrejections = 0 ;
 
 my $html ;
+my $gpx ;
 my $osmName ;
 my $htmlName ;
 
@@ -82,6 +85,10 @@ if (!$htmlName)
 	die (print $usage, "\n");
 }
 
+my $gpxName = $htmlName ;
+$gpxName =~ s/htm/gpx/ ;
+
+
 print "\n$programName $version for file $osmName\n" ;
 
 #####################
@@ -90,12 +97,54 @@ print "\n$programName $version for file $osmName\n" ;
 
 openOsmFile ($osmName) ;
 
-open ($html, ">", $htmlName) || die ("Can't open html output file") ;
-printHTMLHeader ($html, "OnewayCheck by Gary68") ;
-print $html "<H1>OnewayCheck by Gary68</H1>\n" ;
-print $html "<p>Version ", $version, "</p>\n" ;
-print $html "<H2>Statistics</H2>\n" ;
-print $html "<p>", stringFileInfo ($osmName), "</p>\n" ;
+
+######################
+# skip all nodes first
+######################
+print $programName, " ", $osmName, " pass0: skipping nodes...\n" ;
+skipNodes () ;
+
+
+#######################################
+# 
+#######################################
+print $programName, " ", $osmName, " pass0: processing ways...\n" ;
+($wayId, $wayUser, $aRef1, $aRef2) = getWay2 () ;
+if ($wayId != -1) {
+	@wayNodes = @$aRef1 ;
+	@wayTags = @$aRef2 ;
+}
+
+while ($wayId != -1) {
+	if (scalar (@wayNodes) >= 2) {
+		$oneway = 0 ; my $highway = 0 ;
+		foreach (@wayTags) {
+			if ($_->[0] eq "highway") { $highway = 1 ; } 
+			if ($_->[0] eq "oneway") { $oneway = 1 ; }
+		}
+		if (($highway == 1) and ($oneway == 1) ) { 
+			$oneways++ ;
+			foreach my $node (@wayNodes) {
+				$neededWayNodes{$node} = 1 ;
+			}
+		}
+	}
+	else {
+		#print "invalid way (one node only): ", $wayId, "\n" ;
+	}
+
+	($wayId, $wayUser, $aRef1, $aRef2) = getWay2 () ;
+	if ($wayId != -1) {
+		@wayNodes = @$aRef1 ;
+		@wayTags = @$aRef2 ;
+	}
+}
+
+closeOsmFile () ;
+
+print "$oneways oneways found.\n" ;
+
+openOsmFile ($osmName) ;
 
 
 ######################
@@ -136,15 +185,17 @@ while ($wayId != -1) {
 			if ( ($oneway) and ($reverse)) { @wayNodes = reverse @wayNodes ; } 
 	
 			for (my $i = 0; $i <= $#wayNodes; $i++) {
-				$to{$wayNodes[$i]} ++ ;
-				$from{$wayNodes[$i]} ++ ;
-				push @{$nodeWays{$wayNodes[$i]}}, $wayId ;
-				$wayNodeNumber{$wayId} = scalar (@wayNodes) ;
-				if ( ($i == 0) and ($oneway) ) {
-					$to{$wayNodes[$i]} -- ;
-				}
-				if ( ($i == $#wayNodes) and ($oneway) ) {
-					$from{$wayNodes[$i]} -- ;
+				if (defined $neededWayNodes{$wayNodes[$i]}) {
+					$to{$wayNodes[$i]} ++ ;
+					$from{$wayNodes[$i]} ++ ;
+					push @{$nodeWays{$wayNodes[$i]}}, $wayId ;
+					$wayNodeNumber{$wayId} = scalar (@wayNodes) ;
+					if ( ($i == 0) and ($oneway) ) {
+						$to{$wayNodes[$i]} -- ;
+					}
+					if ( ($i == $#wayNodes) and ($oneway) ) {
+						$from{$wayNodes[$i]} -- ;
+					}
 				}
 			}		
 		}
@@ -240,14 +291,28 @@ print $programName, " ", $osmName, " critical nodes: ", $numCritical, "\n\n" ;
 print $programName, " ", $osmName, " write HTML tables...\n" ;
 
 
+
+
+##############################
+# PRINT HTML / GPX INFOS NODES
+##############################
+open ($gpx, ">", $gpxName) || die ("Can't open gpx output file") ;
+printGPXHeader ($gpx) ;
+
+
+open ($html, ">", $htmlName) || die ("Can't open html output file") ;
+printHTMLHeader ($html, "OnewayCheck by Gary68") ;
+print $html "<H1>OnewayCheck by Gary68</H1>\n" ;
+print $html "<p>Version ", $version, "</p>\n" ;
+print $html "<H2>Statistics</H2>\n" ;
+print $html "<p>", stringFileInfo ($osmName), "</p>\n" ;
 print $html "<p>number ways: $wayCount<br>\n" ;
 $numCritical = scalar (keys %criticalNodes) ;
 print $html "critical nodes: ", $numCritical, "</p>\n" ;
+print $html "<p>$APIcount API calls</p>" ;
+print $html "<p>$APIerrors API errors</p>" ;
+print $html "<p>$APIrejections API rejections</p>" ;
 
-
-########################
-# PRINT HTML INFOS NODES
-########################
 print $html "<H2>Critical Nodes</H2>\n" ;
 print $html "<table border=\"1\">\n";
 print $html "<tr>\n" ;
@@ -280,15 +345,17 @@ foreach $nodeId (keys %criticalNodes) {
 	print $html "<td>", picLinkMapnik ($nodesLon{$nodeId}, $nodesLat{$nodeId}, 16), "</td>\n" ;
 	print $html "<td>", picLinkOsmarender ($nodesLon{$nodeId}, $nodesLat{$nodeId}, 16), "</td>\n" ;
 	print $html "</tr>\n" ;
+
+	# GPX
+	my $text = "OnewayCheck - " . $nodeId . " problem with oneway road" ;
+	printGPXWaypoint ($gpx, $nodesLon{$nodeId}, $nodesLat{$nodeId}, $text) ;
+
 }
 print $html "</table>\n" ;
 print $html "<p>$i lines total</p>\n" ;
 
 
 
-print $html "<p>$APIcount API calls</p>" ;
-print $html "<p>$APIerrors API errors</p>" ;
-print $html "<p>$APIrejections API rejections</p>" ;
 
 print $html "<p>", stringTimeSpent ($time1-$time0), "</p>\n" ;
 
@@ -299,6 +366,9 @@ print $html "<p>", stringTimeSpent ($time1-$time0), "</p>\n" ;
 
 printHTMLFoot ($html) ;
 close ($html) ;
+
+printGPXFoot ($gpx) ;
+close ($gpx) ;
 
 print "\n$APIcount API calls\n" ;
 print "$APIerrors API errors\n" ;

@@ -23,7 +23,7 @@ use Time::localtime;
 
 my $programName = "onewaycheck" ; 
 my $usage = "onewaycheck.pl file.osm out.htm" ;
-my $version = "1.1" ;
+my $version = "1.2" ;
 
 my $wayId ;
 my $wayUser ;
@@ -216,12 +216,13 @@ closeOsmFile () ;
 #####################
 # find critical nodes
 #####################
-print $programName, " ", $osmName, " pass1: find critical nodes...\n" ;
+print $programName, " ", $osmName, " pass1: find critical nodes (incl. API calls)...\n" ;
 %criticalNodes = () ;
 
 foreach my $key (keys %to) {
 	my $allWaysOK = 1 ;
-	if (($to{$key} > 0) and ($from{$key} == 0)) {
+	if ( ( ($to{$key} > 0) and ($from{$key} == 0) ) or 
+		( ($to{$key} == 0) and ($from{$key} > 0) ) ) {
 		foreach my $wayId (@{$nodeWays{$key}}) {
 			my $APIok = 1 ;
 			# print "request API data for way $wayId...\n" ;

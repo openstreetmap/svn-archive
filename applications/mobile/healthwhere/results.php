@@ -257,7 +257,7 @@ $numfound = count ($asPharmacies);
 echo "<p>" . $numfound;
 if ($numfound == 1 && $search == "pharmacy")
 	echo " pharmacy";
-elseif ($numfound > 1 && $search == "pharmacy")
+elseif ($numfound != 1 && $search == "pharmacy")
 	echo " pharmacies";
 elseif ($numfound == 1 && $search == "hospital")
 	echo " hospital";

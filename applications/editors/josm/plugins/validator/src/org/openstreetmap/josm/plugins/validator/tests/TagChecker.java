@@ -212,8 +212,8 @@ public class TagChecker extends Test
                 BufferedReader reader = new BufferedReader(r);
 
                 String okValue = null;
-                Boolean tagcheckerfile = false;
-                Boolean ignorefile = false;
+                boolean tagcheckerfile = false;
+                boolean ignorefile = false;
                 String line;
                 while((line = reader.readLine()) != null && (tagcheckerfile || line.length() != 0))
                 {
@@ -322,8 +322,10 @@ public class TagChecker extends Test
             presetsValueData = new Bag<String, String>();
             for(String a : OsmPrimitive.getUninterestingKeys())
                 presetsValueData.add(a);
-            for(String a : OsmPrimitive.getDirectionKeys())
+            // TODO directionKeys are no longer in OsmPrimitive (search pattern is used instead)
+            /*  for(String a : OsmPrimitive.getDirectionKeys())
                 presetsValueData.add(a);
+            */
             for(String a : Main.pref.getCollection(PreferenceEditor.PREFIX + ".knownkeys",
             Arrays.asList(new String[]{"is_in", "int_ref", "fixme", "population"})))
                 presetsValueData.add(a);
@@ -496,7 +498,7 @@ public class TagChecker extends Test
                 List<String> values = presetsValueData.get(key);
                 if(values == null)
                 {
-                    Boolean ignore = false;
+                    boolean ignore = false;
                     for(String a : ignoreDataStartsWith)
                     {
                         if(key.startsWith(a))
@@ -885,10 +887,10 @@ public class TagChecker extends Test
         private class CheckerElement {
             public Object tag;
             public Object value;
-            public Boolean noMatch;
-            public Boolean tagAll = false;
-            public Boolean valueAll = false;
-            public Boolean valueBool = false;
+            public boolean noMatch;
+            public boolean tagAll = false;
+            public boolean valueAll = false;
+            public boolean valueBool = false;
             private Pattern getPattern(String str) throws IllegalStateException, PatternSyntaxException
             {
                 if(str.endsWith("/i"))
@@ -924,7 +926,7 @@ public class TagChecker extends Test
                 else
                     value = n.startsWith("/") ? getPattern(n) : n;
             }
-            public Boolean match(OsmPrimitive osm)
+            public boolean match(OsmPrimitive osm)
             {
                 for(Entry<String, String> prop: osm.getKeys().entrySet())
                 {
@@ -997,7 +999,7 @@ public class TagChecker extends Test
             }
             return null;
         }
-        public Boolean match(OsmPrimitive osm)
+        public boolean match(OsmPrimitive osm)
         {
             if(osm.getKeys() == null || (type == NODE && !(osm instanceof Node))
             || (type == RELATION && !(osm instanceof Relation)) || (type == WAY && !(osm instanceof Way)))

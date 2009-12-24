@@ -1,4 +1,4 @@
-#! /bin/sh -ex
+#! /bin/sh -x
 
 export TARGET=/osm/osmosis-continuous-integration/web
 

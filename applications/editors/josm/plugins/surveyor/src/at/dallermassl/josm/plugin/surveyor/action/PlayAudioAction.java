@@ -42,7 +42,7 @@ public class PlayAudioAction extends AbstractSurveyorAction {
                 try {
                     if(audioSource == null) {
                         audioSource = getParameters().get(0);
-                        System.out.println("reading audio from " + audioSource);
+                        //System.out.println("reading audio from " + audioSource);
                     }
                     InputStream in = new BufferedInputStream(ResourceLoader.getInputStream(audioSource));
                     AudioInputStream stream = AudioSystem.getAudioInputStream(in);
@@ -85,8 +85,6 @@ public class PlayAudioAction extends AbstractSurveyorAction {
                     e.printStackTrace();
                 }
             }
-
         });
-
     }
 }

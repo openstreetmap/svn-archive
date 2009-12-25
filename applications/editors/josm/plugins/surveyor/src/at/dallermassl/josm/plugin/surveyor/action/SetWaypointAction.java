@@ -37,7 +37,7 @@ import at.dallermassl.josm.plugin.surveyor.util.LayerUtil;
 public class SetWaypointAction extends AbstractSurveyorAction {
     private LiveGpsLayer liveGpsLayer;
     private MarkerLayer markerLayer;
-    public static final String MARKER_LAYER_NAME = "surveyorwaypointlayer";
+    public static final String MARKER_LAYER_NAME = tr("Surveyor waypoint layer");
     private WaypointDialog dialog;
 
     /**
@@ -53,7 +53,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
      */
     public void actionPerformed(GpsActionEvent event) {
         LatLon coordinates = event.getCoordinates();
-        System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon());
+        //System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon());
         String markerTitle = getParameters().get(0);
         Object source = event.getSource();
         if(source instanceof JToggleButton) {
@@ -69,7 +69,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
         }
 
         String markerText = markerTitle;
-        String inputText = dialog.openDialog(SurveyorPlugin.getSurveyorFrame(), "Waypoint Description");
+        String inputText = dialog.openDialog(SurveyorPlugin.getSurveyorFrame(), tr("Waypoint Description"));
         if(inputText != null && inputText.length() > 0) {
             inputText = inputText.replaceAll("<", "_"); // otherwise the gpx file is ruined
             markerText = markerText + " " + inputText;

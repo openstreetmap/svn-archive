@@ -67,7 +67,7 @@ public class WaypointDialog {
         dialog.setVisible(true);
 
 
-        System.out.println("value: " + optionPane.getValue());
+        //System.out.println("value: " + optionPane.getValue());
         return textField.getText();
 
 //        int value = ((Integer) optionPane.getValue()).intValue();

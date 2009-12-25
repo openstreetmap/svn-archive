@@ -14,6 +14,7 @@ import livegps.LiveGpsLock;
 import org.dinopolis.util.collection.Tuple;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
@@ -62,15 +63,18 @@ public class SetNodeAction implements SurveyorAction {
      */
     public void actionPerformed(GpsActionEvent event) {
         LatLon coordinates = event.getCoordinates();
-        System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon() + " params: " + keyValues);
+        //System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon() + " params: " + keyValues);
         Node node = new Node(coordinates);
         for(Entry<String, String> entry : keyValues) {
             node.put(entry.getKey(), entry.getValue());
         }
-        node.put("created_by", "JOSM-surveyor-plugin");
         synchronized(LiveGpsLock.class) {
-            Main.map.mapView.getEditLayer().data.addPrimitive(node);
-            Main.main.getCurrentDataSet().setSelected(node);
+            DataSet ds = Main.main.getCurrentDataSet();
+            if(ds != null)
+            {
+                ds.addPrimitive(node);
+                ds.setSelected(node);
+            }
         }
         Main.map.repaint();
     }

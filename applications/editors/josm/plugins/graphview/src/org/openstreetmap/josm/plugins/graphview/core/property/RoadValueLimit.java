@@ -33,14 +33,14 @@ abstract public class RoadValueLimit implements RoadPropertyType<Float> {
 		this.upperLimit = upperLimit;
 	}
 
-	public <N, W, R> Float evaluateW(W way, boolean forward,
-			AccessParameters accessParameters, DataSource<N, W, R> dataSource) {
+	public <N, W, R, M> Float evaluateW(W way, boolean forward,
+			AccessParameters accessParameters, DataSource<N, W, R, M> dataSource) {
 		assert way != null && accessParameters != null && dataSource != null;
 		return evaluateTags(dataSource.getTagsW(way));
 	}
 
-	public <N, W, R> Float evaluateN(N node,
-			AccessParameters accessParameters, DataSource<N, W, R> dataSource) {
+	public <N, W, R, M> Float evaluateN(N node,
+			AccessParameters accessParameters, DataSource<N, W, R, M> dataSource) {
 		assert node != null && accessParameters != null && dataSource != null;
 		return evaluateTags(dataSource.getTagsN(node));
 	}

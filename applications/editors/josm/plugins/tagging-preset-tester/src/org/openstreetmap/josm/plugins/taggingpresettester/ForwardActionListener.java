@@ -4,7 +4,7 @@ package org.openstreetmap.josm.plugins.taggingpresettester;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.openstreetmap.josm.gui.dialogs.PropertiesDialog;
+import org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 
 /**

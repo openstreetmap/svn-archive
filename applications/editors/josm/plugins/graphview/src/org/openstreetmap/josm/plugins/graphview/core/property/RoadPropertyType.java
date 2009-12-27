@@ -25,8 +25,8 @@ public interface RoadPropertyType<V> {
 	 * @return                  value of this property for the way;
 	 *                          null if property cannot be determined / does not apply
 	 */
-	public <N, W, R> V evaluateW(W way, boolean forward,
-			AccessParameters accessParameters, DataSource<N, W, R> dataSource);
+	public <N, W, R, M> V evaluateW(W way, boolean forward,
+			AccessParameters accessParameters, DataSource<N, W, R, M> dataSource);
 
 	/**
 	 * determines the property value for node-based segments.
@@ -38,8 +38,8 @@ public interface RoadPropertyType<V> {
 	 * @return                  value of this property for the way;
 	 *                          null if property cannot be determined / does not apply
 	 */
-	public <N, W, R> V evaluateN(N node,
-			AccessParameters accessParameters, DataSource<N, W, R> dataSource);
+	public <N, W, R, M> V evaluateN(N node,
+			AccessParameters accessParameters, DataSource<N, W, R, M> dataSource);
 
 	/**
 	 * checks whether a segment with a given value for this property can be used by a vehicle

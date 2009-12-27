@@ -11,7 +11,7 @@ import org.openstreetmap.josm.plugins.graphview.core.data.DataSourceObserver;
 import org.openstreetmap.josm.plugins.graphview.core.data.MapBasedTagGroup;
 import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
 
-public class TestDataSource implements DataSource<TestDataSource.TestNode, TestDataSource.TestWay, TestDataSource.TestRelation> {
+public class TestDataSource implements DataSource<TestDataSource.TestNode, TestDataSource.TestWay, TestDataSource.TestRelation, TestDataSource.TestRelationMember> {
 
 	public static class TestPrimitive {
 		public final Map<String, String> tags = new HashMap<String, String>();
@@ -42,14 +42,14 @@ public class TestDataSource implements DataSource<TestDataSource.TestNode, TestD
 	}
 
 	public static class TestRelation extends TestPrimitive {
-		public final Collection<RelationMember> members = new LinkedList<RelationMember>();
+		public final Collection<TestRelationMember> members = new LinkedList<TestRelationMember>();
 		@Override
 		public String toString() {
 			return members + "; " + tags;
 		}
 	}
 
-	public static class TestRelationMember implements RelationMember {
+	public static class TestRelationMember {
 		public final String role;
 		public final TestPrimitive member;
 		public TestRelationMember(String role, TestPrimitive member) {
@@ -81,7 +81,7 @@ public class TestDataSource implements DataSource<TestDataSource.TestNode, TestD
 		return node.lon;
 	}
 
-	public Iterable<RelationMember> getMembers(TestRelation relation) {
+	public Iterable<TestRelationMember> getMembers(TestRelation relation) {
 		return relation.members;
 	}
 
@@ -111,6 +111,26 @@ public class TestDataSource implements DataSource<TestDataSource.TestNode, TestD
 
 	public TagGroup getTagsR(TestRelation relation) {
 		return new MapBasedTagGroup(relation.tags);
+	}
+	
+	public Object getMember(TestRelationMember member) {
+		return member.getMember();
+	}
+	
+	public String getRole(TestRelationMember member) {
+		return member.getRole();
+	}
+	
+	public boolean isNMember(TestRelationMember member) {
+		return member.getMember() instanceof TestNode;
+	}
+	
+	public boolean isWMember(TestRelationMember member) {
+		return member.getMember() instanceof TestWay;
+	}
+	
+	public boolean isRMember(TestRelationMember member) {
+		return member.getMember() instanceof TestRelation;
 	}
 
 	public void addObserver(DataSourceObserver observer) {

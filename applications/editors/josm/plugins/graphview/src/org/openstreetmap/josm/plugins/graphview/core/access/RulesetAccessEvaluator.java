@@ -15,9 +15,9 @@ import org.openstreetmap.josm.plugins.graphview.core.property.RoadPropertyType;
 /**
  * AccessEvaluator based on a single AccessRuleset
  */
-public class RulesetAccessEvaluator<N, W, R> implements AccessEvaluator<N, W> {
+public class RulesetAccessEvaluator<N, W, R, M> implements AccessEvaluator<N, W> {
 
-	private final DataSource<N, W, R> dataSource;
+	private final DataSource<N, W, R, M> dataSource;
 	private final AccessRuleset ruleset;
 	private final AccessParameters parameters;
 
@@ -27,7 +27,7 @@ public class RulesetAccessEvaluator<N, W, R> implements AccessEvaluator<N, W> {
 	 * @param parameters  parameters object that describes the vehicle
 	 *                    and situation to evaluate access for; != null
 	 */
-	public RulesetAccessEvaluator(DataSource<N, W, R> dataSource, AccessRuleset ruleset, AccessParameters parameters) {
+	public RulesetAccessEvaluator(DataSource<N, W, R, M> dataSource, AccessRuleset ruleset, AccessParameters parameters) {
 		assert dataSource != null && ruleset != null && parameters != null;
 
 		this.dataSource = dataSource;

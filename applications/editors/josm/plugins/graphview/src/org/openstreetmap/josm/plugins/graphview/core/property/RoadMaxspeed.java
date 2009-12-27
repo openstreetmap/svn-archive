@@ -7,13 +7,13 @@ import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
 
 public class RoadMaxspeed implements RoadPropertyType<Float> {
 
-	private DataSource<?, ?, ?> lastDataSource;
+	private DataSource<?, ?, ?, ?> lastDataSource;
 
 	/**
 	 * (re)creates information like boundaries if data source has changed
 	 * since last call to {@link #evaluate(Object, boolean, AccessParameters, DataSource)}
 	 */
-	private <N, W, R> void initializeIfNecessary(DataSource<N, W, R> dataSource) {
+	private <N, W, R, M> void initializeIfNecessary(DataSource<N, W, R, M> dataSource) {
 
 		if (dataSource != lastDataSource) {
 
@@ -29,8 +29,8 @@ public class RoadMaxspeed implements RoadPropertyType<Float> {
 		}
 	}
 
-	public <N, W, R> Float evaluateN(N node, AccessParameters accessParameters,
-			DataSource<N, W, R> dataSource) {
+	public <N, W, R, M> Float evaluateN(N node, AccessParameters accessParameters,
+			DataSource<N, W, R, M> dataSource) {
 		assert node != null && accessParameters != null && dataSource != null;
 
 		initializeIfNecessary(dataSource);
@@ -38,8 +38,8 @@ public class RoadMaxspeed implements RoadPropertyType<Float> {
 		return evaluateTags(dataSource.getTagsN(node));
 	}
 
-	public <N, W, R> Float evaluateW(W way, boolean forward, AccessParameters accessParameters,
-			DataSource<N, W, R> dataSource) {
+	public <N, W, R, M> Float evaluateW(W way, boolean forward, AccessParameters accessParameters,
+			DataSource<N, W, R, M> dataSource) {
 		assert way != null && accessParameters != null && dataSource != null;
 
 		initializeIfNecessary(dataSource);

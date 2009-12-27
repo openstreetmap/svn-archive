@@ -1,10 +1,8 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -13,6 +11,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.graphview.core.data.DataSource;
 import org.openstreetmap.josm.plugins.graphview.core.data.DataSourceObserver;
@@ -24,7 +23,7 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
  * this DataSource type does not send updates!
  */
 
-public class JOSMDataSource implements DataSource<Node, Way, Relation> {
+public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationMember> {
 
 	public double getLat(Node node) {
 		return node.getCoor().lat();
@@ -35,13 +34,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 	}
 
 	public Iterable<RelationMember> getMembers(Relation relation) {
-		List<RelationMember> members = new ArrayList<RelationMember>(relation.getMembersCount());
-		for (org.openstreetmap.josm.data.osm.RelationMember member : relation.getMembers()) {
-			if (!member.getMember().isDeleted() && !member.getMember().isIncomplete()) {
-				members.add(new RelationMemberImpl(member));
-			}
-		}
-		return members;
+		return relation.getMembers();
 	}
 
 	public Iterable<Node> getNodes(Way way) {
@@ -79,6 +72,27 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 			return new MapBasedTagGroup(primitive.getKeys());
 		}
 	}
+	
+	public Object getMember(RelationMember member) {
+		return member.getMember();
+	}
+	
+	public String getRole(RelationMember member) {
+		return member.getRole();
+	}
+	
+	public boolean isNMember(RelationMember member) {
+		return member.getMember() instanceof Node;
+	}
+	
+	public boolean isWMember(RelationMember member) {
+		return member.getMember() instanceof Way;
+	}
+	
+	public boolean isRMember(RelationMember member) {
+		return member.getMember() instanceof Relation;
+	}
+	
 
 	private static final TagGroup EMPTY_TAG_GROUP;
 	static {
@@ -174,7 +188,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation> {
 		}
 	}
 
-	public static class RelationMemberImpl implements RelationMember {
+	static class RelationMemberImpl {
 		private final String role;
 		private final Object member;
 		public RelationMemberImpl(org.openstreetmap.josm.data.osm.RelationMember originalMember) {

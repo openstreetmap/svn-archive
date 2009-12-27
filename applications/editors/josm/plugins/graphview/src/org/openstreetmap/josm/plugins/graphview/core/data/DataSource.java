@@ -7,15 +7,8 @@ package org.openstreetmap.josm.plugins.graphview.core.data;
  * @param <W>  way type
  * @param <R>  relation type
  */
-public interface DataSource<N, W, R> {
-
-	public static interface RelationMember {
-		/** returns the member's role. != null */
-		public String getRole();
-		/** returns the member itself. Must be instance of N, W or R, != null */
-		public Object getMember();
-	}
-
+public interface DataSource<N, W, R, M> {
+	
 	/** returns all nodes */
 	public Iterable<N> getNodes();
 
@@ -35,7 +28,7 @@ public interface DataSource<N, W, R> {
 	public Iterable<N> getNodes(W way);
 
 	/** returns a relation's members */
-	public Iterable<RelationMember> getMembers(R relation);
+	public Iterable<M> getMembers(R relation);
 
 	/** returns a node's tags */
 	public TagGroup getTagsN(N node);
@@ -46,6 +39,21 @@ public interface DataSource<N, W, R> {
 	/** returns a relation's tags */
 	public TagGroup getTagsR(R relation);
 
+	/** returns a relation member's role */
+	public String getRole(M member);
+
+	/** returns a relation member's member object */
+	public Object getMember(M member);
+	
+	/** returns whether a relation member is a node */
+	public boolean isNMember(M member);
+	
+	/** returns whether a relation member is a way */
+	public boolean isWMember(M member);
+	
+	/** returns whether a relation member is a relation */
+	public boolean isRMember(M member);
+	
 	/**
 	 * adds an observer.
 	 * Does nothing if the parameter is already an observer of this DataSource.

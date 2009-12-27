@@ -8,13 +8,13 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
 
 public class RoadSurface implements RoadPropertyType<String> {
 
-	public <N, W, R> String evaluateN(N node, AccessParameters accessParameters,
-			DataSource<N,W,R> dataSource) {
+	public <N, W, R, M> String evaluateN(N node, AccessParameters accessParameters,
+			DataSource<N,W,R,M> dataSource) {
 		return null;
 	};
 
-	public <N, W, R> String evaluateW(W way, boolean forward, AccessParameters accessParameters,
-			DataSource<N,W,R> dataSource) {
+	public <N, W, R, M> String evaluateW(W way, boolean forward, AccessParameters accessParameters,
+			DataSource<N,W,R,M> dataSource) {
 		assert way != null && accessParameters != null && dataSource != null;
 
 		TagGroup tags = dataSource.getTagsW(way);

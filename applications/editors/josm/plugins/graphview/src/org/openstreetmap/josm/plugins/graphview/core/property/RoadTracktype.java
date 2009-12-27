@@ -6,13 +6,13 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
 
 public class RoadTracktype implements RoadPropertyType<Integer> {
 
-	public <N, W, R> Integer evaluateN(N node, AccessParameters accessParameters,
-			DataSource<N,W,R> dataSource) {
+	public <N, W, R, M> Integer evaluateN(N node, AccessParameters accessParameters,
+			DataSource<N,W,R,M> dataSource) {
 		return null;
 	};
 
-	public <N, W, R> Integer evaluateW(W way, boolean forward, AccessParameters accessParameters,
-			DataSource<N,W,R> dataSource) {
+	public <N, W, R, M> Integer evaluateW(W way, boolean forward, AccessParameters accessParameters,
+			DataSource<N,W,R,M> dataSource) {
 		assert way != null && accessParameters != null && dataSource != null;
 
 		TagGroup tags = dataSource.getTagsW(way);

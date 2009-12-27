@@ -7,13 +7,13 @@ import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
 
 public class RoadIncline implements RoadPropertyType<Float> {
 
-	public <N, W, R> Float evaluateN(N node, AccessParameters accessParameters,
-			DataSource<N,W,R> dataSource) {
+	public <N, W, R, M> Float evaluateN(N node, AccessParameters accessParameters,
+			DataSource<N,W,R,M> dataSource) {
 		return null;
 	};
 
-	public <N, W, R> Float evaluateW(W way, boolean forward, AccessParameters accessParameters,
-			DataSource<N,W,R> dataSource) {
+	public <N, W, R, M> Float evaluateW(W way, boolean forward, AccessParameters accessParameters,
+			DataSource<N,W,R,M> dataSource) {
 		assert way != null && accessParameters != null && dataSource != null;
 
 		TagGroup tags = dataSource.getTagsW(way);

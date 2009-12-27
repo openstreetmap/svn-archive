@@ -164,8 +164,7 @@ public class FullGraphCreationTest {
 		LinkedList<RoadPropertyType<?>> properties = new LinkedList<RoadPropertyType<?>>();
 		properties.add(new RoadWidth());
 
-		return new GenericTransitionStructure<TestNode, TestWay, TestRelation>(
-				TestNode.class, TestWay.class, TestRelation.class,
+		return new GenericTransitionStructure<TestNode, TestWay, TestRelation, TestRelationMember>(
 				ACCESS_PARAMS, TEST_RULESET, dataSource, properties);
 	}
 

@@ -27,7 +27,7 @@ import org.openstreetmap.josm.plugins.graphview.core.property.RoadPropertyType;
  * @param <W>  way type
  * @param <R>  relation type
  */
-public class GenericTransitionStructure<N, W, R> implements TransitionStructure, DataSourceObserver {
+public class GenericTransitionStructure<N, W, R, M> implements TransitionStructure, DataSourceObserver {
 
 	private static final Collection<Segment> EMPTY_SEGMENT_LIST =
 		Collections.unmodifiableList(new ArrayList<Segment>(0));
@@ -147,15 +147,11 @@ public class GenericTransitionStructure<N, W, R> implements TransitionStructure,
 		}
 	}
 
-	private final Class<N> nodeClass;
-	private final Class<W> wayClass;
-	private final Class<R> relationClass;
-
 	private final Set<TransitionStructureObserver> observers = new HashSet<TransitionStructureObserver>();
 
 	private final Collection<RoadPropertyType<?>> properties;
 
-	private final DataSource<N, W, R> dataSource;
+	private final DataSource<N, W, R, M> dataSource;
 
 	private AccessParameters accessParameters;
 	private AccessRuleset ruleset;
@@ -167,19 +163,13 @@ public class GenericTransitionStructure<N, W, R> implements TransitionStructure,
 	private Collection<Restriction> restrictions = new LinkedList<Restriction>();
 
 	public GenericTransitionStructure(
-			Class<N> nodeClass, Class<W> wayClass, Class<R> relationClass,
 			AccessParameters accessParameters, AccessRuleset ruleset,
-			DataSource<N, W, R> dataSource,
+			DataSource<N, W, R, M> dataSource,
 			Collection<RoadPropertyType<?>> properties) {
 
-		assert nodeClass != null && wayClass != null && relationClass != null;
 		assert accessParameters != null && ruleset != null;
 		assert dataSource != null;
 		assert properties != null;
-
-		this.nodeClass = nodeClass;
-		this.wayClass = wayClass;
-		this.relationClass = relationClass;
 
 		this.dataSource = dataSource;
 
@@ -210,7 +200,7 @@ public class GenericTransitionStructure<N, W, R> implements TransitionStructure,
 
 			assert dataSource != null;
 
-			accessEvaluator = new RulesetAccessEvaluator<N, W, R>(
+			accessEvaluator = new RulesetAccessEvaluator<N, W, R, M>(
 					dataSource,
 					this.ruleset,
 					this.accessParameters);
@@ -410,8 +400,6 @@ public class GenericTransitionStructure<N, W, R> implements TransitionStructure,
 			Map<N, SegmentNodeImpl> nodeCreationMap,
 			Map<W, List<Segment>> waySegmentMap) {
 
-		assert relationClass.isInstance(relation);
-
 		/* collect information about the relation */
 
 		W fromWay = null;
@@ -419,27 +407,27 @@ public class GenericTransitionStructure<N, W, R> implements TransitionStructure,
 		Collection<W> viaWays = new LinkedList<W>();
 		Collection<W> toWays = new LinkedList<W>();
 
-		for (DataSource.RelationMember member : dataSource.getMembers(relation)) {
+		for (M member : dataSource.getMembers(relation)) {
 
-			if ("from".equals(member.getRole())) {
-				if (fromWay != null || !wayClass.isInstance(member.getMember())) {
+			if ("from".equals(dataSource.getRole(member))) {
+				if (fromWay != null || !dataSource.isWMember(member)) {
 					//broken restriction
 					return EMPTY_RESTRICTION_COLLECTION;
 				} else {
-					fromWay = (W)member.getMember();
+					fromWay = (W)dataSource.getMember(member);
 				}
-			} else if ("to".equals(member.getRole())) {
-				if (!wayClass.isInstance(member.getMember())) {
+			} else if ("to".equals(dataSource.getRole(member))) {
+				if (!dataSource.isWMember(member)) {
 					//broken restriction
 					return EMPTY_RESTRICTION_COLLECTION;
 				} else {
-					toWays.add((W)member.getMember());
+					toWays.add((W)dataSource.getMember(member));
 				}
-			} else if ("via".equals(member.getRole())) {
-				if (wayClass.isInstance(member.getMember())) {
-					viaWays.add((W)member.getMember());
-				} else if (nodeClass.isInstance(member.getMember())) {
-					viaNodes.add((N)member.getMember());
+			} else if ("via".equals(dataSource.getRole(member))) {
+				if (dataSource.isWMember(member)) {
+					viaWays.add((W)dataSource.getMember(member));
+				} else if (dataSource.isNMember(member)) {
+					viaNodes.add((N)dataSource.getMember(member));
 				}
 			}
 
@@ -682,7 +670,7 @@ public class GenericTransitionStructure<N, W, R> implements TransitionStructure,
 		return propertyValues;
 	}
 
-	public void update(DataSource<?, ?, ?> dataSource) {
+	public void update(DataSource<?, ?, ?, ?> dataSource) {
 		assert this.dataSource == dataSource;
 		updateData();
 	}

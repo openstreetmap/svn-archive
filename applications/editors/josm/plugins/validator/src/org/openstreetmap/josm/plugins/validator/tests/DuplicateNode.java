@@ -3,11 +3,15 @@ package org.openstreetmap.josm.plugins.validator.tests;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.geom.Area;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -32,8 +36,13 @@ public class DuplicateNode extends Test{
 
     protected static int DUPLICATE_NODE = 1;
 
-    /** Bag of all nodes */
-    Bag<LatLon, OsmPrimitive> nodes;
+    /** The map of potential duplicates.
+     * 
+     * If there is exactly one node for a given pos, the map includes a pair <pos, Node>.
+     * If there are multiple nodes for a given pos, the map includes a pair 
+     * <pos, NodesByEqualTagsMap>  
+     */
+    Map<LatLon,Object> potentialDuplicates;
 
     /**
      * Constructor
@@ -47,44 +56,55 @@ public class DuplicateNode extends Test{
     @Override
     public void startTest(ProgressMonitor monitor) {
     	super.startTest(monitor);
-        nodes = new Bag<LatLon, OsmPrimitive>(1000);
+        potentialDuplicates = new HashMap<LatLon, Object>();
     }
-
+ 
+   
 	@Override
-	public void endTest() {
-		for (List<OsmPrimitive> duplicated : nodes.values()) {
-			if (duplicated.size() > 1) {
-				boolean sameTags = true;
-				Map<String, String> keys0 = duplicated.get(0).getKeys();
-				keys0.remove("created_by");
-				for (int i = 0; i < duplicated.size(); i++) {
-					Map<String, String> keysI = duplicated.get(i).getKeys();
-					keysI.remove("created_by");
-					if (!keys0.equals(keysI))
-						sameTags = false;
-				}
-				if (!sameTags) {
-					TestError testError = new TestError(this, Severity.WARNING,
-							tr("Nodes at same position"), DUPLICATE_NODE,
-							duplicated);
-					errors.add(testError);
-				} else {
-					TestError testError = new TestError(this, Severity.ERROR,
-							tr("Duplicated nodes"), DUPLICATE_NODE, duplicated);
-					errors.add(testError);
-				}
-			}
+	public void endTest() {	
+		for (Entry<LatLon, Object> entry: potentialDuplicates.entrySet()) {
+			Object v = entry.getValue();
+			if (v instanceof Node) {
+				// just one node at this position. Nothing to report as
+				// error
+				continue;
+			}			
+			
+			// multiple nodes at the same position -> report errors 
+			//
+			NodesByEqualTagsMap map = (NodesByEqualTagsMap)v;
+			errors.addAll(map.buildTestErrors(this));
 		}
 		super.endTest();
-		nodes = null;
+		potentialDuplicates = null;
 	}
 
-    @Override
-    public void visit(Node n)
-    {
-        if(n.isUsable())
-            nodes.add(n.getCoor(), n);
-    }
+	@Override
+	public void visit(Node n) {
+		if (n.isUsable()) {
+			LatLon rounded = n.getCoor().getRoundedToOsmPrecision();
+			if (potentialDuplicates.get(rounded) == null) {		
+				// in most cases there is just one node at a given position. We
+				// avoid to create an extra object and add remember the node 
+				// itself at this position 
+				potentialDuplicates.put(rounded, n);
+			} else if (potentialDuplicates.get(rounded) instanceof Node) {
+				// we have an additional node at the same position. Create an extra
+				// object to keep track of the nodes at this position.
+				//
+				Node n1 = (Node)potentialDuplicates.get(rounded);
+				NodesByEqualTagsMap map = new NodesByEqualTagsMap();
+				map.add(n1);
+				map.add(n);
+				potentialDuplicates.put(rounded, map);
+			} else if (potentialDuplicates.get(rounded) instanceof NodesByEqualTagsMap) {
+				// we have multiple nodes at the same position. 
+				// 
+				NodesByEqualTagsMap map = (NodesByEqualTagsMap)potentialDuplicates.get(rounded);
+				map.add(n);
+			}			
+		}
+	}
 
     /**
      * Merge the nodes into one.
@@ -102,11 +122,10 @@ public class DuplicateNode extends Test{
         return null;// undoRedo handling done in mergeNodes
     }
 
-    @Override
-    public boolean isFixable(TestError testError)
-    {
-        return (testError.getTester() instanceof DuplicateNode);
-    }
+	@Override
+	public boolean isFixable(TestError testError) {
+		return (testError.getTester() instanceof DuplicateNode);
+	}
 
     /**
      * Check whether user is about to delete data outside of the download area.
@@ -136,5 +155,63 @@ public class DuplicateNode extends Test{
             }
         }
         return true;
+    }
+    
+    static private class NodesByEqualTagsMap {
+    	/**
+    	 * a bag of primitives with the same position. The bag key is represented
+    	 * by the tag set of the primitive. This allows for easily find nodes at
+    	 * the same position with the same tag sets later. 
+    	 */
+    	private Bag<Map<String,String>, OsmPrimitive> bag;
+
+    	public NodesByEqualTagsMap() {
+    		bag = new Bag<Map<String,String>, OsmPrimitive>();
+    	}
+    	
+    	public void add(Node n) {
+    		bag.add(n.getKeys(), n);
+    	}
+    	    	
+    	public List<TestError> buildTestErrors(Test parentTest) {
+    		List<TestError> errors = new ArrayList<TestError>();
+    		// check whether we have multiple nodes at the same position with
+    		// the same tag set 
+    		//    		
+    		for (Iterator<Map<String,String>> it = bag.keySet().iterator(); it.hasNext(); ) {
+    			Map<String,String> tagSet = it.next();
+    			if (bag.get(tagSet).size() > 1) {
+    				errors.add(new TestError(
+    						parentTest, 
+    						Severity.ERROR,
+    						tr("Duplicated nodes"), 
+    						DUPLICATE_NODE, 
+    						bag.get(tagSet)
+    				));
+    				it.remove();
+    			}
+    			
+    		}
+    		
+    		// check whether we have multiple nodes at the same position with
+    		// differing tag sets 
+    		//
+    		if (!bag.isEmpty()) {
+    			List<OsmPrimitive> duplicates = new ArrayList<OsmPrimitive>();
+    			for (List<OsmPrimitive> l: bag.values()) {
+    				duplicates.addAll(l);
+    			}
+    			if (duplicates.size() > 1) {
+	    			errors.add(new TestError(
+	    					parentTest, 
+	    					Severity.WARNING,
+							tr("Nodes at same position"),
+							DUPLICATE_NODE,
+							duplicates
+					));
+    			}
+    		}
+    		return errors;
+    	}    	
     }
 }

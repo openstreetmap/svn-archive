@@ -14,7 +14,6 @@ import javax.swing.JScrollPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.upload.UploadHook;
 import org.openstreetmap.josm.data.APIDataSet;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.validator.util.AgregatePrimitivesVisitor;
 import org.openstreetmap.josm.tools.GBC;

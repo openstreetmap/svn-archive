@@ -25,8 +25,8 @@
 	<!-- 
 	  ** update before publishing 
 	-->
-	<property name="commit.message" value="Fixed JOSM ticket #4235 - Validation layer is not removed when data layers are removed" />
-	<property name="plugin.main.version" value="2621" />
+	<property name="commit.message" value="Fixed JOSM ticket  #4231 - Validator: duplicate nodes test should round to OSM precision" />
+	<property name="plugin.main.version" value="2694" />
 
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>

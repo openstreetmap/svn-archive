@@ -179,6 +179,7 @@ public class Tile {
     public boolean isLoading() {
         return loading;
     }
+
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
     }
@@ -208,17 +209,49 @@ public class Tile {
         return "Tile " + key;
     }
 
+    /**
+     * Note that the hash code does not include the {@link #source}. 
+     * Therefore a hash based collection can only contain tiles
+     * of one {@link #source}. 
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + xtile;
+        result = prime * result + ytile;
+        result = prime * result + zoom;
+        return result;
+    }
+
+    /**
+     * Compares this object with <code>obj</code> based on 
+     * the fields {@link #xtile}, {@link #ytile} and 
+     * {@link #zoom}.
+     * The {@link #source} field is ignored.
+     */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Tile))
+        if (this == obj)
+            return true;
+        if (obj == null)
             return false;
-        Tile tile = (Tile) obj;
-        return (xtile == tile.xtile) && (ytile == tile.ytile) && (zoom == tile.zoom);
+        if (getClass() != obj.getClass())
+            return false;
+        Tile other = (Tile) obj;
+        if (xtile != other.xtile)
+            return false;
+        if (ytile != other.ytile)
+            return false;
+        if (zoom != other.zoom)
+            return false;
+        return true;
     }
 
     public static String getTileKey(TileSource source, int xtile, int ytile, int zoom) {
         return zoom + "/" + xtile + "/" + ytile + "@" + source.getName();
     }
+
     public String getStatus() {
         String status = "new";
         if (this.loading)
@@ -229,6 +262,7 @@ public class Tile {
             status = "error";
         return status;
     }
+
     public boolean hasError() {
         return error;
     }

@@ -13,8 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -290,6 +288,9 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
         }
     }
 
+    /* -------------------------------------------------------------------------- */
+    /* interface LayerChangeListener                                              */
+    /* -------------------------------------------------------------------------- */
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
         if (newLayer instanceof OsmDataLayer) {
             List<TestError> errors = layerErrors.get(newLayer);
@@ -305,6 +306,15 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
     }
 
     public void layerRemoved(Layer oldLayer) {
+    	if (oldLayer == errorLayer) {
+    		errorLayer = null;
+    		return;
+    	}
         layerErrors.remove(oldLayer);
+        if (Main.map.mapView.getLayersOfType(OsmDataLayer.class).isEmpty()) {
+        	if (errorLayer != null) {
+        		Main.map.mapView.removeLayer(errorLayer);
+        	}
+        }
     }
 }

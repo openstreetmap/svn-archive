@@ -42,7 +42,6 @@ import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
-import org.openstreetmap.josm.plugins.validator.tests.DuplicateNode;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 

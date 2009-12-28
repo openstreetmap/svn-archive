@@ -25,7 +25,7 @@
 	<!-- 
 	  ** update before publishing 
 	-->
-	<property name="commit.message" value="Updated to JOSM 2621" />
+	<property name="commit.message" value="Fixed JOSM ticket #4235 - Validation layer is not removed when data layers are removed" />
 	<property name="plugin.main.version" value="2621" />
 
 

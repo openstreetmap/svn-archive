@@ -25,7 +25,7 @@
 	<!-- 
 	  ** update before publishing 
 	-->
-	<property name="commit.message" value="Fixed JOSM ticket  #4231 - Validator: duplicate nodes test should round to OSM precision" />
+	<property name="commit.message" value="Fixed JOSM ticket #4220 - validator: check for FIXME=*" />
 	<property name="plugin.main.version" value="2694" />
 
 

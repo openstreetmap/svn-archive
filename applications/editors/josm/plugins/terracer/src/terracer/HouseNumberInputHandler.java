@@ -188,12 +188,12 @@ public class HouseNumberInputHandler implements ChangeListener, ItemListener,
 				int i = Integer.parseInt(content);
 				if (i < 0) {
 					appendMessageNewLine(message);
-					message.append(label + tr(" must be greater than 0"));
+					message.append(tr("{0} must be greater than 0", label));
 					return false;
 				}
 			} catch (NumberFormatException e) {
 				appendMessageNewLine(message);
-				message.append(label + tr(" is not a number"));
+				message.append(tr("{0} is not a number", label));
 				return false;
 			}
 

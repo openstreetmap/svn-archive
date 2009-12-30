@@ -95,7 +95,6 @@ public class WMSLayer extends Layer {
             pixelPerDegree = getPPD();
         }
         resolution = mv.getDist100PixelText();
-        pixelPerDegree = getPPD();
 
         executor = Executors.newFixedThreadPool(3);
         if (baseURL != null && !baseURL.startsWith("html:") && !WMSGrabber.isUrlWithPatterns(baseURL)) {
@@ -110,6 +109,10 @@ public class WMSLayer extends Layer {
                 }
             }
         }
+    }
+
+    public boolean hasAutoDownload(){
+        return startstop.isSelected();
     }
 
     public double getDx(){
@@ -176,7 +179,7 @@ public class WMSLayer extends Layer {
         if(baseURL == null) return;
         if (usesInvalidUrl && !isInvalidUrlConfirmed) return;
 
-        if( !startstop.isSelected() || (pixelPerDegree / getPPD() > minZoom) ){ //don't download when it's too outzoomed
+        if(pixelPerDegree / getPPD() > minZoom){ //don't download when it's too outzoomed
             for(int x = 0; x<dax; ++x) {
                 for(int y = 0; y<day; ++y) {
                     images[modulo(x,dax)][modulo(y,day)].paint(g, mv, dx, dy);
@@ -460,7 +463,7 @@ public class WMSLayer extends Layer {
                 baseName = getName();
             }
             Main.pref.put("wmsplugin.url."+ i +".url",baseURL );
-            Main.pref.put("wmsplugin.url."+String.valueOf(i)+".name", baseName + "#" + getPPD() );
+            Main.pref.put("wmsplugin.url."+String.valueOf(i)+".name", baseName + "#PPD=" + getPPD() );
             WMSPlugin.refreshMenu();
         }
     }

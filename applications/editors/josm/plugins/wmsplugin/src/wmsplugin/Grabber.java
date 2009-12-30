@@ -112,4 +112,6 @@ abstract public class Grabber extends Thread {
     public static int random(int min, int max) {
         return (int)(Math.random() * ((max+1)-min) ) + min;
     }
+
+    abstract public boolean loadFromCache();
 }

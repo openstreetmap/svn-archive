@@ -2,10 +2,6 @@
 #
 # checkrelation.pl by gary68
 #
-# this program check for connections at start or end of a way. this is intended to check motorways, trunks, their links, primary, secondary and
-# tertiary highways. it might not be too useful for i.e. highway=residential
-#
-#
 #
 # Copyright (C) 2009, Gerhard Schwanz
 #
@@ -35,6 +31,8 @@
 #
 # version 1.4 removed ERROR message
 #
+# version 1.5 ignore list implemented
+#
 
 
 use strict ;
@@ -49,7 +47,7 @@ use OSM::osmgraph 2.1 ;
 
 my $program = "checkrelation.pl" ;
 my $usage = $program . " <mode> file.osm baseDir baseName [borderName]\nmode=[M|Re|Ro|B|P]\nM=multipolygon, Re=restriction, Ro=route, B=boundary P=picture" ;
-my $version = "1.4" ;
+my $version = "1.5" ;
 
 my @restrictions = qw (no_right_turn no_left_turn no_u_turn no_straight_on only_right_turn only_left_turn only_straight_on) ;
 my @typesChecked = qw (restriction multipolygon boundary route) ; 
@@ -93,6 +91,7 @@ my %lon ; my %lat ;
 my %lineMax = () ; my %lineMin = () ;
 my %wayNodesHash ;
 my %placeName ;
+my %ignoredRelations = () ;
 
 my @borderWay = () ;
 
@@ -150,6 +149,8 @@ print "\n$program $version \nfor file $osmName\nmode = $mode\nborder threshold =
 if ($borderFileName ne "") {
 	readBorder ($borderFileName) ;
 }
+
+readIgnoreFile() ;
 
 print "parsing relations...\n" ;
 openOsmFile ($osmName) ;
@@ -294,12 +295,14 @@ print $html "<H1>Relation Check by Gary68</H1>\n" ;
 print $html "<p>Version ", $version, "</p>\n" ;
 print $html "<H2>Info</H2>\n" ;
 print $html "<p>", stringFileInfo ($osmName), "<br>\n" ;
-print $html "<p>Mode: $mode<br>\n" ;
+print $html "<p>Mode: $mode</p>\n" ;
 
-print $html "<H2>Info</H2>\n" ;
-print $html "<p>Checked relation types: @typesChecked</p>\n" ;
+# print $html "<p>Checked relation types: @typesChecked</p>\n" ; # see mode !!!
 print $html "<p>Valid restrictions: @restrictions</p>\n" ;
 print $html "<p>Border threshold: $borderThreshold km</p>\n" ;
+print $html "<p>Ignored relation Ids: " ;
+foreach my $id (sort keys %ignoredRelations) { print $html "$id " ; }
+print $html "</p>\n" ;
 
 
 print "parsing relations 2...\n" ;
@@ -380,7 +383,8 @@ while ($relationId != -1) {
 		foreach (@restrictions) {
 			if ($_ eq $restrictionType) { $validRestriction = 1 ; }
 		}
-		if ( (!$validRestriction) or ($via != 1) or ($from != 1) or ($from != 1) ) {
+		if ( ( (!$validRestriction) or ($via != 1) or ($from != 1) or ($from != 1) )
+			and (!defined $ignoredRelations{$relationId}) ) {
 			$problems++ ;
 			$line++ ;
 			my $problemText = "" ;
@@ -474,7 +478,8 @@ while ($relationId != -1) {
 						josmLinkSelectWay ($lon{$wayNodesHash{$firstWay}[0]}, $lat{$wayNodesHash{$firstWay}[0]}, 0.003, $firstWay) ;
 				}
 			}
-			if (($text ne "") and (minDistToBorderOK (@openEndsList) )  ) {
+			if ( ( ($text ne "") and (minDistToBorderOK (@openEndsList) ) )
+				and (!defined $ignoredRelations{$relationId}) ) {
 				$line++ ;
 				$problems++ ;
 				#print "relation: $relationId distance: ", minDistToBorder(@innerWays, @outerWays), "\n" ;
@@ -614,7 +619,9 @@ while ($relationId != -1) {
 					push @openEndsList, @openEnds ;
 				}
 			}
-			if (($text ne "") and ( minDistToBorderOK (@openEndsList) ) ) {
+			if ( 	($text ne "") and 
+				( minDistToBorderOK (@openEndsList) ) and 
+				(!defined $ignoredRelations{$relationId}) ) {
 				$line++ ;
 				$problems++ ;
 				printHTMLRowStart ($html) ;
@@ -756,7 +763,9 @@ while ($relationId != -1) {
 				$text = $text . "<strong>no backward ways</strong><br>" ;
 			}
 
-			if (($text ne "") and ( minDistToBorderOK (@openEndsList) ) ) {
+			if (	($text ne "") and 
+				( minDistToBorderOK (@openEndsList) ) and 
+				( !defined $ignoredRelations{$relationId}) ) {
 				$line++ ;
 				$problems++ ;
 
@@ -1291,4 +1300,19 @@ sub removeElement {
 		}
 	}
 	return @arrayNew ;
+}
+sub readIgnoreFile {
+	my $ignoreFile ;
+	my ($success) = open ($ignoreFile, "<", "./ignoredrelations.txt") ;
+	if ($success) {
+		print "ignore file found.\n" ;
+		while ($line = <$ignoreFile>) {
+			my ($relationId) = ($line =~ /([\d]+)/) ;
+			if (defined $relationId) { 
+				$ignoredRelations{$relationId} = 1 ;
+				print "will ignore relation id $relationId\n" ;
+			}
+		}
+		close ($ignoreFile) ;
+	} 
 }

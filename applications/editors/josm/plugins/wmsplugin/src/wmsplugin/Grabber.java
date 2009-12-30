@@ -72,6 +72,24 @@ abstract public class Grabber extends Thread {
         image.image = img;
         image.flushedResizedCachedInstance();
         image.failed = true;
+        image.downloadingStarted = false;
+        g.setFont(font);
+    }
+
+    protected void grabNotInCache(){ // report not in cache
+        BufferedImage img = new BufferedImage(width(), height(), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = img.getGraphics();
+        g.setColor(Color.GRAY);
+        g.fillRect(0, 0, width(), height());
+        Font font = g.getFont();
+        Font tempFont = font.deriveFont(Font.PLAIN).deriveFont(36.0f);
+        g.setFont(tempFont);
+        g.setColor(Color.BLACK);
+        g.drawString(tr("Not in cache"), 10, height()/2);
+        image.image = img;
+        image.flushedResizedCachedInstance();
+        image.failed = true;
+        image.downloadingStarted = false;
         g.setFont(font);
     }
 

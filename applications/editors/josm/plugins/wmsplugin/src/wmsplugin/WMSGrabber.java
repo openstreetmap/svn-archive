@@ -65,9 +65,7 @@ public class WMSGrabber extends Grabber {
             image.max = b.max;
 
             if(image.isVisible(mv, layer.getDx(), layer.getDy())) { //don't download, if the image isn't visible already
-                BufferedImage img = grab(url); 
-                if(img == null)return;
-                image.image = img;
+                image.image = grab(url);
                 image.flushedResizedCachedInstance();
             }
             image.downloadingStarted = false;
@@ -153,13 +151,33 @@ public class WMSGrabber extends Grabber {
         return res;
     }
 
-    protected BufferedImage grab(URL url) throws IOException, OsmTransferException {
+    public boolean loadFromCache(){
+        URL url = null;
+        try{
+           url = getURL(
+              b.min.east(), b.min.north(),
+              b.max.east(), b.max.north(),
+              width(), height());
+        } catch(Exception e) {
+           return false;
+        }
         BufferedImage cached = cache.getImg(url.toString());
         if(!layer.hasAutoDownload() || cached != null){
-           if(cached == null) grabNotInCache();
-           return cached;
+           image.min = b.min;
+           image.max = b.max;
+           if(cached == null){
+              grabNotInCache();
+              return true;
+           }
+           image.image = cached;
+           image.flushedResizedCachedInstance();
+           image.downloadingStarted = false;
+           return true;
         }
+        return false;
+    }
 
+    protected BufferedImage grab(URL url) throws IOException, OsmTransferException {
         System.out.println("Grabbing WMS " + url);
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

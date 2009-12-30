@@ -26,9 +26,6 @@ public class HTMLGrabber extends WMSGrabber {
 
         System.out.println("Grabbing HTML " + url);
 
-        BufferedImage cached = cache.getImg(urlstring);
-        if(cached != null) return cached;
-
         ArrayList<String> cmdParams = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(MessageFormat.format(
         Main.pref.get("wmsplugin.browser", "webkit-image {0}"), urlstring));

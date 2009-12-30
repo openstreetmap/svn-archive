@@ -7,7 +7,7 @@
 #
 #
 #
-# Copyright (C) 2008, Gerhard Schwanz
+# Copyright (C) 2008, 2009 Gerhard Schwanz
 #
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
 # Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -53,6 +53,10 @@
 # - added online api support
 # - removed boundary support
 #
+# Version 4.1
+# - omit contruction sites
+#
+#
 
 use strict ;
 use warnings ;
@@ -63,7 +67,7 @@ use Time::localtime;
 
 my $program = "checkconn.pl" ;
 my $usage = $program . " def.xml file.osm out.htm out.gpx" ;
-my $version = "4.0" ;
+my $version = "4.1" ;
 
 my $wayId ; my $wayId2 ;
 my $wayUser ; my @wayNodes ; my @wayTags ;
@@ -102,6 +106,7 @@ my @allCat1Nodes ;
 my %cat1Connected ;
 my @cat1Nodes ; my @cat12Nodes ;
 my %nodeNumber = () ;
+my %construction = () ;
 
 my @neededNodes ;
 my %lon ; my %lat ;
@@ -208,6 +213,8 @@ while ($wayId != -1) {
 			foreach $tag2 (@check) {
 				if ($tag1 eq $tag2) { $found = 1 ; }
 			}
+			if ($tag1 eq "highway:construction") { $construction{$wayId} = 1 ; } 
+			if ($tag1 eq "construction:yes") { $construction{$wayId} = 1 ; } 
 		}
 		if (($found) and ($round == 0)) { 
 			push @cat1, $wayId ; 
@@ -468,10 +475,9 @@ print $html "<th>Pic Start</th>\n" ;
 print $html "<th>Pic End</th>\n" ;
 print $html "</tr>\n" ;
 $i = 0 ;
+
 foreach $wayId (@cat1) {
-
-
-	if ($wayStat{$wayId} > 0) {
+	if ( ($wayStat{$wayId} > 0) and (!defined($construction{$wayId})) ) {
 		# check API way data
 		my $APIok = 1 ;
 		#print "request API data for way $wayId...\n" ;

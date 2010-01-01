@@ -23,7 +23,9 @@ use Time::localtime;
 
 my $programName = "onewaycheck" ; 
 my $usage = "onewaycheck.pl file.osm out.htm" ;
-my $version = "1.2" ;
+my $version = "1.3" ;
+my @checkWays = qw (motorway motorway_link trunk trunk_link primary primary_link secondary secondary_link tertiary residential service unclassified road living_street ) ;
+
 
 my $wayId ;
 my $wayUser ;
@@ -90,6 +92,7 @@ $gpxName =~ s/htm/gpx/ ;
 
 
 print "\n$programName $version for file $osmName\n" ;
+print "Check ways: @checkWays\n" ;
 
 #####################
 # open and init files
@@ -118,9 +121,16 @@ if ($wayId != -1) {
 while ($wayId != -1) {
 	if (scalar (@wayNodes) >= 2) {
 		$oneway = 0 ; my $highway = 0 ;
-		foreach (@wayTags) {
-			if ($_->[0] eq "highway") { $highway = 1 ; } 
-			if ($_->[0] eq "oneway") { $oneway = 1 ; }
+		foreach my $wt (@wayTags) {
+			if ($wt->[0] eq "highway") { 
+				my $found = 0 ;
+				foreach my $hw (@checkWays) {
+					if ($wt->[1] eq $hw) { $found = 1 ; }
+				}
+				if ($found) { $highway = 1 ; }
+			} 
+			if ( ($wt->[0] eq "junction") and ($wt->[1] eq "roundabout") ) { $highway = 1 ; } 
+			if ($wt->[0] eq "oneway") { $oneway = 1 ; }
 		}
 		if (($highway == 1) and ($oneway == 1) ) { 
 			$oneways++ ;
@@ -171,15 +181,25 @@ while ($wayId != -1) {
 
 	if (scalar (@wayNodes) >= 2) {
 		$oneway = 0 ; $reverse = 0 ; my $highway = 0 ;
-		foreach (@wayTags) {
-			if ($_->[0] eq "highway") { $highway = 1 ; } 
-			if ($_->[0] eq "amenity" and $_->[1] eq "parking" ) { $highway = 1 ; } 
-			if ($_->[0] eq "oneway" and $_->[1] eq "true") { $oneway = 1 ; }
-			if ($_->[0] eq "oneway" and $_->[1] eq "false") { $oneway = 0 ; }
-			if ($_->[0] eq "oneway" and $_->[1] eq "yes") { $oneway = 1 ; }
-			if ($_->[0] eq "oneway" and $_->[1] eq "no") { $oneway = 0 ; }
-			if ($_->[0] eq "oneway" and $_->[1] eq "1") { $oneway = 1 ; }
-			if ($_->[0] eq "oneway" and $_->[1] eq "-1") { $oneway = 1 ; $reverse = 1 ; }
+		foreach my $wt (@wayTags) {
+
+			if ($wt->[0] eq "highway") { 
+				my $found = 0 ;
+				foreach my $hw (@checkWays) {
+					if ($wt->[1] eq $hw) { $found = 1 ; }
+				}
+				if ($found) { $highway = 1 ; }
+			} 
+
+			if ($wt->[0] eq "amenity" and $wt->[1] eq "parking" ) { $highway = 1 ; } 
+			if ($wt->[0] eq "junction" and $wt->[1] eq "roundabout" ) { $highway = 1 ; } 
+
+			if ($wt->[0] eq "oneway" and $wt->[1] eq "true") { $oneway = 1 ; }
+			if ($wt->[0] eq "oneway" and $wt->[1] eq "false") { $oneway = 0 ; }
+			if ($wt->[0] eq "oneway" and $wt->[1] eq "yes") { $oneway = 1 ; }
+			if ($wt->[0] eq "oneway" and $wt->[1] eq "no") { $oneway = 0 ; }
+			if ($wt->[0] eq "oneway" and $wt->[1] eq "1") { $oneway = 1 ; }
+			if ($wt->[0] eq "oneway" and $wt->[1] eq "-1") { $oneway = 1 ; $reverse = 1 ; }
 		}
 		if ($highway) {
 			if ( ($oneway) and ($reverse)) { @wayNodes = reverse @wayNodes ; } 
@@ -305,6 +325,7 @@ open ($html, ">", $htmlName) || die ("Can't open html output file") ;
 printHTMLHeader ($html, "OnewayCheck by Gary68") ;
 print $html "<H1>OnewayCheck by Gary68</H1>\n" ;
 print $html "<p>Version ", $version, "</p>\n" ;
+print $html "<p>Check ways: @checkWays</p>\n" ;
 print $html "<H2>Statistics</H2>\n" ;
 print $html "<p>", stringFileInfo ($osmName), "</p>\n" ;
 print $html "<p>number ways: $wayCount<br>\n" ;

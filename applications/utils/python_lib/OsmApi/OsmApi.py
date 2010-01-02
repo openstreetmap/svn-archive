@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.17  2010-01-02 Capabilities implementation                        ##
 ## 0.2.16  2010-01-02 ChangesetsGet by Alexander Rampp                   ##
 ## 0.2.15  2009-12-16 xml encoding error for < and >                     ##
 ## 0.2.14  2009-11-20 changesetautomulti parameter                       ##
@@ -48,7 +49,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.16'
+__version__ = '0.2.17'
 
 import httplib, base64, xml.dom.minidom, time, sys, urllib
 
@@ -132,7 +133,24 @@ class OsmApi:
     #######################################################################
     
     def Capabilities(self):
-        raise NotImplemented
+        """ Returns ApiCapabilities. """
+        uri = "/api/capabilities"
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        print data.getElementsByTagName("osm")
+        data = data.getElementsByTagName("osm")[0].getElementsByTagName("api")[0]
+        result = {}
+        for elem in data.childNodes:
+            if elem.nodeType <> elem.ELEMENT_NODE:
+                continue
+            result[elem.nodeName] = {}
+            print elem.nodeName
+            for k, v in elem.attributes.items():
+                try:
+                    result[elem.nodeName][k] = float(v)
+                except:
+                    result[elem.nodeName][k] = v
+        return result
 
     #######################################################################
     # Node                                                                #

@@ -2,7 +2,7 @@
 
 ###########################################################################
 ##                                                                       ##
-## Copyrights Etienne Chové <chove@crans.org> 2009                       ##
+## Copyrights Etienne Chové <chove@crans.org> 2009-2010                  ##
 ##                                                                       ##
 ## This program is free software: you can redistribute it and/or modify  ##
 ## it under the terms of the GNU General Public License as published by  ##
@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.16  2010-01-02 ChangesetsGet by Alexander Rampp                   ##
 ## 0.2.15  2009-12-16 xml encoding error for < and >                     ##
 ## 0.2.14  2009-11-20 changesetautomulti parameter                       ##
 ## 0.2.13  2009-11-16 modify instead update for osc                      ##
@@ -47,9 +48,9 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.15'
+__version__ = '0.2.16'
 
-import httplib, base64, xml.dom.minidom, time, sys
+import httplib, base64, xml.dom.minidom, time, sys, urllib
 
 class ApiError(Exception):
     	
@@ -418,9 +419,42 @@ class OsmApi:
         data = self._get(uri)
         return self.ParseOsc(data)
     
-    def ChangesetsGet(self, min_lon=None, min_lat=None, max_lon=None, max_lat=None, userid=None, closed_after=None, created_before=None, only_open=False, only_closed=False):
+    def ChangesetsGet(self, min_lon=None, min_lat=None, max_lon=None, max_lat=None,
+                      userid=None, username=None,
+                      closed_after=None, created_before=None,
+                      only_open=False, only_closed=False):
         """ Returns dict(ChangsetId: ChangesetData) matching all criteria. """
-        raise NotImplemented
+        
+        uri = "/api/0.6/changesets"
+        params = {}
+        if min_lon or min_lat or max_lon or max_lat:
+            params["bbox"] = ",".join([str(min_lon),str(min_lat),str(max_lon),str(max_lat)])
+        if userid:
+            params["user"] = userid
+        if username:
+            params["display_name"] = username
+        if closed_after and not created_before:
+            params["time"] = closed_after
+        if created_before:
+            if not closed_after:
+                closed_after = "1970-01-01T00:00:00Z"
+            params["time"] = closed_after + "," + created_before
+        if only_open:
+            params["open"] = 1
+        if only_closed:
+            params["closed"] = 1
+            
+        if params:
+            uri += "?" + urllib.urlencode(params)
+                
+        data = self._get(uri)
+        data = xml.dom.minidom.parseString(data)
+        data = data.getElementsByTagName("osm")[0].getElementsByTagName("changeset")
+        result = {}
+        for curChangeset in data:
+            tmpCS = self._DomParseChangeset(curChangeset)
+            result[tmpCS["id"]] = tmpCS
+        return result
     
     #######################################################################
     # Other                                                               #

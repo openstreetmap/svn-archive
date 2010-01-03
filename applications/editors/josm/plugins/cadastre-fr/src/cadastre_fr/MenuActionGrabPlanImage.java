@@ -123,6 +123,8 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         }
         else
             mouseClickedTime = System.currentTimeMillis();
+        if (e.getButton() != MouseEvent.BUTTON1)
+            return;
         countMouseClicked++;
         EastNorth ea = Main.proj.latlon2eastNorth(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         System.out.println("clic:"+countMouseClicked+" ,"+ea+", mode:"+mode);

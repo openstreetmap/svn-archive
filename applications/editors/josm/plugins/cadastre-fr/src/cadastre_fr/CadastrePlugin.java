@@ -86,10 +86,15 @@ import org.openstreetmap.josm.data.projection.*;
  *                   support of subprojections in preferences for zones setting and UTM20N
  *                 - removed autosourcing of empty new nodes
  * 1.6 28-Nov-2009 - Fix minor issues if Grab is called without layer (possible since projection rework)
- * 1.7 12-Dec-2009 - Change URL's changes for cookie and downgrade imgs resolution due to WMS changes 
+ * 1.7 12-Dec-2009 - Change URL's changes for cookie and downgrade imgs resolution due to WMS changes
+ * 1.8 xxx         - filter the mouse button 1 during georeferencing
+ *                 - possibility to modify the auto-sourcing text just before upload 
+ *                 - retry if getting a new cookie failed (10 times during 30 seconds)
+ *                 - cookie expiration automatically detected and renewed (after 30 minutes)
+ *                 - proper WMS layer cleanup at destruction (workaround for memory leak)
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "1.7";
+    static String VERSION = "1.8";
 
     static JMenu cadastreJMenu;
 
@@ -121,7 +126,7 @@ public class CadastrePlugin extends Plugin {
      * @throws Exception
      */
     public CadastrePlugin() throws Exception {
-        System.out.println("Pluging \"cadastre-fr\" started...");
+        System.out.println("Pluging cadastre-fr v"+VERSION+" started...");
         if (Main.pref.get("cadastrewms.cacheDir").equals(""))
             cacheDir = Main.pref.getPreferencesDir()+"plugins/cadastrewms/";
         else {

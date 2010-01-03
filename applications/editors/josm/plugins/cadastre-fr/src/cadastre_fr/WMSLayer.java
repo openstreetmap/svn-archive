@@ -87,6 +87,13 @@ public class WMSLayer extends Layer implements ImageObserver {
         CadastrePlugin.pluginUsed = true;
     }
 
+    public void destroy() {
+        super.destroy();
+        images = null;
+        dividedBbox = null;
+        System.out.println("Layer "+location+" destroyed");
+    }
+    
     private static String buildName(String location, String codeCommune) {
         String ret = new String(location.toUpperCase());
         if (codeCommune != null && !codeCommune.equals(""))

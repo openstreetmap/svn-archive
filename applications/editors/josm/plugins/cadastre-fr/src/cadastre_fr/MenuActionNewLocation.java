@@ -38,7 +38,7 @@ public class MenuActionNewLocation extends JosmAction {
         String location = "";
         String codeDepartement = "";
         String codeCommune = "";
-        boolean resetCookie = false;
+        boolean changeInterface = false;
         JLabel labelSectionNewLocation = new JLabel(tr("Add a new layer"));
         JPanel p = new JPanel(new GridBagLayout());
         JLabel labelLocation = new JLabel(tr("Location"));
@@ -65,7 +65,7 @@ public class MenuActionNewLocation extends JosmAction {
         WMSLayer wmsLayer = null;
         if (!inputTown.getText().equals("")) {
             location = inputTown.getText().toUpperCase();
-            resetCookie = true;
+            changeInterface = true;
             Main.pref.put("cadastrewms.location", location);
             Main.pref.put("cadastrewms.codeCommune", codeCommune);
             if (Main.map != null) {
@@ -88,11 +88,11 @@ public class MenuActionNewLocation extends JosmAction {
             System.out.println("Add new layer with Location:" + inputTown.getText());
         } else if (existingLayers != null && existingLayers.size() > 0 && Main.map.mapView.getActiveLayer() instanceof WMSLayer) {
             wmsLayer = (WMSLayer)Main.map.mapView.getActiveLayer();
-            resetCookie = true;
+            changeInterface = true;
         }
 
-        if (resetCookie)
-            CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookieIfNewLayer(wmsLayer.getName());
+        if (changeInterface)
+            CadastrePlugin.cadastreGrabber.getWmsInterface().resetInterfaceRefIfNewLayer(wmsLayer.getName());
         return wmsLayer;
     }
 

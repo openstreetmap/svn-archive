@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
@@ -42,6 +43,7 @@ public class CadastreInterface {
         }
     }
     private Vector<PlanImage> listOfFeuilles = new Vector<PlanImage>();
+    private long cookieTimestamp;
 
     final String baseURL = "http://www.cadastre.gouv.fr";
     final String cImageFormat = "Cette commune est au format ";
@@ -50,63 +52,79 @@ public class CadastreInterface {
     final String c0ptionListStart = "<option value=\"";
     final String cOptionListEnd = "</option>";
     final String cBBoxCommunStart = "new GeoBox(";
-    final String cBBoxCommunEnd = ")";
+    final String cBBoxCommunEnd = ")";    
 
     final String cInterfaceVector = "afficherCarteCommune.do";
     final String cInterfaceRasterTA = "afficherCarteTa.do";
     final String cInterfaceRasterFeuille = "afficherCarteFeuille.do";
     final String cImageLinkStart = "title=\"image\"><a href=\"#\" onClick=\"popup('afficherCarteFeuille.do?f=";
     final String cImageNameStart = ">Feuille ";
+    
+    final static long cCookieExpiration = 30 * 60 * 1000; // 30 minutes expressed in milliseconds
+
+    final  int cRetriesGetCookie = 10; // 10 times every 3 seconds means 30 seconds trying to get a cookie
 
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException {
         if (wmsLayer.getName().equals(""))
             return false;
+        if (wmsLayer.getName().equals(lastWMSLayerName))
+            return true;
         // open the session with the French Cadastre web front end
         downloadCancelled = false;
         try {
-            if (cookie == null || !wmsLayer.getName().equals(lastWMSLayerName)) {
+            if (cookie == null || isCookieExpired())
                 getCookie();
-                getInterface(wmsLayer);
-                this.lastWMSLayerName = wmsLayer.getName();
+            if (cookie != null && interfaceRef == null) {
+                    getInterface(wmsLayer);
+                    this.lastWMSLayerName = wmsLayer.getName();
+            } else {
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("Cannot open a new client session.\nServer in maintenance or temporary overloaded."));
+                return false;
             }
             openInterface();
         } catch (IOException e) {
-            /*JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(Main.parent,
                     tr("Town/city {0} not found or not available\n" +
-                            "or action canceled", wmsLayer.getLocation()));*/
-            JOptionPane pane = new JOptionPane(
-                    tr("Town/city {0} not found or not available\n" +
-                            "or action canceled", wmsLayer.getLocation()),
-                            JOptionPane.INFORMATION_MESSAGE);
-            // this below is a temporary workaround to fix the "always on top" issue
-            JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));
-            CadastrePlugin.prepareDialog(dialog);
-            dialog.setVisible(true);
-            // till here
+                            "or action canceled", wmsLayer.getLocation()));
             return false;
         }
         return true;
     }
 
+    /**
+     * 
+     * @return true if a cookie is delivered by WMS and false is WMS is not opening a client session
+     *         (too many clients or in maintenance)
+     * @throws IOException
+     */
     private void getCookie() throws IOException {
+        boolean cookied = false;
+        int retries = cRetriesGetCookie;
         try {
-            // first, get the cookie from Cadastre to allow next downloads
             searchFormURL = new URL(baseURL + "/scpc/accueil.do");
-            urlConn = (HttpURLConnection)searchFormURL.openConnection();
-            urlConn.setRequestMethod("GET");
-            urlConn.connect();
-            if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new IOException("Cannot get Cadastre cookie.");
-            }
-            System.out.println("GET "+searchFormURL);
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-            while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
-            String headerName=null;
-            for (int i=1; (headerName = urlConn.getHeaderFieldKey(i))!=null; i++) {
-                if (headerName.equals("Set-Cookie")) {
-                    cookie = urlConn.getHeaderField(i);
-                    cookie = cookie.substring(0, cookie.indexOf(";"));
-                    System.out.println("Cookie="+cookie);
+            while (cookied == false && retries > 0) {
+                urlConn = (HttpURLConnection)searchFormURL.openConnection();
+                urlConn.setRequestMethod("GET");
+                urlConn.connect();
+                if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    System.out.println("GET "+searchFormURL);
+                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+                    while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
+                    String headerName=null;
+                    for (int i=1; (headerName = urlConn.getHeaderFieldKey(i))!=null; i++) {
+                        if (headerName.equals("Set-Cookie")) {
+                            cookie = urlConn.getHeaderField(i);
+                            cookie = cookie.substring(0, cookie.indexOf(";"));
+                            cookieTimestamp = new Date().getTime();
+                            System.out.println("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
+                            cookied = true;
+                        }
+                    }
+                } else {
+                    System.out.println("Request to home page failed. Http error:"+urlConn.getResponseCode()+". Try again "+retries+" times");
+                    CadastrePlugin.safeSleep(3000);
+                    retries --;
                 }
             }
         } catch (MalformedURLException e) {
@@ -117,11 +135,21 @@ public class CadastreInterface {
 
     public void resetCookie() {
         lastWMSLayerName = null;
+        cookie = null;
+    }
+    
+    public boolean isCookieExpired() {
+        long now = new Date().getTime();
+        if ((now - cookieTimestamp) > cCookieExpiration) {
+            System.out.println("cookie received at "+new Date(cookieTimestamp)+" expired (now is "+new Date(now)+")");
+            return true;
+        }
+        return false;
     }
 
-    public void resetCookieIfNewLayer(String newWMSLayerName) {
+    public void resetInterfaceRefIfNewLayer(String newWMSLayerName) {
         if (!newWMSLayerName.equals(lastWMSLayerName)) {
-            resetCookie();
+            interfaceRef = null;
         }
     }
 
@@ -153,7 +181,6 @@ public class CadastreInterface {
                     // commune known but raster format. Select "Feuille" (non-georeferenced image) from list.
                     int res = selectFeuilleDialog();
                     if (res != -1) {
-                        // TODO
                         wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
                         checkLayerDuplicates(wmsLayer);
                         interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());

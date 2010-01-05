@@ -27,6 +27,8 @@
  */
 package org.openstreetmap.josm.plugins.osb.gui.action;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -49,6 +51,7 @@ public class PointToNewIssueAction extends AbstractAction implements MouseListen
     private Cursor previousCursor;
     
     public PointToNewIssueAction(JToggleButton button, OsbPlugin plugin) {
+        super(tr("New issue"));
         this.button = button;
         this.plugin = plugin;
     }

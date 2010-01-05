@@ -30,15 +30,18 @@ package org.openstreetmap.josm.plugins.osb.gui.action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.widgets.HistoryChangedListener;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.CloseAction;
 import org.openstreetmap.josm.plugins.osb.api.EditAction;
+import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
 import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
 
 public class CloseIssueAction extends OsbAction {
@@ -47,9 +50,13 @@ public class CloseIssueAction extends OsbAction {
 
     private CloseAction closeAction = new CloseAction();
     private EditAction commentAction = new EditAction();
+    
+    private String comment;
+    
+    private Node node;
 
-    public CloseIssueAction() {
-        super(tr("Mark as done"));
+    public CloseIssueAction(OsbDialog dialog) {
+        super(tr("Mark as done"), dialog);
     }
 
     @Override
@@ -60,18 +67,39 @@ public class CloseIssueAction extends OsbAction {
                 Main.pref.putCollection(ConfigKeys.OSB_COMMENT_HISTORY, history);
             }
         };
-        String comment = TextInputDialog.showDialog(Main.map,
+        node = dialog.getSelectedNode();
+        comment = TextInputDialog.showDialog(Main.map,
                 tr("Really close?"),
                 tr("<html>Really mark this issue as ''done''?<br><br>You may add an optional comment:</html>"),
                 OsbPlugin.loadIcon("icon_valid22.png"),
                 history, l);
-
-        if(comment != null) {
-            if(comment.length() > 0) {
-                comment = addMesgInfo(comment);
-                commentAction.execute(getSelectedNode(), comment);
-            }
-            closeAction.execute(getSelectedNode());
+        
+        if(comment == null) {
+            cancelled = true;
         }
+
+    }
+
+    @Override
+    public void execute() throws IOException {
+        if (comment.length() > 0) {
+            comment = addMesgInfo(comment);
+            commentAction.execute(node, comment);
+        }
+        closeAction.execute(node);
+    }
+    
+    @Override
+    public String toString() {
+        return tr("Close: " + node.get("note") + " - Comment: " + comment);
+    }
+    
+    @Override
+    public CloseIssueAction clone() {
+        CloseIssueAction action = new CloseIssueAction(dialog);
+        action.cancelled = cancelled;
+        action.comment = comment;
+        action.node = node;
+        return action;
     }
 }

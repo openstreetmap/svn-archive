@@ -155,22 +155,25 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             return;
         }
 
-        try {
-            // download the data
-            download.execute(dataSet, bounds);
-
-            // display the parsed data
-            if(!dataSet.getNodes().isEmpty() && dialog.isDialogShowing()) {
-                // if the map layer has been closed, while we are requesting the osb db,
-                // we don't have to update the gui, because the user is not interested
-                // in this area anymore
-                if(Main.map != null && Main.map.mapView != null) {
-                    updateGui();
+        // download data for the new bounds, if the plugin is not in offline mode
+        if(!Main.pref.getBoolean(ConfigKeys.OSB_API_OFFLINE)) {
+            try {
+                // download the data
+                download.execute(dataSet, bounds);
+    
+                // display the parsed data
+                if(!dataSet.getNodes().isEmpty() && dialog.isDialogShowing()) {
+                    // if the map layer has been closed, while we are requesting the osb db,
+                    // we don't have to update the gui, because the user is not interested
+                    // in this area anymore
+                    if(Main.map != null && Main.map.mapView != null) {
+                        updateGui();
+                    }
                 }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(Main.parent, e.getMessage());
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(Main.parent, e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -187,7 +190,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     private void updateLayer(DataSet osbData) {
         if(layer == null) {
-            layer = new OsbLayer(osbData, "OpenStreetBugs");
+            layer = new OsbLayer(osbData, "OpenStreetBugs", dialog);
             Main.main.addLayer(layer);
         }
     }

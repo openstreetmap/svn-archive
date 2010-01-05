@@ -40,34 +40,38 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
+import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
 
 public abstract class OsbAction extends AbstractAction {
 
     private static final long serialVersionUID = 1L;
 
-    private static List<OsbActionObserver> observers = new ArrayList<OsbActionObserver>();
+    private List<OsbActionObserver> observers = new ArrayList<OsbActionObserver>();
+    
+    protected OsbDialog dialog;
+    
+    protected boolean cancelled = false;
 
-    private static Node selectedNode;
-
-    public OsbAction(String name) {
+    public OsbAction(String name, OsbDialog osbDialog) {
         super(name);
-    }
-
-    public static Node getSelectedNode() {
-        return selectedNode;
-    }
-
-    public static void setSelectedNode(Node selectedNode) {
-        OsbAction.selectedNode = selectedNode;
+        this.dialog = osbDialog;
     }
 
     public void actionPerformed(ActionEvent e) {
+        cancelled = false;
         try {
             doActionPerformed(e);
-            for (OsbActionObserver obs : observers) {
-                obs.actionPerformed(this);
+            if(!cancelled) {
+                if (!Main.pref.getBoolean(ConfigKeys.OSB_API_OFFLINE)) {
+                    execute();
+                    for (OsbActionObserver obs : observers) {
+                        obs.actionPerformed(this);
+                    }
+                } else {
+                    OsbAction action = clone();
+                    ActionQueue.getInstance().offer(action);
+                }
             }
         } catch (Exception e1) {
             System.err.println("Couldn't execute action " + getClass().getSimpleName());
@@ -77,11 +81,11 @@ public abstract class OsbAction extends AbstractAction {
 
     protected abstract void doActionPerformed(ActionEvent e) throws Exception;
 
-    public static void addActionObserver(OsbActionObserver obs) {
+    public void addActionObserver(OsbActionObserver obs) {
         observers.add(obs);
     }
 
-    public static void removeActionObserver(OsbActionObserver obs) {
+    public void removeActionObserver(OsbActionObserver obs) {
         observers.remove(obs);
     }
     
@@ -113,4 +117,12 @@ public abstract class OsbAction extends AbstractAction {
         
         return msg;
     }
+    
+    public List<OsbActionObserver> getActionObservers() {
+        return observers;
+    }
+    
+    public abstract void execute() throws Exception;
+    
+    public abstract OsbAction clone();
 }

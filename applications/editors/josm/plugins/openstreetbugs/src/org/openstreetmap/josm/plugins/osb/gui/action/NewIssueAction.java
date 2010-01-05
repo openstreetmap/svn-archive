@@ -29,16 +29,11 @@ package org.openstreetmap.josm.plugins.osb.gui.action;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
-import javax.swing.JToggleButton;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
@@ -48,88 +43,70 @@ import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.NewAction;
 import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
 
-public class NewIssueAction extends OsbAction implements MouseListener {
+public class NewIssueAction extends OsbAction {
 
     private static final long serialVersionUID = 1L;
 
-    private NewAction newAction = new NewAction();
-
-    private JToggleButton button;
-
     private OsbPlugin plugin;
 
-    private Cursor previousCursor;
-
-    public NewIssueAction(JToggleButton button, OsbPlugin plugin) {
-        super(tr("New issue"));
-        this.button = button;
+    private String result;
+    
+    private Point p;
+    
+    private NewAction newAction = new NewAction();
+    
+    public NewIssueAction(OsbPlugin plugin, Point p) {
+        super(tr("New issue"), plugin.getDialog());
         this.plugin = plugin;
+        this.p = p;
     }
 
     @Override
-    protected void doActionPerformed(ActionEvent e) throws IOException {
-        if(button.isSelected()) {
-            previousCursor = Main.map.mapView.getCursor();
-            Main.map.mapView.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-            Main.map.mapView.addMouseListener(this);
-        } else {
-            reset();
-        }
-    }
-
-    private void reset() {
-        Main.map.mapView.setCursor(previousCursor);
-        Main.map.mapView.removeMouseListener(this);
-        button.setSelected(false);
-    }
-
-    public void mouseClicked(MouseEvent e) {
-        addNewIssue(e);
-    }
-
-    public void mouseEntered(MouseEvent e) {}
-
-    public void mouseExited(MouseEvent e) {}
-
-    public void mousePressed(MouseEvent e) {
-        addNewIssue(e);
-    }
-
-    private void addNewIssue(MouseEvent e) {
+    protected void doActionPerformed(ActionEvent e) throws IOException, InterruptedException {
         List<String> history = new LinkedList<String>(Main.pref.getCollection(ConfigKeys.OSB_NEW_HISTORY, new LinkedList<String>()));
         HistoryChangedListener l = new HistoryChangedListener() {
             public void historyChanged(List<String> history) {
                 Main.pref.putCollection(ConfigKeys.OSB_NEW_HISTORY, history);
             }
         };
-        String result = TextInputDialog.showDialog(
+
+        result = TextInputDialog.showDialog(
                 Main.map,
                 tr("Create issue"),
                 tr("Describe the problem precisely"),
                 OsbPlugin.loadIcon("icon_error_add22.png"),
                 history, l);
-
-        if(result != null && result.length() > 0) {
-            try {
-                result = addMesgInfo(result);
-                Node n = newAction.execute(e.getPoint(), result);
-                plugin.getDataSet().addPrimitive(n);
-                if(Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
-                    plugin.updateGui();
-                } else {
-                    plugin.updateData();
-                }
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("An error occurred: {0}", new Object[] {result}),
-                        tr("Error"),
-                        JOptionPane.ERROR_MESSAGE);
-            }
+        
+        if(result == null) {
+            cancelled = true;
         }
-
-        reset();
     }
 
-    public void mouseReleased(MouseEvent e) {}
+    @Override
+    public void execute() throws IOException {
+        if (result.length() > 0) {
+            result = addMesgInfo(result);
+            Node n = newAction.execute(p, result);
+            plugin.getDataSet().addPrimitive(n);
+            if (Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
+                plugin.updateGui();
+            } else {
+                plugin.updateData();
+            }
+        }
+    }
+    
+    @Override
+    public String toString() {
+        return tr("Create: " + result);
+    }
+    
+    @Override
+    public OsbAction clone() {
+        NewIssueAction action = new NewIssueAction(plugin, p);
+        action.cancelled = cancelled;
+        action.p = p;
+        action.result = result;
+        return action;
+    }
 }

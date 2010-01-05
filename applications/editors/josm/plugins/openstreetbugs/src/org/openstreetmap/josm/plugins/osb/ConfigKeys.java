@@ -39,4 +39,5 @@ public class ConfigKeys {
     public static final String OSB_INCLUDE_DATE = "osb.include_date";
     public static final String OSB_NEW_HISTORY = "osb.new.history";
     public static final String OSB_NICKNAME = "osb.nickname";
+    public static final String OSB_API_OFFLINE = "osb.api.offline";
 }

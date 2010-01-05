@@ -37,10 +37,13 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
+import org.openstreetmap.josm.plugins.osb.gui.action.AddCommentAction;
+import org.openstreetmap.josm.plugins.osb.gui.action.CloseIssueAction;
+import org.openstreetmap.josm.plugins.osb.gui.action.NewIssueAction;
+import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
 
-public class OsbListCellRenderer implements ListCellRenderer {
+public class OsbQueueListCellRenderer implements ListCellRenderer {
 
     private Color background = Color.WHITE;
     private Color altBackground = new Color(250, 250, 220);
@@ -59,16 +62,17 @@ public class OsbListCellRenderer implements ListCellRenderer {
             label.setBackground(index % 2 == 0 ? background : altBackground);
         }
 
-        OsbListItem item = (OsbListItem) value;
-        Node n = item.getNode();
+        OsbAction action = (OsbAction) value;
         Icon icon = null;
-        if("0".equals(n.get("state"))) {
-            icon = OsbPlugin.loadIcon("icon_error16.png");
-        } else if("1".equals(n.get("state"))) {
+        if(action instanceof NewIssueAction) {
+            icon = OsbPlugin.loadIcon("icon_error_add16.png");
+        } else if(action instanceof AddCommentAction) {
+            icon = OsbPlugin.loadIcon("add_comment16.png");
+        } else if(action instanceof CloseIssueAction) {
             icon = OsbPlugin.loadIcon("icon_valid16.png");
         }
         label.setIcon(icon);
-        String text = n.get("note");
+        String text = action.toString();
         if(text.indexOf("<hr />") > 0) {
             text = text.substring(0, text.indexOf("<hr />"));
         }

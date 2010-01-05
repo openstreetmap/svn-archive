@@ -30,14 +30,17 @@ package org.openstreetmap.josm.plugins.osb.gui.action;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.widgets.HistoryChangedListener;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.api.EditAction;
+import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
 import org.openstreetmap.josm.plugins.osb.gui.dialogs.TextInputDialog;
 
 public class AddCommentAction extends OsbAction {
@@ -45,9 +48,13 @@ public class AddCommentAction extends OsbAction {
     private static final long serialVersionUID = 1L;
 
     private EditAction editAction = new EditAction();
+    
+    private String comment;
+    
+    private Node node;
 
-    public AddCommentAction() {
-        super(tr("Add a comment"));
+    public AddCommentAction(OsbDialog dialog) {
+        super(tr("Add a comment"), dialog);
     }
 
     @Override
@@ -58,16 +65,36 @@ public class AddCommentAction extends OsbAction {
                 Main.pref.putCollection(ConfigKeys.OSB_COMMENT_HISTORY, history);
             }
         };
-        String comment = TextInputDialog.showDialog(
+        node = dialog.getSelectedNode();
+        comment = TextInputDialog.showDialog(
                 Main.map,
                 tr("Add a comment"),
                 tr("Enter your comment"),
                 OsbPlugin.loadIcon("add_comment22.png"),
                 history, l);
-
-        if(comment != null) {
-            comment = addMesgInfo(comment);
-            editAction.execute(getSelectedNode(), comment);
+        
+        if(comment == null) {
+            cancelled = true;
         }
+    }
+
+    @Override
+    public void execute() throws IOException {
+        comment = addMesgInfo(comment);
+        editAction.execute(node, comment);
+    }
+    
+    @Override
+    public String toString() {
+        return tr("Comment: " + node.get("note") + " - " + comment);
+    }
+    
+    @Override
+    public AddCommentAction clone() {
+        AddCommentAction action = new AddCommentAction(dialog);
+        action.comment = comment;
+        action.cancelled = cancelled;
+        action.node = node;
+        return action;
     }
 }

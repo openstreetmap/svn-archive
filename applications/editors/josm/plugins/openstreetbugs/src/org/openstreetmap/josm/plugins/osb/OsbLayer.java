@@ -57,7 +57,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
+import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
 import org.openstreetmap.josm.plugins.osb.gui.action.PopupFactory;
 import org.openstreetmap.josm.tools.ColorHelper;
 
@@ -71,10 +71,13 @@ public class OsbLayer extends Layer implements MouseListener {
 
     private static ImageIcon iconError = OsbPlugin.loadIcon("icon_error16.png");
     private static ImageIcon iconValid = OsbPlugin.loadIcon("icon_valid16.png");
+    
+    private OsbDialog dialog;
 
-    public OsbLayer(DataSet dataSet, String name) {
+    public OsbLayer(DataSet dataSet, String name, OsbDialog dialog) {
         super(name);
         this.data = dataSet;
+        this.dialog = dialog;
         DataSet.selListeners.add(new SelectionChangedListener() {
             public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
                 selection = newSelection;
@@ -233,7 +236,7 @@ public class OsbLayer extends Layer implements MouseListener {
             if(Main.map.mapView.getActiveLayer() == this) {
                 Node n = getNearestNode(e.getPoint());
                 if(data.getNodes().contains(n)) {
-                    data.setSelected(n);
+                    dialog.setSelectedNode(n);
                 }
             }
         }
@@ -251,9 +254,8 @@ public class OsbLayer extends Layer implements MouseListener {
         if(e.isPopupTrigger()) {
             if(Main.map.mapView.getActiveLayer() == this) {
                 Node n = getNearestNode(e.getPoint());
-                OsbAction.setSelectedNode(n);
                 if(data.getNodes().contains(n)) {
-                    PopupFactory.createPopup(n).show(e.getComponent(), e.getX(), e.getY());
+                    PopupFactory.createPopup(n, dialog).show(e.getComponent(), e.getX(), e.getY());
                 }
             }
         }
@@ -262,4 +264,8 @@ public class OsbLayer extends Layer implements MouseListener {
     public void mouseEntered(MouseEvent e) {}
 
     public void mouseExited(MouseEvent e) {}
+    
+    public DataSet getDataSet() {
+        return data;
+    }
 }

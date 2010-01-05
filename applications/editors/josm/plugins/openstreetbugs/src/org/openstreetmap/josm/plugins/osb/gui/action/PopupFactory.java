@@ -34,47 +34,48 @@ import javax.swing.JPopupMenu;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
+import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
 
 public class PopupFactory {
 
     private static JPopupMenu issuePopup;
     private static JPopupMenu fixedPopup;
 
-    public static synchronized JPopupMenu createPopup(Node node) {
+    public static synchronized JPopupMenu createPopup(Node node, OsbDialog dialog) {
         if("0".equals(node.get("state"))) {
-            return getIssuePopup();
+            return getIssuePopup(dialog);
         } else if("1".equals(node.get("state"))) {
-            return getFixedPopup();
+            return getFixedPopup(dialog);
         } else {
             throw new RuntimeException(tr("Unknown issue state"));
         }
     }
 
-    private static JPopupMenu getIssuePopup() {
+    private static JPopupMenu getIssuePopup(OsbDialog dialog) {
         if(issuePopup == null) {
             issuePopup = new JPopupMenu();
             JMenuItem add = new JMenuItem();
-            add.setAction(new AddCommentAction());
+            add.setAction(new AddCommentAction(dialog));
             add.setIcon(OsbPlugin.loadIcon("add_comment16.png"));
             issuePopup.add(add);
             JMenuItem close = new JMenuItem();
-            close.setAction(new CloseIssueAction());
+            close.setAction(new CloseIssueAction(dialog));
             close.setIcon(OsbPlugin.loadIcon("icon_valid16.png"));
             issuePopup.add(close);
         }
         return issuePopup;
     }
 
-    private static JPopupMenu getFixedPopup() {
+    private static JPopupMenu getFixedPopup(OsbDialog dialog) {
         if(fixedPopup == null) {
             fixedPopup = new JPopupMenu();
             JMenuItem add = new JMenuItem();
-            AddCommentAction aca = new AddCommentAction();
+            AddCommentAction aca = new AddCommentAction(dialog);
             aca.setEnabled(false);
             add.setAction(aca);
             add.setIcon(OsbPlugin.loadIcon("add_comment16.png"));
             JMenuItem close = new JMenuItem();
-            CloseIssueAction cia = new CloseIssueAction();
+            CloseIssueAction cia = new CloseIssueAction(dialog);
             cia.setEnabled(false);
             close.setAction(cia);
             close.setIcon(OsbPlugin.loadIcon("icon_valid16.png"));

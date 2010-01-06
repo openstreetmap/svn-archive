@@ -27,8 +27,8 @@
 <project name="wmsplugin" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="Made build file more robust, mainly in case svn is missing on the build machine" />
-	<property name="plugin.main.version" value="2450" />
+	<property name="commit.message" value="Update to JOSM 2748" />
+	<property name="plugin.main.version" value="2748" />
 
 
 	<property name="josm" location="../../core/dist/josm-custom.jar" />

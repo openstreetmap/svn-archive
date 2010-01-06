@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 
 public class WMSPreferenceEditor implements PreferenceSetting {
@@ -41,7 +42,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
     JSpinner spinEast;
     JSpinner spinNorth;
     
-    public void addGui(final PreferenceDialog gui) {
+    public void addGui(final PreferenceTabbedPane gui) {
         JPanel p = gui.createPreferenceTab("wms", tr("WMS Plugin Preferences"), tr("Modify list of WMS servers displayed in the WMS plugin menu"));
 
         model = new DefaultTableModel(new String[]{tr("Menu Name"), tr("WMS URL")}, 0);

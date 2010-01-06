@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -29,7 +30,7 @@ public class RemoteControlPreferences implements PreferenceSetting
     private JCheckBox permissionChangeViewport = new JCheckBox(tr("change the viewport"));
     private JCheckBox alwaysAskUserConfirm = new JCheckBox(tr("confirm all Remote Control actions manually"));
 
-    public void addGui(final PreferenceDialog gui)
+    public void addGui(final PreferenceTabbedPane gui)
     {
         String description = tr("A plugin that allows JOSM to be controlled from other applications.");
         JPanel remote = gui.createPreferenceTab("remotecontrol.gif", tr("Remote Control"), tr("Settings for the Remote Control plugin."));

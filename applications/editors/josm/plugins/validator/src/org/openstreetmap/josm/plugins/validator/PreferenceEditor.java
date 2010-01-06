@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.validator.util.Util;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -64,7 +65,7 @@ public class PreferenceEditor implements PreferenceSetting
         this.plugin = plugin;
     }
 
-    public void addGui(PreferenceDialog gui)
+    public void addGui(PreferenceTabbedPane gui)
     {
         JPanel testPanel = new JPanel(new GridBagLayout());
         testPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));

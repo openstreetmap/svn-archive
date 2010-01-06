@@ -10,6 +10,7 @@ import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -67,7 +68,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     static final int DEFAULT_CROSSPIECES = 0;
     
-    public void addGui(final PreferenceDialog gui) {
+    public void addGui(final PreferenceTabbedPane gui) {
 
         String description = tr("A special handler of the French cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
                 + "Please read the Terms and Conditions of Use here (in French): <br>"

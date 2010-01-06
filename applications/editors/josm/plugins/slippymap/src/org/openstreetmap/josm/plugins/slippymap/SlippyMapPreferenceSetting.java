@@ -19,6 +19,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.*;
 
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -39,7 +40,7 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
     private JSpinner minZoomLvl = new JSpinner();
     private JSlider fadeBackground = new JSlider(0, 100);
     
-    public void addGui(PreferenceDialog gui)
+    public void addGui(PreferenceTabbedPane gui)
     {
         minZoomLvl = new JSpinner(new SpinnerNumberModel(SlippyMapPreferences.DEFAULT_MIN_ZOOM, SlippyMapPreferences.MIN_ZOOM, SlippyMapPreferences.MAX_ZOOM, 1));
         maxZoomLvl = new JSpinner(new SpinnerNumberModel(SlippyMapPreferences.DEFAULT_MAX_ZOOM, SlippyMapPreferences.MIN_ZOOM, SlippyMapPreferences.MAX_ZOOM, 1));

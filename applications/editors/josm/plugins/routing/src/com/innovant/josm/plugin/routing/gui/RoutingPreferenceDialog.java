@@ -56,6 +56,7 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 
 import com.innovant.josm.jrt.osm.OsmWayTypes;
@@ -79,7 +80,7 @@ public class RoutingPreferenceDialog implements PreferenceSetting {
         readPreferences();
     }
 
-    public void addGui(final PreferenceDialog gui) {
+    public void addGui(final PreferenceTabbedPane gui) {
 
         JPanel principal = gui.createPreferenceTab("routing",
                 tr("Routing Plugin Preferences"), tr("Configure routing preferences."));
@@ -186,7 +187,7 @@ public class RoutingPreferenceDialog implements PreferenceSetting {
         return false;
     }
 
-    private void edit(final PreferenceDialog gui, final JTable list) {
+    private void edit(final PreferenceTabbedPane gui, final JTable list) {
         if (list.getSelectedRowCount() != 1) {
             JOptionPane.showMessageDialog(gui,
                     tr("Please select the row to edit."));

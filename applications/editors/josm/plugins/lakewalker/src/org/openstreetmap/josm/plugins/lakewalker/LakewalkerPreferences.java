@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 
@@ -65,7 +66,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
     protected StringConfigurer sourceConfig = new StringConfigurer();
     protected JLabel sourceLabel = new JLabel(tr("Source text"));
 
-    public void addGui(PreferenceDialog gui) {
+    public void addGui(PreferenceTabbedPane gui) {
         maxSegsConfig.setToolTipText(tr("Maximum number of segments allowed in each generated way. Default 250."));
         maxNodesConfig.setToolTipText(tr("Maximum number of nodes to generate before bailing out (before simplifying lines). Default 50000."));
         thresholdConfig.setToolTipText(tr("Maximum gray value to accept as water (based on Landsat IR-1 data). Can be in the range 0-255. Default 90."));

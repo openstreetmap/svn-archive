@@ -33,6 +33,7 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.tools.GBC;
@@ -126,7 +127,7 @@ public class OsmarenderPlugin extends Plugin {
     @Override public PreferenceSetting getPreferenceSetting() {
         return new PreferenceSetting(){
             private JTextField firefox = new JTextField(10);
-            public void addGui(PreferenceDialog gui) {
+            public void addGui(PreferenceTabbedPane gui) {
                 final JPanel panel = new JPanel(new GridBagLayout());
                 panel.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
 

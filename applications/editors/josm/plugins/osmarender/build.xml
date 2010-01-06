@@ -33,8 +33,8 @@
 	<property name="xslt" location="./xslt" />
 
 
-	<property name="commit.message" value="Removed dependency to perl, made build.xml more robust" />
-	<property name="plugin.main.version" value="2565" />
+	<property name="commit.message" value="Update to JOSM r2748" />
+	<property name="plugin.main.version" value="2748" />
 
 	<target name="init">
 		<mkdir dir="${plugin.build.dir}" />
@@ -62,14 +62,14 @@
 		</jar>
 	</target>
 	<target name="revision">
-                <exec append="false" output="REVISION" executable="perl" failifexecutionfails="false">
-                        <env key="LANG" value="C"/>
-                        <arg value="../getrevision.pl"/>
-                        <arg value="xslt"/>
-                        <arg value="stylesheets"/>
-                        <arg value="." />
-                </exec>
-           	<exec append="false" output="REVISION" executable="svn" failifexecutionfails="true" failonerror="true">
+		<exec append="false" output="REVISION" executable="perl" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="../getrevision.pl"/>
+			<arg value="xslt"/>
+			<arg value="stylesheets"/>
+			<arg value="." />
+		</exec>
+		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="true" failonerror="true">
 			<env key="LANG" value="C" />
 			<arg value="info" />
 			<arg value="--xml" />
@@ -92,53 +92,61 @@
 		<copy file="${plugin.jar}" todir="${josm.plugins.dir}" />
 	</target>
 
-	<!-- ************************** Publishing the plugin *********************************** -->
 	<!--
-	** extracts the JOSM release for the JOSM version in ../core and saves it in the 
-	** property ${coreversion.info.entry.revision}
-	**
-	-->
+		 ************************** Publishing the plugin *********************************** 
+		-->
+	<!--
+		** extracts the JOSM release for the JOSM version in ../core and saves it in the 
+		** property ${coreversion.info.entry.revision}
+		**
+		-->
 	<target name="core-info">
-		<exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="true" failonerror="true">
-			<env key="LANG" value="C" />
-			<arg value="info" />
-			<arg value="--xml" />
-			<arg value="../../core" />
+		<exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="info"/>
+			<arg value="--xml"/>
+			<arg value="../../core"/>
 		</exec>
-		<xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true" />
+		<xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true"/>
 		<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
 		<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
 		<delete file="core.info.xml" />
 	</target>
 
-	<!-- ** commits the source tree for this plugin ** -->
+	<!--
+		** commits the source tree for this plugin
+		-->
 	<target name="commit-current">
 		<echo>Commiting the plugin source with message '${commit.message}' ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="true" failonerror="true">
-			<env key="LANG" value="C" />
-			<arg value="commit" />
-			<arg value="-m '${commit.message}'" />
-			<arg value="." />
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="commit"/>
+			<arg value="-m '${commit.message}'"/>
+			<arg value="."/>
 		</exec>
 	</target>
 
-	<!-- ** updates (svn up) the source tree for this plugin -->
+	<!--
+		** updates (svn up) the source tree for this plugin
+		-->
 	<target name="update-current">
 		<echo>Updating plugin source ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="true" failonerror="true">
-			<env key="LANG" value="C" />
-			<arg value="up" />
-			<arg value="." />
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="up"/>
+			<arg value="."/>
 		</exec>
 		<echo>Updating ${plugin.jar} ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="true" failonerror="true">
-			<env key="LANG" value="C" />
-			<arg value="up" />
-			<arg value="../dist/${plugin.jar}" />
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="up"/>
+			<arg value="../dist/${plugin.jar}"/>
 		</exec>
 	</target>
 
-	<!-- ** commits the plugin.jar  -->
+	<!--
+		** commits the plugin.jar 
+		-->
 	<target name="commit-dist">
 		<echo>
 	***** Properties of published ${plugin.jar} *****
@@ -150,28 +158,36 @@
 						
 	Now commiting ${plugin.jar} ...
 	</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="true" failonerror="true">
-			<env key="LANG" value="C" />
-			<arg value="-m '${commit.message}'" />
-			<arg value="commit" />
-			<arg value="${plugin.jar}" />
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="-m '${commit.message}'"/>
+			<arg value="commit"/>
+			<arg value="${plugin.jar}"/>
 		</exec>
 	</target>
 
 	<!-- ** make sure svn is present as a command line tool ** -->
 	<target name="ensure-svn-present">
-		<exec append="true" output="svn.log" executable="svn" failonerror="false" resultproperty="svn.exit.code">
-			<env key="LANG" value="C"  />
-			<arg value="--version"/>
+		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
+			<env key="LANG" value="C" />
+			<arg value="--version" />
 		</exec>
-		<fail message="Fatal: command 'svn' not found. Please make sure svn is installed on your system.">
+		<fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
+			<!-- return code not set at all? Most likely svn isn't installed -->
+			<condition>
+				<not>
+					<isset property="svn.exit.code" />
+				</not>
+			</condition>
+		</fail>
+		<fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
+			<!-- error code from SVN? Most likely svn is not what we are looking on this system -->
 			<condition>
 				<isfailure code="${svn.exit.code}" />
 			</condition>
 		</fail>
 	</target>
 
-	<!-- ** checkin source, build the plugin from scratch and finally checkin the plugin ** -->
 	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
 	</target>
 </project>

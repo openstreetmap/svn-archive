@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.graphview.plugin.dialogs.AccessParameterDialog.BookmarkAction;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.GraphViewPreferenceDefaults;
 import org.openstreetmap.josm.plugins.graphview.plugin.preferences.GraphViewPreferences;
@@ -47,7 +48,7 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
 
 	private JCheckBox separateDirectionsCheckBox;
 
-	public void addGui(PreferenceDialog gui) {
+	public void addGui(PreferenceTabbedPane gui) {
 
 		readPreferences();
 

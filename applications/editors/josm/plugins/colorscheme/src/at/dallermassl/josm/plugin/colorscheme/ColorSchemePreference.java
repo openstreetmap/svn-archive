@@ -29,6 +29,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.ColorPreference;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 
 public class ColorSchemePreference implements PreferenceSetting {
@@ -50,7 +51,7 @@ public class ColorSchemePreference implements PreferenceSetting {
     /* (non-Javadoc)
      * @see org.openstreetmap.josm.gui.preferences.PreferenceSetting#addGui(org.openstreetmap.josm.gui.preferences.PreferenceDialog)
      */
-    public void addGui(final PreferenceDialog gui) {
+    public void addGui(final PreferenceTabbedPane gui) {
         Map<String, String> colorMap = Main.pref.getAllPrefix(PREF_KEY_COLOR_PREFIX);
         colorKeys = new ArrayList<String>(colorMap.keySet());
         Collections.sort(colorKeys);
@@ -176,7 +177,7 @@ public class ColorSchemePreference implements PreferenceSetting {
         return colorMap;
     }
 
-    public ColorPreference getColorPreference(PreferenceDialog gui) {
+    public ColorPreference getColorPreference(PreferenceTabbedPane gui) {
         if(colorPreference == null) {
             for(PreferenceSetting setting : gui.getSettings()) {
                 if(setting instanceof ColorPreference) {

@@ -9,9 +9,10 @@
   <property name="wms.srcfile"       value="${plugin.dir}/wmsplugin/sources.cfg"/>
   <property name="surveyor.srcfile"  value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
   <property name="i18n.build.dir"    value="build"/>
-  <property name="i18n.install.dir"  value="${josm.build.dir}/lib"/>
+  <property name="i18n.install.dir"  value="${josm.build.dir}/data"/>
+  <property name="i18n.oldinstall.dir" value="${josm.build.dir}/lib"/>
   <property name="i18n.name"         value="josm-translation"/>
-  <property name="i18n.jar"          value="${i18n.install.dir}/${i18n.name}.jar"/>
+  <property name="i18n.jar"          value="${i18n.oldinstall.dir}/${i18n.name}.jar"/>
 
   <property name="ant.build.javac.target" value="1.5"/>
 
@@ -58,10 +59,18 @@
     </gettext-extract>
   </target>
 
-  <target name="build" depends="po/josm.pot,init.gettext">
-    <copy file="i18n.properties" todir="build/org/openstreetmap/josm" />
-
+  <target name="prebuild" depends="po/josm.pot,init.gettext">
     <gettext-merge keysFile="josm.pot" poDirectory="po"/>
+  </target>
+
+  <target name="build" depends="prebuild">
+    <exec executable="perl">
+      <arg line="i18n.pl ${i18n.install.dir}/ po/*.po"/>
+    </exec>
+  </target>
+
+  <target name="buildold" depends="prebuild">
+    <copy file="i18n.properties" todir="build/org/openstreetmap/josm" />
 
     <!--<gettext-dist targetBundle="org.openstreetmap.josm.i18n.Translation"
                   poDirectory="po" outputDirectory="build"/>-->

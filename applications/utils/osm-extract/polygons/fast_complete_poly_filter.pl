@@ -38,23 +38,24 @@ if (!-r $polyfile)
     exit;
 }
 
-if (!-w $outfile)
+if (!open(X, ">$outfile"))
 {
     print "cannot open $outfile for writing\n";
     exit;
 }
+close(X);
 
 open (POLY, $polyfile);
 
 my $bottom = 90;
 my $top = -90;
 my $left = 180;
-my $right = 180;
+my $right = -180;
 
 while($line = <POLY>)
 {
     my ($dummy, $x, $y) = split(/\s+/, $line);
-    if ($x =~ /^[0-9-.eE]+$/ && $y =~ /^[0-9-.eE]+$/)
+    if ($x =~ /^[0-9-+.eE]+$/ && $y =~ /^[0-9-+.eE]+$/)
     {
         if ($x<$left) { $left=$x } elsif ($x>$right) { $right=$x; }
         if ($y<$bottom) { $bottom=$y } elsif ($y>$top) { $top=$y; }

@@ -34,7 +34,7 @@ import org.openstreetmap.josm.tools.JVector;
 /**
  * Duplicate an existing set of ordered ways, offset by a specified distance.
  *
- * This basic version just creates a completely seperate way and makes no
+ * This basic version just creates a completely separate way and makes no
  * attempt to attach it to any other ways.
  *
  * Planned Improvements:

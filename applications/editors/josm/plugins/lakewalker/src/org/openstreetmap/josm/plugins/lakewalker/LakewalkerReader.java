@@ -36,7 +36,7 @@ public class LakewalkerReader {
         *
         * m text - Status message l name [size] - Access landsat image name. size
         * is returned if it needs to be downloaded. e text - Error message s nnn -
-        * Start node data stream, nnn seperate tracings to follow t nnn - Start
+        * Start node data stream, nnn separate tracings to follow t nnn - Start
         * tracing, nnn nodes to follow x [o] - End of Tracing. o indicates do not
         * connect last node to first n lat lon [o] - Node. o indicates it is an
         * open node (not connected to the previous node) z - End of data stream

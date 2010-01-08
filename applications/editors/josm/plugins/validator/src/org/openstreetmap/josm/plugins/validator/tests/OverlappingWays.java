@@ -93,7 +93,7 @@ public class OverlappingWays extends Test
                 }
                 /* These ways not seen before
                  * If two or more of the overlapping ways are
-                 * highways or railways mark a seperate error
+                 * highways or railways mark a separate error
                  */
                 if ((highlight = ways_seen.get(current_ways)) == null)
                 {

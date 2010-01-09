@@ -56,6 +56,8 @@
 # Version 4.1
 # - omit contruction sites
 #
+# Version 4.2
+# omit noexit = yes
 #
 
 use strict ;
@@ -67,7 +69,7 @@ use Time::localtime;
 
 my $program = "checkconn.pl" ;
 my $usage = $program . " def.xml file.osm out.htm out.gpx" ;
-my $version = "4.1" ;
+my $version = "4.2" ;
 
 my $wayId ; my $wayId2 ;
 my $wayUser ; my @wayNodes ; my @wayTags ;
@@ -107,6 +109,7 @@ my %cat1Connected ;
 my @cat1Nodes ; my @cat12Nodes ;
 my %nodeNumber = () ;
 my %construction = () ;
+my %noexit = () ;
 
 my @neededNodes ;
 my %lon ; my %lat ;
@@ -407,7 +410,7 @@ openOsmFile ($osmName) ;
 
 ($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode () ;
 if ($nodeId != -1) {
-	#@nodeTags = @$aRef1 ;
+	@nodeTags = @$aRef1 ;
 }
 
 while ($nodeId != -1) {
@@ -415,12 +418,21 @@ while ($nodeId != -1) {
 
 	$needed = binSearch ($nodeId, \@neededNodes ) ;
 
-	if ($needed >= 0) { $lon{$nodeId} = $nodeLon ; $lat{$nodeId} = $nodeLat }
+	if ($needed >= 0) { 
+		$lon{$nodeId} = $nodeLon ; 
+		$lat{$nodeId} = $nodeLat ;
+
+		# check for noexit 
+		foreach my $tag (@nodeTags) {
+			if ($tag eq "noexit:yes") { $noexit{$nodeId} = 1 ; }
+		}
+
+	}
 
 	# next
 	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode () ;
 	if ($nodeId != -1) {
-		#@nodeTags = @$aRef1 ;
+		@nodeTags = @$aRef1 ;
 	}
 }
 
@@ -494,40 +506,45 @@ foreach $wayId (@cat1) {
 			print "WARNING: $wayId ignored because node count of osm file not equal to API node count\n" ;
 		}
 		if ($APIok == 1) {
-			$i++ ;
 
-			my $status ;
-			if ($wayStat{$wayId} == 1) { $status = "start" ; } 
-			if ($wayStat{$wayId} == 2) { $status = "end" ; } 
-			if ($wayStat{$wayId} == 3) { $status = "start/end" ; } 
+			my $status = "" ;
+			if ( ($wayStat{$wayId} == 1) and (!defined $noexit{$wayStart{$wayId}}) ) { $status = "start" ; } 
+			if ( ($wayStat{$wayId} == 2) and (!defined $noexit{$wayEnd{$wayId}}) ) { $status = "end" ; } 
 
-			# HTML
-			print $html "<tr>\n" ;
-			print $html "<td>", $i , "</td>\n" ;
-			print $html "<td>", historyLink ("way", $wayId) , "</td>\n" ;
-			print $html "<td>", $status , "</td>\n" ;
-	
-			print $html "<td>start ", osmLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16) , "<br>\n" ;
-			print $html "start ", osbLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16) , "</td>\n" ;
-			print $html "<td>start ", josmLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 0.01, $wayId), "</td>\n" ;
-	
-			print $html "<td>end ", osmLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16) , "<br>\n" ;
-			print $html "end ", osbLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16) , "</td>\n" ;
-			print $html "<td>end ", josmLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 0.01, $wayId), "</td>\n" ;
-	
-			print $html "<td>", picLinkOsmarender ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16), "</td>\n" ;
-			print $html "<td>", picLinkOsmarender ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16), "</td>\n" ;
-			print $html "</tr>\n" ;
-	
-			# GPX
-			if (($wayStat{$wayId} == 1) or ($wayStat{$wayId} == 3) ) { 
-				my ($text) = "ChkCon - " . $defName . " - way start unconnected" ;
-				printGPXWaypoint ($gpx, $lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, $text) ;
-			} 
-			if (($wayStat{$wayId} == 2) or ($wayStat{$wayId} == 3) ) { 
-				my ($text) = "ChkCon - " . $defName . " - way end unconnected" ;
-				printGPXWaypoint ($gpx, $lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, $text) ;
-			} 
+			if 	( ($wayStat{$wayId} == 3) and 
+				( (!defined $noexit{$wayStart{$wayId}}) and (!defined $noexit{$wayEnd{$wayId}}) ) 
+				) { $status = "start/end" ; } 
+
+			if ($status ne "") {
+				# HTML
+				$i++ ;
+				print $html "<tr>\n" ;
+				print $html "<td>", $i , "</td>\n" ;
+				print $html "<td>", historyLink ("way", $wayId) , "</td>\n" ;
+				print $html "<td>", $status , "</td>\n" ;
+		
+				print $html "<td>start ", osmLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16) , "<br>\n" ;
+				print $html "start ", osbLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16) , "</td>\n" ;
+				print $html "<td>start ", josmLink ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 0.01, $wayId), "</td>\n" ;
+		
+				print $html "<td>end ", osmLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16) , "<br>\n" ;
+				print $html "end ", osbLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16) , "</td>\n" ;
+				print $html "<td>end ", josmLink ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 0.01, $wayId), "</td>\n" ;
+		
+				print $html "<td>", picLinkOsmarender ($lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, 16), "</td>\n" ;
+				print $html "<td>", picLinkOsmarender ($lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, 16), "</td>\n" ;
+				print $html "</tr>\n" ;
+		
+				# GPX
+				if (($wayStat{$wayId} == 1) or ($wayStat{$wayId} == 3) ) { 
+					my ($text) = "ChkCon - " . $defName . " - way start unconnected" ;
+					printGPXWaypoint ($gpx, $lon{$wayStart{$wayId}}, $lat{$wayStart{$wayId}}, $text) ;
+				} 
+				if (($wayStat{$wayId} == 2) or ($wayStat{$wayId} == 3) ) { 
+					my ($text) = "ChkCon - " . $defName . " - way end unconnected" ;
+					printGPXWaypoint ($gpx, $lon{$wayEnd{$wayId}}, $lat{$wayEnd{$wayId}}, $text) ;
+				} 
+			}
 		}
 	}
 }

@@ -7,19 +7,20 @@
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorisationUI.java:381
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:306
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetParser.java:215
+#: ../core/src/org/openstreetmap/josm/io/OsmServerUserInfoReader.java:125
 msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-07 10:57+0100\n"
-"PO-Revision-Date: 2010-01-01 15:00+0000\n"
+"POT-Creation-Date: 2010-01-09 13:49+0100\n"
+"PO-Revision-Date: 2010-01-08 17:14+0000\n"
 "Last-Translator: Juan Sebastián Marulanda <juanchito2006@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-01-07 08:49+0000\n"
+"X-Launchpad-Export-Date: 2010-01-09 12:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../core/src/org/openstreetmap/josm/Main.java:208
@@ -62,8 +63,8 @@ msgstr "Ignorando URL mal formado: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:259
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:274
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:280
-#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:426
-#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:432
+#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:450
+#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:456
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:110
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:129
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:161
@@ -71,7 +72,7 @@ msgstr "Ignorando URL mal formado: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:126
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:357
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:252
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:285
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:286
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:522
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:575
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:638
@@ -119,7 +120,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/Main.java:506
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:94
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:132
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:236
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:237
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:453
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:464
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:487
@@ -160,7 +161,6 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:343
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:70
 #: ../core/src/org/openstreetmap/josm/plugins/PluginSelection.java:415
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:49
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:458
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:679
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:692
@@ -322,7 +322,7 @@ msgstr "Haga clic para ocntinuar y abrir {0} navegadores"
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:97
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:113
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:207
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:154
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:155
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:44
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:48
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:363
@@ -549,8 +549,8 @@ msgstr "Por favor, selecciona al menos cuatro nodos."
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:140
 #: ../core/src/org/openstreetmap/josm/actions/AlignInLineAction.java:67
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:47
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:169
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:55
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:193
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:71
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:245
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:67
@@ -591,44 +591,54 @@ msgstr "Mover los nodos seleccionados a una línea."
 msgid "Please select at least three nodes."
 msgstr "Por favor seleccione como mínimo tres nodos."
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:30
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:32
 msgid "data"
 msgstr "datos"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:30
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:33
 msgid "layer"
 msgstr "capa"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:30
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:34
 msgid "selection"
 msgstr "selección"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:30
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:35
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:61
 msgid "conflict"
 msgstr "conflicto"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:30
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:36
 msgid "download"
 msgstr "Descarga"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:46
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:168
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:37
+#, fuzzy
+msgid "previous"
+msgstr "Anterior"
+
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:38
+#, fuzzy
+msgid "next"
+msgstr "Texto"
+
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:54
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:192
 msgid "Nothing selected to zoom to."
 msgstr "Nada seleccionado a lo que hacer zoom"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:88
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:89
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:102
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:103
 #, java-format
 msgid "Zoom to {0}"
 msgstr "Zoom a {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:88
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:102
 #, java-format
 msgid "Zoom the view to {0}."
 msgstr "Zoom de la vista a {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:89
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:103
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:17
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:23
 #: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:20
@@ -636,13 +646,13 @@ msgstr "Zoom de la vista a {0}"
 msgid "View: {0}"
 msgstr "Vista: {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:168
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:192
 msgid "No conflicts to zoom to"
 msgstr "No existen conflictos a los que hacer zoom"
 
 #: ../core/src/org/openstreetmap/josm/actions/ChangesetManagerToggleAction.java:32
 msgid "Changeset Manager"
-msgstr ""
+msgstr "Gestor de conjuntos de cambios"
 
 #: ../core/src/org/openstreetmap/josm/actions/ChangesetManagerToggleAction.java:34
 #: ../core/src/org/openstreetmap/josm/actions/ChangesetManagerToggleAction.java:37
@@ -673,12 +683,12 @@ msgid "File: {0}"
 msgstr "Archivo: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/CloseChangesetAction.java:57
-#: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:65
+#: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:82
 msgid "There are no open changesets"
 msgstr "No hay conjuntos de cambios abiertos"
 
 #: ../core/src/org/openstreetmap/josm/actions/CloseChangesetAction.java:58
-#: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:66
+#: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:83
 msgid "No open changesets"
 msgstr "Ningún conjunto de cambios abiertos"
 
@@ -988,7 +998,7 @@ msgstr "Nada que exportar. Obtén algunos datos primero"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/MultiValueResolutionDecision.java:249
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/MultiValueResolutionDecision.java:268
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictDecision.java:21
-#: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolverModel.java:114
+#: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolverModel.java:124
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:314
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:361
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:426
@@ -1359,20 +1369,20 @@ msgstr "Abriendo archivos"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:118
 msgid "<html>Cannot open directory.<br>Please select a file!"
-msgstr ""
+msgstr "<html>No se pudo abrir la carpeta.<br>¡Seleccione un archivo!"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:119
 msgid "Open file"
-msgstr ""
+msgstr "Abrir archivo"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:159
 msgid "Opening 1 file..."
-msgstr ""
+msgstr "Abriendo 1 archivo..."
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:161
 #, java-format
 msgid "Opening {0} files..."
-msgstr ""
+msgstr "Abriendo {0} archivos..."
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:169
 #, java-format
@@ -1783,7 +1793,7 @@ msgstr ""
 "No se pueden dividir la vía por los nodos seleccionados. (Pista: seleccione "
 "nodos de la mitad de la vía)."
 
-#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:425
+#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:449
 msgid ""
 "<html>A role based relation membership was copied to all new ways.<br>You "
 "should verify this and correct it when necessary.</html>"
@@ -1791,7 +1801,7 @@ msgstr ""
 "<html>Una parte basada en la relación de miembros fue copiada a todas las "
 "rutas.<br>Debería verificar esto y corregirlo cuando sea necesario.</html>"
 
-#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:431
+#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:455
 msgid ""
 "<html>A relation membership was copied to all new ways.<br>You should verify "
 "this and correct it when necessary.</html>"
@@ -1799,7 +1809,7 @@ msgstr ""
 "<html>Una relación de miembros fue copiada a todas las rutas.<br>Deberería "
 "verificar y corregirlo cuando sea necesareo.</html>"
 
-#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:436
+#: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:460
 #, java-format
 msgid "Split way {0} into {1} parts"
 msgstr "Dividir la vía {0} en {1} partes"
@@ -1943,7 +1953,7 @@ msgstr "Descargar datos"
 #: ../core/src/org/openstreetmap/josm/actions/UpdateModifiedAction.java:23
 #: ../core/src/org/openstreetmap/josm/actions/UpdateModifiedAction.java:27
 msgid "Update modified"
-msgstr ""
+msgstr "Actualización modificada"
 
 #: ../core/src/org/openstreetmap/josm/actions/UpdateModifiedAction.java:25
 msgid ""
@@ -2610,15 +2620,22 @@ msgstr ""
 "lógico O (disyunción)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:140
-msgid "Use <b>\"</b> to quote operators (e.g. if key contains :)"
+#, fuzzy
+msgid "Use <b>\"</b> to quote operators (e.g. if key contains <b>:</b>)"
 msgstr ""
 "Usar <b>\"</b> para delimitar operadores (por ejemplo si la clave contiene :)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:141
+msgid ""
+"Within quoted strings the <b>\"</b> and <b>\\</b> characters need to be "
+"escaped by a preceding <b>\\</b> (e.g. <b>\\\"</b> and <b>\\\\</b>)."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:142
 msgid "Use <b>(</b> and <b>)</b> to group expressions"
 msgstr "Usar <b>(</b> y <b>)</b> para agrupar expresiones"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:151
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:152
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:52
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:53
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:53
@@ -2626,53 +2643,53 @@ msgstr "Usar <b>(</b> y <b>)</b> para agrupar expresiones"
 msgid "Filter"
 msgstr "Filtrar"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:151
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:152
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:137
 msgid "Search"
 msgstr "Buscar"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:153
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:154
 msgid "Submit filter"
 msgstr "Enviar filtro"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:153
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:154
 msgid "Start Search"
 msgstr "Iniciar búsqueda"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:273
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:274
 #, java-format
 msgid "No match found for ''{0}''"
 msgstr "No se encontraron coincidencias para \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:275
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:276
 #, java-format
 msgid "Nothing added to selection by searching for ''{0}''"
 msgstr "No se ha añadido nada a la selección al buscar \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:277
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:278
 #, java-format
 msgid "Nothing removed from selection by searching for ''{0}''"
 msgstr "No se ha quitado nada de la selección al buscar \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:279
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:280
 #, java-format
 msgid "Nothing found in selection by searching for ''{0}''"
 msgstr "No se ha encontrado nada en la selección buscando por ''{0}''"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:289
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:290
 #, java-format
 msgid "Found {0} matches"
 msgstr "Se han encontrado {0} coincidencias"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:317
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:318
 msgid "CS"
 msgstr "CS"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:317
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:318
 msgid "CI"
 msgstr "CI"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:318
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:319
 msgid "RX"
 msgstr "RX"
 
@@ -2717,7 +2734,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:636
 msgid "Missing right parenthesis"
-msgstr ""
+msgstr "Falta el paréntesis derecho"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:639
 msgid "Missing operator for NOT"
@@ -2962,11 +2979,8 @@ msgid "Parameter ''{0}'' must not be empty"
 msgstr "El párametro ''{0}'' no debe estar vacío"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:59
-msgid "At least one object to delete required, got empty collection"
-msgstr ""
-
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:105
-msgid "At least one object to delete requird, got empty collection"
+msgid "At least one object to delete required, got empty collection"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:177
@@ -3642,116 +3656,104 @@ msgstr "Vía de tipo área sin cerrar"
 msgid "multipolygon way ''{0}'' is not closed."
 msgstr "La vía multipoligonal ''{0}'' no está cerrada."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:359
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:674
-#, java-format
-msgid "Deleted member ''{0}'' in relation."
-msgstr "Miembro ''{0}'' borrado en la relación."
-
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:370
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:682
-#, java-format
-msgid "Way ''{0}'' with less than two points."
-msgstr "Vía ''{0}''  con menos de dos puntos."
-
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:375
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:371
 msgid "More than one \"from\" way found."
 msgstr "Se ha encontrado más de una vía \"desde\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:381
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:377
 msgid "More than one \"to\" way found."
 msgstr "Se ha encontrado más de una vía \"a\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:387
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:401
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:383
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:397
 msgid "More than one \"via\" found."
 msgstr "Se ha encontrado más de un elemento \"vía\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:392
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:406
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:388
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:402
 #, java-format
 msgid "Unknown role ''{0}''."
 msgstr "Función ''{0}'' desconocida."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:409
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:405
 #, java-format
 msgid "Unknown member type for ''{0}''."
 msgstr "Tipo de miembro \"{0}\" desconocido."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:415
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:411
 msgid "No \"from\" way found."
 msgstr "No se ha encontrado ninguna vía \"desde\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:419
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:415
 msgid "No \"to\" way found."
 msgstr "No se ha encontrado ninguna vía \"a\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:423
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:419
 msgid "No \"via\" node or way found."
 msgstr "No se ha encontrado ningún nodo o vía con el rol \"vía\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:432
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:428
 msgid "The \"from\" way doesn't start or end at a \"via\" node."
 msgstr "La vía \"desde\" no comienza o termina en un nodo \"vía\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:436
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:432
 msgid "The \"to\" way doesn't start or end at a \"via\" node."
 msgstr "La vía \"a\" no comienza o termina en un nodo \"vía\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:464
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:460
 msgid "The \"from\" way doesn't start or end at the \"via\" way."
 msgstr "La vía \"desde\" no comienza o termina en la vía con rol \"vía\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:468
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:464
 msgid "The \"to\" way doesn't start or end at the \"via\" way."
 msgstr "La vía \"a\" no comienza o termina en la vía con rol \"vía\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:562
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:558
 #, java-format
 msgid "Style for restriction {0} not found."
 msgstr "No se ha encontrado el estilo para la restricción {0}."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:643
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:639
 #, java-format
 msgid "Intersection between ways ''{0}'' and ''{1}''."
 msgstr "Intersección entre las vías ''{0}'' y ''{1}''."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:655
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:651
 #, java-format
 msgid "Inner way ''{0}'' is outside."
 msgstr "La vía interior ''{0}'' se encuentra en la parte de fuera."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:690
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:683
 #, java-format
 msgid "No useful role ''{0}'' for Way ''{1}''."
 msgstr "La función \"{0}\" no es útil para el tramo \"{1}\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:703
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:696
 #, java-format
 msgid "Non-Way ''{0}'' in multipolygon."
 msgstr "La no-vía ''{0}'' en multipolígono"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:749
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:742
 #, java-format
 msgid "No outer way for multipolygon ''{0}''."
 msgstr "Ninguna vía exterior en el multipolígono ''{0}''."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:809
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:802
 #, java-format
 msgid "Style for inner way ''{0}'' equals multipolygon."
 msgstr "El estilo de la vía interior ''{0}'' es igual al del multipolígono"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:837
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:830
 #, java-format
 msgid "Style for outer way ''{0}'' mismatches."
 msgstr "El estilo de la vía exterior ''{0}'' no coincide."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:1035
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:1028
 #, java-format
 msgid "Error: {0}"
 msgstr "Error: {0}"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:1035
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:1028
 #, java-format
 msgid "Warning: {0}"
 msgstr "Advertencia: {0}"
@@ -3969,7 +3971,7 @@ msgstr "vía"
 
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:134
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:319
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "railway"
 msgstr "ferrocarril"
 
@@ -5415,14 +5417,19 @@ msgstr ""
 msgid "Decision"
 msgstr "Decisión"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolver.java:42
+#: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolver.java:43
 msgid "<html>Please select the values to keep for the following tags.</html>"
 msgstr ""
 "<html>Por favor, seleccione los valores a conservar para las siguientes "
 "etiquetas.</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolver.java:47
+#: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolver.java:48
 msgid "Show tags with conflicts only"
+msgstr "Mostrar solo etiquetas con conflictos"
+
+#: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolver.java:60
+#, fuzzy
+msgid "Show tags with multiple values only"
 msgstr "Mostrar solo etiquetas con conflictos"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ChangesetDialog.java:168
@@ -5725,7 +5732,7 @@ msgstr "Información de capa"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:88
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:89
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:173
-#: build/trans_presets.java:3154
+#: build/trans_presets.java:3155
 msgid "Relations"
 msgstr "Relaciones"
 
@@ -6953,55 +6960,55 @@ msgstr ""
 #: build/trans_presets.java:2352 build/trans_presets.java:2358
 #: build/trans_presets.java:2364 build/trans_presets.java:2370
 #: build/trans_presets.java:2380 build/trans_presets.java:2387
-#: build/trans_presets.java:2481 build/trans_presets.java:2488
-#: build/trans_presets.java:2503 build/trans_presets.java:2511
-#: build/trans_presets.java:2516 build/trans_presets.java:2522
-#: build/trans_presets.java:2529 build/trans_presets.java:2536
-#: build/trans_presets.java:2542 build/trans_presets.java:2548
-#: build/trans_presets.java:2570 build/trans_presets.java:2577
-#: build/trans_presets.java:2584 build/trans_presets.java:2590
-#: build/trans_presets.java:2597 build/trans_presets.java:2603
-#: build/trans_presets.java:2609 build/trans_presets.java:2615
-#: build/trans_presets.java:2621 build/trans_presets.java:2627
-#: build/trans_presets.java:2634 build/trans_presets.java:2641
-#: build/trans_presets.java:2648 build/trans_presets.java:2654
-#: build/trans_presets.java:2660 build/trans_presets.java:2666
-#: build/trans_presets.java:2672 build/trans_presets.java:2678
-#: build/trans_presets.java:2685 build/trans_presets.java:2692
-#: build/trans_presets.java:2699 build/trans_presets.java:2705
-#: build/trans_presets.java:2711 build/trans_presets.java:2721
-#: build/trans_presets.java:2730 build/trans_presets.java:2745
-#: build/trans_presets.java:2751 build/trans_presets.java:2759
-#: build/trans_presets.java:2766 build/trans_presets.java:2786
-#: build/trans_presets.java:2797 build/trans_presets.java:2803
-#: build/trans_presets.java:2809 build/trans_presets.java:2815
-#: build/trans_presets.java:2821 build/trans_presets.java:2828
-#: build/trans_presets.java:2835 build/trans_presets.java:2842
-#: build/trans_presets.java:2848 build/trans_presets.java:2854
-#: build/trans_presets.java:2862 build/trans_presets.java:2869
-#: build/trans_presets.java:2876 build/trans_presets.java:2883
-#: build/trans_presets.java:2889 build/trans_presets.java:2896
-#: build/trans_presets.java:2903 build/trans_presets.java:2912
-#: build/trans_presets.java:2918 build/trans_presets.java:2924
-#: build/trans_presets.java:2930 build/trans_presets.java:2936
-#: build/trans_presets.java:2945 build/trans_presets.java:2955
-#: build/trans_presets.java:2964 build/trans_presets.java:2970
-#: build/trans_presets.java:2976 build/trans_presets.java:2981
-#: build/trans_presets.java:2987 build/trans_presets.java:2993
-#: build/trans_presets.java:3002 build/trans_presets.java:3008
-#: build/trans_presets.java:3014 build/trans_presets.java:3020
-#: build/trans_presets.java:3026 build/trans_presets.java:3032
-#: build/trans_presets.java:3038 build/trans_presets.java:3045
-#: build/trans_presets.java:3051 build/trans_presets.java:3056
-#: build/trans_presets.java:3063 build/trans_presets.java:3070
-#: build/trans_presets.java:3076 build/trans_presets.java:3085
-#: build/trans_presets.java:3093 build/trans_presets.java:3099
-#: build/trans_presets.java:3105 build/trans_presets.java:3112
-#: build/trans_presets.java:3118 build/trans_presets.java:3125
-#: build/trans_presets.java:3131 build/trans_presets.java:3137
-#: build/trans_presets.java:3143 build/trans_presets.java:3149
-#: build/trans_presets.java:3162 build/trans_presets.java:3176
-#: build/trans_presets.java:3190
+#: build/trans_presets.java:2482 build/trans_presets.java:2489
+#: build/trans_presets.java:2504 build/trans_presets.java:2512
+#: build/trans_presets.java:2517 build/trans_presets.java:2523
+#: build/trans_presets.java:2530 build/trans_presets.java:2537
+#: build/trans_presets.java:2543 build/trans_presets.java:2549
+#: build/trans_presets.java:2571 build/trans_presets.java:2578
+#: build/trans_presets.java:2585 build/trans_presets.java:2591
+#: build/trans_presets.java:2598 build/trans_presets.java:2604
+#: build/trans_presets.java:2610 build/trans_presets.java:2616
+#: build/trans_presets.java:2622 build/trans_presets.java:2628
+#: build/trans_presets.java:2635 build/trans_presets.java:2642
+#: build/trans_presets.java:2649 build/trans_presets.java:2655
+#: build/trans_presets.java:2661 build/trans_presets.java:2667
+#: build/trans_presets.java:2673 build/trans_presets.java:2679
+#: build/trans_presets.java:2686 build/trans_presets.java:2693
+#: build/trans_presets.java:2700 build/trans_presets.java:2706
+#: build/trans_presets.java:2712 build/trans_presets.java:2722
+#: build/trans_presets.java:2731 build/trans_presets.java:2746
+#: build/trans_presets.java:2752 build/trans_presets.java:2760
+#: build/trans_presets.java:2767 build/trans_presets.java:2787
+#: build/trans_presets.java:2798 build/trans_presets.java:2804
+#: build/trans_presets.java:2810 build/trans_presets.java:2816
+#: build/trans_presets.java:2822 build/trans_presets.java:2829
+#: build/trans_presets.java:2836 build/trans_presets.java:2843
+#: build/trans_presets.java:2849 build/trans_presets.java:2855
+#: build/trans_presets.java:2863 build/trans_presets.java:2870
+#: build/trans_presets.java:2877 build/trans_presets.java:2884
+#: build/trans_presets.java:2890 build/trans_presets.java:2897
+#: build/trans_presets.java:2904 build/trans_presets.java:2913
+#: build/trans_presets.java:2919 build/trans_presets.java:2925
+#: build/trans_presets.java:2931 build/trans_presets.java:2937
+#: build/trans_presets.java:2946 build/trans_presets.java:2956
+#: build/trans_presets.java:2965 build/trans_presets.java:2971
+#: build/trans_presets.java:2977 build/trans_presets.java:2982
+#: build/trans_presets.java:2988 build/trans_presets.java:2994
+#: build/trans_presets.java:3003 build/trans_presets.java:3009
+#: build/trans_presets.java:3015 build/trans_presets.java:3021
+#: build/trans_presets.java:3027 build/trans_presets.java:3033
+#: build/trans_presets.java:3039 build/trans_presets.java:3046
+#: build/trans_presets.java:3052 build/trans_presets.java:3057
+#: build/trans_presets.java:3064 build/trans_presets.java:3071
+#: build/trans_presets.java:3077 build/trans_presets.java:3086
+#: build/trans_presets.java:3094 build/trans_presets.java:3100
+#: build/trans_presets.java:3106 build/trans_presets.java:3113
+#: build/trans_presets.java:3119 build/trans_presets.java:3126
+#: build/trans_presets.java:3132 build/trans_presets.java:3138
+#: build/trans_presets.java:3144 build/trans_presets.java:3150
+#: build/trans_presets.java:3163 build/trans_presets.java:3177
+#: build/trans_presets.java:3191
 msgid "Name"
 msgstr "Nombre"
 
@@ -7140,12 +7147,14 @@ msgid "Query both open and closed changesets"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:389
-msgid "User ID: "
-msgstr ""
+#, fuzzy
+msgid "User ID:"
+msgstr "Usuario:"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:409
-msgid "User name: "
-msgstr ""
+#, fuzzy
+msgid "User name:"
+msgstr "Nombre de usuario"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:445
 msgid "Only changesets owned by myself"
@@ -7192,14 +7201,18 @@ msgid "Invalid user name"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:656
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:690
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:720
 msgid "Date: "
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:684
 msgid "Closed after - "
 msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:690
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:720
+#, fuzzy
+msgid "Date:"
+msgstr "Fecha"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:714
 msgid "Created before - "
@@ -8110,7 +8123,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:74
 msgid "Class Type"
-msgstr ""
+msgstr "Tipo de clase"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:74
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ProjectionPreference.java:88
@@ -8119,7 +8132,7 @@ msgstr "Límites"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:75
 msgid "Near"
-msgstr ""
+msgstr "Cerca de"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:75
 msgctxt "placeselection"
@@ -8128,7 +8141,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:101
 msgid "Choose the server for searching:"
-msgstr ""
+msgstr "Elegir el servidor para la búsqueda:"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:108
 msgid "Enter a place name to search for:"
@@ -8186,8 +8199,8 @@ msgstr ""
 #: build/trans_presets.java:800 build/trans_presets.java:1148
 #: build/trans_presets.java:1406 build/trans_presets.java:2337
 #: build/trans_presets.java:2379 build/trans_presets.java:2405
-#: build/trans_presets.java:2946 build/trans_presets.java:2956
-#: build/trans_presets.java:2965
+#: build/trans_presets.java:2947 build/trans_presets.java:2957
+#: build/trans_presets.java:2966
 msgid "Type"
 msgstr "Tipo"
 
@@ -8220,8 +8233,8 @@ msgstr "Tipo"
 #: build/trans_presets.java:648 build/trans_presets.java:785
 #: build/trans_presets.java:800 build/trans_presets.java:1344
 #: build/trans_presets.java:1411 build/trans_presets.java:1412
-#: build/trans_presets.java:1413 build/trans_presets.java:2472
-#: build/trans_presets.java:2473 build/trans_presets.java:2474
+#: build/trans_presets.java:1413 build/trans_presets.java:2473
+#: build/trans_presets.java:2474 build/trans_presets.java:2475
 msgid "unknown"
 msgstr "desconocido"
 
@@ -8231,9 +8244,9 @@ msgid ""
 "Hold right mousebutton and move mouse or use cursor keys. <b>Select:</b> "
 "Hold left mousebutton and draw a frame."
 msgstr ""
-"<b>Zoom:</ b> Rueda del ratón, doble clic o Ctrl + Arriba/Abajo <b>Mover el "
-"mapa:</ b> Mantener el botón derecho pulsado y desplazar el ratón o usar las "
-"teclas de cursor.<b> Seleccionar: </ b> Mantener pulsado el botón izquierdo "
+"<b>Zoom:</b> Rueda del ratón, doble clic o Ctrl + Arriba/Abajo <b>Mover el "
+"mapa:</b> Mantener el botón derecho pulsado y desplazar el ratón o usar las "
+"teclas de cursor.<b> Seleccionar: </b> Mantener pulsado el botón izquierdo "
 "del ratón para dibujar un marco de selección."
 
 #: ../core/src/org/openstreetmap/josm/gui/download/SlippyMapChooser.java:122
@@ -8680,6 +8693,12 @@ msgstr "Comentario del conjunto de cambios"
 msgid "No open changeset"
 msgstr "No abrir un conjunto de cambios"
 
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:78
+msgid ""
+"Please decide what changeset the data is uploaded to and whether to close "
+"the changeset after the next upload."
+msgstr ""
+
 #: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:87
 msgid "Upload to a new changeset"
 msgstr ""
@@ -8697,20 +8716,20 @@ msgstr ""
 msgid "Upload data to an already existing and open changeset"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:142
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:143
 msgid "Close changeset after upload"
 msgstr "Cerrar conjunto de cambios despues de subir los datos"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:143
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:144
 msgid "Select to close the changeset after the next upload"
 msgstr ""
 
 #. putValue(NAME, tr("Reload"));
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:294
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:297
 msgid "Load the list of your open changesets from the server"
 msgstr "Cargar del servidor la lista de su conjunto de cambios abiertos"
 
-#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:312
+#: ../core/src/org/openstreetmap/josm/gui/io/ChangesetManagementPanel.java:315
 msgid "Close the currently selected open changeset"
 msgstr ""
 
@@ -8818,6 +8837,26 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:293
 msgid "Cancel authentication"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:63
+msgid ""
+"<html>Could not retrieve the list of your open changesets because<br>JOSM "
+"doesn't know your identity.<br>You've either chosen to work anonymously or "
+"you are not entitled<br>to know the identity of the user on whose behalf you "
+"are working.</html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:69
+#, fuzzy
+msgid "Missing user identity"
+msgstr "Falta la primitiva"
+
+#: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:122
+#, java-format
+msgid ""
+"Warning: Failed to retrieve user infos for the current JOSM user. Exceptions "
+"was: {0}"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/FilenameCellEditor.java:140
@@ -9581,7 +9620,7 @@ msgstr[1] "{0} trazas"
 #. item "Relations/Route" text "Symbol description"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:381
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:142
-#: build/trans_presets.java:3193
+#: build/trans_presets.java:3194
 msgid "Description"
 msgstr "Descripción"
 
@@ -9955,7 +9994,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:650
 #, java-format
-msgid "<html>Matched <b>{0}</b> of <b>{1}</b> photos to GPX track."
+msgid "<html>Matched <b>{0}</b> of <b>{1}</b> photos to GPX track.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:667
@@ -10850,9 +10889,9 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/oauth/TestAccessTokenTask.java:144
 #, java-format
 msgid ""
-"<html>Successfully used the the Access Token ''{0}'' to<br>access the OSM "
-"server at ''{1}''.<br>You''re accessing the OSM server as user ''{2}'' with "
-"id ''{3}''.</html>"
+"<html>Successfully used the Access Token ''{0}'' to<br>access the OSM server "
+"at ''{1}''.<br>You''re accessing the OSM server as user ''{2}'' with id "
+"''{3}''.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/TestAccessTokenTask.java:154
@@ -10865,8 +10904,8 @@ msgstr "Acceso"
 msgid ""
 "<html>Failed to access the OSM server ''{0}''<br>with the Access Token "
 "''{0}''.<br>The server rejected the Access Token as unauthorised. You will "
-"not<br>able to access any protected resource on this server using this token."
-"</html>"
+"not<br>be able to access any protected resource on this server using this "
+"token.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/TestAccessTokenTask.java:172
@@ -11482,11 +11521,11 @@ msgstr "No requiere cambiar de modos (flujo de trabajo estilo Potlatch)"
 msgid "Look and Feel"
 msgstr "Visualización y comportamiento"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:47
+#: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:45
 msgid "Language"
 msgstr "Idioma"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:108
+#: ../core/src/org/openstreetmap/josm/gui/preferences/LanguagePreference.java:103
 msgid "Default (Auto determined)"
 msgstr "Por defecto (determinado automáticamente)"
 
@@ -12057,19 +12096,19 @@ msgstr ""
 "preferencias.<br> La contraseña es transferida en texto plano al servidor, "
 "codificada en la URL.<br><b>No utilice claves valiosas.</b></html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/server/BasicAuthenticationPreferencesPanel.java:112
+#: ../core/src/org/openstreetmap/josm/gui/preferences/server/BasicAuthenticationPreferencesPanel.java:117
 msgid "Warning: failed to retrieve OSM credentials from credential manager."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/server/BasicAuthenticationPreferencesPanel.java:113
-#: ../core/src/org/openstreetmap/josm/gui/preferences/server/BasicAuthenticationPreferencesPanel.java:135
+#: ../core/src/org/openstreetmap/josm/gui/preferences/server/BasicAuthenticationPreferencesPanel.java:118
+#: ../core/src/org/openstreetmap/josm/gui/preferences/server/BasicAuthenticationPreferencesPanel.java:140
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAccessTokenHolder.java:151
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAccessTokenHolder.java:182
 #, java-format
 msgid "Current credential manager is of type ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/server/BasicAuthenticationPreferencesPanel.java:134
+#: ../core/src/org/openstreetmap/josm/gui/preferences/server/BasicAuthenticationPreferencesPanel.java:139
 msgid "Warning: failed to save OSM credentials to credential manager."
 msgstr ""
 
@@ -13293,7 +13332,7 @@ msgstr ""
 "Valor ilegal para el atributo ''{0}'' en la etiqueta XML ''{1}''. Obtenido "
 "{2}."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmServerUserInfoReader.java:127
+#: ../core/src/org/openstreetmap/josm/io/OsmServerUserInfoReader.java:126
 #, fuzzy
 msgid "Reading user info ..."
 msgstr "Leyendo conjunto de cambios {0}..."
@@ -13614,15 +13653,15 @@ msgstr "Esto está despues del final de la grabación"
 msgid "Error playing sound"
 msgstr "Error reproduciendo sonido"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:58
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:56
 msgid "Do nothing"
 msgstr "No hacer nada"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:58
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:56
 msgid "Report Bug"
 msgstr "Informar del error"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:59
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:57
 msgid ""
 "An unexpected exception occurred.\n"
 "\n"
@@ -13634,42 +13673,41 @@ msgstr ""
 "Esto es siempre un error de código. Si usted esta ejecutando la última\n"
 "versión de JOSM, por favor, considere enviar un informe de error."
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:62
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:60
 msgid "Unexpected Exception"
 msgstr "Excepción inesperada"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:103
 msgid ""
-"<html><p>You've encountered an error in JOSM. Before you file a bug<br>make "
-"sure you've updated to the latest version of JOSM here:</p></html>"
+"You have encountered an error in JOSM. Before you file a bug reportmake sure "
+"you have updated to the latest version of JOSM here:"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:107
 msgid ""
-"<html>You should also update your plugins. If neither of those help "
-"please<br>file a bug in our bugtracker using this link:</p></html>"
+"You should also update your plugins. If neither of those help pleasefile a "
+"bug report in our bugtracker using this link:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:110
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:111
 msgid ""
-"<html><p>There the error information provided below should already "
-"be<br>filled out for you. Please include information on how to "
-"reproduce<br>the error and try to supply as much detail as possible.</p></"
-"html>"
+"There the error information provided below should already befilled in for "
+"you. Please include information on how to reproducethe error and try to "
+"supply as much detail as possible."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:114
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:115
 msgid ""
-"<html><p>Alternatively if that doesn't work you can manually fill in the "
-"information<br>below at this URL:</p></html>"
+"Alternatively, if that doesn't work you can manually fill in the "
+"informationbelow at this URL:"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:122
 msgid "(The text has already been copied to your clipboard.)"
 msgstr "(El texto ya ha sido copiado a tu portapapeles.)"
 
-#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:131
-msgid "You've encountered a bug in JOSM"
+#: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:137
+msgid "You have encountered a bug in JOSM"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/tools/CheckParameterUtil.java:23
@@ -13870,7 +13908,7 @@ msgid ""
 "<br><br>The error message is:<br>{0}</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:339
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:348
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
@@ -14130,7 +14168,7 @@ msgstr "Trazas subidas a openstreetmap.org"
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:1196
 #: build/trans_presets.java:2285
 msgid "Address Interpolation"
-msgstr "Direcciones interpoladas"
+msgstr "Interpolación de números de portales"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationAction.java:25
 msgid "Handy Address Interpolation Functions"
@@ -14235,13 +14273,14 @@ msgstr "Información opcional:"
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:678
 msgid "Please select a street to associate with address interpolation way"
 msgstr ""
-"Por favor, seleccione una calle para asociarla con la vía de direcciones "
-"interpoladas"
+"Por favor, seleccione una calle para asociarla con el modo de interpolación "
+"de números de portales"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:691
 msgid "Please select address interpolation way for this street"
 msgstr ""
-"Por favor, seleccione una vía de direcciones interpoladas para esta calle"
+"Por favor, seleccione modo de interpolación de números de portales de esta "
+"calle"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:1078
 msgid "Expected odd numbers for addresses"
@@ -17906,8 +17945,8 @@ msgstr ""
 #. combo: combo box, with multiple choices and possible to enter free form text
 #. key: key to set
 #. text: fixed label to display
-#. values: comma seperated list of values
-#. display_values: comma seperated list of values to be displayed instead of the
+#. values: comma separated list of values
+#. display_values: comma separated list of values to be displayed instead of the
 #. database values, order and number must be equal to values
 #. default: default string to display
 #. delete_if_empty: true/false
@@ -17984,7 +18023,7 @@ msgstr "Editar autopista"
 #: build/trans_presets.java:132 build/trans_presets.java:152
 #: build/trans_presets.java:189 build/trans_presets.java:209
 #: build/trans_presets.java:1560 build/trans_presets.java:2389
-#: build/trans_presets.java:3191
+#: build/trans_presets.java:3192
 msgid "Reference"
 msgstr "Referencia"
 
@@ -18544,7 +18583,7 @@ msgstr "hormigón"
 #: build/trans_presets.java:442 build/trans_presets.java:463
 #: build/trans_presets.java:483 build/trans_presets.java:502
 #: build/trans_presets.java:521 build/trans_presets.java:677
-#: build/trans_presets.java:1320 build/trans_presets.java:2464
+#: build/trans_presets.java:1320 build/trans_presets.java:2465
 msgid "metal"
 msgstr "metal"
 
@@ -18554,7 +18593,7 @@ msgstr "metal"
 #: build/trans_presets.java:442 build/trans_presets.java:463
 #: build/trans_presets.java:483 build/trans_presets.java:502
 #: build/trans_presets.java:521 build/trans_presets.java:677
-#: build/trans_presets.java:1320 build/trans_presets.java:2464
+#: build/trans_presets.java:1320 build/trans_presets.java:2465
 msgid "wood"
 msgstr "bosque"
 
@@ -18701,7 +18740,7 @@ msgstr "callejón"
 
 #: build/trans_presets.java:283
 msgid "driveway"
-msgstr "camino de entrada (a garage, casa, etc.)"
+msgstr "camino de entrada (a garage, casa, finca, etc.)"
 
 #: build/trans_presets.java:283
 msgid "parking_aisle"
@@ -18845,9 +18884,9 @@ msgstr "Acceso"
 #: build/trans_presets.java:1532 build/trans_presets.java:1533
 #: build/trans_presets.java:1534 build/trans_presets.java:1767
 #: build/trans_presets.java:1777 build/trans_presets.java:2427
-#: build/trans_presets.java:2463 build/trans_presets.java:2472
+#: build/trans_presets.java:2428 build/trans_presets.java:2464
 #: build/trans_presets.java:2473 build/trans_presets.java:2474
-#: build/trans_presets.java:2758
+#: build/trans_presets.java:2475 build/trans_presets.java:2759
 msgid "yes"
 msgstr "sí"
 
@@ -18971,6 +19010,7 @@ msgstr "permisivo"
 msgid "agricultural"
 msgstr "agrícola"
 
+#. item "Amenities/Toilets" combo "Wheelchair"
 #: build/trans_presets.java:335 build/trans_presets.java:336
 #: build/trans_presets.java:337 build/trans_presets.java:338
 #: build/trans_presets.java:339 build/trans_presets.java:340
@@ -18996,9 +19036,10 @@ msgstr "agrícola"
 #: build/trans_presets.java:1413 build/trans_presets.java:1532
 #: build/trans_presets.java:1533 build/trans_presets.java:1534
 #: build/trans_presets.java:1767 build/trans_presets.java:1777
-#: build/trans_presets.java:2427 build/trans_presets.java:2463
-#: build/trans_presets.java:2472 build/trans_presets.java:2473
-#: build/trans_presets.java:2474 build/trans_presets.java:2758
+#: build/trans_presets.java:2427 build/trans_presets.java:2428
+#: build/trans_presets.java:2464 build/trans_presets.java:2473
+#: build/trans_presets.java:2474 build/trans_presets.java:2475
+#: build/trans_presets.java:2759
 msgid "no"
 msgstr "no"
 
@@ -19699,11 +19740,11 @@ msgstr "Editar estación de servicio"
 #: build/trans_presets.java:2306 build/trans_presets.java:2336
 #: build/trans_presets.java:2388 build/trans_presets.java:2396
 #: build/trans_presets.java:2413 build/trans_presets.java:2425
-#: build/trans_presets.java:2433 build/trans_presets.java:2440
-#: build/trans_presets.java:2494 build/trans_presets.java:2504
-#: build/trans_presets.java:2556 build/trans_presets.java:2722
-#: build/trans_presets.java:2737 build/trans_presets.java:2776
-#: build/trans_presets.java:3196
+#: build/trans_presets.java:2434 build/trans_presets.java:2441
+#: build/trans_presets.java:2495 build/trans_presets.java:2505
+#: build/trans_presets.java:2557 build/trans_presets.java:2723
+#: build/trans_presets.java:2738 build/trans_presets.java:2777
+#: build/trans_presets.java:3197
 msgid "Operator"
 msgstr "Operador"
 
@@ -19914,8 +19955,8 @@ msgstr "Editar puerto de montaña"
 #. item "Geography/Places/Glacier" text "Name"
 #. item "Geography/Places/Volcano" text "Name"
 #: build/trans_presets.java:854 build/trans_presets.java:1604
-#: build/trans_presets.java:1749 build/trans_presets.java:2890
-#: build/trans_presets.java:2897 build/trans_presets.java:2904
+#: build/trans_presets.java:1749 build/trans_presets.java:2891
+#: build/trans_presets.java:2898 build/trans_presets.java:2905
 msgid "Elevation"
 msgstr "Altitud"
 
@@ -20873,25 +20914,25 @@ msgstr "Ediatr gasolinera"
 #: build/trans_presets.java:1717 build/trans_presets.java:1814
 #: build/trans_presets.java:1822 build/trans_presets.java:1925
 #: build/trans_presets.java:1931 build/trans_presets.java:2244
-#: build/trans_presets.java:2268 build/trans_presets.java:2495
-#: build/trans_presets.java:2517 build/trans_presets.java:2523
-#: build/trans_presets.java:2530 build/trans_presets.java:2537
-#: build/trans_presets.java:2543 build/trans_presets.java:2549
-#: build/trans_presets.java:2571 build/trans_presets.java:2578
-#: build/trans_presets.java:2585 build/trans_presets.java:2591
-#: build/trans_presets.java:2598 build/trans_presets.java:2604
-#: build/trans_presets.java:2610 build/trans_presets.java:2616
-#: build/trans_presets.java:2622 build/trans_presets.java:2628
-#: build/trans_presets.java:2635 build/trans_presets.java:2642
-#: build/trans_presets.java:2649 build/trans_presets.java:2655
-#: build/trans_presets.java:2661 build/trans_presets.java:2667
-#: build/trans_presets.java:2673 build/trans_presets.java:2679
-#: build/trans_presets.java:2686 build/trans_presets.java:2693
-#: build/trans_presets.java:2700 build/trans_presets.java:2706
-#: build/trans_presets.java:2712 build/trans_presets.java:2723
-#: build/trans_presets.java:2731 build/trans_presets.java:2746
-#: build/trans_presets.java:2752 build/trans_presets.java:2760
-#: build/trans_presets.java:2787
+#: build/trans_presets.java:2268 build/trans_presets.java:2496
+#: build/trans_presets.java:2518 build/trans_presets.java:2524
+#: build/trans_presets.java:2531 build/trans_presets.java:2538
+#: build/trans_presets.java:2544 build/trans_presets.java:2550
+#: build/trans_presets.java:2572 build/trans_presets.java:2579
+#: build/trans_presets.java:2586 build/trans_presets.java:2592
+#: build/trans_presets.java:2599 build/trans_presets.java:2605
+#: build/trans_presets.java:2611 build/trans_presets.java:2617
+#: build/trans_presets.java:2623 build/trans_presets.java:2629
+#: build/trans_presets.java:2636 build/trans_presets.java:2643
+#: build/trans_presets.java:2650 build/trans_presets.java:2656
+#: build/trans_presets.java:2662 build/trans_presets.java:2668
+#: build/trans_presets.java:2674 build/trans_presets.java:2680
+#: build/trans_presets.java:2687 build/trans_presets.java:2694
+#: build/trans_presets.java:2701 build/trans_presets.java:2707
+#: build/trans_presets.java:2713 build/trans_presets.java:2724
+#: build/trans_presets.java:2732 build/trans_presets.java:2747
+#: build/trans_presets.java:2753 build/trans_presets.java:2761
+#: build/trans_presets.java:2788
 msgid "Opening Hours"
 msgstr "Horario de apertura"
 
@@ -20957,24 +20998,24 @@ msgstr "Horario de apertura"
 #: build/trans_presets.java:1814 build/trans_presets.java:1822
 #: build/trans_presets.java:1925 build/trans_presets.java:1931
 #: build/trans_presets.java:2244 build/trans_presets.java:2268
-#: build/trans_presets.java:2517 build/trans_presets.java:2523
-#: build/trans_presets.java:2530 build/trans_presets.java:2537
-#: build/trans_presets.java:2543 build/trans_presets.java:2549
-#: build/trans_presets.java:2571 build/trans_presets.java:2578
-#: build/trans_presets.java:2585 build/trans_presets.java:2591
-#: build/trans_presets.java:2598 build/trans_presets.java:2604
-#: build/trans_presets.java:2610 build/trans_presets.java:2616
-#: build/trans_presets.java:2622 build/trans_presets.java:2628
-#: build/trans_presets.java:2635 build/trans_presets.java:2642
-#: build/trans_presets.java:2649 build/trans_presets.java:2655
-#: build/trans_presets.java:2661 build/trans_presets.java:2667
-#: build/trans_presets.java:2673 build/trans_presets.java:2679
-#: build/trans_presets.java:2686 build/trans_presets.java:2693
-#: build/trans_presets.java:2700 build/trans_presets.java:2706
-#: build/trans_presets.java:2712 build/trans_presets.java:2723
-#: build/trans_presets.java:2731 build/trans_presets.java:2746
-#: build/trans_presets.java:2752 build/trans_presets.java:2760
-#: build/trans_presets.java:2787
+#: build/trans_presets.java:2518 build/trans_presets.java:2524
+#: build/trans_presets.java:2531 build/trans_presets.java:2538
+#: build/trans_presets.java:2544 build/trans_presets.java:2550
+#: build/trans_presets.java:2572 build/trans_presets.java:2579
+#: build/trans_presets.java:2586 build/trans_presets.java:2592
+#: build/trans_presets.java:2599 build/trans_presets.java:2605
+#: build/trans_presets.java:2611 build/trans_presets.java:2617
+#: build/trans_presets.java:2623 build/trans_presets.java:2629
+#: build/trans_presets.java:2636 build/trans_presets.java:2643
+#: build/trans_presets.java:2650 build/trans_presets.java:2656
+#: build/trans_presets.java:2662 build/trans_presets.java:2668
+#: build/trans_presets.java:2674 build/trans_presets.java:2680
+#: build/trans_presets.java:2687 build/trans_presets.java:2694
+#: build/trans_presets.java:2701 build/trans_presets.java:2707
+#: build/trans_presets.java:2713 build/trans_presets.java:2724
+#: build/trans_presets.java:2732 build/trans_presets.java:2747
+#: build/trans_presets.java:2753 build/trans_presets.java:2761
+#: build/trans_presets.java:2788
 msgid "24/7"
 msgstr "24/7"
 
@@ -20987,24 +21028,24 @@ msgstr "24/7"
 #: build/trans_presets.java:1814 build/trans_presets.java:1822
 #: build/trans_presets.java:1925 build/trans_presets.java:1931
 #: build/trans_presets.java:2244 build/trans_presets.java:2268
-#: build/trans_presets.java:2517 build/trans_presets.java:2523
-#: build/trans_presets.java:2530 build/trans_presets.java:2537
-#: build/trans_presets.java:2543 build/trans_presets.java:2549
-#: build/trans_presets.java:2571 build/trans_presets.java:2578
-#: build/trans_presets.java:2585 build/trans_presets.java:2591
-#: build/trans_presets.java:2598 build/trans_presets.java:2604
-#: build/trans_presets.java:2610 build/trans_presets.java:2616
-#: build/trans_presets.java:2622 build/trans_presets.java:2628
-#: build/trans_presets.java:2635 build/trans_presets.java:2642
-#: build/trans_presets.java:2649 build/trans_presets.java:2655
-#: build/trans_presets.java:2661 build/trans_presets.java:2667
-#: build/trans_presets.java:2673 build/trans_presets.java:2679
-#: build/trans_presets.java:2686 build/trans_presets.java:2693
-#: build/trans_presets.java:2700 build/trans_presets.java:2706
-#: build/trans_presets.java:2712 build/trans_presets.java:2723
-#: build/trans_presets.java:2731 build/trans_presets.java:2746
-#: build/trans_presets.java:2752 build/trans_presets.java:2760
-#: build/trans_presets.java:2787
+#: build/trans_presets.java:2518 build/trans_presets.java:2524
+#: build/trans_presets.java:2531 build/trans_presets.java:2538
+#: build/trans_presets.java:2544 build/trans_presets.java:2550
+#: build/trans_presets.java:2572 build/trans_presets.java:2579
+#: build/trans_presets.java:2586 build/trans_presets.java:2592
+#: build/trans_presets.java:2599 build/trans_presets.java:2605
+#: build/trans_presets.java:2611 build/trans_presets.java:2617
+#: build/trans_presets.java:2623 build/trans_presets.java:2629
+#: build/trans_presets.java:2636 build/trans_presets.java:2643
+#: build/trans_presets.java:2650 build/trans_presets.java:2656
+#: build/trans_presets.java:2662 build/trans_presets.java:2668
+#: build/trans_presets.java:2674 build/trans_presets.java:2680
+#: build/trans_presets.java:2687 build/trans_presets.java:2694
+#: build/trans_presets.java:2701 build/trans_presets.java:2707
+#: build/trans_presets.java:2713 build/trans_presets.java:2724
+#: build/trans_presets.java:2732 build/trans_presets.java:2747
+#: build/trans_presets.java:2753 build/trans_presets.java:2761
+#: build/trans_presets.java:2788
 msgid "Mo-Fr 08:30-20:00"
 msgstr "Lu-Vie 08:30-20:00"
 
@@ -21017,24 +21058,24 @@ msgstr "Lu-Vie 08:30-20:00"
 #: build/trans_presets.java:1814 build/trans_presets.java:1822
 #: build/trans_presets.java:1925 build/trans_presets.java:1931
 #: build/trans_presets.java:2244 build/trans_presets.java:2268
-#: build/trans_presets.java:2517 build/trans_presets.java:2523
-#: build/trans_presets.java:2530 build/trans_presets.java:2537
-#: build/trans_presets.java:2543 build/trans_presets.java:2549
-#: build/trans_presets.java:2571 build/trans_presets.java:2578
-#: build/trans_presets.java:2585 build/trans_presets.java:2591
-#: build/trans_presets.java:2598 build/trans_presets.java:2604
-#: build/trans_presets.java:2610 build/trans_presets.java:2616
-#: build/trans_presets.java:2622 build/trans_presets.java:2628
-#: build/trans_presets.java:2635 build/trans_presets.java:2642
-#: build/trans_presets.java:2649 build/trans_presets.java:2655
-#: build/trans_presets.java:2661 build/trans_presets.java:2667
-#: build/trans_presets.java:2673 build/trans_presets.java:2679
-#: build/trans_presets.java:2686 build/trans_presets.java:2693
-#: build/trans_presets.java:2700 build/trans_presets.java:2706
-#: build/trans_presets.java:2712 build/trans_presets.java:2723
-#: build/trans_presets.java:2731 build/trans_presets.java:2746
-#: build/trans_presets.java:2752 build/trans_presets.java:2760
-#: build/trans_presets.java:2787
+#: build/trans_presets.java:2518 build/trans_presets.java:2524
+#: build/trans_presets.java:2531 build/trans_presets.java:2538
+#: build/trans_presets.java:2544 build/trans_presets.java:2550
+#: build/trans_presets.java:2572 build/trans_presets.java:2579
+#: build/trans_presets.java:2586 build/trans_presets.java:2592
+#: build/trans_presets.java:2599 build/trans_presets.java:2605
+#: build/trans_presets.java:2611 build/trans_presets.java:2617
+#: build/trans_presets.java:2623 build/trans_presets.java:2629
+#: build/trans_presets.java:2636 build/trans_presets.java:2643
+#: build/trans_presets.java:2650 build/trans_presets.java:2656
+#: build/trans_presets.java:2662 build/trans_presets.java:2668
+#: build/trans_presets.java:2674 build/trans_presets.java:2680
+#: build/trans_presets.java:2687 build/trans_presets.java:2694
+#: build/trans_presets.java:2701 build/trans_presets.java:2707
+#: build/trans_presets.java:2713 build/trans_presets.java:2724
+#: build/trans_presets.java:2732 build/trans_presets.java:2747
+#: build/trans_presets.java:2753 build/trans_presets.java:2761
+#: build/trans_presets.java:2788
 msgid "Tu-Su 08:00-15:00; Sa 08:00-12:00"
 msgstr "Ma-Do 08:00-15:00; Sa 08:00-12:00"
 
@@ -21066,7 +21107,7 @@ msgstr "Editar aparcamiento"
 #. item "Shops/Vending machine" text "Operator"
 #: build/trans_presets.java:1405 build/trans_presets.java:1766
 #: build/trans_presets.java:1776 build/trans_presets.java:2426
-#: build/trans_presets.java:2557
+#: build/trans_presets.java:2558
 msgid "Reference number"
 msgstr "Número de referencia"
 
@@ -21271,7 +21312,7 @@ msgid "Edit Subway Entrance"
 msgstr "Editar boca de metro"
 
 #. item "Public Transport/Subway Entrance" text "Name"
-#: build/trans_presets.java:1509
+#: build/trans_presets.java:1509 build/trans_presets.java:2428
 msgid "Wheelchair"
 msgstr "Silla de ruedas"
 
@@ -21307,12 +21348,12 @@ msgstr "Editar parada de autobús"
 #. item "Tourism/Other Information Points" text "Closer Description"
 #. <separator/>
 #: build/trans_presets.java:1532 build/trans_presets.java:1789
-#: build/trans_presets.java:2472
+#: build/trans_presets.java:2473
 msgid "Shelter"
 msgstr "Refugio"
 
 #. item "Amenities/Recycling" check "Scrap Metal"
-#: build/trans_presets.java:1533 build/trans_presets.java:2460
+#: build/trans_presets.java:1533 build/trans_presets.java:2461
 msgid "Bench"
 msgstr "Banco"
 
@@ -21808,7 +21849,7 @@ msgstr "Equitación"
 #. item "Tourism/Guidepost" check "Riding"
 #: build/trans_presets.java:1734 build/trans_presets.java:1757
 msgid "... other transportation modes possible"
-msgstr "... otros mods de transporte posible"
+msgstr "... otros modos de desplazamiento posible"
 
 #. item "Tourism/Map" label "... other transportation modes possible"
 #: build/trans_presets.java:1736
@@ -22045,7 +22086,7 @@ msgid "Edit Fishing"
 msgstr "Editando pesca"
 
 #. item "Leisure/Fishing" text "Name"
-#: build/trans_presets.java:1883 build/trans_presets.java:2702
+#: build/trans_presets.java:1883 build/trans_presets.java:2703
 msgid "Sports"
 msgstr "Deportes"
 
@@ -23449,154 +23490,154 @@ msgstr "Editar lugar de culto"
 #. item "Man-Made/Buildings/Place of Worship" text "Name"
 #. item "Land use/Graveyard" text "Name"
 #. item "Land use/Cemetery" text "Name"
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "Religion"
 msgstr "Religión"
 
 #. item "Man-Made/Buildings/Place of Worship" combo "Religion"
 #. item "Land use/Graveyard" combo "Religion"
 #. item "Land use/Cemetery" combo "Religion"
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "bahai"
 msgstr "bahaísta"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "buddhist"
 msgstr "budista"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "christian"
 msgstr "cristiana"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "hindu"
 msgstr "hindú"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "jain"
 msgstr "jainista"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "jewish"
 msgstr "judía"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "muslim"
 msgstr "musulmana"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "sikh"
 msgstr "sijista"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "spiritualist"
 msgstr "espiritualista"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "taoist"
 msgstr "taoista"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "unitarian"
 msgstr "unitarismo"
 
-#: build/trans_presets.java:2266 build/trans_presets.java:3077
-#: build/trans_presets.java:3086
+#: build/trans_presets.java:2266 build/trans_presets.java:3078
+#: build/trans_presets.java:3087
 msgid "zoroastrian"
 msgstr "zoroástrica"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "Denomination"
 msgstr "Confesión"
 
 #. item "Man-Made/Buildings/Place of Worship" combo "Denomination"
 #. item "Land use/Graveyard" combo "Denomination"
 #. item "Land use/Cemetery" combo "Denomination"
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "anglican"
 msgstr "anglicano"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "baptist"
 msgstr "baptista"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "catholic"
 msgstr "católico"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "evangelical"
 msgstr "evangélico"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "jehovahs_witness"
 msgstr "testigos de Jehová"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "lutheran"
 msgstr "luterano"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "methodist"
 msgstr "metodista"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "mormon"
 msgstr "mormón"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "orthodox"
 msgstr "ortodoxo"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "pentecostal"
 msgstr "pentecostal"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "presbyterian"
 msgstr "presbiteriano"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "protestant"
 msgstr "protestante"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "quaker"
 msgstr "cuáquero"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "shia"
 msgstr "chiita"
 
-#: build/trans_presets.java:2267 build/trans_presets.java:3078
-#: build/trans_presets.java:3087
+#: build/trans_presets.java:2267 build/trans_presets.java:3079
+#: build/trans_presets.java:3088
 msgid "sunni"
 msgstr "suní"
 
@@ -23649,7 +23690,7 @@ msgstr "Código del país"
 #. de.href="http://wiki.openstreetmap.org/wiki/Proposed_features/De:Hausnummern" />
 #: build/trans_presets.java:2288
 msgid "Edit Address Interpolation"
-msgstr "Editar direcciones interpoladas"
+msgstr "Editar interpolación de números de portales"
 
 #. item "Man-Made/Buildings/Address Interpolation" label "Edit Address Interpolation"
 #. <space />
@@ -24015,136 +24056,141 @@ msgstr "Servicios"
 msgid "Toilets"
 msgstr "Baños"
 
+#: build/trans_presets.java:2428
+#, fuzzy
+msgid "limited"
+msgstr "mixto"
+
 #. item "Shops/Vending machine" text "Reference number"
-#: build/trans_presets.java:2428 build/trans_presets.java:2558
+#: build/trans_presets.java:2429 build/trans_presets.java:2559
 msgid "Note"
 msgstr "Nota"
 
 #. item "Amenities/Toilets" text "Note"
-#: build/trans_presets.java:2430
+#: build/trans_presets.java:2431
 msgid "Post Box"
 msgstr "Buzón de correos"
 
 #. item "Amenities/Post Box" text "Operator"
-#: build/trans_presets.java:2435
+#: build/trans_presets.java:2436
 msgid "Telephone"
 msgstr "Teléfono"
 
 #. item "Amenities/Telephone"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=telephone"
 #. fi.href="http://wiki.openstreetmap.org/wiki/Fi:Tag:amenity=telephone" />
-#: build/trans_presets.java:2438
+#: build/trans_presets.java:2439
 msgid "Edit Telephone"
 msgstr "Editar teléfono"
 
 #. item "Amenities/Telephone" text "Operator"
 #. item "Shops/Vending machine" text "Note"
-#: build/trans_presets.java:2441 build/trans_presets.java:2559
+#: build/trans_presets.java:2442 build/trans_presets.java:2560
 msgid "Coins"
 msgstr "Monedas"
 
 #. item "Amenities/Telephone" check "Coins"
 #. item "Shops/Vending machine" check "Coins"
-#: build/trans_presets.java:2442 build/trans_presets.java:2560
+#: build/trans_presets.java:2443 build/trans_presets.java:2561
 msgid "Notes"
 msgstr "Billetes"
 
 #. item "Amenities/Telephone" check "Notes"
 #. item "Shops/Vending machine" check "Notes"
-#: build/trans_presets.java:2443 build/trans_presets.java:2561
+#: build/trans_presets.java:2444 build/trans_presets.java:2562
 msgid "Electronic purses and Charge cards"
 msgstr "Tarjetas de recarga y monederos electrónicos"
 
 #. item "Amenities/Telephone" check "Electronic purses and Charge cards"
 #. item "Shops/Vending machine" check "Electronic purses and Charge cards"
-#: build/trans_presets.java:2444 build/trans_presets.java:2562
+#: build/trans_presets.java:2445 build/trans_presets.java:2563
 msgid "Debit cards"
 msgstr "Tarjetas de débito"
 
 #. item "Amenities/Telephone" check "Debit cards"
 #. item "Shops/Vending machine" check "Debit cards"
-#: build/trans_presets.java:2445 build/trans_presets.java:2563
+#: build/trans_presets.java:2446 build/trans_presets.java:2564
 msgid "Credit cards"
 msgstr "Tarjetas de crédito"
 
 #. item "Amenities/Telephone" check "Credit cards"
-#: build/trans_presets.java:2446
+#: build/trans_presets.java:2447
 msgid "Telephone cards"
 msgstr "Tarjetas telefónicas"
 
 #. item "Amenities/Telephone" check "Telephone cards"
-#: build/trans_presets.java:2448
+#: build/trans_presets.java:2449
 msgid "Recycling"
 msgstr "Reciclaje"
 
 #. item "Amenities/Recycling"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=recycling"
 #. fi.href="http://wiki.openstreetmap.org/wiki/Fi:Tag:amenity=recycling" />
-#: build/trans_presets.java:2451
+#: build/trans_presets.java:2452
 msgid "Edit Recycling station"
 msgstr "Editar punto limpio"
 
 #. item "Amenities/Recycling" label "Edit Recycling station"
 #. <key key="amenity" value="recycling" />
-#: build/trans_presets.java:2453
+#: build/trans_presets.java:2454
 msgid "Batteries"
 msgstr "Baterías"
 
 #. item "Amenities/Recycling" check "Batteries"
-#: build/trans_presets.java:2454
+#: build/trans_presets.java:2455
 msgid "Cans"
 msgstr "Envases"
 
 #. item "Amenities/Recycling" check "Cans"
-#: build/trans_presets.java:2455
+#: build/trans_presets.java:2456
 msgid "Clothes"
 msgstr "Ropas"
 
 #. item "Amenities/Recycling" check "Clothes"
-#: build/trans_presets.java:2456
+#: build/trans_presets.java:2457
 msgid "Glass"
 msgstr "Vidrio"
 
 #. item "Amenities/Recycling" check "Glass"
-#: build/trans_presets.java:2457
+#: build/trans_presets.java:2458
 msgid "Paper"
 msgstr "Papel"
 
 #. item "Amenities/Recycling" check "Paper"
-#: build/trans_presets.java:2458
+#: build/trans_presets.java:2459
 msgid "Scrap Metal"
 msgstr "Chatarra"
 
 #. item "Amenities/Bench"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=bench" />
 #. <key key="amenity" value="bench" />
-#: build/trans_presets.java:2463
+#: build/trans_presets.java:2464
 msgid "Backrest"
 msgstr "Backrest"
 
-#: build/trans_presets.java:2464
+#: build/trans_presets.java:2465
 msgid "Material"
 msgstr "Material"
 
 #. item "Amenities/Bench" combo "Material"
-#: build/trans_presets.java:2464
+#: build/trans_presets.java:2465
 msgid "stone"
 msgstr "piedra"
 
-#: build/trans_presets.java:2464
+#: build/trans_presets.java:2465
 msgid "plastic"
 msgstr "plástico"
 
-#: build/trans_presets.java:2465
+#: build/trans_presets.java:2466
 msgid "Colour"
 msgstr "Color"
 
 #. item "Amenities/Bench" combo "Colour"
-#: build/trans_presets.java:2465
+#: build/trans_presets.java:2466
 msgid "black"
 msgstr "negro"
 
-#: build/trans_presets.java:2465
+#: build/trans_presets.java:2466
 msgid "brown"
 msgstr "marrón"
 
@@ -24221,7 +24267,7 @@ msgstr "marrón"
 #.
 #. <rule>
 #. <condition k="landuse" v="recreation_ground"/>
-#: build/trans_presets.java:2465 build/trans_style.java:3100
+#: build/trans_presets.java:2466 build/trans_style.java:3100
 #: build/trans_style.java:3108 build/trans_style.java:3116
 #: build/trans_style.java:3124 build/trans_style.java:3132
 #: build/trans_style.java:3179 build/trans_style.java:3187
@@ -24229,709 +24275,709 @@ msgstr "marrón"
 msgid "green"
 msgstr "zona verde"
 
-#: build/trans_presets.java:2465
+#: build/trans_presets.java:2466
 msgid "red"
 msgstr "red"
 
-#: build/trans_presets.java:2465
+#: build/trans_presets.java:2466
 msgid "blue"
 msgstr "azul"
 
-#: build/trans_presets.java:2465
+#: build/trans_presets.java:2466
 msgid "gray"
 msgstr "gris"
 
-#: build/trans_presets.java:2465
+#: build/trans_presets.java:2466
 msgid "white"
 msgstr "blanco"
 
-#: build/trans_presets.java:2466
+#: build/trans_presets.java:2467
 msgid "Amount of Seats"
 msgstr "Número de asientos"
 
 #. item "Amenities/Bench" combo "Amount of Seats"
-#: build/trans_presets.java:2468
+#: build/trans_presets.java:2469
 msgid "Hunting Stand"
 msgstr "Apostadero de caza"
 
 #. item "Amenities/Hunting Stand"
-#: build/trans_presets.java:2469
+#: build/trans_presets.java:2470
 msgid "Edit Hunting Stand"
 msgstr "Editar apostadero de caza"
 
 #. item "Amenities/Hunting Stand" label "Edit Hunting Stand"
 #. <key key="amenity" value="hunting_stand" />
 #. item "Land use/Tree" text "Type"
-#: build/trans_presets.java:2471 build/trans_presets.java:2947
+#: build/trans_presets.java:2472 build/trans_presets.java:2948
 msgid "Height"
 msgstr "Altura"
 
 #. item "Amenities/Hunting Stand" combo "Height"
-#: build/trans_presets.java:2471
+#: build/trans_presets.java:2472
 msgid "low"
 msgstr "profundidad"
 
-#: build/trans_presets.java:2471
+#: build/trans_presets.java:2472
 msgid "half"
 msgstr "media"
 
-#: build/trans_presets.java:2471
+#: build/trans_presets.java:2472
 msgid "full"
 msgstr "total"
 
-#: build/trans_presets.java:2473
+#: build/trans_presets.java:2474
 msgid "Hide"
 msgstr "Oculto"
 
-#: build/trans_presets.java:2474
+#: build/trans_presets.java:2475
 msgid "Lock"
 msgstr "Esclusa"
 
-#: build/trans_presets.java:2476
+#: build/trans_presets.java:2477
 msgid "Fountain"
 msgstr "Fuente"
 
 #. item "Amenities/Fountain"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=fountain"
 #. fi.href="http://wiki.openstreetmap.org/wiki/Fi:Tag:amenity=fountain" />
-#: build/trans_presets.java:2479
+#: build/trans_presets.java:2480
 msgid "Edit Fountain"
 msgstr "Editar fuente"
 
 #. item "Amenities/Fountain" text "Name"
-#: build/trans_presets.java:2483
+#: build/trans_presets.java:2484
 msgid "Drinking Water"
 msgstr "Agua potable"
 
 #. item "Amenities/Drinking Water"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=drinking_water"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:amenity=drinking_water" />
-#: build/trans_presets.java:2486
+#: build/trans_presets.java:2487
 msgid "Edit Drinking Water"
 msgstr "Editar agua potable"
 
 #. item "Amenities/Drinking Water" text "Name"
-#: build/trans_presets.java:2490
+#: build/trans_presets.java:2491
 msgid "Baby Hatch"
 msgstr "Caja tibia"
 
 #. item "Amenities/Baby Hatch"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=baby_hatch" />
-#: build/trans_presets.java:2492
+#: build/trans_presets.java:2493
 msgid "Edit Baby Hatch"
 msgstr "Editar caja tibia"
 
 #. item "Amenities/Baby Hatch" text "Opening Hours"
-#: build/trans_presets.java:2498
+#: build/trans_presets.java:2499
 msgid "Shops"
 msgstr "Comercios"
 
 #. group "Shops"
-#: build/trans_presets.java:2499
+#: build/trans_presets.java:2500
 msgid "Car Dealer"
 msgstr "Concesionario de automóviles"
 
 #. item "Shops/Car Dealer"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=car" />
-#: build/trans_presets.java:2501
+#: build/trans_presets.java:2502
 msgid "Edit Car Shop"
 msgstr "Editar concesionario de automóviles"
 
 #. item "Shops/Car Dealer" text "Operator"
-#: build/trans_presets.java:2506
+#: build/trans_presets.java:2507
 msgid "Bike Dealer"
 msgstr "Tienda de bicicletas"
 
 #. item "Shops/Bike Dealer"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=bicycle"
 #. fi.href="http://wiki.openstreetmap.org/wiki/Fi:Tag:shop=bicycle" />
-#: build/trans_presets.java:2509
+#: build/trans_presets.java:2510
 msgid "Edit Bicycle Shop"
 msgstr "Editar tienda de bicicletas"
 
 #. item "Shops/Bike Dealer" text "Name"
-#: build/trans_presets.java:2513
+#: build/trans_presets.java:2514
 msgid "Supermarket"
 msgstr "Supermercado"
 
 #. item "Shops/Supermarket"
-#: build/trans_presets.java:2514
+#: build/trans_presets.java:2515
 msgid "Edit Supermarket"
 msgstr "Editar supermercado"
 
-#: build/trans_presets.java:2519
+#: build/trans_presets.java:2520
 msgid "Chemist"
 msgstr "Farmacia"
 
 #. item "Shops/Chemist"
-#: build/trans_presets.java:2520
+#: build/trans_presets.java:2521
 msgid "Edit Chemist"
 msgstr "Editar farmacia"
 
-#: build/trans_presets.java:2525
+#: build/trans_presets.java:2526
 msgid "Convenience Store"
 msgstr "Tienda de alimentación"
 
 #. item "Shops/Convenience Store"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=convenience" />
-#: build/trans_presets.java:2527
+#: build/trans_presets.java:2528
 msgid "Edit Convenience Store"
 msgstr "Editar tienda de alimentación"
 
-#: build/trans_presets.java:2532
+#: build/trans_presets.java:2533
 msgid "Kiosk"
 msgstr "Kiosco"
 
 #. item "Shops/Kiosk"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=kiosk" />
-#: build/trans_presets.java:2534
+#: build/trans_presets.java:2535
 msgid "Edit Kiosk"
 msgstr "Editar kiosco"
 
-#: build/trans_presets.java:2539
+#: build/trans_presets.java:2540
 msgid "Book Store"
 msgstr "Librería"
 
 #. item "Shops/Book Store"
-#: build/trans_presets.java:2540
+#: build/trans_presets.java:2541
 msgid "Edit Book Store"
 msgstr "Editar librería"
 
-#: build/trans_presets.java:2545
+#: build/trans_presets.java:2546
 msgid "Travel Agency"
 msgstr "Agencia de viajes"
 
 #. item "Shops/Travel Agency"
-#: build/trans_presets.java:2546
+#: build/trans_presets.java:2547
 msgid "Edit Travel Agency"
 msgstr "Editar agencia de viajes"
 
-#: build/trans_presets.java:2551
+#: build/trans_presets.java:2552
 msgid "Vending machine"
 msgstr "Máquina expendedora"
 
 #. item "Shops/Vending machine"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=vending_machine" />
-#: build/trans_presets.java:2553
+#: build/trans_presets.java:2554
 msgid "Edit Vending machine"
 msgstr "Editar máquina expendedora"
 
 #. item "Shops/Vending machine" label "Edit Vending machine"
 #. <key key="amenity" value="vending_machine" />
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "Vending products"
 msgstr "Expendedor automático de productos"
 
 #. item "Shops/Vending machine" combo "Vending products"
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "public_transport_tickets"
 msgstr "billetes de de transporte público"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "public_transport_plans"
 msgstr "abonos de transporte público"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "parking_tickets"
 msgstr "billetes de aparcamiento"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "food"
 msgstr "Alimentación"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "drinks"
 msgstr "Bebidas"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "sweets"
 msgstr "Caramelos"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "cigarettes"
 msgstr "Estanco"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "photos"
 msgstr "fotos"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "animal_food"
 msgstr "comida para animales"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "news_papers"
 msgstr "Periódicos"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "toys"
 msgstr "juguetes"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "stamps"
 msgstr "sellos"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "SIM-cards"
 msgstr "Tarjetas SIM"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "telephone_vouchers"
 msgstr "Tarjetas telefónicas"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "vouchers"
 msgstr "Bonos"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "condoms"
 msgstr "condones"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "tampons"
 msgstr "tampones"
 
-#: build/trans_presets.java:2555
+#: build/trans_presets.java:2556
 msgid "excrement_bags"
 msgstr "Bolsas para excrementos"
 
 #. item "Shops/Vending machine" check "Credit cards"
-#: build/trans_presets.java:2564
+#: build/trans_presets.java:2565
 msgid "Account or loyalty cards"
 msgstr "Tarjetas de fidelización o descuento"
 
 #. item "Shops/Vending machine" check "Account or loyalty cards"
-#: build/trans_presets.java:2566
+#: build/trans_presets.java:2567
 msgid "Butcher"
 msgstr "Carnicería"
 
 #. item "Shops/Butcher"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=butcher" />
-#: build/trans_presets.java:2568
+#: build/trans_presets.java:2569
 msgid "Edit Butcher"
 msgstr "Editar carnicería"
 
-#: build/trans_presets.java:2573
+#: build/trans_presets.java:2574
 msgid "Baker"
 msgstr "Panadería"
 
 #. item "Shops/Baker"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=bakery" />
-#: build/trans_presets.java:2575
+#: build/trans_presets.java:2576
 msgid "Edit Baker"
 msgstr "Editar panadería"
 
-#: build/trans_presets.java:2580
+#: build/trans_presets.java:2581
 msgid "Florist"
 msgstr "Floristería"
 
 #. item "Shops/Florist"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=florist" />
-#: build/trans_presets.java:2582
+#: build/trans_presets.java:2583
 msgid "Edit Florist"
 msgstr "Editar floristería"
 
-#: build/trans_presets.java:2587
+#: build/trans_presets.java:2588
 msgid "Organic"
 msgstr "Tienda de productos orgánicos"
 
 #. item "Shops/Organic"
-#: build/trans_presets.java:2588
+#: build/trans_presets.java:2589
 msgid "Edit Organic Shop"
 msgstr "Editar tienda de productos orgánicos"
 
-#: build/trans_presets.java:2593
+#: build/trans_presets.java:2594
 msgid "Alcohol"
 msgstr "Tienda de bebidas alcohólicas"
 
 #. item "Shops/Alcohol"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=alcohol" />
-#: build/trans_presets.java:2595
+#: build/trans_presets.java:2596
 msgid "Edit Alcohol Shop"
 msgstr "Editar tienda de bebidas alcohólicas"
 
-#: build/trans_presets.java:2600
+#: build/trans_presets.java:2601
 msgid "Beverages"
 msgstr "Bebidas"
 
 #. item "Shops/Beverages"
-#: build/trans_presets.java:2601
+#: build/trans_presets.java:2602
 msgid "Edit Beverages Shop"
 msgstr "Editar tienda de bebidas"
 
-#: build/trans_presets.java:2606
+#: build/trans_presets.java:2607
 msgid "Computer"
 msgstr "Tienda de informática"
 
 #. item "Shops/Computer"
-#: build/trans_presets.java:2607
+#: build/trans_presets.java:2608
 msgid "Edit Computer Shop"
 msgstr "Editar tienda de informática"
 
-#: build/trans_presets.java:2612
+#: build/trans_presets.java:2613
 msgid "Electronics"
 msgstr "Electrónica"
 
 #. item "Shops/Electronics"
-#: build/trans_presets.java:2613
+#: build/trans_presets.java:2614
 msgid "Edit Electronics Shop"
 msgstr "Editar tienda de electrónica"
 
-#: build/trans_presets.java:2618
+#: build/trans_presets.java:2619
 msgid "Hifi"
 msgstr "Hifi"
 
 #. item "Shops/Hifi"
-#: build/trans_presets.java:2619
+#: build/trans_presets.java:2620
 msgid "Edit Hifi Shop"
 msgstr "Editar Tienda Hifi"
 
-#: build/trans_presets.java:2624
+#: build/trans_presets.java:2625
 msgid "Furniture"
 msgstr "Muebles"
 
 #. item "Shops/Furniture"
-#: build/trans_presets.java:2625
+#: build/trans_presets.java:2626
 msgid "Edit Furniture Shop"
 msgstr "Editar mueblería"
 
-#: build/trans_presets.java:2630
+#: build/trans_presets.java:2631
 msgid "Garden Centre"
 msgstr "Centro de jardinería"
 
 #. item "Shops/Garden Centre"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=garden_centre" />
-#: build/trans_presets.java:2632
+#: build/trans_presets.java:2633
 msgid "Edit Garden Centre"
 msgstr "Editar centro de jardinería"
 
-#: build/trans_presets.java:2637
+#: build/trans_presets.java:2638
 msgid "Hardware"
-msgstr "Hardware"
+msgstr "Ferretería"
 
 #. item "Shops/Hardware"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=hardware" />
-#: build/trans_presets.java:2639
+#: build/trans_presets.java:2640
 msgid "Edit Hardware Store"
-msgstr "Editar almacén de hardware"
+msgstr "Editar ferretería"
 
-#: build/trans_presets.java:2644
+#: build/trans_presets.java:2645
 msgid "Do-it-yourself-store"
 msgstr "Almacén de bricolaje"
 
 #. item "Shops/Do-it-yourself-store"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=doityourself" />
-#: build/trans_presets.java:2646
+#: build/trans_presets.java:2647
 msgid "Edit Do-it-yourself-store"
 msgstr "Editar almacén de bricolaje"
 
-#: build/trans_presets.java:2651
+#: build/trans_presets.java:2652
 msgid "Stationery"
 msgstr "Papelería"
 
 #. item "Shops/Stationery"
-#: build/trans_presets.java:2652
+#: build/trans_presets.java:2653
 msgid "Edit Stationery Shop"
 msgstr "Editar papelería"
 
-#: build/trans_presets.java:2657
+#: build/trans_presets.java:2658
 msgid "Hairdresser"
 msgstr "Peluquería"
 
 #. item "Shops/Hairdresser"
-#: build/trans_presets.java:2658
+#: build/trans_presets.java:2659
 msgid "Edit Hairdresser"
 msgstr "Editar peluquería"
 
-#: build/trans_presets.java:2663
+#: build/trans_presets.java:2664
 msgid "Shoes"
 msgstr "Zapatos"
 
 #. item "Shops/Shoes"
-#: build/trans_presets.java:2664
+#: build/trans_presets.java:2665
 msgid "Edit Shoe Shop"
 msgstr "Editar zapatería"
 
-#: build/trans_presets.java:2669
+#: build/trans_presets.java:2670
 msgid "Toys"
 msgstr "Juguetes"
 
 #. item "Shops/Toys"
-#: build/trans_presets.java:2670
+#: build/trans_presets.java:2671
 msgid "Edit Toy Shop"
 msgstr "Editar juguetería"
 
-#: build/trans_presets.java:2675
+#: build/trans_presets.java:2676
 msgid "Video"
 msgstr "Video"
 
 #. item "Shops/Video"
-#: build/trans_presets.java:2676
+#: build/trans_presets.java:2677
 msgid "Edit Video Shop"
 msgstr "Editar tienda de videos"
 
-#: build/trans_presets.java:2681
+#: build/trans_presets.java:2682
 msgid "Dry Cleaning"
 msgstr "Tintorería"
 
 #. item "Shops/Dry Cleaning"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=dry_cleaning" />
-#: build/trans_presets.java:2683
+#: build/trans_presets.java:2684
 msgid "Edit Dry Cleaning"
 msgstr "Editar tintorería"
 
-#: build/trans_presets.java:2688
+#: build/trans_presets.java:2689
 msgid "Laundry"
 msgstr "Lavandería"
 
 #. item "Shops/Laundry"
 #. <link href="http://wiki.openstreetmap.org/wiki/Proposed_features/Laundry" />
-#: build/trans_presets.java:2690
+#: build/trans_presets.java:2691
 msgid "Edit Laundry"
 msgstr "Editar lavandería"
 
-#: build/trans_presets.java:2695
+#: build/trans_presets.java:2696
 msgid "Outdoor"
 msgstr "Tienda de actividades al aire libre"
 
 #. item "Shops/Outdoor"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=outdoor" />
-#: build/trans_presets.java:2697
+#: build/trans_presets.java:2698
 msgid "Edit Outdoor Shop"
 msgstr "Editar tienda de actividades al aire libre"
 
 #. item "Shops/Sports"
-#: build/trans_presets.java:2703
+#: build/trans_presets.java:2704
 msgid "Edit Sports Shop"
 msgstr "Editar tienda de material de deportes"
 
-#: build/trans_presets.java:2708
+#: build/trans_presets.java:2709
 msgid "Optician"
 msgstr "Óptica"
 
 #. item "Shops/Optician"
-#: build/trans_presets.java:2709
+#: build/trans_presets.java:2710
 msgid "Edit Optician"
 msgstr "Editar óptica"
 
-#: build/trans_presets.java:2716
+#: build/trans_presets.java:2717
 msgid "Cash"
 msgstr "Dinero en efectivo"
 
 #. group "Cash"
-#: build/trans_presets.java:2717
+#: build/trans_presets.java:2718
 msgid "Bank"
 msgstr "Banco"
 
 #. item "Cash/Bank"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=bank" />
-#: build/trans_presets.java:2719
+#: build/trans_presets.java:2720
 msgid "Edit Bank"
 msgstr "Editar banco"
 
-#: build/trans_presets.java:2724 build/trans_presets.java:2733
+#: build/trans_presets.java:2725 build/trans_presets.java:2734
 msgid "Automated Teller Machine"
 msgstr "Cajero automático"
 
 #. item "Cash/Bank" check "Automated Teller Machine"
-#: build/trans_presets.java:2726
+#: build/trans_presets.java:2727
 msgid "Money Exchange"
 msgstr "Cambio de moneda"
 
 #. item "Cash/Money Exchange"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=bureau_de_change" />
-#: build/trans_presets.java:2728
+#: build/trans_presets.java:2729
 msgid "Edit Money Exchange"
 msgstr "Editar cambio de moneda"
 
 #. item "Cash/Automated Teller Machine"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=atm" />
-#: build/trans_presets.java:2735
+#: build/trans_presets.java:2736
 msgid "Edit Automated Teller Machine"
 msgstr "Editar cajero automático"
 
 #. item "Cash/Automated Teller Machine" text "Operator"
-#: build/trans_presets.java:2740
+#: build/trans_presets.java:2741
 msgid "Health"
 msgstr "Centro médico"
 
 #. group "Health"
-#: build/trans_presets.java:2741
+#: build/trans_presets.java:2742
 msgid "Doctors"
 msgstr ""
 "Médicos (para centros de tratamiento ambulatorio y reconocimiento médico)"
 
 #. item "Health/Doctors"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=doctors" />
-#: build/trans_presets.java:2743
+#: build/trans_presets.java:2744
 msgid "Edit Doctors"
 msgstr "Editar médicos"
 
-#: build/trans_presets.java:2748
+#: build/trans_presets.java:2749
 msgid "Dentist"
 msgstr "Dentista"
 
 #. item "Health/Dentist"
-#: build/trans_presets.java:2749
+#: build/trans_presets.java:2750
 msgid "Edit Dentist"
 msgstr "Editar dentista"
 
-#: build/trans_presets.java:2754
+#: build/trans_presets.java:2755
 msgid "Pharmacy"
 msgstr "Farmacia/Parafarmacia"
 
 #. item "Health/Pharmacy"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=pharmacy" />
-#: build/trans_presets.java:2756
+#: build/trans_presets.java:2757
 msgid "Edit Pharmacy"
 msgstr "Editar farmacia/parafarmacia"
 
 #. item "Health/Pharmacy" label "Edit Pharmacy"
 #. <key key="amenity" value="pharmacy" />
-#: build/trans_presets.java:2758
+#: build/trans_presets.java:2759
 msgid "Dispensing"
 msgstr "Expende con receta médica"
 
-#: build/trans_presets.java:2762
+#: build/trans_presets.java:2763
 msgid "Hospital"
 msgstr "Hospital"
 
 #. item "Health/Hospital"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=hospital" />
-#: build/trans_presets.java:2764
+#: build/trans_presets.java:2765
 msgid "Edit Hospital"
 msgstr "Editar hospital"
 
 #. item "Health/Hospital" text "Name"
-#: build/trans_presets.java:2768
+#: build/trans_presets.java:2769
 msgid "Emergency Access Point"
 msgstr "Punto de acceso para emergencias"
 
 #. item "Health/Emergency Access Point"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:highway=emergency_access_point"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:highway=emergency_access_point" />
-#: build/trans_presets.java:2771
+#: build/trans_presets.java:2772
 msgid "Edit Emergency Access Point"
 msgstr "Editar punto de acceso para emergencias"
 
 #. item "Health/Emergency Access Point" label "Edit Emergency Access Point"
 #. <space />
 #. <key key="highway" value="emergency_access_point" />
-#: build/trans_presets.java:2774
+#: build/trans_presets.java:2775
 msgid "Point Number"
 msgstr "Número de punto"
 
 #. item "Health/Emergency Access Point" text "Point Number"
-#: build/trans_presets.java:2775
+#: build/trans_presets.java:2776
 msgid "Point Name"
 msgstr "Nombre del Punto"
 
 #. item "Health/Emergency Access Point" text "Operator"
-#: build/trans_presets.java:2777
+#: build/trans_presets.java:2778
 msgid "Phone Number"
 msgstr "Número de teléfono"
 
 #. item "Health/Emergency Access Point" text "Phone Number"
-#: build/trans_presets.java:2778
+#: build/trans_presets.java:2779
 msgid "(Use international code, like +12-345-67890)"
 msgstr "(Utilizar código internacional, como +12-345-67890)"
 
 #. item "Health/Emergency Access Point" label "(Use international code, like +12-345-67890)"
 #. <space />
-#: build/trans_presets.java:2781
+#: build/trans_presets.java:2782
 msgid "Veterinary"
 msgstr "Veterinario"
 
 #. item "Health/Veterinary"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=veterinary"
 #. fi.href="http://wiki.openstreetmap.org/wiki/Fi:Tag:amenity=veterinary" />
-#: build/trans_presets.java:2784
+#: build/trans_presets.java:2785
 msgid "Edit Veterinary"
 msgstr "Editar veterinario"
 
-#: build/trans_presets.java:2791
+#: build/trans_presets.java:2792
 msgid "Geography"
 msgstr "Geografía"
 
 #. group "Geography"
-#: build/trans_presets.java:2792
+#: build/trans_presets.java:2793
 msgid "Places"
 msgstr "Lugares"
 
 #. group "Geography/Places"
-#: build/trans_presets.java:2793
+#: build/trans_presets.java:2794
 msgid "Continent"
 msgstr "Continente"
 
 #. item "Geography/Places/Continent"
-#: build/trans_presets.java:2794
+#: build/trans_presets.java:2795
 msgid "Edit Continent"
 msgstr "Editar continente"
 
 #. item "Geography/Places/Continent" text "Name"
-#: build/trans_presets.java:2799
+#: build/trans_presets.java:2800
 msgid "Country"
 msgstr "País"
 
 #. item "Geography/Places/Country"
-#: build/trans_presets.java:2800
+#: build/trans_presets.java:2801
 msgid "Edit Country"
 msgstr "Editar país"
 
 #. item "Geography/Places/Country" text "Name"
-#: build/trans_presets.java:2805
+#: build/trans_presets.java:2806
 msgid "State"
 msgstr "Estado/Provincia"
 
 #. item "Geography/Places/State"
-#: build/trans_presets.java:2806
+#: build/trans_presets.java:2807
 msgid "Edit State"
 msgstr "Editar estado/provincia"
 
 #. item "Geography/Places/State" text "Name"
-#: build/trans_presets.java:2811
+#: build/trans_presets.java:2812
 msgid "Region"
 msgstr "Región"
 
 #. item "Geography/Places/Region"
-#: build/trans_presets.java:2812
+#: build/trans_presets.java:2813
 msgid "Edit Region"
 msgstr "Editar región"
 
 #. item "Geography/Places/Region" text "Name"
-#: build/trans_presets.java:2817
+#: build/trans_presets.java:2818
 msgid "County"
 msgstr "Municipio"
 
 #. item "Geography/Places/County"
-#: build/trans_presets.java:2818
+#: build/trans_presets.java:2819
 msgid "Edit County"
 msgstr "Editar municipio"
 
 #. item "Geography/Places/County" text "Name"
 #. <separator/>
-#: build/trans_presets.java:2824
+#: build/trans_presets.java:2825
 msgid "City"
 msgstr "Ciudad (>100.000 hab.)"
 
 #. item "Geography/Places/City"
-#: build/trans_presets.java:2825
+#: build/trans_presets.java:2826
 msgid "Edit City"
 msgstr "Editar ciudad (>100.00 hab.)"
 
 #. item "Geography/Places/City" text "Name"
-#: build/trans_presets.java:2830
+#: build/trans_presets.java:2831
 msgid "Town"
 msgstr "Ciudad (10.000 - 100.000 hab.)"
 
 #. item "Geography/Places/Town"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:place=town" />
-#: build/trans_presets.java:2832
+#: build/trans_presets.java:2833
 msgid "Edit Town"
 msgstr "Editar ciudad (10.000 - 100.000 hab.)"
 
 #. item "Geography/Places/Town" text "Name"
-#: build/trans_presets.java:2837
+#: build/trans_presets.java:2838
 msgid "Suburb"
 msgstr ""
 "Poblamiento compacto (grandes barrios, suburbios, polígonos de viviendas, "
@@ -24939,30 +24985,30 @@ msgstr ""
 
 #. item "Geography/Places/Suburb"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:place=suburb" />
-#: build/trans_presets.java:2839
+#: build/trans_presets.java:2840
 msgid "Edit Suburb"
 msgstr ""
 "Editar poblamiento compacto (grandes barrios, suburbios, polígonos de "
 "viviendas, distritos, etc.)"
 
 #. item "Geography/Places/Suburb" text "Name"
-#: build/trans_presets.java:2844
+#: build/trans_presets.java:2845
 msgid "Village"
 msgstr "Población (< 10.000 hab.)"
 
 #. item "Geography/Places/Village"
-#: build/trans_presets.java:2845
+#: build/trans_presets.java:2846
 msgid "Edit Village"
 msgstr "Editar población (< 10.000 hab.)"
 
 #. item "Geography/Places/Village" text "Name"
-#: build/trans_presets.java:2850
+#: build/trans_presets.java:2851
 msgid "Hamlet"
 msgstr ""
 "Poblamiento laxo (pequeños barrios, aldeas, caseríos, urbanizaciones, etc.)"
 
 #. item "Geography/Places/Hamlet"
-#: build/trans_presets.java:2851
+#: build/trans_presets.java:2852
 msgid "Edit Hamlet"
 msgstr ""
 "Editar poblamiento laxo (pequeños barrios, aldeas, caseríos, urbanizaciones, "
@@ -24970,501 +25016,503 @@ msgstr ""
 
 #. item "Geography/Places/Hamlet" text "Name"
 #. <separator/>
-#: build/trans_presets.java:2857
+#: build/trans_presets.java:2858
 msgid "Locality"
 msgstr "Paraje"
 
 #. item "Geography/Places/Locality"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:place=locality" />
-#: build/trans_presets.java:2859
+#: build/trans_presets.java:2860
 msgid "Edit Locality"
 msgstr "Editar paraje"
 
 #. item "Geography/Places/Locality" text "Name"
-#: build/trans_presets.java:2864
+#: build/trans_presets.java:2865
 msgid "Island"
 msgstr "Isla"
 
 #. item "Geography/Places/Island"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:place=island" />
-#: build/trans_presets.java:2866
+#: build/trans_presets.java:2867
 msgid "Edit Island"
 msgstr "Editar isla"
 
 #. item "Geography/Places/Island" text "Name"
-#: build/trans_presets.java:2871
+#: build/trans_presets.java:2872
 msgid "Islet"
 msgstr "Islote"
 
 #. item "Geography/Places/Islet"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:place=islet" />
-#: build/trans_presets.java:2873
+#: build/trans_presets.java:2874
 msgid "Edit Islet"
 msgstr "Editar islote"
 
 #. item "Geography/Places/Islet" text "Name"
 #. <separator/>
-#: build/trans_presets.java:2879
+#: build/trans_presets.java:2880
 msgid "Cave Entrance"
 msgstr "Entrada de cueva"
 
 #. item "Geography/Places/Cave Entrance"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=cave_entrance" />
-#: build/trans_presets.java:2881
+#: build/trans_presets.java:2882
 msgid "Edit Cave Entrance"
 msgstr "Editar entrada de cueva"
 
 #. item "Geography/Places/Cave Entrance" text "Name"
-#: build/trans_presets.java:2885
+#: build/trans_presets.java:2886
 msgid "Peak"
 msgstr "Pico"
 
 #. item "Geography/Places/Peak"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=peak" />
-#: build/trans_presets.java:2887
+#: build/trans_presets.java:2888
 msgid "Edit Peak"
 msgstr "Editar pico"
 
 #. item "Geography/Places/Peak" text "Elevation"
-#: build/trans_presets.java:2892
+#: build/trans_presets.java:2893
 msgid "Glacier"
 msgstr "Glaciar"
 
 #. item "Geography/Places/Glacier"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=glacier" />
-#: build/trans_presets.java:2894
+#: build/trans_presets.java:2895
 msgid "Edit Glacier"
 msgstr "Editar glaciar"
 
 #. item "Geography/Places/Glacier" text "Elevation"
-#: build/trans_presets.java:2899
+#: build/trans_presets.java:2900
 msgid "Volcano"
 msgstr "Volcán"
 
 #. item "Geography/Places/Volcano"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=volcano" />
-#: build/trans_presets.java:2901
+#: build/trans_presets.java:2902
 msgid "Edit Volcano"
 msgstr "Editar volcán"
 
 #. item "Geography/Places/Volcano" text "Elevation"
-#: build/trans_presets.java:2907
+#: build/trans_presets.java:2908
 msgid "Boundaries"
 msgstr "Fronteras"
 
 #. group "Boundaries"
-#: build/trans_presets.java:2908
+#: build/trans_presets.java:2909
 msgid "National"
 msgstr "Nacional"
 
 #. item "Boundaries/National"
-#: build/trans_presets.java:2909
+#: build/trans_presets.java:2910
 msgid "Edit National Boundary"
 msgstr "Editar frontera nacional"
 
 #. item "Boundaries/National" text "Name"
-#: build/trans_presets.java:2914
+#: build/trans_presets.java:2915
 msgid "Administrative"
 msgstr "Administrativa"
 
 #. item "Boundaries/Administrative"
-#: build/trans_presets.java:2915
+#: build/trans_presets.java:2916
 msgid "Edit Administrative Boundary"
 msgstr "Editar frontera administrativa"
 
 #. item "Boundaries/Administrative" text "Name"
-#: build/trans_presets.java:2920
+#: build/trans_presets.java:2921
 msgid "Civil"
 msgstr "Civil"
 
 #. item "Boundaries/Civil"
-#: build/trans_presets.java:2921
+#: build/trans_presets.java:2922
 msgid "Edit Civil Boundary"
 msgstr "Editar frontera civil"
 
 #. item "Boundaries/Civil" text "Name"
-#: build/trans_presets.java:2926
+#: build/trans_presets.java:2927
 msgid "Political"
 msgstr "Político"
 
 #. item "Boundaries/Political"
-#: build/trans_presets.java:2927
+#: build/trans_presets.java:2928
 msgid "Edit Political Boundary"
 msgstr "Editar frontera política"
 
 #. item "Boundaries/Political" text "Name"
-#: build/trans_presets.java:2932
+#: build/trans_presets.java:2933
 msgid "National park"
 msgstr "Parque Nacional"
 
 #. item "Boundaries/National park"
-#: build/trans_presets.java:2933
+#: build/trans_presets.java:2934
 msgid "Edit National Park Boundary"
 msgstr "Editar límites del parque nacional"
 
 #. item "Boundaries/National park" text "Name"
-#: build/trans_presets.java:2939
+#: build/trans_presets.java:2940
 msgid "Land use"
 msgstr "Uso del suelo"
 
 #. group "Land use"
-#: build/trans_presets.java:2940
+#: build/trans_presets.java:2941
 msgid "Tree"
 msgstr "Árbol"
 
 #. item "Land use/Tree"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=tree"
 #. fi.href="http://wiki.openstreetmap.org/wiki/Fi:Tag:natural=tree"  />
-#: build/trans_presets.java:2943
+#: build/trans_presets.java:2944
 msgid "Edit Tree"
 msgstr "Editar árbol"
 
 #. item "Land use/Tree" text "Height"
-#: build/trans_presets.java:2948
+#: build/trans_presets.java:2949
 msgid "Botanical Name"
 msgstr "Nombre botánico"
 
 #. item "Land use/Tree" text "Botanical Name"
-#: build/trans_presets.java:2950
+#: build/trans_presets.java:2951
 msgid "Wood"
 msgstr "Bosque"
 
 #. item "Land use/Wood"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=wood"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:natural=wood" />
-#: build/trans_presets.java:2953
+#: build/trans_presets.java:2954
 msgid "Edit Wood"
 msgstr "Editar bosque"
 
 #. item "Land use/Wood" combo "Type"
 #. item "Land use/Forest" combo "Type"
-#: build/trans_presets.java:2956 build/trans_presets.java:2965
+#: build/trans_presets.java:2957 build/trans_presets.java:2966
 msgid "coniferous"
 msgstr "conífera"
 
-#: build/trans_presets.java:2956 build/trans_presets.java:2965
+#: build/trans_presets.java:2957 build/trans_presets.java:2966
 msgid "deciduous"
 msgstr "caducifolio"
 
-#: build/trans_presets.java:2956 build/trans_presets.java:2965
+#: build/trans_presets.java:2957 build/trans_presets.java:2966
 msgid "mixed"
 msgstr "mixto"
 
-#: build/trans_presets.java:2958
+#: build/trans_presets.java:2959
 msgid "Forest"
 msgstr "Plantación forestal"
 
 #. item "Land use/Forest"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=forest"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:landuse=forest" />
-#: build/trans_presets.java:2961
+#: build/trans_presets.java:2962
 msgid "Edit Forest Landuse"
 msgstr "Editar zona forestal"
 
-#: build/trans_presets.java:2967
+#: build/trans_presets.java:2968
 msgid "Nature Reserve"
 msgstr "Reserva natural"
 
 #. item "Land use/Nature Reserve"
-#: build/trans_presets.java:2968
+#: build/trans_presets.java:2969
 msgid "Edit Nature Reserve"
 msgstr "Editar reserva natural"
 
 #. item "Land use/Nature Reserve" text "Name"
 #. <separator/>
-#: build/trans_presets.java:2973
+#: build/trans_presets.java:2974
 msgid "Scree"
 msgstr "Pedregal"
 
 #. item "Land use/Scree"
-#: build/trans_presets.java:2974
+#: build/trans_presets.java:2975
 msgid "Edit Scree"
 msgstr "Editar pedregal"
 
 #. item "Land use/Scree" text "Name"
-#: build/trans_presets.java:2978
+#: build/trans_presets.java:2979
 msgid "Scrub"
 msgstr "Matorral"
 
 #. item "Land use/Scrub"
-#: build/trans_presets.java:2979
+#: build/trans_presets.java:2980
 msgid "Edit Scrub"
 msgstr "Editar matorral"
 
 #. item "Land use/Scrub" text "Name"
-#: build/trans_presets.java:2983
+#: build/trans_presets.java:2984
 msgid "Fell"
 msgstr "Braña"
 
 #. item "Land use/Fell"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=fell" />
-#: build/trans_presets.java:2985
+#: build/trans_presets.java:2986
 msgid "Edit Fell"
 msgstr "Editar braña"
 
 #. item "Land use/Fell" text "Name"
-#: build/trans_presets.java:2989
+#: build/trans_presets.java:2990
 msgid "Heath"
 msgstr "Brezal o landa"
 
 #. item "Land use/Heath"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:natural=heath" />
-#: build/trans_presets.java:2991
+#: build/trans_presets.java:2992
 msgid "Edit Heath"
 msgstr "Editar brezal o landa"
 
 #. item "Land use/Heath" text "Name"
 #. <separator/>
-#: build/trans_presets.java:2996
+#: build/trans_presets.java:2997
 msgid "Farmyard"
 msgstr "Edificio agrario"
 
 #. item "Land use/Farmyard"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=farmyard"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:landuse=farmyard" />
-#: build/trans_presets.java:2999
+#: build/trans_presets.java:3000
 msgid "Edit Farmyard Landuse"
 msgstr "Editar edificio agrario"
 
 #. item "Land use/Farmyard" text "Name"
-#: build/trans_presets.java:3004
+#: build/trans_presets.java:3005
 msgid "Farmland"
 msgstr "Tierra de labranza"
 
 #. item "Land use/Farmland"
-#: build/trans_presets.java:3005
+#: build/trans_presets.java:3006
 msgid "Edit Farmland Landuse"
 msgstr "Editar tierra de labranza"
 
 #. item "Land use/Farmland" text "Name"
-#: build/trans_presets.java:3010
+#: build/trans_presets.java:3011
 msgid "Meadow"
 msgstr "Prado"
 
 #. item "Land use/Meadow"
-#: build/trans_presets.java:3011
+#: build/trans_presets.java:3012
 msgid "Edit Meadow Landuse"
 msgstr "Editar prado"
 
 #. item "Land use/Meadow" text "Name"
-#: build/trans_presets.java:3016
+#: build/trans_presets.java:3017
 msgid "Vineyard"
 msgstr "Viñedo"
 
 #. item "Land use/Vineyard"
-#: build/trans_presets.java:3017
+#: build/trans_presets.java:3018
 msgid "Edit Vineyard Landuse"
 msgstr "Editar viñedo"
 
 #. item "Land use/Vineyard" text "Name"
-#: build/trans_presets.java:3022
+#: build/trans_presets.java:3023
 msgid "Allotments"
 msgstr "Huertos de ocio"
 
 #. item "Land use/Allotments"
-#: build/trans_presets.java:3023
+#: build/trans_presets.java:3024
 msgid "Edit Allotments Landuse"
 msgstr "Editar zona de huertos de ocio"
 
 #. item "Land use/Allotments" text "Name"
 #. <separator/>
-#: build/trans_presets.java:3029
+#: build/trans_presets.java:3030
 msgid "Garden"
 msgstr "Jardín"
 
 #. item "Land use/Garden"
-#: build/trans_presets.java:3030
+#: build/trans_presets.java:3031
 msgid "Edit Garden"
 msgstr "Editar jardín"
 
 #. item "Land use/Garden" text "Name"
-#: build/trans_presets.java:3034
+#: build/trans_presets.java:3035
 msgid "Grass"
 msgstr "Pastizal"
 
 #. item "Land use/Grass"
-#: build/trans_presets.java:3035
+#: build/trans_presets.java:3036
 msgid "Edit Grass Landuse"
 msgstr "Editar pastizal"
 
 #. item "Land use/Grass" text "Name"
-#: build/trans_presets.java:3040
+#: build/trans_presets.java:3041
 msgid "Village Green"
-msgstr "Parque municipal"
+msgstr ""
+"Parque municipal (espacio comunal con suelo de hierba para reuniones, "
+"fiestas, ferias, etc.)"
 
 #. item "Land use/Village Green"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=village_green" />
-#: build/trans_presets.java:3042
+#: build/trans_presets.java:3043
 msgid "Edit Village Green Landuse"
 msgstr "Editar parque municipal"
 
 #. item "Land use/Village Green" text "Name"
-#: build/trans_presets.java:3047
+#: build/trans_presets.java:3048
 msgid "Common"
 msgstr "Espacio de uso común (plazas, alamedas, bulevares, etc.)"
 
 #. item "Land use/Common"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:leisure=common" />
-#: build/trans_presets.java:3049
+#: build/trans_presets.java:3050
 msgid "Edit Common"
 msgstr "Editar espacio de uso común"
 
 #. item "Land use/Common" text "Name"
-#: build/trans_presets.java:3053
+#: build/trans_presets.java:3054
 msgid "Park"
 msgstr "Parque"
 
 #. item "Land use/Park"
-#: build/trans_presets.java:3054
+#: build/trans_presets.java:3055
 msgid "Edit Park"
 msgstr "Editar parque"
 
 #. item "Land use/Park" text "Name"
-#: build/trans_presets.java:3058
+#: build/trans_presets.java:3059
 msgid "Recreation Ground"
 msgstr "Área de esparcimiento"
 
 #. item "Land use/Recreation Ground"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=recreation_ground" />
-#: build/trans_presets.java:3060
+#: build/trans_presets.java:3061
 msgid "Edit Recreation Ground Landuse"
 msgstr "Editar área de esparcimiento"
 
 #. item "Land use/Recreation Ground" text "Name"
 #. <separator/>
-#: build/trans_presets.java:3066
+#: build/trans_presets.java:3067
 msgid "Residential area"
 msgstr "Área residencial"
 
 #. item "Land use/Residential area"
-#: build/trans_presets.java:3067
+#: build/trans_presets.java:3068
 msgid "Edit Residential Landuse"
 msgstr "Editar suelo residencial"
 
 #. item "Land use/Residential area" text "Name"
-#: build/trans_presets.java:3072
+#: build/trans_presets.java:3073
 msgid "Graveyard"
 msgstr "Camposanto (para los cementerios próximos a las iglesias)"
 
 #. item "Land use/Graveyard"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=grave_yard" />
-#: build/trans_presets.java:3074
+#: build/trans_presets.java:3075
 msgid "Edit Graveyard"
 msgstr "Editar camposanto"
 
-#: build/trans_presets.java:3080
+#: build/trans_presets.java:3081
 msgid "Cemetery"
 msgstr "Cementerio"
 
 #. item "Land use/Cemetery"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=cemetery" />
-#: build/trans_presets.java:3082
+#: build/trans_presets.java:3083
 msgid "Edit Cemetery Landuse"
 msgstr "Editar cementerio"
 
-#: build/trans_presets.java:3089
+#: build/trans_presets.java:3090
 msgid "Retail"
 msgstr "Comercios"
 
 #. item "Land use/Retail"
-#: build/trans_presets.java:3090
+#: build/trans_presets.java:3091
 msgid "Edit Retail Landuse"
 msgstr "Editar comercios"
 
 #. item "Land use/Retail" text "Name"
-#: build/trans_presets.java:3095
+#: build/trans_presets.java:3096
 msgid "Commercial"
 msgstr "Oficinas"
 
 #. item "Land use/Commercial"
-#: build/trans_presets.java:3096
+#: build/trans_presets.java:3097
 msgid "Edit Commercial Landuse"
 msgstr "Editar oficinas"
 
 #. item "Land use/Commercial" text "Name"
-#: build/trans_presets.java:3101
+#: build/trans_presets.java:3102
 msgid "Industrial"
 msgstr "Industrial"
 
 #. item "Land use/Industrial"
-#: build/trans_presets.java:3102
+#: build/trans_presets.java:3103
 msgid "Edit Industrial Landuse"
 msgstr "Editar suelo industrial"
 
 #. item "Land use/Industrial" text "Name"
-#: build/trans_presets.java:3107
+#: build/trans_presets.java:3108
 msgid "Railway land"
 msgstr "Zona ferroviaria"
 
 #. item "Land use/Railway land"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=railway" />
-#: build/trans_presets.java:3109
+#: build/trans_presets.java:3110
 msgid "Edit Railway Landuse"
 msgstr "Editar zona ferroviaria"
 
 #. item "Land use/Railway land" text "Name"
-#: build/trans_presets.java:3114
+#: build/trans_presets.java:3115
 msgid "Military"
 msgstr "Militar"
 
 #. item "Land use/Military"
-#: build/trans_presets.java:3115
+#: build/trans_presets.java:3116
 msgid "Edit Military Landuse"
 msgstr "Editar área militar"
 
 #. item "Land use/Military" text "Name"
 #. <separator/>
-#: build/trans_presets.java:3121
+#: build/trans_presets.java:3122
 msgid "Construction area"
 msgstr "Zona en construcción"
 
 #. item "Land use/Construction area"
-#: build/trans_presets.java:3122
+#: build/trans_presets.java:3123
 msgid "Edit Construction Landuse"
 msgstr "Editar zona en construcción"
 
 #. item "Land use/Construction area" text "Name"
-#: build/trans_presets.java:3127
+#: build/trans_presets.java:3128
 msgid "Brownfield"
 msgstr "Baldío"
 
 #. item "Land use/Brownfield"
-#: build/trans_presets.java:3128
+#: build/trans_presets.java:3129
 msgid "Edit Brownfield Landuse"
 msgstr "Editar terreno baldío"
 
 #. item "Land use/Brownfield" text "Name"
-#: build/trans_presets.java:3133
+#: build/trans_presets.java:3134
 msgid "Greenfield"
 msgstr "Suelo en construcción"
 
 #. item "Land use/Greenfield"
-#: build/trans_presets.java:3134
+#: build/trans_presets.java:3135
 msgid "Edit Greenfield Landuse"
 msgstr "Editar suelo en contrucción"
 
 #. item "Land use/Greenfield" text "Name"
-#: build/trans_presets.java:3139
+#: build/trans_presets.java:3140
 msgid "Landfill"
 msgstr "Vertedero"
 
 #. item "Land use/Landfill"
-#: build/trans_presets.java:3140
+#: build/trans_presets.java:3141
 msgid "Edit Landfill Landuse"
 msgstr "Editar vertedero"
 
 #. item "Land use/Landfill" text "Name"
-#: build/trans_presets.java:3145
+#: build/trans_presets.java:3146
 msgid "Quarry"
 msgstr "Cantera"
 
 #. item "Land use/Quarry"
-#: build/trans_presets.java:3146
+#: build/trans_presets.java:3147
 msgid "Edit Quarry Landuse"
 msgstr "Editar cantera"
 
 #. group "Relations"
-#: build/trans_presets.java:3155
+#: build/trans_presets.java:3156
 msgid "Multipolygon"
 msgstr "Multipolígono"
 
@@ -25472,103 +25520,103 @@ msgstr "Multipolígono"
 #. <link href="http://wiki.openstreetmap.org/wiki/Relation:multipolygon"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Relation:multipolygon"
 #. fr.href="http://wiki.openstreetmap.org/wiki/FR:Relation:multipolygon" />
-#: build/trans_presets.java:3159
+#: build/trans_presets.java:3160
 msgid "Edit Multipolygon"
 msgstr "Editar multipolígono"
 
 #. item "Relations/Multipolygon" text "Name"
 #. </optional>
 #. <roles>
-#: build/trans_presets.java:3165
+#: build/trans_presets.java:3166
 msgid "outer segment"
 msgstr "segmento exterior"
 
 #. item "Relations/Multipolygon" role "outer segment"
-#: build/trans_presets.java:3166
+#: build/trans_presets.java:3167
 msgid "inner segment"
 msgstr "segmento interior"
 
 #. item "Relations/Multipolygon" role "inner segment"
 #. </roles>
-#: build/trans_presets.java:3169
+#: build/trans_presets.java:3170
 msgid "Turn restriction"
 msgstr "Restricción de giro"
 
 #. item "Relations/Turn restriction"
 #. <link href="http://wiki.openstreetmap.org/wiki/Relation:restriction"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Relation:restriction"/>
-#: build/trans_presets.java:3172
+#: build/trans_presets.java:3173
 msgid "Edit Turn Restriction"
 msgstr "Editar restricción de giro"
 
 #. item "Relations/Turn restriction" label "Edit Turn Restriction"
 #. <key key="type" value="restriction" />
-#: build/trans_presets.java:3174
+#: build/trans_presets.java:3175
 msgid "Restriction"
 msgstr "Restricción"
 
 #. item "Relations/Turn restriction" combo "Restriction"
-#: build/trans_presets.java:3174
+#: build/trans_presets.java:3175
 msgid "no_left_turn"
 msgstr "prohibido girar a la izquierda"
 
-#: build/trans_presets.java:3174
+#: build/trans_presets.java:3175
 msgid "no_right_turn"
 msgstr "prohibido girar a la derecha"
 
-#: build/trans_presets.java:3174
+#: build/trans_presets.java:3175
 msgid "no_straight_on"
 msgstr "prohibido continuar recto"
 
-#: build/trans_presets.java:3174
+#: build/trans_presets.java:3175
 msgid "no_u_turn"
 msgstr "prohibido giro en U"
 
-#: build/trans_presets.java:3174
+#: build/trans_presets.java:3175
 msgid "only_right_turn"
 msgstr "solo giro a la derecha"
 
-#: build/trans_presets.java:3174
+#: build/trans_presets.java:3175
 msgid "only_left_turn"
 msgstr "solo giro a la izquierda"
 
-#: build/trans_presets.java:3174
+#: build/trans_presets.java:3175
 msgid "only_straight_on"
 msgstr "solo ir recto"
 
 #. item "Relations/Turn restriction" text "Name"
 #. </optional>
 #. <roles>
-#: build/trans_presets.java:3179
+#: build/trans_presets.java:3180
 msgid "from way"
 msgstr "desde la vía"
 
 #. item "Relations/Turn restriction" role "from way"
-#: build/trans_presets.java:3180
+#: build/trans_presets.java:3181
 msgid "via node or way"
 msgstr "a través de nodo o vía"
 
 #. item "Relations/Turn restriction" role "via node or way"
-#: build/trans_presets.java:3181
+#: build/trans_presets.java:3182
 msgid "to way"
 msgstr "a la vía"
 
 #. item "Relations/Turn restriction" role "to way"
 #. </roles>
-#: build/trans_presets.java:3184
+#: build/trans_presets.java:3185
 msgid "Route"
 msgstr "Ruta"
 
 #. item "Relations/Route"
 #. <link href="http://wiki.openstreetmap.org/wiki/Relation:route"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Relation:route"/>
-#: build/trans_presets.java:3187
+#: build/trans_presets.java:3188
 msgid "Edit Route"
 msgstr "Editar ruta"
 
 #. item "Relations/Route" label "Edit Route"
 #. <key key="type" value="route" />
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "Route type"
 msgstr "Tipo de ruta"
 
@@ -25638,26 +25686,26 @@ msgstr "Tipo de ruta"
 #.
 #. <rule>
 #. <condition k="cycleway" v="opposite"/>
-#: build/trans_presets.java:3189 build/trans_style.java:233
+#: build/trans_presets.java:3190 build/trans_style.java:233
 #: build/trans_style.java:689 build/trans_style.java:883
 #: build/trans_style.java:891 build/trans_style.java:899
 #: build/trans_style.java:907 build/trans_style.java:915
 msgid "bicycle"
 msgstr "bicicleta"
 
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "bus"
 msgstr "bus"
 
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "road"
 msgstr "carretera"
 
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "ferry"
 msgstr "ferry"
 
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "ski"
 msgstr "ski"
 
@@ -25708,22 +25756,22 @@ msgstr "ski"
 #.
 #. <rule>
 #. <condition k="highway" v="steps"/>
-#: build/trans_presets.java:3189 build/trans_style.java:247
+#: build/trans_presets.java:3190 build/trans_style.java:247
 #: build/trans_style.java:697 build/trans_style.java:705
 #: build/trans_style.java:713 build/trans_style.java:714
 #: build/trans_style.java:722
 msgid "foot"
 msgstr "pie"
 
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "hiking"
 msgstr "senderismo"
 
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "tram"
 msgstr "tranvía"
 
-#: build/trans_presets.java:3189
+#: build/trans_presets.java:3190
 msgid "detour"
 msgstr "desvío"
 
@@ -25735,76 +25783,76 @@ msgstr "desvío"
 #.
 #. <rule>
 #. <condition k="railway" v="subway"/>
-#: build/trans_presets.java:3189 build/trans_style.java:1167
+#: build/trans_presets.java:3190 build/trans_style.java:1167
 msgid "subway"
 msgstr "metro"
 
 #. item "Relations/Route" text "Reference"
-#: build/trans_presets.java:3192
+#: build/trans_presets.java:3193
 msgid "Symbol description"
 msgstr "Descripción del símbolo"
 
 #. item "Relations/Route" text "Description"
 #. <optional>
-#: build/trans_presets.java:3195
+#: build/trans_presets.java:3196
 msgid "Network"
 msgstr "Red"
 
 #. item "Relations/Route" text "Operator"
-#: build/trans_presets.java:3197
+#: build/trans_presets.java:3198
 msgid "Route state"
 msgstr "Ruta estatal"
 
 #. item "Relations/Route" combo "Route state"
-#: build/trans_presets.java:3197
+#: build/trans_presets.java:3198
 msgid "proposed"
 msgstr "Propuesto"
 
-#: build/trans_presets.java:3197
+#: build/trans_presets.java:3198
 msgid "alternate"
 msgstr "Suplente"
 
-#: build/trans_presets.java:3197
+#: build/trans_presets.java:3198
 msgid "temporary"
 msgstr "temporal"
 
-#: build/trans_presets.java:3197
+#: build/trans_presets.java:3198
 msgid "connection"
 msgstr "Conexión"
 
-#: build/trans_presets.java:3198
+#: build/trans_presets.java:3199
 msgid "Color (hex)"
 msgstr "Color (hex)"
 
 #. item "Relations/Route" text "Color (hex)"
 #. </optional>
 #. <roles>
-#: build/trans_presets.java:3201
+#: build/trans_presets.java:3202
 msgid "route segment"
 msgstr "segmento de la ruta"
 
 #. item "Relations/Route" role "route segment"
-#: build/trans_presets.java:3202
+#: build/trans_presets.java:3203
 msgid "forward segment"
 msgstr "segmento siguiente"
 
 #. item "Relations/Route" role "forward segment"
-#: build/trans_presets.java:3203
+#: build/trans_presets.java:3204
 msgid "backward segment"
 msgstr "segmento anterior"
 
 #. item "Relations/Route" role "backward segment"
-#: build/trans_presets.java:3204
+#: build/trans_presets.java:3205
 msgid "halt point"
 msgstr "punto de detención"
 
 #. item "Relations/Route" role "halt point"
-#: build/trans_presets.java:3205
+#: build/trans_presets.java:3206
 msgid "forward halt point"
 msgstr "próximo punto de parada"
 
 #. item "Relations/Route" role "forward halt point"
-#: build/trans_presets.java:3206
+#: build/trans_presets.java:3207
 msgid "backward halt point"
 msgstr "anterior punto de parada"
 
@@ -25815,8 +25863,8 @@ msgstr "anterior punto de parada"
 #. -k for the key (required)
 #. -v for the value as a string
 #. -b for the values yes / no (boolean, will also understand true, 1 and false, 0 respectively)
-#. Although the value flags v/b for the condition are optional, using at
-#. least one of them is highly recommended!
+#. Both -v and -b are optional (but recommended). If both are ommitted, the rule will apply to all
+#. tags with the given key - don't forget to set a priority if other rules could also apply.
 #. 3. line attributes
 #. - width absolute width in pixel in every zoom level
 #. - realwidth relative width which will be scaled in meters, integer
@@ -25847,7 +25895,7 @@ msgstr "anterior punto de parada"
 #. - zoom scale for display
 #.
 #. Using both area and line attributes for the same key/value pair does work. For areas
-#. first the rbest matching area rule is searched and the best matching line rule is
+#. first the best matching area rule is searched and the best matching line rule is
 #. connected with it. They need not have the same key/value pair.
 #.
 #. The colours can consist of the two components - name and hex code (e.g. water#0000ff).
@@ -29982,6 +30030,12 @@ msgstr ""
 msgid "Sicily - Italy"
 msgstr ""
 
+#~ msgid "Deleted member ''{0}'' in relation."
+#~ msgstr "Miembro ''{0}'' borrado en la relación."
+
+#~ msgid "Way ''{0}'' with less than two points."
+#~ msgstr "Vía ''{0}''  con menos de dos puntos."
+
 #~ msgid "The base URL for the OSM server (REST API)"
 #~ msgstr "La URL base del servidor OSM (REST API)"
 
@@ -30308,9 +30362,6 @@ msgstr ""
 
 #~ msgid "Proxy server password"
 #~ msgstr "Contraseña del servidor proxy"
-
-#~ msgid "Date"
-#~ msgstr "Fecha"
 
 #~ msgid "Drawbridge"
 #~ msgstr "Puente levadizo"
@@ -30944,9 +30995,6 @@ msgstr ""
 
 #~ msgid "Update Selection"
 #~ msgstr "Actualización de selección"
-
-#~ msgid "Missing primitive"
-#~ msgstr "Falta la primitiva"
 
 #~ msgid "Error header \"{0}\" does not match expected pattern \"{1}\""
 #~ msgstr ""

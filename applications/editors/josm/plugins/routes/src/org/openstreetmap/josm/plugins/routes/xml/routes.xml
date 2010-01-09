@@ -4,22 +4,22 @@
 	<layer name="Czech hiking trails">
 		<route color="#FF0000">
 			<pattern>
-			((type:relation | type:way) kct_red=*) | (color=red type=route route=hiking network=cz:kct)
+			((type:relation | type:way) kct_red=*) | (color=red type=route route=hiking network="cz:kct")
 			</pattern>
 		</route>
 		<route color="#FFFF00">
 			<pattern>
-			((type:relation | type:way) kct_yellow=*) | (color=yellow type=route route=hiking network=cz:kct)
+			((type:relation | type:way) kct_yellow=*) | (color=yellow type=route route=hiking network="cz:kct")
 			</pattern>			
 		</route>
 		<route color="#0000FF">
 			<pattern>
-			((type:relation | type:way) kct_blue=*) | (color=blue type=route route=hiking network=cz:kct)
+			((type:relation | type:way) kct_blue=*) | (color=blue type=route route=hiking network="cz:kct")
 			</pattern>
 		</route>
 		<route color="#00FF00">
 			<pattern>
-			((type:relation | type:way) kct_green=*) | (color=green type=route route=hiking network=cz:kct)
+			((type:relation | type:way) kct_green=*) | (color=green type=route route=hiking network="cz:kct")
 			</pattern>		
 		</route>
 	</layer>

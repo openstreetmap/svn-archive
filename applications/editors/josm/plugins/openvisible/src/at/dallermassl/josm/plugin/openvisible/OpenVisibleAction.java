@@ -119,9 +119,9 @@ public class OpenVisibleAction extends JosmAction {
         if (new GpxImporter().acceptFile(file)) {
             GpxReader r = null;
             if (file.getName().endsWith(".gpx.gz")) {
-                r = new GpxReader(new GZIPInputStream(new FileInputStream(file)), file.getAbsoluteFile().getParentFile());
+                r = new GpxReader(new GZIPInputStream(new FileInputStream(file)));
             } else{
-                r = new GpxReader(new FileInputStream(file), file.getAbsoluteFile().getParentFile());
+                r = new GpxReader(new FileInputStream(file));
             }
             r.data.storageFile = file;
             GpxLayer gpxLayer = new GpxLayer(r.data, fn);

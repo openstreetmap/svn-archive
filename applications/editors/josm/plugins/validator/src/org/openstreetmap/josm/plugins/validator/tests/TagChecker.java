@@ -885,7 +885,7 @@ public class TagChecker extends Test
         protected static int TAG_CHECK_WARN   = 1260;
         protected static int TAG_CHECK_INFO   = 1270;
 
-        private class CheckerElement {
+        private static class CheckerElement {
             public Object tag;
             public Object value;
             public boolean noMatch;

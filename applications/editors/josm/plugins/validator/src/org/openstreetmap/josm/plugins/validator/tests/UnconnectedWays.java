@@ -225,8 +225,10 @@ public class UnconnectedWays extends Test
         {
 //            return !w.containsNode(n)
 //            && line.ptSegDist(n.getEastNorth().east(), n.getEastNorth().north()) < dist;
-            if (w == null)
+            if (w == null) {
                 Main.debug("way null");
+                return false;
+            }
             if (w.containsNode(n))
                 return false;
             EastNorth coord = n.getEastNorth();

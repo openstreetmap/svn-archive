@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.validator;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,10 +32,10 @@ import org.openstreetmap.josm.tools.GBC;
 public class Test extends AbstractVisitor
 {
     /** Name of the test */
-    protected String name;
+    protected final String name;
 
     /** Description of the test */
-    protected String description;
+    protected final String description;
 
     /** Whether this test is enabled. Enabled by default */
     protected boolean enabled = true;
@@ -76,7 +77,7 @@ public class Test extends AbstractVisitor
      */
     public Test(String name)
     {
-        this.name = name;
+        this(name, null);
     }
 
     /**
@@ -161,7 +162,7 @@ public class Test extends AbstractVisitor
         testPanel.add(checkEnabled, GBC.std());
 
         GBC a = GBC.eol();
-        a.anchor = GBC.EAST;
+        a.anchor = GridBagConstraints.EAST;
         checkBeforeUpload = new JCheckBox();
         checkBeforeUpload.setSelected(testBeforeUpload);
         testPanel.add(checkBeforeUpload, a);

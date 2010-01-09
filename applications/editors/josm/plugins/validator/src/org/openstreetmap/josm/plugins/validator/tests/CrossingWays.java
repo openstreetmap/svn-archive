@@ -165,7 +165,7 @@ public class CrossingWays extends Test
      * A way segment with some additional information
      * @author frsantos
      */
-    private class ExtendedSegment
+    private static class ExtendedSegment
     {
         public Node n1, n2;
 

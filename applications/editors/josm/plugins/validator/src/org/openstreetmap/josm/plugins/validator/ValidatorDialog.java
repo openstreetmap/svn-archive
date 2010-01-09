@@ -437,7 +437,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         if (!Main.pref.getBoolean(PreferenceEditor.PREF_FILTER_BY_SELECTION, false))
             return;
-        if (newSelection == null || newSelection.size() == 0)
+        if (newSelection.isEmpty())
             tree.setFilter(null);
         HashSet<OsmPrimitive> filter = new HashSet<OsmPrimitive>(newSelection);
         tree.setFilter(filter);

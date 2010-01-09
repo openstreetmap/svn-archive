@@ -137,7 +137,7 @@ public class GridLayer extends Layer
     /**
      * Visitor that highlights all cells the selected primitives go through
      */
-    class HighlightCellVisitor extends AbstractVisitor
+    static class HighlightCellVisitor extends AbstractVisitor
     {
         /** The MapView */
         private final MapView mv;

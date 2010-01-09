@@ -340,7 +340,7 @@ public class Entities {
         int firstAmp = str.indexOf('&');
         if (firstAmp < 0)
             return str;
-        String res = new String(str.substring(0, firstAmp));
+        String res = str.substring(0, firstAmp);
         int len = str.length();
         for (int i = firstAmp; i < len; i++) {
             char c = str.charAt(i);

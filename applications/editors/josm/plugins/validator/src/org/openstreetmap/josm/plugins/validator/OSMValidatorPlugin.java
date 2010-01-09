@@ -38,6 +38,7 @@ import org.openstreetmap.josm.plugins.validator.tests.CrossingWays;
 import org.openstreetmap.josm.plugins.validator.tests.DuplicateNode;
 import org.openstreetmap.josm.plugins.validator.tests.DuplicateWay;
 import org.openstreetmap.josm.plugins.validator.tests.DuplicatedWayNodes;
+import org.openstreetmap.josm.plugins.validator.tests.MultipolygonTest;
 import org.openstreetmap.josm.plugins.validator.tests.NameMismatch;
 import org.openstreetmap.josm.plugins.validator.tests.NodesWithSameName;
 import org.openstreetmap.josm.plugins.validator.tests.OverlappingWays;
@@ -79,7 +80,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
 
     /**
      * All available tests
-     * TODO: is there any way to find out automagically all available tests?
+     * TODO: is there any way to find out automatically all available tests?
      */
     @SuppressWarnings("unchecked")
     public static Class<Test>[] allAvailableTests = new Class[] { DuplicateNode.class, // ID    1 ..   99
@@ -98,6 +99,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
             UnconnectedWays.class, // ID 1301 .. 1399
             DuplicateWay.class, // ID 1401 .. 1499
             NameMismatch.class, // ID  1501 ..  1599
+            MultipolygonTest.class, // ID  1601 ..  1699
     };
 
     /**
@@ -133,6 +135,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
                     ignoredErrors.add(line);
                 }
             } catch (final FileNotFoundException e) {
+                // Ignore
             } catch (final IOException e) {
                 e.printStackTrace();
             }
@@ -156,7 +159,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
     }
 
     private ValidateUploadHook uploadHook;
-    
+
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
@@ -165,7 +168,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
             initializeErrorLayer();
             if (Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid"))
                 Main.main.addLayer(new GridLayer(tr("Grid")));
-            MapView.addLayerChangeListener(this);            
+            MapView.addLayerChangeListener(this);
         } else
         	MapView.removeLayerChangeListener(this);
         if (newFrame != null) {
@@ -272,14 +275,14 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
                 }
             } catch (InvocationTargetException ite) {
                 ite.getCause().printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent, 
+                JOptionPane.showMessageDialog(Main.parent,
                 		tr("Error initializing test {0}:\n {1}", test.getClass()
                         .getSimpleName(), ite.getCause().getMessage()),
                         tr("Error"),
                         JOptionPane.ERROR_MESSAGE);
             } catch (Exception e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent, 
+                JOptionPane.showMessageDialog(Main.parent,
                 		tr("Error initializing test {0}:\n {1}", test.getClass()
                         .getSimpleName(), e),
                         tr("Error"),

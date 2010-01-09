@@ -27,7 +27,7 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
 public class DuplicateWay extends Test
 {
 
-    private class WayPair {
+    private static class WayPair {
         public List<LatLon> coor;
         public Map<String, String> keys;
         public WayPair(List<LatLon> _coor,Map<String, String> _keys) {

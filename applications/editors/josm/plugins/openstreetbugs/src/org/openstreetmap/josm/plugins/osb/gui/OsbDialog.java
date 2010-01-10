@@ -96,7 +96,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
     private JToggleButton toggleConnectionMode;
     private JTabbedPane tabbedPane = new JTabbedPane();
     private boolean queuePanelVisible = false;
-    
+
     private boolean buttonLabels = Main.pref.getBoolean(ConfigKeys.OSB_BUTTON_LABELS);
 
     public OsbDialog(final OsbPlugin plugin) {
@@ -117,7 +117,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
         bugList.addMouseListener(this);
         bugList.setCellRenderer(new OsbBugListCellRenderer());
         bugListPanel.add(new JScrollPane(bugList), BorderLayout.CENTER);
-        
+
         // create dialog buttons
         GridLayout layout = buttonLabels ? new GridLayout(3, 2) : new GridLayout(1, 5);
         JPanel buttonPanel = new JPanel(layout);
@@ -151,7 +151,6 @@ DataChangeListener, MouseListener, OsbActionObserver {
             Main.pref.put(ConfigKeys.OSB_API_OFFLINE, false);
             toggleConnectionMode.doClick();
         }
-        
 
         AddCommentAction addCommentAction = new AddCommentAction(this);
         addComment = new JButton(addCommentAction);
@@ -173,7 +172,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
         buttonPanel.add(newIssue);
         buttonPanel.add(addComment);
         buttonPanel.add(closeIssue);
-        
+
         queuePanel = new JPanel(new BorderLayout());
         queuePanel.setName(tr("Queue"));
         queueList = new JList(ActionQueue.getInstance());
@@ -186,7 +185,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
                 setConnectionMode(false);
                 try {
                     ActionQueue.getInstance().processQueue();
-    
+
                     // refresh, if the api is enabled
                     if(!Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
                         plugin.updateData();
@@ -225,7 +224,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
         if(listItem != null) {
             lastNode = listItem.getNode();
         }
-        
+
         // create a new list model
         bugListModel = new DefaultListModel();
         List<Node> sortedList = new ArrayList<Node>(dataset.getNodes());
@@ -236,7 +235,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
             }
         }
         bugList.setModel(bugListModel);
-        
+
         // restore the last selection 
         if(lastNode != null) {
             bugList.setSelectedValue(new OsbListItem(lastNode), true);
@@ -376,7 +375,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
         }
         super.showDialog();
     }
-    
+
     public void showQueuePanel() {
         if(!queuePanelVisible) {
             remove(bugListPanel);
@@ -388,7 +387,7 @@ DataChangeListener, MouseListener, OsbActionObserver {
             repaint();
         }
     }
-    
+
     public void hideQueuePanel() {
         if(queuePanelVisible) {
             tabbedPane.remove(bugListPanel);
@@ -399,18 +398,18 @@ DataChangeListener, MouseListener, OsbActionObserver {
             repaint();
         }
     }
-    
+
     public Node getSelectedNode() {
         return ((OsbListItem)bugList.getSelectedValue()).getNode();
     }
-    
+
     public void setSelectedNode(Node node) {
         bugList.setSelectedValue(new OsbListItem(node), true);
     }
-    
+
     public void setConnectionMode(boolean offline) {
         refresh.setEnabled(!offline);
-        setTitle("OpenStreetBugs (" + (offline ? "offline" : "online") + ")");
+        setTitle(tr("OpenStreetBugs ({0})", (offline ? tr("offline") : tr("online"))));
         toggleConnectionMode.setSelected(offline);
     }
 }

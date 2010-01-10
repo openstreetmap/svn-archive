@@ -210,7 +210,11 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     public static ImageIcon loadIcon(String name) {
         URL url = OsbPlugin.class.getResource("/images/".concat(name));
-        return new ImageIcon(url);
+        if(url != null) {
+            return new ImageIcon(url);
+        } else  {
+            return new ImageIcon();
+        }
     }
 
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {}

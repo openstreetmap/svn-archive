@@ -22,11 +22,14 @@
     <map name="Computerteddy" boundary="Germany" comment="" updated="Weekly">
         <lang iso="de" name="Computerteddy"  boundary="Deutschland" comment="" updated="Woechentlich"/>
         <!-- routing: yes, no -->
-        <!-- height display: no, shading or lines -->
-        <!-- address search: no, pois or search -->
+        <!-- height display: no, lines, shading or elevation values -->
+        <!-- address search: no, pois, tile search or search -->
         <!-- typfile: no, optional or required -->
         <!-- colors(min): 2, 256 or 65000 -->
         <!-- nightmode: no, yes -->
+		<!-- layers: 1, 2, 3, ... -->
+		<!-- transparent: yes/no -->
+		<!-- drawing_prio: 25, ... -->
         <attributes routing="no"/>
         <file name="gmapsupp.img" sizeMB="370"/>
         <download url="ftp://ftp5.gwdg.de/pub/misc/openstreetmap/teddynetz.de/latest/gmapsupp.img.gz" sizeMB="290"/>
@@ -39,7 +42,7 @@
             <continent>europe</continent>
             <country>germany</country>
         </boundary>
-         <!-- yes/no or better: good, bad, usable, ...? -->
+         <!-- designated/yes/no or better: good, bad, usable, ...? -->
         <usage hiking="yes" climbing="no" cycling="yes" mtb="no" skiing="no" riding="no" car="yes" motorcycle="yes" marine="no"/>
     </map>    
 

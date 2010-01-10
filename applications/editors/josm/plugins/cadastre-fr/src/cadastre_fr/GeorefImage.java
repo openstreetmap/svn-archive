@@ -24,8 +24,17 @@ import org.openstreetmap.josm.gui.NavigatableComponent;
 public class GeorefImage implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    // bbox of the georeferenced image (the nice horizontal and vertical box)
     public EastNorth min;
     public EastNorth max;
+    // bbox of the georeferenced original image (raster only) (inclined if rotated and before cropping)
+    // P[0] is bottom,left then next are clockwise. 
+    private EastNorth[] orgRaster = new EastNorth[4];
+    // bbox of the georeferenced original image (raster only) after cropping 
+    private EastNorth[] orgCroppedRaster = new EastNorth[4];
+    // angle with georeferenced original image after rotation (raster images only)(in radian)
+    private double angle = 0;
+
     public BufferedImage image;
 
     private double pixelPerEast;
@@ -35,6 +44,14 @@ public class GeorefImage implements Serializable {
         image = img;
         this.min = min;
         this.max = max;
+        this.orgRaster[0] = min;
+        this.orgRaster[1] = new EastNorth(min.east(), max.north());
+        this.orgRaster[2] = max;
+        this.orgRaster[3] = new EastNorth(max.east(), min.north());
+        this.orgCroppedRaster[0] = min;
+        this.orgCroppedRaster[1] = new EastNorth(min.east(), max.north());
+        this.orgCroppedRaster[2] = max;
+        this.orgCroppedRaster[3] = new EastNorth(max.east(), min.north());
         updatePixelPer();
     }
 
@@ -44,10 +61,19 @@ public class GeorefImage implements Serializable {
         return gd.getDefaultConfiguration();
     }
 
-    private void getNewBounding(EastNorth min, EastNorth max, EastNorth c, EastNorth d) {
+    /**
+     * Recalculate the new bounding box of the image based on the previous [min,max] bbox 
+     * and the new box after rotation [c,d]. 
+     * The new bbox defined in [min.max] will retain the extreme values of both boxes. 
+     * @param oldMin the original box min point, before rotation
+     * @param oldMax the original box max point, before rotation
+     * @param c the new box min point, after rotation
+     * @param d the new box max point, after rotation
+     */
+    private EastNorthBound getNewBounding(EastNorth oldMin, EastNorth oldMax, EastNorth c, EastNorth d) {
         EastNorth pt[] = new EastNorth[4];
-        pt[0] = min;
-        pt[1] = max;
+        pt[0] = oldMin;
+        pt[1] = oldMax;
         pt[2] = c;
         pt[3] = d;
         double smallestEast = Double.MAX_VALUE;
@@ -60,8 +86,8 @@ public class GeorefImage implements Serializable {
             highestEast = Math.max(pt[i].east(), highestEast);
             highestNorth = Math.max(pt[i].north(), highestNorth);
         }
-        min.setLocation(smallestEast, smallestNorth);
-        max.setLocation(highestEast, highestNorth);
+        return new EastNorthBound(new EastNorth(smallestEast, smallestNorth),
+                new EastNorth(highestEast, highestNorth));
     }
 
     public boolean contains(EastNorth en) {
@@ -83,7 +109,17 @@ public class GeorefImage implements Serializable {
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
         if (drawBoundaries) {
             g.setColor(Color.green);
-            g.drawRect(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y);
+            if (orgCroppedRaster == null) {
+                // this is the old cache format where only [min,max] bbox is stored
+                g.drawRect(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y);
+            } else {
+                Point[] croppedPoint = new Point[5];
+                for (int i=0; i<4; i++)
+                    croppedPoint[i] = nc.getPoint(orgCroppedRaster[i]);
+                croppedPoint[4] = croppedPoint[0]; 
+                for (int i=0; i<4; i++)
+                    g.drawLine(croppedPoint[i].x, croppedPoint[i].y, croppedPoint[i+1].x, croppedPoint[i+1].y);
+            }
         }
         g.drawImage(image, minPt.x, maxPt.y, maxPt.x, minPt.y, // dest
                 0, 0, image.getWidth(), image.getHeight(), // src
@@ -134,21 +170,51 @@ public class GeorefImage implements Serializable {
      * Save only primitives to keep cache independent of software changes.
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        max = new EastNorth(in.readDouble(), in.readDouble());
-        min = new EastNorth(in.readDouble(), in.readDouble());
+        if (WMSLayer.currentFormat == 2 || WMSLayer.currentFormat == 3) {
+            max = new EastNorth(in.readDouble(), in.readDouble());
+            min = new EastNorth(in.readDouble(), in.readDouble());
+        }
+        if (WMSLayer.currentFormat == 3) {
+            orgRaster = new EastNorth[4];
+            orgCroppedRaster = new EastNorth[4];
+            angle = in.readDouble();
+            orgRaster[0] = new EastNorth(in.readDouble(), in.readDouble());
+            orgRaster[1] = new EastNorth(in.readDouble(), in.readDouble());
+            orgRaster[2] = new EastNorth(in.readDouble(), in.readDouble());
+            orgRaster[3] = new EastNorth(in.readDouble(), in.readDouble());
+            orgCroppedRaster[0] = new EastNorth(in.readDouble(), in.readDouble());
+            orgCroppedRaster[1] = new EastNorth(in.readDouble(), in.readDouble());
+            orgCroppedRaster[2] = new EastNorth(in.readDouble(), in.readDouble());
+            orgCroppedRaster[3] = new EastNorth(in.readDouble(), in.readDouble());
+        } else {
+            orgRaster = null;
+            orgCroppedRaster = null;
+            angle = 0;
+        }
         image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
         updatePixelPer();
     }
 
     /**
      * Method required by BufferedImage serialization.
-     * Cache uses only primitives to stay independent of software changes.
+     * Use only primitives for stability in time (not influenced by josm-core changes).
      */
     private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeDouble(max.getX());
-        out.writeDouble(max.getY());
-        out.writeDouble(min.getX());
-        out.writeDouble(min.getY());
+        out.writeDouble(max.getX()); out.writeDouble(max.getY());
+        out.writeDouble(min.getX()); out.writeDouble(min.getY());
+        if (orgRaster == null) { // just in case we save an old format layer already cached
+            orgRaster = new EastNorth[4];
+            orgCroppedRaster = new EastNorth[4];
+        }
+        out.writeDouble(angle);
+        out.writeDouble(orgRaster[0].getX()); out.writeDouble(orgRaster[0].getY());
+        out.writeDouble(orgRaster[1].getX()); out.writeDouble(orgRaster[1].getY());
+        out.writeDouble(orgRaster[2].getX()); out.writeDouble(orgRaster[2].getY());
+        out.writeDouble(orgRaster[3].getX()); out.writeDouble(orgRaster[3].getY());
+        out.writeDouble(orgCroppedRaster[0].getX()); out.writeDouble(orgCroppedRaster[0].getY());
+        out.writeDouble(orgCroppedRaster[1].getX()); out.writeDouble(orgCroppedRaster[1].getY());
+        out.writeDouble(orgCroppedRaster[2].getX()); out.writeDouble(orgCroppedRaster[2].getY());
+        out.writeDouble(orgCroppedRaster[3].getX()); out.writeDouble(orgCroppedRaster[3].getY());
         ImageIO.write(image, "png", ImageIO.createImageOutputStream(out));
     }
 
@@ -181,6 +247,10 @@ public class GeorefImage implements Serializable {
     public void shear(double dx, double dy) {
         min = new EastNorth(min.east() + dx, min.north() + dy);
         max = new EastNorth(max.east() + dx, max.north() + dy);
+        for (int i=0; i<4; i++) {
+            orgRaster[i] = new EastNorth(orgRaster[i].east() + dx, orgRaster[i].north() + dy);
+            orgCroppedRaster[i] = new EastNorth(orgCroppedRaster[i].east() + dx, orgCroppedRaster[i].north() + dy);
+        }
     }
     
     /**
@@ -191,43 +261,45 @@ public class GeorefImage implements Serializable {
     public void scale(EastNorth anchor, double proportion) {
         min = anchor.interpolate(min, proportion);
         max = anchor.interpolate(max, proportion);
+        for (int i=0; i<4; i++) {
+            orgRaster[i] = anchor.interpolate(orgRaster[i], proportion);
+            orgCroppedRaster[i] = anchor.interpolate(orgCroppedRaster[i], proportion);
+        }
         updatePixelPer();
     }
 
     /**
      * Rotate this image and its min/max coordinates around anchor point
      * @param anchor anchor of rotation
-     * @param angle angle of rotation (in radians)
+     * @param ang angle of rotation (in radian)
      */
-    public void rotate(EastNorth anchor, double angle) {
-        EastNorth min2 = new EastNorth(min.east(), max.north());
-        EastNorth max2 = new EastNorth(max.east(), min.north());
-        min = min.rotate(anchor, angle);
-        max = max.rotate(anchor, angle);
-        min2 = min2.rotate(anchor, angle);
-        max2 = max2.rotate(anchor, angle);
-        getNewBounding(min, max, min2, max2);
-        image = tilt(image, angle);
-    }
-
-    /**
-     * Rotate by copying original buffered image into a new one with new dimensions 
-     * @param image
-     * @param angle
-     * @return
-     */
-    public static BufferedImage tilt(BufferedImage image, double angle) {
-        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+    public void rotate(EastNorth anchor, double ang) {
+        // rotate the bounding boxes coordinates first
+        EastNorth min2 = new EastNorth(orgRaster[0].east(), orgRaster[2].north());
+        EastNorth max2 = new EastNorth(orgRaster[2].east(), orgRaster[0].north());
+        for (int i=0; i<4; i++) {
+            orgRaster[i] = orgRaster[i].rotate(anchor, ang);
+            orgCroppedRaster[i] = orgCroppedRaster[i].rotate(anchor, ang);
+        }
+        min2 = min2.rotate(anchor, ang);
+        max2 = max2.rotate(anchor, ang);
+        EastNorthBound enb = getNewBounding(orgCroppedRaster[0], orgCroppedRaster[2], min2, max2);
+        min = enb.min;
+        max = enb.max;
+        angle=+ang;
+        
+        // rotate the image now
+        double sin = Math.abs(Math.sin(ang)), cos = Math.abs(Math.cos(ang));
         int w = image.getWidth(), h = image.getHeight();
         int neww = (int)Math.floor(w*cos+h*sin), newh = (int)Math.floor(h*cos+w*sin);
         GraphicsConfiguration gc = getDefaultConfiguration();
         BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
         Graphics2D g = result.createGraphics();
         g.translate((neww-w)/2, (newh-h)/2);
-        g.rotate(angle, w/2, h/2);
+        g.rotate(ang, w/2, h/2);
         g.drawRenderedImage(image, null);
         g.dispose();
-        return result;
+        image = result;
     }
 
 }

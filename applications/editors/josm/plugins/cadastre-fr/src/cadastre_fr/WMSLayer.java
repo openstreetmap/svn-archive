@@ -50,7 +50,13 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     protected Vector<GeorefImage> images = new Vector<GeorefImage>();
 
-    protected final int serializeFormatVersion = 2;
+    /**
+     * v1 to v2 = not supported
+     * v2 to v3 = add 4 more EastNorth coordinates in GeorefImages 
+     */
+    protected final int serializeFormatVersion = 3;
+    
+    public static int currentFormat;
 
     private ArrayList<EastNorthBound> dividedBbox = new ArrayList<EastNorthBound>();
 
@@ -68,6 +74,7 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public double X0, Y0, angle, fX, fY;
 
+    // bbox of the georeferenced raster image (the nice horizontal and vertical box)
     private EastNorth rasterMin;
     private EastNorth rasterMax;
     private double rasterRatio;
@@ -88,6 +95,11 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     public void destroy() {
+        // if the layer is currently saving the images in the cache, wait until it's finished
+        while (!cacheControl.isCachePipeEmpty()) {
+            System.out.println("Try to close a WMSLayer which is currently saving in cache : wait 1 sec.");
+            CadastrePlugin.safeSleep(1000);
+        }
         super.destroy();
         images = null;
         dividedBbox = null;
@@ -363,8 +375,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         double rasterSizeY = communeBBox.max.getY() - communeBBox.min.getY();
         double ratio = rasterSizeY/rasterSizeX;
         // keep same ratio on screen as WMS bbox (stored in communeBBox)
-        rasterMin = new EastNorth(eaMin.getX(), rasterCenter.getY()-(eaMax.getX()-eaMin.getX())*ratio/2);
-        rasterMax = new EastNorth(eaMax.getX(), rasterCenter.getY()+(eaMax.getX()-eaMin.getX())*ratio/2);
+        rasterMin = new EastNorth(eaMin.getX(), rasterCenter.getY()-(eaMax.getX()-eaMin.getX())*ratio/2); 
+        rasterMax = new EastNorth(eaMax.getX(), rasterCenter.getY()+(eaMax.getX()-eaMin.getX())*ratio/2); 
         rasterRatio = (rasterMax.getX()-rasterMin.getX())/rasterSizeX;
     }
 
@@ -401,10 +413,10 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @throws ClassNotFoundException
      */
     public boolean read(ObjectInputStream ois, int currentLambertZone) throws IOException, ClassNotFoundException {
-        int sfv = ois.readInt();
-        if (sfv != this.serializeFormatVersion) {
+        currentFormat = ois.readInt();;
+        if (currentFormat < 2) {
             JOptionPane.showMessageDialog(Main.parent, tr("Unsupported cache file version; found {0}, expected {1}\nCreate a new one.",
-                    sfv, this.serializeFormatVersion), tr("Cache Format Error"), JOptionPane.ERROR_MESSAGE);
+                    currentFormat, this.serializeFormatVersion), tr("Cache Format Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         this.setLocation((String) ois.readObject());
@@ -530,8 +542,6 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public void setCommuneBBox(EastNorthBound entireCommune) {
         this.communeBBox = entireCommune;
-//        if (Main.proj instanceof LambertCC9Zones)
-//            setLambertCC9Zone(communeBBox.min.north());
     }
 
     /**
@@ -544,32 +554,6 @@ public class WMSLayer extends Layer implements ImageObserver {
     public int getLambertZone() {
         return lambertZone;
     }
-
-//    public void setLambertCC9Zone(double north) {
-//        int lambertZone = LambertCC9Zones.north2ZoneNumber(north);
-//        this.lambertZone = lambertZone;
-//        if (((LambertCC9Zones)Main.proj).getLayoutZone() != lambertZone) {
-//            String currentZone = MenuActionLambertZone.lambert9zones[((LambertCC9Zones)Main.proj).getLayoutZone()+1];
-//            String destZone = MenuActionLambertZone.lambert9zones[lambertZone+1];
-//            if (Main.map.mapView.getAllLayers().size() == 1) {
-//                /* Enable this code below when JOSM will have a proper support of dynamic projection change
-//                 *
-//                System.out.println("close all layers and change current Lambert zone from "+LambertCC9Zones.layoutZone+" to "+lambertZone);
-//                Bounds b = null;
-//                if (Main.map != null && Main.map.mapView != null)
-//                    b = Main.map.mapView.getRealBounds();
-//                LambertCC9Zones.layoutZone = lambertZone;
-//                Main.map.mapView.zoomTo(b);
-//                */
-//            } else {
-//                JOptionPane.showMessageDialog(Main.parent, tr("Current layer is in Lambert CC9 Zone \"{0}\"\n"+
-//                        "where the commune is in Lambert CC9 Zone \"{1}\".\n"+
-//                        "Upload your changes, close all layers and change\n"+
-//                        "manually the Lambert zone from the Cadastre menu"
-//                        , currentZone, destZone));
-//            }
-//        }
-//    }
 
     public EastNorth getRasterCenter() {
         return new EastNorth((images.get(0).max.east()+images.get(0).min.east())/2,

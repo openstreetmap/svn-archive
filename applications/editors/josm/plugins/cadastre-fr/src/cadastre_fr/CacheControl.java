@@ -48,6 +48,13 @@ public class CacheControl implements Runnable {
     private ArrayList<GeorefImage> imagesToSave = new ArrayList<GeorefImage>();
     private Lock imagesLock = new ReentrantLock();
 
+    public boolean isCachePipeEmpty() {
+        imagesLock.lock();
+        boolean ret = imagesToSave.isEmpty();
+        imagesLock.unlock();
+        return ret;
+    }
+    
     public CacheControl(WMSLayer wmsLayer) {
         cacheEnabled = Main.pref.getBoolean("cadastrewms.enableCaching", true);
         this.wmsLayer = wmsLayer;
@@ -170,11 +177,10 @@ public class CacheControl implements Runnable {
     public synchronized void run() {
         for (;;) {
             imagesLock.lock();
-            // copy locally the images to save for better performance
-            ArrayList<GeorefImage> images = new ArrayList<GeorefImage>(imagesToSave);
-            imagesToSave.clear();
+            //ArrayList<GeorefImage> images = new ArrayList<GeorefImage>(imagesToSave);
+            int size = imagesToSave.size();
             imagesLock.unlock();
-            if (images != null && !images.isEmpty()) {
+            if (size > 0) {
                 String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
                 if (Main.proj instanceof LambertCC9Zones)
                     extension = cLambertCC9Z + extension;
@@ -185,22 +191,27 @@ public class CacheControl implements Runnable {
                     if (file.exists()) {
                         ObjectOutputStreamAppend oos = new ObjectOutputStreamAppend(
                                 new BufferedOutputStream(new FileOutputStream(file, true)));
-                        for (GeorefImage img : images) {
-                            oos.writeObject(img);
+                        for (int i=0; i < size; i++) {
+                            oos.writeObject(imagesToSave.get(i));
                         }
                         oos.close();
                     } else {
                         ObjectOutputStream oos = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(file)));
                         wmsLayer.write(oos);
-                        for (GeorefImage img : images) {
-                            oos.writeObject(img);
+                        for (int i=0; i < size; i++) {
+                            oos.writeObject(imagesToSave.get(i));
                         }
                         oos.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace(System.out);
                 }
+                imagesLock.lock();
+                for (int i=0; i < size; i++) {
+                    imagesToSave.remove(0);
+                }
+                imagesLock.unlock();
             }
             try {wait();} catch (InterruptedException e) {
                 e.printStackTrace(System.out);

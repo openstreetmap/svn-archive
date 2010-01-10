@@ -4,6 +4,7 @@ package cadastre_fr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Cursor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -86,12 +87,12 @@ public class WMSAdjustAction extends MapMode implements
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
-        boolean ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
+        boolean ctrl = (e.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0;
         // boolean alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
         boolean shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
-        if (shift)
+        if (shift && !ctrl)
             mode = Mode.moveZ;
-        else if (ctrl)
+        else if (shift && ctrl)
             mode = Mode.rotate;
         else
             mode = Mode.moveXY;

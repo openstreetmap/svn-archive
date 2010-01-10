@@ -29,7 +29,7 @@ pages/LicensePage.txt: pages/License.txt 3rdparty/License.txt images/License.txt
 	cat 3rdparty/License.txt >> pages/LicensePage.txt
 	cat images/License.txt >> pages/LicensePage.txt
     
-gosmin.exe: ${pages} gosmin.nsi gosmin.ico
+gosmin.exe: ${pages} gosmin.nsi images/icon/gosmin.ico
 	if test -f "/cygdrive/c/Program Files/nsis/makensis"; then "/cygdrive/c/Program Files/nsis/makensis" gosmin.nsi; fi
 	if test -f "/cygdrive/c/Programme/nsis/makensis"; then "/cygdrive/c/Programme/nsis/makensis" gosmin.nsi; fi
 

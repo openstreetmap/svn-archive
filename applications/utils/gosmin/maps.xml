@@ -8,7 +8,7 @@
         <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="460"/>
         <picture url="AllInOne.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
-    </map>    
+    </map>
 
     <map name="All in One" boundary="Europe" comment="Lot's of OSM features" updated="Weekly">
         <lang iso="de" name="All in One"  boundary="Europa" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
@@ -17,7 +17,7 @@
         <download url="http://dev.openstreetmap.de/aio/europe/gmapsupp.img.bz2" sizeMB="1410"/>
         <picture url="AllInOne.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
-    </map>    
+    </map>
 
     <map name="Computerteddy" boundary="Germany" comment="" updated="Weekly">
         <lang iso="de" name="Computerteddy"  boundary="Deutschland" comment="" updated="Woechentlich"/>
@@ -27,9 +27,9 @@
         <!-- typfile: no, optional or required -->
         <!-- colors(min): 2, 256 or 65000 -->
         <!-- nightmode: no, yes -->
-		<!-- layers: 1, 2, 3, ... -->
-		<!-- transparent: yes/no -->
-		<!-- drawing_prio: 25, ... -->
+        <!-- layers: 1, 2, 3, ... -->
+        <!-- transparent: yes/no -->
+        <!-- drawing_prio: 25, ... -->
         <attributes routing="no"/>
         <file name="gmapsupp.img" sizeMB="370"/>
         <download url="ftp://ftp5.gwdg.de/pub/misc/openstreetmap/teddynetz.de/latest/gmapsupp.img.gz" sizeMB="290"/>
@@ -44,7 +44,7 @@
         </boundary>
          <!-- designated/yes/no or better: good, bad, usable, ...? -->
         <usage hiking="yes" climbing="no" cycling="yes" mtb="no" skiing="no" riding="no" car="yes" motorcycle="yes" marine="no"/>
-    </map>    
+    </map>
 
     <map name="Computerteddy" boundary="Europe" comment="" updated="Weekly">
         <lang iso="de" name="Computerteddy"  boundary="Europa" comment="" updated="Woechentlich"/>
@@ -53,7 +53,7 @@
         <download url="ftp://ftp5.gwdg.de/pub/misc/openstreetmap/teddynetz.de/latest/eu_gmapsupp.img.gz" sizeMB="612"/>
         <picture url="Computerteddy.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/User:Computerteddy"/>
-    </map>    
+    </map>
 
     <map name="Radkarte" boundary="Germany" comment="Map designed for the everyday cyclist" updated="Every 2nd day">
         <lang iso="de" name="Radkarte"  boundary="Deutschland" comment="Karte fuer den Alltagsradfahrer" updated="Jeder 2. Tag"/>
@@ -71,7 +71,16 @@
         <download url="http://topo.geofabrik.de/OSM%20Wanderkarte_gmapsupp.zip" sizeMB="680"/>
         <picture url="OSMC.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/DE:OSMC_Reitkarte#Garmin-Version_der_Karte"/>
-    </map>    
+    </map>
+
+    <map name="OpenSeaMap" boundary="Baltic sea" comment="Special sea map" updated="?">
+        <lang iso="de" name="OpenSeaMap"  boundary="Ostsee" comment="Spezielle Seekarte" updated="?"/>
+        <attributes routing="no"/>
+        <file name="gmapsupp.img" sizeMB="45"/>
+        <download url="http://sourceforge.net/projects/openseamap/files/Maps/Garmin/baltic.zip/download" sizeMB="33"/>
+        <picture url="OpenSeaMap.bmp"/>
+        <details url="http://openseamap.org/"/>
+    </map>
 
     <map name="Ivko Maksimovic" boundary="Dominican Republic" comment="" updated="Monthly">
         <lang iso="de" name="Ivko Maksimovic"  boundary="Dominikanische Republik" comment="" updated="Monatlich"/>
@@ -79,7 +88,7 @@
         <file name="gmapsupp.img" sizeMB="2"/>
         <download url="http://www.ivkoandruth.com/navigation/gmapsupp.zip" sizeMB="2"/>
         <picture url=""/>
-        <details url=""/>
+        <details url="http://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/Download"/>
     </map>
     
     <!-- currently unused, complicated licensing

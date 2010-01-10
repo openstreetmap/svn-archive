@@ -10,7 +10,7 @@ SetCompressor /SOLID lzma
 ; ============================================================================
 ; The name and version of the installer
 !define PROGRAM_NAME "OSM Karten"
-!define VERSION "0.0.5"
+!define VERSION "0.0.6"
 
 Name "${PROGRAM_NAME}"
 
@@ -52,7 +52,7 @@ FileWrite $LogFile "${Text}$\r$\n"
 
 !include "MUI.nsh"
 
-!define MUI_ICON "gosmin.ico"
+!define MUI_ICON "images/icon/gosmin.ico"
 
 !define MUI_WELCOMEFINISHPAGE_BITMAP "images\brand\brand.bmp" 
 !define MUI_HEADERIMAGE 
@@ -183,7 +183,7 @@ garmindirexists2:
 ; ============================================================================
 IfFileExists "$destinationDir\gmapsupp.img" 0 mapcopy
   !insertmacro FileSize $destinationDir\gmapsupp.img $0
-  MessageBox MB_OKCANCEL|MB_ICONQUESTION "Eine Kartendatei $destinationDir\gmapsupp.img ($0 MB) ist bereits installiert. Diese Datei ersetzen?" IDOK deleteoldfile
+  MessageBox MB_OKCANCEL|MB_ICONQUESTION "Eine Kartendatei $destinationDir\gmapsupp.img ($0 MB) ist bereits auf dem Gerät installiert. Gosmin kann nur eine Karte installieren, nicht mehrere gleichzeitig. Die installierte Datei ersetzen?" IDOK deleteoldfile
   Abort
 deleteoldfile:
   DetailPrint "User acknowledged to delete old gmapsupp.img file!"

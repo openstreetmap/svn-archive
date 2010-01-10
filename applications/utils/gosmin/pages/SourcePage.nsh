@@ -24,7 +24,7 @@ Var /GLOBAL sourcePageCurrentMap
 Var /GLOBAL sourcePageMapName
 
 ; ============================================================================
-; convsersion of user visible strings
+; conversion of user visible strings
 ; ============================================================================
 !macro sourcePageMapNameDisplay mapName mapDisplayName
   ReadINIStr $5 "$PLUGINSDIR\Maps.ini" "${mapName}" "Boundary:de"
@@ -40,6 +40,14 @@ Var /GLOBAL sourcePageMapName
   ; get file name without url prefix
   ${WordReplace} "$sourcePageMapUrl" "/" "\" "+" $7
   ${GetFileName} $7 "$8"
+  
+  ; "sourceforge hack": sourceforge download url ends with ".../map.zip/download"
+  ; (... and we don't need the filename "download" :-)
+  ${If} $8 == "download"
+  ${WordReplace} "$7" "\download" "" "+" $4
+  ${GetFileName} $4 "$8"
+  ${EndIf}
+  
   ; get current date
   File 3rdparty\nsisdt.dll
   StrCpy $0 "%Y%m%d"
@@ -80,6 +88,7 @@ Function sourcePageInit
     File "images\maps\Computerteddy.bmp"
     File "images\maps\OSMC.bmp"
     File "images\maps\Radkarte.bmp"
+    File "images\maps\OpenSeaMap.bmp"
     
     StrCpy $sourcePageSelect "download"
     StrCpy $sourcePageCurrentMap "Map 1"
@@ -311,7 +320,7 @@ Function sourcePageDisplay
     StrCpy $ySPPos "45"
     StrCpy $ySPStep "15"
     
-    !insertmacro MUI_HEADER_TEXT "Quelle auswählen" "Von welcher Quelle soll installiert werden?"
+    !insertmacro MUI_HEADER_TEXT "Karte auswählen" "Welche Karte soll installiert werden?"
 
     ; create the new dialog
 	nsDialogs::Create 1018
@@ -336,7 +345,7 @@ Function sourcePageDisplay
     !insertmacro sourcePageFillListOfMaps $sourcePageMapList
     ${NSD_OnChange} $sourcePageMapList MapListChanged
 
-	${NSD_CreateButton} $xSPPosLabels 110 80u 15u "Kartendetails Online"
+	${NSD_CreateButton} $xSPPosLabels 110 120u 15u "Kartenbeschreibung im OSM-Wiki"
     Pop $SourceHelpButton
     ${NSD_OnClick} $SourceHelpButton onClickSourceWikiLink
     ToolTips::Classic $SourceHelpButton "Wiki Seite über diese Karte im Browser anzeigen" 0x0066FBF2 0x00000000 "Comic Sans Ms" 9    

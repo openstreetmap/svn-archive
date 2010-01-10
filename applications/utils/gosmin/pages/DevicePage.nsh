@@ -299,7 +299,7 @@ Function devicePageDisplay
 	Pop $FirmwareAvailableStateLabel
     IntOp $yPos $yPos + $yStep
 
-	${NSD_CreateButton} 240 205 80u 15u "Gerätedetails Online"
+	${NSD_CreateButton} 220 205 120u 15u "Weitere Gerätedaten im OSM-Wiki"
     Pop $HelpButton
     ${NSD_OnClick} $HelpButton onClickWikiLink
     ToolTips::Classic $HelpButton "Wiki Seite über dieses Gerät im Browser anzeigen" 0x0066FBF2 0x00000000 "Comic Sans Ms" 9

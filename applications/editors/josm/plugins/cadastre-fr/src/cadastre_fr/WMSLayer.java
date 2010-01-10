@@ -80,6 +80,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     private double rasterRatio;
 
     private JMenuItem saveAsPng;
+    
+    public boolean adjustModeEnabled;
 
     public WMSLayer() {
         this(tr("Blank Layer"), "", -1);
@@ -236,6 +238,9 @@ public class WMSLayer extends Layer implements ImageObserver {
         if (this.isRaster) {
             paintCrosspieces(g, mv);
         }
+        if (this.adjustModeEnabled) {
+            WMSAdjustAction.paintAdjustFrames(g, mv);
+        }            
     }
 
     @Override

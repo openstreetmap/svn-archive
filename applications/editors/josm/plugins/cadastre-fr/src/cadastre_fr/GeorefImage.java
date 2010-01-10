@@ -29,11 +29,11 @@ public class GeorefImage implements Serializable {
     public EastNorth max;
     // bbox of the georeferenced original image (raster only) (inclined if rotated and before cropping)
     // P[0] is bottom,left then next are clockwise. 
-    private EastNorth[] orgRaster = new EastNorth[4];
+    public EastNorth[] orgRaster = new EastNorth[4];
     // bbox of the georeferenced original image (raster only) after cropping 
-    private EastNorth[] orgCroppedRaster = new EastNorth[4];
+    public EastNorth[] orgCroppedRaster = new EastNorth[4];
     // angle with georeferenced original image after rotation (raster images only)(in radian)
-    private double angle = 0;
+    public double angle = 0;
 
     public BufferedImage image;
 

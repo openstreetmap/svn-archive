@@ -186,6 +186,15 @@ sub checkpo($$$$$$)
   }
 }
 
+sub makestring($)
+{
+  my ($str) = @_;
+  $str =~ s/\\"/"/g;
+  $str =~ s/\\n/\n/g;
+  $str = encode("utf8", $str);
+  return pack("n",length($str)).$str;
+}
+
 sub createlang($@)
 {
   my ($data, @files) = @_;
@@ -220,8 +229,7 @@ sub createlang($@)
         $val = (exists($data->{$en}{$la})) ? $data->{$en}{$la} : "";
         $val = "" if($ennoctx eq $val);
       }
-      $val = encode("utf8", $val);
-      print FILE pack("n",length($val)).$val;
+      print FILE makestring($val);
     }
     print FILE pack "n",0xFFFF;
     foreach my $en (sort keys %{$data})
@@ -251,12 +259,10 @@ sub createlang($@)
       print FILE pack "C",$num;
       if($num)
       {
-        $val = encode("utf8", $val);
-        print FILE pack("n",length($val)).$val;
+        print FILE makestring($val);
         for($num = 1; exists($data->{$en}{"$la.$num"}); ++$num)
         {
-          $val = encode("utf8", $data->{$en}{"$la.$num"});
-          print FILE pack("n",length($val)).$val;
+          print FILE makestring($data->{$en}{"$la.$num"});
         }
       }
     }

@@ -47,6 +47,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.osb.api.DownloadAction;
 import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Shows issues from OpenStreetBugs
@@ -209,12 +210,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
     }
 
     public static ImageIcon loadIcon(String name) {
-        URL url = OsbPlugin.class.getResource("/images/".concat(name));
-        if(url != null) {
-            return new ImageIcon(url);
-        } else  {
-            return new ImageIcon();
-        }
+        return ImageProvider.get(name);
     }
 
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {}

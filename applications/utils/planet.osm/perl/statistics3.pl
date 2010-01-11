@@ -48,7 +48,13 @@ my %user_nodes ;
 
 
 # open input file
-open(my $XML, "<:encoding(UTF-8)", $xml);
+my $XML;
+if ($xml =~ /\.bz2$/) {
+    require PerlIO::via::Bzip2;
+    open $XML, "<:via(Bzip2):utf8", $xml;
+} else {
+    open $XML,  "<:encoding(UTF-8)", $xml;
+}
 
 # parse data
 while(my $line = <$XML>) {

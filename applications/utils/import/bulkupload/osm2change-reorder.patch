@@ -1,0 +1,38 @@
+--- osm2change.py	2009-09-18 00:14:45.000000000 +0200
++++ osm2change-modified.py	2009-09-18 00:27:30.000000000 +0200
+@@ -73,7 +73,18 @@ try:
+ 
+     operation = {}
+     for opname in [ "create", "modify", "delete" ]:
+-        operation[opname] = ElementTree.SubElement(output_root,
++        operation[opname] = {}
++    for opname, elname in [
++            ("create", "node"),
++            ("modify", "node"),
++            ("create", "way"),
++            ("modify", "way"),
++            ("create", "relation"),
++            ("modify", "relation"),
++            ("delete", "relation"),
++            ("delete", "way"),
++            ("delete", "node") ]:
++        operation[opname][elname] = ElementTree.SubElement(output_root,
+                 opname, output_attr)
+ 
+     for element in root:
+@@ -83,12 +94,12 @@ try:
+             opname = element.attrib.pop("action")
+         else:
+             continue
+-        operation[opname].append(element)
++        operation[opname][element.tag].append(element)
+ 
+     # Does this account for all cases?  Also, is it needed?
+     # (cases like relations containing relations... is that allowed?)
+-    osmsort(operation["create"], [ "node", "way", "relation" ])
+-    osmsort(operation["delete"], [ "relation", "way", "node" ])
++    #osmsort(operation["create"], [ "node", "way", "relation" ])
++    #osmsort(operation["delete"], [ "relation", "way", "node" ])
+ 
+     output_tree.write(filename_base + ".osc", "utf-8")
+ except Exception,err:

@@ -1,0 +1,13 @@
+#! /bin/bash
+[ $# -ge 2 ] || exit -1
+
+fn="$1"
+shift
+grep old_id "$fn" | \
+while read line; do
+	old=`echo "$line" | grep -o 'old_id="[0-9-]*'`
+	new=`echo "$line" | grep -o 'new_id="[0-9-]*'`
+	old=${old:8}
+	new=${new:8}
+	sed -i "s/ref=\"${old}\"/ref=\"${new}\"/g" $*
+done

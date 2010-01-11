@@ -1,0 +1,16 @@
+#! /bin/bash
+# Copyright (C) 2009  Andrzej Zaborowski
+# Merge two .osm files without applying fancy logic (JOSM merge layers
+# operation tries to be too smart and corrupts data - see bug #2245)
+if [ $# != 2 ]; then
+	echo Usage: $0 a.osm b.osm \> a+b.osm >&2
+	exit
+fi
+
+echo "<?xml version='1.0' encoding='UTF-8'?>"
+echo "<osm version='0.6' generator='$0'>"
+cat "$1" | grep -v "<osm" | grep -v "<\\?xml" | grep -v "</osm"
+cat "$2" | grep -v "<osm" | grep -v "<\\?xml" | grep -v "</osm" | \
+    sed "s/id='-/id='-1000000/" | \
+    sed "s/ref='-/ref='-1000000/"
+echo "</osm>"

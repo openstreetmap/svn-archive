@@ -4,8 +4,8 @@
     <map name="All in One" boundary="Germany" comment="Lot's of OSM features" updated="Weekly">
         <lang iso="de" name="All in One"  boundary="Deutschland" comment="Moeglichst viele OSM Elemente" updated="Woechentlich"/>
         <attributes routing="yes"/>
-        <file name="gmapsupp.img" sizeMB="610"/>
-        <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="460"/>
+        <file name="gmapsupp.img" sizeMB="665"/>
+        <download url="http://www.juergen-frank.de/osm/gmapsupps/germany/gmapsupp.img.bz2" sizeMB="500"/>
         <picture url="AllInOne.bmp"/>
         <details url="http://wiki.openstreetmap.org/wiki/All_in_one_Garmin_Map"/>
     </map>

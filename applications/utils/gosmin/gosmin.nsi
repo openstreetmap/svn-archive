@@ -10,7 +10,7 @@ SetCompressor /SOLID lzma
 ; ============================================================================
 ; The name and version of the installer
 !define PROGRAM_NAME "OSM Karten"
-!define VERSION "0.0.6"
+!define VERSION "0.0.7"
 
 Name "${PROGRAM_NAME}"
 
@@ -276,10 +276,24 @@ ${EndIf}
 ; check if unzipped file really exists now
 ; ============================================================================
 IfFileExists gmapsupp.img unzippedok
+  ; ".bz2 hack": with .bz2 compression, we may end up with something like:
+  ; "Deutschland - All in One - 20100111 - gmapsupp.img"
+  ; but we just want "gmapsupp.img"
+  ;MessageBox MB_OK|MB_ICONSTOP "Try to fix filename (probably .bz2)"
+
+  ; get only the base name (without path / extension)
+  ${GetBaseName} "$installFile" "$8"
+  ;MessageBox MB_OK|MB_ICONSTOP "Filename: $8"
+
+  ; rename file to gmapsupp.img
+  Rename "$PLUGINSDIR\$8" "$PLUGINSDIR\gmapsupp.img"
+unzippedok:
+
+IfFileExists gmapsupp.img unzippedok2
   DetailPrint "Couldn't find gmapsupp.img!"
   MessageBox MB_OK|MB_ICONSTOP "Couldn't find gmapsupp.img!"
   Abort
-unzippedok:
+unzippedok2:
 
 !insertmacro FileSize "$PLUGINSDIR\gmapsupp.img" $1
 IntCmp $destinationFreeMB $1 0 0 unzippedEnoughFreeSpace

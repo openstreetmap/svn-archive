@@ -60,6 +60,7 @@ public class GpxUpload {
             writeContentDisposition(out, "description", urlDesc);
             writeContentDisposition(out, "tags", urlTags);
             writeContentDisposition(out, "public", "1");
+            writeContentDisposition(out, "visibility", "identifiable");
             
             out.writeBytes("--" + BOUNDARY + "--" + LINE_END);
             out.flush();

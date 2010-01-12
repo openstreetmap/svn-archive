@@ -35,6 +35,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 import wmsplugin.io.WMSLayerExporter;
 import wmsplugin.io.WMSLayerImporter;
@@ -60,7 +61,8 @@ public class WMSPlugin extends Plugin {
         ExtensionFileFilter.importers.add(new WMSLayerImporter());
     }
 
-    public WMSPlugin() {
+    public WMSPlugin(PluginInformation info) {
+    	super(info);
         refreshMenu();
         cache.setExpire(CacheFiles.EXPIRE_MONTHLY, false);
         cache.setMaxSize(70, false);

@@ -27,8 +27,8 @@
 <project name="wmsplugin" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="Update to JOSM 2748" />
-	<property name="plugin.main.version" value="2748" />
+	<property name="commit.message" value="Update to JOSM 2817" />
+	<property name="plugin.main.version" value="2817" />
 
 
 	<property name="josm" location="../../core/dist/josm-custom.jar" />

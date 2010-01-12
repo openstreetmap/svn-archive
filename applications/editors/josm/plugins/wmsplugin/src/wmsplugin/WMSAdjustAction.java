@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -31,8 +30,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 
 public class WMSAdjustAction extends MapMode implements MouseListener, MouseMotionListener{
-    static private final Logger logger = Logger.getLogger(WMSAdjustAction.class.getName());
-    
+    //static private final Logger logger = Logger.getLogger(WMSAdjustAction.class.getName());
+
     GeorefImage selectedImage;
     boolean mouseDown;
     EastNorth prevEastNorth;
@@ -44,10 +43,10 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
                         ImageProvider.getCursor("normal", "move"));
     }
 
-    
-    
+
+
     @Override public void enterMode() {
-        super.enterMode();       
+        super.enterMode();
         if (!hasWMSLayersToAdjust()) {
             warnNoWMSLayers();
             return;
@@ -107,15 +106,15 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
         selectedImage = null;
         prevEastNorth = null;
     }
-    
+
     @Override
     public void mouseEntered(MouseEvent e) {
     }
-    
+
     @Override
     public void mouseExited(MouseEvent e) {
     }
-    
+
     @Override
     public void mouseMoved(MouseEvent e) {
     }
@@ -128,10 +127,10 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
     @Override public boolean layerIsSupported(Layer l) {
         return (l instanceof WMSLayer) && l.isVisible();
     }
-    
+
     /**
     * the list cell renderer used to render layer list entries
-    * 
+    *
     */
    static public class LayerListCellRenderer extends DefaultListCellRenderer {
 
@@ -157,25 +156,25 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
    }
 
    /**
-    * Prompts the user with a list of WMS layers which can be adjusted  
-    * 
-    * @param adjustableLayers the list of adjustable layers 
-    * @return  the selected layer; null, if no layer was selected 
+    * Prompts the user with a list of WMS layers which can be adjusted
+    *
+    * @param adjustableLayers the list of adjustable layers
+    * @return  the selected layer; null, if no layer was selected
     */
    protected Layer askAdjustLayer(List<? extends Layer> adjustableLayers) {
        JComboBox layerList = new JComboBox();
        layerList.setRenderer(new LayerListCellRenderer());
        layerList.setModel(new DefaultComboBoxModel(adjustableLayers.toArray()));
        layerList.setSelectedIndex(0);
-   
+
        JPanel pnl = new JPanel();
        pnl.setLayout(new GridBagLayout());
        pnl.add(new JLabel(tr("Please select the WMS layer to adjust.")), GBC.eol());
        pnl.add(layerList, GBC.eol());
-   
+
        ExtendedDialog diag = new ExtendedDialog(
-               Main.parent, 
-               tr("Select WMS layer"), 
+               Main.parent,
+               tr("Select WMS layer"),
                new String[] { tr("Start adjusting"),tr("Cancel") }
                );
        diag.setContent(pnl);
@@ -189,21 +188,21 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
    }
 
    /**
-    * Displays a warning message if there are no WMS layers to adjust 
-    * 
+    * Displays a warning message if there are no WMS layers to adjust
+    *
     */
    protected void warnNoWMSLayers() {
        JOptionPane.showMessageDialog(
                Main.parent,
                tr("There are currently no WMS layer to adjust."),
-               tr("No layers to adjust"), 
+               tr("No layers to adjust"),
                JOptionPane.WARNING_MESSAGE
        );
    }
-   
+
    /**
-    * Replies true if there is at least one WMS layer 
-    * 
+    * Replies true if there is at least one WMS layer
+    *
     * @return true if there is at least one WMS layer
     */
    protected boolean hasWMSLayersToAdjust() {
@@ -215,5 +214,5 @@ public class WMSAdjustAction extends MapMode implements MouseListener, MouseMoti
     @Override
     protected void updateEnabledState() {
         setEnabled(hasWMSLayersToAdjust());
-    }   
+    }
 }

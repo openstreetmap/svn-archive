@@ -1,15 +1,10 @@
 package wmsplugin;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import org.openstreetmap.josm.Main;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,17 +13,19 @@ import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
@@ -41,14 +38,14 @@ public class WMSPreferenceEditor implements PreferenceSetting {
     JCheckBox overlapCheckBox;
     JSpinner spinEast;
     JSpinner spinNorth;
-    
+
     public void addGui(final PreferenceTabbedPane gui) {
         JPanel p = gui.createPreferenceTab("wms", tr("WMS Plugin Preferences"), tr("Modify list of WMS servers displayed in the WMS plugin menu"));
 
         model = new DefaultTableModel(new String[]{tr("Menu Name"), tr("WMS URL")}, 0);
         final JTable list = new JTable(model);
         JScrollPane scroll = new JScrollPane(list);
-        p.add(scroll, GBC.eol().fill(GBC.BOTH));
+        p.add(scroll, GBC.eol().fill(GridBagConstraints.BOTH));
         scroll.setPreferredSize(new Dimension(200,200));
 
         for (WMSInfo i : WMSPlugin.wmsList) {
@@ -81,12 +78,12 @@ public class WMSPreferenceEditor implements PreferenceSetting {
                 p.add(new JLabel(tr("Menu Name")), GBC.std().insets(0,0,5,0));
                 JTextField key = new JTextField(40);
                 JTextField value = new JTextField(40);
-                p.add(key, GBC.eop().insets(5,0,0,0).fill(GBC.HORIZONTAL));
+                p.add(key, GBC.eop().insets(5,0,0,0).fill(GridBagConstraints.HORIZONTAL));
                 p.add(new JLabel(tr("WMS URL")), GBC.std().insets(0,0,5,0));
-                p.add(value, GBC.eol().insets(5,0,0,0).fill(GBC.HORIZONTAL));
+                p.add(value, GBC.eol().insets(5,0,0,0).fill(GridBagConstraints.HORIZONTAL));
                 int answer = JOptionPane.showConfirmDialog(
-                        gui, p, 
-                        tr("Enter a menu name and WMS URL"), 
+                        gui, p,
+                        tr("Enter a menu name and WMS URL"),
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
                 if (answer == JOptionPane.OK_OPTION) {
@@ -117,22 +114,22 @@ public class WMSPreferenceEditor implements PreferenceSetting {
                 int[] lines = listdef.getSelectedRows();
                 if (lines.length == 0) {
                     JOptionPane.showMessageDialog(
-                            gui, 
+                            gui,
                             tr("Please select at least one row to copy."),
                             tr("Information"),
                             JOptionPane.INFORMATION_MESSAGE
                             );
                     return;
                 }
-                
+
                 outer: for(int i = 0; i < lines.length; i++) {
                     String c1 = modeldef.getValueAt(lines[i], 0).toString();
                     String c2 = modeldef.getValueAt(lines[i], 1).toString();
-                    
+
                     // Check if an entry with exactly the same values already
                     // exists
                     for(int j = 0; j < model.getRowCount(); j++) {
-                        if(c1.equals(model.getValueAt(j, 0).toString()) 
+                        if(c1.equals(model.getValueAt(j, 0).toString())
                                 && c2.equals(model.getValueAt(j, 1).toString())) {
                             // Select the already existing row so the user has
                             // some feedback in case an entry exists
@@ -141,7 +138,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
                             continue outer;
                         }
                     }
-                    
+
                     model.addRow(new String[] {c1, c2});
                     int lastLine = model.getRowCount() - 1;
                     list.getSelectionModel().setSelectionInterval(lastLine, lastLine);
@@ -151,10 +148,10 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         });
 
         p.add(buttonPanel);
-        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
         // Add default item list
-        p.add(scrolldef, GBC.eol().insets(0,5,0,0).fill(GBC.BOTH));       
-        
+        p.add(scrolldef, GBC.eol().insets(0,5,0,0).fill(GridBagConstraints.BOTH));
+
         browser = new JComboBox(new String[]{
         "webkit-image {0}",
         "gnome-web-photo --mode=photo --format=png {0} /dev/stdout",
@@ -162,27 +159,27 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         "webkit-image-gtk {0}"});
         browser.setEditable(true);
         browser.setSelectedItem(Main.pref.get("wmsplugin.browser", "webkit-image {0}"));
-        p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
+        p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
         p.add(browser);
 
 
         //Overlap
-        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL)); 
-         
-        overlapCheckBox = new JCheckBox(tr("Overlap tiles"), WMSPlugin.doOverlap ); 
-        JLabel labelEast = new JLabel(tr("% of east:")); 
-        JLabel labelNorth = new JLabel(tr("% of north:")); 
-        spinEast = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapEast, 1, 50, 1)); 
-        spinNorth = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapNorth, 1, 50, 1)); 
-         
-        JPanel overlapPanel = new JPanel(new FlowLayout()); 
-        overlapPanel.add(overlapCheckBox); 
-        overlapPanel.add(labelEast); 
-        overlapPanel.add(spinEast); 
-        overlapPanel.add(labelNorth); 
-        overlapPanel.add(spinNorth); 
-         
-        p.add(overlapPanel);    
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+
+        overlapCheckBox = new JCheckBox(tr("Overlap tiles"), WMSPlugin.doOverlap );
+        JLabel labelEast = new JLabel(tr("% of east:"));
+        JLabel labelNorth = new JLabel(tr("% of north:"));
+        spinEast = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapEast, 1, 50, 1));
+        spinNorth = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapNorth, 1, 50, 1));
+
+        JPanel overlapPanel = new JPanel(new FlowLayout());
+        overlapPanel.add(overlapCheckBox);
+        overlapPanel.add(labelEast);
+        overlapPanel.add(spinEast);
+        overlapPanel.add(labelNorth);
+        overlapPanel.add(spinNorth);
+
+        p.add(overlapPanel);
     }
 
     public boolean ok() {
@@ -222,13 +219,13 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 
         if (change) WMSPlugin.refreshMenu();
 
-        WMSPlugin.doOverlap = overlapCheckBox.getModel().isSelected(); 
-        WMSPlugin.overlapEast = (Integer) spinEast.getModel().getValue(); 
-        WMSPlugin.overlapNorth = (Integer) spinNorth.getModel().getValue(); 
-         
-        Main.pref.put("wmsplugin.url.overlap",    String.valueOf(WMSPlugin.doOverlap)); 
-        Main.pref.put("wmsplugin.url.overlapEast", String.valueOf(WMSPlugin.overlapEast)); 
-        Main.pref.put("wmsplugin.url.overlapNorth", String.valueOf(WMSPlugin.overlapNorth)); 
+        WMSPlugin.doOverlap = overlapCheckBox.getModel().isSelected();
+        WMSPlugin.overlapEast = (Integer) spinEast.getModel().getValue();
+        WMSPlugin.overlapNorth = (Integer) spinNorth.getModel().getValue();
+
+        Main.pref.put("wmsplugin.url.overlap",    String.valueOf(WMSPlugin.doOverlap));
+        Main.pref.put("wmsplugin.url.overlapEast", String.valueOf(WMSPlugin.overlapEast));
+        Main.pref.put("wmsplugin.url.overlapNorth", String.valueOf(WMSPlugin.overlapNorth));
 
         Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
         return false;

@@ -32,7 +32,7 @@ public class WMSInfo implements Comparable<WMSInfo> {
 
     public int compareTo(WMSInfo in)
     {
-        Integer i = name.compareTo(in.name);
+        int i = name.compareTo(in.name);
         if(i == 0)
             i = url.compareTo(in.url);
         if(i == 0)

@@ -2,6 +2,7 @@ package wmsplugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -30,7 +31,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
     /**
      * Class that bundles all required information of a rectifier service
      */
-    public class rectifierService {
+    public static class RectifierService {
         private final String name;
         private final String url;
         private final String wmsUrl;
@@ -44,7 +45,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
          * @param urlRegEx: a regular expression that determines if a given URL is one of the service and returns the WMS id if so
          * @param idValidator: regular expression that checks if a given ID is syntactically valid
          */
-        public rectifierService(String name, String url, String wmsUrl, String urlRegEx, String idValidator) {
+        public RectifierService(String name, String url, String wmsUrl, String urlRegEx, String idValidator) {
             this.name = name;
             this.url = url;
             this.wmsUrl = wmsUrl;
@@ -60,7 +61,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
     /**
      * List of available rectifier services. May be extended from the outside
      */
-    public ArrayList<rectifierService> services = new ArrayList<rectifierService>();
+    public ArrayList<RectifierService> services = new ArrayList<RectifierService>();
 
     public Map_Rectifier_WMSmenuAction() {
         super(tr("Rectified Image..."),
@@ -75,7 +76,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 
         // Add default services
         services.add(
-            new rectifierService("Metacarta Map Rectifier",
+            new RectifierService("Metacarta Map Rectifier",
                 "http://labs.metacarta.com/rectifier/",
                 "http://labs.metacarta.com/rectifier/wms.cgi?id=__s__&srs=EPSG:4326"
                 + "&Service=WMS&Version=1.1.0&Request=GetMap&format=image/png&",
@@ -88,7 +89,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
             // TODO: Change all links to mapwarper.net once the project has moved.
             // The RegEx already matches the new URL and old URLs will be forwarded
             // to make the transition as smooth as possible for the users
-            new rectifierService("Geothings Map Warper",
+            new RectifierService("Geothings Map Warper",
                 "http://warper.geothings.net/",
                 "http://warper.geothings.net/maps/wms/__s__?request=GetMap&version=1.1.1"
                 + "&styles=&format=image/png&srs=epsg:4326&exceptions=application/vnd.ogc.se_inimage&",
@@ -103,7 +104,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 
         // Clipboard content gets trimmed, so matching whitespace only ensures that this
         // service will never be selected automatically.
-        services.add(new rectifierService(tr("Custom WMS Link"), "", "", "^\\s+$", ""));
+        services.add(new RectifierService(tr("Custom WMS Link"), "", "", "^\\s+$", ""));
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -116,7 +117,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
         ButtonGroup group = new ButtonGroup();
 
         JRadioButton firstBtn = null;
-        for(rectifierService s : services) {
+        for(RectifierService s : services) {
             JRadioButton serviceBtn = new JRadioButton(s.name);
             if(firstBtn == null)
                 firstBtn = serviceBtn;
@@ -132,9 +133,9 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
             group.add(serviceBtn);
             if(!s.url.equals("")) {
                 panel.add(serviceBtn, GBC.std());
-                panel.add(new UrlLabel(s.url, tr("Visit Homepage")), GBC.eol().anchor(GBC.EAST));
+                panel.add(new UrlLabel(s.url, tr("Visit Homepage")), GBC.eol().anchor(GridBagConstraints.EAST));
             } else
-                panel.add(serviceBtn, GBC.eol().anchor(GBC.WEST));
+                panel.add(serviceBtn, GBC.eol().anchor(GridBagConstraints.WEST));
         }
 
         // Fallback in case no match was found
@@ -142,7 +143,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
             firstBtn.setSelected(true);
 
         panel.add(new JLabel(tr("WMS URL or Image ID:")), GBC.eol());
-        panel.add(tfWmsUrl, GBC.eol().fill(GBC.HORIZONTAL));
+        panel.add(tfWmsUrl, GBC.eol().fill(GridBagConstraints.HORIZONTAL));
 
         ExtendedDialog diag = new ExtendedDialog(Main.parent,
                 tr("Add Rectified Image"),
@@ -162,7 +163,7 @@ public class Map_Rectifier_WMSmenuAction extends JosmAction {
 
             String text = tfWmsUrl.getText().trim();
             // Loop all services until we find the selected one
-            for(rectifierService s : services) {
+            for(RectifierService s : services) {
                 if(!s.isSelected())
                     continue;
 

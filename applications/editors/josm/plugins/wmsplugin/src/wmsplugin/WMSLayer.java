@@ -50,7 +50,7 @@ public class WMSLayer extends Layer {
     protected MapView mv;
     protected String resolution;
     protected boolean stopAfterPaint = false;
-    protected int ImageSize = 500;
+    protected int imageSize = 500;
     protected int dax = 10;
     protected int day = 10;
     protected int minZoom = 3;
@@ -167,8 +167,8 @@ public class WMSLayer extends Layer {
 
     private ProjectionBounds XYtoBounds (int x, int y) {
         return new ProjectionBounds(
-                new EastNorth(      x * ImageSize / pixelPerDegree,       y * ImageSize / pixelPerDegree),
-                new EastNorth((x + 1) * ImageSize / pixelPerDegree, (y + 1) * ImageSize / pixelPerDegree));
+                new EastNorth(      x * imageSize / pixelPerDegree,       y * imageSize / pixelPerDegree),
+                new EastNorth((x + 1) * imageSize / pixelPerDegree, (y + 1) * imageSize / pixelPerDegree));
     }
 
     private int modulo (int a, int b) {
@@ -227,10 +227,10 @@ public class WMSLayer extends Layer {
         if (usesInvalidUrl)
             return;
         ProjectionBounds bounds = mv.getProjectionBounds();
-        int bminx= (int)Math.floor (((bounds.min.east() - dx) * pixelPerDegree) / ImageSize );
-        int bminy= (int)Math.floor (((bounds.min.north() - dy) * pixelPerDegree) / ImageSize );
-        int bmaxx= (int)Math.ceil  (((bounds.max.east() - dx) * pixelPerDegree) / ImageSize );
-        int bmaxy= (int)Math.ceil  (((bounds.max.north() - dy) * pixelPerDegree) / ImageSize );
+        int bminx= (int)Math.floor (((bounds.min.east() - dx) * pixelPerDegree) / imageSize );
+        int bminy= (int)Math.floor (((bounds.min.north() - dy) * pixelPerDegree) / imageSize );
+        int bmaxx= (int)Math.ceil  (((bounds.max.east() - dx) * pixelPerDegree) / imageSize );
+        int bmaxy= (int)Math.ceil  (((bounds.max.north() - dy) * pixelPerDegree) / imageSize );
 
         if((bmaxx - bminx > dax) || (bmaxy - bminy > day)){
             JOptionPane.showMessageDialog(
@@ -384,7 +384,7 @@ public class WMSLayer extends Layer {
                     oos.writeInt(serializeFormatVersion);
                     oos.writeInt(dax);
                     oos.writeInt(day);
-                    oos.writeInt(ImageSize);
+                    oos.writeInt(imageSize);
                     oos.writeDouble(pixelPerDegree);
                     oos.writeObject(getName());
                     oos.writeObject(baseURL);
@@ -422,7 +422,7 @@ public class WMSLayer extends Layer {
                 startstop.setSelected(false);
                 dax = ois.readInt();
                 day = ois.readInt();
-                ImageSize = ois.readInt();
+                imageSize = ois.readInt();
                 pixelPerDegree = ois.readDouble();
                 setName((String)ois.readObject());
                 baseURL = (String) ois.readObject();

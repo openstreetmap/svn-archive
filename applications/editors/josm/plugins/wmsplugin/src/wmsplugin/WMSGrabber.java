@@ -36,7 +36,7 @@ public class WMSGrabber extends Grabber {
     public static boolean isUrlWithPatterns(String url) {
         return url != null && url.contains("{") && url.contains("}");
     }
-    
+
     protected String baseURL;
     private final boolean urlWithPatterns;
 
@@ -47,7 +47,8 @@ public class WMSGrabber extends Grabber {
         urlWithPatterns = isUrlWithPatterns(baseURL);
     }
 
-    public void run() {
+    @Override
+	public void run() {
         attempt();
         mv.repaint();
     }
@@ -151,7 +152,8 @@ public class WMSGrabber extends Grabber {
         return res;
     }
 
-    public boolean loadFromCache(){
+    @Override
+	public boolean loadFromCache(){
         URL url = null;
         try{
            url = getURL(

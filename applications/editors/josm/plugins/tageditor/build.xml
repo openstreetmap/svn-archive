@@ -27,8 +27,8 @@
 <project name="tageditor" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="Made build file more robust" />
-	<property name="plugin.main.version" value="2355" />
+	<property name="commit.message" value="Uses new constructor for Plugin" />
+	<property name="plugin.main.version" value="2830" />
 
 	<!--
       ************************************************

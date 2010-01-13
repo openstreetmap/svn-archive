@@ -27,7 +27,6 @@
 
 package com.innovant.josm.plugin.routing;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 import com.innovant.josm.plugin.routing.actions.AddRouteNodeAction;
 import com.innovant.josm.plugin.routing.actions.MoveRouteNodeAction;
@@ -126,8 +126,8 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener {
     /**
      * Default Constructor
      */
-    public RoutingPlugin() {
-        super();
+    public RoutingPlugin(PluginInformation info) {
+        super(info);
         plugin = this; // Assign reference to the plugin class
         DOMConfigurator.configure("log4j.xml");
         logger.debug("Loading routing plugin...");

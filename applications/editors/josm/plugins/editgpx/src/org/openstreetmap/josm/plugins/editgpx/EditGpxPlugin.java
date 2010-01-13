@@ -17,6 +17,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -42,7 +43,8 @@ public class EditGpxPlugin extends Plugin {
     protected static DataSet dataSet;
     public static boolean active = false;
 
-    public EditGpxPlugin() {
+    public EditGpxPlugin(PluginInformation info) {
+    	super(info);
         dataSet = new DataSet();
         mode = new EditGpxMode(Main.map, "editgpx", tr("edit gpx tracks"), dataSet);
 

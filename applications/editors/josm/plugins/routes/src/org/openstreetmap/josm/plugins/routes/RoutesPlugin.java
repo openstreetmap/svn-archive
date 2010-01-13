@@ -20,6 +20,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.routes.xml.Routes;
 import org.openstreetmap.josm.plugins.routes.xml.RoutesXMLLayer;
 
@@ -28,7 +29,8 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
     private final List<RouteLayer> routeLayers = new ArrayList<RouteLayer>();
     private boolean isShown;
     
-    public RoutesPlugin() {
+    public RoutesPlugin(PluginInformation info) {
+    	super(info);
     	MapView.addLayerChangeListener(this);
         
         File routesFile = new File(getPluginDir() + File.separator + "routes.xml");

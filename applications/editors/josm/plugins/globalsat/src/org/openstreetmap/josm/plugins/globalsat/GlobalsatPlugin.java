@@ -18,6 +18,7 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
@@ -86,7 +87,8 @@ public class GlobalsatPlugin extends Plugin {
 
 
     GlobalsatImportAction importAction;
-    public GlobalsatPlugin() {
+    public GlobalsatPlugin(PluginInformation info) {
+    	super(info);
         boolean error = false;
         try{
             Enumeration e = CommPortIdentifier.getPortIdentifiers();

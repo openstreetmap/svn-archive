@@ -24,6 +24,7 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.data.projection.*;
 
 /**
@@ -129,7 +130,8 @@ public class CadastrePlugin extends Plugin {
      *
      * @throws Exception
      */
-    public CadastrePlugin() throws Exception {
+    public CadastrePlugin(PluginInformation info) throws Exception {
+    	super(info);
         System.out.println("Pluging cadastre-fr v"+VERSION+" started...");
         if (Main.pref.get("cadastrewms.cacheDir").equals(""))
             cacheDir = Main.pref.getPreferencesDir()+"plugins/cadastrewms/";

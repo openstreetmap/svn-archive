@@ -23,6 +23,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
@@ -114,7 +115,8 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 		}
 	}
 
-	public LiveGpsPlugin() {
+	public LiveGpsPlugin(PluginInformation info) {
+		super(info);
 		MainMenu menu = Main.main.menu;
 		lgpsmenu = menu.addMenu(marktr("LiveGPS"), KeyEvent.VK_G,
 				menu.defaultMenuPos, ht("/Plugin/LiveGPS"));

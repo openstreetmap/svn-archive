@@ -31,8 +31,8 @@
     <property name="ant.build.javac.target" value="1.5"/>
 	
 
-    <property name="commit.message" value="Compatibility issues with Java 1.5. We didn't switch to 1.6 yet." />		
-    <property name="plugin.main.version" value="2565" />
+    <property name="commit.message" value="Changed the constructor signature of the plugin main class" />		
+    <property name="plugin.main.version" value="2830" />
     	
     	
     <target name="init">

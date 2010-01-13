@@ -2,7 +2,7 @@
 
   <!-- compilation properties -->
   <property name="josm.build.dir"    value="../core"/>
-  <property name="josm.presets"      value="${josm.build.dir}/presets/presets.xml"/>
+  <property name="josm.presets"      value="${josm.build.dir}/data/defaultpresets.xml"/>
   <property name="josm.style"        value="${josm.build.dir}/styles/standard/elemstyles.xml"/>
   <property name="plugin.dir"        value="../plugins"/>
   <property name="validator.tagfile" value="${plugin.dir}/validator/tagchecker.cfg"/>

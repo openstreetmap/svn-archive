@@ -10,6 +10,9 @@
 #      -u username
 #      -p password
 #      -c comment for change set
+#      -t tag for change set, e.g. -t source=myimport or -t about="an awesome import"
+#         can be supplied multiple times for multiple tags, if comment or
+#         created_by are supplied they'll overwrite the default values
 #
 # After each change set is sent to the server the id mappings are saved
 # in inputfile.osm.db
@@ -97,8 +100,19 @@ class ImportProcessor:
     def createChangeSet(self):
         createReq=ET.Element('osm',version="0.6")
         change=ET.Element('changeset')
-        change.append(ET.Element('tag',k='comment',v=self.comment))
-        change.append(ET.Element('tag',k='created_by', v='bulk_upload_sax.py'))
+
+        # Changeset tags
+        tags = {
+            'created_by': headers['User-Agent'],
+            'comment': self.comment,
+        }
+        for tag in options.tags:
+            (k, v) = tag.split("=", 1)
+            tags[k] = v
+        
+        for key, value in tags.iteritems():
+            change.append(ET.Element('tag',k=key, v=value))
+
         createReq.append(change)
         xml=ET.tostring(createReq)
         resp,content=self.doHttpRequest('Error creating changeset:', api_host +
@@ -261,7 +275,9 @@ parser = OptionParser(usage)
 parser.add_option("-i", "--input", dest="infile", help="read data from input.osm")
 parser.add_option("-u", "--user", dest="user", help="username")
 parser.add_option("-p", "--password", dest="password", help="password")
-parser.add_option("-c", "--comment", dest="comment", help="ChangeSet Comment")
+parser.add_option("-c", "--comment", dest="comment", help="changeset comment")
+parser.add_option("-t", "--tag", action="append", dest="tags",
+                  help="Changeset tags e.g. `source=landsat', can be supplied multiple times")
 (options, args) = parser.parse_args()
  
 parser.check_required("-i")

@@ -23,6 +23,7 @@ import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.FileImporter;
 
 /**
@@ -42,7 +43,7 @@ public class TangoGPS extends FileImporter {
 	 * form: <lat>,<lon>,<elevation>,<speed>,<course>,<hdop>,<datetime>
 	 */
 	@Override
-	public void importData(File file) throws IOException {
+	public void importData(File file, ProgressMonitor progressMonitor) throws IOException {
 		// create the data tree
 		GpxData data = new GpxData();
 		GpxTrack currentTrack = new GpxTrack();
@@ -91,8 +92,9 @@ public class TangoGPS extends FileImporter {
 			}
 			showInfobox(imported,failure);
 		} finally {
-			if (rd != null)
+			if (rd != null) {
 				rd.close();
+			}
 		}
 	}
 

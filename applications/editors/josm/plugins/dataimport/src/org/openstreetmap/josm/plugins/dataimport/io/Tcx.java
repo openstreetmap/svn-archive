@@ -22,6 +22,7 @@ import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.FileImporter;
 import org.openstreetmap.josm.plugins.dataimport.io.tcx.ActivityLapT;
 import org.openstreetmap.josm.plugins.dataimport.io.tcx.ActivityT;
@@ -70,7 +71,7 @@ public class Tcx extends FileImporter {
      * @param tcxFile
      */
     @Override
-    public void importData(File tcxFile) throws IOException {
+    public void importData(File tcxFile, ProgressMonitor progressMonitor) throws IOException {
         //this.tcxFile = tcxFile;
         parseFile(tcxFile);
 

@@ -17,7 +17,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.tools.I18n;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Plugin {
     private static final class ImageFileFilter extends FileFilter {
@@ -94,7 +94,9 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
     /**
      * no-arg constructor is required by JOSM
      */
-    public ImageWayPointPlugin() {
+    public ImageWayPointPlugin(PluginInformation info) {
+    	super(info);
+    	
         MainMenu menu = Main.main.menu;
         menu.add(menu.fileMenu, new LoadImagesAction(this));
     }

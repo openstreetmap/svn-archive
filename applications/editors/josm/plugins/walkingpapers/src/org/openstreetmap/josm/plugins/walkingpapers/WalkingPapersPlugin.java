@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
  * Main class for the walking papers plugin.
@@ -22,8 +23,9 @@ public class WalkingPapersPlugin extends Plugin
 {
     static JMenu walkingPapersMenu;
 
-    public WalkingPapersPlugin()
+    public WalkingPapersPlugin(PluginInformation info)
     {
+    	super(info);
         MainMenu menu = Main.main.menu;
         walkingPapersMenu = menu.addMenu(marktr("Walking Papers"), KeyEvent.VK_K, menu.defaultMenuPos, ht("/Plugin/WalkingPapers"));
         walkingPapersMenu.add(new JMenuItem(new WalkingPapersAddLayerAction()));

@@ -20,6 +20,7 @@ import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessRuleset;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessRulesetReader;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessRulesetReader.AccessRulesetSyntaxException;
@@ -73,7 +74,8 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
 	private GraphViewLayer graphViewLayer;
 
 	/** creates the plugin */
-	public GraphViewPlugin() {
+	public GraphViewPlugin(PluginInformation info) {
+		super(info);
 
 		preferences = GraphViewPreferences.getInstance();
 		this.preferences.addObserver(this);

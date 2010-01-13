@@ -6,6 +6,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
  * Interface to Darryl Shpak's Lakewalker python module
@@ -13,7 +14,8 @@ import org.openstreetmap.josm.plugins.Plugin;
  * @author Brent Easton
  */
 public class LakewalkerPlugin extends Plugin {
-  public LakewalkerPlugin() {
+  public LakewalkerPlugin(PluginInformation info) {
+	  super(info);
     MainMenu.add(Main.main.menu.toolsMenu, new LakewalkerAction(tr("Lake Walker")));
   }
 

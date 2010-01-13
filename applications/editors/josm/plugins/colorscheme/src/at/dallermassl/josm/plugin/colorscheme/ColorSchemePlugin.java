@@ -6,6 +6,7 @@ package at.dallermassl.josm.plugin.colorscheme;
 
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
  * ColorScheme Plugin for JOSM.
@@ -17,8 +18,8 @@ public class ColorSchemePlugin extends Plugin {
     /**
      * Default Constructor
      */
-    public ColorSchemePlugin() {
-
+    public ColorSchemePlugin(PluginInformation info) {
+    	super(info);
     }
 
     @Override

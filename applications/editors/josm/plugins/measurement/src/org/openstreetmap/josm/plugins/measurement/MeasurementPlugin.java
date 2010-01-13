@@ -9,6 +9,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class MeasurementPlugin extends Plugin {
 
@@ -17,7 +18,8 @@ public class MeasurementPlugin extends Plugin {
     protected static MeasurementDialog measurementDialog;
     protected static MeasurementLayer currentLayer;
 
-    public MeasurementPlugin() {
+    public MeasurementPlugin(PluginInformation info) {
+    	super(info);
         mode = new MeasurementMode(Main.map, "measurement", tr("measurement mode"));
         btn = new IconToggleButton(mode);
         btn.setVisible(true);

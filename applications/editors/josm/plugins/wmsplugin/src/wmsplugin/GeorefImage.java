@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -76,7 +77,7 @@ public class GeorefImage implements Serializable {
 			return true;
 		}
 
-		boolean alphaChannel = Main.pref.getBoolean("wmsplugin.alpha_channel");
+		boolean alphaChannel = Main.pref.getBoolean("wmsplugin.alpha_channel") && image.getTransparency() != Transparency.OPAQUE;
 
 		try {
 			if(reImg != null) reImg.flush();

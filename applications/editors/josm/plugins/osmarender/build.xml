@@ -33,8 +33,8 @@
 	<property name="xslt" location="./xslt" />
 
 
-	<property name="commit.message" value="Update to JOSM r2748" />
-	<property name="plugin.main.version" value="2748" />
+	<property name="commit.message" value="Fixed #4360 - osmarender plugin does not load" />
+	<property name="plugin.main.version" value="2830" />
 
 	<target name="init">
 		<mkdir dir="${plugin.build.dir}" />

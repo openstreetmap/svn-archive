@@ -31,11 +31,11 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.GBC;
 
 public class OsmarenderPlugin extends Plugin {
@@ -104,7 +104,8 @@ public class OsmarenderPlugin extends Plugin {
 
     private JMenuItem osmarenderMenu;
 
-    public OsmarenderPlugin() throws IOException {
+    public OsmarenderPlugin(PluginInformation info) throws IOException {
+    	super(info);
         osmarenderMenu = MainMenu.add(Main.main.menu.viewMenu, new Action());
         osmarenderMenu.setVisible(false);
 

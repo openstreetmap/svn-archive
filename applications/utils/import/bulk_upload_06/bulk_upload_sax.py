@@ -53,7 +53,7 @@ import socket
 #api_host='http://api.openstreetmap.org'
 api_host='http://api06.dev.openstreetmap.org'
 headers = {
-    'User-Agent' : 'bulk_upload.py',
+    'User-Agent' : 'bulk_upload_sax.py',
 }
 retryDelays = [0, 10, 60, 300]
 
@@ -98,7 +98,7 @@ class ImportProcessor:
         createReq=ET.Element('osm',version="0.6")
         change=ET.Element('changeset')
         change.append(ET.Element('tag',k='comment',v=self.comment))
-        change.append(ET.Element('tag',k='created_by', v='bulk_upload.py'))
+        change.append(ET.Element('tag',k='created_by', v='bulk_upload_sax.py'))
         createReq.append(change)
         xml=ET.tostring(createReq)
         resp,content=self.doHttpRequest('Error creating changeset:', api_host +

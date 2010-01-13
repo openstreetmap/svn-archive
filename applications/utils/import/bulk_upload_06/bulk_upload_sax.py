@@ -118,6 +118,7 @@ class ImportProcessor:
         resp,content=self.doHttpRequest('Error creating changeset:', api_host +
                                           '/api/0.6/changeset/create','PUT',xml,headers=headers)
         self.changesetid=content
+        print "Opened changeset:" + self.changesetid
 
     def createStructure(self, item):
         if item['type'] == 'node':
@@ -155,13 +156,13 @@ class ImportProcessor:
         xml.append(self.addElem)
         xml.append(self.modifyElem)
         xml.append(self.deleteElem)
-        print "Uploading change set:" + self.changesetid        
         resp,content = self.doHttpRequest("Error uploading changeset:", api_host +
                                             '/api/0.6/changeset/'+self.changesetid+
                                             '/upload',
                                             'POST', ET.tostring(xml),headers=headers)        
         self.processResult(content)
     def closeSet(self):
+        print "Closing changeset:" + self.changesetid
         resp,content=self.doHttpRequest("Error closing changeset " + str(self.changesetid) + ":", api_host +
                                           '/api/0.6/changeset/' +
                                           self.changesetid + '/close','PUT',headers=headers)
@@ -179,8 +180,11 @@ class ImportProcessor:
             else:
                 self.idMap[old_id]=old_id
     
+    def getChangesetLimit(self):
+        return int(options.changeset_limit)
+
     def getAPILimit(self):
-        return 1000
+        return int(options.put_limit)
 
 # Allow enforcing of required arguements
 # code from http://www.python.org/doc/2.3/lib/optparse-extending-examples.html
@@ -211,7 +215,8 @@ class BulkParser(ContentHandler):
         self.idMap=shelve.open('%s.db' % options.infile)
         self.importer=ImportProcessor(self.httpObj,options.comment,self.idMap)
         self.object = None
-        self.cnt = 0
+        self.ob_cnt = 0
+        self.cs_cnt = 0
 
     def endDocument(self):
         self.importer.upload()
@@ -255,12 +260,18 @@ class BulkParser(ContentHandler):
 
                 self.object = None
 
-            if self.cnt >= self.importer.getAPILimit():
+            if self.ob_cnt >= self.importer.getAPILimit():
+                print "  Uploading to changeset: %d (uploading %d thingies with %d/%d possible thingies in this changeset so far)" % (int(self.importer.changesetid), self.ob_cnt, self.cs_cnt, self.importer.getChangesetLimit())
                 self.importer.upload()
+                self.ob_cnt=0
+            if self.cs_cnt >= self.importer.getChangesetLimit():
                 self.importer.closeSet()
                 self.importer=ImportProcessor(self.httpObj,options.comment,self.idMap)
-                self.cnt=0
-            self.cnt=self.cnt+1
+                self.cs_cnt=0
+
+            # One more object in this request / upload
+            self.ob_cnt += 1
+            self.cs_cnt += 1
 
         del self.pathStack[-1]
         self.path = '/'.join(self.pathStack)
@@ -278,6 +289,10 @@ parser.add_option("-p", "--password", dest="password", help="password")
 parser.add_option("-c", "--comment", dest="comment", help="changeset comment")
 parser.add_option("-t", "--tag", action="append", dest="tags",
                   help="Changeset tags e.g. `source=landsat', can be supplied multiple times")
+parser.add_option("", "--changeset-limit", dest="changeset_limit", default=20000,
+                  help="The maximum number of thingies to upload to each changeset")
+parser.add_option("", "--put-limit", dest="put_limit", default=1000,
+                  help="The number of thingies to upload in each PUT request")
 (options, args) = parser.parse_args()
  
 parser.check_required("-i")

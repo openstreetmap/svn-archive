@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.AddrInterpolation;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class AddrInterpolationPlugin extends Plugin {
 
@@ -12,10 +13,9 @@ public class AddrInterpolationPlugin extends Plugin {
 	/**
 	 * constructor
 	 */
-	public AddrInterpolationPlugin() {
+	public AddrInterpolationPlugin(PluginInformation info) {
+		super(info);
 		action = new AddrInterpolationAction();
 		Main.main.menu.toolsMenu.add(action);
 	}
-
-
 }

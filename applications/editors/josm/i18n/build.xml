@@ -16,7 +16,7 @@
 
   <property name="ant.build.javac.target" value="1.5"/>
 
-  <property name="gettexttasks.jar" value="lib/gettext-ant-tasks-0.9.6.jar"/>
+  <property name="gettexttasks.jar" value="lib/gettext-ant-tasks-0.9.7.jar"/>
 
   <target name="init.gettext" description="Loads the Ant gettext tasks">
     <taskdef name="gettext-extract" classname="org.xnap.commons.ant.gettext.GettextExtractKeysTask" classpath="${gettexttasks.jar}"/>

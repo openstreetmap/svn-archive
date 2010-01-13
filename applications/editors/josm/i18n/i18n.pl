@@ -6,6 +6,7 @@ use Term::ReadKey;
 use Encode;
 
 my $waswarn = 0;
+my $maxcount = 0;
 
 main();
 
@@ -26,6 +27,7 @@ sub loadfiles($@)
     die "Could not open file $file." if(!open FILE,"<:utf8",$file);
     my $linenum = 0;
 
+    my $cnt = -1; # don't count translators info
     if($file =~ /\/(.._..)\.po$/ || $file =~ /\/(..)\.po$/)
     {
       my $l = $1;
@@ -47,6 +49,7 @@ sub loadfiles($@)
         elsif($_ =~ /^(msg.+) "(.*)"$/)
         {
           my ($n, $d) = ($1, $2);
+          ++$cnt if $n eq "msgid";
           my $new = !${postate}{fuzzy} && (($n eq "msgid" && $postate{type} ne "msgctxt") || ($n eq "msgctxt"));
           checkpo(\%postate, \%all, $l, "line $linenum in $file", $keys, $new);
           $postate{last} = $d;
@@ -64,6 +67,7 @@ sub loadfiles($@)
     {
       die "File format not supported for file $file.";
     }
+    $maxcount = $cnt if $cnt > $maxcount;
     close(FILE);
   }
   return %all;
@@ -201,10 +205,10 @@ sub createlang($@)
   foreach my $file (@files)
   {
     my $la;
+    my $cnt = 0;
     if($file =~ /[-_](.._..)\.lang$/ || $file =~ /^(?:.*\/)?(.._..)\.lang$/ ||
     $file =~ /[-_](...?)\.lang$/ || $file =~ /^(?:.*\/)?(..)\.lang$/)
     {
-      print "Creating file $file\n";
       $la = $1;
     }
     else
@@ -219,6 +223,7 @@ sub createlang($@)
       my $val;
       if($la eq "en")
       {
+        ++$cnt;
         $val = $en;
         $val =~ s/^___(.*)___/_:$1\n/;
       }
@@ -227,6 +232,7 @@ sub createlang($@)
         my $ennoctx = $en;
         $ennoctx =~ s/^___(.*)___//;
         $val = (exists($data->{$en}{$la})) ? $data->{$en}{$la} : "";
+        ++$cnt if $val;
         $val = "" if($ennoctx eq $val);
       }
       print FILE makestring($val);
@@ -241,6 +247,7 @@ sub createlang($@)
       my $val;
       if($la eq "en")
       {
+        ++$cnt;
         $val = $en;
         $val =~ s/^___(.*)___/_:$1\n/;
       }
@@ -248,6 +255,7 @@ sub createlang($@)
       {
         $val = (exists($data->{$en}{$la})) ? $data->{$en}{$la} : "";
         --$num if(!$val);
+        ++$cnt if $val;
         if($num == 2)
         {
           my $ennoctx = $en;
@@ -267,6 +275,7 @@ sub createlang($@)
       }
     }
     close FILE;
+    print "Created file $file: Added $cnt strings out of $maxcount.\n";
   }
 }
 

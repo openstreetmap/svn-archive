@@ -6,21 +6,15 @@ package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.Iterator;
-
-import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
 
 import livegps.LiveGpsPlugin;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginHandler;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
  * Plugin that uses live gps data and a button panel to add nodes/waypoints etc at the current
@@ -39,8 +33,7 @@ public class SurveyorPlugin {
     /**
      *
      */
-    public SurveyorPlugin() {
-        super();
+    public SurveyorPlugin(PluginInformation info) {
 
         LiveGpsPlugin gpsPlugin = (LiveGpsPlugin) PluginHandler.getPlugin("livegps");
         if(gpsPlugin == null)

@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.xml.sax.SAXException;
 
 public class TaggingPresetTester extends JFrame {
@@ -75,7 +76,11 @@ public class TaggingPresetTester extends JFrame {
         panel.validate();
         panel.repaint();
     }
-
+   
+    public TaggingPresetTester(PluginInformation info) {
+    	this(new String[]{});
+    }
+    
     public TaggingPresetTester(String[] args) {
         super(tr("Tagging Preset Tester"));
         this.args = args;

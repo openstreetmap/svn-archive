@@ -195,7 +195,7 @@
 			</condition>
 		</fail>
 	</target>
-
+ 
 	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
 	</target>
 </project>

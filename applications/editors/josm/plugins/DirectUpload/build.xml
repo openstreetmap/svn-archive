@@ -26,8 +26,8 @@
 -->
 <project name="DirectUpload" default="dist" basedir=".">
 
-	<property name="commit.message" value="Rebuilding because of JOSM trac ticket #4156; Enabled state management in UploadAction" />
-	<property name="plugin.main.version" value="2625" />
+	<property name="commit.message" value="Changed constructor signature of plugin main class" />
+	<property name="plugin.main.version" value="2830" />
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.dist.dir"        value="../../dist"/>

@@ -13,10 +13,9 @@ import java.awt.event.KeyEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 /**
  *
@@ -25,7 +24,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class UploadDataGuiPlugin extends Plugin{
     UploadAction openaction;
 
-    public UploadDataGuiPlugin() {
+    public UploadDataGuiPlugin(PluginInformation info) {
+    	super(info);
         openaction = new UploadAction();
         Main.main.menu.toolsMenu.add(openaction);
     }

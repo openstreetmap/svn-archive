@@ -29,8 +29,6 @@ package org.openstreetmap.josm.plugins.osb;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.net.URL;
-
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -45,6 +43,7 @@ import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.osb.api.DownloadAction;
 import org.openstreetmap.josm.plugins.osb.gui.OsbDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -66,8 +65,8 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     private DownloadAction download = new DownloadAction();
 
-    public OsbPlugin() {
-        super();
+    public OsbPlugin(PluginInformation info) {
+        super(info);
         initConfig();
         dataSet = new DataSet();
         uploadHook = new OsbUploadHook();

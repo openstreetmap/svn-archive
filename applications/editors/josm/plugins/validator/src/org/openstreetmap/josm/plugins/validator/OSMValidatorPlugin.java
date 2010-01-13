@@ -33,6 +33,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.validator.tests.Coastlines;
 import org.openstreetmap.josm.plugins.validator.tests.CrossingWays;
 import org.openstreetmap.josm.plugins.validator.tests.DuplicateNode;
@@ -105,7 +106,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
     /**
      * Creates the plugin
      */
-    public OSMValidatorPlugin() {
+    public OSMValidatorPlugin(PluginInformation info) {
+    	super(info);
         plugin = this;
         checkPluginDir();
         initializeGridDetail();

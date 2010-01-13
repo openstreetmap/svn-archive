@@ -25,7 +25,7 @@
 **
 -->
 <project name="graphview" default="dist" basedir=".">
-
+ 
 	<property name="commit.message" value="Changed the constructor signature of the plugin main class" />
 	<property name="plugin.main.version" value="2830" />
 	

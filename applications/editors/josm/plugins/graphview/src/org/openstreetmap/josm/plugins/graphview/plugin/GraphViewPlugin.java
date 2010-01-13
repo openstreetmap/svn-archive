@@ -76,7 +76,6 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
 	/** creates the plugin */
 	public GraphViewPlugin(PluginInformation info) {
 		super(info);
-
 		preferences = GraphViewPreferences.getInstance();
 		this.preferences.addObserver(this);
 

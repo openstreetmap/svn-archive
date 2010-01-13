@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
 
@@ -16,8 +17,9 @@ public class RemoteControlPlugin extends Plugin
     /**
      * Creates the plugin, and starts the HTTP server
      */
-    public RemoteControlPlugin()
+    public RemoteControlPlugin(PluginInformation info)
     {
+    	super(info);
         restartServer();
     }
 

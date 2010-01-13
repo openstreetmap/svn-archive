@@ -28,6 +28,7 @@ import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -42,7 +43,8 @@ public class WayDownloaderPlugin extends Plugin {
 
 
     /** Plugin constructor called at JOSM startup */
-    public WayDownloaderPlugin() {
+    public WayDownloaderPlugin(PluginInformation info) {
+    	super(info);
         //add WayDownloadAction to tools menu
         MainMenu.add(Main.main.menu.toolsMenu, new WayDownloadAction());
     }

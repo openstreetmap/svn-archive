@@ -10,6 +10,7 @@ import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
  * Main class for the OpenLayers plugin.
@@ -23,7 +24,8 @@ public class OpenLayersPlugin extends Plugin {
     static JMenu menu;
     static String pluginDir;
 
-    public OpenLayersPlugin() {
+    public OpenLayersPlugin(PluginInformation info) {
+    	super(info);
         pluginDir = getPluginDir();
         try {
             copy("/resources/yahoo.html", "yahoo.html");

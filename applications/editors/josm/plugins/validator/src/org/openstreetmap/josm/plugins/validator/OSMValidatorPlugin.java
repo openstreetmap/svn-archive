@@ -9,7 +9,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,8 +60,6 @@ import org.openstreetmap.josm.plugins.validator.util.Util;
  */
 public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
 
-    protected static OSMValidatorPlugin plugin;
-
     protected static ErrorLayer errorLayer = null;
 
     /** The validate action */
@@ -108,7 +105,6 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
      */
     public OSMValidatorPlugin(PluginInformation info) {
     	super(info);
-        plugin = this;
         checkPluginDir();
         initializeGridDetail();
         initializeTests(getTests());
@@ -272,16 +268,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
         for (Test test : allTests) {
             try {
                 if (test.enabled) {
-                    test.getClass().getMethod("initialize", new Class[] { OSMValidatorPlugin.class }).invoke(null,
-                            new Object[] { this });
+                    test.initialize(this);
                 }
-            } catch (InvocationTargetException ite) {
-                ite.getCause().printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent,
-                		tr("Error initializing test {0}:\n {1}", test.getClass()
-                        .getSimpleName(), ite.getCause().getMessage()),
-                        tr("Error"),
-                        JOptionPane.ERROR_MESSAGE);
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(Main.parent,

@@ -13,7 +13,6 @@ import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -65,7 +64,7 @@ public class ValidateAction extends JosmAction {
         if (plugin.validateAction == null || Main.map == null || !Main.map.isVisible())
             return;
 
-        OSMValidatorPlugin.plugin.initializeErrorLayer();
+        plugin.initializeErrorLayer();
 
         Collection<Test> tests = OSMValidatorPlugin.getEnabledTests(false);
         if (tests.isEmpty())
@@ -90,31 +89,31 @@ public class ValidateAction extends JosmAction {
         }
 
         ValidationTask task = new ValidationTask(tests, selection, lastSelection);
-        Main.worker.submit(task);        
+        Main.worker.submit(task);
     }
 
     @Override
     public void updateEnabledState() {
         setEnabled(getEditLayer() != null);
     }
-    
+
     /**
      * Asynchronous task for running a collection of tests against a collection
-     * of primitives 
+     * of primitives
      *
      */
-    
+
     class ValidationTask extends PleaseWaitRunnable {
     	private Collection<Test> tests;
     	private Collection<OsmPrimitive> validatedPrimitmives;
     	private Collection<OsmPrimitive> formerValidatedPrimitives;
     	private boolean canceled;
         private List<TestError> errors;
-        
+
         /**
-         * 
-         * @param tests  the tests to run 
-         * @param validatedPrimitives the collection of primitives to validate. 
+         *
+         * @param tests  the tests to run
+         * @param validatedPrimitives the collection of primitives to validate.
          * @param formerValidatedPrimitives the last collection of primitives being validates. May be null.
          */
     	public ValidationTask(Collection<Test> tests, Collection<OsmPrimitive> validatedPrimitives, Collection<OsmPrimitive> formerValidatedPrimitives) {
@@ -123,16 +122,16 @@ public class ValidateAction extends JosmAction {
     		this.formerValidatedPrimitives = formerValidatedPrimitives;
     		this.tests = tests;
     	}
-    	
+
 		@Override
 		protected void cancel() {
-			this.canceled = true; 			
+			this.canceled = true;
 		}
 
 		@Override
 		protected void finish() {
 			if (canceled) return;
-			
+
 			// update GUI on Swing EDT
 			//
 			Runnable r = new Runnable()  {
@@ -140,10 +139,10 @@ public class ValidateAction extends JosmAction {
 			        plugin.validationDialog.tree.setErrors(errors);
 			        plugin.validationDialog.setVisible(true);
 			        Main.main.getCurrentDataSet().fireSelectionChanged();
-				}				
+				}
 			};
 			if (SwingUtilities.isEventDispatchThread()) {
-				r.run();				
+				r.run();
 			} else {
 				SwingUtilities.invokeLater(r);
 			}
@@ -152,11 +151,11 @@ public class ValidateAction extends JosmAction {
 		@Override
 		protected void realRun() throws SAXException, IOException,
 				OsmTransferException {
-			if (tests == null || tests.isEmpty()) return;		
+			if (tests == null || tests.isEmpty()) return;
 	        errors = new ArrayList<TestError>(200);
 	        getProgressMonitor().setTicksCount(tests.size() * validatedPrimitmives.size());
 	        int testCounter = 0;
-			for (Test test : tests) {				
+			for (Test test : tests) {
 				if (canceled) return;
 				testCounter++;
 				getProgressMonitor().setCustomText(tr("Test {0}/{1}: Starting {2}", testCounter, tests.size(),test.name));

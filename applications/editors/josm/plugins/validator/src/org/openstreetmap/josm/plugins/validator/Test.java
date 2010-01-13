@@ -85,7 +85,7 @@ public class Test extends AbstractVisitor
      * @param plugin The plugin
      * @throws Exception When cannot initialize the test
      */
-    public static void initialize(OSMValidatorPlugin plugin) throws Exception {}
+    public void initialize(OSMValidatorPlugin plugin) throws Exception {}
 
     /**
      * Start the test using a given progress monitor

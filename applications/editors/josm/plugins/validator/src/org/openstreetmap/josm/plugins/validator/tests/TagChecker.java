@@ -75,11 +75,11 @@ public class TagChecker extends Test
     protected static Bag<String, String> presetsValueData;
     /** The TagChecker data */
     protected static List<CheckerData> checkerData = new ArrayList<CheckerData>();
-    protected static ArrayList<String> ignoreDataStartsWith = new ArrayList<String>();
-    protected static ArrayList<String> ignoreDataEquals = new ArrayList<String>();
-    protected static ArrayList<String> ignoreDataEndsWith = new ArrayList<String>();
-    protected static ArrayList<IgnoreKeyPair> ignoreDataKeyPair = new ArrayList<IgnoreKeyPair>();
-    protected static ArrayList<IgnoreTwoKeyPair> ignoreDataTwoKeyPair = new ArrayList<IgnoreTwoKeyPair>();
+    protected static List<String> ignoreDataStartsWith = new ArrayList<String>();
+    protected static List<String> ignoreDataEquals = new ArrayList<String>();
+    protected static List<String> ignoreDataEndsWith = new ArrayList<String>();
+    protected static List<IgnoreKeyPair> ignoreDataKeyPair = new ArrayList<IgnoreKeyPair>();
+    protected static List<IgnoreTwoKeyPair> ignoreDataTwoKeyPair = new ArrayList<IgnoreTwoKeyPair>();
 
     /** The preferences prefix */
     protected static final String PREFIX = PreferenceEditor.PREFIX + "." + TagChecker.class.getSimpleName();
@@ -151,7 +151,8 @@ public class TagChecker extends Test
               tr("This plugin checks for errors in property keys and values."));
     }
 
-    public static void initialize(OSMValidatorPlugin plugin) throws Exception
+    @Override
+    public void initialize(OSMValidatorPlugin plugin) throws Exception
     {
         initializeData();
         initializePresets();

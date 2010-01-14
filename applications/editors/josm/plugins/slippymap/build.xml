@@ -26,7 +26,7 @@
 -->
 <project name="slippymap" default="dist" basedir=".">
 
-	<property name="commit.message" value="Changed the constructor signature of the plugin main class" />
+	<property name="commit.message" value="Added haiti imagery tile source" />
 	<property name="plugin.main.version" value="2830" />
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
@@ -181,5 +181,9 @@
 	</target>
 
 	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+	</target>
+	
+	<target name="dev-install">
+		<copy file="${plugin.jar}" todir="c:/data/projekte/osm/josm-dev/plugins" />
 	</target>
 </project>

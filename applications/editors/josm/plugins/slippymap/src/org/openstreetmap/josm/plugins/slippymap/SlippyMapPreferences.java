@@ -277,6 +277,25 @@ public class SlippyMapPreferences
             return TileUpdate.IfNoneMatch;
         }
     }
+    
+
+    public static class HaitiImagery extends OsmTileSource.AbstractOsmTileSource {
+        public HaitiImagery() {
+            super("HaitiImagery", "http://gravitystorm.dev.openstreetmap.org/imagery/haiti");
+        }
+
+        public int getMaxZoom() {
+            return 21;
+        }
+
+        public String getTilePath(int zoom, int tilex, int tiley) {
+        	return "/" + zoom + "/" + tilex + "/" + tiley + ".png";
+        }
+
+        public TileUpdate getTileUpdate() {
+            return TileUpdate.IfNoneMatch;
+        }
+    }
 
     public static class Custom extends OsmTileSource.AbstractOsmTileSource {
         public Custom(String name, String url) {
@@ -336,6 +355,7 @@ public class SlippyMapPreferences
         sources.add(new FreeMapySkPokus());
         sources.add(new FreeMapySk());
         sources.add(new NearMap());
+        sources.add(new HaitiImagery());
         sources.addAll(getCustomSources());
         // Probably need to either add these or let users add them somehow
         //      "http://hypercube.telascience.org/tiles/1.0.0/coastline", // coastline

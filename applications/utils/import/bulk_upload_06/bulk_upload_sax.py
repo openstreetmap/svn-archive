@@ -83,7 +83,7 @@ class ImportProcessor:
                     count += 1
                     continue
                 if resp.status != 200:
-                    print message + str(resp.status)
+                    print message + str(resp.status) + " " + str(content)
                     exit(-1)
                 return (resp, content)
             except socket.error, e:

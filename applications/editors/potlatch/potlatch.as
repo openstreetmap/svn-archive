@@ -133,7 +133,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="1.3b";			// current version
+	var signature="1.3c";			// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k");
 	var lastgroup='road';			// last preset group used
@@ -158,7 +158,8 @@
 						   "http://ooc.openstreetmap.org/npe/!/!/!.png",
 						   "http://ooc.openstreetmap.org/os7/!/!/!.jpg",
 						   "http://ooc.openstreetmap.org/os1/!/!/!.jpg",
-                           "http://www.nearmap.com/maps/nml=Vert&zxy=!,!,!");
+                           "http://www.nearmap.com/maps/nml=Vert&zxy=!,!,!",
+                           "http://gravitystorm.dev.openstreetmap.org/imagery/haiti/!/!/!.png");
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (custombg) { preferences.data.bgtype=3; preferences.data.tilecustom=custombg; }		// custom background layer from JavaScript
@@ -1055,7 +1056,8 @@
                       iText('option_layer_ooc_npe'),
                       iText('option_layer_ooc_7th'),
                       iText('option_layer_ooc_25k'),
-                      iText('option_layer_nearmap')),
+                      iText('option_layer_nearmap'),
+                      iText('option_layer_geoeye_haiti')),
 			iText('option_layer_tip'),function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
 		var w=box.bgoption[3].prompt._width+25;

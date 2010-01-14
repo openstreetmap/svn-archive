@@ -289,9 +289,9 @@ parser.add_option("-p", "--password", dest="password", help="password")
 parser.add_option("-c", "--comment", dest="comment", help="changeset comment")
 parser.add_option("-t", "--tag", action="append", dest="tags",
                   help="Changeset tags e.g. `source=landsat', can be supplied multiple times")
-parser.add_option("", "--changeset-limit", dest="changeset_limit", default=20000,
+parser.add_option("", "--changeset-limit", dest="changeset_limit", default=5000,
                   help="The maximum number of thingies to upload to each changeset")
-parser.add_option("", "--put-limit", dest="put_limit", default=1000,
+parser.add_option("", "--put-limit", dest="put_limit", default=500,
                   help="The number of thingies to upload in each PUT request")
 (options, args) = parser.parse_args()
  

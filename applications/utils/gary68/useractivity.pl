@@ -1044,8 +1044,13 @@ sub nodes2Coordinates1 {
 	my $i ;
 	my @result = () ;
 	for ($i=0; $i<=$#nodes; $i++) {
-		push @result, $lon1{$nodes[$i]} ;
-		push @result, $lat1{$nodes[$i]} ;
+		if (!defined $lon1{$nodes[$i]}) { 
+			print "WARNING: node info $nodes[$i] missing\n" ; 
+		}
+		else {
+			push @result, $lon1{$nodes[$i]} ;
+			push @result, $lat1{$nodes[$i]} ;
+		}
 	}
 	return @result ;
 }
@@ -1055,8 +1060,13 @@ sub nodes2Coordinates2 {
 	my $i ;
 	my @result = () ;
 	for ($i=0; $i<=$#nodes; $i++) {
-		push @result, $lon2{$nodes[$i]} ;
-		push @result, $lat2{$nodes[$i]} ;
+		if (!defined $lon2{$nodes[$i]}) { 
+			print "WARNING: node info $nodes[$i] missing\n" ; 
+		}
+		else {
+			push @result, $lon2{$nodes[$i]} ;
+			push @result, $lat2{$nodes[$i]} ;
+		}
 	}
 	return @result ;
 }

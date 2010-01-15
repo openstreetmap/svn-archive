@@ -15,6 +15,10 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -26,11 +30,12 @@ import org.openstreetmap.josm.plugins.routes.xml.RoutesXMLRoute;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-public class RouteLayer extends Layer {
+public class RouteLayer extends Layer implements DataSetListenerAdapter.Listener {
 
 	private final PathPainter pathPainter;
 	private final PathBuilder pathBuilder = new PathBuilder();
 	private final List<RouteDefinition> routes = new ArrayList<RouteDefinition>();
+	private volatile boolean datasetChanged = true;
 
 	public RouteLayer(RoutesXMLLayer xmlLayer) {
 		super(xmlLayer.getName());
@@ -52,6 +57,8 @@ public class RouteLayer extends Layer {
 		} else {
 			pathPainter = new NarrowLinePainter(this);
 		}
+
+		DatasetEventManager.getInstance().addDatasetListener(new DataSetListenerAdapter(this), FireMode.IMMEDIATELY);
 	}
 
 	@Override
@@ -102,20 +109,23 @@ public class RouteLayer extends Layer {
 			return;
 		}
 
-		pathBuilder.clear();
+		if (datasetChanged) {
+			datasetChanged = false;
+			pathBuilder.clear();
 
-		for (Relation relation:dataset.getRelations()) {
-			for (RouteDefinition route:routes) {
-				if (route.matches(relation)) {
-					addRelation(relation, route);
+			for (Relation relation:dataset.getRelations()) {
+				for (RouteDefinition route:routes) {
+					if (route.matches(relation)) {
+						addRelation(relation, route);
+					}
 				}
 			}
-		}
 
-		for (Way way:dataset.getWays()) {
-			for (RouteDefinition route:routes) {
-				if (route.matches(way)) {
-					pathBuilder.addWay(way, route);
+			for (Way way:dataset.getWays()) {
+				for (RouteDefinition route:routes) {
+					if (route.matches(way)) {
+						pathBuilder.addWay(way, route);
+					}
 				}
 			}
 		}
@@ -127,6 +137,7 @@ public class RouteLayer extends Layer {
 		}
 		g.setStroke(stroke);
 		g.setColor(color);
+
 	}
 
 	@Override
@@ -136,6 +147,10 @@ public class RouteLayer extends Layer {
 
 	public List<RouteDefinition> getRoutes() {
 		return routes;
+	}
+
+	public void processDatasetEvent(AbstractDatasetChangedEvent event) {
+		datasetChanged = true;
 	}
 
 }

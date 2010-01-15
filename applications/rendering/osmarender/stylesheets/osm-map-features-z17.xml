@@ -2896,7 +2896,15 @@
 			<symbol ref="hostel" position="center"/>
 		</rule>
 		<rule e="node|way" k="tourism" v="camp_site">
-			<symbol ref="campSite" position="center"/>
+			<rule e="node|way" k="refugee" v="yes">
+				<symbol ref="earthquakeCamp" position="center"/>
+			</rule>
+			<else>
+				<symbol ref="campSite" position="center"/>
+			</else>
+		</rule>
+		<rule e="node|way" k="earthquake:damage" v="spontaneous_camp">
+			<symbol ref="earthquakeCamp" position="center"/>
 		</rule>
 		<rule e="node|way" k="tourism" v="information">
 			<rule e="node" k="information" v="guidepost">

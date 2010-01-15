@@ -200,6 +200,14 @@
 		<rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
 			<area class="tourism-green-area"/>
 		</rule>
+		<rule e="node|way" k="tourism" v="camp_site">
+			<rule e="node|way" k="refugee" v="yes">
+				<symbol ref="earthquakeCamp" position="center"/>
+			</rule>
+		</rule>
+		<rule e="node|way" k="earthquake:damage" v="spontaneous_camp">
+			<symbol ref="earthquakeCamp" position="center"/>
+		</rule>
 		
 		<!-- Airfields and airports -->
 		<rule e="way" k="aeroway" v="runway">

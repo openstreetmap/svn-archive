@@ -7,6 +7,7 @@ $maxAttempts = 25; //5
 $maxInstances = 4;
 $www_dir = '/home/lambertus/public_html/yours';
 $yours_dir = '/home/lambertus/yours';
+$admin_email = 'osm@na1400.info';
 $ulimit = 30;
 
 $output = "";
@@ -33,7 +34,7 @@ if (in_array($ip, $blocked) == true) {
 		fwrite($fh, date('Y-m-d H:i:s').", ".$ip.", ".$yours_client.", ".$referrer.", ".$user_agent.", ".$query."\n");
 		fclose($fh);
 	}
-	exit("Your IP is blocked. Please send an email to osm@na1400.info describing why you are constantly sending automated requests to the API.");
+	exit("Your IP is blocked. Please send an email to $admin_email describing why you are constantly sending automated requests to the API.");
 }
 
 // Check for running Gosmore instances, max wait is 1 sec
@@ -287,9 +288,7 @@ if ($fh) {
 }
 // Done!
 
-function getDistance($latitudeFrom, $longitudeFrom,
-    $latituteTo, $longitudeTo)
-{
+function getDistance($latitudeFrom, $longitudeFrom, $latituteTo, $longitudeTo) {
     // 1 degree equals 0.017453292519943 radius
     $degreeRadius = deg2rad(1);
  
@@ -306,8 +305,7 @@ function getDistance($latitudeFrom, $longitudeFrom,
     return (6371.0 * acos($d));
 }
 
-function getProcesses()
-{
+function getProcesses() {
 	$nProcesses = 0;
 	
 	exec("ps ax | grep gosmore", $ps, $return_var);
@@ -366,6 +364,7 @@ function asKML($elements, $distance) {
 	$kml .= '        <LineString>'."\n";
 	$kml .= '          <tessellate>1</tessellate>'."\n";
 	$kml .= '          <coordinates> ';
+
 	foreach($elements as $element) {
 		$kml .= $element["lon"].",".$element["lat"]."\n";
 	}
@@ -391,12 +390,20 @@ function asGeoJSON($elements, $distance) {
 	$geoJSON .= "  },\n";
 	$geoJSON .= "  \"coordinates\":\n";
 	$geoJSON .= "  [\n";
+	
+	$nElements = count($elements);
+	$nCount = 1;
 	foreach($elements as $element) {
-		$geoJSON .= "    [".$element["lon"].", ".$element["lat"]."],\n";
+		if ($nCount < $nElements) {
+			$geoJSON .= "    [".$element["lon"].", ".$element["lat"]."],\n";
+		} else {
+			$geoJSON .= "    [".$element["lon"].", ".$element["lat"]."]\n";
+		}
+		$nCount++;
 	}
 	$geoJSON .= "  ],";
 	$geoJSON .= "  \"properties\": {\n";
-	$geoJSON .= "    \"distance\": \"".$distance."\",\n";
+	$geoJSON .= "    \"distance\": ".$distance.",\n";
 	$geoJSON .= "    \"description\": \"GeoJSON route result created by http://www.yournavigation.org\"\n";
 	$geoJSON .= "    }\n";
 	$geoJSON .= "}\n";
@@ -413,7 +420,7 @@ function asGPX($elements, $distance) {
 	$kml .= '  <trk>'."\n";
 	$kml .= '    <trkseg>'."\n";	
 	foreach($elements as $element) {
-		$kml .= '        <trkpt lon="'.$element["lon"].'" lat="'.$element["lat"].'"/>'."\n";
+		$kml .= '        <trkpt lon="'.$element["lon"].'" lat="'.$element["lat"].'" junction="'.$element["junction"].'"/>'."\n";
 	}
 	$kml .= '    </trkseg>'."\n";
 	$kml .= '  </trk>'."\n";

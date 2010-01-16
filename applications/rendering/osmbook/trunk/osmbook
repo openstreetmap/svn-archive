@@ -377,14 +377,19 @@ sub do_grid {
 	    System("inkscape -f $svgfile -A $pdffile");
 
 	    # add some margins
-	    System("pdfcrop --margins 30 $pdffile $tmpfile");
+	    System("pdfcrop --clip --hires --margins 10 $pdffile $tmpfile");
 
 	    # make printable to the page size
 	    # scale_pdf($tmpfile, $pdffile); # outputs to $pdffile
 
+	    rename($pdffile, "$pdffile.orig");
 	    System("pdfposter -m letter $tmpfile $pdffile");
 
 	    print "wrote page to $pdffile\n";
+
+	    unlink("$proj->{'datadir'}/page-$label.pdf");
+	    System("ln -s mapdata-$minx-$maxx-$miny-$maxy.pdf $proj->{'datadir'}/page-$label.pdf");
+
 	    # tmp file no longer needed
 	    # unlink($tmpfile);
 	}
@@ -836,7 +841,7 @@ sub make_svgpage {
     # Add the coordinate information
     my $thisgrid = get_grid_num($x, $y);
     svg_ltext($outh, "Page: $thisgrid",
-	      $outrectleft + $fontsize/8, $outrecttop + $fontsize);
+	      $outrectleft + $fontsize/8, $outrecttop + $fontsize, $fontsize);
     svg_rtext($outh, sprintf("%3.3f, %3.3f to %3.3f, %3.3f",
 			     $minx, $miny, $maxx, $maxy),
 	      $nextpageleft - $fontsize/4,

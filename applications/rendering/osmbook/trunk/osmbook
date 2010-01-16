@@ -20,7 +20,9 @@ GetOptions(\%opts,
 	   ["D|map-data=s", "Map data directory"],
 
 	   ["M|maximum-squares=i", "limit the number of squares to actually perform to M"],
-	   ["R|master-rule=s", "XML Master Grid Rule File"],
+	   ["R|master-rule=s", "XML master grid rule file"],
+	   ["X|extra-rule=s", "Extra rule file for the end of other rules"],
+	   ["F|extra-data=s", "Extra local data File"],
 	   ["O|overview=s", "XML Master Overview Rule File"],
 	   ["l|latex-file=s", "Save Figure commands to a latex file"],
 	   ["force-fetch",    "Force fetching of new data"],
@@ -62,6 +64,7 @@ $proj->{'datadir'}    	       = $opts{'D'}  || $proj->{'datadir'};
 $proj->{'gridwidth'}  	       = $opts{'n'}  || $proj->{'gridwidth'};
 $proj->{'grid-rule-file'}      = $opts{'R'}  || $proj->{'grid-rule-file'};
 $proj->{'extra-rule-file'}     = $opts{'X'}  || $proj->{'extra-rule-file'};
+$proj->{'extra-data-file'}     = $opts{'F'}  || $proj->{'extra-data-file'};
 $proj->{'subgrid-rule-file'}   = $opts{'S'}  || $proj->{'subgrid-rule-file'} ||
                                  $proj->{'grid-rule-file'};
 $proj->{'overview-rule-file'}  = $opts{'O'}  || $proj->{'overview-rule-file'};
@@ -179,10 +182,34 @@ if ($needoverview || ! -f $combinedosm) {
     # create the overview OSM file
     my $cmd = "osmosis/bin/osmosis --read-xml " . 
       join(" --s --merge --read-xml ", @osmfiles) . " --s --merge --write-xml $combinedosm";
+    # remove the first merge argument
     $cmd =~ s/--merge//;
-    System($cmd);
-}
 
+    # run it
+    System($cmd);
+
+    if ($proj->{'extra-data'}) {
+	# add in our extra data
+	my $infile = new IO::File();
+	my $outfile = new IO::File();
+	my $exfile = new IO::File();
+	$infile->open("$combinedosm");
+	$exfile->open($proj->{'extra-data'});
+	$outfile->open(">$combinedosm.tmp");
+	while (<$infile>) {
+	    if (/<\/osm>/) {
+		# add in the extra data file
+		while (<$exfile>) {
+		    print $outfile $_;
+		}
+	    }
+	    print $outfile $_;
+	}
+
+	$outfile->close();
+	rename("$combinedosm.tmp", $combinedosm);
+    }
+}
 
 # build the combined OSM file into a SVG (without the grid)
 if (! -f $combinedsvg || Stat($combinedosm, $combinedsvg) ||

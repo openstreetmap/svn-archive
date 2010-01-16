@@ -310,9 +310,11 @@ sub get_grid_display_num {
 #
 sub do_grid {
     my ($label, $minx, $miny, $maxx, $maxy, $x, $y, $rulefile, $exrules) = @_;
+    my $exdata;
 
     $rulefile ||= $proj->{'grid-rule-file'};
     $exrules ||= $proj->{'extra-rule-file'};
+    $exdata ||= $proj->{'extra-data-file'};
 
     my $smosmfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
     my $osmfile = $smosmfile;
@@ -327,6 +329,34 @@ sub do_grid {
 	}
 
 	push @osmfiles, $osmfile;
+
+	# and for this run if we have additional data, merge it in
+	if ($exdata) {
+	    my $tmpfile = new IO::File;
+	    my $infile = new IO::File;
+	    my $exfile = new IO::File;
+	    $infile->open($osmfile);
+	    $exfile->open($exdata);
+	    $tmpfile->open(">$osmfile.tmp");
+	    while (<$infile>) {
+		if (/<\/osm>/) {
+		    # add in the extra data file
+		    while (<$exfile>) {
+			print $tmpfile $_;
+		    }
+		}
+		print $tmpfile $_;
+	    }
+	    $tmpfile->close();
+	    $infile->close();
+	    $exfile->close();
+
+	    # and read in the tmp file below
+	    # the merge later will add a single instance of the extra
+	    # data to the merge file.
+
+	    $osmfile = $osmfile . ".tmp";
+	}
     }
 
 

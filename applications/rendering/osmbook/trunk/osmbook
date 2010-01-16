@@ -61,6 +61,7 @@ $proj->{'maxlat'}     	       = $opts{'My'} || $proj->{'maxlat'};
 $proj->{'datadir'}    	       = $opts{'D'}  || $proj->{'datadir'};
 $proj->{'gridwidth'}  	       = $opts{'n'}  || $proj->{'gridwidth'};
 $proj->{'grid-rule-file'}      = $opts{'R'}  || $proj->{'grid-rule-file'};
+$proj->{'extra-rule-file'}     = $opts{'X'}  || $proj->{'extra-rule-file'};
 $proj->{'subgrid-rule-file'}   = $opts{'S'}  || $proj->{'subgrid-rule-file'} ||
                                  $proj->{'grid-rule-file'};
 $proj->{'overview-rule-file'}  = $opts{'O'}  || $proj->{'overview-rule-file'};
@@ -281,9 +282,10 @@ sub get_grid_display_num {
 # actually render a particular grid square
 #
 sub do_grid {
-    my ($label, $minx, $miny, $maxx, $maxy, $x, $y, $rulefile) = @_;
+    my ($label, $minx, $miny, $maxx, $maxy, $x, $y, $rulefile, $exrules) = @_;
 
     $rulefile ||= $proj->{'grid-rule-file'};
+    $exrules ||= $proj->{'extra-rule-file'};
 
     my $smosmfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
     my $osmfile = $smosmfile;
@@ -313,6 +315,15 @@ sub do_grid {
 	open(O,">$xmlfile");
 	while (<I>) {
 	    s/data.osm/$osmfile/;
+	    if (defined($exrules) && /<include.*markers/) {
+		# insert our extra rules here
+		my $extrah = new IO::File;
+		$extrah->open($exrules);
+		while (<$extrah>) {
+		    print O $_;
+		}
+		$extrah->close();
+	    }
 	    #		s/data.osm/$starfile/;
 	    print O;
 	}

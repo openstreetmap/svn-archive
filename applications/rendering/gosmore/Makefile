@@ -62,7 +62,7 @@ $(ARCH)gosmore.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h \
 		${ARCH}g++ ${CFLAGS} ${EXTRAC} -c libgosm.cpp
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ConvertUTF.c
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ceglue.c
-		${ARCH}g++ ${CFLAGS} ${EXTRAC} -o $@ \
+		${ARCH}g++ -static ${CFLAGS} ${EXTRAC} -o $@ \
 		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc
 
 gosmore.rsc:	gosmore.rc icons.bmp icons-mask.bmp gosmore.ico

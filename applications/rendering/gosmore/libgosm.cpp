@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#else
+#include <windows.h>
 #endif
 
 #include <stdio.h>
@@ -20,7 +22,7 @@ using namespace std;
 routeNodeType *route = NULL, *shortest = NULL;
 routeHeapType *routeHeap;
 long dhashSize, dLength;
-int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon, dlon16348, dlat16348;
+int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon, routeHeapMaxSize;
 int *hashTable, bucketsMin1, pakHead = 0xEB3A943, gosmStyleCnt;
 char *gosmData, *gosmSstr[searchCnt];
 
@@ -303,25 +305,6 @@ void GosmFreeRoute (void)
   }    
 }
 
-#ifndef _WIN32_WCE
-#define RT_BLK_SIZE (unsigned long) 0x3ffff
-#define RT_WIDTH 53400000
-// Specifies maximum deviation from the direct path / as the crow flies
-#define RT_LENGTH_SHR 2
-/* Within a block we allocate roughly 1 routeNodeType for every 
-     (RT_WIDTH / 100 / 100) << RT_LENGTH_SHR square meter of space.
-   As the actual density approach this, some routes will not be considered.
-*/
-#else
-#define RT_BLK_SIZE 0xffff
-#endif
-
-inline long HeapCmp (routeHeapType *a, routeHeapType *b)
-{
-  return ((a->r - route) ^ (b->r - route)) & ~RT_BLK_SIZE
-    ? a->r - b->r : a->best - b->best;
-}
-
 routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
 { /* This function is called when we find a valid route that consists of the
      segments (hs, hs->other), (newshort->hs, newshort->hs->other),
@@ -331,23 +314,10 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
      When cost is -1, this function just returns the entry for nd without
      modifying anything. */
   if (nd->lat == INT_MIN) return NULL; // Nodes missing from OSM-XML
-  int offcenter = ((nd->lat - tlat) * (__int64) dlon16348 -
-                   (nd->lon - tlon) * (__int64) dlat16348) >> 14;
-  if (offcenter < -RT_WIDTH / 2 || offcenter > RT_WIDTH / 2) return NULL;
   unsigned i = 0, hash = (intptr_t) nd / 10 + dir;
-  unsigned dst = (unsigned)(((nd->lat - tlat) * (__int64) dlat16348 +
-                    (nd->lon - tlon) * (__int64) dlon16348) >> 14) + 6200000;
-  if (dst > (unsigned) (6200000 * 2 + dLength)) return NULL;
-  // Either too far beyond 'to' or too far beyond 'from'
+  routeNodeType *n;
 
-  routeNodeType *n, *base = route +
-    ((unsigned long)(dst >> RT_LENGTH_SHR) & ~RT_BLK_SIZE);
-  // The value for route computed above works, but on short routes it
-  // sometimes takes longer because it starts with the region beyond 'to'
-  // and on longer routes it it is not realistic to expect the user to wait
-  // a couple of minutes for a result. So we just use the first rt_block:
-  base = route;
-
+  //if ((routeHeapSize & 0xff) == 0) printf ("%d %d\n", dhashSize, routeHeapSize);
   do {
     if (i++ > 10) {
       //fprintf (stderr, "Double hash bailout : Table full. %9d %p\n",
@@ -355,7 +325,7 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
       // If you get the
       return NULL;
     }
-    n = base + ((/*(hash >> 16) ^ */hash) & RT_BLK_SIZE);
+    n = route + (/*(hash >> 16) ^ */hash) % dhashSize;
 
     hash -= hash << 6;
     hash ^= hash >> 17;
@@ -369,8 +339,8 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
             
     if (n->nd == NULL) { /* First visit of this node */
       if (cost < 0) return NULL;
-      if ((unsigned) routeHeapSize >= RT_BLK_SIZE) {
-        printf ("Route Heap too big\n");
+      if (routeHeapSize >= routeHeapMaxSize) {
+        //printf ("Route Heap too big\n");
         return NULL;
       }
       n->nd = nd;
@@ -396,8 +366,7 @@ routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
                    > h.best) {
     n->shortest = newshort;
     if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
-    for (; n->heapIdx > 1 && HeapCmp (&h, &routeHeap[n->heapIdx / 2]) < 0;
-                    n->heapIdx /= 2) {
+    for (; n->heapIdx > 1 && h.best < routeHeap[n->heapIdx / 2].best; n->heapIdx /= 2) {
       memcpy (routeHeap + n->heapIdx, routeHeap + n->heapIdx / 2,
         sizeof (*routeHeap));
       routeHeap[n->heapIdx].r->heapIdx = n->heapIdx;
@@ -507,29 +476,15 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
   from.lon = flon;
   if (recalculate || !route) {
     GosmFreeRoute ();
-    dLength = lrint (sqrt (Sqr ((__int64)(flat - tlat)) +
-                               Sqr ((__int64)(flon - tlon))));
-    dlat16348 = ((__int64)(flat - tlat) << 14) / dLength;
-    dlon16348 = ((__int64)(flon - tlon) << 14) / dLength;
     routeHeapSize = 1; /* Leave position 0 open to simplify the math */
-    routeHeap = (routeHeapType*) malloc (RT_BLK_SIZE *
-      sizeof (*routeHeap)); //(route + dhashSize) - 1;
-    dLength += 6200000*2; // Padding near 'from' and 'to'
-    #if 0 // See AddNd() why we don't do this currently
-    dhashSize = ((dLength >> RT_LENGTH_SHR) + RT_BLK_SIZE) & ~RT_BLK_SIZE;
-    // Round up
-    #else
-    dhashSize = RT_BLK_SIZE;
-    #endif
     #ifndef _WIN32
-    #if 1 // If you have lots of swap space
     int dzero = open ("/dev/zero", O_RDWR);
+    long long ds = sysconf (_SC_PAGESIZE) * (long long) sysconf (_SC_PHYS_PAGES) /
+      (sizeof (*routeHeap) + sizeof (*route) + 40);
+    dhashSize = ds > INT_MAX ? INT_MAX : ds;
+    routeHeapMaxSize = lrint (sqrt (dhashSize)) * 3;
+    routeHeap = (routeHeapType*) malloc (routeHeapMaxSize * sizeof (*routeHeap));
     if (!routeHeap || dzero == -1 ||
-    #else // If you have lots of disk space
-    int dzero = open ("route.tmp", O_CREAT | O_RDWR | O_TRUNC, 0600);
-    if (!routeHeap || dzero == -1 || ftruncate (dzero,
-                                 dhashSize * sizeof (*route)) != 0 ||
-    #endif
         (route = (routeNodeType*) mmap (NULL, dhashSize * sizeof (*route),
         PROT_READ | PROT_WRITE, MAP_SHARED, dzero, 0)) == MAP_FAILED) {
       fprintf (stderr, "Error: Mmap of dnull for routing arrays\n");
@@ -542,24 +497,16 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
     dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
     // Allocate one piece of memory for both route and routeHeap, so that
-    // we can easily retry if it fails on a small device
-    #ifdef _WIN32_WCE
+    // we can easily retry if it fails on a small device */
     MEMORYSTATUS memStat;
     GlobalMemoryStatus (&memStat);
-    int lim = (memStat.dwAvailPhys - 1400000) / // Leave 1.4 MB free
-                 (sizeof (*route) + sizeof (*routeHeap));
-    if (dhashSize > lim && lim > 0) dhashSize = lim;
-    #endif */
+    dhashSize = (memStat.dwAvailPhys - 400000) /
+                 (sizeof (*route) + sizeof (*routeHeap) + 40);
 
-    while (dhashSize > 0 && !(route = (routeNodeType*)
-        malloc ((sizeof (*route)) * dhashSize))) {
-      if(1) { // Needs variable RT_BLK_SIZE
-        free (routeHeap);
-        return;
-      }
-      dhashSize = dhashSize / 4 * 3;
-    }
-    memset (route, 0, (sizeof (*route)) * dhashSize); 
+    routeHeapMaxSize = lrint (sqrt (dhashSize)) * 3;
+    routeHeap = (routeHeapType*) malloc (routeHeapMaxSize * sizeof (*routeHeap));
+    if (!routeHeap) return;
+    if (!(route = (routeNodeType*) calloc (sizeof (*route), dhashSize))) return;
     #endif
 
     rlat = flat;
@@ -606,10 +553,10 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     routeHeapSize--;
     for (int i = 2; i / 2 < routeHeapSize; ) {
       routeHeapType *end = &routeHeap[routeHeapSize];
-      int sml = i >= routeHeapSize || HeapCmp (&routeHeap[i], end) > 0
-        ? (i + 1 >= routeHeapSize || HeapCmp (&routeHeap[i], end) > 0
+      int sml = i >= routeHeapSize || routeHeap[i].best > end->best
+        ? (i + 1 >= routeHeapSize || routeHeap[i].best > end->best
            ? routeHeapSize : i + 1)
-        : HeapCmp (&routeHeap[i], &routeHeap[i + 1]) < 0 ? i : i + 1;
+        : routeHeap[i].best < routeHeap[i + 1].best ? i : i + 1;
       memcpy (routeHeap + i / 2, routeHeap + sml, sizeof (*routeHeap));
       routeHeap[i / 2].r->heapIdx = i / 2;
       i = sml * 2;
@@ -655,12 +602,12 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
           StyleNr (Way (nd)) <= barrier_toll_booth &&
           !(Way (nd)->bits & (1 << Vehicle))) break;
       lmask <<= 2;
-      if (root->remain > 500000 && -root->heapIdx - root->remain > 500000 &&
+      if (root->remain > 2500000 && -root->heapIdx - root->remain > 2500000 &&
           (StyleNr (Way (nd)) == highway_residential ||
            StyleNr (Way (nd)) == highway_service ||
            StyleNr (Way (nd)) == highway_living_street ||
            StyleNr (Way (nd)) == highway_unclassified)) continue;
-      /* When more than 50km from the start and the finish, ignore minor
+      /* When more than 250km from the start and the finish, ignore minor
          roads. This reduces the number of calculations. */
       for (int dir = 0; dir < 2; dir++) {
         if (nd == root->nd && dir == root->dir) continue;

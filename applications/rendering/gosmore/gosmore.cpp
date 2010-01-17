@@ -303,7 +303,11 @@ void ChangePak (const TCHAR *pakfile)
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
     NULL);
   if (gmap == INVALID_HANDLE_VALUE && l2 == pakfile) {
+    #ifdef _WIN32_WCE
     wsprintf (wcsrchr (l2, L'\\'), TEXT ("\\default.pak"));
+    #else
+    strcpy (l2, "default.pak");
+    #endif
     gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
       NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
       NULL);    
@@ -975,21 +979,6 @@ void HitButton (int b)
 int firstDrag[2] = { -1, -1 }, lastDrag[2];
 
 #ifndef NOGTK
-gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
-{
-  if ((option == mapMode || option == optionMode) &&
-          (event->state & GDK_BUTTON1_MASK)) {
-    if (firstDrag[0] >= 0) gdk_draw_drawable (draw->window,
-      draw->style[0].fg_gc[0], draw->window, 
-      0, 0, lrint (event->x) - lastDrag[0], lrint (event->y) - lastDrag[1],
-      draw->allocation.width, draw->allocation.height);
-    lastDrag[0] = lrint (event->x);
-    lastDrag[1] = lrint (event->y);
-    if (firstDrag[0] < 0) memcpy (firstDrag, lastDrag, sizeof (firstDrag));
-  }
-  return FALSE;
-}
-
 struct wayPointStruct {
   int lat, lon;
 };
@@ -998,6 +987,7 @@ deque<wayPointStruct> wayPoint;
 void ExtractClipboard (GtkClipboard *, const gchar *t, void *data)
 {
   unsigned lonFirst = FALSE, hash = 0;
+  int minLat = INT_MAX, minLon = INT_MAX, maxLat = INT_MIN, maxLon = INT_MIN;
   double deg[2];
   static unsigned oldh = 0; // Sometimes an extra queue_clear is needed
   wayPoint.clear ();
@@ -1043,12 +1033,43 @@ void ExtractClipboard (GtkClipboard *, const gchar *t, void *data)
         wayPoint.back ().lat = Latitude (deg[lonFirst ? 1 : 0]);
         lonFirst = FALSE; // Not too sure if we should reset lonFirst here.
         hash += wayPoint.back ().lon + wayPoint.back ().lat;
-        // Bad but adequote hash function.
+        // Bad but adequate hash function.
+        if (minLon > wayPoint.back ().lon) minLon = wayPoint.back ().lon;
+        if (maxLon < wayPoint.back ().lon) maxLon = wayPoint.back ().lon;
+        if (minLat > wayPoint.back ().lat) minLat = wayPoint.back ().lat;
+        if (maxLat < wayPoint.back ().lat) maxLat = wayPoint.back ().lat;
       }
     }
   }
-  if (oldh != hash) gtk_widget_queue_clear (draw);
+  if (oldh != hash && !wayPoint.empty ()) {
+    clat = minLat / 2 + maxLat / 2;
+    clon = minLon / 2 + maxLon / 2;
+    zoom = maxLat - minLat + maxLon - minLon + (1 << 15);
+    gtk_widget_queue_clear (draw);
+  }
   oldh = hash;
+}
+
+int UpdateWayPoints (GtkWidget *, GdkEvent *, gpointer *)
+{
+  GtkClipboard *c = gtk_clipboard_get (GDK_SELECTION_PRIMARY);
+  gtk_clipboard_request_text (c, ExtractClipboard, &wayPoint);
+  return FALSE;
+}
+
+gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
+{
+  if ((option == mapMode || option == optionMode) &&
+          (event->state & GDK_BUTTON1_MASK)) {
+    if (firstDrag[0] >= 0) gdk_draw_drawable (draw->window,
+      draw->style[0].fg_gc[0], draw->window, 
+      0, 0, lrint (event->x) - lastDrag[0], lrint (event->y) - lastDrag[1],
+      draw->allocation.width, draw->allocation.height);
+    lastDrag[0] = lrint (event->x);
+    lastDrag[1] = lrint (event->y);
+    if (firstDrag[0] < 0) memcpy (firstDrag, lastDrag, sizeof (firstDrag));
+  }
+  return FALSE;
 }
 #endif
 
@@ -1124,10 +1145,6 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       return RouteTest (NULL /*widget*/, event, NULL /*para*/);
     }
     #endif
-    #ifndef NOGTK
-      GtkClipboard *c = gtk_clipboard_get (GDK_SELECTION_PRIMARY);
-      gtk_clipboard_request_text (c, ExtractClipboard, &wayPoint);
-    #endif
     int perpixel = zoom / w, dx = event->x - w / 2, dy = h / 2 - event->y;
     if (firstDrag[0] >= 0) {
       dx = firstDrag[0] - event->x;
@@ -1167,7 +1184,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     }
   }
   firstDrag[0] = -1;
-  gtk_widget_queue_clear (draw); // TODO: Don't do this when updating wayPoint
+  gtk_widget_queue_clear (draw); 
   return FALSE;
 }
 
@@ -2389,6 +2406,8 @@ int UserInterface (int argc, char *argv[],
                        (GtkSignalFunc) Scroll, NULL);
   
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_signal_connect (GTK_OBJECT (window), "focus-in-event",
+                       (GtkSignalFunc) UpdateWayPoints, NULL);
   /* The new layout will work better on smaller screens esp. touch screens by
   moving less used options to the menu and only displaying search results
   when they are required. It will also be more familiar to casual users

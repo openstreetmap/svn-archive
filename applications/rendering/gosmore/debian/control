@@ -10,8 +10,6 @@ Build-Depends:
 	debhelper (>> 5.0.0),
 	cdbs,
 	libgtk2.0-dev,
-	flite-dev,
-	libgps-dev (>= 2.34.dfsg-5) | gpsd (<< 2.34.dfsg-1),
 	dpatch,
 	libxml2-dev
 Standards-Version: 3.8.0
@@ -28,4 +26,4 @@ Suggests: josm
 Conflicts: gosmore
 Description: Openstreetmap.org viewer / wayfinder / search client
  Gosmore is a openstreetmap.org viewer and wayfinder with support for
- speech syntesis and fetching the current location from gpsd.
+ fetching the current location from gpsd.

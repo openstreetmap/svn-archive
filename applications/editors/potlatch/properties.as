@@ -422,6 +422,26 @@
 		this.attributes[this.tagcount-1].scrollToField();
 	};
 
+	// PropertyWindow.selectTag
+	// selects tag if already exists, creates new one if not
+	
+	PropertyWindow.prototype.selectTag=function(key) {
+		if (!this.proparr[key]) { setValueInObject(this.proptype,key,"(type value here)"); }
+		this.reinit();
+
+		for (var i=0; i<this.tagcount; i++) {
+			if (this.attributes[i].keyname.text=='name') {
+				_root.nameselect=this.attributes[i].value;
+			}
+		}
+		
+		// awful palaver to swallow the 'N' key. Gah
+		this.createTextField("swallow",1000,-500,0,50,50);
+		with (this.swallow) { text=''; type='input'; }
+		Selection.setFocus(this.swallow);
+		this.swallow.onChanged=function() { Selection.setFocus(_root.nameselect); removeMovieClip(this); };
+	};
+
 	// PropertyWindow.updateMask
 	// create mask given size of window, create scrollbar
 

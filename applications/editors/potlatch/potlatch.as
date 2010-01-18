@@ -135,7 +135,7 @@
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
 	var signature="1.3d";			// current version
 	var maximised=false;			// minimised/maximised?
-	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe");
+	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo");
 	var lastgroup='road';			// last preset group used
 	var wayrels=new Object();		// which relations are in ways?
 	var noderels=new Object();		// which relations are in nodes?
@@ -161,7 +161,8 @@
                            "http://www.nearmap.com/maps/nml=Vert&zxy=!,!,!",
                            "http://gravitystorm.dev.openstreetmap.org/imagery/haiti/!/!/!.png",
                            "http://maps.nypl.org/tilecache/1/geoeye/!/!/!.jpg",
-                           "http://maps.nypl.org/tilecache/1/dg_crisis/!/!/!.jpg");
+                           "http://maps.nypl.org/tilecache/1/dg_crisis/!/!/!.jpg",
+						   "http://hypercube.telascience.org/tiles/1.0.0/haiti-city/!/!/!.jpg");
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (custombg) { preferences.data.bgtype=3; preferences.data.tilecustom=custombg; }		// custom background layer from JavaScript
@@ -716,7 +717,7 @@
 			switch (k) {
 				case 112:	preferences.data.bgtype=4; break;
 				case 113:	preferences.data.bgtype=2; break;
-				default:	preferences.data.bgtype=1; preferences.data.tileset=k-114; break;
+				default:	preferences.data.bgtype=1; preferences.data.tileset=k-106; break; // previously 114
 			}
 			resetBackgroundOffset();
 			initBackground(); return;
@@ -774,7 +775,8 @@
 			case '/':		cycleStacked(); break;								// '/' - cycle between stacked ways (191)
 			case 'M':		maximiseSWF(); break;								// 'M' - maximise/minimise Potlatch
 			case 'K':		keyLock(); break;									// 'K' - lock item
-			case 'B':		var s=''; switch (preferences.data.bgtype) {		// 'S' - set source tag
+			case 'N':		_root.panel.properties.selectTag("name"); break;	// 'N' - name tag
+			case 'B':		var s=''; switch (preferences.data.bgtype) {		// 'B' - set source tag
 								case 1: s=sourcetags[preferences.data.tileset]; break;
 								case 2: s='Yahoo'; break;
 								case 3: s=preferences.data.tilecustom; break;
@@ -1061,7 +1063,8 @@
                       iText('option_layer_nearmap'),
                       iText('option_layer_geoeye_gravitystorm_haiti'),
                       iText('option_layer_geoeye_nypl_haiti'),
-                      iText('option_layer_digitalglobe_haiti')),
+                      iText('option_layer_digitalglobe_haiti'),
+                      iText('option_layer_streets_haiti')),
 			iText('option_layer_tip'),function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
 		var w=box.bgoption[3].prompt._width+25;

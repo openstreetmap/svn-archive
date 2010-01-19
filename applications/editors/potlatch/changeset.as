@@ -55,8 +55,13 @@
 		with (box.prompt) { wordWrap=true; setTextFormat(plainSmall); selectable=false; type='dynamic'; }
 		box.prompt.adjustTextField();
 
+		var tc;
+		if (preferences.data.twitterclient==2) { tc=iText('microblog_name_identica'); }
+										  else { tc=iText('microblog_name_twitter'); }
 		box.attachMovie("checkbox","twitter",z++);
-		box.twitter.init(10,110,iText('prompt_microblog',iText(preferences.data.twitterclient==2?'microblog_name_identica':'microblog_name_twitter'),100),preferences.data.twitter,function(n) { preferences.data.twitter=n; },(preferences.data.twitterid!='' && preferences.data.twitterpwd!=''));
+		box.twitter.init(10,110,iText('prompt_microblog',tc,100),
+			preferences.data.twitter,
+			function(n) { preferences.data.twitter=n; } , (preferences.data.twitterid!='' && preferences.data.twitterpwd!=''));
 		
 		box.createTextField("cscomment",z++,10,50,280,50);
 		with (box.cscomment) {

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-18 14:11-0500\n"
+"POT-Creation-Date: 2010-01-19 00:01-0500\n"
 "PO-Revision-Date: 2010-01-17 02:57-0500\n"
 "Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Galician <gl@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
-#: ../core/src/org/openstreetmap/josm/Main.java:200
+#: ../core/src/org/openstreetmap/josm/Main.java:204
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:482
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:107
@@ -30,14 +30,14 @@ msgstr ""
 msgid "Help"
 msgstr "Axuda"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:378
+#: ../core/src/org/openstreetmap/josm/Main.java:396
 #, java-format
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Ignorando URL de ficheiro mal formada: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:379
-#: ../core/src/org/openstreetmap/josm/Main.java:412
-#: ../core/src/org/openstreetmap/josm/Main.java:480
+#: ../core/src/org/openstreetmap/josm/Main.java:397
+#: ../core/src/org/openstreetmap/josm/Main.java:430
+#: ../core/src/org/openstreetmap/josm/Main.java:498
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:107
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:205
@@ -91,11 +91,11 @@ msgstr "Ignorando URL de ficheiro mal formada: \"{0}\""
 msgid "Warning"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:411
+#: ../core/src/org/openstreetmap/josm/Main.java:429
 msgid "Parameter \"downloadgps\" does not accept file names or file URLs"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:479
+#: ../core/src/org/openstreetmap/josm/Main.java:497
 #, java-format
 msgid "Ignoring malformed URL: \"{0}\""
 msgstr "Ignorando URL mal formada: \"{0}\""
@@ -3818,11 +3818,11 @@ msgid "Authentication Failed"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:265
-msgid "Authorisation Failed"
+msgid "Authorization Failed"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:281
-msgid "Authenticationi failed"
+msgid "Authentication failed"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:299
@@ -3857,40 +3857,40 @@ msgstr ""
 msgid "Expected non-empty value for parameter ''{0}'', got ''{1}''"
 msgstr ""
 
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:37
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:38
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:39
 msgid "Upload Preferences"
 msgstr "Subir Preferencias"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:38
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:37
 msgid "Upload the current preferences to the server"
 msgstr "Subir as preferencias actuais ó servidor"
 
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:54
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:55
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:56
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:57
 msgid "string"
 msgstr "cadea"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:55
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:54
 msgid "Name of the user."
 msgstr "Nome do usuario"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:56
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:55
 msgid "OSM Password."
 msgstr "Contrasinal de OSM."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:57
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:56
 msgid "Resize the applet to the given geometry (format: WIDTHxHEIGHT)"
 msgstr "Redimensionar o applet á xeometría indicada (formato: ANCHOxALTO)"
 
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:57
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:58
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:59
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:60
 msgid "string;string;..."
 msgstr "cadea;cadea;..."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:58
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:57
 msgid ""
 "Download each. Can be x1,y1,x2,y2 an URL containing lat=y&lon=x&zoom=z or a "
 "filename"
@@ -3898,7 +3898,7 @@ msgstr ""
 "Descargar cada un. Pode ser x1,y1,x2,y2 , unha URL contendo "
 "lat=y&lon=x&zoom=z ou un nome de ficheiro"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:59
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:58
 msgid ""
 "Download each as raw gps. Can be x1,y1,x2,y2 an URL containing "
 "lat=y&lon=x&zoom=z or a filename"
@@ -3906,7 +3906,7 @@ msgstr ""
 "Descargar cada un como datos gps en bruto. Pode ser x1,y1,x2,y2 , unha URL "
 "contendo lat=y&lon=x&zoom=z ou un nome de ficheiro"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:60
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:59
 msgid ""
 "Add each to the initial selection. Can be a google-like search string or an "
 "URL which returns osm-xml"
@@ -3914,20 +3914,20 @@ msgstr ""
 "Engadir cada un á selección inicial. Pode ser unha cadea de busca de estilo "
 "google ou unha URL que devolva osm-xml"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:61
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:60
 msgid "any"
 msgstr "calquera"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:61
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:60
 msgid "If specified, reset the configuration instead of reading it."
 msgstr "Si se especifica, reestablecer a configuración en lugar de lela."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:87
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:86
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:165
 msgid "Username"
 msgstr "Nome de usuario"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:90
+#: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:89
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:173
 msgid "Password"
 msgstr "Contrasinal"
@@ -4043,11 +4043,11 @@ msgstr "Establecendo valores predeterminados"
 msgid "Creating main GUI"
 msgstr "Creando Interface (GUI) principal"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:195
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:196
 msgid "Loading plugins"
 msgstr "Cargando extensións"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:229
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:237
 #, java-format
 msgid "Preference setting {0} has been removed since it is no longer used."
 msgstr ""
@@ -5269,10 +5269,11 @@ msgstr ""
 #, java-format
 msgid ""
 "<html>You did not finish to merge the differences in this conflict."
-"<br>Conflict resolutions won't be applied unless all differences<br>are "
+"<br>Conflict resolutions will not be applied unless all differences<br>are "
 "resolved.Click <strong>{0}</strong> to close anyway."
-"<strong>Already<br>resolved differences won't be applied.</strong><br>Click "
-"<strong>{1}</strong> to return to resolving conflicts.</html>"
+"<strong>Already<br>resolved differences will not be applied.</"
+"strong><br>Click <strong>{1}</strong> to return to resolving conflicts.</"
+"html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:224
@@ -10015,8 +10016,9 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:101
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:236
-msgid "Authorise URL:"
-msgstr ""
+#, fuzzy
+msgid "Authorize URL:"
+msgstr "Autor"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:125
 msgid "Click to reset the OAuth settings to default values"
@@ -10052,7 +10054,7 @@ msgstr ""
 msgid ""
 "<html>Run a fully automatic procedure to get an access token from the OSM "
 "website.<br>JOSM accesses the OSM website on behalf of the JOSM user and "
-"fully<br>automatically authorises the user and retrieves an Access Token.</"
+"fully<br>automatically authorizes the user and retrieves an Access Token.</"
 "html>"
 msgstr ""
 
@@ -10104,11 +10106,12 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:333
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:305
-msgid "Authorise now"
-msgstr ""
+#, fuzzy
+msgid "Authorize now"
+msgstr "Autor"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:335
-msgid "Click to redirect you to the authorisation form on the JOSM web site"
+msgid "Click to redirect you to the authorization form on the JOSM web site"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:365
@@ -10117,7 +10120,7 @@ msgid "Back"
 msgstr "Atrais"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:366
-msgid "Run the automatic authorisation steps again"
+msgid "Run the automatic authorization steps again"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:380
@@ -10149,20 +10152,20 @@ msgid "The password cannot be empty. Please enter your OSM password"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:442
-msgid "Authorise JOSM to access the OSM API"
+msgid "Authorize JOSM to access the OSM API"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:456
 msgid ""
 "<html>The automatic process for retrieving an OAuth Access Token<br>from the "
 "OSM server failed.<br><br>Please try again or choose another kind of "
-"authorisation process,<br>i.e. semi-automatic or manual authorisation.</html>"
+"authorization process,<br>i.e. semi-automatic or manual authorization.</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:463
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:480
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:505
-msgid "OAuth authorisation failed"
+msgid "OAuth authorization failed"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:472
@@ -10170,7 +10173,7 @@ msgstr ""
 msgid ""
 "<html>The automatic process for retrieving an OAuth Access Token<br>from the "
 "OSM server failed because JOSM was not able to build<br>a valid login URL "
-"from the OAuth Authorise Endpoint URL ''{0}''.<br><br>Please check your "
+"from the OAuth Authorize Endpoint URL ''{0}''.<br><br>Please check your "
 "advanced setting and try again.</html>"
 msgstr ""
 
@@ -10185,7 +10188,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/oauth/ManualAuthorizationUI.java:58
 #, java-format
 msgid ""
-"Please enter an OAuth Access Token which is authorised to access the OSM "
+"Please enter an OAuth Access Token which is authorized to access the OSM "
 "server ''{0}''."
 msgstr ""
 
@@ -10212,7 +10215,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/oauth/ManualAuthorizationUI.java:139
 #, java-format
 msgid ""
-"<html><body>Please enter an OAuth Access Token which is authorised to access "
+"<html><body>Please enter an OAuth Access Token which is authorized to access "
 "the OSM server ''{0}''.</body></html>"
 msgstr ""
 
@@ -10241,8 +10244,9 @@ msgid "Click to test the Access Token"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:121
-msgid "Please select an authorisation procedure: "
-msgstr ""
+#, fuzzy
+msgid "Please select an authorization procedure: "
+msgstr "Por favor, selecciona polo menos catro nodos."
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:239
 #, java-format
@@ -10250,7 +10254,7 @@ msgid "Get an Access Token for ''{0}''"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:340
-msgid "Close the dialog and cancel authorisation"
+msgid "Close the dialog and cancel authorization"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:359
@@ -10285,12 +10289,12 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OsmOAuthAuthorizationClient.java:437
 #, java-format
-msgid "Failed to authorise OAuth request  ''{0}''"
+msgid "Failed to authorize OAuth request  ''{0}''"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OsmOAuthAuthorizationClient.java:484
 #, java-format
-msgid "Authorising OAuth Request token ''{0}'' at the OSM website ..."
+msgid "Authorizing OAuth Request token ''{0}'' at the OSM website ..."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OsmOAuthAuthorizationClient.java:486
@@ -10304,7 +10308,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OsmOAuthAuthorizationClient.java:498
 #, java-format
-msgid "Authorising request token ''{0}''..."
+msgid "Authorizing request token ''{0}''..."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OsmOAuthAuthorizationClient.java:504
@@ -10399,7 +10403,7 @@ msgid "<html>Step 1/3: Retrieve an OAuth Request Token</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:205
-msgid "<html>Step 2/3: Authorise and retrieve an Access Token</html>"
+msgid "<html>Step 2/3: Authorize and retrieve an Access Token</html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:228
@@ -10410,11 +10414,11 @@ msgstr ""
 #, java-format
 msgid ""
 "<html>JOSM successfully retrieved a Request Token. JOSM is now launching an "
-"authorisation page in an external browser. Please login with your OSM "
-"username and password and follow the instructions to authorise the Request "
+"authorization page in an external browser. Please login with your OSM "
+"username and password and follow the instructions to authorize the Request "
 "Token. Then switch back to this dialog and click on <strong>{0}</"
 "strong><br><br>If launching the external browser fails you can copy the "
-"following authorise URL and paste it into the address field of your browser."
+"following authorize URL and paste it into the address field of your browser."
 "</html>"
 msgstr ""
 
@@ -10431,7 +10435,7 @@ msgstr ""
 msgid ""
 "<html>JOSM has successfully retrieved an Access Token. You can now accept "
 "this token. JOSM will use it in the future for authentication and "
-"authorisation to the OSM server.<br><br>The access token is: </html>"
+"authorization to the OSM server.<br><br>The access token is: </html>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:348
@@ -10480,7 +10484,7 @@ msgstr ""
 #, java-format
 msgid ""
 "<html>Failed to access the OSM server ''{0}''<br>with the Access Token "
-"''{0}''.<br>The server rejected the Access Token as unauthorised. You will "
+"''{0}''.<br>The server rejected the Access Token as unauthorized. You will "
 "not<br>be able to access any protected resource on this server using this "
 "token.</html>"
 msgstr ""
@@ -11733,7 +11737,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:186
 msgid ""
 "You do not have an Access Token yet to access the OSM server using OAuth. "
-"Please authorise first."
+"Please authorize first."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:225
@@ -11745,7 +11749,7 @@ msgid "Save to preferences"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:306
-msgid "Click to step through the OAuth authorisation process"
+msgid "Click to step through the OAuth authorization process"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:330
@@ -11754,7 +11758,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:331
 msgid ""
-"Click to step through the OAuth authorisation process and generate a new "
+"Click to step through the OAuth authorization process and generate a new "
 "Access Token"
 msgstr ""
 
@@ -13424,8 +13428,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:132
 #, java-format
 msgid ""
-"<html>Authorisation at the OSM server with the OAuth token ''{0}'' failed."
-"<br>The token is not authorised to access the protected resource<br>''{1}''."
+"<html>Authorization at the OSM server with the OAuth token ''{0}'' failed."
+"<br>The token is not authorized to access the protected resource<br>''{1}''."
 "<br>Please launch the preferences dialog and retrieve another OAuth token.</"
 "html>"
 msgstr ""

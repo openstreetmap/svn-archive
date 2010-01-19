@@ -1549,7 +1549,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 		FWRITE (&idx, sizeof (idx), 1, groupf[grp]);
 	      }
 	      unsigned l = strlen (compact);
-	      newln = compact[l - 1] == '\n' ? 1 : 0;
+	      newln = l > 0 && compact[l - 1] == '\n' ? 1 : 0;
 	      if (l > newln) FWRITE (compact, l - newln, 1, pak);
 	    }
 	    FWRITE ("", 1, 1, pak); // '\0' at the back

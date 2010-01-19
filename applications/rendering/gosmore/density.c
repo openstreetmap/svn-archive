@@ -120,11 +120,11 @@ int main (void)
       }
     }
   }
-  printf ("bzcat planet-latest.osm.bz2 | ./osmosis-0.31/bin/osmosis\
+  printf ("bzcat planet-latest.osm.bz2 | osmosis\
  --read-xml enableDateParsing=no file=/dev/stdin --tee %d \\\n\
   --bb idTrackerType=\"BitSet\" left=-180 right=-33.04688\
  top=85.05113 bottom=-90 --wx left.osm.gz%s\n\n\
-gunzip <left.osm.gz | ./osmosis-0.31/bin/osmosis\
+gunzip <left.osm.gz | osmosis\
  --read-xml enableDateParsing=no file=/dev/stdin --tee %d%s\n\n",
       bcnt[0] + 1, block[0], bcnt[1], block[1]);
   c = 0; // The error count

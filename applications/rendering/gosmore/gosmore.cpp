@@ -632,7 +632,7 @@ void DoFollowThing (gpsNewStruct *gps)
   char *d = gps->fix.date, *t = gps->fix.tm;
   int now = (((((t[0] - '0') * 10 + t[1] - '0') * 6 + t[2] - '0') * 10 +
                  t[3] - '0') * 6 + t[4] - '0') * 10 + t[5];
-  if ((lastTime - now) / 60) {
+  if (lastTime - now > 60) {
     lastTime = now;
     
     int cdays[12] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
@@ -1206,6 +1206,7 @@ static GdkPixmap *icons = NULL;
 #else
 HDC icons, maskDc;
 HFONT sysFont;
+LOGFONT logFont;
 
 #define gtk_combo_box_get_active(x) 1
 #define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
@@ -1240,7 +1241,6 @@ void DrawString (int x, int y, const char *optStr)
                      fg_gc /*draw->style->fg_gc[0]*/, x, y, pl);
   #else
   SelectObject (mygc, sysFont);
-  SetBkMode (mygc, TRANSPARENT);
   const unsigned char *sStart = (const unsigned char*) optStr;
   UTF16 wcTmp[70], *tStart = (UTF16 *) wcTmp;
   if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
@@ -1412,13 +1412,6 @@ int DrawExpose (HPEN *pen, HBRUSH *brush)
   } clip;
 /*  clip.width = GetSystemMetrics(SM_CXSCREEN);
   clip.height = GetSystemMetrics(SM_CYSCREEN); */
-  sysFont = (HFONT) GetStockObject (SYSTEM_FONT);
-  LOGFONT logFont;
-  GetObject (sysFont, sizeof (logFont), &logFont);
-  #ifndef _WIN32_WCE
-  logFont.lfWeight = 400;
-  strcpy (logFont.lfFaceName, TEXT ("Arial"));
-  #endif
   WCHAR wcTmp[70];
 
   iconsgc = mygc;
@@ -1427,7 +1420,7 @@ int DrawExpose (HPEN *pen, HBRUSH *brush)
   SetTextColor (mygc, Background ? 0 : 0xffffff);
   if (objectAddRow >= 0) {
     SelectObject (mygc, sysFont);
-    SetBkMode (mygc, TRANSPARENT);
+    //SetBkMode (mygc, TRANSPARENT);
     SelectObject (mygc, GetStockObject (BLACK_PEN));
     for (int y = 0, i = objectAddRow; y < draw->allocation.height;
               y += ADD_HEIGHT) {
@@ -1776,7 +1769,7 @@ gint DrawExpose (void)
             
             #if 0 //def NOGTK
             SelectObject (mygc, sysFont);
-            SetBkMode (mygc, TRANSPARENT);
+            //SetBkMode (mygc, TRANSPARENT);
             const unsigned char *sStart = (const unsigned char *)(w + 1) + 1;
             UTF16 *tStart = (UTF16 *) wcTmp;
             if (ConvertUTF8toUTF16 (&sStart,  sStart + len, &tStart, tStart +
@@ -1929,8 +1922,10 @@ gint DrawExpose (void)
         &styleColour[firstElemStyle + StartRouteNum][1]); //routeColour);
       gdk_gc_set_line_attributes (mygc, 6,
         GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
+      #define CHARWIDTH 12
       #else
       SelectObject (mygc, pen[firstElemStyle + StartRouteNum]);
+      #define CHARWIDTH 6
       #endif
       if (routeHeapSize > 1) {
         Draw3DLine (X (flon, flat), Y (flon, flat), x, y);
@@ -1958,7 +1953,7 @@ gint DrawExpose (void)
       char distStr[13];
       sprintf (distStr, "%.3lf km", len * (20000 / 2147483648.0) *
         cos (LatInverse (sumLat / nodeCnt) * (M_PI / 180)));
-      DrawString (clip.width - 12 * strlen (distStr), 10, distStr);
+      DrawString (clip.width - CHARWIDTH * strlen (distStr), 10, distStr);
       #if 0 //ndef NOGTK
       gdk_draw_string (draw->window, f, fg_gc, //draw->style->fg_gc[0],
         clip.width - 7 * strlen (distStr), 10, distStr);
@@ -2056,12 +2051,11 @@ gint DrawExpose (void)
         #else
         double hoek = atan2 (t->y2 - t->y, t->x - t->x2);
         if (t->x2 < t->x) hoek += M_PI;
-        logFont.lfEscapement = logFont.lfOrientation =
-          1800 + int ((1800 / M_PI) * hoek);
+        logFont.lfEscapement = logFont.lfOrientation = 1800 + int ((1800 / M_PI) * hoek);
         
         HFONT customFont = CreateFontIndirect (&logFont);
         HGDIOBJ oldf = SelectObject (mygc, customFont);
-        SetBkMode (mygc, TRANSPARENT);
+        //SetBkMode (mygc, TRANSPARENT);
         const unsigned char *sStart = (const unsigned char *) txt;
         UTF16 *tStart = (UTF16 *) wcTmp;
         int len = strcspn (txt, "\n");
@@ -2178,7 +2172,7 @@ gint DrawExpose (void)
   r.bottom = clip.height;
   FillRect (mygc, &r, (HBRUSH) GetStockObject(LTGRAY_BRUSH));
   SelectObject (mygc, sysFont);
-  SetBkMode (mygc, TRANSPARENT);
+  //SetBkMode (mygc, TRANSPARENT);
   while (--i >= 0) {
     ExtTextOut (mygc, clip.width - ButtonSize * 10 - 5, clip.height - 5 -
         ButtonSize * (20 * i + 10), 0, NULL, i == 0 ? TEXT ("O") :
@@ -2186,19 +2180,17 @@ gint DrawExpose (void)
   }
   #endif
 
- #endif
- #if 0
-  wchar_t coord[21];
+  char coord[21];
   if (ShowCoordinates == 1) {
-    wsprintf (coord, TEXT ("%9.5lf %10.5lf"), LatInverse (clat),
-      LonInverse (clon));
-    ExtTextOut (mygc, 0, 0, 0, NULL, coord, 20, NULL);
+    sprintf (coord, "%9.5lf %10.5lf", LatInverse (clat), LonInverse (clon));
+    DrawString (0, 5, coord);
   }
   else if (ShowCoordinates == 2) {
     MEMORYSTATUS memStat;
     GlobalMemoryStatus (&memStat);
-    wsprintf (coord, TEXT ("%9d"), memStat.dwAvailPhys );
-    ExtTextOut (mygc, 0, 0, 0, NULL, coord, 9, NULL);
+    sprintf (coord, "%9d", memStat.dwAvailPhys );
+    DrawString (0, 5, coord);
+    //ExtTextOut (mygc, 0, 10, 0, NULL, coord, 9, NULL);
   }
   #endif
   #ifdef CAIRO_VERSION
@@ -2246,6 +2238,8 @@ void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
 }
 #endif
 
+#endif // HEADLESS
+
 inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
 {
   IconSet = 1;
@@ -2273,8 +2267,6 @@ inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
   SetLocation (((wayType*)tag)[-1].clon, ((wayType*)tag)[-1].clat);
   zoom = ((wayType*)tag)[-1].dlat + ((wayType*)tag)[-1].dlon + (1 << 15); */
 }
-
-#endif // HEADLESS
 
 #ifndef NOGTK
 int UserInterface (int argc, char *argv[], 
@@ -2686,6 +2678,13 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
             if ((c = style[i].areaColour) != -1) brush[i] = CreateSolidBrush
 			  ((c >> 16) | (c & 0xff00) | ((c & 0xff) << 16));
           }
+          sysFont = (HFONT) GetStockObject (SYSTEM_FONT);
+          GetObject (sysFont, sizeof (logFont), &logFont);
+          #ifndef _WIN32_WCE
+          logFont.lfWeight = 400;
+          strcpy (logFont.lfFaceName, TEXT ("Arial"));
+          #endif
+          SetBkMode (bufDc, TRANSPARENT); // Is this really necessary ?
         }
 	rect.top = rect.left = 0;
 	rect.right = draw->allocation.width;
@@ -2698,12 +2697,15 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         }
 	mygc = bufDc;
 	icons = iconsDc;
+	if (option == BackgroundNum) {
+	 FillRect (bufDc, &rect,
+	   brush[firstElemStyle + Background - (Background > 8 ? 8 : 0)]);
+        }
         DrawExpose (pen, brush);
         
 	BitBlt (ps.hdc, 0, topBar, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
       //SetBkColor(ps.hdc,RGB(63,63,63));
-	FillRect (bufDc, &rect,
-	  brush[firstElemStyle + Background - (Background > 8 ? 8 : 0)]);
+	FillRect (bufDc, &rect, brush[firstElemStyle + Background - (Background > 8 ? 8 : 0)]);
 	 //(HBRUSH) GetStockObject(WHITE_BRUSH));
 	rect.bottom = topBar;
 	FillRect (ps.hdc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
@@ -2721,7 +2723,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       // 195=0xC3=V+, 196=0xC4=V- which is VK_APP1 to VK_APP6
       // and WM_CHAR:VK_BACK
       InvalidateRect (hWnd, NULL, FALSE);
-      if (wParam == '0' || wParam == MenuKey) HitButton (0);
+      if (wParam == '0' || wParam == MenuKey) {
+        HitButton (0);
+        if (optionMode != searchMode) SipShowIM (SIPF_OFF);
+      }
       if (wParam == '8') HitButton (1);
       if (wParam == '9') HitButton (2);
       if (ZoomInKeyNum <= option && option <= MenuKeyNum) {
@@ -2773,11 +2778,16 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       break;
     case WM_MOUSEMOVE:
       if (wParam & MK_LBUTTON) {
-        if (firstDrag[0] >= 0) BitBlt (GetDC (hWnd), 0, topBar,
-          draw->allocation.width, 
-          draw->allocation.height + topBar, GetDC (hWnd),
-          lastDrag[0] - LOWORD (lParam),
-          lastDrag[1] - HIWORD (lParam) + 2 * topBar, SRCCOPY);
+        if (firstDrag[0] >= 0) {
+          HDC wdc = GetDC (hWnd);
+          int wadj = lastDrag[0] - LOWORD (lParam);
+          int hadj = lastDrag[1] - HIWORD (lParam) + topBar;
+          BitBlt (wdc, wadj < 0 ? -wadj : 0, (hadj < 0 ? -hadj : 0) + topBar, 
+            draw->allocation.width - (wadj < 0 ? -wadj : wadj),
+            draw->allocation.height + topBar - (hadj < 0 ? -hadj : hadj),
+            wdc, wadj > 0 ? wadj : 0, (hadj > 0 ? hadj : 0) + topBar, SRCCOPY);
+          ReleaseDC (hWnd, wdc);
+        }
         lastDrag[0] = LOWORD (lParam);
         lastDrag[1] = HIWORD (lParam) - topBar;
         if (firstDrag[0] < 0) memcpy (firstDrag, lastDrag, sizeof (firstDrag));
@@ -2803,6 +2813,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       if (HIWORD (wParam) == BN_CLICKED &&
           LOWORD (wParam) > IDC_EDIT1 && LOWORD (wParam) <= IDC_EDIT1 + 3) {
         HitButton (LOWORD (wParam) - IDC_EDIT1 - 1);
+        if (optionMode != searchMode) SipShowIM (SIPF_OFF);
         InvalidateRect (hWnd, NULL, FALSE);
       }
       if (HIWORD (wParam) == BN_CLICKED && LOWORD (wParam) == IDC_EDIT1 + 4) {

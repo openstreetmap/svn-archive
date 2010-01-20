@@ -1097,6 +1097,7 @@ deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s,
         strncasecmp (i->first, "LandPro08:", 10) != 0 &&
         strncasecmp (i->first, "NHD:", 4) != 0 &&
         strncasecmp (i->first, "massgis:", 8) != 0 &&
+        strncasecmp (i->first, "scgis-shp:", 10) != 0 &&
         strcmp (i->first, "addr:street") != 0 &&
         strcmp (i->first, "addr:postcode") != 0 &&
         strcmp (i->first, "addr:state") != 0 &&
@@ -1213,6 +1214,38 @@ deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s,
 #define FWRITEX(x) FWRITEY (x) // Use argument prescan feature of CPP
 #define FWRITE(addr,size,count,f) { if (fwrite (addr, size, count, f) \
                                       != (size_t)(count)) FWRITEX (__LINE__) }
+
+ndType *LFollow (ndType *nd, ndType *ndItr, wayType *w, int forward)
+{ // Helper function when a way is copied into lowzoom table.
+  if (forward) {
+    nd += nd->other[1];
+    if (nd->other[1]) return nd;
+  }
+  if (nd->lat == nd[1].lat && nd->lon == nd[1].lon) {
+    if ((nd->lat != nd[2].lat || nd->lon != nd[2].lon) &&
+        (nd->lat != nd[-1].lat || nd->lon != nd[-1].lon ||
+         // If there is a 3rd object there,
+         nd[-1].other[0] == 0 && nd[-1].other[0] == 0) &&
+        // then it must be a node
+        nd + 1 != ndItr && (nd[1].other[0] == 0 || nd[1].other[1] == 0)
+        // Must not loop back to start and must not be T juntion
+        && StyleNr (w) == StyleNr ((wayType*)(data + nd[1].wayPtr))) nd++;
+  }
+  else if (nd->lat == nd[-1].lat && nd->lon == nd[-1].lon &&
+           (nd->lat != nd[-2].lat || nd->lon != nd[-2].lon ||
+            // If there is a 3rd object there,
+            nd[-2].other[0] == 0 && nd[-2].other[0] == 0) &&
+            // then it must be a node
+           nd - 1 != ndItr && (nd[-1].other[0] == 0 || nd[-1].other[1] == 0)
+           // Must not loop back to start and must not be T juntion
+           && StyleNr (w) == StyleNr ((wayType*)(data + nd[-1].wayPtr))) nd--;
+  // If nd ends at a point where exactly two ways meet and they have the same
+  // StyleNr we can 'route' across it.
+  // But we can't go back to wayPtr, e.g. circular way.
+  return forward || (wayType*)(data + nd->wayPtr) < w ? nd : NULL;
+  // When not going forward, we are just interested in the boolean question:
+  // Is there a previous way that we will see on another pass of the data ?
+}
 
 int RebuildPak(const char* pakfile, const char* elemstylefile, 
 	       const char* iconscsvfile, const char* masterpakfile, 
@@ -1460,9 +1493,9 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
             s[1].wayPtr = TO_HALFSEG;
             s[1].other = s[0].other + 1;
             s[0].lat = onewayReverse ? wayNd.back () : wayNd.front ();
-            if (lowzListCnt >=
+            /*if (lowzListCnt >=
                 int (sizeof (lowzList) / sizeof (lowzList[0]))) lowzListCnt--;
-            lowzList[lowzListCnt++] = s[0].lat;
+            lowzList[lowzListCnt++] = s[0].lat; */
             if (onewayReverse) wayNd.pop_back ();
             else wayNd.pop_front ();
             s[0].other = wayNd.empty () ? -2 : nOther++ * 2;
@@ -1474,7 +1507,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    s[1].wayPtr = TO_HALFSEG;
 	    s[0].other = -2; // No next
 	    s[1].other = -1; // No prev
-	    lowzList[lowzListCnt++] = nd.id;
+	    //lowzList[lowzListCnt++] = nd.id;
             FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
 	  }
 	  
@@ -1500,7 +1533,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
             if (styleCnt < (2 << STYLE_BITS) - 1) styleCnt++;
           }
           
-	  if (srec[StyleNr (&w)].scaleMax > 10000000 &&
+	  /*if (srec[StyleNr (&w)].scaleMax > 10000000 &&
 	      (!wayFseek || wayFseek->off)) { 
 	    for (int i = 0; i < lowzListCnt; i++) {
 	      if (i % 10 && i < lowzListCnt - 1) continue; // Skip some
@@ -1512,7 +1545,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
               FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
 	    }
 	  }
-	  lowzListCnt = 0;
+	  lowzListCnt = 0; */
           
 	  /*if (StyleNr (&w) < elemCnt && stricmp (eMap[StyleNr (&w)].style_v,
 						  "city") == 0 && tags[0] == '\n') {
@@ -1648,8 +1681,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	   (int (*)(const void *, const void *))HalfSegCmp);
     for (int j = 0; j < int (size / sizeof (seg[0])); j++) {
       if (!(j & 1)) {
-	while (bucket < Hash (seg[j].lon, seg[j].lat,
-			      i >= S2GROUP (0) + S2GROUPS - 1)) {
+	while (bucket < Hash (seg[j].lon, seg[j].lat, FALSE)) {
+//			      i >= S2GROUP (0) + S2GROUPS - 1)) {
 	  hashTable[++bucket] = offsetpair.final / 2;
 	}
       }
@@ -1660,10 +1693,16 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     }
     munmap (seg, size);
   }
-  while (bucket < bucketsMin1 + (bucketsMin1 >> 7) + 2) {
+  while (bucket < bucketsMin1 + 1) {
     hashTable[++bucket] = offsetpair.final / 2;
   }
   
+  ndType ndWrite;
+  ndWrite.wayPtr = s[0].wayPtr; // sizeof (pakHead); // Anything halfvalid
+  ndWrite.lon = ndWrite.lat = INT_MIN;
+  ndWrite.other[0] = ndWrite.other[1] = 0;
+  FWRITE (&ndWrite, sizeof (ndWrite), 1, pak); // Insert 'stopper' record
+
   ndStart = ftell (pak);
   
   int *pairing = (int *) malloc (sizeof (*pairing) * PAIRS);
@@ -1687,7 +1726,6 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   int s2grp = S2GROUP (0), pairs, totalp = 0;
   halfSegType *seg = (halfSegType *) malloc (PAIRS * sizeof (*seg));
   assert (seg /* Out of memory. Reduce PAIRS for small scale rebuilds. */);
-  ndType ndWrite;
   for (int i = PAIRGROUP2 (0); i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
     REBUILDWATCH (for (pairs = 0; pairs < PAIRS &&
 			 s2grp < S2GROUP (0) + S2GROUPS; )) {
@@ -1719,11 +1757,16 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     unlink (groupName[i]);
   }
   free (seg);
+  ndWrite.wayPtr = s[0].wayPtr; // sizeof (pakHead); // Anything halfvalid
+  ndWrite.lon = ndWrite.lat = INT_MIN;
+  ndWrite.other[0] = ndWrite.other[1] = 0;
+  FWRITE (&ndWrite, sizeof (ndWrite), 1, pak); // Insert 'stopper' record
+  hashTable[bucket]++; // And reserve space for it.
   
   fflush (pak);
-  data = (char *) mmap (NULL, ndStart,
+  data = (char *) mmap (NULL, ftell (pak),
 			PROT_READ | PROT_WRITE, MAP_SHARED, fileno (pak), 0);
-  fseek (pak, ndStart, SEEK_SET);
+  fseek (pak, ftell (pak), SEEK_SET);
   REBUILDWATCH (for (unsigned i = 0; i < cycleNet.size (); i++)) {
     wayType *way = (wayType*) (data + cycleNet[i]);
     for (int j = StyleNr (way) + 1; j < elemCnt; j++) {
@@ -1734,32 +1777,115 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       }
     }
   }
-  REBUILDWATCH (while (fread (&ndWrite, sizeof (ndWrite), 1, pak) == 1)) {
-    //if (bucket > Hash (ndWrite.lon, ndWrite.lat)) printf ("unsorted !\n");
-    wayType *way = (wayType*) (data + ndWrite.wayPtr);
-    
+  vector<halfSegType> lseg;
+  ndBase = (ndType*)(data + ndStart);
+  REBUILDWATCH (for (ndType *ndItr = ndBase;
+                ndItr < ndBase + hashTable[bucketsMin1 + 1]; ndItr++)) {
+  //while (fread (&ndWrite, sizeof (ndWrite), 1, pak) == 1)) {
+    wayType *way = (wayType*) (data + ndItr->wayPtr);
     /* The difficult way of calculating bounding boxes,
        namely to adjust the centerpoint (it does save us a pass) : */
-    // Block lost nodes with if (ndWrite.lat == INT_MIN) continue;
-    if (way->clat + way->dlat < ndWrite.lat) {
+    // Block lost nodes with if (ndItr->lat == INT_MIN) continue;
+    if (way->clat + way->dlat < ndItr->lat) {
       way->dlat = way->dlat < 0 ? 0 : // Bootstrap
-	(way->dlat - way->clat + ndWrite.lat) / 2;
-      way->clat = ndWrite.lat - way->dlat;
+	(way->dlat - way->clat + ndItr->lat) / 2;
+      way->clat = ndItr->lat - way->dlat;
     }
-    if (way->clat - way->dlat > ndWrite.lat) {
-      way->dlat = (way->dlat + way->clat - ndWrite.lat) / 2;
-      way->clat = ndWrite.lat + way->dlat;
+    if (way->clat - way->dlat > ndItr->lat) {
+      way->dlat = (way->dlat + way->clat - ndItr->lat) / 2;
+      way->clat = ndItr->lat + way->dlat;
     }
-    if (way->clon + way->dlon < ndWrite.lon) {
+    if (way->clon + way->dlon < ndItr->lon) {
       way->dlon = way->dlon < 0 ? 0 : // Bootstrap
-	(way->dlon - way->clon + ndWrite.lon) / 2;
-      way->clon = ndWrite.lon - way->dlon;
+	(way->dlon - way->clon + ndItr->lon) / 2;
+      way->clon = ndItr->lon - way->dlon;
     }
-    if (way->clon - way->dlon > ndWrite.lon) {
-      way->dlon = (way->dlon + way->clon - ndWrite.lon) / 2;
-      way->clon = ndWrite.lon + way->dlon;
+    if (way->clon - way->dlon > ndItr->lon) {
+      way->dlon = (way->dlon + way->clon - ndItr->lon) / 2;
+      way->clon = ndItr->lon + way->dlon;
     }
+
+    // This is a simplified version of the rebuild: It does not use groups or files
+    // and the lats & lons have been dereferenced previously. So the pairing is
+    // simplified a lot.
+    if (!ndItr->other[0] && !LFollow (ndItr, ndItr, way, 0)) {
+      int length = 0;
+      ndType *end;
+      for (end = ndItr; end->other[1]; end = LFollow (end, ndItr, way, 1)) {
+        length += isqrt (Sqr (end->lat - end[end->other[1]].lat) +
+                         Sqr (end->lon - end[end->other[1]].lon));
+      }
+      if (length > 500000 ||
+          end == ndItr && srec[StyleNr (way)].scaleMax > 100000) {
+        //printf ("%d\n", srec[StyleNr (way)].scaleMax);
+        deque<ndType*> dp (1, end); // Stack for Ramer-Douglas-Peucker algorithm
+        for (ndType *nd = ndItr; ; ) {
+          ndType *worst = NULL, *dpItr; // Look for worst between nd and dp.back()
+          if (nd != end) {
+            double len = sqrt (Sqr ((double)(dp.back()->lon - nd->lon)) +
+                               Sqr ((double)(nd->lat - dp.back ()->lat)));
+            double latc = (dp.back ()->lon - nd->lon) / len, maxeps = 10000;
+            double lonc = (nd->lat - dp.back ()->lat) / len, eps;
+            for (dpItr = nd; dpItr != dp.back (); dpItr = LFollow (dpItr, ndItr, way, 1)) {
+              eps = fabs ((dpItr->lat - nd->lat) * latc + (dpItr->lon - nd->lon) * lonc);
+              if (eps > maxeps) {
+                maxeps = eps;
+                worst = dpItr;
+              }
+            }
+          }
+          if (worst) dp.push_back (worst);
+          else { // The segment is reasonable
+            lseg.push_back (halfSegType ());
+            lseg.back ().lon = nd->lon;
+            lseg.back ().lat = nd->lat;
+            lseg.back ().wayPtr = ndItr->wayPtr;
+            lseg.push_back (halfSegType ());
+            lseg.back ().lon = nd->lon; // Unnecessary !
+            lseg.back ().lat = nd->lat; // Unnecessary !
+            lseg.back ().wayPtr = TO_HALFSEG; // Unnecessary !
+            lseg.back ().other = nd == ndItr ? -4 : lowzOther++;
+            (&lseg.back ())[-1].other = nd == end ? -4 : lowzOther++;
+            // Be careful of the conditional post increment when rewriting this code !
+            if (nd == end) break;
+            nd = dp.back ();
+            dp.pop_back ();
+          }
+        } // While DP has not passed the end
+        //printf ("%d %d\n", lowzOther, lseg.size ());
+      } // If the way belongs in the lowzoom
+    } // If it was the start of a way
+  } // For each highzoom nd
+  REBUILDWATCH (qsort (&lseg[0], lseg.size () / 2, sizeof (lseg[0]) * 2, 
+    (int (*)(const void *, const void *))HalfSegCmp));
+  int *lpair = new int[lowzOther - FIRST_LOWZ_OTHER];
+  for (int i = 0; i < lseg.size (); i++) {
+    if (!(i & 1)) {
+      while (bucket < Hash (lseg[i].lon, lseg[i].lat, TRUE)) {
+        hashTable[++bucket] = i / 2 + hashTable[bucketsMin1 + 1];
+      }
+    }
+    if (lseg[i].other >= 0) lpair[lseg[i].other - FIRST_LOWZ_OTHER] = i;
   }
+  while (bucket < bucketsMin1 + (bucketsMin1 >> 7) + 2) {
+    hashTable[++bucket] = lseg.size () / 2 + hashTable[bucketsMin1 + 1];
+  }
+  for (int i = 0; i < lowzOther - FIRST_LOWZ_OTHER; i += 2) {
+    lseg[lpair[i]].other = lpair[i + 1];
+    lseg[lpair[i + 1]].other = lpair[i];
+  }
+  delete lpair;
+  for (int i = 0; i < lseg.size (); i += 2) {
+    ndWrite.lat = lseg[i].lat;
+    ndWrite.lon = lseg[i].lon;
+    ndWrite.wayPtr = lseg[i].wayPtr;
+    ndWrite.other[0] = lseg[i].other < 0 ? 0 : (lseg[i].other >> 1) - i / 2;
+    ndWrite.other[1] = lseg[i + 1].other < 0 ? 0 : (lseg[i + 1].other >> 1) - i / 2;
+    FWRITE (&ndWrite, sizeof (ndWrite), 1, pak);
+    //printf ("%3d %10d %10d %10d %3d %3d\n", i / 2, ndWrite.lat, ndWrite.lon, ndWrite.wayPtr,
+    //  ndWrite.other[0], ndWrite.other[1]);
+  }
+  
 #ifndef LAMBERTUS
   REBUILDWATCH (for (int i = 0; i < IDXGROUPS; i++)) {
     assert (groupf[i] = fopen64 (groupName[i], "r+"));

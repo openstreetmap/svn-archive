@@ -4540,6 +4540,13 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
 	</rule>
+	<rule>
+		<condition k="building" v="residential"/>
+		<icon annotate="true" src="misc/no_icon.png" />
+		<area colour="#cb9999"/>
+		<scale_min>1</scale_min>
+		<scale_max>50000</scale_max>
+	</rule>
 
 <!--"deprecated" tags -->
 	<rule>

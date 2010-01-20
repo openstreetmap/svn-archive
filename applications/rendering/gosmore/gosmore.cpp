@@ -1661,8 +1661,10 @@ gint DrawExpose (void)
     while (Next (itr)) {
       ndType *nd = itr.nd[0];
       wayType *w = Way (nd);
-      if (!Display3D && Style (w)->scaleMax <
-                zoom / clip.width * 175 / (DetailLevel + 6)) continue;
+
+      if (Style (w)->scaleMax < zoom / clip.width * 175 / (DetailLevel + 6)
+          && !Display3D && w->dlat < zoom / clip.width * 20 &&
+                           w->dlon < zoom / clip.width * 20) continue;
       if (nd->other[0] != 0) {
         nd = itr.nd[0] + itr.nd[0]->other[0];
         if (nd->lat == INT_MIN) nd = itr.nd[0]; // Node excluded from build

@@ -443,7 +443,7 @@ struct OsmItr { // Iterate over all the objects in a square
   
   OsmItr (int l, int t, int r, int b)
   {
-    tsize = r - l > 10000000 ? TILESIZE << 7 : TILESIZE;
+    tsize = r - l > 1500000 ? TILESIZE << 7 : TILESIZE;
     left = l & (~(tsize - 1));
     right = (r + tsize - 1) & (~(tsize-1));
     top = t & (~(tsize - 1));

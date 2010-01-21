@@ -26,7 +26,8 @@ WINDRES=	${ARCH}windres
 #CFLAGS += -DHEADLESS
 
 ifneq (${OS},Windows_NT)
-EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS`
+EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS` \
+  `pkg-config --libs libcurl` `pkg-config --libs pkg-config --libs gthread-2.0`
 XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
   `pkg-config --libs libxml-2.0 || echo -l xml2 -lz -lm`
 ARCH=arm-mingw32ce-
@@ -130,9 +131,13 @@ install: gosmore
 	mkdir -p $(DESTDIR)$(bindir)
 	cp gosmore $(DESTDIR)$(bindir)/.
 	mkdir -p $(DESTDIR)$(datarootdir)/gosmore
-	cp -a elemstyles.xml icons.csv icons.xpm $(DESTDIR)$(datarootdir)/gosmore
+	cp -a default.pak elemstyles.xml icons.csv icons.xpm $(DESTDIR)$(datarootdir)/gosmore
 	mkdir -p $(DESTDIR)$(datarootdir)/man/man1
 	gzip <gosmore.1 >$(DESTDIR)$(datarootdir)/man/man1/gosmore.1.gz
+	mkdir -p $(DESTDIR)$(datarootdir)/pixmaps
+	cp -a gosmore.xpm $(DESTDIR)$(datarootdir)/pixmaps
+	mkdir -p $(DESTDIR)$(datarootdir)/applications
+	cp -a gosmore.desktop $(DESTDIR)$(datarootdir)/applications
 
 dist:
 	mkdir gosmore-$(VERSION)

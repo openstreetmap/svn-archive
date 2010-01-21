@@ -98,6 +98,10 @@ using namespace std;
   o (Background,      0, 16) \
   o (ShowCoordinates, 0, 3) \
   o (ShowTrace,       0, 2) \
+  o (ViewOSM,         0, 1) \
+  o (EditInPotlatch,  0, 1) \
+  o (ViewGMaps,       0, 1) \
+  o (UpdateMap,       0, 1) \
   o (CommPort,        0, 13) \
   o (BaudRate,        0, 6) \
   o (ZoomInKey,       0, 3) \
@@ -120,6 +124,9 @@ char docPrefix[80] = "";
 #if !defined (HEADLESS) && !defined (NOGTK)
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
+#include <curl/curl.h>
+#include <curl/types.h>
+#include <curl/easy.h>
 #endif
 
 // We emulate just enough of gtk to make it work
@@ -253,12 +260,13 @@ OPTIONS // Define a global variable for each option
 int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisplayOff;
 /* zoom is the amount that fits into the window (regardless of window size) */
 
+TCHAR currentBbox[80] = "";
+
 void ChangePak (const TCHAR *pakfile)
 {
   static int bboxList[][4] = { 
 #include "bboxes.c"
   }, world[] = { -512, -512, 512, 512 }, *bbox = NULL;
-  TCHAR l2[80];
      
   if (bbox && bbox[0] <= (clon >> 22) && bbox[1] <= ((-clat) >> 22) &&
               bbox[2] >  (clon >> 22) && bbox[3] >  ((-clat) >> 22)) return;
@@ -277,13 +285,13 @@ void ChangePak (const TCHAR *pakfile)
       // outside it.
       if (worst > best) { 
         best = worst;
-        pakfile = l2;
+        pakfile = currentBbox;
         bbox = bboxList[j];
         #ifdef _WIN32_WCE
-        GetModuleFileName (NULL, l2, sizeof (l2) / sizeof (l2[0]));
-        wsprintf (wcsrchr (l2, L'\\'), TEXT ("\\%04d%04d%04d%04d.pak"),
+        GetModuleFileName (NULL, currentBbox, sizeof (currentBbox) / sizeof (currentBbox[0]));
+        wsprintf (wcsrchr (currentBbox, L'\\'), TEXT ("\\%04d%04d%04d%04d.pak"),
         #else
-        sprintf (l2, "%s%04d%04d%04d%04d.pak", "", //RES_DIR,
+        sprintf (currentBbox, "%04d%04d%04d%04d.pak",
         #endif
           bboxList[j][0] + 512, bboxList[j][1] + 512,
           bboxList[j][2] + 512, bboxList[j][3] + 512);
@@ -302,11 +310,11 @@ void ChangePak (const TCHAR *pakfile)
   gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
     NULL);
-  if (gmap == INVALID_HANDLE_VALUE && l2 == pakfile) {
+  if (gmap == INVALID_HANDLE_VALUE && currentBbox == pakfile) {
     #ifdef _WIN32_WCE
-    wsprintf (wcsrchr (l2, L'\\'), TEXT ("\\default.pak"));
+    wsprintf (wcsrchr (currentBbox, L'\\'), TEXT ("\\default.pak"));
     #else
-    strcpy (l2, "default.pak");
+    strcpy (currentBbox, "default.pak"); // WIN32
     #endif
     gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
       NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
@@ -346,7 +354,10 @@ void ChangePak (const TCHAR *pakfile)
   if (map != (void*) -1) munmap (map, len);
   
   FILE *gmap = fopen64 (pakfile, "r");
-  if (!gmap && l2 == pakfile) gmap = fopen64 ("default.pak", "r");
+  if (!gmap && currentBbox == pakfile &&
+             (gmap = fopen64 ("default.pak", "r")) == NULL) {
+    gmap = fopen64 (RES_DIR "default.pak", "r");
+  }
   len = gmap && fseek (gmap, 0, SEEK_END) == 0 ? ftell (gmap) : 0;
   map = !len ? (void*)-1
      : mmap (NULL, ftell (gmap), PROT_READ, MAP_SHARED, fileno (gmap), 0);
@@ -920,6 +931,58 @@ int Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
   return FALSE;
 }
 
+GtkWidget *bar;
+int UpdateProcessFunction(void *userData, double t, double d,
+                                          double /*ultotal*/, double /*ulnow*/)
+{
+  gdk_threads_enter ();
+  gtk_progress_set_value (GTK_PROGRESS (bar), d * 100.0 / t);
+  gdk_threads_leave ();
+  return 0;
+}
+
+void *UpdateMapThread (void *n)
+{
+  CURL *curl;
+  CURLcode res;
+  FILE *outfile;
+ 
+  curl = curl_easy_init();
+  if(curl) {
+    outfile = fopen("tmp.zip", "w");
+ 
+    // string zip ((string)(char*)n + ".zip", cmd ("unzip " + zip);
+    string url ("http://dev.openstreetmap.de/gosmore/" + (string)(char*)n + ".zip");
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str ());
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, outfile);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite); //DefaultCurlWrite);
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, fread); //my_read_func);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, UpdateProcessFunction);
+    curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, ""); // Bar);
+ 
+    res = curl_easy_perform(curl);
+ 
+    fclose(outfile);
+    system ("unzip tmp.zip"); //cmd.c_str ());
+    string dst ((string)(char*)n + ".pak");
+    rename ("gosmore.pak", dst.c_str ());
+    unlink ("tmp.zip");
+    gdk_threads_enter ();
+    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (bar), "Done");
+/*    clon ^= 0x80000000;
+    ChangePak (NULL);
+    clon ^= 0x80000000; 
+    Expose () I don't think it will work in this thread. SEGV. */
+    
+    gdk_threads_leave ();
+
+    curl_easy_cleanup(curl);
+  }
+  free (n); // Malloced in one thread freed in another.
+  return NULL; 
+}
+
 int objectAddRow = -1;
 #define ADD_HEIGHT 32
 #define ADD_WIDTH 64
@@ -1125,6 +1188,46 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
         }
       }
       if (option <= OrientNorthwardsNum) HitButton (1);
+      #ifndef NOGTK
+      if (option >= ViewOSMNum && option <= ViewGMapsNum) {
+        char lstr[200];
+        int zl = 0;
+        while (zl < 32 && (zoom >> zl)) zl++;
+        sprintf (lstr,
+         option == ViewOSMNum ? "%sopenstreetmap.org/?lat=%.5lf&lon=%.5lf&zoom=%d'" :
+         option == EditInPotlatch ? "%sopenstreetmap.org/edit?lat=%.5lf&lon=%.5lf&zoom=%d'" :
+         "%smaps.google.com/?ll=%.5lf,%.5lf&z=%d'",
+          "gnome-open 'http://", LatInverse (clat), LonInverse (clon), 33 - zl);
+        system (lstr);
+        option = mapMode;
+      }
+      else if (option == UpdateMapNum) {
+        struct stat s;
+        if (currentBbox[0] == '\0') {
+          gtk_dialog_run (GTK_DIALOG (gtk_message_dialog_new (NULL,
+            GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+            "Error:\n"
+            "Gosmore is running with a custom map\n"
+            "Download aborted.", currentBbox)));
+        }
+        else if (stat (currentBbox, &s) == 0 &&
+           (s.st_mtime > time (NULL) - 3600*24*7 ||
+            s.st_ctime > time (NULL) - 3600 * 24 * 7)) {
+          gtk_dialog_run (GTK_DIALOG (gtk_message_dialog_new (NULL,
+            GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+            "Error:\n"
+            "%s has changed during the last 7 days,\n"
+            "and is most likely up-to-date.\n"
+            "Download aborted.", currentBbox)));
+        }
+        else {
+          string msg (string ("Downloading ") + currentBbox);
+          gtk_progress_bar_set_text (GTK_PROGRESS_BAR (bar), msg.c_str ());
+          g_thread_create (&UpdateMapThread, strndup (currentBbox, 16), FALSE, NULL);
+        }
+        option = mapMode;
+      }
+      #endif
     }
   }
   else if (option == searchMode) {
@@ -2282,7 +2385,13 @@ int UserInterface (int argc, char *argv[],
   Vehicle = motorcarR;
   string optFname = string (getenv ("HOME")) + "/.gosmore.opt";
   FILE *optFile = fopen (optFname.c_str(), "r+");
-  SerializeOptions (optFile, TRUE, pakfile);
+  if (strcmp (pakfile, "nopak") == 0) {
+    string ddir (string (getenv ("HOME")) + "/.gosmore");
+    mkdir (ddir.c_str (), 0755); // Usually already exists
+    chdir (ddir.c_str ());
+    SerializeOptions (optFile, TRUE, NULL);
+  }
+  else SerializeOptions (optFile, TRUE, pakfile);
   if (Exit) {
     fprintf (stderr, "Cannot read %s\n"
 	     "You can (re)build it from\n"
@@ -2364,7 +2473,9 @@ int UserInterface (int argc, char *argv[],
 
   printf ("%s is in the public domain and comes without warranty\n",argv[0]);
   #ifndef HEADLESS
-  
+
+  curl_global_init (CURL_GLOBAL_ALL);
+  g_thread_init (NULL);  // Something to do with curl progress bar
   gtk_init (&argc, &argv);
   draw = gtk_drawing_area_new ();
   gtk_widget_set_double_buffered (draw, FALSE);
@@ -2415,7 +2526,7 @@ int UserInterface (int argc, char *argv[],
     btn[i] = gtk_button_new_with_label (i == 0 ? "O" : i == 1 ? "-" : "+");
     gtk_widget_set_size_request (btn[i], 27, 20);
     gtk_box_pack_start (GTK_BOX (hbox), btn[i], FALSE, FALSE, 5);
-    gtk_widget_show (btn[i]);
+    //gtk_widget_show (btn[i]);
     gtk_signal_connect (GTK_OBJECT (btn[i]), "clicked",
       GTK_SIGNAL_FUNC (HitGtkButton), (char*)i);
   }  
@@ -2439,7 +2550,7 @@ int UserInterface (int argc, char *argv[],
   gtk_box_pack_start (GTK_BOX (hbox), display3D, FALSE, FALSE, 5);
   gtk_signal_connect (GTK_OBJECT (display3D), "clicked",
     GTK_SIGNAL_FUNC (ChangeOption), NULL);
-  gtk_widget_show (display3D);
+  //gtk_widget_show (display3D);
 
   followGPSr = gtk_toggle_button_new_with_label ("Lock");
   
@@ -2458,25 +2569,31 @@ int UserInterface (int argc, char *argv[],
     gtk_box_pack_start (GTK_BOX (hbox), followGPSr, FALSE, FALSE, 5);
     gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
       GTK_SIGNAL_FUNC (ChangeOption), NULL);
-    gtk_widget_show (followGPSr);
+    //gtk_widget_show (followGPSr);
   }
   #endif
+
+  GtkAdjustment *adj = (GtkAdjustment*) gtk_adjustment_new (0, 0, 100, 0, 0, 0);
+  bar = gtk_progress_bar_new_with_adjustment (adj);
+  gtk_container_add (GTK_CONTAINER (hbox), bar);
 
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   
   gtk_window_set_default_size (GTK_WINDOW (window), 550, 550);
-  gtk_widget_show (searchW);
-  gtk_widget_show (location);
-  gtk_widget_show (draw);
+//  gtk_widget_show (searchW);
+//  gtk_widget_show (location);
+//  gtk_widget_show (draw);
 /*  gtk_widget_show (getDirs); */
-  gtk_widget_show (hbox);
-  gtk_widget_show (vbox);
-  gtk_widget_show (window);
+//  gtk_widget_show (hbox);
+//  gtk_widget_show (vbox);
+  gtk_widget_show_all (window);
   ChangeOption ();
   IncrementalSearch ();
   gtk_widget_grab_focus (searchW);
+  gdk_threads_enter (); // Something to do with curl progress bar
   gtk_main ();
+  gdk_threads_leave (); // Something to do with curl progress bar
   FlushGpx ();
   if (optFile) rewind (optFile);
   else optFile = fopen (optFname.c_str (), "w");

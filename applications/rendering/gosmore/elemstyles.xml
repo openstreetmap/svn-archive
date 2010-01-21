@@ -182,6 +182,34 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
      </rule>
 
     <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ViewOSM" />
+       <icon annotate="true" src="osm.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="EditInPotlatch" />
+       <icon annotate="true" src="osm.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="ViewGMaps" />
+       <icon annotate="true" src="google.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="UpdateMap" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
        <condition k="gosmore" v="CommPort" />
        <icon annotate="true" src="misc/deprecated.png" />
        <scale_min>1</scale_min> <!-- N/A -->

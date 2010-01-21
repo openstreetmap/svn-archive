@@ -1,3 +1,6 @@
 elemstyles.xml usr/share/gosmore
 icons.csv usr/share/gosmore
 icons.xpm usr/share/gosmore
+default.pak usr/share/gosmore
+gosmore.xpm usr/share/pixmaps
+gosmore.desktop usr/share/applications

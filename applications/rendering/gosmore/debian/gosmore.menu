@@ -1,4 +1,4 @@
 ?package(gosmore):needs="X11"\
   section="Applications/Science/Geoscience"\
   title="Gosmore"\
-  command="/usr/bin/gosmore"
+  command="/usr/bin/gosmore nopak"

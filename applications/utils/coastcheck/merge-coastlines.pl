@@ -187,7 +187,7 @@ sub MarkPoint
   print "P$type $x $y\n";
 }
 
-my $wanted_nodes = Bit::Vector->new( 600 * 1000 * 1000 );
+my $wanted_nodes = Bit::Vector->new( 700 * 1000 * 1000 );
 my(%nodes,%ways);
 my $totalways = 0;
 my $closed = 0;

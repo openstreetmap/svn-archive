@@ -72,7 +72,7 @@ use Encode ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '2.2' ; # PUBLISHED
+$VERSION = '2.3' ; # PUBLISHED
 
 require Exporter ;
 
@@ -601,7 +601,7 @@ sub svgElementPathText {
 	$svg = $svg . "font-size=\"" . $fontSize . "\" " ;
 	$svg = $svg . "fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\" >\n" ;
 	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"middle\" startOffset=\"50%\" >\n" ;
-	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . $text . " </tspan>\n" ;
+	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
 	$svg = $svg . "</textPath>\n</text>\n" ;
 	return $svg ;
 }

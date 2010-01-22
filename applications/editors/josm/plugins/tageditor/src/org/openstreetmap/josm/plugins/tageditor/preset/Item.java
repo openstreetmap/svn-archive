@@ -68,16 +68,19 @@ public class Item  implements INameIconProvider {
 	}
 
 	public Icon getIcon() {
+		// FIXME: should also load icons from the image paths configured in the 
+		// preferences for presets
+		//
 		if (icon == null) {
 			// load the icon from the JOSM resources, use Main classloader
 			// for loading
 			URL url = Main.class.getResource("/images/" + getIconName());
 			if (url == null) {
 				logger.warning("failed to create URL for resource 'images/" + getIconName() + "'");
-				icon = null;
+				return null;
 			} else {
 				icon =new ImageIcon(url);
-			}
+			}		
 			Image i = icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
 			icon = new ImageIcon(i);
 

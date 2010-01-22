@@ -27,7 +27,7 @@
 <project name="tageditor" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="Uses new constructor for Plugin" />
+	<property name="commit.message" value="Fixed NPE when icon is missing" />
 	<property name="plugin.main.version" value="2830" />
 
 	<!--

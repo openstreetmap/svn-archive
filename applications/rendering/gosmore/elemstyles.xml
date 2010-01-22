@@ -1257,7 +1257,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	
 	<rule>
 		<condition k="highway" v="turning_circle" />
-		<icon annotate="true" src="vehicle/turning_circle.png" />
+		<icon annotate="true" src="waypoint.png" />
         <scale_min>1</scale_min>
         <scale_max>5000</scale_max>
 	</rule>

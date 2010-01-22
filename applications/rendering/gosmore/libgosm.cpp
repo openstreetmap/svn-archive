@@ -1242,9 +1242,7 @@ ndType *LFollow (ndType *nd, ndType *ndItr, wayType *w, int forward)
   // If nd ends at a point where exactly two ways meet and they have the same
   // StyleNr we can 'route' across it.
   // But we can't go back to wayPtr, e.g. circular way.
-  return forward || (wayType*)(data + nd->wayPtr) < w ? nd : NULL;
-  // When not going forward, we are just interested in the boolean question:
-  // Is there a previous way that we will see on another pass of the data ?
+  return nd;
 }
 
 int RebuildPak(const char* pakfile, const char* elemstylefile, 
@@ -1808,15 +1806,22 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     // This is a simplified version of the rebuild: It does not use groups or files
     // and the lats & lons have been dereferenced previously. So the pairing is
     // simplified a lot.
-    if (!ndItr->other[0] && !LFollow (ndItr, ndItr, way, 0)) {
+    ndType *prev = LFollow (ndItr, ndItr, way, 0);
+    if (!ndItr->other[0] && prev->wayPtr >= ndItr->wayPtr) {
       int length = 0;
       ndType *end;
       for (end = ndItr; end->other[1]; end = LFollow (end, ndItr, way, 1)) {
         length += isqrt (Sqr (end->lat - end[end->other[1]].lat) +
                          Sqr (end->lon - end[end->other[1]].lon));
+        if (prev != ndItr && end->wayPtr < ndItr->wayPtr) break;
+        // If it is circular and we didn't start at the way with the lowest
+        // wayPtr, then we abort
       }
-      if (length > 500000 ||
-          end == ndItr && srec[StyleNr (way)].scaleMax > 100000) {
+      if ((prev == ndItr || prev == end) && (length > 500000 ||
+                  (end == ndItr && srec[StyleNr (way)].scaleMax > 100000))) {
+        //printf (prev == ndItr ? "%3d Non circular %s\n" : "%3d Circular %s\n",
+        //  ndItr - ndBase, (char*)(way+1)+1);
+        //if (prev == ndItr) printf ("Circular\n");
         //printf ("%d\n", srec[StyleNr (way)].scaleMax);
         deque<ndType*> dp (1, end); // Stack for Ramer-Douglas-Peucker algorithm
         for (ndType *nd = ndItr; ; ) {
@@ -1827,7 +1832,9 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
             double latc = (dp.back ()->lon - nd->lon) / len, maxeps = 10000;
             double lonc = (nd->lat - dp.back ()->lat) / len, eps;
             for (dpItr = nd; dpItr != dp.back (); dpItr = LFollow (dpItr, ndItr, way, 1)) {
-              eps = fabs ((dpItr->lat - nd->lat) * latc + (dpItr->lon - nd->lon) * lonc);
+              eps = len == 0 ? sqrt (Sqr ((double)(dpItr->lat - nd->lat) -
+                                          (double)(dpItr->lon - nd->lon))) :
+                fabs ((dpItr->lat - nd->lat) * latc + (dpItr->lon - nd->lon) * lonc);
               if (eps > maxeps) {
                 maxeps = eps;
                 worst = dpItr;

@@ -77,7 +77,6 @@ map-icons/square.big/money.png:128:112:32:32
 map-icons/square.big/place.png:160:112:32:32
 map-icons/square.big/vehicle.png:192:112:32:32
 map-icons/square.big/accommodation.png:224:112:32:32
-map-icons/square.big/waypoint.png:256:112:32:32
 map-icons/square.big/religion.png:288:112:32:32
 map-icons/square.big/health.png:320:112:32:32
 map-icons/square.big/empty.png:352:112:32:32
@@ -685,6 +684,7 @@ map-icons/square.small/waypoint/route/left/uturn.png:674:686:24:24
 map-icons/classic.small/incomming/london-tube-24.png:698:686:24:24
 map-icons/classic.big/shop.png:722:686:24:24
 map-icons/classic.big/waypoint.png:746:686:24:24
+map-icons/square.big/waypoint.png:746:686:24:24
 map-icons/classic.big/geocache.png:770:686:24:24
 map-icons/classic.big/shop/computers.png:794:686:24:24
 map-icons/classic.big/leisure/nightclub.png:818:686:24:24
@@ -785,7 +785,6 @@ map-icons/classic.small/sightseeing/memorial.png:1017:736:7:16
 map-icons/square.small/place.png:0:756:16:16
 map-icons/square.small/vehicle.png:16:756:16:16
 map-icons/square.small/accommodation.png:32:756:16:16
-map-icons/square.small/waypoint.png:48:756:16:16
 map-icons/square.small/religion.png:64:756:16:16
 map-icons/square.small/health.png:80:756:16:16
 map-icons/square.small/geocache.png:96:756:16:16
@@ -1134,6 +1133,7 @@ map-icons/classic.small/misc.png:448:836:16:16
 map-icons/classic.small/place.png:464:836:16:16
 map-icons/classic.small/accommodation.png:480:836:16:16
 map-icons/classic.small/waypoint.png:496:836:16:16
+map-icons/square.small/waypoint.png:496:836:16:16
 map-icons/classic.small/religion.png:512:836:16:16
 map-icons/classic.small/health.png:528:836:16:16
 map-icons/classic.small/empty.png:544:836:16:16

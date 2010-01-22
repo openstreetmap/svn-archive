@@ -7,17 +7,17 @@
 
 	<target name="assemble">
 		<mkdir dir="${basedir}/build"/>
-		<mkdir dir="${basedir}/build/styles"/>
-		<mkdir dir="${basedir}/build/styles/earthquake"/>
-		<copy todir="${basedir}/build/styles/earthquake">
+		<mkdir dir="${basedir}/build/presets"/>
+		<mkdir dir="${basedir}/build/presets/earthquake"/>
+		<copy todir="${basedir}/build/presets/earthquake">
 			<fileset dir="${basedir}/presets">
 				<include name="**/*.xml"/>
 				<include name="**/*.png"/>
 			</fileset>
 		</copy>
 
-		<copy file="README.txt" todir="${basedir}/build/styles/earthquake"/>
-		<copy file="CHANGELOG.txt" todir="${basedir}/build/styles/earthquake"/>
+		<copy file="README.txt" todir="${basedir}/build/presets/earthquake"/>
+		<copy file="CHANGELOG.txt" todir="${basedir}/build/presets/earthquake"/>
 	</target>
 
 	<target name="make-distrib">

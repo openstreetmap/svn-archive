@@ -126,8 +126,8 @@ zip:
 	zip -j gosm_arm.zip ARMV4Rel/gosm_arm.exe *.wav
 	# scp -P 100 gosm_arm.zip gosmore.zip \
 	#  nroets@nroets.openhost.dk:nroets.openhost.dk/htdocs/
-	  
-install: gosmore
+
+install: gosmore default.pak
 	mkdir -p $(DESTDIR)$(bindir)
 	cp gosmore $(DESTDIR)$(bindir)/.
 	mkdir -p $(DESTDIR)$(datarootdir)/gosmore
@@ -138,6 +138,14 @@ install: gosmore
 	cp -a gosmore.xpm $(DESTDIR)$(datarootdir)/pixmaps
 	mkdir -p $(DESTDIR)$(datarootdir)/applications
 	cp -a gosmore.desktop $(DESTDIR)$(datarootdir)/applications
+
+default.pak: gosmore
+	! [ -e gosmore.pak ]
+	(echo '<?xml version="1.0" encoding="UTF-8" ?><osm version="0.6">'; \
+	 bzcat lowres.osm.bz2; \
+	 egrep -v '?xml|<osmCha' countries.osm | sed -e 's|/osmChange|/osm|') | \
+	     QUERY_STRING=suppressGTK ./gosmore rebuild
+	mv gosmore.pak default.pak
 
 dist:
 	mkdir gosmore-$(VERSION)

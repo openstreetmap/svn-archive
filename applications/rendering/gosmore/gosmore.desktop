@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Gosmore Map Viewer
+GenericName=Map Viewer
+Comment=View, search and route with OpenStreetMap
+Exec=gosmore nopak
+TryExec=gosmore
+Icon=gosmore
+Terminal=false
+Categories=Geography
+StartupNotify=false

@@ -2462,24 +2462,26 @@ int UserInterface (int argc, char *argv[],
     Route (TRUE, 0, 0, Vehicle, FastestRoute);
     printf ("Content-Type: text/plain\n\r\n\r");
     if (!shortest) printf ("No route found\n\r");
-    else if (routeHeapSize <= 1) printf ("Jump\n\r");
-    styleStruct *firstS = Style (Way (shortest->nd));
-    double ups = lrint (3.6 / firstS->invSpeed[Vehicle]
-        / firstS->aveSpeed[Vehicle] / (20000 / 2147483648.0) /
-        cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180)));
-    // ups (Units per second) also works as an unsigned int.
+    else {
+      if (routeHeapSize <= 1) printf ("Jump\n\r");
+      styleStruct *firstS = Style (Way (shortest->nd));
+      double ups = lrint (3.6 / firstS->invSpeed[Vehicle]
+          / firstS->aveSpeed[Vehicle] / (20000 / 2147483648.0) /
+          cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180)));
+      // ups (Units per second) also works as an unsigned int.
 
-    for (; shortest; shortest = shortest->shortest) {
-      wayType *w = Way (shortest->nd);
-      char *name = (char*)(w + 1) + 1;
-      unsigned style= StyleNr(w);
-      printf ("%lf,%lf,%c,%s,%.0lf,%.*s\n\r", LatInverse (shortest->nd->lat),
-        LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
-	style < sizeof(klasTable)/sizeof(klasTable[0]) ? klasTable[style].desc :
-	"(unknown-style)", ((shortest->heapIdx < 0
-	? -shortest->heapIdx : routeHeap[shortest->heapIdx].best) -
-	shortest->remain) / ups,
-	(int) strcspn (name, "\n"), name);
+      for (; shortest; shortest = shortest->shortest) {
+        wayType *w = Way (shortest->nd);
+        char *name = (char*)(w + 1) + 1;
+        unsigned style= StyleNr(w);
+        printf ("%lf,%lf,%c,%s,%.0lf,%.*s\n\r", LatInverse (shortest->nd->lat),
+          LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
+          style < sizeof(klasTable)/sizeof(klasTable[0]) ? klasTable[style].desc :
+          "(unknown-style)", ((shortest->heapIdx < 0
+          ? -shortest->heapIdx : routeHeap[shortest->heapIdx].best) -
+          shortest->remain) / ups,
+          (int) strcspn (name, "\n"), name);
+      }
     }
     return 0;
   }

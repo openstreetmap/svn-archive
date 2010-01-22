@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="haiti_earthquake" default="dist">
+
+	<target name="clean">
+		<delete dir="${basedir}/build"/>
+	</target>
+
+	<target name="assemble">
+		<mkdir dir="${basedir}/build"/>
+		<mkdir dir="${basedir}/build/styles"/>
+		<mkdir dir="${basedir}/build/styles/earthquake"/>
+		<copy todir="${basedir}/build/styles/earthquake">
+			<fileset dir="${basedir}/presets">
+				<include name="**/*.xml"/>
+				<include name="**/*.png"/>
+			</fileset>
+		</copy>
+
+		<copy file="README.txt" todir="${basedir}/build/styles/earthquake"/>
+		<copy file="CHANGELOG.txt" todir="${basedir}/build/styles/earthquake"/>
+	</target>
+
+	<target name="make-distrib">
+		<zip destfile="${basedir}/dist/haiti-earthquake-josm-presets.zip">
+			<fileset dir="${basedir}/build">
+				<include name="**/*"/>
+			</fileset>
+		</zip>
+		<tar destfile="${basedir}/dist/haiti-earthquake-josm-presets.tar">
+			<fileset dir="${basedir}/build">
+				<include name="**/*"/>
+			</fileset>		
+		</tar>
+	</target>
+	
+	<target name="dist" depends="clean,assemble,make-distrib">
+	</target>
+</project>

@@ -142,7 +142,7 @@ struct GtkWidget {
 };
 typedef int GtkComboBox;
 struct GdkEventButton {
-  int x, y, button;
+  int x, y, button, time;
 };
 
 struct GdkEventScroll {
@@ -169,8 +169,10 @@ const char *FindResource (const char *fname)
   // first check in current working directory
   if (stat (fname, &dummy) == 0) return strdup (fname);
   // then check in $HOME
-  s = (string) getenv ("HOME") + "/.gosmore/" + fname;
-  if (stat (s.c_str (), &dummy) == 0) return strdup (s.c_str());
+  if (getenv ("HOME")) {
+    s = (string) getenv ("HOME") + "/.gosmore/" + fname;
+    if (stat (s.c_str (), &dummy) == 0) return strdup (s.c_str());
+  }
   // then check in RES_DIR
   s = (string) RES_DIR + fname;
   if (stat (s.c_str (), &dummy) == 0) return strdup (s.c_str());
@@ -260,7 +262,7 @@ OPTIONS // Define a global variable for each option
 int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisplayOff;
 /* zoom is the amount that fits into the window (regardless of window size) */
 
-TCHAR currentBbox[80] = "";
+TCHAR currentBbox[80] = TEXT ("");
 
 void ChangePak (const TCHAR *pakfile)
 {
@@ -931,58 +933,6 @@ int Scroll (GtkWidget * /*widget*/, GdkEventScroll *event, void * /*w_cur*/)
   return FALSE;
 }
 
-GtkWidget *bar;
-int UpdateProcessFunction(void *userData, double t, double d,
-                                          double /*ultotal*/, double /*ulnow*/)
-{
-  gdk_threads_enter ();
-  gtk_progress_set_value (GTK_PROGRESS (bar), d * 100.0 / t);
-  gdk_threads_leave ();
-  return 0;
-}
-
-void *UpdateMapThread (void *n)
-{
-  CURL *curl;
-  CURLcode res;
-  FILE *outfile;
- 
-  curl = curl_easy_init();
-  if(curl) {
-    outfile = fopen("tmp.zip", "w");
- 
-    // string zip ((string)(char*)n + ".zip", cmd ("unzip " + zip);
-    string url ("http://dev.openstreetmap.de/gosmore/" + (string)(char*)n + ".zip");
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str ());
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, outfile);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite); //DefaultCurlWrite);
-    curl_easy_setopt(curl, CURLOPT_READFUNCTION, fread); //my_read_func);
-    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
-    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, UpdateProcessFunction);
-    curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, ""); // Bar);
- 
-    res = curl_easy_perform(curl);
- 
-    fclose(outfile);
-    system ("unzip tmp.zip"); //cmd.c_str ());
-    string dst ((string)(char*)n + ".pak");
-    rename ("gosmore.pak", dst.c_str ());
-    unlink ("tmp.zip");
-    gdk_threads_enter ();
-    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (bar), "Done");
-/*    clon ^= 0x80000000;
-    ChangePak (NULL);
-    clon ^= 0x80000000; 
-    Expose () I don't think it will work in this thread. SEGV. */
-    
-    gdk_threads_leave ();
-
-    curl_easy_cleanup(curl);
-  }
-  free (n); // Malloced in one thread freed in another.
-  return NULL; 
-}
-
 int objectAddRow = -1;
 #define ADD_HEIGHT 32
 #define ADD_WIDTH 64
@@ -1039,7 +989,7 @@ void HitButton (int b)
   if (returnToMap) option = mapMode;
 }
 
-int firstDrag[2] = { -1, -1 }, lastDrag[2];
+int firstDrag[2] = { -1, -1 }, lastDrag[2], pressTime;
 
 #ifndef NOGTK
 struct wayPointStruct {
@@ -1130,16 +1080,72 @@ gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
       draw->allocation.width, draw->allocation.height);
     lastDrag[0] = lrint (event->x);
     lastDrag[1] = lrint (event->y);
-    if (firstDrag[0] < 0) memcpy (firstDrag, lastDrag, sizeof (firstDrag));
+    if (firstDrag[0] < 0) {
+      memcpy (firstDrag, lastDrag, sizeof (firstDrag));
+      pressTime = event->time;
+    }
   }
   return FALSE;
 }
+
+GtkWidget *bar;
+int UpdateProcessFunction(void *userData, double t, double d,
+                                          double /*ultotal*/, double /*ulnow*/)
+{
+  gdk_threads_enter ();
+  gtk_progress_set_value (GTK_PROGRESS (bar), d * 100.0 / t);
+  gdk_threads_leave ();
+  return 0;
+}
+
+void *UpdateMapThread (void *n)
+{
+  CURL *curl;
+  CURLcode res;
+  FILE *outfile;
+ 
+  curl = curl_easy_init();
+  if(curl) {
+    outfile = fopen("tmp.zip", "w");
+ 
+    // string zip ((string)(char*)n + ".zip", cmd ("unzip " + zip);
+    string url ("http://dev.openstreetmap.de/gosmore/" + (string)(char*)n + ".zip");
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str ());
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, outfile);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite); //DefaultCurlWrite);
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, fread); //my_read_func);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, UpdateProcessFunction);
+    curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, ""); // Bar);
+ 
+    res = curl_easy_perform(curl);
+ 
+    fclose(outfile);
+    system ("unzip tmp.zip"); //cmd.c_str ());
+    string dst ((string)(char*)n + ".pak");
+    rename ("gosmore.pak", dst.c_str ());
+    unlink ("tmp.zip");
+    gdk_threads_enter ();
+    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (bar), "Done");
+/*    clon ^= 0x80000000;
+    ChangePak (NULL);
+    clon ^= 0x80000000; 
+    Expose () I don't think it will work in this thread. SEGV. */
+    
+    gdk_threads_leave ();
+
+    curl_easy_cleanup(curl);
+  }
+  free (n); // Malloced in one thread freed in another.
+  return NULL; 
+}
+
 #endif
 
 int ListXY (int cnt, int isY)
 { // Returns either the x or the y for a certain list item
   int max = mapMode; //option == optionMode ? mapNode :
-  int w = 128, h = 80;
+  int w = 105, h = 80;
   while ((draw->allocation.width/w) * (draw->allocation.height/h - 1) > max) {
     w++;
     h++;
@@ -1150,7 +1156,12 @@ int ListXY (int cnt, int isY)
 
 int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
+  static int lastRelease = 0;
   int w = draw->allocation.width, h = draw->allocation.height;
+  int isDrag = firstDrag[0] >= 0 && (lastRelease + 100 > event->time ||
+                                     pressTime + 100 < event->time);
+      // Anything that isn't a short isolated click, is a drag.
+
   if (ButtonSize <= 0) ButtonSize = 4;
   if (objectAddRow >= 0) {
     int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
@@ -1175,7 +1186,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       MenuKey != 0 ? 0 : 1)) HitButton (b);
   #endif
   else if (option == optionMode) {
-    if (firstDrag[0] >= 0 && fabs (firstDrag[1] - event->y) > 15) {
+    if (isDrag) {
       listYOffset = max (0, listYOffset + (int)lrint (firstDrag[1]-event->y));
     }
     else {
@@ -1249,7 +1260,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     }
     #endif
     int perpixel = zoom / w, dx = event->x - w / 2, dy = h / 2 - event->y;
-    if (firstDrag[0] >= 0) {
+    if (isDrag) {
       dx = firstDrag[0] - event->x;
       dy = event->y - firstDrag[1];
     }
@@ -1287,6 +1298,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     }
   }
   firstDrag[0] = -1;
+  lastRelease = event->time;
   gtk_widget_queue_clear (draw); 
   return FALSE;
 }
@@ -2383,10 +2395,11 @@ int UserInterface (int argc, char *argv[],
   FastestRoute = 1;
   Background = 1;
   Vehicle = motorcarR;
-  string optFname = string (getenv ("HOME")) + "/.gosmore.opt";
+  char *h = getenv ("HOME");
+  string optFname = string (h ? h : ".") + "/.gosmore.opt";
   FILE *optFile = fopen (optFname.c_str(), "r+");
-  if (strcmp (pakfile, "nopak") == 0) {
-    string ddir (string (getenv ("HOME")) + "/.gosmore");
+  if (strcmp (pakfile, "nopak") == 0 && h) {
+    string ddir (string (h) + "/.gosmore");
     mkdir (ddir.c_str (), 0755); // Usually already exists
     chdir (ddir.c_str ());
     SerializeOptions (optFile, TRUE, NULL);
@@ -2679,8 +2692,8 @@ int main (int argc, char *argv[])
 
   return UserInterface (argc, argv, pakfile, stylefile);
 
-  // close the logfile if it has been opened
-  if (logFP(false)) fclose(logFP(false));
+  // close the logfile if it has been opened. No. Rather let libc to it.
+  //if (logFP(false)) fclose(logFP(false));
 }
 #else // NOGTK / WIN32 and WINCE Native;
 //-------------------------- WIN32 and WINCE Native ------------------
@@ -2841,30 +2854,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       // 193=0xC1=Zoom in, 194=0xC2=Zoom out, 198=0xC6=menu 197=0xC5=settings
       // 195=0xC3=V+, 196=0xC4=V- which is VK_APP1 to VK_APP6
       // and WM_CHAR:VK_BACK
-      InvalidateRect (hWnd, NULL, FALSE);
-      if (wParam == '0' || wParam == MenuKey) {
-        HitButton (0);
-        if (optionMode != searchMode) SipShowIM (SIPF_OFF);
-      }
-      if (wParam == '8') HitButton (1);
-      if (wParam == '9') HitButton (2);
-      if (ZoomInKeyNum <= option && option <= MenuKeyNum) {
-        #define o(en,min,max) if (option == en ## Num) en = wParam;
-        OPTIONS
-        #undef o
-        break;
-      }
-      if (wParam == (DWORD) ZoomInKey) zoom = zoom * 3 / 4;
-      if (wParam == (DWORD) ZoomOutKey) zoom = zoom * 4 / 3;
-
-      do { // Keep compiler happy
-        int oldCsum = clat + clon;
-        if (VK_DOWN == wParam) clat -= zoom / 2;
-        else if (VK_UP == wParam) clat += zoom / 2;
-        else if (VK_LEFT == wParam) clon -= zoom / 2;
-        else if (VK_RIGHT == wParam) clon += zoom / 2;
-        if (oldCsum != clat + clon) FollowGPSr = FALSE;
-      } while (0);
       break;
     case WM_USER + 1:
       /*
@@ -2877,6 +2866,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       if (FollowGPSr) InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_LBUTTONDOWN:
+      pressTime = GetTickCount ();
       SetCapture (hWnd);
       break;
     case WM_LBUTTONUP:
@@ -2889,6 +2879,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       GdkEventButton ev;
       if ((ev.y = HIWORD (lParam) - topBar) > 0) {
         ev.x = LOWORD (lParam);
+        ev.time = GetTickCount ();
         ev.button = 1;
         Click (NULL, &ev, NULL);
         if (optionMode != searchMode) SipShowIM (SIPF_OFF);
@@ -3255,13 +3246,40 @@ int WINAPI WinMain(
 
   MSG    msg;
   while (GetMessage (&msg, NULL, 0, 0)) {
+    int oldCsum = clat + clon, found = msg.message == WM_KEYDOWN;
     if (msg.hwnd == hwndEdit && msg.message == WM_LBUTTONDOWN) {
       option = option == searchMode ? mapMode : searchMode;
       SipShowIM (option == searchMode ? SIPF_ON : SIPF_OFF);
       InvalidateRect (mWnd, NULL, FALSE);
     } // I couldn't find an EN_ event that traps a click on the searchbar.
-    TranslateMessage (&msg);
-    DispatchMessage (&msg);
+    if (msg.message == WM_KEYDOWN) {
+      if ((msg.wParam == '0' && option != searchMode) || msg.wParam == MenuKey) {
+        HitButton (0);
+        if (optionMode != searchMode) SipShowIM (SIPF_OFF);
+      }
+      else if (msg.wParam == '8' && option != searchMode) HitButton (1);
+      else if (msg.wParam == '9' && option != searchMode) HitButton (2);
+
+      else if (option == ZoomInKeyNum) ZoomInKey = msg.wParam;
+      else if (option == ZoomOutKeyNum) ZoomOutKey = msg.wParam;
+      else if (option == MenuKeyNum) MenuKey = msg.wParam;
+      
+      else if (msg.wParam == (DWORD) ZoomInKey) zoom = zoom * 3 / 4;
+      else if (msg.wParam == (DWORD) ZoomOutKey) zoom = zoom * 4 / 3;
+
+      else if (VK_DOWN == msg.wParam) clat -= zoom / 2;
+      else if (VK_UP == msg.wParam) clat += zoom / 2;
+      else if (VK_LEFT == msg.wParam) clon -= zoom / 2;
+      else if (VK_RIGHT == msg.wParam) clon += zoom / 2;
+      else found = FALSE;
+      
+      if (found) InvalidateRect (mWnd, NULL, FALSE);
+      if (oldCsum != clat + clon) FollowGPSr = FALSE;
+    }
+    if (!found) {
+      TranslateMessage (&msg);
+      DispatchMessage (&msg);
+    }
   }
   guiDone = TRUE;
 

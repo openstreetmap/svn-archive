@@ -56,6 +56,9 @@ name=icons
 
 # Add PD Icons from openclipart.org
 cp -a [^i0]*.png iconset.png $ICONDIR/classic.big
+for n in [^i0]*.png iconset.png
+do convert $n -resize 32x32\> $ICONDIR/classic.small/$n
+done
 
 # list all icons we want, sorting them by height then width
 find $ICONDIR -iname '*.png' \

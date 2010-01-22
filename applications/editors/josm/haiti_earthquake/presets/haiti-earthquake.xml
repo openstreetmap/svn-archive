@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-This is a collection of presets to be used in the OSM Haiti project after the
-haiti earthquake.
-
-First version posted by user Lübeck on the wiki 
-
-See http://wiki.openstreetmap.org/wiki/WikiProject_Haiti for further information.
-
- -->
+	<!--
+		This is a collection of presets to be used in the OSM Haiti project
+		after the haiti earthquake. First version posted by user Lübeck on the
+		wiki See http://wiki.openstreetmap.org/wiki/WikiProject_Haiti for
+		further information.
+	-->
 <annotations>
 	<group name="earthquake" icon="earthquake.png">
 
@@ -38,19 +35,19 @@ See http://wiki.openstreetmap.org/wiki/WikiProject_Haiti for further information
 			<combo key="humanitarian:obstacle:operationalstatusquality"
 				text="quality of operation Status Info" values="reported,confirmed,unspecified" />
 		</item>
-		<item name="health Facilities" icon="eq_hospital.png">
+		<item name="Health Facilities" icon="eq_hospital.png">
 			<text key="name" text="Name" />
-			<label text="edit health hacilities" />
+			<label text="Edit health facilities" />
 			<combo key="type" text="Type" values="hospital,field_hospital" />
 			<combo key="humanitarian:healthfacility:operationalstatus"
 				text="Operational Status" values="open,restricted,closed,unspecified" />
 			<combo key="humanitarian:healthfacility:operationalstatusquality"
-				text="quality of operation Status Info" values="reported,confirmed,unspecified" />
+				text="Quality of Operation Status Info" values="reported,confirmed,unspecified" />
 		</item>
 
 		<separator />
 
-		<item name="building-collapsed" icon="eq_building_collapsed.png">
+		<item name="Collapsed Building" icon="eq_building_collapsed.png">
 			<link
 				href="http://wiki.openstreetmap.org/wiki/WikiProject_Haiti/MappingCoordination" />
 			<label text="edit collapsed building" />
@@ -58,7 +55,7 @@ See http://wiki.openstreetmap.org/wiki/WikiProject_Haiti for further information
 			<key key="building" value="collapsed" />
 		</item>
 
-		<item name="spontaneous_camp" icon="eq_camping.png">
+		<item name="Spontaneous Camp" icon="eq_camping.png">
 			<link
 				href="http://wiki.openstreetmap.org/wiki/WikiProject_Haiti/MappingCoordination" />
 			<label text="edit spontaneous_camp" />

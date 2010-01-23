@@ -1286,7 +1286,7 @@ ndType *LFollow (ndType *nd, ndType *ndItr, wayType *w, int forward)
          // If there is a 3rd object there,
          (nd[-1].other[0] == 0 && nd[-1].other[0] == 0)) &&
         // then it must be a node
-        nd + 1 != ndItr && (nd[1].other[0] == 0 || nd[1].other[1] == 0)
+        nd + 1 != ndItr && nd[1].other[!forward ? 1 : 0] == 0
         // Must not loop back to start and must not be T juntion
         && StyleNr (w) == StyleNr ((wayType*)(data + nd[1].wayPtr))) nd++;
   }
@@ -1295,7 +1295,7 @@ ndType *LFollow (ndType *nd, ndType *ndItr, wayType *w, int forward)
             // If there is a 3rd object there,
             (nd[-2].other[0] == 0 && nd[-2].other[0] == 0)) &&
             // then it must be a node
-           nd - 1 != ndItr && (nd[-1].other[0] == 0 || nd[-1].other[1] == 0)
+           nd - 1 != ndItr && nd[-1].other[!forward ? 1 : 0] == 0
            // Must not loop back to start and must not be T juntion
            && StyleNr (w) == StyleNr ((wayType*)(data + nd[-1].wayPtr))) nd--;
   // If nd ends at a point where exactly two ways meet and they have the same
@@ -1601,9 +1601,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
           else if (strcmp (Role (m), "outer") == 0) {
             outer[nd.id] = deque<int> ();
             outer[nd.id].insert (outer[nd.id].end (), wayNd.begin (), wayNd.end ());
-            //printf ("sss %d\n", outer[nd.id].size ());
           }
-          if (strcmp (Role (m), "outer") == 0) printf ("%d\n", nd.id);
 	}
 	
 	if (wStyle == elemCnt) wayNd.clear ();
@@ -1934,8 +1932,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       int length = 0;
       ndType *end;
       for (end = ndItr; end->other[1]; end = LFollow (end, ndItr, way, 1)) {
-        length += isqrt (Sqr (end->lat - end[end->other[1]].lat) +
-                         Sqr (end->lon - end[end->other[1]].lon));
+        length += lrint (sqrt (Sqr ((double)(end->lat - end[end->other[1]].lat)) +
+                               Sqr ((double)(end->lon - end[end->other[1]].lon))));
         if (prev != ndItr && end->wayPtr < ndItr->wayPtr) break;
         // If it is circular and we didn't start at the way with the lowest
         // wayPtr, then we abort
@@ -2125,7 +2123,7 @@ int SortRelations (void)
   for (unsigned i = 0; i < member.size (); i++) {
     fprintf (idx, "%c%d%c%s%c", member[i].type, member[i].ref, '\0', member[i].role, '\0');
     for (const char *ptr = member[i].tags; *ptr; ptr += strcspn (ptr, "\n") + 1) {
-      fprintf (idx, "%.*s%c", strcspn (ptr, "\n"), ptr, '\0');
+      fprintf (idx, "%.*s%c", (int) strcspn (ptr, "\n"), ptr, '\0');
     }
     fprintf (idx, "%c", '\0');
   }

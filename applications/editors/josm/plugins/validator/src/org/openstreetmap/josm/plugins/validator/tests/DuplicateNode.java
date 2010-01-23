@@ -37,10 +37,10 @@ public class DuplicateNode extends Test{
     protected static int DUPLICATE_NODE = 1;
 
     /** The map of potential duplicates.
-     * 
+     *
      * If there is exactly one node for a given pos, the map includes a pair <pos, Node>.
-     * If there are multiple nodes for a given pos, the map includes a pair 
-     * <pos, NodesByEqualTagsMap>  
+     * If there are multiple nodes for a given pos, the map includes a pair
+     * <pos, NodesByEqualTagsMap>
      */
     Map<LatLon,Object> potentialDuplicates;
 
@@ -58,19 +58,19 @@ public class DuplicateNode extends Test{
     	super.startTest(monitor);
         potentialDuplicates = new HashMap<LatLon, Object>();
     }
- 
-   
+
+
 	@Override
-	public void endTest() {	
+	public void endTest() {
 		for (Entry<LatLon, Object> entry: potentialDuplicates.entrySet()) {
 			Object v = entry.getValue();
 			if (v instanceof Node) {
 				// just one node at this position. Nothing to report as
 				// error
 				continue;
-			}			
-			
-			// multiple nodes at the same position -> report errors 
+			}
+
+			// multiple nodes at the same position -> report errors
 			//
 			NodesByEqualTagsMap map = (NodesByEqualTagsMap)v;
 			errors.addAll(map.buildTestErrors(this));
@@ -83,10 +83,10 @@ public class DuplicateNode extends Test{
 	public void visit(Node n) {
 		if (n.isUsable()) {
 			LatLon rounded = n.getCoor().getRoundedToOsmPrecision();
-			if (potentialDuplicates.get(rounded) == null) {		
+			if (potentialDuplicates.get(rounded) == null) {
 				// in most cases there is just one node at a given position. We
-				// avoid to create an extra object and add remember the node 
-				// itself at this position 
+				// avoid to create an extra object and add remember the node
+				// itself at this position
 				potentialDuplicates.put(rounded, n);
 			} else if (potentialDuplicates.get(rounded) instanceof Node) {
 				// we have an additional node at the same position. Create an extra
@@ -98,11 +98,11 @@ public class DuplicateNode extends Test{
 				map.add(n);
 				potentialDuplicates.put(rounded, map);
 			} else if (potentialDuplicates.get(rounded) instanceof NodesByEqualTagsMap) {
-				// we have multiple nodes at the same position. 
-				// 
+				// we have multiple nodes at the same position.
+				//
 				NodesByEqualTagsMap map = (NodesByEqualTagsMap)potentialDuplicates.get(rounded);
 				map.add(n);
-			}			
+			}
 		}
 	}
 
@@ -115,7 +115,19 @@ public class DuplicateNode extends Test{
     {
         Collection<OsmPrimitive> sel = new LinkedList<OsmPrimitive>(testError.getPrimitives());
         LinkedHashSet<Node> nodes = new LinkedHashSet<Node>(OsmPrimitive.getFilteredList(sel, Node.class));
-        Node target = MergeNodesAction.selectTargetNode(nodes);
+
+        // Use first existing node or first node if all nodes are new
+        Node target = null;
+        for (Node n: nodes) {
+            if (!n.isNew()) {
+                target = n;
+                break;
+            }
+        }
+        if (target == null) {
+            nodes.iterator().next();
+        }
+
         if(checkAndConfirmOutlyingDeletes(nodes))
             return MergeNodesAction.mergeNodes(Main.main.getEditLayer(), nodes, target);
 
@@ -156,45 +168,45 @@ public class DuplicateNode extends Test{
         }
         return true;
     }
-    
+
     static private class NodesByEqualTagsMap {
     	/**
     	 * a bag of primitives with the same position. The bag key is represented
     	 * by the tag set of the primitive. This allows for easily find nodes at
-    	 * the same position with the same tag sets later. 
+    	 * the same position with the same tag sets later.
     	 */
     	private Bag<Map<String,String>, OsmPrimitive> bag;
 
     	public NodesByEqualTagsMap() {
     		bag = new Bag<Map<String,String>, OsmPrimitive>();
     	}
-    	
+
     	public void add(Node n) {
     		bag.add(n.getKeys(), n);
     	}
-    	    	
+
     	public List<TestError> buildTestErrors(Test parentTest) {
     		List<TestError> errors = new ArrayList<TestError>();
     		// check whether we have multiple nodes at the same position with
-    		// the same tag set 
-    		//    		
+    		// the same tag set
+    		//
     		for (Iterator<Map<String,String>> it = bag.keySet().iterator(); it.hasNext(); ) {
     			Map<String,String> tagSet = it.next();
     			if (bag.get(tagSet).size() > 1) {
     				errors.add(new TestError(
-    						parentTest, 
+    						parentTest,
     						Severity.ERROR,
-    						tr("Duplicated nodes"), 
-    						DUPLICATE_NODE, 
+    						tr("Duplicated nodes"),
+    						DUPLICATE_NODE,
     						bag.get(tagSet)
     				));
     				it.remove();
     			}
-    			
+
     		}
-    		
+
     		// check whether we have multiple nodes at the same position with
-    		// differing tag sets 
+    		// differing tag sets
     		//
     		if (!bag.isEmpty()) {
     			List<OsmPrimitive> duplicates = new ArrayList<OsmPrimitive>();
@@ -203,7 +215,7 @@ public class DuplicateNode extends Test{
     			}
     			if (duplicates.size() > 1) {
 	    			errors.add(new TestError(
-	    					parentTest, 
+	    					parentTest,
 	    					Severity.WARNING,
 							tr("Nodes at same position"),
 							DUPLICATE_NODE,
@@ -212,6 +224,6 @@ public class DuplicateNode extends Test{
     			}
     		}
     		return errors;
-    	}    	
+    	}
     }
 }

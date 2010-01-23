@@ -1,4 +1,8 @@
 
+0.3, 2010-01-23
+* extended presets with upcoming humanitarian tags (contributed by user Lübeck)
+* additional icons (contributed by user Lübeck)
+
 0.2, 2010-01-22
 * new installation directory
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<!--
-		This is a collection of presets to be used in the OSM Haiti project
-		after the haiti earthquake. First version posted by user Lübeck on the
-		wiki See http://wiki.openstreetmap.org/wiki/WikiProject_Haiti for
-		further information.
-	-->
+<!--
+	This is a collection of presets to be used in the OSM Haiti project
+	after the haiti earthquake. First version posted by user Lübeck on the
+	wiki See http://wiki.openstreetmap.org/wiki/WikiProject_Haiti for
+	further information.
+-->
 <annotations>
 	<group name="earthquake" icon="earthquake.png">
 
@@ -26,7 +26,7 @@
 			<combo key="humanitarian:road:operationalstatusquality" text="quality of operation status info"
 				values="reported,confirmed,unspecified" />
 		</item>
-		<item name="Transport Obstacles">
+		<item name="Transport Obstacles" icon="eq_checkpoint.png">
 			<label text="edit transport obstacles" />
 			<combo key="type" text="Type"
 				values="bridge_damage,road_damage,landslide_mudslide,debris,checkpoint,roadblock,unspecified" />
@@ -37,7 +37,7 @@
 		</item>
 		<item name="Health Facilities" icon="eq_hospital.png">
 			<text key="name" text="Name" />
-			<label text="Edit health facilities" />
+			<label text="edit health facilities" />
 			<combo key="type" text="Type" values="hospital,field_hospital" />
 			<combo key="humanitarian:healthfacility:operationalstatus"
 				text="Operational Status" values="open,restricted,closed,unspecified" />
@@ -45,9 +45,63 @@
 				text="Quality of Operation Status Info" values="reported,confirmed,unspecified" />
 		</item>
 
+		<item name="Aerodromes" icon="eq_airport.png">
+			<text key="name" text="Name" />
+			<combo key="type" text="Type"
+				values="Airfield,Airstrip,Fixed HLZ,Improvised HLZ,Unspecified" />
+			<combo key="Humanitarian:Aerodromes:OperationalStatus" text="Operational Status"
+				values="Open,Restricted,Closed,Unspecified" />
+			<combo key="Humanitarian:Aerodromes:OperationalStatusQuality"
+				text="Quality of Op. Status Info" values="Reported,Confirmed,Unspecified" />
+			<combo key="Humanitarian:Aerodromes:HumanitarianUse" text="Humanitarian Use of Aerodrome"
+				values="Primary Hub,Secondary Hub,Final Delivery Point,Operationally Significant Location,Unspecified" />
+			<text key="Humanitarian:Aerodromes:PracticabilityDescription"
+				text="Description of aerodrome practicability (largest aircraft landable)" />
+			<combo key="Humanitarian:Aerodromes:TakeOffLandingType" text="Take Off and Landing Type"
+				values="Runway,Heli Landing Zone" />
+			<text key="Humanitarian:Aerodromes:TakeOffLandingLength" text="Length (m) of runway or HLZ" />
+			<text key="Humanitarian:Aerodromes:TakeOffLandingWidth" text="Width (m) of runway or HLZ" />
+			<combo key="Humanitarian:Aerodromes:HLZType" text="For Heli Landing Zone, type of HLZ"
+				values="Purpose-built,Sports-field park,Agricultural field,Car park,Rooftop,Open land,Unspecified" />
+			<text key="Humanitarian:Aerodromes:CargoHandling" text="Description of Cargo Handling Capability" />
+		</item>
+		<item name="Warehouse Compounds" icon="eq_warehouse.png">
+			<text key="name" text="Name" />
+			<combo key="type" text="Type"
+				values="Airfield,Airstrip,Fixed HLZ,Improvised HLZ,Unspecified" />
+			<combo key="Humanitarian:WarehouseCompounds:OperationalStatus"
+				text="Operational Status" values="Open,Restricted,Closed,Unspecified" />
+			<combo key="Humanitarian:WarehouseCompounds:OperationalStatusQuality"
+				text="Quality of Op. Status Info" values="Reported,Confirmed,Unspecified" />
+			<combo key="Humanitarian:WarehouseCompounds:HumanitarianUse"
+				text="Humanitarian Use of Aerodrome"
+				values="Primary Hub,Secondary Hub,Final Delivery Point,Operationally Significant Location,Unspecified" />
+			<text key="Humanitarian:WarehouseCompounds:StorageCapacityM3"
+				text="Storage Capacity (cubic meters)" />
+			<text key="Humanitarian:WarehouseCompounds:StorageCapacityM2"
+				text="Storage Capacity (square meters)" />
+			<text key="Humanitarian:WarehouseCompounds:StorageCapacityMT"
+				text="Storage Capacity (metric tons)" />
+			<text key="Humanitarian:WarehouseCompounds:CargoHandling" text="Description of Cargo Handling Capability" />
+			<check key="Humanitarian:WarehouseCompounds:HasTempStorage"
+				text="Facility has temperature controlled storage?" default="off" />
+		</item>
+		<item name="Fuel Supply Points" icon="eq_fuel.png">
+			<text key="name" text="Name" />
+			<combo key="Humanitarian:FuelSupplyPoints:OperationalStatus"
+				text="Operational Status" values="Open,Restricted,Closed,Unspecified" />
+			<combo key="Humanitarian:FuelSupplyPoints:OperationalStatusQuality"
+				text="Quality of Op. Status Info" values="Reported,Confirmed,Unspecified" />
+			<text key="Humanitarian:FuelSupplyPoints:FuelStorageCapacity"
+				text="Fuel Storage Capacity (specify units)" />
+			<combo key="Humanitarian:FuelSupplyPoints:FuelStorageType"
+				text="Drums,Soft-Storage Bladder,Mobile Storage,Fixed Storage,Multiple Types,Unspecified" />
+			<text key="Humanitarian:FuelSupplyPoints:FuelStorageDesc" text="Description of Fuel Storage" />
+		</item>
+
 		<separator />
 
-		<item name="Collapsed Building" icon="eq_building_collapsed.png">
+		<item name="Collapsed Buildings" icon="eq_building_collapsed.png">
 			<link
 				href="http://wiki.openstreetmap.org/wiki/WikiProject_Haiti/MappingCoordination" />
 			<label text="edit collapsed building" />

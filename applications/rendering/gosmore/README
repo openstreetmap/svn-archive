@@ -42,5 +42,12 @@ licensed under the Gnu Public License v2 or later.
 ConvertUTF.c and ConvertUTF.h comes under a BSD-style license. They are
 only used when builting the Windows CE executable.
 
+lowres.osm.bz2 was derived from the geonames database.
+
+countries.osm comes from openstreetmap.org
+
+The png files comes openclipart.org and other public domain sources.
+
 Everything else are placed by in the public domain by its authors.
-Written by Nic Roets with contribution(s) from Dave Hansen.
+Written by Nic Roets with contribution(s) from Dave Hansen, David Dean and
+others.

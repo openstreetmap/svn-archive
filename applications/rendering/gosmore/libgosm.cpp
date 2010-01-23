@@ -1036,6 +1036,36 @@ struct k2vType {
   } // For std:map the operator[] is not const, so we wrap it in a new class
 };
 
+typedef char *membershipType;
+
+inline char *Role (membershipType rt)
+{
+  return !rt ? NULL : rt + strlen (rt) + 1;
+}
+
+char *Find (membershipType rt, const char *key)
+{
+  if (!rt) return NULL;
+  rt += strlen (rt) + 1; // id
+  rt += strlen (rt) + 1; // role
+  while (*rt != '\0' && strcmp (key, rt) != 0) {
+    rt += strlen (rt) + 1; // id
+    rt += strlen (rt) + 1; // role    
+  }
+  return *rt == '\0' ? NULL : rt + strlen (rt) + 1;
+}
+
+membershipType Next (membershipType rt)
+{
+  if (!rt) return NULL;
+  membershipType old = rt;
+  while (*rt != '\0') {
+    rt += strlen (rt) + 1; // id or k
+    rt += strlen (rt) + 1; // role or v
+  }
+  return strcmp (rt + 1, old) == 0 ? rt + 1 : NULL; // Compare ids
+}
+
 //----------------------------[ Osm2Gosmore ]-----------------------------
 // This function translates the complicated and ever changing language of
 // OSM into the superfast Gosmore language.
@@ -1053,6 +1083,11 @@ struct k2vType {
 // like a city. Or you can adjust the average speed of unpaved ways based on
 // an average annual rainfall map.
 //
+// You are also supplied with the relations table (rStart and rEnd). It has
+// one entry for each relation that the the object is a member of. Use
+// Next () to iterate through them, Role () to determine how it affects this
+// way and Find () to examine the it's tags.
+//
 // You must return a list of strings which will be concatenated into the
 // storage of the object and indexed for searching purposes. Normally each
 // string will occupy one line (end in '\n'). For
@@ -1067,12 +1102,17 @@ struct k2vType {
 // { "city:", "Paris\n" } will be indexed as "Paris" and "city:Paris".
 //
 // NOTE: Gosmore currently requires that you return the same strings during
-// both passes of the rebuild, i.e. the strings cannot depend on w.c{lat,lon}
+// both passes of the rebuild, i.e. the strings cannot depend on w.clat or clon
 
-deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s,
-  int isNode, int isRelation)
+deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
+  styleStruct &s, int isNode, int isRelation, membershipType membership)
 {
   deque<string> result;
+  
+/*  char idStr[12]; // Add way id so that it appear in cgi-bin output
+  sprintf (idStr, "%d", idStr);
+  result.push_front (string (idStr) + '\n'); */
+  
   // First add name and 'ref' to the front so that they are displayed
   if (k2v["name"]) {
     result.push_front (string (k2v["name"]) + "\n");
@@ -1080,6 +1120,25 @@ deque<string> Osm2Gosmore (k2vType &k2v, wayType &w, styleStruct &s,
       result.push_back ("city:" + string (k2v["name"]) + "\n");
     }
   }
+  else if (k2v["left:district"]) {
+    result.push_front (string ("\n") + k2v["left:district"] + '\n');
+  }
+  else if (k2v["right:district"]) {
+    result.push_front (string ("\n") + k2v["right:district"] + '\n');
+  }
+  else if (k2v["left:municipality"]) {
+    result.push_front (string ("\n") + k2v["left:municipality"] + '\n');
+  }
+  else if (k2v["right:municipality"]) {
+    result.push_front (string ("\n") + k2v["right:municipality"] + '\n');
+  }
+  else {
+    membershipType m; // Could be something like a boundary
+    for (m = membership; m && !Find (m, "name"); m = Next (m)) {}
+    if (m) result.push_front (string ("\n") + Find (m, "name") + '\n');
+    // Put name on a new line so that it will not be indexed.
+  }
+  
   if (k2v["ref"]) result.push_back (string (k2v["ref"]) + "\n");
   map<const char *, const char *, ltstr>::iterator i = k2v.m.begin ();
   // Go through all the tags and add all the interesting things to 'result'
@@ -1225,7 +1284,7 @@ ndType *LFollow (ndType *nd, ndType *ndItr, wayType *w, int forward)
     if ((nd->lat != nd[2].lat || nd->lon != nd[2].lon) &&
         (nd->lat != nd[-1].lat || nd->lon != nd[-1].lon ||
          // If there is a 3rd object there,
-         nd[-1].other[0] == 0 && nd[-1].other[0] == 0) &&
+         (nd[-1].other[0] == 0 && nd[-1].other[0] == 0)) &&
         // then it must be a node
         nd + 1 != ndItr && (nd[1].other[0] == 0 || nd[1].other[1] == 0)
         // Must not loop back to start and must not be T juntion
@@ -1234,7 +1293,7 @@ ndType *LFollow (ndType *nd, ndType *ndItr, wayType *w, int forward)
   else if (nd->lat == nd[-1].lat && nd->lon == nd[-1].lon &&
            (nd->lat != nd[-2].lat || nd->lon != nd[-2].lon ||
             // If there is a 3rd object there,
-            nd[-2].other[0] == 0 && nd[-2].other[0] == 0) &&
+            (nd[-2].other[0] == 0 && nd[-2].other[0] == 0)) &&
             // then it must be a node
            nd - 1 != ndItr && (nd[-1].other[0] == 0 || nd[-1].other[1] == 0)
            // Must not loop back to start and must not be T juntion
@@ -1316,7 +1375,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     wayType *w; // Pointer to the first version in the master file.
     int off;
   } *wayFseek = NULL;
-  int lowzList[1000], lowzListCnt = 0, wStyle = elemCnt, ref = 0, role = 0;
+  int wStyle = elemCnt, ref = 0, role = 0;
   int member[2], relationType = 0, onewayReverse = 0;
   vector<int> wayMember, cycleNet;
   map<int,int> wayId;
@@ -1360,10 +1419,20 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     fseek (pak, wayFseek->off, SEEK_SET);
   }
   
+  char *relationTable;
+  FILE *relationTableFile = fopen ("relations.tbl", "r");
+  if (!relationTableFile || fseek (relationTableFile, 0, SEEK_END) != 0 ||
+      (relationTable = (char*) mmap (NULL, ftell (relationTableFile), PROT_READ,
+        MAP_SHARED, fileno (relationTableFile), 0)) == (char*)-1) {
+    relationTable = "z1"; // Stopper
+    fprintf (stderr, "Processing without relations table\n");
+  }
+  
   char *tag_k = NULL; //, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
   //char *nameTag = NULL;
   k2vType k2v;
   deque<int> wayNd;
+  map<int, deque<int> > outer;
   REBUILDWATCH (while (xmlTextReaderRead (xml))) {
     char *name = (char *) BAD_CAST xmlTextReaderName (xml);
     //xmlChar *value = xmlTextReaderValue (xml); // always empty
@@ -1384,11 +1453,11 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 #define K_IS(x) (stricmp (tag_k, x) == 0)
 #define V_IS(x) (stricmp (avalue, x) == 0)
 
-	if (stricmp (aname, "v") == 0) {
+	if (stricmp (aname, "v") == 0) { /* TODO : Move to Osm2Gosmore
 	  if (K_IS ("route") && V_IS ("bicycle")) {
 	    cycleNet.insert (cycleNet.end (), wayMember.begin (), 
 			     wayMember.end ());
-	  }
+	  }*/
 	  if ((!wayFseek || wayFseek->off) &&
 	      (K_IS ("lcn_ref") || K_IS ("rcn_ref") || K_IS ("ncn_ref"))) {
 	    cycleNet.push_back (ftell (pak));
@@ -1441,9 +1510,10 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	
 	xmlFree (aname);
       } /* While it's an attribute */
-      if (relationType == 'w' && stricmp (name, "member") == 0) {
-	map<int,int>::iterator refId = wayId.find (ref);
-	if (refId != wayId.end ()) wayMember.push_back (refId->second);
+      if (/*relationType == 'w' && */ stricmp (name, "member") == 0) {
+	//map<int,int>::iterator refId = wayId.find (ref);
+	//if (refId != wayId.end ()) wayMember.push_back (refId->second);
+	wayMember.push_back (ref);
       }
       if (!wayFseek || wayFseek->off) {
 	if (stricmp (name, "member") == 0 && role != 'v') {
@@ -1461,6 +1531,30 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_END_ELEMENT) {
       int nameIsNode = stricmp (name, "node") == 0;
       int nameIsRelation = stricmp (name, "relation") == 0;
+      if (nameIsRelation && k2v["type"] &&
+          strcmp (k2v["type"], "multipolygon") == 0) {
+        while (!wayMember.empty ()) {
+          int idx;
+          for (idx = wayMember.size () - 1; !outer[wayMember[idx]].empty () ; idx--) {
+            deque<int> *o = &outer[wayMember[idx]];
+            if (wayNd.empty () || wayNd.back () == o->front () || idx == 0) {
+              deque<int>::iterator b = o->begin ();
+              wayNd.insert (wayNd.end (), wayNd.back () != o->front ()
+                               ?  b : ++b, o->end ());
+              break;
+            }
+            if (wayNd.back () == o->back ()) {
+              deque<int>::iterator e = o->end ();
+              wayNd.insert (wayNd.end (), --e, o->begin ());
+              break;
+            }
+          }
+          //printf ("iiiiiiiii %d %d %d %u %s %s\n", idx, nd.id, wayMember[idx],
+          //  outer[wayMember[idx]].size (), eMap[wStyle].style_k, eMap[wStyle].style_v);
+          wayMember[idx] = wayMember.back ();
+          wayMember.pop_back ();
+        }
+      }
       if (nameIsRelation) wayMember.clear ();
       if (stricmp (name, "way") == 0 || nameIsNode || nameIsRelation) {
 	if (!nameIsRelation && !nameIsNode) {
@@ -1483,6 +1577,35 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  xmlFree (nameTag);
 	  nameTag = NULL;
 	}*/
+        while (*relationTable < (isNode ? 'n' : nameIsRelation ? 'x' : 'w') ||
+            (*relationTable == (isNode ? 'n' : nameIsRelation ? 'x' : 'w') &&
+             atoi (relationTable + 1) < nd.id)) {
+          do {
+            relationTable += strlen (relationTable) + 1;
+            relationTable += strlen (relationTable) + 1;
+          } while (*relationTable++ != '\0');
+        }
+        membershipType membership =
+          *relationTable == (isNode ? 'n' : nameIsRelation ? 'x' : 'w') &&
+	      atoi (relationTable + 1) == nd.id ? relationTable : NULL;
+
+        for (membershipType m = membership; m; m = Next (m)) {
+          if (strcmp (Role (m), "inner") == 0 && wStyle == elemCnt) {
+            for (wStyle = 0; wStyle < elemCnt; wStyle++) {
+              if (strcmp (eMap[wStyle].style_k, "natural") == 0 &&
+                  strcmp (eMap[wStyle].style_v, "glacier") == 0) break;
+              // Rendering does not support holes, so we just render something
+              // close to the background colour
+            }
+          }
+          else if (strcmp (Role (m), "outer") == 0) {
+            outer[nd.id] = deque<int> ();
+            outer[nd.id].insert (outer[nd.id].end (), wayNd.begin (), wayNd.end ());
+            //printf ("sss %d\n", outer[nd.id].size ());
+          }
+          if (strcmp (Role (m), "outer") == 0) printf ("%d\n", nd.id);
+	}
+	
 	if (wStyle == elemCnt) wayNd.clear ();
 	else {
 	  s[0].other = -2;
@@ -1519,8 +1642,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    w.dlat = wayFseek->w->dlat;
 	    w.dlon = wayFseek->w->dlon;
           }
-	  deque<string> tags = Osm2Gosmore (k2v, w, srec[styleCnt], isNode,
-	    nameIsRelation);
+	  deque<string> tags = Osm2Gosmore (nd.id, k2v, w, srec[styleCnt], isNode,
+	    nameIsRelation, membership);
 	  while (memcmp (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]))
 	         != 0) wStyle++;
           w.bits += wStyle;
@@ -1866,7 +1989,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   REBUILDWATCH (qsort (&lseg[0], lseg.size () / 2, sizeof (lseg[0]) * 2, 
     (int (*)(const void *, const void *))HalfSegCmp));
   int *lpair = new int[lowzOther - FIRST_LOWZ_OTHER];
-  for (int i = 0; i < lseg.size (); i++) {
+  for (unsigned i = 0; i < lseg.size (); i++) {
     if (!(i & 1)) {
       while (bucket < Hash (lseg[i].lon, lseg[i].lat, TRUE)) {
         hashTable[++bucket] = i / 2 + hashTable[bucketsMin1 + 1];
@@ -1882,7 +2005,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     lseg[lpair[i + 1]].other = lpair[i];
   }
   delete lpair;
-  for (int i = 0; i < lseg.size (); i += 2) {
+  for (unsigned i = 0; i < lseg.size (); i += 2) {
     ndWrite.lat = lseg[i].lat;
     ndWrite.lon = lseg[i].lon;
     ndWrite.wayPtr = lseg[i].wayPtr;
@@ -1929,6 +2052,84 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   fclose (pak);
   free (hashTable);
 
+  return 0;
+}
+
+/*==================================== SortRelations ======================================*/
+int XmlTee (void * /*context*/, char *buf, int len)
+{
+  int n = fread (buf, 1, len, stdin);
+  fwrite (buf, 1, n, stdout);
+  return n; // == 0 ? -1 : n;
+}
+
+int XmlClose (void */*context*/) { return 0; }
+
+struct memberType {
+  int ref, type;
+  const char *role, *tags;
+};
+
+int MemberCmp (const memberType *a, const memberType *b)
+{
+  return a->type == b->type ? a->ref - b->ref : a->type - b->type;
+}
+
+int SortRelations (void)
+{
+  xmlTextReaderPtr xml = xmlReaderForIO (XmlTee, XmlClose, NULL, "", NULL, 0);
+    //xmlReaderForFd (STDIN_FILENO, "", NULL, 0);
+  vector<memberType> member;
+  unsigned rStart = 0, rel = FALSE;
+  string *s = new string ();
+  while (xmlTextReaderRead (xml)) {
+    if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_ELEMENT) {
+      char *name = (char *) BAD_CAST xmlTextReaderName (xml);
+      rel = rel || stricmp (name, "relation") == 0;
+      if (stricmp (name, "relation") == 0 && rStart < member.size ()) {
+        while (rStart < member.size ()) member[rStart++].tags = s->c_str ();
+        s = new string (); // It leaks memory, but it cannot be freed until
+                           // moments before exit.
+      }
+      if (rel && (stricmp (name, "member") == 0 || stricmp (name, "tag") == 0)) {
+        if (name[0] == 'm') member.push_back (memberType ());
+        while (xmlTextReaderMoveToNextAttribute (xml)) {
+          char *aname = (char *) BAD_CAST xmlTextReaderName (xml);  
+          char *avalue = (char *) BAD_CAST xmlTextReaderValue (xml);
+          if (stricmp (aname, "type") == 0) {
+            member.back ().type = avalue[0] == 'r' ? 'x' : avalue[0];
+          }
+          else if (stricmp (aname, "ref") == 0) member.back ().ref = atoi (avalue);
+          else if (name[0] == 't' && stricmp (aname, "k") == 0) {
+            *s += avalue;
+            *s += '\n';
+          } // I assume that "<tag" implies "k=..." followed by "v=..."
+          else if (name[0] == 't' && stricmp (aname, "v") == 0) {
+            *s += avalue;
+            *s += '\n';
+          }
+          
+          if (stricmp (aname, "role") == 0) member.back ().role = avalue;
+          else xmlFree (avalue);
+          
+          xmlFree (aname);
+        }
+      }
+      xmlFree (name);
+    }
+  }
+  while (rStart < member.size ()) member[rStart++].tags = s->c_str ();
+  qsort (&member[0], member.size (), sizeof (member[0]),
+         (int (*)(const void *, const void *)) MemberCmp);
+  FILE *idx = fopen ("relations.tbl", "w");
+  for (unsigned i = 0; i < member.size (); i++) {
+    fprintf (idx, "%c%d%c%s%c", member[i].type, member[i].ref, '\0', member[i].role, '\0');
+    for (const char *ptr = member[i].tags; *ptr; ptr += strcspn (ptr, "\n") + 1) {
+      fprintf (idx, "%.*s%c", strcspn (ptr, "\n"), ptr, '\0');
+    }
+    fprintf (idx, "%c", '\0');
+  }
+  fprintf (idx, "z1%c", '\0'); // Insert stopper
   return 0;
 }
 

@@ -1089,7 +1089,7 @@ gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
 }
 
 GtkWidget *bar;
-int UpdateProcessFunction(void *userData, double t, double d,
+int UpdateProcessFunction(void */*userData*/, double t, double d,
                                           double /*ultotal*/, double /*ulnow*/)
 {
   gdk_threads_enter ();
@@ -1158,8 +1158,8 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
   static int lastRelease = 0;
   int w = draw->allocation.width, h = draw->allocation.height;
-  int isDrag = firstDrag[0] >= 0 && (lastRelease + 100 > event->time ||
-                                     pressTime + 100 < event->time);
+  int isDrag = firstDrag[0] >= 0 && (lastRelease + 100 > (int) event->time ||
+                                     pressTime + 100 < (int) event->time);
       // Anything that isn't a short isolated click, is a drag.
 
   if (ButtonSize <= 0) ButtonSize = 4;
@@ -1206,7 +1206,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
         while (zl < 32 && (zoom >> zl)) zl++;
         sprintf (lstr,
          option == ViewOSMNum ? "%sopenstreetmap.org/?lat=%.5lf&lon=%.5lf&zoom=%d'" :
-         option == EditInPotlatch ? "%sopenstreetmap.org/edit?lat=%.5lf&lon=%.5lf&zoom=%d'" :
+         option == EditInPotlatchNum ? "%sopenstreetmap.org/edit?lat=%.5lf&lon=%.5lf&zoom=%d'" :
          "%smaps.google.com/?ll=%.5lf,%.5lf&z=%d'",
           "gnome-open 'http://", LatInverse (clat), LonInverse (clon), 33 - zl);
         system (lstr);
@@ -1219,7 +1219,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
             GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
             "Error:\n"
             "Gosmore is running with a custom map\n"
-            "Download aborted.", currentBbox)));
+            "Download aborted.")));
         }
         else if (stat (currentBbox, &s) == 0 &&
            (s.st_mtime > time (NULL) - 3600*24*7 ||
@@ -2644,6 +2644,9 @@ int main (int argc, char *argv[])
   
   setlocale (LC_ALL, ""); /* Ensure decimal sign is "." for NMEA parsing. */
   
+  if (argc > 1 && stricmp (argv[1], "sortRelations") == 0) {
+    return SortRelations ();
+  }
   if (argc > 1 && stricmp(argv[1], "rebuild") == 0) {
     if (argc < 6 && argc > 4) {
       fprintf (stderr, 

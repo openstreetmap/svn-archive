@@ -511,6 +511,7 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
 int RebuildPak(const char* pakfile, const char* elemstylefile, 
 	       const char* iconscsvfile, const char* masterpakfile, 
 	       const int bbox[4]);
+int SortRelations (void);
 
 #endif // #ifndef _WIN32
 

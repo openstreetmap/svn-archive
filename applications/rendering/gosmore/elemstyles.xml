@@ -210,6 +210,13 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
      </rule>
 
     <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="HideZoomButtons" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
        <condition k="gosmore" v="CommPort" />
        <icon annotate="true" src="misc/deprecated.png" />
        <scale_min>1</scale_min> <!-- N/A -->
@@ -367,7 +374,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
        <condition k="oneway"/>
 	   <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-       <icon annotate="true" src="misc/deprecated.png" />
+<!--       <icon annotate="true" src="misc/deprecated.png" /> -->
        <scale_min>1</scale_min>
        <scale_max>40000</scale_max>
      </rule>
@@ -381,7 +388,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
        <condition k="bridge" v="no"/>
        <!-- no line or area, as this is a highway=xy, railway=xy, .... -->
-       <icon annotate="true" src="misc/deprecated.png" />
+       <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
        <scale_min>1</scale_min>
        <scale_max>40000</scale_max>
      </rule>
@@ -792,7 +799,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="motorway"/>
         <line width="3" realwidth="8" colour="#809bc0"  width_bg="5" colour_bg="#FFFF00"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000000</scale_max>
         <routing goods="110" hgv="110" motorcycle="110" motorcar="110" psv="110" oneway="1"/>
@@ -800,7 +807,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="motorway"/>
         <line width="3" realwidth="8" colour="#809bc0"  width_bg="5" colour_bg="#FFFF00"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000000</scale_max>
         <routing goods="110" hgv="110" motorcycle="110" motorcar="110" psv="110" bicyle="20" oneway="1"/>
@@ -809,7 +816,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="motorway_link"/>
         <line width="3" colour="#809bc0"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" oneway="1"/>
@@ -817,7 +824,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="motorway_link"/>
         <line width="3" colour="#809bc0"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" bicycle="20" oneway="1"/>
@@ -826,7 +833,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="trunk"/>
 		<line width="3" colour="#7fc97f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>500000</scale_max>
         <routing bicycle="20" foot="5" goods="110" hgv="110" motorcycle="110" motorcar="110" psv="110"/>
@@ -834,7 +841,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="trunk"/>
 		<line width="3" colour="#7fc97f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>500000</scale_max>
         <routing goods="110" hgv="110" motorcycle="110" motorcar="110" psv="110" bicyle="20" moped="45" mofa="25"/>
@@ -843,7 +850,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="trunk_link"/>
         <line width="3" colour="#7fc97f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
         <routing bicycle="20" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" moped="45" mofa="25"/>
@@ -851,7 +858,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="trunk_link"/>
         <line width="3" colour="#7fc97f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
         <routing goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" bicyle="20" moped="45" mofa="25"/>
@@ -860,7 +867,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="primary"/>
 		<line width="3" realwidth="8" colour="#fb805f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>700000</scale_max>
         <routing bicycle="10" foot="5" goods="70" hgv="70" motorcycle="70" motorcar="70" psv="70" moped="45" mofa="25"/>
@@ -868,7 +875,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="primary"/>
 		<line width="3" realwidth="8" colour="#fb805f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>700000</scale_max>
         <routing bicycle="20" foot="5" goods="70" hgv="70" motorcycle="70" motorcar="70" psv="70" moped="45" mofa="25"/>
@@ -877,7 +884,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="primary_link"/>
         <line width="3" colour="#fb805f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
                 <scale_min>1</scale_min>
                 <scale_max>40000</scale_max>
                 <routing bicycle="10" foot="5" goods="70" hgv="70" motorcycle="70" motorcar="70" psv="70" moped="45" mofa="25"/>
@@ -885,7 +892,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="primary_link"/>
         <line width="3" colour="#fb805f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
                 <scale_min>1</scale_min>
                 <scale_max>40000</scale_max>
                 <routing bicycle="20" foot="5" goods="70" hgv="70" motorcycle="70" motorcar="70" psv="70" moped="45" mofa="25"/>
@@ -894,7 +901,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="secondary"/>
 		<line width="3" realwidth="6" colour="#fdbf6f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
                 <routing bicycle="11" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60" moped="45" mofa="25"/>
@@ -902,7 +909,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="secondary"/>
 		<line width="3" realwidth="6" colour="#fdbf6f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
                 <routing bicycle="20" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60" moped="45" mofa="25"/>
@@ -911,7 +918,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="secondary_link"/>
 		<line width="3" realwidth="6" colour="#fdbf6f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
                 <routing bicycle="11" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60" moped="45" mofa="25"/>
@@ -919,7 +926,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="secondary_link"/>
 		<line width="3" realwidth="6" colour="#fdbf6f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
 		<scale_min>1</scale_min>
 		<scale_max>300000</scale_max>
                 <routing bicycle="20" foot="5" goods="60" hgv="60" motorcycle="60" motorcar="60" psv="60" moped="45" mofa="25"/>
@@ -928,7 +935,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <rule>
         <condition k="highway" v="tertiary"/>
         <line width="2" realwidth="5" colour="#f7f496"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
         <routing bicycle="12" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" moped="45" mofa="25"/>
@@ -936,7 +943,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <rule>
         <condition k="cyclenethighway" v="tertiary"/>
         <line width="2" realwidth="5" colour="#f7f496"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
         <routing bicycle="20" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" moped="45" mofa="25"/>
@@ -945,7 +952,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="unclassified"/>
 		<line width="2" realwidth="5" colour="#c0c0c0"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
         <routing bicycle="18" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40" moped="40" mofa="25"/>
@@ -953,7 +960,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="unclassified"/>
 		<line width="2" realwidth="5" colour="#c0c0c0"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
         <routing bicycle="20" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40" moped="40" mofa="25"/>
@@ -962,7 +969,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="road"/>
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
         <routing bicycle="20" foot="5" goods="40" hgv="40" motorcycle="40" motorcar="40" psv="40" moped="40" mofa="25"/>
@@ -971,7 +978,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="unsurfaced"/>
 		<line width="1" realwidth="3" colour="#c0c0c0"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
         <routing bicycle="20" foot="5" goods="30" hgv="30" motorcycle="30" motorcar="30" psv="30" moped="30" mofa="25"/>
@@ -980,7 +987,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="highway" v="track"/>
         <line width="1" realwidth="3" colour="#006600"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
         <routing bicycle="20" foot="5" />
@@ -992,7 +999,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="highway" v="byway"/>
         <line width="1" realwidth="3" colour="#809bc0"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
         <routing bicycle="5" foot="5" motorcycle="5" motorcar="5" moped="5" mofa="5"/>
@@ -1002,7 +1009,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="residential"/>
 		<line width="2" realwidth="5" colour="#c0c0c0"/> 
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
         <routing bicycle="20" foot="5" goods="30" hgv="30" motorcycle="30" motorcar="30" psv="30" moped="30" mofa="25"/>
@@ -1011,7 +1018,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="living_street"/>
 		<line width="1" realwidth="3" colour="#c0c0c0"/> 
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
         <routing bicycle="20" foot="5" goods="10" hgv="10" motorcycle="10" motorcar="10" psv="10" moped="10" mofa="10"/>
@@ -1020,7 +1027,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="highway" v="service"/>
         <line width="1" realwidth="3" colour="#809bc0"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
         <routing bicycle="5" foot="5" goods="5" hgv="5" motorcycle="5" motorcar="5" psv="5" moped="5" mofa="5"/>
@@ -1028,7 +1035,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="cyclenethighway" v="service"/>
         <line width="1" realwidth="3" colour="#809bc0"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000</scale_max>
         <routing bicycle="20" foot="5" goods="5" hgv="5" motorcycle="5" motorcar="5" psv="5" moped="5" mofa="5"/>
@@ -1037,7 +1044,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="bridleway"/>
 		<line width="1" realwidth="2" colour="#c08000" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
         <routing bicycle="20" foot="5" horse="10"/> <!-- Also see horse=designated -->
@@ -1046,7 +1053,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="cycleway"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="23" mofa="25"/> <!-- Also see bicyle=designated -->
@@ -1055,7 +1062,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="footway"/>
 		<line width="1" realwidth="1" colour="#00ff00" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
         <routing bicycle="5" foot="5"/> <!-- Usually you can push
@@ -1064,7 +1071,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cyclenethighway" v="footway"/>
 		<line width="1" realwidth="1" colour="#00ff00" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
         <routing bicycle="20" foot="5"/> <!-- Usually you can push
@@ -1074,7 +1081,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="path"/>
 		<line width="1" realwidth="1" dashed="true" colour="#00ff00" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
         <routing bicycle="20" foot="5"/>
@@ -1083,7 +1090,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="pedestrian"/>
 		<line width="3" realwidth="5" colour="#00ff00"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
         <routing bicycle="20" foot="5"/>
@@ -1109,7 +1116,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="highway" v="bus_guideway"/>
         <line width="1" realwidth="1" colour="#00ff00"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>10000</scale_max>
 	</rule>
@@ -1222,7 +1229,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="highway" v="viaduct" />
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1292,7 +1299,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 		<!-- this overwrites the "underlying" highway tag, so comment it out until we have a better way to display this -->
 		<!--area width="1" colour="#eeeeee" /--> 
 		<!-- tagging a node makes no real sense, a roundabout should be tagged with several nodes, or a highway=mini_roundabout should probably be used -->
-		<icon annotate="true" src="misc/deprecated.png" /> 
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> --> 
 		<scale_min>1</scale_min> 
 		<scale_max>50000</scale_max> 
 	</rule> 
@@ -1302,7 +1309,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cycleway" v="lane"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20" mofa="25"/>
@@ -1311,7 +1318,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cycleway" v="track"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20" mofa="25"/>
@@ -1320,7 +1327,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cycleway" v="opposite_lane"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20" mofa="25"/>
@@ -1329,7 +1336,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cycleway" v="opposite_track"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20" mofa="25"/>
@@ -1338,7 +1345,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="cycleway" v="opposite"/>
 		<line width="1" realwidth="2" colour="#ff00ff"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="20" mofa="25"/>
@@ -1349,7 +1356,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="tracktype" v="grade1"/>
         <line width="1" realwidth="3" dashed="true" colour="#006600"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1357,7 +1364,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="tracktype" v="grade2"/>
         <line width="1" realwidth="3" dashed="true" colour="#006600"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1365,7 +1372,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="tracktype" v="grade3"/>
         <line width="1" realwidth="3" dashed="true" colour="#006600"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1373,7 +1380,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="tracktype" v="grade4"/>
         <line width="1" realwidth="3" dashed="true" colour="#006600"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1381,7 +1388,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="tracktype" v="grade5"/>
         <line width="1" realwidth="3" dashed="true" colour="#006600"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1390,7 +1397,6 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="waterway" v="river"/>
         <line width="2" realwidth="10" colour="#0000ff" width_bg="3" colour_bg="#00001f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1398,7 +1404,6 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="waterway" v="riverbank"/>
         <line width="1" colour="#00005f" width_bg="1" colour_bg="#00001f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1406,7 +1411,6 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="waterway" v="canal"/>
         <line width="2" colour="#0000ff" width_bg="2" colour_bg="#00001f"/>
-		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
 	</rule>
@@ -1414,7 +1418,6 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="waterway" v="stream"/>
         <line width="1" colour="#6600cc" />
-		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
         <scale_max>35000</scale_max>
     </rule>
@@ -1422,7 +1425,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="waterway" v="drain"/>
         <line width="1" colour="#0000ff"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>30000</scale_max>
     </rule>
@@ -1452,7 +1455,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="waterway" v="aqueduct" />
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1553,7 +1556,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="railway" v="viaduct" />
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1577,7 +1580,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="railway" v="rail"/>
 		<line width="2" colour="#808080" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1585,7 +1588,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="railway" v="tram"/>
         <line width="1" colour="#808080" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1593,7 +1596,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="railway" v="light_rail"/>
         <line width="2" colour="#808080" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1601,7 +1604,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="railway" v="subway"/>
         <line width="1" colour="#606060" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1609,7 +1612,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="railway" v="preserved"/>
         <line width="1" colour="#202020" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1617,7 +1620,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="railway" v="disused"/>
         <line width="1" colour="#202020" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1625,7 +1628,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="railway" v="abandoned"/>
         <line width="1" colour="#202020" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1633,7 +1636,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="railway" v="narrow_gauge"/>
         <line width="1" colour="#202020" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1641,7 +1644,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
         <condition k="railway" v="monorail"/>
         <line width="1" colour="#202020" dashed="true"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1673,21 +1676,21 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="service" v="yard" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="service" v="siding" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="service" v="spur" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1860,7 +1863,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="power" v="line" />
         <line width="1" colour="#eeeeee" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -2046,7 +2049,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="man_made" v="pipeline" />
         <line width="2" colour="#660000" />
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3841,7 +3844,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="route" v="bus"/>
         <line width="1" colour="#809bc0" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3849,7 +3852,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="route" v="ferry"/>
         <line width="1" colour="#809bc0" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
         <routing bicycle="3" foot="3" goods="3" hgv="3" motorcycle="3" motorcar="3" psv="3" moped="3" mofa="3"/>
@@ -3858,7 +3861,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="route" v="flight"/>
         <line width="1" colour="#809bc0" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3866,7 +3869,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="route" v="ncn"/>
         <line width="1" colour="#809bc0" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3874,7 +3877,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="route" v="subsea"/>
         <line width="1" colour="#809bc0" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3882,7 +3885,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="route" v="ski"/>
         <line width="1" colour="#809bc0" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3890,7 +3893,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="route" v="tour"/>
         <line width="1" colour="#809bc0" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3898,7 +3901,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="route" v="pub_crawl"/>
         <line width="1" colour="#809bc0" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3908,7 +3911,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="boundary" v="national"/>
         <line width="1" colour="#8de3cb" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>20000000</scale_max>
 	</rule>
@@ -3916,7 +3919,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="boundary" v="administrative"/>
         <line width="1" colour="#8de3cb" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3924,7 +3927,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="boundary" v="civil"/>
         <line width="1" colour="#8de3cb" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3932,7 +3935,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="boundary" v="political"/>
         <line width="1" colour="#8de3cb" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3940,7 +3943,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="boundary" v="national_park"/>
         <line width="1" colour="#8de3cb" dashed="true"/>
-        <icon annotate="true" src="misc/deprecated.png" />
+        <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -4580,7 +4583,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="historic" v="museum" />
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -4588,7 +4591,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="man_made" v="power_wind" />
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -4596,7 +4599,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="man_made" v="power_hydro" />
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -4604,7 +4607,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="man_made" v="power_fossil" />
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -4612,7 +4615,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 	<rule>
 		<condition k="man_made" v="power_nuclear" />
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-		<icon annotate="true" src="misc/deprecated.png" />
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -4620,7 +4623,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
     <rule>
        <condition k="highway" v="minor"/>
        <line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
-       <icon annotate="true" src="misc/deprecated.png" />
+       <!-- <icon annotate="true" src="misc/deprecated.png" /> -->
        <scale_min>1</scale_min>
        <scale_max>40000</scale_max>
      </rule>

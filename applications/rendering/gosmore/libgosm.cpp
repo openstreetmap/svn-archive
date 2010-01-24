@@ -1159,6 +1159,8 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strncasecmp (i->first, "scgis-shp:", 10) != 0 &&
         strcmp (i->first, "addr:street") != 0 &&
         strcmp (i->first, "addr:postcode") != 0 &&
+        strcmp (i->first, "addr:district") != 0 &&
+        strcmp (i->first, "addr:region") != 0 &&
         strcmp (i->first, "addr:state") != 0 &&
         strcmp (i->first, "addr:city") != 0 &&
         strcmp (i->first, "addr:country") != 0 &&        
@@ -1167,9 +1169,33 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strncasecmp (i->first, "kms:", 4)  != 0 &&
         strncasecmp (i->first, "openGeoDB:", 10)  != 0 &&
         strncasecmp (i->first, "gnis:", 5)  != 0 &&
+
+        strcmp (i->second, // Abuse of the 'note' tag !
+          "Experimental import of Irish places and POIs from GNS Dataset") != 0 &&
+        strncasecmp (i->first, "gns:", 4)  != 0 &&
+        strcmp (i->first, "place_county") != 0 && 
+        
+        strcmp (i->first, "code_department") != 0 && // France / EtienneChoveBot
+        strcmp (i->first, "ref:INSEE") != 0 && // France / EtienneChoveBot
+
+        strncasecmp (i->first, "it:fvg:ctrn:", 12)  != 0 && // What is this??
+
+        strncasecmp (i->first, "3dshapes:", 9)  != 0 && // Import in the Netherlands
+
+        strncasecmp (i->first, "TMC:", 4)  != 0 && // Traffic broadcast info esp. Germany
+
+        strncasecmp (i->first, "cladr:", 6)  != 0 && // Some Russian import
+
+        strncasecmp (i->first, "is_in:", 6)  != 0 && // teryt
+        strncasecmp (i->first, "teryt:", 6)  != 0 && // in Poland
+        
+        (strcmp (i->first, "census:population") != 0 || !k2v["population"]) && // GNIS import
+
         strcmp (i->first, "note:ja") != 0 &&
+        strcmp (i->first, "import_uuid") != 0 &&
         strcmp (i->first, "attribution") /* Mostly MassGIS */ != 0 &&
         strcmp (i->first, "layer") != 0 &&
+        strcmp (i->first, "direction") != 0 &&
         strcmp (i->first, "access") != 0 &&
         strcmp (i->first, "motorcar") != 0 &&
         strcmp (i->first, "bicycle") != 0 &&
@@ -1198,7 +1224,7 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->second, "false") != 0 &&
         strcmp (i->first, "sagns_id") != 0 &&
         strcmp (i->first, "sangs_id") != 0 &&
-        strcmp (i->first,"is_in") !=0 &&
+        strcmp (i->first, "is_in") != 0 &&
         strcmp (i->second, "residential") != 0 &&
         strcmp (i->second, "unclassified") != 0 &&
         strcmp (i->second, "tertiary") != 0 &&
@@ -1211,8 +1237,12 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
       junction=junction ! */
         // blocked as highway:  strcmp (i->second, "mini_roundabout") != 0
         //                      && strcmp (i->second, "roundabout") != 0
+        strcmp (i->first, "place_of_worship") != 0 && // Too vague to include
+        strcmp (i->first, "crossing") != 0 &&
+        strcmp (i->first, "barrier") != 0 &&
         strcmp (i->second, "traffic_signals") != 0 &&
         strcmp (i->first, "editor") != 0 &&
+        strcmp (i->first, "power") != 0 && // Power towers
         strcmp (i->first, "class") != 0 /* esp. class=node */ &&
         strcmp (i->first, "type") != 0 &&
         /* "type=..." is only allow for boules grounds. We block it because it
@@ -1230,8 +1260,17 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
                       strcmp (i->second, "water") != 0 &&
                       strcmp (i->first, "abutters") != 0 &&
                       strcmp (i->second, "coastline") != 0))) {
-      result.push_back (string (strcmp (i->second, "true") == 0 ||
-        strcmp (i->second, "yes") == 0 || strcmp (i->second, "1") == 0
+      result.push_back (
+        strcmp (i->first, "population") == 0 ? string ("\npop=") + i->second + '\n':
+        // Don't index population figures, but make it obvious what it is.
+        strcmp (i->first, "phone") == 0 ? string ("\n") + i->second + '\n':
+        // Don't index phonenumbers
+        strncasecmp (i->first, "wikipedia", 9) == 0 ?
+                         string ("\nwikipedia=") + i->second + '\n':
+        // Don't index wikipedia names, but make it obvious what it is.
+        string (strcmp (i->second, "true") == 0 ||
+        strcmp (i->second, "yes") == 0 ||
+        (strcmp (i->second, "1") == 0 && strcmp (i->first, "addr:housenumber") != 0)
         ? i->first : i->second) + "\n");
     }
   }
@@ -1544,7 +1583,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
             }
             if (wayNd.back () == o->back ()) {
               wayNd.pop_back ();
-              wayNd.insert (wayNd.end (), o->rend (), o->rbegin ());
+              wayNd.insert (wayNd.end (), o->rbegin (), o->rend ());
               break;
             }
           }

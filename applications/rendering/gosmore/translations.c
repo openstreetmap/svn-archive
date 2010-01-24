@@ -28,6 +28,7 @@
  "Koordinaten anzeigen",
  "Spur anzeigen",
 // "Freie Dialoge", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -68,6 +69,7 @@
  "Mostrar coordenadas",
  "Mostrar trazo",
 // "Diálogos Modeless", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -108,6 +110,7 @@
  "Voir les coordonnées",
  "Afficher le trace GPS",
 // "Modeless Dialogs", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -148,6 +151,7 @@
  "Mostra Coordinate",
  "Mostra Traccia",
 // "Finestre non modali", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -188,6 +192,7 @@
  "Coördinaten tonen",
  "Trace tonen",
 // "Prominente Dialoogschermen", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -228,6 +233,7 @@
  "Prikaži koordinate",
  "Prikaži sled",
 // "Modeless Dialogs", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -268,6 +274,7 @@
  "Ver as coordenadas",
  "Mostrar o traçado GPS",
 // "Modeless Dialogs", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -308,6 +315,7 @@
  "Arată Coordonatele",
  "Arată Drum Înregistrat",
 // "Opţiuni Generale", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -348,6 +356,7 @@
  "Показать координаты",
  "Показать трассу",
 // "Немодальные диалоги", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -388,6 +397,7 @@
  "Koordináták megjelenítése",
  "Nyomvonal megjelenítése",
 // "Szabad párbeszédablakok", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -428,6 +438,7 @@
  "Mostra les coordenades",
  "Mostra la traça",
 // "Diàlegs no modals", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -468,6 +479,7 @@
  "Näytä koordinaatit",
  "Näytä jälki",
 // "Modeless Dialogs", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -508,6 +520,7 @@
  "Show Coordinates",
  "Show Trace",
 // "Modeless Dialogs", // No longer used 
+ "HideZoomButtons",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",

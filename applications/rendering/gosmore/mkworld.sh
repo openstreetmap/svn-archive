@@ -14,6 +14,7 @@ for n in 0*.pnm
 do convert $n ${n:0:16}.png
 done
 bash density.sh
+sed 's/"building"/"bloatbuilding"/' /home/nic/gosmore/elemstyles.xml >elemstyles.xml
 (echo '<?xml version="1.0" encoding="UTF-8" ?><osm version="0.6">'
  cat lowres.osm
  egrep -v '?xml|<osmCha' countries.osm | sed -e 's|/osmChange|/osm|') |

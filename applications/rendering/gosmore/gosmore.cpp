@@ -83,7 +83,7 @@ using namespace std;
   o (EditInPotlatch,  0, 1) \
   o (ViewGMaps,       0, 1) \
   o (UpdateMap,       0, 1) \
-  o (HideZoomButtons, 0, 3) \
+  o (Layout,          0, 3) \
   o (CommPort,        0, 13) \
   o (BaudRate,        0, 6) \
   o (ZoomInKey,       0, 3) \
@@ -1164,7 +1164,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
                                   + 2) / draw->allocation.height * perRow;
   }
   else if (event->x > w - ButtonSize * 20 && b <
-      (HideZoomButtons >
+      (Layout >
        (MenuKey == 0 || option != mapMode ? 0 : 1) ? 3 : 0)) HitButton (b);
   else if (option == optionMode) {
     if (isDrag) {
@@ -1774,7 +1774,6 @@ gint DrawExpose (void)
     }
     qsort (&area[0], area.size (), sizeof (area[0]),
       (int (*)(const void *a, const void *b))WaySizeCmp);
-    #ifndef _WIN32_WCE
     //for (; !dlist[0].empty (); dlist[0].pop ()) {
     //  ndType *nd = dlist[0].top ();
     for (; !area.empty(); area.pop_back ()) {
@@ -1846,7 +1845,7 @@ gint DrawExpose (void)
         #endif
       }
     }
-    #endif
+
     queue<linePtType> q;
     for (int l = 0; l < 12; l++) {
       for (; !dlist[l].empty (); dlist[l].pop ()) {
@@ -2261,7 +2260,7 @@ gint DrawExpose (void)
   gdk_flush ();
   #else
   #ifdef NOGTK
-  int i = (HideZoomButtons > (MenuKey == 0 || option != mapMode ? 0 : 1) ? 3 : 0);
+  int i = (Layout > (MenuKey == 0 || option != mapMode ? 0 : 1) ? 3 : 0);
   RECT r;
   r.left = clip.width - ButtonSize * 20;
   r.top = clip.height - ButtonSize * 20 * i;
@@ -2698,7 +2697,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
   PAINTSTRUCT ps;
   RECT rect;
   //static wchar_t msg[200] = TEXT("No coms");
-  int topBar = HideZoomButtons != 1 ? 30 : 0;
+  int topBar = Layout != 1 ? 30 : 0;
 
   switch(message) {
     #if 0
@@ -2750,13 +2749,13 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
     case WM_SIZE: 
       draw->allocation.width = LOWORD (lParam);
       draw->allocation.height = HIWORD (lParam) - topBar;
-      MoveWindow(hwndEdit, HideZoomButtons > 1 ? 8 : 140, topBar - 25,
-        draw->allocation.width - (HideZoomButtons > 1 ? 66 : 200), 20, TRUE);
+      MoveWindow(hwndEdit, Layout > 1 ? 8 : 140, topBar - 25,
+        draw->allocation.width - (Layout > 1 ? 66 : 200), 20, TRUE);
       MoveWindow(button3D, draw->allocation.width - 55,
-        HideZoomButtons != 1 ? 5 : -25, 50, 20, TRUE);
+        Layout != 1 ? 5 : -25, 50, 20, TRUE);
       for (int i = 0; i < 3; i++) { // Same as LBUTTON_UP. Put in function !!
         MoveWindow (buttons[i], (2 * i + 1) * 70 / 3 - 15,
-          HideZoomButtons ? -25 : 5, 30, 20, TRUE);
+          Layout ? -25 : 5, 30, 20, TRUE);
       }
       if (bufBmp) {
         DeleteObject (bufBmp);
@@ -2872,15 +2871,15 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         ev.time = GetTickCount ();
         ev.button = 1;
         Click (NULL, &ev, NULL);
-        if (option == HideZoomButtonsNum) {
-          MoveWindow(hwndEdit, HideZoomButtons > 1 ? 8 : 140,
-            HideZoomButtons != 1 ? 5 : -25,
-            draw->allocation.width - (HideZoomButtons > 1 ? 66 : 200), 20, TRUE);
+        if (option == LayoutNum) {
+          MoveWindow(hwndEdit, Layout > 1 ? 8 : 140,
+            Layout != 1 ? 5 : -25,
+            draw->allocation.width - (Layout > 1 ? 66 : 200), 20, TRUE);
           MoveWindow(button3D, draw->allocation.width - 55,
-            HideZoomButtons != 1 ? 5 : -25, 50, 20, TRUE);
+            Layout != 1 ? 5 : -25, 50, 20, TRUE);
           for (int i = 0; i < 3; i++) { // Same as WM_SIZE. Put in function !!
             MoveWindow (buttons[i], (2 * i + 1) * 70 / 3 - 15,
-              HideZoomButtons ? -25 : 5, 30, 20, TRUE);
+              Layout ? -25 : 5, 30, 20, TRUE);
           }
         }
         if (optionMode != searchMode) SipShowIM (SIPF_OFF);

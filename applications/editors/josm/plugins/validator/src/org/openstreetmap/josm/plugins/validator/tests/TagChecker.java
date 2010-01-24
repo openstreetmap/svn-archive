@@ -337,8 +337,11 @@ public class TagChecker extends Test
                     if(i instanceof TaggingPreset.Combo)
                     {
                         TaggingPreset.Combo combo = (TaggingPreset.Combo) i;
-                        for(String value : combo.values.split(","))
-                            presetsValueData.add(combo.key, value);
+                        if(combo.values != null)
+                        {
+                            for(String value : combo.values.split(","))
+                                presetsValueData.add(combo.key, value);
+                        }
                     }
                     else if(i instanceof TaggingPreset.Key)
                     {

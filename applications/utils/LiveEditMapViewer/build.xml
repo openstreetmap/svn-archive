@@ -1,0 +1,55 @@
+<project name="LiveEditMapViewer" default="deploy" basedir=".">
+
+
+
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="src.jmv" value="${basedir}/src_externals/jmapviewer/src" />
+	<property name="src.osmo" value="${basedir}/src_externals/osmosis" />
+
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="version" value="0.0.1" />
+
+	<available property="clover.available" classname="org.apache.tools.ant.taskdefs.CloverCompilerAdapter" />
+
+	<path id="main.classpath">
+		<pathelement location="${classes.dir}" />
+	</path>
+
+
+	<target name="prepare">
+		<mkdir dir="bin" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="bin" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<target name="compile" depends="prepare">
+		<javac srcdir="${src.dir}:${src.jmv}:${src.osmo}" destdir="bin" debug="on" optimize="on" deprecation="on" target="1.5" encoding="UTF8">
+			<classpath>
+				<path refid="main.classpath" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="deploy" depends="compile">
+		<jar jarfile="${dist.dir}/${ant.project.name}-${version}.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="org.openstreetmap.liveEditMapViewer.LiveEditMapViewer" />
+				<section name="${ant.project.name}">
+					<attribute name="Implementation-Title" value="LiveEditMapViewer" />
+					<attribute name="Implementation-Version" value="${version} ${TODAY_DE}" />
+					<attribute name="Implementation-Vendor" value="KK" />
+				</section>
+			</manifest>
+			<fileset dir="bin">
+				<include name="**/*.class" />
+			</fileset>
+		</jar>
+	</target>
+</project>
+

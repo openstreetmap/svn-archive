@@ -125,7 +125,7 @@ public class DuplicateNode extends Test{
             }
         }
         if (target == null) {
-            nodes.iterator().next();
+            target = nodes.iterator().next();
         }
 
         if(checkAndConfirmOutlyingDeletes(nodes))

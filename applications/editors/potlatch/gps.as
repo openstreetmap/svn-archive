@@ -129,7 +129,7 @@
 	// gpxToWays	- convert all GPS tracks to ways
 	
 	function gpxToWays() {
-		var tol=0.2; if (Key.isDown(Key.SHIFT)) { tol=0.1; }
+		var tol=0.2*64; if (Key.isDown(Key.SHIFT)) { tol=0.1*64; }
 		for (var i=0; i<_root.tracks.length; i+=1) {
 			_root.tracks[i]=simplifyPath(_root.tracks[i],tol);
 

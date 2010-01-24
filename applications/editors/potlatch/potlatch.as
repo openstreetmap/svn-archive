@@ -1051,7 +1051,7 @@
 		box.bgoption.addButton(10,75,iText('nobackground'));
 		box.bgoption.doOnChange=function(n) { preferences.data.bgtype=n; initBackground(); };
 
-		box.attachMovie("menu","background",60);
+		box.attachMovie("menu","background",80);
 		box.background.init(24,12,preferences.data.tileset,
 			new Array(iText('option_layer_mapnik'),
                       iText('option_layer_osmarender'),

@@ -1538,14 +1538,13 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
           for (idx = wayMember.size () - 1; !outer[wayMember[idx]].empty () ; idx--) {
             deque<int> *o = &outer[wayMember[idx]];
             if (wayNd.empty () || wayNd.back () == o->front () || idx == 0) {
-              deque<int>::iterator b = o->begin ();
-              wayNd.insert (wayNd.end (), wayNd.back () != o->front ()
-                               ?  b : ++b, o->end ());
+              if (!wayNd.empty () && wayNd.back () == o->front ()) wayNd.pop_back ();
+              wayNd.insert (wayNd.end (), o->begin (), o->end ());
               break;
             }
             if (wayNd.back () == o->back ()) {
-              deque<int>::iterator e = o->end ();
-              wayNd.insert (wayNd.end (), --e, o->begin ());
+              wayNd.pop_back ();
+              wayNd.insert (wayNd.end (), o->rend (), o->rbegin ());
               break;
             }
           }

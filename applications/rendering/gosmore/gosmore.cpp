@@ -48,26 +48,7 @@ using namespace std;
 #include "resource.h"
 
 #define OLDOLDOPTIONS \
-  o (FollowGPSr,      0, 2) \
-  o (AddWayOrNode,    0, 2) \
-  o (StartRoute,      0, 1) \
-  o (EndRoute,        0, 1) \
-  o (OrientNorthwards,0, 2) \
-  o (FastestRoute,    0, 2) \
-  o (Vehicle,         motorcarR, onewayR) \
-  o (English,         0, \
-            sizeof (optionNameTable) / sizeof (optionNameTable[0])) \
-  o (ButtonSize,      1, 5) \
-  o (IconSet,         0, 4) \
-  o (DetailLevel,     0, 5) \
-  o (ShowCompass,     0, 2) \
-  o (Background,      0, 16) \
-  o (Exit,            0, 2) \
-  o (HideZoomButtons, 0, 2) \
-  o (ModelessDialog,  0, 2) \
-  o (ValidateMode,    0, 2) \
-  o (Display3D,       0, 1) \
-  o (SearchSpacing,   32, 1)
+  o (ModelessDialog,  0, 2)
 #else
 #include <unistd.h>
 #include <sys/stat.h>
@@ -102,6 +83,7 @@ using namespace std;
   o (EditInPotlatch,  0, 1) \
   o (ViewGMaps,       0, 1) \
   o (UpdateMap,       0, 1) \
+  o (HideZoomButtons, 0, 3) \
   o (CommPort,        0, 13) \
   o (BaudRate,        0, 6) \
   o (ZoomInKey,       0, 3) \
@@ -1163,6 +1145,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       // Anything that isn't a short isolated click, is a drag.
 
   if (ButtonSize <= 0) ButtonSize = 4;
+  int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
   if (objectAddRow >= 0) {
     int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
     if (event->x < w - ButtonSize * 20) {
@@ -1180,11 +1163,9 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else objectAddRow = int (event->y) * (restriction_no_right_turn / perRow
                                   + 2) / draw->allocation.height * perRow;
   }
-  #if 0 //def NOGTK
   else if (event->x > w - ButtonSize * 20 && b <
-      (!HideZoomButtons || option != mapMode ? 3 : 
-      MenuKey != 0 ? 0 : 1)) HitButton (b);
-  #endif
+      (HideZoomButtons >
+       (MenuKey == 0 || option != mapMode ? 0 : 1) ? 3 : 0)) HitButton (b);
   else if (option == optionMode) {
     if (isDrag) {
       listYOffset = max (0, listYOffset + (int)lrint (firstDrag[1]-event->y));
@@ -2279,9 +2260,8 @@ gint DrawExpose (void)
   gdk_window_end_paint (draw->window);
   gdk_flush ();
   #else
-  #if 0
-  int i = !HideZoomButtons || option != mapMode ? 3 :
-                                                MenuKey != 0 ? 0 : 1;
+  #ifdef NOGTK
+  int i = (HideZoomButtons > (MenuKey == 0 || option != mapMode ? 0 : 1) ? 3 : 0);
   RECT r;
   r.left = clip.width - ButtonSize * 20;
   r.top = clip.height - ButtonSize * 20 * i;
@@ -2710,7 +2690,7 @@ HPEN pen[2 << STYLE_BITS];
 HBRUSH brush[2 << STYLE_BITS];
 UTF16 appendTmp[50];
 
-static HWND hwndEdit, button3D;
+static HWND hwndEdit, button3D, buttons[3];
 
 LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
                                   WPARAM wParam,LPARAM lParam)
@@ -2718,7 +2698,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
   PAINTSTRUCT ps;
   RECT rect;
   //static wchar_t msg[200] = TEXT("No coms");
-  const int topBar = 30;
+  int topBar = HideZoomButtons != 1 ? 30 : 0;
 
   switch(message) {
     #if 0
@@ -2743,11 +2723,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
  
     case WM_CREATE:
       for (int i = 0; i < 3; i++) {
-        CreateWindow(TEXT ("BUTTON"), i == 0 ? TEXT ("O") :
+        buttons[i] = CreateWindow(TEXT ("BUTTON"), i == 0 ? TEXT ("O") :
                       i == 1 ? TEXT ("-") : TEXT ("+"), BS_PUSHBUTTON |
                       WS_CHILD | WS_VISIBLE | WS_TABSTOP,
-                      (2 * i + 1) * 70 / 3 - 15, 5, 30, 20, 
-                      hWnd, (HMENU) (IDC_EDIT1 + 1 + i),
+                      0, 0, 0, 0, hWnd, (HMENU) (IDC_EDIT1 + 1 + i),
                       (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
                       NULL);       // pointer not needed 
       }
@@ -2771,8 +2750,14 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
     case WM_SIZE: 
       draw->allocation.width = LOWORD (lParam);
       draw->allocation.height = HIWORD (lParam) - topBar;
-      MoveWindow(hwndEdit, 140, topBar - 25, LOWORD(lParam) - 200, 20, TRUE);
-      MoveWindow(button3D, LOWORD (lParam) - 55, 5, 50, 20, TRUE);
+      MoveWindow(hwndEdit, HideZoomButtons > 1 ? 8 : 140, topBar - 25,
+        draw->allocation.width - (HideZoomButtons > 1 ? 66 : 200), 20, TRUE);
+      MoveWindow(button3D, draw->allocation.width - 55,
+        HideZoomButtons != 1 ? 5 : -25, 50, 20, TRUE);
+      for (int i = 0; i < 3; i++) { // Same as LBUTTON_UP. Put in function !!
+        MoveWindow (buttons[i], (2 * i + 1) * 70 / 3 - 15,
+          HideZoomButtons ? -25 : 5, 30, 20, TRUE);
+      }
       if (bufBmp) {
         DeleteObject (bufBmp);
         bufBmp = NULL;
@@ -2887,6 +2872,17 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         ev.time = GetTickCount ();
         ev.button = 1;
         Click (NULL, &ev, NULL);
+        if (option == HideZoomButtonsNum) {
+          MoveWindow(hwndEdit, HideZoomButtons > 1 ? 8 : 140,
+            HideZoomButtons != 1 ? 5 : -25,
+            draw->allocation.width - (HideZoomButtons > 1 ? 66 : 200), 20, TRUE);
+          MoveWindow(button3D, draw->allocation.width - 55,
+            HideZoomButtons != 1 ? 5 : -25, 50, 20, TRUE);
+          for (int i = 0; i < 3; i++) { // Same as WM_SIZE. Put in function !!
+            MoveWindow (buttons[i], (2 * i + 1) * 70 / 3 - 15,
+              HideZoomButtons ? -25 : 5, 30, 20, TRUE);
+          }
+        }
         if (optionMode != searchMode) SipShowIM (SIPF_OFF);
       }
       InvalidateRect (hWnd, NULL, FALSE);

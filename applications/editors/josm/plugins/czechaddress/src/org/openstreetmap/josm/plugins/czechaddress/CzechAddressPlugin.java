@@ -25,6 +25,7 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.czechaddress.actions.ConflictResolveAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.FactoryAction;
 import org.openstreetmap.josm.plugins.czechaddress.actions.GroupManipulatorAction;
@@ -82,7 +83,8 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         }
     }
 
-    public CzechAddressPlugin() {
+    public CzechAddressPlugin(PluginInformation info) {
+    	super(info);
 
         /*boolean x;
         x = StringUtils.matchAbbrev("Ahoj lidi", "Ahoj lidi");
@@ -97,8 +99,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         FactoryDialog.getInstance();
         Reasoner.getInstance();
 
-        boolean assertionsEnabled = false;
-        assert assertionsEnabled = true;
+        boolean assertionsEnabled = true;
         if (assertionsEnabled) initLoggers();
 
         MainMenu.add(Main.main.menu.toolsMenu, new SplitAreaByEmptyWayAction());

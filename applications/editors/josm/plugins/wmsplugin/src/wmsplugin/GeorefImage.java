@@ -114,8 +114,10 @@ public class GeorefImage implements Serializable {
 	}
 
 	private void fallbackDraw(Graphics g, Image img, Point min, Point max) {
-		if(reImg != null) reImg.flush();
-		reImg = null;
+		if(reImg != null) {
+			reImg.flush();
+			reImg = null;
+		}
 		g.drawImage(img,
 				min.x, max.y, max.x, min.y, // dest
 				0, 0, img.getWidth(null), img.getHeight(null), // src

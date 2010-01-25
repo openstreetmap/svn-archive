@@ -1642,7 +1642,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
           }
 	}
 	
-	if (wStyle == elemCnt) wayNd.clear ();
+	if (wStyle == elemCnt /* 1 trick that did help enough to make files < 400MB
+	  || (!k2v["name"] && srec[wStyle].areaColour != -1)*/ ) wayNd.clear ();
 	else {
 	  s[0].other = -2;
 	  while (!wayNd.empty ()) {
@@ -2118,9 +2119,29 @@ int SortRelations (void)
   vector<memberType> member;
   unsigned rStart = 0, rel = FALSE;
   string *s = new string ();
+  #ifdef MKDENSITY_CSV
+  int lat, lon, *cnt = (int *) calloc (1024 * 1024, sizeof (*cnt));
+  #endif
   while (xmlTextReaderRead (xml)) {
     if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_ELEMENT) {
       char *name = (char *) BAD_CAST xmlTextReaderName (xml);
+      
+      #ifdef MKDENSITY_CSV
+      if (stricmp (name, "node") == 0) {
+        while (xmlTextReaderMoveToNextAttribute (xml)) {
+          char *aname = (char *) BAD_CAST xmlTextReaderName (xml);  
+          char *avalue = (char *) BAD_CAST xmlTextReaderValue (xml);
+	  if (stricmp (aname, "lat") == 0) lat = Latitude (atof (avalue));
+	  if (stricmp (aname, "lon") == 0) lon = Longitude (atof (avalue));
+	  xmlFree (aname);
+	  xmlFree (avalue);
+        }
+        cnt[(lat / (1 << 22) + 512) * 1024 + (lon / (1 << 22) + 512)]++;
+      }
+      xmlFree (name);
+      continue;
+      #endif
+      
       rel = rel || stricmp (name, "relation") == 0;
       if (stricmp (name, "relation") == 0 && rStart < member.size ()) {
         while (rStart < member.size ()) member[rStart++].tags = s->c_str ();
@@ -2154,6 +2175,15 @@ int SortRelations (void)
       xmlFree (name);
     }
   }
+  #ifdef MKDENSITY_CSV
+  FILE *df = fopen ("density.csv", "w");
+  for (lat = 1023; lat >= 0; lat--) {
+    for (lon = 0; lon < 1024; lon++) {
+      fprintf (df, "%d%c", cnt[lat * 1024 + lon], lon == 1023 ? '\n' : ' ');
+    }
+  }
+  return 0;
+  #endif
   while (rStart < member.size ()) member[rStart++].tags = s->c_str ();
   qsort (&member[0], member.size (), sizeof (member[0]),
          (int (*)(const void *, const void *)) MemberCmp);

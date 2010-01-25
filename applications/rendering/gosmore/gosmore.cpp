@@ -1124,10 +1124,11 @@ void *UpdateMapThread (void *n)
 
 #endif
 
+#define CompactOptions ((draw->allocation.width * draw->allocation.height < 400 * 400))
 int ListXY (int cnt, int isY)
 { // Returns either the x or the y for a certain list item
   int max = mapMode; //option == optionMode ? mapNode :
-  int w = 105, h = 80;
+  int w = CompactOptions ? 70 : 105, h = CompactOptions ? 45 : 80;
   while ((draw->allocation.width/w) * (draw->allocation.height/h - 1) > max) {
     w++;
     h++;
@@ -1227,6 +1228,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     if (row < searchCnt && gosmSstr[row]) {
       SetLocation (gosmSway[row]->clon, gosmSway[row]->clat);
       zoom = gosmSway[row]->dlat + gosmSway[row]->dlon + (1 << 15);
+      if (zoom <= (1 << 15)) zoom = Style (gosmSway[row])->scaleMax;
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
       FollowGPSr = FALSE;
       option = mapMode;
@@ -1787,8 +1789,9 @@ gint DrawExpose (void)
       int oldx = 0, oldy = 0, x = 0 /* Shut up gcc*/, y = 0 /*Shut up gcc*/;
       int firstx = INT_MIN, firsty = INT_MIN /* Shut up gcc */;
       //for (; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] != 0;
-      for (; nd->other[1] != 0;
-           nd += nd->other[1]) {
+      text2B.top ().x = text2B.top ().y = INT_MIN;
+      text2B.top ().x2 = text2B.top ().y2 = INT_MAX;
+      for (; nd->other[1] != 0; nd += nd->other[1]) {
         if (nd->lat != INT_MIN) {
           pt.push_back (GdkPoint ());
           pt.back ().x = x = X (nd->lon, nd->lat);
@@ -1800,9 +1803,9 @@ gint DrawExpose (void)
             }
             if (y > 0 && oldy < 0) {
               pt.back ().x = x + (x - oldx) * (1024 - y) / (y - oldy);
-              pt.back ().y = 1024;
+              pt.back ().y = 1024; // Insert modified instance of old point
               pt.push_back (GdkPoint ());
-              pt.back ().x = x; // This point moves one by 1 position
+              pt.back ().x = x; // before current point.
               pt.back ().y = y;
             }
             else if (y < 0) {
@@ -1815,10 +1818,37 @@ gint DrawExpose (void)
             oldx = x;
             oldy = y;
           }
+          if (pt.back ().x > text2B.top ().x) text2B.top ().x = pt.back ().x;
+          if (pt.back ().x < text2B.top ().x2) text2B.top ().x2 = pt.back ().x;
+          if (pt.back ().y > text2B.top ().y) text2B.top ().y = pt.back ().y;
+          if (pt.back ().y < text2B.top ().y2) text2B.top ().y2 = pt.back ().y;
           //pt[pts].x = X (nd->lon, nd->lat);
           //pt[pts++].y = Y (nd->lon, nd->lat);
         }
       }
+      if (text2B.top ().x > draw->allocation.width) text2B.top ().x = draw->allocation.width;
+      if (text2B.top ().y > draw->allocation.height) text2B.top ().y = draw->allocation.height;
+      if (text2B.top ().x2 < 0) text2B.top ().x2 = 0;
+      if (text2B.top ().y2 < 0) text2B.top ().y2 = 0;
+      if (text2B.top ().x2 < text2B.top ().x - strcspn ((char*)(w + 1) + 1, "\n") * 8 &&
+          text2B.top ().y2 < text2B.top ().y - 10 &&
+          // The area must be large enough to contain all the text
+          (text2B.top ().x < draw->allocation.width ||
+           text2B.top ().y < draw->allocation.height ||
+           text2B.top ().x2 || text2B.top ().y2)) {
+           // but if it is so large that it fills the screen, it is more likely to
+           // confuse the user
+           
+      //printf ("%d %d %d %d %s\n", text2B.top ().x, text2B.top ().y, text2B.top ().x2, text2B.top ().y2, (char*)(w+1)+1);
+        text2B.top ().x = (text2B.top ().x + text2B.top ().x2) / 2 - 100;
+        text2B.top ().x2 = text2B.top ().x + 200;
+        text2B.top ().dst = 200;
+        text2B.top ().y = (text2B.top ().y + text2B.top ().y2) / 2;
+        text2B.top ().y2 = text2B.top ().y;
+        text2B.top ().s = (char*)(w + 1) + 1;
+        text2B.push (text2Brendered ());
+      }
+      
       if (Display3D && y < 0 && firsty > 0) {
         pt.push_back (GdkPoint ());
         pt.back ().x = firstx + (firstx - x) * (1024 - firsty) / (firsty - y);
@@ -2223,11 +2253,20 @@ gint DrawExpose (void)
   }
   else if (option == optionMode) {
     for (int i = 0; i < wayPointIconNum; i++) {
-      DrawPoI (ListXY (i, FALSE), ListXY (i, TRUE) - 5,
-        style[firstElemStyle + i].x); // Always classic.big
-      DrawString (ListXY (i, FALSE) - strlen (optionNameTable[English][i]) *
-        5, ListXY (i, TRUE) + style[firstElemStyle + i].x[3] / 2 - 5,
-        optionNameTable[English][i]);
+      if (CompactOptions) {
+        char l1[20], *s = (char*) optionNameTable[English][i], *ptr = s + 1;
+        while (!isspace (*ptr) && !isupper (*ptr) && *ptr) ptr++;
+        sprintf (l1, "%.*s", ptr - s, s);
+        DrawString (ListXY (i, FALSE) - strlen (l1) * 5, ListXY (i, TRUE) - 8, l1);
+        DrawString (ListXY (i, FALSE) - strlen (ptr) * 5, ListXY (i, TRUE) + 8, ptr);
+      }
+      else {
+        DrawPoI (ListXY (i, FALSE), ListXY (i, TRUE) - 5,
+          style[firstElemStyle + i].x); // Always classic.big
+        DrawString (ListXY (i, FALSE) - strlen (optionNameTable[English][i]) *
+          5, ListXY (i, TRUE) + style[firstElemStyle + i].x[3] / 2 - 5,
+          optionNameTable[English][i]);
+      }
     }
   }
   else {

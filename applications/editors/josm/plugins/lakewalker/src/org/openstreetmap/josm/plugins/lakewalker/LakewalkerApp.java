@@ -39,21 +39,20 @@ public class LakewalkerApp {
         Lakewalker lw = new Lakewalker(waylen,maxnode,threshold,dp,resolution,tilesize,startdir,wmslayer,working_dir);
         try {
             nodelist = lw.trace(lat,lon,leftlon,rightlon,toplat,botlat, NullProgressMonitor.INSTANCE);
+
+            System.out.println(nodelist.size()+" nodes generated");
+
+            nodelist = lw.vertexReduce(nodelist, dp);
+
+            System.out.println("After vertex reduction, "+nodelist.size()+" nodes remain.");
+
+            nodelist = lw.douglasPeucker(nodelist, dp, 0);
+            System.out.println("After dp approximation, "+nodelist.size()+" nodes remain.");
+
         } catch(LakewalkerException e){
-            System.out.println(e.getError());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
-
-        System.out.println(nodelist.size()+" nodes generated");
-
-        nodelist = lw.vertexReduce(nodelist, dp);
-
-        System.out.println("After vertex reduction, "+nodelist.size()+" nodes remain.");
-
-        nodelist = lw.douglasPeucker(nodelist, dp, 0);
-
-        System.out.println("After dp approximation, "+nodelist.size()+" nodes remain.");
-
-
 
     }
 }

@@ -12,7 +12,9 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -26,9 +28,9 @@ public class LakewalkerWMS {
     private int imagey;
 
     // Vector to cache images in memory
-    private Vector<BufferedImage> images = new Vector<BufferedImage>();
+    private List<BufferedImage> images = new Vector<BufferedImage>();
     // Hashmap to hold the mapping of cached images
-    private HashMap<String,Integer> imageindex = new HashMap<String,Integer>();
+    private Map<String,Integer> imageindex = new HashMap<String,Integer>();
 
     private int resolution;
     private int tilesize;
@@ -178,8 +180,8 @@ public class LakewalkerWMS {
         try {
             image = this.getTile(x,y, progressMonitor);
         } catch(LakewalkerException e){
-            System.out.println(e.getError());
-            throw new LakewalkerException(e.getMessage());
+            System.out.println(e.getMessage());
+            throw e;
         }
 
         int tx = floor(x,this.tilesize);

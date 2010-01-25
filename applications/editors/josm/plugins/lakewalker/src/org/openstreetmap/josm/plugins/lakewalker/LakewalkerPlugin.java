@@ -14,14 +14,15 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * @author Brent Easton
  */
 public class LakewalkerPlugin extends Plugin {
-  public LakewalkerPlugin(PluginInformation info) {
-	  super(info);
-    MainMenu.add(Main.main.menu.toolsMenu, new LakewalkerAction(tr("Lake Walker")));
-  }
+	public LakewalkerPlugin(PluginInformation info) {
+		super(info);
+		MainMenu.add(Main.main.menu.toolsMenu, new LakewalkerAction(tr("Lake Walker")));
+	}
 
-  public PreferenceSetting getPreferenceSetting()
-  {
-    return new LakewalkerPreferences();
-  }
+	@Override
+	public PreferenceSetting getPreferenceSetting()
+	{
+		return new LakewalkerPreferences();
+	}
 
 }

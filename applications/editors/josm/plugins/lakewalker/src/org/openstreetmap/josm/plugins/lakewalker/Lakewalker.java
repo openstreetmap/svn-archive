@@ -4,22 +4,15 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.List;
 
-import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 
 public class Lakewalker {
-    protected Collection<Command> commands = new LinkedList<Command>();
-    protected Collection<Way> ways = new ArrayList<Way>();
     protected boolean cancel;
 
-    private int waylen;
     private int maxnode;
     private int threshold;
-    private double epsilon;
     private int resolution;
     private int tilesize;
     private String startdir;
@@ -34,10 +27,8 @@ public class Lakewalker {
     double start_radius_small = 0.0002;
 
     public Lakewalker(int waylen, int maxnode, int threshold, double epsilon, int resolution, int tilesize, String startdir, String wmslayer, File workingdir){
-        this.waylen = waylen;
         this.maxnode = maxnode;
         this.threshold = threshold;
-        this.epsilon = epsilon;
         this.resolution = resolution;
         this.tilesize = tilesize;
         this.startdir = startdir;
@@ -382,8 +373,8 @@ public class Lakewalker {
             }
         }
 
-        ArrayList<double[]> seg_a = new ArrayList<double[]>();
-        ArrayList<double[]> seg_b = new ArrayList<double[]>();
+        List<double[]> seg_a;
+        List<double[]> seg_b;
 
         if(farthest_dist > epsilon){
             seg_a = douglasPeucker(sublist(nodes,0,farthest_node+1),epsilon, depth+1);
@@ -439,7 +430,7 @@ public class Lakewalker {
      *
      * @author Jason Reid
      */
-    private class LakewalkerBBox {
+    private static class LakewalkerBBox {
 
         private double top = 90;
         private double left = -180;

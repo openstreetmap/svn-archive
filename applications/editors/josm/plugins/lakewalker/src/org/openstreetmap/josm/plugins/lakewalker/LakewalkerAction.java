@@ -72,7 +72,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     */
     private void cleanupCache() {
         final long maxCacheAge = System.currentTimeMillis()-Main.pref.getInteger(LakewalkerPreferences.PREF_MAXCACHEAGE, 100)*24*60*60*1000L;
-        final long maxCacheSize = Main.pref.getInteger(LakewalkerPreferences.PREF_MAXCACHESIZE, 300)*1024*1024;
+        final long maxCacheSize = Main.pref.getInteger(LakewalkerPreferences.PREF_MAXCACHESIZE, 300)*1024*1024L;
 
         for (String wmsFolder : LakewalkerPreferences.WMSLAYERS) {
             String wmsCacheDirName = Main.pref.getPreferencesDir()+"plugins/Lakewalker/"+wmsFolder;
@@ -176,7 +176,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 nodelist = lw.trace(pos.lat(),pos.lon(),topLeft.lon(),botRight.lon(),topLeft.lat(),botRight.lat(),
                         progressMonitor.createSubTaskMonitor(1, false));
             } catch(LakewalkerException e){
-                System.out.println(e.getError());
+                System.out.println(e.getMessage());
             }
 
             System.out.println(nodelist.size()+" nodes generated");
@@ -246,6 +246,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                     commands.add(new AddCommand(n));
 
                 } catch (Exception ex) {
+                	ex.printStackTrace();
                 }
 
                 way.addNode(n);

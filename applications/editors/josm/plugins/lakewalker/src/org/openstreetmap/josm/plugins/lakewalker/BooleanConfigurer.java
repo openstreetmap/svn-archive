@@ -13,7 +13,7 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, copies are available 
+ * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
 package org.openstreetmap.josm.plugins.lakewalker;
@@ -22,65 +22,70 @@ package org.openstreetmap.josm.plugins.lakewalker;
  * Configurer for Boolean values
  */
 public class BooleanConfigurer extends Configurer {
-  private javax.swing.JCheckBox box;
+	private javax.swing.JCheckBox box;
 
-  public BooleanConfigurer() {
-    this(false);
-  }
-  
-  public BooleanConfigurer(boolean val) {
-    this(null, "", val);
-  }
-  
-  public BooleanConfigurer(String key, String name, Boolean val) {
-    super(key, name, val);
-  }
+	public BooleanConfigurer() {
+		this(false);
+	}
 
-  public BooleanConfigurer(String key, String name, boolean val) {
-    super(key, name, val ? Boolean.TRUE : Boolean.FALSE);
-  }
+	public BooleanConfigurer(boolean val) {
+		this(null, "", val);
+	}
 
-  public BooleanConfigurer(String key, String name) {
-    this(key, name, Boolean.FALSE);
-  }
+	public BooleanConfigurer(String key, String name, Boolean val) {
+		super(key, name, val);
+	}
 
-  public String getValueString() {
-    return booleanValue().toString();
-  }
+	public BooleanConfigurer(String key, String name, boolean val) {
+		super(key, name, val ? Boolean.TRUE : Boolean.FALSE);
+	}
 
-  public void setValue(Object o) {
-    super.setValue(o);
-    if (box != null
-      && !o.equals(new Boolean(box.isSelected()))) {
-      box.setSelected(booleanValue().booleanValue());
-    }
-  }
+	public BooleanConfigurer(String key, String name) {
+		this(key, name, Boolean.FALSE);
+	}
 
-  public void setValue(String s) {
-    setValue(Boolean.valueOf(s));
-  }
+	@Override
+	public String getValueString() {
+		return booleanValue().toString();
+	}
 
-  public void setName(String s) {
-    super.setName(s);
-    if (box != null) {
-      box.setText(s);
-    }
-  }
+	@Override
+	public void setValue(Object o) {
+		super.setValue(o);
+		if (box != null
+				&& !o.equals(box.isSelected())) {
+			box.setSelected(booleanValue().booleanValue());
+		}
+	}
 
-  public java.awt.Component getControls() {
-    if (box == null) {
-      box = new javax.swing.JCheckBox(getName());
-      box.setSelected(booleanValue().booleanValue());
-      box.addItemListener(new java.awt.event.ItemListener() {
-        public void itemStateChanged(java.awt.event.ItemEvent e) {
-          setValue(new Boolean(box.isSelected()));
-        }
-      });
-    }
-    return box;
-  }
+	@Override
+	public void setValue(String s) {
+		setValue(Boolean.valueOf(s));
+	}
 
-  public Boolean booleanValue() {
-    return (Boolean) value;
-  }
+	@Override
+	public void setName(String s) {
+		super.setName(s);
+		if (box != null) {
+			box.setText(s);
+		}
+	}
+
+	@Override
+	public java.awt.Component getControls() {
+		if (box == null) {
+			box = new javax.swing.JCheckBox(getName());
+			box.setSelected(booleanValue().booleanValue());
+			box.addItemListener(new java.awt.event.ItemListener() {
+				public void itemStateChanged(java.awt.event.ItemEvent e) {
+					setValue(box.isSelected());
+				}
+			});
+		}
+		return box;
+	}
+
+	public Boolean booleanValue() {
+		return (Boolean) value;
+	}
 }

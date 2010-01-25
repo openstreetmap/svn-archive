@@ -35,7 +35,8 @@ public class DoubleConfigurer extends StringConfigurer {
         super(key, name, val == null ? null : val.toString());
     }
 
-    public void setValue(String s) {
+    @Override
+	public void setValue(String s) {
         Double d = null;
         try {
             d = Double.valueOf(s);
@@ -47,14 +48,16 @@ public class DoubleConfigurer extends StringConfigurer {
             setValue(d);
     }
 
-    public void setValue(Object o) {
+    @Override
+	public void setValue(Object o) {
         if (!noUpdate && nameField != null && o != null) {
             nameField.setText(o.toString());
         }
         super.setValue(o);
     }
 
-    public String getValueString() {
+    @Override
+	public String getValueString() {
         if (value == null || value.equals("")) {
             return null;
         }

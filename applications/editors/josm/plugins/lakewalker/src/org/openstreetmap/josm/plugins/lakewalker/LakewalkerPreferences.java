@@ -3,12 +3,13 @@ package org.openstreetmap.josm.plugins.lakewalker;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.GridBagConstraints;
+
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
@@ -73,8 +74,8 @@ public class LakewalkerPreferences implements PreferenceSetting {
         epsilonConfig.setToolTipText(tr("Accuracy of Douglas-Peucker line simplification, measured in degrees.<br>Lower values give more nodes, and more accurate lines. Default 0.0003."));
         landsatResConfig.setToolTipText(tr("Resolution of Landsat tiles, measured in pixels per degree. Default 4000."));
         landsatSizeConfig.setToolTipText(tr("Size of one landsat tile, measured in pixels. Default 2000."));
-        eastOffsetConfig.setToolTipText(tr("Offset all points in East direction (degrees). Default 0."));   
-        northOffsetConfig.setToolTipText(tr("Offset all points in North direction (degrees). Default 0."));   
+        eastOffsetConfig.setToolTipText(tr("Offset all points in East direction (degrees). Default 0."));
+        northOffsetConfig.setToolTipText(tr("Offset all points in North direction (degrees). Default 0."));
         startDirConfig.setToolTipText(tr("Direction to search for land. Default east."));
         lakeTypeConfig.setToolTipText(tr("Tag ways as water, coastline, land or nothing. Default is water."));
         wmsConfig.setToolTipText(tr("Which WMS layer to use for tracing against. Default is IR1."));
@@ -104,7 +105,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
 
     public void buildPreferences(JPanel prefPanel) {
         GBC labelConstraints = GBC.std().insets(10,5,5,0);
-        GBC dataConstraints = GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL);
+        GBC dataConstraints = GBC.eol().insets(0,5,0,0).fill(GridBagConstraints.HORIZONTAL);
 
         prefPanel.add(maxSegsLabel, labelConstraints);
         prefPanel.add(maxSegsConfig.getControls(), dataConstraints);
@@ -117,13 +118,13 @@ public class LakewalkerPreferences implements PreferenceSetting {
         prefPanel.add(landsatResLabel, labelConstraints);
         prefPanel.add(landsatResConfig.getControls(), dataConstraints);
         prefPanel.add(landsatSizeLabel, labelConstraints);
-        prefPanel.add(landsatSizeConfig.getControls(), dataConstraints);    
+        prefPanel.add(landsatSizeConfig.getControls(), dataConstraints);
         prefPanel.add(eastOffsetLabel, labelConstraints);
         prefPanel.add(eastOffsetConfig.getControls(), dataConstraints);
         prefPanel.add(northOffsetLabel, labelConstraints);
         prefPanel.add(northOffsetConfig.getControls(), dataConstraints);
         prefPanel.add(startDirLabel, labelConstraints);
-        prefPanel.add(startDirConfig.getControls(), dataConstraints);    
+        prefPanel.add(startDirConfig.getControls(), dataConstraints);
         prefPanel.add(lakeTypeLabel, labelConstraints);
         prefPanel.add(lakeTypeConfig.getControls(), dataConstraints);
         prefPanel.add(wmsLabel, labelConstraints);
@@ -135,7 +136,7 @@ public class LakewalkerPreferences implements PreferenceSetting {
         prefPanel.add(sourceLabel, labelConstraints);
         prefPanel.add(sourceConfig.getControls(), dataConstraints);
 
-        prefPanel.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
+        prefPanel.add(Box.createVerticalGlue(), GBC.eol().fill(GridBagConstraints.VERTICAL));
     }
 
     /*

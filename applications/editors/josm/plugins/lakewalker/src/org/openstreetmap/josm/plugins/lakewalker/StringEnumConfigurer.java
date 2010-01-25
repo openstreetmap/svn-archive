@@ -32,8 +32,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.Box;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
@@ -62,7 +62,8 @@ public class StringEnumConfigurer extends Configurer {
     public void setToolTipText(String s) {
         tooltipText = s;
     }
-    public Component getControls() {
+    @Override
+	public Component getControls() {
         if (panel == null) {
             panel = Box.createHorizontalBox();
             panel.add(new JLabel(name));
@@ -81,15 +82,18 @@ public class StringEnumConfigurer extends Configurer {
         }
         return panel;
     }
-    public void setValue(Object o) {
+
+    @Override
+	public void setValue(Object o) {
         if(o == null)
-            o = new Integer(0);
+            o = 0;
         super.setValue(o);
         if(!noUpdate && box != null)
             box.setSelectedIndex((Integer)o);
     }
 
-    public void setValue(String s) {
+    @Override
+	public void setValue(String s) {
         Integer n = 0;
         for (int i = 0; i < transValues.length; ++i)
         {
@@ -101,7 +105,8 @@ public class StringEnumConfigurer extends Configurer {
         setValue(n);
     }
 
-    public String getValueString() {
+    @Override
+	public String getValueString() {
         return validValues[(Integer)value];
     }
 }

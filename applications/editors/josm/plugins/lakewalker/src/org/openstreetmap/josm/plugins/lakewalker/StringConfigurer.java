@@ -13,7 +13,7 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, copies are available 
+ * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
 package org.openstreetmap.josm.plugins.lakewalker;
@@ -33,7 +33,7 @@ public class StringConfigurer extends Configurer {
   public StringConfigurer() {
     this(null, "");
   }
-  
+
   public StringConfigurer(String key, String name) {
     this(key, name, "");
   }
@@ -42,11 +42,13 @@ public class StringConfigurer extends Configurer {
     super(key, name, val);
   }
 
-  public String getValueString() {
+  @Override
+public String getValueString() {
     return (String) value;
   }
 
-  public void setValue(String s) {
+  @Override
+public void setValue(String s) {
     if (!noUpdate && nameField != null) {
       nameField.setText(s);
     }
@@ -56,8 +58,9 @@ public class StringConfigurer extends Configurer {
   public void setToolTipText(String s) {
     nameField.setToolTipText(s);
   }
-  
-  public java.awt.Component getControls() {
+
+  @Override
+public java.awt.Component getControls() {
     if (p == null) {
       p = new JPanel();
       p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));
@@ -68,7 +71,8 @@ public class StringConfigurer extends Configurer {
       nameField.setText(getValueString());
       p.add(nameField);
       nameField.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyReleased(java.awt.event.KeyEvent evt) {
+        @Override
+		public void keyReleased(java.awt.event.KeyEvent evt) {
           noUpdate = true;
           setValue(nameField.getText());
           noUpdate = false;

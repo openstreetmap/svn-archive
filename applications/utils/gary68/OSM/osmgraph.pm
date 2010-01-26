@@ -24,19 +24,24 @@
 # USAGE
 #
 #
-# drawArea ($color, @nodes)
+# drawArea ($color, @nodes) - real world
+# drawAreaPix ($color, @nodes) - pixels
 # drawChartColumns ($lon, $lat, $offX, $offY, $sizeY, $columnWidthPix, $yMax, $color, @values)
 # drawCircleRadius ($lon, $lat, $radius, $size, $color)
 # drawCircleRadiusText ($lon, $lat, $radius, $size, $color, $text)
 # drawHead ($text, $color, $size) / size (1..5) 
 # drawFoot ($text, $color, $size) / size (1..5) 
 # drawLegend ($size, @entries) / size (1..5) ("t1", "col1", "t2", "col2")
-# drawNodeDot ($lon, $lat, $color, $size) / size (1..5) 
-# drawNodeCircle ($lon, $lat, $color, $size) / size (1..5)
+# drawNodeDot ($lon, $lat, $color, $size) / size (1..5) - real world
+# drawNodeDotPix ($lon, $lat, $color, $size) / size (1..5) - pixels
+# drawNodeCircle ($lon, $lat, $color, $size) / size (1..5) - real world
+# drawNodeCirclePix ($lon, $lat, $color, $size) / size (1..5) - pixels
 # drawRuler ($color)
-# drawTextPix ($x, $y, $text, $color, $size) / size (1..5) 
+# drawTextPix ($x, $y, $text, $color, $size) / size (1..5) bottom left = (0,0)
+# drawTextPix2 ($x, $y, $text, $color, $size) / size (1..5) top left = (0,0) 
 # drawTextPos ($lon, $lat, $offX, $offY, $text, $color, $size) / size (1..5)
-# drawWay ($color, $size, @nodes) / size = thickness
+# drawWay ($color, $size, @nodes) / size = thickness / real world
+# drawWayPix ($color, $size, @nodes) / size = thickness / pixels
 # enableSVG ()
 # initGraph ($sizeX, $left, $bottom, $right, $top) / real world coordinates, sizeX in pixels, Y automatic
 # labelWay ($col, $size, $font, $text, $tSpan, @nodes) / size can be 0..5 (or bigger...) / $tSpan = offset to line/way
@@ -50,7 +55,7 @@
 #
 # INFO
 #
-# graph bottom left coordinates: (0,0)
+# graph top left coordinates: (0,0)
 # font size (1..5). 1 = smallest, 5 = giant
 # size for lines = pixel width / thickness
 # pass color as string, i.e. "black". list see farther down.
@@ -72,13 +77,13 @@ use Encode ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '2.3' ; # PUBLISHED
+$VERSION = '2.5' ; # PUBLISHED
 
 require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw ( drawArea drawCircleRadius drawCircleRadiusText drawChartColumns drawHead drawFoot drawLegend drawNodeDot drawNodeCircle drawRuler drawTextPix drawTextPos drawWay enableSVG initGraph labelWay writeGraph writeSVG) ;
+@EXPORT = qw ( drawArea drawAreaPix drawCircleRadius drawCircleRadiusText drawChartColumns drawHead drawFoot drawLegend drawNodeDot drawNodeDotPix drawNodeCircle drawNodeCirclePix drawRuler drawTextPix drawTextPix2 drawTextPos drawWay drawWayPix enableSVG initGraph labelWay writeGraph writeSVG) ;
 
 #
 # constants
@@ -128,6 +133,7 @@ my $svgEnabled = 0 ;
 my @svgOutputWaysNodes = () ;
 my @svgOutputAreas = () ;
 my @svgOutputText = () ;
+my @svgOutputPixel = () ;
 my @svgOutputDef = () ;
 my @svgOutputPathText = () ;
 my $pathNumber = 0 ;
@@ -237,6 +243,18 @@ sub drawTextPix {
 	}
 }
 
+sub drawTextPix2 {
+#
+# draws text at pixel position
+#
+	my ($x1, $y1, $text, $col, $size) = @_ ;
+
+	$image->string($fonts{$size}, $x1, $y1, encode("iso-8859-1", decode("utf8", $text)), $color{$col}) ;
+	if ($svgEnabled) {
+		push @svgOutputPixel, svgElementText ($x1, $y1+9, $text, $size, $col, "") ;
+	}
+}
+
 sub drawNodeDot {
 #
 # draws node as a dot at given real world coordinates
@@ -250,12 +268,39 @@ sub drawNodeDot {
 	}
 }
 
+sub drawNodeDotPix {
+#
+# draws node as a dot at given pixels
+#
+	my ($x1, $y1, $col, $size) = @_ ;
+	$image->filledEllipse($x1, $y1, $size, $size, $color{$col}) ;		
+
+	if ($svgEnabled) {
+		push @svgOutputPixel, svgElementCircleFilled ($x1, $y1, $size, $col) ;
+	}
+}
+
 sub drawNodeCircle {
 #
 # draws node as a circle at given real world coordinates
 #
 	my ($lon, $lat, $col, $size) = @_ ;
 	my ($x1, $y1) = convert ($lon, $lat) ;
+	
+	$image->setThickness(2) ;
+	$image->ellipse($x1, $y1, $size, $size, $color{$col}) ;		
+	$image->setThickness(1) ;
+
+	if ($svgEnabled) {
+		push @svgOutputWaysNodes, svgElementCircle ($x1, $y1, $size, 2, $col) ;
+	}
+}
+
+sub drawNodeCirclePix {
+#
+# draws node as a circle at given real world coordinates
+#
+	my ($x1, $y1, $col, $size) = @_ ;
 	
 	$image->setThickness(2) ;
 	$image->ellipse($x1, $y1, $size, $size, $color{$col}) ;		
@@ -332,6 +377,31 @@ sub drawWay {
 	$image->setThickness(1) ;
 }
 
+sub drawWayPix {
+#
+# draws way as a line at given pixels. nodes have to be passed as array ($x, $y, $x, $y...)
+# $size = thickness
+#
+	my ($col, $size, @nodes) = @_ ;
+	my $i ;
+	my @points = () ;
+
+	$image->setThickness($size) ;
+	for ($i=0; $i<$#nodes-2; $i+=2) {
+		my ($x1, $y1) = ($nodes[$i], $nodes[$i+1]) ;
+		my ($x2, $y2) = ($nodes[$i+2], $nodes[$i+3]) ;
+		$image->line($x1,$y1,$x2,$y2,$color{$col}) ;
+	}
+	if ($svgEnabled) {
+		for ($i=0; $i<$#nodes; $i+=2) {
+			my ($x, $y) = ($nodes[$i], $nodes[$i+1]) ;
+			push @points, $x ; push @points, $y ; 
+		}
+		push @svgOutputPixel, svgElementPolyline ($col, $size, @points) ;
+	}
+	$image->setThickness(1) ;
+}
+
 
 sub labelWay {
 #
@@ -374,6 +444,27 @@ sub drawArea {
 	$image->filledPolygon ($poly, $color{$col}) ;
 	if ($svgEnabled) {
 		push @svgOutputAreas, svgElementPolygonFilled ($col, @points) ;
+	}
+}
+
+sub drawAreaPix {
+#
+# draws an area like waterway=riverbank or landuse=forest. 
+# pass color as string and nodes as list (x1, y1, x2, y2...) - pixels
+#
+	my ($col, @nodes) = @_ ;
+	my $i ;
+	my $poly ; my @points = () ;
+	$poly = new GD::Polygon ;
+	
+	for ($i=0; $i<$#nodes; $i+=2) {
+		my ($x1, $y1) = ($nodes[$i], $nodes[$i+1]) ;
+		$poly->addPt ($x1, $y1) ;
+		push @points, $x1 ; push @points, $y1 ; 
+	}
+	$image->filledPolygon ($poly, $color{$col}) ;
+	if ($svgEnabled) {
+		push @svgOutputPixel, svgElementPolygonFilled ($col, @points) ;
 	}
 }
 
@@ -513,6 +604,10 @@ sub writeSVG {
 
 	print $file "<g id=\"Labels\">\n" ;
 	foreach (@svgOutputPathText) { print $file $_, "\n" ; }
+	print $file "</g>\n" ;
+
+	print $file "<g id=\"Pixels\">\n" ;
+	foreach (@svgOutputPixel) { print $file $_, "\n" ; }
 	print $file "</g>\n" ;
 
 	print $file "</svg>\n" ;

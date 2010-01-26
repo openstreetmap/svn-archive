@@ -15,7 +15,7 @@ use strict ;
 use warnings ;
 
 use OSM::osm ;
-use OSM::osmgraph 2.4 ;
+use OSM::osmgraph 2.5 ;
 
 my $programName = "mapgen.pl" ;
 my $usage = "mapgen.pl file.osm style.csv out.png size" ; # svg name is automatic

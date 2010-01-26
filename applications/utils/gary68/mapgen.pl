@@ -1,53 +1,35 @@
 
+# 0.03 enhanced legend, center label in areas
 
 
 # TODO
-# distance calc for ways
-# area labels in the middle
-# read style from file
 # LAYERS, bridges and tunnels (collect objects in separate hashes...)
-# enhanced legend
+# wiki page
 
 # waybegrenzungen, farbe, dicke
 # relations (scan, then convert to ways, preserve layers!)
+# sub key/value for rules
 # bg color
 
 use strict ;
 use warnings ;
 
 use OSM::osm ;
-use OSM::osmgraph 2.3 ;
+use OSM::osmgraph 2.4 ;
 
 my $programName = "mapgen.pl" ;
-my $usage = "mapgen.pl file.osm out.png size" ; # svg name is automatic
-my $version = "0.1" ;
+my $usage = "mapgen.pl file.osm style.csv out.png size" ; # svg name is automatic
+my $version = "0.03" ;
 
-my @legend = (	"Farm", 	"lightgreen",
-	 	"Forest", 	"lightbrown", 
-		"Water", 	"lightblue", 
-		"Primary(way)/road block(node)", "red", 
-		"Motorway", 	"blue", 
-		"Secondary", 	"orange", 
-		"Tertiary", 	"green", 
-		"Residential", 	"darkgray", 
-		"Track", 	"darkgray", 
-		"camp site", 	"green", 
-		"hospital", 	"pink", 
-		"Collapsed", 	"black") ;
+my @legend = () ;
+
 # AREAS
 my $areaIndexKey = 0 ;
 my $areaIndexValue = 1 ;
 my $areaIndexColor = 2 ;
+my $areaIndexLegend = 3 ;
 my @areas = () ;
 # tag value color
-push @areas, [qw (waterway riverbank lightblue)] ;
-push @areas, [qw (natural water lightblue)] ;
-push @areas, [qw (landuse forest lightbrown)] ;
-push @areas, [qw (landuse farm lightgreen)] ;
-push @areas, [qw (landuse village_green lightgreen)] ;
-push @areas, [qw (landuse residential lightgray)] ;
-push @areas, [qw (aeroway runway gray)] ;
-push @areas, [qw (aeroway taxiway gray)] ;
 
 # NODES
 my $nodeIndexTag = 0 ;
@@ -58,27 +40,9 @@ my $nodeIndexLabel = 4 ;
 my $nodeIndexLabelColor = 5 ;
 my $nodeIndexLabelSize = 6 ;
 my $nodeIndexLabelOffset = 7 ;
+my $nodeIndexLegend = 8 ;
 my @nodes = () ;
 # tag value color thickness label label-color label-size label-offset
-push @nodes, [qw (building collapsed black 3 none black 0 0)] ;
-push @nodes, [qw (earthquake:damage collapsed_building black 3 none black 0 0)] ;
-push @nodes, [qw (highway obstacle red 8 none black 0 0)] ;
-push @nodes, [qw (barrier obstacle red 8 none black 0 0)] ;
-push @nodes, [qw (earthquake:damage spontaneous_camp green 6 none black 0 0)] ;
-push @nodes, [qw (earthquake:damage spontaneous_campsite green 6 none black 0 0)] ;
-push @nodes, [qw (earthquake:damage people_camping green 6 none black 0 0)] ;
-push @nodes, [qw (earthquake:damage landslide darkgray 8 none black 0 0)] ;
-push @nodes, [qw (tourism camp_site green 6 none black 0 0)] ;
-push @nodes, [qw (amenity hospital pink 6 name black 1 0)] ;
-push @nodes, [qw (hospital field pink 4 name black 1 0)] ;
-push @nodes, [qw (place city black 0 name black 3 0)] ;
-push @nodes, [qw (place city black 0 pcode:2 blue 3 10)] ;
-push @nodes, [qw (place town black 0 name black 2 0)] ;
-push @nodes, [qw (place town black 0 pcode:2 blue 2 10)] ;
-push @nodes, [qw (place suburb black 0 name black 2 0)] ;
-push @nodes, [qw (place suburb black 0 pcode:2 blue 2 10)] ;
-push @nodes, [qw (place village black 0 name black 2 0)] ;
-push @nodes, [qw (place village black 0 pcode:2 blue 2 10)] ;
 
 
 # WAYS and small AREAS
@@ -89,34 +53,9 @@ my $wayIndexThickness = 3 ;
 my $wayIndexFilled = 4 ;
 my $wayIndexLabel = 5 ;
 my $wayIndexLabelColor = 6 ;
+my $wayIndexLegend = 7 ;
 my @ways = () ;
-# key value color thickness label label-color
-push @ways, [qw (highway residential darkgray 2 0 name darkgray)] ;
-push @ways, [qw (highway unclassified darkgray 2 0 name darkgray)] ;
-push @ways, [qw (highway service darkgray 2 0 name darkgray)] ;
-push @ways, [qw (highway motorway blue 4 0 ref darkgray)] ;
-push @ways, [qw (highway motorway_link blue 3 0 none darkgray)] ;
-push @ways, [qw (highway trunk blue 3 0 ref darkgray)] ;
-push @ways, [qw (highway trunk_link blue 2 0 none darkgray)] ;
-push @ways, [qw (highway primary red 3 0 ref darkgray)] ;
-push @ways, [qw (highway primary_link red 3 0 none darkgray)] ;
-push @ways, [qw (highway secondary orange 3 0 ref darkgray)] ;
-push @ways, [qw (highway secondary_link orange 2 0 none darkgray)] ;
-push @ways, [qw (highway tertiary green 2 0 ref darkgray)] ;
-push @ways, [qw (highway track darkgray 1 0 none darkgray)] ;
-
-push @ways, [qw (waterway river lightblue 2 0 name darkgray)] ;
-push @ways, [qw (waterway stream lightblue 1 0 name darkgray)] ;
-
-push @ways, [qw (building yes gray 1 0 none darkgray)] ;
-push @ways, [qw (building collapsed black 1 0 none darkgray)] ;
-
-# WAY AREAS
-push @ways, [qw (amenity hospital pink 3 1 name darkgray)] ;
-push @ways, [qw (hospital field pink 2 1 name darkgray)] ;
-
-push @ways, [qw (tourism camp_site green 2 1 name darkgray)] ;
-push @ways, [qw (earthquake:damage landslide darkgray 2 1 name darkgray)] ;
+# key value color thickness fill label label-color
 
 
 my $labelMinLength = 0.1 ; # min length of street so that it will be labled / needs adjustment according to picture size
@@ -141,6 +80,7 @@ my %memRelationMembers ;
 
 my $osmName ; 
 my $pngName ;
+my $csvName ;
 
 my %lon ; my %lat ;
 
@@ -157,6 +97,12 @@ if (!$osmName)
 	die (print $usage, "\n");
 }
 
+$csvName = shift||'';
+if (!$csvName)
+{
+	die (print $usage, "\n");
+}
+
 $pngName = shift||'';
 if (!$pngName)
 {
@@ -168,6 +114,47 @@ if (!$size)
 {
 	$size = 1024 ; # default size
 }
+
+# READ STYLE File
+open (my $csvFile, "<", $csvName) or die ("ERROR: style file not found.") ;
+my $line = <$csvFile> ;
+
+#$line = <$csvFile> ;
+#while (! grep /^\"SECTION/, $line) {
+#	my ($color, $text) = ($line =~ /\"(.+)\" \"(.+)\"/ ) ;
+#	# print "L $color $text\n" ; 
+#	push @legend, $text ; push @legend, $color ;
+#	$line = <$csvFile> ;
+#}
+
+$line = <$csvFile> ;
+while (! grep /^\"SECTION/, $line) {
+	my ($key, $value, $color, $legend) = ($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d)/ ) ;
+	# print "A $key, $value, $color, $legend\n" ; 
+	push @areas, [$key, $value, $color, $legend] ;
+	$line = <$csvFile> ;
+}
+# tag value color thickness label label-color label-size label-offset
+$line = <$csvFile> ;
+while (! grep /^\"SECTION/, $line) {
+	my ($key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelOffset, $legend) = 
+		($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) (\d+) (\d)/ ) ;
+	# print "N $key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelOffset, $legend\n" ; 
+	push @nodes, [$key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelOffset, $legend] ;
+	$line = <$csvFile> ;
+}
+# key value color thickness fill label label-color
+$line = <$csvFile> ;
+while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
+	my ($key, $value, $color, $thickness, $fill, $label, $labelColor, $legend) = 
+		($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) (\d+) \"(.+)\" \"(.+)\" (\d)/ ) ;
+	# print "W $key, $value, $color, $thickness, $fill, $label, $labelColor, $legend\n" ; 
+	push @ways, [$key, $value, $color, $thickness, $fill, $label, $labelColor, $legend] ;
+	$line = <$csvFile> ;
+}
+
+close ($csvFile) ;
+
 
 print "\n$programName $version for file $osmName\n" ;
 print "AREAS\n" ;
@@ -298,12 +285,10 @@ foreach my $wayId (keys %memWayTags) {
 	my $text = "" ; 
 	my $length = 0 ;
 
-	my $i ;
-#	for ($i = 0; $i < ((scalar @{$memWayNodes{$wayId}})-1); $i++) {
-#		$length += distance ($lon{ ${$memWayNodes{$wayId}}[$i] }, $lat{ ${$memWayNodes{$wayId}}[$i] }, 
-#			$lon{ ${$memWayNodes{$wayId}}[$i+1] }, $lat{ ${$memWayNodes{$wayId}}[$i+1] }) ;
-#	}
-	$length = 1 ;
+	for (my $i = 0; $i < scalar (@{$memWayNodes{$wayId}})-1   ; $i++) {
+		$length += distance ($lon{ $memWayNodes{$wayId}[$i] }, $lat{ $memWayNodes{$wayId}[$i] }, 
+			$lon{ $memWayNodes{$wayId}[$i+1] }, $lat{ $memWayNodes{$wayId}[$i+1] }) ;
+	}
 
 	foreach my $tag (@{$memWayTags{$wayId}}) {
 		#print "  $tag->[0] $tag->[1]\n" ;
@@ -315,7 +300,7 @@ foreach my $wayId (keys %memWayTags) {
 					drawWay ($test->[$wayIndexColor], $test->[$wayIndexThickness], nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 					if ($test->[$wayIndexLabel] ne "none") {
 						foreach my $tag2 (@{$memWayTags{$wayId}}) {
-							if ( ($tag2->[0] eq $test->[$wayIndexLabel]) and ($length > $labelMinLength) ) {
+							if ( ($tag2->[0] eq $test->[$wayIndexLabel]) and ($length >= $labelMinLength) ) {
 								labelWay ($test->[$wayIndexLabelColor], 0, "", $tag2->[1], -2, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 							}
 						}
@@ -327,9 +312,13 @@ foreach my $wayId (keys %memWayTags) {
 						if ($test->[$wayIndexLabel] ne "none") {
 							foreach my $tag2 (@{$memWayTags{$wayId}}) {
 								if ($tag2->[0] eq $test->[$wayIndexLabel]) {
-									# TODO calc middle of area
-									drawTextPos ($lon{${$memWayNodes{$wayId}}[0]}, $lat{${$memWayNodes{$wayId}}[0]}, 0, 0, 
-										$tag2->[1], $test->[$wayIndexLabelColor], 2) ;
+									my ($x, $y) = (0, 0) ; my $count = 0 ;
+									foreach my $node (@{$memWayNodes{$wayId}}) {
+										$x += $lon{$node} ; $y += $lat{$node} ; $count++ ;
+									}
+									$x = $x / $count ; $y = $y / $count ;
+									# drawTextPos ($lon{${$memWayNodes{$wayId}}[0]}, $lat{${$memWayNodes{$wayId}}[0]}, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], 2) ;
+									drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], 2) ;
 								}
 							}
 						} # draw label
@@ -346,7 +335,9 @@ foreach my $wayId (keys %memWayTags) {
 
 print "draw legend etc. and write files...\n" ;
 
-drawLegend (2, @legend) ;
+# drawLegend (2, @legend) ;
+createLegend() ;
+
 drawRuler ("darkgray") ;
 drawHead ("gary68's $programName $version", "black", 2) ;
 drawFoot ("data by www.openstreetmap.org", "gray", 2) ;
@@ -377,3 +368,66 @@ sub nodes2Coordinates {
 	return @result ;
 }
 
+sub createLegend {
+	my $currentY = 50 ;
+	my $step = 20 ;
+	my $textX = 70 ;
+	my $textOffset = -5 ;
+	my $dotX = 40 ;
+	my $areaSize = 8 ;
+	my $wayStartX = 20 ;
+	my $wayEndX = 60 ;
+	my $areaStartX = 33 ;
+	my $areaEndX = 47 ;
+	my $count = 0 ;
+	my $sizeLegend = 2 ;
+	
+	foreach (@areas) { if ($_->[$areaIndexLegend] == 1) { $count++ ; }  }
+	foreach (@nodes) { if ($_->[$nodeIndexLegend] == 1) { $count++ ; }  }
+	foreach (@ways) { if ($_->[$wayIndexLegend] == 1) { $count++ ; }  }
+
+	# erase background
+	drawAreaPix ("white", 0, 30,
+			180,30,
+			180, 30 + $count*20 + 10,
+			0, 30 + $count*20 + 10,
+			0, 30) ;
+	
+	foreach my $node (@nodes) { 
+		if ($node->[$nodeIndexLegend] == 1) { 
+			drawNodeDotPix ($dotX, $currentY, $node->[$nodeIndexColor], $node->[$nodeIndexThickness]) ;
+			drawTextPix2 ($textX, $currentY+$textOffset, $node->[$nodeIndexValue], "black", $sizeLegend) ;
+			$currentY += $step ;
+		}  
+	}
+
+	foreach my $way (@ways) { 
+		if ($way->[$wayIndexLegend] == 1) { 
+			if ($way->[$wayIndexFilled] == 0) {
+				drawWayPix ($way->[$wayIndexColor], $way->[$wayIndexThickness], $wayStartX, $currentY, $wayEndX, $currentY) ;
+			} 
+			else {
+				drawAreaPix ($way->[$wayIndexColor], $areaStartX, $currentY-$areaSize, 
+					$areaEndX, $currentY-$areaSize,
+					$areaEndX, $currentY+$areaSize,
+					$areaStartX, $currentY+$areaSize,
+					$areaStartX, $currentY-$areaSize) ;
+			}
+			drawTextPix2 ($textX, $currentY+$textOffset, $way->[$wayIndexValue], "black", $sizeLegend) ;
+			$currentY += $step ;
+		}  
+	}
+
+	foreach my $area (@areas) { 
+		if ($area->[$areaIndexLegend] == 1) { 
+			drawAreaPix ($area->[$areaIndexColor], $areaStartX, $currentY-$areaSize, 
+				$areaEndX, $currentY-$areaSize,
+				$areaEndX, $currentY+$areaSize,
+				$areaStartX, $currentY+$areaSize,
+				$areaStartX, $currentY-$areaSize) ;
+			drawTextPix2 ($textX, $currentY+$textOffset, $area->[$areaIndexValue], "black", $sizeLegend) ;
+			$currentY += $step ;
+		}  
+	}
+
+}

@@ -18,10 +18,10 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * @author zere
  */
 public class TerracerPlugin extends Plugin {
-	public TerracerPlugin(PluginInformation info) {
-		super(info);
-		
-		MainMenu.add(Main.main.menu.toolsMenu, new TerracerAction());
-		MainMenu.add(Main.main.menu.toolsMenu, new ReverseTerraceAction());
-	}
+    public TerracerPlugin(PluginInformation info) {
+        super(info);
+        
+        MainMenu.add(Main.main.menu.toolsMenu, new TerracerAction());
+        MainMenu.add(Main.main.menu.toolsMenu, new ReverseTerraceAction());
+    }
 }

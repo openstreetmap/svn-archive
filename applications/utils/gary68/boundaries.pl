@@ -691,7 +691,7 @@ if ( ($polyBaseName ne "") and ($bigPicOpt eq "1") ) {
 }
 
 #
-# BUILD AND PRINT HIRARCHIES
+# BUILD AND PRINT HIERARCHIES
 #
 if ($hierarchyOpt eq "1") {
 	print "building hierarchies...\n" ;
@@ -725,13 +725,13 @@ if ($hierarchyOpt eq "1") {
 	}
 	print "\n$count is_in checks done.\n" ; 
 
-	my ($csvNameHirarchy) = $csvName ;
-	my ($htmlNameHirarchy) = $htmlName ;
-	$csvNameHirarchy =~  s/.csv/.hierarchy.csv/ ;
-	$htmlNameHirarchy =~ s/.htm/.hierarchy.htm/ ;
+	my ($csvNameHierarchy) = $csvName ;
+	my ($htmlNameHierarchy) = $htmlName ;
+	$csvNameHierarchy =~  s/.csv/.hierarchy.csv/ ;
+	$htmlNameHierarchy =~ s/.htm/.hierarchy.htm/ ;
 
-	open ($htmlFile, ">", $htmlNameHirarchy) or die ("can't open html output file") ;
-	open ($csvFile, ">", $csvNameHirarchy) or die ("can't open csv output file") ;
+	open ($htmlFile, ">", $htmlNameHierarchy) or die ("can't open html output file") ;
+	open ($csvFile, ">", $csvNameHierarchy) or die ("can't open csv output file") ;
 
 	printHTMLHeader ($htmlFile, "boundaries by gary68 - hierarchy") ;
 	print $csvFile "Line;RelationId;Name;Type;Boundary;AdminLevel;is_in\n" ;

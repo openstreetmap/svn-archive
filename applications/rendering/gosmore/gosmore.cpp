@@ -140,7 +140,9 @@ enum { GDK_SCROLL_UP, GDK_SCROLL_DOWN };
 HINSTANCE hInst;
 HWND   mWnd, dlgWnd = NULL;
 
+#define LOG logprintf ("%d\n", __LINE__);
 #else
+#define LOG // Less debug info needed because we have gdb
 #ifndef RES_DIR
 #define RES_DIR "/usr/share/gosmore/" /* Needed for "make CFLAGS=-g" */
 #endif
@@ -170,7 +172,7 @@ const char *FindResource (const char *fname)
 char logFileName[80] = "gosmore.log.txt";
 
 FILE * logFP(bool create = true) {
-  static FILE * f;
+  static FILE * f = NULL;
   if (!f && create) {
     f = fopen(logFileName,"at");
     fprintf(f,"-----\n");
@@ -198,7 +200,6 @@ void logprintf(char * format, ...)
   vfprintf(logFP(), format, args);
   va_end (args);
 }
-
 
 struct klasTableStruct {
   const TCHAR *desc;
@@ -287,29 +288,29 @@ void ChangePak (const TCHAR *pakfile)
   #ifdef WIN32
   static HANDLE gmap = INVALID_HANDLE_VALUE, fm = INVALID_HANDLE_VALUE;
   static void *map = NULL;
-  if (map) UnmapViewOfFile (map);
-  if (fm != INVALID_HANDLE_VALUE) CloseHandle (fm);
-  if (gmap != INVALID_HANDLE_VALUE) CloseHandle (gmap);
+  LOG if (map) UnmapViewOfFile (map);
+  LOG if (fm != INVALID_HANDLE_VALUE) CloseHandle (fm);
+  LOG if (gmap != INVALID_HANDLE_VALUE) CloseHandle (gmap);
   
-  gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
+  LOG gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
     NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
     NULL);
-  if (gmap == INVALID_HANDLE_VALUE && currentBbox == pakfile) {
+  LOG if (gmap == INVALID_HANDLE_VALUE && currentBbox == pakfile) {
     #ifdef _WIN32_WCE
     wsprintf (wcsrchr (currentBbox, L'\\'), TEXT ("\\default.pak"));
     #else
     strcpy (currentBbox, "default.pak"); // WIN32
     #endif
-    gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
+    LOG gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
       NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
       NULL);    
   }
-  fm = gmap == INVALID_HANDLE_VALUE ? INVALID_HANDLE_VALUE :
+  LOG fm = gmap == INVALID_HANDLE_VALUE ? INVALID_HANDLE_VALUE :
     CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
-  map = fm == INVALID_HANDLE_VALUE ? NULL :
+  LOG map = fm == INVALID_HANDLE_VALUE ? NULL :
     MapViewOfFile (fm, FILE_MAP_READ, 0, 0, 0);
-  Exit = !map || !GosmInit (map, GetFileSize(gmap, NULL));
-  if (Exit && gmap != INVALID_HANDLE_VALUE) {
+  LOG Exit = !map || !GosmInit (map, GetFileSize(gmap, NULL));
+  LOG if (Exit && gmap != INVALID_HANDLE_VALUE) {
     MessageBox (NULL, TEXT ("mmap problem. Pak file too big ?"),
       TEXT (""), MB_APPLMODAL|MB_OK);
   }
@@ -331,7 +332,7 @@ void ChangePak (const TCHAR *pakfile)
   } // Splitting the 5 parts may help.
   fread (data, pakSize, 1, gmap);
   #endif
-  #elif 1 // defined (__linux__)
+  #else // defined (__linux__)
   static void *map = (void*) -1;
   static size_t len = 0 /* Shut up gcc */;
 //  printf ("%s %d %d\n", pakfile, (clon >> 22) + 512, 512 - (clat >> 22));
@@ -347,12 +348,13 @@ void ChangePak (const TCHAR *pakfile)
      : mmap (NULL, ftell (gmap), PROT_READ, MAP_SHARED, fileno (gmap), 0);
   Exit = map == (void *) -1 || !GosmInit (map, len);
   if (gmap) fclose (gmap);
-  #else
+  #endif
+  /* // Slightly more portable:
   GMappedFile *gmap = g_mapped_file_new (pakfile, FALSE, NULL);
   Exit = !gmap || !GosmInit (g_mapped_file_get_contents (gmap),
       g_mapped_file_get_length (gmap));
-  #endif
-  if (Exit) bbox = NULL;
+  */
+  LOG if (Exit) bbox = NULL;
 }
 
 #ifndef HEADLESS
@@ -2377,7 +2379,7 @@ void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
 
 inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
 {
-  IconSet = 1;
+  LOG IconSet = 1;
   DetailLevel = 3;
   ButtonSize = 4;
   if (optFile) {
@@ -2394,8 +2396,8 @@ inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
     #undef o
     option = mapMode;
   }
-  if (r) ChangePak (pakfile); // This will set up Exit
-  if (Exit && r) ChangePak (NULL);
+  LOG if (r) ChangePak (pakfile); // This will set up Exit
+  LOG if (Exit && r) ChangePak (NULL);
 /*  char *tag = gosmData +
     *(int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
   while (*--tag) {}
@@ -2760,7 +2762,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
     #endif
  
     case WM_CREATE:
-      for (int i = 0; i < 3; i++) {
+      LOG for (int i = 0; i < 3; i++) {
         buttons[i] = CreateWindow(TEXT ("BUTTON"), i == 0 ? TEXT ("O") :
                       i == 1 ? TEXT ("-") : TEXT ("+"), BS_PUSHBUTTON |
                       WS_CHILD | WS_VISIBLE | WS_TABSTOP,
@@ -2768,42 +2770,42 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
                       (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
                       NULL);       // pointer not needed 
       }
-      button3D = CreateWindow(TEXT ("BUTTON"), TEXT ("3D"), BS_CHECKBOX |
+      LOG button3D = CreateWindow(TEXT ("BUTTON"), TEXT ("3D"), BS_CHECKBOX |
                     WS_CHILD | WS_VISIBLE | WS_TABSTOP,
                     0, 0, 0, 0, hWnd, (HMENU) (IDC_EDIT1 + 1 + 3),
                     (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
                     NULL);       // pointer not needed 
-      hwndEdit = CreateWindow(TEXT ("EDIT"), NULL, 
+      LOG hwndEdit = CreateWindow(TEXT ("EDIT"), NULL, 
                     WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
                     0, 0, 0, 0,  // set size in WM_SIZE message
                     hWnd, (HMENU) IDC_EDIT1/*ID_EDITCHILD*/,
                     (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
                     NULL);       // pointer not needed 
-      SendMessage (hwndEdit, WM_SETTEXT, 0, (LPARAM) TEXT ("Search")); 
+      LOG SendMessage (hwndEdit, WM_SETTEXT, 0, (LPARAM) TEXT ("Search")); 
 //      SendMessage (hwndEdit, EM_SETEVENTMASK, 0, ENM_UPDATE | ENM_SETFOCUS);
       break;
     case WM_SETFOCUS: 
       SetFocus(hwndEdit); 
       break;
     case WM_SIZE: 
-      draw->allocation.width = LOWORD (lParam);
-      draw->allocation.height = HIWORD (lParam) - topBar;
-      MoveWindow(hwndEdit, Layout > 1 ? 8 : 140, topBar - 25,
+      LOG draw->allocation.width = LOWORD (lParam);
+      LOG draw->allocation.height = HIWORD (lParam) - topBar;
+      LOG MoveWindow(hwndEdit, Layout > 1 ? 8 : 140, topBar - 25,
         draw->allocation.width - (Layout > 1 ? 66 : 200), 20, TRUE);
-      MoveWindow(button3D, draw->allocation.width - 55,
+      LOG MoveWindow(button3D, draw->allocation.width - 55,
         Layout != 1 ? 5 : -25, 50, 20, TRUE);
       for (int i = 0; i < 3; i++) { // Same as LBUTTON_UP. Put in function !!
-        MoveWindow (buttons[i], (2 * i + 1) * 70 / 3 - 15,
+        LOG MoveWindow (buttons[i], (2 * i + 1) * 70 / 3 - 15,
           Layout ? -25 : 5, 30, 20, TRUE);
       }
-      if (bufBmp) {
+      LOG if (bufBmp) {
         DeleteObject (bufBmp);
         bufBmp = NULL;
       }
-      InvalidateRect (hWnd, NULL, FALSE);
+      LOG InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_DESTROY:
-      PostQuitMessage(0);
+      LOG PostQuitMessage(0);
       break;
     case WM_PAINT:
       do { // Keep compiler happy.
@@ -3247,7 +3249,7 @@ int WINAPI WinMain(
   SerializeOptions (optFile, TRUE, "gosmore.pak");
   #endif
   int newWayFileNr = 0;
-  if (optFile) fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
+  LOG if (optFile) fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
   if (Exit) {
     MessageBox (NULL, TEXT ("Pak file not found"), TEXT (""),
       MB_APPLMODAL|MB_OK);
@@ -3256,13 +3258,13 @@ int WINAPI WinMain(
   GtkWidget dumdraw;
   draw = &dumdraw;
 
-  if(!InitApplication ()) return(FALSE);
-  if (!InitInstance (nCmdShow)) return(FALSE);
+  LOG if(!InitApplication ()) return(FALSE);
+  LOG if (!InitInstance (nCmdShow)) return(FALSE);
 
   newWays[0].cnt = 0;
 
   #ifdef _WIN32_WCE
-  InitCeGlue();
+  LOG InitCeGlue();
   if (SHFullScreenPtr) {
     if (FullScreen) {
       (*SHFullScreenPtr)(mWnd, SHFS_HIDETASKBAR |
@@ -3279,12 +3281,12 @@ int WINAPI WinMain(
   if (CommPort == 0) {}
   else /* if((port=CreateFile (portname, GENERIC_READ | GENERIC_WRITE, 0,
           NULL, OPEN_EXISTING, 0, 0)) != INVALID_HANDLE_VALUE) */ {
-    CreateThread (NULL, 0, NmeaReader, NULL, 0, &threadId);
+    LOG CreateThread (NULL, 0, NmeaReader, NULL, 0, &threadId);
     }
   /*   else MessageBox (NULL, TEXT ("No Port"), TEXT (""), MB_APPLMODAL|MB_OK); */
 
   MSG    msg;
-  while (GetMessage (&msg, NULL, 0, 0)) {
+  LOG while (GetMessage (&msg, NULL, 0, 0)) {
     int oldCsum = clat + clon, found = msg.message == WM_KEYDOWN;
     if (msg.hwnd == hwndEdit && msg.message == WM_LBUTTONDOWN) {
       option = option == searchMode ? mapMode : searchMode;
@@ -3322,16 +3324,16 @@ int WINAPI WinMain(
   }
   guiDone = TRUE;
 
-  while (port != INVALID_HANDLE_VALUE && guiDone) Sleep (1000);
+  LOG while (port != INVALID_HANDLE_VALUE && guiDone) Sleep (1000);
 
   optFile = fopen (optFileName, "r+b");
   if (!optFile) optFile = fopen ("\\My Documents\\gosmore.opt", "wb");
-  SerializeOptions (optFile, FALSE, NULL);
+  LOG SerializeOptions (optFile, FALSE, NULL);
   if (optFile) {
     fwrite (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
     fclose (optFile);
   }
-  gpsNewStruct *first = FlushGpx ();
+  LOG gpsNewStruct *first = FlushGpx ();
   if (newWayCnt > 0) {
     char VehicleName[80];
     #define M(v) Vehicle == v ## R ? #v :
@@ -3339,12 +3341,12 @@ int WINAPI WinMain(
     #undef M
 
     char bname[80], fname[80];
-    getBaseFilename(bname, first);
+    LOG getBaseFilename(bname, first);
     sprintf (fname, "%s.osm", bname);
 
     FILE *newWayFile = fopen (fname, "w");
     if (newWayFile) {
-      fprintf (newWayFile, "<?xml version='1.0' encoding='UTF-8'?>\n"
+      LOG fprintf (newWayFile, "<?xml version='1.0' encoding='UTF-8'?>\n"
                            "<osm version='0.6' generator='gosmore'>\n");
       for (int j, id = -1, i = 0; i < newWayCnt; i++) {
         for (j = 0; j < newWays[i].cnt; j++) {
@@ -3375,7 +3377,7 @@ int WINAPI WinMain(
     }
   }
 
-  if (logFP(false)) fclose(logFP(false));
+  LOG if (logFP(false)) fclose(logFP(false));
 
   return 0;
 }

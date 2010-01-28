@@ -1274,6 +1274,17 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         ? i->first : i->second) + "\n");
     }
   }
+  membershipType m;
+  for (m = membership; m && !(Find (m, "route") &&
+    strcmp (Find (m, "route"), "bicycle") == 0); m = Next (m)) {}
+  // We go through all the relations (regardless of role), but stop if we find
+  // one with route=bicycle. Then m will be set.
+  if (m || k2v["lcn_ref"] || k2v["rcn_ref"] || k2v["ncn_ref"]) {
+    // if part of a cycle route relation or if it has a cycle network reference
+    s.aveSpeed[bicycleR] = 20;
+    // then we say cyclists will love it.
+  }
+  
   // Reduce the aveSpeeds when maxspeed mandates it
   if (k2v["maxspeed"] && isdigit (k2v["maxspeed"][0])) {
     const char *m = k2v["maxspeed"];

@@ -8,7 +8,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Point;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Way;
 

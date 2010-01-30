@@ -14,8 +14,6 @@ import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 
-import livegps.LiveGpsLock;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -52,7 +50,7 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
             // write to temporary file, on success, rename tmp file to target file:
             File tmpFile = new File(file.getAbsoluteFile()+".tmp");
             System.out.println("AutoSaving osm data to file " + file.getAbsolutePath());
-            synchronized(LiveGpsLock.class) {
+            synchronized(SurveyorLock.class) {
                 OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(tmpFile)), false, dataset.getVersion());
                 w.header();
                 w.writeDataSources(dataset);

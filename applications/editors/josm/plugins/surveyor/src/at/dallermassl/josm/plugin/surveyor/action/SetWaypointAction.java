@@ -11,7 +11,6 @@ import java.util.Collection;
 import javax.swing.JToggleButton;
 
 import livegps.LiveGpsLayer;
-import livegps.LiveGpsLock;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -23,6 +22,7 @@ import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
+import at.dallermassl.josm.plugin.surveyor.SurveyorLock;
 import at.dallermassl.josm.plugin.surveyor.SurveyorPlugin;
 import at.dallermassl.josm.plugin.surveyor.action.gui.WaypointDialog;
 import at.dallermassl.josm.plugin.surveyor.util.LayerUtil;
@@ -85,7 +85,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
         waypoint.attr.put("name", markerText);
         if(iconName != null)
             waypoint.attr.put("sym", iconName);
-        synchronized(LiveGpsLock.class) {
+        synchronized(SurveyorLock.class) {
             //layer.data.add(new Marker(event.getCoordinates(), markerText, iconName));
             layer.data.add(new Marker(event.getCoordinates(), markerText, iconName, null, -1.0, 0.0));
             if(gpsLayer != null) {

@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.kaintoch.gps.globalsat.dg100.ByteHelper;
@@ -25,7 +26,8 @@ import org.kaintoch.gps.globalsat.dg100.GpsRec;
 import org.kaintoch.gps.globalsat.dg100.Response;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.ImmutableGpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.SingleSegmentGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 
@@ -147,11 +149,8 @@ public class GlobalsatDg100
     		progressMonitor.setTicksCount(gpsRecList.size());
     		if(gpsRecList.size() > 0){
     			GpsRec last = null;
-    			GpxTrack trk = new GpxTrack();
-    			Collection<WayPoint> seg = new ArrayList<WayPoint>(100);
     			result = new GpxData();
-    			result.tracks.add(trk);
-    			trk.trackSegs.add(seg);
+    			Collection<WayPoint> seg = new ArrayList<WayPoint>(100);
     			for(GpsRec r:gpsRecList){
     				if(cancelled){
     					return result;
@@ -165,6 +164,7 @@ public class GlobalsatDg100
     				last = r;
     				progressMonitor.worked(1);
     			}
+    			result.tracks.add(new SingleSegmentGpxTrack(new ImmutableGpxTrackSegment(seg), Collections.<String, Object>emptyMap()));
     		}
     		return result;
     	} finally {

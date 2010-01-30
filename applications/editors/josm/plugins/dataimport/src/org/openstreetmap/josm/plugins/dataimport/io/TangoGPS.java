@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -19,7 +21,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.ImmutableGpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.SingleSegmentGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
@@ -45,10 +48,7 @@ public class TangoGPS extends FileImporter {
 	@Override
 	public void importData(File file, ProgressMonitor progressMonitor) throws IOException {
 		// create the data tree
-		GpxData data = new GpxData();
-		GpxTrack currentTrack = new GpxTrack();
-		data.tracks.add(currentTrack);
-		ArrayList<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
+		List<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
 
 		int imported = 0;
 		int failure = 0;
@@ -78,7 +78,8 @@ public class TangoGPS extends FileImporter {
 			}
 			failure = failure - imported;
 			if(imported > 0) {
-				currentTrack.trackSegs.add(currentTrackSeg);
+				GpxData data = new GpxData();
+				data.tracks.add(new SingleSegmentGpxTrack(new ImmutableGpxTrackSegment(currentTrackSeg), Collections.<String, Object>emptyMap()));
 				data.recalculateBounds();
 				data.storageFile = file;
 				GpxLayer gpxLayer = new GpxLayer(data, file.getName());

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -18,7 +19,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
@@ -158,12 +159,11 @@ public class Tcx extends FileImporter {
                         if (activityLap.getTrack() != null) {
                             XMLGregorianCalendar startTime = activityLap
                                     .getStartTime();
-                            GpxTrack currentTrack = new GpxTrack();
-                            gpxData.tracks.add(currentTrack);
+                            Collection<Collection<WayPoint>> currentTrack = new ArrayList<Collection<WayPoint>>();
                             for (TrackT track : activityLap.getTrack()) {
                                 if (track.getTrackpoint() != null) {
                                     Collection<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
-                                    currentTrack.trackSegs.add(currentTrackSeg);
+                                    currentTrack.add(currentTrackSeg);
                                     for (TrackpointT tp :
                                            track.getTrackpoint()) {
                                         WayPoint waypt = convertPoint(tp);
@@ -181,6 +181,7 @@ public class Tcx extends FileImporter {
                                     }
                                 }
                             }
+                            gpxData.tracks.add(new ImmutableGpxTrack(currentTrack, Collections.<String, Object>emptyMap()));
                         }
                     }
                 }
@@ -196,12 +197,11 @@ public class Tcx extends FileImporter {
                 && (tcd.getCourses().getCourse() != null)) {
             for (CourseT course : tcd.getCourses().getCourse()) {
                 if (course.getTrack() != null) {
-                    GpxTrack currentTrack = new GpxTrack();
-                    gpxData.tracks.add(currentTrack);
+                    Collection<Collection<WayPoint>> currentTrack = new ArrayList<Collection<WayPoint>>();
                     for (TrackT track : course.getTrack()) {
                         if (track.getTrackpoint() != null) {
                             Collection<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
-                            currentTrack.trackSegs.add(currentTrackSeg);
+                            currentTrack.add(currentTrackSeg);
                             for (TrackpointT tp : track.getTrackpoint()) {
                                 WayPoint waypt = convertPoint(tp);
 
@@ -211,6 +211,7 @@ public class Tcx extends FileImporter {
                             }
                         }
                     }
+                    gpxData.tracks.add(new ImmutableGpxTrack(currentTrack, Collections.<String, Object>emptyMap()));
                 }
             }
         }

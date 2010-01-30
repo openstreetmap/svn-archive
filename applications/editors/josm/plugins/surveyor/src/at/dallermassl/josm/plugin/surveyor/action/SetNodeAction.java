@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
-import livegps.LiveGpsLock;
-
 import org.dinopolis.util.collection.Tuple;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -19,6 +17,7 @@ import org.openstreetmap.josm.data.osm.Node;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
+import at.dallermassl.josm.plugin.surveyor.SurveyorLock;
 
 /**
  * Action that sets a node into the data layer. The first parameter is used as a property key
@@ -68,7 +67,7 @@ public class SetNodeAction implements SurveyorAction {
         for(Entry<String, String> entry : keyValues) {
             node.put(entry.getKey(), entry.getValue());
         }
-        synchronized(LiveGpsLock.class) {
+        synchronized(SurveyorLock.class) {
             DataSet ds = Main.main.getCurrentDataSet();
             if(ds != null)
             {

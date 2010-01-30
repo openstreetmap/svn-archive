@@ -15,8 +15,6 @@ import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 
-import livegps.LiveGpsLock;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.io.GpxWriter;
@@ -75,9 +73,7 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
             // @see LiveGpsLayer
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(tmpFile)));
             GpxWriter gpxWriter = new GpxWriter(out);
-            synchronized(LiveGpsLock.class) {
-                gpxWriter.write(gpsLayer.data);
-            }
+            gpxWriter.write(gpsLayer.data);
             tmpFile.renameTo(file);
         } catch (IOException ioExc) {
             ioExc.printStackTrace();

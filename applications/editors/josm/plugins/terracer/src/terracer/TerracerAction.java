@@ -33,6 +33,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -208,6 +209,10 @@ public final class TerracerAction extends JosmAction {
             terr.addNode(new_nodes[1][i + 1]);
             terr.addNode(new_nodes[1][i]);
             terr.addNode(new_nodes[0][i]);
+            
+            // add the tags of the outline to each building (e.g. source=*)
+            TagCollection.from(outline).applyTo(terr);
+            
             if (from != null) {
                 // only, if the user has specified house numbers
                 terr.put("addr:housenumber", "" + (from + i * step));
@@ -458,4 +463,9 @@ public final class TerracerAction extends JosmAction {
         Node n = new Node(a.getEastNorth().interpolate(b.getEastNorth(), f));
         return n;
     }
+
+    @Override
+    protected void updateEnabledState() {
+        setEnabled(getCurrentDataSet() != null);
+    }    
 }

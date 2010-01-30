@@ -1427,7 +1427,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   } *wayFseek = NULL;
   int wStyle = elemCnt, ref = 0, role = 0;
   int member[2], relationType = 0, onewayReverse = 0;
-  vector<int> wayMember, cycleNet;
+  vector<int> wayMember;
   map<int,int> wayId;
   wayType w;
   w.clat = 0;
@@ -1503,15 +1503,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 #define K_IS(x) (stricmp (tag_k, x) == 0)
 #define V_IS(x) (stricmp (avalue, x) == 0)
 
-	if (stricmp (aname, "v") == 0) { /* TODO : Move to Osm2Gosmore
-	  if (K_IS ("route") && V_IS ("bicycle")) {
-	    cycleNet.insert (cycleNet.end (), wayMember.begin (), 
-			     wayMember.end ());
-	  }*/
-	  if ((!wayFseek || wayFseek->off) &&
-	      (K_IS ("lcn_ref") || K_IS ("rcn_ref") || K_IS ("ncn_ref"))) {
-	    cycleNet.push_back (ftell (pak));
-	  }
+	if (stricmp (aname, "v") == 0) {
           
 	  int newStyle = 0;
 	  // TODO: this for loop could be clearer as a while
@@ -1936,16 +1928,6 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   data = (char *) mmap (NULL, ftell (pak),
 			PROT_READ | PROT_WRITE, MAP_SHARED, fileno (pak), 0);
   fseek (pak, ftell (pak), SEEK_SET);
-  REBUILDWATCH (for (unsigned i = 0; i < cycleNet.size (); i++)) {
-    wayType *way = (wayType*) (data + cycleNet[i]);
-    for (int j = StyleNr (way) + 1; j < elemCnt; j++) {
-      if (strncasecmp (eMap[j].style_k, "cyclenet", 8) == 0 &&
-	  stricmp (eMap[j].style_k + 8, eMap[StyleNr (way)].style_k) == 0 &&
-	  stricmp (eMap[j].style_v, eMap[StyleNr (way)].style_v) == 0) {
-	way->bits = (way->bits & ~((2 << STYLE_BITS) - 1)) | j;
-      }
-    }
-  }
   vector<halfSegType> lseg;
   ndBase = (ndType*)(data + ndStart);
   REBUILDWATCH (for (ndType *ndItr = ndBase;

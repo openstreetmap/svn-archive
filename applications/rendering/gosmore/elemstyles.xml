@@ -4,7 +4,6 @@ a little help:
 2. every rule needs a condition
 3. line attributes
 		- width absolute width in pixel in every zoom level
-		- realwidth relative width which will be scaled in meters, integer
 		- colour
 4. area attributes
 		- colour
@@ -14,14 +13,10 @@ a little help:
 		- any of the keys under 'Map_Features#Restrictions' together
 		  with an integer for the km/h. 'roundabout' is special.
 
-Using both area and line attributes for the same key/value pair doesn't work!
+Using both area and line attributes for the same rule means that a polygon
+will be drawn with the area colour and a border with the line colour.
 
-The colours can consist of the two components - name and hex code (e.g. water#0000ff).
-If both are given, the color name is introduced in preferences with that value. If only
-code is given (e.g. #0000ff), it is used directly. If only name is given, either user
-modified preferences or previous value is used.
-
-BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is unpredicted!
+The colours can only be in hex
 -->
 
 <rules>
@@ -210,7 +205,7 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
      </rule>
 
     <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
-       <condition k="gosmore" v="HideZoomButtons" />
+       <condition k="gosmore" v="Layout" />
        <icon annotate="true" src="misc/deprecated.png" />
        <scale_min>1</scale_min> <!-- N/A -->
        <scale_max>4</scale_max> <!-- N/A -->
@@ -888,7 +883,8 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
 
 	<rule>
 		<condition k="highway" v="road"/>
-		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
+		<!-- <line width="2" realwidth="5" dashed="true" colour="#ff0000"/> -->
+		<line width="2" realwidth="5" colour="#c0c0c0"/>
 		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
         <scale_max>40000</scale_max>
@@ -952,7 +948,6 @@ BEWARE: If a key/value pair matches more than one rule, the "rule that wins" is 
         <scale_max>20000</scale_max>
         <routing bicycle="5" foot="5" goods="5" hgv="5" motorcycle="5" motorcar="5" psv="5" moped="5" mofa="5"/>
 	</rule>
-    <rule>
 
 	<rule>
 		<condition k="highway" v="bridleway"/>

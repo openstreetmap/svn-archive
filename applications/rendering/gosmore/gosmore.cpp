@@ -16,6 +16,7 @@
 #include <stack>
 #include <vector>
 #include <queue>
+#include <map>
 using namespace std;
 #ifndef _WIN32
 #include <sys/mman.h>
@@ -175,7 +176,7 @@ FILE * logFP(bool create = true) {
   static FILE * f = NULL;
   if (!f && create) {
     f = fopen(logFileName,"at");
-    fprintf(f,"-----\n");
+    fprintf(f,"----- %s %s\n", __DATE__, __TIME__);
   }
   return f;
 }
@@ -1923,7 +1924,10 @@ gint DrawExpose (void)
 	  // perform validation (on non-areas)
 	  bool valid;
 	  if (ValidateMode && Style(w)->areaColour == -1) {
-	    valid = (len > 0); // most ways should have labels
+	    valid = len > 0 && StyleNr (w) != highway_road;
+	    // most ways should have labels and they should not be
+	    // highway=road
+	    
 	    // valid = valid && ... (add more validation here)
 
 	    // // LOG
@@ -2815,47 +2819,64 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       //r.left = 50;
       // r.top = 50;
 	if (bmp == NULL) {
-          bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP1));
-          iconsDc = CreateCompatibleDC (ps.hdc);
-          SelectObject(iconsDc, bmp);
+          LOG bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP1));
+          LOG iconsDc = CreateCompatibleDC (ps.hdc);
+          LOG SelectObject(iconsDc, bmp);
 
 	  // get mask for iconsDc
-	  bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP2));
-	  maskDc = CreateCompatibleDC (ps.hdc);
-	  SelectObject(maskDc, bmp);
+	  LOG bmp = LoadBitmap (hInst, MAKEINTRESOURCE (IDB_BITMAP2));
+	  LOG maskDc = CreateCompatibleDC (ps.hdc);
+	  LOG SelectObject(maskDc, bmp);
 
-          bufDc = CreateCompatibleDC (ps.hdc); //bufDc //GetDC (hWnd));
+          LOG bufDc = CreateCompatibleDC (ps.hdc); //bufDc //GetDC (hWnd));
           /*pen[ROUTE_PEN] = CreatePen (PS_SOLID, 6, 0x00ff00);
 	  pen[VALIDATE_PEN] = CreatePen (PS_SOLID, 10, 0x9999ff); */
-          for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
+	  map<int,HPEN> pcache;
+	  map<int,HBRUSH> bcache;
+          LOG for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
 	    // replace line colour with area colour 
 	    // if no line colour specified
 	    int c = style[i].lineColour != -1 ? style[i].lineColour
 	      : (style[i].areaColour & 0xfefefe) >> 1; 
-            if (c != -1) pen[i] = 
-	      CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
+            if (c != -1) {
+	      //logprintf ("PEN %d %x %d\n",style[i].dashed, c, style[i].lineWidth);
+              int idx = (style[i].dashed ? 1 : 0) +
+                (style[i].lineWidth & 0x3f) * 2 + ((c & 0xffffff) << 7);
+              map<int,HPEN>::iterator f = pcache.find (idx);
+              pen[i] = f != pcache.end() ? f->second :
+                CreatePen (style[i].dashed ? PS_DASH : PS_SOLID,
 			 max (1, style[i].lineWidth), (c >> 16) |
 			 (c & 0xff00) |
 			 ((c & 0xff) << 16));
-            if ((c = style[i].areaColour) != -1) brush[i] = CreateSolidBrush
-			  ((c >> 16) | (c & 0xff00) | ((c & 0xff) << 16));
+              pcache[idx] = pen[i];
+            }
+            if ((c = style[i].areaColour) != -1) {
+	      //logprintf ("BR %x\n", c);
+              map<int,HBRUSH>::iterator f = bcache.find (c);
+              brush[i] = f != bcache.end () ? f->second :
+                CreateSolidBrush ((c>>16) | (c&0xff00) | ((c&0xff) << 16));
+              bcache[c] = brush[i];
+            }
           }
-          sysFont = (HFONT) GetStockObject (SYSTEM_FONT);
-          GetObject (sysFont, sizeof (logFont), &logFont);
+          LOG sysFont = (HFONT) GetStockObject (SYSTEM_FONT);
+          LOG GetObject (sysFont, sizeof (logFont), &logFont);
           #ifndef _WIN32_WCE
           logFont.lfWeight = 400;
           strcpy (logFont.lfFaceName, TEXT ("Arial"));
+          /*#else
+          logFont.lfWeight = 400; // TODO ******** Testing WM6
+          wcscpy (logFont.lfFaceName, TEXT ("Arial")); */
           #endif
-          SetBkMode (bufDc, TRANSPARENT); // Is this really necessary ?
+          LOG SetBkMode (bufDc, TRANSPARENT); // Is this really necessary ?
         }
 	rect.top = rect.left = 0;
 	rect.right = draw->allocation.width;
 	rect.bottom = draw->allocation.height;
         if (bufBmp == NULL) { // i.e. after WM_SIZE
-          bufBmp = CreateCompatibleBitmap (ps.hdc, draw->allocation.width,
+          LOG bufBmp = CreateCompatibleBitmap (ps.hdc, draw->allocation.width,
             draw->allocation.height);
-          SelectObject (bufDc, bufBmp);
-          FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
+          LOG SelectObject (bufDc, bufBmp);
+          LOG FillRect (bufDc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
         }
 	mygc = bufDc;
 	icons = iconsDc;
@@ -3287,6 +3308,7 @@ int WINAPI WinMain(
 
   MSG    msg;
   LOG while (GetMessage (&msg, NULL, 0, 0)) {
+    logprintf ("%d %d %d %d\n", msg.hwnd == mWnd, msg.message, msg.lParam, msg.wParam);
     int oldCsum = clat + clon, found = msg.message == WM_KEYDOWN;
     if (msg.hwnd == hwndEdit && msg.message == WM_LBUTTONDOWN) {
       option = option == searchMode ? mapMode : searchMode;

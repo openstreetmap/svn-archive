@@ -8,6 +8,7 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
 import org.openstreetmap.josm.Main;
@@ -50,7 +51,7 @@ public class EditGpxMode extends MapMode {
 
 
     @Override public void mouseDragged(MouseEvent e) {
-        if ( (e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) ==  MouseEvent.BUTTON1_DOWN_MASK) {
+        if ( (e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) ==  InputEvent.BUTTON1_DOWN_MASK) {
             //if button1 is hold, draw the rectangle.
             paintRect(pointPressed, e.getPoint());
         }

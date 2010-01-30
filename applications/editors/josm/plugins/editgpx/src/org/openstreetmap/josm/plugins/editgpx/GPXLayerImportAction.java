@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -111,9 +112,9 @@ class GPXLayerImportAction extends AbstractAction {
 
             synchronized(importing) {
                 for (GpxTrack trk : gpx.data.tracks) {
-                    for (Collection<WayPoint> segment : trk.trackSegs) {
+                    for (GpxTrackSegment segment : trk.getSegments()) {
                         Way w = new Way();
-                        for (WayPoint p : segment) {
+                        for (WayPoint p : segment.getWayPoints()) {
                             Node n = new Node(p.getCoor());
                             String timestr = p.getString("time");
                             if(timestr != null)

@@ -1,3 +1,15 @@
 README 
 ======
-nothing here yet
+This plugin is used to write latitude and longitude information
+to the EXIF header of jpg files.
+It extends the core geoimage feature of JOSM by adding a new entry
+to the right click menu of any image layer.
+
+The real work (writing lat/lon values to file) is done by the pure Java
+sanselan library.
+
+Note: Although sanselan is a proper apache commons project, there was not much activity recently (End of 2009). So let's hope, it is stable enough and gets fixed, if necessary.
+
+Author: Sebastian Klein
+
+License: GPL v2 or above. (Note: When used together with sanselan library only GPL v3 or above can be used.)

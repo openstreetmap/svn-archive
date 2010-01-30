@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** see README.template
-**
 ** Usage
 ** =====
 ** To build it run
@@ -62,17 +56,13 @@
     **********************************************************
     -->
     <target name="dist" depends="compile,revision">
-        <echo message="creating ${plugin.jar.name} ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
+        <echo message="creating ${ant.project.name}.jar ... "/>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir=".">
                 <include name="README" />
-                <include name="LICENSE" />
             </fileset>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
@@ -85,12 +75,12 @@
         ************************************************
     -->
             <manifest>
-                <attribute name="Author" value="..."/>
-                <attribute name="Plugin-Class" value="..."/>
+                <attribute name="Author" value="Sebastian Klein"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.photo_geotagging.GeotaggingPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="..."/>
-                <attribute name="Plugin-Link" value="..."/>
-                <attribute name="Plugin-Mainversion" value="..."/>
+                <attribute name="Plugin-Description" value="Write gps position info to the image file header. Run this feature from the right click menu of the image layer."/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Photo_Geotagging"/>
+                <attribute name="Plugin-Mainversion" value="2904"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

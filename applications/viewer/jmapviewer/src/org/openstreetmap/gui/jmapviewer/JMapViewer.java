@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,12 +28,12 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
- *
+ * 
  * Provides a simple panel that displays pre-rendered map tiles loaded from the
  * OpenStreetMap project.
- *
+ * 
  * @author Jan Peter Stotz
- *
+ * 
  */
 public class JMapViewer extends JPanel implements TileLoaderListener {
 
@@ -96,6 +97,14 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         setMinimumSize(new Dimension(Tile.SIZE, Tile.SIZE));
         setPreferredSize(new Dimension(400, 400));
         setDisplayPositionByLatLon(50, 9, 3);
+        //setToolTipText("");
+    }
+
+    @Override
+    public String getToolTipText(MouseEvent event) {
+        //        Point screenPoint = event.getLocationOnScreen();
+        //        Coordinate c = getPosition(screenPoint);
+        return super.getToolTipText(event);
     }
 
     protected void initializeZoomSlider() {
@@ -147,7 +156,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     /**
      * Changes the map pane so that it is centered on the specified coordinate
      * at the given zoom level.
-     *
+     * 
      * @param lat
      *            latitude of the specified coordinate
      * @param lon
@@ -163,7 +172,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * Changes the map pane so that the specified coordinate at the given zoom
      * level is displayed on the map at the screen coordinate
      * <code>mapPoint</code>.
-     *
+     * 
      * @param mapPoint
      *            point on the map denoted in pixels where the coordinate should
      *            be set
@@ -291,20 +300,39 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         setDisplayPosition(x, y, newZoom);
     }
 
+    /**
+     * Calculates the latitude/longitude coordinate of the center of the
+     * currently displayed map area.
+     * 
+     * @return latitude / longitude
+     */
     public Coordinate getPosition() {
         double lon = OsmMercator.XToLon(center.x, zoom);
         double lat = OsmMercator.YToLat(center.y, zoom);
         return new Coordinate(lat, lon);
     }
 
+    /**
+     * Converts the relative pixel coordinate (regarding the top left corner of
+     * the displayed map) into a latitude / longitude coordinate
+     * 
+     * @param mapPoint
+     *            relative pixel coordinate regarding the top left corner of the
+     *            displayed map
+     * @return latitude / longitude
+     */
     public Coordinate getPosition(Point mapPoint) {
-        int x = center.x + mapPoint.x - getWidth() / 2;
-        int y = center.y + mapPoint.y - getHeight() / 2;
-        double lon = OsmMercator.XToLon(x, zoom);
-        double lat = OsmMercator.YToLat(y, zoom);
-        return new Coordinate(lat, lon);
+        return getPosition(mapPoint.x, mapPoint.y);
     }
 
+    /**
+     * Converts the relative pixel coordinate (regarding the top left corner of
+     * the displayed map) into a latitude / longitude coordinate
+     * 
+     * @param mapPointX
+     * @param mapPointY
+     * @return
+     */
     public Coordinate getPosition(int mapPointX, int mapPointY) {
         int x = center.x + mapPointX - getWidth() / 2;
         int y = center.y + mapPointY - getHeight() / 2;
@@ -315,11 +343,12 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     /**
      * Calculates the position on the map of a given coordinate
-     *
+     * 
      * @param lat
      * @param lon
      * @param checkOutside
-     * @return point on the map or <code>null</code> if the point is not visible and checkOutside set to <code>true</code>
+     * @return point on the map or <code>null</code> if the point is not visible
+     *         and checkOutside set to <code>true</code>
      */
     public Point getMapPosition(double lat, double lon, boolean checkOutside) {
         int x = OsmMercator.LonToX(lon, zoom);
@@ -336,7 +365,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     /**
      * Calculates the position on the map of a given coordinate
-     *
+     * 
      * @param lat
      * @param lon
      * @return point on the map or <code>null</code> if the point is not visible
@@ -347,7 +376,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     /**
      * Calculates the position on the map of a given coordinate
-     *
+     * 
      * @param coord
      * @return point on the map or <code>null</code> if the point is not visible
      */
@@ -361,9 +390,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     /**
      * Calculates the position on the map of a given coordinate
-     *
+     * 
      * @param coord
-     * @return point on the map or <code>null</code> if the point is not visible and checkOutside set to <code>true</code>
+     * @return point on the map or <code>null</code> if the point is not visible
+     *         and checkOutside set to <code>true</code>
      */
     public Point getMapPosition(Coordinate coord, boolean checkOutside) {
         if (coord != null) {
@@ -473,7 +503,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     /**
      * Moves the visible map pane.
-     *
+     * 
      * @param x
      *            horizontal movement in pixel.
      * @param y
@@ -538,7 +568,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * Every time the zoom level changes this method is called. Override it in
      * derived implementations for adapting zoom dependent values. The new zoom
      * level can be obtained via {@link #getZoom()}.
-     *
+     * 
      * @param oldZoom
      *            the previous zoom level
      */
@@ -565,7 +595,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     /**
      * Enables or disables painting of the {@link MapMarker}
-     *
+     * 
      * @param mapMarkersVisible
      * @see #addMapMarker(MapMarker)
      * @see #getMapMarkerList()
@@ -642,7 +672,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     /**
      * Enables or disables painting of the {@link MapRectangle}
-     *
+     * 
      * @param mapMarkersVisible
      * @see #addMapRectangle(MapRectangle)
      * @see #getMapRectangleList()
@@ -652,8 +682,12 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         repaint();
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener#getTileCache()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener#getTileCache
+     * ()
      */
     public TileCache getTileCache() {
         return tileController.getTileCache();

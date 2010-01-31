@@ -98,9 +98,11 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public void destroy() {
         // if the layer is currently saving the images in the cache, wait until it's finished
-        while (!cacheControl.isCachePipeEmpty()) {
-            System.out.println("Try to close a WMSLayer which is currently saving in cache : wait 1 sec.");
-            CadastrePlugin.safeSleep(1000);
+        if (cacheControl != null) {
+            while (!cacheControl.isCachePipeEmpty()) {
+                System.out.println("Try to close a WMSLayer which is currently saving in cache : wait 1 sec.");
+                CadastrePlugin.safeSleep(1000);
+            }
         }
         super.destroy();
         images = null;

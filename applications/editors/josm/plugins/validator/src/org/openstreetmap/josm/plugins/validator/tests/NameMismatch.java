@@ -55,7 +55,7 @@ public class NameMismatch extends Test {
     public void check(OsmPrimitive p) {
         HashSet<String> names = new HashSet<String>();
 
-        for (Entry<String, String> entry : p.entrySet()) {
+        for (Entry<String, String> entry : p.getKeys().entrySet()) {
             if (entry.getKey().startsWith("name:")) {
                 String name_s = entry.getValue();
                 if (name_s != null) {

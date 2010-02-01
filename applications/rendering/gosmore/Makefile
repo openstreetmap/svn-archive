@@ -30,7 +30,7 @@ EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS` \
   `pkg-config --libs libcurl` `pkg-config --libs pkg-config --libs gthread-2.0`
 XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
   `pkg-config --libs libxml-2.0 || echo -l xml2 -lz -lm`
-ARCH=arm-mingw32ce-
+ARCH=arm-wince-mingw32ce-
 else
 # To compile with mingw, install MSYS and mingw, and then download
 # the "all-in-one bundle" from http://www.gtk.org/download-windows.html

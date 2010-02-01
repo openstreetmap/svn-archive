@@ -1,3 +1,6 @@
+/bboxes.c
+/density
+/density.sh
 /extract
 /gosmore.pak
 /gosmore.rsc
@@ -5,3 +8,5 @@
 /gosm_arm.exe
 /icons.png
 /icons-flatten.png
+/*.html
+/*.pnm

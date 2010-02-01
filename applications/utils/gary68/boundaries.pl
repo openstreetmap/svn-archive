@@ -6,7 +6,7 @@
 #
 #
 #
-# Copyright (C) 2009, Gerhard Schwanz
+# Copyright (C) 2009/2010, Gerhard Schwanz
 #
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
 # Free Software Foundation; either version 3 of the License, or (at your option) any later version.
@@ -47,7 +47,7 @@
 # Version 3
 # - support multipolygons, multiple border segments
 #
-# TODO
+# Version 3.1
 # - command line error handling
 # 
 
@@ -62,9 +62,29 @@ use Math::Polygon ;
 use OSM::osm 4.4 ;
 use OSM::osmgraph ;
 
+
 my $program = "boundaries.pl" ;
-my $usage = $program . " see code GetOptions" ;
-my $version = "3.0" ;
+my $version = "3.1" ;
+my $usage = $program . <<"END1" ;
+-help print this text
+-in= osm file name (input file, mandatory) 
+-html= output file name (defaults to boundaries.htm) 
+-csv= output file name (defaults to boundaries.csv) 
+-poly create polygons 
+-polybase= poly base file name (like germany or tmp/germany) used to create output file names for relations. id is appended. (defaults to polygon)
+-pics create pictures of polygons (valid and selected) 
+-picsize=integer size in pixels for the longitude of the maps. latitude will be automatically calculated. 
+-allpics create pictures of all polygons (-pics must be given, >=V3) 
+-bigpic create picture of all (selected) boundaries (>=V3) 
+-bigpicsize=integer size in pixels for the longitude of the big map. latitude will be automatically calculated. 
+-simplify -slope -same -npk build simplified polygons (-poly and -polybase must be given). A minimum of 10 nodes is implemented in the code to prevent errors in Math::Polygon. 
+-hierarchy build hierarchy. output as html and csv. html and csv names must be given and will be adapted. -poly and -polybase= must be given. 
+-resize -factor=float build a resized (factor > 1 means bigger polygon, maybe 1.2) polygon. -poly and -polybase must be given. -simplify can be given. 
+-adminlevel=integer selects one admin_level as selection criteria. So only country borders can be selected i.e. 
+-verbose program talks even more... 
+END1
+
+
 my $maxNestingLevel = 10 ; # for relations
 
 my $nodeId ;		# variables for reading nodes
@@ -122,6 +142,7 @@ my $adminInvalidCount = 0 ;	# how many relations are not used due to admin restr
 
 # command line things
 my $optResult ;
+my $help = 0 ;
 my $verbose = "" ;
 my $adminLevelOpt = "" ;
 my $polyOpt = "" ;
@@ -148,10 +169,10 @@ my $simplifyNpk = 2 ;    # max nodes per kilometer for simplified polygon
 
 
 $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
-				"html=s"	=> \$htmlName,		# output file html, mandatory ([dir/]*.htm)
-				"csv=s" 	=> \$csvName,		# output file csv, mandatory ([dir/]*.csv)
+				"html=s"	=> \$htmlName,		# output file html, defaults to boundaries.htm ([dir/]*.htm)
+				"csv=s" 	=> \$csvName,		# output file csv, defaults to boundaries.csv ([dir/]*.csv)
 				"poly" 		=> \$polyOpt,		# option to create poly files, then give polyBaseName
-				"polybase:s" 	=> \$polyBaseName,	# base filename for poly files. relId is appended. also used for pic names. [dir/]name 
+				"polybase:s" 	=> \$polyBaseName,	# base filename for poly files. relId is appended. also used for pic names. defaults to polygon [dir/]name 
 				"simplify"	=> \$simplifyOpt,	# should simplified polygons be used?
 				"slope:f" 	=> \$simplifySlope,	# simplify (Math::Polygon). distance in DEGREES. With three points X(n),X(n+1),X(n+2), the point X(n+1) will be removed if the length of the path over all three points is less than slope longer than the direct path between X(n) and X(n+2)
 				"same:f" 	=> \$simplifySame,	# distance (IN DEGREES) for nodes to be considered the same
@@ -166,6 +187,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"picsize:i"	=> \$picSize,		# specifies pic size longitude in pixels
 				"bigpicsize:i"	=> \$bigPicSize,	# specifies big pic size longitude in pixels
 				"adminlevel:s"	=> \$adminLevelOpt,	# specifies which boundaries to look at
+				"help" 	=> \$help,	 		# print help
 				"verbose" 	=> \$verbose) ;		# turns twitter on
 
 
@@ -173,11 +195,26 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 my $time0 = time() ;
 my $time1 ;
 
-print "\n$program $version \nfor file $osmName\n\n" ;
+print "\n$program $version \nfor file $osmName\n" ;
 
-#if ($optResult == 0) {
-#	die ("usage...\n") ;
-#}
+if ($help) { print $usage ; die ("program terminated.") ; }
+
+if ($osmName eq "") { die ("ERROR: no infile given.\n") ; }
+if ($htmlName eq "") {
+	$htmlName = "boundaries.htm" ;
+	print "WARNING: htmlName (output) set to $htmlName.\n" ;
+}
+if ($csvName eq "") {
+	$csvName = $htmlName ;
+	$csvName =~  s/.htm/.csv/ ;
+	print "WARNING: csvName (output) set to $csvName.\n" ;
+}
+if ($polyBaseName eq "") {
+	$polyBaseName = "polygon" ;
+	print "WARNING: polyBaseName (output) set to $polyBaseName\n" ;
+}
+
+print "\n" ;
 
 #
 # PARSING RELATIONS

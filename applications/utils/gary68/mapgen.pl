@@ -1,12 +1,30 @@
+#
+# mapgen.pl
+#
+# Copyright (C) 2010, Gerhard Schwanz
+#
+# This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the 
+# Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>
+#
 
 # 0.03 enhanced legend, center label in areas
-
+# 0.04 dash styles, shaping of ways, own perl module, 
+#      only svg support, no more png (use i.e.inkscape for cmd line conversion
+#      layers of ways; draw only really closed areas
+#      getopt, embedded pdf and png creation
+#
+#
 
 # TODO
-# LAYERS, bridges and tunnels (collect objects in separate hashes...)
+# bbox? 5-10%?
+# icons
 # wiki page
 
-# waybegrenzungen, farbe, dicke
 # relations (scan, then convert to ways, preserve layers!)
 # sub key/value for rules
 # bg color
@@ -14,12 +32,25 @@
 use strict ;
 use warnings ;
 
+use Getopt::Long ;
 use OSM::osm ;
-use OSM::osmgraph 2.5 ;
+use OSM::mapgen ;
 
 my $programName = "mapgen.pl" ;
-my $usage = "mapgen.pl file.osm style.csv out.png size" ; # svg name is automatic
-my $version = "0.03" ;
+my $usage = "mapgen.pl -in=file.osm -style=file.csv [-out=file.svg] [-size=INT] [-pdf] [-png] [-minlen=x.y] [-verbose]" ; 
+my $version = "0.04" ;
+
+# command line things
+my $optResult ;
+my $verbose = 0 ;
+my $size = 1024 ; # default pic size longitude in pixels
+my $osmName = "" ; 
+my $csvName = "" ; 
+my $svgName = "mapgen.svg" ; 
+my $pdfOpt = 0 ;
+my $pngOpt = 0 ;
+my $labelMinLength = 0.1 ; # min length of street so that it will be labled / needs adjustment according to picture size
+
 
 my @legend = () ;
 
@@ -50,15 +81,15 @@ my $wayIndexTag = 0 ;
 my $wayIndexValue = 1 ;
 my $wayIndexColor = 2 ;
 my $wayIndexThickness = 3 ;
-my $wayIndexFilled = 4 ;
-my $wayIndexLabel = 5 ;
-my $wayIndexLabelColor = 6 ;
-my $wayIndexLegend = 7 ;
+my $wayIndexDash = 4 ;
+my $wayIndexFilled = 5 ;
+my $wayIndexLabel = 6 ;
+my $wayIndexLabelColor = 7 ;
+my $wayIndexLegend = 8 ;
 my @ways = () ;
 # key value color thickness fill label label-color
 
 
-my $labelMinLength = 0.1 ; # min length of street so that it will be labled / needs adjustment according to picture size
 
 my $wayId ;
 my $wayUser ;
@@ -78,42 +109,33 @@ my %memWayNodes ;
 my %memRelationTags ;
 my %memRelationMembers ;
 
-my $osmName ; 
-my $pngName ;
-my $csvName ;
-
 my %lon ; my %lat ;
 
-my $size ;
 my $lonMin ; my $latMin ; my $lonMax ; my $latMax ;
 
 my $time0 ; my $time1 ;
 
 # get parameter
 
-$osmName = shift||'';
-if (!$osmName)
-{
-	die (print $usage, "\n");
-}
+$optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
+				"style=s" 	=> \$csvName,		# the style file, mandatory
+				"out:s"		=> \$svgName,		# outfile name or default
+				"size:i"	=> \$size,		# specifies pic size longitude in pixels
+				"minlen:f"	=> \$labelMinLength,	# specifies min way len for labels
+				"pdf"		=> \$pdfOpt,		# specifies if pdf will be created
+				"png"		=> \$pngOpt,		# specifies if png will be created
+				"verbose" 	=> \$verbose) ;		# turns twitter on
 
-$csvName = shift||'';
-if (!$csvName)
-{
-	die (print $usage, "\n");
-}
 
-$pngName = shift||'';
-if (!$pngName)
-{
-	die (print $usage, "\n");
-}
-
-$size = shift||'';
-if (!$size)
-{
-	$size = 1024 ; # default size
-}
+print "\n$programName $version for file $osmName\n" ;print "\n" ;
+print "infile  = $osmName\n" ;
+print "style   = $csvName\n" ;
+print "outfile = $svgName\n" ;
+print "size    = $size (pixels)\n" ;
+print "minlen  = $labelMinLength (km)\n" ;
+print "pdf     = $pdfOpt\n" ;
+print "png     = $pngOpt\n" ;
+print "verbose = $verbose\n\n" ;
 
 # READ STYLE File
 open (my $csvFile, "<", $csvName) or die ("ERROR: style file not found.") ;
@@ -146,32 +168,32 @@ while (! grep /^\"SECTION/, $line) {
 # key value color thickness fill label label-color
 $line = <$csvFile> ;
 while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
-	my ($key, $value, $color, $thickness, $fill, $label, $labelColor, $legend) = 
-		($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) (\d+) \"(.+)\" \"(.+)\" (\d)/ ) ;
-	# print "W $key, $value, $color, $thickness, $fill, $label, $labelColor, $legend\n" ; 
-	push @ways, [$key, $value, $color, $thickness, $fill, $label, $labelColor, $legend] ;
+	my ($key, $value, $color, $thickness, $dash, $fill, $label, $labelColor, $legend) = 
+		($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" \"(.+)\" (\d)/ ) ;
+	# print "W $key, $value, $color, $thickness, $dash, $fill, $label, $labelColor, $legend\n" ; 
+	push @ways, [$key, $value, $color, $thickness, $dash, $fill, $label, $labelColor, $legend] ;
 	$line = <$csvFile> ;
 }
 
 close ($csvFile) ;
 
-
-print "\n$programName $version for file $osmName\n" ;
-print "AREAS\n" ;
-foreach my $area (@areas) {
-	printf "%-15s %-15s %-10s\n", $area->[0], $area->[1], $area->[2] ;
+if ($verbose eq "1") {
+	print "AREAS\n" ;
+	foreach my $area (@areas) {
+		printf "%-15s %-15s %-10s %-10s\n", $area->[0], $area->[1], $area->[2], $area->[3] ;
+	}
+	print "\n" ;
+	print "WAYS\n" ;
+	foreach my $way (@ways) {
+		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6], $way->[7], $way->[8] ;
+	}
+	print "\n" ;
+	print "NODES\n" ;
+	foreach my $node (@nodes) {
+		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8] ;
+	}
+	print "\n" ;
 }
-print "\n" ;
-print "WAYS\n" ;
-foreach my $way (@ways) {
-	printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6] ;
-}
-print "\n" ;
-print "NODES\n" ;
-foreach my $node (@nodes) {
-	printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7] ;
-}
-print "\n" ;
 
 $time0 = time() ;
 
@@ -230,7 +252,6 @@ foreach $key (keys %lon) {
 	if ($lat{$key} < $latMin) { $latMin = $lat{$key} ; }
 }
 initGraph ($size, $lonMin, $latMin, $lonMax, $latMax) ;
-enableSVG () ;
 
 
 # BG AREAS
@@ -240,7 +261,9 @@ foreach my $wayId (keys %memWayTags) {
 	foreach $key (@{$memWayTags{$wayId}}) {
 		foreach my $test (@areas) {
 			if ( ($key->[0] eq $test->[$areaIndexKey]) and ($key->[1] eq $test->[$areaIndexValue]) ) {
-				drawArea ($test->[$areaIndexColor], nodes2Coordinates( @{$memWayNodes{$wayId}} ) ) ;
+				if ($memWayNodes{$wayId}[0] == $memWayNodes{$wayId}[-1]) {
+					drawArea ($test->[$areaIndexColor], nodes2Coordinates( @{$memWayNodes{$wayId}} ) ) ;
+				}
 			}
 		}
 	}
@@ -290,6 +313,21 @@ foreach my $wayId (keys %memWayTags) {
 			$lon{ $memWayNodes{$wayId}[$i+1] }, $lat{ $memWayNodes{$wayId}[$i+1] }) ;
 	}
 
+	# tunnels, bridges and layers
+	my $tunnel = "no" ; my $bridge = "no" ; my $layer = 0 ;
+	foreach my $tag (@{$memWayTags{$wayId}}) {
+		if ($tag->[0] eq "tunnel") { $tunnel = $tag->[1] ; }
+		if ($tag->[0] eq "bridge") { $bridge = $tag->[1] ; }
+		if ($tag->[0] eq "layer") { $layer = $tag->[1] ; }
+	}
+
+	# test variables for correct content
+	if ($tunnel ne "yes") { $tunnel = "no" ; }
+	if ($bridge ne "yes") { $bridge = "no" ; }
+	my $found = 0 ;
+	foreach (-5,-4,-3,-2,-1,0,1,2,3,4,5) { if ($layer == $_) { $found = 1 ; } }
+	if ($found == 0) { $layer = 0 ; }
+
 	foreach my $tag (@{$memWayTags{$wayId}}) {
 		#print "  $tag->[0] $tag->[1]\n" ;
 		foreach my $test (@ways) {
@@ -297,7 +335,15 @@ foreach my $wayId (keys %memWayTags) {
 				#print "    tag match\n" ;
 				if ($test->[$wayIndexFilled] eq "0") {
 					#print "      drawing way $test->[$wayIndexColor], $test->[$wayIndexThickness] ...\n" ;
-					drawWay ($test->[$wayIndexColor], $test->[$wayIndexThickness], nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+					if ($bridge eq "yes") {
+						drawWayBridge ($layer-.4, "black", $test->[$wayIndexThickness]+4, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+						drawWayBridge ($layer-.2, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+					}
+					if ($tunnel eq "yes") {
+						drawWayBridge ($layer-.4, "black", $test->[$wayIndexThickness]+4, 11, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+						drawWayBridge ($layer-.2, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+					}
+					drawWay ($layer, $test->[$wayIndexColor], $test->[$wayIndexThickness], $test->[$wayIndexDash], nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 					if ($test->[$wayIndexLabel] ne "none") {
 						foreach my $tag2 (@{$memWayTags{$wayId}}) {
 							if ( ($tag2->[0] eq $test->[$wayIndexLabel]) and ($length >= $labelMinLength) ) {
@@ -342,10 +388,23 @@ drawRuler ("darkgray") ;
 drawHead ("gary68's $programName $version", "black", 2) ;
 drawFoot ("data by www.openstreetmap.org", "gray", 2) ;
 
-writeGraph ($pngName) ;
 
-my $svgName = $pngName ; $svgName =~ s/.png/.svg/ ;
 writeSVG ($svgName) ;
+
+if ($pdfOpt eq "1") {
+	my ($pdfName) = $svgName ;
+	$pdfName =~ s/\.svg/\.pdf/ ;
+	print "creating pdf file $pdfName ...\n" ;
+	`inkscape -A $pdfName $svgName` ;
+}
+
+if ($pngOpt eq "1") {
+	my ($pngName) = $svgName ;
+	$pngName =~ s/\.svg/\.png/ ;
+	print "creating png file $pngName ...\n" ;
+	`inkscape -e $pngName $svgName` ;
+}
+
 
 $time1 = time() ;
 print "\n$programName finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
@@ -396,7 +455,7 @@ sub createLegend {
 	foreach my $node (@nodes) { 
 		if ($node->[$nodeIndexLegend] == 1) { 
 			drawNodeDotPix ($dotX, $currentY, $node->[$nodeIndexColor], $node->[$nodeIndexThickness]) ;
-			drawTextPix2 ($textX, $currentY+$textOffset, $node->[$nodeIndexValue], "black", $sizeLegend) ;
+			drawTextPix ($textX, $currentY+$textOffset, $node->[$nodeIndexValue], "black", $sizeLegend) ;
 			$currentY += $step ;
 		}  
 	}
@@ -404,7 +463,7 @@ sub createLegend {
 	foreach my $way (@ways) { 
 		if ($way->[$wayIndexLegend] == 1) { 
 			if ($way->[$wayIndexFilled] == 0) {
-				drawWayPix ($way->[$wayIndexColor], $way->[$wayIndexThickness], $wayStartX, $currentY, $wayEndX, $currentY) ;
+				drawWayPix ($way->[$wayIndexColor], $way->[$wayIndexThickness], $way->[$wayIndexDash], $wayStartX, $currentY, $wayEndX, $currentY) ;
 			} 
 			else {
 				drawAreaPix ($way->[$wayIndexColor], $areaStartX, $currentY-$areaSize, 
@@ -413,7 +472,7 @@ sub createLegend {
 					$areaStartX, $currentY+$areaSize,
 					$areaStartX, $currentY-$areaSize) ;
 			}
-			drawTextPix2 ($textX, $currentY+$textOffset, $way->[$wayIndexValue], "black", $sizeLegend) ;
+			drawTextPix ($textX, $currentY+$textOffset, $way->[$wayIndexValue], "black", $sizeLegend) ;
 			$currentY += $step ;
 		}  
 	}
@@ -425,7 +484,7 @@ sub createLegend {
 				$areaEndX, $currentY+$areaSize,
 				$areaStartX, $currentY+$areaSize,
 				$areaStartX, $currentY-$areaSize) ;
-			drawTextPix2 ($textX, $currentY+$textOffset, $area->[$areaIndexValue], "black", $sizeLegend) ;
+			drawTextPix ($textX, $currentY+$textOffset, $area->[$areaIndexValue], "black", $sizeLegend) ;
 			$currentY += $step ;
 		}  
 	}

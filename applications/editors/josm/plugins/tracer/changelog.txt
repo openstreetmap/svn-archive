@@ -1,0 +1,5 @@
+Changelog
+
+- Based on Lakewalker [Rodney Kinney, Brent Easton]
+- Initial version [Jan Bilak]
+- Edit mode [Petr Dlouhy]

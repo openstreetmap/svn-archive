@@ -1,14 +1,17 @@
-// This is from a file of the sanselan project that is supposed to show, how the library can be used:
-// https://svn.apache.org/repos/asf/commons/proper/sanselan/trunk/src/test/java/org/apache/sanselan/sampleUsage/WriteExifMetadataExample.java
+// Wrapper class for sanselan library
 package org.openstreetmap.josm.plugins.photo_geotagging;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import java.text.DecimalFormat;
 
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.ImageWriteException;
@@ -17,70 +20,95 @@ import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.jpeg.exifRewrite.ExifRewriter;
 import org.apache.sanselan.formats.tiff.TiffImageMetadata;
+import org.apache.sanselan.formats.tiff.constants.TagInfo;
+import org.apache.sanselan.formats.tiff.constants.TiffConstants;
+import org.apache.sanselan.formats.tiff.fieldtypes.FieldType;
+import org.apache.sanselan.formats.tiff.write.TiffOutputDirectory;
+import org.apache.sanselan.formats.tiff.write.TiffOutputField;
 import org.apache.sanselan.formats.tiff.write.TiffOutputSet;
 
 public class ExifGPSTagger {
     /**
      * Set the GPS values in JPEG EXIF metadata.
      * This is taken from one of the examples of the sanselan project.
-     * 
-     * @param jpegImageFile
-     *            A source image file.
-     * @param dst
-     *            The output file.
-     * @throws IOException
-     * @throws ImageReadException
-     * @throws ImageWriteException
+     *
+     * @param jpegImageFile A source image file.
+     * @param dst The output file.
+     * @param lat latitude
+     * @param lon longitude
+     * @param gpsTime time in milliseconds
      */
-    public static void setExifGPSTag(File jpegImageFile, File dst, double lat, double lon) throws IOException {
+    public static void setExifGPSTag(File jpegImageFile, File dst, double lat, double lon, long gpsTime) throws IOException {
         try {
-            setExifGPSTagWorker(jpegImageFile, dst, lat, lon);
+            setExifGPSTagWorker(jpegImageFile, dst, lat, lon, gpsTime);
         } catch (ImageReadException ire) {
             throw new IOException(tr("Read error!"));
         } catch (ImageWriteException ire2) {
             throw new IOException(tr("Write error!"));
         }
-    }       
-   
-    public static void setExifGPSTagWorker(File jpegImageFile, File dst, double lat, double lon) throws IOException,
+    }
+
+    public static void setExifGPSTagWorker(File jpegImageFile, File dst, double lat, double lon, long gpsTime) throws IOException,
             ImageReadException, ImageWriteException
     {
         OutputStream os = null;
-        try
-        {
+        try {
             TiffOutputSet outputSet = null;
 
-            // note that metadata might be null if no metadata is found.
             IImageMetadata metadata = Sanselan.getMetadata(jpegImageFile);
             JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
-            if (null != jpegMetadata)
-            {
-                // note that exif might be null if no Exif metadata is found.
+            if (null != jpegMetadata) {
                 TiffImageMetadata exif = jpegMetadata.getExif();
 
-                if (null != exif)
-                {
-                    // TiffImageMetadata class is immutable (read-only).
-                    // TiffOutputSet class represents the Exif data to write.
-                    //
-                    // Usually, we want to update existing Exif metadata by
-                    // changing
-                    // the values of a few fields, or adding a field.
-                    // In these cases, it is easiest to use getOutputSet() to
-                    // start with a "copy" of the fields read from the image.
+                if (null != exif) {
                     outputSet = exif.getOutputSet();
                 }
             }
 
-            // if file does not contain any exif metadata, we create an empty
-            // set of exif metadata. Otherwise, we keep all of the other
-            // existing tags.
-            if (null == outputSet)
+            if (null == outputSet) {
                 outputSet = new TiffOutputSet();
-
-            {
-                outputSet.setGPSInDegrees(lon, lat);
             }
+
+            Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+
+            calendar.setTimeInMillis(gpsTime);
+
+            final int year =   calendar.get(Calendar.YEAR);
+            final int month =  calendar.get(Calendar.MONTH);
+            final int day =    calendar.get(Calendar.DAY_OF_MONTH);
+            final int hour =   calendar.get(Calendar.HOUR_OF_DAY);
+            final int minute = calendar.get(Calendar.MINUTE);
+            final int second = calendar.get(Calendar.SECOND);
+
+            DecimalFormat yearFormatter = new DecimalFormat("0000");
+            DecimalFormat monthFormatter = new DecimalFormat("00");
+            DecimalFormat dayFormatter = new DecimalFormat("00");
+
+            final String yearStr = yearFormatter.format(year);
+            final String monthStr = monthFormatter.format(month);
+            final String dayStr = dayFormatter.format(day);
+            final String dateStamp = yearStr+":"+monthStr+":"+dayStr;
+            //System.err.println("date: "+dateStamp+"  h/m/s: "+hour+"/"+minute+"/"+second);
+
+            Double[] timeStamp = {new Double(hour), new Double(minute), new Double(second)};
+            TiffOutputField gpsTimeStamp = TiffOutputField.create(
+                    TiffConstants.GPS_TAG_GPS_TIME_STAMP,
+                    outputSet.byteOrder, timeStamp);
+            TiffOutputDirectory exifDirectory = outputSet.getOrCreateGPSDirectory();
+            // make sure to remove old value if present (this method will
+            // not fail if the tag does not exist).
+            exifDirectory.removeField(TiffConstants.GPS_TAG_GPS_TIME_STAMP);
+            exifDirectory.add(gpsTimeStamp);
+
+            TiffOutputField gpsDateStamp = SanselanFixes.create(
+                    TiffConstants.GPS_TAG_GPS_DATE_STAMP,
+                    outputSet.byteOrder, dateStamp);
+            // make sure to remove old value if present (this method will
+            // not fail if the tag does not exist).
+            exifDirectory.removeField(TiffConstants.GPS_TAG_GPS_DATE_STAMP);
+            exifDirectory.add(gpsDateStamp);
+
+            SanselanFixes.setGPSInDegrees(outputSet, lon, lat);
 
             os = new FileOutputStream(dst);
             os = new BufferedOutputStream(os);
@@ -90,16 +118,12 @@ public class ExifGPSTagger {
 
             os.close();
             os = null;
-        } finally
-        {
-            if (os != null)
-                try
-                {
+        } finally {
+            if (os != null) {
+                try {
                     os.close();
-                } catch (IOException e)
-                {
-
-                }
+                } catch (IOException e) {}
+            }
         }
     }
 }

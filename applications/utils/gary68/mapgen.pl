@@ -17,39 +17,54 @@
 #      only svg support, no more png (use i.e.inkscape for cmd line conversion
 #      layers of ways; draw only really closed areas
 #      getopt, embedded pdf and png creation
-#
+# 0.05 grid implemented [-grid=INT]
+#      clip function implemented [-clip]
+#      street directory [-dir], shows grid squares if [-grid=INT] is enabled
+#      place drawing
+#      [-legend]
 #
 
 # TODO
-# bbox? 5-10%?
+# [-help] 
+# label ref and name, dir entry
+# label size and offset
 # icons
-# wiki page
+# oneways
 
 # relations (scan, then convert to ways, preserve layers!)
 # sub key/value for rules
 # bg color
+# see wiki
 
 use strict ;
 use warnings ;
 
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen ;
+use OSM::mapgen 0.05 ;
 
 my $programName = "mapgen.pl" ;
-my $usage = "mapgen.pl -in=file.osm -style=file.csv [-out=file.svg] [-size=INT] [-pdf] [-png] [-minlen=x.y] [-verbose]" ; 
-my $version = "0.04" ;
+my $usage = "mapgen.pl -in=file.osm -style=file.csv [-out=file.svg] [-size=INT] [-clip=INT] [-legend=INT] [-pdf] [-png] [-minlen=FLOAT] [-grid=INT] [-dir] [-place=TXT] [-lonrad=FLOAT] [-latrad=FLOAT] [-verbose] (DETAILS see OSM wiki)" ; 
+my $version = "0.05" ;
 
 # command line things
 my $optResult ;
 my $verbose = 0 ;
+my $grid = 0 ;
+my $clip = 0 ;
+my $legendOpt = 1 ;
 my $size = 1024 ; # default pic size longitude in pixels
 my $osmName = "" ; 
 my $csvName = "" ; 
+my $dirName = "" ; 
 my $svgName = "mapgen.svg" ; 
 my $pdfOpt = 0 ;
 my $pngOpt = 0 ;
+my $dirOpt = 0 ;
 my $labelMinLength = 0.1 ; # min length of street so that it will be labled / needs adjustment according to picture size
+my $place = "" ;
+my $lonrad = 2 ;
+my $latrad = 2 ;
 
 
 my @legend = () ;
@@ -109,6 +124,8 @@ my %memWayNodes ;
 my %memRelationTags ;
 my %memRelationMembers ;
 
+my %directory = () ;
+
 my %lon ; my %lat ;
 
 my $lonMin ; my $latMin ; my $lonMax ; my $latMax ;
@@ -121,18 +138,44 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"style=s" 	=> \$csvName,		# the style file, mandatory
 				"out:s"		=> \$svgName,		# outfile name or default
 				"size:i"	=> \$size,		# specifies pic size longitude in pixels
+				"legend:i"	=> \$legendOpt,		# legend?
+				"grid:i"	=> \$grid,		# specifies grid, number of parts
+				"clip:i"	=> \$clip,		# specifies how many percent data to clip on each side
 				"minlen:f"	=> \$labelMinLength,	# specifies min way len for labels
 				"pdf"		=> \$pdfOpt,		# specifies if pdf will be created
 				"png"		=> \$pngOpt,		# specifies if png will be created
+				"dir"		=> \$dirOpt,		# specifies if directory will be created
+				"place:s"	=> \$place,		# place to draw
+				"lonrad:f"	=> \$lonrad,
+				"latrad:f"	=> \$latrad,
 				"verbose" 	=> \$verbose) ;		# turns twitter on
 
+if ($grid > 26) { 
+	$grid = 26 ; 
+	print "WARNING: grid set to 26 parts\n" ;
+}
+if ($grid < 0) { 
+	$grid = 0 ; 
+	print "WARNING: grid set to 0\n" ;
+}
+if ( ($clip <0) or ($clip > 100) ) { 
+	$clip = 0 ; 
+	print "WARNING: clip set to 0 percent\n" ;
+}
 
 print "\n$programName $version for file $osmName\n" ;print "\n" ;
 print "infile  = $osmName\n" ;
 print "style   = $csvName\n" ;
 print "outfile = $svgName\n" ;
 print "size    = $size (pixels)\n" ;
+print "legend  = $legendOpt\n" ;
+print "clip    = $clip (percent)\n" ;
+print "grid    = $grid (number)\n" ;
+print "dir     = $dirOpt\n" ;
 print "minlen  = $labelMinLength (km)\n" ;
+print "place   = $place\n" ;
+print "lonrad  = $lonrad (km)\n" ;
+print "latrad  = $latrad (km)\n" ;
 print "pdf     = $pdfOpt\n" ;
 print "png     = $pngOpt\n" ;
 print "verbose = $verbose\n\n" ;
@@ -198,6 +241,56 @@ if ($verbose eq "1") {
 $time0 = time() ;
 
 
+# place given?
+my $placeFound = 0 ; my $placeLon ; my $placeLat ;
+if ($place ne "") {
+	print "looking for place...\n" ;
+	openOsmFile ($osmName) ;
+	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
+	if ($nodeId != -1) {
+		@nodeTags = @$aRef1 ;
+	}
+	while ( ($nodeId != -1) and ($placeFound == 0) ) {
+		my $placeNode = 0 ; my $placeName = 0 ;
+		foreach my $tag	(@nodeTags) {
+			if ($tag->[0] eq "place") { $placeNode = 1 ; }
+			if ( ($tag->[0] eq "name") and ($tag->[1] eq $place) ){ $placeName = 1 ; }
+		}
+		if ( ($placeNode == 1) and ($placeName == 1) ) {
+			$placeFound = 1 ;
+			$placeLon = $nodeLon ;
+			$placeLat = $nodeLat ;
+		}
+
+		($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;		if ($nodeId != -1) {			@nodeTags = @$aRef1 ;		}	}	closeOsmFile() ;
+	if ($placeFound == 1) {
+		print "place found at:\n" ;
+		print "lon: $placeLon\n" ;
+		print "lat: $placeLat\n" ;
+		my $left = $placeLon - $lonrad/(111.11 * cos ( $placeLat / 360 * 3.14 * 2 ) ) ;  
+		my $right = $placeLon + $lonrad/(111.11 * cos ( $placeLat / 360 * 3.14 * 2 ) ) ; 
+		my $top = $placeLat + $latrad/111.11 ; 
+		my $bottom = $placeLat - $latrad/111.11 ;
+
+
+		print "left $left\n" ;
+		print "right $right\n" ;
+		print "top $top\n" ;
+		print "bottom $bottom\n" ;
+		print "call osmosis...\n" ;
+		`osmosis --read-xml-0.6 $osmName  --bounding-box-0.6 clipIncompleteEntities=true bottom=$bottom top=$top left=$left right=$right --write-xml-0.6 ./temp.osm` ;
+		print "osmosis done.\n" ;
+		$osmName = "./temp.osm" ;
+	}
+	else {
+		print "ERROR: place $place not found.\n" ;
+		die() ;
+	}
+}
+
+
+
+
 # STORE DATA
 print "reading osm file...\n" ;
 
@@ -251,6 +344,15 @@ foreach $key (keys %lon) {
 	if ($lat{$key} > $latMax) { $latMax = $lat{$key} ; }
 	if ($lat{$key} < $latMin) { $latMin = $lat{$key} ; }
 }
+
+if ( ($clip > 0) and ($clip < 100) ) { 
+	$clip = $clip / 100 ;
+	$lonMin += ($lonMax-$lonMin) * $clip ;
+	$lonMax -= ($lonMax-$lonMin) * $clip ;
+	$latMin += ($latMax-$latMin) * $clip ;
+	$latMax -= ($latMax-$latMin) * $clip ;
+}
+
 initGraph ($size, $lonMin, $latMin, $lonMax, $latMax) ;
 
 
@@ -346,8 +448,20 @@ foreach my $wayId (keys %memWayTags) {
 					drawWay ($layer, $test->[$wayIndexColor], $test->[$wayIndexThickness], $test->[$wayIndexDash], nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 					if ($test->[$wayIndexLabel] ne "none") {
 						foreach my $tag2 (@{$memWayTags{$wayId}}) {
-							if ( ($tag2->[0] eq $test->[$wayIndexLabel]) and ($length >= $labelMinLength) ) {
-								labelWay ($test->[$wayIndexLabelColor], 0, "", $tag2->[1], -2, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+							if ($tag2->[0] eq $test->[$wayIndexLabel]) { 
+								if ($length >= $labelMinLength) {
+									labelWay ($test->[$wayIndexLabelColor], 0, "", $tag2->[1], -2, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+								}
+								if ($dirOpt eq "1") {
+									if ($grid > 0) {
+										foreach my $node (@{$memWayNodes{$wayId}}) {
+											$directory{$tag2->[1]}{gridSquare($lon{$node}, $lat{$node}, $grid)} = 1 ;
+										}
+									}
+									else {
+										$directory{$tag2->[1]} = 1 ;
+									}
+								}
 							}
 						}
 					}
@@ -381,12 +495,13 @@ foreach my $wayId (keys %memWayTags) {
 
 print "draw legend etc. and write files...\n" ;
 
-# drawLegend (2, @legend) ;
-createLegend() ;
+if ($legendOpt == 1) {
+	createLegend() ;
+}
 
-drawRuler ("darkgray") ;
-drawHead ("gary68's $programName $version", "black", 2) ;
-drawFoot ("data by www.openstreetmap.org", "gray", 2) ;
+drawRuler ("black") ;
+drawFoot ("gary68's $programName $version - data by www.openstreetmap.org", "black", 3) ;
+if ($grid > 0) { drawGrid($grid) ; }
 
 
 writeSVG ($svgName) ;
@@ -403,6 +518,29 @@ if ($pngOpt eq "1") {
 	$pngName =~ s/\.svg/\.png/ ;
 	print "creating png file $pngName ...\n" ;
 	`inkscape -e $pngName $svgName` ;
+}
+
+if ($dirOpt eq "1") {
+	my $dirFile ;
+	my $dirName = $svgName ;
+	$dirName =~ s/\.svg/\.txt/ ;
+	print "creating dir file $dirName ...\n" ;
+	open ($dirFile, ">", $dirName) or die ("can't open dir file\n") ;
+	if ($grid eq "0") {
+		foreach my $street (sort keys %directory) {
+			print $dirFile "$street\n" ;
+		}
+	}
+	else {
+		foreach my $street (sort keys %directory) {
+			print $dirFile "$street\t" ;
+			foreach my $square (sort keys %{$directory{$street}}) {
+				print $dirFile "$square " ;
+			}
+			print $dirFile "\n" ;
+		}
+	}
+	close ($dirFile) ;
 }
 
 
@@ -428,7 +566,7 @@ sub nodes2Coordinates {
 }
 
 sub createLegend {
-	my $currentY = 50 ;
+	my $currentY = 20 ;
 	my $step = 20 ;
 	my $textX = 70 ;
 	my $textOffset = -5 ;
@@ -446,11 +584,11 @@ sub createLegend {
 	foreach (@ways) { if ($_->[$wayIndexLegend] == 1) { $count++ ; }  }
 
 	# erase background
-	drawAreaPix ("white", 0, 30,
-			180,30,
-			180, 30 + $count*20 + 10,
-			0, 30 + $count*20 + 10,
-			0, 30) ;
+	drawAreaPix ("white", 0, 0,
+			180,0,
+			180, $count*20 + 15,
+			0, $count*20 + 15,
+			0, 0) ;
 	
 	foreach my $node (@nodes) { 
 		if ($node->[$nodeIndexLegend] == 1) { 

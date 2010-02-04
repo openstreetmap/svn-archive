@@ -24,6 +24,7 @@
 #
 # drawArea ($color, @nodes) - real world
 # drawAreaPix ($color, @nodes) - pixels
+# drawGrid ($parts)
 # drawHead ($text, $color, $size) / size (1..5) 
 # drawFoot ($text, $color, $size) / size (1..5) 
 # drawNodeDot ($lon, $lat, $color, $size) / size (1..5) - real world
@@ -36,6 +37,7 @@
 # drawWay ($layer, d$color, $size, $dash, @nodes) / size = thickness / real world
 # drawWayBridge ($layer, d$color, $size, $dash, @nodes) / size = thickness / real world
 # drawWayPix ($color, $size, $dash, @nodes) / size = thickness / pixels
+# gridSquare ($lon, $lat) / returns grid square for directory
 # initGraph ($sizeX, $left, $bottom, $right, $top) / real world coordinates, sizeX in pixels, Y automatic
 # labelWay ($col, $size, $font, $text, $tSpan, @nodes) / size can be 0..5 (or bigger...) / $tSpan = offset to line/way
 # writeSVG ($fileName)
@@ -68,7 +70,7 @@ use Encode ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.04' ;
+$VERSION = '0.05' ;
 
 require Exporter ;
 
@@ -80,6 +82,7 @@ require Exporter ;
 			drawCircleRadiusText 
 			drawHead 
 			drawFoot 
+			drawGrid
 			drawLegend 
 			drawNodeDot 
 			drawNodeDotPix 
@@ -92,6 +95,7 @@ require Exporter ;
 			drawWay 
 			drawWayBridge 
 			drawWayPix 
+			gridSquare
 			initGraph 
 			labelWay 
 			writeSVG ) ;
@@ -154,6 +158,7 @@ my %svgOutputWaysNodes = () ;
 my @svgOutputAreas = () ;
 my @svgOutputText = () ;
 my @svgOutputPixel = () ;
+my @svgOutputPixelGrid = () ;
 my @svgOutputDef = () ;
 my @svgOutputPathText = () ;
 my $pathNumber = 0 ;
@@ -181,9 +186,18 @@ sub convert {
 	my ($x, $y) = @_ ;
 
 	my ($x1) = int( ($x - $left) / ($right - $left) * $sizeX ) ;
-	my ($y1) = $sizeY - int( ($y - $bottom) / ($top - $bottom) * $sizeY ) ;
+	my ($y1) = int ($sizeY - int( ($y - $bottom) / ($top - $bottom) * $sizeY ) ) ;
 
 	return ($x1, $y1) ;
+}
+
+sub gridSquare {
+	my ($lon, $lat, $parts) = @_ ;
+	my ($x, $y) = convert ($lon, $lat) ;
+	# my $partsY = $sizeY / ($sizeX / $parts) ;
+	my $xi = int ($x / ($sizeX / $parts)) + 1 ;
+	my $yi = int ($y / ($sizeX / $parts)) + 1 ;
+	return (chr($xi+64) . $yi) ;
 }
 
 sub drawHead {
@@ -222,6 +236,15 @@ sub drawTextPix {
 	my ($x1, $y1, $text, $col, $size) = @_ ;
 
 	push @svgOutputPixel, svgElementText ($x1, $y1+9, $text, $size, $col, "") ;
+}
+
+sub drawTextPixGrid {
+#
+# draws text at pixel position
+#
+	my ($x1, $y1, $text, $col, $size) = @_ ;
+
+	push @svgOutputPixelGrid, svgElementText ($x1, $y1+9, $text, $size, $col, "") ;
 }
 
 sub drawNodeDot {
@@ -334,6 +357,22 @@ sub drawWayPix {
 	push @svgOutputPixel, svgElementPolyline ($col, $size, $dash, @points) ;
 }
 
+sub drawWayPixGrid {
+#
+# draws way as a line at given pixels. nodes have to be passed as array ($x, $y, $x, $y...)
+# $size = thickness
+#
+	my ($col, $size, $dash, @nodes) = @_ ;
+	my $i ;
+	my @points = () ;
+
+	for ($i=0; $i<$#nodes; $i+=2) {
+		my ($x, $y) = ($nodes[$i], $nodes[$i+1]) ;
+		push @points, $x ; push @points, $y ; 
+	}
+	push @svgOutputPixelGrid, svgElementPolyline ($col, $size, $dash, @points) ;
+}
+
 
 sub labelWay {
 #
@@ -420,6 +459,21 @@ sub drawRuler {
 	push @svgOutputText, svgElementText ($rx-$Lpix, $ry+15, $text, 2, $col, "") ;
 }
 
+sub drawGrid {
+	my $number = shift ;
+	my $part = $sizeX / $number ;
+	my $numY = $sizeY / $part ;
+	# vertical lines
+	for (my $i = 1; $i <= $number; $i++) {
+		drawWayPixGrid ("black", 1, 1, $i*$part, 0, $i*$part, $sizeY) ;
+		drawTextPixGrid (($i-1)*$part+$part/2, 20, chr($i+64), "blue", 4) ;
+	}
+	# hor. lines
+	for (my $i = 1; $i <= $numY; $i++) {
+		drawWayPixGrid ("black", 1, 1, 0, $i*$part, $sizeX, $i*$part) ;
+		drawTextPixGrid (20, ($i-1)*$part+$part/2, $i, "blue", 4) ;
+	}
+}
 
 
 
@@ -461,6 +515,10 @@ sub writeSVG {
 
 	print $file "<g id=\"Labels\">\n" ;
 	foreach (@svgOutputPathText) { print $file $_, "\n" ; }
+	print $file "</g>\n" ;
+
+	print $file "<g id=\"Grid\">\n" ;
+	foreach (@svgOutputPixelGrid) { print $file $_, "\n" ; }
 	print $file "</g>\n" ;
 
 	print $file "<g id=\"Pixels\">\n" ;

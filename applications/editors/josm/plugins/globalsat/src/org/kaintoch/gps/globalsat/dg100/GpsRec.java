@@ -313,6 +313,7 @@ public class GpsRec
         int DD = dg100Date / 10000;
         int MM = (dg100Date - DD * 10000) / 100;
         int YY = dg100Date - DD * 10000 - MM * 100;
+        System.out.println("DD = " + new Integer(DD).toString());
         dateTime = GregorianCalendar.getInstance();
         dateTime.set(2000 + YY, MM, DD, hh, mm, ss);
     }

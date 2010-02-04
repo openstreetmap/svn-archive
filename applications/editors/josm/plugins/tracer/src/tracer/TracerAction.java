@@ -38,6 +38,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
  * Interface to Darryl Shpak's Tracer module
@@ -152,19 +153,31 @@ class TracerAction extends MapMode implements MouseListener {
         }
     }
 
+    private boolean isBuilding(Way w){
+        return (w.getKeys().get("building") == null ? false : w.getKeys().get("building").equals("yes"));
+    }
+
+    private boolean isInBuilding(Node n){
+        for(OsmPrimitive op :n.getReferrers())
+            if(op instanceof Way)
+                if(isBuilding((Way) op))
+                    return true;
+            return false;
+    }
+
+
     private Command connectObjects(Way way){
             List<Command> cmds = new LinkedList<Command>();
             Way newWay = new Way(way);
-            for (int i = 0; i < newWay.getNodesCount(); i++) {
-                Node n = newWay.getNode(i);
+            for (int i = 1; i < way.getNodesCount(); i++) {
+                Node n = way.getNode(i);
                 if (cancel) {
                     return null;
                 }
 
-                try {
                     LatLon ll = n.getCoor();
 
-                    double minDistanceSq = 0.00001;
+                    double minDistanceSq = 0.000015;
                     List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(new BBox(
                             ll.getX() - minDistanceSq,
                             ll.getY() - minDistanceSq,
@@ -173,7 +186,7 @@ class TracerAction extends MapMode implements MouseListener {
                             ));
                     Node nearestNode = null;
                     for (Node nn : nodes) {
-                        if (!nn.isUsable() || way.containsNode(nn) || newWay.containsNode(nn)) {
+                        if (!nn.isUsable() || way.containsNode(nn) || newWay.containsNode(nn) || !isInBuilding(nn)) {
                             continue;
                         }
                         double dist = nn.getCoor().distance(ll);
@@ -183,6 +196,8 @@ class TracerAction extends MapMode implements MouseListener {
                         }
                     }
 
+                    //System.out.println("Nearest: " + nearestNode);
+                    //System.out.println("-------");
                     if (nearestNode == null) {
                         // hledani blizke usecky, kam bod pridat ... nebo vytvorit samostatny bod?
                         List<Way> ways = Main.main.getCurrentDataSet().searchWays(new BBox(
@@ -197,7 +212,7 @@ class TracerAction extends MapMode implements MouseListener {
 
 
                         for (Way ww : ways) {
-                            if (!ww.isUsable() || ww == way || ww == newWay) {
+                            if (!ww.isUsable() || ww == way || ww == newWay || !isBuilding(ww)) {
                                 continue;
                             }
                             for (int nindex = 0; nindex < ww.getNodesCount(); nindex++) {
@@ -213,26 +228,23 @@ class TracerAction extends MapMode implements MouseListener {
                             }
                         }
 
-                        if (minDist < 0.00001) {
+                        //System.out.println("Nearest way:" + nearestWay);
+                        if (minDist < 0.000015) {
                             Way newNWay = new Way(nearestWay);
                             newNWay.addNode(nearestNodeIndex + 1, n);
+                            //System.out.println("New way:" + newNWay);
                             cmds.add(new ChangeCommand(nearestWay, newNWay));
                         }
                     } else {
+                          nearestNode.setCoor(ll.getCenter(nearestNode.getCoor()));
                           int j = newWay.getNodes().indexOf(n);
                           newWay.addNode(j, nearestNode);
                           if(j == 0)newWay.addNode(newWay.getNodesCount(), nearestNode);
                           newWay.removeNode(n);
                           cmds.add(new DeleteCommand(n));
-                          i--;
                     }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
             }
-            /**/
-            // projdi kazdou novou usecku a zjisti, zda by nemela vest pres existujici body          
+            // projdi kazdou novou usecku a zjisti, zda by nemela vest pres existujici body
             int i = 0;
             while (i < newWay.getNodesCount()) {
                 if (cancel) {
@@ -244,9 +256,10 @@ class TracerAction extends MapMode implements MouseListener {
                 // usecka n1, n2
                 LatLon n1 = newWay.getNodes().get(i).getCoor();
                 LatLon n2 = newWay.getNodes().get((i + 1) % newWay.getNodesCount()).getCoor();
+                //System.out.println(newWay.getNodes().get(i) + "-----" + newWay.getNodes().get((i + 1) % newWay.getNodesCount()));
 
-                double minDistanceSq = 0.00001;
-                double maxAngle = 10;
+                double minDistanceSq = 0.000015;
+                double maxAngle = 15;
                 List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(new BBox(
                         Math.min(n1.getX(), n2.getX()) - minDistanceSq,
                         Math.min(n1.getY(), n2.getY()) - minDistanceSq,
@@ -255,7 +268,7 @@ class TracerAction extends MapMode implements MouseListener {
                         ));
                 Node nearestNode = null;
                 for (Node nod : nodes) {
-                    if (!nod.isUsable() || way.containsNode(nod) || newWay.containsNode(nod)) {
+                    if (!nod.isUsable() || way.containsNode(nod) || newWay.containsNode(nod) || !isInBuilding(nod)) {
                         continue;
                     }
                     LatLon nn = nod.getCoor();
@@ -276,8 +289,8 @@ class TracerAction extends MapMode implements MouseListener {
                     }
                 }
 
-                System.out.println("Nearest_: " + nearestNode);
-                System.out.println("");
+                //System.out.println("Nearest_: " + nearestNode);
+                //System.out.println("");
                 if (nearestNode == null) {
                     // tato usecka se nerozdeli
                     i++;
@@ -290,7 +303,7 @@ class TracerAction extends MapMode implements MouseListener {
 
             }
 
-            cmds.add(new ChangeCommand(way, newWay));
+                cmds.add(new ChangeCommand(way, newWay));
 
             Command cmd = new SequenceCommand(tr("Merge objects nodes"), cmds);
             return cmd;
@@ -337,10 +350,10 @@ class TracerAction extends MapMode implements MouseListener {
 
             commands.add(new AddCommand(way));
             if(!ctrl) commands.add(connectObjects(way));
-
+            
             if (!commands.isEmpty()) {
                 Main.main.undoRedo.add(new SequenceCommand(tr("Tracer building"), commands));
-                
+
                 if(shift) Main.main.getCurrentDataSet().addSelected(way);
                 else Main.main.getCurrentDataSet().setSelected(way);
             } else {

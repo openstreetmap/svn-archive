@@ -10,6 +10,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -19,14 +20,13 @@ import java.util.LinkedList;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
@@ -49,9 +49,10 @@ class TracerAction extends MapMode implements MouseListener {
     private static final long serialVersionUID = 1L;
     protected Thread executeThread;
     protected boolean cancel;
-    protected Collection<Command> commands = new LinkedList<Command>();
-    protected Collection<Way> ways = new ArrayList<Way>();
-
+    private boolean ctrl;
+    private boolean alt;
+    private boolean shift;
+   
     public TracerAction(MapFrame mapFrame) {
         super(tr("Tracer"), "tracer-sml", tr("Tracer."), Shortcut.registerShortcut("tools:tracer", tr("Tool: {0}", tr("Tracer")), KeyEvent.VK_T, Shortcut.GROUP_EDIT), mapFrame, getCursor());
     }
@@ -106,8 +107,8 @@ class TracerAction extends MapMode implements MouseListener {
                     TracerAction.this.cancel();
                 }
             };
-            Thread executeThread = new Thread(tracerTask);
-            executeThread.start();
+            Thread executeTraceThread = new Thread(tracerTask);
+            executeTraceThread.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,36 +152,17 @@ class TracerAction extends MapMode implements MouseListener {
         }
     }
 
-    private void processnodelist(LatLon pos, LatLon topLeft, LatLon botRight, ProgressMonitor progressMonitor) {
-        progressMonitor.beginTask(null, 3);
-        try {
-            ArrayList<double[]> nodelist = new ArrayList<double[]>();
-            nodelist = getNodeList(pos);
-
-            if (nodelist.size() == 0) {
-                return;
-            }
-
-            /**
-             * Turn the arraylist into osm nodes
-             */
-            Way way = new Way();
-            Node n = null;
-            Node fn = null;
-
-            double eastOffset = 0;
-            double northOffset = 0;
-
-
-            int nodesinway = 0;
-
-            for (int i = 0; i < nodelist.size(); i++) {
+    private Command connectObjects(Way way){
+            List<Command> cmds = new LinkedList<Command>();
+            Way newWay = new Way(way);
+            for (int i = 0; i < newWay.getNodesCount(); i++) {
+                Node n = newWay.getNode(i);
                 if (cancel) {
-                    return;
+                    return null;
                 }
 
                 try {
-                    LatLon ll = new LatLon(nodelist.get(i)[0] + northOffset, nodelist.get(i)[1] + eastOffset);
+                    LatLon ll = n.getCoor();
 
                     double minDistanceSq = 0.00001;
                     List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(new BBox(
@@ -191,11 +173,10 @@ class TracerAction extends MapMode implements MouseListener {
                             ));
                     Node nearestNode = null;
                     for (Node nn : nodes) {
-                        if (!nn.isUsable()) {
+                        if (!nn.isUsable() || way.containsNode(nn) || newWay.containsNode(nn)) {
                             continue;
                         }
-                        LatLon ll2 = nn.getCoor();
-                        double dist = ll2.distance(ll);
+                        double dist = nn.getCoor().distance(ll);
                         if (dist < minDistanceSq) {
                             minDistanceSq = dist;
                             nearestNode = nn;
@@ -216,6 +197,9 @@ class TracerAction extends MapMode implements MouseListener {
 
 
                         for (Way ww : ways) {
+                            if (!ww.isUsable() || ww == way || ww == newWay) {
+                                continue;
+                            }
                             for (int nindex = 0; nindex < ww.getNodesCount(); nindex++) {
                                 Node n1 = ww.getNode(nindex);
                                 Node n2 = ww.getNode((nindex + 1) % ww.getNodesCount());
@@ -230,45 +214,36 @@ class TracerAction extends MapMode implements MouseListener {
                         }
 
                         if (minDist < 0.00001) {
-                            n = new Node(ll);
-                            commands.add(new AddCommand(n));
-                            Way newWay = new Way(nearestWay);
-                            newWay.addNode(nearestNodeIndex + 1, n);
-                            commands.add(new ChangeCommand(nearestWay, newWay));
-                        } else {
-                            n = new Node(ll);
-                            commands.add(new AddCommand(n));
+                            Way newNWay = new Way(nearestWay);
+                            newNWay.addNode(nearestNodeIndex + 1, n);
+                            cmds.add(new ChangeCommand(nearestWay, newNWay));
                         }
                     } else {
-                        n = nearestNode;
-                    }
-
-                    if (fn == null) {
-                        fn = n;
+                          int j = newWay.getNodes().indexOf(n);
+                          newWay.addNode(j, nearestNode);
+                          if(j == 0)newWay.addNode(newWay.getNodesCount(), nearestNode);
+                          newWay.removeNode(n);
+                          cmds.add(new DeleteCommand(n));
+                          i--;
                     }
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-
-                way.addNode(n);
-                nodesinway++;
             }
-/**/
-            // projdi kazdou novou usecku a zjisti, zda by nemela vest pres existujici body
+            /**/
+            // projdi kazdou novou usecku a zjisti, zda by nemela vest pres existujici body          
             int i = 0;
-            while (i < nodelist.size()) {
+            while (i < newWay.getNodesCount()) {
                 if (cancel) {
-                    return;
+                    return null;
                 }
 
                 callWeb("http://localhost:5050/log/i/" + i);
 
                 // usecka n1, n2
-                double d[] = nodelist.get(i);
-                LatLon n1 = new LatLon(d[0], d[1]);
-                d = nodelist.get((i + 1) % nodelist.size());
-                LatLon n2 = new LatLon(d[0], d[1]);
+                LatLon n1 = newWay.getNodes().get(i).getCoor();
+                LatLon n2 = newWay.getNodes().get((i + 1) % newWay.getNodesCount()).getCoor();
 
                 double minDistanceSq = 0.00001;
                 double maxAngle = 10;
@@ -280,7 +255,7 @@ class TracerAction extends MapMode implements MouseListener {
                         ));
                 Node nearestNode = null;
                 for (Node nod : nodes) {
-                    if (!nod.isUsable()) {
+                    if (!nod.isUsable() || way.containsNode(nod) || newWay.containsNode(nod)) {
                         continue;
                     }
                     LatLon nn = nod.getCoor();
@@ -301,35 +276,75 @@ class TracerAction extends MapMode implements MouseListener {
                     }
                 }
 
+                System.out.println("Nearest_: " + nearestNode);
+                System.out.println("");
                 if (nearestNode == null) {
                     // tato usecka se nerozdeli
                     i++;
                     continue;
                 } else {
                     // rozdeleni usecky
-                    nodelist.add(i+1, new double[] { nearestNode.getCoor().getY(), nearestNode.getCoor().getX() });
-                    way.addNode(i+1, nearestNode);
+                    newWay.addNode(i+1, nearestNode);
                     continue; // i nezvetsuji, treba bude treba rozdelit usecku znovu
                 }
 
             }
-/**/
+
+            cmds.add(new ChangeCommand(way, newWay));
+
+            Command cmd = new SequenceCommand(tr("Merge objects nodes"), cmds);
+            return cmd;
+    }
+
+    private void processnodelist(LatLon pos, LatLon topLeft, LatLon botRight, ProgressMonitor progressMonitor) {
+        Collection<Command> commands = new LinkedList<Command>();
+
+        progressMonitor.beginTask(null, 3);
+        try {
+            ArrayList<double[]> nodelist = new ArrayList<double[]>();
+            nodelist = getNodeList(pos);
+
+            if (nodelist.size() == 0) {
+                return;
+            }
+
+            /**
+             * Turn the arraylist into osm nodes
+             */
+            Way way = new Way();
+            Node n = null;
+            Node fn = null;
+
+            double eastOffset = 0;
+            double northOffset = 0;
+
+            for (double[] node : nodelist) {
+                if (cancel) {
+                    return;
+                }
+                LatLon ll = new LatLon(node[0] + northOffset, node[1] + eastOffset);
+
+                n = new Node(ll);
+                if(fn == null) fn = n;
+                commands.add(new AddCommand(n));
+                way.addNode(n);
+            }
+
             way.put("building", "yes");
             way.put("source", "cuzk:km");
 
             way.addNode(fn);
 
             commands.add(new AddCommand(way));
+            if(!ctrl) commands.add(connectObjects(way));
 
             if (!commands.isEmpty()) {
                 Main.main.undoRedo.add(new SequenceCommand(tr("Tracer building"), commands));
-                Main.main.getCurrentDataSet().setSelected(ways);
+                Main.main.getCurrentDataSet().setSelected(way);
             } else {
                 System.out.println("Failed");
             }
 
-            commands = new LinkedList<Command>();
-            ways = new ArrayList<Way>();
         } finally {
             progressMonitor.finishTask();
         }
@@ -367,24 +382,37 @@ class TracerAction extends MapMode implements MouseListener {
         cancel = true;
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         if(!Main.map.mapView.isActiveLayerDrawable())
            return;
 
+        updateKeyModifiers(e);
         if (e.getButton() == MouseEvent.BUTTON1) {
             trace(e.getPoint());
         }
     }
+    
+    private void updateKeyModifiers(MouseEvent e) {
+        ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
+        alt = (e.getModifiers() & (ActionEvent.ALT_MASK|InputEvent.ALT_GRAPH_MASK)) != 0;
+        shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
+    }
 
+
+    @Override
     public void mouseReleased(MouseEvent e) {
     }
 }

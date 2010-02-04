@@ -101,13 +101,13 @@
         ************************************************
     -->
 			<manifest>
-				<attribute name="Author" value="..."/>
-				<attribute name="Plugin-Class" value="..."/>
-				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-				<attribute name="Plugin-Description" value="..."/>
-				<attribute name="Plugin-Link" value="..."/>
-				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+				<attribute name="Author" value="Jan Bilak, Petr Dlouhý" />
+				<attribute name="Plugin-Class" value="tracer.TracerPlugin" />
+				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
+				<attribute name="Plugin-Description" value="Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) to be runnign." />
+				<!-- <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tracer" /> -->
+				<attribute name="Plugin-Mainversion" value="${plugin.main.version}" />
+				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
 			</manifest>
 		</jar>
 	</target>

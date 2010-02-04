@@ -493,14 +493,21 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
         if (mapMarkersVisible && mapMarkerList != null) {
             for (MapMarker marker : mapMarkerList) {
-                Point p = getMapPosition(marker.getLat(), marker.getLon());
-                if (p != null) {
-                    marker.paint(g, p);
-                }
+                paintMarker(g, marker);
             }
         }
     }
 
+    /**
+     * Paint a single marker.
+     */
+    protected void paintMarker(Graphics g, MapMarker marker) {
+        Point p = getMapPosition(marker.getLat(), marker.getLon());
+        if (p != null) {
+            marker.paint(g, p);
+        }
+    }
+    
     /**
      * Moves the visible map pane.
      * 
@@ -625,6 +632,11 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     public void addMapMarker(MapMarker marker) {
         mapMarkerList.add(marker);
+        repaint();
+    }
+
+    public void removeMapMarker(MapMarker marker) {
+        mapMarkerList.remove(marker);
         repaint();
     }
 

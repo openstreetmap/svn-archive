@@ -24,7 +24,7 @@
 <project name="photo_geotagging" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="josm plugin photo_geotagging: added mtime handling and GPSTimeStamp writing" />
+	<property name="commit.message" value="fixed: month is off by 1; delete temporary test file" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="2931" />
 

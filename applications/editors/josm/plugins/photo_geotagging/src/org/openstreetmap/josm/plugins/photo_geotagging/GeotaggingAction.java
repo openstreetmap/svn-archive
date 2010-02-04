@@ -292,6 +292,9 @@ class GeotaggingAction implements ActionListener {
                 throw new IOException(tr("Test failed: Could not read mtime."));
             if (!fileTest.setLastModified(mTimeTest))
                 throw new IOException(tr("Test failed: Could not write mtime."));
+            if (!fileTest.delete())
+                throw new IOException(tr("Could not delete temporary file!"));
+
             testMTimeReadAndWriteDone = true;
         }
 

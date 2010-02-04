@@ -74,7 +74,7 @@ public class ExifGPSTagger {
             calendar.setTimeInMillis(gpsTime);
 
             final int year =   calendar.get(Calendar.YEAR);
-            final int month =  calendar.get(Calendar.MONTH);
+            final int month =  calendar.get(Calendar.MONTH) + 1;
             final int day =    calendar.get(Calendar.DAY_OF_MONTH);
             final int hour =   calendar.get(Calendar.HOUR_OF_DAY);
             final int minute = calendar.get(Calendar.MINUTE);

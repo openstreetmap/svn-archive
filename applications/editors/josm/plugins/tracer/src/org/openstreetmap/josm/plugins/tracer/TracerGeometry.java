@@ -43,6 +43,7 @@ public class TracerGeometry {
     static private double distanceFromSegment(double cx, double cy, double ax, double ay, double bx, double by) {
         double r_numerator = (cx - ax) * (bx - ax) + (cy - ay) * (by - ay);
         double r_denomenator = (bx - ax) * (bx - ax) + (by - ay) * (by - ay);
+        if(r_denomenator == 0)System.out.println("r_denomenator == 0    ------------");
         double r = r_numerator / r_denomenator;
         double s = ((ay - cy) * (bx - ax) - (ax - cx) * (by - ay)) / r_denomenator;
         double distanceLine = Math.abs(s) * Math.sqrt(r_denomenator);

@@ -4,7 +4,7 @@
  * This program is free software and licensed under GPL.
  */
 
-package tracer;
+package org.openstreetmap.josm.plugins.tracer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;

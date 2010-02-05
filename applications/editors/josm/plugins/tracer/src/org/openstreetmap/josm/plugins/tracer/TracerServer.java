@@ -46,24 +46,20 @@ public class TracerServer {
      * @param pos Position of building.
      * @return Building border.
      */
-    public ArrayList<double[]> trace(LatLon pos) {
+    public ArrayList<LatLon> trace(LatLon pos) {
         try {
             String content = callServer("trace/simple/" + pos.lat() + ";" + pos.lon());
-            ArrayList<double[]> nodelist = new ArrayList<double[]>();
+            ArrayList<LatLon> nodelist = new ArrayList<LatLon>();
             String[] lines = content.split("\\|");
             for (String line : lines) {
                 String[] items = line.split(";");
                 double x = Double.parseDouble(items[0]);
                 double y = Double.parseDouble(items[1]);
-                double[] d = new double[2];
-                d[0] = x;
-                d[1] = y;
-                nodelist.add(d);
+                nodelist.add(new LatLon(x, y));
             }
             return nodelist;
         } catch (Exception e) {
-            ArrayList<double[]> nodelist = new ArrayList<double[]>();
-            return nodelist;
+            return new ArrayList<LatLon>();
         }
     }
 

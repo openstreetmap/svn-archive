@@ -35,6 +35,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.tools.Pair;
 
 class TracerAction extends MapMode implements MouseListener {
 
@@ -125,8 +126,7 @@ class TracerAction extends MapMode implements MouseListener {
 
         List<Command> cmds = new LinkedList<Command>();
         Way newWay = new Way(way);
-        for (int i = 1; i < way.getNodesCount(); i++) {
-            Node n = way.getNode(i);
+        for (Node n : way.getNodes()) {
             LatLon ll = n.getCoor();
             BBox bbox = new BBox(
                     ll.getX() - MIN_DISTANCE,
@@ -152,20 +152,12 @@ class TracerAction extends MapMode implements MouseListener {
             //System.out.println("Nearest: " + nearestNode);
             //System.out.println("-------");
             if (nearestNode == null) {
-                tryConnectNodeToAnyWay(way, newWay, n, cmds);
+                cmds.addAll(tryConnectNodeToAnyWay(n));
             } else {
-                nearestNode.setCoor(ll.getCenter(nearestNode.getCoor()));
-                int j = newWay.getNodes().indexOf(n);
-                newWay.addNode(j, nearestNode);
-                if (j == 0) {
-                    // first + last point
-                    newWay.addNode(newWay.getNodesCount(), nearestNode);
-                }
-                newWay.removeNode(n);
-                cmds.add(new DeleteCommand(n));
+                cmds.add(mergeNodes(nearestNode, n, newWay));
             }
         }
-        trySplitWayByAnyNodes(way, newWay);
+        newWay = trySplitWayByAnyNodes(way);
 
         cmds.add(new ChangeCommand(way, newWay));
 
@@ -174,22 +166,40 @@ class TracerAction extends MapMode implements MouseListener {
     }
 
     /**
-     * Try connect node "node" from way "oldWay" to way of other building.
+     * Merges two nodes
+     * @param n1 First node
+     * @param n2 Second node
+     * @param way Way containing first node
+     * @return Command
+     */
+    private Command mergeNodes(Node n1, Node n2, Way way){
+        n2.setCoor(n1.getCoor().getCenter(n2.getCoor()));
+        int j = way.getNodes().indexOf(n1);
+        way.addNode(j, n2);
+        if (j == 0) {
+            // first + last point
+            way.addNode(way.getNodesCount(), n2);
+        }
+        way.removeNode(n1);
+        return new DeleteCommand(n1);
+    }
+
+    /**
+     * Try connect node "node" from way "way" to way of other building.
      *
      * Zkusi zjistit, zda node neni tak blizko nejake usecky existujici budovy,
      * ze by mel byt zacnenen do teto usecky. Pokud ano, provede to.
      *
-     * @param oldWay Way which contains node "node".
-     * @param newWay Modified way.
      * @param node Node to connect.
-     * @param cmds Command list.
      * @throws IllegalStateException
      * @throws IndexOutOfBoundsException
+     * @return List of Commands.
      */
-    private void tryConnectNodeToAnyWay(Way oldWay, Way newWay, Node node, List<Command> cmds)
+    private List<Command> tryConnectNodeToAnyWay(Node node)
             throws IllegalStateException, IndexOutOfBoundsException {
-
+        
         final double MIN_DISTANCE = 0.000015;
+        List<Command> cmds = new LinkedList<Command>();
 
         LatLon ll = node.getCoor();
         BBox bbox = new BBox(
@@ -205,17 +215,15 @@ class TracerAction extends MapMode implements MouseListener {
         Way nearestWay = null;
         int nearestNodeIndex = 0;
         for (Way ww : ways) {
-            if (!ww.isUsable() || ww == oldWay || ww == newWay || !isBuilding(ww)) {
+            if (!ww.isUsable() || ww.containsNode(node) || !isBuilding(ww)) {
                 continue;
             }
-            for (int nindex = 0; nindex < ww.getNodesCount(); nindex++) {
-                Node n1 = ww.getNode(nindex);
-                Node n2 = ww.getNode((nindex + 1) % ww.getNodesCount());
-                double dist = TracerGeometry.distanceFromSegment(ll, n1.getCoor(), n2.getCoor());
+            for (Pair<Node, Node> np : ww.getNodePairs(false)) {
+                double dist = TracerGeometry.distanceFromSegment(ll, np.a.getCoor(), np.b.getCoor());
                 if (dist < minDist) {
                     minDist = dist;
                     nearestWay = ww;
-                    nearestNodeIndex = nindex;
+                    nearestNodeIndex = ww.getNodes().indexOf(np.a);
                 }
             }
         }
@@ -226,36 +234,42 @@ class TracerAction extends MapMode implements MouseListener {
             //System.out.println("New way:" + newNWay);
             cmds.add(new ChangeCommand(nearestWay, newNWay));
         }
+        return cmds;
     }
 
     /**
      * Try split way by any existing buiding nodes.
      *
-     * Zkusi zjistit zda nejake usecka z oldWay by nemela prochazet nejakym existujicim bodem,
+     * Zkusi zjistit zda nejake usecka z way by nemela prochazet nejakym existujicim bodem,
      * ktery je ji velmi blizko. Pokud ano, tak puvodni usecku rozdeli na dve tak, aby
      * prochazela takovym bodem.
      *
-     * @param oldWay Way to split.
-     * @param newWay Modified way.
+     * @param way Way to split.
      * @throws IndexOutOfBoundsException
      * @throws IllegalStateException
+     * @return Modified way
      */
-    private void trySplitWayByAnyNodes(Way oldWay, Way newWay)
+    private Way trySplitWayByAnyNodes(Way way)
             throws IndexOutOfBoundsException, IllegalStateException {
 
         // projdi kazdou novou usecku a zjisti, zda by nemela vest pres existujici body
         int i = 0;
-        while (i < newWay.getNodesCount()) {
+        while (i < way.getNodesCount()) {
             // usecka n1, n2
-            LatLon n1 = newWay.getNodes().get(i).getCoor();
-            LatLon n2 = newWay.getNodes().get((i + 1) % newWay.getNodesCount()).getCoor();
-            //System.out.println(newWay.getNodes().get(i) + "-----" + newWay.getNodes().get((i + 1) % newWay.getNodesCount()));
+            LatLon n1 = way.getNodes().get(i).getCoor();
+            LatLon n2 = way.getNodes().get((i + 1) % way.getNodesCount()).getCoor();
+            //System.out.println(way.getNodes().get(i) + "-----" + way.getNodes().get((i + 1) % way.getNodesCount()));
             double minDistanceSq = 0.000015;
             double maxAngle = 15;
-            List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(new BBox(Math.min(n1.getX(), n2.getX()) - minDistanceSq, Math.min(n1.getY(), n2.getY()) - minDistanceSq, Math.max(n1.getX(), n2.getX()) + minDistanceSq, Math.max(n1.getY(), n2.getY()) + minDistanceSq));
+            List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(new BBox(
+                Math.min(n1.getX(), n2.getX()) - minDistanceSq,
+                Math.min(n1.getY(), n2.getY()) - minDistanceSq,
+                Math.max(n1.getX(), n2.getX()) + minDistanceSq,
+                Math.max(n1.getY(), n2.getY()) + minDistanceSq
+            ));
             Node nearestNode = null;
             for (Node nod : nodes) {
-                if (!nod.isUsable() || oldWay.containsNode(nod) || newWay.containsNode(nod) || !isInBuilding(nod)) {
+                if (!nod.isUsable() || way.containsNode(nod) || !isInBuilding(nod)) {
                     continue;
                 }
                 LatLon nn = nod.getCoor();
@@ -274,14 +288,15 @@ class TracerAction extends MapMode implements MouseListener {
                 continue;
             } else {
                 // rozdeleni usecky
-                newWay.addNode(i + 1, nearestNode);
+                way.addNode(i + 1, nearestNode);
                 continue; // i nezvetsuji, treba bude treba rozdelit usecku znovu
             }
         }
+        return way;
     }
 
     private void tagBuilding(Way way) {
-        way.put("building", "yes");
+        if(alt) way.put("building", "yes");
         way.put("source", "cuzk:km");
     }
 

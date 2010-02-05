@@ -28,9 +28,13 @@ WINDRES=	${ARCH}windres
 ifneq (${OS},Windows_NT)
 EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS` \
   `pkg-config --libs libcurl` `pkg-config --libs pkg-config --libs gthread-2.0`
+
+# I found that it's more reliable and more portable to use aplay, but
+# gnome sound can still be activated with this:
+#  `pkg-config --cflags --libs libgnomeui-2.0 && echo -DUSE_GNOMESOUND`
 XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
   `pkg-config --libs libxml-2.0 || echo -l xml2 -lz -lm`
-ARCH=arm-wince-mingw32ce-
+ARCH=arm-mingw32ce-
 else
 # To compile with mingw, install MSYS and mingw, and then download
 # the "all-in-one bundle" from http://www.gtk.org/download-windows.html
@@ -39,6 +43,7 @@ EXTRAC=-mms-bitfields -mno-cygwin -mwindows \
   `pkg-config --cflags gtk+-2.0 || echo -D NOGTK`
 EXTRAL=`pkg-config --libs gtk+-2.0`
 EXE=.exe
+NETLIB=-lwsock32
 endif
 
 all: gosmore$(EXE)
@@ -64,7 +69,7 @@ $(ARCH)gosmore.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h \
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ConvertUTF.c
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ceglue.c
 		${ARCH}g++ -static ${CFLAGS} ${EXTRAC} -o $@ \
-		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc
+		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc $(NETLIB)
 
 gosmore.rsc:	gosmore.rc icons.bmp icons-mask.bmp gosmore.ico
 		$(WINDRES) $< $@
@@ -131,7 +136,8 @@ install: gosmore default.pak
 	mkdir -p $(DESTDIR)$(bindir)
 	cp gosmore $(DESTDIR)$(bindir)/.
 	mkdir -p $(DESTDIR)$(datarootdir)/gosmore
-	cp -a default.pak elemstyles.xml icons.csv icons.xpm $(DESTDIR)$(datarootdir)/gosmore
+	cp -a *.wav default.pak elemstyles.xml icons.csv icons.xpm \
+	  $(DESTDIR)$(datarootdir)/gosmore
 	mkdir -p $(DESTDIR)$(datarootdir)/man/man1
 	gzip <gosmore.1 >$(DESTDIR)$(datarootdir)/man/man1/gosmore.1.gz
 	mkdir -p $(DESTDIR)$(datarootdir)/pixmaps

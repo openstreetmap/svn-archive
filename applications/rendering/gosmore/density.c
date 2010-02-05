@@ -46,18 +46,22 @@ int main (void)
 <br><br>\n\
 <p align=center><b>Select a rectangle.<br> (Hover the mouse)<br><br>\n\
 <map name=\"region-map\" id=\"region-map\" class=\"map-areas\">\n");
-  while ((c = getchar ()) != EOF) {
+/*  while ((c = getchar ()) != EOF) {
     if (c == '(') col[0] = col[1] = row[0] = row[1] = se = 0;
     if ('A' <= c && c <= 'Z') col[se] = col[se] * 26 + c - 'A' + 1;
     if ('0' <= c && c <= '9') row[se] = row[se] * 10 + c - '0';
     if (c == ':') se = 1;
-    if (c == ')' && se-- == 1) {
+    if (c == ')' && se-- == 1) { 
+      sprintf (fname, "%04d%04d%04d%04d.pnm", --col[0], --row[0],
+               col[1], row[1]);*/
+  while (scanf ("%d %d %d %d\n", &col[0], &row[0], &col[1], &row[1]) > 0) {
+    if (1) {
 //	printf ("%4d %4d - %4d %4d\n", col[0], row[0], col[1], row[1]);
 /*	sprintf (fname, "%c%c%c%04d%c%c%c%04d.poly", N2 (col[0]/26/26),
 		 N2 (col[0]/26%26, N2 (col[0] % 26 + 1), row[0],
 		 N2 (col[1]/26/26), N2 (col[1]/26%26), N2 (col[1] % 26 + 1),
 	         row[1]); */
-      sprintf (fname, "%04d%04d%04d%04d.pnm", --col[0], --row[0],
+      sprintf (fname, "%04d%04d%04d%04d.pnm", col[0], row[0],
                col[1], row[1]);
       fprintf (gosm, "{ %d, %d, %d, %d },\n", col[0] - 512, row[0] - 512,
         col[1] - 512, row[1] - 512);

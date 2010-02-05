@@ -22,7 +22,7 @@ Package: openstreetmap-gosmore
 Priority: optional
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends} unzip
-Recommends: gpsd
+Recommends: gpsd alsa-utils
 Suggests: josm
 Conflicts: gosmore
 Description: Openstreetmap.org viewer with searching and routing capabilities

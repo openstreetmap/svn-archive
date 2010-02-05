@@ -2,8 +2,8 @@
 /* Written by Nic Roets with contribution(s) from Dave Hansen, Ted Mielczarek
    David Dean, Pablo D'Angelo and Dmitry.
    Thanks to
-   * Frederick Ramm, Johnny Rose Carlsen and Lambertus for hosting,
-   * Simon Wood, David Dean, Lambertus, TomH and many others for testing,
+   * Sven Geggus, Frederick Ramm, Johnny Rose Carlsen and Lambertus for hosting,
+   * Stephan Rossig, Simon Wood, David Dean, Lambertus and many others for testing,
    * OSMF for partial funding. */
 
 #include <stdio.h>
@@ -33,6 +33,8 @@ using namespace std;
 #define NOGTK
 #endif
 #ifdef NOGTK
+#include <io.h>
+#include <sys/stat.h>
 #include <windowsx.h>
 //#include <winuserm.h> // For playing a sound ??
 #ifdef _WIN32_WCE
@@ -105,6 +107,9 @@ int Display3D = 0; // Not an option but a button for now.
 char docPrefix[80] = "";
 
 #if !defined (HEADLESS) && !defined (NOGTK)
+#ifdef USE_GNOMESOUND
+#include <libgnome/libgnome.h>
+#endif
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <curl/curl.h>
@@ -299,12 +304,15 @@ void ChangePak (const TCHAR *pakfile)
   LOG if (gmap == INVALID_HANDLE_VALUE && currentBbox == pakfile) {
     #ifdef _WIN32_WCE
     wsprintf (wcsrchr (currentBbox, L'\\'), TEXT ("\\default.pak"));
-    #else
-    strcpy (currentBbox, "default.pak"); // WIN32
-    #endif
     LOG gmap = CreateFileForMapping (pakfile, GENERIC_READ, FILE_SHARE_READ,
       NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
       NULL);    
+    #else
+    LOG gmap = CreateFileForMapping ("default.pak", GENERIC_READ,
+      FILE_SHARE_READ,
+      NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL /*FILE_FLAG_NO_BUFFERING*/,
+      NULL);    
+    #endif
   }
   LOG fm = gmap == INVALID_HANDLE_VALUE ? INVALID_HANDLE_VALUE :
     CreateFileMapping(gmap, NULL, PAGE_READONLY, 0, 0, 0);
@@ -687,58 +695,75 @@ void DoFollowThing (gpsNewStruct *gps)
       decide[0] = 0;
     }
     else if (x) {
-      int nextJunction = TRUE;
+      int icmd = -1, nextJunction = TRUE; // True means the user need to take action at
+      // the first junction he comes across. Otherwise we're looking ahead.
       double dist = sqrt (Sqr ((double) (x->nd->lat - flat)) +
                           Sqr ((double) (x->nd->lon - flon)));
-      for (x = shortest; x->shortest &&
+      for (x = shortest; icmd < 0 && x->shortest &&
            dist < 40000 /* roughly 300m */; x = x->shortest) {
         int roundExit = 0;
-        while (x->shortest && ((1 << roundaboutR) &
-                       (Way (x->shortest->nd))->bits)) {
+        while (icmd < 0 && x->shortest && ((1 << roundaboutR) &
+                           (Way (x->shortest->nd))->bits)) {
           if (isupper (JunctionType (x->shortest->nd))) roundExit++;
           x = x->shortest;
         }
         if (!x->shortest || roundExit) {
           decide[0] = x->nd;
-          command[0] = cmdround1Num - 1 + roundExit;
+          icmd = cmdround1Num - 1 + roundExit;
           break;
         }
         
         ndType *n0 = x->nd, *n1 = x->shortest->nd, *nd = n1;
+        //ndType *n2 = x->shortest->shortest ? x->shortest->shortest->nd : n1;
         int n2lat =
           x->shortest->shortest ? x->shortest->shortest->nd->lat : tlat;
         int n2lon =
           x->shortest->shortest ? x->shortest->shortest->nd->lon : tlon;
-        while (nd > ndBase && nd[-1].lon == nd->lon &&
-          nd[-1].lat == nd->lat) nd--;
+        while (nd[-1].lon == nd->lon && nd[-1].lat == nd->lat) nd--;
         int segCnt = 0; // Count number of segments at x->shortest
+        int n2Left, fLeft = INT_MIN;
         do {
           // TODO : Only count segment traversable by 'Vehicle'
-          // Except for the case where a cyclist crosses a motorway.
-          if (nd->other[0] != 0) segCnt++;
-          if (nd->other[1] != 0) segCnt++;
+          // Except for the case where a cyclist crosses a motorway_link.
+          
+          for (int o = 0; o <= 1; o++) {
+            segCnt++;
+            if (!nd->other[o]) continue;
+            ndType *forkO = nd + nd->other[o];
+            __int64 straight =
+              (forkO->lat - n1->lat) * (__int64) (n1->lat - n0->lat) +
+              (forkO->lon - n1->lon) * (__int64) (n1->lon - n0->lon), left =
+              (forkO->lat - n1->lat) * (__int64) (n1->lon - n0->lon) -
+              (forkO->lon - n1->lon) * (__int64) (n1->lat - n0->lat);
+            int isNd2 = forkO->lat == n2lat && forkO->lon == n2lon;
+            if (straight > left && straight > -left &&
+                (!o || !Way (nd)->bits & onewayR)) {
+              // If we are approaching a split, we can ignore oncoming
+              // oneways (the user can avoid them on his own).
+              //printf ("%d %d %d %lf\n", isNd2, o, Way (nd)->bits & onewayR, dist);
+              (isNd2 ? n2Left : fLeft) = left * 16 / straight;
+            }
+            if (isNd2) icmd = straight < left
+              ? nextJunction ? cmdturnleftNum : cmdkeepleftNum :
+              straight > -left ? -1
+              : nextJunction ? cmdturnrightNum : cmdkeeprightNum;
+          }
         } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
                  nd->lon == nd[-1].lon && nd->lat == nd[-1].lat);
         if (segCnt > 2) {
-          __int64 straight =
-            (n2lat - n1->lat) * (__int64) (n1->lat - n0->lat) +
-            (n2lon - n1->lon) * (__int64) (n1->lon - n0->lon), left =
-            (n2lat - n1->lat) * (__int64) (n1->lon - n0->lon) -
-            (n2lon - n1->lon) * (__int64) (n1->lat - n0->lat);
           decide[0] = n1;
-          if (straight < left) {
-            command[0] = nextJunction ? cmdturnleftNum : cmdkeepleftNum;
-            break;
-          }
-          if (straight < -left) {
-            command[0] = nextJunction ? cmdturnrightNum : cmdkeeprightNum;
-            break;
-          }
           nextJunction = FALSE;
         }
+        else icmd = -1;
+        if (icmd < 0 && fLeft != INT_MIN) { // If it's a split
+          icmd = fLeft < n2Left ? cmdkeepleftNum : cmdkeeprightNum;
+          //printf ("%d\n", segCnt);
+        }
+        
         dist += sqrt (Sqr ((double) (n2lat - n1->lat)) +
                       Sqr ((double) (n2lon - n1->lon)));
       } // While looking ahead to the next turn.
+      if (icmd >= 0) command[0] = icmd;
       if (!x->shortest && dist < 6000) {
         command[0] = cmdstopNum;
         decide[0] = NULL;
@@ -756,13 +781,22 @@ void DoFollowThing (gpsNewStruct *gps)
     static const wchar_t *cmdStr[] = { COMMANDS };
     wchar_t argv0[80];
     GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
-    wcscpy (argv0 + wcslen (argv0) - 12, cmdStr[command[0] - cmdturnleftNum]);
+    wcscpy (wcsrchr (argv0, L'\\') + 1, cmdStr[command[0] - cmdturnleftNum] + 3);
     // gosm_arm.exe to a.wav
     wcscpy (argv0 + wcslen (argv0), TEXT (".wav"));
     PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC );
 #else
     static const char *cmdStr[] = { COMMANDS };
-    printf ("%s\n", cmdStr[command[0] - cmdturnleftNum]);
+    string wav = string (RES_DIR) +  // +3 is to strip the leading "cmd"
+      (cmdStr[command[0] - cmdturnleftNum] + 3) + ".wav";
+#ifdef _WIN32
+    PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC );
+#elif  defined (USE_GNOMESOUND)
+    gnome_sound_play (wav.c_str ());
+#else
+    if (fork () == 0) execlp ("aplay", "aplay", wav.c_str (), NULL);
+#endif
+//    printf ("%s\n", wav.c_str()); //cmdStr[command[0] - cmdturnleftNum]);
 #endif
     #undef o
   }
@@ -1126,6 +1160,76 @@ void *UpdateMapThread (void *n)
 }
 
 #endif
+#if defined (_WIN32) && !defined (_WIN32_WCE)
+DWORD WINAPI UpdateMapThread (LPVOID n)
+{
+  WSADATA d;
+  WSAStartup (MAKEWORD (1, 1), &d);
+  struct hostent *he = gethostbyname ("dev.openstreetmap.de");
+  int s = socket (AF_INET, SOCK_STREAM, 0);
+  struct sockaddr_in name;
+  if (he && s != INVALID_SOCKET) {
+    memset (&name, 0, sizeof (name));
+    name.sin_family = AF_INET;
+    name.sin_port = htons (80);
+    memcpy (&name.sin_addr, he->h_addr_list[0], 4);
+    string header = string ("GET /gosmore/") + string ((char*) n, 16) + 
+                 ".zip HTTP/1.0\r\n"
+                 "Host: dev.openstreetmap.de\r\n"
+                 "\r\n";
+    if (connect (s, (sockaddr *) &name, sizeof (name)) == 0 &&
+        send (s, header.c_str (), strlen (header.c_str ()), 0) > 0) {
+      char reply[4096], *ptr = reply, *lnl = NULL;
+      int code, len, cnt = recv (s, reply, sizeof (reply), 0);
+      sscanf (reply, "%*s %d", &code);
+      while (cnt > 0 && ptr[0] != '\n' || !lnl) {
+        if (cnt > 16 && (ptr[0] == '\n' || ptr[0] == '\r') &&
+            strnicmp (ptr + 1, "Content-Length:", 15) == 0) {
+          len = atoi (ptr + 16);
+        }
+        lnl = *ptr == '\n' ? ptr : *ptr == '\r' ? lnl : NULL;
+        cnt--;
+        ptr++;
+        if (cnt < 1) {
+          memmove (reply, ptr, cnt);
+          ptr = reply;
+          cnt += recv (s, ptr, sizeof (reply) - cnt, 0);
+        }
+      }
+      if (cnt-- > 0) { // Get rid of the '\n'
+        ptr++; // Get rid of the '\n'
+        FILE *z = fopen ("tmp.zip", "wb");
+        code = 0;
+        do {
+          fwrite (ptr, cnt, 1, z);
+          if ((code + cnt) / (len / 1000 + 1) > code / (len / 1000 + 1)) {
+            PostMessage (mWnd, WM_USER + 2, 0, (code + cnt) / (len / 1000 + 1));
+          }
+          code += cnt;
+          ptr = reply;
+        } while ((cnt = recv (s, reply, sizeof (reply), 0)) > 0);
+        fclose (z);
+        STARTUPINFO si;
+        PROCESS_INFORMATION pi;
+        ZeroMemory (&si, sizeof (si));
+        ZeroMemory (&pi, sizeof (pi));
+        si.cb = sizeof (si);
+        CreateProcess ("7z.exe", "7z x -y tmp.zip", NULL, NULL,
+          FALSE, 0, NULL, NULL, &si, &pi);
+        WaitForSingleObject (pi.hProcess, INFINITE);
+        CloseHandle (pi.hProcess);
+        string dst (string ((char*) n, 16) + ".pak");
+        rename ("gosmore.pak", dst.c_str ());
+        _unlink ("tmp.zip");
+      }
+    }
+    else closesocket (s);
+  }
+  free (n);
+  PostMessage (mWnd, WM_USER + 2, 0, 0);
+  return 0;
+}
+#endif
 
 #define CompactOptions ((draw->allocation.width * draw->allocation.height < 400 * 400))
 int ListXY (int cnt, int isY)
@@ -1223,6 +1327,31 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
         }
         option = mapMode;
       }
+      #else
+      #ifndef _WIN32_WCE
+      else if (option == UpdateMapNum) {
+        struct stat s;
+        if (currentBbox[0] == '\0') {
+          MessageBox (NULL, "Error:\n"
+            "Gosmore is running with a custom map\n"
+            "Download aborted.", "Error", MB_APPLMODAL|MB_OK);
+        }
+        else if (stat (currentBbox, &s) == 0 &&
+           (s.st_mtime > time (NULL) - 3600*24*7 ||
+            s.st_ctime > time (NULL) - 3600 * 24 * 7)) {
+          MessageBox (NULL, "Error:\n"
+            "The .pak file has changed during the last 7 days,\n"
+            "and is most likely up-to-date.\n"
+            "Download aborted.", "Error", MB_APPLMODAL|MB_OK);
+        }
+        else {
+          DWORD threadId;
+          CreateThread (NULL, 0, UpdateMapThread, strdup (currentBbox), 0,
+            &threadId);
+        }
+        option = mapMode;
+      }
+      #endif
       #endif
     }
   }
@@ -1241,7 +1370,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   }
   else {
     #ifdef ROUTE_TEST
-    if (event->state) {
+    if (event->state & GDK_SHIFT_MASK) {
       return RouteTest (NULL /*widget*/, event, NULL /*para*/);
     }
     #endif
@@ -2209,7 +2338,7 @@ gint DrawExpose (void)
       text2B.pop ();
     }
     free (block);
-    if (command[0] && command[0] == command[1] && command[0] == command[2]) {
+    if (FollowGPSr && command[0] && command[0] == command[1] && command[0] == command[2]) {
       DrawPoI (draw->allocation.width / 2, draw->allocation.height / 6,
         style[firstElemStyle + command[0]].x + 8); // Always square.big
     }
@@ -2516,6 +2645,9 @@ int UserInterface (int argc, char *argv[],
   curl_global_init (CURL_GLOBAL_ALL);
   g_thread_init (NULL);  // Something to do with curl progress bar
   gtk_init (&argc, &argv);
+#ifdef USE_GNOMESOUND
+  gnome_sound_init ("localhost");
+#endif
   draw = gtk_drawing_area_new ();
   gtk_widget_set_double_buffered (draw, FALSE);
   #if 0 // ndef CHILDREN
@@ -2743,6 +2875,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
   RECT rect;
   //static wchar_t msg[200] = TEXT("No coms");
   int topBar = Layout != 1 ? 30 : 0;
+  static int updatePercent = 0;
 
   switch(message) {
     #if 0
@@ -2887,6 +3020,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         DrawExpose (pen, brush);
         
 	BitBlt (ps.hdc, 0, topBar, rect.right,  rect.bottom, bufDc, 0, 0, SRCCOPY);
+	if (updatePercent) {
+	  MoveToEx (ps.hdc, 0, topBar, NULL);
+	  LineTo (ps.hdc, updatePercent * draw->allocation.width / 1000, topBar);
+	}
       //SetBkColor(ps.hdc,RGB(63,63,63));
 	FillRect (bufDc, &rect, brush[firstElemStyle + Background - (Background > 8 ? 8 : 0)]);
 	 //(HBRUSH) GetStockObject(WHITE_BRUSH));
@@ -2916,6 +3053,15 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       DoFollowThing ((gpsNewStruct*)lParam);
       if (FollowGPSr) InvalidateRect (hWnd, NULL, FALSE);
       break;
+    case WM_USER + 2:
+       do {
+         HDC wdc = GetDC (hWnd);
+         updatePercent = lParam;
+         MoveToEx (wdc, 0, topBar, NULL);
+         LineTo (wdc, updatePercent * draw->allocation.width / 1000, topBar);
+         ReleaseDC (hWnd, wdc);
+       } while (0);
+       break;
     case WM_LBUTTONDOWN:
       pressTime = GetTickCount ();
       SetCapture (hWnd);

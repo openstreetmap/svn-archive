@@ -38,12 +38,12 @@ class HospitalChunkCheck {
 		def maxLon = xpath.evaluate("./@lon", node, XPathConstants.NUMBER) + 0.003
 		return "bbox=${minLon},${minLat},${maxLon},${maxLat}"		
 	}
-		
+	
 	def int countHospitalsInProximity(node) {
 		def bbox = buildQueryBbox(node)
 		def queryUrl = "http://xapi.openstreetmap.org/api/0.6/*[amenity=hospital][${bbox}]"
 		def xapiResponse = DOMBuilder.parse(new InputStreamReader(new URL(queryUrl).openStream(), "UTF-8"))
-		def int  count = xpath.evaluate("count(//node/tag[@k = 'amenity'][@v = 'hospital'])", xapiResponse, XPathConstants.NUMBER)
+		def int  count = xpath.evaluate("count(//tag[@k = 'amenity'][@v = 'hospital']/..)", xapiResponse, XPathConstants.NUMBER)
 		return count
 	}
 	
@@ -51,7 +51,7 @@ class HospitalChunkCheck {
 		def bbox = buildQueryBbox(node)
 		def queryUrl = "http://xapi.openstreetmap.org/api/0.6/*[health_facility:paho_id=*][${bbox}]"
 		def xapiResponse = DOMBuilder.parse(new InputStreamReader(new URL(queryUrl).openStream(), "UTF-8"))
-		def int count = xpath.evaluate("count(//node/tag[@k = 'health_facility:paho_id'])", xapiResponse, XPathConstants.NUMBER)
+		def int count = xpath.evaluate("count(//tag[@k = 'health_facility:paho_id']/..)", xapiResponse, XPathConstants.NUMBER)
 		return count
 	}
 	
@@ -59,7 +59,7 @@ class HospitalChunkCheck {
 		def id = getHealthFacilityId(node)
 		def queryUrl = "http://xapi.openstreetmap.org/api/0.6/*[health_facility:paho_id=${id}]"
 		def xapiResponse = DOMBuilder.parse(new InputStreamReader(new URL(queryUrl).openStream(), "UTF-8"))
-		def int count = xpath.evaluate("count(//node/tag[@k = 'health_facility:paho_id'])", xapiResponse, XPathConstants.NUMBER)
+		def int count = xpath.evaluate("count(//tag[@k = 'health_facility:paho_id'][@v ='${id}'])", xapiResponse, XPathConstants.NUMBER)
 		return count > 0
 	}
 	

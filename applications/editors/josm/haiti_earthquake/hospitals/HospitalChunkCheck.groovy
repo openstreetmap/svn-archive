@@ -39,40 +39,46 @@ class HospitalChunkCheck {
 		return "bbox=${minLon},${minLat},${maxLon},${maxLat}"		
 	}
 	
+	def exprHospitalsInProximity = xpath.compile("count(//tag[@k = 'amenity'][@v = 'hospital']/..)")	
 	def int countHospitalsInProximity(node) {
 		def bbox = buildQueryBbox(node)
 		def queryUrl = "http://xapi.openstreetmap.org/api/0.6/*[amenity=hospital][${bbox}]"
 		def xapiResponse = DOMBuilder.parse(new InputStreamReader(new URL(queryUrl).openStream(), "UTF-8"))
-		def int  count = xpath.evaluate("count(//tag[@k = 'amenity'][@v = 'hospital']/..)", xapiResponse, XPathConstants.NUMBER)
+		def int  count = exprHospitalsInProximity.evaluate(xapiResponse, XPathConstants.NUMBER)
 		return count
 	}
 	
+	def exprHealthFacilitiesInProximity = xpath.compile("count(//tag[@k = 'health_facility:paho_id']/..)")	
 	def int countHealthFacilitiesInProximity(node) {
 		def bbox = buildQueryBbox(node)
 		def queryUrl = "http://xapi.openstreetmap.org/api/0.6/*[health_facility:paho_id=*][${bbox}]"
 		def xapiResponse = DOMBuilder.parse(new InputStreamReader(new URL(queryUrl).openStream(), "UTF-8"))
-		def int count = xpath.evaluate("count(//tag[@k = 'health_facility:paho_id']/..)", xapiResponse, XPathConstants.NUMBER)
+		def int count = exprHealthFacilitiesInProximity.evaluate(xapiResponse, XPathConstants.NUMBER)
 		return count
 	}
 	
 	def healthFacilityAlreadyMapped(node) {
 		def id = getHealthFacilityId(node)
 		def queryUrl = "http://xapi.openstreetmap.org/api/0.6/*[health_facility:paho_id=${id}]"
+		//def queryUrl = "http://osmxapi.hypercube.telascience.org/api/0.6/*[health_facility:paho_id=${id}]"
 		def xapiResponse = DOMBuilder.parse(new InputStreamReader(new URL(queryUrl).openStream(), "UTF-8"))
-		def int count = xpath.evaluate("count(//tag[@k = 'health_facility:paho_id'][@v ='${id}'])", xapiResponse, XPathConstants.NUMBER)
+		def int count = xpath.evaluate("count(//tag[@k = 'health_facility:paho_id'][@v =${id}])", xapiResponse, XPathConstants.NUMBER)
 		return count > 0
 	}
 	
+	def exprHealthFacilityId = xpath.compile("./tag[@k = 'health_facility:paho_id']/@v")
 	def getHealthFacilityId(node) {
-		return xpath.evaluate("./tag[@k = 'health_facility:paho_id']/@v", node)
+		return exprHealthFacilityId.evaluate(node)
 	}
 	
+	def exprName = xpath.compile("./tag[@k = 'name']/@v")
 	def getName(node) {
-		return xpath.evaluate("./tag[@k = 'name']/@v", node)		
+		return exprName.evaluate(node)		
 	}
 	
+	def exprId = xpath.compile("./@id")
 	def getNodeId(node) {
-		return xpath.evaluate("./@id", node)		
+		return exprId.evaluate(node)		
 	}
 	
 	def process() {

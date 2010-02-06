@@ -12,6 +12,7 @@
 	include("func.php");
 
 	$query = getValueFromRequest("query");
+	$limit = getIntFromRequest("limit", 10);
 
 	echo "<H1>Search</H1>\n";
 
@@ -29,8 +30,8 @@
 		}
 		$conn->query("SET NAMES utf8");
 
-		$search =& $conn->prepare("SELECT tag, uses FROM tags WHERE tag LIKE ? ORDER BY uses DESC LIMIT 10");
-		$result = $conn->execute($search, "%$query%");
+		$search =& $conn->prepare("SELECT tag, uses FROM tags WHERE tag LIKE ? ORDER BY uses DESC LIMIT ?");
+		$result = $conn->execute($search, array("%$query%", $limit));
 		if (DB::isError($result)) {
 			die ("SELECT failed: " . $result->getMessage() . "\n");
 		}
@@ -53,8 +54,8 @@
 		}
 		$result->free();
 
-		$search =& $conn->prepare("SELECT tag, value, c_total FROM tagpairs WHERE value LIKE ? ORDER BY c_total DESC LIMIT 10");
-		$result = $conn->execute($search, "%$query%");
+		$search =& $conn->prepare("SELECT tag, value, c_total FROM tagpairs WHERE value LIKE ? ORDER BY c_total DESC LIMIT ?");
+		$result = $conn->execute($search, array("%$query%", $limit));
 		if (DB::isError($result)) {
 			die ("SELECT failed: " . $result->getMessage() . "\n");
 		}
@@ -77,8 +78,8 @@
 		}
 		$result->free();
 
-		$search =& $conn->prepare("SELECT tag1, tag2, c_total FROM tagfriends WHERE tag1 = ? OR tag2 = ? ORDER BY c_total DESC LIMIT 10");
-		$result = $conn->execute($search, array("$query", "$query"));
+		$search =& $conn->prepare("SELECT tag1, tag2, c_total FROM tagfriends WHERE tag1 = ? OR tag2 = ? ORDER BY c_total DESC LIMIT ?");
+		$result = $conn->execute($search, array("$query", "$query", $limit));
 		if (DB::isError($result)) {
 			die ("SELECT failed: " . $result->getMessage() . "\n");
 		}

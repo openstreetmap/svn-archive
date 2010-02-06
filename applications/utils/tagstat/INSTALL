@@ -1,0 +1,14 @@
+to install:
+
+1.) get the java myqsl database connector
+2.) compile PlanetReader in the db dirctory
+3.) set up the database using dbschema.sql
+4.) get planet-latest.osm.bz2
+5.) run "cat planet-latest.osm.bz2 | CLASSPATH=i/path/to/mysql-connector-java.jar:. java -Xmx8000m -XX:-UseGCOverheadLimit -XX:+UseConcMarkSweepGC PlanetReader"
+6.) repeat last step every week to keep up to date
+
+for the web interface:
+1.) copy content of www dir to directory readable by the webserver
+2.) get recaptcha.zip, unzip and copy content to recaptcha-php-1.10
+3.) copy example-config.php to config.php and edit as necessary
+

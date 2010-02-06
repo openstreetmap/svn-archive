@@ -9,7 +9,7 @@
 
 	echo "<search>\n";
 	echo "<action>$action</action>\n";
-	
+
 	if(($action != "values") && ($action != "fulltext")) {
 		echo "<error>This action is currently not supported</error>\n";
 		echo "</search>\n";
@@ -17,6 +17,7 @@
 	}
 
 	$key = getValueFromRequest("key");
+	$limit = getIntFromRequest("limit", 25);
 
 	echo "<key>$key</key>\n";
 
@@ -28,8 +29,8 @@
 	$conn->query("SET NAMES utf8");
 
 	if($action == "values") {
-		$search =& $conn->prepare("SELECT value, c_node, c_way, c_relation, c_other, c_total FROM tagpairs WHERE tag LIKE ? ORDER BY c_total DESC LIMIT 25");
-		$result = $conn->execute($search, "$key");
+		$search =& $conn->prepare("SELECT value, c_node, c_way, c_relation, c_other, c_total FROM tagpairs WHERE tag LIKE ? ORDER BY c_total DESC LIMIT ?");
+		$result = $conn->execute($search, array("$key", $limit));
 		if (DB::isError($result)) {
 			die ("<error>Can't select data: " . $result->getMessage() . "</error></search>\n");
 		}
@@ -49,8 +50,8 @@
 		}
 	} else if($action == "fulltext") {
 		echo "<results>\n";
-		$search =& $conn->prepare("SELECT tag, value, c_node, c_way, c_relation, c_other, c_total FROM tagpairs WHERE tag LIKE ? ORDER BY c_total DESC LIMIT 25");
-		$result = $conn->execute($search, "%$key%");
+		$search =& $conn->prepare("SELECT tag, value, c_node, c_way, c_relation, c_other, c_total FROM tagpairs WHERE tag LIKE ? ORDER BY c_total DESC LIMIT ?");
+		$result = $conn->execute($search, array("%$key%", $limit));
 		if (DB::isError($result)) {
 			die ("<error>Can't select data: " . $result->getMessage() . "</error></results></search>\n");
 		}
@@ -67,8 +68,8 @@
 				echo "</result>";
 			}
 		}
-		$search =& $conn->prepare("SELECT tag, value, c_node, c_way, c_relation, c_other, c_total FROM tagpairs WHERE value LIKE ? ORDER BY c_total DESC LIMIT 25");
-		$result = $conn->execute($search, "%$key%");
+		$search =& $conn->prepare("SELECT tag, value, c_node, c_way, c_relation, c_other, c_total FROM tagpairs WHERE value LIKE ? ORDER BY c_total DESC LIMIT ?");
+		$result = $conn->execute($search, array("%$key%", $limit));
 		if (DB::isError($result)) {
 			die ("<error>Can't select data: " . $result->getMessage() . "</error></results></search>\n");
 		}
@@ -87,8 +88,6 @@
 		}
 		echo "</results>\n";
 	}
-
-
 
 	echo "</search>\n";
 	$result->free();

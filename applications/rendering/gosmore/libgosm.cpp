@@ -1163,7 +1163,9 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->first, "addr:region") != 0 &&
         strcmp (i->first, "addr:state") != 0 &&
         strcmp (i->first, "addr:city") != 0 &&
-        strcmp (i->first, "addr:country") != 0 &&        
+        strcmp (i->first, "addr:country") != 0 &&
+        !(strcmp (i->first, "addr:conscriptionnumber") == 0 && k2v["addr:housenumber"]) &&
+        // The mvcr:adresa import sets both the conscription number & housenumber
         strncasecmp (i->first, "KSJ2:", 5) != 0 && 
         strncasecmp (i->first, "geobase:", 8)  != 0 &&
         strncasecmp (i->first, "kms:", 4)  != 0 &&
@@ -1188,6 +1190,13 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
 
         strncasecmp (i->first, "is_in:", 6)  != 0 && // teryt
         strncasecmp (i->first, "teryt:", 6)  != 0 && // in Poland
+
+        strncasecmp (i->first, "naptan:", 7)  != 0 && // UK bus stops
+        !((strcmp (i->first, "local_ref") == 0 || strcmp (i->first, "name") == 0 ||
+          /* strcmp (i->first, "route_ref") == 0 ||*/ strcmp (i->first, "asset_ref") == 0 ||
+           strcmp (i->first, "ref") == 0) && k2v["naptan:CommonName"]) &&
+        // This second test removes the names, refs and local_refs from naptan bus stops,
+        // as the information is not very useful.
         
         (strcmp (i->first, "census:population") != 0 || !k2v["population"]) && // GNIS import
 
@@ -1212,6 +1221,7 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->first, "oneway") != 0 &&
         strcmp (i->first, "roundabout") != 0 &&
         strcmp (i->first, "time") != 0 &&
+        strcmp (i->first, "timestamp") != 0 && // User WanMil in Luxembourg
         strcmp (i->first, "ele") != 0 &&
         strcmp (i->first, "hdop") != 0 &&
         strcmp (i->first, "sat") != 0 &&
@@ -1220,11 +1230,13 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->first, "course") != 0 &&
         strcmp (i->first, "fix") != 0 &&
         strcmp (i->first, "vdop") != 0 &&
+        strcmp (i->first, "image") != 0 && // =http://www.flickr...
         strcmp (i->second, "no") != 0      &&
         strcmp (i->second, "false") != 0 &&
         strcmp (i->first, "sagns_id") != 0 &&
         strcmp (i->first, "sangs_id") != 0 &&
         strcmp (i->first, "is_in") != 0 &&
+        strcmp (i->second, "level_crossing") != 0 && // railway=level_crossing
         strcmp (i->second, "residential") != 0 &&
         strcmp (i->second, "unclassified") != 0 &&
         strcmp (i->second, "tertiary") != 0 &&
@@ -1265,9 +1277,11 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         // Don't index population figures, but make it obvious what it is.
         strcmp (i->first, "phone") == 0 ? string ("\n") + i->second + '\n':
         // Don't index phonenumbers
+        strcmp (i->first, "noexit") == 0 ? string ("\nnoexit\n") :
+        // Don't index noexit
         strncasecmp (i->first, "wikipedia", 9) == 0 ?
-                         string ("\nwikipedia=") + i->second + '\n':
-        // Don't index wikipedia names, but make it obvious what it is.
+                         string ("\nwikipedia\n") :
+        // Don't index wikipedia names, but make it obvious that it's on there.
         string (strcmp (i->second, "true") == 0 ||
         strcmp (i->second, "yes") == 0 ||
         (strcmp (i->second, "1") == 0 && strcmp (i->first, "addr:housenumber") != 0)

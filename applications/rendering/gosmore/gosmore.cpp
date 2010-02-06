@@ -781,9 +781,8 @@ void DoFollowThing (gpsNewStruct *gps)
     static const wchar_t *cmdStr[] = { COMMANDS };
     wchar_t argv0[80];
     GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
-    wcscpy (wcsrchr (argv0, L'\\') + 1, cmdStr[command[0] - cmdturnleftNum] + 3);
-    // gosm_arm.exe to a.wav
-    wcscpy (argv0 + wcslen (argv0), TEXT (".wav"));
+    wsprintf (wcsrchr (argv0, L'\\'), TEXT ("\\%s.wav"),
+      cmdStr[command[0] - cmdturnleftNum] + 3);
     PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC );
 #else
     static const char *cmdStr[] = { COMMANDS };
@@ -2515,6 +2514,7 @@ inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
   LOG IconSet = 1;
   DetailLevel = 3;
   ButtonSize = 4;
+  Background = 1;
   if (optFile) {
     #define o(en,min,max) Exit = r ? !fread (&en, sizeof (en), 1, optFile) \
                                    : !fwrite (&en, sizeof (en), 1, optFile);
@@ -2972,7 +2972,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	    int c = style[i].lineColour != -1 ? style[i].lineColour
 	      : (style[i].areaColour & 0xfefefe) >> 1; 
             if (c != -1) {
-	      //logprintf ("PEN %d %x %d\n",style[i].dashed, c, style[i].lineWidth);
+	      logprintf ("PEN %d %x %d\n",style[i].dashed, c, style[i].lineWidth);
               int idx = (style[i].dashed ? 1 : 0) +
                 (style[i].lineWidth & 0x3f) * 2 + ((c & 0xffffff) << 7);
               map<int,HPEN>::iterator f = pcache.find (idx);
@@ -2984,7 +2984,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
               pcache[idx] = pen[i];
             }
             if ((c = style[i].areaColour) != -1) {
-	      //logprintf ("BR %x\n", c);
+	      logprintf ("BR %x\n", c);
               map<int,HBRUSH>::iterator f = bcache.find (c);
               brush[i] = f != bcache.end () ? f->second :
                 CreateSolidBrush ((c>>16) | (c&0xff00) | ((c&0xff) << 16));

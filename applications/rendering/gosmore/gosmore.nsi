@@ -1,7 +1,13 @@
+SetCompressor /SOLID lzma
+Page license
+LicenseData README
+
 Page directory
-DirText "Welcome to the Gosmore Installer" "Please select the install directory. Note that$\n \
-there are over 60 maps, each of being approximately 400MB. So$\n\
-it is important that you have sufficient disk space."
+DirText "Directory for the executables and ALL the data.$\n$\r\
+$\n$\r\
+Note that there are more than 50 map files of 400MB each."
+
+InstallDir "$PROGRAMFILES\Gosmore"
 
 Page instfiles
 UninstPage instfiles
@@ -25,6 +31,7 @@ Section "Gosmore"
   File "round8.wav"
   File "turnleft.wav"
   File "uturn.wav"
+  File "7z.exe"
 SectionEnd
 Section "Start Menu Shortcuts"
   CreateShortCut "$SMPROGRAMS\Gosmore.lnk" "$INSTDIR\gosmore.exe"

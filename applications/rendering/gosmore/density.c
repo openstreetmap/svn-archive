@@ -14,7 +14,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "density.xbm"
+//#include "density.xbm"
 
 #define DIM 1024
 int col[2], row[2], c, se = 0, cov[DIM][DIM], i, j, m, mat[DIM][DIM];
@@ -29,68 +29,28 @@ int main (void)
   memset (cov, 0, sizeof (cov));
   memset (mat, 0, sizeof (mat));
   html= fopen ("density.html", "w");
-  fprintf (html, "<html>\n\
-<head>\n\
-<script language=\"JavaScript\">\n\
-     last = \"\";\n\
-     function mouseover (itemID)\n\
-     {\n\
-         if (last != itemID) {\n\
-            last = itemID;\n\
-            document.getElementById (\"jrcmap\").src = itemID + '.png';\n\
-	 }\n\
-     }\n\
-</script>\n\
-</head>\n\
-<body>\n\
-<br><br>\n\
-<p align=center><b>Select a rectangle.<br> (Hover the mouse)<br><br>\n\
-<map name=\"region-map\" id=\"region-map\" class=\"map-areas\">\n");
-/*  while ((c = getchar ()) != EOF) {
-    if (c == '(') col[0] = col[1] = row[0] = row[1] = se = 0;
-    if ('A' <= c && c <= 'Z') col[se] = col[se] * 26 + c - 'A' + 1;
-    if ('0' <= c && c <= '9') row[se] = row[se] * 10 + c - '0';
-    if (c == ':') se = 1;
-    if (c == ')' && se-- == 1) { 
-      sprintf (fname, "%04d%04d%04d%04d.pnm", --col[0], --row[0],
-               col[1], row[1]);*/
+  fprintf (html, "\
+<html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
+    <head>\n\
+        <title>Gosmore Map Selection</title>\n\
+        <script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>\n\
+        <script src=\"http://www.openstreetmap.org/openlayers/OpenStreetMap.js\"></script>\n\
+        <script type=\"text/javascript\">\n\
+            var box_extents = [\n");
   while (scanf ("%d %d %d %d\n", &col[0], &row[0], &col[1], &row[1]) > 0) {
     if (1) {
-//	printf ("%4d %4d - %4d %4d\n", col[0], row[0], col[1], row[1]);
-/*	sprintf (fname, "%c%c%c%04d%c%c%c%04d.poly", N2 (col[0]/26/26),
-		 N2 (col[0]/26%26, N2 (col[0] % 26 + 1), row[0],
-		 N2 (col[1]/26/26), N2 (col[1]/26%26), N2 (col[1] % 26 + 1),
-	         row[1]); */
-      sprintf (fname, "%04d%04d%04d%04d.pnm", col[0], row[0],
-               col[1], row[1]);
       fprintf (gosm, "{ %d, %d, %d, %d },\n", col[0] - 512, row[0] - 512,
         col[1] - 512, row[1] - 512);
-      pnm = fopen (fname, "w");
-      fprintf (pnm, "P2\n%d %d\n255\n", DIM, DIM);
-      for (i = 0; i < DIM; i++) {
-        for (j = 0; j < DIM; j++) {
-#define P1Eq2(x) ((x) == 0 ? 2 : (x) > 0 ? 1 : 0)
-          fprintf (pnm, "%d\n", (map[i * DIM + j] < 99 ? 255 : 192) -
-            (P1Eq2 (i - row[0]) + P1Eq2 (row[1] - 1 - i) +
-             P1Eq2 (j - col[0]) + P1Eq2 (col[1] - 1 - j) >= 5 ? 192 : 0));
-        }
-      }
-      fclose (pnm);
-      
-      strcpy (fname + 16, ".html");
-      html2 = fopen (fname, "w");
-      fprintf (html2, "<html><body><br><br>\n\
-<p align=center><b><a href=\"http://www.openstreetmap.org/\
-?minlon=%.5lf&minlat=%.5lf&maxlon=%.5lf&maxlat=%.5lf&box=yes\">View %.16s\
-</a><br><br>\n<a href=\"%.16s.zip\">Download %.16s.zip</a></body></html>\n",
+      sprintf (fname, "%04d%04d%04d%04d", col[0], row[0],
+               col[1], row[1]);
+      fprintf (html, "[ %10.5lf, %10.5lf, %10.5lf, %10.5lf, \"%s\" ],\n",
               col[0] * 360.0 / DIM - 180,
         (atan (exp ((1 - row[1] / 512.0) * M_PI)) - M_PI / 4) / M_PI * 360,
                 col[1] * 360.0 / DIM - 180,
         (atan (exp ((1 - row[0] / 512.0) * M_PI)) - M_PI / 4) / M_PI * 360,
-              fname, fname, fname);
-      fclose (html2);
+              fname);
       
-      hshrink = col[1] - col[0] > 60 ? 15 : (col[1] - col[0]) / 4;
+/*      hshrink = col[1] - col[0] > 60 ? 15 : (col[1] - col[0]) / 4;
       vshrink = row[1] - row[0] > 60 ? 15 : (row[1] - row[0]) / 4;
       for (i = row[0] + vshrink; i <= row[1] - vshrink; i++) {
         mat[i][col[0] + hshrink] = mat[i][col[1] - hshrink] = 192;
@@ -101,7 +61,7 @@ int main (void)
       fprintf (html, "<area shape=\"rect\" coords=\"%d,%d,%d,%d\" href=\"%.16s.html\" \n\
   OnMouseOver=\"mouseover('%.16s')\" OnMouseOut=\"mouseover('map')\" />\n",
 		 col[0] + hshrink, row[0] + vshrink,
-		 col[1] - hshrink, row[1] - vshrink, fname, fname);
+		 col[1] - hshrink, row[1] - vshrink, fname, fname);*/
 //	printf (" --bp file=%s --wx %.16s.osm.bz2 \\\n",fname, fname);
       bptr[col[1] > 418 ? 0 : 1] += sprintf (bptr[col[1] > 418 ? 0 : 1],
         " \\\n --bb  idTrackerType=\"BitSet\" left=%.5lf right=%.5lf top=%.5lf bottom=%.5lf --wx %.16s.osm.gz",
@@ -124,8 +84,8 @@ int main (void)
       }
     }
   }
-  printf ("bzcat planet-latest.osm.bz2 | osmosis\
- --read-xml enableDateParsing=no file=/dev/stdin --tee %d \\\n\
+  printf ("bzcat planet-latest.osm.bz2 | ./gosmore sort Relations | \n\
+ osmosis --read-xml enableDateParsing=no file=/dev/stdin --tee %d \\\n\
   --bb idTrackerType=\"BitSet\" left=-180 right=-33.04688\
  top=85.05113 bottom=-90 --wx left.osm.gz%s\n\n\
 gunzip <left.osm.gz | osmosis\
@@ -138,16 +98,6 @@ gunzip <left.osm.gz | osmosis\
         c++, (i)/26/26+'A'-1, (i)/26%26+'A'-1, (i)%26+'A', j+1);
     }
   }
-  fprintf (html, "<img src=\"map.png\" id=\"jrcmap\" "
-                        "usemap=\"#region-map\" />\n</body>\n</html>\n");
   fclose (html);
-  pnm = fopen ("map.pnm", "w");
-  fprintf (pnm, "P2\n%d %d\n255\n", DIM, DIM);
-  for (i = 0; i < DIM; i++) {
-    for (j = 0; j < DIM; j++) {
-      fprintf (pnm, "%d\n", (map[i * DIM + j] < 99 ? 255 : 192) - mat[i][j]);
-    }
-  }
-  fclose (pnm);
   return c;
 }

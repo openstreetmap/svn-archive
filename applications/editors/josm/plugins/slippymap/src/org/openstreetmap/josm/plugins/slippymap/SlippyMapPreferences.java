@@ -298,6 +298,10 @@ public class SlippyMapPreferences
     }
 
     public static class Custom extends OsmTileSource.AbstractOsmTileSource {
+
+        String extension;
+        String path;
+
         public Custom(String name, String url) {
             super(name, url);
         }
@@ -305,13 +309,35 @@ public class SlippyMapPreferences
             super(name, url);
             this.extension = extension;
         }
-        String extension;
+        public Custom(String name, String url, String extension, String path) {
+            super(name, url);
+            this.extension = extension;
+            this.path = path;
+        }
+
         @Override
         public String getExtension() {
             if (extension == null)
                 return super.getExtension();
             return extension;
         }
+
+        @Override
+        public int getMaxZoom() {
+            return 21;
+        }
+
+        @Override
+        public String getTilePath(int zoom, int tilex, int tiley) {
+            if (path == null)
+                return super.getTilePath(zoom,tilex,tiley);
+            String tilepath = path;
+            tilepath=tilepath.replaceAll("%z",String.valueOf(zoom));
+            tilepath=tilepath.replaceAll("%x",String.valueOf(tilex));
+            tilepath=tilepath.replaceAll("%y",String.valueOf(tiley));
+            return tilepath;
+        }
+
         public TileUpdate getTileUpdate() {
             return TileUpdate.IfNoneMatch;
         }
@@ -326,17 +352,20 @@ public class SlippyMapPreferences
             // slippymap.custom_tile_source_1.name=OOC layer
             // slippymap.custom_tile_source_1.url=http://a.ooc.openstreetmap.org/npe
             // slippymap.custom_tile_source_1.ext=png
+            // slippymap.custom_tile_source_1.path=/%z/%x/%y
 
             if (!(short_key.endsWith("name")))
                 continue;
             String url_key = short_key.replaceFirst("name","url");
             String ext_key = short_key.replaceFirst("name","ext");
+            String path_key = short_key.replaceFirst("name","path");
             String name = customSources.get(key);
             String url = customSources.get(PREFERENCE_TILE_CUSTOM_SOURCE + url_key);
             String ext = customSources.get(PREFERENCE_TILE_CUSTOM_SOURCE + ext_key);
-            // ext may be null, but that's OK
-            System.out.println("found new tile source: '" +name+"' url:'"+url+"'"+"' ext:'"+ext+"'");
-            ret.add(new Custom(name, url, ext));
+            String path = customSources.get(PREFERENCE_TILE_CUSTOM_SOURCE + path_key);
+            // ext and path may be null, but that's OK
+            System.out.println("found new tile source: '" +name+"' url:'"+url+"'"+"' ext:'"+ext+"' path:'"+path+"'");
+            ret.add(new Custom(name, url, ext, path));
         }
         return ret;
     }

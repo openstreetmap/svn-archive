@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
@@ -54,6 +53,8 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JRadioButton crosspiece4 = new JRadioButton("100m");
 
+    private JCheckBox autoFirstLayer = new JCheckBox(tr("Automaticly select first WMS layer when grabing if multiple layers exist."));
+    
     static final int DEFAULT_SQUARE_SIZE = 100;
     private JTextField grabMultiplier4Size = new JTextField(5);
 
@@ -223,7 +224,11 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         cacheSize.setToolTipText(tr("Oldest files are automatically deleted when this size is exceeded"));
         cadastrewms.add(jLabelCacheSize, GBC.std().insets(20, 0, 0, 0));
         cadastrewms.add(cacheSize, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
-        
+        // separator
+        cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
+        autoFirstLayer.setSelected(Main.pref.getBoolean("cadastrewms.autoFirstLayer", false));
+        autoFirstLayer.setToolTipText(tr("Automatically selects the first WMS layer if multiple layers exist when grabbing."));
+        cadastrewms.add(autoFirstLayer, GBC.eop().insets(0, 0, 0, 0));
         cadastrewms.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
 
     }
@@ -270,6 +275,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
             Main.pref.put("cadastrewms.cacheSize", String.valueOf(CacheControl.cacheSize));
         } catch (NumberFormatException e) { // ignore the last input
         }
+        Main.pref.put("cadastrewms.autoFirstLayer", autoFirstLayer.isSelected());
         CacheControl.cacheEnabled = enableCache.isSelected();
         CadastrePlugin.refreshConfiguration();
         CadastrePlugin.refreshMenu();

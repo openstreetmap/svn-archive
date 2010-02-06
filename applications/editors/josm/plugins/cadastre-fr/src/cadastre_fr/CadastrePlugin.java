@@ -96,7 +96,8 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - new cache format (v3) storing original image and cropped image bbox + angle
  *                 - cache management compatible with previous v2 format
  *                 - raster image rotation using shift+ctrl key instead of ctrl
- *                 - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support  
+ *                 - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support
+ *                 - from Clément Ménier, new option allowing an auto-selection of the first cadastre layer for grab  
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "1.8";

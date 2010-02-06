@@ -40,8 +40,12 @@ public class WMSDownloadAction extends JosmAction {
                 return existingWMSlayers.get(0);
             if (existingWMSlayers.size() == 0)
                 return new MenuActionNewLocation().addNewLayer(existingWMSlayers);
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("More than one WMS layer present\nSelect one of them first, then retry"));
+            if (Main.pref.getBoolean("cadastrewms.autoFirstLayer", false)) {
+                return existingWMSlayers.get(0);
+            } else {
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("More than one WMS layer present\nSelect one of them first, then retry"));
+            }
         } else {
             return new MenuActionNewLocation().addNewLayer(existingWMSlayers);
         }

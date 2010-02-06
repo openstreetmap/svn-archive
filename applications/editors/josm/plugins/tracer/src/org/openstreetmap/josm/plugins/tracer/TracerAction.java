@@ -23,6 +23,7 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
@@ -45,6 +46,11 @@ class TracerAction extends MapMode implements MouseListener {
     private boolean alt;
     private boolean shift;
     protected TracerServer server = new TracerServer();
+
+    final double MIN_DISTANCE = 0.000015; //Minimal distance, when nodes are merged
+    final double MIN_DISTANCE_TW = 0.000015; //Minimal distance, when node is connected to other way
+    final double MIN_DISTANCE_SQ = 0.000015; //Minimal distance, when other node is connected this way
+    final double MAX_ANGLE = 30; //Minimal angle, when other node is connected this way
 
     public TracerAction(MapFrame mapFrame) {
         super(tr("Tracer"), "tracer-sml", tr("Tracer."), Shortcut.registerShortcut("tools:tracer", tr("Tool: {0}", tr("Tracer")), KeyEvent.VK_T, Shortcut.GROUP_EDIT), mapFrame, getCursor());
@@ -122,11 +128,13 @@ class TracerAction extends MapMode implements MouseListener {
      * @return Commands.
      */
     private Command connectObjects(Way way) {
-        final double MIN_DISTANCE = 0.000015;
 
         List<Command> cmds = new LinkedList<Command>();
         Way newWay = new Way(way);
-        for (Node n : way.getNodes()) {
+        for (int i = 0; i < way.getNodesCount() - 1; i++) { 
+            Node n = way.getNode(i); 
+            //System.out.println("-------");
+            //System.out.println("Node: " + n);
             LatLon ll = n.getCoor();
             BBox bbox = new BBox(
                     ll.getX() - MIN_DISTANCE,
@@ -150,16 +158,14 @@ class TracerAction extends MapMode implements MouseListener {
             }
 
             //System.out.println("Nearest: " + nearestNode);
-            //System.out.println("-------");
             if (nearestNode == null) {
                 cmds.addAll(tryConnectNodeToAnyWay(n));
             } else {
-                cmds.add(mergeNodes(nearestNode, n, newWay));
+                cmds.addAll(mergeNodes(n, nearestNode, newWay));
             }
         }
-        newWay = trySplitWayByAnyNodes(way);
 
-        cmds.add(new ChangeCommand(way, newWay));
+        cmds.add(new ChangeCommand(way, trySplitWayByAnyNodes(newWay)));
 
         Command cmd = new SequenceCommand(tr("Merge objects nodes"), cmds);
         return cmd;
@@ -170,10 +176,15 @@ class TracerAction extends MapMode implements MouseListener {
      * @param n1 First node
      * @param n2 Second node
      * @param way Way containing first node
-     * @return Command
+     * @return List of Commands.
      */
-    private Command mergeNodes(Node n1, Node n2, Way way){
-        n2.setCoor(n1.getCoor().getCenter(n2.getCoor()));
+    private List<Command> mergeNodes(Node n1, Node n2, Way way){
+        List<Command> cmds = new LinkedList<Command>();
+        cmds.add(new MoveCommand(n2, 
+                 (n1.getEastNorth().getX() - n2.getEastNorth().getX())/2, 
+                 (n1.getEastNorth().getY() - n2.getEastNorth().getY())/2
+                 ));
+
         int j = way.getNodes().indexOf(n1);
         way.addNode(j, n2);
         if (j == 0) {
@@ -181,11 +192,13 @@ class TracerAction extends MapMode implements MouseListener {
             way.addNode(way.getNodesCount(), n2);
         }
         way.removeNode(n1);
-        return new DeleteCommand(n1);
+
+        cmds.add(new DeleteCommand(n1));
+        return cmds;
     }
 
     /**
-     * Try connect node "node" from way "way" to way of other building.
+     * Try connect node "node" to way of other building.
      *
      * Zkusi zjistit, zda node neni tak blizko nejake usecky existujici budovy,
      * ze by mel byt zacnenen do teto usecky. Pokud ano, provede to.
@@ -198,15 +211,14 @@ class TracerAction extends MapMode implements MouseListener {
     private List<Command> tryConnectNodeToAnyWay(Node node)
             throws IllegalStateException, IndexOutOfBoundsException {
         
-        final double MIN_DISTANCE = 0.000015;
         List<Command> cmds = new LinkedList<Command>();
 
         LatLon ll = node.getCoor();
         BBox bbox = new BBox(
-                ll.getX() - MIN_DISTANCE,
-                ll.getY() - MIN_DISTANCE,
-                ll.getX() + MIN_DISTANCE,
-                ll.getY() + MIN_DISTANCE);
+                ll.getX() - MIN_DISTANCE_TW,
+                ll.getY() - MIN_DISTANCE_TW,
+                ll.getX() + MIN_DISTANCE_TW,
+                ll.getY() + MIN_DISTANCE_TW);
 
         // node nebyl slouceny s jinym
         // hledani pripadne blizke usecky, kam bod pridat
@@ -227,12 +239,14 @@ class TracerAction extends MapMode implements MouseListener {
                 }
             }
         }
-        //System.out.println("Nearest way:" + nearestWay);
-        if (minDist < MIN_DISTANCE) {
+        //System.out.println("Nearest way: " + nearestWay + " distance: " + minDist);
+        if (minDist < MIN_DISTANCE_TW) {
             Way newNWay = new Way(nearestWay);
             newNWay.addNode(nearestNodeIndex + 1, node);
             //System.out.println("New way:" + newNWay);
-            cmds.add(new ChangeCommand(nearestWay, newNWay));
+            Command c = new ChangeCommand(nearestWay, newNWay);
+            c.executeCommand();
+            cmds.add(c);
         }
         return cmds;
     }
@@ -259,8 +273,8 @@ class TracerAction extends MapMode implements MouseListener {
             LatLon n1 = way.getNodes().get(i).getCoor();
             LatLon n2 = way.getNodes().get((i + 1) % way.getNodesCount()).getCoor();
             //System.out.println(way.getNodes().get(i) + "-----" + way.getNodes().get((i + 1) % way.getNodesCount()));
-            double minDistanceSq = 0.000015;
-            double maxAngle = 15;
+            double minDistanceSq = MIN_DISTANCE_SQ;
+            double maxAngle = MAX_ANGLE;
             List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(new BBox(
                 Math.min(n1.getX(), n2.getX()) - minDistanceSq,
                 Math.min(n1.getY(), n2.getY()) - minDistanceSq,
@@ -275,6 +289,7 @@ class TracerAction extends MapMode implements MouseListener {
                 LatLon nn = nod.getCoor();
                 double dist = TracerGeometry.distanceFromSegment(nn, n1, n2);
                 double angle = TracerGeometry.angleOfLines(n1, nn, nn, n2);
+                //System.out.println("Angle: " + angle + " distance: " + dist + " Node: " + nod);
                 if (!n1.equalsEpsilon(nn) && !n2.equalsEpsilon(nn) && dist < minDistanceSq && Math.abs(angle) < maxAngle) {
                     maxAngle = angle;
                     nearestNode = nod;
@@ -296,7 +311,7 @@ class TracerAction extends MapMode implements MouseListener {
     }
 
     private void tagBuilding(Way way) {
-        if(alt) way.put("building", "yes");
+        if(!alt) way.put("building", "yes");
         way.put("source", "cuzk:km");
     }
 
@@ -387,3 +402,4 @@ class TracerAction extends MapMode implements MouseListener {
     public void mouseReleased(MouseEvent e) {
     }
 }
+

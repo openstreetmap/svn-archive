@@ -22,6 +22,7 @@ import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -295,6 +296,26 @@ public class CadastrePlugin extends Plugin {
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
     
+    /**
+     * Adds the WMSLayer following this rule:<br/>
+     * - if a WMSLayer exists place this new layer just before this layer<br/>
+     * - Otherwise place it at the bottom
+     * @param wmsLayer the wmsLayer to add
+     */
+    public static void addWMSLayer(WMSLayer wmsLayer) {
+        if (Main.map != null && Main.map.mapView != null) {
+            int wmsNewLayerPos = Main.map.mapView.getAllLayers().size();
+            for(Layer l : Main.map.mapView.getLayersOfType(WMSLayer.class)) {
+                int wmsPos = Main.map.mapView.getLayerPos(l);
+                if (wmsPos < wmsNewLayerPos) wmsNewLayerPos = wmsPos;
+            }
+            Main.main.addLayer(wmsLayer);
+            // Move the layer to its new position
+            Main.map.mapView.moveLayer(wmsLayer, wmsNewLayerPos);
+        } else
+            Main.main.addLayer(wmsLayer);
+    }
+    
     private static String checkSourceMillesime() {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         int currentYear = calendar.get(java.util.Calendar.YEAR);
@@ -312,4 +333,5 @@ public class CadastrePlugin extends Plugin {
         }
         return src;
     }
+    
 }

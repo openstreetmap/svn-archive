@@ -84,7 +84,7 @@ public class MenuActionNewLocation extends JosmAction {
             else if (Main.proj instanceof UTM_20N_France_DOM)
                 zone = ((UTM_20N_France_DOM)Main.proj).getCurrentGeodesic();
             wmsLayer = new WMSLayer(location, codeCommune, zone);
-            Main.main.addLayer(wmsLayer);
+            CadastrePlugin.addWMSLayer(wmsLayer);
             System.out.println("Add new layer with Location:" + inputTown.getText());
         } else if (existingLayers != null && existingLayers.size() > 0 && Main.map.mapView.getActiveLayer() instanceof WMSLayer) {
             wmsLayer = (WMSLayer)Main.map.mapView.getActiveLayer();

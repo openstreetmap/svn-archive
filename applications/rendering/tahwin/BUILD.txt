@@ -1,0 +1,16 @@
+How to build installer
+----------------------
+
+- Install Nullsoft Scriptable Install System from http://nsis.sourceforge.net/Main_Page
+- optional install eclipte extension
+
+- download binaries bundled with installer into binary-source folder. see contents.txt for details
+
+- compile tahwin-setup.nsi
+
+Some plugins are included to extend nsis functionality:
+http://nsis.sourceforge.net/FontName_plug-in
+http://nsis.sourceforge.net/ZipDLL_plug-in
+http://nsis.sourceforge.net/MD5_plugin
+http://nsis.sourceforge.net/Java_Runtime_Environment_Dynamic_Installer
+http://nsis.sourceforge.net/InetLoad_plug-in

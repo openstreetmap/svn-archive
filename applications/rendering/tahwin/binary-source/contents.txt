@@ -1,0 +1,12 @@
+this directory contains binaries included with the installer
+extract files flat into mentioned subdirectories
+
+\fonts\
+  copy *.ttf into this folder from dejavu and unifont
+  source http://sourceforge.net/projects/dejavu/files/dejavu/dejavu-fonts-ttf-2.30.zip
+  source (http://unifoundry.com/unifont.html) http://unifoundry.com/unifont-5.1.20080907.zip
+  rename unifont to unifont.ttf
+ 
+\pngnq\
+  source http://sourceforge.net/projects/pngnq/files/pngnq/0.5/pngnq-0.5-i386-win.zip/download
+  I included two dlls (libpng13.dll, zlib.dll) that are missing in the distribution but required and hard to find

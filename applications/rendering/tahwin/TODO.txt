@@ -1,0 +1,18 @@
+The following things might be interesting improvements to Tiles@Home for Windows:
+
+1) Use more advanced download plugin as a replacement for the used ones:
+http://nsis.sourceforge.net/Inetc_plug-in
+
+2) create a modern GUI for the rendering process. It could be running as a screensaver displaying tiles as they are rendered
+
+3) make it compatible with Vista. Users with reduced rights, update of the program
+
+4) enable different location than c:\tilesathome. requires adapting the classpath inside tilesathome
+
+5) provide unistaller with menu to aks user whether to uninstall fonts
+
+6) sign uninstaller [I have a cacert.org certificate for code-signing (stephankn)]
+http://nsis.sourceforge.net/Signing_an_Uninstaller
+
+7) provide different languages in installer and GUI
+

@@ -133,9 +133,9 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="1.3d";			// current version
+	var signature="1.3e";			// current version
 	var maximised=false;			// minimised/maximised?
-	var sourcetags=new Array("","","","","NPE","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo");
+	var sourcetags=new Array("","","","","NPE","Popular Edition (Scotland)","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo");
 	var lastgroup='road';			// last preset group used
 	var wayrels=new Object();		// which relations are in ways?
 	var noderels=new Object();		// which relations are in nodes?
@@ -156,6 +156,7 @@
 						   "http://tah.openstreetmap.org/Tiles/maplint/!/!/!.png",
 						   "http://andy.sandbox.cloudmade.com/tiles/cycle/!/!/!.png",
 						   "http://ooc.openstreetmap.org/npe/!/!/!.png",
+						   "http://gibin.geog.ucl.ac.uk/~ollie/scotland/tiles/!/!/!.jpg",
 						   "http://ooc.openstreetmap.org/os7/!/!/!.jpg",
 						   "http://ooc.openstreetmap.org/os1/!/!/!.jpg",
                            "http://www.nearmap.com/maps/nml=Vert&zxy=!,!,!",
@@ -337,6 +338,7 @@
 	plainRight=new TextFormat(); plainRight.color=0x000000;	plainRight.size=12; plainRight.font="_sans"; plainRight.align="right";
 	plainTiny =new TextFormat(); plainTiny.color =0x000000;	plainTiny.size =11; plainTiny.font ="_sans";
 	plainWhite=new TextFormat(); plainWhite.color=0xFFFFFF; plainWhite.size=12; plainWhite.font="_sans";
+	plainLight=new TextFormat(); plainLight.color=0xCCCCCC; plainLight.size=12; plainLight.font="_sans";
 	greySmall =new TextFormat(); greySmall.color =0x888888;	greySmall.size =12; greySmall.font ="_sans";
 	boldText  =new TextFormat(); boldText.color  =0x000000; boldText.size  =14; boldText.font  ="_sans"; boldText.bold =true;
 	boldLarge =new TextFormat(); boldLarge.color =0x000000; boldLarge.size =18; boldLarge.font ="_sans"; boldLarge.bold=true;
@@ -349,6 +351,8 @@
 	menu_dis  =new TextFormat(); menu_dis.color  =0xBBBBBB; menu_dis.size  =12; menu_dis.font  ="_sans"; menu_dis.bold =true;
 	auto_on	  =new TextFormat(); auto_on.color   =0x0000FF; auto_on.size   =12; auto_on.font   ="_sans"; auto_on.bold  =true;
 	auto_off  =new TextFormat(); auto_off.color  =0xFFFFFF; auto_off.size  =12; auto_off.font  ="_sans"; auto_off.bold =true;
+	yellowHead=new TextFormat(); yellowHead.color=0xFFFF00; yellowHead.size=16; yellowHead.font="_sans"; yellowHead.bold=true;
+	moreText  =new TextFormat(); moreText.color  =0xFFFF00; moreText.size  =12; moreText.font  ="_sans"; moreText.underline=true;
 
 	// Colour transform
 	
@@ -420,6 +424,7 @@
 	#include 'offline.as'
 	#include 'error.as'
 	#include 'inspector.as'
+	#include 'tagfinder.as'
 
 	// =====================================================================================
 	// Start
@@ -688,8 +693,10 @@
 		} else if (hashLength(_root.windows)) {
 			if (k==187 && _root.windows.relation.box.properties!=undefined) {
 				_root.windows.relation.box.properties.enterNewAttribute();
-			} else if (k==13 && _root.windows.cs) { completeClose(iText("ok")); _root.windows.cs.remove(); }
+			} else if (k==13 && _root.windows.cs) { completeClose(iText("ok")); _root.windows.cs.remove();
+			} else if (k==13 && _root.windows.tf) { createTagWindow(iText("ok")); _root.windows.tf.remove(); }
 			return;
+		} else if (k==27 && _root.help.bg) { closeHelpWindow();
 		} else if (keytarget!='') { return; }
 
 		if (k>=48 && k<58) { c=k; }		// we don't want shifted numeric characters
@@ -717,7 +724,7 @@
 			switch (k) {
 				case 112:	preferences.data.bgtype=4; break;
 				case 113:	preferences.data.bgtype=2; break;
-				default:	preferences.data.bgtype=1; preferences.data.tileset=k-106; break; // previously 114
+				default:	preferences.data.bgtype=1; preferences.data.tileset=k-105; break; // previously 114
 			}
 			resetBackgroundOffset();
 			initBackground(); return;
@@ -750,6 +757,7 @@
 		switch (s) {
 			case 'C':		closeChangeset(); break;							// C - close current changeset
 			case 'S':		prepareUpload(); break;								// S - save
+			case 'F':		openTagFinder(); break;								// F - tagfinder
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
 			case 'I':		toggleInspector(); break;							// I - inspector
@@ -1058,6 +1066,7 @@
                       iText('option_layer_maplint'),
                       iText('option_layer_cycle_map'),
                       iText('option_layer_ooc_npe'),
+                      iText('option_layer_ooc_scotland'),
                       iText('option_layer_ooc_7th'),
                       iText('option_layer_ooc_25k'),
                       iText('option_layer_nearmap'),

@@ -6,16 +6,7 @@
 	var styles=new TextField.StyleSheet();
 	styles.load("/potlatch/help.css?d=5");
 	
-	function openHelp() {
-		var tw,aw,i;
-	    var topics=new Array(iText('heading_introduction'),
-    	                     iText('heading_pois'),
-    	                     iText('heading_surveying'),
-    	                     iText('heading_drawing'),
-    	                     iText('heading_tagging'),
-    	                     iText('heading_troubleshooting'),
-    	                     iText('heading_quickref'));
-
+	function createHelpWindow(w,h) {
 		// Blank rest of page
 		var bh=Stage.height;
 		_root.createEmptyMovieClip("blank",0xFFFFFC);
@@ -24,12 +15,11 @@
 			beginFill(0xFFFFFF,20); moveTo(0,0); lineTo(Stage.width,0);
 			lineTo(Stage.width,bh); lineTo(0,bh); lineTo(0,0); endFill();
 		}
-		_root.blank.onPress=function() { _root.createEmptyMovieClip("help",0xFFFFFD); _root.createEmptyMovieClip("blank",0xFFFFFC); };
+		_root.blank.onPress=closeHelpWindow;
 		_root.blank.useHandCursor=false;
-
+		
 		// Background
 		_root.help.createEmptyMovieClip("bg",2);
-		var w=700; var h=450;
 		_root.help._x=(Stage.width-w)/2;
 		_root.help._y=(Stage.height-panelheight-h)/2;
 		with (_root.help.bg) {
@@ -40,6 +30,27 @@
 		}
         _root.help.bg.onPress=null;
 		_root.help.bg.useHandCursor=false;
+		
+		_root.help.attachMovie("closewindow","close",0xFFFFFF);
+		_root.help.close.onPress=closeHelpWindow;
+	}
+	
+	function closeHelpWindow() {
+		_root.createEmptyMovieClip("help",0xFFFFFD);
+		_root.createEmptyMovieClip("blank",0xFFFFFC);
+	}
+	
+	function openHelp() {
+		var tw,aw,i;
+		var w=700; var h=420;
+	    var topics=new Array(iText('heading_introduction'),
+    	                     iText('heading_pois'),
+    	                     iText('heading_surveying'),
+    	                     iText('heading_drawing'),
+    	                     iText('heading_tagging'),
+    	                     iText('heading_troubleshooting'),
+    	                     iText('heading_quickref'));
+		createHelpWindow(w,h);
 
 		// Topics
 		_root.help.createEmptyMovieClip("topics",3);

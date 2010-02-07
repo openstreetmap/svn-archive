@@ -17,6 +17,7 @@
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"auto");
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"modal");
 	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"palette");
+	$ec=new SWF::MovieClip(); $ec->nextFrame(); $m->addExport($ec,"vertical");
 
 	#		POI icons
 
@@ -42,6 +43,38 @@
 	}
 	closedir DBL;
 	chop $iconlist;
+
+	#		Scrollbar arrows
+	
+	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();
+	$ch->setLine(20*$cw,0xCC,0xCC,0xCC);
+	$ch->setRightFill(0,0,0x8B);
+	$ch->movePenTo(0,0); $ch->drawLineTo(10,0);
+	$ch->drawLineTo(10,10); $ch->drawLineTo(0,10);
+	$ch->drawLineTo(0,0); $ec->add($ch); 
+
+	$ch=new SWF::Shape();
+	$ch->setRightFill(255,255,255);
+	$ch->movePenTo(5,2); $ch->drawLineTo(9,8);
+	$ch->drawLineTo(2,8); $ch->drawLineTo(5,2);
+	$ec->add($ch); 
+	$ec->nextFrame();
+	$m->addExport($ec,"scroll_up");
+
+	$ec=new SWF::MovieClip(); $ch=new SWF::Shape();
+	$ch->setLine(20*$cw,0xCC,0xCC,0xCC);
+	$ch->setRightFill(0,0,0x8B);
+	$ch->movePenTo(0,0); $ch->drawLineTo(10,0);
+	$ch->drawLineTo(10,10); $ch->drawLineTo(0,10);
+	$ch->drawLineTo(0,0); $ec->add($ch); 
+
+	$ch=new SWF::Shape();
+	$ch->setRightFill(255,255,255);
+	$ch->movePenTo(5,8); $ch->drawLineTo(9,2);
+	$ch->drawLineTo(2,2); $ch->drawLineTo(5,8);
+	$ec->add($ch); 
+	$ec->nextFrame();
+	$m->addExport($ec,"scroll_down");
 
 	#		Radio buttons
 	
@@ -1730,6 +1763,24 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	$ec->add($s);
 	$ec->nextFrame();
 	$m->addExport($ec,"closecross");
+
+	#		close cross - variant for window
+	
+	$ec=new SWF::MovieClip();
+
+	$s=new SWF::Shape();
+	$s->setRightFill(0,0,0);
+	$s->setLine(20*$cw,255,255,255);
+	$s->drawCircle(7);
+	$ec->add($s);
+
+	$s=new SWF::Shape();
+	$s->setLine(40*$cw,255,255,255);
+	$s->movePenTo(-2.5,-2.5); $s->drawLineTo(2.5, 2.5);
+	$s->movePenTo(-2.5, 2.5); $s->drawLineTo(2.5,-2.5);
+	$ec->add($s);
+	$ec->nextFrame();
+	$m->addExport($ec,"closewindow");
 
 	#		add new relation
 	

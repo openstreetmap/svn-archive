@@ -48,12 +48,12 @@
 		box.createTextField("title",z++,7,7,280,20);
 		box.title.text = prompt;
 		with (box.title) { wordWrap=true; setTextFormat(boldText); selectable=false; type='dynamic'; }
-		box.title.adjustTextField();
+		adjustTextField(box.title);
 
 		box.createTextField("prompt",z++,7,27,280,20);
 		box.prompt.text = iText('prompt_changesetcomment');
 		with (box.prompt) { wordWrap=true; setTextFormat(plainSmall); selectable=false; type='dynamic'; }
-		box.prompt.adjustTextField();
+		adjustTextField(box.prompt);
 
 		var tc;
 		if (preferences.data.twitterclient==2) { tc=iText('microblog_name_identica'); }

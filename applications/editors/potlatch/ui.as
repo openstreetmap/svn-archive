@@ -3,6 +3,69 @@
 	// Standard UI
 	// =====================================================================================
 
+	// Vertical scrollbar
+	
+	VerticalScrollBar=function() { };
+	VerticalScrollBar.prototype=new MovieClip();
+	VerticalScrollBar.prototype.init=function(h,max,barheight,dragfunc) {
+		this.max=max;
+		this.height=h;
+		this.barheight=barheight;
+		this.dragsize=(h-20-barheight);
+		this.doOnDrag=dragfunc;
+
+		this.attachMovie("scroll_up"  ,"up"  ,1); this.up._y=0;
+		this.up.onPress=startScrollBarUp;
+		this.up.onRelease=stopScrollBarMove;
+
+		this.attachMovie("scroll_down","down",2); this.down._y=h-10;
+		this.down.onPress=startScrollBarDown;
+		this.down.onRelease=stopScrollBarMove;
+	
+		this.lineStyle(1,0xCCCCCC,100);
+		this.moveTo(0,10); this.lineTo(0 ,this.height-10);
+		this.lineTo(10,this.height-10); this.lineTo(10,10);
+		this.lineTo(0,10);
+
+		this.createEmptyMovieClip("bar",3);
+		this.bar.onPress=pressScrollBar;
+		this.bar.onRelease=releaseScrollBar;
+		this.bar._y=10;
+		with (this.bar) {
+			clear();
+			beginFill(0xBBBBBB,100);
+			moveTo(0,0); lineTo(10,0);
+			lineTo(10,this.barheight); lineTo(0,this.barheight);
+			lineTo(0,0); endFill();
+		};
+	};
+
+	VerticalScrollBar.prototype.moveto=function(pos) {
+		this.bar._x=0;
+		this.bar._y=pos/this.max*this.dragsize+10;
+	};
+
+	function startScrollBarUp()   { clearInterval(this._parent.mover); this._parent.mover=setInterval(doScrollBarMove,10,this._parent,-2); }
+	function startScrollBarDown() { clearInterval(this._parent.mover); this._parent.mover=setInterval(doScrollBarMove,10,this._parent, 2); }
+	function stopScrollBarMove()  { clearInterval(this._parent.mover); }
+	function doScrollBarMove(sb,inc) {
+		sb.bar._y=Math.min(Math.max(sb.bar._y+inc,10),sb.dragsize+10);
+		sb.doOnDrag.call(sb, ((sb.bar._y-10)/sb.dragsize)*sb.max);
+	}
+
+	function pressScrollBar() {
+		this.startDrag(false,0,10,0,this._parent.dragsize+10);
+		this.onMouseMove=function() {
+			this._parent.doOnDrag.call(this._parent, ((this._y-10)/this._parent.dragsize)*this._parent.max);
+		};
+	};
+
+	function releaseScrollBar() {
+		delete this.onMouseMove;
+		this.stopDrag();
+	};
+	Object.registerClass("vertical",VerticalScrollBar);
+
 	// Floating palette
 
 	var palettecss=new TextField.StyleSheet();
@@ -366,6 +429,8 @@
 		this.modalheight=h;		//  |
 		this.modalleave=leavepanel;
 		this.drawAreas();
+		this.ypos=7;
+		this.depthpos=5;
 		
 		// Create buttons
 		for (var i=0; i<buttons.length; i+=1) {
@@ -413,6 +478,32 @@
 			lineTo(w,0); lineTo(w,h);
 			lineTo(0,h); lineTo(0,0); endFill();
 		}
+	};
+
+	ModalDialogue.prototype.addHeadline=function(objname,t) { this.addTextItem(boldText  ,20,objname,t); };
+	ModalDialogue.prototype.addText    =function(objname,t) { this.addTextItem(plainSmall,18,objname,t); };
+	ModalDialogue.prototype.addTextItem=function(textformat,textheight,objname,t) {
+		this.box.createTextField(objname,this.depthpos++,7,this.ypos,this.modalwidth-14,textheight);
+		this.box[objname].text = t;
+		with (this.box[objname]) { wordWrap=true; setTextFormat(textformat); selectable=false; type='dynamic'; }
+		adjustTextField(this.box[objname]);
+		this.ypos+=textheight;
+	};
+
+	ModalDialogue.prototype.addTextEntry=function(objname,t,fieldheight) {
+		this.box.createTextField(objname,this.depthpos++,10,this.ypos+5,this.modalwidth-20,fieldheight);
+		with (this.box[objname]) {
+			setNewTextFormat(plainSmall);
+			type='input';
+			backgroundColor=0xDDDDDD;
+			background=true;
+			border=true;
+			borderColor=0xFFFFFF;
+			wordWrap=true;
+			text=t;
+		}
+		Selection.setFocus(this.box[objname]);
+		this.ypos+=textheight+10;
 	};
 
 	Object.registerClass("modal",ModalDialogue);

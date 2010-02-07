@@ -37,6 +37,7 @@
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
         <ant antfile="build.xml" target="dist" dir="terracer"/>
+        <ant antfile="build.xml" target="dist" dir="tracer"/>
         <ant antfile="build.xml" target="dist" dir="validator"/>
         <ant antfile="build.xml" target="dist" dir="walkingpapers"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
@@ -80,6 +81,7 @@
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="tageditor"/>
         <ant antfile="build.xml" target="clean" dir="terracer"/>
+        <ant antfile="build.xml" target="clean" dir="tracer"/>
         <ant antfile="build.xml" target="clean" dir="validator"/>
         <ant antfile="build.xml" target="clean" dir="walkingpapers"/>
         <ant antfile="build.xml" target="clean" dir="waydownloader"/>

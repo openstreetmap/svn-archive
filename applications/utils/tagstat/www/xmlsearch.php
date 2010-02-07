@@ -9,8 +9,8 @@
 
 	echo "<search>\n";
 	echo "<action>$action</action>\n";
-
-	if(($action != "values") && ($action != "fulltext")) {
+	
+	if(($action != "values") && ($action != "fulltext") && ($action != "fulltext_fast")) {
 		echo "<error>This action is currently not supported</error>\n";
 		echo "</search>\n";
 		die();
@@ -87,7 +87,48 @@
 			}
 		}
 		echo "</results>\n";
+	} else if($action == "fulltext_fast") {
+		echo "<results>\n";
+		$search =& $conn->prepare("SELECT tag, value, c_node, c_way, c_relation, c_other, c_total FROM tagpairs WHERE MATCH(tag) AGAINST (?) ORDER BY c_total DESC LIMIT ?");
+		$result = $conn->execute($search, array("$key", $limit));
+		if (DB::isError($result)) {
+			die ("<error>Can't select data: " . $result->getMessage() . "</error></results></search>\n");
+		}
+		if($result->numRows() > 0) {
+			while ($row =& $result->fetchRow()) {
+				echo "<result>\n";
+				echo "<tag>{$row[0]}</tag>\n";
+				echo "<value>{$row[1]}</value>\n";
+				echo "<total>{$row[6]}</total>\n";
+				echo "<onnode>{$row[2]}</onnode>\n";
+				echo "<onway>{$row[3]}</onway>\n";
+				echo "<onrelation>{$row[4]}</onrelation>\n";
+				echo "<onother>{$row[5]}</onother>\n";
+				echo "</result>";
+			}
+		}
+		$search =& $conn->prepare("SELECT tag, value, c_node, c_way, c_relation, c_other, c_total FROM tagpairs WHERE value LIKE ? ORDER BY c_total DESC LIMIT ?");
+		$result = $conn->execute($search, array("%$key%", $limit));
+		if (DB::isError($result)) {
+			die ("<error>Can't select data: " . $result->getMessage() . "</error></results></search>\n");
+		}
+		if($result->numRows() > 0) {
+			while ($row =& $result->fetchRow()) {
+				echo "<result>\n";
+				echo "<tag>{$row[0]}</tag>\n";
+				echo "<value>{$row[1]}</value>\n";
+				echo "<total>{$row[6]}</total>\n";
+				echo "<onnode>{$row[2]}</onnode>\n";
+				echo "<onway>{$row[3]}</onway>\n";
+				echo "<onrelation>{$row[4]}</onrelation>\n";
+				echo "<onother>{$row[5]}</onother>\n";
+				echo "</result>\n";
+			}
+		}
+		echo "</results>\n";
 	}
+
+
 
 	echo "</search>\n";
 	$result->free();

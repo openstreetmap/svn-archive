@@ -1247,9 +1247,13 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
   static int lastRelease = 0;
   int w = draw->allocation.width, h = draw->allocation.height;
-  int isDrag = firstDrag[0] >= 0 && (lastRelease + 100 > (int) event->time ||
-                                     pressTime + 100 < (int) event->time);
-      // Anything that isn't a short isolated click, is a drag.
+
+  // Anything that covers more than 3 pixels in either direction is a drag.
+  int isDrag = firstDrag[0] >= 0 && (abs(firstDrag[0] - event->x) > 3 ||
+				     abs(firstDrag[1] - event->y) > 3);
+  
+  // logprintf("Click (isDrag = %d): firstDrag = %d,%d; event = %d,%d\n",
+  // 	    isDrag, firstDrag[0], firstDrag[1], event->x, event->y);
 
   if (ButtonSize <= 0) ButtonSize = 4;
   int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);

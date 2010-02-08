@@ -379,6 +379,7 @@ string s (gosmSstr[i], strcspn (gosmSstr[i], "\n")); ... s.c_str() ... */
 
 extern ndType *ndBase;
 extern styleStruct *style;
+extern int stylecount;
 
 inline wayType *Way (ndType *nd) { return (wayType *)(nd->wayPtr+gosmData); }
 

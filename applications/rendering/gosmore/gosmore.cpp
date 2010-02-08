@@ -1702,7 +1702,7 @@ gint DrawExpose (void)
     mygc = gdk_gc_new (draw->window);
     fg_gc = gdk_gc_new (draw->window);
     iconsgc = gdk_gc_new (draw->window);
-    for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
+    for (int i = 0; i < stylecount; i++) {
       for (int j = 0; j < 2; j++) {
         SetColour (&styleColour[i][j],
          !j ? style[i].areaColour 
@@ -2970,13 +2970,13 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	  pen[VALIDATE_PEN] = CreatePen (PS_SOLID, 10, 0x9999ff); */
 	  map<int,HPEN> pcache;
 	  map<int,HBRUSH> bcache;
-          LOG for (int i = 0; i < 1 || style[i - 1].scaleMax; i++) {
+          LOG for (int i = 0; i < stylecount; i++) {
 	    // replace line colour with area colour 
 	    // if no line colour specified
 	    int c = style[i].lineColour != -1 ? style[i].lineColour
 	      : (style[i].areaColour & 0xfefefe) >> 1; 
             if (c != -1) {
-	      logprintf ("PEN %d %x %d\n",style[i].dashed, c, style[i].lineWidth);
+	      // logprintf ("PEN[%d] %d %x %d\n",i,style[i].dashed, c, style[i].lineWidth);
               int idx = (style[i].dashed ? 1 : 0) +
                 (style[i].lineWidth & 0x3f) * 2 + ((c & 0xffffff) << 7);
               map<int,HPEN>::iterator f = pcache.find (idx);
@@ -2988,7 +2988,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
               pcache[idx] = pen[i];
             }
             if ((c = style[i].areaColour) != -1) {
-	      logprintf ("BR %x\n", c);
+	      // logprintf ("BR[%d] %x\n", i, c);
               map<int,HBRUSH>::iterator f = bcache.find (c);
               brush[i] = f != bcache.end () ? f->second :
                 CreateSolidBrush ((c>>16) | (c&0xff00) | ((c&0xff) << 16));

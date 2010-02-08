@@ -23,11 +23,12 @@ routeNodeType *route = NULL, *shortest = NULL;
 routeHeapType *routeHeap;
 long dhashSize, dLength;
 int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon, routeHeapMaxSize;
-int *hashTable, bucketsMin1, pakHead = 0xEB3A943, gosmStyleCnt;
+int *hashTable, bucketsMin1, pakHead = 0xEB3A943;
 char *gosmData, *gosmSstr[searchCnt];
 
 ndType *ndBase;
 styleStruct *style;
+int stylecount;
 wayType *gosmSway[searchCnt];
 
 // store the maximum speeds (over all waytypes) of each vehicle type
@@ -715,9 +716,9 @@ int GosmInit (void *d, long size)
   gosmData = (char*) d;
   ndBase = (ndType *)(gosmData + ((int*)(gosmData + size))[-1]);
   bucketsMin1 = ((int *) (gosmData + size))[-2];
-  gosmStyleCnt = ((int *) (gosmData + size))[-3];
+  stylecount = ((int *) (gosmData + size))[-3];
   style = (struct styleStruct *)
-    (gosmData + size - sizeof (gosmStyleCnt) * 3) - gosmStyleCnt;
+    (gosmData + size - sizeof (stylecount) * 3) - stylecount;
   hashTable = (int *) (style) - bucketsMin1 - (bucketsMin1 >> 7) - 3;
   
   memset (gosmSway, 0, sizeof (gosmSway));
@@ -764,12 +765,12 @@ void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
   elemstyleMapping map[2 << STYLE_BITS]; // this is needed for
 					 // LoadElemstyles but ignored
   styleStruct *old = style;
-  style = (styleStruct*) malloc (gosmStyleCnt * sizeof (*style)); // Mem leak
-  memcpy (style, old, gosmStyleCnt * sizeof (*style));
+  style = (styleStruct*) malloc (stylecount * sizeof (*style)); // Mem leak
+  memcpy (style, old, stylecount * sizeof (*style));
   //memset (&srec, 0, sizeof (srec)); // defined globally
   memset (&map, 0, sizeof (map));
   LoadElemstyles(elemstylefile, iconscsvfile, style, map);
-  CalculateInvSpeeds (style, gosmStyleCnt);
+  CalculateInvSpeeds (style, stylecount);
 }
 
 /*--------------------------------- Rebuild code ---------------------------*/

@@ -171,6 +171,8 @@ public class RequestProcessor extends Thread
                     System.out.println("RemoteControl: no download necessary");
                 } catch (LoadDeniedException ex) {
                     System.out.println("RemoteControl: download forbidden by preferences");
+                    sendForbidden(out);
+                    return;
                 } catch (Exception ex) {
                     sendError(out);
                     System.out.println("RemoteControl: Error parsing load_and_zoom remote control request:");

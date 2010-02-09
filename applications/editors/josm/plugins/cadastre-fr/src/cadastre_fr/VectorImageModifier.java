@@ -15,11 +15,7 @@ public class VectorImageModifier extends ImageModifier {
     
     public static int cadastreBackgroundTransp = 1; // original white but transparent
 
-    private boolean withBackground = false;
-
     private int backgroundPixel = 0;
-
-    private int backgroundSampleX, backgroundSampleY;
 
     public VectorImageModifier(BufferedImage bi) {
         bufferedImage = bi;
@@ -43,13 +39,11 @@ public class VectorImageModifier extends ImageModifier {
                 int pixel = bufferedImage.getRGB(x, y);
                 if (pixel == cadastreBackground) {
                     bufferedImage.setRGB(x, y, josmBackgroundColor);
-                    if (!withBackground)
-                        withBackground = true;
-                    backgroundSampleX = x;
-                    backgroundSampleY = y;
                 }
             }
         }
+        // The cadastre has now a new background (for invertGrey())
+        cadastreBackground = josmBackgroundColor;
     }
 
     /**
@@ -80,8 +74,11 @@ public class VectorImageModifier extends ImageModifier {
         int g = col.getGreen();
         int b = col.getBlue();
         if ((b == r) && (b == g)) {
-            pixel = (0x00 << 32) + ((byte) (255 - r) << 16) + ((byte) (255 - r) << 8) + ((byte) (255 - r));
+            pixel = ((byte) col.getAlpha() << 24) + ((byte) (255 - r) << 16) + ((byte) (255 - r) << 8) + ((byte) (255 - r));
         }
+        // Maybe we should try to find a better formula to avoid discontinuity when text is drawn on a colored item
+        // (building, ...). One could use the conversion to and from HSB to only change the brightness not the color.
+        // Note: the color palette does not have the inverse colors so it may be very weird!
         return pixel;
     }
 
@@ -92,10 +89,7 @@ public class VectorImageModifier extends ImageModifier {
             IndexColorModel icm = (IndexColorModel) colorModel;
             WritableRaster raster = bufferedImage.getRaster();
             // pixel is offset in ICM's palette
-            if (withBackground)
-                backgroundPixel = raster.getSample(backgroundSampleX, backgroundSampleY, 0);
-            else
-                backgroundPixel = 1; // default Cadastre background sample
+            backgroundPixel = 1; // default Cadastre background sample
             int size = icm.getMapSize();
             byte[] reds = new byte[size];
             byte[] greens = new byte[size];
@@ -103,6 +97,8 @@ public class VectorImageModifier extends ImageModifier {
             icm.getReds(reds);
             icm.getGreens(greens);
             icm.getBlues(blues);
+            // The cadastre background has now an alpha to 0 (for invertGrey())
+            cadastreBackground = 0x00ffffff;
             IndexColorModel icm2 = new IndexColorModel(colorModel.getPixelSize(), size, reds, greens, blues,
                     backgroundPixel);
             bufferedImage = new BufferedImage(icm2, raster, bufferedImage.isAlphaPremultiplied(), null);

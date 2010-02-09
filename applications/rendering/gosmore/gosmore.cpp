@@ -36,12 +36,12 @@ using namespace std;
 #include <io.h>
 #include <sys/stat.h>
 #include <windowsx.h>
-//#include <winuserm.h> // For playing a sound ??
 #ifdef _WIN32_WCE
 #include <sipapi.h>
 #include <aygshell.h>
 #include "ceglue.h"
 #else
+#include <mmsystem.h> // For playing a sound under W32
 #define SipShowIM(x)
 #define CeEnableBacklight(x) FALSE
 #define CreateFileForMapping(a,b,c,d,e,f,g) CreateFile (a,b,c,d,e,f,g)
@@ -253,14 +253,14 @@ int clon, clat, zoom, option = EnglishNum, gpsSockTag, setLocBusy = FALSE, gDisp
 
 TCHAR currentBbox[80] = TEXT ("");
 
-void ChangePak (const TCHAR *pakfile)
+void ChangePak (const TCHAR *pakfile, int mlon, int mlat)
 {
   static int bboxList[][4] = { 
 #include "bboxes.c"
   }, world[] = { -512, -512, 512, 512 }, *bbox = NULL;
      
-  if (bbox && bbox[0] <= (clon >> 22) && bbox[1] <= ((-clat) >> 22) &&
-              bbox[2] >  (clon >> 22) && bbox[3] >  ((-clat) >> 22)) return;
+  if (bbox && bbox[0] <= (mlon >> 22) && bbox[1] <= ((-mlat) >> 22) &&
+              bbox[2] >  (mlon >> 22) && bbox[3] >  ((-mlat) >> 22)) return;
   GosmFreeRoute ();
   memset (gosmSstr, 0, sizeof (gosmSstr));
   shortest = NULL;
@@ -268,10 +268,10 @@ void ChangePak (const TCHAR *pakfile)
   if (!pakfile) {
     int best = 0;
     for (size_t j = 0; j < sizeof (bboxList) / sizeof (bboxList[0]); j++) {
-      int worst = min (clon / 8 - (bboxList[j][0] << 19),
-                  min (-clat / 8 - (bboxList[j][1] << 19),
-                  min ((bboxList[j][2] << 19) - clon / 8,
-                       (bboxList[j][3] << 19) + clat / 8)));
+      int worst = min (mlon / 8 - (bboxList[j][0] << 19),
+                  min (-mlat / 8 - (bboxList[j][1] << 19),
+                  min ((bboxList[j][2] << 19) - mlon / 8,
+                       (bboxList[j][3] << 19) + mlat / 8)));
       // Find the worst border of bbox j. worst < 0 implies we are
       // outside it.
       if (worst > best) { 
@@ -344,7 +344,7 @@ void ChangePak (const TCHAR *pakfile)
   #else // defined (__linux__)
   static void *map = (void*) -1;
   static size_t len = 0 /* Shut up gcc */;
-//  printf ("%s %d %d\n", pakfile, (clon >> 22) + 512, 512 - (clat >> 22));
+//  printf ("%s %d %d\n", pakfile, (mlon >> 22) + 512, 512 - (mlat >> 22));
   if (map != (void*) -1) munmap (map, len);
   
   FILE *gmap = fopen64 (pakfile, "r");
@@ -789,7 +789,8 @@ void DoFollowThing (gpsNewStruct *gps)
     string wav = string (RES_DIR) +  // +3 is to strip the leading "cmd"
       (cmdStr[command[0] - cmdturnleftNum] + 3) + ".wav";
 #ifdef _WIN32
-    PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC );
+    string wwav = string (cmdStr[command[0] - cmdturnleftNum] + 3) + ".wav";
+    PlaySound (wwav.c_str(), NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC );
 #elif  defined (USE_GNOMESOUND)
     gnome_sound_play (wav.c_str ());
 #else
@@ -1145,9 +1146,7 @@ void *UpdateMapThread (void *n)
     unlink ("tmp.zip");
     gdk_threads_enter ();
     gtk_progress_bar_set_text (GTK_PROGRESS_BAR (bar), "Done");
-/*    clon ^= 0x80000000;
-    ChangePak (NULL);
-    clon ^= 0x80000000; 
+/*  ChangePak (NULL, clon ^ 0x80000000, clat);
     Expose () I don't think it will work in this thread. SEGV. */
     
     gdk_threads_leave ();
@@ -1781,7 +1780,9 @@ gint DrawExpose (void)
     pango_layout_set_attributes (pl, list);
     pango_attr_list_unref (list); */
 #endif // GTK
-  ChangePak (NULL); // This call can be almost anywhere, e.g. SetLocation()
+  if (option == mapMode) ChangePak (NULL, clon, clat);
+  // This call can be almost anywhere, e.g. SetLocation(). Calling it in
+  // searchMode with GeoSearch will just slow things down.
 
   clip.height = draw->allocation.height;
   clip.width = draw->allocation.width;
@@ -2478,6 +2479,23 @@ gint DrawExpose (void)
   return FALSE;
 }
 
+void GeoSearch (char *key)
+{
+  char *comma = strchr (key, ',');
+  if (!comma) comma = strstr (key, " near ");
+  if (comma) {
+    char *cName = comma + (*comma == ',' ? 1 : 6);
+    string citi = string ("city:") + (cName + strspn (cName, " "));
+    const char *tag = gosmData + *GosmIdxSearch (citi.c_str (), 0);
+    while (*--tag) {}
+    ChangePak (NULL, ((wayType *)tag)[-1].clon, ((wayType *)tag)[-1].clat);
+    string xkey = string (key, comma - key);
+    //printf ("%s tag=%s\nxke %s\n", cName, tag + 1, xkey.c_str ());
+    GosmSearch (((wayType *)tag)[-1].clon, ((wayType *)tag)[-1].clat, xkey.c_str ());
+  }
+  else GosmSearch (clon, clat, key);
+}
+
 #ifndef NOGTK
 GtkWidget *searchW;
 
@@ -2492,7 +2510,7 @@ int ToggleSearchResults (void)
 int IncrementalSearch (void)
 {
   option = searchMode;
-  GosmSearch (clon, clat, (char *) gtk_entry_get_text (GTK_ENTRY (searchW)));
+  GeoSearch ((char*) gtk_entry_get_text (GTK_ENTRY (searchW)));
   gtk_widget_queue_clear (draw);
   return FALSE;
 }
@@ -2533,8 +2551,8 @@ inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
     #undef o
     option = mapMode;
   }
-  LOG if (r) ChangePak (pakfile); // This will set up Exit
-  LOG if (Exit && r) ChangePak (NULL);
+  LOG if (r) ChangePak (pakfile, clon, clat); // This will set up Exit
+  LOG if (Exit && r) ChangePak (NULL, clon, clat);
 /*  char *tag = gosmData +
     *(int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
   while (*--tag) {}
@@ -3162,7 +3180,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
           IM showing is if the device has a hardware keyboard/keypak */
         #endif
           option = searchMode;
-          GosmSearch (clon, clat, editStr);
+          GeoSearch (editStr);
           InvalidateRect (hWnd, NULL, FALSE);
         }
      }

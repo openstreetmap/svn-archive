@@ -365,6 +365,20 @@ The colours can only be in hex
        <scale_max>4</scale_max> <!-- N/A -->
      </rule>
 
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="nosignal" />
+       <icon annotate="true" src="waypoint/wptred.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="nofix" />
+       <icon annotate="true" src="waypoint/wptyellow.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
 	<!-- mark some specials that should be fixed - they are already the default and therefore shouldn't be tagged -->
     <rule>
        <condition k="oneway"/>

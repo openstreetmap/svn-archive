@@ -32,7 +32,7 @@ int stylecount;
 wayType *gosmSway[searchCnt];
 
 // store the maximum speeds (over all waytypes) of each vehicle type
-int TagCmp (char *a, char *b)
+int TagCmp (const char *a, const char *b)
 { // This works like the ordering of books in a library : We ignore
   // meaningless words like "the", "street" and "north". We (should) also map
   // deprecated words to their new words, like petrol to fuel
@@ -60,10 +60,11 @@ int TagCmp (char *a, char *b)
   if (strchr ("WEST", b[0]) && b[1] == ' ') b += 2;
 
   for (;;) {
-    char n[2][30] = { "", "" }, *ptr[2];
+    char n[2][30] = { "", "" };
+    const char *ptr[2];
     int wl[2];
     for (int i = 0; i < 2; i++) {
-      char **p = i ? &b : &a;
+      const char **p = i ? &b : &a;
       if ((*p)[0] == ' ') {
         for (int i = 0; i < int (sizeof (omit) / sizeof (omit[0])); i++) {
           if (strncasecmp (*p + 1, omit[i], strlen (omit[i])) == 0 &&
@@ -104,9 +105,11 @@ int TagCmp (char *a, char *b)
    The worst case is when the nearest nodes are far along a relatively
    straight line.
 */
-static int IdxSearch (int *idx, int h, char *key, unsigned z)
+int *GosmIdxSearch (const char *key, unsigned z)
 {
-  for (int l = 0; l < h;) {
+  int *idx =
+    (int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
+  for (int l = 0, h = hashTable - idx; ;) {
     char *tag = gosmData + idx[(h + l) / 2];
     int diff = TagCmp (tag, key);
     while (*--tag) {}
@@ -114,22 +117,22 @@ static int IdxSearch (int *idx, int h, char *key, unsigned z)
       ZEnc ((unsigned)((wayType *)tag)[-1].clat >> 16, 
             (unsigned)((wayType *)tag)[-1].clon >> 16) >= z)) h = (h + l) / 2;
     else l = (h + l) / 2 + 1;
+    if (l >= h) return idx + h;
   }
-  return h;
 }
 
-void GosmSearch (int clon, int clat, char *key)
+void GosmSearch (int clon, int clat, const char *key)
 {
   __int64 dista[searchCnt];
   int *idx =
     (int *)(ndBase + hashTable[bucketsMin1 + (bucketsMin1 >> 7) + 2]);
-  int l = IdxSearch (idx, hashTable - idx, key, 0), count;
+  int l = GosmIdxSearch (key, 0) - idx, count;
 //  char *lastName = data + idx[min (hashTable - idx), 
 //    int (sizeof (gosmSway) / sizeof (gosmSway[0]))) + l - 1];
   int cz = ZEnc ((unsigned) clat >> 16, (unsigned) clon >> 16);
   for (count = 0; count + l < hashTable - idx && count < searchCnt;) {
     int m[2], c = count, ipos, dir, bits;
-    m[0] = IdxSearch (idx, hashTable - idx, gosmData + idx[count + l], cz);
+    m[0] = GosmIdxSearch (gosmData + idx[count + l], cz) - idx;
     m[1] = m[0] - 1;
     __int64 distm[2] = { -1, -1 }, big = ((unsigned __int64) 1 << 63) - 1;
     while (c < searchCnt && (distm[0] < big || distm[1] < big)) {
@@ -197,8 +200,8 @@ void GosmSearch (int clon, int clat, char *key)
                                               (2 << (bits + 16))) >> 16);
       // Now we search through the 4 squares around (clat, clon)
       for (int mask = 0, maskI = 0; maskI < 4; mask += 0x55555555, maskI++) {
-        int s = IdxSearch (idx, hashTable - idx, gosmData + idx[count + l],
-          (cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1));
+        int s = GosmIdxSearch (gosmData + idx[count + l],
+          (cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1)) - idx;
 /* Print the square
         for (int i = 0; i < 32; i++) printf ("%d%s", 
           (((cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1)) >> (31 - i)) & 1,
@@ -1106,7 +1109,9 @@ membershipType Next (membershipType rt)
 // both passes of the rebuild, i.e. the strings cannot depend on w.clat or clon
 
 deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
-  styleStruct &s, int isNode, int isRelation, membershipType membership)
+  styleStruct &s, int isNode, int isRelation, membershipType membership,
+  k2vType &wayRole /* Only for relations, and only for those members who are ways.
+                      role->file offset in decimal */)
 {
   deque<string> result;
   
@@ -1172,9 +1177,13 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strncasecmp (i->first, "kms:", 4)  != 0 &&
         strncasecmp (i->first, "openGeoDB:", 10)  != 0 &&
         strncasecmp (i->first, "gnis:", 5)  != 0 &&
+        strncasecmp (i->first, "CLC:", 4)  != 0 && // CORINE Land Cover
 
         strcmp (i->second, // Abuse of the 'note' tag !
           "Experimental import of Irish places and POIs from GNS Dataset") != 0 &&
+        strcmp (i->second, // What is the difference between Key:comment and Key:note ?
+          "Experimental import of Canadian places and POIs from GNS Dataset") != 0 &&
+        
         strncasecmp (i->first, "gns:", 4)  != 0 &&
         strcmp (i->first, "place_county") != 0 && 
         
@@ -1300,6 +1309,13 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
     // then we say cyclists will love it.
   }
   
+  if (isRelation && k2v["restriction"] && wayRole["from"] && wayRole["to"]) {
+    result.push_front (
+      string ("\n") + wayRole["from"] + ' ' + wayRole["to"] + '\n');
+    // A turn restriction with both a 'from' and a 'to'. Put the offsets (not
+    // OSM-ids) encoded as decimal (ASCII) where the router expects them.
+    
+  }
   // Reduce the aveSpeeds when maxspeed mandates it
   if (k2v["maxspeed"] && isdigit (k2v["maxspeed"][0])) {
     const char *m = k2v["maxspeed"];
@@ -1440,8 +1456,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     wayType *w; // Pointer to the first version in the master file.
     int off;
   } *wayFseek = NULL;
-  int wStyle = elemCnt, ref = 0, role = 0;
-  int member[2], relationType = 0, onewayReverse = 0;
+  int wStyle = elemCnt, ref = 0;
+  int relationType = 0, onewayReverse = 0;
   vector<int> wayMember;
   map<int,int> wayId;
   wayType w;
@@ -1489,13 +1505,13 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   if (!relationTableFile || fseek (relationTableFile, 0, SEEK_END) != 0 ||
       (relationTable = (char*) mmap (NULL, ftell (relationTableFile), PROT_READ,
         MAP_SHARED, fileno (relationTableFile), 0)) == (char*)-1) {
-    relationTable = "z1"; // Stopper
+    relationTable = (char*) "z1"; // Stopper
     fprintf (stderr, "Processing without relations table\n");
   }
   
-  char *tag_k = NULL; //, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
+  char *tag_k = NULL, *role = NULL; //, *tags = (char *) BAD_CAST xmlStrdup (BAD_CAST "");
   //char *nameTag = NULL;
-  k2vType k2v;
+  k2vType k2v, wayRole; // wayRole should be a vector< struct{char*,int} > ...
   deque<int> wayNd;
   map<int, deque<int> > outer;
   REBUILDWATCH (while (xmlTextReaderRead (xml))) {
@@ -1513,12 +1529,12 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	if (stricmp (aname, "lon") == 0) nd.lon = Longitude (atof (avalue));
 	if (stricmp (aname, "ref") == 0) ref = atoi (avalue);
 	if (stricmp (aname, "type") == 0) relationType = avalue[0];
-	if (stricmp (aname, "role") == 0) role = avalue[0];
 
 #define K_IS(x) (stricmp (tag_k, x) == 0)
 #define V_IS(x) (stricmp (avalue, x) == 0)
 
-	if (stricmp (aname, "v") == 0) {
+	if (stricmp (aname, "role") == 0) role = avalue;
+	else if (stricmp (aname, "v") == 0) {
           
 	  int newStyle = 0;
 	  // TODO: this for loop could be clearer as a while
@@ -1563,7 +1579,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
           k2v.m[tag_k] = avalue; // Will be freed after Osm2Gosmore()
 	}
 	else if (stricmp (aname, "k") == 0) tag_k = avalue;
-	else xmlFree (avalue); // Not "k" or "v"
+	else xmlFree (avalue); // Not "k", "v" or "role"
 	
 	xmlFree (aname);
       } /* While it's an attribute */
@@ -1572,13 +1588,20 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	//if (refId != wayId.end ()) wayMember.push_back (refId->second);
 	wayMember.push_back (ref);
       }
-      if (!wayFseek || wayFseek->off) {
-	if (stricmp (name, "member") == 0 && role != 'v') {
+      if (!wayFseek || wayFseek->off) { // This test / guard is no longer needed.
+	if (stricmp (name, "member") == 0 && role) {
+	  if (relationType == 'n' && stricmp (role, "via") == 0) wayNd.push_back (ref);
+	  
           map<int,int>::iterator refId = wayId.find (ref);
-          if (refId != wayId.end ()) member[role == 'f' ? 0 : 1] = refId->second;
+          if (relationType == 'w' && refId != wayId.end ()) {
+            char tmp[12];
+            sprintf (tmp, "%d", refId->second);
+            wayRole.m[role] = (char*) xmlStrdup (BAD_CAST tmp);
+          }
+          else xmlFree (role);
+          role = NULL;
 	}
-	else if (stricmp (name, "nd") == 0 ||
-		 stricmp (name, "member") == 0) wayNd.push_back (ref);
+	else if (stricmp (name, "nd") == 0) wayNd.push_back (ref);
       }
       if (stricmp (name, "node") == 0 && bbox[0] <= nd.lat &&
 	  bbox[1] <= nd.lon && nd.lat <= bbox[2] && nd.lon <= bbox[3]) {
@@ -1615,14 +1638,6 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       if (stricmp (name, "way") == 0 || nameIsNode || nameIsRelation) {
 	if (!nameIsRelation && !nameIsNode) {
 	  wayId[nd.id] = ftell (pak);
-	}
-	if (nameIsRelation) {
-	  //xmlFree (nameTag);
-	  char str[22];
-	  sprintf (str, "%d %d", member[0], member[1]);
-	  k2v.m[(char *) xmlStrdup (BAD_CAST "name")] =
-	    (char *) xmlStrdup (BAD_CAST str);
-	  //nameTag = (char *) xmlStrdup (BAD_CAST str);
 	}
 	/*if (nameTag) {
 	  char *oldTags = tags;
@@ -1698,7 +1713,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	    w.dlon = wayFseek->w->dlon;
           }
 	  deque<string> tags = Osm2Gosmore (nd.id, k2v, w, srec[styleCnt], isNode,
-	    nameIsRelation, membership);
+	    nameIsRelation, membership, wayRole);
 	  while (memcmp (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]))
 	         != 0) wStyle++;
           w.bits += wStyle;
@@ -1791,6 +1806,11 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  xmlFree ((char*) k2v.m.begin()->second);
 	  xmlFree ((char*) k2v.m.begin()->first);
 	  k2v.m.erase (k2v.m.begin ());
+	}
+	while (!wayRole.m.empty ()) {
+	  xmlFree ((char*) wayRole.m.begin()->second);
+	  xmlFree ((char*) wayRole.m.begin()->first);
+	  wayRole.m.erase (wayRole.m.begin ());
 	}
       }
     } // if it was </...>

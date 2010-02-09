@@ -43,7 +43,7 @@ EXTRAC=-mms-bitfields -mno-cygwin -mwindows \
   `pkg-config --cflags gtk+-2.0 || echo -D NOGTK`
 EXTRAL=`pkg-config --libs gtk+-2.0`
 EXE=.exe
-NETLIB=-lwsock32
+W32LIBS=-lwsock32 -lwinmm
 endif
 
 all: gosmore$(EXE)
@@ -69,7 +69,7 @@ $(ARCH)gosmore.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h \
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ConvertUTF.c
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ceglue.c
 		${ARCH}g++ -static ${CFLAGS} ${EXTRAC} -o $@ \
-		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc $(NETLIB)
+		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc $(W32LIBS)
 
 gosmore.rsc:	gosmore.rc icons.bmp icons-mask.bmp gosmore.ico
 		$(WINDRES) $< $@

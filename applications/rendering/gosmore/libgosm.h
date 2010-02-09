@@ -419,7 +419,7 @@ inline int Hash (int lon, int lat, int lowz = 0)
     (lowz ? bucketsMin1 >> 7 : bucketsMin1)) + (lowz ? bucketsMin1 + 1 : 0);
 }
 
-int TagCmp (char *a, char *b); 
+// int TagCmp (const char *a, const char *b); // Only used in libgosm
 
 struct OsmItr { // Iterate over all the objects in a square
   ndType *nd[1]; /* Readonly. Either can be 'from' or 'to', but you */
@@ -467,7 +467,9 @@ void GosmFreeRoute (void);
 
 int JunctionType (ndType *nd);
 
-void GosmSearch (int clon, int clat, char *key);
+int *GosmIdxSearch (const char *key, unsigned z);
+// GosmIdxSearch is only exported in order to find unique object, like cities.
+void GosmSearch (int clon, int clat, const char *key);
 
 int GosmInit (void *d, long size);
 

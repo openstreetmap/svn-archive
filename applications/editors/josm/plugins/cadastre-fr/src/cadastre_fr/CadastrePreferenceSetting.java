@@ -35,6 +35,8 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JCheckBox drawBoundaries = new JCheckBox(tr("Draw boundaries of downloaded data."));
 
+    private JComboBox imageInterpolationMethod = new JComboBox();
+
     private JCheckBox disableImageCropping = new JCheckBox(tr("Disable image cropping during georeferencing."));
     
     private JRadioButton grabMultiplier1 = new JRadioButton("", true);
@@ -120,6 +122,21 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         drawBoundaries.setSelected(Main.pref.getBoolean("cadastrewms.drawBoundaries", false));
         drawBoundaries.setToolTipText(tr("Draw a rectangle around downloaded data from WMS server."));
         cadastrewms.add(drawBoundaries, GBC.eop().insets(0, 0, 0, 5));
+
+        // option to select image zooming interpolation method
+        JLabel jLabelImageZoomInterpolation = new JLabel(tr("Image zoom interpolation:"));
+        cadastrewms.add(jLabelImageZoomInterpolation, GBC.std().insets(0, 0, 10, 0));
+        imageInterpolationMethod.addItem(tr("Nearest-Neighbor (fastest) [ Default ]"));
+        imageInterpolationMethod.addItem(tr("Bilinear (fast)"));
+        imageInterpolationMethod.addItem(tr("Bicubic (slow)"));
+        String savedImageInterpolationMethod = Main.pref.get("cadastrewms.imageInterpolation", "standard");
+        if (savedImageInterpolationMethod.equals("bilinear")) 
+            imageInterpolationMethod.setSelectedIndex(1);
+        else if (savedImageInterpolationMethod.equals("bicubic")) 
+            imageInterpolationMethod.setSelectedIndex(2);
+        else
+            imageInterpolationMethod.setSelectedIndex(0);
+        cadastrewms.add(imageInterpolationMethod, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
 
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
@@ -241,6 +258,12 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         Main.pref.put("cadastrewms.backgroundTransparent", transparency.isSelected());
         Main.pref.put("cadastrewms.brightness", Float.toString((float)sliderTrans.getValue()/10));
         Main.pref.put("cadastrewms.drawBoundaries", drawBoundaries.isSelected());
+        if (imageInterpolationMethod.getSelectedIndex() == 2)
+            Main.pref.put("cadastrewms.imageInterpolation", "bicubic");
+        else if (imageInterpolationMethod.getSelectedIndex() == 1)
+            Main.pref.put("cadastrewms.imageInterpolation", "bilinear");
+        else 
+            Main.pref.put("cadastrewms.imageInterpolation", "standard");
         if (grabMultiplier1.isSelected())
             Main.pref.put("cadastrewms.scale", Scale.X1.toString());
         else if (grabMultiplier2.isSelected())

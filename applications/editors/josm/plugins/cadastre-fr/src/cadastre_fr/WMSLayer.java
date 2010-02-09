@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -233,9 +234,19 @@ public class WMSLayer extends Layer implements ImageObserver {
     @Override
     public void paint(Graphics2D g, final MapView mv, Bounds bounds) {
         synchronized(this){
+            Object savedInterpolation = g.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
+            if (savedInterpolation == null) savedInterpolation = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
+            String interpolation = Main.pref.get("cadastrewms.imageInterpolation", "Standard");
+            if (interpolation.equals("bilinear"))
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            else if (interpolation.equals("bicubic"))
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            else
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
             for (GeorefImage img : images)
                 img.paint(g, mv, CadastrePlugin.backgroundTransparent,
                         CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, savedInterpolation);
         }
         if (this.isRaster) {
             paintCrosspieces(g, mv);

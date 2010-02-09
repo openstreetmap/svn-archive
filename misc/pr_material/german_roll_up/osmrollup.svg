@@ -28563,6 +28563,27 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 50 : 1"
        sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective9219"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective9233"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective9247"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -28613,13 +28634,13 @@
        id="path3881"
        sodipodi:nodetypes="cccc" />
     <image
-       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\Neuer Ordner\german_roll_up\CIMG0452.JPG"
+       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.pr_material\german_roll_up\CIMG0452.JPG"
        xlink:href="CIMG0452.JPG"
-       width="3542.4033"
-       height="2967.0994"
-       id="image2826"
+       y="-6564.9385"
        x="0.51623988"
-       y="-6564.9385" />
+       id="image2826"
+       height="2967.0994"
+       width="3542.4033" />
     <text
        xml:space="preserve"
        style="font-size:375.98852539px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
@@ -28642,7 +28663,7 @@
          sodipodi:role="line"
          id="tspan3610"
          x="1607.9324"
-         y="-4892.4707">Die freie Wiki-Weltkarte!</tspan></text>
+         y="-4892.4707">Die freie Wiki-Weltkarte</tspan></text>
     <g
        id="g3840"
        transform="matrix(1.8524564,0,0,1.8524564,124.5349,-6405.0391)">
@@ -28842,15 +28863,15 @@
        sodipodi:nodetypes="ccccc" />
     <text
        xml:space="preserve"
-       style="font-size:266.02380371px;font-style:normal;font-weight:normal;text-align:end;line-height:125%;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="2050.02"
-       y="764.36951"
+       style="font-size:276.53875732px;font-style:normal;font-weight:normal;text-align:end;line-height:125%;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="1972.4136"
+       y="794.58228"
        id="text3608-0"
-       transform="scale(0.86607862,1.1546296)"
+       transform="scale(0.90031156,1.1107266)"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="2050.02"
-         y="764.36951"
+         x="1972.4136"
+         y="794.58228"
          id="tspan3940"
          style="font-weight:bold;text-align:center;text-anchor:middle;font-family:Arial;-inkscape-font-specification:Arial Bold">www.OpenStreetMap.de</tspan></text>
     <flowRoot
@@ -28871,25 +28892,24 @@
        id="rect42660"
        style="opacity:0.98999999;fill:#f3ff14;fill-opacity:1;stroke:none" />
     <image
-       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\Neuer Ordner\german_roll_up\world.png"
-       xlink:href="world.png"
-       width="3543.3625"
-       height="1845.4785"
-       id="image42843"
-       x="-0.027860165"
-       y="-1322.5012" />
+       y="-1350.4659"
+       x="-1.5831715"
+       id="image9249"
+       height="1870.725"
+       width="3544.6897"
+       xlink:href="file:///C:/Dokumente%20und%20Einstellungen/ulfl/Eigene%20Dateien/RollUp/Welt%20mapnik2.png" />
     <text
        sodipodi:linespacing="125%"
-       transform="matrix(0.83400577,-0.23350927,0.31130743,1.111871,0,0)"
+       transform="matrix(0.86603645,-2.5664749e-4,-0.01139697,1.1546892,0,0)"
        id="text43625"
-       y="629.38971"
-       x="1911.6025"
-       style="font-size:161.62532043px;font-style:normal;font-weight:normal;text-align:end;line-height:125%;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       y="347.60367"
+       x="2050.1472"
+       style="font-size:233.01350403px;font-style:normal;font-weight:normal;text-align:end;line-height:125%;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
        xml:space="preserve"><tspan
          style="font-weight:normal;text-align:center;text-anchor:middle;font-family:Arial;-inkscape-font-specification:Arial"
          id="tspan43629"
-         y="629.38971"
-         x="1911.6025"
+         y="347.60367"
+         x="2050.1472"
          sodipodi:role="line">Machen Sie mit!</tspan></text>
     <path
        style="fill:none;stroke:#89b4d3;stroke-width:17.10000038;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
@@ -28897,14 +28917,6 @@
        id="path3913"
        transform="translate(0,-6565.7479)"
        sodipodi:nodetypes="cccc" />
-    <image
-       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\Neuer Ordner\german_roll_up\Landungsbruecken_Hamburg.JPG"
-       xlink:href="Landungsbruecken_Hamburg.JPG"
-       width="894.02783"
-       height="670.23242"
-       id="image42051"
-       x="1317.667"
-       y="-3394.2288" />
     <rect
        y="-3632.1399"
        x="2134.887"
@@ -28922,86 +28934,105 @@
            height="296.67188"
            x="-381.43527"
            y="6696.3081" /></flowRegion><flowPara
-         id="flowPara61821" /></flowRoot>    <text
-       id="text42031"
-       y="-2575.2012"
-       x="1765.6499"
-       style="font-size:79.37507629px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         id="tspan42033"
-         y="-2575.2012"
+         id="flowPara61821" /></flowRoot>    <g
+       id="g9260"
+       transform="translate(6.9725266,0)">
+      <image
+         sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.pr_material\german_roll_up\Landungsbruecken_Hamburg.JPG"
+         xlink:href="Landungsbruecken_Hamburg.JPG"
+         id="image42051"
+         x="1314.6809"
+         y="-3386.0015"
+         width="900"
+         height="700" />
+      <text
+         xml:space="preserve"
+         style="font-size:79.37507629px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
          x="1765.6499"
-         sodipodi:role="line">Hamburg</tspan><tspan
-         y="-2475.9824"
-         x="1765.6499"
-         sodipodi:role="line"
-         id="tspan42039">St. Pauli Landungsbrücken</tspan></text>
-    <image
-       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\Neuer Ordner\german_roll_up\Landungsbruecken.png"
-       xlink:href="Landungsbruecken.png"
-       width="871.85724"
-       height="814.18054"
-       id="image61753"
-       x="1328.7527"
-       y="-2359.8081" />
-    <text
-       xml:space="preserve"
-       style="font-size:76.33714294px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="2695.1655"
-       y="-2534.0593"
-       id="text24264"><tspan
-         sodipodi:role="line"
-         x="2695.1655"
-         y="-2534.0593"
-         id="tspan24266">Zugspitze</tspan></text>
-    <image
-       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\Neuer Ordner\german_roll_up\ZugspitzeGipfel.JPG"
-       xlink:href="ZugspitzeGipfel.JPG"
-       width="919.72321"
-       height="655.03827"
-       id="image24278"
-       x="2400.0361"
-       y="-3374.2136" />
-    <image
-       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\Neuer Ordner\german_roll_up\Zugspitze.png"
-       xlink:href="Zugspitze.png"
-       width="923.37866"
-       height="806.85944"
-       id="image61767"
-       x="2398.2087"
-       y="-2372.5022" />
-    <text
-       id="text19269"
-       y="-2577.2136"
-       x="666.07507"
-       style="font-size:78.85820007px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         id="tspan19273"
-         y="-2577.2136"
-         x="666.07507"
-         sodipodi:role="line"
-         style="text-align:center;text-anchor:middle">Berlin</tspan><tspan
-         y="-2478.6409"
-         x="666.07507"
-         sodipodi:role="line"
-         id="tspan42847"
-         style="text-align:center;text-anchor:middle">Brandenburger Tor</tspan></text>
-    <image
-       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\Neuer Ordner\german_roll_up\BrandenburgerTor.png"
-       xlink:href="BrandenburgerTor.png"
-       width="895.48834"
-       height="829.93079"
-       id="image61739"
-       x="221.71945"
-       y="-2371.9978" />
-    <image
-       sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\Neuer Ordner\german_roll_up\Brandenburger_Tor_Berlin_2005_3.jpg"
-       xlink:href="Brandenburger_Tor_Berlin_2005_3.jpg"
-       width="866.91357"
-       height="682.82324"
-       id="image61845"
-       x="236.00677"
-       y="-3397.7893" />
+         y="-2555.7004"
+         id="text42031"><tspan
+           sodipodi:role="line"
+           x="1765.6499"
+           y="-2555.7004"
+           id="tspan42033">Hamburg</tspan><tspan
+           id="tspan42039"
+           sodipodi:role="line"
+           x="1765.6499"
+           y="-2456.4817">St. Pauli Landungsbrücken</tspan></text>
+      <image
+         sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.pr_material\german_roll_up\Landungsbruecken.png"
+         xlink:href="Landungsbruecken.png"
+         id="image61753"
+         x="1314.6809"
+         y="-2368.1172"
+         width="900"
+         height="800" />
+    </g>
+    <g
+       id="g9267"
+       transform="translate(7.6606369,0)">
+      <text
+         id="text24264"
+         y="-2506.8586"
+         x="2684.3901"
+         style="font-size:76.33714294px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           id="tspan24266"
+           y="-2506.8586"
+           x="2684.3901"
+           sodipodi:role="line">Zugspitze</tspan></text>
+      <image
+         sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.pr_material\german_roll_up\ZugspitzeGipfel.JPG"
+         xlink:href="ZugspitzeGipfel.JPG"
+         id="image24278"
+         x="2399.1226"
+         y="-3386.0015"
+         width="900"
+         height="700" />
+      <image
+         sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.pr_material\german_roll_up\Zugspitze.png"
+         xlink:href="Zugspitze.png"
+         id="image61767"
+         x="2399.1226"
+         y="-2368.1172"
+         width="900"
+         height="800" />
+    </g>
+    <g
+       id="g9319">
+      <text
+         xml:space="preserve"
+         style="font-size:78.85820007px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="683.13525"
+         y="-2555.5081"
+         id="text19269"><tspan
+           style="text-align:center;text-anchor:middle"
+           sodipodi:role="line"
+           x="683.13525"
+           y="-2555.5081"
+           id="tspan19273">Berlin</tspan><tspan
+           style="text-align:center;text-anchor:middle"
+           id="tspan42847"
+           sodipodi:role="line"
+           x="683.13525"
+           y="-2456.9353">Brandenburger Tor</tspan></text>
+      <image
+         sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.pr_material\german_roll_up\BrandenburgerTor.png"
+         xlink:href="BrandenburgerTor.png"
+         id="image61739"
+         x="236.5237"
+         y="-2368.1172"
+         width="900"
+         height="800" />
+      <image
+         sodipodi:absref="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\osm\svn.pr_material\german_roll_up\2005-10-26_Brandenburger-Tor.JPG"
+         xlink:href="2005-10-26_Brandenburger-Tor.JPG"
+         id="image61845"
+         x="236.5237"
+         y="-3386.0015"
+         width="900"
+         height="700" />
+    </g>
     <text
        xml:space="preserve"
        style="font-size:144px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
@@ -29038,5 +29069,16 @@
        height="63.572548"
        x="734.10297"
        y="-4501.1206" />
+    <text
+       xml:space="preserve"
+       style="font-size:144px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       x="239.03813"
+       y="-2669.0808"
+       id="text9330"><tspan
+         sodipodi:role="line"
+         id="tspan9332"
+         x="239.03813"
+         y="-2669.0808"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial">© 2005 Axel Mauruszat</tspan></text>
   </g>
 </svg>

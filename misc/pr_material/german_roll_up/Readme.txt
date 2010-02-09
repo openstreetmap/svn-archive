@@ -5,11 +5,11 @@ Photo:
 
 "Bergkönig Oberstaufen"
 CIMG0452.JPG
-(C) 2009 Ulf Lamping, own work, Public Domain
+(C)2009 Ulf Lamping, own work, Public Domain
 
 "Brandenburger Tor"
-http://commons.wikimedia.org/wiki/File:Brandenburger_Tor_Berlin_2005_3.jpg
-Public Domain, slightly brightened
+http://commons.wikimedia.org/wiki/File:2005-10-26_Brandenburger-Tor.JPG
+(C)2005 Axel Mauruszat, Public Domain with attribution
 
 "St. Pauli Landungsbrücken"
 http://commons.wikimedia.org/wiki/File:Landungsbr%C3%BCcken,_Hamburg.JPG

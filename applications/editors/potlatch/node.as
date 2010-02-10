@@ -82,7 +82,7 @@
 		var z=_root.map.anchorhints; for (var a in z) {
 			if (_root.map.anchorhints[a].node==old) { _root.map.anchorhints[a].node=id; }
 		}
-		this.setPosition();
+		nodes[id].setPosition();
 	};
 
 	Node.prototype.unsetPosition=function() {

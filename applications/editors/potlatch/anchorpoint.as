@@ -208,7 +208,7 @@
 				w=_root.map.ways[qway];
 				for (i=0; i<w.path.length; i++) {
 					if (w.path[i].id==this.node) {
-						w.path[i]=n;
+						w.path[i]=n; w.clean=false;
 					}
 				}
 			}
@@ -217,6 +217,7 @@
 		_root.ws.redraw();
 		_root.ws.highlightPoints(5000,"anchor");
 		updateInspector();
+		markClean(false);
 	};
 	
 	AnchorPoint.prototype.onRollOut=function() { clearFloater(); };

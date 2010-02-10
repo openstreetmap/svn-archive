@@ -327,8 +327,10 @@
 			// Move each node
 			for (var i=0; i<this.path.length-1; i++) {
 				var c=Math.sqrt(Math.pow(this.path[i].x-cx,2)+Math.pow(this.path[i].y-cy,2));
+				this.path[i].unsetPosition();
 				this.path[i].x=cx+(this.path[i].x-cx)/c*d;
 				this.path[i].y=cy+(this.path[i].y-cy)/c*d;
+				this.path[i].setPosition();
 				this.path[i].clean=false;
 				var l=this.path[i].ways; for (var o in l) { w[o]=true; }
 			}
@@ -402,8 +404,10 @@
 					u=((this.path[i].x-a.x)*(b.x-a.x)+
 					   (this.path[i].y-a.y)*(b.y-a.y))/
 					   (Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));
+					this.path[i].unsetPosition();
 					this.path[i].x=a.x+u*(b.x-a.x);
 					this.path[i].y=a.y+u*(b.y-a.y);
+					this.path[i].setPosition();
 					this.path[i].clean=false;
 					var l=this.path[i].ways; for (var o in l) { w[o]=true; }
 					retain.push(this.path[i]);
@@ -810,7 +814,9 @@
 		var group=atype+"s";
 		_root.map.createEmptyMovieClip(group,d);
 		for (var i=0; i<this.path.length; i+=1) {
-			var asprite=atype; if (this.path[i].numberOfWays()>1) { asprite+="_junction"; }
+			var asprite=atype; 
+			if (this.path[i].isDupe()) { asprite+="_dupe"; }
+			else if (this.path[i].numberOfWays()>1) { asprite+="_junction"; }
 			_root.map[group].attachMovie(asprite,i,i);
 			_root.map[group][i]._x=this.path[i].x;
 			_root.map[group][i]._y=this.path[i].y;
@@ -965,6 +971,20 @@
 		_root.undo.append(UndoStack.prototype.undo_reverse,new Array(this),iText('action_reverseway'));
 	};
 
+	// ----	Remove dupe nodes
+	
+	OSMWay.prototype.joinNodes=function() {
+		for (var i=0; i<this.path.length; i++) {
+			if (this.path[i].isDupe()) {
+				this.path[i].removeDupes([]);
+			}
+		}
+		this.redraw();
+		this.select();
+		this.clean=false;
+		markClean(false);
+	};
+	
 	// ----	Move all nodes within a way
 	
 	OSMWay.prototype.moveNodes=function(xdiff,ydiff) {
@@ -1032,8 +1052,10 @@
 				u=((nx-a.x)*(b.x-a.x)+
 				   (ny-a.y)*(b.y-a.y))/
 				   (Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));
+				nodeobj.unsetPosition();
 				nodeobj.x=a.x+u*(b.x-a.x);
 				nodeobj.y=a.y+u*(b.y-a.y);
+				nodeobj.setPosition();
 			}
 		}
 		// Insert

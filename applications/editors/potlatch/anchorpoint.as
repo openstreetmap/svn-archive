@@ -168,19 +168,53 @@
 	};
 	
 	AnchorPoint.prototype.joinNodes=function() {
+
+		// First, remove any dupe nodes
+		// ** needs undo
+		var joinedways=new Object();	// Don't try and add new intersections to any ways containing these nodes
+		if (_root.nodes[this.node].isDupe()) {
+			joinedways=_root.nodes[this.node].removeDupes(joinedways);
+		}
+
+		// Now add intersections to ways which cross
 		var t=new Object(); t.x=this._x; t.y=this._y;
 		_root.map.localToGlobal(t);
 
 		var waylist=new Array(); var poslist=new Array();
 		for (qway in _root.map.ways) {
-			if (_root.map.ways[qway].hitTest(t.x,t.y,true) && qway!=this.way._name && !_root.nodes[this.node].ways[qway]) {
+			if (_root.map.ways[qway].hitTest(t.x,t.y,true) && qway!=this.way._name && !_root.nodes[this.node].ways[qway] && !joinedways[qway]) {
 				poslist.push(_root.map.ways[qway].insertAnchorPoint(_root.nodes[this.node]));
 				waylist.push(_root.map.ways[qway]);
 			}
 		}
-		if (poslist.length==0) { return; }
-		_root.undo.append(UndoStack.prototype.undo_addpoint,
-						  new Array(waylist,poslist), iText('action_insertnode'));
+		if (poslist.length) {
+			_root.undo.append(UndoStack.prototype.undo_addpoint,
+							  new Array(waylist,poslist), iText('action_insertnode'));
+		}
+		_root.ws.redraw();
+		_root.ws.highlightPoints(5000,"anchor");
+		updateInspector();
+	};
+	
+	AnchorPoint.prototype.unjoinNodes=function() {
+		var qway,w,i,t,z;
+		t=_root.nodes[this.node];
+		if (t.numberOfWays()<2) { return; }
+
+		z=t.ways; for (qway in z) {
+			if (qway!=_root.wayselected) {
+				_root.newnodeid--;
+				n=new Node(newnodeid,t.x,t.y,shallowCopy(t.attr),0); n.addWay(qway);
+				w=_root.map.ways[qway];
+				for (i=0; i<w.path.length; i++) {
+					if (w.path[i].id==this.node) {
+						w.path[i]=n;
+					}
+				}
+			}
+		}
+		t.ways=new Object(); t.ways[_root.wayselected]=true;
+		_root.ws.redraw();
 		_root.ws.highlightPoints(5000,"anchor");
 		updateInspector();
 	};
@@ -189,6 +223,7 @@
 
 	Object.registerClass("anchor",AnchorPoint);
 	Object.registerClass("anchor_junction",AnchorPoint);
+	Object.registerClass("anchor_dupe",AnchorPoint);
 
 
 
@@ -237,4 +272,5 @@
 	};
 	Object.registerClass("anchorhint",AnchorHint);
 	Object.registerClass("anchorhint_junction",AnchorHint);
+	Object.registerClass("anchorhint_dupe",AnchorHint);
 

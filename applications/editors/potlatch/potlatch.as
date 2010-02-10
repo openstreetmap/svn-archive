@@ -121,6 +121,7 @@
 	var newwayid=-1;				// new way ID		(for those not yet saved)
 	var newnodeid=-2;				// new node ID		(for those not yet saved)
 	var nodes=new Object();			// hash of nodes
+	var pos=new Object();			// hash of nodes by position
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
 	var redopropertywindow=null;	// need to redraw property window after deletion?
@@ -761,10 +762,12 @@
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history
 			case 'I':		toggleInspector(); break;							// I - inspector
-			case 'J':		if (pointselected>-2) { 							// J - join nodes
-								_root.map.anchors[pointselected].joinNodes();	//   | 
-								break;											//   |
-							}													// I - inspector
+			case 'J':		if (Key.isDown(Key.SHIFT)) {						// J - join nodes
+								if (pointselected>-2) { _root.map.anchors[pointselected].unjoinNodes(); }
+							} else {											//   |
+								if (pointselected>-2) { _root.map.anchors[pointselected].joinNodes(); }
+								else if (wayselected) { _root.ws.joinNodes(); }	//   |
+							} break;											//   |
 			case 'L':		showPosition(); break;								// L - show latitude/longitude
 			case 'P':		askOffset(); break;									// P - parallel path
 			case 'R':		_root.panel.properties.repeatAttributes(true);break;// R - repeat attributes

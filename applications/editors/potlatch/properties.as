@@ -361,9 +361,9 @@
 
 	PropertyWindow.prototype.addToAttributes=function(mcname,obj) {
 		this.attributes.attachMovie(mcname,this.tagcount, this.tagcount);
-		var pos = this.getXY(this.tagcount);
-		this.attributes[this.tagcount]._x=pos[0];
-		this.attributes[this.tagcount]._y=pos[1];
+		var ppos = this.getXY(this.tagcount);
+		this.attributes[this.tagcount]._x=ppos[0];
+		this.attributes[this.tagcount]._y=ppos[1];
 		if (obj) { this.attributes[this.tagcount].init(obj); }
 		this.attributes[this.tagcount].value.tabIndex=++this.tab;
 		this.attributes[this.tagcount].value.tabEnabled=true;
@@ -409,9 +409,9 @@
 		// ** check nothing already exists called "key"
 		this.saveUndo();
 		this.attributes.attachMovie("keyvalue",this.tagcount,this.tagcount);
-		var pos = this.getXY(this.tagcount);
-		this.attributes[this.tagcount]._x=pos[0];
-		this.attributes[this.tagcount]._y=pos[1];
+		var ppos = this.getXY(this.tagcount);
+		this.attributes[this.tagcount]._x=ppos[0];
+		this.attributes[this.tagcount]._y=ppos[1];
 		this.attributes[this.tagcount].init('key');
 		this.attributes[this.tagcount].keyname.tabIndex=++this.tab;
 		this.attributes[this.tagcount].value.tabIndex=++this.tab;

@@ -238,14 +238,14 @@
 	function repositionYahoo(force) {
 		clearInterval(_root.yahooresizer);
 		if (!_root.yahooinited) { return; }
-		pos=_root.yahoo.myMap.getCenter();
-		if (pos) {
-			pos.lat=_root.ylat;
-			pos.lon=_root.ylon;
+		var ppos=_root.yahoo.myMap.getCenter();
+		if (ppos) {
+			ppos.lat=_root.ylat;
+			ppos.lon=_root.ylon;
 			if (_root.lastyzoom!=_root.yzoom) {
-				_root.yahoo.myMap.setCenterByLatLonAndZoom(pos,_root.yzoom,0);
+				_root.yahoo.myMap.setCenterByLatLonAndZoom(ppos,_root.yzoom,0);
 			} else if (_root.lastylat!=_root.ylat || _root.lastylon!=_root.ylon || force) {
-				_root.yahoo.myMap.setCenterByLatLon(pos,0);
+				_root.yahoo.myMap.setCenterByLatLon(ppos,0);
 			}
 			clearInterval(_root.copyrightID);
 			_root.copyrightID=setInterval(refreshYahooCopyright,1000);

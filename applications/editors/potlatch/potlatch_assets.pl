@@ -1,6 +1,8 @@
 
 	# **********************************************
 
+	use Math::Trig;
+
 	# ----- Export symbols
 
 	#		Empty movie-clips for prototypes
@@ -165,6 +167,34 @@
 	$ch->drawCircle(3);
 	$ec->add($ch); $ec->nextFrame();
 	$m->addExport($ec,"poiinway");
+
+	#		Anchor (pulsating dupes)
+	
+	for ($s=0; $s<2; $s++) {
+		if ($s==0) { $r=255; $b=0; }
+			  else { $r=0; $b=255; }
+		undef $last;
+		$ec=new SWF::MovieClip();
+
+		$ch=new SWF::Shape();
+		$ch->setRightFill($r,0,$b); $ch->movePenTo(-2,-2);
+		$ch->drawLine( 4,0); $ch->drawLine(0, 4);
+		$ch->drawLine(-4,0); $ch->drawLine(0,-4);
+		$ec->add($ch);
+
+		for ($i=0; $i<10; $i++) {
+			if ($last) { $ec->remove($last); }
+			$c=3+sin(deg2rad($i*18))*3;
+			$c2=new SWF::Shape;
+			$c2->setLine(40*$cw,$r,0,$b);
+			$c2->drawCircle($c);
+			$last=$ec->add($c2);
+
+			$ec->nextFrame();
+		}
+		if ($s==0) { $m->addExport($ec,"anchor_dupe"); }
+			  else { $m->addExport($ec,"anchorhint_dupe"); }
+	}
 
 	#		Anchor (selected)
 

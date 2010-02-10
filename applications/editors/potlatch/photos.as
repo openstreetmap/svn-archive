@@ -10,11 +10,11 @@
 	};
 	
 	Photo.prototype.onPress=function() {
-		var pos=new Object(); pos.x=this._x; pos.y=this._y;
-		_root.map.localToGlobal(pos);
+		var ppos=new Object(); ppos.x=this._x; ppos.y=this._y;
+		_root.map.localToGlobal(ppos);
 		palettedepth++; var pn="p"+palettedepth;
 		_root.palettes.attachMovie("palette",pn,palettedepth);
-		_root.palettes[pn].initHTML(pos.x, pos.y, this.name, this.desc);
+		_root.palettes[pn].initHTML(ppos.x, ppos.y, this.name, this.desc);
 	};
 	
 	Object.registerClass("photo",Photo);

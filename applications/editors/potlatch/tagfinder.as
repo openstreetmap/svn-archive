@@ -155,7 +155,7 @@
 			};
 		}
 
-		var lv:LoadVars=new LoadVars();
+		var lv=new LoadVars();
 		lv.load("http://richard.dev.openstreetmap.org/cgi-bin/description.cgi?key="+key+"&value="+value);
 		lv.onData=writeMoreDetails;
 	}

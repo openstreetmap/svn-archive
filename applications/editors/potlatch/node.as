@@ -12,6 +12,7 @@
 		this.version=version;
 		this.clean=false;		// set to true if just loaded from server
 		this.uploading=false;
+		this.setPosition();
 	};
 
 	Node.prototype.markDirty=function() {
@@ -51,7 +52,9 @@
 	};
 
 	Node.prototype.moveTo=function(newx,newy,ignoreway,ignore_oneway) {
+		this.unsetPosition();
 		this.x=newx; this.y=newy; this.markDirty();
+		this.setPosition();
 		var qchanged;
 		var z=this.ways; for (var qway in z) {
 			if (qway!=ignoreway) { _root.map.ways[qway].redraw(false,ignore_oneway); qchanged=qway; }
@@ -61,6 +64,7 @@
 
 	Node.prototype.renumberTo=function(id) {
 		var old=this.id;
+		this.unsetPosition();
 		noderels[id]=noderels[old]; delete noderels[old];
 		nodes[id]=new Node(id,this.x,this.y,this.attr,this.version);
 		nodes[id].clean=this.clean;
@@ -78,15 +82,78 @@
 		var z=_root.map.anchorhints; for (var a in z) {
 			if (_root.map.anchorhints[a].node==old) { _root.map.anchorhints[a].node=id; }
 		}
+		this.setPosition();
+	};
+
+	Node.prototype.unsetPosition=function() {
+		var a=this.x+","+this.y;
+		var z=_root.pos[a]; for (var i in z) {
+			if (_root.pos[a][i]==this) {
+				_root.pos[a].splice(i,1); 
+				if (_root.pos[a].length==0) { delete _root.pos[a]; }
+				return;
+			}
+		}
+	};
+	Node.prototype.setPosition=function() {
+		var a=this.x+","+this.y;
+		var b;
+		if (_root.pos[a]) {
+			b=_root.pos[a]; for (var i in b) {
+				if (_root.pos[a][i]==this) { return; }
+			}
+			_root.pos[a].push(this);
+		} else {
+			_root.pos[a]=[this];
+		}
+	};
+	Node.prototype.isDupe=function() {
+		if (_root.pos[this.x+","+this.y].length>1) { return true; }
+		return false;
+	};
+	Node.prototype.removeDupes=function(joinedways) {
+		var n=_root.pos[this.x+","+this.y];
+		var i,j;
+		for (i=0; i<n.length; i++) {
+			if (n[i]==this) { continue; }
+			for (j in n[i].ways) { joinedways[j]=true; }
+			n[i].replaceWith(this);
+		}
+		_root.pos[this.x+","+this.y]=[this];
+		return joinedways;
+	};
+	
+	Node.prototype.replaceWith=function(r) {
+		// replace all occurrences of one node with another
+		var w,n,a,b;
+		a=this.ways; for (w in a) {
+			b=_root.map.ways[w].path; for (n in b) {
+				if (_root.map.ways[w].path[n].id==this.id) { _root.map.ways[w].path[n]=r; }
+			}
+			r.addWay(w);
+			_root.map.ways[w].deletednodes[this.id]=this.version;
+			_root.map.ways[w].clean=false;
+			_root.map.ways[w].removeDuplicates();
+		}
+		this.ways=new Object();
+		this.unsetPosition();
 	};
 
 	Node.prototype.inspect=function() {
-		var str = iText('inspector_latlon', Math.floor(coord2lat (this.y)*10000)/10000, Math.floor(coord2long(this.x)*10000)/10000);
+		var str = iText('inspector_latlon', Math.floor(coord2lat (this.y)*10000)/10000, Math.floor(coord2long(this.x)*10000)/10000)+"\n";
 
 		// Status
 		if (!this.clean) { str+=iText('inspector_unsaved'); }
 		if (this.uploading) { str+=' ' + iText('inspector_uploading'); }
 		if (!this.clean) { str+="\n"; }
+	
+		// Duplicate?
+		if (this.isDupe()) {
+			str+=iText('inspector_duplicate');
+			var a=_root.pos[this.x+","+this.y];
+			for (i in a) { if (a[i].id!=this.id) { str+=a[i].id+", "; } }
+			str=str.substr(0,str.length-2)+"\n";
+		}
 
 		// Which ways is this in?
 		if (this.numberOfWays()==0) { 

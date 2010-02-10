@@ -251,15 +251,18 @@
 			var id=path[i].id;
 			if (!done[id]) {
 				if (_root.nodes[id]) {
+					_root.nodes[id].unsetPosition();
 					_root.nodes[id].x=path[i].x;
 					_root.nodes[id].y=path[i].y;
 					_root.nodes[id].attr=path[i].attr;
 					_root.nodes[id].tagged=hasTags(path[i].attr);
 					_root.nodes[id].version=path[i].version;
 					_root.nodes[id].clean=false;
+					_root.nodes[id].setPosition();
 					_root.nodes[id].addWay(way);
 				} else {
 					_root.nodes[id]=deepCopy(path[i]);
+					_root.nodes[id].setPosition();
 				}
 				if (_root.nodes[id].numberOfWays()>1) {
 					_root.nodes[id].redrawWays();

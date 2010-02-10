@@ -102,8 +102,9 @@
 	}
 	
 	function purgeTiles() {
+		var z;
 		for (var i=minscale; i<=maxscale; i+=1) {
-			for (j in _root.map.tiles[i]) {
+			z=_root.map.tiles[i]; for (j in z) {
 				var x=j.substr(0,j.indexOf(','));
 				var y=j.substr(j.indexOf(',')+1);
 				if (x<tile_l || x>tile_r || y<tile_t || y>tile_b) {

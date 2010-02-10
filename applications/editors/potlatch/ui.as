@@ -40,9 +40,9 @@
 		};
 	};
 
-	VerticalScrollBar.prototype.moveto=function(pos) {
+	VerticalScrollBar.prototype.moveto=function(ppos) {
 		this.bar._x=0;
-		this.bar._y=pos/this.max*this.dragsize+10;
+		this.bar._y=ppos/this.max*this.dragsize+10;
 	};
 
 	function startScrollBarUp()   { clearInterval(this._parent.mover); this._parent.mover=setInterval(doScrollBarMove,10,this._parent,-2); }

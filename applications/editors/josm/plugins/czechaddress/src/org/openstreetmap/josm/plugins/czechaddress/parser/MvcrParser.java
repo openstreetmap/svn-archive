@@ -207,16 +207,32 @@ public class MvcrParser extends XMLParser {
 //  IMPLEMENTING THE DatabaseParser
 //==============================================================================
 
-    static final String URL_DEFAULT = "http://web.mvcr.cz/adresa/adresy.zip";
+    static final String URL_DEFAULT = "http://aplikace.mvcr.cz/adresa/adresy.zip";
     static final String URL_PREFERENCES_KEY = "czechaddress.databaseurl";
-    
+
+    static final String[] OLD_URLS = {
+        "http://web.mvcr.cz/adresa/adresy.zip" // Remove around 10.02.2011
+    };
+
     @Override
     protected String getDatabaseUrl() {
 
-        if (!Main.pref.hasKey(URL_PREFERENCES_KEY))
-            Main.pref.put(URL_PREFERENCES_KEY, URL_DEFAULT);
+        // No longer add the default URL into preferences.
+        //if (!Main.pref.hasKey(URL_PREFERENCES_KEY))
+        //    Main.pref.put(URL_PREFERENCES_KEY, URL_DEFAULT);
 
-        return Main.pref.get(URL_PREFERENCES_KEY);
+        /* If an outdated URL is found in the preferences, replace it by the
+         * new one. However the urls from the list should be removed after
+         * a reasonable amount of time (one year?), because this is a
+         * non-systematic solution.
+         */
+        for (String oldUrl : OLD_URLS)
+            if (Main.pref.get(URL_PREFERENCES_KEY, URL_DEFAULT).equals(oldUrl)) {
+                Main.pref.put(URL_PREFERENCES_KEY, URL_DEFAULT);
+                break;
+            }
+
+        return Main.pref.get(URL_PREFERENCES_KEY, URL_DEFAULT);
     }
 
     @Override

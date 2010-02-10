@@ -95,8 +95,12 @@ public abstract class DatabaseParser {
 
             URL url = new URL(getDatabaseUrl());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
+
+            //Set timeout for 10 seconds.
+            con.setReadTimeout(10000);
             con.connect();
 
+            System.err.println("CzechAddress: Stahuji: " + url.toString());
             System.err.println("CzechAddress: Server vrátil: " + con.getResponseMessage());
 
             // Check the status error code from server

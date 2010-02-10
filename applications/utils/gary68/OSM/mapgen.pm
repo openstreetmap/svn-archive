@@ -50,7 +50,6 @@
 # INFO
 #
 # graph top left coordinates: (0,0)
-# font size (1..5). 1 = smallest, 5 = giant
 # size for lines = pixel width / thickness
 # pass color as string, i.e. "black". list see farther down.
 #
@@ -70,7 +69,7 @@ use Encode ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.05' ;
+$VERSION = '0.06' ;
 
 require Exporter ;
 
@@ -169,7 +168,7 @@ sub initGraph {
 #
 # function initializes the picture, the colors and the background (white)
 #
-	my ($x, $l, $b, $r, $t) = @_ ;	
+	my ($x, $l, $b, $r, $t, $color) = @_ ;	
 	
 	$sizeX = $x ;
 	$sizeY = $x * ($t - $b) / ($r - $l) / cos ($t/360*3.14*2) ;
@@ -177,6 +176,8 @@ sub initGraph {
 	$left = $l ;
 	$right = $r ;
 	$bottom = $b ;
+
+	drawArea ($color, $l, $t, $r, $t, $r, $b, $l, $b, $l, $t) ;
 }
 
 sub convert {
@@ -204,16 +205,16 @@ sub drawHead {
 #
 # draws text on top left corner of the picture
 #
-	my ($text, $col, $size) = @_ ;
-	push @svgOutputText, svgElementText (20, 20, $text, $size, $col, "") ;
+	my ($text, $col, $size, $font) = @_ ;
+	push @svgOutputText, svgElementText (20, 20, $text, $size, $font, $col) ;
 }
 
 sub drawFoot {
 #
 # draws text on bottom left corner of the picture, below legend
 #
-	my ($text, $col, $size) = @_ ;
-	push @svgOutputText, svgElementText (20, ($sizeY-20), $text, $size, $col, "") ;
+	my ($text, $col, $size, $font) = @_ ;
+	push @svgOutputText, svgElementText (20, ($sizeY-20), $text, $size, $font, $col) ;
 }
 
 
@@ -221,11 +222,11 @@ sub drawTextPos {
 #
 # draws text at given real world coordinates. however an offset can be given for not to interfere with node dot i.e.
 #
-	my ($lon, $lat, $offX, $offY, $text, $col, $size) = @_ ;
+	my ($lon, $lat, $offX, $offY, $text, $col, $size, $font) = @_ ;
 	my ($x1, $y1) = convert ($lon, $lat) ;
 	$x1 = $x1 + $offX ;
 	$y1 = $y1 - $offY ;
-	push @svgOutputText, svgElementText ($x1, $y1, $text, $size, $col, "") ;
+	push @svgOutputText, svgElementText ($x1, $y1, $text, $size, $font, $col) ;
 }
 
 
@@ -233,9 +234,9 @@ sub drawTextPix {
 #
 # draws text at pixel position
 #
-	my ($x1, $y1, $text, $col, $size) = @_ ;
+	my ($x1, $y1, $text, $col, $size, $font) = @_ ;
 
-	push @svgOutputPixel, svgElementText ($x1, $y1+9, $text, $size, $col, "") ;
+	push @svgOutputPixel, svgElementText ($x1, $y1+9, $text, $size, $font, $col) ;
 }
 
 sub drawTextPixGrid {
@@ -244,7 +245,7 @@ sub drawTextPixGrid {
 #
 	my ($x1, $y1, $text, $col, $size) = @_ ;
 
-	push @svgOutputPixelGrid, svgElementText ($x1, $y1+9, $text, $size, $col, "") ;
+	push @svgOutputPixelGrid, svgElementText ($x1, $y1+9, $text, $size, "sans-serif", $col) ;
 }
 
 sub drawNodeDot {
@@ -298,7 +299,7 @@ sub drawCircleRadiusText {
 #
 # draws circle at real world coordinates with radius in meters
 #
-	my ($lon, $lat, $radius, $size, $col, $text) = @_ ;
+	my ($lon, $lat, $radius, $size, $font, $col, $text) = @_ ;
 	my $radX ; my $radY ;
 	my ($x1, $y1) = convert ($lon, $lat) ;
 
@@ -306,7 +307,7 @@ sub drawCircleRadiusText {
 	$radY = $radX ;
 	if ($size > 4 ) { $size = 4 ; }
 	push @{$svgOutputWaysNodes{0}}, svgElementCircle ($x1, $y1, $radX, $size, $col) ;
-	push @svgOutputText, svgElementText ($x1, $y1+$radY+10, $text, $size, $col, "") ;
+	push @svgOutputText, svgElementText ($x1, $y1+$radY+10, $text, $size, $font, $col) ;
 }
 
 
@@ -456,22 +457,22 @@ sub drawRuler {
 	push @svgOutputText, svgElementLine ($rx-$Lpix,$ry,$rx-$Lpix,$ry+10, $col, 1) ;
 	push @svgOutputText, svgElementLine ($rx,$ry,$rx,$ry+10, $col, 1) ;
 	push @svgOutputText, svgElementLine ($rx-$Lpix/2,$ry,$rx-$Lpix/2,$ry+5, $col, 1) ;
-	push @svgOutputText, svgElementText ($rx-$Lpix, $ry+15, $text, 2, $col, "") ;
+	push @svgOutputText, svgElementText ($rx-$Lpix, $ry+15, $text, 10, "sans-serif", $col) ;
 }
 
 sub drawGrid {
-	my $number = shift ;
+	my ($number, $color) = @_ ;
 	my $part = $sizeX / $number ;
 	my $numY = $sizeY / $part ;
 	# vertical lines
 	for (my $i = 1; $i <= $number; $i++) {
-		drawWayPixGrid ("black", 1, 1, $i*$part, 0, $i*$part, $sizeY) ;
-		drawTextPixGrid (($i-1)*$part+$part/2, 20, chr($i+64), "blue", 4) ;
+		drawWayPixGrid ($color, 1, 1, $i*$part, 0, $i*$part, $sizeY) ;
+		drawTextPixGrid (($i-1)*$part+$part/2, 20, chr($i+64), $color, 20) ;
 	}
 	# hor. lines
 	for (my $i = 1; $i <= $numY; $i++) {
-		drawWayPixGrid ("black", 1, 1, 0, $i*$part, $sizeX, $i*$part) ;
-		drawTextPixGrid (20, ($i-1)*$part+$part/2, $i, "blue", 4) ;
+		drawWayPixGrid ($color, 1, 1, 0, $i*$part, $sizeX, $i*$part) ;
+		drawTextPixGrid (20, ($i-1)*$part+$part/2, $i, $color, 20) ;
 	}
 }
 
@@ -532,11 +533,13 @@ sub writeSVG {
 sub svgElementText {
 #
 # creates string with svg element incl utf-8 encoding
-# TODO support different fonts
 #
-	my ($x, $y, $text, $size, $col, $font) = @_ ; 
-	my $fontSize = 12 + ($size - 1) * 4 ;
-	my $svg = "<text x=\"" . $x . "\" y=\"" . $y . "\" font-size=\"" . $fontSize . "\" fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\">" . encode("iso-8859-1", decode("utf8", $text)) . "</text>" ;
+	my ($x, $y, $text, $size, $font, $col) = @_ ; 
+	my $svg = "<text x=\"" . $x . "\" y=\"" . $y . 
+		"\" font-size=\"" . $size . 
+		"\" font-family=\"" . $font . 
+		"\" fill=\"#" . colorToHex(@{$colorHash{$col}}) . 
+		"\">" . encode("iso-8859-1", decode("utf8", $text)) . "</text>" ;
 	return $svg ;
 }
 
@@ -631,9 +634,8 @@ sub svgElementPathText {
 # draws text to path element
 #
 	my ($col, $size, $font, $text, $pathName, $tSpan) = @_ ;
-	my $fontSize = 12 + ($size - 1) * 4 ;
 	my $svg = "<text font-family=\"" . $font . "\" " ;
-	$svg = $svg . "font-size=\"" . $fontSize . "\" " ;
+	$svg = $svg . "font-size=\"" . $size . "\" " ;
 	$svg = $svg . "fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\" >\n" ;
 	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"middle\" startOffset=\"50%\" >\n" ;
 	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
@@ -647,7 +649,7 @@ sub svgElementPolygonFilled {
 #
 	my ($col, @points) = @_ ;
 	my $i ;
-	my $svg = "<polygon fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\" points=\"" ;
+	my $svg = "<polygon fill-rule=\"evenodd\" fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\" points=\"" ;
 	for ($i=0; $i<scalar(@points); $i+=2) {
 		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
 	}

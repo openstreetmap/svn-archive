@@ -1,0 +1,123 @@
+
+The JOSM Plugin "Public Transport" is designed to simplify the mapping and editing of public transport routes according to the Oxmoa scheme (see USED NOTIONS). In the first section, we will describe how to create a line from scratch. If there exists already one or more lines running partly or completely parallel, you can take advantage of this (see third section). Also, you can easily convert lines from older mapping formats to the Oxmoa scheme (see fourth section). The last section contains a reference of all items in the plugin.
+
+This manual refers to the prototype version of 2010-01-30. This is not even a beta version, so DON'T FORGET TO SAVE YOUR WORK BEFORE you use this plugin. Later versions may simplify the steps explained below. Feel free to make suggestions for simplications or extra functionality or report bugs to me (mailto:roland.olbricht(at)gmx.de). From the first mature version on, the plugin source code should appear in the OSM SVN and thus the plugin won't any more require any special installation procedures.
+
+
+HOW TO INSTALL
+
+In JOSM: Bearbeiten > Einstellungen, dort Plugins (Stecker) -> Liste laden
+cp public_transport.jar ~/.josm/plugins/
+In JOSM: Bearbeiten > Einstellungen, dort Plugins (Stecker): Public Transport aus der Liste wählen
+JOSM neustarten, Aktualisierung überspringen
+
+
+MAP A BUS LINE FROM SCRATCH
+
+The Oxmoa schema consists of a relation per direction (details see USED NOTIONS) and contains the itinerary (the way a bus actually takes from its starting stop to its terminus) and the stops served by the bus. You need to specify one half of the itinerary, the stops and the back direction can mostly be derived by the software.
+
+Download the area where your bus route takes place. Create a new relation with the standard relation editor and set the tags "type=route", "route=bus" and "ref" set to the line number. Then choose the menue item "Public Transport > Route patterns". Now you can find your route in the list of the main window. Select it and change to the tab "Itinerary". Now select on the map the first way that belongs to your line and press "Add". Mark the second item and press "Add" again. You can select several ways at once and press "Add". If your ways are added in the wrong order or with wrong roles, mark them (click the first entry in the window, then shift-click the last entry in the window) and press "Sort". If there appear one or more lines "[gap]", then your ways don't fit together. If sorting won't solve that, there are gaps in your itinerary and you need to add the missing links or split ways (mark the way, the node where to split at and then use menu "Tools > Split Way") if your bus service only partly uses them. You can delete one or more items from the list by marking them and clicking on "Delete". You can also move one or more items by marking them, clicking on "Mark" (this copies them to the clipboard, like the middle mouse button on X servers), then "Delete", then mark the first item before which you want to insert the items and click "Add".
+
+Now you can add the bus stops in a convienient way: change to the tab "Meta" and press "Suggest Stops". This will compile a list of stops that are near the itinerary. You can choose up to which distance from the itinerary stops should be considered and whether stops only the right hand side, only on the left hand side or on both sides are possible. Now change to the tab "Stops". You can identify stops by marking them and then click "Mark" and/or "Show". Delete spurious stops by marking them and pressing "Delete". Add missing stops by marking them on the map, marking the entry before which you want to insert the stop (unmark all entries if you want to append stops to the end), then press "Add".
+
+
+REUSE A PARTLY PARALLEL LINE
+
+The plugin has an internal clipboard to simplify copying parts of the itinerary or the stops from one bus route to another. Data is put into the clipboard in the X server paradigm. Mark one or more entry from the itinerary list or stops list and click the respective button "Copy". The objects themselves are kept by they state being marked on the map. The plugin additionally saves their order and role. You can paste data from clipboard by using the respective button "Add".
+
+To do this, first choose the source relation at the tab "Overview" and change to the tab "Itinerary". Mark there the entries you want to copy and click "Mark". Then choose at the tab "Overview" your destination relation and mark at the tab "Itinerary" the entry before which you want to paste the entries or unmark all entries if you want to append the data from clipboard.
+
+Stops can be copied in the same way: first choose the source relation at the tab "Overview" and change to the tab "Stops". Mark there the entries you want to copy and click "Mark". Then choose at the tab "Overview" your destination relation and mark at the tab "Stops" the entry before which you want to paste the entries or unmark all entries if you want to append the data from clipboard.
+
+
+REUSE AN OLD RELATION
+
+If you have a bus route in an old format, you can with the help of the plugin spread it into separate relations for both (or more) directions. First, use the standard relation editor of JOSM to duplicate the relation: click on the most lower but one icon on the left toolbar. this opens the relation window on the right. Choose there the relation to duplicate. Click then there on the third button to duplicate the relation, then change "to" and "from" in the opening dialog.
+
+Now open "Public transport > Route patterns ..." and select there the new relation. Change to the tab "Itinerary" and click "Reflect" to reflect the itinerary. If this does not work properly, first click "Sort" to sort the itinerary, then if necessary again "Reflect" to bring them in their proper order.
+
+To edit the bus stops, use one of the functions described above: "Suggest Stops" to have a clean restart from scratch. Or use the buttons in the tab "Stops".
+
+
+USED NOTIONS
+
+Note: I'm not a native English speaker. So if you have suggestions for better wording, please send them to me (mailto:roland.olbricht(at)gmx.de).
+
+...
+http://wiki.openstreetmap.org/wiki/User:Oxomoa/Public_transport_schema#Network_information_.28lines_and_routes.29
+
+
+REFERENCE MANUAL
+
+* Tab "Overview"
+
+- List "Existing route patterns"
+The large list in the center contains all relations that are recognised as bus routes. They are listed with the value of their tag "ref" and the ID of their relation. A relation is considered as bus service if it has the tags "type=route" and "route=bus".
+
+- Button "Refresh"
+This button refreshes the list "Existing route patterns".
+
+
+* Tab "Tags"
+
+The content of this tag is not yet implemented.
+
+
+* Tab "Itinerary"
+
+- List of member ways
+This list contains all the current members of the relation you are editing that are ways. The intended format of a route relation (see Oxmoa scheme at USED NOTIONS above) expects a continuos list of ways that represents the itinerary the bus takes in reality. Whenever two ways don't fit head on tail, a marker "[gap]" is put between them in an extra line to make breaks clearly visible. This is not a member of the relation but just a marker. You can change the role of a way in the right column. To achieve maximum backward compability, you should choose "forward" or "backward". To properly display relations that don't follow the Oxmoa scheme, all other roles including the empty are also displayed and you can choose despite "forward" and "backward" also an empty role.
+
+- Button "Show"
+Ths button changes the view on the map such that all marked entries are visible.
+
+- Button "Mark"
+Ths button marks all entries that are marked in the list as objects on the map and unmarks all other ways. It also copies a list of the marked entries to the plugin's internal clipboard, such that roles and the order can be reconstructed.
+
+- Button "Add"
+This button adds all ways that are currently marked on the map as entries in the list. The entries are added in arbitrary order before the first marked entry. You can order the just added elements by marking them and clicking "Sort".
+
+- Button "Delete"
+This button deletes all currently marked entries.
+
+- Button "Sort"
+If one or more entries are marked, all marked entries are sorted. I.e. their order and role is changed such that they form a continuous itinerary. If this is not possible, the plugin tries to construct long series of continuous sections. If no entries are marked, the entire list are sorted.
+
+- Button "Reflect"
+If one or more entries are marked, their order is reflected and their roles get flipped. I.e. every entry it put after its successor and its role is changed from "backward" to "forward", from "forward" to "backward" or left unchanged if it is empty.
+
+
+* Tab "Stops"
+
+- List of member nodes
+This list contains all the current members of the relation you are editing that are nodes. The intended format of a route relation (see Oxmoa scheme at USED NOTIONS above) expects a list of nodes that represents the stops in the order the bus takes them in reality. The roles can be changed to "forward" or "backward" but due to Oxmoa scheme, they should remain empty.
+
+- Button "Show"
+Ths button changes the view on the map such that all marked entries are visible.
+
+- Button "Mark"
+Ths button marks all entries that are marked in the list as objects on the map and unmarks all other nodes. It also copies a list of the marked entries to the plugin's internal clipboard, such that roles and the order can be reconstructed.
+
+- Button "Add"
+This button adds all ways that are currently marked on the map as entries in the list. The entries are added in arbitrary order before the first marked entry. You can order the just added elements by marking them and clicking "Sort".
+
+- Button "Delete"
+This button deletes all currently marked entries.
+
+- Button "Sort"
+If one or more entries are marked, all marked entries are sorted. The sorting order depends on the itinerary and the settings for the distance limit, the right hand side and the left hand side in the meta "tab": the sorting algorithm attaches each stop to the nearest segment of the itinerary and then orders them in the order they are passed on the itinerary. Then all stops that can't be attached are added to the end of the list.
+
+- Button "Reflect"
+If one or more entries are marked, their order is reflected. I.e. every entry it put after its successor.
+
+
+* Tab "Meta"
+
+- Checkbox "Stops are possible"
+This checkbox controls the behaviour of the button "Suggest stops" and the button "Sort" in the tab "Stops". If you mark only one of the boxes "Right hand side" or "Left hand side", only stops on the respective side are taken into account. If you mark both boxes, stops on both sides are taken into account.
+
+- Text field "Maximum distance from route"
+This textfield also controls the behaviour of the button "Suggest stops" and the button "Sort" in the tab "Stops". Only stops that have a distance less or equal the limit set here are taken into account.
+
+- Button "Suggest stops"
+This button replaces the current list of stops by a list of all stops that are on the itinerary with regard to the setting of the checkboxes and the text field described above.

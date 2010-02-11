@@ -19,14 +19,15 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class PublicTransportPlugin extends Plugin {
     
   static JMenu jMenu;
 
-  public PublicTransportPlugin()
+  public PublicTransportPlugin(PluginInformation info)
   {
-    super(null);
+    super(info);
     refreshMenu();
   }
 

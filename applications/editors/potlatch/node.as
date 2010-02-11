@@ -150,7 +150,7 @@
 	
 		// Duplicate?
 		if (this.isDupe()) {
-			str+=iText('inspector_duplicate');
+			str+=iText('inspector_duplicate') + ' ';
 			var a=_root.pos[this.x+","+this.y];
 			for (i in a) { if (a[i].id!=this.id) { str+=a[i].id+", "; } }
 			str=str.substr(0,str.length-2)+"\n";

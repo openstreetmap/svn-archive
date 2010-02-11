@@ -31,7 +31,7 @@
 			var w=result[0];
 			if (length(result[1])==0) { removeMovieClip(_root.map.ways[w]); 
 										removeMovieClip(_root.map.areas[w]); return; }
-			var i,id,x,y,prepoint,redrawws;
+			var i,id,x,y,prepoint,redrawws,l,n,b;
 			_root.map.ways[w].clean=true;
 			_root.map.ways[w].locked=false;
 			_root.map.ways[w].historic=false;
@@ -59,6 +59,12 @@
 				_root.map.ways[w].path.push(_root.nodes[id]);
 				_root.nodes[id].addWay(w);
 				if (_root.nodes[id].ways[_root.wayselected] && w!=_root.wayselected) { redrawws=true; }
+				else if (_root.nodes[id].isDupe()) {
+					l=_root.pos[x+","+y]; for (b in l) {
+						n=_root.pos[x+","+y][b];
+						if (n.id!=id && n.ways[wayselected]) { redrawws=true; }
+					}
+				}
 			}
 			_root.map.ways[w].attr=result[2];
 			_root.map.ways[w].redraw();
@@ -413,6 +419,7 @@
 					retain.push(this.path[i]);
 				} else {
 					this.markAsDeleted(this.path[i],false);
+					this.path[i].unsetPosition();
 					memberDeleted('Node', this.path[i].id);
 				}
 			}
@@ -483,7 +490,7 @@
 		clearFloater();
 		memberDeleted('Way', this._name);
 		var z=this.path; for (var i in z) {
-			if (z[i].numberOfWays()==1) { memberDeleted('Node', z[i].id); }
+			if (z[i].numberOfWays()==1) { z[i].unsetPosition(); memberDeleted('Node', z[i].id); }
 		}
 		uploadDirtyRelations();
 
@@ -492,8 +499,7 @@
 
 		if (!this.historic && !this.locked) {
 			var z=shallowCopy(this.path); this.path=new Array();
-			for (var i in z) { 
-				this.markAsDeleted(z[i],false); }
+			for (var i in z) { this.markAsDeleted(z[i],false); }
 			if (_root.sandbox) {
 				if (this._name>=0) { 
 					_root.waystodelete[this._name]=[this.version,deepCopy(this.deletednodes)];
@@ -1106,7 +1112,7 @@
 		this.path.splice(point,1);
 		this.removeDuplicates();
 		this.markAsDeleted(rnode,true);
-		if (rnode.numberOfWays()==0) { memberDeleted('Node', rnode.id); }
+		if (rnode.numberOfWays()==0) { memberDeleted('Node', rnode.id); rnode.unsetPosition(); }
 		if (this.path.length<2) { this.remove(); }
 						   else { this.redraw(); this.clean=false; }
 	};

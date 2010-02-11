@@ -11,15 +11,15 @@
 			case -2:	errorDialogueAbortUpload(msg+iText('emailauthor'),200); break;
 			case -3:	resolveConflict(msg,result); break;		// version conflict
 			case -4:	deleteObject(msg,result[0]); break;		// object not found
-			case -5: 	break;									// not executed due to previous error
+			case -5:	break;									// not executed due to previous error
 		}
 	}
 
 	function errorDialogueAbortUpload(t,h) {
 		abortUpload();
-        errorDialogue(t,h);
-    }
-    function errorDialogue(t,h) {
+		errorDialogue(t,h);
+	}
+	function errorDialogue(t,h) {
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(350,h,new Array(iText('ok')),null);
 		_root.windows.error.box.createTextField("prompt",2,7,9,325,h-40);
@@ -32,7 +32,7 @@
 		_root.windows.attachMovie("modal","error",++windowdepth);
 		_root.windows.error.init(275,130,new Array(iText('cancel'),iText('retry')),handleWarningAction);
 		_root.windows.error.box.createTextField("prompt",2,7,9,250,100);
-        _root.uploading=false;
+		_root.uploading=false;
 		if (writeError) {
 			writeText(_root.windows.error.box.prompt,iText('error_connectionfailed'));
 		} else {
@@ -44,7 +44,7 @@
 		_root.panel.i_warning._visible=false;
 		_root.writesrequested=0;
 		_root.waysrequested=_root.waysreceived=_root.whichrequested=_root.whichreceived=0;
-        var retry=(choice==iText('retry'));
+		var retry=(choice==iText('retry'));
 		if (writeError) {
 			// loop through all ways which are uploading, and reupload
 			if (retry) { establishConnections(); }
@@ -88,8 +88,11 @@
 	// Delete object from Potlatch if server reports it doesn't exist
 
 	function deleteObject(type,id) {
+		abortUpload();
+		setAdvice(true,iText('advice_conflict'));
 		switch (type) {
 			case 'way':
+				delete _root.waystodelete[id];
 				if (_root.map.ways[id]) {
 					var w=_root.map.ways[id];
 					w.removeNodeIndex();
@@ -107,9 +110,22 @@
 				}
 				break;
 			case 'node':
+				delete _root.poistodelete[id];
 				if (_root.map.pois[id]) {
 					if (id==_poiselected) { deselectAll(); }
 					removeMovieClip(_root.map.pois[id]);
+				}
+				if (_root.nodes[id]) { 
+					_root.nodes[id].unsetPosition();
+					var w=_root.nodes[id].ways;
+					for (var i in w) {
+						var s=_root.map.ways[i]; delete s.deletednodes[id];
+						for (var q=_root.map.ways[i].path.length-1; q>=0; q--) {
+							_root.map.ways[i].path.splice(q,1);
+						}
+						_root.map.ways[i].redraw();
+						delete _root.nodes[id];
+					}
 				}
 				break;
 		}
@@ -157,10 +173,10 @@
 			_root.usertoken=_root.windows.login.box.uidi.text+":"+_root.windows.login.box.pwdi.text;
 		}
 		_root.changeset=null;
-        _root.uploading=false;
-		removeMovieClip(_root.windows.login);
-		removeMovieClip(_root.windows.upload);
-		removeMovieClip(_root.windows.pleasewait);
+		_root.uploading=false;
+		_root.windows.login.remove();
+		_root.windows.upload.remove();
+		_root.windows.pleasewait.remove();
 		if (!_root.sandbox) { _root.changecomment=''; startChangeset(true); }
 		writeError=true; handleWarningAction(choice);
 	}
@@ -169,8 +185,8 @@
 	// Conflict management
 
 	function resolveConflict(rootobj,conflictobj) {
-		//  rootobj is     [root object, id]
-		//  conflictobj is [conflicting object, id, version]
+		//	rootobj is	   [root object, id]
+		//	conflictobj is [conflicting object, id, version]
 		_root.croot=rootobj; _root.cconflict=conflictobj;		// _root. so we can access them from the "Ok" function
 		var t1,t2; var id=rootobj[1];
 
@@ -225,8 +241,8 @@
 			else if (ctype=='node') { _root.map.pois[cid].select(); }
 			// change version number
 			var rtype=_root.cconflict[0];
-			var rid  =_root.cconflict[1];
-			var v    =_root.cconflict[2];
+			var rid	 =_root.cconflict[1];
+			var v	 =_root.cconflict[2];
 			switch (ctype+","+_root.cconflict[0]) {
 				case 'way,way':				_root.map.ways[cid].version=v; _root.map.ways[cid].clean=false; break;
 				case 'way,node':			_root.nodes[rid].version=v; _root.nodes[rid].markDirty(); _root.map.ways[cid].clean=false; break;

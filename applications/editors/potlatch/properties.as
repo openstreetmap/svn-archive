@@ -397,7 +397,7 @@
 	};
 
 	PropertyWindow.prototype.enableTabs=function(a) {
-		for (var i in this.attributes) {
+		var z=this.attributes; for (var i in z) {
 			this.attributes[i].keyname.tabEnabled=a;
 			this.attributes[i].value.tabEnabled  =a;
 		}

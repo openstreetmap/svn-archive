@@ -816,12 +816,6 @@
 		}
 	}
 	
-	function showWaysForNode() {
-		var z=_root.ws.path[pointselected].ways;
-		_root.coordmonitor.text="";
-		for (i in z) { _root.coordmonitor.text+=i+","; }
-	}
-
 	function keyLock() {
 		if (_root.wayselected && _root.ws.locked && _root.ws.path.length>=2000 && !_root.ws.historic) {
 			setAdvice(true,iText('advice_toolong'));
@@ -853,6 +847,7 @@
 			if (_root.drawpoint==0) { rnode=_root.ws.path.shift(); }
 							   else { rnode=_root.ws.path.pop(); _root.drawpoint-=1; }
 			if (!_root.ws.path[pointselected]) { pointselected--; }
+			rnode.unsetPosition();
 			_root.ws.markAsDeleted(rnode);
 			if (_root.ws.path.length) {
 				_root.undo.append(UndoStack.prototype.undo_deletepoint,undoarray,

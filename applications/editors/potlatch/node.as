@@ -35,6 +35,7 @@
 					// to delete it, because it's still in the other (not yet rewritten) way
 				}
 			}
+			this.unsetPosition();
 			_root.map.ways[qway].clean=false;
 			_root.map.ways[qway].removeDuplicates();
 			if (_root.map.ways[qway].path.length<2) {
@@ -131,7 +132,7 @@
 				if (_root.map.ways[w].path[n].id==this.id) { _root.map.ways[w].path[n]=r; }
 			}
 			r.addWay(w);
-			_root.map.ways[w].deletednodes[this.id]=this.version;
+			if (this.id>0) { _root.map.ways[w].deletednodes[this.id]=this.version; }
 			_root.map.ways[w].clean=false;
 			_root.map.ways[w].removeDuplicates();
 		}

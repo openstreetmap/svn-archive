@@ -1747,11 +1747,6 @@ public class RoutePatternAction extends JosmAction {
 		|| ((vertexOnTheLeft) && (lhsPossible))
 	       || (vertexOnSeg)))
 	  {
-/*	    System.out.print("A");
-	    System.out.print(" ");
-	    System.out.print(node);
-	    System.out.print(" ");
-	    System.out.println(currentDistance);*/
 	    distance = Math.abs(currentDistance);
 	    minIndex = curIndex-1;
 	    position = curPosition;
@@ -1772,15 +1767,6 @@ public class RoutePatternAction extends JosmAction {
 		    && (((currentDistance >= 0) && (rhsPossible))
 		    || ((currentDistance <= 0) && (lhsPossible))))
 	{
-/*	  System.out.print("B");
-	  System.out.print(" ");
-	  System.out.print(sm.aLat);
-	  System.out.print(" ");
-	  System.out.print(sm.aLon);
-	  System.out.print(" ");
-	  System.out.print(node);
-	  System.out.print(" ");
-	  System.out.println(currentDistance);*/
 	  distance = Math.abs(currentDistance);
 	  minIndex = curIndex;
 	  position = curPosition;

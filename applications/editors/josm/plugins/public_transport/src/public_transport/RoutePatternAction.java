@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -39,6 +40,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -65,6 +67,113 @@ public class RoutePatternAction extends JosmAction {
     
     public void valueChanged(ListSelectionEvent e) {
       root.routesSelectionChanged();
+    }
+  };
+  
+  private class TagTableModel extends DefaultTableModel implements TableModelListener {
+    Relation relation = null;
+    TreeSet< String > blacklist = null;
+    boolean hasFixedKeys = true;
+    
+    public TagTableModel(boolean hasFixedKeys) {
+      this.hasFixedKeys = hasFixedKeys;
+    }
+
+    public boolean isCellEditable(int row, int column) {
+      if ((column == 0) && (hasFixedKeys))
+	return false;
+      return true;
+    }
+    
+    public void readRelation(Relation rel) {
+      relation = rel;
+      
+      for (int i = 0; i < getRowCount(); ++i)
+      {
+	String value = rel.get((String)getValueAt(i, 0));
+	if (value == null)
+	  value = "";
+	setValueAt(value, i, 1);
+      }
+    }
+    
+    public void readRelation(Relation rel, TreeSet< String > blacklist) {
+      relation = rel;
+      this.blacklist = blacklist;
+      
+      setRowCount(0);
+      Iterator< Map.Entry< String, String > > iter = rel.getKeys().entrySet().iterator();
+      while (iter.hasNext())
+      {
+	Map.Entry< String, String > entry = iter.next();
+	if (!blacklist.contains(entry.getKey()))
+	{
+	  Vector< String > newRow = new Vector< String >();
+	  newRow.add(entry.getKey());
+	  newRow.add(entry.getValue());
+	  addRow(newRow);
+	}
+      }
+      
+      for (int i = 0; i < getRowCount(); ++i)
+      {
+	String value = rel.get((String)getValueAt(i, 0));
+	if (value == null)
+	  value = "";
+	setValueAt(value, i, 1);
+      }
+    }
+  
+    public void tableChanged(TableModelEvent e)
+    {
+      if (e.getType() == TableModelEvent.UPDATE)
+      {
+	String key = (String)getValueAt(e.getFirstRow(), 0);
+	if (key == null)
+	  return;
+	if ((blacklist == null) || (!blacklist.contains(key)))
+	{
+	  relation.setModified(true);
+	  if ("".equals(getValueAt(e.getFirstRow(), 1)))
+	    relation.remove(key);
+	  else
+	    relation.put(key, (String)getValueAt(e.getFirstRow(), 1));
+	}
+	else
+	{
+	  if (e.getColumn() == 0)
+	    setValueAt("", e.getFirstRow(), 0);
+	}
+      }
+    }
+  };
+  
+  private class CustomCellEditorTable extends JTable {
+    TreeMap< Integer, TableCellEditor > col1 = null;
+    TreeMap< Integer, TableCellEditor > col2 = null;
+    
+    public CustomCellEditorTable() {
+      col1 = new TreeMap< Integer, TableCellEditor >();
+      col2 = new TreeMap< Integer, TableCellEditor >();
+    }
+    
+    public TableCellEditor getCellEditor(int row, int column) {
+      TableCellEditor editor = null;
+      if (column == 0)
+	editor = col1.get(new Integer(row));
+      else
+	editor = col2.get(new Integer(row));
+      if (editor == null)
+	return new DefaultCellEditor(new JTextField());
+      else
+	return editor;
+    }
+    
+    public void setCellEditor(int row, int column, TableCellEditor editor) {
+      if (column == 0)
+	col1.put(new Integer(row), editor);
+      else
+	col2.put(new Integer(row), editor);
     }
   };
   
@@ -276,6 +385,13 @@ public class RoutePatternAction extends JosmAction {
   private static JDialog jDialog = null;
   private static JTabbedPane tabbedPane = null;
   private static DefaultListModel dlm = null;
+  private static TagTableModel requiredTagsData = null;
+  private static CustomCellEditorTable requiredTagsTable = null;
+  private static TagTableModel commonTagsData = null;
+  private static CustomCellEditorTable commonTagsTable = null;
+  private static TagTableModel otherTagsData = null;
+  private static TreeSet< String > tagBlacklist = null;
+  private static CustomCellEditorTable otherTagsTable = null;
   private static ItineraryTableModel itineraryData = null;
   private static JTable itineraryTable = null;
   private static StoplistTableModel stoplistData = null;
@@ -363,6 +479,180 @@ public class RoutePatternAction extends JosmAction {
       gridbag.setConstraints(bRefresh, layoutCons);
       contentPane.add(bRefresh);
 	
+      //Tags Tab
+      /*Container*/ contentPane = tabTags;
+      /*GridBagLayout*/ gridbag = new GridBagLayout();
+      /*GridBagConstraints*/ layoutCons = new GridBagConstraints();
+      contentPane.setLayout(gridbag);
+      
+      /*JLabel*/ headline = new JLabel("Required tags:");
+	
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 0;
+      layoutCons.weightx = 0.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(headline, layoutCons);
+      contentPane.add(headline);
+	
+      requiredTagsTable = new CustomCellEditorTable();
+      requiredTagsData = new TagTableModel(true);
+      requiredTagsData.addColumn("Key");
+      requiredTagsData.addColumn("Value");
+      tagBlacklist = new TreeSet< String >();
+      Vector< String > rowContent = new Vector< String >();
+      rowContent.add("type");
+      tagBlacklist.add("type");
+      rowContent.add("route");
+      requiredTagsData.addRow(rowContent);
+      JComboBox comboBox = new JComboBox();
+      comboBox.addItem("route");
+      requiredTagsTable.setCellEditor(0, 1, new DefaultCellEditor(comboBox));
+      rowContent = new Vector< String >();
+      rowContent.add(0, "route");
+      tagBlacklist.add("route");
+      rowContent.add(1, "bus");
+      requiredTagsData.addRow(rowContent);
+      /*JComboBox*/ comboBox = new JComboBox();
+      comboBox.addItem("bus");
+/*      comboBox.addItem("tram");
+      comboBox.addItem("light_rail");
+      comboBox.addItem("subway");
+      comboBox.addItem("rail");*/
+      requiredTagsTable.setCellEditor(1, 1, new DefaultCellEditor(comboBox));
+      rowContent = new Vector< String >();
+      rowContent.add(0, "ref");
+      tagBlacklist.add("ref");
+      rowContent.add(1, "");
+      requiredTagsData.addRow(rowContent);
+      rowContent = new Vector< String >();
+      rowContent.add(0, "to");
+      tagBlacklist.add("to");
+      rowContent.add(1, "");
+      requiredTagsData.addRow(rowContent);
+      rowContent = new Vector< String >();
+      rowContent.add(0, "network");
+      tagBlacklist.add("network");
+      rowContent.add(1, "");
+      requiredTagsData.addRow(rowContent);
+      requiredTagsTable.setModel(requiredTagsData);
+      JScrollPane tableSP = new JScrollPane(requiredTagsTable);
+      requiredTagsData.addTableModelListener(requiredTagsData);
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.25;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(tableSP, layoutCons);
+      Dimension preferredSize = tableSP.getPreferredSize();
+      preferredSize.setSize(tableSP.getPreferredSize().getWidth(), tableSP.getPreferredSize().getHeight()/4.0);
+      tableSP.setPreferredSize(preferredSize);
+      contentPane.add(tableSP);
+	
+      headline = new JLabel("Common tags:");
+	
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 2;
+      layoutCons.weightx = 0.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(headline, layoutCons);
+      contentPane.add(headline);
+      
+      commonTagsTable = new CustomCellEditorTable();
+      commonTagsData = new TagTableModel(true);
+      commonTagsData.addColumn("Key");
+      commonTagsData.addColumn("Value");
+      rowContent = new Vector< String >();
+      rowContent.add(0, "description");
+      tagBlacklist.add("description");
+      rowContent.add(1, "");
+      commonTagsData.addRow(rowContent);
+      rowContent = new Vector< String >();
+      rowContent.add(0, "from");
+      tagBlacklist.add("from");
+      rowContent.add(1, "");
+      commonTagsData.addRow(rowContent);
+      rowContent = new Vector< String >();
+      rowContent.add(0, "operator");
+      tagBlacklist.add("operator");
+      rowContent.add(1, "");
+      commonTagsData.addRow(rowContent);
+      rowContent = new Vector< String >();
+      rowContent.add(0, "color");
+      tagBlacklist.add("color");
+      rowContent.add(1, "");
+      commonTagsData.addRow(rowContent);
+      rowContent = new Vector< String >();
+      rowContent.add(0, "name");
+      tagBlacklist.add("name");
+      rowContent.add(1, "");
+      commonTagsData.addRow(rowContent);
+      commonTagsTable.setModel(commonTagsData);
+      /*JScrollPane*/ tableSP = new JScrollPane(commonTagsTable);
+      commonTagsData.addTableModelListener(commonTagsData);
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 3;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.25;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(tableSP, layoutCons);
+      /*Dimension*/ preferredSize = tableSP.getPreferredSize();
+      preferredSize.setSize(tableSP.getPreferredSize().getWidth(), tableSP.getPreferredSize().getHeight()/4.0);
+      tableSP.setPreferredSize(preferredSize);
+      contentPane.add(tableSP);
+	
+      headline = new JLabel("Additional tags:");
+	
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 4;
+      layoutCons.weightx = 0.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(headline, layoutCons);
+      contentPane.add(headline);
+	
+      otherTagsTable = new CustomCellEditorTable();
+      otherTagsData = new TagTableModel(false);
+      otherTagsData.addColumn("Key");
+      otherTagsData.addColumn("Value");
+      otherTagsTable.setModel(otherTagsData);
+      /*JScrollPane*/ tableSP = new JScrollPane(otherTagsTable);
+      otherTagsData.addTableModelListener(otherTagsData);
+/*      JComboBox comboBox = new JComboBox();
+      comboBox.addItem("");
+      comboBox.addItem("forward");
+      comboBox.addItem("backward");
+      itineraryTable.getColumnModel().getColumn(1)
+      .setCellEditor(new DefaultCellEditor(comboBox));
+      itineraryData.addTableModelListener(new ItineraryTableModelListener());*/
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 5;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 1.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(tableSP, layoutCons);
+      /*Dimension*/ preferredSize = tableSP.getPreferredSize();
+      preferredSize.setSize(tableSP.getPreferredSize().getWidth(), tableSP.getPreferredSize().getHeight()/2.0);
+      tableSP.setPreferredSize(preferredSize);
+      contentPane.add(tableSP);
+      
+      JButton bAddTag = new JButton("Add a new Tag");
+      bAddTag.setActionCommand("routePattern.tagAddTag");
+      bAddTag.addActionListener(this);
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 6;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bAddTag, layoutCons);
+      contentPane.add(bAddTag);
+	
       //Itinerary Tab
       contentPane = tabItinerary;
       gridbag = new GridBagLayout();
@@ -374,8 +664,8 @@ public class RoutePatternAction extends JosmAction {
       itineraryData.addColumn("Name/Id");
       itineraryData.addColumn("Role");
       itineraryTable.setModel(itineraryData);
-      JScrollPane tableSP = new JScrollPane(itineraryTable);
-      JComboBox comboBox = new JComboBox();
+      /*JScrollPane*/ tableSP = new JScrollPane(itineraryTable);
+      /*JComboBox*/ comboBox = new JComboBox();
       comboBox.addItem("");
       comboBox.addItem("forward");
       comboBox.addItem("backward");
@@ -484,8 +774,8 @@ public class RoutePatternAction extends JosmAction {
       /*JScrollPane*/ tableSP = new JScrollPane(stoplistTable);
       /*JComboBox*/ comboBox = new JComboBox();
       comboBox.addItem("");
-      comboBox.addItem("forward");
-      comboBox.addItem("backward");
+      comboBox.addItem("forward_stop");
+      comboBox.addItem("backward_stop");
       stoplistTable.getColumnModel().getColumn(1)
 	  .setCellEditor(new DefaultCellEditor(comboBox));
       stoplistData.addTableModelListener(new StoplistTableModelListener());
@@ -668,6 +958,13 @@ public class RoutePatternAction extends JosmAction {
     if ("routePattern.refresh".equals(event.getActionCommand()))
     {
       refreshData();
+    }
+    else if ("routePattern.tagAddTag".equals(event.getActionCommand()))
+    {
+      Vector< String > rowContent = new Vector< String >();
+      rowContent.add("");
+      rowContent.add("");
+      otherTagsData.addRow(rowContent);
     }
     else if ("routePattern.itineraryShow".equals(event.getActionCommand()))
     {
@@ -1535,6 +1832,11 @@ public class RoutePatternAction extends JosmAction {
       tabbedPane.setEnabledAt(2, true);
       tabbedPane.setEnabledAt(3, true);
       tabbedPane.setEnabledAt(4, true);
+      
+      //Prepare Tags
+      requiredTagsData.readRelation(currentRoute);
+      commonTagsData.readRelation(currentRoute);
+      otherTagsData.readRelation(currentRoute, tagBlacklist);
       
       //Prepare Itinerary
       itineraryData.clear();

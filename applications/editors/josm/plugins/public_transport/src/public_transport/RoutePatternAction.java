@@ -70,6 +70,76 @@ public class RoutePatternAction extends JosmAction {
     }
   };
   
+  private class RouteReference implements Comparable< RouteReference > {
+    Relation route;
+    
+    public RouteReference(Relation route) {
+      this.route = route;
+    }
+    
+    public int compareTo(RouteReference rr) {
+      if (route.get("route") != null)
+      {
+	int result = route.get("route").compareTo(rr.route.get("route"));
+	if (result != 0)
+	  return result;
+      }
+      else if (rr.route.get("route") != null)
+	return 1;
+      if (route.get("ref") != null)
+      {
+	int result = route.get("ref").compareTo(rr.route.get("ref"));
+	if (result != 0)
+	  return result;
+      }
+      else if (rr.route.get("ref") != null)
+	return 1;
+      if (route.get("to") != null)
+      {
+	int result = route.get("to").compareTo(rr.route.get("to"));
+	if (result != 0)
+	  return result;
+      }
+      else if (rr.route.get("to") != null)
+	return 1;
+      if (route.get("direction") != null)
+      {
+	int result = route.get("direction").compareTo(rr.route.get("direction"));
+	if (result != 0)
+	  return result;
+      }
+      else if (rr.route.get("direction") != null)
+	return 1;
+      if (route.getId() < rr.route.getId())
+	return -1;
+      else if (route.getId() > rr.route.getId())
+	return 1;
+      return 0;
+    }
+    
+    public String toString() {
+      String buf = route.get("route");
+      if ((route.get("ref") != null) && (route.get("ref") != ""))
+      {
+	if ((route.get("to") != null) && (route.get("to") != ""))
+	{
+	  buf += " " + route.get("ref") + ": " + route.get("to");
+	}
+	else if ((route.get("direction") != null) && (route.get("direction") != ""))
+	{
+	  buf += " " + route.get("ref") + ": " + route.get("direction");
+	}
+	else
+	{
+	  buf += " " + route.get("ref");
+	}
+      }
+      buf += " [ID " + Long.toString(route.getId()) + "]";
+      
+      return buf;
+    }
+  };
+  
   private class TagTableModel extends DefaultTableModel implements TableModelListener {
     Relation relation = null;
     TreeSet< String > blacklist = null;
@@ -384,7 +454,7 @@ public class RoutePatternAction extends JosmAction {
   
   private static JDialog jDialog = null;
   private static JTabbedPane tabbedPane = null;
-  private static DefaultListModel dlm = null;
+  private static DefaultListModel relsListModel = null;
   private static TagTableModel requiredTagsData = null;
   private static CustomCellEditorTable requiredTagsTable = null;
   private static TagTableModel commonTagsData = null;
@@ -396,11 +466,11 @@ public class RoutePatternAction extends JosmAction {
   private static JTable itineraryTable = null;
   private static StoplistTableModel stoplistData = null;
   private static JTable stoplistTable = null;
-  private static JList rpJList = null;
+  private static JList relsList = null;
   private static JCheckBox cbRight = null;
   private static JCheckBox cbLeft = null;
   private static JTextField tfSuggestStopsLimit = null;
-  private static Vector< Relation > routes = new Vector< Relation >();
+/*  private static Vector< Relation > routes = new Vector< Relation >();*/
   private static Relation currentRoute = null;
   private static Vector< RelationMember > markedWays = new Vector< RelationMember >();
   private static Vector< RelationMember > markedNodes = new Vector< RelationMember >();
@@ -451,13 +521,13 @@ public class RoutePatternAction extends JosmAction {
       gridbag.setConstraints(headline, layoutCons);
       contentPane.add(headline);
 	
-      dlm = new DefaultListModel();
-      rpJList = new JList(dlm);
-      JScrollPane rpListSP = new JScrollPane(rpJList);
+      relsListModel = new DefaultListModel();
+      relsList = new JList(relsListModel);
+      JScrollPane rpListSP = new JScrollPane(relsList);
       String[] data = {"1", "2", "3", "4", "5", "6"};
-      dlm.copyInto(data);
-      rpJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      rpJList.addListSelectionListener(new RoutesLSL(this));
+      relsListModel.copyInto(data);
+      relsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      relsList.addListSelectionListener(new RoutesLSL(this));
       
       layoutCons.gridx = 0;
       layoutCons.gridy = 1;
@@ -565,8 +635,8 @@ public class RoutePatternAction extends JosmAction {
       commonTagsData.addColumn("Key");
       commonTagsData.addColumn("Value");
       rowContent = new Vector< String >();
-      rowContent.add(0, "description");
-      tagBlacklist.add("description");
+      rowContent.add(0, "direction");
+      tagBlacklist.add("direction");
       rowContent.add(1, "");
       commonTagsData.addRow(rowContent);
       rowContent = new Vector< String >();
@@ -1613,34 +1683,36 @@ public class RoutePatternAction extends JosmAction {
   }
   
   private void refreshData() {
-    dlm.clear();
+    relsListModel.clear();
 	
     DataSet mainDataSet = Main.main.getCurrentDataSet();
     if (mainDataSet != null)
     {
-      routes.clear();
-      Vector<String> rpLines = new Vector<String>();
-      Collection<Relation> relCollection = mainDataSet.getRelations();
-      Iterator<Relation> relIter = relCollection.iterator();
+      Vector< RouteReference > relRefs = new Vector< RouteReference >();
+      Collection< Relation > relCollection = mainDataSet.getRelations();
+      Iterator< Relation > relIter = relCollection.iterator();
+      
       while (relIter.hasNext())
       {
 	Relation currentRel = relIter.next();
 	String routeVal = currentRel.get("route");
 	if ("bus".equals(routeVal))
-	{
-	  routes.addElement(currentRel);
-	  String relDesc = currentRel.get("ref");
-	  if (relDesc == null)
-	    relDesc = "";
-	  relDesc = "bus: " + relDesc + " ["+ currentRel.getId() + "]";
-	  rpLines.addElement(relDesc);
-	}
+	  relRefs.add(new RouteReference(currentRel));
+	else if ("tram".equals(routeVal))
+	  relRefs.add(new RouteReference(currentRel));
+	else if ("light_rail".equals(routeVal))
+	  relRefs.add(new RouteReference(currentRel));
+	else if ("subway".equals(routeVal))
+	  relRefs.add(new RouteReference(currentRel));
+	else if ("rail".equals(routeVal))
+	  relRefs.add(new RouteReference(currentRel));
       }
-      Iterator<String> rplIter = rpLines.iterator();
-      while (rplIter.hasNext())
-      {
-	dlm.addElement(rplIter.next());
-      }
+      
+      Collections.sort(relRefs);
+      
+      Iterator< RouteReference > iter = relRefs.iterator();
+      while (iter.hasNext())
+	relsListModel.addElement(iter.next());
     }
     else
     {
@@ -1824,10 +1896,10 @@ public class RoutePatternAction extends JosmAction {
   }
   
   private void routesSelectionChanged() {
-    int selectedPos = rpJList.getAnchorSelectionIndex();
-    if (rpJList.isSelectedIndex(selectedPos))
+    int selectedPos = relsList.getAnchorSelectionIndex();
+    if (relsList.isSelectedIndex(selectedPos))
     {
-      currentRoute = routes.elementAt(selectedPos);
+      currentRoute = ((RouteReference)relsListModel.elementAt(selectedPos)).route;
       tabbedPane.setEnabledAt(1, true);
       tabbedPane.setEnabledAt(2, true);
       tabbedPane.setEnabledAt(3, true);

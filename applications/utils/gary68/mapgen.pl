@@ -30,29 +30,42 @@
 #      [-bgcolor]
 #      multipolygon with holes
 #      change of style file
+# 0.07 [-tagstat] allows tag examination; statistic data about usage of tags
+#      multi label with § and #
+#      areas now with labels in center of area
+#      [-declutter]
+#      [-scale + additional parameters]
+#      [-ruler]
+#      [-rulercolor]
 #      
 
 
 # TODO
-# tag stat and unruled tags
-# label ref and name, dir entry
+# v007
+# format style file (border color ways, thickness, iconfile for nodes
+# wiki features and usage and format style file 
+#
+#
 # icons
 # oneways?
 # sub key/value for rules
 # wildcard for value
 # edges for ways?
 # see wiki
+# maybe prevent double labels in vicinity of each other?
+# auto calc min way length to be labeled (adv.)
+# user's manual?
 
 use strict ;
 use warnings ;
 
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.06 ;
+use OSM::mapgen 0.07 ;
 use Math::Polygon ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.06" ;
+my $version = "0.07" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -67,6 +80,10 @@ perl mapgen.pl
 -lonrad=FLOAT (radius for place width in km, DEFAULT=2)
 -latrad=FLOAT (radius for place width in km, DEFAULT=2)
 
+-declutter (declutter text; WARNING: some labels might be omitted; motorway and trunk will only be labeled in one direction)
+-declutterminx=INTEGER (min distance for labels on x-axis in pixels; DEFAULT=100)
+-declutterminy=INTEGER (min distance for labels on Y-axis in pixels; DEFAULT=10)
+
 -bgcolor=TEXT (color for background)
 -size=<integer> (in pixels for x axis, DEFAULT=1024)
 -clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
@@ -74,6 +91,14 @@ perl mapgen.pl
 -grid=<integer> (number parts for grid, 0=no grid, DEFAULT=0)
 -gridcolor=TEXT (color for grid lines and labels (DEFAULT=black)
 -dir (create street directory in separate file. if grid is enabled, grid squares will be added)
+-tagstat (lists keys and values used in osm file; program filters list to keep them short!!! see code array onoListTags)
+
+-ruler=INT (0=no ruler; 1=draw ruler; DEFAULT=1)
+-rulercolor=TEXT (DEFAULT=black)
+-scale (print scale)
+-scalecolor=TEXT (set scale color; DEFAULT = black)
+-scaleset=INTEGER (1:x preset for map scale; overrides -size=INTEGER! set correct printer options!)
+-scaledpi=INTEGER (print resolution; DEFAULT = 300 dpi)
 
 -minlen=<float> (for ways to be labeled, to prevent clutter, , DEFAULT=0.1, unit is km)
 
@@ -106,9 +131,20 @@ my $place = "" ;
 my $lonrad = 2 ;
 my $latrad = 2 ;
 my $helpOpt = 0 ;
+my $tagStatOpt = 0 ;
+my $declutterOpt = 0 ;
+my $declutterMinX = 100 ;
+my $declutterMinY = 10 ;
+my $rulerOpt = 1 ;
+my $rulerColor = "black" ;
+my $scaleOpt = 0 ;
+my $scaleDpi = 300 ;
+my $scaleColor = "black" ;
+my $scaleSet = 0 ;
 
 my @legend = () ;
 
+my @noListTags = sort qw (name width url source ref note phone operator opening_hours maxspeed maxheight maxweight layer is_in TODO addr:city addr:housenumber addr:country addr:housename addr:interpolation addr:postcode addr:street created_by description ele fixme FIXME website bridge tunnel time openGeoDB:auto_update  openGeoDB:community_identification_number openGeoDB:is_in openGeoDB:is_in_loc_id openGeoDB:layer openGeoDB:license_plate_code openGeoDB:loc_id openGeoDB:location openGeoDB:name openGeoDB:population openGeoDB:postal_codes openGeoDB:sort_name openGeoDB:telephone_area_code openGeoDB:type openGeoDB:version opengeodb:lat opengeodb:lon int_ref population postal_code wikipedia) ;
 
 # NODES
 my $nodeIndexTag = 0 ;
@@ -193,12 +229,23 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"pdf"		=> \$pdfOpt,		# specifies if pdf will be created
 				"png"		=> \$pngOpt,		# specifies if png will be created
 				"dir"		=> \$dirOpt,		# specifies if directory will be created
+				"tagstat"	=> \$tagStatOpt,	# lists k/v used in osm file
+				"declutter"	=> \$declutterOpt,
+				"declutterminx"	=> \$declutterMinX,
+				"declutterminy"	=> \$declutterMinY,
 				"help"		=> \$helpOpt,		# 
 				"place:s"	=> \$place,		# place to draw
 				"lonrad:f"	=> \$lonrad,
 				"latrad:f"	=> \$latrad,
+				"ruler:i"	=> \$rulerOpt,
+				"rulercolor:s"	=> \$rulerColor,
+				"scale"		=> \$scaleOpt,
+				"scaledpi:i"	=> \$scaleDpi,
+				"scalecolor:s"	=> \$scaleColor,
+				"scaleset:s"	=> \$scaleSet,
 				"multionly"	=> \$multiOnly,		# draw only areas from multipolygons
 				"verbose" 	=> \$verbose) ;		# turns twitter on
+
 
 if ($helpOpt eq "1") {
 	print $usage ;
@@ -218,24 +265,39 @@ if ( ($clip <0) or ($clip > 100) ) {
 	print "WARNING: clip set to 0 percent\n" ;
 }
 
-print "\n$programName $version for file $osmName\n" ;
+print "\n$programName $version\n" ;
 print "\n" ;
 print "infile    = $osmName\n" ;
 print "style     = $csvName\n" ;
 print "outfile   = $svgName\n" ;
-print "size      = $size (pixels)\n" ;
+print "size      = $size (pixels)\n\n" ;
+
 print "legend    = $legendOpt\n" ;
+print "ruler     = $rulerOpt\n" ;
+print "scaleOpt  = $scaleOpt\n" ;
+print "scaleCol  = $scaleColor\n" ;
+print "scaleDpi  = $scaleDpi\n" ;
+print "scaleSet  = $scaleSet\n\n" ;
+
 print "clip      = $clip (percent)\n" ;
 print "grid      = $grid (number)\n" ;
 print "gridcolor = $gridColor\n" ;
 print "dir       = $dirOpt\n" ;
 print "minlen    = $labelMinLength (km)\n" ;
+print "declutter = $declutterOpt\n" ;
+print "declutterX= $declutterMinX\n" ;
+print "declutterY= $declutterMinY\n\n" ;
+
 print "place     = $place\n" ;
 print "lonrad    = $lonrad (km)\n" ;
-print "latrad    = $latrad (km)\n" ;
+print "latrad    = $latrad (km)\n\n" ;
+
 print "pdf       = $pdfOpt\n" ;
-print "png       = $pngOpt\n" ;
+print "png       = $pngOpt\n\n" ;
+
+print "multionly = $multiOnly\n" ;
 print "verbose   = $verbose\n\n" ;
+
 
 # READ STYLE File
 open (my $csvFile, "<", $csvName) or die ("ERROR: style file not found.") ;
@@ -414,6 +476,17 @@ if ( ($clip > 0) and ($clip < 100) ) {
 	$latMax -= ($latMax-$latMin) * $clip ;
 }
 
+if ($scaleSet != 0) {
+	my $dist = distance ($lonMin, $latMin, $lonMax, $latMin) ;
+	print "INFO: distX (km) = $dist\n" ;
+	my $width = $dist / $scaleSet * 1000 * 100 / 2.54 ; # inches
+	print "INFO: width (in) = $width\n" ;
+	$size = int ($width * $scaleDpi) ;
+	print "INFO: sizeX set to $size pixels.\n" ;
+	print "INFO: set print resolution to $scaleDpi dpi!\n\n" ;
+}
+
+
 initGraph ($size, $lonMin, $latMin, $lonMax, $latMax, $bgColor) ;
 
 
@@ -430,6 +503,15 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 					if ( ($memWayNodes{$wayId}[0] == $memWayNodes{$wayId}[-1]) and (!defined $wayUsed{$wayId}) )  {
 						if ( ( ($wayId < 0) and ($multiOnly eq "1") ) or ($multiOnly == 0) ){
 							drawArea ($test->[$wayIndexColor], nodes2Coordinates( @{$memWayNodes{$wayId}} ) ) ;
+							# LABELS
+							my $name = "" ; my $ref1 ;
+							($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel]) ;
+							if ($name ne "") {
+							my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+								#print "AREA name $name $x $y\n" ;
+								#print "$x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont]\n" ;
+								drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $declutterMinX, $declutterMinY) ;
+							}
 						}
 					}
 				}
@@ -446,6 +528,14 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 				if ( ($key->[0] eq $test->[$wayIndexTag]) and ($key->[1] eq $test->[$wayIndexValue]) ) {
 					if ( ( ($wayId < 0) and ($multiOnly eq "1") ) or ($multiOnly == 0) ){
 						drawArea ($test->[$wayIndexColor], nodes2Coordinates( @{$memWayNodes{$wayId}} ) ) ;
+						# LABELS
+						my $name = "" ; my $ref1 ;
+						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel]) ;
+						if ($name ne "") {
+							my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+							#print "MP name $name $x $y\n" ;
+							drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $declutterMinX, $declutterMinY) ;
+						}
 					} # if
 				} #if
 			} # foreach
@@ -472,16 +562,12 @@ foreach my $nodeId (keys %memNodeTags) {
 				}
 
 				if ($test->[$nodeIndexLabel] ne "none") {
-					my $name = "" ;
-					# get name
-					foreach my $tag2 (@{$memNodeTags{$nodeId}}) {
-						if ($tag2->[0] eq $test->[$nodeIndexLabel]) {
-							$name = $tag2->[1] ;
-						}
-					}
+					my $name = "" ; my $ref1 ;
+					($name, $ref1) = createLabel (\@{$memNodeTags{$nodeId}}, $test->[$nodeIndexLabel]) ;
+					my @names = @$ref1 ;
 					if ($name ne "") {
 						drawTextPos ($lon{$nodeId}, $lat{$nodeId}, 0, -$test->[$nodeIndexLabelOffset], 
-							$name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont]) ;
+							$name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $declutterOpt, $declutterMinX, $declutterMinY) ;
 					}
 				} # draw label
 			} # tag found
@@ -494,7 +580,7 @@ foreach my $nodeId (keys %memNodeTags) {
 
 print "draw ways...\n" ;
 foreach my $wayId (keys %memWayTags) {
-	#print "wayid: $wayId\n" ;
+	# print "wayid: $wayId\n" ;
 	my $text = "" ; 
 	my $length = 0 ;
 
@@ -535,24 +621,34 @@ foreach my $wayId (keys %memWayTags) {
 					}
 					drawWay ($layer, $test->[$wayIndexColor], $test->[$wayIndexThickness], $test->[$wayIndexDash], nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 					if ($test->[$wayIndexLabel] ne "none") {
-						foreach my $tag2 (@{$memWayTags{$wayId}}) {
-							if ($tag2->[0] eq $test->[$wayIndexLabel]) { 
-								if ($length >= $labelMinLength) {
-									my @way = @{$memWayNodes{$wayId}} ;
-									if ($lon{$memWayNodes{$wayId}[0]} > $lon{$memWayNodes{$wayId}[-1]}) {
-										@way = reverse (@way) ;
-									}
-									labelWay ($test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $tag2->[1], $test->[$wayIndexLabelOffset], nodes2Coordinates(@way)) ;
+
+						my $name = "" ; my $ref1 ;
+						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel]) ;
+						my @names = @$ref1 ;
+						if ($length >= $labelMinLength) {
+							my $toLabel = 1 ;
+							my @way = @{$memWayNodes{$wayId}} ;
+							if ($lon{$memWayNodes{$wayId}[0]} > $lon{$memWayNodes{$wayId}[-1]}) {
+								@way = reverse (@way) ;
+								if ( ( ($test->[$wayIndexValue eq "motorway"]) or ($test->[$wayIndexValue eq "trunk"]) ) and ($declutterOpt eq "1") ) {
+									$toLabel = 0 ;
 								}
-								if ($dirOpt eq "1") {
-									if ($grid > 0) {
-										foreach my $node (@{$memWayNodes{$wayId}}) {
-											$directory{$tag2->[1]}{gridSquare($lon{$node}, $lat{$node}, $grid)} = 1 ;
-										}
+							}
+							if ($toLabel == 1) {
+								labelWay ($test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $name, $test->[$wayIndexLabelOffset], nodes2Coordinates(@way)) ;
+							}
+						}
+						if ($dirOpt eq "1") {
+							if ($grid > 0) {
+								foreach my $node (@{$memWayNodes{$wayId}}) {
+									foreach my $name (@names) {
+										$directory{$name}{gridSquare($lon{$node}, $lat{$node}, $grid)} = 1 ;
 									}
-									else {
-										$directory{$tag2->[1]} = 1 ;
-									}
+								}
+							}
+							else {
+								foreach my $name (@names) {
+									$directory{$name} = 1 ;
 								}
 							}
 						}
@@ -571,8 +667,7 @@ foreach my $wayId (keys %memWayTags) {
 										$x += $lon{$node} ; $y += $lat{$node} ; $count++ ;
 									}
 									$x = $x / $count ; $y = $y / $count ;
-									# drawTextPos ($lon{${$memWayNodes{$wayId}}[0]}, $lat{${$memWayNodes{$wayId}}[0]}, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], 2) ;
-									drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], 10, "Arial") ;
+									drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], 10, "Arial", $declutterOpt, $declutterMinX, $declutterMinY) ;
 								}
 							}
 						} # draw label
@@ -593,10 +688,17 @@ if ($legendOpt == 1) {
 	createLegend() ;
 }
 
+if ($scaleOpt eq "1") {
+	printScale ($scaleDpi, $scaleColor) ;
+}
+
 if ($grid > 0) { drawGrid($grid, $gridColor) ; }
 
-drawRuler ("black") ;
-drawFoot ("gary68's $programName $version - data by www.openstreetmap.org", "black", 12, "Arial") ;
+if ($rulerOpt == 1) {
+	drawRuler ($rulerColor) ;
+}
+
+drawFoot ("gary68's $programName $version - data CC-BY-SA www.openstreetmap.org", "black", 10, "sans-serif") ;
 
 
 writeSVG ($svgName) ;
@@ -638,6 +740,48 @@ if ($dirOpt eq "1") {
 	close ($dirFile) ;
 }
 
+if ($tagStatOpt eq "1") {
+	my %usedTags = () ; my %rules = () ;
+	print "\n--------\nTAG STAT\n--------\n" ;
+	print "\nOMITTED KEYS\n@noListTags\n\n" ;
+	foreach my $node (keys %memNodeTags) { 
+		foreach my $tag (@{$memNodeTags{$node}}) { $usedTags{$tag->[0]}{$tag->[1]}++ ;}
+	}
+	foreach my $way (keys %memWayTags) { 
+		foreach my $tag (@{$memWayTags{$way}}) { $usedTags{$tag->[0]}{$tag->[1]}++ ;}
+	}
+	foreach my $delete (@noListTags) { delete $usedTags{$delete} ; }
+	foreach my $rule (@ways) { $rules{$rule->[$wayIndexTag]}{$rule->[$wayIndexValue]} = 1 ;}
+	foreach my $rule (@nodes) { $rules{$rule->[$nodeIndexTag]}{$rule->[$nodeIndexValue]} = 1 ;}
+
+	my @sorted = () ;
+	foreach my $k (sort keys %usedTags) {
+		foreach my $v (sort keys %{$usedTags{$k}}) {
+			push @sorted, [$usedTags{$k}{$v}, $k, $v] ;
+		}
+	}
+	print "TOP 20 LIST:\n" ;
+	@sorted = sort { $a->[0] <=> $b->[0]} @sorted ;
+	@sorted = reverse @sorted ;
+	my $i = 0 ; my $max = 19 ;
+	if (scalar @sorted <20) { $max = $#sorted ; }
+	for ($i = 0; $i<=$max; $i++) {
+		my $ruleText = "-" ;
+		if (defined $rules{$sorted[$i]->[1]}{$sorted[$i]->[2]}) { $ruleText = "RULE" ; }
+		printf "%-25s %-35s %6i %-6s\n", $sorted[$i]->[1], $sorted[$i]->[2], $sorted[$i]->[0], $ruleText ;
+	}
+	print "\n" ;
+
+	print "LIST:\n" ;
+	foreach my $k (sort keys %usedTags) {
+		foreach my $v (sort keys %{$usedTags{$k}}) {
+			my $ruleText = "-" ;
+			if (defined $rules{$k}{$v}) { $ruleText = "RULE" ; }
+			printf "%-25s %-35s %6i %-6s\n", $k, $v, $usedTags{$k}{$v}, $ruleText ;
+		}
+	}
+	print "\n" ;
+}
 
 $time1 = time() ;
 print "\n$programName finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
@@ -801,17 +945,6 @@ sub processRelations {
 		} # multi
 
 	} # relIds
-	if ($verbose eq "1") {
-		print "\nUSED TAGS IN MULTIPOLYGONS:\n" ;
-		foreach my $key (sort keys %usedTags) {
-			foreach my $value (sort keys %{$usedTags{$key}}) {
-				if ( (!grep /name/, $key) and (!grep /created_by/, $key) and (!grep /source/, $key) ){
-					print "$key - $value\n" ;
-				}
-			}
-		}
-		print "\n" ;
-	}
 }
 
 sub buildRings {

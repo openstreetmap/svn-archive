@@ -22,6 +22,8 @@
 # USAGE
 #
 #
+# center (lon, lat, lon, lat)
+# createLabel ($refTagArray, $styleLabelText)
 # drawArea ($color, @nodes) - real world
 # drawAreaPix ($color, @nodes) - pixels
 # drawGrid ($parts)
@@ -40,6 +42,7 @@
 # gridSquare ($lon, $lat) / returns grid square for directory
 # initGraph ($sizeX, $left, $bottom, $right, $top) / real world coordinates, sizeX in pixels, Y automatic
 # labelWay ($col, $size, $font, $text, $tSpan, @nodes) / size can be 0..5 (or bigger...) / $tSpan = offset to line/way
+# printScale ($dpi, $color)
 # writeSVG ($fileName)
 #
 #
@@ -65,17 +68,19 @@ use File::stat;
 use Time::localtime;
 use List::Util qw[min max] ;
 use Encode ;
-
+use OSM::osm ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.06' ;
+$VERSION = '0.07' ;
 
 require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw ( 	drawArea 
+@EXPORT = qw ( 	center
+			createLabel
+			drawArea 
 			drawAreaPix 
 			drawCircleRadius 
 			drawCircleRadiusText 
@@ -97,6 +102,7 @@ require Exporter ;
 			gridSquare
 			initGraph 
 			labelWay 
+			printScale
 			writeSVG ) ;
 
 #
@@ -163,6 +169,7 @@ my @svgOutputPathText = () ;
 my $pathNumber = 0 ;
 my $svgBaseFontSize = 10 ;
 
+my %clutter = () ;
 
 sub initGraph {
 #
@@ -222,11 +229,36 @@ sub drawTextPos {
 #
 # draws text at given real world coordinates. however an offset can be given for not to interfere with node dot i.e.
 #
-	my ($lon, $lat, $offX, $offY, $text, $col, $size, $font) = @_ ;
+	my ($lon, $lat, $offX, $offY, $text, $col, $size, $font, $declutter, $declutterMinX, $declutterMinY) = @_ ;
 	my ($x1, $y1) = convert ($lon, $lat) ;
 	$x1 = $x1 + $offX ;
 	$y1 = $y1 - $offY ;
-	push @svgOutputText, svgElementText ($x1, $y1, $text, $size, $font, $col) ;
+
+	my $cluttered = 0 ;
+	if ($declutter eq "1") {
+		foreach my $clutterX (keys %clutter) {
+			foreach my $clutterY (keys %{$clutter{$clutterX}}) {
+				my $distY = abs ($clutterY - $y1) ;
+				if ($distY > $declutterMinY) {
+					# dist ok
+				}
+				else {
+					my $distX = abs ($clutterX - $x1) ;
+					if ($distX < $declutterMinX) { 
+						$cluttered = 1 ; 
+					}
+				}
+			}
+		}
+	}
+
+	if (!$cluttered) {
+		push @svgOutputText, svgElementText ($x1, $y1, $text, $size, $font, $col) ;
+		$clutter{$x1}{$y1} = $text ;
+	}
+	else {
+		print "WARNING: label \"$text\" omitted to prevent clutter!\n" ;
+	}
 }
 
 
@@ -668,6 +700,87 @@ sub colorToHex {
 	$string = $string . sprintf "%02x", $arr[2] ;
 	return $string ;
 }
+
+sub createLabel {
+#
+# takes @tags and labelKey(s) from style file and creates labelTextTotal and array of labels for directory
+# takes more keys in string. 
+# § all listed keys will be searched for and values be concatenated
+# # first of found keys will be used to select value
+# "name§ref" will return all values if given
+# "name#ref" will return name, if given. if no name is given, ref will be used. none given, no text
+#
+	my ($ref1, $styleLabelText) = @_ ;
+	my @tags = @$ref1 ;
+	my @keys ;
+	my @labels = () ;
+	my $labelTextTotal = "" ; 
+
+	if (grep /§/, $styleLabelText) { # AND
+		@keys = split ( /§/, $styleLabelText) ;
+		for (my $i=0; $i<=$#keys; $i++) {
+			foreach my $tag (@tags) {
+				if ($tag->[0] eq $keys[$i]) {
+					push @labels, $tag->[1] ;
+				}
+			}
+		}
+		$labelTextTotal = "" ;
+		foreach my $label (@labels) { $labelTextTotal .= $label . " " ; }
+	}
+	else { # PRIO
+		@keys = split ( /#/, $styleLabelText) ;
+		my $i = 0 ; my $found = 0 ;
+		while ( ($i<=$#keys) and ($found == 0) ) {
+			foreach my $tag (@tags) {
+				if ($tag->[0] eq $keys[$i]) {
+					push @labels, $tag->[1] ;
+					$labelTextTotal = $tag->[1] ;
+					$found = 1 ;
+				}
+			}
+			$i++ ;
+		}		
+	}
+	return ( $labelTextTotal, \@labels) ;
+}
+
+sub center {
+	my @nodes = @_ ;
+	my $x = 0 ;
+	my $y = 0 ;
+	my $num = 0 ;
+
+	while (scalar @nodes > 0) { 
+		my $y1 = pop @nodes ;
+		my $x1 = pop @nodes ;
+		$x += $x1 ;
+		$y += $y1 ;
+		$num++ ;
+	}
+	$x = $x / $num ;
+	$y = $y / $num ;
+	return ($x, $y) ;
+}
+
+sub printScale {
+	my ($dpi, $color) = @_ ;
+
+	my $dist = distance ($left, $bottom, $right, $bottom) ;
+	# print "distance = $dist\n" ;
+	my $inches = $sizeX / $dpi ;
+	# print "inches = $inches\n" ;
+	my $cm = $inches * 2.54 ;
+	# print "cm = $cm\n" ;
+	my $scale = int ( $dist / ($cm/100/1000)  ) ;
+	$scale = int ($scale / 100) * 100 ;
+
+	my $text = "1 : $scale ($dpi dpi)" ;
+	
+	drawTextPix ($sizeX-200, 50, $text, $color, 14, "sans-serif") ;
+	# print "scale = $text\n\n" ;
+}
+
 
 1 ;
 

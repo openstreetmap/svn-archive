@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -80,6 +81,8 @@ public class RoutePatternAction extends JosmAction {
     public int compareTo(RouteReference rr) {
       if (route.get("route") != null)
       {
+	if (rr.route.get("route") == null)
+	  return -1;
 	int result = route.get("route").compareTo(rr.route.get("route"));
 	if (result != 0)
 	  return result;
@@ -88,6 +91,8 @@ public class RoutePatternAction extends JosmAction {
 	return 1;
       if (route.get("ref") != null)
       {
+	if (rr.route.get("ref") == null)
+	  return -1;
 	int result = route.get("ref").compareTo(rr.route.get("ref"));
 	if (result != 0)
 	  return result;
@@ -96,6 +101,8 @@ public class RoutePatternAction extends JosmAction {
 	return 1;
       if (route.get("to") != null)
       {
+	if (rr.route.get("to") == null)
+	  return -1;
 	int result = route.get("to").compareTo(rr.route.get("to"));
 	if (result != 0)
 	  return result;
@@ -104,6 +111,8 @@ public class RoutePatternAction extends JosmAction {
 	return 1;
       if (route.get("direction") != null)
       {
+	if (rr.route.get("direction") == null)
+	  return -1;
 	int result = route.get("direction").compareTo(rr.route.get("direction"));
 	if (result != 0)
 	  return result;
@@ -1844,10 +1853,10 @@ public class RoutePatternAction extends JosmAction {
       {
 	frontNodes.remove(firstListNode);
 	LinkedList<RelationMember> listToAppend = frontNodes.get(lastNode);
-	Iterator<RelationMember> memberIter = list.descendingIterator();
-	while (memberIter.hasNext())
+	ListIterator<RelationMember> memberIter = list.listIterator(list.size());
+	while (memberIter.hasPrevious())
 	{
-	  RelationMember member = memberIter.next();
+	  RelationMember member = memberIter.previous();
 	  listToAppend.addFirst(member);
 	}
 	frontNodes.remove(lastNode);
@@ -1857,10 +1866,10 @@ public class RoutePatternAction extends JosmAction {
       {
 	frontNodes.remove(firstListNode);
 	LinkedList<RelationMember> listToAppend = backNodes.get(lastNode);
-	Iterator<RelationMember> memberIter = list.descendingIterator();
-	while (memberIter.hasNext())
+	ListIterator<RelationMember> memberIter = list.listIterator(list.size());
+	while (memberIter.hasPrevious())
 	{
-	  RelationMember member = memberIter.next();
+	  RelationMember member = memberIter.previous();
 	  if ("backward".equals(member.getRole()))
 	    listToAppend.addLast(new RelationMember("forward", member.getWay()));
 	  else

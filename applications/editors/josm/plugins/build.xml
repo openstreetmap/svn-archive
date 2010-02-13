@@ -42,6 +42,7 @@
         <ant antfile="build.xml" target="dist" dir="walkingpapers"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
         <ant antfile="build.xml" target="dist" dir="wmsplugin"/>
+        <ant antfile="build.xml" target="dist" dir="wms-turbo-challenge2"/>
     </target>
     <target name="build_defect" depends="compile">
         <ant antfile="build.xml" target="dist" dir="duplicateway"/>
@@ -86,6 +87,7 @@
         <ant antfile="build.xml" target="clean" dir="walkingpapers"/>
         <ant antfile="build.xml" target="clean" dir="waydownloader"/>
         <ant antfile="build.xml" target="clean" dir="wmsplugin"/>
+        <ant antfile="build.xml" target="clean" dir="wms-turbo-challenge2"/>
     </target>
     <target name="clean_install"></target>
     <target name="install" depends="dist"></target>

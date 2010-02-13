@@ -700,13 +700,6 @@ public class RoutePatternAction extends JosmAction {
       otherTagsTable.setModel(otherTagsData);
       /*JScrollPane*/ tableSP = new JScrollPane(otherTagsTable);
       otherTagsData.addTableModelListener(otherTagsData);
-/*      JComboBox comboBox = new JComboBox();
-      comboBox.addItem("");
-      comboBox.addItem("forward");
-      comboBox.addItem("backward");
-      itineraryTable.getColumnModel().getColumn(1)
-      .setCellEditor(new DefaultCellEditor(comboBox));
-      itineraryData.addTableModelListener(new ItineraryTableModelListener());*/
       
       layoutCons.gridx = 0;
       layoutCons.gridy = 5;
@@ -754,19 +747,32 @@ public class RoutePatternAction extends JosmAction {
       
       layoutCons.gridx = 0;
       layoutCons.gridy = 0;
-      layoutCons.gridwidth = 3;
+      layoutCons.gridwidth = 4;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 1.0;
       layoutCons.fill = GridBagConstraints.BOTH;
       gridbag.setConstraints(tableSP, layoutCons);
       contentPane.add(tableSP);
 	
+      JButton bFind = new JButton("Find");
+      bFind.setActionCommand("routePattern.itineraryFind");
+      bFind.addActionListener(this);
+	
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 1;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bFind, layoutCons);
+      contentPane.add(bFind);
+      
       JButton bShow = new JButton("Show");
       bShow.setActionCommand("routePattern.itineraryShow");
       bShow.addActionListener(this);
 	
       layoutCons.gridx = 0;
-      layoutCons.gridy = 1;
+      layoutCons.gridy = 2;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
@@ -778,8 +784,9 @@ public class RoutePatternAction extends JosmAction {
       bMark.setActionCommand("routePattern.itineraryMark");
       bMark.addActionListener(this);
 	
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 2;
+      layoutCons.gridx = 1;
+      layoutCons.gridy = 1;
+      layoutCons.gridheight = 2;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
@@ -791,8 +798,9 @@ public class RoutePatternAction extends JosmAction {
       bAdd.setActionCommand("routePattern.itineraryAdd");
       bAdd.addActionListener(this);
 	
-      layoutCons.gridx = 1;
+      layoutCons.gridx = 2;
       layoutCons.gridy = 1;
+      layoutCons.gridheight = 1;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
@@ -804,7 +812,7 @@ public class RoutePatternAction extends JosmAction {
       bDelete.setActionCommand("routePattern.itineraryDelete");
       bDelete.addActionListener(this);
 	
-      layoutCons.gridx = 1;
+      layoutCons.gridx = 2;
       layoutCons.gridy = 2;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
@@ -817,7 +825,7 @@ public class RoutePatternAction extends JosmAction {
       bSort.setActionCommand("routePattern.itinerarySort");
       bSort.addActionListener(this);
 	
-      layoutCons.gridx = 2;
+      layoutCons.gridx = 3;
       layoutCons.gridy = 1;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
@@ -830,7 +838,7 @@ public class RoutePatternAction extends JosmAction {
       bReflect.setActionCommand("routePattern.itineraryReflect");
       bReflect.addActionListener(this);
       
-      layoutCons.gridx = 2;
+      layoutCons.gridx = 3;
       layoutCons.gridy = 2;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
@@ -838,7 +846,7 @@ public class RoutePatternAction extends JosmAction {
       layoutCons.fill = GridBagConstraints.BOTH;
       gridbag.setConstraints(bReflect, layoutCons);
       contentPane.add(bReflect);
-	
+      
       //Stoplist Tab
       contentPane = tabStoplist;
       gridbag = new GridBagLayout();
@@ -861,19 +869,32 @@ public class RoutePatternAction extends JosmAction {
       
       layoutCons.gridx = 0;
       layoutCons.gridy = 0;
-      layoutCons.gridwidth = 3;
+      layoutCons.gridwidth = 4;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 1.0;
       layoutCons.fill = GridBagConstraints.BOTH;
       gridbag.setConstraints(tableSP, layoutCons);
       contentPane.add(tableSP);
 	
+      /*JButton*/ bFind = new JButton("Find");
+      bFind.setActionCommand("routePattern.stoplistFind");
+      bFind.addActionListener(this);
+	
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 1;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bFind, layoutCons);
+      contentPane.add(bFind);
+	
       /*JButton*/ bShow = new JButton("Show");
       bShow.setActionCommand("routePattern.stoplistShow");
       bShow.addActionListener(this);
 	
       layoutCons.gridx = 0;
-      layoutCons.gridy = 1;
+      layoutCons.gridy = 2;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
@@ -885,8 +906,9 @@ public class RoutePatternAction extends JosmAction {
       bMark.setActionCommand("routePattern.stoplistMark");
       bMark.addActionListener(this);
 	
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 2;
+      layoutCons.gridx = 1;
+      layoutCons.gridy = 1;
+      layoutCons.gridheight = 2;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
@@ -898,8 +920,9 @@ public class RoutePatternAction extends JosmAction {
       bAdd.setActionCommand("routePattern.stoplistAdd");
       bAdd.addActionListener(this);
 	
-      layoutCons.gridx = 1;
+      layoutCons.gridx = 2;
       layoutCons.gridy = 1;
+      layoutCons.gridheight = 1;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
@@ -911,7 +934,7 @@ public class RoutePatternAction extends JosmAction {
       bDelete.setActionCommand("routePattern.stoplistDelete");
       bDelete.addActionListener(this);
 	
-      layoutCons.gridx = 1;
+      layoutCons.gridx = 2;
       layoutCons.gridy = 2;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
@@ -924,7 +947,7 @@ public class RoutePatternAction extends JosmAction {
       bSort.setActionCommand("routePattern.stoplistSort");
       bSort.addActionListener(this);
 	
-      layoutCons.gridx = 2;
+      layoutCons.gridx = 3;
       layoutCons.gridy = 1;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
@@ -937,7 +960,7 @@ public class RoutePatternAction extends JosmAction {
       bReflect.setActionCommand("routePattern.stoplistReflect");
       bReflect.addActionListener(this);
       
-      layoutCons.gridx = 2;
+      layoutCons.gridx = 3;
       layoutCons.gridy = 2;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
@@ -945,7 +968,7 @@ public class RoutePatternAction extends JosmAction {
       layoutCons.fill = GridBagConstraints.BOTH;
       gridbag.setConstraints(bReflect, layoutCons);
       contentPane.add(bReflect);
-	
+      
       //Meta Tab
       contentPane = tabMeta;
       gridbag = new GridBagLayout();
@@ -1044,6 +1067,20 @@ public class RoutePatternAction extends JosmAction {
       rowContent.add("");
       rowContent.add("");
       otherTagsData.addRow(rowContent);
+    }
+    else if ("routePattern.itineraryFind".equals(event.getActionCommand()))
+    {
+      if (mainDataSet == null)
+	return;
+      
+      itineraryTable.clearSelection();
+      
+      for (int i = 0; i < itineraryData.getRowCount(); ++i)
+      {
+	if ((itineraryData.ways.elementAt(i) != null) &&
+	    (mainDataSet.isSelected(itineraryData.ways.elementAt(i))))
+	    itineraryTable.addRowSelectionInterval(i, i);
+      }
     }
     else if ("routePattern.itineraryShow".equals(event.getActionCommand()))
     {
@@ -1312,6 +1349,20 @@ public class RoutePatternAction extends JosmAction {
       
       cleanupGaps();
       rebuildWays();
+    }
+    else if ("routePattern.stoplistFind".equals(event.getActionCommand()))
+    {
+      if (mainDataSet == null)
+	return;
+      
+      stoplistTable.clearSelection();
+      
+      for (int i = 0; i < stoplistData.getRowCount(); ++i)
+      {
+	if ((stoplistData.nodes.elementAt(i) != null) &&
+	      (mainDataSet.isSelected(stoplistData.nodes.elementAt(i))))
+	  stoplistTable.addRowSelectionInterval(i, i);
+      }
     }
     else if ("routePattern.stoplistShow".equals(event.getActionCommand()))
     {

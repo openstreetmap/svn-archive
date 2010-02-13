@@ -142,6 +142,11 @@ public class ConnectWays {
             if (!ww.isUsable() || ww.containsNode(node) || !isBuilding(ww)) {
                 continue;
             }
+
+            if(m.get(ww) != null){
+                ww = m.get(ww);
+            }
+
             for (Pair<Node, Node> np : ww.getNodePairs(false)) {
                 double dist = TracerGeometry.distanceFromSegment(ll, np.a.getCoor(), np.b.getCoor());
                 if (dist < minDist) {
@@ -154,11 +159,6 @@ public class ConnectWays {
         System.out.println("Nearest way: " + nearestWay + " distance: " + minDist);
         if (minDist < MIN_DISTANCE_TW) {
             Way newNWay = new Way(nearestWay);
-
-            if(m.get(nearestWay) != null){
-                newNWay = m.get(nearestWay);
-                m.remove(nearestWay);
-            }
 
             newNWay.addNode(nearestNodeIndex + 1, node);
             System.out.println("New way:" + newNWay);

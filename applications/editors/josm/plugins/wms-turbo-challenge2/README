@@ -1,0 +1,12 @@
+README
+======
+
+This is the Ultimate WMS Turbo Challenge II game, it is used for
+recording GPX traces and/or mapping roads (TODO) based on a WMS layer
+such as Yahoo! aerial imagery.  The WMS source needs to be detailed
+enough for roads to be visible.
+
+If you never recorded GPS traces in a car, now you have a chance to
+do so in an environmentally friendly way.  Note that mapping railways
+or waterways is not supported due to shortage of 4-colour '90s style
+train and motorboat bitmaps.

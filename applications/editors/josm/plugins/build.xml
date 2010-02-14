@@ -34,6 +34,7 @@
         <ant antfile="build.xml" target="dist" dir="routing"/>
         <ant antfile="build.xml" target="dist" dir="slippymap"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
+        <ant antfile="build.xml" target="dist" dir="public_transport"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
         <ant antfile="build.xml" target="dist" dir="terracer"/>
@@ -74,6 +75,7 @@
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
         <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="clean" dir="public_transport"/>
         <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
         <ant antfile="build.xml" target="clean" dir="routes"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>

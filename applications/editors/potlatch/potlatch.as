@@ -798,8 +798,8 @@
 	}
 
 	function showPosition() { setTooltip(iText('hint_latlon',
-                                                 Math.floor(coord2lat (_root.map._ymouse)*10000)/10000,
-									             Math.floor(coord2long(_root.map._xmouse)*10000)/10000,0)); }
+                                                 Math.floor(coord2lat (_root.map._ymouse)*100000)/100000,
+									             Math.floor(coord2long(_root.map._xmouse)*100000)/100000,0)); }
 	function startCount()	{ z=new Date(); _root.startTime=z.getTime(); }
 	function endCount(id)	{ z=new Date(); zz=Math.floor((z.getTime()-_root.startTime)*100);
 							if (zz>100) { _root.chat.text+=id+":"+zz+";"; } }

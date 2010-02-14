@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-12 15:42+0100\n"
-"PO-Revision-Date: 2010-02-10 15:25+0000\n"
-"Last-Translator: Bráulio Bezerra <Unknown>\n"
+"POT-Creation-Date: 2010-02-14 22:20+0100\n"
+"PO-Revision-Date: 2010-02-13 00:34+0000\n"
+"Last-Translator: DebianTUX <felipe.gomes.ferreira@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-02-12 14:04+0000\n"
+"X-Launchpad-Export-Date: 2010-02-14 20:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
-#: ../core/src/org/openstreetmap/josm/Main.java:204
+#: ../core/src/org/openstreetmap/josm/Main.java:210
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
 #: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:482
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:107
@@ -30,22 +30,25 @@ msgstr ""
 msgid "Help"
 msgstr "Ajuda"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:396
+#: ../core/src/org/openstreetmap/josm/Main.java:402
 #, java-format
 msgid "Ignoring malformed file URL: \"{0}\""
 msgstr "Ignorando URL de arquivo mal formada: \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/Main.java:397
-#: ../core/src/org/openstreetmap/josm/Main.java:430
-#: ../core/src/org/openstreetmap/josm/Main.java:498
+#: ../core/src/org/openstreetmap/josm/Main.java:403
+#: ../core/src/org/openstreetmap/josm/Main.java:436
+#: ../core/src/org/openstreetmap/josm/Main.java:504
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:107
 #: ../core/src/org/openstreetmap/josm/actions/AbstractInfoAction.java:133
 #: ../core/src/org/openstreetmap/josm/actions/CreateCircleAction.java:205
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:61
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:139
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:110
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:116
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:142
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:126
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:68
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:101
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:92
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:150
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:162
@@ -56,21 +59,21 @@ msgstr "Ignorando URL de arquivo mal formada: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:280
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:451
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:457
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:110
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:129
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:161
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:111
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:153
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:185
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:110
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:127
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:357
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:252
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:291
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:522
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:576
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:639
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:575
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:638
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:189
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:415
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:797
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:741
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:747
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:72
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:237
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:269
@@ -91,12 +94,12 @@ msgstr "Ignorando URL de arquivo mal formada: \"{0}\""
 msgid "Warning"
 msgstr "Aviso"
 
-#: ../core/src/org/openstreetmap/josm/Main.java:429
+#: ../core/src/org/openstreetmap/josm/Main.java:435
 msgid "Parameter \"downloadgps\" does not accept file names or file URLs"
 msgstr ""
 "Parâmetro \"downloadgps\" não aceita nomes de arquivos ou URLs de arquivos."
 
-#: ../core/src/org/openstreetmap/josm/Main.java:497
+#: ../core/src/org/openstreetmap/josm/Main.java:503
 #, java-format
 msgid "Ignoring malformed URL: \"{0}\""
 msgstr "Ignorando URL mal formada: \"{0}\""
@@ -238,6 +241,7 @@ msgstr "Clique para continuar e abrir {0} navegadores"
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:97
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:113
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:207
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:116
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:158
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:44
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:48
@@ -247,7 +251,7 @@ msgstr "Clique para continuar e abrir {0} navegadores"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:193
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:207
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:869
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1189
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1187
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:120
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:372
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:112
@@ -261,7 +265,7 @@ msgstr "Clique para continuar e abrir {0} navegadores"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:169
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:673
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:600
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:598
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:204
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:338
@@ -270,12 +274,8 @@ msgstr "Clique para continuar e abrir {0} navegadores"
 #: ../core/src/org/openstreetmap/josm/io/GpxExporter.java:116
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:118
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:330
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:578
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:577
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:104
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:151
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:259
@@ -397,9 +397,9 @@ msgstr "Por favor digite uma longitude entre -180..180"
 #: ../core/src/org/openstreetmap/josm/actions/upload/RelationUploadOrderHook.java:88
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:80
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:350
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1155
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1153
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:169
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:370
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:375
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:716
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:204
@@ -407,8 +407,6 @@ msgstr "Por favor digite uma longitude entre -180..180"
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:322
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:123
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:161
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:145
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:333
@@ -447,16 +445,13 @@ msgstr "Mover nós selecionados em um círculo"
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:48
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:79
 #: ../core/src/org/openstreetmap/josm/actions/ReverseWayAction.java:31
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:34
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:37
 #: ../core/src/org/openstreetmap/josm/actions/SplitWayAction.java:74
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:54
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:63
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:67
 #: ../plugins/Create_grid_of_ways/src/CreateGridOfWaysPlugin/CreateGridOfWaysAction.java:34
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:36
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationAction.java:26
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:48
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:48
 #: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:43
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:53
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeftAction.java:32
@@ -478,8 +473,8 @@ msgstr "Por favor, selecione no mínimo 4 nós."
 
 #: ../core/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:140
 #: ../core/src/org/openstreetmap/josm/actions/AlignInLineAction.java:67
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:55
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:193
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:54
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:192
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:71
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:245
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:88
@@ -546,23 +541,23 @@ msgstr "anterior"
 msgid "next"
 msgstr "próxima"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:54
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:192
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:53
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:191
 msgid "Nothing selected to zoom to."
 msgstr "Não há nada selecionado para se aproximar."
 
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:101
 #: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:102
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:103
 #, java-format
 msgid "Zoom to {0}"
 msgstr "Aproximar para {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:102
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:101
 #, java-format
 msgid "Zoom the view to {0}."
 msgstr "Aproximar a visão para {0}."
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:103
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:102
 #: ../core/src/org/openstreetmap/josm/actions/ToggleGPXLinesAction.java:17
 #: ../core/src/org/openstreetmap/josm/actions/ZoomInAction.java:23
 #: ../core/src/org/openstreetmap/josm/actions/ZoomOutAction.java:20
@@ -570,7 +565,7 @@ msgstr "Aproximar a visão para {0}."
 msgid "View: {0}"
 msgstr "Visão: {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:192
+#: ../core/src/org/openstreetmap/josm/actions/AutoScaleAction.java:191
 msgid "No conflicts to zoom to"
 msgstr "Não há conflitos para se aproximar"
 
@@ -598,11 +593,11 @@ msgstr "Encerra changesets abertos"
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:37
 #: ../core/src/org/openstreetmap/josm/actions/DownloadReferrersAction.java:30
 #: ../core/src/org/openstreetmap/josm/actions/NewAction.java:19
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:43
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:47
 #: ../core/src/org/openstreetmap/josm/actions/OpenLocationAction.java:40
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:29
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:26
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:86
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:88
 #, java-format
 msgid "File: {0}"
 msgstr "Arquivo: {0}"
@@ -703,14 +698,13 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:97
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:372
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:94
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:99
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:276
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:891
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:986
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:600
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:985
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:598
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:141
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:231
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:200
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:92
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:134
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/TagTable.java:215
@@ -832,7 +826,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:21
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateLayerAction.java:21
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:498
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1369
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1367
 msgid "Duplicate"
 msgstr "Duplicar"
 
@@ -953,7 +947,7 @@ msgid "\"{0}\" is not closed and therefore cannot be joined."
 msgstr "\"{0}\" não está fechado e não pode ser unido."
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:152
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:65
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:79
 msgid "The selected way has nodes outside of the downloaded data region."
 msgid_plural ""
 "The selected ways have nodes outside of the downloaded data region."
@@ -961,17 +955,15 @@ msgstr[0] "A via selecionada tem nós fora da área de download definida."
 msgstr[1] "As vias selecionadas tem nós fora da área de download definida."
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:155
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:68
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:84
 msgid "This can lead to nodes being deleted accidentally."
 msgstr "Isto pode levar a nós apagados acidentalmente."
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:156
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:69
 msgid "Are you really sure to continue?"
 msgstr "Tem certeza que quer continuar?"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:157
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:70
 msgid "Please abort if you are not sure"
 msgstr "Por favor, aborte se não está confiante"
 
@@ -1213,41 +1205,62 @@ msgstr "Novo"
 msgid "Create a new map."
 msgstr "Criar novo mapa."
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:42
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:43
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:46
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:47
 msgid "Open..."
 msgstr "Abrir..."
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:42
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:46
 msgid "Open a file."
 msgstr "Abrir um arquivo."
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:77
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:81
 msgid "Opening files"
 msgstr "Abrindo arquivos"
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:120
-msgid "<html>Cannot open directory.<br>Please select a file!</html>"
-msgstr ""
-"<html>Não foi possível abrir diretório.<br>Por favor, selecione um arquivo!</"
-"html>"
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:100
+#, java-format
+msgid ""
+"Cannot open {0} file with the file importer ''{1}''. Skipping the following "
+"files:"
+msgid_plural ""
+"Cannot open {0} files with the file importer ''{1}''. Skipping the following "
+"files:"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:121
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:127
+#, java-format
+msgid ""
+"Cannot open {0} file because no suitable file importer is available. "
+"Skipping the following files:"
+msgid_plural ""
+"Cannot open {0} files because no suitable file importer is available. "
+"Skipping the following files:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:178
+#, java-format
+msgid "<html>Cannot open directory ''{0}''.<br>Please select a file.</html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:179
 msgid "Open file"
 msgstr "Abrir arquivo"
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:160
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:227
 msgid "Opening 1 file..."
 msgstr "Abrindo 1 arquivo..."
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:162
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:229
 #, java-format
 msgid "Opening {0} file..."
 msgid_plural "Opening {0} files..."
 msgstr[0] "Abrindo {0} arquivo..."
 msgstr[1] "Abrindo {0} arquivos..."
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:169
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:237
 #, java-format
 msgid "Opening file ''{0}'' ..."
 msgstr "Abrindo arquivo ''{0}'' ..."
@@ -1307,9 +1320,8 @@ msgid "Orthogonalize Shape"
 msgstr "Ortogonalizar prancha"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:47
-#, fuzzy
 msgid "Move nodes so all angles are 90 or 180 degrees"
-msgstr "Mover nós para que todos ângulos sejam 90 ou 270 graus."
+msgstr "Mover nós para que todos os ângulos sejam 90 ou 180 graus"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:76
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:79
@@ -1480,7 +1492,6 @@ msgstr "Não foi possível renomear arquivo ''{0}''"
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:79
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:45
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:60
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:91
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:134
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:399
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:412
@@ -1489,7 +1500,7 @@ msgstr "Não foi possível renomear arquivo ''{0}''"
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:191
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:200
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:231
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:628
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:626
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:254
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:348
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:241
@@ -1511,13 +1522,6 @@ msgstr "Não foi possível renomear arquivo ''{0}''"
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:1098
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:1106
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:1351
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:153
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:177
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:186
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:152
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:176
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:185
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:156
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBoundaries.java:29
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionBuildings.java:29
@@ -1656,51 +1660,91 @@ msgstr ""
 msgid "Help: {0}"
 msgstr "Ajuda: {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:117
+#: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:119
 msgid "Status Report"
 msgstr "Relatório Atual"
 
-#: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:118
+#: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:120
 msgid "Copy to clipboard and close"
 msgstr "Copiar para área de transferência e fechar"
 
-#: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:118
+#: ../core/src/org/openstreetmap/josm/actions/ShowStatusReportAction.java:120
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:337
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:408
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserDialog.java:130
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:932
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:246
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:887
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:885
 msgid "Close"
 msgstr "Fechar"
 
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:34
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:37
 msgid "Simplify Way"
 msgstr "Simplificar via"
 
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:34
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:37
 msgid "Delete unnecessary nodes from a way."
 msgstr "Apagar nós desnecessários de uma via."
 
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:64
+msgid "Yes, delete nodes"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:66
+msgid "Delete nodes outside of downloaded data regions"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:70
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:634
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:675
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:215
+msgid "No, abort"
+msgstr "Não, abortar"
+
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:72
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:118
+msgid "Cancel operation"
+msgstr ""
+
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:85
+msgid "Do you want to delete them anyway?"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:87
+msgid "Delete nodes outside of data regions?"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:100
 msgid "Please select at least one way to simplify."
 msgstr "Por favor, selecione ao menos uma via para simplificar."
 
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:89
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:110
+#: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:44
+#: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:57
+msgid "Yes"
+msgstr "Sim"
+
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:112
+msgid "Simplify all selected ways"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:125
 #, java-format
-msgid "The selection contains {0} way. Are you sure you want to simplify it?"
-msgid_plural ""
+msgid ""
 "The selection contains {0} ways. Are you sure you want to simplify them all?"
-msgstr[0] "A seleção contém {0} via. Tem certeza que quer simplificá-la?"
-msgstr[1] "A seleção contém {0} vias. Tem certeza que quer simplificar todas?"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:92
-msgid "Are you sure?"
-msgstr "Você tem certeza?"
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:128
+msgid "Simplify ways?"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:139
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:179
+#, java-format
+msgid "Simplify {0} way"
+msgid_plural "Simplify {0} ways"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:250
 #: ../plugins/cadastre-fr/src/cadastre_fr/SimplifyWay.java:66
 #, java-format
 msgid "Simplify Way (remove {0} node)"
@@ -1966,12 +2010,12 @@ msgstr "Não há objetos a atualizar."
 msgid "Selection empty"
 msgstr "Seleção vazia"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:85
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:86
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:87
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:88
 msgid "Upload data"
 msgstr "Enviar dados"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:85
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:87
 msgid "Upload all changes in the active data layer to the OSM server"
 msgstr ""
 "Envia todas as mudanças na camada de dados ativa para o servidor do OSM"
@@ -1979,19 +2023,17 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:108
 #, java-format
 msgid ""
-"<html>There are unresolved conflicts in layer ''{0}''.<br>You have to "
-"resolve them first.</html>"
+"<html>The data to be uploaded participates in unresolved conflicts of layer "
+"''{0}''.<br>You have to resolve them first.</html>"
 msgstr ""
-"<html>Existem conflitos não-resolvidos na camada ''{0}''.<br>Você precisa "
-"resolvê-los primeiro.</html>"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:128
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:152
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:109
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:126
 msgid "No changes to upload."
 msgstr "Não há modificações a enviar."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:160
+#: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:184
 msgid "Nothing to upload. Get some data first."
 msgstr "Não há nada a enviar. Baixe dados primeiro."
 
@@ -2004,16 +2046,16 @@ msgid "Upload all changes in the current selection to the OSM server."
 msgstr ""
 "Enviar todas as alterações presentes na seleção atual para o servidor OSM."
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:258
+#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:267
 msgid "Checking parents for deleted objects"
 msgstr "Verificando pais para os o objetos apagados"
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:317
+#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:326
 #, java-format
 msgid "Reading parents of ''{0}''"
 msgstr "Lendo os pais de \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:323
+#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:332
 msgid "Checking for deleted parents in the local dataset"
 msgstr "Buscando pais apagados no grupo de dados local"
 
@@ -2469,41 +2511,45 @@ msgstr ""
 "Amplie arrastando ou Ctrl+. ou Ctrl+,; mova com Ctrl+Acima, Esquerda, "
 "Abaixo, Direita; mova ampliação com o botão direito"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:25
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:26
 msgid "<not>"
-msgstr ""
+msgstr "<não>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:25
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:26
 msgid "<or>"
-msgstr ""
+msgstr "<ou>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:25
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:26
 msgid "<left parent>"
-msgstr ""
+msgstr "<pai a esquerda>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:26
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:27
 msgid "<right parent>"
-msgstr ""
+msgstr "<pai a direita>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:26
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:27
 msgid "<colon>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:26
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:27
 msgid "<equals>"
-msgstr ""
+msgstr "<igual>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:27
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:28
 msgid "<key>"
-msgstr ""
+msgstr "<chave>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:27
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:28
 msgid "<question mark>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:27
-msgid "<end-of-file>"
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:28
+msgid "<number>"
 msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:29
+msgid "<end-of-file>"
+msgstr "<fim-de-arquivo>"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:49
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:50
@@ -2583,7 +2629,7 @@ msgstr "<b>-name:Bak</b> - ''Bak'' não existe no nome."
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:124
 msgid "<b>oneway?</b> - oneway=yes, true, 1 or on"
-msgstr ""
+msgstr "<b>mão única?</b> - oneway=yes, true,  1 ou on"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:125
 msgid "<b>foot:</b> - key=foot set to any value."
@@ -2703,8 +2749,8 @@ msgid "Use <b>(</b> and <b>)</b> to group expressions"
 msgstr "Usar <b>(</b> e <b>)</b> para agrupar expressões"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:155
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:49
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:50
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:53
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TabularTagSelector.java:51
 msgid "Filter"
@@ -2778,47 +2824,51 @@ msgstr ""
 "\n"
 "{2}"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:251
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:253
 msgid "Key cannot be empty when tag operator is used. Sample use: key=value"
 msgstr ""
 "Chave não pode ser apagada quando o operador está sendo usado. Exemplo: "
 "chave=valor"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:293
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:295
 #, java-format
 msgid "Pattern Syntax Error: Pattern {0} in {1} is illegal!"
 msgstr "Erro de sintaxe do padrão: padrão {0} em {1} é ilegal!"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:440
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:442
 #, java-format
 msgid "Unknown primitive type: {0}. Allowed values are node, way or relation"
 msgstr ""
 "Tipo de primitiva desconhecida: {0}. Os valores permitidos são nó, caminho "
 "ou relação."
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:623
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:625
 #, java-format
 msgid "Unexpected token: {0}"
 msgstr "Credencial de autenticação inesperada: {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:634
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:636
 msgid "Missing parameter for OR"
 msgstr "Parâmetro faltando para OR"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:656
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:658
 #, java-format
 msgid "Unexpected token. Expected {0}, found {1}"
 msgstr "Token não esperado. Esperava {0}, mas {1} foi encontrado"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:659
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:661
 msgid "Missing operator for NOT"
 msgstr "Operador faltando para NOT"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:710
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:668
+msgid "Primitive id expected"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:715
 msgid "Wrong number of parameters for tags operator."
 msgstr "Número errado de parâmetros para o operador de tags"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:712
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:717
 #, java-format
 msgid ""
 "Incorrect value of tags operator: {0}. Tags operator expects number of tags "
@@ -2827,11 +2877,11 @@ msgstr ""
 "Valor incorreto para operador de etiquetas: {0}. Operador de tags espera "
 "número de etiquetas ou intervalo, por exemplo, tags:1 ou tags:2-5"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:722
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:727
 msgid "Wrong number of parameters for nodes operator."
 msgstr "Número de parametros incorreto para operador de nós."
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:724
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:729
 #, java-format
 msgid ""
 "Incorrect value of nodes operator: {0}. Nodes operator expects number of "
@@ -2840,19 +2890,14 @@ msgstr ""
 "Valor incorreto de operador de nós: {0}. O operador de nós espera un número "
 "de nós ou um intervalo, por exemplos, os nós:10-20"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:731
-#, java-format
-msgid "Incorrect value of id operator: {0}. Number is expected."
-msgstr "Valor incorreto do operador de id: {0}. Se esperava um número."
-
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:737
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:736
 #, java-format
 msgid "Incorrect value of changeset operator: {0}. Number is expected."
 msgstr ""
 "Valor incorreto para operador de conjunto de modificações: {0}. Um número é "
 "esperado."
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:744
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:743
 #, java-format
 msgid "Incorrect value of version operator: {0}. Number is expected."
 msgstr "Valor incorreto de operador de versão: {0}. Número é esperado."
@@ -3007,7 +3052,7 @@ msgstr ""
 "primitiva<br>''{1}''.<br>Este conflito não pode ser adicionado.</html>"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:38
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1112
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1110
 msgid "Double conflict"
 msgstr "Conflito duplo"
 
@@ -3119,17 +3164,17 @@ msgstr "Resolver conflitos em estado de exclusão em {0}"
 #: ../core/src/org/openstreetmap/josm/command/ModifiedConflictResolveCommand.java:41
 #, java-format
 msgid "Set the ''modified'' flag for node {0}"
-msgstr ""
+msgstr "Colocar a marcação \"modificado\" para o nó {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/ModifiedConflictResolveCommand.java:42
 #, java-format
 msgid "Set the ''modified'' flag for way {0}"
-msgstr ""
+msgstr "Ajuste a flag \"modificada\" para caminho {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/ModifiedConflictResolveCommand.java:43
 #, java-format
 msgid "Set the ''modified'' flag for relation {0}"
-msgstr ""
+msgstr "Ajuste a flag \"modificada\" para relação {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/MoveCommand.java:121
 #, java-format
@@ -3147,8 +3192,8 @@ msgstr "Eliminado objeto ''{0}''"
 #, java-format
 msgid "Purged {0} object"
 msgid_plural "Purged {0} objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} objeto eliminado"
+msgstr[1] "{0} objetos eliminados"
 
 #: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:155
 #, java-format
@@ -3195,12 +3240,12 @@ msgstr "Resolver {0} conflitos do rotulo no caminho {1}"
 msgid "Resolve {0} tag conflicts in relation {1}"
 msgstr "Resolver {0} conflitos do rotulo na relação {1}"
 
-#: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:61
+#: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:68
 #, java-format
 msgid "Undelete {0} primitive"
 msgid_plural "Undelete {0} primitives"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Recuperar {0} primitiva"
+msgstr[1] "Recuperar {0} primitivas"
 
 #: ../core/src/org/openstreetmap/josm/command/VersionConflictResolveCommand.java:41
 #, java-format
@@ -3433,6 +3478,8 @@ msgid ""
 "Error: Illegal double value ''{0}'' on line ''{1}'' in bookmark list from "
 "server"
 msgstr ""
+"Erro: Valor real ilegal \"{0}\" na linha \"{1}\" na lista de favoritos do "
+"servidor"
 
 #: ../core/src/org/openstreetmap/josm/data/ServerSidePreferences.java:229
 #, java-format
@@ -3507,7 +3554,7 @@ msgctxt "compass"
 msgid "E"
 msgstr "L"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:207
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:218
 #, java-format
 msgid ""
 "Unable to add primitive {0} to the dataset because it is already included"
@@ -3515,7 +3562,7 @@ msgstr ""
 "Impossível adicionar primitiva {0} no conjunto de dados porque ela já está "
 "incluída"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:649
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:660
 #, java-format
 msgid ""
 "JOSM expected to find primitive [{0} {1}] in dataset but it is not there. "
@@ -3564,65 +3611,68 @@ msgid ""
 "with lower version {2} is not visible. Cannot deal with this inconsistency. "
 "Keeping target object. "
 msgstr ""
+"Objeto alvo com id {0} e versão {1} é visível, porém o source do objeto com "
+"versão menor {2} não é visível. Não é possível lidar com essa "
+"inconsistência. Mantendo objeto alvo. "
 
 #. translators notes must be in front
 #. column header: enable filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:142
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:141
 msgctxt "filter"
 msgid "E"
 msgstr ""
 
 #. column header: hide filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:143
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:142
 msgctxt "filter"
 msgid "H"
 msgstr ""
 
 #. column header: filter text
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:144
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:143
 msgctxt "filter"
 msgid "Text"
 msgstr "Texto"
 
 #. column header: apply filter for children
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:145
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:144
 msgctxt "filter"
 msgid "C"
 msgstr ""
 
 #. column header: inverted filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:146
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:145
 msgctxt "filter"
 msgid "I"
 msgstr ""
 
 #. column header: filter mode
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:147
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:146
 msgctxt "filter"
 msgid "M"
 msgstr ""
 
 #. translators notes must be in front
 #. filter mode: replace
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:210
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:209
 msgctxt "filter"
 msgid "R"
 msgstr ""
 
 #. filter mode: add
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:211
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:210
 msgctxt "filter"
 msgid "A"
 msgstr ""
 
 #. filter mode: remove
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:212
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:211
 msgctxt "filter"
 msgid "D"
 msgstr ""
 
 #. filter mode: in selection
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:213
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:212
 msgctxt "filter"
 msgid "F"
 msgstr ""
@@ -3647,6 +3697,8 @@ msgid ""
 "Cannot assign a changesetId > 0 to a new primitive. Value of changesetId is "
 "{0}"
 msgstr ""
+"Não é possível configurar um changesetId > 0 para uma nova primitiva. Valor "
+"do changesetId é {0}"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1007
 msgid ""
@@ -3659,10 +3711,12 @@ msgstr ""
 msgid ""
 "Cannot merge primitives with different ids. This id is {0}, the other is {1}"
 msgstr ""
+"Não é possível fazer merge com primitivas de ids diferentes. Esse id é {0}, "
+"o outro é {1}"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:10
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:15
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:105
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:108
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:577
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:50
 msgid "node"
@@ -3682,8 +3736,8 @@ msgstr[1] "vias"
 #. dark blue
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:12
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:17
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:167
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:361
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:170
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:364
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:577
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:72
 msgid "relation"
@@ -3699,6 +3753,8 @@ msgid ""
 "Tag collection cannot be applied to a primitive because there are keys with "
 "multiple values."
 msgstr ""
+"Coleção de Tag não pode ser aplicada à primitiva porque há chaves com "
+"valores múltiplos."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/Way.java:291
 #: ../core/src/org/openstreetmap/josm/data/osm/Way.java:313
@@ -3710,6 +3766,8 @@ msgstr "Não é possível adicionar nó {0} em uma via incompleta {1}."
 #, java-format
 msgid "Cannot compare primitive with ID ''{0}'' to primitive with ID ''{1}''."
 msgstr ""
+"Não é possível comparar a primitiva com ID \"{0}\" com a primitiva ID \"{1}"
+"\"."
 
 #: ../core/src/org/openstreetmap/josm/data/osm/history/HistoryWay.java:48
 #, java-format
@@ -3720,79 +3778,79 @@ msgstr "parâmetro ''{0}'' fora do intervalo de 0..{1}, obtido {2}"
 msgid "Area style way is not closed."
 msgstr "Caminho para Estilo de Área não está fechado."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:266
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:267
 msgid "More than one \"from\" way found."
 msgstr "Mais de um caminho \"de\" encontrado."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:272
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:273
 msgid "More than one \"to\" way found."
 msgstr "Mais de um caminho \"para\" encontrado."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:278
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:292
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:279
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:293
 msgid "More than one \"via\" found."
 msgstr "Encontrado mais de um parâmetro \"via\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:283
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:297
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:284
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:298
 #, java-format
 msgid "Unknown role ''{0}''."
 msgstr "Regra desconhecida \"{0}\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:300
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:301
 #, java-format
 msgid "Unknown member type for ''{0}''."
 msgstr "Tipo de membro desconhecido para \"{0}\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:306
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:307
 msgid "No \"from\" way found."
 msgstr "Nenhum caminho \"de\" encontrado."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:310
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:311
 msgid "No \"to\" way found."
 msgstr "Nenhuma caminho \"para\" encontrado."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:314
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:315
 msgid "No \"via\" node or way found."
 msgstr "Não encontrei nenum nó ou caminho com o parâmetro \"via\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:323
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:324
 msgid "The \"from\" way does not start or end at a \"via\" node."
 msgstr "O caminho \"de\" não começa ou termina em um nó \"via\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:327
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:328
 msgid "The \"to\" way does not start or end at a \"via\" node."
 msgstr "O trecho \"to\" não começa ou termina no nó \"via\""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:358
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:359
 msgid "The \"from\" way does not start or end at the \"via\" way."
 msgstr "O trecho \"from\" não começa ou termina no caminho \"via\""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:362
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:363
 msgid "The \"to\" way does not start or end at the \"via\" way."
 msgstr "O trecho \"to\" não começa ou termina em um nó \"via\"."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:456
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:457
 #, java-format
 msgid "Style for restriction {0} not found."
 msgstr "Estilo para restrição {0} não encontrado."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:528
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:529
 #, java-format
 msgid "Style for inner way ''{0}'' equals multipolygon."
 msgstr "Estilo para caminho interno \"{0}\" é multipolígono."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:556
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:557
 #, java-format
 msgid "Style for outer way ''{0}'' mismatches."
 msgstr "Estilo para via externa \"{0}\" contém erros."
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:754
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:755
 #, java-format
 msgid "Error: {0}"
 msgstr "Erro: {0}"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:754
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:755
 #, java-format
 msgid "Warning: {0}"
 msgstr "Aviso: {0}"
@@ -3818,7 +3876,7 @@ msgstr "via incompleta"
 #. darker blue
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:181
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:178
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:183
 msgid "background"
 msgstr "segundo plano"
 
@@ -3837,7 +3895,7 @@ msgstr "texto"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:25
 msgid "areatext"
-msgstr ""
+msgstr "Área de texto"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Epsg4326.java:26
 msgid "WGS84 Geographic"
@@ -3961,66 +4019,67 @@ msgstr "<html>Não foi possível gravar favorito.<br>{0}</html>"
 msgid "Do not show again (remembers choice)"
 msgstr "Não mostrar novamente (lembrar escolha)"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:83
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:282
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:84
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:86
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:285
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:82
 #, java-format
 msgid " [id: {0}]"
 msgstr " [id: {0}]"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:97
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:122
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:160
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:214
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:100
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:125
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:163
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:217
 msgid "incomplete"
 msgstr "incompleto"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:134
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:336
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:137
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:339
 msgid "highway"
 msgstr "rodovia"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:135
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:337
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:138
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:340
 #: build/trans_presets.java:3219
 msgid "railway"
 msgstr "ferrovia"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:136
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:338
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:139
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:341
 msgid "waterway"
 msgstr "hidrovia"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:137
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:339
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:140
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:342
 msgid "landuse"
 msgstr "uso da terra"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:144
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:344
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:147
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:347
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:463
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:345
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:260
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:507
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:265
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:513
 #, java-format
 msgid "{0} node"
 msgid_plural "{0} nodes"
 msgstr[0] "{0} nó"
 msgstr[1] "{0} nós"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:164
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:167
 msgid "public transport"
 msgstr "transporte public"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:204
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:389
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:207
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:392
 #, java-format
 msgid "{0} member"
 msgid_plural "{0} members"
 msgstr[0] "{0} membro"
 msgstr[1] "{0} membros"
 
-#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:230
+#: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:233
 #: ../core/src/org/openstreetmap/josm/gui/io/ChangesetCellRenderer.java:62
 #, java-format
 msgid "Changeset {0}"
@@ -4030,54 +4089,54 @@ msgstr "Conjunto de mudanças {0}"
 msgid "Precondition violation"
 msgstr "Violação de Pré-condição"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:109
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:103
 msgid "Security exception"
 msgstr "Exceção de segurança"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:127
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:121
 msgid "Network exception"
 msgstr "Exceção de rede"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:145
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:139
 msgid "IO Exception"
 msgstr "Excepção IO"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:178
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:172
 msgid "Internal Server Error"
 msgstr "Erro interno do servidor"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:194
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:188
 msgid "Bad Request"
 msgstr "Requisição inválida"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:210
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:204
 msgid "Not Found"
 msgstr "Não encontrado"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:225
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:219
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:114
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:172
 msgid "Conflict"
 msgstr "Conflito"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:249
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:243
 msgid "Authentication Failed"
 msgstr "Autenticação Falhou"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:265
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:259
 msgid "Authorisation Failed"
 msgstr "Autorização Falhou"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:281
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:275
 msgid "Authentication failed"
-msgstr ""
+msgstr "Falha de autenticação"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:299
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:293
 msgid "Unknown host"
 msgstr "Servidor desconhecido"
 
-#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:407
+#: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:401
 msgid "Object deleted"
 msgstr "Objeto apagado"
 
@@ -4172,13 +4231,11 @@ msgstr "Se especificado, resetar configuração ao invés de carregá-la."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:86
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:165
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:87
 msgid "Username"
 msgstr "Nome do Usuário"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplet.java:89
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:173
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:90
 msgid "Password"
 msgstr "Senha"
 
@@ -4265,10 +4322,12 @@ msgid ""
 "Parameters --download, --downloadgps, and --selection are processed in this "
 "order."
 msgstr ""
+"Parâmetros --download, --downloadgps, e --selection são processados nessa "
+"ordem."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:99
 msgid "Make sure you load some data if you use --selection."
-msgstr ""
+msgstr "Tenha certeza de que irá carregar algum dado, caso use --selection."
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:165
 msgid "Initializing"
@@ -4308,7 +4367,7 @@ msgid "File"
 msgstr "Arquivo"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:167
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:79
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:84
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:936
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:180
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:144
@@ -4464,6 +4523,8 @@ msgid ""
 "<html>Please confirm to remove <strong>1 object</strong> from <strong>1 "
 "relation</strong>.</html>"
 msgstr ""
+"<html>Por favor confirme para remover <strong>1 objeto</strong> de <strong>1 "
+"relação</strong>.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:152
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:154
@@ -4472,6 +4533,8 @@ msgid ""
 "<html>Please confirm to remove <strong>1 object</strong> from <strong>{0} "
 "relations</strong>.</html>"
 msgstr ""
+"<html>Por favor confirme para remover <strong>1 objeto</strong>  de <strong>"
+"{0} relações</strong>.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:156
 #, java-format
@@ -4515,11 +4578,11 @@ msgstr "Regra"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:352
 msgid "Click to close the dialog and remove the object from the relations"
-msgstr ""
+msgstr "Clique para fechar o diálogo e remover o objeto das relações"
 
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:365
 msgid "Click to close the dialog and to abort deleting the objects"
-msgstr ""
+msgstr "Clique para fechar o diálogo e cancelar a remoção dos objetos"
 
 #. *
 #. * compare my version of an {@see OsmPrimitive} with their version
@@ -4558,7 +4621,7 @@ msgstr "Propriedades"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:180
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:234
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowser.java:132
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:494
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:504
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:227
 msgid "Tags"
 msgstr "Etiquetas"
@@ -4650,28 +4713,37 @@ msgstr "Conflito de propriedades pendente de solução"
 msgid "Conflict Resolution"
 msgstr "Resolução de Conflito"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:334
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:321
 #, java-format
 msgid "{0} more..."
-msgstr ""
+msgstr "{0} mais..."
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:336
-#, java-format
-msgid "Following primitives could not be added because they are deleted: {0}"
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:325
+#, fuzzy
+msgid ""
+"The following primitives could not be copied to the target "
+"primitive<br>because they are deleted in the target dataset:"
 msgstr ""
+"As primitivas seguintes não puderam ser adicionadas porque foram deletadas: "
+"{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:604
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:628
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:335
+#, fuzzy
+msgid "Merging deleted primitives failed"
+msgstr "Recuperar {0} primitiva"
+
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:626
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:650
 #, java-format
 msgid "List in role {0} is currently not participating in a compare pair."
 msgstr "lista em regra {0} não está participando de um par comparado"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:777
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:799
 #, java-format
 msgid "Unexpected value of parameter ''index''. Got {0}."
 msgstr "valor inesperado do parâmetro \"index\": {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:791
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMergeModel.java:813
 #, java-format
 msgid "Item {0} not found in list."
 msgstr "item {0} não encontrado na lista"
@@ -4781,15 +4853,16 @@ msgstr ""
 "selecionado na lista de elementos combinados"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:643
-msgid "Use all mine elements"
-msgstr ""
+#, fuzzy
+msgid "Use all my elements"
+msgstr "Usar todos meus elementos"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:669
 msgid "Use all their elements"
-msgstr ""
+msgstr "Usar todos elementos deles"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:696
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:104
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:109
 msgid "Up"
 msgstr "Acima"
 
@@ -4798,7 +4871,7 @@ msgid "Move up the selected elements by one position."
 msgstr "Move uma posição acima os elementos selecionados"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:728
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:115
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:120
 msgid "Down"
 msgstr "Abaixo"
 
@@ -4883,12 +4956,14 @@ msgid ""
 "Adjustable {0} not registered yet. Cannot set participation in synchronized "
 "adjustment."
 msgstr ""
+"Ajustável {0} não registrado ainda. Não foi possível configurar participação "
+"no ajuste sincronizado."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:957
 #: ../core/src/org/openstreetmap/josm/gui/history/AdjustmentSynchronizer.java:94
 #, java-format
 msgid "Adjustable {0} not registered yet."
-msgstr ""
+msgstr "Ajustável {0} não registrado ainda."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/nodes/NodeListColumnModel.java:27
 msgid "Node"
@@ -5051,12 +5126,6 @@ msgstr "Manter meu estado visível"
 msgid "Yes, reset the id"
 msgstr "Sim, resetar id"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:634
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:675
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:215
-msgid "No, abort"
-msgstr "Não, abortar"
-
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:638
 #, java-format
 msgid ""
@@ -5138,7 +5207,7 @@ msgstr "Meu conjunto de dados não inclui tag com valor {0}"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:75
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:112
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:260
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:63
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:78
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/TagTable.java:71
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TagsTableColumnModel.java:18
 msgid "Key"
@@ -5151,7 +5220,7 @@ msgstr "Chave"
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:27
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:75
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:264
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:70
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:85
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:120
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/TagTable.java:78
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TagsTableColumnModel.java:25
@@ -5199,7 +5268,7 @@ msgstr "Conflitos ao combinar primitivas"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:135
 #, java-format
 msgid "Conflicts when combining ways - combined way is ''{0}''"
-msgstr ""
+msgstr "Conflito quando combinando caminhos - caminho combinado é \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:140
 #, java-format
@@ -5223,7 +5292,7 @@ msgstr "Aplicar conflitos resolvidos"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:360
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:289
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:146
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1122
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1120
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -5313,8 +5382,8 @@ msgstr[1] "{0} etiquetas"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:464
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:341
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:261
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:512
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:266
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:518
 #, java-format
 msgid "{0} way"
 msgid_plural "{0} ways"
@@ -5323,7 +5392,7 @@ msgstr[1] "{0} vias"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:465
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:349
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:517
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:523
 #, java-format
 msgid "{0} relation"
 msgid_plural "{0} relations"
@@ -5333,7 +5402,7 @@ msgstr[1] "{0} relações"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictDecision.java:24
 #, java-format
 msgid "Position {0} is out of range. Current number of members is {1}."
-msgstr ""
+msgstr "Posição {0} está fora da faixa. Número atual de membros é {1}."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictDecisionType.java:31
 msgid "Remove this relation member from the relation"
@@ -5345,7 +5414,7 @@ msgstr "Manter"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictDecisionType.java:35
 msgid "Keep this relation member for the target object"
-msgstr ""
+msgstr "Manter este membro de relação para objeto alvo"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictDecisionType.java:38
 msgid "Undecided"
@@ -5515,7 +5584,7 @@ msgstr "Abrir uma lista de todos os comandos (desfazer buffer)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:31
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:50
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:156
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:89
@@ -5544,7 +5613,7 @@ msgstr "Resolver conflitos."
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:170
 #, java-format
 msgid "Conflicts: {0} unresolved"
-msgstr ""
+msgstr "Conflitos: {0} não resolvidos"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:327
 msgid "Resolve"
@@ -5606,15 +5675,14 @@ msgstr "Resolver conflitos"
 msgid "Resolve conflicts for ''{0}''"
 msgstr "Resolver conflitos para \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:49
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
 msgid "Filter objects and hide/disable them."
-msgstr ""
+msgstr "Filtrar objetos e esconder/desativá-los"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:72
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:924
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:124
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:195
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:254
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:79
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:108
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/TagTable.java:271
@@ -5623,43 +5691,43 @@ msgstr ""
 msgid "Add"
 msgstr "Adicionar"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:72
 msgid "Add filter."
 msgstr "Adicionar filtro."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:79
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:84
 msgid "Edit filter."
 msgstr "Editar filtro."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:94
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:99
 msgid "Delete filter."
 msgstr "Apagar filtro."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:104
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:109
 msgid "Move filter up."
 msgstr "Mover filtro para cima."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:115
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:120
 msgid "Move filter down."
 msgstr "Mover filtro para baixo."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:129
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:134
 msgid "Enable filter"
 msgstr "Habilitar filtro"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:130
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:135
 msgid "Hide elements"
 msgstr "Esconder elementos"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:132
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:137
 msgid "Apply also for children"
 msgstr "Aplicar também para filhos"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:133
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:138
 msgid "Inverse filter"
 msgstr "Inverter filtro"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:134
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:139
 msgid "Filter mode"
 msgstr "Modo Filtro"
 
@@ -5777,17 +5845,17 @@ msgid "Create a new relation"
 msgstr "Criar uma nova relação"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:393
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1366
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1364
 msgid "Create a copy of this relation and open it in another editor window"
 msgstr "Criar uma cópia desta relação e abri-la em outra janela de edição"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:431
 msgid "Set the current selection to the list of selected relations"
-msgstr ""
+msgstr "Ajuste a seleção atual para a lista de relações selecionadas"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:458
 msgid "Select the members of all selected relations"
-msgstr ""
+msgstr "Selecionar os membros de todas as relações selecionadas"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:460
 msgid "Select members"
@@ -5795,7 +5863,7 @@ msgstr "Selecionar membros"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:490
 msgid "Download all members of the selected relations"
-msgstr ""
+msgstr "Baixar todos os membros das relações selecionadas"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:491
 msgid "Download members"
@@ -5834,17 +5902,17 @@ msgstr "Seleção"
 msgid "Selection: {0}"
 msgstr "Seleção: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:360
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:359
 msgid "Undock the panel"
 msgstr "Desacoplar painel"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:374
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:373
 msgid ""
 "Close this panel. You can reopen it with the buttons in the left toolbar."
 msgstr ""
 "Fechar este painel. Você pode reabri-lo com os botões da barra da esquerda."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:385
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:384
 msgid "Click to minimize/maximize the panel content"
 msgstr "Clique para minimizar/maximizar o conteúdo do painel"
 
@@ -6070,7 +6138,7 @@ msgstr "Exibir histórico"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:250
 msgid "Download and show the history of the selected primitives"
-msgstr ""
+msgstr "Baixe e mostre o histórico das primitivas selecionadas"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:315
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:356
@@ -6079,7 +6147,7 @@ msgstr "Selecionar na camada"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:317
 msgid "Select the corresponding primitives in the current data layer"
-msgstr ""
+msgstr "Selecione as primitivas correspondentes na camada de dados atual"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:324
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:386
@@ -7071,7 +7139,7 @@ msgstr "ID do changeset: "
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/SingleChangesetDownloadPanel.java:47
 msgid "Enter a changeset id"
-msgstr ""
+msgstr "Entre com um id de changeset"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/SingleChangesetDownloadPanel.java:79
 msgid ""
@@ -7148,7 +7216,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:533
 #, java-format
 msgid "Current value ''{0}'' for user ID is not valid"
-msgstr ""
+msgstr "Valor atual \"{0}\" para usuário ID não é válido"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:536
 #, java-format
@@ -7157,7 +7225,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:553
 msgid "Please enter a valid user ID"
-msgstr ""
+msgstr "Por favor entre com um ID de usuário válido"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:554
 msgid "Invalid user ID"
@@ -7165,7 +7233,7 @@ msgstr "ID de usuário inválido"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:563
 msgid "Please enter a non-empty user name"
-msgstr ""
+msgstr "Por favor entre com um nome de usuário que não seja vazio"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:564
 msgid "Invalid user name"
@@ -7210,7 +7278,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:868
 msgid "Invalid date/time values"
-msgstr ""
+msgstr "Valores de data/hora inválidos"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:942
 msgid ""
@@ -7242,7 +7310,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:1033
 msgid "Please enter an non-empty user name"
-msgstr ""
+msgstr "Por favor, entre com um nome de usuário não-vazio"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:1063
 #, java-format
@@ -7260,7 +7328,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:108
 msgid "Download my changesets only"
-msgstr ""
+msgstr "Baixar somente os meus changesets"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:109
 msgid ""
@@ -7366,7 +7434,7 @@ msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:183
 msgid "An empty value deletes the tag."
-msgstr ""
+msgstr "Um valor vazio deleta a tag."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:224
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:269
@@ -7470,7 +7538,7 @@ msgstr "Selecionar relação"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:974
 msgid "Select relation in main selection."
-msgstr ""
+msgstr "Selecione a relação na seleção principal."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:976
 msgid "Select in relation list"
@@ -7478,7 +7546,7 @@ msgstr "Selecionar na lista de relações"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:977
 msgid "Select relation in relation list."
-msgstr ""
+msgstr "Selecionar uma relação na lista de relações"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:178
 msgid "Edit the relation the currently selected relation member refers to."
@@ -7509,11 +7577,11 @@ msgstr "Baixar membros do relaçoe"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:332
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:487
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1093
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1091
 msgid "Conflict in data"
 msgid_plural "Conflicts in data"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Conflito nos dados"
+msgstr[1] "Conflitos nos dados"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:345
 #, java-format
@@ -7534,8 +7602,8 @@ msgstr "Baixando relação {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:430
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:532
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/DownloadRelationMemberTask.java:110
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/DownloadRelationTask.java:110
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/DownloadRelationMemberTask.java:109
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/DownloadRelationTask.java:109
 #, java-format
 msgid "Warning: ignoring exception because task is cancelled. Exception: {0}"
 msgstr "Aviso: ignorando exceção porque tarefa foi cancelada. Exceção: {0}"
@@ -7577,23 +7645,23 @@ msgstr "Aplicar papel:"
 msgid "Enter a role and apply it to the selected relation members"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:572
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:571
 msgid ""
 "<html>There is at least one member in this relation referring<br>to the "
 "relation itself.<br>This creates circular dependencies and is discouraged."
 "<br>How do you want to proceed with circular dependencies?</html>"
 msgstr ""
 
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:578
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:579
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:580
 msgid "Remove them, clean up relation"
 msgstr "Apagá-los, limpar relação"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:579
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:578
 msgid "Ignore them, leave relation as is"
 msgstr "Ignorá-los, deixar relação como está"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:602
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:601
 #, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
@@ -7601,11 +7669,11 @@ msgid ""
 "html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:611
 msgid "Multiple members referring to same primitive"
 msgstr "Múltiplos membros referenciando a mesma primitiva"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:630
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:629
 #, java-format
 msgid ""
 "<html>You are trying to add a relation to itself.<br><br>This creates "
@@ -7613,21 +7681,21 @@ msgid ""
 "''{0}''.</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:671
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:670
 msgid ""
 "Add all primitives selected in the current dataset before the first member"
 msgstr ""
 "Adicionar todas primitivas selecionadas nos dados atuais antes do primeiro "
 "membro"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:697
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:696
 msgid ""
 "Add all primitives selected in the current dataset after the last member"
 msgstr ""
 "Adicionar todas primitivas selecionadas nos dados atuais depois do primeiro "
 "membro"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:724
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:723
 msgid ""
 "Add all primitives selected in the current dataset before the first selected "
 "member"
@@ -7635,7 +7703,7 @@ msgstr ""
 "Adicionar todas primitivas selecionadas nos dados atuais antes do primeiro "
 "membro selecionado"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:758
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:757
 msgid ""
 "Add all primitives selected in the current dataset after the last selected "
 "member"
@@ -7643,187 +7711,187 @@ msgstr ""
 "Adicionar todas primitivas selecionadas nos dados atuais depois do primeiro "
 "membro selecionado"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:790
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:789
 msgid "Remove all members referring to one of the selected primitives"
 msgstr ""
 
 #. putValue(NAME, tr("Remove Selected"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:793
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:792
 msgid "Relation Editor: Remove Selected"
 msgstr "Editor de Relações: Remover Selecionada"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:827
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:839
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:826
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:838
 msgid ""
 "Select relation members which refer to primitives in the current selection"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:837
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:836
 #, java-format
 msgid ""
 "Select relation members which refer to {0} primitives in the current "
 "selection"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:861
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:860
 msgid "Select primitives for selected relation members"
-msgstr ""
+msgstr "Selecione primitivas para as relações de membros selecionadas"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:881
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:880
 msgid "Sort the relation members"
 msgstr "Classificar a relação de membros"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:883
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:882
 msgid "Sort"
 msgstr "Classificar"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:884
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:883
 msgid "Relation Editor: Sort"
 msgstr "Editor de Relações: Classificar"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:904
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:903
 msgid "Reverse the order of the relation members"
 msgstr "Reverter a ordem dos membros da relação"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:905
 msgid "Reverse"
 msgstr "Inverter"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:907
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
 msgid "Relation Editor: Reverse"
 msgstr "Editor de Relações: Inverter"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:927
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:926
 msgid "Move the currently selected members up"
 msgstr "Mover os membros selecionados para cima"
 
 #. putValue(NAME, tr("Move Up"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:930
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:929
 msgid "Relation Editor: Move Up"
 msgstr "Editor de Relações: Mover para cima"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:946
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:945
 msgid "Move the currently selected members down"
 msgstr "Mover membros selecionados para baixo"
 
 #. putValue(NAME, tr("Move Down"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:949
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:948
 msgid "Relation Editor: Move Down"
 msgstr "Editor de Relações: Mover para Baixo"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:965
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:964
 msgid "Remove the currently selected members from this relation"
 msgstr ""
 
 #. putValue(NAME, tr("Remove"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:968
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:967
 msgid "Relation Editor: Remove"
 msgstr "Editor de Relações: Remover"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:984
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:983
 msgid "Delete the currently edited relation"
 msgstr "Apagar a relação editada atual"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1074
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1072
 msgid "Yes, create a conflict and close"
 msgstr "Sim, crie um conflito e feche"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1076
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1074
 msgid "Click to create a conflict and close this relation editor"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1080
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1078
 msgid "No, continue editing"
 msgstr "Não, continuar editando"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1082
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1080
 msgid "Click to return to the relation editor and to resume relation editing"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1089
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1087
 msgid ""
 "<html>This relation has been changed outside of the editor.<br>You cannot "
 "apply your changes and continue editing.<br><br>Do you want to create a "
 "conflict and close the editor?</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1106
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1104
 #, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
 "<br>Please resolve this conflict first, then try again.</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1120
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1118
 msgid "Apply the current updates"
 msgstr "Aplciar as atualizações correntes"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1153
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1151
 msgid "Apply the updates and close the dialog"
 msgstr "Aplicar atualizações e fechar aviso"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1187
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1185
 msgid "Cancel the updates and close the dialog"
 msgstr "Cancelar atualizações e fechar janela"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1204
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1202
 msgid "Add an empty tag"
 msgstr "Adicionar uma tag vazia"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1217
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1215
 msgid "Download all incomplete members"
 msgstr "Baixar todos os membros incompletos"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1219
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1254
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1217
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1252
 msgid "Download Members"
 msgstr "Baixar membros"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1220
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1255
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1218
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1253
 msgid "Relation Editor: Download Members"
 msgstr "Editor de Relações: Baixar Membros"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1252
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1250
 msgid "Download selected incomplete members"
-msgstr ""
+msgstr "Baixar membros incompletos selecionados"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1291
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1289
 msgid "Sets a role for the selected members"
 msgstr "Definir uma papel para membros selecionados"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1293
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1291
 msgid "Apply Role"
 msgstr "Aplicar papel"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1307
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1305
 #, java-format
 msgid "You are setting an empty role on {0} primitive."
 msgid_plural "You are setting an empty role on {0} primitives."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1310
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1308
 msgid "This is equal to deleting the roles of these primitives."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1312
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1310
 msgid "Do you really want to apply the new role?"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1314
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1312
 msgid "Yes, apply it"
 msgstr "Sim, aplique"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1315
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1313
 msgid "No, do not apply"
-msgstr ""
+msgstr "Não, não aplicar"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1321
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1319
 msgid "Confirm empty role"
 msgstr "Confirme papel vazio"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1389
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1387
 msgid "Edit the relation the currently selected relation member refers to"
 msgstr "Editar relação referente à relação selecionada atualmente"
 
@@ -8359,20 +8427,20 @@ msgstr "Histórico para relação {0}"
 msgid "Reload the history from the server"
 msgstr "Recarregar histórico do servidor"
 
-#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:274
+#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:272
 msgid "History not initialized yet. Failed to set reference primitive."
 msgstr ""
 "histórico não foi inicializado ainda. Falha ao definir primitiva de "
 "referência."
 
-#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:276
-#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:306
+#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:274
+#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:304
 #, java-format
 msgid ""
 "Failed to set reference. Reference ID {0} does not match history ID {1}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:279
+#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:277
 #, java-format
 msgid ""
 "Failed to set reference. Reference version {0} not available in history."
@@ -8380,11 +8448,11 @@ msgstr ""
 "Falha ao difinir referência. Versão de referência {0}  dnão disponível no "
 "histórico"
 
-#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:304
+#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:302
 msgid "History not initialized yet. Failed to set current primitive."
 msgstr "Histórico não inicializado ainda. Falha ao definir primitivo atual."
 
-#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:309
+#: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:307
 #, java-format
 msgid ""
 "Failed to set current primitive. Current version {0} not available in "
@@ -8477,7 +8545,7 @@ msgstr "Exibir changeset {0}"
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionTableCellRenderer.java:62
 #, java-format
 msgid "Version {0}, {1} (by {2})"
-msgstr ""
+msgstr "Versão {0}, {1} (por {2})"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionTableCellRenderer.java:78
 #, java-format
@@ -8487,7 +8555,7 @@ msgstr "Verção {0} creado do {2} no {1}"
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionTableCellRenderer.java:106
 #, java-format
 msgid "Version {0} in editor"
-msgstr ""
+msgstr "Versão {0} no editor"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionTableCellRenderer.java:108
 msgid "[deleted]"
@@ -8496,7 +8564,7 @@ msgstr "[apagado]"
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionTableCellRenderer.java:118
 #, java-format
 msgid "Version {0} currently edited in data layer ''{1}''"
-msgstr ""
+msgstr "Versão {0} atualmente editada na camada de dados ''{1}''"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionTableColumnModel.java:20
 msgid "Version"
@@ -8556,7 +8624,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:132
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:176
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:379
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:384
 msgid "Conflicts detected"
 msgstr "Conflitos detectados"
 
@@ -8732,7 +8800,6 @@ msgid "Enter credentials for HTTP proxy"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:145
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:97
 msgid "Save user and password (unencrypted)"
 msgstr "Salvar usuário e senha (sem encriptação)"
 
@@ -8752,7 +8819,6 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:242
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:93
 msgid "Warning: The password is transferred unencrypted."
 msgstr "Atenção: A senha é enviada sem encriptação."
 
@@ -8799,7 +8865,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:68
 msgid "Missing user identity"
-msgstr ""
+msgstr "Faltando identidade de usuário"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/DownloadOpenChangesetsTask.java:121
 #, java-format
@@ -8816,11 +8882,6 @@ msgstr "Lança diálogo para escolha de arquivo"
 #: ../core/src/org/openstreetmap/josm/gui/io/FilenameCellEditor.java:144
 msgid "Select filename"
 msgstr "Selecionar nome de arquivo"
-
-#: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:44
-#: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:57
-msgid "Yes"
-msgstr "Sim"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:44
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:57
@@ -8952,7 +9013,7 @@ msgstr "Descartar e Sair"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersDialog.java:318
 msgid "Exit JOSM without saving. Unsaved changes are lost."
-msgstr ""
+msgstr "Saindo do JOSM sem salvar. Mudanção não salvas serão perdidas."
 
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersDialog.java:323
 msgid "Discard and Delete"
@@ -9250,7 +9311,7 @@ msgstr "A enviar informação para a camada \"{0}\""
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:80
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadSelectionDialog.java:275
 msgid "Continue uploading"
-msgstr ""
+msgstr "Continuar enviando"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:82
 msgid "Click to continue uploading to additional new changesets"
@@ -9258,11 +9319,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:86
 msgid "Go back to Upload Dialog"
-msgstr ""
+msgstr "Voltar para Diálogo de Envio"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:88
 msgid "Click to return to the Upload Dialog"
-msgstr ""
+msgstr "Clique para voltar para Diálogo de Envio"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:92
 msgid "Abort"
@@ -9411,7 +9472,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadStrategySelectionPanel.java:351
 msgid "(1 request)"
-msgstr ""
+msgstr "(1 requisição)"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadStrategySelectionPanel.java:353
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadStrategySelectionPanel.java:354
@@ -9554,7 +9615,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:227
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:312
 msgid "Import not possible"
-msgstr ""
+msgstr "Importação não possível"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:249
 msgid "Wave Audio files (*.wav)"
@@ -9593,8 +9654,8 @@ msgstr "Descrição: {0}"
 #, java-format
 msgid "{0} track"
 msgid_plural "{0} tracks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} trilha"
+msgstr[1] "{0} trilhas"
 
 #. item "Relations/Route" text "Symbol description"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:380
@@ -9648,7 +9709,7 @@ msgid "http://www.openstreetmap.org/traces"
 msgstr "http://www.openstreetmap.org/traces (EN)"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:819
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:636
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:642
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:89
 #: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:225
 #: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:236
@@ -9710,27 +9771,27 @@ msgstr ""
 msgid "Data Layer {0}"
 msgstr "Camada de dados {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:182
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:187
 msgid "outside downloaded area"
 msgstr "fora da área baixada"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:264
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:269
 #, java-format
 msgid "version {0}"
 msgstr "versão {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:302
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:307
 msgid "Warning: mixing 0.6 and 0.5 data results in version 0.5"
 msgstr "Atenção: misturando dados de versões 0.6 e 0.5 na versão 0.5"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:336
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:341
 #, java-format
 msgid "There was {0} conflict detected."
 msgid_plural "There were {0} conflicts detected."
 msgstr[0] "Houve {0} conflito detectado."
 msgstr[1] "Houve {0} conflitos detectados."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:342
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:347
 #, java-format
 msgid ""
 "{0} conflict has been <strong>resolved automatically</strong> by purging {0} "
@@ -9742,7 +9803,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:351
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:356
 #, java-format
 msgid ""
 "{0} conflict remains to be resolved.<br><br>Please open the Conflict List "
@@ -9757,47 +9818,47 @@ msgstr[1] ""
 "{0} conflitos ainda não foram resolvidos.<br><br>Por favor, abra a janela de "
 "Lista de Conflitos e resolva-os manualmente."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:372
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:377
 msgid "Click to close this dialog and continue editing"
 msgstr "Clique para fechar essa janela e continuar editando"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:509
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:514
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:519
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:515
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:520
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:525
 #, java-format
 msgid "{0} deleted"
 msgid_plural "{0} deleted"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:522
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:528
 #, java-format
 msgid "{0} consists of:"
 msgstr "{0} consiste em:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:526
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:532
 msgid "unset"
 msgstr "remover definição"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:526
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:532
 #, java-format
 msgid "API version: {0}"
 msgstr "Versão API: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:633
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:639
 #: ../plugins/editgpx/src/org/openstreetmap/josm/plugins/editgpx/EditGpxLayer.java:222
 msgid "Convert to GPX layer"
 msgstr "Converter para camada GPX"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:726
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:732
 msgid "Dataset consistency test"
 msgstr "Teste de consistência de dados"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:732
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:738
 msgid "No problems found"
 msgstr "Nenhum problema encontrado"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:735
+#: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:741
 msgid "Following problems found:"
 msgstr ""
 
@@ -9846,40 +9907,25 @@ msgid "GPS point"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:145
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:131
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:130
 msgid "GPX Files (*.gpx *.gpx.gz)"
 msgstr "Arcivo GPX (*.gpx *.gpx.gz)"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:165
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:152
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:151
 #, java-format
 msgid "File {0} is loaded yet under the name \"{1}\""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:190
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:176
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:175
 #, java-format
 msgid "Error while parsing {0}"
 msgstr "Erro enquanto analisava {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:199
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:185
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:184
 #, java-format
 msgid "Could not read \"{0}\""
 msgstr "Não foi possível ler \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:238
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:224
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:223
 msgid ""
 "<html>Take a photo of your GPS receiver while it displays the time."
 "<br>Display that photo here.<br>And then, simply capture the time you read "
@@ -9887,23 +9933,14 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:256
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:242
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:241
 msgid "Photo time (from exif):"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:271
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:257
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:256
 msgid "Gps time (read from the above photo): "
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:283
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:269
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:268
 msgid " [dd/mm/yyyy hh:mm:ss]"
 msgstr " [dd/mm/yyyy hh:mm:ss]"
 
@@ -9913,11 +9950,6 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:355
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:390
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:340
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:376
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:339
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:375
 msgid "No date"
 msgstr "Sem data"
 
@@ -9926,46 +9958,28 @@ msgid "Open another photo"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:404
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:390
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:389
 msgid "Synchronize time from a photo of the GPS receiver"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:417
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:404
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:403
 msgid ""
 "Error while parsing the date.\n"
 "Please use the requested format"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:419
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:406
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:405
 msgid "Invalid date"
 msgstr "Data inválida"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:464
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:449
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:448
 msgid "<No GPX track loaded yet>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:469
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:455
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:454
 msgid "GPX track: "
 msgstr "Trilha GPX: "
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:477
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:460
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:459
 msgid "Open another GPX trace"
 msgstr ""
 
@@ -9975,9 +9989,6 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:512
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:578
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:577
 msgid "Auto-Guess"
 msgstr ""
 
@@ -10004,16 +10015,10 @@ msgid "Show Thumbnail images on the map"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:558
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:476
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:475
 msgid "Timezone: "
 msgstr "Timezone: "
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:569
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:498
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:497
 msgid "Offset:"
 msgstr "Deslocamento:"
 
@@ -10031,30 +10036,18 @@ msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:672
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:715
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:576
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:575
 msgid "Correlate images with GPX track"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:673
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:578
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:577
 msgid "Correlate"
 msgstr "Correlacione"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:700
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:602
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:601
 msgid "Invalid timezone"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:708
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:615
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:614
 msgid "Invalid offset"
 msgstr "Offset inválido"
 
@@ -10067,25 +10060,16 @@ msgid "No images could be matched!"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:866
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:776
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:774
 #, java-format
 msgid "Timezone: {0}"
 msgstr "Timezone: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:867
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:777
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:775
 #, java-format
 msgid "Minutes: {0}"
 msgstr "Minutos: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:868
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:778
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:776
 #, java-format
 msgid "Seconds: {0}"
 msgstr "Segundos: {0}"
@@ -10098,25 +10082,16 @@ msgstr[0] "(Diferença de {0} dia)"
 msgstr[1] "Diferença de {0} dias"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:913
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:867
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:865
 msgid ""
 "An error occurred while trying to match the photos to the GPX track. You can "
 "adjust the sliders to manually match the photos."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:915
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:869
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:867
 msgid "Matching photos to track failed"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:931
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:885
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:883
 msgid "Adjust timezone and offset"
 msgstr ""
 
@@ -10135,30 +10110,18 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:981
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:731
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:729
 msgid "GPX Track has no time information"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1076
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:588
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:587
 msgid "You should select a GPX track"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1077
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:589
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:588
 msgid "No selected GPX track"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1265
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:601
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:600
 #, java-format
 msgid ""
 "Error while parsing timezone.\n"
@@ -10166,9 +10129,6 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1335
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:614
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:613
 #, java-format
 msgid ""
 "Error while parsing offset.\n"
@@ -10176,16 +10136,10 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:106
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:107
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:107
 msgid "Extracting GPS locations from EXIF"
 msgstr "Extrair coordenadas GPS do EXIF"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:114
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:113
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:113
 msgid "Starting directory scan"
 msgstr ""
 
@@ -10195,202 +10149,146 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:124
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:127
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:124
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:127
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:124
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:127
 msgid "Read photos..."
 msgstr "Ler fotos..."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:139
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:139
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:139
 #, java-format
 msgid "Reading {0}..."
 msgstr "Lendo {0}..."
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:178
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:181
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:181
 #, java-format
 msgid "Unable to get canonical path for directory {0}\n"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:190
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:193
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:193
 #, java-format
 msgid "Scanning directory {0}"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:195
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:198
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:198
 #, java-format
 msgid "Found null file in directory {0}\n"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:198
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:201
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:201
 #, java-format
 msgid "Error while getting files from directory {0}\n"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:274
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:63
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:246
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:246
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:272
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:67
 msgid "Geotagged Images"
 msgstr "Imagens Geotagueadas"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:298
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:266
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:266
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:296
 msgid "Correlate to GPX"
 msgstr "Correlacionar com GPX"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:326
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:324
 #, java-format
 msgid "{0} image loaded."
 msgid_plural "{0} images loaded."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:327
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:325
 #, java-format
 msgid "{0} was found to be GPS tagged."
 msgid_plural "{0} were found to be GPS tagged."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:599
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:105
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:597
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:103
 msgid "Delete image file from disk"
 msgstr "Remover arquivo de imagem do disco"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:602
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:600
 #, java-format
 msgid ""
 "<html><h3>Delete the file {0} from disk?<p>The image file will be "
 "permanently lost!</h3></html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:627
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:625
 msgid "Image file could not be deleted."
 msgstr "O arquivo de imagem não pode ser removido."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageDisplay.java:441
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:436
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageDisplay.java:432
 msgid "No image"
 msgstr "Nenhuma imagem"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageDisplay.java:451
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:488
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:446
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageDisplay.java:442
 #, java-format
 msgid "Loading {0}"
 msgstr "Carregando {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageDisplay.java:453
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageDisplay.java:480
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:490
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:518
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:448
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:475
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageDisplay.java:444
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageDisplay.java:471
 #, java-format
 msgid "Error on file {0}"
 msgstr "Erro no arquivo {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:63
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:67
 msgid "Display geotagged images"
 msgstr "Mostrar imagens com tags geográficas"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:83
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:70
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:70
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:81
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:106
 msgid "Previous"
 msgstr "Anterior"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:87
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:85
 msgid "Show previous Image"
 msgstr "Mostrar imagem anterior"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:87
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:99
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:109
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:120
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:85
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:97
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:107
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:118
 #, java-format
 msgid "Geoimage: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:94
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:78
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:78
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:92
 msgid "Remove photo from layer"
 msgstr "Remover foto da camada"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:109
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:107
 msgid "Delete File from disk"
 msgstr "Apagar arquivo do disco"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:116
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:86
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:86
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:114
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:127
 msgid "Next"
 msgstr "Próximo"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:120
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:118
 msgid "Show next Image"
 msgstr "Mostrar a próxima imagem"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:127
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:94
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:94
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:125
 msgid "Center view"
 msgstr "Centralizar vista"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:130
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:102
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:102
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:128
 msgid "Zoom best fit and 1:1"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:133
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:131
 msgid "Move dialog to the side pane"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:243
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:166
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:166
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:241
 #, java-format
 msgid ""
 "\n"
 "Altitude: {0} m"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:246
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:169
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:169
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:244
 #, java-format
 msgid ""
 "\n"
@@ -10400,9 +10298,6 @@ msgstr ""
 "{0} km/h"
 
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/JpegFileFilter.java:31
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:37
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:37
 msgid "JPEG images (*.jpg)"
 msgstr "Imagens JPEG (*.jpg)"
 
@@ -11625,12 +11520,12 @@ msgid "Map Paint Styles"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:69
-#, fuzzy, java-format
+#, java-format
 msgid "The following plugin has been downloaded <strong>successfully</strong>:"
 msgid_plural ""
 "The following {0} plugins have been downloaded <strong>successfully</strong>:"
-msgstr[0] "O seguinte plugin foi baixado <strong>com sucesso</strong>:"
-msgstr[1] "Os seguintes {0} plugins foram baixados com sucesso:"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:82
 #, java-format
@@ -11729,7 +11624,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:167
 msgid ""
 "<p>Furthermore, the shortcuts are activated when the actions are assigned to "
-"a menu entry of button for the first time. So some of your changes may "
+"a menu entry of a button for the first time. So some of your changes may "
 "become active even without restart --- but also without collision handling. "
 "This is another reason to <b>restart</b> JOSM after making any changes here."
 "</p>"
@@ -11739,103 +11634,99 @@ msgstr ""
 msgid ""
 "<p>You may notice that the key selection list on the next page lists all "
 "keys that exist on all kinds of keyboards Java knows about, not just those "
-"keys that exist on your keyboard. Please use only those values that "
-"correspond to a real key on your keyboard. So if your keyboard has no "
-"''Copy'' key (PC keyboard do not have them, Sun keyboards do), then do not "
-"use it. Also there will be ''keys'' listed that correspond to a shortcut on "
-"your keyboard (e.g. '':''/Colon). Please also do not use them, use the base "
-"key ('';''/Semicolon on US keyboards, ''.''/Period on German keyboards, ...) "
-"instead. Not doing so may result in conflicts, as there is no way for JOSM "
-"to know that Ctrl+Shift+; and Ctrl+: actually is the same thing on an US "
-"keyboard...</p>"
+"keys that exist on your keyboard. Please only use values that correspond to "
+"a real key on your keyboard. If your keyboard has no ''Copy'' key (PC "
+"keyboard do not have them, Sun keyboards do), then do not use it. Also there "
+"are ''keys'' listed that correspond to a shortcut on your keyboard (e.g. "
+"'':''/Colon). Please do not use them either, use the base key ('';''/"
+"Semicolon on US keyboards, ''.''/Period on German keyboards, etc.) instead. "
+"Not doing so may result in conflicts, as there is no way for JOSM to know "
+"that Ctrl+Shift+; and Ctrl+: actually is the same thing on an US keyboard.</"
+"p>"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:177
-msgid "<p>Thank you for your understanding</p>"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:178
 msgid "<h1>Modifier Groups</h1>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:179
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:178
 msgid ""
 "<p>The last page lists the modifier keys JOSM will automatically assign to "
 "shortcuts. For every of the four kinds of shortcuts there are three "
 "alternatives. JOSM will try those alternatives in the listed order when "
-"managing a conflict. If all alternatives would result in shortcuts that are "
+"managing a conflict. If all alternatives result in shortcuts that are "
 "already taken, it will assign a random shortcut instead.</p>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:183
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:182
 msgid ""
 "<p>The pseudo-modifier ''disabled'' will disable the shortcut when "
 "encountered.</p>"
 msgstr ""
 
 #. scroll up
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:186
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:185
 msgid "Read First"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:207
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:206
 msgid "Use default"
 msgstr "Usar padrão"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:217
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:216
 msgid "Disable"
 msgstr "Desativar"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:225
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:224
 msgid "Key:"
 msgstr "Chave:"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:240
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:239
 msgid "Attention: Use real keyboard keys only!"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:247
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:246
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:254
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:253
 msgid "Edit Shortcuts"
 msgstr "Editar Atalhos"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:257
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:280
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:303
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:326
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:256
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:279
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:302
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:325
 msgid "Primary modifier:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:263
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:286
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:309
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:332
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:262
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:285
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:308
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:331
 msgid "Secondary modifier:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:269
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:292
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:315
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:338
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:268
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:291
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:314
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:337
 msgid "Tertiary modifier:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:277
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:276
 msgid "Menu Shortcuts"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:300
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:299
 msgid "Hotkey Shortcuts"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:323
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:322
 msgid "Subwindow Shortcuts"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:360
+#: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:359
 msgid "Modifier Groups"
 msgstr ""
 
@@ -12372,12 +12263,11 @@ msgid ""
 "JVM is not configured to retrieve them. Resetting preferences to ''No proxy''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TagCellRenderer.java:69
-#: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/TableCellRenderer.java:72
-msgid "<multiple>"
-msgstr "<múltiplo>"
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TagCellRenderer.java:58
+msgid "multiple"
+msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TagEditorModel.java:406
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TagEditorModel.java:431
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/TagEditorModel.java:341
 #, java-format
 msgid "Remove old keys from up to {0} object"
@@ -12385,13 +12275,13 @@ msgid_plural "Remove old keys from up to {0} objects"
 msgstr[0] "Remover chaves antigas de até {0} objeto"
 msgstr[1] "Remover chaves antigas de até {0} objetos"
 
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TagEditorPanel.java:138
-msgid "Add a new tag"
-msgstr "Adicionar nova tag"
-
-#: ../core/src/org/openstreetmap/josm/gui/tagging/TagEditorPanel.java:163
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:183
 msgid "Delete the selection in the tag table"
 msgstr "Apagar a seleção na tabela de tags"
+
+#: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:278
+msgid "Add a new tag"
+msgstr "Adicionar nova tag"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:337
 #, java-format
@@ -12660,14 +12550,14 @@ msgid "Could not import files."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:62
-#, fuzzy, java-format
+#, java-format
 msgid "<html>Could not read file ''{0}''.<br>Error is:<br>{1}</html>"
-msgstr "<html>Não pode ler o ficheiro ''{0}''.<br> Erro: <br>{1}</html>"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:76
-#, fuzzy, java-format
+#, java-format
 msgid "<html>Could not read files.<br>Error is:<br>{0}</html>"
-msgstr "<html>Não pode ler o ficheiro ''{0}''.<br> Erro: <br>{1}</html>"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/GpxExporter.java:41
 msgid ""
@@ -13352,27 +13242,27 @@ msgid ""
 "missing in the loaded data."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:489
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:498
 #, java-format
 msgid ""
 "Relation with external id ''{0}'' refers to a missing primitive with "
 "external id ''{1}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:513
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:522
 #, java-format
 msgid "Deleted member {0} is used by relation {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:540
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:548
 msgid "Prepare OSM data..."
 msgstr "Preparando dados OSM..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:541
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:549
 msgid "Parsing OSM data..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:546
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:554
 msgid "Preparing data set..."
 msgstr ""
 
@@ -14519,166 +14409,6 @@ msgstr ""
 msgid "Starting address number must be less than ending address number"
 msgstr ""
 
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:48
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:48
-msgid "AgPifoJ - Geotagged pictures"
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:48
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojDialog.java:48
-#, fuzzy
-msgid "Display geotagged photos"
-msgstr "Mostrar imagens com tags geográficas"
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:118
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:118
-msgid "One of the selected files was null !!!"
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:284
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:284
-msgid "image"
-msgid_plural "images"
-msgstr[0] "imagem"
-msgstr[1] "imagens"
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:285
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojLayer.java:285
-#, java-format
-msgid "{0} were found to be gps tagged."
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:46
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:46
-msgid "Open images with AgPifoJ..."
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:48
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/AgpifojPlugin.java:48
-#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:47
-msgid "Load set of images as a new layer."
-msgstr "Carregar grupo de imagens como nova camada."
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:277
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:276
-msgid "I'm in the timezone of: "
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:349
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:348
-msgid "Open an other photo"
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:510
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:509
-msgid "<html>I can take a picture of my GPS receiver.<br>Can this help?</html>"
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:527
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:526
-#, fuzzy
-msgid "Update position for: "
-msgstr "Atualizar seleção"
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:536
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:535
-msgid "All images"
-msgstr "Todas as imagens"
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:546
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:545
-#, fuzzy
-msgid "Images with no exif position"
-msgstr "Nós na mesma posição"
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:556
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:555
-#, fuzzy
-msgid "Not yet tagged images"
-msgstr "Imagens Geotagueadas"
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:658
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:657
-#, java-format
-msgid "Found {0} matches of {1} in GPX track {2}"
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:659
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:658
-#, fuzzy
-msgid "GPX Track loaded"
-msgstr "Trilha GPX: "
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:694
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:693
-#, fuzzy
-msgid "The selected photos don't contain time information."
-msgstr "O caminho selecionado não contém o nó selecionado."
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:695
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:694
-msgid "Photos don't contain time information"
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:730
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:728
-#, fuzzy
-msgid ""
-"The selected GPX track doesn't contain timestamps. Please select another one."
-msgstr "O caminho selecionado não contém o nó selecionado."
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:795
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:793
-#, java-format
-msgid "Matched {0} of {1} photos to GPX track."
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:798
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:796
-#, fuzzy, java-format
-msgid "(Time difference of {0} days)"
-msgstr "(Diferença de {0} dia)"
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:805
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:803
-#, java-format
-msgid "Offset between track and photos: {0}m {1}s"
-msgstr ""
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:887
-#: ../plugins/agpifoj/src/org/openstreetmap/josm/plugins/agpifoj/CorrelateGpxWithImages.java:885
-msgid "Default Values"
-msgstr "Valores Predefinidos"
-
-#: ../plugins/agpifoj
-#: fst/src/org/openstreetmap/josm/plugins/agpifoj/ImageDisplay.java:478
-#, fuzzy
-msgid "No image -dsffs"
-msgstr "Nenhuma imagem"
-
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:104
 #, java-format
 msgid ""
@@ -14877,9 +14607,8 @@ msgstr ""
 
 #. option to select image zooming interpolation method
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:127
-#, fuzzy
 msgid "Image zoom interpolation:"
-msgstr "Interpolação"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:129
 msgid "Nearest-Neighbor (fastest) [ Default ]"
@@ -15585,6 +15314,10 @@ msgstr "Arcivo do imagens (*.jpg *.jpeg *.png *.gif)"
 msgid "Open images with ImageWayPoint"
 msgstr ""
 
+#: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointPlugin.java:47
+msgid "Load set of images as a new layer."
+msgstr "Carregar grupo de imagens como nova camada."
+
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/Lakewalker.java:69
 msgid "Direction index '{0}' not found"
 msgstr ""
@@ -16070,102 +15803,6 @@ msgstr ""
 msgid "You must select at least two ways."
 msgstr ""
 
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:37
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:55
-msgid "Native Password Manager Plugin: "
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:37
-#, java-format
-msgid "lookup {0} ("
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:55
-#, fuzzy, java-format
-msgid "store {0} ("
-msgstr "Mover {0}"
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:85
-msgid "Incorrect password or username."
-msgstr "Senha ou usuário incorreto."
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:103
-msgid "Enter Password"
-msgstr "Digite a Senha"
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:104
-msgid "Login"
-msgstr "Login"
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:161
-#, fuzzy
-msgid "show"
-msgstr "Mostrar"
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:175
-msgid "Login name (e-mail) to the OSM account."
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:176
-msgid ""
-"Login password to the OSM account. Leave blank to not store any password."
-msgstr ""
-
-#. Main.pref.get("osm-server.url", "http://api.openstreetmap.org/api"));
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:219
-msgid "The base URL for the OSM server (REST API)"
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:220
-msgid "Base Server URL"
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:227
-msgid "OSM username (e-mail)"
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:229
-#, fuzzy
-msgid "OSM password"
-msgstr "Senha do OSM"
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NPMCredentialsManager.java:335
-msgid ""
-"<html>WARNING: The password is stored in plain text in the preferences file."
-"<br>The password is transferred in plain text to the server, encoded in the "
-"URL.<br><b>Do not use a valuable Password.</b></html>"
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:107
-msgid ""
-"<html>No native password managers could be found.<br>Make sure you have one "
-"of the following applications<br>installed and running:"
-"<ul><li>gnomekeyring<li>KWallet 3<li>KWallet 4</ul>Your password is still "
-"saved to a plain text file!"
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:114
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:122
-msgid "Native password manager plugin"
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:123
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:161
-#, fuzzy
-msgid "don't change my settings"
-msgstr "Nenhum changeset aberto"
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:125
-#, java-format
-msgid ""
-"{0} was detected.\n"
-"Do you like to have your password saved by this password manager?"
-msgstr ""
-
-#: ../plugins/native_password_manager/src/org/openstreetmap/josm/plugins/native_password_manager/NativePasswordManagerPlugin.java:143
-msgid "More than one native password manager has been detected. Please choose:"
-msgstr ""
-
 #: ../plugins/openlayers/src/org/openstreetmap/josm/plugins/openLayers/OpenLayersPlugin.java:46
 msgid "OpenLayers"
 msgstr "OpenLayers"
@@ -16455,34 +16092,29 @@ msgstr ""
 msgid "Public Transport"
 msgstr "Transporte Público"
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:479
-#, fuzzy
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:489
 msgid "Route patterns ..."
-msgstr "Relação ..."
+msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:480
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:490
 msgid "Edit Route patterns for public transport"
 msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:492
-#, fuzzy
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:502
 msgid "Overview"
-msgstr "Sobrescrever"
+msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:496
-#, fuzzy
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:506
 msgid "Itinerary"
-msgstr "temporário"
+msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:498
-#, fuzzy
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:508
 msgid "Stops"
-msgstr "Pare"
+msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:500
-#, fuzzy
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:510
 msgid "Meta"
-msgstr "Aluguel"
+msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:27
 msgid "load data from API"
@@ -16828,6 +16460,10 @@ msgstr ""
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/PresetManager.java:53
 msgid "Highlight"
 msgstr ""
+
+#: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/TableCellRenderer.java:72
+msgid "<multiple>"
+msgstr "<múltiplo>"
 
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/TagEditorModel.java:370
 #, java-format
@@ -18221,20 +17857,13 @@ msgid ""
 "option to automatically generate individual house number nodes from a Way."
 msgstr ""
 
-#. Plugin AgPifoJ
-#: build/trans_plugins.java:5 build/trans_plugins.java:7
-msgid ""
-"Another geotag plugin for JOSM. Correlates pictures with GPS tracks or "
-"import EXIF geotagged pictures."
-msgstr ""
-
 #. Plugin cadastre-fr
-#: build/trans_plugins.java:9
+#: build/trans_plugins.java:5
 msgid "A special handler for the French land registry WMS server."
 msgstr ""
 
 #. Plugin colorscheme
-#: build/trans_plugins.java:11
+#: build/trans_plugins.java:7
 msgid ""
 "Allows the user to create different color schemes and to switch between "
 "them. Just change the colors and create a new scheme. Used to switch to a "
@@ -18244,57 +17873,57 @@ msgid ""
 msgstr ""
 
 #. Plugin Create_grid_of_ways
-#: build/trans_plugins.java:13
+#: build/trans_plugins.java:9
 msgid "Create a grid of ways."
 msgstr ""
 
 #. Plugin czechaddress
-#: build/trans_plugins.java:15
+#: build/trans_plugins.java:11
 msgid ""
 "Creating and handling address nodes and buildings within Czech Republic."
 msgstr ""
 
 #. Plugin dataimport
-#: build/trans_plugins.java:17
+#: build/trans_plugins.java:13
 msgid "Allows to import various file formats into JOSM directly."
 msgstr ""
 
 #. Plugin DirectUpload
-#: build/trans_plugins.java:19
+#: build/trans_plugins.java:15
 msgid ""
 "This plugin directly upload GPS Traces from current active layer in JOSM to "
 "openstreetmap.org."
 msgstr ""
 
 #. Plugin Duplicate-Way
-#: build/trans_plugins.java:21
+#: build/trans_plugins.java:17
 msgid "Duplicate Ways with an offset"
 msgstr ""
 
 #. Plugin editgpx
-#: build/trans_plugins.java:23
+#: build/trans_plugins.java:19
 msgid ""
 "Allows the user to anonymize timestamps and delete parts of huge GPX tracks "
 "very fast."
 msgstr ""
 
 #. Plugin globalsat
-#: build/trans_plugins.java:25
+#: build/trans_plugins.java:21
 msgid "Download GPS points from Globalsat dg100 data logger directly in JOSM."
 msgstr ""
 
 #. Plugin graphview
-#: build/trans_plugins.java:27
+#: build/trans_plugins.java:23
 msgid "Visualizes routing information as a routing graph."
 msgstr ""
 
 #. Plugin grid
-#: build/trans_plugins.java:29
+#: build/trans_plugins.java:25
 msgid "Provide a background layer that displays a map grid"
 msgstr ""
 
 #. Plugin ImageWayPoint
-#: build/trans_plugins.java:31
+#: build/trans_plugins.java:27
 msgid ""
 "Another plugin to match images to the waypoints in a GPX file. A match is "
 "made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
@@ -18302,18 +17931,18 @@ msgid ""
 msgstr ""
 
 #. Plugin lakewalker
-#: build/trans_plugins.java:33
+#: build/trans_plugins.java:29
 msgid "Helps vectorizing WMS images."
 msgstr ""
 
 #. Plugin livegps
-#: build/trans_plugins.java:35
+#: build/trans_plugins.java:31
 msgid ""
 "Support live GPS input (moving dot) through a connection to gpsd server."
 msgstr ""
 
 #. Plugin measurement
-#: build/trans_plugins.java:37
+#: build/trans_plugins.java:33
 msgid ""
 "Provide a measurement dialog and a layer to measure length and angle of "
 "segments, area surrounded by a (simple) closed way and create measurement "
@@ -18321,28 +17950,19 @@ msgid ""
 msgstr ""
 
 #. Plugin michigan_left
-#: build/trans_plugins.java:39
+#: build/trans_plugins.java:35
 msgid "Adds no left turn for sets of 4 or 5 ways"
 msgstr ""
 
 #. Plugin multipoly
-#: build/trans_plugins.java:41
+#: build/trans_plugins.java:37
 msgid ""
 "Create multipolygons by one click, much easier than standard way with "
 "relation editor."
 msgstr ""
 
-#. Plugin native_password_manager
-#: build/trans_plugins.java:43
-msgid ""
-"(Linux only.) Let the native password management system store the osm login "
-"password and username rather than putting it unencrypted in a plain text "
-"file. Currently only Unix-like operating systems are supported. (Using gnome-"
-"keyring or KWallet.)"
-msgstr ""
-
 #. Plugin nearclick
-#: build/trans_plugins.java:45
+#: build/trans_plugins.java:39
 msgid ""
 "Simulates a click when you do a small and short drag. This is useful for "
 "tablet pens, when you have problems just clicking the tablet without the "
@@ -18350,88 +17970,88 @@ msgid ""
 msgstr ""
 
 #. Plugin openlayers
-#: build/trans_plugins.java:47
+#: build/trans_plugins.java:41
 msgid "Displays an OpenLayers background image"
 msgstr ""
 
 #. Plugin openstreetbugs
-#: build/trans_plugins.java:49
+#: build/trans_plugins.java:43
 msgid "Imports issues from OpenStreetBugs"
 msgstr ""
 
 #. Plugin openvisible
-#: build/trans_plugins.java:51
+#: build/trans_plugins.java:45
 msgid ""
 "Allows opening gpx/osm files that intersect the currently visible screen area"
 msgstr ""
 
 #. Plugin osmarender
-#: build/trans_plugins.java:53
+#: build/trans_plugins.java:47
 msgid ""
 "Launches FireFox to display the current visible screen as a nice SVG image."
 msgstr ""
 
 #. Plugin photo_geotagging
-#: build/trans_plugins.java:55
+#: build/trans_plugins.java:49
 msgid ""
 "Write gps position info to the image file header. Run this feature from the "
 "right click menu of the image layer."
 msgstr ""
 
 #. Plugin PicLayer
-#: build/trans_plugins.java:57
+#: build/trans_plugins.java:51
 msgid ""
 "This plugin allows to display any picture as a background in the editor and "
 "align it with the map."
 msgstr ""
 
 #. Plugin plastic_laf
-#: build/trans_plugins.java:59
+#: build/trans_plugins.java:53
 msgid "The great JGoodies Plastic Look and Feel."
 msgstr ""
 
 #. Plugin public_transport
-#: build/trans_plugins.java:61
+#: build/trans_plugins.java:55
 msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr ""
 
 #. Plugin remotecontrol
-#: build/trans_plugins.java:63
+#: build/trans_plugins.java:57
 msgid "Let other applications send commands to JOSM."
 msgstr ""
 
 #. Plugin routes
-#: build/trans_plugins.java:65
+#: build/trans_plugins.java:59
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
 msgstr ""
 
 #. Plugin routing
-#: build/trans_plugins.java:67
+#: build/trans_plugins.java:61
 msgid "Provides routing capabilities."
 msgstr ""
 
 #. Plugin slippymap
-#: build/trans_plugins.java:69
+#: build/trans_plugins.java:63
 msgid ""
 "Displays a slippy map grid in JOSM. Can load tiles from slippy map as "
 "background and request updates."
 msgstr ""
 
 #. Plugin surveyor
-#: build/trans_plugins.java:71
+#: build/trans_plugins.java:65
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr ""
 
 #. Plugin tageditor
-#: build/trans_plugins.java:73
+#: build/trans_plugins.java:67
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr ""
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:75
+#: build/trans_plugins.java:69
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -18439,38 +18059,45 @@ msgid ""
 msgstr ""
 
 #. Plugin terracer
-#: build/trans_plugins.java:77
+#: build/trans_plugins.java:71
 msgid "Make terraced houses out of single blocks."
 msgstr ""
 
 #. Plugin Tracer
-#: build/trans_plugins.java:79
+#: build/trans_plugins.java:73
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be runnign."
 msgstr ""
 
 #. Plugin validator
-#: build/trans_plugins.java:81
+#: build/trans_plugins.java:75
 msgid ""
 "An OSM data validator. It checks for problems in data, and provides fixes "
 "for the common ones. Spellcheck integrated for tag names."
 msgstr ""
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:83
+#: build/trans_plugins.java:77
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
 msgstr ""
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:85
+#: build/trans_plugins.java:79
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr ""
 
+#. Plugin wms-turbo-challenge2
+#: build/trans_plugins.java:81
+msgid ""
+"Drive a race car from point A to point B over aerial imagery, leave cacti "
+"behind."
+msgstr ""
+
 #. Plugin wmsplugin
-#: build/trans_plugins.java:87
+#: build/trans_plugins.java:83
 msgid ""
 "Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)."
 msgstr ""
@@ -24155,16 +23782,16 @@ msgstr ""
 #. item "Sport (Ball)/Football"
 #: build/trans_presets.java:2066
 msgid "Edit Football"
-msgstr ""
+msgstr "Editar Futebol Americano"
 
 #: build/trans_presets.java:2071
 msgid "Australian Football"
-msgstr ""
+msgstr "Futebol Australiano"
 
 #. item "Sport (Ball)/Australian Football"
 #: build/trans_presets.java:2072
 msgid "Edit Australian Football"
-msgstr ""
+msgstr "Editar Futebol Australiano"
 
 #: build/trans_presets.java:2077
 msgid "Baseball"
@@ -24177,12 +23804,12 @@ msgstr "Editar Campo de Baseball"
 
 #: build/trans_presets.java:2083
 msgid "Basketball"
-msgstr ""
+msgstr "Basquetebol"
 
 #. item "Sport (Ball)/Basketball"
 #: build/trans_presets.java:2084
 msgid "Edit Basketball"
-msgstr ""
+msgstr "Editar Basquetebol"
 
 #: build/trans_presets.java:2089
 msgid "Golf"
@@ -24218,12 +23845,12 @@ msgstr ""
 
 #: build/trans_presets.java:2107
 msgid "Cricket"
-msgstr ""
+msgstr "Críquete"
 
 #. item "Sport (Ball)/Cricket"
 #: build/trans_presets.java:2108
 msgid "Edit Cricket"
-msgstr ""
+msgstr "Editar Críquete"
 
 #: build/trans_presets.java:2113
 msgid "Cricket Nets"
@@ -24281,12 +23908,12 @@ msgstr "Editar Rugby"
 
 #: build/trans_presets.java:2149
 msgid "Table Tennis"
-msgstr ""
+msgstr "Tênis de mesa"
 
 #. item "Sport (Ball)/Table Tennis"
 #: build/trans_presets.java:2150
 msgid "Edit Table Tennis"
-msgstr ""
+msgstr "Editar Tênis de Mesa"
 
 #: build/trans_presets.java:2155
 msgid "Tennis"
@@ -24295,7 +23922,7 @@ msgstr "Tenis"
 #. item "Sport (Ball)/Tennis"
 #: build/trans_presets.java:2156
 msgid "Edit Tennis"
-msgstr ""
+msgstr "Editar Tênis"
 
 #: build/trans_presets.java:2163
 msgid "Man-Made"
@@ -24837,7 +24464,7 @@ msgstr "gás"
 
 #: build/trans_presets.java:2353
 msgid "heat"
-msgstr ""
+msgstr "calor"
 
 #: build/trans_presets.java:2353
 msgid "oil"
@@ -24849,7 +24476,7 @@ msgstr ""
 
 #: build/trans_presets.java:2353
 msgid "any substance"
-msgstr ""
+msgstr "qualquer substância"
 
 #: build/trans_presets.java:2354
 msgid "underwater"
@@ -24921,7 +24548,7 @@ msgstr ""
 
 #: build/trans_presets.java:2387
 msgid "public"
-msgstr ""
+msgstr "público"
 
 #. <separator/>
 #: build/trans_presets.java:2390
@@ -25008,11 +24635,11 @@ msgstr "Editar Torre de Energia"
 #. item "Man Made/Power Tower" combo "Type"
 #: build/trans_presets.java:2422
 msgid "tower"
-msgstr ""
+msgstr "torre"
 
 #: build/trans_presets.java:2422
 msgid "pole"
-msgstr ""
+msgstr "polo"
 
 #: build/trans_presets.java:2423
 msgid "Tower reference"
@@ -25033,12 +24660,12 @@ msgstr "Editar Linha de Transmissão"
 #. item "Man Made/Power Line" label "Edit Power Line"
 #: build/trans_presets.java:2429
 msgid "Line type"
-msgstr ""
+msgstr "Tipo de Linha de Transmissão"
 
 #. item "Man Made/Power Line" combo "Line type"
 #: build/trans_presets.java:2429
 msgid "line"
-msgstr ""
+msgstr "linha de transmissão"
 
 #: build/trans_presets.java:2429
 msgid "minor_line"
@@ -25047,29 +24674,29 @@ msgstr ""
 #. item "Man Made/Power Line" combo "Voltage"
 #: build/trans_presets.java:2434
 msgid "Amount of Cables"
-msgstr ""
+msgstr "Quantidade de Cabos"
 
 #. item "Man Made/Power Line" text "Amount of Cables"
 #: build/trans_presets.java:2435
 msgid "Number of wires (better: conductors) per power cable"
-msgstr ""
+msgstr "Número de cabos (ou condutores) por cabo-de-força"
 
 #. item "Man Made/Power Line" combo "Number of wires (better: conductors) per power cable"
 #: build/trans_presets.java:2435
 msgid "single"
-msgstr ""
+msgstr "simples"
 
 #: build/trans_presets.java:2435
 msgid "double"
-msgstr ""
+msgstr "duplo"
 
 #: build/trans_presets.java:2435
 msgid "triple"
-msgstr ""
+msgstr "triplo"
 
 #: build/trans_presets.java:2435
 msgid "quad"
-msgstr ""
+msgstr "quádruplo"
 
 #: build/trans_presets.java:2438
 msgid "Amenities"
@@ -25082,7 +24709,7 @@ msgstr "Banheiros"
 
 #: build/trans_presets.java:2446
 msgid "limited"
-msgstr ""
+msgstr "limitado"
 
 #. item "Shops/Vending machine" text "Reference number"
 #: build/trans_presets.java:2447 build/trans_presets.java:2588
@@ -25122,13 +24749,13 @@ msgstr "Notas"
 #. item "Shops/Vending machine" check "Notes"
 #: build/trans_presets.java:2462 build/trans_presets.java:2591
 msgid "Electronic purses and Charge cards"
-msgstr ""
+msgstr "Carteiras Eletrónicas ou Cartões pré-pagos"
 
 #. item "Amenities/Telephone" check "Electronic purses and Charge cards"
 #. item "Shops/Vending machine" check "Electronic purses and Charge cards"
 #: build/trans_presets.java:2463 build/trans_presets.java:2592
 msgid "Debit cards"
-msgstr ""
+msgstr "Cartões de Débito"
 
 #. item "Amenities/Telephone" check "Debit cards"
 #. item "Shops/Vending machine" check "Debit cards"
@@ -25151,7 +24778,7 @@ msgstr "Reciclagem"
 #. fi.href="http://wiki.openstreetmap.org/wiki/Fi:Tag:amenity=recycling" />
 #: build/trans_presets.java:2470
 msgid "Edit Recycling station"
-msgstr ""
+msgstr "Editar Centro de Reciclagem"
 
 #. item "Amenities/Recycling" label "Edit Recycling station"
 #. <key key="amenity" value="recycling" />
@@ -25187,13 +24814,13 @@ msgstr "Ferro Velho"
 #. item "Amenities/Recycling" check "Scrap Metal"
 #: build/trans_presets.java:2479
 msgid "Waste Basket"
-msgstr ""
+msgstr "Cesta de Lixo"
 
 #. item "Amenities/Waste Basket"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dwaste_basket" />
 #: build/trans_presets.java:2481
 msgid "Edit Waste Basket"
-msgstr ""
+msgstr "Editar Cesta de Lixo"
 
 #. item "Amenities/Bench"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=bench" />
@@ -25357,15 +24984,15 @@ msgstr "metade"
 
 #: build/trans_presets.java:2495
 msgid "full"
-msgstr ""
+msgstr "cheio"
 
 #: build/trans_presets.java:2497
 msgid "Hide"
-msgstr ""
+msgstr "Ocutar"
 
 #: build/trans_presets.java:2498
 msgid "Lock"
-msgstr ""
+msgstr "Bloquear"
 
 #: build/trans_presets.java:2500
 msgid "Fountain"
@@ -25393,26 +25020,26 @@ msgstr "Editar Bebedouro"
 #. item "Amenities/Drinking Water" text "Name"
 #: build/trans_presets.java:2514
 msgid "Fire Hydrant"
-msgstr ""
+msgstr "Hidrante"
 
 #. item "Amenities/Fire Hydrant"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=fire hydrant"
 #. fi.href="http://wiki.openstreetmap.org/wiki/Fi:Tag:fire hydrant" />
 #: build/trans_presets.java:2517
 msgid "Edit Fire Hydrant"
-msgstr ""
+msgstr "Editar Hidrante"
 
 #. item "Amenities/Fire Hydrant" label "Edit Fire Hydrant"
 #. <key key="amenity" value="fire_hydrant" />
 #: build/trans_presets.java:2520
 msgid "Baby Hatch"
-msgstr ""
+msgstr "Berçário"
 
 #. item "Amenities/Baby Hatch"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=baby_hatch" />
 #: build/trans_presets.java:2522
 msgid "Edit Baby Hatch"
-msgstr ""
+msgstr "Editar Berçário"
 
 #. item "Amenities/Baby Hatch" text "Opening Hours"
 #: build/trans_presets.java:2528
@@ -25422,7 +25049,7 @@ msgstr "Lojas"
 #. group "Shops"
 #: build/trans_presets.java:2529
 msgid "Car Dealer"
-msgstr ""
+msgstr "Concessionária"
 
 #. item "Shops/Car Dealer"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=car" />
@@ -25433,7 +25060,7 @@ msgstr "Editar Loja de Carros"
 #. item "Shops/Car Dealer" text "Operator"
 #: build/trans_presets.java:2536
 msgid "Bike Dealer"
-msgstr ""
+msgstr "Casa de Bicicleta"
 
 #. item "Shops/Bike Dealer"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=bicycle"
@@ -25574,7 +25201,7 @@ msgstr ""
 
 #: build/trans_presets.java:2585
 msgid "vouchers"
-msgstr ""
+msgstr "vales"
 
 #: build/trans_presets.java:2585
 msgid "condoms"
@@ -25641,7 +25268,7 @@ msgstr "Álcool"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=alcohol" />
 #: build/trans_presets.java:2625
 msgid "Edit Alcohol Shop"
-msgstr ""
+msgstr "Editar"
 
 #: build/trans_presets.java:2630
 msgid "Beverages"
@@ -25700,7 +25327,7 @@ msgstr "Editar Loja de Plantas"
 
 #: build/trans_presets.java:2667
 msgid "Hardware"
-msgstr ""
+msgstr "Componente físico"
 
 #. item "Shops/Hardware"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=hardware" />
@@ -25710,13 +25337,13 @@ msgstr "Editar Loja de Utilidades Domésticas"
 
 #: build/trans_presets.java:2674
 msgid "Do-it-yourself-store"
-msgstr ""
+msgstr "Loja de Ferragens"
 
 #. item "Shops/Do-it-yourself-store"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=doityourself" />
 #: build/trans_presets.java:2676
 msgid "Edit Do-it-yourself-store"
-msgstr ""
+msgstr "Editar Loja de Ferragens"
 
 #: build/trans_presets.java:2681
 msgid "Stationery"
@@ -25785,7 +25412,7 @@ msgstr "Editar Lavanderia"
 
 #: build/trans_presets.java:2725
 msgid "Outdoor"
-msgstr ""
+msgstr "Outdoor"
 
 #. item "Shops/Outdoor"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop=outdoor" />
@@ -26057,13 +25684,13 @@ msgstr ""
 #. <separator/>
 #: build/trans_presets.java:2887
 msgid "Locality"
-msgstr ""
+msgstr "Localidade"
 
 #. item "Geography/Places/Locality"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:place=locality" />
 #: build/trans_presets.java:2889
 msgid "Edit Locality"
-msgstr ""
+msgstr "Editar Localidade"
 
 #. item "Geography/Places/Locality" text "Name"
 #: build/trans_presets.java:2894
@@ -26079,13 +25706,13 @@ msgstr "Editar Ilha"
 #. item "Geography/Places/Island" text "Name"
 #: build/trans_presets.java:2901
 msgid "Islet"
-msgstr ""
+msgstr "Ilhota"
 
 #. item "Geography/Places/Islet"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:place=islet" />
 #: build/trans_presets.java:2903
 msgid "Edit Islet"
-msgstr ""
+msgstr "Editar Ilhota"
 
 #. item "Geography/Places/Islet" text "Name"
 #. <separator/>
@@ -26244,7 +25871,7 @@ msgstr "Floresta"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:landuse=forest" />
 #: build/trans_presets.java:2991
 msgid "Edit Forest Landuse"
-msgstr ""
+msgstr "Editar zona Florestal"
 
 #: build/trans_presets.java:2997
 msgid "Nature Reserve"
@@ -26302,7 +25929,7 @@ msgstr "Editar matagal"
 #. <separator/>
 #: build/trans_presets.java:3026
 msgid "Farmyard"
-msgstr ""
+msgstr "Fazenda"
 
 #. item "Land use/Farmyard"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=farmyard"
@@ -26314,12 +25941,12 @@ msgstr ""
 #. item "Land use/Farmyard" text "Name"
 #: build/trans_presets.java:3034
 msgid "Farmland"
-msgstr ""
+msgstr "Terra agrícola"
 
 #. item "Land use/Farmland"
 #: build/trans_presets.java:3035
 msgid "Edit Farmland Landuse"
-msgstr ""
+msgstr "Editar zona Agrícola"
 
 #. item "Land use/Farmland" text "Name"
 #: build/trans_presets.java:3040
@@ -26334,17 +25961,17 @@ msgstr ""
 #. item "Land use/Meadow" text "Name"
 #: build/trans_presets.java:3046
 msgid "Vineyard"
-msgstr ""
+msgstr "Vinhedo"
 
 #. item "Land use/Vineyard"
 #: build/trans_presets.java:3047
 msgid "Edit Vineyard Landuse"
-msgstr ""
+msgstr "Editar zona de Vinhedos"
 
 #. item "Land use/Vineyard" text "Name"
 #: build/trans_presets.java:3052
 msgid "Allotments"
-msgstr ""
+msgstr "Hortas comunitárias"
 
 #. item "Land use/Allotments"
 #: build/trans_presets.java:3053
@@ -26365,12 +25992,12 @@ msgstr "Editar Jardim"
 #. item "Land use/Garden" text "Name"
 #: build/trans_presets.java:3064
 msgid "Grass"
-msgstr ""
+msgstr "Grama"
 
 #. item "Land use/Grass"
 #: build/trans_presets.java:3065
 msgid "Edit Grass Landuse"
-msgstr ""
+msgstr "Editar zona de Gramado"
 
 #. item "Land use/Grass" text "Name"
 #: build/trans_presets.java:3070
@@ -26386,7 +26013,7 @@ msgstr ""
 #. item "Land use/Village Green" text "Name"
 #: build/trans_presets.java:3077
 msgid "Common"
-msgstr ""
+msgstr "Comum"
 
 #. item "Land use/Common"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:leisure=common" />
@@ -26424,7 +26051,7 @@ msgstr "Área residencial"
 #. item "Land use/Residential area"
 #: build/trans_presets.java:3097
 msgid "Edit Residential Landuse"
-msgstr ""
+msgstr "Editar zona Residencial"
 
 #. item "Land use/Residential area" text "Name"
 #: build/trans_presets.java:3102
@@ -26445,16 +26072,16 @@ msgstr "Cemitério"
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse=cemetery" />
 #: build/trans_presets.java:3112
 msgid "Edit Cemetery Landuse"
-msgstr ""
+msgstr "Editar zona de Cemitério"
 
 #: build/trans_presets.java:3119
 msgid "Retail"
-msgstr ""
+msgstr "Comércio"
 
 #. item "Land use/Retail"
 #: build/trans_presets.java:3120
 msgid "Edit Retail Landuse"
-msgstr ""
+msgstr "Editar zona Comercial"
 
 #. item "Land use/Retail" text "Name"
 #: build/trans_presets.java:3125
@@ -26464,7 +26091,7 @@ msgstr "Comercial"
 #. item "Land use/Commercial"
 #: build/trans_presets.java:3126
 msgid "Edit Commercial Landuse"
-msgstr ""
+msgstr "Editar zona Comercial"
 
 #. item "Land use/Commercial" text "Name"
 #: build/trans_presets.java:3131
@@ -26474,7 +26101,7 @@ msgstr "Industrial"
 #. item "Land use/Industrial"
 #: build/trans_presets.java:3132
 msgid "Edit Industrial Landuse"
-msgstr ""
+msgstr "Editar zona Industrial"
 
 #. item "Land use/Industrial" text "Name"
 #: build/trans_presets.java:3137
@@ -26495,7 +26122,7 @@ msgstr "Militar"
 #. item "Land use/Military"
 #: build/trans_presets.java:3145
 msgid "Edit Military Landuse"
-msgstr ""
+msgstr "Editar zona Militar"
 
 #. item "Land use/Military" text "Name"
 #. <separator/>
@@ -26506,7 +26133,7 @@ msgstr "Área de construção"
 #. item "Land use/Construction area"
 #: build/trans_presets.java:3152
 msgid "Edit Construction Landuse"
-msgstr ""
+msgstr "Editar zona para Construção"
 
 #. item "Land use/Construction area" text "Name"
 #: build/trans_presets.java:3157
@@ -26531,12 +26158,12 @@ msgstr ""
 #. item "Land use/Greenfield" text "Name"
 #: build/trans_presets.java:3169
 msgid "Landfill"
-msgstr ""
+msgstr "Aterro"
 
 #. item "Land use/Landfill"
 #: build/trans_presets.java:3170
 msgid "Edit Landfill Landuse"
-msgstr ""
+msgstr "Editar Aterro"
 
 #. item "Land use/Landfill" text "Name"
 #: build/trans_presets.java:3175
@@ -26873,7 +26500,7 @@ msgstr "temporário"
 
 #: build/trans_presets.java:3227
 msgid "connection"
-msgstr ""
+msgstr "conexão"
 
 #: build/trans_presets.java:3228
 msgid "Color (hex)"
@@ -27325,7 +26952,7 @@ msgstr "cavalo"
 #: build/trans_style.java:476 build/trans_style.java:477
 #: build/trans_style.java:490 build/trans_style.java:491
 msgid "barrier"
-msgstr ""
+msgstr "obstáculo"
 
 #. color barrier
 #. <scale_min>1</scale_min>
@@ -27532,7 +27159,7 @@ msgstr "trilha_autoestrada"
 #. <condition k="highway" v="services"/>
 #: build/trans_style.java:842
 msgid "services"
-msgstr ""
+msgstr "serviços"
 
 #. color services
 #. <icon annotate="true" src="vehicle/services.png"/>
@@ -30578,9 +30205,8 @@ msgstr "lugar"
 #. <rule>
 #. <condition k="tiger:reviewed" v="no"/>
 #: build/trans_style.java:4239
-#, fuzzy
 msgid "tiger_data"
-msgstr "tigre"
+msgstr ""
 
 #. color area
 #. <scale_min>1</scale_min>
@@ -30988,6 +30614,9 @@ msgstr "Sicilia - Italia"
 #~ msgid "Unknown version"
 #~ msgstr "Versão desconhecida"
 
+#~ msgid "Enter Password"
+#~ msgstr "Digite a Senha"
+
 #~ msgid "Unsaved Changes"
 #~ msgstr "Alterações Não Salvas"
 
@@ -31018,6 +30647,9 @@ msgstr "Sicilia - Italia"
 #~ msgstr ""
 #~ "Atenção - o carregamento do plugin {0} foi solicitado. Este plugin não é "
 #~ "mais necessário."
+
+#~ msgid "Incorrect password or username."
+#~ msgstr "Senha ou usuário incorreto."
 
 #~ msgid "Ill-formed node id"
 #~ msgstr "Identificação de nó mal-formada"
@@ -31142,6 +30774,9 @@ msgstr "Sicilia - Italia"
 
 #~ msgid "Conflicting relation"
 #~ msgstr "Relação conflitando"
+
+#~ msgid "Login"
+#~ msgstr "Login"
 
 #~ msgid "zoom"
 #~ msgstr "zoom"
@@ -31323,6 +30958,11 @@ msgstr "Sicilia - Italia"
 #~ msgid "Images for {0}"
 #~ msgstr "Imagens para {0}"
 
+#~ msgid "image"
+#~ msgid_plural "images"
+#~ msgstr[0] "imagem"
+#~ msgstr[1] "imagens"
+
 #~ msgid "Synchronize Time with GPS Unit"
 #~ msgstr "Sincronizar Tempo com Unidade GPS"
 
@@ -31438,6 +31078,9 @@ msgstr "Sicilia - Italia"
 #~ msgid "Contact {0}..."
 #~ msgstr "Contato {0}..."
 
+#~ msgid "Incorrect value of id operator: {0}. Number is expected."
+#~ msgstr "Valor incorreto do operador de id: {0}. Se esperava um número."
+
 #~ msgid "Expected closing parenthesis."
 #~ msgstr "Fechamento de parenteses esperado."
 
@@ -31536,11 +31179,20 @@ msgstr "Sicilia - Italia"
 #~ msgid "Copy defaults"
 #~ msgstr "Copiar padrões"
 
+#~ msgid "All images"
+#~ msgstr "Todas as imagens"
+
+#~ msgid "Default Values"
+#~ msgstr "Valores Predefinidos"
+
 #~ msgid "Optional"
 #~ msgstr "Opcional"
 
 #~ msgid "Continue anyway"
 #~ msgstr "Continuar assim mesmo"
+
+#~ msgid "Are you sure?"
+#~ msgstr "Você tem certeza?"
 
 #~ msgid "Sync clock"
 #~ msgstr "Sincronizar relógio"
@@ -31725,6 +31377,13 @@ msgstr "Sicilia - Italia"
 #~ msgid "Parameter ''{0}'' must not be null"
 #~ msgstr "Parâmetro \"{0}\" não pode ser nulo"
 
+#~ msgid ""
+#~ "<html>There are unresolved conflicts in layer ''{0}''.<br>You have to "
+#~ "resolve them first.</html>"
+#~ msgstr ""
+#~ "<html>Existem conflitos não-resolvidos na camada ''{0}''.<br>Você precisa "
+#~ "resolvê-los primeiro.</html>"
+
 #~ msgid "Current changeset is null. Can't upload data."
 #~ msgstr "Changeset atual é nulo. Não há como enviar os dados."
 
@@ -31743,5 +31402,19 @@ msgstr "Sicilia - Italia"
 #~ "Isto pode acabar apagando nós acidentalmente.\n"
 #~ "Deseja continuar?"
 
+#~ msgid ""
+#~ "The selection contains {0} way. Are you sure you want to simplify it?"
+#~ msgid_plural ""
+#~ "The selection contains {0} ways. Are you sure you want to simplify them "
+#~ "all?"
+#~ msgstr[0] "A seleção contém {0} via. Tem certeza que quer simplificá-la?"
+#~ msgstr[1] ""
+#~ "A seleção contém {0} vias. Tem certeza que quer simplificar todas?"
+
 #~ msgid "Enter a changset id"
 #~ msgstr "Digite o ID do changeset"
+
+#~ msgid "<html>Cannot open directory.<br>Please select a file!</html>"
+#~ msgstr ""
+#~ "<html>Não foi possível abrir diretório.<br>Por favor, selecione um "
+#~ "arquivo!</html>"

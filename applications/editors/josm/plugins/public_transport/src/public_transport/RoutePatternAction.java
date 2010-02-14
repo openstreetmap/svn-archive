@@ -207,6 +207,8 @@ public class RoutePatternAction extends JosmAction {
     {
       if (e.getType() == TableModelEvent.UPDATE)
       {
+	relation.setModified(true);
+	
 	String key = (String)getValueAt(e.getFirstRow(), 0);
 	if (key == null)
 	  return;
@@ -479,7 +481,6 @@ public class RoutePatternAction extends JosmAction {
   private static JCheckBox cbRight = null;
   private static JCheckBox cbLeft = null;
   private static JTextField tfSuggestStopsLimit = null;
-/*  private static Vector< Relation > routes = new Vector< Relation >();*/
   private static Relation currentRoute = null;
   private static Vector< RelationMember > markedWays = new Vector< RelationMember >();
   private static Vector< RelationMember > markedNodes = new Vector< RelationMember >();
@@ -594,10 +595,10 @@ public class RoutePatternAction extends JosmAction {
       requiredTagsData.addRow(rowContent);
       /*JComboBox*/ comboBox = new JComboBox();
       comboBox.addItem("bus");
-/*      comboBox.addItem("tram");
+      comboBox.addItem("tram");
       comboBox.addItem("light_rail");
       comboBox.addItem("subway");
-      comboBox.addItem("rail");*/
+      comboBox.addItem("rail");
       requiredTagsTable.setCellEditor(1, 1, new DefaultCellEditor(comboBox));
       rowContent = new Vector< String >();
       rowContent.add(0, "ref");
@@ -1694,12 +1695,40 @@ public class RoutePatternAction extends JosmAction {
       mainDataSet = Main.main.getCurrentDataSet();
       if (mainDataSet != null)
       {
+	String stopKey = "";
+	String stopValue = "";
+	if ("bus".equals(currentRoute.get("route")))
+	{
+	  stopKey = "highway";
+	  stopValue = "bus_stop";
+	}
+	else if ("tram".equals(currentRoute.get("route")))
+	{
+	  stopKey = "highway";
+	  stopValue = "tram_stop";
+	}
+	else if ("light_rail".equals(currentRoute.get("route")))
+	{
+	  stopKey = "railway";
+	  stopValue = "station";
+	}
+	else if ("subway".equals(currentRoute.get("route")))
+	{
+	  stopKey = "railway";
+	  stopValue = "station";
+	}
+	else if ("rail".equals(currentRoute.get("route")))
+	{
+	  stopKey = "railway";
+	  stopValue = "station";
+	}
+
 	Collection< Node > nodeCollection = mainDataSet.getNodes();
 	Iterator< Node > nodeIter = nodeCollection.iterator();
 	while (nodeIter.hasNext())
 	{
 	  Node currentNode = nodeIter.next();
-	  if ("bus_stop".equals(currentNode.get("highway")))
+	  if (stopValue.equals(currentNode.get(stopKey)))
 	  {
 	    StopReference sr = detectMinDistance
 		(currentNode, segmentMetrics,

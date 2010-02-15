@@ -462,6 +462,25 @@ elsif ($Mode eq "stopBatik")
         statusMessage($result, 0, 0);
     }
 }
+elsif ($Mode eq "localFile")
+{
+    print "*** Local file rendering mode enabled, please do NOT use upload function ***\n";
+
+    my $DataFile = shift();
+
+    my (undef,$Zoom,$X,$Y,undef) = split (/[_.]/,$DataFile);
+
+    my $req = new Request;
+    $req->ZXY($Zoom, $X, $Y);
+
+    $currentSubTask = "info";
+    statusMessage("Trying file ".$DataFile,1,0);
+    
+    my $tileset = Tileset->new($req);
+    my $tilestart = time();
+    $tileset->generate(0,$DataFile); # "0" means no download.
+
+}
 #---------------------------------
 else {
     # ----------------------------------
@@ -476,13 +495,6 @@ else {
     print "z is optional and can be used for low-zoom tilesets\n";
     print "layers is a comma separated list (no spaces) of layers and overrides the config.\n";
     print "Other modes:\n";
-    print "  $0 loop - runs continuously\n";
-    print "  $0 upload - uploads any tiles\n";
-    print "  $0 upload_loop - uploads tiles in loop mode\n";
-    print "  $0 startBatik - start batik agent\n";
-    print "  $0 stopBatik - stop batik agent\n";
-    print "  $0 version - prints out version string and exits\n";
-    print "\nGNU General Public license, version 2 or later\n$Bar\n";
 }
 
 

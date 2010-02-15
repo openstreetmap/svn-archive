@@ -141,9 +141,20 @@ sub DESTROY
 sub generate
 {
     my $self = shift;
+    my $doDownload = shift;
+    my $DataFile = shift;
     my $req =  $self->{req};
     my $Config = $self->{Config};
 
+    if (not defined $doDownload)
+    {
+       $doDownload = 1;
+    }
+    elsif (not defined $DataFile)
+    {
+       $DataFile = sprintf("%s_%d_%d_%d.osm", "data", $req->ZXY);
+    }
+ 
     $::currentSubTask = "";
     ::keepLog($$,"GenerateTileset","start","x=".$req->X.',y='.$req->Y.',z='.$req->Z." for layers ".$req->layers_str);
 
@@ -158,8 +169,16 @@ sub generate
         #------------------------------------------------------
 
         my $beforeDownload = time();
-        my $FullDataFile = $self->downloadData($req->layers);
-        ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+        my $FullDataFile;
+        if ($doDownload)
+        {
+            $FullDataFile = $self->downloadData($req->layers);
+            ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+        }
+        else
+        {
+            $FullDataFile = $DataFile; ## FIXME: do we need full path here? currently it's just the plain filename w/o path info.
+        }
 
         #------------------------------------------------------
         # Handle all layers, one after the other
@@ -210,8 +229,16 @@ sub generate
             if($alllayers{$layer}{direct})
             {
                 my $beforeDownload = time();
-                my $FullDataFile = $self->downloadData($layer);
-                ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+                my $FullDataFile; 
+                if ($doDownload)
+                {
+                    $FullDataFile = $self->downloadData($layer);
+                    ::statusMessage("Download in ".(time() - $beforeDownload)." sec",1,10); 
+                }
+                else
+                {
+                    $FullDataFile = $DataFile; ## FIXME: do we need full path here? currently it's just the plain filename w/o path info.
+                }
                 $self->generateNormalLayer($layer);
             }
         }

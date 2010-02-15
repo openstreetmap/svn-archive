@@ -37,35 +37,43 @@
 #      [-scale + additional parameters]
 #      [-ruler]
 #      [-rulercolor]
-#      
+# 0.08 print information paper size and paper fit
+#      icons for nodes
+#      multipolygon problems solved
+#      declutter for icons
+#      user's manual provided in pdf
+#      all color names from svg can be used, even hex triplets like #FF00FF are accepted
+#      § changed to !
+#
 
 
 # TODO
-# v007
-# format style file (border color ways, thickness, iconfile for nodes
-# wiki features and usage and format style file 
-#
-#
-# icons
+# icons for areas
+# wildcard for value
+# routes
+# integrity check osm file; all referenced nodes and ways given?
+# color none for area / border, just print label in the middle
+# --------------------
+# style file check, color check, error messages, array for regex? Defaults
+# move parts of code to pm, even a new pm
+# lon/lat as label text?
 # oneways?
 # sub key/value for rules
-# wildcard for value
 # edges for ways?
 # see wiki
 # maybe prevent double labels in vicinity of each other?
 # auto calc min way length to be labeled (adv.)
-# user's manual?
 
 use strict ;
 use warnings ;
 
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.07 ;
+use OSM::mapgen 0.08 ;
 use Math::Polygon ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.07" ;
+my $version = "0.08" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -74,7 +82,9 @@ perl mapgen.pl
 -style=style.csv (original can be kept and maintained in OO sheet or MS Excel)
 -out=file.svg (png and pdf names are automatic, DEFAULT=mapgen.svg)
 
--legend=INT (0=no legend; 1=legend; DEFAULT=1)
+-bgcolor=TEXT (color for background)
+-size=<integer> (in pixels for x axis, DEFAULT=1024)
+-clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
 
 -place=TEXT (Place to draw automatically; quotation marks can be used if necessary; OSMOSIS REQUIRED!)
 -lonrad=FLOAT (radius for place width in km, DEFAULT=2)
@@ -84,15 +94,12 @@ perl mapgen.pl
 -declutterminx=INTEGER (min distance for labels on x-axis in pixels; DEFAULT=100)
 -declutterminy=INTEGER (min distance for labels on Y-axis in pixels; DEFAULT=10)
 
--bgcolor=TEXT (color for background)
--size=<integer> (in pixels for x axis, DEFAULT=1024)
--clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
-
 -grid=<integer> (number parts for grid, 0=no grid, DEFAULT=0)
 -gridcolor=TEXT (color for grid lines and labels (DEFAULT=black)
 -dir (create street directory in separate file. if grid is enabled, grid squares will be added)
--tagstat (lists keys and values used in osm file; program filters list to keep them short!!! see code array onoListTags)
+-tagstat (lists keys and values used in osm file; program filters list to keep them short!!! see code array noListTags)
 
+-legend=INT (0=no legend; 1=legend; DEFAULT=1)
 -ruler=INT (0=no ruler; 1=draw ruler; DEFAULT=1)
 -rulercolor=TEXT (DEFAULT=black)
 -scale (print scale)
@@ -142,11 +149,10 @@ my $scaleDpi = 300 ;
 my $scaleColor = "black" ;
 my $scaleSet = 0 ;
 
-my @legend = () ;
-
+# keys from tags listes here will not be shown in tag stat
 my @noListTags = sort qw (name width url source ref note phone operator opening_hours maxspeed maxheight maxweight layer is_in TODO addr:city addr:housenumber addr:country addr:housename addr:interpolation addr:postcode addr:street created_by description ele fixme FIXME website bridge tunnel time openGeoDB:auto_update  openGeoDB:community_identification_number openGeoDB:is_in openGeoDB:is_in_loc_id openGeoDB:layer openGeoDB:license_plate_code openGeoDB:loc_id openGeoDB:location openGeoDB:name openGeoDB:population openGeoDB:postal_codes openGeoDB:sort_name openGeoDB:telephone_area_code openGeoDB:type openGeoDB:version opengeodb:lat opengeodb:lon int_ref population postal_code wikipedia) ;
 
-# NODES
+# NODES; column indexes for style file
 my $nodeIndexTag = 0 ;
 my $nodeIndexValue = 1 ;
 my $nodeIndexColor = 2 ;
@@ -157,11 +163,12 @@ my $nodeIndexLabelSize = 6 ;
 my $nodeIndexLabelFont = 7 ;
 my $nodeIndexLabelOffset = 8 ;
 my $nodeIndexLegend = 9 ;
+my $nodeIndexIcon = 10 ;
+my $nodeIndexIconSize = 11 ;
 my @nodes = () ;
-# tag value color thickness label label-color label-size label-offset
 
 
-# WAYS and small AREAS
+# WAYS and small AREAS, as well as base layer info when flagged; column indexes for style file
 my $wayIndexTag = 0 ;
 my $wayIndexValue = 1 ;
 my $wayIndexColor = 2 ;
@@ -176,10 +183,9 @@ my $wayIndexLabelOffset = 10 ;
 my $wayIndexLegend = 11 ;
 my $wayIndexBaseLayer = 12 ;
 my @ways = () ;
-# key value color thickness fill label label-color
 
 
-
+# read data from file
 my $wayId ;
 my $wayUser ;
 my @wayNodes ;
@@ -196,21 +202,24 @@ my $relationUser ;
 my @relationTags ;
 my @relationMembers ;
 
+# storage of data
 my %memNodeTags ;
 my %memWayTags ;
 my %memWayNodes ;
 my %memRelationTags ;
 my %memRelationMembers ;
+my %memWayPaths = () ;
 
-my %usedTags = () ;
-my %wayUsed = () ;
-my %directory = () ;
+# my %usedTags = () ; # for stats
+my %wayUsed = () ; # used in multipolygon? then dont use again 
+my %directory = () ; # street list
 
 my %lon ; my %lat ;
 
 my $lonMin ; my $latMin ; my $lonMax ; my $latMax ;
 
-my $newId = -100000000; # global !
+my $newId = -100000000; # global ! for multipolygon data (ways)
+my $iconMax = 0 ;
 
 my $time0 ; my $time1 ;
 
@@ -248,7 +257,8 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 
 
 if ($helpOpt eq "1") {
-	print $usage ;
+	print "\nINFO on http://wiki.openstreetmap.org/wiki/Mapgen.pl\n\n" ;
+	print $usage . "\n" ;
 	die() ;
 }
 
@@ -301,19 +311,20 @@ print "verbose   = $verbose\n\n" ;
 
 # READ STYLE File
 open (my $csvFile, "<", $csvName) or die ("ERROR: style file not found.") ;
-my $line = <$csvFile> ;
+my $line = <$csvFile> ; # omit SECTION
 
-# tag value color thickness label label-color label-size label-offset
+# READ NODE RULES
 $line = <$csvFile> ;
 while (! grep /^\"SECTION/, $line) {
-	my ($key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend) = 
-		($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" (\d+) (\d)/ ) ;
-	# print "N $key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend\n" ; 
-	push @nodes, [$key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend] ;
+	my ($key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize) = ($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" (\d+) (\d) \"(.+)\" (\d+)/ ) ;
+	# print "N $key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize\n" ; 
+	push @nodes, [$key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize] ;
+	if ($iconSize>$iconMax) { $iconMax = $iconSize ; } 
 	$line = <$csvFile> ;
 }
-# key value color thickness fill label label-color
-$line = <$csvFile> ;
+
+# READ WAY RULES
+$line = <$csvFile> ; # omit SECTION
 while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
 	my ($key, $value, $color, $thickness, $dash, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer) = 
 		($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" ([\d\-]+) (\d) (\d)/ ) ;
@@ -332,7 +343,7 @@ if ($verbose eq "1") {
 	print "\n" ;
 	print "NODES\n" ;
 	foreach my $node (@nodes) {
-		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9] ;
+		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-20s %6s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11] ;
 	}
 	print "\n" ;
 }
@@ -340,7 +351,7 @@ if ($verbose eq "1") {
 $time0 = time() ;
 
 
-# place given?
+# -place given? look for place and call osmosis
 my $placeFound = 0 ; my $placeLon ; my $placeLat ;
 if ($place ne "") {
 	print "looking for place...\n" ;
@@ -489,8 +500,14 @@ if ($scaleSet != 0) {
 
 initGraph ($size, $lonMin, $latMin, $lonMax, $latMax, $bgColor) ;
 
+my ($paper, $w, $h) = fitsPaper ($scaleDpi) ;
+print "\nINFO: map fits paper $paper using $scaleDpi dpi.\n" ;
+printf "INFO: map width : %4.1f (cm)\n", $w ;
+printf "INFO: map height: %4.1f (cm)\n\n", $h ;
 
-processRelations () ;
+
+
+processRelations () ; # multipolygons, (routes)
 
 # BG AREAS
 
@@ -527,7 +544,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 			foreach my $test (@ways) {
 				if ( ($key->[0] eq $test->[$wayIndexTag]) and ($key->[1] eq $test->[$wayIndexValue]) ) {
 					if ( ( ($wayId < 0) and ($multiOnly eq "1") ) or ($multiOnly == 0) ){
-						drawArea ($test->[$wayIndexColor], nodes2Coordinates( @{$memWayNodes{$wayId}} ) ) ;
+						drawAreaMP ($test->[$wayIndexColor], \@{$memWayPaths{$wayId}}, \%lon, \%lat  ) ;
 						# LABELS
 						my $name = "" ; my $ref1 ;
 						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel]) ;
@@ -544,7 +561,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 } # foreach
 
 
-if ($multiOnly eq "1") {
+if ($multiOnly eq "1") { 	# clear all data so nothing else will be drawn
 	%memNodeTags = () ;
 	%memWayTags = () ;
 	%memWayNodes = () ;
@@ -559,6 +576,9 @@ foreach my $nodeId (keys %memNodeTags) {
 			if ( ($tag->[0] eq $test->[$nodeIndexTag]) and ($tag->[1] eq $test->[$nodeIndexValue]) ) {
 				if ($test->[$nodeIndexThickness] > 0) {
 					drawNodeDot ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexColor], $test->[$nodeIndexThickness]) ;
+				}
+				if ($test->[$nodeIndexIcon] ne "none") {
+					drawIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $declutterOpt, $iconMax) ;
 				}
 
 				if ($test->[$nodeIndexLabel] ne "none") {
@@ -742,7 +762,7 @@ if ($dirOpt eq "1") {
 
 if ($tagStatOpt eq "1") {
 	my %usedTags = () ; my %rules = () ;
-	print "\n--------\nTAG STAT\n--------\n" ;
+	print "\n--------\nTAG STAT for nodes and ways\n--------\n" ;
 	print "\nOMITTED KEYS\n@noListTags\n\n" ;
 	foreach my $node (keys %memNodeTags) { 
 		foreach my $tag (@{$memNodeTags{$node}}) { $usedTags{$tag->[0]}{$tag->[1]}++ ;}
@@ -887,10 +907,9 @@ sub processRelations {
 				for (my $ring=0; $ring<=$#ringWaysInner; $ring++) {
 					if ($verbose eq "1") { print "INNER RING $ring: @{$ringWaysInner[$ring]}\n" ; }
 					my $firstWay = $ringWaysInner[$ring]->[0] ;
-					if (scalar @{$ringWaysInner[$ring]} == 1) {$wayUsed{$firstWay} = 1 ; }
+					if (scalar @{$ringWaysInner[$ring]} == 1) {$wayUsed{$firstWay} = 1 ; } # way will be marked as used/drawn by multipolygon
 
 					@{$ringTagsInner[$ring]} = @{$memWayTags{$firstWay}} ; # ring will be tagged like first contained way
-	
 					if ($verbose eq "1") {
 						print "tags from first way...\n" ;
 						foreach my $tag (@{$memWayTags{$firstWay}}) {
@@ -902,7 +921,7 @@ sub processRelations {
 						push @{$ringTagsInner[$ring]}, ["multihole", "yes"] ;
 					}
 
-					foreach my $tag (@{$ringTagsInner[$ring]}) { $usedTags{$tag->[0]}{$tag->[1]} = 1 ; } 
+					# foreach my $tag (@{$ringTagsInner[$ring]}) { $usedTags{$tag->[0]}{$tag->[1]} = 1 ; } 
 				}
 			}
 
@@ -932,7 +951,7 @@ sub processRelations {
  					}
 
 
-					foreach my $tag (@{$ringTagsOuter[$ring]}) { $usedTags{$tag->[0]}{$tag->[1]} = 1 ; } 
+					# foreach my $tag (@{$ringTagsOuter[$ring]}) { $usedTags{$tag->[0]}{$tag->[1]} = 1 ; } 
 				}
 			} # outer
 			
@@ -1138,6 +1157,7 @@ sub processRings {
 		my (@k) = keys %selectedStacks ;
 		if ($verbose eq "1") { print "  stacks available: @k\n" ; }
 		my @nodes = () ;
+		my @nodesOld ;
 		my @processedStacks = () ;
 
 		# select one bottom element 
@@ -1146,7 +1166,8 @@ sub processRings {
 		my $ringToDraw = $selectedStacks{$key}[0] ;
 		if ($verbose eq "1") { print "  ring to draw: $ringToDraw\n" ; }
 
-		push @nodes, @{$ringNodes[$ringToDraw]} ; # outer polygon
+		push @nodesOld, @{$ringNodes[$ringToDraw]} ; # outer polygon
+		push @nodes, [@{$ringNodes[$ringToDraw]}] ; # outer polygon as array
 
 		# and remove ring from stacks; store processed stacks
 		foreach my $k2 (keys %selectedStacks) {
@@ -1166,7 +1187,8 @@ sub processRings {
 				my $temp = $ringTags[$tempRing]->[0]->[0] ;
 				if ($verbose eq "1") { print "           testing for hole: stack $k, ring $tempRing, tag $temp\n" ; }
 				if ($ringTags[$tempRing]->[0]->[0] eq "multihole") {
-					push @nodes, @{$ringNodes[$tempRing]} ;
+					push @nodesOld, @{$ringNodes[$tempRing]} ;
+					push @nodes, [@{$ringNodes[$tempRing]}] ;
 					# print "      nodes so far: @nodes\n" ;
 					# and remove this element from stack
 					shift @{$selectedStacks{$k}} ;
@@ -1177,8 +1199,9 @@ sub processRings {
 		}
 
 		# add way
-		@{$memWayNodes{$newId}} = @nodes ;
+		@{$memWayNodes{$newId}} = @nodesOld ;
 		@{$memWayTags{$newId}} = @{$ringTags[$ringToDraw]} ;
+		@{$memWayPaths{$newId}} = @nodes ;
 		push @{$memWayTags{$newId}}, ["layer", $actualLayer] ;
 		# should an existing layer tag be removed? TODO?
 		$actualLayer++ ;
@@ -1194,6 +1217,7 @@ sub processRings {
 }
 
 sub isIn {
+	# checks two polygons
 	# return 0 = neither
 	#        1 = p1 is in p2
 	#        2 = p2 is in p1

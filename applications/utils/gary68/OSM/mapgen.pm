@@ -22,12 +22,14 @@
 # USAGE
 #
 #
-# center (lon, lat, lon, lat)
+# center (lon, lat, lon, lat...)
 # createLabel ($refTagArray, $styleLabelText)
 # drawArea ($color, @nodes) - real world
+# drawAreaMP
 # drawAreaPix ($color, @nodes) - pixels
 # drawGrid ($parts)
 # drawHead ($text, $color, $size) / size (1..5) 
+# drawIcon ($lon, $lat, $icon, $size) ;
 # drawFoot ($text, $color, $size) / size (1..5) 
 # drawNodeDot ($lon, $lat, $color, $size) / size (1..5) - real world
 # drawNodeDotPix ($lon, $lat, $color, $size) / size (1..5) - pixels
@@ -40,6 +42,7 @@
 # drawWayBridge ($layer, d$color, $size, $dash, @nodes) / size = thickness / real world
 # drawWayPix ($color, $size, $dash, @nodes) / size = thickness / pixels
 # gridSquare ($lon, $lat) / returns grid square for directory
+# fitsPaper ($x, $y, $dpi)
 # initGraph ($sizeX, $left, $bottom, $right, $top) / real world coordinates, sizeX in pixels, Y automatic
 # labelWay ($col, $size, $font, $text, $tSpan, @nodes) / size can be 0..5 (or bigger...) / $tSpan = offset to line/way
 # printScale ($dpi, $color)
@@ -72,7 +75,7 @@ use OSM::osm ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.07' ;
+$VERSION = '0.08' ;
 
 require Exporter ;
 
@@ -81,12 +84,14 @@ require Exporter ;
 @EXPORT = qw ( 	center
 			createLabel
 			drawArea 
+			drawAreaMP
 			drawAreaPix 
 			drawCircleRadius 
 			drawCircleRadiusText 
 			drawHead 
 			drawFoot 
 			drawGrid
+			drawIcon
 			drawLegend 
 			drawNodeDot 
 			drawNodeDotPix 
@@ -99,6 +104,7 @@ require Exporter ;
 			drawWay 
 			drawWayBridge 
 			drawWayPix 
+			fitsPaper
 			gridSquare
 			initGraph 
 			labelWay 
@@ -108,29 +114,6 @@ require Exporter ;
 #
 # constants
 #
-
-my %colorHash ;
-
-@{$colorHash{"black"}} = (0, 0, 0) ;
-@{$colorHash{"darkgray"}} = (79,79,79) ;
-@{$colorHash{"gray"}} = (145, 145, 145) ;
-@{$colorHash{"lightgray"}} = (207, 207, 207) ;
-@{$colorHash{"white"}} = (255, 255, 255) ;
-
-@{$colorHash{"red"}} = (255, 0, 0) ;
-@{$colorHash{"orange"}} = (255, 165, 0) ;
-@{$colorHash{"darkorange"}} = (255, 140, 0) ;
-@{$colorHash{"tomato"}} = (255, 140, 0) ;
-@{$colorHash{"yellow"}} = (255, 255, 0) ;
-
-@{$colorHash{"blue"}} = (0, 0, 255) ;
-@{$colorHash{"lightblue"}} = (135, 206, 235) ;
-@{$colorHash{"pink"}} = (255, 105, 180) ;
-@{$colorHash{"green"}} = (0, 255, 0) ;
-@{$colorHash{"darkgreen"}} = (105, 139, 105) ;
-@{$colorHash{"lightgreen"}} = (0, 255, 127) ;
-@{$colorHash{"brown"}} = (139, 69, 19) ;
-@{$colorHash{"lightbrown"}} = (244, 164, 96) ;
 
 my %dashStyle = () ;
 $dashStyle{1} = "15,5" ;
@@ -154,7 +137,6 @@ my $lineJoin = "round" ;
 # variables
 #
 my $image ;
-my %color ;
 
 my ($top, $bottom, $left, $right) ; # min and max real world coordinates
 my ($sizeX, $sizeY) ; # pic size in pixels
@@ -166,10 +148,13 @@ my @svgOutputPixel = () ;
 my @svgOutputPixelGrid = () ;
 my @svgOutputDef = () ;
 my @svgOutputPathText = () ;
+my @svgOutputIcons = () ;
 my $pathNumber = 0 ;
 my $svgBaseFontSize = 10 ;
 
+# clutter information
 my %clutter = () ;
+my %clutterIcon = () ;
 
 sub initGraph {
 #
@@ -200,12 +185,66 @@ sub convert {
 }
 
 sub gridSquare {
+#
+# returns grid square of given coordinates for directories
+#
 	my ($lon, $lat, $parts) = @_ ;
 	my ($x, $y) = convert ($lon, $lat) ;
 	# my $partsY = $sizeY / ($sizeX / $parts) ;
 	my $xi = int ($x / ($sizeX / $parts)) + 1 ;
 	my $yi = int ($y / ($sizeX / $parts)) + 1 ;
 	return (chr($xi+64) . $yi) ;
+}
+
+sub drawIcon {
+#
+# draws icon por poi at given location. file must be png, or other supported format
+#
+	my ($lon, $lat, $icon, $size, , $declutter, $maxSize) = @_ ;
+	my ($x, $y) = convert ($lon, $lat) ;
+	$x -= $size/2 ;
+	$y -= $size/2 ;
+
+	# check for clutter condition
+	my $cluttered = 0 ;
+	if ($declutter eq "1") {
+		foreach my $clutterX (keys %clutterIcon) {
+			foreach my $clutterY (keys %{$clutterIcon{$clutterX}}) {
+				my $distY = abs ($clutterY - $y) ;
+				if ($distY > $maxSize) {
+					# dist ok
+				}
+				else {
+					my $distX = abs ($clutterX - $x) ;
+					if ($distX < $maxSize) { 
+						$cluttered = 1 ; 
+					}
+				}
+			}
+		}
+	}
+
+	if (!$cluttered) {
+		push @svgOutputIcons, svgElementIcon ($x, $y, $icon, $size) ;
+		$clutterIcon{$x}{$y} = 1 ;
+	}
+	else {
+		print "WARNING: icon $icon omitted to prevent clutter!\n" ;
+	}
+}
+
+sub svgElementIcon {
+#
+# create SVG text for icons
+#
+	my ($x, $y, $icon, $size) = @_ ;
+	my ($out) = "<image x=\"" . $x . "\"" ;
+	$out .= " y=\"" . $y . "\"" ;
+	$out .= " width=\"" . $size . "\"" ;
+	$out .= " height=\"" . $size . "\"" ;
+	$out .= " xlink:href=\"" . $icon . "\" />" ;
+
+	return ($out) ;	
 }
 
 sub drawHead {
@@ -273,7 +312,7 @@ sub drawTextPix {
 
 sub drawTextPixGrid {
 #
-# draws text at pixel position
+# draws text at pixel position. code goes to grid
 #
 	my ($x1, $y1, $text, $col, $size) = @_ ;
 
@@ -295,51 +334,6 @@ sub drawNodeDotPix {
 #
 	my ($x1, $y1, $col, $size) = @_ ;
 	push @svgOutputPixel, svgElementCircleFilled ($x1, $y1, $size, $col) ;
-}
-
-sub drawNodeCircle {
-#
-# draws node as a circle at given real world coordinates
-#
-	my ($lon, $lat, $col, $size) = @_ ;
-	my ($x1, $y1) = convert ($lon, $lat) ;
-	push @{$svgOutputWaysNodes{0}}, svgElementCircle ($x1, $y1, $size, 2, $col) ;
-}
-
-sub drawNodeCirclePix {
-#
-# draws node as a circle at given real world coordinates
-#
-	my ($x1, $y1, $col, $size) = @_ ;
-	push @{$svgOutputWaysNodes{0}}, svgElementCircle ($x1, $y1, $size, 2, $col) ;
-}
-
-sub drawCircleRadius {
-#
-# draws circle at real world coordinates with radius in meters
-#
-	my ($lon, $lat, $radius, $size, $col) = @_ ;
-	my $radX ; my $radY ;
-	my ($x1, $y1) = convert ($lon, $lat) ;
-
-	$radX = ($radius/1000) / (($right - $left) * 111.1) / cos ($top/360*3.14*2) * $sizeX ;
-	$radY = $radX ;
-	push @{$svgOutputWaysNodes{0}}, svgElementCircle ($x1, $y1, $radX, $size, $col) ;
-}
-
-sub drawCircleRadiusText {
-#
-# draws circle at real world coordinates with radius in meters
-#
-	my ($lon, $lat, $radius, $size, $font, $col, $text) = @_ ;
-	my $radX ; my $radY ;
-	my ($x1, $y1) = convert ($lon, $lat) ;
-
-	$radX = ($radius/1000) / (($right - $left) * 111.1) / cos ($top/360*3.14*2) * $sizeX ;
-	$radY = $radX ;
-	if ($size > 4 ) { $size = 4 ; }
-	push @{$svgOutputWaysNodes{0}}, svgElementCircle ($x1, $y1, $radX, $size, $col) ;
-	push @svgOutputText, svgElementText ($x1, $y1+$radY+10, $text, $size, $font, $col) ;
 }
 
 
@@ -447,6 +441,7 @@ sub drawAreaPix {
 #
 # draws an area like waterway=riverbank or landuse=forest. 
 # pass color as string and nodes as list (x1, y1, x2, y2...) - pixels
+# used for legend
 #
 	my ($col, @nodes) = @_ ;
 	my $i ;
@@ -456,6 +451,35 @@ sub drawAreaPix {
 		push @points, $x1 ; push @points, $y1 ; 
 	}
 	push @svgOutputPixel, svgElementPolygonFilled ($col, @points) ;
+}
+
+sub drawAreaMP {
+#
+# draws an area like waterway=riverbank or landuse=forest. 
+# pass color as string and nodes as list (x1, y1, x2, y2...) - real world coordinates
+#
+# receives ARRAY of ARRAY of NODES LIST! NOT coordinates list like other functions
+#
+	my ($col, $ref, $refLon, $refLat) = @_ ;
+	# my %lon = %$refLon ;
+	# my %lat = %$refLat ;
+	my @ways = @$ref ;
+	my $i ;
+	my @array = () ;
+
+	foreach my $way (@ways) {	
+		my @actual = @$way ;
+		# print "drawAreaMP - actual ring/way: @actual\n" ; 
+			my @points = () ;
+		for ($i=0; $i<$#actual; $i++) { # without last node! SVG command 'z'!
+			my ($x1, $y1) = convert ( $$refLon{$actual[$i]}, $$refLat{$actual[$i]} ) ;
+			push @points, $x1 ; push @points, $y1 ; 
+		}
+		push @array, [@points] ;
+		# print "drawAreaMP - array pushed: @points\n" ; 
+	}
+
+	push @svgOutputAreas, svgElementMultiPolygonFilled ($col, \@array) ;
 }
 
 
@@ -493,6 +517,9 @@ sub drawRuler {
 }
 
 sub drawGrid {
+#
+# draw grid on top of map. receives number of parts in x/lon direction
+#
 	my ($number, $color) = @_ ;
 	my $part = $sizeX / $number ;
 	my $numY = $sizeY / $part ;
@@ -546,6 +573,10 @@ sub writeSVG {
 	foreach (@svgOutputText) { print $file $_, "\n" ; }
 	print $file "</g>\n" ;
 
+	print $file "<g id=\"Icons\">\n" ;
+	foreach (@svgOutputIcons) { print $file $_, "\n" ; }
+	print $file "</g>\n" ;
+
 	print $file "<g id=\"Labels\">\n" ;
 	foreach (@svgOutputPathText) { print $file $_, "\n" ; }
 	print $file "</g>\n" ;
@@ -570,7 +601,7 @@ sub svgElementText {
 	my $svg = "<text x=\"" . $x . "\" y=\"" . $y . 
 		"\" font-size=\"" . $size . 
 		"\" font-family=\"" . $font . 
-		"\" fill=\"#" . colorToHex(@{$colorHash{$col}}) . 
+		"\" fill=\"" . $col . 
 		"\">" . encode("iso-8859-1", decode("utf8", $text)) . "</text>" ;
 	return $svg ;
 }
@@ -580,7 +611,7 @@ sub svgElementCircleFilled {
 # draws circle not filled
 #
 	my ($x, $y, $size, $col) = @_ ;
-	my $svg = "<circle cx=\"" . $x . "\" cy=\"" . $y . "\" r=\"" . $size . "\" fill=\"#" . colorToHex(@{$colorHash{$col}})  . "\" />" ;
+	my $svg = "<circle cx=\"" . $x . "\" cy=\"" . $y . "\" r=\"" . $size . "\" fill=\"" . $col  . "\" />" ;
 	return $svg ;
 }
 
@@ -589,7 +620,7 @@ sub svgElementCircle {
 # draws filled circle / dot
 #
 	my ($x, $y, $radius, $size, $col) = @_ ;
-	my $svg = "<circle cx=\"" . $x . "\" cy=\"" . $y . "\" r=\"" . $radius . "\" fill=\"none\" stroke=\"#" . colorToHex(@{$colorHash{$col}})  . "\" stroke-width=\"2\" />" ;
+	my $svg = "<circle cx=\"" . $x . "\" cy=\"" . $y . "\" r=\"" . $radius . "\" fill=\"none\" stroke=\"" . $col  . "\" stroke-width=\"2\" />" ;
 	return $svg ;
 }
 
@@ -598,7 +629,7 @@ sub svgElementLine {
 # draws line between two points
 #
 	my ($x1, $y1, $x2, $y2, $col, $size) = @_ ;
-	my $svg = "<polyline points=\"" . $x1 . "," . $y1 . " " . $x2 . "," . $y2 . "\" stroke=\"#" . colorToHex(@{$colorHash{$col}}) . "\" stroke-width=\"" . $size . "\"/>" ;
+	my $svg = "<polyline points=\"" . $x1 . "," . $y1 . " " . $x2 . "," . $y2 . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\"/>" ;
 	return $svg ;
 }
 
@@ -614,10 +645,10 @@ sub svgElementPolyline {
 		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
 	}
 	if ($dash == 0) { 
-		$svg = $svg . "\" stroke=\"#" . colorToHex(@{$colorHash{$col}}) . "\" stroke-width=\"" . $size . "\" stroke-linecap=\"" . $lineCap . "\" stroke-linejoin=\"" . $lineJoin . "\" fill=\"none\" />" ;
+		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" stroke-linecap=\"" . $lineCap . "\" stroke-linejoin=\"" . $lineJoin . "\" fill=\"none\" />" ;
 	}
 	else {
-		$svg = $svg . "\" stroke=\"#" . colorToHex(@{$colorHash{$col}}) . "\" stroke-width=\"" . $size . "\" stroke-linecap=\"" . $lineCap . "\" stroke-linejoin=\"" . $lineJoin . "\" stroke-dasharray=\"" . $dashStyle{$dash} . "\" fill=\"none\" />" ;
+		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" stroke-linecap=\"" . $lineCap . "\" stroke-linejoin=\"" . $lineJoin . "\" stroke-dasharray=\"" . $dashStyle{$dash} . "\" fill=\"none\" />" ;
 	}
 	return $svg ;
 }
@@ -633,10 +664,10 @@ sub svgElementPolylineBridge {
 		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
 	}
 	if ($dash == 0) { 
-		$svg = $svg . "\" stroke=\"#" . colorToHex(@{$colorHash{$col}}) . "\" stroke-width=\"" . $size . "\" fill=\"none\" />" ;
+		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" fill=\"none\" />" ;
 	}
 	else {
-		$svg = $svg . "\" stroke=\"#" . colorToHex(@{$colorHash{$col}}) . "\" stroke-width=\"" . $size . "\" stroke-dasharray=\"" . $dashStyle{$dash} . "\" fill=\"none\" />" ;
+		$svg = $svg . "\" stroke=\"" . $col . "\" stroke-width=\"" . $size . "\" stroke-dasharray=\"" . $dashStyle{$dash} . "\" fill=\"none\" />" ;
 	}
 	return $svg ;
 }
@@ -668,7 +699,7 @@ sub svgElementPathText {
 	my ($col, $size, $font, $text, $pathName, $tSpan) = @_ ;
 	my $svg = "<text font-family=\"" . $font . "\" " ;
 	$svg = $svg . "font-size=\"" . $size . "\" " ;
-	$svg = $svg . "fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\" >\n" ;
+	$svg = $svg . "fill=\"" . $col . "\" >\n" ;
 	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"middle\" startOffset=\"50%\" >\n" ;
 	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
 	$svg = $svg . "</textPath>\n</text>\n" ;
@@ -681,7 +712,7 @@ sub svgElementPolygonFilled {
 #
 	my ($col, @points) = @_ ;
 	my $i ;
-	my $svg = "<polygon fill-rule=\"evenodd\" fill=\"#" . colorToHex(@{$colorHash{$col}}) . "\" points=\"" ;
+	my $svg = "<polygon fill-rule=\"evenodd\" fill=\"" . $col . "\" points=\"" ;
 	for ($i=0; $i<scalar(@points); $i+=2) {
 		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
 	}
@@ -689,25 +720,39 @@ sub svgElementPolygonFilled {
 	return $svg ;
 }
 
-sub colorToHex {
+sub svgElementMultiPolygonFilled {
 #
-# converts array of integers (rgb) to hex string without hash # (internaly used)
+# draws mp in svg, filled with color. accepts holes. receives ARRAY of ARRAY of coordinates
 #
-	my @arr = @_ ;
-	my $string = "" ; 
-	$string = sprintf "%02x", $arr[0] ;
-	$string = $string . sprintf "%02x", $arr[1] ;
-	$string = $string . sprintf "%02x", $arr[2] ;
-	return $string ;
+	my ($col, $ref) = @_ ;
+	my @ways = @$ref ;
+	my $i ;
+	my $svg = "<path fill-rule=\"evenodd\" fill=\"" . $col . "\" d=\"" ;
+	
+	foreach my $way (@ways) {
+		my @actual = @$way ;
+		# print "svg - actual: @actual\n" ;
+		for ($i=0; $i<scalar(@actual); $i+=2) {
+			if ($i == 0) { $svg .= " M " ; } else { $svg .= " L " ; }
+			$svg = $svg . $actual[$i] . "," . $actual[$i+1] ;
+		}
+		$svg .= " z" ;
+		# print "svg - text = $svg\n" ; 
+	}
+
+	$svg = $svg . "\" />" ;
+	# print "svg - text = $svg\n" ; 
+	return $svg ;
 }
 
 sub createLabel {
 #
 # takes @tags and labelKey(s) from style file and creates labelTextTotal and array of labels for directory
-# takes more keys in string. 
-# § all listed keys will be searched for and values be concatenated
+# takes more keys in one string - using a separator. 
+#
+# � all listed keys will be searched for and values be concatenated
 # # first of found keys will be used to select value
-# "name§ref" will return all values if given
+# "name�ref" will return all values if given
 # "name#ref" will return name, if given. if no name is given, ref will be used. none given, no text
 #
 	my ($ref1, $styleLabelText) = @_ ;
@@ -716,8 +761,9 @@ sub createLabel {
 	my @labels = () ;
 	my $labelTextTotal = "" ; 
 
-	if (grep /§/, $styleLabelText) { # AND
-		@keys = split ( /§/, $styleLabelText) ;
+	if (grep /!/, $styleLabelText) { # AND
+		@keys = split ( /!/, $styleLabelText) ;
+		# print "par found: $styleLabelText; @keys\n" ;
 		for (my $i=0; $i<=$#keys; $i++) {
 			foreach my $tag (@tags) {
 				if ($tag->[0] eq $keys[$i]) {
@@ -746,6 +792,9 @@ sub createLabel {
 }
 
 sub center {
+#
+# calculate center of area by averageing lons/lats. could be smarter because result could be outside of area! TODO
+#
 	my @nodes = @_ ;
 	my $x = 0 ;
 	my $y = 0 ;
@@ -764,6 +813,9 @@ sub center {
 }
 
 sub printScale {
+#
+# print scale based on dpi and global variables left, right etc.
+#
 	my ($dpi, $color) = @_ ;
 
 	my $dist = distance ($left, $bottom, $right, $bottom) ;
@@ -780,6 +832,37 @@ sub printScale {
 	drawTextPix ($sizeX-200, 50, $text, $color, 14, "sans-serif") ;
 	# print "scale = $text\n\n" ;
 }
+
+
+sub fitsPaper {
+#
+# takes dpi and calculates on what paper size the map will fit. sizes are taken from global variables
+#
+	my ($dpi) = shift ;
+	my @sizes = () ;
+	my $width = $sizeX / $dpi * 2.54 ;
+	my $height = $sizeY / $dpi * 2.54 ;
+	my $paper = "" ;
+	push @sizes, ["4A0", 168.2, 237.8] ;
+	push @sizes, ["2A0", 118.9, 168.2] ;
+	push @sizes, ["A0", 84.1, 118.9] ;
+	push @sizes, ["A1", 59.4, 84.1] ;
+	push @sizes, ["A2", 42, 59.4] ;
+	push @sizes, ["A3", 29.7, 42] ;
+	push @sizes, ["A4", 21, 29.7] ;
+	push @sizes, ["A5", 14.8, 21] ;
+	push @sizes, ["A6", 10.5, 14.8] ;
+	push @sizes, ["none", 0, 0] ;
+
+	foreach my $size (@sizes) {
+		if ( ( ($width<=$size->[1]) and ($height<=$size->[2]) ) or ( ($width<=$size->[2]) and ($height<=$size->[1]) ) ) {
+			$paper = $size->[0] ;
+		}
+	}
+
+	return ($paper, $width, $height) ;
+}
+
 
 
 1 ;

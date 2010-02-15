@@ -39,7 +39,6 @@ use Server;
 use Request;
 use Upload;
 use SVG::Rasterize;
-use SVG::Rasterize::CoordinateBox;
 use English '-no_match_vars';
 use POSIX;
 
@@ -137,20 +136,46 @@ if ($LoopMode) {
 
 # Setup SVG::Rasterize
 if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
-    $SVG::Rasterize::object = SVG::Rasterize->new();
+    $SVG::Rasterize::object = SVG::Rasterize->new({ debug => $Config->get("DEBUG") });
     if( $Config->get("Rasterizer") ){
-        $SVG::Rasterize::object->engine( $Config->get("Rasterizer") );
+        $SVG::Rasterize::object->engine( $Config->get("Rasterizer"));
     }
 
     my $rasterizer = ref($SVG::Rasterize::object->engine());
 
     print "- rasterizing using $rasterizer\n";
 
+    # Set engine specific parameters
     if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
     {
         $SVG::Rasterize::object->engine()->heapsize($Config->get("BatikJVMSize"));
         $SVG::Rasterize::object->engine()->host('localhost');
         $SVG::Rasterize::object->engine()->port($Config->get("BatikPort"));
+        $SVG::Rasterize::object->engine()->autostartstop(1);
+    }
+    elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Batik') )
+    {
+        my @customSearchPaths = ();
+        push(@customSearchPaths, $Config->get("BatikPath")) if $Config->get("BatikPath");
+        if( $^O eq 'MSWin32' ){
+            push(@customSearchPaths, 'c:\tilesAtHome', 'c:\tilesAtHome\batik');
+            push(@customSearchPaths, 'D:\Programme\batik');
+        }
+
+        $SVG::Rasterize::object->engine()->jar_searchpaths(
+            @customSearchPaths,
+            $SVG::Rasterize::object->engine()->jar_searchpaths()
+        );
+    }
+    elsif( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::Inkscape') )
+    {
+        if( $Config->get("InkscapePath") ){
+            # Add InkscapePath as first location to look
+            $SVG::Rasterize::object->engine()->jar_searchpaths(
+                $Config->get("InkscapePath"),
+                $SVG::Rasterize::object->engine()->jar_searchpaths()
+            );
+        }
     }
 
     # Check for broken rasterizer versions
@@ -206,9 +231,6 @@ my $upload_pid = -1;
 
 # keep track of the server time for current job
 my $JobTime;
-
-# If batik agent was started automatically, turn it off at exit
-our $StartedBatikAgent = 0;
 
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
@@ -296,15 +318,6 @@ elsif ($Mode eq "loop")
     # ----------------------------------
     # Continuously process requests from server
     # ----------------------------------
-
-    # Start batik agent if it's not runnig
-    if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') ){
-        my $result = $SVG::Rasterize::object->engine()->start_agent();
-        if( $result ){
-            $StartedBatikAgent = 1;
-            statusMessage("Started Batik agent", 0, 0);
-        }
-    }
 
     # this is the actual processing loop
     
@@ -447,7 +460,6 @@ elsif ($Mode eq "startBatik")
 {
     my $result = $SVG::Rasterize::object->engine()->start_agent();
     if( $result ){
-        $StartedBatikAgent = 1;
         statusMessage("Started Batik agent", 0, 0);
     } else {
         statusMessage("Batik agent already running");
@@ -498,6 +510,13 @@ else {
     print "z is optional and can be used for low-zoom tilesets\n";
     print "layers is a comma separated list (no spaces) of layers and overrides the config.\n";
     print "Other modes:\n";
+    print "  $0 loop - runs continuously\n";
+    print "  $0 upload - uploads any tiles\n";
+    print "  $0 upload_loop - uploads tiles in loop mode\n";
+    print "  $0 startBatik - start batik agent\n";
+    print "  $0 stopBatik - stop batik agent\n";
+    print "  $0 version - prints out version string and exits\n";
+    print "\nGNU General Public license, version 2 or later\n$Bar\n";
 }
 
 
@@ -735,6 +754,7 @@ sub ProcessRequestsFromServer
         eval {
             $Server->putRequestBack($req, $err->text()) unless $Mode eq 'xy';
         }; # ignoring exceptions
+        statusMessage("\n ".$err->value." \n",1,10); #print only for debug (verbosity 10)
         if ($err->value() eq "fatal") {
             # $err->value() is "fatal" for fatal errors 
             cleanUpAndDie($err->text(), "EXIT", 1);
@@ -1009,26 +1029,6 @@ sub xml2svg
         statusMessage("Bezier Curve hinting disabled.",0,3);
     }
     return 1;
-}
-
-
-#-----------------------------------------------------------------------------
-# Get the width and height (in SVG units, must be pixels) of an SVG file
-#-----------------------------------------------------------------------------
-sub getSize($)
-{
-    my $SVG = shift();
-    open(my $fpSvg,"<",$SVG);
-    while(my $Line = <$fpSvg>)
-    {
-        if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/)
-        {
-            close $fpSvg;
-            return(($1,$2,1));
-        }
-    }
-    close $fpSvg;
-    return((0,0,0));
 }
 
 #-----------------------------------------------------------------------------

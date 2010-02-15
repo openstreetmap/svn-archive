@@ -477,6 +477,25 @@ elsif ($Mode eq "stopBatik")
         statusMessage($result, 0, 0);
     }
 }
+elsif ($Mode eq "localFile")
+{
+    print "*** Local file rendering mode enabled, please do NOT use upload function ***\n";
+
+    my $DataFile = shift();
+
+    my (undef,$Zoom,$X,$Y,undef) = split (/[_.]/,$DataFile);
+
+    my $req = new Request;
+    $req->ZXY($Zoom, $X, $Y);
+
+    $currentSubTask = "info";
+    statusMessage("Trying file ".$DataFile,1,0);
+    
+    my $tileset = Tileset->new($req);
+    my $tilestart = time();
+    $tileset->generate(0,$DataFile); # "0" means no download.
+
+}
 #---------------------------------
 else {
     # ----------------------------------

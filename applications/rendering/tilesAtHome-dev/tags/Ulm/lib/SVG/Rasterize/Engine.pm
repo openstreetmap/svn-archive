@@ -19,7 +19,17 @@ SVG::Rasterize::Engine -- Base class for SVG::Rasterize engines
 This is a base class for SVG::Rasterize engine modules. The documentation here
 describes the interface to be implemented by such modules.
 
-At some point some helper functions might also be moved to this module.
+=head1 ACCESSORS
+
+=cut
+
+__PACKAGE__->mk_accessors(qw(rasterizer));
+
+=pod
+
+=head2 wrapper_path
+
+Path to Batik wrapper
 
 =cut
 
@@ -70,7 +80,8 @@ sub check_output {
 
 Do the actual convertion.
 
-C<\%params> is a hash as described in SVG::Rasterize
+C<\%params> is a hash as described in SVG::Rasterize, with the exception
+that relative coordinates are resolved to absolute ones.
 
 =cut
 

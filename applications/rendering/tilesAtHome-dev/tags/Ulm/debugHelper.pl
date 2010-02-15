@@ -79,6 +79,19 @@ elsif ($Mode eq "center")
     print "center of rendered (projected) tile is\n";
     print "  in lat,lon order: $lat,$lon \n\n";
 }
+elsif ($Mode eq "tile")
+{
+    my $lat = shift();
+    my $lon = shift();
+    my $Z = shift() || 12;
+    
+    my ($X,$Y) = getTileNumber($lat,$lon,$Z);
+
+    print "\n";
+    print "tilenumber for $lat,$lon at zoom $Z is\n";
+    print " X=$X Y=$Y $Z,$X,$Y \n\n";
+
+}
 else
 {
     usage();
@@ -88,5 +101,14 @@ sub usage
 {
    print "perl debugHelper.pl <mode> <X> <Y> [Zoom]\n";
    print "where <mode> one of \"getbbox\", \"center\"\n";
+   print " - or - ";
+   print "perl debugHelper.pl \"tile\" <lat> <lon> [Zoom]\n";
    exit 1;
+}
+
+sub getTileNumber {
+  my ($lat,$lon,$zoom) = @_;
+  my $xtile = int( ($lon+180)/360 *2**$zoom ) ;
+  my $ytile = int( (1 - log(tan($lat*pi/180) + sec($lat*pi/180))/pi)/2 *2**$zoom ) ;
+  return(($xtile, $ytile));
 }

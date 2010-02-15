@@ -57,6 +57,9 @@ WorkingDirectory = tmp
 # has been removed from TahConf.pm
 Inkscape = inkscape
 
+# the next parameter can be used to set a custom inkscape path. set to "0" (unused) by default.
+InkscapePath = 0
+
 Zip = zip
 7zipWin = 0
 

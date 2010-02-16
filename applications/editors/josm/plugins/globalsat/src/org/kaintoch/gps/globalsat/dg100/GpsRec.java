@@ -314,7 +314,7 @@ public class GpsRec
         int MM = (dg100Date - DD * 10000) / 100;
         int YY = dg100Date - DD * 10000 - MM * 100;
         dateTime = GregorianCalendar.getInstance();
-        dateTime.set(2000 + YY, MM - 1, DD, hh, mm, ss); // this is somehoe strange (MM - 1) seems correct now, but last year I did not notice wrong behaviour without the "- 1"
+        dateTime.set(2000 + YY, MM - 1, DD, hh, mm, ss); // this is somehow strange: (MM - 1) seems correct now, but last year I did not notice wrong behaviour without the "- 1"
     }
 
     /**

@@ -60,7 +60,7 @@ function init() {
     });
 
     map.addLayers([
-        new OpenLayers.Layer.XYZ("OSM Standard", [
+        new OpenLayers.Layer.XYZ("OSM Standard (dt. Server)", [
                 "http://a.tile.openstreetmap.de/osm/${z}/${x}/${y}.png",
                 "http://b.tile.openstreetmap.de/osm/${z}/${x}/${y}.png",
                 "http://c.tile.openstreetmap.de/osm/${z}/${x}/${y}.png",
@@ -69,8 +69,8 @@ function init() {
             attribution: 'Map tiles from server sponsored by STRATO',
             keyname: 'mapnik'
         }),
-        new OpenLayers.Layer.OSM.Osmarender("OSM Alternativ (Tiles@Home)", { attribution: '', keyname: 'osmarender' }),
         new OpenLayers.Layer.OSM.Mapnik("OSM Standard (engl. Server)", { attribution: '', keyname: 'mapnik' }),
+        new OpenLayers.Layer.OSM.Osmarender("OSM Alternativ (Tiles@Home)", { attribution: '', keyname: 'osmarender' })
     ]);
 
     jumpTo(lon, lat, zoom);

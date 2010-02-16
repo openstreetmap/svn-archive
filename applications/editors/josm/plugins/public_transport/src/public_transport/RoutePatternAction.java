@@ -45,6 +45,7 @@ import javax.swing.table.TableCellEditor;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.mapmode.DeleteAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -485,6 +486,8 @@ public class RoutePatternAction extends JosmAction {
   private static Vector< RelationMember > markedWays = new Vector< RelationMember >();
   private static Vector< RelationMember > markedNodes = new Vector< RelationMember >();
   
+  private static Relation copy = null;
+  
   public RoutePatternAction() {
     super(tr("Route patterns ..."), null,
 	  tr("Edit Route patterns for public transport"), null, true);
@@ -525,6 +528,7 @@ public class RoutePatternAction extends JosmAction {
 	
       layoutCons.gridx = 0;
       layoutCons.gridy = 0;
+      layoutCons.gridwidth = 3;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
       layoutCons.fill = GridBagConstraints.BOTH;
@@ -541,6 +545,7 @@ public class RoutePatternAction extends JosmAction {
       
       layoutCons.gridx = 0;
       layoutCons.gridy = 1;
+      layoutCons.gridwidth = 3;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 1.0;
       layoutCons.fill = GridBagConstraints.BOTH;
@@ -553,12 +558,70 @@ public class RoutePatternAction extends JosmAction {
 	
       layoutCons.gridx = 0;
       layoutCons.gridy = 2;
+      layoutCons.gridwidth = 1;
+      layoutCons.gridheight = 2;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
       layoutCons.fill = GridBagConstraints.BOTH;
       gridbag.setConstraints(bRefresh, layoutCons);
       contentPane.add(bRefresh);
 	
+      JButton bNew = new JButton("New");
+      bNew.setActionCommand("routePattern.overviewNew");
+      bNew.addActionListener(this);
+	
+      layoutCons.gridx = 1;
+      layoutCons.gridy = 2;
+      layoutCons.gridwidth = 1;
+      layoutCons.gridheight = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bNew, layoutCons);
+      contentPane.add(bNew);
+	
+      JButton bDelete = new JButton("Delete");
+      bDelete.setActionCommand("routePattern.overviewDelete");
+      bDelete.addActionListener(this);
+	
+      layoutCons.gridx = 1;
+      layoutCons.gridy = 3;
+      layoutCons.gridwidth = 1;
+      layoutCons.gridheight = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bDelete, layoutCons);
+      contentPane.add(bDelete);
+      
+      JButton bDuplicate = new JButton("Duplicate");
+      bDuplicate.setActionCommand("routePattern.overviewDuplicate");
+      bDuplicate.addActionListener(this);
+	
+      layoutCons.gridx = 2;
+      layoutCons.gridy = 2;
+      layoutCons.gridwidth = 1;
+      layoutCons.gridheight = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bDuplicate, layoutCons);
+      contentPane.add(bDuplicate);
+	
+      JButton bReflect = new JButton("Reflect");
+      bReflect.setActionCommand("routePattern.overviewReflect");
+      bReflect.addActionListener(this);
+	
+      layoutCons.gridx = 2;
+      layoutCons.gridy = 3;
+      layoutCons.gridwidth = 1;
+      layoutCons.gridheight = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bReflect, layoutCons);
+      contentPane.add(bReflect);
+      
       //Tags Tab
       /*Container*/ contentPane = tabTags;
       /*GridBagLayout*/ gridbag = new GridBagLayout();
@@ -809,7 +872,7 @@ public class RoutePatternAction extends JosmAction {
       gridbag.setConstraints(bAdd, layoutCons);
       contentPane.add(bAdd);
 	
-      JButton bDelete = new JButton("Delete");
+      /*JButton*/ bDelete = new JButton("Delete");
       bDelete.setActionCommand("routePattern.itineraryDelete");
       bDelete.addActionListener(this);
 	
@@ -835,7 +898,7 @@ public class RoutePatternAction extends JosmAction {
       gridbag.setConstraints(bSort, layoutCons);
       contentPane.add(bSort);
 	
-      JButton bReflect = new JButton("Reflect");
+      /*JButton*/ bReflect = new JButton("Reflect");
       bReflect.setActionCommand("routePattern.itineraryReflect");
       bReflect.addActionListener(this);
       
@@ -1060,6 +1123,96 @@ public class RoutePatternAction extends JosmAction {
       
     if ("routePattern.refresh".equals(event.getActionCommand()))
     {
+      refreshData();
+    }
+    else if ("routePattern.overviewNew".equals(event.getActionCommand()))
+    {
+      currentRoute = new Relation();
+      currentRoute.put("type", "route");
+      currentRoute.put("route", "bus");
+      mainDataSet.addPrimitive(currentRoute);
+      
+      refreshData();
+      
+      for (int i = 0; i < relsListModel.size(); ++i)
+      {
+	if (currentRoute == ((RouteReference)relsListModel.elementAt(i)).route)
+	  relsList.setSelectedIndex(i);
+      }
+    }
+    else if ("routePattern.overviewDuplicate".equals(event.getActionCommand()))
+    {
+      currentRoute = new Relation(currentRoute, true);
+      currentRoute.put("type", "route");
+      currentRoute.put("route", "bus");
+      mainDataSet.addPrimitive(currentRoute);
+      
+      refreshData();
+      	
+      for (int i = 0; i < relsListModel.size(); ++i)
+      {
+	if (currentRoute == ((RouteReference)relsListModel.elementAt(i)).route)
+	  relsList.setSelectedIndex(i);
+      }
+    }
+    else if ("routePattern.overviewReflect".equals(event.getActionCommand()))
+    {
+      currentRoute.setModified(true);
+      String tag_from = currentRoute.get("from");
+      String tag_to = currentRoute.get("to");
+      currentRoute.put("from", tag_to);
+      currentRoute.put("to", tag_from);
+      
+      Vector< RelationMember > itemsToReflect = new Vector< RelationMember >();
+      Vector< RelationMember > otherItems = new Vector< RelationMember >();
+      int insPos = itineraryTable.getSelectedRow();
+      
+      for (int i = 0; i < currentRoute.getMembersCount(); ++i)
+      {
+	RelationMember item = currentRoute.getMember(i);
+	
+	if (item.isWay())
+	{
+	  String role = item.getRole();
+	  if ("backward".equals(role))
+	    role = "forward";
+	  else if ("forward".equals(role))
+	    role = "backward";
+	  else
+	    role = "backward";
+	  
+	  itemsToReflect.add(new RelationMember(role, item.getWay()));
+	}
+	else if (item.isNode())
+	  itemsToReflect.add(item);
+	else
+	  otherItems.add(item);
+      }
+	
+      currentRoute.setMembers(null);
+      for (int i = itemsToReflect.size()-1; i >= 0; --i)
+	currentRoute.addMember(itemsToReflect.elementAt(i));
+      for (int i = 0; i < otherItems.size(); ++i)
+	currentRoute.addMember(otherItems.elementAt(i));
+      
+      refreshData();
+      
+      for (int i = 0; i < relsListModel.size(); ++i)
+      {
+	if (currentRoute == ((RouteReference)relsListModel.elementAt(i)).route)
+	  relsList.setSelectedIndex(i);
+      }
+    }
+    else if ("routePattern.overviewDelete".equals(event.getActionCommand()))
+    {
+      DeleteAction.deleteRelation(Main.main.getEditLayer(), currentRoute);
+      
+      currentRoute = null;
+      tabbedPane.setEnabledAt(1, false);
+      tabbedPane.setEnabledAt(2, false);
+      tabbedPane.setEnabledAt(3, false);
+      tabbedPane.setEnabledAt(4, false);
+      
       refreshData();
     }
     else if ("routePattern.tagAddTag".equals(event.getActionCommand()))
@@ -1772,7 +1925,9 @@ public class RoutePatternAction extends JosmAction {
   }
   
   private void refreshData() {
+    Relation copy = currentRoute;
     relsListModel.clear();
+    currentRoute = copy;
 	
     DataSet mainDataSet = Main.main.getCurrentDataSet();
     if (mainDataSet != null)
@@ -1784,21 +1939,24 @@ public class RoutePatternAction extends JosmAction {
       while (relIter.hasNext())
       {
 	Relation currentRel = relIter.next();
-	String routeVal = currentRel.get("route");
-	if ("bus".equals(routeVal))
-	  relRefs.add(new RouteReference(currentRel));
-	else if ("tram".equals(routeVal))
-	  relRefs.add(new RouteReference(currentRel));
-	else if ("light_rail".equals(routeVal))
-	  relRefs.add(new RouteReference(currentRel));
-	else if ("subway".equals(routeVal))
-	  relRefs.add(new RouteReference(currentRel));
-	else if ("rail".equals(routeVal))
-	  relRefs.add(new RouteReference(currentRel));
+	if (!currentRel.isDeleted())
+	{
+	  String routeVal = currentRel.get("route");
+	  if ("bus".equals(routeVal))
+	    relRefs.add(new RouteReference(currentRel));
+	  else if ("tram".equals(routeVal))
+	    relRefs.add(new RouteReference(currentRel));
+	  else if ("light_rail".equals(routeVal))
+	    relRefs.add(new RouteReference(currentRel));
+	  else if ("subway".equals(routeVal))
+	    relRefs.add(new RouteReference(currentRel));
+	  else if ("rail".equals(routeVal))
+	    relRefs.add(new RouteReference(currentRel));
+	}
       }
       
       Collections.sort(relRefs);
-      
+
       Iterator< RouteReference > iter = relRefs.iterator();
       while (iter.hasNext())
 	relsListModel.addElement(iter.next());

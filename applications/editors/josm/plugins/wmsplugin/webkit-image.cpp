@@ -1,11 +1,3 @@
-/* compile with
-moc webkit-image.cpp >webkit-image.h
-g++ webkit-image.cpp -o webkit-image -lQtCore -lQtWebKit -lQtGui -s -O2
-or under Windows:
-g++ webkit-image.cpp -o webkit-image -lQtCore4 -lQtWebKit4 -lQtGui4 -s O2
-adding the correct directories with -L or -I:
--I C:\Progra~1\Qt\include -L C:\Progra~1\Qt\lib
-*/
 #include <QtGui/QApplication>
 #include <QtGui/QPainter>
 #include <QtCore/QFile>
@@ -16,8 +8,8 @@ adding the correct directories with -L or -I:
 #include <QtNetwork/QNetworkProxy>
 #include <QtCore/QProcess>
 #if QT_VERSION >= 0x040500
-#include <QDesktopServices>
-#include <QNetworkDiskCache>
+#include <QtGui/QDesktopServices>
+#include <QtNetwork/QNetworkDiskCache>
 #endif
 
 /* using mingw to set binary mode */

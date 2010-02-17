@@ -31,25 +31,16 @@ import javax.swing.table.TableModel;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionCache;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionList;
 
-
 /**
  * This is the tabular editor component for OSM tags.
  * 
- * 
- * @author Gubaer
- *
  */
 @SuppressWarnings("serial")
 public class TagTable extends JTable  {
-
 	private static Logger logger = Logger.getLogger(TagTable.class.getName());
-
-
 
 	/** the table cell editor used by this table */
 	private TableCellEditor editor = null;
-
-
 
 	/**
 	 * The table has three columns. In the first column, we display error and
@@ -64,7 +55,6 @@ public class TagTable extends JTable  {
 		public TagTableColumnModel() {
 			TableColumn col = null;
 			TableCellRenderer renderer = new TableCellRenderer();
-
 
 			// column 0 - tag key
 			col = new TableColumn(0);
@@ -82,7 +72,6 @@ public class TagTable extends JTable  {
 
 		}
 	}
-
 
 	/**
 	 * Action to be run when the user navigates to the next cell in the table,
@@ -217,8 +206,6 @@ public class TagTable extends JTable  {
 			getColumnModel().getSelectionModel().addListSelectionListener(this);
 		}
 
-
-
 		@Override
 		public void run() {
 			if (!isEnabled())
@@ -232,7 +219,7 @@ public class TagTable extends JTable  {
 				} else
 					// should not happen
 					//
-					throw new IllegalStateException("unexpected selected clolumn: getSelectedColumn() is " + getSelectedColumn());
+					throw new IllegalStateException("unexpected selected column: getSelectedColumn() is " + getSelectedColumn());
 			} else if (getSelectedColumnCount() == 2) {
 				deleteTags();
 			}
@@ -256,7 +243,6 @@ public class TagTable extends JTable  {
 			} else {
 				setEnabled(false);
 			}
-
 		}
 	}
 
@@ -299,18 +285,13 @@ public class TagTable extends JTable  {
 		return addAction;
 	}
 
-
 	/**
 	 * initialize the table
 	 */
 	protected void init() {
-
-
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		setCellSelectionEnabled(true);
 		setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-
-
 
 		// make ENTER behave like TAB
 		//
@@ -334,14 +315,14 @@ public class TagTable extends JTable  {
 		.put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.CTRL_MASK), "addTag");
 		getActionMap().put("addTag", addAction);
 
-
 		// create the table cell editor and set it to key and value columns
 		//
 		editor = new TableCellEditor();
 		editor.setTagEditorModel((TagEditorModel)getModel());
 		getColumnModel().getColumn(0).setCellEditor(editor);
 		getColumnModel().getColumn(1).setCellEditor(editor);
-
+		
+		
 	}
 
 	/**
@@ -354,8 +335,6 @@ public class TagTable extends JTable  {
 		super(model, new TagTableColumnModel());
 		init();
 	}
-
-
 
 	/**
 	 * adjusts the width of the columns for the tag name and the tag value
@@ -377,7 +356,6 @@ public class TagTable extends JTable  {
 		}
 	}
 
-
 	@Override protected boolean processKeyBinding(KeyStroke ks, KeyEvent e,
 			int condition, boolean pressed) {
 
@@ -388,7 +366,6 @@ public class TagTable extends JTable  {
 		}
 		return super.processKeyBinding(ks, e, condition, pressed);
 	}
-
 
 	/**
 	 * @param autoCompletionList
@@ -463,8 +440,5 @@ public class TagTable extends JTable  {
 			logger.log(Level.SEVERE, "failed to simulate mouse click event at (" + r.x + "," + r.y + "). Exception: " + e.toString());
 			return;
 		}
-
 	}
-
-
 }

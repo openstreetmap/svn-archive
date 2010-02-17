@@ -1,17 +1,16 @@
 package org.openstreetmap.josm.plugins.tageditor.editor;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionCache;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionList;
+import org.openstreetmap.josm.gui.dialogs.relation.RunnableAction;
+import org.openstreetmap.josm.gui.tagging.TagTable;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionCache;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.tageditor.ac.IAutoCompletionListListener;
 
 
@@ -77,15 +76,15 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 		// to the width of the scroll pane viewport. Also tried to overwrite
 		// getPreferredViewportSize() in JTable, but did not work.
 		//
-		scrollPane.addComponentListener(
-				new ComponentAdapter() {
-					@Override public void componentResized(ComponentEvent e) {
-						super.componentResized(e);
-						Dimension d = scrollPane.getViewport().getExtentSize();
-						tblTagEditor.adjustColumnWidth(d.width);
-					}
-				}
-		);
+//		scrollPane.addComponentListener(
+//				new ComponentAdapter() {
+//					@Override public void componentResized(ComponentEvent e) {
+//						super.componentResized(e);
+//						Dimension d = scrollPane.getViewport().getExtentSize();
+//						tblTagEditor.adjustColumnWidth(d.width);
+//					}
+//				}
+//		);
 
 		// build the preset manager which shows a list of applied presets
 		//
@@ -139,13 +138,9 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 		return tblTagEditor.getAddAction();
 	}
 
-
-
 	public void clearSelection() {
 		tblTagEditor.getSelectionModel().clearSelection();
 	}
-
-
 
 	public void stopEditing() {
 		TableCellEditor editor = (TableCellEditor) tblTagEditor.getCellEditor();
@@ -154,9 +149,9 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 		}
 	}
 
-
 	public AutoCompletionList getAutoCompletionList() {
-		return ((org.openstreetmap.josm.plugins.tageditor.editor.TableCellEditor)tblTagEditor.getCellEditor()).getAutoCompletionList();
+		return null;
+		//return ((org.openstreetmap.josm.gui.tagging.TagCellEditor)tblTagEditor.getCellEditor()).getAutoCompletionList();
 	}
 
 	public void setAutoCompletionList(AutoCompletionList autoCompletionList) {
@@ -166,7 +161,6 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 	public void setAutoCompletionCache(AutoCompletionCache acCache) {
 		tblTagEditor.setAutoCompletionCache(acCache);
 	}
-
 
 	public void autoCompletionItemSelected(String item) {
 		org.openstreetmap.josm.plugins.tageditor.editor.TableCellEditor editor = ((org.openstreetmap.josm.plugins.tageditor.editor.TableCellEditor)tblTagEditor.getCellEditor());
@@ -178,10 +172,4 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 	public void requestFocusInTopLeftCell() {
 		tblTagEditor.requestFocusInCell(0,0);
 	}
-
-
-
-
-
-
 }

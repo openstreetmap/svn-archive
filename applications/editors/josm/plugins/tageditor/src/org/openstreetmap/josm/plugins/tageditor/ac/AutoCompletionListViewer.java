@@ -18,13 +18,8 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 
-/**
- * 
- * 
- *
- */
-@SuppressWarnings("serial")
 public class AutoCompletionListViewer extends JPanel {
 	
 	static private Logger logger = Logger.getLogger(AutoCompletionListViewer.class.getName());

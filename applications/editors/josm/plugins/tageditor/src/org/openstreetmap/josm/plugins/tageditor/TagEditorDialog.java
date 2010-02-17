@@ -31,8 +31,8 @@ import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionCache;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionList;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionCache;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionListViewer;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditor;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditorModel;
@@ -305,7 +305,7 @@ public class TagEditorDialog extends JDialog {
 	public void startEditSession() {
 		model.clearAppliedPresets();
 		model.initFromJOSMSelection();
-		acCache.initFromJOSMDataset();
+		//acCache.initFromJOSMDataset();
 		getModel().ensureOneTag();
 	}
 

@@ -39,7 +39,6 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 	/** user input is matched against this list of auto completion items */
 	private AutoCompletionList autoCompletionList = null;
 
-
 	/**
 	 * constructor
 	 */
@@ -76,8 +75,6 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 		} catch(Exception e) {
 			logger.log(Level.WARNING, "failed to initialize auto completion list with standard keys.", e);
 		}
-
-
 
 		// add the list of keys in the current data set
 		//
@@ -245,5 +242,4 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 	public void setTagEditorModel(TagEditorModel tagEditorModel) {
 		this.tagEditorModel = tagEditorModel;
 	}
-
 }

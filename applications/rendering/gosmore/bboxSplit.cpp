@@ -1,4 +1,3 @@
-// For splitting the planet. Compile with g++ -O2 bboxSplit.cpp -o bboxSplit
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
@@ -144,15 +143,19 @@ int main (int argc, char *argv[])
             fwrite (start, 1, n - start, f[areas.back()[j]]);
           }
           areas.back ()[acnt] = -1;
-          map<younion,int>::iterator f = amap.find (younion (areas.back()));
-          if (f == amap.end ()) {
+          map<younion,int>::iterator mf = amap.find (younion (areas.back()));
+          if (mf == amap.end ()) {
             int pos = areas.size () - 1;
             if (pos >> (sizeof (areasIndexType) * 8)) {
+              for (int j = 0; j < bcnt; j++) {
+                fprintf (f[j], "</osm>\n");
+                pclose (f[j]);
+              }
               fprintf (stderr, "%s FATAL: Too many combinations of areas\n", argv[0]);
               return 2;
             }
             amap[younion (areas.back ())] = pos;
-            f = amap.find (younion (areas.back()));
+            mf = amap.find (younion (areas.back()));
             areas.push_back (new int[bcnt + 1]); // Tiny once off memory leak.
             //assert (f != amap.end());
           }
@@ -160,7 +163,7 @@ int main (int argc, char *argv[])
           //printf (stderr, "Extending %c to %ld\n", tipe[2], id);
           while (nwr[nwrIdx].size () <= id) nwr[nwrIdx].push_back (0);
           // Initialize nwr with 0 which implies the empty union
-          nwr[nwrIdx][id] = f->second;
+          nwr[nwrIdx][id] = mf->second;
           areas.back ()[0] = -1;
           acnt = 0;
         } // if we found an entity that belongs to at least 1 bbox
@@ -192,6 +195,11 @@ int main (int argc, char *argv[])
     cnt -= start - buf;
     start = buf;
   }
-  fprintf (stderr, "Error: Xml termination not found\n");
+  for (int j = 0; j < bcnt; j++) {
+    fprintf (f[j], "</osm>\n");
+    pclose (f[j]);
+  }
+  fprintf (stderr, "Warning: Xml termination not found. Files should be OK.\n");
+  fprintf (stderr, "%s done using %d area combinations\n", argv[0], areas.size () - 1);
   return 1;
 }

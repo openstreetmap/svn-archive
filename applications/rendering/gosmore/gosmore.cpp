@@ -92,6 +92,7 @@ using namespace std;
   o (ZoomInKey,       0, 3) \
   o (ZoomOutKey,      0, 3) \
   o (MenuKey,         0, 3) \
+  o (Keyboard,        0, 2) \
   o (ShowActiveRouteNodes, 0, 2) \
   o (SearchSpacing,   32, 1) \
 
@@ -144,7 +145,7 @@ enum { GDK_SCROLL_UP, GDK_SCROLL_DOWN };
 #define RESERVED_PENS 2 */
 
 HINSTANCE hInst;
-HWND   mWnd, dlgWnd = NULL;
+static HWND   mWnd, dlgWnd = NULL, hwndEdit, button3D, buttons[3];
 
 #define LOG logprintf ("%d\n", __LINE__);
 #else
@@ -370,7 +371,7 @@ void ChangePak (const TCHAR *pakfile, int mlon, int mlat)
 
 GtkWidget *draw, *location, *display3D, *followGPSr;
 double cosAzimuth = 1.0, sinAzimuth = 0.0;
-string highlight;
+string highlight, searchStr ("Search");
 
 inline void SetLocation (int nlon, int nlat)
 {
@@ -783,6 +784,7 @@ void DoFollowThing (gpsNewStruct *gps)
     GetModuleFileName (NULL, argv0, sizeof (argv0) / sizeof (argv0[0]));
     wsprintf (wcsrchr (argv0, L'\\'), TEXT ("\\%s.wav"),
       cmdStr[command[0] - cmdturnleftNum] + 3);
+    // waveOutSetVolume (/*pcm*/0, 0xFFFF); // Puts the sound at maximum volume
     PlaySound (argv0, NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC );
 #else
     static const char *cmdStr[] = { COMMANDS };
@@ -1242,6 +1244,148 @@ int ListXY (int cnt, int isY)
     (cnt % (draw->allocation.width / w)) * w + w / 2;
 }
 
+#ifndef NOGTK
+typedef GdkGC *HDC;
+
+static GdkGC *maskGC = NULL, *fg_gc;
+static GdkBitmap *mask = NULL;
+// create bitmap for generation the mask image for icons
+// all icons must be smaller than these dimensions
+static GdkBitmap *maskicon = NULL;
+static GdkPixmap *icons = NULL;
+
+#else
+HDC icons, maskDc;
+HFONT sysFont;
+LOGFONT logFont;
+
+#define gtk_combo_box_get_active(x) 1
+#define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
+  BitBlt (dgc, dx, dy, w, h, maskDc, x, y, SRCAND); \
+  BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCPAINT)
+#define gdk_draw_line(win,gc,sx,sy,dx,dy) \
+  do { MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy); } while (0)
+
+#endif
+
+static HDC mygc = NULL, iconsgc = NULL;
+
+#ifdef PANGO_VERSION
+PangoContext *pc;
+PangoLayout  *pl;
+#endif
+
+void DrawString (int x, int y, const char *optStr)
+{
+  #if PANGO_VERSION
+  PangoMatrix mat;
+  mat.xx = mat.yy = 1.0;
+  mat.xy = mat.yx = 0.0;
+  pango_context_set_matrix (pc, &mat);
+  pango_layout_set_text (pl, optStr, -1);
+  gdk_draw_layout (GDK_DRAWABLE (draw->window),
+                     fg_gc /*draw->style->fg_gc[0]*/, x, y, pl);
+  #else
+  SelectObject (mygc, sysFont);
+  const unsigned char *sStart = (const unsigned char*) optStr;
+  UTF16 wcTmp[70], *tStart = (UTF16 *) wcTmp;
+  if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
+           tStart + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+      == conversionOK) {
+    ExtTextOutW (mygc, x, y, 0, NULL, (wchar_t*) wcTmp, tStart - wcTmp, NULL);
+  }
+  #endif
+}
+
+void DrawPoI (int dstx, int dsty, int *icon)
+{
+  if (icon[2] == 0 || dstx < -icon[2] || dsty < -icon[3] ||
+    dstx > draw->allocation.width + icon[2] ||
+    // GDK need these tests for the Start&EndRoute markers
+    dsty > draw->allocation.height + icon[3]) return;
+  #ifndef NOGTK
+  // for gdk we first need to extract the portion of the mask
+  if (!maskicon) maskicon = gdk_pixmap_new(NULL, 100, 100, 1);
+  gdk_draw_drawable (maskicon, maskGC, mask,
+                     icon[0], icon[1], 0, 0,
+                     icon[2], icon[3]);
+  // and set the clip region using that portion
+  gdk_gc_set_clip_origin(iconsgc, dstx - icon[2] / 2, dsty - icon[3] / 2);
+  gdk_gc_set_clip_mask(iconsgc, maskicon);
+  #endif
+  gdk_draw_drawable (draw->window, iconsgc, icons,
+    icon[0], icon[1], dstx - icon[2] / 2, dsty - icon[3] / 2,
+    icon[2], icon[3]);
+}
+
+void GeoSearch (const char *key)
+{
+  const char *comma = strchr (key, ',');
+  if (!comma) comma = strstr (key, " near ");
+  if (comma) {
+    const char *cName = comma + (*comma == ',' ? 1 : 6);
+    string citi = string ("city:") + (cName + strspn (cName, " "));
+    const char *tag = gosmData + *GosmIdxSearch (citi.c_str (), 0);
+    while (*--tag) {}
+    ChangePak (NULL, ((wayType *)tag)[-1].clon, ((wayType *)tag)[-1].clat);
+    string xkey = string (key, comma - key);
+    //printf ("%s tag=%s\nxke %s\n", cName, tag + 1, xkey.c_str ());
+    GosmSearch (((wayType *)tag)[-1].clon, ((wayType *)tag)[-1].clat, xkey.c_str ());
+  }
+  else GosmSearch (clon, clat, key);
+}
+
+int HandleKeyboard (GdkEventButton *event)
+{ // Some WinCE devices, like the Mio Moov 200 does not have an input method
+  // and any call to activate it or set the text on an EDIT or STATIC (label)
+  // control will crash the application. So under WinCE we default to our
+  // own keyboard.
+  //
+  // Draw our own keyboard (Expose Event) or handle the key (Click)
+  if (Keyboard) return FALSE; // Using the Windows keyboard
+  // DrawString (30, 5, searchStr.c_str ()); // For testing under GTK
+  #ifdef _WIN32_WCE
+  if (!event) {
+    RECT r;
+    r.left = 0;
+    r.top = draw->allocation.height - 32 * 3;
+    r.right = draw->allocation.width;
+    r.bottom = draw->allocation.height;
+    FillRect (mygc, &r, (HBRUSH) GetStockObject (WHITE_BRUSH)); //brush[KeyboardNum]);
+    SelectObject (mygc, GetStockObject (BLACK_PEN));
+  }
+
+  const char *kbLayout[] = { "qwertyuiop", "asdfghjkl", " zxcvbnm,$" };
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; kbLayout[i][j] != '\0'; j++) {
+      int hb = draw->allocation.width / strlen (kbLayout[0]) / 2, ys = 16;
+      int x = (2 * j + (i & 1)) * hb, y = draw->allocation.height - (3 - i) * ys * 2;
+      if (event && event->y >= y && event->y < y + ys + ys && event->x < x + hb + hb) {
+        if (kbLayout[i][j] != '$') searchStr += kbLayout[i][j];
+        else if (searchStr.length () > 0) searchStr.erase (searchStr.length () - 1, 1);
+        logprintf ("'%s'\n", searchStr.c_str());
+        GeoSearch (searchStr.c_str ());
+        gtk_widget_queue_clear (draw);
+        return TRUE;
+      }
+      if (!event) {
+        if (j > 0) gdk_draw_line (draw->window, mygc, x, y, x, y + ys + ys);
+        else gdk_draw_line (draw->window, mygc, 0, y, draw->allocation.width, y);
+        string chr = string ("") + kbLayout[i][j];
+        if (kbLayout[i][j] == ' ') DrawString (x + hb - 5, y + ys / 2, "[ ]");
+        else if (kbLayout[i][j] != '$') DrawString (x + hb, y + ys / 2, chr.c_str ());
+        else { // Now draw the backspace symbol :
+          gdk_draw_line (draw->window, mygc, x + 3, y + ys, x + hb + hb - 3, y + ys);
+          gdk_draw_line (draw->window, mygc, x + 3, y + ys, x + hb, y + 3);
+          gdk_draw_line (draw->window, mygc, x + 3, y + ys, x + hb, y + ys + ys - 3);
+        }
+      }
+    }
+  }
+  #endif
+  return FALSE;
+}
+
 int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
   static int lastRelease = 0;
@@ -1359,7 +1503,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   }
   else if (option == searchMode) {
     int row = event->y / SearchSpacing;
-    if (row < searchCnt && gosmSstr[row]) {
+    if (!HandleKeyboard (event) && row < searchCnt && gosmSstr[row]) {
       SetLocation (gosmSway[row]->clon, gosmSway[row]->clat);
       zoom = gosmSway[row]->dlat + gosmSway[row]->dlon + (1 << 15);
       if (zoom <= (1 << 15)) zoom = Style (gosmSway[row])->scaleMax;
@@ -1420,32 +1564,6 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   return FALSE;
 }
 
-#ifdef PANGO_VERSION
-PangoContext *pc;
-PangoLayout  *pl;
-#endif
-
-#ifndef NOGTK
-typedef GdkGC *HDC;
-
-static GdkGC *maskGC = NULL, *fg_gc;
-static GdkBitmap *mask = NULL;
-// create bitmap for generation the mask image for icons
-// all icons must be smaller than these dimensions
-static GdkBitmap *maskicon = NULL;
-static GdkPixmap *icons = NULL;
-
-#else
-HDC icons, maskDc;
-HFONT sysFont;
-LOGFONT logFont;
-
-#define gtk_combo_box_get_active(x) 1
-#define gdk_draw_drawable(win,dgc,sdc,x,y,dx,dy,w,h) \
-  BitBlt (dgc, dx, dy, w, h, maskDc, x, y, SRCAND); \
-  BitBlt (dgc, dx, dy, w, h, sdc, x, y, SRCPAINT)
-#endif
-
 #if 0 //ifdef CHILDREN
 struct childStruct {
   int minlon, minlat, maxlon, maxlat, z;
@@ -1458,51 +1576,6 @@ struct childStruct {
 #define o(x,min,max) sizeof (x) +
 static const size_t stateSize = STATEINFO 0;
 #undef o
-
-static HDC mygc = NULL, iconsgc = NULL;
-
-void DrawString (int x, int y, const char *optStr)
-{
-  #if PANGO_VERSION
-  PangoMatrix mat;
-  mat.xx = mat.yy = 1.0;
-  mat.xy = mat.yx = 0.0;
-  pango_context_set_matrix (pc, &mat);
-  pango_layout_set_text (pl, optStr, -1);
-  gdk_draw_layout (GDK_DRAWABLE (draw->window),
-                     fg_gc /*draw->style->fg_gc[0]*/, x, y, pl);
-  #else
-  SelectObject (mygc, sysFont);
-  const unsigned char *sStart = (const unsigned char*) optStr;
-  UTF16 wcTmp[70], *tStart = (UTF16 *) wcTmp;
-  if (ConvertUTF8toUTF16 (&sStart,  sStart + strlen (optStr), &tStart,
-           tStart + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
-      == conversionOK) {
-    ExtTextOutW (mygc, x, y, 0, NULL, (wchar_t*) wcTmp, tStart - wcTmp, NULL);
-  }
-  #endif
-}
-
-void DrawPoI (int dstx, int dsty, int *icon)
-{
-  if (icon[2] == 0 || dstx < -icon[2] || dsty < -icon[3] ||
-    dstx > draw->allocation.width + icon[2] ||
-    // GDK need these tests for the Start&EndRoute markers
-    dsty > draw->allocation.height + icon[3]) return;
-  #ifndef NOGTK
-  // for gdk we first need to extract the portion of the mask
-  if (!maskicon) maskicon = gdk_pixmap_new(NULL, 100, 100, 1);
-  gdk_draw_drawable (maskicon, maskGC, mask,
-                     icon[0], icon[1], 0, 0,
-                     icon[2], icon[3]);
-  // and set the clip region using that portion
-  gdk_gc_set_clip_origin(iconsgc, dstx - icon[2] / 2, dsty - icon[3] / 2);
-  gdk_gc_set_clip_mask(iconsgc, maskicon);
-  #endif
-  gdk_draw_drawable (draw->window, iconsgc, icons,
-    icon[0], icon[1], dstx - icon[2] / 2, dsty - icon[3] / 2,
-    icon[2], icon[3]);
-}
 
 #if 0
 typedef struct {  /* For 3D, a list of segments is generated that is */
@@ -1525,11 +1598,6 @@ inline int Clamp2 (int x)
 {
   return x < -32760 ? -32760 : x > 32760 ? 32760 : x;
 }*/
-
-#ifdef NOGTK
-#define gdk_draw_line(win,gc,sx,sy,dx,dy) \
-  MoveToEx (gc, sx, sy, NULL); LineTo (gc, dx, dy)
-#endif
 
 void Draw3DLine (int sx, int sy, int dx, int dy)
 {
@@ -1966,7 +2034,7 @@ gint DrawExpose (void)
       if (text2B.top ().y > draw->allocation.height) text2B.top ().y = draw->allocation.height;
       if (text2B.top ().x2 < 0) text2B.top ().x2 = 0;
       if (text2B.top ().y2 < 0) text2B.top ().y2 = 0;
-      if (text2B.top ().x2 < text2B.top ().x - strcspn ((char*)(w + 1) + 1, "\n") * 8 &&
+      if (text2B.top ().x2 < text2B.top ().x - (int) strcspn ((char*)(w + 1) + 1, "\n") * 8 &&
           text2B.top ().y2 < text2B.top ().y - 10 &&
           // The area must be large enough to contain all the text
           (text2B.top ().x < draw->allocation.width ||
@@ -2389,6 +2457,7 @@ gint DrawExpose (void)
       gdk_draw_line (draw->window, mygc, 0, y + SearchSpacing / 2,
         clip.width, y + SearchSpacing / 2);
     }
+    HandleKeyboard (NULL);
   }
   else if (option == optionMode) {
     for (int i = 0; i < wayPointIconNum; i++) {
@@ -2479,23 +2548,6 @@ gint DrawExpose (void)
   return FALSE;
 }
 
-void GeoSearch (char *key)
-{
-  char *comma = strchr (key, ',');
-  if (!comma) comma = strstr (key, " near ");
-  if (comma) {
-    char *cName = comma + (*comma == ',' ? 1 : 6);
-    string citi = string ("city:") + (cName + strspn (cName, " "));
-    const char *tag = gosmData + *GosmIdxSearch (citi.c_str (), 0);
-    while (*--tag) {}
-    ChangePak (NULL, ((wayType *)tag)[-1].clon, ((wayType *)tag)[-1].clat);
-    string xkey = string (key, comma - key);
-    //printf ("%s tag=%s\nxke %s\n", cName, tag + 1, xkey.c_str ());
-    GosmSearch (((wayType *)tag)[-1].clon, ((wayType *)tag)[-1].clat, xkey.c_str ());
-  }
-  else GosmSearch (clon, clat, key);
-}
-
 #ifndef NOGTK
 GtkWidget *searchW;
 
@@ -2580,6 +2632,7 @@ int UserInterface (int argc, char *argv[],
     SerializeOptions (optFile, TRUE, NULL);
   }
   else SerializeOptions (optFile, TRUE, pakfile);
+  Keyboard = 1;
   if (Exit) {
     fprintf (stderr, "Cannot read %s\n"
 	     "You can (re)build it from\n"
@@ -2888,8 +2941,6 @@ HPEN pen[2 << STYLE_BITS];
 HBRUSH brush[2 << STYLE_BITS];
 UTF16 appendTmp[50];
 
-static HWND hwndEdit, button3D, buttons[3];
-
 LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
                                   WPARAM wParam,LPARAM lParam)
 {
@@ -2934,22 +2985,23 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
                     0, 0, 0, 0, hWnd, (HMENU) (IDC_EDIT1 + 1 + 3),
                     (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
                     NULL);       // pointer not needed 
-      LOG hwndEdit = CreateWindow(TEXT ("EDIT"), NULL, 
-                    WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
+      LOG hwndEdit = CreateWindow(TEXT ("EDIT"),
+                    NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
                     0, 0, 0, 0,  // set size in WM_SIZE message
                     hWnd, (HMENU) IDC_EDIT1/*ID_EDITCHILD*/,
                     (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), 
                     NULL);       // pointer not needed 
-      LOG SendMessage (hwndEdit, WM_SETTEXT, 0, (LPARAM) TEXT ("Search")); 
+      if (Keyboard) SendMessage (hwndEdit, WM_SETTEXT, 0, (LPARAM) TEXT ("Search")); 
+      //else SetClassLongPtr (hwndEdit, GCLP_HBRBACKGROUND, (LONG) GetStockObject (WHITE_BRUSH));
 //      SendMessage (hwndEdit, EM_SETEVENTMASK, 0, ENM_UPDATE | ENM_SETFOCUS);
       break;
     case WM_SETFOCUS: 
-      SetFocus(hwndEdit); 
+      if (Keyboard) SetFocus(hwndEdit); 
       break;
     case WM_SIZE: 
       LOG draw->allocation.width = LOWORD (lParam);
       LOG draw->allocation.height = HIWORD (lParam) - topBar;
-      LOG MoveWindow(hwndEdit, Layout > 1 ? 8 : 140, topBar - 25,
+      if (Keyboard) MoveWindow (hwndEdit, Layout > 1 ? 8 : 140, topBar - 25,
         draw->allocation.width - (Layout > 1 ? 66 : 200), 20, TRUE);
       LOG MoveWindow(button3D, draw->allocation.width - 55,
         Layout != 1 ? 5 : -25, 50, 20, TRUE);
@@ -2966,6 +3018,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
     case WM_DESTROY:
       LOG PostQuitMessage(0);
       break;
+    /*case WM_CTLCOLORSTATIC: // Tried to make hwndEdit a STATIC when !Keyboard
+      SetBkMode ((HDC)wParam, TRANSPARENT);
+      return (LONG) GetStockObject (WHITE_BRUSH); */
     case WM_PAINT:
       do { // Keep compiler happy.
         BeginPaint (hWnd, &ps);
@@ -3051,6 +3106,17 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
 	 //(HBRUSH) GetStockObject(WHITE_BRUSH));
 	rect.bottom = topBar;
 	FillRect (ps.hdc, &rect, (HBRUSH) GetStockObject(WHITE_BRUSH));
+	if (!Keyboard) {
+          UTF16 wcTmp[70], *tStart = (UTF16 *) wcTmp;
+          const unsigned char *sStart = (const unsigned char*) searchStr.c_str ();
+          if (ConvertUTF8toUTF16 (&sStart, sStart + searchStr.length (),
+                &tStart, tStart + sizeof (wcTmp) / sizeof (wcTmp[0]), lenientConversion)
+              == conversionOK) {
+            //SendMessage (hwndEdit, WM_SETTEXT, 0, (LPARAM) (wchar_t*) wcTmp);
+            ExtTextOutW (ps.hdc, Layout > 1 ? 8 : 140, topBar - 25, 0, NULL,
+              (wchar_t*) wcTmp, tStart - wcTmp, NULL);
+          }
+        }
 //      HPEN pen = CreatePen (a[c2].lineDashed ? PS_DASH : PS_SOLID,
         EndPaint (hWnd, &ps);
       } while (0);
@@ -3102,7 +3168,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         ev.button = 1;
         Click (NULL, &ev, NULL);
         if (option == LayoutNum) {
-          MoveWindow(hwndEdit, Layout > 1 ? 8 : 140,
+          if (Keyboard) MoveWindow(hwndEdit, Layout > 1 ? 8 : 140,
             Layout != 1 ? 5 : -25,
             draw->allocation.width - (Layout > 1 ? 66 : 200), 20, TRUE);
           MoveWindow(button3D, draw->allocation.width - 55,
@@ -3112,8 +3178,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
               Layout ? -25 : 5, 30, 20, TRUE);
           }
         }
-        if (optionMode != searchMode) SipShowIM (SIPF_OFF);
+        if (Keyboard && option != searchMode) SipShowIM (SIPF_OFF);
       }
+      else if (!Keyboard) option = option == searchMode ? mapMode : searchMode;
       InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_MOUSEMOVE:
@@ -3153,7 +3220,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       if (HIWORD (wParam) == BN_CLICKED &&
           LOWORD (wParam) > IDC_EDIT1 && LOWORD (wParam) <= IDC_EDIT1 + 3) {
         HitButton (LOWORD (wParam) - IDC_EDIT1 - 1);
-        if (optionMode != searchMode) SipShowIM (SIPF_OFF);
+        if (Keyboard && optionMode != searchMode) SipShowIM (SIPF_OFF);
         InvalidateRect (hWnd, NULL, FALSE);
       }
       if (HIWORD (wParam) == BN_CLICKED && LOWORD (wParam) == IDC_EDIT1 + 4) {
@@ -3436,6 +3503,7 @@ int WINAPI WinMain(
   SerializeOptions (optFile, TRUE, argv0);
   #else
   SerializeOptions (optFile, TRUE, "gosmore.pak");
+  Keyboard = 1;
   #endif
   int newWayFileNr = 0;
   LOG if (optFile) fread (&newWayFileNr, sizeof (newWayFileNr), 1, optFile);
@@ -3476,9 +3544,9 @@ int WINAPI WinMain(
 
   MSG    msg;
   LOG while (GetMessage (&msg, NULL, 0, 0)) {
-    logprintf ("%d %d %d %d\n", msg.hwnd == mWnd, msg.message, msg.lParam, msg.wParam);
+    //logprintf ("%d %d %d %d\n", msg.hwnd == mWnd, msg.message, msg.lParam, msg.wParam);
     int oldCsum = clat + clon, found = msg.message == WM_KEYDOWN;
-    if (msg.hwnd == hwndEdit && msg.message == WM_LBUTTONDOWN) {
+    if (Keyboard && msg.hwnd == hwndEdit && msg.message == WM_LBUTTONDOWN) {
       option = option == searchMode ? mapMode : searchMode;
       SipShowIM (option == searchMode ? SIPF_ON : SIPF_OFF);
       InvalidateRect (mWnd, NULL, FALSE);
@@ -3486,7 +3554,7 @@ int WINAPI WinMain(
     if (msg.message == WM_KEYDOWN) {
       if ((msg.wParam == '0' && option != searchMode) || msg.wParam == MenuKey) {
         HitButton (0);
-        if (optionMode != searchMode) SipShowIM (SIPF_OFF);
+        if (Keyboard && optionMode != searchMode) SipShowIM (SIPF_OFF);
       }
       else if (msg.wParam == '8' && option != searchMode) HitButton (1);
       else if (msg.wParam == '9' && option != searchMode) HitButton (2);

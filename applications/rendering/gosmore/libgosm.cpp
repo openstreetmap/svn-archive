@@ -1259,7 +1259,7 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
       junction=junction ! */
         // blocked as highway:  strcmp (i->second, "mini_roundabout") != 0
         //                      && strcmp (i->second, "roundabout") != 0
-        strcmp (i->first, "place_of_worship") != 0 && // Too vague to include
+        strcmp (i->second, "place_of_worship") != 0 && // Too vague to include
         strcmp (i->first, "crossing") != 0 &&
         strcmp (i->first, "barrier") != 0 &&
         strcmp (i->second, "traffic_signals") != 0 &&

@@ -27,10 +27,11 @@ Your Position
 <td><input name = "txtPostcode" value = "<?=$txtPostcode?>"></td></tr>
 <tr><td colspan = "2" align = "center">or</td></tr>
 <tr><td>Latitude:</td>
-<td><input name = "txtLatitude" value = "<?=$txtLatitude?>"></td></tr>
+<td><input name = "txtLatitude" id = "txtLatitude" value = "<?=$txtLatitude?>"></td></tr>
 <tr><td>Longitude:</td>
-<td><input name = "txtLongitude" value = "<?=$txtLongitude?>"></td></tr>
+<td><input name = "txtLongitude" id = "txtLongitude" value = "<?=$txtLongitude?>"></td></tr>
 </table>
+<div id = "divLatLon"></div>
 </p>
 
 <p>

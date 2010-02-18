@@ -61,12 +61,16 @@ function AddPharmHospital (&$asPharmacies, &$ph, &$node, $user_lat, $user_lon, $
 			$dist = "$dist.0";
 		//pad $dist with leading zeroes for sorting
 		$sorting = str_pad ($dist, 5, "0", STR_PAD_LEFT);
-		//Prefix $sorting with 0 (open) or 1 (closed/don't know)
-		$bOpen = OpenClosed ($ph ["hours"]);
-		if ($bOpen === True)
-			$sorting = "0$sorting";
-		else
+		//Prefix $sorting with 0 (open), 1 (don't know) or 2 (closed)
+		if ($ph ["hours"] == "")
 			$sorting = "1$sorting";
+		else {
+			$bOpen = OpenClosed ($ph ["hours"]);
+			if ($bOpen === True)
+				$sorting = "0$sorting";
+			else
+				$sorting = "2$sorting";
+		}
 		//Add $sorting as a comment, so array can be sorted by distance
 		$sPharmacy = "<!-- $sorting -->";
 		$url = "detail.php?id=$id&amp;dist=$dist&amp;waynode=$waynode";
@@ -279,8 +283,8 @@ $sMap .= "</script>\n";
 $sMap .= "<noscript>\n of $locationtext\n</noscript>\n";
 echo $sMap;
 
-echo "<br><a href = 'index.php'>Search again</a><br>\n";
-echo "Click on a name to see details</p>\n";
+echo "<br><a href = 'index.php'>Search again</a></p>\n";
+echo "<p>Click on a name to see details</p>\n";
 
 // Sort array
 sort ($asPharmacies);

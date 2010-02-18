@@ -38,13 +38,13 @@ if ($sXML != '') {
 			$operator = $_POST ["txtOperator"];
 		}
 		if ($_COOKIE ["SearchType"] == "pharmacy") {
-			if ($dispensing != "" && $dispensing != $_POST ["selDispensing"]) {
+			if ($dispensing != $_POST ["selDispensing"]) {
 				$xml->node [0]->tag [$i_dispensing]['v'] = $_POST ["selDispensing"];
 				$dispensing = $_POST ["selDispensing"];
 			}
 		}
 		if ($_COOKIE ["SearchType"] == "hospital") {
-			if ($emergency != "" && $emergency != $_POST ["selEmergency"]) {
+			if ($emergency != $_POST ["selEmergency"]) {
 				$xml->node [0]->tag [$i_emergency]['v'] = $_POST ["selEmergency"];
 				$emergency = $_POST ["selEmergency"];
 			}
@@ -76,7 +76,7 @@ if ($sXML != '') {
 			$name = $_POST ["txtOperator"];
 		}
 		if ($_COOKIE ["SearchType"] == "pharmacy") {
-			if ($dispensing == "" && $_POST ["selDispensing"] != "") {
+			if ($_POST ["selDispensing"] != "") {
 				$tag = $xml->node [0]->addChild("tag");
 				$tag->addAttribute ("k", "dispensing");
 				$tag->addAttribute ("v", $_POST ["selDispensing"]);
@@ -84,7 +84,7 @@ if ($sXML != '') {
 			}
 		}
 		if ($_COOKIE ["SearchType"] == "hospital") {
-			if ($emergency == "" && $_POST ["selEmergency"] != "") {
+			if ($_POST ["selEmergency"] != "") {
 				$tag = $xml->node [0]->addChild("tag");
 				$tag->addAttribute ("k", "emergency");
 				$tag->addAttribute ("v", $_POST ["selEmergency"]);
@@ -142,12 +142,23 @@ require_once ("inc_head_html.php");
 		echo "<td><select name = 'selEmergency' class = 'default'>\n";
 		$selected = $emergency;
 	}
+
+	//Write out OPTION tags
+	if ($selected == "yes") {
+		echo "<option value = ''>unknown</option>\n";
 		echo "<option value = 'no'>no</option>\n";
-		if ($selected == "yes")
-			echo "<option value = 'yes' selected>";
-		else
-			echo "<option value = 'yes'>";
-		echo "yes</option>\n";
+		echo "<option value = 'yes' selected>yes</option>\n";
+	}
+	elseif ($selected == "no") {
+		echo "<option value = ''>unknown</option>\n";
+		echo "<option value = 'no' selected>no</option>\n";
+		echo "<option value = 'yes'>yes</option>\n";
+	}
+	else {
+		echo "<option value = '' selected>unknown</option>\n";
+		echo "<option value = 'no'>no</option>\n";
+		echo "<option value = 'yes'>yes</option>\n";
+	}
 	?>
 	</select>
 	</td></tr>

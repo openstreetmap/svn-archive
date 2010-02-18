@@ -8,13 +8,32 @@
    buttonlabelaccept="Close"
    autostretch="always"
    ondialogaccept="return true;">
-    
-    <dialogheader title="MyTaH" description="About"/>
-    <box>
-    	<html:h1>MyTaH 0.2</html:h1>
-    	<html:p><html:strong>Build date</html:strong>: 20081219</html:p>
-    	<html:p><html:strong>Author</html:strong>: Mario Ferraro</html:p>
-    	<html:a id="mytah_link_home" href="http://osmarenderfrontend.wordpress.com" target="_blank">http://osmarenderfrontend.wordpress.com</html:a>
-    	<html:p>Released under GPL v2 license or later</html:p>
-    </box>
+   <dialogheader title="MyTaH" description="About"/>
+   <tabbox>
+     <tabs>
+       <tab label="About"/>
+       <tab label="Changelog"/>
+     </tabs>
+     <tabpanels>
+       <tabpanel>
+         <box>
+           <html:h1>MyTaH 0.3</html:h1>
+           <html:p><html:strong>Build date</html:strong>: 20100218</html:p>
+           <html:p><html:strong>Author</html:strong>: Mario Ferraro</html:p>
+           <html:a id="mytah_link_home" href="http://osmarenderfrontend.wordpress.com" target="_blank">http://osmarenderfrontend.wordpress.com</html:a>
+           <html:p>Released under GPL v2 license or later</html:p>
+         </box>
+       </tabpanel>
+       <tabpanel>
+         <box>
+           <html:h1>Changelog</html:h1><html:br />
+           <html:p><html:strong>0.3</html:strong></html:p>
+           <html:ul>
+             <html:li>Make MyTaH compatible with all 3.* Firefox versions</html:li>
+             <html:li>New panel tab for changelog</html:li>
+           </html:ul>
+         </box>
+       </tabpanel>
+     </tabpanels>
+   </tabbox>
 </dialog>

@@ -1,9 +1,9 @@
 @CHARSET "UTF-8";
 
-#mytah_timeout {
-	width: 50px;
+#mytah_dialog_preferences {
+  min-width:40ex;
 }
 
 #mytah_link_home {
-	color: blue;
+  color: blue;
 }

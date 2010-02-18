@@ -715,10 +715,10 @@ sub ProcessRequestsFromServer
         catch ServerError with {
             my $err = shift();
             if ($err->value() eq "PermError") {
-                cleanUpAndDie($err->text(), "EXIT", 1);
+                cleanUpAndDie("Server: ".$err->text(), "EXIT", 1);
             }
             else {
-                talkInSleep($err->text(), 60);
+                talkInSleep("Server: ".$err->text(), 60);
             }
         };
     } until ($req);

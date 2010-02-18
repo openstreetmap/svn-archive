@@ -40,7 +40,6 @@ public class AutoCompletionListViewer extends JPanel {
 		setBackground(Color.WHITE);
 		setLayout(new BorderLayout());
 	
-		
 		table = new JTable();
 		
 		// the table model

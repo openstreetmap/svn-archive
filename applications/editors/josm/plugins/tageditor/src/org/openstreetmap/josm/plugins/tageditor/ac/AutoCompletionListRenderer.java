@@ -1,30 +1,27 @@
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
-import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.net.URL;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPritority;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * This is the table cell renderer for the list of auto completion list items.
  * 
- * It uses an instance of {@Link JLabel} to render an {@link AutoCompletionListItem}.
- * 
- *
  */
-public class AutoCompletionListRenderer implements TableCellRenderer {
-
+public class AutoCompletionListRenderer extends JLabel implements TableCellRenderer {
 
 	static public final String RES_OSM_ICON = "/resources/osm.gif";
 	static public final String RES_SELECTION_ICON = "/resources/selection.gif";
-	public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
-
-	/** the renderer component */
-	private final JLabel renderer;
 
 	/** the icon used to decorate items of priority
 	 *  {@link AutoCompletionItemPritority#IS_IN_STANDARD}
@@ -40,9 +37,7 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 	 * constructor
 	 */
 	public AutoCompletionListRenderer() {
-		renderer = new JLabel();
-		renderer.setOpaque(true);
-
+		setOpaque(true);
 		loadIcons();
 	}
 
@@ -50,7 +45,7 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 	 * loads the icons
 	 */
 	protected void loadIcons() {
-		java.net.URL imgURL = getClass().getResource(RES_OSM_ICON);
+		URL imgURL = getClass().getResource(RES_OSM_ICON);
 		if (imgURL != null) {
 			iconStandard = new ImageIcon(imgURL);
 		} else {
@@ -67,7 +62,6 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 		}
 	}
 
-
 	/**
 	 * prepares the renderer for rendering a specific icon
 	 * 
@@ -76,11 +70,11 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 	protected void prepareRendererIcon(AutoCompletionListItem item) {
 		if (item.getPriority().equals(AutoCompletionItemPritority.IS_IN_STANDARD)) {
 			if (iconStandard != null) {
-				renderer.setIcon(iconStandard);
+				setIcon(iconStandard);
 			}
 		} else if (item.getPriority().equals(AutoCompletionItemPritority.IS_IN_SELECTION)) {
 			if (iconSelection != null) {
-				renderer.setIcon(iconSelection);
+				setIcon(iconSelection);
 			}
 		}
 	}
@@ -89,19 +83,20 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 	 * resets the renderer
 	 */
 	protected void resetRenderer() {
-		renderer.setIcon(null);
-		renderer.setText("");
-		renderer.setOpaque(true);
-		renderer.setBackground(Color.WHITE);
-		renderer.setForeground(Color.BLACK);
+		setIcon(null);
+		setText("");
+		setFont(UIManager.getFont("Table.font"));
+		setOpaque(true);
+		setBackground(UIManager.getColor("Table.background"));
+		setForeground(UIManager.getColor("Table.foreground"));
 	}
 
 	/**
 	 * prepares background and text colors for a selected item
 	 */
 	protected void renderSelected() {
-		renderer.setBackground(BG_COLOR_SELECTED);
-		renderer.setForeground(Color.WHITE);
+		setBackground(UIManager.getColor("Table.selectionBackground"));
+		setForeground(UIManager.getColor("Table.selectionForeground"));
 	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
@@ -113,11 +108,14 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 		if (value instanceof AutoCompletionListItem) {
 			AutoCompletionListItem item = (AutoCompletionListItem)value;
 			prepareRendererIcon(item);
-			renderer.setText(item.getValue());
+			setText(item.getValue());
+			setToolTipText(item.getValue());
 		} else if (value != null) {
-			renderer.setText(value.toString());
+			setText(value.toString());
+			setToolTipText(value.toString());
 		} else {
-			renderer.setText("<null>");
+			setText(tr("unknown"));
+			setFont(getFont().deriveFont(Font.ITALIC));
 		}
 
 		// prepare background and foreground for a selected item
@@ -125,12 +123,6 @@ public class AutoCompletionListRenderer implements TableCellRenderer {
 		if (isSelected) {
 			renderSelected();
 		}
-
-
-		return renderer;
-
+		return this;
 	}
-
-
-
 }

@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.tageditor.editor;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
 
 import java.util.ArrayList;
 import java.util.List;

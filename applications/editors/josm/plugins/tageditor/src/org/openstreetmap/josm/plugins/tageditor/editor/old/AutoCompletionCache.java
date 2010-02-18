@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.tageditor.ac;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
 
 import java.util.ArrayList;
 import java.util.Collection;

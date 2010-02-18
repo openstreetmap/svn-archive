@@ -1,13 +1,19 @@
 package org.openstreetmap.josm.plugins.tageditor.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.logging.Logger;
 
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.table.TableCellEditor;
 
-import org.openstreetmap.josm.gui.dialogs.relation.RunnableAction;
 import org.openstreetmap.josm.gui.tagging.TagTable;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionCache;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
@@ -51,40 +57,89 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 
 	private static final Logger logger = Logger.getLogger(TagEditor.class.getName());
 
-	private final TagEditorModel tagEditorModel;
+	private TagEditorModel tagEditorModel;
 	private TagTable tblTagEditor;
 	private PresetManager presetManager;
-	private AutoCompletionList autoCompletionList;
+	
+	 /**
+     * builds the panel with the button row
+     *
+     * @return the panel
+     */
+    protected JPanel buildButtonsPanel() {
+        JPanel pnl = new JPanel();
+        pnl.setLayout(new BoxLayout(pnl, BoxLayout.Y_AXIS));
 
+        // add action
+        JButton btn;
+        pnl.add(btn = new JButton(tblTagEditor.getAddAction()));
+        btn.setMargin(new Insets(0,0,0,0));
+        tblTagEditor.addComponentNotStoppingCellEditing(btn);
 
+        // delete action
+        pnl.add(btn = new JButton(tblTagEditor.getDeleteAction()));
+        btn.setMargin(new Insets(0,0,0,0));
+        tblTagEditor.addComponentNotStoppingCellEditing(btn);
+        return pnl;
+    }
+    
+    public void addComponentNotStoppingCellEditing(Component c) {
+    	tblTagEditor.addComponentNotStoppingCellEditing(c);
+    }
+    
+    /**
+     * builds the GUI
+     */
+    protected JPanel buildTagEditorPanel() {
+        JPanel pnl = new JPanel(new GridBagLayout());
+
+		DefaultListSelectionModel rowSelectionModel = new DefaultListSelectionModel();
+		DefaultListSelectionModel colSelectionModel = new DefaultListSelectionModel();
+		
+		tagEditorModel = new TagEditorModel(rowSelectionModel,colSelectionModel);
+		
+		// build the scrollable table for editing tag names and tag values
+		//
+		tblTagEditor = new TagTable(tagEditorModel, rowSelectionModel, colSelectionModel);
+		tblTagEditor.setTagCellEditor(new TagSpecificationAwareTagCellEditor());
+		TableCellRenderer renderer = new TableCellRenderer();
+		tblTagEditor.getColumnModel().getColumn(0).setCellRenderer(renderer);
+		tblTagEditor.getColumnModel().getColumn(1).setCellRenderer(renderer);
+
+		final JScrollPane scrollPane = new JScrollPane(tblTagEditor);
+		JPanel pnlTagTable = new JPanel(new BorderLayout());
+		pnlTagTable.add(scrollPane, BorderLayout.CENTER);
+
+        GridBagConstraints gc = new GridBagConstraints();
+
+        // -- buttons panel
+        //
+        gc.fill = GridBagConstraints.VERTICAL;
+        gc.weightx = 0.0;
+        gc.weighty = 1.0;
+        gc.anchor = GridBagConstraints.NORTHWEST;
+        pnl.add(buildButtonsPanel(),gc);
+
+        // -- the panel with the editor table
+        //
+        gc.gridx = 1;
+        gc.fill = GridBagConstraints.BOTH;
+        gc.weightx = 1.0;
+        gc.weighty = 1.0;
+        gc.anchor = GridBagConstraints.CENTER;
+        pnl.add(pnlTagTable,gc);
+        
+        return pnl;
+    }
+    
 	/**
 	 * builds the GUI
 	 * 
 	 */
 	protected void build() {
 		setLayout(new BorderLayout());
-
-		// build the scrollable table for editing tag names and tag values
-		//
-		tblTagEditor = new TagTable(tagEditorModel);
-		final JScrollPane scrollPane = new JScrollPane(tblTagEditor);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		add(scrollPane, BorderLayout.CENTER);
-
-		// this adapters ensures that the width of the tag table columns is adjusted
-		// to the width of the scroll pane viewport. Also tried to overwrite
-		// getPreferredViewportSize() in JTable, but did not work.
-		//
-//		scrollPane.addComponentListener(
-//				new ComponentAdapter() {
-//					@Override public void componentResized(ComponentEvent e) {
-//						super.componentResized(e);
-//						Dimension d = scrollPane.getViewport().getExtentSize();
-//						tblTagEditor.adjustColumnWidth(d.width);
-//					}
-//				}
-//		);
+		
+		add(buildTagEditorPanel(), BorderLayout.CENTER);
 
 		// build the preset manager which shows a list of applied presets
 		//
@@ -93,18 +148,12 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 		add(presetManager, BorderLayout.NORTH);
 	}
 
-
 	/**
 	 * constructor
 	 */
 	public TagEditor() {
-		// creates a default model and a default cache
-		//
-		tagEditorModel = new TagEditorModel();
-
 		build();
 	}
-
 
 	/**
 	 * replies the tag editor model
@@ -113,47 +162,18 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 	public TagEditorModel getTagEditorModel() {
 		return tagEditorModel;
 	}
-
-	/**
-	 * sets the tag editor model
-	 * 
-	 * @param tagEditorModel the tag editor model
-	 */
-	public void setTagEditorModel(TagEditorModel tagEditorModel) {
-		tblTagEditor.setModel(tagEditorModel);
-		for (int i=0; i<=1; i++) {
-			TableCellEditor editor = (TableCellEditor)tblTagEditor.getColumnModel().getColumn(i).getCellEditor();
-			if (editor != null) {
-				editor.setTagEditorModel(tagEditorModel);
-			}
-		}
-		presetManager.setModel(tagEditorModel);
-	}
-
-	public RunnableAction getDeleteAction() {
-		return tblTagEditor.getDeleteAction();
-	}
-
-	public RunnableAction getAddAction() {
-		return tblTagEditor.getAddAction();
-	}
-
+	
 	public void clearSelection() {
 		tblTagEditor.getSelectionModel().clearSelection();
 	}
 
 	public void stopEditing() {
-		TableCellEditor editor = (TableCellEditor) tblTagEditor.getCellEditor();
+		TableCellEditor editor = tblTagEditor.getCellEditor();
 		if (editor != null) {
 			editor.stopCellEditing();
 		}
 	}
-
-	public AutoCompletionList getAutoCompletionList() {
-		return null;
-		//return ((org.openstreetmap.josm.gui.tagging.TagCellEditor)tblTagEditor.getCellEditor()).getAutoCompletionList();
-	}
-
+	
 	public void setAutoCompletionList(AutoCompletionList autoCompletionList) {
 		tblTagEditor.setAutoCompletionList(autoCompletionList);
 	}
@@ -163,7 +183,8 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 	}
 
 	public void autoCompletionItemSelected(String item) {
-		org.openstreetmap.josm.plugins.tageditor.editor.TableCellEditor editor = ((org.openstreetmap.josm.plugins.tageditor.editor.TableCellEditor)tblTagEditor.getCellEditor());
+		logger.info("autocompletion item selected ...");
+		TagSpecificationAwareTagCellEditor editor = (TagSpecificationAwareTagCellEditor)tblTagEditor.getCellEditor();
 		if (editor != null) {
 			editor.autoCompletionItemSelected(item);
 		}
@@ -171,5 +192,9 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 
 	public void requestFocusInTopLeftCell() {
 		tblTagEditor.requestFocusInCell(0,0);
+	}
+	
+	public TagEditorModel getModel() {
+		return tagEditorModel;
 	}
 }

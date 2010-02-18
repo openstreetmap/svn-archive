@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
 
-
 /**
  * A TagSpecifications specifies a tag. The specifications consists of the following
  * elements:
@@ -62,7 +61,6 @@ public class TagSpecification {
 		return lables;
 	}
 
-
 	/**
 	 * sets the list of lables for this tag specification
 	 * 
@@ -78,12 +76,11 @@ public class TagSpecification {
 		}
 	}
 
-
 	/**
-	 * adds a lable to the list of lables for this tag specification. The lable
+	 * Adds a label to the list of label for this tag specification. The label
 	 * is only added if i
 	 * 
-	 * @param lable the lable to add; must not be null
+	 * @param lable the lalbe to add; must not be null
 	 * @exception IllegalArgumentException thrown, if lable is null
 	 */
 	public void addLable(LableSpecification lable) throws IllegalArgumentException  {

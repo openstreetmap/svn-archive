@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.tageditor.editor;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
 
 import java.awt.event.ActionEvent;
 

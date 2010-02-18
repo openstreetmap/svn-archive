@@ -8,13 +8,12 @@ import java.awt.Component;
 import java.awt.Font;
 import java.util.logging.Logger;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.border.Border;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import org.openstreetmap.josm.gui.tagging.TagModel;
 import org.openstreetmap.josm.plugins.tageditor.preset.Item;
 import org.openstreetmap.josm.plugins.tageditor.preset.Tag;
 
@@ -28,15 +27,8 @@ import org.openstreetmap.josm.plugins.tageditor.preset.Tag;
 public class TableCellRenderer extends JLabel implements javax.swing.table.TableCellRenderer  {
 	
 	private static Logger logger = Logger.getLogger(TableCellRenderer.class.getName());
-	
-	public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
 	public static final Color BG_COLOR_HIGHLIGHTED = new Color(255,255,204);
-	
-	public static final Border BORDER_EMPHASIZED = BorderFactory.createLineBorder(new Color(253,75,45));
-	
-	/** the icon displayed for deleting a tag */
-	private ImageIcon deleteIcon = null;
-	
+		
 	private Font fontStandard = null;
 	private Font fontItalic = null;
 	
@@ -69,12 +61,10 @@ public class TableCellRenderer extends JLabel implements javax.swing.table.Table
 		} else if (tag.getValueCount() == 1) {
 			setText(tag.getValues().get(0));
 		} else if (tag.getValueCount() >  1) {
-			setText(tr("<multiple>"));
+			setText(tr("multiple"));
 			setFont(fontItalic);
 		}
 	}
-	
-	
 	
 	/**
 	 * resets the renderer 
@@ -120,7 +110,6 @@ public class TableCellRenderer extends JLabel implements javax.swing.table.Table
 		return false;
 	}
 	
-	
 	/**
 	 * renders the background color. The default color is white. It is
 	 * set to {@see TableCellRenderer#BG_COLOR_HIGHLIGHTED} if this cell
@@ -131,13 +120,11 @@ public class TableCellRenderer extends JLabel implements javax.swing.table.Table
 	 * @param model the tag editor model 
 	 */
 	protected void renderBackgroundColor(TagModel tagModel, TagEditorModel model) {
-		setBackground(Color.WHITE); // standard color
+		setBackground(UIManager.getColor("Table.background")); 
 		if (belongsToSelectedPreset(tagModel, model)) {
 			setBackground(BG_COLOR_HIGHLIGHTED);
 		}
 	}
-	
-
 	
 	/**
 	 * replies the cell renderer component for a specific cell 
@@ -153,27 +140,27 @@ public class TableCellRenderer extends JLabel implements javax.swing.table.Table
 	 */
 	public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
+		
 		resetRenderer();
 		
 		// set background color
 		//
 		if (isSelected){
-			setBackground(BG_COLOR_SELECTED);
+			setBackground(UIManager.getColor("Table.selectionBackground"));
+			setForeground(UIManager.getColor("Table.selectionForeground"));
 		} else {
-			renderBackgroundColor(getModel(table).get(rowIndex), getModel(table));
+			setBackground(UIManager.getColor("Table.background"));
+			setForeground(UIManager.getColor("Table.foreground"));
 		}
-		
 
+		TagModel tagModel  = (TagModel)value;
 		switch(vColIndex) { 
-			case 0: renderTagName((TagModel)value); break;
-			case 1: renderTagValue((TagModel)value); break;
-			
-			default: throw new RuntimeException("unexpected index in switch statement");	
+			case 0: renderTagName(tagModel); break;
+			case 1: renderTagValue(tagModel); break;
 		}
+		renderBackgroundColor(tagModel, (TagEditorModel)table.getModel());
 		if (hasFocus && isSelected) {
 			if (table.getSelectedColumnCount() == 1 && table.getSelectedRowCount() == 1) {
-				boolean success = table.editCellAt(rowIndex, vColIndex);
-
 				if (table.getEditorComponent() != null) {
 					table.getEditorComponent().requestFocusInWindow();
 				}
@@ -181,6 +168,4 @@ public class TableCellRenderer extends JLabel implements javax.swing.table.Table
 		}
 		return this;
 	}
-
-
 }

@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.tageditor.ac;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+
 
 /**
  * AutoCompletionList manages a list of {@see AutoCompletionListItem}s.

@@ -12,7 +12,6 @@ import javax.swing.table.AbstractTableModel;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 
-
 public class TagsTableModel extends AbstractTableModel {
 
 	static private Logger logger = Logger.getLogger(TagsTableModel.class.getName());
@@ -116,5 +115,4 @@ public class TagsTableModel extends AbstractTableModel {
 			throw new IndexOutOfBoundsException("row is out of bound: row=" + row);
 		return visibleItems.get(row);
 	}
-
 }

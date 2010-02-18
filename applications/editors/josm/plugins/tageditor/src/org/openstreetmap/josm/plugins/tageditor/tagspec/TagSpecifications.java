@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPritority;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionItemPritority;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionListItem;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -56,8 +56,6 @@ public class TagSpecifications {
 
 	/** list of tag specifications managed list */
 	private ArrayList<TagSpecification> tagSpecifications = null;
-
-
 
 	private static TagSpecifications instance = null;
 
@@ -122,9 +120,6 @@ public class TagSpecifications {
 		} finally {
 			parser = null;
 		}
-
-
-
 	}
 
 	public List<AutoCompletionListItem> getKeysForAutoCompletion(AutoCompletionContext context) {
@@ -159,8 +154,7 @@ public class TagSpecifications {
 		}
 		return items;
 	}
-
-
+	
 	/**
 	 * replies a list of {@see KeyValuePair}s for all {@see TagSpecification}s and
 	 * {@see LableSpecification}s.
@@ -291,7 +285,6 @@ public class TagSpecifications {
 
 		}
 
-
 		/**
 		 * handles a start element with name <code>label</code>
 		 * 
@@ -358,11 +351,7 @@ public class TagSpecifications {
 			// TODO Auto-generated method stub
 			logger.log(Level.WARNING, "XML parsing warning", e);
 		}
-
-
-
 	}
-
 
 	/**
 	 *
@@ -382,9 +371,7 @@ public class TagSpecifications {
 
 	}
 
-
 	static public void main(String args[]) throws Exception{
 		TagSpecifications.loadFromResources();
 	}
-
 }

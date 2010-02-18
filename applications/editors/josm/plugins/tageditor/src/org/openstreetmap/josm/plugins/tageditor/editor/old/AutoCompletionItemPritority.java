@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.tageditor.ac;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
 
 public enum AutoCompletionItemPritority implements Comparable<AutoCompletionItemPritority> {
 

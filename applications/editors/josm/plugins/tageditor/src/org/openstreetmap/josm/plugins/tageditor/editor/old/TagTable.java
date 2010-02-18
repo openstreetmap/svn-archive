@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.tageditor.editor;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -28,8 +28,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionCache;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionList;
+import org.openstreetmap.josm.plugins.tageditor.editor.TableCellRenderer;
+import org.openstreetmap.josm.plugins.tageditor.editor.TagEditorModel;
 
 /**
  * This is the tabular editor component for OSM tags.

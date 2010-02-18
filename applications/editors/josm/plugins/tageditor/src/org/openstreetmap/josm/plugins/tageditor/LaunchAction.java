@@ -2,12 +2,6 @@ package org.openstreetmap.josm.plugins.tageditor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
@@ -24,7 +18,6 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.tools.Shortcut;
 
-@SuppressWarnings("serial")
 public class LaunchAction extends JosmAction implements SelectionChangedListener {
 
 	protected void registerAsMenuItem() {
@@ -67,69 +60,9 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
 						false // don't register, plugin will add the action to the menu
 		);
 
-
-		// register as dataset selection listener
-		//
 		DataSet.selListeners.add(this);
-
-		// insert a menu item
-		//
 		registerAsMenuItem();
-
-		// initially not enabled; becomes enabled when the selection becomes non-empty
-		//
 		setEnabled(false);
-
-	}
-
-	/**
-	 * 
-	 * @return  the top window of the JOSM GUI; can be null
-	 */
-	protected Window getTopWindow() {
-		if (Main.contentPane == null)
-			return null;
-		Component c = Main.contentPane;
-		while(c.getParent() != null) {
-			c = c.getParent();
-		}
-		if (c instanceof Window)
-			return (Window)c;
-		else
-			return null;
-	}
-
-	/**
-	 * tries to center the tag editor dialog on the top window or, alternatively,
-	 * on the screen
-	 * 
-	 * @param dialog the dialog to be placed on the screen
-	 */
-	protected void placeDialogOnScreen(TagEditorDialog dialog) {
-		Window w = getTopWindow();
-		if (w == null)
-			// don't center
-			return;
-
-		GraphicsConfiguration gc = w.getGraphicsConfiguration();
-		Rectangle screenBounds = null;
-		if (gc != null) {
-			screenBounds = gc.getBounds();
-		}
-		Rectangle winBounds = w.getBounds();
-		Dimension d = dialog.getPreferredSize();
-
-		Point p = new Point();
-		if (d.width <= winBounds.width && d.height <= winBounds.height) {
-			p.x = winBounds.x + ((winBounds.width - d.width)/2 );
-			p.y = winBounds.y + ((winBounds.height - d.height)/2 );
-		} else  {
-			p.x = screenBounds.x + ((screenBounds.width - d.width)/2 );
-			p.y = screenBounds.y + ((screenBounds.height - d.height)/2 );
-		}
-
-		dialog.setLocation(p);
-
 	}
 
 	/**
@@ -139,7 +72,6 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
 		if (!isEnabled())
 			return;
 		TagEditorDialog dialog = TagEditorDialog.getInstance();
-		placeDialogOnScreen(dialog);
 		dialog.startEditSession();
 		dialog.setVisible(true);
 	}
@@ -151,8 +83,4 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 		setEnabled(newSelection != null && newSelection.size() >0);
 	}
-
-
-
-
 }

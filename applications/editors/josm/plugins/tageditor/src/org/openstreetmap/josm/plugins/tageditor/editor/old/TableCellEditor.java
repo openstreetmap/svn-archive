@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.tageditor.editor;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
 
 import java.awt.Component;
 import java.util.logging.Level;
@@ -8,12 +8,9 @@ import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
 
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionCache;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionItemPritority;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionList;
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.plugins.tageditor.ac.IAutoCompletionListListener;
+import org.openstreetmap.josm.plugins.tageditor.editor.TagEditorModel;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 
 
@@ -71,7 +68,7 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 		// add the list of standard keys
 		//
 		try {
-			autoCompletionList.add(TagSpecifications.getInstance().getKeysForAutoCompletion(context));
+			//autoCompletionList.add(TagSpecifications.getInstance().getKeysForAutoCompletion(context));
 		} catch(Exception e) {
 			logger.log(Level.WARNING, "failed to initialize auto completion list with standard keys.", e);
 		}
@@ -79,9 +76,9 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 		// add the list of keys in the current data set
 		//
 		for (String key : acCache.getKeys()) {
-			autoCompletionList.add(
-					new AutoCompletionListItem(key, AutoCompletionItemPritority.IS_IN_DATASET)
-			);
+//			autoCompletionList.add(
+//					new AutoCompletionListItem(key, AutoCompletionItemPritority.IS_IN_DATASET)
+//			);
 		}
 
 		// remove the keys already present in the current tag model
@@ -116,17 +113,17 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 		// add the list of standard values for the given key
 		//
 		try {
-			autoCompletionList.add(
-					TagSpecifications.getInstance().getLabelsForAutoCompletion(forKey, context)
-			);
+//			autoCompletionList.add(
+//					TagSpecifications.getInstance().getLabelsForAutoCompletion(forKey, context)
+//			);
 		} catch(Exception e){
 			logger.log(Level.WARNING, "failed to initialize auto completion list with standard values", e);
 		}
 
 		for (String value : acCache.getValues(forKey)) {
-			autoCompletionList.add(
-					new AutoCompletionListItem(value, AutoCompletionItemPritority.IS_IN_DATASET)
-			);
+//			autoCompletionList.add(
+//					new AutoCompletionListItem(value, AutoCompletionItemPritority.IS_IN_DATASET)
+//			);
 		}
 
 		//  add the list of possible values for a key from the current selection
@@ -134,9 +131,9 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 		if (currentTag.getValueCount() > 1) {
 			for (String value : currentTag.getValues()) {
 				//logger.info("adding ac item " + value + " with priority IN_SELECTION");;
-				autoCompletionList.add(
-						new AutoCompletionListItem(value, AutoCompletionItemPritority.IS_IN_SELECTION)
-				);
+//				autoCompletionList.add(
+//						new AutoCompletionListItem(value, AutoCompletionItemPritority.IS_IN_SELECTION)
+//				);
 			}
 		}
 	}
@@ -190,12 +187,12 @@ public class TableCellEditor extends AbstractCellEditor implements javax.swing.t
 		}
 
 		if (currentColumn == 0) {
-			tagEditorModel.updateTagName(currentTag, editor.getText());
+			//tagEditorModel.updateTagName(currentTag, editor.getText());
 		} else if (currentColumn == 1){
 			if (currentTag.getValueCount() > 1 && ! editor.getText().equals("")) {
-				tagEditorModel.updateTagValue(currentTag, editor.getText());
+				//tagEditorModel.updateTagValue(currentTag, editor.getText());
 			} else if (currentTag.getValueCount() <= 1) {
-				tagEditorModel.updateTagValue(currentTag, editor.getText());
+				//tagEditorModel.updateTagValue(currentTag, editor.getText());
 			}
 		}
 

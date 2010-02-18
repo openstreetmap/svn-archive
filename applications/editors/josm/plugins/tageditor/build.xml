@@ -27,8 +27,8 @@
 <project name="tageditor" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="Fixed NPE when icon is missing" />
-	<property name="plugin.main.version" value="2830" />
+	<property name="commit.message" value="Tageditor plugin cleaned up" />
+	<property name="plugin.main.version" value="3015" />
 
 	<!--
       ************************************************

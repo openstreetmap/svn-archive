@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.tageditor.editor;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -13,7 +13,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
-import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionList;
 
 
 

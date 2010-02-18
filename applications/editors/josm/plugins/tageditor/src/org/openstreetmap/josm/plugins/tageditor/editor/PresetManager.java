@@ -18,7 +18,7 @@ import org.openstreetmap.josm.plugins.tageditor.preset.Item;
 
 public class PresetManager extends JPanel {
 
-	static private Logger logger = Logger.getLogger(PresetManager.class.getName());
+	static private final Logger logger = Logger.getLogger(PresetManager.class.getName());
 
 	private JComboBox presets;
 	private JButton btnRemove;
@@ -98,7 +98,4 @@ public class PresetManager extends JPanel {
 		presets.setModel(model.getAppliedPresetsModel());
 		this.model = model;
 	}
-
-
-
 }

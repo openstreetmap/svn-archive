@@ -1,5 +1,8 @@
 // License: GPL. For details, see LICENSE file.
-package org.openstreetmap.josm.plugins.tageditor.ac;
+package org.openstreetmap.josm.plugins.tageditor.editor.old;
+
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPritority;
+
 
 /**
  * Represents an entry in the list of auto completion values.

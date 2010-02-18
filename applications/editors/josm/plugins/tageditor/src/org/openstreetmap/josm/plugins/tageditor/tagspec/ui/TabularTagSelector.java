@@ -30,8 +30,6 @@ import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 
-
-
 public class TabularTagSelector extends JPanel {
 
 	private TagsTable tagsTable;
@@ -39,7 +37,6 @@ public class TabularTagSelector extends JPanel {
 	private JButton btnApply;
 	private JScrollPane scrollPane;
 	private final ArrayList<ITagSelectorListener> listeners = new ArrayList<ITagSelectorListener>();
-
 
 	protected JPanel buildFilterPanel() {
 		JPanel pnl = new JPanel();
@@ -121,7 +118,6 @@ public class TabularTagSelector extends JPanel {
 
 		return scrollPane;
 	}
-
 
 	protected JPanel buildControlButtonPanel() {
 		JPanel pnl = new JPanel();

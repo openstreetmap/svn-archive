@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.tageditor.preset.io;
 
+import java.io.File;
 import java.io.Reader;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -21,13 +22,15 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class Parser {
 	
-	static private Logger logger = Logger.getLogger(Parser.class.getName());
+	static final private Logger logger = Logger.getLogger(Parser.class.getName());
+	
     private Presets presets = null;
 	private Reader reader;
 	private Stack<Group> currentGroup;
 	private Item currentItem;
 	private boolean inOptionalKeys = false; 
 	private XMLReader parser;
+	private File zipIconArchive;
 
 	public Parser() {
 		currentGroup = new Stack<Group>();
@@ -48,6 +51,10 @@ public class Parser {
 	
 	public Reader getReader() {
 		return reader;
+	}
+	
+	public void setZipIconArchive(File zipIconArchive) {
+		this.zipIconArchive = zipIconArchive;
 	}
 	
 	public Presets getPresets() {
@@ -121,7 +128,6 @@ public class Parser {
 		parser = null;		
 	}
 	
-	
 	protected String translatedAttributeValue(String attrValue) {
 		if (attrValue == null) {
 			return null;
@@ -133,7 +139,7 @@ public class Parser {
 	protected void onStartGroup(String name, String iconName) {
 		Group g = new Group();
 		g.setName(translatedAttributeValue(name));
-		g.setIconName(iconName);
+		g.setIconName(iconName, zipIconArchive);
 		currentGroup.push(g);
 	}
 	
@@ -145,7 +151,7 @@ public class Parser {
 	protected void onStartItem(String name, String iconName) {
 		currentItem = new Item();
 		currentItem.setName(translatedAttributeValue(name));
-		currentItem.setIconName(iconName);
+		currentItem.setIconName(iconName, zipIconArchive);
 	}
 	
 	protected void onEndItem() {
@@ -237,8 +243,7 @@ public class Parser {
 			} else if ("key".equals(qName) || "text".equals(qName) || "combo".equals(qName) 
 					   || "check".equals(qName)) {
 				onTag(getAttribute(atts, "key"), getAttribute(atts, "value"), getAttribute(atts, "text"));
-			}
-			
+			}			
 		}
 		
 		@Override

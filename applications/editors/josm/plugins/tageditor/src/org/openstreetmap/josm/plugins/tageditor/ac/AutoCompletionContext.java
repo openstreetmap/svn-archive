@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.tageditor.ac;
 
 import org.openstreetmap.josm.Main;
 
-
 public class AutoCompletionContext {
 
 	private boolean selectionIncludesNodes = false;
@@ -19,7 +18,6 @@ public class AutoCompletionContext {
 		selectionIncludesRelations = !Main.main.getCurrentDataSet().getSelectedRelations().isEmpty();
 		selectionEmpty = (Main.main.getCurrentDataSet().getSelected().size() == 0);
 	}
-
 
 	public boolean isSelectionEmpty() {
 		return selectionEmpty;
@@ -48,8 +46,4 @@ public class AutoCompletionContext {
 	public void setSelectionIncludesRelations(boolean selectionIncludesRelations) {
 		this.selectionIncludesRelations = selectionIncludesRelations;
 	}
-
-
-
-
 }

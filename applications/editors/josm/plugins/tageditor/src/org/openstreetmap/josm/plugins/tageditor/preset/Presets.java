@@ -2,7 +2,9 @@ package org.openstreetmap.josm.plugins.tageditor.preset;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -20,7 +22,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.plugins.tageditor.preset.io.Parser;
 import org.openstreetmap.josm.plugins.tageditor.preset.io.PresetIOException;
-import org.openstreetmap.josm.plugins.tageditor.util.IndentWriter;
 
 public class Presets {
 	private static Logger logger = Logger.getLogger(Presets.class.getName());
@@ -36,24 +37,26 @@ public class Presets {
 		// and slightly modified
 		//
 		if (Main.pref.getBoolean("taggingpreset.enable-defaults", true)) {
-			sources.add("resource://presets/presets.xml");
+			sources.add("resource://data/defaultpresets.xml");
 		}
 		sources.addAll(Main.pref.getCollection("taggingpreset.sources",
 				new LinkedList<String>()));
 
+		File zipIconArchive = null;
 		for (String source : sources) {
-			logger.log(Level.INFO, String.format(
-					"starting to read presets from source '%1$s'", source));
 			try {
 				MirroredInputStream s = new MirroredInputStream(source);
+                InputStream zip = s.getZipEntry("xml","preset");
+                if(zip != null) {
+                	zipIconArchive = s.getFile();
+                }
 				InputStreamReader r;
 				try {
 					r = new InputStreamReader(s, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
 					r = new InputStreamReader(s);
 				}
-				presets = loadPresets(r, presets);
-
+				presets = loadPresets(r, presets, zipIconArchive);
 			} catch (PresetIOException e) {
 				logger
 						.log(Level.SEVERE, tr(
@@ -76,16 +79,15 @@ public class Presets {
 			URLConnection con = from.openConnection();
 			con.connect();
 			Reader reader = new InputStreamReader(con.getInputStream());
-			return loadPresets(reader, null);
+			return loadPresets(reader, null, null);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE,
 					"exception caught while loading preset file", e);
 			throw new PresetIOException(e);
 		}
-
 	}
 
-	static public Presets loadPresets(Reader reader, Presets p) throws PresetIOException {
+	static public Presets loadPresets(Reader reader, Presets p, File zipIconArchive) throws PresetIOException {
 		try {
 			Parser parser = new Parser();
 			parser.setReader(reader);
@@ -119,20 +121,7 @@ public class Presets {
 		groups.remove(group);
 	}
 
-	public void dump(IndentWriter writer) throws IOException {
-		writer.indent();
-		writer.write("<presets>\n");
-		writer.incLevel();
-		for (Group group : groups) {
-			group.dump(writer);
-		}
-		writer.decLevel();
-		writer.indent();
-		writer.write("</presets>");
-	}
-
 	public List<Group> getGroups() {
 		return groups;
 	}
-
 }

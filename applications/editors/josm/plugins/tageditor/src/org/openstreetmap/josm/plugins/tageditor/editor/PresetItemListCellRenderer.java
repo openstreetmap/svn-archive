@@ -2,23 +2,18 @@ package org.openstreetmap.josm.plugins.tageditor.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 
 import org.openstreetmap.josm.plugins.tageditor.preset.Item;
 
-public class PresetItemListCellRenderer extends JLabel implements
-ListCellRenderer {
-
+public class PresetItemListCellRenderer extends JLabel implements ListCellRenderer {
 	private static final Logger logger = Logger.getLogger(PresetItemListCellRenderer.class.getName());
-	private static final Font DEFAULT_FONT =  new Font("SansSerif",Font.PLAIN,10);
-	public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
 
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
@@ -29,9 +24,11 @@ ListCellRenderer {
 			setIcon(null);
 		} else {
 			if (isSelected) {
-				setBackground(BG_COLOR_SELECTED);
+				setBackground(UIManager.getColor("Table.selectionBackground"));
+				setForeground(UIManager.getColor("Table.selectionForeground"));
 			} else {
-				setBackground(Color.WHITE);
+				setBackground(UIManager.getColor("Table.background"));
+				setForeground(UIManager.getColor("Table.foreground"));
 			}
 			setIcon(item.getIcon());
 			StringBuilder sb = new StringBuilder();
@@ -40,9 +37,8 @@ ListCellRenderer {
 			.append(item.getName());
 			setText(sb.toString());
 			setOpaque(true);
-			setFont(DEFAULT_FONT);
+			setFont(UIManager.getFont("Table.font"));
 		}
 		return this;
 	}
-
 }

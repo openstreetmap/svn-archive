@@ -123,6 +123,11 @@ public class OpenVisibleAction extends JosmAction {
             } else{
                 r = new GpxReader(new FileInputStream(file));
             }
+            if (!r.parse(true)) {
+                // input was not properly parsed, abort
+                JOptionPane.showMessageDialog(Main.parent, tr("Parsing file \"{0}\" failed", file));
+                throw new IllegalStateException();
+            }				
             r.data.storageFile = file;
             GpxLayer gpxLayer = new GpxLayer(r.data, fn);
             Main.main.addLayer(gpxLayer);

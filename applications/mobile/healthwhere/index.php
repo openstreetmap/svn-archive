@@ -42,12 +42,16 @@ Other details
 <tr><td>
 Max distance:</td><td>
 <select name = "txtDistance">
-<option value = "2">2 miles</option>
-<option value = "5">5 miles</option>
-<option value = "10">10 miles</option>
-<option value = "25">25 miles</option>
-<option value = "50">50 miles</option>
-<option value = "100">100 miles</option>
+
+<?php
+$aiDistances = array (2, 5, 10, 25, 50);
+foreach ($aiDistances as $iDistance)
+	if ($iDistance == $txtDistance)
+		echo "<option value = '$iDistance' selected>$iDistance miles</option>\n";
+	else
+		echo "<option value = '$iDistance'>$iDistance miles</option>\n";
+?>
+
 </td>
 </tr><tr>
 <td>Current time:</td>

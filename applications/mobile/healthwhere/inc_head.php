@@ -1,4 +1,5 @@
 <?php
+include ("VERSION.php");
 require ("inc_config.php");
 
 /*

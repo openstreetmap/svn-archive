@@ -1,8 +1,9 @@
 <html>
 <head>
 <title>Healthwhere</title>
-<!-- <link rel="stylesheet" type="text/css" media="handheld" href="mobile.css" /> -->
-<link rel="stylesheet" type="text/css" media="all" href="mobile.css" />
+<!-- viewport meta tag is used to inform Mobile Safari that the page is *not* 980px wide -->
+<meta name="viewport" content="user-scalable=no, width=device-width" />
+<link rel="stylesheet" type="text/css" href="style.css" media="all" />
 <?php
 if (basename ($_SERVER["SCRIPT_FILENAME"]) == "index.php") {
 ?>
@@ -15,7 +16,7 @@ if (basename ($_SERVER["SCRIPT_FILENAME"]) == "index.php") {
 
 		document.getElementById ("txtLatitude").value = latitude
 		document.getElementById ("txtLongitude").value = longitude
-		document.getElementById ("divLatLon").innerHTML = "<i>Latitude &amp; longitude have been filled in automatically. <a href = 'geolocation.php'>More information</a></i>"
+		document.getElementById ("divLatLon").innerHTML = "<i>Your location has been filled in automatically. <a href = 'geolocation.php'>More information</a></i>"
 	}
 
 	function errorCallback(error) {

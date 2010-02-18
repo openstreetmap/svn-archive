@@ -23,9 +23,6 @@ $osm_xapi_base = "http://www.informationfreeway.org/api/0.6";
 //Local SQLite database file used for postcodes etc
 $db_file = "healthware.db";
 
-//Version info etc.
-define ("SERVICE_NAME", "Healthwhere");
-define ("VERSION", "3.0");
 //Base URL - do not include trailing /
 define ("BASE_URL", "http://www.example.com");
 ?>

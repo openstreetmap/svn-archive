@@ -2,8 +2,10 @@
 //Get start time for log
 $iStartTime = time ();
 //Store search terms in cookies
-if ($_GET ["txtPostcode"] != "")
-	setcookie ("Postcode", trim ($_GET ["txtPostcode"]));
+if ($_GET ["txtPostcode"] != "") {
+	$txtPostcode = trim ($_GET ["txtPostcode"]);
+	setcookie ("Postcode", $txtPostcode);
+}
 if ($_GET ["txtLatitude"] != "")
 	setcookie ("Latitude", (float) $_GET ["txtLatitude"]);
 if ($_GET ["txtLongitude"] != "")
@@ -97,14 +99,14 @@ function AddPharmHospital (&$asPharmacies, &$ph, &$node, $user_lat, $user_lon, $
 	}
 }
 
-if ($_GET ["txtPostcode"] == "" && ($_GET ["txtLatitude"] == "" || $_GET ["txtLongitude"] == "")) {
+if ($txtPostcode == "" && ($_GET ["txtLatitude"] == "" || $_GET ["txtLongitude"] == "")) {
 	echo "<p>You must enter a postcode or a latitude <i>and</i> longitude</p>\n";
 	echo "<p><a href = 'index.php'>Back</a></p>\n";
 	require ("inc_foot.php");
 	exit;
 }
 
-if ($_GET ["txtPostcode"] != "") {
+if ($txtPostcode != "") {
 	$pcOuter = "";
 	$pcInner = "";
 	//Set $user_lat and $user_lon to invalid values
@@ -112,9 +114,9 @@ if ($_GET ["txtPostcode"] != "") {
 	$user_lon = 400;
 	$db = sqlite_open ($db_file);
 	//Parse postcode
-	$pc = strtolower (trim ($_GET ["txtPostcode"]));
+	$pc = strtolower ($txtPostcode);
 	$asPC = explode (" ", $pc);
-	if (count ($asPC == 2)) {
+	if (count ($asPC) == 2) {
 		//$pc includes a space, so we now have inner & outer
 		$pcOuter = $asPC [0];
 		$pcInner = $asPC [1];
@@ -123,7 +125,7 @@ if ($_GET ["txtPostcode"] != "") {
 		//$pc does not include a space. Have to best guess inner & outer
 		//If last three characters are digit & 2 letters, then they are inner
 		//If not, there is no inner, just an outer (eg S1)
-		if (ereg ('([a-z][0-9]?[0-9]?)([0-9][a-z][a-z])', $pc, $regs) !== False) {
+		if (ereg ('([a-z][a-z]?[0-9][0-9]?)([0-9][a-z][a-z])', $pc, $regs) !== False) {
 			$pcOuter = $regs [1];
 			$pcInner = $regs [2];
 		}
@@ -242,8 +244,8 @@ foreach ($wayxml->way as $way) {
 }
 
 //Write results to log
-if ($_GET ["txtPostcode"] != "")
-	$SearchTerm = "Postcode,{$_GET ["txtPostcode"]},,";
+if ($txtPostcode != "")
+	$SearchTerm = "Postcode,{$txtPostcode},,";
 else
 	$SearchTerm = "Lat/Lon,{$_GET ['txtLatitude']},{$_GET ['txtLongitude']},";
 $SearchTerm .= "{$_GET ['txtDistance']},";
@@ -264,16 +266,18 @@ elseif ($numfound == 1 && $search == "hospital")
 else
 	echo " hospitals";
 echo " found within $maxdist miles";
-if ($_GET ["txtPostcode"] != "") {
-	$postcode = htmlentities ($_GET ["txtPostcode"]);
-	//Only display map link in JS-capable browsers
-	$sMap = "\n<script type='text/javascript'>\n<!--\n";
-	$sMap .= "document.write (\" of <a href = 'http://www.openstreetmap.org/?mlat=$user_lat&mlon=$user_lon&zoom=17' title = 'map of $postcode'>$postcode</a>\")";
-	$sMap .= "\n// -->\n";
-	$sMap .= "</script>\n";
-	$sMap .= "<noscript>\n of $postcode\n</noscript>\n";
-	echo $sMap;
-}
+if ($txtPostcode != "")
+	$locationtext = strtoupper (htmlentities ($txtPostcode));
+else
+	$locationtext = "your location";
+
+//Only display map link in JS-capable browsers
+$sMap = "\n<script type='text/javascript'>\n<!--\n";
+$sMap .= "document.write (\" of <a href = 'http://www.openstreetmap.org/?mlat=$user_lat&mlon=$user_lon&zoom=17' title = 'map of $locationtext'>$locationtext</a>\")";
+$sMap .= "\n// -->\n";
+$sMap .= "</script>\n";
+$sMap .= "<noscript>\n of $locationtext\n</noscript>\n";
+echo $sMap;
 
 echo "<br><a href = 'index.php'>Search again</a><br>\n";
 echo "Click on a name to see details</p>\n";

@@ -163,6 +163,13 @@ else
 ?>
 <input type = "checkbox" <?=$check?> class = "default" name = "chk247"> Open 24/7
 </td></tr>
+</table>
+
+<p>
+<i>Use 24 hour clock for times (eg 09:00, 18:00)</i>
+</p>
+
+<table>
 <?php
 for ($iCount = 0; $iCount <= 6; $iCount++) {
 	echo "<tr><td>{$days [$iCount]}</td><td>";

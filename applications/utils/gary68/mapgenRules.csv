@@ -1,10 +1,12 @@
 "SECTION" "NODES" "color" "thickness" "label" "label-color" "label-size" "label-font" "label-offset" "Legend" "Icon" "Size" 
 "building" "collapsed" "black" 3 "none" "black" 0 "sans-serif" 0 0 "none" 0 
 "earthquake:damage" "collapsed_building" "black" 3 "none" "black" 0 "sans-serif" 0 0 "none" 0 
+"natural" "peak" "black" 0 "ele" "blue" 12 "sans-serif" 12 0 "none" 0 
+"natural" "peak" "black" 2 "name!_lon!_lat" "black" 10 "sans-serif" 0 0 "none" 0 
 "highway" "obstacle" "red" 8 "none" "black" 0 "sans-serif" 0 0 "none" 0 
 "barrier" "obstacle" "red" 8 "none" "black" 0 "sans-serif" 0 0 "none" 0 
 "amenity" "bank" "black" 0 "name" "black" 8 "sans-serif" 15 0 "icon/bank.png" 10 
-"leisure" "park" "black" 0 "name" "black" 8 "sans-serif" 15 0 "icon/park,png" 10 
+"leisure" "park" "black" 1 "name" "black" 8 "sans-serif" 15 0 "icon/park,png" 10 
 "amenity" "parking" "black" 0 "name" "black" 8 "sans-serif" 15 0 "icon/parking.png" 10 
 "leisure" "playground" "black" 0 "name" "black" 8 "sans-serif" 15 0 "icon/playground.png" 10 
 "amenity" "police" "black" 0 "name" "black" 8 "sans-serif" 15 0 "icon/police.png" 10 
@@ -27,22 +29,22 @@
 "place" "village" "black" 0 "name" "black" 14 "sans-serif" 0 0 "none" 0 
 "place" "village" "black" 0 "pcode:2" "blue" 14 "sans-serif" 10 0 "none" 0 
 "SECTION" "WAYS" "color" "thickness" "DashStyle" "fill" "label" "label-color" "label-size" "label-font" "label-offset" "Legend" "BaseLayer"
-"highway" "residential" "darkgrey" 2 0 0 "name" "black" 10 "sans-serif" -2 1 0
-"highway" "unclassified" "darkgrey" 2 0 0 "name" "black" 10 "sans-serif" -2 0 0
-"highway" "service" "darkgrey" 2 0 0 "name" "black" 10 "sans-serif" -2 0 0
-"highway" "motorway" "blue" 4 0 0 "ref!name" "black" 16 "sans-serif" -4 1 0
-"highway" "motorway_link" "blue" 3 0 0 "none" "black" 12 "sans-serif" -3 0 0
-"highway" "trunk" "blue" 3 0 0 "ref!name" "black" 16 "sans-serif" -3 0 0
-"highway" "trunk_link" "blue" 2 0 0 "none" "black" 12 "sans-serif" -2 0 0
-"highway" "primary" "red" 3 0 0 "ref!name" "black" 14 "sans-serif" -3 1 0
-"highway" "primary_link" "red" 3 0 0 "none" "black" 12 "sans-serif" -3 0 0
-"highway" "secondary" "orange" 3 0 0 "ref!name" "black" 14 "sans-serif" -3 1 0
-"highway" "secondary_link" "orange" 2 0 0 "none" "black" 12 "sans-serif" -2 0 0
-"highway" "tertiary" "green" 2 0 0 "ref!name" "black" 14 "sans-serif" -2 1 0
-"highway" "track" "darkgrey" 1 2 0 "none" "black" 8 "sans-serif" -1 1 0
-"highway" "footway" "black" 1 4 0 "none" "black" 8 "sans-serif" -1 1 0
-"highway" "path" "gray" 1 4 0 "none" "black" 8 "sans-serif" -1 1 0
-"highway" "cycleway" "blue" 2 3 0 "none" "black" 10 "sans-serif" -2 1 0
+"highway" "residential" "darkgrey" 6 0 0 "name" "black" 8 "sans-serif" 3 1 0
+"highway" "unclassified" "darkgrey" 6 0 0 "name" "black" 8 "sans-serif" 3 0 0
+"highway" "service" "darkgrey" 6 0 0 "name" "black" 8 "sans-serif" 3 0 0
+"highway" "motorway" "blue" 10 0 0 "ref!name" "white" 14 "sans-serif" 4 1 0
+"highway" "motorway_link" "blue" 8 0 0 "none" "white" 12 "sans-serif" 4 0 0
+"highway" "trunk" "blue" 10 0 0 "ref!name" "white" 16 "sans-serif" 4 0 0
+"highway" "trunk_link" "blue" 8 0 0 "none" "white" 12 "sans-serif" 4 0 0
+"highway" "primary" "red" 8 0 0 "ref!name" "white" 10 "sans-serif" 4 1 0
+"highway" "primary_link" "red" 6 0 0 "none" "white" 10 "sans-serif" 3 0 0
+"highway" "secondary" "goldenrod" 8 0 0 "ref!name" "black" 10 "sans-serif" 4 1 0
+"highway" "secondary_link" "goldenrod" 6 0 0 "none" "black" 10 "sans-serif" 3 0 0
+"highway" "tertiary" "darkkhaki" 6 0 0 "ref!name" "black" 8 "sans-serif" 3 1 0
+"highway" "track" "darkgrey" 1 2 0 "none" "black" 8 "sans-serif" 0 1 0
+"highway" "footway" "black" 1 4 0 "none" "black" 8 "sans-serif" 0 1 0
+"highway" "path" "gray" 1 4 0 "none" "black" 8 "sans-serif" 0 1 0
+"highway" "cycleway" "blue" 2 3 0 "none" "black" 10 "sans-serif" 0 1 0
 "power" "line" "darkgreen" 1 0 0 "none" "black" 8 "sans-serif" -1 1 1
 "railway" "rail" "black" 2 0 0 "none" "black" 8 "sans-serif" -1 1 1
 "waterway" "river" "lightblue" 2 0 0 "name" "black" 10 "sans-serif" -2 0 0
@@ -72,4 +74,7 @@
 "landuse" "commercial" "lightgray" 0 0 1 "none" "black" 10 "sans-serif" 0 1 1
 "aeroway" "runway" "gray" 0 0 1 "none" "black" 10 "sans-serif" 0 0 1
 "aeroway" "taxiway" "gray" 0 0 1 "none" "black" 10 "sans-serif" 0 0 1
+"SECTION" "ROUTES" "ThicknessLine" "DashStyle" "Opacity" "Label" "StopNodeThickness"      
+"hiking" "red;pink;yellow" 4 3 55 "ref" 4      
+"bus" "red;pink;yellow" 2 0 100 "ref" 4      
 "SECTION" "END"           

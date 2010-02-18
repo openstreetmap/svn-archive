@@ -44,19 +44,25 @@
 #      user's manual provided in pdf
 #      all color names from svg can be used, even hex triplets like #FF00FF are accepted
 #      § changed to !
+# 0.09 _lon and _lat for labes
+#      [-coords] coordinates grid 
+#      display routes
+#      automatic label fit for labels on roads; [-ppc] replaces [-minlen]
+#      stops for routes
 #
 
 
 # TODO
 # icons for areas
+# module for style file reading and error handling
 # wildcard for value
-# routes
 # integrity check osm file; all referenced nodes and ways given?
 # color none for area / border, just print label in the middle
+# tunnel with opacity value?
+# nested relations for multipolygons?
 # --------------------
 # style file check, color check, error messages, array for regex? Defaults
 # move parts of code to pm, even a new pm
-# lon/lat as label text?
 # oneways?
 # sub key/value for rules
 # edges for ways?
@@ -69,11 +75,11 @@ use warnings ;
 
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.08 ;
+use OSM::mapgen 0.09 ;
 use Math::Polygon ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.08" ;
+my $version = "0.09" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -96,8 +102,16 @@ perl mapgen.pl
 
 -grid=<integer> (number parts for grid, 0=no grid, DEFAULT=0)
 -gridcolor=TEXT (color for grid lines and labels (DEFAULT=black)
+-coords (turn on coordinates grid)
+-coordsexp=INTEGER (degrees to the power of ten for grid distance; DEFAULT=-2 equals 0.01 degrees)
+-coordscolor=TEXT (set color of coordinates grid)
 -dir (create street directory in separate file. if grid is enabled, grid squares will be added)
 -tagstat (lists keys and values used in osm file; program filters list to keep them short!!! see code array noListTags)
+
+-routelabelcolor=TEXT (color for labels of routes)
+-routelabelsize=INTEGER (DEFAULT=8)
+-routelabelfont=TEXT (DEFAULT=sans-serif)
+-routelabeloffset=INTEGER (DEFAULT=10)
 
 -legend=INT (0=no legend; 1=legend; DEFAULT=1)
 -ruler=INT (0=no ruler; 1=draw ruler; DEFAULT=1)
@@ -107,7 +121,7 @@ perl mapgen.pl
 -scaleset=INTEGER (1:x preset for map scale; overrides -size=INTEGER! set correct printer options!)
 -scaledpi=INTEGER (print resolution; DEFAULT = 300 dpi)
 
--minlen=<float> (for ways to be labeled, to prevent clutter, , DEFAULT=0.1, unit is km)
+-ppc=<float> (pixels needed per character using font size 10; DEFAULT=5.5)
 
 -png (also produce png, inkscape must be installed, very big)
 -pdf (also produce pdf, inkscape must be installed)
@@ -133,7 +147,7 @@ my $svgName = "mapgen.svg" ;
 my $pdfOpt = 0 ;
 my $pngOpt = 0 ;
 my $dirOpt = 0 ;
-my $labelMinLength = 0.1 ; # min length of street so that it will be labled / needs adjustment according to picture size
+my $ppc = 5.5 ; 
 my $place = "" ;
 my $lonrad = 2 ;
 my $latrad = 2 ;
@@ -148,6 +162,13 @@ my $scaleOpt = 0 ;
 my $scaleDpi = 300 ;
 my $scaleColor = "black" ;
 my $scaleSet = 0 ;
+my $coordsOpt = 0 ;
+my $coordsExp = -2 ;
+my $coordsColor = "black" ;
+my $routeLabelColor = "black" ;
+my $routeLabelSize = 8 ;
+my $routeLabelFont = "sans-serif" ;
+my $routeLabelOffset = 10 ;
 
 # keys from tags listes here will not be shown in tag stat
 my @noListTags = sort qw (name width url source ref note phone operator opening_hours maxspeed maxheight maxweight layer is_in TODO addr:city addr:housenumber addr:country addr:housename addr:interpolation addr:postcode addr:street created_by description ele fixme FIXME website bridge tunnel time openGeoDB:auto_update  openGeoDB:community_identification_number openGeoDB:is_in openGeoDB:is_in_loc_id openGeoDB:layer openGeoDB:license_plate_code openGeoDB:loc_id openGeoDB:location openGeoDB:name openGeoDB:population openGeoDB:postal_codes openGeoDB:sort_name openGeoDB:telephone_area_code openGeoDB:type openGeoDB:version opengeodb:lat opengeodb:lon int_ref population postal_code wikipedia) ;
@@ -184,6 +205,14 @@ my $wayIndexLegend = 11 ;
 my $wayIndexBaseLayer = 12 ;
 my @ways = () ;
 
+my $routeIndexRoute = 0 ;
+my $routeIndexColor = 1 ; # colorSet!!! default if route doesn't have own color
+my $routeIndexThickness = 2 ;
+my $routeIndexDash = 3 ;
+my $routeIndexOpacity = 4 ; # stroke opacity, values 0-1; 1 = fully blocking; 0 = transparent
+my $routeIndexLabel = 5 ;
+my $routeIndexStopThickness = 6 ;
+my @routes = () ;
 
 # read data from file
 my $wayId ;
@@ -201,6 +230,7 @@ my $relationId ;
 my $relationUser ;
 my @relationTags ;
 my @relationMembers ;
+
 
 # storage of data
 my %memNodeTags ;
@@ -233,8 +263,11 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"bgcolor:s"	=> \$bgColor,		# background color
 				"grid:i"	=> \$grid,		# specifies grid, number of parts
 				"gridcolor:s"	=> \$gridColor,		# color used for grid and labels
+				"coords"	=> \$coordsOpt,		# 
+				"coordsexp:i"	=> \$coordsExp,		# 
+				"coordscolor:s"	=> \$coordsColor,		# 
 				"clip:i"	=> \$clip,		# specifies how many percent data to clip on each side
-				"minlen:f"	=> \$labelMinLength,	# specifies min way len for labels
+				"ppc:f"		=> \$ppc,		# pixels needed per label char in font size 10
 				"pdf"		=> \$pdfOpt,		# specifies if pdf will be created
 				"png"		=> \$pngOpt,		# specifies if png will be created
 				"dir"		=> \$dirOpt,		# specifies if directory will be created
@@ -252,6 +285,10 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"scaledpi:i"	=> \$scaleDpi,
 				"scalecolor:s"	=> \$scaleColor,
 				"scaleset:s"	=> \$scaleSet,
+				"routelabelcolor:s"	=> \$routeLabelColor,		
+				"routelabelsize:i"	=> \$routeLabelSize,		
+				"routelabelfont:s"	=> \$routeLabelFont,		
+				"routelabeloffset:i"	=> \$routeLabelOffset,		
 				"multionly"	=> \$multiOnly,		# draw only areas from multipolygons
 				"verbose" 	=> \$verbose) ;		# turns twitter on
 
@@ -289,11 +326,15 @@ print "scaleCol  = $scaleColor\n" ;
 print "scaleDpi  = $scaleDpi\n" ;
 print "scaleSet  = $scaleSet\n\n" ;
 
-print "clip      = $clip (percent)\n" ;
-print "grid      = $grid (number)\n" ;
-print "gridcolor = $gridColor\n" ;
+print "clip        = $clip (percent)\n" ;
+print "grid        = $grid (number)\n" ;
+print "gridcolor   = $gridColor\n" ;
+print "coordsOpt   = $coordsOpt\n" ;
+print "coordsExp   = $coordsExp\n" ;
+print "coordsColor = $coordsColor\n\n" ;
+
 print "dir       = $dirOpt\n" ;
-print "minlen    = $labelMinLength (km)\n" ;
+print "ppc       = $ppc (pixels needed per charcter font size 10)\n" ;
 print "declutter = $declutterOpt\n" ;
 print "declutterX= $declutterMinX\n" ;
 print "declutterY= $declutterMinY\n\n" ;
@@ -301,6 +342,11 @@ print "declutterY= $declutterMinY\n\n" ;
 print "place     = $place\n" ;
 print "lonrad    = $lonrad (km)\n" ;
 print "latrad    = $latrad (km)\n\n" ;
+
+print "routeLabelColor = $routeLabelColor \n" ; 
+print "routeLabelSize = $routeLabelSize \n" ; 
+print "routeLabelFont = $routeLabelFont \n" ; 
+print "routeLabelOffset = $routeLabelOffset\n\n" ; 
 
 print "pdf       = $pdfOpt\n" ;
 print "png       = $pngOpt\n\n" ;
@@ -333,6 +379,14 @@ while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
 	$line = <$csvFile> ;
 }
 
+# READ ROUTE RULES#print "ROUTE LINE: $line\n" ;
+$line = <$csvFile> ; # omit SECTION
+#print "ROUTE LINE: $line\n" ;
+while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
+	#print "ROUTE LINE: $line\n" ;
+	my ($route, $color, $thickness, $dash, $opacity, $label, $nodeThickness) = ($line =~ /\"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" (\d+)/ ) ;
+	$opacity = $opacity / 100 ;
+	push @routes, [$route, $color, $thickness, $dash, $opacity, $label, $nodeThickness] ;	$line = <$csvFile> ;}
 close ($csvFile) ;
 
 if ($verbose eq "1") {
@@ -341,11 +395,10 @@ if ($verbose eq "1") {
 		printf "%-20s %-20s %-10s %-6s %-6s %-6s %-10s %-10s %-10s %-10s %-6s %-6s %-6s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6], $way->[7], $way->[8], $way->[9], $way->[10], $way->[11], $way->[12] ;
 	}
 	print "\n" ;
-	print "NODES\n" ;
-	foreach my $node (@nodes) {
-		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-20s %6s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11] ;
-	}
+	print "NODES\n" ;	foreach my $node (@nodes) {		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-20s %6s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11] ;	}
 	print "\n" ;
+
+	print "ROUTES\n" ;	foreach my $route (@routes) {		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s\n", $route->[0], $route->[1], $route->[2], $route->[3], $route->[4], $route->[5], $route->[6] ;	}	print "\n" ;
 }
 
 $time0 = time() ;
@@ -506,8 +559,9 @@ printf "INFO: map width : %4.1f (cm)\n", $w ;
 printf "INFO: map height: %4.1f (cm)\n\n", $h ;
 
 
+processRoutes () ;
 
-processRelations () ; # multipolygons, (routes)
+processMultipolygons () ; # multipolygons, (routes)
 
 # BG AREAS
 
@@ -522,7 +576,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 							drawArea ($test->[$wayIndexColor], nodes2Coordinates( @{$memWayNodes{$wayId}} ) ) ;
 							# LABELS
 							my $name = "" ; my $ref1 ;
-							($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel]) ;
+							($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
 							if ($name ne "") {
 							my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 								#print "AREA name $name $x $y\n" ;
@@ -547,7 +601,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 						drawAreaMP ($test->[$wayIndexColor], \@{$memWayPaths{$wayId}}, \%lon, \%lat  ) ;
 						# LABELS
 						my $name = "" ; my $ref1 ;
-						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel]) ;
+						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
 						if ($name ne "") {
 							my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 							#print "MP name $name $x $y\n" ;
@@ -583,7 +637,7 @@ foreach my $nodeId (keys %memNodeTags) {
 
 				if ($test->[$nodeIndexLabel] ne "none") {
 					my $name = "" ; my $ref1 ;
-					($name, $ref1) = createLabel (\@{$memNodeTags{$nodeId}}, $test->[$nodeIndexLabel]) ;
+					($name, $ref1) = createLabel (\@{$memNodeTags{$nodeId}}, $test->[$nodeIndexLabel], $lon{$nodeId}, $lat{$nodeId}) ;
 					my @names = @$ref1 ;
 					if ($name ne "") {
 						drawTextPos ($lon{$nodeId}, $lat{$nodeId}, 0, -$test->[$nodeIndexLabelOffset], 
@@ -602,12 +656,6 @@ print "draw ways...\n" ;
 foreach my $wayId (keys %memWayTags) {
 	# print "wayid: $wayId\n" ;
 	my $text = "" ; 
-	my $length = 0 ;
-
-	for (my $i = 0; $i < scalar (@{$memWayNodes{$wayId}})-1   ; $i++) {
-		$length += distance ($lon{ $memWayNodes{$wayId}[$i] }, $lat{ $memWayNodes{$wayId}[$i] }, 
-			$lon{ $memWayNodes{$wayId}[$i+1] }, $lat{ $memWayNodes{$wayId}[$i+1] }) ;
-	}
 
 	# tunnels, bridges and layers
 	my $tunnel = "no" ; my $bridge = "no" ; my $layer = 0 ;
@@ -632,25 +680,26 @@ foreach my $wayId (keys %memWayTags) {
 				if ($test->[$wayIndexFilled] eq "0") {
 					#print "      drawing way $test->[$wayIndexColor], $test->[$wayIndexThickness] ...\n" ;
 					if ($bridge eq "yes") {
-						drawWayBridge ($layer-.4, "black", $test->[$wayIndexThickness]+4, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
-						drawWayBridge ($layer-.2, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+						drawWayBridge ($layer-.04, "black", $test->[$wayIndexThickness]+4, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+						drawWayBridge ($layer-.02, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 					}
 					if ($tunnel eq "yes") {
-						drawWayBridge ($layer-.4, "black", $test->[$wayIndexThickness]+4, 11, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
-						drawWayBridge ($layer-.2, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+						drawWayBridge ($layer-.04, "black", $test->[$wayIndexThickness]+4, 11, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+						drawWayBridge ($layer-.02, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 					}
 					drawWay ($layer, $test->[$wayIndexColor], $test->[$wayIndexThickness], $test->[$wayIndexDash], nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 					if ($test->[$wayIndexLabel] ne "none") {
 
 						my $name = "" ; my $ref1 ;
-						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel]) ;
+						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel],0, 0) ;
 						my @names = @$ref1 ;
-						if ($length >= $labelMinLength) {
+						if (labelFitsWay (\@{$memWayNodes{$wayId}}, $name, $test->[$wayIndexLabelFont], $test->[$wayIndexLabelSize]) ) {
+
 							my $toLabel = 1 ;
 							my @way = @{$memWayNodes{$wayId}} ;
 							if ($lon{$memWayNodes{$wayId}[0]} > $lon{$memWayNodes{$wayId}[-1]}) {
 								@way = reverse (@way) ;
-								if ( ( ($test->[$wayIndexValue eq "motorway"]) or ($test->[$wayIndexValue eq "trunk"]) ) and ($declutterOpt eq "1") ) {
+								if ( ( ($test->[$wayIndexValue] eq "motorway") or ($test->[$wayIndexValue] eq "trunk") ) and ($declutterOpt eq "1") ) {
 									$toLabel = 0 ;
 								}
 							}
@@ -713,6 +762,10 @@ if ($scaleOpt eq "1") {
 }
 
 if ($grid > 0) { drawGrid($grid, $gridColor) ; }
+
+if ($coordsOpt eq "1") {
+	drawCoords ($coordsExp, $coordsColor) ;
+}
 
 if ($rulerOpt == 1) {
 	drawRuler ($rulerColor) ;
@@ -874,7 +927,7 @@ sub createLegend {
 	}
 }
 
-sub processRelations {
+sub processMultipolygons {
 #
 # 
 #
@@ -1258,4 +1311,162 @@ sub isIn {
 }
 
 
+sub processRoutes {
 
+	my %routeColors = () ;
+	my %actualColorIndex = () ;
+	my %colorNumber = () ;
+	my %wayRouteLabels = () ;
+
+	# init before relation processing
+	print "initializing route data...\n" ;
+	foreach my $routeType (@routes) {
+		print "  type: $routeType->[0]\n" ;
+		$actualColorIndex{$routeType->[0]} = 0 ;
+
+		# get route colors from	
+		@{$routeColors{$routeType->[0]}} = split ( /;/, $routeType->[$routeIndexColor] ) ;
+		$colorNumber{$routeType->[0]} = scalar @{$routeColors{$routeType->[0]}} ;
+		print "  colors: @{$routeColors{$routeType->[0]}}\n\n" ;
+	}
+	print "end.\n" ;
+
+	foreach my $relId (keys %memRelationTags) {
+		my $relationType = getValue ("type", \@{$memRelationTags{$relId}}) ;
+		if ( $relationType eq "route" ) {
+			# look for rule
+			my $routeType = getValue ("route", \@{$memRelationTags{$relId}}) ;
+
+			foreach my $test (@routes) {
+				if ($routeType eq $test->[$routeIndexRoute]) {
+
+					# new route detected
+					if ($verbose eq "1" ) { print "rule found for $relId, $routeType.\n" ;	}
+	
+					my $color = getValue ("color", \@{$memRelationTags{$relId}}) ;
+					if ($verbose eq "1" ) { print "  color from tags: $color\n" ;	}
+
+					if ($color eq "") { 
+						if ($verbose eq "1" ) { print "  actual color index: $actualColorIndex{$routeType}\n" ; }
+						$color = $routeColors{$routeType}[$actualColorIndex{$routeType}] ; 
+						$actualColorIndex{$routeType} = ($actualColorIndex{$routeType} + 1) % $colorNumber{$routeType} ;
+					}
+					if ($verbose eq "1" ) { print "  final color: $color\n" ; }
+
+					my ($label, $ref) = createLabel (\@{$memRelationTags{$relId}}, $test->[$routeIndexLabel]) ;
+					if ($verbose eq "1" ) { print "  label: $label\n" ; }
+
+					# collect ways
+
+					my $mRef = getAllMembers ($relId, 0) ;
+					my @tempMembers = @$mRef ;
+
+
+
+					my @relWays = () ;
+					# foreach my $member (@{$memRelationMembers{$relId}}) {
+					foreach my $member (@tempMembers) {
+						if ( ( ($member->[2] eq "none") or ($member->[2] eq "route") ) and ($member->[0] eq "way") ) { push @relWays, $member->[1] ; }
+						if ( ( ($member->[2] eq "forward") or ($member->[2] eq "backward") ) and ($member->[0] eq "way") ) { push @relWays, $member->[1] ; }
+
+
+						# stops
+						if ( (grep /stop/, $member->[2]) and ($member->[0] eq "node") ) {
+							# print "stop found in route $relId\n" ;
+							if ($test->[$routeIndexStopThickness] > 0) {
+								drawNodeDotRouteStops ($lon{$member->[1]}, $lat{$member->[1]}, $color, $test->[$routeIndexStopThickness]) ;
+							}
+						}
+
+
+
+					}
+					if ($verbose eq "1" ) { print "  ways: @relWays\n" ; }
+					foreach my $w (@relWays) {
+						drawWayRoute ($color, $test->[$routeIndexThickness], $test->[$routeIndexDash], $test->[$routeIndexOpacity], nodes2Coordinates (@{$memWayNodes{$w}} ) ) ;
+						# $wayRouteLabels{$w} .= $label . " " ;
+						$wayRouteLabels{$w}{$label} = 1 ;
+					}
+				} # rule found
+			} # test rules
+			if ($verbose eq "1") { print "\n" ; }
+		} # rel route
+	}
+
+	# label route ways after all relations have been processed
+
+	print "label...\n" ;
+	foreach my $w (keys %wayRouteLabels) {
+		if (scalar @{$memWayNodes{$w}} > 1) {
+			# print "\nway: $w\n" ;
+			my $label = "" ;
+			foreach my $l (keys %{$wayRouteLabels{$w}}) {
+				$label .= $l . " " ;
+			} 
+			# print "label created.\n" ;
+
+			my @way = @{$memWayNodes{$w}} ;
+			# print "nodes @way\n" ;
+			if ($lon{$way[0]} > $lon{$way[-1]}) {
+				@way = reverse (@way) ;
+			}
+
+			if (labelFitsWay (\@{$memWayNodes{$w}}, $label, $routeLabelFont, $routeLabelSize) ) {
+				labelWay ($routeLabelColor, $routeLabelSize, $routeLabelFont, $label, $routeLabelOffset, nodes2Coordinates (@way) ) ;
+			}
+		}
+	}
+}
+
+sub getAllMembers {
+#
+# get all members of a relation recursively
+#
+	my ($relId, $nestingLevel) = @_ ;
+	my @allMembers = () ;
+	my $maxNestingLevel = 20 ;
+
+	if ($nestingLevel > $maxNestingLevel) { 
+		print "ERROR/WARNING nesting level of relations too deep. recursion stopped at depth $maxNestingLevel! relId=$relId\n" ;
+	}
+	else {
+		foreach my $member (@{$memRelationMembers{$relId}}) {
+			if ( ($member->[0] eq "way") or ($member->[0] eq "node") ) {
+				push @allMembers, $member ;
+			}
+			if ( $member->[0] eq "relation" ) {
+				my $ref = getAllMembers ($member->[1], $nestingLevel+1) ;
+				push @allMembers, @$ref ;
+			}
+		}	
+	}
+	return \@allMembers ;
+}
+
+sub labelFitsWay {
+	my ($refWayNodes, $text, $font, $size) = @_ ;
+	my @wayNodes = @$refWayNodes ;
+
+	# calc waylen
+	my $wayLength = 0 ; # in pixels
+	for (my $i=0; $i<$#wayNodes; $i++) {
+		my ($x1, $y1) = convert ($lon{$wayNodes[$i]}, $lat{$wayNodes[$i]}) ;
+		my ($x2, $y2) = convert ($lon{$wayNodes[$i+1]}, $lat{$wayNodes[$i+1]}) ;
+		$wayLength += sqrt ( ($x2-$x1)**2 + ($y2-$y1)**2 ) ;
+	}
+
+
+	# calc label len
+	my $labelLength = length ($text) * $ppc / 10 * $size ; # in pixels
+
+	my $fit ;
+	if ($labelLength < $wayLength) { $fit="fit" ; }	else { $fit = "NOFIT" ; }
+	# print "labelFitsWay: $fit, $text, labelLen = $labelLength, wayLen = $wayLength\n" ;
+
+	if ($labelLength < $wayLength) {
+		return 1 ;
+	}
+	else {
+		return 0 ;
+	}
+}

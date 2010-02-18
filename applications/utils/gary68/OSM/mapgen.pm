@@ -27,6 +27,7 @@
 # drawArea ($color, @nodes) - real world
 # drawAreaMP
 # drawAreaPix ($color, @nodes) - pixels
+# drawCoords
 # drawGrid ($parts)
 # drawHead ($text, $color, $size) / size (1..5) 
 # drawIcon ($lon, $lat, $icon, $size) ;
@@ -41,6 +42,8 @@
 # drawWay ($layer, d$color, $size, $dash, @nodes) / size = thickness / real world
 # drawWayBridge ($layer, d$color, $size, $dash, @nodes) / size = thickness / real world
 # drawWayPix ($color, $size, $dash, @nodes) / size = thickness / pixels
+# drawWayRoute ($col, $size, $dash, $opacity, @nodes)
+# getValue ($key, \@tagArray)
 # gridSquare ($lon, $lat) / returns grid square for directory
 # fitsPaper ($x, $y, $dpi)
 # initGraph ($sizeX, $left, $bottom, $right, $top) / real world coordinates, sizeX in pixels, Y automatic
@@ -75,25 +78,28 @@ use OSM::osm ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.08' ;
+$VERSION = '0.09' ;
 
 require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
 @EXPORT = qw ( 	center
+			convert
 			createLabel
 			drawArea 
 			drawAreaMP
 			drawAreaPix 
 			drawCircleRadius 
 			drawCircleRadiusText 
+			drawCoords
 			drawHead 
 			drawFoot 
 			drawGrid
 			drawIcon
 			drawLegend 
 			drawNodeDot 
+			drawNodeDotRouteStops 
 			drawNodeDotPix 
 			drawNodeCircle 
 			drawNodeCirclePix 
@@ -104,7 +110,9 @@ require Exporter ;
 			drawWay 
 			drawWayBridge 
 			drawWayPix 
+			drawWayRoute
 			fitsPaper
+			getValue
 			gridSquare
 			initGraph 
 			labelWay 
@@ -149,8 +157,10 @@ my @svgOutputPixelGrid = () ;
 my @svgOutputDef = () ;
 my @svgOutputPathText = () ;
 my @svgOutputIcons = () ;
+my @svgOutputRouteStops = () ;
 my $pathNumber = 0 ;
 my $svgBaseFontSize = 10 ;
+my @svgOutputRoutes = () ;
 
 # clutter information
 my %clutter = () ;
@@ -328,6 +338,15 @@ sub drawNodeDot {
 	push @{$svgOutputWaysNodes{0}}, svgElementCircleFilled ($x1, $y1, $size, $col) ;
 }
 
+sub drawNodeDotRouteStops {
+#
+# draws node as a dot at given real world coordinates
+#
+	my ($lon, $lat, $col, $size) = @_ ;
+	my ($x1, $y1) = convert ($lon, $lat) ;
+	push @svgOutputRouteStops, svgElementCircleFilled ($x1, $y1, $size, $col) ;
+}
+
 sub drawNodeDotPix {
 #
 # draws node as a dot at given pixels
@@ -350,7 +369,7 @@ sub drawWay {
 		my ($x, $y) = convert ($nodes[$i], $nodes[$i+1]) ;
 		push @points, $x ; push @points, $y ; 
 	}
-	push @{$svgOutputWaysNodes{$layer+$size/10}}, svgElementPolyline ($col, $size, $dash, @points) ;
+	push @{$svgOutputWaysNodes{$layer+$size/100}}, svgElementPolyline ($col, $size, $dash, @points) ;
 }
 sub drawWayBridge {
 #
@@ -365,7 +384,7 @@ sub drawWayBridge {
 		my ($x, $y) = convert ($nodes[$i], $nodes[$i+1]) ;
 		push @points, $x ; push @points, $y ; 
 	}
-	push @{$svgOutputWaysNodes{$layer+$size/10}}, svgElementPolylineBridge ($col, $size, $dash, @points) ;
+	push @{$svgOutputWaysNodes{$layer+$size/100}}, svgElementPolylineBridge ($col, $size, $dash, @points) ;
 }
 
 sub drawWayPix {
@@ -569,6 +588,15 @@ sub writeSVG {
 	}
 	print $file "</g>\n" ;
 
+
+	print $file "<g id=\"Routes\">\n" ;
+	foreach (@svgOutputRoutes) { print $file $_, "\n" ; }
+	print $file "</g>\n" ;
+
+	print $file "<g id=\"RouteStops\">\n" ;
+	foreach (@svgOutputRouteStops) { print $file $_, "\n" ; }
+	print $file "</g>\n" ;
+
 	print $file "<g id=\"Text\">\n" ;
 	foreach (@svgOutputText) { print $file $_, "\n" ; }
 	print $file "</g>\n" ;
@@ -755,7 +783,7 @@ sub createLabel {
 # "name§ref" will return all values if given
 # "name#ref" will return name, if given. if no name is given, ref will be used. none given, no text
 #
-	my ($ref1, $styleLabelText) = @_ ;
+	my ($ref1, $styleLabelText, $lon, $lat) = @_ ;
 	my @tags = @$ref1 ;
 	my @keys ;
 	my @labels = () ;
@@ -765,6 +793,8 @@ sub createLabel {
 		@keys = split ( /!/, $styleLabelText) ;
 		# print "par found: $styleLabelText; @keys\n" ;
 		for (my $i=0; $i<=$#keys; $i++) {
+			if ($keys[$i] eq "_lat") { push @labels, $lat ; } 
+			if ($keys[$i] eq "_lon") { push @labels, $lon ; } 
 			foreach my $tag (@tags) {
 				if ($tag->[0] eq $keys[$i]) {
 					push @labels, $tag->[1] ;
@@ -778,6 +808,8 @@ sub createLabel {
 		@keys = split ( /#/, $styleLabelText) ;
 		my $i = 0 ; my $found = 0 ;
 		while ( ($i<=$#keys) and ($found == 0) ) {
+			if ($keys[$i] eq "_lat") { push @labels, $lat ; $found = 1 ; $labelTextTotal = $lat ; } 
+			if ($keys[$i] eq "_lon") { push @labels, $lon ; $found = 1 ; $labelTextTotal = $lon ; } 
 			foreach my $tag (@tags) {
 				if ($tag->[0] eq $keys[$i]) {
 					push @labels, $tag->[1] ;
@@ -861,6 +893,95 @@ sub fitsPaper {
 	}
 
 	return ($paper, $width, $height) ;
+}
+
+
+
+
+sub drawCoords {
+	my ($exp, $color) = @_ ;
+	my $step = 10 ** $exp ;
+
+	# vert. lines
+	my $start = int ($left / $step) + 1 ;
+	my $actual = $start * $step ;
+	while ($actual < $right) {
+		# print "actualX: $actual\n" ;
+		my ($x1, $y1) = convert ($actual, 0) ;
+		drawTextPixGrid ($x1+3, $sizeY-20, $actual, $color, 10) ;
+		drawWayPixGrid ($color, 1, 0, ($x1, 0, $x1, $sizeY) ) ;
+		$actual += $step ;
+	}
+
+	# hor lines
+	$start = int ($bottom / $step) + 1 ;
+	$actual = $start * $step ;
+	while ($actual < $top) {
+		# print "actualY: $actual\n" ;
+		my ($x1, $y1) = convert (0, $actual) ;
+		drawTextPixGrid ($sizeX-60, $y1+3, $actual, $color, 10) ;
+		drawWayPixGrid ($color, 1, 0, (0, $y1, $sizeX, $y1) ) ;
+		$actual += $step ;
+	}
+}
+
+
+sub getValue {
+	my ($key, $ref) = @_ ;
+	my @relationTags = @$ref ;
+
+	my $value = "" ;
+	foreach my $tag (@relationTags) {
+		if ($tag->[0] eq $key) { $value = $tag->[1] ; }
+	}
+	return ($value) ;
+}
+
+
+sub drawWayRoute {
+#
+# draws way as a line at given real world coordinates. nodes have to be passed as array ($lon, $lat, $lon, $lat...)
+# $size = thickness
+#
+	my ($col, $size, $dash, $opacity, @nodes) = @_ ;
+	my $i ;
+	my @points = () ;
+
+	for ($i=0; $i<$#nodes; $i+=2) {
+		my ($x, $y) = convert ($nodes[$i], $nodes[$i+1]) ;
+		push @points, $x ; push @points, $y ; 
+	}
+	push @svgOutputRoutes, svgElementPolylineOpacity ($col, $size, $dash, $opacity, @points) ;
+}
+
+
+sub svgElementPolylineOpacity {
+#
+# draws way to svg
+#
+	my ($col, $size, $dash, $opacity, @points) = @_ ;
+	my $svg = "<polyline points=\"" ;
+	my $i ;
+	for ($i=0; $i<scalar(@points)-1; $i+=2) {
+		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
+	}
+	if ($dash == 0) { 
+		$svg = $svg . "\" stroke=\"" . $col . 
+			"\" stroke-width=\"" . $size . 
+			"\" stroke-opacity=\"" . $opacity . 
+			"\" stroke-linecap=\"" . $lineCap . 
+			"\" stroke-linejoin=\"" . $lineJoin . "\" fill=\"none\" />" ;
+	}
+	else {
+		$svg = $svg . "\" stroke=\"" . $col . 
+			"\" stroke-width=\"" . $size . 
+			"\" stroke-opacity=\"" . $opacity . 
+			"\" stroke-linecap=\"" . $lineCap . 
+			"\" stroke-linejoin=\"" . $lineJoin . 
+			"\" stroke-dasharray=\"" . $dashStyle{$dash} . 
+			"\" fill=\"none\" />" ;
+	}
+	return $svg ;
 }
 
 

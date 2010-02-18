@@ -95,7 +95,7 @@
 			}
 		}
 		echo "<TD><A href=\"http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\">xapi</A>\n";
-		echo "<A href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\">josm</A></TD>\n";
+		echo "<A href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\" target=\"hiddenIframe\">josm</A></TD>\n";
 		echo "</TR>\n";
 		$i++;
 	}
@@ -165,5 +165,6 @@
 	echo "<A href=\"tagdetails.php?tag=$tag&limit=$limit&skip=$skip&dir=$invdir&order=$order\">".getPopWord($invdir)." values</A>\n";
 	echo "<A href=\"index.php\">Back to index page</A>\n";
 ?>
+  <iframe style="display:none" id="hiddenIframe" name="hiddenIframe"></iframe>
  </BODY>
 </HTML>

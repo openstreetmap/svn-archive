@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" lang="en"></meta>
+  <title>Public Transport Plugin for JOSM</title>
+</head>
+<body>
+
+<h1>Public Transport Plugin for JOSM</h1>
+
+<p>
+<a href="#chapter.introduction">Introduction</a> -
+<a href="#chapter.tutorial">Examples how to Use</a> -
+<a href="#chapter.notions">Used Notions</a> -
+<a href="#chapter.items">Reference Manual</a>
+</p>
+
+<div>
+<h2>Table of Contents</h2>
+</div>
+
+<p>
+<a href="#chapter.introduction">Introduction</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.installation">How to Install</a><br/>
+<a href="#chapter.tutorial">Examples how to Use</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.scratch">Map a Bus Line from Scratch</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.parallel">Reuse a partly parallel line</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.legacy">Reuse an Old Relation</a><br/>
+<a href="#chapter.notions">Used Notions</a><br/>
+<a href="#chapter.items">Reference Manual</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.overview">Tab <em>Overview</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.tags">Tab <em>Tags</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.itinerary">Tab <em>Itinerary</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.stops">Tab <em>Stops</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.meta">Tab <em>Meta</em></a><br/>
+</p>
+
+<!-- ==================================================================== //-->
+
+<div>
+<a id="chapter.introduction"/>
+<h2>Introduction</h2>
+</div>
+
+<p>The JOSM Plugin <em>Public Transport</em> is designed to simplify the mapping and editing of public transport routes according to best practice standards (see <a href="#notion.oxmoa">Oxmoa scheme</a>). After some <a href="#section.installation">installation instructions</a>, we start with a chapter about <a href="#chapter.tutorial">usage examples</a>: In the <a href="#section.scratch">first section</a>, we describe how to create a bus route from scratch. If there exists already one or more lines running partly or completely parallel, you can take advantage of this (see <a href="#section.parallel">second section</a>). Also, you can easily convert routes from older data formats to the Oxmoa scheme (see <a href="#section.legacy">fourth section</a>). The <a href="#chapter.notions">following chapter</a> explains the notions used along the plugin. The <a href="#chapter.items">last chapter</a> contains a reference manual of all items in the plugin.</p>
+
+<p>This manual refers to the prototype version of 2010-02-19. It has successfully been tested with the latest JOSM (version 2940). It does not work with JOSM-tested (version 2561) due to changes to the data model. This is still a beta version, so <strong>don't forget to save your work before and during you use this plugin</strong>. Feel free to make suggestions for simplifications or extra functionality or report bugs to me (mailto:roland.olbricht(at)gmx.de).</p>
+
+
+<div>
+<a id="section.installation"/>
+<h3>How to Install</h3>
+</div>
+
+<p>Open JOSM and select from menu <em>Edit > Preferences</em>, then there <em>Plugins > Download list</em>. Check <em>public_transport</em> in the list. Now restart JOSM.</p>
+
+<!-- ==================================================================== //-->
+
+<div>
+<a id="chapter.tutorial"/>
+<h2>Examples how to Use</h2>
+</div>
+
+<div>
+<a id="section.scratch"/>
+<h3>Map a Bus Line from Scratch</h3>
+</div>
+
+<p>The <a href="#notion.oxmoa">Oxmoa schema</a> consists of a relation per direction and contains the <a href="#notion.itinerary">itinerary</a> (the way a bus actually takes from its starting stop to its terminus) and the <a href="#notion.stop">stops</a> served by the bus. Roughly, you need to enter one direction of the itinerary by hand. The stops and the back direction can mostly be derived from that by the software.</p>
+
+<p>Download the area where your <a href="#notion.bus_route">bus route</a> takes place. Choose the menu item <em>Public Transport > Route patterns</em>. This opens a <a href="#section.overview">window</a> where you can see all <a href="#notion.bus_route">public transport routes</a> existing in the downloaded data set. Create a new relation by clicking on the button <a href="#subsection.overview.new">New</a>. Now change to the tab <a href="#section.tags">Tags</a> and set appropriate values for a least <em>route</em> (the type of public transport), <em>ref</em> (the line number) and <em>to</em> (the destination displayed).</p>
+
+<p>Change to the tab <a href="#section.itinerary">Itinerary</a>. Now select on the map the first way that belongs to your <a href="#notion.bus_route">route</a> and press <a href="#subsection.itinerary.add">Add</a>. Mark the second item and press <a href="#subsection.itinerary.add">Add</a> again. You also can select several ways at once and click <a href="#subsection.itinerary.add">Add</a>. If your ways are added in the wrong order or with wrong roles, <a href="#notion.select">mark</a> them (click the first entry in the window, then shift-click the last entry in the window) and press <a href="#subsection.itinerary.sort">Sort</a>. If there appear one or more lines <em>[gap]</em>, then your ways don't fit together. If <a href="#subsection.itinerary.sort">sorting</a> won't solve that then there are gaps in your <a href="#notion.itinerary">itinerary</a> and you need to add the missing links or split ways (mark the way, the node where to split at and then use menu <em>Tools > Split Way</em>) if your bus service only partly uses them. To help you 
+with the tasks you can:</p>
+
+<ul>
+<li>Highlight the <a href="#notion.way">way</a> in the map corresponding to a <a href="#notion.select">selected</a> <a href="#notion.entry">entry</a> by clicking <a href="#subsection.itinerary.mark">Mark</a>.</li>
+<li>Make visible the <a href="#notion.way">way</a> in the map corresponding to a <a href="#notion.select">selected</a> <a href="#notion.entry">entry</a> by clicking <a href="#subsection.itinerary.show">Show</a>.</li>
+<li>Detect whether there is an <a href="#notion.entry">entry</a> for a given <a href="#notion.way">way</a> in the map: <a href="#notion.select">select</a> the <a href="#notion.way">way</a> on the map and click <a href="#subsection.itinerary.find">Find</a>. Every <a href="#notion.entry">entry</a> in the current <a href="#notion.bus_route">route</a> that refers to that <a href="#notion.way">way</a> is <a href="#notion.select">marked</a>.</li>
+</ul>
+
+<p>There are buttons <a href="#subsection.stops.mark">Mark</a>, <a href="#subsection.stops.show">Show</a> and <a href="#subsection.stops.find">Find</a> with similar functionality in the tab <a href="#section.stops">Stops</a>.</p>
+
+<p>You can delete one or more <a href="#notion.entry">entries</a> from the list by marking them and clicking <a href="#subsection.itinerary.sort">Delete</a>. You can also move one or more entry by marking them, clicking on <a href="#subsection.itinerary.select">Mark</a> (this copies them to the clipboard, like the middle mouse button on X servers), then <a href="#subsection.itinerary.delete">Delete</a>, then mark the first item before which you want to insert the items and click <a href="#subsection.itinerary.add">Add</a>.</p>
+
+<p>Now you can add the <a href="#notion.stop">bus stops</a> in a convenient way: change to the tab <a href="#section.meta">Meta</a> and press <a href="#subsection.meta.suggest">Suggest Stops</a>. This will compile a list of stops that are <a href="#subsection.meta.maxdist">near</a> the itinerary. You can choose up to which <a href="#subsection.meta.maxdist">distance</a> from the itinerary stops should be considered and whether stops only the right hand <a href="#subsection.meta.rightleft">side</a>, only on the left hand <a href="#subsection.meta.rightleft">side</a> or on both <a href="#subsection.meta.rightleft">sides</a> are possible. Now change to the tab <a href="#section.stops">Stops</a>. You can identify the stops by their entries as follows: click <a href="#subsection.stops.mark">Mark</a> and/or <a href="#subsection.stops.sort">Show</a>. Delete spurious entries by marking them and pressing <a href="#subsection.stops.delete">Delete</a>. Add missing stops by <a href="#notion.select">marking</a> them on the map, <a href="#notion.select">marking</a> the <a href="#notion.entry">entry</a> before which you want to insert the stop (<a href="#notion.select">unmark</a> all entries if you want to append stops to the end), then press <a href="#subsection.stops.add">Add</a>.</p>
+
+<p>When you are complete with the forward direction, go back to the tab <a href="#section.overview">Overview</a>. Then click <a href="#subsection.overview.duplicate">Duplicate</a> (this adds a copy of the relation) and click <a href="#subsection.overview.reflect">Reflect</a> (this reflects the copy to become the backward direction). Review the <a href="#notion.itinerary">itinerary</a> in the tab <a href="#section.itinerary">Itinerary</a> and correct oneways passed in the now wrong direction. Then change to the tab <a href="#section.meta">Meta</a> and let you suggest bus stops. Review them. Congratulations, you are done with the entire <a href="#notion.line">bus line</a>.</p>
+
+<div>
+<a id="section.parallel"/>
+<h3>Reuse a partly parallel line</h3>
+</div>
+
+<p>The plugin has an <a href="#notion.clipboard">internal clipboard</a> to simplify copying parts of the <a href="#section.itinerary">itinerary</a> or the <a href="#section.stops">stops</a> from one <a href="#notion.bus_route">bus route</a> to another. Data is put into the clipboard following the <a href="#notion.clipboard">X server paradigm</a>. Mark one or more <a href="#notion.entry">entries</a> from the <a href="#section.itinerary">itinerary list</a> or <a href="#section.stops">stops list</a> and click the respective button <em>Mark</em> (in <a href="#subsection.itinerary.mark">Itinerary</a>, in <a href="#subsection.stops.mark">Stops</a>). The objects themselves are kept by being marked on the map. The plugin additionally saves their order and role. You can paste data from <a href="#notion.clipboard">clipboard</a> by using the respective button <em>Add</em> (in <a href="#subsection.itinerary.add">Itinerary</a>, in <a href="#subsection.stops.add">Stops</a>).</p>
+
+<p>To do this, first choose the source <a href="#notion.bus_route">route</a> at the tab <a href="#section.overview">Overview</a> and then change to the tab <a href="#section.itinerary">Itinerary</a>. Mark there the <a href="#notion.entry">entries</a> you want to copy and click <a href="#subsection.itinerary.mark">Mark</a>. Then choose at the tab <a href="#section.overview">Overview</a> your destination relation and mark in the tab <a href="#section.itinerary">Itinerary</a> the entry <a href="#notion.select">before which</a> you want to paste the entries or unmark all entries if you want to append the data from <a href="#notion.clipboard">clipboard</a>.</p>
+
+<p>Stops can be <a href="#notion.clipboard">copied</a> in the same way: first choose the source relation at the tab <a href="#section.overview">Overview</a> and change to the tab <a href="#section.stops">Stops</a>. Mark there the <a href="#notion.entry">entries</a> you want to <a href="#notion.clipboard">copy</a> and click <a href="#subsection.stops.mark">Mark</a>. Then choose at the tab <a href="#section.overview">Overview</a> your destination relation and mark at the tab <a href="#section.stops">Stops</a> the entry <a href="#notion.select">before which</a> you want to paste the entries or unmark all entries if you want to append the data from <a href="#notion.clipboard">clipboard</a>.</p>
+
+
+<div>
+<a id="section.legacy"/>
+<h3>Reuse an Old Relation</h3>
+</div>
+
+<p>If you have a <a href="#notion.bus_route">bus route</a> in an <a href="#notion.bus_route">old format</a>, you can spread it with the help of the plugin into separate <a href="#notion.relation">relations</a> for both (or more) directions. Go to the tab <a href="#section.overview">Overview</a>, mark the respective relation and click <a href="#subsection.overview.duplicate">Duplicate</a>, then <a href="#subsection.overview.reflect">Reflect</a>. Now you have a relation for each direction. The remaining task is to cleanup the new relations.</p>
+
+<p>First, mark again the first relation. Go to the tab <a href="#section.itinerary">Itinerary</a> and cleanup the <a href="#notion.itinerary">itinerary</a> to contain only the forward direction as described <a href="#section.scratch">above</a>. Now you can use <a href="#subsection.meta.suggest">Suggest Stops</a> from tab <a href="#section.meta">Meta</a> to obtain a good guess for the bus stops. Use the tools in the tab <a href="#section.stops">Stops</a> to cleanup this list.</p>
+
+<p>Now go back to the tab <a href="#section.overview">Overview</a> and select the newly created <a href="#notion.bus_route">route</a>. Proceed with the same steps as for the forward direction. Congratulations, now you have corrected the <a href="#notion.line">bus line</a>.</p>
+
+<!-- ==================================================================== //-->
+
+<div>
+<a id="chapter.notions"/>
+<h2>Used Notions</h2>
+</div>
+
+<p>
+<em>Note</em>: I'm not a native English speaker. Thus, if you have suggestions for better wording, please send them to me (mailto:roland.olbricht(at)gmx.de).
+</p>
+
+<p>
+<a id="notion.clipboard"/>
+<strong>clipboard</strong> - Beside the operating system, the plugin has an internal clipboard that allows to maintain the order and roles of relation members, in particular bus stops and ways belonging to the itinerary. The clipboard is used similar to the X window system cliopboard: there you copy text into the clipboard by marking it with the mouse and paste it by clicking the middle mouse button. We can't assume that every computer has a middle mouse button. Thus, in the plugin you copy data into the internal clipboard by <a href="#notion.select">marking</a> the entries and clicking <em>Mark</em> (in <a href="#subsection.itinerary.mark">Itinerary</a>, in <a href="#subsection.stops.mark">Stops</a>). You paste data by keeping it <a href="#notion.select">marked</a> on the map and clicking <em>Add</em> (in <a href="#subsection.itinerary.add">Itinerary</a>, in <a href="#subsection.stops.add">Stops</a>).
+</p>
+
+<p>
+<a id="notion.entry"/>
+<strong>entry</strong> - An entry in the list of objects that are members of a <a href="#notion.relation">relation</a>. Here, the relations are <a href="#notion.bus_route">public transport routes</a> and members are <a href="#notion.stop">stops or stations</a> or the <a href="#notion.way">ways</a> that constitute the <a href="#notion.itinerary">itinerary</a>. The notion <em>entry</em> is used to discriminate between the relation members (entries) and the objects referred to by the relation members (objects on the map).
+</p>
+
+<p>
+<a id="notion.itinerary"/>
+<strong>itinerary</strong> - The way a bus service actually takes. Note that buses or other vehicles can't make jumps, thus there cannot be gaps in an itinerary. For that reason, a line <em>[gap]</em> is displayed in the <a href="#subsection.itinerary.list"/>itinerary list</a> whenever the first <a href="#notion.node">node</a> of a <a href="#notion.way">way</a> differs from the last <a href="#notion.node">node</a> of the preceeding <a href="#notion.way">way</a>.
+</p>
+
+<p>
+<a id="notion.line"/>
+<strong>(bus) line</strong> - The notion refers usually to all bus or train services that are offered in a certain <a href="#notion.network">network</a> with the same line identifier. The line identifier for a relation is declared by the tag  <em>ref</em>.
+</p>
+
+<p>
+<a id="notion.mark"/>
+<strong>mark</strong> - see <a href="#notion.select">select</a>.
+</p>
+
+<p>
+<a id="notion.network"/>
+<strong>network</strong> - the set of all services that a organised as a whole by some kind of transport authority. Often, the network is the responsible party for ticket fares. It is used to disambiguate different routes with the same line identifier in different regions. In particular, we assume that in every network a <a href="#notion.line">line identifier</a> is unique, i.e. that all relations with the same line identifier constitute a logical unit. The network is declared by the tag <em>network</em>.
+</p>
+
+<p>
+<a id="notion.node"/>
+<strong>node</strong> - The respective OSM primitive. The only objects represented by nodes here are stops and stations. Nodes are visible in the JOSM main window and a list of nodes as members of the <a href="#notion.bus_route">route</a> <a href="#notion.relation">relation</a> constitutes the served <a href="#notion.stop">stops</a> of a <a href="#notion.bus_route">public transport route</a>.
+</p>
+
+<p>
+<a id="notion.oxmoa"/>
+<strong>Oxmoa scheme</strong>
+- see <a href="http://wiki.openstreetmap.org/wiki/User:Oxomoa/Public_transport_schema">http://wiki.openstreetmap.org/wiki/User:Oxomoa/Public_transport_schema</a>.
+This plugin implements a subset of the Oxmoa scheme. We implement in particular here the splitting of <a href="#notion.line">bus lines</a> into <a href="#notion.bus_route">bus routes</a>. This allows to display the correct order of an itinerary and stops even if a section is passed twice or several times. The extra relations per line number on top of the bus route relations aren't implemented yet because there is no known use case for them. Also, the concept <em>stop_position</em> has not been implemented as it causes ambiguities: if it is placed on a non-oneway, the direction of the stop_position is unclear.
+</p>
+
+<p>
+In particular, the data model underlying this plugin is as follows: Every <a href="#notion.stop">bus stop</a> is represented at its road sign by a <a href="#notion.node">node</a> with tag <em>highway=bus_stop</em> which is off the road itself, usually a few meters, depending on the width of the street. Every <a href="#notion.bus_route">bus route</a> (i.e. every service with distinct starting point, ending point or <a href="#notion.itinerary">itinerary</a>) is represented by a relation on its own with tags <em>type=route</em>, <em>route=bus|tram|light_rail|subway|rail</em> and <em>ref</em> set to the line number or <a href="#notion.line">line identifier</a> and <em>network</em> set to the <a href="#notion.network">network</a> the line belongs to. The name tag may be used if the line has a name but it won't appear somewhere. The <a href="#notion.relation">relation</a> contains as members the <a href="#notion.way">ways</a> which constitute the <a href="#notion.itinerary">itinerary</a> the bus actually takes and the <a href="#notion.stop">bus stops</a> in the order they are served. The member role of the <a href="#notion.way">ways</a> is set to either <em>forward</em> or <em>backward</em>, depending on whether the bus passes the street in or against the direction it is drawn in the map.
+</p>
+
+<p>
+<a id="notion.bus_route"/>
+<strong>public transport route</strong> - The pattern of <a href="#notion.itinerary">passed roads</a> and served <a href="#notion.stop">stops</a> by a particular public transport service. A (bus) <a href="#notion.line">line</a> usually consists of two or more (bus) routes but there are exceptions: bus services only operating in one direction or bus services with the same <a href="#notion.line">line number</a> but different branches.
+</p>
+
+<p>
+<a id="notion.relation"/>
+<strong>relation</strong> - The respective OSM primitive. The only objects represented by relations here are the <a href="#notion.bus_route">public transport routes</a>. They are not visible on the JOSM main map but can be edited with this plugin.
+</p>
+
+<p>
+<a id="notion.select"/>
+<strong>select</strong> - Unfortunately, there are different things that can be selected. You can and need to mark objects (<a href="#notion.way">ways</a> and <a href="#notion.node">nodes</a>) on the map in the JOSM main window. Or you can mark <a href="#notion.entry">entries</a> in the list in one of the tabs <a href="#section.overview">Overview</a>, <a href="#section.itinerary">Itinerary</a> or <a href="#section.stops">Stops</a>. The former is usually referred to as <em>select on the map</em>, the latter as <em>select an entry</em>. For the <a href="#notion.entry">entries</a> it is sometimes useful to know that you can mark several entries at once by clicking on the first entry, then <em>shift</em>-clicking on the last entry. You can unmark all <a href="#notion.entry">entries</a> as follows: click an entry (this marks it and unmarks all other entries) then <em>Ctrl</em>-click it again (this unmarks this entry).
+</p>
+
+<p>
+<a id="notion.stop"/>
+<strong>stop</strong> - The location where a bus or train calls. It is represented here by the position of the road sign that indicates the bus stop in the real world. In particular, bus stops are always off the road. This is necessary because buses have doors only on one side. Thus, there are no two-directional bus stops. This is in contrast to railway stations: as trains have usually doors on both sides, a train station can and is often used in both directions.
+</p>
+
+<p>
+<a id="notion.way"/>
+<strong>way</strong> - The respective OSM primitive. It is visible in the JOSM main window and a list of ways constitutes the <a href="#notion.itinerary">itinerary</a> of a <a href="#notion.bus_route">bus route</a>.
+</p>
+
+<!-- ==================================================================== //-->
+
+<div>
+<a id="chapter.items"/>
+<h2>Reference Manual</h2>
+</div>
+
+<div>
+<a id="section.overview"/>
+<h3>Tab <em>Overview</em></h3>
+</div>
+
+<a id="subsection.overview.list"/>
+<h4>List <em>Existing route patterns</em></h4>
+The large list in the center contains all relations that are recognised as <a href="#notion.bus_route">public transport routes</a>. They are listed with the value of their tag <em>ref</em>, the value of their tag <em>to</em> and the ID of their <a href="#notion.relation">relation</a>. A relation is considered as public transport service if it has the tags <em>type=route</em> and <em>route</em> is set to one of the values <em>bus</em>, <em>tram</em>, <em>light_rail</em>, <em>subway</em> or <em>rail</em>.
+
+<a id="subsection.overview.refresh"/>
+<h4>Button <em>Refresh</em></h4>
+This button refreshes the list <em>Existing route patterns</em>.
+
+<a id="subsection.overview.new"/>
+<h4>Button <em>New</em></h4>
+This button generates a new <a href="#notion.bus_route">route pattern</a>.
+
+<a id="subsection.overview.delete"/>
+<h4>Button <em>Delete</em></h4>
+This button deletes the currently marked <a href="#notion.bus_route">route pattern</a>.
+
+<a id="subsection.overview.duplicate"/>
+<h4>Button <em>Duplicate</em></h4>
+This button makes a copy of the currently marked <a href="#notion.bus_route">route pattern</a>.
+
+<a id="subsection.overview.reflect"/>
+<h4>Button <em>Reflect</em></h4>
+This button changes the direction of the <a href="#notion.bus_route">route pattern</a>: the values of the tags <em>to</em> and <em>from</em> are exchanged and the <a href="subsection.itinerary.reflect">itinerary</a> and the <a href="subsection.stops.reflect">list of the stops</a> are reflected.
+
+
+<div>
+<a id="section.tags"/>
+<h3>Tab <em>Tags</em></h3>
+</div>
+
+<a id="subsection.tags.required"/>
+<h4>List <em>Required tags</em></h4>
+The list contains the five tags that every <a href="#notion.bus_route">public transport route</a> must have:
+<ul>
+<li><em>type</em>: Must always have the value <em>route</em>.</li>
+<li><em>route</em>: Designates the kind of vehicle that performs the service. It can be set to one of the values <em>bus</em>, <em>tram</em>, <em>light_rail</em>, <em>subway</em> or <em>rail</em>.</li>
+<li><em>ref</em>: The <a href="#notion.line">line identifier</a> of the route.</li>
+<li><em>to</em>: The destination shown in front of the vehicle and/or at the platform to clarify the direction of the service. It is usually the name of the terminus. Compare the tag <a href="#subsection.tags.common">direction</a>.</li>
+<li><em>network</em>: The <a href="#notion.network">network</a> this route belongs to.</li>
+</ul>
+
+<a id="subsection.tags.common"/>
+<h4>List <em>Common tags</em></h4>
+The list contains further tags which are quite common for <a href="#notion.bus_route">public transport routes</a>:
+<ul>
+<li><em>direction</em>: The destination shown in front of the vehicle and/or at the platform (an alternative for the tag <a href="#subsection.tags.required">to</a>).</li>
+<li><em>from</em>: The origin of this route. Usually the first station.</li>
+<li><em>operator</em>: The company that runs this service.</li>
+<li><em>color</em>: If the <a href="#notion.line">line</a> has a designated color then set this tag to it. It should be either a valid keyword (see <a href="http://www.w3.org/TR/2008/REC-CSS2-20080411/syndata.html#color-units">W3C specification</a>), i.e. <span style="color:aqua;">aqua</span>, <span style="color:black;">black</span>, <span style="color:blue;">blue</span>, <span style="color:fuchsia;">fuchsia</span>, <span style="color:gray;">gray</span>, <span style="color:green;">green</span>, <span style="color:lime;">lime</span>, <span style="color:maroon;">maroon</span>, <span style="color:navy;">navy</span>, <span style="color:olive;">olive</span>, <span style="color:purple;">purple</span>, <span style="color:red;">red</span>, <span style="color:silver;">silver</span>, <span style="color:teal;">teal</span>, <em>white</em> or <span style="color:yellow;">yellow</span>. Or a RGB value, i.e. a # followed by six hexadecimal values.</li>
+<li><em>name</em>: If the <a href="#notion.bus_route">route</a> has a particular name, then add it here. Unlike ref, this is neither displayed anywhere nor needs it to fulfill any uniqueness properties.</li>
+</ul>
+
+<a id="subsection.tags.additional"/>
+<h4>List <em>Additional tags</em></h4>
+Additional tags can be added here. These tags might be of use for specific software or describe special local features but aren't part of the <a href="#notion.oxmoa">standard data format</a>. If you leave a key empty or delete the key, the respective key will be removed from the <a href="#notion.relation">relation</a>.
+
+<a id="subsection.tags.add"/>
+<h4>Button <em>Add a new Tag</em></h4>
+This adds an empty line to the <a href="#subsection.tags.additional">additional tags list</a>. 
+
+<div>
+<a id="section.itinerary"/>
+<h3>Tab <em>Itinerary</em></h3>
+</div>
+
+<a id="subsection.itinerary.list"/>
+<h4>List of member ways</h4>
+This list contains all the current members of the relation you are editing that are ways. The intended format of a route relation (see Oxmoa scheme at USED NOTIONS above) expects a continuous list of ways that represents the itinerary the bus takes in reality. Whenever two ways don't fit head on tail, a marker "[gap]" is put between them in an extra line to make breaks clearly visible. This is not a member of the relation but just a marker. You can change the role of a way in the right column. To achieve maximum backward compatibility, you should choose "forward" or "backward". To properly display relations that don't follow the Oxmoa scheme, all other roles including the empty are also displayed and you can choose despite "forward" and "backward" also an empty role.
+
+<a id="subsection.itinerary.find"/>
+<h4>Button <em>Find</em></h4>
+
+<a id="subsection.itinerary.show"/>
+<h4>Button <em>Show</em></h4>
+This button changes the view on the map such that all nodes belonging to a marked entries become visible. If no entry is marked, then the view will show all nodes belonging to an entry.
+
+<a id="subsection.itinerary.mark"/>
+<h4>Button <em>Mark</em></h4>
+This button marks all entries that are marked in the list as objects on the map and unmarks all other ways. It also copies a list of the marked entries to the plugin's internal clipboard, such that roles and the order can be reconstructed.  If no entry is marked, then all items belonging to an entry are marked and copied to the clipboard.
+
+<a id="subsection.itinerary.add"/>
+<h4>Button <em>Add</em></h4>
+This button adds all ways that are currently marked on the map as entries in the list. The entries are added in arbitrary order before the first marked entry.  If no entry is marked, then the new entries will be appended. You can order the just added elements by marking them and clicking "Sort".
+
+<a id="subsection.itinerary.delete"/>
+<h4>Button <em>Delete</em></h4>
+This button deletes all currently marked entries.
+
+<a id="subsection.itinerary.sort"/>
+<h4>Button <em>Sort</em></h4>
+If one or more entries are marked, all marked entries are sorted. I.e. their order and role is changed such that they form a continuous itinerary. If this is not possible, the plugin tries to construct long series of continuous sections. If no entries are marked, the entire list is sorted.
+
+<a id="subsection.itinerary.reflect"/>
+<h4>Button <em></em>Reflect</h4>
+If one or more entries are marked, their order is reflected and their roles get flipped. I.e. every entry it put after its successor and its role is changed from "backward" to "forward", from "forward" to "backward" or left unchanged if it is empty. If no entry is marked, then the entire list will be reflected.
+
+
+<div>
+<a id="section.stops"/>
+<h3>Tab <em>Stops</em></h3>
+</div>
+
+<a id="subsection.stops.list"/>
+<h4>List of member nodes</h4>
+This list contains all the current members of the relation you are editing that are nodes. The intended format of a route relation (see Oxmoa scheme at USED NOTIONS above) expects a list of nodes that represents the stops in the order the bus takes them in reality. The roles can be changed to "forward" or "backward" but due to Oxmoa scheme, they should remain empty.
+
+<a id="subsection.stops.find"/>
+<h4>Button <em>Find</em></h4>
+
+<a id="subsection.stops.show"/>
+<h4>Button <em>Show</em></h4>
+This button changes the view on the map such that all nodes belonging to a marked entries become visible. If no entry is marked, then the view will show all nodes belonging to an entry.
+
+<a id="subsection.stops.mark"/>
+<h4>Button <em>Mark</em></h4>
+This button marks all entries that are marked in the list as objects on the map and unmarks all other nodes. It also copies a list of the marked entries to the plugin's internal clipboard, such that roles and the order can be reconstructed.  If no entry is marked, then all items belonging to an entry are marked and copied to the clipboard.
+
+<a id="subsection.stops.add"/>
+<h4>Button <em>Add</em></h4>
+This button adds all ways that are currently marked on the map as entries in the list. The entries are added in arbitrary order before the first marked entry. You can order the just added elements by marking them and clicking "Sort".
+
+<a id="subsection.stops.delete"/>
+<h4>Button <em>Delete</em></h4>
+This button deletes all currently marked entries.
+
+<a id="subsection.stops.sort"/>
+<h4>Button <em>Sort</em></h4>
+If one or more entries are marked, all marked entries are sorted. The sorting order depends on the itinerary and the settings for the distance limit, the right hand side and the left hand side in the meta "tab": the sorting algorithm attaches each stop to the nearest segment of the itinerary and then orders them in the order they are passed on the itinerary. Then all stops that can't be attached are added to the end of the list. If no entzry is marked, all entries are sorted.
+
+<a id="subsection.stops.reflect"/>
+<h4>Button <em>Reflect</em></h4>
+If one or more entries are marked, their order is reflected. I.e. every entry it put after its successor.
+
+<div>
+<a id="section.meta"/>
+<h3>Tab <em>Meta</em></h3>
+</div>
+
+<a id="subsection.meta.rightleft"/>
+<h4>Check box <em>Stops are possible</em></h4>
+This check box controls the behaviour of the button "Suggest stops" and the button "Sort" in the tab "Stops". If you mark only one of the boxes "Right hand side" or "Left hand side", only stops on the respective side are taken into account. If you mark both boxes, stops on both sides are taken into account.
+
+<a id="subsection.meta.maxdist"/>
+<h4>Text field <em>Maximum distance from route</em></h4>
+This text field also controls the behaviour of the button "Suggest stops" and the button "Sort" in the tab "Stops". Only stops that have a distance less or equal the limit set here are taken into account.
+
+<a id="subsection.meta.suggest"/>
+<h4>Button <em>Suggest Stops</em></h4>
+This button replaces the current list of stops by a list of all stops that are on the itinerary with regard to the setting of the check boxes and the text field described above.
+
+</body>
+</html>

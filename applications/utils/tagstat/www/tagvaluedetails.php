@@ -51,7 +51,7 @@
 	if($dir == "ASC") {
 		echo "<TH>suggestion</TH>";
 	}
-	echo "<TH>link</TH>\n";
+	echo "<TH>links</TH>\n";
 	echo "</TR>\n";
 	$i = 1;
 	while ($row =& $result->fetchRow()) {
@@ -76,8 +76,8 @@
 				echo "<TD>&nbsp;</TD>";
 			}
 		}
-		echo "<TD><A href=\"http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\">xapi</A></TD>\n";
-		echo "</TR>\n";
+		echo "<TD><A href=\"http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\">xapi</A>\n";
+		echo "<A href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\" target=\"hiddenIframe\">		echo "</TR>\n";
 		$i++;
 	}
 	echo "</TABLE>\n";
@@ -117,5 +117,6 @@
 	echo "<BR><BR>\n";
 	echo "<A href=\"index.php\">Back to index page</A>\n";
 ?>
+  <iframe style="display:none" id="hiddenIframe" name="hiddenIframe"></iframe>
  </BODY>
 </HTML>

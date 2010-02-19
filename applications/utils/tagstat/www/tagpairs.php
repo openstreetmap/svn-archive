@@ -40,7 +40,7 @@
 	echo "<TH><A href=\"tagpairs.php?limit=$limit&skip=$skip&dir={$dirA["node"]}&order=node\">node</A></TH>";
 	echo "<TH><A href=\"tagpairs.php?limit=$limit&skip=$skip&dir={$dirA["way"]}&order=way\">way</A></TH>";
 	echo "<TH><A href=\"tagpairs.php?limit=$limit&skip=$skip&dir={$dirA["relation"]}&order=relation\">relation</A></TH>";
-	echo "<TH>link</TH>\n";
+	echo "<TH>links</TH>\n";
 	echo "</TR>\n";
 	$i = 1;
 	while ($row =& $result->fetchRow()) {
@@ -49,7 +49,7 @@
 		} else {
 			$style="even";
 		}
-		printf('<TR class="%1$s"><TD><A href="tagdetails.php?tag=%2$s">%3$s</A></TD><TD>%4$s</TD><TD class="count">%5$s</TD><TD class="count">%6$s</TD><TD class="count">%7$s</TD><TD class="count">%8$s</TD><TD><A href="http://www.informationfreeway.org/api/0.6/*[%2$s=%9$s]">xapi</A></TD></TR>', $style, $row[0], displayTag($row[0]), displayTag($row[1]), displayNum($row[2]), displayNum($row[3]), displayNum($row[4]), displayNum($row[5]), $row[1]);
+		printf('<TR class="%1$s"><TD><A href="tagdetails.php?tag=%2$s">%3$s</A></TD><TD>%4$s</TD><TD class="count">%5$s</TD><TD class="count">%6$s</TD><TD class="count">%7$s</TD><TD class="count">%8$s</TD><TD><A href="http://www.informationfreeway.org/api/0.6/*[%2$s=%9$s]">xapi</A> <A href="http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/*[%2$s=%9$s]">josm</A></TD></TR>', $style, $row[0], displayTag($row[0]), displayTag($row[1]), displayNum($row[2]), displayNum($row[3]), displayNum($row[4]), displayNum($row[5]), $row[1]);
 		echo "\n";
 		$i++;
 	}
@@ -66,5 +66,6 @@
 	echo "<A href=\"tagpairs.php?limit=$limit&skip=$skip&dir=$invdir&order=$order\">".getPopWord($invdir)."tag / value combinations</A>\n";
 	echo "<A href=\"index.php\">Back to index page</A>\n";
 ?>
+  <iframe style="display:none" id="hiddenIframe" name="hiddenIframe"></iframe>
  </BODY>
 </HTML>

@@ -122,7 +122,7 @@ void StartElement(xmlTextReaderPtr reader, const xmlChar *name)
         assert(xid);
 
         int id = strtol((char *)xid, NULL, 10);
-        if( id > 0 && nd_count < MAX_NODES_PER_WAY)
+        if( id > 0 && nd_count <= MAX_NODES_PER_WAY)
             nds[nd_count] = id;
         nd_count++;
         xmlFree(xid);
@@ -158,9 +158,9 @@ void EndElement(const xmlChar *name)
                 printf( "<node id=\"%d\" lat=\"%f\" lon=\"%f\" />\n", osm_id, node_lat, node_lon );
         }
     } else if (xmlStrEqual(name, BAD_CAST "way")) {
-        if( nd_count >= MAX_NODES_PER_WAY )
+        if( nd_count > MAX_NODES_PER_WAY )
         {
-            fprintf(stderr, "Exceeded maximum node count (%d >= %d) way=%d\n", nd_count, MAX_NODES_PER_WAY, osm_id );
+            fprintf(stderr, "Exceeded maximum node count (%d > %d) way=%d\n", nd_count, MAX_NODES_PER_WAY, osm_id );
         }
 
         if( pass == 0 && wanted )
@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
 
     LIBXML_TEST_VERSION
 
-    nds = malloc( sizeof(nds[0]) * MAX_NODES_PER_WAY );
+    nds = malloc( sizeof(nds[0]) * (MAX_NODES_PER_WAY + 1) );
     bitmap = calloc( MAX_NODE_ID /8 + 1, 1 );
     
     count_node = max_node = 0;

@@ -78,7 +78,7 @@ use OSM::osm ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.09' ;
+$VERSION = '0.10' ;
 
 require Exporter ;
 
@@ -208,12 +208,17 @@ sub gridSquare {
 
 sub drawIcon {
 #
-# draws icon por poi at given location. file must be png, or other supported format
+# draws icon for poi at given location. file must be png, or other supported format
 #
-	my ($lon, $lat, $icon, $size, , $declutter, $maxSize) = @_ ;
+	my ($lon, $lat, $icon, $sizeX, $sizeY, $declutter, $maxSize, $offset) = @_ ;
 	my ($x, $y) = convert ($lon, $lat) ;
-	$x -= $size/2 ;
-	$y -= $size/2 ;
+	# print "    $lon, $lat, $x, $y, $offset\n" ;
+	my $sizeX1 = $sizeX ; if ($sizeX1 == 0) { $sizeX1 = 20 ; }
+	my $sizeY1 = $sizeY ; if ($sizeY1 == 0) { $sizeY1 = 20 ; }
+	$x = $x - $sizeX1/2 ;
+	$y = $y - $sizeY1/2 ; $y = $y - $offset ;
+
+	# print "    $lon, $lat, $x, $y, $offset\n" ;
 
 	# check for clutter condition
 	my $cluttered = 0 ;
@@ -235,7 +240,8 @@ sub drawIcon {
 	}
 
 	if (!$cluttered) {
-		push @svgOutputIcons, svgElementIcon ($x, $y, $icon, $size) ;
+		push @svgOutputIcons, svgElementIcon ($x, $y, $icon, $sizeX, $sizeY) ;
+		# print "      " . svgElementIcon ($x, $y, $icon, $sizeX, $sizeY) . "\n" ;
 		$clutterIcon{$x}{$y} = 1 ;
 	}
 	else {
@@ -247,11 +253,11 @@ sub svgElementIcon {
 #
 # create SVG text for icons
 #
-	my ($x, $y, $icon, $size) = @_ ;
+	my ($x, $y, $icon, $sizeX, $sizeY) = @_ ;
 	my ($out) = "<image x=\"" . $x . "\"" ;
 	$out .= " y=\"" . $y . "\"" ;
-	$out .= " width=\"" . $size . "\"" ;
-	$out .= " height=\"" . $size . "\"" ;
+	if ($sizeX > 0) { $out .= " width=\"" . $sizeX . "\"" ; }
+	if ($sizeY > 0) { $out .= " height=\"" . $sizeY . "\"" ; }
 	$out .= " xlink:href=\"" . $icon . "\" />" ;
 
 	return ($out) ;	

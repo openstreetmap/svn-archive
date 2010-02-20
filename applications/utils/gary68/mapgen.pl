@@ -49,10 +49,14 @@
 #      display routes
 #      automatic label fit for labels on roads; [-ppc] replaces [-minlen]
 #      stops for routes
+# 0.10 icons for routes (routeicons dir)
+#      [-routeicondist]
+#      [-poi]
 #
 
 
 # TODO
+# wild cards for rules (rule check function)
 # icons for areas
 # module for style file reading and error handling
 # wildcard for value
@@ -75,11 +79,11 @@ use warnings ;
 
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.09 ;
+use OSM::mapgen 0.10 ;
 use Math::Polygon ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.09" ;
+my $version = "0.10" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -106,12 +110,15 @@ perl mapgen.pl
 -coordsexp=INTEGER (degrees to the power of ten for grid distance; DEFAULT=-2 equals 0.01 degrees)
 -coordscolor=TEXT (set color of coordinates grid)
 -dir (create street directory in separate file. if grid is enabled, grid squares will be added)
+-poi (create list of pois)
 -tagstat (lists keys and values used in osm file; program filters list to keep them short!!! see code array noListTags)
 
 -routelabelcolor=TEXT (color for labels of routes)
 -routelabelsize=INTEGER (DEFAULT=8)
 -routelabelfont=TEXT (DEFAULT=sans-serif)
 -routelabeloffset=INTEGER (DEFAULT=10)
+-icondir=TEXT (dir for icons for routes; ./icondir/ i.e.; DEFAULT=./routeicons/ )
+-routeicondist=INTEGER (dist in y direction for route icons on same route; DEFAULT=25)
 
 -legend=INT (0=no legend; 1=legend; DEFAULT=1)
 -ruler=INT (0=no ruler; 1=draw ruler; DEFAULT=1)
@@ -147,6 +154,7 @@ my $svgName = "mapgen.svg" ;
 my $pdfOpt = 0 ;
 my $pngOpt = 0 ;
 my $dirOpt = 0 ;
+my $poiOpt = 0 ;
 my $ppc = 5.5 ; 
 my $place = "" ;
 my $lonrad = 2 ;
@@ -169,6 +177,8 @@ my $routeLabelColor = "black" ;
 my $routeLabelSize = 8 ;
 my $routeLabelFont = "sans-serif" ;
 my $routeLabelOffset = 10 ;
+my $iconDir = "./routeicons/" ;
+my $routeIconDist = 25 ;
 
 # keys from tags listes here will not be shown in tag stat
 my @noListTags = sort qw (name width url source ref note phone operator opening_hours maxspeed maxheight maxweight layer is_in TODO addr:city addr:housenumber addr:country addr:housename addr:interpolation addr:postcode addr:street created_by description ele fixme FIXME website bridge tunnel time openGeoDB:auto_update  openGeoDB:community_identification_number openGeoDB:is_in openGeoDB:is_in_loc_id openGeoDB:layer openGeoDB:license_plate_code openGeoDB:loc_id openGeoDB:location openGeoDB:name openGeoDB:population openGeoDB:postal_codes openGeoDB:sort_name openGeoDB:telephone_area_code openGeoDB:type openGeoDB:version opengeodb:lat opengeodb:lon int_ref population postal_code wikipedia) ;
@@ -243,6 +253,7 @@ my %memWayPaths = () ;
 # my %usedTags = () ; # for stats
 my %wayUsed = () ; # used in multipolygon? then dont use again 
 my %directory = () ; # street list
+my %poiHash = () ;
 
 my %lon ; my %lat ;
 
@@ -270,7 +281,8 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"ppc:f"		=> \$ppc,		# pixels needed per label char in font size 10
 				"pdf"		=> \$pdfOpt,		# specifies if pdf will be created
 				"png"		=> \$pngOpt,		# specifies if png will be created
-				"dir"		=> \$dirOpt,		# specifies if directory will be created
+				"dir"		=> \$dirOpt,		# specifies if directory of streets will be created
+				"poi"		=> \$poiOpt,		# specifies if directory of pois will be created
 				"tagstat"	=> \$tagStatOpt,	# lists k/v used in osm file
 				"declutter"	=> \$declutterOpt,
 				"declutterminx"	=> \$declutterMinX,
@@ -289,6 +301,8 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"routelabelsize:i"	=> \$routeLabelSize,		
 				"routelabelfont:s"	=> \$routeLabelFont,		
 				"routelabeloffset:i"	=> \$routeLabelOffset,		
+				"routeicondist:i"	=> \$routeIconDist,
+				"icondir:s"		=> \$iconDir,
 				"multionly"	=> \$multiOnly,		# draw only areas from multipolygons
 				"verbose" 	=> \$verbose) ;		# turns twitter on
 
@@ -334,6 +348,7 @@ print "coordsExp   = $coordsExp\n" ;
 print "coordsColor = $coordsColor\n\n" ;
 
 print "dir       = $dirOpt\n" ;
+print "poiOpt    = $poiOpt\n" ;
 print "ppc       = $ppc (pixels needed per charcter font size 10)\n" ;
 print "declutter = $declutterOpt\n" ;
 print "declutterX= $declutterMinX\n" ;
@@ -343,10 +358,12 @@ print "place     = $place\n" ;
 print "lonrad    = $lonrad (km)\n" ;
 print "latrad    = $latrad (km)\n\n" ;
 
-print "routeLabelColor = $routeLabelColor \n" ; 
-print "routeLabelSize = $routeLabelSize \n" ; 
-print "routeLabelFont = $routeLabelFont \n" ; 
-print "routeLabelOffset = $routeLabelOffset\n\n" ; 
+print "routeLabelColor  = $routeLabelColor \n" ; 
+print "routeLabelSize   = $routeLabelSize \n" ; 
+print "routeLabelFont   = $routeLabelFont \n" ; 
+print "routeLabelOffset = $routeLabelOffset\n" ; 
+print "iconDir          = $iconDir\n" ; 
+print "routeIconDist    = $routeIconDist\n\n" ; 
 
 print "pdf       = $pdfOpt\n" ;
 print "png       = $pngOpt\n\n" ;
@@ -628,11 +645,21 @@ foreach my $nodeId (keys %memNodeTags) {
 	foreach my $tag (@{$memNodeTags{$nodeId}} ) {
 		foreach my $test (@nodes) {
 			if ( ($tag->[0] eq $test->[$nodeIndexTag]) and ($tag->[1] eq $test->[$nodeIndexValue]) ) {
+				
+				$dirName = getValue ("name", \@{$memNodeTags{$nodeId}}) ;
+
+				if ( ($poiOpt eq "1") and ($dirName ne "") ){
+					if ($grid > 0) {
+						$poiHash{$dirName}{gridSquare($lon{$nodeId}, $lat{$nodeId}, $grid)} = 1 ;
+					}
+					else {
+						$poiHash{$dirName} = 1 ;
+					}				}
 				if ($test->[$nodeIndexThickness] > 0) {
 					drawNodeDot ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexColor], $test->[$nodeIndexThickness]) ;
 				}
 				if ($test->[$nodeIndexIcon] ne "none") {
-					drawIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $declutterOpt, $iconMax) ;
+					drawIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $declutterOpt, $iconMax, 0) ;
 				}
 
 				if ($test->[$nodeIndexLabel] ne "none") {
@@ -793,7 +820,7 @@ if ($pngOpt eq "1") {
 if ($dirOpt eq "1") {
 	my $dirFile ;
 	my $dirName = $svgName ;
-	$dirName =~ s/\.svg/\.txt/ ;
+	$dirName =~ s/\.svg/\_streets.txt/ ;
 	print "creating dir file $dirName ...\n" ;
 	open ($dirFile, ">", $dirName) or die ("can't open dir file\n") ;
 	if ($grid eq "0") {
@@ -811,6 +838,29 @@ if ($dirOpt eq "1") {
 		}
 	}
 	close ($dirFile) ;
+}
+
+if ($poiOpt eq "1") {
+	my $poiFile ;
+	my $poiName = $svgName ;
+	$poiName =~ s/\.svg/\_pois.txt/ ;
+	print "creating poi file $poiName ...\n" ;
+	open ($poiFile, ">", $poiName) or die ("can't open poi file\n") ;
+	if ($grid eq "0") {
+		foreach my $poi (sort keys %poiHash) {
+			print $poiFile "$poi\n" ;
+		}
+	}
+	else {
+		foreach my $poi (sort keys %poiHash) {
+			print $poiFile "$poi\t" ;
+			foreach my $square (sort keys %{$poiHash{$poi}}) {
+				print $poiFile "$square " ;
+			}
+			print $poiFile "\n" ;
+		}
+	}
+	close ($poiFile) ;
 }
 
 if ($tagStatOpt eq "1") {
@@ -1317,6 +1367,7 @@ sub isIn {
 	my %actualColorIndex = () ;
 	my %colorNumber = () ;
 	my %wayRouteLabels = () ;
+	my %wayRouteIcons = () ;
 
 	# init before relation processing
 	print "initializing route data...\n" ;
@@ -1344,6 +1395,9 @@ sub isIn {
 					if ($verbose eq "1" ) { print "rule found for $relId, $routeType.\n" ;	}
 	
 					my $color = getValue ("color", \@{$memRelationTags{$relId}}) ;
+					if ($color eq "") {
+						$color = getValue ("colour", \@{$memRelationTags{$relId}}) ;
+					}
 					if ($verbose eq "1" ) { print "  color from tags: $color\n" ;	}
 
 					if ($color eq "") { 
@@ -1353,8 +1407,34 @@ sub isIn {
 					}
 					if ($verbose eq "1" ) { print "  final color: $color\n" ; }
 
+
+					# find icon
+					my $iconName = getValue ("ref", \@{$memRelationTags{$relId}}) ;
+					if ($iconName eq "") {
+						getValue ("name", \@{$memRelationTags{$relId}})
+					}
+
+					$iconName = $iconDir . $routeType . "-" . $iconName . ".svg" ;
+					my $iconResult = open (my $file, "<", $iconName) ;
+					# print "  trying $iconName\n" ;
+					if ($iconResult) { 
+						if ($verbose eq "1") { print "  icon $iconName found!\n" ; }
+					} 
+
+					if (!$iconResult) {
+						$iconName =~ s/.svg/.png/ ; 
+						# print "  trying $iconName\n" ;
+						$iconResult = open (my $file, "<", $iconName) ;
+						if ($iconResult) { 
+							if ($verbose eq "1") { print "  icon $iconName found!\n" ; }
+						} 
+					}
+
 					my ($label, $ref) = createLabel (\@{$memRelationTags{$relId}}, $test->[$routeIndexLabel]) ;
 					if ($verbose eq "1" ) { print "  label: $label\n" ; }
+
+					my $printIcon = "" ; if ($iconResult) { $printIcon=$iconName ; }
+					printf "ROUTE %10s %10s %10s %30s %40s\n", $relId, $routeType, $color, $label, $printIcon ; 
 
 					# collect ways
 
@@ -1386,6 +1466,9 @@ sub isIn {
 						drawWayRoute ($color, $test->[$routeIndexThickness], $test->[$routeIndexDash], $test->[$routeIndexOpacity], nodes2Coordinates (@{$memWayNodes{$w}} ) ) ;
 						# $wayRouteLabels{$w} .= $label . " " ;
 						$wayRouteLabels{$w}{$label} = 1 ;
+						if ($iconResult) {						
+							$wayRouteIcons{$w}{$iconName} = 1 ;
+						}
 					}
 				} # rule found
 			} # test rules
@@ -1394,19 +1477,14 @@ sub isIn {
 	}
 
 	# label route ways after all relations have been processed
-
-	print "label...\n" ;
 	foreach my $w (keys %wayRouteLabels) {
 		if (scalar @{$memWayNodes{$w}} > 1) {
-			# print "\nway: $w\n" ;
 			my $label = "" ;
 			foreach my $l (keys %{$wayRouteLabels{$w}}) {
 				$label .= $l . " " ;
 			} 
-			# print "label created.\n" ;
 
 			my @way = @{$memWayNodes{$w}} ;
-			# print "nodes @way\n" ;
 			if ($lon{$way[0]} > $lon{$way[-1]}) {
 				@way = reverse (@way) ;
 			}
@@ -1416,6 +1494,23 @@ sub isIn {
 			}
 		}
 	}
+
+	foreach my $w (keys %wayRouteIcons) {
+		my $offset = 0 ;
+		my $nodeNumber = scalar @{$memWayNodes{$w}} ;
+		if ($nodeNumber > 1) {
+			my $node = $memWayNodes{$w}[int ($nodeNumber/2)] ;
+			my $num = scalar (keys %{$wayRouteIcons{$w}}) ;
+			$offset = int (-($num-1)*$routeIconDist/2) ; 
+
+			foreach my $iconName (keys %{$wayRouteIcons{$w}}) {
+				# print "  $w $offset ICON $iconName drawn\n" ;
+				drawIcon ($lon{$node}, $lat{$node}, $iconName, 0, 0, $declutterOpt, $routeIconDist-2, $offset) ;
+				$offset += $routeIconDist ;
+			}
+		}
+	}
+
 }
 
 sub getAllMembers {

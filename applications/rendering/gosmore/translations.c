@@ -28,7 +28,7 @@
  "Koordinaten anzeigen",
  "Spur anzeigen",
 // "Freie Dialoge", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -38,6 +38,11 @@
  "Vergrößern Taste",
  "Verkleinern Taste",
  "Menü Taste",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -69,7 +74,7 @@
  "Mostrar coordenadas",
  "Mostrar trazo",
 // "Diálogos Modeless", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -79,6 +84,11 @@
  "Tecla para acercar",
  "Tecla para alejar",
  "Tecla de menú",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "Mostrar nodos activos",
  "SearchSpacing",
 },
@@ -110,7 +120,7 @@
  "Voir les coordonnées",
  "Afficher le trace GPS",
 // "Modeless Dialogs", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -120,6 +130,11 @@
  "Bouton zoom avant",
  "Bouton zoom arrière",
  "Panneau de configuration",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -151,7 +166,7 @@
  "Mostra Coordinate",
  "Mostra Traccia",
 // "Finestre non modali", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -161,6 +176,11 @@
  "Tasto Zoom +",
  "Tasto Zoom -",
  "Tasto Menu",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -192,7 +212,7 @@
  "Coördinaten tonen",
  "Trace tonen",
 // "Prominente Dialoogschermen", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -202,6 +222,11 @@
  "Inzoomtoets",
  "Uitzoomtoets",
  "Menutoets",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -233,7 +258,7 @@
  "Prikaži koordinate",
  "Prikaži sled",
 // "Modeless Dialogs", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -243,6 +268,11 @@
  "Tipka za povečavo",
  "Tipka za pomanjšavo",
  "Tipka za meni",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -274,7 +304,7 @@
  "Ver as coordenadas",
  "Mostrar o traçado GPS",
 // "Modeless Dialogs", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -284,6 +314,11 @@
  "Botão zoom +",
  "Botão zoom -",
  "Painel de configuração",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -315,7 +350,7 @@
  "Arată Coordonatele",
  "Arată Drum Înregistrat",
 // "Opţiuni Generale", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -325,6 +360,11 @@
  "Tasta Zoom In",
  "Tasta Zoom Out",
  "Tasta Meniu",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -340,7 +380,7 @@
  "Начало пути",
  "Конец пути",
  "Ориентировать на север",
- "Load GPX",
+ "Загрузить GPX",
  "Самый быстрый маршрут",
  "Транспортное средство",
  "Язык",
@@ -351,21 +391,26 @@
  "Выход",
  "Отключить дисплей",
  "Полноэкранный режим",
- "Show Compass",
- "Background",
+ "Показать компас",
+ "Фон",
  "Показать координаты",
  "Показать трассу",
 // "Немодальные диалоги", // No longer used 
- "HideZoomButtons",
- "View in osm.org",
- "Edit in Potlatch",
- "View in Google Maps",
- "Update Map",
+ "Расположение",
+ "Просмотреть на osm.org",
+ "Правиь в Potlatch",
+ "Просмотреть на Google Maps",
+ "Обновить карту",
  "COM порт",
  "Скорость порта",
  "Приблизить",
  "Отдалить",
  "Кнопка меню",
+ "Клавиатура", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -397,18 +442,23 @@
  "Koordináták megjelenítése",
  "Nyomvonal megjelenítése",
 // "Szabad párbeszédablakok", // No longer used 
- "HideZoomButtons",
- "View in osm.org",
- "Edit in Potlatch",
- "View in Google Maps",
- "Update Map",
+ "Elrendezés",
+ "Megtekintés az osm.org-on",
+ "Szerkeszés Potlatch-ban",
+ "Megtekintés a Google Mapsen",
+ "Térekép frissítése",
  "Comm Port",
  "Baud Rate",
  "Nagyítás gomb",
  "Kicsinyítés gomb",
  "Menü gomb",
+ "Billentyűzet", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "Aktív pontok megjelenítése",
- "Elhelyezkedés keresése",
+ "Keresés térköz",
 },
 /*
 </pre>
@@ -438,7 +488,7 @@
  "Mostra les coordenades",
  "Mostra la traça",
 // "Diàlegs no modals", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -448,6 +498,11 @@
  "Apropa",
  "Allunya",
  "Menú",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -479,7 +534,7 @@
  "Näytä koordinaatit",
  "Näytä jälki",
 // "Modeless Dialogs", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -489,6 +544,11 @@
  "Zoom In Key",
  "Zoom Out Key",
  "Menu Key",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },
@@ -520,7 +580,7 @@
  "Show Coordinates",
  "Show Trace",
 // "Modeless Dialogs", // No longer used 
- "HideZoomButtons",
+ "Layout",
  "View in osm.org",
  "Edit in Potlatch",
  "View in Google Maps",
@@ -530,6 +590,11 @@
  "Zoom In Key",
  "Zoom Out Key",
  "Menu Key",
+ "Keyboard", // If 1 then use WinCE keyboard
+ "Future1", // Don't translate (yet)
+ "Future2", // Don't translate (yet)
+ "Future3", // Don't translate (yet)
+ "Future4", // Don't translate (yet)
  "ShowActiveNodes",
  "SearchSpacing",
 },

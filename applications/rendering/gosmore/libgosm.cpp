@@ -606,11 +606,11 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
           StyleNr (Way (nd)) <= barrier_toll_booth &&
           !(Way (nd)->bits & (1 << Vehicle))) break;
       lmask <<= 2;
-      if (root->remain > 2500000 && -root->heapIdx - root->remain > 2500000 &&
+    /*  if (root->remain > 2500000 && -root->heapIdx - root->remain > 2500000 &&
           (StyleNr (Way (nd)) == highway_residential ||
            StyleNr (Way (nd)) == highway_service ||
            StyleNr (Way (nd)) == highway_living_street ||
-           StyleNr (Way (nd)) == highway_unclassified)) continue;
+           StyleNr (Way (nd)) == highway_unclassified)) continue;*/
       /* When more than 250km from the start and the finish, ignore minor
          roads. This reduces the number of calculations. */
       for (int dir = 0; dir < 2; dir++) {

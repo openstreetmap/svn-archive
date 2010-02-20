@@ -93,6 +93,10 @@ using namespace std;
   o (ZoomOutKey,      0, 3) \
   o (MenuKey,         0, 3) \
   o (Keyboard,        0, 2) \
+  o (Future1,         0, 1) \
+  o (Future2,         0, 1) \
+  o (Future3,         0, 1) \
+  o (Future4,         0, 1) \
   o (ShowActiveRouteNodes, 0, 2) \
   o (SearchSpacing,   32, 1) \
 
@@ -682,7 +686,17 @@ void DoFollowThing (gpsNewStruct *gps)
   __int64 dlon = clon - flon, dlat = clat - flat;
   flon = clon;
   flat = clat;
-  if (route) Route (FALSE, dlon, dlat, Vehicle, FastestRoute);
+  if (route) {
+    Route (FALSE, dlon, dlat, Vehicle, FastestRoute);
+/*    #ifdef _WIN32_WCE
+    MSG msg;
+    while (!PeekMessage (&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_PEEK) &&
+           !PeekMessage (&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_PEEK) &&
+           GosmRoute) {}
+    #else
+    while (GosmRoute ()) {}
+    #endif*/
+  }
 
   static ndType *decide[3] = { NULL, NULL, NULL }, *oldDecide = NULL;
   decide[0] = NULL;
@@ -2305,7 +2319,7 @@ gint DrawExpose (void)
         style[firstElemStyle + wayPointIconNum].x);
     }
     
-    for (int i = 1; ShowActiveRouteNodes && i < routeHeapSize; i++) {
+    for (int i = 1; shortest && ShowActiveRouteNodes && i < routeHeapSize; i++) {
       gdk_draw_line (draw->window, mygc,
         X (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat) - 2,
         Y (routeHeap[i].r->nd->lon, routeHeap[i].r->nd->lat),

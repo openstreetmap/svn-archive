@@ -255,6 +255,34 @@ The colours can only be in hex
      </rule>
 
     <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="Future1" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="Future2" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="Future3" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
+       <condition k="gosmore" v="Future4" />
+       <icon annotate="true" src="misc/deprecated.png" />
+       <scale_min>1</scale_min> <!-- N/A -->
+       <scale_max>4</scale_max> <!-- N/A -->
+     </rule>
+
+    <rule> <!-- Not valid OSM-XML, but used inside gosmore -->
        <condition k="gosmore" v="ShowActiveRouteNodes" />
        <icon annotate="true" src="misc/deprecated.png" />
        <scale_min>1</scale_min> <!-- N/A -->

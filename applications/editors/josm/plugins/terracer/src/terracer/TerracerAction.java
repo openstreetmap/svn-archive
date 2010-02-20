@@ -190,10 +190,8 @@ public final class TerracerAction extends JosmAction {
 
         // create intermediate nodes by interpolating.
         for (int i = 0; i <= nb; ++i) {
-            new_nodes[0][i] = interpolateAlong(interp.a, frontLength * (i)
-                    / (nb));
-            new_nodes[1][i] = interpolateAlong(interp.b, backLength * (i)
-                    / (nb));
+            new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i / nb);
+            new_nodes[1][i] = interpolateAlong(interp.b, backLength * i / nb);
             commands.add(new AddCommand(new_nodes[0][i]));
             commands.add(new AddCommand(new_nodes[1][i]));
         }
@@ -322,10 +320,10 @@ public final class TerracerAction extends JosmAction {
         // list. we know there are at least 4 sides, as anything smaller
         // than a quadrilateral would have been rejected at an earlier
         // stage.
-        if (Math.abs(side1 - side2) < 2) {
+        if (indexDistance(side1, side2, indexes.length) < 2) {
             side2 = indexes[2];
         }
-        if (Math.abs(side1 - side2) < 2) {
+        if (indexDistance(side1, side2, indexes.length) < 2) {
             side2 = indexes[3];
         }
 
@@ -364,6 +362,26 @@ public final class TerracerAction extends JosmAction {
         return new Pair<Way, Way>(front, back);
     }
 
+    /**
+     * returns the distance of two segments of a closed polygon
+     */
+    private int indexDistance(int i1, int i2, int n) {
+        return Math.min(positiveModulus(i1 - i2, n), positiveModulus(i2 - i1, n));
+    }
+    
+    /**
+     * return the modulus in the range [0, n)
+     */
+    private int positiveModulus(int a, int n) {
+        if (n <=0) 
+            throw new IllegalArgumentException();
+        int res = a % n;
+        if (res < 0) {
+            res += n;
+        }
+        return res;
+    }
+    
     /**
      * Calculate the length of a side (from node i to i+1) in a way. This assumes that
      * the way is closed, but I only ever call it for buildings.

@@ -20,33 +20,6 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class LaunchAction extends JosmAction implements SelectionChangedListener {
 
-	protected void registerAsMenuItem() {
-		JMenuBar menu = Main.main.menu;
-		JMenu edit = null;
-		JMenuItem item = new JMenuItem(this);
-
-		for (int i = 0; i < menu.getMenuCount(); ++i) {
-			if (menu.getMenu(i) != null
-					&& tr("Edit").equals(menu.getMenu(i).getText())) {
-				edit = menu.getMenu(i);
-				break;
-			}
-		}
-
-		if (edit != null) {
-			edit.insertSeparator(edit.getItemCount());
-			JMenuItem mitem = edit.insert(this, edit.getItemCount());
-			mitem.setAccelerator(KeyStroke.getKeyStroke('T'));
-		} else if (menu.getMenuCount() > 0) {
-			edit = menu.getMenu(0);
-			JMenuItem mitem = edit.insert(this, 0);
-			mitem.setAccelerator(KeyStroke.getKeyStroke('T'));
-
-		}
-
-		item.setVisible(true);
-	}
-
 	public LaunchAction()  {
 		super(
 				tr("Edit tags"),
@@ -57,11 +30,10 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
 						tr("Launches the tag editor dialog"),
 						KeyEvent.VK_T,
 						Shortcut.GROUP_EDIT),
-						false // don't register, plugin will add the action to the menu
+						true
 		);
 
 		DataSet.selListeners.add(this);
-		registerAsMenuItem();
 		setEnabled(false);
 	}
 

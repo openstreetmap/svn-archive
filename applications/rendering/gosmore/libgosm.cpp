@@ -23,7 +23,7 @@ routeNodeType *route = NULL, *shortest = NULL;
 routeHeapType *routeHeap;
 long dhashSize, dLength;
 int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon, routeHeapMaxSize;
-int *hashTable, bucketsMin1, pakHead = 0xEB3A943;
+int *hashTable, bucketsMin1, pakHead = 0xEB3A943, routeSuccess = FALSE;
 char *gosmData, *gosmSstr[searchCnt];
 
 ndType *ndBase;
@@ -307,6 +307,7 @@ void GosmFreeRoute (void)
     free (routeHeap);
     route = NULL;
   }    
+  routeSuccess = FALSE;
 }
 
 routeNodeType *AddNd (ndType *nd, int dir, int cost, routeNodeType *newshort)
@@ -401,12 +402,17 @@ static const int rhdBbox[][4] = {
   // Japan
 };
 
-void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
+static int rhd = FALSE, Vehicle, fast;
+
+void Route (int recalculate, int plon, int plat, int _vehicle, int _fast)
 { /* Recalculate is faster but only valid if 'to', 'Vehicle' and
      'fast' did not change */
 /* We start by finding the segment that is closest to 'from' and 'to' */
   ROUTE_SET_ADDND_COUNT (0);
   shortest = NULL;
+  routeSuccess = FALSE;
+  Vehicle = _vehicle;
+  fast = _fast;
   for (int i = recalculate ? 0 : 1; i < 2; i++) {
     int lon = i ? flon : tlon, lat = i ? flat : tlat;
     __int64 bestd = (__int64) 1 << 62;
@@ -482,6 +488,9 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     GosmFreeRoute ();
     routeHeapSize = 1; /* Leave position 0 open to simplify the math */
     #ifndef _WIN32
+    // Google "zero-fill-on-demand". Basically all the reasons they mention are valid.
+    // In particular, while gosmore is paused while a page is swapped in, the OS can
+    // zero some pages for us.
     int dzero = open ("/dev/zero", O_RDWR);
     long long ds = sysconf (_SC_PAGESIZE) * (long long) sysconf (_SC_PHYS_PAGES) /
       (sizeof (*routeHeap) + sizeof (*route) + 40);
@@ -497,11 +506,6 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     }
     if (dzero != -1) close (dzero);
     #else
-/*    RT_BLK_SIZE should be variable for this case...
-    dhashSize = Sqr ((tlon - flon) >> 16) + Sqr ((tlat - flat) >> 16) + 20;
-    dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
-    // Allocate one piece of memory for both route and routeHeap, so that
-    // we can easily retry if it fails on a small device */
     MEMORYSTATUS memStat;
     GlobalMemoryStatus (&memStat);
     dhashSize = (memStat.dwAvailPhys - 400000) /
@@ -544,14 +548,18 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     routeNodeType *rno = AddNd (endNd[1] + endNd[1]->other[0], 1, -1, NULL);
     if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
   }
-  int rhd = FALSE;
+  rhd = FALSE;
   for (size_t i = 0; i < sizeof (rhdBbox) / sizeof (rhdBbox[0]); i++) {
     rhd = rhd || (rhdBbox[i][0] < tlon && rhdBbox[i][1] < tlat &&
                   tlon < rhdBbox[i][2] && tlat < rhdBbox[i][3]);
   }
   //printf (rhd ? "Right Hand Drive\n" : "Left Hand Drive\n");
-  
-  while (routeHeapSize > 1) {
+}
+
+int RouteLoop (void)
+{
+  // printf ("%ld %ld\n", clock (), CLOCKS_PER_SEC); // Calibrate loop below
+  for (int i = 0; i < 20000 && routeHeapSize > 1; i++) {
     routeNodeType *root = routeHeap[1].r;
     root->heapIdx = -routeHeap[1].best; /* Root now removed from the heap */
     routeHeapSize--;
@@ -567,7 +575,8 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
     }
     if (root->nd == &from) { // Remove 'from' from the heap in case we
       shortest = root->shortest; // get called with recalculate=0
-      break;
+      routeSuccess = TRUE;
+      return FALSE;
     }
     if (root->nd == (!root->dir ? endNd[1] : endNd[1] + endNd[1]->other[0])) {
       AddNd (&from, 0, toEndNd[1][1 - root->dir], root);
@@ -688,6 +697,7 @@ void Route (int recalculate, int plon, int plat, int Vehicle, int fast)
   ROUTE_SHOW_STATS;
 //  if (fastest) printf ("%lf
 //  printf ("%lf km\n", limit / 100000.0);
+  return routeHeapSize > 1;
 }
 
 int JunctionType (ndType *nd)

@@ -460,9 +460,10 @@ struct routeHeapType {
 
 extern routeNodeType *route, *shortest;
 extern routeHeapType *routeHeap;
-extern int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon;
+extern int routeHeapSize, tlat, tlon, flat, flon, rlat, rlon, routeSuccess;
 
 void Route (int recalculate, int plon, int plat, int Vehicle, int fast);
+int RouteLoop (void);
 void GosmFreeRoute (void);
 
 int JunctionType (ndType *nd);

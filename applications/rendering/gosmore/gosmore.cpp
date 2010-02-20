@@ -93,7 +93,7 @@ using namespace std;
   o (ZoomOutKey,      0, 3) \
   o (MenuKey,         0, 3) \
   o (Keyboard,        0, 2) \
-  o (Future1,         0, 1) \
+  o (DebounceDrag,    0, 2) \
   o (Future2,         0, 1) \
   o (Future3,         0, 1) \
   o (Future4,         0, 1) \
@@ -637,6 +637,19 @@ int ProcessNmea (char *rx, unsigned *got)
 
 int command[3] = { 0, 0, 0 }, oldCommand = 0;
 
+void CallRoute (int recalculate, int plon, int plat)
+{
+  Route (recalculate, plon, plat, Vehicle, FastestRoute);
+  #ifdef _WIN32_WCE
+  MSG msg;
+  while (!PeekMessage (&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_NOREMOVE) &&
+         !PeekMessage (&msg, NULL, WM_MOUSEFIRST, WM_MOUSELAST, PM_NOREMOVE) &&
+         RouteLoop ()) {}
+  #else
+  while (RouteLoop ()) {}
+  #endif
+}
+
 void DoFollowThing (gpsNewStruct *gps)
 {
   static int lastTime = -1;
@@ -686,17 +699,7 @@ void DoFollowThing (gpsNewStruct *gps)
   __int64 dlon = clon - flon, dlat = clat - flat;
   flon = clon;
   flat = clat;
-  if (route) {
-    Route (FALSE, dlon, dlat, Vehicle, FastestRoute);
-/*    #ifdef _WIN32_WCE
-    MSG msg;
-    while (!PeekMessage (&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_PEEK) &&
-           !PeekMessage (&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_PEEK) &&
-           GosmRoute) {}
-    #else
-    while (GosmRoute ()) {}
-    #endif*/
-  }
+  if (routeSuccess) CallRoute (FALSE, dlon, dlat);
 
   static ndType *decide[3] = { NULL, NULL, NULL }, *oldDecide = NULL;
   decide[0] = NULL;
@@ -997,7 +1000,7 @@ void HitButton (int b)
   else if (option == EndRouteNum) {
     tlon = clon;
     tlat = clat;
-    Route (TRUE, 0, 0, Vehicle, FastestRoute);
+    CallRoute (TRUE, 0, 0);
   }
   #ifdef NOGTK
   else if (option == DisplayOffNum) {
@@ -1406,8 +1409,11 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   int w = draw->allocation.width, h = draw->allocation.height;
 
   // Anything that covers more than 3 pixels in either direction is a drag.
-  int isDrag = firstDrag[0] >= 0 && (abs(firstDrag[0] - event->x) > 3 ||
-				     abs(firstDrag[1] - event->y) > 3);
+  int isDrag = DebounceDrag
+        ? firstDrag[0] >= 0 && (lastRelease + 100 > (int) event->time ||
+                                  pressTime + 100 < (int) event->time)
+        : firstDrag[0] >= 0 && (abs(firstDrag[0] - event->x) > 3 ||
+                                abs(firstDrag[1] - event->y) > 3);
   
   // logprintf("Click (isDrag = %d): firstDrag = %d,%d; event = %d,%d\n",
   // 	    isDrag, firstDrag[0], firstDrag[1], event->x, event->y);
@@ -1448,19 +1454,29 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
         }
       }
       if (option <= OrientNorthwardsNum) HitButton (1);
-      #ifndef NOGTK
       if (option >= ViewOSMNum && option <= ViewGMapsNum) {
         char lstr[200];
         int zl = 0;
         while (zl < 32 && (zoom >> zl)) zl++;
         sprintf (lstr,
-         option == ViewOSMNum ? "%sopenstreetmap.org/?lat=%.5lf&lon=%.5lf&zoom=%d'" :
-         option == EditInPotlatchNum ? "%sopenstreetmap.org/edit?lat=%.5lf&lon=%.5lf&zoom=%d'" :
-         "%smaps.google.com/?ll=%.5lf,%.5lf&z=%d'",
-          "gnome-open 'http://", LatInverse (clat), LonInverse (clon), 33 - zl);
+         option == ViewOSMNum ? "%sopenstreetmap.org/?lat=%.5lf&lon=%.5lf&zoom=%d%s" :
+         option == EditInPotlatchNum ? "%sopenstreetmap.org/edit?lat=%.5lf&lon=%.5lf&zoom=%d%s" :
+         "%smaps.google.com/?ll=%.5lf,%.5lf&z=%d%s",
+        #ifdef WIN32
+          "http://", LatInverse (clat), LonInverse (clon), 33 - zl, "");
+        #ifndef _WIN32_WCE
+        ShellExecute (NULL, TEXT ("open"), lstr, NULL, NULL,
+          SW_SHOWNORMAL);
+        #else
+        MessageBox (NULL, TEXT ("Not implemented"), TEXT ("Error"), MB_APPLMODAL|MB_OK);
+        #endif
+        #else
+          "gnome-open 'http://", LatInverse (clat), LonInverse (clon), 33 - zl, "");
         system (lstr);
+        #endif
         option = mapMode;
       }
+      #ifndef NOGTK
       else if (option == UpdateMapNum) {
         struct stat s;
         if (currentBbox[0] == '\0') {
@@ -1569,7 +1585,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     else {
       tlon = lon;
       tlat = lat;
-      Route (TRUE, 0, 0, Vehicle, FastestRoute);
+      CallRoute (TRUE, 0, 0);
     }
   }
   firstDrag[0] = -1;
@@ -1882,7 +1898,7 @@ gint DrawExpose (void)
 
   #define FAR3D  100000 // 3D view has a limit of roughly 5 km forwards 
   #define WIDE3D 100000 // and roughly 5km between top left & top right corner
-  #define CAMERA2C 12000 // How far the camera is behind the user (clat/lon)
+  #define CAMERA2C 20000 // How far the camera is behind the user (clat/lon)
   #define HEIGHT   12000 // Height of the camera
   #define PIX45     256 // Y value corresponding to 45 degrees down
   #define XFix PIX45
@@ -1981,6 +1997,7 @@ gint DrawExpose (void)
       if (Style (w)->scaleMax < zoom / clip.width * 175 / (DetailLevel + 6)
           && !Display3D && w->dlat < zoom / clip.width * 20 &&
                            w->dlon < zoom / clip.width * 20) continue;
+      // With 3D, the icons are filtered only much later when we know z.
       if (nd->other[0] != 0) {
         nd = itr.nd[0] + itr.nd[0]->other[0];
         if (nd->lat == INT_MIN) nd = itr.nd[0]; // Node excluded from build
@@ -2107,8 +2124,8 @@ gint DrawExpose (void)
         if (nd->other[0] == 0 && nd->other[1] == 0) {
           int x = X (nd->lon, nd->lat), y = Y (nd->lon, nd->lat);
           int *icon = Style (w)->x + 4 * IconSet, wd = icon[2], ht = icon[3];
-          if ((!Display3D || y > 0) && !TestOrSet (block, FALSE,
-                               x - wd / 2, y - ht / 2, 0, ht, wd, 0)) {
+          if ((!Display3D || y > Style (w)->scaleMax / 400) && !TestOrSet (
+                      block, FALSE, x - wd / 2, y - ht / 2, 0, ht, wd, 0)) {
             TestOrSet (block, TRUE, x - wd / 2, y - ht / 2, 0, ht, wd, 0);
             DrawPoI (x, y, Style (w)->x + 4 * IconSet);
             
@@ -2275,9 +2292,8 @@ gint DrawExpose (void)
       SelectObject (mygc, pen[firstElemStyle + StartRouteNum]);
       #define CHARWIDTH 6
       #endif
-      if (routeHeapSize > 1) {
-        Draw3DLine (X (flon, flat), Y (flon, flat), x, y);
-      }
+      if (routeSuccess) Draw3DLine (X (flon, flat), Y (flon, flat), x, y);
+      
       len = sqrt (Sqr ((double) (rt->nd->lat - flat)) +
         Sqr ((double) (rt->nd->lon - flon)));
       for (; rt->shortest; rt = rt->shortest) {
@@ -2702,10 +2718,11 @@ int UserInterface (int argc, char *argv[],
     RESTRICTIONS
     #undef M
     Route (TRUE, 0, 0, Vehicle, FastestRoute);
+    while (RouteLoop ()) {}
     printf ("Content-Type: text/plain\n\r\n\r");
     if (!shortest) printf ("No route found\n\r");
     else {
-      if (routeHeapSize <= 1) printf ("Jump\n\r");
+      if (!routeSuccess) printf ("Jump\n\r");
       styleStruct *firstS = Style (Way (shortest->nd));
       double ups = lrint (3.6 / firstS->invSpeed[Vehicle]
           / firstS->aveSpeed[Vehicle] / (20000 / 2147483648.0) /
@@ -3194,7 +3211,10 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         }
         if (Keyboard && option != searchMode) SipShowIM (SIPF_OFF);
       }
-      else if (!Keyboard) option = option == searchMode ? mapMode : searchMode;
+      else if (!Keyboard && LOWORD (lParam) > (Layout > 1 ? 8 : 140)) {
+        option = option == searchMode ? mapMode : searchMode;
+      }
+      firstDrag[0] = -1;
       InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_MOUSEMOVE:

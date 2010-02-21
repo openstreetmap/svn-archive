@@ -1,0 +1,9 @@
+/build
+/eclipse
+/osmosis.jar
+/dist
+/*.externalToolBuilders
+/*.settings
+/report
+/lib
+/target

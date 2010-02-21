@@ -513,6 +513,7 @@ else {
     print "  $0 loop - runs continuously\n";
     print "  $0 upload - uploads any tiles\n";
     print "  $0 upload_loop - uploads tiles in loop mode\n";
+    print "  $0 localFile data_<z>_<x>_<y>.osm - runs offline, rendering from given osm file\n";
     print "  $0 startBatik - start batik agent\n";
     print "  $0 stopBatik - stop batik agent\n";
     print "  $0 version - prints out version string and exits\n";
@@ -739,7 +740,7 @@ sub ProcessRequestsFromServer
 
         # successfully rendered, so reset renderer faults
         resetFault("renderer");
-        resetFault("inkscape");
+        resetFault("rasterizer");
         resetFault("utf8");
 
         # Rendered tileset, don't idle in next round

@@ -14,10 +14,9 @@ Fetch planet file from OpenStreetmap and feed it to gosmore
 
   bzcat planet-...osm.bz2 | gosmore rebuild
 
-The rebuild process uses a lot of memory and free disk space for osm files
-with a compressed size greater than a few mega bytes. Rebuilding the
-complete planet take around 3 hours on a dual core 64 bit machine with 2 GB
-of RAM and 20 GB of free disk space.
+The rebuild process uses a lot of memory and free disk space for osm files.
+Rebuilding the complete planet take around 6 hours on a dual core 64 bit
+machine with 3 GB of RAM and 40 GB of free disk space.
 
 Downloading latest version
 --------------------------
@@ -41,6 +40,8 @@ licensed under the Gnu Public License v2 or later.
 
 ConvertUTF.c and ConvertUTF.h comes under a BSD-style license. They are
 only used when builting the Windows CE executable.
+
+bounds.osm was derived from the public domain Natural Earth dataset.
 
 lowres.osm.bz2 was derived from the geonames database.
 

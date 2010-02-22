@@ -145,9 +145,23 @@ install: gosmore default.pak
 	mkdir -p $(DESTDIR)$(datarootdir)/applications
 	cp -a gosmore.desktop $(DESTDIR)$(datarootdir)/applications
 
+# The commands below will create a gpx file with a low res version of the national boundaries
+# Then you must open tmp.gpx in JOSM and save it as bounds.osm. Then this makefile will
+# use sed to reencode the ids to the 2 billion range and use grep to concatenate it with
+# the geonames cities and the osm country names.
+#
+# sudo apt-get install libshp-dev
+# wget http://www.obviously.com/gis/shp2text/shp2text.c
+# gcc -lshp shp2text.c -o shp2text
+# wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/110m-admin-0-countries.zip
+# unzip 110m-admin-0-countries.zip
+# ./shp2text --gpx 110m-admin-0-countries.shp 0 4 |
+#   gpsbabel -r -i gpx -f - -x transform,trk=rte,del -o gpx -F tmp.gpx
+  
 default.pak: gosmore
 	! [ -e gosmore.pak ]
-	(echo '<?xml version="1.0" encoding="UTF-8" ?><osm version="0.6">'; \
+	(bzgrep -v '</osm>' bounds.osm.bz2 | sed -e 's/'\''-\([0-9]*'\''\)/'\''00000000\1/' |\
+	  sed -e 's/0*\([0-9]\{8\}'\''\)/21\1/'; \
 	 bzcat lowres.osm.bz2; \
 	 egrep -v '?xml|<osmCha' countries.osm | sed -e 's|/osmChange|/osm|') | \
 	     QUERY_STRING=suppressGTK ./gosmore rebuild

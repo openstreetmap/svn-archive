@@ -389,7 +389,8 @@ inline int IsOneway (wayType *w, int Vehicle)
   //  (w->bits & (1 << motorcarR))) && (w->bits & (1<<onewayR));
 }
 
-static const int rhdBbox[][4] = {
+// left-hand drive country aproximate bounding boxes
+static const int lhdBbox[][4] = {
   { Longitude (10.2), Latitude (-85.0), Longitude (42.1), Latitude (4.7) },
   // Africa. Not correct for Angola, DRC and a few other poor countries.
   { Longitude (-14.11), Latitude (49.83), Longitude (1.84), Latitude (60.03) },
@@ -548,12 +549,13 @@ void Route (int recalculate, int plon, int plat, int _vehicle, int _fast)
     routeNodeType *rno = AddNd (endNd[1] + endNd[1]->other[0], 1, -1, NULL);
     if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
   }
-  rhd = FALSE;
-  for (size_t i = 0; i < sizeof (rhdBbox) / sizeof (rhdBbox[0]); i++) {
-    rhd = rhd || (rhdBbox[i][0] < tlon && rhdBbox[i][1] < tlat &&
-                  tlon < rhdBbox[i][2] && tlat < rhdBbox[i][3]);
+  rhd = TRUE;
+  // keep rhd true if we are not in any of the lhdBbox
+  for (size_t i = 0; i < sizeof (lhdBbox) / sizeof (lhdBbox[0]); i++) {
+    rhd = rhd && !(lhdBbox[i][0] < tlon && lhdBbox[i][1] < tlat &&
+                  tlon < lhdBbox[i][2] && tlat < lhdBbox[i][3]);
   }
-  //printf (rhd ? "Right Hand Drive\n" : "Left Hand Drive\n");
+  // printf (rhd ? "Right Hand Drive\n" : "Left Hand Drive\n");
 }
 
 int RouteLoop (void)

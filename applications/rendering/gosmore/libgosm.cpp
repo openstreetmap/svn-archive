@@ -647,6 +647,16 @@ int RouteLoop (void)
         
         other = nd + nd->other[dir];
         wayType *w = Way (nd);
+
+	// // DEBUGGING
+	// char label[255], *strings;
+	// strings=(char*)(w+1)+1;
+	// memset(label,0,255);
+	// strncpy(label,strings,strcspn(strings,"\n"));
+	// printf ("DEBUG: %s (%d) %lf\n", label, StyleNr(w), 
+	// 	Style(w)->invSpeed[Vehicle]);
+
+
         int myV = Vehicle == bicycleR && (!(w->bits & (1 << bicycleR)) 
           || ((w->bits & (1 << bicycleOneway)) && !dir)) ? footR : Vehicle;
         // If pedestrians are allowed and cyclists not, we can dismount and
@@ -1330,11 +1340,14 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
   if (k2v["maxspeed"] && isdigit (k2v["maxspeed"][0])) {
     const char *m = k2v["maxspeed"];
     double maxs = atof (m), best = 30, m2km = 1.609344;
-    if (tolower (m[strcspn (m, "KMPSkmps")]) == 'm') maxs *= m2km;
     // Here we find the first alphabetic character and compare it to 'm'
-    int v[] = { 5,7,10,15,20,30,32,40,50,60,70,80,90,100,110,120,130 };
-    for (unsigned i = 0; i < sizeof (v) / sizeof (v); i++) {
+    if (tolower (m[strcspn (m, "KMPSkmps")]) == 'm') maxs *= m2km;
+    // choose the closest of these values ...
+    int v[] = { 5,7,10,15,20,30,32,40,45,50,60,70,80,90,100,110,120,130 };
+    for (unsigned i = 0; i < sizeof (v) / sizeof (v[1]); i++) {
+      // ... either in km/h
       if (fabs (maxs - best) > fabs (maxs - v[i])) best = v[i];
+      // ... or in miles/h
       if (fabs (maxs - best) > fabs (maxs - v[i] * m2km)) best = v[i] * m2km;
     }
     s.aveSpeed[accessR] = best;

@@ -167,6 +167,11 @@ default.pak: gosmore
 	     QUERY_STRING=suppressGTK ./gosmore rebuild
 	mv gosmore.pak default.pak
 
+routingTest: gosmore
+	! [ -e gosmore.pak ]
+	sed -e 's/\(nd='\''\|ref='\''\|id='\''\)-\([0-9]*'\''\)/\121000\2/' routingTest.osm |\
+	  ./gosmore rebuild
+
 dist:
 	mkdir gosmore-$(VERSION)
 	cp gosmore.cpp Makefile elemstyles.xml icons.csv icons.xpm  README \

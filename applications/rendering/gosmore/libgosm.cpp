@@ -390,7 +390,7 @@ inline int IsOneway (wayType *w, int Vehicle)
 }
 
 // left-hand drive country aproximate bounding boxes
-static const int lhdBbox[][4] = {
+static const int lhtBbox[][4] = {
   { Longitude (10.2), Latitude (-85.0), Longitude (42.1), Latitude (4.7) },
   // Africa. Not correct for Angola, DRC and a few other poor countries.
   { Longitude (-14.11), Latitude (49.83), Longitude (1.84), Latitude (60.03) },
@@ -403,7 +403,7 @@ static const int lhdBbox[][4] = {
   // Japan
 };
 
-static int rhd = FALSE, Vehicle, fast;
+static int lht = FALSE, Vehicle, fast;
 
 void Route (int recalculate, int plon, int plat, int _vehicle, int _fast)
 { /* Recalculate is faster but only valid if 'to', 'Vehicle' and
@@ -549,13 +549,13 @@ void Route (int recalculate, int plon, int plat, int _vehicle, int _fast)
     routeNodeType *rno = AddNd (endNd[1] + endNd[1]->other[0], 1, -1, NULL);
     if (rno) AddNd (&from, 0, toEndNd[1][0], rno);
   }
-  rhd = TRUE;
-  // keep rhd true if we are not in any of the lhdBbox
-  for (size_t i = 0; i < sizeof (lhdBbox) / sizeof (lhdBbox[0]); i++) {
-    rhd = rhd && !(lhdBbox[i][0] < tlon && lhdBbox[i][1] < tlat &&
-                  tlon < lhdBbox[i][2] && tlat < lhdBbox[i][3]);
+  lht = FALSE;
+  // keep lht true if we are not in any of the lhtBbox
+  for (size_t i = 0; i < sizeof (lhtBbox) / sizeof (lhtBbox[0]); i++) {
+    lht = lht || (lhtBbox[i][0] < tlon && lhtBbox[i][1] < tlat &&
+                  tlon < lhtBbox[i][2] && tlat < lhtBbox[i][3]);
   }
-  // printf (rhd ? "Right Hand Drive\n" : "Left Hand Drive\n");
+  // printf (lht ? "Left Hand Traffic\n" : "Right Hand Traffic\n");
 }
 
 int RouteLoop (void)
@@ -678,7 +678,7 @@ int RouteLoop (void)
           // are going to (Remember that we are coming from 'root')
           // If layout[x] is not zero, there are segments going in that
           // direction
-          if (layout[rhd ? 1 : 3] && ((lmask << dir) & layout[rhd ? 3 : 1])
+          if (layout[lht ? 1 : 3] && ((lmask << dir) & layout[lht ? 3 : 1])
               && fast && Style (w)->scaleMax > 100000) {
             d += 100000 * (fast ? Style (w)->invSpeed[Vehicle] : 1);
           // Turning right in the UK (or left in the rest of the world), when
@@ -686,20 +686,39 @@ int RouteLoop (void)
           // you will probably have to wait for oncoming traffic.
           }
           
-          // if (layout[1] && layout[3] && ((lmask << dir) & layout[0])) {
-          //   // Straight over a T-junction
-          //   if ((Way (layoutNd[1])->bits & (1 << motorcarR)) &&
-          //       (Way (layoutNd[3])->bits & (1 << motorcarR)) && fast) {
-          //   // And motorcars are allowed on both sides
-          //     d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
-          //           Style (w)->invSpeed[motorcarR] ? 50000 : 9000) *
-          //           (fast ? Style (w)->invSpeed[Vehicle] : 1);
-          //   // Crossing a road that is faster that the road we are traveling
-          //   // on incurs a 500m penalty. If they are equal, the penality is
-          //   // 90m. TODO: residential crossing residential should be less,
-          //   // perhaps 20m.
-          //   }
-          // }
+          if (layout[1] && layout[3] && ((lmask << dir) & layout[0])) {
+            // Straight over a T-junction
+            if ((Way (layoutNd[1])->bits & (1 << motorcarR)) &&
+                (Way (layoutNd[3])->bits & (1 << motorcarR)) && fast) {
+            // And motorcars are allowed on both sides
+              d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
+                    Style (w)->invSpeed[motorcarR] ? 50000 : 9000) *
+                    (fast ? Style (w)->invSpeed[Vehicle] : 1);
+            // Crossing a road that is faster that the road we are traveling
+            // on incurs a 500m penalty. If they are equal, the penality is
+            // 90m. TODO: residential crossing residential should be less,
+            // perhaps 20m.
+            }
+          }
+          
+          ndType *n2 = root->nd + root->nd->other[root->dir];
+          __int64 straight =
+            (n2->lat - nd->lat) * (__int64)(nd->lat - other->lat) +
+            (n2->lon - nd->lon) * (__int64)(nd->lon - other->lon), left =
+            (n2->lat - nd->lat) * (__int64)(nd->lon - other->lon) -
+            (n2->lon - nd->lon) * (__int64)(nd->lat - other->lat);
+            
+          // The code below adds a penalty to making a U-turn when an oncoming road
+          // exists for example where a bidirectional road splits into two oneways.
+          // We can add an extra condition to allow a right turn in right hand
+          // traffic countries. Something like '&& lht ? left : -left > 0)'
+          
+          // Currently the threshold angle is 45 degrees (a turn of more than 135 degrees).
+          // We can vary it using this line:
+          // straight = straight * lrint (tan (M_PI / 180 * 45) * 100) / 100;
+          if (straight < -left && straight < left && layout[2]) d += 200000 *
+            (fast ? Style (w)->invSpeed[Vehicle] : 1);
+                    
           AddNd (other, 1 - dir, d, root);
         } // If we found a segment we may follow
       } // for each direction

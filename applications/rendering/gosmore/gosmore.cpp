@@ -15,6 +15,7 @@
 #include <string>
 #include <stack>
 #include <vector>
+#include <algorithm>
 #include <queue>
 #include <map>
 using namespace std;
@@ -1412,8 +1413,8 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
   int isDrag = DebounceDrag
         ? firstDrag[0] >= 0 && (lastRelease + 100 > (int) event->time ||
                                   pressTime + 100 < (int) event->time)
-        : firstDrag[0] >= 0 && (abs(firstDrag[0] - event->x) > 3 ||
-                                abs(firstDrag[1] - event->y) > 3);
+        : firstDrag[0] >= 0 && (abs((int)(firstDrag[0] - event->x)) > 3 ||
+                                abs((int)(firstDrag[1] - event->y)) > 3);
   
   // logprintf("Click (isDrag = %d): firstDrag = %d,%d; event = %d,%d\n",
   // 	    isDrag, firstDrag[0], firstDrag[1], event->x, event->y);
@@ -1471,8 +1472,8 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
         MessageBox (NULL, TEXT ("Not implemented"), TEXT ("Error"), MB_APPLMODAL|MB_OK);
         #endif
         #else
-          "gnome-open 'http://", LatInverse (clat), LonInverse (clon), 33 - zl, "");
-        system (lstr);
+          "gnome-open 'http://", LatInverse (clat), LonInverse (clon), 33 - zl, "'");
+        option = system (lstr); // Shut up GCC w.r.t. return value
         #endif
         option = mapMode;
       }
@@ -2024,9 +2025,6 @@ gint DrawExpose (void)
       vector<GdkPoint> pt;
       int oldx = 0, oldy = 0, x = 0 /* Shut up gcc*/, y = 0 /*Shut up gcc*/;
       int firstx = INT_MIN, firsty = INT_MIN /* Shut up gcc */;
-      //for (; pts < sizeof (pt) / sizeof (pt[0]) && nd->other[1] != 0;
-      text2B.top ().x = text2B.top ().y = INT_MIN;
-      text2B.top ().x2 = text2B.top ().y2 = INT_MAX;
       for (; nd->other[1] != 0; nd += nd->other[1]) {
         if (nd->lat != INT_MIN) {
           pt.push_back (GdkPoint ());
@@ -2054,35 +2052,9 @@ gint DrawExpose (void)
             oldx = x;
             oldy = y;
           }
-          if (pt.back ().x > text2B.top ().x) text2B.top ().x = pt.back ().x;
-          if (pt.back ().x < text2B.top ().x2) text2B.top ().x2 = pt.back ().x;
-          if (pt.back ().y > text2B.top ().y) text2B.top ().y = pt.back ().y;
-          if (pt.back ().y < text2B.top ().y2) text2B.top ().y2 = pt.back ().y;
           //pt[pts].x = X (nd->lon, nd->lat);
           //pt[pts++].y = Y (nd->lon, nd->lat);
         }
-      }
-      if (text2B.top ().x > draw->allocation.width) text2B.top ().x = draw->allocation.width;
-      if (text2B.top ().y > draw->allocation.height) text2B.top ().y = draw->allocation.height;
-      if (text2B.top ().x2 < 0) text2B.top ().x2 = 0;
-      if (text2B.top ().y2 < 0) text2B.top ().y2 = 0;
-      if (text2B.top ().x2 < text2B.top ().x - (int) strcspn ((char*)(w + 1) + 1, "\n") * 8 &&
-          text2B.top ().y2 < text2B.top ().y - 10 &&
-          // The area must be large enough to contain all the text
-          (text2B.top ().x < draw->allocation.width ||
-           text2B.top ().y < draw->allocation.height ||
-           text2B.top ().x2 || text2B.top ().y2)) {
-           // but if it is so large that it fills the screen, it is more likely to
-           // confuse the user
-           
-      //printf ("%d %d %d %d %s\n", text2B.top ().x, text2B.top ().y, text2B.top ().x2, text2B.top ().y2, (char*)(w+1)+1);
-        text2B.top ().x = (text2B.top ().x + text2B.top ().x2) / 2 - 100;
-        text2B.top ().x2 = text2B.top ().x + 200;
-        text2B.top ().dst = 200;
-        text2B.top ().y = (text2B.top ().y + text2B.top ().y2) / 2;
-        text2B.top ().y2 = text2B.top ().y;
-        text2B.top ().s = (char*)(w + 1) + 1;
-        text2B.push (text2Brendered ());
       }
       
       if (Display3D && y < 0 && firsty > 0) {
@@ -2109,8 +2081,36 @@ gint DrawExpose (void)
           : GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
         gdk_draw_polygon (draw->window, mygc, FALSE, &pt[0], pt.size ());
         #endif
-      }
-    }
+        // Text placement: The basic idea is here : http://alienryderflex.com/polygon_fill/
+        text2B.top ().dst = strcspn ((char*)(w + 1) + 1, "\n") * 9;
+        text2B.top ().x = -1;
+        for (unsigned i = 0; i < pt.size (); i++) {
+          int iy = pt[i].y; // Look for a large horisontal space inside the poly at y=pt[i].y
+          vector<int> nx;
+          for (unsigned j = 0, k = pt.size () - 1; j < pt.size (); j++) {
+            if ((pt[j].y < iy && pt[k].y >= iy) || (pt[k].y < iy && pt[j].y >= iy)) {
+              nx.push_back (pt[j].x + (pt[k].x - pt[j].x) * (iy - pt[j].y) /
+                (pt[k].y - pt[j].y));
+            }
+            k = j;
+          }
+          sort (nx.begin (), nx.end ());
+          for (int j = 0; j < nx.size (); j += 2) {
+            if (nx[j + 1] - nx[j] > text2B.top ().dst) {
+              text2B.top ().x = nx[j];
+              text2B.top ().x2 = nx[j + 1];
+              text2B.top ().y = iy - 5;
+              text2B.top ().dst = nx[j + 1] - nx[j];
+            }
+          }
+        }
+        if (text2B.top ().x >= 0) {
+          text2B.top ().y2 = text2B.top ().y;
+          text2B.top ().s = (char*)(w + 1) + 1;
+          text2B.push (text2Brendered ());
+        }
+      } // Polygon not empty
+    } // For each area
 
     queue<linePtType> q;
     for (int l = 0; l < 12; l++) {

@@ -686,20 +686,20 @@ int RouteLoop (void)
           // you will probably have to wait for oncoming traffic.
           }
           
-          if (layout[1] && layout[3] && ((lmask << dir) & layout[0])) {
-            // Straight over a T-junction
-            if ((Way (layoutNd[1])->bits & (1 << motorcarR)) &&
-                (Way (layoutNd[3])->bits & (1 << motorcarR)) && fast) {
-            // And motorcars are allowed on both sides
-              d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
-                    Style (w)->invSpeed[motorcarR] ? 50000 : 9000) *
-                    (fast ? Style (w)->invSpeed[Vehicle] : 1);
-            // Crossing a road that is faster that the road we are traveling
-            // on incurs a 500m penalty. If they are equal, the penality is
-            // 90m. TODO: residential crossing residential should be less,
-            // perhaps 20m.
-            }
-          }
+          // if (layout[1] && layout[3] && ((lmask << dir) & layout[0])) {
+          //   // Straight over a T-junction
+          //   if ((Way (layoutNd[1])->bits & (1 << motorcarR)) &&
+          //       (Way (layoutNd[3])->bits & (1 << motorcarR)) && fast) {
+          //   // And motorcars are allowed on both sides
+          //     d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
+          //           Style (w)->invSpeed[motorcarR] ? 50000 : 9000) *
+          //           (fast ? Style (w)->invSpeed[Vehicle] : 1);
+          //   // Crossing a road that is faster that the road we are traveling
+          //   // on incurs a 500m penalty. If they are equal, the penality is
+          //   // 90m. TODO: residential crossing residential should be less,
+          //   // perhaps 20m.
+          //   }
+          // }
           AddNd (other, 1 - dir, d, root);
         } // If we found a segment we may follow
       } // for each direction

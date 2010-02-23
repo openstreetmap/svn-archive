@@ -1250,6 +1250,8 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         // as the information is not very useful.
         
         (strcmp (i->first, "census:population") != 0 || !k2v["population"]) && // GNIS import
+        
+        strncmp (i->first, "qroti:", 6) != 0 &&
 
         strcmp (i->first, "note:ja") != 0 &&
         strcmp (i->first, "import_uuid") != 0 &&

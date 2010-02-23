@@ -1709,19 +1709,20 @@ struct text2Brendered {
 void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
   text2Brendered *t)
 {
+  text2Brendered nt;
+  nt.s = t->s;
   while (!q->empty ()) {
 //  while (len * 14 <
 //      (cumulative - q.front ().cumulative) * DetailLevel) {
-    int dst = isqrt (Sqr (q->front ().x - q->back ().x) +
-                 Sqr (q->front ().y - q->back ().y));
-    if (q->back ().cumulative - q->front ().cumulative - dst <= *best) {
-      if (dst * DetailLevel > len * 14) {
-        t->x = q->front ().x;
-        t->y = q->front ().y;
-        t->x2 = q->back ().x;
-        t->y2 = q->back ().y;
-        t->dst = dst;
-        *best = q->back ().cumulative - q->front (). cumulative - dst;
+    nt.x = min (max (q->front ().x, 10), draw->allocation.width - 10);
+    nt.y = min (max (q->front ().y, 10), draw->allocation.height - 10);
+    nt.x2 = min (max (q->back ().x, 10), draw->allocation.width - 10);
+    nt.y2 = min (max (q->back ().y, 10), draw->allocation.height - 10);
+    nt.dst = isqrt (Sqr (nt.x - nt.x2) + Sqr (nt.y - nt.y2));
+    if (q->back ().cumulative - q->front ().cumulative - nt.dst <= *best) {
+      if (nt.dst * DetailLevel > len * 14) {
+        memcpy (t, &nt, sizeof (*t));
+        *best = q->back ().cumulative - q->front (). cumulative - nt.dst;
       }
       if (!finish) break;
     }

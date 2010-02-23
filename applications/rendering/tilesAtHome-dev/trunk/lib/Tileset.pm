@@ -177,7 +177,8 @@ sub generate
         }
         else
         {
-            $FullDataFile = $DataFile; ## FIXME: do we need full path here? currently it's just the plain filename w/o path info.
+            $FullDataFile = File::Spec->join($self->{JobDir}, "data.osm");
+            rename $DataFile, $FullDataFile; ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
         }
 
         #------------------------------------------------------
@@ -237,7 +238,8 @@ sub generate
                 }
                 else
                 {
-                    $FullDataFile = $DataFile; ## FIXME: do we need full path here? currently it's just the plain filename w/o path info.
+                    $FullDataFile = File::Spec->join($self->{JobDir}, "data.osm");
+                    rename $DataFile, $FullDataFile; ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
                 }
                 $self->generateNormalLayer($layer);
             }

@@ -1,0 +1,205 @@
+/* general map styles */
+#browser_map_wrapper
+{
+	width: 700px;
+	height: 600px;
+	background-color: orange;
+	border: 1px solid #cccccc;
+	overflow: hidden;
+	position: relative;
+	font-family: "Century Gothic", Tahoma, Arial;
+}
+
+#map
+{
+	width: 100%;
+	height: 100%;
+	border-width: 0px;
+    background-color:#E7FFC2;
+	overflow: hidden;
+}
+
+#mapborder {
+  border: 1px solid black;
+  width:100%;
+  height:100%;
+}
+
+#maptitle {
+  border: 1px solid black;
+  width:100%;
+  background: gray;
+  color: white;
+  text-align: center;
+  font-family: Verdana;
+  font-size: 16px;
+  padding: 2px;
+}
+
+#mapfooter {
+  border-top: 1px solid black;
+  width:100%;
+  background: gray;
+  color: white;
+  text-align: center;
+  font-family: Verdana;
+  font-size: 10px;
+  padding: 2px;
+}
+
+body {
+  background: silver;
+}
+
+#maptitle a {color:white;}
+#maptitle a:hover {color: yellow;}
+#maptitle a.visited { color: silver;}
+
+#mapfooter a {color:white;}
+#mapfooter a:hover {color: yellow;}
+#mapfooter a.visited { color: silver;}
+
+.pclick a {
+  color:darkblue;
+  text-decoration: underline;
+  cursor:pointer;
+}
+
+.pclick a:hover {
+  color: blue;
+  text-decoration: underline;
+  cursor:pointer;
+}
+.pclick a.visited {
+  color: gray;
+  text-decoration: underline;
+  cursor:pointer;
+}
+
+#appbase {
+  width:250px;  
+  height:100%;
+  background:white;
+  padding:0px;
+}
+
+#tool_handler {
+  background-image: url('../rico_images/app_panel_bg.png');
+  border-right: 1px solid gray;
+  cursor: pointer;
+}
+ 
+.panelheader {
+  background-image: url('../rico_images/example1_panelBG.png');
+  height: 22px;
+  color : #8080A0;
+  font-weight : normal;
+  padding-top:2px;
+  padding-left: 5px;
+  font-family: Verdana;
+  font-size: 14px;
+  cursor:pointer;
+}
+
+.panelHover {
+  background-image: url('../rico_images/example1_panelBGHover.png');
+  height: 22px;
+  color : #808080;
+  padding-top:2px;
+  padding-left: 5px;
+  cursor:pointer;
+}
+
+.panelClicked {
+  background-image: url('../rico_images/example1_panelBGClick.png');
+  height: 22px;
+  color : #ffffff;
+  padding-top:2px;
+  padding-left: 5px;
+  cursor:pointer;
+}
+
+.panelSelected {
+  background-image: url('../rico_images/example1_panelBGSelected.png');
+  height: 22px;
+  color : #494969;
+  font-weight : bold;
+  padding-top:2px;
+  padding-left: 5px;
+  cursor:pointer;
+}
+
+.panelContent {
+  background: #f8f8f8;
+  overflow: auto;
+  font-family: Verdana;
+  font-size: 10px;
+}
+
+#map_header {
+  background-image: url('../rico_images/header_bg.png');
+  font-family: Verdana;
+  font-size: 10px;
+}
+
+/* popup related styles */
+.olPopup
+{
+	overflow:inherit;
+}
+
+.olPopup *
+{
+	margin: 0px;
+	padding:0px;
+	font-size: 12px;
+}
+
+.olPopup a.close
+{
+	width: 14px;
+	height: 14px;
+	position: absolute;
+	top: 10px;
+	right: 28px;
+	background: url(../img/close.gif) no-repeat top left;
+	margin: 0px;
+	font-size: 1px;
+	padding: 0px;
+}
+
+.olPopup a.close:hover
+{
+	background: url(../img/close-hover.gif) no-repeat top left;
+}
+
+.olPopup .olPopupContent
+{
+	min-width:200px;
+	background-color: #ffffff !important;
+	padding: 1px !important;
+	margin: 0px !important;
+	font-size: 0.80em;
+}
+
+.olPopup .olPopupContent h2
+{
+	font-size: small;
+	text-align: center;
+	padding: 2px 0px 2px 0px;
+	margin: 0px 6px 0px 6px;
+	text-transform:capitalize;
+}
+
+.olPopup .olPopupContent table
+{
+	border-collapse:collapse;
+	overflow: auto;
+	padding: 0px;
+}
+
+.olPopupContent table td
+{
+	padding: 4px;
+	border: 1px solid #cccccc;
+}

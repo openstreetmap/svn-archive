@@ -1,0 +1,20 @@
+/* Überschriften fehlende TMC Elemente*/
+.missing {
+	color: red;
+	font-weight: bold;
+}
+
+/* Überschriften gefundene TMC Elemente*/
+.found {
+	color: green;
+}
+
+/* Fehlermeldungen wie "Fehlt in OSM" */
+.error {
+	color: red;
+}
+
+/* Warnungen */
+.warning {
+	color: #FF4400;
+}

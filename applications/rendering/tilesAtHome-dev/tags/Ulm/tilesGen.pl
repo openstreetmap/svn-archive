@@ -50,7 +50,7 @@ my $Config = TahConf->getConfig();
 # Handle the command-line
 our $Mode = shift() || '';
 my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
-my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop")) ? 1 : 0;
+my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop") or ($Mode eq "localFile")) ? 1 : 0;
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_loop")) ? 1 : 0;
 my %EnvironmentInfo;
 
@@ -490,6 +490,20 @@ elsif ($Mode eq "localFile")
 
     $currentSubTask = "info";
     statusMessage("Trying file ".$DataFile,1,0);
+    
+    my $Layers = shift();
+    if (not defined $Layers) {
+        if ($Zoom >= 12) {
+            $Layers = $Config->get("Layers");
+        }
+        elsif ($Zoom >= 6) {
+            $Layers = $Config->get("LowzoomLayers");
+        }
+        else {
+            $Layers = $Config->get("WorldLayers");
+        }
+    }
+    $req->layers_str($Layers);
     
     my $tileset = Tileset->new($req);
     my $tilestart = time();

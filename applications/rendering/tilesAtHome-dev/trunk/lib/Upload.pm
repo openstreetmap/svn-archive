@@ -196,6 +196,9 @@ sub upload
         my $URL = $Config->get("UploadURL");
         
         ::statusMessage("Uploading $file_name", 0, 3);
+
+        sleep(int(UploadOkOrNot()/50));
+        
         my $res = $ua->post($URL,
                             Content_Type => 'form-data',
                             Content => [ file => [$file],

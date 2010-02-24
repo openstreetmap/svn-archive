@@ -102,7 +102,7 @@ sub uploadAllZips
             my $UploadFailedHardOrDone=0;
             # while not upload success or complete failure
             while ($UploadFailedHardOrDone != 1) {
-		my $res_str; #stores success or error msg for status line
+                my $res_str; #stores success or error msg for status line
                 try {
                     $self->upload($file);
 
@@ -196,6 +196,9 @@ sub upload
         my $URL = $Config->get("UploadURL");
         
         ::statusMessage("Uploading $file_name", 0, 3);
+
+        sleep(int($self->UploadOkOrNot/50));
+        
         my $res = $ua->post($URL,
                             Content_Type => 'form-data',
                             Content => [ file => [$file],
@@ -265,7 +268,7 @@ sub UploadOkOrNot
 {
     my $self = shift;
     my $Config = $self->{Config};
-    ::statusMessage("Checking server queue",0,3);
+    ::statusMessage("Checking server queue",0,9);
     my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
     $ua->env_proxy();
     my $res = $ua->get($Config->get("GoNogoURL"));

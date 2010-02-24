@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-21 09:35+0100\n"
-"PO-Revision-Date: 2010-02-20 11:36+0000\n"
-"Last-Translator: hanoj <ehanoj@gmail.com>\n"
+"POT-Creation-Date: 2010-02-24 19:46+0100\n"
+"PO-Revision-Date: 2010-02-24 11:00+0000\n"
+"Last-Translator: Jezevec <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-02-21 08:16+0000\n"
+"X-Launchpad-Export-Date: 2010-02-24 18:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -68,8 +68,8 @@ msgstr "Ignoruji poškozený soubor z URL: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:252
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:291
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:522
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:576
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:639
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:579
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:642
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:189
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:415
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:795
@@ -248,7 +248,7 @@ msgstr "Klikněte pro pokračování startu {0} externích prohlížečů"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:193
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:207
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:869
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1188
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1191
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:120
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:373
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:112
@@ -394,7 +394,7 @@ msgstr "Prosím zadejte zeměpisnou délku v rozsahu -180..180"
 #: ../core/src/org/openstreetmap/josm/actions/upload/RelationUploadOrderHook.java:88
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:80
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:350
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1154
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1157
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:169
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:375
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
@@ -695,7 +695,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:99
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:276
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:891
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:986
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:989
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:597
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:142
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:232
@@ -776,19 +776,19 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:55
 msgid "Object type:"
-msgstr ""
+msgstr "Typ objektu:"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:62
 msgid "Object ID:"
-msgstr ""
+msgstr "ID objektu:"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:64
 msgid "Enter the ID of the object that should be downloaded"
-msgstr ""
+msgstr "Zadat ID objektu, který chcete stáhnout"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:77
 msgid "Download Object"
-msgstr ""
+msgstr "Stáhnout objekt"
 
 #: ../core/src/org/openstreetmap/josm/actions/DownloadPrimitiveAction.java:78
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadPrimitiveTask.java:43
@@ -817,7 +817,7 @@ msgstr "Stáhnout prvky odkazující na jeden z vybraných prvků"
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:21
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateLayerAction.java:21
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:498
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1368
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1371
 msgid "Duplicate"
 msgstr "Duplikovat"
 
@@ -943,6 +943,7 @@ msgid_plural ""
 "The selected ways have nodes outside of the downloaded data region."
 msgstr[0] "Zvolená cesta má uzly mimo stahovanou oblast"
 msgstr[1] "Zvolené cesty mají uzly mimo stahovanou oblast"
+msgstr[2] "Zvolené cesty mají uzly mimo stahovanou oblast"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:155
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:85
@@ -1240,8 +1241,9 @@ msgstr "Otevírám 1 soubor..."
 #, java-format
 msgid "Opening {0} file..."
 msgid_plural "Opening {0} files..."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Otevírám {0} soubor..."
+msgstr[1] "Otevírám {0} soubory..."
+msgstr[2] "Otevírám {0} souborů..."
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:262
 #, java-format
@@ -1336,7 +1338,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:148
 msgid "Selection must consist only of ways and nodes."
-msgstr ""
+msgstr "Výběr musí obsahovat pouze cesty a body"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:188
 msgid "Orthogonalize"
@@ -1657,15 +1659,15 @@ msgstr "Smazat nepotřebné uzly z cesty."
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:65
 msgid "Yes, delete nodes"
-msgstr ""
+msgstr "Ano,smazat body"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:67
 msgid "Delete nodes outside of downloaded data regions"
-msgstr ""
+msgstr "Smazat body mimo staženou oblast dat"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:71
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:634
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:675
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:635
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:676
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:215
 msgid "No, abort"
 msgstr "Ne, zrušit"
@@ -1673,7 +1675,7 @@ msgstr "Ne, zrušit"
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:73
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:119
 msgid "Cancel operation"
-msgstr ""
+msgstr "Zrušit operaci"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:86
 msgid "Do you want to delete them anyway?"
@@ -1681,7 +1683,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:88
 msgid "Delete nodes outside of data regions?"
-msgstr ""
+msgstr "Smazat body mimo oblast s daty?"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:101
 msgid "Please select at least one way to simplify."
@@ -1695,24 +1697,26 @@ msgstr "Ano"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:113
 msgid "Simplify all selected ways"
-msgstr ""
+msgstr "Zjednodušit všechny vybrané cesty"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:126
 #, java-format
 msgid ""
 "The selection contains {0} ways. Are you sure you want to simplify them all?"
 msgstr ""
+"Výběr obsahuje {0} cest. Jste si jistý že je chcete všechny zjednodušit?"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:129
 msgid "Simplify ways?"
-msgstr ""
+msgstr "Zjednodušit cesty?"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:180
 #, java-format
 msgid "Simplify {0} way"
 msgid_plural "Simplify {0} ways"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Zjednodušit {0} cestu"
+msgstr[1] "Zjednodušit {0} cesty"
+msgstr[2] "Zjednodušit {0} cest"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:251
 #: ../plugins/cadastre-fr/src/cadastre_fr/SimplifyWay.java:66
@@ -2392,7 +2396,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:111
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:112
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ChangesetDialog.java:299
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:347
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:345
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:116
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:149
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:104
@@ -2511,7 +2515,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:49
 msgid "range"
-msgstr ""
+msgstr "rozsah"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/PushbackTokenizer.java:49
 msgid "<end-of-file>"
@@ -2811,15 +2815,15 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:653
 msgid "Primitive id expected"
-msgstr ""
+msgstr "Očekáváno ID prvku"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:661
 msgid "Changeset id expected"
-msgstr ""
+msgstr "Očekáváno ID sady změn"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchCompiler.java:663
 msgid "Version expected"
-msgstr ""
+msgstr "Očekávána verze"
 
 #: ../core/src/org/openstreetmap/josm/actions/upload/ApiPreconditionCheckerHook.java:58
 #, java-format
@@ -2833,6 +2837,8 @@ msgid ""
 "Length of value for tag ''{0}'' on object {1} exceeds the max. allowed "
 "length {2}. Values length is {3}."
 msgstr ""
+"Délka hodnoty tagu ''{0}'' na objektu {1} překročila maximální dovolenou "
+"délku {2}. Délka hodnoty je {3}."
 
 #: ../core/src/org/openstreetmap/josm/actions/upload/ApiPreconditionCheckerHook.java:70
 msgid "Precondition Violation"
@@ -2859,6 +2865,8 @@ msgid ""
 "cannot upload them. Please edit the relations and remove the cyclic "
 "dependency.</html>"
 msgstr ""
+"<html>{0} relace tvoří cyklus, protože na sebe vzájemně odkazují.<br>JOSM je "
+"nenahraje na server, dokud závislost neopravíte a neodstraníte cyklus.</html>"
 
 #: ../core/src/org/openstreetmap/josm/actions/upload/RelationUploadOrderHook.java:53
 msgid "Relation ..."
@@ -2891,8 +2899,9 @@ msgstr "Přidat relaci {0}"
 #, java-format
 msgid "Added {0} object"
 msgid_plural "Added {0} objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Přidán {0} objekt"
+msgstr[1] "Přidány {0} objekty"
+msgstr[2] "Přidáno {0} objektů"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangeCommand.java:49
 #, java-format
@@ -2962,7 +2971,7 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:38
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1111
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1114
 msgid "Double conflict"
 msgstr "Dvojí konflikt"
 
@@ -2995,7 +3004,7 @@ msgstr "Vyřešení konfliktu v souřadnicích pro {0}"
 
 #. should not happen
 #: ../core/src/org/openstreetmap/josm/command/CoordinateConflictResolveCommand.java:68
-#: ../core/src/org/openstreetmap/josm/command/DeletedStateConflictResolveCommand.java:78
+#: ../core/src/org/openstreetmap/josm/command/DeletedStateConflictResolveCommand.java:79
 msgid "Cannot resolve undecided conflict."
 msgstr "nemohu vyřešit nerozhodnutý konflikt"
 
@@ -3007,17 +3016,17 @@ msgstr "Pro mazání je třeba vybrat alespoň jeden objekt, nemáte nic vybrán
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:161
 #, java-format
 msgid "Delete node {0}"
-msgstr ""
+msgstr "Smazat bod {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:162
 #, java-format
 msgid "Delete way {0}"
-msgstr ""
+msgstr "Smazat cestu {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:163
 #, java-format
 msgid "Delete relation {0}"
-msgstr ""
+msgstr "Smazat relaci {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:177
 #, java-format
@@ -3104,8 +3113,9 @@ msgstr "Odstraněný objekt ''{0}''"
 #, java-format
 msgid "Purged {0} object"
 msgid_plural "Purged {0} objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Odstraněn {0} objekt"
+msgstr[1] "Odstraněny {0} objekty"
+msgstr[2] "Odstraněno {0} objektů"
 
 #: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:155
 #, java-format
@@ -3175,12 +3185,12 @@ msgstr ""
 msgid "Resolve version conflict for relation {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/WayNodesConflictResolverCommand.java:52
+#: ../core/src/org/openstreetmap/josm/command/WayNodesConflictResolverCommand.java:53
 #, java-format
 msgid "Resolve conflicts in node list of way {0}"
 msgstr "Vyřešit konflikty v seznamu bodů cesty {0}"
 
-#: ../core/src/org/openstreetmap/josm/command/WayNodesConflictResolverCommand.java:70
+#: ../core/src/org/openstreetmap/josm/command/WayNodesConflictResolverCommand.java:71
 #, java-format
 msgid "Main dataset does not include node {0}"
 msgstr "Hlavní datová sada neobsahuje bod {0}"
@@ -3460,29 +3470,29 @@ msgid ""
 "error, it should be safe to continue in your work."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:148
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:216
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:150
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:219
 #, java-format
 msgid "Missing merge target for way with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:164
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:228
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:167
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:235
 #, java-format
 msgid "Missing merge target for node with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:187
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:190
 #, java-format
 msgid "Missing merge target for object with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:243
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:250
 #, java-format
 msgid "Missing merge target for relation with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:248
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:255
 #, java-format
 msgid "Missing merge target of type {0} with id {1}"
 msgstr ""
@@ -3490,7 +3500,7 @@ msgstr ""
 #. should not happen
 #. FIXME: this message does not make sense, source version can not be lower than
 #. target version at this point
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:281
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:292
 #, java-format
 msgid ""
 "Target object with id {0} and version {1} is visible although source object "
@@ -3636,8 +3646,8 @@ msgid ""
 "multiple values."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:291
-#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:313
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:292
+#: ../core/src/org/openstreetmap/josm/data/osm/Way.java:314
 #, java-format
 msgid "Cannot add node {0} to incomplete way {1}."
 msgstr "nelze přidat uzel {0} do nekompletní cesty {1}"
@@ -3753,7 +3763,7 @@ msgstr "nekompletní cesta"
 
 #. darker blue
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:181
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:179
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:183
 msgid "background"
 msgstr "pozadí"
@@ -3995,7 +4005,7 @@ msgstr "Nenalezeno"
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:219
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:114
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:172
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:170
 msgid "Conflict"
 msgstr "Konflikt"
 
@@ -4245,7 +4255,7 @@ msgstr "Soubor"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:84
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:936
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:180
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:144
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:143
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:134
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:209
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:468
@@ -4485,102 +4495,102 @@ msgstr "Cizí se sloučeným"
 msgid "Role {0} is not participating in compare pair {1}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:103
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:207
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:105
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:209
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:178
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:108
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:171
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:110
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:173
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:180
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:235
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:239
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowser.java:132
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:507
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:193
 msgid "Tags"
 msgstr "Značky"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:113
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:256
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:115
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:259
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowser.java:139
 #: ../core/src/org/openstreetmap/josm/gui/history/NodeListTableColumnModel.java:21
 msgid "Nodes"
 msgstr "Body"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:118
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:251
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:271
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:120
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:254
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:275
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowser.java:142
 msgid "Members"
 msgstr "Členové"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:172
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:174
 msgid "No pending tag conflicts to be resolved"
 msgstr "Nezbývají žádné další konflikty značek k vyřešení"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:175
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:177
 #, java-format
 msgid "Tags({0} conflict)"
 msgid_plural "Tags({0} conflicts)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:176
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:178
 #, java-format
 msgid "{0} pending tag conflict to be resolved"
 msgid_plural "{0} pending tag conflicts to be resolved"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:184
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:186
 msgid "Nodes(resolved)"
 msgstr "Body(vyřešeno)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:185
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:187
 msgid ""
 "Merged node list frozen. No pending conflicts in the node list of this way"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:188
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:190
 msgid "Nodes(with conflicts)"
 msgstr "Body(s konflikty)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:189
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:191
 msgid "Pending conflicts in the node list of this way"
 msgstr "Nevyřešené konflikty v seznamu bodů v této cesty"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:194
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:196
 msgid "Members(resolved)"
 msgstr "Členové(vyřešeno)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:195
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:197
 msgid ""
 "Merged member list frozen. No pending conflicts in the member list of this "
 "relation"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:198
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:200
 msgid "Members(with conflicts)"
 msgstr "Členi (s konflikty)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:199
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:201
 msgid "Pending conflicts in the member list of this relation"
 msgstr "Nevyřešené konflikty v seznamu členů této relace"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:208
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:210
 msgid "No pending property conflicts"
 msgstr "Nezbývají žádné konflikty ve vlastnostech"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:211
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:213
 msgid "Properties(with conflicts)"
 msgstr "Vlastnosti (s konflikty)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:212
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:214
 msgid "Pending property conflicts to be resolved"
 msgstr "Zbývající konflikty k vyřešení ve vlastnostech"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:292
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ConflictResolver.java:295
 msgid "Conflict Resolution"
 msgstr "Řešení konfliktů"
 
@@ -4624,7 +4634,7 @@ msgid "Compare "
 msgstr "Porovnat "
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:280
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:85
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:86
 msgid "My version"
 msgstr "Má verze"
 
@@ -4633,8 +4643,8 @@ msgid "List of elements in my dataset, i.e. the local dataset"
 msgstr "Seznam prvků v mé datové sadě, např v lokální datové sadě"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:286
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:91
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:139
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:92
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:140
 msgid "Merged version"
 msgstr "Sloučená verze"
 
@@ -4645,7 +4655,7 @@ msgid ""
 msgstr "Seznam sloučených elementů. Nahradí mé elementy po potvrzení sloučení."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:292
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:97
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:98
 msgid "Their version"
 msgstr "Cizí verze"
 
@@ -4828,32 +4838,32 @@ msgstr "Nastaviteľný {0} ešte neregistrovaný."
 msgid "Node"
 msgstr "Bod"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/nodes/NodeListMergeModel.java:71
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/nodes/NodeListMergeModel.java:68
 msgid "Merged nodes not frozen yet. Cannot build resolution command."
 msgstr "sloučené body nejsou dosud zmražené. Nelze vytvořit příkaz pro řešení"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:460
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:463
 #, java-format
 msgid ""
 "<html>An error occurred while communicating with the server<br>Details: {0}</"
 "html>"
 msgstr "<html>Při komunikaci se serverem doslo k chybě<br>Detaily: {0}</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:464
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:467
 msgid "Communication with server failed"
 msgstr "Komunikace se serverem selhala"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:506
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:540
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:509
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:543
 msgid "Yes, undelete them too"
 msgstr "Ano, obnovit je také"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:507
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:541
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:510
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:544
 msgid "No, cancel operation"
 msgstr "Ne, zruš operaci"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:511
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:514
 #, java-format
 msgid ""
 "There is {0} additional node used by way {1}<br>which is deleted on the "
@@ -4864,11 +4874,11 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:521
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:524
 msgid "Undelete additional nodes?"
 msgstr "Obnovit další body?"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:545
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:548
 #, java-format
 msgid ""
 "There is {0} additional primitive referred to by relation {1}<br>which is "
@@ -4879,15 +4889,15 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:555
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:558
 msgid "Undelete dependent primitives?"
 msgstr "Obnovit závislé prvky?"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:86
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:87
 msgid "Properties in my dataset, i.e. the local dataset"
 msgstr "Vlastnosti v mé datové sadě, např lokální datové sadě"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:92
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:93
 msgid ""
 "Properties in the merged element. They will replace properties in my "
 "elements when merge decisions are applied."
@@ -4895,93 +4905,93 @@ msgstr ""
 "Vlastnosti slučovaného prvku. Nahradí vlastnosti v mých prvcích pokud bude "
 "sloučení aplikováno."
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:98
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:99
 msgid "Properties in their dataset, i.e. the server dataset"
 msgstr "Vlastnosti v cizí datové sadě, např serverová datová sada"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:114
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:115
 msgid "Coordinates:"
 msgstr "Souřadnice:"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:188
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:189
 msgid "Deleted State:"
 msgstr "Stav smazáno:"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:264
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:265
 msgid "Visible State:"
 msgstr "Stav viditelné:"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:340
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:341
 msgid "Referenced by:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:376
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:388
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:397
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:406
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:415
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:377
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:389
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:398
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:407
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:416
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/PresetItemListCellRenderer.java:23
 msgid "(none)"
 msgstr "(žádný)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:390
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:391
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/MultiValueCellRenderer.java:77
 msgid "deleted"
 msgstr "smazáno"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:392
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:393
 msgid "not deleted"
 msgstr "nesmazáno"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:399
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:400
 msgid "visible (on the server)"
 msgstr "viditelný (na serveru)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:401
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:402
 msgid "not visible (on the server)"
 msgstr "neviditelný (na serveru)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:408
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:409
 msgid "Keep a clone of the local version"
 msgstr "Ponechat klon lokální verze"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:410
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:411
 msgid "Physically delete from local dataset"
 msgstr "Fyzicky odstranit z lokální datové sady"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:528
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:529
 msgid "Keep my coordiates"
 msgstr "Ponechat mé souřadnice"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:543
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:544
 msgid "Keep their coordiates"
 msgstr "Ponechat cizí souřadnice"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:558
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:559
 msgid "Undecide conflict between different coordinates"
 msgstr "Nerozhodnutý konflikt rozdílných souřadnic"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:573
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:574
 msgid "Keep my deleted state"
 msgstr "Ponechat můj stav vymazáno"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:588
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:589
 msgid "Keep their deleted state"
 msgstr "Ponechat cizí stav vymazáno"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:603
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:604
 msgid "Undecide conflict between deleted state"
 msgstr "Nerozhodnutý konflikt stavu vymazáno"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:618
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:619
 msgid "Keep my visible state"
 msgstr "Ponechat můj stav viditelné"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:633
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:634
 msgid "Yes, reset the id"
 msgstr "Ano, resetovat id"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:638
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:639
 #, java-format
 msgid ""
 "<html>To keep your local version, JOSM<br>has to reset the id of primitive "
@@ -4989,19 +4999,19 @@ msgid ""
 "yo agree?</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:645
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:646
 msgid "Reset id to 0"
 msgstr "Resetovat id na 0"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:659
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:660
 msgid "Keep their visible state"
 msgstr "Ponechat cizí stav viditelné"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:674
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:675
 msgid "Yes, purge it"
 msgstr "Ano, vyčistit to"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:679
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:680
 #, java-format
 msgid ""
 "<html>JOSM will have to remove your local primitive with id {0}<br>from the "
@@ -5010,11 +5020,11 @@ msgstr ""
 "<html>JOSM odstraní lokální prvek s id {0}<br>z datové sady.<br>Souhlasíte?</"
 "html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:684
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:685
 msgid "Remove from dataset"
 msgstr "Odstranit z datové sady"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:698
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:699
 msgid "Undecide conflict between visible state"
 msgstr "Nerozhodnutý konflikt stavu viditelné"
 
@@ -5082,27 +5092,27 @@ msgstr "Hodnota"
 msgid "Cannot apply undecided tag merge item."
 msgstr "nelze aplikovat nerozhodnutou položku slučování tagů"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:128
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:129
 msgid "My version (local dataset)"
 msgstr "Má verze (lokální datová sada)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:151
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:152
 msgid "Their version (server dataset)"
 msgstr "Cizí verze (serverová datová sada)"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:274
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:275
 msgid "Keep the selected key/value pairs from the local dataset"
 msgstr "Ponechat vybrané páry klíč/hodnota z lokální datové sady"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:304
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:305
 msgid "Keep the selected key/value pairs from the server dataset"
 msgstr "Ponechat vybrané páry klíč/hodnota ze serverové datové sady"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:397
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:398
 msgid "Undecide"
 msgstr "Nerozhodnuto"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:399
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMerger.java:400
 msgid "Mark the selected tags as undecided"
 msgstr "Označit vybrané tagy jako nerozhodnuté"
 
@@ -5143,7 +5153,7 @@ msgstr "Aplikovat vyřešené konflikty"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:360
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:289
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:146
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1121
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1124
 msgid "Apply"
 msgstr "Aplikovat"
 
@@ -5453,22 +5463,22 @@ msgstr "Zásobník příkazů: {0}"
 msgid "Resolve conflicts."
 msgstr "Vyřešit konflikty."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:170
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:168
 #, java-format
 msgid "Conflicts: {0} unresolved"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:327
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:325
 msgid "Resolve"
 msgstr "Vyřešit"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:328
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:326
 msgid "Open a merge dialog of all selected items in the list above."
 msgstr ""
 "Otevřít \"dialog sloučení\" pro všechny vybrané položky z předchozího "
 "seznamu."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:348
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:346
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:117
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:105
 msgid ""
@@ -5587,7 +5597,7 @@ msgid "Object with history"
 msgstr "Objekt s historií"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:282
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:95
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:94
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserDialog.java:148
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:513
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTester.java:100
@@ -5682,7 +5692,7 @@ msgid "Create a new relation"
 msgstr "Vytvořit novou relaci"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:389
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1365
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1368
 msgid "Create a copy of this relation and open it in another editor window"
 msgstr "Vytvořit kopii relace a otevřít ji v novém okně"
 
@@ -5734,7 +5744,7 @@ msgid "Sel.: Rel.:{0} / Ways:{1} / Nodes:{2}"
 msgstr "Výběr: Rel.:{0} / Cest:{1} / Uzlů:{2}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:299
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:349
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:353
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/SelectionTableColumnModel.java:17
 msgid "Selection"
 msgstr "Výběr"
@@ -7432,7 +7442,7 @@ msgstr "Stáhnout členy relace"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:332
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:487
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1092
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1095
 msgid "Conflict in data"
 msgid_plural "Conflicts in data"
 msgstr[0] ""
@@ -7482,28 +7492,28 @@ msgstr ""
 msgid "({0}/{1}): Downloading relation ''{2}''..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:150
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:154
 msgid "Tags and Members"
 msgstr "Značky a Členové"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:152
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:160
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:156
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:164
 msgid "Parent Relations"
 msgstr "Rodičovské relace"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:153
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:157
 msgid "Child Relations"
 msgstr "Potomci relace"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:293
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:297
 msgid "Apply Role:"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:295
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:299
 msgid "Enter a role and apply it to the selected relation members"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:572
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:575
 msgid ""
 "<html>There is at least one member in this relation referring<br>to the "
 "relation itself.<br>This creates circular dependencies and is discouraged."
@@ -7513,16 +7523,16 @@ msgstr ""
 "relaci.<br>To vyváří cyklické závislosti a není to doporučeno.<br>Co chcete "
 "provést s touto cyklickou závislostí?</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:579
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:580
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:582
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:583
 msgid "Remove them, clean up relation"
 msgstr "Odstranit, vyčistit relaci"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:579
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:582
 msgid "Ignore them, leave relation as is"
 msgstr "Ignorovat, ponechat relaci jak je"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:602
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:605
 #, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
@@ -7532,11 +7542,11 @@ msgstr ""
 "<html>Relace již obsahuje minimálně jeden prvek odkazující na<br>prvek "
 "''{0}''<br><br>Opravdu chcete přidat dalšího člena relace?</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:615
 msgid "Multiple members referring to same primitive"
 msgstr "Více členů odkazuje na stejný prvek"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:630
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:633
 #, java-format
 msgid ""
 "<html>You are trying to add a relation to itself.<br><br>This creates "
@@ -7547,18 +7557,18 @@ msgstr ""
 "odkaz a proto není taková úprava povolena.<br>Přeskakuji relaci ''{0}''.</"
 "html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:671
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:674
 msgid ""
 "Add all primitives selected in the current dataset before the first member"
 msgstr "Přidat všechny vybrané prvky z aktuální datové sady před prvního člena"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:697
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:700
 msgid ""
 "Add all primitives selected in the current dataset after the last member"
 msgstr ""
 "Přidat všechny vybrané prvky z aktuální datové sady za posledního člena"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:724
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:727
 msgid ""
 "Add all primitives selected in the current dataset before the first selected "
 "member"
@@ -7566,7 +7576,7 @@ msgstr ""
 "Přidat všechny vybrané prvky z aktuální datové sady před prvního vybraného "
 "člena"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:758
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:761
 msgid ""
 "Add all primitives selected in the current dataset after the last selected "
 "member"
@@ -7574,187 +7584,187 @@ msgstr ""
 "Přidat všechny vybrané prvky z aktuální datové sady za posledního vybraného "
 "člena"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:790
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:793
 msgid "Remove all members referring to one of the selected primitives"
 msgstr "Odstranit všechny členy odkazující na některý z vybraných prvků"
 
 #. putValue(NAME, tr("Remove Selected"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:793
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:796
 msgid "Relation Editor: Remove Selected"
 msgstr "Editor relací: Odstranit vybrané"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:827
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:839
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:830
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:842
 msgid ""
 "Select relation members which refer to primitives in the current selection"
 msgstr "Vybrat členy relace odkazující na prvky v aktuálním výběru"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:837
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:840
 #, java-format
 msgid ""
 "Select relation members which refer to {0} primitives in the current "
 "selection"
 msgstr "Vybrat členy relace odkazující na {0} prvků v aktuálním výběru"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:861
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:864
 msgid "Select primitives for selected relation members"
 msgstr "Vybrat prvky pro vybrané členy relace"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:881
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:884
 msgid "Sort the relation members"
 msgstr "Seřadit členy relace"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:883
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:886
 msgid "Sort"
 msgstr "Řadit"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:884
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:887
 msgid "Relation Editor: Sort"
 msgstr "Editor relací: Třídění"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:904
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:907
 msgid "Reverse the order of the relation members"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:909
 msgid "Reverse"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:907
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:910
 msgid "Relation Editor: Reverse"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:927
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:930
 msgid "Move the currently selected members up"
 msgstr "Přesunout zvolené členy nahoru"
 
 #. putValue(NAME, tr("Move Up"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:930
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:933
 msgid "Relation Editor: Move Up"
 msgstr "Editor relací: Posun nahoru"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:946
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:949
 msgid "Move the currently selected members down"
 msgstr "Přesunout zvolené členy dolů"
 
 #. putValue(NAME, tr("Move Down"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:949
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:952
 msgid "Relation Editor: Move Down"
 msgstr "Editor relací: Posun dolů"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:965
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:968
 msgid "Remove the currently selected members from this relation"
 msgstr "Odstranit vybrané členy z relace"
 
 #. putValue(NAME, tr("Remove"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:968
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:971
 msgid "Relation Editor: Remove"
 msgstr "Editor relací: Odstranit"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:984
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:987
 msgid "Delete the currently edited relation"
 msgstr "Smazat editovanou relaci"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1073
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1076
 msgid "Yes, create a conflict and close"
 msgstr "Ano, vytvořit konflikt a zavřít"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1075
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1078
 msgid "Click to create a conflict and close this relation editor"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1079
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1082
 msgid "No, continue editing"
 msgstr "Ne, pokračovat v editaci"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1081
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1084
 msgid "Click to return to the relation editor and to resume relation editing"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1088
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1091
 msgid ""
 "<html>This relation has been changed outside of the editor.<br>You cannot "
 "apply your changes and continue editing.<br><br>Do you want to create a "
 "conflict and close the editor?</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1105
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1108
 #, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
 "<br>Please resolve this conflict first, then try again.</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1119
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1122
 msgid "Apply the current updates"
 msgstr "Aplikovat aktuální změny"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1152
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1155
 msgid "Apply the updates and close the dialog"
 msgstr "Aplikovat změny a zavřít dialog"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1186
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1189
 msgid "Cancel the updates and close the dialog"
 msgstr "Zrušit změny a zavřít dialog"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1203
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1206
 msgid "Add an empty tag"
 msgstr "Přidat prázdnou značku"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1216
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1219
 msgid "Download all incomplete members"
 msgstr "Stáhnout všechny nekompletní členy"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1218
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1253
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1221
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1256
 msgid "Download Members"
 msgstr "Stáhnout prvky"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1219
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1254
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1222
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1257
 msgid "Relation Editor: Download Members"
 msgstr "Editor relací: Stáhnout členy"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1251
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1254
 msgid "Download selected incomplete members"
 msgstr "Stáhnout vybrané nekompletní členy"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1290
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1293
 msgid "Sets a role for the selected members"
 msgstr "Nastaví roli pro vybrané členy"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1292
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1295
 msgid "Apply Role"
 msgstr "Aplikovat roli"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1306
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1309
 #, java-format
 msgid "You are setting an empty role on {0} primitive."
 msgid_plural "You are setting an empty role on {0} primitives."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1309
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1312
 msgid "This is equal to deleting the roles of these primitives."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1311
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1314
 msgid "Do you really want to apply the new role?"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1313
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1316
 msgid "Yes, apply it"
 msgstr "Ano, aplikovat"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1314
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1317
 msgid "No, do not apply"
 msgstr "Ne, neaplikovat"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1320
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1323
 msgid "Confirm empty role"
 msgstr "Potvrdit prázdnou roli"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1388
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1391
 msgid "Edit the relation the currently selected relation member refers to"
 msgstr "Upravit relaci na kterou odkazuje vybraný člen"
 
@@ -7797,15 +7807,15 @@ msgstr ""
 msgid "including immediate children of parent relations"
 msgstr "včetně přímých potomků rodičovské relace"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:93
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:92
 msgid "Load parent relations"
 msgstr "Načíst rodičovské relace"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:109
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:108
 msgid "Loading parent relations"
 msgstr "Nahrávám rodičovské relace"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:142
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:141
 msgid "Edit the currently selected relation"
 msgstr "Upravit vybranou relaci"
 
@@ -13423,6 +13433,8 @@ msgid ""
 "You updated your JOSM software.<br>To prevent problems the plugins should be "
 "updated as well.<br><br>Update plugins now?"
 msgstr ""
+"Aktualizoval jste verzi JOSM.<br>Pokud chcete předejít potížím, je třeba "
+"aktualizovat také pluginy.<br><br>Aktualizovat nyní pluginy?"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:183
 #, java-format
@@ -13508,7 +13520,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:406
 msgid "Checking plugin preconditions..."
-msgstr ""
+msgstr "Kontroluji požadavky pluginu..."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:433
 #, java-format
@@ -13650,6 +13662,7 @@ msgid ""
 "Do not ask again and remember my decision (go to Preferences->Plugins to "
 "change it later)"
 msgstr ""
+"Neptat příště se a zapamatovat si volbu (změnit lze v Nastavení -> Pluginy)"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:69
 #, java-format
@@ -13969,7 +13982,7 @@ msgid ""
 "<br><br>The error message is:<br>{0}</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:348
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:353
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr "Nelze najít překlad pro jazyk {0}. Vracím se k {1}."
@@ -16485,14 +16498,12 @@ msgid "JOSM Tag Editor Plugin"
 msgstr "Plugin pro editaci tagů v JOSM"
 
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:291
-#, fuzzy
 msgid "Abort tag editing and close dialog"
-msgstr "Aplikovat změny a zavřít dialog"
+msgstr ""
 
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:304
-#, fuzzy
 msgid "Apply edited tags and close dialog"
-msgstr "Aplikovat změny a zavřít dialog"
+msgstr ""
 
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/PresetManager.java:53
 msgid "Highlight"
@@ -30711,9 +30722,6 @@ msgstr "Lodi - Itálie"
 msgid "Sicily - Italy"
 msgstr "Sicily - Itálie"
 
-#~ msgid "<multiple>"
-#~ msgstr "<mnohonásobný>"
-
 #~ msgid "Email"
 #~ msgstr "E-mail"
 
@@ -31844,6 +31852,9 @@ msgstr "Sicily - Itálie"
 #~ msgstr ""
 #~ "<html>Nastavil jste prázdnou roli pro {0} prvků.<br>To je totéž jako "
 #~ "smazání role těchto prvků.<br>Opravdu chcete novou roli aplikovat?</html>"
+
+#~ msgid "<multiple>"
+#~ msgstr "<mnohonásobný>"
 
 #~ msgid "Linked"
 #~ msgstr "Spojený"

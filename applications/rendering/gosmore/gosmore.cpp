@@ -1710,25 +1710,36 @@ struct text2Brendered {
 void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
   text2Brendered *t)
 {
-  text2Brendered nt;
-  nt.s = t->s;
   while (!q->empty ()) {
-//  while (len * 14 <
-//      (cumulative - q.front ().cumulative) * DetailLevel) {
-    nt.x = min (max (q->front ().x, 10), draw->allocation.width - 10);
-    nt.y = min (max (q->front ().y, 10), draw->allocation.height - 10);
-    nt.x2 = min (max (q->back ().x, 10), draw->allocation.width - 10);
-    nt.y2 = min (max (q->back ().y, 10), draw->allocation.height - 10);
-    nt.dst = isqrt (Sqr (nt.x - nt.x2) + Sqr (nt.y - nt.y2));
-    if (q->back ().cumulative - q->front ().cumulative - nt.dst <= *best) {
-      if (nt.dst * DetailLevel > len * 14) {
-        memcpy (t, &nt, sizeof (*t));
-        *best = q->back ().cumulative - q->front (). cumulative - nt.dst;
+    int clip[2] = { 0, 0 }; // Used with q->front or q->back is off-screen
+    int dx = q->back ().x - q->front ().x, dy = q->back ().y - q->front ().y;
+    if (q->size () == 2) { // cumulative can't cope with clipping, so we
+                           // only do it when we know detour will be 0
+      for (int i = 0; i < 2; i++) {
+        linePtType *f = !i ? &q->front () : &q->back ();
+        if (f->x < 10 && dx != 0) clip[i] = max (clip[i], 256 * (10 - f->x) / (i ? -dx : dx));
+        if (f->y < 10 && dy != 0) clip[i] = max (clip[i], 256 * (10 - f->y) / (i ? -dy : dy));
+        int r2x = f->x - draw->allocation.width + 10;
+        if (r2x > 0 && dx != 0) clip[i] = max (clip[i], 256 * r2x / (i ? dx : -dx));
+        int r2y = f->y - draw->allocation.height + 10;
+        if (r2y > 0 && dy != 0) clip[i] = max (clip[i], 256 * r2y / (i ? dy : -dy));
+      }
+    }
+    int dst = isqrt (Sqr (dx) + Sqr (dy)) * (256 - clip[0] - clip[1]) / 256;
+    int detour = q->size () == 2 ? 0 : q->back ().cumulative - q->front ().cumulative - dst;
+    if (detour <= *best) {
+      if (dst * DetailLevel > len * 14) {
+        t->x = q->front ().x + dx * clip[0] / 256;
+        t->y = q->front ().y + dy * clip[0] / 256;
+        t->x2 = q->back ().x - dx * clip[1] / 256;
+        t->y2 = q->back ().y - dy * clip[1] / 256;
+        t->dst = dst;
+        *best = detour;
       }
       if (!finish) break;
     }
     q->pop ();
-  }
+  } // While shortening the queue
 }
 
 int WaySizeCmp (ndType **a, ndType **b)
@@ -2085,7 +2096,8 @@ gint DrawExpose (void)
         text2B.top ().dst = strcspn ((char*)(w + 1) + 1, "\n") * 9;
         text2B.top ().x = -1;
         for (unsigned i = 0; i < pt.size (); i++) {
-          int iy = pt[i].y; // Look for a large horisontal space inside the poly at y=pt[i].y
+          int iy = (pt[i].y + pt[i < pt.size () - 1 ? i + 1 : 0].y) / 2;
+          // Look for a large horisontal space inside the poly at this y value
           vector<int> nx;
           for (unsigned j = 0, k = pt.size () - 1; j < pt.size (); j++) {
             if ((pt[j].y < iy && pt[k].y >= iy) || (pt[k].y < iy && pt[j].y >= iy)) {

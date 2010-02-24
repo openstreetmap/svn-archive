@@ -8,6 +8,8 @@
    buttonlabelaccept="Close"
    autostretch="always"
    ondialogaccept="return true;">
+
+   <script type="application/x-javascript" src="chrome://MyTaH/content/mytah_about.js" />
    <dialogheader title="MyTaH" description="About"/>
    <tabbox>
      <tabs>
@@ -17,20 +19,25 @@
      <tabpanels>
        <tabpanel>
          <box>
-           <html:h1>MyTaH 0.3</html:h1>
-           <html:p><html:strong>Build date</html:strong>: 20100218</html:p>
+           <html:h1 id="about_version">MyTaH </html:h1>
+           <html:p id="about_build_date"><html:strong>Build date</html:strong>: </html:p>
            <html:p><html:strong>Author</html:strong>: Mario Ferraro</html:p>
            <html:a id="mytah_link_home" href="http://osmarenderfrontend.wordpress.com" target="_blank">http://osmarenderfrontend.wordpress.com</html:a>
            <html:p>Released under GPL v2 license or later</html:p>
          </box>
        </tabpanel>
        <tabpanel>
-         <box>
+       <box>
            <html:h1>Changelog</html:h1><html:br />
            <html:p><html:strong>0.3</html:strong></html:p>
+           <html:h5>Release notes</html:h5>
+           <html:p style="max-width:70ex;">This is a maintenance release to make MyTaH compatible with newer versions of Firefox and some refactoring for future enhancements</html:p>
+	   <html:h5>Changelog</html:h5>
            <html:ul>
              <html:li>Make MyTaH compatible with all 3.* Firefox versions</html:li>
              <html:li>New panel tab for changelog</html:li>
+             <html:li>General refactoring to avoid global namespace polluting</html:li>
+	     <html:li>Version and build date now variables</html:li>
            </html:ul>
          </box>
        </tabpanel>

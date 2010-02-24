@@ -6,10 +6,7 @@
    buttons="accept,cancel"
    buttonlabelcancel="Cancel"
    buttonlabelaccept="Save"
-   onload="mytah_preferences_init()"
-   autostretch="always"
-   ondialogaccept="return mytah_preferences_doOK();"
-   ondialogcancel="return mytah_preferences_doCancel();">
+   autostretch="always">
 
   <script type="application/x-javascript" src="chrome://MyTaH/content/mytah_preferences.js" />
   <dialogheader title="MyTaH" description="Preferences" />

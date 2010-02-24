@@ -4,6 +4,11 @@
   min-width:40ex;
 }
 
+#mytah_dialog_about {
+  width: 50ex;
+  max-width: 50ex;
+}
+
 #mytah_link_home {
   color: blue;
 }

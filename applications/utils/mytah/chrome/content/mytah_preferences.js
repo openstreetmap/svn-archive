@@ -1,65 +1,64 @@
-const USER_BY_ID = 0;
-const USER_BY_NAME = 1;
+(function() {
 
-function mytah_preferences_init() {
-  this.prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-  var user;
-  var user_type;
-  var timeout;
-  var display;
+  var mytah = window.arguments[0].mytah;
 
-  if (this.prefs.getPrefType("mytah.user_type") == this.prefs.PREF_INT) {
-    user_type = this.prefs.getIntPref("mytah.user_type");
-  } else {
-    user_type = USER_BY_NAME;
-  }
-  document.getElementById("mytah_usertype").selectedIndex=user_type;
+  mytah.preferences = function () {
+    return new mytah.preferences();
+  };
 
-  if (this.prefs.getPrefType("mytah.user") == this.prefs.PREF_STRING) {
-    user = this.prefs.getCharPref("mytah.user");
-  } else {
-    user = "";
-  }
-  document.getElementById("mytah_user").value=user;
+  mytah.preferences.init = function() {
+    document.getElementById("mytah_usertype").selectedIndex=mytah.prefs.user_type;
+    document.getElementById("mytah_user").value=mytah.prefs.user;
+    document.getElementById("mytah_timeout").value = mytah.prefs.timeout;
+    document.getElementById("mytah_display").selectedItem=document.getElementById("mytah_menuitem_"+mytah.prefs.display);
 
-  if (this.prefs.getPrefType("mytah.timeout") == this.prefs.PREF_INT) {
-    timeout = this.prefs.getIntPref("mytah.timeout");
-  }
-  else {
-    timeout = 60;
-  }
-  document.getElementById("mytah_timeout").value = timeout;
+    document.getElementById("mytah_dialog_preferences").addEventListener("dialogaccept", mytah.preferences.doOk, false);
+    document.getElementById("mytah_dialog_preferences").addEventListener("dialogcancel", mytah.preferences.doCancel, false);
 
-  if (this.prefs.getPrefType("mytah.display") == this.prefs.PREF_STRING) {
-    display = this.prefs.getCharPref("mytah.display");
-  } else {
-    display = "current_rank";
-  }
-  document.getElementById("mytah_display").selectedItem=document.getElementById("mytah_menuitem_"+display);
-}
+  };
+
+  mytah.preferences.doOk = function() {
+    var user;
+    var timeout;
+    var display;
+    var preferences = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
 
 
-function mytah_preferences_doOK() {
-  var user;
-  var timeout;
+    if (document.getElementById("mytah_username").selected) {
+      preferences.setIntPref("mytah.user_type", mytah.USER_BY_NAME);
+    } else if (document.getElementById("mytah_userid").selected) {
+      preferences.setIntPref("mytah.user_type", mytah.USER_BY_ID);
+    }
 
-  if (document.getElementById("mytah_username").selected) {
-    this.prefs.setIntPref("mytah.user_type", USER_BY_NAME);
-  } else if (document.getElementById("mytah_userid").selected) {
-    this.prefs.setIntPref("mytah.user_type", USER_BY_ID);
-  }
+    user = document.getElementById("mytah_user").value;
+    timeout = document.getElementById("mytah_timeout").value;
+    display = document.getElementById("mytah_display").selectedItem.value;
 
-  user = document.getElementById("mytah_user").value;
-  timeout = document.getElementById("mytah_timeout").value;
-  display = document.getElementById("mytah_display").selectedItem.value;
+    preferences.setCharPref("mytah.user", user);
+    mytah.prefs.user = user;
+    preferences.setIntPref("mytah.timeout", timeout);
+    mytah.prefs.timeout = timeout;
+    preferences.setCharPref("mytah.display", display);
+    mytah.prefs.display = display;
+    window.arguments[0].out={result:"ok"};
 
-  this.prefs.setCharPref("mytah.user", user);
-  this.prefs.setIntPref("mytah.timeout", timeout);
-  this.prefs.setCharPref("mytah.display", display);
-  window.arguments[0].out={result:"ok"};
-  return true;
-}
+    return true;
+  };
 
-function mytah_preferences_doCancel() {
-  return true;
-}
+  mytah.preferences.doCancel = function() {
+    return true;
+  };
+
+  mytah.preferences.shutdown = function () {
+    window.removeEventListener("load", mytah.preferences.init, false);
+    window.removeEventListener("unload", mytah.preferences.shutdown, false);
+    document.getElementById("mytah_dialog_preferences").removeEventListener("dialogaccept", mytah.preferences.doOk, false);
+    document.getElementById("mytah_dialog_preferences").removeEventListener("dialogcancel", mytah.preferences.doCancel, false);
+  };
+
+  window.addEventListener("load", mytah.preferences.init, false);
+  window.addEventListener("unload", mytah.preferences.shutdown, false);
+
+}());
+
+

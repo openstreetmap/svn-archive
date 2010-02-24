@@ -54,10 +54,10 @@ sub new
     my $delTmpDir = 1-$Config->get('Debug');
 
     $self->{JobDir} = tempdir( 
-         sprintf("%d_%d_%d_XXXXX",$self->{req}->ZXY),
-         DIR      => $Config->get('WorkingDirectory'), 
-	 CLEANUP  => $delTmpDir,
-         );
+        sprintf("%d_%d_%d_XXXXX",$self->{req}->ZXY),
+        DIR      => $Config->get('WorkingDirectory'), 
+        CLEANUP  => $delTmpDir,
+        );
 
     # create true color images by default
     GD::Image->trueColor(1);
@@ -98,19 +98,25 @@ sub new
             $self->{inkscape_autobackup}{backupfile} = "$self->{inkscape_autobackup}{cfgfile}.bak"
                 if defined($self->{inkscape_autobackup}{cfgfile});
 
-            if( -f $self->{inkscape_autobackup}{cfgfile} ){
-                if ( -s $self->{inkscape_autobackup}{cfgfile} == 0 ) {
+            if( -f $self->{inkscape_autobackup}{cfgfile} )
+            {
+                if ( -s $self->{inkscape_autobackup}{cfgfile} == 0 ) 
+                {
                     #emty config file found! i delete it
                     unlink($self->{inkscape_autobackup}{cfgfile});
                 }
-                else {
+                else 
+                {
                     copy($self->{inkscape_autobackup}{cfgfile}, $self->{inkscape_autobackup}{backupfile})
-                        or do {
+                        or do 
+                    {
                             warn "Error doing backup of $self->{inkscape_autobackup}{cfgfile} to $self->{inkscape_autobackup}{backupfile}: $!\n";
                             delete($self->{inkscape_autobackup});
                     };
                 }
-            } else {
+            } 
+            else 
+            {
                 delete($self->{inkscape_autobackup});
             }
         }
@@ -995,39 +1001,39 @@ sub runPreprocessors
         }
         elsif ($preprocessor eq "area-center")
         {
-           if ($Config->get("JavaAvailable"))
-           {
-	       if ($Config->get("JavaVersion") >= 1.6)
-               {
-                   my $javaHeapSize; ## default values for overridable config parameters go into config.defaults so as to ease maintenance.
-                   if ($Config->get('JavaHeapSize'))
-                   {
-                       $javaHeapSize = $Config->get('JavaHeapSize');
-                   }
+            if ($Config->get("JavaAvailable"))
+            {
+                if ($Config->get("JavaVersion") >= 1.6)
+                {
+                    my $javaHeapSize; ## default values for overridable config parameters go into config.defaults so as to ease maintenance.
+                    if ($Config->get('JavaHeapSize'))
+                    {
+                        $javaHeapSize = $Config->get('JavaHeapSize');
+                    }
 
-                   # use preprocessor only for XSLT for now. Using different algorithm for area center might provide inconsistent results"
-                   # on tile boundaries. But XSLT is currently in minority and use different algorithm than orp anyway, so no difference.
-                   my $Cmd = sprintf("java -Xmx%s -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
-                               $javaHeapSize,
-                               join($Config->get("JavaSeparator"), "java/osmosis/osmosis.jar", "java/area-center.jar"),
-                               $inputFile,
-                               $outputFile);
-                   ::statusMessage("Running area-center",0,3);
-                   if (!::runCommand($Cmd,$$))
-                   {
-                       ::statusMessage("Area-center failed, ignoring",0,3);
-                       copy($inputFile,$outputFile);
-                   }
-               } else 
-               {
-                   ::statusMessage("Java version at least 1.6 is required for area-center preprocessor",0,3);
-                   copy($inputFile,$outputFile);
-               }
-           }
-           else
-           {
-              copy($inputFile,$outputFile);
-           }
+                    # use preprocessor only for XSLT for now. Using different algorithm for area center might provide inconsistent results"
+                    # on tile boundaries. But XSLT is currently in minority and use different algorithm than orp anyway, so no difference.
+                    my $Cmd = sprintf("java -Xmx%s -cp %s com.bretth.osmosis.core.Osmosis -q -p org.tah.areaCenter.AreaCenterPlugin --read-xml %s --area-center --write-xml %s",
+                                $javaHeapSize,
+                                join($Config->get("JavaSeparator"), "java/osmosis/osmosis.jar", "java/area-center.jar"),
+                                $inputFile,
+                                $outputFile);
+                    ::statusMessage("Running area-center",0,3);
+                    if (!::runCommand($Cmd,$$))
+                    {
+                        ::statusMessage("Area-center failed, ignoring",0,3);
+                        copy($inputFile,$outputFile);
+                    }
+                } else 
+                {
+                    ::statusMessage("Java version at least 1.6 is required for area-center preprocessor",0,3);
+                    copy($inputFile,$outputFile);
+                }
+            }
+            else
+            {
+                copy($inputFile,$outputFile);
+            }
         }
         elsif ($preprocessor eq "noop")
         {

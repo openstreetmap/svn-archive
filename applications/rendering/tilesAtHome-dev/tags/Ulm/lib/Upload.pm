@@ -197,7 +197,8 @@ sub upload
         
         ::statusMessage("Uploading $file_name", 0, 3);
 
-        sleep(int($self->UploadOkOrNot/50));
+        sleep(30) if ($self->UploadOkOrNot >= 990); # unlikely we can upload, so we wait a short while 
+                                                    # TODO: use some flexible sleepdelay, or better yet, use a flexible delay before requesting new work.
         
         my $res = $ua->post($URL,
                             Content_Type => 'form-data',
@@ -278,7 +279,7 @@ sub UploadOkOrNot
          # $res->status_line; contains result here.
          ::statusMessage("Failed to retrieve server queue load. Assuming full queue.",1,0);
          return 1000;
-   }
+    }
     # Load is a float value between [0,1]
     my $Load = $res->content;
     chomp $Load;

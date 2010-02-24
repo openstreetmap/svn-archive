@@ -62,7 +62,41 @@ sub new
 
     return $self;
 }
+#-------------------------------------------------------------------------------
+=pod 
 
+=back
+
+=head3 Instance methods
+
+=over
+
+=item C<< ->getServerLoad() >>
+
+Calculate the load of the server via GoNogo.  Returns the load returned
+by the server as a number between 0 and 1000, 1000 meaning a full queue.
+
+=cut
+#-------------------------------------------------------------------------------
+sub getServerLoad
+{
+    my $self = shift();
+    ::statusMessage("Checking server queue",0,3);
+    my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
+    $ua->env_proxy();
+    my $res = $ua->get($self->{Config}->get("GoNogoURL"));
+
+    if (! $res->is_success)
+    {    # Failed to retrieve server load
+         # $res->status_line; contains result here.
+         ::statusMessage("Failed to retrieve server queue load. Assuming full queue.",1,0);
+         return 1000;
+    }
+    # Load is a float value between [0,1]
+    my $Load = $res->content;
+    chomp $Load;
+    return ($Load*1000);
+}
 
 #-------------------------------------------------------------------------------
 =pod 
@@ -120,6 +154,12 @@ object.
 sub fetchRequest
 {
     my $self = shift;
+    
+    while ($self->getServerLoad > 850) # this should be transformed into something with dynamic waits based upon the load returned. i.e. wait 30 seconds if the load is above 850, but wait a couple of minutes when load above 990.
+    {
+       ::talkInSleep("* Server load too high, unlikely we can upload after rendering, waiting 30s.",30);
+    }
+    
     my $Request;
 
     my $Requeststring = $self->getString($self->{Config}->get("RequestURL"));

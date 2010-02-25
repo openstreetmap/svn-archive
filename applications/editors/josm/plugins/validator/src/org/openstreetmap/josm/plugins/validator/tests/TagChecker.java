@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +41,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
@@ -148,7 +150,7 @@ public class TagChecker extends Test
     public TagChecker()
     {
         super(tr("Properties checker :"),
-              tr("This plugin checks for errors in property keys and values."));
+                tr("This plugin checks for errors in property keys and values."));
     }
 
     @Override
@@ -326,9 +328,9 @@ public class TagChecker extends Test
             // TODO directionKeys are no longer in OsmPrimitive (search pattern is used instead)
             /*  for(String a : OsmPrimitive.getDirectionKeys())
                 presetsValueData.add(a);
-            */
+             */
             for(String a : Main.pref.getCollection(PreferenceEditor.PREFIX + ".knownkeys",
-            Arrays.asList(new String[]{"is_in", "int_ref", "fixme", "population"})))
+                    Arrays.asList(new String[]{"is_in", "int_ref", "fixme", "population"})))
                 presetsValueData.add(a);
             for(TaggingPreset p : presets)
             {
@@ -430,17 +432,18 @@ public class TagChecker extends Test
                 if(!ignore)
                 {
                     errors.add( new TestError(this, Severity.ERROR, tr("Illegal tag/value combinations"),
-                    tr("Illegal tag/value combinations"), tr("Illegal tag/value combinations"), 1272, p) );
+                            tr("Illegal tag/value combinations"), tr("Illegal tag/value combinations"), 1272, p) );
                     withErrors.add(p, "TC");
                 }
             }
 
+            Map<String, String> keys = p.getKeys();
             for(CheckerData d : checkerData)
             {
-                if(d.match(p))
+                if(d.match(p, keys))
                 {
                     errors.add( new TestError(this, d.getSeverity(), tr("Illegal tag/value combinations"),
-                    d.getDescription(), d.getDescriptionOrig(), d.getCode(), p) );
+                            d.getDescription(), d.getDescriptionOrig(), d.getCode(), p) );
                     withErrors.add(p, "TC");
                 }
             }
@@ -455,7 +458,7 @@ public class TagChecker extends Test
                     /* passing translated text also to original string, as we already
                     translated the stuff before. Makes the ignore file language dependend. */
                     errors.add( new TestError(this, Severity.WARNING, tr("Painting problem"),
-                    s, s, PAINT, p) );
+                            s, s, PAINT, p) );
                     withErrors.add(p, "P");
                 }
             }
@@ -470,31 +473,31 @@ public class TagChecker extends Test
             if( checkValues && (value==null || value.trim().length() == 0) && !withErrors.contains(p, "EV"))
             {
                 errors.add( new TestError(this, Severity.WARNING, tr("Tags with empty values"),
-                tr(s, key), MessageFormat.format(s, key), EMPTY_VALUES, p) );
+                        tr(s, key), MessageFormat.format(s, key), EMPTY_VALUES, p) );
                 withErrors.add(p, "EV");
             }
             if( checkKeys && spellCheckKeyData.containsKey(key) && !withErrors.contains(p, "IPK"))
             {
                 errors.add( new TestError(this, Severity.WARNING, tr("Invalid property key"),
-                tr(s, key), MessageFormat.format(s, key), INVALID_KEY, p) );
+                        tr(s, key), MessageFormat.format(s, key), INVALID_KEY, p) );
                 withErrors.add(p, "IPK");
             }
             if( checkKeys && key.indexOf(" ") >= 0 && !withErrors.contains(p, "IPK"))
             {
                 errors.add( new TestError(this, Severity.WARNING, tr("Invalid white space in property key"),
-                tr(s, key), MessageFormat.format(s, key), INVALID_KEY_SPACE, p) );
+                        tr(s, key), MessageFormat.format(s, key), INVALID_KEY_SPACE, p) );
                 withErrors.add(p, "IPK");
             }
             if( checkValues && value != null && (value.startsWith(" ") || value.endsWith(" ")) && !withErrors.contains(p, "SPACE"))
             {
                 errors.add( new TestError(this, Severity.OTHER, tr("Property values start or end with white space"),
-                tr(s, key), MessageFormat.format(s, key), INVALID_SPACE, p) );
+                        tr(s, key), MessageFormat.format(s, key), INVALID_SPACE, p) );
                 withErrors.add(p, "SPACE");
             }
             if( checkValues && value != null && !value.equals(entities.unescape(value)) && !withErrors.contains(p, "HTML"))
             {
                 errors.add( new TestError(this, Severity.OTHER, tr("Property values contain HTML entity"),
-                tr(s, key), MessageFormat.format(s, key), INVALID_HTML, p) );
+                        tr(s, key), MessageFormat.format(s, key), INVALID_HTML, p) );
                 withErrors.add(p, "HTML");
             }
             if( checkValues && value != null && value.length() > 0 && presetsValueData != null)
@@ -522,7 +525,7 @@ public class TagChecker extends Test
                     {
                         String i = marktr("Key ''{0}'' not in presets.");
                         errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property key"),
-                        tr(i, key), MessageFormat.format(i, key), INVALID_VALUE, p) );
+                                tr(i, key), MessageFormat.format(i, key), INVALID_VALUE, p) );
                         withErrors.add(p, "UPK");
                     }
                 }
@@ -545,21 +548,21 @@ public class TagChecker extends Test
                     {
                         String i = marktr("Value ''{0}'' for key ''{1}'' not in presets.");
                         errors.add( new TestError(this, Severity.OTHER, tr("Presets do not contain property value"),
-                        tr(i, prop.getValue(), key), MessageFormat.format(i, prop.getValue(), key), INVALID_VALUE, p) );
+                                tr(i, prop.getValue(), key), MessageFormat.format(i, prop.getValue(), key), INVALID_VALUE, p) );
                         withErrors.add(p, "UPV");
                     }
                 }
             }
-			if (checkFixmes && value != null && value.length() > 0) {
-				if ((value.toLowerCase().contains("FIXME")
-						|| value.contains("check and delete")
-						|| key.contains("todo") || key.toLowerCase().contains("fixme"))
-						&& !withErrors.contains(p, "FIXME")) {
-					errors.add(new TestError(this, Severity.OTHER,
-							tr("FIXMES"), FIXME, p));
-					withErrors.add(p, "FIXME");
-				}
-			}
+            if (checkFixmes && value != null && value.length() > 0) {
+                if ((value.toLowerCase().contains("FIXME")
+                        || value.contains("check and delete")
+                        || key.contains("todo") || key.toLowerCase().contains("fixme"))
+                        && !withErrors.contains(p, "FIXME")) {
+                    errors.add(new TestError(this, Severity.OTHER,
+                            tr("FIXMES"), FIXME, p));
+                    withErrors.add(p, "FIXME");
+                }
+            }
         }
     }
 
@@ -599,7 +602,7 @@ public class TagChecker extends Test
     public void addGui(JPanel testPanel)
     {
         GBC a = GBC.eol();
-        a.anchor = GBC.EAST;
+        a.anchor = GridBagConstraints.EAST;
 
         testPanel.add( new JLabel(name), GBC.eol().insets(3,0,0,0) );
 
@@ -636,7 +639,7 @@ public class TagChecker extends Test
                         tr("TagChecker source"),
                         tr("TagChecker source"),
                         JOptionPane.QUESTION_MESSAGE
-                        );
+                );
                 if (source != null)
                     ((DefaultListModel)Sources.getModel()).addElement(source);
                 Sources.clearSelection();
@@ -667,7 +670,7 @@ public class TagChecker extends Test
                                 tr("Please select the row to edit."),
                                 tr("Information"),
                                 JOptionPane.INFORMATION_MESSAGE
-                                );
+                        );
                     }
                 }
                 else {
@@ -702,9 +705,9 @@ public class TagChecker extends Test
         deleteSrcButton.setToolTipText(tr("Delete the selected source from the list."));
 
         testPanel.add(new JLabel(tr("Data sources")), GBC.eol().insets(23,0,0,0));
-        testPanel.add(new JScrollPane(Sources), GBC.eol().insets(23,0,0,0).fill(GBC.HORIZONTAL));
+        testPanel.add(new JScrollPane(Sources), GBC.eol().insets(23,0,0,0).fill(GridBagConstraints.HORIZONTAL));
         final JPanel buttonPanel = new JPanel(new GridBagLayout());
-        testPanel.add(buttonPanel, GBC.eol().fill(GBC.HORIZONTAL));
+        testPanel.add(buttonPanel, GBC.eol().fill(GridBagConstraints.HORIZONTAL));
         buttonPanel.add(addSrcButton, GBC.std().insets(0,5,0,0));
         buttonPanel.add(editSrcButton, GBC.std().insets(5,5,5,0));
         buttonPanel.add(deleteSrcButton, GBC.std().insets(0,5,0,0));
@@ -836,7 +839,7 @@ public class TagChecker extends Test
                         if( replacementKey != null )
                         {
                             commands.add( new ChangePropertyKeyCommand(Collections.singleton(primitives.get(i)),
-                            key, replacementKey) );
+                                    key, replacementKey) );
                         }
                     }
                 }
@@ -878,13 +881,9 @@ public class TagChecker extends Test
     private static class CheckerData {
         private String description;
         private List<CheckerElement> data = new ArrayList<CheckerElement>();
-        private Integer type = 0;
-        private Integer code;
+        private OsmPrimitiveType type;
+        private int code;
         protected Severity severity;
-        protected static int NODE = 1;
-        protected static int WAY = 2;
-        protected static int RELATION = 3;
-        protected static int ALL = 4;
         protected static int TAG_CHECK_ERROR  = 1250;
         protected static int TAG_CHECK_WARN   = 1260;
         protected static int TAG_CHECK_INFO   = 1270;
@@ -914,31 +913,29 @@ public class TagChecker extends Test
                     tagAll = true;
                 else
                     tag = n.startsWith("/") ? getPattern(n) : n;
-                noMatch = m.group(2).equals("!=");
-                n = m.group(3).trim();
-                if(n.equals("*"))
-                    valueAll = true;
-                else if(n.equals("BOOLEAN_TRUE"))
-                {
-                    valueBool = true;
-                    value = OsmUtils.trueval;
-                }
-                else if(n.equals("BOOLEAN_FALSE"))
-                {
-                    valueBool = true;
-                    value = OsmUtils.falseval;
-                }
-                else
-                    value = n.startsWith("/") ? getPattern(n) : n;
+                    noMatch = m.group(2).equals("!=");
+                    n = m.group(3).trim();
+                    if(n.equals("*"))
+                        valueAll = true;
+                    else if(n.equals("BOOLEAN_TRUE"))
+                    {
+                        valueBool = true;
+                        value = OsmUtils.trueval;
+                    }
+                    else if(n.equals("BOOLEAN_FALSE"))
+                    {
+                        valueBool = true;
+                        value = OsmUtils.falseval;
+                    }
+                    else
+                        value = n.startsWith("/") ? getPattern(n) : n;
             }
-            public boolean match(OsmPrimitive osm)
-            {
-                for(Entry<String, String> prop: osm.getKeys().entrySet())
-                {
+            public boolean match(OsmPrimitive osm, Map<String, String> keys) {
+                for(Entry<String, String> prop: keys.entrySet()) {
                     String key = prop.getKey();
                     String val = valueBool ? OsmUtils.getNamedOsmBoolean(prop.getValue()) : prop.getValue();
                     if((tagAll || (tag instanceof Pattern ? ((Pattern)tag).matcher(key).matches() : key.equals(tag)))
-                    && (valueAll || (value instanceof Pattern ? ((Pattern)value).matcher(val).matches() : val.equals(value))))
+                            && (valueAll || (value instanceof Pattern ? ((Pattern)value).matcher(val).matches() : val.equals(value))))
                         return !noMatch;
                 }
                 return noMatch;
@@ -961,15 +958,18 @@ public class TagChecker extends Test
             }
             String[] n = str.split(" *: *", 3);
             if(n[0].equals("way"))
-                type = WAY;
+                type = OsmPrimitiveType.WAY;
             else if(n[0].equals("node"))
-                type = NODE;
+                type = OsmPrimitiveType.NODE;
             else if(n[0].equals("relation"))
-                type = RELATION;
+                type = OsmPrimitiveType.RELATION;
             else if(n[0].equals("*"))
-                type = ALL;
-            if(type == 0 || n.length != 3)
+                type = null;
+            else
                 return tr("Could not find element type");
+            if (n.length != 3)
+                return tr("Incorrect number of parameters");
+
             if(n[1].equals("W"))
             {
                 severity = Severity.WARNING;
@@ -1004,14 +1004,13 @@ public class TagChecker extends Test
             }
             return null;
         }
-        public boolean match(OsmPrimitive osm)
+        public boolean match(OsmPrimitive osm, Map<String, String> keys)
         {
-            if(osm.getKeys() == null || (type == NODE && !(osm instanceof Node))
-            || (type == RELATION && !(osm instanceof Relation)) || (type == WAY && !(osm instanceof Way)))
+            if (type != null && OsmPrimitiveType.from(osm) != type)
                 return false;
-            for(CheckerElement ce : data)
-            {
-                if(!ce.match(osm))
+
+            for(CheckerElement ce : data) {
+                if(!ce.match(osm, keys))
                     return false;
             }
             return true;
@@ -1028,9 +1027,13 @@ public class TagChecker extends Test
         {
             return severity;
         }
-        public int getCode()
-        {
-            return code + type;
+
+        public int getCode() {
+            if (type == null) {
+                return code;
+            } else {
+                return code + type.ordinal() + 1;
+            }
         }
     }
 }

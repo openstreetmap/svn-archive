@@ -1,7 +1,7 @@
 package org.openstreetmap.josm.plugins.validator.util;
 
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.HashSet;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -20,15 +20,7 @@ import org.openstreetmap.josm.data.osm.visitor.AbstractVisitor;
 public class AgregatePrimitivesVisitor extends AbstractVisitor
 {
     /** Aggregated data */
-    Collection<OsmPrimitive> aggregatedData;
-
-    /**
-     * Constructor
-     */
-    public AgregatePrimitivesVisitor()
-    {
-        aggregatedData = new LinkedList<OsmPrimitive>();
-    }
+    final Collection<OsmPrimitive> aggregatedData = new HashSet<OsmPrimitive>();
 
     /**
      * Visits a collection of primitives

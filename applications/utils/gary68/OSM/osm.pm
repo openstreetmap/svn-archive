@@ -77,7 +77,10 @@
 # Version 5.3
 # - new html output functions
 #
-
+#
+# Version 5.4
+# - support negative ids
+#
 #
 # USAGE
 #
@@ -161,7 +164,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.3' ; 
+$VERSION = '5.4' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -244,7 +247,7 @@ sub getNode {
 	my @gTags = () ;
 	if($line =~ /^\s*\<node/) {
 
-		my ($id)   = ($line =~ /^\s*\<node id=[\'\"](\d+)[\'\"]/);	# get node id
+		my ($id)   = ($line =~ /^\s*\<node id=[\'\"]([-\d]+)[\'\"]/);	# get node id
 		my ($lon) = ($line =~ /^.+lon=[\'\"]([-\d,\.]+)[\'\"]/);	# get position
 		my ($lat) = ($line =~ /^.+lat=[\'\"]([-\d,\.]+)[\'\"]/);	# get position
 
@@ -310,7 +313,7 @@ sub getNode2 {
 	my @gTags = () ;
 	if($line =~ /^\s*\<node/) {
 
-		my ($id)   = ($line =~ /^\s*\<node id=[\'\"](\d+)[\'\"]/);	# get node id
+		my ($id)   = ($line =~ /^\s*\<node id=[\'\"]([-\d]+)[\'\"]/);	# get node id
 		my ($lon) = ($line =~ /^.+lon=[\'\"]([-\d,\.]+)[\'\"]/);	# get position
 		my ($lat) = ($line =~ /^.+lat=[\'\"]([-\d,\.]+)[\'\"]/);	# get position
 
@@ -378,7 +381,7 @@ sub getWay {
 	my @gTags ;
 	my @gNodes ;
 	if($line =~ /^\s*\<way/) {
-		my ($id)   = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/); # get way id
+		my ($id)   = ($line =~ /^\s*\<way id=[\'\"]([-\d]+)[\'\"]/); # get way id
 		my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/);       # get value // REGEX???
 		if (!$u) {
 			$u = "unknown" ;
@@ -431,7 +434,7 @@ sub getWay2 {
 	my @gTags ;
 	my @gNodes ;
 	if($line =~ /^\s*\<way/) {
-		my ($id)   = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/); # get way id
+		my ($id)   = ($line =~ /^\s*\<way id=[\'\"]([-\d]+)[\'\"]/); # get way id
 		my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/);       # get value // REGEX???
 		if (!$u) {
 			$u = "unknown" ;
@@ -491,7 +494,7 @@ sub getRelation {
 
 	if ($line =~ /^\s*\<relation/) {
 
-		my ($id)   = ($line =~ /^\s*\<relation id=[\'\"](\d+)[\'\"]/); # get rel id
+		my ($id)   = ($line =~ /^\s*\<relation id=[\'\"]([-\d]+)[\'\"]/); # get rel id
 		my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/);     
 		if (!$u) {
 			$u = "unknown" ;

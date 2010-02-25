@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.GridBagLayout;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.MergeNodesAction;
@@ -150,15 +153,21 @@ public class DuplicateNode extends Test{
                 if (osm instanceof Node && !osm.isNew()) {
                     Node n = (Node) osm;
                     if (!a.contains(n.getCoor())) {
+                        JPanel msg = new JPanel(new GridBagLayout());
+                        msg.add(new JLabel(
+                                "<html>" +
+                                // leave message in one tr() as there is a grammatical
+                                // connection.
+                                tr("You are about to delete nodes outside of the area you have downloaded."
+                                        + "<br>"
+                                        + "This can cause problems because other objects (that you do not see) might use them."
+                                        + "<br>" + "Do you really want to delete?") + "</html>"));
+
                         return ConditionalOptionPaneUtil.showConfirmationDialog(
                             "delete_outside_nodes",
                             Main.parent,
-                            tr("You are about to delete nodes outside of the area you have downloaded." +
-                                                "<br>" +
-                                                "This can cause problems because other objects (that you don't see) might use them." +
-                                                "<br>" +
-                                        "Do you really want to delete?") + "</html>",
-                            tr("Confirmation"),
+                            msg,
+                            tr("Delete confirmation"),
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE,
                             JOptionPane.YES_OPTION);

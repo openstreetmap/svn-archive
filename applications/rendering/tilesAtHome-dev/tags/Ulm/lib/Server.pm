@@ -155,7 +155,7 @@ sub fetchRequest
 {
     my $self = shift;
     
-    while ($self->getServerLoad > 850) # this should be transformed into something with dynamic waits based upon the load returned. i.e. wait 30 seconds if the load is above 850, but wait a couple of minutes when load above 990.
+    while ($self->getServerLoad > 750) # this should be transformed into something with dynamic waits based upon the load returned. i.e. wait 30 seconds if the load is above 750, but wait a couple of minutes when load above 990.
     {
        ::talkInSleep("* Server load too high, unlikely we can upload after rendering, waiting 30s.",30);
     }

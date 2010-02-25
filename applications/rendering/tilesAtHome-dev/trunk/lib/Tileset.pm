@@ -184,7 +184,7 @@ sub generate
         else
         {
             $FullDataFile = File::Spec->join($self->{JobDir}, "data.osm");
-            copy($DataFile, $FullDataFile); ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
+            copy($DataFile, $FullDataFile) or throw TilesetError "could not copy data file", "fatal"; ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
         }
 
         #------------------------------------------------------
@@ -245,7 +245,7 @@ sub generate
                 else
                 {
                     $FullDataFile = File::Spec->join($self->{JobDir}, "data.osm");
-                    copy($DataFile, $FullDataFile); ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
+                    copy($DataFile, $FullDataFile) or throw TilesetError "could not copy data file", "fatal"; ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
                 }
                 $self->generateNormalLayer($layer);
             }
@@ -1403,7 +1403,7 @@ sub SplitTiles
 
                 # Check for black tile output
                 if (not ($SubImage->compare($self->{BlackTileImage}) & GD_CMP_IMAGE)) {
-                    throw TilesetError "SplitTiles: Black Tile encountered", "inkscape";
+                    throw TilesetError "SplitTiles: Black Tile encountered", "rasterizer";
                 }
 
                 # Detect empty tile here:

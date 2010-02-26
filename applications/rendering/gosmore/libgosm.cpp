@@ -1239,7 +1239,11 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
 
         strncasecmp (i->first, "cladr:", 6)  != 0 && // Some Russian import
 
+        strncasecmp (i->first, "chile:", 6)  != 0 && // vialidad.cl import
+        strncasecmp (i->first, "navibot:", 8)  != 0 && // navimont's tag
+        
         strncasecmp (i->first, "is_in:", 6)  != 0 && // teryt
+        
         strncasecmp (i->first, "teryt:", 6)  != 0 && // in Poland
 
         strncasecmp (i->first, "naptan:", 7)  != 0 && // UK bus stops
@@ -1253,6 +1257,9 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         
         strncmp (i->first, "qroti:", 6) != 0 &&
 
+        strcmp (i->first, "building") != 0 &&
+        strcmp (i->first, "building:use") != 0 &&
+        
         strcmp (i->first, "note:ja") != 0 &&
         strcmp (i->first, "import_uuid") != 0 &&
         strcmp (i->first, "attribution") /* Mostly MassGIS */ != 0 &&
@@ -1326,19 +1333,22 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
                       strcmp (i->first, "abutters") != 0 &&
                       strcmp (i->second, "coastline") != 0))) {
       result.push_back (
-        strcmp (i->first, "population") == 0 ? string ("\npop=") + i->second + '\n':
+        strcmp (i->first, "population") == 0 ? string ("\npop. ") + i->second + '\n':
         // Don't index population figures, but make it obvious what it is.
-        strcmp (i->first, "phone") == 0 ? string ("\n") + i->second + '\n':
-        // Don't index phonenumbers
+        strcmp (i->first, "phone") == 0 || strcmp (i->first, "addr:housenumber") == 0 ?
+          string ("\n") + i->second + '\n':
+        // Don't index phonenumbers or housenumbers.
+        // Some day I hope to include housenumber data into the data for the street it is on.
+        // Then, when the user enters a housenumber and a street name,
+        // we search by street and filter by housenumber
         strcmp (i->first, "noexit") == 0 ? string ("\nnoexit\n") :
         // Don't index noexit
         strncasecmp (i->first, "wikipedia", 9) == 0 ?
                          string ("\nwikipedia\n") :
         // Don't index wikipedia names, but make it obvious that it's on there.
         string (strcmp (i->second, "true") == 0 ||
-        strcmp (i->second, "yes") == 0 ||
-        (strcmp (i->second, "1") == 0 && strcmp (i->first, "addr:housenumber") != 0)
-        ? i->first : i->second) + "\n");
+                strcmp (i->second, "yes") == 0 || strcmp (i->second, "1") == 0
+                ? i->first : i->second) + "\n");
     }
   }
   membershipType m;

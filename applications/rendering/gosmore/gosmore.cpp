@@ -1893,7 +1893,7 @@ gint DrawExpose (void)
 #endif // GTK
   if (option == mapMode) ChangePak (NULL, clon, clat);
   // This call can be almost anywhere, e.g. SetLocation(). Calling it in
-  // searchMode with GeoSearch will just slow things down.
+  // searchMode with GeoSearch may invalidate some of the results.
 
   clip.height = draw->allocation.height;
   clip.width = draw->allocation.width;

@@ -43,6 +43,7 @@
 # drawWayBridge ($layer, d$color, $size, $dash, @nodes) / size = thickness / real world
 # drawWayPix ($color, $size, $dash, @nodes) / size = thickness / pixels
 # drawWayRoute ($col, $size, $dash, $opacity, @nodes)
+# getScale
 # getValue ($key, \@tagArray)
 # gridSquare ($lon, $lat) / returns grid square for directory
 # fitsPaper ($x, $y, $dpi)
@@ -75,16 +76,19 @@ use Time::localtime;
 use List::Util qw[min max] ;
 use Encode ;
 use OSM::osm ;
+use GD ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.10' ;
+$VERSION = '0.11' ;
 
 require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw ( 	center
+@EXPORT = qw ( 		addAreaIcon
+			addOnewayArrows
+			center
 			convert
 			createLabel
 			drawArea 
@@ -112,9 +116,11 @@ require Exporter ;
 			drawWayPix 
 			drawWayRoute
 			fitsPaper
+			getScale
 			getValue
 			gridSquare
 			initGraph 
+			initOneways
 			labelWay 
 			printScale
 			writeSVG ) ;
@@ -162,6 +168,11 @@ my $pathNumber = 0 ;
 my $svgBaseFontSize = 10 ;
 my @svgOutputRoutes = () ;
 
+my %areaPicX = () ;
+my %areaPicY = () ;
+my %areaDef = () ;
+my $areaNum = 1 ;
+
 # clutter information
 my %clutter = () ;
 my %clutterIcon = () ;
@@ -173,13 +184,13 @@ sub initGraph {
 	my ($x, $l, $b, $r, $t, $color) = @_ ;	
 	
 	$sizeX = $x ;
-	$sizeY = $x * ($t - $b) / ($r - $l) / cos ($t/360*3.14*2) ;
+	$sizeY = int ( $x * ($t - $b) / ($r - $l) / cos ($t/360*3.14*2) ) ;
 	$top = $t ;
 	$left = $l ;
 	$right = $r ;
 	$bottom = $b ;
 
-	drawArea ($color, $l, $t, $r, $t, $r, $b, $l, $b, $l, $t) ;
+	drawArea ($color, "", $l, $t, $r, $t, $r, $b, $l, $b, $l, $t) ;
 }
 
 sub convert {
@@ -451,7 +462,7 @@ sub drawArea {
 # draws an area like waterway=riverbank or landuse=forest. 
 # pass color as string and nodes as list (x1, y1, x2, y2...) - real world coordinates
 #
-	my ($col, @nodes) = @_ ;
+	my ($col, $icon, @nodes) = @_ ;
 	my $i ;
 	my @points = () ;
 	
@@ -459,7 +470,7 @@ sub drawArea {
 		my ($x1, $y1) = convert ($nodes[$i], $nodes[$i+1]) ;
 		push @points, $x1 ; push @points, $y1 ; 
 	}
-	push @svgOutputAreas, svgElementPolygonFilled ($col, @points) ;
+	push @svgOutputAreas, svgElementPolygonFilled ($col, $icon, @points) ;
 }
 
 sub drawAreaPix {
@@ -468,14 +479,14 @@ sub drawAreaPix {
 # pass color as string and nodes as list (x1, y1, x2, y2...) - pixels
 # used for legend
 #
-	my ($col, @nodes) = @_ ;
+	my ($col, $icon, @nodes) = @_ ;
 	my $i ;
 	my @points = () ;
 	for ($i=0; $i<$#nodes; $i+=2) {
 		my ($x1, $y1) = ($nodes[$i], $nodes[$i+1]) ;
 		push @points, $x1 ; push @points, $y1 ; 
 	}
-	push @svgOutputPixel, svgElementPolygonFilled ($col, @points) ;
+	push @svgOutputPixel, svgElementPolygonFilled ($col, $icon, @points) ;
 }
 
 sub drawAreaMP {
@@ -485,7 +496,7 @@ sub drawAreaMP {
 #
 # receives ARRAY of ARRAY of NODES LIST! NOT coordinates list like other functions
 #
-	my ($col, $ref, $refLon, $refLat) = @_ ;
+	my ($col, $icon, $ref, $refLon, $refLat) = @_ ;
 	# my %lon = %$refLon ;
 	# my %lat = %$refLat ;
 	my @ways = @$ref ;
@@ -504,7 +515,7 @@ sub drawAreaMP {
 		# print "drawAreaMP - array pushed: @points\n" ; 
 	}
 
-	push @svgOutputAreas, svgElementMultiPolygonFilled ($col, \@array) ;
+	push @svgOutputAreas, svgElementMultiPolygonFilled ($col, $icon, \@array) ;
 }
 
 
@@ -742,14 +753,32 @@ sub svgElementPathText {
 
 sub svgElementPolygonFilled {
 #
-# draws areas in svg, filled with color
+# draws areas in svg, filled with color 
 #
-	my ($col, @points) = @_ ;
+	my ($col, $icon, @points) = @_ ;
 	my $i ;
-	my $svg = "<polygon fill-rule=\"evenodd\" fill=\"" . $col . "\" points=\"" ;
-	for ($i=0; $i<scalar(@points); $i+=2) {
-		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
+	my $svg ;
+	if (defined $areaDef{$icon}) {
+		$svg = "<path fill-rule=\"evenodd\" style=\"fill:url(" . $areaDef{$icon} . ")\" d=\"" ;
+		# print "AREA POLYGON with icon $icon drawn\n" ;
 	}
+	else {
+		$svg = "<path fill-rule=\"evenodd\" fill=\"" . $col . "\" d=\"" ;
+	}
+
+
+	for ($i=0; $i<scalar(@points); $i+=2) {
+		if ($i == 0) { $svg .= " M " ; } else { $svg .= " L " ; }
+		$svg = $svg . $points[$i] . " " . $points[$i+1] ;
+	}
+	$svg .= " z" ;
+
+
+
+
+#	for ($i=0; $i<scalar(@points); $i+=2) {
+#		$svg = $svg . $points[$i] . "," . $points[$i+1] . " " ;
+#	}
 	$svg = $svg . "\" />" ;
 	return $svg ;
 }
@@ -758,17 +787,24 @@ sub svgElementMultiPolygonFilled {
 #
 # draws mp in svg, filled with color. accepts holes. receives ARRAY of ARRAY of coordinates
 #
-	my ($col, $ref) = @_ ;
+	my ($col, $icon, $ref) = @_ ;
 	my @ways = @$ref ;
 	my $i ;
-	my $svg = "<path fill-rule=\"evenodd\" fill=\"" . $col . "\" d=\"" ;
+	my $svg ;
+	if (defined $areaDef{$icon}) {
+		$svg = "<path fill-rule=\"evenodd\" style=\"fill:url(" . $areaDef{$icon} . ")\" d=\"" ;
+		# print "AREA PATH with icon $icon drawn\n" ;
+	}
+	else {
+		$svg = "<path fill-rule=\"evenodd\" fill=\"" . $col . "\" d=\"" ;
+	}
 	
 	foreach my $way (@ways) {
 		my @actual = @$way ;
 		# print "svg - actual: @actual\n" ;
 		for ($i=0; $i<scalar(@actual); $i+=2) {
 			if ($i == 0) { $svg .= " M " ; } else { $svg .= " L " ; }
-			$svg = $svg . $actual[$i] . "," . $actual[$i+1] ;
+			$svg = $svg . $actual[$i] . " " . $actual[$i+1] ;
 		}
 		$svg .= " z" ;
 		# print "svg - text = $svg\n" ; 
@@ -871,6 +907,18 @@ sub printScale {
 	# print "scale = $text\n\n" ;
 }
 
+
+sub getScale {
+	my ($dpi) = shift ;
+
+	my $dist = distance ($left, $bottom, $right, $bottom) ;
+	my $inches = $sizeX / $dpi ;
+	my $cm = $inches * 2.54 ;
+	my $scale = int ( $dist / ($cm/100/1000)  ) ;
+	$scale = int ($scale / 100) * 100 ;
+
+	return ($scale) ;
+}
 
 sub fitsPaper {
 #
@@ -988,6 +1036,90 @@ sub svgElementPolylineOpacity {
 			"\" fill=\"none\" />" ;
 	}
 	return $svg ;
+}
+
+
+sub addAreaIcon {
+	my $fileNameOriginal = shift ;
+	my $result = open (my $file, "<", $fileNameOriginal) ;
+	if ($result) {
+		if (grep /.svg/, $fileNameOriginal) {
+			close $file ;
+			my $newName = $fileNameOriginal ;
+			$newName =~ s/.svg/.png/ ;
+			`inkscape -e $newName $fileNameOriginal` ;
+			print "INFO area sicon converted $fileNameOriginal -> $newName\n" ;
+			open ($file, "<", $newName) ;
+		}
+
+		my $pic = newFromPng GD::Image($file) ;
+		my ($x, $y) = $pic->getBounds ;
+		close ($file) ;
+		if (!defined $areaDef{$fileNameOriginal}) {
+			$areaPicX{$fileNameOriginal} = $x ;
+			$areaPicY{$fileNameOriginal} = $y ;
+			# add defs to svg output
+			my $defName = "A" . $areaNum ;
+			print "INFO area icon $fileNameOriginal, $defName, $x, $y processed.\n" ;
+			$areaNum++ ;
+
+			my $svgElement = "<pattern id=\"" . $defName . "\" width=\"" . $x . "\" height=\"" . $y . "\" " ;
+			$svgElement .= "patternUnits=\"userSpaceOnUse\">\n" ;
+			$svgElement .= "  <image xlink:href=\"" . $fileNameOriginal . "\"/>\n" ;
+			$svgElement .= "</pattern>\n" ;
+			push @svgOutputDef, $svgElement ;
+			$defName = "#" . $defName ;
+			$areaDef{$fileNameOriginal} = $defName ;
+		}
+	}
+	else {
+		print "WARNING: area icon $fileNameOriginal not found!\n" ;
+	}
+}
+
+sub svgEle {
+	my ($a, $b) = @_ ;
+	my $out = $a . "=\"" . $b . "\" " ;
+	return ($out)
+}
+
+
+
+sub initOneways {
+	# write marker defs to svg 
+	my $color = shift ;
+
+	push @svgOutputDef, "<marker id=\"Arrow1\"" ;
+	push @svgOutputDef, "viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"" ;
+	push @svgOutputDef, "markerUnits=\"strokeWidth\"" ;
+	push @svgOutputDef, "markerWidth=\"10\" markerHeight=\"10\"" ;
+	push @svgOutputDef, "orient=\"auto\">" ;
+	push @svgOutputDef, "<path d=\"M 0 4 L 6 4 L 6 2 L 10 5 L 6 8 L 6 6 L 0 6 Z\" fill=\"" . $color .  "\" />" ;
+	push @svgOutputDef, "</marker>" ;
+}
+
+
+sub addOnewayArrows {
+	my ($wayNodesRef, $lonRef, $latRef, $direction, $thickness, $color, $layer) = @_ ;
+	my @wayNodes = @$wayNodesRef ;
+	my $minDist = 15 ;
+
+	if ($direction == -1) { @wayNodes = reverse @wayNodes ; }
+
+	# create new pathes with new nodes
+	for (my $i=0; $i<scalar(@wayNodes)-1;$i++) {
+		my ($x1, $y1) = convert ($$lonRef{$wayNodes[$i]}, $$latRef{$wayNodes[$i]}) ;
+		my ($x2, $y2) = convert ($$lonRef{$wayNodes[$i+1]}, $$latRef{$wayNodes[$i+1]}) ;
+		my $xn = ($x2+$x1) / 2 ;
+		my $yn = ($y2+$y1) / 2 ;
+		if (sqrt (($x2-$x1)**2+($y2-$y1)**2) > $minDist) {
+			# create path
+			# use path
+			my $svg = "<path d=\"M $x1 $y1 L $xn $yn L $x2 $y2\" fill=\"none\" marker-mid=\"url(#Arrow1)\" />" ;
+			
+			push @{$svgOutputWaysNodes{$layer+$thickness/100}}, $svg ;
+		}
+	}
 }
 
 

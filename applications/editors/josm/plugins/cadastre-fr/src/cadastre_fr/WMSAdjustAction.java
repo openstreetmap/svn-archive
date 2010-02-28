@@ -85,8 +85,10 @@ public class WMSAdjustAction extends MapMode implements
             }
         }
         modifiedLayers.clear();
-        selectedLayer.adjustModeEnabled = false;
-        selectedLayer = null;
+        if (selectedLayer != null) {
+            selectedLayer.adjustModeEnabled = false;
+            selectedLayer = null;
+        }
     }
 
     @Override

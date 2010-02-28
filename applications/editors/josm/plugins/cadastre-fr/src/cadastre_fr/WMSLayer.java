@@ -53,9 +53,10 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     /**
      * v1 to v2 = not supported
-     * v2 to v3 = add 4 more EastNorth coordinates in GeorefImages 
+     * v2 to v3 = add 4 more EastNorth coordinates in GeorefImages
+     * v3 to v4 = add original raster image width and height
      */
-    protected final int serializeFormatVersion = 3;
+    protected final int serializeFormatVersion = 4;
     
     public static int currentFormat;
 
@@ -534,24 +535,12 @@ public class WMSLayer extends Layer implements ImageObserver {
         // adj2 is corner top, right
         EastNorth adj2 = new EastNorth(en1.east() > en2.east() ? en1.east() : en2.east(),
                 en1.north() > en2.north() ? en1.north() : en2.north());
-        // s1 and s2 have 0,0 at top, left where all EastNorth coord. have 0,0 at bottom, left
-        int sx1 = (int)((adj1.getX() - images.get(0).min.getX())*images.get(0).getPixelPerEast());
-        int sy1 = (int)((images.get(0).max.getY() - adj2.getY())*images.get(0).getPixelPerNorth());
-        int sx2 = (int)((adj2.getX() - images.get(0).min.getX())*images.get(0).getPixelPerEast());
-        int sy2 = (int)((images.get(0).max.getY() - adj1.getY())*images.get(0).getPixelPerNorth());
-        int newWidth = Math.abs(sx2 - sx1);
-        int newHeight = Math.abs(sy2 - sy1);
-        BufferedImage new_img = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics g = new_img.getGraphics();
-        g.drawImage(images.get(0).image, 0, 0, newWidth-1, newHeight-1,
-                sx1, sy1, sx2, sy2,
-                this);
-        images.set(0, new GeorefImage(new_img, adj1, adj2));
-        // important: update the layer georefs !
+        images.get(0).crop(adj1, adj2);
+        // update the layer georefs
         rasterMin = adj1;
         rasterMax = adj2;
+        setCommuneBBox(new EastNorthBound(new EastNorth(0,0), new EastNorth(images.get(0).image.getWidth()-1,images.get(0).image.getHeight()-1)));
         rasterRatio = (rasterMax.getX()-rasterMin.getX())/(communeBBox.max.getX() - communeBBox.min.getX());
-        setCommuneBBox(new EastNorthBound(new EastNorth(0,0), new EastNorth(newWidth-1,newHeight-1)));
     }
 
     public EastNorthBound getCommuneBBox() {
@@ -580,17 +569,22 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public void displace(double dx, double dy) {
         this.rasterMin = new EastNorth(rasterMin.east() + dx, rasterMin.north() + dy);
+        this.rasterMax = new EastNorth(rasterMax.east() + dx, rasterMax.north() + dy);
         images.get(0).shear(dx, dy);
     }
 
     public void resize(EastNorth rasterCenter, double proportion) {
         this.rasterMin = rasterMin.interpolate(rasterCenter, proportion);
+        this.rasterMax = rasterMax.interpolate(rasterCenter, proportion);
         images.get(0).scale(rasterCenter, proportion);
     }
 
     public void rotate(EastNorth rasterCenter, double angle) {
         this.rasterMin = rasterMin.rotate(rasterCenter, angle);
+        this.rasterMax = rasterMax.rotate(rasterCenter, angle);
+//        double proportion = dst1.distance(dst2)/org1.distance(org2);
         images.get(0).rotate(rasterCenter, angle);
+        this.angle += angle; 
     }
 
     private void paintCrosspieces(Graphics g, MapView mv) {

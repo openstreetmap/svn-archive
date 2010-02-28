@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-26 21:00+0100\n"
+"POT-Creation-Date: 2010-02-28 20:58+0100\n"
 "PO-Revision-Date: 2010-01-23 21:36+0000\n"
 "Last-Translator: Tsvi Mostovicz <ttmost@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-02-26 19:56+0000\n"
+"X-Launchpad-Export-Date: 2010-02-28 19:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -72,7 +72,7 @@ msgstr "מתעלם מ-URL לא תקין לקובץ: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:642
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1036
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:189
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:419
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:424
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:795
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:747
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:72
@@ -248,7 +248,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:869
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1203
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:120
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:373
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:376
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:112
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:160
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:220
@@ -259,7 +259,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadSelectionDialog.java:262
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:169
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:673
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:646
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:597
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:204
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
@@ -394,7 +394,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:169
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:375
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:716
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:689
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:204
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:107
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:322
@@ -685,7 +685,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:18
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:97
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:372
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:370
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:99
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:276
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:891
@@ -1447,12 +1447,12 @@ msgstr "לא ניתן לשנות את שם הקובץ ''{0}''"
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:45
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:60
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:134
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:400
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:413
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:403
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:416
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:1063
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:166
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:191
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:200
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:167
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:192
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:201
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:230
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:625
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:254
@@ -1624,7 +1624,7 @@ msgstr "העתק ללוח הגזירים וסגור"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:337
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:408
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserDialog.java:130
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:932
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:966
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:246
 msgid "Close"
 msgstr "סגור"
@@ -2346,7 +2346,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:111
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:112
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ChangesetDialog.java:299
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:345
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:347
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:116
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:149
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:104
@@ -2933,48 +2933,48 @@ msgstr "פתור התנגשויות בקואורדינטות ב-{0}"
 msgid "Cannot resolve undecided conflict."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:61
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:105
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:66
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:110
 msgid "At least one object to delete required, got empty collection"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:161
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:159
 #, java-format
 msgid "Delete node {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:162
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:160
 #, java-format
 msgid "Delete way {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:163
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:161
 #, java-format
 msgid "Delete relation {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:177
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:175
 #, java-format
 msgid "Delete {0} object"
 msgid_plural "Delete {0} objects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:182
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:180
 #, java-format
 msgid "Delete {0} node"
 msgid_plural "Delete {0} nodes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:183
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:181
 #, java-format
 msgid "Delete {0} way"
 msgid_plural "Delete {0} ways"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:184
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:182
 #, java-format
 msgid "Delete {0} relation"
 msgid_plural "Delete {0} relations"
@@ -2983,7 +2983,7 @@ msgstr[1] ""
 
 #. leave message in one tr() as there is a grammatical
 #. connection.
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:435
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:433
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:161
 msgid ""
 "You are about to delete nodes outside of the area you have downloaded."
@@ -2993,7 +2993,7 @@ msgstr ""
 "אתה עומד למחוק נקודות מחוץ לשטח שהורדת.<br>זה עלול לגרום לבעיות כיוון שעצמים "
 "אחרים {שאתה לא רואה) עשויים להשתמש בהם.<br>האם אתה באמת רוצה למחוק?"
 
-#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:443
+#: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:441
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:170
 msgid "Delete confirmation"
 msgstr ""
@@ -3381,28 +3381,27 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:147
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:216
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:185
 #, java-format
 msgid "Missing merge target for way with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:164
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:232
-#, java-format
-msgid "Missing merge target for node with id {0}"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:187
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:169
 #, java-format
 msgid "Missing merge target for object with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:247
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:201
+#, java-format
+msgid "Missing merge target for node with id {0}"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:216
 #, java-format
 msgid "Missing merge target for relation with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:252
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:221
 #, java-format
 msgid "Missing merge target of type {0} with id {1}"
 msgstr ""
@@ -3410,7 +3409,7 @@ msgstr ""
 #. should not happen
 #. FIXME: this message does not make sense, source version can not be lower than
 #. target version at this point
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:289
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:258
 #, java-format
 msgid ""
 "Target object with id {0} and version {1} is visible although source object "
@@ -3501,13 +3500,13 @@ msgid ""
 "{0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1021
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1022
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1023
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1024
 #, java-format
 msgid ""
 "Cannot merge primitives with different ids. This id is {0}, the other is {1}"
@@ -3670,7 +3669,7 @@ msgstr "דרך לא גמורה"
 
 #. darker blue
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:179
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:180
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:183
 msgid "background"
 msgstr "רקע"
@@ -3910,7 +3909,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:219
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:114
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:170
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:171
 msgid "Conflict"
 msgstr "התנגשות"
 
@@ -4732,28 +4731,28 @@ msgstr "נקודה"
 msgid "Merged nodes not frozen yet. Cannot build resolution command."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:463
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:464
 #, java-format
 msgid ""
 "<html>An error occurred while communicating with the server<br>Details: {0}</"
 "html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:467
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:468
 msgid "Communication with server failed"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:509
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:543
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:510
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:544
 msgid "Yes, undelete them too"
 msgstr "כן, בטל גם את המחיקה שלהם"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:510
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:544
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:511
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:545
 msgid "No, cancel operation"
 msgstr "לא, בטל את הפעולה"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:514
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:515
 #, java-format
 msgid ""
 "There is {0} additional node used by way {1}<br>which is deleted on the "
@@ -4764,11 +4763,11 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:524
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:525
 msgid "Undelete additional nodes?"
 msgstr "בטל מחיקת נקודות נוספות?"
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:548
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:549
 #, java-format
 msgid ""
 "There is {0} additional primitive referred to by relation {1}<br>which is "
@@ -4779,7 +4778,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:558
+#: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMergeModel.java:559
 msgid "Undelete dependent primitives?"
 msgstr ""
 
@@ -5276,8 +5275,8 @@ msgid "Select all objects assigned to the currently selected changesets"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ChangesetDialog.java:359
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:176
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:390
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:179
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:393
 msgid "Download"
 msgstr "הורד"
 
@@ -5344,20 +5343,20 @@ msgstr "מצבור פקודות: {0}"
 msgid "Resolve conflicts."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:168
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:169
 #, java-format
 msgid "Conflicts: {0} unresolved"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:325
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:327
 msgid "Resolve"
 msgstr "פתור"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:326
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:328
 msgid "Open a merge dialog of all selected items in the list above."
 msgstr "פתח את תיבת דו-שיח עבור כל הפריטים הנבחרים ברשימה שלהלן."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:346
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:348
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:117
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:105
 msgid ""
@@ -5714,6 +5713,10 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:183
 msgid "Display the objects created, updated, and deleted by the changeset"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:267
+msgid "Changeset Management Dialog"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:339
@@ -7816,65 +7819,62 @@ msgid "Paste URL from clipboard"
 msgstr ""
 
 #. adding the download tasks
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:95
-msgid "Data Sources and Types"
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:97
+#, fuzzy
+msgid "Data Sources and Types:"
 msgstr "מקורות מידע וסוגים"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:96
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:98
 msgid "OpenStreetMap data"
 msgstr "נתוני OpenStreetMap"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:97
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:99
 msgid "Select to download OSM data in the selected download area."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:99
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:101
 msgid "Raw GPS data"
 msgstr "נתוני GPS גולמיים"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:100
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:102
 msgid "Select to download GPS traces in the selected download area."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:120
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:133
 msgid "Download as new layer"
 msgstr "הורדה כשכבה חדשה"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:121
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:134
 msgid ""
 "<html>Select to download data into a new data layer.<br>Unselect to download "
 "into the currently active data layer.</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:125
-msgid "Download Area"
-msgstr "הורדת איזור"
-
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:216
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:219
 msgid "No area selected yet"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:219
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:222
 msgid "Download area too large; will probably be rejected by server"
 msgstr "הורדת איזור גדול מידי; כנראה שתדחה ע\"י השרת"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:222
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:225
 msgid "Download area ok, size probably acceptable to server"
 msgstr "הורדת איזור בסדר; כנראה שתתקבל ע\"י השרת"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:375
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:378
 msgid "Click to close the dialog and to abort downloading"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:392
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:395
 msgid "Click do download the currently selected area"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:399
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:402
 msgid "Please select a download area first."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:408
+#: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:411
 #, java-format
 msgid ""
 "<html>Neither <strong>{0}</strong> nor <strong>{1}</strong> is enabled."
@@ -7992,14 +7992,7 @@ msgstr "סוג"
 msgid "unknown"
 msgstr "לא ידוע"
 
-#: ../core/src/org/openstreetmap/josm/gui/download/SlippyMapChooser.java:119
-msgid ""
-"<b>Zoom:</b> Mousewheel, double click or Ctrl + Up/Down <b>Move map:</b> "
-"Hold right mousebutton and move mouse or use cursor keys. <b>Select:</b> "
-"Hold left mousebutton and draw a frame."
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/download/SlippyMapChooser.java:122
+#: ../core/src/org/openstreetmap/josm/gui/download/SlippyMapChooser.java:118
 msgid "Slippy map"
 msgstr ""
 
@@ -8054,28 +8047,28 @@ msgid ""
 "p></html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:353
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:355
 #, java-format
 msgid ""
 "<html>Failed to open help page for url {0}.<br>This is most likely due to a "
 "network problem, please check<br>your internet connection</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:358
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:360
 msgid "Failed to open URL"
 msgstr ""
 
 #. putValue(NAME, tr("Open in Browser"));
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:391
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:393
 msgid "Open the current help page in an external browser"
 msgstr ""
 
 #. putValue(NAME, tr("Edit"));
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:403
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:405
 msgid "Edit the current help page"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:410
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:415
 #, java-format
 msgid ""
 "<html>The current URL <tt>{0}</tt><br>is an external URL. Editing is only "
@@ -8083,35 +8076,35 @@ msgid ""
 msgstr ""
 
 #. putValue(NAME, tr("Reload"));
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:433
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:437
 msgid "Reload the current help page"
 msgstr ""
 
 #. putValue(NAME, tr("Back"));
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:448
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:452
 msgid "Go to the previous page"
 msgstr ""
 
 #. putValue(NAME, tr("Forward"));
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:468
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:472
 msgid "Go to the next page"
 msgstr ""
 
 #. putValue(NAME, tr("Home"));
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:484
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:488
 msgid "Go to the JOSM help home page"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:515
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:519
 #, java-format
 msgid "Warning: bad location in HTML document. Exception was: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:565
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:569
 msgid "Failed to open help page. The target URL is empty."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:566
+#: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:570
 msgid "Failed to open help page"
 msgstr ""
 
@@ -9575,127 +9568,152 @@ msgstr[1] "{0} נקודות"
 msgid "GPS point"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:145
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:146
 msgid "GPX Files (*.gpx *.gpx.gz)"
 msgstr "קבצי GPX‏ (*.gpx *.gpx.gz)"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:165
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:166
 #, java-format
 msgid "File {0} is loaded yet under the name \"{1}\""
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:190
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:191
 #, java-format
 msgid "Error while parsing {0}"
 msgstr "שגיאה בעת ניתוח {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:199
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:200
 #, java-format
 msgid "Could not read \"{0}\""
 msgstr "לא ניתן לקרוא את \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:238
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:240
 msgid ""
 "<html>Take a photo of your GPS receiver while it displays the time."
 "<br>Display that photo here.<br>And then, simply capture the time you read "
 "on the photo and select a timezone<hr></html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:256
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:258
 msgid "Photo time (from exif):"
 msgstr "זמן צילום (מ-EXIF)"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:271
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:273
 msgid "Gps time (read from the above photo): "
 msgstr "זמן GPS (נקרא מהצילום למעלה): "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:283
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:285
 msgid " [dd/mm/yyyy hh:mm:ss]"
 msgstr " [dd/mm/yyyy hh:mm:ss]"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:291
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:293
 msgid "I am in the timezone of: "
 msgstr "אני באזור זמן: "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:355
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:390
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:357
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:392
 msgid "No date"
 msgstr "אין תאריך"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:364
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:366
 msgid "Open another photo"
 msgstr "פתח תמונה אחרת"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:404
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:406
 msgid "Synchronize time from a photo of the GPS receiver"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:417
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:419
 msgid ""
 "Error while parsing the date.\n"
 "Please use the requested format"
 msgstr "שגיאה בזמן ניתוח התאריך:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:419
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:421
 msgid "Invalid date"
 msgstr "תאריך שגוי"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:464
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:465
 msgid "<No GPX track loaded yet>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:469
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:470
 msgid "GPX track: "
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:477
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:479
 msgid "Open another GPX trace"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:507
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:509
 msgid ""
 "<html>Use photo of an accurate clock,<br>e.g. GPS receiver display</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:512
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:514
 msgid "Auto-Guess"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:515
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:517
 msgid "Manual adjust"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:518
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:520
 msgid "Override position for: "
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:524
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:526
 #, java-format
 msgid "Images with geo location in exif data ({0}/{1})"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:527
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:529
 #, java-format
 msgid "Images that are already tagged ({0}/{1})"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:533
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:535
 msgid "Show Thumbnail images on the map"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:558
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:560
 msgid "Timezone: "
 msgstr "אזור זמן: "
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:569
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:571
 msgid "Offset:"
 msgstr "היסט:"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:648
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:645
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:688
+msgid "Correlate images with GPX track"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:646
+msgid "Correlate"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:673
+msgid "Invalid timezone"
+msgstr "אזור זמן שגוי"
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:681
+msgid "Invalid offset"
+msgstr "היסט שגוי"
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:689
+msgid "Try Again"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:690
+msgid "No images could be matched!"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:814
 msgid "No gpx selected"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:653
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:819
 #, java-format
 msgid "<html>Matched <b>{0}</b> of <b>{1}</b> photo to GPX track.</html>"
 msgid_plural ""
@@ -9703,94 +9721,69 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:672
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:715
-msgid "Correlate images with GPX track"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:673
-msgid "Correlate"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:700
-msgid "Invalid timezone"
-msgstr "אזור זמן שגוי"
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:708
-msgid "Invalid offset"
-msgstr "היסט שגוי"
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:716
-msgid "Try Again"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:717
-msgid "No images could be matched!"
-msgstr ""
-
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:866
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:900
 #, java-format
 msgid "Timezone: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:867
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:901
 #, java-format
 msgid "Minutes: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:868
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:902
 #, java-format
 msgid "Seconds: {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:886
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:920
 #, java-format
 msgid "(Time difference of {0} day)"
 msgid_plural "Time difference of {0} days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:913
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:947
 msgid ""
 "An error occurred while trying to match the photos to the GPX track. You can "
 "adjust the sliders to manually match the photos."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:915
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:949
 msgid "Matching photos to track failed"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:931
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:965
 msgid "Adjust timezone and offset"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:951
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:985
 msgid "The selected photos do not contain time information."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:952
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:986
 msgid "Photos do not contain time information"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:980
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1014
 msgid ""
 "The selected GPX track does not contain timestamps. Please select another "
 "one."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:981
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1015
 msgid "GPX Track has no time information"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1076
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1110
 msgid "You should select a GPX track"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1077
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1111
 msgid "No selected GPX track"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1265
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1299
 #, java-format
 msgid ""
 "Error while parsing timezone.\n"
@@ -9799,7 +9792,7 @@ msgstr ""
 "שגיאה בזמן ניתוח אזור זמן.\n"
 "פורמט מצופה: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1335
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:1369
 #, java-format
 msgid ""
 "Error while parsing offset.\n"
@@ -10848,6 +10841,7 @@ msgstr "צבעים"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:36
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:107
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAllAction.java:44
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:286
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:278
 msgid "All"
@@ -11608,6 +11602,11 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:52
 msgid "Tagging Presets"
 msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:66
+#, fuzzy
+msgid "Actions"
+msgstr "פעולה"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:183
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:205
@@ -13685,6 +13684,20 @@ msgid ""
 "platform first."
 msgstr ""
 
+#. This list if far from complete!
+#. items with automatic shortcuts will not be added to the menu bar at all
+#. not really system, but to avoid odd results
+#: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:49
+#: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:50
+#: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:51
+#: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:52
+#: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:53
+#: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:54
+#: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:55
+#, fuzzy
+msgid "unused"
+msgstr "לא סלול"
+
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
 #, java-format
 msgid ""
@@ -14140,30 +14153,30 @@ msgstr "בחר מ..."
 msgid "Select commune"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:157
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:161
 msgid "Cadastre"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:166
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:170
 msgid "Auto sourcing"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:221
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:225
 msgid ""
 "Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"
 "which is currently allocated for full-screen switch by default\n"
 "Would you like to restore F11 for grab action ?"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:224
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:228
 msgid "Restore grab shortcut F11"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:229
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:233
 msgid "JOSM is stopped for the change to take effect."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:291
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:295
 #, java-format
 msgid ""
 "Warning: failed to put option pane dialog always on top. Exception was: {0}"
@@ -14388,80 +14401,80 @@ msgid "Cadastre: {0}"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrab.java:38
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:86
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:92
 msgid ""
 "To enable the cadastre WMS plugin, change\n"
 "the current projection to one of the cadastre\n"
 "projections and retry"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:48
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:54
 msgid "Grab non-georeferenced image"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:69
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:75
 msgid "Georeferencing interrupted"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:100
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:106
 msgid ""
 "This image contains georeference data.\n"
 "Do you want to use them ?"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:172
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:173
 msgid ""
 "Click first corner for image cropping\n"
 "(two points required)"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:173
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:192
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:174
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:193
 msgid "Image cropping"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:191
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:192
 msgid "Click second corner for image cropping"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:211
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:212
 msgid ""
 "Click first Lambert crosspiece for georeferencing\n"
 "(two points required)"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:212
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:231
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:213
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:232
 msgid "Image georeferencing"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:230
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:231
 msgid "Click second Lambert crosspiece for georeferencing"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:248
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:260
 msgid ""
 "Do you want to cancel completely\n"
 "or just retry "
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:264
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:277
 msgid "Enter cadastre east,north position"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:265
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:279
 msgid "(Warning: verify north with arrow !!)"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:267
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:281
 msgid "East"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:268
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:282
 msgid "North"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:281
+#: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:300
 #, java-format
 msgid "Set {0} Lambert coordinates"
 msgstr ""
@@ -14562,52 +14575,52 @@ msgid ""
 "Select one of them first, then retry"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:88
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:89
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:75
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:187
 msgid "Blank Layer"
 msgstr "שכבה ריקה"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:215
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:216
 #, java-format
 msgid "WMS layer ({0}), {1} tile(s) loaded"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:217
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:218
 msgid "Is not vectorized."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:218
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:219
 #, java-format
 msgid "Raster size: {0}"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:220
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:221
 msgid "Is vectorized."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:221
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:222
 #, java-format
 msgid "Commune bbox: {0}"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:436
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:437
 #, java-format
 msgid ""
 "Unsupported cache file version; found {0}, expected {1}\n"
 "Create a new one."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:437
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:438
 msgid "Cache Format Error"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:459
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:460
 #, java-format
 msgid "Lambert zone {0} in cache incompatible with current Lambert zone {1}"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:461
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:462
 msgid "Cache Lambert Zone Error"
 msgstr ""
 
@@ -15354,7 +15367,10 @@ msgstr "ערכים נמדדים"
 msgid "Open the measurement window."
 msgstr "פתח את חלון המדידות."
 
+#. Create popup menu
+#. Reset submenu
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:72
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/PicLayerAbstract.java:97
 msgid "Reset"
 msgstr "אפס"
 
@@ -15375,6 +15391,7 @@ msgid "Selection Area"
 msgstr "שטח הבחירה"
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:94
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAngleAction.java:44
 msgid "Angle"
 msgstr "זווית"
 
@@ -15731,8 +15748,146 @@ msgstr ""
 msgid "Write coordinates to image header"
 msgstr ""
 
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/CalibrationFileFilter.java:48
+#, fuzzy
+msgid "Calibration Files"
+msgstr "שגיאת תקינות"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/LoadPictureCalibrationAction.java:53
+#, fuzzy
+msgid "Load Picture Calibration..."
+msgstr "כיול רשם קול"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/LoadPictureCalibrationAction.java:53
+msgid "Loads calibration data to a file"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/LoadPictureCalibrationAction.java:79
+#, fuzzy, java-format
+msgid "Loading file failed: {0}"
+msgstr "טוען {0}"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/MovePictureAction.java:55
+msgid "PicLayer move"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/MovePictureAction.java:55
+msgid "Drag to move the picture"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/NewLayerFromClipboardAction.java:42
+msgid "New picture layer from clipboard"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/NewLayerFromFileAction.java:64
+#, fuzzy
+msgid "Image files"
+msgstr "תמונה"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/NewLayerFromFileAction.java:73
+#, fuzzy
+msgid "New picture layer from file..."
+msgstr "טען שכבת WMS מקובץ"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/PicLayerAbstract.java:124
+msgid "Image not created properly."
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/PicLayerAbstract.java:138
+#, fuzzy
+msgid "Could not find the map object."
+msgstr "לא יכול למצוא את סוג האלמנט"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/PicLayerFromClipboard.java:45
+msgid "Nothing in clipboard"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/PicLayerFromClipboard.java:54
+msgid "The clipboard data is not an image"
+msgstr ""
+
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/PicLayerPlugin.java:65
 msgid "PicLayer"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAllAction.java:44
+#, fuzzy
+msgid "Resets picture calibration"
+msgstr "כיול רשם קול"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAngleAction.java:44
+#, fuzzy
+msgid "Resets picture rotation"
+msgstr "ערוך תחנת מכבי אש"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPicturePositionAction.java:44
+#, fuzzy
+msgid "Reset position"
+msgstr "מיקום"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPicturePositionAction.java:44
+msgid "Resets picture position"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureScaleAction.java:44
+#, fuzzy
+msgid "Scale"
+msgstr "הגדלה"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureScaleAction.java:44
+msgid "Resets picture scale"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/RotatePictureAction.java:54
+msgid "PicLayer rotate"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/RotatePictureAction.java:54
+msgid "Drag to rotate the picture"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/SavePictureCalibrationAction.java:52
+#, fuzzy
+msgid "Save Picture Calibration..."
+msgstr "כיול רשם קול"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/SavePictureCalibrationAction.java:52
+#, fuzzy
+msgid "Saves calibration data to a file"
+msgstr "שמור את המידע הנוכחי לקובץ חדש."
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/SavePictureCalibrationAction.java:81
+msgid "JOSM PicLayer plugin calibration data"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/SavePictureCalibrationAction.java:85
+#, java-format
+msgid "Saving file failed: {0}"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ScaleXPictureAction.java:41
+msgid "PicLayer scale X"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ScaleXPictureAction.java:41
+msgid "Drag to scale the picture in the X Axis"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ScaleXYPictureAction.java:41
+#, fuzzy
+msgid "PicLayer scale"
+msgstr "שכבות"
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ScaleXYPictureAction.java:41
+msgid "Drag to scale the picture in the X and Y Axis"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ScaleYPictureAction.java:41
+msgid "PicLayer scale Y"
+msgstr ""
+
+#: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ScaleYPictureAction.java:41
+msgid "Drag to scale the picture in the Y Axis"
 msgstr ""
 
 #. item "Bicycle/Rental" text "Name"
@@ -30269,13 +30424,8 @@ msgstr ""
 msgid "Sicily - Italy"
 msgstr ""
 
-#~ msgid ""
-#~ "You are about to delete nodes outside of the area you have downloaded."
-#~ "<br>This can cause problems because other objects (that you don't see) "
-#~ "might use them.<br>Do you really want to delete?"
-#~ msgstr ""
-#~ "אתה עומד למחוק נקודות מחוץ לשטח שהורדת.<br>זה עלול לגרום לבעיות כיוון "
-#~ "שעצמים אחרים {שאתה לא רואה) עשויים להשתמש בהם.<br>האם אתה באמת רוצה למחוק?"
+#~ msgid "Download Area"
+#~ msgstr "הורדת איזור"
 
 #~ msgid "Move"
 #~ msgstr "הזז"
@@ -30333,9 +30483,6 @@ msgstr ""
 
 #~ msgid "No time for point {0} x {1}"
 #~ msgstr "אין זמן לנקודה {0} x {1}"
-
-#~ msgid "Image"
-#~ msgstr "תמונה"
 
 #~ msgid "Enter shown date (mm/dd/yyyy HH:MM:SS)"
 #~ msgstr "הזן את התאריך המוצג (mm/dd/yyyy HH:MM:SS)"
@@ -30577,9 +30724,6 @@ msgstr ""
 #~ msgid "File not found"
 #~ msgstr "קובץ לא נמצא"
 
-#~ msgid "position"
-#~ msgstr "מיקום"
-
 #~ msgid "false"
 #~ msgstr "שקר"
 
@@ -30744,6 +30888,14 @@ msgstr ""
 
 #~ msgid "EPSG:4326"
 #~ msgstr "EPSG:4326"
+
+#~ msgid ""
+#~ "You are about to delete nodes outside of the area you have downloaded."
+#~ "<br>This can cause problems because other objects (that you don't see) "
+#~ "might use them.<br>Do you really want to delete?"
+#~ msgstr ""
+#~ "אתה עומד למחוק נקודות מחוץ לשטח שהורדת.<br>זה עלול לגרום לבעיות כיוון "
+#~ "שעצמים אחרים {שאתה לא רואה) עשויים להשתמש בהם.<br>האם אתה באמת רוצה למחוק?"
 
 #~ msgid "Resolve {0} conflicts in {1} objects"
 #~ msgstr "פתור {0} התנגשויות ב{1} עצמים"

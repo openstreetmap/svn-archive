@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -40,7 +42,7 @@ public class PicLayerFromClipboard extends PicLayerAbstract {
         Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
         // Check result
         if ( t == null ) {
-        	throw new IOException( "Nothing in clipboard" );
+        	throw new IOException(tr("Nothing in clipboard"));
         }
         
         // TODO: Why is it so slow?
@@ -49,7 +51,7 @@ public class PicLayerFromClipboard extends PicLayerAbstract {
             if (t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
                 image = (Image)t.getTransferData(DataFlavor.imageFlavor);
             } else {
-            	throw new IOException( "The clipboard data is not an image" );
+            	throw new IOException(tr("The clipboard data is not an image"));
             }
         } catch (UnsupportedFlavorException e) {
         	throw new IOException( e.getMessage() );

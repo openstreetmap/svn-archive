@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -92,7 +94,7 @@ public abstract class PicLayerAbstract extends Layer
 
         // Create popup menu
         // Reset submenu
-        JMenu reset_submenu = new JMenu( "Reset" );
+        JMenu reset_submenu = new JMenu(tr("Reset"));
         reset_submenu.add( new ResetPictureAllAction( this ) );
         reset_submenu.addSeparator();
         reset_submenu.add( new ResetPicturePositionAction( this ) );
@@ -104,8 +106,6 @@ public abstract class PicLayerAbstract extends Layer
                 new JSeparator(),
                 new JMenuItem( new SavePictureCalibrationAction(this)),
                 new JMenuItem( new LoadPictureCalibrationAction(this)),
-                new JSeparator(),
-                new JMenuItem( new HelpAction() )
         };
 
         // Load layer icon
@@ -121,7 +121,7 @@ public abstract class PicLayerAbstract extends Layer
         // Create image
         Image image = createImage();
         if ( image == null ) {
-            throw new IOException( "Image not created properly.");
+            throw new IOException(tr("Image not created properly."));
         }
         // Convert to Buffered Image - not sure if this is the right way...
         m_image = new BufferedImage( image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB );
@@ -135,7 +135,7 @@ public abstract class PicLayerAbstract extends Layer
             // Initial scale at which the image was loaded
             m_initial_scale = Main.map.mapView.getDist100Pixel();
         } else {
-            throw new IOException( "Could not find the map object." );
+            throw new IOException(tr("Could not find the map object."));
         }
     }
 

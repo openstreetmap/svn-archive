@@ -19,6 +19,8 @@
  ***************************************************************************/
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
@@ -43,7 +45,6 @@ public class CalibrationFileFilter extends FileFilter {
 
 	@Override
 	public String getDescription() {
-		return "Calibration Files (*" + EXTENSION + ")";
+		return tr("Calibration Files")+ " (*" + EXTENSION + ")";
 	}
-
 }

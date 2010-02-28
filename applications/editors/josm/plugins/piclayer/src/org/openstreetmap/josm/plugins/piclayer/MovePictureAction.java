@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -50,7 +52,7 @@ public class MovePictureAction extends MapMode implements MouseListener, MouseMo
 	 * Constructor
 	 */
 	public MovePictureAction(MapFrame frame) {
-		super("PicLayer", "move", "Drag to move the picture", frame, ImageProvider.getCursor("crosshair", null));
+		super(tr("PicLayer move"), "move", tr("Drag to move the picture"), frame, ImageProvider.getCursor("crosshair", null));
 	}
 
     @Override 

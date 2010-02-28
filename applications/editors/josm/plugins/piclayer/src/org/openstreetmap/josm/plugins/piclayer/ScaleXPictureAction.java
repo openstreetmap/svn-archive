@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -36,7 +38,7 @@ public class ScaleXPictureAction extends ScalePictureActionAbstract
 	 * Constructor
 	 */
 	public ScaleXPictureAction(MapFrame frame) {
-		super("PicLayer", "scale_x", "Drag to scale the picture in the X Axis", frame);
+		super(tr("PicLayer scale X"), "scale_x", tr("Drag to scale the picture in the X Axis"), frame);
 		// TODO Auto-generated constructor stub
 	}
 

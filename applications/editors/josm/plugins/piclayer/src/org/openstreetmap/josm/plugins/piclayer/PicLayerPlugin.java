@@ -69,8 +69,6 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         if ( m_menu != null ) {
             m_menu.add( m_newFromFileAction = new NewLayerFromFileAction() );
             m_menu.add( m_newFromClipAction = new NewLayerFromClipboardAction() );
-            m_menu.addSeparator();
-            m_menu.add( new HelpAction() );
             m_newFromFileAction.setEnabled( false );
             m_newFromClipAction.setEnabled( false );
         }

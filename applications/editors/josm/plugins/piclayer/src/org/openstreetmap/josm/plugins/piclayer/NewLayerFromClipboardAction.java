@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -37,7 +39,7 @@ public class NewLayerFromClipboardAction extends JosmAction {
 	 * Constructor...
 	 */
 	public NewLayerFromClipboardAction() {
-		super("New picture layer from clipboard", null, null, null, false);
+		super(tr("New picture layer from clipboard"), null, null, null, false);
 	}
 
 	/**

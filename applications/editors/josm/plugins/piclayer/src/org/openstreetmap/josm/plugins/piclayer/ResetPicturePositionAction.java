@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 package org.openstreetmap.josm.plugins.piclayer;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.Main;
@@ -38,7 +41,7 @@ public class ResetPicturePositionAction extends JosmAction {
 	 * Constructor
 	 */
 	public ResetPicturePositionAction( PicLayerAbstract owner ) {
-		super("Position", null, "Resets picture position", null, false);
+		super(tr("Reset position"), null, tr("Resets picture position"), null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}

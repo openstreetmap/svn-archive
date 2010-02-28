@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 package org.openstreetmap.josm.plugins.piclayer;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.Main;
@@ -38,7 +41,7 @@ public class ResetPictureAngleAction extends JosmAction {
 	 * Constructor
 	 */
 	public ResetPictureAngleAction( PicLayerAbstract owner ) {
-		super("Angle", null, "Resets picture rotation", null, false);
+		super(tr("Angle"), null, tr("Resets picture rotation"), null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}

@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 package org.openstreetmap.josm.plugins.piclayer;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,7 +50,7 @@ public class LoadPictureCalibrationAction extends JosmAction {
 	 * Constructor
 	 */
 	public LoadPictureCalibrationAction( PicLayerAbstract owner ) {
-		super("Load Picture Calibration...", null, "Loads calibration data to a file", null, false);
+		super(tr("Load Picture Calibration..."), null, tr("Loads calibration data to a file"), null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}
@@ -73,8 +76,8 @@ public class LoadPictureCalibrationAction extends JosmAction {
 			} catch (Exception e) {
 				// Error
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(Main.parent , "Loading file failed: " + e.getMessage());
+				JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", e.getMessage()));
 			}
-		}	
+		}
 	}
 }

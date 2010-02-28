@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 package org.openstreetmap.josm.plugins.piclayer;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.Main;
@@ -38,7 +41,7 @@ public class ResetPictureScaleAction extends JosmAction {
 	 * Constructor
 	 */
 	public ResetPictureScaleAction( PicLayerAbstract owner ) {
-		super("Scale", null, "Resets picture scale", null, false);
+		super(tr("Scale"), null, tr("Resets picture scale"), null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}

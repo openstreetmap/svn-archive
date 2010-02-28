@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 package org.openstreetmap.josm.plugins.piclayer;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,7 +49,7 @@ public class SavePictureCalibrationAction extends JosmAction {
 	 * Constructor
 	 */
 	public SavePictureCalibrationAction( PicLayerAbstract owner ) {
-		super("Save Picture Calibration...", null, "Saves calibration data to a file", null, false);
+		super(tr("Save Picture Calibration..."), null, tr("Saves calibration data to a file"), null, false);
 		// Remember the owner...
 		m_owner = owner;
 	}
@@ -75,11 +78,11 @@ public class SavePictureCalibrationAction extends JosmAction {
 			Properties props = new Properties();
 			m_owner.saveCalibration(props);
 			try {
-				props.store(new FileOutputStream(file), "JOSM PicLayer plugin calibration data");
+				props.store(new FileOutputStream(file), tr("JOSM PicLayer plugin calibration data"));
 			} catch (Exception e) {
 				// Error
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(Main.parent , "Saving file failed: " + e.getMessage());
+				JOptionPane.showMessageDialog(Main.parent , tr("Saving file failed: {0}", e.getMessage()));
 			}
 		}	
 	}

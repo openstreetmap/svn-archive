@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +61,7 @@ public class NewLayerFromFileAction extends JosmAction {
 
 		@Override
 		public String getDescription() {
-			return "Image files";
+			return tr("Image files");
 		}
 		
 	}
@@ -68,7 +70,7 @@ public class NewLayerFromFileAction extends JosmAction {
 	 * Constructor...
 	 */
 	public NewLayerFromFileAction() {
-		super("New picture layer from file...", null, null, null, false);
+		super(tr("New picture layer from file..."), null, null, null, false);
 	}
 
 	/**

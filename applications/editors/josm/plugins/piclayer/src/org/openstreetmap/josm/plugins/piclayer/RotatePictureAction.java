@@ -20,6 +20,8 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -49,7 +51,7 @@ public class RotatePictureAction extends MapMode implements MouseListener, Mouse
 	 * Constructor
 	 */
 	public RotatePictureAction(MapFrame frame) {
-		super("PicLayer", "rotate", "Drag to rotate the picture", frame, ImageProvider.getCursor("crosshair", null));
+		super(tr("PicLayer rotate"), "rotate", tr("Drag to rotate the picture"), frame, ImageProvider.getCursor("crosshair", null));
 		// TODO Auto-generated constructor stub
 	}
 

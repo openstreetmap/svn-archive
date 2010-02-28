@@ -90,15 +90,19 @@ import org.openstreetmap.josm.data.projection.*;
  * 1.6 28-Nov-2009 - Fix minor issues if Grab is called without layer (possible since projection rework)
  * 1.7 12-Dec-2009 - Change URL's changes for cookie and downgrade imgs resolution due to WMS changes
  * 1.8 xxx         - filter the mouse button 1 during georeferencing
- *                 - possibility to modify the auto-sourcing text just before upload 
  *                 - retry if getting a new cookie failed (10 times during 30 seconds)
  *                 - cookie expiration automatically detected and renewed (after 30 minutes)
  *                 - proper WMS layer cleanup at destruction (workaround for memory leak)
  *                 - new cache format (v3) storing original image and cropped image bbox + angle
- *                 - cache management compatible with previous v2 format
- *                 - raster image rotation using shift+ctrl key instead of ctrl
+ *                 - new cache format (v4) storing original image size for later rotation 
+ *                 - cache files read compatible with previous formats
+ *                 - raster image rotation issues fixed, now using shift+ctrl key instead of ctrl
  *                 - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support
- *                 - from Clément Ménier, new option allowing an auto-selection of the first cadastre layer for grab  
+ *                 - from Erik Amzallag:
+ *                 -     possibility to modify the auto-sourcing text just before upload 
+ *                 - from Clément Ménier:
+ *                 -     new option allowing an auto-selection of the first cadastre layer for grab
+ *                 -     non-modal JDialog in MenuActionGrabPlanImage  
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "1.8";
@@ -183,7 +187,7 @@ public class CadastrePlugin extends Plugin {
             cadastreJMenu.add(menuActionGrabPlanImage);
             cadastreJMenu.add(menuSettings);
             cadastreJMenu.add(menuSource);
-            cadastreJMenu.add(menuResetCookie);
+            //cadastreJMenu.add(menuResetCookie); not required any more
             //cadastreJMenu.add(menuLambertZone);
             cadastreJMenu.add(menuLoadFromCache);
             // all SVG features disabled until official WMS is released

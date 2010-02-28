@@ -7,8 +7,11 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -36,9 +39,12 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     private int cGetCorners = 1;
     private int cGetLambertCrosspieces = 2;
     private EastNorth ea1;
+    private EastNorth ea2;
     private long mouseClickedTime = 0;
     private EastNorth georefpoint1;
     private EastNorth georefpoint2;
+    private boolean ignoreMouseClick = false;
+    
     /**
      * The time which needs to pass between two clicks during georeferencing, in milliseconds
      */
@@ -125,6 +131,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
             mouseClickedTime = System.currentTimeMillis();
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
+        if (ignoreMouseClick) return; // In case we are currently just allowing zooming to read lambert coordinates
         countMouseClicked++;
         EastNorth ea = Main.proj.latlon2eastNorth(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         System.out.println("clic:"+countMouseClicked+" ,"+ea+", mode:"+mode);
@@ -145,17 +152,11 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         } else if (mode == cGetLambertCrosspieces) {
             if (countMouseClicked == 1) {
                 ea1 = ea;
-                if (inputLambertPosition())
-                    continueGeoreferencing();
+                inputLambertPosition(); // This will automatically asks for second point and continue the georeferencing
             }
             if (countMouseClicked == 2) {
-                if (inputLambertPosition()) {
-                    Main.map.mapView.removeMouseListener(this);
-                    affineTransform(ea1, ea, georefpoint1, georefpoint2);
-                    wmsLayer.saveNewCache();
-                    Main.map.mapView.repaint();
-                    actionCompleted();
-                }
+                ea2 = ea;
+                inputLambertPosition(); // This will automatically ends the georeferencing
             }
         }
     }
@@ -237,6 +238,17 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
 	    }
 	    return true;
     }
+    
+    /**
+     * Ends the georeferencing by computing the affine transformation
+     */
+    private void endGeoreferencing() {
+        Main.map.mapView.removeMouseListener(this);
+        affineTransform(ea1, ea2, georefpoint1, georefpoint2);
+        wmsLayer.saveNewCache();
+        Main.map.mapView.repaint();
+        actionCompleted();
+    }
 
     /**
      *
@@ -260,9 +272,11 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         return true;
     }
 
-    private boolean inputLambertPosition() {
-        JLabel labelEnterPosition = new JLabel(tr("Enter cadastre east,north position"));
-        JLabel labelWarning = new JLabel(tr("(Warning: verify north with arrow !!)"));
+    private void inputLambertPosition() {
+        JLabel labelEnterPosition = new JLabel(
+                tr("Enter cadastre east,north position"));
+        JLabel labelWarning = new JLabel(
+                tr("(Warning: verify north with arrow !!)"));
         JPanel p = new JPanel(new GridBagLayout());
         JLabel labelEast = new JLabel(tr("East"));
         JLabel labelNorth = new JLabel(tr("North"));
@@ -274,30 +288,49 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         p.add(inputEast, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 5, 0, 5));
         p.add(labelNorth, GBC.std().insets(0, 0, 10, 0));
         p.add(inputNorth, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 5, 0, 5));
-        JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
+        final JOptionPane pane = new JOptionPane(p,
+                JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION,
+                null);
         String number;
-        if (countMouseClicked == 1) number = "first";
-        else number = "second";
-        pane.createDialog(Main.parent, tr("Set {0} Lambert coordinates",number)).setVisible(true);
-        if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue())) {
-            if (canceledOrRestartCurrAction("georeferencing"))
-                startGeoreferencing();
-            return false;
-        }
-        if (inputEast.getText().length() != 0 && inputNorth.getText().length() != 0) {
-            try {
-                double e = Double.parseDouble(inputEast.getText());
-                double n = Double.parseDouble(inputNorth.getText());
-                if (countMouseClicked == 1)
-                    georefpoint1 = new EastNorth(e, n);
-                else
-                    georefpoint2 = new EastNorth(e, n);
-                return true;
-            } catch (NumberFormatException e) {
-                return false;
+        if (countMouseClicked == 1)
+            number = "first";
+        else
+            number = "second";
+        JDialog dialog = pane.createDialog(Main.parent, tr(
+                "Set {0} Lambert coordinates", number));
+        dialog.setModal(false);
+        ignoreMouseClick = true; // To avoid mouseClicked from being called
+                                 // during coordinates reading
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+        pane.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (JOptionPane.VALUE_PROPERTY.equals(evt.getPropertyName())) {
+                    ignoreMouseClick = false;
+                    if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(
+                            pane.getValue())) {
+                        if (canceledOrRestartCurrAction("georeferencing"))
+                            startGeoreferencing();
+                    }
+                    if (inputEast.getText().length() != 0
+                            && inputNorth.getText().length() != 0) {
+                        try {
+                            double e = Double.parseDouble(inputEast.getText());
+                            double n = Double.parseDouble(inputNorth.getText());
+                            if (countMouseClicked == 1) {
+                                georefpoint1 = new EastNorth(e, n);
+                                continueGeoreferencing();
+                            } else {
+                                georefpoint2 = new EastNorth(e, n);
+                                endGeoreferencing();
+                            }
+                        } catch (NumberFormatException e) {
+                            return;
+                        }
+                    }
+                }
             }
-        }
-        return false;
+        });
     }
 
     /**

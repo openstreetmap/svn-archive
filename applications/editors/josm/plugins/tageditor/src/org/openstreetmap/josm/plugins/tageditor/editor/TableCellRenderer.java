@@ -119,8 +119,14 @@ public class TableCellRenderer extends JLabel implements javax.swing.table.Table
 	 * @param tagModel the tag model 
 	 * @param model the tag editor model 
 	 */
-	protected void renderBackgroundColor(TagModel tagModel, TagEditorModel model) {
-		setBackground(UIManager.getColor("Table.background")); 
+	protected void renderColor(TagModel tagModel, TagEditorModel model, boolean isSelected) {
+		if (isSelected){
+			setBackground(UIManager.getColor("Table.selectionBackground"));
+			setForeground(UIManager.getColor("Table.selectionForeground"));
+		} else {
+			setBackground(UIManager.getColor("Table.background"));
+			setForeground(UIManager.getColor("Table.foreground"));
+		}		
 		if (belongsToSelectedPreset(tagModel, model)) {
 			setBackground(BG_COLOR_HIGHLIGHTED);
 		}
@@ -142,23 +148,12 @@ public class TableCellRenderer extends JLabel implements javax.swing.table.Table
             boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
 		
 		resetRenderer();
-		
-		// set background color
-		//
-		if (isSelected){
-			setBackground(UIManager.getColor("Table.selectionBackground"));
-			setForeground(UIManager.getColor("Table.selectionForeground"));
-		} else {
-			setBackground(UIManager.getColor("Table.background"));
-			setForeground(UIManager.getColor("Table.foreground"));
-		}
-
 		TagModel tagModel  = (TagModel)value;
 		switch(vColIndex) { 
 			case 0: renderTagName(tagModel); break;
 			case 1: renderTagValue(tagModel); break;
 		}
-		renderBackgroundColor(tagModel, (TagEditorModel)table.getModel());
+		renderColor(tagModel, (TagEditorModel)table.getModel(),isSelected);
 		if (hasFocus && isSelected) {
 			if (table.getSelectedColumnCount() == 1 && table.getSelectedRowCount() == 1) {
 				if (table.getEditorComponent() != null) {

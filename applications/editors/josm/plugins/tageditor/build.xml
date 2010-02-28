@@ -27,7 +27,7 @@
 <project name="tageditor" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="Tageditor: fixed josm bug 2416" />
+	<property name="commit.message" value="Fixed rendering of background color for selected cells" />
 	<property name="plugin.main.version" value="3015" />
 
 	<!--

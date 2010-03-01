@@ -98,6 +98,7 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - cache files read compatible with previous formats
  *                 - raster image rotation issues fixed, now using shift+ctrl key instead of ctrl
  *                 - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support
+ *                 - image resolution configurable (high, medium, low) like the online interface
  *                 - from Erik Amzallag:
  *                 -     possibility to modify the auto-sourcing text just before upload 
  *                 - from Clément Ménier:
@@ -128,6 +129,8 @@ public class CadastrePlugin extends Plugin {
     public static float transparency = 1.0f;
 
     public static boolean drawBoundaries = false;
+
+    public static int imageWidth, imageHeight;
 
     static private boolean menuEnabled = false;
 
@@ -176,7 +179,7 @@ public class CadastrePlugin extends Plugin {
                 }
             });
 
-            JMenuItem menuResetCookie = new JMenuItem(new MenuActionResetCookie());
+            //JMenuItem menuResetCookie = new JMenuItem(new MenuActionResetCookie());
             //JMenuItem menuLambertZone = new JMenuItem(new MenuActionLambertZone());
             JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
             // temporary disabled:
@@ -209,6 +212,15 @@ public class CadastrePlugin extends Plugin {
             backgroundTransparent = false;
             transparency = 1.0f;
         }
+        String currentResolution = Main.pref.get("cadastrewms.resolution", "high");
+        if (currentResolution.equals("high")) {
+            imageWidth = 1000; imageHeight = 800;
+        } else if (currentResolution.equals("medium")){
+            imageWidth = 800; imageHeight = 600;
+        } else { 
+            imageWidth = 600; imageHeight = 400;
+        }
+        
         // overwrite F11 shortcut used from the beginning by this plugin and recently used
         // for full-screen switch in JOSM core
         int i = 0;

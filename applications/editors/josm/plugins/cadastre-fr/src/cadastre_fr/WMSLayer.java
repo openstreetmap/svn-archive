@@ -237,7 +237,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         synchronized(this){
             Object savedInterpolation = g.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
             if (savedInterpolation == null) savedInterpolation = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
-            String interpolation = Main.pref.get("cadastrewms.imageInterpolation", "Standard");
+            String interpolation = Main.pref.get("cadastrewms.imageInterpolation", "standard");
             if (interpolation.equals("bilinear"))
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             else if (interpolation.equals("bicubic"))

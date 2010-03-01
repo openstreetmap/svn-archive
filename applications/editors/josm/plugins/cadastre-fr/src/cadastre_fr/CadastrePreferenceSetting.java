@@ -57,6 +57,12 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JCheckBox autoFirstLayer = new JCheckBox(tr("Automaticly select first WMS layer when grabing if multiple layers exist."));
     
+    private JRadioButton grabRes1 = new JRadioButton("high");
+
+    private JRadioButton grabRes2 = new JRadioButton("medium");
+
+    private JRadioButton grabRes3 = new JRadioButton("low");
+
     static final int DEFAULT_SQUARE_SIZE = 100;
     private JTextField grabMultiplier4Size = new JTextField(5);
 
@@ -123,8 +129,38 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         drawBoundaries.setToolTipText(tr("Draw a rectangle around downloaded data from WMS server."));
         cadastrewms.add(drawBoundaries, GBC.eop().insets(0, 0, 0, 5));
 
+        // option to select the single grabbed image resolution
+        JLabel jLabelRes = new JLabel(tr("Image resolution:"));
+        cadastrewms.add(jLabelRes, GBC.std().insets(0, 5, 10, 0));
+        ButtonGroup bgResolution = new ButtonGroup();
+        ActionListener resActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+              AbstractButton button = (AbstractButton) actionEvent.getSource();
+              grabMultiplier4Size.setEnabled(button == grabMultiplier4);
+            }
+          };
+        grabRes1.addActionListener( resActionListener);
+        grabRes1.setToolTipText(tr("High resolution (1000x800)"));
+        grabRes2.addActionListener( resActionListener);
+        grabRes2.setToolTipText(tr("Medium resolution (800x600)"));
+        grabRes3.addActionListener( resActionListener);
+        grabRes3.setToolTipText(tr("Low resolution (600x400)"));
+        bgResolution.add(grabRes1);
+        bgResolution.add(grabRes2);
+        bgResolution.add(grabRes3);
+        String currentResolution = Main.pref.get("cadastrewms.resolution", "high");
+        if (currentResolution.equals("high"))
+            grabRes1.setSelected(true);
+        if (currentResolution.equals("medium"))
+            grabRes2.setSelected(true);
+        if (currentResolution.equals("low"))
+            grabRes3.setSelected(true);
+        cadastrewms.add(grabRes1, GBC.std().insets(5, 0, 5, 0));
+        cadastrewms.add(grabRes2, GBC.std().insets(5, 0, 5, 0));
+        cadastrewms.add(grabRes3, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
+        
         // option to select image zooming interpolation method
-        JLabel jLabelImageZoomInterpolation = new JLabel(tr("Image zoom interpolation:"));
+        JLabel jLabelImageZoomInterpolation = new JLabel(tr("Image filter interpolation:"));
         cadastrewms.add(jLabelImageZoomInterpolation, GBC.std().insets(0, 0, 10, 0));
         imageInterpolationMethod.addItem(tr("Nearest-Neighbor (fastest) [ Default ]"));
         imageInterpolationMethod.addItem(tr("Bilinear (fast)"));
@@ -154,6 +190,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         grabMultiplier1.setIcon(ImageProvider.get("preferences", "unsel_box_1"));
         grabMultiplier1.setSelectedIcon(ImageProvider.get("preferences", "sel_box_1"));
         grabMultiplier1.addActionListener( multiplierActionListener);
+        grabMultiplier1.setToolTipText(tr("Grab one image full screen"));
         grabMultiplier2.setIcon(ImageProvider.get("preferences", "unsel_box_2"));
         grabMultiplier2.setSelectedIcon(ImageProvider.get("preferences", "sel_box_2"));
         grabMultiplier2.addActionListener( multiplierActionListener);
@@ -258,6 +295,12 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         Main.pref.put("cadastrewms.backgroundTransparent", transparency.isSelected());
         Main.pref.put("cadastrewms.brightness", Float.toString((float)sliderTrans.getValue()/10));
         Main.pref.put("cadastrewms.drawBoundaries", drawBoundaries.isSelected());
+        if (grabRes1.isSelected())
+            Main.pref.put("cadastrewms.resolution", "high");
+        else if (grabRes2.isSelected())
+            Main.pref.put("cadastrewms.resolution", "medium");
+        else if (grabRes3.isSelected())
+            Main.pref.put("cadastrewms.resolution", "low");
         if (imageInterpolationMethod.getSelectedIndex() == 2)
             Main.pref.put("cadastrewms.imageInterpolation", "bicubic");
         else if (imageInterpolationMethod.getSelectedIndex() == 1)

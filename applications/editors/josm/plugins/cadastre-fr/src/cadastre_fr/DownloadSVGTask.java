@@ -176,7 +176,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         str += bbox.min.north() + ",";
         str += bbox.max.east() + ",";
         str += bbox.max.north();
-        str += "&width=800&height=600"; // maximum allowed by wms server
+        str += "&width="+CadastrePlugin.imageWidth+"&height="+CadastrePlugin.imageHeight;
         str += "&styles=";
         str += "COMMUNE_90";
         System.out.println("URL="+str);

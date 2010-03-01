@@ -592,6 +592,9 @@ int RouteLoop (void)
     
     unsigned layout[4] = { 0, 0, 0, 0 }, lmask = 1;
     ndType *rtother = root->nd + root->nd->other[root->dir], *layoutNd[4];
+    // We categorize each segment leaving this junction according to the
+    // angle it form with the 'root' segment. The angles are 315 to 45,
+    // 45 to 135, 135 to 225 and 225 to 315 degrees.
     do {
       lmask <<= 2;
       for (int dir = 0; dir < 2; dir++) {
@@ -680,7 +683,7 @@ int RouteLoop (void)
           // direction
           if (layout[lht ? 1 : 3] && ((lmask << dir) & layout[lht ? 3 : 1])
               && fast && Style (w)->scaleMax > 100000) {
-            d += 100000 * (fast ? Style (w)->invSpeed[Vehicle] : 1);
+            d += 50000 * (fast ? Style (w)->invSpeed[Vehicle] : 1);
           // Turning right in the UK (or left in the rest of the world), when
           // we are on a major road (secondary+) that continues straight on,
           // you will probably have to wait for oncoming traffic.
@@ -692,11 +695,11 @@ int RouteLoop (void)
                 (Way (layoutNd[3])->bits & (1 << motorcarR)) && fast) {
             // And motorcars are allowed on both sides
               d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
-                    Style (w)->invSpeed[motorcarR] ? 50000 : 9000) *
+                    Style (w)->invSpeed[motorcarR] ? 10000 : 3000) *
                     (fast ? Style (w)->invSpeed[Vehicle] : 1);
             // Crossing a road that is faster that the road we are traveling
-            // on incurs a 500m penalty. If they are equal, the penality is
-            // 90m. TODO: residential crossing residential should be less,
+            // on incurs a 100m penalty. If they are equal, the penality is
+            // 30m. TODO: residential crossing residential should be less,
             // perhaps 20m.
             }
           }
@@ -707,6 +710,8 @@ int RouteLoop (void)
             (n2->lon - nd->lon) * (__int64)(nd->lon - other->lon), left =
             (n2->lat - nd->lat) * (__int64)(nd->lon - other->lon) -
             (n2->lon - nd->lon) * (__int64)(nd->lat - other->lat);
+          // Note: We need not calculate these, because we can check the relevant
+          // bits in layout
             
           // The code below adds a penalty to making a U-turn when an oncoming road
           // exists for example where a bidirectional road splits into two oneways.
@@ -716,9 +721,10 @@ int RouteLoop (void)
           // Currently the threshold angle is 45 degrees (a turn of more than 135 degrees).
           // We can vary it using this line:
           // straight = straight * lrint (tan (M_PI / 180 * 45) * 100) / 100;
-          if (straight < -left && straight < left && layout[2]) d += 200000 *
+          if (straight < -left && straight < left && layout[2]) d += 50000 *
             (fast ? Style (w)->invSpeed[Vehicle] : 1);
-                    
+          // Note: The layout values I've seen during debugging didn't add up.
+          
           AddNd (other, 1 - dir, d, root);
         } // If we found a segment we may follow
       } // for each direction
@@ -1261,10 +1267,16 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->first, "building:use") != 0 &&
         
         strcmp (i->first, "note:ja") != 0 &&
+        
+        !(strcmp (i->first, "ref") == 0 && strncmp (i->second, "http://", 7) == 0) &&
+        // Abused during the EPA import
+        
         strcmp (i->first, "import_uuid") != 0 &&
         strcmp (i->first, "attribution") /* Mostly MassGIS */ != 0 &&
         strcmp (i->first, "layer") != 0 &&
         strcmp (i->first, "direction") != 0 &&
+        strcmp (i->first, "maxspeed") != 0 &&
+        strcmp (i->first, "maxwidth") != 0 &&
         strcmp (i->first, "access") != 0 &&
         strcmp (i->first, "motorcar") != 0 &&
         strcmp (i->first, "bicycle") != 0 &&

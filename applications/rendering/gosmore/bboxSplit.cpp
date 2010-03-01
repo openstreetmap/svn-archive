@@ -24,7 +24,7 @@ bool operator < (const younion &a, const younion &b)
   return *ap < *bp;
 }
 
-char buf[409600]; // I assume the largest object will fit in 400KB
+char buf[2048000]; // I assume the largest object will fit in 1 MB
 
 int main (int argc, char *argv[])
 {
@@ -107,7 +107,7 @@ int main (int argc, char *argv[])
           pclose (f[j]);
         }
         // Should we close the files and wait for the children to exit ?
-        fprintf (stderr, "%s done using %d area combinations\n", argv[0], areas.size () - 1);
+        fprintf (stderr, "%s done using %ld area combinations\n", argv[0], areas.size () - 1);
         return 0;
       }
       if (n >= buf + cnt) {}
@@ -200,6 +200,6 @@ int main (int argc, char *argv[])
     pclose (f[j]);
   }
   fprintf (stderr, "Warning: Xml termination not found. Files should be OK.\n");
-  fprintf (stderr, "%s done using %d area combinations\n", argv[0], areas.size () - 1);
+  fprintf (stderr, "%s done using %ld area combinations\n", argv[0], areas.size () - 1);
   return 1;
 }

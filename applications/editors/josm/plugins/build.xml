@@ -7,6 +7,7 @@
     <target name="dist" depends="compile">
         <mkdir dir="../dist"/>
         <ant antfile="build.xml" target="dist" dir="addrinterpolation"/>
+        <ant antfile="build.xml" target="dist" dir="buildings_tools"/>
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="Create_grid_of_ways"/>
@@ -51,6 +52,7 @@
     </target>
     <target name="clean">
         <ant antfile="build.xml" target="clean" dir="addrinterpolation"/>
+        <ant antfile="build.xml" target="clean" dir="buildings_tools"/>
         <ant antfile="build.xml" target="clean" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
         <ant antfile="build.xml" target="clean" dir="Create_grid_of_ways"/>

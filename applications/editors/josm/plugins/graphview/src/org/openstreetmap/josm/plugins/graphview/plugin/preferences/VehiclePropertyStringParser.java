@@ -14,10 +14,10 @@ import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
  * utility class for interpreting Strings as vehicle property values
  */
 public final class VehiclePropertyStringParser {
-	
+
 	/** prevents instantiation */
 	private VehiclePropertyStringParser() { }
-	
+
 	/**
 	 * Exception class for syntax errors in property value Strings,
 	 * the message contains the reason using one of this utility class' public String constants.
@@ -28,11 +28,12 @@ public final class VehiclePropertyStringParser {
 			super(message);
 		}
 	}
-	
+
 	public static final String ERROR_WEIGHT =
-		"Weights must be given as positive decimal numbers without unit.";
+		"Weights must be given as positive decimal numbers with unit \"t\" or without unit.";
 	public static final String ERROR_LENGTH =
-		"Lengths must be given as positive decimal numbers without unit.";
+		"Lengths must be given as positive decimal numbers with unit \"m\", \"km\", \"mi\"" +
+		" or without unit.\nAlternatively, the format FEET' INCHES\" can be used.";
 	public static final String ERROR_SPEED =
 		"Speeds should be given as numbers without unit or "
 		+ "as numbers followed by \"mph\".";
@@ -42,10 +43,10 @@ public final class VehiclePropertyStringParser {
 		"Tracktype grades must be given as integers between 0 and 5.";
 	public static final String ERROR_SURFACE =
 		"Surface values must not contain any of the following characters: ',' '{' '}' '=' '|";
-	
+
 	private static final List<Character> FORBIDDEN_SURFACE_CHARS =
 		Arrays.asList(',', '{', '}', '=', '|');
-	
+
 	/**
 	 * returns the value represented by the propertyValueString
 	 *
@@ -61,13 +62,13 @@ public final class VehiclePropertyStringParser {
 	public static final <V> V parsePropertyValue(
 			VehiclePropertyType<V> propertyType, String propertyValueString)
 	throws PropertyValueSyntaxException {
-		
+
 		assert propertyType != null && propertyValueString != null;
-		
+
 		if (propertyType == VehiclePropertyTypes.AXLELOAD
 				|| propertyType == VehiclePropertyTypes.WEIGHT) {
-			
-			Float value = ValueStringParser.parseOsmDecimal(propertyValueString, false);
+
+			Float value = ValueStringParser.parseWeight(propertyValueString);
 			if (value != null && propertyType.isValidValue(value)) {
 				@SuppressWarnings("unchecked") //V must be float because of propertyType condition
 				V result = (V)value;
@@ -75,12 +76,12 @@ public final class VehiclePropertyStringParser {
 			} else {
 				throw new PropertyValueSyntaxException(ERROR_WEIGHT);
 			}
-			
+
 		} else if (propertyType == VehiclePropertyTypes.HEIGHT
 				|| propertyType == VehiclePropertyTypes.LENGTH
 				|| propertyType == VehiclePropertyTypes.WIDTH) {
-			
-			Float value = ValueStringParser.parseOsmDecimal(propertyValueString, false);
+
+			Float value = ValueStringParser.parseMeasure(propertyValueString);
 			if (value != null && propertyType.isValidValue(value)) {
 				@SuppressWarnings("unchecked") //V must be float because of propertyType condition
 				V result = (V)value;
@@ -88,9 +89,9 @@ public final class VehiclePropertyStringParser {
 			} else {
 				throw new PropertyValueSyntaxException(ERROR_LENGTH);
 			}
-			
+
 		} else if (propertyType == VehiclePropertyTypes.SPEED) {
-			
+
 			Float value = ValueStringParser.parseSpeed(propertyValueString);
 			if (value != null && propertyType.isValidValue(value)) {
 				@SuppressWarnings("unchecked") //V must be float because of propertyType condition
@@ -99,10 +100,10 @@ public final class VehiclePropertyStringParser {
 			} else {
 				throw new PropertyValueSyntaxException(ERROR_SPEED);
 			}
-			
+
 		} else if (propertyType == VehiclePropertyTypes.MAX_INCLINE_DOWN
 				|| propertyType == VehiclePropertyTypes.MAX_INCLINE_UP) {
-			
+
 			Float value = ValueStringParser.parseIncline(propertyValueString);
 			if (value != null && propertyType.isValidValue(value)) {
 				@SuppressWarnings("unchecked") //V must be float because of propertyType condition
@@ -111,9 +112,9 @@ public final class VehiclePropertyStringParser {
 			} else {
 				throw new PropertyValueSyntaxException(ERROR_INCLINE);
 			}
-			
+
 		} else if (propertyType == VehiclePropertyTypes.MAX_TRACKTYPE) {
-			
+
 			try {
 				int value = Integer.parseInt(propertyValueString);
 				if (0 <= value && value <= 5) {
@@ -122,11 +123,11 @@ public final class VehiclePropertyStringParser {
 					return result;
 				}
 			} catch (NumberFormatException e) {}
-			
+
 			throw new PropertyValueSyntaxException(ERROR_TRACKTYPE);
-			
+
 		} else if (propertyType == VehiclePropertyTypes.SURFACE_BLACKLIST) {
-			
+
 			String[] surfaces = propertyValueString.split(";\\s*");
 			Collection<String> surfaceBlacklist = new ArrayList<String>(surfaces.length);
 			for (String surface : surfaces) {
@@ -137,15 +138,15 @@ public final class VehiclePropertyStringParser {
 				}
 				surfaceBlacklist.add(surface);
 			}
-			
+
 			@SuppressWarnings("unchecked") //V must be Collection because of propertyType condition
 			V result = (V)surfaceBlacklist;
 			return result;
-			
+
 		} else {
 			throw new InvalidParameterException("unknown property type: " + propertyType);
 		}
-		
+
 	}
-	
+
 }

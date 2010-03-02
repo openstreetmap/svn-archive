@@ -33,6 +33,8 @@ abstract public class RoadValueLimit implements RoadPropertyType<Float> {
 		this.upperLimit = upperLimit;
 	}
 
+	protected abstract Float parse(String valueString);
+
 	public <N, W, R, M> Float evaluateW(W way, boolean forward,
 			AccessParameters accessParameters, DataSource<N, W, R, M> dataSource) {
 		assert way != null && accessParameters != null && dataSource != null;
@@ -48,7 +50,7 @@ abstract public class RoadValueLimit implements RoadPropertyType<Float> {
 	private final Float evaluateTags(TagGroup tags) {
 		String valueString = tags.getValue(keyName);
 		if (valueString != null) {
-			Float value = ValueStringParser.parseOsmDecimal(valueString, false);
+			Float value = parse(valueString);
 			return value;
 		} else {
 			return null;

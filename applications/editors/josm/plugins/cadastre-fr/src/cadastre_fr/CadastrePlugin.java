@@ -99,6 +99,7 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - raster image rotation issues fixed, now using shift+ctrl key instead of ctrl
  *                 - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support
  *                 - image resolution configurable (high, medium, low) like the online interface
+ *                 - layer selection configurable for vectorized images
  *                 - from Erik Amzallag:
  *                 -     possibility to modify the auto-sourcing text just before upload 
  *                 - from Clément Ménier:
@@ -131,6 +132,8 @@ public class CadastrePlugin extends Plugin {
     public static boolean drawBoundaries = false;
 
     public static int imageWidth, imageHeight;
+    
+    public static String grabLayers, grabStyles = null;
 
     static private boolean menuEnabled = false;
 
@@ -219,6 +222,48 @@ public class CadastrePlugin extends Plugin {
             imageWidth = 800; imageHeight = 600;
         } else { 
             imageWidth = 600; imageHeight = 400;
+        }
+        grabLayers = "";
+        grabStyles = "";
+        if (Main.pref.getBoolean("cadastrewms.layerWater", true)) {
+            grabLayers += "CDIF:LS3,";
+            grabStyles += "LS3_90,";
+        }
+        if (Main.pref.getBoolean("cadastrewms.layerBuilding", true)) {
+            grabLayers += "CDIF:LS2,";
+            grabStyles += "LS2_90,";
+        }
+        if (Main.pref.getBoolean("cadastrewms.layerSymbol", true)) {
+            grabLayers += "CDIF:LS1,";
+            grabStyles += "LS1_90,";
+        }
+        if (Main.pref.getBoolean("cadastrewms.layerParcel", true)) {
+            grabLayers += "CDIF:PARCELLE,";
+            grabStyles += "PARCELLE_90,";
+        }
+        if (Main.pref.getBoolean("cadastrewms.layerNumero", true)) {
+            grabLayers += "CDIF:NUMERO,";
+            grabStyles += "NUMERO_90,";
+        }
+        if (Main.pref.getBoolean("cadastrewms.layerLabel", true)) {
+            grabLayers += "CDIF:PT3,CDIF:PT2,CDIF:PT1,";
+            grabStyles += "PT3_90,PT2_90,PT1_90,";
+        }
+        if (Main.pref.getBoolean("cadastrewms.layerLieudit", true)) {
+            grabLayers += "CDIF:LIEUDIT,";
+            grabStyles += "NUMERO_90,";
+        }
+        if (Main.pref.getBoolean("cadastrewms.layerSection", true)) {
+            grabLayers += "CDIF:SUBSECTION,CDIF:SECTION,";
+            grabStyles += "SUBSECTION_90,SECTION_90,";
+        }
+        if (Main.pref.getBoolean("cadastrewms.layerCommune", true)) {
+            grabLayers += "CDIF:COMMUNE,";
+            grabStyles += "COMMUNE_90,";
+        }
+        if (grabLayers.length() > 0) { // remove the last ','
+            grabLayers = grabLayers.substring(0, grabLayers.length()-1);
+            grabStyles = grabStyles.substring(0, grabStyles.length()-1);
         }
         
         // overwrite F11 shortcut used from the beginning by this plugin and recently used

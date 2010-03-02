@@ -63,6 +63,16 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JRadioButton grabRes3 = new JRadioButton("low");
 
+    private JCheckBox layerLS3 = new JCheckBox(tr("water"));
+    private JCheckBox layerLS2 = new JCheckBox(tr("building"));
+    private JCheckBox layerLS1 = new JCheckBox(tr("symbol"));
+    private JCheckBox layerParcel = new JCheckBox(tr("parcel"));
+    private JCheckBox layerLabel = new JCheckBox(tr("parcel number"));
+    private JCheckBox layerNumero = new JCheckBox(tr("address"));
+    private JCheckBox layerLieudit = new JCheckBox(tr("locality"));
+    private JCheckBox layerSection = new JCheckBox(tr("section"));
+    private JCheckBox layerCommune = new JCheckBox(tr("commune"));
+
     static final int DEFAULT_SQUARE_SIZE = 100;
     private JTextField grabMultiplier4Size = new JTextField(5);
 
@@ -226,6 +236,37 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         grabMultiplier4Size.setEnabled(currentScale.equals(Scale.SQUARE_100M.value));
         cadastrewms.add(grabMultiplier4Size, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
 
+        // WMS layers selection
+        JLabel jLabelLayers = new JLabel(tr("Layers:"));
+        cadastrewms.add(jLabelLayers, GBC.std().insets(0, 5, 10, 0));
+        layerLS3.setSelected(Main.pref.getBoolean("cadastrewms.layerWater", true));
+        layerLS3.setToolTipText(tr("See, rivers, swimming pools."));
+        cadastrewms.add(layerLS3, GBC.std().insets(5, 0, 5, 0));
+        layerLS2.setSelected(Main.pref.getBoolean("cadastrewms.layerBuilding", true));
+        layerLS2.setToolTipText(tr("Buildings, covers, underground constructions."));
+        cadastrewms.add(layerLS2, GBC.std().insets(5, 0, 5, 0));
+        layerLS1.setSelected(Main.pref.getBoolean("cadastrewms.layerSymbol", true));
+        layerLS1.setToolTipText(tr("Symbols like cristian cross."));
+        cadastrewms.add(layerLS1, GBC.std().insets(5, 0, 5, 0));
+        layerParcel.setSelected(Main.pref.getBoolean("cadastrewms.layerParcel", true));
+        layerParcel.setToolTipText(tr("Parcels."));
+        cadastrewms.add(layerParcel, GBC.eop().insets(5, 0, 5, 0));
+        layerLabel.setSelected(Main.pref.getBoolean("cadastrewms.layerLabel", true));
+        layerLabel.setToolTipText(tr("Parcels numbers, street names."));
+        cadastrewms.add(layerLabel, GBC.std().insets(70, 0, 5, 0));
+        layerNumero.setSelected(Main.pref.getBoolean("cadastrewms.layerNumero", true));
+        layerNumero.setToolTipText(tr("Address, houses numbers."));
+        cadastrewms.add(layerNumero, GBC.std().insets(5, 0, 5, 0));
+        layerLieudit.setSelected(Main.pref.getBoolean("cadastrewms.layerLieudit", true));
+        layerLieudit.setToolTipText(tr("Locality, hamlet, place."));
+        cadastrewms.add(layerLieudit, GBC.std().insets(5, 0, 5, 0));
+        layerSection.setSelected(Main.pref.getBoolean("cadastrewms.layerSection", true));
+        layerSection.setToolTipText(tr("Cadastral sections and subsections."));
+        cadastrewms.add(layerSection, GBC.std().insets(5, 0, 5, 0));
+        layerCommune.setSelected(Main.pref.getBoolean("cadastrewms.layerCommune", true));
+        layerCommune.setToolTipText(tr("Municipality administrative borders."));
+        cadastrewms.add(layerCommune, GBC.eop().insets(5, 0, 5, 0));
+        
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
 
@@ -322,6 +363,15 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
             } catch (NumberFormatException e) { // ignore the last input
             }
         }
+        Main.pref.put("cadastrewms.layerWater", layerLS3.isSelected());
+        Main.pref.put("cadastrewms.layerBuilding", layerLS2.isSelected());
+        Main.pref.put("cadastrewms.layerSymbol", layerLS1.isSelected());
+        Main.pref.put("cadastrewms.layerParcel", layerParcel.isSelected());
+        Main.pref.put("cadastrewms.layerLabel", layerLabel.isSelected());
+        Main.pref.put("cadastrewms.layerNumero", layerNumero.isSelected());
+        Main.pref.put("cadastrewms.layerLieudit", layerLieudit.isSelected());
+        Main.pref.put("cadastrewms.layerSection", layerSection.isSelected());
+        Main.pref.put("cadastrewms.layerCommune", layerCommune.isSelected());
         try {
             int i = Integer.parseInt(rasterDivider.getText());
             if (i > 0 && i < 13)

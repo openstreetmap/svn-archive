@@ -25,6 +25,7 @@ public class VectorImageModifier extends ImageModifier {
             replaceBackground();
         if (Main.pref.getBoolean("cadastrewms.invertGrey"))
             invertGrey();
+        //bufferedImage = convert8(convert1(bufferedImage));
     }
 
     /**

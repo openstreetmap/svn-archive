@@ -19,8 +19,6 @@ import org.openstreetmap.josm.io.ProgressInputStream;
 
 public class CadastreGrabber {
 
-    public final static double epsilon = 1e-11;
-
     private CadastreInterface wmsInterface = new CadastreInterface();
 
     public GeorefImage grab(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws IOException, OsmTransferException {
@@ -61,11 +59,7 @@ public class CadastreGrabber {
 
     private URL getURLVector(EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
         String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
-        str += "&layers=CDIF:LS3,CDIF:LS2,CDIF:LS1,CDIF:PARCELLE,CDIF:NUMERO";
-        str += ",CDIF:PT3,CDIF:PT2,CDIF:PT1,CDIF:LIEUDIT";
-        str += ",CDIF:SUBSECTION";
-        str += ",CDIF:SECTION";
-        str += ",CDIF:COMMUNE";
+        str += "&layers="+CadastrePlugin.grabLayers;
         str += "&format=image/png";
         //str += "&format=image/jpeg";
         str += "&bbox="+lambertMin.east()+",";
@@ -74,10 +68,7 @@ public class CadastreGrabber {
         str += lambertMax.north();
         str += "&width="+CadastrePlugin.imageWidth+"&height="+CadastrePlugin.imageHeight;
         //str += "&exception=application/vnd.ogc.se_inimage"; // used by normal client but not required
-        str += "&styles=LS3_90,LS2_90,LS1_90,PARCELLE_90,NUMERO_90,PT3_90,PT2_90,PT1_90,LIEUDIT_90";
-        str += ",SUBSECTION_90";
-        str += ",SECTION_90";
-        str += ",COMMUNE_90";
+        str += "&styles="+CadastrePlugin.grabStyles;
         System.out.println("URL="+str);
         return new URL(str.replace(" ", "%20"));
     }

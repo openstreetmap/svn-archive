@@ -62,10 +62,10 @@ $result=mysql_query($query);
 $num=mysql_numrows($result);
 if ($num==0) {
 
-print "<h1 class='missing'>Zu Erledigen!</h1><p>Diese Area fehlt in OpenStreetMap. Bitte versuchen eine  Gebietsrelation zu diesem TMC Gebiet (z.B. Kreis oder Gemeinderlation) zu finden.</p>
+print "<h1 class='missing'>Zu Erledigen!</h1><p>Diese Area fehlt in OpenStreetMap. Bitte versuche, eine Gebietsrelation zu diesem TMC Gebiet (z.B. Kreis oder Gemeinderelation) zu finden.</p>
 <ul>
 <li>Suche nach einem Gebiet: [<a href=\"http://www.informationfreeway.org/api/0.6/relation[name|ref|name:de|short_name:de=$name]\">XAPI Suche nach Relation</a>][<a href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/relation[name|ref|name:de|short_name:de=$name\">JOSM</a>]
-<li>Wenn es kein Gebiet mit dieser Info existiert, kann man auch einen Punkt mit der Information getaggt werden. Suche nach einem Punkt: [<a href=\"http://www.informationfreeway.org/api/0.6/node[name|ref|name:de|short_name:de=$name]\">XAPI Suche nach Node</a>][<a href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/node[name|ref|name:de|short_name:de=$name\">JOSM</a>]</li>
+<li>Wenn kein Gebiet mit dieser Info existiert, kann auch ein Punkt mit der Information getaggt werden. Suche nach einem Punkt: [<a href=\"http://www.informationfreeway.org/api/0.6/node[name|ref|name:de|short_name:de=$name]\">XAPI Suche nach Knoten</a>][<a href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/node[name|ref|name:de|short_name:de=$name\">JOSM</a>]</li>
 </ul>
 <p>Diese dann mit folgenden Tags erg&auml;nzen: 
 	<ul>

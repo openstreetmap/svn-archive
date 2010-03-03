@@ -133,7 +133,7 @@ $farbe="rot";
 }
 $zweitFarbe="gruen";
 #$text="Zweitfarbe: $zweitFarbe";
-$text="<ul><li>Punkt: <a href='point.php?lcd=$lcd'>$lcd</a>".zusammenfassung($found,$fehler,$warnung,$tipp,1)."</li>";
+$text="<ul><li>Punkt: <a href='point.php?lcd=$lcd'>$lcd</a> ".zusammenfassung($found,$fehler,$warnung,$tipp,1)."</li>";
 if ($pol_lcd>0) {
         $thisLCD=$pol_lcd;
 	$zweitFarbe=updateFarbe($zweitFarbe,farbLCD($pol_lcd,"administrativearea"));

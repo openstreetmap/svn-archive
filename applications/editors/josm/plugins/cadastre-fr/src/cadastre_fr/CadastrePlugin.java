@@ -251,7 +251,7 @@ public class CadastrePlugin extends Plugin {
         }
         if (Main.pref.getBoolean("cadastrewms.layerLieudit", true)) {
             grabLayers += "CDIF:LIEUDIT,";
-            grabStyles += "NUMERO_90,";
+            grabStyles += "LIEUDIT_90,";
         }
         if (Main.pref.getBoolean("cadastrewms.layerSection", true)) {
             grabLayers += "CDIF:SUBSECTION,CDIF:SECTION,";

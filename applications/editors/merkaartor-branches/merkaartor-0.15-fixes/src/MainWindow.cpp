@@ -1757,6 +1757,7 @@ void MainWindow::preferencesChanged(void)
 
     updateStyleMenu();
     updateMenu();
+    theView->launch(new EditInteraction(theView));
     invalidateView(false);
 }
 

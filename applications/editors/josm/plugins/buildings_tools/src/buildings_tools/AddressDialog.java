@@ -72,7 +72,7 @@ public class AddressDialog extends ExtendedDialog {
 	{
 		lhousenum = housenum.getText();
 		lstreetname = streetname.getText();
-		inc = cincdec.getSelectedItem() == tr("Increment");		
+		inc = cincdec.getSelectedIndex() == 0;		
 	}
 	public String getHouseNum()
 	{

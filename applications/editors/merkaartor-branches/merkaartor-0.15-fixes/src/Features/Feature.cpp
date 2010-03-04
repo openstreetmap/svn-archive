@@ -94,6 +94,7 @@ class MapFeaturePrivate
 				theFeature(0), LastPartNotification(0),
 				Time(QDateTime::currentDateTime()), Deleted(false), Visible(true), Uploaded(false), LongId(0)
 				, Virtual(false)
+				, VirtualsUpdatesBlocked(false)
 		{
 			initVersionNumber();
 		}
@@ -104,6 +105,7 @@ class MapFeaturePrivate
 				theFeature(0), LastPartNotification(0),
 				Time(other.Time), Deleted(false), Visible(true), Uploaded(false), LongId(0)
 				, Virtual(other.Virtual)
+				, VirtualsUpdatesBlocked(other.VirtualsUpdatesBlocked)
 		{
 			initVersionNumber();
 		}
@@ -134,6 +136,7 @@ class MapFeaturePrivate
 		qint64 LongId;
 		RenderPriority theRenderPriority;
 		bool Virtual;
+		bool VirtualsUpdatesBlocked;
 };
 
 void MapFeaturePrivate::initVersionNumber()
@@ -364,6 +367,16 @@ bool Feature::isHidden() const
 void Feature::setVirtual(bool val)
 {
 	p->Virtual = val;
+}
+
+void Feature::blockVirtualUpdates(bool val)
+{
+	p->VirtualsUpdatesBlocked = val;
+}
+
+bool Feature::isVirtualUpdatesBlocked() const
+{
+	return p->VirtualsUpdatesBlocked;
 }
 
 bool Feature::isVirtual() const

@@ -17,7 +17,6 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.SingleSegmentGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.GpxLayer;

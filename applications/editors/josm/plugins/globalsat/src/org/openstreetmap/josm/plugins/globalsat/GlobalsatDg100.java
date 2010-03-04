@@ -27,7 +27,6 @@ import org.kaintoch.gps.globalsat.dg100.Response;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.ImmutableGpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.SingleSegmentGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 

@@ -26,6 +26,6 @@
 
 		if (-e "${fn}_r.tiff") { unlink "${fn}_r.tiff"; }
 		system "gdal_translate $cmd -a_srs EPSG:27700 $fn.tif temp1.tiff";
-		system "gdalwarp -s_srs EPSG:27700 -t_srs EPSG:27700 -te $min_e $min_n $max_e $max_n temp1.tiff ${fn}_r.tiff";
+		system "gdalwarp -s_srs EPSG:27700 -t_srs EPSG:27700 -srcnodata '0 255 0' -dstnodata '0 255 0' -te $min_e $min_n $max_e $max_n temp1.tiff ${fn}_r.tiff";
 		unlink "temp1.tiff";
 	}

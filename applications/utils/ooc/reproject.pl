@@ -9,12 +9,28 @@
 	$google=Geo::Proj4->new(proj=>"merc", a=>6378137, b=>6378137,
 						    lat_ts=>0.0, lon_0=>0.0, x_0=>0.0, y_0=>0,
 						    k=>1.0, units=>"m", nadgrids=>'@null');
-	$black=Imager::Color->new(0,0,0);
+	$blank=Imager::Color->new(0,255,0);
 	$scale1=15;	$scale2=16; 	# Target zoom levels (min/max)
 	$root="tiles/";
 
+	# Do we need to reproject any images?
+	@files=();
+	for $fn (@ARGV) {
+		if ($fn=~/_p/) {
+			# already reprojected, so no
+			push @files,$fn;
+		} else {
+			print "Reprojecting $fn\n";
+			$fn2=$fn; $fn2=~s/_r/_p/; push @files,$fn2;
+			system "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -s_srs EPSG:27700 -t_srs EPSG:900913 -srcnodata '0 255 0' -dstnodata '0 255 0' $fn $fn2";
+			unlink $fn;
+		}
+	}
+
 	# Combine images
-	system "gdalwarp -s_srs EPSG:27700 -t_srs EPSG:900913 @ARGV combined.tiff";
+	print "Combining\n";
+	system "gdalbuildvrt -srcnodata '0 255 0' combined.vrt @files";
+	system "gdal_translate combined.vrt combined.tiff";
 
 	# Get bounds
 	$info=`gdalinfo combined.tiff`;
@@ -60,8 +76,10 @@
 		$crop_bottom=($gprojbottom-$ybottom)/$pixelsize;
 		print "crop: $crop_left, $crop_right, $crop_top, $crop_bottom\n";
 	
-		print "expected width: ".($width-$crop_left-$crop_right)."\n";
-		print "expected height: ".($height-$crop_top-$crop_bottom)."\n";
+		$ewidth=$width-$crop_left-$crop_right;
+		$eheight=$height-$crop_top-$crop_bottom;
+		print "expected width: $ewidth\n";
+		print "expected height: $eheight\n";
 	
 		# ------------------------
 		# Create tiles with Imager
@@ -79,6 +97,10 @@
 		$crop_top   =(lat2y($umaxlat)-lat2y($gmaxlat))*$pxsize;
 		$crop_bottom=(lat2y($gminlat)-lat2y($uminlat))*$pxsize;
 
+		$owidth=$ewidth/$gwidthpx*256;
+		$oheight=$eheight/$gheightpx*256;
+		print "Source tile width $owidth, source tile height $oheight\n";
+
 		print "\nProcessing file:\n";
 		$pr=Imager->new();
 		$pr->open(file=>"combined.tiff") or die "Open error: ".$pr->errstr;
@@ -88,18 +110,16 @@
 					  right =>$width-$crop_right,
 					  top   =>$crop_top,
 					  bottom=>$height-$crop_bottom) or die "Crop error: ".$pr->errstr;
-		print "scale: $gwidthpx, $gheightpx\n";
-		$pr=$pr->scale(xpixels=>$gwidthpx,
-					   ypixels=>$gheightpx,
-					   type=>'nonprop') or die "Scale error: ".$pr->errstr;
+
 		print "write\n";
 		for ($x=$gx1; $x<$gx2; $x++) {
 			for ($y=$gy1; $y<$gy2; $y++) {
 				unless (-d "${root}$scale") { mkdir "${root}$scale"; }
 				unless (-d "${root}$scale/$x") { mkdir "${root}$scale/$x"; }
-				$tile=$pr->crop(left=>($x-$gx1)*256, width=>256,
-								top =>($y-$gy1)*256, height=>256) or die "Tile crop error: ".$pr->errstr;
-				$bcount=Imager::CountColor::count_color($tile,$black);
+				$tile=$pr->crop(left=>($x-$gx1)*$owidth , width=>$owidth,
+								top =>($y-$gy1)*$oheight, height=>$oheight) or die "Tile crop error: ".$pr->errstr;
+				$tile=$tile->scale(xpixels=>256, ypixels=>256, type=>'nonprop') or die "Tile scale error: ".$pr->errstr;
+				$bcount=Imager::CountColor::count_color($tile,$blank);
 				if ($bcount<5000) {
 					$tile->write(file=>"${root}$scale/$x/$y.jpg", jpegquality=>90) or die "Tile write error: ".$tile->errstr;
 				}
@@ -107,7 +127,8 @@
 		}
 	}
 	unlink "combined.tiff";
-
+	unlink "combined.vrt";
+	
 	print chr(7)."Finished\n";
 
 	# ==========

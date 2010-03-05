@@ -67,6 +67,8 @@ public class WMSAdjustAction extends MapMode implements
             } else {
                 JOptionPane.showMessageDialog(Main.parent,tr("This mode works only if active layer is\n"
                         +"a cadastre \"plan image\" (raster image)"));
+                exitMode();
+                Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
             }
         }
     }

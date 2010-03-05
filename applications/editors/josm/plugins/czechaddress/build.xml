@@ -1,6 +1,5 @@
 <project name="czechaddress" default="dist" basedir=".">
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-    <property name="josm.classpath"         value="../../core/build"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
@@ -25,13 +24,7 @@
 
     <target name="compile" depends="init,revision"
             description="Compile the plugin and make it ready for running">
-
-        <fail message="You must firstly compile the JOSM itself"><condition><not>
-            <resourcecount count="1" when="ge">
-                <fileset id="josm" dir="${josm.classpath}"/>
-            </resourcecount>
-        </not></condition></fail>
-
+	    
         <javac srcdir="src"
                classpath="${josm}"
                debug="true"
@@ -94,17 +87,6 @@
 
 
     <target name="run" depends="compile">
-        <fail message="You must firstly compile the JOSM itself">
-            <condition>
-                <not>
-                    <resourcecount count="1" when="gt">
-                        <fileset  includes="*" id="josm"
-                                 dir="${josm.classpath}"/>
-                    </resourcecount>
-                </not>
-            </condition>
-        </fail>
-
         <java classname="JOSM" fork="true">
             <jvmarg value="-Xmx1024m"/>
             <jvmarg value="-Xdebug"/>
@@ -148,16 +130,6 @@
 
     <target name="debug" depends="compile"
             description="Debug CzechAddress with Netbeans">
-        <fail message="You must firstly compile the JOSM itself">
-            <condition>
-                <not>
-                    <resourcecount count="1" when="gt">
-                        <fileset dir="${josm.classpath}"
-                                 includes="*" id="josm"/>
-                    </resourcecount>
-                </not>
-            </condition>
-        </fail>
         <nbjpdastart addressproperty="jpda.address"
                      name="czechaddress"
                      transport="dt_socket"/>

@@ -1,5 +1,6 @@
 <project name="josm-plugins" default="build" basedir=".">
-    <target name="compile_josm">
+    <target name="compile_josm" unless="skip-josm">
+	<echo message="test"/>
         <ant dir="../core" target="dist" />
     </target>
     <target name="compile" depends="compile_josm"></target>

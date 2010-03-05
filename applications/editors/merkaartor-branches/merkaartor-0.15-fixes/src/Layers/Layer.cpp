@@ -406,6 +406,8 @@ std::deque<Feature*> Layer::indexFind(const CoordBox& vp)
 
 void Layer::reIndex()
 {
+	qDebug() << "Reindexing...";
+
 	delete p->theRTree;
 	p->theRTree = new MyRTree(7, 2);
 
@@ -582,7 +584,7 @@ DrawingLayer * DrawingLayer::fromXML(Document* d, const QDomElement& e, QProgres
 DrawingLayer * DrawingLayer::doFromXML(DrawingLayer* l, Document* d, const QDomElement e, QProgressDialog & progress)
 {
 	l->blockIndexing(true);
-//	l->blockVirtualUpdates(true);
+	l->blockVirtualUpdates(true);
 
 	l->setId(e.attribute("xml:id"));
 	l->setAlpha(e.attribute("alpha").toDouble());
@@ -595,7 +597,7 @@ DrawingLayer * DrawingLayer::doFromXML(DrawingLayer* l, Document* d, const QDomE
 	if (c.tagName() != "osm")
 		return NULL;
 
-	QList<Way*> addedWays;
+	QSet<Way*> addedWays;
 	int i=0;
 	c = c.firstChildElement();
 	while(!c.isNull()) {
@@ -604,7 +606,7 @@ DrawingLayer * DrawingLayer::doFromXML(DrawingLayer* l, Document* d, const QDomE
 		if (c.tagName() == "way") {
 			Way* R = Way::fromXML(d, l, c);
 			if (R)
-				addedWays.push_back(R);
+				addedWays << R;
 //			l->add(R);
 			i++;
 		} else
@@ -637,12 +639,15 @@ DrawingLayer * DrawingLayer::doFromXML(DrawingLayer* l, Document* d, const QDomE
 
 	if (i > 0) progress.setValue(progress.value()+i);
 
+	l->blockVirtualUpdates(false);
+	if (M_PREFS->getUseVirtualNodes()) {
+		foreach (Way* value, addedWays) {
+			value->updateVirtuals();
+			qApp->processEvents();
+		}
+	}
 	l->blockIndexing(false);
 	l->reIndex();
-//	l->blockVirtualUpdates(false);
-//	if (M_PREFS->getUseVirtualNodes())
-//		for (int i=0; i<addedWays.size(); ++i)
-//			addedWays[i]->updateVirtuals();
 
 	return l;
 }

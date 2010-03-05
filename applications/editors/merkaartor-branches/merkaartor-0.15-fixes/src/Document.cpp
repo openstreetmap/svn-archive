@@ -1,7 +1,6 @@
 #include "Command.h"
 
 #include "Feature.h"
-#include "ImportOSM.h"
 #include "Document.h"
 #include "ImageMapLayer.h"
 

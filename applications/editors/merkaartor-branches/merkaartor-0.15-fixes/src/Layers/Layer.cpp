@@ -4,7 +4,6 @@
 
 #include "Document.h"
 #include "LayerWidget.h"
-#include "ImportOSM.h"
 
 #include "DocumentCommands.h"
 #include "FeatureCommands.h"
@@ -38,6 +37,7 @@ public:
 
 		theRTree = new MyRTree(7, 2);
 		IndexingBlocked = false;
+		VirtualsUpdatesBlocked = false;
 
 	}
 	~LayerPrivate()
@@ -59,6 +59,7 @@ public:
 	bool Readonly;
 	bool Uploadable;
 	bool IndexingBlocked;
+	bool VirtualsUpdatesBlocked;
 	qreal alpha;
 	int dirtyLevel;
 
@@ -371,6 +372,17 @@ void Layer::blockIndexing(bool val)
 	p->IndexingBlocked = val;
 }
 
+void Layer::blockVirtualUpdates(bool val)
+{
+	p->VirtualsUpdatesBlocked = val;
+}
+
+bool Layer::isVirtualUpdatesBlocked() const
+{
+	return p->VirtualsUpdatesBlocked;
+}
+
+
 void Layer::indexAdd(const CoordBox& bb, const MapFeaturePtr aFeat)
 {
 	if (bb.isNull())
@@ -570,6 +582,7 @@ DrawingLayer * DrawingLayer::fromXML(Document* d, const QDomElement& e, QProgres
 DrawingLayer * DrawingLayer::doFromXML(DrawingLayer* l, Document* d, const QDomElement e, QProgressDialog & progress)
 {
 	l->blockIndexing(true);
+//	l->blockVirtualUpdates(true);
 
 	l->setId(e.attribute("xml:id"));
 	l->setAlpha(e.attribute("alpha").toDouble());
@@ -582,25 +595,16 @@ DrawingLayer * DrawingLayer::doFromXML(DrawingLayer* l, Document* d, const QDomE
 	if (c.tagName() != "osm")
 		return NULL;
 
-// 	QByteArray ba;
-// 	QTextStream out(&ba);
-// 	c.save(out,2);
-//
-// 	bool importOK = importOSM(NULL, ba, d, l,NULL);
-// 	if (importOK == false) {
-// 		d->remove(l);
-// 		delete l;
-// 		return NULL;
-// 	}
-
-
+	QList<Way*> addedWays;
 	int i=0;
 	c = c.firstChildElement();
 	while(!c.isNull()) {
 		if (c.tagName() == "bound") {
 		} else
 		if (c.tagName() == "way") {
-			/* Way* R = */ Way::fromXML(d, l, c);
+			Way* R = Way::fromXML(d, l, c);
+			if (R)
+				addedWays.push_back(R);
 //			l->add(R);
 			i++;
 		} else
@@ -635,6 +639,10 @@ DrawingLayer * DrawingLayer::doFromXML(DrawingLayer* l, Document* d, const QDomE
 
 	l->blockIndexing(false);
 	l->reIndex();
+//	l->blockVirtualUpdates(false);
+//	if (M_PREFS->getUseVirtualNodes())
+//		for (int i=0; i<addedWays.size(); ++i)
+//			addedWays[i]->updateVirtuals();
 
 	return l;
 }

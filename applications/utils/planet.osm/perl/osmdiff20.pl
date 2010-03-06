@@ -471,6 +471,7 @@ foreach $key (keys %way1_user) {
 		my $changed = 0 ;
 		for ($i = 0; $i <= $#{$way1_nodes{$key}}; $i++) {
 			if ( defined ( $node0_lon{$way1_nodes{$key}[$i]} ) ) {
+				no warnings qw[uninitialized];
 				if ( ( $node0_lon{$way1_nodes{$key}[$i]} != $node1_lon{$way1_nodes{$key}[$i]} ) or   
 					( $node0_lat{$way1_nodes{$key}[$i]} != $node1_lat{$way1_nodes{$key}[$i]} ) ) {
 					$changed = 1 ;

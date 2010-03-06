@@ -2705,7 +2705,14 @@ void MainWindow::updateLanguage()
         // Do not prevent Merkaartor translations to be loaded, even if there is no Qt translation for the language.
 
         // First, try in the app dir
+    #if defined(Q_OS_MAC)
+        QDir resources = QDir(QCoreApplication::applicationDirPath());
+        resources.cdUp();
+        resources.cd("Resources");
+        bool retM = merkaartorTranslator->load("merkaartor_" + DefaultLanguage, resources.absolutePath());
+    #else
         bool retM = merkaartorTranslator->load("merkaartor_" + DefaultLanguage, QCoreApplication::applicationDirPath());
+    #endif
     #ifdef TRANSDIR_MERKAARTOR
         if (!retM) {
             // Next, try the TRANSDIR_MERKAARTOR, if defined

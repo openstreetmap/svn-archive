@@ -1333,6 +1333,7 @@ void MerkaartorPreferences::loadProjection(QString fn)
 	if (QDir::isRelativePath(fn))
 		fn = QCoreApplication::applicationDirPath() + "/" + fn;
 
+	qDebug() << "loadProjection " << fn;
 	QFile file(fn);
 	if (!file.open(QIODevice::ReadOnly)) {
 //		QMessageBox::critical(this, tr("Invalid file"), tr("%1 could not be opened.").arg(fn));
@@ -1359,7 +1360,16 @@ void MerkaartorPreferences::loadProjections()
 	QString fn = ":/Projections.xml";
 	loadProjection(fn);
 
+#if defined(Q_OS_MAC)
+	{
+		QDir resources = QDir(QCoreApplication::applicationDirPath());
+		resources.cdUp();
+		resources.cd("Resources");
+		fn = resources.absolutePath() + "/Projections.xml";
+	}
+#else
 	fn = QString(STRINGIFY(SHARE_DIR)) + "/Projections.xml";
+#endif
 	loadProjection(fn);
 
 	fn = HOMEDIR + "/Projections.xml";

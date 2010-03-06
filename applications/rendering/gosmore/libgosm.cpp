@@ -54,8 +54,16 @@ int TagCmp (const char *a, const char *b)
   static const char *teens[] = { "", "", "twenty ", "thirty ", "fourty ",
     "fifty ", "sixty ", "seventy ", "eighty ", "ninety " };
   
-  if (stricmp (a, "the ") == 0) a += 4;
-  if (stricmp (b, "the ") == 0) b += 4;
+  if (strncasecmp (a, "the ", 4) == 0) a += 4;
+  else if (strncasecmp (a, "de ", 3) == 0) a += 3;
+  else if (strncasecmp (a, "rue ", 4) == 0) a += 4;
+  else if (strncasecmp (a, "avenue ", 7) == 0) a += 7;
+  else if (strncasecmp (a, "boulevard ", 10) == 0) a += 10;
+  if (strncasecmp (b, "the ", 4) == 0) b += 4;
+  else if (strncasecmp (b, "de ", 3) == 0) b += 3;
+  else if (strncasecmp (b, "rue ", 4) == 0) b += 4;
+  else if (strncasecmp (b, "avenue ", 7) == 0) b += 7;
+  else if (strncasecmp (b, "boulevard ", 10) == 0) b += 10;
   if (strchr ("WEST", a[0]) && a[1] == ' ') a += 2; // e.g. N 21st St
   if (strchr ("WEST", b[0]) && b[1] == ' ') b += 2;
 
@@ -1193,12 +1201,14 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
   }
   
   if (k2v["ref"]) result.push_back (string (k2v["ref"]) + "\n");
+  if (k2v["operator"]) result.push_back (string (k2v["operator"]) + "\n");
   map<const char *, const char *, ltstr>::iterator i = k2v.m.begin ();
   // Go through all the tags and add all the interesting things to 'result'
   // so that they will be indexed.
   for (; i != k2v.m.end (); i++) {
     if (strcmp (i->first, "name") != 0 &&
         strcmp (i->first, "ref") != 0 &&
+        strcmp (i->first, "operator") != 0 &&
         strncasecmp (i->first, "tiger:", 6) != 0 &&
         strcmp (i->first, "created_by") != 0 &&
         strcmp (i->first, "converted_by") != 0 &&
@@ -1219,6 +1229,11 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->first, "addr:country") != 0 &&
         !(strcmp (i->first, "addr:conscriptionnumber") == 0 && k2v["addr:housenumber"]) &&
         // The mvcr:adresa import sets both the conscription number & housenumber
+        !(strcmp (i->first, "postal_code") == 0 && !isNode) &&
+        // Many European ways include the postal code. Although it's nice to be able to
+        // highlight all the streets in a postal code (after searching), it's more likely
+        // to slow down the software unnecessarily.
+
         strncasecmp (i->first, "KSJ2:", 5) != 0 && 
         strncasecmp (i->first, "geobase:", 8)  != 0 &&
         strncasecmp (i->first, "kms:", 4)  != 0 &&
@@ -1244,6 +1259,9 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strncasecmp (i->first, "TMC:", 4)  != 0 && // Traffic broadcast info esp. Germany
 
         strncasecmp (i->first, "cladr:", 6)  != 0 && // Some Russian import
+        
+        strncmp (i->first, "BP:", 2)  != 0 && // British Petroleum import
+        strcmp (i->first, "amenity:eftpos") != 0 && // Payment method not important
 
         strncasecmp (i->first, "chile:", 6)  != 0 && // vialidad.cl import
         strncasecmp (i->first, "navibot:", 8)  != 0 && // navimont's tag
@@ -1263,17 +1281,25 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         
         strncmp (i->first, "qroti:", 6) != 0 &&
 
+        strcmp (i->first, "area") != 0 && // Too vague
         strcmp (i->first, "building") != 0 &&
         strcmp (i->first, "building:use") != 0 &&
+
+        strcmp (i->second, "surveillance") != 0 && // man_made=...
+        strcmp (i->first, "surveillance") != 0 && // e.g. ...=indoor
+        // I doubt anyone will have a legal reason to search for a security camera
         
         strcmp (i->first, "note:ja") != 0 &&
         
         !(strcmp (i->first, "ref") == 0 && strncmp (i->second, "http://", 7) == 0) &&
         // Abused during the EPA import
+
+        strcmp (i->second, "tree") != 0 && // A few of these in Berlin
         
         strcmp (i->first, "import_uuid") != 0 &&
         strcmp (i->first, "attribution") /* Mostly MassGIS */ != 0 &&
         strcmp (i->first, "layer") != 0 &&
+        strcmp (i->first, "history") != 0 &&
         strcmp (i->first, "direction") != 0 &&
         strcmp (i->first, "maxspeed") != 0 &&
         strcmp (i->first, "maxwidth") != 0 &&
@@ -1309,6 +1335,7 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->first, "sangs_id") != 0 &&
         strcmp (i->first, "is_in") != 0 &&
         strcmp (i->second, "level_crossing") != 0 && // railway=level_crossing
+        strcmp (i->second, "living_street") != 0 &&
         strcmp (i->second, "residential") != 0 &&
         strcmp (i->second, "unclassified") != 0 &&
         strcmp (i->second, "tertiary") != 0 &&
@@ -1360,7 +1387,9 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         // Don't index wikipedia names, but make it obvious that it's on there.
         string (strcmp (i->second, "true") == 0 ||
                 strcmp (i->second, "yes") == 0 || strcmp (i->second, "1") == 0
-                ? i->first : i->second) + "\n");
+                ? strncasecmp (i->first, "amenity:", 8) == 0 ? i->first + 8
+                // Strip off amenity: from things like amenity:restaurant (BP import)
+                : i->first : i->second) + "\n");
     }
   }
   membershipType m;

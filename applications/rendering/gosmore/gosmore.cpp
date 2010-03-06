@@ -1296,9 +1296,7 @@ PangoLayout  *pl;
 void DrawString (int x, int y, const char *optStr)
 {
   #if PANGO_VERSION
-  PangoMatrix mat;
-  mat.xx = mat.yy = 1.0;
-  mat.xy = mat.yx = 0.0;
+  PangoMatrix mat = PANGO_MATRIX_INIT;
   pango_context_set_matrix (pc, &mat);
   pango_layout_set_text (pl, optStr, -1);
   gdk_draw_layout (GDK_DRAWABLE (draw->window),
@@ -1744,7 +1742,8 @@ void ConsiderText (queue<linePtType> *q, int finish, int len, int *best,
 
 int WaySizeCmp (ndType **a, ndType **b)
 {
-  return Way (*a)->dlat * Way (*a)->dlon - Way (*b)->dlat * Way (*b)->dlon;
+  return Way (*a)->dlat * (__int64) Way (*a)->dlon >
+         Way (*b)->dlat * (__int64) Way (*b)->dlon ? 1 : -1;
 }
 
 #ifdef NOGTK
@@ -1874,7 +1873,7 @@ gint DrawExpose (void)
   clip.x = 0;
   clip.y = 0;
 
-  PangoMatrix mat;
+  PangoMatrix mat = PANGO_MATRIX_INIT;
   pc = gdk_pango_context_get_for_screen (gdk_screen_get_default ());
   pl = pango_layout_new (pc);
   pango_layout_set_width (pl, -1); // No wrapping 200 * PANGO_SCALE);
@@ -2007,7 +2006,7 @@ gint DrawExpose (void)
       ndType *nd = itr.nd[0];
       wayType *w = Way (nd);
 
-      if (Style (w)->scaleMax < zoom / clip.width * 175 / (DetailLevel + 6)
+      if (Style (w)->scaleMax < zoom / clip.width * 350 / (DetailLevel + 6)
           && !Display3D && w->dlat < zoom / clip.width * 20 &&
                            w->dlon < zoom / clip.width * 20) continue;
       // With 3D, the icons are filtered only much later when we know z.

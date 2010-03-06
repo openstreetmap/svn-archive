@@ -777,12 +777,12 @@ The colours can only be in hex
         <routing bicycle="1" foot="1" goods="1" hgv="1" motorcycle="1" motorcar="1" psv="1" moped="1" mofa="1"/>
 	</rule>
 	
-	<rule>
+<!--	<rule>
 		<condition k="barrier" v="speed_bump" />
 		<icon annotate="true" src="misc/no_icon.png" />
 		<scale_min>1</scale_min>
 		<scale_max>2000</scale_max>
-	</rule>
+	</rule> Rather use traffic_calming: bump -->
 	<rule>
 		<condition k="barrier" v="block"/>
 		<icon annotate="true" src="misc/no_icon.png"/>
@@ -791,12 +791,12 @@ The colours can only be in hex
 		<scale_min>1</scale_min>
 		<scale_max>5000</scale_max>
 	</rule>
-	<rule>
+<!--	<rule>
 		<condition k="barrier" v="border_control"/>
 		<icon annotate="true" src="misc/no_icon.png"/>
 		<scale_min>1</scale_min>
 		<scale_max>5000</scale_max>
-	</rule>
+	</rule> Not documented -->
 	<rule>
 		<condition k="barrier" v="bump_gate"/>
 		<icon annotate="true" src="misc/no_icon.png"/>
@@ -1050,7 +1050,7 @@ The colours can only be in hex
         <line width="1" realwidth="1" colour="#00ff00"/>
 		<icon annotate="true" src="transport/steps.png" />
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>5000</scale_max>
         <routing foot="2"/>
 	</rule>
 
@@ -1066,28 +1066,28 @@ The colours can only be in hex
 		<condition k="highway" v="mini_roundabout" />
 		<icon annotate="true" src="vehicle/restriction/roundabout_left.png" />
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="stop" />
 		<icon annotate="true" src="vehicle/restriction/stop.png" />
         <scale_min>1</scale_min>
-        <scale_max>5000</scale_max>
+        <scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="traffic_signals" />
 		<icon annotate="true" src="vehicle/restriction/traffic-light.png" />
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 	
 	<rule>
 		<condition k="highway" v="street_lamp"/>
 		<icon annotate="true" src="misc/streetlamp.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>5000</scale_max>
+		<scale_max>2000</scale_max>
 	</rule>
 
 	<rule>
@@ -1108,63 +1108,63 @@ The colours can only be in hex
 		<condition k="highway" v="crossing" />
 		<icon annotate="true" src="vehicle/zebra_crossing.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="traffic_calming" v="bump" />
 		<icon annotate="true" src="vehicle/bump.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="traffic_calming" v="table" />
 		<icon annotate="true" src="vehicle/bump.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="gate" />
 		<icon annotate="true" src="vehicle/gate.png" />
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 	
 	<rule>
 		<condition k="highway" v="stile" />
 		<icon annotate="true" src="vehicle/stile.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 	
 	<rule>
 		<condition k="highway" v="cattle_grid" />
 		<icon annotate="true" src="vehicle/cattle_grid.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 	
 	<rule>
 		<condition k="highway" v="toll_booth" />
 		<icon annotate="true" src="vehicle/toll_booth.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 	
 	<rule>
 		<condition k="highway" v="incline" />
 		<icon annotate="true" src="vehicle/restriction/incline.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="incline_steep" />
 		<icon annotate="true" src="vehicle/restriction/incline.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -1172,14 +1172,14 @@ The colours can only be in hex
 		<line width="2" realwidth="5" dashed="true" colour="#ff0000"/>
 		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="motorway_junction" />
 		<icon annotate="true" src="vehicle/exit.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -1344,7 +1344,7 @@ The colours can only be in hex
 
 	<rule>
 		<condition k="waterway" v="riverbank"/>
-        <line width="1" colour="#00005f" width_bg="1" colour_bg="#00001f"/>
+        <line width="1" colour="#a0a0ff" width_bg="1" colour_bg="#00001f"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1595,7 +1595,7 @@ The colours can only be in hex
 		<icon annotate="true" src="transport/turntable.png" />
         <area colour="#202020" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
     </rule>
     
 	<rule>
@@ -1956,14 +1956,6 @@ The colours can only be in hex
 	</rule>
 
 	<rule>
-		<condition k="man_made" v="surveillance"/>
-		<icon annotate="true" src="misc/surveillance.png"/>
-		<area colour="manmade#d8d8d8"/>
-		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
-	</rule>
-
-	<rule>
 		<condition k="man_made" v="lighthouse" />
 		<icon annotate="true" src="misc/landmark/lighthouse.png" />
         <area colour="#D8D8D8" />
@@ -2008,7 +2000,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/landmark/watermill.png"/>
 		<area colour="manmade#d8d8d8"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -2025,7 +2017,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sport/centre.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -2033,7 +2025,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sport/golf.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>30000</scale_max>
 	</rule>
 
 	<rule>
@@ -2041,7 +2033,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sport/stadium.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>40000</scale_max>
 	</rule>
 
 	<rule>
@@ -2049,7 +2041,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sport/track.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>30000</scale_max>
 	</rule>
 
 	<rule>
@@ -2057,7 +2049,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sport/pitch.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>30000</scale_max>
 	</rule>
 
 	<rule>
@@ -2073,7 +2065,7 @@ The colours can only be in hex
 		<icon annotate="true" src="nautical/marina.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>30000</scale_max>
 	</rule>
 
 	<rule>
@@ -2081,7 +2073,7 @@ The colours can only be in hex
 		<icon annotate="true" src="nautical/slipway.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -2089,7 +2081,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sport/fishing.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2105,7 +2097,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/park.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
@@ -2113,7 +2105,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/playground.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
@@ -2121,7 +2113,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/dog.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -2129,7 +2121,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/garden.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
@@ -2137,7 +2129,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/common.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
@@ -2145,7 +2137,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sport/pool.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
@@ -2153,7 +2145,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sport/golf.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 <!--amenity tags -->
@@ -2162,7 +2154,7 @@ The colours can only be in hex
 		<icon annotate="true" src="food/pub.png"  />
 		<area colour="#ecba52"/>
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
@@ -2170,7 +2162,7 @@ The colours can only be in hex
 		<icon annotate="true" src="food/biergarten.png"  />
 		<area colour="#ecba52"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -2178,7 +2170,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/nightclub.png"  />
 		<area colour="#ecba52"/>
         <scale_min>1</scale_min>
-        <scale_max>25000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -2186,7 +2178,7 @@ The colours can only be in hex
 		<icon annotate="true" src="food/cafe.png"  />
 		<area colour="#ecba52"/>
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
@@ -2194,7 +2186,7 @@ The colours can only be in hex
 		<icon annotate="true" src="food/restaurant.png" />
 		<area colour="#ecba52"/>
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
@@ -2202,7 +2194,7 @@ The colours can only be in hex
 		<icon annotate="true" src="food/fastfood.png" />
 		<area colour="#ecba52"/>
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2210,7 +2202,7 @@ The colours can only be in hex
 		<icon annotate="true" src="food/bar.png" />
 		<area colour="#ecba52"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 	
 	<rule>
@@ -2218,7 +2210,7 @@ The colours can only be in hex
 		<icon annotate="true" src="food/icecream.png" />
 		<area colour="#ecba52"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 	
 	<rule>
@@ -2226,7 +2218,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/parking/multi-storey.png" priority="10000"/>
 		<area colour="amenity_traffic#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2234,7 +2226,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/parking/underground.png" priority="10000"/>
 		<area colour="amenity_traffic#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2242,7 +2234,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/parking/park_ride.png" priority="10000"/>
 		<area colour="amenity_traffic#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2250,7 +2242,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/parking.png"/>
 		<area colour="amenity_traffic#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2258,7 +2250,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/parking.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>15000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2266,7 +2258,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/parking/bicycle.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
@@ -2274,7 +2266,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/rental/bicycle.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
@@ -2282,7 +2274,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/rental.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -2290,7 +2282,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/car_sharing.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -2298,7 +2290,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="transport/car.png" />
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>9000</scale_max>
 	</rule>
 	
 	<rule>
@@ -2306,7 +2298,7 @@ The colours can only be in hex
 		<icon annotate="true" src="transport/taxi.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
@@ -2314,7 +2306,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/fuel.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -2322,14 +2314,14 @@ The colours can only be in hex
 		<icon annotate="true" src="service/telephone.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="amenity" v="clock"/>
 		<icon annotate="true" src="service/clock.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
@@ -2337,7 +2329,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/emergency_phone.png"/>
 		<area colour="amenity_light#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
@@ -2345,7 +2337,7 @@ The colours can only be in hex
 		<icon annotate="true" src="service/toilets.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2353,14 +2345,14 @@ The colours can only be in hex
 		<icon annotate="true" src="service/recycling.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="amenity" v="waste_basket"/>
 		<icon annotate="true" src="service/recycling/trash-bin.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2368,7 +2360,7 @@ The colours can only be in hex
 		<icon annotate="true" src="public.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2376,7 +2368,7 @@ The colours can only be in hex
 		<icon annotate="true" src="public.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -2384,23 +2376,23 @@ The colours can only be in hex
 		<icon annotate="true" src="service.png"/>
 		<area colour="amenity_light#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="amenity" v="drinking_water" />
 		<icon annotate="true" src="food/drinking_water.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 	  	
 	<rule>
 		<condition k="amenity" v="fountain"/>
 		<icon annotate="true" src="misc/landmark/spring.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<!--the religion rules must be placed before the place_of_worship rule! -->
@@ -2408,91 +2400,91 @@ The colours can only be in hex
 		<condition k="religion" v="bahai" />
 		<icon annotate="true" src="religion/bahai.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="buddhist" />
 		<icon annotate="true" src="religion/buddhism.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="christian" />
 		<icon annotate="true" src="religion/church.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="hindu" />
 		<icon annotate="true" src="religion/hinduism.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="jain" />
 		<icon annotate="true" src="religion/jainism.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="jewish" />
 		<icon annotate="true" src="religion/synagogue.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="muslim" />
 		<icon annotate="true" src="religion/mosque.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="sikh" />
 		<icon annotate="true" src="religion/sikhism.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="shinto" />
 		<icon annotate="true" src="religion/shinto.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="spiritualist"/>
 		<icon annotate="true" src="misc/no_icon.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="taoist" />
 		<icon annotate="true" src="religion/taoism.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="unitarian"/>
 		<icon annotate="true" src="misc/no_icon.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="religion" v="zoroastrian"/>
 		<icon annotate="true" src="misc/no_icon.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2500,7 +2492,7 @@ The colours can only be in hex
 		<icon annotate="true" src="religion.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2508,7 +2500,7 @@ The colours can only be in hex
 		<icon annotate="true" src="rendering/landuse/cemetery.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2516,7 +2508,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2524,7 +2516,7 @@ The colours can only be in hex
 		<icon annotate="true" src="service/post_office.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
@@ -2532,7 +2524,7 @@ The colours can only be in hex
 		<icon annotate="true" src="service/post_box.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2540,7 +2532,7 @@ The colours can only be in hex
 		<icon annotate="true" src="education/school.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>12000</scale_max>
 	</rule>
 
 	<rule>
@@ -2548,7 +2540,7 @@ The colours can only be in hex
 		<icon annotate="true" src="education/university.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -2556,7 +2548,7 @@ The colours can only be in hex
 		<icon annotate="true" src="education/college.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2564,7 +2556,7 @@ The colours can only be in hex
 		<icon annotate="true" src="education/kindergarten.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2572,7 +2564,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png"/>
 		<area colour="amenity_light#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
@@ -2580,7 +2572,7 @@ The colours can only be in hex
         <area colour="#eeeeee" />
 		<icon annotate="true" src="health/pharmacy.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
@@ -2588,7 +2580,7 @@ The colours can only be in hex
         <area colour="#eeeeee" />
 		<icon annotate="true" src="health/hospital.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -2596,7 +2588,7 @@ The colours can only be in hex
         <area colour="#eeeeee" />
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2604,7 +2596,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png"/>
 		<area colour="health#eeeeee"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>3000</scale_max>
 	</rule>
 
         <rule>
@@ -2612,7 +2604,7 @@ The colours can only be in hex
                 <area colour="health#eeeeee"/>
                 <icon annotate="true" src="health/doctor.png"/>
                 <scale_min>1</scale_min>
-                <scale_max>50000</scale_max>
+                <scale_max>5000</scale_max>
         </rule>
 
 	<rule>
@@ -2620,7 +2612,7 @@ The colours can only be in hex
         <area colour="#eeeeee" />
 		<icon annotate="true" src="misc/no_icon.png" />
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>4500</scale_max>
 	</rule>
 	
 	<rule>
@@ -2628,7 +2620,7 @@ The colours can only be in hex
 		<area colour="health#eeeeee"/>
 		<icon annotate="true" src="health/veterinary.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
@@ -2636,7 +2628,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="shop/rental/library.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -2644,7 +2636,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="service/police.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2652,7 +2644,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="service/firebrigade.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
@@ -2660,7 +2652,7 @@ The colours can only be in hex
 		<icon annotate="true" src="transport/bus.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -2668,7 +2660,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png"/>
 		<area colour="amenity_light#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -2676,7 +2668,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="leisure/theater.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
@@ -2684,7 +2676,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="leisure/cinema.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2692,7 +2684,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="service/arts_centre.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -2700,7 +2692,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="service/administration/court_of_law.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -2708,7 +2700,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="service/administration/prison.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>12000</scale_max>
 	</rule>
 
 	<rule>
@@ -2716,7 +2708,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="money/bank.png" />
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
@@ -2724,7 +2716,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="money/exchange.png" />
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
@@ -2732,7 +2724,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="money/atm.png" />
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
@@ -2740,7 +2732,7 @@ The colours can only be in hex
 		<area colour="amenity_light#f7efb7"/>
 		<icon annotate="true" src="leisure/bench.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2748,7 +2740,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -2756,7 +2748,7 @@ The colours can only be in hex
 		<area colour="amenity_light#f7efb7"/>
 		<icon annotate="true" src="leisure/bbq.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>12000</scale_max>
 	</rule>
 
 	<rule>
@@ -2764,7 +2756,7 @@ The colours can only be in hex
 		<area colour="#f7efb7"/>
 		<icon annotate="true" src="accommodation/shelter.png" />
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>15000</scale_max>
 	</rule>
 	
 	<rule>
@@ -2772,7 +2764,7 @@ The colours can only be in hex
 		<area colour="amenity_light#f7efb7"/>
     <icon annotate="true" src="hunting_stand.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>15000</scale_max>
 	</rule>
 
 	<rule>
@@ -2780,14 +2772,14 @@ The colours can only be in hex
 		<icon annotate="true" src="wlan.png"/>
 		<area colour="amenity_light#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="vending" v="excrement_bags"/>
 		<icon annotate="true" src="service/excrement_bags.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>3000</scale_max>
 	</rule>
 
 	<rule>
@@ -2795,7 +2787,7 @@ The colours can only be in hex
 		<icon src="transport/ticket-machine.png" priority="-10"/>
 		<area colour="amenity_light#f7efb7"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>4000</scale_max>
 	</rule>
 
 	<rule>
@@ -2804,7 +2796,7 @@ The colours can only be in hex
     <icon annotate="true" src="misc/deprecated.png"/>
 		<line width="2" realwidth="5" dashed="true" colour="deprecated#ff0000"/>
 		<scale_min>1</scale_min>
-		<scale_max>40000</scale_max>
+		<scale_max>10000</scale_max>
 	</rule>
 
 <!--shop tags -->
@@ -2812,346 +2804,346 @@ The colours can only be in hex
 	<rule>
 		<condition k="shop" v="supermarket" />
 		<icon annotate="true" src="shop/supermarket.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="convenience" />
 		<icon annotate="true" src="shop/supermarket.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="bakery" />
 		<icon annotate="true" src="shop/groceries/bakery.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="butcher" />
 		<icon annotate="true" src="shop/groceries/butcher.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="bicycle" />
 		<icon annotate="true" src="sport/bicycle.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="doityourself" />
 		<icon annotate="true" src="shop/diy_store.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>40000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="dry_cleaning" />
 		<icon annotate="true" src="shop/laundry.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="laundry" />
 		<icon annotate="true" src="shop/laundry.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>15000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="outdoor" />
 		<icon annotate="true" src="shop/sports/outdoor.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="kiosk" />
 		<icon annotate="true" src="shop/kiosk.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="alcohol"/>
 		<icon annotate="true" src="shop/beverages.png"/>
-		<area colour="shop#00005f"/>
+		<area colour="shop#a0a0ff"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="beverages" />
 		<icon annotate="true" src="shop/beverages.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>30000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="books" />
 		<icon annotate="true" src="shop/rental/library.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="car" />
 		<icon annotate="true" src="transport/car.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="car_dealer" />
 		<icon annotate="true" src="transport/car.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="car_repair" />
 		<icon annotate="true" src="transport/car.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="chemist" />
 		<icon annotate="true" src="shop/chemist.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="clothes" />
 		<icon annotate="true" src="shop/clothes.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="computer" />
 		<icon annotate="true" src="shop/computer.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="cycle_repair" />
 		<icon annotate="true" src="sport/bicycle.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="department_store" />
 		<icon annotate="true" src="misc/no_icon.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>11000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="electronics" />
 		<icon annotate="true" src="shop/electronics.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="furniture" />
 		<icon annotate="true" src="shop/furniture.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="florist" />
 		<icon annotate="true" src="shop/florist.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="groceries" />
 		<icon annotate="true" src="shop/groceries/fruits.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>6500</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="garden_centre" />
 		<icon annotate="true" src="shop/garden_centre.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>12000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="hairdresser" />
 		<icon annotate="true" src="misc/no_icon.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="hardware" />
 		<icon annotate="true" src="shop/diy_store.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="hifi" />
 		<icon annotate="true" src="shop/hifi.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="jewelry" />
 		<icon annotate="true" src="shop/jewelry.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="mall" />
 		<icon annotate="true" src="shop/mall.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>16000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="motorcycle" />
 		<icon annotate="true" src="vehicle/motorbike.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="newsagent" />
 		<icon annotate="true" src="shop/kiosk.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="organic" />
 		<icon annotate="true" src="shop/groceries/fruits.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="optician" />
 		<icon annotate="true" src="shop/optician.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="shoes" />
 		<icon annotate="true" src="shop/shoes.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="sports"/>
 		<icon annotate="true" src="sport/multi.png"/>
-		<area colour="shop#00005f"/>
+		<area colour="shop#a0a0ff"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>6500</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="stationery"/>
 		<icon annotate="true" src="misc/no_icon.png"/>
-		<area colour="shop#00005f"/>
+		<area colour="shop#a0a0ff"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="tailor" />
 		<icon annotate="true" src="misc/no_icon.png" />
-		<area colour="#00005f"/>
-        <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+		<area colour="#a0a0ff"/>
+		<scale_min>1</scale_min>
+		<scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="travel_agency" />
 		<icon annotate="true" src="place/island.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5500</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="toys" />
 		<icon annotate="true" src="shop/toys.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>65000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="shop" v="video" />
 		<icon annotate="true" src="shop/video.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<!-- duplicate of shopping_centre? -->
 	<rule>
 		<condition k="shop" v="shopping_center" />
 		<icon annotate="true" src="shop/mall.png" />
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>17000</scale_max>
 	</rule>
 
 <!--tourism tags -->
@@ -3160,7 +3152,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/information.png" />
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -3168,7 +3160,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>11000</scale_max>
 	</rule>
 
 	<rule>
@@ -3176,7 +3168,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/motel.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>11000</scale_max>
 	</rule>
 
 	<rule>
@@ -3184,7 +3176,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/guest_house.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
@@ -3192,7 +3184,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/hostel.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
@@ -3200,7 +3192,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/chalet.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>12000</scale_max>
 	</rule>
 
 	<rule>
@@ -3208,7 +3200,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/alpine_hut.png"/>
 		<area colour="hotel#e1a0a2"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -3216,7 +3208,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/camping.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -3224,7 +3216,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/camping/caravan.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -3232,7 +3224,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/picnic.png" />
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<rule>
@@ -3240,7 +3232,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sightseeing/viewpoint.png" />
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>14000</scale_max>
 	</rule>
 
 	<rule>
@@ -3248,7 +3240,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/theme_park.png" />
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
     <rule>
@@ -3256,7 +3248,7 @@ The colours can only be in hex
         <icon annotate="true" src="sightseeing.png"/>
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>13000</scale_max>
     </rule>
 
     <rule>
@@ -3264,7 +3256,7 @@ The colours can only be in hex
         <icon annotate="true" src="leisure/zoo.png"/>
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>14000</scale_max>
     </rule>
 
     <rule>
@@ -3272,7 +3264,7 @@ The colours can only be in hex
         <icon annotate="true" src="service/arts_centre.png"/>
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7000</scale_max>
     </rule>
 
 	<rule>
@@ -3280,14 +3272,14 @@ The colours can only be in hex
 		<icon annotate="true" src="sightseeing/museum.png" />
 		<area colour="#e180a2" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>9000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="information" v="guidepost"/>
 		<icon annotate="true" src="misc/information/guidepost.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>40000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -3295,21 +3287,21 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/information/informationoffice.png"/>
 		<area colour="tourism#e180a2"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>8000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="information" v="map"/>
 		<icon annotate="true" src="misc/information/map.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>40000</scale_max>
+		<scale_max>6000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="information" v="board"/>
 		<icon annotate="true" src="misc/information/board.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>40000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 
 <!--historic tags -->
@@ -3318,7 +3310,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sightseeing/castle.png" />
         <area colour="#663300" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -3326,7 +3318,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sightseeing/monument.png" />
         <area colour="#663300" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -3334,7 +3326,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sightseeing/memorial.png" />
         <area colour="#663300" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -3342,7 +3334,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sightseeing/archaeological.png" />
         <area colour="#663300" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -3350,7 +3342,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sightseeing/ruins.png" />
         <area colour="#663300" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>16000</scale_max>
 	</rule>
 
 	<rule>
@@ -3358,7 +3350,7 @@ The colours can only be in hex
 		<icon annotate="true" src="sightseeing/battlefield.png" />
         <area colour="#663300" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 	
 	<rule>
@@ -3366,7 +3358,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png" />
         <area colour="#663300" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 	
 	<rule>
@@ -3374,7 +3366,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png" />
         <area colour="#663300" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>8000</scale_max>
 	</rule>
 	
 	<rule>
@@ -3382,7 +3374,7 @@ The colours can only be in hex
 		<icon annotate="true" src="historic/boundary_stone.png"/>
 		<area colour="historic#663300"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>20000</scale_max>
 	</rule>
 
 <!--landuse tags -->
@@ -3477,7 +3469,8 @@ The colours can only be in hex
 	<rule>
 		<condition k="landuse" v="residential"/>
 		<area colour="#f0f0f0"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> If you want a residential
+		node, be more specific, e.g. a building or an address -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3485,7 +3478,7 @@ The colours can only be in hex
 	<rule>
 		<condition k="landuse" v="farmyard"/>
 		<area colour="#f0f0f0"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> Make an area -->
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
 	</rule>
@@ -3494,7 +3487,8 @@ The colours can only be in hex
 	<rule>
 		<condition k="landuse" v="retail"/>
 		<area colour="#dbdbdb"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> Make an area or a mall or a
+		shop -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3502,7 +3496,7 @@ The colours can only be in hex
 	<rule>
 		<condition k="landuse" v="commercial"/>
 		<area colour="#dbdbdb"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> Make a building -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3534,7 +3528,7 @@ The colours can only be in hex
 	<rule>
 		<condition k="landuse" v="railway"/>
 		<area colour="#888888"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> Make a station -->
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -3624,7 +3618,7 @@ The colours can only be in hex
     <rule>
         <condition k="natural" v="spring"/>
         <icon annotate="true" src="misc/landmark/spring.png"/>
-		<area colour="#00005f"/>
+		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -3671,7 +3665,7 @@ The colours can only be in hex
 
 	<rule>
         <condition k="natural" v="scrub" />
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> If it is map worthy, make an area -->
         <area colour="#007000" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3679,7 +3673,7 @@ The colours can only be in hex
     
     <rule>
         <condition k="natural" v="fell"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> If it is map worthy, make an area -->
         <area colour="#002f00"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3687,7 +3681,8 @@ The colours can only be in hex
 
     <rule>
 		<condition k="natural" v="heath"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" />  If it is map worthy, make
+		an area -->
         <area colour="#ffffc0"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3703,7 +3698,8 @@ The colours can only be in hex
     
     <rule>
 		<condition k="natural" v="marsh"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" />  If it is map worthy, make
+		an area -->
 		<area colour="#4f4ff3"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3711,7 +3707,8 @@ The colours can only be in hex
 
 	<rule>
 		<condition k="natural" v="wetland"/>
-		<icon src="misc/no_icon.png"/>
+<!--		<icon src="misc/no_icon.png"/>  If it is map worthy, make an
+		area -->
 		<area colour="marsh#4f4ff3"/>
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
@@ -3719,7 +3716,8 @@ The colours can only be in hex
 
     <rule>
 		<condition k="natural" v="water"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> If it is map worthy, make an
+		area -->
 		<area colour="#0000ff"/>
         <scale_min>1</scale_min>
         <scale_max>60000</scale_max>
@@ -3727,7 +3725,7 @@ The colours can only be in hex
 	
     <rule>
         <condition k="natural" v="coastline"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" /> Make an way -->
         <line width="1" colour="#0000ff"/>
         <scale_min>1</scale_min>
         <scale_max>200000000</scale_max>
@@ -3735,15 +3733,17 @@ The colours can only be in hex
     
     <rule>
 		<condition k="natural" v="mud"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" />  If it is map worthy, make
+		an area -->
 		<area colour="#cba762"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
     <rule>
-		<condition k="natural" v="beach"/>
-		<icon src="misc/no_icon.png" />
+		<condition k="natural" v="beach"/> 
+		<icon src="misc/no_icon.png" /> <!-- Some beaches are
+		important tourist attractions with names -->
 		<area colour="#f8dba2"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3759,7 +3759,8 @@ The colours can only be in hex
 
     <rule>
 		<condition k="natural" v="land"/>
-		<icon src="misc/no_icon.png" />
+<!--		<icon src="misc/no_icon.png" />  If it is map worthy, make
+		an area -->
 		<area colour="#002f00"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -3777,7 +3778,7 @@ The colours can only be in hex
 		<condition k="natural" v="tree"/>
 		<icon src="misc/landmark/trees.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>1000</scale_max>
 	</rule>
 
 <!--route tags -->
@@ -3895,7 +3896,7 @@ The colours can only be in hex
 		<area colour="sport#bde3cb"/>
 		<icon src="sport/10pin.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3903,7 +3904,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3911,7 +3912,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3919,7 +3920,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/football.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3927,7 +3928,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/baseball.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3935,7 +3936,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/basketball.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3943,7 +3944,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3951,7 +3952,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3959,7 +3960,7 @@ The colours can only be in hex
 		<area colour="sport#bde3cb"/>
 		<icon src="sport/canoe.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3967,7 +3968,7 @@ The colours can only be in hex
 		<area colour="sport#bde3cb"/>
 		<icon src="sport/chess.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3975,7 +3976,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3983,7 +3984,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/cricket.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3991,7 +3992,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -3999,7 +4000,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4007,7 +4008,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/cycling.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4015,7 +4016,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4023,7 +4024,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/riding.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4031,7 +4032,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/football.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4039,7 +4040,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/golf.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4047,7 +4048,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4055,7 +4056,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4063,7 +4064,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/riding.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4071,7 +4072,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4079,7 +4080,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4087,7 +4088,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4095,7 +4096,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4103,7 +4104,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/football.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4111,7 +4112,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4119,7 +4120,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4127,7 +4128,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/soccer.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4135,7 +4136,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/pool.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4143,7 +4144,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/skiing.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4151,7 +4152,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/table_tennis.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4159,7 +4160,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon src="sport/tennis.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 
 	<rule>
@@ -4167,7 +4168,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4175,7 +4176,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4183,7 +4184,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4191,7 +4192,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="sport/volleyball.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4199,7 +4200,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4207,7 +4208,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4215,7 +4216,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4223,7 +4224,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4231,7 +4232,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4239,7 +4240,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="sport/diving.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4247,7 +4248,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4255,7 +4256,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="misc/no_icon.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 	<rule>
@@ -4263,7 +4264,7 @@ The colours can only be in hex
 		<area colour="#bde3cb"/>
 		<icon annotate="true" src="sport/fishing.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>7700</scale_max>
 	</rule>
 	
 <!--abutters tags -->
@@ -4355,7 +4356,7 @@ The colours can only be in hex
 		<icon annotate="true" src="place/settlement/capital.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>100000</scale_max>
 	</rule>
 
 	<rule>
@@ -4363,7 +4364,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
-        <scale_max>9000000</scale_max>
+        <scale_max>18000000</scale_max>
 	</rule>
 
 	<rule>
@@ -4371,7 +4372,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
-        <scale_max>100000</scale_max>
+        <scale_max>200000</scale_max>
 	</rule>
 
 	<rule>
@@ -4379,7 +4380,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>100000</scale_max>
 	</rule>
 
 	<rule>
@@ -4387,7 +4388,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
-        <scale_max>100000</scale_max>
+        <scale_max>200000</scale_max>
 	</rule>
 
 	<rule>
@@ -4395,7 +4396,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/no_icon.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
-        <scale_max>300000</scale_max>
+        <scale_max>600000</scale_max>
 	</rule>
 
 	<rule>
@@ -4403,7 +4404,7 @@ The colours can only be in hex
 		<icon annotate="true" src="place/locality.png" />
 		<area colour="#8de3cb"/>
         <scale_min>1</scale_min>
-        <scale_max>100000</scale_max>
+        <scale_max>200000</scale_max>
 	</rule>
 
 	<rule>
@@ -4472,49 +4473,60 @@ The colours can only be in hex
 	<!-- keep this generic rules at the end of the file, so more specialised rules fit first -->
 	<rule>
 		<condition k="building" v="yes"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+<!--		<icon annotate="true" src="misc/no_icon.png" />  If it is
+		map worthy, make an area, or tag it with an address, shop or
+		amenity -->
 		<area colour="#cb9999"/>
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
 	</rule>
 	<rule>
 		<condition k="building" v="true"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+<!--		<icon annotate="true" src="misc/no_icon.png" />  If it is
+		map worthy, make an area, or tag it with an address, shop or
+		amenity -->
 		<area colour="#cb9999"/>
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
 	</rule>
 	<rule>
 		<condition k="building" v="church"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+<!--		<icon annotate="true" src="misc/no_icon.png" />  If it is
+		map worthy, make an area, or tag it with an address, shop or
+		amenity -->
 		<area colour="#cb9999"/>
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
 	</rule>
 	<rule>
 		<condition k="building" v="museum"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+<!--		<icon annotate="true" src="misc/no_icon.png" />  If it is
+		map worthy, make an area, or tag it with an address, shop or
+		amenity -->
 		<area colour="#cb9999"/>
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
 	</rule>
 	<rule>
 		<condition k="building" v="tower"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+<!--		<icon annotate="true" src="misc/no_icon.png" />  If it is
+		map worthy, make an area, or tag it with man_made=... -->
 		<area colour="#cb9999"/>
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
 	</rule>
 	<rule>
 		<condition k="building" v="station"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+<!--		<icon annotate="true" src="misc/no_icon.png" />  If it is
+		map worthy, make an area, or tag it with railway=station -->
 		<area colour="#cb9999"/>
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
 	</rule>
 	<rule>
 		<condition k="building" v="residential"/>
-		<icon annotate="true" src="misc/no_icon.png" />
+<!--		<icon annotate="true" src="misc/no_icon.png" />  If it is
+		map worthy, make an area, or tag it with an address -->
 		<area colour="#cb9999"/>
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
@@ -4581,23 +4593,23 @@ The colours can only be in hex
 		<condition k="addr:housenumber"/>
 		<icon annotate="true" src="misc/deprecated.png" />
         <scale_min>1</scale_min>
-        <scale_max>7000</scale_max>
+        <scale_max>2500</scale_max>
 	</rule>
 <!--public_transport tags --> 
-    <rule> 
+<!--    <rule> 
         <condition k="public_transport" v="stop_position"/> 
         <icon annotate="true" src="misc/no_icon.png"/>
         <scale_min>1</scale_min> 
         <scale_max>50000</scale_max> 
-    </rule> 
+    </rule> Not currently documented -->
 
-    <rule> 
+<!--    <rule> 
         <condition k="public_transport" v="platform"/> 
         <icon annotate="true" src="misc/no_icon.png"/>
         <line width="1" realwidth="1" colour="service#809bc0" dashed="9" dashedcolour="livingdashed#00ff00" /> 
         <scale_min>1</scale_min> 
         <scale_max>50000</scale_max> 
-    </rule> 
+    </rule> Not currently documented -->
 
 	<rule>
 		<condition k="contour_ext" v="elevation_major"/>
@@ -4630,6 +4642,14 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/error.png" />
 		<scale_min>1</scale_min>
 		<scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="surveillance"/>
+		<icon annotate="true" src="misc/surveillance.png"/>
+		<area colour="manmade#d8d8d8"/>
+		<scale_min>1</scale_min>
+		<scale_max>2000</scale_max>
 	</rule>
 
 </rules>

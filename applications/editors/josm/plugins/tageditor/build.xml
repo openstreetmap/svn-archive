@@ -27,7 +27,7 @@
 <project name="tageditor" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="Testing plugin update " />
+	<property name="commit.message" value="Testing plugin update" />
 	<property name="plugin.main.version" value="3089" />
 
 	<!--

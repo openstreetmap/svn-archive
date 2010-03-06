@@ -80,7 +80,7 @@ use GD ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.11' ;
+$VERSION = '0.12' ;
 
 require Exporter ;
 
@@ -91,6 +91,7 @@ require Exporter ;
 			center
 			convert
 			createLabel
+			declutterStat
 			drawArea 
 			drawAreaMP
 			drawAreaPix 
@@ -147,6 +148,9 @@ $dashStyle{23} = "0,8,0,16" ;
 my $lineCap = "round" ;
 my $lineJoin = "round" ;
 
+my @occupiedAreas = () ;
+my $labelPathId = 0 ;
+
 #
 # variables
 #
@@ -172,6 +176,14 @@ my %areaPicX = () ;
 my %areaPicY = () ;
 my %areaDef = () ;
 my $areaNum = 1 ;
+
+my $numIcons = 0 ;
+my $numIconsMoved = 0 ;
+my $numIconsOmitted = 0 ;
+my $numLabels = 0 ;
+my $numLabelsMoved = 0 ;
+my $numLabelsOmitted = 0 ;
+
 
 # clutter information
 my %clutter = () ;
@@ -221,44 +233,111 @@ sub drawIcon {
 #
 # draws icon for poi at given location. file must be png, or other supported format
 #
-	my ($lon, $lat, $icon, $sizeX, $sizeY, $declutter, $maxSize, $offset) = @_ ;
+	my ($lon, $lat, $icon, $sizeX, $sizeY, $declutter, $offset) = @_ ;
 	my ($x, $y) = convert ($lon, $lat) ;
-	# print "    $lon, $lat, $x, $y, $offset\n" ;
+	my $positionFound = 0 ;
+	my $positionMoved = 0 ;
 	my $sizeX1 = $sizeX ; if ($sizeX1 == 0) { $sizeX1 = 20 ; }
 	my $sizeY1 = $sizeY ; if ($sizeY1 == 0) { $sizeY1 = 20 ; }
-	$x = $x - $sizeX1/2 ;
-	$y = $y - $sizeY1/2 ; $y = $y - $offset ;
+	my ($x1, $y1) ;
 
-	# print "    $lon, $lat, $x, $y, $offset\n" ;
+	$numIcons++ ;
 
-	# check for clutter condition
-	my $cluttered = 0 ;
+	# print "draw icon $icon\n" ;
+	# print "  node position $x, $y\n" ;
+
+	# drawNodeDotPix ($x-15, $y-15, "black", 2) ;
+	# drawNodeDotPix ($x-15, $y+15, "black", 2) ;
+	# drawNodeDotPix ($x+15, $y-15, "black", 2) ;
+	# drawNodeDotPix ($x+15, $y+15, "black", 2) ;
+
 	if ($declutter eq "1") {
-		foreach my $clutterX (keys %clutterIcon) {
-			foreach my $clutterY (keys %{$clutterIcon{$clutterX}}) {
-				my $distY = abs ($clutterY - $y) ;
-				if ($distY > $maxSize) {
-					# dist ok
-				}
-				else {
-					my $distX = abs ($clutterX - $x) ;
-					if ($distX < $maxSize) { 
-						$cluttered = 1 ; 
+		# initial pos for upper left corner of icon
+		$x = $x - $sizeX1/2 ;
+		$y = $y - $sizeY1/2 ; 
+		# print "  icon top left corner initially: $x, $y\n" ;
+
+		LAB5: foreach my $xFactor (0, -1, 1) {
+			foreach my $yFactor (0, -1, 1) {
+				$x1 = $x + $xFactor * $sizeX1/2 ;
+				$y1 = $y + $yFactor * $sizeY1/2 ;
+				# print "  testing pos TLC: $x1, $y1\n" ;
+				if ( ! areaOccupied ($x1, $x1+$sizeX1, $y1+$sizeY, $y1) ) {
+					# print "    FOUND\n" ;
+					$positionFound = 1 ;
+					if ( ($xFactor != 0) or ($yFactor != 0) ) {
+						$positionMoved = 1 ;
 					}
+					last LAB5 ;
 				}
 			}
 		}
-	}
 
-	if (!$cluttered) {
-		push @svgOutputIcons, svgElementIcon ($x, $y, $icon, $sizeX, $sizeY) ;
-		# print "      " . svgElementIcon ($x, $y, $icon, $sizeX, $sizeY) . "\n" ;
-		$clutterIcon{$x}{$y} = 1 ;
 	}
 	else {
-		print "WARNING: icon $icon omitted to prevent clutter!\n" ;
+		$x1 = $x - $sizeX1/2 ;
+		$y1 = $y - $sizeY1/2 ; $y = $y - $offset ;
+		$positionFound = 1 ;
+	}
+
+	if ($positionFound) {
+		push @svgOutputIcons, svgElementIcon ($x1, $y1, $icon, $sizeX, $sizeY) ;
+		occupyArea ($x1, $x1+$sizeX1, $y1+$sizeY, $y1) ;
+		# print "  area occupied: $x1, $x1+$sizeX1, $y1+$sizeY, $y1\n" ;
+		if ($positionMoved) {
+			# print "WARNING: icon $icon MOVED to prevent clutter!\n" ;
+			$numIconsMoved++ ;
+		}
+	}
+	else {
+		# print "WARNING: icon $icon OMITTED to prevent clutter!\n" ;
+		$numIconsOmitted++ ;
 	}
 }
+
+
+sub occupyArea {
+	my ($x1, $x2, $y1, $y2) = @_ ;
+	# left, right, bottom, top (bottom > top!)
+	push @occupiedAreas, [$x1, $x2, $y1, $y2] ;
+}
+
+sub areaOccupied {
+	my ($x1, $x2, $y1, $y2) = @_ ;
+	# left, right, bottom, top (bottom > top!)
+	my $occupied = 0 ;
+	LAB1: foreach my $area (@occupiedAreas) {
+		my $intersection = 1 ;
+		if ($x1 > $area->[1]) { $intersection = 0 ; } ;
+		if ($x2 < $area->[0]) { $intersection = 0 ; } ;
+		if ($y1 < $area->[3]) { $intersection = 0 ; } ;
+		if ($y2 > $area->[2]) { $intersection = 0 ; } ;
+		if ($intersection == 1) { 
+			$occupied = 1 ; 
+			last LAB1 ;	
+		}
+	}
+	return ($occupied) ;
+}
+
+sub splitLabel {
+	my $text = shift ;
+	my @lines = split / /, $text ;
+	my $merged = 1 ;
+	while ($merged) {
+		$merged = 0 ;
+		LAB2: for (my $i=0; $i<$#lines; $i++) {
+			if (length ($lines[$i] . " " . $lines[$i+1]) <= 20) {
+				$lines[$i] = $lines[$i] . " " . $lines[$i+1] ;
+				splice (@lines, $i+1, 1) ;
+				$merged = 1 ;
+				last LAB2 ;
+			}
+		}
+	}
+	return (\@lines) ;
+}
+
 
 sub svgElementIcon {
 #
@@ -295,36 +374,126 @@ sub drawTextPos {
 #
 # draws text at given real world coordinates. however an offset can be given for not to interfere with node dot i.e.
 #
-	my ($lon, $lat, $offX, $offY, $text, $col, $size, $font, $declutter, $declutterMinX, $declutterMinY) = @_ ;
-	my ($x1, $y1) = convert ($lon, $lat) ;
-	$x1 = $x1 + $offX ;
-	$y1 = $y1 - $offY ;
+	my ($lon, $lat, $offX, $offY, $text, $col, $size, $font, $declutter, $ppc) = @_ ;
+	my ($x, $y) = convert ($lon, $lat) ;
 
-	my $cluttered = 0 ;
+	$numLabels++ ;
+
 	if ($declutter eq "1") {
-		foreach my $clutterX (keys %clutter) {
-			foreach my $clutterY (keys %{$clutter{$clutterX}}) {
-				my $distY = abs ($clutterY - $y1) ;
-				if ($distY > $declutterMinY) {
-					# dist ok
-				}
-				else {
-					my $distX = abs ($clutterX - $x1) ;
-					if ($distX < $declutterMinX) { 
-						$cluttered = 1 ; 
-					}
-				}
+		# print "draw text pos initial coordinates: $x, $y\n" ;
+		my $positionFound = 0 ;
+		# split label -> lineNumber and Lines
+		my ($ref) = splitLabel ($text) ;
+		my (@lines) = @$ref ;
+		# foreach my $line (@lines) { print "  line: $line\n" ; }
+		my $numLines = scalar @lines ;
+		my $maxTextLenPix = 0 ;
+		my $orientation = "" ;
+		my $lineDist = 2 ;
+		my $tries = 0 ;
+
+		foreach my $line (@lines) {
+			my $len = length ($line) * $ppc / 10 * $size ; # in pixels
+			if ($len > $maxTextLenPix) { $maxTextLenPix = $len ; }
+		}
+		# print "  max text len pix: $maxTextLenPix\n" ;
+
+		# try different positions
+		my ($x1, $x2, $y1, $y2) ;
+
+		# centered	
+		# print "  try centered\n" ;
+		LAB3: foreach my $offsetY (2, 5, 10, 15, 20, -5, -10, -15) {
+			$tries ++ ;
+			$orientation = "centered" ;
+			$x1 = $x - $maxTextLenPix/2 ;
+			$x2 = $x + $maxTextLenPix/2 ;
+			$y2 = $y + $offsetY ;
+			$y1 = $y2 + ($size+$lineDist) * $numLines ;
+			# print "  try $x1, $x2, $y1, $y2\n" ;
+			if (!areaOccupied ($x1, $x2, $y1, $y2)) {
+				# print "    free pos FOUND\n" ;
+				$positionFound = 1 ;
+				last LAB3 ;
+			} 
+		}
+
+		# left bound
+		if (!$positionFound) {
+			# print "  try aligned left\n" ;
+			LAB4: foreach my $offsetY (-10, -15, -5, 5) {
+				$orientation = "left" ;
+				$x1 = $x + 17 ;
+				$x2 = $x1 + 17 + $maxTextLenPix ;
+				$y2 = $y + $offsetY ;
+				$y1 = $y2 + ($size+$lineDist) * $numLines ;
+				# print "  try $x1, $x2, $y1, $y2\n" ;
+				if (!areaOccupied ($x1, $x2, $y1, $y2)) {
+					# print "    free pos FOUND\n" ;
+					$positionFound = 1 ;
+					last LAB4 ;
+				} 
 			}
 		}
+
+		if (!$positionFound) {
+			# print "  try aligned left\n" ;
+			LAB9: foreach my $offsetY (-10, -15, -5, 5) {
+				$orientation = "right" ;
+				$x1 = $x - 17 - $maxTextLenPix ;
+				$x2 = $x1 + $maxTextLenPix ;
+				$y2 = $y + $offsetY ;
+				$y1 = $y2 + ($size+$lineDist) * $numLines ;
+				# print "  try $x1, $x2, $y1, $y2\n" ;
+				if (!areaOccupied ($x1, $x2, $y1, $y2)) {
+					# print "    free pos RIGHT ALND FOUND\n" ;
+					$positionFound = 1 ;
+					last LAB9 ;
+				} 
+			}
+		}
+
+		if ($positionFound == 1) {
+
+			for (my $i=0; $i<=$#lines; $i++) {			
+				my @points = ($x1, $y2+($i+1)*($size+$lineDist), $x2, $y2+($i+1)*($size+$lineDist)) ;
+				my $pathName = "LabelPath" . $labelPathId ; 
+				$labelPathId++ ;
+				push @svgOutputDef, svgElementPath ($pathName, @points) ;
+				if ($orientation eq "centered") {
+					push @svgOutputPathText, svgElementPathText ($col, $size, $font, $lines[$i], $pathName, 0) ;
+				}
+				if ($orientation eq "left") {
+					push @svgOutputPathText, svgElementPathTextLeft ($col, $size, $font, $lines[$i], $pathName, 0) ;
+				}
+				if ($orientation eq "right") {
+					push @svgOutputPathText, svgElementPathTextRight ($col, $size, $font, $lines[$i], $pathName, 0) ;
+				}
+			}
+
+			occupyArea ($x1, $x2, $y1, $y2) ;
+			# drawNodeDotPix ($x1, $y1, "black", 1) ;
+			# drawNodeDotPix ($x1, $y2, "black", 1) ;
+			# drawNodeDotPix ($x2, $y1, "black", 1) ;
+			# drawNodeDotPix ($x2, $y2, "black", 1) ;
+
+			if ($tries > 1) {
+				# print "WARNING: label \"$text\" MOVED to prevent clutter!\n" ;
+				$numLabelsMoved++ ;
+			}
+		} # position found
+		else {
+			# print "WARNING: label \"$text\" OMITTED to prevent clutter!\n" ;
+			$numLabelsOmitted++ ;
+		}
+	} # declutter
+	else { 
+		# no linesplit, default position
+		$x += $offX ;
+		$y = $y - $offY ;
+		push @svgOutputText, svgElementText ($x, $y, $text, $size, $font, $col) ;
 	}
 
-	if (!$cluttered) {
-		push @svgOutputText, svgElementText ($x1, $y1, $text, $size, $font, $col) ;
-		$clutter{$x1}{$y1} = $text ;
-	}
-	else {
-		print "WARNING: label \"$text\" omitted to prevent clutter!\n" ;
-	}
 }
 
 
@@ -751,6 +920,36 @@ sub svgElementPathText {
 	return $svg ;
 }
 
+sub svgElementPathTextLeft {
+#
+# draws text to path element
+#
+	my ($col, $size, $font, $text, $pathName, $tSpan) = @_ ;
+	my $svg = "<text font-family=\"" . $font . "\" " ;
+	$svg = $svg . "font-size=\"" . $size . "\" " ;
+	$svg = $svg . "fill=\"" . $col . "\" >\n" ;
+	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"start\" startOffset=\"0%\" >\n" ;
+	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
+	$svg = $svg . "</textPath>\n</text>\n" ;
+	return $svg ;
+}
+
+sub svgElementPathTextRight {
+#
+# draws text to path element
+#
+	my ($col, $size, $font, $text, $pathName, $tSpan) = @_ ;
+	my $svg = "<text font-family=\"" . $font . "\" " ;
+	$svg = $svg . "font-size=\"" . $size . "\" " ;
+	$svg = $svg . "fill=\"" . $col . "\" >\n" ;
+	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"end\" startOffset=\"100%\" >\n" ;
+	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
+	$svg = $svg . "</textPath>\n</text>\n" ;
+	return $svg ;
+}
+
+
+
 sub svgElementPolygonFilled {
 #
 # draws areas in svg, filled with color 
@@ -1048,7 +1247,7 @@ sub addAreaIcon {
 			my $newName = $fileNameOriginal ;
 			$newName =~ s/.svg/.png/ ;
 			`inkscape -e $newName $fileNameOriginal` ;
-			print "INFO area sicon converted $fileNameOriginal -> $newName\n" ;
+			# print "INFO area icon converted $fileNameOriginal -> $newName\n" ;
 			open ($file, "<", $newName) ;
 		}
 
@@ -1060,7 +1259,7 @@ sub addAreaIcon {
 			$areaPicY{$fileNameOriginal} = $y ;
 			# add defs to svg output
 			my $defName = "A" . $areaNum ;
-			print "INFO area icon $fileNameOriginal, $defName, $x, $y processed.\n" ;
+			# print "INFO area icon $fileNameOriginal, $defName, $x, $y processed.\n" ;
 			$areaNum++ ;
 
 			my $svgElement = "<pattern id=\"" . $defName . "\" width=\"" . $x . "\" height=\"" . $y . "\" " ;
@@ -1122,7 +1321,20 @@ sub addOnewayArrows {
 	}
 }
 
+sub declutterStat {
+	my $perc1 = int ($numIconsMoved / $numIcons * 100) ;
+	my $perc2 = int ($numIconsOmitted / $numIcons * 100) ;
+	my $perc3 = int ($numLabelsMoved / $numLabels * 100) ;
+	my $perc4 = int ($numLabelsOmitted / $numLabels * 100) ;
 
+	my $out = "$numIcons icons drawn.\n" ; 
+	$out .= "  $numIconsMoved moved. ($perc1 %)\n" ;
+	$out .= "  $numIconsOmitted omitted. ($perc2 %)\n" ;
+
+	$out .= "$numLabels labels drawn.\n" ; 
+	$out .= "  $numLabelsMoved moved. ($perc3 %)\n" ;
+	$out .= "  $numLabelsOmitted omitted. ($perc4 %)\n" ;
+}
 
 1 ;
 

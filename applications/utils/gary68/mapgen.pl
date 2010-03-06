@@ -58,22 +58,29 @@
 #      scale range for rules
 #      area tile patterns implemented
 #      error checking for osm file implemented
-#
+# 0.12 show only elements in legend that are shown in current scale
+#      larger legend symbols
+#      support for asterisk (wild card) in way and node rules (enter * for value)
+#      more intelligent icon placement, 9 different positions around actual position
+#      ppc changed to 5.7?
+#      draw text pos new
 
 # TODO
+# test
+# publish 0.12
+# --------------------
+# adapt tagstat for new sub-rules
+# work on output amount of lines
+# [ ] reading rule check for right number of keys and values ! else ERROR
+# [ ] eliminate rules not needed when scale is present. remove ifs in getXYZRules
+# grid distance in meters
 # -viewpng -viewpdf -viewsvg
-# legend symbols larger
 # STDERR outputs
-# wild cards for rules (rule check function)
 # module for style file reading and error handling
 # color none for area / border, just print label in the middle
-# tunnel with opacity value?
 # nested relations for multipolygons?
 # sub labelWay with intelligence (text dir/text length)
-# label areas with getLabel and right formatting
-# more intelligent declutter
 # --------------------
-# elevation lines
 # style file check, color check, error messages, array for regex? Defaults
 # move parts of code to pm, even a new pm
 # sub key/value for rules
@@ -86,11 +93,11 @@ use warnings ;
 
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.11 ;
+use OSM::mapgen 0.12 ;
 use Math::Polygon ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.11" ;
+my $version = "0.12" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -108,8 +115,6 @@ perl mapgen.pl
 -latrad=FLOAT (radius for place width in km, DEFAULT=2)
 
 -declutter (declutter text; WARNING: some labels might be omitted; motorway and trunk will only be labeled in one direction)
--declutterminx=INTEGER (min distance for labels on x-axis in pixels; DEFAULT=100)
--declutterminy=INTEGER (min distance for labels on Y-axis in pixels; DEFAULT=10)
 
 -oneways (add oneway arrows)
 -onewaycolor=TEXT (color for oneway arrows)
@@ -165,15 +170,15 @@ my $pdfOpt = 0 ;
 my $pngOpt = 0 ;
 my $dirOpt = 0 ;
 my $poiOpt = 0 ;
-my $ppc = 5.5 ; 
+my $ppc = 6 ; 
 my $place = "" ;
 my $lonrad = 2 ;
 my $latrad = 2 ;
 my $helpOpt = 0 ;
 my $tagStatOpt = 0 ;
 my $declutterOpt = 0 ;
-my $declutterMinX = 100 ;
-my $declutterMinY = 10 ;
+# my $declutterMinX = 100 ;
+# my $declutterMinY = 10 ;
 my $rulerOpt = 1 ;
 my $rulerColor = "black" ;
 my $scaleOpt = 0 ;
@@ -305,8 +310,6 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"poi"		=> \$poiOpt,		# specifies if directory of pois will be created
 				"tagstat"	=> \$tagStatOpt,	# lists k/v used in osm file
 				"declutter"	=> \$declutterOpt,
-				"declutterminx"	=> \$declutterMinX,
-				"declutterminy"	=> \$declutterMinY,
 				"help"		=> \$helpOpt,		# 
 				"oneways"	=> \$onewayOpt,
 				"onewaycolor:s" => \$onewayColor,
@@ -371,10 +374,8 @@ print "coordsColor = $coordsColor\n\n" ;
 
 print "dir       = $dirOpt\n" ;
 print "poiOpt    = $poiOpt\n" ;
-print "ppc       = $ppc (pixels needed per charcter font size 10)\n" ;
+print "ppc       = $ppc (pixels needed per character font size 10)\n" ;
 print "declutter = $declutterOpt\n" ;
-print "declutterX= $declutterMinX\n" ;
-print "declutterY= $declutterMinY\n\n" ;
 
 print "place     = $place\n" ;
 print "lonrad    = $lonrad (km)\n" ;
@@ -488,6 +489,7 @@ if ($place ne "") {
 		if ($verbose >= 1) { print "right $right\n" ; }
 		if ($verbose >= 1) { print "top $top\n" ; }
 		if ($verbose >= 1) { print "bottom $bottom\n" ; }
+		print "OSMOSIS STRING: --bounding-box-0.6 clipIncompleteEntities=true bottom=$bottom top=$top left=$left right=$right --write-xml-0.6\n" ;
 		print "call osmosis...\n" ;
 		`osmosis --read-xml-0.6 $osmName  --bounding-box-0.6 clipIncompleteEntities=true bottom=$bottom top=$top left=$left right=$right --write-xml-0.6 ./temp.osm` ;
 		print "osmosis done.\n" ;
@@ -646,7 +648,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 						my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 						#print "AREA name $name $x $y\n" ;
 						#print "$x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont]\n" ;
-						drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $declutterMinX, $declutterMinY) ;
+						drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
 					}
 				}
 			}
@@ -666,7 +668,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 			if ($name ne "") {
 				my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 				#print "MP name $name $x $y\n" ;
-				drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $declutterMinX, $declutterMinY) ;
+				drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
 			}
 		} #if
 	} # if
@@ -698,7 +700,7 @@ foreach my $nodeId (keys %memNodeTags) {
 			drawNodeDot ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexColor], $test->[$nodeIndexThickness]) ;
 		}
 		if ($test->[$nodeIndexIcon] ne "none") {
-			drawIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $declutterOpt, $iconMax, 0) ;
+			drawIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $declutterOpt, 0) ;
 		}
 
 		if ($test->[$nodeIndexLabel] ne "none") {
@@ -706,7 +708,7 @@ foreach my $nodeId (keys %memNodeTags) {
 			($name, $ref1) = createLabel (\@{$memNodeTags{$nodeId}}, $test->[$nodeIndexLabel], $lon{$nodeId}, $lat{$nodeId}) ;
 			my @names = @$ref1 ;
 			if ($name ne "") {
-				drawTextPos ($lon{$nodeId}, $lat{$nodeId}, 0, -$test->[$nodeIndexLabelOffset], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $declutterOpt, $declutterMinX, $declutterMinY) ;
+				drawTextPos ($lon{$nodeId}, $lat{$nodeId}, 0, -$test->[$nodeIndexLabelOffset], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $declutterOpt, $ppc) ;
 			}
 		} # draw label
 	} # defined $test
@@ -803,7 +805,7 @@ foreach my $wayId (keys %memWayTags) {
 									$x += $lon{$node} ; $y += $lat{$node} ; $count++ ;
 								}
 								$x = $x / $count ; $y = $y / $count ;
-								drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $declutterMinX, $declutterMinY) ;
+								drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
 							}
 						}
 					} # draw label
@@ -813,6 +815,10 @@ foreach my $wayId (keys %memWayTags) {
 	} # tag found
 } # ways
 
+
+if ($declutterOpt == 1) {
+	print declutterStat() ;
+}
 
 
 # draw other information
@@ -968,30 +974,38 @@ sub nodes2Coordinates {
 
 sub createLegend {
 	my $currentY = 20 ;
-	my $step = 20 ;
+	my $step = 30 ;
 	my $textX = 70 ;
 	my $textOffset = -5 ;
 	my $dotX = 40 ;
-	my $areaSize = 8 ;
+	my $areaSize = 12 ;
 	my $wayStartX = 20 ;
 	my $wayEndX = 60 ;
-	my $areaStartX = 33 ;
-	my $areaEndX = 47 ;
+	my $areaStartX = 31 ;
+	my $areaEndX = 55 ;
 	my $count = 0 ;
-	my $sizeLegend = 14 ;
+	my $sizeLegend = 20 ;
 	
-	foreach (@nodes) { if ($_->[$nodeIndexLegend] == 1) { $count++ ; }  }
-	foreach (@ways) { if ($_->[$wayIndexLegend] == 1) { $count++ ; }  }
+	foreach my $node (@nodes) { 
+		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $scaleValue) and ($node->[$nodeIndexToScale] >= $scaleValue) ) { 
+			$count++ ; 
+		}
+	}
+	foreach my $way (@ways) { 
+		if ( ($way->[$wayIndexLegend] == 1)  and ($way->[$wayIndexFromScale] <= $scaleValue) and ($way->[$wayIndexToScale] >= $scaleValue) ) { 
+			$count++ ; 
+		}  
+	}
 
 	# erase background
 	drawAreaPix ("white", "", 0, 0,
 			180,0,
-			180, $count*20 + 15,
-			0, $count*20 + 15,
+			180, $count*$step + 15,
+			0, $count*$step + 15,
 			0, 0) ;
 	
 	foreach my $node (@nodes) { 
-		if ($node->[$nodeIndexLegend] == 1) { 
+		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $scaleValue) and ($node->[$nodeIndexToScale] >= $scaleValue) ) { 
 			drawNodeDotPix ($dotX, $currentY, $node->[$nodeIndexColor], $node->[$nodeIndexThickness]) ;
 			drawTextPix ($textX, $currentY+$textOffset, $node->[$nodeIndexValue], "black", $sizeLegend, "Arial") ;
 			$currentY += $step ;
@@ -999,7 +1013,7 @@ sub createLegend {
 	}
 
 	foreach my $way (@ways) { 
-		if ($way->[$wayIndexLegend] == 1) { 
+		if ( ($way->[$wayIndexLegend] == 1)  and ($way->[$wayIndexFromScale] <= $scaleValue) and ($way->[$wayIndexToScale] >= $scaleValue) ) { 
 			if ($way->[$wayIndexFilled] == 0) {
 				drawWayPix ($way->[$wayIndexColor], $way->[$wayIndexThickness], $way->[$wayIndexDash], $wayStartX, $currentY, $wayEndX, $currentY) ;
 			} 
@@ -1418,7 +1432,7 @@ sub isIn {
 		# get route colors from	
 		@{$routeColors{$routeType->[0]}} = split ( /;/, $routeType->[$routeIndexColor] ) ;
 		$colorNumber{$routeType->[0]} = scalar @{$routeColors{$routeType->[0]}} ;
-		print "  colors: @{$routeColors{$routeType->[0]}}\n\n" ;
+		print "  colors: @{$routeColors{$routeType->[0]}}\n" ;
 	}
 	print "end.\n" ;
 
@@ -1545,7 +1559,7 @@ sub isIn {
 
 			foreach my $iconName (keys %{$wayRouteIcons{$w}}) {
 				# print "  $w $offset ICON $iconName drawn\n" ;
-				drawIcon ($lon{$node}, $lat{$node}, $iconName, 0, 0, $declutterOpt, $routeIconDist-2, $offset) ;
+				drawIcon ($lon{$node}, $lat{$node}, $iconName, 0, 0, $declutterOpt, $offset) ;
 				$offset += $routeIconDist ;
 			}
 		}
@@ -1610,19 +1624,37 @@ sub getNodeRule {
 	my ($ref1, $ref2, $scale) = @_ ;
 	my @nodeTags = @$ref1 ;
 	my @nodeRules = @$ref2 ;
-	my $ruleFound ;
+	my $ruleFound ; undef $ruleFound ;
 
-	foreach my $rule (@nodeRules) {
-		foreach my $tag (@nodeTags) {
-			if ( ($tag->[0] eq $rule->[$nodeIndexTag]) and ($tag->[1] eq $rule->[$nodeIndexValue]) ) {
-				if ( ( $rule->[$nodeIndexFromScale] <= $scale) and ( $rule->[$nodeIndexToScale]>= $scale) ) {
-					if (!defined $ruleFound) {
-						$ruleFound = $rule ;
+	RUL2: foreach my $rule (@nodeRules) {
+		if ( ( $rule->[$nodeIndexFromScale] <= $scale) and ( $rule->[$nodeIndexToScale]>= $scale) ) {
+
+			# get k/v pairs
+			my @keys = split /\|/, $rule->[$nodeIndexTag] ;
+			my @values = split /\|/, $rule->[$nodeIndexValue] ;
+			my $allValid = 1 ; # assume all k/vs valid until proved otherwise
+
+			# if (scalar @keys > 1) { print "multi rule\n" ;} 
+
+			RUL1: for (my $i=0; $i<=$#keys; $i++) {
+				my $found = 0 ;
+				foreach my $tag (@nodeTags) {
+					if ( ($tag->[0] eq $keys[$i]) and ( ($tag->[1] eq $values[$i]) or ($values[$i] eq "*") ) ) {
+						$found = 1 ;
 					}
 				}
+				if ($found == 0) { 
+					$allValid = 0 ; 
+					last RUL1 ;
+				}
 			}
-		}
-	}
+			if ($allValid == 1) {
+				# if (scalar @keys > 1) { print "multi node FOUND\n" ;} 
+				$ruleFound = $rule ;
+				last RUL2 ;
+			}
+		} # scale
+	} # all rules
 
 	return ($ruleFound) ;
 }
@@ -1631,19 +1663,35 @@ sub getWayRule {
 	my ($ref1, $ref2, $scale) = @_ ;
 	my @wayTags = @$ref1 ;
 	my @wayRules = @$ref2 ;
-	my $ruleFound ;
+	my $ruleFound ; undef $ruleFound ;
 
-	foreach my $rule (@wayRules) {
-		foreach my $tag (@wayTags) {
-			if ( ($tag->[0] eq $rule->[$wayIndexTag]) and ($tag->[1] eq $rule->[$wayIndexValue]) ) {
-				if ( ( $rule->[$wayIndexFromScale] <= $scale) and ( $rule->[$wayIndexToScale]>= $scale) ) {
-					if (!defined $ruleFound) {
-						$ruleFound = $rule ;
+	RUL4: foreach my $rule (@wayRules) {
+		if ( ( $rule->[$wayIndexFromScale] <= $scale) and ( $rule->[$wayIndexToScale]>= $scale) ) {
+
+			# get k/v pairs
+			my @keys = split /\|/, $rule->[$wayIndexTag] ;
+			my @values = split /\|/, $rule->[$wayIndexValue] ;
+			my $allValid = 1 ; # assume all k/vs valid until proved otherwise
+
+			RUL3: for (my $i=0; $i<=$#keys; $i++) {
+				my $found = 0 ;
+				foreach my $tag (@wayTags) {
+					if ( ($tag->[0] eq $keys[$i]) and ( ($tag->[1] eq $values[$i]) or ($values[$i] eq "*") ) ) {
+						$found = 1 ;
 					}
 				}
+				if ($found == 0) { 
+					$allValid = 0 ; 
+					last RUL3 ;
+				}
 			}
-		}
-	}
+			if ($allValid == 1) {
+				# if (scalar @keys > 1) { print "multi WAY FOUND\n" ;} 
+				$ruleFound = $rule ;
+				last RUL4 ;
+			}
+		} # scale
+	} # all rules
 
 	return ($ruleFound) ;
 }

@@ -158,12 +158,10 @@ win32-msvc* {
 }
 
 
-count(TRANSDIR_MERKAARTOR, 1) {
-    translations.path =  $${TRANSDIR_MERKAARTOR}
-    translations.files = $${BINTRANSLATIONS}
-    DEFINES += TRANSDIR_MERKAARTOR=$$translations.path
-    INSTALLS += translations
-}
+translations.path =  $${TRANSDIR_MERKAARTOR}
+translations.files = $${BINTRANSLATIONS}
+DEFINES += TRANSDIR_MERKAARTOR=$$translations.path
+INSTALLS += translations
 
 count(TRANSDIR_SYSTEM, 1) {
     DEFINES += TRANSDIR_SYSTEM=$${TRANSDIR_SYSTEM}

@@ -6,7 +6,9 @@
 
 #include "MainWindow.h"
 #include "Preferences/MerkaartorPreferences.h"
+#ifndef RELEASE
 #include "revision.h"
+#endif
 
 #include "IMapAdapter.h"
 

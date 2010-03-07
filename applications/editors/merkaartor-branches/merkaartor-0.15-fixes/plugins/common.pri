@@ -1,7 +1,11 @@
 # PREFIX              - base prefix for installation (default: /usr/local)
 # LIBDIR              - base directory for plugins (default: $$PREFIX/lib)
 # NODEBUG             - no debug target
+
 MERKAARTOR_SRC_DIR = $$PWD/..
+
+#Static config
+include ($$MERKAARTOR_SRC_DIR/src/Config.pri)
 
 DEFINES += VERSION=\"\\\"$$VERSION\\\"\"
 DEFINES += REVISION=\"\\\"$$REVISION\\\"\"

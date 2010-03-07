@@ -1,5 +1,6 @@
 v0.15.2
-    * FIX : Cannot cleanly copy tags from one relation to another (fixezs #2746)
+    * FIX : roads not always refreshed when changing type or properties (fixes #2773)
+    * FIX : Cannot cleanly copy tags from one relation to another (fixes #2746)
     * FIX : When merging contiguous nodes in the same way, check that we don't add the same node twice (fixes #2771)  
     * FIX : OSX enhacements (by Aleksandar Topuzovic) (closes #2774)
     * FIX : When nodes are hidden,do not put them in the way of selecting roads

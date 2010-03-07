@@ -756,8 +756,8 @@
 		}
 		
 		switch (s) {
-			case 'C':		closeChangeset(); break;							// C - close current changeset
-			case 'S':		prepareUpload(); break;								// S - save
+			case 'C':		_root.csswallow=s; closeChangeset(); break;			// C - close current changeset
+			case 'S':		_root.csswallow=s; prepareUpload(); break;			// S - save
 			case 'F':		openTagFinder(); break;								// F - tagfinder
 			case 'G':		loadGPS(); break;									// G - load GPS
 			case 'H':		getHistory(); break;								// H - history

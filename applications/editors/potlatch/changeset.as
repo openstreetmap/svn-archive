@@ -74,15 +74,14 @@
 			wordWrap=true;
 			text=comment;
 		}
-		_root.csswallowed=false;
 		Selection.setFocus(box.cscomment);
 		box.cscomment.onChanged=function() {				// swallow 'C'
 			fixUTF8();
-			if ((box.cscomment.text.toUpperCase()=='C' || box.cscomment.text.toUpperCase()=='S') && !_root.csswallowed ) {
+			if (box.cscomment.text.toUpperCase()==_root.csswallow ) {
 				box.cscomment.text='';
 			}
 			_root.windows.cs.box.twitter.prompt.text=iText('prompt_microblog',iText(preferences.data.twitterclient==2?'microblog_name_identica':'microblog_name_twitter'),100-box.cscomment.text.length);
-			_root.csswallowed=true;
+			delete _root.csswallow;
 		};
 	}
 	

@@ -545,7 +545,7 @@
 		var c=true;
 		var z=this.path;
 		for (var i in z) {
-			if (this.path[i].tagged && hashLength(this.path[i].ways)==1) { c=false; }
+			if ((this.path[i].tagged && hashLength(this.path[i].ways)==1) || hashLength(noderels[this.path[i].id])) { c=false; }
 		}
 		if (c) {
 			_root.ws.saveDeleteUndo(iText('deleting'));

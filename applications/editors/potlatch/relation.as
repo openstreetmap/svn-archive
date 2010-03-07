@@ -59,6 +59,7 @@
 
 	OSMRelation.prototype.getType=function() {
 		if (!this.attr['type']) { return "relation"; }
+		if (this.attr['boundary']) { return this.attr['boundary']; }
 		if (this.attr['type']=='route') {
 			if (this.attr['network']) { return this.attr['network']; }
 			if (this.attr['route']) { return this.attr['route']; }

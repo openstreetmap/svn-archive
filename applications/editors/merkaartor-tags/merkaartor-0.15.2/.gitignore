@@ -1,0 +1,7 @@
+/Makefile*
+/*.qm
+/GeneratedFiles
+/binaries
+/obj
+/tmp
+/qrc_AllIcons.cpp

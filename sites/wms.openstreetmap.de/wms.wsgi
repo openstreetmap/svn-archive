@@ -2,8 +2,10 @@
 # -*- coding: UTF-8 -*-
 #
 # Mapscript WMS server with default request parameters for josm
+#
+# to be used in conjunction with wsgi Interface
 # 
-# (c) 2009 Sven Geggus <sven-osm@geggus.net>
+# (c) 2009-2010 Sven Geggus <sven-osm@geggus.net>
 #
 # Released under the GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/copyleft/gpl.html
@@ -17,10 +19,8 @@ tcopyright="copyrighted Material: OSM use only"
 
 josmdefaults={'SERVICE': 'WMS', 'VERSION': '1.1.1', 'FORMAT':'image/png', 'REQUEST':'GetMap'}
 
-import os,crypt,mapscript,sys,math,string
-
-from mod_python import apache
-from mod_python.util import parse_qsl
+import os,crypt,mapscript,sys,math,string,cgi
+from time import *
 
 # make our WMS also usable as TMS
 def TileToMeters(tx, ty, zoom):
@@ -41,8 +41,7 @@ def TileToBBox(x,y,z):
 
 # generate a valid XML ServiceException message text
 # from a simple textual error message
-def SException(req,msg,code=""):
-  req.content_type = 'application/vnd.ogc.se_xml' 
+def SException(start_response,msg,code=""):
   xml = '<ServiceExceptionReport '
   xml += 'xmlns=\"http://www.opengis.net/ogc\" '
   xml += 'xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance" '
@@ -53,37 +52,43 @@ def SException(req,msg,code=""):
   else:
     xml += '  <ServiceException code=\"' + code +'\">\n  ' + msg
   xml += '\n  </ServiceException>\n</ServiceExceptionReport>\n'
+  status = '200 OK'
+  response_headers = [('Content-type', 'application/vnd.ogc.se_xml'),('Content-Length', str(len(xml)))]
+  start_response(status, response_headers)
   return xml
 
 # "main"
-def index(req):
-
+def application(env, start_response):
+  
   global debug
+  global tcopyright
 
   # read apaceh environment variables
-  req.add_common_vars()
-  req.content_type = "text/plain"
+  content_type = "text/plain"
+  response_headers = dict([('Content-type', content_type)])
 
   url = "http://%s%s" % \
-        (req.subprocess_env['SERVER_NAME'],req.subprocess_env['REQUEST_URI'])
+        (env['SERVER_NAME'],env['REQUEST_URI'])
 
-  os.chdir(req.subprocess_env['DOCUMENT_ROOT'])
+  os.chdir(env['DOCUMENT_ROOT'])
   
-  querystr = req.subprocess_env['QUERY_STRING']
-  uagent = ''
-  uagent = req.subprocess_env['HTTP_USER_AGENT']
+  querystr = env['QUERY_STRING']
+  try:
+    uagent = env['HTTP_USER_AGENT']
+  except:
+    uagent = ''
   
   qupper=querystr.upper()
   
   # MAP=something in request is always an error  
   if "MAP=" in qupper:
-    return SException(req,'Invalid argument "MAP=..." in request')
+    return SException(start_response,response_headers,'Invalid argument "MAP=..." in request')
     
   # if tile=something is given we are in TMS mode
   
     
   # parse QUERY_STRING
-  query = parse_qsl(querystr)
+  query = cgi.parse_qsl(querystr)
   query = dict(query)
   
   msreq = mapscript.OWSRequest()
@@ -97,24 +102,26 @@ def index(req):
       debug = 1
     if (key == "LAYERS"):
       query_layers=value
+      if ("," in query_layers):
+        return SException(start_response,'Multiple Layers are currently unsupported')
     if key != "TILE":
       msreq.setParameter(key,value)
     else:
       xyz=value.split(',')
       if (len(xyz) != 3):
-        return SException(req,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
+        return SException(start_response,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
       try:
         x=int(xyz[0])
       except:
-        return SException(req,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
+        return SException(start_response,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
       try:
         y=int(xyz[1])
       except:
-        return SException(req,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
+        return SException(start_response,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)
       try:
         z=int(xyz[2])
       except:
-        return SException(req,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)                                                                                                                                                      
+        return SException(start_response,'Invalid argument "TILE=%s" in request, must be TILE=x,y,z' % value)                                                                                                                                                      
       tilemode=1
 
   # we are in tilemode, lets add the required keys
@@ -134,9 +141,15 @@ def index(req):
   map = mapscript.mapObj(mapfile)
   map.setMetaData("wms_onlineresource",url.split("?")[0])
   
+  try:
+    layer=map.getLayerByName(query_layers)
+    cstring=layer.metadata.get('copyright')
+  except:
+    cstring=tcopyright
+  
   clayer=map.getLayerByName("copyright")
   cclass=clayer.getClass(0)
-  cclass.setText(tcopyright)
+  cclass.setText(cstring)
   
   # write a mapfile for debugging purposes
   if (debug):
@@ -148,11 +161,22 @@ def index(req):
   try:
     res = map.OWSDispatch(msreq)
   except:
-     return SException(req,str(sys.exc_info()[1]))
+     return SException(start_response,str(sys.exc_info()[1]))
 
   # adjust content-type
-  req.content_type = mapscript.msIO_stripStdoutBufferContentType()
-
+  content_type = mapscript.msIO_stripStdoutBufferContentType()
+  
+  output=mapscript.msIO_getStdoutBufferBytes()
+  
+  # set Expire header to 100 days from now
+  expire = strftime('%a, %d %b %Y %H:%M:%S %z',gmtime(time()+3600*24*100))   
+  
+  response_headers = [('Content-type', content_type),
+                      ('Expires', expire),
+                      ('Content-Length', str(len(output)))]
+  status = '200 OK'
+  start_response(status, response_headers)
+  
   # write image data to stdout
-  return mapscript.msIO_getStdoutBufferBytes()
+  return output
 

@@ -10,7 +10,7 @@
 #include "PaintStyle/MasPaintStyle.h"
 #include "PaintStyle/TagSelector.h"
 
-#include <QtCore/QUuid>
+#include <QUuid>
 #include <QProgressDialog>
 
 #include <algorithm>
@@ -601,6 +601,9 @@ void Feature::unsetParentFeature(Feature* F)
 
 void Feature::updateIndex()
 {
+    if (isDeleted())
+        return;
+
     if (layer()) {
         layer()->indexRemove(BBox, this);
         CoordBox bb = boundingBox();

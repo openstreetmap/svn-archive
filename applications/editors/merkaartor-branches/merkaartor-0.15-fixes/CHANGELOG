@@ -1,3 +1,5 @@
+v0.15.3
+    * FIX : Do not updateindex() if the feature is deleted
 v0.15.2
     * FIX : roads not always refreshed when changing type or properties (fixes #2773)
     * FIX : Cannot cleanly copy tags from one relation to another (fixes #2746)

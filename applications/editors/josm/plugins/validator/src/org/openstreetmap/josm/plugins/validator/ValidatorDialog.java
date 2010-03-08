@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JMenuItem;
@@ -34,6 +35,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.WaySegment;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -431,6 +433,12 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
                 return;
             visit(ws.way.getNodes().get(ws.lowerIndex));
             visit(ws.way.getNodes().get(ws.lowerIndex + 1));
+        }
+
+        public void visit(List<Node> nodes) {
+            for (Node n: nodes) {
+                visit(n);
+            }
         }
     }
 

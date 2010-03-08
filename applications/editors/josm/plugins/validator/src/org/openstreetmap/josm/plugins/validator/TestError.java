@@ -238,12 +238,16 @@ public class TestError {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void visitHighlighted(ValidatorVisitor v) {
         for (Object o : highlighted) {
             if (o instanceof OsmPrimitive)
                 v.visit((OsmPrimitive) o);
             else if (o instanceof WaySegment)
                 v.visit((WaySegment) o);
+            else if (o instanceof List<?>) {
+                v.visit((List<Node>)o);
+            }
         }
     }
 
@@ -287,15 +291,7 @@ public class TestError {
                 g.drawOval(p.x - 5, p.y - 5, 10, 10);
         }
 
-        /**
-         * Draws a line around the segment
-         *
-         * @param s The segment
-         * @param color The color
-         */
-        public void drawSegment(Node n1, Node n2, Color color) {
-            Point p1 = mv.getPoint(n1);
-            Point p2 = mv.getPoint(n2);
+        public void drawSegment(Point p1, Point p2, Color color) {
             g.setColor(color);
 
             double t = Math.atan2(p2.x - p1.x, p2.y - p1.y);
@@ -321,6 +317,16 @@ public class TestError {
         }
 
         /**
+         * Draws a line around the segment
+         *
+         * @param s The segment
+         * @param color The color
+         */
+        public void drawSegment(Node n1, Node n2, Color color) {
+            drawSegment(mv.getPoint(n1), mv.getPoint(n2), color);
+        }
+
+        /**
          * Draw a small rectangle.
          * White if selected (as always) or red otherwise.
          *
@@ -332,17 +338,7 @@ public class TestError {
         }
 
         public void visit(Way w) {
-            Node lastN = null;
-            for (Node n : w.getNodes()) {
-                if (lastN == null) {
-                    lastN = n;
-                    continue;
-                }
-                if (isSegmentVisible(lastN, n)) {
-                    drawSegment(lastN, n, severity.getColor());
-                }
-                lastN = n;
-            }
+            visit(w.getNodes());
         }
 
         public void visit(WaySegment ws) {
@@ -387,6 +383,20 @@ public class TestError {
             if ((p1.y > mv.getHeight()) && (p2.y > mv.getHeight()))
                 return false;
             return true;
+        }
+
+        public void visit(List<Node> nodes) {
+            Node lastN = null;
+            for (Node n : nodes) {
+                if (lastN == null) {
+                    lastN = n;
+                    continue;
+                }
+                if (n.isDrawable() && isSegmentVisible(lastN, n)) {
+                    drawSegment(lastN, n, severity.getColor());
+                }
+                lastN = n;
+            }
         }
     }
 

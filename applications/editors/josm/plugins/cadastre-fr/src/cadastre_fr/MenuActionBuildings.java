@@ -12,26 +12,28 @@ import org.openstreetmap.josm.actions.JosmAction;
 
 public class MenuActionBuildings extends JosmAction {
     
-    public static String name = "Building footprints";
+    public static String name = "Grab buildings only";
 
     private static final long serialVersionUID = 1L;
-    private WMSLayer wmsLayer = null;
    
     public MenuActionBuildings() {
-        super(tr(name), "cadastre_small", tr("Extract building footprints"), null, false);
+        super(tr(name), "cadastre_small", tr("Grab building layer only"), null, false);
     }
 
-    public void actionPerformed(ActionEvent arg0) {
-        wmsLayer = WMSDownloadAction.getLayer();
-        if (wmsLayer != null) {
-            if (wmsLayer.isRaster()) {
+    public void actionPerformed(ActionEvent e) {
+        if (Main.map != null) {
+            if (CadastrePlugin.isCadastreProjection()) {
+                WMSLayer wmsLayer = WMSDownloadAction.getLayer();
+                if (wmsLayer != null)
+                    DownloadWMSVectorImage.download(wmsLayer, true);
+            } else {
                 JOptionPane.showMessageDialog(Main.parent,
-                        tr("Only on vectorized layers"), tr("Error"),
-                        JOptionPane.ERROR_MESSAGE);
-                return;
+                        tr("To enable the cadastre WMS plugin, change\n"
+                         + "the current projection to one of the cadastre\n"
+                         + "projections and retry"));
             }
-            DownloadSVGBuilding.download(wmsLayer);
-        }
+        } else
+            new MenuActionNewLocation().actionPerformed(e);
     }
 
 }

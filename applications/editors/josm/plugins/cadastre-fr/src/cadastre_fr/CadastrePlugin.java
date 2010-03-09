@@ -89,7 +89,7 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - removed autosourcing of empty new nodes
  * 1.6 28-Nov-2009 - Fix minor issues if Grab is called without layer (possible since projection rework)
  * 1.7 12-Dec-2009 - Change URL's changes for cookie and downgrade imgs resolution due to WMS changes
- * 1.8 xxx         - filter the mouse button 1 during georeferencing
+ * 1.8 09-Mar-2010 - filter the mouse button 1 during georeferencing
  *                 - retry if getting a new cookie failed (10 times during 30 seconds)
  *                 - cookie expiration automatically detected and renewed (after 30 minutes)
  *                 - proper WMS layer cleanup at destruction (workaround for memory leak)
@@ -187,7 +187,7 @@ public class CadastrePlugin extends Plugin {
             JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
             // temporary disabled:
             //JMenuItem menuActionBoundaries = new JMenuItem(new MenuActionBoundaries());
-            //JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
+            JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
 
             cadastreJMenu.add(menuGrab);
             cadastreJMenu.add(menuActionGrabPlanImage);
@@ -195,10 +195,11 @@ public class CadastrePlugin extends Plugin {
             cadastreJMenu.add(menuSource);
             //cadastreJMenu.add(menuResetCookie); not required any more
             //cadastreJMenu.add(menuLambertZone);
+            if (Main.pref.getBoolean("cadastrewms.buildingsMenu", false))
+                cadastreJMenu.add(menuActionBuildings);
             cadastreJMenu.add(menuLoadFromCache);
             // all SVG features disabled until official WMS is released
             //cadastreJMenu.add(menuActionBoundaries);
-            //cadastreJMenu.add(menuActionBuildings);
         }
         setEnabledAll(menuEnabled);
     }
@@ -223,6 +224,39 @@ public class CadastrePlugin extends Plugin {
         } else { 
             imageWidth = 600; imageHeight = 400;
         }
+        refreshLayersURL();
+        
+        // overwrite F11 shortcut used from the beginning by this plugin and recently used
+        // for full-screen switch in JOSM core
+        int i = 0;
+        String p = Main.pref.get("shortcut.shortcut."+i, null);
+        boolean alreadyRedefined = false;
+        while (p != null) {
+            String[] s = p.split(";");
+            alreadyRedefined = alreadyRedefined || s[0].equals("menu:view:fullscreen");
+            i++;
+            p = Main.pref.get("shortcut.shortcut."+i, null);
+        }
+        if (!alreadyRedefined) {
+            int reply = JOptionPane.showConfirmDialog(null,
+                    tr("Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"+
+                    "which is currently allocated for full-screen switch by default\n"+
+                    "Would you like to restore F11 for grab action ?"),
+                    tr("Restore grab shortcut F11"),
+                    JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.OK_OPTION) {
+                System.out.println("redefine fullscreen shortcut F11 to shift+F11");
+                Main.pref.put("shortcut.shortcut."+i, "menu:view:fullscreen;Toggle Full Screen view;122;5;122;64;false;true");
+                JOptionPane.showMessageDialog(Main.parent,tr("JOSM is stopped for the change to take effect."));
+                System.exit(0);
+            }
+        } else
+            System.out.println("shortcut F11 already redefined; do not change");
+
+        refreshMenu();
+    }
+    
+    private static void refreshLayersURL() {
         grabLayers = "";
         grabStyles = "";
         if (Main.pref.getBoolean("cadastrewms.layerWater", true)) {
@@ -265,35 +299,6 @@ public class CadastrePlugin extends Plugin {
             grabLayers = grabLayers.substring(0, grabLayers.length()-1);
             grabStyles = grabStyles.substring(0, grabStyles.length()-1);
         }
-        
-        // overwrite F11 shortcut used from the beginning by this plugin and recently used
-        // for full-screen switch in JOSM core
-        int i = 0;
-        String p = Main.pref.get("shortcut.shortcut."+i, null);
-        boolean alreadyRedefined = false;
-        while (p != null) {
-            String[] s = p.split(";");
-            alreadyRedefined = alreadyRedefined || s[0].equals("menu:view:fullscreen");
-            i++;
-            p = Main.pref.get("shortcut.shortcut."+i, null);
-        }
-        if (!alreadyRedefined) {
-            int reply = JOptionPane.showConfirmDialog(null,
-                    tr("Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"+
-                    "which is currently allocated for full-screen switch by default\n"+
-                    "Would you like to restore F11 for grab action ?"),
-                    tr("Restore grab shortcut F11"),
-                    JOptionPane.YES_NO_OPTION);
-            if (reply == JOptionPane.OK_OPTION) {
-                System.out.println("redefine fullscreen shortcut F11 to shift+F11");
-                Main.pref.put("shortcut.shortcut."+i, "menu:view:fullscreen;Toggle Full Screen view;122;5;122;64;false;true");
-                JOptionPane.showMessageDialog(Main.parent,tr("JOSM is stopped for the change to take effect."));
-                System.exit(0);
-            }
-        } else
-            System.out.println("shortcut F11 already redefined; do not change");
-
-        refreshMenu();
     }
 
     @Override
@@ -321,6 +326,8 @@ public class CadastrePlugin extends Plugin {
                 setEnabledAll(true);
                 Main.map.addMapMode(new IconToggleButton
                         (new WMSAdjustAction(Main.map)));
+                Main.map.addMapMode(new IconToggleButton
+                        (new Buildings(Main.map)));
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
                 //Lambert.layoutZone = -1;

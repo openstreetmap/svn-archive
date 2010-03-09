@@ -3,36 +3,36 @@ package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.event.ActionEvent;
+//import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.JosmAction;
+//import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.layer.Layer;
 
-public class WMSDownloadAction extends JosmAction {
+public class WMSDownloadAction /*extends JosmAction */{
 
     private static final long serialVersionUID = 1L;
 
-    public WMSDownloadAction(String layerName) {
-        super(layerName, "wmsmenu", tr("Download WMS tile from {0}",layerName), null, false);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        DownloadWMSVectorImage.download(getLayer());
-    }
+//    public WMSDownloadAction(String layerName) {
+//        super(layerName, "wmsmenu", tr("Download WMS tile from {0}",layerName), null, false);
+//    }
+//
+//    public void actionPerformed(ActionEvent e) {
+//        DownloadWMSVectorImage.download(getLayer());
+//    }
 
     public static WMSLayer getLayer() {
         // check if we already have a layer created. if not, create; if yes, reuse.
         ArrayList<WMSLayer> existingWMSlayers = new ArrayList<WMSLayer>();
         if (Main.map != null) {
             Layer activeLayer = Main.map.mapView.getActiveLayer();
-            if (activeLayer instanceof WMSLayer)
+            if (activeLayer instanceof WMSLayer && !((WMSLayer)activeLayer).isBuildingsOnly())
                 return (WMSLayer) activeLayer;
             for (Layer l : Main.map.mapView.getAllLayers()) {
-                if (l instanceof WMSLayer) {
+                if (l instanceof WMSLayer && !((WMSLayer)l).isBuildingsOnly()) {
                     existingWMSlayers.add((WMSLayer)l);
                 }
             }

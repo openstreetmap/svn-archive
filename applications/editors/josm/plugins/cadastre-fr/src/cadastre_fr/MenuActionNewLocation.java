@@ -31,7 +31,7 @@ public class MenuActionNewLocation extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         WMSLayer wmsLayer = addNewLayer(new ArrayList<WMSLayer>());
         if (wmsLayer != null)
-            DownloadWMSVectorImage.download(wmsLayer);
+            DownloadWMSVectorImage.download(wmsLayer, false);
     }
 
     public WMSLayer addNewLayer(ArrayList<WMSLayer> existingLayers) {

@@ -336,7 +336,7 @@ public class GeorefImage implements Serializable, ImageObserver {
         int sy2 = (int)((max.getY() - adj1.getY())*getPixelPerNorth());
         int newWidth = Math.abs(sx2 - sx1);
         int newHeight = Math.abs(sy2 - sy1);
-        BufferedImage new_img = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage new_img = new BufferedImage(newWidth, newHeight, image.getType());
         Graphics g = new_img.getGraphics();
         g.drawImage(image, 0, 0, newWidth-1, newHeight-1,
                 sx1, sy1, sx2, sy2,

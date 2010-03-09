@@ -93,12 +93,7 @@ public class CacheControl implements Runnable {
 
     public boolean loadCacheIfExist() {
         try {
-            String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
-            if (Main.proj instanceof LambertCC9Zones)
-                extension = cLambertCC9Z + extension;
-            else if (Main.proj instanceof UTM_20N_France_DOM)
-                extension = cUTM20N + extension;
-            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension);
+            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension());
             if (file.exists()) {
                 JOptionPane pane = new JOptionPane(
                         tr("Location \"{0}\" found in cache.\n"+
@@ -126,10 +121,7 @@ public class CacheControl implements Runnable {
 
     public void deleteCacheFile() {
         try {
-            String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
-            if (Main.proj instanceof LambertCC9Zones)
-                extension = cLambertCC9Z + extension;
-            delete(new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension));
+            delete(new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension()));
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
@@ -181,12 +173,7 @@ public class CacheControl implements Runnable {
             int size = imagesToSave.size();
             imagesLock.unlock();
             if (size > 0) {
-                String extension = String.valueOf((wmsLayer.getLambertZone() + 1));
-                if (Main.proj instanceof LambertCC9Zones)
-                    extension = cLambertCC9Z + extension;
-                else if (Main.proj instanceof UTM_20N_France_DOM)
-                    extension = cUTM20N + extension;
-                File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + extension);
+                File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension());
                 try {
                     if (file.exists()) {
                         ObjectOutputStreamAppend oos = new ObjectOutputStreamAppend(
@@ -218,4 +205,14 @@ public class CacheControl implements Runnable {
             }
         }
     }
+    
+    private String WMSFileExtension() {
+        String ext = String.valueOf((wmsLayer.getLambertZone() + 1));
+        if (Main.proj instanceof LambertCC9Zones)
+            ext = cLambertCC9Z + ext;
+        else if (Main.proj instanceof UTM_20N_France_DOM)
+            ext = cUTM20N + ext;
+        return ext;
+    }
+
 }

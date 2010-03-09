@@ -128,8 +128,8 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 }*/
 
         // simplify ways and check if we can reuse existing OSM nodes
-        for (Way wayToAdd : svgDataSet.getWays())
-            new SimplifyWay().simplifyWay(wayToAdd, svgDataSet, 0.5);
+//        for (Way wayToAdd : svgDataSet.getWays())
+//            new SimplifyWay().simplifyWay(wayToAdd, svgDataSet, 0.5);
         // check if the new way or its nodes is already in OSM layer
         for (Node n : svgDataSet.getNodes()) {
             Node nearestNewNode = checkNearestNode(n, Main.main.getCurrentDataSet().getNodes());

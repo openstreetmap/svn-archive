@@ -122,8 +122,8 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         wayToAdd.addNode(wayToAdd.getNode(0)); // close the circle
 
         // simplify the way
-        double threshold = Double.parseDouble(Main.pref.get("cadastrewms.simplify-way-boundary", "1.0"));
-        new SimplifyWay().simplifyWay(wayToAdd, Main.main.getCurrentDataSet(), threshold);
+//        double threshold = Double.parseDouble(Main.pref.get("cadastrewms.simplify-way-boundary", "1.0"));
+//        new SimplifyWay().simplifyWay(wayToAdd, Main.main.getCurrentDataSet(), threshold);
 
         cmds.add(new AddCommand(wayToAdd));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create boundary"), cmds));

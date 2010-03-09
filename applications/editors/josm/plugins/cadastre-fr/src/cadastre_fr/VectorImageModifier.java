@@ -17,7 +17,9 @@ public class VectorImageModifier extends ImageModifier {
 
     private int backgroundPixel = 0;
 
-    public VectorImageModifier(BufferedImage bi) {
+    public VectorImageModifier() {super();}
+    
+    public VectorImageModifier(BufferedImage bi, boolean monocolor) {
         bufferedImage = bi;
         if (Main.pref.getBoolean("cadastrewms.backgroundTransparent"))
             makeTransparent();
@@ -25,7 +27,8 @@ public class VectorImageModifier extends ImageModifier {
             replaceBackground();
         if (Main.pref.getBoolean("cadastrewms.invertGrey"))
             invertGrey();
-        //bufferedImage = convert8(convert1(bufferedImage));
+        if (monocolor)
+            bufferedImage = convert8(convert4(bufferedImage));
     }
 
     /**

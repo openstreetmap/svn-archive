@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Vector;
 
 import javax.swing.Icon;
@@ -71,9 +72,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
 
     private boolean isRaster = false;
-
     private boolean isAlreadyGeoreferenced = false;
-
+    private boolean buildingsOnly = false;
     public double X0, Y0, angle, fX, fY;
 
     // bbox of the georeferenced raster image (the nice horizontal and vertical box)
@@ -85,12 +85,13 @@ public class WMSLayer extends Layer implements ImageObserver {
     
     public boolean adjustModeEnabled;
 
+
     public WMSLayer() {
         this(tr("Blank Layer"), "", -1);
     }
 
     public WMSLayer(String location, String codeCommune, int lambertZone) {
-        super(buildName(location, codeCommune));
+        super(buildName(location, codeCommune, false));
         this.location = location;
         this.codeCommune = codeCommune;
         this.lambertZone = lambertZone;
@@ -112,15 +113,17 @@ public class WMSLayer extends Layer implements ImageObserver {
         System.out.println("Layer "+location+" destroyed");
     }
     
-    private static String buildName(String location, String codeCommune) {
+    private static String buildName(String location, String codeCommune, boolean buildingOnly) {
         String ret = new String(location.toUpperCase());
         if (codeCommune != null && !codeCommune.equals(""))
             ret += "(" + codeCommune + ")";
+        if (buildingOnly)
+            ret += ".b";
         return  ret;
     }
 
     private String rebuildName() {
-        return buildName(this.location.toUpperCase(), this.codeCommune);
+        return buildName(this.location.toUpperCase(), this.codeCommune, this.buildingsOnly);
     }
 
     public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
@@ -132,16 +135,26 @@ public class WMSLayer extends Layer implements ImageObserver {
             if (isRaster) {
                 b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
-                        CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
-            } else
-                divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
+                        CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)), 0);
+            } else if (buildingsOnly)
+                divideBbox(b, 5, 80); // hard coded size of 80 meters per box
+            else
+                divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())), 0);
         } else
-            divideBbox(b, 1);
+            divideBbox(b, 1, 0);
 
+        int lastSavedImage = images.size();
         for (EastNorthBound n : dividedBbox) {
             GeorefImage newImage;
             try {
-                newImage = grabber.grab(this, n.min, n.max);
+                if (buildingsOnly == false)
+                    newImage = grabber.grab(this, n.min, n.max);
+                else { // TODO
+                    GeorefImage buildings = grabber.grabBuildings(this, n.min, n.max);
+                    GeorefImage parcels = grabber.grabParcels(this, n.min, n.max);
+                    new BuildingsImageModifier(buildings, parcels);
+                    newImage = buildings;
+                }
             } catch (IOException e) {
                 System.out.println("Download action cancelled by user or server did not respond");
                 break;
@@ -165,9 +178,12 @@ public class WMSLayer extends Layer implements ImageObserver {
                 }
             }
             images.add(newImage);
-            saveToCache(newImage);
             Main.map.mapView.repaint();
         }
+        if (buildingsOnly)
+            joinBufferedImages();
+        for (int i=lastSavedImage; i < images.size(); i++)
+            saveToCache(images.get(i));
     }
 
     /**
@@ -176,10 +192,12 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @param factor 1 = source bbox 1:1
      *               2 = source bbox divided by 2x2 smaller boxes
      *               3 = source bbox divided by 3x3 smaller boxes
-     *               4 = hard coded size of boxes (100 meters) rounded allowing
-     *                   grabbing of next contiguous zone
+     *               4 = configurable size from preferences (100 meters per default) rounded
+     *                   allowing grabbing of next contiguous zone
+     *               5 = use the size provided in next argument optionalSize
+     * @param optionalSize box size used when factor is 5.
      */
-    private void divideBbox(Bounds b, int factor) {
+    private void divideBbox(Bounds b, int factor, int optionalSize) {
         EastNorth lambertMin = Main.proj.latlon2eastNorth(b.getMin());
         EastNorth lambertMax = Main.proj.latlon2eastNorth(b.getMax());
         double minEast = lambertMin.east();
@@ -195,7 +213,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             }
         } else {
             // divide to fixed size squares
-            int cSquare = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100"));
+            int cSquare = factor == 4 ? Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100")) : optionalSize;   
             minEast = minEast - minEast % cSquare;
             minNorth = minNorth - minNorth % cSquare;
             for (int xEast = (int)minEast; xEast < lambertMax.east(); xEast+=cSquare)
@@ -297,7 +315,7 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public boolean isOverlapping(Bounds bounds) {
         GeorefImage georefImage =
-            new GeorefImage(new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB ), // not really important
+            new GeorefImage(null,
             Main.proj.latlon2eastNorth(bounds.getMin()),
             Main.proj.latlon2eastNorth(bounds.getMax()));
         for (GeorefImage img : images) {
@@ -360,6 +378,15 @@ public class WMSLayer extends Layer implements ImageObserver {
         setName(rebuildName());
     }
 
+    public boolean isBuildingsOnly() {
+        return buildingsOnly;
+    }
+
+    public void setBuildingsOnly(boolean buildingsOnly) {
+        this.buildingsOnly = buildingsOnly;
+        setName(rebuildName());
+    }
+
     public boolean isRaster() {
         return isRaster;
     }
@@ -411,6 +438,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         oos.writeObject(this.codeCommune); // String
         oos.writeInt(this.lambertZone);
         oos.writeBoolean(this.isRaster);
+        oos.writeBoolean(this.buildingsOnly);
         if (this.isRaster) {
             oos.writeDouble(this.rasterMin.getX());
             oos.writeDouble(this.rasterMin.getY());
@@ -442,6 +470,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         this.setCodeCommune((String) ois.readObject());
         this.lambertZone = ois.readInt();
         this.setRaster(ois.readBoolean());
+        if (currentFormat >= 4)
+            this.setBuildingsOnly(ois.readBoolean());
         if (this.isRaster) {
             double X = ois.readDouble();
             double Y = ois.readDouble();
@@ -490,23 +520,27 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     /**
      * Join the grabbed images into one single.
-     * Works only for images grabbed from non-georeferenced images (Feuilles cadastrales)(same amount of
-     * images in x and y)
      */
-    public void joinRasterImages() {
+    public void joinBufferedImages() {
         if (images.size() > 1) {
             EastNorth min = images.get(0).min;
             EastNorth max = images.get(images.size()-1).max;
             int oldImgWidth = images.get(0).image.getWidth();
             int oldImgHeight = images.get(0).image.getHeight();
-            int newWidth = oldImgWidth*(int)Math.sqrt(images.size());
-            int newHeight = oldImgHeight*(int)Math.sqrt(images.size());
-            BufferedImage new_img = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+            HashSet<Double> lx = new HashSet<Double>();
+            HashSet<Double> ly = new HashSet<Double>();
+            for (GeorefImage img : images) {
+                lx.add(img.min.east());
+                ly.add(img.min.north());
+            }
+            int newWidth = oldImgWidth*lx.size();
+            int newHeight = oldImgHeight*ly.size();
+            BufferedImage new_img = new BufferedImage(newWidth, newHeight, images.get(0).image.getType()/*BufferedImage.TYPE_INT_ARGB*/);
             Graphics g = new_img.getGraphics();
             // Coordinate (0,0) is on top,left corner where images are grabbed from bottom left
             int rasterDivider = (int)Math.sqrt(images.size());
-            for (int h = 0; h < rasterDivider; h++) {
-                for (int v = 0; v < rasterDivider; v++) {
+            for (int h = 0; h < lx.size(); h++) {
+                for (int v = 0; v < ly.size(); v++) {
                     int newx = h*oldImgWidth;
                     int newy = newHeight - oldImgHeight - (v*oldImgHeight);
                     int j = h*rasterDivider + v;
@@ -542,7 +576,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         setCommuneBBox(new EastNorthBound(new EastNorth(0,0), new EastNorth(images.get(0).image.getWidth()-1,images.get(0).image.getHeight()-1)));
         rasterRatio = (rasterMax.getX()-rasterMin.getX())/(communeBBox.max.getX() - communeBBox.min.getX());
     }
-
+    
     public EastNorthBound getCommuneBBox() {
         return communeBBox;
     }

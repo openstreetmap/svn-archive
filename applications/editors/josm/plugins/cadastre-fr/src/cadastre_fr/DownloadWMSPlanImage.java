@@ -65,7 +65,7 @@ public class DownloadWMSPlanImage {
                                 Main.map.mapView.repaint();
                             } else {
                                 // next steps follow in method finish() when download is terminated
-                                wmsLayer.joinRasterImages();
+                                wmsLayer.joinBufferedImages();
                             }
                         } else {
                             /*JOptionPane.showMessageDialog(Main.parent,tr("Municipality vectorized !\n"+

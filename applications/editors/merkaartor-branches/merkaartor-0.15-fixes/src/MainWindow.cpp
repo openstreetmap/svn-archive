@@ -2693,6 +2693,11 @@ void MainWindow::updateLanguage()
     if (DefaultLanguage != "-" && DefaultLanguage != "en")
     {
         qtTranslator = new QTranslator;
+	#if defined(Q_OS_MAC)
+    	QDir resources = QDir(QCoreApplication::applicationDirPath());
+    	resources.cdUp();
+		resources.cd("Resources");
+	#endif
     #ifdef TRANSDIR_SYSTEM
         bool retQt;
         if (!QDir::isAbsolutePath(STRINGIFY(TRANSDIR_SYSTEM)))
@@ -2700,7 +2705,11 @@ void MainWindow::updateLanguage()
         else
             retQt = qtTranslator->load("qt_" + DefaultLanguage, STRINGIFY(TRANSDIR_SYSTEM));
     #else
-        bool retQt = qtTranslator->load("qt_" + DefaultLanguage, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+		#if defined(Q_OS_MAC)
+			bool retQt = qtTranslator->load("qt_" + DefaultLanguage, resources.absolutePath());
+		#else
+        	bool retQt = qtTranslator->load("qt_" + DefaultLanguage, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+		#endif
     #endif
         if (retQt)
             QCoreApplication::installTranslator(qtTranslator);
@@ -2710,9 +2719,6 @@ void MainWindow::updateLanguage()
 
         // First, try in the app dir
     #if defined(Q_OS_MAC)
-        QDir resources = QDir(QCoreApplication::applicationDirPath());
-        resources.cdUp();
-        resources.cd("Resources");
         bool retM = merkaartorTranslator->load("merkaartor_" + DefaultLanguage, resources.absolutePath());
     #else
         bool retM = merkaartorTranslator->load("merkaartor_" + DefaultLanguage, QCoreApplication::applicationDirPath());

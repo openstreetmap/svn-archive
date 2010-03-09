@@ -1,10 +1,17 @@
 package org.openstreetmap.josm.plugins.turnrestrictions;
 
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceEditor;
 
+/**
+ * This is the main class for the turnrestriction plugin.
+ * 
+ */
 public class TurnRestrictionsPlugin extends Plugin{
+	
 	public TurnRestrictionsPlugin(PluginInformation info) {
 		super(info);
 	}
@@ -19,5 +26,10 @@ public class TurnRestrictionsPlugin extends Plugin{
 			// add the dialog
 			newFrame.addToggleDialog(dialog);
 		}
+	}
+
+	@Override
+	public PreferenceSetting getPreferenceSetting() {
+		return new PreferenceEditor();
 	}
 }

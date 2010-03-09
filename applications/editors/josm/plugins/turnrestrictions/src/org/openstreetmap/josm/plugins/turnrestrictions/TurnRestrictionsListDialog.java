@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -22,10 +23,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
@@ -55,6 +58,8 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 	private NewAction actNew;
 	private EditAction actEdit;
 	private DeleteAction actDelete;	 
+	private SelectSelectedTurnRestrictions actSelectSelectedTurnRestrictions;
+	private ZoomToAction actZoomTo;
 	private SwitchListViewHandler switchListViewHandler;
 	
 	private AbstractTurnRestrictionsListView currentListView = null;
@@ -100,9 +105,12 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 	protected JPanel buildCommandPanel() {
 		JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
 		pnl.setBorder(null);
-		pnl.add(new JButton(actNew = new NewAction()));
-		pnl.add(new JButton(actEdit = new EditAction()));
-		pnl.add(new JButton(actDelete = new DeleteAction()));
+		pnl.add(new SideButton(actNew = new NewAction(), false /* don't show the name */));
+		pnl.add(new SideButton(actEdit = new EditAction(), false /* don't show the name */));
+		pnl.add(new SideButton(actDelete = new DeleteAction(), false /* don't show the name */));
+		
+		actSelectSelectedTurnRestrictions = new SelectSelectedTurnRestrictions();
+		actZoomTo = new ZoomToAction();
 		return pnl;
 	}
 	
@@ -154,14 +162,20 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 			if (currentListView != null) {
 				currentListView.removeListSelectionListener(actEdit);
 				currentListView.removeListSelectionListener(actDelete);
+				currentListView.removeListSelectionListener(actSelectSelectedTurnRestrictions);
+				currentListView.removeListSelectionListener(actZoomTo);
 				pnlContent.remove(currentListView);
 			}
 			pnlContent.add(view,BorderLayout.CENTER);
+			currentListView = view;						
 			view.addListSelectionListener(actEdit);
 			view.addListSelectionListener(actDelete);
+			view.addListSelectionListener(actSelectSelectedTurnRestrictions);
+			view.addListSelectionListener(actZoomTo);
 			actEdit.updateEnabledState();
 			actDelete.updateEnabledState();
-			currentListView = view;
+			actSelectSelectedTurnRestrictions.updateEnabledState();
+			actZoomTo.updateEnabledState();
 			currentListView.revalidate();
 			currentListView.repaint();
 		}
@@ -187,6 +201,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         public EditAction() {
             putValue(SHORT_DESCRIPTION,tr( "Open an editor for the selected turn restricion"));
             putValue(SMALL_ICON, ImageProvider.get("dialogs", "edit"));
+            putValue(NAME, tr("Edit"));
             setEnabled(false);
         }
         protected Collection<RelationMember> getMembersForCurrentSelection(Relation r) {
@@ -209,13 +224,13 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         public void actionPerformed(ActionEvent e) {
             if (!isEnabled())
                 return;
-            List<Relation> toEdit = pnlTurnRestrictionsInDataSet.getModel().getSelectedTurnRestrictions();
+            List<Relation> toEdit = currentListView.getModel().getSelectedTurnRestrictions();
             if (toEdit.size() != 1) return;
             launchEditor(toEdit.get(0));
         }
 
         public void updateEnabledState() {
-        	setEnabled(pnlTurnRestrictionsInDataSet.getModel().getSelectedTurnRestrictions().size() == 1);
+        	setEnabled(currentListView!= null && currentListView.getModel().getSelectedTurnRestrictions().size() == 1);
         }
         
         public void valueChanged(ListSelectionEvent e) {
@@ -233,6 +248,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         public DeleteAction() {
             putValue(SHORT_DESCRIPTION,tr("Delete the selected turn restriction"));
             putValue(SMALL_ICON, ImageProvider.get("dialogs", "delete"));
+            putValue(NAME, tr("Delete"));
             setEnabled(false);
         }
 
@@ -247,14 +263,14 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 
         public void actionPerformed(ActionEvent e) {
             if (!isEnabled()) return;
-            List<Relation> toDelete = pnlTurnRestrictionsInDataSet.getModel().getSelectedTurnRestrictions();
+            List<Relation> toDelete = currentListView.getModel().getSelectedTurnRestrictions();
             for (Relation r: toDelete) {
                 deleteRelation(r);
             }
         }
         
         public void updateEnabledState() {
-        	setEnabled(!pnlTurnRestrictionsInDataSet.getModel().getSelectedTurnRestrictions().isEmpty());
+        	setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
         }
 
         public void valueChanged(ListSelectionEvent e) {
@@ -269,7 +285,8 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
     static class NewAction extends AbstractAction implements EditLayerChangeListener{
         public NewAction() {
             putValue(SHORT_DESCRIPTION,tr("Create a new turn restriction"));
-            putValue(SMALL_ICON, ImageProvider.get("dialogs", "addrelation"));
+            putValue(SMALL_ICON, ImageProvider.get("new"));
+            putValue(NAME, tr("New"));
             updateEnabledState();
         }
 
@@ -289,6 +306,73 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 				OsmDataLayer newLayer) {
             updateEnabledState();
 		}
+    }
+    
+    /**
+     * Sets the selection of the current data set to the currently selected 
+     * turn restrictions.
+     *
+     */
+    class SelectSelectedTurnRestrictions extends AbstractAction implements ListSelectionListener {
+        class AbortException extends Exception {}
+
+        public SelectSelectedTurnRestrictions() {
+            putValue(SHORT_DESCRIPTION,tr("Set the current JOSM selection to the selected turn restrictions"));
+            putValue(SMALL_ICON, ImageProvider.get("selectall"));
+            putValue(NAME, tr("Select in current data layer"));
+            setEnabled(false);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if (!isEnabled()) return;
+            List<Relation> toSelect = currentListView.getModel().getSelectedTurnRestrictions();
+            if (toSelect.isEmpty()) return;
+            OsmDataLayer layer= Main.main.getEditLayer();
+            if (layer == null) return;
+            layer.data.setSelected(toSelect);
+        }
+        
+        public void updateEnabledState() {
+        	setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
+        }
+
+        public void valueChanged(ListSelectionEvent e) {
+        	updateEnabledState();
+        }
+    }
+    
+    /**
+     * Sets the selection of the current data set to the currently selected 
+     * turn restrictions.
+     *
+     */
+    class ZoomToAction extends AbstractAction implements ListSelectionListener {
+        class AbortException extends Exception {}
+
+        public ZoomToAction() {
+            putValue(SHORT_DESCRIPTION,tr("Zoom to the currently selected turn restrictions"));
+            putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale/selection"));
+            putValue(NAME, tr("Zoom to"));
+            setEnabled(false);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if (!isEnabled()) return;
+            List<Relation> toSelect = currentListView.getModel().getSelectedTurnRestrictions();
+            if (toSelect.isEmpty()) return;
+            OsmDataLayer layer= Main.main.getEditLayer();
+            if (layer == null) return;
+            layer.data.setSelected(toSelect);
+            new AutoScaleAction("selection").autoScale();
+        }
+        
+        public void updateEnabledState() {
+        	setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
+        }
+
+        public void valueChanged(ListSelectionEvent e) {
+        	updateEnabledState();
+        }
     }
     
     /**
@@ -319,6 +403,9 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
             add(actNew);
             add(actEdit);
             add(actDelete);
+            addSeparator();
+            add(actSelectSelectedTurnRestrictions);
+            add(actZoomTo);
         }
     }
 }

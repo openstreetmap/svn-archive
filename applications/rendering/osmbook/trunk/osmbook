@@ -422,22 +422,10 @@ sub do_grid {
     my $svgfinalfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy-page.svg";
     if ($opts{'svg'} &&
 	(! -f $svgfinalfile || Stat($svg2file, $svgfinalfile))) {
-	make_svgpage($svgfile, $svgfinalfile, $x, $y,
+	make_svgpage($svgfile, $svgfinalfile, $label, $x, $y,
 		     $minx, $maxx, $miny, $maxy);
     }
     $svgfile = $svgfinalfile;
-
-    # convert to png
-    # inkscape -f map.svg -e map.png
-    my $pngfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.png";
-    if ($opts{'png'} && (! -f $pngfile || Stat($svgfile, $pngfile))) {
-	my $dpiarg = "";
-	if ($opts{'dpi'}) {
-	    $dpiarg = "-d $opts{'dpi'}";
-	}
-	System("inkscape $dpiarg -f $svgfile -e $pngfile");
-	System("ln -s $pngfile page-$label.png");
-    }
 
     my $outfile;
     if ($opts{'ps'}) {
@@ -475,8 +463,21 @@ sub do_grid {
 	    # tmp file no longer needed
 	    # unlink($tmpfile);
 	}
+    } elsif ($opts{'png'}) {
+	# convert to png
+	# inkscape -f map.svg -e map.png
+
+	my $pngfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.png";
+	if (! -f $pngfile || Stat($svgfile, $pngfile)) {
+	    my $dpiarg = "";
+	    if ($opts{'dpi'}) {
+		$dpiarg = "-d $opts{'dpi'}";
+	    }
+	    System("inkscape $dpiarg -f $svgfile -e $pngfile");
+	    System("ln -s $pngfile page-$label.png");
+	}
     } else {
-	# convert to pdf
+	# default convert to pdf
 	my $pdffile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.pdf";
 	if (! -f $pdffile || Stat($svgfile, $pdffile)) {
 	    System("inkscape -f $svgfile -A $pdffile");
@@ -734,7 +735,8 @@ sub svg_hline {
 }
 
 sub svg_grid {
-    my ($outh, $gridinfo, $left, $width, $top, $height, $fontsize) = @_;
+    my ($outh, $gridinfo, $current,
+	$left, $width, $top, $height, $fontsize) = @_;
 
     my $xoff = 0*$width / 6;
     my $yoff = 0*$height / 6;
@@ -748,7 +750,7 @@ sub svg_grid {
 	my $subheight = $height / $cols;
  	for (my $row = 0; $row < $rows; $row++) {
 	    for (my $col = 0; $col < $cols; $col++) {
-		svg_grid($outh, $gridinfo->[$row][$col],
+		svg_grid($outh, $gridinfo->[$row][$col], $current,
 			 $left + $row * $subwidth, $subwidth,
 			 $top + $col * $subheight, $subheight,
 			 .6*$fontsize/$rows); # XXX: arbitrary scale
@@ -769,6 +771,9 @@ sub svg_grid {
 
     } else {
 	# straight grid blank square
+	if ($gridinfo eq $current) {
+	    $gridinfo = "<tspan font-weight=\"bold\" fill=\"\#800\">$gridinfo</tspan>";
+	}
 	svg_text($outh, $gridinfo,
 		 $left + $xoff + $width/2,
 		 $top + $yoff + $height/2 + $height/12,
@@ -843,7 +848,7 @@ sub make_svggrid {
 }
 
 sub make_svgpage {
-    my ($infile, $outfile, $x, $y, $minx, $maxx, $miny, $maxy) = @_;
+    my ($infile, $outfile, $label, $x, $y, $minx, $maxx, $miny, $maxy) = @_;
 
     my $vscale = 1.25;
 
@@ -939,41 +944,41 @@ sub make_svgpage {
     my $fontsize = $xoff * .9;
     my $heresize = $xoff;
 
-    svg_grid($outh, $nw,
+    svg_grid($outh, $nw, $label,
 	     $nextpageleft + $xadj, $gridxoff,
 	     $nextpagetop + $yadj,  $gridyoff,
 	     $fontsize);
-    svg_grid($outh, $n,
+    svg_grid($outh, $n, $label,
 	     $nextpageleft + $xadj + $gridxoff, $gridxoff,
 	     $nextpagetop + $yadj,  $gridyoff,
 	     $fontsize);
-    svg_grid($outh, $ne,
+    svg_grid($outh, $ne, $label,
 	     $nextpageleft + $xadj + 2 * $gridxoff, $gridxoff,
 	     $nextpagetop + $yadj,  $gridyoff,
 	     $fontsize);
 
-    svg_grid($outh, $w,
+    svg_grid($outh, $w, $label,
 	     $nextpageleft + $xadj, $gridxoff,
 	     $nextpagetop + $yadj + $gridyoff,  $gridyoff,
 	     $fontsize);
-    svg_grid($outh, $here, #"<tspan font-weight=\"bold\" fill=\"\#800\">$here</tspan>",
+    svg_grid($outh, $here, $label, #"<tspan font-weight=\"bold\" fill=\"\#800\">$here</tspan>",
 	     $nextpageleft + $xadj + $gridxoff, $gridxoff,
 	     $nextpagetop + $yadj + $gridyoff,  $gridyoff,
 	     $fontsize);
-    svg_grid($outh, $e,
+    svg_grid($outh, $e, $label,
 	     $nextpageleft + $xadj + 2 * $gridxoff, $gridxoff,
 	     $nextpagetop + $yadj + $gridyoff,  $gridyoff,
 	     $fontsize);
 
-    svg_grid($outh, $sw,
+    svg_grid($outh, $sw, $label,
 	     $nextpageleft + $xadj, $gridxoff,
 	     $nextpagetop + $yadj + 2*$gridyoff,  $gridyoff,
 	     $fontsize);
-    svg_grid($outh, $s,
+    svg_grid($outh, $s, $label,
 	     $nextpageleft + $xadj + $gridxoff, $gridxoff,
 	     $nextpagetop + $yadj + 2*$gridyoff,  $gridyoff,
 	     $fontsize);
-    svg_grid($outh, $se,
+    svg_grid($outh, $se, $label,
 	     $nextpageleft + $xadj + 2 * $gridxoff, $gridxoff,
 	     $nextpagetop + $yadj + 2*$gridyoff,  $gridyoff,
 	     $fontsize);

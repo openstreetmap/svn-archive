@@ -860,7 +860,6 @@ sub make_svgpage {
     my $outrectleft = 1;
     my $outrectright = $width;
     my $outrecttop = 1.05*$origheight;
-    print "STROKE: $thick\n";
     my $outrectbot = 1.25*$origheight - $thick;
     my $outrectht = $outrectbot-$outrecttop;
     my $outrectwid = $outrectright-$outrectleft;

@@ -862,7 +862,7 @@ sub make_svgpage {
       copy_svg($infile, $outfile, 1, $vscale);
 
     # a thickline
-    my $thick = int($origheight*.01);
+    my $thick = int($origheight*.005);
     my $thin = int($origheight*.005);
 
     # add in our bottom enclosing rectangle
@@ -991,7 +991,7 @@ sub make_svgpage {
 
     # Add the coordinate information
     my $thisgrid = get_grid_num($x, $y);
-    svg_ltext($outh, "Page: $thisgrid",
+    svg_ltext($outh, "Page: $label",
 	      $outrectleft + $fontsize/8, $outrecttop + $fontsize, $fontsize);
     svg_rtext($outh, sprintf("%3.3f, %3.3f to %3.3f, %3.3f",
 			     $miny, $minx, $maxy, $maxx),

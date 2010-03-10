@@ -71,6 +71,8 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
 
+    public boolean cancelled;
+
     private boolean isRaster = false;
     private boolean isAlreadyGeoreferenced = false;
     private boolean buildingsOnly = false;
@@ -131,6 +133,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
     
     public void grab(CadastreGrabber grabber, Bounds b, boolean useFactor) throws IOException {
+        cancelled = false;
         if (useFactor) {
             if (isRaster) {
                 b = new Bounds(Main.proj.eastNorth2latlon(rasterMin), Main.proj.eastNorth2latlon(rasterMax));
@@ -145,6 +148,8 @@ public class WMSLayer extends Layer implements ImageObserver {
 
         int lastSavedImage = images.size();
         for (EastNorthBound n : dividedBbox) {
+            if (cancelled)
+                return;
             GeorefImage newImage;
             try {
                 if (buildingsOnly == false)

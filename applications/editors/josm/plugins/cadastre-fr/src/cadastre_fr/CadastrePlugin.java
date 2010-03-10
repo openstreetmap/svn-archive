@@ -89,7 +89,7 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - removed autosourcing of empty new nodes
  * 1.6 28-Nov-2009 - Fix minor issues if Grab is called without layer (possible since projection rework)
  * 1.7 12-Dec-2009 - Change URL's changes for cookie and downgrade imgs resolution due to WMS changes
- * 1.8 09-Mar-2010 - filter the mouse button 1 during georeferencing
+ * 1.8 11-Mar-2010 - filter the mouse button 1 during georeferencing
  *                 - retry if getting a new cookie failed (10 times during 30 seconds)
  *                 - cookie expiration automatically detected and renewed (after 30 minutes)
  *                 - proper WMS layer cleanup at destruction (workaround for memory leak)
@@ -100,11 +100,13 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support
  *                 - image resolution configurable (high, medium, low) like the online interface
  *                 - layer selection configurable for vectorized images
+ *                 - improved download cancellation
  *                 - from Erik Amzallag:
  *                 -     possibility to modify the auto-sourcing text just before upload 
  *                 - from Clément Ménier:
  *                 -     new option allowing an auto-selection of the first cadastre layer for grab
- *                 -     non-modal JDialog in MenuActionGrabPlanImage  
+ *                 -     non-modal JDialog in MenuActionGrabPlanImage
+ *                 -     new options in the image filter (bilinear, bicubic)
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "1.8";

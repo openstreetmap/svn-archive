@@ -20,6 +20,7 @@ public class DownloadWMSPlanImage {
     private WMSLayer wmsLayer;
     private Bounds bounds;
     private boolean dontGeoreference = false;
+    private static String errorMessage;
     
     private class Task extends PleaseWaitRunnable {
         private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
@@ -30,6 +31,7 @@ public class DownloadWMSPlanImage {
         @Override
         public void realRun() throws IOException {
             progressMonitor.indeterminateSubTask(tr("Contacting cadastre WMS ..."));
+            errorMessage = null;
             try {
                 if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
                     if (!wmsLayer.images.isEmpty()) {
@@ -84,6 +86,9 @@ public class DownloadWMSPlanImage {
             } catch (DuplicateLayerException e) {
                 // we tried to grab onto a duplicated layer (removed)
                 System.err.println("removed a duplicated layer");
+            } catch (WMSException e) {
+                errorMessage = e.getMessage();
+                grabber.getWmsInterface().resetCookie();
             }
         }
         
@@ -107,6 +112,8 @@ public class DownloadWMSPlanImage {
         this.wmsLayer = wmsLayer;
         this.bounds = bounds;
         task = Main.worker.submit(t, t);
+        if (errorMessage != null)
+            JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }
 
     public boolean waitFinished() {

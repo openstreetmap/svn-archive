@@ -64,7 +64,7 @@ public class CadastreInterface {
 
     final  int cRetriesGetCookie = 10; // 10 times every 3 seconds means 30 seconds trying to get a cookie
 
-    public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException {
+    public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException, WMSException {
         if (wmsLayer.getName().equals(""))
             return false;
         if (wmsLayer.getName().equals(lastWMSLayerName))
@@ -74,13 +74,11 @@ public class CadastreInterface {
         try {
             if (cookie == null || isCookieExpired())
                 getCookie();
-            if (cookie != null && interfaceRef == null) {
+            if (cookie == null)
+                throw new WMSException(tr("Cannot open a new client session.\nServer in maintenance or temporary overloaded."));
+            if (interfaceRef == null) {
                     getInterface(wmsLayer);
                     this.lastWMSLayerName = wmsLayer.getName();
-            } else {
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("Cannot open a new client session.\nServer in maintenance or temporary overloaded."));
-                return false;
             }
             openInterface();
         } catch (IOException e) {

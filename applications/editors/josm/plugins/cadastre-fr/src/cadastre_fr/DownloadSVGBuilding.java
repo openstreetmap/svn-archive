@@ -41,6 +41,8 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     private String svg = null;
     private static EastNorthBound currentView = null;
     private EastNorthBound viewBox = null;
+    private static String errorMessage;
+
 
     public DownloadSVGBuilding(WMSLayer wmsLayer) {
         super(tr("Downloading {0}", wmsLayer.getName()));
@@ -52,6 +54,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     @Override
     public void realRun() throws IOException, OsmTransferException {
     	progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
+        errorMessage = null;
         try {
             if (wmsInterface.retrieveInterface(wmsLayer)) {
                 svg = grabBoundary(currentView);
@@ -64,6 +67,9 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             }
         } catch (DuplicateLayerException e) {
             System.err.println("removed a duplicated layer");
+        } catch (WMSException e) {
+            errorMessage = e.getMessage();
+            grabber.getWmsInterface().resetCookie();
         }
     }
 
@@ -271,6 +277,8 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
             return;
         }
         Main.worker.execute(new DownloadSVGBuilding(wmsLayer));
+        if (errorMessage != null)
+            JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }
 
 }

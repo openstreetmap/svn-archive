@@ -45,6 +45,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     private CadastreInterface wmsInterface;
     private String svg = null;
     private EastNorthBound viewBox = null;
+    private static String errorMessage;
 
     public DownloadSVGTask(WMSLayer wmsLayer) {
         super(tr("Downloading {0}", wmsLayer.getName()));
@@ -56,6 +57,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     @Override
     public void realRun() throws IOException, OsmTransferException {
     	progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
+        errorMessage = null;
         try {
             if (wmsInterface.retrieveInterface(wmsLayer)) {
                 svg = grabBoundary(wmsLayer.getCommuneBBox());
@@ -70,6 +72,9 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
             }
         } catch (DuplicateLayerException e) {
             System.err.println("removed a duplicated layer");
+        } catch (WMSException e) {
+            errorMessage = e.getMessage();
+            grabber.getWmsInterface().resetCookie();
         }
     }
 
@@ -217,6 +222,8 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
             return;
         }
         Main.worker.execute(new DownloadSVGTask(wmsLayer));
+        if (errorMessage != null)
+            JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }
 
 }

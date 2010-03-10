@@ -5,6 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
@@ -13,10 +15,9 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 public class DownloadWMSVectorImage extends PleaseWaitRunnable {
 
     private WMSLayer wmsLayer;
-
-    private Bounds bounds;
-    
-    private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
+    private Bounds bounds;    
+    private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;    
+    private static String errorMessage;
 
     public DownloadWMSVectorImage(WMSLayer wmsLayer, Bounds bounds, boolean buildingsOnly) {
         super(tr("Downloading {0}", wmsLayer.getName()));
@@ -29,6 +30,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
     @Override
     public void realRun() throws IOException {
         progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
+        errorMessage = null;
         try {
             if (grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
                 boolean useFactor = true;
@@ -61,12 +63,17 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
         } catch (DuplicateLayerException e) {
             // we tried to grab onto a duplicated layer (removed)
             System.err.println("removed a duplicated layer");
+        } catch (WMSException e) {
+            errorMessage = e.getMessage();
+            grabber.getWmsInterface().resetCookie();
         }
     }
 
     @Override
     protected void cancel() {
         grabber.getWmsInterface().cancel();
+        if (wmsLayer != null)
+            wmsLayer.cancelled = true;
     }
 
     @Override
@@ -78,6 +85,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
         Bounds bounds = new Bounds(mv.getLatLon(0, mv.getHeight()), mv.getLatLon(mv.getWidth(), 0));
 
         Main.worker.execute(new DownloadWMSVectorImage(wmsLayer, bounds, buildingsOnly));
-
+        if (errorMessage != null)
+            JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }
 }

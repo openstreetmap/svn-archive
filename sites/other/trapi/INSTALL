@@ -158,3 +158,51 @@ day.)
    bzcat relation-DATE.osm.bz2 | tahdbload.pl
    echo YYYYMMDD > timestamp
    restart trpcs
+
+
+IMPORTANT NOTE
+
+As of early 2010 that the old minute and hourly diffs that TRAPI uses 
+are no longer in service. You must follow the instructions below to 
+fetch and apply the new replicate diffs to your TRAPI database. 
+The new method uses Osmosis and the --rri option to fetch the replicate 
+diffs and convert them to the type expected by TRAPI.
+
+The process is as follows: use the "go.sh" bash script to invoke 
+osmosis with --rri, rename the output file, and move it to the change 
+directory (CHANGEDIR). The "go.sh" script should be located in your 
+osmosis/bin/ directory. There are two locations that need to be changed 
+in the go script. 
+Please edit the script and set CHANGEDIR and WORKDIR equal to something 
+appropriate for your system. CHANGEDIR should be an empty directory 
+where Osmosis will dump the .osc files and WORKDIR is the Osmosis 
+workingDirectory used with the --rri task.
+
+monitor.pl replaces trup.pl. It monitors CHANGEDIR for new files and 
+feeds the filenames to trpcs.pl via STDOUT. monitor.pl should be placed 
+in the same directory as trapi.pm as it reads config info from there. 
+trapi.pm needs to define the constant CHANGEDIR, so a line like 
+"use constant CHANGEDIR => "/home/user/change/"; should be added to 
+trapi.pm. 
+Of course you should change the directory to suit your environment.
+
+Note that monitor.pl requires File::Monitor for perl.
+
+If you haven't yet loaded your database with your initial planet dump, 
+now would be a good time. See the TRAPI INSTALL file for details. You 
+should fetch the initial dump from a mirror, because TRAPI will 
+(obviously) catch up.
+
+At this point you should install Osmosis, run the --rrii task, and find 
+and download the appropriate state.txt file from planet.openstreetmap.org 
+or mirror. This is typically one from slightly before the dump you used 
+to initialize your database.
+
+Once osmosis is ready, just run the "go.sh" script and osmosis should 
+start dumping .osc.gz files into your CHANGEDIR. Once it's done at least 
+one, you can then invoke monitor.pl in your TRAPI directory with 
+something like ./monitor.pl | ./trpcs.pl. Trpcs should start updating 
+your database with the files that it finds in CHANGEDIR.
+
+Any questions, email the talk list or contact user Milenko.
+

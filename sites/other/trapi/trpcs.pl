@@ -8,7 +8,7 @@
 use strict;
 use warnings;
 
-use constant VERBOSE => 5;		# verbosity
+use constant VERBOSE => 15;		# verbosity
 use trapi;
 
 chdir TRAPIDIR or die "could not chdir ".TRAPIDIR.": $!";
@@ -874,9 +874,9 @@ while (my $gz = <>) {
     close OSC;
     
     writecache();
-    if ($gz =~ /(?:^|\/)\d+\-(\d+)\.osc\.gz$/) {
+    if ($gz =~ /(?:^|\/)\d+\-(\d+)-(\d+)\.osc\.gz$/) {
 	open STAMP, ">", "timestamp" or die "Could not open timestamp";
-	print STAMP "$1\n";
+	print STAMP "$2\n";
 	close STAMP;
 	unlink $gz;
     }

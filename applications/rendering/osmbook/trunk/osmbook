@@ -772,6 +772,10 @@ sub svg_grid {
     } else {
 	# straight grid blank square
 	if ($gridinfo eq $current) {
+	    print $outh "<rect x=\"$left\" y=\"$top\"
+                  width=\"$width\" height=\"$height\"
+                  stroke=\"black\" stroke-width=\"0\"
+                  fill=\"\#fff\"/>\n";
 	    $gridinfo = "<tspan font-weight=\"bold\" fill=\"\#800\">$gridinfo</tspan>";
 	}
 	svg_text($outh, $gridinfo,
@@ -892,34 +896,6 @@ sub make_svgpage {
                   stroke=\"black\" stroke-width=\"$thick\"
                   fill=\"\#ddd\"/>\n";
 
-    # now the 4 grid dividing lines:
-
-    # Horizontal first
-    print $outh "<line x1=\"$nextpageleft\" y1=\"" .
-      ($nextpagetop + $nextpageht / 3) . "\"
-      x2=\"$nextpageright\" y2=\"" .
-      ($nextpagetop + $nextpageht / 3) . "\"
-                  stroke=\"black\" stroke-width=\"$thin\" />\n";
-
-    print $outh "<line x1=\"$nextpageleft\" y1=\"" .
-      ($nextpagetop + 2 * $nextpageht / 3) . "\"
-      x2=\"$nextpageright\" y2=\"" .
-      ($nextpagetop + 2 * $nextpageht / 3) . "\"
-                  stroke=\"black\" stroke-width=\"$thin\" />\n";
-
-    # Vertical first
-    print $outh "<line y1=\"$nextpagetop\" x1=\"" .
-      ($nextpageleft + $nextpagewid / 3) . "\"
-      y2=\"$nextpagebot\" x2=\"" .
-      ($nextpageleft + $nextpagewid / 3) . "\"
-                  stroke=\"black\" stroke-width=\"$thin\" />\n";
-
-    print $outh "<line y1=\"$nextpagetop\" x1=\"" .
-      ($nextpageleft + 2 * $nextpagewid / 3) . "\"
-      y2=\"$nextpagebot\" x2=\"" .
-      ($nextpageleft + 2 * $nextpagewid / 3) . "\"
-                  stroke=\"black\" stroke-width=\"$thin\" />\n";
-
     # now add the text for the navigation grid
     my $nw = get_grid_display_num($x-1, $y+1, 'svg');
     my $n  = get_grid_display_num($x,   $y+1, 'svg');
@@ -983,14 +959,44 @@ sub make_svgpage {
 	     $nextpagetop + $yadj + 2*$gridyoff,  $gridyoff,
 	     $fontsize);
 
+    # now the 4 grid dividing lines:
+
+    # Horizontal first
+    my $stroke_width = $gridxoff/100;
+
+    print $outh "<line x1=\"$nextpageleft\" y1=\"" .
+      ($nextpagetop + $nextpageht / 3) . "\"
+      x2=\"$nextpageright\" y2=\"" .
+      ($nextpagetop + $nextpageht / 3) . "\"
+                  stroke=\"black\" stroke-width=\"$stroke_width\" />\n";
+
+    print $outh "<line x1=\"$nextpageleft\" y1=\"" .
+      ($nextpagetop + 2 * $nextpageht / 3) . "\"
+      x2=\"$nextpageright\" y2=\"" .
+      ($nextpagetop + 2 * $nextpageht / 3) . "\"
+                  stroke=\"black\" stroke-width=\"$stroke_width\" />\n";
+
+    # Vertical first
+    print $outh "<line y1=\"$nextpagetop\" x1=\"" .
+      ($nextpageleft + $nextpagewid / 3) . "\"
+      y2=\"$nextpagebot\" x2=\"" .
+      ($nextpageleft + $nextpagewid / 3) . "\"
+                  stroke=\"black\" stroke-width=\"$stroke_width\" />\n";
+
+    print $outh "<line y1=\"$nextpagetop\" x1=\"" .
+      ($nextpageleft + 2 * $nextpagewid / 3) . "\"
+      y2=\"$nextpagebot\" x2=\"" .
+      ($nextpageleft + 2 * $nextpagewid / 3) . "\"
+                  stroke=\"black\" stroke-width=\"$stroke_width\" />\n";
+
     # Add the coordinate information
     my $thisgrid = get_grid_num($x, $y);
     svg_ltext($outh, "Page: $thisgrid",
 	      $outrectleft + $fontsize/8, $outrecttop + $fontsize, $fontsize);
     svg_rtext($outh, sprintf("%3.3f, %3.3f to %3.3f, %3.3f",
-			     $minx, $miny, $maxx, $maxy),
+			     $miny, $minx, $maxy, $maxx),
 	      $nextpageleft - $fontsize/4,
-	      $outrecttop + $fontsize/2, $fontsize/2);
+	      $outrecttop + 1.1*$fontsize/2, $fontsize/2);
 
     if ($proj->{'title'}) {
 	svg_text($outh, "<tspan font-weight=\"bold\">$proj->{title}</tspan>",

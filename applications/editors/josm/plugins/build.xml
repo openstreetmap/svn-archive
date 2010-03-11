@@ -24,6 +24,7 @@
         <ant antfile="build.xml" target="dist" dir="measurement"/>
         <ant antfile="build.xml" target="dist" dir="michigan_left"/>
         <ant antfile="build.xml" target="dist" dir="multipoly"/>
+        <ant antfile="build.xml" target="dist" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
         <ant antfile="build.xml" target="dist" dir="openlayers"/>
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>

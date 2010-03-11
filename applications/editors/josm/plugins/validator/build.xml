@@ -26,7 +26,7 @@
 	  ** update before publishing
 	-->
 	<property name="commit.message" value="validator: fixed josm bug 4594" />
-	<property name="plugin.main.version" value="3095" />
+	<property name="plugin.main.version" value="3118" />
 
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>

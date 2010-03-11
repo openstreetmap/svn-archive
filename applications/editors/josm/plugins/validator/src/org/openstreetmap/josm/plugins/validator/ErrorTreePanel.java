@@ -43,10 +43,12 @@ public class ErrorTreePanel extends JTree {
     private List<TestError> errors;
 
     /**
-     * If {@link #filter} is not <code>null</code> only errors are displayed 
-     * that refer to one of the primitives in the filter.  
+     * If {@link #filter} is not <code>null</code> only errors are displayed
+     * that refer to one of the primitives in the filter.
      */
     private Set<OsmPrimitive> filter = null;
+
+    private int updateCount;
 
     /**
      * Constructor
@@ -64,6 +66,7 @@ public class ErrorTreePanel extends JTree {
         setErrorList(errors);
     }
 
+    @Override
     public String getToolTipText(MouseEvent e) {
         String res = null;
         TreePath path = getPathForLocation(e.getX(), e.getY());
@@ -104,6 +107,7 @@ public class ErrorTreePanel extends JTree {
      * Builds the errors tree
      */
     public void buildTree() {
+        updateCount++;
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
 
         if (errors == null || errors.isEmpty()) {
@@ -323,5 +327,9 @@ public class ErrorTreePanel extends JTree {
      */
     public DefaultMutableTreeNode getRoot() {
         return (DefaultMutableTreeNode) treeModel.getRoot();
+    }
+
+    public int getUpdateCount() {
+        return updateCount;
     }
 }

@@ -31,7 +31,11 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author frsantos
  */
 public class ErrorLayer extends Layer implements LayerChangeListener {
+
     private OSMValidatorPlugin plugin;
+
+    private int updateCount = -1;
+
 
     public ErrorLayer(OSMValidatorPlugin plugin) {
         super(tr("Validation errors"));
@@ -55,6 +59,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener {
     @SuppressWarnings("unchecked")
     @Override
     public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
+        updateCount = plugin.validationDialog.tree.getUpdateCount();
         DefaultMutableTreeNode root = plugin.validationDialog.tree.getRoot();
         if (root == null || root.getChildCount() == 0)
             return;
@@ -100,6 +105,11 @@ public class ErrorLayer extends Layer implements LayerChangeListener {
     @Override
     public boolean isMergable(Layer other) {
         return false;
+    }
+
+    @Override
+    public boolean isChanged() {
+        return updateCount != plugin.validationDialog.tree.getUpdateCount();
     }
 
     @Override

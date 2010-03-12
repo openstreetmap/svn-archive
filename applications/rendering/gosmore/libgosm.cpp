@@ -55,15 +55,17 @@ int TagCmp (const char *a, const char *b)
     "fifty ", "sixty ", "seventy ", "eighty ", "ninety " };
   
   if (strncasecmp (a, "the ", 4) == 0) a += 4;
-  else if (strncasecmp (a, "de ", 3) == 0) a += 3;
   else if (strncasecmp (a, "rue ", 4) == 0) a += 4;
   else if (strncasecmp (a, "avenue ", 7) == 0) a += 7;
   else if (strncasecmp (a, "boulevard ", 10) == 0) a += 10;
+  if (strncasecmp (a, "de ", 3) == 0) a += 3;
+  
   if (strncasecmp (b, "the ", 4) == 0) b += 4;
-  else if (strncasecmp (b, "de ", 3) == 0) b += 3;
   else if (strncasecmp (b, "rue ", 4) == 0) b += 4;
   else if (strncasecmp (b, "avenue ", 7) == 0) b += 7;
   else if (strncasecmp (b, "boulevard ", 10) == 0) b += 10;
+  if (strncasecmp (b, "de ", 3) == 0) b += 3;
+  
   if (strchr ("WEST", a[0]) && a[1] == ' ') a += 2; // e.g. N 21st St
   if (strchr ("WEST", b[0]) && b[1] == ' ') b += 2;
 
@@ -628,12 +630,16 @@ int RouteLoop (void)
           StyleNr (Way (nd)) <= barrier_toll_booth &&
           !(Way (nd)->bits & (1 << Vehicle))) break;
       lmask <<= 2;
-    /*  if (root->remain > 2500000 && -root->heapIdx - root->remain > 2500000 &&
+      #ifdef _WIN32_WCE
+      if (root->remain > 5500000 && -root->heapIdx - root->remain > 5500000 &&
+      #else
+      if (root->remain > 25500000 && -root->heapIdx - root->remain > 25500000 &&
+      #endif
           (StyleNr (Way (nd)) == highway_residential ||
            StyleNr (Way (nd)) == highway_service ||
            StyleNr (Way (nd)) == highway_living_street ||
-           StyleNr (Way (nd)) == highway_unclassified)) continue;*/
-      /* When more than 250km from the start and the finish, ignore minor
+           StyleNr (Way (nd)) == highway_unclassified)) continue;
+      /* When more than 75km from the start and the finish, ignore minor
          roads. This reduces the number of calculations. */
       for (int dir = 0; dir < 2; dir++) {
         if (nd == root->nd && dir == root->dir) continue;
@@ -1611,7 +1617,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   k2vType k2v, wayRole; // wayRole should be a vector< struct{char*,int} > ...
   deque<int> wayNd;
   map<int, deque<int> > outer;
-  REBUILDWATCH (while (xmlTextReaderRead (xml))) {
+  REBUILDWATCH (while (xmlTextReaderRead (xml) == 1)) {
     char *name = (char *) BAD_CAST xmlTextReaderName (xml);
     //xmlChar *value = xmlTextReaderValue (xml); // always empty
     if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_ELEMENT) {
@@ -2247,7 +2253,7 @@ int SortRelations (void)
   #ifdef MKDENSITY_CSV
   int lat, lon, *cnt = (int *) calloc (1024 * 1024, sizeof (*cnt));
   #endif
-  while (xmlTextReaderRead (xml)) {
+  while (xmlTextReaderRead (xml) == 1) {
     if (xmlTextReaderNodeType (xml) == XML_READER_TYPE_ELEMENT) {
       char *name = (char *) BAD_CAST xmlTextReaderName (xml);
       

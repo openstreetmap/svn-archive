@@ -54,4 +54,9 @@ public class AppendableGpxTrackSegment implements GpxTrackSegment {
 		return length;
 	}
 
+	@Override
+	public int getUpdateCount() {
+		return size;
+	}
+
 }

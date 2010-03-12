@@ -35,4 +35,9 @@ public class SingleSegmentGpxTrack implements GpxTrack {
 		return trackSegment.length();
 	}
 
+	@Override
+	public int getUpdateCount() {
+		return trackSegment.getUpdateCount();
+	}
+
 }

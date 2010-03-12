@@ -29,7 +29,6 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
 	private final AppendableGpxTrackSegment trackSegment;
 	float speed;
 	float course;
-	String status;
 	// JLabel lbl;
 	boolean autocenter;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat(

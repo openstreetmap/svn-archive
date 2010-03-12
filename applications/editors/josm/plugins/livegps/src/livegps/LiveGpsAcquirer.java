@@ -27,7 +27,7 @@ public class LiveGpsAcquirer implements Runnable {
 	private PropertyChangeEvent lastDataEvent;
 
 	/**
-	 * Constructor, initializes the configurable settings. 
+	 * Constructor, initializes the configurable settings.
 	 */
 	public LiveGpsAcquirer() {
 		super();
@@ -203,6 +203,7 @@ public class LiveGpsAcquirer implements Runnable {
 								course = Float.NaN;
 								haveFix = true;
 							}
+							break;
 						default:
 							// not interested
 						}

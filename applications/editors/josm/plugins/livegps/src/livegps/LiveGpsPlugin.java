@@ -31,7 +31,6 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 	private Thread acquirerThread = null;
 	private JMenu lgpsmenu;
 	private JCheckBoxMenuItem lgpscapture;
-	private JMenuItem lgpscenter;
 	private JCheckBoxMenuItem lgpsautocenter;
 	private LiveGpsDialog lgpsdialog;
 	List<PropertyChangeListener> listenerQueue;

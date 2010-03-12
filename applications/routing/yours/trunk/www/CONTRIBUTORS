@@ -10,7 +10,7 @@ This is a list of people who contributed to the YOURS routing website, in chrono
   CSS fix for the navigation menu, 3 column layout.
 
 * Anonymous
-  Fix for JavaScript error in IE 6.0
+  Fix for JavaScript error in IE 6.0.
 
 * Philip Homburg
   Support for via's in routing.
@@ -19,4 +19,7 @@ This is a list of people who contributed to the YOURS routing website, in chrono
   Rewrite of JavaScript code, CSS, added JavaDoc and logo.
 
 * David Wilkins
-  HTML and CSS fixes for IE
+  HTML and CSS fixes for IE.
+  
+* Patrick Kilian
+  Add option to remove a waypoint.

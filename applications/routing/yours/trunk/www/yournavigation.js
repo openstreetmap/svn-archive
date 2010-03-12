@@ -36,6 +36,7 @@ function WaypointAdd() {
 	wypt_li.attr("class","waypoint");
 	var wypt_div= $(document.createElement("div"));
 	MyFirstWayPoint = MyFirstRoute.waypoint(MyFirstRoute.Waypoints[length -1]);
+	wypt_div.attr("id","waypoint"+MyFirstWayPoint.position);
 
 	var button = $(document.createElement("input"));
 	button.attr("type", "image");
@@ -64,17 +65,92 @@ function WaypointAdd() {
 	img.attr("title", "");
 	img.attr("style", "vertical-align:middle;");
 	img.attr("name", "via_image");
-	
+
+	var del_button = $(document.createElement("input"));
+	del_button.attr("type", "image");
+	del_button.attr("name", "via_del_image");
+	del_button.attr("src", "images/del.png");
+	del_button.attr("alt", "Remove waypoint "+ MyFirstWayPoint.position + " from the map");
+	del_button.attr("title", "Remove waypoint "+ MyFirstWayPoint.position + " from the map");
+	del_button.attr("waypointnr", MyFirstWayPoint.position);
+	del_button.attr("onclick", "elementClick(this);");
+	del_button.attr("value", "");
+	del_button.css("vertical-align", "middle");
+
 	wypt_div.attr("class", "via");
 	wypt_div.append(button);
 	//wypt_div.append(' ');
 	wypt_div.append(text);
 	wypt_div.append(img);
 	wypt_div.append('<div id="via_message'+MyFirstWayPoint.position+'" style="display:inline"></div>');
+	wypt_div.append(del_button);
 	
 	wypt_li.append(wypt_div);
 	wypt_li.insertBefore("#WaypointTo");
 	// By inserting new elements we may have moved the map
+	MyFirstMap.updateSize();
+}
+
+function WaypointRemove(waypointnr) {
+	/*
+	 * remove a waypoint from the UI and the route object
+	 */
+	// renumber in the UI
+	wypt_div = document.getElementById("waypoint"+waypointnr);
+	wypt_li = wypt_div.parentNode;
+	wypt_ul = wypt_li.parentNode;
+	tmp_wypt = wypt_li.nextSibling;
+
+	i = waypointnr;
+	while((tmp_wypt != null) && (tmp_wypt.nodeName == "LI")) {
+		tmp_div = tmp_wypt.getElementsByTagName("div")[0];
+		if((tmp_div != null) && (tmp_div.getAttribute("class") == "via")) {
+			tmp_div.setAttribute("id","waypoint_"+i);
+
+			tmp_button = tmp_div.firstChild;
+			tmp_button.setAttribute("src","markers/number" + i + ".png");
+			tmp_button.setAttribute("alt", "Click to position waypoint " + i + " on the map");
+			tmp_button.setAttribute("title", "Click to position waypoint " + i + " on the map");
+			tmp_button.setAttribute("waypointnr", i);
+
+			tmp_text = tmp_button.nextSibling;
+			tmp_text.setAttribute("waypointnr", i);
+
+			tmp_img = tmp_text.nextSibling;
+			tmp_img.setAttribute("id", "via_image"+i);
+
+			tmp_div_div = tmp_img.nextSibling;
+			tmp_div_div.setAttribute("id", "via_message"+i);
+
+			tmp_del_button = tmp_div_div.nextSibling;
+			tmp_del_button.setAttribute("alt", "Remove waypoint "+ i + " from the map");
+			tmp_del_button.setAttribute("title", "Remove waypoint "+ i + " from the map");
+			tmp_del_button.setAttribute("waypointnr", i);
+		}
+		tmp_wypt = tmp_wypt.nextSibling;
+		i++;
+	}
+
+	// remove from UI
+	wypt_ul.removeChild(wypt_li);
+
+	// delete waypoint
+	WayPoint = MyFirstRoute.Waypoints[waypointnr];
+	MyFirstRoute.Waypoints.splice(waypointnr,1);
+	WayPoint.destroy();
+
+	// renumber all further waypoints
+	i = waypointnr;
+	while(i < MyFirstRoute.Waypoints[MyFirstRoute.Waypoints.length -1]) {
+		Waypoint = MyFirstRoute.Waypoints[i];
+		lonlat = Waypoint.lonlat;
+		Waypoint.position = i;
+		Waypoint.draw(lonlat);
+		i++;
+	}
+	MyFirstRoute.End=MyFirstRoute.Waypoints[MyFirstRoute.Waypoints.length - 1];
+
+	// redraw map
 	MyFirstMap.updateSize();
 }
 
@@ -478,6 +554,9 @@ function elementClick(element) {
 			case 'via':
 				//do nothing, let the trigger handle it..
 				MyFirstWayPoint = MyFirstRoute.waypoint(element.attributes.waypointnr.value);
+				break;
+			case 'via_del_image':
+				WaypointRemove(element.attributes.waypointnr.value);
 				break;
 			case 'add waypoint':
 				WaypointAdd();

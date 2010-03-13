@@ -69,10 +69,24 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         super(info);
         initConfig();
         dataSet = new DataSet();
-        uploadHook = new OsbUploadHook();
-        dialog = new OsbDialog(this);
-        MapView.addLayerChangeListener(dialog);
-        MapView.addLayerChangeListener(this);
+    }
+
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (newFrame != null) {
+            dialog = new OsbDialog(this);
+            newFrame.addToggleDialog(dialog);
+
+            MapView.addLayerChangeListener(dialog);
+            MapView.addLayerChangeListener(this);
+            
+            uploadHook = new OsbUploadHook();
+            UploadAction.registerUploadHook(uploadHook);
+        } else {
+        	MapView.removeLayerChangeListener(this);
+        	UploadAction.unregisterUploadHook(uploadHook);
+        	uploadHook = null;
+        }
     }
 
     private void initConfig() {
@@ -192,19 +206,6 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         if(layer == null) {
             layer = new OsbLayer(osbData, "OpenStreetBugs", dialog);
             Main.main.addLayer(layer);
-        }
-    }
-
-    @Override
-    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if (oldFrame==null && newFrame!=null) { // map frame added
-            // add the dialog
-            newFrame.addToggleDialog(dialog);
-
-            // add the upload hook
-            UploadAction.registerUploadHook(uploadHook);
-        } else if (oldFrame!=null && newFrame==null ) { // map frame removed
-
         }
     }
 

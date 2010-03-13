@@ -1120,9 +1120,38 @@ sub make_overviewpng {
 sub make_indexfile {
     DEBUG("saving index data to ", $proj->{'index-file'});
     open(IF, ">" . $proj->{'index-file'});
+    print IF "\\documentclass[twocolumn,11pt]{article}
+
+\\newcommand{\\Anitem}[2]{
+#1 \\dotfill #2
+
+}
+
+\\newcommand{\\Header}[1]{
+\\vspace*{.1in}
+{\\Large \\em #1}
+
+\\vspace*{-.1in}
+\\rule{3in}{.01in}
+
+\\vspace*{.05in}
+
+}
+
+\\begin{document}
+\\Header{0-9}
+";
+
+    my $last = "[0-9]";
     foreach my $label (sort keys(%indexinfo)) {
-	print IF "$label " . join(",",keys(%{$indexinfo{$label}})) . "\n";
+        if ($label !~ /^$last/) {
+            ($last) = ($label =~ /^(.)/);
+            print IF "\\Header{$last}\n";
+        }
+        my $places = join(", ",keys(%{$indexinfo{$label}}));
+	print IF "\\Anitem{$label}{$places}\n";
     }
+    print IF "\\end{document}\n";
     close(IF);
 }
 

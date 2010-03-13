@@ -13,38 +13,6 @@
 # You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 
-# 0.03 enhanced legend, center label in areas
-# 0.04 dash styles, shaping of ways, own perl module, 
-#      only svg support, no more png (use i.e.inkscape for cmd line conversion
-#      layers of ways; draw only really closed areas
-#      getopt, embedded pdf and png creation
-# 0.05 grid implemented [-grid=INT]
-#      clip function implemented [-clip]
-#      street directory [-dir], shows grid squares if [-grid=INT] is enabled
-#      place drawing
-#      [-legend]
-# 0.06 [-help]
-#      font-families, sizes and offsets for texts
-#      ignore case when searching for given place 
-#      [-gridcolor]
-#      basic multipolygon recognition      
-#      [-bgcolor]
-#      multipolygon with holes
-#      change of style file
-# 0.07 [-tagstat] allows tag examination; statistic data about usage of tags
-#      multi label with § and #
-#      areas now with labels in center of area
-#      [-declutter]
-#      [-scale + additional parameters]
-#      [-ruler]
-#      [-rulercolor]
-# 0.08 print information paper size and paper fit
-#      icons for nodes
-#      multipolygon problems solved
-#      declutter for icons
-#      user's manual provided in pdf
-#      all color names from svg can be used, even hex triplets like #FF00FF are accepted
-#      § changed to !
 # 0.09 _lon and _lat for labes
 #      [-coords] coordinates grid 
 #      display routes
@@ -64,27 +32,25 @@
 #      more intelligent icon placement, 9 different positions around actual position
 #      ppc changed to 5.7?
 #      draw text pos new
-
+# 0.13 tagstat changed to consider sub k/v
+#      remark (COMMENT) lines for style file
+#      [-rulescaleset]
+#      way borders 
+#      tagstat separated for nodes and ways
+#
 # TODO
-# test
-# publish 0.12
-# --------------------
-# adapt tagstat for new sub-rules
-# work on output amount of lines
+# ocean rendering
+# check rendering of route symbols, rectangles?
+# ------------------
+# determine svg file size differently and faster?
 # [ ] reading rule check for right number of keys and values ! else ERROR
 # [ ] eliminate rules not needed when scale is present. remove ifs in getXYZRules
 # grid distance in meters
 # -viewpng -viewpdf -viewsvg
 # STDERR outputs
 # module for style file reading and error handling
-# color none for area / border, just print label in the middle
-# nested relations for multipolygons?
-# sub labelWay with intelligence (text dir/text length)
-# --------------------
 # style file check, color check, error messages, array for regex? Defaults
-# move parts of code to pm, even a new pm
-# sub key/value for rules
-# edges for ways?
+# nested relations for multipolygons?
 # see wiki
 # maybe prevent double labels in vicinity of each other?
 
@@ -93,11 +59,11 @@ use warnings ;
 
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.12 ;
+use OSM::mapgen 0.13 ;
 use Math::Polygon ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.12" ;
+my $version = "0.13" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -142,6 +108,7 @@ perl mapgen.pl
 -scalecolor=TEXT (set scale color; DEFAULT = black)
 -scaleset=INTEGER (1:x preset for map scale; overrides -size=INTEGER! set correct printer options!)
 -scaledpi=INTEGER (print resolution; DEFAULT = 300 dpi)
+-rulescaleset=INTEGER (determines the scale used to select rules; DEFAULT=0, meaning actual map scale is used to select rules)
 
 -ppc=<float> (pixels needed per character using font size 10; DEFAULT=5.5)
 
@@ -185,6 +152,7 @@ my $scaleOpt = 0 ;
 my $scaleDpi = 300 ;
 my $scaleColor = "black" ;
 my $scaleSet = 0 ;
+my $ruleScaleSet = 0 ;
 my $coordsOpt = 0 ;
 my $coordsExp = -2 ;
 my $coordsColor = "black" ;
@@ -224,17 +192,19 @@ my $wayIndexValue = 1 ;
 my $wayIndexColor = 2 ;
 my $wayIndexThickness = 3 ;
 my $wayIndexDash = 4 ;
-my $wayIndexFilled = 5 ;
-my $wayIndexLabel = 6 ;
-my $wayIndexLabelColor = 7 ;
-my $wayIndexLabelSize = 8 ;
-my $wayIndexLabelFont = 9 ;
-my $wayIndexLabelOffset = 10 ;
-my $wayIndexLegend = 11 ;
-my $wayIndexBaseLayer = 12 ;
-my $wayIndexIcon = 13 ;
-my $wayIndexFromScale = 14 ;
-my $wayIndexToScale = 15 ;
+my $wayIndexBorderColor =  5 ;
+my $wayIndexBorderThickness = 6 ;
+my $wayIndexFilled = 7 ;
+my $wayIndexLabel = 8 ;
+my $wayIndexLabelColor = 9 ;
+my $wayIndexLabelSize = 10 ;
+my $wayIndexLabelFont = 11 ;
+my $wayIndexLabelOffset = 12 ;
+my $wayIndexLegend = 13 ;
+my $wayIndexBaseLayer = 14 ;
+my $wayIndexIcon = 15 ;
+my $wayIndexFromScale = 16 ;
+my $wayIndexToScale = 17 ;
 my @ways = () ;
 
 my $routeIndexRoute = 0 ;
@@ -321,7 +291,8 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"scale"		=> \$scaleOpt,
 				"scaledpi:i"	=> \$scaleDpi,
 				"scalecolor:s"	=> \$scaleColor,
-				"scaleset:s"	=> \$scaleSet,
+				"scaleset:i"	=> \$scaleSet,
+				"rulescaleset:i" => \$ruleScaleSet,
 				"routelabelcolor:s"	=> \$routeLabelColor,		
 				"routelabelsize:i"	=> \$routeLabelSize,		
 				"routelabelfont:s"	=> \$routeLabelFont,		
@@ -363,7 +334,8 @@ print "ruler     = $rulerOpt\n" ;
 print "scaleOpt  = $scaleOpt\n" ;
 print "scaleCol  = $scaleColor\n" ;
 print "scaleDpi  = $scaleDpi\n" ;
-print "scaleSet  = $scaleSet\n\n" ;
+print "scaleSet  = $scaleSet\n" ;
+print "ruleScaleSet  = $ruleScaleSet\n\n" ;
 
 print "clip        = $clip (percent)\n" ;
 print "grid        = $grid (number)\n" ;
@@ -403,23 +375,26 @@ my $line = <$csvFile> ; # omit SECTION
 # READ NODE RULES
 $line = <$csvFile> ;
 while (! grep /^\"SECTION/, $line) {
-	my ($key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" (\d+) (\d) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
-	# print "N $key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale\n" ; 
-	push @nodes, [$key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale] ;
-	if ($iconSize>$iconMax) { $iconMax = $iconSize ; } 
+	if (! grep /^\"COMMENT/i, $line) {
+		my ($key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" (\d+) (\d) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
+		# print "N $key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale\n" ; 
+		push @nodes, [$key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale] ;
+		if ($iconSize>$iconMax) { $iconMax = $iconSize ; } 
+	}
 	$line = <$csvFile> ;
 }
 
 # READ WAY RULES
 $line = <$csvFile> ; # omit SECTION
 while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
-	my ($key, $value, $color, $thickness, $dash, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale) = 
-		($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" ([\d\-]+) (\d) (\d) \"(.+)\" (\d+) (\d+)/ ) ;
-	# print "W $key, $value, $color, $thickness, $dash, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale\n" ; 
-	push @ways, [$key, $value, $color, $thickness, $dash, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale] ;
-
-	if (($areaIcon ne "") and ($areaIcon ne "none")) { addAreaIcon ($areaIcon) ; }
-
+	if (! grep /^\"COMMENT/i, $line) {
+		# print "way line: $line\n" ;
+		my ($key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale) = 
+			($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) (\d+) \"(.+)\" (\d+) (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" ([\d\-]+) (\d) (\d) \"(.+)\" (\d+) (\d+)/ ) ;
+		# print "W $key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale\n" ; 
+		push @ways, [$key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale] ;
+		if (($areaIcon ne "") and ($areaIcon ne "none")) { addAreaIcon ($areaIcon) ; }
+	}
 	$line = <$csvFile> ;
 }
 
@@ -427,16 +402,18 @@ while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
 $line = <$csvFile> ; # omit SECTION
 #print "ROUTE LINE: $line\n" ;
 while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
-	#print "ROUTE LINE: $line\n" ;
-	my ($route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
-	$opacity = $opacity / 100 ;
-	push @routes, [$route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale] ;	$line = <$csvFile> ;}
+	if (! grep /^\"COMMENT/i, $line) {
+		#print "ROUTE LINE: $line\n" ;
+		my ($route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
+		$opacity = $opacity / 100 ;
+		push @routes, [$route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale] ;	}
+	$line = <$csvFile> ;}
 close ($csvFile) ;
 
 if ($verbose eq "1") {
 	print "WAYS/AREAS\n" ;
 	foreach my $way (@ways) {
-		printf "%-20s %-20s %-10s %-6s %-6s %-6s %-10s %-10s %-10s %-10s %-6s %-6s %-6s %-20s %-10s %-10s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6], $way->[7], $way->[8], $way->[9], $way->[10], $way->[11], $way->[12], $way->[13], $way->[14], $way->[15] ;
+		printf "%-20s %-20s %-10s %-6s %-6s %-10s %-6s %-6s %-10s %-10s %-10s %-10s %-6s %-6s %-6s %-20s %-10s %-10s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6], $way->[7], $way->[8], $way->[9], $way->[10], $way->[11], $way->[12], $way->[13], $way->[14], $way->[15], $way->[16], $way->[17] ;
 	}
 	print "\n" ;
 	print "NODES\n" ;	foreach my $node (@nodes) {		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-20s %6s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11], $node->[12], $node->[13] ;	}
@@ -612,7 +589,6 @@ if ($scaleSet != 0) {
 	print "INFO: set print resolution to $scaleDpi dpi!\n\n" ;
 }
 
-
 initGraph ($size, $lonMin, $latMin, $lonMax, $latMax, $bgColor) ;
 if ($onewayOpt eq "1") { initOneways ($onewayColor) ; }
 
@@ -622,6 +598,13 @@ printf "INFO: map width : %4.1f (cm)\n", $w ;
 printf "INFO: map height: %4.1f (cm)\n", $h ;
 my $scaleValue = getScale ($scaleDpi) ;
 print "INFO: map scale 1 : $scaleValue\n\n" ;
+
+if ($ruleScaleSet == 0) { 
+	$ruleScaleSet = $scaleValue ; 
+}
+else {
+	print "INFO: using map rules for scale = $ruleScaleSet\n\n" ;
+}
 
 processRoutes () ;
 
@@ -633,7 +616,7 @@ print "draw background areas...\n" ;
 foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 	if ($wayId>-100000000) {
 
-		my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $scaleValue) ;
+		my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
 		if (defined $test) {
 			if ($test->[$wayIndexBaseLayer] != 1) { undef $test ; }
 		}
@@ -648,7 +631,8 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 						my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 						#print "AREA name $name $x $y\n" ;
 						#print "$x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont]\n" ;
-						drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
+						# drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
+						placeLabelAndIcon ($x, $y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0) ;
 					}
 				}
 			}
@@ -659,7 +643,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 print "draw multipolygons...\n" ;
 foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 	if ($wayId <= -100000000) {
-		my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $scaleValue) ;
+		my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
 		if (defined $test) {
 			drawAreaMP ($test->[$wayIndexColor], $test->[$wayIndexIcon], \@{$memWayPaths{$wayId}}, \%lon, \%lat  ) ;
 			# LABELS
@@ -668,7 +652,8 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 			if ($name ne "") {
 				my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 				#print "MP name $name $x $y\n" ;
-				drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
+				# drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
+				placeLabelAndIcon ($x,$y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0) ;
 			}
 		} #if
 	} # if
@@ -686,7 +671,7 @@ if ($multiOnly eq "1") { 	# clear all data so nothing else will be drawn
 print "draw nodes...\n" ;
 foreach my $nodeId (keys %memNodeTags) {
 
-	my $test = getNodeRule (\@{$memNodeTags{$nodeId}}, \@nodes, $scaleValue) ;
+	my $test = getNodeRule (\@{$memNodeTags{$nodeId}}, \@nodes, $ruleScaleSet) ;
 	if (defined $test) {
 		$dirName = getValue ("name", \@{$memNodeTags{$nodeId}}) ;
 		if ( ($poiOpt eq "1") and ($dirName ne "") ){
@@ -699,18 +684,14 @@ foreach my $nodeId (keys %memNodeTags) {
 		if ($test->[$nodeIndexThickness] > 0) {
 			drawNodeDot ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexColor], $test->[$nodeIndexThickness]) ;
 		}
-		if ($test->[$nodeIndexIcon] ne "none") {
-			drawIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $declutterOpt, 0) ;
-		}
-
-		if ($test->[$nodeIndexLabel] ne "none") {
+		if ( ($test->[$nodeIndexLabel] ne "none") or ($test->[$nodeIndexIcon] ne "none") ) {
 			my $name = "" ; my $ref1 ;
 			($name, $ref1) = createLabel (\@{$memNodeTags{$nodeId}}, $test->[$nodeIndexLabel], $lon{$nodeId}, $lat{$nodeId}) ;
 			my @names = @$ref1 ;
-			if ($name ne "") {
-				drawTextPos ($lon{$nodeId}, $lat{$nodeId}, 0, -$test->[$nodeIndexLabelOffset], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $declutterOpt, $ppc) ;
-			}
-		} # draw label
+
+			placeLabelAndIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexThickness], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $ppc, 
+				$test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize]) ;
+		}
 	} # defined $test
 } # nodes
 
@@ -739,11 +720,17 @@ foreach my $wayId (keys %memWayTags) {
 	foreach (-5,-4,-3,-2,-1,0,1,2,3,4,5) { if ($layer == $_) { $found = 1 ; } }
 	if ($found == 0) { $layer = 0 ; }
 
-	my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $scaleValue) ;
+	my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
 	if (defined $test) {
 		#print "    tag/scale match\n" ;
 		if ($test->[$wayIndexFilled] eq "0") {
 			#print "      drawing way $test->[$wayIndexColor], $test->[$wayIndexThickness] ...\n" ;
+
+			if ( ($test->[$wayIndexBorderThickness] > 0) and ($test->[$wayIndexBorderColor ne "none"]) and ($tunnel ne "yes") and ($bridge ne "yes") ) {
+				drawWay ($layer-.3, $test->[$wayIndexBorderColor], $test->[$wayIndexThickness]+2*$test->[$wayIndexBorderThickness], 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+			}
+
+
 			if ($bridge eq "yes") {
 				drawWayBridge ($layer-.04, "black", $test->[$wayIndexThickness]+4, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 				drawWayBridge ($layer-.02, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
@@ -805,7 +792,8 @@ foreach my $wayId (keys %memWayTags) {
 									$x += $lon{$node} ; $y += $lat{$node} ; $count++ ;
 								}
 								$x = $x / $count ; $y = $y / $count ;
-								drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
+								# drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
+								placeLabelAndIcon ($x, $y, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0) ;
 							}
 						}
 					} # draw label
@@ -909,48 +897,101 @@ if ($poiOpt eq "1") {
 }
 
 if ($tagStatOpt eq "1") {
-	my %usedTags = () ; my %rules = () ;
-	print "\n--------\nTAG STAT for nodes and ways\n--------\n" ;
-	print "\nOMITTED KEYS\n@noListTags\n\n" ;
+	my $tagFile ;
+	my $tagName = $svgName ;
+	$tagName =~ s/\.svg/\_tagstat.txt/ ;
+	print "creating tagstat file $tagName ...\n" ;
+	open ($tagFile, ">", $tagName) or die ("can't open tagstat file\n") ;
+
+	my %usedTagsNodes = () ; my %rulesNodes = () ;
+	my %usedTagsWays = () ; my %rulesWays = () ;
+	print $tagFile "\n--------\nTAG STAT for nodes and ways\n--------\n" ;
+	print $tagFile "\nOMITTED KEYS\n@noListTags\n\n" ;
 	foreach my $node (keys %memNodeTags) { 
-		foreach my $tag (@{$memNodeTags{$node}}) { $usedTags{$tag->[0]}{$tag->[1]}++ ;}
+		foreach my $tag (@{$memNodeTags{$node}}) { $usedTagsNodes{$tag->[0]}{$tag->[1]}++ ;}
 	}
 	foreach my $way (keys %memWayTags) { 
-		foreach my $tag (@{$memWayTags{$way}}) { $usedTags{$tag->[0]}{$tag->[1]}++ ;}
+		foreach my $tag (@{$memWayTags{$way}}) { $usedTagsWays{$tag->[0]}{$tag->[1]}++ ;}
 	}
-	foreach my $delete (@noListTags) { delete $usedTags{$delete} ; }
-	foreach my $rule (@ways) { $rules{$rule->[$wayIndexTag]}{$rule->[$wayIndexValue]} = 1 ;}
-	foreach my $rule (@nodes) { $rules{$rule->[$nodeIndexTag]}{$rule->[$nodeIndexValue]} = 1 ;}
+	foreach my $delete (@noListTags) { 
+		delete $usedTagsNodes{$delete} ; 
+		delete $usedTagsWays{$delete} ; 
+	}
 
-	my @sorted = () ;
-	foreach my $k (sort keys %usedTags) {
-		foreach my $v (sort keys %{$usedTags{$k}}) {
-			push @sorted, [$usedTags{$k}{$v}, $k, $v] ;
+
+	foreach my $rule (@ways) { 
+		my (@keys) = split /\|/, $rule->[$wayIndexTag] ;
+		my (@values) = split /\|/, $rule->[$wayIndexValue] ;
+		for (my $i=0; $i<=$#keys; $i++) {
+			$rulesWays{$keys[$i]}{$values[$i]} = 1 ;
 		}
 	}
-	print "TOP 20 LIST:\n" ;
-	@sorted = sort { $a->[0] <=> $b->[0]} @sorted ;
-	@sorted = reverse @sorted ;
-	my $i = 0 ; my $max = 19 ;
-	if (scalar @sorted <20) { $max = $#sorted ; }
+	foreach my $rule (@nodes) { 
+		my @keys = split /\|/, $rule->[$nodeIndexTag] ;
+		my @values = split /\|/, $rule->[$nodeIndexValue] ;
+		for (my $i=0; $i<=$#keys; $i++) {
+			$rulesNodes{$keys[$i]}{$values[$i]} = 1 ;
+		}
+	}
+
+	my @sortedNodes = () ;
+	foreach my $k (sort keys %usedTagsNodes) {
+		foreach my $v (sort keys %{$usedTagsNodes{$k}}) {
+			push @sortedNodes, [$usedTagsNodes{$k}{$v}, $k, $v] ;
+		}
+	}
+	my @sortedWays = () ;
+	foreach my $k (sort keys %usedTagsWays) {
+		foreach my $v (sort keys %{$usedTagsWays{$k}}) {
+			push @sortedWays, [$usedTagsWays{$k}{$v}, $k, $v] ;
+		}
+	}
+
+
+	print $tagFile "TOP 30 LIST NODES:\n" ;
+	@sortedNodes = sort { $a->[0] <=> $b->[0]} @sortedNodes ;
+	@sortedNodes = reverse @sortedNodes ;
+	my $i = 0 ; my $max = 29 ;
+	if (scalar @sortedNodes <30) { $max = $#sortedNodes ; }
 	for ($i = 0; $i<=$max; $i++) {
 		my $ruleText = "-" ;
-		if (defined $rules{$sorted[$i]->[1]}{$sorted[$i]->[2]}) { $ruleText = "RULE" ; }
-		printf "%-25s %-35s %6i %-6s\n", $sorted[$i]->[1], $sorted[$i]->[2], $sorted[$i]->[0], $ruleText ;
+		if (defined $rulesNodes{$sortedNodes[$i]->[1]}{$sortedNodes[$i]->[2]}) { $ruleText = "RULE" ; }
+		printf $tagFile "%-25s %-35s %6i %-6s\n", $sortedNodes[$i]->[1], $sortedNodes[$i]->[2], $sortedNodes[$i]->[0], $ruleText ;
 	}
-	print "\n" ;
+	print $tagFile "\n" ;
 
-	print "LIST:\n" ;
-	foreach my $k (sort keys %usedTags) {
-		foreach my $v (sort keys %{$usedTags{$k}}) {
+	print $tagFile "TOP 30 LIST WAYS:\n" ;
+	@sortedWays = sort { $a->[0] <=> $b->[0]} @sortedWays ;
+	@sortedWays = reverse @sortedWays ;
+	$i = 0 ; $max = 29 ;
+	if (scalar @sortedWays <30) { $max = $#sortedWays ; }
+	for ($i = 0; $i<=$max; $i++) {
+		my $ruleText = "-" ;
+		if (defined $rulesWays{$sortedWays[$i]->[1]}{$sortedWays[$i]->[2]}) { $ruleText = "RULE" ; }
+		printf $tagFile "%-25s %-35s %6i %-6s\n", $sortedWays[$i]->[1], $sortedWays[$i]->[2], $sortedWays[$i]->[0], $ruleText ;
+	}
+	print $tagFile "\n" ;
+
+	print $tagFile "LIST NODES:\n" ;
+	foreach my $k (sort keys %usedTagsNodes) {
+		foreach my $v (sort keys %{$usedTagsNodes{$k}}) {
 			my $ruleText = "-" ;
-			if (defined $rules{$k}{$v}) { $ruleText = "RULE" ; }
-			printf "%-25s %-35s %6i %-6s\n", $k, $v, $usedTags{$k}{$v}, $ruleText ;
+			if (defined $rulesNodes{$k}{$v}) { $ruleText = "RULE" ; }
+			printf $tagFile "%-25s %-35s %6i %-6s\n", $k, $v, $usedTagsNodes{$k}{$v}, $ruleText ;
 		}
 	}
-	print "\n" ;
-}
-
+	print $tagFile "\n" ;
+	print $tagFile "LIST WAYS:\n" ;
+	foreach my $k (sort keys %usedTagsWays) {
+		foreach my $v (sort keys %{$usedTagsWays{$k}}) {
+			my $ruleText = "-" ;
+			if (defined $rulesWays{$k}{$v}) { $ruleText = "RULE" ; }
+			printf $tagFile "%-25s %-35s %6i %-6s\n", $k, $v, $usedTagsWays{$k}{$v}, $ruleText ;
+		}
+	}
+	print $tagFile "\n" ;
+	close ($tagFile) ;
+}
 $time1 = time() ;
 print "\n$programName finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
 
@@ -987,12 +1028,12 @@ sub createLegend {
 	my $sizeLegend = 20 ;
 	
 	foreach my $node (@nodes) { 
-		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $scaleValue) and ($node->[$nodeIndexToScale] >= $scaleValue) ) { 
+		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $ruleScaleSet) and ($node->[$nodeIndexToScale] >= $ruleScaleSet) ) { 
 			$count++ ; 
 		}
 	}
 	foreach my $way (@ways) { 
-		if ( ($way->[$wayIndexLegend] == 1)  and ($way->[$wayIndexFromScale] <= $scaleValue) and ($way->[$wayIndexToScale] >= $scaleValue) ) { 
+		if ( ($way->[$wayIndexLegend] == 1)  and ($way->[$wayIndexFromScale] <= $ruleScaleSet) and ($way->[$wayIndexToScale] >= $ruleScaleSet) ) { 
 			$count++ ; 
 		}  
 	}
@@ -1005,7 +1046,7 @@ sub createLegend {
 			0, 0) ;
 	
 	foreach my $node (@nodes) { 
-		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $scaleValue) and ($node->[$nodeIndexToScale] >= $scaleValue) ) { 
+		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $ruleScaleSet) and ($node->[$nodeIndexToScale] >= $ruleScaleSet) ) { 
 			drawNodeDotPix ($dotX, $currentY, $node->[$nodeIndexColor], $node->[$nodeIndexThickness]) ;
 			drawTextPix ($textX, $currentY+$textOffset, $node->[$nodeIndexValue], "black", $sizeLegend, "Arial") ;
 			$currentY += $step ;
@@ -1013,8 +1054,11 @@ sub createLegend {
 	}
 
 	foreach my $way (@ways) { 
-		if ( ($way->[$wayIndexLegend] == 1)  and ($way->[$wayIndexFromScale] <= $scaleValue) and ($way->[$wayIndexToScale] >= $scaleValue) ) { 
+		if ( ($way->[$wayIndexLegend] == 1)  and ($way->[$wayIndexFromScale] <= $ruleScaleSet) and ($way->[$wayIndexToScale] >= $ruleScaleSet) ) { 
 			if ($way->[$wayIndexFilled] == 0) {
+				if ( ($way->[$wayIndexBorderThickness] > 0) and ($way->[$wayIndexBorderColor ne "none"]) ) {
+					drawWayPix ($way->[$wayIndexBorderColor], $way->[$wayIndexThickness]+2*$way->[$wayIndexBorderThickness], 0, $wayStartX, $currentY, $wayEndX, $currentY) ;
+				}
 				drawWayPix ($way->[$wayIndexColor], $way->[$wayIndexThickness], $way->[$wayIndexDash], $wayStartX, $currentY, $wayEndX, $currentY) ;
 			} 
 			else {
@@ -1443,7 +1487,7 @@ sub isIn {
 			my $routeType = getValue ("route", \@{$memRelationTags{$relId}}) ;
 
 			foreach my $test (@routes) {
-				if ( ($routeType eq $test->[$routeIndexRoute]) and ( $test->[$routeIndexFromScale] <= $scaleValue) and ( $test->[$routeIndexToScale]>= $scaleValue) ) {
+				if ( ($routeType eq $test->[$routeIndexRoute]) and ( $test->[$routeIndexFromScale] <= $ruleScaleSet) and ( $test->[$routeIndexToScale]>= $ruleScaleSet) ) {
 
 					# new route detected
 					if ($verbose eq "1" ) { print "rule found for $relId, $routeType.\n" ;	}
@@ -1559,7 +1603,8 @@ sub isIn {
 
 			foreach my $iconName (keys %{$wayRouteIcons{$w}}) {
 				# print "  $w $offset ICON $iconName drawn\n" ;
-				drawIcon ($lon{$node}, $lat{$node}, $iconName, 0, 0, $declutterOpt, $offset) ;
+				# drawIcon ($lon{$node}, $lat{$node}, $iconName, 0, 0, $declutterOpt, $offset) ;
+				placeLabelAndIcon ($lon{$node}, $lat{$node}, 0, "", "none", 0, "", $ppc, $iconName, 0, 0) ;
 				$offset += $routeIconDist ;
 			}
 		}

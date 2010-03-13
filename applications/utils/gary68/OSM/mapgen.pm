@@ -80,7 +80,7 @@ use GD ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.12' ;
+$VERSION = '0.13' ;
 
 require Exporter ;
 
@@ -89,6 +89,7 @@ require Exporter ;
 @EXPORT = qw ( 		addAreaIcon
 			addOnewayArrows
 			center
+			placeLabelAndIcon
 			convert
 			createLabel
 			declutterStat
@@ -101,7 +102,6 @@ require Exporter ;
 			drawHead 
 			drawFoot 
 			drawGrid
-			drawIcon
 			drawLegend 
 			drawNodeDot 
 			drawNodeDotRouteStops 
@@ -111,7 +111,6 @@ require Exporter ;
 			drawRuler 
 			drawTextPix 
 			drawTextPix2 
-			drawTextPos 
 			drawWay 
 			drawWayBridge 
 			drawWayPix 
@@ -131,7 +130,7 @@ require Exporter ;
 #
 
 my %dashStyle = () ;
-$dashStyle{1} = "15,5" ;
+$dashStyle{1} = "15,5" ; # for tracks, path etc.
 $dashStyle{2} = "11,5" ;
 $dashStyle{3} = "7,5" ;
 $dashStyle{4} = "3,5" ;
@@ -140,10 +139,16 @@ $dashStyle{11} = "4,4" ;
 $dashStyle{12} = "6,6" ;
 $dashStyle{13} = "8,8" ;
 $dashStyle{14} = "10,10" ;
-$dashStyle{20} = "0,2,0,4" ;
+$dashStyle{20} = "0,2,0,4" ; # for borders
 $dashStyle{21} = "0,4,0,8" ;
 $dashStyle{22} = "0,6,0,12" ;
 $dashStyle{23} = "0,8,0,16" ;
+$dashStyle{30} = "1,1" ; # for steps
+$dashStyle{31} = "2,2" ;
+$dashStyle{32} = "3,3" ;
+$dashStyle{33} = "1,3" ;
+$dashStyle{34} = "1,5" ;
+$dashStyle{35} = "2,5" ;
 
 my $lineCap = "round" ;
 my $lineJoin = "round" ;
@@ -229,71 +234,6 @@ sub gridSquare {
 	return (chr($xi+64) . $yi) ;
 }
 
-sub drawIcon {
-#
-# draws icon for poi at given location. file must be png, or other supported format
-#
-	my ($lon, $lat, $icon, $sizeX, $sizeY, $declutter, $offset) = @_ ;
-	my ($x, $y) = convert ($lon, $lat) ;
-	my $positionFound = 0 ;
-	my $positionMoved = 0 ;
-	my $sizeX1 = $sizeX ; if ($sizeX1 == 0) { $sizeX1 = 20 ; }
-	my $sizeY1 = $sizeY ; if ($sizeY1 == 0) { $sizeY1 = 20 ; }
-	my ($x1, $y1) ;
-
-	$numIcons++ ;
-
-	# print "draw icon $icon\n" ;
-	# print "  node position $x, $y\n" ;
-
-	# drawNodeDotPix ($x-15, $y-15, "black", 2) ;
-	# drawNodeDotPix ($x-15, $y+15, "black", 2) ;
-	# drawNodeDotPix ($x+15, $y-15, "black", 2) ;
-	# drawNodeDotPix ($x+15, $y+15, "black", 2) ;
-
-	if ($declutter eq "1") {
-		# initial pos for upper left corner of icon
-		$x = $x - $sizeX1/2 ;
-		$y = $y - $sizeY1/2 ; 
-		# print "  icon top left corner initially: $x, $y\n" ;
-
-		LAB5: foreach my $xFactor (0, -1, 1) {
-			foreach my $yFactor (0, -1, 1) {
-				$x1 = $x + $xFactor * $sizeX1/2 ;
-				$y1 = $y + $yFactor * $sizeY1/2 ;
-				# print "  testing pos TLC: $x1, $y1\n" ;
-				if ( ! areaOccupied ($x1, $x1+$sizeX1, $y1+$sizeY, $y1) ) {
-					# print "    FOUND\n" ;
-					$positionFound = 1 ;
-					if ( ($xFactor != 0) or ($yFactor != 0) ) {
-						$positionMoved = 1 ;
-					}
-					last LAB5 ;
-				}
-			}
-		}
-
-	}
-	else {
-		$x1 = $x - $sizeX1/2 ;
-		$y1 = $y - $sizeY1/2 ; $y = $y - $offset ;
-		$positionFound = 1 ;
-	}
-
-	if ($positionFound) {
-		push @svgOutputIcons, svgElementIcon ($x1, $y1, $icon, $sizeX, $sizeY) ;
-		occupyArea ($x1, $x1+$sizeX1, $y1+$sizeY, $y1) ;
-		# print "  area occupied: $x1, $x1+$sizeX1, $y1+$sizeY, $y1\n" ;
-		if ($positionMoved) {
-			# print "WARNING: icon $icon MOVED to prevent clutter!\n" ;
-			$numIconsMoved++ ;
-		}
-	}
-	else {
-		# print "WARNING: icon $icon OMITTED to prevent clutter!\n" ;
-		$numIconsOmitted++ ;
-	}
-}
 
 
 sub occupyArea {
@@ -369,132 +309,6 @@ sub drawFoot {
 	push @svgOutputText, svgElementText (20, ($sizeY-20), $text, $size, $font, $col) ;
 }
 
-
-sub drawTextPos {
-#
-# draws text at given real world coordinates. however an offset can be given for not to interfere with node dot i.e.
-#
-	my ($lon, $lat, $offX, $offY, $text, $col, $size, $font, $declutter, $ppc) = @_ ;
-	my ($x, $y) = convert ($lon, $lat) ;
-
-	$numLabels++ ;
-
-	if ($declutter eq "1") {
-		# print "draw text pos initial coordinates: $x, $y\n" ;
-		my $positionFound = 0 ;
-		# split label -> lineNumber and Lines
-		my ($ref) = splitLabel ($text) ;
-		my (@lines) = @$ref ;
-		# foreach my $line (@lines) { print "  line: $line\n" ; }
-		my $numLines = scalar @lines ;
-		my $maxTextLenPix = 0 ;
-		my $orientation = "" ;
-		my $lineDist = 2 ;
-		my $tries = 0 ;
-
-		foreach my $line (@lines) {
-			my $len = length ($line) * $ppc / 10 * $size ; # in pixels
-			if ($len > $maxTextLenPix) { $maxTextLenPix = $len ; }
-		}
-		# print "  max text len pix: $maxTextLenPix\n" ;
-
-		# try different positions
-		my ($x1, $x2, $y1, $y2) ;
-
-		# centered	
-		# print "  try centered\n" ;
-		LAB3: foreach my $offsetY (2, 5, 10, 15, 20, -5, -10, -15) {
-			$tries ++ ;
-			$orientation = "centered" ;
-			$x1 = $x - $maxTextLenPix/2 ;
-			$x2 = $x + $maxTextLenPix/2 ;
-			$y2 = $y + $offsetY ;
-			$y1 = $y2 + ($size+$lineDist) * $numLines ;
-			# print "  try $x1, $x2, $y1, $y2\n" ;
-			if (!areaOccupied ($x1, $x2, $y1, $y2)) {
-				# print "    free pos FOUND\n" ;
-				$positionFound = 1 ;
-				last LAB3 ;
-			} 
-		}
-
-		# left bound
-		if (!$positionFound) {
-			# print "  try aligned left\n" ;
-			LAB4: foreach my $offsetY (-10, -15, -5, 5) {
-				$orientation = "left" ;
-				$x1 = $x + 17 ;
-				$x2 = $x1 + 17 + $maxTextLenPix ;
-				$y2 = $y + $offsetY ;
-				$y1 = $y2 + ($size+$lineDist) * $numLines ;
-				# print "  try $x1, $x2, $y1, $y2\n" ;
-				if (!areaOccupied ($x1, $x2, $y1, $y2)) {
-					# print "    free pos FOUND\n" ;
-					$positionFound = 1 ;
-					last LAB4 ;
-				} 
-			}
-		}
-
-		if (!$positionFound) {
-			# print "  try aligned left\n" ;
-			LAB9: foreach my $offsetY (-10, -15, -5, 5) {
-				$orientation = "right" ;
-				$x1 = $x - 17 - $maxTextLenPix ;
-				$x2 = $x1 + $maxTextLenPix ;
-				$y2 = $y + $offsetY ;
-				$y1 = $y2 + ($size+$lineDist) * $numLines ;
-				# print "  try $x1, $x2, $y1, $y2\n" ;
-				if (!areaOccupied ($x1, $x2, $y1, $y2)) {
-					# print "    free pos RIGHT ALND FOUND\n" ;
-					$positionFound = 1 ;
-					last LAB9 ;
-				} 
-			}
-		}
-
-		if ($positionFound == 1) {
-
-			for (my $i=0; $i<=$#lines; $i++) {			
-				my @points = ($x1, $y2+($i+1)*($size+$lineDist), $x2, $y2+($i+1)*($size+$lineDist)) ;
-				my $pathName = "LabelPath" . $labelPathId ; 
-				$labelPathId++ ;
-				push @svgOutputDef, svgElementPath ($pathName, @points) ;
-				if ($orientation eq "centered") {
-					push @svgOutputPathText, svgElementPathText ($col, $size, $font, $lines[$i], $pathName, 0) ;
-				}
-				if ($orientation eq "left") {
-					push @svgOutputPathText, svgElementPathTextLeft ($col, $size, $font, $lines[$i], $pathName, 0) ;
-				}
-				if ($orientation eq "right") {
-					push @svgOutputPathText, svgElementPathTextRight ($col, $size, $font, $lines[$i], $pathName, 0) ;
-				}
-			}
-
-			occupyArea ($x1, $x2, $y1, $y2) ;
-			# drawNodeDotPix ($x1, $y1, "black", 1) ;
-			# drawNodeDotPix ($x1, $y2, "black", 1) ;
-			# drawNodeDotPix ($x2, $y1, "black", 1) ;
-			# drawNodeDotPix ($x2, $y2, "black", 1) ;
-
-			if ($tries > 1) {
-				# print "WARNING: label \"$text\" MOVED to prevent clutter!\n" ;
-				$numLabelsMoved++ ;
-			}
-		} # position found
-		else {
-			# print "WARNING: label \"$text\" OMITTED to prevent clutter!\n" ;
-			$numLabelsOmitted++ ;
-		}
-	} # declutter
-	else { 
-		# no linesplit, default position
-		$x += $offX ;
-		$y = $y - $offY ;
-		push @svgOutputText, svgElementText ($x, $y, $text, $size, $font, $col) ;
-	}
-
-}
 
 
 sub drawTextPix {
@@ -1334,6 +1148,174 @@ sub declutterStat {
 	$out .= "$numLabels labels drawn.\n" ; 
 	$out .= "  $numLabelsMoved moved. ($perc3 %)\n" ;
 	$out .= "  $numLabelsOmitted omitted. ($perc4 %)\n" ;
+}
+
+sub placeLabelAndIcon {
+	my ($lon, $lat, $thickness, $text, $color, $textSize, $font, $ppc, $icon, $iconSizeX, $iconSizeY) = @_ ;
+
+	my ($x, $y) = convert ($lon, $lat) ; # center !
+
+
+	my ($ref) = splitLabel ($text) ;
+	my (@lines) = @$ref ;
+	my $numLines = scalar @lines ;
+	my $maxTextLenPix = 0 ;
+	my $orientation = "" ;
+	my $lineDist = 2 ;
+	my $tries = 0 ;
+
+	foreach my $line (@lines) {
+		my $len = length ($line) * $ppc / 10 * $textSize ; # in pixels
+		if ($len > $maxTextLenPix) { $maxTextLenPix = $len ; }
+	}
+	my $spaceTextX = $maxTextLenPix ;
+	my $spaceTextY = $numLines * ($lineDist+$textSize) ;
+
+
+	if ($icon ne "none") {
+		$numIcons++ ;
+		# space for icon?
+			my $sizeX1 = $iconSizeX ; if ($sizeX1 == 0) { $sizeX1 = 20 ; }
+			my $sizeY1 = $iconSizeY ; if ($sizeY1 == 0) { $sizeY1 = 20 ; }
+			my $iconX = $x - $sizeX1/2 ; # top left corner
+			my $iconY = $y - $sizeY1/2 ; 
+
+			if ( ! areaOccupied ($iconX, $iconX+$sizeX1, $iconY+$sizeY1, $iconY) ) {
+				push @svgOutputIcons, svgElementIcon ($iconX, $iconY, $icon, $sizeX1, $sizeY1) ;
+				occupyArea ($iconX, $iconX+$sizeX1, $iconY+$sizeY1, $iconY) ;
+
+				# label text?
+				if ($text ne "") {
+					$numLabels++ ;
+
+
+					$sizeX1 += 1 ; $sizeY1 += 1 ;
+
+					my ($x1, $x2, $y1, $y2) ;
+					# $x, $y centered 
+					# yes, check if space for label, choose position, draw
+					# no, count omitted text
+
+					my @positions = () ; my $positionFound = 0 ;
+					# pos 1 centered below
+					$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y + $sizeY1/2 + $spaceTextY ; $y2 = $y + $sizeY1/2 ; $orientation = "centered" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+					# pos 2/3 to the right, bottom, top
+					$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y1 = $y + $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "left" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+					$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y2 = $y - $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "left" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+					# pos 4 centered upon
+					$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y - $sizeY1/2 ; $y2 = $y - $sizeY1/2 - $spaceTextY ; $orientation = "centered" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+					# pos 5/6 to the right, below and upon
+					$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y2 = $y + $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "left" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+					$x1 = $x + $sizeX1/2 ; $x2 = $x + $sizeX1/2 + $spaceTextX ; $y1 = $y - $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "left" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+					# left normal, bottom, top
+					$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y1 = $y + $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "right" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+					$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y2 = $y - $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "right" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+					# left corners, bottom, top
+					$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y2 = $y + $sizeY1/2 ; $y1 = $y2 + $spaceTextY ; $orientation = "right" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+					$x1 = $x - $sizeX1/2 - $spaceTextX ; $x2 = $x - $sizeX1/2 ; $y1 = $y - $sizeY1/2 ; $y2 = $y1 - $spaceTextY ; $orientation = "right" ; 
+					push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+
+					$tries = 0 ;
+					LABB: foreach my $pos (@positions) {
+						$tries++ ;
+						$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines, \@lines, $color, $textSize, $font, $lineDist) ;
+						if ($positionFound == 1) {
+							last LABB ;
+						}
+					}
+					if ($positionFound == 0) { $numLabelsOmitted++ ; }
+					if ($tries > 1) { $numLabelsMoved++ ; }
+				}
+			}
+			else {
+				# no, count omitted
+				$numIconsOmitted++ ;
+			}
+	}
+	else { # only text
+		my ($x1, $x2, $y1, $y2) ;
+		# x1, x2, y1, y2
+		# left, right, bottom, top		
+		# choose space for text, draw
+		# count omitted
+
+		$numLabels++ ;
+		my @positions = () ;
+		$x1 = $x + $thickness ; $x2 = $x + $thickness + $spaceTextX ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "left" ; 
+		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+		$x1 = $x + $thickness ; $x2 = $x + $thickness + $spaceTextX ; $y1 = $y + $spaceTextY ; $y2 = $y ; $orientation = "left" ; 
+		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+		$x1 = $x - ($thickness + $spaceTextX) ; $x2 = $x - $thickness ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "right" ; 
+		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+		$x1 = $x - ($thickness + $spaceTextX) ; $x2 = $x - $thickness ; $y1 = $y ; $y2 = $y - $spaceTextY ; $orientation = "right" ; 
+		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+		$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y - $thickness ; $y2 = $y - ($thickness + $spaceTextY) ; $orientation = "centered" ; 
+		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+		$x1 = $x - $spaceTextX/2 ; $x2 = $x + $spaceTextX/2 ; $y1 = $y + $thickness + $spaceTextY ; $y2 = $y + $thickness ; $orientation = "centered" ; 
+		push @positions, [$x1, $x2, $y1, $y2, $orientation] ;
+
+		my $positionFound = 0 ;
+		$tries = 0 ;
+		LABA: foreach my $pos (@positions) {
+			$tries++ ;
+			# print "$lines[0]   $pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines\n" ;
+			$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines, \@lines, $color, $textSize, $font, $lineDist) ;
+			if ($positionFound == 1) {
+				last LABA ;
+			}
+		}
+		if ($positionFound == 0) { $numLabelsOmitted++ ; }
+		if ($tries > 1) { $numLabelsMoved++ ; }
+	}
+}
+
+
+sub checkAndDrawText {
+	my ($x1, $x2, $y1, $y2, $orientation, $numLines, $ref, $col, $size, $font, $lineDist) = @_ ;
+	my @lines = @$ref ;
+
+	if (!areaOccupied ($x1, $x2, $y1, $y2)) {
+
+		for (my $i=0; $i<=$#lines; $i++) {
+			my @points = ($x1, $y2+($i+1)*($size+$lineDist), $x2, $y2+($i+1)*($size+$lineDist)) ;
+			my $pathName = "LabelPath" . $labelPathId ; 
+			$labelPathId++ ;
+			push @svgOutputDef, svgElementPath ($pathName, @points) ;
+			if ($orientation eq "centered") {
+				push @svgOutputPathText, svgElementPathText ($col, $size, $font, $lines[$i], $pathName, 0) ;
+			}
+			if ($orientation eq "left") {
+				push @svgOutputPathText, svgElementPathTextLeft ($col, $size, $font, $lines[$i], $pathName, 0) ;
+			}
+			if ($orientation eq "right") {
+				push @svgOutputPathText, svgElementPathTextRight ($col, $size, $font, $lines[$i], $pathName, 0) ;
+			}
+		}
+
+		occupyArea ($x1, $x2, $y1, $y2) ;
+		
+		return (1) ;
+	}
+	else {
+		return 0 ;
+	}
 }
 
 1 ;

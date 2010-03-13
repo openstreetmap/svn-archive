@@ -25,6 +25,7 @@ GetOptions(\%opts,
 	   ["F|extra-data=s", "Extra local data File"],
 	   ["O|overview=s", "XML Master Overview Rule File"],
 	   ["l|latex-file=s", "Save Figure commands to a latex file"],
+	   ["i|index-file=s", "Save a Latex formatted index to a file"],
 	   ["force-fetch",    "Force fetching of new data"],
 	   ["ps",             "Expect a postscript generation instead"],
 	   ["png",            "Make grid png files"],
@@ -70,6 +71,7 @@ $proj->{'subgrid-rule-file'}   = $opts{'S'}  || $proj->{'subgrid-rule-file'} ||
                                  $proj->{'grid-rule-file'};
 $proj->{'overview-rule-file'}  = $opts{'O'}  || $proj->{'overview-rule-file'};
 $proj->{'latex-file'}          = $opts{'l'}  || $proj->{'latex-file'};
+$proj->{'index-file'}          = $opts{'i'}  || $proj->{'index-file'};
 
 my $gridinfo = $proj->{'gridinfo'};
 #print STDERR Dumper($proj);
@@ -127,6 +129,7 @@ if ($proj->{'latex-file'}) {
 }
 
 my $needoverview = 0;
+my %indexinfo;
 
 ######################################################################
 # Build each grid square
@@ -246,6 +249,8 @@ if ($opts{'ps'}) {
 	System("inkscape -f $overviewsvg -E $overvieweps");
     }
 }
+
+make_indexfile() if ($proj->{'index-file'});
 
 ######################################################################
 # subroutines
@@ -407,6 +412,10 @@ sub do_grid {
 	    $combinedsvg =~ s/osm$/svg/;
 	    rename($combinedsvg, $svgfile);
 	}
+    }
+
+    if ($proj->{'index-file'}) {
+	find_index_info($svgfile, $label);
     }
 
     # add a numeric/letter grid border to the svg file
@@ -645,13 +654,57 @@ sub make_overview_grid {
 
 }
 
+sub find_index_info {
+    my ($infile, $squarelabel) = @_;
+    my $h = new IO::File;
+    $h->open("<$infile");
+    my %pathids;
+
+    # find the width/height spec
+    my $initline = <$h>;
+
+    # find original width/height
+    my ($origwidth, $origheight);
+    ($origwidth) = ($initline =~ /width=\"([\.\d]+)px\"/);
+    ($origheight) = ($initline =~ /height=\"([\.\d]+)(|px)\"/);
+
+    # copy everything but the closing svg line to the new file
+    while (<$h>) {
+	if (/<textPath xlink:href="#([^"]+)".*>(.*)<\/textPath>/) {
+	    # remember paths
+	    $pathids{$1}{$2} = 1;
+	} elsif (/<text x=\"([^"]+)\" y=\"([^"]+)\".*>(.*)<\/text>/) {
+	    if ($1 > 0 && $2 > 0 && $1 < $origwidth && $2 < $origheight) {
+		$indexinfo{$3}{$squarelabel} = 1;
+	    }
+	} elsif (/<path id=\"([^"]+)" d="M([^"]+)"/ &&
+		 exists($pathids{$1})) {
+	    # ugh; determine if at least one part of the path falls
+	    # in our boundry area
+	    my ($id, $d) = ($1, $2);
+	    my @parts = split(/L/,$d);
+	    my ($xpt, $ypt);
+	    foreach my $point (@parts) {
+		my ($xpt, $ypt) = split(/ /, $point);
+		if ($xpt > 0 && $ypt > 0 &&
+		    $xpt < $origwidth && $ypt < $origheight) {
+		    foreach my $waylabel (keys(%{$pathids{$id}})) {
+			$indexinfo{$waylabel}{$squarelabel} = 1;
+		    }
+		    last;
+		}
+	    }
+	}
+    }
+}
+
 # it's generally faster to read straight SVG files as text than completely
 # parse them; so because we're really just taking one file and adding data
 # we don't pull in the full SVG to parse and just copy it till the end
 # but remembering the bounding area size
 
 sub copy_svg {
-    my ($infile, $outfile, $hscale, $vscale) = @_;
+    my ($infile, $outfile, $hscale, $vscale, $squarelabel) = @_;
 
     $hscale ||= 1;
     $vscale ||= 1;
@@ -682,6 +735,8 @@ sub copy_svg {
     $initline =~ s/(viewBox=\"[-\.\d]+\s+[-\.\d]+\s+)[^\"]+/$1$width $height/;
 
     $outh->print($initline);
+
+    my %pathids;
 
     # copy everything but the closing svg line to the new file
     while (<$inh>) {
@@ -751,8 +806,8 @@ sub svg_grid {
  	for (my $row = 0; $row < $rows; $row++) {
 	    for (my $col = 0; $col < $cols; $col++) {
 		svg_grid($outh, $gridinfo->[$row][$col], $current,
-			 $left + $row * $subwidth, $subwidth,
-			 $top + $col * $subheight, $subheight,
+			 $left + $col * $subwidth, $subwidth,
+			 $top + $row * $subheight, $subheight,
 			 .6*$fontsize/$rows); # XXX: arbitrary scale
 	    }
  	}
@@ -815,20 +870,22 @@ sub make_svggrid {
     print $outh "<rect x=\"0px\" y=\"$origheight\" height=\"${hlinegap}px\" width=\"${width}px\" class=\"map-marginalia-background\" />\n";
     print $outh "<rect x=\"${origwidth}px\" y=\"0\" height=\"${height}px\" width=\"${vlinegap}px\" class=\"map-marginalia-background\" />\n";
 
+    my $linewidth = $height/300;
+
     # outer black lines
     # horizontal
-    svg_hline($outh, 1, $width, 1);
-    svg_hline($outh, 1, $width, $vlinetop);
-    svg_hline($outh, 1, $hlinetop, $height);
+    svg_hline($outh, 1, $width, 1, $linewidth);
+    svg_hline($outh, 1, $width, $vlinetop, $linewidth);
+    svg_hline($outh, 1, $hlinetop, $height, $linewidth);
 
     # vertical
-    svg_vline($outh, 1, 1, $height);
-    svg_vline($outh, $hlinetop, 1, $vlinetop);
-    svg_vline($outh, $width, 1, $vlinetop);
+    svg_vline($outh, 1, 1, $height, $linewidth);
+    svg_vline($outh, $hlinetop, 1, $vlinetop, $linewidth);
+    svg_vline($outh, $width, 1, $vlinetop, $linewidth);
 
     # vertical grid lines and horizontal labels
     for my $x (0..($numx)) {
-	svg_vline($outh, $x * $vlinegap, $vlinetop, $height);
+	svg_vline($outh, $x * $vlinegap, $vlinetop, $height, $linewidth);
 	if ($x != $numx) {
 	    svg_text($outh, $xlabels[$x], ($x + .5) * $vlinegap,
 		     $height - $hlinegap/16, $fontsize);
@@ -837,7 +894,7 @@ sub make_svggrid {
 
     # horizontal grid lines and virtical labels
     for my $y (0..($numy)) {
-	svg_hline($outh, $hlinetop, $width, $y * $hlinegap);
+	svg_hline($outh, $hlinetop, $width, $y * $hlinegap, $linewidth);
 
 	if ($y != $numy) {
 	    svg_text($outh, $ylabels[$y], $width - $vlinegap/8,
@@ -859,7 +916,7 @@ sub make_svgpage {
     DEBUG("modifying SVG to add bottom grid note\n");
 
     my ($outh, $width, $height, $origwidth, $origheight) =
-      copy_svg($infile, $outfile, 1, $vscale);
+      copy_svg($infile, $outfile, 1, $vscale, $label);
 
     # a thickline
     my $thick = int($origheight*.005);
@@ -1058,6 +1115,15 @@ sub make_overviewpng {
     open(OPNG, ">$outpng");
     print OPNG $overviewimg->png;
     close(OPNG);
+}
+
+sub make_indexfile {
+    DEBUG("saving index data to ", $proj->{'index-file'});
+    open(IF, ">" . $proj->{'index-file'});
+    foreach my $label (sort keys(%indexinfo)) {
+	print IF "$label " . join(",",keys(%{$indexinfo{$label}})) . "\n";
+    }
+    close(IF);
 }
 
 ########################################

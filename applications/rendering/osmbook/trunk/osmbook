@@ -1160,6 +1160,7 @@ sub make_indexfile {
             print IF "\\Header{$last}\n";
         }
         my $places = join(", ",keys(%{$indexinfo{$label}}));
+        $places =~ s/([^,]+,[^,]+,[^,]+,)(.*)/$1}\n\\Anitem{ }{$2/;
 	print IF "\\Anitem{$label}{$places}\n";
     }
     print IF "\\end{multicols}\\end{document}\n";

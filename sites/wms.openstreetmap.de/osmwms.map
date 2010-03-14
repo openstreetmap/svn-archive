@@ -36,7 +36,7 @@ MAP
 			"wms_title"    "Luftbilder Stadt Lauf an der Pegnitz"  ##required
 			"wms_extent"   "11.1828049 49.4630117 11.3570980 49.5764818"
 			"wms_srs"      "EPSG:4326"
-			"copyright"    "Stadt Lauf: OSM use only"
+			"copyright"    "© Stadt Lauf: OSM use only"
         END
         TYPE RASTER
         STATUS ON
@@ -47,11 +47,27 @@ MAP
     END
 
     LAYER                                                      
+        NAME "Dortmund"
+        METADATA
+			"wms_title"    "Luftbilder Dortmund Firma Aerowest"  ##required
+			"wms_extent" "7.293047 51.409698 7.644673 51.602716"
+			"wms_srs"      "EPSG:4326"
+			"copyright"    "© Aerowest GmbH: OSM use only"
+        END
+        TYPE RASTER
+        STATUS ON
+	DATA "aerowest/dortmund_5cm_4326.img"
+        PROJECTION
+			"init=epsg:4326"
+        END
+    END
+
+    LAYER                                                      
         NAME "Neunkirchen"
         METADATA
 		        "wms_title" "Katasterplan Gemeinde Neunkirchen am Sand"
                         "wms_extent" "11.3014 49.5112 11.3869 49.558"
-			"copyright"  "Gemeinde Neunkirchen: OSM use only"
+			"copyright"  "© Gem. Neunkirchen: OSM use only"
         END
         DATA "neunkirchen/neunkirchen-4326.shp"
              TYPE LINE
@@ -76,7 +92,7 @@ MAP
                         "wms_title"    "Rapideye Images from Chile"  ##required
                         "wms_extent"   "-73.655740 -37.944243 -72.090433 -34.879482"
                         "wms_srs"      "EPSG:4326"
-			"copyright"    "Copyright RapidEye AG: OSM use only"
+			"copyright"    "© RapidEye AG: OSM use only"
         END
         TYPE RASTER
         STATUS ON

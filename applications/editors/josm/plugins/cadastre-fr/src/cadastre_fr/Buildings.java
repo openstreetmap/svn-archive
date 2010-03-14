@@ -78,7 +78,7 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
     private int orange = Color.ORANGE.getRGB(); // new color of pixels ending nowhere (cul-de-sac)
     BuildingsImageModifier bim = new BuildingsImageModifier();
 
-    private double snapDistance = Main.pref.getDouble("cadastrewms.snap-distance", 60); // in centimeters
+    private double snapDistance = Main.pref.getDouble("cadastrewms.snap-distance", 50); // in centimeters
     private double snapDistanceSq = snapDistance*snapDistance;
     private double dx, dy;
 
@@ -172,6 +172,8 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                             wayToAdd.addNode(nearestNode);
                             cmds.add(new MoveCommand(nearestNode, dx, dy));
                         }
+                        if (i>0)
+                            joinExistingNodesInNewSegment(way2.getNode(i-1), way2.getNode(i));
                     }
                     wayToAdd.addNode(wayToAdd.getNode(0));
                     cmds.add(new AddCommand(wayToAdd));
@@ -408,6 +410,24 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
             nearestList.addAll(wss);
         }
         return nearestList;
+    }
+    
+    private void joinExistingNodesInNewSegment(Node n1, Node n2) {
+        // TODO
+        double minx = Math.min(n1.getEastNorth().getX(), n2.getEastNorth().getX());
+        double miny = Math.min(n1.getEastNorth().getY(), n2.getEastNorth().getY());
+        double maxx = Math.max(n1.getEastNorth().getX(), n2.getEastNorth().getX());
+        double maxy = Math.max(n1.getEastNorth().getY(), n2.getEastNorth().getY());
+        BBox bbox = new BBox(minx-snapDistance, miny-snapDistance, maxx+snapDistance, maxy+snapDistance);
+        DataSet ds = getCurrentDataSet();
+        if (ds == null)
+            return;
+        List<Node> ln = ds.searchNodes(bbox);
+        int i=0;
+        for (Node n:ln)
+            if (n.isUsable())
+                i++;
+        System.out.println("usable nodes in boxe="+i);
     }
     
     private void joinNodeToExistingWays(List<WaySegment> wss, Node newNode, Collection<Command> cmds) {

@@ -149,11 +149,11 @@ public class CadastrePlugin extends Plugin {
     	super(info);
         System.out.println("Pluging cadastre-fr v"+VERSION+" started...");
         if (Main.pref.get("cadastrewms.cacheDir").equals(""))
-            cacheDir = Main.pref.getPreferencesDir()+"plugins"+File.pathSeparatorChar+"cadastrewms"+File.pathSeparatorChar;
+            cacheDir = Main.pref.getPreferencesDir()+"plugins"+File.separatorChar+"cadastrewms"+File.separatorChar;
         else {
             cacheDir = Main.pref.get("cadastrewms.cacheDir");
-            if (cacheDir.charAt(cacheDir.length()-1) != File.pathSeparatorChar )
-                cacheDir += File.pathSeparatorChar;
+            if (cacheDir.charAt(cacheDir.length()-1) != File.separatorChar )
+                cacheDir += File.separatorChar;
         }
         System.out.println("current cache directory: "+cacheDir);
 
@@ -327,10 +327,9 @@ public class CadastrePlugin extends Plugin {
         if (cadastreJMenu != null) {
             if (oldFrame == null && newFrame != null) {
                 setEnabledAll(true);
-                Main.map.addMapMode(new IconToggleButton
-                        (new WMSAdjustAction(Main.map)));
-                Main.map.addMapMode(new IconToggleButton
-                        (new Buildings(Main.map)));
+                Main.map.addMapMode(new IconToggleButton(new WMSAdjustAction(Main.map)));
+                if (Main.pref.getBoolean("cadastrewms.buildingsMenu", false))
+                    Main.map.addMapMode(new IconToggleButton(new Buildings(Main.map)));
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
                 //Lambert.layoutZone = -1;

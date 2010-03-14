@@ -8,6 +8,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
@@ -148,11 +149,11 @@ public class CadastrePlugin extends Plugin {
     	super(info);
         System.out.println("Pluging cadastre-fr v"+VERSION+" started...");
         if (Main.pref.get("cadastrewms.cacheDir").equals(""))
-            cacheDir = Main.pref.getPreferencesDir()+"plugins/cadastrewms/";
+            cacheDir = Main.pref.getPreferencesDir()+"plugins"+File.pathSeparatorChar+"cadastrewms"+File.pathSeparatorChar;
         else {
             cacheDir = Main.pref.get("cadastrewms.cacheDir");
-            if (cacheDir.charAt(cacheDir.length()-1) != '\\' )
-                cacheDir += '\\';
+            if (cacheDir.charAt(cacheDir.length()-1) != File.pathSeparatorChar )
+                cacheDir += File.pathSeparatorChar;
         }
         System.out.println("current cache directory: "+cacheDir);
 

@@ -70,9 +70,9 @@ if (/map\?bbox\=(-?\d+(?:\.\d*)?)\,(-?\d+(?:\.\d*)?)\,(-?\d+(?:\.\d*)?)\,(-?\d+(
 }
 
 print "<?xml version='1.0' encoding='UTF-8'?>\n";
-print "<osm version=\"0.5\" generator=\"Trapi 0.3\">\n";
+print "<osm version=\"0.6\" generator=\"Trapi 0.3\">\n";
 if ($bbs) {
-    print "<bound box=\"$bbs,$bbw,$bbn,$bbe\" origin=\"http://www.openstreetmap.org/api/0.5\"/>\n";
+    print "<bound box=\"$bbs,$bbw,$bbn,$bbe\" origin=\"http://www.openstreetmap.org/api/0.6\"/>\n";
 }
 
 foreach $ptn (keys %tiles) {

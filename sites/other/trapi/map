@@ -108,10 +108,10 @@ while (my $query = new CGI::Fast) {
     
     print $query->header(-type=>'text/xml', -charset=>'utf8');
     print "<?xml version='1.0' encoding='UTF-8'?>\n";
-    print "<osm version=\"0.5\" generator=\"Trapi 0.3\">\n";
+    print "<osm version=\"0.6\" generator=\"Trapi 0.3\">\n";
     if (defined $bbs) {
-#	print "<bound box=\"$bbs,$bbw,$bbn,$bbe\" origin=\"http://www.openstreetmap.org/api/0.5\"/>\n";
-	print "<bounds minlat=\"$bbs\" minlon=\"$bbw\" maxlat=\"$bbn\" maxlon=\"$bbe\" origin=\"http://www.openstreetmap.org/api/0.5\"/>\n";
+#	print "<bound box=\"$bbs,$bbw,$bbn,$bbe\" origin=\"http://www.openstreetmap.org/api/0.6\"/>\n";
+	print "<bounds minlat=\"$bbs\" minlon=\"$bbw\" maxlat=\"$bbn\" maxlon=\"$bbe\" origin=\"http://www.openstreetmap.org/api/0.6\"/>\n";
     }
     
     foreach $ptn (keys %tiles) {

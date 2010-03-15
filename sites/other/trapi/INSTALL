@@ -89,7 +89,7 @@ collection.
 Web access:
 
 map is a fastcgi script.  Your web server should be configured so
-api/0.5/map requests will go to it.
+api/0.6/map requests will go to it.
 
 
 Tags files: 

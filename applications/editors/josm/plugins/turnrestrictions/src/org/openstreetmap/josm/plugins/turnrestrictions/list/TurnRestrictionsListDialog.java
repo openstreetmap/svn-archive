@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.turnrestrictions;
+package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -11,10 +11,8 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.AbstractAction;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -34,6 +32,8 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
+import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditor;
+import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditorManager;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -215,11 +215,23 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
             return members;
         }
 
-        public void launchEditor(Relation toEdit) {
-            if (toEdit == null)
-                return;
-            RelationEditor.getEditor(Main.map.mapView.getEditLayer(),toEdit, getMembersForCurrentSelection(toEdit)).setVisible(true);
-        }
+		public void launchEditor(Relation toEdit) {
+			if (toEdit == null)
+				return;
+			OsmDataLayer layer = Main.main.getEditLayer();
+			TurnRestrictionEditorManager manager = TurnRestrictionEditorManager.getInstance();
+			TurnRestrictionEditor editor = manager.getEditorForRelation(layer, toEdit);
+			if (editor != null) {
+				editor.setVisible(true);
+				editor.toFront();
+			} else {
+				editor = new TurnRestrictionEditor(
+						TurnRestrictionsListDialog.this, layer,toEdit);
+				manager.positionOnScreen(editor);
+				manager.register(layer, toEdit,editor);
+				editor.setVisible(true);
+			}
+		}
 
         public void actionPerformed(ActionEvent e) {
             if (!isEnabled())
@@ -282,7 +294,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
      * The action for creating a new turn restriction
      *
      */
-    static class NewAction extends AbstractAction implements EditLayerChangeListener{
+     class NewAction extends AbstractAction implements EditLayerChangeListener{
         public NewAction() {
             putValue(SHORT_DESCRIPTION,tr("Create a new turn restriction"));
             putValue(SMALL_ICON, ImageProvider.get("new"));
@@ -291,7 +303,13 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
 
         public void run() {
-            RelationEditor.getEditor(Main.main.getEditLayer(),null, null).setVisible(true);
+        	 Relation tr = new Relation();
+        	 OsmDataLayer layer =  Main.main.getEditLayer();
+        	 if (layer == null) return;
+        	 TurnRestrictionEditor editor = new TurnRestrictionEditor(TurnRestrictionsListDialog.this, layer);
+             TurnRestrictionEditorManager.getInstance().positionOnScreen(editor);             
+             TurnRestrictionEditorManager.getInstance().register(layer, tr, editor);
+             editor.setVisible(true);
         }
 
         public void actionPerformed(ActionEvent e) {

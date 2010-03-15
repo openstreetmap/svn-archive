@@ -30,10 +30,9 @@
 <project name="turnrestrictions" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Commit message" />
+	<property name="commit.message" value="Second version of turnrestriction plugin. Still under development." />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="" />
-
+	<property name="plugin.main.version" value="3136" />
 
 	<!--
       ************************************************

@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.turnrestrictions;
+package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 

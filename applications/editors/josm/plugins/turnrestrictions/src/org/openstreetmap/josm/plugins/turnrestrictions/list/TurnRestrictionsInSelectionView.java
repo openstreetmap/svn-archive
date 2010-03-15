@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.turnrestrictions;
+package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import java.awt.BorderLayout;
 
@@ -8,19 +8,22 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.event.DataSetListener;
-import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
+import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 
 /**
- * This is the view for the list of turn restrictions in the current data set.
+ * This is the view for the list of turn restrictions related to objects in the 
+ * current selection.
+ * 
  */
-public class TurnRestrictionsInDatasetView extends AbstractTurnRestrictionsListView{	
+public class TurnRestrictionsInSelectionView extends AbstractTurnRestrictionsListView {
+
 	protected void build() {
 		DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-		model = new TurnRestrictionsInDatasetListModel(selectionModel);
+		model = new TurnRestrictionsInSelectionListModel(selectionModel);
 		lstTurnRestrictions = new JList(model);
 		lstTurnRestrictions.setSelectionModel(selectionModel);
 		lstTurnRestrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -32,19 +35,18 @@ public class TurnRestrictionsInDatasetView extends AbstractTurnRestrictionsListV
 
 	protected void registerAsListener() {
 		MapView.addEditLayerChangeListener((EditLayerChangeListener)model);
-		DatasetEventManager.getInstance().addDatasetListener((DataSetListener)model, FireMode.IN_EDT);
+		SelectionEventManager.getInstance().addSelectionListener((SelectionChangedListener)model, FireMode.IN_EDT_CONSOLIDATED);
 		if (Main.main.getEditLayer() != null) {
-			model.setTurnRestrictions(Main.main.getEditLayer().data
-					.getRelations());
+			model.setTurnRestrictions(Main.main.getEditLayer().data.getRelations());
 		}
 	}
 
 	protected void unregisterAsListener() {
 		MapView.removeEditLayerChangeListener((EditLayerChangeListener)model);
-		DatasetEventManager.getInstance().removeDatasetListener((DataSetListener)model);
+		SelectionEventManager.getInstance().removeSelectionListener((SelectionChangedListener)model);
 	}
 
-	public TurnRestrictionsInDatasetView() {
+	public TurnRestrictionsInSelectionView() {
 		build();
 	}
 }

@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.turnrestrictions;
+package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import javax.swing.JList;
 import javax.swing.JPanel;

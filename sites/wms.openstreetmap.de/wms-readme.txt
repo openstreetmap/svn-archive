@@ -25,7 +25,9 @@ mod_disk_cache.
 Configuration:
 
 Layers are added using osmwms.map. This is (more or less) an ordinary mapfile
-with the exeption of the "copyright" metadata in layers. This is used for
-layer specific copyright messages rendered as watermark. Files need to user
-EPSG:4326 projection. In Addition to the mapfile new layers should also be
-added manually to the index.html shown at the servers root directory.
+with the exeption of the "copyright" metadata in layers.
+This is used for layer specific copyright messages rendered as watermark.
+
+Files need to use EPSG:4326 projection. In Addition to the mapfile new layers
+should also be added manually to the index.html shown at the servers root
+directory.

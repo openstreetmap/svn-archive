@@ -226,8 +226,10 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     /* ------------------------------------------------------------------------ */
 	public List<PrimitiveId> getSelectedPrimitiveIds() {
 		List<PrimitiveId> ret = new ArrayList<PrimitiveId>(getSelected().size());
-		for(OsmPrimitive p: getSelected()) {
-			ret.add(p.getPrimitiveId());
+		for(int i=0; i< selection.size(); i++) {
+			if (selectionModel.isSelectedIndex(i)) {
+				ret.add(selection.get(i).getPrimitiveId());
+			}
 		}
 		return ret;
 	}

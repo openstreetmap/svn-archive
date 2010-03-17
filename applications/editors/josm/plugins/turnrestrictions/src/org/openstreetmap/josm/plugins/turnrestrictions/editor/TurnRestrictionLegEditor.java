@@ -4,7 +4,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -19,15 +18,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -38,9 +38,9 @@ import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvider;
@@ -57,7 +57,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 	static private final Logger logger = Logger.getLogger(TurnRestrictionLegEditor.class.getName());
  
 	private JLabel lblOsmObject;
-	private Way way;
+	private final Set<OsmPrimitive> legs = new HashSet<OsmPrimitive>();
 	private TurnRestrictionEditorModel model;
 	private TurnRestrictionLegRole role; 
 	private DeleteAction actDelete;
@@ -139,18 +139,24 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 	}
 
 	protected void refresh(){
-		Way newWay = model.getTurnRestrictionLeg(role);
-		way = newWay;
-		if (way == null) {
+		legs.clear();
+		legs.addAll(model.getTurnRestrictionLeg(role));
+		if (legs.isEmpty()) {
 			lblOsmObject.setFont(UIManager.getFont("Label.font").deriveFont(Font.ITALIC));
 			lblOsmObject.setIcon(null);
 			lblOsmObject.setText(tr("please select a way"));
 			lblOsmObject.setToolTipText(null);
-		} else {
+		} else if (legs.size() == 1){
+			OsmPrimitive leg = legs.iterator().next();
 			lblOsmObject.setFont(UIManager.getFont("Label.font"));
 			lblOsmObject.setIcon(ImageProvider.get("data", "way"));
-			lblOsmObject.setText(DefaultNameFormatter.getInstance().format(way));
-			lblOsmObject.setToolTipText(DefaultNameFormatter.getInstance().buildDefaultToolTip(way));
+			lblOsmObject.setText(leg.getDisplayName(DefaultNameFormatter.getInstance()));
+			lblOsmObject.setToolTipText(DefaultNameFormatter.getInstance().buildDefaultToolTip(leg));
+		} else {
+			lblOsmObject.setFont(UIManager.getFont("Label.font").deriveFont(Font.ITALIC));
+			lblOsmObject.setIcon(null);
+			lblOsmObject.setText(tr("multiple objects with role ''{0}''",this.role.toString()));
+			lblOsmObject.setToolTipText(null);			
 		}
 		renderColors();
 		actDelete.updateEnabledState();
@@ -200,8 +206,10 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 	/* interface PrimitiveIdListProvider                                                            */
 	/* ----------------------------------------------------------------------------- */
 	public List<PrimitiveId> getSelectedPrimitiveIds() {
-		if (way == null) return Collections.emptyList();
-		return Collections.singletonList(way.getPrimitiveId());
+		if (legs.size() == 1) {
+			return Collections.singletonList(legs.iterator().next().getPrimitiveId());
+		}
+		return Collections.emptyList();
 	}
 	
 	/* ----------------------------------------------------------------------------- */
@@ -246,7 +254,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 		}		
 		
 		public void updateEnabledState() {
-			setEnabled(way != null);
+			setEnabled(legs.size()>0);
 		}
 	}
 	
@@ -283,7 +291,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 
 		@Override
 		protected Transferable createTransferable(JComponent c) {
-			if (way == null) return null;
+			if (legs.size() != 1) return null;
 			return super.createTransferable(c);
 		}
 	}
@@ -325,7 +333,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 		}
 		
 		public void updateEnabledState() {
-			setEnabled(way != null);
+			setEnabled(legs.size() == 1);
 		}
 	}
 	

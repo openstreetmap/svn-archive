@@ -76,6 +76,7 @@ public class TurnRestrictionEditor extends JDialog {
 	
     private JosmSelectionPanel pnlJosmSelection;
     private BasicEditorPanel pnlBasicEditor;
+    private AdvancedEditorPanel pnlAdvancedEditor;
     private TurnRestrictionEditorModel editorModel;
     
     /**
@@ -116,6 +117,11 @@ public class TurnRestrictionEditor extends JDialog {
     	tpEditors.add(pnlBasicEditor =new BasicEditorPanel(editorModel));
     	tpEditors.setTitleAt(0, tr("Basic"));
     	tpEditors.setToolTipTextAt(0, tr("Edit basic attributes of a turn restriction"));
+    	
+    	tpEditors.add(pnlAdvancedEditor = new AdvancedEditorPanel(editorModel));
+    	tpEditors.setTitleAt(1, tr("Advanced"));
+    	tpEditors.setToolTipTextAt(1, tr("Edit the raw tags and members of this turn restriction"));
+    	
     	pnl.add(tpEditors, BorderLayout.CENTER);
     	return pnl;
     }
@@ -160,7 +166,7 @@ public class TurnRestrictionEditor extends JDialog {
      * builds the UI
      */
     protected void build() {    	
-    	editorModel = new TurnRestrictionEditorModel();
+    	editorModel = new TurnRestrictionEditorModel(getLayer());
     	Container c = getContentPane();
     	c.setLayout(new BorderLayout());
     	c.add(buildToolBar(), BorderLayout.NORTH);
@@ -221,13 +227,11 @@ public class TurnRestrictionEditor extends JDialog {
     protected void setTurnRestriction(Relation turnRestriction) {
       
         if (turnRestriction == null) {
-        	editorModel.populate(new Relation(), getLayer().data);
-        } else if (turnRestriction.getDataSet() == null) {
-        	editorModel.populate(turnRestriction, getLayer().data);
-        } else if (turnRestriction.getDataSet() == getLayer().data) {
+        	editorModel.populate(new Relation());
+        } else if (turnRestriction.getDataSet() == null || turnRestriction.getDataSet() == getLayer().data) {
         	editorModel.populate(turnRestriction);
         } else {
-        	throw new IllegalArgumentException(MessageFormat.format("turnRestriction must not belong to the layer {0}", getLayer().getName()));
+        	throw new IllegalArgumentException(MessageFormat.format("turnRestriction must belong to layer ''{0}''", getLayer().getName()));
         }
         setTurnRestrictionSnapshot(turnRestriction == null ? null : new Relation(turnRestriction));
         Relation oldValue = this.turnRestriction;

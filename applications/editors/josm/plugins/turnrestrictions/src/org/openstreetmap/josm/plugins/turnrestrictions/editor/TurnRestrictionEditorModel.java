@@ -1,18 +1,19 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 import java.util.logging.Logger;
+
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
@@ -26,6 +27,9 @@ import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.tagging.TagEditorModel;
+import org.openstreetmap.josm.gui.tagging.TagModel;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -58,31 +62,21 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 		return true;
 	}
 	
+	private OsmDataLayer layer;
+	private final TagEditorModel tagEditorModel = new TagEditorModel();
+	private  RelationMemberEditorModel memberModel;
 	
-	/** 
-	 * holds the relation member of turn restriction relation from which the turn
-	 * restriction leg with role 'from' was initialized. This is needed if OSM
-	 * data contains turn restrictions with multiple 'from' members. The
-	 * field is null if a turn restriction didn't have a member with role
-	 * 'from'.
+	/**
+	 * Creates a model in the context of a {@see OsmDataLayer}
+	 * 
+	 * @param layer the layer. Must not be null.
+	 * @throws IllegalArgumentException thrown if {@code layer} is null
 	 */
-	private RelationMember fromRelationMember;
-	
-	/** 
-	 * holds the relation member of turn restriction relation from which the turn
-	 * restriction leg with role 'to' was initialized. This is needed if OSM
-	 * data contains turn restrictions with multiple 'to' members. The
-	 * field is null if a turn restriction didn't have a member with role
-	 * 'to'.
-	 */
-	private RelationMember toRelationMember;
-	private Way from;
-	private Way to;
-	private TagCollection tags = new TagCollection();
-	private DataSet dataSet;
-	private final List<OsmPrimitive> vias = new ArrayList<OsmPrimitive>();
-	
-	public TurnRestrictionEditorModel(){
+	public TurnRestrictionEditorModel(OsmDataLayer layer) throws IllegalArgumentException{
+		CheckParameterUtil.ensureParameterNotNull(layer, "layer");
+		this.layer = layer;
+		memberModel = new RelationMemberEditorModel(layer);
+		memberModel.addTableModelListener(new RelationMemberModelListener());
 	}
 	
 	/**
@@ -95,24 +89,16 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 */
 	public void setTurnRestrictionLeg(TurnRestrictionLegRole role, Way way) {
 		CheckParameterUtil.ensureParameterNotNull(role, "role");
-		Way oldValue = null;
 		switch(role){
-		case FROM: 
-			oldValue = this.from;
-			this.from = way; 
+		case FROM:
+			memberModel.setFromPrimitive(way);
 			break;
 		case TO:
-			oldValue = this.to;
-			this.to = way; 
+			memberModel.setToPrimitive(way);
 			break;
 		}
-		
-		if (oldValue != way) {
-			setChanged();
-			notifyObservers();		
-		}
 	}	
-	
+		
 	/**
 	 * Sets the way participating in the turn restriction in a given role.
 	 * 
@@ -131,31 +117,37 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 		if (!wayId.getType().equals(OsmPrimitiveType.WAY)) {
 			throw new IllegalArgumentException(MessageFormat.format("parameter ''wayId'' of type {0} expected, got {1}", OsmPrimitiveType.WAY, wayId.getType()));
 		}
-		
-		if (dataSet == null) {			
-			throw new IllegalStateException("data set not initialized");			
-		}
-		OsmPrimitive p = dataSet.getPrimitiveById(wayId);
+
+		OsmPrimitive p = layer.data.getPrimitiveById(wayId);
 		if (p == null) {
-			throw new IllegalStateException(MessageFormat.format("didn't find way with id {0} in dataset {1}", wayId, dataSet));			
+			throw new IllegalStateException(MessageFormat.format("didn''t find way with id {0} in layer ''{1}''", wayId, layer.getName()));			
 		}
 		setTurnRestrictionLeg(role, (Way)p);
 	}	
 	
 	/**
-	 * Replies the turn restrictioin leg with role {@code role}
+	 * "Officially" a turn restriction should have exactly one member with 
+	 * role {@see TurnRestrictionLegRole#FROM} and one member with role {@see TurnRestrictionLegRole#TO},
+	 * both referring to an OSM {@see Way}. In order to deals with turn restrictions where these
+	 * integrity constraints are violated, this model also supports relation with multiple or no
+	 * 'from' or 'to' members.
+	 * 
+	 * Replies the turn restriction legs with role {@code role}. If no leg with this
+	 * role exists, an empty set is returned. If multiple legs exists, the set of referred
+	 * primitives is returned.  
 	 * 
 	 * @param role the role. Must not be null.
-	 * @return the turn restrictioin leg with role {@code role}. null, if
+	 * @return the set of turn restriction legs with role {@code role}. The empty set, if
 	 * no such turn restriction leg exists
 	 * @throws IllegalArgumentException thrown if role is null
 	 */
-	public Way getTurnRestrictionLeg(TurnRestrictionLegRole role){
+	public Set<OsmPrimitive>getTurnRestrictionLeg(TurnRestrictionLegRole role){
 		CheckParameterUtil.ensureParameterNotNull(role, "role");
 		switch(role){
-		case FROM: return from;
-		case TO: return to;
+		case FROM: return memberModel.getFromPrimitives();
+		case TO: return memberModel.getToPrimitives();
 		}
+		// should not happen
 		return null;
 	}
 	
@@ -166,37 +158,14 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 * @param turnRestriction the turn restriction
 	 */
 	protected void initFromTurnRestriction(Relation turnRestriction) {
-		this.from = null;
-		this.to = null;
-		this.fromRelationMember = null;
-		this.toRelationMember = null;
-		this.tags = new TagCollection();
-		this.vias.clear();
-		if (turnRestriction == null) return;
-		for (RelationMember rm: turnRestriction.getMembers()) {
-			if (rm.getRole().equals("from") && rm.isWay()) {
-				this.fromRelationMember = rm;
-				this.from = rm.getWay();
-				break;
-			}
-		}
-		for (RelationMember rm: turnRestriction.getMembers()) {
-			if (rm.getRole().equals("to") && rm.isWay()) {
-				this.toRelationMember = rm;
-				this.to = rm.getWay();
-				break;
-			}
-		}
 		
-		for (RelationMember rm: turnRestriction.getMembers()) {
-			if (rm.getRole().equals("via")) {
-				this.vias.add(rm.getMember());
-			}
-		}
+		// populate the member model
+		memberModel.populate(turnRestriction);
 		
 		// make sure we have a restriction tag
-		tags = TagCollection.from(turnRestriction);
+		TagCollection tags = TagCollection.from(turnRestriction);
 		tags.setUniqueForKey("type", "restriction");
+		tagEditorModel.initFromTags(tags);
 				
 		setChanged();
 		notifyObservers();
@@ -214,60 +183,15 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 */
 	public void populate(Relation turnRestriction) {
 		CheckParameterUtil.ensureParameterNotNull(turnRestriction, "turnRestriction");
-		if (turnRestriction.getDataSet() == null) {			 
+		if (turnRestriction.getDataSet() != null && turnRestriction.getDataSet() != layer.data) {			
 			throw new IllegalArgumentException(
 				// don't translate - it's a technical message
-				MessageFormat.format("turnRestriction {0} must belong to a dataset", turnRestriction.getId())
+				MessageFormat.format("turnRestriction {0} must not belong to a different dataset than the dataset of layer ''{1}''", turnRestriction.getId(), layer.getName())
 			);
 		}
-		this.dataSet = turnRestriction.getDataSet();
 		initFromTurnRestriction(turnRestriction);
 	}
 	
-	/**
-	 * Populates the turn restriction editor model with a new turn restriction,
-	 * which isn't added to a data set yet. {@code ds} is the data set the turn
-	 * restriction is eventually being added to. Relation members of this
-	 * turn restriction must refer to objects in {@code ds}. 
-	 *  
-	 * {@code turnRestriction} is an arbitrary relation. A tag type=restriction
-	 * isn't required. If it is missing, it is added here.  {@code turnRestriction}
-	 * is required to be a new turn restriction with a negative id. It must not be
-	 * part of a dataset yet
-	 * 
-	 * @param turnRestriction the turn restriction. Must not be null. New turn restriction
-	 * required
-	 * @param ds the dataset. Must not be null.
-	 * @throws IllegalArgumentException thrown if turnRestriction is null
-	 * @throws IllegalArgumentException thrown if turnRestriction is part of a dataset
-	 * @throws IllegalArgumentException thrown if turnRestriction isn't a new turn restriction  
-	 */
-	public void populate(Relation turnRestriction, DataSet ds) {
-		CheckParameterUtil.ensureParameterNotNull(turnRestriction, "turnRestriction");
-		CheckParameterUtil.ensureParameterNotNull(ds, "ds");
-		if (!turnRestriction.isNew()){			
-			throw new IllegalArgumentException(
-					// don't translate - it's a technical message
-					MessageFormat.format("new turn restriction expected, got turn restriction with id {0}", turnRestriction.getId())
-			);
-		}
-		if (turnRestriction.getDataSet() != null) {
-			throw new IllegalArgumentException(
-                    // don't translate - it's a technical message
-					MessageFormat.format("expected turn restriction not assigned to a  dataset, got turn restriction with id {0} assigned to {1}", turnRestriction.getId(), turnRestriction.getDataSet())
-			);
-		}
-		for(RelationMember rm: turnRestriction.getMembers()) {
-			if (rm.getMember().getDataSet() != ds) {
-				throw new IllegalArgumentException(
-	                    // don't translate - it's a technical message
-						MessageFormat.format("expected all members assigned to dataset {0}, got member {1} assigned to {2}", ds, rm, rm.getMember().getDataSet())
-				);
-			}
-		}
-		this.dataSet = ds;
-		initFromTurnRestriction(turnRestriction);
-	}
 	
 	/**
 	 * Applies the current state in the model to a turn restriction
@@ -276,20 +200,10 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 */
 	public void apply(Relation turnRestriction) {
 		CheckParameterUtil.ensureParameterNotNull(turnRestriction, "turnRestriction");
-		// apply the tags
-		tags.applyTo(turnRestriction);
 		
-		List<RelationMember> members = new ArrayList<RelationMember>();
-		if (from != null){
-			members.add(new RelationMember("from", from));
-		}
-		if (to != null) {
-			members.add(new RelationMember("to", to));			
-		}
-		for(OsmPrimitive via: vias) {
-			members.add(new RelationMember("via", via));
-		}
-		turnRestriction.setMembers(members);
+		TagCollection tags = tagEditorModel.getTagCollection();
+		tags.applyTo(turnRestriction);
+		memberModel.applyTo(turnRestriction);		
 	}
 	
 	/**
@@ -299,6 +213,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 * @return the tag value
 	 */
 	public String getRestrictionTagValue() {
+		TagCollection tags = tagEditorModel.getTagCollection();
 		if (!tags.hasTagsFor("restriction")) return null;
 		return tags.getJoinedValues("restriction");
 	}
@@ -311,9 +226,14 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 */
 	public void setRestrictionTagValue(String value){
 		if (value == null || value.trim().equals("")) {
-			tags.removeByKey("restriction");
+			tagEditorModel.delete("restriction");			
 		} else {
-			tags.setUniqueForKey("restriction", value.trim());
+			TagModel  tm = tagEditorModel.get("restriction");
+			if (tm != null){
+				tm.setValue(value);
+			} else {
+				tagEditorModel.add(new TagModel("restriction", value));
+			}
 		}
 		setChanged();
 		notifyObservers();
@@ -326,7 +246,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 * @return the list of 'via' objects
 	 */
 	public List<OsmPrimitive> getVias() {
-		return Collections.unmodifiableList(vias);
+		return memberModel.getVias();
 	}
 	
 	/**
@@ -341,34 +261,18 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 * if it belongs to the wrong dataset 
 	 */
 	public void setVias(List<OsmPrimitive> vias) {
-		if (vias == null) {
-			this.vias.clear();
-			setChanged();
-			notifyObservers();
-			return;
-		}
-		for (OsmPrimitive p: vias) {
-			if (p == null)
-				throw new IllegalArgumentException("a via object must not be null");
-			if (p.getDataSet() != dataSet)
-				throw new IllegalArgumentException(MessageFormat.format("a via object must belong to dataset {1}, object {2} belongs to {3}", dataSet, p.getPrimitiveId(), p.getDataSet()));
-		}
-		this.vias.clear();
-		this.vias.addAll(vias);
-		setChanged();
-		notifyObservers();
+		memberModel.setVias(vias);
 	}
 	
 	/**
-	 * Replies the dataset this turn restriction editor model is 
-	 * working with
+	 * Replies the layer in whose context this editor is working
 	 * 
-	 * @return the dataset 
+	 * @return the layer in whose context this editor is working
 	 */
-	public DataSet getDataSet() {
-		return this.dataSet;
+	public OsmDataLayer getLayer() {
+		return layer;
 	}
-
+	
 	/**
 	 * Registers this model with global event sources like {@see DatasetEventManager}
 	 */
@@ -382,27 +286,41 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	public void unregisterAsEventListener() {
 		DatasetEventManager.getInstance().removeDatasetListener(this);
 	}
+	
+	/**
+	 * Replies the tag  editor model 
+	 * 
+	 * @return the tag  editor model
+	 */
+	public TagEditorModel getTagEditorModel() {
+		return tagEditorModel;
+	}
+	
+	/**
+	 * Replies the editor model for the relation members
+	 * 
+	 * @return the editor model for the relation members
+	 */
+	public RelationMemberEditorModel getRelationMemberEditorModel() {
+		return memberModel;
+	}
 
 	/* ----------------------------------------------------------------------------------------- */
 	/* interface DataSetListener                                                                 */
-	/* ----------------------------------------------------------------------------------------- */
-	
+	/* ----------------------------------------------------------------------------------------- */	
 	protected boolean isAffectedByDataSetUpdate(DataSet ds, List<? extends OsmPrimitive> updatedPrimitives) {
-		if (ds != dataSet) return false;
+		if (ds != layer.data) return false;
 		if (updatedPrimitives == null || updatedPrimitives.isEmpty()) return false;
-		if (from != null && updatedPrimitives.contains(from)) return true;
-		if (to != null && updatedPrimitives.contains(to)) return true;
-		for (OsmPrimitive via: vias){
-			if (updatedPrimitives.contains(via)) return true;
-		}
-		return false;
+		Set<OsmPrimitive> myPrimitives = memberModel.getMemberPrimitives();
+		int size1 = myPrimitives.size();
+		myPrimitives.retainAll(updatedPrimitives);
+		return size1 != myPrimitives.size();
 	}
 	
 	public void dataChanged(DataChangedEvent event) {
 		// refresh the views
 		setChanged();
-		notifyObservers();
-		
+		notifyObservers();		
 	}
 
 	public void nodeMoved(NodeMovedEvent event) {
@@ -434,6 +352,13 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	public void wayNodesChanged(WayNodesChangedEvent event) {
 		// may affect the display name of 'from', 'to' or 'via' elements
 		if (isAffectedByDataSetUpdate(event.getDataset(), event.getPrimitives())) {
+			setChanged();
+			notifyObservers();
+		}		
+	}	
+	
+	class RelationMemberModelListener implements TableModelListener {
+		public void tableChanged(TableModelEvent e) {
 			setChanged();
 			notifyObservers();
 		}		

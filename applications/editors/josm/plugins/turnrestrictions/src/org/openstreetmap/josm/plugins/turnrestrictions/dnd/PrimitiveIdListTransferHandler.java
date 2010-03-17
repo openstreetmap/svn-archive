@@ -23,6 +23,19 @@ public class PrimitiveIdListTransferHandler extends TransferHandler {
 	private PrimitiveIdListProvider provider;
 	
 	/**
+	 * Replies true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
+
+	 * @param transferFlavors an array of transferFlavors
+	 * @return true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
+	 */
+	public static boolean isSupportedFlavor(DataFlavor[] transferFlavors) {
+		for (DataFlavor df: transferFlavors) {
+			if (df.equals(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR)) return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Creates the transfer handler 
 	 * 
 	 * @param provider the provider of the primitive IDs. Must not be null.
@@ -33,18 +46,7 @@ public class PrimitiveIdListTransferHandler extends TransferHandler {
 		this.provider = provider;
 	}
 
-	/**
-	 * Replies true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
-
-	 * @param transferFlavors an array of transferFlavors
-	 * @return
-	 */
-	protected boolean isSupportedFlavor(DataFlavor[] transferFlavors) {
-		for (DataFlavor df: transferFlavors) {
-			if (df.equals(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR)) return true;
-		}
-		return false;
-	}
+	
 	
 	protected Transferable createTransferable(JComponent c) {
 		return new PrimitiveIdTransferable(provider.getSelectedPrimitiveIds());			

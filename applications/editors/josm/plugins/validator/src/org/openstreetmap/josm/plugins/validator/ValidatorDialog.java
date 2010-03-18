@@ -459,13 +459,10 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
     class FixTask extends PleaseWaitRunnable {
         private Collection<TestError> testErrors;
         private boolean canceled;
-        private LinkedList<Command> fixCommands;
-
 
         public FixTask(Collection<TestError> testErrors) {
             super(tr("Fixing errors ..."), false /* don't ignore exceptions */);
             this.testErrors = testErrors == null ? new ArrayList<TestError> (): testErrors;
-            fixCommands = new LinkedList<Command>();
         }
 
         @Override
@@ -492,7 +489,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
                         return;
                     final Command fixCommand = error.getFix();
                     if (fixCommand != null) {
-                        fixCommands.add(fixCommand);
                         SwingUtilities.invokeAndWait(
                                 new Runnable() {
                                     public void run() {

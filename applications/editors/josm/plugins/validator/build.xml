@@ -25,7 +25,7 @@
 	<!--
 	  ** update before publishing
 	-->
-	<property name="commit.message" value="validator: fixed josm bug 4594" />
+	<property name="commit.message" value="validator: fixed memory leak" />
 	<property name="plugin.main.version" value="3118" />
 
 

@@ -162,20 +162,31 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                     for (int i = 0; i < way2.getNodesCount()-1; i++) {
                         Node nearestNode = getNearestNode(way2.getNode(i));
                         if (nearestNode == null) {
+                            // check if we can join new node to existing ways
                             List<WaySegment> wss = getNearestWaySegments(way2.getNode(i));
                             wayToAdd.addNode(way2.getNode(i));
                             cmds.add(new AddCommand(way2.getNode(i)));
-                            if (wss.size() > 0)
+                            if (wss.size() > 0) {
                                 cmds.add(new MoveCommand(way2.getNode(i), dx, dy));
                                 joinNodeToExistingWays(wss, way2.getNode(i), cmds);
-                        } else {// reuse the existing node
+                            }
+                        } else {
+                            // replace new node by an existing nearest node
                             wayToAdd.addNode(nearestNode);
                             cmds.add(new MoveCommand(nearestNode, dx, dy));
                         }
-                        if (i>0)
-                            joinExistingNodesInNewSegment(way2.getNode(i-1), way2.getNode(i));
                     }
-                    wayToAdd.addNode(wayToAdd.getNode(0));
+                    wayToAdd.addNode(wayToAdd.getNode(0)); // close the polygon !
+                    for (int i = 1; i < wayToAdd.getNodesCount(); i++) {
+                        List<Node> nodesToJoin = existingNodesInNewSegment(wayToAdd.getNode(i-1), wayToAdd.getNode(i));
+                        // check if we join new way to existing nodes
+                        while (nodesToJoin != null && nodesToJoin.size() > 0) {
+                            List<WaySegment> wss = new LinkedList<WaySegment>();
+                            wss.add(new WaySegment(wayToAdd, i-1));
+                            wayToAdd = joinNodeToExistingWays(wss, nodesToJoin.get(0), cmds);
+                            nodesToJoin = existingNodesInNewSegment(wayToAdd.getNode(i-1), wayToAdd.getNode(i));
+                        }
+                    }
                     cmds.add(new AddCommand(wayToAdd));
                     if (clickOnBuilding)
                         addBuildingTags(cmds, wayToAdd);
@@ -412,25 +423,28 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
         return nearestList;
     }
     
-    private void joinExistingNodesInNewSegment(Node n1, Node n2) {
-        // TODO
-        double minx = Math.min(n1.getEastNorth().getX(), n2.getEastNorth().getX());
-        double miny = Math.min(n1.getEastNorth().getY(), n2.getEastNorth().getY());
-        double maxx = Math.max(n1.getEastNorth().getX(), n2.getEastNorth().getX());
-        double maxy = Math.max(n1.getEastNorth().getY(), n2.getEastNorth().getY());
-        BBox bbox = new BBox(minx-snapDistance, miny-snapDistance, maxx+snapDistance, maxy+snapDistance);
+    private List<Node> existingNodesInNewSegment(Node n1, Node n2) {
+        double minx = Math.min(n1.getEastNorth().getX(), n2.getEastNorth().getX())*100;
+        double miny = Math.min(n1.getEastNorth().getY(), n2.getEastNorth().getY())*100;
+        double maxx = Math.max(n1.getEastNorth().getX(), n2.getEastNorth().getX())*100;
+        double maxy = Math.max(n1.getEastNorth().getY(), n2.getEastNorth().getY())*100;
+        if ((maxx-minx)/2 < snapDistance && (maxy-miny)/2 < snapDistance) {
+            return null;
+        }
+        BBox bbox = new BBox( Main.proj.eastNorth2latlon(new EastNorth((minx+snapDistance)/100, (miny+snapDistance)/100)), 
+                Main.proj.eastNorth2latlon(new EastNorth((maxx-snapDistance)/100, (maxy-snapDistance)/100)));
         DataSet ds = getCurrentDataSet();
         if (ds == null)
-            return;
-        List<Node> ln = ds.searchNodes(bbox);
-        int i=0;
-        for (Node n:ln)
+            return null;
+        List<Node> ret = new ArrayList<Node>();
+        for (Node n:ds.searchNodes(bbox))
             if (n.isUsable())
-                i++;
-        System.out.println("usable nodes in boxe="+i);
+                ret.add(n);
+        System.out.println("Join "+ret.size()+" nodes to new segment");
+        return ret;
     }
     
-    private void joinNodeToExistingWays(List<WaySegment> wss, Node newNode, Collection<Command> cmds) {
+    private Way joinNodeToExistingWays(List<WaySegment> wss, Node newNode, Collection<Command> cmds) {
         HashMap<Way, List<Integer>> insertPoints = new HashMap<Way, List<Integer>>();
         for (WaySegment ws : wss) {
             List<Integer> is;
@@ -441,12 +455,12 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                 insertPoints.put(ws.way, is);
             }
 
-            if (ws.way.getNode(ws.lowerIndex) != newNode
-                    && ws.way.getNode(ws.lowerIndex+1) != newNode) {
+            if (ws.way.getNode(ws.lowerIndex) != newNode && ws.way.getNode(ws.lowerIndex+1) != newNode) {
                 is.add(ws.lowerIndex);
             }
         }
         
+        Way wnew = null;
         for (Map.Entry<Way, List<Integer>> insertPoint : insertPoints.entrySet()) {
             List<Integer> is = insertPoint.getValue();
             if (is.size() == 0)
@@ -458,10 +472,11 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
             for (int i : is) {
                 nodesToAdd.add(i+1, newNode);
             }
-            Way wnew = new Way(w);
+            wnew = new Way(w);
             wnew.setNodes(nodesToAdd);
             cmds.add(new ChangeCommand(w, wnew));
-        }        
+        }
+        return wnew;
     }
     
     private static void pruneSuccsAndReverse(List<Integer> is) {

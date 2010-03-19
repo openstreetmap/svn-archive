@@ -24,7 +24,7 @@
 
     <target name="compile" depends="init,revision"
             description="Compile the plugin and make it ready for running">
-	    
+
         <javac srcdir="src"
                classpath="${josm}"
                debug="true"
@@ -44,7 +44,7 @@
             <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
             <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
             <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/Cz:JOSM/Plugins/CzechAddress"/>
-            <attribute name="Plugin-Mainversion" value="2830"/>
+            <attribute name="Plugin-Mainversion" value="3147"/>
             <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
         </manifest>
 

@@ -10,15 +10,17 @@ import java.awt.Insets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
+import javax.swing.table.TableCellRenderer;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -26,14 +28,18 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.JMultilineLabel;
 import org.openstreetmap.josm.tools.ImageProvider;
+import static org.openstreetmap.josm.tools.I18n.trc;
 
 /**
- * This the cell renderer for turn restrictions in the turn restriction list
- * dialog.
- *
+ * This is a cell renderer for turn restrictions.
+ * 
+ * It can be used a cell renderer in lists of turn restrictions and as cell renderer in
+ * {@see JTable}s displaying turn restrictions. 
+ * 
  */
-public class TurnRestrictionListCellRenderer extends JPanel implements ListCellRenderer{
-
+public class TurnRestrictionCellRenderer extends JPanel implements ListCellRenderer, TableCellRenderer{
+	static private final Logger logger = Logger.getLogger(TurnRestrictionCellRenderer.class.getName());
+	
 	/** the names of restriction types */
 	static private Set<String> RESTRICTION_TYPES = new HashSet<String>(
 			Arrays.asList(new String[] {
@@ -52,7 +58,7 @@ public class TurnRestrictionListCellRenderer extends JPanel implements ListCellR
 	private JLabel from;
 	private JLabel to;
 	
-	public TurnRestrictionListCellRenderer() {
+	public TurnRestrictionCellRenderer() {
 		build();
 	}
 
@@ -102,7 +108,7 @@ public class TurnRestrictionListCellRenderer extends JPanel implements ListCellR
 		gc.weightx = 0.0;
 		gc.gridheight = 2;
 		gc.anchor = GridBagConstraints.CENTER;
-		gc.insets = new Insets(0,2,0,2);
+		gc.insets = new Insets(0,0,2,2);
 		add(icon = new JLabel(), gc);
 		
 		
@@ -111,8 +117,7 @@ public class TurnRestrictionListCellRenderer extends JPanel implements ListCellR
 		gc.gridx = 1;
 		gc.gridheight = 1;
 		gc.weightx = 0.0;
-		gc.insets = new Insets(0,0,0,0);
-		add(new JMultilineLabel("<html><strong>From:</strong></html>"), gc);
+		add(new JMultilineLabel("<html><strong>" + trc("turnrestrictions","From:") + "</strong></html>"), gc);
 		
 		gc.gridx = 2;
 		gc.weightx = 1.0; 
@@ -123,7 +128,7 @@ public class TurnRestrictionListCellRenderer extends JPanel implements ListCellR
 		gc.gridx = 1;
 		gc.gridy = 1;
 		gc.weightx = 0.0;
-		add(new JMultilineLabel("<html><strong>To:</strong></html>"), gc);
+		add(new JMultilineLabel("<html><strong>" + trc("turnrestriction", "To:")  + "</strong></html>"), gc);
 		
 		gc.gridx = 2;
 		gc.weightx = 1.0;
@@ -207,11 +212,27 @@ public class TurnRestrictionListCellRenderer extends JPanel implements ListCellR
 		this.from.setForeground(fg);
 		this.to.setForeground(fg);
 	}
-		
+
+	/* ---------------------------------------------------------------------------------- */
+	/* interface ListCellRenderer                                                         */
+	/* ---------------------------------------------------------------------------------- */
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 
 		renderColor(isSelected);
+		Relation tr = (Relation)value;
+		renderIcon(tr);
+		renderFrom(tr);
+		renderTo(tr);		
+		return this;
+	}
+
+	/* ---------------------------------------------------------------------------------- */
+	/* interface TableCellRenderer                                                        */
+	/* ---------------------------------------------------------------------------------- */
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		renderColor(isSelected);		
 		Relation tr = (Relation)value;
 		renderIcon(tr);
 		renderFrom(tr);

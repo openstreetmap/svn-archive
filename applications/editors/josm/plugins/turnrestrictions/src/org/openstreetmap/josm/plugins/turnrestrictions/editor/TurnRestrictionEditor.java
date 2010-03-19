@@ -11,6 +11,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.text.MessageFormat;
@@ -30,6 +31,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ConflictAddCommand;
@@ -45,6 +47,7 @@ import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
+
 
 public class TurnRestrictionEditor extends JDialog {
 	final private static Logger logger = Logger.getLogger(TurnRestrictionEditor.class.getName());
@@ -159,6 +162,18 @@ public class TurnRestrictionEditor extends JDialog {
         JToolBar tb  = new JToolBar();
         tb.setFloatable(false);
         tb.add(new ApplyAction());
+        tb.addSeparator();
+        DeleteAction actDelete = new DeleteAction();
+        tb.add(actDelete);
+        addPropertyChangeListener(actDelete);
+        tb.addSeparator();
+        SelectAction actSelect = new SelectAction();
+        tb.add(actSelect);
+        addPropertyChangeListener(actSelect);
+
+        ZoomToAction actZoomTo = new ZoomToAction();
+        tb.add(actZoomTo);
+        addPropertyChangeListener(actZoomTo);
         return tb;
     }
     
@@ -224,8 +239,7 @@ public class TurnRestrictionEditor extends JDialog {
      * @throws IllegalArgumentException thrown if {@code turnRestriction} belongs to a different dataset than
      * that owned by the layer {@see #getLayer()}
      */
-    protected void setTurnRestriction(Relation turnRestriction) {
-      
+    protected void setTurnRestriction(Relation turnRestriction) {      
         if (turnRestriction == null) {
         	editorModel.populate(new Relation());
         } else if (turnRestriction.getDataSet() == null || turnRestriction.getDataSet() == getLayer().data) {
@@ -236,9 +250,7 @@ public class TurnRestrictionEditor extends JDialog {
         setTurnRestrictionSnapshot(turnRestriction == null ? null : new Relation(turnRestriction));
         Relation oldValue = this.turnRestriction;
         this.turnRestriction = turnRestriction;
-        if (this.turnRestriction != oldValue) {
-            support.firePropertyChange(TURN_RESTRICION_PROP, oldValue, this.turnRestriction);
-        }
+        support.firePropertyChange(TURN_RESTRICION_PROP, null, this.turnRestriction);
         updateTitle();
     }
     
@@ -246,12 +258,12 @@ public class TurnRestrictionEditor extends JDialog {
      * updates the title of the turn restriction editor
      */
     protected void updateTitle() {
-        if (getTurnRestriction() == null) {
-            setTitle(tr("Create new turn restriction in layer ''{0}''", layer.getName()));
+        if (getTurnRestriction() == null || getTurnRestriction().getDataSet() == null) {
+            setTitle(tr("Create a new turn restriction in layer ''{0}''", layer.getName()));
         } else if (getTurnRestriction().isNew()) {
-            setTitle(tr("Edit new turn restriction in layer ''{0}''", layer.getName()));
+            setTitle(tr("Edit a new turn restriction in layer ''{0}''", layer.getName()));
         } else {
-            setTitle(tr("Edit turn restriction #{0} in layer ''{1}''", Long.toString(turnRestriction.getId()), layer.getName()));
+            setTitle(tr("Edit turn restriction ''{0}'' in layer ''{1}''", Long.toString(turnRestriction.getId()), layer.getName()));
         }
     }
     
@@ -280,12 +292,9 @@ public class TurnRestrictionEditor extends JDialog {
      * 
      * @param snapshot the snapshot
      */
-    protected void setTurnRestrictionSnapshot(Relation snapshot) {
-        Relation oldValue = turnRestrictionSnapshot;
+    protected void setTurnRestrictionSnapshot(Relation snapshot) {        
         turnRestrictionSnapshot = snapshot;
-        if (turnRestrictionSnapshot != oldValue) {
-            support.firePropertyChange(TURN_RESTRICION_SNAPSHOT_PROP, oldValue, turnRestrictionSnapshot);
-        }
+        support.firePropertyChange(TURN_RESTRICION_SNAPSHOT_PROP, null, turnRestrictionSnapshot);
     }
     
     /**
@@ -485,10 +494,15 @@ public class TurnRestrictionEditor extends JDialog {
          * Apply the updates for an existing turn restriction which has not been changed
          * outside of the turn restriction editor.
          */
-        protected void applyExistingNonConflictingTurnRestriction() {
-        	Relation toUpdate = new Relation(getTurnRestriction());
-            editorModel.apply(toUpdate);
-            Main.main.undoRedo.add(new ChangeCommand(getTurnRestriction(), toUpdate));
+        protected void applyExistingNonConflictingTurnRestriction() {        	
+            if (getTurnRestriction().getDataSet() == null) {
+            	editorModel.apply(getTurnRestriction());
+            	Main.main.undoRedo.add(new AddCommand(getTurnRestriction()));
+            } else {
+            	Relation toUpdate = new Relation(getTurnRestriction());
+                editorModel.apply(toUpdate);            
+            	Main.main.undoRedo.add(new ChangeCommand(getTurnRestriction(), toUpdate));
+            }
             // this will refresh the snapshot and update the dialog title
             //
             setTurnRestriction(getTurnRestriction());
@@ -643,5 +657,91 @@ public class TurnRestrictionEditor extends JDialog {
         public void actionPerformed(ActionEvent e) {
             setVisible(false);
         }
+    }
+    
+    class DeleteAction extends AbstractAction implements PropertyChangeListener{
+    	public DeleteAction() {
+    		putValue(NAME, tr("Delete"));
+    		putValue(SHORT_DESCRIPTION, tr(("Delete this turn restriction")));
+    		putValue(SMALL_ICON, ImageProvider.get("dialogs", "delete"));
+    		updateEnabledState();
+    	}
+    	
+    	protected void updateEnabledState() {    		
+    		Relation tr = getTurnRestriction();
+    		setEnabled(tr != null && tr.getDataSet() != null);
+    	}
+
+    	public void actionPerformed(ActionEvent e) {
+    		Relation tr = getTurnRestriction();
+    		if (tr == null || tr.getDataSet() == null) return;
+    		org.openstreetmap.josm.actions.mapmode.DeleteAction.deleteRelation(
+                    getLayer(),
+                    tr
+            );
+    		setVisible(false);
+		}
+
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)){
+				updateEnabledState();
+			}
+		}
+    }
+    
+    class SelectAction extends AbstractAction implements PropertyChangeListener{
+    	public SelectAction() {
+    		putValue(NAME, tr("Select"));
+    		putValue(SHORT_DESCRIPTION, tr(("Select this turn restriction")));
+    		putValue(SMALL_ICON, ImageProvider.get("dialogs", "select"));
+    		updateEnabledState();
+    	}
+    	
+    	protected void updateEnabledState() {
+    		Relation tr = getTurnRestriction();
+    		setEnabled(tr != null && tr.getDataSet() != null);
+    	}
+
+    	public void actionPerformed(ActionEvent e) {
+    		Relation tr = getTurnRestriction();
+    		if (tr == null || tr.getDataSet() == null) return;
+    		getLayer().data.setSelected(tr);
+		}
+
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)){
+				updateEnabledState();
+			}
+		}
+    }
+    
+    class ZoomToAction extends AbstractAction implements PropertyChangeListener{
+    	public ZoomToAction() {
+    		putValue(NAME, tr("Zoom to"));
+    		putValue(SHORT_DESCRIPTION, tr(("Activate the layer this turn restriction belongs to and zoom to it")));
+    		putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale", "data"));
+    		updateEnabledState();
+    	}
+    	
+    	protected void updateEnabledState() {
+    		Relation tr = getTurnRestriction();
+    		setEnabled(tr != null && tr.getDataSet() != null);
+    	}
+
+    	public void actionPerformed(ActionEvent e) {
+    		if (Main.main.getActiveLayer() != getLayer()){
+    			Main.map.mapView.setActiveLayer(getLayer());
+    		}
+    		Relation tr = getTurnRestriction();
+    		if (tr == null || tr.getDataSet() == null) return;
+    		getLayer().data.setSelected(tr);    		
+    		AutoScaleAction.zoomToSelection();
+		}
+
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)){
+				updateEnabledState();
+			}
+		}
     }
 }

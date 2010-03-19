@@ -32,6 +32,7 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
+import org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditor;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditorManager;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -303,10 +304,10 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
 
         public void run() {
-        	 Relation tr = new Relation();
         	 OsmDataLayer layer =  Main.main.getEditLayer();
         	 if (layer == null) return;
-        	 TurnRestrictionEditor editor = new TurnRestrictionEditor(TurnRestrictionsListDialog.this, layer);
+        	 Relation tr = new TurnRestrictionBuilder().buildFromSelection(layer);
+        	 TurnRestrictionEditor editor = new TurnRestrictionEditor(TurnRestrictionsListDialog.this, layer, tr);
              TurnRestrictionEditorManager.getInstance().positionOnScreen(editor);             
              TurnRestrictionEditorManager.getInstance().register(layer, tr, editor);
              editor.setVisible(true);

@@ -13,8 +13,11 @@ import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceEdi
  */
 public class TurnRestrictionsPlugin extends Plugin{
 	
+	private CreateOrEditTurnRestrictionAction actCreateOrEditTurnRestriction;
+	
 	public TurnRestrictionsPlugin(PluginInformation info) {
 		super(info);
+		actCreateOrEditTurnRestriction = new CreateOrEditTurnRestrictionAction();
 	}
 	
 	/**

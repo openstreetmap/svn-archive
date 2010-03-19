@@ -24,7 +24,7 @@ public class TurnRestrictionsInDatasetView extends AbstractTurnRestrictionsListV
 		lstTurnRestrictions = new JList(model);
 		lstTurnRestrictions.setSelectionModel(selectionModel);
 		lstTurnRestrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		lstTurnRestrictions.setCellRenderer(new TurnRestrictionListCellRenderer());
+		lstTurnRestrictions.setCellRenderer(new TurnRestrictionCellRenderer());
 		
 		setLayout(new BorderLayout());
 		add(new JScrollPane(lstTurnRestrictions), BorderLayout.CENTER);

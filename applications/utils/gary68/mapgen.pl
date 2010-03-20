@@ -37,9 +37,11 @@
 #      [-rulescaleset]
 #      way borders 
 #      tagstat separated for nodes and ways
+# 0.14 [-pad]
+#      ocean rendering
+#      [-allowiconmove]
 #
 # TODO
-# ocean rendering
 # check rendering of route symbols, rectangles?
 # ------------------
 # determine svg file size differently and faster?
@@ -57,13 +59,14 @@
 use strict ;
 use warnings ;
 
+use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.13 ;
-use Math::Polygon ;
+use OSM::mapgen 0.14 ;
+use OSM::mapgenRules 0.14 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.13" ;
+my $version = "0.14" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -75,12 +78,14 @@ perl mapgen.pl
 -bgcolor=TEXT (color for background)
 -size=<integer> (in pixels for x axis, DEFAULT=1024)
 -clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
+-pad=<INTEGER> (percent of white space around data in osm file, DEFAULT=0)
 
 -place=TEXT (Place to draw automatically; quotation marks can be used if necessary; OSMOSIS REQUIRED!)
 -lonrad=FLOAT (radius for place width in km, DEFAULT=2)
 -latrad=FLOAT (radius for place width in km, DEFAULT=2)
 
 -declutter (declutter text; WARNING: some labels might be omitted; motorway and trunk will only be labeled in one direction)
+-allowiconmove (allows icons to be moved if they don't fit the exact position)
 
 -oneways (add oneway arrows)
 -onewaycolor=TEXT (color for oneway arrows)
@@ -126,6 +131,7 @@ my $multiOnly = 0 ;
 my $grid = 0 ;
 my $gridColor = "black" ;
 my $clip = 0 ;
+my $pad = 0 ;
 my $legendOpt = 1 ;
 my $size = 1024 ; # default pic size longitude in pixels
 my $bgColor = "white" ;
@@ -144,6 +150,7 @@ my $latrad = 2 ;
 my $helpOpt = 0 ;
 my $tagStatOpt = 0 ;
 my $declutterOpt = 0 ;
+my $allowIconMoveOpt = 0 ;
 # my $declutterMinX = 100 ;
 # my $declutterMinY = 10 ;
 my $rulerOpt = 1 ;
@@ -255,7 +262,6 @@ my %lon ; my %lat ;
 my $lonMin ; my $latMin ; my $lonMax ; my $latMax ;
 
 my $newId = -100000000; # global ! for multipolygon data (ways)
-my $iconMax = 0 ;
 
 my $time0 ; my $time1 ;
 
@@ -273,6 +279,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"coordsexp:i"	=> \$coordsExp,		# 
 				"coordscolor:s"	=> \$coordsColor,		# 
 				"clip:i"	=> \$clip,		# specifies how many percent data to clip on each side
+				"pad:i"		=> \$pad,		# specifies how many percent data to pad on each side
 				"ppc:f"		=> \$ppc,		# pixels needed per label char in font size 10
 				"pdf"		=> \$pdfOpt,		# specifies if pdf will be created
 				"png"		=> \$pngOpt,		# specifies if png will be created
@@ -280,6 +287,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"poi"		=> \$poiOpt,		# specifies if directory of pois will be created
 				"tagstat"	=> \$tagStatOpt,	# lists k/v used in osm file
 				"declutter"	=> \$declutterOpt,
+				"allowiconmove"	=> \$allowIconMoveOpt,
 				"help"		=> \$helpOpt,		# 
 				"oneways"	=> \$onewayOpt,
 				"onewaycolor:s" => \$onewayColor,
@@ -338,6 +346,7 @@ print "scaleSet  = $scaleSet\n" ;
 print "ruleScaleSet  = $ruleScaleSet\n\n" ;
 
 print "clip        = $clip (percent)\n" ;
+print "pad         = $pad (percent)\n" ;
 print "grid        = $grid (number)\n" ;
 print "gridcolor   = $gridColor\n" ;
 print "coordsOpt   = $coordsOpt\n" ;
@@ -348,6 +357,7 @@ print "dir       = $dirOpt\n" ;
 print "poiOpt    = $poiOpt\n" ;
 print "ppc       = $ppc (pixels needed per character font size 10)\n" ;
 print "declutter = $declutterOpt\n" ;
+print "alloIconMoveOpt = $allowIconMoveOpt\n" ;
 
 print "place     = $place\n" ;
 print "lonrad    = $lonrad (km)\n" ;
@@ -366,64 +376,16 @@ print "png       = $pngOpt\n\n" ;
 print "multionly = $multiOnly\n" ;
 print "verbose   = $verbose\n\n" ;
 
-
-# READ STYLE File
-print "read style file and preprocess tile icons for areas...\n" ;
-open (my $csvFile, "<", $csvName) or die ("ERROR: style file not found.") ;
-my $line = <$csvFile> ; # omit SECTION
-
-# READ NODE RULES
-$line = <$csvFile> ;
-while (! grep /^\"SECTION/, $line) {
-	if (! grep /^\"COMMENT/i, $line) {
-		my ($key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" (\d+) (\d) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
-		# print "N $key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale\n" ; 
-		push @nodes, [$key, $value, $color, $thickness, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $icon, $iconSize, $fromScale, $toScale] ;
-		if ($iconSize>$iconMax) { $iconMax = $iconSize ; } 
-	}
-	$line = <$csvFile> ;
-}
-
-# READ WAY RULES
-$line = <$csvFile> ; # omit SECTION
-while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
-	if (! grep /^\"COMMENT/i, $line) {
-		# print "way line: $line\n" ;
-		my ($key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale) = 
-			($line =~ /\"(.+)\" \"(.+)\" \"(.+)\" (\d+) (\d+) \"(.+)\" (\d+) (\d+) \"(.+)\" \"(.+)\" (\d+) \"(.+)\" ([\d\-]+) (\d) (\d) \"(.+)\" (\d+) (\d+)/ ) ;
-		# print "W $key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale\n" ; 
-		push @ways, [$key, $value, $color, $thickness, $dash, $borderColor, $borderSize, $fill, $label, $labelColor, $labelSize, $labelFont, $labelOffset, $legend, $baseLayer, $areaIcon, $fromScale, $toScale] ;
-		if (($areaIcon ne "") and ($areaIcon ne "none")) { addAreaIcon ($areaIcon) ; }
-	}
-	$line = <$csvFile> ;
-}
-
-# READ ROUTE RULES#print "ROUTE LINE: $line\n" ;
-$line = <$csvFile> ; # omit SECTION
-#print "ROUTE LINE: $line\n" ;
-while ( (! grep /^\"SECTION/, $line) and (defined $line) ) {
-	if (! grep /^\"COMMENT/i, $line) {
-		#print "ROUTE LINE: $line\n" ;
-		my ($route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale) = ($line =~ /\"(.+)\" \"(.+)\" (\d+) (\d+) (\d+) \"(.+)\" (\d+) (\d+) (\d+)/ ) ;
-		$opacity = $opacity / 100 ;
-		push @routes, [$route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale] ;	}
-	$line = <$csvFile> ;}
-close ($csvFile) ;
-
-if ($verbose eq "1") {
-	print "WAYS/AREAS\n" ;
-	foreach my $way (@ways) {
-		printf "%-20s %-20s %-10s %-6s %-6s %-10s %-6s %-6s %-10s %-10s %-10s %-10s %-6s %-6s %-6s %-20s %-10s %-10s\n", $way->[0], $way->[1], $way->[2], $way->[3], $way->[4], $way->[5], $way->[6], $way->[7], $way->[8], $way->[9], $way->[10], $way->[11], $way->[12], $way->[13], $way->[14], $way->[15], $way->[16], $way->[17] ;
-	}
-	print "\n" ;
-	print "NODES\n" ;	foreach my $node (@nodes) {		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-10s %-20s %6s %-10s %-10s\n", $node->[0], $node->[1], $node->[2], $node->[3], $node->[4], $node->[5], $node->[6], $node->[7], $node->[8], $node->[9], $node->[10], $node->[11], $node->[12], $node->[13] ;	}
-	print "\n" ;
-
-	print "ROUTES\n" ;	foreach my $route (@routes) {		printf "%-20s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", $route->[0], $route->[1], $route->[2], $route->[3], $route->[4], $route->[5], $route->[6], $route->[7], $route->[8] ;	}	print "\n" ;
-}
-
 $time0 = time() ;
 
+my ($ref1, $ref2, $ref3) = readRules ($csvName) ;
+@nodes = @$ref1 ;
+@ways = @$ref2 ;
+@routes = @$ref3 ;
+
+if ($verbose eq "1") {
+	printRules() ;
+}
 
 # -place given? look for place and call osmosis
 my $placeFound = 0 ; my $placeLon ; my $placeLat ;
@@ -579,6 +541,16 @@ if ( ($clip > 0) and ($clip < 100) ) {
 	$latMax -= ($latMax-$latMin) * $clip ;
 }
 
+if ( ($pad > 0) and ($pad < 100) ) { 
+	$pad = $pad / 100 ;
+	$lonMin -= ($lonMax-$lonMin) * $pad ;
+	$lonMax += ($lonMax-$lonMin) * $pad ;
+	$latMin -= ($latMax-$latMin) * $pad ;
+	$latMax += ($latMax-$latMin) * $pad ;
+}
+
+
+
 if ($scaleSet != 0) {
 	my $dist = distance ($lonMin, $latMin, $lonMax, $latMin) ;
 	print "INFO: distX (km) = $dist\n" ;
@@ -606,6 +578,8 @@ else {
 	print "INFO: using map rules for scale = $ruleScaleSet\n\n" ;
 }
 
+processCoastLines() ;
+
 processRoutes () ;
 
 processMultipolygons () ; # multipolygons, (routes)
@@ -632,7 +606,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 						#print "AREA name $name $x $y\n" ;
 						#print "$x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont]\n" ;
 						# drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
-						placeLabelAndIcon ($x, $y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0) ;
+						placeLabelAndIcon ($x, $y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt) ;
 					}
 				}
 			}
@@ -653,7 +627,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 				my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 				#print "MP name $name $x $y\n" ;
 				# drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
-				placeLabelAndIcon ($x,$y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0) ;
+				placeLabelAndIcon ($x,$y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt) ;
 			}
 		} #if
 	} # if
@@ -690,7 +664,7 @@ foreach my $nodeId (keys %memNodeTags) {
 			my @names = @$ref1 ;
 
 			placeLabelAndIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexThickness], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $ppc, 
-				$test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize]) ;
+				$test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $allowIconMoveOpt) ;
 		}
 	} # defined $test
 } # nodes
@@ -793,7 +767,7 @@ foreach my $wayId (keys %memWayTags) {
 								}
 								$x = $x / $count ; $y = $y / $count ;
 								# drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
-								placeLabelAndIcon ($x, $y, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0) ;
+								placeLabelAndIcon ($x, $y, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt) ;
 							}
 						}
 					} # draw label
@@ -804,9 +778,8 @@ foreach my $wayId (keys %memWayTags) {
 } # ways
 
 
-if ($declutterOpt == 1) {
-	print declutterStat() ;
-}
+print declutterStat() ;
+
 
 
 # draw other information
@@ -1102,7 +1075,7 @@ sub processMultipolygons {
 			my @ringWaysInner = () ; my @ringNodesInner = () ; my @ringTagsInner = () ;
 			# build rings inner
 			if (scalar @innerWays > 0) {
-				($ringsWaysRef, $ringsNodesRef) = buildRings (\@innerWays) ;
+				($ringsWaysRef, $ringsNodesRef) = buildRings (\@innerWays, 1) ;
 				@ringWaysInner = @$ringsWaysRef ; 
 				@ringNodesInner = @$ringsNodesRef ;
 				for (my $ring=0; $ring<=$#ringWaysInner; $ring++) {
@@ -1129,7 +1102,7 @@ sub processMultipolygons {
 			# build rings outer
 			my @ringWaysOuter = () ; my @ringNodesOuter = () ; my @ringTagsOuter = () ;
 			if (scalar @outerWays > 0) {
-				($ringsWaysRef, $ringsNodesRef) = buildRings (\@outerWays) ;
+				($ringsWaysRef, $ringsNodesRef) = buildRings (\@outerWays, 1) ;
 				@ringWaysOuter = @$ringsWaysRef ; # not necessary for outer
 				@ringNodesOuter = @$ringsNodesRef ;
 				for (my $ring=0; $ring<=$#ringWaysOuter; $ring++) {
@@ -1168,32 +1141,38 @@ sub processMultipolygons {
 }
 
 sub buildRings {
-	my ($ref) = shift ;
+	my ($ref, $closeOpt) = @_ ;
 	my (@allWays) = @$ref ;
 	my @ringWays = () ;
 	my @ringNodes = () ;
 	my $ringCount = 0 ;
 
 	# print "build rings for @allWays\n" ;
-
+	if ($verbose eq "1" ) { print "BR: called.\n" ; }
 	while ( scalar @allWays > 0) {
 		# build new test ring
 		my (@currentWays) = () ; my (@currentNodes) = () ;
 		push @currentWays, $allWays[0] ;
+		if ($verbose eq "1" ) { print "BR: initial way for next ring id= $allWays[0]\n" ; }
 		push @currentNodes, @{$memWayNodes{$allWays[0]}} ;
 		my $startNode = $currentNodes[0] ;
 		my $endNode = $currentNodes[-1] ;
+		if ($verbose eq "1" ) { print "BR: initial start and end node $startNode $endNode\n" ; }
 		my $closed = 0 ;
 		shift @allWays ; # remove first element 
 		if ($startNode == $endNode) {	$closed = 1 ; }
 
 		my $success = 1 ;
-		while ( ($closed != 0) and ( (scalar @allWays) > 0) and ($success == 1) ) {
+		while ( ($closed == 0) and ( (scalar @allWays) > 0) and ($success == 1) ) {
+		# while ( ($closed != 0) and ( (scalar @allWays) > 0) and ($success == 1) ) { # TODO CHECK
 			# try to find new way
+			if ($verbose eq "1" ) { print "TRY TO FIND NEW WAY\n" ; }
 			$success = 0 ;
-
+			if ($verbose eq "1" ) { print "BR: actual start and end node $startNode $endNode\n" ; }
 			my $i = 0 ;
 			while ( ($i < (scalar @allWays) ) and ($success == 0) ) {
+				if ($verbose eq "1" ) { print "BR: testing way $i = $allWays[$i]\n" ; }
+				if ($verbose eq "1" ) { print "BR:   rev in front?\n" ; }
 				if ( $memWayNodes{$allWays[$i]}[0] == $startNode ) { 
 					$success = 1 ;
 					# reverse in front
@@ -1201,38 +1180,50 @@ sub buildRings {
 					@currentNodes = (reverse (@{$memWayNodes{$allWays[$i]}}), @currentNodes) ;
 					splice (@allWays, $i, 1) ;
 				}
-				if ( ( $memWayNodes{$allWays[$i]}[0] == $endNode) and ($success == 0) ) { 
-					$success = 1 ;
-					# append at end
-					@currentWays = (@currentWays, $allWays[$i]) ;
-					@currentNodes = (@currentNodes, @{$memWayNodes{$allWays[$i]}}) ;
-					splice (@allWays, $i, 1) ;
+				if ($success ==0) {
+					if ($verbose eq "1" ) { print "BR:   app at end?\n" ; }
+					if ( $memWayNodes{$allWays[$i]}[0] == $endNode)  { 
+						$success = 1 ;
+						# append at end
+						@currentWays = (@currentWays, $allWays[$i]) ;
+						@currentNodes = (@currentNodes, @{$memWayNodes{$allWays[$i]}}) ;
+						splice (@allWays, $i, 1) ;
+					}
 				}
-				if ( ( $memWayNodes{$allWays[$i]}[-1] == $startNode) and ($success == 0) ) { 
-					$success = 1 ;
-					# append in front
-					@currentWays = ($allWays[$i], @currentWays) ;
-					@currentNodes = (@{$memWayNodes{$allWays[$i]}}, @currentNodes) ;
-					splice (@allWays, $i, 1) ;
+				if ($success ==0) {
+					if ($verbose eq "1" ) { print "BR:   app in front?\n" ; }
+					if ( $memWayNodes{$allWays[$i]}[-1] == $startNode) { 
+						$success = 1 ;
+						# append in front
+						@currentWays = ($allWays[$i], @currentWays) ;
+						@currentNodes = (@{$memWayNodes{$allWays[$i]}}, @currentNodes) ;
+						splice (@allWays, $i, 1) ;
+					}
 				}
-				if ( ( $memWayNodes{$allWays[$i]}[-1] == $endNode) and ($success == 0) ) { 
-					$success = 1 ;
-					# append reverse at the end
-					@currentWays = (@currentWays, $allWays[$i]) ;
-					@currentNodes = (@currentNodes, (reverse (@{$memWayNodes{$allWays[$i]}}))) ;
-					splice (@allWays, $i, 1) ;
+				if ($success ==0) {
+					if ($verbose eq "1" ) { print "BR:   rev at end?\n" ; }
+					if ( $memWayNodes{$allWays[$i]}[-1] == $endNode) { 
+						$success = 1 ;
+						# append reverse at the end
+						@currentWays = (@currentWays, $allWays[$i]) ;
+						@currentNodes = (@currentNodes, (reverse (@{$memWayNodes{$allWays[$i]}}))) ;
+						splice (@allWays, $i, 1) ;
+					}
 				}
 				$i++ ;
 			} # look for new way that fits
 
 			$startNode = $currentNodes[0] ;
 			$endNode = $currentNodes[-1] ;
-			if ($startNode == $endNode) { $closed = 1 ; }
+			if ($startNode == $endNode) { 
+				$closed = 1 ; 
+				if ($verbose eq "1" ) { print "BR: ring now closed\n" ;} 
+			}
 
 		} # new ring 
 		
 		# examine ring and act
-		if ($closed == 1) {
+		if ( ($closed == 1) or ($closeOpt == 0) ) {
 			@{$ringWays[$ringCount]} = @currentWays ;
 			@{$ringNodes[$ringCount]} = @currentNodes ;
 			$ringCount++ ;
@@ -1570,7 +1561,7 @@ sub isIn {
 					}
 				} # rule found
 			} # test rules
-			if ($verbose eq "1") { print "\n" ; }
+			# if ($verbose eq "1") { print "\n" ; }
 		} # rel route
 	}
 
@@ -1604,7 +1595,7 @@ sub isIn {
 			foreach my $iconName (keys %{$wayRouteIcons{$w}}) {
 				# print "  $w $offset ICON $iconName drawn\n" ;
 				# drawIcon ($lon{$node}, $lat{$node}, $iconName, 0, 0, $declutterOpt, $offset) ;
-				placeLabelAndIcon ($lon{$node}, $lat{$node}, 0, "", "none", 0, "", $ppc, $iconName, 0, 0) ;
+				placeLabelAndIcon ($lon{$node}, $lat{$node}, 0, "", "none", 0, "", $ppc, $iconName, 0, 0, $allowIconMoveOpt) ;
 				$offset += $routeIconDist ;
 			}
 		}
@@ -1742,4 +1733,308 @@ sub getWayRule {
 }
 
 
+# ------------------------------------------------------------------------------------------------
+
+sub processCoastLines {
+#
+#
+#
+	print "check and process coastlines...\n" ;
+	# collect all coastline ways
+	my @allWays = () ;
+	foreach $wayId (keys %memWayNodes) {
+		if (getValue ("natural", \@{$memWayTags{$wayId}}) eq "coastline" ) {
+			push @allWays, $wayId ;
+			if ($verbose eq "1") { print "COAST initial way $wayId start ${$memWayNodes{$wayId}}[0]  end ${$memWayNodes{$wayId}}[-1]\n" ; }
+		}
+	}
+	if ($verbose eq "1") { print "COAST: " . scalar (@allWays) . " coastline ways found.\n" ; }
+
+	if (scalar @allWays > 0) {
+		# build rings
+		my ($refWays, $refNodes) = buildRings (\@allWays, 0) ;
+		my @ringNodes = @$refNodes ; # contains all nodes of rings // array of arrays !
+		if ($verbose eq "1") { print "COAST: " . scalar (@ringNodes) . " rings found.\n" ; }
+
+		# convert rings to coordinate system
+		my @ringCoordsOpen = () ; my @ringCoordsClosed = () ;
+		for (my $i=0; $i<=$#ringNodes; $i++) {
+			# print "COAST: initial ring $i\n" ;
+			my @actualCoords = () ;
+			foreach my $node (@{$ringNodes[$i]}) {
+				push @actualCoords, [convert ($lon{$node}, $lat{$node})] ;
+			}
+			if (${$ringNodes[$i]}[0] == ${$ringNodes[$i]}[-1]) {
+				push @ringCoordsClosed, [@actualCoords] ; # islands
+			}
+			else {
+				push @ringCoordsOpen, [@actualCoords] ;
+			}
+			# printRingCoords (\@actualCoords) ;
+			my $num = scalar @actualCoords ;
+			if ($verbose eq "1") { print "COAST: initial ring $i - $actualCoords[0]->[0],$actualCoords[0]->[1] -->> $actualCoords[-1]->[0],$actualCoords[-1]->[1]  nodes: $num\n" ; }
+		}
+
+		if ($verbose eq "1") { print "COAST: add points on border...\n" ; }
+		foreach my $ring (@ringCoordsOpen) {
+			# print "COAST:   ring $ring with border nodes\n" ;
+			# add first point on border
+			my $ref = nearestPoint ($ring->[0]) ;
+			my @a = @$ref ;
+			unshift @$ring, [@a] ;
+			# add last point on border
+			$ref = nearestPoint ($ring->[-1]) ;
+			@a = @$ref ;
+			push @$ring, [@a] ;
+			# printRingCoords ($ring) ;
+		}
+
+		my @islandRings = @ringCoordsClosed ;
+		if ($verbose eq "1") { print "COAST: " . scalar (@islandRings) . " islands found.\n" ; }
+		@ringCoordsClosed = () ;
+
+		# process ringCoordsOpen
+		# add other rings, corners... 
+		while (scalar @ringCoordsOpen > 0) { # as long as there are open rings
+			if ($verbose eq "1") { print "COAST: building ring...\n" ; }
+			my $ref = shift @ringCoordsOpen ; # get start ring
+			my @actualRing = @$ref ;
+
+			my $closed = 0 ; # mark as not closed
+			my $actualX = $actualRing[-1]->[0] ;
+			my $actualY = $actualRing[-1]->[1] ;
+
+			my $actualStartX = $actualRing[0]->[0] ;  
+			my $actualStartY = $actualRing[0]->[1] ;  
+
+			if ($verbose eq "1") { print "COAST: actual and actualStart $actualX, $actualY   -   $actualStartX, $actualStartY\n" ; }
+
+			my $corner ;
+			while (!$closed) { # as long as this ring is not closed
+				($actualX, $actualY, $corner) = nextPointOnBorder ($actualX, $actualY) ;
+				# print "      actual $actualX, $actualY\n" ;
+				my $startFromOtherPolygon = -1 ;
+				# find matching ring if there is another ring
+				if (scalar @ringCoordsOpen > 0) {
+					for (my $i=0; $i <= $#ringCoordsOpen; $i++) {
+						my @test = @{$ringCoordsOpen[$i]} ;
+						# print "    test ring $i: ", $test[0]->[0], " " , $test[0]->[1] , "\n" ;
+						if ( ($actualX == $test[0]->[0]) and ($actualY == $test[0]->[1]) ) {
+							$startFromOtherPolygon = $i ;
+							if ($verbose eq "1") { print "COAST:   matching start other polygon found i= $i\n" ; }
+						}
+					}
+				}
+				# process matching polygon, if present
+				if ($startFromOtherPolygon != -1) { # start from other polygon {
+					# append nodes
+					# print "ARRAY TO PUSH: @{$ringCoordsOpen[$startFromOtherPolygon]}\n" ;
+					push @actualRing, @{$ringCoordsOpen[$startFromOtherPolygon]} ;
+					# set actual
+					$actualX = $actualRing[-1]->[0] ;
+					$actualY = $actualRing[-1]->[1] ;
+					# drop p2 from opens
+					splice @ringCoordsOpen, $startFromOtherPolygon, 1 ;
+					if ($verbose eq "1") { print "COAST:   openring $startFromOtherPolygon added to actual ring\n" ; }
+				}
+				else {
+					if ($corner) { # add corner to actual ring
+						push @actualRing, [$actualX, $actualY] ;
+						if ($verbose eq "1") { print "COAST:   corner $actualX, $actualY added to actual ring\n" ; }
+					}
+				}
+				# check if closed
+				if ( ($actualX == $actualStartX) and ($actualY == $actualStartY) ) {
+					$closed = 1 ;
+					push @actualRing, [$actualX, $actualY] ;
+					push @ringCoordsClosed, [@actualRing] ;
+					if ($verbose eq "1") { print "COAST:    ring now closed and moved to closed rings.\n" ; }
+				}
+			} # !closed
+		} # open rings
+
+		# get water color or default
+		my $color = "lightblue" ;
+		foreach my $way (@ways) {
+			if ( ($way->[$wayIndexTag] eq "natural") and ($way->[$wayIndexValue] eq "water") ) {
+				$color = $way->[$wayIndexColor] ;
+			}
+		}
+
+		# build islandRings polygons
+		if ($verbose eq "1") { print "OCEAN: building island polygons\n" ; }
+		my @islandPolygons = () ;
+		if (scalar @islandRings > 0) {
+			for (my $i=0; $i<=$#islandRings; $i++) {
+				my @poly = () ;
+				foreach my $node ( @{$islandRings[$i]} ) {
+					push @poly, [$node->[0], $node->[1]] ;
+				}
+				my ($p) = Math::Polygon->new(@poly) ;
+				$islandPolygons[$i] = $p ;
+			}
+		}
+		
+		# build ocean ring polygons
+		if ($verbose eq "1") { print "OCEAN: building ocean polygons\n" ; }
+		my @oceanPolygons = () ;
+		if (scalar @ringCoordsClosed > 0) {
+			for (my $i=0; $i<=$#ringCoordsClosed; $i++) {
+				my @poly = () ;
+				foreach my $node ( @{$ringCoordsClosed[$i]} ) {
+					push @poly, [$node->[0], $node->[1]] ;
+				}
+				my ($p) = Math::Polygon->new(@poly) ;
+				$oceanPolygons[$i] = $p ;
+			}
+		}
+		else {
+			if (scalar @islandRings > 0) {
+				if ($verbose eq "1") { print "OCEAN: build ocean rect\n" ; }
+				my @ocean = () ;
+				my ($x, $y) = getDimensions() ;
+				push @ocean, [0,0], [$x,0], [$x,$y], [0,$y], [0,0] ;
+				push @ringCoordsClosed, [@ocean] ;
+				my ($p) = Math::Polygon->new(@ocean) ;
+				push @oceanPolygons, $p ;
+			}
+		}
+
+		# finally create pathes for SVG
+		for (my $i=0; $i<=$#ringCoordsClosed; $i++) {
+		# foreach my $ring (@ringCoordsClosed) {
+			my @ring = @{$ringCoordsClosed[$i]} ;
+			my @array = () ;
+			my @coords = () ;
+			foreach my $c (@ring) {
+				push @coords, $c->[0], $c->[1] ;
+			}
+			push @array, [@coords] ; 
+			if (scalar @islandRings > 0) {
+				for (my $j=0; $j<=$#islandRings; $j++) {
+					# island in ring? 1:1 and coast on border?
+					# if (isIn ($islandPolygons[$j], $oceanPolygons[$i]) == 1) {
+					if ( (isIn ($islandPolygons[$j], $oceanPolygons[$i]) == 1) or 
+						( (scalar @islandRings == 1) and (scalar @ringCoordsClosed == 1) ) )	{
+						if ($verbose eq "1") { print "OCEAN: island $j in ocean $i\n" ; }
+						my @coords = () ;
+						foreach my $c (@{$islandRings[$j]}) {
+							push @coords, $c->[0], $c->[1] ;		
+						}
+						push @array, [@coords] ;
+					}
+				}
+			}
+			drawAreaOcean ($color, \@array) ;
+		}
+	}
+}
+
+
+sub nearestPoint {
+#
+# accepts x/y coordinates and returns nearest point on border of map to complete cut coast ways
+#
+	my $ref = shift ;
+	my $x = $ref->[0] ;
+	my $y = $ref->[1] ;
+	my $xn ; my $yn ;
+	my $min = 99999 ;
+	# print "  NP: initial $x $y\n" ;
+	my ($xmax, $ymax) = getDimensions() ;
+	# print "  NP: dimensions $xmax $ymax\n" ;
+	if ( abs ($xmax-$x) < $min) { # right
+		$xn = $xmax ;
+		$yn = $y ; 
+		$min = abs ($xmax-$x) ;
+	}
+	if ( abs ($ymax-$y) < $min) { # bottom
+		$xn = $x ;
+		$yn = $ymax ; 
+		$min = abs ($ymax-$y) ;
+	}
+	if ( abs ($x) < $min) { # left
+		$xn = 0 ;
+		$yn = $y ; 
+		$min = abs ($x) ;
+	}
+	if ( abs ($y) < $min) { # top
+		$xn = $x ;
+		$yn = 0 ; 
+	}
+	# print "  NP: final $xn $yn\n" ;
+	my @a = ($xn, $yn) ;
+	return (\@a) ;
+}
+
+
+sub printRingCoords {
+	my $ref = shift ;
+	my @ringCoords = @$ref ;
+
+	print "        ring coords\n" ;
+	foreach my $c (@ringCoords) {
+		print "$c->[0], $c->[1] *** " ;
+	}
+	print "\n" ;
+}
+
+
+sub nextPointOnBorder {
+#
+# accepts x/y coordinates and returns next point on border - to complete coast rings with other polygons and corner points
+# hints if returned point is a corner
+#
+	# right turns
+	my ($x, $y) = @_ ;
+	my ($xn, $yn) ;
+	my $corner = 0 ;
+	my ($xmax, $ymax) = getDimensions() ;
+	if ($x == $xmax) { # right border
+		if ($y < $ymax) {
+			$xn = $xmax ; $yn = $y + 1 ;
+		}
+		else {
+			$xn = $xmax - 1 ; $yn = $ymax ;
+		}
+	}
+	else {
+		if ($x == 0) { # left border
+			if ($y > 0) {
+				$xn = 0 ; $yn = $y - 1 ;
+			}
+			else {
+				$xn = 1 ; $yn = 0 ;
+			}
+		}
+		else {
+			if ($y == $ymax) { # bottom border
+				if ($x > 0) {
+					$xn = $x - 1 ; $yn = $ymax ;
+				}
+				else {
+					$xn = 0 ; $yn = $ymax - 1 ; 
+				}
+			}
+			else {
+				if ($y == 0) { # top border
+					if ($x < $xmax) {
+						$xn = $x + 1 ; $yn = 0 ;
+					}
+					else {
+						$xn = $xmax ; $yn = 1 ; 
+					}
+				}
+			}
+		}
+	}
+	# print "NPOB: $x, $y --- finito $xn $yn\n" ;
+
+	if ( ($xn == 0) and ($yn == 0) ) { $corner = 1 ; }
+	if ( ($xn == 0) and ($yn == $ymax) ) { $corner = 1 ; }
+	if ( ($xn == $xmax) and ($yn == 0) ) { $corner = 1 ; }
+	if ( ($xn == $xmax) and ($yn == $ymax) ) { $corner = 1 ; }
+
+	return ($xn, $yn, $corner) ;
+}
 

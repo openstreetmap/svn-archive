@@ -19,50 +19,10 @@
 # You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>
 
 #
-# USAGE
-#
-#
-# center (lon, lat, lon, lat...)
-# createLabel ($refTagArray, $styleLabelText)
-# drawArea ($color, @nodes) - real world
-# drawAreaMP
-# drawAreaPix ($color, @nodes) - pixels
-# drawCoords
-# drawGrid ($parts)
-# drawHead ($text, $color, $size) / size (1..5) 
-# drawIcon ($lon, $lat, $icon, $size) ;
-# drawFoot ($text, $color, $size) / size (1..5) 
-# drawNodeDot ($lon, $lat, $color, $size) / size (1..5) - real world
-# drawNodeDotPix ($lon, $lat, $color, $size) / size (1..5) - pixels
-# drawNodeCircle ($lon, $lat, $color, $size) / size (1..5) - real world
-# drawNodeCirclePix ($lon, $lat, $color, $size) / size (1..5) - pixels
-# drawRuler ($color)
-# drawTextPix ($x, $y, $text, $color, $size) / size (1..5) top left = (0,0) 
-# drawTextPos ($lon, $lat, $offX, $offY, $text, $color, $size) / size (1..5)
-# drawWay ($layer, d$color, $size, $dash, @nodes) / size = thickness / real world
-# drawWayBridge ($layer, d$color, $size, $dash, @nodes) / size = thickness / real world
-# drawWayPix ($color, $size, $dash, @nodes) / size = thickness / pixels
-# drawWayRoute ($col, $size, $dash, $opacity, @nodes)
-# getScale
-# getValue ($key, \@tagArray)
-# gridSquare ($lon, $lat) / returns grid square for directory
-# fitsPaper ($x, $y, $dpi)
-# initGraph ($sizeX, $left, $bottom, $right, $top) / real world coordinates, sizeX in pixels, Y automatic
-# labelWay ($col, $size, $font, $text, $tSpan, @nodes) / size can be 0..5 (or bigger...) / $tSpan = offset to line/way
-# printScale ($dpi, $color)
-# writeSVG ($fileName)
-#
-#
-# INTERNAL
-# 
-# convert ($x, $y)						-> ($x1, $y1) pixels in graph
-#
 # INFO
 #
 # graph top left coordinates: (0,0)
 # size for lines = pixel width / thickness
-# pass color as string, i.e. "black". list see farther down.
-#
 #
 
 package OSM::mapgen ; #  
@@ -80,7 +40,7 @@ use GD ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.13' ;
+$VERSION = '0.14' ;
 
 require Exporter ;
 
@@ -95,6 +55,7 @@ require Exporter ;
 			declutterStat
 			drawArea 
 			drawAreaMP
+			drawAreaOcean
 			drawAreaPix 
 			drawCircleRadius 
 			drawCircleRadiusText 
@@ -116,6 +77,7 @@ require Exporter ;
 			drawWayPix 
 			drawWayRoute
 			fitsPaper
+			getDimensions
 			getScale
 			getValue
 			gridSquare
@@ -636,7 +598,7 @@ sub svgElementText {
 
 sub svgElementCircleFilled {
 #
-# draws circle not filled
+# draws circle filled
 #
 	my ($x, $y, $size, $col) = @_ ;
 	my $svg = "<circle cx=\"" . $x . "\" cy=\"" . $y . "\" r=\"" . $size . "\" fill=\"" . $col  . "\" />" ;
@@ -645,7 +607,7 @@ sub svgElementCircleFilled {
 
 sub svgElementCircle {
 #
-# draws filled circle / dot
+# draws not filled circle / dot
 #
 	my ($x, $y, $radius, $size, $col) = @_ ;
 	my $svg = "<circle cx=\"" . $x . "\" cy=\"" . $y . "\" r=\"" . $radius . "\" fill=\"none\" stroke=\"" . $col  . "\" stroke-width=\"2\" />" ;
@@ -1136,14 +1098,30 @@ sub addOnewayArrows {
 }
 
 sub declutterStat {
-	my $perc1 = int ($numIconsMoved / $numIcons * 100) ;
-	my $perc2 = int ($numIconsOmitted / $numIcons * 100) ;
-	my $perc3 = int ($numLabelsMoved / $numLabels * 100) ;
-	my $perc4 = int ($numLabelsOmitted / $numLabels * 100) ;
+	my $perc1 ;
+	my $perc2 ;
+	my $perc3 ;
+	my $perc4 ;
+	if ($numIcons != 0) {
+		$perc1 = int ($numIconsMoved / $numIcons * 100) ;
+		$perc2 = int ($numIconsOmitted / $numIcons * 100) ;
+	}
+	else {
+		$perc1 = 0 ;
+		$perc2 = 0 ;
+	}
+	if ($numLabels != 0) {
+		$perc3 = int ($numLabelsMoved / $numLabels * 100) ;
+		$perc4 = int ($numLabelsOmitted / $numLabels * 100) ;
+	}
+	else {
+		$perc3 = 0 ;
+		$perc4 = 0 ;
+	}
 
 	my $out = "$numIcons icons drawn.\n" ; 
 	$out .= "  $numIconsMoved moved. ($perc1 %)\n" ;
-	$out .= "  $numIconsOmitted omitted. ($perc2 %)\n" ;
+	$out .= "  $numIconsOmitted omitted (possibly with label!). ($perc2 %)\n" ;
 
 	$out .= "$numLabels labels drawn.\n" ; 
 	$out .= "  $numLabelsMoved moved. ($perc3 %)\n" ;
@@ -1151,7 +1129,7 @@ sub declutterStat {
 }
 
 sub placeLabelAndIcon {
-	my ($lon, $lat, $thickness, $text, $color, $textSize, $font, $ppc, $icon, $iconSizeX, $iconSizeY) = @_ ;
+	my ($lon, $lat, $thickness, $text, $color, $textSize, $font, $ppc, $icon, $iconSizeX, $iconSizeY, $allowIconMove) = @_ ;
 
 	my ($x, $y) = convert ($lon, $lat) ; # center !
 
@@ -1180,9 +1158,26 @@ sub placeLabelAndIcon {
 			my $iconX = $x - $sizeX1/2 ; # top left corner
 			my $iconY = $y - $sizeY1/2 ; 
 
-			if ( ! areaOccupied ($iconX, $iconX+$sizeX1, $iconY+$sizeY1, $iconY) ) {
-				push @svgOutputIcons, svgElementIcon ($iconX, $iconY, $icon, $sizeX1, $sizeY1) ;
-				occupyArea ($iconX, $iconX+$sizeX1, $iconY+$sizeY1, $iconY) ;
+			my @shifts = (0) ;
+			if ($allowIconMove eq "1") {
+				@shifts = (0, -10, 10) ;
+			}
+			my $posFound = 0 ; my $posCount = 0 ;
+			LABAB: foreach my $xShift (@shifts) {
+				foreach my $yShift (@shifts) {
+					$posCount++ ;
+					if ( ! areaOccupied ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ) {
+						push @svgOutputIcons, svgElementIcon ($iconX+$xShift, $iconY+$yShift, $icon, $sizeX1, $sizeY1) ;
+						occupyArea ($iconX+$xShift, $iconX+$sizeX1+$xShift, $iconY+$sizeY1+$yShift, $iconY+$yShift) ;
+						$posFound = 1 ;
+						if ($posCount > 1) { $numIconsMoved++ ; }
+						$iconX = $iconX + $xShift ; # for later use with label
+						$iconY = $iconY + $yShift ;
+						last LABAB ;
+					}
+				}
+			}
+			if ($posFound == 1) {
 
 				# label text?
 				if ($text ne "") {
@@ -1317,6 +1312,19 @@ sub checkAndDrawText {
 		return 0 ;
 	}
 }
+
+sub getDimensions {
+	return ($sizeX, $sizeY) ;
+}
+
+
+
+sub drawAreaOcean {
+	my ($col, $ref) = @_ ;
+	push @svgOutputAreas, svgElementMultiPolygonFilled ($col, "none", $ref) ;
+}
+
+
 
 1 ;
 

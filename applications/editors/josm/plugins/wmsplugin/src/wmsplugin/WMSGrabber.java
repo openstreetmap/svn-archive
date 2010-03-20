@@ -209,7 +209,8 @@ public class WMSGrabber extends Grabber {
 
         String line = null;
         while( (line = br.readLine()) != null) {
-            exception.append(line);
+            // filter non-ASCII characters and control characters
+            exception.append(line.replaceAll("[^\\p{Print}]", ""));
             exception.append('\n');
         }
         return exception.toString();

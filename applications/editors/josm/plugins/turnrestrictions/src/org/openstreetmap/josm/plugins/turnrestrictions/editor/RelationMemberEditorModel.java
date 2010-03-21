@@ -135,7 +135,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
 		}
 		return isChanged;
 	}
-	
+		
 	/**
 	 * Replies the set of {@see OsmPrimitive}s with the role 'from'. If no
 	 * such primitives exists, the empty set is returned.

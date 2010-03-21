@@ -52,10 +52,10 @@ public class JosmSelectionPanel extends JPanel {
 	/**
 	 * builds the UI for the panel 
 	 */
-	protected void build(DataSet ds) {
+	protected void build(OsmDataLayer layer) {
 		setLayout(new BorderLayout());
 		DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-		model = new JosmSelectionListModel(ds,selectionModel);
+		model = new JosmSelectionListModel(layer,selectionModel);
 		lstSelection = new JList(model);
 		lstSelection.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		lstSelection.setSelectionModel(selectionModel);
@@ -72,14 +72,14 @@ public class JosmSelectionPanel extends JPanel {
 	}
 	
 	/**
-	 * Creates the JOSM selection panel for the selection in a data set. 
+	 * Creates the JOSM selection panel for the selection in an OSM data layer
 	 * 
-	 * @param ds the dataset. Must not be null.
-	 * @exception IllegalArgumentException thrown if ds is null
+	 * @param layer the data layer. Must not be null.
+	 * @exception IllegalArgumentException thrown if {@code layer} is null
 	 */
-	public JosmSelectionPanel(DataSet ds) throws IllegalArgumentException{
-		CheckParameterUtil.ensureParameterNotNull(ds, "ds");
-		build(ds); 
+	public JosmSelectionPanel(OsmDataLayer layer) throws IllegalArgumentException{
+		CheckParameterUtil.ensureParameterNotNull(layer, "layer");
+		build(layer); 
 	}
 	
 	/**

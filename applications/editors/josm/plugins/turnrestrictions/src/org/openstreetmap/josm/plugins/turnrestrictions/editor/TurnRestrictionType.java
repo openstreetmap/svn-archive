@@ -55,4 +55,14 @@ public enum TurnRestrictionType {
 		}
 		return null;
 	}
+
+	/**
+	 * Replies true if {@code tagValue} is a standard restriction type. 
+	 * 
+	 * @param tagValue the tag value 
+	 * @return true if {@code tagValue} is a standard restriction type
+	 */
+	static public boolean isStandardTagValue(String tagValue){
+		return fromTagValue(tagValue) != null;
+	}
 }

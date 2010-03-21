@@ -30,6 +30,7 @@ import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.tagging.TagEditorModel;
 import org.openstreetmap.josm.gui.tagging.TagModel;
+import org.openstreetmap.josm.plugins.turnrestrictions.qa.IssuesModel;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -65,6 +66,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	private OsmDataLayer layer;
 	private final TagEditorModel tagEditorModel = new TagEditorModel();
 	private  RelationMemberEditorModel memberModel;
+	private  IssuesModel issuesModel;
 	
 	/**
 	 * Creates a model in the context of a {@see OsmDataLayer}
@@ -72,11 +74,14 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 * @param layer the layer. Must not be null.
 	 * @throws IllegalArgumentException thrown if {@code layer} is null
 	 */
-	public TurnRestrictionEditorModel(OsmDataLayer layer) throws IllegalArgumentException{
+	public TurnRestrictionEditorModel(OsmDataLayer layer, NavigationControler navigationControler) throws IllegalArgumentException{
 		CheckParameterUtil.ensureParameterNotNull(layer, "layer");
 		this.layer = layer;
 		memberModel = new RelationMemberEditorModel(layer);
 		memberModel.addTableModelListener(new RelationMemberModelListener());
+		issuesModel = new IssuesModel(this,navigationControler);
+		addObserver(issuesModel);
+		tagEditorModel.addTableModelListener(new TagEditorModelObserver());
 	}
 	
 	/**
@@ -304,6 +309,59 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	public RelationMemberEditorModel getRelationMemberEditorModel() {
 		return memberModel;
 	}
+	
+	/**
+	 * Replies the model for the open issues in this turn restriction
+	 * editor.
+	 * 
+	 * @return the model for the open issues in this turn restriction
+	 * editor
+	 */
+	public IssuesModel getIssuesModel() {
+		return issuesModel;
+	}
+	
+	/**
+	 * Replies the current value of the tag "except", or the empty string
+	 * if the tag doesn't exist.
+	 * 
+	 * @return
+	 */
+	public ExceptValueModel getExcept() {
+		TagModel tag = tagEditorModel.get("except");
+		if (tag == null) return new ExceptValueModel("");
+		return new ExceptValueModel(tag.getValue());
+	}
+	
+	/**
+	 * Sets the current value of the tag "except". Removes the
+	 * tag is {@code value} is null or consists of white
+	 * space only. 
+	 * 
+	 * @param value the new value for 'except'
+	 */
+	public void setExcept(ExceptValueModel value){
+		if (value == null || value.getValue().equals("")) {
+			if (tagEditorModel.get("except") != null){
+				tagEditorModel.delete("except");
+				setChanged();
+				notifyObservers();				
+			}
+			return;			
+		}
+		TagModel tag = tagEditorModel.get("except");
+		if (tag == null) {
+			tagEditorModel.prepend(new TagModel("except", value.getValue()));
+			setChanged();
+			notifyObservers();
+		} else {
+			if (!tag.getValue().equals(value.getValue())) {
+				tag.setValue(value.getValue().trim());
+				setChanged();
+				notifyObservers();
+			}
+		}		
+	}
 
 	/* ----------------------------------------------------------------------------------------- */
 	/* interface DataSetListener                                                                 */
@@ -362,5 +420,12 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 			setChanged();
 			notifyObservers();
 		}		
-	}	
+	}
+	
+	class TagEditorModelObserver implements TableModelListener {
+		public void tableChanged(TableModelEvent e) {
+			setChanged();
+			notifyObservers();
+		}		
+	}
 }

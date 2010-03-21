@@ -10,18 +10,26 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
+import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * BasicEditorPanel provides a UI for editing the basic elements of a turn restriction,
  * i.e. its restriction type, the from, the to, and the via objects.
  * 
- *
  */
-public class BasicEditorPanel extends JPanel {
+public class BasicEditorPanel extends VerticallyScrollablePanel {
 
 	/** the turn restriction model */
 	private TurnRestrictionEditorModel model;
+	
+	/** the UI widgets */
+	private TurnRestrictionLegEditor fromEditor;
+	private TurnRestrictionLegEditor toEditor;
+	private ViaList lstVias;
+	private TurnRestrictionComboBox cbTurnRestrictions;
+	private VehicleExceptionEditor vehicleExceptionsEditor;
 	
 	/**
 	 * builds the UI
@@ -39,7 +47,7 @@ public class BasicEditorPanel extends JPanel {
 	    
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;
-	    add(new TurnRestrictionComboBox(new TurnRestrictionComboBoxModel(model)), gc);
+	    add(cbTurnRestrictions = new TurnRestrictionComboBox(new TurnRestrictionComboBoxModel(model)), gc);
 
 		// the editor for selecting the 'from' leg
 	    gc.gridx = 0;
@@ -49,7 +57,7 @@ public class BasicEditorPanel extends JPanel {
 	    
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;
-	    add(new TurnRestrictionLegEditor(model, TurnRestrictionLegRole.FROM),gc);
+	    add(fromEditor = new TurnRestrictionLegEditor(model, TurnRestrictionLegRole.FROM),gc);
 
 	    // the editor for selecting the 'to' leg
 	    gc.gridx = 0;
@@ -60,7 +68,7 @@ public class BasicEditorPanel extends JPanel {
 	    
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;
-	    add(new TurnRestrictionLegEditor(model, TurnRestrictionLegRole.TO),gc);
+	    add(toEditor = new TurnRestrictionLegEditor(model, TurnRestrictionLegRole.TO),gc);
 	    
 	    // the editor for selecting the 'vias' 
 	    gc.gridx = 0;
@@ -72,11 +80,20 @@ public class BasicEditorPanel extends JPanel {
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;
 	    DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-	    add(new JScrollPane(new ViaList(new ViaListModel(model, selectionModel), selectionModel)),gc);
+	    add(new JScrollPane(lstVias = new ViaList(new ViaListModel(model, selectionModel), selectionModel)),gc);
+	    
+	    // the editor for vehicle exceptions
+	    vehicleExceptionsEditor = new VehicleExceptionEditor(model);
+	    gc.gridx = 0;
+	    gc.gridy = 4;
+		gc.weightx = 1.0;
+		gc.gridwidth = 2;
+	    gc.insets = new Insets(0,0,5,5);	
+	    add(vehicleExceptionsEditor, gc);
 	    
 	    // just a filler - grabs remaining space 
 	    gc.gridx = 0;
-	    gc.gridy = 4;
+	    gc.gridy = 5;
 	    gc.gridwidth = 2;
 	    gc.weighty = 1.0;
 	    gc.fill = GridBagConstraints.BOTH;
@@ -98,5 +115,28 @@ public class BasicEditorPanel extends JPanel {
 		build();
 	}
 	
-	
+	/**
+	 * Requests the focus on one of the input widgets for turn
+	 * restriction data.
+	 * 
+	 * @param focusTarget the target component to request focus for.
+	 * Ignored if null.
+	 */
+	public void requestFocusFor(BasicEditorFokusTargets focusTarget){
+		if (focusTarget == null) return;
+		switch(focusTarget){
+		case RESTRICION_TYPE:
+			cbTurnRestrictions.requestFocusInWindow();
+			break;
+		case FROM:
+			fromEditor.requestFocusInWindow();
+			break;
+		case TO:
+			toEditor.requestFocusInWindow();
+			break;
+		case VIA:
+			lstVias.requestFocusInWindow();
+			break;
+		}
+	}	
 }

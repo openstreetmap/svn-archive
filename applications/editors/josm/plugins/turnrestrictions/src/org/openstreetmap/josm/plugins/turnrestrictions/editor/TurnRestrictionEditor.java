@@ -18,6 +18,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -25,6 +27,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -45,11 +48,11 @@ import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.turnrestrictions.qa.IssuesView;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-
-public class TurnRestrictionEditor extends JDialog {
+public class TurnRestrictionEditor extends JDialog implements NavigationControler{
 	final private static Logger logger = Logger.getLogger(TurnRestrictionEditor.class.getName());
 	
     /** the property name for the current turn restriction
@@ -80,7 +83,9 @@ public class TurnRestrictionEditor extends JDialog {
     private JosmSelectionPanel pnlJosmSelection;
     private BasicEditorPanel pnlBasicEditor;
     private AdvancedEditorPanel pnlAdvancedEditor;
+    private IssuesView pnlIssuesView;
     private TurnRestrictionEditorModel editorModel;
+    private JTabbedPane tpEditors;
     
     /**
      * builds the panel with the OK and the Cancel button
@@ -104,7 +109,7 @@ public class TurnRestrictionEditor extends JDialog {
      * @return
      */
     protected JPanel buildJOSMSelectionPanel() {
-    	pnlJosmSelection = new JosmSelectionPanel(layer.data);
+    	pnlJosmSelection = new JosmSelectionPanel(layer);
     	return pnlJosmSelection;
     }
     
@@ -116,14 +121,21 @@ public class TurnRestrictionEditor extends JDialog {
      */
     protected JPanel buildEditorPanel() {
     	JPanel pnl = new JPanel(new BorderLayout());
-    	JTabbedPane tpEditors = new JTabbedPane();
-    	tpEditors.add(pnlBasicEditor =new BasicEditorPanel(editorModel));
+    	tpEditors = new JTabbedPane();
+    	JScrollPane pane = new JScrollPane(pnlBasicEditor =new BasicEditorPanel(editorModel));
+    	pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    	pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    	tpEditors.add(pane);
     	tpEditors.setTitleAt(0, tr("Basic"));
     	tpEditors.setToolTipTextAt(0, tr("Edit basic attributes of a turn restriction"));
     	
     	tpEditors.add(pnlAdvancedEditor = new AdvancedEditorPanel(editorModel));
     	tpEditors.setTitleAt(1, tr("Advanced"));
     	tpEditors.setToolTipTextAt(1, tr("Edit the raw tags and members of this turn restriction"));
+    	
+    	tpEditors.add(pnlIssuesView = new IssuesView(editorModel.getIssuesModel()));
+    	tpEditors.setTitleAt(2, tr("Errors/Warnings"));
+    	tpEditors.setToolTipTextAt(2, tr("Show errors and warnings related to this turn restriction"));
     	
     	pnl.add(tpEditors, BorderLayout.CENTER);
     	return pnl;
@@ -181,12 +193,14 @@ public class TurnRestrictionEditor extends JDialog {
      * builds the UI
      */
     protected void build() {    	
-    	editorModel = new TurnRestrictionEditorModel(getLayer());
+    	editorModel = new TurnRestrictionEditorModel(getLayer(), this);
     	Container c = getContentPane();
     	c.setLayout(new BorderLayout());
     	c.add(buildToolBar(), BorderLayout.NORTH);
     	c.add(buildContentPanel(), BorderLayout.CENTER);    	
     	c.add(buildOkCancelButtonPanel(), BorderLayout.SOUTH);
+    	
+    	editorModel.getIssuesModel().addObserver(new IssuesModelObserver());
     	setSize(600,600);
     }    
 	
@@ -345,7 +359,23 @@ public class TurnRestrictionEditor extends JDialog {
         this.support.removePropertyChangeListener(listener);
     }
     
-    /**
+    /* ----------------------------------------------------------------------- */
+    /* interface NavigationControler                                           */
+    /* ----------------------------------------------------------------------- */
+    public void gotoBasicEditor() {
+    	tpEditors.setSelectedIndex(0);
+	}
+
+    public void gotoAdvancedEditor() {
+    	tpEditors.setSelectedIndex(1);
+	}
+
+	public void gotoBasicEditor(BasicEditorFokusTargets focusTarget) {
+		tpEditors.setSelectedIndex(0);
+		pnlBasicEditor.requestFocusFor(focusTarget);
+	}
+
+	/**
      * The abstract base action for applying the updates of a turn restriction
      * to the dataset.
      */
@@ -743,5 +773,35 @@ public class TurnRestrictionEditor extends JDialog {
 				updateEnabledState();
 			}
 		}
+    }
+    
+    class IssuesModelObserver implements Observer {
+		public void update(Observable o, Object arg) {
+			int numWarnings = editorModel.getIssuesModel().getNumWarnings();
+			int numErrors = editorModel.getIssuesModel().getNumErrors();
+			String warningText = null;
+			if (numWarnings > 0){
+				warningText = trn("{0} warning", "{0} warnings", numWarnings, numWarnings);
+			}
+			String errorText = null;
+			if (numErrors > 0){
+				errorText = trn("{0} error", "{0} errors", numErrors, numErrors);
+			}
+			String title = "";
+			if (errorText != null) {
+				title += errorText;
+			}
+			if (warningText != null){
+				if (title.length() > 0){
+					title += "/";
+				}
+				title += warningText;
+			}
+			if (title.length() == 0){
+				title = tr("no issues");
+			}
+			tpEditors.setTitleAt(2, title);
+			tpEditors.setEnabledAt(2, numWarnings + numErrors > 0);
+		}    	
     }
 }

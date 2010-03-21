@@ -37,10 +37,11 @@ public class AdvancedEditorPanel extends JPanel {
 	protected JPanel buildTagEditorPanel() {
 		JPanel pnl = new JPanel(new BorderLayout());
 		HtmlPanel msg = new HtmlPanel();
-		msg.setText(tr(
-				"<html><body>In the following table you can edit the <strong>raw tags</strong>"
-			  + " of the OSM relation representing this turn restriction."
-		));
+		msg.setText("<html><body>" + 
+				tr("In the following table you can edit the <strong>raw tags</strong>"
+			  + " of the OSM relation representing this turn restriction.")
+			  + "</body></html>"
+		);
 		pnl.add(msg, BorderLayout.NORTH);
 		pnlTagEditor = new TagEditorPanel(model.getTagEditorModel());	
 		pnlTagEditor.initAutoCompletion(model.getLayer());
@@ -56,10 +57,10 @@ public class AdvancedEditorPanel extends JPanel {
 	protected JPanel buildMemberEditorPanel() {
 		JPanel pnl = new JPanel(new BorderLayout());
 		HtmlPanel msg = new HtmlPanel();
-		msg.setText(tr(
-				"<html><body>In the following table you can edit the <strong>raw members</strong>"
-			  + " of the OSM relation representing this turn restriction."
-		));
+		msg.setText("<html><body>"  
+			  + tr("In the following table you can edit the <strong>raw members</strong>"
+			  + " of the OSM relation representing this turn restriction.") + "</body></html>"
+		);
 		pnl.add(msg, BorderLayout.NORTH);
 		
 		tblRelationMemberEditor = new RelationMemberTable(model);

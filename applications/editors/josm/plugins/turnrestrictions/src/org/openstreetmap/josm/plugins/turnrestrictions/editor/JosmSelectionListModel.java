@@ -15,7 +15,6 @@ import javax.swing.DefaultListSelectionModel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
@@ -44,21 +43,22 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
 	
     private final List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>();
     private DefaultListSelectionModel selectionModel;
-    private DataSet dataSet;
+    private OsmDataLayer layer;
 
     /**
      * Constructor
      * 
      * @param selectionModel the selection model used in the list. Must not be null.
-     * @param dataSet the dataset this model is displaying the selection from. Must not be null.
+     * @param layer the layer this model is displaying the selection from. Must not be null.
      * @throws IllegalArgumentException thrown if {@code selectionModel} is null
+     * @throws IllegalArgumentException thrown if {@code layer} is null
      */
-    public JosmSelectionListModel(DataSet dataSet, DefaultListSelectionModel selectionModel) {
+    public JosmSelectionListModel(OsmDataLayer layer, DefaultListSelectionModel selectionModel) {
     	CheckParameterUtil.ensureParameterNotNull(selectionModel, "selectionModel");
-    	CheckParameterUtil.ensureParameterNotNull(dataSet, "dataSet");
-    	this.dataSet = dataSet;
+    	CheckParameterUtil.ensureParameterNotNull(layer, "layer");
+    	this.layer = layer;
         this.selectionModel = selectionModel;
-        setJOSMSelection(dataSet.getSelected());
+        setJOSMSelection(layer.data.getSelected());
     }
 
     public Object getElementAt(int index) {
@@ -159,7 +159,7 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
         if (newLayer == null) {
         	// don't show a JOSM selection if we don't have a data layer 
             setJOSMSelection(null);
-        } else if (newLayer.data != dataSet){
+        } else if (newLayer != layer){
         	// don't show a JOSM selection if this turn restriction editor doesn't
         	// manipulate data in the current data layer
         	setJOSMSelection(null);
@@ -176,7 +176,7 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     	// this turn restriction editor is working on
     	OsmDataLayer layer = Main.main.getEditLayer();
     	if(layer == null) return;
-    	if (layer.data != dataSet) return;
+    	if (layer != this.layer) return;
         setJOSMSelection(newSelection);
     }
 
@@ -184,36 +184,36 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     /* interface DataSetListener                                                */
     /* ------------------------------------------------------------------------ */
     public void dataChanged(DataChangedEvent event) {
-        if (event.getDataset() != dataSet) return;
+        if (event.getDataset() != layer.data) return;
         fireContentsChanged(this, 0, getSize());
     }
 
     public void nodeMoved(NodeMovedEvent event) {
-        if (event.getDataset() != dataSet) return;
+        if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
     	update(event.getPrimitives());
     }
 
     public void otherDatasetChange(AbstractDatasetChangedEvent event) {
-        if (event.getDataset() != dataSet) return;
+        if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }
 
     public void relationMembersChanged(RelationMembersChangedEvent event) {
-        if (event.getDataset() != dataSet) return;
+        if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }
 
     public void tagsChanged(TagsChangedEvent event) {
-        if (event.getDataset() != dataSet) return;
+        if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }
 
     public void wayNodesChanged(WayNodesChangedEvent event) {
-        if (event.getDataset() != dataSet) return;
+        if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }

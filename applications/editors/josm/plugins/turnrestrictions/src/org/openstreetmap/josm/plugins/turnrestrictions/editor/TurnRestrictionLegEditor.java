@@ -194,7 +194,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 	public TurnRestrictionLegRole getRole() {
 		return role;
 	}		
-
+	
 	/* ----------------------------------------------------------------------------- */
 	/* interface Observer                                                            */
 	/* ----------------------------------------------------------------------------- */

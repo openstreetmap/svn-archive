@@ -1,6 +1,6 @@
 <project name="josm-plugins" default="build" basedir=".">
     <target name="compile_josm" unless="skip-josm">
-	<echo message="test"/>
+    <echo message="test"/>
         <ant dir="../core" target="dist" />
     </target>
     <target name="compile" depends="compile_josm"></target>
@@ -72,6 +72,7 @@
         <ant antfile="build.xml" target="clean" dir="measurement"/>
         <ant antfile="build.xml" target="clean" dir="michigan_left"/>
         <ant antfile="build.xml" target="clean" dir="multipoly"/>
+        <ant antfile="build.xml" target="clean" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
         <ant antfile="build.xml" target="clean" dir="openlayers"/>
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>

@@ -39,9 +39,9 @@ public class MenuActionNewLocation extends JosmAction {
         String codeDepartement = "";
         String codeCommune = "";
         boolean changeInterface = false;
-        JLabel labelSectionNewLocation = new JLabel(tr("Add a new layer"));
+        JLabel labelSectionNewLocation = new JLabel(tr("Add a new municipality layer"));
         JPanel p = new JPanel(new GridBagLayout());
-        JLabel labelLocation = new JLabel(tr("Location"));
+        JLabel labelLocation = new JLabel(tr("Commune"));
         final JTextField inputTown = new JTextField( Main.pref.get("cadastrewms.location") );
         inputTown.setToolTipText(tr("<html>Enter the town,village or city name.<br>"
                 + "Use the syntax and punctuation known by www.cadastre.gouv.fr .</html>"));

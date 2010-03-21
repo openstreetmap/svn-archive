@@ -72,6 +72,7 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
     private ArrayList<Pixel> listPixels = new ArrayList<Pixel>();
     
     private static final int cMaxnode = 10000;
+    private static final double cDistanceForOptimization = 0.7;
     private int[] dirsX = new int[] {1,1,0,-1,-1,-1,0,1};
     private int[] dirsY = new int[] {0,1,1,1,0,-1,-1,-1};
 
@@ -120,9 +121,11 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
         selectedImage = null;
-        // boolean ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
-        // boolean alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
+        // ctrl = do not merge the new polygon with adjacent elements
+        boolean ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
+        // shift = do not use the parcel as a separator
         boolean shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
+        // boolean alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
         for (Layer layer : Main.map.mapView.getAllLayers()) {
             if (layer.isVisible() && layer instanceof WMSLayer && ((WMSLayer)layer).isBuildingsOnly() ) {
                 clickedEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
@@ -157,34 +160,44 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                     }
                     way2.addNode(way2.getNode(0));
                     new SimplifyWay().simplifyWay(way2, 0.2);
+                    simplifyAngles(way2);
                     Way wayToAdd = new Way();
                     Collection<Command> cmds = new LinkedList<Command>();
-                    for (int i = 0; i < way2.getNodesCount()-1; i++) {
-                        Node nearestNode = getNearestNode(way2.getNode(i));
-                        if (nearestNode == null) {
-                            // check if we can join new node to existing ways
-                            List<WaySegment> wss = getNearestWaySegments(way2.getNode(i));
+                    if (ctrl) {
+                        for (int i = 0; i < way2.getNodesCount()-1; i++) {
                             wayToAdd.addNode(way2.getNode(i));
-                            cmds.add(new AddCommand(way2.getNode(i)));
-                            if (wss.size() > 0) {
-                                cmds.add(new MoveCommand(way2.getNode(i), dx, dy));
-                                joinNodeToExistingWays(wss, way2.getNode(i), cmds);
-                            }
-                        } else {
-                            // replace new node by an existing nearest node
-                            wayToAdd.addNode(nearestNode);
-                            cmds.add(new MoveCommand(nearestNode, dx, dy));
+                            cmds.add(new AddCommand(wayToAdd.getNode(i)));
                         }
-                    }
-                    wayToAdd.addNode(wayToAdd.getNode(0)); // close the polygon !
-                    for (int i = 1; i < wayToAdd.getNodesCount(); i++) {
-                        List<Node> nodesToJoin = existingNodesInNewSegment(wayToAdd.getNode(i-1), wayToAdd.getNode(i));
-                        // check if we join new way to existing nodes
-                        while (nodesToJoin != null && nodesToJoin.size() > 0) {
-                            List<WaySegment> wss = new LinkedList<WaySegment>();
-                            wss.add(new WaySegment(wayToAdd, i-1));
-                            wayToAdd = joinNodeToExistingWays(wss, nodesToJoin.get(0), cmds);
-                            nodesToJoin = existingNodesInNewSegment(wayToAdd.getNode(i-1), wayToAdd.getNode(i));
+                        wayToAdd.addNode(wayToAdd.getNode(0)); // close the polygon !
+                    } else {
+                        for (int i = 0; i < way2.getNodesCount()-1; i++) {
+                            Node nearestNode = getNearestNode(way2.getNode(i));
+                            if (nearestNode == null) {
+                                // check if we can join new node to existing ways
+                                List<WaySegment> wss = getNearestWaySegments(way2.getNode(i));
+                                wayToAdd.addNode(way2.getNode(i));
+                                cmds.add(new AddCommand(way2.getNode(i)));
+                                if (wss.size() > 0) {
+                                    cmds.add(new MoveCommand(way2.getNode(i), dx, dy));
+                                    joinNodeToExistingWays(wss, way2.getNode(i), cmds);
+                                }
+                            } else {
+                                // replace new node by an existing nearest node
+                                wayToAdd.addNode(nearestNode);
+                                cmds.add(new MoveCommand(nearestNode, dx, dy));
+                            }
+                        }
+                        wayToAdd.addNode(wayToAdd.getNode(0)); // close the polygon !
+                        for (int i = 1; i < wayToAdd.getNodesCount(); i++) {
+                            Node nodeToJoin = existingNodesInNewSegment(wayToAdd.getNode(i-1), wayToAdd.getNode(i), wayToAdd);
+                            // check if we join new way to existing nodes
+                            if (nodeToJoin != null) {
+                                List<WaySegment> wss = new LinkedList<WaySegment>();
+                                wss.add(new WaySegment(wayToAdd, i-1));
+                                wayToAdd = joinNodeToExistingWays(wss, nodeToJoin, cmds);
+                                cmds.add(new MoveCommand(nodeToJoin, dx, dy));
+                                i--; // re-assess the new segment (perhaps several nodes to join)
+                            }
                         }
                     }
                     cmds.add(new AddCommand(wayToAdd));
@@ -321,13 +334,13 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                 Main.proj.eastNorth2latlon(new EastNorth(n.getEastNorth().east() + snapDistance, n.getEastNorth().north() + snapDistance)));
     }
 
-    private Point getPointInCentimeters(Node n) {
+    private Point getPointInCm(Node n) {
         return new Point(new Double(n.getEastNorth().getX()*100).intValue(),
                 new Double(n.getEastNorth().getY()*100).intValue());
     }
     
     public Node getNearestNode(Node newNode) {
-        Point newP = getPointInCentimeters(newNode);
+        Point newPoint = getPointInCm(newNode);
         DataSet ds = getCurrentDataSet();
         if (ds == null)
             return null;
@@ -340,7 +353,7 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
             }
             Point sp = new Point(new Double(n.getEastNorth().getX()*100).intValue(),
                     new Double(n.getEastNorth().getY()*100).intValue());
-            double dist = newP.distanceSq(sp); // in centimeter !
+            double dist = newPoint.distanceSq(sp); // in centimeter !
             if (dist < minDistanceSq) {
                 minDistanceSq = dist;
                 minNode = n;
@@ -360,7 +373,7 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
     }
 
     private List<WaySegment> getNearestWaySegments(Node newNode) {
-        Point newP = new Point(new Double(newNode.getEastNorth().getX()*100).intValue(),
+        Point newPoint = new Point(new Double(newNode.getEastNorth().getX()*100).intValue(),
                 new Double(newNode.getEastNorth().getY()*100).intValue());
         TreeMap<Double, List<WaySegment>> nearest = new TreeMap<Double, List<WaySegment>>();
         DataSet ds = getCurrentDataSet();
@@ -383,12 +396,12 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                     continue;
                 }
 
-                Point A = getPointInCentimeters(lastN);
-                Point B = getPointInCentimeters(n);
+                Point A = getPointInCm(lastN);
+                Point B = getPointInCm(n);
                 double c = A.distanceSq(B);
-                double a = newP.distanceSq(B);
-                double b = newP.distanceSq(A);
-                double perDist = a - (a - b + c) * (a - b + c) / 4 / c; // perpendicular distance squared
+                double a = newPoint.distanceSq(B);
+                double b = newPoint.distanceSq(A);
+                double perDist = a - (a - b + c) * (a - b + c) / 4 / c;
                 if (perDist < snapDistanceSq && a < c + snapDistanceSq && b < c + snapDistanceSq) {
                     if (ds.isSelected(w)) {
                         perDist -= 0.00001;
@@ -400,16 +413,12 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                         l = new LinkedList<WaySegment>();
                         nearest.put(perDist, l);
                     }
-                    Point pivot = A;
-                    double startAngle = Math.atan2(B.x-pivot.x, B.y-pivot.y);
-                    double endAngle = Math.atan2(newP.x-pivot.x, newP.y-pivot.y);
-                    double angle = endAngle - startAngle;
-                    double ratio = A.distance(newP)/A.distance(B);//).intValue();
+                    double ratio = A.distance(newPoint)/A.distance(B);
                     Point perP = new Point(A.x+new Double((B.x-A.x)*ratio).intValue(),
                             A.y+new Double((B.y-A.y)*ratio).intValue());
-                    dx = (perP.x-newP.x)/200.0; // back to meters this time and whole distance by two 
-                    dy = (perP.y-newP.y)/200.0;
-                    System.out.println(angle+","+ ratio+","+perP );
+                    dx = (perP.x-newPoint.x)/200.0; // back to meters this time and whole distance by two 
+                    dy = (perP.y-newPoint.y)/200.0;
+//                    System.out.println(angle+","+ ratio+","+perP );
                     l.add(new WaySegment(w, i));
                 }
 
@@ -423,24 +432,43 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
         return nearestList;
     }
     
-    private List<Node> existingNodesInNewSegment(Node n1, Node n2) {
+    private Node existingNodesInNewSegment(Node n1, Node n2, Way way) {
         double minx = Math.min(n1.getEastNorth().getX(), n2.getEastNorth().getX())*100;
         double miny = Math.min(n1.getEastNorth().getY(), n2.getEastNorth().getY())*100;
         double maxx = Math.max(n1.getEastNorth().getX(), n2.getEastNorth().getX())*100;
         double maxy = Math.max(n1.getEastNorth().getY(), n2.getEastNorth().getY())*100;
-        if ((maxx-minx)/2 < snapDistance && (maxy-miny)/2 < snapDistance) {
+//        if ((maxx-minx)/2 < snapDistance && (maxy-miny)/2 < snapDistance) {
+//            return null;
+//        }
+        BBox bbox = new BBox( Main.proj.eastNorth2latlon(new EastNorth((minx-snapDistance)/100, (miny-snapDistance)/100)), 
+                Main.proj.eastNorth2latlon(new EastNorth((maxx+snapDistance)/100, (maxy+snapDistance)/100)));
+        DataSet ds = getCurrentDataSet();
+        if (ds == null) {
             return null;
         }
-        BBox bbox = new BBox( Main.proj.eastNorth2latlon(new EastNorth((minx+snapDistance)/100, (miny+snapDistance)/100)), 
-                Main.proj.eastNorth2latlon(new EastNorth((maxx-snapDistance)/100, (maxy-snapDistance)/100)));
-        DataSet ds = getCurrentDataSet();
-        if (ds == null)
-            return null;
-        List<Node> ret = new ArrayList<Node>();
-        for (Node n:ds.searchNodes(bbox))
-            if (n.isUsable())
-                ret.add(n);
-        System.out.println("Join "+ret.size()+" nodes to new segment");
+        Node ret = null;
+        List<Node> nodesInBbox = ds.searchNodes(bbox);
+        for (Node n:nodesInBbox) {
+            Point A = getPointInCm(n1);
+            Point B = getPointInCm(n2);
+            Point existingPoint = getPointInCm(n);
+            double c = A.distanceSq(B);
+            double a = existingPoint.distanceSq(B);
+            double b = existingPoint.distanceSq(A);
+            double perDist = a - (a - b + c) * (a - b + c) / 4 / c;
+            if (perDist < snapDistanceSq && a < c + snapDistanceSq && b < c + snapDistanceSq
+               && n.isUsable() && !way.getNodes().contains(n)) {
+                ret = n;
+                // shift the existing node to the half distance of the joined new segment
+                double ratio = A.distance(existingPoint)/A.distance(B);
+                Point perP = new Point(A.x+new Double((B.x-A.x)*ratio).intValue(),
+                        A.y+new Double((B.y-A.y)*ratio).intValue());
+                dx = (perP.x-existingPoint.x)/200.0; // back to meters this time and whole distance by two 
+                dy = (perP.y-existingPoint.y)/200.0;
+                break;
+            }
+        }
+//        System.out.println("Found "+nodesInBbox.size()+", join node "+ret+" to new segment; "+Main.proj.latlon2eastNorth(bbox.getBottomRight())+","+Main.proj.latlon2eastNorth(bbox.getTopLeft()));
         return ret;
     }
     
@@ -491,5 +519,79 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
         Collections.sort(is);
         Collections.reverse(is);
     }
+    
+    /*
+     * The standard simplifier leaves sometimes closed nodes at buildings corners. 
+     * We remove here the node not altering the building angle.
+     */
+    private void simplifyAngles(Way way){
+        for (int i=1; i<way.getNodes().size(); i++){
+            Node n1 = way.getNode(i-1);
+            Node n2 = way.getNode(i);
+            double dist = getPointInCm(n1).distance(getPointInCm(n2))/100;
+//            System.out.println("dist="+dist+":"+(dist < cDistanceForOptimization));                
+            if (dist < cDistanceForOptimization) {
+                Node n0, n3;
+                if (i > 1)
+                    n0 = way.getNode(i-2);
+                else
+                    n0 = way.getNode(way.getNodes().size()-1);
+                if (i < way.getNodes().size()-1)
+                    n3 = way.getNode(i+1);
+                else
+                    n3 = way.getNode(0);
+                double angle1 = AngleOfView(n1.getCoor().getX(), n1.getCoor().getY(),
+                        n0.getCoor().getX(), n0.getCoor().getY(),
+                        n2.getCoor().getX(), n2.getCoor().getY());
+                System.out.println("angle n0,n1,n2="+(angle1*180/Math.PI));
+                double angle2 = AngleOfView(n2.getCoor().getX(), n2.getCoor().getY(),
+                        n1.getCoor().getX(), n1.getCoor().getY(),
+                        n3.getCoor().getX(), n3.getCoor().getY());
+                System.out.println("angle n1,n2,n3="+(angle2*180/Math.PI));
+                if (angle1 > Math.PI*0.9 && angle1 < Math.PI*1.1) {
+                    way.removeNode(n1);
+                    System.out.println("remove n1");                
+                } else if  (angle2 > Math.PI*0.9 && angle2 < Math.PI*1.1) {
+                    way.removeNode(n2);
+                    System.out.println("remove n2");                
+                } else
+                    System.out.println("no angle near PI");
+            }                
+        }        
+    }
 
+    private double AngleOfView ( double ViewPt_X, double ViewPt_Y,
+            double Pt1_X, double Pt1_Y,
+            double Pt2_X, double Pt2_Y ) {
+        double a1, b1, a2, b2, a, b, t, cosinus ;
+        a1 = Pt1_X - ViewPt_X ;
+        a2 = Pt1_Y - ViewPt_Y ;
+        b1 = Pt2_X - ViewPt_X ;
+        b2 = Pt2_Y - ViewPt_Y ;
+        a = Math.sqrt( (a1*a1) + (a2*a2) );
+        b = Math.sqrt ( (b1*b1) + (b2*b2) );
+        if ( (a == 0.0) || (b == 0.0) )
+            return (0.0) ;
+        cosinus = (a1*b1+a2*b2) / (a*b) ;
+        t = Math.acos ( cosinus );
+        //t = t * 180.0 / Math.PI ;
+        return (t);
+    }
+    
+    /* 
+     * coming from SimplifyWayAction
+     */
+//    private boolean isRequiredNode(Way way, Node node) {
+//        boolean isRequired =  Collections.frequency(way.getNodes(), node) > 1;
+//        if (! isRequired) {
+//            List<OsmPrimitive> parents = new LinkedList<OsmPrimitive>();
+//            parents.addAll(node.getReferrers());
+//            parents.remove(way);
+//            isRequired = !parents.isEmpty();
+//        }
+//        if (!isRequired) {
+//            isRequired = node.isTagged();
+//        }
+//        return isRequired;
+//    }
 }

@@ -16,41 +16,8 @@ public class SimplifyWay {
     public void simplifyWay(Way w/*, DataSet dataSet*/, double threshold) {
         Way wnew = new Way(w);
 
-//        int toI = wnew.getNodesCount() - 1;
-//        List<OsmPrimitive> parents = new ArrayList<OsmPrimitive>();
-//        for (int i = wnew.getNodesCount() - 1; i >= 0; i--) {
-//            //CollectBackReferencesVisitor backRefsV = new CollectBackReferencesVisitor(dataSet, false);
-//            //backRefsV.visit(wnew.getNode(i));
-//           parents.addAll(w.getNode(i).getReferrers());
-//            boolean used = false;
-//            if (parents.size() == 1) {
-//                used = Collections.frequency(w.getNodes(), wnew.getNode(i)) > 1;
-//            } else {
-//                //backRefsV.getData().remove(w);
-//                parents.remove(w);
-//                used = !parents.isEmpty();
-//            }
-//            if (!used)
-//                used = wnew.getNode(i).isTagged();
-//
-//            if (used) {
-//                simplifyWayRange(wnew, i, toI, threshold);
-//                toI = i;
-//            }
-//        }
         simplifyWayRange(wnew, 0, wnew.getNodesCount() - 1, threshold);
         w.setNodes(wnew.getNodes());
-//        HashSet<Node> delNodes = new HashSet<Node>();
-//        delNodes.addAll(w.getNodes());
-//        delNodes.removeAll(wnew.getNodes());
-
-//        if (wnew.getNodesCount() != w.getNodesCount()) {
-//            Collection<Command> cmds = new LinkedList<Command>();
-//            cmds.add(new ChangeCommand(w, wnew));
-//            cmds.add(new DeleteCommand(delNodes));
-//            Main.main.undoRedo.add(new SequenceCommand(trn("Simplify Way (remove {0} node)", "Simplify Way (remove {0} nodes)", delNodes.size(), delNodes.size()), cmds));
-//            Main.map.repaint();
-//        }
     }
 
     public void simplifyWayRange(Way wnew, int from, int to, double thr) {

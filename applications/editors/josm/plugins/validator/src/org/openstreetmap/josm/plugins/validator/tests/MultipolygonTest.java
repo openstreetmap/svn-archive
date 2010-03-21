@@ -50,8 +50,9 @@ public class MultipolygonTest extends Test {
         for (JoinedWay jw: Multipolygon.joinWays(waysToJoin)) {
             if (!jw.isClosed()) {
                 nonClosedWays.add(jw.getNodes());
+            } else {
+                result.add(jw.getNodes());
             }
-            result.add(jw.getNodes());
         }
         return result;
     }
@@ -69,9 +70,7 @@ public class MultipolygonTest extends Test {
     private List<GeneralPath> createPolygons(List<List<Node>> joinedWays) {
         List<GeneralPath> result = new ArrayList<GeneralPath>();
         for (List<Node> way: joinedWays) {
-            if (way.size() >= 3) {
-                result.add(createPath(way));
-            }
+            result.add(createPath(way));
         }
         return result;
     }

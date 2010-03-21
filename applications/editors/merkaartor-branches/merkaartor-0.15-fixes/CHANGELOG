@@ -1,4 +1,5 @@
 v0.15.3
+    * FIX : remove features destructor cleanups that shouldn't be necessary and lead to crashes	
     * FIX : delete a way when its second to last node is deleted (closes #2786)
     * FIX : problem when joining ways
     * FIX : make sure polygons are at least 1 pixel wide when drawing them at creation time

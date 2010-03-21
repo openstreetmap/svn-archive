@@ -3750,6 +3750,9 @@
 			<rule e="node|way" k="natural" v="cave_entrance" layer="5">
 				<caption k="name" class="place-caption cave-caption" dy="-1.5px" layer="5"/>
 			</rule>
+			<rule e="node|way" k="place" v="island" layer="5">
+				<caption k="name" class="place-caption island-caption" layer="5"/>
+			</rule>
 			<rule e="node|way" k="place" v="islet" layer="5">
 				<caption k="name" class="place-caption islet-caption" layer="5"/>
 			</rule>
@@ -3857,8 +3860,12 @@
 
 		<!-- Area captions -->
 		<rule e="way" k="natural" v="*" layer="5">
-			<caption k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
-			<caption k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
+			<rule e="way" k="place" v="island|islet">
+			</rule>
+			<else>
+				<caption k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
+				<caption k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
+			</else>
 		</rule>
 
 		<rule e="way" k="sport" v="~" layer="5"> <!-- omit rendering captions for leisure, if sport is also set -->
@@ -4886,7 +4893,8 @@
 			.peak-caption           { font-size: 2px; }
 			.pass-caption           { font-size: 2px; }
 			.cave-caption           { font-size: 2px; }
-			.islet-caption          { font-size: 3px; }
+			.island-caption         { font-size: 2px; }
+			.islet-caption          { font-size: 1.5px; }
 			.village-caption        { font-size: 3px; }
 			.suburb-caption         { font-size: 3px; }
 			.hamlet-caption         { font-size: 2px; }

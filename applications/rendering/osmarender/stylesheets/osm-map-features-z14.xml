@@ -2253,8 +2253,8 @@
 			.town-caption           { font-size: 12px; }
 			.peak-caption           { font-size: 8px; }
 			.cave-caption           { font-size: 8px; }
-			.island-caption         { font-size: 12px; opacity: 0.5; }
-			.islet-caption          { font-size: 10px; }
+			.island-caption         { font-size: 10px; opacity: 0.5; }
+			.islet-caption          { font-size: 8px; }
 			.village-caption        { font-size: 10px; }
 			.suburb-caption         { font-size: 10px; }
 			.hamlet-caption         { font-size: 8px;  }

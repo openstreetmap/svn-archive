@@ -2797,12 +2797,19 @@
 		</rule>
 
 		<!-- Power lines and pylons -->
+		<rule e="way" k="power" v="line">
+			<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
+			<line class="power-line no-bezier" smart-linecap="no"/>
+		</rule>
+		<rule e="way" k="power" v="minor_line">
+			<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
+			<line class="power-minor-line no-bezier" smart-linecap="no"/>
+		</rule>
 		<rule e="node|way" k="power" v="tower">
 			<symbol ref="power-tower" position="center"/>
 		</rule>
-		<rule e="way" k="power" v="line">
-			<line class="powerline-pipeline-casing no-bezier"/>
-			<line class="power-line no-bezier"/>
+		<rule e="node|way" k="power" v="pole">
+			<symbol ref="power-pole" position="center"/>
 		</rule>
 
 		<!-- Power generators -->
@@ -5669,6 +5676,14 @@
 			stroke-linejoin: round;
 			stroke: #808080;
 			stroke-dasharray: 2 ,1;
+			fill: none;
+			}
+			.power-minor-line {
+			stroke-width: 0.1px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #808080;
+			stroke-dasharray: 1, 0.5;
 			fill: none;
 			}
 

@@ -1967,6 +1967,13 @@
   <node id='-10002009' action='modify' visible='true' lat='51.31819146732193' lon='-0.3547208634865886'>
     <tag k='leisure' v='playground' />
   </node>
+  <node id='-200000' action='modify' visible='true' lat='51.26380677777447' lon='-0.43154704253605275'>
+    <tag k='power' v='pole' />
+  </node>
+  <node id='-200001' action='modify' visible='true' lat='51.26380677777447' lon='-0.4294458833810905'>
+    <tag k='power' v='pole' />
+  </node>
+  <node id='-200002' visible='true' lat='51.26380677777447' lon='-0.4268554131900413' />
   <way id='-10002010' action='modify' visible='true'>
     <nd ref='-10002000' />
     <nd ref='-10002001' />
@@ -2043,6 +2050,13 @@
     <nd ref='-100068' />
     <tag k='power' v='generator' />
     <tag k='power_source' v='photovoltaic' />
+  </way>
+  <way id='-200003' action='modify' visible='true'>
+    <nd ref='-844' />
+    <nd ref='-200000' />
+    <nd ref='-200001' />
+    <nd ref='-200002' />
+    <tag k='power' v='minor_line' />
   </way>
   <way id='-1475' timestamp='2009-07-26T12:50:25Z' visible='true' version='0'>
     <nd ref='-372' />

@@ -1871,7 +1871,16 @@
 		<rule e="way" k="man_made" v="pier" closed="no">
 			<line class="artificial-pier-core"/>
 		</rule>
-		
+
+		<!-- Power lines and pylons -->
+		<rule e="way" k="power" v="line">
+			<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
+			<line class="power-line no-bezier" smart-linecap="no"/>
+		</rule>
+		<rule e="node|way" k="power" v="tower">
+			<symbol ref="power-tower" position="center"/>
+		</rule>
+
 		<!-- Power generators -->
 		<rule e="node" k="power" v="generator">
 			<rule e="node" k="power_source" v="wind">
@@ -3587,12 +3596,20 @@
 			}
 			
 			/* Power line */
-			.power-line {
-			stroke-width: 0.1px;
+			.powerline-pipeline-casing {
+			stroke-width: 0.4px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
-			stroke: #d0d0d0;
-			stroke-dasharray: 2 ,2;
+			stroke: #ffffff;
+			stroke-opacity: 0.5;
+			fill: none;
+			}
+			.power-line {
+			stroke-width: 0.4px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #808080;
+			stroke-dasharray: 8, 4;
 			fill: none;
 			}
 

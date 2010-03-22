@@ -1103,6 +1103,9 @@
 		<rule e="node" k="natural" v="peak">
 			<symbol ref="peak" position="center"/>
 		</rule>
+		<rule e="node" k="natural" v="volcano">
+			<symbol ref="vulcan" position="center"/>
+		</rule>
 		
 		<!-- Non-physical routes -->
 		<rule e="way" k="route" v="ferry">

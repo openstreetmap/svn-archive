@@ -1375,6 +1375,9 @@
 		<rule e="node" k="natural" v="peak">
 			<symbol ref="peak" position="center"/>
 		</rule>
+		<rule e="node" k="natural" v="volcano">
+			<symbol ref="vulcan" position="center"/>
+		</rule>
 		<rule e="node" k="natural" v="cave_entrance">
 			<symbol ref="cave_entrance" position="center"/>
 		</rule>
@@ -1647,7 +1650,7 @@
 			<rule k="natural" v="cave_entrance" layer="5">
 				<caption k="name" class="place-caption cave-caption" dy="-5px" layer="5"/>
 			</rule>
-			<rule k="natural" v="peak" layer="5">
+			<rule k="natural" v="peak|volcano" layer="5">
 				<caption k="name" class="place-caption peak-caption" dy="-5px" layer="5"/>
 			</rule>
 			<rule e="node" k="place" v="island" layer="5">

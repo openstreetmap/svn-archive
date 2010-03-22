@@ -1843,6 +1843,9 @@
 		<rule e="node" k="natural" v="peak">
 			<symbol ref="peak" position="center"/>
 		</rule>
+		<rule e="node" k="natural" v="volcano">
+			<symbol ref="vulcan" position="center"/>
+		</rule>
 		<rule e="node" k="tourism" v="viewpoint">
 			<symbol ref="viewpoint" position="center"/>
 		</rule>
@@ -2190,7 +2193,7 @@
 		
 		<!-- Place names  -->
 		<rule e="node|way" k="osmarender:renderName" v="~|yes" layer="5">
-			<rule e="node" k="natural" v="peak" layer="5">
+			<rule e="node" k="natural" v="peak|volcano" layer="5">
 				<caption k="name" class="place-caption peak-caption" dy="-5px" layer="5"/>
 			</rule>
 			<rule e="node" k="natural" v="cave_entrance" layer="5">

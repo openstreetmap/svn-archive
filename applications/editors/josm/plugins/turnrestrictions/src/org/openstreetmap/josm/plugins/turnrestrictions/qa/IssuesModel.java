@@ -29,7 +29,6 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  */
 public class IssuesModel extends Observable implements Observer{
 	private final ArrayList<Issue> issues = new ArrayList<Issue>();
-	private NavigationControler navigationContoler;
 	private TurnRestrictionEditorModel editorModel;
 	
 	/**
@@ -40,13 +39,10 @@ public class IssuesModel extends Observable implements Observer{
 	 * of the editor tabs in order to fix an issue. 
 	 * 
 	 * @param editorModel the editor model. Must not be null.
-	 * @param controler the navigation controler. Must not be null.
 	 * @throws IllegalArgumentException thrown if controler is null
 	 */
-	public IssuesModel(TurnRestrictionEditorModel editorModel, NavigationControler controler) throws IllegalArgumentException{
+	public IssuesModel(TurnRestrictionEditorModel editorModel) throws IllegalArgumentException{
 		CheckParameterUtil.ensureParameterNotNull(editorModel, "editorModel");
-		CheckParameterUtil.ensureParameterNotNull(controler, "controler");
-		this.navigationContoler = controler;
 		this.editorModel = editorModel;
 		this.editorModel.addObserver(this);
 	}
@@ -192,7 +188,7 @@ public class IssuesModel extends Observable implements Observer{
 	}
 	
 	public NavigationControler getNavigationControler() {
-		return navigationContoler;
+		return editorModel.getNavigationControler();
 	}
 	
 	public int getNumWarnings() {

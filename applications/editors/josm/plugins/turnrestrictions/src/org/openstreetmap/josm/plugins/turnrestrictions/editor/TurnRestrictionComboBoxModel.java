@@ -39,7 +39,7 @@ public class TurnRestrictionComboBoxModel implements ComboBoxModel, Observer{
 		}		
 		
 		String tagValue = model.getRestrictionTagValue();
-		if (tagValue == null) {
+		if (tagValue.trim().equals("")) {
 			selectedTagValue = null;
 		} else {
 			TurnRestrictionType type = TurnRestrictionType.fromTagValue(tagValue);

@@ -353,8 +353,8 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
 		@Override
 		public void focusLost(FocusEvent e) {
 			// if we loose the focus to a component outside of the popup panel
-			// we hide the popup
-			if (!SwingUtilities.isDescendingFrom(e.getOppositeComponent(), TurnRestrictionSelectionPopupPanel.this)) {
+			// we hide the popup			
+			if (e.getOppositeComponent() == null ||!SwingUtilities.isDescendingFrom(e.getOppositeComponent(), TurnRestrictionSelectionPopupPanel.this)) {
 				if (parentPopup != null){
 					parentPopup.hide();
 				}

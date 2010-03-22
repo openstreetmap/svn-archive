@@ -180,7 +180,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
 	 * @exception IllegalArgumentException thrown if a via doesn't belong to the dataset of the layer
 	 * in whose context this editor is working 
 	 */
-	public void setVias(List<OsmPrimitive> vias){
+	public void setVias(List<OsmPrimitive> vias) throws IllegalArgumentException{
 		boolean viasDeleted = removeMembersWithRole("via");
 		if (vias == null || vias.isEmpty()){
 			if (viasDeleted){

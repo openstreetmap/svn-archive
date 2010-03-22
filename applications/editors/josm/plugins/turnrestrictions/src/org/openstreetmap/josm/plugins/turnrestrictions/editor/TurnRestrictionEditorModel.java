@@ -67,19 +67,23 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	private final TagEditorModel tagEditorModel = new TagEditorModel();
 	private  RelationMemberEditorModel memberModel;
 	private  IssuesModel issuesModel;
+	private NavigationControler navigationControler;
 	
 	/**
 	 * Creates a model in the context of a {@see OsmDataLayer}
 	 * 
 	 * @param layer the layer. Must not be null.
+	 * @param navigationControler control to direct the user to specific UI components. Must not be null 
 	 * @throws IllegalArgumentException thrown if {@code layer} is null
 	 */
 	public TurnRestrictionEditorModel(OsmDataLayer layer, NavigationControler navigationControler) throws IllegalArgumentException{
 		CheckParameterUtil.ensureParameterNotNull(layer, "layer");
+		CheckParameterUtil.ensureParameterNotNull(navigationControler, "navigationControler");
 		this.layer = layer;
+		this.navigationControler = navigationControler;
 		memberModel = new RelationMemberEditorModel(layer);
 		memberModel.addTableModelListener(new RelationMemberModelListener());
-		issuesModel = new IssuesModel(this,navigationControler);
+		issuesModel = new IssuesModel(this);
 		addObserver(issuesModel);
 		tagEditorModel.addTableModelListener(new TagEditorModelObserver());
 	}
@@ -213,13 +217,13 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	
 	/**
 	 * Replies the current tag value for the tag <tt>restriction</tt>.
-	 * null, if there isn't a tag <tt>restriction</tt>.  
+	 * The empty tag, if there isn't a tag <tt>restriction</tt>.  
 	 * 
 	 * @return the tag value
 	 */
 	public String getRestrictionTagValue() {
 		TagCollection tags = tagEditorModel.getTagCollection();
-		if (!tags.hasTagsFor("restriction")) return null;
+		if (!tags.hasTagsFor("restriction")) return "";
 		return tags.getJoinedValues("restriction");
 	}
 	
@@ -237,7 +241,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 			if (tm != null){
 				tm.setValue(value);
 			} else {
-				tagEditorModel.add(new TagModel("restriction", value));
+				tagEditorModel.add(new TagModel("restriction", value.trim().toLowerCase()));
 			}
 		}
 		setChanged();
@@ -261,11 +265,12 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 * in {@code vias} must be assigned to a dataset and the dataset
 	 * must be equal to the dataset of this editor model, see {@see #getDataSet()}
 	 * 
+	 * null values in {@see vias} are skipped. 
+	 * 
 	 * @param vias the list of vias 
-	 * @throws IllegalArgumentException thrown if one of the via objects is null or
-	 * if it belongs to the wrong dataset 
+	 * @throws IllegalArgumentException thrown if one of the via objects belongs to the wrong dataset 
 	 */
-	public void setVias(List<OsmPrimitive> vias) {
+	public void setVias(List<OsmPrimitive> vias) throws IllegalArgumentException{
 		memberModel.setVias(vias);
 	}
 	
@@ -319,6 +324,10 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 */
 	public IssuesModel getIssuesModel() {
 		return issuesModel;
+	}
+	
+	public NavigationControler getNavigationControler() {
+		return navigationControler;
 	}
 	
 	/**
@@ -421,7 +430,10 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 			notifyObservers();
 		}		
 	}
-	
+
+	/* ----------------------------------------------------------------------------------------- */
+	/* inner classes                                                                             */
+	/* ----------------------------------------------------------------------------------------- */	
 	class TagEditorModelObserver implements TableModelListener {
 		public void tableChanged(TableModelEvent e) {
 			setChanged();

@@ -338,6 +338,15 @@
 		<rule e="way" k="waterway" v="riverbank">
 			<area class="waterway-riverbank"/>
 		</rule>
+		<rule e="way" k="waterway" v="weir">
+			<line class="waterway-weir"/>
+		</rule>
+		<rule e="way" k="waterway" v="dam">
+			<line class="waterway-dam"/>
+		</rule>
+		<rule e="node" k="waterway" v="lock_gate">
+			<wayMarker k="waterway" class="canal-lock"/>
+		</rule>
 		<rule e="node" k="lock" v="yes|true">
 			<wayMarker k="waterway" class="canal-lock"/>
 		</rule>
@@ -4886,6 +4895,22 @@
 			.waterway-ditch-tunnel-core             { stroke-width: 0.08px; stroke-dasharray: 0.4, 0.4; }
 			.waterway-ditch-name-casing             { stroke-width: 0.08px; font-size: 1.5px; }
 			.waterway-ditch-name-core               { font-size: 1.5px; }
+
+			.waterway-dam {
+			stroke: #000000;
+			stroke-width: 0.5px;
+			fill: none;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			}
+			.waterway-weir {
+			stroke: #000044;
+			stroke-width: 0.375px;
+			fill: none;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			}
+
 
 			/* Generic under-construction style - makes any way dashed */
 			.under-construction-1 { stroke-width: 0.1px; stroke: #707070; stroke-dasharray: 0.5, 0.5; stroke-linecap: butt; fill:none; }

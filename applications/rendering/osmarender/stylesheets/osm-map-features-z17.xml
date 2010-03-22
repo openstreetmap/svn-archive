@@ -2896,7 +2896,7 @@
 		</rule>
 
 		<!-- Electrical substations -->
-		<rule e="way" k="power" v="sub_station">
+		<rule e="way" k="power" v="station|sub_station">
 			<area class="power-generic"/>
 		</rule>
 

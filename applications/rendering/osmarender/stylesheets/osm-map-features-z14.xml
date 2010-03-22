@@ -1308,8 +1308,33 @@
 			</rule>
 		</rule>
 
-		<!-- Piste maps -->
-		<rule e="way" k="piste:type" v="downhill">
+		<!-- Piste maps: -->
+		<!-- piste areas -->
+		<rule e="way" k="piste:type" v="downhill" closed="yes">
+			<rule e="way" k="piste:difficulty" v="novice">
+				<line class="piste-area piste-area-difficulty-novice" smart-linecap="no"/>
+			</rule>
+			<rule e="way" k="piste:difficulty" v="easy">
+				<line class="piste-area piste-area-difficulty-easy" smart-linecap="no"/>
+			</rule>
+			<rule e="way" k="piste:difficulty" v="intermediate">
+				<line class="piste-area piste-area-difficulty-intermediate" smart-linecap="no"/>
+			</rule>
+			<rule e="way" k="piste:difficulty" v="advanced">
+				<line class="piste-area piste-area-difficulty-advanced" smart-linecap="no"/>
+			</rule>
+			<rule e="way" k="piste:difficulty" v="expert">
+				<line class="piste-area piste-area-difficulty-expert" smart-linecap="no"/>
+			</rule>
+			<rule e="way" k="piste:difficulty" v="freeride">
+				<line class="piste-area piste-area-difficulty-freeride" smart-linecap="no"/>
+			</rule>
+			<rule e="way" k="piste:difficulty" v="~">
+				<line class="piste-area piste-area-difficulty-other" smart-linecap="no"/>
+			</rule>
+		</rule>
+		<!-- piste ways -->
+		<rule e="way" k="piste:type" v="downhill" closed="no">
 			<rule e="way" k="piste:difficulty" v="novice">
 				<line class="piste-core piste-difficulty-novice" smart-linecap="no"/>
 			</rule>
@@ -2778,7 +2803,14 @@
 			stroke-linecap: round;
 			stroke-linejoin: round;
 			stroke-width: 5px;
-			opacity: 0.8;
+			opacity: 0.66;
+			}
+			
+			.piste-area {
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: 5px;
+			opacity: 0.66;
 			}
 			
 			.piste-difficulty-novice       { stroke: #40ff40; }
@@ -2788,6 +2820,13 @@
 			.piste-difficulty-expert       { stroke: #f6800a; }
 			.piste-difficulty-freeride     { stroke: #f6dd0a; }
 			.piste-difficulty-other        { stroke: #505050; }
+			.piste-area-difficulty-novice       { stroke: #40ff40; fill: #40ff40; }
+			.piste-area-difficulty-easy         { stroke: #4040ff; fill: #4040ff; }
+			.piste-area-difficulty-intermediate { stroke: #ff4040; fill: #ff4040; }
+			.piste-area-difficulty-advanced     { stroke: #000000; fill: #000000; }
+			.piste-area-difficulty-expert       { stroke: #f6800a; fill: #f6800a; }
+			.piste-area-difficulty-freeride     { stroke: #f6dd0a; fill: #f6dd0a; }
+			.piste-area-difficulty-other        { stroke: #505050; fill: #505050; }
 			
 			.piste-type-sled {
 			fill: none;

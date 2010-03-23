@@ -77,7 +77,8 @@
 			}
 		}
 		echo "<TD><A href=\"http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\">xapi</A>\n";
-		echo "<A href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\" target=\"hiddenIframe\">		echo "</TR>\n";
+		echo "<A href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\" target=\"hiddenIframe\">josm</A>";
+		echo "</TR>\n";
 		$i++;
 	}
 	echo "</TABLE>\n";

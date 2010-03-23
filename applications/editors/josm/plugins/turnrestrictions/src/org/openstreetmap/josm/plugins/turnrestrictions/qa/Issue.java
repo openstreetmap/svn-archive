@@ -18,8 +18,8 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  */
 abstract public class Issue {
 	/** the parent model for this issue */
-	private IssuesModel parent;
-	private Severity severity;
+	protected IssuesModel parent;
+	protected Severity severity;
 	protected final ArrayList<Action> actions = new ArrayList<Action>();
 	
 	/**

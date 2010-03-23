@@ -42,13 +42,13 @@ public class WrongTurnRestrictionLegTypeError extends Issue {
 		switch(leg.getType()){
 		case NODE:
 			msg = tr(
-				"This turn restriction uses the OSM node ''{0}'' as member with role ''{1}''.",
+				"This turn restriction uses the OSM node <span class=\"object-name\">{0}</span> as member with role <tt>{1}</tt>.",
 				leg.getDisplayName(DefaultNameFormatter.getInstance()),
 				role.toString()
 			);
 			break;
 		case RELATION:
-			msg = tr("This turn restriction uses the OSM relation ''{0}'' as member with role ''{1}''.",
+			msg = tr("This turn restriction uses the OSM relation <span class=\"object-name\">{0}</span> as member with role <tt>{1}</tt>.",
 					leg.getDisplayName(DefaultNameFormatter.getInstance()),
 					role.toString()
 				);				

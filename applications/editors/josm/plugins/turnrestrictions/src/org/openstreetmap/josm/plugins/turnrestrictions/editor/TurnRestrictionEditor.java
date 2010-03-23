@@ -47,6 +47,7 @@ import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
+import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnrestrictions.qa.IssuesView;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
@@ -379,7 +380,51 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      * The abstract base action for applying the updates of a turn restriction
      * to the dataset.
      */
-    abstract class SavingAction extends AbstractAction {
+    abstract class SavingAction extends AbstractAction {    	
+    	protected boolean confirmSaveDespiteOfErrorsAndWarnings(){
+    		int numErrors = editorModel.getIssuesModel().getNumErrors();
+    		int numWarnings = editorModel.getIssuesModel().getNumWarnings();
+    		if (numErrors + numWarnings == 0) return true;
+    		
+    		StringBuffer sb = new StringBuffer();
+    		sb.append("<html>");
+    		sb.append(trn(
+				"There is still an unresolved error or warning identified for this turn restriction. "
+    				+ "You are recommended to resolve this issue first.",
+				  "There are still {0} errors and/or warnings identified for this turn restriction. "
+    				+ "You are recommended to resolve these issues first.",
+				  numErrors + numWarnings,
+				  numErrors + numWarnings
+    		));
+    		sb.append("<br>");
+    		sb.append(tr("Do you want to save anyway?"));
+    		ButtonSpec[] options = new ButtonSpec[] {
+    				new ButtonSpec(
+    						tr("Yes, save anyway"),
+    						ImageProvider.get("ok"),
+    						tr("Save the turn restriction despite of errors and/or warnings"),
+    						null // no specific help topic
+    				),
+    				new ButtonSpec(
+    						tr("No, resolve issues first"),
+    						ImageProvider.get("cancel"),
+    						tr("Cancel saving and start resolving pending issues first"),
+    						null // no specific help topic
+    				)
+    		};
+    		
+    		int ret = HelpAwareOptionPane.showOptionDialog(
+    				JOptionPane.getFrameForComponent(TurnRestrictionEditor.this),
+    				sb.toString(),
+    				tr("Pending errors and warnings"),
+    				JOptionPane.WARNING_MESSAGE,
+    				null, // no special icon
+    				options,
+    				options[1], // cancel is default operation
+    				HelpUtil.ht("/Plugins/turnrestrictions#PendingErrorsAndWarnings")
+    		);
+    		return ret == 0 /* OK */;    		
+    	}
     	
     	/**
     	 * Replies the list of relation members in {@code r} which refer to
@@ -594,6 +639,10 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         }
 
         public void run() {
+        	if (!confirmSaveDespiteOfErrorsAndWarnings()){
+        		tpEditors.setSelectedIndex(2); // show the errors and warnings
+        		return;
+        	}
             if (getTurnRestriction() == null) {
                 applyNewTurnRestriction();
                 return;
@@ -633,6 +682,10 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         }
 
         public void run() {
+        	if (!confirmSaveDespiteOfErrorsAndWarnings()){
+        		tpEditors.setSelectedIndex(2); // show the errors and warnings
+        		return;
+        	}
             if (getTurnRestriction() == null) {
             	// it's a new turn restriction. Try to save it and close the dialog
                 if (applyNewTurnRestriction()) {

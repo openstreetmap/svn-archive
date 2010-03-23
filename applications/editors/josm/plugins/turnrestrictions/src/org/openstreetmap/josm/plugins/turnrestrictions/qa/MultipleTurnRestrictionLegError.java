@@ -34,14 +34,14 @@ public class MultipleTurnRestrictionLegError extends Issue {
 	public String getText() {
 		switch(role){
 		case FROM: return 
-			tr("A turn restriction requires exactly one way with role <em>from</em>. "
+			tr("A turn restriction requires exactly one way with role <tt>from</tt>. "
 				+ "This turn restriction has {0} ways in this role. Please remove "
 				+ "{1} of them.",
 				numLegs,
 				numLegs -1
 			);
 		case TO: 
-			tr("A turn restriction requires exactly one way with role <em>from</em>. "
+			tr("A turn restriction requires exactly one way with role <tt>from</tt>. "
 					+ "This turn restriction has {0} ways in this role. Please remove "
 					+ "{1} of them.",
 					numLegs,

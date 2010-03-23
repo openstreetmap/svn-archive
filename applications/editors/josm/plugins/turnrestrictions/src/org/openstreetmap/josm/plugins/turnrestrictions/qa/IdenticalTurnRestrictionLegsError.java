@@ -14,7 +14,6 @@ import org.openstreetmap.josm.gui.DefaultNameFormatter;
  * 
  */
 public class IdenticalTurnRestrictionLegsError extends Issue{
-	private String value;
 	private OsmPrimitive leg;
 	
 	public IdenticalTurnRestrictionLegsError(IssuesModel parent, OsmPrimitive leg) {
@@ -27,7 +26,7 @@ public class IdenticalTurnRestrictionLegsError extends Issue{
 
 	@Override
 	public String getText() {		
-		return tr("This turn restriction uses the OSM way <em>{0}</em> with role ''from'' <strong>and</strong> with role ''to''. "
+		return tr("This turn restriction uses the OSM way <span class=\"object-name\">{0}</span> with role ''from'' <strong>and</strong> with role ''to''. "
 				+ "In a turn restriction, the way with role ''from'' should be different from the way with role ''to'', though.",
 				leg.getDisplayName(DefaultNameFormatter.getInstance())
 				);				

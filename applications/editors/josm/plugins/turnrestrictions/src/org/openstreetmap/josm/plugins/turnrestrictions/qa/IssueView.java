@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
@@ -27,6 +29,19 @@ public class IssueView extends JPanel{
 	private JPanel pnlActions;
 	private Issue issue;
 	private JLabel lblIcon;
+	private StyleSheet styleSheet;
+	
+	 /**
+     * Builds the style sheet used in the internal help browser
+     *
+     * @return the style sheet
+     */
+    protected void initStyleSheet(HtmlPanel view) {
+        StyleSheet ss = ((HTMLEditorKit)view.getEditorPane().getEditorKit()).getStyleSheet();
+        ss.addRule("em {font-style: italic}");
+        ss.addRule("tt {font-family: Courier New}");
+        ss.addRule(".object-name {background-color:rgb(240,240,240); color: blue;}");
+    }
 	
 	protected void build() {
 		setLayout(new GridBagLayout());
@@ -58,8 +73,10 @@ public class IssueView extends JPanel{
 		gc.weightx = 1.0;
 		gc.weighty = 1.0;
 		add(pnlMessage = new HtmlPanel(), gc);
+		initStyleSheet(pnlMessage);
 		pnlMessage.setBackground(Color.white);
 		pnlMessage.setText("<html><body>" + issue.getText() + "</html></bod>");
+
 		
 		// if there are any actions available to resolve the issue, add a panel with action buttons 
 		if (!issue.getActions().isEmpty()) {
@@ -97,7 +114,7 @@ public class IssueView extends JPanel{
 	public IssueView(Issue issue) throws IllegalArgumentException{
 		CheckParameterUtil.ensureParameterNotNull(issue, "issue");
 		this.issue = issue;
-		build();
+		build();		
 	}
 
 	@Override

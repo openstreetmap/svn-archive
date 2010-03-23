@@ -2,11 +2,13 @@ package org.openstreetmap.josm.plugins.turnrestrictions.qa;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.tagging.TagEditorModel;
@@ -94,6 +96,7 @@ public class IssuesModel extends Observable implements Observer{
 			checkFromLeg(editorModel);
 			checkToLeg(editorModel);
 			checkFromAndToEquals(editorModel);
+			checkVias(editorModel);
 		}
 		setChanged();
 		notifyObservers();
@@ -184,6 +187,48 @@ public class IssuesModel extends Observable implements Observer{
 		if (! (to instanceof Way)) return;
 		if (from.equals(to)){
 			issues.add(new IdenticalTurnRestrictionLegsError(this, from));
+		}		
+	}
+	
+	protected Node getNodeAtIntersection(Way from, Way to){
+		Set<Node> fromNodes = new HashSet<Node>(from.getNodes());
+		fromNodes.retainAll(to.getNodes());
+		if (fromNodes.size() == 1){
+			return fromNodes.iterator().next();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Checks the 'via' members in the turn restriction
+	 * 
+	 * @param editorModel the editor model
+	 */
+	protected void checkVias(TurnRestrictionEditorModel editorModel){
+		Set<OsmPrimitive> toLegs = editorModel.getTurnRestrictionLeg(TurnRestrictionLegRole.TO);
+		Set<OsmPrimitive> fromLegs = editorModel.getTurnRestrictionLeg(TurnRestrictionLegRole.FROM);
+		// we only check vias if 'to' and 'from' are already OK
+		if (toLegs.size() != 1 || fromLegs.size() != 1) return;
+		if (! (toLegs.iterator().next() instanceof Way)) return;
+		if (! (fromLegs.iterator().next() instanceof Way)) return;
+		
+		Way from = (Way)fromLegs.iterator().next();
+		Way to = (Way)toLegs.iterator().next();
+		Node intersect = getNodeAtIntersection(from, to);
+		if (intersect != null){
+			if (!editorModel.getVias().contains(intersect)) {
+				issues.add(new IntersectionMissingAsViaError(this, from, to, intersect));
+			}
+		}
+		
+		// 'from' intersects with 'to' - should be split  
+		if (intersect != null && from.getNode(0) != intersect && from.getNode(from.getNodesCount()-1) != intersect){
+			issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.FROM, from, to, intersect));
+		}
+		// 'to' intersects with 'from' - should be split
+		if (intersect != null && to.getNode(0) != intersect && to.getNode(to.getNodesCount()-1) != intersect){
+			issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.TO, from, to, intersect));
 		}		
 	}
 	

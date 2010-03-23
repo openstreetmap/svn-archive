@@ -24,7 +24,7 @@ public class IllegalRestrictionTypeError extends Issue{
 
 	@Override
 	public String getText() {		
-		return tr("This turn restriction uses a non-standard restriction type <tt>{0}</tt> for the tag key <tt>restriction<tt>. "
+		return tr("This turn restriction uses a non-standard restriction type <tt>{0}</tt> for the tag key <tt>restriction</tt>. "
 				+ "It is recommended to use standard values only. Please select one in the Basic editor.",
 				value
 				);				

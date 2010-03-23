@@ -33,7 +33,7 @@ public class MissingTurnRestrictionLegError extends Issue {
 		String msg = "";
 		switch(role){
 		case FROM: 
-			msg = tr("An OSM way with role <tt>from</t> is required in a turn restriction.");
+			msg = tr("An OSM way with role <tt>from</tt> is required in a turn restriction.");
 			break;
 		case TO: 
 			msg = tr("An OSM way with role <tt>to</tt> is required in a turn restriction.");

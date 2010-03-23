@@ -100,8 +100,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         pnl.add(new SideButton(new OKAction()));
         pnl.add(new SideButton(new CancelAction()));
         
-        // FIXME: fix help topics
-        pnl.add(new SideButton(new ContextSensitiveHelpAction(ht("/Plugin/turnrestrictions"))));
+        pnl.add(new SideButton(new ContextSensitiveHelpAction(ht("/Plugins/turnrestrictions"))));
         return pnl;
     }
     

@@ -1,7 +1,7 @@
 /build
 /eclipse
 /osmosis.jar
-/dist
+/distrib
 /*.externalToolBuilders
 /*.settings
 /report

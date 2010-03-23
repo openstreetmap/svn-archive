@@ -16,7 +16,7 @@ import org.jdesktop.application.Action;
 
 /**
  *
- * @author jono
+ * @author Jonathan Bennett
  */
 public class TraceyPreferencesBox extends javax.swing.JDialog {
 
@@ -42,7 +42,6 @@ public class TraceyPreferencesBox extends javax.swing.JDialog {
 	@Action public void savePreferences() {
 		Preferences traceyPrefs = Preferences.userNodeForPackage(this.getClass());
 		traceyPrefs.put(USERNAME, userNameField.getText());
-		System.err.println("Putting password: " + new String(passwordField.getPassword()));
 		traceyPrefs.put(PASSWORD, new String(passwordField.getPassword()));
 		traceyPrefs.put(APIURI, uriField.getText());
 		dispose();

@@ -19,8 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.prefs.*;
 
 /**
@@ -44,12 +42,14 @@ public class GpxUpload {
 		this.username = prefs.get(TraceyPreferencesBox.USERNAME, "");
 		this.password = prefs.get(TraceyPreferencesBox.PASSWORD, "");
 		this.serveruri = prefs.get(TraceyPreferencesBox.APIURI, "http://www.openstreetmap.org/api/0.6/");
-
 	}
 
 	public void upload(String description, String tags, File gpxFile) throws IOException {
+		upload(description, tags, Privacy.PRIVATE, gpxFile);
+	}
+
+	public void upload(String description, String tags, Privacy privacy, File gpxFile) throws IOException {
 		System.err.println("uploading " + gpxFile.getAbsolutePath() + " to openstreetmap.org");
-		System.err.println("Using username " + username + " and password " + password);
 		try {
 			//String urlGpxName = URLEncoder.encode(gpxName.replaceAll("\\.;&?,/","_"), "UTF-8");
 			String urlDesc = description.replaceAll("\\.;&?,/", "_");
@@ -72,7 +72,7 @@ public class GpxUpload {
 			writeContentDispositionFile(out, "file", gpxFile);
 			writeContentDisposition(out, "description", urlDesc);
 			writeContentDisposition(out, "tags", urlTags);
-			writeContentDisposition(out, "public", "1");
+			writeContentDisposition(out, "visibility", privacy.getValue());
 
 			out.writeBytes("--" + BOUNDARY + "--" + LINE_END);
 			out.flush();

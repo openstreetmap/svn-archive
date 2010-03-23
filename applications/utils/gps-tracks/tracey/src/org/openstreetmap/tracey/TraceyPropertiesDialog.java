@@ -24,6 +24,7 @@ public class TraceyPropertiesDialog extends javax.swing.JDialog {
 
 	private String tags;
 	private String description;
+	private PrivacyListModel privacyList = new PrivacyListModel();
 	private int returnStatus;
 
 	public static final int UPLOAD = 1;
@@ -51,6 +52,8 @@ public class TraceyPropertiesDialog extends javax.swing.JDialog {
         tagsLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        privacyComboBox = new javax.swing.JComboBox();
+        privacyLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(org.openstreetmap.tracey.TraceyApp.class).getContext().getResourceMap(TraceyPropertiesDialog.class);
@@ -62,7 +65,7 @@ public class TraceyPropertiesDialog extends javax.swing.JDialog {
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
         descriptionTextArea.setColumns(20);
-        descriptionTextArea.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        descriptionTextArea.setFont(new java.awt.Font("Tahoma", 0, 11));
         descriptionTextArea.setRows(5);
         descriptionTextArea.setText(Preferences.userNodeForPackage(this.getClass()).get("lastDescription",""));
         descriptionTextArea.setToolTipText(resourceMap.getString("descriptionTextArea.toolTipText")); // NOI18N
@@ -92,6 +95,14 @@ public class TraceyPropertiesDialog extends javax.swing.JDialog {
         cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
         cancelButton.setName("cancelButton"); // NOI18N
 
+        privacyComboBox.setModel(privacyList);
+        privacyComboBox.setName("privacyList"); // NOI18N
+
+        privacyLabel.setLabelFor(privacyComboBox);
+        privacyLabel.setText(resourceMap.getString("privacyLabel.text")); // NOI18N
+        privacyLabel.setFocusable(false);
+        privacyLabel.setName("privacyLabel"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,14 +114,18 @@ public class TraceyPropertiesDialog extends javax.swing.JDialog {
                         .addComponent(descriptionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tagsLabel)
+                            .addComponent(privacyLabel))
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(privacyComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tagsTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(okButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(tagsLabel)
-                        .addGap(34, 34, 34)
-                        .addComponent(tagsTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
+                        .addComponent(cancelButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -125,9 +140,13 @@ public class TraceyPropertiesDialog extends javax.swing.JDialog {
                     .addComponent(tagsLabel)
                     .addComponent(tagsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(privacyComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(privacyLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancelButton)
+                    .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -158,6 +177,10 @@ public class TraceyPropertiesDialog extends javax.swing.JDialog {
 
 	public String getTags() {
 		return this.tags;
+	}
+
+	public Privacy getPrivacy() {
+		return this.privacyList.getSelectedItem();
 	}
 
 	@Action
@@ -191,6 +214,8 @@ public class TraceyPropertiesDialog extends javax.swing.JDialog {
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton okButton;
+    private javax.swing.JComboBox privacyComboBox;
+    private javax.swing.JLabel privacyLabel;
     private javax.swing.JLabel tagsLabel;
     private javax.swing.JTextField tagsTextField;
     // End of variables declaration//GEN-END:variables

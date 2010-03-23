@@ -125,7 +125,6 @@ public class TraceyView extends FrameView {
 				System.err.println("Adding: " + newTrace.getAbsolutePath());
 				traceListModel.addElement(newTrace);
 			}
-			System.err.println("Size: " + traceListModel.getSize());
 		}
 	}
 
@@ -159,9 +158,9 @@ public class TraceyView extends FrameView {
 	public void uploadFiles() {
 		String description;
 		String tags;
+		Privacy privacy;
 
 		if (propertiesBox == null) {
-				System.err.println("No properties box");
 				JFrame mainFrame = TraceyApp.getApplication().getMainFrame();
 				propertiesBox = new TraceyPropertiesDialog(mainFrame, true);
 				propertiesBox.setLocationRelativeTo(mainFrame);
@@ -169,13 +168,13 @@ public class TraceyView extends FrameView {
 		TraceyApp.getApplication().show(propertiesBox);
 
 		if (propertiesBox.getReturnStatus() == TraceyPropertiesDialog.UPLOAD) {
-			System.err.println("Upload triggered");
 			description = propertiesBox.getDescription();
 			tags = propertiesBox.getTags();
+			privacy = propertiesBox.getPrivacy();
 			GpxUpload uploader = new GpxUpload();
 			for (File fileToUpload : traceListModel) {
 				try {
-					uploader.upload(description, tags, fileToUpload);
+					uploader.upload(description, tags, privacy, fileToUpload);
 					//traceListModel.remove(fileToUpload);
 				}
 				catch (IOException fault) {

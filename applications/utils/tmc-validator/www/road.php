@@ -40,7 +40,20 @@ $roadnumber=mysql_result($result,$i,"roadnumber");
 }
 
 if ($name == "") {
-	$name="UNBENNANT $lcd";
+	
+	if ($roadnumber!="") {
+  	 $name=$roadnumber.", ";
+	}
+	if ($name1 !="") {
+	 $name.=$name1." ";
+	}
+	if ($name2 !="") {
+	 $name.=$name2;
+	}
+        
+	if ($name=="") {
+	  $name="Ohne Namen (lcd=$lcd)";
+        }
 }
 
 ?>

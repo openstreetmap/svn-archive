@@ -2,7 +2,7 @@
 
 // define DB_USERNAME, DB_PASSWORD and DB_DBASE in this file
 // Not in SVN for obvious reasons
-require_once('/var/www-data/private/defines.php');
+require_once('/home/www-data/private/defines.php');
 
 // Generic stuff - might be useful for other projects
 // This code is licenced under the LGPL

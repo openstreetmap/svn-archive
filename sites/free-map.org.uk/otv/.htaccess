@@ -1,0 +1,3 @@
+RewriteEngine on
+RewriteRule ^panorama/([0-9]+)/?$ /otv/pan.php?id=$1
+RewriteRule ^panorama/([0-9]+)/rotate/([0-9]+)/?$ /otv/pan.php?action=changeAngle&angle=$2&id=$1

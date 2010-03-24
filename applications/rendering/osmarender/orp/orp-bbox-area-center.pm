@@ -26,6 +26,10 @@ sub find_area_center
             push(@$nodes, @{$_->{'nodes'}});
         }
     }
+
+    # TOOD: work in projected coordinates - will allow wrapping over date-line,
+    # and handle polar azimuthal projection well
+
     my $maxlat = -180;
     my $maxlon = -180;
     my $minlat = 180;

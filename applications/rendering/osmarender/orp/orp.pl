@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # or/p - Osmarender in Perl
 # -------------------------
@@ -508,7 +508,7 @@ my $extraHeight = ($title eq "" and $showBorder eq "yes") ? 3 : 0;
 
 # Find out what bounds to render
 
-my ($minlat, $minlon, $maxlat, $maxlon);
+our ($minlat, $minlon, $maxlat, $maxlon);
 
 if (scalar(grep defined, values %opt_bounds) == 4) # Given on command line
 {
@@ -557,6 +557,19 @@ our $documentHeight = ($dataHeight > $minimumMapHeight * $km) ? $dataHeight : $m
 # FIXME: what's the logic behind the following?
 our $width = ($documentWidth + $dataWidth) / 2;
 our $height = ($documentHeight + $dataHeight) / 2;
+
+# Approximate projected bounds
+our ($minx, $miny, $maxx, $maxy);
+
+our $project;
+
+# Project all nodes into document space
+if (get_variable("projection")) {
+    require "project.pm";
+} else {
+    $project = \&project;
+}
+
 
 my $output = new IO::File(">$output_file");
 our $writer = new XML::Writer(OUTPUT => $output, UNSAFE => 1, 
@@ -1492,7 +1505,7 @@ sub make_path
 sub project_string
 {
     my $latlon = shift;
-    my $projected = project($latlon);
+    my $projected = $project->($latlon);
     return sprintf("%f %f", $projected->[0], $projected->[1]);
 }
 

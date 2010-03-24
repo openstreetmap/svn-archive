@@ -14,7 +14,7 @@ use strict;
 use warnings;
 require "orp-bbox-area-center.pm";
 
-our ($writer, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel, $text_index, %symbols, $labelRelations);
+our ($writer, $project, $projection, $symbolScale, $textAttenuation, $debug, $meter2pixel, $text_index, %symbols, $labelRelations);
 
 
 # -------------------------------------------------------------------
@@ -269,7 +269,7 @@ sub render_text
 {
     my ($textnode, $text, $coordinates) = @_;
 
-    my $projected = project([$coordinates->[0], $coordinates->[1]]);
+    my $projected = $project->($coordinates);
     $writer->startTag("text", 
         "x" => $projected->[0],
         "y" => $projected->[1],
@@ -651,14 +651,14 @@ sub draw_symbols
             {
                 # Draw icon at area center
                 my $center = get_area_center($_);
-                my $projected = project($center);
+                my $projected = $project->($center);
                 draw_symbol($symbolnode, $projected);
             }
         }
         elsif (ref $_ eq 'node')
         {
             #Node
-            my $projected = project([$_->{'lat'}, $_->{'lon'}]);
+            my $projected = $project->([$_->{'lat'}, $_->{'lon'}]);
             draw_symbol($symbolnode, $projected);
         }
         else
@@ -704,7 +704,7 @@ sub draw_circles
             {
                 foreach my $ref (@{$labelRelation})
                 {
-                    my $projected = project([$ref->{'lat'}, $ref->{'lon'}]);
+                    my $projected = $project->([$ref->{'lat'}, $ref->{'lon'}]);
                     $writer->emptyTag('circle',
                         'cx' => $projected->[0],
                         'cy' => $projected->[1],
@@ -716,7 +716,7 @@ sub draw_circles
             {
                 # Draw icon at area center
                 my $center = get_area_center($_);
-                my $projected = project($center);
+                my $projected = $project->($center);
                 $writer->emptyTag('circle',
                     'cx' => $projected->[0],
                     'cy' => $projected->[1],
@@ -727,7 +727,7 @@ sub draw_circles
         elsif (ref $_ eq 'node')
         {
             #Node
-            my $projected = project([$_->{'lat'}, $_->{'lon'}]);
+            my $projected = $project->([$_->{'lat'}, $_->{'lon'}]);
             $writer->emptyTag('circle',
                 'cx' => $projected->[0],
                 'cy' => $projected->[1],

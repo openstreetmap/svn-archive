@@ -3206,6 +3206,9 @@
 		<rule e="node|way" k="man_made" v="lighthouse">
 			<symbol ref="lighthouse" position="center"/>
 		</rule>
+		<rule e="node" k="man_made" v="survey_point">
+			<symbol ref="survey_point" position="center"/>
+		</rule>
 		<rule e="node|way" k="man_made" v="windmill">
 			<symbol ref="windmill" position="center"/>
 		</rule>

@@ -1,0 +1,4 @@
+NOTE: some data files are missing from the SVN repository for Freemap as
+they are just too damned big! These are the 'hgt' , 'world_boundaries'
+and 'srtmshp' directories in the freemap/data directory. You can download from
+http://www.free-map.org.uk/data/

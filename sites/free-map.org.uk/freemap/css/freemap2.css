@@ -1,0 +1,135 @@
+body { font-family: verdana,helvetica,arial,sans-serif; 
+color: black; 
+			/*
+			background-image: url(http://www.free-map.org.uk/images/grad.png);
+			background-repeat: repeat-x;
+			background-color: #afdce7;
+			*/
+			font-size:80%
+}
+a { text-decoration: none; }
+#main { 
+font-family: verdana,helvetica,arial,sans-serif; 
+top:0%; left:256px; width:75%; height:100%; position:absolute; 
+			/*
+			background-image: url(http://www.free-map.org.uk/images/grad.png);
+			background-repeat: repeat-x;
+			background-color: #afdce7;
+			*/
+			margin-left:10px;
+}
+#main.content { font-size: 120% }
+#sidebar { 
+font-family: verdana,helvetica,arial,sans-serif; 
+top:0%; left:0%; width:256px; height:100%; position:absolute;
+			/*
+			background-image: url(http://www.free-map.org.uk/images/grad.png);
+			background-repeat: repeat-x;
+			background-color: #afdce7;
+			*/
+}
+#map { width: 1024px; height: 768px; background-color: #d8d8d8 }
+input, select, textarea 
+	{ border-style:solid; border-width: 1px }
+
+#inputbox {  visibility:hidden;position:absolute; width:400px; height:400px;
+background-color: #ffffff; z-index: 99999;
+border-width: 2px; border-style: solid; border-color: black } 
+
+#menubar { background-color: #000080; color: white; width: 1024px } 
+h1 { font-weight: normal }
+
+#links { font-size:120%; border-width: 1px; background-color: #000080;
+color:white; padding: 5px; border-color:black; border-style:solid; margin:5px;}
+#links a { text-decoration: none; color: white;}
+#links a:hover { text-decoration: underline; }
+.titlebox { text-align: center; width: 100%;  }
+textarea.textbox { width:80%; height:100px }
+
+#close
+{
+	background-color: #0000c0;
+	color: white;
+}
+#walkroute
+{
+	background-color: white;
+	color: black;
+	overflow: auto;
+}
+#fmap_client_popup
+{
+	color:black;
+}
+.error
+{
+	color:red;
+	font-weight:bold;
+	font-size:150%;
+}
+#editpanel
+{
+	visibility:hidden;
+}
+
+#osmajaxPanel input
+{
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:5px;
+	margin-bottom:5px;
+	width:50%;
+}
+em
+{
+	 font-weight:bold;
+}
+pre
+{
+	background-color: white;
+	color: black;
+	overflow: auto;
+	border-style: solid;
+	border-width: 1px
+}
+#navigation
+{
+	font-size:90% ;
+	background-color: #000080;
+	color: white;
+	width:50%
+}
+#navigation a,#navigation a:visited
+{
+	color:white
+}
+#navigation a:hover
+{
+	color:yellow;
+}
+#loading
+{
+	visibility:hidden;
+}
+h1,h2,h3,h4,h5
+{
+	font-weight:700;
+}
+#key
+{
+	height:240px;
+	width:100%;
+	overflow:auto;
+}
+#results
+{
+	height:240px;
+	width:100%;
+	overflow:auto;
+}
+table, td
+{
+	border-style:solid;
+	border-width: 1px;
+}

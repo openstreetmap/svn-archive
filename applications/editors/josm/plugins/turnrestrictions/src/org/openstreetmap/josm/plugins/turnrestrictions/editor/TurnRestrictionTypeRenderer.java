@@ -25,7 +25,7 @@ public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRende
 	protected void loadImages() {
 		for(TurnRestrictionType type: TurnRestrictionType.values()) {
 			try {
-				ImageIcon icon = new ImageIcon(ImageProvider.get("types", type.getTagValue()).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+				ImageIcon icon = new ImageIcon(ImageProvider.get("types/set-a", type.getTagValue()).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 				icons.put(type,icon);
 			} catch(Exception e){
 				System.out.println(tr("Warning: failed to load icon for turn restriction type ''{0}''", type.getTagValue()));

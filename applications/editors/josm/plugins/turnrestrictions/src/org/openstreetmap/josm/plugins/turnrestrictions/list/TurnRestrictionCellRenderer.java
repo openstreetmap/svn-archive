@@ -83,7 +83,7 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
 	 * @return the icon name 
 	 */
 	protected String buildImageName(String restrictionType) {
-		return "types/" + restrictionType;
+		return "types/set-a/" + restrictionType;
 	}
 	
 	/**

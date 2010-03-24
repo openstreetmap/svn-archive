@@ -73,6 +73,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 		pnlTurnRestrictionsInDataSet.registerAsListener();		
 		pnlTurnRestrictionsInSelection.registerAsListener();
 		MapView.addEditLayerChangeListener(actNew);
+		actNew.updateEnabledState();
 	}
 
 	@Override
@@ -317,7 +318,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
             run();
         }
 
-        protected void updateEnabledState() {
+        public void updateEnabledState() {
             setEnabled(Main.main != null && Main.main.getEditLayer() != null);
         }
 

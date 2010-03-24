@@ -79,7 +79,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
 		cbPsv = new JCheckBox();
 		cbPsv.addItemListener(changeHandler);
 		lbl = new JLabel();
-		lbl.setText(tr("Public Service Vehicle"));
+		lbl.setText(tr("Public Service Vehicles"));
 		lbl.setToolTipText(tr("Public service vehicles like buses, tramways, etc."));
 		lbl.setIcon(ImageProvider.get("vehicle", "psv"));
 		

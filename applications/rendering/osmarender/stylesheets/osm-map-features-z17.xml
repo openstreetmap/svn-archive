@@ -201,6 +201,12 @@
 		<rule e="way" k="tourism" v="zoo|picnic_site|caravan_site|camp_site">
 			<area class="tourism-green-area"/>
 		</rule>
+		<rule e="node" k="tourism" v="picnic_site">
+			<symbol ref="picnic" position="center"/>
+		</rule>
+		<rule e="node|way" k="amenity" v="bench">
+			<symbol ref="bench" position="center"/>
+		</rule>
 
 		<!-- access rules for parking -->
 		<rule e="way" k="amenity" v="parking">

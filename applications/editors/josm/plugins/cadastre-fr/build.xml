@@ -28,7 +28,7 @@
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="ant.build.javac.target" value="1.6"/>
+    <property name="ant.build.javac.target" value="1.5"/>
 	
 	
 

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" version="1.1" baseProfile="full"
-   width="16" height="16">
+   width="16" height="16" id="symbol-power-photovoltaic">
  <g transform="matrix(1,0,-0.26,1,0.15,0)">
   <rect x="3.4" y="3.4" width="13" height="8.9" style="fill:#ffffff;stroke:#000000;stroke-width:0.4"/>
   <g style="stroke-width:0;fill:#000084" >

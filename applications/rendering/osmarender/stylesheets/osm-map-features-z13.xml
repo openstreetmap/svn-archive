@@ -137,7 +137,7 @@
 		<!-- Man-made areas -->
 		<rule e="way" k="leisure|landuse|amenity|tourism" v="~">
 			<rule e="way" k="building" v="~|no|false|0">
-				<rule e="way" k="sport" v="swimming">
+				<rule e="way" k="sport" v="swimming|canoe|diving|scuba_diving">
 					<area class="sport-swimming"/>
 				</rule>
 				<else>

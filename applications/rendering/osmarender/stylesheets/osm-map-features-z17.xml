@@ -172,7 +172,7 @@
 		<!-- Man-made areas -->
 		<rule e="way" k="leisure|landuse|amenity|tourism" v="~">
 			<rule e="way" k="building" v="~|no|false|0">
-				<rule e="way" k="sport" v="swimming">
+				<rule e="way" k="sport" v="swimming|canoe|diving|scuba_diving">
 					<area class="sport-swimming"/>
 				</rule>
 				<else>
@@ -3357,37 +3357,103 @@
 		</rule>
 
 		<!-- Sport symbols with border on nodes -->
-		<rule e="node" k="sport" v="soccer">
-			<symbol ref="soccer" position="center"/>
+		<rule e="node" k="sport" v="archery">
+			<symbol ref="archery" position="center"/>
 		</rule>
-		<rule e="node" k="sport" v="handball">
-			<symbol ref="handball" position="center"/>
+		<rule e="node" k="sport" v="athletics">
+			<symbol ref="athletics" position="center"/>
 		</rule>
-		<rule e="node" k="sport" v="tennis">
-			<symbol ref="tennis" position="center"/>
+		<rule e="node" k="sport" v="baseball">
+			<symbol ref="baseball" position="center"/>
 		</rule>
-		<rule e="node" k="sport" v="swimming">
-			<symbol ref="swimming" position="center"/>
+		<rule e="node" k="sport" v="basketball">
+			<symbol ref="basketball" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="bowls">
+			<symbol ref="bowls" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="cricket">
+			<symbol ref="cricket" position="center"/>
 		</rule>
 		<rule e="node" k="sport" v="curling">
 			<symbol ref="curling" position="center"/>
 		</rule>
+		<rule e="node" k="sport" v="diving|scuba_diving">
+			<symbol ref="diving" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="equestrian">
+			<symbol ref="equestrian" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="gymnastics">
+			<symbol ref="gymnastics" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="football">
+			<symbol ref="football" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="handball">
+			<symbol ref="handball" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="shooting">
+			<symbol ref="shooting" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="soccer">
+			<symbol ref="soccer" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="swimming">
+			<symbol ref="swimming" position="center"/>
+		</rule>
+		<rule e="node" k="sport" v="tennis">
+			<symbol ref="tennis" position="center"/>
+		</rule>
 		
 		<!-- Sport symbols without borders on ways -->
-		<rule e="way" k="sport" v="soccer">
-			<symbol ref="soccer-borderless" position="center"/>
+		<rule e="way" k="sport" v="archery">
+			<symbol ref="archery-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="athletics">
+			<symbol ref="athletics-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="baseball">
+			<symbol ref="baseball-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="basketball">
+			<symbol ref="basketball-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="bowls">
+			<symbol ref="bowls-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="cricket">
+			<symbol ref="cricket-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="curling">
+			<symbol ref="curling-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="diving|scuba_diving">
+			<symbol ref="diving-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="equestrian">
+			<symbol ref="equestrian-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="football">
+			<symbol ref="football-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="gymnastics">
+			<symbol ref="gymnastics-borderless" position="center"/>
 		</rule>
 		<rule e="way" k="sport" v="handball">
 			<symbol ref="handball-borderless" position="center"/>
 		</rule>
-		<rule e="way" k="sport" v="tennis">
-			<symbol ref="tennis-borderless" position="center"/>
+		<rule e="way" k="sport" v="shooting">
+			<symbol ref="shooting-borderless" position="center"/>
+		</rule>
+		<rule e="way" k="sport" v="soccer">
+			<symbol ref="soccer-borderless" position="center"/>
 		</rule>
 		<rule e="way" k="sport" v="swimming">
 			<symbol ref="swimming-borderless" position="center"/>
 		</rule>
-		<rule e="way" k="sport" v="curling">
-			<symbol ref="curling-borderless" position="center"/>
+		<rule e="way" k="sport" v="tennis">
+			<symbol ref="tennis-borderless" position="center"/>
 		</rule>
 		
 		<!-- Historic symbols -->
@@ -3937,7 +4003,7 @@
 		</rule>
 		<rule e="way" k="sport" v="*" layer="5">
 			<!-- Offset captions for areas with icons -->
-			<rule e="way" k="sport" v="soccer|handball|tennis|swimming|curling" layer="5">
+			<rule e="way" k="sport" v="archery|athletics|baseball|basketball|bowls|cricket|curling|diving|equestrian|football|gymnastics|handball|scuba_diving|shooting|soccer|swimming|tennis" layer="5">
 				<caption k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
 				<caption k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
 			</rule>

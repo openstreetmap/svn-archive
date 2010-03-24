@@ -1,0 +1,654 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.5' generator='JOSM'>
+  <bounds minlat='0.0' minlon='0.0' maxlat='0.024999999999999998' maxlon='0.024999999999999998' origin='petschge' />
+  <node id='-626' action='modify' visible='true' lat='0.008028158621399792' lon='0.024274017112750623' />
+  <node id='-625' action='modify' visible='true' lat='0.008028158621399792' lon='0.02221167380469825' />
+  <node id='-624' action='modify' visible='true' lat='0.00931185552125501' lon='0.02240109459026428'>
+    <tag k='name' v='scuba_diving' />
+    <tag k='sport' v='scuba_diving' />
+  </node>
+  <node id='-623' action='modify' visible='true' lat='0.00596592268949274' lon='0.02221167380469855' />
+  <node id='-622' action='modify' visible='true' lat='0.00596592268949274' lon='0.024274017112750915' />
+  <node id='-621' action='modify' visible='true' lat='0.008059724278652237' lon='0.018871028725821075' />
+  <node id='-620' action='modify' visible='true' lat='0.008043941450018516' lon='0.021572522919285856' />
+  <node id='-619' action='modify' visible='true' lat='0.008043941450018516' lon='0.019510179611233483' />
+  <node id='-618' action='modify' visible='true' lat='0.00934868212122659' lon='0.01978640595510949'>
+    <tag k='name' v='golf' />
+    <tag k='sport' v='golf' />
+  </node>
+  <node id='-617' action='modify' visible='true' lat='0.009385508721247646' lon='0.017171717319954673'>
+    <tag k='name' v='multi' />
+    <tag k='sport' v='multi' />
+  </node>
+  <node id='-616' action='modify' visible='true' lat='0.008059724278652237' lon='0.016808685417768702' />
+  <node id='-615' action='modify' visible='true' lat='0.009422335321254542' lon='0.014557028684799864'>
+    <tag k='name' v='table_tennis' />
+    <tag k='sport' v='table_tennis' />
+  </node>
+  <node id='-614' action='modify' visible='true' lat='0.009459161921247256' lon='0.011942340049645051'>
+    <tag k='name' v='rugby' />
+    <tag k='sport' v='rugby' />
+  </node>
+  <node id='-613' action='modify' visible='true' lat='0.008091289935913775' lon='0.011405697030839145' />
+  <node id='-612' action='modify' visible='true' lat='0.008075507107300952' lon='0.014107191224303919' />
+  <node id='-611' action='modify' visible='true' lat='0.008091289935913775' lon='0.013468040338891525' />
+  <node id='-610' action='modify' visible='true' lat='0.008075507107300952' lon='0.0161695345323563' />
+  <node id='-609' action='modify' visible='true' lat='0.009532815121215442' lon='0.006712962779335442'>
+    <tag k='name' v='pelota' />
+    <tag k='sport' v='pelota' />
+  </node>
+  <node id='-608' action='modify' visible='true' lat='0.009495988521238473' lon='0.009327651414490245'>
+    <tag k='name' v='racquet' />
+    <tag k='sport' v='racquet' />
+  </node>
+  <node id='-607' action='modify' visible='true' lat='0.00812285559315895' lon='0.006002708643909596' />
+  <node id='-606' action='modify' visible='true' lat='0.00810707276454159' lon='0.010766546145426747' />
+  <node id='-605' action='modify' visible='true' lat='0.00812285559315895' lon='0.008065051951961973' />
+  <node id='-604' action='modify' visible='true' lat='0.00810707276454159' lon='0.008704202837374372' />
+  <node id='-603' action='modify' visible='true' lat='0.009606468321202837' lon='0.0014835855090258284'>
+    <tag k='name' v='croquet' />
+    <tag k='sport' v='croquet' />
+  </node>
+  <node id='-602' action='modify' visible='true' lat='0.009569641721216294' lon='0.004098274144180633'>
+    <tag k='name' v='hockey' />
+    <tag k='sport' v='hockey' />
+  </node>
+  <node id='-601' action='modify' visible='true' lat='0.008154421250413185' lon='0.0026620635650324268' />
+  <node id='-600' action='modify' visible='true' lat='0.008138638421778576' lon='0.0033012144504448223' />
+  <node id='-599' action='modify' visible='true' lat='0.008138638421778576' lon='0.005363557758497201' />
+  <node id='-598' action='modify' visible='true' lat='0.008154421250413185' lon='5.997202569800479E-4' />
+  <node id='-597' action='modify' visible='true' lat='0.0059817055181856866' lon='0.021572522919286144' />
+  <node id='-596' action='modify' visible='true' lat='0.005997488346881221' lon='0.01680868541776899' />
+  <node id='-595' action='modify' visible='true' lat='0.0059817055181856866' lon='0.019510179611233778' />
+  <node id='-594' action='modify' visible='true' lat='0.005997488346881221' lon='0.018871028725821373' />
+  <node id='-593' action='modify' visible='true' lat='0.006029054004292772' lon='0.011405697030839433' />
+  <node id='-592' action='modify' visible='true' lat='0.006013271175592064' lon='0.01410719122430421' />
+  <node id='-591' action='modify' visible='true' lat='0.006029054004292772' lon='0.013468040338891814' />
+  <node id='-590' action='modify' visible='true' lat='0.006013271175592064' lon='0.016169534532356585' />
+  <node id='-589' action='modify' visible='true' lat='0.006060619661689208' lon='0.006002708643909886' />
+  <node id='-588' action='modify' visible='true' lat='0.006044836832970619' lon='0.008704202837374659' />
+  <node id='-587' action='modify' visible='true' lat='0.006044836832983341' lon='0.010766546145427044' />
+  <node id='-586' action='modify' visible='true' lat='0.006060619661689208' lon='0.008065051951962263' />
+  <node id='-585' action='modify' visible='true' lat='0.006092185319057793' lon='0.002662063565032716' />
+  <node id='-584' action='modify' visible='true' lat='0.006076402490346771' lon='0.003301214450445111' />
+  <node id='-583' action='modify' visible='true' lat='0.006076402490346771' lon='0.00536355775849749' />
+  <node id='-582' action='modify' visible='true' lat='0.006092185319057793' lon='5.997202569803352E-4' />
+  <node id='-483' action='modify' visible='true' lat='0.010343027160085758' lon='4.7345762671128876E-4' />
+  <node id='-482' action='modify' visible='true' lat='0.012405263066739725' lon='4.734576267110015E-4' />
+  <node id='-472' action='modify' visible='true' lat='0.01227900043940419' lon='0.02414775448248157' />
+  <node id='-471' action='modify' visible='true' lat='0.01021676453186336' lon='0.02208541117442949' />
+  <node id='-470' action='modify' visible='true' lat='0.01021676453186336' lon='0.02414775448248186' />
+  <node id='-469' action='modify' visible='true' lat='0.01227900043940419' lon='0.022085411174429196' />
+  <node id='-468' action='modify' visible='true' lat='0.013562697321309148' lon='0.022274831959995224'>
+    <tag k='name' v='cricket' />
+    <tag k='sport' v='cricket' />
+  </node>
+  <node id='-467' action='modify' visible='true' lat='0.01231056609624359' lon='0.01874476609555202' />
+  <node id='-466' action='modify' visible='true' lat='0.012294783267810298' lon='0.019383916980964425' />
+  <node id='-465' action='modify' visible='true' lat='0.012294783267810298' lon='0.0214462602890168' />
+  <node id='-464' action='modify' visible='true' lat='0.013599523920749203' lon='0.01966014332484043'>
+    <tag k='name' v='bowls' />
+    <tag k='sport' v='bowls' />
+  </node>
+  <node id='-463' action='modify' visible='true' lat='0.013636350520223077' lon='0.01704545468968562'>
+    <tag k='name' v='boules' />
+    <tag k='sport' v='boules' />
+  </node>
+  <node id='-462' action='modify' visible='true' lat='0.01231056609624359' lon='0.016682422787499648' />
+  <node id='-461' action='modify' visible='true' lat='0.013673177119667137' lon='0.014430766054530808'>
+    <tag k='name' v='basketball' />
+    <tag k='sport' v='basketball' />
+  </node>
+  <node id='-460' action='modify' visible='true' lat='0.013710003719106788' lon='0.011816077419376004'>
+    <tag k='name' v='baseball' />
+    <tag k='sport' v='baseball' />
+  </node>
+  <node id='-459' action='modify' visible='true' lat='0.012342131753077204' lon='0.011279434400570101' />
+  <node id='-458' action='modify' visible='true' lat='0.01232634892466589' lon='0.013980928594034873' />
+  <node id='-457' action='modify' visible='true' lat='0.012342131753077204' lon='0.013341777708622478' />
+  <node id='-456' action='modify' visible='true' lat='0.01232634892466589' lon='0.016043271902087243' />
+  <node id='-455' action='modify' visible='true' lat='0.010279895845990022' lon='0.011279434400570386' />
+  <node id='-454' action='modify' visible='true' lat='0.010264113017458465' lon='0.013980928594035165' />
+  <node id='-453' action='modify' visible='true' lat='0.010279895845990022' lon='0.013341777708622769' />
+  <node id='-452' action='modify' visible='true' lat='0.010264113017458465' lon='0.016043271902087534' />
+  <node id='-451' action='modify' visible='true' lat='0.010248330188916237' lon='0.016682422787499932' />
+  <node id='-450' action='modify' visible='true' lat='0.010232547360388774' lon='0.019383916980964717' />
+  <node id='-449' action='modify' visible='true' lat='0.010248330188916237' lon='0.01874476609555232' />
+  <node id='-448' action='modify' visible='true' lat='0.010232547360388774' lon='0.02144626028901709' />
+  <node id='-447' action='modify' visible='true' lat='0.01374683031854201' lon='0.0092013887842212'>
+    <tag k='name' v='austrilian_football' />
+    <tag k='sport' v='australian_football' />
+  </node>
+  <node id='-446' action='modify' visible='true' lat='0.013783656917960045' lon='0.0065867001490663955'>
+    <tag k='name' v='football' />
+    <tag k='sport' v='football' />
+  </node>
+  <node id='-445' action='modify' visible='true' lat='0.012357914581490248' lon='0.008577940207105327' />
+  <node id='-444' action='modify' visible='true' lat='0.012373697409917736' lon='0.007938789321692926' />
+  <node id='-443' action='modify' visible='true' lat='0.012357914581490248' lon='0.0106402835151577' />
+  <node id='-442' action='modify' visible='true' lat='0.012373697409917736' lon='0.005876446013640549' />
+  <node id='-441' action='modify' visible='true' lat='0.013857310116846192' lon='0.001357322878756782'>
+    <tag k='name' v='skiing' />
+    <tag k='sport' v='skiing' />
+  </node>
+  <node id='-440' action='modify' visible='true' lat='0.013820483517411738' lon='0.003972011513911587'>
+    <tag k='name' v='shooting' />
+    <tag k='sport' v='shooting' />
+  </node>
+  <node id='-439' action='modify' visible='true' lat='0.01238948023832151' lon='0.005237295128228154' />
+  <node id='-438' action='modify' visible='true' lat='0.01238948023832151' lon='0.003174951820175775' />
+  <node id='-437' action='modify' visible='true' lat='0.012405263066739725' lon='0.0025358009347633804' />
+  <node id='-436' action='modify' visible='true' lat='0.010327244331558771' lon='0.005237295128228444' />
+  <node id='-435' action='modify' visible='true' lat='0.010327244331558771' lon='0.003174951820176065' />
+  <node id='-434' action='modify' visible='true' lat='0.010343027160085758' lon='0.0025358009347636696' />
+  <node id='-433' action='modify' visible='true' lat='0.010311461503046538' lon='0.005876446013640839' />
+  <node id='-432' action='modify' visible='true' lat='0.010295678674510898' lon='0.010640283515157997' />
+  <node id='-431' action='modify' visible='true' lat='0.010311461503046538' lon='0.007938789321693217' />
+  <node id='-430' action='modify' visible='true' lat='0.010295678674498179' lon='0.008577940207105611' />
+  <node id='-320' action='modify' visible='true' lat='0.017850365645414316' lon='0.019618055781417412'>
+    <tag k='name' v='skating' />
+    <tag k='sport' v='skating' />
+  </node>
+  <node id='-319' action='modify' visible='true' lat='0.017887192244138452' lon='0.017003367146262608'>
+    <tag k='name' v='motor' />
+    <tag k='sport' v='motor' />
+  </node>
+  <node id='-318' action='modify' visible='true' lat='0.017924018842828227' lon='0.014388678511107797'>
+    <tag k='name' v='gymnastics' />
+    <tag k='sport' v='gymnastics' />
+  </node>
+  <node id='-317' action='modify' visible='true' lat='0.017960845441509044' lon='0.01177398987595299'>
+    <tag k='name' v='horse_racing' />
+    <tag k='sport' v='horse_racing' />
+  </node>
+  <node id='-316' action='modify' visible='true' lat='0.017997672040193587' lon='0.009159301240798182'>
+    <tag k='name' v='equestrian' />
+    <tag k='sport' v='equestrian' />
+  </node>
+  <node id='-315' action='modify' visible='true' lat='0.018034498638869106' lon='0.006544612605643377'>
+    <tag k='name' v='dog_racing' />
+    <tag k='sport' v='dog_racing' />
+  </node>
+  <node id='-314' action='modify' visible='true' lat='0.018071325237535577' lon='0.003929923970488569'>
+    <tag k='name' v='cycling' />
+    <tag k='sport' v='cycling' />
+  </node>
+  <node id='-313' action='modify' visible='true' lat='0.01781353904670671' lon='0.022232744416572213'>
+    <tag k='name' v='skateboard' />
+    <tag k='sport' v='skateboard' />
+  </node>
+  <node id='-312' action='modify' visible='true' lat='0.018108151836205684' lon='0.0013152353353337637'>
+    <tag k='name' v='canoe' />
+    <tag k='sport' v='canoe' />
+  </node>
+  <node id='-311' action='modify' visible='true' lat='0.01652984218983229' lon='0.022043323631006178' />
+  <node id='-310' action='modify' visible='true' lat='0.014467606317993218' lon='0.022043323631006473' />
+  <node id='-309' action='modify' visible='true' lat='0.014467606317993218' lon='0.024105666939058846' />
+  <node id='-308' action='modify' visible='true' lat='0.01652984218983229' lon='0.02410566693905855' />
+  <node id='-307' action='modify' visible='true' lat='0.01654562501793678' lon='0.02140417274559378' />
+  <node id='-306' action='modify' visible='true' lat='0.01656140784608032' lon='0.018702678552129003' />
+  <node id='-305' action='modify' visible='true' lat='0.01654562501793678' lon='0.019341829437541407' />
+  <node id='-304' action='modify' visible='true' lat='0.01656140784608032' lon='0.016640335244076633' />
+  <node id='-303' action='modify' visible='true' lat='0.014483389146262736' lon='0.02140417274559407' />
+  <node id='-302' action='modify' visible='true' lat='0.014499171974546188' lon='0.0187026785521293' />
+  <node id='-301' action='modify' visible='true' lat='0.014483389146262736' lon='0.0193418294375417' />
+  <node id='-300' action='modify' visible='true' lat='0.014499171974546188' lon='0.016640335244076918' />
+  <node id='-299' action='modify' visible='true' lat='0.01657719067419933' lon='0.01600118435866423' />
+  <node id='-298' action='modify' visible='true' lat='0.016592973502319225' lon='0.01329969016519946' />
+  <node id='-297' action='modify' visible='true' lat='0.01657719067419933' lon='0.013938841050611859' />
+  <node id='-296' action='modify' visible='true' lat='0.016592973502319225' lon='0.01123734685714708' />
+  <node id='-295' action='modify' visible='true' lat='0.014514954802830852' lon='0.016001184358664523' />
+  <node id='-294' action='modify' visible='true' lat='0.014530737631104004' lon='0.013299690165199753' />
+  <node id='-293' action='modify' visible='true' lat='0.014514954802830852' lon='0.013938841050612145' />
+  <node id='-292' action='modify' visible='true' lat='0.014530737631104004' lon='0.011237346857147367' />
+  <node id='-291' action='modify' visible='true' lat='0.016608756330427295' lon='0.010598195971734682' />
+  <node id='-290' action='modify' visible='true' lat='0.0166245391585617' lon='0.007896701778269908' />
+  <node id='-289' action='modify' visible='true' lat='0.016608756330427295' lon='0.008535852663682307' />
+  <node id='-288' action='modify' visible='true' lat='0.0166245391585617' lon='0.005834358470217531' />
+  <node id='-287' action='modify' visible='true' lat='0.01454652045937836' lon='0.010598195971734978' />
+  <node id='-286' action='modify' visible='true' lat='0.01456230328765392' lon='0.0078967017782702' />
+  <node id='-285' action='modify' visible='true' lat='0.014546520459365641' lon='0.008535852663682595' />
+  <node id='-284' action='modify' visible='true' lat='0.01456230328765392' lon='0.005834358470217821' />
+  <node id='-283' action='modify' visible='true' lat='0.01664032198668427' lon='0.005195207584805136' />
+  <node id='-282' action='modify' visible='true' lat='0.01664032198668427' lon='0.0031328642767527565' />
+  <node id='-281' action='modify' visible='true' lat='0.016656104814795' lon='0.002493713391340362' />
+  <node id='-280' action='modify' visible='true' lat='0.016656104814795' lon='4.3137008328798316E-4' />
+  <node id='-279' action='modify' visible='true' lat='0.014578086115917958' lon='0.005195207584805426' />
+  <node id='-278' action='modify' visible='true' lat='0.014578086115917958' lon='0.0031328642767530467' />
+  <node id='-277' action='modify' visible='true' lat='0.014593868944195915' lon='0.002493713391340652' />
+  <node id='-276' action='modify' visible='true' lat='0.014593868944195915' lon='4.313700832882704E-4' />
+  <node id='-182' action='modify' visible='true' lat='0.02072808784351273' lon='0.024200363911760336' />
+  <node id='-181' action='modify' visible='true' lat='0.01866585201809011' lon='0.024200363911760638' />
+  <node id='-180' action='modify' visible='true' lat='0.01866585201809011' lon='0.022138020603708255' />
+  <node id='-179' action='modify' visible='true' lat='0.02072808784351273' lon='0.022138020603707963' />
+  <node id='-172' action='modify' visible='true' lat='0.020743870671262727' lon='0.021498869718295562' />
+  <node id='-171' action='modify' visible='true' lat='0.018681634846034963' lon='0.021498869718295857' />
+  <node id='-170' action='modify' visible='true' lat='0.018681634846034925' lon='0.01943652641024348' />
+  <node id='-169' action='modify' visible='true' lat='0.02074387067126269' lon='0.01943652641024319' />
+  <node id='-162' action='modify' visible='true' lat='0.020759653499011148' lon='0.018797375524830788' />
+  <node id='-161' action='modify' visible='true' lat='0.018697417673978402' lon='0.018797375524831086' />
+  <node id='-160' action='modify' visible='true' lat='0.018697417673978325' lon='0.016735032216778703' />
+  <node id='-159' action='modify' visible='true' lat='0.02075965349901108' lon='0.016735032216778415' />
+  <node id='-152' action='modify' visible='true' lat='0.020775436326757993' lon='0.016095881331366014' />
+  <node id='-151' action='modify' visible='true' lat='0.018713200501920414' lon='0.01609588133136631' />
+  <node id='-150' action='modify' visible='true' lat='0.018713200501920303' lon='0.014033538023313929' />
+  <node id='-149' action='modify' visible='true' lat='0.02077543632675789' lon='0.014033538023313644' />
+  <node id='-142' action='modify' visible='true' lat='0.020791219154503264' lon='0.013394387137901243' />
+  <node id='-141' action='modify' visible='true' lat='0.01872898332986101' lon='0.01339438713790154' />
+  <node id='-140' action='modify' visible='true' lat='0.01872898332986087' lon='0.011332043829849153' />
+  <node id='-139' action='modify' visible='true' lat='0.020791219154503122' lon='0.011332043829848867' />
+  <node id='-132' action='modify' visible='true' lat='0.02080700198224696' lon='0.010692892944436467' />
+  <node id='-131' action='modify' visible='true' lat='0.018744766157800186' lon='0.010692892944436764' />
+  <node id='-130' action='modify' visible='true' lat='0.01874476615780001' lon='0.008630549636384379' />
+  <node id='-129' action='modify' visible='true' lat='0.02080700198224678' lon='0.008630549636384093' />
+  <node id='-122' action='modify' visible='true' lat='0.02082278480998907' lon='0.007991398750971693' />
+  <node id='-121' action='modify' visible='true' lat='0.01876054898573794' lon='0.007991398750971985' />
+  <node id='-120' action='modify' visible='true' lat='0.018760548985737726' lon='0.005929055442919605' />
+  <node id='-119' action='modify' visible='true' lat='0.020822784809988854' lon='0.005929055442919317' />
+  <node id='-112' action='modify' visible='true' lat='0.020838567637729604' lon='0.005289904557506921' />
+  <node id='-111' action='modify' visible='true' lat='0.018776331813674274' lon='0.005289904557507211' />
+  <node id='-110' action='modify' visible='true' lat='0.018776331813674017' lon='0.003227561249454831' />
+  <node id='-109' action='modify' visible='true' lat='0.02083856763772935' lon='0.003227561249454542' />
+  <node id='-100' action='modify' visible='true' lat='0.02085435046546856' lon='0.002588410364042147' />
+  <node id='-98' action='modify' visible='true' lat='0.01879211464160917' lon='0.0025884103640424357' />
+  <node id='-96' action='modify' visible='true' lat='0.018792114641608883' lon='5.260670559900559E-4' />
+  <node id='-95' action='modify' visible='true' lat='0.02085435046546827' lon='5.260670559897674E-4' />
+  <node id='-94' action='modify' visible='true' lat='0.022011784668766878' lon='0.022327441389274002'>
+    <tag k='name' v='climbing' />
+    <tag k='sport' v='climbing' />
+  </node>
+  <node id='-93' action='modify' visible='true' lat='0.02204861126653877' lon='0.019712752754119198'>
+    <tag k='name' v='archery' />
+    <tag k='sport' v='archery' />
+  </node>
+  <node id='-92' action='modify' visible='true' lat='0.022085437864302063' lon='0.01709806411896439'>
+    <tag k='name' v='athletics' />
+    <tag k='sport' v='athletics' />
+  </node>
+  <node id='-91' action='modify' visible='true' lat='0.022122264462056236' lon='0.014483375483809582'>
+    <tag k='name' v='10pin' />
+    <tag k='sport' v='10pin' />
+  </node>
+  <node id='-90' action='modify' visible='true' lat='0.022159091059801263' lon='0.011868686848654775'>
+    <tag k='name' v='curling' />
+    <tag k='sport' v='curling' />
+  </node>
+  <node id='-89' action='modify' visible='true' lat='0.02219591765753714' lon='0.009253998213499967'>
+    <tag k='name' v='swimming' />
+    <tag k='sport' v='swimming' />
+  </node>
+  <node id='-87' action='modify' visible='true' lat='0.022232744255263844' lon='0.006639309578345162'>
+    <tag k='name' v='tennis' />
+    <tag k='sport' v='tennis' />
+  </node>
+  <node id='-86' action='modify' visible='true' lat='0.022269570852981365' lon='0.004024620943190354'>
+    <tag k='name' v='handball' />
+    <tag k='sport' v='handball' />
+  </node>
+  <node id='-85' action='modify' visible='true' lat='0.022306397450694324' lon='0.0014099323080355487'>
+    <tag k='name' v='soccer' />
+    <tag k='sport' v='soccer' />
+  </node>
+  <node id='1' timestamp='2010-03-23T11:48:11Z' user='petschge' visible='true' version='1' lat='0.0' lon='0.0' />
+  <node id='19' timestamp='2010-03-23T11:48:11Z' user='petschge' visible='true' version='1' lat='0.0' lon='0.025' />
+  <node id='20' timestamp='2010-03-23T11:48:11Z' user='petschge' visible='true' version='1' lat='0.025' lon='0.0' />
+  <node id='29' timestamp='2010-03-23T11:48:11Z' user='petschge' visible='true' version='1' lat='0.025' lon='0.025' />
+  <node id='101' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1' lat='0.021602349166935562' lon='0.0012374157500113464' />
+  <node id='102' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1' lat='0.021602349166935562' lon='0.023510906389653714' />
+  <node id='103' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1' lat='0.016652684857702375' lon='0.001363254680178817' />
+  <node id='104' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1' lat='0.016652684857702375' lon='0.0231333895991513' />
+  <node id='105' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1' lat='0.012044396221088535' lon='0.0014971186167477405' />
+  <node id='106' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1' lat='0.012128288839334913' lon='0.02318336091560857' />
+  <node id='107' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1' lat='0.00721652967361578' lon='0.0016747501414210479' />
+  <node id='108' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1' lat='0.0072584759833400694' lon='0.023067368269891107' />
+  <way id='-635' action='modify' visible='true'>
+    <nd ref='-607' />
+    <nd ref='-589' />
+    <nd ref='-586' />
+    <nd ref='-605' />
+    <nd ref='-607' />
+    <tag k='name' v='pelota' />
+    <tag k='sport' v='pelota' />
+  </way>
+  <way id='-634' action='modify' visible='true'>
+    <nd ref='-604' />
+    <nd ref='-588' />
+    <nd ref='-587' />
+    <nd ref='-606' />
+    <nd ref='-604' />
+    <tag k='name' v='racquet' />
+    <tag k='sport' v='racquet' />
+  </way>
+  <way id='-633' action='modify' visible='true'>
+    <nd ref='-619' />
+    <nd ref='-595' />
+    <nd ref='-597' />
+    <nd ref='-620' />
+    <nd ref='-619' />
+    <tag k='name' v='golf' />
+    <tag k='sport' v='golf' />
+  </way>
+  <way id='-632' action='modify' visible='true'>
+    <nd ref='-598' />
+    <nd ref='-582' />
+    <nd ref='-585' />
+    <nd ref='-601' />
+    <nd ref='-598' />
+    <tag k='name' v='croquet' />
+    <tag k='sport' v='croquet' />
+  </way>
+  <way id='-631' action='modify' visible='true'>
+    <nd ref='-600' />
+    <nd ref='-584' />
+    <nd ref='-583' />
+    <nd ref='-599' />
+    <nd ref='-600' />
+    <tag k='name' v='hockey' />
+    <tag k='sport' v='hockey' />
+  </way>
+  <way id='-630' action='modify' visible='true'>
+    <nd ref='-625' />
+    <nd ref='-623' />
+    <nd ref='-622' />
+    <nd ref='-626' />
+    <nd ref='-625' />
+    <tag k='name' v='scuba_diving' />
+    <tag k='sport' v='scuba_diving' />
+  </way>
+  <way id='-629' action='modify' visible='true'>
+    <nd ref='-616' />
+    <nd ref='-596' />
+    <nd ref='-594' />
+    <nd ref='-621' />
+    <nd ref='-616' />
+    <tag k='name' v='multi' />
+    <tag k='sport' v='multi' />
+  </way>
+  <way id='-628' action='modify' visible='true'>
+    <nd ref='-613' />
+    <nd ref='-593' />
+    <nd ref='-591' />
+    <nd ref='-611' />
+    <nd ref='-613' />
+    <tag k='name' v='rugby' />
+    <tag k='sport' v='rugby' />
+  </way>
+  <way id='-627' action='modify' visible='true'>
+    <nd ref='-612' />
+    <nd ref='-592' />
+    <nd ref='-590' />
+    <nd ref='-610' />
+    <nd ref='-612' />
+    <tag k='name' v='table_tennis' />
+    <tag k='sport' v='table_tennis' />
+  </way>
+  <way id='-481' action='modify' visible='true'>
+    <nd ref='-482' />
+    <nd ref='-483' />
+    <nd ref='-434' />
+    <nd ref='-437' />
+    <nd ref='-482' />
+    <tag k='name' v='skiing' />
+    <tag k='sport' v='skiing' />
+  </way>
+  <way id='-480' action='modify' visible='true'>
+    <nd ref='-469' />
+    <nd ref='-471' />
+    <nd ref='-470' />
+    <nd ref='-472' />
+    <nd ref='-469' />
+    <tag k='name' v='cricket' />
+    <tag k='sport' v='cricket' />
+  </way>
+  <way id='-479' action='modify' visible='true'>
+    <nd ref='-462' />
+    <nd ref='-451' />
+    <nd ref='-449' />
+    <nd ref='-467' />
+    <nd ref='-462' />
+    <tag k='name' v='boules' />
+    <tag k='sport' v='boules' />
+  </way>
+  <way id='-478' action='modify' visible='true'>
+    <nd ref='-466' />
+    <nd ref='-450' />
+    <nd ref='-448' />
+    <nd ref='-465' />
+    <nd ref='-466' />
+    <tag k='name' v='bowls' />
+    <tag k='sport' v='bowls' />
+  </way>
+  <way id='-477' action='modify' visible='true'>
+    <nd ref='-445' />
+    <nd ref='-430' />
+    <nd ref='-432' />
+    <nd ref='-443' />
+    <nd ref='-445' />
+    <tag k='name' v='austrilian_football' />
+    <tag k='sport' v='australian_football' />
+  </way>
+  <way id='-476' action='modify' visible='true'>
+    <nd ref='-442' />
+    <nd ref='-433' />
+    <nd ref='-431' />
+    <nd ref='-444' />
+    <nd ref='-442' />
+    <tag k='name' v='football' />
+    <tag k='sport' v='football' />
+  </way>
+  <way id='-475' action='modify' visible='true'>
+    <nd ref='-459' />
+    <nd ref='-455' />
+    <nd ref='-453' />
+    <nd ref='-457' />
+    <nd ref='-459' />
+    <tag k='name' v='baseball' />
+    <tag k='sport' v='baseball' />
+  </way>
+  <way id='-474' action='modify' visible='true'>
+    <nd ref='-458' />
+    <nd ref='-454' />
+    <nd ref='-452' />
+    <nd ref='-456' />
+    <nd ref='-458' />
+    <tag k='name' v='basketball' />
+    <tag k='sport' v='basketball' />
+  </way>
+  <way id='-473' action='modify' visible='true'>
+    <nd ref='-438' />
+    <nd ref='-435' />
+    <nd ref='-436' />
+    <nd ref='-439' />
+    <nd ref='-438' />
+    <tag k='name' v='shooting' />
+    <tag k='sport' v='shooting' />
+  </way>
+  <way id='-329' action='modify' visible='true'>
+    <nd ref='-305' />
+    <nd ref='-301' />
+    <nd ref='-303' />
+    <nd ref='-307' />
+    <nd ref='-305' />
+    <tag k='name' v='skating' />
+    <tag k='sport' v='skating' />
+  </way>
+  <way id='-328' action='modify' visible='true'>
+    <nd ref='-304' />
+    <nd ref='-300' />
+    <nd ref='-302' />
+    <nd ref='-306' />
+    <nd ref='-304' />
+    <tag k='name' v='motor' />
+    <tag k='sport' v='motor' />
+  </way>
+  <way id='-327' action='modify' visible='true'>
+    <nd ref='-297' />
+    <nd ref='-293' />
+    <nd ref='-295' />
+    <nd ref='-299' />
+    <nd ref='-297' />
+    <tag k='name' v='gymnastics' />
+    <tag k='sport' v='gymnastics' />
+  </way>
+  <way id='-326' action='modify' visible='true'>
+    <nd ref='-296' />
+    <nd ref='-292' />
+    <nd ref='-294' />
+    <nd ref='-298' />
+    <nd ref='-296' />
+    <tag k='name' v='horse_racing' />
+    <tag k='sport' v='horse_racing' />
+  </way>
+  <way id='-325' action='modify' visible='true'>
+    <nd ref='-289' />
+    <nd ref='-285' />
+    <nd ref='-287' />
+    <nd ref='-291' />
+    <nd ref='-289' />
+    <tag k='name' v='equestrian' />
+    <tag k='sport' v='equestrian' />
+  </way>
+  <way id='-324' action='modify' visible='true'>
+    <nd ref='-288' />
+    <nd ref='-284' />
+    <nd ref='-286' />
+    <nd ref='-290' />
+    <nd ref='-288' />
+    <tag k='name' v='dog_racing' />
+    <tag k='sport' v='dog_racing' />
+  </way>
+  <way id='-323' action='modify' visible='true'>
+    <nd ref='-282' />
+    <nd ref='-278' />
+    <nd ref='-279' />
+    <nd ref='-283' />
+    <nd ref='-282' />
+    <tag k='name' v='cycling' />
+    <tag k='sport' v='cycling' />
+  </way>
+  <way id='-322' action='modify' visible='true'>
+    <nd ref='-311' />
+    <nd ref='-310' />
+    <nd ref='-309' />
+    <nd ref='-308' />
+    <nd ref='-311' />
+    <tag k='name' v='skateboard' />
+    <tag k='sport' v='skateboard' />
+  </way>
+  <way id='-321' action='modify' visible='true'>
+    <nd ref='-280' />
+    <nd ref='-276' />
+    <nd ref='-277' />
+    <nd ref='-281' />
+    <nd ref='-280' />
+    <tag k='name' v='canoe' />
+    <tag k='sport' v='canoe' />
+  </way>
+  <way id='-178' action='modify' visible='true'>
+    <nd ref='-179' />
+    <nd ref='-180' />
+    <nd ref='-181' />
+    <nd ref='-182' />
+    <nd ref='-179' />
+    <tag k='name' v='climbing' />
+    <tag k='sport' v='climbing' />
+  </way>
+  <way id='-168' action='modify' visible='true'>
+    <nd ref='-169' />
+    <nd ref='-170' />
+    <nd ref='-171' />
+    <nd ref='-172' />
+    <nd ref='-169' />
+    <tag k='name' v='archery' />
+    <tag k='sport' v='archery' />
+  </way>
+  <way id='-158' action='modify' visible='true'>
+    <nd ref='-159' />
+    <nd ref='-160' />
+    <nd ref='-161' />
+    <nd ref='-162' />
+    <nd ref='-159' />
+    <tag k='name' v='athletics' />
+    <tag k='sport' v='athletics' />
+  </way>
+  <way id='-148' action='modify' visible='true'>
+    <nd ref='-149' />
+    <nd ref='-150' />
+    <nd ref='-151' />
+    <nd ref='-152' />
+    <nd ref='-149' />
+    <tag k='name' v='10pin' />
+    <tag k='sport' v='10pin' />
+  </way>
+  <way id='-138' action='modify' visible='true'>
+    <nd ref='-139' />
+    <nd ref='-140' />
+    <nd ref='-141' />
+    <nd ref='-142' />
+    <nd ref='-139' />
+    <tag k='name' v='curling' />
+    <tag k='sport' v='curling' />
+  </way>
+  <way id='-128' action='modify' visible='true'>
+    <nd ref='-129' />
+    <nd ref='-130' />
+    <nd ref='-131' />
+    <nd ref='-132' />
+    <nd ref='-129' />
+    <tag k='name' v='swimming' />
+    <tag k='sport' v='swimming' />
+  </way>
+  <way id='-118' action='modify' visible='true'>
+    <nd ref='-119' />
+    <nd ref='-120' />
+    <nd ref='-121' />
+    <nd ref='-122' />
+    <nd ref='-119' />
+    <tag k='name' v='tennis' />
+    <tag k='sport' v='tennis' />
+  </way>
+  <way id='-108' action='modify' visible='true'>
+    <nd ref='-109' />
+    <nd ref='-110' />
+    <nd ref='-111' />
+    <nd ref='-112' />
+    <nd ref='-109' />
+    <tag k='name' v='handball' />
+    <tag k='sport' v='handball' />
+  </way>
+  <way id='-97' action='modify' visible='true'>
+    <nd ref='-95' />
+    <nd ref='-96' />
+    <nd ref='-98' />
+    <nd ref='-100' />
+    <nd ref='-95' />
+    <tag k='name' v='soccer' />
+    <tag k='sport' v='soccer' />
+  </way>
+  <way id='109' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1'>
+    <tag k='highway' v='residential' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='1000' timestamp='2010-03-23T11:48:11Z' user='petschge' visible='true' version='1'>
+    <nd ref='1' />
+    <nd ref='20' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1009' timestamp='2010-03-23T11:48:11Z' user='petschge' visible='true' version='1'>
+    <nd ref='19' />
+    <nd ref='29' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='1010' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1'>
+    <tag k='highway' v='residential' />
+    <tag k='oneway' v='-1' />
+  </way>
+  <way id='1011' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1'>
+    <tag k='highway' v='cycleway' />
+    <tag k='oneway' v='true' />
+  </way>
+  <way id='1012' action='delete' timestamp='2010-03-23T11:48:11Z' visible='true' version='1'>
+    <tag k='highway' v='cycleway' />
+    <tag k='oneway' v='-1' />
+  </way>
+</osm>

@@ -108,6 +108,7 @@ import org.openstreetmap.josm.data.projection.*;
  *                 -     new option allowing an auto-selection of the first cadastre layer for grab
  *                 -     non-modal JDialog in MenuActionGrabPlanImage
  *                 -     new options in the image filter (bilinear, bicubic)
+ * 1.9 xx-xxx-xxxx - added a scroll bar in preferences
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "1.8";

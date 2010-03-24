@@ -268,12 +268,12 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                 new_dir = (last_dir + d + 4) % 8;
                 test_x = x + this.dirsX[new_dir];
                 test_y = y + this.dirsY[new_dir];
-                if(test_x < 0 || test_x >= selectedImage.image.getWidth() ||
+                if (test_x < 0 || test_x >= selectedImage.image.getWidth() ||
                         test_y < 0 || test_y >= selectedImage.image.getHeight()){
                     System.out.println("Outside image");
                     return false;
                 }
-                if(bim.isBuildingOrRoofColor(selectedImage.image, test_x, test_y, buildingColors, ignoreParcels)){
+                if (bim.isBuildingOrRoofColor(selectedImage.image, test_x, test_y, buildingColors, ignoreParcels)){
                     System.out.println("building color at "+test_x+","+test_y+" new_dir="+new_dir);
                     break;
                 }
@@ -303,9 +303,14 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
             x = test_x;
             y = test_y;
             // Break the loop if we managed to get back to our starting point
-            if (listPixels.contains(new Pixel(x, y, 0))){
+            if (x == startX && y == startY) {
                 System.out.println("loop closed at "+x+","+y+", exit");
                 break;
+            } else if (listPixels.contains(new Pixel(x, y, 0))){
+                int j = listPixels.indexOf(new Pixel(x, y, 0));
+                int l = listPixels.size();
+                for (int k = j; k < l; k++)
+                    listPixels.remove(j);
             }
             addPixeltoList(x, y, new_dir);
         }
@@ -543,11 +548,11 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                 double angle1 = AngleOfView(n1.getCoor().getX(), n1.getCoor().getY(),
                         n0.getCoor().getX(), n0.getCoor().getY(),
                         n2.getCoor().getX(), n2.getCoor().getY());
-                System.out.println("angle n0,n1,n2="+(angle1*180/Math.PI));
+//                System.out.println("angle n0,n1,n2="+(angle1*180/Math.PI));
                 double angle2 = AngleOfView(n2.getCoor().getX(), n2.getCoor().getY(),
                         n1.getCoor().getX(), n1.getCoor().getY(),
                         n3.getCoor().getX(), n3.getCoor().getY());
-                System.out.println("angle n1,n2,n3="+(angle2*180/Math.PI));
+//                System.out.println("angle n1,n2,n3="+(angle2*180/Math.PI));
                 if (angle1 > Math.PI*0.9 && angle1 < Math.PI*1.1) {
                     way.removeNode(n1);
                     System.out.println("remove n1");                

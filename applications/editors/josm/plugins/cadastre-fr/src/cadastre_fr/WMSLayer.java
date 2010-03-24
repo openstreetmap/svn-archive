@@ -60,6 +60,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     protected final int serializeFormatVersion = 4;
     
     public static int currentFormat;
+    
+    private static final int cBBoxForBuildings = 50; // hard coded size of grabbed boxes for building layers
 
     private ArrayList<EastNorthBound> dividedBbox = new ArrayList<EastNorthBound>();
 
@@ -140,7 +142,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
                         CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)), 0);
             } else if (buildingsOnly)
-                divideBbox(b, 5, 80); // hard coded size of 80 meters per box
+                divideBbox(b, 5, cBBoxForBuildings);
             else
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())), 0);
         } else

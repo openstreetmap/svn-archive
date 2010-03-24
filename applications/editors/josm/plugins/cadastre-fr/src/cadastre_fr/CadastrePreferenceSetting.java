@@ -3,6 +3,7 @@ package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -94,7 +95,10 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
                 + "<a href=\"http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html\"> "
                 + "http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html</a> <BR>"
                 + "before any upload of data created by this plugin.");
-        JPanel cadastrewms = gui.createPreferenceTab("cadastrewms.gif", I18n.tr("French cadastre WMS"), description);
+        JPanel cadastrewmsMast = gui.createPreferenceTab("cadastrewms.gif", I18n.tr("French cadastre WMS"), description);
+        
+        JPanel cadastrewms = new JPanel(new GridBagLayout());
+        cadastrewms.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 
         // option to automatically set the source tag when uploading
         sourcing.setText(CadastrePlugin.source);
@@ -325,6 +329,11 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         autoFirstLayer.setToolTipText(tr("Automatically selects the first WMS layer if multiple layers exist when grabbing."));
         cadastrewms.add(autoFirstLayer, GBC.eop().insets(0, 0, 0, 0));
         cadastrewms.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
+//        JTabbedPane cadastrecontent = new JTabbedPane();
+//        cadastrecontent.add(cadastrewms);
+        JScrollPane scrollpane = new JScrollPane(cadastrewms);
+        scrollpane.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
+        cadastrewmsMast.add(scrollpane, GBC.eol().fill(GBC.BOTH));
 
     }
 

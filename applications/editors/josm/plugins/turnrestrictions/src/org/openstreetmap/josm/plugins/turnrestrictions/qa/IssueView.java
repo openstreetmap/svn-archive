@@ -100,7 +100,7 @@ public class IssueView extends JPanel{
 			lblIcon.setIcon(ImageProvider.get("warning-small"));
 			break;
 		case ERROR:
-			lblIcon.setIcon(ImageProvider.get("styles/standard/misc", "error"));
+			lblIcon.setIcon(ImageProvider.get("error"));
 			break;
 		}		
 	}

@@ -284,7 +284,17 @@
 				<line class="waterway-core waterway-river-core" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
 			</rule>
 			<rule e="way" k="waterway" v="stream">
-				<line class="waterway-core waterway-stream-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="3"/>
+				<rule e="way" k="stream" v="ephemeral">
+					<line class="waterway-core waterway-stream-core-ephemeral" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="3"/>
+				</rule>
+				<else>
+					<rule e="way" k="stream" v="intermittent">
+						<line class="waterway-core waterway-stream-core-intermittent" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="3"/>
+					</rule>
+					<else>
+						<line class="waterway-core waterway-stream-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="3"/>
+					</else>
+				</else>
 			</rule>
 			<rule e="way" k="waterway" v="canal">
 				<line class="waterway-core waterway-canal-core" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="100"/>
@@ -3815,6 +3825,8 @@
 			.waterway-river-name-core               { font-size: 2px; }
 			
 			.waterway-stream-casing                 { stroke-width: 0.5px; }
+			.waterway-stream-core-ephemeral         { stroke-width: 0.5px; stroke-dasharray: 0.4, 0.4; stroke-linecap: butt; }
+			.waterway-stream-core-intermittent      { stroke-width: 0.5px; stroke-dasharray: 0.6, 0.2; stroke-linecap: butt; }
 			.waterway-stream-core                   { stroke-width: 0.5px; }
 			.waterway-stream-tunnel-core            { stroke-width: 0.3px; stroke-dasharray: 0.75, 0.75; }
 			.waterway-stream-name-casing            { font-size: 3px; stroke-width: 0.2px;}

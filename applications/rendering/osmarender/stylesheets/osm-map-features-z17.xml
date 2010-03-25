@@ -121,6 +121,9 @@
 			<area class="leisure-nature_reserve"/>
 			<symbol ref="bird" position="center"/>
 		</rule>
+		<rule e="node" k="natural" v="tree">
+			<symbol ref="tree" position="center"/>
+		</rule>
 		<rule e="way" k="leisure" v="stadium|sports_centre|water_park">
 			<area class="leisure-stadium"/>
 		</rule>

@@ -1974,6 +1974,9 @@
     <tag k='power' v='pole' />
   </node>
   <node id='-200002' visible='true' lat='51.26380677777447' lon='-0.4268554131900413' />
+  <node id='-200003' visible='true' lat='51.31456' lon='-0.38201' >
+    <tag k='natural' v='tree' />
+  </node>
   <way id='-10002010' action='modify' visible='true'>
     <nd ref='-10002000' />
     <nd ref='-10002001' />

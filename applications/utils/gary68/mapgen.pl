@@ -40,17 +40,19 @@
 # 0.14 [-pad]
 #      ocean rendering
 #      [-allowiconmove]
+# 0.15 -place also accepts node id
+#      intelligent street labeling
+#      faster size determination of svg files
+#      right size and resolution for output files
 #
 # TODO
 # check rendering of route symbols, rectangles?
 # ------------------
-# determine svg file size differently and faster?
 # [ ] reading rule check for right number of keys and values ! else ERROR
-# [ ] eliminate rules not needed when scale is present. remove ifs in getXYZRules
 # grid distance in meters
 # -viewpng -viewpdf -viewsvg
 # STDERR outputs
-# module for style file reading and error handling
+# style file error handling
 # style file check, color check, error messages, array for regex? Defaults
 # nested relations for multipolygons?
 # see wiki
@@ -62,11 +64,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.14 ;
-use OSM::mapgenRules 0.14 ;
+use OSM::mapgen 0.15 ;
+use OSM::mapgenRules 0.15 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.14" ;
+my $version = "0.15" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -80,7 +82,7 @@ perl mapgen.pl
 -clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
 -pad=<INTEGER> (percent of white space around data in osm file, DEFAULT=0)
 
--place=TEXT (Place to draw automatically; quotation marks can be used if necessary; OSMOSIS REQUIRED!)
+-place=TEXT (Place to draw automatically; quotation marks can be used if necessary; node id can also be given; OSMOSIS REQUIRED!)
 -lonrad=FLOAT (radius for place width in km, DEFAULT=2)
 -latrad=FLOAT (radius for place width in km, DEFAULT=2)
 
@@ -151,8 +153,6 @@ my $helpOpt = 0 ;
 my $tagStatOpt = 0 ;
 my $declutterOpt = 0 ;
 my $allowIconMoveOpt = 0 ;
-# my $declutterMinX = 100 ;
-# my $declutterMinY = 10 ;
 my $rulerOpt = 1 ;
 my $rulerColor = "black" ;
 my $scaleOpt = 0 ;
@@ -256,6 +256,8 @@ my %memWayPaths = () ;
 my %wayUsed = () ; # used in multipolygon? then dont use again 
 my %directory = () ; # street list
 my %poiHash = () ;
+my %wayLabels = () ;
+my @labelCandidates = () ;
 
 my %lon ; my %lat ;
 
@@ -390,6 +392,8 @@ if ($verbose eq "1") {
 # -place given? look for place and call osmosis
 my $placeFound = 0 ; my $placeLon ; my $placeLat ;
 if ($place ne "") {
+	my ($placeId) = ($place =~ /([\d]+)/);
+	if (!defined $placeId) { $placeId = -999999999 ; }
 	print "looking for place...\n" ;
 	openOsmFile ($osmName) ;
 	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
@@ -402,7 +406,7 @@ if ($place ne "") {
 			if ($tag->[0] eq "place") { $placeNode = 1 ; }
 			if ( ($tag->[0] eq "name") and (grep /$place/i, $tag->[1]) ){ $placeName = 1 ; }
 		}
-		if ( ($placeNode == 1) and ($placeName == 1) ) {
+		if ( (($placeNode == 1) and ($placeName == 1)) or ($placeId == $nodeId) ) {
 			$placeFound = 1 ;
 			$placeLon = $nodeLon ;
 			$placeLat = $nodeLat ;
@@ -561,7 +565,7 @@ if ($scaleSet != 0) {
 	print "INFO: set print resolution to $scaleDpi dpi!\n\n" ;
 }
 
-initGraph ($size, $lonMin, $latMin, $lonMax, $latMax, $bgColor) ;
+initGraph ($size, $lonMin, $latMin, $lonMax, $latMax, $bgColor, $scaleDpi) ;
 if ($onewayOpt eq "1") { initOneways ($onewayColor) ; }
 
 my ($paper, $w, $h) = fitsPaper ($scaleDpi) ;
@@ -590,7 +594,7 @@ print "draw background areas...\n" ;
 foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 	if ($wayId>-100000000) {
 
-		my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
+		my ($test, $ruleNumber) = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
 		if (defined $test) {
 			if ($test->[$wayIndexBaseLayer] != 1) { undef $test ; }
 		}
@@ -617,7 +621,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 print "draw multipolygons...\n" ;
 foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 	if ($wayId <= -100000000) {
-		my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
+		my ($test, $ruleNumber) = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
 		if (defined $test) {
 			drawAreaMP ($test->[$wayIndexColor], $test->[$wayIndexIcon], \@{$memWayPaths{$wayId}}, \%lon, \%lat  ) ;
 			# LABELS
@@ -694,8 +698,9 @@ foreach my $wayId (keys %memWayTags) {
 	foreach (-5,-4,-3,-2,-1,0,1,2,3,4,5) { if ($layer == $_) { $found = 1 ; } }
 	if ($found == 0) { $layer = 0 ; }
 
-	my $test = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
+	my ($test, $ruleNumber) = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
 	if (defined $test) {
+		# print "k/v match number = $ruleNumber\n" ;
 		#print "    tag/scale match\n" ;
 		if ($test->[$wayIndexFilled] eq "0") {
 			#print "      drawing way $test->[$wayIndexColor], $test->[$wayIndexThickness] ...\n" ;
@@ -724,20 +729,9 @@ foreach my $wayId (keys %memWayTags) {
 				my $name = "" ; my $ref1 ;
 				($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel],0, 0) ;
 				my @names = @$ref1 ;
-				if (labelFitsWay (\@{$memWayNodes{$wayId}}, $name, $test->[$wayIndexLabelFont], $test->[$wayIndexLabelSize]) ) {
 
-					my $toLabel = 1 ;
-					my @way = @{$memWayNodes{$wayId}} ;
-					if ($lon{$memWayNodes{$wayId}[0]} > $lon{$memWayNodes{$wayId}[-1]}) {
-						@way = reverse (@way) ;
-						if ( ( ($test->[$wayIndexValue] eq "motorway") or ($test->[$wayIndexValue] eq "trunk") ) and ($declutterOpt eq "1") ) {
-							$toLabel = 0 ;
-						}
-					}
-					if ($toLabel == 1) {
-						labelWay ($test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $name, $test->[$wayIndexLabelOffset], nodes2Coordinates(@way)) ;
-					}
-				}
+				if ($name ne "") { addWayLabel ($wayId, $name, $ruleNumber) ; }
+
 				if ($dirOpt eq "1") {
 					if ($grid > 0) {
 						foreach my $node (@{$memWayNodes{$wayId}}) {
@@ -777,8 +771,11 @@ foreach my $wayId (keys %memWayTags) {
 	} # tag found
 } # ways
 
+preprocessWayLabels() ;
+createWayLabels (\@labelCandidates, \@ways, $declutterOpt) ;
 
-print declutterStat() ;
+
+print declutterStat(), "\n" ;
 
 
 
@@ -820,7 +817,7 @@ if ($pngOpt eq "1") {
 	my ($pngName) = $svgName ;
 	$pngName =~ s/\.svg/\.png/ ;
 	print "creating png file $pngName ...\n" ;
-	`inkscape -e $pngName $svgName` ;
+	`inkscape --export-dpi=$scaleDpi -e $pngName $svgName` ;
 }
 
 if ($dirOpt eq "1") {
@@ -1224,6 +1221,20 @@ sub buildRings {
 		
 		# examine ring and act
 		if ( ($closed == 1) or ($closeOpt == 0) ) {
+
+			# eliminate double nodes in @currentNodes
+			my $found = 1 ;
+			while ($found) {
+				$found = 0 ;
+				LABCN: for (my $i=0; $i<$#currentNodes; $i++) {
+					if ($currentNodes[$i] == $currentNodes[$i+1]) {
+						$found = 1 ;
+						splice @currentNodes, $i, 1 ;
+						last LABCN ;
+					}
+				}
+			}
+
 			@{$ringWays[$ringCount]} = @currentWays ;
 			@{$ringNodes[$ringCount]} = @currentNodes ;
 			$ringCount++ ;
@@ -1728,8 +1739,13 @@ sub getWayRule {
 			}
 		} # scale
 	} # all rules
-
-	return ($ruleFound) ;
+	my $ruleNumber ; undef $ruleNumber ;
+	if (defined $ruleFound) {
+		for (my $i=0; $i<=$#wayRules; $i++) {
+			if ($wayRules[$i] == $ruleFound) { $ruleNumber = $i ; }
+		}
+	}	
+	return ($ruleFound, $ruleNumber) ;
 }
 
 
@@ -2037,4 +2053,88 @@ sub nextPointOnBorder {
 
 	return ($xn, $yn, $corner) ;
 }
+sub addWayLabel {
+	my ($wayId, $name, $ruleNum) = @_ ;
+	push @{ $wayLabels{$ruleNum}{$name} }, $wayId ;
+}
+
+sub preprocessWayLabels {
+	foreach my $ruleNum (keys %wayLabels) {
+		# print "PPWL: ruleNum $ruleNum\n" ;
+		my @ruleArray = @{$ways[$ruleNum]} ;
+		# print "PPWL: processing rule $ruleArray[0] $ruleArray[1]\n" ;
+		foreach my $name (keys %{$wayLabels{$ruleNum}}) {
+			my (@ways) = @{$wayLabels{$ruleNum}{$name}} ;
+			# print "PPWL:    processing name $name, " . scalar (@ways) . " ways\n" ;
+			my ($waysRef, $nodesRef) = buildRings (\@ways, 0) ;
+			my @segments = @$nodesRef ;
+			# print "PPWL:    processing name $name, " . scalar (@segments) . " segments\n" ;
+
+			my @newSegments = () ;
+			foreach my $segment (@segments) {
+				my @actual = @$segment ;
+				# print "PPWL: Actual segment @actual\n" ;
+				my $found = 1 ;
+				while ($found) {
+					$found = 0 ; my $sp = 0 ;
+					# look for splitting point
+					LABSP: for (my $i=1; $i<$#actual; $i++) {
+						if ( (($lon{$actual[$i-1]} > $lon{$actual[$i]}) and ($lon{$actual[$i+1]} > $lon{$actual[$i]})) or 
+							(($lon{$actual[$i-1]} < $lon{$actual[$i]}) and ($lon{$actual[$i+1]} < $lon{$actual[$i]})) ) {
+							$found = 1 ;
+							$sp = $i ;
+							last LABSP ;
+						}
+					}
+					if ($found == 1) {
+						# print "\nname $name --- sp: $sp\n" ;
+						# print "ACTUAL BEFORE: @actual\n" ;
+						# create new seg
+						my @newSegment = @actual[0..$sp] ;
+						push @newSegments, [@newSegment] ;
+						# print "NEW: @newSegment\n" ;
+
+						# splice actual
+						splice @actual, 0, $sp ;
+						# print "ACTUAL AFTER: @actual\n\n" ;
+					}
+				}
+				@$segment = @actual ;
+			}
+
+			push @segments, @newSegments ;
+
+			foreach my $segment (@segments) {
+				my (@wayNodes) = @$segment ;
+				my @points = () ;
+
+				if ($lon{$wayNodes[0]} > $lon{$wayNodes[-1]}) {
+					if ( ($ruleArray[1] ne "motorway") and ($ruleArray[1] ne "trunk") ) {
+						@wayNodes = reverse @wayNodes ;
+					}
+				}
+
+				foreach my $node (@wayNodes) {
+					push @points, convert ($lon{$node}, $lat{$node}) ;
+				}
+				# print "PPWL:      segment @wayNodes\n" ;
+				# print "PPWL:      segment @points\n" ;
+
+				my ($segmentLengthPixels) = 0 ; 
+				for (my $i=0; $i<$#wayNodes; $i++) {
+					my ($x1, $y1) = convert ($lon{$wayNodes[$i]}, $lat{$wayNodes[$i]}) ;
+					my ($x2, $y2) = convert ($lon{$wayNodes[$i+1]}, $lat{$wayNodes[$i+1]}) ;
+					$segmentLengthPixels += sqrt ( ($x2-$x1)**2 + ($y2-$y1)**2 ) ;
+				}
+				# print "$ruleNum, $wayIndexLabelSize\n" ;
+				my ($labelLengthPixels) = length ($name) * $ppc / 10 * $ruleArray[$wayIndexLabelSize] ;
+
+				# print "PPWL:        wayLen $segmentLengthPixels\n" ;
+				# print "PPWL:        labLen $labelLengthPixels\n" ;
+				push @labelCandidates, [$ruleNum, $name, $segmentLengthPixels, $labelLengthPixels, [@points]] ;
+			}
+		}
+	}
+}
+
 

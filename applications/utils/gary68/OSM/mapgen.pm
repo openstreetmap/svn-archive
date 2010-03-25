@@ -40,7 +40,7 @@ use GD ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.14' ;
+$VERSION = '0.15' ;
 
 require Exporter ;
 
@@ -52,6 +52,7 @@ require Exporter ;
 			placeLabelAndIcon
 			convert
 			createLabel
+			createWayLabels
 			declutterStat
 			drawArea 
 			drawAreaMP
@@ -112,6 +113,12 @@ $dashStyle{33} = "1,3" ;
 $dashStyle{34} = "1,5" ;
 $dashStyle{35} = "2,5" ;
 
+my $wayIndexLabelColor = 9 ;
+my $wayIndexLabelSize = 10 ;
+my $wayIndexLabelFont = 11 ;
+my $wayIndexLabelOffset = 12 ;
+
+
 my $lineCap = "round" ;
 my $lineJoin = "round" ;
 
@@ -150,7 +157,9 @@ my $numIconsOmitted = 0 ;
 my $numLabels = 0 ;
 my $numLabelsMoved = 0 ;
 my $numLabelsOmitted = 0 ;
+my $numWayLabelsOmitted = 0 ;
 
+my $dpi = 0 ;
 
 # clutter information
 my %clutter = () ;
@@ -160,7 +169,8 @@ sub initGraph {
 #
 # function initializes the picture, the colors and the background (white)
 #
-	my ($x, $l, $b, $r, $t, $color) = @_ ;	
+	my ($x, $l, $b, $r, $t, $color, $scaleDpi) = @_ ;	
+	$dpi = $scaleDpi ;
 	
 	$sizeX = $x ;
 	$sizeY = int ( $x * ($t - $b) / ($r - $l) / cos ($t/360*3.14*2) ) ;
@@ -398,8 +408,61 @@ sub labelWay {
 	}
 	my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
 	push @svgOutputDef, svgElementPath ($pathName, @points) ;
-	push @svgOutputPathText, svgElementPathText ($col, $size, $font, $text, $pathName, $tSpan) ;
+	push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $text, $pathName, $tSpan, "middle", 50) ;
 }
+
+
+sub createWayLabels {
+	my ($ref, $ruleRef, $declutter) = @_ ;
+	my @labelCandidates = @$ref ;
+	my @wayRules = @$ruleRef ;
+	foreach my $candidate (@labelCandidates) {
+		my $rule = $candidate->[0] ; # integer
+		my @ruleData = @{$wayRules[$rule]} ;
+		my $name = $candidate->[1] ;
+		my $wLen = $candidate->[2] ;
+		my $lLen = $candidate->[3] ;
+		my @points = @{$candidate->[4]} ;
+		# print "\nCWL: $ruleData[0], $ruleData[1]\n" ;
+		# print "CWL: $name\n" ;
+		# print "CWL: $wLen\n" ;
+		# print "CWL: $lLen\n" ;
+		# print "CWL: @points\n" ;
+
+		my $toLabel = 1 ;
+		if ( ($declutter eq "1") and ($points[0] > $points[-2]) and ( ($ruleData[1] eq "motorway") or ($ruleData[1] eq "trunk") ) ) {
+			$toLabel = 0 ;
+		}
+
+		if ( ($lLen > $wLen) or ($toLabel == 0) ) {
+			# label too long
+			# print "CWL: candidate is too short\n" ;
+			$numWayLabelsOmitted++ ;
+		}
+		else {
+			my $numLabels = int ($wLen / (4 * $lLen)) ;
+			if ($numLabels < 1) { $numLabels = 1 ; }
+			if ($numLabels > 4) { $numLabels = 4 ; }
+			# print "CWL:   $numLabels labels will be drawn.\n" ;
+			my $interval = int (100 / ($numLabels + 1)) ;
+			my @positions = () ;
+			for (my $i=1; $i<=$numLabels; $i++) {
+				push @positions, $i * $interval ;
+			}
+			
+			my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
+			push @svgOutputDef, svgElementPath ($pathName, @points) ;
+
+			foreach my $position (@positions) {
+				# print "CWL:   position $position\n" ;
+				push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
+					$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], "middle", $position) ;
+			}
+		}
+	}
+}
+
+
 
 
 sub drawArea {
@@ -529,10 +592,17 @@ sub writeSVG {
 #
 	my ($fileName) = shift ;
 	my $file ;
+	my ($paper, $w, $h) = fitsPaper ($dpi) ;
+
 	open ($file, ">", $fileName) || die "can't open svg output file";
 	print $file "<?xml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"no\"?>\n" ;
 	print $file "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n" ;
-	print $file "<svg version=\"1.1\" baseProfile=\"full\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:ev=\"http://www.w3.org/2001/xml-events\" width=\"$sizeX\" height=\"$sizeY\" >\n" ;
+
+	my ($svg) = "<svg version=\"1.1\" baseProfile=\"full\" xmlns=\"http://www.w3.org/2000/svg\" " ;
+	$svg .= "xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:ev=\"http://www.w3.org/2001/xml-events\" " ;
+	$svg .= "width=\"$w" . "cm\" height=\"$h" . "cm\" viewBox=\"0 0 $sizeX $sizeY\">\n" ;
+	print $file $svg ;
+
 	print $file "<rect width=\"$sizeX\" height=\"$sizeY\" y=\"0\" x=\"0\" fill=\"#ffffff\" />\n" ;
 
 	print $file "<defs>\n" ;
@@ -682,48 +752,20 @@ sub svgElementPath {
 	$svg = $svg . "\" />\n" ;
 }
 
-sub svgElementPathText {
+
+sub svgElementPathTextAdvanced {
 #
-# draws text to path element
+# draws text to path element; anchors: start, middle, end
 #
-	my ($col, $size, $font, $text, $pathName, $tSpan) = @_ ;
+	my ($col, $size, $font, $text, $pathName, $tSpan, $alignment, $offset) = @_ ;
 	my $svg = "<text font-family=\"" . $font . "\" " ;
 	$svg = $svg . "font-size=\"" . $size . "\" " ;
 	$svg = $svg . "fill=\"" . $col . "\" >\n" ;
-	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"middle\" startOffset=\"50%\" >\n" ;
+	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"" . $alignment . "\" startOffset=\"" . $offset . "%\" >\n" ;
 	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
 	$svg = $svg . "</textPath>\n</text>\n" ;
 	return $svg ;
 }
-
-sub svgElementPathTextLeft {
-#
-# draws text to path element
-#
-	my ($col, $size, $font, $text, $pathName, $tSpan) = @_ ;
-	my $svg = "<text font-family=\"" . $font . "\" " ;
-	$svg = $svg . "font-size=\"" . $size . "\" " ;
-	$svg = $svg . "fill=\"" . $col . "\" >\n" ;
-	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"start\" startOffset=\"0%\" >\n" ;
-	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
-	$svg = $svg . "</textPath>\n</text>\n" ;
-	return $svg ;
-}
-
-sub svgElementPathTextRight {
-#
-# draws text to path element
-#
-	my ($col, $size, $font, $text, $pathName, $tSpan) = @_ ;
-	my $svg = "<text font-family=\"" . $font . "\" " ;
-	$svg = $svg . "font-size=\"" . $size . "\" " ;
-	$svg = $svg . "fill=\"" . $col . "\" >\n" ;
-	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"end\" startOffset=\"100%\" >\n" ;
-	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
-	$svg = $svg . "</textPath>\n</text>\n" ;
-	return $svg ;
-}
-
 
 
 sub svgElementPolygonFilled {
@@ -1016,20 +1058,34 @@ sub svgElementPolylineOpacity {
 
 sub addAreaIcon {
 	my $fileNameOriginal = shift ;
+	# print "AREA: $fileNameOriginal\n" ;
 	my $result = open (my $file, "<", $fileNameOriginal) ;
 	if ($result) {
+		my ($x, $y) ; undef $x ; undef $y ;
 		if (grep /.svg/, $fileNameOriginal) {
-			close $file ;
-			my $newName = $fileNameOriginal ;
-			$newName =~ s/.svg/.png/ ;
-			`inkscape -e $newName $fileNameOriginal` ;
-			# print "INFO area icon converted $fileNameOriginal -> $newName\n" ;
-			open ($file, "<", $newName) ;
+			my $line ;
+			while ($line = <$file>) {
+				# print "AREA:    $line" ;
+				#   width="32px"
+				#   height="32px"
+				my ($x1) = ( $line =~ /^.*width=\"([\d]+)px\"/ ) ; 
+				my ($y1) = ( $line =~ /^.*height=\"([\d]+)px\"/ ) ; 
+				if (defined $x1) { $x = $x1 ; }
+				if (defined $y1) { $y = $y1 ; }
+			}
+			close ($file) ;
+			if ( (!defined $x) or (!defined $y) ) { 
+				$x = 32 ; $y = 32 ; 
+				print "WARNING: size of file $fileNameOriginal could not be determined. Set to 32px x 32px\n" ;
+			} 
 		}
 
-		my $pic = newFromPng GD::Image($file) ;
-		my ($x, $y) = $pic->getBounds ;
-		close ($file) ;
+		if (grep /.png/, $fileNameOriginal) {
+			my $pic = newFromPng GD::Image($file) ;
+			($x, $y) = $pic->getBounds ;
+			close ($file) ;
+		}
+
 		if (!defined $areaDef{$fileNameOriginal}) {
 			$areaPicX{$fileNameOriginal} = $x ;
 			$areaPicY{$fileNameOriginal} = $y ;
@@ -1051,6 +1107,8 @@ sub addAreaIcon {
 		print "WARNING: area icon $fileNameOriginal not found!\n" ;
 	}
 }
+
+
 
 sub svgEle {
 	my ($a, $b) = @_ ;
@@ -1125,7 +1183,10 @@ sub declutterStat {
 
 	$out .= "$numLabels labels drawn.\n" ; 
 	$out .= "  $numLabelsMoved moved. ($perc3 %)\n" ;
-	$out .= "  $numLabelsOmitted omitted. ($perc4 %)\n" ;
+	$out .= "  $numLabelsOmitted omitted. ($perc4 %)\n\n" ;
+	$out .= "$numWayLabelsOmitted way labels omitted because way was too short or declutter.\n" ;
+
+
 }
 
 sub placeLabelAndIcon {
@@ -1294,13 +1355,13 @@ sub checkAndDrawText {
 			$labelPathId++ ;
 			push @svgOutputDef, svgElementPath ($pathName, @points) ;
 			if ($orientation eq "centered") {
-				push @svgOutputPathText, svgElementPathText ($col, $size, $font, $lines[$i], $pathName, 0) ;
+				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "middle", 50) ;
 			}
 			if ($orientation eq "left") {
-				push @svgOutputPathText, svgElementPathTextLeft ($col, $size, $font, $lines[$i], $pathName, 0) ;
+				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "start", 0) ;
 			}
 			if ($orientation eq "right") {
-				push @svgOutputPathText, svgElementPathTextRight ($col, $size, $font, $lines[$i], $pathName, 0) ;
+				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "end", 100) ;
 			}
 		}
 

@@ -11,6 +11,8 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
+import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.tools.ImageProvider;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -18,6 +20,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRenderer{
  
 	final private Map<TurnRestrictionType, ImageIcon> icons = new HashMap<TurnRestrictionType, ImageIcon>();
+	private String iconSet = "set-a";
 	
 	/**
 	 * Loads the image icons for the rendered turn restriction types 
@@ -25,7 +28,7 @@ public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRende
 	protected void loadImages() {
 		for(TurnRestrictionType type: TurnRestrictionType.values()) {
 			try {
-				ImageIcon icon = new ImageIcon(ImageProvider.get("types/set-a", type.getTagValue()).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+				ImageIcon icon = new ImageIcon(ImageProvider.get("types/" + iconSet, type.getTagValue()).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 				icons.put(type,icon);
 			} catch(Exception e){
 				System.out.println(tr("Warning: failed to load icon for turn restriction type ''{0}''", type.getTagValue()));
@@ -47,6 +50,21 @@ public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRende
 			setBackground(UIManager.getColor("List.background"));
 			setForeground(UIManager.getColor("List.foreground"));			
 		}
+	}
+	
+	/**
+	 * Initializes the set of icons used from the preference key
+	 * {@see PreferenceKeys#ROAD_SIGNS}.
+	 * 
+	 * @param prefs the JOSM preferences 
+	 */
+	public void initIconSetFromPreferences(Preferences prefs){		
+		iconSet = prefs.get(PreferenceKeys.ROAD_SIGNS, "set-a");
+		iconSet = iconSet.trim().toLowerCase();
+		if (!iconSet.equals("set-a") && !iconSet.equals("set-b")) {
+			iconSet = "set-a";
+		}
+		loadImages();
 	}
 	
 	public Component getListCellRendererComponent(JList list, Object value,

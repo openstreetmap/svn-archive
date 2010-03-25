@@ -38,6 +38,8 @@ import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ConflictAddCommand;
+import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
+import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.conflict.Conflict;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -49,6 +51,7 @@ import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.plugins.turnrestrictions.qa.IssuesView;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -87,6 +90,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     private IssuesView pnlIssuesView;
     private TurnRestrictionEditorModel editorModel;
     private JTabbedPane tpEditors;
+    private PreferenceChangeHandler preferenceChangeHandler;
     
     /**
      * builds the panel with the OK and the Cancel button
@@ -201,7 +205,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     	c.add(buildOkCancelButtonPanel(), BorderLayout.SOUTH);
     	
     	editorModel.getIssuesModel().addObserver(new IssuesModelObserver());
-    	setSize(600,600);
+    	setSize(600,600);    	
     }    
 	
 	/**
@@ -334,9 +338,12 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     	if (visible && ! isVisible()) {
     		pnlJosmSelection.wireListeners();
     		editorModel.registerAsEventListener();
+        	Main.pref.addPreferenceChangeListener(this.preferenceChangeHandler = new PreferenceChangeHandler());
+        	pnlBasicEditor.initIconSetFromPreferences(Main.pref);
     	} else if (!visible && isVisible()) {
     		pnlJosmSelection.unwireListeners();
     		editorModel.unregisterAsEventListener();
+    		Main.pref.removePreferenceChangeListener(preferenceChangeHandler);
     	}
     	super.setVisible(visible);
     	if (!visible){
@@ -855,5 +862,21 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 			tpEditors.setTitleAt(2, title);
 			tpEditors.setEnabledAt(2, numWarnings + numErrors > 0);
 		}    	
+    }
+    
+    /**
+     * Listens the changes of the preference {@see PreferenceKeys#ROAD_SIGNS}
+     * and refreshes the set of road icons 
+     *
+     */
+    class PreferenceChangeHandler implements PreferenceChangedListener {    	
+    	public void refreshIconSet() {
+    		pnlBasicEditor.initIconSetFromPreferences(Main.pref);
+    	}
+    	
+		public void preferenceChanged(PreferenceChangeEvent evt) {			
+			if (!evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)) return;
+			refreshIconSet();
+		}
     }
 }

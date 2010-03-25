@@ -21,12 +21,14 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.JMultilineLabel;
+import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.tools.ImageProvider;
 import static org.openstreetmap.josm.tools.I18n.trc;
 
@@ -57,6 +59,7 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
 	private JLabel icon;
 	private JLabel from;
 	private JLabel to;
+	private String iconSet = "set-a";
 	
 	public TurnRestrictionCellRenderer() {
 		build();
@@ -83,7 +86,7 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
 	 * @return the icon name 
 	 */
 	protected String buildImageName(String restrictionType) {
-		return "types/set-a/" + restrictionType;
+		return "types/" + iconSet + "/" + restrictionType;
 	}
 	
 	/**
@@ -213,6 +216,21 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
 		this.to.setForeground(fg);
 	}
 
+	/**
+	 * Initializes the set of icons used from the preference key
+	 * {@see PreferenceKeys#ROAD_SIGNS}.
+	 * 
+	 * @param prefs the JOSM preferences 
+	 */
+	public void initIconSetFromPreferences(Preferences prefs){
+		
+		iconSet = prefs.get(PreferenceKeys.ROAD_SIGNS, "set-a");
+		iconSet = iconSet.trim().toLowerCase();
+		if (!iconSet.equals("set-a") && !iconSet.equals("set-b")) {
+			iconSet = "set-a";
+		}
+	}
+	
 	/* ---------------------------------------------------------------------------------- */
 	/* interface ListCellRenderer                                                         */
 	/* ---------------------------------------------------------------------------------- */

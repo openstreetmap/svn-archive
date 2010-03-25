@@ -12,10 +12,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
@@ -28,6 +30,8 @@ import org.openstreetmap.josm.tools.OpenBrowser;
  *
  */
 public class PreferenceEditor extends JPanel implements PreferenceSetting{
+	
+	private IconPreferencePanel pnlIconPreferences;
 
 	/**
 	 * builds the panel with the sponsoring information 
@@ -69,12 +73,28 @@ public class PreferenceEditor extends JPanel implements PreferenceSetting{
 		return pnl;
 	}
 
+	protected JPanel buildIconPreferencePanel() {
+		JPanel pnl = new JPanel(new BorderLayout());
+		
+		pnlIconPreferences = new IconPreferencePanel();
+		pnlIconPreferences.initFromPreferences(Main.pref);
+		
+		JScrollPane sp = new JScrollPane(pnlIconPreferences);
+		sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		pnl.add(sp, BorderLayout.CENTER);
+		return pnl;
+	}
 	
 	protected void build() {
 		setLayout(new BorderLayout());
 		JTabbedPane tp = new JTabbedPane();
-		tp.add(buildCreditPanel());
-		tp.setTitleAt(0, tr("Sponsor"));
+		tp.add(buildIconPreferencePanel());
+		tp.add(buildCreditPanel());		
+		tp.setTitleAt(0, tr("Road Signs"));
+		tp.setToolTipTextAt(0,tr("Configure the set of road sign icons to be used in the turnrestrictions plugin"));
+		tp.setTitleAt(1, tr("Sponsor"));
 		add(tp, BorderLayout.CENTER);
 	}
 	
@@ -89,6 +109,7 @@ public class PreferenceEditor extends JPanel implements PreferenceSetting{
 	}
 
 	public boolean ok() {
+		pnlIconPreferences.saveToPreferences(Main.pref);
 		return false;
 	}
 	

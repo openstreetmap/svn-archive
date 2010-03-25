@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -22,6 +23,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
+import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
+import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -29,12 +32,12 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditor;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditorManager;
+import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -47,6 +50,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  */
 public class TurnRestrictionsListDialog extends ToggleDialog{
+	private static final Logger logger = Logger.getLogger(TurnRestrictionsListDialog.class.getName());
 
 	/** checkbox for switching between the two list views */
 	private JCheckBox cbInSelectionOnly;
@@ -67,6 +71,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 	
 	/** the main content panel in this toggle dialog */
 	private JPanel pnlContent;
+	private PreferenceChangeHandler preferenceChangeHandler;
 	
 	@Override
 	public void showNotify() {
@@ -74,6 +79,8 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 		pnlTurnRestrictionsInSelection.registerAsListener();
 		MapView.addEditLayerChangeListener(actNew);
 		actNew.updateEnabledState();
+		Main.pref.addPreferenceChangeListener(preferenceChangeHandler);
+		preferenceChangeHandler.refreshIconSet();
 	}
 
 	@Override
@@ -81,6 +88,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 		pnlTurnRestrictionsInDataSet.unregisterAsListener();
 		pnlTurnRestrictionsInSelection.unregisterAsListener();
 		MapView.removeEditLayerChangeListener(actNew);
+		Main.pref.removePreferenceChangeListener(preferenceChangeHandler);
 	}
 
 	/**
@@ -140,6 +148,9 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 		TurnRestrictionsPopupLauncher launcher = new TurnRestrictionsPopupLauncher();
 		pnlTurnRestrictionsInDataSet.getList().addMouseListener(launcher);
 		pnlTurnRestrictionsInSelection.getList().addMouseListener(launcher);
+		
+		preferenceChangeHandler = new PreferenceChangeHandler();
+		
 	}
 	
 	/**
@@ -427,5 +438,23 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
             add(actSelectSelectedTurnRestrictions);
             add(actZoomTo);
         }
+    }
+    
+    /**
+     * Listens the changes of the preference {@see PreferenceKeys#ROAD_SIGNS}
+     * and refreshes the set of road icons 
+     *
+     */
+    class PreferenceChangeHandler implements PreferenceChangedListener {    	
+    	public void refreshIconSet() {
+    		pnlTurnRestrictionsInDataSet.initIconSetFromPreferences(Main.pref);
+			pnlTurnRestrictionsInSelection.initIconSetFromPreferences(Main.pref);
+			repaint();
+    	}
+    	
+		public void preferenceChanged(PreferenceChangeEvent evt) {			
+			if (!evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)) return;
+			refreshIconSet();
+		}
     }
 }

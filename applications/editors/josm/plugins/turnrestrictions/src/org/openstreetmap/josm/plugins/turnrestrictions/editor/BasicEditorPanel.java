@@ -10,8 +10,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets;
+import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -139,4 +141,14 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 			break;
 		}
 	}	
+	
+	/**
+	 * Initializes the set of icons used from the preference key
+	 * {@see PreferenceKeys#ROAD_SIGNS}.
+	 * 
+	 * @param prefs the JOSM preferences 
+	 */
+	public void initIconSetFromPreferences(Preferences prefs){		
+		cbTurnRestrictions.initIconSetFromPreferences(prefs);
+	}
 }

@@ -49,8 +49,10 @@ public class PreferenceEditor extends JPanel implements PreferenceSetting{
 		gc.gridx = 1;
 		gc.weightx = 1.0;
 		HtmlPanel msg  =new HtmlPanel();
-		msg.setText("<html><body>Development of the turn restriction plugin was sponsored " 
-				+ "by <a href=\"http://www.skobbler.de\">skobbler GmbH</a>.</body></html>");
+		msg.setText("<html><body>"
+				+ tr("Development of the turn restriction plugin was sponsored " 
+				+ "by <a href=\"http://www.skobbler.de\">skobbler GmbH</a>.")
+				+"</body></html>");
 		pnl.add(msg, gc);
 		
 		// filler - grab remaining space 

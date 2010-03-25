@@ -30,7 +30,7 @@ public class MichiganLeftAction extends JosmAction {
 
     public MichiganLeftAction() {
     super(tr("Michigan Left"), "michigan_left", tr("Adds no left turn for sets of 4 or 5 ways."), Shortcut.registerShortcut("tools:michigan_left", tr("Tool: {0}", tr("Michigan Left")),
-    KeyEvent.VK_M, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+    KeyEvent.VK_M, Shortcut.GROUP_EDIT, KeyEvent.SHIFT_DOWN_MASK|KeyEvent.ALT_DOWN_MASK), true);
   }
 
   public void actionPerformed(ActionEvent e) {

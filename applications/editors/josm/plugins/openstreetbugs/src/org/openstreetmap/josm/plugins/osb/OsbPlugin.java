@@ -37,6 +37,7 @@ import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.actions.upload.UploadHook;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
@@ -159,6 +160,9 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
     }
 
     public void updateData() {
+        // store the current selected node
+        Node selectedNode = getDialog().getSelectedNode();
+        
         // determine the bounds of the currently visible area
         Bounds bounds = null;
         try {
@@ -189,6 +193,9 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
                 e.printStackTrace();
             }
         }
+        
+        // restore node selection
+        dialog.setSelectedNode(selectedNode);
     }
 
     public void updateGui() {

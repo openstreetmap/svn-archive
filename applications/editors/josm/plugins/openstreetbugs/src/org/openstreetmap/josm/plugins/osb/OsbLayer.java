@@ -37,7 +37,9 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.ImageObserver;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -236,8 +238,13 @@ public class OsbLayer extends Layer implements MouseListener {
             if(Main.map.mapView.getActiveLayer() == this) {
                 Node n = getNearestNode(e.getPoint());
                 if(n != null && data.getNodes().contains(n)) {
-                    dialog.setSelectedNode(n);
+                    List<OsmPrimitive> selected = new ArrayList<OsmPrimitive>();
+                    selected.add(n);
+                    data.setSelected(selected);
+                } else {
+                    data.setSelected(new ArrayList<OsmPrimitive>());
                 }
+                data.fireSelectionChanged();
             }
         }
     }

@@ -37,6 +37,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -56,14 +57,22 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListener;
+import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
+import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
+import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.gui.layer.DataChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.osb.ConfigKeys;
 import org.openstreetmap.josm.plugins.osb.OsbObserver;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
@@ -78,8 +87,8 @@ import org.openstreetmap.josm.plugins.osb.gui.action.ToggleConnectionModeAction;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener,
-DataChangeListener, MouseListener, OsbActionObserver {
+public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener, 
+DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
 
     private static final long serialVersionUID = 1L;
     private JPanel bugListPanel, queuePanel;
@@ -215,16 +224,10 @@ DataChangeListener, MouseListener, OsbActionObserver {
         addCommentAction.addActionObserver(this);
         closeIssueAction.addActionObserver(this);
         setConnectionMode(offline);
+        DataSet.selListeners.add(this);
     }
 
     public synchronized void update(final DataSet dataset) {
-        // store the last selection
-        OsbListItem listItem = (OsbListItem) bugList.getSelectedValue();
-        Node lastNode = null;
-        if(listItem != null) {
-            lastNode = listItem.getNode();
-        }
-
         // create a new list model
         bugListModel = new DefaultListModel();
         List<Node> sortedList = new ArrayList<Node>(dataset.getNodes());
@@ -235,11 +238,6 @@ DataChangeListener, MouseListener, OsbActionObserver {
             }
         }
         bugList.setModel(bugListModel);
-
-        // restore the last selection 
-        if(lastNode != null) {
-            bugList.setSelectedValue(new OsbListItem(lastNode), true);
-        }
     }
 
     public void valueChanged(ListSelectionEvent e) {
@@ -301,10 +299,6 @@ DataChangeListener, MouseListener, OsbActionObserver {
         if (oldLayer == osbPlugin.getLayer()) {
             bugListModel.removeAllElements();
         }
-    }
-
-    public void dataChanged(OsmDataLayer l) {
-        update(l.data);
     }
 
     public void zoomToNode(Node node) {
@@ -400,16 +394,55 @@ DataChangeListener, MouseListener, OsbActionObserver {
     }
 
     public Node getSelectedNode() {
-        return ((OsbListItem)bugList.getSelectedValue()).getNode();
+        if(bugList.getSelectedValue() != null) {
+            return ((OsbListItem)bugList.getSelectedValue()).getNode();
+        } else {
+            return null;
+        }
     }
 
     public void setSelectedNode(Node node) {
-        bugList.setSelectedValue(new OsbListItem(node), true);
+        if(node == null) {
+            bugList.clearSelection();
+        } else {
+            bugList.setSelectedValue(new OsbListItem(node), true);
+        }
     }
 
     public void setConnectionMode(boolean offline) {
         refresh.setEnabled(!offline);
         setTitle(tr("OpenStreetBugs ({0})", (offline ? tr("offline") : tr("online"))));
         toggleConnectionMode.setSelected(offline);
+    }
+
+    public void dataChanged(DataChangedEvent event) {
+        update(event.getDataset());
+    }
+
+    public void nodeMoved(NodeMovedEvent event) {}
+
+    public void otherDatasetChange(AbstractDatasetChangedEvent event) {}
+
+    public void primtivesAdded(PrimitivesAddedEvent event) {}
+
+    public void primtivesRemoved(PrimitivesRemovedEvent event) {}
+
+    public void relationMembersChanged(RelationMembersChangedEvent event) {}
+
+    public void tagsChanged(TagsChangedEvent event) {}
+
+    public void wayNodesChanged(WayNodesChangedEvent event) {}
+
+    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        if(newSelection.size() == 1 && newSelection.iterator().next() instanceof Node) {
+            Node selectedNode = (Node) newSelection.iterator().next();
+            if(osbPlugin.getLayer().getDataSet().getNodes().contains(selectedNode)) {
+                setSelectedNode(selectedNode);
+            } else {
+                bugList.clearSelection();
+            }
+        } else {
+            bugList.clearSelection();
+        }
     }
 }

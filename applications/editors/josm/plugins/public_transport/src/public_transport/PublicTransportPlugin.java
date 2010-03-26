@@ -41,6 +41,7 @@ public class PublicTransportPlugin extends Plugin {
       jMenu.removeAll();
 
     jMenu.addSeparator();
+    jMenu.add(new JMenuItem(new StopImporterAction()));
     jMenu.add(new JMenuItem(new RoutePatternAction()));
     setEnabledAll(true);
   }

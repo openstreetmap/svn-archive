@@ -1898,7 +1898,7 @@ public class RoutePatternAction extends JosmAction {
 	    + " Try to download data from the server or open an OSM file.",
      "No data found", JOptionPane.ERROR_MESSAGE);
       
-	System.out.println("Public Transport: No data found");
+	System.out.println("Public Transport: RoutePattern: No data found");
       }
       
       for (int i = 0; i < stoplistData.getRowCount(); ++i)
@@ -2253,7 +2253,8 @@ public class RoutePatternAction extends JosmAction {
       lastNodeId = getLastNodeId
 	  (itineraryData.ways.elementAt(i), (String)(itineraryData.getValueAt(i, 1)));
     }
-    while (itineraryData.ways.elementAt(itineraryData.getRowCount()-1) == null)
+    while ((itineraryData.getRowCount() > 0) &&
+	    (itineraryData.ways.elementAt(itineraryData.getRowCount()-1) == null))
     {
       itineraryData.ways.removeElementAt(itineraryData.getRowCount()-1);
       itineraryData.removeRow(itineraryData.getRowCount()-1);

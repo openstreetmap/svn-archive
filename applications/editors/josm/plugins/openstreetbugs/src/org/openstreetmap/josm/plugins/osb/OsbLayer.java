@@ -254,7 +254,7 @@ public class OsbLayer extends Layer implements MouseListener {
         if(e.isPopupTrigger()) {
             if(Main.map.mapView.getActiveLayer() == this) {
                 Node n = getNearestNode(e.getPoint());
-                if(data.getNodes().contains(n)) {
+                if(n != null && data.getNodes().contains(n)) {
                     PopupFactory.createPopup(n, dialog).show(e.getComponent(), e.getX(), e.getY());
                 }
             }

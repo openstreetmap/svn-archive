@@ -235,7 +235,7 @@ public class OsbLayer extends Layer implements MouseListener {
         if(e.getButton() == MouseEvent.BUTTON1) {
             if(Main.map.mapView.getActiveLayer() == this) {
                 Node n = getNearestNode(e.getPoint());
-                if(data.getNodes().contains(n)) {
+                if(n != null && data.getNodes().contains(n)) {
                     dialog.setSelectedNode(n);
                 }
             }

@@ -1881,6 +1881,8 @@ public class RoutePatternAction extends JosmAction {
 	while (nodeIter.hasNext())
 	{
 	  Node currentNode = nodeIter.next();
+	  if (!currentNode.isUsable())
+	    continue;
 	  if (stopValue.equals(currentNode.get(stopKey)))
 	  {
 	    StopReference sr = detectMinDistance

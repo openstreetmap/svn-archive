@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets;
@@ -30,6 +31,8 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 	private TurnRestrictionLegEditor fromEditor;
 	private TurnRestrictionLegEditor toEditor;
 	private ViaList lstVias;
+	private JLabel lblVias;
+	private JScrollPane spVias;
 	private TurnRestrictionComboBox cbTurnRestrictions;
 	private VehicleExceptionEditor vehicleExceptionsEditor;
 	
@@ -77,12 +80,16 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 	    gc.gridy = 3;
 		gc.weightx = 0.0;
 	    gc.insets = new Insets(0,0,5,5);	
-	    add(new JLabel("Vias:"), gc);
+	    add(lblVias = new JLabel("Vias:"), gc);
 	    
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;
 	    DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-	    add(new JScrollPane(lstVias = new ViaList(new ViaListModel(model, selectionModel), selectionModel)),gc);
+	    add(spVias = new JScrollPane(lstVias = new ViaList(new ViaListModel(model, selectionModel), selectionModel)),gc);
+	    if (!Main.pref.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false)) {
+	    	lblVias.setVisible(false);
+	    	spVias.setVisible(false);
+	    }
 	    
 	    // the editor for vehicle exceptions
 	    vehicleExceptionsEditor = new VehicleExceptionEditor(model);
@@ -150,5 +157,19 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 	 */
 	public void initIconSetFromPreferences(Preferences prefs){		
 		cbTurnRestrictions.initIconSetFromPreferences(prefs);
+	}
+	
+	/**
+	 * Initializes the visibility of the list of via-objects depending
+	 * on values in the JOSM preferences
+	 * 
+	 * @param prefs the JOSM preferences
+	 */
+	public void initViasVisibilityFromPreferences(Preferences prefs){
+		boolean value = prefs.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false);
+		if (value != lblVias.isVisible()){
+			lblVias.setVisible(value);
+			spVias.setVisible(value);
+		}
 	}
 }

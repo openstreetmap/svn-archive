@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -26,12 +27,38 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * used in the turnrestrictions plugin.
  * 
  */
-public class IconPreferencePanel extends VerticallyScrollablePanel {
-	private static final Logger logger = Logger.getLogger(IconPreferencePanel.class.getName());
+public class PreferencesPanel extends VerticallyScrollablePanel {
+	private static final Logger logger = Logger.getLogger(PreferencesPanel.class.getName());
 	private JRadioButton rbSetA;
 	private JRadioButton rbSetB;
 	private ButtonGroup bgIconSet;
-
+	private JCheckBox cbShowViaListInBasicEditor;
+	
+	protected JPanel buildShowViaListInBasicEditorPanel() {
+		JPanel pnl = new JPanel(new GridBagLayout());
+		GridBagConstraints gc = new GridBagConstraints();
+		gc.anchor = GridBagConstraints.NORTHWEST;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.weightx = 1.0;
+		gc.gridx = 0;
+		gc.gridy = 0;
+		
+		HtmlPanel msg = new HtmlPanel();
+		msg.setText("<html><body>"
+				+ tr("The Basic Editor can optionally display the list of via-objects "
+					 + "of a turn restrictions. If enabled, one can also edit them "
+					 + "in the Basic editor. If disabled, editing of via-objects is only "
+					 + "possible in the Advanced Editor."
+				  )
+				+ "</body></html>"
+	    );
+		pnl.add(msg, gc);
+		
+		gc.gridy++;
+		pnl.add(cbShowViaListInBasicEditor = new JCheckBox(tr("Display and edit list of via-objects in the Basic Editor")), gc);
+		return pnl;
+	}
+	
 	/**
 	 * Builds the panel for the icon set "set-a"
 	 * 
@@ -124,6 +151,8 @@ public class IconPreferencePanel extends VerticallyScrollablePanel {
 		add(buildSetAPanel(), gc);
 		gc.gridy++;
 		add(buildSetBPanel(), gc);
+		gc.gridy++;
+		add(buildShowViaListInBasicEditorPanel(), gc);
 		
 		// filler - just grab remaining space
 		gc.gridy++;
@@ -156,6 +185,9 @@ public class IconPreferencePanel extends VerticallyScrollablePanel {
 		} else {
 			rbSetB.setSelected(true);
 		}
+		
+		boolean b = prefs.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false);
+		cbShowViaListInBasicEditor.setSelected(b);
 	}
 	
 	/**
@@ -174,9 +206,15 @@ public class IconPreferencePanel extends VerticallyScrollablePanel {
 		if (!set.equals(oldSet)){
 			prefs.put(PreferenceKeys.ROAD_SIGNS, set);
 		}
+		
+		boolean newValue = cbShowViaListInBasicEditor.isSelected();
+		boolean oldValue = prefs.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false);
+		if (newValue != oldValue){
+			prefs.put(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, newValue);
+		}		
 	}
 	
-	public IconPreferencePanel() {
+	public PreferencesPanel() {
 		build();
 	}	
 }

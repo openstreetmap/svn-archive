@@ -50,6 +50,8 @@ public class RelationMemberTable extends JTable {
 	private TurnRestrictionEditorModel model;
 	private DeleteAction actDelete;
 	private PasteAction actPaste;
+	private MoveUpAction actMoveUp;
+	private MoveDownAction actMoveDown;
 	private TransferHandler transferHandler;
 	
 	public RelationMemberTable(TurnRestrictionEditorModel model) {
@@ -80,6 +82,14 @@ public class RelationMemberTable extends JTable {
 		// initialize the paste action (will be used in the popup, the action map already includes
 		// the standard paste action for transfer handling) 
 		actPaste = new PasteAction();
+		
+		actMoveUp = new MoveUpAction();
+		model.getRelationMemberEditorModel().getRowSelectionModel().addListSelectionListener(actMoveUp);
+		registerKeyboardAction(actMoveUp,actMoveUp.getKeyStroke(), WHEN_FOCUSED);
+		
+		actMoveDown = new MoveDownAction();
+		model.getRelationMemberEditorModel().getRowSelectionModel().addListSelectionListener(actMoveDown);
+		registerKeyboardAction(actMoveDown, actMoveDown.getKeyStroke(), WHEN_FOCUSED);
 	}
 
 	/**
@@ -149,6 +159,59 @@ public class RelationMemberTable extends JTable {
 			} 
 		}
 	}	
+
+	class MoveDownAction extends AbstractAction implements ListSelectionListener{	
+		private KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK);
+		public MoveDownAction(){
+			putValue(NAME, tr("Move down"));
+			putValue(SHORT_DESCRIPTION, tr("Move the selected relation members down by one position"));
+			putValue(ACCELERATOR_KEY,keyStroke);
+			putValue(SMALL_ICON, ImageProvider.get("dialogs", "movedown"));
+			updateEnabledState();
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			model.getRelationMemberEditorModel().moveDownSelected();
+		}
+
+		public void updateEnabledState(){
+			setEnabled(model.getRelationMemberEditorModel().canMoveDown());
+		}
+		
+		public void valueChanged(ListSelectionEvent e) {
+			updateEnabledState();			
+		}
+		public KeyStroke getKeyStroke() {
+			return keyStroke;
+		}
+	}
+	
+	class MoveUpAction extends AbstractAction implements ListSelectionListener{
+		private KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK);
+
+		public MoveUpAction() {
+			putValue(NAME, tr("Move up"));
+			putValue(SHORT_DESCRIPTION, tr("Move the selected relation members up by one position"));
+			putValue(ACCELERATOR_KEY,keyStroke);
+			putValue(SMALL_ICON, ImageProvider.get("dialogs", "moveup"));
+			updateEnabledState();
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			model.getRelationMemberEditorModel().moveUpSelected();
+		}
+
+		public void updateEnabledState(){
+			setEnabled(model.getRelationMemberEditorModel().canMoveUp());
+		}
+		
+		public void valueChanged(ListSelectionEvent e) {
+			updateEnabledState();			
+		}
+		public KeyStroke getKeyStroke() {
+			return keyStroke;
+		}
+	}
 	
 	class TablePopupLauncher extends PopupMenuLauncher {
 		@Override
@@ -169,6 +232,9 @@ public class RelationMemberTable extends JTable {
 			actPaste.updateEnabledState();
 			addSeparator();
 			add(actDelete);
+			addSeparator();
+			add(actMoveUp);
+			add(actMoveDown);
 		}
 	}
 	

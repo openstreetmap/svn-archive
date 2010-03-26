@@ -31,7 +31,7 @@ import org.openstreetmap.josm.tools.OpenBrowser;
  */
 public class PreferenceEditor extends JPanel implements PreferenceSetting{
 	
-	private IconPreferencePanel pnlIconPreferences;
+	private PreferencesPanel pnlIconPreferences;
 
 	/**
 	 * builds the panel with the sponsoring information 
@@ -76,7 +76,7 @@ public class PreferenceEditor extends JPanel implements PreferenceSetting{
 	protected JPanel buildIconPreferencePanel() {
 		JPanel pnl = new JPanel(new BorderLayout());
 		
-		pnlIconPreferences = new IconPreferencePanel();
+		pnlIconPreferences = new PreferencesPanel();
 		pnlIconPreferences.initFromPreferences(Main.pref);
 		
 		JScrollPane sp = new JScrollPane(pnlIconPreferences);
@@ -92,8 +92,8 @@ public class PreferenceEditor extends JPanel implements PreferenceSetting{
 		JTabbedPane tp = new JTabbedPane();
 		tp.add(buildIconPreferencePanel());
 		tp.add(buildCreditPanel());		
-		tp.setTitleAt(0, tr("Road Signs"));
-		tp.setToolTipTextAt(0,tr("Configure the set of road sign icons to be used in the turnrestrictions plugin"));
+		tp.setTitleAt(0, tr("Preferences"));
+		tp.setToolTipTextAt(0,tr("Configure the preferences for the turnrestrictions plugin"));
 		tp.setTitleAt(1, tr("Sponsor"));
 		add(tp, BorderLayout.CENTER);
 	}

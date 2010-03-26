@@ -1,8 +1,9 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 
-import java.text.MessageFormat;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,7 +22,6 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class RelationMemberEditorModel extends AbstractTableModel{	
 	static private final Logger logger = Logger.getLogger(RelationMemberEditorModel.class.getName());
@@ -350,6 +350,58 @@ public class RelationMemberEditorModel extends AbstractTableModel{
 			removedSelectedMembers();
 		}
 		fireTableDataChanged();
+	}
+	
+	protected List<Integer> getSelectedIndices() {
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		for(int i =0; i < members.size(); i++){
+			if (rowSelectionModel.isSelectedIndex(i)) 
+				ret.add(i);
+		}
+		return ret;
+	}
+	
+	public boolean canMoveUp() {
+		List<Integer> sel = getSelectedIndices();
+		if (sel.isEmpty()) return false;
+		return sel.get(0) > 0;
+	}
+	
+	public boolean canMoveDown() {
+		List<Integer> sel = getSelectedIndices();
+		if (sel.isEmpty()) return false;
+		return sel.get(sel.size()-1) < members.size()-1;
+	}
+	
+	public void moveUpSelected() {
+		if (!canMoveUp()) return;
+		List<Integer> sel = getSelectedIndices();
+		for (int idx: sel){
+			RelationMemberModel m = members.remove(idx);
+			members.add(idx-1, m);
+		}
+		fireTableDataChanged();
+		rowSelectionModel.clearSelection();
+		colSelectionModel.setSelectionInterval(0, 1);
+		for (int idx: sel){
+			rowSelectionModel.addSelectionInterval(idx-1, idx-1);
+		}
+	}
+	
+	public void moveDownSelected() {
+		if (!canMoveDown()) return;
+		List<Integer> sel = getSelectedIndices();
+		for (int i = sel.size()-1; i>=0;i--){
+			int idx = sel.get(i);
+			RelationMemberModel m = members.remove(idx);
+			members.add(idx+1, m);
+		}
+		fireTableDataChanged();
+		rowSelectionModel.clearSelection();
+		colSelectionModel.setSelectionInterval(0, 1);
+		for (int idx: sel){
+			rowSelectionModel.addSelectionInterval(idx+1, idx+1);
+		}
 	}
 	
 	/**

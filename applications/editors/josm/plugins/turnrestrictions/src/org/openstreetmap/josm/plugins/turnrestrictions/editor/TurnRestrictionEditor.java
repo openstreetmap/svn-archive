@@ -865,8 +865,12 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     }
     
     /**
-     * Listens the changes of the preference {@see PreferenceKeys#ROAD_SIGNS}
-     * and refreshes the set of road icons 
+     * Listens to changes of the preference {@see PreferenceKeys#ROAD_SIGNS}
+     * and refreshes the set of road icons.
+     * 
+     * Listens to changes of the preference {@see PreferenceKeys#SHOW_VIAS_IN_BASIC_EDITOR}
+     * and toggles the visibility af the list of via-objects in the Basic
+     * Editor. 
      *
      */
     class PreferenceChangeHandler implements PreferenceChangedListener {    	
@@ -875,8 +879,11 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     	}
     	
 		public void preferenceChanged(PreferenceChangeEvent evt) {			
-			if (!evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)) return;
-			refreshIconSet();
+			if (evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)){
+				refreshIconSet();
+			} else if (evt.getKey().equals(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR)) {
+				pnlBasicEditor.initViasVisibilityFromPreferences(Main.pref);
+			}			
 		}
     }
 }

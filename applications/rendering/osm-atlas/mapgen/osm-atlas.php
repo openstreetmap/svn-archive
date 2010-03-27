@@ -3,7 +3,7 @@
 /*
  * This file is part of OSM-Atlas, a script to create an atlas from
  * OpenStreetMap (www.openstreetmap.org) data.
- * Copyright 2009 Russell Phillips
+ * Copyright 2009-2010 Russell Phillips
 */
 
 // This script works with OSM API v0.6
@@ -40,7 +40,7 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 	global $OSMOSIS_DIR;
 	global $DATA_FILE;
 	global $OUTPUT_DIR;
-	global $OSMARENDER_DIR;
+	global $MAPGEN_DIR;
 	global $STYLESHEET;
 	global $STYLESHEET_THUMBS;
 	global $INDEX_STREET_NAMES;
@@ -73,20 +73,26 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 	shell_exec ("$cmd 2>/dev/null >/dev/null");
 
-	// Run osmarender
-	Progress ($CurrentProgress, "Running osmarender for tile row=$tRow, col=$tCol");
+	// Run mapgen.pl
+	Progress ($CurrentProgress, "Running mapgen.pl for tile row=$tRow, col=$tCol");
 	if (!file_exists ("$OUTPUT_DIR/osm-temp-$tRow-$tCol.osm"))
 		die_error ("$OUTPUT_DIR/osm-temp-$tRow-$tCol.osm does not exist");
-	if (!copy ("$OUTPUT_DIR/osm-temp-$tRow-$tCol.osm", "$OSMARENDER_DIR/data.osm"))
-		die_error ("Error copying $OUTPUT_DIR/osm-temp-$tRow-$tCol.osm to $OSMARENDER_DIR/data.osm");
-	chdir ($OSMARENDER_DIR);
+	if (!copy ("$OUTPUT_DIR/osm-temp-$tRow-$tCol.osm", "$MAPGEN_DIR/data.osm"))
+		die_error ("Error copying $OUTPUT_DIR/osm-temp-$tRow-$tCol.osm to $MAPGEN_DIR/data.osm");
+	if (!file_exists ("$MAPGEN_DIR/data.osm"))
+		die_error ("$MAPGEN_DIR/data.osm does not exist");
+	chdir ($MAPGEN_DIR);
+
 	//Create image for main map page
-	$cmd = "xsltproc osmarender.xsl $STYLESHEET > $OUTPUT_DIR/osm-temp-$tRow-$tCol.svg";
+	$cmd = "perl mapgen.pl -style=mapgenRules.csv -in=data.osm -declutter -grid=10 -legend=0 -out=$OUTPUT_DIR/osm-temp-$tRow-$tCol.svg";
+	file_put_contents ($LOG_FILE, "$cmd\n", FILE_APPEND);
 	if ($DEBUG === True)
 		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 	shell_exec ("$cmd 2>/dev/null");
+
 	//Create image for overview page
-	$cmd = "xsltproc osmarender.xsl $STYLESHEET_THUMBS > $OUTPUT_DIR/osm-temp-thumb-$tRow-$tCol.svg";
+	$cmd = "perl mapgen.pl -style=mapgenRules.csv -in=data.osm -declutter -ruler=0 -legend=0 -out=$OUTPUT_DIR/osm-temp-thumb-$tRow-$tCol.svg";
+	file_put_contents ($LOG_FILE, "$cmd\n", FILE_APPEND);
 	if ($DEBUG === True)
 		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 	shell_exec ("$cmd 2>/dev/null");
@@ -154,8 +160,8 @@ function tile ($tLeft, $tRight, $tTop, $tBottom, $tRow, $tCol, $PageNumber) {
 		file_put_contents ($LOG_FILE, "\tRunning `$cmd`\n", FILE_APPEND);
 	shell_exec ("$cmd 2>/dev/null >/dev/null");
 
-	if (file_exists ("$OSMARENDER_DIR/data.osm"))
-		unlink ("$OSMARENDER_DIR/data.osm");
+	if (file_exists ("$MAPGEN_DIR/data.osm"))
+		unlink ("$MAPGEN_DIR/data.osm");
 }
 
 /*
@@ -206,10 +212,12 @@ file_put_contents ($LOG_FILE, "\nOSM-Atlas.php started at " . date ("H:i jS M Y"
 //Check files & directories exist
 if (! file_exists ($OUTPUT_DIR))
 	die_error ("OUTPUT_DIR ($OUTPUT_DIR) does not exist");
-if (! file_exists ($OSMARENDER_DIR))
-	die_error ("OSMARENDER_DIR ($OSMARENDER_DIR) does not exist");
-if (! file_exists ("$OSMARENDER_DIR/$STYLESHEET"))
+if (! file_exists ($MAPGEN_DIR))
+	die_error ("MAPGEN_DIR ($MAPGEN_DIR) does not exist");
+if (! file_exists ("$MAPGEN_DIR/$STYLESHEET"))
 	die_error ("STYLESHEET ($STYLESHEET) does not exist");
+if (! file_exists ("$MAPGEN_DIR/$STYLESHEET_THUMBS"))
+	die_error ("STYLESHEET_THUMBS ($STYLESHEET_THUMBS) does not exist");
 //Delete .tex file if it already exists
 if (file_exists ("$OUTPUT_DIR/OSM_Atlas.tex"))
 	if (unlink ("$OUTPUT_DIR/OSM_Atlas.tex") === False)

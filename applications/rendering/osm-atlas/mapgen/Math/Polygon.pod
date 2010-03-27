@@ -1,0 +1,541 @@
+=head1 NAME
+
+Math::Polygon - Class for maintaining polygon data
+
+=head1 INHERITANCE
+
+=head1 SYNOPSIS
+
+ my $poly = Math::Polygon->new( [1,2], [2,4], [5,7], [1,2] );
+ print $poly->nrPoints;
+ my @p    = $poly->points;
+
+ my ($xmin, $ymin, $xmax, $ymax) = $poly->bbox;
+
+ my $area = $poly->area;
+ my $l    = $poly->perimeter;
+ if($poly->isClockwise) { ... };
+ 
+ my $rot  = $poly->startMinXY;
+
+ my $boxed = $poly->lineClip($xmin, $xmax, $ymin, $ymax);
+
+=head1 DESCRIPTION
+
+This class provides an OO interface around L<Math::Polygon::Calc|Math::Polygon::Calc>
+and L<Math::Polygon::Clip|Math::Polygon::Clip>.
+
+=head1 METHODS
+
+=head2 Constructors
+
+$obj-E<gt>B<new>([OPTIONS], [POINTS], [OPTIONS])
+
+Math::Polygon-E<gt>B<new>([OPTIONS], [POINTS], [OPTIONS])
+
+=over 4
+
+You may add OPTIONS after and/or before the POINTS.  You may also use
+the "points" options to get the points listed.  POINTS are references
+to an ARRAY of X and Y.
+
+When C<new> is called as instance method, it is believed that the
+new polygon is derived from the callee, and therefore some facts
+(like clockwise or anti-clockwise direction) will get copied unless
+overruled.
+
+ Option   --Default
+ bbox       undef
+ clockwise  undef
+ points     undef
+
+. bbox => ARRAY
+
+=over 4
+
+Usually computed from the figure automatically, but can also be
+specified as [xmin,ymin,xmax, ymax].  See L<bbox()|Math::Polygon/"Geometry">.
+
+=back
+
+. clockwise => BOOLEAN
+
+=over 4
+
+Is not specified, it will be computed by the L<isClockwise()|Math::Polygon/"Geometry"> method
+on demand.
+
+=back
+
+. points => ARRAY-OF-POINTS
+
+=over 4
+
+See L<points()|Math::Polygon/"Attributes"> and L<nrPoints()|Math::Polygon/"Attributes">.
+
+=back
+
+example: creation of new polygon
+
+ my $p = Math::Polygon->new([1,0],[1,1],[0,1],[0,0],[1,0]);
+
+ my @p = ([1,0],[1,1],[0,1],[0,0],[1,0]);
+ my $p = Math::Polygon->new(points => \@p);
+
+=back
+
+=head2 Attributes
+
+$obj-E<gt>B<nrPoints>
+
+=over 4
+
+Returns the number of points,
+
+=back
+
+$obj-E<gt>B<order>
+
+=over 4
+
+Returns the number of uniqe points: one less than L<nrPoints()|Math::Polygon/"Attributes">.
+
+=back
+
+$obj-E<gt>B<point>(INDEX, [INDEX, ...])
+
+=over 4
+
+Returns the point with the specified INDEX or INDEXES.  In SCALAR context,
+only the first INDEX is used.
+
+=back
+
+$obj-E<gt>B<points>
+
+=over 4
+
+In LIST context, the points are returned as list, otherwise as
+reference to an ARRAY.
+
+=back
+
+=head2 Geometry
+
+$obj-E<gt>B<area>
+
+=over 4
+
+Returns the area enclosed by the polygon.  The last point of the list
+must be the same as the first to produce a correct result.  The computed
+result is cached.
+Function L<Math::Polygon::Calc::polygon_area()|Math::Polygon::Calc/"FUNCTIONS">.
+
+=back
+
+$obj-E<gt>B<bbox>
+
+=over 4
+
+Returns a list with four elements: (xmin, ymin, xmax, ymax), which describe
+the bounding box of the polygon (all points of the polygon are inside that
+area).  The computation is expensive, and therefore, the results are
+cached.
+Function L<Math::Polygon::Calc::polygon_bbox()|Math::Polygon::Calc/"FUNCTIONS">.
+
+=back
+
+$obj-E<gt>B<beautify>(OPTIONS)
+
+=over 4
+
+Returns a new, beautified version of this polygon.
+Function L<Math::Polygon::Calc::polygon_beautify()|Math::Polygon::Calc/"FUNCTIONS">.
+
+Polygons, certainly after some computations, can have a lot of
+horrible artifacts: points which are double, spikes, etc.  This
+functions provided by this module beautify
+
+ Option       --Default
+ remove_spikes  <false>
+
+. remove_spikes => BOOLEAN
+
+=back
+
+$obj-E<gt>B<clockwise>
+
+=over 4
+
+Make sure the points are in clockwise order.
+
+=back
+
+$obj-E<gt>B<contains>(POINT)
+
+=over 4
+
+Returns a truth value indicating whether the point is inside the polygon
+or not.  On the edge is inside.
+
+=back
+
+$obj-E<gt>B<counterClockwise>
+
+=over 4
+
+Make sure the points are in counter-clockwise order.
+
+=back
+
+$obj-E<gt>B<equal>((OTHER|ARRAY, [TOLERANCE])|POINTS)
+
+=over 4
+
+Compare two polygons, on the level of points. When the polygons are
+the same but rotated, this will return false. See L<same()|Math::Polygon/"Geometry">.
+Function L<Math::Polygon::Calc::polygon_equal()|Math::Polygon::Calc/"FUNCTIONS">.
+
+=back
+
+$obj-E<gt>B<isClockwise>
+
+=over 4
+
+The points are (in majority) orded in the direction of the hands of the clock.
+This calculation is quite expensive (same effort as calculating the area of
+the polygon), and the result is therefore cached.
+
+=back
+
+$obj-E<gt>B<isClosed>
+
+=over 4
+
+Returns true if the first point of the poly definition is the same
+as the last point.
+
+=back
+
+$obj-E<gt>B<perimeter>
+
+=over 4
+
+The length of the line of the polygon.  This can also be used to compute
+the length of any line: of the last point is not equal to the first, then
+a line is presumed; for a polygon they must match.
+Function L<Math::Polygon::Calc::polygon_perimeter()|Math::Polygon::Calc/"FUNCTIONS">.
+
+=back
+
+$obj-E<gt>B<same>((OTHER|ARRAY, [TOLERANCE])|POINTS)
+
+=over 4
+
+Compare two polygons, where the polygons may be rotated wrt each
+other. This is (much) slower than L<equal()|Math::Polygon/"Geometry">, but some algorithms
+will cause un unpredictable rotation in the result.
+Function L<Math::Polygon::Calc::polygon_same()|Math::Polygon::Calc/"FUNCTIONS">.
+
+=back
+
+$obj-E<gt>B<startMinXY>
+
+=over 4
+
+Returns a new polygon object, where the points are rotated in such a way
+that the point which is losest to the left-bottom point of the bouding
+box has become the first.
+
+Function L<Math::Polygon::Calc::polygon_start_minxy()|Math::Polygon::Calc/"FUNCTIONS">.
+
+=back
+
+=head2 Transformations
+
+Implemented in L<Math::Polygon::Transform|Math::Polygon::Transform>: changes on the structure of
+the polygon except clipping.  All functions return a new polygon object
+or undef.
+
+$obj-E<gt>B<grid>(OPTIONS)
+
+=over 4
+
+Returns a polygon object with the points snapped to grid points.
+See L<Math::Polygon::Transform::polygon_grid()|Math::Polygon::Transform/"FUNCTIONS">.
+
+ Option--Default
+ raster  1.0
+
+. raster => FLOAT
+
+=over 4
+
+The raster size, which determines the points to round to.  The origin
+C<[0,0]> is always on a grid-point.  When the raster value is zero,
+no transformation will take place.
+
+=back
+
+=back
+
+$obj-E<gt>B<mirror>(OPTIONS)
+
+=over 4
+
+Mirror the polygon in a line.  Only one of the options can be provided.
+Some programs call this "flip" or "flop".
+
+ Option--Default
+ b       0
+ line    <undef>
+ rc      undef
+ x       undef
+ y       undef
+
+. b => FLOAT
+
+=over 4
+
+Only used in combination with option C<rc> to describe a line.
+
+=back
+
+. line => [POINT, POINT]
+
+=over 4
+
+Alternative way to specify the mirror line.  The C<rc> and C<b> are
+computed from the two points of the line.
+
+=back
+
+. rc => FLOAT
+
+=over 4
+
+Description of the line which is used to mirror in. The line is
+C<y= rc*x+b>.  The C<rc> equals C<-dy/dx>, the firing angle.  If
+C<undef> is explicitly specified then C<b> is used as constant x: it's
+a vertical mirror.
+
+=back
+
+. x => FLOAT
+
+=over 4
+
+Mirror in the line C<x=value>, which means that C<y> stays unchanged.
+
+=back
+
+. y => FLOAT
+
+=over 4
+
+Mirror in the line C<y=value>, which means that C<x> stays unchanged.
+
+=back
+
+=back
+
+$obj-E<gt>B<move>(OPTIONS)
+
+=over 4
+
+Returns a moved polygon object: all point are moved over the
+indicated distance.  See L<Math::Polygon::Transform::polygon_move()|Math::Polygon::Transform/"FUNCTIONS">.
+
+ Option--Default
+ dx      0
+ dy      0
+
+. dx => FLOAT
+
+=over 4
+
+Displacement in the horizontal direction.
+
+=back
+
+. dy => FLOAT
+
+=over 4
+
+Displacement in the vertical direction.
+
+=back
+
+=back
+
+$obj-E<gt>B<resize>(OPTIONS)
+
+=over 4
+
+Returns a resized polygon object.
+See L<Math::Polygon::Transform::polygon_resize()|Math::Polygon::Transform/"FUNCTIONS">.
+
+ Option--Default
+ center  [0,0]
+ scale   1.0
+ xscale  <scale>
+ yscale  <scale>
+
+. center => POINT
+
+. scale => FLOAT
+
+=over 4
+
+Resize the polygon with the indicated factor.  When the factor is larger
+than 1, the resulting polygon with grow, when small it will be reduced in
+size.  The scale will be respective from the center.
+
+=back
+
+. xscale => FLOAT
+
+=over 4
+
+Specific scaling factor in the horizontal direction.
+
+=back
+
+. yscale => FLOAT
+
+=over 4
+
+Specific scaling factor in the vertical direction.
+
+=back
+
+=back
+
+$obj-E<gt>B<rotate>(OPTIONS)
+
+=over 4
+
+Returns a rotated polygon object: all point are moved over the
+indicated distance.  See L<Math::Polygon::Transform::polygon_rotate()|Math::Polygon::Transform/"FUNCTIONS">.
+
+ Option --Default
+ center   [0,0]
+ degrees  0
+ radians  0
+
+. center => POINT
+
+. degrees => FLOAT
+
+=over 4
+
+specify rotation angle in degrees (between -180 and 360).
+
+=back
+
+. radians => FLOAT
+
+=over 4
+
+specify rotation angle in rads (between -pi and 2*pi)
+
+=back
+
+=back
+
+$obj-E<gt>B<simplify>(OPTIONS)
+
+=over 4
+
+Returns a polygon object where points are removed.
+See L<Math::Polygon::Transform::polygon_simplify()|Math::Polygon::Transform/"FUNCTIONS">.
+
+ Option    --Default
+ max_points  undef
+ same        0.0001
+ slope       undef
+
+. max_points => INTEGER
+
+=over 4
+
+First, C<same> and C<slope> reduce the number of points.  Then, if there
+are still more than the specified number of points left, the points with
+the widest angles will be removed until the specified maximum number is
+reached.
+
+=back
+
+. same => FLOAT
+
+=over 4
+
+The distance between two points to be considered "the same" point.  The value
+is used as radius of the circle.
+
+=back
+
+. slope => FLOAT
+
+=over 4
+
+With three points X(n),X(n+1),X(n+2), the point X(n+1) will be removed if
+the length of the path over all three points is less than C<slope> longer
+than the direct path between X(n) and X(n+2).
+
+The slope will not be removed around the starting point of the polygon.
+Removing points will change the area of the polygon.
+
+=back
+
+=back
+
+=head2 Clipping
+
+$obj-E<gt>B<fillClip1>(BOX)
+
+=over 4
+
+Clipping a polygon into rectangles can be done in various ways.
+With this algorithm, the parts of the polygon which are outside
+the BOX are mapped on the borders.  The polygon stays in one piece,
+but may have vertices which are followed in two directions.
+
+Returned is one polygon, which is cleaned from double points,
+spikes and superfluous intermediate points, or C<undef> when
+no polygon is outside the BOX.
+Function L<Math::Polygon::Clip::polygon_fill_clip1()|Math::Polygon::Clip/"FUNCTIONS">.
+
+=back
+
+$obj-E<gt>B<lineClip>(BOX)
+
+=over 4
+
+Returned is a list of ARRAYS-OF-POINTS containing line pieces
+from the input polygon.
+Function L<Math::Polygon::Clip::polygon_line_clip()|Math::Polygon::Clip/"FUNCTIONS">.
+
+=back
+
+=head2 Display
+
+$obj-E<gt>B<string>
+
+=over 4
+
+=back
+
+=head1 SEE ALSO
+
+This module is part of Math-Polygon distribution version 1.01,
+built on May 25, 2009. Website: F<http://perl.overmeer.net/geo/>
+
+=head1 LICENSE
+
+Copyrights 2004,2006-2009 by Mark Overmeer. For other contributors see ChangeLog.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+See F<http://www.perl.com/perl/misc/Artistic.html>
+

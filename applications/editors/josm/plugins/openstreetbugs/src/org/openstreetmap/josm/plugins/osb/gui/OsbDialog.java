@@ -436,7 +436,10 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         if(newSelection.size() == 1 && newSelection.iterator().next() instanceof Node) {
             Node selectedNode = (Node) newSelection.iterator().next();
-            if(osbPlugin.getLayer().getDataSet().getNodes().contains(selectedNode)) {
+            if(osbPlugin.getLayer() != null && osbPlugin.getLayer().getDataSet() != null
+                    && osbPlugin.getLayer().getDataSet().getNodes() != null
+                    && osbPlugin.getLayer().getDataSet().getNodes().contains(selectedNode)) 
+            {
                 setSelectedNode(selectedNode);
             } else {
                 bugList.clearSelection();

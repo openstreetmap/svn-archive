@@ -1,0 +1,13 @@
+This utility expands abbreviations in imported TIGER data using the list
+of Spanish and English abbreviations from TIGER dataset's documentation.
+English is the default, the first and only parameter can be appended to
+select the language ("./expand.py es" switches to Spanish).  The script
+takes an osm file on standard input and outputs an osmChange file to
+expand abbreviations in "name" and "name_N" tag values found.  If new
+TIGER imports ever happen this should definitely be done *before*
+importing new data to avoid spamming the ways' history, so it needs to
+be modified to run as part of the conversion.
+
+Abbreviations are bad, mkay.
+
+The resulting osc also removes the "upload_uuid" tag on all ways it touches.

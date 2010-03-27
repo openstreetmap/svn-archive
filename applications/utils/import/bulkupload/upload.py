@@ -143,8 +143,9 @@ class OSM_API(object):
                 sys.stderr.flush()
                 response_body = response.read()
             else:
+                err = response.read()
                 raise HTTPError(response.status, "%03i: %s (%s)" % (
-                    response.status, response.reason, response.read()))
+                    response.status, response.reason, err), err)
         finally:
             conn.close()
         return response_body
@@ -162,7 +163,9 @@ class OSM_API(object):
 #       ElementTree.SubElement(element, "tag", {"k": "import", "v": "yes"})
 #       ElementTree.SubElement(element, "tag", {"k": "source", "v": "BDLL25, EGRN, Instituto Geográfico Nacional"})
 #       ElementTree.SubElement(element, "tag", {"k": "merged", "v": "no - possible duplicates (will be resolved in following changesets)"})
+#       ElementTree.SubElement(element, "tag", {"k": "reviewed", "v": "yes"})
 #       ElementTree.SubElement(element, "tag", {"k": "revert", "v": "yes"})
+#       ElementTree.SubElement(element, "tag", {"k": "bot", "v": "yes"})
 #       ElementTree.SubElement(element, "tag", {"k": "url", "v": "http://www.openstreetmap.org/user/nmixter/diary/8218"})
         body = ElementTree.tostring(root, "utf-8")
         reply = self._run_request("PUT", "/api/0.6/changeset/create", body)
@@ -237,6 +240,9 @@ try:
             skip = 1
         elif arg == "-n":
             param['start'] = 1
+            skip = 0
+        elif arg == "-t":
+            param['try'] = 1
             skip = 0
         else:
             filenames.append(arg)
@@ -318,23 +324,47 @@ try:
             if 'start' in param:
                 print(api.changeset)
                 sys.exit(0)
-        try:
-            diff_file = codecs.open(diff_fn, "w", "utf-8")
-            diff = api.upload(root)
-            diff_file.write(diff.decode("utf8"))
-            diff_file.close()
-        except HTTPError as e:
-            sys.stderr.write("\n" + e.args[1] + "\n")
-            if e.args[0] in [ 404, 409, 412 ]: # Merge conflict
-                # TODO: also unlink when not the whole file has been uploaded
-                # because then likely the server will not be able to parse
-                # it and nothing gets committed
-                os.unlink(diff_fn)
-            sys.exit(1)
-        finally:
-            if 'changeset' not in param:
-                api.close_changeset()
-except HTTPError as e:
+        while 1:
+            try:
+                diff_file = codecs.open(diff_fn, "w", "utf-8")
+                diff = api.upload(root)
+                diff_file.write(diff.decode("utf8"))
+                diff_file.close()
+            except HTTPError as e:
+                sys.stderr.write("\n" + e.args[1] + "\n")
+                if e.args[0] in [ 404, 409, 412 ]: # Merge conflict
+                    # TODO: also unlink when not the whole file has been uploaded
+                    # because then likely the server will not be able to parse
+                    # it and nothing gets committed
+                    os.unlink(diff_fn)
+                errstr = e.args[2].decode("utf8")
+                if 'try' in param and e.args[0] == 409 and \
+                        errstr.find("Version mismatch") > -1:
+                    id = errstr.split(" ")[-1]
+                    found = 0
+                    for oper in root:
+                        todel = []
+                        for elem in oper:
+                            if elem.attrib.get("id") == id:
+                                todel.append(elem)
+                                found = 1
+                        for elem in todel:
+                            oper.remove(elem)
+                    if not found:
+                        sys.stderr.write("\nElement " + id + " not found\n")
+                        if 'changeset' not in param:
+                            api.close_changeset()
+                        sys.exit(1)
+                    sys.stderr.write("\nRetrying upload without element " +
+                            id + "\n")
+                    continue
+                if 'changeset' not in param:
+                   api.close_changeset()
+                sys.exit(1)
+            break
+        if 'changeset' not in param:
+            api.close_changeset()
+except HTTPError as err:
     sys.stderr.write(err.args[1])
     sys.exit(1)
 except Exception as err:

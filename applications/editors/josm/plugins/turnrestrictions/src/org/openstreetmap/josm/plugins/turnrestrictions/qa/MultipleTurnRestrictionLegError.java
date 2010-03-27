@@ -19,7 +19,7 @@ public class MultipleTurnRestrictionLegError extends Issue {
 	/**
 	 * Create the issue
 	 * 
-	 * @param parent the parant model 
+	 * @param parent the parent model 
 	 * @param role the role of the turn restriction leg with multiple entries 
 	 * @param numLegs the number of legs
 	 */
@@ -33,15 +33,15 @@ public class MultipleTurnRestrictionLegError extends Issue {
 	@Override
 	public String getText() {
 		switch(role){
-		case FROM: return 
-			tr("A turn restriction requires exactly one way with role <tt>from</tt>. "
+		case FROM:  
+			return tr("A turn restriction requires exactly one way with role <tt>from</tt>. "
 				+ "This turn restriction has {0} ways in this role. Please remove "
 				+ "{1} of them.",
 				numLegs,
 				numLegs -1
 			);
 		case TO: 
-			tr("A turn restriction requires exactly one way with role <tt>from</tt>. "
+			return tr("A turn restriction requires exactly one way with role <tt>to</tt>. "
 					+ "This turn restriction has {0} ways in this role. Please remove "
 					+ "{1} of them.",
 					numLegs,

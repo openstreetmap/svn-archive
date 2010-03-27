@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' generator='JOSM'>
+  <bounds minlat='46.914158099999995' minlon='7.3788643' maxlat='46.930806499999996' maxlon='7.4164581' origin='OpenStreetMap server' />
+  <node id='-94' action='modify' visible='true' lat='46.92118998017687' lon='7.383993510066159' />
+  <node id='-92' action='modify' visible='true' lat='46.91990939642803' lon='7.38399351006616'>
+    <tag k='name' v='node 7.3' />
+  </node>
+  <node id='-91' visible='true' lat='46.9199878003943' lon='7.380435012966924' />
+  <node id='-78' visible='true' lat='46.923359062408515' lon='7.383840456427483' />
+  <node id='-76' action='modify' visible='true' lat='46.921921728576876' lon='7.383802193017814'>
+    <tag k='name' v='node 6.3' />
+  </node>
+  <node id='-75' visible='true' lat='46.921973995937314' lon='7.38016716909924' />
+  <node id='-38' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92880973833219' lon='7.402406615822886' />
+  <node id='-36' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92880973833219' lon='7.39972817714604' />
+  <node id='-34' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92752933671926' lon='7.396934948240187' />
+  <node id='-32' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.927581598608725' lon='7.3936442950086345' />
+  <node id='-30' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92828712912576' lon='7.396820158011179' />
+  <node id='-28' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92828712912576' lon='7.393606031598966' />
+  <node id='-26' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.928835868658666' lon='7.396743631191842' />
+  <node id='-24' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.928861998972394' lon='7.393606031598966' />
+  <node id='-22' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92888812927337' lon='7.390162324728737' />
+  <node id='-20' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92888812927337' lon='7.386948198316524' />
+  <node id='-18' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92773838397117' lon='7.383657545084972' />
+  <node id='-16' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92779064565668' lon='7.380252101624412' />
+  <node id='-14' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92833939027588' lon='7.3837340719043105' />
+  <node id='-12' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.928365520831804' lon='7.3802903650340825' />
+  <node id='-10' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92888812927337' lon='7.383619281675304' />
+  <node id='-8' timestamp='2010-03-27T10:39:59Z' visible='true' lat='46.92888812927337' lon='7.3802903650340825' />
+  <node id='-6' timestamp='2010-03-27T10:52:49Z' visible='true' lat='46.9243377340131' lon='7.380169082269725' />
+  <node id='-4' action='modify' timestamp='2010-03-27T10:52:49Z' visible='true' lat='46.9242959219737' lon='7.383689315959293'>
+    <tag k='name' v='node 5.3' />
+  </node>
+  <node id='-2' action='modify' timestamp='2010-03-27T10:52:49Z' visible='true' lat='46.925759323935175' lon='7.383689315959293' />
+  <node id='3193150' action='delete' timestamp='2010-03-14T11:36:30Z' uid='1' user='guggis' visible='true' version='1' changeset='3301' lat='46.9295464' lon='7.3922341' />
+  <node id='3193151' action='delete' timestamp='2010-03-14T11:36:30Z' uid='1' user='guggis' visible='true' version='1' changeset='3301' lat='46.9295464' lon='7.397716' />
+  <node id='3193152' action='delete' timestamp='2010-03-14T11:36:56Z' uid='1' user='guggis' visible='true' version='1' changeset='3300' lat='46.9276142' lon='7.3927056' />
+  <node id='3193153' action='delete' timestamp='2010-03-14T11:36:56Z' uid='1' user='guggis' visible='true' version='1' changeset='3300' lat='46.9273727' lon='7.3963602' />
+  <way id='-96' action='modify' visible='true'>
+    <nd ref='-92' />
+    <nd ref='-94' />
+    <tag k='name' v='way 7.2' />
+  </way>
+  <way id='-93' action='modify' visible='true'>
+    <nd ref='-91' />
+    <nd ref='-92' />
+    <tag k='name' v='way 7.1' />
+  </way>
+  <way id='-81' action='modify' visible='true'>
+    <nd ref='-76' />
+    <nd ref='-78' />
+    <tag k='name' v='way 6.2' />
+  </way>
+  <way id='-77' action='modify' visible='true'>
+    <nd ref='-75' />
+    <nd ref='-76' />
+    <tag k='name' v='way 6.1' />
+  </way>
+  <way id='-62' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <nd ref='-36' />
+    <nd ref='-38' />
+    <tag k='name' v='way 4.1' />
+  </way>
+  <way id='-60' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <nd ref='-32' />
+    <nd ref='-34' />
+    <tag k='name' v='way 3.3' />
+  </way>
+  <way id='-58' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <nd ref='-28' />
+    <nd ref='-30' />
+    <tag k='name' v='way 3.2' />
+  </way>
+  <way id='-56' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <nd ref='-24' />
+    <nd ref='-26' />
+    <tag k='name' v='way 3.1' />
+  </way>
+  <way id='-54' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <nd ref='-20' />
+    <nd ref='-22' />
+    <tag k='name' v='way 2.1' />
+  </way>
+  <way id='-52' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <nd ref='-16' />
+    <nd ref='-18' />
+    <tag k='name' v='way 1.3' />
+  </way>
+  <way id='-50' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <nd ref='-12' />
+    <nd ref='-14' />
+    <tag k='name' v='way 1.2' />
+  </way>
+  <way id='-48' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <nd ref='-8' />
+    <nd ref='-10' />
+    <tag k='name' v='way 1.1' />
+  </way>
+  <way id='-46' action='modify' timestamp='2010-03-27T10:52:49Z' visible='true'>
+    <nd ref='-6' />
+    <nd ref='-4' />
+    <tag k='name' v='way 5.1' />
+  </way>
+  <way id='-44' action='modify' timestamp='2010-03-27T10:52:49Z' visible='true'>
+    <nd ref='-4' />
+    <nd ref='-2' />
+    <tag k='name' v='way 5.2' />
+  </way>
+  <way id='85091' action='delete' timestamp='2010-03-14T11:36:30Z' uid='1' user='guggis' visible='true' version='1' changeset='3301'>
+  </way>
+  <way id='85092' action='delete' timestamp='2010-03-14T11:36:56Z' uid='1' user='guggis' visible='true' version='1' changeset='3300'>
+  </way>
+  <relation id='-103' action='modify' visible='true'>
+    <member type='way' ref='-93' role='from' />
+    <member type='way' ref='-96' role='to' />
+    <member type='node' ref='-92' role='via' />
+    <tag k='except' v='non-standard-except' />
+    <tag k='name' v='Test Case 7 - Non-Standard-Excepts' />
+    <tag k='restriction' v='no_right_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-90' visible='true'>
+    <member type='way' ref='-77' role='from' />
+    <member type='way' ref='-81' role='to' />
+    <tag k='name' v='Test Case 6 - Missing node as &apos;via&apos;' />
+    <tag k='restriction' v='no_left_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-74' action='modify' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <member type='way' ref='-62' role='from' />
+    <tag k='name' v='Test Case 4 - No &apos;to&apos; ways' />
+    <tag k='restriction' v='no_left_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-72' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <member type='way' ref='-56' role='from' />
+    <member type='way' ref='-58' role='to' />
+    <member type='way' ref='-60' role='to' />
+    <tag k='name' v='Test Case 3 - 2 &apos;tp&apos; ways' />
+    <tag k='restriction' v='no_left_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-70' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <member type='way' ref='-54' role='to' />
+    <tag k='name' v='Test Case 2 - No from way' />
+    <tag k='restriction' v='no_left_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-68' timestamp='2010-03-27T10:39:59Z' visible='true'>
+    <member type='way' ref='-48' role='from' />
+    <member type='way' ref='-50' role='from' />
+    <member type='way' ref='-52' role='to' />
+    <tag k='name' v='Test Case 1 - 2 from ways' />
+    <tag k='restriction' v='no_left_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-66' action='modify' timestamp='2010-03-27T10:52:49Z' visible='true'>
+    <member type='way' ref='-46' role='from' />
+    <member type='way' ref='-44' role='to' />
+    <member type='node' ref='-4' role='via' />
+    <tag k='name' v='Test Case 5 - Non-Standard restriction' />
+    <tag k='restriction' v='non-standard-restriction' />
+    <tag k='type' v='restriction' />
+  </relation>
+</osm>

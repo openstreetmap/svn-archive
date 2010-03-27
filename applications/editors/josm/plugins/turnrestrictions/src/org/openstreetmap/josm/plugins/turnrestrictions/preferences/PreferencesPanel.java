@@ -15,6 +15,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
@@ -33,6 +34,7 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
 	private JRadioButton rbSetB;
 	private ButtonGroup bgIconSet;
 	private JCheckBox cbShowViaListInBasicEditor;
+	private ShortcutPreferencePanel pnlShortcutPreference;
 	
 	protected JPanel buildShowViaListInBasicEditorPanel() {
 		JPanel pnl = new JPanel(new GridBagLayout());
@@ -46,9 +48,9 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
 		HtmlPanel msg = new HtmlPanel();
 		msg.setText("<html><body>"
 				+ tr("The Basic Editor can optionally display the list of via-objects "
-					 + "of a turn restrictions. If enabled, one can also edit them "
-					 + "in the Basic editor. If disabled, editing of via-objects is only "
-					 + "possible in the Advanced Editor."
+					 + "of a turn restriction. If enabled, one can edit them "
+					 + "in the Basic editor too. If disabled, editing of via-objects is "
+					 + "possible in the Advanced Editor only."
 				  )
 				+ "</body></html>"
 	    );
@@ -152,7 +154,13 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
 		gc.gridy++;
 		add(buildSetBPanel(), gc);
 		gc.gridy++;
+		add(new JSeparator(), gc);		
+		gc.gridy++;
 		add(buildShowViaListInBasicEditorPanel(), gc);
+		gc.gridy++;
+		add(new JSeparator(), gc);
+		gc.gridy++;
+		add(pnlShortcutPreference = new ShortcutPreferencePanel(), gc);
 		
 		// filler - just grab remaining space
 		gc.gridy++;
@@ -188,6 +196,8 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
 		
 		boolean b = prefs.getBoolean(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, false);
 		cbShowViaListInBasicEditor.setSelected(b);
+		
+		pnlShortcutPreference.initFromPreferences(prefs);
 	}
 	
 	/**
@@ -212,6 +222,8 @@ public class PreferencesPanel extends VerticallyScrollablePanel {
 		if (newValue != oldValue){
 			prefs.put(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR, newValue);
 		}		
+		
+		pnlShortcutPreference.saveToPreferences(prefs);
 	}
 	
 	public PreferencesPanel() {

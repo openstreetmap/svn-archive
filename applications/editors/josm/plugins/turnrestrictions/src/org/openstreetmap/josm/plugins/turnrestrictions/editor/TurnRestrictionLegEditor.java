@@ -155,7 +155,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
 		} else {
 			lblOsmObject.setFont(UIManager.getFont("Label.font").deriveFont(Font.ITALIC));
 			lblOsmObject.setIcon(null);
-			lblOsmObject.setText(tr("multiple objects with role ''{0}''",this.role.toString()));
+			lblOsmObject.setText(tr("multiple objects with role ''{0}''",this.role.getOsmRole()));
 			lblOsmObject.setToolTipText(null);			
 		}
 		renderColors();

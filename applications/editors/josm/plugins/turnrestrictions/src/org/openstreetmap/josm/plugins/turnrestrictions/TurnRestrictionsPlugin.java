@@ -8,16 +8,13 @@ import org.openstreetmap.josm.plugins.turnrestrictions.list.TurnRestrictionsList
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceEditor;
 
 /**
- * This is the main class for the turnrestriction plugin.
+ * This is the main class for the turnrestrictions plugin.
  * 
  */
 public class TurnRestrictionsPlugin extends Plugin{
 	
-	private CreateOrEditTurnRestrictionAction actCreateOrEditTurnRestriction;
-	
 	public TurnRestrictionsPlugin(PluginInformation info) {
-		super(info);
-		actCreateOrEditTurnRestriction = new CreateOrEditTurnRestrictionAction();
+		super(info);		
 	}
 	
 	/**
@@ -29,6 +26,7 @@ public class TurnRestrictionsPlugin extends Plugin{
 			TurnRestrictionsListDialog dialog  = new TurnRestrictionsListDialog();
 			// add the dialog
 			newFrame.addToggleDialog(dialog);
+			CreateOrEditTurnRestrictionAction.install();
 		}
 	}
 

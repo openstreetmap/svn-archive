@@ -95,7 +95,9 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
 	 * @return the icon 
 	 */
 	protected ImageIcon getIcon(String restrictionType) {
-		if (!isValidRestrictionType(restrictionType)) return null;
+		if (!isValidRestrictionType(restrictionType)) {
+			return ImageProvider.get("types", "non-standard-type");
+		}
 		return ImageProvider.get(buildImageName(restrictionType));
 	}
  	
@@ -145,10 +147,6 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
 	 */
 	protected void renderIcon(Relation tr) {
 		String restrictionType = tr.get("restriction");
-		if (!isValidRestrictionType(restrictionType)) {
-			icon.setIcon(null);
-			return;
-		}
 		icon.setIcon(getIcon(restrictionType));
 	}
 

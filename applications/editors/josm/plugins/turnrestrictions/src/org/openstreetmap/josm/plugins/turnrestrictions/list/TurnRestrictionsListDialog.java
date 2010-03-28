@@ -190,7 +190,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 			actSelectSelectedTurnRestrictions.updateEnabledState();
 			actZoomTo.updateEnabledState();
 			currentListView.revalidate();
-			currentListView.repaint();
+			currentListView.repaint();			
 		}
 
 		public void itemStateChanged(ItemEvent e) {

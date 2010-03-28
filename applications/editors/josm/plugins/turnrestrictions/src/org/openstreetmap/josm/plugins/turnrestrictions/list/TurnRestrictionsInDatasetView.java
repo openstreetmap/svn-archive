@@ -34,8 +34,7 @@ public class TurnRestrictionsInDatasetView extends AbstractTurnRestrictionsListV
 		MapView.addEditLayerChangeListener((EditLayerChangeListener)model);
 		DatasetEventManager.getInstance().addDatasetListener((DataSetListener)model, FireMode.IN_EDT);
 		if (Main.main.getEditLayer() != null) {
-			model.setTurnRestrictions(Main.main.getEditLayer().data
-					.getRelations());
+			model.setTurnRestrictions(Main.main.getEditLayer().data.getRelations());
 		}
 	}
 

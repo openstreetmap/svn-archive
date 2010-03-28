@@ -5,6 +5,7 @@ require 'proj4'
 require 'xml/libxml'
 require 'set'
 require 'postgres'
+require 'time'
 
 module Expire
   # projection object to go from latlon -> spherical mercator
@@ -60,11 +61,13 @@ module Expire
     root + '/' + z.to_s + '/' + hash_path + ".meta"
   end
   
-  # expire the meta tile by setting the modified time back to some
-  # very stupidly early time, before OSM started
+  # time to reset to, some very stupidly early time, before OSM started
+  EXPIRY_TIME = Time.parse("2000-01-01 00:00:00")
+
+  # expire the meta tile by setting the modified time back 
   def Expire.expire_meta(meta)
     puts "Expiring #{meta}"
-    `touch -t 200001010000 #{meta}`
+    File.utime(EXPIRY_TIME, EXPIRY_TIME, meta)
   end
   
   def Expire.expire(change_file)

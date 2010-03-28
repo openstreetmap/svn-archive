@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-27 19:25+0100\n"
+"POT-Creation-Date: 2010-03-28 16:10+0200\n"
 "PO-Revision-Date: 2010-03-15 19:09+0000\n"
 "Last-Translator: bastik <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-03-27 18:19+0000\n"
+"X-Launchpad-Export-Date: 2010-03-28 13:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -2902,9 +2902,9 @@ msgid "Change relation {0}"
 msgstr "Αλαγή σχέσης {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangeNodesCommand.java:51
-#, fuzzy, java-format
+#, java-format
 msgid "Changed nodes of {0}"
-msgstr "Αλλαγή κόμβου {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:101
 #, java-format
@@ -13953,7 +13953,7 @@ msgid ""
 "<br><br>The error message is:<br>{0}</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:353
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:354
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
@@ -15167,14 +15167,12 @@ msgid "Set a new location for the next request"
 msgstr "Ρύθμιση νέας θέσης για την επόμενη αίτηση"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:42
-#, fuzzy
 msgid "Add a new municipality layer"
-msgstr "Προσθήκη νέου επιπέδου"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:44
-#, fuzzy
 msgid "Commune"
-msgstr "Υπολογιστές"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:46
 msgid ""
@@ -16541,14 +16539,13 @@ msgid "Create Stops from a GPX file"
 msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:525
-#, fuzzy
 msgid "Tracks"
-msgstr "Ετικέτες"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1103
-#, fuzzy, java-format
+#, java-format
 msgid "IOException \"{0}\" occurred"
-msgstr "Δημιοθργήθηκε εξαίρεση"
+msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:27
 msgid "load data from API"
@@ -17096,14 +17093,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:90
-#, fuzzy
 msgid "Create/Edit turn restriction..."
-msgstr "Επεξεργασία περιορισμού στροφής"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:92
-#, fuzzy
 msgid "Create or edit a turn restriction."
-msgstr "Επεξεργασία περιορισμού στροφής"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:41
 msgid ""
@@ -17123,11 +17118,9 @@ msgid "Copy to the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:425
-#, fuzzy, java-format
+#, java-format
 msgid "Cannot find object with id ''{0}'' in layer ''{1}''"
 msgstr ""
-"Δεν βρέθηκε κάποιο αντικείμενο με αναγνωριστικό {0} στην ισχύουσα ομάδα "
-"δεδομένων"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:428
 #, java-format
@@ -17137,23 +17130,20 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:102
-#, fuzzy
 msgid "Clear the selected roles or delete the selected members"
-msgstr "Η επιλεγμένη διαδρομή δεν περιέχει τον επιλεγμένο κόμβο."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:128
 msgid "Insert new relation members from object in the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:167
-#, fuzzy
 msgid "Move the selected relation members down by one position"
-msgstr "Μετακίνηση των επιλεγμένων στοιχείων προς τα πάνω κατά μία θέση"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:194
-#, fuzzy
 msgid "Move the selected relation members up by one position"
-msgstr "Μετακίνηση των επιλεγμένων στοιχείων προς τα πάνω κατά μία θέση"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
 msgid "Edit basic attributes of a turn restriction"
@@ -17164,9 +17154,8 @@ msgid "Edit the raw tags and members of this turn restriction"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
-#, fuzzy
 msgid "Errors/Warnings"
-msgstr "Προειδοποιήσεις"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Show errors and warnings related to this turn restriction"
@@ -17199,14 +17188,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:406
-#, fuzzy
 msgid "Do you want to save anyway?"
-msgstr "Θέλετε σίγουρα να διαγραφούν;"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:409
-#, fuzzy
 msgid "Yes, save anyway"
-msgstr "Επιβεβαίωση αποθήκευσης"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:411
 msgid "Save the turn restriction despite of errors and/or warnings"
@@ -17282,23 +17269,22 @@ msgid "Already participating in a conflict"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
-#, fuzzy, java-format
+#, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
-msgstr[0] "{0} σημείο αναφοράς"
-msgstr[1] "{0} σημεία αναφοράς"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
-#, fuzzy, java-format
+#, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
-msgstr[0] "{0} μέλος"
-msgstr[1] "{0} μέλη"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
-#, fuzzy
 msgid "no issues"
-msgstr "Νέο θέμα"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:147
 msgid "please select a way"
@@ -17318,9 +17304,8 @@ msgid "Paste from the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:220
-#, fuzzy
 msgid "Create new turn restriction"
-msgstr "Σημιουργία νέας σχέσης"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:221
 msgid "Launch the turn restriction editor to create a new turn restriction"
@@ -17382,19 +17367,16 @@ msgid "Heavy Goods Vehicles"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:108
-#, fuzzy
 msgid "Motorcars"
-msgstr "Αυτοκίνητο"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:122
-#, fuzzy
 msgid "Bicycles"
-msgstr "Ποδήλατο"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:193
-#, fuzzy
 msgid "Use standard exceptions"
-msgstr "Μη Αναμενόμενη Εξαίρεση"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:203
 msgid "Use non-standard exceptions"
@@ -17529,9 +17511,8 @@ msgid "Road signs - Set B"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:131
-#, fuzzy
 msgid "Please select the set of road sign icons to be used in the plugin."
-msgstr "Παρακαλώ επιλέξτε την γραμμή για επεξεργασία."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:188
 #, java-format
@@ -17547,40 +17528,34 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:64
-#, fuzzy
 msgctxt "keyboard-key"
 msgid "Key:"
-msgstr "Πλήκτρο:"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:75
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Modifiers:"
-msgstr "Ομάδες τροποποιητών"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:78
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Shift"
-msgstr "λευκό"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:80
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Ctrl"
-msgstr "Κάστρο"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:82
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Alt"
-msgstr "Όλα"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:85
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Meta"
-msgstr "Ενοικίαση"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:29
 #, java-format
@@ -17592,18 +17567,16 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:37
-#, fuzzy
 msgid "Delete ''from''"
-msgstr "Διαγραφή από σχέση"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:38
 msgid "Removes the member with role ''from''"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:47
-#, fuzzy
 msgid "Delete ''to''"
-msgstr "Κατάσταση Διαγραφής"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:48
 msgid "Removes the member with role ''to''"
@@ -17649,9 +17622,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:49
-#, fuzzy
 msgid "Set via-Object"
-msgstr "# Αντικείμενα"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:50
 msgid ""
@@ -17682,9 +17654,8 @@ msgid "Please go to the Basic editor and manually choose an OSM way."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:48
-#, fuzzy
 msgid "Add in editor"
-msgstr "Προσθήκη νέου επιπέδου"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:51
 msgid "Add an OSM way with role ''from''"
@@ -17747,14 +17718,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:75
-#, fuzzy
 msgid "Split now"
-msgstr "Διαίρεση Διαδρομής"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:76
-#, fuzzy
 msgid "Splits the way"
-msgstr "Διαίρεση Διαδρομής"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:45
 #, java-format
@@ -17775,9 +17744,8 @@ msgid "An OSM way is required instead."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:63
-#, fuzzy
 msgid "Delete the member from the turn restriction"
-msgstr "Διαγραφή της επιλεγμένης σχέσης"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:81
 msgid "Change to the Basic Editor and select an OSM way"
@@ -18004,11 +17972,11 @@ msgstr ""
 "Αυτή η δοκιμή ελέγχει αν δυο δρόμοι, σιδηρόδρομοι, υδατοδιαδρομές ή κτήρια "
 "διασταυρώνονται στο ίδιο επίπεδο, αλλά δεν είναι ενωμένα με κάποιο κόμβο."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing buildings"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing ways"
 msgstr ""
 

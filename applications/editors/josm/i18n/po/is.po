@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-27 19:25+0100\n"
+"POT-Creation-Date: 2010-03-28 16:10+0200\n"
 "PO-Revision-Date: 2010-01-31 17:21+0000\n"
 "Last-Translator: Ævar Arnfjörð Bjarmason <avarab@gmail.com>\n"
 "Language-Team: Icelandic <is@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-03-27 18:18+0000\n"
+"X-Launchpad-Export-Date: 2010-03-28 13:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -2875,9 +2875,9 @@ msgid "Change relation {0}"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/ChangeNodesCommand.java:51
-#, fuzzy, java-format
+#, java-format
 msgid "Changed nodes of {0}"
-msgstr "Breytti hnút {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:101
 #, java-format
@@ -13891,7 +13891,7 @@ msgid ""
 "<br><br>The error message is:<br>{0}</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:353
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:354
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
@@ -15100,14 +15100,12 @@ msgid "Set a new location for the next request"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:42
-#, fuzzy
 msgid "Add a new municipality layer"
-msgstr "Bæta við nýju lagi"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:44
-#, fuzzy
 msgid "Commune"
-msgstr "Tölvubúð"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:46
 msgid ""
@@ -16451,9 +16449,8 @@ msgid "Create Stops from a GPX file"
 msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:525
-#, fuzzy
 msgid "Tracks"
-msgstr "Tögg"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1103
 #, java-format
@@ -17006,14 +17003,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:90
-#, fuzzy
 msgid "Create/Edit turn restriction..."
-msgstr "Breyti beygjutakmörkun"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:92
-#, fuzzy
 msgid "Create or edit a turn restriction."
-msgstr "Breyti beygjutakmörkun"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:41
 msgid ""
@@ -17033,9 +17028,9 @@ msgid "Copy to the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:425
-#, fuzzy, java-format
+#, java-format
 msgid "Cannot find object with id ''{0}'' in layer ''{1}''"
-msgstr "Breyti venslum #{0} í laginu „{1}“"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:428
 #, java-format
@@ -17045,23 +17040,20 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:102
-#, fuzzy
 msgid "Clear the selected roles or delete the selected members"
-msgstr "Vistar hlutverk fyrir völd stök"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:128
 msgid "Insert new relation members from object in the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:167
-#, fuzzy
 msgid "Move the selected relation members down by one position"
-msgstr "Færa valið lag niður í röðinni"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:194
-#, fuzzy
 msgid "Move the selected relation members up by one position"
-msgstr "Færa valið lag niður í röðinni"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
 msgid "Edit basic attributes of a turn restriction"
@@ -17072,28 +17064,27 @@ msgid "Edit the raw tags and members of this turn restriction"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
-#, fuzzy
 msgid "Errors/Warnings"
-msgstr "Aðvaranir"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Show errors and warnings related to this turn restriction"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:280
-#, fuzzy, java-format
+#, java-format
 msgid "Create a new turn restriction in layer ''{0}''"
-msgstr "Búa til ný vensl í laginu „{0}“"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:282
-#, fuzzy, java-format
+#, java-format
 msgid "Edit a new turn restriction in layer ''{0}''"
-msgstr "Breyti nýjum venslum í laginu „{0}“"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:284
-#, fuzzy, java-format
+#, java-format
 msgid "Edit turn restriction ''{0}'' in layer ''{1}''"
-msgstr "Breyti venslum #{0} í laginu „{1}“"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:398
 #, java-format
@@ -17188,23 +17179,22 @@ msgid "Already participating in a conflict"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
-#, fuzzy, java-format
+#, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
-msgstr[0] "{0} punktur"
-msgstr[1] "{0} punktar"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
-#, fuzzy, java-format
+#, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
-msgstr[0] "{0} stak"
-msgstr[1] "{0} stök"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
-#, fuzzy
 msgid "no issues"
-msgstr "Ný padda"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:147
 msgid "please select a way"
@@ -17224,9 +17214,8 @@ msgid "Paste from the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:220
-#, fuzzy
 msgid "Create new turn restriction"
-msgstr "Skapa ný vensl"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:221
 msgid "Launch the turn restriction editor to create a new turn restriction"
@@ -17288,19 +17277,16 @@ msgid "Heavy Goods Vehicles"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:108
-#, fuzzy
 msgid "Motorcars"
-msgstr "Bifreið"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:122
-#, fuzzy
 msgid "Bicycles"
-msgstr "Hjól"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:193
-#, fuzzy
 msgid "Use standard exceptions"
-msgstr "Óvænt villa"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:203
 msgid "Use non-standard exceptions"
@@ -17435,9 +17421,8 @@ msgid "Road signs - Set B"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:131
-#, fuzzy
 msgid "Please select the set of road sign icons to be used in the plugin."
-msgstr "Veldu hlut til að breyta fyrst."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:188
 #, java-format
@@ -17453,16 +17438,14 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:64
-#, fuzzy
 msgctxt "keyboard-key"
 msgid "Key:"
-msgstr "Lykill"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:75
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Modifiers:"
-msgstr "barrskógur"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:78
 msgctxt "keyboard-modifiers"
@@ -17470,10 +17453,9 @@ msgid "Shift"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:80
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Ctrl"
-msgstr "Kastali"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:82
 msgctxt "keyboard-modifiers"
@@ -17481,10 +17463,9 @@ msgid "Alt"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:85
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Meta"
-msgstr "Leiga"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:29
 #, java-format
@@ -17496,18 +17477,16 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:37
-#, fuzzy
 msgid "Delete ''from''"
-msgstr "Fjarlægja úr venslum"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:38
 msgid "Removes the member with role ''from''"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:47
-#, fuzzy
 msgid "Delete ''to''"
-msgstr "Fjarlægja"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:48
 msgid "Removes the member with role ''to''"
@@ -17553,9 +17532,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:49
-#, fuzzy
 msgid "Set via-Object"
-msgstr "Fjöldi hluta"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:50
 msgid ""
@@ -17586,9 +17564,8 @@ msgid "Please go to the Basic editor and manually choose an OSM way."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:48
-#, fuzzy
 msgid "Add in editor"
-msgstr "Bæta hnút við veg"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:51
 msgid "Add an OSM way with role ''from''"
@@ -17633,9 +17610,8 @@ msgid "The required tag <tt>{0}={1}</tt> is missing."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:45
-#, fuzzy
 msgid "Add missing tag"
-msgstr "Bæta við nýju taggi"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:46
 #, java-format
@@ -17652,14 +17628,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:75
-#, fuzzy
 msgid "Split now"
-msgstr "Skipta veg"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:76
-#, fuzzy
 msgid "Splits the way"
-msgstr "Skipta veg"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:45
 #, java-format
@@ -17680,9 +17654,8 @@ msgid "An OSM way is required instead."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:63
-#, fuzzy
 msgid "Delete the member from the turn restriction"
-msgstr "Eyða völdum venslum"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:81
 msgid "Change to the Basic Editor and select an OSM way"
@@ -17905,11 +17878,11 @@ msgid ""
 "the same layer, but are not connected by a node."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing buildings"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing ways"
 msgstr ""
 

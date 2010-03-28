@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-27 19:25+0100\n"
-"PO-Revision-Date: 2010-03-24 21:12+0000\n"
-"Last-Translator: Gubaer <Unknown>\n"
+"POT-Creation-Date: 2010-03-28 16:10+0200\n"
+"PO-Revision-Date: 2010-03-28 13:41+0000\n"
+"Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-03-27 18:14+0000\n"
+"X-Launchpad-Export-Date: 2010-03-28 13:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -3004,9 +3004,9 @@ msgid "Change relation {0}"
 msgstr "Relation {0} verändern"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangeNodesCommand.java:51
-#, fuzzy, java-format
+#, java-format
 msgid "Changed nodes of {0}"
-msgstr "Knoten {0} verändern"
+msgstr "Knoten von {0} geändert"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:101
 #, java-format
@@ -14944,6 +14944,9 @@ msgid ""
 "<html>Failed to download data. Its format is either unsupported, ill-formed, "
 "and/or inconsistent.<br><br>Details (untranslated): {0}</html>"
 msgstr ""
+"<html>Daten herunterladen fehlgeschlagen. Das Format ist nicht unterstützt, "
+"unzulässig strukturiert  und/oder inkonsistent.<br><br>Details (nicht "
+"übersetzt): {0}</html>"
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:352
 #, java-format
@@ -15014,7 +15017,7 @@ msgstr ""
 "fehlgeschlagen</strong>, falls versucht wurde, das Objekt herunterzuladen."
 "<br><br>Die Fehlermeldung lautet:<br>{0}</html>"
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:353
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:354
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
@@ -16315,14 +16318,12 @@ msgid "Set a new location for the next request"
 msgstr "Für die nächste Anfrage eine neue Position setzen"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:42
-#, fuzzy
 msgid "Add a new municipality layer"
-msgstr "Neue Ebene hinzufügen"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:44
-#, fuzzy
 msgid "Commune"
-msgstr "Gemeinde"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:46
 msgid ""
@@ -17715,23 +17716,21 @@ msgstr "Meta"
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:511
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:833
-#, fuzzy
 msgid "Create Stops from GPX ..."
-msgstr "Mit GPX korrelieren"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:512
 msgid "Create Stops from a GPX file"
 msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:525
-#, fuzzy
 msgid "Tracks"
-msgstr "Feld- oder Waldweg"
+msgstr "Spuren"
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1103
-#, fuzzy, java-format
+#, java-format
 msgid "IOException \"{0}\" occurred"
-msgstr "Fehler"
+msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:27
 msgid "load data from API"
@@ -18278,38 +18277,42 @@ msgid ""
 "Warning: turnrestrictions plugin replaces already existing action ''{0}'' "
 "behind shortcut ''{1}'' by action ''{2}''"
 msgstr ""
+"Warnung: das Plugin turnrestrictions ersetzt die Aktion ''{0}'' belegt durch "
+"die Tastenkombination ''{1}'' durch die Aktion ''{2}''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:67
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:111
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Warning: illegal value ''{0}'' for preference key ''{1}''. Falling back to "
 "default value ''shift ctrl T''."
 msgstr ""
-"Unerwarteter Wert ''{0}'' für Einstellung ''{1}''. Nehme Wert \"Nachfragen\" "
-"an."
+"Warnung: unzulässiger Wert ''{0}'' für die Einstellung ''{1}''. Der Standard-"
+"Wert ''shift ctrl T'' wird benutzt."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:90
-#, fuzzy
 msgid "Create/Edit turn restriction..."
-msgstr "Neue Abbiegeeinschränkung erstellen"
+msgstr "Erstelle/Editiere eine Abbiegebeschränkung"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:92
-#, fuzzy
 msgid "Create or edit a turn restriction."
-msgstr "Neue Abbiegeeinschränkung erstellen"
+msgstr "Erstelle oder editiere eine Abbiegebeschränkung"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:41
 msgid ""
 "In the following table you can edit the <strong>raw tags</strong> of the OSM "
 "relation representing this turn restriction."
 msgstr ""
+"In der folgenden Tabelle können Sie die <strong>Merkmale</strong> der OSM-"
+"Relation, die diese Abbiegebeschränkung repräsentiert, editieren."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:61
 msgid ""
 "In the following table you can edit the <strong>raw members</strong> of the "
 "OSM relation representing this turn restriction."
 msgstr ""
+"In der folgenden Tabelle können Sie die <strong>Relationselemente</strong> "
+"der OSM-Relation, die diese Abbiegebeschränkung repräsentiert, editieren."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/JosmSelectionPanel.java:123
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:324
@@ -18317,9 +18320,9 @@ msgid "Copy to the clipboard"
 msgstr "In die Zwischenablage kopieren"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:425
-#, fuzzy, java-format
+#, java-format
 msgid "Cannot find object with id ''{0}'' in layer ''{1}''"
-msgstr "Abbiegebeschränkung #{0} auf Ebene ''{1}'' bearbeiten"
+msgstr "Kann Objekt mit ID ''{0}'' in der Ebene ''{1}'' nicht finden"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:428
 #, java-format
@@ -18327,59 +18330,56 @@ msgid ""
 "Cannot add object ''{0}'' as relation member because it is deleted or "
 "invisible in layer ''{1}''"
 msgstr ""
+"Kann das Objekt ''{0}'' nicht als Relationselement hinzufügen. Es ist "
+"entweder gelöscht oder unsichtbar in der Ebene ''{1}''."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:102
-#, fuzzy
 msgid "Clear the selected roles or delete the selected members"
-msgstr "Definiert eine Rolle für die ausgewählten Elemente"
+msgstr ""
+"Leere die ausgewählten Rollen oder lösche die ausgewählten Relationselemente"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:128
-#, fuzzy
 msgid "Insert new relation members from object in the clipboard"
-msgstr "Einfügen von 'via'-Objekten aus der Zwischenablage"
+msgstr "Füge Objekte in der Zwischenablage als neue Relationselemente ein"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:167
-#, fuzzy
 msgid "Move the selected relation members down by one position"
-msgstr "Ausgewählte Vias um eine Position nach unten verschieben"
+msgstr "Verschiebe ausgewählte Relationselemente um eine Zeile nach unten"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:194
-#, fuzzy
 msgid "Move the selected relation members up by one position"
-msgstr "Ausgewählte Vias um eine Position nach oben verschieben"
+msgstr "Verschiebe ausgewählte Relationselemente um eine Zeile nach oben"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
 msgid "Edit basic attributes of a turn restriction"
 msgstr "Basisattribute einer Abbiegebeschränkung bearbeiten"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:138
-#, fuzzy
 msgid "Edit the raw tags and members of this turn restriction"
-msgstr "Basisattribute einer Abbiegebeschränkung bearbeiten"
+msgstr "Editiere die Merkmale und Elemente dieser Abbiegebeschränkung"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
-#, fuzzy
 msgid "Errors/Warnings"
-msgstr "Warnungen"
+msgstr "Fehler/Warnungen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Show errors and warnings related to this turn restriction"
-msgstr ""
+msgstr "Zeige Fehler und Warnungen für diese Abbiegebeschränkung"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:280
-#, fuzzy, java-format
+#, java-format
 msgid "Create a new turn restriction in layer ''{0}''"
-msgstr "Eine neue Abbiegebeschränkung auf Ebene ''{0}'' anlegen"
+msgstr "Erstelle eine neue Abbiegebeschränkung in der Ebene ''{0}''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:282
-#, fuzzy, java-format
+#, java-format
 msgid "Edit a new turn restriction in layer ''{0}''"
-msgstr "Eine neue Abbiegebeschränkung auf Ebene ''{0}'' bearbeiten"
+msgstr "Editiere eine neue Abbiegebeschränkung in der Ebene ''{0}''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:284
-#, fuzzy, java-format
+#, java-format
 msgid "Edit turn restriction ''{0}'' in layer ''{1}''"
-msgstr "Abbiegebeschränkung #{0} auf Ebene ''{1}'' bearbeiten"
+msgstr "Editiere die Abbiegebeschränkung ''{0}'' in der Ebene ''{1}''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:398
 #, java-format
@@ -18390,34 +18390,35 @@ msgid_plural ""
 "There are still {0} errors and/or warnings identified for this turn "
 "restriction. You are recommended to resolve these issues first."
 msgstr[0] ""
+"Diese Abbiegebeschränkung weist einen Fehler oder eine Warnung auf. Sie "
+"sollten diese zunächst bereinigen."
 msgstr[1] ""
+"Diese Abbiegebeschränkung weist {0} Fehler und/oder Warnungen auf. Sie "
+"sollten diese zunächst bereinigen."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:406
-#, fuzzy
 msgid "Do you want to save anyway?"
-msgstr "Wollen Sie sie trotzdem löschen?"
+msgstr "Wollen Sie die Änderungen trotzdem sichern?"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:409
-#, fuzzy
 msgid "Yes, save anyway"
-msgstr "Trotzdem speichern"
+msgstr "Ja, trotzdem sichern"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:411
-#, fuzzy
 msgid "Save the turn restriction despite of errors and/or warnings"
-msgstr "Zum Abbiegebeschränkungseditor zurückkehren und Bearbeiten fortsetzen"
+msgstr "Sichere die Abbiegebeschränkung trotz Fehler und/oder Warnungen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:415
 msgid "No, resolve issues first"
-msgstr ""
+msgstr "Nein, bereinige zunächst die Fehler/Warnungen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:417
 msgid "Cancel saving and start resolving pending issues first"
-msgstr ""
+msgstr "Sichern abbrechen und Bereinigen der Fehler/Warnungen starten"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:425
 msgid "Pending errors and warnings"
-msgstr ""
+msgstr "Ausstehende Fehler und Warnungen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:484
 #, java-format
@@ -18485,35 +18486,34 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:633
 msgid "Already participating in a conflict"
-msgstr ""
+msgstr "Bereits an einem Konflikt beteiligt"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
-#, fuzzy, java-format
+#, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
-msgstr[0] "{0} Wegpunkt"
-msgstr[1] "{0} Wegpunkte"
+msgstr[0] "{0} Warnung"
+msgstr[1] "{0} Warnungen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
-#, fuzzy, java-format
+#, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
-msgstr[0] "{0} Element"
-msgstr[1] "{0} Elemente"
+msgstr[0] "{0} Fehler"
+msgstr[1] "{0} Fehler"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
-#, fuzzy
 msgid "no issues"
-msgstr "Neuer Fehler"
+msgstr "Keine Fehler/Warnungen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:147
 msgid "please select a way"
 msgstr "Bitte Weg auswählen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:158
-#, fuzzy, java-format
+#, java-format
 msgid "multiple objects with role ''{0}''"
-msgstr "Das Objekt ''{0}'' wurde entfernt"
+msgstr "Mehrere Objekte mit Rolle ''{0}''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:245
 msgid "Delete from turn restriction"
@@ -18524,14 +18524,14 @@ msgid "Paste from the clipboard"
 msgstr "Aus Zwischenablage einfügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:220
-#, fuzzy
 msgid "Create new turn restriction"
-msgstr "Neue Abbiegeeinschränkung erstellen"
+msgstr "Erstelle eine neue Abbiegebeschränkung"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:221
-#, fuzzy
 msgid "Launch the turn restriction editor to create a new turn restriction"
-msgstr "Zum Abbiegebeschränkungseditor zurückkehren und Bearbeiten fortsetzen"
+msgstr ""
+"Öffne den Editor für Abbiegebeschränkungen um eine neue Abbiegebeschränkung "
+"zu erfassen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:11
 msgid "No Right Turn"
@@ -18576,40 +18576,36 @@ msgid ""
 "Select the vehicle types this turn restriction is <strong>not</strong> "
 "applicable for."
 msgstr ""
+"Wähle die Fahrzeugtypen für die diese Abbiegebeschränkung <strong>nicht</"
+"strong> gültig ist."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:82
-#, fuzzy
 msgid "Public Service Vehicles"
-msgstr "Öffentlicher Verkehr & Taxi"
+msgstr "Öffentlicher Verkehr"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:83
 msgid "Public service vehicles like buses, tramways, etc."
-msgstr ""
+msgstr "Fahrzeuge des öffentlichen Verkehrs wie Busse, Trams, etc."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:95
-#, fuzzy
 msgid "Heavy Goods Vehicles"
-msgstr "LKW"
+msgstr "Lastwagen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:108
-#, fuzzy
 msgid "Motorcars"
-msgstr "Automobil"
+msgstr "Autos"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:122
-#, fuzzy
 msgid "Bicycles"
-msgstr "Fahrrad"
+msgstr "Fahrräder"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:193
-#, fuzzy
 msgid "Use standard exceptions"
-msgstr "Standard-Systemeinstellungen nutzen"
+msgstr "Verwende Standardwerte für Ausnahmen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:203
-#, fuzzy
 msgid "Use non-standard exceptions"
-msgstr "Standard-Systemeinstellungen nutzen"
+msgstr "Verwende Nicht-Standardwerte für Ausnahmen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:156
 msgid "Remove the currently selected vias"
@@ -18641,15 +18637,14 @@ msgstr ""
 "\"via\" hinzufügen nicht möglich."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:125
-#, fuzzy
 msgctxt "turnrestrictions"
 msgid "From:"
-msgstr "Von..."
+msgstr "Von:"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:136
 msgctxt "turnrestriction"
 msgid "To:"
-msgstr ""
+msgstr "Nach:"
 
 #. FIXME: render as warning/error (red background?)
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:173
@@ -18713,10 +18708,12 @@ msgid ""
 "Development of the turn restriction plugin was sponsored by <a href=\"http://"
 "www.skobbler.de\">skobbler GmbH</a>."
 msgstr ""
+"Die Entwicklung des Plugins turnrestrictions wurde durch <a href=\"http://"
+"www.skobbler.de\">skobbler GmbH</a> finanziell unterstützt."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferenceEditor.java:96
 msgid "Configure the preferences for the turnrestrictions plugin"
-msgstr ""
+msgstr "Konfiguriere die Einstellungen für das Plugin turnrestrictions"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferenceEditor.java:97
 msgid "Sponsor"
@@ -18732,71 +18729,73 @@ msgid ""
 "restriction. If enabled, one can edit them in the Basic editor too. If "
 "disabled, editing of via-objects is possible in the Advanced Editor only."
 msgstr ""
+"Der Standard-Editor kann optional die Liste der via-Objekte einer "
+"Abbiegebeschränkung anzeigen. Falls aktiviert kann man diese im Standard-"
+"Editor auch editieren. Falls deaktiviert, ist das nur im Fortgeschrittenen-"
+"Editor möglich."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:60
 msgid "Display and edit list of via-objects in the Basic Editor"
-msgstr ""
+msgstr "Zeige und editiere die Liste der via-Objekte im Standard-Editor"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:78
 msgid "Road signs - Set A"
-msgstr ""
+msgstr "Strassenschilder - Satz A"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:107
 msgid "Road signs - Set B"
-msgstr ""
+msgstr "Strassenschilder - Satz B"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:131
-#, fuzzy
 msgid "Please select the set of road sign icons to be used in the plugin."
-msgstr "Bitte wählen Sie eine Zeile zum Bearbeiten."
+msgstr ""
+"Bitte wählen Sie den Satz von Strassenschildern, die im Plugin verwendet "
+"werden."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:188
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Warning: the preference with key ''{0}'' has an unsupported value ''{1}''. "
 "Assuming the default value ''set-a''."
 msgstr ""
-"Warnung: Ungeeigneter Wert ''{1}'' für die Einstellung ''{0}''. Verwende "
-"Standard-Abfrage."
+"Warnung: die Einstellung mit Schlüssel ''{0}'' hat einen unzulässigen Wert "
+"''{1}''. Verwende den Standard-wert ''set-a''."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:48
 msgid ""
 "Please configure the <strong>keyboard shortcut</strong> which triggers "
 "creating/editing a turn restriction from the current JOSM selection."
 msgstr ""
+"Bitte konfigurieren Sie die <strong>Tastenkombination</strong> mit der Sie "
+"eine neue Abbiegebeschränkung anlegen oder eine existierende "
+"Abbiegebeschränkung editieren können."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:64
-#, fuzzy
 msgctxt "keyboard-key"
 msgid "Key:"
 msgstr "Taste:"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:75
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Modifiers:"
-msgstr "Steuertastengruppen"
+msgstr "Hilfstasten:"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:78
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Shift"
-msgstr "weiß"
+msgstr "Umschalt"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:80
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Ctrl"
-msgstr "Burg / Schloß"
+msgstr "Strg"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:82
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Alt"
-msgstr "Alle"
+msgstr "Alt"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:85
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Meta"
 msgstr "Meta"
@@ -18809,26 +18808,26 @@ msgid ""
 "a turn restriction, the way with role <tt>from</tt> should be different from "
 "the way with role <tt>to</tt>, though."
 msgstr ""
+"Diese Abbiegebeschränkung nutzt den OSM-Weg <span class=\"object-name\">{0}</"
+"span> sowohl in der Rolle <tt>from</tt> als auch in der Rolle <tt>to</tt>. "
+"In einer Abbiegebeschränkung  sollte der OSM-Weg mit der Rolle <tt>from</tt> "
+"jedoch unterschiedlich sein vom OSM-Weg mit der Rolle <tt>to</tt>."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:37
-#, fuzzy
 msgid "Delete ''from''"
-msgstr "Aus der Relation entfernen"
+msgstr "Lösche den OSM-Weg in der Rolle ''from''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:38
-#, fuzzy
 msgid "Removes the member with role ''from''"
-msgstr "Kein beteiligter Weg mit der Rolle \"Von\""
+msgstr "Löscht den OSM-Weg in der Rolle ''from''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:47
-#, fuzzy
 msgid "Delete ''to''"
-msgstr "Löschmodus"
+msgstr "Lösche ''to''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:48
-#, fuzzy
 msgid "Removes the member with role ''to''"
-msgstr "Dieses Element aus der Relation löschen."
+msgstr "Löscht den OSM-Weg in der Rolle ''to''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:57
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IllegalRestrictionTypeError.java:35
@@ -18837,14 +18836,15 @@ msgstr "Dieses Element aus der Relation löschen."
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:56
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/NonStandardExceptWarning.java:33
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:80
-#, fuzzy
 msgid "Fix in editor"
-msgstr "Version {0} im Editor"
+msgstr "Korrigiere im Editor"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:58
 msgid ""
 "Go to Basic Editor and manually choose members with roles ''from'' and ''to''"
 msgstr ""
+"Gehe zum Standard-Editor und wähle Relationselemente mit Rolle ''from'' und "
+"''to''"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IllegalRestrictionTypeError.java:27
 #, java-format
@@ -18853,11 +18853,14 @@ msgid ""
 "the tag key <tt>restriction</tt>. It is recommended to use standard values "
 "only. Please select one in the Basic editor."
 msgstr ""
+"Diese Abbiegebeschränkung verwendet einen unbekannten Typ <tt>{0}</tt> im "
+"Merkmal <tt>restriction</tt>. Sie sollten nur Standard-Werte verwenden. "
+"Bitte wählen Sie einen zulässigen Typ im Standard-Editor."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IllegalRestrictionTypeError.java:36
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingRestrictionTypeError.java:31
 msgid "Go to Basic Editor and manually choose a turn restriction type"
-msgstr ""
+msgstr "Gehe zum Standard-Editor und wähle den Typ der Abbiegebeschränkung"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:37
 #, java-format
@@ -18869,55 +18872,63 @@ msgid ""
 "set <span class=\"object-name\">{2}</span> as unique <strong>via</strong>-"
 "object."
 msgstr ""
+"Der <strong>from</strong>-Weg <span class=\"object-name\">{0}</span> und der "
+"<strong>to</strong>-Weg <span class=\"object-name\">{1}</span> schneiden "
+"sich am Knoten <span class=\"object-name\">{2}</span>, aber der Knoten <span "
+"class=\"object-name\">{2}</span> ist nicht als <strong>via</strong>-Objekt "
+"eingetragen.<br>Sie sollten <span class=\"object-name\">{2}</span> als "
+"einziges <strong>via</strong>-Objekt setzen."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:49
-#, fuzzy
 msgid "Set via-Object"
-msgstr "# Objekte"
+msgstr "Setze das via-Objekt"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:50
 msgid ""
 "Replaces the currently configured via-objects with the node at the "
 "intersection"
 msgstr ""
+"Ersetze die zurzeit vorhandenen via-Objekte durch den Knoten am Schnittpunkt"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:60
 msgid "Go to Basic Editor and manually fix the list of via-objects"
-msgstr ""
+msgstr "Gehe zum Standard-Editor und korrigiere die Liste der via-Objekte"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingRestrictionTypeError.java:25
 msgid ""
 "A turn restriction must declare the type of restriction. Please select a "
 "type in the Basic Editor."
 msgstr ""
+"Eine Abbiegebeschränkung mus einen Typ umfassen. Bitte wählen Sie einen Typ "
+"im Standard-Editor."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:36
-#, fuzzy
 msgid "An OSM way with role <tt>from</tt> is required in a turn restriction."
-msgstr "Ein OSM-Plugin für die Bearbeitung von Abbiegeeinschränkungen."
+msgstr ""
+"Ein OSM-Weg mit der Rolle <tt>from</tt> ist erforderlich in einer "
+"Abbiegebeschränkung."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:39
 msgid "An OSM way with role <tt>to</tt> is required in a turn restriction."
 msgstr ""
+"Ein OSM-Weg mit der Rolle <tt>to</tt> ist erforderlich in einer "
+"Abbiegebeschränkung."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:42
 msgid "Please go to the Basic editor and manually choose an OSM way."
-msgstr ""
+msgstr "Bitte gehen Sie zum Standard-Editor und wählen Sie einen OSM-Weg aus."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:48
-#, fuzzy
 msgid "Add in editor"
-msgstr "Eine neue Ebene hinzufügen"
+msgstr "Im Editor hinzufügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:51
-#, fuzzy
 msgid "Add an OSM way with role ''from''"
-msgstr "Kein beteiligter Weg mit der Rolle \"Von\""
+msgstr "Einen OSM-Weg in der Rolle ''from'' hinzufügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:54
-#, fuzzy
 msgid "Add an OSM way with role ''to''"
-msgstr "Kein beteiligter Weg mit der Rolle \"Nach\""
+msgstr "Einen OSM-Weg in der Rolle ''to'' hinzufügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:37
 #, java-format
@@ -18925,6 +18936,9 @@ msgid ""
 "A turn restriction requires exactly one way with role <tt>from</tt>. This "
 "turn restriction has {0} ways in this role. Please remove {1} of them."
 msgstr ""
+"Eine Abbiegebeschränkung benötigt genau einen OSM-Weg in der Rolle <tt>from</"
+"tt>. Diese Abbiegebeschränkung hat {0} Wege mit dieser Rolle. Bitte "
+"entfernen Sie {1} davon."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:44
 #, java-format
@@ -18932,10 +18946,13 @@ msgid ""
 "A turn restriction requires exactly one way with role <tt>to</tt>. This turn "
 "restriction has {0} ways in this role. Please remove {1} of them."
 msgstr ""
+"Eine Abbiegebeschränkung benötigt genau einen OSM-Weg in der Rolle <tt>to</"
+"tt>. Diese Abbiegebeschränkung hat {0} Wege mit dieser Rolle. Bitte "
+"entfernen Sie {1} davon."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:57
 msgid "Go to the Advanced Editor and remove the members"
-msgstr ""
+msgstr "Gehe zum Fortgeschrittenen-Editor und entferne die Relationselemente"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/NonStandardExceptWarning.java:25
 #, java-format
@@ -18943,25 +18960,28 @@ msgid ""
 "The tag <tt>except</tt> has the non-standard value <tt>{0}</tt>. It is "
 "recommended to use standard values for <tt>except</tt> only."
 msgstr ""
+"Das Merkmal <tt>except</tt> hat einen nicht unterstützten Wert <tt>{0}</tt>. "
+"Sie sollten nur Standard-Werte für <tt>except</tt> verwenden."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/NonStandardExceptWarning.java:34
 msgid "Go to Basic Editor and select standard vehicle type based exceptions"
 msgstr ""
+"Gehe zum Standard-Editor und wähle Standard-Werte für Ausnahmen basierend "
+"auf Fahrzeugtypen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:37
 #, java-format
 msgid "The required tag <tt>{0}={1}</tt> is missing."
-msgstr ""
+msgstr "Das erforderliche Merkmal <tt>{0}={1}</tt> fehlt."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:45
-#, fuzzy
 msgid "Add missing tag"
-msgstr "Neues Merkmal hinzufügen"
+msgstr "Fehlendes Merkmal hinzufügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:46
 #, java-format
 msgid "Add the missing tag {0}={1}"
-msgstr ""
+msgstr "Fehlendes Merkmal {0}={1} hinzufügen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:52
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:61
@@ -18971,16 +18991,17 @@ msgid ""
 "should be split at node <span class=\"object-name\">{2}</span> where it "
 "connects to way <span class=\"object-name\">{3}</span>."
 msgstr ""
+"Der OSM-Weg <span class=\"object-name\">{0}</span> mit Rolle <tt>{1}</tt> "
+"sollte beim Knoten <span class=\"object-name\">{2}</span> aufgeteilt werden. "
+"Er schneidet dort den OSM-Weg <span class=\"object-name\">{3}</span>."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:75
-#, fuzzy
 msgid "Split now"
-msgstr "Weg aufspalten"
+msgstr "Jetzt auftrennen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:76
-#, fuzzy
 msgid "Splits the way"
-msgstr "Weg aufspalten"
+msgstr "Trennt den Weg auf"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:45
 #, java-format
@@ -18988,6 +19009,8 @@ msgid ""
 "This turn restriction uses the OSM node <span class=\"object-name\">{0}</"
 "span> as member with role <tt>{1}</tt>."
 msgstr ""
+"Diese Abbiegebeschränkung nutzt den Knoten <span class=\"object-name\">{0}</"
+"span> als Relationselement mit Rolle <tt>{1}</tt>."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:51
 #, java-format
@@ -18995,19 +19018,20 @@ msgid ""
 "This turn restriction uses the OSM relation <span class=\"object-name\">{0}</"
 "span> as member with role <tt>{1}</tt>."
 msgstr ""
+"Diese Abbiegebeschränkung nutzt die OSM-Relation <span class=\"object-name\">"
+"{0}</span> als Relationselement mit Rolle <tt>{1}</tt>."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:57
 msgid "An OSM way is required instead."
-msgstr ""
+msgstr "Stattdessen wird ein OSM-Weg benötigt."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:63
-#, fuzzy
 msgid "Delete the member from the turn restriction"
-msgstr "Ausgewählte Abbiegeeinschränkung löschen"
+msgstr "Lösche das Relationselement aus der Abbiegebeschränkung"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:81
 msgid "Change to the Basic Editor and select an OSM way"
-msgstr ""
+msgstr "Gehe zum Standard-Editor und wähle einen OSM-Weg"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:41
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:98
@@ -19233,11 +19257,11 @@ msgstr ""
 "Gebäude auf derselben Ebene schneiden ohne mit einem Knoten verbunden zu "
 "sein."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing buildings"
 msgstr "Überschneidende Gebäude"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing ways"
 msgstr "Überschneidende Wege"
 
@@ -19892,11 +19916,11 @@ msgstr ""
 #: ../plugins/wayselector/src/org/openstreetmap/josm/plugins/wayselector/WaySelectorPlugin.java:44
 #: ../plugins/wayselector/src/org/openstreetmap/josm/plugins/wayselector/WaySelectorPlugin.java:47
 msgid "Way Select"
-msgstr ""
+msgstr "Wegauswahl"
 
 #: ../plugins/wayselector/src/org/openstreetmap/josm/plugins/wayselector/WaySelectorPlugin.java:46
 msgid "Select non-branching sequences of ways"
-msgstr ""
+msgstr "Nichverzweigenden Sequenz von Wegen auswählen"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Grabber.java:71
 msgid "Exception occurred"
@@ -20543,7 +20567,7 @@ msgstr "Leichtes Herunterladen entlang einer langen Reihe verbundener Wege"
 #. Plugin wayselector
 #: build/trans_plugins.java:87
 msgid "Select a sequence of non-branching connected ways"
-msgstr ""
+msgstr "Eine Reihe von nichtverzweigenden verbundenen Wegen auswählen"
 
 #. Plugin wms-turbo-challenge2
 #: build/trans_plugins.java:89

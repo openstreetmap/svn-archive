@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-27 19:25+0100\n"
-"PO-Revision-Date: 2010-03-15 19:34+0000\n"
+"POT-Creation-Date: 2010-03-28 16:10+0200\n"
+"PO-Revision-Date: 2010-03-27 21:21+0000\n"
 "Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2010-03-27 18:20+0000\n"
+"X-Launchpad-Export-Date: 2010-03-28 13:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -13890,7 +13890,7 @@ msgid ""
 "<br><br>The error message is:<br>{0}</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:353
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:354
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
@@ -15100,9 +15100,8 @@ msgid "Add a new municipality layer"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:44
-#, fuzzy
 msgid "Commune"
-msgstr "شائع"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:46
 msgid ""
@@ -16446,9 +16445,8 @@ msgid "Create Stops from a GPX file"
 msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:525
-#, fuzzy
 msgid "Tracks"
-msgstr "السابق"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1103
 #, java-format
@@ -17001,14 +16999,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:90
-#, fuzzy
 msgid "Create/Edit turn restriction..."
-msgstr "حرّر حصر الإنعطاف"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:92
-#, fuzzy
 msgid "Create or edit a turn restriction."
-msgstr "حرّر حصر الإنعطاف"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:41
 msgid ""
@@ -17040,23 +17036,20 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:102
-#, fuzzy
 msgid "Clear the selected roles or delete the selected members"
-msgstr "حرّك الأعضاء المختارة حالياً إلى الأعلى"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:128
 msgid "Insert new relation members from object in the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:167
-#, fuzzy
 msgid "Move the selected relation members down by one position"
-msgstr "أنقل الطبقة المختارة صفّ إلى الأسفل."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:194
-#, fuzzy
 msgid "Move the selected relation members up by one position"
-msgstr "أنقل الطبقة المختارة صفّ إلى الأسفل."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
 msgid "Edit basic attributes of a turn restriction"
@@ -17067,9 +17060,8 @@ msgid "Edit the raw tags and members of this turn restriction"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
-#, fuzzy
 msgid "Errors/Warnings"
-msgstr "التحذير"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Show errors and warnings related to this turn restriction"
@@ -17100,20 +17092,14 @@ msgid_plural ""
 "restriction. You are recommended to resolve these issues first."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:406
-#, fuzzy
 msgid "Do you want to save anyway?"
-msgstr "هل تريد السماح بذلك ؟"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:409
-#, fuzzy
 msgid "Yes, save anyway"
-msgstr "رغم ذلك احفظه"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:411
 msgid "Save the turn restriction despite of errors and/or warnings"
@@ -17189,22 +17175,18 @@ msgid "Already participating in a conflict"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
-#, fuzzy, java-format
+#, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
-msgstr[0] "التحذير"
-msgstr[1] "التحذير"
-msgstr[2] "التحذير"
-msgstr[3] "التحذير"
-msgstr[4] "التحذير"
-msgstr[5] "التحذير"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
-#, fuzzy, java-format
+#, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
-msgstr[0] "{0} عضو"
-msgstr[1] "{0} أعضاء"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
 msgid "no issues"
@@ -17228,9 +17210,8 @@ msgid "Paste from the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:220
-#, fuzzy
 msgid "Create new turn restriction"
-msgstr "أنشئ علاقة جديدة"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:221
 msgid "Launch the turn restriction editor to create a new turn restriction"
@@ -17292,19 +17273,16 @@ msgid "Heavy Goods Vehicles"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:108
-#, fuzzy
 msgid "Motorcars"
-msgstr "رياضة المحركات"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:122
-#, fuzzy
 msgid "Bicycles"
-msgstr "الدراجة"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:193
-#, fuzzy
 msgid "Use standard exceptions"
-msgstr "الشذوذ غيرال متوقع"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:203
 msgid "Use non-standard exceptions"
@@ -17456,16 +17434,14 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:64
-#, fuzzy
 msgctxt "keyboard-key"
 msgid "Key:"
-msgstr "المفتاح:"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:75
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Modifiers:"
-msgstr "صنوبري الثمر"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:78
 msgctxt "keyboard-modifiers"
@@ -17473,10 +17449,9 @@ msgid "Shift"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:80
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Ctrl"
-msgstr "قلعة"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:82
 msgctxt "keyboard-modifiers"
@@ -17484,10 +17459,9 @@ msgid "Alt"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:85
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Meta"
-msgstr "إستئجار سيارة"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:29
 #, java-format
@@ -17499,18 +17473,16 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:37
-#, fuzzy
 msgid "Delete ''from''"
-msgstr "أمحي من العلاقة"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:38
 msgid "Removes the member with role ''from''"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:47
-#, fuzzy
 msgid "Delete ''to''"
-msgstr "نمط المحو"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:48
 msgid "Removes the member with role ''to''"
@@ -17556,9 +17528,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:49
-#, fuzzy
 msgid "Set via-Object"
-msgstr "رقم الغرض"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:50
 msgid ""
@@ -17589,9 +17560,8 @@ msgid "Please go to the Basic editor and manually choose an OSM way."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:48
-#, fuzzy
 msgid "Add in editor"
-msgstr "إضافة عقدة إلى طريق"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:51
 msgid "Add an OSM way with role ''from''"
@@ -17680,9 +17650,8 @@ msgid "An OSM way is required instead."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:63
-#, fuzzy
 msgid "Delete the member from the turn restriction"
-msgstr "أمحي العلاقة المحددة"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:81
 msgid "Change to the Basic Editor and select an OSM way"
@@ -17906,11 +17875,11 @@ msgid ""
 "the same layer, but are not connected by a node."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing buildings"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing ways"
 msgstr ""
 

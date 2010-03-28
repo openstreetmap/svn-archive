@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-27 19:25+0100\n"
-"PO-Revision-Date: 2010-03-23 04:55+0000\n"
+"POT-Creation-Date: 2010-03-28 16:10+0200\n"
+"PO-Revision-Date: 2010-03-28 12:09+0000\n"
 "Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Traditional Chinese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-03-27 18:18+0000\n"
+"X-Launchpad-Export-Date: 2010-03-28 13:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: zh_TW\n"
 
@@ -1230,7 +1230,7 @@ msgstr[1] ""
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:189
 #, java-format
 msgid "<html>Cannot open directory ''{0}''.<br>Please select a file.</html>"
-msgstr ""
+msgstr "<html>不能開啟目錄「{0}」。<br>請選擇一個檔案。</html>"
 
 #: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:190
 msgid "Open file"
@@ -1333,6 +1333,8 @@ msgid ""
 "undesirable results when doing rectangular alignments.<br>Change your "
 "projection to get rid of this warning.<br>Do you want to continue?</html>"
 msgstr ""
+"<html>您使用的 EPSG:4326 投影法會導致在進行<br>矩形排列時產生不想要的結果。"
+"<br>改變您的投影法可以去除這項警告。<br>是否要繼續？</html>"
 
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:148
 msgid "Selection must consist only of ways and nodes."
@@ -2336,7 +2338,7 @@ msgstr "推出路徑"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:418
 msgid "Move a segment along its normal, then release the mouse button."
-msgstr ""
+msgstr "以平常的方式移動一個區段，然後放開滑鼠按鈕。"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:420
 msgid "Draw a rectangle of the desired size, then release the mouse button."
@@ -2346,7 +2348,7 @@ msgstr "繪出想要尺寸的矩形，然後放開滑鼠按鈕。"
 msgid ""
 "Drag a way segment to make a rectangle. Ctrl-drag to move a segment along "
 "its normal."
-msgstr ""
+msgstr "拖曳一個路徑來製作矩形。按 Ctrl 後拖曳並以平常的方式移動一個區段。"
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/PlayHeadDragMode.java:29
 msgid "Drag play head"
@@ -2878,9 +2880,9 @@ msgid "Change relation {0}"
 msgstr "改變關係 {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangeNodesCommand.java:51
-#, fuzzy, java-format
+#, java-format
 msgid "Changed nodes of {0}"
-msgstr "改變節點 {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:101
 #, java-format
@@ -3548,7 +3550,7 @@ msgstr "不能將 changesetId > 0 指派給新的原型。changesetId 的數值�
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
-msgstr ""
+msgstr "不能合併，因為參與的原型是新的但其他的卻不是"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1013
 #, java-format
@@ -5121,12 +5123,12 @@ msgstr "他們的資料組合並未包含設定鍵 {0} 的標籤"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:131
 msgid "Conflicts when combining primitives"
-msgstr ""
+msgstr "組合原型時發生衝突"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:135
 #, java-format
 msgid "Conflicts when combining ways - combined way is ''{0}''"
-msgstr ""
+msgstr "組合路徑時發生衝突 - 組合的路徑為「{0}」"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:140
 #, java-format
@@ -5327,6 +5329,10 @@ msgid ""
 "ways that are members of the same relation: the combined way will take the "
 "place of the original way in the relation.</html>"
 msgstr ""
+"<html>組合的路徑是一或多個關係的成員。請決定您要<strong>保留</strong>組合路徑"
+"的這些成員或是<strong>移除</strong>它們。<br>預設值是<strong>保留</strong>第"
+"一條路徑並<strong>移除</strong>相同關係中其他路徑的成員資格：組合後的路徑會取"
+"代關係中原本的路徑。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:134
 msgid ""
@@ -5337,6 +5343,10 @@ msgid ""
 "other nodes that are members of the same relation: the target node will take "
 "the place of the original node in the relation.</html>"
 msgstr ""
+"<html>組合的節點是一或多個關係的成員。請決定您要<strong>保留</strong>目標節點"
+"的這些成員或是<strong>移除</strong>它們。<br>預設值是<strong>保留</strong>第"
+"一個節點並<strong>移除</strong>相同關係中其他節點的成員資格：目標節點會取代關"
+"係中原本的節點。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:148
 msgid "Apply this role to all members"
@@ -5506,6 +5516,10 @@ msgid ""
 "Already<br>resolved differences will not be applied.</strong><br>Click "
 "<strong>{1}</strong> to return to resolving conflicts.</html>"
 msgstr ""
+"<html>您尚未完成這個衝突中差異的合併。<br>衝突的調解只有在所有差異都<br>解決"
+"後才會套用。<br>請按 <strong>{0}</strong> 強制關閉路徑。<strong>已經<br>解決"
+"的差異都不會套用。</strong><br>點選 <strong>{1}</strong> 則返回衝突調解。</"
+"html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:249
 msgid "Conflict not resolved completely"
@@ -5884,7 +5898,7 @@ msgstr "更新變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:450
 msgid "Updates the selected changesets with current data from the OSM server"
-msgstr ""
+msgstr "以目前的資料更新 OSM 伺服器上選取的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:475
 msgid "Download changeset content"
@@ -5900,7 +5914,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:512
 msgid "Download my changesets from the OSM server (max. 100 changesets)"
-msgstr ""
+msgstr "從 OSM 伺服器下載我的變更組合（最多 100 個變更組合）"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:518
 msgid ""
@@ -5908,6 +5922,8 @@ msgid ""
 "download<br>your changesets from the OSM server unless you enter your OSM "
 "user name<br>in the JOSM preferences.</html>"
 msgstr ""
+"<html>JOSM 目前是以匿名使用者執行。它無法從<br> OSM 伺服器下載您的變更組合，"
+"除非在 JOSM 偏好設定<br>輸入您的 OSM 使用者名稱。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheTableCellRenderer.java:51
 msgctxt "changeset.upload-comment"
@@ -5918,7 +5934,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:214
 msgctxt "changeset.state"
 msgid "Open"
-msgstr ""
+msgstr "開啟"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheTableCellRenderer.java:64
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:216
@@ -5938,7 +5954,7 @@ msgstr "備註"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheTableColumnModel.java:38
 msgid "Open"
-msgstr ""
+msgstr "開啟"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheTableColumnModel.java:46
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionInfoPanel.java:54
@@ -5959,7 +5975,7 @@ msgstr "關閉於"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentDownloadTask.java:110
 #: ../core/src/org/openstreetmap/josm/io/OsmServerChangesetReader.java:179
 msgid "Downloading changeset content"
-msgstr ""
+msgstr "下載變更組合內容"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentDownloadTask.java:170
 #, java-format
@@ -5993,7 +6009,7 @@ msgstr "更新內容"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:201
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:312
 msgid "Update the changeset content from the OSM server"
-msgstr ""
+msgstr "從 OSM 伺服器更新變更組合內容"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:248
 #: ../core/src/org/openstreetmap/josm/gui/history/NodeListViewer.java:241
@@ -6002,7 +6018,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:250
 msgid "Download and show the history of the selected primitives"
-msgstr ""
+msgstr "下載並顯示選取原型的歷史紀錄"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:315
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:356
@@ -6011,7 +6027,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:317
 msgid "Select the corresponding primitives in the current data layer"
-msgstr ""
+msgstr "選擇在目前的資料圖層中對應的原型"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:324
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:386
@@ -6022,8 +6038,7 @@ msgid ""
 msgid_plural ""
 "<html>None of the selected objects is available in the current<br>edit layer "
 "''{0}''.</html>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<html>在目前編輯的圖層「{0}」中沒有選取的<br>物件可用。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:331
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:370
@@ -6046,7 +6061,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:446
 msgid "The content of this changeset is not downloaded yet."
-msgstr ""
+msgstr "這個變更組合的內容尚未下載。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetContentPanel.java:464
 msgid "Download now"
@@ -6940,7 +6955,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:155
 msgid "Created by:"
-msgstr ""
+msgstr "建立者："
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:168
 msgid "Created on:"
@@ -6952,7 +6967,7 @@ msgstr "關閉於："
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:267
 msgid "Remove the changeset in the detail view panel from the local cache"
-msgstr ""
+msgstr "從本地端快取移除詳細資料檢視面板中的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:325
 msgid "Update the changeset from the OSM server"
@@ -6962,7 +6977,7 @@ msgstr ""
 msgid ""
 "Select the primitives in the content of this changeset in the current data "
 "layer"
-msgstr ""
+msgstr "選擇在目前資料圖層中這個變更組合的內容裡的原型"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:365
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:434
@@ -6971,12 +6986,13 @@ msgid ""
 "<html>None of the objects in the content of changeset {0} is available in "
 "the current<br>edit layer ''{1}''.</html>"
 msgstr ""
+"<html>在目前編輯圖層「{1}」變更組合 {0} 的內容<br>中沒有物件可用。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetDetailPanel.java:427
 msgid ""
 "Zoom to the primitives in the content of this changeset in the current data "
 "layer"
-msgstr ""
+msgstr "縮放到目前資料圖層這個變更組合的內容的原型"
 
 #. parent for dialog is Main.parent
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetHeaderDownloadTask.java:112
@@ -7008,13 +7024,13 @@ msgstr "請輸入變更組合 id"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/SingleChangesetDownloadPanel.java:79
 msgid ""
 "Download the changeset with the specified id, including the changeset content"
-msgstr ""
+msgstr "以指定的 id 下載變更組合，包含變更組合的內容"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/SingleChangesetDownloadPanel.java:141
 msgid ""
 "The current value is not a valid changeset ID. Please enter an integer value "
 "> 0"
-msgstr ""
+msgstr "目前的數值不是有效的變更組合 ID。請輸入大於 0 的整數值"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/SingleChangesetDownloadPanel.java:143
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:996
@@ -7024,20 +7040,20 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:74
 msgid "Select changesets owned by specific users"
-msgstr ""
+msgstr "選擇由指定使用者擁有的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:93
 msgid "Select changesets depending on whether they are open or closed"
-msgstr ""
+msgstr "根據變更組合是開放或關閉來選擇"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:112
 msgid ""
 "Select changesets based on the date/time they have been created or closed"
-msgstr ""
+msgstr "根據變更組合建立或關閉的日期/時刻來選擇"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:132
 msgid "Select only changesets related to a specific bounding box"
-msgstr ""
+msgstr "只選擇與指定的綁定方塊相關的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:302
 msgid "Query open changesets only"
@@ -7045,11 +7061,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:311
 msgid "Query closed changesets only"
-msgstr ""
+msgstr "只查詢已關閉的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:320
 msgid "Query both open and closed changesets"
-msgstr ""
+msgstr "查詢開放與關閉的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:389
 msgid "User ID:"
@@ -7061,31 +7077,31 @@ msgstr "使用者名稱："
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:445
 msgid "Only changesets owned by myself"
-msgstr ""
+msgstr "只有我自己擁有的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:457
 msgid "Only changesets owned by the user with the following user ID"
-msgstr ""
+msgstr "只有由下列使用者 ID 擁有的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:475
 msgid "Only changesets owned by the user with the following user name"
-msgstr ""
+msgstr "只有由下列使用者名稱擁有的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:527
 msgid ""
 "Cannot restrict changeset query to the current user because the current user "
 "is anonymous"
-msgstr ""
+msgstr "不能限制變更組合的查詢為目前的使用者，因為目前的使用者是匿名的"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:533
 #, java-format
 msgid "Current value ''{0}'' for user ID is not valid"
-msgstr ""
+msgstr "使用者 ID 目前的數值「{0}」是無效的"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:536
 #, java-format
 msgid "Cannot restrict the changeset query to the user name ''{0}''"
-msgstr ""
+msgstr "不能限制變更組合的查詢為使用者名稱「{0}」"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:553
 msgid "Please enter a valid user ID"
@@ -7122,23 +7138,24 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:765
 msgid "Only changesets closed after the following date/time"
-msgstr ""
+msgstr "只有在下列日期/時刻後關閉的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:786
 msgid "Only changesets closed after and created before a specific date/time"
-msgstr ""
+msgstr "只有在指定的日期/時刻後關閉或在這之前建立的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:837
 msgid ""
 "Cannot build changeset query with time based restrictions. Input is not "
 "valid."
-msgstr ""
+msgstr "不能建立以時刻限制為基礎的變更組合查詢。輸入是無效的。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:865
 msgid ""
 "<html>Please enter valid date/time values to restrict<br>the query to a "
 "specific time range.</html>"
 msgstr ""
+"<html>請輸入有效的日期/時刻數值來將查詢限制<br>在指定的時間範圍。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:868
 msgid "Invalid date/time values"
@@ -7148,13 +7165,15 @@ msgstr ""
 msgid ""
 "Cannot restrict the changeset query to a specific bounding box. The input is "
 "invalid."
-msgstr ""
+msgstr "不能將變更組合查詢限制在指定的綁定方塊。輸入是無效的。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:951
 msgid ""
 "<html>Please enter valid longitude/latitude values to restrict<br>the "
 "changeset query to a specific bounding box.</html>"
 msgstr ""
+"<html>請輸入有效的經度 /緯度數值來將變更組合查詢<br>限制在指定的綁定方塊。</"
+"html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:954
 msgid "Invalid bounding box"
@@ -7164,13 +7183,14 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:993
 msgid ""
 "The current value is not a valid user ID. Please enter an integer value > 0"
-msgstr ""
+msgstr "目前的數值不是有效的使用者 ID。請輸入大於 0 的整數值"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:1030
 msgid ""
 "<html>The  current value is not a valid user name.<br>Please enter an non-"
 "empty user name.</html>"
 msgstr ""
+"<html>目前的數值不是有效的使用者名稱。<br>請輸入非空白的使用者名稱。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:1033
 msgid "Please enter an non-empty user name"
@@ -7182,6 +7202,8 @@ msgid ""
 "Please enter a date in the usual format for your locale.<br>Example: {0}"
 "<br>Example: {1}<br>Example: {2}<br>Example: {3}<br>"
 msgstr ""
+"請以您所在地區常用的格式輸入日期。<br>範例：{0}<br>範例：{1}<br>範例：{2}<br>"
+"範例：{3}<br>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/AdvancedChangesetQueryPanel.java:1127
 #, java-format
@@ -7189,16 +7211,19 @@ msgid ""
 "Please enter a valid time in the usual format for your locale.<br>Example: "
 "{0}<br>Example: {1}<br>Example: {2}<br>Example: {3}<br>"
 msgstr ""
+"請以您所在地區常用的格式輸入有效的時刻。<br>範例：{0}<br>範例：{1}<br>範例："
+"{2}<br>範例：{3}<br>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:108
 msgid "Download my changesets only"
-msgstr ""
+msgstr "只下載我的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:109
 msgid ""
 "<html>Select to restrict the query to your changesets only.<br>Unselect to "
 "include all changesets in the query.</html>"
 msgstr ""
+"<html>選擇只查詢您的變更組合。<br>不選擇這項就會查詢所有的變更組合。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:126
 msgid ""
@@ -7207,37 +7232,44 @@ msgid ""
 "download changesets created by yourself.<br>Note that JOSM will download "
 "max. 100 changesets.</html>"
 msgstr ""
+"<html>請在下列<strong>標準查詢</strong>中選擇一項。如果您只想下載由自己建立的"
+"變更組合，請選擇<strong>只下載我的變更組合</strong>。<br>注意 JOSM 最多只能下"
+"載 100 個變更組合。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:147
 msgid "<html>Download the latest changesets</html>"
-msgstr ""
+msgstr "<html>下載最新的變更組合</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:154
 msgid ""
 "<html>Download my open changesets<br><em>Disabled. Please enter your OSM "
 "user name in the preferences first.</em></html>"
 msgstr ""
+"<html>下載我的開放變更組合<br><em>已停用。請先在偏好設定中輸入您的 OSM 使用者"
+"名稱。</em></html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:157
 msgid "<html>Download my open changesets</html>"
-msgstr ""
+msgstr "<html>下載我的開放變更組合</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:165
 msgid ""
 "<html>Download changesets in the current map view.<br><em>Disabled. There is "
 "currently no map view active.</em></html>"
 msgstr ""
+"<html>下載在目前地圖檢視中的變更組合。<br><em>已停用。目前並沒有使用中的地圖"
+"檢視。</em></html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:168
 msgid "<html>Download changesets in the current map view</html>"
-msgstr ""
+msgstr "<html>下載在目前地圖檢視中的變更組合</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/BasicChangesetQueryPanel.java:193
 #, java-format
 msgid ""
 "Warning: unexpected value for preference ''{0}'', got ''{1}''. Resetting to "
 "default query."
-msgstr ""
+msgstr "警告：偏好設定「{0}」有未預期的數值，卻收到「{1}」。重設為預設的查詢。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:51
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:172
@@ -7247,7 +7279,7 @@ msgstr "基本"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:52
 msgid "Download changesets using predefined queries"
-msgstr ""
+msgstr "使用預先定義查詢來下載變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:54
 msgid "From URL"
@@ -7255,7 +7287,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:55
 msgid "Query changesets from a server URL"
-msgstr ""
+msgstr "從伺服器 URL 查詢變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:57
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:132
@@ -7277,11 +7309,11 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:171
 msgid "Please enter a valid changeset query URL first."
-msgstr ""
+msgstr "請先輸入有效的變更組合查詢 URL。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:172
 msgid "Illegal changeset query URL"
-msgstr ""
+msgstr "不合法的變更組合查詢 URL"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:209
 msgid "Close the dialog and abort querying of changesets"
@@ -7294,7 +7326,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryTask.java:136
 msgid "Determine user id for current user..."
-msgstr ""
+msgstr "判斷目前使用者的 id..."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryTask.java:164
 msgid "Query and download changesets ..."
@@ -7306,11 +7338,11 @@ msgstr "URL: "
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/UrlBasedQueryPanel.java:70
 msgid "Please enter or paste an URL to retrieve changesets from the OSM API."
-msgstr ""
+msgstr "請輸入或貼上從 OSM API 取回變更組合的 URL。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/UrlBasedQueryPanel.java:71
 msgid "Examples"
-msgstr ""
+msgstr "範例"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/UrlBasedQueryPanel.java:76
 #, java-format
@@ -7318,10 +7350,12 @@ msgid ""
 "Note that changeset queries are currently always submitted to ''{0}'', "
 "regardless of the host, port and path of the URL entered below."
 msgstr ""
+"請注意變更組合查詢目前永遠送出到「{0}」，不管下列輸入的 URL 路徑、主機和連接"
+"埠。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/UrlBasedQueryPanel.java:174
 msgid "This changeset query URL is invalid"
-msgstr ""
+msgstr "這個變更組合查詢 URL 是無效的"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:181
 #, java-format
@@ -7433,7 +7467,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:975
 msgid "Select relation in main selection."
-msgstr ""
+msgstr "選擇主要選擇區域的關係。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:977
 msgid "Select in relation list"
@@ -7477,8 +7511,7 @@ msgstr "下載關係成員"
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:614
 msgid "Conflict in data"
 msgid_plural "Conflicts in data"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "資料中有衝突"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:345
 #, java-format
@@ -7515,8 +7548,7 @@ msgstr[0] "正下載關係「{1}」的 {0} 不完整子項目"
 #, java-format
 msgid "Downloading {0} incomplete child of {1} parent relations"
 msgid_plural "Downloading {0} incomplete children of  {1} parent relations"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "正在下載 {1} 父關係的 {0} 個不完整子項"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/DownloadRelationTask.java:45
 msgid "Download relations"
@@ -7699,6 +7731,8 @@ msgid ""
 "relation editor\n"
 "was open. They have been removed from the relation members list."
 msgstr ""
+"這個新關係的一或多個成員已經在開啟關係編輯器的期間被刪除了。\n"
+"它們已經從關係成員清單移除了。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1085
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:595
@@ -7716,7 +7750,7 @@ msgstr "否，繼續編輯"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1093
 msgid "Click to return to the relation editor and to resume relation editing"
-msgstr ""
+msgstr "點選以返回關係編輯器並繼續關係的編輯"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1100
 msgid ""
@@ -7785,16 +7819,15 @@ msgstr "套用角色"
 #, java-format
 msgid "You are setting an empty role on {0} primitive."
 msgid_plural "You are setting an empty role on {0} primitives."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "您正在設定 {0} 個原型的空白角色。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1317
 msgid "This is equal to deleting the roles of these primitives."
-msgstr ""
+msgstr "這樣等同刪除這些原型的角色。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1319
 msgid "Do you really want to apply the new role?"
-msgstr ""
+msgstr "您確定要套用新的角色嗎？"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1321
 msgid "Yes, apply it"
@@ -7852,7 +7885,7 @@ msgstr "警告：因為工作已取消，忽略例外。例外為：{0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:63
 msgid "including immediate children of parent relations"
-msgstr ""
+msgstr "包含父關係的直接子項"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:92
 msgid "Load parent relations"
@@ -7878,7 +7911,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:135
 #, java-format
 msgid "Edit new relation in layer ''{0}''"
-msgstr ""
+msgstr "編輯圖層「{0}」中的新關係"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:137
 #, java-format
@@ -7924,6 +7957,8 @@ msgid ""
 "<html><strong>Current download area</strong> (minlon, minlat, maxlon, "
 "maxlat): </html>"
 msgstr ""
+"<html><strong>目前的下載區域</strong> (最小經度, 最小緯度, 最大經度, 最大緯"
+"度): </html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/download/BookmarkSelection.java:183
 msgid "Create bookmark"
@@ -8210,6 +8245,11 @@ msgid ""
 "your local language ({1})</a> and the <a href=\"{3}\">help topic in english</"
 "a>.</p></html>"
 msgstr ""
+"<html><p class=\"warning-header\">缺少求助主題的內容</p><p class=\"warning-"
+"body\">求助主題的內容<strong>{0}</strong>尚不能取得。不管是您當地語言 ({1}) "
+"或是英語版本都沒有。<br><br>請協助改進 JOSM 求助系統並填好缺少的資訊。您可以"
+"編輯<a href=\"{2}\">將求助主題編輯為當地的語言 ({1})</a> 和 <a href=\"{3}\">"
+"英語版本</a>。</p></html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:247
 #, java-format
@@ -8229,6 +8269,8 @@ msgid ""
 "<html>Failed to open help page for url {0}.<br>This is most likely due to a "
 "network problem, please check<br>your internet connection</html>"
 msgstr ""
+"<html>無法開啟 url {0} 的求助頁面。<br>這大部分是網路問題造成的，請檢查<br>您"
+"的網際網路連線</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:360
 msgid "Failed to open URL"
@@ -8237,7 +8279,7 @@ msgstr "無法開啟 URL"
 #. putValue(NAME, tr("Open in Browser"));
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:393
 msgid "Open the current help page in an external browser"
-msgstr ""
+msgstr "在外部瀏覽器開啟目前的求助頁面"
 
 #. putValue(NAME, tr("Edit"));
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:405
@@ -8250,6 +8292,8 @@ msgid ""
 "<html>The current URL <tt>{0}</tt><br>is an external URL. Editing is only "
 "possible for help topics<br>on the help server <tt>{1}</tt>.</html>"
 msgstr ""
+"<html>目前的 URL <tt>{0}</tt><br>是外部 URL。編輯求助主題只能在<br>求助伺服"
+"器 <tt>{1}</tt> 進行。</html>"
 
 #. putValue(NAME, tr("Reload"));
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:437
@@ -8278,7 +8322,7 @@ msgstr "警告：在 HTML 文件中有錯誤的位置。例外為：{0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:569
 msgid "Failed to open help page. The target URL is empty."
-msgstr ""
+msgstr "無法開啟求助頁面。目標 URL 是空的。"
 
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:570
 msgid "Failed to open help page"
@@ -8317,24 +8361,24 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:272
 msgid "History not initialized yet. Failed to set reference primitive."
-msgstr ""
+msgstr "歷史紀錄尚未初始化。設定參照原型失敗。"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:274
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:304
 #, java-format
 msgid ""
 "Failed to set reference. Reference ID {0} does not match history ID {1}."
-msgstr ""
+msgstr "設定參照失敗。參照 ID {0} 與歷史紀錄 ID {1} 不符。"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:277
 #, java-format
 msgid ""
 "Failed to set reference. Reference version {0} not available in history."
-msgstr ""
+msgstr "設定參照失敗。參照版本 {0} 在歷史紀錄中無法使用。"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:302
 msgid "History not initialized yet. Failed to set current primitive."
-msgstr ""
+msgstr "歷史紀錄尚未初始化。設定目前的原型失敗。"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserModel.java:307
 #, java-format
@@ -8384,7 +8428,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberListTableCellRenderer.java:78
 #, java-format
 msgid "Way {0}"
-msgstr ""
+msgstr "路徑 {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberListTableCellRenderer.java:79
 #, java-format
@@ -8428,7 +8472,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionTableCellRenderer.java:63
 #, java-format
 msgid "Version {0}, {1} (by {2})"
-msgstr ""
+msgstr "版本 {0}, {1} (by {2})"
 
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionTableCellRenderer.java:79
 #, java-format
@@ -8580,7 +8624,7 @@ msgstr "請輸入上傳備註（最小 3 個字元）"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/ChangesetCellRenderer.java:33
 msgid "Changeset id:"
-msgstr ""
+msgstr "變更組合 id："
 
 #: ../core/src/org/openstreetmap/josm/gui/io/ChangesetCellRenderer.java:36
 msgid "Created at:"
@@ -8643,15 +8687,15 @@ msgstr "<html>請選擇您想要關閉的變更組合</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CloseChangesetDialog.java:88
 msgid "Open changesets"
-msgstr ""
+msgstr "開放的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CloseChangesetDialog.java:119
 msgid "Close changesets"
-msgstr ""
+msgstr "關閉的變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CloseChangesetDialog.java:121
 msgid "Close the selected open changesets"
-msgstr ""
+msgstr "關閉選取的開放變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CloseChangesetDialog.java:144
 msgid "Cancel closing of changesets"
@@ -8659,12 +8703,12 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CloseChangesetTask.java:38
 msgid "Closing changeset"
-msgstr ""
+msgstr "正在關閉變更組合"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CloseChangesetTask.java:76
 #, java-format
 msgid "Closing changeset {0}"
-msgstr ""
+msgstr "正在關閉變更組合 {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/CredentialDialog.java:99
 msgid ""
@@ -11660,7 +11704,7 @@ msgstr "設定可用的外掛程式。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceTabbedPane.java:119
 msgid "Download plugins"
-msgstr ""
+msgstr "下載外掛程式"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceTabbedPane.java:151
 msgid "You have to restart JOSM for some settings to take effect."
@@ -11689,7 +11733,7 @@ msgstr "無法使用投影法 {0}。改用麥卡托投影"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ServerAccessPreference.java:68
 msgid "Authentication"
-msgstr ""
+msgstr "驗證"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ServerAccessPreference.java:69
 msgid "Proxy settings"
@@ -11833,7 +11877,7 @@ msgstr "加上預先組合標籤"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:66
 msgid "Actions"
-msgstr ""
+msgstr "動作"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:183
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:205
@@ -11884,7 +11928,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/plugin/PluginUpdatePolicyPanel.java:80
 #: ../core/src/org/openstreetmap/josm/gui/preferences/plugin/PluginUpdatePolicyPanel.java:123
 msgid "Never update"
-msgstr ""
+msgstr "永不周期"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/plugin/PluginUpdatePolicyPanel.java:84
 msgid ""
@@ -13155,7 +13199,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerBackreferenceReader.java:134
 msgid "Downloading from OSM Server..."
-msgstr ""
+msgstr "從 OSM 主機下載..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerBackreferenceReader.java:142
 msgid "Downloading referring ways ..."
@@ -13440,7 +13484,7 @@ msgstr "無法載入外掛程式 {0}。是否從偏好設定中刪除？"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:414
 msgid "Loading plugins ..."
-msgstr ""
+msgstr "正在載入外掛程式 ..."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:415
 msgid "Checking plugin preconditions..."
@@ -13918,7 +13962,7 @@ msgid ""
 "<br><br>The error message is:<br>{0}</html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:353
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:354
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr "找不到地區設定 {0} 的翻譯檔。回復為 {1}。"
@@ -14206,17 +14250,17 @@ msgstr "偶數"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:107
 msgid "Alphabetic"
-msgstr ""
+msgstr "字母"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:107
 msgid "Numeric"
-msgstr ""
+msgstr "數字"
 
 #. NOTE: The following 2 arrays must match in number of elements and position
 #. Tag values for map
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:113
 msgid "Actual"
-msgstr ""
+msgstr "實際"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:113
 msgid "Estimate"
@@ -14876,7 +14920,7 @@ msgstr "固定大小（從 25 到 100 公尺）"
 #. WMS layers selection
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:244
 msgid "Layers:"
-msgstr ""
+msgstr "圖層："
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:247
 msgid "See, rivers, swimming pools."
@@ -15132,14 +15176,12 @@ msgid "Set a new location for the next request"
 msgstr "為下個要求設定新的位置"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:42
-#, fuzzy
 msgid "Add a new municipality layer"
-msgstr "加入新的圖層"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:44
-#, fuzzy
 msgid "Commune"
-msgstr "備註"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:46
 msgid ""
@@ -16194,11 +16236,11 @@ msgstr "不明的議題狀態"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/ToggleConnectionModeAction.java:22
 msgid "Switch to online mode"
-msgstr ""
+msgstr "切換至上線模式"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/ToggleConnectionModeAction.java:23
 msgid "Switch to offline mode"
-msgstr ""
+msgstr "切換至離線模式"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/ToggleConnectionModeAction.java:65
 msgid "You have unsaved changes in your queue. Do you want to submit them now?"
@@ -16206,7 +16248,7 @@ msgstr ""
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/ToggleConnectionModeAction.java:66
 msgid "OpenStreetBugs"
-msgstr ""
+msgstr "OpenStreetBugs"
 
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:48
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:50
@@ -16243,11 +16285,11 @@ msgstr "Firefox 可執行檔"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/ExifGPSTagger.java:45
 msgid "Read error!"
-msgstr ""
+msgstr "讀取錯誤！"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/ExifGPSTagger.java:47
 msgid "Write error!"
-msgstr ""
+msgstr "寫入錯誤！"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:63
 msgid "Write position information into the exif header of the following files:"
@@ -16407,7 +16449,7 @@ msgstr ""
 
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureScaleAction.java:44
 msgid "Scale"
-msgstr ""
+msgstr "比例"
 
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureScaleAction.java:44
 msgid "Resets picture scale"
@@ -16495,23 +16537,21 @@ msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:511
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:833
-#, fuzzy
 msgid "Create Stops from GPX ..."
-msgstr "關聯到 GPX"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:512
 msgid "Create Stops from a GPX file"
 msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:525
-#, fuzzy
 msgid "Tracks"
-msgstr "產業道路"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1103
-#, fuzzy, java-format
+#, java-format
 msgid "IOException \"{0}\" occurred"
-msgstr "發生例外"
+msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:27
 msgid "load data from API"
@@ -16519,7 +16559,7 @@ msgstr "從 API 載入資料"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:28
 msgid "create new objects"
-msgstr ""
+msgstr "建立新的物件"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:29
 msgid "change the selection"
@@ -16696,7 +16736,7 @@ msgstr "快速地圖"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:150
 msgid "Auto Zoom"
-msgstr ""
+msgstr "自動縮放"
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:159
 msgid "Load Tile"
@@ -16831,12 +16871,12 @@ msgstr ""
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/action/SetWaypointAction.java:61
 #, java-format
 msgid "{0} start"
-msgstr ""
+msgstr "{0} 開始"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/action/SetWaypointAction.java:63
 #, java-format
 msgid "{0} end"
-msgstr ""
+msgstr "{0} 結束"
 
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/action/SetWaypointAction.java:72
 msgid "Waypoint Description"
@@ -17060,14 +17100,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:90
-#, fuzzy
 msgid "Create/Edit turn restriction..."
-msgstr "編輯道路限制"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:92
-#, fuzzy
 msgid "Create or edit a turn restriction."
-msgstr "建立新的關係"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:41
 msgid ""
@@ -17087,9 +17125,9 @@ msgid "Copy to the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:425
-#, fuzzy, java-format
+#, java-format
 msgid "Cannot find object with id ''{0}'' in layer ''{1}''"
-msgstr "在目前的資料組合中找不到 id {0} 的物件"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:428
 #, java-format
@@ -17099,24 +17137,20 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:102
-#, fuzzy
 msgid "Clear the selected roles or delete the selected members"
-msgstr "為選取的成員設定角色"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:128
-#, fuzzy
 msgid "Insert new relation members from object in the clipboard"
-msgstr "從關係中移除這個關係成員"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:167
-#, fuzzy
 msgid "Move the selected relation members down by one position"
-msgstr "將選取的元件向上移動一個位置"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:194
-#, fuzzy
 msgid "Move the selected relation members up by one position"
-msgstr "將選取的元件向上移動一個位置"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
 msgid "Edit basic attributes of a turn restriction"
@@ -17127,9 +17161,8 @@ msgid "Edit the raw tags and members of this turn restriction"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
-#, fuzzy
 msgid "Errors/Warnings"
-msgstr "警告"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Show errors and warnings related to this turn restriction"
@@ -17141,14 +17174,14 @@ msgid "Create a new turn restriction in layer ''{0}''"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:282
-#, fuzzy, java-format
+#, java-format
 msgid "Edit a new turn restriction in layer ''{0}''"
-msgstr "編輯圖層「{1}」的關係 #{0}"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:284
-#, fuzzy, java-format
+#, java-format
 msgid "Edit turn restriction ''{0}'' in layer ''{1}''"
-msgstr "編輯圖層「{1}」的關係 #{0}"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:398
 #, java-format
@@ -17159,16 +17192,15 @@ msgid_plural ""
 "There are still {0} errors and/or warnings identified for this turn "
 "restriction. You are recommended to resolve these issues first."
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:406
-#, fuzzy
 msgid "Do you want to save anyway?"
-msgstr "您是否要允許這個？"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:409
-#, fuzzy
 msgid "Yes, save anyway"
-msgstr "強制儲存"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:411
 msgid "Save the turn restriction despite of errors and/or warnings"
@@ -17244,30 +17276,31 @@ msgid "Already participating in a conflict"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
-#, fuzzy, java-format
+#, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
-msgstr[0] "{0} 航點"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
-#, fuzzy, java-format
+#, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
-msgstr[0] "{0} 成員"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
-#, fuzzy
 msgid "no issues"
-msgstr "新增議題"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:147
 msgid "please select a way"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:158
-#, fuzzy, java-format
+#, java-format
 msgid "multiple objects with role ''{0}''"
-msgstr "清理的物件「{0}」"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:245
 msgid "Delete from turn restriction"
@@ -17278,9 +17311,8 @@ msgid "Paste from the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:220
-#, fuzzy
 msgid "Create new turn restriction"
-msgstr "建立新的關係"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:221
 msgid "Launch the turn restriction editor to create a new turn restriction"
@@ -17288,15 +17320,15 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:11
 msgid "No Right Turn"
-msgstr ""
+msgstr "禁止右轉"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:12
 msgid "No Left Turn"
-msgstr ""
+msgstr "禁止左轉"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:13
 msgid "No U-Turn"
-msgstr ""
+msgstr "禁止廻轉"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:14
 msgid "No Straight On"
@@ -17330,33 +17362,28 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:82
-#, fuzzy
 msgid "Public Service Vehicles"
-msgstr "公共汽車 (psv)"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:83
 msgid "Public service vehicles like buses, tramways, etc."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:95
-#, fuzzy
 msgid "Heavy Goods Vehicles"
-msgstr "大型車 (hgv)"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:108
-#, fuzzy
 msgid "Motorcars"
-msgstr "汽車"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:122
-#, fuzzy
 msgid "Bicycles"
-msgstr "單車"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:193
-#, fuzzy
 msgid "Use standard exceptions"
-msgstr "網路例外"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:203
 msgid "Use non-standard exceptions"
@@ -17390,10 +17417,9 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:125
-#, fuzzy
 msgctxt "turnrestrictions"
 msgid "From:"
-msgstr "從..."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:136
 msgctxt "turnrestriction"
@@ -17492,9 +17518,8 @@ msgid "Road signs - Set B"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:131
-#, fuzzy
 msgid "Please select the set of road sign icons to be used in the plugin."
-msgstr "請選擇要編輯的列。"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:188
 #, java-format
@@ -17510,40 +17535,34 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:64
-#, fuzzy
 msgctxt "keyboard-key"
 msgid "Key:"
-msgstr "按鍵："
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:75
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Modifiers:"
-msgstr "修飾鍵群組"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:78
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Shift"
-msgstr "白色"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:80
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Ctrl"
-msgstr "城堡"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:82
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Alt"
-msgstr "全部"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:85
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Meta"
-msgstr "金屬"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:29
 #, java-format
@@ -17555,23 +17574,20 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:37
-#, fuzzy
 msgid "Delete ''from''"
-msgstr "自關係中刪除"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:38
 msgid "Removes the member with role ''from''"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:47
-#, fuzzy
 msgid "Delete ''to''"
-msgstr "刪除模式"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:48
-#, fuzzy
 msgid "Removes the member with role ''to''"
-msgstr "從關係中移除這個關係成員"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:57
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IllegalRestrictionTypeError.java:35
@@ -17613,9 +17629,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:49
-#, fuzzy
 msgid "Set via-Object"
-msgstr "# 物件"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:50
 msgid ""
@@ -17646,9 +17661,8 @@ msgid "Please go to the Basic editor and manually choose an OSM way."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:48
-#, fuzzy
 msgid "Add in editor"
-msgstr "加入新的圖層"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:51
 msgid "Add an OSM way with role ''from''"
@@ -17693,9 +17707,8 @@ msgid "The required tag <tt>{0}={1}</tt> is missing."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:45
-#, fuzzy
 msgid "Add missing tag"
-msgstr "加入新標籤"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:46
 #, java-format
@@ -17712,14 +17725,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:75
-#, fuzzy
 msgid "Split now"
-msgstr "切割路徑"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:76
-#, fuzzy
 msgid "Splits the way"
-msgstr "切割路徑"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:45
 #, java-format
@@ -17740,9 +17751,8 @@ msgid "An OSM way is required instead."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:63
-#, fuzzy
 msgid "Delete the member from the turn restriction"
-msgstr "從關係中移除這個關係成員"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:81
 msgid "Change to the Basic Editor and select an OSM way"
@@ -17966,11 +17976,11 @@ msgid ""
 "the same layer, but are not connected by a node."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing buildings"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing ways"
 msgstr "路徑交叉"
 
@@ -20728,11 +20738,11 @@ msgstr "編輯小徑"
 #. item "Ways/Path" combo "Visibility"
 #: build/trans_presets.java:488
 msgid "excellent"
-msgstr ""
+msgstr "極好"
 
 #: build/trans_presets.java:488
 msgid "good"
-msgstr ""
+msgstr "良好"
 
 #: build/trans_presets.java:488 build/trans_presets.java:2049
 msgid "intermediate"
@@ -20740,7 +20750,7 @@ msgstr "中級"
 
 #: build/trans_presets.java:488
 msgid "bad"
-msgstr ""
+msgstr "差"
 
 #: build/trans_presets.java:488
 msgid "horrible"

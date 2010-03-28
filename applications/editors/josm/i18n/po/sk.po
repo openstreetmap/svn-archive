@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-27 19:25+0100\n"
-"PO-Revision-Date: 2010-03-27 12:56+0000\n"
+"POT-Creation-Date: 2010-03-28 16:10+0200\n"
+"PO-Revision-Date: 2010-03-28 10:08+0000\n"
 "Last-Translator: Vlado <babicvm@szm.sk>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Launchpad-Export-Date: 2010-03-27 18:13+0000\n"
+"X-Launchpad-Export-Date: 2010-03-28 13:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -2986,9 +2986,9 @@ msgid "Change relation {0}"
 msgstr "Zmeniť reláciu {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangeNodesCommand.java:51
-#, fuzzy, java-format
+#, java-format
 msgid "Changed nodes of {0}"
-msgstr "Zmeniť bod {0}"
+msgstr "Zmenené body z {0}"
 
 #: ../core/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:101
 #, java-format
@@ -11352,6 +11352,8 @@ msgid ""
 "<html>Please click on <strong>{0}</strong> to retrieve an OAuth Request "
 "Token from ''{1}''.</html>"
 msgstr ""
+"<html> Kliknite prosím na <strong>{0} </ strong> načítať OAuth žiadosť "
+"prístupu z ''{1}''.</ html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:182
 msgid "<html>Step 1/3: Retrieve an OAuth Request Token</html>"
@@ -12956,6 +12958,8 @@ msgid ""
 "Broken tagging preset \"{0}-{1}\" - number of items in display_values must "
 "be the same as in values"
 msgstr ""
+"Broken tagging preset \"{0}-{1}\" - počet položiek na zobrazení hodnôt, musí "
+"byť rovnaký ako v hodnotách"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:466
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:313
@@ -13210,15 +13214,18 @@ msgid ""
 "settings. The property ''java.net.useSystemProxies'' was missing at startup "
 "time.  Will not use a proxy."
 msgstr ""
+"Upozornenie: JVM nie je nakonfigurovaný tak, aby vyhľadával proxy nastavenia "
+"systému. Vlastnosť ''java.net.useSystemProxies'' chýbala pri štarte. Nebude "
+"použitý proxy."
 
 #: ../core/src/org/openstreetmap/josm/io/DiffResultProcessor.java:83
 msgid "Parsing response from server..."
-msgstr ""
+msgstr "Spracovávam odpoveď  servera ..."
 
 #: ../core/src/org/openstreetmap/josm/io/DiffResultProcessor.java:169
 #, java-format
 msgid "Unexpected XML element with name ''{0}''"
-msgstr ""
+msgstr "Neočakávaný XML element s názvom ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/io/FileExporter.java:24
 #, java-format
@@ -13228,21 +13235,21 @@ msgstr "Nemôžem exportovať \"{0}\""
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:40
 #, java-format
 msgid "Could not import ''{0}''."
-msgstr ""
+msgstr "Nemôžem importovať ''{0}''."
 
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:48
 msgid "Could not import files."
-msgstr ""
+msgstr "Nemôžem importovať súbory."
 
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:62
 #, java-format
 msgid "<html>Could not read file ''{0}''.<br>Error is:<br>{1}</html>"
-msgstr ""
+msgstr "<html> Nemôžem čítať súbor ''{0}''.< br> Chyba je: <br> {1}</ html>"
 
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:76
 #, java-format
 msgid "<html>Could not read files.<br>Error is:<br>{0}</html>"
-msgstr ""
+msgstr "<html> Nemôžem čítať. <br> Chyba je: <br> {0} </ html>"
 
 #: ../core/src/org/openstreetmap/josm/io/GpxExporter.java:41
 msgid ""
@@ -13326,6 +13333,8 @@ msgid ""
 "Error occured while parsing gpx file {0}. Only part of the file will be "
 "available"
 msgstr ""
+"Nastala chyba pri rozkladaní gpx súboru {0}. Iba časť súboru bude k "
+"dispozícii"
 
 #: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:79
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1093
@@ -13352,24 +13361,24 @@ msgstr "Neznámy mód {0}."
 
 #: ../core/src/org/openstreetmap/josm/io/JpgImporter.java:23
 msgid "Image Files"
-msgstr ""
+msgstr "Obrázkové súbory"
 
 #: ../core/src/org/openstreetmap/josm/io/JpgImporter.java:23
 msgid "folder"
-msgstr ""
+msgstr "priečinok"
 
 #: ../core/src/org/openstreetmap/josm/io/JpgImporter.java:38
 msgid "Looking for image files"
-msgstr ""
+msgstr "Hľadanie obrázkov"
 
 #: ../core/src/org/openstreetmap/josm/io/JpgImporter.java:48
 msgid "No image files found."
-msgstr ""
+msgstr "Nenajdené žiadne obrázky."
 
 #: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:59
 #, java-format
 msgid "Failed to open input stream for resource ''{0}''"
-msgstr ""
+msgstr "Nepodarilo sa otvoriť vstupný tok pre zdroj ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:105
 #, java-format
@@ -13377,11 +13386,15 @@ msgid ""
 "Warning: failed to open file with extension ''{2}'' and namepart ''{3}'' in "
 "zip file ''{0}''. Exception was: {1}"
 msgstr ""
+"Upozornenie: Nepodarilo sa otvoriť súbor s príponou ''{2}'' a súbor ''{3}'' "
+"v zip súbore ''{0}''. Výnimka bola: {1}"
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:114
 #, java-format
 msgid "No primitive with id {0} in local dataset. Cannot infer primitive type."
 msgstr ""
+"Žiadne pôvodné s id {0}  v miestnom dátovom súbore. Nemožno vyvodzovať "
+"pôvodné typ."
 
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:308
 #: ../core/src/org/openstreetmap/josm/io/MultiFetchServerObjectReader.java:332
@@ -13480,7 +13493,7 @@ msgstr "NMEA import zlyhal!"
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:86
 #, java-format
 msgid "Preference ''{0}'' missing. Cannot initialize OsmApi."
-msgstr ""
+msgstr "Chýbajú preferencie ''{0}'. Nemôžem inicializovať OsmApi."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:165
 msgid "This version of JOSM is incompatible with the configured server."
@@ -13550,14 +13563,15 @@ msgstr "Nenachádza sa tu súbor zmien pre diff nahratie"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:416
 msgid "Preparing upload request..."
-msgstr ""
+msgstr "Pripravujem požiadavku pre nahrávanie ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:425
 #, java-format
 msgid "Uploading {0} object..."
 msgid_plural "Uploading {0} objects..."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Nahrávanie (0) objektu ..."
+msgstr[1] "Nahrávanie (0) objektov ..."
+msgstr[2] "Nahrávanie (0) objektov ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:446
 msgid "Waiting 10 seconds ... "
@@ -13579,7 +13593,7 @@ msgstr "Spúšťam opakovanie {0} z {1}."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:634
 msgid "Current changeset is null. Cannot upload data."
-msgstr ""
+msgstr "Aktuálny zmenový súbor je prázdny. Nemožem nahrať dáta."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:636
 #, java-format
@@ -13614,13 +13628,14 @@ msgstr "Poškodený bz2 súbor."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangeBuilder.java:75
 msgid "Prolog of OsmChange document already written. Please write only once."
-msgstr ""
+msgstr "Prológ dokumentu OsmChange už bol napísaný. Prosím, napíšte iba raz."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangeBuilder.java:93
 #: ../core/src/org/openstreetmap/josm/io/OsmChangeBuilder.java:111
 #: ../core/src/org/openstreetmap/josm/io/OsmChangeBuilder.java:122
 msgid "Prolog of OsmChange document not written yet. Please write frst."
 msgstr ""
+"Prológ dokumentu OsmChange ešte nebol napísaný. Najskôr ho prosím napíšte."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:73
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:106
@@ -13704,6 +13719,8 @@ msgid ""
 "Illegal document structure. Found node, way, or relation outside of "
 "''create'', ''modify'', or ''delete''."
 msgstr ""
+"Chybná štruktúra dokumentu. Vytvorená bod, cesta, alebo relácia sa nedá "
+"''vytvoriť'','' zmeniť'', alebo odstrániť''."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:259
 #, java-format
@@ -13714,7 +13731,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:307
 msgid "Parsing changeset content ..."
-msgstr ""
+msgstr "Rozkladanie obsahu zmenového súboru ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetParser.java:80
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetParser.java:130
@@ -13728,7 +13745,7 @@ msgstr "chybné hodnoty pre vlastnosti ''{0}''. Got ''{1}''"
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetParser.java:83
 #, java-format
 msgid "Illegal numeric value for attribute ''{0}''. Got ''{1}''."
-msgstr ""
+msgstr "Chybná číselná hodnota atribútu ''{0}''. Mám ''{1}''."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetParser.java:117
 #, java-format
@@ -13758,12 +13775,12 @@ msgstr "rozkladám obsah zo zmenového súboru..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:126
 msgid "Failed to sign a HTTP connection with an OAuth Authentication header"
-msgstr ""
+msgstr "Nepodarilo sa podpísať HTTP spojenie s hlavičkou OAuth autentifikácie"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:137
 #, java-format
 msgid "Warning: unexpected value for preference ''{0}''. Got ''{1}''."
-msgstr ""
+msgstr "Varovanie: Neočakávaná hodnota preferencie ''{0}''. Mám ''{1}''."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmDataParsingException.java:44
 #: ../core/src/org/openstreetmap/josm/tools/XmlObjectParser.java:68
@@ -13837,7 +13854,7 @@ msgstr "Neplatná hodnota vlastnosti ''ref'' z elementu <nd>. Got {0}"
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:213
 #, java-format
 msgid "Deleted way {0} contains nodes"
-msgstr ""
+msgstr "Vymazaná cesta {0} obsahuje body"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:233
 msgid "Found XML element <member> not as direct child of element <relation>."
@@ -13954,7 +13971,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:448
 #, java-format
 msgid "Deleted node {0} is part of way {1}"
-msgstr ""
+msgstr "Vymazaný bod {0} je súčasťou cesty {1}"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:456
 #, java-format
@@ -13962,6 +13979,8 @@ msgid ""
 "Way {0} with {1} nodes has incomplete nodes because at least one node was "
 "missing in the loaded data."
 msgstr ""
+"Cesta {0} s {1}  bodmi neobsahuje všetky body, pretože aspoň jeden bod "
+"chýbal v nahratých dátach."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:512
 #, java-format
@@ -13975,7 +13994,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:536
 #, java-format
 msgid "Deleted member {0} is used by relation {1}"
-msgstr ""
+msgstr "Vymazaný člen {0} je použitý v relácii {1}"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:562
 msgid "Prepare OSM data..."
@@ -14023,18 +14042,19 @@ msgstr "Sťahujem zmenový súbor {0} ..."
 #, java-format
 msgid "Downloading {0} changeset ..."
 msgid_plural "Downloading {0} changesets ..."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sťahujem {0} zmenový súbor ..."
+msgstr[1] "Sťahujem {0} zmenové súbory ..."
+msgstr[2] "Sťahujem {0} zmenových súborov ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerChangesetReader.java:145
 #, java-format
 msgid "({0}/{1}) Downloading changeset {2} ..."
-msgstr ""
+msgstr "({0}/{1}) Sťahujem zmenový subor {2} ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerChangesetReader.java:185
 #, java-format
 msgid "Downloading content for changeset {0} ..."
-msgstr ""
+msgstr "Sťahujem obsah pre zmenový súbor {0} ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerHistoryReader.java:68
 msgid "Downloading history..."
@@ -14079,7 +14099,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerUserInfoReader.java:126
 msgid "Reading user info ..."
-msgstr ""
+msgstr "Čítam užívateľské info ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:80
 msgid "Starting to upload with one request per primitive ..."
@@ -14111,14 +14131,15 @@ msgstr "Hodnota >0 očakávaná pre parameter ''{0}'', dostal som {1}"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:144
 msgid "Starting to upload in chunks..."
-msgstr ""
+msgstr "Začínam presúvanie v kusoch ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:160
 #, java-format
 msgid "({0}/{1}) Uploading {2} object..."
 msgid_plural "({0}/{1}) Uploading {2} objects..."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "({0}/{1}) Nahrávaný {2} objekt ..."
+msgstr[1] "({0}/{1}) Nahrávané {2} objekty ..."
+msgstr[2] "({0}/{1}) Nahrávaných {2} objektov ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:187
 msgid "Uploading data ..."
@@ -14126,7 +14147,7 @@ msgstr "Nahrávam dáta ..."
 
 #: ../core/src/org/openstreetmap/josm/io/OsmWriter.java:218
 msgid "Unexpected id 0 for osm primitive found"
-msgstr ""
+msgstr "Najdené neočakávané id 0 pre OSM pôvodné"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloadTask.java:102
 msgid "Skip download"
@@ -14151,6 +14172,8 @@ msgid ""
 "Warning: Cannot download plugin ''{0}''. Its download link is not known. "
 "Skipping download."
 msgstr ""
+"Upozornenie: Nemôžem stiahnuť plugin ''{0}''. Jeho odkaz na stiahnutie nie "
+"je známy. Vynechávam zo sťahovania."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloadTask.java:139
 #, java-format
@@ -14158,11 +14181,13 @@ msgid ""
 "Warning: Cannot download plugin ''{0}''. Its download link ''{1}'' is not a "
 "valid URL. Skipping download."
 msgstr ""
+"Upozornenie: Nemôžem stiahnuť plugin ''{0}''. Jeho odkaz na stiahnutie "
+"''{1}'' nie je platná URL. Vynechávam zo sťahovania."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloadTask.java:167
 #, java-format
 msgid "Failed to create plugin directory ''{0}''"
-msgstr ""
+msgstr "Nepodarilo sa vytvoriť adresár pluginov ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginDownloadTask.java:175
 #, java-format
@@ -14179,8 +14204,10 @@ msgstr "Nastala chyba v plugine {0}"
 msgid "The following plugin is no longer necessary and has been deactivated:"
 msgid_plural ""
 "The following plugins are no longer necessary and have been deactivated:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Nasledujúci plugin už nie je potrebný, a má byť deaktivovaný:"
+msgstr[1] "Nasledujúce pluginy už nie sú potrebné, a majú byť deaktivované:"
+msgstr[2] ""
+"Nasledujúcich pluginov už nie je potrebných, a majú byť deaktivované:"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:140
 #, java-format
@@ -14198,6 +14225,8 @@ msgid ""
 "You updated your JOSM software.<br>To prevent problems the plugins should be "
 "updated as well.<br><br>Update plugins now?"
 msgstr ""
+"Aktualizujte váš JOSM softvér. <br> Pre zabránenie problémov pluginov, by "
+"mali byť tiež aktualizované. <br> Aktualizovať pluginy teraz?"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:183
 #, java-format
@@ -14206,7 +14235,7 @@ msgstr "Pluginy boli  naposledy aktualizované pred {0} dňami."
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:194
 msgid "Click to update the activated plugins"
-msgstr ""
+msgstr "Kliknite pre aktualizáciu aktívnych pluginov"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:198
 msgid "Skip update"
@@ -14214,7 +14243,7 @@ msgstr "Vynechať aktualizáciu"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:200
 msgid "Click to skip updating the activated plugins"
-msgstr ""
+msgstr "Kliknite na tlačidlo preskočiť aktualizácie aktívnych pluginov"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:215
 msgid ""
@@ -14805,7 +14834,7 @@ msgstr ""
 "<strong>Nahrávanie neúspešné</strong> ak ste sa snažili nahrať tento objekt."
 "<br><br>Chybová správa je:<br>{0}</html>"
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:353
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:354
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr "Nemôžem nájsť preklad pre jazyk {0}. Vyberám {1}."
@@ -16078,14 +16107,12 @@ msgid "Set a new location for the next request"
 msgstr "Nastavenie nového miesta pre ďalšiu požiadavku"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:42
-#, fuzzy
 msgid "Add a new municipality layer"
-msgstr "Pridať novú vrstvu"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:44
-#, fuzzy
 msgid "Commune"
-msgstr "Spoločné, obecné"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionNewLocation.java:46
 msgid ""
@@ -17460,23 +17487,21 @@ msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:511
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:833
-#, fuzzy
 msgid "Create Stops from GPX ..."
-msgstr "Zladiť GPX"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:512
 msgid "Create Stops from a GPX file"
 msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:525
-#, fuzzy
 msgid "Tracks"
-msgstr "Poľná cesta (Track)"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1103
-#, fuzzy, java-format
+#, java-format
 msgid "IOException \"{0}\" occurred"
-msgstr "Nastala výnimka/chyba"
+msgstr ""
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:27
 msgid "load data from API"
@@ -18025,23 +18050,19 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:67
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:111
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Warning: illegal value ''{0}'' for preference key ''{1}''. Falling back to "
 "default value ''shift ctrl T''."
 msgstr ""
-"Varovanie: neočakávané hodnota pre preferencie ''{0}'', dostal som ''{1}''. "
-"Resetovanie pre východziu hodnotu."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:90
-#, fuzzy
 msgid "Create/Edit turn restriction..."
-msgstr "Vytvoriť Michigan zákaz odbočenia vľavo"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:92
-#, fuzzy
 msgid "Create or edit a turn restriction."
-msgstr "Vytvoriť Michigan zákaz odbočenia vľavo"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:41
 msgid ""
@@ -18061,9 +18082,9 @@ msgid "Copy to the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:425
-#, fuzzy, java-format
+#, java-format
 msgid "Cannot find object with id ''{0}'' in layer ''{1}''"
-msgstr "Nemôže byť nájdený objekt s id {0} v aktuálnej dátovej sade"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:428
 #, java-format
@@ -18073,24 +18094,20 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:102
-#, fuzzy
 msgid "Clear the selected roles or delete the selected members"
-msgstr "Nastavenie funkcie pre vybrané členy"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:128
-#, fuzzy
 msgid "Insert new relation members from object in the clipboard"
-msgstr "Odstrániť tohoto člena relácie z relácie"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:167
-#, fuzzy
 msgid "Move the selected relation members down by one position"
-msgstr "Posunúť hore vybrané elementy s rovnakou pozíciou"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:194
-#, fuzzy
 msgid "Move the selected relation members up by one position"
-msgstr "Posunúť hore vybrané elementy s rovnakou pozíciou"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
 msgid "Edit basic attributes of a turn restriction"
@@ -18101,28 +18118,27 @@ msgid "Edit the raw tags and members of this turn restriction"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
-#, fuzzy
 msgid "Errors/Warnings"
-msgstr "Varovania"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Show errors and warnings related to this turn restriction"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:280
-#, fuzzy, java-format
+#, java-format
 msgid "Create a new turn restriction in layer ''{0}''"
-msgstr "Vytvoriť novú reláciu vo vrstve \"{0}\""
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:282
-#, fuzzy, java-format
+#, java-format
 msgid "Edit a new turn restriction in layer ''{0}''"
-msgstr "Upraviť novú reláciu vo vrstve \"{0}\""
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:284
-#, fuzzy, java-format
+#, java-format
 msgid "Edit turn restriction ''{0}'' in layer ''{1}''"
-msgstr "Upraviť reláciu #{0} vo vrstve \"{1}\""
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:398
 #, java-format
@@ -18134,17 +18150,14 @@ msgid_plural ""
 "restriction. You are recommended to resolve these issues first."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:406
-#, fuzzy
 msgid "Do you want to save anyway?"
-msgstr "Chcete ich aj tak vymazať?"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:409
-#, fuzzy
 msgid "Yes, save anyway"
-msgstr "Uložiť akokoľvek"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:411
 msgid "Save the turn restriction despite of errors and/or warnings"
@@ -18220,34 +18233,31 @@ msgid "Already participating in a conflict"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
-#, fuzzy, java-format
+#, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
-msgstr[0] "{0} waypoint (bod cesty)"
-msgstr[1] "{0} waypointy (body cesty)"
-msgstr[2] "{0} waypointov (bodov cesty)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
-#, fuzzy, java-format
+#, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
-msgstr[0] "{0} členov"
-msgstr[1] "{0} člen"
-msgstr[2] "{0} členy"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
-#, fuzzy
 msgid "no issues"
-msgstr "Nový problém"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:147
 msgid "please select a way"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:158
-#, fuzzy, java-format
+#, java-format
 msgid "multiple objects with role ''{0}''"
-msgstr "Očistený objekt ''{0}''"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:245
 msgid "Delete from turn restriction"
@@ -18258,9 +18268,8 @@ msgid "Paste from the clipboard"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:220
-#, fuzzy
 msgid "Create new turn restriction"
-msgstr "Vytvoriť Michigan zákaz odbočenia vľavo"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:221
 msgid "Launch the turn restriction editor to create a new turn restriction"
@@ -18310,38 +18319,32 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:82
-#, fuzzy
 msgid "Public Service Vehicles"
-msgstr "Dopravná obsluha"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:83
 msgid "Public service vehicles like buses, tramways, etc."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:95
-#, fuzzy
 msgid "Heavy Goods Vehicles"
-msgstr "Nákladné vozidlá"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:108
-#, fuzzy
 msgid "Motorcars"
-msgstr "Motorové vozidlo"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:122
-#, fuzzy
 msgid "Bicycles"
-msgstr "Bicykel"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:193
-#, fuzzy
 msgid "Use standard exceptions"
-msgstr "Použite štandardné nastavenie systému"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:203
-#, fuzzy
 msgid "Use non-standard exceptions"
-msgstr "Použite štandardné nastavenie systému"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:156
 msgid "Remove the currently selected vias"
@@ -18371,10 +18374,9 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:125
-#, fuzzy
 msgctxt "turnrestrictions"
 msgid "From:"
-msgstr "Z ..."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionCellRenderer.java:136
 msgctxt "turnrestriction"
@@ -18473,18 +18475,15 @@ msgid "Road signs - Set B"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:131
-#, fuzzy
 msgid "Please select the set of road sign icons to be used in the plugin."
-msgstr "Prosím vyberte riadok na úpravu."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:188
-#, fuzzy, java-format
+#, java-format
 msgid ""
 "Warning: the preference with key ''{0}'' has an unsupported value ''{1}''. "
 "Assuming the default value ''set-a''."
 msgstr ""
-"Varovanie: neočakávané hodnota pre preferencie ''{0}'', dostal som ''{1}''. "
-"Resetovanie pre východziu hodnotu."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:48
 msgid ""
@@ -18493,40 +18492,34 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:64
-#, fuzzy
 msgctxt "keyboard-key"
 msgid "Key:"
-msgstr "Kláves:"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:75
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Modifiers:"
-msgstr "Skupiny modifikátorov"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:78
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Shift"
-msgstr "biela"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:80
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Ctrl"
-msgstr "Hrad"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:82
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Alt"
-msgstr "Všetko"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:85
-#, fuzzy
 msgctxt "keyboard-modifiers"
 msgid "Meta"
-msgstr "kov"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:29
 #, java-format
@@ -18538,24 +18531,20 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:37
-#, fuzzy
 msgid "Delete ''from''"
-msgstr "Zmazať z relácie (zo vzťahu"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:38
-#, fuzzy
 msgid "Removes the member with role ''from''"
-msgstr "Odstrániť člena(member) v aktuálnom riadku tabuľky z tejto relácie"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:47
-#, fuzzy
 msgid "Delete ''to''"
-msgstr "Režim mazania"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:48
-#, fuzzy
 msgid "Removes the member with role ''to''"
-msgstr "Odstrániť tohoto člena relácie z relácie"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:57
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IllegalRestrictionTypeError.java:35
@@ -18564,9 +18553,8 @@ msgstr "Odstrániť tohoto člena relácie z relácie"
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:56
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/NonStandardExceptWarning.java:33
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:80
-#, fuzzy
 msgid "Fix in editor"
-msgstr "Verzia {0} v editore"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:58
 msgid ""
@@ -18598,9 +18586,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:49
-#, fuzzy
 msgid "Set via-Object"
-msgstr "# Objekty"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IntersectionMissingAsViaError.java:50
 msgid ""
@@ -18631,9 +18618,8 @@ msgid "Please go to the Basic editor and manually choose an OSM way."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:48
-#, fuzzy
 msgid "Add in editor"
-msgstr "Pridať novú vrstvu"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:51
 msgid "Add an OSM way with role ''from''"
@@ -18678,9 +18664,8 @@ msgid "The required tag <tt>{0}={1}</tt> is missing."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:45
-#, fuzzy
 msgid "Add missing tag"
-msgstr "Pridať novú značku"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/RequiredTagMissingError.java:46
 #, java-format
@@ -18697,14 +18682,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:75
-#, fuzzy
 msgid "Split now"
-msgstr "Rozdeliť cestu"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:76
-#, fuzzy
 msgid "Splits the way"
-msgstr "Rozdeliť cestu"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:45
 #, java-format
@@ -18725,9 +18708,8 @@ msgid "An OSM way is required instead."
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:63
-#, fuzzy
 msgid "Delete the member from the turn restriction"
-msgstr "Odstrániť tohoto člena relácie z relácie"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:81
 msgid "Change to the Basic Editor and select an OSM way"
@@ -18959,11 +18941,11 @@ msgstr ""
 "Tento test kontroluje či dve cesty, železnice, vodné cesty, alebo budovy sa "
 "križujú v rovnakej vrstve, ale sa nepretínajú v spoločnom bode."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing buildings"
 msgstr "Prekrývajúce sa budovy"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
 msgid "Crossing ways"
 msgstr "Zkrížené cesty"
 

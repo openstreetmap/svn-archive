@@ -183,9 +183,12 @@ public class IssuesModel extends Observable implements Observer{
 		
 		OsmPrimitive from = fromLegs.iterator().next();
 		OsmPrimitive to = toLegs.iterator().next();
+		
 		if (! (from instanceof Way)) return;
 		if (! (to instanceof Way)) return;
-		if (from.equals(to)){
+		if (from.equals(to) && ! "no_u_turn".equals(editorModel.getRestrictionTagValue())){
+			// identical from and to allowed for "no_u_turn" only
+			//
 			issues.add(new IdenticalTurnRestrictionLegsError(this, from));
 		}		
 	}

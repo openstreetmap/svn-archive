@@ -12,6 +12,12 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
+/**
+ * TurnRestrictionBuilder creates a turn restriction and initializes it with
+ * objects from a selection of OSM primitives, i.e. the current selection
+ * in a {@see OsmDataLayer}.
+ *
+ */
 public class TurnRestrictionBuilder {
 
 	private Way from;

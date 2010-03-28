@@ -241,7 +241,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 			if (tm != null){
 				tm.setValue(value);
 			} else {
-				tagEditorModel.add(new TagModel("restriction", value.trim().toLowerCase()));
+				tagEditorModel.prepend(new TagModel("restriction", value.trim().toLowerCase()));
 			}
 		}
 		setChanged();

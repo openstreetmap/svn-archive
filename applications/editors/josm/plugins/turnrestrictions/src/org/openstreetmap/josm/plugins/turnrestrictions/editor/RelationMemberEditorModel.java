@@ -326,11 +326,9 @@ public class RelationMemberEditorModel extends AbstractTableModel{
 	 * Removes the currently selected rows from the model 
 	 */
 	protected void removedSelectedMembers() {
-		int j = 0;
-		for(int i=0; i < getRowCount();i++){
+		for(int i=getRowCount()-1; i >= 0;i--){
 			if (rowSelectionModel.isSelectedIndex(i)) {
-				members.remove(i - j);
-				j++;
+				members.remove(i);
 			}
 		}
 	}
@@ -447,10 +445,23 @@ public class RelationMemberEditorModel extends AbstractTableModel{
 	}
 
 	public int getRowCount() {
-		return members.size();
+		if (members.size() > 0) return members.size();
+		
+		// we display an empty row if the model is empty because otherwise
+		// we can't drag/drop into the empty table.
+		// FIXME: use JTable.setFillsViewportHeight(boolean) after the migration
+		// to Java 6.
+		return 1;
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		if (members.size() == 0 && rowIndex == 0){
+			// we display an empty row if the model is empty because otherwise
+			// we can't drag/drop into the empty table.
+			// FIXME: use JTable.setFillsViewportHeight(boolean) after the migration
+			// to Java 6.
+			return null;
+		}
 		switch(columnIndex){
 		case 0: return members.get(rowIndex).getRole();
 		case 1: return layer.data.getPrimitiveById(members.get(rowIndex).getTarget());
@@ -460,6 +471,13 @@ public class RelationMemberEditorModel extends AbstractTableModel{
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		// we display an empty row if the model is empty because otherwise
+		// we can't drag/drop into the empty table. This row isn't editable
+		// FIXME: use JTable.setFillsViewportHeight(boolean) after the migration
+		// to Java 6.
+		if (members.size() == 0 && rowIndex == 0) return false;
+		
+		// otherwise only the column with the member roles is editable
 		return columnIndex == 0;
 	}
 

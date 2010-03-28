@@ -10,7 +10,7 @@ import javax.swing.TransferHandler;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
- * PrimitiveIdListTransferHandler is a transfer handler for component which 
+ * PrimitiveIdListTransferHandler is a transfer handler for components which 
  * provide and/or accept a list of {@see PrimitiveId} via copy/paste or
  * drag-and-drop.
  * 

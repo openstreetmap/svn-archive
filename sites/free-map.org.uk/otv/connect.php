@@ -1,9 +1,6 @@
 <?php
-
-// define DB_USERNAME, DB_PASSWORD and DB_DBASE in this file
-// Not in SVN for obvious reasons
-require_once('/home/www-data/private/defines.php');
-
+require_once("/home/www-data/private/defines.php")
+global $conn;
 $conn=mysql_connect("localhost",DB_USER,DB_PASSWORD);
-mysql_select_db(DB_DBASE);
+mysql_select_db("otv");
 ?>

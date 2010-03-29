@@ -2,6 +2,8 @@
 $lat = (isset($_GET['lat'])) ? $_GET['lat']:50.9;
 $lon = (isset($_GET['lon'])) ? $_GET['lon']:-1.4;
 $zoom = (isset($_GET['lon'])) ? $_GET['zoom']:14;
+
+session_start();
 ?>
 <html>
 <head>
@@ -124,7 +126,13 @@ $zoom = (isset($_GET['lon'])) ? $_GET['zoom']:14;
                          } );
 
             map.addLayer(georss);
-
+			map.events.register('click',map,
+					function(e) { 
+            			var featurePos = this.getLonLatFromViewPortPx(e.xy).
+                				transform( this.getProjectionObject(),wgs84);
+						$('lat').value = featurePos.lat;
+						$('lon').value = featurePos.lon;
+					});
             control = new OpenLayers.Control.DragFeature (
                 georss,
                 {
@@ -149,8 +157,6 @@ $zoom = (isset($_GET['lon'])) ? $_GET['zoom']:14;
                                 (d < 360-angle ?  d+10: 0);
                         
                         this.layer.drawFeature(this.feature);
-                        $('status').innerHTML = 'Rotation=' +
-                                this.feature.attributes.description;
                     },
 
                     doneDragging: function()
@@ -204,7 +210,15 @@ $zoom = (isset($_GET['lon'])) ? $_GET['zoom']:14;
 
         function failcb(xmlHTTP)
         {
-            alert('error aligning photo: http code=' + xmlHTTP.status);
+			if(xmlHTTP.status==401)
+			{
+				alert("Log in to orientate photos. You can orientate "+
+					"other people's but you must be logged in.");
+			}
+			else
+			{
+				alert('Internal error: http code=' + xmlHTTP.status);
+			}
         }
 
     </script>
@@ -213,6 +227,7 @@ $zoom = (isset($_GET['lon'])) ? $_GET['zoom']:14;
 		border-style:solid; border-width:1px; padding:5px; }
 	#map {  margin:100px }
     #photodiv { width:1024px; overflow:auto; margin-top:10px; height:200px }
+	#login { float:right; }
     </style>
 </head>
  
@@ -221,14 +236,33 @@ $zoom = (isset($_GET['lon'])) ? $_GET['zoom']:14;
 
 <div id='maindiv'>
 <h1>OpenTrailView</h1>
-<p>StreetView for the world's trails and footpaths!</p>
-<ul>
-<li><a href='pansubmit.php'>Submit a panorama</a></li>
-<li>Align a panorama by rotating the camera icons. The camera should face
-the same direction as the centre of the panorama.</li>
-<li>To view a panorama, move the mouse over the camera icon</li>
-</ul>
+<div id='login'>
+<?php
+echo isset($_SESSION['gatekeeper']) ? "Logged in as $_SESSION[gatekeeper] ".
+"<a href='logout.php'>Log out</a>": 
+"<a href='login.php?redirect=/otv/index.php'>Login</a>";
+?>
+</div>
+<p>StreetView for the world's trails and footpaths!
+<a href='howto.html'>How to contribute...</a></p>
 <div id='status'></div>
+<div id='pansubmit'>
+<form method='post' enctype='multipart/form-data' action='pansubmit.php'>
+<fieldset id='panorama_submit'>
+<legend>Please submit your panorama</legend>
+<label for='panorama'>Panorama file:</label>
+<input type="file" name="panorama" id="panorama" />
+<label for='lat'>Latitude:</label>
+<input name='lat' id='lat' />
+<label for='lat'>Longitude:</label>
+<input name='lon' id='lon' />
+<input type='hidden' name='MAX_FILE_SIZE' value='1048576' />
+<input type='submit' value='Go!' />
+</fieldset>
+</form>
+</div>
+</body>
+</html>
 
 
 <!-- define a DIV into which the map will appear. Make it take up the whole 

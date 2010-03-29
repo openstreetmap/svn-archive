@@ -579,7 +579,7 @@ public class StopImporterAction extends JosmAction
       JPanel tabWaypoints = new JPanel();
       tabbedPane.addTab(marktr("Waypoints"), tabWaypoints);
       tabbedPane.setEnabledAt(0, true);
-      tabbedPane.setEnabledAt(1, false);
+      tabbedPane.setEnabledAt(1, true);
       tabbedPane.setEnabledAt(2, false);
       tabbedPane.setEnabledAt(3, true);
       jDialog.add(tabbedPane);

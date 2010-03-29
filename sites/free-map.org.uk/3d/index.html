@@ -1,0 +1,146 @@
+<html>
+<head>
+
+<script type='application/x-javascript' 
+src='/freemap/javascript/prototype/prototype.js'></script>
+
+<script type='application/x-javascript' src='sylvester.js'></script>
+<script type='application/x-javascript' src='glUtils.js'></script>
+
+<script type='application/x-javascript' src='main.js'></script>
+<script type='application/x-javascript' src='Projection.js'></script>
+<script type='application/x-javascript' src='OSMData.js'></script>
+<script type='application/x-javascript' src='ShaderInterface.js'></script>
+<script type='application/x-javascript' src='WebGLInitialiser.js'></script>
+<script type='application/x-javascript' src='Camera.js'></script>
+<script type='application/x-javascript' src='DownloadedTiles.js'></script>
+<script type='application/x-javascript' src='Line.js'></script>
+<script type='application/x-javascript' src='SRTM.js'></script>
+<script type='application/x-javascript' src='Way.js'></script>
+
+<script id="shader-vs" type="x-shader/x-vertex">
+attribute vec3 aVertex;
+attribute vec3 aNormal;
+//attribute vec4 aColour;
+uniform mat4 upMtx, umvMtx, unMtx;
+uniform vec4 uColour;
+varying vec4 vColour;
+uniform bool uDoCalculation;
+uniform float uhExag;
+varying vec3 vLightWeighting;
+
+void main (void)
+{
+	// if (uDoCalculation==true) screws up here, so always do lighting...
+	if(true)
+	{
+	vec3 ambientColour = vec3(0.1, 0.1, 0.1);
+	vec3 directionalColour = vec3(0.8, 0.8, 0.8);
+	vec3 lightingDirection = vec3(0.0, 0.7, 0.3);
+	vec4 transformedNormal = unMtx *vec4(aNormal,0.0);
+	vec4 transformedLightingDirection = umvMtx*vec4(lightingDirection,0.0);
+	float dirLightWeighting =
+			max(dot(transformedNormal.xyz,transformedLightingDirection.xyz),
+				0.0);
+	vLightWeighting = ambientColour + directionalColour*dirLightWeighting;
+	}
+	else
+	{
+	vLightWeighting = vec3(1.0, 1.0, 1.0);
+	}
+    gl_Position = upMtx * umvMtx * vec4(aVertex,1.0);
+	vColour = uColour;
+}
+
+</script>
+<script id="shader-fs" type="x-shader/x-fragment">
+varying vec4 vColour;
+varying vec3 vLightWeighting;
+void main (void)
+{
+		vec3 colour = vColour.xyz; 
+		gl_FragColor = vec4(colour*vLightWeighting,1.0);
+}
+</script>
+<script id="wayshader-vs" type="x-shader/x-vertex">
+attribute vec3 aVertex2;
+uniform mat4 upMtx2, umvMtx2;
+uniform vec4 uColour2;
+varying vec4 vColour2;
+
+void main (void)
+{
+	vColour2 = uColour2;
+    gl_Position = upMtx2 * umvMtx2 * vec4(aVertex2,1.0);
+}
+
+</script>
+<script id="wayshader-fs" type="x-shader/x-fragment">
+varying vec4 vColour2;
+void main (void)
+{
+	gl_FragColor = vColour2;
+}
+</script>
+
+<style type='text/css'>
+body { font-family: helvetica, arial, sans-serif ; }
+#display { height:480px; width:1024px; position: relative}
+#status { width: 640px; overflow:auto; background-color: blue; color: white }
+#key { left:640px; height:480px; width: 384px; top:0px; position:absolute; 
+border-style:solid; border-width: 1px; margin-left:10px}
+#key h1 { font-size: 120%; } 
+#dbg { width:100%; height:256px; overflow:auto; }
+#canvas1 { left:0px; top:0px; position:absolute; z-index: 0 }
+#canvas2 { left:0px; top:0px; position:absolute; z-index: 1;
+background-color: rgba(135,207,236,0) }
+</style>
+
+<title>Freemap 3D: WebGL 3D OpenStreetMap viewer</title>
+
+</head>
+
+<body onload='init()'>
+<h1>Freemap 3D</h1>
+<div id='intro'>
+<p>
+<p>This is a demo application to render OpenStreetMap data in 3D using 
+WebGL. This is a very early version, so it's not that impressive yet, but
+nonetheless you can navigate around and OSM data will be downloaded from
+Freemap and shown as coloured lines of different width depending on what sort
+of way it is (see key). Only ways with a <em>highway</em> tag are shown.
+Use the up and down arrow keys to 
+move forward and back, and the left and right arrow keys to rotate the 
+viewpoint (camera), and P and L to move up and down.
+Requires a recent Firefox nightly build (Minefield); make sure you update
+to the latest.</p>
+<p>Start point is Fernhurst, West Sussex, UK (lat 51.05 lon -0.72).
+<em>Change to:</em>
+<label for='lat'>Latitude:</label>
+<input id='lat' />
+<label for='lon'>Longitude:</label>
+<input id='lon' />
+<input type='submit' id='locChange' value='Go!' />
+</p>
+</div>
+<div id='status'> </div>
+<div id='display'>
+<canvas id='canvas1' width='640px' height='480px'></canvas>
+<canvas id='canvas2' width='640px' height='480px'></canvas>
+<div id="key">
+<h1>Key</h1>
+<ul>
+<li>White lines are roads; the wider the line, the more important the
+road.</li>
+<li>Yellow = footpath</li>
+<li>Brown = bridleway</li>
+<li>Red = byway</li>
+<li>Orange = track</li>
+<li>Blue = cycleway</li>
+</ul>
+<div id="dbg"></div>
+</div>
+</div>
+</body>
+
+</html>

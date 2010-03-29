@@ -1857,7 +1857,7 @@ public class RoutePatternAction extends JosmAction {
 	}
 	else if ("tram".equals(currentRoute.get("route")))
 	{
-	  stopKey = "highway";
+	  stopKey = "railway";
 	  stopValue = "tram_stop";
 	}
 	else if ("light_rail".equals(currentRoute.get("route")))

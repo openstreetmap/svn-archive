@@ -22,6 +22,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -496,8 +497,6 @@ public class StopImporterAction extends JosmAction
     
     public void insertRow(int insPos, WayPoint wp)
     {
-      Node node = createNode(wp.getCoor(), "");
-      
       String[] buf = { "", "" };
       buf[0] = wp.getString("time");
       if (buf[0] == null)
@@ -505,6 +504,9 @@ public class StopImporterAction extends JosmAction
       buf[1] = wp.getString("name");
       if (buf[1] == null)
 	buf[1] = "";
+
+      Node node = createNode(wp.getCoor(), buf[1]);
+      
       if (insPos == -1)
       {
 	nodes.addElement(node);
@@ -541,6 +543,7 @@ public class StopImporterAction extends JosmAction
   private static JDialog jDialog = null;
   private static JTabbedPane tabbedPane = null;
   private static DefaultListModel tracksListModel = null;
+  private static JComboBox cbStoptype = null;
   private static JList tracksList = null;
   private static JTextField tfGPSTimeStart = null;
   private static JTextField tfStopwatchStart = null;
@@ -621,10 +624,40 @@ public class StopImporterAction extends JosmAction
       /*GridBagConstraints*/ layoutCons = new GridBagConstraints();
       contentPane.setLayout(gridbag);
       
-      /*JLabel*/ label = new JLabel("Time on your GPS device");
+      /*JLabel*/ label = new JLabel("Type of stops to add");
       
       layoutCons.gridx = 0;
       layoutCons.gridy = 0;
+      layoutCons.gridwidth = 2;
+      layoutCons.weightx = 0.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(label, layoutCons);
+      contentPane.add(label);
+      
+      cbStoptype = new JComboBox();
+      cbStoptype.setEditable(false);
+      cbStoptype.addItem("bus");
+      cbStoptype.addItem("tram");
+      cbStoptype.addItem("light_rail");
+      cbStoptype.addItem("subway");
+      cbStoptype.addItem("rail");
+      cbStoptype.setActionCommand("stopImporter.settingsStoptype");
+      cbStoptype.addActionListener(this);
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 1;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 0.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(cbStoptype, layoutCons);
+      contentPane.add(cbStoptype);
+      
+      /*JLabel*/ label = new JLabel("Time on your GPS device");
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 2;
       layoutCons.gridwidth = 2;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -637,7 +670,7 @@ public class StopImporterAction extends JosmAction
       tfGPSTimeStart.addActionListener(this);
       
       layoutCons.gridx = 0;
-      layoutCons.gridy = 1;
+      layoutCons.gridy = 3;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -648,7 +681,7 @@ public class StopImporterAction extends JosmAction
       /*JLabel*/ label = new JLabel("HH:MM:SS.sss");
       
       layoutCons.gridx = 1;
-      layoutCons.gridy = 1;
+      layoutCons.gridy = 3;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -659,7 +692,7 @@ public class StopImporterAction extends JosmAction
       /*JLabel*/ label = new JLabel("Time on your stopwatch");
       
       layoutCons.gridx = 0;
-      layoutCons.gridy = 2;
+      layoutCons.gridy = 4;
       layoutCons.gridwidth = 2;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -672,7 +705,7 @@ public class StopImporterAction extends JosmAction
       tfStopwatchStart.addActionListener(this);
       
       layoutCons.gridx = 0;
-      layoutCons.gridy = 3;
+      layoutCons.gridy = 5;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -683,7 +716,7 @@ public class StopImporterAction extends JosmAction
       /*JLabel*/ label = new JLabel("HH:MM:SS.sss");
       
       layoutCons.gridx = 1;
-      layoutCons.gridy = 3;
+      layoutCons.gridy = 5;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -694,7 +727,7 @@ public class StopImporterAction extends JosmAction
       /*JLabel*/ label = new JLabel("Time window");
       
       layoutCons.gridx = 0;
-      layoutCons.gridy = 4;
+      layoutCons.gridy = 6;
       layoutCons.gridwidth = 2;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -707,7 +740,7 @@ public class StopImporterAction extends JosmAction
       tfTimeWindow.addActionListener(this);
       
       layoutCons.gridx = 0;
-      layoutCons.gridy = 5;
+      layoutCons.gridy = 7;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -718,7 +751,7 @@ public class StopImporterAction extends JosmAction
       /*JLabel*/ label = new JLabel("seconds");
       
       layoutCons.gridx = 1;
-      layoutCons.gridy = 5;
+      layoutCons.gridy = 7;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -729,7 +762,7 @@ public class StopImporterAction extends JosmAction
       /*JLabel*/ label = new JLabel("Move Threshold");
       
       layoutCons.gridx = 0;
-      layoutCons.gridy = 6;
+      layoutCons.gridy = 8;
       layoutCons.gridwidth = 2;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -742,7 +775,7 @@ public class StopImporterAction extends JosmAction
       tfThreshold.addActionListener(this);
       
       layoutCons.gridx = 0;
-      layoutCons.gridy = 7;
+      layoutCons.gridy = 9;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -753,7 +786,7 @@ public class StopImporterAction extends JosmAction
       /*JLabel*/ label = new JLabel("meters");
       
       layoutCons.gridx = 1;
-      layoutCons.gridy = 7;
+      layoutCons.gridy = 9;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 0.0;
       layoutCons.weighty = 0.0;
@@ -766,7 +799,7 @@ public class StopImporterAction extends JosmAction
       bSuggestStops.addActionListener(this);
       
       layoutCons.gridx = 0;
-      layoutCons.gridy = 8;
+      layoutCons.gridy = 10;
       layoutCons.gridwidth = 3;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
@@ -1373,6 +1406,51 @@ public class StopImporterAction extends JosmAction
 	Main.main.undoRedo.add(cmd);
       }
     }
+    else if ("stopImporter.settingsStoptype".equals(event.getActionCommand()))
+    {
+      for (int i = 0; i < waypointTM.getRowCount(); ++i)
+      {
+	if ((Node)waypointTM.nodes.elementAt(i) != null)
+        {
+	  Node node = (Node)waypointTM.nodes.elementAt(i);
+	  node.remove("highway");
+	  node.remove("railway");
+          if ("bus".equals((String)cbStoptype.getSelectedItem()))
+            node.put("highway", "bus_stop");
+          else if ("tram".equals((String)cbStoptype.getSelectedItem()))
+            node.put("railway", "tram_stop");
+          else if ("light_rail".equals((String)cbStoptype.getSelectedItem()))
+            node.put("railway", "station");
+          else if ("subway".equals((String)cbStoptype.getSelectedItem()))
+            node.put("railway", "station");
+          else if ("rail".equals((String)cbStoptype.getSelectedItem()))
+            node.put("railway", "station");
+        }
+      }
+      for (int j = 0; j < tracksListModel.size(); ++j)
+      {
+	TrackReference track = (TrackReference)tracksListModel.elementAt(j);
+	for (int i = 0; i < track.stoplistTM.getRowCount(); ++i)
+	{
+	  if ((Node)track.stoplistTM.nodes.elementAt(i) != null)
+	  {
+	    Node node = (Node)track.stoplistTM.nodes.elementAt(i);
+	    node.remove("highway");
+	    node.remove("railway");
+	    if ("bus".equals((String)cbStoptype.getSelectedItem()))
+	      node.put("highway", "bus_stop");
+	    else if ("tram".equals((String)cbStoptype.getSelectedItem()))
+	      node.put("railway", "tram_stop");
+	    else if ("light_rail".equals((String)cbStoptype.getSelectedItem()))
+	      node.put("railway", "station");
+	    else if ("subway".equals((String)cbStoptype.getSelectedItem()))
+	      node.put("railway", "station");
+	    else if ("rail".equals((String)cbStoptype.getSelectedItem()))
+	      node.put("railway", "station");
+	  }
+	}
+      }
+    }
   }
 
   private void importData(final File file)
@@ -1488,7 +1566,16 @@ public class StopImporterAction extends JosmAction
   private Node createNode(LatLon latLon, String name)
   {
     Node node = new Node(latLon);
-    node.put("highway", "bus_stop");
+    if ("bus".equals((String)cbStoptype.getSelectedItem()))
+      node.put("highway", "bus_stop");
+    else if ("tram".equals((String)cbStoptype.getSelectedItem()))
+      node.put("railway", "tram_stop");
+    else if ("light_rail".equals((String)cbStoptype.getSelectedItem()))
+      node.put("railway", "station");
+    else if ("subway".equals((String)cbStoptype.getSelectedItem()))
+      node.put("railway", "station");
+    else if ("rail".equals((String)cbStoptype.getSelectedItem()))
+      node.put("railway", "station");
     node.put("name", name);
     if (Main.main.getCurrentDataSet() == null)
     {

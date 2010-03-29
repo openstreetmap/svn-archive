@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
@@ -35,6 +36,7 @@ public class IssuesView extends VerticallyScrollablePanel implements Observer{
 		this.model = model;
 		model.addObserver(this);
 		build();
+		HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#ErrorsAndWarnings"));
 	}
 	
 	/**

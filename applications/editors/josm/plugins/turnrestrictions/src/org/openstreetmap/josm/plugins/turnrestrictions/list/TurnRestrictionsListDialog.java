@@ -32,6 +32,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder;
@@ -165,6 +166,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 				150   // default height
 		);
 		build();
+		HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#TurnRestrictionToggleDialog"));
 	}	
 	
 	/**

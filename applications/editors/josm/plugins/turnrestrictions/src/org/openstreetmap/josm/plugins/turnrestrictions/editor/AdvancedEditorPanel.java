@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 
+import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.tagging.TagEditorPanel;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
@@ -103,6 +104,7 @@ public class AdvancedEditorPanel extends JPanel {
 		CheckParameterUtil.ensureParameterNotNull(model, "model");
 		this.model = model;
 		build();
+		HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#AdvancedEditor"));
 	}
 	
 	/**

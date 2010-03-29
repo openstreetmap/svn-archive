@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.widgets.VerticallyScrollablePanel;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
@@ -122,6 +123,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 		CheckParameterUtil.ensureParameterNotNull(model, "model");
 		this.model = model;
 		build();
+		HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#BasicEditor"));
 	}
 	
 	/**

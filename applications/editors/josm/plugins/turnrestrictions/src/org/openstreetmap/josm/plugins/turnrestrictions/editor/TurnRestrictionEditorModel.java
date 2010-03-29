@@ -208,9 +208,9 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
 	 * @param turnRestriction the turn restriction. Must not be null.
 	 */
 	public void apply(Relation turnRestriction) {
-		CheckParameterUtil.ensureParameterNotNull(turnRestriction, "turnRestriction");
-		
+		CheckParameterUtil.ensureParameterNotNull(turnRestriction, "turnRestriction");		
 		TagCollection tags = tagEditorModel.getTagCollection();
+		turnRestriction.removeAll();
 		tags.applyTo(turnRestriction);
 		memberModel.applyTo(turnRestriction);		
 	}

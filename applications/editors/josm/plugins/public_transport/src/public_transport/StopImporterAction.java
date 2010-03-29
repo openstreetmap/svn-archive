@@ -3,9 +3,7 @@ package public_transport;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-// import java.awt.BorderLayout;
 import java.awt.Container;
-// import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -17,23 +15,13 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.Format;
-// import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-// import java.util.LinkedList;
-// import java.util.List;
-// import java.util.ListIterator;
-// import java.util.Map;
-// import java.util.TreeMap;
-// import java.util.TreeSet;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
-// 
-// import javax.swing.DefaultCellEditor;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-// import javax.swing.JCheckBox;
-// import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -50,7 +38,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-// import javax.swing.table.TableCellEditor;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -65,15 +52,8 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-// import org.openstreetmap.josm.data.osm.Relation;
-// import org.openstreetmap.josm.data.osm.RelationMember;
-// import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-// import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.io.GpxReader;
-// import org.openstreetmap.josm.tools.GBC;
-// import org.openstreetmap.josm.tools.Shortcut;
-// import org.openstreetmap.josm.tools.UrlLabel;
 
 import org.xml.sax.SAXException;
 
@@ -182,7 +162,9 @@ public class StopImporterAction extends JosmAction
 	
 	if (stoplistTM.nodes.elementAt(e.getFirstRow()) == null)
 	{
-	  createNode(e.getFirstRow(), latLon, (String)stoplistTM.getValueAt(e.getFirstRow(), 1));
+	  Node node = createNode
+	      (latLon, (String)stoplistTM.getValueAt(e.getFirstRow(), 1));
+	  stoplistTM.nodes.set(e.getFirstRow(), node);
 	}
 	else
 	{
@@ -248,25 +230,6 @@ public class StopImporterAction extends JosmAction
 	    *(wayPointTime - time)/(wayPointTime - lastWayPointTime);
       
       return new LatLon(lat, lon);
-    }
-    
-    public void createNode(int index, LatLon latLon, String name)
-    {
-      Node node = new Node(latLon);
-      node.put("highway", "bus_stop");
-      node.put("name", name);
-      if (Main.main.getCurrentDataSet() == null)
-      {
-	JOptionPane.showMessageDialog(null, "There exists no dataset."
-	    + " Try to download data from the server or open an OSM file.",
-     "No data found", JOptionPane.ERROR_MESSAGE);
-      
-	System.out.println("Public Transport: StopInserter: No data found");
-	    
-	return;
-      }
-      Main.main.getCurrentDataSet().addPrimitive(node);
-      stoplistTM.nodes.set(index, node);
     }
     
     public void relocateNodes()
@@ -398,7 +361,8 @@ public class StopImporterAction extends JosmAction
 	  double timeDelta = gpsSyncTime - parseTime(stopwatchStart);
 	  time -= timeDelta;
 	  stoplistTM.insertRow(-1, timeOf(time));
-	  createNode(stoplistTM.getRowCount()-1, latLon, "");
+	  Node node = createNode(latLon, "");
+	  stoplistTM.nodes.set(stoplistTM.getRowCount()-1, node);
 	}
 	
 	lastStopCoor = latLon;
@@ -471,7 +435,8 @@ public class StopImporterAction extends JosmAction
       insertRow(insPos, null, time, "");
     }
     
-    public void insertRow(int insPos, Node node, String time, String name) {
+    public void insertRow(int insPos, Node node, String time, String name)
+    {
       String[] buf = { "", "" };
       buf[0] = time;
       buf[1] = name;
@@ -494,6 +459,85 @@ public class StopImporterAction extends JosmAction
     }
   };
   
+  private class WaypointTableModel extends DefaultTableModel
+      implements TableModelListener
+  {
+    public Vector< Node > nodes = new Vector< Node >();
+    public Vector< LatLon > coors = new Vector< LatLon >();
+    
+    public WaypointTableModel()
+    {
+      addColumn("Time");
+      addColumn("Stopname");
+      addTableModelListener(this);
+    }
+    
+    public boolean isCellEditable(int row, int column)
+    {
+      if (column == 1)
+	return true;
+      return false;
+    }
+    
+    public void addRow(Object[] obj)
+    {
+      throw new UnsupportedOperationException();
+    }
+    
+    public void insertRow(int insPos, Object[] obj)
+    {
+      throw new UnsupportedOperationException();
+    }
+    
+    public void addRow(WayPoint wp)
+    {
+      insertRow(-1, wp);
+    }
+    
+    public void insertRow(int insPos, WayPoint wp)
+    {
+      Node node = createNode(wp.getCoor(), "");
+      
+      String[] buf = { "", "" };
+      buf[0] = wp.getString("time");
+      if (buf[0] == null)
+	buf[0] = "";
+      buf[1] = wp.getString("name");
+      if (buf[1] == null)
+	buf[1] = "";
+      if (insPos == -1)
+      {
+	nodes.addElement(node);
+	coors.addElement(wp.getCoor());
+	super.addRow(buf);
+      }
+      else
+      {
+	nodes.insertElementAt(node, insPos);
+	coors.insertElementAt(wp.getCoor(), insPos);
+	super.insertRow(insPos, buf);
+      }
+    }
+    
+    public void clear()
+    {
+      nodes.clear();
+      super.setRowCount(0);
+    }
+  
+    public void tableChanged(TableModelEvent e)
+    {
+      if (e.getType() == TableModelEvent.UPDATE)
+      {
+	if (nodes.elementAt(e.getFirstRow()) != null)
+	{
+	  Node node = nodes.elementAt(e.getFirstRow());
+	  node.put("name", (String)getValueAt(e.getFirstRow(), 1));
+	}
+      }
+    }
+  };
+  
   private static JDialog jDialog = null;
   private static JTabbedPane tabbedPane = null;
   private static DefaultListModel tracksListModel = null;
@@ -503,8 +547,10 @@ public class StopImporterAction extends JosmAction
   private static JTextField tfTimeWindow = null;
   private static JTextField tfThreshold = null;
   private static JTable stoplistTable = null;
+  private static JTable waypointTable = null;
   private static GpxData data = null;
   private static TrackReference currentTrack = null;
+  private static WaypointTableModel waypointTM = null;
   
   public StopImporterAction()
   {
@@ -527,9 +573,12 @@ public class StopImporterAction extends JosmAction
       tabbedPane.addTab(marktr("Settings"), tabSettings);
       JPanel tabStops = new JPanel();
       tabbedPane.addTab(marktr("Stops"), tabStops);
+      JPanel tabWaypoints = new JPanel();
+      tabbedPane.addTab(marktr("Waypoints"), tabWaypoints);
       tabbedPane.setEnabledAt(0, true);
       tabbedPane.setEnabledAt(1, false);
       tabbedPane.setEnabledAt(2, false);
+      tabbedPane.setEnabledAt(3, true);
       jDialog.add(tabbedPane);
       
       //Tracks Tab
@@ -775,13 +824,27 @@ public class StopImporterAction extends JosmAction
       
       layoutCons.gridx = 1;
       layoutCons.gridy = 1;
-      layoutCons.gridheight = 2;
+      layoutCons.gridheight = 1;
       layoutCons.gridwidth = 1;
       layoutCons.weightx = 1.0;
       layoutCons.weighty = 0.0;
       layoutCons.fill = GridBagConstraints.BOTH;
       gridbag.setConstraints(bMark, layoutCons);
       contentPane.add(bMark);
+      
+      JButton bDetach = new JButton("Detach");
+      bDetach.setActionCommand("stopImporter.stoplistDetach");
+      bDetach.addActionListener(this);
+      
+      layoutCons.gridx = 1;
+      layoutCons.gridy = 2;
+      layoutCons.gridheight = 1;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bDetach, layoutCons);
+      contentPane.add(bDetach);
       
       JButton bAdd = new JButton("Add");
       bAdd.setActionCommand("stopImporter.stoplistAdd");
@@ -823,6 +886,105 @@ public class StopImporterAction extends JosmAction
       layoutCons.fill = GridBagConstraints.BOTH;
       gridbag.setConstraints(bSort, layoutCons);
       contentPane.add(bSort);
+      
+      //Waypoints Tab
+      contentPane = tabWaypoints;
+      gridbag = new GridBagLayout();
+      layoutCons = new GridBagConstraints();
+      contentPane.setLayout(gridbag);
+      
+      waypointTable = new JTable();
+      /*JScrollPane*/ tableSP = new JScrollPane(waypointTable);
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 0;
+      layoutCons.gridwidth = 3;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 1.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(tableSP, layoutCons);
+      contentPane.add(tableSP);
+      
+      /*JButton*/ bFind = new JButton("Find");
+      bFind.setActionCommand("stopImporter.waypointsFind");
+      bFind.addActionListener(this);
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 1;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bFind, layoutCons);
+      contentPane.add(bFind);
+      
+      /*JButton*/ bShow = new JButton("Show");
+      bShow.setActionCommand("stopImporter.waypointsShow");
+      bShow.addActionListener(this);
+      
+      layoutCons.gridx = 0;
+      layoutCons.gridy = 2;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bShow, layoutCons);
+      contentPane.add(bShow);
+      
+      /*JButton*/ bMark = new JButton("Mark");
+      bMark.setActionCommand("stopImporter.waypointsMark");
+      bMark.addActionListener(this);
+      
+      layoutCons.gridx = 1;
+      layoutCons.gridy = 1;
+      layoutCons.gridheight = 1;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bMark, layoutCons);
+      contentPane.add(bMark);
+      
+      /*JButton*/ bDetach = new JButton("Detach");
+      bDetach.setActionCommand("stopImporter.waypointsDetach");
+      bDetach.addActionListener(this);
+      
+      layoutCons.gridx = 1;
+      layoutCons.gridy = 2;
+      layoutCons.gridheight = 1;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bDetach, layoutCons);
+      contentPane.add(bDetach);
+      
+      /*JButton*/ bAdd = new JButton("Enable");
+      bAdd.setActionCommand("stopImporter.waypointsAdd");
+      bAdd.addActionListener(this);
+      
+      layoutCons.gridx = 2;
+      layoutCons.gridy = 1;
+      layoutCons.gridheight = 1;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bAdd, layoutCons);
+      contentPane.add(bAdd);
+      
+      /*JButton*/ bDelete = new JButton("Disable");
+      bDelete.setActionCommand("stopImporter.waypointsDelete");
+      bDelete.addActionListener(this);
+      
+      layoutCons.gridx = 2;
+      layoutCons.gridy = 2;
+      layoutCons.gridwidth = 1;
+      layoutCons.weightx = 1.0;
+      layoutCons.weighty = 0.0;
+      layoutCons.fill = GridBagConstraints.BOTH;
+      gridbag.setConstraints(bDelete, layoutCons);
+      contentPane.add(bDelete);
       
       jDialog.pack();
       jDialog.setLocationRelativeTo(frame);
@@ -982,6 +1144,29 @@ public class StopImporterAction extends JosmAction
 	}
       }
     }
+    else if ("stopImporter.stoplistDetach".equals(event.getActionCommand()))
+    {
+      if (stoplistTable.getSelectedRowCount() > 0)
+      {
+	for (int i = 0; i < currentTrack.stoplistTM.getRowCount(); ++i)
+	{
+	  if ((stoplistTable.isRowSelected(i)) &&
+		      (currentTrack.stoplistTM.nodes.elementAt(i) != null))
+	  {
+	    currentTrack.stoplistTM.nodes.set(i, null);
+	  }
+	}
+      }
+      else
+      {
+	for (int i = 0; i < currentTrack.stoplistTM.getRowCount(); ++i)
+	{
+	  if (currentTrack.stoplistTM.nodes.elementAt(i) != null)
+	    currentTrack.stoplistTM.nodes.set(i, null);
+	}
+      }
+      stoplistTable.clearSelection();
+    }
     else if ("stopImporter.stoplistAdd".equals(event.getActionCommand()))
     {
       int insPos = stoplistTable.getSelectedRow();
@@ -1057,6 +1242,137 @@ public class StopImporterAction extends JosmAction
 	  ++insPos;
       }
     }
+    else if ("stopImporter.waypointsFind".equals(event.getActionCommand()))
+    {
+      if (Main.main.getCurrentDataSet() == null)
+	return;
+      
+      waypointTable.clearSelection();
+      
+      for (int i = 0; i < waypointTM.getRowCount(); ++i)
+      {
+	if ((waypointTM.nodes.elementAt(i) != null) &&
+		    (Main.main.getCurrentDataSet().isSelected(waypointTM.nodes.elementAt(i))))
+	  waypointTable.addRowSelectionInterval(i, i);
+      }
+    }
+    else if ("stopImporter.waypointsShow".equals(event.getActionCommand()))
+    {
+      BoundingXYVisitor box = new BoundingXYVisitor();
+      if (waypointTable.getSelectedRowCount() > 0)
+      {
+	for (int i = 0; i < waypointTM.getRowCount(); ++i)
+	{
+	  if ((waypointTable.isRowSelected(i)) &&
+		      (waypointTM.nodes.elementAt(i) != null))
+	  {
+	    waypointTM.nodes.elementAt(i).visit(box);
+	  }
+	}
+      }
+      else
+      {
+	for (int i = 0; i < waypointTM.getRowCount(); ++i)
+	{
+	  if (waypointTM.nodes.elementAt(i) != null)
+	    waypointTM.nodes.elementAt(i).visit(box);
+	}
+      }
+      if (box.getBounds() == null)
+	return;
+      box.enlargeBoundingBox();
+      Main.map.mapView.recalculateCenterScale(box);
+    }
+    else if ("stopImporter.waypointsMark".equals(event.getActionCommand()))
+    {
+      OsmPrimitive[] osmp = { null };
+      Main.main.getCurrentDataSet().setSelected(osmp);
+      if (waypointTable.getSelectedRowCount() > 0)
+      {
+	for (int i = 0; i < waypointTM.getRowCount(); ++i)
+	{
+	  if ((waypointTable.isRowSelected(i)) &&
+		      (waypointTM.nodes.elementAt(i) != null))
+	  {
+	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
+	  }
+	}
+      }
+      else
+      {
+	for (int i = 0; i < waypointTM.getRowCount(); ++i)
+	{
+	  if (waypointTM.nodes.elementAt(i) != null)
+	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
+	}
+      }
+    }
+    else if ("stopImporter.waypointsDetach".equals(event.getActionCommand()))
+    {
+      if (waypointTable.getSelectedRowCount() > 0)
+      {
+	for (int i = 0; i < waypointTM.getRowCount(); ++i)
+	{
+	  if ((waypointTable.isRowSelected(i)) &&
+		      (waypointTM.nodes.elementAt(i) != null))
+	  {
+	    waypointTM.nodes.set(i, null);
+	  }
+	}
+      }
+      else
+      {
+	for (int i = 0; i < waypointTM.getRowCount(); ++i)
+	{
+	  if (waypointTM.nodes.elementAt(i) != null)
+	    waypointTM.nodes.set(i, null);
+	}
+      }
+      waypointTable.clearSelection();
+    }
+    else if ("stopImporter.waypointsAdd".equals(event.getActionCommand()))
+    {
+      if (waypointTable.getSelectedRowCount() > 0)
+      {
+	for (int i = 0; i < waypointTM.getRowCount(); ++i)
+	{
+	  if ((waypointTable.isRowSelected(i)) &&
+		      (waypointTM.nodes.elementAt(i) == null))
+	  {
+	    Node node = createNode(waypointTM.coors.elementAt(i), (String)waypointTM.getValueAt(i, 1));
+	    waypointTM.nodes.set(i, node);
+	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
+	  }
+	}
+      }
+      else
+      {
+	for (int i = 0; i < waypointTM.getRowCount(); ++i)
+	{
+	  if (waypointTM.nodes.elementAt(i) == null)
+	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
+	}
+      }
+    }
+    else if ("stopImporter.waypointsDelete".equals(event.getActionCommand()))
+    {
+      Vector< Node > toDelete = new Vector< Node >();
+      for (int i = waypointTM.getRowCount()-1; i >=0; --i)
+      {
+	if (waypointTable.isRowSelected(i))
+	{
+	  if ((Node)waypointTM.nodes.elementAt(i) != null)
+	    toDelete.add((Node)waypointTM.nodes.elementAt(i));
+	  waypointTM.nodes.set(i, null);
+	}
+      }
+      Command cmd = DeleteCommand.delete
+	  (Main.main.getEditLayer(), toDelete);
+      if (cmd != null) {
+	// cmd can be null if the user cancels dialogs DialogCommand displays
+	Main.main.undoRedo.add(cmd);
+      }
+    }
   }
 
   private void importData(final File file)
@@ -1106,7 +1422,7 @@ public class StopImporterAction extends JosmAction
 
   private void refreshData()
   {
-    tracksListModel.clear();	
+    tracksListModel.clear();
     if (data != null)
     {
       Vector< TrackReference > trackRefs = new Vector< TrackReference >();
@@ -1122,11 +1438,20 @@ public class StopImporterAction extends JosmAction
       Iterator< TrackReference > iter = trackRefs.iterator();
       while (iter.hasNext())
 	tracksListModel.addElement(iter.next());
+      
+      waypointTM = new WaypointTableModel();
+      Iterator< WayPoint > waypointIter = data.waypoints.iterator();
+      while (waypointIter.hasNext())
+      {
+	WayPoint waypoint = waypointIter.next();
+	waypointTM.addRow(waypoint);
+      }
+      waypointTable.setModel(waypointTM);
     }
     else
     {
       JOptionPane.showMessageDialog
-      (null, "The GPX file contained no tracks.", "No data found",
+      (null, "The GPX file contained no tracks or waypoints.", "No data found",
        JOptionPane.ERROR_MESSAGE);
       
       System.out.println("Public Transport: StopImporter: No data found");
@@ -1160,6 +1485,25 @@ public class StopImporterAction extends JosmAction
     }
   }
 
+  private Node createNode(LatLon latLon, String name)
+  {
+    Node node = new Node(latLon);
+    node.put("highway", "bus_stop");
+    node.put("name", name);
+    if (Main.main.getCurrentDataSet() == null)
+    {
+      JOptionPane.showMessageDialog(null, "There exists no dataset."
+	  + " Try to download data from the server or open an OSM file.",
+   "No data found", JOptionPane.ERROR_MESSAGE);
+      
+      System.out.println("Public Transport: StopInserter: No data found");
+	    
+      return null;
+    }
+    Main.main.getCurrentDataSet().addPrimitive(node);
+    return node;
+  }
+    
   private static double parseTime(String s)
   {
     double result = 0;

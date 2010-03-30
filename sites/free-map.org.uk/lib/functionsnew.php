@@ -1,7 +1,5 @@
 <?php
 
-// define DB_USERNAME, DB_PASSWORD and DB_DBASE in this file
-// Not in SVN for obvious reasons
 require_once('/home/www-data/private/defines.php');
 
 // Generic stuff - might be useful for other projects
@@ -255,6 +253,18 @@ function js_error($err, $redirect)
 	</head>
 	</html>
 	<?php
+}
+
+// given an ID, get the value in another column in a database
+function get_col($table,$id,$col)
+{
+	$result=mysql_query("SELECT * FROM $table WHERE ID=$id");
+	if(mysql_num_rows($result)==1)
+	{
+		$row=mysql_fetch_array($result);
+		return (isset($row[$col]) ? $row[$col]:null);
+	}
+	return null;
 }
 
 ?>

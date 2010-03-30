@@ -60,22 +60,6 @@ import org.xml.sax.SAXException;
 
 public class StopImporterAction extends JosmAction
 {  
-
-  private class TracksLSL implements ListSelectionListener
-  {
-    StopImporterAction root = null;
-    
-    public TracksLSL(StopImporterAction sia)
-    {
-      root = sia;
-    }
-    
-    public void valueChanged(ListSelectionEvent e)
-    {
-      root.tracksSelectionChanged();
-    }
-  };
-  
   private class TrackReference
     implements Comparable< TrackReference >, TableModelListener
   {
@@ -149,7 +133,7 @@ public class StopImporterAction extends JosmAction
     {
       if (e.getType() == TableModelEvent.UPDATE)
       {
-	double time = parseTime
+	double time = StopImporterDialog.parseTime
 	    ((String)stoplistTM.getValueAt(e.getFirstRow(), 0));
 	if (time < 0)
 	{
@@ -182,11 +166,11 @@ public class StopImporterAction extends JosmAction
     
     public LatLon computeCoor(double time)
     {
-      double gpsSyncTime = parseTime(this.gpsSyncTime);
-      double dGpsStartTime = parseTime(gpsStartTime);
+      double gpsSyncTime = StopImporterDialog.parseTime(this.gpsSyncTime);
+      double dGpsStartTime = StopImporterDialog.parseTime(gpsStartTime);
       if (gpsSyncTime < dGpsStartTime - 12*60*60)
 	gpsSyncTime += 24*60*60;
-      double timeDelta = gpsSyncTime - parseTime(stopwatchStart);
+      double timeDelta = gpsSyncTime - StopImporterDialog.parseTime(stopwatchStart);
       time += timeDelta;
 	
       WayPoint wayPoint = null;
@@ -201,7 +185,7 @@ public class StopImporterAction extends JosmAction
 	{
 	  wayPoint = witer.next();
 	  String startTime = wayPoint.getString("time");
-	  wayPointTime = parseTime(startTime.substring(11, 19));
+	  wayPointTime = StopImporterDialog.parseTime(startTime.substring(11, 19));
 	  if (startTime.substring(11, 19).compareTo(gpsStartTime.substring(11, 19)) == -1)
 	    wayPointTime += 24*60*60;
 	  if (wayPointTime >= time)
@@ -241,7 +225,7 @@ public class StopImporterAction extends JosmAction
 	if (node == null)
 	  continue;
 	
-	double time = parseTime
+	double time = StopImporterDialog.parseTime
 	      ((String)stoplistTM.getValueAt(i, 0));
 	LatLon latLon = computeCoor(time);
 	
@@ -269,11 +253,12 @@ public class StopImporterAction extends JosmAction
       
       int i = 0;
       double time = -48*60*60;
-      double dGpsStartTime = parseTime(gpsStartTime);
+      double dGpsStartTime = StopImporterDialog.parseTime(gpsStartTime);
       while ((i < wayPoints.size()) && (time < dGpsStartTime + timeWindow/2))
       {
 	if (wayPoints.elementAt(i).getString("time") != null)
-	  time = parseTime(wayPoints.elementAt(i).getString("time").substring(11,19));
+	  time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
+	      .getString("time").substring(11,19));
 	if (time < dGpsStartTime)
 	  time += 24*60*60;
 	wayPointsDist.add(Double.valueOf(Double.POSITIVE_INFINITY));
@@ -287,7 +272,8 @@ public class StopImporterAction extends JosmAction
 	{
 	  --j;
 	  if (wayPoints.elementAt(j).getString("time") != null)
-	    time2 = parseTime(wayPoints.elementAt(j).getString("time").substring(11,19));
+	    time2 = StopImporterDialog.parseTime(wayPoints.elementAt(j)
+		.getString("time").substring(11,19));
 	  if (time2 < dGpsStartTime)
 	    time2 += 24*60*60;
 	}
@@ -296,7 +282,8 @@ public class StopImporterAction extends JosmAction
 	while ((k < wayPoints.size()) && (time + timeWindow/2 > time2))
 	{
 	  if (wayPoints.elementAt(k).getString("time") != null)
-	    time2 = parseTime(wayPoints.elementAt(k).getString("time").substring(11,19));
+	    time2 = StopImporterDialog.parseTime(wayPoints.elementAt(k)
+		.getString("time").substring(11,19));
 	  if (time2 < dGpsStartTime)
 	    time2 += 24*60*60;
 	  ++k;
@@ -318,7 +305,8 @@ public class StopImporterAction extends JosmAction
 	  wayPointsDist.add(Double.valueOf(Double.POSITIVE_INFINITY));
 	
 	if (wayPoints.elementAt(i).getString("time") != null)
-	  time = parseTime(wayPoints.elementAt(i).getString("time").substring(11,19));
+	  time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
+	      .getString("time").substring(11,19));
 	if (time < dGpsStartTime)
 	  time += 24*60*60;
 	++i;
@@ -355,11 +343,12 @@ public class StopImporterAction extends JosmAction
 	
 	if (wayPoints.elementAt(i).getString("time") != null)
 	{
-	  time = parseTime(wayPoints.elementAt(i).getString("time").substring(11,19));
-	  double gpsSyncTime = parseTime(this.gpsSyncTime);
+	  time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
+	      .getString("time").substring(11,19));
+	  double gpsSyncTime = StopImporterDialog.parseTime(this.gpsSyncTime);
 	  if (gpsSyncTime < dGpsStartTime - 12*60*60)
 	    gpsSyncTime += 24*60*60;
-	  double timeDelta = gpsSyncTime - parseTime(stopwatchStart);
+	  double timeDelta = gpsSyncTime - StopImporterDialog.parseTime(stopwatchStart);
 	  time -= timeDelta;
 	  stoplistTM.insertRow(-1, timeOf(time));
 	  Node node = createNode(latLon, "");
@@ -387,11 +376,11 @@ public class StopImporterAction extends JosmAction
     
     public int compareTo(NodeSortEntry nse)
     {
-      double time = parseTime(this.time);
+      double time = StopImporterDialog.parseTime(this.time);
       if (time - startTime > 12*60*60)
 	time -= 24*60*60;
       
-      double nseTime = parseTime(nse.time);
+      double nseTime = StopImporterDialog.parseTime(nse.time);
       if (nseTime - startTime > 12*60*60)
 	nseTime -= 24*60*60;
       
@@ -540,17 +529,8 @@ public class StopImporterAction extends JosmAction
     }
   };
   
-  private static JDialog jDialog = null;
-  private static JTabbedPane tabbedPane = null;
+  private static StopImporterDialog dialog = null;
   private static DefaultListModel tracksListModel = null;
-  private static JComboBox cbStoptype = null;
-  private static JList tracksList = null;
-  private static JTextField tfGPSTimeStart = null;
-  private static JTextField tfStopwatchStart = null;
-  private static JTextField tfTimeWindow = null;
-  private static JTextField tfThreshold = null;
-  private static JTable stoplistTable = null;
-  private static JTable waypointTable = null;
   private static GpxData data = null;
   private static TrackReference currentTrack = null;
   private static WaypointTableModel waypointTM = null;
@@ -561,469 +541,21 @@ public class StopImporterAction extends JosmAction
 	  tr("Create Stops from a GPX file"), null, true);
   }
 
+  public DefaultListModel getTracksListModel()
+  {
+    if (tracksListModel == null)
+      tracksListModel = new DefaultListModel();
+    return tracksListModel;
+  }
+  
   public void actionPerformed(ActionEvent event)
   {
-    Frame frame = JOptionPane.getFrameForComponent(Main.parent);
     DataSet mainDataSet = Main.main.getCurrentDataSet();
     
-    if (jDialog == null)
-    {
-      jDialog = new JDialog(frame, "Create Stops from GPX", false);
-      tabbedPane = new JTabbedPane();
-      JPanel tabTracks = new JPanel();
-      tabbedPane.addTab(marktr("Tracks"), tabTracks);
-      JPanel tabSettings = new JPanel();
-      tabbedPane.addTab(marktr("Settings"), tabSettings);
-      JPanel tabStops = new JPanel();
-      tabbedPane.addTab(marktr("Stops"), tabStops);
-      JPanel tabWaypoints = new JPanel();
-      tabbedPane.addTab(marktr("Waypoints"), tabWaypoints);
-      tabbedPane.setEnabledAt(0, true);
-      tabbedPane.setEnabledAt(1, true);
-      tabbedPane.setEnabledAt(2, false);
-      tabbedPane.setEnabledAt(3, true);
-      jDialog.add(tabbedPane);
-      
-      //Tracks Tab
-      Container contentPane = tabTracks;
-      GridBagLayout gridbag = new GridBagLayout();
-      GridBagConstraints layoutCons = new GridBagConstraints();
-      contentPane.setLayout(gridbag);
-      
-      JLabel label = new JLabel("Tracks in this GPX file:");
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 0;
-      layoutCons.gridwidth = 3;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      tracksListModel = new DefaultListModel();
-      tracksList = new JList(tracksListModel);
-      JScrollPane rpListSP = new JScrollPane(tracksList);
-      String[] data = {"1", "2", "3", "4", "5", "6"};
-      tracksListModel.copyInto(data);
-      tracksList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      tracksList.addListSelectionListener(new TracksLSL(this));
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 1;
-      layoutCons.gridwidth = 3;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 1.0;
-      layoutCons.fill = GridBagConstraints.BOTH;      
-      gridbag.setConstraints(rpListSP, layoutCons);
-      contentPane.add(rpListSP);
-      
-      //Settings Tab
-      /*Container*/ contentPane = tabSettings;
-      /*GridBagLayout*/ gridbag = new GridBagLayout();
-      /*GridBagConstraints*/ layoutCons = new GridBagConstraints();
-      contentPane.setLayout(gridbag);
-      
-      /*JLabel*/ label = new JLabel("Type of stops to add");
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 0;
-      layoutCons.gridwidth = 2;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      cbStoptype = new JComboBox();
-      cbStoptype.setEditable(false);
-      cbStoptype.addItem("bus");
-      cbStoptype.addItem("tram");
-      cbStoptype.addItem("light_rail");
-      cbStoptype.addItem("subway");
-      cbStoptype.addItem("rail");
-      cbStoptype.setActionCommand("stopImporter.settingsStoptype");
-      cbStoptype.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(cbStoptype, layoutCons);
-      contentPane.add(cbStoptype);
-      
-      /*JLabel*/ label = new JLabel("Time on your GPS device");
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 2;
-      layoutCons.gridwidth = 2;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      tfGPSTimeStart = new JTextField("00:00:00", 15);
-      tfGPSTimeStart.setActionCommand("stopImporter.settingsGPSTimeStart");
-      tfGPSTimeStart.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 3;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(tfGPSTimeStart, layoutCons);
-      contentPane.add(tfGPSTimeStart);
-      
-      /*JLabel*/ label = new JLabel("HH:MM:SS.sss");
-      
-      layoutCons.gridx = 1;
-      layoutCons.gridy = 3;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-            
-      /*JLabel*/ label = new JLabel("Time on your stopwatch");
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 4;
-      layoutCons.gridwidth = 2;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      tfStopwatchStart = new JTextField("00:00:00", 15);
-      tfStopwatchStart.setActionCommand("stopImporter.settingsStopwatchStart");
-      tfStopwatchStart.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 5;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(tfStopwatchStart, layoutCons);
-      contentPane.add(tfStopwatchStart);
-      
-      /*JLabel*/ label = new JLabel("HH:MM:SS.sss");
-      
-      layoutCons.gridx = 1;
-      layoutCons.gridy = 5;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      /*JLabel*/ label = new JLabel("Time window");
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 6;
-      layoutCons.gridwidth = 2;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      tfTimeWindow = new JTextField("15", 4);
-      tfTimeWindow.setActionCommand("stopImporter.settingsTimeWindow");
-      tfTimeWindow.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 7;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(tfTimeWindow, layoutCons);
-      contentPane.add(tfTimeWindow);
-      
-      /*JLabel*/ label = new JLabel("seconds");
-      
-      layoutCons.gridx = 1;
-      layoutCons.gridy = 7;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      /*JLabel*/ label = new JLabel("Move Threshold");
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 8;
-      layoutCons.gridwidth = 2;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      tfThreshold = new JTextField("20", 4);
-      tfThreshold.setActionCommand("stopImporter.settingsThreshold");
-      tfThreshold.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 9;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(tfThreshold, layoutCons);
-      contentPane.add(tfThreshold);
-      
-      /*JLabel*/ label = new JLabel("meters");
-      
-      layoutCons.gridx = 1;
-      layoutCons.gridy = 9;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 0.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(label, layoutCons);
-      contentPane.add(label);
-      
-      JButton bSuggestStops = new JButton("Suggest Stops");
-      bSuggestStops.setActionCommand("stopImporter.settingsSuggestStops");
-      bSuggestStops.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 10;
-      layoutCons.gridwidth = 3;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bSuggestStops, layoutCons);
-      contentPane.add(bSuggestStops);
-      
-      //Stops Tab
-      contentPane = tabStops;
-      gridbag = new GridBagLayout();
-      layoutCons = new GridBagConstraints();
-      contentPane.setLayout(gridbag);
-      
-      stoplistTable = new JTable();
-      JScrollPane tableSP = new JScrollPane(stoplistTable);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 0;
-      layoutCons.gridwidth = 4;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 1.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(tableSP, layoutCons);
-      contentPane.add(tableSP);
-      
-      JButton bFind = new JButton("Find");
-      bFind.setActionCommand("stopImporter.stoplistFind");
-      bFind.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bFind, layoutCons);
-      contentPane.add(bFind);
-      
-      JButton bShow = new JButton("Show");
-      bShow.setActionCommand("stopImporter.stoplistShow");
-      bShow.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 2;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bShow, layoutCons);
-      contentPane.add(bShow);
-      
-      JButton bMark = new JButton("Mark");
-      bMark.setActionCommand("stopImporter.stoplistMark");
-      bMark.addActionListener(this);
-      
-      layoutCons.gridx = 1;
-      layoutCons.gridy = 1;
-      layoutCons.gridheight = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bMark, layoutCons);
-      contentPane.add(bMark);
-      
-      JButton bDetach = new JButton("Detach");
-      bDetach.setActionCommand("stopImporter.stoplistDetach");
-      bDetach.addActionListener(this);
-      
-      layoutCons.gridx = 1;
-      layoutCons.gridy = 2;
-      layoutCons.gridheight = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bDetach, layoutCons);
-      contentPane.add(bDetach);
-      
-      JButton bAdd = new JButton("Add");
-      bAdd.setActionCommand("stopImporter.stoplistAdd");
-      bAdd.addActionListener(this);
-      
-      layoutCons.gridx = 2;
-      layoutCons.gridy = 1;
-      layoutCons.gridheight = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bAdd, layoutCons);
-      contentPane.add(bAdd);
-      
-      JButton bDelete = new JButton("Delete");
-      bDelete.setActionCommand("stopImporter.stoplistDelete");
-      bDelete.addActionListener(this);
-      
-      layoutCons.gridx = 2;
-      layoutCons.gridy = 2;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bDelete, layoutCons);
-      contentPane.add(bDelete);
-      
-      JButton bSort = new JButton("Sort");
-      bSort.setActionCommand("stopImporter.stoplistSort");
-      bSort.addActionListener(this);
-      
-      layoutCons.gridx = 3;
-      layoutCons.gridy = 1;
-      layoutCons.gridheight = 2;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bSort, layoutCons);
-      contentPane.add(bSort);
-      
-      //Waypoints Tab
-      contentPane = tabWaypoints;
-      gridbag = new GridBagLayout();
-      layoutCons = new GridBagConstraints();
-      contentPane.setLayout(gridbag);
-      
-      waypointTable = new JTable();
-      /*JScrollPane*/ tableSP = new JScrollPane(waypointTable);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 0;
-      layoutCons.gridwidth = 3;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 1.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(tableSP, layoutCons);
-      contentPane.add(tableSP);
-      
-      /*JButton*/ bFind = new JButton("Find");
-      bFind.setActionCommand("stopImporter.waypointsFind");
-      bFind.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bFind, layoutCons);
-      contentPane.add(bFind);
-      
-      /*JButton*/ bShow = new JButton("Show");
-      bShow.setActionCommand("stopImporter.waypointsShow");
-      bShow.addActionListener(this);
-      
-      layoutCons.gridx = 0;
-      layoutCons.gridy = 2;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bShow, layoutCons);
-      contentPane.add(bShow);
-      
-      /*JButton*/ bMark = new JButton("Mark");
-      bMark.setActionCommand("stopImporter.waypointsMark");
-      bMark.addActionListener(this);
-      
-      layoutCons.gridx = 1;
-      layoutCons.gridy = 1;
-      layoutCons.gridheight = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bMark, layoutCons);
-      contentPane.add(bMark);
-      
-      /*JButton*/ bDetach = new JButton("Detach");
-      bDetach.setActionCommand("stopImporter.waypointsDetach");
-      bDetach.addActionListener(this);
-      
-      layoutCons.gridx = 1;
-      layoutCons.gridy = 2;
-      layoutCons.gridheight = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bDetach, layoutCons);
-      contentPane.add(bDetach);
-      
-      /*JButton*/ bAdd = new JButton("Enable");
-      bAdd.setActionCommand("stopImporter.waypointsAdd");
-      bAdd.addActionListener(this);
-      
-      layoutCons.gridx = 2;
-      layoutCons.gridy = 1;
-      layoutCons.gridheight = 1;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bAdd, layoutCons);
-      contentPane.add(bAdd);
-      
-      /*JButton*/ bDelete = new JButton("Disable");
-      bDelete.setActionCommand("stopImporter.waypointsDelete");
-      bDelete.addActionListener(this);
-      
-      layoutCons.gridx = 2;
-      layoutCons.gridy = 2;
-      layoutCons.gridwidth = 1;
-      layoutCons.weightx = 1.0;
-      layoutCons.weighty = 0.0;
-      layoutCons.fill = GridBagConstraints.BOTH;
-      gridbag.setConstraints(bDelete, layoutCons);
-      contentPane.add(bDelete);
-      
-      jDialog.pack();
-      jDialog.setLocationRelativeTo(frame);
-    }
-
-    jDialog.setVisible(true);
+    if (dialog == null)
+      dialog = new StopImporterDialog(this);
+    
+    dialog.setVisible(true);
 
     if (tr("Create Stops from GPX ...").equals(event.getActionCommand()))
     {
@@ -1046,50 +578,27 @@ public class StopImporterAction extends JosmAction
       importData(fc.getSelectedFile());
       
       refreshData();
-      
-/*      Iterator< GpxTrack > iter = data.tracks.iterator();
-      while (iter.hasNext())
-      {
-	GpxTrack track = iter.next();
-	System.out.println("");
-	System.out.println(track.getAttributes().get("name"));
-	Iterator< GpxTrackSegment > siter = track.getSegments().iterator();
-	while (siter.hasNext())
-	{
-	  Iterator< WayPoint > witer = siter.next().getWayPoints().iterator();
-	  while (witer.hasNext())
-	  {
-	    System.out.println(witer.next());
-	  }
-	}
-      }*/
     }
     else if ("stopImporter.settingsGPSTimeStart"
       .equals(event.getActionCommand()))
     {
-      if (parseTime(tfGPSTimeStart.getText()) >= 0)
+      if (dialog.gpsTimeStartValid())
       {
 	if (currentTrack != null)
 	{
-	  currentTrack.gpsSyncTime = tfGPSTimeStart.getText();
+	  currentTrack.gpsSyncTime = dialog.getGpsTimeStart();
 	  currentTrack.relocateNodes();
 	}
-      }
-      else
-      {
-	JOptionPane.showMessageDialog
-	(null, "Can't parse a time from this string.", "Invalid value",
-	 JOptionPane.ERROR_MESSAGE);
       }
     }
     else if ("stopImporter.settingsStopwatchStart"
       .equals(event.getActionCommand()))
     {
-      if (parseTime(tfStopwatchStart.getText()) >= 0)
+      if (dialog.stopwatchStartValid())
       {
 	if (currentTrack != null)
 	{
-	  currentTrack.stopwatchStart = tfStopwatchStart.getText();
+	  currentTrack.stopwatchStart = dialog.getStopwatchStart();
 	  currentTrack.relocateNodes();
 	}
       }
@@ -1101,12 +610,12 @@ public class StopImporterAction extends JosmAction
       .equals(event.getActionCommand()))
     {
       if (currentTrack != null)
-	currentTrack.timeWindow = Double.parseDouble(tfTimeWindow.getText());
+	currentTrack.timeWindow = dialog.getTimeWindow();
     }
     else if ("stopImporter.settingsThreshold".equals(event.getActionCommand()))
     {
       if (currentTrack != null)
-	currentTrack.threshold = Double.parseDouble(tfThreshold.getText());
+	currentTrack.threshold = dialog.getThreshold();
     }
     else if ("stopImporter.settingsSuggestStops".equals(event.getActionCommand()))
     {
@@ -1117,23 +626,23 @@ public class StopImporterAction extends JosmAction
       if (Main.main.getCurrentDataSet() == null)
 	return;
       
-      stoplistTable.clearSelection();
+      dialog.getStoplistTable().clearSelection();
       
       for (int i = 0; i < currentTrack.stoplistTM.getRowCount(); ++i)
       {
 	if ((currentTrack.stoplistTM.nodes.elementAt(i) != null) &&
 		    (Main.main.getCurrentDataSet().isSelected(currentTrack.stoplistTM.nodes.elementAt(i))))
-	  stoplistTable.addRowSelectionInterval(i, i);
+	  dialog.getStoplistTable().addRowSelectionInterval(i, i);
       }
     }
     else if ("stopImporter.stoplistShow".equals(event.getActionCommand()))
     {
       BoundingXYVisitor box = new BoundingXYVisitor();
-      if (stoplistTable.getSelectedRowCount() > 0)
+      if (dialog.getStoplistTable().getSelectedRowCount() > 0)
       {
 	for (int i = 0; i < currentTrack.stoplistTM.getRowCount(); ++i)
 	{
-	  if ((stoplistTable.isRowSelected(i)) &&
+	  if ((dialog.getStoplistTable().isRowSelected(i)) &&
 		      (currentTrack.stoplistTM.nodes.elementAt(i) != null))
 	  {
 	    currentTrack.stoplistTM.nodes.elementAt(i).visit(box);
@@ -1157,11 +666,11 @@ public class StopImporterAction extends JosmAction
     {
       OsmPrimitive[] osmp = { null };
       Main.main.getCurrentDataSet().setSelected(osmp);
-      if (stoplistTable.getSelectedRowCount() > 0)
+      if (dialog.getStoplistTable().getSelectedRowCount() > 0)
       {
 	for (int i = 0; i < currentTrack.stoplistTM.getRowCount(); ++i)
 	{
-	  if ((stoplistTable.isRowSelected(i)) &&
+	  if ((dialog.getStoplistTable().isRowSelected(i)) &&
 	    (currentTrack.stoplistTM.nodes.elementAt(i) != null))
 	  {
 	    Main.main.getCurrentDataSet().addSelected(currentTrack.stoplistTM.nodes.elementAt(i));
@@ -1179,11 +688,11 @@ public class StopImporterAction extends JosmAction
     }
     else if ("stopImporter.stoplistDetach".equals(event.getActionCommand()))
     {
-      if (stoplistTable.getSelectedRowCount() > 0)
+      if (dialog.getStoplistTable().getSelectedRowCount() > 0)
       {
 	for (int i = 0; i < currentTrack.stoplistTM.getRowCount(); ++i)
 	{
-	  if ((stoplistTable.isRowSelected(i)) &&
+	  if ((dialog.getStoplistTable().isRowSelected(i)) &&
 		      (currentTrack.stoplistTM.nodes.elementAt(i) != null))
 	  {
 	    currentTrack.stoplistTM.nodes.set(i, null);
@@ -1198,11 +707,11 @@ public class StopImporterAction extends JosmAction
 	    currentTrack.stoplistTM.nodes.set(i, null);
 	}
       }
-      stoplistTable.clearSelection();
+      dialog.getStoplistTable().clearSelection();
     }
     else if ("stopImporter.stoplistAdd".equals(event.getActionCommand()))
     {
-      int insPos = stoplistTable.getSelectedRow();
+      int insPos = dialog.getStoplistTable().getSelectedRow();
       if (currentTrack != null)
 	currentTrack.stoplistTM.insertRow(insPos, "00:00:00");
     }
@@ -1213,7 +722,7 @@ public class StopImporterAction extends JosmAction
 	return;
       for (int i = currentTrack.stoplistTM.getRowCount()-1; i >=0; --i)
       {
-	if (stoplistTable.isRowSelected(i))
+	if (dialog.getStoplistTable().isRowSelected(i))
 	{
 	  if ((Node)currentTrack.stoplistTM.nodes.elementAt(i) != null)
 	    toDelete.add((Node)currentTrack.stoplistTM.nodes.elementAt(i));
@@ -1230,21 +739,21 @@ public class StopImporterAction extends JosmAction
     }
     else if ("stopImporter.stoplistSort".equals(event.getActionCommand()))
     {
-      int insPos = stoplistTable.getSelectedRow();
+      int insPos = dialog.getStoplistTable().getSelectedRow();
       Vector< NodeSortEntry > nodesToSort = new Vector< NodeSortEntry >();
       if (currentTrack == null)
 	return;
-      if (stoplistTable.getSelectedRowCount() > 0)
+      if (dialog.getStoplistTable().getSelectedRowCount() > 0)
       {
 	for (int i = currentTrack.stoplistTM.getRowCount()-1; i >=0; --i)
 	{
-	  if (stoplistTable.isRowSelected(i))
+	  if (dialog.getStoplistTable().isRowSelected(i))
 	  {
 	    nodesToSort.add(new NodeSortEntry
 		(currentTrack.stoplistTM.nodes.elementAt(i),
 		 (String)currentTrack.stoplistTM.getValueAt(i, 0),
 		  (String)currentTrack.stoplistTM.getValueAt(i, 1),
-		   parseTime(currentTrack.stopwatchStart)));
+		   StopImporterDialog.parseTime(currentTrack.stopwatchStart)));
 	    currentTrack.stoplistTM.nodes.removeElementAt(i);
 	    currentTrack.stoplistTM.removeRow(i);
 	  }
@@ -1258,7 +767,7 @@ public class StopImporterAction extends JosmAction
 	      (currentTrack.stoplistTM.nodes.elementAt(i),
 	       (String)currentTrack.stoplistTM.getValueAt(i, 0),
 		(String)currentTrack.stoplistTM.getValueAt(i, 1),
-		 parseTime(currentTrack.stopwatchStart)));
+		 StopImporterDialog.parseTime(currentTrack.stopwatchStart)));
 	}
 	currentTrack.stoplistTM.clear();
       }
@@ -1280,23 +789,23 @@ public class StopImporterAction extends JosmAction
       if (Main.main.getCurrentDataSet() == null)
 	return;
       
-      waypointTable.clearSelection();
+      dialog.getWaypointsTable().clearSelection();
       
       for (int i = 0; i < waypointTM.getRowCount(); ++i)
       {
 	if ((waypointTM.nodes.elementAt(i) != null) &&
 		    (Main.main.getCurrentDataSet().isSelected(waypointTM.nodes.elementAt(i))))
-	  waypointTable.addRowSelectionInterval(i, i);
+	  dialog.getWaypointsTable().addRowSelectionInterval(i, i);
       }
     }
     else if ("stopImporter.waypointsShow".equals(event.getActionCommand()))
     {
       BoundingXYVisitor box = new BoundingXYVisitor();
-      if (waypointTable.getSelectedRowCount() > 0)
+      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
       {
 	for (int i = 0; i < waypointTM.getRowCount(); ++i)
 	{
-	  if ((waypointTable.isRowSelected(i)) &&
+	  if ((dialog.getWaypointsTable().isRowSelected(i)) &&
 		      (waypointTM.nodes.elementAt(i) != null))
 	  {
 	    waypointTM.nodes.elementAt(i).visit(box);
@@ -1320,11 +829,11 @@ public class StopImporterAction extends JosmAction
     {
       OsmPrimitive[] osmp = { null };
       Main.main.getCurrentDataSet().setSelected(osmp);
-      if (waypointTable.getSelectedRowCount() > 0)
+      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
       {
 	for (int i = 0; i < waypointTM.getRowCount(); ++i)
 	{
-	  if ((waypointTable.isRowSelected(i)) &&
+	  if ((dialog.getWaypointsTable().isRowSelected(i)) &&
 		      (waypointTM.nodes.elementAt(i) != null))
 	  {
 	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
@@ -1342,11 +851,11 @@ public class StopImporterAction extends JosmAction
     }
     else if ("stopImporter.waypointsDetach".equals(event.getActionCommand()))
     {
-      if (waypointTable.getSelectedRowCount() > 0)
+      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
       {
 	for (int i = 0; i < waypointTM.getRowCount(); ++i)
 	{
-	  if ((waypointTable.isRowSelected(i)) &&
+	  if ((dialog.getWaypointsTable().isRowSelected(i)) &&
 		      (waypointTM.nodes.elementAt(i) != null))
 	  {
 	    waypointTM.nodes.set(i, null);
@@ -1361,15 +870,15 @@ public class StopImporterAction extends JosmAction
 	    waypointTM.nodes.set(i, null);
 	}
       }
-      waypointTable.clearSelection();
+      dialog.getWaypointsTable().clearSelection();
     }
     else if ("stopImporter.waypointsAdd".equals(event.getActionCommand()))
     {
-      if (waypointTable.getSelectedRowCount() > 0)
+      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
       {
 	for (int i = 0; i < waypointTM.getRowCount(); ++i)
 	{
-	  if ((waypointTable.isRowSelected(i)) &&
+	  if ((dialog.getWaypointsTable().isRowSelected(i)) &&
 		      (waypointTM.nodes.elementAt(i) == null))
 	  {
 	    Node node = createNode(waypointTM.coors.elementAt(i), (String)waypointTM.getValueAt(i, 1));
@@ -1392,7 +901,7 @@ public class StopImporterAction extends JosmAction
       Vector< Node > toDelete = new Vector< Node >();
       for (int i = waypointTM.getRowCount()-1; i >=0; --i)
       {
-	if (waypointTable.isRowSelected(i))
+	if (dialog.getWaypointsTable().isRowSelected(i))
 	{
 	  if ((Node)waypointTM.nodes.elementAt(i) != null)
 	    toDelete.add((Node)waypointTM.nodes.elementAt(i));
@@ -1415,15 +924,15 @@ public class StopImporterAction extends JosmAction
 	  Node node = (Node)waypointTM.nodes.elementAt(i);
 	  node.remove("highway");
 	  node.remove("railway");
-          if ("bus".equals((String)cbStoptype.getSelectedItem()))
+          if ("bus".equals(dialog.getStoptype()))
             node.put("highway", "bus_stop");
-          else if ("tram".equals((String)cbStoptype.getSelectedItem()))
+	  else if ("tram".equals(dialog.getStoptype()))
             node.put("railway", "tram_stop");
-          else if ("light_rail".equals((String)cbStoptype.getSelectedItem()))
+	  else if ("light_rail".equals(dialog.getStoptype()))
             node.put("railway", "station");
-          else if ("subway".equals((String)cbStoptype.getSelectedItem()))
+	  else if ("subway".equals(dialog.getStoptype()))
             node.put("railway", "station");
-          else if ("rail".equals((String)cbStoptype.getSelectedItem()))
+	  else if ("rail".equals(dialog.getStoptype()))
             node.put("railway", "station");
         }
       }
@@ -1437,15 +946,15 @@ public class StopImporterAction extends JosmAction
 	    Node node = (Node)track.stoplistTM.nodes.elementAt(i);
 	    node.remove("highway");
 	    node.remove("railway");
-	    if ("bus".equals((String)cbStoptype.getSelectedItem()))
+	    if ("bus".equals(dialog.getStoptype()))
 	      node.put("highway", "bus_stop");
-	    else if ("tram".equals((String)cbStoptype.getSelectedItem()))
+	    else if ("tram".equals(dialog.getStoptype()))
 	      node.put("railway", "tram_stop");
-	    else if ("light_rail".equals((String)cbStoptype.getSelectedItem()))
+	    else if ("light_rail".equals(dialog.getStoptype()))
 	      node.put("railway", "station");
-	    else if ("subway".equals((String)cbStoptype.getSelectedItem()))
+	    else if ("subway".equals(dialog.getStoptype()))
 	      node.put("railway", "station");
-	    else if ("rail".equals((String)cbStoptype.getSelectedItem()))
+	    else if ("rail".equals(dialog.getStoptype()))
 	      node.put("railway", "station");
 	  }
 	}
@@ -1524,7 +1033,7 @@ public class StopImporterAction extends JosmAction
 	WayPoint waypoint = waypointIter.next();
 	waypointTM.addRow(waypoint);
       }
-      waypointTable.setModel(waypointTM);
+      dialog.getWaypointsTable().setModel(waypointTM);
     }
     else
     {
@@ -1536,45 +1045,41 @@ public class StopImporterAction extends JosmAction
     }
   }
   
-  private void tracksSelectionChanged()
+  public void tracksSelectionChanged(int selectedPos)
   {
-    int selectedPos = tracksList.getAnchorSelectionIndex();
-    if (tracksList.isSelectedIndex(selectedPos))
+    if (selectedPos >= 0)
     {
       currentTrack = ((TrackReference)tracksListModel.elementAt(selectedPos));
-      tabbedPane.setEnabledAt(1, true);
-      tabbedPane.setEnabledAt(2, true);
+      dialog.setTrackValid(true);
       
       //Prepare Settings
-      tfGPSTimeStart.setText(currentTrack.gpsSyncTime);
-      tfStopwatchStart.setText(currentTrack.stopwatchStart);
-      tfTimeWindow.setText(Double.toString(currentTrack.timeWindow));
-      tfThreshold.setText(Double.toString(currentTrack.threshold));
+      dialog.setSettings
+	  (currentTrack.gpsSyncTime, currentTrack.stopwatchStart,
+	   currentTrack.timeWindow, currentTrack.threshold);
       
       //Prepare Stoplist
-      stoplistTable.setModel
+      dialog.getStoplistTable().setModel
           (((TrackReference)tracksListModel.elementAt(selectedPos)).stoplistTM);
     }
     else
     {
       currentTrack = null;
-      tabbedPane.setEnabledAt(1, false);
-      tabbedPane.setEnabledAt(2, false);
+      dialog.setTrackValid(false);
     }
   }
 
   private Node createNode(LatLon latLon, String name)
   {
     Node node = new Node(latLon);
-    if ("bus".equals((String)cbStoptype.getSelectedItem()))
+    if ("bus".equals(dialog.getStoptype()))
       node.put("highway", "bus_stop");
-    else if ("tram".equals((String)cbStoptype.getSelectedItem()))
+    else if ("tram".equals(dialog.getStoptype()))
       node.put("railway", "tram_stop");
-    else if ("light_rail".equals((String)cbStoptype.getSelectedItem()))
+    else if ("light_rail".equals(dialog.getStoptype()))
       node.put("railway", "station");
-    else if ("subway".equals((String)cbStoptype.getSelectedItem()))
+    else if ("subway".equals(dialog.getStoptype()))
       node.put("railway", "station");
-    else if ("rail".equals((String)cbStoptype.getSelectedItem()))
+    else if ("rail".equals(dialog.getStoptype()))
       node.put("railway", "station");
     node.put("name", name);
     if (Main.main.getCurrentDataSet() == null)
@@ -1591,21 +1096,6 @@ public class StopImporterAction extends JosmAction
     return node;
   }
     
-  private static double parseTime(String s)
-  {
-    double result = 0;
-    if ((s.charAt(2) != ':') || (s.charAt(2) != ':')
-      || (s.length() < 8))
-      return -1;
-    int hour = Integer.parseInt(s.substring(0, 2));
-    int minute = Integer.parseInt(s.substring(3, 5));
-    double second = Double.parseDouble(s.substring(6, s.length()));
-    if ((hour < 0) || (hour > 23) || (minute < 0) || (minute > 59)
-      || (second < 0) || (second >= 60.0))
-      return -1;
-    return (second + minute*60 + hour*60*60);
-  }
-  
   private static String timeOf(double t)
   {
     t -= Math.floor(t/24/60/60)*24*60*60;

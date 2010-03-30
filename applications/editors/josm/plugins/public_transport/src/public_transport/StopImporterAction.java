@@ -811,24 +811,13 @@ public class StopImporterAction extends JosmAction
     else if ("stopImporter.waypointsShow".equals(event.getActionCommand()))
     {
       BoundingXYVisitor box = new BoundingXYVisitor();
-      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
+      Vector< Integer > consideredLines = getConsideredLines
+        (dialog.getWaypointsTable());
+      for (int i = 0; i < consideredLines.size(); ++i)
       {
-	for (int i = 0; i < waypointTM.getRowCount(); ++i)
-	{
-	  if ((dialog.getWaypointsTable().isRowSelected(i)) &&
-		      (waypointTM.nodes.elementAt(i) != null))
-	  {
-	    waypointTM.nodes.elementAt(i).visit(box);
-	  }
-	}
-      }
-      else
-      {
-	for (int i = 0; i < waypointTM.getRowCount(); ++i)
-	{
-	  if (waypointTM.nodes.elementAt(i) != null)
-	    waypointTM.nodes.elementAt(i).visit(box);
-	}
+	int j = consideredLines.elementAt(i);
+	if (waypointTM.nodes.elementAt(j) != null)
+	  waypointTM.nodes.elementAt(j).visit(box);
       }
       if (box.getBounds() == null)
 	return;
@@ -839,24 +828,13 @@ public class StopImporterAction extends JosmAction
     {
       OsmPrimitive[] osmp = { null };
       Main.main.getCurrentDataSet().setSelected(osmp);
-      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
+      Vector< Integer > consideredLines = getConsideredLines
+        (dialog.getWaypointsTable());
+      for (int i = 0; i < consideredLines.size(); ++i)
       {
-	for (int i = 0; i < waypointTM.getRowCount(); ++i)
-	{
-	  if ((dialog.getWaypointsTable().isRowSelected(i)) &&
-		      (waypointTM.nodes.elementAt(i) != null))
-	  {
-	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
-	  }
-	}
-      }
-      else
-      {
-	for (int i = 0; i < waypointTM.getRowCount(); ++i)
-	{
-	  if (waypointTM.nodes.elementAt(i) != null)
-	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
-	}
+	int j = consideredLines.elementAt(i);
+	if (waypointTM.nodes.elementAt(j) != null)
+	  Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(j));
       }
     }
     else if ("stopImporter.waypointsDetach".equals(event.getActionCommand()))
@@ -1057,7 +1035,26 @@ public class StopImporterAction extends JosmAction
     Main.main.getCurrentDataSet().addPrimitive(node);
     return node;
   }
-    
+
+  /* returns a collection of all slected lines or
+     a collection of all lines otherwise */
+  public static Vector< Integer > getConsideredLines(JTable table)
+  {
+    int[] selectedLines = table.getSelectedRows();
+    Vector< Integer > consideredLines = new Vector< Integer >();
+    if (selectedLines.length > 0)
+    {
+      for (int i = 0; i < selectedLines.length; ++i)
+	consideredLines.add(selectedLines[i]);
+    }
+    else
+    {
+      for (int i = 0; i < table.getRowCount(); ++i)
+	consideredLines.add(new Integer(i));
+    }
+    return consideredLines;
+  }
+
   private static String timeOf(double t)
   {
     t -= Math.floor(t/24/60/60)*24*60*60;

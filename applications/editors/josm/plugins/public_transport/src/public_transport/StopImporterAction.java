@@ -861,7 +861,7 @@ public class StopImporterAction extends JosmAction
     }
     else if ("stopImporter.waypointsDetach".equals(event.getActionCommand()))
     {
-      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
+/*      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
       {
 	for (int i = 0; i < waypointTM.getRowCount(); ++i)
 	{
@@ -879,7 +879,8 @@ public class StopImporterAction extends JosmAction
 	  if (waypointTM.nodes.elementAt(i) != null)
 	    waypointTM.nodes.set(i, null);
 	}
-      }
+      }*/
+      Main.main.undoRedo.add(new WaypointsDetachCommand(this));
       dialog.getWaypointsTable().clearSelection();
     }
     else if ("stopImporter.waypointsAdd".equals(event.getActionCommand()))

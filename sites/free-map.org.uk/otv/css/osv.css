@@ -1,6 +1,6 @@
 body 
 { 
-	font-family: helvetica, arial, sans-serif; 
+	font-family: DejaVu Sans, lucida, verdana, helvetica, arial, sans-serif; 
 }
 
 a 
@@ -8,10 +8,9 @@ a
 	text-decoration: none 
 }
 
-#panorama_submit
+
+.error
 {
-	display:block;
-	width:400px;
-	border-style:solid;
-	border-width: 2px;
+	color: #c00000;
+	font-weight:bold;
 }

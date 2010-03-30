@@ -3,8 +3,8 @@
 <?php
 require_once('/home/www-data/private/defines.php');
 require_once('../lib/functionsnew.php');
-include('connect.php');
 
+$conn=dbconnect("otv");
 
 $inp=clean_input($_GET);
 

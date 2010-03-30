@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('connect.php');
 include('../lib/functionsnew.php');
+$conn=dbconnect("otv");
 $cleaned=clean_input($_GET);
 $result=mysql_query("SELECT * FROM panoramas WHERE ID=$cleaned[id]");
 if(mysql_num_rows($result)==1)
@@ -39,6 +39,7 @@ if(mysql_num_rows($result)==1)
                 if(isset($_SESSION['admin']))
                 {
                     mysql_query("DELETE FROM panoramas WHERE ID=$cleaned[id]");
+					unlink("/home/www-data/uploads/otv/${cleaned[id]}.jpg");
                     echo "Deleted";
                 }
                 else
@@ -49,7 +50,12 @@ if(mysql_num_rows($result)==1)
             case "moderate":
                 if(isset($_SESSION['admin']))
                 {
-                    echo "<html><body><p>";
+                    echo "<html>";
+					echo "<head>";
+					echo "<link rel='stylesheet' type='text/css' ".
+						"href='css/osv.css' />";
+					echo "</head>";
+					echo "<body><p>";
                     echo "<h1>Submitted photo $cleaned[id]</h1>\n";
                     echo "<p><img src='/otv/panorama/$cleaned[id]' ".
                     "alt='Panorama $cleaned[id]' /></p>\n";
@@ -92,5 +98,5 @@ else
 {
     header("HTTP/1.1 404 Not Found");
 } 
-
+mysql_close($conn);
 ?>

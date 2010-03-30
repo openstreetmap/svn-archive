@@ -1,9 +1,9 @@
 <?php
-include('connect.php');
 include('../lib/functionsnew.php');
 
 header("Content-type: application/atom+xml");
 
+$conn=dbconnect("otv");
 $cleaned = clean_input($_GET);
 $admin = (isset($cleaned['auth'])) && $cleaned['auth']==0;
 $title = $admin ?  "Unmoderated OTV Panoramas" : "Moderated OTV Panoramas";

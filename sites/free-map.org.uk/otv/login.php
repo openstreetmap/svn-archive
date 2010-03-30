@@ -1,8 +1,8 @@
 <?php
 require_once('/home/www-data/private/defines.php');
 require_once('../lib/functionsnew.php');
-include('connect.php');
 
+$conn=dbconnect("otv");
 session_start();
 
 if (isset($_POST['username']) && isset($_POST['password']))
@@ -15,8 +15,8 @@ if (isset($_POST['username']) && isset($_POST['password']))
     $result=mysql_query($q);
     if(mysql_num_rows($result)==1)
     {
-        $_SESSION["gatekeeper"] = $cleaned["username"];
         $row=mysql_fetch_array($result);
+        $_SESSION["gatekeeper"] = $row["id"];
         if($row['isadmin']==1)
             $_SESSION['admin'] = true;
         mysql_close($conn);
@@ -42,6 +42,7 @@ else
     <html>
     <head>
     <title>Log in</title>
+	<link rel='stylesheet' type='text/css' href='css/osv.css' />
     </head>
     <body>
     <h1>Log in</h1>

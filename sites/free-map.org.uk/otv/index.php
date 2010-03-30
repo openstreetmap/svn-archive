@@ -1,4 +1,6 @@
 <?php
+require_once("../lib/functionsnew.php");
+
 $lat = (isset($_GET['lat'])) ? $_GET['lat']:50.9;
 $lon = (isset($_GET['lon'])) ? $_GET['lon']:-1.4;
 $zoom = (isset($_GET['lon'])) ? $_GET['zoom']:14;
@@ -126,13 +128,13 @@ session_start();
                          } );
 
             map.addLayer(georss);
-			map.events.register('click',map,
-					function(e) { 
-            			var featurePos = this.getLonLatFromViewPortPx(e.xy).
-                				transform( this.getProjectionObject(),wgs84);
-						$('lat').value = featurePos.lat;
-						$('lon').value = featurePos.lon;
-					});
+            map.events.register('click',map,
+                    function(e) { 
+                        var featurePos = this.getLonLatFromViewPortPx(e.xy).
+                                transform( this.getProjectionObject(),wgs84);
+                        $('lat').value = featurePos.lat;
+                        $('lon').value = featurePos.lon;
+                    });
             control = new OpenLayers.Control.DragFeature (
                 georss,
                 {
@@ -210,25 +212,26 @@ session_start();
 
         function failcb(xmlHTTP)
         {
-			if(xmlHTTP.status==401)
-			{
-				alert("Log in to orientate photos. You can orientate "+
-					"other people's but you must be logged in.");
-			}
-			else
-			{
-				alert('Internal error: http code=' + xmlHTTP.status);
-			}
+            if(xmlHTTP.status==401)
+            {
+                alert("Log in to orientate photos. You can orientate "+
+                    "other people's but you must be logged in.");
+            }
+            else
+            {
+                alert('Internal error: http code=' + xmlHTTP.status);
+            }
         }
 
     </script>
     <style type='text/css'>
-	#maindiv { width:1024px; 
-		border-style:solid; border-width:1px; padding:5px; }
-	#map {  margin:100px }
+    #maindiv { width:1024px; 
+        border-style:solid; border-width:1px; padding:5px; }
+    #map {  margin:100px }
     #photodiv { width:1024px; overflow:auto; margin-top:10px; height:200px }
-	#login { float:right; }
+    #login { float:right; }
     </style>
+    <link rel='stylesheet' type='text/css' href='css/osv.css' />
 </head>
  
 <!-- body.onload is called once the page is loaded (call the init function) -->
@@ -238,9 +241,17 @@ session_start();
 <h1>OpenTrailView</h1>
 <div id='login'>
 <?php
-echo isset($_SESSION['gatekeeper']) ? "Logged in as $_SESSION[gatekeeper] ".
-"<a href='logout.php'>Log out</a>": 
-"<a href='login.php?redirect=/otv/index.php'>Login</a>";
+if(isset($_SESSION['gatekeeper']))
+{
+    $conn=dbconnect("otv");
+    $username=get_col("users",$_SESSION['gatekeeper'],"username");
+    echo "Logged in as $username <a href='logout.php'>Log out</a>";
+    mysql_close($conn);
+}
+else
+{
+    echo "<a href='login.php?redirect=/otv/index.php'>Login</a>";
+}
 ?>
 </div>
 <p>StreetView for the world's trails and footpaths!

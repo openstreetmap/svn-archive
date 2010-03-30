@@ -1,11 +1,12 @@
 <?php
 session_start();
-include('connect.php');
 include('../lib/functionsnew.php');
+
+$conn=dbconnect("otv");
 
 if(!isset($_SESSION['gatekeeper']))
 {
-	header("Location: login.php?redirect=/otv/index.php");
+    header("Location: login.php?redirect=/otv/index.php");
 }
 else if (isset($_FILES["panorama"]))
 {
@@ -34,8 +35,6 @@ else if (isset($_FILES["panorama"]))
     }
     else
     {
-        mysql_query("INSERT INTO panoramas (lat,lon,user) VALUES ($cleaned[lat],$cleaned[lon],'$_SESSION[gatekeeper]')") or die(mysql_error());
-
         $id=mysql_insert_id();
 
         $upfile = "/home/www-data/uploads/otv/$id.jpg";
@@ -46,7 +45,31 @@ else if (isset($_FILES["panorama"]))
             if(!move_uploaded_file($panorama,$upfile))
             {
                 $msg= "Could not move file to images directory"; 
-                mysql_query("DELETE FROM panoramas where id=$id");
+            }
+            else // get EXIF lat/lon if present
+            {
+
+                $exif=exif_read_data($upfile);
+                if(isset($exif['GpsLatitude']) && isset($exif['GpsLongitude']))
+                {
+                    $cleaned['lat']=to_decimal_degrees($exif['GpsLatitude']);
+                    $cleaned['lon']=to_decimal_degrees($exif['GpsLongitude']);
+                    if($exif['GpsLatitudeRef']=='S')
+                        $cleaned['lat']=-$cleaned['lat'];
+                    if($exif['GpsLongitudeRef']=='W')
+                        $cleaned['lon']=-$cleaned['lon'];
+                }
+                if($cleaned['lat']=="" || $cleaned['lon']=="")
+                {    
+                    $msg="No latitude/longitude provided or found in image";
+                    unlink($upfile);
+                }
+                else
+                {
+                    mysql_query("INSERT INTO panoramas (lat,lon,user) ".
+                            "VALUES ($cleaned[lat],$cleaned[lon],".
+                            "'$_SESSION[gatekeeper]')") or die(mysql_error());
+                }
             }
         }
         else
@@ -68,7 +91,12 @@ else if (isset($_FILES["panorama"]))
 }
 else
 {
-	echo "You must upload a file!";
+    echo "You must upload a file!";
 }
 mysql_close($conn);
+
+function to_decimal_degrees($dms)
+{
+    return $dms[0] + $dms[1]/60.0 + $dms[2]/3600.0;
+}
 ?>

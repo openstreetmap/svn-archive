@@ -861,25 +861,6 @@ public class StopImporterAction extends JosmAction
     }
     else if ("stopImporter.waypointsDetach".equals(event.getActionCommand()))
     {
-/*      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
-      {
-	for (int i = 0; i < waypointTM.getRowCount(); ++i)
-	{
-	  if ((dialog.getWaypointsTable().isRowSelected(i)) &&
-		      (waypointTM.nodes.elementAt(i) != null))
-	  {
-	    waypointTM.nodes.set(i, null);
-	  }
-	}
-      }
-      else
-      {
-	for (int i = 0; i < waypointTM.getRowCount(); ++i)
-	{
-	  if (waypointTM.nodes.elementAt(i) != null)
-	    waypointTM.nodes.set(i, null);
-	}
-      }*/
       Main.main.undoRedo.add(new WaypointsDetachCommand(this));
       dialog.getWaypointsTable().clearSelection();
     }

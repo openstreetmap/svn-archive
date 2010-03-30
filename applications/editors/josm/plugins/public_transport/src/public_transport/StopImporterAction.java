@@ -449,7 +449,7 @@ public class StopImporterAction extends JosmAction
     }
   };
   
-  private class WaypointTableModel extends DefaultTableModel
+  public class WaypointTableModel extends DefaultTableModel
       implements TableModelListener
   {
     public Vector< Node > nodes = new Vector< Node >();
@@ -539,6 +539,16 @@ public class StopImporterAction extends JosmAction
   {
     super(tr("Create Stops from GPX ..."), null,
 	  tr("Create Stops from a GPX file"), null, true);
+  }
+
+  public WaypointTableModel getWaypointTableModel()
+  {
+    return waypointTM;
+  }
+  
+  public StopImporterDialog getDialog()
+  {
+    return dialog;
   }
 
   public DefaultListModel getTracksListModel()
@@ -874,46 +884,11 @@ public class StopImporterAction extends JosmAction
     }
     else if ("stopImporter.waypointsAdd".equals(event.getActionCommand()))
     {
-      if (dialog.getWaypointsTable().getSelectedRowCount() > 0)
-      {
-	for (int i = 0; i < waypointTM.getRowCount(); ++i)
-	{
-	  if ((dialog.getWaypointsTable().isRowSelected(i)) &&
-		      (waypointTM.nodes.elementAt(i) == null))
-	  {
-	    Node node = createNode(waypointTM.coors.elementAt(i), (String)waypointTM.getValueAt(i, 1));
-	    waypointTM.nodes.set(i, node);
-	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
-	  }
-	}
-      }
-      else
-      {
-	for (int i = 0; i < waypointTM.getRowCount(); ++i)
-	{
-	  if (waypointTM.nodes.elementAt(i) == null)
-	    Main.main.getCurrentDataSet().addSelected(waypointTM.nodes.elementAt(i));
-	}
-      }
+      Main.main.undoRedo.add(new WaypointsEnableCommand(this));
     }
     else if ("stopImporter.waypointsDelete".equals(event.getActionCommand()))
     {
-      Vector< Node > toDelete = new Vector< Node >();
-      for (int i = waypointTM.getRowCount()-1; i >=0; --i)
-      {
-	if (dialog.getWaypointsTable().isRowSelected(i))
-	{
-	  if ((Node)waypointTM.nodes.elementAt(i) != null)
-	    toDelete.add((Node)waypointTM.nodes.elementAt(i));
-	  waypointTM.nodes.set(i, null);
-	}
-      }
-      Command cmd = DeleteCommand.delete
-	  (Main.main.getEditLayer(), toDelete);
-      if (cmd != null) {
-	// cmd can be null if the user cancels dialogs DialogCommand displays
-	Main.main.undoRedo.add(cmd);
-      }
+      Main.main.undoRedo.add(new WaypointsDisableCommand(this));
     }
     else if ("stopImporter.settingsStoptype".equals(event.getActionCommand()))
     {
@@ -1070,16 +1045,21 @@ public class StopImporterAction extends JosmAction
 
   private Node createNode(LatLon latLon, String name)
   {
+    return createNode(latLon, dialog.getStoptype(), name);
+  }
+    
+  public static Node createNode(LatLon latLon, String type, String name)
+  {
     Node node = new Node(latLon);
-    if ("bus".equals(dialog.getStoptype()))
+    if ("bus".equals(type))
       node.put("highway", "bus_stop");
-    else if ("tram".equals(dialog.getStoptype()))
+    else if ("tram".equals(type))
       node.put("railway", "tram_stop");
-    else if ("light_rail".equals(dialog.getStoptype()))
+    else if ("light_rail".equals(type))
       node.put("railway", "station");
-    else if ("subway".equals(dialog.getStoptype()))
+    else if ("subway".equals(type))
       node.put("railway", "station");
-    else if ("rail".equals(dialog.getStoptype()))
+    else if ("rail".equals(type))
       node.put("railway", "station");
     node.put("name", name);
     if (Main.main.getCurrentDataSet() == null)

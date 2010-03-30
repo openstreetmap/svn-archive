@@ -2,9 +2,10 @@ t@h server
 ==========
 
  - Investigate switch to Postgresql as this one runs on the box anyway
+ - Minimize "* Server load too high, unlikely we can upload after rendering, waiting 30s.."
  - "Render this tile" button on the tile detail page
  - Check MYSQL "FOR UPDATE locks". Small race conditions could enable handing out the same job twice?! Seems fine though.
- - Think about notifying users when their clients fail too often.
+ - Think about notifying users when their clients fail too often, more verbose collection of client's efficiency and quality of renders.
  - Enable client to hand back requests as "oldData" (ie API data older than tileset on server) which would delete the request.
  - Save the client_uuid in the request database with finished requests
  - Check the "LayerCapabilities" of the client and only send appropriate requests.
@@ -12,12 +13,14 @@ t@h server
  - Make lowzoom stitching run in a good way (cron). Implement blacklisted areas for people wanting to upload their own lowzoom.
  - Improve "feedback" API. Make sure we reset only tilesets assigned to that one client. Make sure, we record the client_uuid in the feedback case.
  - Examine the password situation. why are non-character passwords failing? It works fine on the server side of things. Put on hold for now.
+ - introduce "minimal complexity" parameter requested by the client (e.g i have plenty of memory and i do not want to spend the time for rendering non-complex tiles)
+ - more intelligence within the process of distributing jobs to clients.
 
 t@h client (will not be implemented by spaetz)
 ==========
+ - assemble tilesets on the clientside already, don't upload zip files
  - generally go through the code and remove superfluous code (e.g. non-tileset uploads)
  - Send the current client version as data (or other numeric) string that we can compare against. We don't want to maintain a list of city names in the server.
- - assemble tilesets on the clientside already, don't upload zip files
  - check last-modified age of tileset, compare with API age and skip request if the tileset on the server is younger already
  - return a request if the tileset complexity is higher than what the client is willing to handle
  - Fork the rendering in 2 threads, have one already downloading the next task, while the first is still rendering the tiles.

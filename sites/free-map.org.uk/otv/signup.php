@@ -111,15 +111,12 @@ else
     <label for="password">Enter a password</label> <br/>
     <input name="password" id="password" type="password" /> <br/>
     <input type="checkbox" name="agree" />
-    I agree to transfer the copyright in submitted panoramas to Nick Whitelegg
-    (OpenTrailView) under the 
+    I agree to licence my panorama under the 
     <a href='http://creativecommons.org/licenses/by/3.0/'>
     Creative Commons Attribution 3.0 licence</a>
-    (meaning: you can do what you like with it as long as the copyright 
-    holder is mentioned)
-    (NB the reason for OpenTrailView, i.e. myself, holding the copyright
-    is to simplify the whole messy business of licencing by having just
-    one copyright owner, with the photos under a liberal licence)<br />
+    (meaning: people can do what they like with it as long as the copyright 
+    holder is mentioned). Panoramas will be attributed to your OTV
+	username.<br />
     <input type='submit' value='go'/>
     </form>
     </div>

@@ -19,7 +19,7 @@ public class TraceListModel extends AbstractListModel implements Iterable<File> 
 	private ArrayList<File> delegate;
 
 	TraceListModel() {
-		this.delegate = new ArrayList();
+		this.delegate = new ArrayList<File>();
 	}
 
 	public void addElement(File file) {

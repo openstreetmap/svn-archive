@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map [
+<!ENTITY % colorents SYSTEM "colorents.xml.inc">
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+%colorents;
+%entities;
+<!ENTITY layer-parking-lane SYSTEM "inc/layer-parking-area.xml.inc">
+<!ENTITY layer-parking-area SYSTEM "inc/layer-parking-lane.xml.inc">
+]>
+
+<!-- This stylesheet uses features only available in mapnik builds with
+     libxml2 as the XML parser. Furthermore, there are other features
+     that necessitate an upgrade to at least mapnik 0.6.1 -->
+<Map srs="&srs900913;" minimum_version="0.6.1">
+
+&layer-parking-area;
+&layer-parking-lane;
+
+</Map>

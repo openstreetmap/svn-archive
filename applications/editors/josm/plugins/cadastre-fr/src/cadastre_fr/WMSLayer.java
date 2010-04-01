@@ -187,10 +187,12 @@ public class WMSLayer extends Layer implements ImageObserver {
             images.add(newImage);
             Main.map.mapView.repaint();
         }
-        if (buildingsOnly)
-            joinBufferedImages();
-        for (int i=lastSavedImage; i < images.size(); i++)
-            saveToCache(images.get(i));
+        if (!cancelled) {
+            if (buildingsOnly)
+                joinBufferedImages();
+            for (int i=lastSavedImage; i < images.size(); i++)
+                saveToCache(images.get(i));
+        }
     }
 
     /**

@@ -67,13 +67,16 @@ public class CadastreInterface {
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException, WMSException {
         if (wmsLayer.getName().equals(""))
             return false;
-        if (wmsLayer.getName().equals(lastWMSLayerName))
+        boolean isCookieExpired = isCookieExpired();
+        if (wmsLayer.getName().equals(lastWMSLayerName) && !isCookieExpired)
             return true;
         // open the session with the French Cadastre web front end
         downloadCancelled = false;
         try {
-            if (cookie == null || isCookieExpired())
+            if (cookie == null || isCookieExpired) {
                 getCookie();
+                interfaceRef = null;
+            }
             if (cookie == null)
                 throw new WMSException(tr("Cannot open a new client session.\nServer in maintenance or temporary overloaded."));
             if (interfaceRef == null) {

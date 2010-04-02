@@ -1,75 +1,75 @@
 "SECTION" "NODES" "color" "thickness" "label" "label-color" "label-size" "label-font" "label-offset" "Legend" "Icon" "Size" "FromScale" "ToScale"    
 "COMMENT" "VERY HIGH ZOOM"                
-"amenity" "bank" "black" 0 "name" "black" 10 "sans-serif" 15 0 "icons/bank.png" 20 0 10000    
-"amenity" "bench" "black" 0 "none" "black" 10 "Sans-serif" 0 0 "icons/bench.svg" 10 0 10000    
-"amenity" "cafe" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/cafe.svg" 20 0 10000    
-"amenity" "restaurant" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/restaurant.svg" 20 0 10000    
-"amenity" "school" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/school.svg" 20 0 10000    
-"amenity" "recycling" "black" 0 "name" "black" 10 "sans-serif" 15 0 "icons/recycling.png" 20 0 10000    
-"amenity" "atm" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/atm.svg" 20 0 10000    
-"amenity" "toilets" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/toilets.svg" 20 0 10000    
-"amenity" "fast_food" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/fastfood.svg" 20 0 10000    
-"amenity" "pub" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/pub.svg" 20 0 10000    
-"amenity" "post_box" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/postbox.svg" 20 0 10000    
-"information" "guide_post" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/guidepost.svg" 20 0 10000    
-"sport" "swimming" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/swimming.svg" 20 0 10000    
-"sport" "soccer" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/soccer.svg" 20 0 10000    
-"shop" "supermarket" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/supermarket.svg" 20 0 10000    
-"amenity" "kindergarten" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/kindergarten.svg" 20 0 10000    
-"natural" "spring" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/spring.svg" 20 0 10000    
-"amenity" "telephone" "black" 0 "name" "black" 10 "Sans-serif" 0 0 "icons/telephone.svg" 20 0 10000    
-"amenity" "fountain" "black" 0 "name" "black" 10 "Sans-serif" 0 0 "icons/fountain.svg" 20 0 10000    
-"building" "*" "black" 0 "addr:housenumber" "black" 10 "Sans-serif" 0 0 "none" 0 0 25000    
-"addr:housenumber" "*" "black" 0 "addr:housenumber" "black" 10 "Sans-serif" 0 0 "none" 0 0 25000    
-"amenity" "fire_station" "black" 0 "name" "black" 10 "Sans-serif" 0 0 "icons/firestation.svg" 20 0 25000    
-"power" "sub_station" "black" 0 "name" "black" 10 "Sans-serif" 0 0 "icons/powerSubStation.svg" 20 0 25000    
+"amenity" "bank" "black" 0 "name" "black" 12 "sans-serif" 15 0 "icons/bank.png" 20 0 10000    
+"amenity" "bench" "black" 0 "none" "black" 12 "Sans-serif" 0 0 "icons/bench.svg" 10 0 10000    
+"amenity" "cafe" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/cafe.svg" 20 0 10000    
+"amenity" "restaurant" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/restaurant.svg" 20 0 10000    
+"amenity" "school" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/school.svg" 20 0 10000    
+"amenity" "recycling" "black" 0 "name" "black" 12 "sans-serif" 15 0 "icons/recycling.png" 20 0 10000    
+"amenity" "atm" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/atm.svg" 20 0 10000    
+"amenity" "toilets" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/toilets.svg" 20 0 10000    
+"amenity" "fast_food" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/fastfood.svg" 20 0 10000    
+"amenity" "pub" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/pub.svg" 20 0 10000    
+"amenity" "post_box" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/postbox.svg" 20 0 10000    
+"information" "guide_post" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/guidepost.svg" 20 0 10000    
+"sport" "swimming" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/swimming.svg" 20 0 10000    
+"sport" "soccer" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/soccer.svg" 20 0 10000    
+"shop" "supermarket" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/supermarket.svg" 20 0 10000    
+"amenity" "kindergarten" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/kindergarten.svg" 20 0 10000    
+"natural" "spring" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/spring.svg" 20 0 10000    
+"amenity" "telephone" "black" 0 "name" "black" 12 "Sans-serif" 0 0 "icons/telephone.svg" 20 0 10000    
+"amenity" "fountain" "black" 0 "name" "black" 12 "Sans-serif" 0 0 "icons/fountain.svg" 20 0 10000    
+"building" "*" "black" 0 "addr:housenumber" "black" 12 "Sans-serif" 0 0 "none" 0 0 25000    
+"addr:housenumber" "*" "black" 0 "addr:housenumber" "black" 12 "Sans-serif" 0 0 "none" 0 0 25000    
+"amenity" "fire_station" "black" 0 "name" "black" 12 "Sans-serif" 0 0 "icons/firestation.svg" 20 0 25000    
+"power" "sub_station" "black" 0 "name" "black" 12 "Sans-serif" 0 0 "icons/powerSubStation.svg" 20 0 25000    
 "COMMENT"                 
 "building" "collapsed" "black" 0 "none" "black" 0 "sans-serif" 0 0 "icons/buildingCollapsed.svg" 20 0 50000    
 "earthquake:damage" "collapsed_building" "black" 0 "none" "black" 0 "sans-serif" 0 0 "icons/buildingCollapsed.svg" 20 0 50000    
-"man_made" "lighthouse" "black" 0 "name" "black" 10 "sans-serif" 0 0 "icons/lighthouse.svg" 20 0 50000    
+"man_made" "lighthouse" "black" 0 "name" "black" 12 "sans-serif" 0 0 "icons/lighthouse.svg" 20 0 50000    
 "buoy" "*" "black" 0 "none" "black" 0 "Sans-serif" 0 0 "icons/buoy.svg" 20 0 50000    
 "traffic_sign" "city_limit" "black" 0 "none" "black" 0 "sans-serif" 0 0 "icons/citylimit.svg" 20 0 50000    
 "power|power_source" "generator|wind" "black" 0 "none" "black" 0 "sans-serif" 0 0 "icons/powerWind.svg" 20 0 50000    
-"natural" "peak" "black" 0 "name!_lon!_lat" "black" 10 "sans-serif" 0 0 "icons/peak.svg" 20 0 100000    
+"natural" "peak" "black" 0 "name!_lon!_lat" "black" 12 "sans-serif" 0 0 "icons/peak.svg" 20 0 100000    
 "highway" "obstacle" "black" 0 "none" "black" 0 "sans-serif" 0 0 "icons/landslide.svg" 20 0 50000    
 "highway" "bus_stop" "black" 0 "none" "black" 0 "Sans-serif" 0 0 "icons/bus.svg" 20 0 50000    
 "barrier" "obstacle" "black" 0 "none" "black" 0 "sans-serif" 0 0 "icons/landslide.svg" 20 0 50000    
 "barrier" "gate" "black" 0 "none" "black" 0 "sans-serif" 0 0 "icons/gate.svg" 15 0 50000    
 "barrier" "wall" "black" 0 "none" "black" 0 "sans-serif" 0 0 "icons/wall.svg" 15 0 50000    
-"amenity" "fuel" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/fuel.svg" 20 0 50000    
-"amenity" "place_of_worship" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/church.svg" 20 0 25000    
-"leisure" "park" "black" 1 "name" "black" 10 "sans-serif" 15 0 "none" 0 0 25000    
-"amenity" "parking" "black" 0 "name" "black" 10 "sans-serif" 15 0 "icons/parking.png" 15 0 50000    
-"leisure" "playground" "black" 0 "name" "black" 10 "sans-serif" 15 0 "icons/playground.png" 20 0 25000    
-"amenity" "police" "black" 0 "name" "black" 10 "sans-serif" 15 0 "icons/police.png" 20 0 50000    
-"amenity" "post_office" "black" 0 "name" "black" 10 "sans-serif" 15 0 "none" 0 0 25000    
-"amenity" "bus_station" "black" 0 "name" "black" 10 "sans-serif" 15 0 "icons/busstation.svg" 20 0 25000    
-"enforcement" "speed" "black" 0 "none" "black" 10 "Sans-serif" 15 0 "icons/radar.svg" 20 0 50000    
-"enforcement" "maxspeed" "black" 0 "none" "black" 10 "Sans-serif" 15 0 "icons/radar.svg" 20 0 50000    
-"enforcement" "traffic_signals" "black" 0 "none" "black" 10 "Sans-serif" 15 0 "icons/blitzer.svg" 20 0 50000    
+"amenity" "fuel" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/fuel.svg" 20 0 50000    
+"amenity" "place_of_worship" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/church.svg" 20 0 25000    
+"leisure" "park" "black" 1 "name" "black" 12 "sans-serif" 15 0 "none" 0 0 25000    
+"amenity" "parking" "black" 0 "name" "black" 12 "sans-serif" 15 0 "icons/parking.png" 15 0 50000    
+"leisure" "playground" "black" 0 "name" "black" 12 "sans-serif" 15 0 "icons/playground.png" 20 0 25000    
+"amenity" "police" "black" 0 "name" "black" 12 "sans-serif" 15 0 "icons/police.png" 20 0 50000    
+"amenity" "post_office" "black" 0 "name" "black" 12 "sans-serif" 15 0 "none" 0 0 25000    
+"amenity" "bus_station" "black" 0 "name" "black" 12 "sans-serif" 15 0 "icons/busstation.svg" 20 0 25000    
+"enforcement" "speed" "black" 0 "none" "black" 12 "Sans-serif" 15 0 "icons/radar.svg" 20 0 50000    
+"enforcement" "maxspeed" "black" 0 "none" "black" 12 "Sans-serif" 15 0 "icons/radar.svg" 20 0 50000    
+"enforcement" "traffic_signals" "black" 0 "none" "black" 12 "Sans-serif" 15 0 "icons/blitzer.svg" 20 0 50000    
 "earthquake:damage" "spontaneous_camp" "green" 0 "none" "black" 0 "sans-serif" 0 0 "icons/areaRefugees.svg" 20 0 50000    
 "earthquake:damage" "spontaneous_campsite" "green" 0 "none" "black" 0 "sans-serif" 0 0 "icons/areaRefugees.svg" 20 0 50000    
 "earthquake:damage" "people_camping" "green" 0 "none" "black" 0 "sans-serif" 0 0 "icons/areaRefugees.svg" 20 0 50000    
 "earthquake:damage" "landslide" "darkgrey" 0 "none" "black" 0 "sans-serif" 0 0 "icons/landslide.svg" 20 0 50000    
 "tourism|refugee" "camp_site|yes" "green" 0 "none" "black" 0 "sans-serif" 0 0 "icons/areaRefugees.svg" 20 0 50000    
-"tourism" "picnic_site" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/picnic.svg" 20 0 25000    
-"tourism" "viewpoint" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/binoculars.svg" 20 0 50000    
-"tourism" "attraction" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/glasses.svg" 20 0 50000    
-"tourism" "hotel" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/hotel.svg" 20 0 25000    
+"tourism" "picnic_site" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/picnic.svg" 20 0 25000    
+"tourism" "viewpoint" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/binoculars.svg" 20 0 50000    
+"tourism" "attraction" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/glasses.svg" 20 0 50000    
+"tourism" "hotel" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/hotel.svg" 20 0 25000    
 "tourism" "information" "black" 0 "name" "black" 0 "Sans-serif" 15 0 "icons/info.svg" 20 0 50000    
-"amenity|type" "hospital|Field Hospital" "pink" 0 "name" "black" 10 "sans-serif" 15 0 "icons/fieldHospital.svg" 20 0 50000    
-"amenity|hospital" "hospital|field" "pink" 0 "name" "black" 10 "sans-serif" 15 0 "icons/fieldHospital.svg" 20 0 50000    
-"amenity" "hospital" "pink" 0 "name" "black" 10 "sans-serif" 15 0 "icons/hospital.svg" 20 0 50000    
-"amenity" "pharmacy" "black" 0 "name" "black" 10 "Sans-serif" 0 0 "icons/pharmacy.svg" 20 0 25000    
-"power" "pole" "black" 0 "none" "black" 10 "sans-serif" 0 0 "icons/powerTower.svg" 20 0 50000    
-"power" "tower" "black" 0 "none" "black" 10 "sans-serif" 0 0 "icons/powerTower.svg" 20 0 50000    
-"man_made|tower:type" "tower|communication" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/towerRadio.svg" 20 0 100000    
-"man_made" "tower" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/tower.svg" 20 0 100000    
-"railway" "station" "black" 0 "name" "black" 10 "Sans-serif" 15 0 "icons/railwaystation.svg" 20 0 50000    
+"amenity|type" "hospital|Field Hospital" "pink" 0 "name" "black" 12 "sans-serif" 15 0 "icons/fieldHospital.svg" 20 0 50000    
+"amenity|hospital" "hospital|field" "pink" 0 "name" "black" 12 "sans-serif" 15 0 "icons/fieldHospital.svg" 20 0 50000    
+"amenity" "hospital" "pink" 0 "name" "black" 12 "sans-serif" 15 0 "icons/hospital.svg" 20 0 50000    
+"amenity" "pharmacy" "black" 0 "name" "black" 12 "Sans-serif" 0 0 "icons/pharmacy.svg" 20 0 25000    
+"power" "pole" "black" 0 "none" "black" 12 "sans-serif" 0 0 "icons/powerTower.svg" 20 0 50000    
+"power" "tower" "black" 0 "none" "black" 12 "sans-serif" 0 0 "icons/powerTower.svg" 20 0 50000    
+"man_made|tower:type" "tower|communication" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/towerRadio.svg" 20 0 100000    
+"man_made" "tower" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/tower.svg" 20 0 100000    
+"railway" "station" "black" 0 "name" "black" 12 "Sans-serif" 15 0 "icons/railwaystation.svg" 20 0 50000    
 "COMMENT" "PLACES"                
 "place" "city" "black" 3 "name" "black" 18 "sans-serif" 0 0 "none" 0 0 999999    
 "place" "island" "black" 2 "name" "black" 16 "sans-serif" 0 0 "none" 0 0 999999    
-"place" "town" "black" 2 "name" "black" 16 "sans-serif" 0 0 "none" 0 0 250000    
+"place" "town" "black" 2 "name" "black" 24 "sans-serif" 0 0 "none" 0 0 250000    
 "place" "suburb" "black" 1 "name" "black" 14 "sans-serif" 0 0 "none" 0 0 50000    
 "place" "village" "black" 1 "name" "black" 14 "sans-serif" 0 0 "none" 0 0 50000    
 "place" "hamlet" "black" 1 "name" "black" 12 "sans-serif" 0 0 "none" 0 0 50000    
@@ -100,7 +100,7 @@
 "highway" "footway" "black" 1 4 "none" 0 0 "none" "black" 8 "sans-serif" 0 1 0 "none" 0 25000
 "highway" "path" "gray" 1 4 "none" 0 0 "none" "black" 8 "sans-serif" 0 1 0 "none" 0 25000
 "highway" "cycleway" "blue" 2 3 "none" 0 0 "none" "black" 10 "sans-serif" 0 1 0 "none" 0 50000
-"route" "ferry" "black" 2 1 "none" 0 0 "none" "black" 10 "sans-serif" 0 0 0 "none" 0 100000
+"route" "ferry" "black" 2 1 "none" 0 0 "name" "black" 10 "sans-serif" 0 0 0 "none" 0 100000
 "addr:interpolation" "*" "darkgrey" 1 0 "none" 0 0 "none" "black" 10 "sans-serif" 0 0 0 "none" 0 25000
 "power" "line" "darkgreen" 1 0 "none" 0 0 "none" "black" 8 "sans-serif" -1 0 1 "none" 0 100000
 "railway" "rail" "black" 2 0 "none" 0 0 "none" "black" 8 "sans-serif" -1 0 1 "none" 0 100000

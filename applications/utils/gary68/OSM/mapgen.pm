@@ -36,11 +36,12 @@ use Time::localtime;
 use List::Util qw[min max] ;
 use Encode ;
 use OSM::osm ;
+use OSM::QuadTree ;
 use GD ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '0.15' ;
+$VERSION = '0.16' ;
 
 require Exporter ;
 
@@ -125,6 +126,9 @@ my $lineJoin = "round" ;
 my @occupiedAreas = () ;
 my $labelPathId = 0 ;
 
+my $qtWayLabels ;
+my $qtPoiLabels ;
+
 #
 # variables
 #
@@ -164,6 +168,7 @@ my $dpi = 0 ;
 # clutter information
 my %clutter = () ;
 my %clutterIcon = () ;
+my @lines ;
 
 sub initGraph {
 #
@@ -180,6 +185,17 @@ sub initGraph {
 	$bottom = $b ;
 
 	drawArea ($color, "", $l, $t, $r, $t, $r, $b, $l, $b, $l, $t) ;
+
+	$qtWayLabels = OSM::QuadTree->new(  -xmin  => 0,
+                                      -xmax  => $sizeX+100,
+                                      -ymin  => 0,
+                                      -ymax  => $sizeY+40,
+                                      -depth => 5);
+	$qtPoiLabels = OSM::QuadTree->new(  -xmin  => 0,
+                                      -xmax  => $sizeX+100,
+                                      -ymin  => 0,
+                                      -ymax  => $sizeY+40,
+                                      -depth => 5);
 }
 
 sub convert {
@@ -212,13 +228,23 @@ sub occupyArea {
 	my ($x1, $x2, $y1, $y2) = @_ ;
 	# left, right, bottom, top (bottom > top!)
 	push @occupiedAreas, [$x1, $x2, $y1, $y2] ;
+	$qtPoiLabels->add ($#occupiedAreas, $x1, $y1, $x2, $y2) ;
 }
 
 sub areaOccupied {
 	my ($x1, $x2, $y1, $y2) = @_ ;
 	# left, right, bottom, top (bottom > top!)
 	my $occupied = 0 ;
-	LAB1: foreach my $area (@occupiedAreas) {
+
+	my $ref2 = $qtPoiLabels->getEnclosedObjects ($x1, $y2, $x2, $y1) ;
+	my @index = @$ref2 ;
+	my @occupiedAreasTemp = () ;
+	foreach my $nr (@index) {
+		push @occupiedAreasTemp, $occupiedAreas[$nr] ;
+	} 
+
+
+	LAB1: foreach my $area (@occupiedAreasTemp) {
 		my $intersection = 1 ;
 		if ($x1 > $area->[1]) { $intersection = 0 ; } ;
 		if ($x2 < $area->[0]) { $intersection = 0 ; } ;
@@ -408,7 +434,7 @@ sub labelWay {
 	}
 	my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
 	push @svgOutputDef, svgElementPath ($pathName, @points) ;
-	push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $text, $pathName, $tSpan, "middle", 50) ;
+	push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $text, $pathName, $tSpan, "middle", 50, 0) ;
 }
 
 
@@ -416,6 +442,17 @@ sub createWayLabels {
 	my ($ref, $ruleRef, $declutter) = @_ ;
 	my @labelCandidates = @$ref ;
 	my @wayRules = @$ruleRef ;
+
+	# calc ratio to label ways first where label just fits
+	foreach my $candidate (@labelCandidates) {
+		my $wLen = $candidate->[2] ;
+		my $lLen = $candidate->[3] ;
+		if ($wLen == 0) { $wLen = 1 ; }
+		$candidate->[5] = $lLen / $wLen ;
+	}
+	@labelCandidates = sort { $b->[5] <=> $a->[5] } @labelCandidates ;
+
+
 	foreach my $candidate (@labelCandidates) {
 		my $rule = $candidate->[0] ; # integer
 		my @ruleData = @{$wayRules[$rule]} ;
@@ -434,35 +471,391 @@ sub createWayLabels {
 			$toLabel = 0 ;
 		}
 
-		if ( ($lLen > $wLen) or ($toLabel == 0) ) {
+		if ( ($lLen > $wLen*0.95) or ($toLabel == 0) ) {
 			# label too long
 			# print "CWL: candidate is too short\n" ;
 			$numWayLabelsOmitted++ ;
+			# print "OMITTED: $name, $wLen, $lLen\n" ;
 		}
 		else {
 			my $numLabels = int ($wLen / (4 * $lLen)) ;
 			if ($numLabels < 1) { $numLabels = 1 ; }
 			if ($numLabels > 4) { $numLabels = 4 ; }
 			# print "CWL:   $numLabels labels will be drawn.\n" ;
-			my $interval = int (100 / ($numLabels + 1)) ;
-			my @positions = () ;
-			for (my $i=1; $i<=$numLabels; $i++) {
-				push @positions, $i * $interval ;
-			}
-			
-			my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
-			push @svgOutputDef, svgElementPath ($pathName, @points) ;
 
-			foreach my $position (@positions) {
-				# print "CWL:   position $position\n" ;
-				push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
-					$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], "middle", $position) ;
+			if ($numLabels == 1) {
+				my $spare = 0.95 * $wLen - $lLen ;
+				my $sparePercentHalf = $spare / ($wLen*0.95) *100 / 2 ;
+				my $startOffset = 50 - $sparePercentHalf ;
+				my $endOffset = 50 + $sparePercentHalf ;
+				my $step = ($endOffset - $startOffset) / 5 ;
+				my @positions = () ;
+				my $actual = $startOffset ;
+				while ($actual <= $endOffset) {
+					my ($ref, $angle) = subWay (\@points, $lLen, "middle", $actual) ;
+					my @way = @$ref ;
+					my ($col) = lineCrossings (\@way) ;
+					my $quality = $angle + abs (50 - $actual) ;
+					if ($col == 0) { push @positions, ["middle", $actual, $quality] ; }
+					$actual += $step ;
+				}
+				if (scalar @positions > 0) {
+					@positions = sort {$a->[2] <=> $b->[2]} @positions ;
+					# print "name $name\n" ; foreach my $pos (@positions) { print "  angle $pos->[2] $pos->[0] $pos->[1]\n" ; }
+					my ($pos) = shift @positions ;
+					my ($ref, $angle) = subWay (\@points, $lLen, $pos->[0], $pos->[1]) ;
+					my @finalWay = @$ref ;
+					my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
+					push @svgOutputDef, svgElementPath ($pathName, @points) ;
+					push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
+						$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], $pos->[0], $pos->[1], 0) ;
+					occupyLines (\@finalWay) ;
+				}
+				else {
+					# print "WARNING: $name could not be labeled (collisions)\n" ;
+					$numWayLabelsOmitted++ ;
+				}
+			}
+			else {
+				my $interval = int (100 / ($numLabels + 1)) ;
+				my @positions = () ;
+				# print "$name - num lables: $numLabels\n" ;
+				for (my $i=1; $i<=$numLabels; $i++) {
+					push @positions, $i * $interval ;
+				}
+			
+				foreach my $position (@positions) {
+					my ($refFinal, $angle) = subWay (\@points, $lLen, "middle", $position) ;
+					my (@finalWay) = @$refFinal ;
+					# print "points @points\n" ;
+					# print "final: @finalWay\n\n" ;
+					my ($collision) = lineCrossings (\@finalWay) ;
+					if ($collision == 0) {
+						my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
+						push @svgOutputDef, svgElementPath ($pathName, @finalWay) ;
+						push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
+							$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], "middle", 50, 0) ;
+						occupyLines (\@finalWay) ;
+					}
+					else {
+						# print "INFO: $name labeled less often than desired.\n" ;
+					}
+				}
 			}
 		}
 	}
 }
 
 
+sub occupyLines {
+	my ($ref) = shift ;
+	my @coordinates = @$ref ;
+
+	for (my $i=0; $i<$#coordinates-2; $i+=2) {
+		push @lines, [$coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]] ;
+		# print "PUSHED $coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]\n" ;
+		# drawWayPix ("black", 1, 0, @coordinates)
+
+		$qtWayLabels->add ($#lines, $coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]) ;
+
+	}
+}
+
+
+sub lineCrossings {
+	my ($ref) = shift ;
+	my @coordinates = @$ref ;
+	my @testLines = () ;
+
+	for (my $i=0; $i<$#coordinates-2; $i+=2) {
+		push @testLines, [$coordinates[$i], $coordinates[$i+1], $coordinates[$i+2], $coordinates[$i+3]] ;
+	}
+
+	my ($found) = 0 ;
+
+
+	# find area
+	my $xMin = 999999 ; my $xMax = 0 ;
+	my $yMin = 999999 ; my $yMax = 0 ;
+	foreach my $l1 (@testLines) {
+		if ($l1->[0] > $xMax) { $xMax = $l1->[0] ; }
+		if ($l1->[0] < $xMin) { $xMin = $l1->[0] ; }
+		if ($l1->[1] > $yMax) { $yMax = $l1->[1] ; }
+		if ($l1->[1] < $yMin) { $yMin = $l1->[1] ; }
+	}
+	
+	# get indexes
+	my $ref2 = $qtWayLabels->getEnclosedObjects ($xMin, $yMin, $xMax, $yMax) ;
+	# create array linesInArea
+	my @linesInAreaIndex = @$ref2 ;
+	my @linesInArea = () ;
+	foreach my $lineNr (@linesInAreaIndex) {
+		push @linesInArea, $lines[$lineNr] ;
+	} 
+
+	LABCR: foreach my $l1 (@testLines) {
+		foreach my $l2 (@linesInArea) {
+			my ($x, $y) = intersection (@$l1, @$l2) ;
+			# print "@$l1, @$l2\n" ;
+			# print "$x, $y\n" ;
+			if (($x !=0) and ($y != 0)) {
+				$found = 1 ;
+				last LABCR ;
+			}
+		}
+	}
+	if ($found == 0) {
+		return 0 ;
+	}
+	else {
+		# drawWayPix ("blue", 1, 1, @coordinates) ;
+		return 1 ;
+	}	
+}
+
+sub triangleNode {
+	# 0 = start
+	# 1 = end
+	my ($x1, $y1, $x2, $y2, $len, $startEnd) = @_ ;
+	my ($c) = sqrt ( ($x2-$x1)**2 + ($y2-$y1)**2) ;
+	my $percent = $len / $c ;
+
+	my ($x, $y) ;
+	if ($startEnd == 0 ) {	
+		$x = $x1 + ($x2-$x1)*$percent ;
+		$y = $y1 + ($y2-$y1)*$percent ;
+	}
+	else {
+		$x = $x2 - ($x2-$x1)*$percent ;
+		$y = $y2 - ($y2-$y1)*$percent ;
+	}
+
+	return ($x, $y) ;
+}
+
+
+sub subWay {
+	my ($ref, $labLen, $alignment, $position) = @_ ;
+	my @coordinates = @$ref ;
+	my @points ;
+	my @dists ;
+	my @angles = () ;
+
+	for (my $i=0; $i < $#coordinates; $i+=2) {
+		push @points, [$coordinates[$i],$coordinates[$i+1]] ;
+	}
+
+	$dists[0] = 0 ;
+	my $dist = 0 ;
+	if (scalar @points > 1) {
+		for (my $i=1;$i<=$#points; $i++) {
+			$dist = $dist + sqrt ( ($points[$i-1]->[0]-$points[$i]->[0])**2 + ($points[$i-1]->[1]-$points[$i]->[1])**2 ) ;
+			$dists[$i] = $dist ;
+			# print "  dist $i = $dist\n" ;
+		}			
+	}
+
+	# calc angles at nodes
+	if (scalar @points > 2) {
+		for (my $i=1;$i<$#points; $i++) {
+			$angles[$i] = angleMapgen ($points[$i-1]->[0], $points[$i-1]->[1], $points[$i]->[0], $points[$i]->[1], $points[$i]->[0], $points[$i]->[1], $points[$i+1]->[0], $points[$i+1]->[1]) ;
+			# print "  angle $i = $angle\n" ;
+		}			
+	}
+
+	my $wayLength = $dist ;
+	my $refPoint = $wayLength / 100 * $position ;
+	my $labelStart ; my $labelEnd ;
+	if ($alignment eq "start") { # left
+		$labelStart = $refPoint ;
+		$labelEnd = $labelStart + $labLen ;
+	}
+	if ($alignment eq "end") { # right
+		$labelEnd = $refPoint ;
+		$labelStart = $labelEnd - $labLen ;
+	}
+	if ($alignment eq "middle") { # center
+		$labelEnd = $refPoint + $labLen / 2 ;
+		$labelStart = $refPoint - $labLen / 2 ;
+	}
+	# print "labelStart = $labelStart; labelEnd = $labelEnd\n" ;
+
+	# find start and end segments
+	my $startSeg ; my $endSeg ;
+	for (my $i=0; $i<$#points; $i++) {
+		if ( ($dists[$i]<=$labelStart) and ($dists[$i+1]>=$labelStart) ) { $startSeg = $i ; }
+		if ( ($dists[$i]<=$labelEnd) and ($dists[$i+1]>=$labelEnd) ) { $endSeg = $i ; }
+	}
+	# print "startSeg= $startSeg   -   endSeg= $endSeg\n" ;
+
+	my @finalWay = () ;
+	my $finalAngle = 0 ;
+	my ($sx, $sy) = triangleNode ($coordinates[$startSeg*2], $coordinates[$startSeg*2+1], $coordinates[$startSeg*2+2], $coordinates[$startSeg*2+3], $labelStart-$dists[$startSeg], 0) ;
+	push @finalWay, $sx, $sy ;
+	# print "final way (start): @finalWay\n" ;
+
+	if ($startSeg != $endSeg) {
+		for (my $i=$startSeg+1; $i<=$endSeg; $i++) { 
+			push @finalWay, $coordinates[$i*2], $coordinates[$i*2+1] ; 
+			$finalAngle += abs ($angles[$i]) ;
+		}
+	}
+
+	my ($ex, $ey) = triangleNode ($coordinates[$endSeg*2], $coordinates[$endSeg*2+1], $coordinates[$endSeg*2+2], $coordinates[$endSeg*2+3], $labelEnd-$dists[$endSeg], 0) ;
+	push @finalWay, $ex, $ey ;
+	# print "final way (final): @finalWay\n" ;
+	
+	return (\@finalWay, $finalAngle) ;	
+
+}
+sub intersection {
+
+	my ($g1x1) = shift ;
+	my ($g1y1) = shift ;
+	my ($g1x2) = shift ;
+	my ($g1y2) = shift ;
+	
+	my ($g2x1) = shift ;
+	my ($g2y1) = shift ;
+	my ($g2x2) = shift ;
+	my ($g2y2) = shift ;
+
+	# printf "g1: %f/%f   %f/%f\n", $g1x1, $g1y1, $g1x2, $g1y2 ;
+	# printf "g2: %f/%f   %f/%f\n", $g2x1, $g2y1, $g2x2, $g2y2 ;
+
+
+
+	# wenn punkte gleich, dann 0 !!!
+	# nur geraden pr fen, wenn node ids ungleich !!!
+
+	if (($g1x1 == $g2x1) and ($g1y1 == $g2y1)) { # p1 = p1 ?
+		#print "gleicher punkt\n" ;
+		return ($g1x1, $g1y1) ;
+	}
+	if (($g1x1 == $g2x2) and ($g1y1 == $g2y2)) { # p1 = p2 ?
+		#print "gleicher punkt\n" ;
+		return ($g1x1, $g1y1) ;
+	}
+	if (($g1x2 == $g2x1) and ($g1y2 == $g2y1)) { # p2 = p1 ?
+		#print "gleicher punkt\n" ;
+		return ($g1x2, $g1y2) ;
+	}
+
+	if (($g1x2 == $g2x2) and ($g1y2 == $g2y2)) { # p2 = p1 ?
+		#print "gleicher punkt\n" ;
+		return ($g1x2, $g1y2) ;
+	}
+
+
+	my $g1m ;
+	if ( ($g1x2-$g1x1) != 0 )  {
+		$g1m = ($g1y2-$g1y1)/($g1x2-$g1x1) ; # steigungen
+	}
+	else {
+		$g1m = 999999 ;
+	}
+
+	my $g2m ;
+	if ( ($g2x2-$g2x1) != 0 ) {
+		$g2m = ($g2y2-$g2y1)/($g2x2-$g2x1) ;
+	}
+	else {
+		$g2m = 999999 ;
+	}
+
+	#printf "Steigungen: m1=%f m2=%f\n", $g1m, $g2m ;
+
+	if ($g1m == $g2m) {   # parallel
+		#print "parallel\n" ;
+		return (0, 0) ;
+	}
+
+	my ($g1b) = $g1y1 - $g1m * $g1x1 ; # abschnitte
+	my ($g2b) = $g2y1 - $g2m * $g2x1 ;
+
+	#printf "b1=%f b2=%f\n", $g1b, $g2b ;
+
+	
+	# wenn punkt auf gerade, dann 1 - DELTA Pr fung !!! delta?
+
+
+	my ($sx) = ($g2b-$g1b) / ($g1m-$g2m) ;             # schnittpunkt
+	my ($sy) = ($g1m*$g2b - $g2m*$g1b) / ($g1m-$g2m);
+
+	#print "schnitt: ", $sx, "/", $sy, "\n"	;
+
+	my ($g1xmax) = max ($g1x1, $g1x2) ;
+	my ($g1xmin) = min ($g1x1, $g1x2) ;	
+	my ($g1ymax) = max ($g1y1, $g1y2) ;	
+	my ($g1ymin) = min ($g1y1, $g1y2) ;	
+
+	my ($g2xmax) = max ($g2x1, $g2x2) ;
+	my ($g2xmin) = min ($g2x1, $g2x2) ;	
+	my ($g2ymax) = max ($g2y1, $g2y2) ;	
+	my ($g2ymin) = min ($g2y1, $g2y2) ;	
+
+	if 	(($sx >= $g1xmin) and
+		($sx >= $g2xmin) and
+		($sx <= $g1xmax) and
+		($sx <= $g2xmax) and
+		($sy >= $g1ymin) and
+		($sy >= $g2ymin) and
+		($sy <= $g1ymax) and
+		($sy <= $g2ymax)) {
+		#print "*******IN*********\n" ;
+		return ($sx, $sy) ;
+	}
+	else {
+		#print "OUT\n" ;
+		return (0, 0) ;
+	}
+
+} 
+
+sub angleMapgen {
+	my ($g1x1) = shift ;
+	my ($g1y1) = shift ;
+	my ($g1x2) = shift ;
+	my ($g1y2) = shift ;
+	my ($g2x1) = shift ;
+	my ($g2y1) = shift ;
+	my ($g2x2) = shift ;
+	my ($g2y2) = shift ;
+
+	my $g1m ;
+	if ( ($g1x2-$g1x1) != 0 )  {
+		$g1m = ($g1y2-$g1y1)/($g1x2-$g1x1) ; # steigungen
+	}
+	else {
+		$g1m = 999999999 ;
+	}
+
+	my $g2m ;
+	if ( ($g2x2-$g2x1) != 0 ) {
+		$g2m = ($g2y2-$g2y1)/($g2x2-$g2x1) ;
+	}
+	else {
+		$g2m = 999999999 ;
+	}
+
+	if ($g1m == $g2m) {   # parallel
+		return (0) ;
+	}
+	else {
+		my $t1 = $g1m -$g2m ;
+		my $t2 = 1 + $g1m * $g2m ;
+		if ($t2 == 0) {
+			return 90 ;
+		}
+		else {
+			my $a = atan (abs ($t1/$t2)) / 3.141592654 * 180 ;
+			return $a ;
+		}
+	}
+} 
+
+
+#------------------------------------------------------------------------------------------------------------
 
 
 sub drawArea {
@@ -595,7 +988,7 @@ sub writeSVG {
 	my ($paper, $w, $h) = fitsPaper ($dpi) ;
 
 	open ($file, ">", $fileName) || die "can't open svg output file";
-	print $file "<?xml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"no\"?>\n" ;
+	print $file "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n" ;
 	print $file "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n" ;
 
 	my ($svg) = "<svg version=\"1.1\" baseProfile=\"full\" xmlns=\"http://www.w3.org/2000/svg\" " ;
@@ -662,7 +1055,7 @@ sub svgElementText {
 		"\" font-size=\"" . $size . 
 		"\" font-family=\"" . $font . 
 		"\" fill=\"" . $col . 
-		"\">" . encode("iso-8859-1", decode("utf8", $text)) . "</text>" ;
+		"\">" . $text . "</text>" ;
 	return $svg ;
 }
 
@@ -757,12 +1150,20 @@ sub svgElementPathTextAdvanced {
 #
 # draws text to path element; anchors: start, middle, end
 #
-	my ($col, $size, $font, $text, $pathName, $tSpan, $alignment, $offset) = @_ ;
+	my ($col, $size, $font, $text, $pathName, $tSpan, $alignment, $offset, $halo) = @_ ;
 	my $svg = "<text font-family=\"" . $font . "\" " ;
 	$svg = $svg . "font-size=\"" . $size . "\" " ;
+
+	if ($halo > 0) {
+		$svg = $svg . "font-weight=\"bold\" " ;
+		$svg = $svg . "stroke=\"white\" " ;
+		$svg = $svg . "stroke-width=\"" . $halo . "\" " ;
+		$svg = $svg . "opacity=\"90\%\" " ;
+	}
+
 	$svg = $svg . "fill=\"" . $col . "\" >\n" ;
 	$svg = $svg . "<textPath xlink:href=\"#" . $pathName . "\" text-anchor=\"" . $alignment . "\" startOffset=\"" . $offset . "%\" >\n" ;
-	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . encode("iso-8859-1", decode("utf8", $text)) . " </tspan>\n" ;
+	$svg = $svg . "<tspan dy=\"" . $tSpan . "\" >" . $text . " </tspan>\n" ;
 	$svg = $svg . "</textPath>\n</text>\n" ;
 	return $svg ;
 }
@@ -1184,13 +1585,13 @@ sub declutterStat {
 	$out .= "$numLabels labels drawn.\n" ; 
 	$out .= "  $numLabelsMoved moved. ($perc3 %)\n" ;
 	$out .= "  $numLabelsOmitted omitted. ($perc4 %)\n\n" ;
-	$out .= "$numWayLabelsOmitted way labels omitted because way was too short or declutter.\n" ;
+	$out .= "$numWayLabelsOmitted way labels omitted because way was too short, collision or declutter.\n" ;
 
 
 }
 
 sub placeLabelAndIcon {
-	my ($lon, $lat, $thickness, $text, $color, $textSize, $font, $ppc, $icon, $iconSizeX, $iconSizeY, $allowIconMove) = @_ ;
+	my ($lon, $lat, $thickness, $text, $color, $textSize, $font, $ppc, $icon, $iconSizeX, $iconSizeY, $allowIconMove, $halo) = @_ ;
 
 	my ($x, $y) = convert ($lon, $lat) ; # center !
 
@@ -1289,7 +1690,7 @@ sub placeLabelAndIcon {
 					$tries = 0 ;
 					LABB: foreach my $pos (@positions) {
 						$tries++ ;
-						$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines, \@lines, $color, $textSize, $font, $lineDist) ;
+						$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines, \@lines, $color, $textSize, $font, $lineDist, $halo) ;
 						if ($positionFound == 1) {
 							last LABB ;
 						}
@@ -1332,7 +1733,7 @@ sub placeLabelAndIcon {
 		LABA: foreach my $pos (@positions) {
 			$tries++ ;
 			# print "$lines[0]   $pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines\n" ;
-			$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines, \@lines, $color, $textSize, $font, $lineDist) ;
+			$positionFound = checkAndDrawText ($pos->[0], $pos->[1], $pos->[2], $pos->[3], $pos->[4], $numLines, \@lines, $color, $textSize, $font, $lineDist, $halo) ;
 			if ($positionFound == 1) {
 				last LABA ;
 			}
@@ -1344,7 +1745,7 @@ sub placeLabelAndIcon {
 
 
 sub checkAndDrawText {
-	my ($x1, $x2, $y1, $y2, $orientation, $numLines, $ref, $col, $size, $font, $lineDist) = @_ ;
+	my ($x1, $x2, $y1, $y2, $orientation, $numLines, $ref, $col, $size, $font, $lineDist, $halo) = @_ ;
 	my @lines = @$ref ;
 
 	if (!areaOccupied ($x1, $x2, $y1, $y2)) {
@@ -1355,13 +1756,13 @@ sub checkAndDrawText {
 			$labelPathId++ ;
 			push @svgOutputDef, svgElementPath ($pathName, @points) ;
 			if ($orientation eq "centered") {
-				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "middle", 50) ;
+				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "middle", 50, $halo) ;
 			}
 			if ($orientation eq "left") {
-				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "start", 0) ;
+				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "start", 0, $halo) ;
 			}
 			if ($orientation eq "right") {
-				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "end", 100) ;
+				push @svgOutputPathText, svgElementPathTextAdvanced ($col, $size, $font, $lines[$i], $pathName, 0, "end", 100, $halo) ;
 			}
 		}
 

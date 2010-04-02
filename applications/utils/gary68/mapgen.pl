@@ -44,8 +44,14 @@
 #      intelligent street labeling
 #      faster size determination of svg files
 #      right size and resolution for output files
+# 0.16 [-halo]
+#      placement of labels of ways improved
+#      quad trees implemented for speed
+#
+#
 #
 # TODO
+# multi labeling of ways
 # check rendering of route symbols, rectangles?
 # ------------------
 # [ ] reading rule check for right number of keys and values ! else ERROR
@@ -64,11 +70,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 0.15 ;
-use OSM::mapgenRules 0.15 ;
+use OSM::mapgen 0.16 ;
+use OSM::mapgenRules 0.16 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "0.15" ;
+my $version = "0.16" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -91,6 +97,7 @@ perl mapgen.pl
 
 -oneways (add oneway arrows)
 -onewaycolor=TEXT (color for oneway arrows)
+-halo=<FLOAT> (white halo width for point feature labels; DEFAULT=0)
 
 -grid=<integer> (number parts for grid, 0=no grid, DEFAULT=0)
 -gridcolor=TEXT (color for grid lines and labels (DEFAULT=black)
@@ -171,6 +178,7 @@ my $iconDir = "./routeicons/" ;
 my $routeIconDist = 25 ;
 my $onewayOpt = 0 ;
 my $onewayColor = "white" ;
+my $halo = 0 ;
 
 # keys from tags listed here will not be shown in tag stat
 my @noListTags = sort qw (name width url source ref note phone operator opening_hours maxspeed maxheight maxweight layer is_in TODO addr:city addr:housenumber addr:country addr:housename addr:interpolation addr:postcode addr:street created_by description ele fixme FIXME website bridge tunnel time openGeoDB:auto_update  openGeoDB:community_identification_number openGeoDB:is_in openGeoDB:is_in_loc_id openGeoDB:layer openGeoDB:license_plate_code openGeoDB:loc_id openGeoDB:location openGeoDB:name openGeoDB:population openGeoDB:postal_codes openGeoDB:sort_name openGeoDB:telephone_area_code openGeoDB:type openGeoDB:version opengeodb:lat opengeodb:lon int_ref population postal_code wikipedia) ;
@@ -296,6 +304,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"place:s"	=> \$place,		# place to draw
 				"lonrad:f"	=> \$lonrad,
 				"latrad:f"	=> \$latrad,
+				"halo:f"	=> \$halo,
 				"ruler:i"	=> \$rulerOpt,
 				"rulercolor:s"	=> \$rulerColor,
 				"scale"		=> \$scaleOpt,
@@ -610,7 +619,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 						#print "AREA name $name $x $y\n" ;
 						#print "$x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont]\n" ;
 						# drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
-						placeLabelAndIcon ($x, $y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt) ;
+						placeLabelAndIcon ($x, $y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt, $halo) ;
 					}
 				}
 			}
@@ -631,7 +640,7 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 				my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 				#print "MP name $name $x $y\n" ;
 				# drawTextPos ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
-				placeLabelAndIcon ($x,$y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt) ;
+				placeLabelAndIcon ($x,$y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt, $halo) ;
 			}
 		} #if
 	} # if
@@ -668,7 +677,7 @@ foreach my $nodeId (keys %memNodeTags) {
 			my @names = @$ref1 ;
 
 			placeLabelAndIcon ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexThickness], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $ppc, 
-				$test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $allowIconMoveOpt) ;
+				$test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $allowIconMoveOpt, $halo) ;
 		}
 	} # defined $test
 } # nodes
@@ -753,16 +762,11 @@ foreach my $wayId (keys %memWayTags) {
 				if ( $test->[$wayIndexBaseLayer] == 0) { 
 					drawArea ($test->[$wayIndexColor], $test->[$wayIndexIcon], nodes2Coordinates( @{$memWayNodes{$wayId}} ) ) ; 
 					if ( ($test->[$wayIndexLabel] ne "none") and ( $test->[$wayIndexBaseLayer] == 0) ) {
-						foreach my $tag2 (@{$memWayTags{$wayId}}) {
-							if ($tag2->[0] eq $test->[$wayIndexLabel]) {
-								my ($x, $y) = (0, 0) ; my $count = 0 ;
-								foreach my $node (@{$memWayNodes{$wayId}}) {
-									$x += $lon{$node} ; $y += $lat{$node} ; $count++ ;
-								}
-								$x = $x / $count ; $y = $y / $count ;
-								# drawTextPos ($x, $y, 0, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $declutterOpt, $ppc) ;
-								placeLabelAndIcon ($x, $y, 0, $tag2->[1], $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt) ;
-							}
+						my $name = "" ; my $ref1 ;
+						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
+						if ($name ne "") {
+							my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+							placeLabelAndIcon ($x, $y, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt, $halo) ;
 						}
 					} # draw label
 				}
@@ -1606,7 +1610,7 @@ sub isIn {
 			foreach my $iconName (keys %{$wayRouteIcons{$w}}) {
 				# print "  $w $offset ICON $iconName drawn\n" ;
 				# drawIcon ($lon{$node}, $lat{$node}, $iconName, 0, 0, $declutterOpt, $offset) ;
-				placeLabelAndIcon ($lon{$node}, $lat{$node}, 0, "", "none", 0, "", $ppc, $iconName, 0, 0, $allowIconMoveOpt) ;
+				placeLabelAndIcon ($lon{$node}, $lat{$node}, 0, "", "none", 0, "", $ppc, $iconName, 0, 0, $allowIconMoveOpt, $halo) ;
 				$offset += $routeIconDist ;
 			}
 		}

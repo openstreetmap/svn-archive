@@ -68,6 +68,11 @@ public class TrackReference
     this.timeWindow = 20;
     this.threshold = 20;
   }
+  
+  public GpxTrack getGpxTrack()
+  {
+    return track;
+  }
     
   public int compareTo(TrackReference tr)
   {

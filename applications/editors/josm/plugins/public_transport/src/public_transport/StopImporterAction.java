@@ -152,9 +152,7 @@ public class StopImporterAction extends JosmAction
 	currentTrack.threshold = dialog.getThreshold();
     }
     else if ("stopImporter.settingsSuggestStops".equals(event.getActionCommand()))
-    {
-      currentTrack.suggestStops();
-    }
+      Main.main.undoRedo.add(new TrackSuggestStopsCommand(this));
     else if ("stopImporter.stoplistFind".equals(event.getActionCommand()))
       findNodesInTable(dialog.getStoplistTable(), currentTrack.stoplistTM.nodes);
     else if ("stopImporter.stoplistShow".equals(event.getActionCommand()))

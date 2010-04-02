@@ -14,13 +14,11 @@ public class WaypointsDisableCommand extends Command
 {
   private Vector< Integer > workingLines = null;
   private Vector< Node > nodesForUndo = null;
-  private StopImporterAction.WaypointTableModel waypointTM = null;
-  private String type = null;
+  private WaypointTableModel waypointTM = null;
   
   public WaypointsDisableCommand(StopImporterAction controller)
   {
     waypointTM = controller.getWaypointTableModel();
-    type = controller.getDialog().getStoptype();
     workingLines = new Vector< Integer >();
     nodesForUndo = new Vector< Node >();
     
@@ -69,9 +67,11 @@ public class WaypointsDisableCommand extends Command
     {
       int j = workingLines.elementAt(i).intValue();
       Node node = nodesForUndo.elementAt(i);
+      waypointTM.nodes.set(j, node);
+      if (node == null)
+	continue;
       node.setDeleted(false);
       Main.main.getCurrentDataSet().addPrimitive(node);
-      waypointTM.nodes.set(j, node);
     }
   }
   

@@ -13,7 +13,7 @@ import javax.swing.tree.MutableTreeNode;
 public class WaypointsEnableCommand extends Command
 {
   private Vector< Integer > workingLines = null;
-  private StopImporterAction.WaypointTableModel waypointTM = null;
+  private WaypointTableModel waypointTM = null;
   private String type = null;
   
   public WaypointsEnableCommand(StopImporterAction controller)
@@ -63,6 +63,8 @@ public class WaypointsEnableCommand extends Command
       int j = workingLines.elementAt(i).intValue();
       Node node = waypointTM.nodes.elementAt(j);
       waypointTM.nodes.set(j, null);
+      if (node == null)
+	continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }

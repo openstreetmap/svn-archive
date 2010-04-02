@@ -10,20 +10,20 @@ import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
-public class WaypointsDetachCommand extends Command
+public class TrackStoplistDetachCommand extends Command
 {
   private Vector< Integer > workingLines = null;
   private Vector< Node > nodesForUndo = null;
-  private WaypointTableModel waypointTM = null;
+  private TrackStoplistTableModel stoplistTM = null;
   
-  public WaypointsDetachCommand(StopImporterAction controller)
+  public TrackStoplistDetachCommand(StopImporterAction controller)
   {
-    waypointTM = controller.getWaypointTableModel();
+    stoplistTM = controller.getCurrentTrack().stoplistTM;
     workingLines = new Vector< Integer >();
     nodesForUndo = new Vector< Node >();
     
     // use either selected lines or all lines if no line is selected
-    int[] selectedLines = controller.getDialog().getWaypointsTable().getSelectedRows();
+    int[] selectedLines = controller.getDialog().getStoplistTable().getSelectedRows();
     Vector< Integer > consideredLines = new Vector< Integer >();
     if (selectedLines.length > 0)
     {
@@ -32,14 +32,14 @@ public class WaypointsDetachCommand extends Command
     }
     else
     {
-      for (int i = 0; i < waypointTM.getRowCount(); ++i)
+      for (int i = 0; i < stoplistTM.getRowCount(); ++i)
 	consideredLines.add(new Integer(i));
     }
     
     // keep only lines where a node can be added
     for (int i = 0; i < consideredLines.size(); ++i)
     {
-      if (waypointTM.nodes.elementAt(consideredLines.elementAt(i)) != null)
+      if (stoplistTM.nodes.elementAt(consideredLines.elementAt(i)) != null)
 	workingLines.add(consideredLines.elementAt(i));
     }
   }
@@ -50,9 +50,9 @@ public class WaypointsDetachCommand extends Command
     for (int i = 0; i < workingLines.size(); ++i)
     {
       int j = workingLines.elementAt(i).intValue();
-      Node node = waypointTM.nodes.elementAt(j);
+      Node node = stoplistTM.nodes.elementAt(j);
       nodesForUndo.add(node);
-      waypointTM.nodes.set(j, null);
+      stoplistTM.nodes.set(j, null);
     }
     return true;
   }
@@ -63,7 +63,7 @@ public class WaypointsDetachCommand extends Command
     {
       int j = workingLines.elementAt(i).intValue();
       Node node = nodesForUndo.elementAt(i);
-      waypointTM.nodes.set(j, node);
+      stoplistTM.nodes.set(j, node);
     }
   }
   
@@ -75,6 +75,6 @@ public class WaypointsDetachCommand extends Command
   
   public MutableTreeNode description()
   {
-    return new DefaultMutableTreeNode("public_transport.Waypoints.Detach");
+    return new DefaultMutableTreeNode("public_transport.TrackStoplist.Detach");
   }
 };

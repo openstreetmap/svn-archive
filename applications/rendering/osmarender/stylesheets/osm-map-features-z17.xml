@@ -2534,6 +2534,15 @@
 			</else>
 		</rule>
 
+		<!-- highway crossing -->
+		<rule e="node" s="way" k="highway" v="trunk|primary|secondary|tertiary|residential|unclassified">
+			<rule e="node" k="highway" v="crossing">
+				<rule e="node" k="crossing" v="~|uncontrolled|zebra|island">
+					<wayMarker k="highway" class="highway-crossing"/>
+				</rule>
+			</rule>
+		</rule>
+
 		<!-- Oneway markers -->
 		<rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="area" v="~|false|no">
@@ -4244,6 +4253,13 @@
 			stroke-width: 2px;
 			stroke-opacity: 0;
 			marker-mid: url(#marker-traffic-calming);
+			}
+
+			.highway-crossing {
+			fill: none;
+			stroke: red;
+			stroke-opacity: 0;
+			marker-mid: url(#highway-crossing);
 			}
 
 			/* RelationRoute - generic styles */
@@ -6502,6 +6518,11 @@
 		</svg:marker>
 		<svg:marker fill="none" id="marker-gate-open" markerHeight="3px" markerUnits="userSpaceOnUse" markerWidth="3px" orient="auto" refX="1px" refY="5px" stroke="#707070" stroke-width="0.4px" viewBox="0 0 11 11">
 			<svg:path d="M1,0 L1,1 M1,2 L1,3 M1,4 L1,5 M1,6 L1,7 M1,8 L1,9 M1,10 L1,11"/>
+		</svg:marker>
+		<svg:marker fill="#949494" id="highway-crossing" markerHeight="1px" markerUnits="userSpaceOnUse" markerWidth="0.6px" orient="auto" refX="0.3px" refY="0.5px" viewBox="0 0 0.6 1">
+			<svg:rect x="0" y="0" width="0.6" height="0.2"/>
+			<svg:rect x="0" y="0.4" width="0.6" height="0.2"/>
+			<svg:rect x="0" y="0.8" width="0.6" height="0.2"/>
 		</svg:marker>
 		<svg:marker fill="none" id="noexit-all" markerHeight="3px" markerUnits="userSpaceOnUse" markerWidth="3px" orient="auto" refX="1px" refY="5px" stroke="#ff5555" stroke-width="2px" stroke-opacity="0.5" viewBox="0 0 10 10">
 			<svg:path d="M 1,0 L 1,10"/>

@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.wayselector;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -102,21 +103,35 @@ public class WaySelection {
     /** Extend the current selection
      @param data the data set in which to extend the selection */
     void extend(DataSet data) {
-        Collection<OsmPrimitive> selection = data.getSelected();
+	Collection<OsmPrimitive> currentSelection;
+	LinkedList<OsmPrimitive> selection;
 	boolean selectionChanged = false;
         Way way;
 
         if (!canExtend())
 	    return;
 
-	while ((way = findWay(selection)) != null) {
+	currentSelection = data.getSelected();
+
+	way = findWay(currentSelection);
+
+	if (way == null)
+	    return;
+
+	selection = new LinkedList<OsmPrimitive>();
+	for (OsmPrimitive primitive : currentSelection)
+	    selection.add(primitive);
+
+	do {
 	    if (!selection.add(way))
 	        break;
 
 	    selectionChanged = true;
 	    ways.add(way);
 	    addNodes(way);
-	}
+
+	    way = findWay(selection);
+	} while (way != null);
 
 	if (selectionChanged)
 	    data.setSelected(selection, true);

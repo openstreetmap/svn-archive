@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map [
 <!ENTITY % colorents SYSTEM "colorents-bw.xml.inc">
-<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+<!ENTITY % entities SYSTEM "parking-inc/entities.xml.inc">
 %colorents;
 %entities;
-<!ENTITY layer-parking-lane SYSTEM "inc/layer-parking-lane.xml.inc">
-<!ENTITY layer-parking-area SYSTEM "inc/layer-parking-area.xml.inc">
+<!ENTITY layer-parking-lane SYSTEM "parking-inc/layer-parking-lane.xml.inc">
+<!ENTITY layer-parking-area SYSTEM "parking-inc/layer-parking-area.xml.inc">
 <!-- <!ENTITY layer-parking-area-semi SYSTEM "inc/layer-parking-area-semi.xml.inc"> -->
 ]>
 <!-- This stylesheet uses features only available in mapnik builds with

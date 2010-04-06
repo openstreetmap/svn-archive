@@ -136,7 +136,7 @@
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
 	var signature="1.3e";			// current version
 	var maximised=false;			// minimised/maximised?
-	var sourcetags=new Array("","","","","NPE","Popular Edition (Scotland)","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo");
+	var sourcetags=new Array("","","","","OS OpenData StreetView","NPE","Popular Edition (Scotland)","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo");
 	var lastgroup='road';			// last preset group used
 	var wayrels=new Object();		// which relations are in ways?
 	var noderels=new Object();		// which relations are in nodes?
@@ -156,6 +156,7 @@
 						   "http://tah.openstreetmap.org/Tiles/tile/!/!/!.png",
 						   "http://tah.openstreetmap.org/Tiles/maplint/!/!/!.png",
 						   "http://andy.sandbox.cloudmade.com/tiles/cycle/!/!/!.png",
+						   "http://os.openstreetmap.org/sv/!/!/!.png",
 						   "http://ooc.openstreetmap.org/npe/!/!/!.png",
 						   "http://gibin.geog.ucl.ac.uk/~ollie/scotland/tiles/!/!/!.jpg",
 						   "http://ooc.openstreetmap.org/os7/!/!/!.jpg",
@@ -751,12 +752,13 @@
 			case Key.RIGHT: moveMap(-xinc,0); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.DOWN:  moveMap(0,-yinc); updateLinks(); redrawBackground(); whichWays(); break;	//  |
 			case Key.UP:    moveMap(0, yinc); updateLinks(); redrawBackground(); whichWays(); break;	//  |
-			case Key.CAPSLOCK: dimMap(); break;									// CAPS LOCK - dim map
+			case Key.CAPSLOCK: dimMapCapsLock(); break;							// CAPS LOCK - dim map
 			case 167:		_root.panel.presets.cycleIcon(); break;				// cycle presets
 		}
-		
+
 		switch (s) {
 			case 'C':		_root.csswallow=s; closeChangeset(); break;			// C - close current changeset
+			case 'D':		dimMapD(); break;									// D - dim map
 			case 'S':		_root.csswallow=s; prepareUpload(); break;			// S - save
 			case 'F':		openTagFinder(); break;								// F - tagfinder
 			case 'G':		loadGPS(); break;									// G - load GPS
@@ -1023,12 +1025,14 @@
 	
 	// Dim map on CAPS LOCK
 
-	function dimMap() {
+	function dimMapCapsLock() { dimMap(Key.isToggled(Key.CAPSLOCK)?30:100); }
+	function dimMapD() { dimMap(130-_root.map.ways._alpha); }
+	function dimMap(a) {
 		_root.map.areas._alpha=
 		_root.map.highlight._alpha=
 		_root.map.relations._alpha=
 		_root.map.ways._alpha=
-		_root.map.pois._alpha=Key.isToggled(Key.CAPSLOCK)?30:100;
+		_root.map.pois._alpha=a;
 	}
 
 	// Options window
@@ -1063,6 +1067,7 @@
                       iText('option_layer_osmarender'),
                       iText('option_layer_maplint'),
                       iText('option_layer_cycle_map'),
+                      iText('option_layer_os_streetview'),
                       iText('option_layer_ooc_npe'),
                       iText('option_layer_ooc_scotland'),
                       iText('option_layer_ooc_7th'),

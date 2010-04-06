@@ -3,18 +3,22 @@ package org.openstreetmap.josm.plugins.validator.tests;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.validator.Severity;
@@ -106,7 +110,7 @@ public class DuplicateWay extends Test
     public Command fixError(TestError testError)
     {
         Collection<? extends OsmPrimitive> sel = testError.getPrimitives();
-        LinkedList<Way> ways = new LinkedList<Way>();
+        HashSet<Way> ways = new HashSet<Way>();
 
         for (OsmPrimitive osm : sel)
             if (osm instanceof Way)
@@ -116,30 +120,50 @@ public class DuplicateWay extends Test
             return null;
 
         long idToKeep = 0;
+        Way wayToKeep = ways.iterator().next();
         // Only one way will be kept - the one with lowest positive ID, if such exist
         // or one "at random" if no such exists. Rest of the ways will be deleted
         for (Way w: ways) {
             if (!w.isNew()) {
-                if (idToKeep == 0 || w.getId() < idToKeep) idToKeep = w.getId();
+                if (idToKeep == 0 || w.getId() < idToKeep) {
+                    idToKeep = w.getId();
+                    wayToKeep = w;
+                }
             }
         }
 
-        if (idToKeep > 0) {
-            //Remove chosen way from the list, rest of ways in the list will be deleted
-            for (Way w: ways) {
-                if (w.getId() == idToKeep) {
-                        ways.remove(w);
-                    break;
-                }
+        // Find the way that is member of one or more relations. (If any)
+        Way wayWithRelations = null;
+        List<Relation> relations = null;
+        for (Way w : ways) {
+            List<Relation> rel = OsmPrimitive.getFilteredList(w.getReferrers(), Relation.class);
+            if (!rel.isEmpty()) {
+                if (wayWithRelations != null)
+                    throw new AssertionError("Cannot fix duplicate Ways: More than one way is relation member.");
+                wayWithRelations = w;
+                relations = rel;
             }
-        } else {
-            //Remove first way from the list, delete the rest
-            ways.remove(0);
+        }
+
+        Collection<Command> commands = new LinkedList<Command>();
+
+        // Fix relations.
+        if (wayWithRelations != null && wayToKeep != wayWithRelations) {
+            for (Relation rel : relations) {
+                Relation newRel = new Relation(rel);
+                for (int i = 0; i < newRel.getMembers().size(); ++i) {
+                    RelationMember m = newRel.getMember(i);
+                    if (wayWithRelations.equals(m.getMember())) {
+                        newRel.setMember(i, new RelationMember(m.getRole(), wayToKeep));
+                    }
+                }
+                commands.add(new ChangeCommand(rel, newRel));
+            }
         }
 
         //Delete all ways in the list
         //Note: nodes are not deleted, these can be detected and deleted at next pass
-        Collection<Command> commands = new LinkedList<Command>();
+        ways.remove(wayToKeep);
         commands.add(new DeleteCommand(ways));
         Main.main.undoRedo.add(new SequenceCommand(tr("Delete duplicate ways"), commands));
         return null;
@@ -148,6 +172,27 @@ public class DuplicateWay extends Test
     @Override
     public boolean isFixable(TestError testError)
     {
-        return (testError.getTester() instanceof DuplicateWay);
+        if (!(testError.getTester() instanceof DuplicateWay))
+            return false;
+
+        // We fix it only if there is no more than one way that is relation member.
+        Collection<? extends OsmPrimitive> sel = testError.getPrimitives();
+        HashSet<Way> ways = new HashSet<Way>();
+
+        for (OsmPrimitive osm : sel)
+            if (osm instanceof Way)
+                ways.add((Way)osm);
+
+        if (ways.size() < 2)
+            return false;
+
+        int waysWithRelations = 0;
+        for (Way w : ways) {
+            List<Relation> rel = OsmPrimitive.getFilteredList(w.getReferrers(), Relation.class);
+            if (!rel.isEmpty()) {
+                ++waysWithRelations;
+            }
+        }
+        return (waysWithRelations <= 1);
     }
 }

@@ -23,8 +23,10 @@ if (basename ($_SERVER["SCRIPT_FILENAME"]) == "index.php") {
 		// do nothing
 	}
 
-	if (typeof navigator.geolocation != "undefined")
-		navigator.geolocation.getCurrentPosition (successCallback, errorCallback)
+	function getlocation () {
+		if (typeof navigator.geolocation != "undefined")
+			navigator.geolocation.getCurrentPosition (successCallback, errorCallback)
+	}
 	// -->
 	</script>
 <?php
@@ -33,7 +35,7 @@ if (basename ($_SERVER["SCRIPT_FILENAME"]) == "index.php") {
 </head>
 <?php
 if (basename ($_SERVER["SCRIPT_FILENAME"]) == "index.php")
-	echo "<body onload = 'getlocation'>\n";
+	echo "<body onload = 'getlocation ()'>\n";
 else
 	echo "<body>\n";
 ?>

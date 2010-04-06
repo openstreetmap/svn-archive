@@ -8,6 +8,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.Node;
@@ -16,6 +17,7 @@ public class WaypointTableModel extends DefaultTableModel
       implements TableModelListener
 {
   private StopImporterAction controller = null;
+  public boolean inEvent = false;
   public Vector< Node > nodes = new Vector< Node >();
   public Vector< LatLon > coors = new Vector< LatLon >();
     
@@ -85,11 +87,17 @@ public class WaypointTableModel extends DefaultTableModel
   {
     if (e.getType() == TableModelEvent.UPDATE)
     {
+      if (inEvent)
+	return;
+      Main.main.undoRedo.add(new WaypointsNameCommand
+	  (this, e.getFirstRow(), (String)getValueAt(e.getFirstRow(), 1)));
+    }
+/*    {
       if (nodes.elementAt(e.getFirstRow()) != null)
       {
 	Node node = nodes.elementAt(e.getFirstRow());
 	node.put("name", (String)getValueAt(e.getFirstRow(), 1));
       }
-    }
+    }*/
   }
 };

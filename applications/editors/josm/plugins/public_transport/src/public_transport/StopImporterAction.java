@@ -303,16 +303,7 @@ public class StopImporterAction extends JosmAction
   public static Node createNode(LatLon latLon, String type, String name)
   {
     Node node = new Node(latLon);
-    if ("bus".equals(type))
-      node.put("highway", "bus_stop");
-    else if ("tram".equals(type))
-      node.put("railway", "tram_stop");
-    else if ("light_rail".equals(type))
-      node.put("railway", "station");
-    else if ("subway".equals(type))
-      node.put("railway", "station");
-    else if ("rail".equals(type))
-      node.put("railway", "station");
+    setTagsWrtType(node, type);
     node.put("name", name);
     if (Main.main.getCurrentDataSet() == null)
     {

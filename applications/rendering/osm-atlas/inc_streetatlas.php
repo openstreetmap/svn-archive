@@ -2,7 +2,6 @@
 /*
  * This file is part of OSM-Atlas, a script to create an atlas from
  * OpenStreetMap (www.openstreetmap.org) data.
- * Copyright 2009 Russell Phillips
 */
 
 /*

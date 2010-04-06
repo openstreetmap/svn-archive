@@ -3,7 +3,6 @@
 /*
  * This file is part of OSM-Atlas, a script to create an atlas from
  * OpenStreetMap (www.openstreetmap.org) data.
- * Copyright 2009 Russell Phillips
 */
 
 // This script works with OSM API v0.6
@@ -473,7 +472,7 @@ fwrite ($latexfile, "\\begin{titlepage}\n" .
 	"you think of as free actually have legal or technical restrictions " .
 	"on their use, holding back people from using them in creative, productive," .
 	" or unexpected ways.\n\n" .
-	"OpenStreetMap data, and this atlas, and is licensed under the Creative " .
+	"OpenStreetMap data, and this atlas, is licensed under the Creative " .
 	"Commons Attribution-Share Alike 2.0 Generic License. To view a " .
 	"copy of this license, visit " .
 	"\\href{http://creativecommons.org/licenses/by-sa/2.0/}" .

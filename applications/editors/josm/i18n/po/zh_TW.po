@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-28 16:10+0200\n"
-"PO-Revision-Date: 2010-03-28 12:09+0000\n"
+"POT-Creation-Date: 2010-04-06 18:52+0200\n"
+"PO-Revision-Date: 2010-03-28 16:42+0000\n"
 "Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Traditional Chinese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-03-28 13:55+0000\n"
+"X-Launchpad-Export-Date: 2010-04-06 16:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: zh_TW\n"
 
@@ -707,7 +707,7 @@ msgstr "請正確的選擇二或三個節點或一條只有二或二個節點的
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:101
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:753
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:246
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:276
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:278
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:62
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:689
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:95
@@ -1191,7 +1191,7 @@ msgstr "不能將物件移動到世界外頭"
 #: ../core/src/org/openstreetmap/josm/actions/NewAction.java:19
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:432
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:624
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:314
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:316
 msgid "New"
 msgstr "新增"
 
@@ -3410,13 +3410,13 @@ msgctxt "compass"
 msgid "E"
 msgstr "東"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:201
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:202
 #, java-format
 msgid ""
 "Unable to add primitive {0} to the dataset because it is already included"
 msgstr "無法將原型 {0} 加入資料組合，因為它已在其中"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:635
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:637
 #, java-format
 msgid ""
 "JOSM expected to find primitive [{0} {1}] in dataset but it is not there. "
@@ -3567,8 +3567,9 @@ msgid "node"
 msgid_plural "nodes"
 msgstr[0] "節點"
 
+#. turquoise
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:11
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:16
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:17
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:580
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:62
 msgid "way"
@@ -3577,7 +3578,7 @@ msgstr[0] "路徑"
 
 #. dark blue
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:12
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:17
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:18
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:170
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:364
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:580
@@ -3611,83 +3612,83 @@ msgstr "不能比較 ID「{0}」和 ID「{1}」的原型。"
 msgid "Parameter {0} not in range 0..{1}. Got ''{2}''."
 msgstr "參數「{0}」不應使用範圍 0..{1}，卻收到 {2}"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:189
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:188
 msgid "Area style way is not closed."
 msgstr "區域類型的路徑並未封閉。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:268
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:267
 msgid "More than one \"from\" way found."
 msgstr "找到一個以上「從」路徑。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:274
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:273
 msgid "More than one \"to\" way found."
 msgstr "找到一個以上「到」路徑。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:280
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:294
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:279
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:293
 msgid "More than one \"via\" found."
 msgstr "找到一個以上的「經過」。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:285
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:299
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:284
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:298
 #, java-format
 msgid "Unknown role ''{0}''."
 msgstr "不明的角色「{0}」。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:302
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:301
 #, java-format
 msgid "Unknown member type for ''{0}''."
 msgstr "「{0}」的不明成員類型。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:308
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:307
 msgid "No \"from\" way found."
 msgstr "找不到「從」路徑。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:312
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:311
 msgid "No \"to\" way found."
 msgstr "找不到「到」路徑。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:316
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:315
 msgid "No \"via\" node or way found."
 msgstr "找到一個以上「經過」路徑。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:325
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:324
 msgid "The \"from\" way does not start or end at a \"via\" node."
 msgstr "「從」路徑沒有開始或結束於「經過」節點。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:329
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:328
 msgid "The \"to\" way does not start or end at a \"via\" node."
 msgstr "「到」路徑沒有開始或結束於「經過」節點。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:360
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:359
 msgid "The \"from\" way does not start or end at the \"via\" way."
 msgstr "「從」路徑沒有開始或結束於「經過」路徑。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:364
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:363
 msgid "The \"to\" way does not start or end at the \"via\" way."
 msgstr "「到」路徑沒有開始或結束於「經過」路徑。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:458
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:457
 #, java-format
 msgid "Style for restriction {0} not found."
 msgstr "找不到限制 {0} 的樣式"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:530
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:529
 #, java-format
 msgid "Style for inner way ''{0}'' equals multipolygon."
 msgstr "內部路徑「{0}」的樣式等同多邊形。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:558
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:557
 #, java-format
 msgid "Style for outer way ''{0}'' mismatches."
 msgstr "外部路徑「{0}」的樣式不符。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:757
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:755
 #, java-format
 msgid "Error: {0}"
 msgstr "錯誤：{0}"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:757
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/MapPaintVisitor.java:755
 #, java-format
 msgid "Warning: {0}"
 msgstr "警告：{0}"
@@ -3701,47 +3702,48 @@ msgstr "不使用"
 msgid "selected"
 msgstr "已選取"
 
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:16
+#, fuzzy
+msgid "tagged"
+msgstr "未上標籤的"
+
 #. teal
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:18
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:19
 msgid "untagged way"
 msgstr "未上標籤的路徑"
 
 #. dark green
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:19
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
 msgid "incomplete way"
 msgstr "不完整的路徑"
 
 #. darker blue
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:21
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:179
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:189
 msgid "background"
 msgstr "背景"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:21
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:22
 msgid "highlight"
 msgstr "突顯"
 
 #. lighteal
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:23
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:24
 msgid "untagged"
 msgstr "未上標籤的"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:24
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:25
 msgid "text"
 msgstr "文字"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:25
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:26
 msgid "areatext"
 msgstr "區域文字"
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Epsg4326.java:26
 msgid "WGS84 Geographic"
 msgstr "WGS84 地理座標"
-
-#: ../core/src/org/openstreetmap/josm/data/projection/GaussLaborde_Reunion.java:220
-msgid "Gauss-Laborde Réunion 1947"
-msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Lambert.java:100
 #, java-format
@@ -3821,23 +3823,27 @@ msgstr "UTM"
 msgid "UTM Zone"
 msgstr "UTM 區"
 
-#: ../core/src/org/openstreetmap/josm/data/projection/UTM_20N_France_DOM.java:25
+#: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:25
 msgid "Guadeloupe Fort-Marigot 1949"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/projection/UTM_20N_France_DOM.java:26
+#: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:26
 msgid "Guadeloupe Ste-Anne 1948"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/projection/UTM_20N_France_DOM.java:27
+#: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:27
 msgid "Martinique Fort Desaix 1952"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/projection/UTM_20N_France_DOM.java:386
+#: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:28
+msgid "Reunion RGR92"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:410
 msgid "UTM 20N (France)"
 msgstr "UTM 20N (法國)"
 
-#: ../core/src/org/openstreetmap/josm/data/projection/UTM_20N_France_DOM.java:398
+#: ../core/src/org/openstreetmap/josm/data/projection/UTM_France_DOM.java:422
 msgid "UTM20 North Geodesic system"
 msgstr "UTM20 北部地理測量系統"
 
@@ -4219,7 +4225,7 @@ msgstr "檔案"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:468
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:658
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:149
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:217
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:219
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:649
 msgid "Edit"
 msgstr "編輯"
@@ -4421,7 +4427,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:479
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTableColumnModel.java:16
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:20
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberColumnModel.java:21
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberColumnModel.java:20
 msgid "Role"
 msgstr "角色"
 
@@ -7847,7 +7853,7 @@ msgstr "編輯目前選取關係成員所參照的關係"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTable.java:191
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:809
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:386
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:388
 msgid "Zoom to"
 msgstr "縮放至"
 
@@ -9073,7 +9079,7 @@ msgid "Initializing relations to update ..."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:120
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:527
+#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:82
 msgid "Settings"
 msgstr "設定值"
 
@@ -12560,7 +12566,7 @@ msgid "Markers from {0}"
 msgstr "{0} 的標記"
 
 #: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:68
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1087
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:217
 #, java-format
 msgid ""
 "Error occured while parsing gpx file {0}. Only part of the file will be "
@@ -12568,7 +12574,7 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:79
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1093
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:223
 #, java-format
 msgid "File \"{0}\" does not exist"
 msgstr "檔案「{0}」不存在"
@@ -12576,7 +12582,7 @@ msgstr "檔案「{0}」不存在"
 #. input was not properly parsed, abort
 #: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:82
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:128
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1098
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:228
 #, java-format
 msgid "Parsing file \"{0}\" failed"
 msgstr "分析檔案「{0}」失敗"
@@ -14484,7 +14490,7 @@ msgstr ""
 #. pane.createDialog(Main.parent, tr("Select Feuille")).setVisible(true);
 #. this below is a temporary workaround to fix the "always on top" issue
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheControl.java:104
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:414
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:417
 msgid "Select Feuille"
 msgstr ""
 
@@ -14535,26 +14541,26 @@ msgstr ""
 msgid "CadastreGrabber: Illegal url."
 msgstr "CadastreGrabber: 不合法的 url。"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:78
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:81
 msgid ""
 "Cannot open a new client session.\n"
 "Server in maintenance or temporary overloaded."
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:86
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:89
 #, java-format
 msgid ""
 "Town/city {0} not found or not available\n"
 "or action canceled"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:382
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:385
 msgid "Choose from..."
 msgstr "選擇自..."
 
 #. pane.createDialog(Main.parent, tr("Select commune")).setVisible(true);
 #. this below is a temporary workaround to fix the "always on top" issue
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:393
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastreInterface.java:396
 msgid "Select commune"
 msgstr ""
 
@@ -15240,30 +15246,30 @@ msgstr ""
 msgid "Blank Layer"
 msgstr "空白圖層"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:241
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:243
 #, java-format
 msgid "WMS layer ({0}), {1} tile(s) loaded"
 msgstr "WMS 圖層 ({0})，已載入 {1} 個拼貼"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:243
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:245
 msgid "Is not vectorized."
 msgstr "並非向量化的。"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:244
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:246
 #, java-format
 msgid "Raster size: {0}"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:246
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:248
 msgid "Is vectorized."
 msgstr "是向量化的。"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:247
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:249
 #, java-format
 msgid "Commune bbox: {0}"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:472
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:474
 #, java-format
 msgid ""
 "Unsupported cache file version; found {0}, expected {1}\n"
@@ -15272,16 +15278,16 @@ msgstr ""
 "不支援的快取檔案版本；找到 {0}，應為 {1}\n"
 "建立一個新的。"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:473
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:475
 msgid "Cache Format Error"
 msgstr "快取格式錯誤"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:497
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:499
 #, java-format
 msgid "Lambert zone {0} in cache incompatible with current Lambert zone {1}"
 msgstr "快取中的蘭勃特區 {0} 與目前的蘭勃特區 {1} 不相容"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:499
+#: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:501
 msgid "Cache Lambert Zone Error"
 msgstr "快取蘭勃特區發生錯誤"
 
@@ -16527,7 +16533,7 @@ msgid "Itinerary"
 msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:511
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:529
+#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:84
 msgid "Stops"
 msgstr ""
 
@@ -16535,23 +16541,30 @@ msgstr ""
 msgid "Meta"
 msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:511
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:833
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:71
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:106
 msgid "Create Stops from GPX ..."
 msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:512
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:72
 msgid "Create Stops from a GPX file"
 msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:525
-msgid "Tracks"
-msgstr ""
-
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:1103
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:233
 #, java-format
 msgid "IOException \"{0}\" occurred"
 msgstr ""
+
+#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:80
+msgid "Tracks"
+msgstr ""
+
+#. item "Ways/Steps" text "Width (meters)"
+#. </optional>
+#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:86
+#: build/trans_presets.java:628
+msgid "Waypoints"
+msgstr "路標"
 
 #: ../plugins/remotecontrol/src/org/openstreetmap/josm/plugins/remotecontrol/RemoteControlPreferences.java:27
 msgid "load data from API"
@@ -17107,13 +17120,13 @@ msgstr ""
 msgid "Create or edit a turn restriction."
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:41
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:42
 msgid ""
 "In the following table you can edit the <strong>raw tags</strong> of the OSM "
 "relation representing this turn restriction."
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:61
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/AdvancedEditorPanel.java:62
 msgid ""
 "In the following table you can edit the <strong>raw members</strong> of the "
 "OSM relation representing this turn restriction."
@@ -17124,12 +17137,12 @@ msgstr ""
 msgid "Copy to the clipboard"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:425
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:423
 #, java-format
 msgid "Cannot find object with id ''{0}'' in layer ''{1}''"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:428
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:426
 #, java-format
 msgid ""
 "Cannot add object ''{0}'' as relation member because it is deleted or "
@@ -17436,47 +17449,47 @@ msgstr ""
 msgid "no participating way with role ''to''"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:103
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:104
 msgid "Only participating in selection"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:105
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:106
 msgid ""
 "<html>Select to display turn restrictions related to object in the current "
 "selection only.<br>Deselect to display all turn restrictions in the current "
 "data set.</html>"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:161
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:162
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferenceEditor.java:107
 msgid "Turn Restrictions"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:163
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:164
 msgid "Display and manage turn restrictions in the current data set"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:215
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:217
 msgid "Open an editor for the selected turn restricion"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:274
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:276
 msgid "Delete the selected turn restriction"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:312
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:314
 msgid "Create a new turn restriction"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:351
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:353
 msgid "Set the current JOSM selection to the selected turn restrictions"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:353
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:355
 msgid "Select in current data layer"
 msgstr ""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:384
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:386
 msgid "Zoom to the currently selected turn restrictions"
 msgstr ""
 
@@ -17976,11 +17989,11 @@ msgid ""
 "the same layer, but are not connected by a node."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
 msgid "Crossing buildings"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:138
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
 msgid "Crossing ways"
 msgstr "路徑交叉"
 
@@ -17997,18 +18010,18 @@ msgstr "這會測試有沒有位置非常相近的節點存在。"
 msgid "Nodes at same position"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:59
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:79
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:63
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:83
 msgid "Duplicated ways"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:60
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:64
 msgid ""
 "This test checks that there are no ways with same tags and same node "
 "coordinates."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:144
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:168
 msgid "Delete duplicate ways"
 msgstr ""
 
@@ -19159,8 +19172,8 @@ msgstr ""
 #. Plugin turnrestrictions
 #: build/trans_plugins.java:79
 msgid ""
-"The turnrestrictions plugin allows to enter maintain information about turn "
-"restrictions in the OpenStreetMap database."
+"The turnrestrictions plugin allows to create and edit turn restrictions in "
+"the OpenStreetMap database."
 msgstr ""
 
 #. Plugin validator
@@ -20851,12 +20864,6 @@ msgstr "階梯"
 #: build/trans_presets.java:611
 msgid "Edit Flight of Steps"
 msgstr "編輯階梯"
-
-#. item "Ways/Steps" text "Width (meters)"
-#. </optional>
-#: build/trans_presets.java:628
-msgid "Waypoints"
-msgstr "路標"
 
 #. group "Waypoints"
 #: build/trans_presets.java:629

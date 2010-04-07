@@ -56,32 +56,36 @@
 # Version 2.0
 # - faster execution parameters
 #
+#
+# Version 3.0
+# - quad trees
+#
 
 use strict ;
 use warnings ;
 
 use List::Util qw[min max] ;
 use OSM::osm 5.1 ;
+use OSM::QuadTree ;
 use File::stat;
 use Time::localtime;
 use LWP::Simple;
 
-my $span = 0.03 ; # steps of 0.01 ! determines how far way centers may be apart to be compared against each other
+my $olc = 0 ;
 
 my $program = "checkcross.pl" ;
 my $usage = $program . " [N|B] def.xml file.osm out.htm out.gpx (mode N = normal or B = also get openstreetbugs" ;
-my $version = "2.0" ;
+my $version = "3.0" ;
 my $mode = "N" ;
 
 my $gpxFileName = "../../web/osm/qa/bugs/OpenStreetBugsOpen.gpx" ;
-my $threshold = 0.005 ; # in degrees, ~500m
 my $bugsMaxDist = 0.05 ; # in km
 my $bugsDownDist = 0.02 ; # in deg
 my $minLength = 100 ; # min length of way to be considered in result list (in meters)
 
 my (%gpxLon, %gpxLat, %gpxId, %gpxClosed, %gpxDesc) ;
 
-
+my $qt ;
 
 my $wayId ; my $wayId1 ; my $wayId2 ;
 my $wayUser ; my @wayNodes ; my @wayTags ;
@@ -288,11 +292,6 @@ print "number invalid ways (1 node only): $invalidWays\n" ;
 print "number check ways: $checkWayCount\n" ;
 print "number against ways: $againstWayCount\n" ;
 
-#$" = " " ;
-#print "Cat1 ways: @cat1\n" ;
-#print "Cat1 nodes: @allCat1Nodes\n" ;
-#print "All way nodes: @allWayNodes\n" ;
-
 
 
 
@@ -300,6 +299,12 @@ print "number against ways: $againstWayCount\n" ;
 # get node information
 ######################
 print "pass2: get node information...\n" ;
+
+my $minLon = 999 ;
+my $maxLon = -999 ;
+my $minLat = 999 ;
+my $maxLat = -999 ;
+
 openOsmFile ($osmName) ;
 
 @neededNodes = sort { $a <=> $b } @neededNodes ;
@@ -316,6 +321,11 @@ while ($nodeId != -1) {
 
 	if ($needed >= 0) { $lon{$nodeId} = $nodeLon ; $lat{$nodeId} = $nodeLat ; }
 
+	if ($nodeLon > $maxLon) { $maxLon = $nodeLon ; }
+	if ($nodeLon < $minLon) { $minLon = $nodeLon ; }
+	if ($nodeLat > $maxLat) { $maxLat = $nodeLat ; }
+	if ($nodeLat < $minLat) { $minLat = $nodeLat ; }
+
 	# next
 	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode () ;
 	if ($nodeId != -1) {
@@ -325,6 +335,11 @@ while ($nodeId != -1) {
 
 closeOsmFile () ;
 
+$qt = OSM::QuadTree->new (	-xmin => $minLon, 
+				-xmax => $maxLon, 
+				-ymin => $minLat, 
+				-ymax => $maxLat, 
+				-depth => 8) ;
 
 ##############
 # calc lengths
@@ -357,21 +372,12 @@ foreach $wayId (@againstWays) {
 ##########################
 print "init areas for checkways...\n" ;
 foreach $wayId (@checkWays) {
-	$xMax{$wayId} =  max ($lon{$wayNodesHash{$wayId}[0]}, $lon{$wayNodesHash{$wayId}[-1]}) + $threshold ;
-	$xMin{$wayId} =  min ($lon{$wayNodesHash{$wayId}[0]}, $lon{$wayNodesHash{$wayId}[-1]}) - $threshold ;
-	$yMax{$wayId} =  max ($lat{$wayNodesHash{$wayId}[0]}, $lat{$wayNodesHash{$wayId}[-1]}) + $threshold ;
-	$yMin{$wayId} =  min ($lat{$wayNodesHash{$wayId}[0]}, $lat{$wayNodesHash{$wayId}[-1]}) - $threshold ;
+
+	($xMin{$wayId}, $xMax{$wayId}, $yMin{$wayId}, $yMax{$wayId}) = getArea ( @{$wayNodesHash{$wayId}} );
+
+	$qt->add ($wayId, $xMin{$wayId}, $yMin{$wayId}, $xMax{$wayId}, $yMax{$wayId}) ;
 }
 
-###############
-# init way hash
-###############
-foreach $wayId (@checkWays) {
-	my ($lo) = ($lon{$wayNodesHash{$wayId}[0]} + $lon{$wayNodesHash{$wayId}[-1]}) / 2 ;
-	my ($la) = ($lat{$wayNodesHash{$wayId}[0]} + $lat{$wayNodesHash{$wayId}[-1]}) / 2 ;
-	my $hashValue = hashValue2 ($lo, $la) ;
-	push (@{$wayHash {$hashValue}}, $wayId) ;
-}
 
 
 ###############################
@@ -394,20 +400,10 @@ foreach $wayId1 (@againstWays) {
 	}
 
 	# create temp array according to hash
-	my @temp = () ;
-	my $lo ; my $la ;
-	for ($lo=$lon{$wayNodesHash{$wayId1}[0]}-$span; $lo<=$lon{$wayNodesHash{$wayId1}[0]}+$span; $lo=$lo+0.01) {
-		for ($la=$lat{$wayNodesHash{$wayId1}[0]}-$span; $la<=$lat{$wayNodesHash{$wayId1}[0]}+$span; $la=$la+0.01) {
-			if ( defined @{$wayHash{hashValue2($lo,$la)}} ) {
-				push @temp, @{$wayHash{hashValue2($lo,$la)}} ;
-			}
-		}
-	}
 
-	my $aXMax = max ($lon{$wayNodesHash{$wayId1}[0]}, $lon{$wayNodesHash{$wayId1}[-1]}) ;
-	my $aXMin = min ($lon{$wayNodesHash{$wayId1}[0]}, $lon{$wayNodesHash{$wayId1}[-1]}) ;
-	my $aYMax = max ($lat{$wayNodesHash{$wayId1}[0]}, $lat{$wayNodesHash{$wayId1}[-1]}) ;
-	my $aYMin = min ($lat{$wayNodesHash{$wayId1}[0]}, $lat{$wayNodesHash{$wayId1}[-1]}) ;
+	my ($aXMin, $aXMax, $aYMin, $aYMax) = getArea ( @{$wayNodesHash{$wayId1}} );
+	my $ref = $qt->getEnclosedObjects ($aXMin, $aYMin, $aXMax, $aYMax) ;
+	my @temp = @$ref ;
 
 	foreach $wayId2 (@temp) {
 		if ( $layer{$wayId1} ne $layer{$wayId2} ) {
@@ -417,6 +413,7 @@ foreach $wayId1 (@againstWays) {
 			# check for overlapping "way areas"
 
 			if (checkOverlap ($aXMin, $aYMin, $aXMax, $aYMax, $xMin{$wayId2}, $yMin{$wayId2}, $xMax{$wayId2}, $yMax{$wayId2})) {
+				$olc++ ;
 				if ( ($wayCategory{$wayId1} == $wayCategory{$wayId2}) and ($wayId1 <= $wayId2) ) {
 					# don't do anything because cat1/cat1 only if id1>id2
 				}
@@ -451,6 +448,7 @@ print "checks actually done: $checksDone\n" ;
 my $percent = $checksDone / $potential * 100 ;
 printf "work: %2.3f percent\n", $percent ;
 print "crossings found: $crossings\n" ;
+print "olc done: $olc\n" ;
 
 $time1 = time () ;
 
@@ -649,4 +647,20 @@ sub getGPXWaypoints {
 
 
 
+sub getArea {
+	my @nodes = @_ ;
 
+	my $minLon = 999 ;
+	my $maxLon = -999 ;
+	my $minLat = 999 ;
+	my $maxLat = -999 ;
+
+
+	foreach my $node (@nodes) {
+		if ($lon{$node} > $maxLon) { $maxLon = $lon{$node} ; }
+		if ($lon{$node} < $minLon) { $minLon = $lon{$node} ; }
+		if ($lat{$node} > $maxLat) { $maxLat = $lat{$node} ; }
+		if ($lat{$node} < $minLat) { $minLat = $lat{$node} ; }
+	}	
+	return ($minLon, $maxLon, $minLat, $maxLat) ;
+}

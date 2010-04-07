@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python -u
 # -*- coding: utf-8 -*-
 
 import cairo
@@ -12,7 +12,7 @@ import resource
 
 # Limit maximum CPU time
 # The Postscript output format can sometimes take hours
-resource.setrlimit(resource.RLIMIT_CPU,(300,300))
+resource.setrlimit(resource.RLIMIT_CPU,(90,90))
 
 # Limit memory usage
 # Some odd requests can cause extreme memory usage
@@ -52,9 +52,10 @@ def output_error(message):
 # Parse CGI parameters
 form = cgi.FieldStorage()
 
+
 # Abort if the load average on the machine is too high
 loadavg = float(open("/proc/loadavg").readline().split(" ")[0])
-if loadavg > 40.0:
+if loadavg > 25.0:
   print "Status: 503 Service Unavailable"
   output_error("The load average on the server is too high at the moment. Please wait a few minutes before trying again.")
  
@@ -107,13 +108,13 @@ else:
         mapnik.render(map, image)
         png = image.tostring("png") 
         output_headers("image/png", "map.png", len(png))
-        print png
+        sys.stdout.write(png)
       elif form.getvalue("format") == "jpeg":
         image = mapnik.Image(map.width, map.height)
         mapnik.render(map, image)
         jpeg = image.tostring("jpeg") 
         output_headers("image/jpeg", "map.jpg", len(jpeg))
-        print jpeg
+        sys.stdout.write(jpeg)
       elif form.getvalue("format") == "svg":
         file = tempfile.NamedTemporaryFile()
         surface = cairo.SVGSurface(file.name, map.width, map.height)

@@ -154,11 +154,11 @@ public class StopImporterAction extends JosmAction
     else if ("stopImporter.settingsSuggestStops".equals(event.getActionCommand()))
       Main.main.undoRedo.add(new TrackSuggestStopsCommand(this));
     else if ("stopImporter.stoplistFind".equals(event.getActionCommand()))
-      findNodesInTable(dialog.getStoplistTable(), currentTrack.stoplistTM.nodes);
+      findNodesInTable(dialog.getStoplistTable(), currentTrack.stoplistTM.getNodes());
     else if ("stopImporter.stoplistShow".equals(event.getActionCommand()))
-      showNodesFromTable(dialog.getStoplistTable(), currentTrack.stoplistTM.nodes);
+      showNodesFromTable(dialog.getStoplistTable(), currentTrack.stoplistTM.getNodes());
     else if ("stopImporter.stoplistMark".equals(event.getActionCommand()))
-      markNodesFromTable(dialog.getStoplistTable(), currentTrack.stoplistTM.nodes);
+      markNodesFromTable(dialog.getStoplistTable(), currentTrack.stoplistTM.getNodes());
     else if ("stopImporter.stoplistDetach".equals(event.getActionCommand()))
     {
       Main.main.undoRedo.add(new TrackStoplistDetachCommand(this));

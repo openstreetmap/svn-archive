@@ -10,8 +10,9 @@ import org.openstreetmap.josm.data.osm.Node;
 
 public class TrackStoplistTableModel extends DefaultTableModel
 {
-  public Vector< Node > nodes = new Vector< Node >();
-  public Vector< String > columns = null;
+  private Vector< Node > nodes = null;
+  private Vector< String > times = null;
+  private Vector< String > columns = null;
     
   public TrackStoplistTableModel(TrackReference tr)
   {
@@ -21,6 +22,8 @@ public class TrackStoplistTableModel extends DefaultTableModel
       columns.add("Time");
       columns.add("Name");
     }
+    nodes = new Vector< Node >();
+    times = new Vector< String >();
       
     setColumnIdentifiers(columns);
     addTableModelListener(tr);
@@ -46,7 +49,54 @@ public class TrackStoplistTableModel extends DefaultTableModel
   {
     insertRow(insPos, null, time, "");
   }
-    
+
+  public void removeRow(int pos)
+  {
+    super.removeRow(pos);
+    nodes.removeElementAt(pos);
+    times.removeElementAt(pos);
+  }
+
+  public Node nodeAt(int i)
+  {
+    return nodes.elementAt(i);
+  }
+
+  public void setNodeAt(int i, Node node)
+  {
+    nodes.set(i, node);
+  }
+
+  public final Vector< Node > getNodes()
+  {
+    return nodes;
+  }
+
+  public void setNodes(Vector< Node > nodes)
+  {
+    this.nodes = nodes;
+  }
+
+  public String timeAt(int i)
+  {
+    return times.elementAt(i);
+  }
+
+  public void setTimeAt(int i, String time)
+  {
+    times.set(i, time);
+  }
+
+  public final Vector< String > getTimes()
+  {
+    return times;
+  }
+
+  public void setTimes(Vector< String > times)
+  {
+    this.times = times;
+  }
+
   public void insertRow(int insPos, Node node, String time, String name)
   {
     String[] buf = { "", "" };
@@ -55,11 +105,13 @@ public class TrackStoplistTableModel extends DefaultTableModel
     if (insPos == -1)
     {
       nodes.addElement(node);
+      times.addElement(time);
       super.addRow(buf);
     }
     else
     {
       nodes.insertElementAt(node, insPos);
+      times.insertElementAt(time, insPos);
       super.insertRow(insPos, buf);
     }
   }
@@ -67,6 +119,7 @@ public class TrackStoplistTableModel extends DefaultTableModel
   public void clear()
   {
     nodes.clear();
+    times.clear();
     super.setRowCount(0);
   }
     

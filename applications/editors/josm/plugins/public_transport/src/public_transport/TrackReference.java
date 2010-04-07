@@ -30,6 +30,7 @@ public class TrackReference
   public double timeWindow;
   public double threshold;
   private StopImporterAction controller = null;
+  public boolean inEvent = false;
     
   public TrackReference(GpxTrack track, StopImporterAction controller)
   {
@@ -99,34 +100,27 @@ public class TrackReference
   {
     if ((e.getType() == TableModelEvent.UPDATE) && (e.getFirstRow() >= 0))
     {
+      if (inEvent)
+	return;
+      
       double time = StopImporterDialog.parseTime
 	    ((String)stoplistTM.getValueAt(e.getFirstRow(), 0));
       if (time < 0)
       {
+	stoplistTM.setValueAt
+	    (stoplistTM.timeAt(e.getFirstRow()), e.getFirstRow(), 0);
 	JOptionPane.showMessageDialog
 	    (null, "Can't parse a time from this string.", "Invalid value",
 	     JOptionPane.ERROR_MESSAGE);
 	return;
       }
 
-      LatLon latLon = computeCoor(time);
-	
-      if (stoplistTM.nodes.elementAt(e.getFirstRow()) == null)
-      {
-	Node node = controller.createNode
-	    (latLon, (String)stoplistTM.getValueAt(e.getFirstRow(), 1));
-	stoplistTM.nodes.set(e.getFirstRow(), node);
-      }
-      else
-      {
-	Node node = new Node(stoplistTM.nodes.elementAt(e.getFirstRow()));
-	node.setCoor(latLon);
-	node.put("name", (String)stoplistTM.getValueAt(e.getFirstRow(), 1));
-	Command cmd = new ChangeCommand(stoplistTM.nodes.elementAt(e.getFirstRow()), node);
-	if (cmd != null) {
-	  Main.main.undoRedo.add(cmd);
-	}
-      }
+      Main.main.undoRedo.add(new TrackStoplistNameCommand
+              (this, e.getFirstRow(),
+	       (String)stoplistTM.getValueAt(e.getFirstRow(), 0),
+	       (String)stoplistTM.getValueAt(e.getFirstRow(), 1)));
+      stoplistTM.setTimeAt
+	  (e.getFirstRow(), (String)stoplistTM.getValueAt(e.getFirstRow(), 0));
     }
   }
     
@@ -185,16 +179,16 @@ public class TrackReference
     
   public void relocateNodes()
   {
-    for (int i = 0; i < stoplistTM.nodes.size(); ++i)
+    for (int i = 0; i < stoplistTM.getNodes().size(); ++i)
     {
-      Node node = stoplistTM.nodes.elementAt(i);
+      Node node = stoplistTM.nodeAt(i);
       if (node == null)
 	continue;
 	
       double time = StopImporterDialog.parseTime
 	    ((String)stoplistTM.getValueAt(i, 0));
       LatLon latLon = computeCoor(time);
-	
+
       Node newNode = new Node(node);
       newNode.setCoor(latLon);
       Command cmd = new ChangeCommand(node, newNode);
@@ -202,126 +196,6 @@ public class TrackReference
       {
 	Main.main.undoRedo.add(cmd);
       }
-    }
-  }
-    
-  public void suggestStops()
-  {
-    Vector< WayPoint > wayPoints = new Vector< WayPoint >();
-    Iterator< GpxTrackSegment > siter = track.getSegments().iterator();
-    while (siter.hasNext())
-    {
-      Iterator< WayPoint > witer = siter.next().getWayPoints().iterator();
-      while (witer.hasNext())
-	wayPoints.add(witer.next());
-    }
-    Vector< Double > wayPointsDist = new Vector< Double >(wayPoints.size());
-      
-    int i = 0;
-    double time = -48*60*60;
-    double dGpsStartTime = StopImporterDialog.parseTime(gpsStartTime);
-    while ((i < wayPoints.size()) && (time < dGpsStartTime + timeWindow/2))
-    {
-      if (wayPoints.elementAt(i).getString("time") != null)
-	time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
-	    .getString("time").substring(11,19));
-      if (time < dGpsStartTime)
-	time += 24*60*60;
-      wayPointsDist.add(Double.valueOf(Double.POSITIVE_INFINITY));
-      ++i;
-    }
-    while (i < wayPoints.size())
-    {
-      int j = i;
-      double time2 = time;
-      while ((j > 0) && (time - timeWindow/2 < time2))
-      {
-	--j;
-	if (wayPoints.elementAt(j).getString("time") != null)
-	  time2 = StopImporterDialog.parseTime(wayPoints.elementAt(j)
-	      .getString("time").substring(11,19));
-	if (time2 < dGpsStartTime)
-	  time2 += 24*60*60;
-      }
-      int k = i + 1;
-      time2 = time;
-      while ((k < wayPoints.size()) && (time + timeWindow/2 > time2))
-      {
-	if (wayPoints.elementAt(k).getString("time") != null)
-	  time2 = StopImporterDialog.parseTime(wayPoints.elementAt(k)
-	      .getString("time").substring(11,19));
-	if (time2 < dGpsStartTime)
-	  time2 += 24*60*60;
-	++k;
-      }
-	
-      if (j < k)
-      {
-	double dist = 0;
-	LatLon latLonI = wayPoints.elementAt(i).getCoor();
-	for (int l = j; l < k; ++l)
-	{
-	  double distL = latLonI.greatCircleDistance(wayPoints.elementAt(l).getCoor());
-	  if (distL > dist)
-	    dist = distL;
-	}
-	wayPointsDist.add(Double.valueOf(dist));
-      }
-      else
-	wayPointsDist.add(Double.valueOf(Double.POSITIVE_INFINITY));
-	
-      if (wayPoints.elementAt(i).getString("time") != null)
-	time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
-	    .getString("time").substring(11,19));
-      if (time < dGpsStartTime)
-	time += 24*60*60;
-      ++i;
-    }
-      
-    Vector< Node > toDelete = new Vector< Node >();
-    for (i = 0; i < stoplistTM.getRowCount(); ++i)
-    {
-      if ((Node)stoplistTM.nodes.elementAt(i) != null)
-	toDelete.add((Node)stoplistTM.nodes.elementAt(i));
-    }
-    if (!toDelete.isEmpty())
-    {
-      Command cmd = DeleteCommand.delete
-	  (Main.main.getEditLayer(), toDelete);
-      if (cmd == null)
-	return;
-      Main.main.undoRedo.add(cmd);
-    }
-    stoplistTM.clear();
-      
-    LatLon lastStopCoor = null;
-    for (i = 1; i < wayPoints.size()-1; ++i)
-    {
-      if (wayPointsDist.elementAt(i).doubleValue() >= threshold)
-	continue;
-      if ((wayPointsDist.elementAt(i).compareTo(wayPointsDist.elementAt(i-1)) != -1)
-	   || (wayPointsDist.elementAt(i).compareTo(wayPointsDist.elementAt(i+1)) != -1))
-	continue;
-	
-      LatLon latLon = wayPoints.elementAt(i).getCoor();
-      if ((lastStopCoor != null) &&  (lastStopCoor.greatCircleDistance(latLon) < threshold))
-	continue;
-	
-      if (wayPoints.elementAt(i).getString("time") != null)
-      {
-	time = StopImporterDialog.parseTime(wayPoints.elementAt(i)
-	    .getString("time").substring(11,19));
-	double gpsSyncTime = StopImporterDialog.parseTime(this.gpsSyncTime);
-	if (gpsSyncTime < dGpsStartTime - 12*60*60)
-	  gpsSyncTime += 24*60*60;
-	double timeDelta = gpsSyncTime - StopImporterDialog.parseTime(stopwatchStart);
-	time -= timeDelta;
-	stoplistTM.insertRow(-1, StopImporterAction.timeOf(time));
-	Node node = controller.createNode(latLon, "");
-	stoplistTM.nodes.set(stoplistTM.getRowCount()-1, node);
-      }
-	
-      lastStopCoor = latLon;
     }
   }
 };

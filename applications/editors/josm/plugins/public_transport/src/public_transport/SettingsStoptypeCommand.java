@@ -57,9 +57,9 @@ public class SettingsStoptypeCommand extends Command
       TrackReference track = (TrackReference)tracksListModel.elementAt(j);
       for (int i = 0; i < track.stoplistTM.getRowCount(); ++i)
       {
-	if ((Node)track.stoplistTM.nodes.elementAt(i) != null)
+	if (track.stoplistTM.nodeAt(i) != null)
 	{
-	  Node node = (Node)track.stoplistTM.nodes.elementAt(i);
+	  Node node = track.stoplistTM.nodeAt(i);
 	  oldStrings.add(new HighwayRailway(node));
 	  StopImporterAction.setTagsWrtType(node, type);
 	}

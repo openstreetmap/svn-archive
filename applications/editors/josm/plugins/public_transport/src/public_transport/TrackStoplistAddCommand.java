@@ -32,7 +32,6 @@ public class TrackStoplistAddCommand extends Command
     int workingLine = this.workingLine;
     if (workingLine < 0)
       workingLine = stoplistTM.getRowCount()-1;
-    stoplistTM.nodes.removeElementAt(workingLine);
     stoplistTM.removeRow(workingLine);
   }
   

@@ -58,11 +58,10 @@ public class TrackStoplistDeleteCommand extends Command
     for (int i = workingLines.size()-1; i >= 0; --i)
     {
       int j = workingLines.elementAt(i).intValue();
-      Node node = stoplistTM.nodes.elementAt(j);
+      Node node = stoplistTM.nodeAt(j);
       nodesForUndo.add(new NodeTimeName
 	  (node, (String)stoplistTM.getValueAt(j, 0),
 	   (String)stoplistTM.getValueAt(j, 1)));
-      stoplistTM.nodes.removeElementAt(j);
       stoplistTM.removeRow(j);
       if (node == null)
 	continue;

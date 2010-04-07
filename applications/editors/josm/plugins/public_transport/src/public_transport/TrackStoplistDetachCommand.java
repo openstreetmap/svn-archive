@@ -39,7 +39,7 @@ public class TrackStoplistDetachCommand extends Command
     // keep only lines where a node can be added
     for (int i = 0; i < consideredLines.size(); ++i)
     {
-      if (stoplistTM.nodes.elementAt(consideredLines.elementAt(i)) != null)
+      if (stoplistTM.nodeAt(consideredLines.elementAt(i)) != null)
 	workingLines.add(consideredLines.elementAt(i));
     }
   }
@@ -50,9 +50,9 @@ public class TrackStoplistDetachCommand extends Command
     for (int i = 0; i < workingLines.size(); ++i)
     {
       int j = workingLines.elementAt(i).intValue();
-      Node node = stoplistTM.nodes.elementAt(j);
+      Node node = stoplistTM.nodeAt(j);
       nodesForUndo.add(node);
-      stoplistTM.nodes.set(j, null);
+      stoplistTM.setNodeAt(j, null);
     }
     return true;
   }
@@ -63,7 +63,7 @@ public class TrackStoplistDetachCommand extends Command
     {
       int j = workingLines.elementAt(i).intValue();
       Node node = nodesForUndo.elementAt(i);
-      stoplistTM.nodes.set(j, node);
+      stoplistTM.setNodeAt(j, node);
     }
   }
   

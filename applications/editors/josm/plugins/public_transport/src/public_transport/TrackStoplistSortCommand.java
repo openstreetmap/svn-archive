@@ -18,6 +18,7 @@ public class TrackStoplistSortCommand extends Command
   private TrackStoplistTableModel stoplistTM = null;
   private Vector< Vector< Object > > tableDataModel = null;
   private Vector< Node > nodes = null;
+  private Vector< String > times = null;
   private Vector< Integer > workingLines = null;
   private int insPos;
   private String stopwatchStart;
@@ -48,17 +49,17 @@ public class TrackStoplistSortCommand extends Command
   {
     tableDataModel = (Vector< Vector< Object > >)stoplistTM.getDataVector()
 	.clone();
-    nodes = (Vector< Node >)stoplistTM.nodes.clone();
+    nodes = (Vector< Node >)stoplistTM.getNodes().clone();
+    times = (Vector< String >)stoplistTM.getTimes().clone();
     
     Vector< NodeSortEntry > nodesToSort = new Vector< NodeSortEntry >();
     for (int i = workingLines.size()-1; i >= 0; --i)
     {
       int j = workingLines.elementAt(i).intValue();
       nodesToSort.add(new NodeSortEntry
-	  (stoplistTM.nodes.elementAt(j), (String)stoplistTM.getValueAt(j, 0),
+	  (stoplistTM.nodeAt(j), (String)stoplistTM.getValueAt(j, 0),
 	    (String)stoplistTM.getValueAt(j, 1),
 	     StopImporterDialog.parseTime(stopwatchStart)));
-      stoplistTM.nodes.removeElementAt(j);
       stoplistTM.removeRow(j);
     }
     
@@ -79,7 +80,8 @@ public class TrackStoplistSortCommand extends Command
   public void undoCommand()
   {
     stoplistTM.setDataVector(tableDataModel);
-    stoplistTM.nodes = nodes;
+    stoplistTM.setNodes(nodes);
+    stoplistTM.setTimes(times);
   }
   
   public void fillModifiedData

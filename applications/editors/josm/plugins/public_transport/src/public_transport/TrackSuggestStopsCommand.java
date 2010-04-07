@@ -28,6 +28,7 @@ public class TrackSuggestStopsCommand extends Command
   private Collection< GpxTrackSegment > segments = null;
   private Vector< Vector< Object > > tableDataModel = null;
   private Vector< Node > nodes = null;
+  private Vector< String > times = null;
   
   public TrackSuggestStopsCommand(StopImporterAction controller)
   {
@@ -48,12 +49,12 @@ public class TrackSuggestStopsCommand extends Command
   {
     tableDataModel = (Vector< Vector< Object > >)stoplistTM.getDataVector()
 	.clone();
-    nodes = (Vector< Node >)stoplistTM.nodes.clone();
+    nodes = (Vector< Node >)stoplistTM.getNodes().clone();
+    times = (Vector< String >)stoplistTM.getTimes().clone();
     
-    for (int i = 0; i < stoplistTM.nodes.size(); ++i)
+    for (int i = 0; i < stoplistTM.getNodes().size(); ++i)
     {
-      Node node = stoplistTM.nodes.elementAt(i);
-      stoplistTM.nodes.set(i, null);
+      Node node = stoplistTM.nodeAt(i);
       if (node == null)
 	continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
@@ -154,9 +155,8 @@ public class TrackSuggestStopsCommand extends Command
 	  gpsSyncTime += 24*60*60;
 	double timeDelta = gpsSyncTime - StopImporterDialog.parseTime(stopwatchStart);
 	time -= timeDelta;
-	stoplistTM.insertRow(-1, StopImporterAction.timeOf(time));
 	Node node = StopImporterAction.createNode(latLon, type, "");
-	stoplistTM.nodes.set(stoplistTM.getRowCount()-1, node);
+	stoplistTM.insertRow(-1, node, StopImporterAction.timeOf(time), "");
       }
 	
       lastStopCoor = latLon;
@@ -167,10 +167,9 @@ public class TrackSuggestStopsCommand extends Command
   
   public void undoCommand()
   {
-    for (int i = 0; i < stoplistTM.nodes.size(); ++i)
+    for (int i = 0; i < stoplistTM.getNodes().size(); ++i)
     {
-      Node node = stoplistTM.nodes.elementAt(i);
-      stoplistTM.nodes.set(i, null);
+      Node node = stoplistTM.nodeAt(i);
       if (node == null)
 	continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
@@ -178,11 +177,12 @@ public class TrackSuggestStopsCommand extends Command
     }
     
     stoplistTM.setDataVector(tableDataModel);
-    stoplistTM.nodes = nodes;
+    stoplistTM.setNodes(nodes);
+    stoplistTM.setTimes(times);
     
-    for (int i = 0; i < stoplistTM.nodes.size(); ++i)
+    for (int i = 0; i < stoplistTM.getNodes().size(); ++i)
     {
-      Node node = stoplistTM.nodes.elementAt(i);
+      Node node = stoplistTM.nodeAt(i);
       if (node == null)
 	continue;
       node.setDeleted(false);
@@ -198,7 +198,7 @@ public class TrackSuggestStopsCommand extends Command
   
   public MutableTreeNode description()
   {
-    return new DefaultMutableTreeNode("public_transport.TrackStoplist.Sort");
+    return new DefaultMutableTreeNode("public_transport.TrackStoplist.SuggestStops");
   }
   
   private class NodeSortEntry implements Comparable< NodeSortEntry >

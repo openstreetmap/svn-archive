@@ -119,7 +119,13 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 <input type = "checkbox" onchange = "updateForm ()" name = "road" id = "road" <?=$road?>>&nbsp;<label for = "road">Any way tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Tag:highway%3Droad">highway=road</a>&quot;</label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "name" id = "name" <?=$name?>>&nbsp;<label for = "name">Various things without <a href = "http://wiki.openstreetmap.org/wiki/Key:name">names</a></label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "hours" id = "hours" <?=$hours?>>&nbsp;<label for = "hours">Shops etc without <a href = "http://wiki.openstreetmap.org/wiki/Key:opening_hours">opening hours</a></label><br>
-<input type = "checkbox" onchange = "updateForm ()" name = "source" id = "source" <?=$source?>>&nbsp;<label for = "source">Anything with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:source">source</a>&quot; set to &quot;extrapolation&quot;, &quot;NPE&quot; or &quot;historical&quot;</label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "source" id = "source" <?=$source?>>&nbsp;
+<label for = "source">Anything with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:source">source</a>&quot; set to
+&quot;extrapolation&quot;,
+&quot;<a href = "http://wiki.openstreetmap.org/wiki/NPE">NPE</a>&quot;,
+&quot;<a href = "http://wiki.openstreetmap.org/wiki/Ordnance_Survey_Opendata#Attributing_OS">OS_OpenData StreetView</a>&quot;
+or
+&quot;historical&quot;</label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "fixme" id = "fixme" <?=$fixme?>>&nbsp;<label for = "fixme">Anything with a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:fixme">fixme</a>&quot; tag</label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "naptan" id = "naptan" <?=$naptan?>>&nbsp;<label for = "naptan">Any node tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/NaPTAN/Surveying_and_Merging_NaPTAN_and_OSM_data">naptan:verified=no</a>&quot;</label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "pbref" id = "pbref" <?=$pbref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dpost_box" onchange = "updateForm ()">Postboxes</a> without a &quot;ref&quot; tag</label><br>

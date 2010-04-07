@@ -108,10 +108,13 @@ import org.openstreetmap.josm.data.projection.*;
  *                 -     new option allowing an auto-selection of the first cadastre layer for grab
  *                 -     non-modal JDialog in MenuActionGrabPlanImage
  *                 -     new options in the image filter (bilinear, bicubic)
- * 1.9 xx-xxx-xxxx - added a scroll bar in preferences
+ * 1.9 05-Apr-2010 - added a scroll bar in preferences
+ *                 - download cancellation improved
+ *                 - last deployment for Java1.5 compatibility
+ * 2.0 xx-xxx-xxxx - update projection for "La Reunion" departement to RGR92, UTM40S. 
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "1.8";
+    static String VERSION = "2.0";
 
     static JMenu cadastreJMenu;
 

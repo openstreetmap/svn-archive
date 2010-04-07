@@ -1,3 +1,4 @@
+// License: GPL. See LICENSE file for details.
 package org.openstreetmap.josm.plugins.validator.util;
 
 import java.util.Collection;

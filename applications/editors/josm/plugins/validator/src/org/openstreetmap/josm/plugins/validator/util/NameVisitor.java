@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007 by Immanuel Scholz and others
+// License: GPL. See LICENSE file for details.
 package org.openstreetmap.josm.plugins.validator.util;
 
 import static org.openstreetmap.josm.tools.I18n.tr;

@@ -315,14 +315,6 @@ SectionEnd
 
 SectionGroup $(JOSM_SEC_PLUGINS_GROUP) SecPluginsGroup
 
-Section $(JOSM_SEC_AGPIFOJ_PLUGIN) SecAgPifoJPlugin
-;-------------------------------------------
-SectionIn 1 2
-SetShellVarContext current
-SetOutPath $APPDATA\JOSM\plugins
-File "..\dist\AgPifoJ.jar"
-SectionEnd
-
 Section $(JOSM_SEC_OPENSTREETBUGS_PLUGIN) SecOpenStreetBugsPlugin
 ;-------------------------------------------
 SectionIn 1 2
@@ -414,7 +406,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "AgPifoJ;openstreetbugs;remotecontrol;validator;wmsplugin"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "openstreetbugs;remotecontrol;validator;wmsplugin"
 SectionEnd
 
 
@@ -510,7 +502,6 @@ SectionEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} $(JOSM_SECDESC_JOSM)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecAgPifoJPlugin} $(JOSM_SECDESC_AGPIFOJ_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecOpenStreetBugsPlugin} $(JOSM_SECDESC_OPENSTREETBUGS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecRemoteControlPlugin} $(JOSM_SECDESC_REMOTECONTROL_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} $(JOSM_SECDESC_VALIDATOR_PLUGIN)

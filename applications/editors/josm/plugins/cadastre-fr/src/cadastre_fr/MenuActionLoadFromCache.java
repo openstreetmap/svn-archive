@@ -12,7 +12,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.LambertCC9Zones;
-import org.openstreetmap.josm.data.projection.UTM_20N_France_DOM;
+import org.openstreetmap.josm.data.projection.UTM_France_DOM;
 import org.openstreetmap.josm.gui.layer.Layer;
 
 public class MenuActionLoadFromCache extends JosmAction {
@@ -39,7 +39,7 @@ public class MenuActionLoadFromCache extends JosmAction {
                 if ((ext.length() == 3 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z) &&
                     !(Main.proj instanceof LambertCC9Zones))
                     || (ext.length() == 4 && ext.substring(0, CacheControl.cUTM20N.length()).equals(CacheControl.cUTM20N) &&
-                            !(Main.proj instanceof UTM_20N_France_DOM))
+                            !(Main.proj instanceof UTM_France_DOM))
                     || (ext.length() == 1) && !(Main.proj instanceof Lambert)) {
                         JOptionPane.showMessageDialog(Main.parent, tr("{0} not allowed with the current projection", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
                         continue;
@@ -92,7 +92,7 @@ public class MenuActionLoadFromCache extends JosmAction {
                 fc.addChoosableFileFilter(CacheFileLambert4ZoneFilter.filters[layoutZone]);
             else if (Main.proj instanceof LambertCC9Zones)
                 fc.addChoosableFileFilter(CacheFileLambert9ZoneFilter.filters[layoutZone]);
-            else if (Main.proj instanceof UTM_20N_France_DOM)
+            else if (Main.proj instanceof UTM_France_DOM)
                 fc.addChoosableFileFilter(CacheFileUTM20NFilter.filters[layoutZone]);
         }
         fc.setAcceptAllFileFilterUsed(false);
@@ -110,8 +110,8 @@ public class MenuActionLoadFromCache extends JosmAction {
             zone = ((LambertCC9Zones)Main.proj).getLayoutZone();
         else if (Main.proj instanceof Lambert)
             zone = ((Lambert)Main.proj).getLayoutZone();
-        else if (Main.proj instanceof UTM_20N_France_DOM)
-            zone = ((UTM_20N_France_DOM)Main.proj).getCurrentGeodesic();
+        else if (Main.proj instanceof UTM_France_DOM)
+            zone = ((UTM_France_DOM)Main.proj).getCurrentGeodesic();
         return zone;
     }
 }

@@ -21,7 +21,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.projection.LambertCC9Zones;
-import org.openstreetmap.josm.data.projection.UTM_20N_France_DOM;
+import org.openstreetmap.josm.data.projection.UTM_France_DOM;
 
 public class CacheControl implements Runnable {
     
@@ -210,7 +210,7 @@ public class CacheControl implements Runnable {
         String ext = String.valueOf((wmsLayer.getLambertZone() + 1));
         if (Main.proj instanceof LambertCC9Zones)
             ext = cLambertCC9Z + ext;
-        else if (Main.proj instanceof UTM_20N_France_DOM)
+        else if (Main.proj instanceof UTM_France_DOM)
             ext = cUTM20N + ext;
         return ext;
     }

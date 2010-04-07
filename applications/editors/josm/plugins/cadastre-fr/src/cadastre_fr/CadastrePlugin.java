@@ -341,8 +341,7 @@ public class CadastrePlugin extends Plugin {
     
     public static boolean isCadastreProjection() {
         return Main.proj.toString().equals(new Lambert().toString())
-            || Main.proj.toString().equals(new UTM_20N_France_DOM().toString())
-            || Main.proj.toString().equals(new GaussLaborde_Reunion().toString())
+            || Main.proj.toString().equals(new UTM_France_DOM().toString())
             || Main.proj.toString().equals(new LambertCC9Zones().toString());
     }
 

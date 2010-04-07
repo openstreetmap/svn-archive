@@ -18,7 +18,8 @@ public class CacheFileUTM20NFilter extends FileFilter {
     public static CacheFileUTM20NFilter[] filters = {
         new CacheFileUTM20NFilter("utm1", tr("Guadeloupe Fort-Marigot cache file (.UTM1)")),
         new CacheFileUTM20NFilter("utm2", tr("Guadeloupe Ste-Anne cache file (.UTM2)")),
-        new CacheFileUTM20NFilter("utm3", tr("Martinique Fort Desaix cache file (.UTM3)"))
+        new CacheFileUTM20NFilter("utm3", tr("Martinique Fort Desaix cache file (.UTM3)")),
+        new CacheFileUTM20NFilter("utm4", tr("Reunion RGR92 cache file (.UTM4)"))
         };
 
     /**

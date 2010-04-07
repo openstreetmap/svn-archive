@@ -16,7 +16,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.projection.Lambert;
 import org.openstreetmap.josm.data.projection.LambertCC9Zones;
-import org.openstreetmap.josm.data.projection.UTM_20N_France_DOM;
+import org.openstreetmap.josm.data.projection.UTM_France_DOM;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -81,8 +81,8 @@ public class MenuActionNewLocation extends JosmAction {
                 zone = ((LambertCC9Zones)Main.proj).getLayoutZone();
             else if (Main.proj instanceof Lambert)
                 zone = ((Lambert)Main.proj).getLayoutZone();
-            else if (Main.proj instanceof UTM_20N_France_DOM)
-                zone = ((UTM_20N_France_DOM)Main.proj).getCurrentGeodesic();
+            else if (Main.proj instanceof UTM_France_DOM)
+                zone = ((UTM_France_DOM)Main.proj).getCurrentGeodesic();
             wmsLayer = new WMSLayer(location, codeCommune, zone);
             CadastrePlugin.addWMSLayer(wmsLayer);
             System.out.println("Add new layer with Location:" + inputTown.getText());

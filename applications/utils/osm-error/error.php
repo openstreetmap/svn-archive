@@ -151,6 +151,70 @@ function NoTagCheck ($node, $tag, $k, $v, $waynode, $name, $shortname) {
 	}
 }
 
+/* ****************************************************************** */
+
+/*
+ * Check a node has a source=OS_OpenData tag
+ * If tag exists, writes a waypoint
+ * $node: node to be checked
+ * $tag: tag in $node to be checked
+*/
+function NodeCheckOS ($node, $tag) {
+	global $iCount, $DEBUG, $LOG_FILE;
+	//Make check case-insensitive
+	$tagk = strtolower ($tag ["k"]);
+	$tagv = strtolower ($tag ["v"]);
+
+	if ($tagk == "source" && substr ($tagv, 0, 11) == "os_opendata") {
+		$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
+		if ($namelen == 6)
+			$sOut .= "<name>SrcOS" . $iCount++ . "</name>\n";
+		elseif ($namelen == 14)
+			$sOut .= "<name>Source OS " . $iCount++ . "</name>\n";
+		else {
+			$sOut .= "<name>Source OS (" . $iCount++ . ")</name>\n";
+			$sOut .= "<desc>Sourced from OS data</desc>\n";
+			$sOut .= "</wpt>\n";
+			echo $sOut;
+			if ($DEBUG)
+				file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
+		}
+	}
+}
+
+/*
+ * Check a way has a source=OS_OpenData tag
+ * If tag exists, writes a waypoint
+ * $way: way to be checked
+ * $tag: tag in $way to be checked
+*/
+function WayCheckOS ($way, $tag) {
+	global $iCount, $DEBUG, $LOG_FILE;
+	//Make check case-insensitive
+	$tagk = strtolower ($tag ["k"]);
+	$tagv = strtolower ($tag ["v"]);
+
+	if ($tagk == "source" && substr ($tagv, 0, 11) == "os_opendata") {
+		$lat = 0;
+		$lon = 0;
+		GetWayLatLon ($way, $lat, $lon);
+		$sOut = "<wpt lat='$lat' lon='$lon'>\n";
+		if ($namelen == 6)
+			$sOut .= "<name>SrcOS" . $iCount++ . "</name>\n";
+		elseif ($namelen == 14)
+			$sOut .= "<name>Source OS " . $iCount++ . "</name>\n";
+		else {
+			$sOut .= "<name>Source OS (" . $iCount++ . ")</name>\n";
+			$sOut .= "<desc>Sourced from OS data</desc>\n";
+			$sOut .= "</wpt>\n";
+			echo $sOut;
+			if ($DEBUG)
+				file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
+		}
+	}
+}
+/* ****************************************************************** */
+
 /*
  * Check a node has a tag.
  * If tag does not exist, writes a waypoint
@@ -287,7 +351,7 @@ foreach ($xml->node as $node) {
 			NoTagCheck ($node, $tag, "source", "extrapolation", "node", "Src extrap", "Source");
 			NoTagCheck ($node, $tag, "source", "NPE", "node", "Src NPE ", "SrcNPE");
 			NoTagCheck ($node, $tag, "source", "historical", "node", "Src Hist ", "SrcHis");
-			NoTagCheck ($node, $tag, "source", "os_opendata_streetview", "way", "Src OS ", "SrcOS");
+			NodeCheckOS ($way, $tag);
 		}
 
 		// FIXME tags
@@ -349,7 +413,7 @@ foreach ($xml->way as $way) {
 			NoTagCheck ($way, $tag, "source", "NPE", "way", "Src NPE ", "SrcNPE");
 			NoTagCheck ($way, $tag, "source", "historical", "way", "Src Hist ", "SrcHis");
 			NoTagCheck ($way, $tag, "source", "historical", "way", "Src Hist ", "SrcHis");
-			NoTagCheck ($way, $tag, "source", "os_opendata_streetview", "way", "Src OS ", "SrcOS");
+			WayCheckOS ($way, $tag);
 		}
 
 		// FIXME etc

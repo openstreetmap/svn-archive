@@ -123,7 +123,7 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 <label for = "source">Anything with &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:source">source</a>&quot; set to
 &quot;extrapolation&quot;,
 &quot;<a href = "http://wiki.openstreetmap.org/wiki/NPE">NPE</a>&quot;,
-&quot;<a href = "http://wiki.openstreetmap.org/wiki/Ordnance_Survey_Opendata#Attributing_OS">OS_OpenData StreetView</a>&quot;
+&quot;<a href = "http://wiki.openstreetmap.org/wiki/Ordnance_Survey_Opendata#Attributing_OS">OS_OpenData_*</a>&quot;
 or
 &quot;historical&quot;</label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "fixme" id = "fixme" <?=$fixme?>>&nbsp;<label for = "fixme">Anything with a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:fixme">fixme</a>&quot; tag</label><br>

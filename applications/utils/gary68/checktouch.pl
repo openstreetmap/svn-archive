@@ -48,6 +48,8 @@
 # - faster parameters
 # - iFrame
 # 
+# Version 2.0
+# - quad trees
 
 
 use strict ;
@@ -55,16 +57,14 @@ use warnings ;
 
 use List::Util qw[min max] ;
 use OSM::osm 5.0 ;
+use OSM::QuadTree ;
 use File::stat;
 use Time::localtime;
 
 my $program = "checktouch.pl" ;
 my $usage = $program . " def.xml file.osm out.htm out.gpx" ;
-my $version = "1.4" ;
+my $version = "2.0" ;
 
-my $span = 0.05 ; # steps of 0.01 - the smaller, the faster, but not all errors will befound then... good values are 0.03 to 0.05
-
-my $threshold = 0.005 ; # ~500m 0.5km degrees!
 my $maxDist = 0.002 ; # in km 
 my $maxDist2 = 0.001 ; 
 
@@ -78,6 +78,8 @@ my $againstCount = 0 ;
 my $checkWayCount = 0 ;
 my $againstWayCount = 0 ;
 my $invalidWays ;
+
+my $qt ;
 
 my @check ;
 my @against ;
@@ -274,6 +276,12 @@ print "number against ways: $againstWayCount\n" ;
 print "pass2: get node information...\n" ;
 openOsmFile ($osmName) ;
 
+my $minLon = 999 ;
+my $maxLon = -999 ;
+my $minLat = 999 ;
+my $maxLat = -999 ;
+
+
 @neededNodes = sort { $a <=> $b } @neededNodes ;
 
 ($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode () ;
@@ -299,6 +307,11 @@ while ($nodeId != -1) {
 		}
 	}
 
+	if ($nodeLon > $maxLon) { $maxLon = $nodeLon ; }
+	if ($nodeLon < $minLon) { $minLon = $nodeLon ; }
+	if ($nodeLat > $maxLat) { $maxLat = $nodeLat ; }
+	if ($nodeLat < $minLat) { $minLat = $nodeLat ; }
+
 	# next
 	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode () ;
 	if ($nodeId != -1) {
@@ -308,28 +321,26 @@ while ($nodeId != -1) {
 
 closeOsmFile () ;
 
+$qt = OSM::QuadTree->new (	-xmin => $minLon, 
+				-xmax => $maxLon, 
+				-ymin => $minLat, 
+				-ymax => $maxLat, 
+				-depth => 8) ;
 
 
 ##########################
 # init areas for checkWays
 ##########################
 print "init areas for checkways...\n" ;
-foreach $wayId (@checkWays) {
-	$xMax{$wayId} =  max ($lon{$wayNodesHash{$wayId}[0]}, $lon{$wayNodesHash{$wayId}[-1]}) + $threshold ;
-	$xMin{$wayId} =  min ($lon{$wayNodesHash{$wayId}[0]}, $lon{$wayNodesHash{$wayId}[-1]}) - $threshold ;
-	$yMax{$wayId} =  max ($lat{$wayNodesHash{$wayId}[0]}, $lat{$wayNodesHash{$wayId}[-1]}) + $threshold ;
-	$yMin{$wayId} =  min ($lat{$wayNodesHash{$wayId}[0]}, $lat{$wayNodesHash{$wayId}[-1]}) - $threshold ;
-}
 
 ###############
 # init way hash
 ###############
 foreach $wayId (@checkWays) {
 
-	my ($lo) = ($lon{$wayNodesHash{$wayId}[0]} + $lon{$wayNodesHash{$wayId}[-1]}) / 2 ;
-	my ($la) = ($lat{$wayNodesHash{$wayId}[0]} + $lat{$wayNodesHash{$wayId}[-1]}) / 2 ;
-	my $hashValue = hashValue2 ($lo, $la) ;
-	push (@{$wayHash {$hashValue}}, $wayId) ;
+	($xMin{$wayId}, $xMax{$wayId}, $yMin{$wayId}, $yMax{$wayId}) = getArea ( @{$wayNodesHash{$wayId}} );
+
+	$qt->add ($wayId, $xMin{$wayId}, $yMin{$wayId}, $xMax{$wayId}, $yMax{$wayId}) ;
 }
 
 
@@ -353,20 +364,9 @@ foreach $wayId1 (@againstWays) {
 	}
 
 	# create temp array according to hash
-	my @temp = () ;
-	my $lo ; my $la ;
-	for ($lo=$lon{$wayNodesHash{$wayId1}[0]}-$span; $lo<=$lon{$wayNodesHash{$wayId1}[0]}+$span; $lo=$lo+0.01) {
-		for ($la=$lat{$wayNodesHash{$wayId1}[0]}-$span; $la<=$lat{$wayNodesHash{$wayId1}[0]}+$span; $la=$la+0.01) {
-			if ( defined @{$wayHash{hashValue2($lo,$la)}} ) {
-				push @temp, @{$wayHash{hashValue2($lo,$la)}} ;
-			}
-		}
-	}
-
-	my $aXMax = max ($lon{$wayNodesHash{$wayId1}[0]}, $lon{$wayNodesHash{$wayId1}[-1]}) ;
-	my $aXMin = min ($lon{$wayNodesHash{$wayId1}[0]}, $lon{$wayNodesHash{$wayId1}[-1]}) ;
-	my $aYMax = max ($lat{$wayNodesHash{$wayId1}[0]}, $lat{$wayNodesHash{$wayId1}[-1]}) ;
-	my $aYMin = min ($lat{$wayNodesHash{$wayId1}[0]}, $lat{$wayNodesHash{$wayId1}[-1]}) ;
+	my ($aXMin, $aXMax, $aYMin, $aYMax) = getArea ( @{$wayNodesHash{$wayId1}} );
+	my $ref = $qt->getEnclosedObjects ($aXMin, $aYMin, $aXMax, $aYMax) ;
+	my @temp = @$ref ;
 
 	foreach $wayId2 (@temp) {
 		# check for overlapping "way areas"
@@ -541,3 +541,21 @@ sub statistics {
 	}
 	return ;
 }
+sub getArea {
+	my @nodes = @_ ;
+
+	my $minLon = 999 ;
+	my $maxLon = -999 ;
+	my $minLat = 999 ;
+	my $maxLat = -999 ;
+
+
+	foreach my $node (@nodes) {
+		if ($lon{$node} > $maxLon) { $maxLon = $lon{$node} ; }
+		if ($lon{$node} < $minLon) { $minLon = $lon{$node} ; }
+		if ($lat{$node} > $maxLat) { $maxLat = $lat{$node} ; }
+		if ($lat{$node} < $minLat) { $minLat = $lat{$node} ; }
+	}	
+	return ($minLon, $maxLon, $minLat, $maxLat) ;
+}
+

@@ -58,6 +58,7 @@ abbrevs = [
     ( "Arprt",          "Airport",                              0, 0, 1 ),
     ( "Airstrip",       "Airstrip",                             0, 0, 1 ),
     ( "Aly",            "Alley",                                0, 0, 1 ),
+    ( "Alleyway",       "Alleyway",                             0, 0, 1 ),
     ( "Apt Bldg",       "Apartment Building",                   0, 0, 1 ),
     ( "Apt Complex",    "Apartment Complex",                    0, 0, 1 ),
     ( "Apts",           "Apartments",                           0, 0, 1 ),
@@ -90,14 +91,22 @@ abbrevs = [
     ( "Brk",            "Brook",                                0, 0, 1 ),
     ( "Bldg",           "Building",                             0, 1, 1 ),
     ( "Bulevar",        "Bulevar",                              1, 1, 0 ),
+    ( "BIA Highway",    "Bureau of Indian Affairs Highway",     0, 1, 1 ),
+    ( "BIA Highway",    "Bureau of Indian Affairs Highway",     1, 1, 0 ),
     ( "BIA Hwy",        "Bureau of Indian Affairs Highway",     0, 1, 1 ),
     ( "BIA Hwy",        "Bureau of Indian Affairs Highway",     1, 1, 0 ),
+    ( "BIA Road",       "Bureau of Indian Affairs Road",        0, 1, 1 ),
+    ( "BIA Road",       "Bureau of Indian Affairs Road",        1, 1, 0 ),
     ( "BIA Rd",         "Bureau of Indian Affairs Road",        0, 1, 1 ),
     ( "BIA Rd",         "Bureau of Indian Affairs Road",        1, 1, 0 ),
+    ( "BIA Route",      "Bureau of Indian Affairs Route",       0, 1, 1 ),
+    ( "BIA Route",      "Bureau of Indian Affairs Route",       1, 1, 0 ),
     ( "BIA Rte",        "Bureau of Indian Affairs Route",       0, 1, 1 ),
     ( "BIA Rte",        "Bureau of Indian Affairs Route",       1, 1, 0 ),
     ( "BLM Rd",         "Bureau of Land Management Road",       0, 1, 1 ),
     ( "BLM Rd",         "Bureau of Land Management Road",       1, 1, 0 ),
+    ( "BLM Road",       "Bureau of Land Management Road",       0, 1, 1 ),
+    ( "BLM Road",       "Bureau of Land Management Road",       1, 1, 0 ),
     ( "Byp",            "Bypass",                               0, 1, 1 ),
     ( "Cll",            "Calle",                                1, 1, 0 ),
     ( "Calleja",        "Calleja",                              1, 1, 0 ),
@@ -117,6 +126,9 @@ abbrevs = [
     ( "Cswy",           "Causeway",                             0, 0, 1 ),
     ( "Cayo",           "Cayo",                                 1, 1, 0 ),
     ( "Cem",            "Cementerio",                           1, 1, 0 ),
+    ( "Cem",            "Cemetery",                             0, 0, 1 ),
+    ( "Cementery",      "Cemetery",                             0, 0, 1 ),
+    ( "Cemetary",       "Cemetery",                             0, 0, 1 ),
     ( "Cmtry",          "Cemetery",                             0, 0, 1 ),
     ( "Ctr",            "Center",                               0, 1, 1 ),
     ( "Centro",         "Centro",                               1, 1, 0 ),
@@ -192,6 +204,7 @@ abbrevs = [
     ( "Draw",           "Draw",                                 0, 0, 1 ),
     ( "Dr",             "Drive",                                0, 0, 1 ),
     ( "Driveway",       "Driveway",                             0, 1, 1 ),
+    ( "Drwy",           "Driveway",                             0, 1, 1 ),
     ( "Dump",           "Dump",                                 0, 0, 1 ),
     ( "Edif",           "Edificio",                             1, 1, 0 ),
     ( "Elem School",    "Elementary School",                    0, 0, 1 ),
@@ -232,6 +245,10 @@ abbrevs = [
     ( "Forest Rte",     "Forest Route",                         1, 1, 0 ),
     ( "FS Rd",          "Forest Service Road",                  0, 1, 1 ),
     ( "FS Rd",          "Forest Service Road",                  1, 1, 0 ),
+    ( "F S",            "Forest Service",                       0, 1, 1 ),
+    ( "N F S",          "National Forest Service",              0, 1, 1 ),
+    ( "North F S",      "National Forest Service",              0, 1, 1 ),
+    ( "North F South",  "National Forest Service",              0, 1, 1 ),
     ( "Frk",            "Fork",                                 0, 0, 1 ),
     ( "Ft",             "Fort",                                 0, 1, 0 ),
     ( "4WD Trl",        "Four-Wheel Drive Trail",               0, 1, 1 ),
@@ -239,6 +256,7 @@ abbrevs = [
     ( "Fwy",            "Freeway",                              0, 0, 1 ),
     ( "Grge",           "Garage",                               0, 0, 1 ),
     ( "Gdns",           "Gardens",                              0, 0, 1 ),
+    ( "Gtwy",           "Gateway",                              0, 0, 1 ),
     ( "Glacier",        "Glacier",                              0, 0, 1 ),
     ( "Gln",            "Glen",                                 0, 0, 1 ),
     ( "Golf Club",      "Golf Club",                            0, 1, 1 ),
@@ -266,6 +284,8 @@ abbrevs = [
     ( "Iglesia",        "Iglesia",                              1, 1, 0 ),
     ( "Indian Rte",     "Indian Route",                         0, 1, 1 ),
     ( "Indian Svc Rte", "Indian Service Route",                 0, 1, 1 ),
+    ( "Ind St Rte",     "Indian State Route",                   0, 1, 1 ),
+    ( "Ind St Rt",      "Indian State Route",                   0, 1, 1 ),
     ( "Indl Park",      "Industrial Park",                      0, 0, 1 ),
     ( "Inlt",           "Inlet",                                0, 0, 1 ),
     ( "Inn",            "Inn",                                  0, 1, 1 ),
@@ -316,6 +336,7 @@ abbrevs = [
     ( "Memorial Gnds",  "Memorial Gardens",                     0, 0, 1 ),
     ( "Memorial Pk",    "Memorial Park",                        0, 0, 1 ),
     ( "Mesa",           "Mesa",                                 0, 1, 1 ),
+    ( "Mgmt",           "Management",                           0, 1, 1 ),
     ( "Mid Schl",       "Middle School",                        0, 0, 1 ),
     ( "Mil Res",        "Military Reservation",                 0, 0, 1 ),
     ( "Millpond",       "Millpond",                             0, 0, 1 ),
@@ -338,8 +359,19 @@ abbrevs = [
     ( "Natl Bfld Site", "National Battlefield Site",            0, 0, 1 ),
     ( "Natl Cnsv Area", "National Conservation Area",           0, 0, 1 ),
     ( "Natl Forest",    "National Forest",                      0, 1, 1 ),
-    ( "Nat For Dev Rd", "National Forest Development Road",     0, 1, 0 ),
-    ( "Natl Forest Develop", "National Forest Development",     0, 1, 0 ),
+    ( "Nf Rd",          "National Forest Road",                 0, 0, 1 ),
+    ( "Nat For Dev Rd", "National Forest Development Road",     0, 1, 1 ),
+    ( "NFD",            "National Forest Development",          0, 1, 1 ),
+    ( "N F D",          "National Forest Development",          0, 1, 1 ),
+    ( "North F D",      "National Forest Development",          0, 1, 1 ),
+    ( "Nat For Development", "National Forest Development",     0, 1, 1 ),
+    ( "Natl Forest Develop", "National Forest Development",     0, 1, 1 ),
+    ( "F Dev Rd",       "Forest Development Road",              0, 1, 1 ),
+    ( "F Dev",          "Forest Development",                   0, 1, 1 ),
+    ( "N F Dev Rd",     "National Forest Development Road",     0, 1, 1 ),
+    ( "N F Dev",        "National Forest Development",          0, 1, 1 ),
+    ( "North F Dev Rd", "National Forest Development Road",     0, 1, 1 ),
+    ( "North F Dev",    "National Forest Development",          0, 1, 1 ),
     ( "Natl Grsslands", "National Grasslands",                  0, 1, 1 ),
     ( "Natl Hist Site", "National Historic Site",               0, 0, 1 ),
     ( "Natl Hist Pk",   "National Historical Park",             0, 0, 1 ),
@@ -425,6 +457,7 @@ abbrevs = [
     ( "Railnet",        "Railnet",                              0, 0, 1 ),
     ( "RR",             "Railroad",                             0, 0, 1 ),
     ( "Rlwy",           "Railway",                              0, 0, 1 ),
+    ( "Ry",             "Railway",                              0, 0, 1 ),
     ( "Ramal",          "Ramal",                                1, 1, 0 ),
     ( "Ramp",           "Ramp",                                 0, 0, 1 ),
     ( "Ranch Rd",       "Ranch Road",                           0, 1, 0 ),
@@ -486,19 +519,43 @@ abbrevs = [
     ( "Sq",             "Square",                               0, 1, 1 ),
     ( "State Beach",    "State Beach",                          0, 0, 1 ),
     ( "State Forest",   "State Forest",                         0, 0, 1 ),
+    ( "St Beach",       "State Beach",                          0, 0, 1 ),
+    ( "St Forest",      "State Forest",                         0, 0, 1 ),
     ( "St FS Rd",       "State Forest Service Road",            0, 1, 1 ),
     ( "St FS Rd",       "State Forest Service Road",            1, 1, 0 ),
     ( "State Hwy",      "State Highway",                        0, 1, 1 ),
     ( "State Hwy",      "State Highway",                        1, 1, 0 ),
+    ( "St Hwy",         "State Highway",                        0, 1, 1 ),
+    ( "St Hwy",         "State Highway",                        1, 1, 0 ),
+    ( "St Highway",     "State Highway",                        0, 1, 1 ),
+    ( "St Highway",     "State Highway",                        1, 1, 0 ),
     ( "State Hospital", "State Hospital",                       0, 1, 1 ),
+    ( "St Hospital",    "State Hospital",                       0, 1, 1 ),
     ( "State Loop",     "State Loop",                           0, 1, 0 ),
+    ( "St Loop",        "State Loop",                           0, 1, 0 ),
     ( "State Park",     "State Park",                           0, 0, 1 ),
+    ( "St Park",        "State Park",                           0, 0, 1 ),
     ( "State Prison",   "State Prison",                         0, 0, 1 ),
+    ( "St Prison",      "State Prison",                         0, 0, 1 ),
     ( "State Rd",       "State Road",                           0, 1, 1 ),
     ( "State Rd",       "State Road",                           1, 1, 0 ),
+    ( "St Road",        "State Road",                           0, 1, 0 ),
+    ( "St Road",        "State Road",                           1, 1, 0 ),
+    ( "St Rd",          "State Road",                           0, 1, 0 ),
+    ( "St Rd",          "State Road",                           1, 1, 0 ),
     ( "State Rte",      "State Route",                          0, 1, 1 ),
     ( "State Rte",      "State Route",                          1, 1, 0 ),
+    ( "St Rte",         "State Route",                          0, 1, 1 ),
+    ( "St Rte",         "State Route",                          1, 1, 0 ),
+    ( "State Rt",       "State Route",                          0, 1, 1 ),
+    ( "State Rt",       "State Route",                          1, 1, 0 ),
+    ( "St Rt",          "State Route",                          0, 1, 1 ),
+    ( "St Rt",          "State Route",                          1, 1, 0 ),
+    ( "St Route",       "State Route",                          0, 1, 1 ),
+    ( "St Route",       "State Route",                          1, 1, 0 ),
     ( "State Spur",     "State Spur",                           0, 1, 0 ),
+    ( "St Spur",        "State Spur",                           0, 1, 0 ),
+    ( "St Spr",         "State Spur",                           0, 1, 1 ),
     ( "St Trunk Hwy",   "State Trunk Highway",                  0, 1, 1 ),
     ( "St Trunk Hwy",   "State Trunk Highway",                  1, 1, 0 ),
     ( "Sta",            "Station",                              0, 0, 1 ),
@@ -506,6 +563,30 @@ abbrevs = [
     ( "Stra",           "Stravenue",                            0, 0, 1 ),
     ( "Strm",           "Stream",                               0, 0, 1 ),
     ( "St",             "Street",                               0, 0, 1 ),
+    # NOTE: Enable these only if you know what you're doing -- all of these
+    # need to be reviewed manually in the resulting .osc file
+    #( "St Market",      "State Market",                         0, 1, 1 ),####
+    #( "St Line",        "State Line",                           0, 1, 1 ),####
+    #( "Saint Line",     "State Line",                           0, 1, 1 ),####
+    #( "Street Line",    "State Line",                           0, 1, 1 ),####
+    #( "St",             "Saint",                                0, 1, 0 ),####
+    #( "St Andrews",     "Saint Andrew's",                       0, 1, 1 ),####
+    #( "St Johns",       "Saint John's",                         0, 1, 1 ),####
+    #( "St Marys",       "Saint Mary's",                         0, 1, 1 ),####
+    #( "St Matthews",    "Saint Matthew's",                      0, 1, 1 ),####
+    #( "St Josephs",     "Saint Joseph's",                       0, 1, 1 ),####
+    #( "St Michaels",    "Saint Michael's",                      0, 1, 1 ),####
+    #( "St Bernards",    "Saint Bernard's",                      0, 1, 1 ),####
+    #( "St Helens",      "Saint Helen's",                        0, 1, 1 ),####
+    #( "St Annes",       "Saint Anne's",                         0, 1, 1 ),####
+    #( "St Albans",      "Saint Alban's",                        0, 1, 1 ),####
+    #( "St Martins",     "Saint Martin's",                       0, 1, 1 ),####
+    #( "St Pauls",       "Saint Paul's",                         0, 1, 1 ),####
+    #( "Saint Andrews",  "Saint Andrew's",                       0, 1, 1 ),####
+    #( "Saint Johns",    "Saint John's",                         0, 1, 1 ),####
+    ( "St No",          "Street No",                            0, 1, 0 ),
+    ( "St Of",          "Street Of",                            0, 1, 0 ),
+    ( "St of",          "Street of",                            0, 1, 0 ),
     ( "Strip",          "Strip",                                0, 1, 1 ),
     ( "Swamp",          "Swamp",                                0, 0, 1 ),
     ( "Synagogue",      "Synagogue",                            0, 1, 1 ),
@@ -533,6 +614,7 @@ abbrevs = [
     ( "Trak",           "Track",                                0, 1, 1 ),
     ( "Trfy",           "Trafficway",                           0, 0, 1 ),
     ( "Trl",            "Trail",                                0, 1, 1 ),
+    ( "Tr",             "Trail",                                0, 0, 1 ),
     ( "Trailer Ct",     "Trailer Court",                        0, 0, 1 ),
     ( "Trailer Park",   "Trailer Park",                         0, 0, 1 ),
     ( "Trans Ln",       "Transmission Line",                    0, 0, 1 ),
@@ -602,8 +684,34 @@ for abbrev, full, is_es, pref, suff in abbrevs:
     if suff and full not in [ en, es ][is_es]["suffixes"]:
         [ en, es ][is_es]["suffixes"][full] = full
 
+def is_num(strng):
+    d = 0
+    l = 0
+    for i in strng:
+        if i.isupper():
+            l += 1
+        elif i.isdigit():
+            d += 1
+        else:
+            return 0
+    return l < 2 and d > l
+
 def expand_name(name, lingo):
     # Try matching the longest suffix / prefix first
+    if name in lingo["suffixes"]:
+        return lingo["suffixes"][name]
+    if name in lingo["prefixes"]:
+        return lingo["prefixes"][name]
+    l = len(name) - 1
+    if l > 40:
+        l = 40
+    while l > 1:
+        l -= 1
+        if name[- l - 1] == " " and name[- l:] in lingo["suffixes"]:
+            return expand_name(name[:- l - 1], lingo) + " " + \
+                    lingo["suffixes"][name[- l:]]
+        if name[- l - 1] == " " and is_num(name[- l:]):
+            return expand_name(name[:- l - 1], lingo) + " " + name[- l:]
     l = len(name) - 1
     if l > 40:
         l = 40
@@ -612,13 +720,6 @@ def expand_name(name, lingo):
         if name[l] == " " and name[:l] in lingo["prefixes"]:
             return lingo["prefixes"][name[:l]] + " " + \
                     expand_name(name[l + 1:], lingo)
-        if name[- l - 1] == " " and name[- l:] in lingo["suffixes"]:
-            return expand_name(name[:- l - 1], lingo) + " " + \
-                    lingo["suffixes"][name[- l:]]
-    if name in lingo["prefixes"]:
-        return lingo["prefixes"][name]
-    if name in lingo["suffixes"]:
-        return lingo["suffixes"][name]
     return name
 
 def to_xml(str):

@@ -65,6 +65,7 @@ public class StopImporterAction extends JosmAction
   private static GpxData data = null;
   private static TrackReference currentTrack = null;
   private static WaypointTableModel waypointTM = null;
+  public boolean inEvent = false;
   
   public StopImporterAction()
   {
@@ -127,19 +128,21 @@ public class StopImporterAction extends JosmAction
     }
     else if ("stopImporter.settingsGPSTimeStart".equals(event.getActionCommand()))
     {
-      if ((dialog.gpsTimeStartValid()) && (currentTrack != null))
-      {
+      if ((!inEvent) && (dialog.gpsTimeStartValid()) && (currentTrack != null))
+	Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
+/*      {
 	currentTrack.gpsSyncTime = dialog.getGpsTimeStart();
 	currentTrack.relocateNodes();
-      }
+      }*/
     }
     else if ("stopImporter.settingsStopwatchStart".equals(event.getActionCommand()))
     {
-      if ((dialog.stopwatchStartValid()) && (currentTrack != null))
-      {
+      if ((!inEvent) && (dialog.stopwatchStartValid()) && (currentTrack != null))
+	Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
+/*      {
 	currentTrack.stopwatchStart = dialog.getStopwatchStart();
 	currentTrack.relocateNodes();
-      }
+      }*/
     }
     else if ("stopImporter.settingsTimeWindow".equals(event.getActionCommand()))
     {

@@ -574,6 +574,11 @@ public class StopImporterDialog
     return tfGPSTimeStart.getText();
   }
   
+  public void setGpsTimeStart(String s)
+  {
+    tfGPSTimeStart.setText(s);
+  }
+  
   public boolean stopwatchStartValid()
   {
     if (parseTime(tfStopwatchStart.getText()) >= 0)
@@ -592,6 +597,11 @@ public class StopImporterDialog
   public String getStopwatchStart()
   {
     return tfStopwatchStart.getText();
+  }
+  
+  public void setStopwatchStart(String s)
+  {
+    tfStopwatchStart.setText(s);
   }
   
   public double getTimeWindow()

@@ -26,12 +26,13 @@ public class WaypointTableModel extends DefaultTableModel
     this.controller = controller;
     addColumn("Time");
     addColumn("Stopname");
+    addColumn("Shelter");
     addTableModelListener(this);
   }
     
   public boolean isCellEditable(int row, int column)
   {
-    if (column == 1)
+    if (column >= 1)
       return true;
     return false;
   }
@@ -53,7 +54,7 @@ public class WaypointTableModel extends DefaultTableModel
     
   public void insertRow(int insPos, WayPoint wp)
   {
-    String[] buf = { "", "" };
+    String[] buf = { "", "", "" };
     buf[0] = wp.getString("time");
     if (buf[0] == null)
       buf[0] = "";
@@ -62,7 +63,7 @@ public class WaypointTableModel extends DefaultTableModel
       buf[1] = "";
 
     Node node = controller.createNode(wp.getCoor(), buf[1]);
-      
+    
     if (insPos == -1)
     {
       nodes.addElement(node);
@@ -90,14 +91,8 @@ public class WaypointTableModel extends DefaultTableModel
       if (inEvent)
 	return;
       Main.main.undoRedo.add(new WaypointsNameCommand
-	  (this, e.getFirstRow(), (String)getValueAt(e.getFirstRow(), 1)));
+	  (this, e.getFirstRow(), (String)getValueAt(e.getFirstRow(), 1),
+	   (String)getValueAt(e.getFirstRow(), 2)));
     }
-/*    {
-      if (nodes.elementAt(e.getFirstRow()) != null)
-      {
-	Node node = nodes.elementAt(e.getFirstRow());
-	node.put("name", (String)getValueAt(e.getFirstRow(), 1));
-      }
-    }*/
   }
 };

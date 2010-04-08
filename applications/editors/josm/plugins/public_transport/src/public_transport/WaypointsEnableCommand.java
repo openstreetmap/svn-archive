@@ -51,6 +51,10 @@ public class WaypointsEnableCommand extends Command
       int j = workingLines.elementAt(i).intValue();
       Node node = StopImporterAction.createNode
         (waypointTM.coors.elementAt(j), type, (String)waypointTM.getValueAt(j, 1));
+      if ("".equals((String)waypointTM.getValueAt(j, 2)))
+	node.put("shelter", null);
+      else
+	node.put("shelter", (String)waypointTM.getValueAt(j, 2));
       waypointTM.nodes.set(j, node);
     }
     return true;

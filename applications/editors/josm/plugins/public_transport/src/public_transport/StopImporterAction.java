@@ -130,19 +130,11 @@ public class StopImporterAction extends JosmAction
     {
       if ((!inEvent) && (dialog.gpsTimeStartValid()) && (currentTrack != null))
 	Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
-/*      {
-	currentTrack.gpsSyncTime = dialog.getGpsTimeStart();
-	currentTrack.relocateNodes();
-      }*/
     }
     else if ("stopImporter.settingsStopwatchStart".equals(event.getActionCommand()))
     {
       if ((!inEvent) && (dialog.stopwatchStartValid()) && (currentTrack != null))
 	Main.main.undoRedo.add(new TrackStoplistRelocateCommand(this));
-/*      {
-	currentTrack.stopwatchStart = dialog.getStopwatchStart();
-	currentTrack.relocateNodes();
-      }*/
     }
     else if ("stopImporter.settingsTimeWindow".equals(event.getActionCommand()))
     {
@@ -263,7 +255,7 @@ public class StopImporterAction extends JosmAction
 	WayPoint waypoint = waypointIter.next();
 	waypointTM.addRow(waypoint);
       }
-      dialog.getWaypointsTable().setModel(waypointTM);
+      dialog.setWaypointsTableModel(waypointTM);
     }
     else
     {

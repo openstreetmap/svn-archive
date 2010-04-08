@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -434,7 +435,7 @@ public class StopImporterDialog
       
     waypointTable = new JTable();
     tableSP = new JScrollPane(waypointTable);
-      
+    
     layoutCons.gridx = 0;
     layoutCons.gridy = 0;
     layoutCons.gridwidth = 3;
@@ -622,6 +623,22 @@ public class StopImporterDialog
   public JTable getWaypointsTable()
   {
     return waypointTable;
+  }
+  
+  public void setWaypointsTableModel(WaypointTableModel model)
+  {
+    waypointTable.setModel(model);
+    JComboBox comboBox = new JComboBox();
+    comboBox.addItem("");
+    comboBox.addItem("yes");
+    comboBox.addItem("no");
+    comboBox.addItem("implicit");
+    waypointTable.getColumnModel().getColumn(2)
+	.setCellEditor(new DefaultCellEditor(comboBox));
+    int width = waypointTable.getPreferredSize().width;
+    waypointTable.getColumnModel().getColumn(0).setPreferredWidth((int)(width * 0.4));
+    waypointTable.getColumnModel().getColumn(1).setPreferredWidth((int)(width * 0.5));
+    waypointTable.getColumnModel().getColumn(2).setPreferredWidth((int)(width * 0.1));
   }
   
   public static double parseTime(String s)

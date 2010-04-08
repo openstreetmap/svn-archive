@@ -16,14 +16,23 @@ public class WaypointsNameCommand extends Command
   private WaypointTableModel waypointTM = null;
   private String oldName = null;
   private String name = null;
+  private String oldShelter = null;
+  private String shelter = null;
   
-  public WaypointsNameCommand(WaypointTableModel waypointTM, int workingLine, String name)
+  public WaypointsNameCommand
+      (WaypointTableModel waypointTM, int workingLine, String name, String shelter)
   {
     this.waypointTM = waypointTM;
     this.workingLine = workingLine;
     if (waypointTM.nodes.elementAt(workingLine) != null)
+    {
       oldName = waypointTM.nodes.elementAt(workingLine).get("name");
+      oldShelter = waypointTM.nodes.elementAt(workingLine).get("shelter");
+    }
     this.name = name;
+    this.shelter = shelter;
+    if ("".equals(shelter))
+      shelter = null;
   }
   
   public boolean executeCommand()
@@ -31,8 +40,13 @@ public class WaypointsNameCommand extends Command
     if (waypointTM.nodes.elementAt(workingLine) != null)
     {
       waypointTM.nodes.elementAt(workingLine).put("name", name);
+      waypointTM.nodes.elementAt(workingLine).put("shelter", shelter);
       waypointTM.inEvent = true;
       waypointTM.setValueAt(name, workingLine, 1);
+      if (shelter == null)
+	waypointTM.setValueAt("", workingLine, 2);
+      else
+	waypointTM.setValueAt(shelter, workingLine, 2);
       waypointTM.inEvent = false;
     }
     return true;
@@ -43,8 +57,13 @@ public class WaypointsNameCommand extends Command
     if (waypointTM.nodes.elementAt(workingLine) != null)
     {
       waypointTM.nodes.elementAt(workingLine).put("name", oldName);
+      waypointTM.nodes.elementAt(workingLine).put("shelter", oldShelter);
       waypointTM.inEvent = true;
       waypointTM.setValueAt(oldName, workingLine, 1);
+      if (oldShelter == null)
+	waypointTM.setValueAt("", workingLine, 2);
+      else
+	waypointTM.setValueAt(oldShelter, workingLine, 2);
       waypointTM.inEvent = false;
     }
   }

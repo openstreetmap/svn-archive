@@ -196,12 +196,19 @@
 		initBackground();
 		whichWays();
 
+		var x=7;
 		_root.panel.createEmptyMovieClip("help",80);
-		drawButton(_root.panel.help,7,114,iText('help'),"");
+		drawButton(_root.panel.help,x,114,iText('help'),"",undefined,true);
 		_root.panel.help.onPress=function() { openHelp(); };
+		x+=_root.panel.help._width+2;
 
-		_root.panel.attachMovie("menu","advanced",81);
-		_root.panel.advanced.init(67,114,-1,
+		_root.panel.createEmptyMovieClip("findtag",81);
+		drawButton(_root.panel.findtag,x,114,iText('tags_findtag'),"",undefined,true);
+		_root.panel.findtag.onPress=function() { openTagFinder(); _root.reinstatefocus=_root.windows.tf.box.comment; _root.tfswallowed=true; };
+		x+=_root.panel.findtag._width+7;
+
+		_root.panel.attachMovie("menu","advanced",82);
+		_root.panel.advanced.init(x,114,-1,
 			new Array(iText("advanced_parallel"),
 					  iText("advanced_history"),
 					  "--",

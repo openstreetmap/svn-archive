@@ -134,7 +134,7 @@
 	var saved=new Array();			// no saved presets yet
 	var sandbox=false;				// we're doing proper editing
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
-	var signature="1.3e";			// current version
+	var signature="1.4";			// current version
 	var maximised=false;			// minimised/maximised?
 	var sourcetags=new Array("","","","","OS OpenData StreetView","NPE","Popular Edition (Scotland)","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo");
 	var lastgroup='road';			// last preset group used
@@ -147,6 +147,7 @@
 	var poistodelete=new Object();	// hash of POIs to delete (offline)
 	var waystoload=new Array();		// array of ways to load (if dialogue presented)
 	var relstoload=new Array();		// array of relations to load (if dialogue presented)
+	var dimlock=false;				// lock display in dimmed mode (with D)
 
 	var waynames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport","cycleway","aeroway","boundary");
 	var nodenames=new Array("highway","barrier","waterway","railway","man_made","leisure","amenity","military","shop","tourism","historic","landuse","natural","sport");
@@ -1014,7 +1015,7 @@
 
 		// ---- Service tile queue
 		if (preferences.data.bgtype==1 || preferences.data.bgtype==3) { serviceTileQueue(); }
-		if (_root.map.ways._alpha<40) { if (!Key.isToggled(Key.CAPSLOCK)) { dimMap(); } }
+		if (_root.map.ways._alpha<40 && !_root.dimlock) { if (!Key.isToggled(Key.CAPSLOCK)) { dimMapCapsLock(); } }
 			
 		// ----	Reinstate focus if lost after click event
 		if (_root.reinstatefocus) {
@@ -1025,14 +1026,21 @@
 	
 	// Dim map on CAPS LOCK
 
-	function dimMapCapsLock() { dimMap(Key.isToggled(Key.CAPSLOCK)?30:100); }
-	function dimMapD() { dimMap(130-_root.map.ways._alpha); }
+	function dimMapCapsLock() { 
+		if (Key.isToggled(Key.CAPSLOCK)) { dimMap(true); }
+									else { dimMap(false); }
+	}
+	function dimMapD() { 
+		_root.dimlock=!_root.dimlock;
+		dimMap(_root.dimlock);
+	}
 	function dimMap(a) {
+		var alpha=a ? 30:100;
 		_root.map.areas._alpha=
 		_root.map.highlight._alpha=
 		_root.map.relations._alpha=
 		_root.map.ways._alpha=
-		_root.map.pois._alpha=a;
+		_root.map.pois._alpha=alpha;
 	}
 
 	// Options window

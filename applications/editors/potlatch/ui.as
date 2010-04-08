@@ -514,7 +514,7 @@
 	// drawButton		- draw white-on-grey button
 	// (object,x,y,button text, text to right,width)
 
-	function drawButton(buttonobject,x,y,btext,ltext,bwidth) {
+	function drawButton(buttonobject,x,y,btext,ltext,bwidth,leftalign) {
         if (!bwidth) { bwidth=50; }
 		buttonobject.useHandCursor=true;
 		buttonobject.createTextField('btext',1,0,-1,bwidth-2,20);
@@ -534,7 +534,8 @@
 		var t=buttonobject.btext.textWidth;
 		if (t+6>buttonobject.btext._width) { buttonobject.btext._width=t+4; }
 		if (t>bwidth) {
-			x-=(t-bwidth)/2; buttonobject.btext._x+=(t-bwidth)/2+2;
+			if (!leftalign) { x-=(t-bwidth)/2; }
+			buttonobject.btext._x+=(t-bwidth)/2+2;
 			bwidth=t+4;
 		}
 		with (buttonobject) {

@@ -14,16 +14,18 @@ public class TrackStoplistDeleteCommand extends Command
 {
   private class NodeTimeName
   {
-    NodeTimeName(Node node, String time, String name)
+    NodeTimeName(Node node, String time, String name, String shelter)
     {
       this.node = node;
       this.time = time;
       this.name = name;
+      this.shelter = shelter;
     }
     
     public Node node;
     public String time;
     public String name;
+    public String shelter;
   };
   
   private Vector< Integer > workingLines = null;
@@ -61,7 +63,8 @@ public class TrackStoplistDeleteCommand extends Command
       Node node = stoplistTM.nodeAt(j);
       nodesForUndo.add(new NodeTimeName
 	  (node, (String)stoplistTM.getValueAt(j, 0),
-	   (String)stoplistTM.getValueAt(j, 1)));
+	   (String)stoplistTM.getValueAt(j, 1),
+	   (String)stoplistTM.getValueAt(j, 2)));
       stoplistTM.removeRow(j);
       if (node == null)
 	continue;
@@ -77,7 +80,7 @@ public class TrackStoplistDeleteCommand extends Command
     {
       int j = workingLines.elementAt(i).intValue();
       NodeTimeName ntn = nodesForUndo.elementAt(workingLines.size() - i - 1);
-      stoplistTM.insertRow(j, ntn.node, ntn.time, ntn.name);
+      stoplistTM.insertRow(j, ntn.node, ntn.time, ntn.name, ntn.shelter);
       if (ntn.node == null)
 	continue;
       ntn.node.setDeleted(false);

@@ -12,7 +12,7 @@ public class TrackStoplistTableModel extends DefaultTableModel
 {
   private Vector< Node > nodes = null;
   private Vector< String > times = null;
-  private Vector< String > columns = null;
+  private static Vector< String > columns = null;
     
   public TrackStoplistTableModel(TrackReference tr)
   {
@@ -21,6 +21,7 @@ public class TrackStoplistTableModel extends DefaultTableModel
       columns = new Vector< String >();
       columns.add("Time");
       columns.add("Name");
+      columns.add("Shelter");
     }
     nodes = new Vector< Node >();
     times = new Vector< String >();
@@ -47,7 +48,7 @@ public class TrackStoplistTableModel extends DefaultTableModel
     
   public void insertRow(int insPos, String time)
   {
-    insertRow(insPos, null, time, "");
+    insertRow(insPos, null, time, "", "");
   }
 
   public void removeRow(int pos)
@@ -97,9 +98,10 @@ public class TrackStoplistTableModel extends DefaultTableModel
     this.times = times;
   }
 
-  public void insertRow(int insPos, Node node, String time, String name)
+  public void insertRow
+      (int insPos, Node node, String time, String name, String shelter)
   {
-    String[] buf = { "", "" };
+    String[] buf = { "", "", "" };
     buf[0] = time;
     buf[1] = name;
     if (insPos == -1)

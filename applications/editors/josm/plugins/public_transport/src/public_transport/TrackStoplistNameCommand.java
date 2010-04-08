@@ -19,11 +19,12 @@ public class TrackStoplistNameCommand extends Command
   private String name = null;
   private String oldTime = null;
   private String time = null;
+  private String oldShelter = null;
+  private String shelter = null;
   private LatLon oldLatLon = null;
   
   @SuppressWarnings("unchecked")
-  public TrackStoplistNameCommand
-    (TrackReference trackref, int workingLine, String time, String name)
+  public TrackStoplistNameCommand(TrackReference trackref, int workingLine)
   {
     this.trackref = trackref;
     this.workingLine = workingLine;
@@ -32,11 +33,12 @@ public class TrackStoplistNameCommand extends Command
     {
       oldName = node.get("name");
       oldTime = trackref.stoplistTM.timeAt(workingLine);
+      oldShelter = node.get("shelter");
       oldLatLon = (LatLon)node.getCoor().clone();
-      System.out.println("Setze oldLatLon: " + oldLatLon);
     }
-    this.name = name;
-    this.time = time;
+    this.time = (String)trackref.stoplistTM.getValueAt(workingLine, 0);
+    this.name = (String)trackref.stoplistTM.getValueAt(workingLine, 1);
+    this.shelter = (String)trackref.stoplistTM.getValueAt(workingLine, 2);
   }
   
   public boolean executeCommand()
@@ -45,13 +47,24 @@ public class TrackStoplistNameCommand extends Command
     if (node != null)
     {
       node.put("name", name);
+      node.put("shelter", shelter);
       double dTime = StopImporterDialog.parseTime(time);
       node.setCoor(trackref.computeCoor(dTime));
-      trackref.inEvent = true;
-      trackref.stoplistTM.setValueAt(time, workingLine, 0);
-      trackref.stoplistTM.setValueAt(name, workingLine, 1);
-      trackref.inEvent = false;
     }
+    trackref.inEvent = true;
+    if (time == null)
+      trackref.stoplistTM.setValueAt("", workingLine, 0);
+    else
+      trackref.stoplistTM.setValueAt(time, workingLine, 0);
+    if (name == null)
+      trackref.stoplistTM.setValueAt("", workingLine, 1);
+    else
+      trackref.stoplistTM.setValueAt(name, workingLine, 1);
+    if (shelter == null)
+      trackref.stoplistTM.setValueAt("", workingLine, 2);
+    else
+      trackref.stoplistTM.setValueAt(shelter, workingLine, 2);
+    trackref.inEvent = false;
     return true;
   }
   
@@ -61,13 +74,23 @@ public class TrackStoplistNameCommand extends Command
     if (node != null)
     {
       node.put("name", oldName);
-      System.out.println("Verwende oldLatLon: " + oldLatLon);
+      node.put("shelter", oldShelter);
       node.setCoor(oldLatLon);
-      trackref.inEvent = true;
-      trackref.stoplistTM.setValueAt(oldTime, workingLine, 0);
-      trackref.stoplistTM.setValueAt(oldName, workingLine, 1);
-      trackref.inEvent = false;
     }
+    trackref.inEvent = true;
+    if (oldTime == null)
+      trackref.stoplistTM.setValueAt("", workingLine, 0);
+    else
+      trackref.stoplistTM.setValueAt(oldTime, workingLine, 0);
+    if (oldName == null)
+      trackref.stoplistTM.setValueAt("", workingLine, 1);
+    else
+      trackref.stoplistTM.setValueAt(oldName, workingLine, 1);
+    if (oldShelter == null)
+      trackref.stoplistTM.setValueAt("", workingLine, 2);
+    else
+      trackref.stoplistTM.setValueAt(oldShelter, workingLine, 2);
+    trackref.inEvent = false;
   }
   
   public void fillModifiedData

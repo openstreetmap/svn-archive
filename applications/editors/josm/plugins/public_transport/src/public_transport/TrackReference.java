@@ -116,9 +116,7 @@ public class TrackReference
       }
 
       Main.main.undoRedo.add(new TrackStoplistNameCommand
-              (this, e.getFirstRow(),
-	       (String)stoplistTM.getValueAt(e.getFirstRow(), 0),
-	       (String)stoplistTM.getValueAt(e.getFirstRow(), 1)));
+              (this, e.getFirstRow()));
       stoplistTM.setTimeAt
 	  (e.getFirstRow(), (String)stoplistTM.getValueAt(e.getFirstRow(), 0));
     }

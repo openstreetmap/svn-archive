@@ -620,6 +620,22 @@ public class StopImporterDialog
     return stoplistTable;
   }
   
+  public void setStoplistTableModel(TrackStoplistTableModel model)
+  {
+    stoplistTable.setModel(model);
+    JComboBox comboBox = new JComboBox();
+    comboBox.addItem("");
+    comboBox.addItem("yes");
+    comboBox.addItem("no");
+    comboBox.addItem("implicit");
+    stoplistTable.getColumnModel().getColumn(2)
+	.setCellEditor(new DefaultCellEditor(comboBox));
+    int width = stoplistTable.getPreferredSize().width;
+    stoplistTable.getColumnModel().getColumn(0).setPreferredWidth((int)(width * 0.4));
+    stoplistTable.getColumnModel().getColumn(1).setPreferredWidth((int)(width * 0.5));
+    stoplistTable.getColumnModel().getColumn(2).setPreferredWidth((int)(width * 0.1));
+  }
+  
   public JTable getWaypointsTable()
   {
     return waypointTable;

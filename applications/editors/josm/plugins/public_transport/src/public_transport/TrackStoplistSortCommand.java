@@ -59,6 +59,7 @@ public class TrackStoplistSortCommand extends Command
       nodesToSort.add(new NodeSortEntry
 	  (stoplistTM.nodeAt(j), (String)stoplistTM.getValueAt(j, 0),
 	    (String)stoplistTM.getValueAt(j, 1),
+	    (String)stoplistTM.getValueAt(j, 2),
 	     StopImporterDialog.parseTime(stopwatchStart)));
       stoplistTM.removeRow(j);
     }
@@ -70,7 +71,7 @@ public class TrackStoplistSortCommand extends Command
     while (iter.hasNext())
     {
       NodeSortEntry nse = iter.next();
-      stoplistTM.insertRow(insPos, nse.node, nse.time, nse.name);
+      stoplistTM.insertRow(insPos, nse.node, nse.time, nse.name, nse.shelter);
       if (insPos >= 0)
 	++insPos;
     }
@@ -100,13 +101,16 @@ public class TrackStoplistSortCommand extends Command
     public Node node = null;
     public String time = null;
     public String name = null;
+    public String shelter = null;
     public double startTime = 0;
     
-    public NodeSortEntry(Node node, String time, String name, double startTime)
+    public NodeSortEntry
+        (Node node, String time, String name, String shelter, double startTime)
     {
       this.node = node;
       this.time = time;
       this.name = name;
+      this.shelter = shelter;
     }
     
     public int compareTo(NodeSortEntry nse)

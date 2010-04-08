@@ -156,7 +156,7 @@ public class TrackSuggestStopsCommand extends Command
 	double timeDelta = gpsSyncTime - StopImporterDialog.parseTime(stopwatchStart);
 	time -= timeDelta;
 	Node node = StopImporterAction.createNode(latLon, type, "");
-	stoplistTM.insertRow(-1, node, StopImporterAction.timeOf(time), "");
+	stoplistTM.insertRow(-1, node, StopImporterAction.timeOf(time), "", "");
       }
 	
       lastStopCoor = latLon;

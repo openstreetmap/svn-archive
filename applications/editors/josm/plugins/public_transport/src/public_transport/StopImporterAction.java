@@ -280,7 +280,7 @@ public class StopImporterAction extends JosmAction
 	   currentTrack.timeWindow, currentTrack.threshold);
       
       //Prepare Stoplist
-      dialog.getStoplistTable().setModel
+      dialog.setStoplistTableModel
           (((TrackReference)tracksListModel.elementAt(selectedPos)).stoplistTM);
     }
     else

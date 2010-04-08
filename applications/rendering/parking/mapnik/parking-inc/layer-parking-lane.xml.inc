@@ -539,7 +539,7 @@
     <Datasource>
         <Parameter name="table">
         (select way,"parking:lane:left","parking:condition:left"
-          from planet_osm_line
+          from &prefix;_line
           where "parking:lane:left" in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')
           order by z_order
         ) as roads
@@ -556,7 +556,7 @@
     <Datasource>
         <Parameter name="table">
         (select way,"parking:lane:right","parking:condition:right"
-          from planet_osm_line
+          from &prefix;_line
           where "parking:lane:right" in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')
           order by z_order
         ) as roads

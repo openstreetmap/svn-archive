@@ -77,9 +77,14 @@
 # Version 5.3
 # - new html output functions
 #
-#
 # Version 5.4
 # - support negative ids
+#
+# Version 5.5
+# - support comments in osm files
+# - ignore a space after the last attribute in the <node> tag.
+#
+#
 #
 #
 # USAGE
@@ -141,7 +146,7 @@
 # skipWays ()
 # stringFileInfo ($file)				> $string
 # stringTimeSpent ($timeSpent in seconds) 		> $string
-# tileNumber ($lat,$lon,$zoom) 				> ($xTile, $yTile)
+# tileNumber ($lon,$lat,$zoom) 				> ($xTile, $yTile)
 #
 
 
@@ -164,7 +169,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.4' ; 
+$VERSION = '5.5' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -219,12 +224,14 @@ sub stringFileInfo {
 }
 
 sub nextLine {
-	if ($isBz2) {
-		$bz->bzreadline($line) ;
-	}
-	else {
-		$line = <$file> ;
-	}
+	do {
+		if ($isBz2) {
+			$bz->bzreadline($line) ;
+		}
+		else {
+			$line = <$file> ;
+		}
+	} while ($line =~ /^<!--/) ;
 }
 
 
@@ -265,7 +272,7 @@ sub getNode {
 		unless ($id) { next; }
 		if  (! (defined ($lat))) { next; }
 		if  (! (defined ($lon))) { next; }
-		if ( (grep (/">/, $line)) or (grep (/'>/, $line)) ) {                  # more lines, get tags
+		if ( (grep (/"\s*>/, $line)) or (grep (/'\s*>/, $line)) ) {                  # more lines, get tags
 			nextLine() ;
 			while (!grep(/<\/node>/, $line)) {
 
@@ -328,7 +335,7 @@ sub getNode2 {
 			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
 		}
 		else {
-			if ( (grep (/">/, $line)) or (grep (/'>/, $line)) ) {                  # more lines, get tags
+			if ( (grep (/"\s*>/, $line)) or (grep (/'\s*>/, $line)) ) {                  # more lines, get tags
 				nextLine() ;
 				while (!grep(/<\/node>/, $line)) {
 	

@@ -538,9 +538,9 @@
     <StyleName>parkinglane-left-no</StyleName>
     <Datasource>
         <Parameter name="table">
-        (select way,"parking:lane:left","parking:condition:left"
+        (select way,tags->'parking:lane:left',tags->'parking:condition:left'
           from &prefix;_line
-          where "parking:lane:left" in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')
+          where (tags ? 'parking:lane:left') AND (tags ? 'parking:condition:left') AND (tags->'parking:lane:left') in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')
           order by z_order
         ) as roads
         </Parameter>

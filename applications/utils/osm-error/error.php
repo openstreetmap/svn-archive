@@ -2,7 +2,7 @@
 /*
 Code to get co-ordinates from map taken from http://maposmatic.org/ and
 copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
-Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
+Other code copyright (c) 2009-2010 Russ Phillips <russ AT phillipsuk DOT org>
 
 This file is part of OSM Error.
 
@@ -84,10 +84,10 @@ function GetWayLatLon ($way, &$fWayLat, &$fWayLon) {
 
 	// Loop through nodes in XML
 	foreach ($xml->node as $node) {
-		// If node is part of the way, get lat & lon
+		// If node is first part of the way, get lat & lon
 		if ((int) $node ["id"] == $nodeid) {
-			$fWayLat += (float) $node ["lat"];
-			$fWayLon += (float) $node ["lon"];
+			$fWayLat = (float) $node ["lat"];
+			$fWayLon = (float) $node ["lon"];
 			// Found node - return from function
 			return;
 		}
@@ -147,11 +147,8 @@ function NoTagCheck ($node, $tag, $k, $v, $waynode, $name, $shortname) {
 		echo $sOut;
 		if ($DEBUG)
 			file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
-
 	}
 }
-
-/* ****************************************************************** */
 
 /*
  * Check a node has a source=OS_OpenData tag
@@ -171,14 +168,13 @@ function NodeCheckOS ($node, $tag) {
 			$sOut .= "<name>SrcOS" . $iCount++ . "</name>\n";
 		elseif ($namelen == 14)
 			$sOut .= "<name>Source OS " . $iCount++ . "</name>\n";
-		else {
+		else
 			$sOut .= "<name>Source OS (" . $iCount++ . ")</name>\n";
-			$sOut .= "<desc>Sourced from OS data</desc>\n";
-			$sOut .= "</wpt>\n";
-			echo $sOut;
-			if ($DEBUG)
-				file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
-		}
+		$sOut .= "<desc>Sourced from OS data ({$tag ['v']})</desc>\n";
+		$sOut .= "</wpt>\n";
+		echo $sOut;
+		if ($DEBUG)
+			file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
 	}
 }
 
@@ -203,17 +199,76 @@ function WayCheckOS ($way, $tag) {
 			$sOut .= "<name>SrcOS" . $iCount++ . "</name>\n";
 		elseif ($namelen == 14)
 			$sOut .= "<name>Source OS " . $iCount++ . "</name>\n";
-		else {
+		else
 			$sOut .= "<name>Source OS (" . $iCount++ . ")</name>\n";
-			$sOut .= "<desc>Sourced from OS data</desc>\n";
-			$sOut .= "</wpt>\n";
-			echo $sOut;
-			if ($DEBUG)
-				file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
-		}
+		$sOut .= "<desc>Sourced from OS data ({$tag ['v']})</desc>\n";
+		$sOut .= "</wpt>\n";
+		echo $sOut;
+		if ($DEBUG)
+			file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
 	}
 }
-/* ****************************************************************** */
+
+/* **************************************************************** */
+/*
+ * Check a node has "fixme" in the description
+ * If it exists, write a waypoint
+ * $node: node to be checked
+ * $tag: tag in $node to be checked
+*/
+function NodeFixmeDescription ($node, $tag) {
+	global $iCount, $DEBUG, $LOG_FILE;
+	//Make check case-insensitive
+	$tagk = strtolower ($tag ["k"]);
+	$tagv = strtolower ($tag ["v"]);
+
+	if ($tagk == "description" && strstr ($tagv, "fixme") !== False) {
+		$sOut = "<wpt lat='" . $node ["lat"] . "' lon='" . $node ["lon"] . "'>\n";
+		if ($namelen == 6)
+			$sOut .= "<name>FIXME" . $iCount++ . "</name>\n";
+		elseif ($namelen == 14)
+			$sOut .= "<name>FIXME " . $iCount++ . "</name>\n";
+		else
+			$sOut .= "<name>FIXME (" . $iCount++ . ")</name>\n";
+		$sOut .= "<desc>Fixme in description - {$tag ['v']}</desc>\n";
+		$sOut .= "</wpt>\n";
+		echo $sOut;
+		if ($DEBUG)
+			file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
+	}
+}
+
+/*
+ * Check a way has "fixme" in the description
+ * If it exists, write a waypoint
+ * $way: way to be checked
+ * $tag: tag in $way to be checked
+*/
+function WayFixmeDescription ($way, $tag) {
+	global $iCount, $DEBUG, $LOG_FILE;
+	//Make check case-insensitive
+	$tagk = strtolower ($tag ["k"]);
+	$tagv = strtolower ($tag ["v"]);
+
+	if ($tagk == "description" && strstr ($tagv, "fixme") !== False) {
+		$lat = 0;
+		$lon = 0;
+		GetWayLatLon ($way, $lat, $lon);
+		$sOut = "<wpt lat='$lat' lon='$lon'>\n";
+		if ($namelen == 6)
+			$sOut .= "<name>FIXME" . $iCount++ . "</name>\n";
+		elseif ($namelen == 14)
+			$sOut .= "<name>FIXME " . $iCount++ . "</name>\n";
+		else
+			$sOut .= "<name>FIXME (" . $iCount++ . ")</name>\n";
+		$sOut .= "<desc>Fixme in description - {$tag ['v']}</desc>\n";
+		$sOut .= "</wpt>\n";
+		echo $sOut;
+		if ($DEBUG)
+			file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
+	}
+}
+/* **************************************************************** */
 
 /*
  * Check a node has a tag.
@@ -247,11 +302,11 @@ function NodeCheck ($node, $tag, $k, $v, $checkfor, $name, $shortname) {
 			$sOut .= "<name>$name" . $iCount++ . "</name>\n";
 		else
 			$sOut .= "<name>$sErrText (" . $iCount++ . ")</name>\n";
-			$sOut .= "<desc>$sErrText</desc>\n";
-			$sOut .= "</wpt>\n";
-			echo $sOut;
-			if ($DEBUG)
-				file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
+		$sOut .= "<desc>$sErrText</desc>\n";
+		$sOut .= "</wpt>\n";
+		echo $sOut;
+		if ($DEBUG)
+			file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
 		}
 }
 
@@ -290,11 +345,11 @@ function WayCheck ($way, $tag, $k, $v, $checkfor, $name, $shortname) {
 			$sOut .= "<name>$name" . $iCount++ . "</name>\n";
 		else
 			$sOut .= "<name>$sErrText (" . $iCount++ . ")</name>\n";
-			$sOut .= "<desc>$sErrText</desc>\n";
-			$sOut .= "</wpt>\n";
-			echo $sOut;
-			if ($DEBUG)
-				file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
+		$sOut .= "<desc>$sErrText</desc>\n";
+		$sOut .= "</wpt>\n";
+		echo $sOut;
+		if ($DEBUG)
+			file_put_contents ($LOG_FILE, "\t$sErrText\n\tLat/Lon: {$node ['lat']}, {$node ['lon']}\n", FILE_APPEND);
 		}
 }
 
@@ -351,7 +406,7 @@ foreach ($xml->node as $node) {
 			NoTagCheck ($node, $tag, "source", "extrapolation", "node", "Src extrap", "Source");
 			NoTagCheck ($node, $tag, "source", "NPE", "node", "Src NPE ", "SrcNPE");
 			NoTagCheck ($node, $tag, "source", "historical", "node", "Src Hist ", "SrcHis");
-			NodeCheckOS ($way, $tag);
+			NodeCheckOS ($node, $tag);
 		}
 
 		// FIXME tags

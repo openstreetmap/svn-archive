@@ -2,7 +2,7 @@
 /*
 Code to get co-ordinates from map taken from http://maposmatic.org/ and
 copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
-Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
+Other code copyright (c) 2009-2010 Russ Phillips <russ AT phillipsuk DOT org>
 
 This file is part of OSM Error.
 

@@ -1,7 +1,7 @@
 <!--
 Code to get co-ordinates from map taken from http://maposmatic.org/ and
 copyright (c) 2009 Étienne Loks <etienne.loks_AT_peacefrogsDOTnet>
-Other code copyright (c) Russ Phillips <russ AT phillipsuk DOT org>
+Other code copyright (c) 2009-2010 Russ Phillips <russ AT phillipsuk DOT org>
 
 This file is part of OSM Error.
 
@@ -126,7 +126,7 @@ Download a GPX file with a waypoint for each error found. The GPX file can then 
 &quot;<a href = "http://wiki.openstreetmap.org/wiki/Ordnance_Survey_Opendata#Attributing_OS">OS_OpenData_*</a>&quot;
 or
 &quot;historical&quot;</label><br>
-<input type = "checkbox" onchange = "updateForm ()" name = "fixme" id = "fixme" <?=$fixme?>>&nbsp;<label for = "fixme">Anything with a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:fixme">fixme</a>&quot; tag</label><br>
+<input type = "checkbox" onchange = "updateForm ()" name = "fixme" id = "fixme" <?=$fixme?>>&nbsp;<label for = "fixme">Anything with a &quot;<a href = "http://wiki.openstreetmap.org/wiki/Key:fixme">fixme</a>&quot; tag, or &quot;fixme&quot; in the description</label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "naptan" id = "naptan" <?=$naptan?>>&nbsp;<label for = "naptan">Any node tagged with &quot;<a href = "http://wiki.openstreetmap.org/wiki/NaPTAN/Surveying_and_Merging_NaPTAN_and_OSM_data">naptan:verified=no</a>&quot;</label><br>
 <input type = "checkbox" onchange = "updateForm ()" name = "pbref" id = "pbref" <?=$pbref?>>&nbsp;<label for = "ref"><a href = "http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dpost_box" onchange = "updateForm ()">Postboxes</a> without a &quot;ref&quot; tag</label><br>
 </p>
@@ -167,6 +167,7 @@ echo "<input type = 'radio' $checked name = 'namelen' value = '0' id = 'name0'>&
 <li>If an error is found on a way, the waypoint will be positioned at the first node in the way
 <li><a href = "../download/osm-error.tar.gz">Download source code</a> (released under <a href = "gpl.txt">GNU General Public License</a>)
 <li><a href = "README.html">About OSM Error</a>
+<li>Send bug reports etc to <a href = 'mailto:&#114;&#117;&#115;&#115;&#64;&#112;&#104;&#105;&#108;&#108;&#105;&#112;&#115;&#117;&#107;&#46;&#111;&#114;&#103;'>Russ</a>
 </ul>
 
 <p>

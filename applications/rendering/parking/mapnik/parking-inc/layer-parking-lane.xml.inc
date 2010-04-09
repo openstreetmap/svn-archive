@@ -540,7 +540,7 @@
         <Parameter name="table">
         (select way,(tags->'parking:lane:left') as "parking:lane:left",(tags->'parking:condition:left') as "parking:condition:left"
           from &prefix;_line
-          where (tags ? 'parking:lane:left') AND (tags ? 'parking:condition:left') AND (tags->'parking:lane:left') in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')
+          where (tags ? 'parking:lane:left') AND (tags->'parking:lane:left') in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')
         ) as roads
         </Parameter>
         &datasource-settings;
@@ -556,7 +556,7 @@
         <Parameter name="table">
         (select way,(tags->'parking:lane:right') as "parking:lane:right",(tags->'parking:condition:right') as "parking:condition:right"
           from &prefix;_line
-          where (tags ? 'parking:lane:right') AND (tags ? 'parking:condition:right') AND (tags->'parking:lane:right') in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')
+          where (tags ? 'parking:lane:right') AND (tags->'parking:lane:right') in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')
         ) as roads
         </Parameter>
         &datasource-settings;

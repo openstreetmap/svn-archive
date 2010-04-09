@@ -39,6 +39,8 @@ public class TrackStoplistNameCommand extends Command
     this.time = (String)trackref.stoplistTM.getValueAt(workingLine, 0);
     this.name = (String)trackref.stoplistTM.getValueAt(workingLine, 1);
     this.shelter = (String)trackref.stoplistTM.getValueAt(workingLine, 2);
+    if ("".equals(this.shelter))
+      this.shelter = null;
   }
   
   public boolean executeCommand()

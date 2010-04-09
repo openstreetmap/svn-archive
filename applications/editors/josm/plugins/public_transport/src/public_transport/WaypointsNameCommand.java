@@ -32,7 +32,7 @@ public class WaypointsNameCommand extends Command
     this.name = name;
     this.shelter = shelter;
     if ("".equals(shelter))
-      shelter = null;
+      this.shelter = null;
   }
   
   public boolean executeCommand()

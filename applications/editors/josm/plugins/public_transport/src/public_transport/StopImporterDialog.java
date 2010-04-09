@@ -24,6 +24,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -34,6 +35,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -92,7 +94,7 @@ public class StopImporterDialog
     jDialog.add(tabbedPane);
       
     //Tracks Tab
-    Container contentPane = tabTracks;
+    JPanel contentPane = tabTracks;
     GridBagLayout gridbag = new GridBagLayout();
     GridBagConstraints layoutCons = new GridBagConstraints();
     contentPane.setLayout(gridbag);
@@ -314,15 +316,39 @@ public class StopImporterDialog
     gridbag.setConstraints(bSuggestStops, layoutCons);
     contentPane.add(bSuggestStops);
       
-      //Stops Tab
+    //Stops Tab
     contentPane = tabStops;
     gridbag = new GridBagLayout();
     layoutCons = new GridBagConstraints();
     contentPane.setLayout(gridbag);
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt N"), "stopImporter.focusName");
+    contentPane.getActionMap().put
+	("stopImporter.focusName", controller.getFocusTrackStoplistNameAction());
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt S"), "stopImporter.focusShelterYes");
+    contentPane.getActionMap().put
+	("stopImporter.focusShelterYes",
+	 controller.getFocusTrackStoplistShelterAction("yes"));
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt T"), "stopImporter.focusShelterNo");
+    contentPane.getActionMap().put
+	("stopImporter.focusShelterNo",
+	 controller.getFocusTrackStoplistShelterAction("no"));
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt U"), "stopImporter.focusShelterImplicit");
+    contentPane.getActionMap().put
+	("stopImporter.focusShelterImplicit",
+	 controller.getFocusTrackStoplistShelterAction("implicit"));
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt D"), "stopImporter.stoplistDelete");
+    contentPane.getActionMap().put
+	("stopImporter.stoplistDelete",
+	 controller.getFocusStoplistDeleteAction());
       
     stoplistTable = new JTable();
     JScrollPane tableSP = new JScrollPane(stoplistTable);
-      
+    
     layoutCons.gridx = 0;
     layoutCons.gridy = 0;
     layoutCons.gridwidth = 4;
@@ -427,11 +453,35 @@ public class StopImporterDialog
     gridbag.setConstraints(bSort, layoutCons);
     contentPane.add(bSort);
       
-      //Waypoints Tab
+    //Waypoints Tab
     contentPane = tabWaypoints;
     gridbag = new GridBagLayout();
     layoutCons = new GridBagConstraints();
     contentPane.setLayout(gridbag);
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt N"), "stopImporter.focusName");
+    contentPane.getActionMap().put
+	("stopImporter.focusName", controller.getFocusWaypointNameAction());
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt S"), "stopImporter.focusShelterYes");
+    contentPane.getActionMap().put
+	("stopImporter.focusShelterYes",
+	 controller.getFocusWaypointShelterAction("yes"));
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt T"), "stopImporter.focusShelterNo");
+    contentPane.getActionMap().put
+	("stopImporter.focusShelterNo",
+	 controller.getFocusWaypointShelterAction("no"));
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt U"), "stopImporter.focusShelterImplicit");
+    contentPane.getActionMap().put
+	("stopImporter.focusShelterImplicit",
+	 controller.getFocusWaypointShelterAction("implicit"));
+    contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put
+        (KeyStroke.getKeyStroke("alt D"), "stopImporter.waypointsDelete");
+    contentPane.getActionMap().put
+	("stopImporter.waypointsDelete",
+	 controller.getFocusWaypointDeleteAction());
       
     waypointTable = new JTable();
     tableSP = new JScrollPane(waypointTable);

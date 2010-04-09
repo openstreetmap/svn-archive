@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -414,4 +416,166 @@ public class StopImporterAction extends JosmAction
     return (format.format(hour) + ":" + format.format(minute) + ":"
 	+ formatS.format(second));
   }
+  
+  public Action getFocusWaypointNameAction()
+  {
+    return new FocusWaypointNameAction();
+  }
+  
+  public Action getFocusWaypointShelterAction(String shelter)
+  {
+    return new FocusWaypointShelterAction(shelter);
+  }
+
+  public Action getFocusWaypointDeleteAction()
+  {
+    return new AbstractAction()
+    {
+      public void actionPerformed(ActionEvent e)
+      {
+	JTable table = dialog.getWaypointsTable();
+	int row = table.getEditingRow();
+	if (row < 0)
+	  return;
+	table.clearSelection();
+	table.addRowSelectionInterval(row, row);
+	Main.main.undoRedo.add
+	    (new WaypointsDisableCommand(StopImporterAction.this));
+      }
+    };
+  }
+
+  public Action getFocusTrackStoplistNameAction()
+  {
+    return new FocusTrackStoplistNameAction();
+  }
+  
+  public Action getFocusTrackStoplistShelterAction(String shelter)
+  {
+    return new FocusTrackStoplistShelterAction(shelter);
+  }
+
+  public Action getFocusStoplistDeleteAction()
+  {
+    return new AbstractAction()
+    {
+      public void actionPerformed(ActionEvent e)
+      {
+	JTable table = dialog.getStoplistTable();
+	int row = table.getEditingRow();
+	if (row < 0)
+	  return;
+	table.clearSelection();
+	table.addRowSelectionInterval(row, row);
+	Main.main.undoRedo.add
+	    (new TrackStoplistDeleteCommand(StopImporterAction.this));
+      }
+    };
+  }
+
+  private class FocusWaypointNameAction extends AbstractAction
+  {
+    public void actionPerformed(ActionEvent e)
+    {
+      JTable table = dialog.getWaypointsTable();
+      showNodesFromTable(table, waypointTM.nodes);
+      markNodesFromTable(table, waypointTM.nodes);
+      int row = table.getEditingRow();
+      if (row < 0)
+	row = 0;
+      waypointTM.inEvent = true;
+      if (table.getCellEditor() != null)
+      {
+	if (!table.getCellEditor().stopCellEditing())
+	  table.getCellEditor().cancelCellEditing();
+      }
+      table.editCellAt(row, 1);
+      table.getCellEditor().getTableCellEditorComponent
+	  (table, "", true, row, 1);
+      waypointTM.inEvent = false;
+    }
+  };
+  
+  private class FocusWaypointShelterAction extends AbstractAction
+  {
+    private String defaultShelter = null;
+    
+    public FocusWaypointShelterAction(String defaultShelter)
+    {
+      this.defaultShelter = defaultShelter;
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+      JTable table = dialog.getWaypointsTable();
+      showNodesFromTable(table, waypointTM.nodes);
+      markNodesFromTable(table, waypointTM.nodes);
+      int row = table.getEditingRow();
+      if (row < 0)
+	row = 0;
+      waypointTM.inEvent = true;
+      if (table.getCellEditor() != null)
+      {
+	if (!table.getCellEditor().stopCellEditing())
+	  table.getCellEditor().cancelCellEditing();
+      }
+      table.editCellAt(row, 2);
+      waypointTM.inEvent = false;
+      table.getCellEditor().getTableCellEditorComponent
+          (table, defaultShelter, true, row, 2);
+    }
+  };
+  
+  private class FocusTrackStoplistNameAction extends AbstractAction
+  {
+    public void actionPerformed(ActionEvent e)
+    {
+      JTable table = dialog.getStoplistTable();
+      showNodesFromTable(table, currentTrack.stoplistTM.getNodes());
+      markNodesFromTable(table, currentTrack.stoplistTM.getNodes());
+      int row = table.getEditingRow();
+      if (row < 0)
+	row = 0;
+      currentTrack.inEvent = true;
+      if (table.getCellEditor() != null)
+      {
+	if (!table.getCellEditor().stopCellEditing())
+	  table.getCellEditor().cancelCellEditing();
+      }
+      table.editCellAt(row, 1);
+      table.getCellEditor().getTableCellEditorComponent
+          (table, "", true, row, 1);
+      currentTrack.inEvent = false;
+    }
+  };
+  
+  private class FocusTrackStoplistShelterAction extends AbstractAction
+  {
+    private String defaultShelter = null;
+    
+    public FocusTrackStoplistShelterAction(String defaultShelter)
+    {
+      this.defaultShelter = defaultShelter;
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+      JTable table = dialog.getStoplistTable();
+      showNodesFromTable(table, currentTrack.stoplistTM.getNodes());
+      markNodesFromTable(table, currentTrack.stoplistTM.getNodes());
+      int row = table.getEditingRow();
+      if (row < 0)
+	row = 0;
+      currentTrack.inEvent = true;
+      if (table.getCellEditor() != null)
+      {
+	if (!table.getCellEditor().stopCellEditing())
+	  table.getCellEditor().cancelCellEditing();
+      }
+      table.editCellAt(row, 2);
+      currentTrack.inEvent = false;
+      table.getCellEditor().getTableCellEditorComponent
+          (table, defaultShelter, true, row, 2);
+    }
+  };
 }

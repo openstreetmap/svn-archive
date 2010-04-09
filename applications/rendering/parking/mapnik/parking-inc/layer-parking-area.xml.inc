@@ -183,11 +183,11 @@
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,tags->amenity,tags->tourism,tags->name,tags->fee,tags->'parking:condition:area'
+      (select way,tags->'amenity',tags->'tourism',tags->'name',tags->'fee',tags->'parking:condition:area'
        from &prefix;_polygon
        where 
-          (tags ? amenity) AND (tags->amenity) in ('parking')
-          or (tags ? tourism) AND (tags->tourism) in ('camp_site','caravan_site','picnic_site')
+          (tags ? 'amenity') AND (tags->'amenity') in ('parking')
+          or (tags ? 'tourism') AND (tags->'tourism') in ('camp_site','caravan_site','picnic_site')
       ) as parking
       </Parameter>
       &datasource-settings;

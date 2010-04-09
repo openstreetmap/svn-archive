@@ -47,6 +47,8 @@ public class TrackSuggestStopsCommand extends Command
   @SuppressWarnings("unchecked")
   public boolean executeCommand()
   {
+    if (stoplistTM == null)
+      return false;
     tableDataModel = (Vector< Vector< Object > >)stoplistTM.getDataVector()
 	.clone();
     nodes = (Vector< Node >)stoplistTM.getNodes().clone();
@@ -167,6 +169,8 @@ public class TrackSuggestStopsCommand extends Command
   
   public void undoCommand()
   {
+    if (stoplistTM == null)
+      return;
     for (int i = 0; i < stoplistTM.getNodes().size(); ++i)
     {
       Node node = stoplistTM.nodeAt(i);

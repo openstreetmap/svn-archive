@@ -23,13 +23,17 @@
 
 <p>
 <a href="#chapter.introduction">Introduction</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.installation">How to Install</a><br/>
-<a href="#chapter.tutorial">Examples how to Use</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.scratch">Map a Bus Line from Scratch</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.parallel">Reuse a partly parallel line</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.legacy">Reuse an Old Relation</a><br/>
-<a href="#chapter.notions">Used Notions</a><br/>
-<a href="#chapter.items">Reference Manual</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.installation">How to Install</a><br/>                                                                                             
+<a href="#chapter.tutorial">Examples how to Use</a><br/>                                                                                                                    
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.scratch">Map a Bus Line from Scratch</a><br/>                                                                                     
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.parallel">Reuse a partly parallel line</a><br/>                                                                                   
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.legacy">Reuse an Old Relation</a><br/>                                                                                            
+<a href="#chapter.notions">Used Notions</a><br/>                                                                                                                            <a href="#chapter.stops_from_gpx">Create Stops from GPX</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.tracks">Tab <em>Tracks</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.settings">Tab <em>Settings</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.trackstops">Tab <em>Stops</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.waypoints">Tab <em>Waypoints</em></a><br/>
+<a href="#chapter.route_patterns">Route patterns</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.overview">Tab <em>Overview</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.tags">Tab <em>Tags</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.itinerary">Tab <em>Itinerary</em></a><br/>
@@ -134,6 +138,11 @@ with the tasks you can:</p>
 </p>
 
 <p>
+<a id="notion.gpx_file"/>
+<strong>GPX file</strong> - This is a common file format supported by most GPS loggers. The data you log in the real world, in particular logged stops and stations, get feeded into this software as GPX files.
+</p>
+
+<p>
 <a id="notion.itinerary"/>
 <strong>itinerary</strong> - The way a bus service actually takes. Note that buses or other vehicles can't make jumps, thus there cannot be gaps in an itinerary. For that reason, a line <em>[gap]</em> is displayed in the <a href="#subsection.itinerary.list"/>itinerary list</a> whenever the first <a href="#notion.node">node</a> of a <a href="#notion.way">way</a> differs from the last <a href="#notion.node">node</a> of the preceeding <a href="#notion.way">way</a>.
 </p>
@@ -180,6 +189,18 @@ In particular, the data model underlying this plugin is as follows: Every <a hre
 </p>
 
 <p>
+<a id="notion.route_type"/>
+<strong>Route type</strong> - You don't want to see an international high speed rail service and a local school bus to be mapped in the same way. For this purpose, we need some further taxonomy to classify public transport services into. As a preliminary classification, we use the following:
+<ul>
+<li><em>Bus</em>: Any service that operates completely or partly on ordinary streets with rubber tyred vehicles.</li>
+<li><em>Tram</em>: A service that operates on rails, almost always on the surface and often shares space with car traffic.</li>
+<li><em>Light rail</em>: Most newer tram-like services will go into this category. Operates on rails, has most of the time separated tracks, might go underground or overgorund or use wide area railway networks and has usually a level entrance.</li>
+<li><em>Subway</em>: A service that has its tracks completely separated from street traffic but is also apart from wide area railway networks.</li>
+<li><em>Railway</em>: Services that operate on wide area railway networks.</li>
+</ul>
+</p>
+
+<p>
 <a id="notion.select"/>
 <strong>select</strong> - Unfortunately, there are different things that can be selected. You can and need to mark objects (<a href="#notion.way">ways</a> and <a href="#notion.node">nodes</a>) on the map in the JOSM main window. Or you can mark <a href="#notion.entry">entries</a> in the list in one of the tabs <a href="#section.overview">Overview</a>, <a href="#section.itinerary">Itinerary</a> or <a href="#section.stops">Stops</a>. The former is usually referred to as <em>select on the map</em>, the latter as <em>select an entry</em>. For the <a href="#notion.entry">entries</a> it is sometimes useful to know that you can mark several entries at once by clicking on the first entry, then <em>shift</em>-clicking on the last entry. You can unmark all <a href="#notion.entry">entries</a> as follows: click an entry (this marks it and unmarks all other entries) then <em>Ctrl</em>-click it again (this unmarks this entry).
 </p>
@@ -190,15 +211,92 @@ In particular, the data model underlying this plugin is as follows: Every <a hre
 </p>
 
 <p>
+<a id="notion."/>
+<strong></strong> - 
+</p>
+
+<p>
 <a id="notion.way"/>
 <strong>way</strong> - The respective OSM primitive. It is visible in the JOSM main window and a list of ways constitutes the <a href="#notion.itinerary">itinerary</a> of a <a href="#notion.bus_route">bus route</a>. A way has an orientation from its first <a href="#notion.node">node</a> to its last node. In JOSM, this is visualised by the direction of the arrows that represent the way. Thus, a vehicle can pass a way in or against its orientation. This is indicated by the role of the <a href="#notion.relation">relation</a> membership representing the <a href="#notion.itinerary">itinerary</a>: <em>forward</em> means that the vehicle passes the way in its orientation while <em>backward</em> means the opposite.
+</p>
+
+<p>
+<a id="notion.track"/>
+<strong>Track</strong> - A data structure from GPX files: GPX files are organised as a collection of waypoints and tracks. While waypoints are just points, each track is a sequence of points representing an arbitrary motion. The track contains the information when the vehicle was where. Usually, a GPS logger starts a new track each time you put its power on.
 </p>
 
 <!-- ==================================================================== //-->
 
 <div>
-<a id="chapter.items"/>
-<h2>Reference Manual</h2>
+<a id="chapter.stops_from_gpx"/>
+<h2>Create Stops from GPX</h2>
+</div>
+
+If you have a <a href="#notion.gpx_file">GPX file</a> and want to create <a href="#notion.stop">bus stops or stations</a> from it, use this dialog. Each time you open this dialog, you must select from which GPX file you want to create stops. For this purpose, please choose a file in the file open dialog <em>Select GPX file</em>. After you have chosen a file, you can use the subsequently described items. If you close the dialog, the generated stops remain as ordinary <a href="#notion.node">nodes</a> in the JOSM dataset - you cannot manage them any more from this dialog.
+
+<div>
+<a id="section.tracks"/>
+<h3>Tab <em>Tracks</em></h3>
+</div>
+
+<a id="subsection.tracks.list"/>
+<h4>List <em>Tracks in this GPX file</em></h4>
+The large list in the center contains all <a href="#notion.track">tracks</a> that have been found in the <a href="#notion.gpx_file">GPX file</a>. They are described by their name. The features in the tabs <a href="#section.settings">Settings</a> and <a href="#section.trackstops">Stops</a> depend on the content of the track and can only be used if you choose a track here.
+
+<div>
+<a id="section.settings"/>
+<h3>Tab <em>Settings</em></h3>
+</div>
+
+In this tab you configure the values for the nodes you create or manage with the dialog.  Depending on the method you use to create stops, different parts of this tab might be relevant:
+<ul>
+<li>If you map from waypoints, only the combo box <a href="#subsection.settings.type">Type of stops to add</a> is relevant to you.</li>
+<li>If you map with a tracklog and a stopwatch, also the text fields <a href="#subsection.settings.gps">Time on your GPS device</a> and <a href="#subsection.settings.stopwatch">Time on your stopwatch</a> are relevant.</li>
+<li>If you map with a tracklog only and want to use heuristics, every item in this dialog but the text field <em>Time on your stopwatch</em> is relevant.</li>
+</ul>
+
+<a id="subsection.settings.type"/>
+<h4>Combo box <em>Type of stops to add</em></h4>
+Choose here which kind of <a href="#notion.stop">stops</a> you want to generate. Available options are <a href="#notion.route_type">bus</a> stops, <a href="#notion.route_type">tram</a> stops, <a href="#notion.route_type">light rail</a> stations, <a href="#notion.route_type">subway</a> stations and <a href="#notion.route_type">rail</a>way stations.
+
+<a id="subsection.settings.gps"/>
+<h4>Text field <em>Time on your GPS device</em></h4>
+
+<a id="subsection.settings.stopwatch"/>
+<h4>Text field <em>Time on your stopwatch</em></h4>
+
+<a id="subsection.settings.time_window"/>
+<h4>Text field <em>Time window</em></h4>
+
+<a id="subsection.settings.threshold"/>
+<h4>Text field <em>Move Threshold</em></h4>
+
+<a id="subsection.settings.suggest_stops"/>
+<h4>Button <em>Suggest Stops</em></h4>
+
+<div>
+<a id="section.trackstops"/>
+<h3>Tab <em>Stops</em></h3>
+</div>
+
+This tab is only accessible if you have selected a track from <a href="#subsection.tracks.list">Tracks in this GPX file</a> in the tab <a href="#section.tracks">Tracks</a>.
+
+<a id="subsection.trackstops.list"/>
+<h4>List of created stops</h4>
+
+<div>
+<a id="section.waypoints"/>
+<h3>Tab <em>Waypoints</em></h3>
+</div>
+
+<a id="subsection.waypoints.list"/>
+<h4>List of waypoints in the file</h4>
+
+<!-- ==================================================================== //-->
+
+<div>
+<a id="chapter.route_patterns"/>
+<h2>Route patterns</h2>
 </div>
 
 <div>

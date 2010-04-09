@@ -183,7 +183,7 @@
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,(tags->'amenity') as 'amenity',(tags->'tourism') as 'tourism',(tags->'name') as 'name',(tags->'fee') as 'fee',(tags->'parking:condition:area') as 'parking:condition:area'
+      (select way,(tags->'amenity') as "amenity",(tags->'tourism') as "tourism",(tags->'name') as "name",(tags->'fee') as "fee",(tags->'parking:condition:area') as "parking:condition:area"
        from &prefix;_polygon
        where 
           (tags ? 'amenity') AND (tags->'amenity') in ('parking')

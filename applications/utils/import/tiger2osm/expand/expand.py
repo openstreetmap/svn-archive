@@ -673,6 +673,8 @@ abbrevs = [
     ( "Zoo",            "Zoo",                                  0, 1, 1 ),
 ]
 
+directionals = [ "N", "S", "E", "W", "O" ]
+
 en = { "suffixes": {}, "prefixes": {} }
 es = { "suffixes": {}, "prefixes": {} }
 for abbrev, full, is_es, pref, suff in abbrevs:
@@ -698,7 +700,7 @@ def is_num(strng):
             return 0
     return l < 2 and d > l
 
-def expand_name(name, lingo):
+def expand_name(name, lingo, avoid=[]):
     # Try matching the longest suffix / prefix first
     if name in lingo["suffixes"]:
         return lingo["suffixes"][name]
@@ -760,24 +762,47 @@ class WayHandler(ContentHandler):
             # original import
             if ttags[0] not in self.tags:
                 continue
-            base = self.tags[ttags[0]].replace(" ", "")
+            base = self.tags[ttags[0]]
             type = ""
             if ttags[1] not in self.tags:
-                type = self.tags[ttags[1]].replace(" ", "")
+                type = self.tags[ttags[1]]
             dir_prefix = ""
             if ttags[2] not in self.tags:
-                dir_prefix = self.tags[ttags[2]].replace(" ", "")
+                dir_prefix = self.tags[ttags[2]]
             dir_suffix = ""
             if ttags[3] not in self.tags:
-                dir_suffix = self.tags[ttags[3]].replace(" ", "")
+                dir_suffix = self.tags[ttags[3]]
 
             current_name = self.tags[tag].replace(" ", "")
             if current_name not in [
-                    dir_prefix + base + dir_suffix + type,
-                    dir_prefix + base + type + dir_suffix ]:
+                    (dir_prefix + base + dir_suffix + type).replace(" ", ""),
+                    (dir_prefix + base + type + dir_suffix).replace(" ", "") ]:
                 continue
 
-            newname = expand_name(self.tags[tag], self.lingo)
+            # Special case: name_base contains one of the single letter
+            # directionals, in this case it's likely just a letter used
+            # for enumerations such as in arrayes of avenues from A to Z,
+            # don't expand those..
+            special = 0
+            for word in base.split():
+                if word in directionals and base.find("N F") == -1:
+                    special = 1
+                    break
+
+            if not special:
+                newname = expand_name(self.tags[tag], self.lingo)
+            else:
+                newname = ""
+                pos = self.tags[tag].find(base)
+
+                pref = self.tags[tag][:pos] + "XXX"
+                newname += expand_name(pref, self.lingo)[:-3]
+
+                newname += expand(base, self.lingo, directionals)
+
+                suff = "XXX" + self.tags[tag][pos + len(base)]
+                newname += expand_name(suff, self.lingo)[3:]
+
             if newname.find(" Road ") > -1 and newname[-5:] == " Road":
                 newname = newname[:-5]
             if newname != self.tags[tag]:

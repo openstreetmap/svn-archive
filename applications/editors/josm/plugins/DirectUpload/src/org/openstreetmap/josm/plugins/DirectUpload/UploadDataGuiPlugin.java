@@ -10,6 +10,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -43,7 +44,8 @@ public class UploadDataGuiPlugin extends Plugin{
 
         @Override
 		protected void updateEnabledState() {
-            if(Main.map == null
+           	// enable button if there is "one active GpxLayer" or "exactly one GpxLayer in the list of all layers available"
+           	if(Main.map == null
                     || Main.map.mapView == null
                     || Main.map.mapView.getActiveLayer() == null
                     || !(Main.map.mapView.getActiveLayer() instanceof GpxLayer)) {                
@@ -52,6 +54,12 @@ public class UploadDataGuiPlugin extends Plugin{
             	setEnabled(true);
             }
 
-		}		
+            if(Main.map != null && Main.map.mapView.getNumLayers() > 1) {
+                List<GpxLayer> list = Main.map.mapView.getLayersOfType(GpxLayer.class);
+                if (list.size() == 1)
+                    setEnabled(true);
+            }
+
+        }		
     }
 }

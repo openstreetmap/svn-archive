@@ -217,6 +217,7 @@ abbrevs = [
     ( "Estuary",        "Estuary",                              0, 0, 1 ),
     ( "Expreso",        "Expreso",                              1, 1, 0 ),
     ( "Expy",           "Expressway",                           0, 1, 1 ),
+    ( "Exp-Way",        "Expressway",                           0, 1, 1 ),
     ( "Ext",            "Extension",                            0, 1, 1 ),
     ( "Faclty",         "Facility",                             0, 0, 1 ),
     ( "Fairgrounds",    "Fairgrounds",                          0, 0, 1 ),
@@ -257,6 +258,7 @@ abbrevs = [
     ( "Grge",           "Garage",                               0, 0, 1 ),
     ( "Gdns",           "Gardens",                              0, 0, 1 ),
     ( "Gtwy",           "Gateway",                              0, 0, 1 ),
+    ( "Gen",            "General",                              0, 1, 0 ),
     ( "Glacier",        "Glacier",                              0, 0, 1 ),
     ( "Gln",            "Glen",                                 0, 0, 1 ),
     ( "Golf Club",      "Golf Club",                            0, 1, 1 ),
@@ -749,8 +751,32 @@ class WayHandler(ContentHandler):
             return
         modified = 0
         tag = "name"
+        tiger_tags = [ 'tiger:name_base', 'tiger:name_type',
+                'tiger:name_direction_prefix', 'tiger:name_direction_suffix' ]
+        ttags = tiger_tags
         i = 1
         while tag in self.tags:
+            # Check that the name has not been corrected after the
+            # original import
+            if ttags[0] not in self.tags:
+                continue
+            base = self.tags[ttags[0]].replace(" ", "")
+            type = ""
+            if ttags[1] not in self.tags:
+                type = self.tags[ttags[1]].replace(" ", "")
+            dir_prefix = ""
+            if ttags[2] not in self.tags:
+                dir_prefix = self.tags[ttags[2]].replace(" ", "")
+            dir_suffix = ""
+            if ttags[3] not in self.tags:
+                dir_suffix = self.tags[ttags[3]].replace(" ", "")
+
+            current_name = self.tags[tag].replace(" ", "")
+            if current_name not in [
+                    dir_prefix + base + dir_suffix + type,
+                    dir_prefix + base + type + dir_suffix ]:
+                continue
+
             newname = expand_name(self.tags[tag], self.lingo)
             if newname.find(" Road ") > -1 and newname[-5:] == " Road":
                 newname = newname[:-5]
@@ -759,6 +785,7 @@ class WayHandler(ContentHandler):
                 self.tags[tag] = newname
 
             tag = "name_" + str(i)
+            ttags = [ t + "_" + str(i) for t in tiger_tags ]
             i += 1
 
         if not modified:

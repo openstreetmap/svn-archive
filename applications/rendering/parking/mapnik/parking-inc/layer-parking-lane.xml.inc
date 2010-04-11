@@ -562,6 +562,7 @@
     <StyleName>parkinglane-right-no</StyleName>
     <Datasource>
         <Parameter name="table">
+<!--
         (select way,(tags->'parking:lane:right') as "parking:lane:right",(tags->'parking:condition:right') as "parking:condition:right"
           from &prefix;_line
           where (tags ? 'parking:lane:right') AND (tags->'parking:lane:right') in ('diagonal','orthogonal','inline','no_parking','no_stopping','fire_lane')

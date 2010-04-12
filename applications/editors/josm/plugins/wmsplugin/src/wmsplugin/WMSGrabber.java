@@ -26,6 +26,7 @@ import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Mercator;
+import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -185,6 +186,7 @@ public class WMSGrabber extends Grabber {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         if(layer.cookies != null && !layer.cookies.equals(""))
             conn.setRequestProperty("Cookie", layer.cookies);
+        conn.setRequestProperty("User-Agent", Main.pref.get("wmsplugin.user_agent", Version.getInstance().getAgentString()));
         conn.setConnectTimeout(Main.pref.getInteger("wmsplugin.timeout.connect", 30) * 1000);
         conn.setReadTimeout(Main.pref.getInteger("wmsplugin.timeout.read", 30) * 1000);
 

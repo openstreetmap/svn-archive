@@ -259,89 +259,6 @@ public class RoutePatternAction extends JosmAction {
     }
   };
   
-  private class ItineraryTableModel extends DefaultTableModel {
-    public Vector<Way> ways = new Vector<Way>();
-    
-    public boolean isCellEditable(int row, int column) {
-      if (column != 1)
-	return false;
-      if (ways.elementAt(row) == null)
-	return false;
-      return true;
-    }
-  
-    public void addRow(Object[] obj) {
-      ways.addElement(null);
-      super.addRow(obj);
-    }
-    
-    public void insertRow(int insPos, Object[] obj) {
-      if (insPos == -1)
-      {
-	ways.addElement(null);
-	super.addRow(obj);
-      }
-      else
-      {
-	ways.insertElementAt(null, insPos);
-	super.insertRow(insPos, obj);
-      }
-    }
-    
-    public void addRow(Way way, String role) {
-      insertRow(-1, way, role);
-    }
-    
-    public void insertRow(int insPos, Way way, String role) {
-      String[] buf = { "", "" };
-      String curName = way.get("name");
-      if (way.isIncomplete())
-      {
-	buf[0] = "[incomplete]";
-      }
-      else if (way.getNodesCount() < 1)
-      {
-	buf[0] = "[empty way]";
-      }
-      else if (curName != null)
-      {
-	buf[0] = curName;
-      }
-      else
-      {
-	buf[0] = "[ID] " + (new Long(way.getId())).toString();
-      }
-      buf[1] = role;
-      if (insPos == -1)
-      {
-	ways.addElement(way);
-	super.addRow(buf);
-      }
-      else
-      {
-	ways.insertElementAt(way, insPos);
-	super.insertRow(insPos, buf);
-      }
-    }
-    
-    public void clear()
-    {
-      ways.clear();
-      super.setRowCount(0);
-    }
-  };
-  
-  private class ItineraryTableModelListener implements TableModelListener {
-    public void tableChanged(TableModelEvent e)
-    {
-      if (e.getType() == TableModelEvent.UPDATE)
-      {
-	cleanupGaps();
-	rebuildWays();
-      }
-    }
-  };
-  
   private class StoplistTableModel extends DefaultTableModel {
     public Vector<Node> nodes = new Vector<Node>();
     
@@ -807,7 +724,7 @@ public class RoutePatternAction extends JosmAction {
       comboBox.addItem("backward");
       itineraryTable.getColumnModel().getColumn(1)
 	  .setCellEditor(new DefaultCellEditor(comboBox));
-      itineraryData.addTableModelListener(new ItineraryTableModelListener());
+      itineraryData.addTableModelListener(itineraryData);
       
       layoutCons.gridx = 0;
       layoutCons.gridy = 0;
@@ -1343,7 +1260,7 @@ public class RoutePatternAction extends JosmAction {
 	  itineraryTable.addRowSelectionInterval(insPos, insPos);
       }
 
-      cleanupGaps();
+      itineraryData.cleanupGaps();
       rebuildWays();
     }
     else if ("routePattern.itineraryDelete".equals(event.getActionCommand()))
@@ -1357,7 +1274,7 @@ public class RoutePatternAction extends JosmAction {
 	}
       }
     
-      cleanupGaps();
+      itineraryData.cleanupGaps();
       rebuildWays();
     }
     else if ("routePattern.itinerarySort".equals(event.getActionCommand()))
@@ -1434,7 +1351,7 @@ public class RoutePatternAction extends JosmAction {
 	}
       }
       
-      cleanupGaps();
+      itineraryData.cleanupGaps();
       rebuildWays();
     }
     else if ("routePattern.itineraryReflect".equals(event.getActionCommand()))
@@ -1501,7 +1418,7 @@ public class RoutePatternAction extends JosmAction {
       if (insPos >= 0)
 	itineraryTable.addRowSelectionInterval(startPos, insPos-1);
       
-      cleanupGaps();
+      itineraryData.cleanupGaps();
       rebuildWays();
     }
     else if ("routePattern.stoplistFind".equals(event.getActionCommand()))
@@ -1974,24 +1891,26 @@ public class RoutePatternAction extends JosmAction {
   }
   
   //Rebuild ways in the relation currentRoute
-  private void rebuildWays() {
+  public static void rebuildWays() {
     currentRoute.setModified(true);
-    for (int i = currentRoute.getMembersCount()-1; i >=0; --i)
+    List< RelationMember > members = currentRoute.getMembers();
+    ListIterator< RelationMember > iter = members.listIterator();
+    while (iter.hasNext())
     {
-      if (currentRoute.getMember(i).isWay())
-      {
-	currentRoute.removeMember(i);
-      }
+      if (iter.next().isWay())
+	iter.remove();
     }
     for (int i = 0; i < itineraryData.getRowCount(); ++i)
     {
       if (itineraryData.ways.elementAt(i) != null)
       {
 	RelationMember member = new RelationMember
-	    ((String)(itineraryData.getValueAt(i, 1)), itineraryData.ways.elementAt(i));
-	currentRoute.addMember(member);
+	    ((String)(itineraryData.getValueAt(i, 1)),
+	     itineraryData.ways.elementAt(i));
+	members.add(member);
       }
     }
+    currentRoute.setMembers(members);
   }
   
   //Rebuild nodes in the relation currentRoute
@@ -2213,56 +2132,6 @@ public class RoutePatternAction extends JosmAction {
     }
   }
   
-  private void cleanupGaps()
-  {
-    long lastNodeId = 0;
-    
-    for (int i = 0; i < itineraryData.getRowCount(); ++i)
-    {
-      if (itineraryData.ways.elementAt(i) == null)
-      {
-	++i;
-	if (i >= itineraryData.getRowCount())
-	  break;
-      }
-      while ((itineraryData.ways.elementAt(i) == null) &&
-	      ((i == 0) || (itineraryData.ways.elementAt(i-1) == null)))
-      {
-	itineraryData.ways.removeElementAt(i);
-	itineraryData.removeRow(i);
-	if (i >= itineraryData.getRowCount())
-	  break;
-      }
-      if (i >= itineraryData.getRowCount())
-	break;
-      
-      boolean gapRequired = gapNecessary
-	  (itineraryData.ways.elementAt(i), (String)(itineraryData.getValueAt(i, 1)),
-	   lastNodeId);
-      if ((i > 0) && (!gapRequired) && (itineraryData.ways.elementAt(i-1) == null))
-      {
-	itineraryData.ways.removeElementAt(i-1);
-	itineraryData.removeRow(i-1);
-	--i;
-      }
-      else if ((i > 0) && gapRequired && (itineraryData.ways.elementAt(i-1) != null))
-      {
-	String[] buf = { "", "" };
-	buf[0] = "[gap]";
-	itineraryData.insertRow(i, buf);
-	++i;
-      }
-      lastNodeId = getLastNodeId
-	  (itineraryData.ways.elementAt(i), (String)(itineraryData.getValueAt(i, 1)));
-    }
-    while ((itineraryData.getRowCount() > 0) &&
-	    (itineraryData.ways.elementAt(itineraryData.getRowCount()-1) == null))
-    {
-      itineraryData.ways.removeElementAt(itineraryData.getRowCount()-1);
-      itineraryData.removeRow(itineraryData.getRowCount()-1);
-    }
-  }
-  
   private int insertGapIfNecessary(Way way, String role, long lastNodeId, int insPos)
   {
     String[] buf = { "", "" };
@@ -2305,13 +2174,9 @@ public class RoutePatternAction extends JosmAction {
     else
     {
       if ("backward".equals(role))
-      {
 	return way.getNode(0).getId();
-      }
       else
-      {
 	return way.getNode(way.getNodesCount() - 1).getId();
-      }
     }
   }
   

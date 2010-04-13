@@ -48,10 +48,9 @@
 <h2>Introduction</h2>
 </div>
 
-<p>The JOSM Plugin <em>Public Transport</em> is designed to simplify the mapping and editing of public transport routes according to best practice standards (see <a href="#notion.oxmoa">Oxmoa scheme</a>). After some <a href="#section.installation">installation instructions</a>, we start with a chapter about <a href="#chapter.tutorial">usage examples</a>: In the <a href="#section.scratch">first section</a>, we describe how to create a bus route from scratch. If there exists already one or more lines running partly or completely parallel, you can take advantage of this (see <a href="#section.parallel">second section</a>). Also, you can easily convert routes from older data formats to the Oxmoa scheme (see <a href="#section.legacy">fourth section</a>). The <a href="#chapter.notions">following chapter</a> explains the notions used along the plug-in. The <a href="#chapter.items">last chapter</a> contains a reference manual of all items in the plug-in.</p>
+<p>The JOSM Plugin <em>Public Transport</em> is designed to simplify the mapping and editing of public transport routes according to best practice standards (see <a href="#notion.oxmoa">Oxmoa scheme</a>). After some <a href="#section.installation">installation instructions</a>, we start with a chapter about <a href="#chapter.tutorial">usage examples</a>: Mapping public transport means mapping of its stops and its routes. In the <a href="#chapter.tutorial">first three sections</a>, we present different methods of how to map stops and how this plugin can be used to simplify this. The <a href="#section.map_waypoints">first section</a> is about mapping by waypoints. The <a href="#section.map_stopwatch">second section</a> explains how to map with the help of a stopwatch. The <a href="#section.map_tracklog">third section</a> explains mapping by tracklogs only. The subsequent sections are devoted to map routes. In the <a href="#section.scratch">fourth section</a>, we describe how to create a bus route from scratch. If there exists already one or more lines running partly or completely parallel, you can take advantage of this (see <a href="#section.parallel">fifth section</a>). Also, you can easily convert routes from older data formats to the Oxmoa scheme (see <a href="#section.legacy">sixth section</a>). The <a href="#chapter.notions">following chapter</a> explains the notions used along the plug-in. The <a href="#chapter.items">last chapter</a> contains a reference manual of all items in the plug-in.</p>
 
-<p>This manual refers to the prototype version of 2010-02-19. It has successfully been tested with the latest JOSM (version 2940). It does not work with JOSM-tested (version 2561) due to changes to the data model. This is still a beta version, so <strong>don't forget to save your work before and during you use this plug-in</strong>. Feel free to make suggestions for simplifications or extra functionality or report bugs to me (mailto:roland.olbricht(at)gmx.de).</p>
-
+<p>This manual refers to the version of 2010-04-13. This plug-in is still a beta version, so <strong>don't forget to save your work before and during you use this plug-in</strong>. Feel free to make suggestions for simplifications or extra functionality or report bugs to me (mailto:roland.olbricht(at)gmx.de).</p>
 
 <div>
 <a id="section.installation"/>
@@ -65,6 +64,42 @@
 <div>
 <a id="chapter.tutorial"/>
 <h2>Examples how to Use</h2>
+</div>
+
+<p>To map public transport, in particular bus services, means to map stops and routes. The larger part of the work is to map stops; the routes can usually be derived from other information in the map and local knowledge. To properly map the stops, you need a GPS device, because an estimation is almost always surprisingly inexact (even bus stops are often a lot larger than one would expect).</p>
+
+<p>We discuss three different approaches. The basic assumption of all three approaches is that you are mapping the public transport service by actually using it. Take the GPS device, pen and paper with you and ride on the vehicle from its starting point to its terminus. With some cleverness and fortune, you should be able to log forth and back direction within a single ride. Also, all three methods will need more or less post-processing with JOSM and the plugin.</p>
+<ul>
+<li><a href="#section.map_waypoints">Map Stops from Waypoints</a>: this is the most comfortable technique. Depending on your GPS device, you might get a worse precision than possible.</li>
+<li><a href="#section.map_stopwatch">Map Stops with a Tracklog and a Stopwatch</a>: this is the most elaborate approach. You will additionally need a stopwatch.</li>
+<li><a href="#section.map_tracklog">Map Stops with a Tracklog only</a>: simpler but less accurate than the before metioned methods.</li>
+</ul>
+
+<div>
+<a id="section.map_waypoints"/>
+<h3>Map Stops from Waypoints</h3>
+</div>
+
+<p>You need a GPS logger which can register waypoints and pen and paper. Get on the vehicle and mark a waypoint at each station: bus stops and tram stops are mapped on the side of the road at their respective sign, all other stops are mapped as part of the railway line. Use pen and paper to note the names of the bus stops and whether they have a shelter or not. I personally also collect stops forth and back during a single ride and thus take also a note whether the stop is in forward or backward direction.</p>
+
+<p>When you are back at your computer, download the collected data from your GPS device into a GPX file: the exact steps depend on your particular device, but in general one of the programs <em>gpsbabel</em>, <em>mtkbabel</em> or <em>bt747</em> may help. They are explained on the respective pages of the wiki.</p>
+
+<p>Once you have created the GPX file, open JOSM. Now choose <em>Create Stops from GPX</em> in the menue <em>Public Transport</em>. This raises first a file selection dialogue. Select here your just generated GPX file. The plugin now generates one stop at every waypoint. Now go to the tab <em>Settings</em> and select the type of stop you want to create. Open tab <em>Waypoints</em> and click onto the table. Now you can use keyboard shortcuts to edit the stops: <em>Alt-N</em> will focus the stop of the current line in the table and activate the <em>name</em> cell of this line. <em>Alt-S</em>, <em>Alt-T</em> and <em>Alt-U</em> help you to select the proper type of shelter: <em>Alt-S</em> yields <em>Yes</em>, <em>Alt-T</em> yields <em>No</em> and <em>Alt-U</em> yields <em>implicit</em>. If you don't want to map the shelter, just use only <em>Alt-N</em>. The key combination <em>Alt-D</em> disables the current waypoint and deletes the node associated to it. Now process all waypoints and then close the dialogue. Or process all waypoints, mark the lines they belong to and click <em>Detach</em> - this has the same effect. Once you have pressed <em>Detach</em>, the nodes are released from the dialogue and complete. Congratulations.</p>
+
+<div>
+<a id="section.map_stopwatch"/>
+<h3>Map Stops with a Tracklog and a Stopwatch</h3>
+</div>
+
+<p>You need a GPS logger that displays its current time, pen and paper and a stopwatch that can store sufficently much split times. First, syncronise stopwatch and GPS logger: Note the time the GPS logger has shown in the moment when you have started the stopwatch. Take a split time for every stop you pass: bus stops and tram stops are mapped on the side of the road at their respective sign, all other stops are mapped as part of the railway line. Use pen and paper to note the names of the bus stops and whether they have a shelter or not.</p>
+
+<p>When you are back at your computer, download the collected data from your GPS device into a GPX file: the exact steps depend on your particular device, but in general one of the programs <em>gpsbabel</em>, <em>mtkbabel</em> or <em>bt747</em> may help. They are explained on the respective pages of the wiki.</p>
+
+<p>Once you have created the GPX file, open JOSM. Now choose <em>Create Stops from GPX</em> in the menu <em>Public Transport</em>. This raises first a file selection dialogue. Select here your just generated GPX file. Select in the tab <em>Tracks</em> the track to create stops from. Now go to the tab <em>Settings</em> and select the type of stop you want to create. Put the sync time of the GPS device and the stopwatch in the respective fields. Open tab <em>Waypoints</em> and click onto the table. Click the button <em>Add</em> unless you have sufficiently much lines for all your split times. Now enter your split times in the first column. Then proceed as explained in the last paragraph of the <a href="#section.map_waypoints">section before</a>.</p>
+
+<div>
+<a id="section.map_tracklog"/>
+<h3>Map Stops with a Tracklog only</h3>
 </div>
 
 <div>

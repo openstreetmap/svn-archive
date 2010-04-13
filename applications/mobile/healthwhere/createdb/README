@@ -1,0 +1,12 @@
+Scripts to take postcode data from Ordnance Survey's CodePoint Open
+and use it to populate an SQLite database for Healthwhere
+
+To use:
+Place codepo_gb.zip (as obtained from OS) in this directory
+Run createdb.sh
+Copy/move the created healthwhere.db file to the healthwhere directory
+
+The scripts use PHPcoord, which is copyright (c) 2005 Jonathan Stott
+See http://www.jstott.me.uk/phpcoord/ for latest releases and information.
+
+PHPcoord and these scripts are released under the GNU GPL

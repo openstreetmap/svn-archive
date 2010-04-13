@@ -2107,15 +2107,12 @@ public class RoutePatternAction extends JosmAction {
       RelationMember curMember = relIter.next();
       if (curMember.isWay())
       {
-	insPos = insertGapIfNecessary(curMember.getWay(), curMember.getRole(), lastNodeId, insPos);
-	
 	itineraryData.insertRow(insPos, curMember.getWay(), curMember.getRole());
 	if (insPos >= 0)
 	  ++insPos;
-	
-	lastNodeId = getLastNodeId(curMember.getWay(), curMember.getRole());
       }
     }
+    itineraryData.cleanupGaps();
   }
   
   private void fillStoplistTable
@@ -2129,54 +2126,6 @@ public class RoutePatternAction extends JosmAction {
 	if (insPos >= 0)
 	  ++insPos;
       }
-    }
-  }
-  
-  private int insertGapIfNecessary(Way way, String role, long lastNodeId, int insPos)
-  {
-    String[] buf = { "", "" };
-    if (gapNecessary(way, role, lastNodeId))
-    {
-      buf[0] = "[gap]";
-      itineraryData.insertRow(insPos, buf);
-      if (insPos >= 0)
-	++insPos;
-    }
-    return insPos;
-  }
-  
-  private boolean gapNecessary(Way way, String role, long lastNodeId)
-  {
-    if ((way != null) && (!(way.isIncomplete())) && (way.getNodesCount() >= 1))
-    {
-      if ("backward".equals(role))
-      {
-	long firstNodeId = way.getNode(way.getNodesCount() - 1).getId();
-	if ((lastNodeId != 0) && (lastNodeId != firstNodeId))
-	  return true;
-      }
-      else
-      {
-	long firstNodeId = way.getNode(0).getId();
-	if ((lastNodeId != 0) && (lastNodeId != firstNodeId))
-	  return true;
-      }
-    }
-    return false;
-  }
-  
-  private long getLastNodeId(Way way, String role)
-  {
-    if ((way == null) || (way.isIncomplete()) || (way.getNodesCount() < 1))
-    {
-      return 0;
-    }
-    else
-    {
-      if ("backward".equals(role))
-	return way.getNode(0).getId();
-      else
-	return way.getNode(way.getNodesCount() - 1).getId();
     }
   }
   

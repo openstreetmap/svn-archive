@@ -41,7 +41,7 @@ use GD ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.00' ;
+$VERSION = '1.01' ;
 
 require Exporter ;
 

@@ -52,6 +52,7 @@
 #      steps with linecap=butt
 #      subs for png and svg sizes
 # 1.00 ---
+# 1.01 [-clipbox] implemented
 #
 # TODO
 # ------------------
@@ -71,11 +72,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.00 ;
-use OSM::mapgenRules 1.00 ;
+use OSM::mapgen 1.01 ;
+use OSM::mapgenRules 1.01 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.00" ;
+my $version = "1.01" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -87,6 +88,7 @@ perl mapgen.pl
 -bgcolor=TEXT (color for background)
 -size=<integer> (in pixels for x axis, DEFAULT=1024)
 -clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
+-clipbbox=<float>,<float>,<float>,<float> (left, right, bootom, top of bbox for clipping map out of data - more precise than -clip)
 -pad=<INTEGER> (percent of white space around data in osm file, DEFAULT=0)
 
 -place=TEXT (Place to draw automatically; quotation marks can be used if necessary; node id can also be given; OSMOSIS REQUIRED!)
@@ -140,6 +142,7 @@ my $multiOnly = 0 ;
 my $grid = 0 ;
 my $gridColor = "black" ;
 my $clip = 0 ;
+my $clipbbox = "" ;
 my $pad = 0 ;
 my $legendOpt = 1 ;
 my $size = 1024 ; 		# default pic size longitude in pixels
@@ -289,6 +292,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"coordsexp:i"	=> \$coordsExp,		# 
 				"coordscolor:s"	=> \$coordsColor,		# 
 				"clip:i"	=> \$clip,		# specifies how many percent data to clip on each side
+				"clipbbox:s"	=> \$clipbbox,		# bbox data for clipping map out of data
 				"pad:i"		=> \$pad,		# specifies how many percent data to pad on each side
 				"ppc:f"		=> \$ppc,		# pixels needed per label char in font size 10
 				"pdf"		=> \$pdfOpt,		# specifies if pdf will be created
@@ -360,6 +364,7 @@ print "scaleSet  = $scaleSet\n" ;
 print "ruleScaleSet  = $ruleScaleSet\n\n" ;
 
 print "clip        = $clip (percent)\n" ;
+print "clipbbox    = $clipbbox\n" ;
 print "pad         = $pad (percent)\n" ;
 print "grid        = $grid (number)\n" ;
 print "gridcolor   = $gridColor\n" ;
@@ -537,12 +542,26 @@ foreach my $key (keys %lon) {
 }
 
 # clip picture if desired
-if ( ($clip > 0) and ($clip < 100) ) { 
-	$clip = $clip / 100 ;
-	$lonMin += ($lonMax-$lonMin) * $clip ;
-	$lonMax -= ($lonMax-$lonMin) * $clip ;
-	$latMin += ($latMax-$latMin) * $clip ;
-	$latMax -= ($latMax-$latMin) * $clip ;
+if ($clipbbox ne "") {
+	my ($bbLeft, $bbRight, $bbBottom, $bbTop) = ($clipbbox =~ /([\d\-\.]+),([\d\-\.]+),([\d\-\.]+),([\d\-\.]+)/ ) ;
+	# print "$bbLeft, $bbRight, $bbBottom, $bbTop\n" ;
+	if (($bbLeft > $lonMax) or ($bbLeft < $lonMin)) { die ("ERROR -clipbox left parameter outside data.") ; }
+	if (($bbRight > $lonMax) or ($bbRight < $lonMin)) { die ("ERROR -clipbox right parameter outside data.") ; }
+	if (($bbBottom > $latMax) or ($bbBottom < $latMin)) { die ("ERROR -clipbox bottom parameter outside data.") ; }
+	if (($bbTop > $latMax) or ($bbTop < $latMin)) { die ("ERROR -clipbox top parameter outside data.") ; }
+	$lonMin = $bbLeft ;
+	$lonMax = $bbRight ;
+	$latMin = $bbBottom ;
+	$latMax = $bbTop ;
+}
+else {
+	if ( ($clip > 0) and ($clip < 100) ) { 
+		$clip = $clip / 100 ;
+		$lonMin += ($lonMax-$lonMin) * $clip ;
+		$lonMax -= ($lonMax-$lonMin) * $clip ;
+		$latMin += ($latMax-$latMin) * $clip ;
+		$latMax -= ($latMax-$latMin) * $clip ;
+	}
 }
 
 # pad picture if desired

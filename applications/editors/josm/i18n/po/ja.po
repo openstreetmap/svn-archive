@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-06 18:52+0200\n"
-"PO-Revision-Date: 2010-04-05 03:52+0000\n"
+"POT-Creation-Date: 2010-04-14 19:25+0200\n"
+"PO-Revision-Date: 2010-04-14 03:59+0000\n"
 "Last-Translator: higa4 <higa432@gmail.com>\n"
 "Language-Team: Japanese <tr@openstreetmap.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-04-06 16:41+0000\n"
+"X-Launchpad-Export-Date: 2010-04-14 16:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: JAPAN\n"
 "X-Poedit-Language: Japanese\n"
@@ -69,11 +69,11 @@ msgstr "不正な形式のファイルURL\"{0}\"を無視します。"
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:127
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:357
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:252
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:297
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:357
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:522
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:576
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:639
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1033
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:578
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:641
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1035
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:189
 #: ../core/src/org/openstreetmap/josm/gui/help/HelpBrowser.java:424
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:815
@@ -94,7 +94,7 @@ msgstr "不正な形式のファイルURL\"{0}\"を無視します。"
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:53
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:143
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:68
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:142
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:143
 msgid "Warning"
 msgstr "警告"
 
@@ -119,12 +119,12 @@ msgstr "情報を表示する。"
 #. TODO: put in a platformHook for system that have no console by default
 #. Add the name of this application
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:60
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:65
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:99
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:69
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:103
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:71
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:192
-#: ../core/src/org/openstreetmap/josm/gui/MapView.java:810
-#: ../core/src/org/openstreetmap/josm/gui/MapView.java:812
+#: ../core/src/org/openstreetmap/josm/gui/MapView.java:814
+#: ../core/src/org/openstreetmap/josm/gui/MapView.java:816
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:62
 msgid "Java OpenStreetMap Editor"
 msgstr "Java OpenStreetMapエディタ"
@@ -243,7 +243,7 @@ msgstr "クリックして継続し、{0} ブラウザを開きます"
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:113
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:207
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:117
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:153
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:219
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:44
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:48
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:363
@@ -252,7 +252,7 @@ msgstr "クリックして継続し、{0} ブラウザを開きます"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:193
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:207
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:870
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1200
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1202
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:120
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:376
 #: ../core/src/org/openstreetmap/josm/gui/io/AbstractUploadTask.java:112
@@ -287,7 +287,7 @@ msgstr "クリックして継続し、{0} ブラウザを開きます"
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:272
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:740
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:179
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -405,7 +405,7 @@ msgstr "-180から180の範囲で経度を入力してください"
 #: ../core/src/org/openstreetmap/josm/actions/upload/RelationUploadOrderHook.java:88
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:80
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:350
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1166
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1168
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:170
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:386
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
@@ -462,7 +462,7 @@ msgstr "選択したノードを円形に移動します"
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:54
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:67
 #: ../plugins/Create_grid_of_ways/src/CreateGridOfWaysPlugin/CreateGridOfWaysAction.java:34
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:36
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:37
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationAction.java:26
 #: ../plugins/czechaddress/src/org/openstreetmap/josm/plugins/czechaddress/actions/SplitAreaByEmptyWayAction.java:43
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:53
@@ -475,7 +475,7 @@ msgstr "選択したノードを円形に移動します"
 #: ../plugins/terracer/src/terracer/ReverseTerraceAction.java:42
 #: ../plugins/terracer/src/terracer/TerracerAction.java:63
 #: ../plugins/tracer/src/org/openstreetmap/josm/plugins/tracer/TracerAction.java:44
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:45
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:46
 #, java-format
 msgid "Tool: {0}"
 msgstr "ツール: {0}"
@@ -502,8 +502,8 @@ msgstr "少なくとも４つのノードを選択してください。"
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:250
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:900
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:929
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:671
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:693
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:672
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:694
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:88
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:119
 msgid "Information"
@@ -709,12 +709,12 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:18
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:19
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:97
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:98
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:370
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:99
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:102
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:276
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:892
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:986
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:988
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:597
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:142
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:507
@@ -725,7 +725,7 @@ msgstr ""
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:246
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:278
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:62
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:689
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:690
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:95
 msgid "Delete"
 msgstr "削除"
@@ -842,7 +842,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:21
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateLayerAction.java:21
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:498
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1376
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1378
 msgid "Duplicate"
 msgstr "複製"
 
@@ -1488,7 +1488,7 @@ msgstr "ファイル ''{0}'' をリネームできません"
 
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:94
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:133
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:248
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:308
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:453
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:464
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:487
@@ -1542,7 +1542,7 @@ msgstr "ファイル ''{0}'' をリネームできません"
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveGpsLayerTimerTask.java:82
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:67
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:72
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:278
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:279
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:78
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:313
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:445
@@ -2211,7 +2211,7 @@ msgstr ""
 "されているかどうかチェック"
 
 #: ../core/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTaskList.java:163
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:115
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:116
 msgid "Ignore"
 msgstr "無視する"
 
@@ -2280,15 +2280,15 @@ msgstr "({0}/{1}) リレーション {2} の親をロード中"
 msgid "Errors during download"
 msgstr "ダウンロード中にエラー"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:94
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:95
 msgid "Delete Mode"
 msgstr "削除モード"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:96
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:97
 msgid "Delete nodes or ways."
 msgstr "ノードやウェイの削除"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:97
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:98
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:93
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:102
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:112
@@ -2300,7 +2300,7 @@ msgstr "ノードやウェイの削除"
 msgid "Mode: {0}"
 msgstr "モード: {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:246
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:247
 msgid ""
 "Click to delete. Shift: delete way segment. Alt: do not delete unused nodes "
 "when deleting a way. Ctrl: delete referring objects."
@@ -2419,10 +2419,10 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:112
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ChangesetDialog.java:299
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:346
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:304
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:305
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:159
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:783
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:106
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:107
 msgid "Select"
 msgstr "選択"
 
@@ -2535,74 +2535,74 @@ msgstr ""
 msgid "<end-of-file>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:49
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:50
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:115
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:116
 msgid "Search..."
 msgstr "検索..."
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:49
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:115
 msgid "Search for objects."
 msgstr "オブジェクトを検索"
 
 #. -- prepare the combo box with the search expressions
 #.
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:74
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:140
 msgid "Please enter a filter string."
 msgstr "フィルター文字列を入力してください。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:74
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:140
 msgid "Please enter a search string."
 msgstr "検索文字列を入力してください"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:79
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:145
 msgid "Enter the search expression"
 msgstr "検索表現を入力"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:87
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:153
 msgid "replace selection"
 msgstr "セレクションを置換"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:88
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:154
 msgid "add to selection"
 msgstr "セレクションに加える"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:89
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:155
 msgid "remove from selection"
 msgstr "セレクションの削除"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:90
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:156
 msgid "find in selection"
 msgstr "選択範囲の中から見つける"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:97
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:163
 msgid "case sensitive"
 msgstr "大/小文字を区別する"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:98
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:164
 msgid "regular expression"
 msgstr "正規表現検索"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:113
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:179
 msgid "<b>Baker Street</b> - ''Baker'' and ''Street'' in any key or name."
 msgstr ""
 "<b>ベイカー ストリート</b> - 任意のキーや名前に ''ベイカー'' と ''ストリー"
 "ト'' を両方含むもの"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:114
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:180
 msgid "<b>\"Baker Street\"</b> - ''Baker Street'' in any key or name."
 msgstr ""
 "<b>\"ベイカー ストリート\"</b> - 任意のキーや名前に ''ベイカー ストリート'' "
 "を含むもの。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:115
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:181
 msgid "<b>name:Bak</b> - ''Bak'' anywhere in the name."
 msgstr "<b>name:Bak</b> - nameタグに ''Bak'' を含むもの"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:116
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:182
 msgid "<b>type=route</b> - key ''type'' with value exactly ''route''."
 msgstr "<b>type=route</b> -  キー ''type'' の値が ''route'' であるもの"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:117
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:183
 msgid ""
 "<b>type=*</b> - key ''type'' with any value. Try also <b>*=value</b>, "
 "<b>type=</b>, <b>*=*</b>, <b>*=</b>"
@@ -2610,41 +2610,41 @@ msgstr ""
 "<b>type=*</b> -  ''type'' というキーを持つもの全て。* は任意の文字列を意味し"
 "ます。<b>*=value</b>, <b>type=</b>, <b>*=*</b>, <b>*=</b>なども可能です。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:118
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:184
 msgid "<b>-name:Bak</b> - not ''Bak'' in the name."
 msgstr "<b>-name:Bak</b> - その名前の内 ''Bak'' でない。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:119
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:185
 msgid "<b>oneway?</b> - oneway=yes, true, 1 or on"
 msgstr "<b>oneway?</b> - oneway=yes もしくは true, 1, on のオブジェクト"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:120
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:186
 msgid "<b>foot:</b> - key=foot set to any value."
 msgstr "<b>foot:</b> - key=任意の値を入力してください."
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:121
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:187
 msgid "<u>Special targets:</u>"
 msgstr "<u>特殊なターゲット:</u>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:122
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:188
 msgid ""
 "<b>type:</b> - type of the object (<b>node</b>, <b>way</b>, <b>relation</b>)"
 msgstr ""
 "<b>type:</b> - オブジェクトの型 (<b>node</b>, <b>way</b>, <b>relation</b>)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:123
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:189
 msgid "<b>user:</b>... - all objects changed by user"
 msgstr "<b>user:</b>... - 該当ユーザに変更された全オブジェクト"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:124
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:190
 msgid "<b>user:anonymous</b> - all objects changed by anonymous users"
 msgstr "<b>user:anonymous</b> - 匿名ユーザによって変更された全てのオブジェクト"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:125
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:191
 msgid "<b>id:</b>... - object with given ID (0 for new objects)"
 msgstr "<b>id:</b>... - オブジェクトに与えられた ID (0 は新しいオブジェクト)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:126
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:192
 msgid ""
 "<b>version:</b>... - object with given version (0 objects without an "
 "assigned version)"
@@ -2652,7 +2652,7 @@ msgstr ""
 "<b>version:</b>... - 指定したバージョンを持つオブジェクト（バージョン番号のな"
 "いオブジェクトは0）"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:127
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:193
 msgid ""
 "<b>changeset:</b>... - object with given changeset id (0 objects without "
 "assigned changeset)"
@@ -2660,7 +2660,7 @@ msgstr ""
 "<b>changeset:</b>... - 変更セットIDのオブジェクト（変更セットに含まれていない"
 "オブジェクトは0)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:128
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:194
 msgid ""
 "<b>nodes:</b>... - object with given number of nodes (nodes:count or nodes:"
 "min-max)"
@@ -2668,7 +2668,7 @@ msgstr ""
 "<b>nodes:</b>... - 指定した数のノードをもつオブジェクト（nodes:数 または "
 "nodes:最小-最大で指定）"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:129
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:195
 msgid ""
 "<b>tags:</b>... - object with given number of tags (tags:count or tags:min-"
 "max)"
@@ -2676,7 +2676,7 @@ msgstr ""
 "<b>tags:</b>... - 与えられた数値のタグのオブジェクト (tags:件数 または tags:"
 "最小値-最大値)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:130
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:196
 msgid ""
 "<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
 "12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
@@ -2684,43 +2684,43 @@ msgstr ""
 "<b>timestamp:</b>... - 指定したタイムスタンプのオブジェクト (<b>2009-11-"
 "12T14:51:09Z</b>、<b>2009-11-12</b>　や <b>T14:51</b> 等)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:131
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:197
 msgid "<b>modified</b> - all changed objects"
 msgstr "<b>modified</b> - 変更されたオブジェクトすべて"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:132
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:198
 msgid "<b>selected</b> - all selected objects"
 msgstr "<b>選択</b>- 選択されたオブジェクトすべて"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:133
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:199
 msgid "<b>incomplete</b> - all incomplete objects"
 msgstr "<b>incomplete</b>- すべての不完全なオブジェクト"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:134
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid "<b>untagged</b> - all untagged objects"
 msgstr "<b>untagged</b> - タグの無いオブジェクト全て"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:135
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid ""
 "<b>child <i>expr</i></b> - all children of objects matching the expression"
 msgstr "<b>child <i>式</i></b> - 式にマッチしたオブジェクトの全ての子"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:136
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:202
 msgid ""
 "<b>parent <i>expr</i></b> - all parents of objects matching the expression"
 msgstr "<b>parent <i>式</i></b> - 式にマッチしたオブジェクトの全ての親"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:137
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:203
 msgid "Use <b>|</b> or <b>OR</b> to combine with logical or"
 msgstr "<b>|</b> や <b>OR</b>を、論理和をとるために使う"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:138
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:204
 msgid "Use <b>\"</b> to quote operators (e.g. if key contains <b>:</b>)"
 msgstr ""
 "文字列に引用符をつける場合は<b>\"</b> を使ってください（キーが<b>:</b>を含む"
 "場合など）"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:139
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:205
 msgid ""
 "Within quoted strings the <b>\"</b> and <b>\\</b> characters need to be "
 "escaped by a preceding <b>\\</b> (e.g. <b>\\\"</b> and <b>\\\\</b>)."
@@ -2728,70 +2728,70 @@ msgstr ""
 "引用符で囲った文字列に <b>\"</b> か <b>\\</b> を含むときには、<b>\\</b> を加"
 "えてエスケープしてください。(<b>\\\"</b> 及び <b>\\\\</b>）。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:140
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:206
 msgid "Use <b>(</b> and <b>)</b> to group expressions"
 msgstr "グループの分類のために <b>(</b> と <b>)</b> を使用する。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:150
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:216
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:56
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:53
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TabularTagSelector.java:48
 msgid "Filter"
 msgstr "フィルター"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:150
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:278
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:216
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:279
 msgid "Search"
 msgstr "検索"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:152
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:218
 msgid "Submit filter"
 msgstr "フィルターを登録"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:152
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:218
 msgid "Start Search"
 msgstr "検索開始"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:285
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:345
 #, java-format
 msgid "No match found for ''{0}''"
 msgstr "\"{0}\"にマッチするものが見つからない"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:287
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:347
 #, java-format
 msgid "Nothing added to selection by searching for ''{0}''"
 msgstr "''{0}''を検索することにより、何も選択肢に加えられませんでした。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:289
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:349
 #, java-format
 msgid "Nothing removed from selection by searching for ''{0}''"
 msgstr "''{0}'' を検索しましたが、選択からは何も取り除いていません。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:291
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:351
 #, java-format
 msgid "Nothing found in selection by searching for ''{0}''"
 msgstr "選択の中に \"{0}\" と一致するものは見つかりませんでした。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:301
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:361
 #, java-format
 msgid "Found {0} matches"
 msgstr "{0} の一致が見つかりました"
 
 #. case sensitive
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:329
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:389
 msgctxt "search"
 msgid "CS"
 msgstr ""
 
 #. case insensitive
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:330
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:390
 msgctxt "search"
 msgid "CI"
 msgstr ""
 
 #. regex search
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:332
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:392
 msgctxt "search"
 msgid "RX"
 msgstr ""
@@ -3014,7 +3014,7 @@ msgstr ""
 "す。この競合は加えることができません。</html>"
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictAddCommand.java:38
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1123
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1125
 msgid "Double conflict"
 msgstr "二重の競合"
 
@@ -3101,7 +3101,7 @@ msgstr[0] "{0} つのリレーションを削除"
 #. leave message in one tr() as there is a grammatical
 #. connection.
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:433
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:161
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:162
 msgid ""
 "You are about to delete nodes outside of the area you have downloaded."
 "<br>This can cause problems because other objects (that you do not see) "
@@ -3112,7 +3112,7 @@ msgstr ""
 "起こします。<br>本当に削除しますか？"
 
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:441
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:170
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:171
 msgid "Delete confirmation"
 msgstr "削除確認"
 
@@ -3136,7 +3136,7 @@ msgstr "ウェイ{0}の\"修正中\"フラグを設定します。"
 msgid "Set the ''modified'' flag for relation {0}"
 msgstr "関連{0}の\"修正中\"フラグを設定します。"
 
-#: ../core/src/org/openstreetmap/josm/command/MoveCommand.java:120
+#: ../core/src/org/openstreetmap/josm/command/MoveCommand.java:121
 #, java-format
 msgid "Move {0} node"
 msgid_plural "Move {0} nodes"
@@ -3511,13 +3511,13 @@ msgctxt "compass"
 msgid "E"
 msgstr "東"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:202
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:200
 #, java-format
 msgid ""
 "Unable to add primitive {0} to the dataset because it is already included"
 msgstr "プリミティブ {0} をデータセットに追加できません、既に含まれています"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:637
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSet.java:635
 #, java-format
 msgid ""
 "JOSM expected to find primitive [{0} {1}] in dataset but it is not there. "
@@ -3570,81 +3570,99 @@ msgstr ""
 
 #. translators notes must be in front
 #. column header: enable filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:141
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:162
 msgctxt "filter"
 msgid "E"
 msgstr "東"
 
 #. column header: hide filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:142
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:163
 msgctxt "filter"
 msgid "H"
 msgstr ""
 
 #. column header: filter text
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:143
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:164
 msgctxt "filter"
 msgid "Text"
 msgstr "テキスト"
 
 #. column header: apply filter for children
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:144
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:165
 msgctxt "filter"
 msgid "C"
 msgstr ""
 
 #. column header: inverted filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:145
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:166
 msgctxt "filter"
 msgid "I"
 msgstr ""
 
 #. column header: filter mode
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:146
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:167
 msgctxt "filter"
 msgid "M"
 msgstr ""
 
 #. translators notes must be in front
 #. filter mode: replace
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:209
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:235
 msgctxt "filter"
 msgid "R"
 msgstr ""
 
 #. filter mode: add
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:210
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:236
 msgctxt "filter"
 msgid "A"
 msgstr ""
 
 #. filter mode: remove
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:211
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:237
 msgctxt "filter"
 msgid "D"
 msgstr ""
 
 #. filter mode: in selection
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:212
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:238
 msgctxt "filter"
 msgid "F"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:360
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:265
+msgid "<h2>Filter active</h2>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:271
+#, java-format
+msgid "<p><b>{0}</b> objects hidden"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:279
+#, java-format
+msgid "<b>{0}</b> objects disabled"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:282
+msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:463
 msgid "A primitive with ID = 0 cannot be invisible."
 msgstr "id=0 のプリミティブは非表示にできません"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:417
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:520
 #, java-format
 msgid "ID > 0 expected. Got {0}."
 msgstr "ID > 0 である必要があります。 {0} を受け取りました"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:419
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:522
 #, java-format
 msgid "Version > 0 expected. Got {0}."
 msgstr "バージョン > 0 である必要があります。 {0} を受け取りました"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:639
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:742
 #, java-format
 msgid ""
 "Cannot assign a changesetId > 0 to a new primitive. Value of changesetId is "
@@ -3653,7 +3671,7 @@ msgstr ""
 "変更セットID > 0 は新しいプリミティブには割り当てられません。変更セットの値"
 "は {0}"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1011
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1114
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
@@ -3661,7 +3679,7 @@ msgstr ""
 "結合できません。なぜなら、処理しようとしているプリミティブが片方は新規で、も"
 "う一方は新規ではないためです。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1013
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1116
 #, java-format
 msgid ""
 "Cannot merge primitives with different ids. This id is {0}, the other is {1}"
@@ -3669,7 +3687,6 @@ msgstr ""
 "異なるIDのプリミティブはマージできません。こちらのIDは{0}です、相手は {1}です"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:10
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:15
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:108
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:580
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:50
@@ -3677,9 +3694,9 @@ msgid "node"
 msgid_plural "nodes"
 msgstr[0] "ノード"
 
-#. turquoise
+#. light cyan
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:11
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:17
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:18
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:580
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/NameVisitor.java:62
 msgid "way"
@@ -3688,7 +3705,7 @@ msgstr[0] "ウェイ"
 
 #. dark blue
 #: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitiveType.java:12
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:18
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:19
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:170
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:364
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:580
@@ -3814,42 +3831,52 @@ msgstr "停止中"
 msgid "selected"
 msgstr "選択済の"
 
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:15
+#, fuzzy
+msgid "Node: standard"
+msgstr "標準"
+
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:16
 #, fuzzy
-msgid "tagged"
-msgstr "タグ付いていない"
+msgid "Node: connection"
+msgstr "接続"
+
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:17
+#, fuzzy
+msgid "Node: tagged"
+msgstr "まだタグ付けされていない画像"
 
 #. teal
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:19
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
 msgid "untagged way"
 msgstr "タグ付いていないウェイ"
 
 #. dark green
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:21
 msgid "incomplete way"
 msgstr "不完全なウェイ"
 
 #. darker blue
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:21
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:22
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:179
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:189
 msgid "background"
 msgstr "背景"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:22
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:23
 msgid "highlight"
 msgstr "ハイライト"
 
 #. lighteal
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:24
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:25
 msgid "untagged"
 msgstr "タグ付いていない"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:25
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:26
 msgid "text"
 msgstr "テキスト"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:26
+#: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:27
 msgid "areatext"
 msgstr "エリアテキスト"
 
@@ -4016,7 +4043,7 @@ msgstr "土地利用"
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:147
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:347
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:464
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:704
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:705
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:276
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:526
 #, java-format
@@ -4115,11 +4142,11 @@ msgstr "オブジェクトは削除されました"
 msgid "Show help information"
 msgstr "ヘルプ情報を表示"
 
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:66
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:70
 msgid "Message of the day not available"
 msgstr "今日のメッセージはありません"
 
-#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:100
+#: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:104
 msgid "Downloading \"Message of the day\""
 msgstr "\"今日のメッセージ\"をダウンロード"
 
@@ -4336,7 +4363,7 @@ msgid "File"
 msgstr "ファイル"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:167
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:84
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:937
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:180
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:143
@@ -4346,7 +4373,7 @@ msgstr "ファイル"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:658
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:149
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:219
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:649
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:650
 msgid "Edit"
 msgstr "編集"
 
@@ -4466,7 +4493,7 @@ msgstr "ユーザ:"
 msgid "Layer not in list."
 msgstr "レイヤーがリストにありません。"
 
-#: ../core/src/org/openstreetmap/josm/gui/MapView.java:708
+#: ../core/src/org/openstreetmap/josm/gui/MapView.java:712
 #, java-format
 msgid "Layer ''{0}'' must be in list of layers"
 msgstr "レイヤー ''{0}'' はレイヤーのリスト中になければなりません"
@@ -4651,7 +4678,7 @@ msgstr "プロパティ"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:180
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:238
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowser.java:132
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:507
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:424
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:193
 msgid "Tags"
 msgstr "タグ"
@@ -4876,7 +4903,7 @@ msgid "Copy all their elements to the target"
 msgstr "すべての要素を対象にコピーする"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:696
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:109
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 msgid "Up"
 msgstr "上"
 
@@ -4885,7 +4912,7 @@ msgid "Move up the selected elements by one position."
 msgstr "同じ位置で選択した要素を上に移動"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:728
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:120
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:123
 msgid "Down"
 msgstr "下"
 
@@ -5298,7 +5325,7 @@ msgstr "解決済み競合を適用"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:360
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:289
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:146
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1133
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1135
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:643
 msgid "Apply"
 msgstr "適用"
@@ -5387,7 +5414,7 @@ msgid_plural "{0} tags"
 msgstr[0] "{0} タグ"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:465
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:700
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:701
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:277
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:531
 #, java-format
@@ -5396,7 +5423,7 @@ msgid_plural "{0} ways"
 msgstr[0] "{0}ウェイ"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:466
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:708
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:709
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:536
 #, java-format
 msgid "{0} relation"
@@ -5588,11 +5615,11 @@ msgstr "全指示のリストを開く（取り消しバッファ）"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:31
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:56
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:156
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:91
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:161
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:162
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:66
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:446
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
@@ -5600,7 +5627,7 @@ msgstr "全指示のリストを開く（取り消しバッファ）"
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:114
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingDialog.java:69
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:84
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:85
 #, java-format
 msgid "Toggle: {0}"
 msgstr "トグル: {0}"
@@ -5628,8 +5655,8 @@ msgid "Open a merge dialog of all selected items in the list above."
 msgstr "上記リストの全てのアイテムを結合するダイアログを開く"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:347
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:305
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:107
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:306
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:108
 msgid ""
 "Set the selected elements on the map to the selected items in the list above."
 msgstr "マップ上の選択した要素を、上記リストの選択したアイテムに設定します。"
@@ -5677,58 +5704,58 @@ msgstr "競合を解決"
 msgid "Resolve conflicts for ''{0}''"
 msgstr "''{0}'' の競合を解決する"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
 msgid "Filter objects and hide/disable them."
 msgstr "オブジェクトにフィルターをかけ、非表示/無効にします。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:72
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:75
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:925
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:125
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:471
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:79
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:108
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:634
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:635
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:73
 msgid "Add"
 msgstr "追加"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:72
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:75
 msgid "Add filter."
 msgstr "フィルターを追加。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:84
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 msgid "Edit filter."
 msgstr "フィルターを編集。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:99
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:102
 msgid "Delete filter."
 msgstr "フィルターを削除。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:109
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 msgid "Move filter up."
 msgstr "フィルターを上に移動。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:120
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:123
 msgid "Move filter down."
 msgstr "フィルターを下に移動。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:134
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:137
 msgid "Enable filter"
 msgstr "フィルターを有効化"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:135
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:138
 msgid "Hide elements"
 msgstr "要素を非表示にする"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:137
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:140
 msgid "Apply also for children"
 msgstr "子へも適用"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:138
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:141
 msgid "Inverse filter"
 msgstr "反転フィルター"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:139
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:142
 msgid "Filter mode"
 msgstr "フィルターモード"
 
@@ -5841,7 +5868,7 @@ msgid "Create a new relation"
 msgstr "新規リレーション作成"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:394
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1373
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1375
 msgid "Create a copy of this relation and open it in another editor window"
 msgstr "このリレーションのコピーを作成し、他の編集ウィンドウで開く"
 
@@ -5866,12 +5893,12 @@ msgid "Download members"
 msgstr "メンバーをダウンロード"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:523
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:744
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:745
 msgid "Download incomplete members of selected relations"
 msgstr "選択されたリレーションの不完全なメンバーをダウンロード"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:525
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:746
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:747
 msgid "Download incomplete members"
 msgstr "不完全なメンバーをダウンロード"
 
@@ -5880,58 +5907,58 @@ msgstr "不完全なメンバーをダウンロード"
 msgid "Relations: {0}"
 msgstr "リレーション: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:160
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:161
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:162
 msgid "Current Selection"
 msgstr "現在の選択範囲"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:160
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:161
 msgid "Open a selection list window."
 msgstr "セレクションリスト　ウインドウを開きます。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:279
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:280
 msgid "Search for objects"
 msgstr "オブジェクトを検索"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:333
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:334
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:335
 msgid "Zoom to selection"
 msgstr "セレクションへズーム"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:367
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:368
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:369
 msgid "Zoom to selected element(s)"
 msgstr "選択した要素にズーム"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:422
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:423
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:352
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/SelectionTableColumnModel.java:17
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/JosmSelectionPanel.java:67
 msgid "Selection"
 msgstr "選択"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:433
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:434
 #, java-format
 msgid "Sel.: Rel.:{0} / Ways:{1} / Nodes:{2}"
 msgstr "選択: 関連:{0}/ウェイ:{1}/ノード:{2}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:710
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:711
 #, java-format
 msgid "Selection: {0}"
 msgstr "選択: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:383
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:375
 msgid "Undock the panel"
 msgstr "パネルの取り外し"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:397
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:389
 msgid ""
 "Close this panel. You can reopen it with the buttons in the left toolbar."
 msgstr ""
 "このパネルを閉じます。左側のツールバーのボタンを使うことで再度開くことができ"
 "ます。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:408
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/ToggleDialog.java:401
 msgid "Click to minimize/maximize the panel content"
 msgstr "クリックすることでパネルの内容を最小化/最大化"
 
@@ -7657,7 +7684,7 @@ msgstr "リレーションメンバーをダウンロード"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:332
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:487
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1104
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1106
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:614
 msgid "Conflict in data"
 msgid_plural "Conflicts in data"
@@ -7733,7 +7760,7 @@ msgstr "ロールを適用"
 msgid "Enter a role and apply it to the selected relation members"
 msgstr "ロールを入力して選択されたリレーションメンバーに適用"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:572
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:574
 msgid ""
 "<html>There is at least one member in this relation referring<br>to the "
 "relation itself.<br>This creates circular dependencies and is discouraged."
@@ -7743,16 +7770,16 @@ msgstr ""
 "参照しています。<br>これは循環参照を引き起こすため、推奨されません。<br>循環"
 "参照をどうしますか？</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:579
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:580
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:581
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:582
 msgid "Remove them, clean up relation"
 msgstr "削除し、リレーションをクリーンナップ"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:579
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:581
 msgid "Ignore them, leave relation as is"
 msgstr "無視し、リレーションはそのまま"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:602
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:604
 #, java-format
 msgid ""
 "<html>This relation already has one or more members referring to<br>the "
@@ -7763,11 +7790,11 @@ msgstr ""
 "しているメンバーがあります。<br>本当に他のリレーションメンバーを追加します"
 "か？</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:614
 msgid "Multiple members referring to same primitive"
 msgstr "複数のメンバーが同じプリミティブを参照しています"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:630
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:632
 #, java-format
 msgid ""
 "<html>You are trying to add a relation to itself.<br><br>This creates "
@@ -7777,19 +7804,19 @@ msgstr ""
 "<html>リレーション自身に追加しようとしています。<br><br>これは循環参照を引き"
 "起こすので薦められません。<br>リレーション ''{0}'' をスキップします。</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:671
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:673
 msgid ""
 "Add all primitives selected in the current dataset before the first member"
 msgstr ""
 "現在のデータセット内で選択された全プリミティブを最初のメンバーの前に追加"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:697
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:699
 msgid ""
 "Add all primitives selected in the current dataset after the last member"
 msgstr ""
 "現在のデータセット内で選択された全プリミティブを最後のメンバーの後に追加"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:724
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:726
 msgid ""
 "Add all primitives selected in the current dataset before the first selected "
 "member"
@@ -7797,7 +7824,7 @@ msgstr ""
 "現在のデータセット内で選択された全プリミティブを最初に選択されたメンバーの前"
 "に追加"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:758
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:760
 msgid ""
 "Add all primitives selected in the current dataset after the last selected "
 "member"
@@ -7805,22 +7832,22 @@ msgstr ""
 "現在のデータセット内で選択された全プリミティブを最後に選択されたメンバーの後"
 "に追加"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:790
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:792
 msgid "Remove all members referring to one of the selected primitives"
 msgstr "選択されたプリミティブのひとつを参照している全てのメンバーを削除"
 
 #. putValue(NAME, tr("Remove Selected"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:793
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:795
 msgid "Relation Editor: Remove Selected"
 msgstr "リレーション編集画面: 削除が選択されました"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:827
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:839
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:829
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:841
 msgid ""
 "Select relation members which refer to primitives in the current selection"
 msgstr "現在の選択の中でプリミティブを参照しているリレーションメンバーを選択"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:837
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:839
 #, java-format
 msgid ""
 "Select relation members which refer to {0} primitives in the current "
@@ -7828,91 +7855,91 @@ msgid ""
 msgstr ""
 "現在の選択の中で {0} プリミティブを参照しているリレーションメンバーを選択"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:861
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:863
 msgid "Select primitives for selected relation members"
 msgstr "選択されたリレーションメンバーのプリミティブを選択"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:881
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:883
 msgid "Sort the relation members"
 msgstr "リレーションメンバーをソート"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:883
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:885
 msgid "Sort"
 msgstr "並べ替え"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:884
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:886
 msgid "Relation Editor: Sort"
 msgstr "リレーション編集画面: ソート"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:904
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
 msgid "Reverse the order of the relation members"
 msgstr "リレーションメンバーの表示順序を反転する"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:906
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:908
 msgid "Reverse"
 msgstr "逆順"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:907
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:909
 msgid "Relation Editor: Reverse"
 msgstr "リレーションエディタ:反転"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:927
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:929
 msgid "Move the currently selected members up"
 msgstr "現在選択したメンバーを一つ上に移動します"
 
 #. putValue(NAME, tr("Move Up"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:930
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:932
 msgid "Relation Editor: Move Up"
 msgstr "リレーション編集画面: 上へ移動"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:946
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:948
 msgid "Move the currently selected members down"
 msgstr "選択したメンバーを一つ下に移動します"
 
 #. putValue(NAME, tr("Move Down"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:949
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:951
 msgid "Relation Editor: Move Down"
 msgstr "リレーション編集画面: 下へ移動"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:965
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:967
 msgid "Remove the currently selected members from this relation"
 msgstr "このリレーションから現在選択されたメンバーを削除"
 
 #. putValue(NAME, tr("Remove"));
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:968
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:970
 msgid "Relation Editor: Remove"
 msgstr "リレーション編集画面: 削除"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:984
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:986
 msgid "Delete the currently edited relation"
 msgstr "現在編集されたリレーションを削除"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1031
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1033
 msgid ""
 "One or more members of this new relation have been deleted while the "
 "relation editor\n"
 "was open. They have been removed from the relation members list."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1085
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1087
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:595
 msgid "Yes, create a conflict and close"
 msgstr "はい、競合を作成して閉じる"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1087
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1089
 msgid "Click to create a conflict and close this relation editor"
 msgstr "クリックして競合を作成し、このリレーションエディタを閉じる"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1091
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1093
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:601
 msgid "No, continue editing"
 msgstr "いいえ、編集を続ける"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1093
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1095
 msgid "Click to return to the relation editor and to resume relation editing"
 msgstr "クリックしてリレーションエディタに戻り、リレーション編集を再開"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1102
 msgid ""
 "<html>This relation has been changed outside of the editor.<br>You cannot "
 "apply your changes and continue editing.<br><br>Do you want to create a "
@@ -7921,7 +7948,7 @@ msgstr ""
 "<html>このリレーションは編集画面以外で変更されています。<br>変更を適用して編"
 "集を続けることはできません<br><br>競合を作成してエディタを閉じますか？</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1117
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1119
 #, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for primitive<br>''{1}''."
@@ -7930,78 +7957,78 @@ msgstr ""
 "<html>レイヤー ''{0}''には既にプリミティブ ''{1}'' <br>に競合があります。<br>"
 "最初にこの競合を解決してからやり直してください。</html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1131
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1133
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:641
 msgid "Apply the current updates"
 msgstr "現在の更新を適用"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1164
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1166
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:684
 msgid "Apply the updates and close the dialog"
 msgstr "更新を適用してダイアログを閉じる"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1198
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1200
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:738
 msgid "Cancel the updates and close the dialog"
 msgstr "更新をキャンセルしてダイアログを閉じる"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1215
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1217
 msgid "Add an empty tag"
 msgstr "空のタグを追加"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1228
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1230
 msgid "Download all incomplete members"
 msgstr "全ての不完全なメンバーをダウンロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1230
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1263
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1232
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1265
 msgid "Download Members"
 msgstr "メンバーのダウンロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1231
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1264
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1233
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1266
 msgid "Relation Editor: Download Members"
 msgstr "リレーション編集画面: メンバーをダウンロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1261
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1263
 msgid "Download selected incomplete members"
 msgstr "選択された不完全なメンバーをダウンロード"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1298
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1300
 msgid "Sets a role for the selected members"
 msgstr "選択されたメンバーにロールをセット"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1300
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1302
 msgid "Apply Role"
 msgstr "ロールを適用"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1314
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1316
 #, java-format
 msgid "You are setting an empty role on {0} primitive."
 msgid_plural "You are setting an empty role on {0} primitives."
 msgstr[0] "{0} プリミティブに空のロールを設定しています。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1317
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1319
 msgid "This is equal to deleting the roles of these primitives."
 msgstr "これはこれらのプリミティブのロールを削除することと同じです"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1319
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1321
 msgid "Do you really want to apply the new role?"
 msgstr "新しいロールを本当に適用しますか？"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1321
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1323
 msgid "Yes, apply it"
 msgstr "はい、適用します"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1322
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1324
 msgid "No, do not apply"
 msgstr "いいえ、適用しません"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1328
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1330
 msgid "Confirm empty role"
 msgstr "空のロールを確認"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1396
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1398
 msgid "Edit the relation the currently selected relation member refers to"
 msgstr "現在選択中のリレーションメンバーが参照しているリレーションを編集"
 
@@ -9264,7 +9291,7 @@ msgid "Initializing relations to update ..."
 msgstr "更新するリレーションを初期化中 ..."
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:120
-#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:82
+#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:85
 msgid "Settings"
 msgstr "設定"
 
@@ -11182,7 +11209,7 @@ msgstr "不明なときの既定値(設定はまだ使われません）"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:222
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:193
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:670
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:671
 msgid "Please select the row to edit."
 msgstr "編集する列を選択してください。"
 
@@ -11194,7 +11221,7 @@ msgstr "新しい値は{0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:247
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:140
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:693
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:694
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:100
 msgid "Please select the row to delete."
 msgstr "削除する列を選択してください。"
@@ -12154,28 +12181,43 @@ msgstr "プリセットメニューの並び替え"
 msgid "Tagging Presets"
 msgstr "タグ付けプリセット"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:66
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:260
 msgid "Actions"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:183
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:205
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:379
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:401
 msgid "Separator"
 msgstr "区切り"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:351
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:557
 msgid "Toolbar"
 msgstr "ツールバー"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:355
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:561
 msgid "Available"
 msgstr "有効"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:394
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:601
+#, fuzzy
+msgid "Action parameters"
+msgstr "OAuthの詳細設定"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:602
+#, fuzzy
+msgid "Parameter name"
+msgstr "ストリートの名前"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:603
+#, fuzzy
+msgid "Parameter value"
+msgstr "測定した値"
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:608
 msgid "Toolbar customization"
 msgstr "ツールバーのカスタマイズ"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:395
+#: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:609
 msgid "Customize the elements on the toolbar."
 msgstr "ツールバーの要素をカスタマイズ"
 
@@ -12855,7 +12897,7 @@ msgid "Markers from {0}"
 msgstr "{0}　のマーカー"
 
 #: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:68
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:217
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:214
 #, java-format
 msgid ""
 "Error occured while parsing gpx file {0}. Only part of the file will be "
@@ -12863,7 +12905,7 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:79
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:223
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:220
 #, java-format
 msgid "File \"{0}\" does not exist"
 msgstr "ファイル \"{0}\" はありません"
@@ -12871,7 +12913,7 @@ msgstr "ファイル \"{0}\" はありません"
 #. input was not properly parsed, abort
 #: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:82
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:128
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:228
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:225
 #, java-format
 msgid "Parsing file \"{0}\" failed"
 msgstr "ファイル \"{0}\" の解析に失敗"
@@ -12904,7 +12946,7 @@ msgstr "画像ファイルが見つかりません。"
 #: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:59
 #, java-format
 msgid "Failed to open input stream for resource ''{0}''"
-msgstr ""
+msgstr "リソース ''{0}'' 用の入力ストリームのオープンに失敗しました"
 
 #: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:105
 #, java-format
@@ -13148,13 +13190,13 @@ msgstr "不正なbz2 ファイル。"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangeBuilder.java:75
 msgid "Prolog of OsmChange document already written. Please write only once."
-msgstr ""
+msgstr "OsmChangeのプロローグは既に書かれています。書くのは一度だけです。"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangeBuilder.java:93
 #: ../core/src/org/openstreetmap/josm/io/OsmChangeBuilder.java:111
 #: ../core/src/org/openstreetmap/josm/io/OsmChangeBuilder.java:122
 msgid "Prolog of OsmChange document not written yet. Please write frst."
-msgstr ""
+msgstr "OsmChangeのプロローグがまだ書かれていません。最初に書いてください。"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:73
 #: ../core/src/org/openstreetmap/josm/io/OsmChangesetContentParser.java:106
@@ -13297,7 +13339,7 @@ msgstr "OAuth認証ヘッダでのHTTP接続のサインに失敗"
 #: ../core/src/org/openstreetmap/josm/io/OsmConnection.java:137
 #, java-format
 msgid "Warning: unexpected value for preference ''{0}''. Got ''{1}''."
-msgstr ""
+msgstr "警告: プリファレンス ''{0}'' に予期せぬ値。入力値 ''{1}''。"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmDataParsingException.java:44
 #: ../core/src/org/openstreetmap/josm/tools/XmlObjectParser.java:68
@@ -13456,13 +13498,15 @@ msgid ""
 "Illegal value for attribute ''changeset'' on new object {1}. Got {0}. "
 "Resetting to 0."
 msgstr ""
+"新しいオブジェクト {1} の属性 ''changeset'' に不正な値。入力値 {0}。0にリセッ"
+"トします。"
 
 #. for an existing primitive this is a problem
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:391
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:401
 #, java-format
 msgid "Illegal value for attribute ''changeset''. Got {0}."
-msgstr ""
+msgstr "属性 ''changeset'' に不正な値。入力値 {0}。"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmReader.java:410
 #, java-format
@@ -13605,7 +13649,7 @@ msgstr "XML タグ ''{1}'' の属性 ''{0}'' に不正な値。入力値: {2}。
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerUserInfoReader.java:126
 msgid "Reading user info ..."
-msgstr ""
+msgstr "ユーザ情報を読込中"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:80
 msgid "Starting to upload with one request per primitive ..."
@@ -13634,7 +13678,7 @@ msgstr "ひとつのリクエストでアップロード開始..."
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:142
 #, java-format
 msgid "Value >0 expected for parameter ''{0}'', got {1}"
-msgstr ""
+msgstr "パラメータ ''{0}'' では値 > 0 が期待されています。入力値 {1}"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerWriter.java:144
 msgid "Starting to upload in chunks..."
@@ -13709,8 +13753,7 @@ msgstr "プラグイン {0} でエラーが発生しました。"
 msgid "The following plugin is no longer necessary and has been deactivated:"
 msgid_plural ""
 "The following plugins are no longer necessary and have been deactivated:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "次のプラグインは現在では不要になっていますので無効化しました:"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:140
 #, java-format
@@ -13802,11 +13845,14 @@ msgid ""
 "<html>Plugin {0} requires JOSM version {1}. The current JOSM version is {2}."
 "<br>You have to update JOSM in order to use this plugin.</html>"
 msgstr ""
+"<html>プラグイン {0} には JOSM バージョン {1} が必要です。現在の JOSM バー"
+"ジョンは {2} です。<br>このプラグインを使うにはJOSMを更新しなければなりませ"
+"ん。</html>"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:381
 #, java-format
 msgid "loading plugin ''{0}'' (version {1})"
-msgstr ""
+msgstr "プラグイン ''{0}'' をロード中 (バージョン {1})"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:387
 #, java-format
@@ -13814,6 +13860,8 @@ msgid ""
 "<html>Could not load plugin {0} because the plugin<br>main class ''{1}'' was "
 "not found.<br>Delete from preferences?"
 msgstr ""
+"<html>プラグイン {0} をロードできません。プラグインの<br>main クラス ''{1}'' "
+"が見つかりません。<br>プリファレンスから削除しますか？"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:395
 #, java-format
@@ -13841,8 +13889,7 @@ msgstr[0] "JOSMは次のプラグインの情報を見つけられません:"
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:531
 msgid "The plugin is not going to be loaded."
 msgid_plural "The plugins are not going to be loaded."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "プラグインはロードされません。"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:557
 msgid "Determine plugins to load..."
@@ -13859,8 +13906,7 @@ msgstr "維持されていないプラグインを取り外します..."
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:589
 msgid "Updating the following plugin has failed:"
 msgid_plural "Updating the following plugins has failed:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "次のプラグインの更新に失敗:"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:600
 msgid ""
@@ -13870,7 +13916,7 @@ msgid_plural ""
 "Please open the Preference Dialog after JOSM has started and try to update "
 "them manually."
 msgstr[0] ""
-msgstr[1] ""
+"JOSMが開始してからプリファレンスダイアログを開いて手動更新してみてください。"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:608
 msgid "Plugin update failed"
@@ -13879,7 +13925,7 @@ msgstr "プラグインの更新に失敗しました"
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:641
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:645
 msgid "Warning: failed to download plugin information list"
-msgstr ""
+msgstr "警告: プラグイン情報リストのダウンロードに失敗"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:706
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:721
@@ -13915,6 +13961,8 @@ msgid ""
 "Warning: failed to install already downloaded plugin ''{0}''. Skipping "
 "installation. JOSM is still going to load the old plugin version."
 msgstr ""
+"警告: ダウンロード済みのプラグイン ''{0}'' のインストールに失敗。インストール"
+"をスキップします。JOSMは古いプラグインのバージョンをロードします。"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:794
 #, java-format
@@ -13974,6 +14022,8 @@ msgid ""
 "Do not ask again and remember my decision (go to Preferences->Plugins to "
 "change it later)"
 msgstr ""
+"この決定を記憶し、次回からは確認しない (プリファレンス>プラグイン で後から変"
+"更できます)"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:81
 #, java-format
@@ -14010,6 +14060,8 @@ msgstr "ファイル \"{0}\"の処理中"
 #, java-format
 msgid "Warning: Failed to scan file ''{0}'' for plugin information. Skipping."
 msgstr ""
+"警告: プラグイン情報取得のためのファイル ''{0}'' のスキャンに失敗。スキップし"
+"ます。"
 
 #: ../core/src/org/openstreetmap/josm/plugins/ReadLocalPluginInformationTask.java:105
 msgid "Processing plugin files..."
@@ -14031,6 +14083,8 @@ msgid ""
 "Warning: failed to create plugin directory ''{0}''. Cannot cache plugin list "
 "from plugin site ''{1}''."
 msgstr ""
+"警告: プラグインディレクトリ ''{0}'' の作成に失敗。プラグインサイト ''{1}'' "
+"からのプラグインリストをキャッシュできません。"
 
 #: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:189
 #, java-format
@@ -14040,7 +14094,7 @@ msgstr "ローカルキャッシュ ''{0}'' にプラグインリストを書き
 #: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:230
 #, java-format
 msgid "Parsing plugin list from site ''{0}''"
-msgstr ""
+msgstr "サイト ''{0}'' からのプラグインリストをパースしています"
 
 #: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:235
 #: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:238
@@ -14049,11 +14103,13 @@ msgid ""
 "Failed to parse plugin list document from site ''{0}''. Skipping site. "
 "Exception was: {1}"
 msgstr ""
+"サイト ''{0}'' からのプラグインリスト文書のパースに失敗。サイトをスキップしま"
+"す。例外コード: {1}"
 
 #: ../core/src/org/openstreetmap/josm/plugins/ReadRemotePluginInformationTask.java:248
 #, java-format
 msgid "Processing plugin list from site ''{0}''"
-msgstr ""
+msgstr "サイト ''{0}'' からのプラグインリストを処理しています"
 
 #: ../core/src/org/openstreetmap/josm/tools/AudioPlayer.java:301
 msgid "This is after the end of the recording"
@@ -14079,6 +14135,8 @@ msgid ""
 "are running the latest<br>version of JOSM, please consider being kind and "
 "file a bug report."
 msgstr ""
+"予期せぬ例外が発生。<br>これはたいていコーディングエラーです。最新の<br>JOSM"
+"を実行している場合は、おおらかな気持ちでバグレポートをファイルしてください。"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:75
 msgid "Unexpected Exception"
@@ -14089,12 +14147,16 @@ msgid ""
 "You have encountered an error in JOSM. Before you file a bug report make "
 "sure you have updated to the latest version of JOSM here:"
 msgstr ""
+"JOSMでエラーが発生しました。バグレポートをファイルする前にJOSMの最新バージョ"
+"ンに更新したかどうかこちらで確認してください:"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:127
 msgid ""
 "You should also update your plugins. If neither of those help please file a "
 "bug report in our bugtracker using this link:"
 msgstr ""
+"プラグインも更新する必要があります。どちらも役に立たない場合はこのリンクを"
+"使ってバグトラッカーにバグレポートをファイルしてください:"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:131
 msgid ""
@@ -14102,12 +14164,15 @@ msgid ""
 "you. Please include information on how to reproduce the error and try to "
 "supply as much detail as possible."
 msgstr ""
+"下記エラー情報には既にあなたのために情報が埋められています。エラーを再現する"
+"ための情報をできるだけ詳細に追加してみてください。"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:135
 msgid ""
 "Alternatively, if that does not work you can manually fill in the "
 "information below at this URL:"
 msgstr ""
+"ちゃんと機能していない場合は、代わりに次のURLで手作業で情報を入力できます:"
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:142
 msgid "(The text has already been copied to your clipboard.)"
@@ -14191,10 +14256,12 @@ msgid ""
 "<html>Communication with the OSM server ''{0}'' timed out. Please retry "
 "later.</html>"
 msgstr ""
+"<html>OSM サーバ ''{0}'' との通信がタイムアウトしました。しばらくしてからやり"
+"直してください。</html>"
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:172
 msgid "no error message available"
-msgstr ""
+msgstr "利用できるエラーメッセージはありません。"
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:174
 #, java-format
@@ -14349,7 +14416,7 @@ msgstr "Unable to find translation for the locale {0}. Reverting to {1}."
 #: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:151
 #, java-format
 msgid "Warning: failed to handle zip file ''{0}''. Exception was: {1}"
-msgstr ""
+msgstr "警告: zipファイル ''{0}'' のハンドルに失敗。例外コード: {1}"
 
 #: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:203
 #: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:217
@@ -14358,6 +14425,8 @@ msgid ""
 "Warning: failed to access directory ''{0}'' for security reasons. Exception "
 "was: {1}"
 msgstr ""
+"警告: セキュリティ上の理由によりディレクトリ ''{0}'' へのアクセスに失敗。例外"
+"コード: {1}"
 
 #: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:237
 #, java-format
@@ -14382,6 +14451,8 @@ msgid ""
 "Failed to open URL. There is currently no platform set. Please set a "
 "platform first."
 msgstr ""
+"URLのオープンに失敗。現在プラットフォームセットがありません。最初にプラット"
+"フォームをセットしてください。"
 
 #. This list if far from complete!
 #. items with automatic shortcuts will not be added to the menu bar at all
@@ -14394,7 +14465,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:54
 #: ../core/src/org/openstreetmap/josm/tools/PlatformHookWindows.java:55
 msgid "unused"
-msgstr ""
+msgstr "未使用"
 
 #: ../core/src/org/openstreetmap/josm/tools/Shortcut.java:448
 #, java-format
@@ -14528,8 +14599,8 @@ msgid "Upload Trace"
 msgstr "トレースをアップロード"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:117
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:35
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:36
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:37
 msgid "Upload Traces"
 msgstr "トレースのアップロード"
 
@@ -14614,7 +14685,7 @@ msgstr "パスワードが与えられていません。"
 msgid "Uploading GPX Track"
 msgstr "GPXトラックのアップロード"
 
-#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:35
+#: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGuiPlugin.java:36
 msgid "Uploads traces to openstreetmap.org"
 msgstr "openstreetmap.org へトレースをアップロード"
 
@@ -14680,7 +14751,7 @@ msgstr "ナンバリングスキーム:"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:216
 msgid "Increment:"
-msgstr ""
+msgstr "増加:"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:220
 msgid "Starting #:"
@@ -14793,11 +14864,11 @@ msgstr ""
 
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:48
 msgid "Increment"
-msgstr ""
+msgstr "増加"
 
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:49
 msgid "Decrement"
-msgstr ""
+msgstr "減少"
 
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:51
 msgid "Numbers:"
@@ -14810,7 +14881,7 @@ msgstr ""
 #: ../plugins/buildings_tools/src/buildings_tools/Building.java:163
 #: ../plugins/cadastre-fr/src/cadastre_fr/Buildings.java:209
 msgid "Create building"
-msgstr ""
+msgstr "建物を作成"
 
 #: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeAction.java:16
 #: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeAction.java:18
@@ -14926,6 +14997,11 @@ msgstr ""
 msgid "Martinique Fort Desaix cache file (.UTM3)"
 msgstr ""
 
+#: ../plugins/cadastre-fr/src/cadastre_fr/CacheFileUTM20NFilter.java:22
+#, fuzzy
+msgid "Reunion RGR92 cache file (.UTM4)"
+msgstr "Lambert Zone 2 cache file (.2)"
+
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:40
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:51
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:62
@@ -14961,15 +15037,15 @@ msgstr "選択..."
 msgid "Select commune"
 msgstr "コミューンの選択"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:171
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:174
 msgid "Cadastre"
 msgstr "Cadastre"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:180
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:183
 msgid "Auto sourcing"
 msgstr "自動ソーシング"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:246
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:249
 msgid ""
 "Plugin cadastre-fr used traditionaly for grabbing the key shortcut F11\n"
 "which is currently allocated for full-screen switch by default\n"
@@ -14979,15 +15055,15 @@ msgstr ""
 "これは現在デフォルトでフルスクリーンスイッチに割り当てられています。\n"
 "F11 を取得アクションに戻しますか？"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:249
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:252
 msgid "Restore grab shortcut F11"
 msgstr "F11 を取得ショートカットに戻す"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:254
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:257
 msgid "JOSM is stopped for the change to take effect."
 msgstr "変更が実施されるようにJOSM を停止しました"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:362
+#: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePlugin.java:364
 #, java-format
 msgid ""
 "Warning: failed to put option pane dialog always on top. Exception was: {0}"
@@ -15134,7 +15210,7 @@ msgstr "水域(湖沼)"
 #. <condition k="building"/>
 #. <icon annotate="true" src="misc/landmark/building.png" priority="-10000"/>
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:68
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:100
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:101
 #: build/trans_style.java:4292
 msgid "building"
 msgstr "建物"
@@ -15275,19 +15351,19 @@ msgstr "WMSサーバからダウンロードしたデータの周囲に長方形
 #. option to select the single grabbed image resolution
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:147
 msgid "Image resolution:"
-msgstr ""
+msgstr "画像解像度:"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:157
 msgid "High resolution (1000x800)"
-msgstr ""
+msgstr "高解像度(1000x800)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:159
 msgid "Medium resolution (800x600)"
-msgstr ""
+msgstr "中解像度(800x600)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:161
 msgid "Low resolution (600x400)"
-msgstr ""
+msgstr "低解像度 (600x400)"
 
 #. option to select image zooming interpolation method
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:177
@@ -16496,7 +16572,7 @@ msgstr ""
 
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:39
 msgid "Convert to multipolygon."
-msgstr ""
+msgstr "マルチポリゴンに変換。"
 
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:81
 #: ../plugins/multipoly/src/multipoly/MultipolyAction.java:94
@@ -16664,7 +16740,7 @@ msgstr "問題を詳細に記述してください"
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/NewIssueAction.java:101
 msgid "Create: "
-msgstr ""
+msgstr "作成: "
 
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/action/OsbAction.java:96
 msgid "Please enter a user name"
@@ -16735,7 +16811,7 @@ msgstr "書き込みエラー！"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:63
 msgid "Write position information into the exif header of the following files:"
-msgstr ""
+msgstr "次のファイルのexif ヘッダに位置情報を書き込む:"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:79
 msgid "settings"
@@ -16747,7 +16823,7 @@ msgstr "バックアップファイルを保持"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:85
 msgid "change file modification time:"
-msgstr ""
+msgstr "ファイル更新時刻を変更:"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:88
 msgid "to gps time"
@@ -16764,7 +16840,7 @@ msgstr ""
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:147
 msgid "Writing position information to image files..."
-msgstr ""
+msgstr "位置情報を画像ファイルに書き込み中"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:171
 msgid "Could not read mtime."
@@ -16798,7 +16874,7 @@ msgstr "古いバックアップファイルを保持して継続"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:259
 msgid "Override"
-msgstr ""
+msgstr "上書き"
 
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:280
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:296
@@ -16880,11 +16956,11 @@ msgstr ""
 
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAngleAction.java:44
 msgid "Resets picture rotation"
-msgstr ""
+msgstr "画像回転をリセット"
 
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPicturePositionAction.java:44
 msgid "Reset position"
-msgstr ""
+msgstr "位置をリセット"
 
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPicturePositionAction.java:44
 msgid "Resets picture position"
@@ -16892,11 +16968,11 @@ msgstr "画像位置をリセットします"
 
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureScaleAction.java:44
 msgid "Scale"
-msgstr ""
+msgstr "サイズ調整"
 
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureScaleAction.java:44
 msgid "Resets picture scale"
-msgstr ""
+msgstr "画像サイズをリセット"
 
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/RotatePictureAction.java:54
 msgid "PicLayer rotate"
@@ -16953,52 +17029,52 @@ msgstr ""
 msgid "Public Transport"
 msgstr "公共交通機関"
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:492
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:409
 msgid "Route patterns ..."
-msgstr ""
+msgstr "ルートパターン ..."
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:493
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:410
 msgid "Edit Route patterns for public transport"
-msgstr ""
+msgstr "公共輸送用ルートパターンを編集"
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:505
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:422
 msgid "Overview"
 msgstr "概要"
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:509
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:426
 msgid "Itinerary"
 msgstr "繰り返し"
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:511
-#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:84
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:428
+#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:87
 msgid "Stops"
 msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:513
+#: ../plugins/public_transport/src/public_transport/RoutePatternAction.java:430
 msgid "Meta"
 msgstr "メタな"
 
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:71
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:106
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:74
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:109
 msgid "Create Stops from GPX ..."
 msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:72
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:75
 msgid "Create Stops from a GPX file"
 msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:233
+#: ../plugins/public_transport/src/public_transport/StopImporterAction.java:230
 #, java-format
 msgid "IOException \"{0}\" occurred"
 msgstr ""
 
-#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:80
+#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:83
 msgid "Tracks"
 msgstr ""
 
 #. item "Ways/Steps" text "Width (meters)"
 #. </optional>
-#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:86
+#: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:89
 #: build/trans_presets.java:628
 msgid "Waypoints"
 msgstr "ウェイポイント"
@@ -17356,7 +17432,7 @@ msgstr ""
 
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:304
 msgid "Apply edited tags and close dialog"
-msgstr ""
+msgstr "編集したタグを適用してダイアログを閉じる"
 
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/PresetManager.java:53
 msgid "Highlight"
@@ -17418,7 +17494,7 @@ msgstr "補間"
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:142
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:92
 msgid "Segments"
-msgstr ""
+msgstr "セグメント"
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:144
 msgid "Street"
@@ -17582,7 +17658,7 @@ msgstr "クリップボードへコピー"
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:423
 #, java-format
 msgid "Cannot find object with id ''{0}'' in layer ''{1}''"
-msgstr ""
+msgstr "ID ''{0}'' のオブジェクトはレイヤ ''{1}'' にありません"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberEditorModel.java:426
 #, java-format
@@ -17597,7 +17673,7 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:128
 msgid "Insert new relation members from object in the clipboard"
-msgstr ""
+msgstr "クリップボードのオブジェクトから新しいリレーションメンバーを挿入"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:167
 msgid "Move the selected relation members down by one position"
@@ -17617,7 +17693,7 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
 msgid "Errors/Warnings"
-msgstr ""
+msgstr "エラー/警告"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Show errors and warnings related to this turn restriction"
@@ -17651,11 +17727,11 @@ msgstr[1] ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:406
 msgid "Do you want to save anyway?"
-msgstr ""
+msgstr "強制保存しますか？"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:409
 msgid "Yes, save anyway"
-msgstr ""
+msgstr "はい、強制保存します"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:411
 msgid "Save the turn restriction despite of errors and/or warnings"
@@ -17663,15 +17739,15 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:415
 msgid "No, resolve issues first"
-msgstr ""
+msgstr "いいえ、最初に問題を解決します"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:417
 msgid "Cancel saving and start resolving pending issues first"
-msgstr ""
+msgstr "保存をキャンセルして最初に保留中の問題を解決"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:425
 msgid "Pending errors and warnings"
-msgstr ""
+msgstr "保留中のエラーと警告"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:484
 #, java-format
@@ -17734,23 +17810,21 @@ msgstr ""
 #, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} の警告"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
 #, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} のエラー"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
 msgid "no issues"
-msgstr ""
+msgstr "問題はありません"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:147
 msgid "please select a way"
-msgstr ""
+msgstr "ウェイを選択してください"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:158
 #, java-format
@@ -17763,7 +17837,7 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:354
 msgid "Paste from the clipboard"
-msgstr ""
+msgstr "クリップボードから貼り付け"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionSelectionPopupPanel.java:220
 msgid "Create new turn restriction"
@@ -17775,19 +17849,19 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:11
 msgid "No Right Turn"
-msgstr ""
+msgstr "右折禁止"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:12
 msgid "No Left Turn"
-msgstr ""
+msgstr "左折禁止"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:13
 msgid "No U-Turn"
-msgstr ""
+msgstr "Uターン禁止"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:14
 msgid "No Straight On"
-msgstr ""
+msgstr "直進禁止"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:15
 msgid "Only Right Turn"
@@ -17818,11 +17892,11 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:82
 msgid "Public Service Vehicles"
-msgstr ""
+msgstr "公共輸送機関"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:83
 msgid "Public service vehicles like buses, tramways, etc."
-msgstr ""
+msgstr "バス、路面電車などのような公共輸送機関。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:95
 msgid "Heavy Goods Vehicles"
@@ -17830,19 +17904,19 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:108
 msgid "Motorcars"
-msgstr ""
+msgstr "自動車"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:122
 msgid "Bicycles"
-msgstr ""
+msgstr "自転車"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:193
 msgid "Use standard exceptions"
-msgstr ""
+msgstr "標準例外を使用"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/VehicleExceptionEditor.java:203
 msgid "Use non-standard exceptions"
-msgstr ""
+msgstr "非標準例外を使用"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/ViaList.java:156
 msgid "Remove the currently selected vias"
@@ -18002,17 +18076,17 @@ msgstr ""
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:78
 msgctxt "keyboard-modifiers"
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:80
 msgctxt "keyboard-modifiers"
 msgid "Ctrl"
-msgstr ""
+msgstr "Ctrl"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:82
 msgctxt "keyboard-modifiers"
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:85
 msgctxt "keyboard-modifiers"
@@ -18181,11 +18255,11 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:75
 msgid "Split now"
-msgstr ""
+msgstr "直ちに分割"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:76
 msgid "Splits the way"
-msgstr ""
+msgstr "ウェイを分割"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:45
 #, java-format
@@ -18203,7 +18277,7 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:57
 msgid "An OSM way is required instead."
-msgstr ""
+msgstr "代わりにOSMウェイが必要です。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:63
 msgid "Delete the member from the turn restriction"
@@ -18213,22 +18287,22 @@ msgstr ""
 msgid "Change to the Basic Editor and select an OSM way"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:41
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:98
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:83
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:42
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:99
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:84
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:85
 msgid "Validation errors"
 msgstr "妥当性検証エラー"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:96
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:97
 msgid "No validation errors"
 msgstr "妥当性検証エラー"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:168
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:169
 msgid "Grid"
 msgstr "グリッド"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:276
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:277
 #, java-format
 msgid ""
 "Error initializing test {0}:\n"
@@ -18237,39 +18311,39 @@ msgstr ""
 "テスト{0} の初期化失敗:\n"
 "{1}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:73
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:74
 msgid "Use ignore list."
 msgstr "無視リストを使う"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:74
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:75
 msgid "Use the ignore list to suppress warnings."
 msgstr "警告を抑制するために、無視するリストを使用する"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:77
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:78
 msgid "Use error layer."
 msgstr "エラーレイヤーを使う"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:78
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:79
 msgid "Use the error layer to display problematic elements."
 msgstr "疑わしい要素を表示するために、エラーレイヤーを使用"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:81
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:82
 msgid "Show informational level on upload."
 msgstr "アップロードの情報レベルを示してください。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:82
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:83
 msgid "Show the informational tests in the upload check windows."
 msgstr "アップロードチェックウィンドウのお知らせテストを表示"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:87
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:88
 msgid "On demand"
 msgstr "要求に応じて"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:88
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:89
 msgid "On upload"
 msgstr "アップロード時"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:99
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:100
 msgid ""
 "An OSM data validator that checks for common errors made by users and editor "
 "programs."
@@ -18277,157 +18351,157 @@ msgstr ""
 "OSM データ妥当性検証はユーザや編集プログラムによる一般的なエラーをチェックし"
 "ます。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:100
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/PreferenceEditor.java:101
 msgid "Data validator"
 msgstr "データ妥当性検証"
 
 #. * Error messages
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:13
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:14
 msgid "Errors"
 msgstr "エラー"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:13
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:14
 msgid "validation error"
 msgstr "妥当性検証のエラー"
 
 #. * Warning messages
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:15
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:16
 msgid "Warnings"
 msgstr "警告"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:15
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:16
 msgid "validation warning"
 msgstr "妥当性検証の警告"
 
 #. * Other messages
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:17
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:18
 msgid "Other"
 msgstr "その他"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:17
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Severity.java:18
 msgid "validation other"
 msgstr "その他を検証"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Test.java:101
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/Test.java:102
 #, java-format
 msgid "Running test {0}"
 msgstr "テスト {0} 実行中"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:44
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:45
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:46
 msgid "Validation"
 msgstr "妥当性検証"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:44
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:45
 msgid "Performs the data validation"
 msgstr "データの妥当性を検証"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:120
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:121
 msgid "Validating"
 msgstr "検証中"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:161
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:162
 #, java-format
 msgid "Test {0}/{1}: Starting {2}"
 msgstr "テスト {0}/{1}:  {2} 開始"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:170
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:171
 msgid "Updating ignored errors ..."
 msgstr "無視されたエラーを更新中 ..."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateUploadHook.java:117
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateUploadHook.java:118
 msgid "Data with errors. Upload anyway?"
 msgstr "エラーのあるデータです。それでもアップロードしますか？"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:83
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:84
 msgid "Open the validation window."
 msgstr "妥当性検証ウィンドウを開く"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:90
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:91
 msgid "Zoom to problem"
 msgstr "問題へズーム"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:111
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:112
 msgid "Fix"
 msgstr "修正"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:111
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:112
 msgid "Fix the selected errors."
 msgstr "選択したエラーを修正"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:116
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:117
 msgid "Ignore the selected errors next time."
 msgstr "次回から選択したエラーを無視する。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:197
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:198
 msgid "Whole group"
 msgstr "全てのグループ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:197
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:198
 msgid "Single elements"
 msgstr "単一の要素"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:197
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:198
 msgid "Nothing"
 msgstr "何もしない"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:198
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:199
 msgid "Ignore whole group or individual elements?"
 msgstr "全体のグループか個々の要素を無視しますか?"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:199
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:200
 msgid "Ignoring elements"
 msgstr "要素を無視"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:464
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:465
 msgid "Fixing errors ..."
 msgstr "エラー修正中 ..."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:487
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:488
 #, java-format
 msgid "Fixing ({0}/{1}): ''{2}''"
 msgstr "({0}/{1}) 修正中: ''{2}''"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:503
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:504
 msgid "Updating map ..."
 msgstr "地図を更新中 ..."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/ChangePropertyKeyCommand.java:69
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/ChangePropertyKeyCommand.java:70
 #, java-format
 msgid "Replace \"{0}\" by \"{1}\" for"
 msgstr "\"{0}\" を \"{1}\" で置き換える。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/ChangePropertyKeyCommand.java:75
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/MultipleNameVisitor.java:65
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/ChangePropertyKeyCommand.java:76
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/MultipleNameVisitor.java:66
 msgid "object"
 msgid_plural "objects"
 msgstr[0] "オブジェクト"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:41
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:42
 msgid "Coastlines."
 msgstr "海岸線"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:42
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:43
 msgid "This test checks that coastlines are correct."
 msgstr "このテストは海岸線が正しいことをチェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:120
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:121
 msgid "Unconnected coastline"
 msgstr "接続されていない海岸線"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:150
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:151
 msgid "Unordered coastline"
 msgstr "順序付いていない海岸線"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:154
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:155
 msgid "Reversed coastline"
 msgstr "反転された海岸線"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:46
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:47
 msgid "Crossing ways."
 msgstr "交差するウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:47
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:48
 msgid ""
 "This test checks if two roads, railways, waterways or buildings crosses in "
 "the same layer, but are not connected by a node."
@@ -18435,121 +18509,121 @@ msgstr ""
 "このテストではふたつの道路、鉄道、水路あるいは建物が同じレイヤーでクロスはし"
 "ているがノードで接続されていないことをチェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:126
 msgid "Crossing buildings"
 msgstr "交差する建物"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:125
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:126
 msgid "Crossing ways"
 msgstr "交差するウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:55
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:208
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:56
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:209
 msgid "Duplicated nodes"
 msgstr "ノードの複製"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:56
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:57
 msgid "This test checks that there are no nodes at the very same location."
 msgstr "このテストは全く同じ位置にノードがないことをチェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:229
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:230
 msgid "Nodes at same position"
 msgstr "同位置のノード"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:63
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:83
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:64
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:84
 msgid "Duplicated ways"
 msgstr "複製したウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:64
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:65
 msgid ""
 "This test checks that there are no ways with same tags and same node "
 "coordinates."
 msgstr "このテストは同じタグで同じノード座標が無いことをチェックしています。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:168
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateWay.java:169
 msgid "Delete duplicate ways"
 msgstr "複製したウェイを削除"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicatedWayNodes.java:22
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicatedWayNodes.java:23
 msgid "Duplicated way nodes."
 msgstr "ウェイのノードの複製"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicatedWayNodes.java:23
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicatedWayNodes.java:24
 msgid "Checks for ways with identical consecutive nodes."
 msgstr "全く同じ連続するノードを持つウェイをチェック"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicatedWayNodes.java:36
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicatedWayNodes.java:37
 msgid "Duplicated way nodes"
 msgstr "ウェイのノードの複製"
 
 #. group "Relations"
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:35
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:36
 #: build/trans_presets.java:3187
 msgid "Multipolygon"
 msgstr "マルチポリゴン"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:36
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:37
 msgid "This test checks if multipolygons are valid"
 msgstr "このテストはマルチポリゴンが適切かどうかチェックします"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:104
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:105
 msgid "No outer way for multipolygon"
 msgstr "マルチポリゴンに外側のウェイがありません"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:117
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:118
 msgid "Multipolygon is not closed"
 msgstr "マルチポリゴンが閉じられていません"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:139
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:140
 msgid "Multipolygon inner way is outside."
 msgstr "マルチポリゴンの内側のウェイが外にあります"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:142
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:143
 msgid "Intersection between multipolygon ways"
 msgstr "マルチポリゴンウェイ間の交差"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:153
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:154
 msgid "No useful role for multipolygon member"
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:156
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/MultipolygonTest.java:157
 msgid "Non-Way in multipolygon."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NameMismatch.java:35
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NameMismatch.java:36
 msgid "Missing name:* translation."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NameMismatch.java:36
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NameMismatch.java:37
 msgid ""
 "This test finds multilingual objects whose 'name' attribute is not equal to "
 "some 'name:*' attribute and not a composition of 'name:*' attributes, e.g., "
 "Italia - Italien - Italy."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NameMismatch.java:46
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NameMismatch.java:47
 msgid "A name:* translation is missing."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NameMismatch.java:73
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NameMismatch.java:74
 msgid "A name is missing, even though name:* exists."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:24
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:62
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:25
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:63
 msgid "Nodes with same name"
 msgstr "同じ名前のノード"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:25
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/NodesWithSameName.java:26
 msgid "This test finds nodes that have the same name (might be duplicates)."
 msgstr "このテストは同じ名前のノードを探します（重複の可能性）。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:43
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:44
 msgid "Overlapping ways."
 msgstr "重なったウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:44
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:45
 msgid ""
 "This test checks that a connection between two nodes is not used by more "
 "than one way."
@@ -18557,73 +18631,73 @@ msgstr ""
 "このテストはふたつのノード間の接続がひとつ以上のウェイで使用されていないか"
 "チェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:107
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:108
 msgid "Overlapping areas"
 msgstr "重なった領域"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:112
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:113
 msgid "Overlapping highways (with area)"
 msgstr "道路の重なり(エリアも含む)"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:117
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:118
 msgid "Overlapping railways (with area)"
 msgstr "鉄道の重なり(エリアも含む)"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:122
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:123
 msgid "Overlapping ways (with area)"
 msgstr "ウェイの重なり(エリアも含む)"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:128
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:129
 msgid "Overlapping highways"
 msgstr "重なった道路"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:133
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:134
 msgid "Overlapping railways"
 msgstr "重なった鉄路"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:138
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/OverlappingWays.java:139
 msgid "Overlapping ways"
 msgstr "重なったウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:21
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:33
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:22
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:34
 msgid "Self-intersecting ways"
 msgstr "自身で交差するウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:22
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:23
 msgid ""
 "This test checks for ways that contain some of their nodes more than once."
 msgstr "このテストはノードのいくつかを一回以上含むウェイをチェックしています。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:38
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:86
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:39
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:87
 msgid "Similarly named ways"
 msgstr "同じような名前のウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:39
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SimilarNamedWays.java:40
 msgid ""
 "This test checks for ways with similar names that may have been misspelled."
 msgstr "このテストはスペルミスの可能性がある似た名前のウェイをチェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:152
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:153
 msgid "Properties checker :"
 msgstr "プロパティチェッカー："
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:153
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:154
 msgid "This plugin checks for errors in property keys and values."
 msgstr "このプラグインはプロパティのキーと値のエラーをチェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:285
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:286
 #, java-format
 msgid "Invalid tagchecker line - {0}: {1}"
 msgstr "タグチェッカーライン - {0}: {1}　が不正です。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:298
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:299
 #, java-format
 msgid "Invalid spellcheck line: {0}"
 msgstr "スペルチェック行 {0}が不正です"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:309
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:310
 #, java-format
 msgid ""
 "Could not access data file(s):\n"
@@ -18632,90 +18706,90 @@ msgstr ""
 "データファイルにアクセスできませんでした。:\n"
 "{0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:434
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:435
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:445
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:436
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:446
 msgid "Illegal tag/value combinations"
 msgstr "不正なタグ/値の組み合わせです"
 
 #. passing translated text also to original string, as we already
 #. translated the stuff before. Makes the ignore file language dependend.
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:460
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:461
 msgid "Painting problem"
 msgstr "色つけに問題発生"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:470
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:471
 #, java-format
 msgid "Key ''{0}'' invalid."
 msgstr "キー ''{0}''は不正です。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:475
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:476
 msgid "Tags with empty values"
 msgstr "値のないタグ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:481
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:482
 msgid "Invalid property key"
 msgstr "プロパティキーが不正です"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:487
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:488
 msgid "Invalid white space in property key"
 msgstr "プロパティのキーとして、不正なスペースが入っています。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:493
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:494
 msgid "Property values start or end with white space"
 msgstr "値で、空白文字を最初か最後にあるプロパティ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:499
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:500
 msgid "Property values contain HTML entity"
 msgstr "HTML書式の値を持つプロパティ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:526
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:527
 #, java-format
 msgid "Key ''{0}'' not in presets."
 msgstr "キー ''{0}'' はプリセットにはありません。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:527
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:528
 msgid "Presets do not contain property key"
 msgstr "プリセットはプロパティキーを含みません。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:549
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:550
 #, java-format
 msgid "Value ''{0}'' for key ''{1}'' not in presets."
 msgstr "キー ''{1}'' の値 ''{0}'' はプリセットにはありません。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:550
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:551
 msgid "Presets do not contain property value"
 msgstr "プリセットに含まれていない属性値です"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:562
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:563
 msgid "FIXMES"
 msgstr "FIXMES"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:609
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:610
 msgid "Check property keys."
 msgstr "プロパティのキーをチェック"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:610
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:611
 msgid "Validate that property keys are valid checking against list of words."
 msgstr "ワードのリストをチェックしてプロパティキーが正しいか検証。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:617
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:618
 msgid "Use complex property checker."
 msgstr "高度なプロパティチェッカーを使用"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:618
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:619
 msgid "Validate property values and tags using complex rules."
 msgstr "混合ルールを使用しているプロパティの値とタグを検証"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:639
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:640
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:662
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:678
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:641
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:663
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:679
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:680
 msgid "TagChecker source"
 msgstr "タグチェッカーのソース"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:702
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:703
 msgid ""
 "The sources (URL or filename) of spell check (see http://wiki.openstreetmap."
 "org/index.php/User:JLS/speller) or tag checking data files."
@@ -18723,140 +18797,140 @@ msgstr ""
 "スペルチェックのソース(URL またはファイル名)(http://wiki.openstreetmap.org/"
 "index.php/User:JLS/speller 参照) またはタグをチェックするデータファイル。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:703
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:704
 msgid "Add a new source to the list."
 msgstr "新しいソースをリストに追加"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:704
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:705
 msgid "Edit the selected source."
 msgstr "選択したソースの編集"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:705
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:706
 msgid "Delete the selected source from the list."
 msgstr "リストから選択した情報源を削除"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:707
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:708
 msgid "Data sources"
 msgstr "データソース"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:727
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:728
 msgid "Check property values."
 msgstr "プロパティの値をチェック"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:728
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:729
 msgid "Validate that property values are valid checking against presets."
 msgstr "プリセットをチェックしてプロパティの値が正しいか検証。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:735
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:736
 msgid "Check for FIXMES."
 msgstr "FIXMEをチェック"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:736
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:737
 msgid "Looks for nodes or ways with FIXME in any property value."
 msgstr "プロパティの値としてFIXMEをもつノードやウェイを検索"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:743
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:744
 msgid "Check for paint notes."
 msgstr "Check for paint notes."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:744
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:745
 msgid "Check if map painting found data errors."
 msgstr "地図塗りつぶしでデータエラーがあるかどうかチェック"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:751
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:752
 msgid "Use default data file."
 msgstr "既定のデータファイルを使用。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:752
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:753
 msgid "Use the default data file (recommended)."
 msgstr "既定のデータファイルを使用(推奨)"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:755
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:756
 msgid "Use default tag ignore file."
 msgstr "デフォルトタグを使用、ファイルを無視。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:756
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:757
 msgid "Use the default tag ignore file (recommended)."
 msgstr "デフォルトタグを使用、ファイルを無視（推奨）。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:759
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:760
 msgid "Use default spellcheck file."
 msgstr "既定のスペルチェックファイルを使用"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:760
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:761
 msgid "Use the default spellcheck file (recommended)."
 msgstr "既定のスペルチェックファイルを使用(推奨)"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:854
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:855
 msgid "Fix properties"
 msgstr "プロパティを修正"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:969
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:970
 msgid "Could not find element type"
 msgstr "要素タイプを見つけられませんでした。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:971
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:972
 msgid "Incorrect number of parameters"
 msgstr "パラメータの数が不正"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:989
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:990
 msgid "Could not find warning level"
 msgstr "警告レベルを見つけられませんでした"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:998
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:999
 #, java-format
 msgid "Illegal expression ''{0}''"
 msgstr "不正な表現\"{0}\""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:1002
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:1003
 #, java-format
 msgid "Illegal regular expression ''{0}''"
 msgstr "不正な正規表現： \"{0}\""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:34
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:35
 msgid "Unclosed Ways."
 msgstr "閉じていないウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:34
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:35
 msgid "This tests if ways which should be circular are closed."
 msgstr "これは循環しているべきウェイが閉じられているかチェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:76
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:77
 #, java-format
 msgid "natural type {0}"
 msgstr "自然のタイプ {0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:79
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:80
 #, java-format
 msgid "landuse type {0}"
 msgstr "土地利用のタイプ {0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:82
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:83
 #, java-format
 msgid "amenities type {0}"
 msgstr "アメニティのタイプ {0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:85
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:86
 #, java-format
 msgid "sport type {0}"
 msgstr "スポーツのタイプ {0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:88
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:89
 #, java-format
 msgid "tourism type {0}"
 msgstr "旅行関係のタイプ {0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:91
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:92
 #, java-format
 msgid "shop type {0}"
 msgstr "店のタイプ {0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:94
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:95
 #, java-format
 msgid "leisure type {0}"
 msgstr "レジャーのタイプ {0}"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:97
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:98
 #, java-format
 msgid "waterway type {0}"
 msgstr "水路のタイプ {0}"
@@ -18868,101 +18942,101 @@ msgstr "水路のタイプ {0}"
 #.
 #. <rule>
 #. <condition k="area" b="yes"/>
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:103
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:104
 #: build/trans_style.java:4299
 msgid "area"
 msgstr "領域"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:122
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:123
 msgid "Unclosed way"
 msgstr "閉じていないウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:60
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:61
 msgid "Unconnected ways."
 msgstr "つながっていないウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:61
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:62
 msgid "This test checks if a way has an endpoint very near to another way."
 msgstr ""
 "このテストはウェイが別のウェイのすぐ近くにエンドポイントを持っているかチェッ"
 "クしています。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:126
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:127
 msgid "Way end node near other highway"
 msgstr "ウェイは他の高速道路の近くでノードで終わっています。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:146
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:147
 msgid "Way end node near other way"
 msgstr "ウェイは他のウェイの近くでノードで終わっています。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:167
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:168
 msgid "Way node near other way"
 msgstr "ほかのウェイに近いウェイのノード"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:185
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnconnectedWays.java:186
 msgid "Connected way end node near other way"
 msgstr "他のウェイの近くに結合されたウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:36
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:69
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:37
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:70
 msgid "Untagged and unconnected nodes"
 msgstr "タグ付けされておらず、かつつながっていないノード"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:37
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:38
 msgid "This test checks for untagged nodes that are not part of any way."
 msgstr ""
 "このテストはどのウェイにも属さないタグ無しのノードをチェックしています。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:59
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:60
 msgid "Untagged, empty and one node ways."
 msgstr "タグ付けされておらず、空で一ノードのウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:60
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:61
 msgid "This test checks for untagged, empty and one node ways."
 msgstr ""
 "このテストはタグ無し、空、そして単一ノードのウェイをチェックしています。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:91
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:92
 msgid "Unnamed ways"
 msgstr "名前のないウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:93
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:94
 msgid "Unnamed junction"
 msgstr "名前の無いジャンクション"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:100
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:101
 msgid "Untagged ways"
 msgstr "タグ付いていないウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:105
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:106
 msgid "Empty ways"
 msgstr "空のウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:109
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:110
 msgid "One node ways"
 msgstr "ノードが一つのウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:34
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:35
 msgid "Wrongly Ordered Ways."
 msgstr "順序の誤ったウェイ"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:35
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:36
 msgid "This test checks the direction of water, land and coastline ways."
 msgstr "このテストは水域、陸地および海岸線ウェイの方向をチェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:69
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:70
 msgid "Reversed coastline: land not on left side"
 msgstr "海岸線の反転: 陸地が左側にありません。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:74
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:75
 msgid "Reversed water: land not on left side"
 msgstr "水域の反転： 陸地は左側にない"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:79
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/WronglyOrderedWays.java:80
 msgid "Reversed land: land not on left side"
 msgstr "陸地の反転：　陸地は左側にない"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/MultipleNameVisitor.java:74
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/util/MultipleNameVisitor.java:75
 #, java-format
 msgid "{0}, ..."
 msgstr "{0}, ..."
@@ -19137,23 +19211,23 @@ msgstr "正しいWMSまたはID がありません"
 msgid "Adjust the position of the selected WMS layer"
 msgstr "WMSレイヤーの位置を調整"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:172
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:173
 msgid "Please select the WMS layer to adjust."
 msgstr "調整するWMSレイヤーを選択してください。"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:177
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
 msgid "Select WMS layer"
 msgstr "WMSレイヤーを選択"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:179
 msgid "Start adjusting"
 msgstr "調整開始"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:197
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:198
 msgid "There are currently no WMS layer to adjust."
 msgstr "現在は調整するWMSレイヤーがありません。"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:198
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:199
 msgid "No layers to adjust"
 msgstr "調整するレイヤーがありません"
 
@@ -19162,7 +19236,7 @@ msgstr "調整するレイヤーがありません"
 msgid "Download WMS tile from {0}"
 msgstr "{0}からWMSタイルのダウンロード"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:116
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:117
 #, java-format
 msgid ""
 "Warning: The base URL ''{0}'' for a WMS service doesn't have a trailing '&' "
@@ -19171,18 +19245,18 @@ msgstr ""
 "警告: WMS サービス用のベースURL ''{0}'' には末尾の '&' または '?' がありませ"
 "ん。"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:117
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:118
 msgid ""
 "Warning: Fetching WMS tiles is likely to fail. Please check you preference "
 "settings."
 msgstr "警告: WMSタイルの取得に失敗したようです。設定をチェックしてください。"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:118
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:119
 #, java-format
 msgid "Warning: The complete URL is ''{0}''."
 msgstr "警告: 完全なURL は ''{0}' です。"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:139
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:140
 #, java-format
 msgid ""
 "The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
@@ -32187,9 +32261,6 @@ msgstr "Lodi - Italy"
 msgid "Sicily - Italy"
 msgstr "Sicily - Italy"
 
-#~ msgid "Gauss-Laborde Réunion 1947"
-#~ msgstr "ガウス-ラボルド会議1947"
-
 #~ msgid "Move"
 #~ msgstr "移動"
 
@@ -32520,9 +32591,6 @@ msgstr "Sicily - Italy"
 #~ msgid "error requesting update"
 #~ msgstr "アップデート要求時にエラー"
 
-#~ msgid "Lambert Zone 2 cache file (.2)"
-#~ msgstr "Lambert Zone 2 cache file (.2)"
-
 #~ msgid "Lambert Zone 3 cache file (.3)"
 #~ msgstr "Lambert Zone 3 cache file (.3)"
 
@@ -32543,9 +32611,6 @@ msgstr "Sicily - Italy"
 
 #~ msgid "Images with no exif position"
 #~ msgstr "exif位置のついていない画像"
-
-#~ msgid "Not yet tagged images"
-#~ msgstr "まだタグ付けされていない画像"
 
 #~ msgid "GPX Track loaded"
 #~ msgstr "GPXトラックが読み込まれました"
@@ -33469,6 +33534,9 @@ msgstr "Sicily - Italy"
 
 #~ msgid "<html>"
 #~ msgstr "<html>"
+
+#~ msgid "Gauss-Laborde Réunion 1947"
+#~ msgstr "ガウス-ラボルド会議1947"
 
 #~ msgid "Unexpected return value. Got {0}."
 #~ msgstr "予期せぬ値が返って来ました。 {0} を受けとりました。"

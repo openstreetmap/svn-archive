@@ -23,22 +23,93 @@
 
 <p>
 <a href="#chapter.introduction">Introduction</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.installation">How to Install</a><br/>                                                                                             
-<a href="#chapter.tutorial">Examples how to Use</a><br/>                                                                                                                    
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.scratch">Map a Bus Line from Scratch</a><br/>                                                                                     
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.parallel">Reuse a partly parallel line</a><br/>                                                                                   
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.legacy">Reuse an Old Relation</a><br/>                                                                                            
-<a href="#chapter.notions">Used Notions</a><br/>                                                                                                                            <a href="#chapter.stops_from_gpx">Create Stops from GPX</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.installation">How to Install</a><br/>
+<a href="#chapter.tutorial">Examples how to Use</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.map_waypoints">Map Stops from Waypoints</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.map_stopwatch">Map Stops with a Tracklog and a Stopwatch</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.map_tracklog">Map Stops with a Tracklog only</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.scratch">Map a Bus Line from Scratch</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.parallel">Reuse a partly parallel line</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.legacy">Reuse an Old Relation</a><br/>
+<a href="#chapter.notions">Used Notions</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.clipboard">clipboard</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.entry">entry</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.gpx_file">GPX file</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.itinerary">itinerary</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.line">line</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.mark">mark</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.network">network</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.node">node</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.oxmoa">Oxmoa scheme</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.bus_route">public transport route</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.relation">relation</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.route_type">route type</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.select">select</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.stop">stop</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.track">track</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#notion.way">way</a><br/>
+<a href="#chapter.stops_from_gpx">Create Stops from GPX</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.tracks">Tab <em>Tracks</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.tracks.list">List <em>Tracks in this GPX file</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.settings">Tab <em>Settings</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.settings.type">Combo box <em>Type of stops to add</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.settings.gps">Text field <em>Time on your GPS device</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.settings.stopwatch">Text field <em>Time on your stopwatch</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.settings.time_window">Text field <em>Time window</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.settings.threshold">Text field <em>Move Threshold</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.settings.suggest_stops">Button <em>Suggest Stops</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.trackstops">Tab <em>Stops</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.trackstops.list">List of created stops</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.trackstops.find">Button <em>Find</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.trackstops.show">Button <em>Show</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.trackstops.mark">Button <em>Mark</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.trackstops.detach">Button <em>Detach</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.trackstops.add">Button <em>Add</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.trackstops.delete">Button <em>Delete</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.trackstops.sort">Button <em>Sort</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.waypoints">Tab <em>Waypoints</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.waypoints.list">List of waypoints in the file</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.waypoints.find">Button <em>Find</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.waypoints.show">Button <em>Show</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.waypoints.mark">Button <em>Mark</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.waypoints.detach">Button <em>Detach</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.waypoints.add">Button <em>Enable</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.waypoints.delete">Button <em>Disable</em></a><br/>
 <a href="#chapter.route_patterns">Route patterns</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.overview">Tab <em>Overview</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.overview.list">List <em>Existing route patterns</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.overview.refresh">Button <em>Refresh</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.overview.new">Button <em>New</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.overview.delete">Button <em>Delete</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.overview.duplicate">Button <em>Duplicate</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.overview.reflect">Button <em>Reflect</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.tags">Tab <em>Tags</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.tags.required">List <em>Required tags</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.tags.common">List <em>Common tags</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.tags.additional">List <em>Additional tags</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.tags.add">Button <em>Add a new Tag</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.itinerary">Tab <em>Itinerary</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.itinerary.list">List of member ways</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.itinerary.find">Button <em>Find</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.itinerary.show">Button <em>Show</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.itinerary.mark">Button <em>Mark</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.itinerary.add">Button <em>Add</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.itinerary.delete">Button <em>Delete</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.itinerary.sort">Button <em>Sort</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.itinerary.reflect">Button <em>Reflect</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.stops">Tab <em>Stops</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.stops.list">List of member nodes</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.stops.find">Button <em>Find</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.stops.show">Button <em>Show</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.stops.mark">Button <em>Mark</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.stops.add">Button <em>Add</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.stops.delete">Button <em>Delete</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.stops.sort">Button <em>Sort</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.stops.reflect">Button <em>Reflect</em></a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#section.meta">Tab <em>Meta</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.meta.rightleft">Check box <em>Stops are possible</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.meta.maxdist">Text field <em>Maximum distance from route</em></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subsection.meta.suggest">Button <em>Suggest Stops</em></a><br/>
 </p>
 
 <!-- ==================================================================== //-->
@@ -75,6 +146,7 @@
 <li><a href="#section.map_tracklog">Map Stops with a Tracklog only</a>: simpler but less accurate than the before metioned methods.</li>
 </ul>
 
+
 <div>
 <a id="section.map_waypoints"/>
 <h3>Map Stops from Waypoints</h3>
@@ -84,7 +156,8 @@
 
 <p>When you are back at your computer, download the collected data from your GPS device into a GPX file: the exact steps depend on your particular device, but in general one of the programs <em>gpsbabel</em>, <em>mtkbabel</em> or <em>bt747</em> may help. They are explained on the respective pages of the wiki.</p>
 
-<p>Once you have created the GPX file, open JOSM. Now choose <em>Create Stops from GPX</em> in the menue <em>Public Transport</em>. This raises first a file selection dialogue. Select here your just generated GPX file. The plugin now generates one stop at every waypoint. Now go to the tab <em>Settings</em> and select the type of stop you want to create. Open tab <em>Waypoints</em> and click onto the table. Now you can use keyboard shortcuts to edit the stops: <em>Alt-N</em> will focus the stop of the current line in the table and activate the <em>name</em> cell of this line. <em>Alt-S</em>, <em>Alt-T</em> and <em>Alt-U</em> help you to select the proper type of shelter: <em>Alt-S</em> yields <em>Yes</em>, <em>Alt-T</em> yields <em>No</em> and <em>Alt-U</em> yields <em>implicit</em>. If you don't want to map the shelter, just use only <em>Alt-N</em>. The key combination <em>Alt-D</em> disables the current waypoint and deletes the node associated to it. Now process all waypoints and then close the dialogue. Or process all waypoints, mark the lines they belong to and click <em>Detach</em> - this has the same effect. Once you have pressed <em>Detach</em>, the nodes are released from the dialogue and complete. Congratulations.</p>
+<p>Once you have created the GPX file, open JOSM. Now choose <a href="#chapter.stops_from_gpx">Create Stops from GPX</a> in the menue <em>Public Transport</em>. This raises first a file selection dialogue. Select here your just generated GPX file. The plugin now generates one stop at every waypoint. Now go to the tab <a href="#section.settings">Settings</a> and select the type of stop you want to create. Open tab <a href="#section.waypoints">Waypoints</a> and click onto the table. Now you can use keyboard shortcuts to edit the stops: <em>Alt-N</em> will focus the stop of the current line in the table and activate the <a href="#subsection.waypoints.list">name</a> cell of this line. <em>Alt-S</em>, <em>Alt-T</em> and <em>Alt-U</em> help you to select the proper type of shelter: <em>Alt-S</em> yields <em>Yes</em>, <em>Alt-T</em> yields <em>No</em> and <em>Alt-U</em> yields <em>implicit</em>. If you don't want to map the shelter, just use only <em>Alt-N</em>. The key combination <em>Alt-D</em> disables the current waypoint and deletes the node associated to it. Now process all waypoints and then close the dialogue. Or process all waypoints, mark the lines they belong to and click <a href="#subsection.waypoints.detach">Detach</a> - this has the same effect. Once you have pressed <a href="#subsection.waypoints.detach">Detach</a>, the nodes are released from the dialogue and complete. Congratulations.</p>
+
 
 <div>
 <a id="section.map_stopwatch"/>
@@ -95,12 +168,21 @@
 
 <p>When you are back at your computer, download the collected data from your GPS device into a GPX file: the exact steps depend on your particular device, but in general one of the programs <em>gpsbabel</em>, <em>mtkbabel</em> or <em>bt747</em> may help. They are explained on the respective pages of the wiki.</p>
 
-<p>Once you have created the GPX file, open JOSM. Now choose <em>Create Stops from GPX</em> in the menu <em>Public Transport</em>. This raises first a file selection dialogue. Select here your just generated GPX file. Select in the tab <em>Tracks</em> the track to create stops from. Now go to the tab <em>Settings</em> and select the type of stop you want to create. Put the sync time of the GPS device and the stopwatch in the respective fields. Open tab <em>Waypoints</em> and click onto the table. Click the button <em>Add</em> unless you have sufficiently much lines for all your split times. Now enter your split times in the first column. Then proceed as explained in the last paragraph of the <a href="#section.map_waypoints">section before</a>.</p>
+<p>Once you have created the GPX file, open JOSM. Now choose <a href="#chapter.stops_from_gpx">Create Stops from GPX</a> in the menu <em>Public Transport</em>. This raises first a file selection dialogue. Select here your just generated GPX file. Select in the tab <a href="#section.tracks">Tracks</a> the track to create stops from. Now go to the tab <a href="#section.settings">Settings</a> and select the type of stop you want to create. Put the sync time of the GPS device and the stopwatch in the respective fields. Open tab <a href="#section.trackstops">Stops</a> and click onto the table. Click the button <a href="#subsection.trackstops.add">Add</a> unless you have sufficiently much lines for all your split times. Now enter your split times in the first column. Then proceed as explained in the last paragraph of the <a href="#section.map_waypoints">section before</a>.</p>
+
 
 <div>
 <a id="section.map_tracklog"/>
 <h3>Map Stops with a Tracklog only</h3>
 </div>
+
+<p>N.B.: This apporach requires the software to do some semi-automatic guesswork. Although I've tried several approaches, the software still produces annoyingly much false positive (e.g. halts at traffic lights) and might miss stops (in particular, if the bus has passed them with no stop). Thus you should try to use one of the other two methods (with or without waypoints) first or a combination of these methods. The method might be useful to map stops you have forgotten to record.</p>
+
+<p>You need a GPS logger, pen and paper. Record a GPS track while taking a ride on the route you want to map. Note the names of the bus stops you have passed and whether they have a shelter or not.</p>
+
+<p>When you are back at your computer, download the collected data from your GPS device into a GPX file: the exact steps depend on your particular device, but in general one of the programs <em>gpsbabel</em>, <em>mtkbabel</em> or <em>bt747</em> may help. They are explained on the respective pages of the wiki.</p>
+
+<p>Once you have created the GPX file, open JOSM. Now choose <a href="#chapter.stops_from_gpx">Create Stops from GPX</a> in the menu <em>Public Transport</em>. This raises first a file selection dialogue. Select here your just generated GPX file. Select in the tab <a href="#section.tracks">Tracks</a> the track to create stops from. Now go to the tab <a href="#section.settings">Settings</a> and select the type of stop you want to create. Put the sync time of the GPS device and the stopwatch in the respective fields. Click the button <a href="#subsection.settings.suggest_stops">Suggest stops</a> and open tab <a href="#section.trackstops">Stops</a>. If there are way too much or way too few stops or clusters of stops, adapt the values <a href="#subsection.settings.time_window">Time window</a> and <a href="#subsection.settings.threshold">Move Threshold</a> in the tab <a href="#section.settings">Settings</a>. Now enter in the second column the names of the stops: Mark a line in the table and press <em>Alt-N</em>. This focuses and marks the stop and makes its name editable. If the stop is a false positive, you can delete it with the button <a href="#subsection.trackstops.delete">Delete</a> or <em>Alt-D</em>. All keyboard shortcuts are explained in the <a href="#section.map_waypoints">waypoints section</a>.</p>
 
 <div>
 <a id="section.scratch"/>
@@ -109,7 +191,7 @@
 
 <p>The <a href="#notion.oxmoa">Oxmoa schema</a> consists of a relation per direction and contains the <a href="#notion.itinerary">itinerary</a> (the way a bus actually takes from its starting stop to its terminus) and the <a href="#notion.stop">stops</a> served by the bus. Roughly, you need to enter one direction of the itinerary by hand. The stops and the back direction can mostly be derived from that by the software.</p>
 
-<p>Download the area where your <a href="#notion.bus_route">bus route</a> takes place. Choose the menu item <em>Public Transport > Route patterns</em>. This opens a <a href="#section.overview">window</a> where you can see all <a href="#notion.bus_route">public transport routes</a> existing in the downloaded data set. Create a new relation by clicking on the button <a href="#subsection.overview.new">New</a>. Now change to the tab <a href="#section.tags">Tags</a> and set appropriate values for a least <em>route</em> (the type of public transport), <em>ref</em> (the line number) and <em>to</em> (the destination displayed).</p>
+<p>Download the area where your <a href="#notion.bus_route">bus route</a> takes place. Choose the menu item <a href="#chapter.route_patterns">Public Transport > Route patterns</a>. This opens a <a href="#section.overview">window</a> where you can see all <a href="#notion.bus_route">public transport routes</a> existing in the downloaded data set. Create a new relation by clicking on the button <a href="#subsection.overview.new">New</a>. Now change to the tab <a href="#section.tags">Tags</a> and set appropriate values for a least <a href="#notion.route_type">route</a> (the type of public transport), <em>ref</em> (the line number) and <em>to</em> (the destination displayed).</p>
 
 <p>Change to the tab <a href="#section.itinerary">Itinerary</a>. Now select on the map the first way that belongs to your <a href="#notion.bus_route">route</a> and press <a href="#subsection.itinerary.add">Add</a>. Mark the second item and press <a href="#subsection.itinerary.add">Add</a> again. You also can select several ways at once and click <a href="#subsection.itinerary.add">Add</a>. If your ways are added in the wrong order or with wrong roles, <a href="#notion.select">mark</a> them (click the first entry in the window, then shift-click the last entry in the window) and press <a href="#subsection.itinerary.sort">Sort</a>. If there appear one or more lines <em>[gap]</em>, then your ways don't fit together. If <a href="#subsection.itinerary.sort">sorting</a> won't solve that then there are gaps in your <a href="#notion.itinerary">itinerary</a> and you need to add the missing links or split ways (mark the way, the node where to split at and then use menu <em>Tools > Split Way</em>) if your bus service only partly uses them. To help you 
 with the tasks you can:</p>
@@ -246,13 +328,13 @@ In particular, the data model underlying this plug-in is as follows: Every <a hr
 </p>
 
 <p>
-<a id="notion.way"/>
-<strong>way</strong> - The respective OSM primitive. It is visible in the JOSM main window and a list of ways constitutes the <a href="#notion.itinerary">itinerary</a> of a <a href="#notion.bus_route">bus route</a>. A way has an orientation from its first <a href="#notion.node">node</a> to its last node. In JOSM, this is visualised by the direction of the arrows that represent the way. Thus, a vehicle can pass a way in or against its orientation. This is indicated by the role of the <a href="#notion.relation">relation</a> membership representing the <a href="#notion.itinerary">itinerary</a>: <em>forward</em> means that the vehicle passes the way in its orientation while <em>backward</em> means the opposite.
+<a id="notion.track"/>
+<strong>track</strong> - A data structure from GPX files: GPX files are organised as a collection of <a href="#notion.waypoint">waypoints</a> and tracks. While waypoints are just points, each track is a sequence of points representing an arbitrary motion. The track contains the information when the vehicle was where. Usually, a GPS logger starts a new track each time you put its power on.
 </p>
 
 <p>
-<a id="notion.track"/>
-<strong>track</strong> - A data structure from GPX files: GPX files are organised as a collection of <a href="#notion.waypoint">waypoints</a> and tracks. While waypoints are just points, each track is a sequence of points representing an arbitrary motion. The track contains the information when the vehicle was where. Usually, a GPS logger starts a new track each time you put its power on.
+<a id="notion.way"/>
+<strong>way</strong> - The respective OSM primitive. It is visible in the JOSM main window and a list of ways constitutes the <a href="#notion.itinerary">itinerary</a> of a <a href="#notion.bus_route">bus route</a>. A way has an orientation from its first <a href="#notion.node">node</a> to its last node. In JOSM, this is visualised by the direction of the arrows that represent the way. Thus, a vehicle can pass a way in or against its orientation. This is indicated by the role of the <a href="#notion.relation">relation</a> membership representing the <a href="#notion.itinerary">itinerary</a>: <em>forward</em> means that the vehicle passes the way in its orientation while <em>backward</em> means the opposite.
 </p>
 
 <!-- ==================================================================== //-->

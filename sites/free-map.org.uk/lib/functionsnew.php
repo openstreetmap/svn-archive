@@ -185,13 +185,13 @@ function searchby($table,$searchterm,$searchby,$db='mysql')
 	return $userdetails;
 }
 
-function upload_file($uploaddir="/home/www-data/uploads")
+function upload_file($fname,$uploaddir="/home/www-data/uploads")
 {
-	$userfile = $_FILES['userfile']['tmp_name'];
-	$userfile_name = $_FILES['userfile']['name'];
-	$userfile_size = $_FILES['userfile']['size'];
-	$userfile_type = $_FILES['userfile']['type'];
-	$userfile_error = $_FILES['userfile']['error'];
+	$userfile = $_FILES[$fname]['tmp_name'];
+	$userfile_name = $_FILES[$fname]['name'];
+	$userfile_size = $_FILES[$fname]['size'];
+	$userfile_type = $_FILES[$fname]['type'];
+	$userfile_error = $_FILES[$fname]['error'];
 
 	if ($userfile_error>0)
 	{

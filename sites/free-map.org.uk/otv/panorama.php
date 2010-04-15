@@ -36,11 +36,14 @@ if(mysql_num_rows($result)==1)
                 }
                 break;
             case "delete":
-                if(isset($_SESSION['admin']))
-                {
-                    mysql_query("DELETE FROM panoramas WHERE ID=$cleaned[id]");
-					unlink("/home/www-data/uploads/otv/${cleaned[id]}.jpg");
-                    echo "Deleted";
+                if( (isset($_SESSION['gatekeeper']) &&
+						$row['user']==$_SESSION['gatekeeper']) ||
+							isset($_SESSION['admin']))
+				{
+                    	mysql_query
+							("DELETE FROM panoramas WHERE ID=$cleaned[id]");
+						unlink("/home/www-data/uploads/otv/${cleaned[id]}.jpg");
+                    	echo "Deleted";
                 }
                 else
                 {
@@ -68,7 +71,7 @@ if(mysql_num_rows($result)==1)
                 else
                 {
                     header("Location: ".
-                        "/otv/login.php?redirect=".
+                        "/otv/user.php?action=login&redirect=".
 						"/otv/panorama/$cleaned[id]/moderate");
                 }
                 break;

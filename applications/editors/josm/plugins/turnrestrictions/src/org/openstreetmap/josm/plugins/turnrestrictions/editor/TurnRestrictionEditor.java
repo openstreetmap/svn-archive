@@ -751,7 +751,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     class DeleteAction extends AbstractAction implements PropertyChangeListener{
     	public DeleteAction() {
     		putValue(NAME, tr("Delete"));
-    		putValue(SHORT_DESCRIPTION, tr(("Delete this turn restriction")));
+    		putValue(SHORT_DESCRIPTION, tr("Delete this turn restriction"));
     		putValue(SMALL_ICON, ImageProvider.get("dialogs", "delete"));
     		updateEnabledState();
     	}
@@ -781,7 +781,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     class SelectAction extends AbstractAction implements PropertyChangeListener{
     	public SelectAction() {
     		putValue(NAME, tr("Select"));
-    		putValue(SHORT_DESCRIPTION, tr(("Select this turn restriction")));
+    		putValue(SHORT_DESCRIPTION, tr("Select this turn restriction"));
     		putValue(SMALL_ICON, ImageProvider.get("dialogs", "select"));
     		updateEnabledState();
     	}
@@ -807,7 +807,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     class ZoomToAction extends AbstractAction implements PropertyChangeListener{
     	public ZoomToAction() {
     		putValue(NAME, tr("Zoom to"));
-    		putValue(SHORT_DESCRIPTION, tr(("Activate the layer this turn restriction belongs to and zoom to it")));
+    		putValue(SHORT_DESCRIPTION, tr("Activate the layer this turn restriction belongs to and zoom to it"));
     		putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale", "data"));
     		updateEnabledState();
     	}

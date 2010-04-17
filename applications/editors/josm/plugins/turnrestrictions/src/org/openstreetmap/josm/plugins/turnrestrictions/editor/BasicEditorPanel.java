@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -49,7 +51,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 		
 		// the editor for selecting the 'from' leg
 	    gc.insets = new Insets(0,0,5,5);	
-	    add(new JLabel("Type:"), gc);
+	    add(new JLabel(tr("Type:")), gc);
 	    
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;
@@ -59,7 +61,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 	    gc.gridx = 0;
 	    gc.gridy = 1;	
 	    gc.weightx = 0.0;
-	    add(new JLabel("From:"), gc);
+	    add(new JLabel(tr("From:")), gc);
 	    
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;
@@ -70,7 +72,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 	    gc.gridy = 2;
 		gc.weightx = 0.0;
 	    gc.insets = new Insets(0,0,5,5);	
-	    add(new JLabel("To:"), gc);
+	    add(new JLabel(tr("To:")), gc);
 	    
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;
@@ -81,7 +83,7 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
 	    gc.gridy = 3;
 		gc.weightx = 0.0;
 	    gc.insets = new Insets(0,0,5,5);	
-	    add(lblVias = new JLabel("Vias:"), gc);
+	    add(lblVias = new JLabel(tr("Vias:")), gc);
 	    
 	    gc.gridx = 1;
 	    gc.weightx = 1.0;

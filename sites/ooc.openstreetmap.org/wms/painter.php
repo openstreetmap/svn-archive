@@ -58,7 +58,10 @@ class GDPainter extends Painter
 
 	function imageCopyResized($src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h)
 	{
-		imagecopyresized($this->im,$src_image->im, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+		if(USE_RESAMPLING)
+			imagecopyresized($this->im,$src_image->im, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+		else
+			imagecopyresampled($this->im,$src_image->im, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 	}
 
 	function getImageHeight()

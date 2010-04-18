@@ -22,5 +22,6 @@ define ('TILE_HEIGHT', 256);
 
 define ('TRUETYPE_FONT','data/luxisr.ttf');
 define ('FONT_MARGIN',2);
+define ('USE_RESAMPLING',1);
 
 ?>

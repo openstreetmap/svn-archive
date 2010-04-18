@@ -1,5 +1,5 @@
 <?php 
-/* WMS Tile Server
+/* WMS Tile Server, original code by TimSC
 
 	JP80 29/10/09	- Added HTTP parameter source=OS1|OS7|NPE to choose the map
 					- Added auto zoom selection
@@ -9,6 +9,9 @@
 	Note that JOSM or WMS plugin is quite eager to cache things - can make debugging faults a bit
 	confusing. Better to test with a browser directly:
 	map.php?source=os1&bbox=-0.6550125,51.7603802,-0.6478145,51.7675781&srs=EPSG:4326&width=500&height=499
+
+	TimSC 13/04/10   - Improvements for handing missing tiles and different zoom levels for OS street view
+                           and other small fixes, resampling of image, etc
 */
 
 try
@@ -47,7 +50,7 @@ switch($source)
 		$zoom_max = NPE_ZOOM_MAX;
 		$zoom_min = NPE_ZOOM_MIN;
 		break;
-
+	
 	default:
 		$mapFolder = DEFAULT_MAP_FOLDER;
 		$zoom_max = DEFAULT_ZOOM_MAX;
@@ -84,7 +87,7 @@ if ($debug) {
 
 
 $painter = new GDPainter();
-$painter->createImage($width, $height, 0, 0, 0);
+$painter->createImage($width, $height, 255, 0, 255);
 
 //TrySetImageFormat($image,'jpg',1);
 //$image->setCompressionQuality(40);
@@ -167,6 +170,10 @@ do 	{
 	$zoom_level--;
 	
 	} while (1);
+
+$countDrawnTiles = 0;
+while($countDrawnTiles == 0)
+{
 
 if ($debug) echo "..Using z".$zoom_level."<br>";
 
@@ -253,11 +260,20 @@ for($i=$tileTRY;$i<=$tileBLY;$i += 1)
 				$red=imagecolorallocate($painter->im, 255, 0, 0);
 				$painter->drawText(50,50,30,"z".(17-$zoom).$addt, $red);
 				}
+
+			$countDrawnTiles ++;
 			
 		}
 	}
 }
 
+//If no tiles have been drawn, back off a zoom level and hope we find some files
+if ($countDrawnTiles == 0)
+	$zoom_level -- ;
+if ($zoom_level < $zoomMinOnServer)
+	$countDrawnTiles = -1;
+
+}
 if ($debug) exit();
 
 header( "Content-Type: image/png" );

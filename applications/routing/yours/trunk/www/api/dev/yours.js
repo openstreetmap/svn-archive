@@ -23,6 +23,8 @@ var nominatimUrl = "transport.php?url=http://nominatim.openstreetmap.org/";
 
 var reverseNamefinderUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/rev_namefinder/&";
 
+var routeCache = {};
+
 // Create OpenLayers Control Click handler
 OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 		defaultHandlerOptions: {
@@ -56,13 +58,7 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 		 */
 		trigger: function(e) {
 			var location = this.map.getLonLatFromViewPortPx(e.xy);
-			if (MyFirstWayPoint !== undefined) {
-				MyFirstWayPoint.name = undefined;
-				
-				MyFirstWayPoint.draw(location);
-			//route.draw();
-			}
-		// Maybe add a new marker by default if none selected?
+			this.route.updateWaypoint("selected", location);
 		}
 	}
 );
@@ -244,7 +240,7 @@ Yours.NominatimLookup = function(lookupMethod, value, wp, map, callback) {
 		break;
 	case Yours.lookupMethod.coordToName:
 		if (wp !== undefined) {
-			point = wp.marker.lonlat.clone();
+			point = wp.lonlat.clone();
 			newPoint = point.transform(map.projection, map.displayProjection);
 			parameters = "lon=" + newPoint.lon + "&lat=" + newPoint.lat;
 			$.get(nominatimUrl + "reverse/&" + parameters, {}, 
@@ -383,7 +379,7 @@ Yours.NameFinder = function(xml, wp, map) {
 			}
 			if (responseLonLat !== undefined) {
 				transformedLonLat = responseLonLat.transform(map.displayProjection, map.projection);
-				wp.draw(transformedLonLat);
+				wp.route.updateWaypoint(wp.position, transformedLonLat, wp.name);
 				map.setCenter(transformedLonLat);
 				return 'OK';
 			}
@@ -447,7 +443,7 @@ Yours.Nominatim = function(xml, wp, map) {
 			if (responseLonLat !== undefined) {
 				var transformedLonLat = new OpenLayers.LonLat();
 				transformedLonLat = responseLonLat.transform(map.displayProjection, map.projection);
-				wp.draw(transformedLonLat);
+				wp.route.updateWaypoint(wp.position, transformedLonLat, wp.name);
 				map.setCenter(transformedLonLat);
 				return 'OK';
 			} else {
@@ -487,9 +483,22 @@ Yours.status = {
 };
 	
 /**
- *	Class: Yours.Route
+ * Class: Yours.Route
+ *
+ * Parameters:
+ *   Waypoints - Array containing the waypoints of the route
+ *   Start - The 'from' waypoint (Waypoints[0])
+ *   End - The 'to' waypoint (Waypoints[Waypoints.lenght - 1])
+ *   Selected - The currently selected waypoint
+ *   Segments - The route segments
+ *   distance - The total distance of the route
+ *   nodes - The number of nodes of the route
+ *   completeRoute - True if a complete route is available, false if only a partial or no route is available
+ *   autoroute - True if changing waypoints should automatically start route calculation, false otherwise
+ *   map - <OpenLayers.Map> Map on which the route is drawn
+ *   Layer - <OpenLayers.Layer.Vector> Layer on which the route is drawn
+ *   Markers - <OpenLayers.Layer.Vector> Layer on which the markers are drawn
  */
-
 Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 	/**
 	 * Constructor: new Yours.Route(map)
@@ -531,6 +540,13 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 	var self = this;
 	this.callback = customRouteCallback;
 	this.waypointcallback = customWaypointCallback;
+
+	this.completeRoute = false;
+	this.autoroute = true;
+
+	// Used during rendering to store the state
+	this.rendering = 0;
+	this.renderQuiet = false;
 	
 	/**
 	 * Property: Yours.Route.parameters
@@ -633,7 +649,7 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 					this.Waypoints.splice(wp.position, 0, wp);
 
 					// Update the position of the end node, since the array has grown.
-					this.Waypoints[this.Waypoints.length - 1].position = this.Waypoints.length;
+					this.Waypoints[this.Waypoints.length - 1].position = this.Waypoints.length - 1;
 					this.End = this.Waypoints[this.Waypoints.length - 1];
 				} else {
 					wp = this.Waypoints[id];
@@ -642,6 +658,172 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 		
 		return wp;
 	};
+	
+	/**
+	 * Function: Yours.Route.addWaypoint(id)
+	 *
+	 * Parameters:
+	 *   id - (optional) { integer } or { string } "from" or "to"
+	 *        describing what waypoint to remove from the <Waypoints> collection
+	 *
+	 * Returns:
+	 *   <Yours.Waypoint> - The Waypoint added
+	 */
+	this.addWaypoint = function(id) {
+		if (id == "from") {
+			id = 0;
+		} else if (id == "to" || id === undefined) {
+			id = this.Waypoints.length;
+		}
+		// Create the waypoint
+		var waypoint = new Yours.Waypoint(this);
+		waypoint.type = "via";
+		// Add the waypoint to the array of Waypoints
+		this.Waypoints.splice(id, 0, waypoint);
+		// If the 'from' or 'to' is added, correct the types
+		switch (id) {
+			case 0:
+				this.Start.type = "via";
+				this.Start = this.Waypoints[0];
+				this.Start.type = "from";
+				break;
+			case this.Waypoints.length - 1:
+				this.End.type = "via";
+				this.End.draw(); // Redraw using 'via' marker
+				this.End = this.Waypoints[this.Waypoints.length - 1];
+				this.End.type = "to";
+				break;
+		}
+		// Renumber all waypoints starting with the inserted one
+		for (var i = id; i < this.Waypoints.length; i++) {
+			var wp = this.Waypoints[i];
+			wp.position = i;
+			wp.draw();
+		}
+		// Return inserted waypoint
+		return waypoint;
+	};
+	
+	/**
+	 * Function: Yours.Route.removeWaypoint(id)
+	 *
+	 * Parameters:
+	 *   id - (optional) { integer } or { string } "from" or "to"
+	 *        describing what waypoint to add to the <Waypoints> collection
+	 *
+	 */
+	this.removeWaypoint = function(id) {
+		switch (id) {
+			case "from":
+			case 0:
+				this.Start.destroy();
+				if (this.Waypoints.length > 2) {
+					// Delete waypoint
+					this.Waypoints.splice(0, 1);
+					// Make first waypoint 'from'
+					this.Start = this.Waypoints[0];
+					this.Start.type = "from";
+					// Renumber all further waypoints
+					for (var i = 0; i < this.Waypoints.length; i++) {
+						var wp = this.Waypoints[i];
+						wp.position = i;
+						wp.draw();
+					}
+				}
+				break;
+			case "to":
+			case this.Waypoints.length - 1:
+				this.End.destroy();
+				if (this.Waypoints.length > 2) {
+					// Delete waypoint
+					this.Waypoints.splice(this.Waypoints.length - 1, 1);
+					// Make last waypoint 'to'
+					this.End = this.Waypoints[this.Waypoints.length - 1];
+					this.End.type = "to";
+					this.End.draw();
+				}
+				break;
+			default:
+				// Delete waypoint
+				this.Waypoints[id].destroy();
+				this.Waypoints.splice(id, 1);
+				// Renumber all further waypoints
+				for (var i = id; i < this.Waypoints.length; i++) {
+					var wp = this.Waypoints[i];
+					wp.position = i;
+					wp.draw();
+				}
+		}
+		// Replan route
+		if (this.autoroute) {
+			this.renderQuiet = true;
+			this.draw();
+		}
+	};
+
+	/**
+	 * Function: Yours.Route.updateWaypoint(id, lonlat, name)
+	 *
+	 * Parameters:
+	 *   id - (optional) { integer } or { string } "from", "to" or "selected"
+	 *        describing which waypoint to update
+	 *   lonlat - <OpenLayers.LonLat> object holding the location of this waypoint
+	 *   name - (optional) The name representing the given location
+	 */
+	this.updateWaypoint = function(id, lonlat, name) {
+		var wp;
+		switch (id) {
+			case "from":
+				wp = this.Start;
+				break;
+			case "to":
+				wp = this.End;
+				break;
+			case "selected":
+				wp = this.Selected;
+				break;
+			default:
+				wp = this.Waypoints[id];
+		}
+		wp.name = name;
+		wp.lonlat = lonlat;
+		wp.draw();
+		if (this.autoroute) {
+			this.renderQuiet = true;
+			this.draw();
+		}
+	}
+
+	/**
+	 * Function: Yours.Route.selectWaypoint(id)
+	 *
+	 * Parameters:
+	 *   id - (optional) { integer } or { string } "from", "to"
+	 *        describing which waypoint to select
+	 */
+	this.selectWaypoint = function(id) {
+		switch (id) {
+			case "from":
+				this.Selected = this.Start;
+				break;
+			case "to":
+				this.Selected = this.End;
+				break;
+			case undefined:
+				this.Selected = undefined;
+				break;
+			default:
+				this.Selected = this.Waypoints[id];
+		}
+		// Setting the cursor on the layer only does not work, so the cursor is set on the container of all layers
+		if (this.Selected === undefined) {
+			$(this.Markers.div.parentNode).css("cursor",  "default");
+			this.controls.click.deactivate();
+		} else {
+			this.controls.click.activate();
+			$(this.Markers.div.parentNode).css("cursor",  "url(" + this.Selected.markerUrl() + ") 9 34, pointer");
+		}
+	}
 
 	/*
 		Constructor: reset
@@ -652,30 +834,48 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 		if (OpenLayersMap !== undefined) {
 			this.map = OpenLayersMap;
 			this.Layer = new OpenLayers.Layer.Vector("Route");
-			this.Markers = new OpenLayers.Layer.Markers("Markers",
-				{
-					projection: this.map.displayProjection,
-					'calculateInRange':	function() {
-						return true;
+			this.Markers = new OpenLayers.Layer.Vector("Markers", {
+				styleMap: new OpenLayers.StyleMap({
+					"default": new OpenLayers.Style({
+						graphicOpacity: 0.75,
+						externalGraphic: '${image}',
+						graphicWidth: 20,
+						graphicHeight: 34,
+						graphicXOffset: -10,
+						graphicYOffset: -34
+					}),
+					"select": new OpenLayers.Style({
+						graphicOpacity: 1,
+						cursor: 'move'
+					})
+				})
+			});
+			this.map.addLayers([this.Layer, this.Markers]);
+			var route = this;
+			this.controls = {
+				click: new OpenLayers.Control.Click({
+					route: this
+				}),
+				drag: new OpenLayers.Control.DragFeature(this.Markers, {
+					onComplete: function(feature, pixel) {
+						// The pixel coordinate represents the mouse pointer, which is not the center of the image,
+						// but the location where the user picked the image. Therefore, we use the geometry of the
+						// image, which is the actual image location (respecting any offsets defining its base)
+						var location = new OpenLayers.LonLat(feature.geometry.x, feature.geometry.y);
+						var wp = feature.attributes.waypoint;
+						wp.route.updateWaypoint(wp.position, location);
 					}
-				}
-			);
-			this.map.addLayers([this.Layer,this.Markers]);
-			var control = new OpenLayers.Control.SelectFeature(this.Layer,
-				{
-					clickout: true,
-					toggle: false,
-					multiple: false,
-					hover: false,
-					toggleKey: "ctrlKey", 			// ctrl key removes from selection
-					multipleKey: "shiftKey"			// shift key adds to selection
-				}
-			);
-
-			this.map.addControl(control);
-			var click = new OpenLayers.Control.Click();
-			this.map.addControl(click);
-			click.activate();
+				}),
+				select: new OpenLayers.Control.SelectFeature(this.Markers, {hover: true})
+			};
+			// Add control to handle mouse clicks for placing markers
+			this.map.addControl(this.controls.click);
+			// Add control to handle mouse drags for moving markers
+			this.map.addControl(this.controls.drag);
+			this.controls.drag.activate();
+			// Add control to show which marker we point at
+			this.map.addControl(this.controls.select);
+			this.controls.select.activate();
 		}
 		if (this.map === undefined) {
 			error = "Yours.Route should be initialized with a map";
@@ -705,47 +905,41 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 	this.clear = function() {
 		this.Waypoints = [];
 		this.Segments = [];
-		this.Markers.clearMarkers();
+		this.Markers.destroyFeatures();
 		this.distance = 0;
 		this.reset();
 	};
 		
 	/*
-		Function: draw
-
-		Try to draw a route with the Waypoints[] collection
-
-		Parameters:
-
-		none
-
-	*/
+	 * Function: draw
+	 * Try to draw a route with the Waypoints[] collection
+	 */
 	this.draw = function() {
 		// Clear a previous route result
 		this.Layer.destroyFeatures();
 		this.Segments = [];
 		
-		if (this.Waypoints.length > 2) {
-			//determine the numer of segments..
-			self.callback(Yours.status.starting, "");
-			var numsegs = this.Waypoints.length -1;
-			//loop the number of segments, -1, no segment required from the to node.
-			for (var i = 0; i < self.Waypoints.length - 1; i++) {
-				self.Segments[i] = new Yours.Segment(this);
-				self.callback(Yours.status.segmentStarted, i+1);
-				self.Segments[i].Start = self.Waypoints[ i ];
-				self.Segments[i].End = self.Waypoints[ i + 1 ];
-				self.Segments[i].draw(self.callback);
-			}
-		} else {
-			if ( this.Start.lonlat !== undefined && this.End.lonlat !== undefined) {
-				/* simple route, start and finish only */
-				self.Layer.destroyFeatures();
-				self.Segments[0] = new Yours.Segment(self);
-				self.callback(Yours.status.starting, "");
-				self.Segments[0].Start = self.Start;
-				self.Segments[0].End = self.End;
-				self.Segments[0].draw(self.callback);
+		// Determine the numer of segments.
+		this.callback(Yours.status.starting, "");
+		var numsegs = this.Waypoints.length - 1;
+		this.rendering = numsegs;
+		this.completeRoute = false;
+		// Loop the segments except the last one; no segment required from the to node.
+		for (var i = 0; i < this.Waypoints.length - 1; i++) {
+			this.Segments[i] = new Yours.Segment(this);
+			if (this.Waypoints[i].lonlat === undefined || this.Waypoints[i + 1].lonlat === undefined) {
+				if (this.renderQuiet) {
+					// Finish silently
+					this.rendering--;
+				} else {
+					// Finish with error
+					this._segmentError(this.Segments[i], 'No begin or end point specified!');
+				}
+			} else {
+				this.callback(Yours.status.segmentStarted, i + 1);
+				this.Segments[i].Start = this.Waypoints[i];
+				this.Segments[i].End = this.Waypoints[i + 1];
+				this.Segments[i].draw(this.callback);
 			}
 		}
 	};
@@ -762,7 +956,7 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 	*/
 	this.reverse = function() {
 		if (this.Segments.length > 0) {
-			//remove all the markers from the marker layer
+			//remove all the markers
 			this.Layer.destroyFeatures();
 			this.Waypoints.reverse();
 			for (var i=0, len=this.Waypoints.length; i<len; ++i ) {
@@ -776,31 +970,34 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 				} else {
 					this.Waypoints[i].type = "via";
 				}
-				this.Waypoints[i].draw(this.Waypoints[i].lonlat);
+				this.Waypoints[i].draw();
 			}
 			this.draw();
 		}
 	};
 	
 	this._segmentFinished = function(segment) {
-		bFinished = true;
-		this.distance = 0;
-		this.nodes = 0;
-		for (i = 0; i < this.Segments.length; i++) {
-			if (this.Segments[i].distance === undefined) {
-				bFinished = false;
-				break;
+		this.rendering--;
+		if (this.rendering == 0) {
+			this.distance = 0;
+			this.nodes = 0;
+			this.completeRoute = true;
+			for (i = 0; i < this.Segments.length; i++) {
+				if (this.Segments[i].distance === undefined) {
+					this.completeRoute = false;
+				} else {
+					this.distance += this.Segments[i].distance;
+					this.nodes += this.Segments[i].nodes;
+				}
 			}
-			this.distance += this.Segments[i].distance;
-			this.nodes += this.Segments[i].nodes;
-		}
-		if (bFinished === true) {
-			self.callback(Yours.status.routeFinished, "");
+			self.callback(Yours.status.routeFinished, {quiet: this.renderQuiet});
+			this.renderQuiet = false; // Set to false for next render
 		}
 	};
 	
 	this._segmentError = function(segment, error) {
 		self.callback(Yours.status.error, "Could not finish segment because:\n\n"+error);
+		this._segmentFinished(segment);
 	};
 	
 	// Initialize the map
@@ -812,90 +1009,83 @@ Yours.Route = function(map, customRouteCallback, customWaypointCallback) {
 };
 
 /*
-		 Class: Yours.Waypoint
+		Class: Yours.Waypoint
 
-		 Parameters:
-		   type - Type of waypoint, can be one of from/to/via
-		   label - Label returned from namefinder or entered by user
-		   position - Position of the waypoint in the route sequence.
-			   0 = startpoint
-			   highest val = endpoint
-		  lonlat -OpenLayers.LonLat object holding the waypoints position
+		Parameters:
+		  type - Type of waypoint, can be one of from/to/via
+		  name - Label returned from namefinder or entered by user
+		  position - Position of the waypoint in the route sequence.
+			  0 = startpoint,
+			  highest val = endpoint
+		  lonlat - <OpenLayers.LonLat> object holding the location of this waypoint
+		  marker - <OpenLayers.Marker> object holding the marker representing this waypoint
 	 */
 Yours.Waypoint = function(ParentRoute)
 {
 	this.route = ParentRoute;
 	var self = this;
+
 	/*
-		Function: draw
-
-		Draw a Waypoint on the Markers Layer
-
-		Parameters:
-
-		OpenLayers.LonLat
-
-	*/
-	this.draw = function(lonlat) {
-		this.destroy();
-		if(lonlat === undefined) {
-			lonlat = this.lonlat;
-		} else {
-			this.lonlat = lonlat;
-		}
-		var marker_url;
+	 * Function: markerUrl
+	 * Get the url of the marker belonging to this waypoint.
+	 */
+	this.markerUrl = function() {
 		switch (this.type) {
 			case 'via':
-				marker_url= 'markers/number'+this.position+'.png';
-				break;
+				return 'markers/number' + this.position + '.png';
 			case 'from':
-				marker_url= 'markers/route-start.png';
-				break;
+				return 'markers/route-start.png';
 			case 'to':
-				marker_url= 'markers/route-stop.png';
-				break;
+				return 'markers/route-stop.png';
 			default:
-				marker_url= 'markers/marker-yellow.png';
-				break;
+				return 'markers/marker-yellow.png';
 		}
-		/* Waypoint symbol placement */
-		var size = new OpenLayers.Size(20,34);
-		var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-		var icon = new OpenLayers.Icon(marker_url, size, offset);
+	}
 
-		/* Create a marker and add it to the marker layer */
-		this.marker = new OpenLayers.Marker(lonlat.clone(), icon);
+	/*
+	 * Function: draw
+	 *
+	 * Draw a Waypoint on the Vector Layer. If no lonlat is available, the
+	 * Waypoint will not be drawn.
+	 */
+	this.draw = function() {
+		if (this.lonlat !== undefined) {
+			// Delete old marker, if available
+			if (this.marker !== undefined) {
+				this.route.Markers.removeFeatures([this.marker]);
+				this.marker.destroy();
+			}
 
-		this.route.Markers.addMarker(this.marker);
-		
-		
-		/* Update the marker's location information */
-		
-		if (this.name === undefined) {
-			var that = this;
-			Yours.NominatimLookup(Yours.lookupMethod.coordToName, "", that, this.route.map, this.update);
+			/* Create a marker and add it to the marker layer */
+			this.marker = new OpenLayers.Feature.Vector(
+				new OpenLayers.Geometry.Point(this.lonlat.lon, this.lonlat.lat),
+				{waypoint: this, image: this.markerUrl()}
+			);
+
+			this.route.Markers.addFeatures([this.marker]);
+			
+			/* Update the marker's location information */
+			if (this.name === undefined) {
+				var that = this;
+				Yours.NominatimLookup(Yours.lookupMethod.coordToName, "", that, this.route.map, this.update);
+			}
 		}
-		
-		
 	};
 
 	/*
 		Function: destroy
 
-		Remove Waypoint from the Markers Layer and destroy it's location information
+		Remove Waypoint from the Vector Layer and destroy it's location information
 
 	*/
 	this.destroy = function() {
 		if (this.marker !== undefined) {
-			this.route.Markers.removeMarker(this.marker);
+			this.route.Markers.removeFeatures(this.marker);
 			this.marker.destroy();
-			this.marker= undefined;
+			this.marker = undefined;
 			this.lonlat = undefined;
+			this.name = undefined;
 		}
-	};
-	
-	this.setName = function(theName) {
-		this.thwname = theName;
 	};
 	
 	this.update = function (result) {
@@ -916,54 +1106,70 @@ Yours.Waypoint = function(ParentRoute)
 		end - a Waypoint Object that initializes the end of the segment
 		distance - the total length of this segment
 		parameters - get the routing parameters from the gui
-		url - url to have a gosmore instance return the route
+		search - search part of the url to have a gosmore instance return the route
 		permalink - the permalink for this segment
+		feature - the feature representing this segment
+		nodes - the number of components of the feature
 */
 Yours.Segment = function(ParentRoute) {
 	var self = this;
 	this.route = ParentRoute;
-	/*
-		Function: create
 
-		Create a route from the kml file returned from the gosmore service
-	*/
-	this.create = function(xml) {
+	/*
+	 * Function: create
+	 * Create a route
+
+	 * Parameters:
+	 *   distance - the total length of this segment
+	 *   feature - the feature representing this segment
+	 */
+	this.create = function(distance, feature) {
+		this.distance = distance;
+		this.feature = feature;
+		this.nodes = this.feature[0].geometry.components.length;
+		if (this.route.Layer !== undefined) {
+			this.route.Layer.addFeatures(this.feature);
+		}
+	};
+
+	/*
+	 * Function: parseKML
+	 * Create a route from the kml file returned from the gosmore service
+	 *
+	 * Parameters:
+	 *   xml - The xml returned by the server
+	 */
+	this.parseKML = function(xml) {
 		if (xml.childNodes.length > 0) {
-			// Check to make sure that kml is returned..
+			// Check to make sure that kml is returned.
 			switch (xml.childNodes[0].nodeName) {
 				case "kml":
 					var distance = xml.getElementsByTagName('distance')[0].textContent;
 					if(distance === 0 || distance === undefined) {
-						self.route._segmentError(self, 'Segment has no length, or kml has no distance attribute');
-						//return 'Segment has no length, or kml has no distance attribute';
+						this.route._segmentError(this, 'Segment has no length, or kml has no distance attribute');
 					} else {
 						var options = {};
 						options.externalProjection = this.route.map.displayProjection;
 						options.internalProjection = this.route.map.projection;
 						var kml = new OpenLayers.Format.KML(options);
-						this.feature = kml.read(xml);
-						//alert(this.feature);
-						if (typeof(this.route.Layer) != 'undefined') {
-							this.route.Layer.addFeatures(this.feature);
-						}
-						this.distance = parseFloat(distance);
-						this.nodes = this.feature[0].geometry.components.length;
-						return 'Segment is of length:' + distance;
+						var distance = parseFloat(distance);
+						var feature = kml.read(xml);
+						this.create(distance, feature);
+						this.route._segmentFinished(this);
+						// Add to cache
+						routeCache[this.search] = {distance: distance, feature: feature};
 					}
 					break;
-			case "error":
-				var error = xml.getElementsByTagName('error')[0].textContent;
-				self.route._segmentError(self, error);
-				break;
-			default:
-				self.route._segmentError(self, 'Response is no kml, segment cannot be constructed');
-				//return 'Response is no kml, segment cannot be constructed';
-				break;
+				case "error":
+					var error = xml.getElementsByTagName('error')[0].textContent;
+					this.route._segmentError(this, error);
+					break;
+				default:
+					this.route._segmentError(this, 'Response is no kml, segment cannot be constructed');
+					break;
 			}
 		} else {
-			//alert(xml+'3');
-			self.route._segmentError(self, 'No segment found!');
-			//return 'No segment found!';
+			this.route._segmentError(this, 'No segment found!');
 		}
 	};
 
@@ -977,23 +1183,27 @@ Yours.Segment = function(ParentRoute) {
 			//apiUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/yours/api/dev/";
 		}
 	*/		
-		this.url = 'flat=' + flonlat.lat +
+		this.search = 'flat=' + flonlat.lat +
 			'&flon=' + flonlat.lon +
 			'&tlat=' + tlonlat.lat +
 			'&tlon=' + tlonlat.lon;
-		this.url += '&v=' + this.route.parameters.type +
+		this.search += '&v=' + this.route.parameters.type +
 			'&fast=' + this.route.parameters.fast +
 			'&layer=' + this.route.parameters.layer;
-		this.permalink = location.protocol + '//' + location.host + location.pathname + "?" + this.url;
-		url = apiUrl + 'gosmore.php?' + this.url;
-		$.get(url, {}, function(xml) {
-			html = "Status: ready";
-			var result = self.create(xml);
-			if (result) {
-				// Report back to the route that this segment is finished
-				self.route._segmentFinished(self);
-			}
-		},"xml");
+		this.permalink = location.protocol + '//' + location.host + location.pathname + "?" + this.search;
+		if (routeCache[this.search] === undefined) {
+			// Not in cache, request from server
+			var url = apiUrl + 'gosmore.php?' + this.search;
+			var self = this;
+			$.get(url, {}, function(xml) {
+				self.parseKML(xml);
+			}, "xml");
+		} else {
+			// In cache, retreive from there
+			var s = routeCache[this.search];
+			this.create(s.distance, s.feature);
+			this.route._segmentFinished(this);
+		}
 	};
 
 	/*

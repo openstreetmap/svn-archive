@@ -93,12 +93,6 @@ h1, h2 {
     border-top: 1px solid #DDD;
 }
 
-
-input.marker {
-    xdisplay: inline;
-    vertical-align: middle;
-}
-
 input#from_text_id{
 }
 
@@ -142,7 +136,7 @@ div.hover a:hover {
     margin-right: 5px;
     width: 305px;
     /*background: #F9FFF0;*/
-	height:85%
+	height: 85%;
 	overflow: auto;
 	overflow-x: hidden;
 }
@@ -212,6 +206,7 @@ div.hover a:hover {
 	font-weight: bold;
 }
 */
+
 /* route via stuff */
 .route_via {
     list-style: none;
@@ -222,6 +217,14 @@ div.hover a:hover {
     position: relative;
     top: -20px;
     left: 250px;
+}
+
+#route_via img.marker {
+    cursor: pointer;
+}
+
+#route_via .marker, #route_via .via_image, #route_via .via_del_image {
+    vertical-align: middle;
 }
 
 #route ul {

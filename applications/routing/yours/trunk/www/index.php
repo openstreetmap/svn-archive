@@ -1,3 +1,4 @@
+<?php header('Content-Type: text/html'); ?>
 <!-- Copyright (c) 2009, L. IJsselstein and others
      Yournavigation.org All rights reserved.
 -->
@@ -17,15 +18,19 @@
         <script type="text/javascript" src="yournavigation.js"></script>
 
         <script type="text/javascript">
-
-            $(document).ready(function(){
-                /* Make the navigation tabs */
-                $("#nav_header > ul").tabs();
-            });
-
+			$(function() {
+				// Initialise the map
+				init();
+				// Make the navigation tabs
+				$("#nav_header").tabs();
+				// Make the via points sortable
+				$("#route_via").sortable({
+					update: waypointReorderCallback
+				});
+			});
         </script>
     </head>
-    <body class="indexbody" onload="init();">
+    <body class="indexbody">
 		<div id="header">
 			<!--
 			<div id="title">
@@ -56,21 +61,9 @@
 					</div>
 					<div id="fragment-route">
 						<form id="route" name="route" action="#" onsubmit="return false;">
-							<ul class="route_via">
-								<li id="waypointFrom">
-										<input class="marker"  type="image" src="markers/route-start.png" alt="Start marker" title="Click to position start on the map" name="from" onclick="elementClick(this);" />
-										<input class="box" type="text" name="from_text" onclick="elementClick(this);" onchange="elementChange(this);" value="e.g. Street, City" tabindex="1" onfocus="this.select()" />
-										<img id="from_image" src="images/blank.gif" alt="" title="" style="vertical-align:middle;" name="from_image" />
-										<div id="from_message" style="display:inline"></div>
-								</li>
-								<li id="WaypointTo">
-									<div>
-										<input class="marker" type="image" src="markers/route-stop.png" alt="Finish marker" title="Click to position finish on the map" name="to" onclick="elementClick(this);" />
-										<input class="box" type="text" name="to_text" onclick="elementClick(this);" onchange="elementChange(this);" value="e.g. Street, City" tabindex="2" onfocus="this.select()" />
-										<img id="to_image" src="images/blank.gif" alt="" title="" style="vertical-align:middle;" name="to_image" />
-										<div id="to_message" style="display:inline"></div>
-									</div>
-								</li>
+							<ul id="route_via" class="route_via">
+							</ul>
+							<ul>
 								<li>
 									<div>
 										<img src="markers/yellow.png" alt="marker to" height="30" style="vertical-align:middle;"/>
@@ -81,7 +74,7 @@
 						</form>
 						<form id="parameters" action="#">
 							<!--<div id="parameters">-->
-							<p>Parameters</p>
+							<p>Type of transport</p>
 							<ul>
 								<li><input type="radio" name="type" onclick="typeChange(this);" value="motorcar" checked="checked" />Car</li>
 								<li><input type="radio" name="type" onclick="typeChange(this);" value="hgv"/>Heavy goods</li>
@@ -95,6 +88,7 @@
 							</ul>
 						</form>
 						<form id="options" action="#">
+							<p>Routing method</p>
 							<ul>
 								<li><input type="radio" name="method" value="fast" checked="checked" />Fastest</li>
 								<li><input type="radio" name="method" value="short"/>Shortest</li>
@@ -140,15 +134,15 @@
 			<!--<div id="clearfooter">&nbsp;</div>-->
 			<div style="clear:both;"></div>
 			<div class="footer">
-				<i>This site is sponsored by <a href="http://www.oxilion.nl/">Oxilion</a>. Routing data from planet file:
+				<i>This site is sponsored by <a href="http://www.oxilion.nl/">Oxilion</a>.
 <?php 
-$datefile = "~/yours/planet-date.txt";
+$datefile = '~/yours/planet-date.txt';
 if (file_exists($datefile)) {
 		$myFile = $datefile;
 		$fh = fopen($myFile, 'r');
 		$theData = fgets($fh);
 		fclose($fh);
-		echo $theData;
+		echo 'Routing data from planet file:', $theData;
 }
 ?>
 				</i>

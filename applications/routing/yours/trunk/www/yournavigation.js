@@ -1,13 +1,11 @@
 /* Copyright (c) 2009, L. IJsselstein and others
   Yournavigation.org All rights reserved.
  */
- 
+
 var myFirstMap;
 var myFirstRoute;
-var MyFirstWayPoint;
 var currRouteParams;
 var currBounds;
-var permalink;
 var WindowLocation;
 
 var map_layer = [];
@@ -28,142 +26,194 @@ style_to = {
 	strokeWidth: 3
 };
 
-function WaypointAdd() {
+function waypointAdd() {
 	/*
 	 * Create a new DOM element to enter waypoint info
 	 */
-	var wypt_li = $(document.createElement("li"));
-	wypt_li.attr("class","waypoint");
-	var wypt_div= $(document.createElement("div"));
-	MyFirstWayPoint = MyFirstRoute.waypoint(MyFirstRoute.Waypoints[length -1]);
-	wypt_div.attr("id","waypoint"+MyFirstWayPoint.position);
+	var wp = MyFirstRoute.waypoint();
+	MyFirstRoute.selectWaypoint(wp.position);
 
-	var button = $(document.createElement("input"));
-	button.attr("type", "image");
-	button.attr("name", "via");
-	button.attr("src","markers/number" + MyFirstWayPoint.position + ".png");
-	button.attr("alt", "Click to position waypoint " + MyFirstWayPoint.position +  " on the map");
-	button.attr("title", "Click to position waypoint " + MyFirstWayPoint.position +  " on the map");
-	button.attr("waypointnr", MyFirstWayPoint.position);
-	button.attr("onclick", "elementClick(this);");
-	button.attr("value", "Via:");
-	button.css("vertical-align","middle");
+	// Update the number of the end
+	$("li.waypoint[waypointnr='" + wp.position + "']").attr("waypointnr", wp.position + 1);
+
+	// Add the DOM LI
+	var wypt_li = waypointCreateDOM(wp);
+	$("#route_via > li.waypoint:last-child").before(wypt_li);
+
+	// By inserting new elements we may have moved the map
+	MyFirstMap.updateSize();
+}
+
+function waypointCreateDOM(waypoint) {
+	/*
+	 * Create a new DOM element to enter waypoint info
+	 */
+	var waypointName;
+	if (waypoint.type == "from") {
+		waypointName = "start";
+	} else if (waypoint.type == "to") {
+		waypointName = "finish";
+	} else {
+		waypointName = "waypoint " + waypoint.position;
+	}
+
+	var wypt_li = $(document.createElement("li"));
+	wypt_li.attr("waypointnr", waypoint.position);
+	wypt_li.addClass("waypoint");
+
+	var marker_image = $(document.createElement("img"));
+	marker_image.attr("src", waypoint.markerUrl());
+	marker_image.attr("alt", "Via:");
+	marker_image.attr("title", "Click to position " + waypointName +  " on the map");
+	marker_image.bind("click", function() {
+		if (MyFirstRoute.Selected !== undefined && MyFirstRoute.Selected.position == this.parentNode.attributes.waypointnr.value) {
+			// Already selected, deselect
+			MyFirstRoute.selectWaypoint();
+		} else {
+			// Select
+			MyFirstRoute.selectWaypoint(this.parentNode.attributes.waypointnr.value);
+		}
+	});
+	marker_image.addClass("marker");
 
 	var text = $(document.createElement("input"));
 	text.attr("type", "text");
 	text.attr("name", "via_text");
 	text.attr("value", "e.g. Street, City");
-	text.attr("waypointnr", MyFirstWayPoint.position);
-	text.attr("onclick", "elementClick(this);");
-	text.attr("onchange", "elementChange(this);");
-	text.attr("onfocus", "this.select();");
-
-	var img = $(document.createElement("img"));
-	img.attr("id", "via_image"+MyFirstWayPoint.position);
-	img.attr("src", "images/blank.gif");
-	img.attr("alt", "");
-	img.attr("title", "");
-	img.attr("style", "vertical-align:middle;");
-	img.attr("name", "via_image");
+	text.bind("change", function() { elementChange(this); });
+	text.bind("focus", function() { this.select(); });
 
 	var del_button = $(document.createElement("input"));
 	del_button.attr("type", "image");
 	del_button.attr("name", "via_del_image");
 	del_button.attr("src", "images/del.png");
-	del_button.attr("alt", "Remove waypoint "+ MyFirstWayPoint.position + " from the map");
-	del_button.attr("title", "Remove waypoint "+ MyFirstWayPoint.position + " from the map");
-	del_button.attr("waypointnr", MyFirstWayPoint.position);
-	del_button.attr("onclick", "elementClick(this);");
+	del_button.attr("alt", "Remove " + waypointName + " from the map");
+	del_button.attr("title", "Remove " + waypointName + " from the map");
+	del_button.bind("click", function() { elementClick(this); });
 	del_button.attr("value", "");
-	del_button.css("vertical-align", "middle");
+	del_button.addClass("via_del_image");
 
-	wypt_div.attr("class", "via");
-	wypt_div.append(button);
-	//wypt_div.append(' ');
-	wypt_div.append(text);
-	wypt_div.append(img);
-	wypt_div.append('<div id="via_message'+MyFirstWayPoint.position+'" style="display:inline"></div>');
-	wypt_div.append(del_button);
+	var via_image = $(document.createElement("img"));
+	via_image.attr("src", "images/ajax-loader.gif");
+	via_image.css("visibility", "hidden");
+	via_image.attr("alt", "");
+	via_image.addClass("via_image");
+
+	var via_message = $(document.createElement("span"));
+	via_message.addClass("via_message");
+
+	wypt_li.addClass("via");
+	wypt_li.append(marker_image);
+	wypt_li.append(' ');
+	wypt_li.append(text);
+	wypt_li.append(' ');
+	wypt_li.append(del_button);
+	wypt_li.append(' ');
+	wypt_li.append(via_image);
+	wypt_li.append(via_message);
+
+	var disable_delete = $("#route_via li").length < 2;
+	$("#route_via input[name='via_del_image']").attr("disabled", disable_delete ? "disabled" : "");
 	
-	wypt_li.append(wypt_div);
-	wypt_li.insertBefore("#WaypointTo");
-	// By inserting new elements we may have moved the map
-	MyFirstMap.updateSize();
+	return wypt_li;
 }
 
-function WaypointRemove(waypointnr) {
+function waypointRemove(waypointnr) {
 	/*
-	 * remove a waypoint from the UI and the route object
+	 * Remove a waypoint from the UI and the route object
 	 */
-	// renumber in the UI
-	wypt_div = document.getElementById("waypoint"+waypointnr);
-	wypt_li = wypt_div.parentNode;
-	wypt_ul = wypt_li.parentNode;
-	tmp_wypt = wypt_li.nextSibling;
 
-	i = waypointnr;
-	while((tmp_wypt != null) && (tmp_wypt.nodeName == "LI")) {
-		tmp_div = tmp_wypt.getElementsByTagName("div")[0];
-		if((tmp_div != null) && (tmp_div.getAttribute("class") == "via")) {
-			tmp_div.setAttribute("id","waypoint_"+i);
-
-			tmp_button = tmp_div.firstChild;
-			tmp_button.setAttribute("src","markers/number" + i + ".png");
-			tmp_button.setAttribute("alt", "Click to position waypoint " + i + " on the map");
-			tmp_button.setAttribute("title", "Click to position waypoint " + i + " on the map");
-			tmp_button.setAttribute("waypointnr", i);
-
-			tmp_text = tmp_button.nextSibling;
-			tmp_text.setAttribute("waypointnr", i);
-
-			tmp_img = tmp_text.nextSibling;
-			tmp_img.setAttribute("id", "via_image"+i);
-
-			tmp_div_div = tmp_img.nextSibling;
-			tmp_div_div.setAttribute("id", "via_message"+i);
-
-			tmp_del_button = tmp_div_div.nextSibling;
-			tmp_del_button.setAttribute("alt", "Remove waypoint "+ i + " from the map");
-			tmp_del_button.setAttribute("title", "Remove waypoint "+ i + " from the map");
-			tmp_del_button.setAttribute("waypointnr", i);
-		}
-		tmp_wypt = tmp_wypt.nextSibling;
-		i++;
+	// Deselect waypoint
+	if (MyFirstRoute.Selected !== undefined && MyFirstRoute.Selected.position == waypointnr) {
+		MyFirstRoute.selectWaypoint();
 	}
 
-	// remove from UI
-	wypt_ul.removeChild(wypt_li);
+	// Delete waypoint
+	MyFirstRoute.removeWaypoint(parseInt(waypointnr));
 
-	// delete waypoint
-	WayPoint = MyFirstRoute.Waypoints[waypointnr];
-	MyFirstRoute.Waypoints.splice(waypointnr,1);
-	WayPoint.destroy();
+	// Remove from UI
+	$("li.waypoint[waypointnr='" + waypointnr + "']").remove();
 
-	// renumber all further waypoints
-	i = waypointnr;
-	while(i < MyFirstRoute.Waypoints[MyFirstRoute.Waypoints.length -1]) {
-		Waypoint = MyFirstRoute.Waypoints[i];
-		lonlat = Waypoint.lonlat;
-		Waypoint.position = i;
-		Waypoint.draw(lonlat);
-		i++;
-	}
-	MyFirstRoute.End=MyFirstRoute.Waypoints[MyFirstRoute.Waypoints.length - 1];
+	// Renumber in the UI
+	waypointRenumberUI();
 
-	// redraw map
+	// Ensure there are always at least two waypoints (start and end)
+	var disable_delete = $("#route_via li").length <= 2;
+	$("#route_via input[name='via_del_image']").attr("disabled", disable_delete ? "disabled" : "");
+
+	// Redraw map
 	MyFirstMap.updateSize();
 }
 
-function init(){
+function waypointReorderCallback(event, ui) {
+	var oldPosition = parseInt($(ui.item.context).attr("waypointnr"));
+	var newPosition = parseInt($(ui.item.context).prev().attr("waypointnr")) + 1;
+	if (isNaN(newPosition)) {
+		// The waypoint was moved to the first position
+		newPosition = 0;
+	}
+	// Add the new waypoint
+	var wptOld = MyFirstRoute.Waypoints[oldPosition];
+	MyFirstRoute.addWaypoint(newPosition);
+	MyFirstRoute.updateWaypoint(newPosition, wptOld.lonlat, wptOld.name)
+	// Remove the old waypoint
+	if (oldPosition > newPosition) {
+		// After adding the new waypoint, the old position has increased
+		oldPosition++;
+	}
+	MyFirstRoute.removeWaypoint(oldPosition);
+
+	MyFirstRoute.selectWaypoint();
+	MyFirstMap.updateSize();
+
+	waypointRenumberUI();
+}
+
+function waypointRenumberUI() {
+	$("#route_via").children().each(function(index, wypt_li) {
+		var waypointName;
+		if (index == 0) {
+			waypointName = "start";
+		} else if (index == MyFirstRoute.Waypoints.length - 1) {
+			waypointName = "finish";
+		} else {
+			waypointName = "waypoint " + index;
+		}
+
+		// Update HTML list
+		$(wypt_li).attr("waypointnr", index);
+
+		var marker_image = $("img.marker", wypt_li);
+		marker_image.attr("src", MyFirstRoute.Waypoints[index].markerUrl());
+		marker_image.attr("title", "Click to position " + waypointName +  " on the map");
+
+		var del_button = $("input[name='via_del_image']", wypt_li);
+		del_button.attr("alt", "Remove " + waypointName + " from the map");
+		del_button.attr("title", "Remove " + waypointName + " from the map");
+	});
+}
+
+function initWaypoints() {
+	// Add begin waypoint
+	$("#route_via").append(waypointCreateDOM(MyFirstRoute.Start));
+
+	// Add end waypoint
+	$("#route_via").append(waypointCreateDOM(MyFirstRoute.End));
+
+	// Let the user choose begin waypoint first
+	MyFirstRoute.selectWaypoint(MyFirstRoute.Start.position);
+}
+
+function init() {
 	WindowLocation = String(window.location);
 
 	OpenLayers.Feature.Vector.style['default'].strokeWidth = '2';
 	OpenLayers.Feature.Vector.style['default'].fillColor = '#0000FF';
 	OpenLayers.Feature.Vector.style['default'].strokeColor = '#0000FF';
-	
+
 	// Map definition based on http://wiki.openstreetmap.org/index.php/OpenLayers_Simple_Example
 	MyFirstMap = new OpenLayers.Map ("map", {
-		controls:[
+		controls: [
 			new OpenLayers.Control.Navigation(),
 			new OpenLayers.Control.PanZoomBar(),
 			new OpenLayers.Control.LayerSwitcher(),
@@ -190,15 +240,19 @@ function init(){
 		displayOutsideMaxExtent: true,
 		wrapDateLine: true
 	});
-	/*				 
+	/*
 	layerCycleNetworks = new OpenLayers.Layer.OSM.CycleMap("Cycle Networks", {
 		displayOutsideMaxExtent: true,
 		wrapDateLine: true
 	});
 	*/
+
+	MyFirstMap.addLayers([layerMapnik, layerCycle]);
 	
 	/* Initialize a Route object from the YourNavigation API */
 	MyFirstRoute = new Yours.Route(MyFirstMap, myRouteCallback, updateWaypointCallback);
+
+	initWaypoints();
 
 	// Check if a permalink is used
 	if (location.search.length > 0) {
@@ -220,9 +274,8 @@ function init(){
 					value = parseFloat(fields[1]);
 					if (value !== 0) {
 						flonlat.lon = value;
-						MyFirstWayPoint = MyFirstRoute.Start;
-						MyFirstWayPoint.lonlat = flonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
-						MyFirstWayPoint.draw();
+						MyFirstRoute.selectWaypoint(MyFirstRoute.Start.position);
+						MyFirstRoute.updateWaypoint("selected", flonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection));
 					}
 					break;
 				case 'wlat':
@@ -232,9 +285,8 @@ function init(){
 					value = parseFloat(fields[1]);
 					if (value !== 0) {
 						wlonlat.lon = value;
-						MyFirstWayPoint = MyFirstRoute.waypoint();
-						MyFirstWayPoint.lonlat = wlonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
-						MyFirstWayPoint.draw();
+						waypointAdd();
+						MyFirstRoute.updateWaypoint("selected", flonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection));
 					}
 					break;
 				case 'tlat':
@@ -244,65 +296,32 @@ function init(){
 					value = parseFloat(fields[1]);
 					if (value !== 0) {
 						tlonlat.lon = value;
-						MyFirstWayPoint = MyFirstRoute.End;
-						MyFirstWayPoint.lonlat = tlonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection);
-						MyFirstWayPoint.draw();
+						MyFirstRoute.selectWaypoint(MyFirstRoute.End.position);
+						MyFirstRoute.updateWaypoint("selected", flonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection));
 					}
 					break;
 				case 'v':
-					switch (fields[1]) {
-						case 'bicycle':
-							for (j = 0; j < document.forms.parameters.type.length; j++) {
-								if (document.forms.parameters.type[j].value == 'bicycle') {
-									document.forms.parameters.type[j].checked = true;
-								}
-							}
-							break;
-						case 'foot':
-							for (j = 0; j < document.forms.parameters.type.length; j++) {
-								if (document.forms.parameters.type[j].value == 'foot') {
-									document.forms.parameters.type[j].checked = true;
-								}
-							}
-							break;
-						default:
-							for (j = 0; j < document.forms.parameters.type.length; j++) {
-								if (document.forms.parameters.type[j].value == 'car') {
-									document.forms.parameters.type[j].checked = true;
-								}
-							}
-							break;
-					}
+					$("input[name='type'][value='" + fields[1] + "']").attr("checked", true);
 					break;
 				case 'fast':
 					if (parseInt(fields[1]) == 1) {
-						for (j = 0; j < document.forms.options.method.length; j++) {
-							if (document.forms.options.method[j].value == 'fast') {
-								document.forms.options.method[j].checked = true;
-							}
-						}
+						$("input[name='method'][value='fast']").attr("checked", true);
 					} else {
-						for (j = 0; j < document.forms.options.method.length; j++) {
-							if (document.forms.options.method[j].value == 'short') {
-								document.forms.options.method[j].checked = true;
-							}
-						}
+						$("input[name='method'][value='short']").attr("checked", true);
 					}
 					break;
 				case 'layer':
 					switch (fields[1]) {
 						case 'cycle':
-							//MyFirstMap.addLayers([layerCycle, layerMapnik, layerCycleNetworks]);
-							MyFirstMap.addLayers([layerCycle, layerMapnik]);
+							MyFirstMap.setBaseLayer(layerCycle);
 							break;
 							/*
 						case 'cn':
-							MyFirstMap.addLayers([layerCycleNetworks, layerMapnik, layerCycle]);
+							MyFirstMap.setBaseLayer(layerCycleNetworks);
 							break;
 							*/
 						default:
-							//MyFirstMap.addLayers([layerMapnik, layerCycle, layerCycleNetworks]);
-							MyFirstMap.addLayers([layerMapnik, layerCycle]);
+							MyFirstMap.setBaseLayer(layerMapnik);
 							break;
 					}
 				case 'zlat':
@@ -320,21 +339,22 @@ function init(){
 					break;
 			}
 		}
-		if (null === MyFirstMap.baseLayer) {
-			//Fallback for old permalinks that don't list the layer property
-			//MyFirstMap.addLayers([layerMapnik, layerCycle, layerCycleNetworks]);
-			MyFirstMap.addLayers([layerMapnik, layerCycle]);
-		}
 
 		// Determine where to zoom the map and at what level
 		if (zlevel == -1) {
-			MyFirstMap.zoomToExtent(MyFirstRoute.Markers.getDataExtent());
+			var extent = MyFirstRoute.Markers.getDataExtent();
+			if (extent != null) {
+				MyFirstMap.zoomToExtent(extent);
+			}
 		}
 		
 		prepareDrawRoute();
 		MyFirstRoute.draw();
 		if (zlevel != -1) {
-			MyFirstMap.zoomToExtent(MyFirstRoute.Markers.getDataExtent());
+			var extent = MyFirstRoute.Markers.getDataExtent();
+			if (extent != null) {
+				MyFirstMap.zoomToExtent(extent);
+			}
 		} else {
 			zlevel = MyFirstMap.getZoom();
 		}
@@ -343,13 +363,17 @@ function init(){
 			MyFirstMap.setCenter(zlonlat, zlevel);
 		}
 	} else {
-		//No preference for any layer, load Mapnik layer first
-		//MyFirstMap.addLayers([layerMapnik, layerCycle, layerCycleNetworks]);
-		MyFirstMap.addLayers([layerMapnik, layerCycle]);
 		var pos;
 		if (!MyFirstMap.getCenter()) {
 			pos = new OpenLayers.LonLat(5, 45);
 			MyFirstMap.setCenter(pos.transform(MyFirstMap.displayProjection,MyFirstMap.projection), 3);
+			if (navigator.geolocation) {  
+				// Our geolocation is available, zoom to it if the user allows us to retreive it
+				navigator.geolocation.getCurrentPosition(function(position) {
+					var pos = new OpenLayers.LonLat(position.coords.longitude, position.coords.latitude);
+					MyFirstMap.setCenter(pos.transform(MyFirstMap.displayProjection, MyFirstMap.projection), 14);
+				});
+			}
 		}
 		if (typeof(document.baseURI) != 'undefined') {
 			if (document.baseURI.indexOf('-devel') > 0 || document.baseURI.indexOf('test') > 0) {
@@ -359,9 +383,9 @@ function init(){
 		}
 	}
 	
-	PermaLink = new OpenLayers.Control.Permalink('test', 'http://www.openstreetmap.org/edit');
-	MyFirstMap.addControl(PermaLink);
-	PermaLink.element.textContent = 'Edit map';
+	var permalink = new OpenLayers.Control.Permalink('test', 'http://www.openstreetmap.org/edit');
+	MyFirstMap.addControl(permalink);
+	permalink.element.textContent = 'Edit map';
 } //End of init()
 
 // Called when the baselayer is changed
@@ -404,6 +428,7 @@ function myRouteCallback(code, result) {
 			var seg_li;
 			
 			// Add segment info (nodes, distance), totals and permalink
+			$('#feature_info').empty();
 			$('#feature_info').append("Segments:");
 			seg_ul = $(document.createElement("ul"));
 			seg_ul.attr("class", "segments");
@@ -412,17 +437,24 @@ function myRouteCallback(code, result) {
 			for (i = 0; i < MyFirstRoute.Segments.length; i++) {
 				seg_li = $(document.createElement("li"));
 				
-				var seg_div= $(document.createElement("div"));
+				var seg_div = $(document.createElement("div"));
+				seg_div.addClass("segment");
 				MyFirstSegment = MyFirstRoute.Segments[i];
 
-				text = i+") length = "+MyFirstSegment.distance.toFixed(2)+" km, nodes = "+MyFirstSegment.nodes;
-				
-				seg_div.attr("class", "segment");
-				seg_div.append(text);
+				seg_div.append(i + ") ");
+				if (MyFirstSegment.distance === undefined) {
+					seg_div.append($(document.createElement("i")).append("Unavailable"));
+				} else {
+					seg_div.append("length = "+MyFirstSegment.distance.toFixed(2)+" km, nodes = "+MyFirstSegment.nodes);
+				}
 				seg_li.append(seg_div);
 				seg_ul.append(seg_li);
 			}
-			$('#feature_info').append("Route:");
+			if (MyFirstRoute.completeRoute) {
+				$('#feature_info').append("Route:");
+			} else {
+				$('#feature_info').append($(document.createElement("font")).attr("color", "red").append("Route (partial):"));
+			}
 			seg_ul = $(document.createElement("ul"));
 			seg_ul.attr("class", "segments");
 			$('#feature_info').append(seg_ul);
@@ -437,10 +469,16 @@ function myRouteCallback(code, result) {
 			
 			seg_li = $(document.createElement("li"));
 			seg_ul.append(seg_li);
-			seg_li.append('<a href="' + MyFirstRoute.permalink() + '">Permalink</a>');
+			if (MyFirstRoute.completeRoute) {
+				// Create a permalink
+				// FIXME: User can add waypoints while calculating route, in which case permalink() will fail
+				seg_li.append($(document.createElement("a")).attr("href", MyFirstRoute.permalink()).append("Permalink"));
+			}
 			
 			// Zoom in to the area around the route
-			MyFirstMap.zoomToExtent(MyFirstRoute.Layer.getDataExtent());
+			if (!result.quiet) {
+				MyFirstMap.zoomToExtent(MyFirstRoute.Layer.getDataExtent());
+			}
 			break;
 		case Yours.status.starting:
 			//alert('starting');
@@ -463,34 +501,23 @@ function myRouteCallback(code, result) {
 function myCallback(result) {
 	if (result == "OK") {
 		if (undefined !== wait_image) {
-			wait_image.attr("src","images/blank.gif");
+			wait_image.css("visibility", "hidden");
 		}
 		if (undefined !== message_div) {
 			message_div.html('');
 		}
 	} else {
-		wait_image.attr("src","images/blank.gif");
+		wait_image.css("visibility", "hidden");
 		message_div.html('<font color="red">' + result + '</font>');
 	}
 }
 
 /*
- * Called when a reverse gecoder result is returned
+ * Called when a reverse geocoder result is returned
  */
 function updateWaypointCallback(waypoint) {
 	if (waypoint !== undefined) {
-		switch (waypoint.type) {
-		case "to":
-			$('input[name=to_text]').val(waypoint.name);
-			break;
-		case "from":
-			$('input[name=from_text]').val(waypoint.name);
-			break;
-		case "via":
-			pos = waypoint.position;
-			$('input[waypointnr='+pos+']').val(waypoint.name);
-			break;
-		}
+		$("#route_via li[waypointnr='" + waypoint.position + "'] input").val(waypoint.name);
 	}
 }
 
@@ -511,32 +538,15 @@ function typeChange(element) {
 function elementChange(element) {
 	if (element.value.length > 0) {
 		// Try to find element in waypoint list
-		message_div = undefined;
-		wait_image = undefined;
-		switch (element.name) {
-			case 'from_text':
-				wait_image = $('#from_image');
-				message_div = $('#from_message');
-				MyFirstWayPoint = MyFirstRoute.Start;
-				break;
-			case 'to_text':
-				wait_image = $('#to_image');
-				message_div = $('#to_message');
-				MyFirstWayPoint = MyFirstRoute.End;
-				break;
-			default:
-				// via
-				viaNr = element.attributes['waypointnr'].value;
-				wait_image = $('#via_image'+viaNr);
-				message_div = $('#via_message'+viaNr);
-				MyFirstWayPoint = MyFirstRoute.Waypoints[element.attributes.waypointnr.value];
-				break;
-		}
+		viaNr = element.parentNode.attributes['waypointnr'].value;
+		wait_image = $(".via_image", element.parentNode);
+		message_div = $(".via_message", element.parentNode);
+		MyFirstRoute.selectWaypoint(viaNr);
 
-		wait_image.attr("src","images/ajax-loader.gif");
+		wait_image.css("visibility", "visible");
 		// Choose between Namefinder or Nominatim
 		//Yours.NamefinderLookup( Yours.lookupMethod.nameToCoord, jQuery.trim(element.value), MyFirstWayPoint, MyFirstMap, myCallback);
-		Yours.NominatimLookup( Yours.lookupMethod.nameToCoord, jQuery.trim(element.value), MyFirstWayPoint, MyFirstMap, myCallback);
+		Yours.NominatimLookup( Yours.lookupMethod.nameToCoord, jQuery.trim(element.value), MyFirstRoute.Selected, MyFirstMap, myCallback);
 	}
 }
 
@@ -545,30 +555,19 @@ function elementClick(element) {
 	if (element.type == "button" || element.type == "image") {
 		mode = element.name;
 		switch (mode) {
-			case 'to':
-				MyFirstWayPoint = MyFirstRoute.End;
-				break;
-			case 'from':
-				MyFirstWayPoint = MyFirstRoute.Start;
-				break;
-			case 'via':
-				//do nothing, let the trigger handle it..
-				MyFirstWayPoint = MyFirstRoute.waypoint(element.attributes.waypointnr.value);
-				break;
 			case 'via_del_image':
-				WaypointRemove(element.attributes.waypointnr.value);
+				waypointRemove(element.parentNode.attributes.waypointnr.value);
 				break;
 			case 'add waypoint':
-				WaypointAdd();
+				waypointAdd();
 				break;
 			case 'clear':
 				MyFirstRoute.clear();
 				//clear the routelayer;
 				notice("",'#feature_info');
 				notice("",'#status');
-				$('input[name=from_text]').val( "e.g. Street, City");
-				$('input[name=to_text]').val("e.g. Street, City");
 				$('.waypoint').remove();
+				initWaypoints();
 				MyFirstMap.updateSize();
 				break;
 			case 'reverse':
@@ -584,20 +583,6 @@ function elementClick(element) {
 			case 'export':
 				//document.open(Yours.Export(MyFirstRoute), null, null); return false;
 				Yours.Export(MyFirstRoute);
-				break;
-		}
-	} else {
-		mode = element.name;
-		switch (mode) {
-			case 'to_text':
-				if (element.value == "Street, City") {
-					element.value = "";
-				}
-				break;
-			case 'from_text':
-				if (element.value == "Street, City") {
-					element.value = "";
-				}
 				break;
 		}
 	}

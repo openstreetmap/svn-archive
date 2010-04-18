@@ -131,6 +131,11 @@ public abstract class ImageModifier {
         return false;
     }
 
+    public boolean isParcelColor(BufferedImage img, int x, int y) {
+        int rgb = img.getRGB(x, y);
+        return (rgb == parcelColor);
+    }
+
     public boolean isBuildingOrRoofColor(BufferedImage img, int x, int y, boolean ignoreParcelColor) {
         int rgb = img.getRGB(x, y);
         boolean ret = isBuildingColor(rgb, ignoreParcelColor) || isRoofColor(rgb, ignoreParcelColor);
@@ -146,7 +151,7 @@ public abstract class ImageModifier {
             ret = isRoofColor(rgb, ignoreParcelColor);
         return ret;
     }
-
+    
     /**
      * Checks if the rgb value is the black background color
      * @param  

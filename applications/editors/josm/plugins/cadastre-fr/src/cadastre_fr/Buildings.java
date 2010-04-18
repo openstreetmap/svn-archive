@@ -54,6 +54,8 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
     private class Pixel {
         public Point p;
         public int dir;
+        @SuppressWarnings("unused")
+        public boolean toKeep;
         public Pixel(int x, int y, int dir) {
             this.p = new Point(x,y);
             this.dir = dir;
@@ -68,21 +70,31 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                 return p.equals(new Point(((Pixel)obj).p.x, ((Pixel)obj).p.y));
             return p.equals(obj);
         }
+        @Override
+        public String toString() {
+            return new String("p="+p+", dir="+dir);
+        }
     }
     private ArrayList<Pixel> listPixels = new ArrayList<Pixel>();
     
-    private static final int cMaxnode = 10000;
-    private static final double cDistanceForOptimization = 0.7;
+    //  5 6 7
+    //   \|/ 
+    //  4-*-0       'dir' index vs pixel direction
+    //   /|\
+    //  3 2 1
     private int[] dirsX = new int[] {1,1,0,-1,-1,-1,0,1};
     private int[] dirsY = new int[] {0,1,1,1,0,-1,-1,-1};
 
     private int orange = Color.ORANGE.getRGB(); // new color of pixels ending nowhere (cul-de-sac)
     BuildingsImageModifier bim = new BuildingsImageModifier();
 
-    private double snapDistance = Main.pref.getDouble("cadastrewms.snap-distance", 50); // in centimeters
+    private static final int cMaxnode = 10000;
+    private static final double cDistanceForOptimization = 0.5;
+    private double snapDistance = Main.pref.getDouble("cadastrewms.snap-distance", 25); // in centimeters
+    private double SimplifyFactor = 0.1;
+
     private double snapDistanceSq = snapDistance*snapDistance;
     private double dx, dy;
-
     
     public Buildings(MapFrame mapFrame) {
         super(tr("Grab buildings"), "buildings",
@@ -153,13 +165,13 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
                         wayToCreate.addNode(nodeToAdd);
                     }
                     wayToCreate.addNode(wayToCreate.getNode(0)); // close the way
-                    new SimplifyWay().simplifyWay(wayToCreate, 0.2);
+                    new SimplifyWay().simplifyWay(wayToCreate, SimplifyFactor);
                     // move the node closing the loop and simplify again
                     for (int i = 1; i < wayToCreate.getNodesCount(); i++) {
                         way2.addNode(wayToCreate.getNode(i));
                     }
                     way2.addNode(way2.getNode(0));
-                    new SimplifyWay().simplifyWay(way2, 0.2);
+                    new SimplifyWay().simplifyWay(way2, SimplifyFactor);
                     simplifyAngles(way2);
                     Way wayToAdd = new Way();
                     Collection<Command> cmds = new LinkedList<Command>();
@@ -314,6 +326,7 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
             }
             addPixeltoList(x, y, new_dir);
         }
+        inflate();
         System.out.println("list size="+listPixels.size());
         return true;
     }
@@ -321,6 +334,47 @@ public class Buildings extends MapMode implements MouseListener, MouseMotionList
     private void addPixeltoList(int x, int y, int dir) {
         listPixels.add( new Pixel(x, y, dir));
         System.out.println("added pixel at "+x+","+y);
+    }
+    
+    private void inflate() {
+        // TODO
+        if (listPixels.size() > 1) {
+//            for (int i=1; i<listPixels.size()-1; i++) {
+//                int delta_dir = Math.abs((listPixels.get(i+1).dir - listPixels.get(i-1).dir + 8)%8);
+//                if (delta_dir > 1 && delta_dir < 4) {
+//                    System.out.println(listPixels.get(i).dir);
+//                    int j = i;
+//                    if (listPixels.get(i).dir == 0 || listPixels.get(i).dir == 1 || listPixels.get(i).dir == 4 || listPixels.get(i).dir == 2)
+//                        j = i-1;
+//                    listPixels.get(j).toKeep = true;
+//                    i+=2;
+//                    selectedImage.image.setRGB(listPixels.get(j).p.x, listPixels.get(j).p.y, Color.GREEN.getRGB());
+//                }
+//            }
+            ArrayList<Pixel> newList = new ArrayList<Pixel>();
+            for (int i=0; i<listPixels.size(); i++) {
+//                    selectedImage.image.setRGB(listPixels.get(i).p.x, listPixels.get(i).p.y, Color.GREEN.getRGB());
+                boolean inflatedPixel = false;
+                for (int j=0; j<3; j++) {
+                    if ((i+j-1) > 0 && (i+j-1) < listPixels.size()) {
+                        int inflate_dir = (listPixels.get(i+j-1).dir+6)%8;
+                        Pixel p = new Pixel(listPixels.get(i).p.x+dirsX[inflate_dir],
+                              listPixels.get(i).p.y+dirsY[inflate_dir],
+                              listPixels.get(i).dir);
+                        if (bim.isParcelColor(selectedImage.image, p.p.x, p.p.y)) {
+                            if (!newList.contains(p))
+                                newList.add(p);
+                            inflatedPixel = true;
+                        } 
+                    }
+                }
+                if (!inflatedPixel) {
+                    if (!newList.contains(listPixels.get(i)))
+                        newList.add(listPixels.get(i));
+                }
+            }
+            listPixels = newList;
+        }
     }
     
     private boolean removeTwoLastPixelsFromList() {

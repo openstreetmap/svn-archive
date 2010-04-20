@@ -191,29 +191,20 @@ if ($needoverview || ! -f $combinedosm) {
 
     # run it
     System($cmd);
-
-    if ($proj->{'extra-data'}) {
-	# add in our extra data
-	my $infile = new IO::File();
-	my $outfile = new IO::File();
-	my $exfile = new IO::File();
-	$infile->open("$combinedosm");
-	$exfile->open($proj->{'extra-data'});
-	$outfile->open(">$combinedosm.tmp");
-	while (<$infile>) {
-	    if (/<\/osm>/) {
-		# add in the extra data file
-		while (<$exfile>) {
-		    print $outfile $_;
-		}
-	    }
-	    print $outfile $_;
-	}
-
-	$outfile->close();
-	rename("$combinedosm.tmp", $combinedosm);
-    }
 }
+
+if ($proj->{'extra-data-file'}) {
+    my $newfilename = $combinedosm;
+    $newfilename =~ s/\.osm$/-local.osm/;
+
+    if (! -f $newfilename || Stat($combinedosm, $newfilename) ||
+       Stat($proj->{'extra-data-file'}, $newfilename)) {
+	merge_local_osm($combinedosm, $proj->{'extra-data-file'}, $newfilename);
+    }
+
+    $combinedosm = $newfilename;
+}
+
 
 # build the combined OSM file into a SVG (without the grid)
 if (! -f $combinedsvg || Stat($combinedosm, $combinedsvg) ||
@@ -317,6 +308,38 @@ sub get_grid_display_num {
     return $gridnum;
 }
 
+sub merge_local_osm {
+    my ($file1, $file2, $outfile) = @_;
+
+    my $tmpfile = new IO::File;
+    my $infile = new IO::File;
+    my $exfile = new IO::File;
+
+    print "merging $file1 with $file2 to become $outfile\n";
+    $infile->open($file1);
+    $exfile->open($file2);
+    $tmpfile->open(">$outfile");
+    while (<$infile>) {
+	if (/<\/osm>/) {
+	    # add in the extra data file
+	    while (<$exfile>) {
+		print $tmpfile $_;
+	    }
+	    print $tmpfile "<\/osm>\n";
+	} else {
+	    print $tmpfile $_;
+	}
+    }
+    $tmpfile->close();
+    $infile->close();
+    $exfile->close();
+
+    # and read in the tmp file below
+    # the merge later will add a single instance of the extra
+    # data to the merge file.
+}
+
+
 #
 # actually render a particular grid square
 #
@@ -331,46 +354,32 @@ sub do_grid {
     my $smosmfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.osm";
     my $osmfile = $smosmfile;
     my $xmlfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.xml";
+    my $localosmfile = $osmfile;
+    $localosmfile =~ s/\.osm$/-local.osm/;
 
-    if (!$opts{'force-fetch'} && -f $combinedosm) {
-	$osmfile = $combinedosm;
-    } else {
+    if ($opts{'force-fetch'} || ! -f $combinedosm || $exdata ||
+	($exdata && Stat($exdata, $localosmfile))) {
+
 	if (! -f $osmfile) {
 	    System("wget --no-proxy -O $osmfile http://www.openstreetmap.org/api/0.6/map?bbox=$minx,$miny,$maxx,$maxy");
 	    $needoverview = 1;
 	}
 
-	push @osmfiles, $osmfile;
-
-	# and for this run if we have additional data, merge it in
 	if ($exdata) {
-	    my $tmpfile = new IO::File;
-	    my $infile = new IO::File;
-	    my $exfile = new IO::File;
-	    $infile->open($osmfile);
-	    $exfile->open($exdata);
-	    $tmpfile->open(">$osmfile.tmp");
-	    while (<$infile>) {
-		if (/<\/osm>/) {
-		    # add in the extra data file
-		    while (<$exfile>) {
-			print $tmpfile $_;
-		    }
-		}
-		print $tmpfile $_;
+	    if (! -f $localosmfile || Stat($combinedosm, $localosmfile) ||
+		Stat($exdata, $localosmfile)) {
+		merge_local_osm($osmfile, $proj->{'extra-data-file'},
+				$localosmfile);
 	    }
-	    $tmpfile->close();
-	    $infile->close();
-	    $exfile->close();
 
-	    # and read in the tmp file below
-	    # the merge later will add a single instance of the extra
-	    # data to the merge file.
-
-	    $osmfile = $osmfile . ".tmp";
+	    $osmfile = $localosmfile;
 	}
-    }
 
+	# push the original name, not the modified version which won't merge
+	push @osmfiles, $smosmfile;
+    } else {
+	$osmfile = $combinedosm;
+    }
 
     # render the page
     if (! -f $xmlfile || Stat($rulefile, $xmlfile)) {
@@ -404,7 +413,8 @@ sub do_grid {
 
     # render the map as a svg
     my $svgfile = "$proj->{'datadir'}/mapdata-$minx-$maxx-$miny-$maxy.svg";
-    if (! -f $svgfile || Stat($xmlfile, $svgfile)) {
+    if (! -f $svgfile || Stat($xmlfile, $svgfile) ||
+	Stat($osmfile, $svgfile)) {
 	#System("xmlstarlet tr osmarender.xsl $xmlfile > $svgfile");
 	System("perl orp.svn/orp.pl --minlat $miny --maxlat $maxy --minlon $minx --maxlon $maxx -r $xmlfile $osmfile");
 	if ($osmfile ne $smosmfile) {

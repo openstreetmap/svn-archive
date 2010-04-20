@@ -203,6 +203,8 @@ if ($proj->{'extra-data-file'}) {
     }
 
     $combinedosm = $newfilename;
+
+    $combinedsvg =~ s/\.osm$/-local.osm/;
 }
 
 
@@ -1186,7 +1188,7 @@ sub Stat {
     my ($file1, $file2) = @_;
     my @attr1 = stat $file1;
     my @attr2 = stat $file2;
-#    print STDERR "newer: $file1\n" if ($attr1[9] > $attr2[9]);
+    print STDERR "newer: $file1 is newer than $file2\n" if ($attr1[9] > $attr2[9]);
 #    print STDERR "newer: $file2\n" if ($attr1[9] <= $attr2[9]);
     return $attr1[9] > $attr2[9];
 }

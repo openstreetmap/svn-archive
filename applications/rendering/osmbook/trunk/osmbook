@@ -180,6 +180,10 @@ foreach my $y (reverse(1..$ygridnum)) {
 # Now build the overall combined overview map
 #
 
+DEBUG("----------------------------------------------------------------------\n");
+DEBUG("Starting Overview\n");
+DEBUG("----------------------------------------------------------------------\n");
+
 # combine all the exsting OSM files into a single combined OSM file
 if ($needoverview || ! -f $combinedosm) {
 
@@ -204,7 +208,7 @@ if ($proj->{'extra-data-file'}) {
 
     $combinedosm = $newfilename;
 
-    $combinedsvg =~ s/\.osm$/-local.osm/;
+    $combinedsvg =~ s/\.svg$/-local.svg/;
 }
 
 
@@ -224,7 +228,11 @@ if (! -f $overviewsvg || Stat($combinedsvg, $overviewsvg)) {
 # render the overview SVG as EPS for later inclusion into latex
 if (! -f $combinedpng  ||
     Stat($combinedsvg, $combinedpng)) {
-    System("inkscape -f $combinedsvg -e $combinedpng");
+    my $dpiarg = "";
+#     if ($opts{'dpi'}) {
+# 	$dpiarg = "-d $opts{'dpi'}";
+#     }
+    System("inkscape $dpiarg -f $combinedsvg -e $combinedpng");
 #    Stat($overviewsvg, $overvieweps)) {
 #    System("inkscape -f $overviewsvg -E $overvieweps");
 }
@@ -419,7 +427,7 @@ sub do_grid {
 	Stat($osmfile, $svgfile)) {
 	#System("xmlstarlet tr osmarender.xsl $xmlfile > $svgfile");
 	System("perl orp.svn/orp.pl --minlat $miny --maxlat $maxy --minlon $minx --maxlon $maxx -r $xmlfile $osmfile");
-	if ($osmfile ne $smosmfile) {
+	if ($osmfile eq $combinedosm) {
 	    my $combinedsvg = $osmfile;
 	    $combinedsvg =~ s/osm$/svg/;
 	    rename($combinedsvg, $svgfile);
@@ -1132,13 +1140,13 @@ sub make_overviewpng {
 sub make_indexfile {
     DEBUG("saving index data to ", $proj->{'index-file'});
     open(IF, ">" . $proj->{'index-file'});
-    print IF "\\documentclass[11pt]{article}
+    print IF "\\documentclass[11pt,letterpaper]{article}
 
 \\topmargin= -.5in
 \\oddsidemargin=-.5in
 \\evensidemargin=-.5in
 \\headheight= 0in
-\\textheight= 9.9in
+\\textheight= 9.0in
 \\textwidth = 7in
 \\setlength\\parindent{0in}
 
@@ -1188,7 +1196,7 @@ sub Stat {
     my ($file1, $file2) = @_;
     my @attr1 = stat $file1;
     my @attr2 = stat $file2;
-    print STDERR "newer: $file1 is newer than $file2\n" if ($attr1[9] > $attr2[9]);
+    DEBUG ("newer: $file1 is newer than $file2\n") if ($attr1[9] > $attr2[9]);
 #    print STDERR "newer: $file2\n" if ($attr1[9] <= $attr2[9]);
     return $attr1[9] > $attr2[9];
 }

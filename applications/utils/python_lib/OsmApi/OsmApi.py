@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.18  2010-04-20 Fix ChangesetClose and _http_request               ##
 ## 0.2.17  2010-01-02 Capabilities implementation                        ##
 ## 0.2.16  2010-01-02 ChangesetsGet by Alexander Rampp                   ##
 ## 0.2.15  2009-12-16 xml encoding error for < and >                     ##
@@ -49,7 +50,7 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.17'
+__version__ = '0.2.18'
 
 import httplib, base64, xml.dom.minidom, time, sys, urllib
 
@@ -563,9 +564,12 @@ class OsmApi:
             self.ChangesetUpload(self._changesetautodata[:self._changesetautosize])
             self._changesetautodata = self._changesetautodata[self._changesetautosize:]
             self._changesetautocpt += 1
-            if self._changesetautocpt == self._changesetautomulti or force:
+            if self._changesetautocpt == self._changesetautomulti:
                 self.ChangesetClose()
                 self._changesetautocpt = 0
+        if self._changesetautocpt and force:
+            self.ChangesetClose()
+            self._changesetautocpt = 0
         return None
         
     def _http_request(self, cmd, path, auth, send):
@@ -578,7 +582,7 @@ class OsmApi:
         self._conn.putheader('User-Agent', self._created_by)
         if auth:
             self._conn.putheader('Authorization', 'Basic ' + base64.encodestring(self._username + ':' + self._password).strip())
-        if send:
+        if send <> None:
             self._conn.putheader('Content-Length', len(send))
         self._conn.endheaders()
         if send:

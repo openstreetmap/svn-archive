@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -99,6 +100,7 @@ public class HouseNumberInputDialog extends JDialog {
     private void initialize() {
         this.setTitle(tr("Terrace a house"));
         getJContentPane();
+        SwingUtilities.invokeLater(new Runnable() { public void run() { lo.requestFocus(); } } );
         this.pack();
         this.setLocationRelativeTo(Main.parent);
     }
@@ -124,7 +126,6 @@ public class HouseNumberInputDialog extends JDialog {
             jContentPane.add(messageLabel, jContentPane);
             jContentPane.add(getInputPanel(), jContentPane);
             jContentPane.add(getButtonPanel(), jContentPane);
-
         }
         return jContentPane;
     }
@@ -142,12 +143,12 @@ public class HouseNumberInputDialog extends JDialog {
             segmentsLabel.setText(tr("Segments"));
             streetLabel = new JLabel();
             streetLabel.setText(tr("Street"));
-            hiLabel = new JLabel();
-            hiLabel.setText(tr("Highest Number"));
             loLabel = new JLabel();
             loLabel.setText(tr("Lowest Number"));
             loLabel.setPreferredSize(new Dimension(111, 16));
             loLabel.setToolTipText(tr("Lowest housenumber of the terraced house"));
+            hiLabel = new JLabel();
+            hiLabel.setText(tr("Highest Number"));
             final String txt = relationExists ? tr("add to existing associatedStreet relation") : tr("create an associatedStreet relation");
             handleRelationCheckBox = new JCheckBox(txt, Main.pref.getBoolean(HANDLE_RELATION, true));
             deleteOutlineCheckBox = new JCheckBox(tr("delete outline way"), Main.pref.getBoolean(DELETE_OUTLINE, true));
@@ -198,6 +199,7 @@ public class HouseNumberInputDialog extends JDialog {
         if (lo == null) {
             lo = new JTextField();
             lo.setText("");
+            lo.requestFocus();
         }
         return lo;
     }

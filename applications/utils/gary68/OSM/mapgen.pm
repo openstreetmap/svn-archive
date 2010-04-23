@@ -38,10 +38,11 @@ use Encode ;
 use OSM::osm ;
 use OSM::QuadTree ;
 use GD ;
+use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.01' ;
+$VERSION = '1.02' ;
 
 require Exporter ;
 
@@ -50,7 +51,6 @@ require Exporter ;
 @EXPORT = qw ( 		addAreaIcon
 			addOnewayArrows
 			center
-			placeLabelAndIcon
 			convert
 			createLabel
 			createWayLabels
@@ -86,7 +86,12 @@ require Exporter ;
 			initGraph 
 			initOneways
 			labelWay 
+			placeLabelAndIcon
 			printScale
+			scalePoints
+			scaleBase
+			setdpi 
+			setBaseDpi
 			sizePNG 
 			sizeSVG
 			writeSVG ) ;
@@ -96,25 +101,26 @@ require Exporter ;
 #
 
 my %dashStyle = () ;
-$dashStyle{1} = "15,5" ; # for tracks, path etc.
-$dashStyle{2} = "11,5" ;
-$dashStyle{3} = "7,5" ;
-$dashStyle{4} = "3,5" ;
-$dashStyle{10} = "2,2" ;
-$dashStyle{11} = "4,4" ;
-$dashStyle{12} = "6,6" ;
-$dashStyle{13} = "8,8" ;
-$dashStyle{14} = "10,10" ;
-$dashStyle{20} = "0,2,0,4" ; # for borders
-$dashStyle{21} = "0,4,0,8" ;
-$dashStyle{22} = "0,6,0,12" ;
-$dashStyle{23} = "0,8,0,16" ;
-$dashStyle{30} = "1,1" ; # for steps
-$dashStyle{31} = "2,2" ;
-$dashStyle{32} = "3,3" ;
-$dashStyle{33} = "1,3" ;
-$dashStyle{34} = "1,5" ;
-$dashStyle{35} = "2,5" ;
+my %dashDefinition = () ; # for 300 dpi
+@{$dashDefinition{1}} = (60,20) ; # for tracks, path etc.
+@{$dashDefinition{2}} = (44,20) ;
+@{$dashDefinition{3}} = (28,20) ;
+@{$dashDefinition{4}} = (12,20) ;
+@{$dashDefinition{10}} = (8,8) ;
+@{$dashDefinition{11}} = (16,16) ;
+@{$dashDefinition{12}} = (24,24) ;
+@{$dashDefinition{13}} = (32,32) ;
+@{$dashDefinition{14}} = (40,40) ;
+@{$dashDefinition{20}} = (0,8,0,16) ; # for borders
+@{$dashDefinition{21}} = (0,16,0,32) ;
+@{$dashDefinition{22}} = (0,24,0,48) ;
+@{$dashDefinition{23}} = (0,32,0,48) ;
+@{$dashDefinition{30}} = (4,4) ; # for steps
+@{$dashDefinition{31}} = (8,8) ;
+@{$dashDefinition{32}} = (12,12) ;
+@{$dashDefinition{33}} = (4,12) ;
+@{$dashDefinition{34}} = (4,20) ;
+@{$dashDefinition{35}} = (8,20) ;
 
 my $wayIndexLabelColor = 9 ;
 my $wayIndexLabelSize = 10 ;
@@ -133,6 +139,12 @@ my $qtPoiLabels ;
 #
 # variables
 #
+my $proj ;
+my $projSizeX ;
+my $projSizeY ;
+my ($projLeft, $projRight, $projBottom, $projTop) ;
+
+
 my ($top, $bottom, $left, $right) ; # min and max real world coordinates
 my ($sizeX, $sizeY) ; # pic size in pixels
 
@@ -163,21 +175,53 @@ my $numLabelsOmitted = 0 ;
 my $numWayLabelsOmitted = 0 ;
 
 my $dpi = 0 ;
+my $baseDpi ;
 
 # clutter information
 my %clutter = () ;
 my %clutterIcon = () ;
 my @lines ;
 
+sub setdpi {
+	$dpi = shift ;
+}
+
+sub setBaseDpi {
+	$baseDpi = shift ;
+}
+
+
 sub initGraph {
 #
 # function initializes the picture, the colors and the background (white)
 #
-	my ($x, $l, $b, $r, $t, $color, $scaleDpi) = @_ ;	
-	$dpi = $scaleDpi ;
+	my ($x, $l, $b, $r, $t, $color, $projection, $ellipsoid) = @_ ;	
+
+	my $l0 = int($l) - 1 ;
+	$proj = Geo::Proj4->new(
+		proj => $projection, 
+		ellps => $ellipsoid, 
+		lon_0 => $l0 
+		) or die "parameter error: ".Geo::Proj4->error. "\n"; 
+
+
+	($projLeft, $projBottom) = $proj->forward($b, $l) ; # lat/lon!!!
+	($projRight, $projTop) = $proj->forward($t, $r) ; # lat/lon!!!
+
+	# print "PROJ: bounds: $projLeft $projRight $projBottom $projTop\n" ;
+
+	$projSizeX = $projRight - $projLeft ;
+	$projSizeY = $projTop - $projBottom ;
+
+	my $factor = $projSizeY / $projSizeX ;
+
+	# print "PROJ: $projSizeX x $projSizeY units, factor = $factor\n" ;
 	
-	$sizeX = $x ;
-	$sizeY = int ( $x * ($t - $b) / ($r - $l) / cos ($t/360*3.14*2) ) ;
+	$sizeX = int ($x) ;
+	$sizeY = int ($x * $factor) ;
+
+	# print "PROJ: $sizeX x $sizeY pixels\n" ;
+
 	$top = $t ;
 	$left = $l ;
 	$right = $r ;
@@ -195,7 +239,34 @@ sub initGraph {
                                       -ymin  => 0,
                                       -ymax  => $sizeY+40,
                                       -depth => 5);
+	initDashes() ;
 }
+
+sub initDashes {
+#
+# sub creates dash styles according to base definition, base dpi and scaledpi
+#
+	foreach my $style (keys %dashDefinition) {
+		my @array = @{$dashDefinition{$style}} ;
+		print "DASH $style initially: @array\n" ;
+		my $dashString = "" ;
+		my $first = 1 ;
+		foreach my $entry (@array) {
+			my $entryScaled = scalePoints ( scaleBase ($entry)) ;
+			if (!$first) {
+				$dashString .= "," . $entryScaled ;
+			}
+			else {
+				$first = 0 ;
+				$dashString .= $entryScaled ;
+			}
+		}
+		$dashStyle{$style} = $dashString ;
+		print "DASH $style finally: \"$dashString\"\n\n" ;
+	}
+}
+
+
 
 sub convert {
 #
@@ -203,12 +274,13 @@ sub convert {
 #
 	my ($x, $y) = @_ ;
 
-	my ($x1) = int( ($x - $left) / ($right - $left) * $sizeX ) ;
-	my ($y1) = int ($sizeY - int( ($y - $bottom) / ($top - $bottom) * $sizeY ) ) ;
+	my ($x1, $y1) = $proj->forward($y, $x) ; # lat/lon!!!
 
-	return ($x1, $y1) ;
-}
+	my $x2 = int ( ($x1 - $projLeft) / ($projRight - $projLeft) * $sizeX ) ;
+	my $y2 = $sizeY - int ( ($y1 - $projBottom) / ($projTop - $projBottom) * $sizeY ) ;
 
+	return ($x2, $y2) ;
+}
 sub gridSquare {
 #
 # returns grid square of given coordinates for directories
@@ -308,10 +380,19 @@ sub drawHead {
 
 sub drawFoot {
 #
-# draws text on bottom left corner of the picture, below legend
+# draws text on bottom left corner of the picture
 #
 	my ($text, $col, $size, $font) = @_ ;
-	push @svgOutputText, svgElementText (20, ($sizeY-20), $text, $size, $font, $col) ;
+	my $posX = 80 ;
+	my $posY = 80 ;
+	push @svgOutputText, svgElementText (
+		scalePoints ( scaleBase ($posX) ), 
+		$sizeY - ( scalePoints ( scaleBase ($posY) ) ), 
+		$text, 
+		scalePoints ( scaleBase ($size) ) , 
+		$font, 
+		$col
+	) ;
 }
 
 
@@ -323,7 +404,7 @@ sub drawTextPix {
 #
 	my ($x1, $y1, $text, $col, $size, $font) = @_ ;
 
-	push @svgOutputPixel, svgElementText ($x1, $y1+9, $text, $size, $font, $col) ;
+	push @svgOutputPixel, svgElementText ($x1, $y1, $text, $size, $font, $col) ;
 }
 
 sub drawTextPixGrid {
@@ -459,6 +540,7 @@ sub createWayLabels {
 		my $wLen = $candidate->[2] ;
 		my $lLen = $candidate->[3] ;
 		if ($wLen == 0) { $wLen = 1 ; }
+		if ($lLen == 0) { $lLen = 1 ; }
 		$candidate->[5] = $lLen / $wLen ;
 	}
 	@labelCandidates = sort { $b->[5] <=> $a->[5] } @labelCandidates ;
@@ -481,6 +563,7 @@ sub createWayLabels {
 			$numWayLabelsOmitted++ ;
 		}
 		else {
+			# print "$wLen - $name - $lLen\n" ;
 			my $numLabels = int ($wLen / (4 * $lLen)) ;
 			if ($numLabels < 1) { $numLabels = 1 ; }
 			if ($numLabels > 4) { $numLabels = 4 ; }
@@ -908,30 +991,34 @@ sub drawRuler {
 #
 	my $col = shift ;
 
-	my $B ;
-	my $B2 ;
-	my $L ;
-	my $Lpix ;
+	my $B ; my $B2 ;
+	my $L ; my $Lpix ;
 	my $x ;
 	my $text ;
-	my $rx = $sizeX - 20 ;
-	my $ry = 20 ;
-	
+	my $rx = $sizeX - scalePoints (scaleBase (80)) ;
+	my $ry = scalePoints (scaleBase (80)) ;
+	my $lineThickness = 8 ; # at 300dpi
+	my $textSize = 40 ; # at 300 dpi
+	my $textDist = 60 ; # at 300 dpi
+	my $lineLen = 40 ; # at 300 dpi
+		
 	$B = $right - $left ; 				# in degrees
 	$B2 = $B * cos ($top/360*3.14*2) * 111.1 ;	# in km
-	$text = "100m" ; $x = 0.1 ;			# default length ruler
-	if ($B2 > 5) {$text = "500m" ; $x = 0.5 ; }	# enlarge ruler
-	if ($B2 > 10) {$text = "1km" ; $x = 1 ; }
-	if ($B2 > 50) {$text = "5km" ; $x = 5 ; }
-	if ($B2 > 100) {$text = "10km" ; $x = 10 ; }
+	$text = "50m" ; $x = 0.05 ;			# default length ruler
+
+	if ($B2 > 0.5) {$text = "100m" ; $x = 0.1 ; }	# enlarge ruler
+	if ($B2 > 1) {$text = "500m" ; $x = 0.5 ; }	# enlarge ruler
+	if ($B2 > 5) {$text = "1km" ; $x = 1 ; }
+	if ($B2 > 10) {$text = "5km" ; $x = 5 ; }
+	if ($B2 > 50) {$text = "10km" ; $x = 10 ; }
 	$L = $x / (cos ($top/360*3.14*2) * 111.1 ) ;	# length ruler in km
 	$Lpix = $L / $B * $sizeX ;			# length ruler in pixels
 
-	push @svgOutputText, svgElementLine ($rx-$Lpix,$ry,$rx,$ry, $col, 1) ;
-	push @svgOutputText, svgElementLine ($rx-$Lpix,$ry,$rx-$Lpix,$ry+10, $col, 1) ;
-	push @svgOutputText, svgElementLine ($rx,$ry,$rx,$ry+10, $col, 1) ;
-	push @svgOutputText, svgElementLine ($rx-$Lpix/2,$ry,$rx-$Lpix/2,$ry+5, $col, 1) ;
-	push @svgOutputText, svgElementText ($rx-$Lpix, $ry+15, $text, 10, "sans-serif", $col) ;
+	push @svgOutputText, svgElementLine ($rx-$Lpix,$ry,$rx,$ry, $col, scalePoints( scaleBase ($lineThickness) ) ) ;
+	push @svgOutputText, svgElementLine ($rx-$Lpix,$ry,$rx-$Lpix,$ry+scalePoints(scaleBase($lineLen)), $col, scalePoints( scaleBase ($lineThickness) ) ) ;
+	push @svgOutputText, svgElementLine ($rx,$ry,$rx,$ry+scalePoints(scaleBase($lineLen)), $col, scalePoints( scaleBase ($lineThickness) )) ;
+	push @svgOutputText, svgElementLine ($rx-$Lpix/2,$ry,$rx-$Lpix/2,$ry+scalePoints(scaleBase($lineLen/2)), $col, scalePoints( scaleBase ($lineThickness) ) ) ;
+	push @svgOutputText, svgElementText ($rx-$Lpix, $ry+scalePoints(scaleBase($textDist)), $text, scalePoints(scaleBase($textSize)), "sans-serif", $col) ;
 }
 
 sub drawGrid {
@@ -1296,18 +1383,21 @@ sub printScale {
 	my ($dpi, $color) = @_ ;
 
 	my $dist = distance ($left, $bottom, $right, $bottom) ;
-	# print "distance = $dist\n" ;
 	my $inches = $sizeX / $dpi ;
-	# print "inches = $inches\n" ;
 	my $cm = $inches * 2.54 ;
-	# print "cm = $cm\n" ;
 	my $scale = int ( $dist / ($cm/100/1000)  ) ;
 	$scale = int ($scale / 100) * 100 ;
-
 	my $text = "1 : $scale ($dpi dpi)" ;
-	
-	drawTextPix ($sizeX-200, 50, $text, $color, 14, "sans-serif") ;
-	# print "scale = $text\n\n" ;
+	# sizes for 300 dpi
+	my $posX = 650 ;
+	my $posY = 200 ;
+	my $size = 56 ;
+	drawTextPix (
+		$sizeX-scalePoints( scaleBase($posX) ), 
+		scalePoints( scaleBase($posY) ), 
+		$text, $color, 
+		scalePoints( scaleBase ($size) ), "sans-serif"
+	) ;
 }
 
 
@@ -1467,14 +1557,18 @@ sub addAreaIcon {
 		my ($x, $y) ;
 		if (grep /.svg/, $fileNameOriginal) {
 			($x, $y) = sizeSVG ($fileNameOriginal) ;
+			# $x = scalePoints ($x) ;
+			# $y = scalePoints ($y) ;
 			if ( ($x == 0) or ($y == 0) ) { 
-				$x = 32 ; $y = 32 ; 
+				$x = scalePoints(32) ; $y = scalePoints(32) ; 
 				print "WARNING: size of file $fileNameOriginal could not be determined. Set to 32px x 32px\n" ;
 			} 
 		}
 
 		if (grep /.png/, $fileNameOriginal) {
 			($x, $y) = sizePNG ($fileNameOriginal) ;
+			# $x = scalePoints ($x) ;
+			# $y = scalePoints ($y) ;
 		}
 
 		if (!defined $areaDef{$fileNameOriginal}) {
@@ -1626,7 +1720,7 @@ sub placeLabelAndIcon {
 
 			my @shifts = (0) ;
 			if ($allowIconMove eq "1") {
-				@shifts = (0, -10, 10) ;
+				@shifts = ( 0, scalePoints(-10), scalePoints(10) ) ;
 			}
 			my $posFound = 0 ; my $posCount = 0 ;
 			LABAB: foreach my $xShift (@shifts) {
@@ -1849,7 +1943,22 @@ sub sizeSVG {
 	return ($x, $y) ;
 }
 
+sub scalePoints {
+	my $a = shift ;
+	# my $b = $a ;
+	my $b = $a / $baseDpi * $dpi ;
 
+	return int ($b) ;
+}
+
+sub scaleBase {
+#
+# function scales sizes given in 300dpi to base dpi given in rules so texts in legend, ruler etc. will appear in same size
+#
+	my $a = shift ;
+	my $b = $a / 300 * $baseDpi ;
+	return $b ;
+}
 
 1 ;
 

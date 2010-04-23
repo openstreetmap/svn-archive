@@ -20,11 +20,11 @@ use warnings ;
 
 use List::Util qw[min max] ;
 use OSM::osm ;
-use OSM::mapgen 1.01 ;
+use OSM::mapgen 1.02 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.01' ;
+$VERSION = '1.02' ;
 
 require Exporter ;
 
@@ -86,6 +86,26 @@ sub readRules {
 			push @routes, [$route, $color, $thickness, $dash, $opacity, $label, $nodeThickness, $fromScale, $toScale] ;		}
 		$line = <$csvFile> ;	}
 	close ($csvFile) ;
+
+	foreach my $node (@nodes) {
+		$node->[3] = scalePoints ($node->[3]) ;
+		$node->[6] = scalePoints ($node->[6]) ;
+		$node->[8] = scalePoints ($node->[8]) ;
+		$node->[11] = scalePoints ($node->[11]) ;
+	}
+
+	foreach my $way (@ways) {
+		$way->[3] = scalePoints ($way->[3]) ;
+		$way->[6] = scalePoints ($way->[6]) ;
+		$way->[10] = scalePoints ($way->[10]) ;
+		$way->[12] = scalePoints ($way->[12]) ;
+	}
+
+	foreach my $route (@routes) {
+		$route->[2] = scalePoints ($route->[2]) ;
+		$route->[6] = scalePoints ($route->[6]) ;
+	}
+
 	return (\@nodes, \@ways, \@routes) ;
 }
 

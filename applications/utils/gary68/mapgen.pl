@@ -53,6 +53,12 @@
 #      subs for png and svg sizes
 # 1.00 ---
 # 1.01 [-clipbox] implemented
+# 1.02 mercator projection implemented
+#      default resolution set to 72dpi
+#      scale point sizes according to selected resolution
+#      [-basedpi]
+#      dir -> pdf
+#
 #
 # TODO
 # ------------------
@@ -72,11 +78,15 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.01 ;
-use OSM::mapgenRules 1.01 ;
+use OSM::mapgen 1.02 ;
+use OSM::mapgenRules 1.02 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.01" ;
+my $version = "1.02" ;
+
+my $projection = "merc" ;
+# my $ellipsoid = "clrk66" ;
+my $ellipsoid = "WGS84" ;
 
 my $usage = <<"END23" ;
 perl mapgen.pl 
@@ -88,7 +98,7 @@ perl mapgen.pl
 -bgcolor=TEXT (color for background)
 -size=<integer> (in pixels for x axis, DEFAULT=1024)
 -clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
--clipbbox=<float>,<float>,<float>,<float> (left, right, bootom, top of bbox for clipping map out of data - more precise than -clip)
+-clipbbox=<float>,<float>,<float>,<float> (left, right, bootom, top of bbox for clipping map out of data - more precise than -clip; overrides -clip!)
 -pad=<INTEGER> (percent of white space around data in osm file, DEFAULT=0)
 
 -place=TEXT (Place to draw automatically; quotation marks can be used if necessary; node id can also be given; OSMOSIS REQUIRED!)
@@ -109,6 +119,9 @@ perl mapgen.pl
 -coordscolor=TEXT (set color of coordinates grid)
 -dir (create street directory in separate file. if grid is enabled, grid squares will be added)
 -poi (create list of pois)
+-dirpdf (creates directory of streets and POIs if according options for generation are set)
+-dircolnum=INTEGER (number of columns for PDF directory of streets and POIs; DEFAULT=3)
+-dirtitle=TEXT (title for PDF directory of streets and POIs; DEFAULT="mapgen map")
 -tagstat (lists keys and values used in osm file; program filters list to keep them short!!! see code array noListTags)
 
 -routelabelcolor=TEXT (color for labels of routes)
@@ -124,6 +137,7 @@ perl mapgen.pl
 -scalecolor=TEXT (set scale color; DEFAULT = black)
 -scaleset=INTEGER (1:x preset for map scale; overrides -size=INTEGER! set correct printer options!)
 -scaledpi=INTEGER (print resolution; DEFAULT = 300 dpi)
+-basedpi=INTEGER (rule size resolution; DEFAULT = 300 dpi)
 -rulescaleset=INTEGER (determines the scale used to select rules; DEFAULT=0, meaning actual map scale is used to select rules)
 
 -ppc=<float> (pixels needed per character using font size 10; DEFAULT=5.5)
@@ -155,6 +169,9 @@ my $pdfOpt = 0 ;
 my $pngOpt = 0 ;
 my $dirOpt = 0 ;
 my $poiOpt = 0 ;
+my $dirPdfOpt = 0 ;
+my $dirColNum = 3 ;
+my $dirTitle = "mapgen map" ;
 my $ppc = 6 ; 
 my $place = "" ;
 my $lonrad = 2 ;
@@ -167,6 +184,7 @@ my $rulerOpt = 1 ;
 my $rulerColor = "black" ;
 my $scaleOpt = 0 ;
 my $scaleDpi = 300 ;
+my $baseDpi = 300 ;
 my $scaleColor = "black" ;
 my $scaleSet = 0 ;
 my $ruleScaleSet = 0 ;
@@ -299,6 +317,9 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"png"		=> \$pngOpt,		# specifies if png will be created
 				"dir"		=> \$dirOpt,		# specifies if directory of streets will be created
 				"poi"		=> \$poiOpt,		# specifies if directory of pois will be created
+				"dirpdf"		=> \$dirPdfOpt,
+				"dircolnum:i"	=> \$dirColNum,
+				"dirtitle:s"	=> \$dirTitle,
 				"tagstat"	=> \$tagStatOpt,	# lists k/v used in osm file
 				"declutter"	=> \$declutterOpt,
 				"allowiconmove"	=> \$allowIconMoveOpt,
@@ -313,6 +334,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"rulercolor:s"	=> \$rulerColor,
 				"scale"		=> \$scaleOpt,
 				"scaledpi:i"	=> \$scaleDpi,
+				"basedpi:i"	=> \$baseDpi,
 				"scalecolor:s"	=> \$scaleColor,
 				"scaleset:i"	=> \$scaleSet,
 				"rulescaleset:i" => \$ruleScaleSet,
@@ -331,6 +353,15 @@ if ($helpOpt eq "1") {
 	print $usage . "\n" ;
 	die() ;
 }
+
+setdpi ($scaleDpi) ;
+setBaseDpi ($baseDpi) ;
+
+$halo = scalePoints ($halo) ;
+$routeLabelSize = scalePoints ($routeLabelSize) ;
+$routeLabelOffset = scalePoints ($routeLabelOffset) ;
+$routeIconDist = scalePoints ($routeIconDist) ;
+
 
 if ($grid > 26) { 
 	# max 26 because then letters are running out
@@ -360,6 +391,7 @@ print "ruler     = $rulerOpt\n" ;
 print "scaleOpt  = $scaleOpt\n" ;
 print "scaleCol  = $scaleColor\n" ;
 print "scaleDpi  = $scaleDpi\n" ;
+print "baseDpi  = $baseDpi\n" ;
 print "scaleSet  = $scaleSet\n" ;
 print "ruleScaleSet  = $ruleScaleSet\n\n" ;
 
@@ -584,7 +616,7 @@ if ($scaleSet != 0) {
 	print "INFO: set print resolution to $scaleDpi dpi!\n\n" ;
 }
 
-initGraph ($size, $lonMin, $latMin, $lonMax, $latMax, $bgColor, $scaleDpi) ;
+initGraph ($size, $lonMin, $latMin, $lonMax, $latMax, $bgColor, $projection, $ellipsoid) ;
 if ($onewayOpt eq "1") { initOneways ($onewayColor) ; }
 
 my ($paper, $w, $h) = fitsPaper ($scaleDpi) ;
@@ -712,13 +744,14 @@ foreach my $wayId (keys %memWayTags) {
 			if ( ($test->[$wayIndexBorderThickness] > 0) and ($test->[$wayIndexBorderColor ne "none"]) and ($tunnel ne "yes") and ($bridge ne "yes") ) {
 				drawWay ($layer-.3, $test->[$wayIndexBorderColor], $test->[$wayIndexThickness]+2*$test->[$wayIndexBorderThickness], 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 			}
+			my $thickness = 16 ;
 			if ($bridge eq "yes") {
-				drawWayBridge ($layer-.04, "black", $test->[$wayIndexThickness]+4, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
-				drawWayBridge ($layer-.02, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWayBridge ($layer-scalePoints(scaleBase($thickness))/100, "black", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness)), 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWayBridge ($layer-scalePoints(scaleBase($thickness/2))/100, "white", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness/2)), 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 			}
 			if ($tunnel eq "yes") {
-				drawWayBridge ($layer-.04, "black", $test->[$wayIndexThickness]+4, 11, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
-				drawWayBridge ($layer-.02, "white", $test->[$wayIndexThickness]+2, 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWayBridge ($layer-scalePoints(scaleBase($thickness))/100, "black", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness)), 11, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
+				drawWayBridge ($layer-scalePoints(scaleBase($thickness/2))/100, "white", $test->[$wayIndexThickness] + scalePoints(scaleBase($thickness/2)), 0, nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 			}
 			drawWay ($layer, $test->[$wayIndexColor], $test->[$wayIndexThickness], $test->[$wayIndexDash], nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 
@@ -796,7 +829,7 @@ if ($rulerOpt == 1) {
 	drawRuler ($rulerColor) ;
 }
 
-drawFoot ("gary68's $programName $version - data CC-BY-SA www.openstreetmap.org", "black", 10, "sans-serif") ;
+drawFoot ("gary68's $programName $version ($projection $ellipsoid) - data CC-BY-SA www.openstreetmap.org", "black", 48, "sans-serif") ;
 
 writeSVG ($svgName) ;
 
@@ -814,12 +847,13 @@ if ($pngOpt eq "1") {
 	`inkscape --export-dpi=$scaleDpi -e $pngName $svgName` ;
 }
 
+my $directoryName ;
 if ($dirOpt eq "1") {
 	my $dirFile ;
-	my $dirName = $svgName ;
-	$dirName =~ s/\.svg/\_streets.txt/ ;
-	print "creating dir file $dirName ...\n" ;
-	open ($dirFile, ">", $dirName) or die ("can't open dir file\n") ;
+	$directoryName = $svgName ;
+	$directoryName =~ s/\.svg/\_streets.txt/ ;
+	print "creating dir file $directoryName ...\n" ;
+	open ($dirFile, ">", $directoryName) or die ("can't open dir file\n") ;
 	if ($grid eq "0") {
 		foreach my $street (sort keys %directory) {
 			print $dirFile "$street\n" ;
@@ -837,9 +871,10 @@ if ($dirOpt eq "1") {
 	close ($dirFile) ;
 }
 
+my $poiName ;
 if ($poiOpt eq "1") {
 	my $poiFile ;
-	my $poiName = $svgName ;
+	$poiName = $svgName ;
 	$poiName =~ s/\.svg/\_pois.txt/ ;
 	print "creating poi file $poiName ...\n" ;
 	open ($poiFile, ">", $poiName) or die ("can't open poi file\n") ;
@@ -859,6 +894,29 @@ if ($poiOpt eq "1") {
 	}
 	close ($poiFile) ;
 }
+
+if ($dirPdfOpt eq "1") {
+	if (($dirOpt eq "1") or ($poiOpt eq "1")) {
+		if ($grid >0) {
+			my $dirPdfName = $svgName ;
+			$dirPdfName =~ s/.svg/_dir.pdf/ ;
+			my $sName = "none" ;
+			my $pName = "none" ;
+			if ($dirOpt eq "1") { $sName = $directoryName ; }
+			if ($poiOpt eq "1") { $pName = $poiName ; }
+			print "\ncalling perl dir.pl $sName $pName $dirTitle $dirPdfName $dirColNum\n\n" ;
+			`perl dir.pl $sName $pName \"$dirTitle\" $dirPdfName $dirColNum > out.txt` ;
+		}
+		else {
+			print "WARNING: directory PDF will not be created because -grid was not specified\n" ;
+		}
+		
+	}
+	else {
+		print "WARNING: directory PDF will not be created because neither -dir nor -poi was specified\n" ;
+	}
+}
+
 
 if ($tagStatOpt eq "1") {
 	my $tagFile ;
@@ -981,18 +1039,20 @@ sub createLegend {
 # creates legend in map
 # only flagged item, only items used in map scale
 #
-	my $currentY = 20 ;
-	my $step = 30 ;
-	my $textX = 70 ;
-	my $textOffset = -5 ;
-	my $dotX = 40 ;
-	my $areaSize = 12 ;
-	my $wayStartX = 20 ;
-	my $wayEndX = 60 ;
-	my $areaStartX = 31 ;
-	my $areaEndX = 55 ;
-	my $count = 0 ;
-	my $sizeLegend = 20 ;
+	my $currentY = scalePoints(scaleBase(80)) ;		# current y position
+	my $step = scalePoints(scaleBase(120)) ;		# step to next line
+	my $textX = scalePoints(scaleBase(280)) ;		# x position start of text
+	my $textOffset = scalePoints(scaleBase(20)) ;		# text offset y to current Y
+	my $dotX = scalePoints(scaleBase(160)) ;		# x position for dot
+	my $areaSize = scalePoints(scaleBase(48)) ;		# area size x/y
+	my $wayStartX = scalePoints(scaleBase(80)) ;		# x position way start
+	my $wayEndX = scalePoints(scaleBase(240)) ;		# x position way end
+	my $areaStartX = scalePoints(scaleBase(124)) ;		# x position start area
+	my $areaEndX = scalePoints(scaleBase(220)) ;		# x position end area
+	my $count = 0 ;						# actual position
+	my $sizeLegend = scalePoints(scaleBase(80)) ;		# 
+	my $width = scalePoints (scaleBase(720)) ;		# width of legend
+	my $buffer = scalePoints(scaleBase(60)) ;			# 
 	
 	foreach my $node (@nodes) { 
 		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $ruleScaleSet) and ($node->[$nodeIndexToScale] >= $ruleScaleSet) ) { 
@@ -1012,21 +1072,21 @@ sub createLegend {
 	}
 	else { # == 2
 		my ($sx, $sy) = getDimensions() ;
-		$xOffset = $sx - 180 ;
-		$yOffset = $sy - ($count*$step+15) ;
+		$xOffset = $sx - $width ;
+		$yOffset = $sy - ($count*$step + $buffer) ;
 	}
 
 	# erase background
 	drawAreaPix ("white", "", $xOffset, $yOffset,
-			$xOffset+180, $yOffset,
-			$xOffset+180, $yOffset + $count*$step + 15,
-			$xOffset, $yOffset + $count*$step + 15,
+			$xOffset+$width, $yOffset,
+			$xOffset+$width, $yOffset + $count*$step + $buffer,
+			$xOffset, $yOffset + $count*$step + $buffer,
 			$xOffset, $yOffset) ;
 	
 	foreach my $node (@nodes) { 
 		if ( ($node->[$nodeIndexLegend] == 1) and ($node->[$nodeIndexFromScale] <= $ruleScaleSet) and ($node->[$nodeIndexToScale] >= $ruleScaleSet) ) { 
 			drawNodeDotPix ($xOffset + $dotX, $yOffset+$currentY, $node->[$nodeIndexColor], $node->[$nodeIndexThickness]) ;
-			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $node->[$nodeIndexValue], "black", $sizeLegend, "Arial") ;
+			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $node->[$nodeIndexValue], "black", $sizeLegend, "sans-serif") ;
 			$currentY += $step ;
 		}  
 	}
@@ -1046,7 +1106,7 @@ sub createLegend {
 					$xOffset+$areaStartX, $yOffset+$currentY+$areaSize,
 					$xOffset+$areaStartX, $yOffset+$currentY-$areaSize) ;
 			}
-			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $way->[$wayIndexValue], "black", $sizeLegend, "Arial") ;
+			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $way->[$wayIndexValue], "black", $sizeLegend, "sans-serif") ;
 			$currentY += $step ;
 		}  
 	}
@@ -2160,8 +2220,10 @@ sub preprocessWayLabels {
 				# print "$ruleNum, $wayIndexLabelSize\n" ;
 				my ($labelLengthPixels) = length ($name) * $ppc / 10 * $ruleArray[$wayIndexLabelSize] ;
 
+				# print "\nPPWL:        name $name - ppc $ppc - size $ruleArray[$wayIndexLabelSize]\n" ;
 				# print "PPWL:        wayLen $segmentLengthPixels\n" ;
 				# print "PPWL:        labLen $labelLengthPixels\n" ;
+
 				push @labelCandidates, [$ruleNum, $name, $segmentLengthPixels, $labelLengthPixels, [@points]] ;
 			}
 		}

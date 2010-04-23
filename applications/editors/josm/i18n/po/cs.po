@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 18:19+0200\n"
-"PO-Revision-Date: 2010-04-20 10:16+0000\n"
-"Last-Translator: Jezevec <Unknown>\n"
+"POT-Creation-Date: 2010-04-23 22:02+0200\n"
+"PO-Revision-Date: 2010-04-20 18:39+0000\n"
+"Last-Translator: bastik <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-04-20 15:46+0000\n"
+"X-Launchpad-Export-Date: 2010-04-23 20:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -281,10 +281,10 @@ msgstr "Klikněte pro pokračování startu {0} externích prohlížečů"
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:259
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:288
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:272
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:274
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:740
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:179
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -416,7 +416,7 @@ msgstr "Prosím zadejte zeměpisnou délku v rozsahu -180..180"
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:145
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:302
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:258
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:260
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:686
 msgid "OK"
 msgstr "OK"
@@ -2464,21 +2464,21 @@ msgstr ""
 "objektů najednou je častá chyba.\n"
 "Opravdu přesunout?"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:542
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:543
 msgid "Release the mouse button to select the objects in the rectangle."
 msgstr "Pusťte myší tlačítko k vybrání obejktů v obdélníku"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:544
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:545
 msgid ""
 "Release the mouse button to stop moving. Ctrl to merge with nearest node."
 msgstr ""
 "Uvolněte tlačítko myši pro ukončení pohybu. Ctrl sloučí s nejbližším uzlem."
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:546
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:547
 msgid "Release the mouse button to stop rotating."
 msgstr "Pusťte myší tlačítko k zastavení otaáčení"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:548
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:549
 msgid ""
 "Move objects by dragging; Shift to add to selection (Ctrl to toggle); Shift-"
 "Ctrl to rotate selected; or change selection"
@@ -3545,81 +3545,81 @@ msgstr ""
 
 #. translators notes must be in front
 #. column header: enable filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:162
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:166
 msgctxt "filter"
 msgid "E"
 msgstr ""
 
 #. column header: hide filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:163
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:167
 msgctxt "filter"
 msgid "H"
 msgstr ""
 
 #. column header: filter text
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:164
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:168
 msgctxt "filter"
 msgid "Text"
 msgstr ""
 
 #. column header: apply filter for children
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:165
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:169
 msgctxt "filter"
 msgid "C"
 msgstr ""
 
 #. column header: inverted filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:166
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:170
 msgctxt "filter"
 msgid "I"
 msgstr ""
 
 #. column header: filter mode
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:167
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:171
 msgctxt "filter"
 msgid "M"
 msgstr ""
 
 #. translators notes must be in front
 #. filter mode: replace
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:235
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:239
 msgctxt "filter"
 msgid "R"
 msgstr ""
 
 #. filter mode: add
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:236
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:240
 msgctxt "filter"
 msgid "A"
 msgstr ""
 
 #. filter mode: remove
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:237
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:241
 msgctxt "filter"
 msgid "D"
 msgstr ""
 
 #. filter mode: in selection
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:238
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:242
 msgctxt "filter"
 msgid "F"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:265
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:269
 msgid "<h2>Filter active</h2>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:271
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:275
 #, java-format
 msgid "<p><b>{0}</b> objects hidden"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:279
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:283
 #, java-format
 msgid "<b>{0}</b> objects disabled"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:282
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:286
 msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
 msgstr ""
 
@@ -5722,7 +5722,7 @@ msgstr "Negovat filtr"
 msgid "Filter mode"
 msgstr "Mód filtrování"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:218
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:217
 #, java-format
 msgid "Filter Hidden: {0} Disabled: {0}"
 msgstr ""
@@ -11336,7 +11336,7 @@ msgstr "Barvy"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:36
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:107
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAllAction.java:44
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:286
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:288
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:278
 msgid "All"
 msgstr "Všechny"
@@ -17348,56 +17348,56 @@ msgstr "Otevřít nástroj pro testovaní dialogů přednastavených značek."
 msgid "You have to specify tagging preset sources in the preferences first."
 msgstr "Je třeba zadat zdroje předvoleb v konfiguraci."
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:61
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:62
 msgid "Enter housenumbers or amount of segments"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:100
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:101
 msgid "Terrace a house"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:140
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:141
 msgid "Interpolation"
 msgstr "Interpolace"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:142
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:143
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:92
 msgid "Segments"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:144
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:145
 msgid "Street"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:146
-msgid "Highest Number"
-msgstr ""
-
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:148
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:147
 msgid "Lowest Number"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:150
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:149
 msgid "Lowest housenumber of the terraced house"
 msgstr ""
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:151
+msgid "Highest Number"
+msgstr ""
+
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:152
 msgid "add to existing associatedStreet relation"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:151
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:152
 msgid "create an associatedStreet relation"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:153
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:154
 msgid "delete outline way"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:169
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:170
 msgid "Street name: "
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:287
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:289
 msgid "Even/Odd"
 msgstr ""
 
@@ -17524,14 +17524,12 @@ msgstr ""
 "reprezentující toto pravidlo."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:54
-#, fuzzy
 msgid "Type:"
-msgstr "Typ"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:64
-#, fuzzy
 msgid "From:"
-msgstr "Z ..."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:75
 msgid "To:"
@@ -17698,14 +17696,12 @@ msgid "Already participating in a conflict"
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:754
-#, fuzzy
 msgid "Delete this turn restriction"
-msgstr "Vytvořit nové pravidlo odbočování"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:784
-#, fuzzy
 msgid "Select this turn restriction"
-msgstr "Vytvořit nové pravidlo odbočování"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:810
 msgid "Activate the layer this turn restriction belongs to and zoom to it"
@@ -18425,11 +18421,11 @@ msgid ""
 "the same layer, but are not connected by a node."
 msgstr ""
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:126
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:139
 msgid "Crossing buildings"
 msgstr "Křížící se budovy"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:126
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:139
 msgid "Crossing ways"
 msgstr "Zkřížené cesty"
 
@@ -19115,23 +19111,23 @@ msgstr "Neplatná URL WMS nebo id"
 msgid "Adjust the position of the selected WMS layer"
 msgstr "Upravit pozici zvolené WMS vrstvy"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:173
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:172
 msgid "Please select the WMS layer to adjust."
 msgstr "Prosíme vyberte WMS vrstvu k upravení."
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:177
 msgid "Select WMS layer"
 msgstr "Vybrat WMS vrstvu"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:179
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
 msgid "Start adjusting"
 msgstr "Začít upravování"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:198
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:197
 msgid "There are currently no WMS layer to adjust."
 msgstr "Nejsou žádné WMS vrstvy k upravování."
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:199
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:198
 msgid "No layers to adjust"
 msgstr "Žádné vrstvy k upravování"
 
@@ -26918,9 +26914,8 @@ msgid "vouchers"
 msgstr "poukazy"
 
 #: build/trans_presets.java:2729
-#, fuzzy
 msgid "bicycle_tube"
-msgstr "bicykl"
+msgstr ""
 
 #: build/trans_presets.java:2729
 msgid "condoms"

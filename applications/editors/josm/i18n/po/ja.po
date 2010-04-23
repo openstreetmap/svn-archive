@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 18:19+0200\n"
-"PO-Revision-Date: 2010-04-20 03:41+0000\n"
+"POT-Creation-Date: 2010-04-23 22:02+0200\n"
+"PO-Revision-Date: 2010-04-21 03:52+0000\n"
 "Last-Translator: higa4 <higa432@gmail.com>\n"
 "Language-Team: Japanese <tr@openstreetmap.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-04-20 15:45+0000\n"
+"X-Launchpad-Export-Date: 2010-04-23 20:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: JAPAN\n"
 "X-Poedit-Language: Japanese\n"
@@ -284,10 +284,10 @@ msgstr "クリックして継続し、{0} ブラウザを開きます"
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:259
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:288
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:272
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:274
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:740
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:179
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -421,7 +421,7 @@ msgstr "-180から180の範囲で経度を入力してください"
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:145
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:302
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:258
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:260
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:686
 msgid "OK"
 msgstr "OK"
@@ -2459,22 +2459,22 @@ msgstr ""
 "違いでしょう。\n"
 "本当に移動しますか？"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:542
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:543
 msgid "Release the mouse button to select the objects in the rectangle."
 msgstr "矩形範囲でオブジェクトを選択し、マウスボタンを離してください。"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:544
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:545
 msgid ""
 "Release the mouse button to stop moving. Ctrl to merge with nearest node."
 msgstr ""
 "移動を止めるには、マウスのボタンを放してください。Ctrlキーで、近くのノードと"
 "マージします。"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:546
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:547
 msgid "Release the mouse button to stop rotating."
 msgstr "回転を止めるには、マウスボタンを放します。"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:548
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:549
 msgid ""
 "Move objects by dragging; Shift to add to selection (Ctrl to toggle); Shift-"
 "Ctrl to rotate selected; or change selection"
@@ -3570,81 +3570,81 @@ msgstr ""
 
 #. translators notes must be in front
 #. column header: enable filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:162
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:166
 msgctxt "filter"
 msgid "E"
 msgstr "東"
 
 #. column header: hide filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:163
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:167
 msgctxt "filter"
 msgid "H"
 msgstr ""
 
 #. column header: filter text
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:164
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:168
 msgctxt "filter"
 msgid "Text"
 msgstr "テキスト"
 
 #. column header: apply filter for children
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:165
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:169
 msgctxt "filter"
 msgid "C"
 msgstr ""
 
 #. column header: inverted filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:166
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:170
 msgctxt "filter"
 msgid "I"
 msgstr ""
 
 #. column header: filter mode
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:167
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:171
 msgctxt "filter"
 msgid "M"
 msgstr ""
 
 #. translators notes must be in front
 #. filter mode: replace
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:235
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:239
 msgctxt "filter"
 msgid "R"
 msgstr ""
 
 #. filter mode: add
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:236
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:240
 msgctxt "filter"
 msgid "A"
 msgstr ""
 
 #. filter mode: remove
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:237
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:241
 msgctxt "filter"
 msgid "D"
 msgstr ""
 
 #. filter mode: in selection
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:238
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:242
 msgctxt "filter"
 msgid "F"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:265
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:269
 msgid "<h2>Filter active</h2>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:271
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:275
 #, java-format
 msgid "<p><b>{0}</b> objects hidden"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:279
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:283
 #, java-format
 msgid "<b>{0}</b> objects disabled"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:282
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:286
 msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
 msgstr ""
 
@@ -5756,7 +5756,7 @@ msgstr "反転フィルター"
 msgid "Filter mode"
 msgstr "フィルターモード"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:218
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:217
 #, java-format
 msgid "Filter Hidden: {0} Disabled: {0}"
 msgstr ""
@@ -11398,7 +11398,7 @@ msgstr "色"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:36
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:107
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAllAction.java:44
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:286
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:288
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:278
 msgid "All"
 msgstr "全て"
@@ -12402,10 +12402,14 @@ msgid ""
 "You do not have an Access Token yet to access the OSM server using OAuth. "
 "Please authorize first."
 msgstr ""
+"あなたにはOAuth を使用しているOSMサーバにアクセスするためのアクセストークンが"
+"まだありません。最初に認証してください。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:226
 msgid "You already have an Access Token to access the OSM server using OAuth."
 msgstr ""
+"あなたにはOAuth を使用しているOSMサーバにアクセスするためのアクセストークンが"
+"既にあります。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:258
 msgid "Save to preferences"
@@ -12413,7 +12417,7 @@ msgstr "プリファレンスに保存"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:307
 msgid "Click to step through the OAuth authorization process"
-msgstr ""
+msgstr "クリックしてOAuth 認証プロセスを一歩進む"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:331
 msgid "New Access Token"
@@ -12423,7 +12427,7 @@ msgstr "新しいアクセストークン"
 msgid ""
 "Click to step through the OAuth authorization process and generate a new "
 "Access Token"
-msgstr ""
+msgstr "クリックしてOAuth 認証プロセスを一歩進み、新しいアクセストークンを作成"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:357
 msgid "Click test access to the OSM server with the current access token"
@@ -12643,6 +12647,8 @@ msgstr ""
 msgid ""
 "The current value is not a valid OSM ID. Please enter an integer value > 0"
 msgstr ""
+"現在の値は正しいOSMのIDではありません。ゼロより大きい整数値を入力してくださ"
+"い。"
 
 #: ../core/src/org/openstreetmap/josm/io/AllFormatsImporter.java:15
 msgid "All Formats"
@@ -12681,18 +12687,19 @@ msgid ""
 "Unexpected format of error header for conflict in changeset update. Got "
 "''{0}''"
 msgstr ""
+"変更セット更新中の競合に対するエラーヘッダの予期せぬ形式。入力値 ''{0}''"
 
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:127
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:129
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:133
 #, java-format
 msgid "Illegal longitude value for parameter ''{0}'', got {1}"
-msgstr ""
+msgstr "パラメータ ''{0}'' に対する不正な経度値、入力値 ''{1}''"
 
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:131
 #, java-format
 msgid "Illegal latitude value for parameter ''{0}'', got {1}"
-msgstr ""
+msgstr "パラメータ ''{0}'' に対する不正な緯度値、入力値 ''{1}''"
 
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:294
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:299
@@ -12706,7 +12713,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:348
 #, java-format
 msgid "Unexpected value for ''{0}'' in changeset query url, got {1}"
-msgstr ""
+msgstr "変更セットクエリURL中の ''{0}'' に対する予期せぬ値、入力値 ''{1}''"
 
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:362
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:366
@@ -12714,17 +12721,20 @@ msgid ""
 "Cannot create a changeset query including both the query parameters ''uid'' "
 "and ''display_name''"
 msgstr ""
+"クエリパラメータ''uid'' と ''display_name'' の両方を含む変更セットクエリは作"
+"成できません"
 
 #: ../core/src/org/openstreetmap/josm/io/ChangesetQuery.java:391
 #, java-format
 msgid "Unsupported parameter ''{0}'' in changeset query string"
 msgstr ""
+"変更セットクエリ文字列中にサポートされないパラメータ ''{0}'' があります"
 
 #: ../core/src/org/openstreetmap/josm/io/DefaultProxySelector.java:85
 #, java-format
 msgid ""
 "Unexpected format for port number in in preference ''{0}''. Got ''{1}''."
-msgstr ""
+msgstr "プリファレンス''{0}'' 中のポート番号に予期せぬ形式。入力値 ''{1}''。"
 
 #: ../core/src/org/openstreetmap/josm/io/DefaultProxySelector.java:86
 #: ../core/src/org/openstreetmap/josm/io/DefaultProxySelector.java:91
@@ -12814,12 +12824,12 @@ msgstr "ファイルをインポートできません。"
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:62
 #, java-format
 msgid "<html>Could not read file ''{0}''.<br>Error is:<br>{1}</html>"
-msgstr ""
+msgstr "<html>ファイル ''{0}'' を読み込めません。<br>エラー:<br>{1}</html>"
 
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:76
 #, java-format
 msgid "<html>Could not read files.<br>Error is:<br>{0}</html>"
-msgstr ""
+msgstr "<html>ファイルを読み込めません。<br>エラー:<br>{0}</html>"
 
 #: ../core/src/org/openstreetmap/josm/io/GpxExporter.java:41
 msgid ""
@@ -12903,6 +12913,8 @@ msgid ""
 "Error occured while parsing gpx file {0}. Only part of the file will be "
 "available"
 msgstr ""
+"GPXファイル ''{0}'' のパース中にエラー発生。ファイルの一部だけが利用可能と思"
+"われます"
 
 #: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:79
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:220
@@ -17479,56 +17491,56 @@ msgstr ""
 msgid "You have to specify tagging preset sources in the preferences first."
 msgstr "先に設定情報のタグ付きプリセットのソースを指定してください。"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:61
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:62
 msgid "Enter housenumbers or amount of segments"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:100
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:101
 msgid "Terrace a house"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:140
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:141
 msgid "Interpolation"
 msgstr "補間"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:142
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:143
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:92
 msgid "Segments"
 msgstr "セグメント"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:144
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:145
 msgid "Street"
 msgstr "ストリート"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:146
-msgid "Highest Number"
-msgstr "最大数"
-
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:148
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:147
 msgid "Lowest Number"
 msgstr "最小数"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:150
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:149
 msgid "Lowest housenumber of the terraced house"
 msgstr ""
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:151
+msgid "Highest Number"
+msgstr "最大数"
+
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:152
 msgid "add to existing associatedStreet relation"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:151
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:152
 msgid "create an associatedStreet relation"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:153
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:154
 msgid "delete outline way"
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:169
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:170
 msgid "Street name: "
 msgstr ""
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:287
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:289
 msgid "Even/Odd"
 msgstr "偶数/奇数"
 
@@ -17651,14 +17663,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:54
-#, fuzzy
 msgid "Type:"
-msgstr "タイプ"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:64
-#, fuzzy
 msgid "From:"
-msgstr "元: ..."
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:75
 msgid "To:"
@@ -17831,14 +17841,12 @@ msgid "Already participating in a conflict"
 msgstr "既に競合に参加しています"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:754
-#, fuzzy
 msgid "Delete this turn restriction"
-msgstr "転回制限から削除"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:784
-#, fuzzy
 msgid "Select this turn restriction"
-msgstr "転回制限から削除"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:810
 msgid "Activate the layer this turn restriction belongs to and zoom to it"
@@ -18548,11 +18556,11 @@ msgstr ""
 "このテストではふたつの道路、鉄道、水路あるいは建物が同じレイヤーでクロスはし"
 "ているがノードで接続されていないことをチェックします。"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:126
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:139
 msgid "Crossing buildings"
 msgstr "交差する建物"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:126
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:139
 msgid "Crossing ways"
 msgstr "交差するウェイ"
 
@@ -19250,23 +19258,23 @@ msgstr "正しいWMSまたはID がありません"
 msgid "Adjust the position of the selected WMS layer"
 msgstr "WMSレイヤーの位置を調整"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:173
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:172
 msgid "Please select the WMS layer to adjust."
 msgstr "調整するWMSレイヤーを選択してください。"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:177
 msgid "Select WMS layer"
 msgstr "WMSレイヤーを選択"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:179
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
 msgid "Start adjusting"
 msgstr "調整開始"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:198
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:197
 msgid "There are currently no WMS layer to adjust."
 msgstr "現在は調整するWMSレイヤーがありません。"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:199
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:198
 msgid "No layers to adjust"
 msgstr "調整するレイヤーがありません"
 
@@ -27064,9 +27072,8 @@ msgid "vouchers"
 msgstr "車"
 
 #: build/trans_presets.java:2729
-#, fuzzy
 msgid "bicycle_tube"
-msgstr "自転車"
+msgstr ""
 
 #: build/trans_presets.java:2729
 msgid "condoms"
@@ -32285,9 +32292,6 @@ msgstr "Lodi - Italy"
 msgid "Sicily - Italy"
 msgstr "Sicily - Italy"
 
-#~ msgid "Bikes"
-#~ msgstr "自転車"
-
 #~ msgid "Move"
 #~ msgstr "移動"
 
@@ -33740,6 +33744,9 @@ msgstr "Sicily - Italy"
 #~ msgstr ""
 #~ "あなたの人生をより楽なものにする数種のユーティリティ: 例、ウェイ簡素化、エ"
 #~ "リア結合、ポジションへのジャンプ"
+
+#~ msgid "Bikes"
+#~ msgstr "自転車"
 
 #~ msgid "error requesting update: not zoom-level 12"
 #~ msgstr "更新要求中にエラー: ズームレベル12 ではありません"

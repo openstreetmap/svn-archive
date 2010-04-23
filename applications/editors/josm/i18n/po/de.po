@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 18:19+0200\n"
-"PO-Revision-Date: 2010-04-16 06:26+0000\n"
-"Last-Translator: cmdrhenner <cmdrhenner@gmail.com>\n"
+"POT-Creation-Date: 2010-04-23 22:02+0200\n"
+"PO-Revision-Date: 2010-04-21 07:58+0000\n"
+"Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-04-20 15:53+0000\n"
+"X-Launchpad-Export-Date: 2010-04-23 20:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -282,10 +282,10 @@ msgstr "Klicken Sie um fortzufahren und {0} Browserfenster zu öffnen"
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:259
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:288
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:272
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:274
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:740
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:179
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -419,7 +419,7 @@ msgstr "Bitte eine Länge im Bereich -180..180 eingeben"
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:145
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:302
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:258
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:260
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:686
 msgid "OK"
 msgstr "OK"
@@ -2498,22 +2498,22 @@ msgstr ""
 "Anzahl von Elementen ist oftmals unbeabsichtigt.\n"
 "Wollen Sie sie wirklich verschieben?"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:542
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:543
 msgid "Release the mouse button to select the objects in the rectangle."
 msgstr "Maustaste loslassen, um Objekte im Rechteck auszuwählen."
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:544
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:545
 msgid ""
 "Release the mouse button to stop moving. Ctrl to merge with nearest node."
 msgstr ""
 "Maustaste loslassen, um die Bewegung zu stoppen. Strg: mit dem nächsten "
 "Knoten vereinigen."
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:546
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:547
 msgid "Release the mouse button to stop rotating."
 msgstr "Maustaste loslassen, um das Drehen zu stoppen."
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:548
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:549
 msgid ""
 "Move objects by dragging; Shift to add to selection (Ctrl to toggle); Shift-"
 "Ctrl to rotate selected; or change selection"
@@ -3649,81 +3649,81 @@ msgstr ""
 
 #. translators notes must be in front
 #. column header: enable filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:162
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:166
 msgctxt "filter"
 msgid "E"
 msgstr "A"
 
 #. column header: hide filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:163
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:167
 msgctxt "filter"
 msgid "H"
 msgstr "S"
 
 #. column header: filter text
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:164
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:168
 msgctxt "filter"
 msgid "Text"
 msgstr "Text"
 
 #. column header: apply filter for children
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:165
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:169
 msgctxt "filter"
 msgid "C"
 msgstr "K"
 
 #. column header: inverted filter
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:166
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:170
 msgctxt "filter"
 msgid "I"
 msgstr "I"
 
 #. column header: filter mode
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:167
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:171
 msgctxt "filter"
 msgid "M"
 msgstr "M"
 
 #. translators notes must be in front
 #. filter mode: replace
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:235
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:239
 msgctxt "filter"
 msgid "R"
 msgstr "E"
 
 #. filter mode: add
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:236
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:240
 msgctxt "filter"
 msgid "A"
 msgstr "H"
 
 #. filter mode: remove
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:237
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:241
 msgctxt "filter"
 msgid "D"
 msgstr "L"
 
 #. filter mode: in selection
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:238
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:242
 msgctxt "filter"
 msgid "F"
 msgstr "F"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:265
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:269
 msgid "<h2>Filter active</h2>"
 msgstr "<h2>Filter aktiv</h2>"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:271
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:275
 #, java-format
 msgid "<p><b>{0}</b> objects hidden"
-msgstr ""
+msgstr "<p><b>{0}</b> Objekte versteckt"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:279
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:283
 #, java-format
 msgid "<b>{0}</b> objects disabled"
-msgstr ""
+msgstr "<b>{0}</b> Objekte ausgeblendet"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:282
+#: ../core/src/org/openstreetmap/josm/data/osm/Filters.java:286
 msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
 msgstr "</p><p>Den Filterdialog schließen, um alle Objekte zu sehen<p></html>"
 
@@ -3918,15 +3918,15 @@ msgstr "Ausgewählt"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:15
 msgid "Node: standard"
-msgstr ""
+msgstr "Knoten: Standard"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:16
 msgid "Node: connection"
-msgstr ""
+msgstr "Knoten: Verbindung"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:17
 msgid "Node: tagged"
-msgstr ""
+msgstr "Knoten: Mit Merkmalen"
 
 #. teal
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:20
@@ -5920,10 +5920,10 @@ msgstr "Filter invertieren"
 msgid "Filter mode"
 msgstr "Filtermodus"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:218
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:217
 #, java-format
 msgid "Filter Hidden: {0} Disabled: {0}"
-msgstr ""
+msgstr "Filter Verst.:{0} Aus:{0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:69
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
@@ -11839,7 +11839,7 @@ msgstr "Farben"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:36
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:107
 #: ../plugins/piclayer/src/org/openstreetmap/josm/plugins/piclayer/ResetPictureAllAction.java:44
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:286
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:288
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:278
 msgid "All"
 msgstr "Alle"
@@ -12698,7 +12698,7 @@ msgstr "Verfügbar"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:601
 msgid "Action parameters"
-msgstr ""
+msgstr "Aktionsparameter"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:602
 msgid "Parameter name"
@@ -15677,7 +15677,7 @@ msgstr "Martinique Fort Desaix Zwischenspeicherdatei (.UTM3)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CacheFileUTM20NFilter.java:22
 msgid "Reunion RGR92 cache file (.UTM4)"
-msgstr ""
+msgstr "Reunion RGR92-Zwischenspeicherdatei (.UTM4)"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:40
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastreGrabber.java:51
@@ -18195,56 +18195,56 @@ msgid "You have to specify tagging preset sources in the preferences first."
 msgstr ""
 "Sie müssen zuerst in den Einstellungen eine Quelle für Vorlagen angeben."
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:61
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:62
 msgid "Enter housenumbers or amount of segments"
 msgstr "Hausnummern oder Anzahl der Abschnitte eingeben"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:100
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:101
 msgid "Terrace a house"
 msgstr "Ein Haus aufteilen"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:140
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:141
 msgid "Interpolation"
 msgstr "Interpolation"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:142
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:143
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:92
 msgid "Segments"
 msgstr "Abschnitte"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:144
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:145
 msgid "Street"
 msgstr "Straße"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:146
-msgid "Highest Number"
-msgstr "Höchste Nummer"
-
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:148
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:147
 msgid "Lowest Number"
 msgstr "Niedrigste Nummer"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:150
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:149
 msgid "Lowest housenumber of the terraced house"
 msgstr "Kleinste Hausnummer"
 
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:151
+msgid "Highest Number"
+msgstr "Höchste Nummer"
+
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:152
 msgid "add to existing associatedStreet relation"
 msgstr "Zu Straßenzugehörigkeitsrelation hinzufügen"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:151
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:152
 msgid "create an associatedStreet relation"
 msgstr "Eine Straßenzugehörigkeitsrelation erzeugen"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:153
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:154
 msgid "delete outline way"
 msgstr "Ursprungsweg löschen"
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:169
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:170
 msgid "Street name: "
 msgstr "Straßenname: "
 
-#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:287
+#: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:289
 msgid "Even/Odd"
 msgstr "Gerade/Ungerade"
 
@@ -18375,23 +18375,20 @@ msgstr ""
 "Relation, die diese Abbiegebeschränkung repräsentiert."
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:54
-#, fuzzy
 msgid "Type:"
-msgstr "Typ"
+msgstr "Typ:"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:64
-#, fuzzy
 msgid "From:"
 msgstr "Von:"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:75
-#, fuzzy
 msgid "To:"
 msgstr "Nach:"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/BasicEditorPanel.java:86
 msgid "Vias:"
-msgstr ""
+msgstr "Über:"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/JosmSelectionPanel.java:123
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:324
@@ -18568,18 +18565,16 @@ msgid "Already participating in a conflict"
 msgstr "Bereits an einem Konflikt beteiligt"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:754
-#, fuzzy
 msgid "Delete this turn restriction"
-msgstr "Aus Abbiegeeinschränkung entfernen"
+msgstr "Diese Abbigeeinschränkung löschen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:784
-#, fuzzy
 msgid "Select this turn restriction"
-msgstr "Aus Abbiegeeinschränkung entfernen"
+msgstr "Diese Abbigeeinschränkung auswählen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:810
 msgid "Activate the layer this turn restriction belongs to and zoom to it"
-msgstr ""
+msgstr "Die Ebene mit dieser Abbiegeeinschränkung aktivieren und darauf zoomen"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
 #, java-format
@@ -19350,11 +19345,11 @@ msgstr ""
 "Gebäude auf derselben Ebene schneiden ohne mit einem Knoten verbunden zu "
 "sein."
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:126
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:139
 msgid "Crossing buildings"
 msgstr "Überschneidende Gebäude"
 
-#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:126
+#: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/CrossingWays.java:139
 msgid "Crossing ways"
 msgstr "Überschneidende Wege"
 
@@ -20078,23 +20073,23 @@ msgstr "Keine gültige WMS-URL oder ID"
 msgid "Adjust the position of the selected WMS layer"
 msgstr "Die Position der gewählten WMS-Ebene anpassen"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:173
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:172
 msgid "Please select the WMS layer to adjust."
 msgstr "Bitte wählen Sie die zu justierende WMS-Ebene."
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:177
 msgid "Select WMS layer"
 msgstr "WMS-Ebene wählen"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:179
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:178
 msgid "Start adjusting"
 msgstr "Justierung starten"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:198
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:197
 msgid "There are currently no WMS layer to adjust."
 msgstr "Es existieren momentan keine justierbaren WMS-Ebenen"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:199
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:198
 msgid "No layers to adjust"
 msgstr "Keine Ebenen zum Justieren"
 
@@ -27914,9 +27909,8 @@ msgid "vouchers"
 msgstr "Karten/Belege"
 
 #: build/trans_presets.java:2729
-#, fuzzy
 msgid "bicycle_tube"
-msgstr "Fahrrad"
+msgstr "Fahrradschlauch"
 
 #: build/trans_presets.java:2729
 msgid "condoms"
@@ -33135,9 +33129,6 @@ msgstr "Lodi (Lauden) - Italien"
 msgid "Sicily - Italy"
 msgstr "Sizilien - Italien"
 
-#~ msgid "Bikes"
-#~ msgstr "Fahrräder"
-
 #~ msgid "to"
 #~ msgstr "bis"
 
@@ -33364,6 +33355,9 @@ msgstr "Sizilien - Italien"
 #~ "<html>Sie setzen eine leere Rolle für das Relationselement{0}.<br>Damit "
 #~ "löschen Sie die dessen Rolle.<br>Wollen Sie die leere Rolle wirklich "
 #~ "löschen?</html>"
+
+#~ msgid "Bikes"
+#~ msgstr "Fahrräder"
 
 #~ msgid "<html>"
 #~ msgstr "<html>"

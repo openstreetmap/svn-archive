@@ -42,7 +42,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.02' ;
+$VERSION = '1.021' ;
 
 require Exporter ;
 
@@ -248,7 +248,7 @@ sub initDashes {
 #
 	foreach my $style (keys %dashDefinition) {
 		my @array = @{$dashDefinition{$style}} ;
-		print "DASH $style initially: @array\n" ;
+		# print "DASH $style initially: @array\n" ;
 		my $dashString = "" ;
 		my $first = 1 ;
 		foreach my $entry (@array) {
@@ -262,7 +262,7 @@ sub initDashes {
 			}
 		}
 		$dashStyle{$style} = $dashString ;
-		print "DASH $style finally: \"$dashString\"\n\n" ;
+		# print "DASH $style finally: \"$dashString\"\n\n" ;
 	}
 }
 

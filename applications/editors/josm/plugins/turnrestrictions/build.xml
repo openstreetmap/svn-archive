@@ -30,9 +30,9 @@
 <project name="turnrestrictions" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="First release" />
+	<property name="commit.message" value="Update to josm core" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3152" />
+	<property name="plugin.main.version" value="3210" />
 
 	<!--
       ************************************************
@@ -101,7 +101,7 @@
 				<attribute name="Author" value="Karl Guggisberg"/>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionsPlugin"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-				<attribute name="Plugin-Description" value="The turnrestrictions plugin allows to create and edit turn restrictions in the OpenStreetMap database."/>
+				<attribute name="Plugin-Description" value="The turnrestrictions plugin allows to enter maintain information about turn restrictions in the OpenStreetMap database."/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/turnrestrictions"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

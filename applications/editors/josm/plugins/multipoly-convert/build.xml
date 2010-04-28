@@ -88,7 +88,7 @@
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
 				<attribute name="Plugin-Link" value="http://www.stephane-brunner.ch/mediawiki/index.php/Plugins" />
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}" />
-				<attribute name="2830_Plugin-Url" value="20583;http://trac.openstreetmap.org/browser/applications/editors/josm/dist/multipoly-convert.jar?rev=20584&amp;format=raw" />
+				<!--attribute name="2830_Plugin-Url" value="20583;http://trac.openstreetmap.org/browser/applications/editors/josm/dist/multipoly-convert.jar?rev=20584&amp;format=raw" /-->
 			</manifest>
 		</jar>
 	</target>

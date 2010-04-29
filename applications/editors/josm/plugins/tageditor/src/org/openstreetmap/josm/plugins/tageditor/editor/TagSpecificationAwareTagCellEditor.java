@@ -10,7 +10,7 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPritority;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 
-public class TagSpecificationAwareTagCellEditor extends TagCellEditor{
+public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
 	private static final Logger logger = Logger.getLogger(TagCellEditor.class.getName());
 
 	/**
@@ -41,7 +41,7 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor{
 
 		// add the list of keys in the current data set
 		//
-		acCache.populateWithKeys(autoCompletionList, false /* don't append */);
+		autocomplete.populateWithKeys(autoCompletionList);
 		AutoCompletionContext context = new AutoCompletionContext();
 		try {
 			context.initFromJOSMSelection();
@@ -76,7 +76,7 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor{
 			return;
 		}
 		autoCompletionList.clear();
-		acCache.populateWithTagValues(autoCompletionList, forKey, false /* don't append */);
+		autocomplete.populateWithTagValues(autoCompletionList, forKey);
 		
 		AutoCompletionContext context = new AutoCompletionContext();
 		try {

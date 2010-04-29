@@ -15,7 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.TableCellEditor;
 
 import org.openstreetmap.josm.gui.tagging.TagTable;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionCache;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.tageditor.ac.IAutoCompletionListListener;
 
@@ -178,8 +178,8 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
 		tblTagEditor.setAutoCompletionList(autoCompletionList);
 	}
 
-	public void setAutoCompletionCache(AutoCompletionCache acCache) {
-		tblTagEditor.setAutoCompletionCache(acCache);
+	public void setAutoCompletionManager(AutoCompletionManager autocomplete) {
+		tblTagEditor.setAutoCompletionManager(autocomplete);
 	}
 
 	public void autoCompletionItemSelected(String item) {

@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionCache;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionListViewer;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditor;
@@ -76,7 +76,7 @@ public class TagEditorDialog extends JDialog {
 	private AutoCompletionListViewer aclViewer = null;
 
 	/** the cache of auto completion values used by the tag editor */
-	private AutoCompletionCache acCache = null;
+	private AutoCompletionManager autocomplete = null;
 
 	private OKAction okAction = null;
 	private CancelAction cancelAction = null;
@@ -114,7 +114,6 @@ public class TagEditorDialog extends JDialog {
 		AutoCompletionList autoCompletionList = new AutoCompletionList();
 		aclViewer = new AutoCompletionListViewer(autoCompletionList);
 		tagEditor.setAutoCompletionList(autoCompletionList);
-		tagEditor.setAutoCompletionCache(acCache);
 		aclViewer.addAutoCompletionListListener(tagEditor);
 		tagEditor.addComponentNotStoppingCellEditing(aclViewer);
 
@@ -251,7 +250,6 @@ public class TagEditorDialog extends JDialog {
 	 * constructor
 	 */
 	protected TagEditorDialog() {
-		acCache = new AutoCompletionCache();	
 		build();
 	}
 
@@ -279,7 +277,8 @@ public class TagEditorDialog extends JDialog {
 	public void startEditSession() {
 		tagEditor.getModel().clearAppliedPresets();
 		tagEditor.getModel().initFromJOSMSelection();
-		//acCache.initFromJOSMDataset();
+		autocomplete = Main.main.getEditLayer().data.getAutoCompletionManager();
+		tagEditor.setAutoCompletionManager(autocomplete);
 		getModel().ensureOneTag();
 	}
 

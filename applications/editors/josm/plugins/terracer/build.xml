@@ -31,8 +31,8 @@
     <property name="ant.build.javac.target" value="1.5"/>
 
 
-    <property name="commit.message" value="josm terracer plugin: minor bug (Broken test, whether two sements are next to each other for a closed way.)" />
-    <property name="plugin.main.version" value="2830" />
+    <property name="commit.message" value="Update to JOSM core" />
+    <property name="plugin.main.version" value="3210" />
 
 
     <target name="init">

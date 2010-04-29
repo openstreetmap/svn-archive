@@ -33,7 +33,7 @@ import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.widgets.AutoCompleteComboBox;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.tools.GBC;
 
 
@@ -69,7 +69,7 @@ public class HouseNumberInputDialog extends JDialog {
     private JLabel hiLabel;
     JTextField hi;
     private JLabel streetLabel;
-    AutoCompleteComboBox streetComboBox;
+    AutoCompletingComboBox streetComboBox;
     private JLabel segmentsLabel;
     JTextField segments;
     JTextArea messageLabel;
@@ -222,12 +222,12 @@ public class HouseNumberInputDialog extends JDialog {
      *
      * @return javax.swing.JTextField
      */
-    private AutoCompleteComboBox getStreet() {
+    private AutoCompletingComboBox getStreet() {
 
         if (streetComboBox == null) {
             final TreeSet<String> names = createAutoCompletionInfo();
 
-            streetComboBox = new AutoCompleteComboBox();
+            streetComboBox = new AutoCompletingComboBox();
             streetComboBox.setPossibleItems(names);
             streetComboBox.setEditable(true);
             streetComboBox.setSelectedItem(null);

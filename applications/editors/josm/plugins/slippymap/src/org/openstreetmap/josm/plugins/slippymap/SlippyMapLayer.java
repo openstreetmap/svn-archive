@@ -801,8 +801,11 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         }
     }
 
+    boolean az_disable = false;
     boolean autoZoomEnabled()
     {
+        if (az_disable)
+            return false;
         return autoZoomPopup.isSelected();
     }
     /**
@@ -851,8 +854,21 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
                 if (debug)
                     out("too zoomed in, (" + ts.tilesSpanned()
                         + "), increasing zoom from " + currentZoomLevel);
+                // This is a hack.  ts.tooSmall() is proabably a bad thing, and this works
+                // around it.  If we have a very small window, the tileSet may be well
+                // less than 1 real tile wide, but that's expected.  But, this sees the
+                // tile set as too small and zooms in.  The code below that checks for
+                // pixel stretching disagrees and tries to zoom out.  Both calls recurse,
+                // hillarity ensues, and the stack overflows.
+                //
+                // This really needs to get fixed properly.  We probably shouldn't even
+                // have the tooSmall() check on tileSets.  But, this also helps the zoom
+                // converge to the correct place much faster.
+                boolean tmp = az_disable;
+                az_disable = true;
                 if (increaseZoomLevel())
                      this.paint(oldg, mv, bounds);
+                az_disable = tmp;
                 return;
             }
         }

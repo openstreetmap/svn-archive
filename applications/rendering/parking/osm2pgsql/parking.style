@@ -129,11 +129,20 @@ node,way   parking:condition:left:time_interval   text         linear
 node,way   parking:condition:right:time_interval  text         linear
 node,way   parking:condition:both:time_interval   text         linear
 node,way   parking:condition:area:time_interval   text         polygon
+node,way   parking:condition:left:maxstay         text         linear
+node,way   parking:condition:right:maxstay        text         linear
+node,way   parking:condition:both:maxstay         text         linear
+node,way   parking:condition:area:maxstay         text         polygon
+node,way   parking:error:way                      text         linear
+node,way   parking:error:area                     text         polygon
+
+# these are temporary for finland
+node,way   parking:left                           text         linear
+node,way   parking:right                          text         linear
+node,way   parking:both                           text         linear
+# these are obsolete, imported just to find errorneous occurences
 node,way   parking:condition:left:time_limit      text         linear
 node,way   parking:condition:right:time_limit     text         linear
 node,way   parking:condition:both:time_limit      text         linear
 node,way   parking:condition:area:time_limit      text         polygon
-node,way   parking:error:way                      text         linear
-node,way   parking:error:area                     text         polygon
-
 

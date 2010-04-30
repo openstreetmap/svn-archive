@@ -140,6 +140,10 @@ node,way   parking:error:area                     text         polygon
 node,way   parking:left                           text         linear
 node,way   parking:right                          text         linear
 node,way   parking:both                           text         linear
+node,way   parking:fee                            text         linear
+node,way   halting:left                           text         linear
+node,way   halting:right                          text         linear
+node,way   halting:both                           text         linear
 # these are obsolete, imported just to find errorneous occurences
 node,way   parking:condition:left:time_limit      text         linear
 node,way   parking:condition:right:time_limit     text         linear

@@ -42,7 +42,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.021' ;
+$VERSION = '1.03' ;
 
 require Exporter ;
 
@@ -148,7 +148,8 @@ my ($projLeft, $projRight, $projBottom, $projTop) ;
 my ($top, $bottom, $left, $right) ; # min and max real world coordinates
 my ($sizeX, $sizeY) ; # pic size in pixels
 
-my %svgOutputWaysNodes = () ;
+my %svgOutputWays ;
+my %svgOutputNodes ;
 my @svgOutputAreas = () ;
 my @svgOutputText = () ;
 my @svgOutputPixel = () ;
@@ -161,8 +162,6 @@ my $pathNumber = 0 ;
 my $svgBaseFontSize = 10 ;
 my @svgOutputRoutes = () ;
 
-my %areaPicX = () ;
-my %areaPicY = () ;
 my %areaDef = () ;
 my $areaNum = 1 ;
 
@@ -422,7 +421,7 @@ sub drawNodeDot {
 #
 	my ($lon, $lat, $col, $size) = @_ ;
 	my ($x1, $y1) = convert ($lon, $lat) ;
-	push @{$svgOutputWaysNodes{0}}, svgElementCircleFilled ($x1, $y1, $size, $col) ;
+	push @{$svgOutputNodes{0}}, svgElementCircleFilled ($x1, $y1, $size, $col) ;
 }
 
 sub drawNodeDotRouteStops {
@@ -456,7 +455,7 @@ sub drawWay {
 		my ($x, $y) = convert ($nodes[$i], $nodes[$i+1]) ;
 		push @points, $x ; push @points, $y ; 
 	}
-	push @{$svgOutputWaysNodes{$layer+$size/100}}, svgElementPolyline ($col, $size, $dash, @points) ;
+	push @{$svgOutputWays{$layer+$size/100}}, svgElementPolyline ($col, $size, $dash, @points) ;
 }
 
 sub drawWayBridge {
@@ -472,7 +471,7 @@ sub drawWayBridge {
 		my ($x, $y) = convert ($nodes[$i], $nodes[$i+1]) ;
 		push @points, $x ; push @points, $y ; 
 	}
-	push @{$svgOutputWaysNodes{$layer+$size/100}}, svgElementPolylineBridge ($col, $size, $dash, @points) ;
+	push @{$svgOutputWays{$layer+$size/100}}, svgElementPolylineBridge ($col, $size, $dash, @points) ;
 }
 
 sub drawWayPix {
@@ -530,7 +529,7 @@ sub createWayLabels {
 #
 # finally take all way label candidates and try to label them
 #
-	my ($ref, $ruleRef, $declutter) = @_ ;
+	my ($ref, $ruleRef, $declutter, $halo) = @_ ;
 	my @labelCandidates = @$ref ;
 	my @wayRules = @$ruleRef ;
 
@@ -595,7 +594,7 @@ sub createWayLabels {
 					my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
 					push @svgOutputDef, svgElementPath ($pathName, @points) ;
 					push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
-						$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], $pos->[0], $pos->[1], 0) ;
+						$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], $pos->[0], $pos->[1], $halo) ;
 					occupyLines (\@finalWay) ;
 				}
 				else {
@@ -617,7 +616,7 @@ sub createWayLabels {
 						my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
 						push @svgOutputDef, svgElementPath ($pathName, @finalWay) ;
 						push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
-							$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], "middle", 50, 0) ;
+							$ruleData[$wayIndexLabelFont], $name, $pathName, $ruleData[$wayIndexLabelOffset], "middle", 50, $halo) ;
 						occupyLines (\@finalWay) ;
 					}
 					else {
@@ -1031,12 +1030,12 @@ sub drawGrid {
 	# vertical lines
 	for (my $i = 1; $i <= $number; $i++) {
 		drawWayPixGrid ($color, 1, 1, $i*$part, 0, $i*$part, $sizeY) ;
-		drawTextPixGrid (($i-1)*$part+$part/2, 20, chr($i+64), $color, 20) ;
+		drawTextPixGrid (($i-1)*$part+$part/2, 20, chr($i+64), $color, scalePoints(scaleBase(80))) ;
 	}
 	# hor. lines
 	for (my $i = 1; $i <= $numY; $i++) {
 		drawWayPixGrid ($color, 1, 1, 0, $i*$part, $sizeX, $i*$part) ;
-		drawTextPixGrid (20, ($i-1)*$part+$part/2, $i, $color, 20) ;
+		drawTextPixGrid (20, ($i-1)*$part+$part/2, $i, $color, scalePoints(scaleBase(80))) ;
 	}
 }
 
@@ -1074,10 +1073,15 @@ sub writeSVG {
 	foreach (@svgOutputAreas) { print $file $_, "\n" ; }
 	print $file "</g>\n" ;
 
-	print $file "<g id=\"WaysAndNodes\">\n" ;
+	print $file "<g id=\"Ways\">\n" ;
+	foreach my $layer (sort {$a <=> $b} (keys %svgOutputWays)) {
+		foreach (@{$svgOutputWays{$layer}}) { print $file $_, "\n" ; }
+	}
+	print $file "</g>\n" ;
 
-	foreach my $layer (sort {$a <=> $b} (keys %svgOutputWaysNodes)) {
-		foreach (@{$svgOutputWaysNodes{$layer}}) { print $file $_, "\n" ; }
+	print $file "<g id=\"Nodes\">\n" ;
+	foreach my $layer (sort {$a <=> $b} (keys %svgOutputNodes)) {
+		foreach (@{$svgOutputNodes{$layer}}) { print $file $_, "\n" ; }
 	}
 	print $file "</g>\n" ;
 
@@ -1461,7 +1465,7 @@ sub drawCoords {
 	while ($actual < $right) {
 		# print "actualX: $actual\n" ;
 		my ($x1, $y1) = convert ($actual, 0) ;
-		drawTextPixGrid ($x1+3, $sizeY-20, $actual, $color, 10) ;
+		drawTextPixGrid ($x1+scalePoints(scaleBase(10)), $sizeY-scalePoints(scaleBase(50)), $actual, $color, scalePoints(scaleBase(40))) ;
 		drawWayPixGrid ($color, 1, 0, ($x1, 0, $x1, $sizeY) ) ;
 		$actual += $step ;
 	}
@@ -1472,7 +1476,7 @@ sub drawCoords {
 	while ($actual < $top) {
 		# print "actualY: $actual\n" ;
 		my ($x1, $y1) = convert (0, $actual) ;
-		drawTextPixGrid ($sizeX-60, $y1+3, $actual, $color, 10) ;
+		drawTextPixGrid ($sizeX-scalePoints(scaleBase(180)), $y1+scalePoints(scaleBase(30)), $actual, $color, scalePoints(scaleBase(40))) ;
 		drawWayPixGrid ($color, 1, 0, (0, $y1, $sizeX, $y1) ) ;
 		$actual += $step ;
 	}
@@ -1557,29 +1561,30 @@ sub addAreaIcon {
 		my ($x, $y) ;
 		if (grep /.svg/, $fileNameOriginal) {
 			($x, $y) = sizeSVG ($fileNameOriginal) ;
-			# $x = scalePoints ($x) ;
-			# $y = scalePoints ($y) ;
 			if ( ($x == 0) or ($y == 0) ) { 
-				$x = scalePoints(32) ; $y = scalePoints(32) ; 
+				$x = 32 ; $y = 32 ; 
 				print "WARNING: size of file $fileNameOriginal could not be determined. Set to 32px x 32px\n" ;
 			} 
 		}
 
 		if (grep /.png/, $fileNameOriginal) {
 			($x, $y) = sizePNG ($fileNameOriginal) ;
-			# $x = scalePoints ($x) ;
-			# $y = scalePoints ($y) ;
 		}
 
 		if (!defined $areaDef{$fileNameOriginal}) {
-			$areaPicX{$fileNameOriginal} = $x ;
-			$areaPicY{$fileNameOriginal} = $y ;
+
+			my $x1 = scalePoints( scaleBase( $x ) ) ; # scale area icons assuming a base dpi of 300 in files
+			my $y1 = scalePoints( scaleBase( $y ) ) ;
+			my $fx = $x1 / $x ;
+			my $fy = $y1 / $y ;
+			
 			# add defs to svg output
 			my $defName = "A" . $areaNum ;
-			# print "INFO area icon $fileNameOriginal, $defName, $x, $y processed.\n" ;
+			# print "INFO area icon $fileNameOriginal, $defName, $x, $y --- $x1, $y1 --- $fx, $fy --- processed.\n" ;
 			$areaNum++ ;
 
 			my $svgElement = "<pattern id=\"" . $defName . "\" width=\"" . $x . "\" height=\"" . $y . "\" " ;
+			$svgElement .= "patternTransform=\"translate(0,0) scale(" . $fx . "," . $fy . ")\" \n" ;
 			$svgElement .= "patternUnits=\"userSpaceOnUse\">\n" ;
 			$svgElement .= "  <image xlink:href=\"" . $fileNameOriginal . "\"/>\n" ;
 			$svgElement .= "</pattern>\n" ;
@@ -1592,7 +1597,7 @@ sub addAreaIcon {
 		print "WARNING: area icon $fileNameOriginal not found!\n" ;
 	}
 }
-
+
 
 
 sub svgEle {
@@ -1611,11 +1616,12 @@ sub initOneways {
 # write marker defs to svg 
 #
 	my $color = shift ;
+	my $markerSize = scalePoints (scaleBase (20)) ;
 
 	push @svgOutputDef, "<marker id=\"Arrow1\"" ;
 	push @svgOutputDef, "viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"" ;
 	push @svgOutputDef, "markerUnits=\"strokeWidth\"" ;
-	push @svgOutputDef, "markerWidth=\"10\" markerHeight=\"10\"" ;
+	push @svgOutputDef, "markerWidth=\"" . $markerSize . "\" markerHeight=\"" . $markerSize . "\"" ;
 	push @svgOutputDef, "orient=\"auto\">" ;
 	push @svgOutputDef, "<path d=\"M 0 4 L 6 4 L 6 2 L 10 5 L 6 8 L 6 6 L 0 6 Z\" fill=\"" . $color .  "\" />" ;
 	push @svgOutputDef, "</marker>" ;
@@ -1628,7 +1634,8 @@ sub addOnewayArrows {
 #
 	my ($wayNodesRef, $lonRef, $latRef, $direction, $thickness, $color, $layer) = @_ ;
 	my @wayNodes = @$wayNodesRef ;
-	my $minDist = 15 ;
+	my $minDist = scalePoints(scaleBase(25)) ;
+	# print "OW: mindist = $minDist\n" ;
 
 	if ($direction == -1) { @wayNodes = reverse @wayNodes ; }
 
@@ -1643,7 +1650,7 @@ sub addOnewayArrows {
 			# use path
 			my $svg = "<path d=\"M $x1 $y1 L $xn $yn L $x2 $y2\" fill=\"none\" marker-mid=\"url(#Arrow1)\" />" ;
 			
-			push @{$svgOutputWaysNodes{$layer+$thickness/100}}, $svg ;
+			push @{$svgOutputWays{$layer+$thickness/100}}, $svg ;
 		}
 	}
 }
@@ -1720,7 +1727,7 @@ sub placeLabelAndIcon {
 
 			my @shifts = (0) ;
 			if ($allowIconMove eq "1") {
-				@shifts = ( 0, scalePoints(-10), scalePoints(10) ) ;
+				@shifts = ( 0, scalePoints(scaleBase(-15)), scalePoints(scaleBase(15)) ) ;
 			}
 			my $posFound = 0 ; my $posCount = 0 ;
 			LABAB: foreach my $xShift (@shifts) {

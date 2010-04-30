@@ -58,6 +58,14 @@
 #      scale point sizes according to selected resolution
 #      [-basedpi]
 #      dir -> pdf
+# 1.03 scale legend
+#      adapt icon move parameter
+#      scale oneway arrows
+#      scale patterns
+#      scale grid labels
+#      poi file
+#      halo for way labels
+#
 #
 #
 # TODO
@@ -78,11 +86,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.02 ;
-use OSM::mapgenRules 1.02 ;
+use OSM::mapgen 1.03 ;
+use OSM::mapgenRules 1.03 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.02" ;
+my $version = "1.03" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -123,13 +131,14 @@ perl mapgen.pl
 -dircolnum=INTEGER (number of columns for PDF directory of streets and POIs; DEFAULT=3)
 -dirtitle=TEXT (title for PDF directory of streets and POIs; DEFAULT="mapgen map")
 -tagstat (lists keys and values used in osm file; program filters list to keep them short!!! see code array noListTags)
+-poifile=<TEXT> (name of file with POIs to be displayed in map)
 
 -routelabelcolor=TEXT (color for labels of routes)
--routelabelsize=INTEGER (DEFAULT=8)
+-routelabelsize=INTEGER (DEFAULT=28)
 -routelabelfont=TEXT (DEFAULT=sans-serif)
--routelabeloffset=INTEGER (DEFAULT=10)
+-routelabeloffset=INTEGER (DEFAULT=35)
 -icondir=TEXT (dir for icons for routes; ./icondir/ i.e.; DEFAULT=./routeicons/ )
--routeicondist=INTEGER (dist in y direction for route icons on same route; DEFAULT=25)
+-routeicondist=INTEGER (dist in y direction for route icons on same route; DEFAULT=75)
 
 -legend=INT (0=no legend; 1=legend in top left corner; 2 = legend in lower right corner; DEFAULT=1)-ruler=INT (0=no ruler; 1=draw ruler; DEFAULT=1)
 -rulercolor=TEXT (DEFAULT=black)
@@ -140,7 +149,7 @@ perl mapgen.pl
 -basedpi=INTEGER (rule size resolution; DEFAULT = 300 dpi)
 -rulescaleset=INTEGER (determines the scale used to select rules; DEFAULT=0, meaning actual map scale is used to select rules)
 
--ppc=<float> (pixels needed per character using font size 10; DEFAULT=5.5)
+-ppc=<float> (pixels needed per character using font size 10; DEFAULT=6)
 
 -png (also produce png, inkscape must be installed, very big)
 -pdf (also produce pdf, inkscape must be installed)
@@ -192,14 +201,16 @@ my $coordsOpt = 0 ;
 my $coordsExp = -2 ;
 my $coordsColor = "black" ;
 my $routeLabelColor = "black" ;
-my $routeLabelSize = 8 ;
+my $routeLabelSize = 28 ;
 my $routeLabelFont = "sans-serif" ;
-my $routeLabelOffset = 10 ;
+my $routeLabelOffset = 35 ;
 my $iconDir = "./routeicons/" ;
-my $routeIconDist = 25 ;
+my $routeIconDist = 75 ;
 my $onewayOpt = 0 ;
 my $onewayColor = "white" ;
 my $halo = 0 ;
+my $extPoiFileName = "" ;
+
 
 # keys from tags listed here will not be shown in tag stat
 my @noListTags = sort qw (name width url source ref note phone operator opening_hours maxspeed maxheight maxweight layer is_in TODO addr:city addr:housenumber addr:country addr:housename addr:interpolation addr:postcode addr:street created_by description ele fixme FIXME website bridge tunnel time openGeoDB:auto_update  openGeoDB:community_identification_number openGeoDB:is_in openGeoDB:is_in_loc_id openGeoDB:layer openGeoDB:license_plate_code openGeoDB:loc_id openGeoDB:location openGeoDB:name openGeoDB:population openGeoDB:postal_codes openGeoDB:sort_name openGeoDB:telephone_area_code openGeoDB:type openGeoDB:version opengeodb:lat opengeodb:lon int_ref population postal_code wikipedia) ;
@@ -344,6 +355,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"routelabeloffset:i"	=> \$routeLabelOffset,		
 				"routeicondist:i"	=> \$routeIconDist,
 				"icondir:s"		=> \$iconDir,
+				"poifile:s"	=> \$extPoiFileName,		
 				"multionly"	=> \$multiOnly,		# draw only areas from multipolygons
 				"verbose" 	=> \$verbose) ;		# turns twitter on
 
@@ -357,10 +369,10 @@ if ($helpOpt eq "1") {
 setdpi ($scaleDpi) ;
 setBaseDpi ($baseDpi) ;
 
-$halo = scalePoints ($halo) ;
-$routeLabelSize = scalePoints ($routeLabelSize) ;
-$routeLabelOffset = scalePoints ($routeLabelOffset) ;
-$routeIconDist = scalePoints ($routeIconDist) ;
+$halo = scalePoints (scaleBase($halo)) ;
+$routeLabelSize = scalePoints (scaleBase($routeLabelSize)) ;
+$routeLabelOffset = scalePoints (scaleBase($routeLabelOffset)) ;
+$routeIconDist = scalePoints (scaleBase($routeIconDist)) ;
 
 
 if ($grid > 26) { 
@@ -406,6 +418,7 @@ print "coordsColor = $coordsColor\n\n" ;
 
 print "dir       = $dirOpt " ;
 print "poiOpt    = $poiOpt\n" ;
+print "extPoiFileName    = $extPoiFileName\n" ;
 print "ppc       = $ppc (pixels needed per character font size 10)\n" ;
 print "declutter = $declutterOpt\n" ;
 print "alloIconMoveOpt = $allowIconMoveOpt\n" ;
@@ -799,8 +812,37 @@ foreach my $wayId (keys %memWayTags) {
 	} # tag found
 } # ways
 
+if ($extPoiFileName ne "") {
+	my $result = open (my $file, "<", $extPoiFileName) ;
+	if ($result) {
+		print "reading external POI file...\n" ;
+		my $line ;
+		while ($line = <$file>) {
+			my ($lon, $lat, $size, $color, $name, $fontSize) = ($line =~ /([\d\-\.]+) ([\d\-\.]+) ([\d]+) \"(.+)\" \"(.+)\" ([\d]+)/ ) ;
+			if (!defined $size) { $size = 10 ; }
+			if (!defined $fontSize) { $fontSize = 10 ; }
+			if (!defined $color) { $color = "black" ; }
+			if (!defined $name) { $name = "POI" ; }
+			$size = scalePoints( scaleBase ($size)) ;
+			$fontSize = scalePoints( scaleBase ($fontSize)) ;
+			# print "POI: $lon, $lat, size=$size, color=$color, name=$name, font=$fontSize\n" ;
+			if ( (defined $lon) and (defined $lat) ) {
+				drawNodeDot ($lon, $lat, $color, $size) ;
+				placeLabelAndIcon ($lon, $lat, 0, $size, $name, $color, $fontSize, "sans-serif", $ppc, 
+					"none", 0, 0, $allowIconMoveOpt, $halo) ;
+			}
+			else {
+				print "ERROR reading external POI file. lon and/or lat not recognized!\nLINE=$line\n" ;
+			}
+		}
+		close ($file)
+	}
+	else {
+		print "ERROR: external POI file $extPoiFileName could not be opened!\n" ;
+	}
+}
 preprocessWayLabels() ;
-createWayLabels (\@labelCandidates, \@ways, $declutterOpt) ;
+createWayLabels (\@labelCandidates, \@ways, $declutterOpt, $halo) ;
 
 
 print declutterStat(), "\n" ;
@@ -1040,18 +1082,18 @@ sub createLegend {
 # only flagged item, only items used in map scale
 #
 	my $currentY = scalePoints(scaleBase(80)) ;		# current y position
-	my $step = scalePoints(scaleBase(120)) ;		# step to next line
+	my $step = scalePoints(scaleBase(60)) ;		# step to next line
 	my $textX = scalePoints(scaleBase(280)) ;		# x position start of text
-	my $textOffset = scalePoints(scaleBase(20)) ;		# text offset y to current Y
+	my $textOffset = scalePoints(scaleBase(15)) ;		# text offset y to current Y
 	my $dotX = scalePoints(scaleBase(160)) ;		# x position for dot
-	my $areaSize = scalePoints(scaleBase(48)) ;		# area size x/y
 	my $wayStartX = scalePoints(scaleBase(80)) ;		# x position way start
 	my $wayEndX = scalePoints(scaleBase(240)) ;		# x position way end
-	my $areaStartX = scalePoints(scaleBase(124)) ;		# x position start area
-	my $areaEndX = scalePoints(scaleBase(220)) ;		# x position end area
+	my $areaSize = scalePoints(scaleBase(48)) ;		# area size x/y
+	my $areaStartX = scalePoints(scaleBase(140)) ;		# x position start area
+	my $areaEndX = $areaStartX + $areaSize ;		# x position end area
 	my $count = 0 ;						# actual position
-	my $sizeLegend = scalePoints(scaleBase(80)) ;		# 
-	my $width = scalePoints (scaleBase(720)) ;		# width of legend
+	my $sizeLegend = scalePoints(scaleBase(40)) ;		# 
+	my $width = scalePoints (scaleBase(600)) ;		# width of legend
 	my $buffer = scalePoints(scaleBase(60)) ;			# 
 	
 	foreach my $node (@nodes) { 
@@ -1100,11 +1142,11 @@ sub createLegend {
 				drawWayPix ($way->[$wayIndexColor], $way->[$wayIndexThickness], $way->[$wayIndexDash], $xOffset+$wayStartX, $yOffset+$currentY, $xOffset+$wayEndX, $yOffset+$currentY) ;
 			} 
 			else {
-				drawAreaPix ($way->[$wayIndexColor], $way->[$wayIndexIcon], $xOffset+$areaStartX, $yOffset+$currentY-$areaSize, 
-					$xOffset+$areaEndX, $yOffset+$currentY-$areaSize,
-					$xOffset+$areaEndX, $yOffset+$currentY+$areaSize,
-					$xOffset+$areaStartX, $yOffset+$currentY+$areaSize,
-					$xOffset+$areaStartX, $yOffset+$currentY-$areaSize) ;
+				drawAreaPix ($way->[$wayIndexColor], $way->[$wayIndexIcon], $xOffset+$areaStartX, $yOffset+$currentY-$areaSize/2, 
+					$xOffset+$areaEndX, $yOffset+$currentY-$areaSize/2,
+					$xOffset+$areaEndX, $yOffset+$currentY+$areaSize/2,
+					$xOffset+$areaStartX, $yOffset+$currentY+$areaSize/2,
+					$xOffset+$areaStartX, $yOffset+$currentY-$areaSize/2) ;
 			}
 			drawTextPix ($xOffset+$textX, $yOffset+$currentY+$textOffset, $way->[$wayIndexValue], "black", $sizeLegend, "sans-serif") ;
 			$currentY += $step ;

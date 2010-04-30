@@ -2,6 +2,8 @@
 use strict ;
 use warnings ;
 
+my $version = "1.03" ;
+
 my $streetFileName ;
 my $poiFileName ;
 my $pdfFileName ;

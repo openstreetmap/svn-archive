@@ -136,7 +136,7 @@
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
 	var signature="1.4";			// current version
 	var maximised=false;			// minimised/maximised?
-	var sourcetags=new Array("","","","","OS OpenData StreetView","NPE","Popular Edition (Scotland)","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo");
+	var sourcetags=new Array("","","","","OS OpenData StreetView","NPE","Popular Edition (Scotland)","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo","Surrey Air Survey");
 	var lastgroup='road';			// last preset group used
 	var wayrels=new Object();		// which relations are in ways?
 	var noderels=new Object();		// which relations are in nodes?
@@ -166,7 +166,8 @@
                            "http://gravitystorm.dev.openstreetmap.org/imagery/haiti/!/!/!.png",
                            "http://maps.nypl.org/tilecache/1/geoeye/!/!/!.jpg",
                            "http://maps.nypl.org/tilecache/1/dg_crisis/!/!/!.jpg",
-						   "http://hypercube.telascience.org/tiles/1.0.0/haiti-city/!/!/!.jpg");
+						   "http://hypercube.telascience.org/tiles/1.0.0/haiti-city/!/!/!.jpg",
+						   "http://gravitystorm.dev.openstreetmap.org/surrey/!/!/!.png");
 
 //	if (layernums[preferences.data.baselayer]==undefined) { preferences.data.baselayer="Aerial - Yahoo!"; }
 	if (custombg) { preferences.data.bgtype=3; preferences.data.tilecustom=custombg; }		// custom background layer from JavaScript
@@ -1085,6 +1086,7 @@
                       iText('option_layer_geoeye_nypl_haiti'),
                       iText('option_layer_digitalglobe_haiti'),
                       iText('option_layer_streets_haiti')),
+                      iText('option_layer_surrey_air_survey'),
 			iText('option_layer_tip'),function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
 		var w=box.bgoption[3].prompt._width+25;

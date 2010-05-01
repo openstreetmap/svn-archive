@@ -1085,8 +1085,8 @@
                       iText('option_layer_geoeye_gravitystorm_haiti'),
                       iText('option_layer_geoeye_nypl_haiti'),
                       iText('option_layer_digitalglobe_haiti'),
-                      iText('option_layer_streets_haiti')),
-                      iText('option_layer_surrey_air_survey'),
+                      iText('option_layer_streets_haiti'),
+                      iText('option_layer_surrey_air_survey')),
 			iText('option_layer_tip'),function(n) { preferences.data.tileset=n; _root.windows.options.box.bgoption.select(1); },null,0);
 
 		var w=box.bgoption[3].prompt._width+25;

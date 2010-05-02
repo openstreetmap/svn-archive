@@ -17,12 +17,13 @@ import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+
 import java.util.TreeSet;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -33,7 +34,8 @@ import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
+import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox; 
 import org.openstreetmap.josm.tools.GBC;
 
 
@@ -47,7 +49,7 @@ import org.openstreetmap.josm.tools.GBC;
  * @author casualwalker
  *
  */
-public class HouseNumberInputDialog extends JDialog {
+public class HouseNumberInputDialog extends ExtendedDialog {
     /*
     final static String MIN_NUMBER = "plugin.terracer.lowest_number";
     final static String MAX_NUMBER = "plugin.terracer.highest_number";
@@ -63,7 +65,6 @@ public class HouseNumberInputDialog extends JDialog {
     private static final long serialVersionUID = 1L;
     private Container jContentPane;
     private JPanel inputPanel;
-    private JPanel buttonPanel;
     private JLabel loLabel;
     JTextField lo;
     private JLabel hiLabel;
@@ -73,38 +74,49 @@ public class HouseNumberInputDialog extends JDialog {
     private JLabel segmentsLabel;
     JTextField segments;
     JTextArea messageLabel;
-    JButton okButton;
-    JButton cancelButton;
     private JLabel interpolationLabel;
     Choice interpolation;
     JCheckBox handleRelationCheckBox;
     JCheckBox deleteOutlineCheckBox;
 
+	HouseNumberInputHandler inputHandler;
+	
     /**
      * @param street If street is not null, we assume, the name of the street to be fixed
      * and just show a label. If street is null, we show a ComboBox/InputField.
      * @param relationExists If the buildings can be added to an existing relation or not.
      */
-    public HouseNumberInputDialog(Way street, boolean relationExists) {
-        super(JOptionPane.getFrameForComponent(Main.parent));
+    public HouseNumberInputDialog(HouseNumberInputHandler handler, Way street, boolean relationExists) {
+        super(Main.parent,
+                tr("Terrace a house"),
+                new String[] { tr("OK"), tr("Cancel")},
+                true
+        );
+        this.inputHandler = handler;
         this.street = street;
         this.relationExists = relationExists;
+        handler.dialog = this;
+        JPanel content = getInputPanel();
+        setContent(content);
+        setButtonIcons(new String[] {"ok.png", "cancel.png" });
+        getJContentPane();
         initialize();
+        setupDialog();
+        setVisible(true);
     }
 
-    /**
+	/**
      * This method initializes this
      *
      * @return void
      */
     private void initialize() {
-        this.setTitle(tr("Terrace a house"));
-        getJContentPane();
-        SwingUtilities.invokeLater(new Runnable() { public void run() { lo.requestFocus(); } } );
-        this.pack();
-        this.setLocationRelativeTo(Main.parent);
+        this.lo.addFocusListener(this.inputHandler);
+        this.hi.addFocusListener(this.inputHandler);
+        this.segments.addFocusListener(this.inputHandler);
+		this.interpolation.addItemListener(this.inputHandler);
     }
-
+	
     /**
      * This method initializes jContentPane
      *
@@ -112,6 +124,7 @@ public class HouseNumberInputDialog extends JDialog {
      */
     private Container getJContentPane() {
         if (jContentPane == null) {
+        
             messageLabel = new JTextArea();
             messageLabel.setText(DEFAULT_MESSAGE);
             messageLabel.setAutoscrolls(true);
@@ -120,12 +133,11 @@ public class HouseNumberInputDialog extends JDialog {
             messageLabel.setRows(2);
             messageLabel.setBackground(new Color(238, 238, 238));
             messageLabel.setEditable(false);
+            
             jContentPane = this.getContentPane();
-            jContentPane.setLayout(new BoxLayout(jContentPane,
-                    BoxLayout.Y_AXIS));
+            jContentPane.setLayout(new BoxLayout(jContentPane, BoxLayout.Y_AXIS));
             jContentPane.add(messageLabel, jContentPane);
             jContentPane.add(getInputPanel(), jContentPane);
-            jContentPane.add(getButtonPanel(), jContentPane);
         }
         return jContentPane;
     }
@@ -175,19 +187,12 @@ public class HouseNumberInputDialog extends JDialog {
         return inputPanel;
     }
 
-    /**
-     * This method initializes buttonPanel
-     *
-     * @return javax.swing.JPanel
+	/**
+     * Overrides the default actions. Will not close the window when upload trace is clicked
      */
-    private JPanel getButtonPanel() {
-        if (buttonPanel == null) {
-            buttonPanel = new JPanel();
-            buttonPanel.setLayout(new FlowLayout());
-            buttonPanel.add(getOkButton(), null);
-            buttonPanel.add(getCancelButton(), null);
-        }
-        return buttonPanel;
+    @Override protected void buttonAction(final ActionEvent evt) {
+        String a = evt.getActionCommand();
+        this.inputHandler.actionPerformed(evt);
     }
 
     /**
@@ -250,34 +255,6 @@ public class HouseNumberInputDialog extends JDialog {
     }
 
     /**
-     * This method initializes okButton
-     *
-     * @return javax.swing.JButton
-     */
-    private JButton getOkButton() {
-        if (okButton == null) {
-            okButton = new JButton();
-            okButton.setText(tr("OK"));
-            okButton.setName("OK");
-        }
-        return okButton;
-    }
-
-    /**
-     * This method initializes cancelButton
-     *
-     * @return javax.swing.JButton
-     */
-    private JButton getCancelButton() {
-        if (cancelButton == null) {
-            cancelButton = new JButton();
-            cancelButton.setText(tr("Cancel"));
-            cancelButton.setName("CANCEL");
-        }
-        return cancelButton;
-    }
-
-    /**
      * This method initializes interpolation
      *
      * @return java.awt.Choice
@@ -289,28 +266,6 @@ public class HouseNumberInputDialog extends JDialog {
             interpolation.add(tr("Even/Odd"));
         }
         return interpolation;
-    }
-
-    /**
-     * Registers the handler as a listener to all relevant events.
-     *
-     * @param handler the handler
-     */
-    public void addHandler(HouseNumberInputHandler handler) {
-        this.hi.addActionListener(handler);
-        this.hi.addFocusListener(handler);
-
-        this.lo.addActionListener(handler);
-        this.lo.addFocusListener(handler);
-
-        this.segments.addActionListener(handler);
-        this.segments.addFocusListener(handler);
-
-        this.okButton.addActionListener(handler);
-        this.cancelButton.addActionListener(handler);
-
-        this.interpolation.addItemListener(handler);
-
     }
 
     /**

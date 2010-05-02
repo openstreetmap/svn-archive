@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
@@ -56,7 +57,9 @@ public final class TerracerAction extends JosmAction {
     // smsms1 asked for the last value to be remembered to make it easier to do
     // repeated terraces. this is the easiest, but not necessarily nicest, way.
     // private static String lastSelectedValue = "";
-
+	
+	Collection<Command> commands;
+	
     public TerracerAction() {
         super(tr("Terrace a building"), "terrace",
                 tr("Creates individual buildings from a long building."),
@@ -148,6 +151,14 @@ public final class TerracerAction extends JosmAction {
         new HouseNumberInputHandler(this, outline, street, associatedStreet, title);
     }
 
+	public Integer getNumber(String number) {
+		try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+	}
+	
     /**
      * Terraces a single, closed, quadrilateral way.
      *
@@ -158,12 +169,28 @@ public final class TerracerAction extends JosmAction {
      *
      * @param outline The closed, quadrilateral way to terrace.
      * @param street The street, the buildings belong to (may be null)
+     * @param associatedStreet
+     * @param From
+     * @param To
+     * @param streetName the name of a street (may be null). Used if not null and street is null.
      * @param handleRelations If the user likes to add a relation or extend an existing relation
      * @param deleteOutline If the outline way should be deleted, when done
      */
-    public void terraceBuilding(Way outline, Way street, Relation associatedStreet, Integer segments, Integer from,
-            Integer to, int step, String streetName, boolean handleRelations, boolean deleteOutline) {
+    public void terraceBuilding(Way outline,
+				Way street,
+				Relation associatedStreet,
+				Integer segments,
+				String From,
+				String To,
+				int step,
+				String streetName,
+				boolean handleRelations,
+				boolean deleteOutline) {
         final int nb;
+        
+        Integer to, from;
+        to = getNumber(To);
+        from = getNumber(From);
         if (to != null && from != null) {
             nb = 1 + (to.intValue() - from.intValue()) / step;
         } else if (segments != null) {
@@ -175,7 +202,7 @@ public final class TerracerAction extends JosmAction {
                             + "Parameters were: segments " + segments
                             + " from " + from + " to " + to + " step " + step);
         }
-
+		
         // now find which is the longest side connecting the first node
         Pair<Way, Way> interp = findFrontAndBack(outline);
 
@@ -185,76 +212,107 @@ public final class TerracerAction extends JosmAction {
         // new nodes array to hold all intermediate nodes
         Node[][] new_nodes = new Node[2][nb + 1];
 
-        Collection<Command> commands = new LinkedList<Command>();
+        this.commands = new LinkedList<Command>();
         Collection<Way> ways = new LinkedList<Way>();
 
-        // create intermediate nodes by interpolating.
-        for (int i = 0; i <= nb; ++i) {
-            new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i / nb);
-            new_nodes[1][i] = interpolateAlong(interp.b, backLength * i / nb);
-            commands.add(new AddCommand(new_nodes[0][i]));
-            commands.add(new AddCommand(new_nodes[1][i]));
-        }
+		if (nb > 1) {
+		    // create intermediate nodes by interpolating.
+		    for (int i = 0; i <= nb; ++i) {
+		        new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i / nb);
+		        new_nodes[1][i] = interpolateAlong(interp.b, backLength * i / nb);
+		        this.commands.add(new AddCommand(new_nodes[0][i]));
+		        this.commands.add(new AddCommand(new_nodes[1][i]));
+		    }
 
-        // assemble new quadrilateral, closed ways
-        for (int i = 0; i < nb; ++i) {
-            Way terr = new Way();
-            // Using Way.nodes.add rather than Way.addNode because the latter
-            // doesn't
-            // exist in older versions of JOSM.
-            terr.addNode(new_nodes[0][i]);
-            terr.addNode(new_nodes[0][i + 1]);
-            terr.addNode(new_nodes[1][i + 1]);
-            terr.addNode(new_nodes[1][i]);
-            terr.addNode(new_nodes[0][i]);
-            
-            // add the tags of the outline to each building (e.g. source=*)
-            TagCollection.from(outline).applyTo(terr);
-            
-            if (from != null) {
-                // only, if the user has specified house numbers
-                terr.put("addr:housenumber", "" + (from + i * step));
-            }
-            terr.put("building", "yes");
-            if (street != null) {
-                terr.put("addr:street", street.get("name"));
-            } else if (streetName != null) {
-                terr.put("addr:street", streetName);
-            }
-            ways.add(terr);
-            commands.add(new AddCommand(terr));
-        }
+		    // assemble new quadrilateral, closed ways
+		    for (int i = 0; i < nb; ++i) {
+		        Way terr = new Way();
+		        // Using Way.nodes.add rather than Way.addNode because the latter
+		        // doesn't
+		        // exist in older versions of JOSM.
+		        terr.addNode(new_nodes[0][i]);
+		        terr.addNode(new_nodes[0][i + 1]);
+		        terr.addNode(new_nodes[1][i + 1]);
+		        terr.addNode(new_nodes[1][i]);
+		        terr.addNode(new_nodes[0][i]);
+		        
+		        // add the tags of the outline to each building (e.g. source=*)
+		        TagCollection.from(outline).applyTo(terr);
+				
+				String number = Integer.toString(from + i * step);
 
-        if (handleRelations) { // create a new relation or merge with existing
-            if (associatedStreet == null) {  // create a new relation
-                associatedStreet = new Relation();
-                associatedStreet.put("type", "associatedStreet");
-                if (street != null) { // a street was part of the selection
-                    associatedStreet.put("name", street.get("name"));
-                    associatedStreet.addMember(new RelationMember("street", street));
-                } else {
-                    associatedStreet.put("name", streetName);
-                }
-                for (Way w : ways) {
-                    associatedStreet.addMember(new RelationMember("house", w));
-                }
-                commands.add(new AddCommand(associatedStreet));
-            }
-            else { // relation exists already - add new members
-                Relation newAssociatedStreet = new Relation(associatedStreet);
-                for (Way w : ways) {
-                    newAssociatedStreet.addMember(new RelationMember("house", w));
-                }
-                commands.add(new ChangeCommand(associatedStreet, newAssociatedStreet));
-            }
-        }
+		       	terr = addressBuilding(terr, street, streetName, number);
 
-        if (deleteOutline) {
-            commands.add(DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(outline), true, true));
-        }
+		        ways.add(terr);
+		        this.commands.add(new AddCommand(terr));
+		    }
 
-        Main.main.undoRedo.add(new SequenceCommand(tr("Terrace"), commands));
-        Main.main.getCurrentDataSet().setSelected(ways);
+		    if (deleteOutline) {
+		        this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(outline), true, true));
+		    }
+		} else {
+			// Single building, just add the address details
+			Way newOutline;
+			newOutline = addressBuilding(outline, street, streetName, From);
+			ways.add(newOutline);
+			this.commands.add(new ChangeCommand(outline, newOutline));
+		}
+		
+		if (handleRelations) { // create a new relation or merge with existing
+		    if (associatedStreet == null) {  // create a new relation
+		        associatedStreet = new Relation();
+		        associatedStreet.put("type", "associatedStreet");
+		        if (street != null) { // a street was part of the selection
+		            associatedStreet.put("name", street.get("name"));
+		            associatedStreet.addMember(new RelationMember("street", street));
+		        } else {
+		            associatedStreet.put("name", streetName);
+		        }
+		        for (Way w : ways) {
+		            associatedStreet.addMember(new RelationMember("house", w));
+		        }
+		        this.commands.add(new AddCommand(associatedStreet));
+		    }
+		    else { // relation exists already - add new members
+		        Relation newAssociatedStreet = new Relation(associatedStreet);
+		        for (Way w : ways) {
+		            newAssociatedStreet.addMember(new RelationMember("house", w));
+		        }
+		        this.commands.add(new ChangeCommand(associatedStreet, newAssociatedStreet));
+		    }
+		}
+		Main.main.undoRedo.add(new SequenceCommand(tr("Terrace"), commands));
+		if (nb > 1) {
+			// Select the new building outlines (for quick reversing)
+		    Main.main.getCurrentDataSet().setSelected(ways);
+		} else if (street != null) {
+			// Select the way (for quick selection of a new house (with the same way))
+		    Main.main.getCurrentDataSet().setSelected(street);
+		}
+    }
+
+    /**
+     * Adds address details to a single building
+     *
+     * @param outline The closed, quadrilateral way to add the address to.
+     * @param street The street, the buildings belong to (may be null)
+     * @param streetName the name of a street (may be null). Used if not null and street is null.
+     * @param number The house number
+     * @return the way with added address details
+     */
+    private Way addressBuilding(Way outline, Way street, String streetName, String number) {
+    	Way changedOutline = outline;
+        if (number != null) {
+            // only, if the user has specified house numbers
+            this.commands.add(new ChangePropertyCommand(changedOutline, "addr:housenumber", number));
+        }
+        changedOutline.put("building", "yes");
+        if (street != null) {
+            this.commands.add(new ChangePropertyCommand(changedOutline, "addr:street", street.get("name")));
+        } else if (streetName != null) {
+            this.commands.add(new ChangePropertyCommand(changedOutline, "addr:street", streetName));
+        }
+        return changedOutline;
     }
 
     /**

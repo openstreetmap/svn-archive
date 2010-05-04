@@ -12,6 +12,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -41,6 +42,7 @@ import org.openstreetmap.josm.data.osm.history.History;
 import org.openstreetmap.josm.data.osm.history.HistoryDataSet;
 import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
+import org.openstreetmap.josm.data.osm.history.HistoryWay;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.history.HistoryLoadTask;
@@ -118,14 +120,16 @@ public class Undelete extends Plugin {
         if (dialog.getValue() != 1) return;
         Main.pref.put("undelete.newlayer", layer.isSelected());
         Main.pref.putInteger("undelete.osmid", tfId.getOsmId());
-        undelete(layer.isSelected(), cbType.getType(), tfId.getOsmId());
+        List<Long> ids=new ArrayList<Long>();
+        ids.add((long)tfId.getOsmId());
+        undelete(layer.isSelected(), cbType.getType(), ids, 0);
       }
     }      
           
     /**
      * Download the given primitive.
      */
-    public void undelete(boolean newLayer, final OsmPrimitiveType type, final long id) {
+    public void undelete(boolean newLayer, final OsmPrimitiveType type, final List<Long> ids, final long parent) {
         OsmDataLayer layer = Main.main.getEditLayer();
         if ((layer == null) || newLayer) {
             layer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
@@ -135,40 +139,86 @@ public class Undelete extends Plugin {
         final DataSet datas = layer.data;
         
         HistoryLoadTask task  = new HistoryLoadTask();
-        task.add (id, type);
+        for (long id: ids)
+        {
+          task.add (id, type);
+        }
+
         
         
         Main.worker.execute(task);
         
         Runnable r = new Runnable() {
             public void run() {
+              List<Node> nodes=new ArrayList<Node>();
+              for (long id: ids)
+              {
+
                 History h = HistoryDataSet.getInstance().getHistory(id, type);
                 
                 OsmPrimitive primitive;
-                HistoryOsmPrimitive hPrimitive=h.getLatest();
+                HistoryOsmPrimitive hPrimitive1;
+                HistoryOsmPrimitive hPrimitive2;
                 
                 if (type.equals(OsmPrimitiveType.NODE))
                 {
-                  HistoryNode hNode = (HistoryNode) hPrimitive;
+                  // We get all info from the latest version
+                  hPrimitive1=h.getLatest();
+                  hPrimitive2=hPrimitive1;
                   
-                  Node node = new Node(id, (int) hNode.getVersion());
+                  Node node = new Node(id, (int) hPrimitive1.getVersion());
+
+                  HistoryNode hNode = (HistoryNode) hPrimitive1;
                   node.setCoor(hNode.getCoords());
                   
                   primitive=node;
+                  if (parent>0)
+                  {
+                    nodes.add(node);
+                  }
+                }
+                else if (type.equals(OsmPrimitiveType.WAY))
+                {
+                  // We get version and user from the latest version, nodes and tags from n-1 version
+                  hPrimitive1 = h.getLatest();
+                  hPrimitive2 = h.getByVersion(h.getNumVersions()-1);
+
+                  
+                  
+                  Way way = new Way(id, (int) hPrimitive1.getVersion());
+                  
+                  HistoryWay hWay = (HistoryWay) hPrimitive2;
+                  //System.out.println(tr("Primitive {0} version {1}: {2} nodes", hPrimitive2.getId(), hPrimitive2.getVersion(), hWay.getNumNodes()));
+                  List<Long> nodeIds = hWay.getNodes();
+                  undelete(false, OsmPrimitiveType.NODE, nodeIds, id);
+                  
+                  primitive=way;
+                  
                 }
                 else
-                { primitive=new Node();}
-                
-                primitive.setKeys(hPrimitive.getTags());
-                
-                User user = User.createOsmUser(hPrimitive.getUid(), hPrimitive.getUser());
+                { 
+                    primitive=new Node();
+                    hPrimitive1=h.getLatest();
+                    hPrimitive2=h.getLatest();
+                }
+
+                User user = User.createOsmUser(hPrimitive1.getUid(), hPrimitive1.getUser());
                 
                 primitive.setUser(user);
+                
+                primitive.setKeys(hPrimitive2.getTags());
                 
                 primitive.setModified(true);
                 
                 datas.addPrimitive(primitive);                
                 //HistoryBrowserDialogManager.getInstance().show(h);
+              }
+              if ((parent>0) && (type.equals(OsmPrimitiveType.NODE)))
+              {
+                Way parentWay=(Way)datas.getPrimitiveById(parent, OsmPrimitiveType.WAY);
+                
+                parentWay.setNodes(nodes);
+              }
             }
         };
         Main.worker.submit(r);

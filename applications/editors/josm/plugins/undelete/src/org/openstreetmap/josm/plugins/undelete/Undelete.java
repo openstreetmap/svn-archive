@@ -130,13 +130,14 @@ public class Undelete extends Plugin {
      * Download the given primitive.
      */
     public void undelete(boolean newLayer, final OsmPrimitiveType type, final List<Long> ids, final long parent) {
-        OsmDataLayer layer = Main.main.getEditLayer();
-        if ((layer == null) || newLayer) {
-            layer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
-            Main.main.addLayer(layer);
+        OsmDataLayer tmpLayer = Main.main.getEditLayer();
+        if ((tmpLayer == null) || newLayer) {
+            tmpLayer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
+            Main.main.addLayer(tmpLayer);
         }
         
-        final DataSet datas = layer.data;
+        final DataSet datas = tmpLayer.data;
+        final OsmDataLayer layer=tmpLayer;
         
         HistoryLoadTask task  = new HistoryLoadTask();
         for (long id: ids)
@@ -157,60 +158,82 @@ public class Undelete extends Plugin {
                 History h = HistoryDataSet.getInstance().getHistory(id, type);
                 
                 OsmPrimitive primitive;
-                HistoryOsmPrimitive hPrimitive1;
+                HistoryOsmPrimitive hPrimitive1=h.getLatest();
                 HistoryOsmPrimitive hPrimitive2;
                 
-                if (type.equals(OsmPrimitiveType.NODE))
+                boolean visible=hPrimitive1.isVisible();
+                
+                if (visible)
                 {
-                  // We get all info from the latest version
-                  hPrimitive1=h.getLatest();
-                  hPrimitive2=hPrimitive1;
+                  // If the object is not deleted we get the real object
+                  DownloadPrimitiveTask download=new DownloadPrimitiveTask(new SimplePrimitiveId(id, type), layer);
+                  System.out.println(tr("Will get {0}", id));                 
+                  download.run();
                   
-                  Node node = new Node(id, (int) hPrimitive1.getVersion());
-
-                  HistoryNode hNode = (HistoryNode) hPrimitive1;
-                  node.setCoor(hNode.getCoords());
                   
-                  primitive=node;
-                  if (parent>0)
+                  System.out.println(tr("Looking for {0}", id));                 
+                  primitive=datas.getPrimitiveById(id, type);
+                  System.out.println(tr("Found {0}", primitive.getId()));
+                  if (parent>0 && type.equals(OsmPrimitiveType.NODE))
                   {
-                    nodes.add(node);
+                      nodes.add((Node)primitive);
                   }
                 }
-                else if (type.equals(OsmPrimitiveType.WAY))
-                {
-                  // We get version and user from the latest version, nodes and tags from n-1 version
-                  hPrimitive1 = h.getLatest();
-                  hPrimitive2 = h.getByVersion(h.getNumVersions()-1);
-
-                  
-                  
-                  Way way = new Way(id, (int) hPrimitive1.getVersion());
-                  
-                  HistoryWay hWay = (HistoryWay) hPrimitive2;
-                  //System.out.println(tr("Primitive {0} version {1}: {2} nodes", hPrimitive2.getId(), hPrimitive2.getVersion(), hWay.getNumNodes()));
-                  List<Long> nodeIds = hWay.getNodes();
-                  undelete(false, OsmPrimitiveType.NODE, nodeIds, id);
-                  
-                  primitive=way;
-                  
-                }
                 else
-                { 
-                    primitive=new Node();
-                    hPrimitive1=h.getLatest();
-                    hPrimitive2=h.getLatest();
-                }
+                {
+                  if (type.equals(OsmPrimitiveType.NODE))
+                  {
+                    // We get all info from the latest version
+                    hPrimitive2=hPrimitive1;
+                    
+                    Node node = new Node(id, (int) hPrimitive1.getVersion());
 
-                User user = User.createOsmUser(hPrimitive1.getUid(), hPrimitive1.getUser());
-                
-                primitive.setUser(user);
-                
-                primitive.setKeys(hPrimitive2.getTags());
-                
-                primitive.setModified(true);
-                
-                datas.addPrimitive(primitive);                
+                    HistoryNode hNode = (HistoryNode) hPrimitive1;
+                    node.setCoor(hNode.getCoords());
+                    
+                    primitive=node;
+                    if (parent>0)
+                    {
+                      nodes.add(node);
+                    }
+                  }
+                  else if (type.equals(OsmPrimitiveType.WAY))
+                  {
+                    // We get version and user from the latest version, nodes and tags from n-1 version
+                    hPrimitive1 = h.getLatest();
+                    hPrimitive2 = h.getByVersion(h.getNumVersions()-1);
+
+                    
+                    
+                    Way way = new Way(id, (int) hPrimitive1.getVersion());
+                    
+                    HistoryWay hWay = (HistoryWay) hPrimitive2;
+                    //System.out.println(tr("Primitive {0} version {1}: {2} nodes", hPrimitive2.getId(), hPrimitive2.getVersion(), hWay.getNumNodes()));
+                    List<Long> nodeIds = hWay.getNodes();
+                    undelete(false, OsmPrimitiveType.NODE, nodeIds, id);
+                    
+                    primitive=way;
+                    
+                  }
+                  else
+                  { 
+                      primitive=new Node();
+                      hPrimitive1=h.getLatest();
+                      hPrimitive2=h.getLatest();
+                  }
+
+                  User user = User.createOsmUser(hPrimitive1.getUid(), hPrimitive1.getUser());
+                  
+                  primitive.setUser(user);
+                  
+                  primitive.setKeys(hPrimitive2.getTags());
+                  
+                  primitive.setModified(true);
+                  
+                  datas.addPrimitive(primitive);                
+                }
+                  
+
                 //HistoryBrowserDialogManager.getInstance().show(h);
               }
               if ((parent>0) && (type.equals(OsmPrimitiveType.NODE)))

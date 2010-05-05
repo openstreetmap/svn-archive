@@ -89,7 +89,7 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         if (debug)
             out("clearing tile storage");
         tileCache = new MemoryTileCache();
-        tileCache.setCacheSize(2000);
+        tileCache.setCacheSize(200);
     }
 
     /**

@@ -86,7 +86,14 @@ public class DuplicateNode extends Test{
 	@Override
 	public void visit(Node n) {
 		if (n.isUsable()) {
-			LatLon rounded = n.getCoor().getRoundedToOsmPrecision();
+			//LatLon rounded = n.getCoor().getRoundedToOsmPrecision();
+		  LatLon ori=n.getCoor();
+		  double precision = 10e-7;
+			LatLon rounded = new LatLon(
+                Math.round(ori.lat() / precision) * precision,
+                Math.round(ori.lon() / precision) * precision
+                );
+
 			if (potentialDuplicates.get(rounded) == null) {
 				// in most cases there is just one node at a given position. We
 				// avoid to create an extra object and add remember the node

@@ -228,6 +228,8 @@ public class Undelete extends Plugin {
                   
                   primitive.setKeys(hPrimitive2.getTags());
                   
+                  primitive.put("history", "retrieved using undelete JOSM plugin");
+                  
                   primitive.setModified(true);
                   
                   datas.addPrimitive(primitive);                

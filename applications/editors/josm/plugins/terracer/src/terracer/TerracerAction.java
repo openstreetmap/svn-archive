@@ -238,9 +238,11 @@ public final class TerracerAction extends JosmAction {
 		        
 		        // add the tags of the outline to each building (e.g. source=*)
 		        TagCollection.from(outline).applyTo(terr);
-				
-				String number = Integer.toString(from + i * step);
 
+				String number = null;
+				if (from != null) {
+					number = Integer.toString(from + i * step);
+				}
 		       	terr = addressBuilding(terr, street, streetName, number);
 
 		        ways.add(terr);

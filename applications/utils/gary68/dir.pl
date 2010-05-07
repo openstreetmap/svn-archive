@@ -2,7 +2,7 @@
 use strict ;
 use warnings ;
 
-my $version = "1.03" ;
+my $version = "1.04" ;
 
 my $streetFileName ;
 my $poiFileName ;

@@ -65,7 +65,9 @@
 #      scale grid labels
 #      poi file
 #      halo for way labels
-#
+# 1.04 [-placefile]
+#      scaleing of route icons
+#      [-routeiconscale]
 #
 #
 # TODO
@@ -86,11 +88,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.03 ;
-use OSM::mapgenRules 1.03 ;
+use OSM::mapgen 1.04 ;
+use OSM::mapgenRules 1.04 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.03" ;
+my $version = "1.04" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -106,10 +108,11 @@ perl mapgen.pl
 -bgcolor=TEXT (color for background)
 -size=<integer> (in pixels for x axis, DEFAULT=1024)
 -clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
--clipbbox=<float>,<float>,<float>,<float> (left, right, bootom, top of bbox for clipping map out of data - more precise than -clip; overrides -clip!)
+-clipbbox=<float>,<float>,<float>,<float> (left, right, bottom, top of bbox for clipping map out of data - more precise than -clip; overrides -clip!)
 -pad=<INTEGER> (percent of white space around data in osm file, DEFAULT=0)
 
 -place=TEXT (Place to draw automatically; quotation marks can be used if necessary; node id can also be given; OSMOSIS REQUIRED!)
+-placefile=<TEXT> (file in which to look for places; can be produced with osmosis; speeds up search process) 
 -lonrad=FLOAT (radius for place width in km, DEFAULT=2)
 -latrad=FLOAT (radius for place width in km, DEFAULT=2)
 
@@ -139,6 +142,7 @@ perl mapgen.pl
 -routelabeloffset=INTEGER (DEFAULT=35)
 -icondir=TEXT (dir for icons for routes; ./icondir/ i.e.; DEFAULT=./routeicons/ )
 -routeicondist=INTEGER (dist in y direction for route icons on same route; DEFAULT=75)
+-routeiconscale=FLOAT (factor to scale the height and width of the route icons; >1 bigger; <1 smaller)
 
 -legend=INT (0=no legend; 1=legend in top left corner; 2 = legend in lower right corner; DEFAULT=1)-ruler=INT (0=no ruler; 1=draw ruler; DEFAULT=1)
 -rulercolor=TEXT (DEFAULT=black)
@@ -183,6 +187,7 @@ my $dirColNum = 3 ;
 my $dirTitle = "mapgen map" ;
 my $ppc = 6 ; 
 my $place = "" ;
+my $placeFileName = "" ;
 my $lonrad = 2 ;
 my $latrad = 2 ;
 my $helpOpt = 0 ;
@@ -206,6 +211,7 @@ my $routeLabelFont = "sans-serif" ;
 my $routeLabelOffset = 35 ;
 my $iconDir = "./routeicons/" ;
 my $routeIconDist = 75 ;
+my $routeIconScale = 1 ;
 my $onewayOpt = 0 ;
 my $onewayColor = "white" ;
 my $halo = 0 ;
@@ -338,6 +344,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"oneways"	=> \$onewayOpt,
 				"onewaycolor:s" => \$onewayColor,
 				"place:s"	=> \$place,		# place to draw
+				"placefile:s"	=> \$placeFileName,		# file to look for places
 				"lonrad:f"	=> \$lonrad,
 				"latrad:f"	=> \$latrad,
 				"halo:f"	=> \$halo,
@@ -354,6 +361,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"routelabelfont:s"	=> \$routeLabelFont,		
 				"routelabeloffset:i"	=> \$routeLabelOffset,		
 				"routeicondist:i"	=> \$routeIconDist,
+				"routeiconscale:f"	=> \$routeIconScale,
 				"icondir:s"		=> \$iconDir,
 				"poifile:s"	=> \$extPoiFileName,		
 				"multionly"	=> \$multiOnly,		# draw only areas from multipolygons
@@ -424,6 +432,7 @@ print "declutter = $declutterOpt\n" ;
 print "alloIconMoveOpt = $allowIconMoveOpt\n" ;
 
 print "place     = $place " ;
+print "placefile     = $placeFileName " ;
 print "lonrad    = $lonrad (km) " ;
 print "latrad    = $latrad (km)\n\n" ;
 
@@ -433,6 +442,7 @@ print "routeLabelFont   = $routeLabelFont \n" ;
 print "routeLabelOffset = $routeLabelOffset\n" ; 
 print "iconDir          = $iconDir\n" ; 
 print "routeIconDist    = $routeIconDist\n\n" ; 
+print "routeIconScale    = $routeIconScale\n\n" ; 
 
 print "pdf       = $pdfOpt " ;
 print "png       = $pngOpt\n\n" ;
@@ -457,7 +467,8 @@ if ($place ne "") {
 	my ($placeId) = ($place =~ /([\d]+)/);
 	if (!defined $placeId) { $placeId = -999999999 ; }
 	print "looking for place...\n" ;
-	openOsmFile ($osmName) ;
+	if ($placeFileName eq "") { $placeFileName = $osmName ; }
+	openOsmFile ($placeFileName) ;
 	($nodeId, $nodeLon, $nodeLat, $nodeUser, $aRef1) = getNode2 () ;
 	if ($nodeId != -1) {
 		@nodeTags = @$aRef1 ;
@@ -1647,8 +1658,8 @@ sub isIn {
 						if (grep /.png/, $iconName) {
 							($x, $y) = sizePNG ($iconName) ;
 						}
-						$iconSizeX{$iconName} = $x ;
-						$iconSizeY{$iconName} = $y ;
+						$iconSizeX{$iconName} = $routeIconScale * scalePoints( scaleBase ($x)) ;
+						$iconSizeY{$iconName} = $routeIconScale * scalePoints( scaleBase ($y)) ;
 						# print "route icon $iconName $x $y\n" ;
 					}
 

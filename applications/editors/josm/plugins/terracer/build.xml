@@ -31,7 +31,7 @@
     <property name="ant.build.javac.target" value="1.5"/>
 
 
-    <property name="commit.message" value="Update to JOSM core" />
+    <property name="commit.message" value="Remember the interpolation setting between restarts" />
     <property name="plugin.main.version" value="3210" />
 
 

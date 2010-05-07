@@ -57,6 +57,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     */
     final static String HANDLE_RELATION = "plugins.terracer.handle_relation";
     final static String DELETE_OUTLINE = "plugins.terracer.delete_outline";
+    final static String INTERPOLATION = "plugins.terracer.interpolation";
 
     final private Way street;
     final private boolean relationExists;
@@ -162,6 +163,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             hiLabel = new JLabel();
             hiLabel.setText(tr("Highest Number"));
             final String txt = relationExists ? tr("add to existing associatedStreet relation") : tr("create an associatedStreet relation");
+
             handleRelationCheckBox = new JCheckBox(txt, Main.pref.getBoolean(HANDLE_RELATION, true));
             deleteOutlineCheckBox = new JCheckBox(tr("delete outline way"), Main.pref.getBoolean(DELETE_OUTLINE, true));
 
@@ -264,6 +266,12 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             interpolation = new Choice();
             interpolation.add(tr("All"));
             interpolation.add(tr("Even/Odd"));
+            if (Main.pref.getInteger(INTERPOLATION, 2) == 1) {
+            	interpolation.select(tr("All"));
+            } else {
+            	interpolation.select(tr("Even/Odd"));
+            }
+            //return (dialog.interpolation.getSelectedItem().equals(tr("All"))) ? 1 : 2;
         }
         return interpolation;
     }

@@ -304,7 +304,7 @@ import org.openstreetmap.josm.actions.JosmAction;
      *
      * @return the stepSize (1 for all, 2 for odd /even)
      */
-    public int stepSize() {
+    public Integer stepSize() {
         return (dialog.interpolation.getSelectedItem().equals(tr("All"))) ? 1
                 : 2;
     }
@@ -386,13 +386,14 @@ import org.openstreetmap.josm.actions.JosmAction;
         }
     }
 
+   
     /**
      * Whether the user likes to delete the outline way.
      */
     public boolean doDeleteOutline() {
         return dialog.deleteOutlineCheckBox.isSelected();
     }
-
+    
     /* (non-Javadoc)
      * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
      */
@@ -416,5 +417,6 @@ import org.openstreetmap.josm.actions.JosmAction;
     public void saveValues() {
         Main.pref.put(HouseNumberInputDialog.HANDLE_RELATION, doHandleRelation());
         Main.pref.put(HouseNumberInputDialog.DELETE_OUTLINE, doDeleteOutline());
+        Main.pref.put(HouseNumberInputDialog.INTERPOLATION, stepSize().toString());
     }
 }

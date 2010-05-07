@@ -16,6 +16,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
@@ -104,6 +105,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         initialize();
         setupDialog();
         setVisible(true);
+        lo.requestFocus();
     }
 
 	/**
@@ -125,19 +127,8 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      */
     private Container getJContentPane() {
         if (jContentPane == null) {
-        
-            messageLabel = new JTextArea();
-            messageLabel.setText(DEFAULT_MESSAGE);
-            messageLabel.setAutoscrolls(true);
-
-            messageLabel.setLineWrap(true);
-            messageLabel.setRows(2);
-            messageLabel.setBackground(new Color(238, 238, 238));
-            messageLabel.setEditable(false);
-            
             jContentPane = this.getContentPane();
             jContentPane.setLayout(new BoxLayout(jContentPane, BoxLayout.Y_AXIS));
-            jContentPane.add(messageLabel, jContentPane);
             jContentPane.add(getInputPanel(), jContentPane);
         }
         return jContentPane;
@@ -150,6 +141,19 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      */
     private JPanel getInputPanel() {
         if (inputPanel == null) {
+
+        	GridBagConstraints c = new GridBagConstraints();
+
+        	messageLabel = new JTextArea();
+            messageLabel.setText(DEFAULT_MESSAGE);
+            messageLabel.setAutoscrolls(true);
+
+            messageLabel.setLineWrap(true);
+            messageLabel.setRows(2);
+            messageLabel.setBackground(new Color(238, 238, 238));
+            messageLabel.setEditable(false);
+            messageLabel.setFocusable(false); // Needed so that lowest number can have focus immediately
+            
             interpolationLabel = new JLabel();
             interpolationLabel.setText(tr("Interpolation"));
             segmentsLabel = new JLabel();
@@ -169,6 +173,10 @@ public class HouseNumberInputDialog extends ExtendedDialog {
 
             inputPanel = new JPanel();
             inputPanel.setLayout(new GridBagLayout());
+            c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridwidth = GridBagConstraints.REMAINDER;
+            inputPanel.add(messageLabel, c);
+            
             inputPanel.add(loLabel, GBC.std().insets(3,3,0,0));
             inputPanel.add(getLo(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
             inputPanel.add(hiLabel, GBC.std().insets(3,3,0,0));
@@ -206,7 +214,6 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         if (lo == null) {
             lo = new JTextField();
             lo.setText("");
-            lo.requestFocus();
         }
         return lo;
     }

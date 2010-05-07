@@ -137,7 +137,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 	        // For some reason the messageLabel doesn't want to show up, so a MessageDialog is shown instead. Someone more knowledgeable might fix this.
 	        dialog.messageLabel.setForeground(Color.red);
 	        dialog.messageLabel.setText(message.toString());
-	        JOptionPane.showMessageDialog(null, message.toString(), tr("Error"), JOptionPane.ERROR_MESSAGE);
+	        //JOptionPane.showMessageDialog(null, message.toString(), tr("Error"), JOptionPane.ERROR_MESSAGE);
 
             return false;
         }

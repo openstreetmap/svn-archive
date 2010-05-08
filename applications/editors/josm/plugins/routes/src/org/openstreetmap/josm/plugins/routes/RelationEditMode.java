@@ -61,8 +61,10 @@ public class RelationEditMode extends MapMode {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		Way way = Main.map.mapView.getNearestWay(e.getPoint());
+		if (Main.main.getCurrentDataSet() == null)
+			return;
 
+		Way way = Main.map.mapView.getNearestWay(e.getPoint());
 		Collection<Relation> selectedRelations = Main.main.getCurrentDataSet().getSelectedRelations();
 
 		if (way != null) {

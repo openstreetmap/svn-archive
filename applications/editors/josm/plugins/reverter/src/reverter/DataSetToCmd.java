@@ -67,6 +67,7 @@ final class DataSetToCmd {
             default: throw new AssertionError();
             }
             newTarget.mergeFrom(source);
+            newTarget.setOsmId(target.getId(), (int)target.getVersion());
             newTarget.setDeleted(false);
             cmds.add(new ChangeCommand(target,newTarget));
         }

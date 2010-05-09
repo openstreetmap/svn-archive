@@ -1,13 +1,21 @@
 <?php
-/* Copyright (c) 2009, L. IJsselstein and others
+/* Copyright (c) 2010, L. IJsselstein and others
   Yournavigation.org All rights reserved.
+ */
+
+/* Interfaces with a routing engine developed by 
+ * KIT (Karlsruhe Institute of Technology)
+ *
+ * This engine uses the contraction hierarchies algorithm
+ * to achieve very fast route results.
  */
  
 $maxAttempts = 25; //5
 $maxInstances = 4;
 $www_dir = '/home/lambertus/public_html/yours';
 $yours_dir = '/home/lambertus/yours';
-$admin_email = 'osm@na1400.info';
+$admin_email = '[admin email address here]';
+$action = "http://[KIT server address here]/route";
 $ulimit = 30;
 
 $output = "";
@@ -15,8 +23,8 @@ $nAttempts = 0;
 $script_start = microtime(true);
 
 // Allowed parameters
-$vehicles = array("motorcar", "hgv", "goods", "psv", "bicycle", "cycleroute", "foot", "moped", "mofa");
-$layers = array("mapnik", "cn", "test");
+$vehicles = array("motorcar");
+$layers = array("mapnik");
 $formats = array("kml", "geojson", "gpx");
 
 $blocked = array('77.215.30.153');
@@ -37,31 +45,11 @@ if (in_array($ip, $blocked) == true) {
 	exit("Your IP is blocked. Please send an email to $admin_email describing why you are constantly sending automated requests to the API.");
 }
 
-// Check for running Gosmore instances, max wait is 1 sec
-for ($nAttempts = 0; $nAttempts < $maxAttempts; $nAttempts++) {
-	if (getProcesses() > $maxInstances) {
-		// sleep for 200 msec
-		usleep(200000);
-	} else {
-		break;
-	}
-} 
-
-if ($nAttempts == $maxAttempts) {
-	$file = $www_dir.'/busy.csv';
-	$fh = fopen($file, 'a+');
-	if ($fh) {		
-		fwrite($fh, date('Y-m-d H:i:s').", ".$ip.", ".$yours_client.", ".$referrer.", ".$user_agent.", ".$query."\n");
-		fclose($fh);
-	}
-	exit(kmlError("Server is busy, please try again later..."));
-}
-
-$query = "QUERY_STRING='";
+$query = "";
 
 //Coordinates
 if (isset($_GET['flat']) && is_numeric($_GET['flat'])) {
-	$query .= 'flat='.$_GET['flat'];
+	$query .= "&".$_GET['flat'];
 	$flat = $_GET['flat'];
 }
 else {	
@@ -70,7 +58,7 @@ else {
 }
 
 if (isset($_GET['flon']) && is_numeric($_GET['flon'])) {
-	$query .= '&flon='.$_GET['flon'];
+	$query .= "&".$_GET['flon'];
 	$flon = $_GET['flon'];
 }
 else {
@@ -79,50 +67,19 @@ else {
 }
 
 if (isset($_GET['tlat']) && is_numeric($_GET['tlat'])) {
-	$query .= '&tlat='.$_GET['tlat'];
+	$query .= "&".$_GET['tlat'];
 }
 else {
 	$query .= '&tlat=53.02616';
 }
 
 if (isset($_GET['tlon']) && is_numeric($_GET['tlon'])) {
-	$query .= '&tlon='.$_GET['tlon'];
+	$query .= "&".$_GET['tlon'];
 	$tlon = $_GET['tlon'];
 }
 else {
 	$query .= '&tlon=5.66875';
 	$tlon = '5.66875';
-}
-
-//Fastest/shortest route
-if (isset($_GET['fast']) && is_numeric($_GET['fast'])) {
-	$query .= '&fast='.$_GET['fast'];
-}
-else if (isset($_GET['short']) && is_numeric($_GET['short'])) {
-	if ($_GET['short'] == '1') {
-		$query .= '&fast=0';
-	}
-}
-else {
-	$query .= '&fast=1';
-}
-
-//Transportation
-$style = 'genericstyles.xml';
-if (isset($_GET['v']) && in_array($_GET['v'], $vehicles)) {
-	if (strcmp($_GET['v'], "cycleroute") == 0) {
-		// Cycleroute is special case
-		$vehicle = 'bicycle';
-		$query .= '&v=bicycle';
-		$style = 'cyclestyles.xml';
-	} else {
-		$vehicle = $_GET['v'];
-		$query .= '&v='.$_GET['v'];
-	}
-}
-else 
-{
-	$query .= '&v=motorcar';
 }
 
 //Map layer
@@ -137,126 +94,32 @@ if (isset($_GET['format']) && in_array($_GET['format'], $formats)) {
 	$format = $_GET['format'];
 }
 
-$query .= "'";
-//$dir = $yours_dir.'/normal';
-
-// Geographic pak file selection
-if ($flon > -168 and $flon < -30) {
-	// American continents (North and South)
-	$pak = $yours_dir.'/america.pak';
-} else {
-	// Europe, Asia, Africa and Oceania continents
-	$pak = $yours_dir.'/eurasia.pak';
-}
-
-//Decide which routing database is going to be used
-switch ($layer) {
-case 'test':
-	$gosmore = '/test';
-	break;
-default:
-	$gosmore = '/normal';
-	break;
-}
-
-$dir = $yours_dir.$gosmore;
-$command = $query." nice ./gosmore ".$pak." ".$style;
-
 $fh = fopen($www_dir.'/commands.log', 'a+');
 if ($fh) {
-	fwrite($fh, date('Y-m-d H:i:s').", ".$dir.', '.$command."\n");
+	fwrite($fh, date('Y-m-d H:i:s').", ".$dir.', '.$action.$query."\n");
 	fclose($fh);
 }
+$kit_start = microtime(true);
 
-$res = chdir($dir);
-$gosmore_start = microtime(true);
-exec("ulimit -t ".$ulimit);
-$result = exec("ulimit -t 30 && ".$command, $output);
-exec("ulimit");
-$gosmore_end = microtime(true);
+// Initiate cURL
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $action.$query);
 
-$nodes = 0;
+// Follow redirects and return the transfer
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-if (count($output) > 1)
-{
-	// Loop through all the coordinates
-	$flat = $flon = 360.0;
-	$distance = 0;
-	$elements = array();
-	foreach ($output as $line)
-	{
-		$pos = strripos($line, ',');
-		if ($pos)
-		{
-			$node = split(",", $line);
-			for ($i = 0; $i < count($node); $i++)
-			{
-				switch ($i)
-				{
-				case 0:
-					$lat = trim($node[0], "\n\r0");
-					break;
-				case 1:
-					$lon = trim($node[1], "\n\r0");
-					break;
-				case 2:
-					$junction = trim($node[2], "\n\r0");
-					break;
-				case 3:
-					$name = trim($node[3], "\n\r0");
-					break;
-				}
-			}
-			$element = array("lat" => $lat, "lon" => $lon, "junction" => $junction, "name" => $name);
-			array_push($elements, $element);
-			
-			if ($flat < 360)
-			{
-				$distance += getDistance($flat, $flon, $lat, $lon);
-			}
-			$flat = $lat;
-			$flon = $lon;
-			$nodes++;
-		}
-	}
-	
-	// Convert the returned coordinates to the requested output format
-	switch ($format) {
-	case 'kml':
-		$output = asKML($elements, $distance);
-		break;
-	case 'geojson':
-		$output = asGeoJSON($elements, $distance);
-		break;
-	case 'gpx':
-		$output = asGPX($elements, $distance);
-		break;
-	default:
-		$output = kmlError("unrecognised output format given");
-	}
-}
+// Get result and close cURL
+$result = curl_exec($ch);
 
-if ($nodes == 0) 
-{
-	if (count($output) > 1)
-	{
-		if (strcmp($output[2], 'No route found')) {
-			$output = kmlError('Unable to calculate a route');
-		}
-		else
-		{
-			$output = kmlError("An unexpected error occured in Gosmore:\n".print_r($output));
-		}	
-	}
-	else if (count($output) == 0)
-	{
-		$output = kmlError("An unexpected error occured in Gosmore:\n".$result);
-	}
-	
-}
+$curl_info = curl_getinfo($ch);
 
-// Return the result
-echo $output;
+curl_close($ch);
+
+$kit_end = microtime(true);
+
+// Return the response
+header("Content-type: ".$curl_info['content_type']);
+echo $result;
 
 // Do some housekeeping (update logfiles)
 
@@ -264,7 +127,7 @@ $file = $www_dir.'/requests.csv';
 if (!file_exists($file)) {
 	$fh = fopen($file, 'a+');
 	if ($fh) {		
-		fwrite($fh, "date, ip, client id, referrer, user_agent, query, length, nodes, script time, gosmore time\n");
+		fwrite($fh, "date, ip, client id, referrer, user_agent, query, length, nodes, script time, kit time\n");
 		fclose($fh);
 	}
 }
@@ -273,7 +136,7 @@ $fh = fopen($file, 'a+');
 if ($fh) {
 	$script_end = microtime(true);
 	$script = $script_end - $script_start;
-	$runtime = $gosmore_end - $gosmore_start;
+	$runtime = $kit_end - $kit_start;
 	
 	fwrite($fh, date('Y-m-d H:i:s').", ".$ip.", ".$yours_client.", ".$referrer.", ".$user_agent.", ".$query.", ".strlen($output).", ".$nodes.", ".round($script, 2).", ".round($runtime, 2)."\n");
 	fclose($fh);
@@ -295,29 +158,6 @@ function getDistance($latitudeFrom, $longitudeFrom, $latituteTo, $longitudeTo) {
        * cos($latituteTo) * cos($longitudeFrom - $longitudeTo);
  
     return (6371.0 * acos($d));
-}
-
-function getProcesses() {
-	$nProcesses = 0;
-	
-	exec("ps ax | grep gosmore", $ps, $return_var);
-
-	foreach ($ps as $row => $process)
-	{
-		$properties = array();
-		$properties = split(" ", $process);
-		
-		foreach ($properties as $item => $property)
-		{
-			//echo "property ".$item." = ".$property."\n";
-			if (strcmp(trim($property), "./gosmore") == 0)
-			{
-				$nProcesses++;
-				break;
-			}
-		}
-	}
-	return $nProcesses;
 }
 
 function kmlError($error) {

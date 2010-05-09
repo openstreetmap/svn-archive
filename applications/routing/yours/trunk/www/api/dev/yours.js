@@ -2,27 +2,16 @@
   Yournavigation.org All rights reserved.
  */
 
+var apiUrl = document.location.protocol + "//" + document.location.hostname + document.location.pathname + "api/dev/";
+var namefinderUrl = "transport.php?url=http://gazetteer.openstreetmap.org/namefinder/search.xml&";
+var nominatimUrl = "transport.php?url=http://nominatim.openstreetmap.org/";
+var reverseNamefinderUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/rev_namefinder/&";
+
 /*
 	Yours NameSpace with Classes and functions
 	@requires OpenLayers
 	@requires jQuery
  */
-
-
-var apiUrl = "http://" + document.domain + "/api/dev/";
-//var apiUrl = "proxy.php?u=http://yournavigation.org/api/dev/";
-
-//var proxyUrl = "proxy.php?u=http://yournavigation.org/api";
-//var gosmoreUrl = "proxy.php?u=http://yournavigation.org/api/1.0/gosmore.php?";
-
-//leave blank when using a local gazetteer service.
-//var namefinderUrl = "";
-//var namefinderUrl = "proxy.php?u=http://gazetteer.openstreetmap.org/namefinder/search.xml?";
-var namefinderUrl = "transport.php?url=http://gazetteer.openstreetmap.org/namefinder/search.xml&";
-var nominatimUrl = "transport.php?url=http://nominatim.openstreetmap.org/";
-
-var reverseNamefinderUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/rev_namefinder/&";
-
 var routeCache = {};
 
 // Create OpenLayers Control Click handler

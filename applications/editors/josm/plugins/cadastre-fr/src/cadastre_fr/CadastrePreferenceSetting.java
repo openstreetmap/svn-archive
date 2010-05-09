@@ -56,7 +56,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JRadioButton crosspiece4 = new JRadioButton("100m");
 
-    private JCheckBox autoFirstLayer = new JCheckBox(tr("Automaticly select first WMS layer when grabing if multiple layers exist."));
+    private JCheckBox autoFirstLayer = new JCheckBox(tr("Select first WMS layer in list."));
     
     private JRadioButton grabRes1 = new JRadioButton("high");
 
@@ -79,7 +79,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JCheckBox enableCache = new JCheckBox(tr("Enable automatic caching."));
 
-    static final int DEFAULT_CACHE_SIZE = 500;
+    static final int DEFAULT_CACHE_SIZE = 0; // disabled by default
     JLabel jLabelCacheSize = new JLabel(tr("Max. cache size (in MB)"));
     private JTextField cacheSize = new JTextField(20);
     

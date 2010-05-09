@@ -68,6 +68,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     private CacheControl cacheControl = null;
 
     private String location = "";
+    
+    private String departement = "";
 
     private String codeCommune = "";
 
@@ -376,6 +378,14 @@ public class WMSLayer extends Layer implements ImageObserver {
     public void setLocation(String location) {
         this.location = location;
         setName(rebuildName());
+    }
+
+    public String getDepartement() {
+        return departement;
+    }
+
+    public void setDepartement(String departement) {
+        this.departement = departement;
     }
 
     public String getCodeCommune() {

@@ -72,22 +72,24 @@ public class CacheControl implements Runnable {
     }
 
     private void checkDirSize(File path) {
-        long size = 0;
-        long oldestFileDate = Long.MAX_VALUE;
-        int oldestFile = 0;
-        File[] files = path.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            size += files[i].length();
-            if (files[i].lastModified() <  oldestFileDate) {
-                oldestFile = i;
-                oldestFileDate = files[i].lastModified();
+        if (cacheSize != 0) {
+            long size = 0;
+            long oldestFileDate = Long.MAX_VALUE;
+            int oldestFile = 0;
+            File[] files = path.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                size += files[i].length();
+                if (files[i].lastModified() <  oldestFileDate) {
+                    oldestFile = i;
+                    oldestFileDate = files[i].lastModified();
+                }
             }
-        }
-        if (size > cacheSize*1024*1024) {
-            System.out.println("Delete oldest file  \""+ files[oldestFile].getName()
-                    + "\" in cache dir to stay under the limit of " + cacheSize + " MB.");
-            files[oldestFile].delete();
-            checkDirSize(path);
+            if (size > (long)cacheSize*1024*1024) {
+                System.out.println("Delete oldest file  \""+ files[oldestFile].getName()
+                        + "\" in cache dir to stay under the limit of " + cacheSize + " MB.");
+                files[oldestFile].delete();
+                checkDirSize(path);
+            }
         }
     }
 

@@ -257,6 +257,7 @@ public class CadastreInterface {
                 content += "&codeCommune=" + codeCommune;
             }
             content += "&codeDepartement=";
+            content += wmsLayer.getDepartement();
             content += "&nbResultatParPage=10";
             content += "&x=0&y=0";
             searchFormURL = new URL(baseURL + "/scpc/rechercherPlan.do");

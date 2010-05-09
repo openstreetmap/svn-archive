@@ -112,6 +112,8 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - download cancellation improved
  *                 - last deployment for Java1.5 compatibility
  * 2.0 xx-xxx-xxxx - update projection for "La Reunion" departement to RGR92, UTM40S. 
+ *                 - add 'departement' as option in the municipality selection
+ *                 - fixed bug in cache directory size control (and disabled by default)
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "2.0";

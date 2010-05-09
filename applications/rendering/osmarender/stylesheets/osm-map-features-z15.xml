@@ -2220,11 +2220,17 @@
 						</rule>
 					</rule>
 				</rule>
-				<rule e="way" k="natural" v="*" minSize="0.016" layer="5">
-					<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/>
-					<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%'/>
+				<rule e="way" k="natural" v="*" minSize="0.008" layer="5">
+					<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%' layer="1"/>
+					<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%' layer="1"/>
+				</rule>
+				<!-- Add landuse names, e.g. to display names of forest parcels teinted by a large wooden area -->
+				<rule e="way" k="landuse" v="*" minSize="0.008" layer="5">
+					<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%' layer="1"/>
+					<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%' layer="1"/>
 				</rule>
 			</rule>
+
 
 			<!-- Road numbers for all highways -->
 			<rule e="way" k="osmarender:renderRef" v="~|yes" layer="5">

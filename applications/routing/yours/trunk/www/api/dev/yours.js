@@ -2,7 +2,11 @@
   Yournavigation.org All rights reserved.
  */
 
-var apiUrl = document.location.protocol + "//" + document.location.hostname + document.location.pathname + "api/dev/";
+if (document.location.pathname.charAt(document.location.pathname.length-1) == "/") {
+	var apiUrl = document.location.protocol + "//" + document.location.hostname + document.location.pathname + "api/dev/";
+} else {
+	var apiUrl = document.location.protocol + "//" + document.location.hostname + document.location.pathname + "/api/dev/";
+}
 var namefinderUrl = "transport.php?url=http://gazetteer.openstreetmap.org/namefinder/search.xml&";
 var nominatimUrl = "transport.php?url=http://nominatim.openstreetmap.org/";
 var reverseNamefinderUrl = "transport.php?url=http://dev.openstreetmap.nl/~rullzer/rev_namefinder/&";

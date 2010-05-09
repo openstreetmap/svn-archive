@@ -2935,8 +2935,13 @@
 				</else>
 			</rule>
 			<rule e="way" k="natural" v="*" minSize="0.008" layer="5">
-				<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/>
-				<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%'/>
+				<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%' layer="1"/>
+				<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%' layer="1"/>
+			</rule>
+			<!-- Add landuse names, e.g. to display names of forest parcels teinted by a large wooden area -->
+			<rule e="way" k="landuse" v="*" minSize="0.008" layer="5">
+				<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%' dx="0px" dy="0px" layer="1"/>
+				<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%' dx="0px" dy="0px" layer="1"/>
 			</rule>
 		</rule>
 

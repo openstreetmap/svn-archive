@@ -2934,14 +2934,12 @@
 					</rule>
 				</else>
 			</rule>
-			
-                        <rule e="way" k="natural" v="*" minSize="0.008" layer="5">
-                        	<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/>
+			<rule e="way" k="natural" v="*" minSize="0.008" layer="5">
+				<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%'/>
 				<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%'/>
 			</rule>
-			
 		</rule>
-		
+
 		<!-- Road numbers for all highways -->
 		<rule e="way" k="osmarender:renderRef" v="~|yes" layer="5">
 			<rule e="way" k="tunnel" v="~|no|false" layer="5"> <!-- no road numbers in tunnels -->

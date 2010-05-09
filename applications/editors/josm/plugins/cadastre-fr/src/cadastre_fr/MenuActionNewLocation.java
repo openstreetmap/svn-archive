@@ -77,7 +77,11 @@ public class MenuActionNewLocation extends JosmAction {
             inputDepartement.addItem(departements[i]);
         }
         inputDepartement.setToolTipText(tr("<html>Departement number (optional)</html>"));
-
+        if (!Main.pref.get("cadastrewms.codeDepartement").equals("")) {
+            for (int i=0; i < departements.length; i=i+2)
+                if (departements[i].equals(Main.pref.get("cadastrewms.codeDepartement")))
+                    inputDepartement.setSelectedIndex(i/2);        
+        }
         p.add(labelSectionNewLocation, GBC.eol());
         p.add(labelLocation, GBC.std().insets(10, 0, 0, 0));
         p.add(inputTown, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 5));
@@ -103,6 +107,7 @@ public class MenuActionNewLocation extends JosmAction {
             changeInterface = true;
             Main.pref.put("cadastrewms.location", location);
             Main.pref.put("cadastrewms.codeCommune", codeCommune);
+            Main.pref.put("cadastrewms.codeDepartement", codeDepartement);
             if (Main.map != null) {
                 for (Layer l : Main.map.mapView.getAllLayers()) {
                     if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location)) {

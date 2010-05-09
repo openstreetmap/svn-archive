@@ -44,6 +44,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     private EastNorth georefpoint1;
     private EastNorth georefpoint2;
     private boolean ignoreMouseClick = false;
+    private boolean clickOnTheMap = false;
     
     /**
      * The time which needs to pass between two clicks during georeferencing, in milliseconds
@@ -132,31 +133,36 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
         if (ignoreMouseClick) return; // In case we are currently just allowing zooming to read lambert coordinates
-        countMouseClicked++;
         EastNorth ea = Main.proj.latlon2eastNorth(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         System.out.println("clic:"+countMouseClicked+" ,"+ea+", mode:"+mode);
-        // ignore clicks outside the image
-        if (ea.east() < wmsLayer.images.get(0).min.east() || ea.east() > wmsLayer.images.get(0).max.east()
-                || ea.north() < wmsLayer.images.get(0).min.north() || ea.north() > wmsLayer.images.get(0).max.north())
-            return;
-        if (mode == cGetCorners) {
-            if (countMouseClicked == 1) {
-                ea1 = ea;
-                continueCropping();
-            }
-            if (countMouseClicked == 2) {
-                wmsLayer.cropImage(ea1, ea);
-                Main.map.mapView.repaint();
-                startGeoreferencing();
-            }
-        } else if (mode == cGetLambertCrosspieces) {
-            if (countMouseClicked == 1) {
-                ea1 = ea;
-                inputLambertPosition(); // This will automatically asks for second point and continue the georeferencing
-            }
-            if (countMouseClicked == 2) {
-                ea2 = ea;
-                inputLambertPosition(); // This will automatically ends the georeferencing
+        if (clickOnTheMap) {
+            clickOnTheMap = false;
+            handleNewCoordinates(ea.east(), ea.north());
+        } else {
+            countMouseClicked++;
+            // ignore clicks outside the image
+            if (ea.east() < wmsLayer.images.get(0).min.east() || ea.east() > wmsLayer.images.get(0).max.east()
+                    || ea.north() < wmsLayer.images.get(0).min.north() || ea.north() > wmsLayer.images.get(0).max.north())
+                return;
+            if (mode == cGetCorners) {
+                if (countMouseClicked == 1) {
+                    ea1 = ea;
+                    continueCropping();
+                }
+                if (countMouseClicked == 2) {
+                    wmsLayer.cropImage(ea1, ea);
+                    Main.map.mapView.repaint();
+                    startGeoreferencing();
+                }
+            } else if (mode == cGetLambertCrosspieces) {
+                if (countMouseClicked == 1) {
+                    ea1 = ea;
+                    inputLambertPosition(); // This will automatically asks for second point and continue the georeferencing
+                }
+                if (countMouseClicked == 2) {
+                    ea2 = ea;
+                    inputLambertPosition(); // This will automatically ends the georeferencing
+                }
             }
         }
     }
@@ -248,6 +254,8 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         wmsLayer.saveNewCache();
         Main.map.mapView.repaint();
         actionCompleted();
+        clickOnTheMap = false;
+        ignoreMouseClick = false;
     }
 
     /**
@@ -288,9 +296,12 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         p.add(inputEast, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 5, 0, 5));
         p.add(labelNorth, GBC.std().insets(0, 0, 10, 0));
         p.add(inputNorth, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 5, 0, 5));
+        final Object[] options = {tr("OK"),
+                tr("Cancel"),
+                tr("I use the mouse")};
         final JOptionPane pane = new JOptionPane(p,
-                JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION,
-                null);
+                JOptionPane.INFORMATION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
+                null, options, options[0]);
         String number;
         if (countMouseClicked == 1)
             number = "first";
@@ -307,30 +318,42 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
             public void propertyChange(PropertyChangeEvent evt) {
                 if (JOptionPane.VALUE_PROPERTY.equals(evt.getPropertyName())) {
                     ignoreMouseClick = false;
-                    if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(
-                            pane.getValue())) {
+                    // Cancel
+                    if (pane.getValue().equals(options[1])) {
                         if (canceledOrRestartCurrAction("georeferencing"))
                             startGeoreferencing();
                     }
-                    if (inputEast.getText().length() != 0
-                            && inputNorth.getText().length() != 0) {
-                        try {
-                            double e = Double.parseDouble(inputEast.getText());
-                            double n = Double.parseDouble(inputNorth.getText());
-                            if (countMouseClicked == 1) {
-                                georefpoint1 = new EastNorth(e, n);
-                                continueGeoreferencing();
-                            } else {
-                                georefpoint2 = new EastNorth(e, n);
-                                endGeoreferencing();
+                    // Click on the map
+                    if (pane.getValue().equals(options[2])) {
+                        clickOnTheMap = true;
+                    } else {
+                    // OK (coordinates manually entered)
+                        clickOnTheMap = false;
+                        if (inputEast.getText().length() != 0
+                                && inputNorth.getText().length() != 0) {
+                            double e, n;
+                            try {
+                                e = Double.parseDouble(inputEast.getText());
+                                n = Double.parseDouble(inputNorth.getText());
+                            } catch (NumberFormatException ex) {
+                                return;
                             }
-                        } catch (NumberFormatException e) {
-                            return;
+                            handleNewCoordinates(e, n);
                         }
                     }
                 }
             }
         });
+    }
+
+    private void handleNewCoordinates(double e, double n) {
+        if (countMouseClicked == 1) {
+            georefpoint1 = new EastNorth(e, n);
+            continueGeoreferencing();
+        } else {
+            georefpoint2 = new EastNorth(e, n);
+            endGeoreferencing();
+        }
     }
 
     /**

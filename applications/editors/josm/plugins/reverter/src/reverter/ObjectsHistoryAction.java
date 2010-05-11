@@ -21,9 +21,7 @@ public class ObjectsHistoryAction extends JosmAction {
                 true);
         setEnabled(false);
     }
-//    private ObjectsHistoryDialog dlg = null;
     public void actionPerformed(ActionEvent arg0) {
-//        if (dlg.get)
         new ObjectsHistoryDialog().setVisible(true);
     }
 }

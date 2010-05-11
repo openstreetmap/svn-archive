@@ -22,21 +22,24 @@ public class RevertChangesetAction extends JosmAction {
     {
         super(tr("Revert changeset"),null,tr("Revert changeset"),
                 Shortcut.registerShortcut("tool:revert",
-                        "Tool: Revert changeset",
+                        tr("Tool: {0}", tr("Revert changeset")),
                         KeyEvent.VK_T, Shortcut.GROUP_EDIT, 
                         Shortcut.SHIFT_DEFAULT),  
                 true);
     }
-//    private ObjectsHistoryDialog dlg = null;
+    
+    @Override
+    protected void updateEnabledState() {
+        setEnabled(Main.main.getCurrentDataSet() != null);
+    }
+    
     public void actionPerformed(ActionEvent arg0) {
-        
         ChangesetIdQuery dlg = new ChangesetIdQuery();
         dlg.setVisible(true);
-        System.out.println(tr("reverter: {0}",dlg.getValue()));
         if (dlg.getValue() != 1) return;
         final int changesetId = dlg.ChangesetId();
         if (changesetId == 0) return;
-        Main.worker.submit(new PleaseWaitRunnable("Reverting...") {
+        Main.worker.submit(new PleaseWaitRunnable(tr("Reverting...")) {
             @Override
             protected void realRun() {
                 try {

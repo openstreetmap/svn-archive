@@ -30,7 +30,7 @@
 <project name="reverter" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Fix #5003 ignores any changes that come after the change set that is to be reverted" />
+	<property name="commit.message" value="Trivial fixes" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3000" />
 

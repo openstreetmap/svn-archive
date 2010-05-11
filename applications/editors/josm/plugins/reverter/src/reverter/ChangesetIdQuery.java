@@ -27,7 +27,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
         }
     }
     public ChangesetIdQuery() {
-        super(Main.parent, tr("Objects history"), new String[] {"Revert","Cancel"}, true);
+        super(Main.parent, tr("Objects history"), new String[] {tr("Revert"),tr("Cancel")}, true);
         contentConstraints = GBC.eol().fill().insets(10,10,10,5);
         setButtonIcons(new String[] {"ok.png", "cancel.png" });
         JPanel panel = new JPanel(new GridBagLayout());

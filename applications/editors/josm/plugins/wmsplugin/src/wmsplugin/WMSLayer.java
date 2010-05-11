@@ -471,7 +471,7 @@ public class WMSLayer extends Layer {
 				baseName = getName();
 			}
 			Main.pref.put("wmsplugin.url."+ i +".url",baseURL );
-			Main.pref.put("wmsplugin.url."+String.valueOf(i)+".name", baseName + "#PPD=" + getPPD() );
+			Main.pref.put("wmsplugin.url."+String.valueOf(i)+".name", baseName + "#PPD=" + pixelPerDegree );
 			WMSPlugin.refreshMenu();
 		}
 	}

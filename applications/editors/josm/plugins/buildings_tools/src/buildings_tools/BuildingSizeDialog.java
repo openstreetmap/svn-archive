@@ -44,28 +44,21 @@ public class BuildingSizeDialog extends ExtendedDialog {
 		setupDialog();
 		setVisible(true);
 	}
-	public double width()
-	{
-		try
-		{
-		  return NumberFormat.getInstance().parse(twidth.getText()).doubleValue();
-		} catch (ParseException e)
-		{			
+	public double width() {
+		try {
+			return NumberFormat.getInstance().parse(twidth.getText()).doubleValue();
+		} catch (ParseException e) {			
+			return 0;
+		}
+	}
+	public double lenstep() {
+		try {
+			return NumberFormat.getInstance().parse(tlenstep.getText()).doubleValue();
+		} catch (ParseException e) {			
 		  return 0;
 		}
 	}
-	public double lenstep()
-	{
-		try
-		{
-			  return NumberFormat.getInstance().parse(tlenstep.getText()).doubleValue();
-		} catch (ParseException e)
-		{			
-		  return 0;
-		}
-	}
-	public boolean useAddr()
-	{
+	public boolean useAddr() {
 		return caddr.isSelected();
 	}
 }

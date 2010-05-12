@@ -55,31 +55,25 @@ public class AddressDialog extends ExtendedDialog {
 		setVisible(true);
 	}
 	
-	private static String nextHouseNum()
-	{
+	private static String nextHouseNum() {
 		if (lhousenum==null) return "";
-		try
-		{
-		  Integer num = NumberFormat.getInstance().parse(lhousenum).intValue();
-		  if (inc) num=num+2; else num = num-2;
-		  return num.toString();
-		} catch (ParseException e)
-		{			
-		  return lhousenum;
+		try {
+			Integer num = NumberFormat.getInstance().parse(lhousenum).intValue();
+			if (inc) num=num+2; else num = num-2;
+			return num.toString();
+		} catch (ParseException e) {			
+			return lhousenum;
 		}
 	}
-	public void saveValues()
-	{
+	public void saveValues() {
 		lhousenum = housenum.getText();
 		lstreetname = streetname.getText();
 		inc = cincdec.getSelectedIndex() == 0;		
 	}
-	public String getHouseNum()
-	{
+	public String getHouseNum() {
 		return housenum.getText();
 	}
-	public String getStreetName()
-	{
+	public String getStreetName() {
 		return streetname.getText();
 	}
 }

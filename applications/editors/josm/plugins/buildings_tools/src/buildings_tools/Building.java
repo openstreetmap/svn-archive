@@ -46,13 +46,11 @@ class Building {
 		angconstraint = angle;
 		while (angconstraint>(Math.PI/4)) angconstraint-=Math.PI/4;
 	}
-	public double getLength()
-	{
+	public double getLength() {
 		return len;
 	}
 	
-	public void reset()
-	{
+	public void reset() {
 		len = 0;
 		en1=null;
 		en2=null;
@@ -63,29 +61,24 @@ class Building {
 	public EastNorth Point2() { return en2; }
 	public EastNorth Point3() { return en3; }
 	public EastNorth Point4() { return en4; }
-	private void updMetrics()
-	{
+	private void updMetrics() {
 		meter = 2*Math.PI/(Math.cos(Math.toRadians(eastNorth2latlon(p1).lat())) * eqlen);
 		reset();
 	}
-	public void setBase(EastNorth base)
-	{
+	public void setBase(EastNorth base) {
 		node = null;
 		p1 = base;
 		updMetrics();
 	}
-	public void setBase(Node base)
-	{
+	public void setBase(Node base) {
 		node = base;
 		p1 = latlon2eastNorth(base.getCoor());
 		updMetrics();
 	}
-	public void setPlace(EastNorth p2,double width,double lenstep)
-	{
+	public void setPlace(EastNorth p2,double width,double lenstep) {
 		double heading = p1.heading(p2);
 		double hdang = 0;
-		if (angconstrainted)
-		{
+		if (angconstrainted) {
 			hdang = Math.round((heading-angconstraint)/Math.PI*4);
 			if (hdang>=8)hdang-=8;
 			if (hdang<0)hdang+=8;
@@ -102,13 +95,11 @@ class Building {
 
 		lwidth = width;
 		Main.map.statusLine.setHeading(Math.toDegrees(heading));
-		if (angconstrainted)
-		{
+		if (angconstrainted) {
 			Main.map.statusLine.setAngle(hdang*45);
 		}
 	}
-	public void paint(Graphics2D g, MapView mv)
-	{
+	public void paint(Graphics2D g, MapView mv) {
 		if (len == 0) return;
 		GeneralPath b = new GeneralPath();
 		Point pp1 = mv.getPoint(eastNorth2latlon(en1));
@@ -121,8 +112,7 @@ class Building {
 		b.lineTo(pp1.x, pp1.y);
 		g.draw(b);
 	}
-	public Way create()
-	{
+	public Way create() {
 		if (len == 0) return null;
 		Node n1;
 		if (node==null) 
@@ -133,21 +123,18 @@ class Building {
 		Node n3 = new Node(eastNorth2latlon(en3));
 		Node n4 = new Node(eastNorth2latlon(en4));
 		if (n1.getCoor().isOutSideWorld()||n2.getCoor().isOutSideWorld()||
-				n3.getCoor().isOutSideWorld()||n4.getCoor().isOutSideWorld())
-		{
+				n3.getCoor().isOutSideWorld()||n4.getCoor().isOutSideWorld()) {
 			JOptionPane.showMessageDialog(Main.parent,
 				tr("Cannot place building outside of the world."));
 			return null;
 		}
 		Way w = new Way();
 		w.addNode(n1);
-		if (lwidth>=0)
-		{
+		if (lwidth>=0) {
 			w.addNode(n2);
 			w.addNode(n3);
 			w.addNode(n4);
-		} else
-		{
+		} else {
 			w.addNode(n4);
 			w.addNode(n3);
 			w.addNode(n2);

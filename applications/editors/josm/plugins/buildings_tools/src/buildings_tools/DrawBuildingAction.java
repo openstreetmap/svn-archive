@@ -57,26 +57,21 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 	
 	Building building = new Building();
 	
-	public static void SetAddrDialog(boolean _useAddr)
-	{
+	public static void SetAddrDialog(boolean _useAddr) {
 		useAddr = _useAddr;
 	}
-	public static void SetSizes(double newwidth,double newlenstep)
-	{
+	public static void SetSizes(double newwidth,double newlenstep) {
 		width = newwidth;
 		lenstep = newlenstep;
 	}
-	public static double getWidth()
-	{
+	public static double getWidth() {
 		return width;
 	}
 	
-	public static double getLenStep()
-	{
+	public static double getLenStep() {
 		return lenstep;
 	}
-	public DrawBuildingAction(MapFrame mapFrame)
-	{
+	public DrawBuildingAction(MapFrame mapFrame) {
 		super(tr("Draw buildings"),"building",tr("Draw buildings"),
 				Shortcut.registerShortcut("mapmode:buildings",
 						tr("Mode: {0}", tr("Draw buildings")),
@@ -116,8 +111,7 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 			currCursor = c;
 		} catch(Exception e) {}
 	}
-	private static void showAddrDialog(Way w)
-	{
+	private static void showAddrDialog(Way w) {
 		AddressDialog dlg = new AddressDialog();
 		int answer = dlg.getValue();
 		if (answer == 1) {
@@ -132,6 +126,10 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 
 	@Override public void enterMode() {
 		super.enterMode();
+		if (getCurrentDataSet() == null) {
+			Main.map.selectSelectTool(false);
+			return;
+		}
 		currCursor = cursorCrosshair;
 		Main.map.mapView.addMouseListener(this);
 		Main.map.mapView.addMouseMotionListener(this);
@@ -156,8 +154,7 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 		mode = Mode.None;
 	}
 	
-	public void cancelDrawing()
-	{
+	public void cancelDrawing() {
 		mode = Mode.None;
 		if(Main.map == null || Main.map.mapView == null)
 			return;
@@ -171,30 +168,36 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 			cancelDrawing();
 	}
 
-	private void ProcessMouseEvent(MouseEvent e)
-	{
+	private void ProcessMouseEvent(MouseEvent e) {
 		mousePos = e.getPoint();
 		if (mode == Mode.None) return;
 		Node n;
-		if (mode == Mode.Drawing)
-		{
-			if (e.isControlDown()) n = null; else n = Main.map.mapView.getNearestNode(mousePos);
-			if (n == null)
+		if (mode == Mode.Drawing) {
+			if (e.isControlDown()) {
+				n = null;
+			} else { 
+				n = Main.map.mapView.getNearestNode(mousePos);
+			}
+			if (n == null) {
 				p2 = latlon2eastNorth(Main.map.mapView.getLatLon(mousePos.x, mousePos.y));
-			else
+			} else {
 				p2 = latlon2eastNorth(n.getCoor());
+			}
 			building.setPlace(p2, width, e.isControlDown()?0:lenstep);
 			Main.map.statusLine.setDist(building.getLength());
 			return;
 		}
-		if (mode == Mode.DrawingWidth)
-		{
-			if (e.isControlDown()) n = null; else n = Main.map.mapView.getNearestNode(mousePos);
-			if (n == null)
+		if (mode == Mode.DrawingWidth) {
+			if (e.isControlDown()) { 
+				n = null;
+			} else {
+				n = Main.map.mapView.getNearestNode(mousePos);
+			}
+			if (n == null) {
 				p3 = latlon2eastNorth(Main.map.mapView.getLatLon(mousePos.x, mousePos.y));
-			else
+			} else {
 				p3 = latlon2eastNorth(n.getCoor());
-			
+			}
 			double mwidth =
 				((p3.east()-p2.east())*(p2.north()-p1.north())+
 				 (p3.north()-p2.north())*(p1.east()-p2.east()))
@@ -208,7 +211,7 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 	public void paint(Graphics2D g, MapView mv,Bounds bbox)
 	{
 		if (mode == Mode.None) return;
-		if (building.getLength()==0)return;
+		if (building.getLength() == 0) return;
 		
 		g.setColor(selectedColor);
 		g.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
@@ -225,12 +228,10 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 		drawStartPos = mousePos;
 		
 		Node n = Main.map.mapView.getNearestNode(mousePos);
-		if (n == null)
-		{
+		if (n == null) {
 			p1 = latlon2eastNorth(Main.map.mapView.getLatLon(mousePos.x, mousePos.y));
 			building.setBase(p1);
-		} else
-		{
+		} else {
 			p1 = latlon2eastNorth(n.getCoor());
 			building.setBase(n);
 		}
@@ -238,13 +239,10 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 		updateStatusLine();
 	}
 
-	private void drawingAdvance(MouseEvent e)
-	{
+	private void drawingAdvance(MouseEvent e) {
 		ProcessMouseEvent(e);
-		if (building.getLength() > 0)
-		{
-			if (width == 0 && mode == Mode.Drawing)
-			{
+		if (building.getLength() > 0) {
+			if (width == 0 && mode == Mode.Drawing) {
 				p2 = building.Point2();
 				mode = Mode.DrawingWidth;
 				updateStatusLine();
@@ -262,8 +260,7 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 		updateStatusLine();
 	}
 
-	@Override public void mousePressed(MouseEvent e)
-	{
+	@Override public void mousePressed(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON1) return;
 		if(!Main.map.mapView.isActiveLayerDrawable()) return;		
 
@@ -271,18 +268,15 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 			drawingStart(e);
 	}
 
-	@Override public void mouseDragged(MouseEvent e)
-	{
+	@Override public void mouseDragged(MouseEvent e) {
 		ProcessMouseEvent(e);
 		updCursor();
 		if (mode!=Mode.None) Main.map.mapView.repaint();
 	}
 
-	@Override public void mouseReleased(MouseEvent e)
-	{
+	@Override public void mouseReleased(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON1) return;
 		if(!Main.map.mapView.isActiveLayerDrawable()) return;
-		
 		boolean dragged = true;
 		if (drawStartPos != null)
 			dragged = e.getPoint().distance(drawStartPos) > 10;
@@ -292,15 +286,13 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 			drawingAdvance(e);
 	}
 	
-	private void updCursor()
-	{
+	private void updCursor() {
 		if (mousePos==null) return;
 		Node n = Main.map.mapView.getNearestNode(mousePos);
 		if (n != null) setCursor(cursorJoinNode); else setCursor(cursorCrosshair);
 
 	}
-	@Override public void mouseMoved(MouseEvent e)
-	{
+	@Override public void mouseMoved(MouseEvent e) {
 		if(!Main.map.mapView.isActiveLayerDrawable()) return;
 		ProcessMouseEvent(e);
 		updCursor();
@@ -318,8 +310,7 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 		return l instanceof OsmDataLayer;
 	}
 	
-	public void UpdateConstraint(Collection<? extends OsmPrimitive> newSelection)
-	{
+	public void UpdateConstraint(Collection<? extends OsmPrimitive> newSelection) {
 		building.disableAngConstraint();
 		if (newSelection.size()!=2)return;
    		Object[] arr = newSelection.toArray();

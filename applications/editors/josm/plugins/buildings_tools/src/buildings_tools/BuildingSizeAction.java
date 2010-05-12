@@ -11,8 +11,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 @SuppressWarnings("serial")
 public class BuildingSizeAction extends JosmAction {
 	
-	public BuildingSizeAction()
-	{
+	public BuildingSizeAction() {
 		super(tr("Set buildings size"),"mapmode/building",tr("Set buildings size"),
 				Shortcut.registerShortcut("edit:buildingsdialog",
 				        tr("Edit: {0}", tr("Set buildings size")),

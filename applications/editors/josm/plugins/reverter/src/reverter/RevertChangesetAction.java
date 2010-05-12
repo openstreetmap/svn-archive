@@ -30,10 +30,12 @@ public class RevertChangesetAction extends JosmAction {
     
     @Override
     protected void updateEnabledState() {
-        setEnabled(Main.main.getCurrentDataSet() != null);
+        setEnabled(getCurrentDataSet() != null);
     }
     
     public void actionPerformed(ActionEvent arg0) {
+        if (getCurrentDataSet() == null)
+            return;
         ChangesetIdQuery dlg = new ChangesetIdQuery();
         dlg.setVisible(true);
         if (dlg.getValue() != 1) return;

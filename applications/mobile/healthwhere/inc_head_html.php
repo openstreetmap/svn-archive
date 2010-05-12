@@ -17,7 +17,7 @@ if (basename ($_SERVER["SCRIPT_FILENAME"]) == "index.php") {
 		document.getElementById ("txtLatitude").value = latitude
 		document.getElementById ("txtLongitude").value = longitude
 		sURL = "http://www.openstreetmap.org/?mlat=" + latitude + "&mlon=" + longitude + "&zoom=17"
-		document.getElementById ("divLatLon").innerHTML = "<i><a href = '" + sURL + "' title = 'map of your location'>Your location</a> has been filled in automatically. <a href = 'geolocation.php'>More information</a></i>"
+		document.getElementById ("divLatLon").innerHTML = "<i><a href = '" + sURL + "' title = 'map of your location'>Your location</a> has been filled in automatically. Note that this may not be accurate. <a href = 'geolocation.php'>More information</a></i>"
 	}
 
 	function errorCallback(error) {

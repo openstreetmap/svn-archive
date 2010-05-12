@@ -1,5 +1,5 @@
 <?php
 //Version info etc.
 define ("SERVICE_NAME", "Healthwhere");
-define ("VERSION", "4.2");
+define ("VERSION", "v5.0");
 ?>

@@ -95,7 +95,7 @@ public class PositionLayer extends Layer implements MouseListener {
 
 	//finds the corresponding timecode in GPXtrack
 	private Point getNearestPoint(Point point) {
-		Main.map.mapView.getn
+
 		return point;
 		
 	}

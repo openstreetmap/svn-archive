@@ -35,6 +35,7 @@
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
         <ant antfile="build.xml" target="dist" dir="public_transport"/>
         <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
+        <ant antfile="build.xml" target="dist" dir="reverter"/>
         <ant antfile="build.xml" target="dist" dir="routes"/>
         <ant antfile="build.xml" target="dist" dir="routing"/>
         <ant antfile="build.xml" target="dist" dir="slippymap"/>
@@ -46,6 +47,7 @@
         <ant antfile="build.xml" target="dist" dir="turnrestrictions"/>
         <ant antfile="build.xml" target="dist" dir="undelete"/>
         <ant antfile="build.xml" target="dist" dir="validator"/>
+        <ant antfile="build.xml" target="dist" dir="videomapping"/>
         <ant antfile="build.xml" target="dist" dir="walkingpapers"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
         <ant antfile="build.xml" target="dist" dir="wayselector"/>
@@ -87,6 +89,7 @@
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
         <ant antfile="build.xml" target="clean" dir="public_transport"/>
         <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
+        <ant antfile="build.xml" target="clean" dir="reverter"/>
         <ant antfile="build.xml" target="clean" dir="routes"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>
         <ant antfile="build.xml" target="clean" dir="slippymap"/>
@@ -98,6 +101,7 @@
         <ant antfile="build.xml" target="clean" dir="turnrestrictions"/>
         <ant antfile="build.xml" target="clean" dir="undelete"/>
         <ant antfile="build.xml" target="clean" dir="validator"/>
+        <ant antfile="build.xml" target="clean" dir="videomapping"/>
         <ant antfile="build.xml" target="clean" dir="walkingpapers"/>
         <ant antfile="build.xml" target="clean" dir="waydownloader"/>
         <ant antfile="build.xml" target="clean" dir="wayselector"/>

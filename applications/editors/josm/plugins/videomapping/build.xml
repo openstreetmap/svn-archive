@@ -39,13 +39,13 @@
       ************************************************
       ** should not be necessary to change the following properties
      -->
-	<property name="josm"                   location="../rest/core/dist/josm-custom.jar"/>
+	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.build.dir"       value="build"/>
 	<property name="plugin.src.dir"         value="src"/>
 	<!-- this is the directory where the plugin jar is copied to -->
-	<property name="plugin.dist.dir"        value="../rest/dist"/>
+	<property name="plugin.dist.dir"        value="../../dist"/>
 	<property name="ant.build.javac.target" value="1.5"/>
-	<property name="plugin.dist.dir"        value="../rest/dist"/>
+	<property name="plugin.dist.dir"        value="../../dist"/>
 	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
 	<!--

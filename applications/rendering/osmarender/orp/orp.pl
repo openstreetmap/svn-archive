@@ -418,10 +418,6 @@ foreach my $rel (values(%$relation_storage))
         {
             push(@$outerways, $obj);
             push(@{$multipolygon->{'relations'}}, @{$obj->{'relations'}});
-            while (my ($key, $val) = each(%{$obj->{'tags'}}))
-            {
-                $multipolygon->{'tags'}->{$key}=$val;
-            }
         }
         elsif ($role eq 'inner')
         {
@@ -431,8 +427,36 @@ foreach my $rel (values(%$relation_storage))
         {
             debug("Unknown role \"$role\" in multipolygon relation $rel->{'id'}!") if ($debug->{'multipolygon'});
         }
-        $obj->{'multipolygon'} = 1; # Mark object as beeing part of a multipolygon
+
+        # only mark objects as used by a multipolygon which have no tags
+        # assigned to itself - other objects may need further processing
+        if (!defined $obj->{'tags'} || int $obj->{'tags'} == 0)
+        {
+            # TODO: source*, note*, fixme, etc. shouldn't prevent the object
+            #       from beeing marked as part of a multipolygon
+            $obj->{'multipolygon'} = 1;
+        }
     }
+
+    # simple multipolygons can have there tags on an (one) outer way,
+    # therefore assign these tags to the multipolygon
+    #
+    # if the multipolygon consists out of more than one outer way it
+    # should always be treated as an advanced multipolygon which tags
+    # are assigned to itself, so no copying needed
+    if (defined(@$outerways) && int @$outerways == 1)
+    {
+        my $obj = \%{@$outerways[0]};
+        while (my ($key, $val) = each(%{$obj->{'tags'}}))
+        {
+            next if defined($multipolygon->{'tags'}->{$key});
+            $multipolygon->{'tags'}->{$key}=$val;
+        }
+        # mark the object as used in a multipolygon because it gave its
+        # tags to the multipolygon, so no further processing needed
+        $obj->{'multipolygon'} = 1;
+    }
+
     # A list of all outer and inner nodes is assembled, now sort them
     $multipolygon->{'outer'} = assemble_closed_ways($outerways, $rel);
     $multipolygon->{'inner'} = assemble_closed_ways($innerways, $rel);

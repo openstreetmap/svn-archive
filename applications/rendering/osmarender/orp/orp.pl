@@ -438,7 +438,7 @@ foreach my $rel (values(%$relation_storage))
         }
     }
 
-    # simple multipolygons can have there tags on an (one) outer way,
+    # simple multipolygons can have their tags on an (one) outer way,
     # therefore assign these tags to the multipolygon
     #
     # if the multipolygon consists out of more than one outer way it

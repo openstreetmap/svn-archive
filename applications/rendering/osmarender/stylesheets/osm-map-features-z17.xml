@@ -3336,6 +3336,9 @@
 				<symbol ref="shelter" position="center"/>
 			</else>
 		</rule>
+		<rule e="node|way" k="amenity" v="hunting_stand">
+			<symbol ref="hunting_closed_high" position="center"/>
+		</rule>
 		<rule e="node|way" k="amenity" v="library">
 			<symbol ref="library" position="center"/>
 		</rule>

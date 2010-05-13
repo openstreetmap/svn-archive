@@ -2942,7 +2942,7 @@
 				<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%' layer="1"/>
 			</rule>
 			<!-- Add landuse names, e.g. to display names of forest parcels teinted by a large wooden area -->
-			<rule e="way" k="landuse" v="*" minSize="0.008" layer="5">
+			<rule e="way" k="landuse" v="allotments|basin|brownfield|cemetery|commercial|construction|farm|farmyard|farmland|forest|garages|grass|greenfield|greenhouse_horticulture|industrial|landfill|meadow|military|orchard|quarry|railway|recreation_ground|reservoir|retail|salt_pond|street|village_green|vineyard" minSize="0.008" layer="5">
 				<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%' dx="0px" dy="0px" layer="1"/>
 				<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%' dx="0px" dy="0px" layer="1"/>
 			</rule>

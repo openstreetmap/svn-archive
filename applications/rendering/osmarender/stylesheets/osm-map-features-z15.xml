@@ -2223,7 +2223,7 @@
 						</rule>
 					</rule>
 				</rule>
-				<rule e="way" k="natural" v="*" minSize="0.008" layer="5">
+				<rule e="way" k="natural" v="allotments|basin|brownfield|cemetery|commercial|construction|farm|farmyard|farmland|forest|garages|grass|greenfield|greenhouse_horticulture|industrial|landfill|meadow|military|orchard|quarry|railway|recreation_ground|reservoir|retail|salt_pond|street|village_green|vineyard" minSize="0.008" layer="5">
 					<caption k="name" class="caption-casing largefeature-caption-casing" text-anchor='middle' startOffset='50%' layer="1"/>
 					<caption k="name" class="caption-core largefeature-caption-core" text-anchor='middle' startOffset='50%' layer="1"/>
 				</rule>

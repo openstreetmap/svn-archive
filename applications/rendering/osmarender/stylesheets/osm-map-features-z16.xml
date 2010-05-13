@@ -2648,6 +2648,9 @@
 		<rule e="node|way" k="amenity" v="speed_trap">
 			<symbol ref="speed_trap" position="center"/>
 		</rule>
+		<rule e="node|way" k="tourism" v="alpine_hut">
+			<symbol ref="alpine_hut" position="center"/>
+		</rule>
 		<rule e="node|way" k="amenity" v="shelter">
 			<rule e="node|way" k="fireplace" v="yes">
 				<symbol ref="shelter-fireplace" position="center"/>

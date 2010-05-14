@@ -68,6 +68,7 @@
 # 1.04 [-placefile]
 #      scaleing of route icons
 #      [-routeiconscale]
+# 1.05 [-ra]
 #
 #
 # TODO
@@ -88,11 +89,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.04 ;
-use OSM::mapgenRules 1.04 ;
+use OSM::mapgen 1.05 ;
+use OSM::mapgenRules 1.05 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.04" ;
+my $version = "1.05" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -160,6 +161,7 @@ perl mapgen.pl
 
 -verbose
 -multionly (draws only areas of multipolygons; for test purposes)
+-ra=TEXT (TEXT = types and/or ids, separated by commas; add relation analyzer layer; keep normal elements in map in light colors)
 END23
 
 # command line things
@@ -193,6 +195,7 @@ my $latrad = 2 ;
 my $helpOpt = 0 ;
 my $tagStatOpt = 0 ;
 my $declutterOpt = 0 ;
+my $ra = "" ;
 my $allowIconMoveOpt = 0 ;
 my $rulerOpt = 1 ;
 my $rulerColor = "black" ;
@@ -220,6 +223,36 @@ my $extPoiFileName = "" ;
 
 # keys from tags listed here will not be shown in tag stat
 my @noListTags = sort qw (name width url source ref note phone operator opening_hours maxspeed maxheight maxweight layer is_in TODO addr:city addr:housenumber addr:country addr:housename addr:interpolation addr:postcode addr:street created_by description ele fixme FIXME website bridge tunnel time openGeoDB:auto_update  openGeoDB:community_identification_number openGeoDB:is_in openGeoDB:is_in_loc_id openGeoDB:layer openGeoDB:license_plate_code openGeoDB:loc_id openGeoDB:location openGeoDB:name openGeoDB:population openGeoDB:postal_codes openGeoDB:sort_name openGeoDB:telephone_area_code openGeoDB:type openGeoDB:version opengeodb:lat opengeodb:lon int_ref population postal_code wikipedia) ;
+
+my %raColor = () ;
+# multi
+$raColor{"inner"} = "blue" ;
+$raColor{"outer"} = "black" ;
+
+# route
+$raColor{"none"} = "black" ;
+$raColor{"forward"} = "green" ;
+$raColor{"backward"} = "red" ;
+$raColor{"alternative"} = "darkgrey" ;
+$raColor{"excursion"} = "brown" ;
+$raColor{"detour"} = "orange" ;
+$raColor{"stop"} = "black" ;
+$raColor{"forward_stop"} = "green" ;
+$raColor{"backward_stop"} = "red" ;
+
+#
+$raColor{"across"} = "red" ;
+$raColor{"under"} = "blue" ;
+$raColor{"over"} = "black" ;
+
+# restriction
+$raColor{"from"} = "black" ;
+$raColor{"to"} = "red" ;
+$raColor{"via"} = "blue" ;
+
+# enforcement?
+$raColor{"device"} = "black" ;
+
 
 # NODES; column indexes for style file
 my $nodeIndexTag = 0 ;
@@ -365,6 +398,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"icondir:s"		=> \$iconDir,
 				"poifile:s"	=> \$extPoiFileName,		
 				"multionly"	=> \$multiOnly,		# draw only areas from multipolygons
+				"ra:s"		=> \$ra,		# 
 				"verbose" 	=> \$verbose) ;		# turns twitter on
 
 
@@ -441,14 +475,15 @@ print "routeLabelSize   = $routeLabelSize \n" ;
 print "routeLabelFont   = $routeLabelFont \n" ; 
 print "routeLabelOffset = $routeLabelOffset\n" ; 
 print "iconDir          = $iconDir\n" ; 
-print "routeIconDist    = $routeIconDist\n\n" ; 
+print "routeIconDist    = $routeIconDist\n" ; 
 print "routeIconScale    = $routeIconScale\n\n" ; 
 
 print "pdf       = $pdfOpt " ;
 print "png       = $pngOpt\n\n" ;
 
 print "multionly = $multiOnly " ;
-print "verbose   = $verbose\n\n" ;
+print "verbose   = $verbose " ;
+print "ra        = $ra\n\n" ;
 
 $time0 = time() ;
 
@@ -854,6 +889,102 @@ if ($extPoiFileName ne "") {
 }
 preprocessWayLabels() ;
 createWayLabels (\@labelCandidates, \@ways, $declutterOpt, $halo) ;
+
+
+if ($ra ne "") {
+	my @types = split /,/, $ra ;
+	print "relation analyzer drawing...\n" ;
+	foreach my $relId (keys %memRelationMembers) {
+		my $memberPresent = 0 ;
+		my $minLon = 999 ;
+		my $minLat = 999 ;
+		my $maxLon = -999 ;
+		my $maxLat = -999 ;
+
+		my $type = "" ;
+		foreach my $tag (@{$memRelationTags{$relId}}) {
+			if ($tag->[0] eq "type") { $type = $tag->[1] ; } 
+		}
+		my $process = 0 ;
+		foreach my $t (@types) {
+			if ($t eq $type) { $process = 1 ; }
+			if ($t eq $relId) { $process = 1 ; }
+		}
+
+		# print "RELATION $relId $type\n" ;
+
+		if ($process) {
+
+			foreach my $member (@{$memRelationMembers{$relId}}) {
+				my $mType = $member->[0] ;
+				my $mId = $member->[1] ;
+				my $mRole = $member->[2] ;
+				# print "  MEMBER type=$mType id=$mId role=$mRole\n" ;
+				if ($mRole eq "") { $mRole ="none" ; } # should be obsolete
+
+				if ($mType eq "node") {
+
+					$memberPresent = 1 ;
+					# print "    node $mId\n" ;
+					my $text = $mRole . " " . $mId ;
+					my $color = "pink" ;
+					if (defined $raColor{$mRole}) {
+						$color = $raColor{$mRole} ;
+					}
+					drawNodeDotRouteStops ($lon{$mId}, $lat{$mId}, $color, scalePoints( scaleBase(20))) ;				
+					placeLabelAndIcon ($lon{$mId}, $lat{$mId}, 0, scalePoints( scaleBase (30)), $text, $color, scalePoints( scaleBase (25)), "sans-serif", $ppc, "none", 0, 0, 0, 0) ;
+					if ($lon{$mId} > $maxLon) { $maxLon = $lon{$mId} ; } 
+					if ($lon{$mId} < $minLon) { $minLon = $lon{$mId} ; } 
+					if ($lat{$mId} > $maxLat) { $maxLat = $lat{$mId} ; } 
+					if ($lat{$mId} < $minLat) { $minLat = $lat{$mId} ; } 
+				} # node
+
+				if ( ($mType eq "way") and (defined @{$memWayNodes{$mId}} ) ) {
+					$memberPresent = 1 ;
+					# print "    way $mId\n" ;
+					my @nodes = @{$memWayNodes{$mId}} ;
+					# print "    nodes @nodes\n" ;
+					my $loop = " (o)" ;
+					if ($nodes[0] == $nodes[-1]) { $loop = " (c)" ; } 
+					my $text = $mRole . " " . $mId . $loop ;
+					my $color = "pink" ;
+					if (defined $raColor{$mRole}) {
+						$color = $raColor{$mRole} ;
+					}
+	
+					# print "    DRAW way\n" ;
+					my @coords = nodes2Coordinates(@nodes) ;
+					# print "    @coords\n" ;
+					drawWay (10, $color, scalePoints( scaleBase (10)), 0, @coords) ;
+					labelWay ($color, scalePoints( scaleBase (25)), "sans-serif", $text, scalePoints( scaleBase (25)), @coords) ;
+
+					foreach my $node (@nodes) {
+						if ($lon{$node} > $maxLon) { $maxLon = $lon{$node} ; } 
+						if ($lon{$node} < $minLon) { $minLon = $lon{$node} ; } 
+						if ($lat{$node} > $maxLat) { $maxLat = $lat{$node} ; } 
+						if ($lat{$node} < $minLat) { $minLat = $lat{$node} ; } 
+					}
+				} # way
+			} # members
+
+			# print "  BORDER\n" ;
+			if ($memberPresent == 1) {
+				# print "$minLon, $maxLon --- $minLat, $maxLat\n" ;
+				my @coords = ($minLon, $minLat,
+					$minLon, $maxLat,
+					$maxLon, $maxLat,
+					$maxLon, $minLat,
+					$minLon, $minLat) ;
+				drawWay (11, "grey", scalePoints( scaleBase (5)), 0, @coords) ;
+				my $text = $relId . " " . $type ; 
+				placeLabelAndIcon ($minLon, $minLat, scalePoints( scaleBase (30)), 0, $text, "black", scalePoints( scaleBase (30)), "sans-serif", $ppc, "none", 0, 0, 0, 0) ;
+			}
+
+		} # $process
+
+	} # relation
+} # -ra
+
 
 
 print declutterStat(), "\n" ;

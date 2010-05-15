@@ -4,12 +4,16 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -28,13 +32,20 @@ public class TaggingPresetTesterAction extends JosmAction {
         MainMenu.add(Main.main.menu.helpMenu, this);
     }
 
+    public TaggingPresetTesterAction(PluginInformation info) {
+        this();
+    }
+
     public void actionPerformed(ActionEvent e) {
-        String taggingPresetSources = Main.pref.get("taggingpreset.sources");
-        if (taggingPresetSources.equals("")) {
+        Collection<String> coll = TaggingPreset.getPresetSources();
+
+        if (coll.size() == 0) {
             JOptionPane.showMessageDialog(Main.parent, tr("You have to specify tagging preset sources in the preferences first."));
             return;
         }
-        String[] args = taggingPresetSources.split(";");
-        new TaggingPresetTester(args);
+
+        String[] taggingPresetSources = new String [coll.size()];
+        coll.toArray(taggingPresetSources);
+        new TaggingPresetTester(taggingPresetSources);
     }
 }

@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Vector;
@@ -26,7 +27,6 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
-import org.openstreetmap.josm.plugins.PluginInformation;
 import org.xml.sax.SAXException;
 
 public class TaggingPresetTester extends JFrame {
@@ -37,29 +37,7 @@ public class TaggingPresetTester extends JFrame {
     private JPanel panel = new JPanel(new BorderLayout());
 
     public void reload() {
-        Vector<TaggingPreset> allPresets = new Vector<TaggingPreset>();
-        for (String source : args) {
-            InputStream in = null;
-            try {
-                if (source.startsWith("http") || source.startsWith("ftp") || source.startsWith("file"))
-                    in = new URL(source).openStream();
-                else
-                    in = new FileInputStream(source);
-                allPresets.addAll(TaggingPreset.readAll(new BufferedReader(new InputStreamReader(in))));
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, tr("Could not read tagging preset source: {0}",source));
-            } catch (SAXException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, tr("Error parsing {0}: {1}",source,e.getMessage()));
-            }
-
-            try {
-                if (in != null)
-                    in.close();
-            } catch (IOException e) {
-            }
-        }
+        Vector<TaggingPreset> allPresets = new Vector<TaggingPreset>(TaggingPreset.readAll(Arrays.asList(args)));
         taggingPresets.setModel(new DefaultComboBoxModel(allPresets));
     }
 
@@ -77,10 +55,6 @@ public class TaggingPresetTester extends JFrame {
         panel.repaint();
     }
    
-    public TaggingPresetTester(PluginInformation info) {
-    	this(new String[]{});
-    }
-    
     public TaggingPresetTester(String[] args) {
         super(tr("Tagging Preset Tester"));
         this.args = args;

@@ -368,6 +368,23 @@ sub tags_subset
     return 1;
 }
 
+
+# return true if the relation has no keys that affect the rendering
+# TODO: add more keys that didn't affect the rendering
+sub multipolygon_has_tags
+{
+    my ($multipolygon) = @_;
+    foreach my $key(keys %{$multipolygon->{'tags'}})
+    {
+        if ($key !~ m/^(type|created_by|fixme|name.*|note.*|source.*|osmarender.*)$/)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
 #Multipolygon:
 # "outer": [way1, way2, ...]
 #   Combined to form full ways
@@ -427,34 +444,63 @@ foreach my $rel (values(%$relation_storage))
         {
             debug("Unknown role \"$role\" in multipolygon relation $rel->{'id'}!") if ($debug->{'multipolygon'});
         }
-
-        # only mark objects as used by a multipolygon which have no tags
-        # assigned to itself - other objects may need further processing
-        if (!defined $obj->{'tags'} || int $obj->{'tags'} == 0)
-        {
-            # TODO: source*, note*, fixme, etc. shouldn't prevent the object
-            #       from beeing marked as part of a multipolygon
-            $obj->{'multipolygon'} = 1;
-        }
+        $obj->{'multipolygon'} = 1; # Mark object as beeing part of a multipolygon
     }
 
-    # simple multipolygons can have their tags on an (one) outer way,
-    # therefore assign these tags to the multipolygon
-    #
-    # if the multipolygon consists out of more than one outer way it
-    # should always be treated as an advanced multipolygon which tags
-    # are assigned to itself, so no copying needed
-    if (defined(@$outerways) && int @$outerways == 1)
+    if (defined(@$outerways))
     {
-        my $obj = \%{@$outerways[0]};
-        while (my ($key, $val) = each(%{$obj->{'tags'}}))
+        if (!multipolygon_has_tags($multipolygon))
         {
-            next if defined($multipolygon->{'tags'}->{$key});
-            $multipolygon->{'tags'}->{$key}=$val;
-        }
-        # mark the object as used in a multipolygon because it gave its
-        # tags to the multipolygon, so no further processing needed
-        $obj->{'multipolygon'} = 1;
+	    # multipolygon relation without tags on itself
+	    # using deprecated multipolygon relation tagging rules
+	    # to figure out what to do - compatibility mode
+	    my %relation_tags;
+	    for (my $i = 0; $i < scalar @$outerways; $i++)
+	    {
+		my $obj = \%{@$outerways[$i]};
+		while (my ($key, $val) = each(%{$obj->{'tags'}}))
+		{
+		    $relation_tags{"$key=$val"}++;
+		}
+	    }
+
+	    foreach my $keyval(keys %relation_tags)
+	    {
+		# copy only tags to the multipolygon relation wich are
+		# shared by each outer way
+		if ($relation_tags{$keyval} == scalar @$outerways)
+		{
+		    $keyval =~ m/(.*?)=(.*)/;
+		    my $key = $1;
+		    my $val = $2;
+		    $multipolygon->{'tags'}->{$key} = $val;
+		}
+	    }
+
+	    if (!multipolygon_has_tags($multipolygon))
+	    {
+		# multipolygon has still no tags, do it like earlier in orp.pl
+		# just copy everything from the outer ways to the multipolygon
+		# relation
+		#
+		# pure guessing - results aren't predictable and mostly wrong
+		for (my $i = 0; $i < scalar @$outerways; $i++)
+		{
+		    my $obj = \%{@$outerways[$i]};
+		    while (my ($key, $val) = each(%{$obj->{'tags'}}))
+		    {
+			next if defined($multipolygon->{'tags'}->{$key});
+			$multipolygon->{'tags'}->{$key}=$val;
+		    }
+		}
+		debug("No common tags on outer ways in multipolygon relation $rel->{'id'}!") if $debug->{'multipolygon'};
+	    }
+	    else
+	    {
+		# just a warning
+		debug("Copied common tags from outer way(s) into multipolygon relation $rel->{'id'}!") if $debug->{'multipolygon'};
+	    }
+	}
     }
 
     # A list of all outer and inner nodes is assembled, now sort them

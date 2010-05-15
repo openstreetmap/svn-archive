@@ -6,8 +6,8 @@
 
 struct osmNode {
     int id;
-    float lon;
-    float lat;
+    double lon;
+    double lat;
 };
 
 struct osmWay {

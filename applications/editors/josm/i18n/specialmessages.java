@@ -9,3 +9,4 @@ tr("The maximum bbox size is 0.25, and your request was too large. Either reques
 tr("could not get audio input stream from input URL"); // Java message loading audio data
 tr("Audio Device Unavailable"); // Java message loading audio data
 tr("You must make your edits public to upload new data"); // use has not made edits public
+tr("town"); // Nominatim search place type

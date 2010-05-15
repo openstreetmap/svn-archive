@@ -473,8 +473,8 @@ static int processList(char *filename, char *output_prefix)
           first_match = node_match;
         if( last_match == node_match )
           continue;
-        if( last_match && fabs( last_match->lat - node_match->lat ) < 1e-6
-                       && fabs( last_match->lon - node_match->lon ) < 1e-6 )
+        if( last_match && fabs( last_match->lat - node_match->lat ) < 1e-7
+                       && fabs( last_match->lon - node_match->lon ) < 1e-7 )
         {
 //          printf( "{%.6f,%.6f} ", node_match->lat, node_match->lon );
           continue;
@@ -514,8 +514,8 @@ static int processList(char *filename, char *output_prefix)
     {
       if( last_match != first_match )
       {
-        if( fabs( last_match->lat - first_match->lat ) < 1e-6 &&
-            fabs( last_match->lon - first_match->lon ) < 1e-6 )
+        if( fabs( last_match->lat - first_match->lat ) < 1e-7 &&
+            fabs( last_match->lon - first_match->lon ) < 1e-7 )
         {
           // If it's close, make sure it's equal
           v_y[vertex_count-1] = first_match->lat;

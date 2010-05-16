@@ -9,7 +9,7 @@ Settings for symbols, the spatial reference of your postgis tables, coastline sh
 <!ENTITY osm2pgsql_projection "&srs900913;">
 
 <!-- use 'world_boundaries', which is the usual naming for the local folder the coastline shapefiles are unzipped into -->
-<!ENTITY world_boundaries "./world_boundaries/">
+<!ENTITY world_boundaries "/home/project/o/s/m/osm/data/world_boundaries/">
 
 <!-- use 'planet_osm' unless you have customized your database table prefix using the osm2pgsql 'prefix' flag -->
-<!ENTITY prefix "planet_osm_hstore">
+<!ENTITY prefix "planet_osm">

@@ -102,44 +102,42 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
 
         this.setPreferredSize(new Dimension(0, 92));
         final MeasurementDialog dlg = this;
-       //TODO: is this enough?
 
-        DataSet.selListeners.add(new SelectionChangedListener(){
-
+        DataSet.selListeners.add(new SelectionChangedListener() {
             public void selectionChanged(Collection<? extends OsmPrimitive> arg0) {
                 double length = 0.0;
                 double segAngle = 0.0;
-                                double area = 0.0;
-                                Node lastNode = null;
-                for(OsmPrimitive p:arg0){
-                                    // ignore incomplete nodes
-                                    if(p instanceof Node && !((Node)p).isIncomplete()){
-                                        Node n =(Node)p;
-                                        if(lastNode == null){
-                                            lastNode = n;
-                                        }else{
-                                            length += MeasurementLayer.calcDistance(lastNode.getCoor(), n.getCoor());
-                                            segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
-                                            lastNode = n;
-                                        }
-                                    } else if(p instanceof Way){
-                                        Way w = (Way)p;
-                                        Node lastN = null;
-                                        for(Node n: w.getNodes()){
-                                            if(lastN != null){
-                                                length += MeasurementLayer.calcDistance(lastN.getCoor(), n.getCoor());
-                                                //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
-                                                area += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
-                              - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
-                                            }
-                                            lastN = n;
-                                        }
-                                        if (lastN != null && lastN == w.getNodes().iterator().next()){
-                                            area = Math.abs(area / 2);
-                                        }else{
-                                            area = 0;
-                                        }
-                                    }
+                double area = 0.0;
+                Node lastNode = null;
+                for(OsmPrimitive p:arg0) {
+                    // ignore incomplete nodes
+                    if(p instanceof Node && !((Node)p).isIncomplete()) {
+                        Node n =(Node)p;
+                        if(lastNode == null) {
+                            lastNode = n;
+                        } else {
+                            length += MeasurementLayer.calcDistance(lastNode.getCoor(), n.getCoor());
+                            segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
+                            lastNode = n;
+                        }
+                    } else if(p instanceof Way) {
+                        Way w = (Way)p;
+                        Node lastN = null;
+                        for(Node n: w.getNodes()) {
+                            if(lastN != null) {
+                                length += MeasurementLayer.calcDistance(lastN.getCoor(), n.getCoor());
+                                //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
+                                area += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
+                                - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
+                                segAngle = MeasurementLayer.angleBetween(lastN.getCoor(), n.getCoor());
+                            }
+                            lastN = n;
+                        }
+                        if (lastN != null && lastN == w.getNodes().iterator().next())
+                            area = Math.abs(area / 2);
+                        else
+                            area = 0;
+                    }
                 }
                 dlg.selectLengthLabel.setText(new DecimalFormat("#0.00").format(length) + " m");
 
@@ -163,5 +161,4 @@ public class MeasurementDialog extends ToggleDialog implements ActionListener
     public void resetValues(){
         MeasurementPlugin.getCurrentLayer().reset();
     }
-
 }

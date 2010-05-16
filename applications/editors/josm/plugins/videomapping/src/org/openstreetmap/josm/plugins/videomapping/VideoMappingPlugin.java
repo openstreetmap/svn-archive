@@ -29,7 +29,7 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 	public VideoMappingPlugin(PluginInformation info) {
 		super(info);
 		//Register for GPS menu
-		VMenu = Main.main.menu.addMenu(tr(" Video"), KeyEvent.VK_V, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));//TODO no more ugly " video" hack
+		VMenu = Main.main.menu.addMenu(" Video", KeyEvent.VK_V, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));//TODO no more ugly " video" hack
 		VMenu.setEnabled(false); //enabled only on GPS Layers
 		VAction = new VideoAction();
 		VMenu.add(VAction);

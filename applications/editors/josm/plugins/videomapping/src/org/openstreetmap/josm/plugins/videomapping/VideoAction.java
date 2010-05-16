@@ -2,6 +2,8 @@ package org.openstreetmap.josm.plugins.videomapping;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -34,7 +36,7 @@ public class VideoAction extends JosmAction {
 	public void actionPerformed(ActionEvent arg0) {
 	
 		copyGPSLayer();
-		Main.main.addLayer(new PositionLayer("test",ds));
+		Main.main.addLayer(new PositionLayer("test",ls));
 	}
 		
 	
@@ -44,24 +46,14 @@ public class VideoAction extends JosmAction {
 	
 	//makes a private flat copy for interaction
 	private void copyGPSLayer()
-	{
-		//TODO we assume that GPS points are in the correct order! 
-		ds = new DataSet();
-            for (GpxTrack trk : gps.tracks) {
-                for (GpxTrackSegment segment : trk.getSegments()) {
-                    Way w = new Way();
-                    for (WayPoint p : segment.getWayPoints()) {
-                        Node n = new Node(p.getCoor());
-                        String timestr = p.getString("time");
-                        if(timestr != null)
-                            n.setTimestamp(DateUtils.fromString(timestr));
-                        ds.addPrimitive(n);
-                        w.addNode(n);
-                        //ls.add
-                    }
-                    ds.addPrimitive(w);
-                }
+	{ 
+		ls = new LinkedList<WayPoint>();
+        for (GpxTrack trk : gps.tracks) {
+            for (GpxTrackSegment segment : trk.getSegments()) {
+                ls.addAll(segment.getWayPoints());
             }
+        }
+        Collections.sort(ls); //sort basing upon time
 	}
 
 }

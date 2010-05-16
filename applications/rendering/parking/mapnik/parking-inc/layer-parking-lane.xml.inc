@@ -410,12 +410,12 @@
         &maxscale_zoom15;
         &minscale_zoom16;
         <Filter>[parking:lane:left]='orthogonal' and [parking:condition:left]='ticket'</Filter>
-        <LinePatternSymbolizer file="&symbols;/park-lo-fee.png" type="png" width="16" height="16"></LinePatternSymbolizer>
+        <LinePatternSymbolizer file="&symbols;/park-lo-fee.png" type="png" width="16" height="20"></LinePatternSymbolizer>
     </Rule>
     <Rule>
         &maxscale_zoom17;
         <Filter>[parking:lane:left]='orthogonal' and [parking:condition:left]='ticket'</Filter>
-        <LinePatternSymbolizer file="&symbols;/park-lo-fee.png" type="png" width="16" height="16"></LinePatternSymbolizer>
+        <LinePatternSymbolizer file="&symbols;/park-lo-fee.png" type="png" width="16" height="20"></LinePatternSymbolizer>
     </Rule>
     <!-- left parking lane: customers -->
     <Rule>
@@ -484,12 +484,12 @@
         &maxscale_zoom15;
         &minscale_zoom16;
         <Filter>[parking:lane:right]='orthogonal' and [parking:condition:right]='ticket'</Filter>
-        <LinePatternSymbolizer file="&symbols;/park-ro-fee.png" type="png" width="16" height="16"></LinePatternSymbolizer>
+        <LinePatternSymbolizer file="&symbols;/park-ro-fee.png" type="png" width="16" height="20"></LinePatternSymbolizer>
     </Rule>
     <Rule>
         &maxscale_zoom17;
         <Filter>[parking:lane:right]='orthogonal' and [parking:condition:right]='ticket'</Filter>
-        <LinePatternSymbolizer file="&symbols;/park-ro-fee.png" type="png" width="16" height="16"></LinePatternSymbolizer>
+        <LinePatternSymbolizer file="&symbols;/park-ro-fee.png" type="png" width="16" height="20"></LinePatternSymbolizer>
     </Rule>
     <!-- right parking lane: customers -->
     <Rule>

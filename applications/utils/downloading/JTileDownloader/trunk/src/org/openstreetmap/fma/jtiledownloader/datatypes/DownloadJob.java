@@ -124,7 +124,8 @@ public class DownloadJob
         return _tileServer;
     }
 
-    public final TileProviderIf getTileProvider() {
+    public final TileProviderIf getTileProvider()
+    {
         return Util.getTileProvider(getTileServer());
     }
 
@@ -173,7 +174,8 @@ public class DownloadJob
         config.save(prop);
     }
 
-    public void loadDownloadConfig(DownloadConfiguration config) {
+    public void loadDownloadConfig(DownloadConfiguration config)
+    {
         config.load(prop);
     }
 }

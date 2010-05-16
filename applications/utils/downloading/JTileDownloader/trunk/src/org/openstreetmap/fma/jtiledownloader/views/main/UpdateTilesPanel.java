@@ -227,9 +227,9 @@ public class UpdateTilesPanel
             }
 
             TileListSimple updateList = new TileListSimple();
-            for (int index = 0; index < selectedRows.length; index++)
+            for (int selectedRow : selectedRows)
             {
-                int zoomLevel = (Integer) _updateTilesTable.getValueAt(selectedRows[index], 0);
+                int zoomLevel = (Integer) _updateTilesTable.getValueAt(selectedRow, 0);
                 System.out.println("selected zoom level " + zoomLevel);
 
                 for (int indexTileList = 0; indexTileList < _updateList.size(); indexTileList++)
@@ -333,10 +333,9 @@ public class UpdateTilesPanel
                     if (yDirs != null)
                     {
                         YDirectory yDirectory;
-                        for (int indexY = 0; indexY < yDirs.length; indexY++)
+                        for (File yDir : yDirs)
                         {
                             Tile[] theTiles;
-                            File yDir = yDirs[indexY];
                             yDirectory = new YDirectory();
                             yDirectory.setName(yDir.getName());
                             File[] tiles = yDir.listFiles(new FileFilter() {

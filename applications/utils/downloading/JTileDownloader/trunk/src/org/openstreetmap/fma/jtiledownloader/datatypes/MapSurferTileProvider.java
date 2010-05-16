@@ -50,6 +50,7 @@ public class MapSurferTileProvider
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileUrl(int, int, int)
      * {@inheritDoc}
      */
+    @Override
     public String getTileUrl(Tile tile)
     {
         serverNumber = (serverNumber + 1) % getSubDomains().length;

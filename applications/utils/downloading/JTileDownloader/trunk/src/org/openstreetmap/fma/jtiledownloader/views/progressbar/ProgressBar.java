@@ -31,7 +31,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -184,9 +183,8 @@ public class ProgressBar
             if (exitCode == ErrorTileListView.CODE_RETRY)
             {
                 TileListSimple tiles = new TileListSimple();
-                for (Enumeration<TileDownloadError> enumeration = errorTileList.elements(); enumeration.hasMoreElements();)
+                for (TileDownloadError tde : errorTileList)
                 {
-                    TileDownloadError tde = enumeration.nextElement();
                     tiles.addTile(tde.getTile());
                 }
 
@@ -268,7 +266,7 @@ public class ProgressBar
         timeElapsed.setText("Elapsed: " + timeDiff(ticks));
         if (ticks > 0 && progressBar.getValue() > 0)
         {
-            timeRemaining.setText("Remaining: " + timeDiff((long) (ticks / (double) (progressBar.getValue() / (double) progressBar.getMaximum())) - ticks));
+            timeRemaining.setText("Remaining: " + timeDiff((long) (ticks / (progressBar.getValue() / (double) progressBar.getMaximum())) - ticks));
         }
     }
 

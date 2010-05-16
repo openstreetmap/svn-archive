@@ -26,7 +26,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.datatypes.Tile;
@@ -76,9 +75,8 @@ public class TileListExporter
             fileWriter = new BufferedWriter(new FileWriter(exportFile));
 
             int count = 0;
-            for (Enumeration<Tile> enumeration = _tilesToDownload.elements(); enumeration.hasMoreElements();)
+            for (Tile tileToDownload : _tilesToDownload)
             {
-                Tile tileToDownload = enumeration.nextElement();
                 doSingleExport(tileToDownload, fileWriter);
                 count++;
             }

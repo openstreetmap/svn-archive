@@ -21,7 +21,6 @@
 
 package org.openstreetmap.fma.jtiledownloader.views.main;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
@@ -47,9 +46,8 @@ public class UpdateTilesTableModel
             return;
         }
 
-        for (Enumeration<UpdateTileList> enumeration = updateTileList.elements(); enumeration.hasMoreElements();)
+        for (UpdateTileList utl : updateTileList)
         {
-            UpdateTileList utl = enumeration.nextElement();
             count++;
             Vector rowData = new Vector();
             rowData.add(utl.getZoomLevel());

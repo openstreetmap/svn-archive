@@ -103,10 +103,10 @@ public class InfoPanel
         _textInfo.append("----------------------------------------\n");
         _textInfo.append("Predefined tile servers are:\n");
         TileProviderIf[] tileServerList = new TileProviderList().getTileProviderList();
-        for (int index = 0; index < tileServerList.length; index++)
+        for (TileProviderIf element : tileServerList)
         {
-            _textInfo.append(tileServerList[index].getName() + "\n");
-            _textInfo.append(tileServerList[index].getTileServerUrl() + "\n");
+            _textInfo.append(element.getName() + "\n");
+            _textInfo.append(element.getTileServerUrl() + "\n");
         }
 
         _textInfo.append("----------------------------------------\n");

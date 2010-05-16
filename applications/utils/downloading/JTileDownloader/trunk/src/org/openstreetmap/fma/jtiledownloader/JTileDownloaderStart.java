@@ -43,9 +43,9 @@ public class JTileDownloaderStart
         HashMap<String, String> arguments = new HashMap<String, String>();
         if (args != null && args.length > 0)
         {
-            for (int index = 0; index < args.length; index++)
+            for (String arg : args)
             {
-                String[] parts = args[index].split("=");
+                String[] parts = arg.split("=");
                 if (parts != null && parts.length == 2)
                 {
                     String key = parts[0].toUpperCase();

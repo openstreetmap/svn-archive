@@ -89,6 +89,7 @@ public class Tile
         return z + "/" + x + "/" + y;
     }
 
+    @Override
     public int hashCode()
     {
         assert false : "hashCode not designed";

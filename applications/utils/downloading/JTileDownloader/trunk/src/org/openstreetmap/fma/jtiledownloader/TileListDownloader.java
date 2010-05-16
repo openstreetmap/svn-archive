@@ -33,7 +33,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
@@ -451,7 +450,7 @@ public class TileListDownloader
             int tileCounter = 0;
             int updatedTileCount = 0;
 
-            for (Enumeration<Tile> enumeration = getTilesToDownload().elements(); enumeration.hasMoreElements();)
+            for (Tile tileToDownload : getTilesToDownload())
             {
                 if (interrupted())
                 {
@@ -459,7 +458,6 @@ public class TileListDownloader
                     return;
                 }
 
-                Tile tileToDownload = enumeration.nextElement();
                 System.out.println("try to download tile " + tileToDownload + " to " + getDownloadPath());
                 tileCounter++;
 

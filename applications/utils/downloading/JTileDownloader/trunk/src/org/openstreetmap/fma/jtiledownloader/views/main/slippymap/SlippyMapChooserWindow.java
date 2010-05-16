@@ -7,6 +7,7 @@ package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
@@ -30,7 +31,7 @@ public class SlippyMapChooserWindow
         setSize(400, 400);
         final SlippyMapChooser map = new SlippyMapChooser(bboxlatlonpanel);
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         add(map, BorderLayout.CENTER);
     }
 }

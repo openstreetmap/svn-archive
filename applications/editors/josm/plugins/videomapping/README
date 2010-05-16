@@ -3,3 +3,9 @@ README
 
 Third party components:
 icon: http://www.openclipart.org/detail/16349
+
+VLCj binding (1.1.0f):
+http://code.google.com/p/vlcj/
+
+for use with VLC 1.1.x
+http://download.videolan.org/pub/videolan/testing/vlc-1.1.0-pre4/win32/

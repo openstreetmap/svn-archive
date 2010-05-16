@@ -164,9 +164,9 @@ public class MainPanel
         }
         _textOutputZoomLevels.setName(COMPONENT_OUTPUT_ZOOM_LEVEL_TEXT);
 
-        for (int index = 0; index < _tileProviders.length; index++)
+        for (TileProviderIf tileProvider : _tileProviders)
         {
-            _comboTileServer.addItem(_tileProviders[index].getName());
+            _comboTileServer.addItem(tileProvider.getName());
         }
         initializeTileServer(AppConfiguration.getInstance().getTileServer());
         initializeOutputZoomLevel(AppConfiguration.getInstance().getLastZoom());
@@ -342,7 +342,6 @@ public class MainPanel
 
         /**
          * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
-         * {@inheritDoc}
          */
         public void focusGained(FocusEvent focusevent)
         {
@@ -351,7 +350,6 @@ public class MainPanel
 
         /**
          * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
-         * {@inheritDoc}
          */
         public void focusLost(FocusEvent focusevent)
         {
@@ -366,7 +364,6 @@ public class MainPanel
 
         /**
          * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-         * {@inheritDoc}
          */
         public void itemStateChanged(ItemEvent e)
         {
@@ -574,6 +571,7 @@ public class MainPanel
 
     /**
      * Sets the number of tiles to download
+     * @param numberOfTiles 
      */
     public void setNumberOfTiles(int numberOfTiles)
     {
@@ -586,7 +584,6 @@ public class MainPanel
 
         /**
          * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
-         * {@inheritDoc}
          */
         public void stateChanged(ChangeEvent evt)
         {
@@ -599,7 +596,7 @@ public class MainPanel
     }
 
     /**
-     * @param downloadConfig
+     * @param outputFolder
      */
     public void setOutputFolder(String outputFolder)
     {

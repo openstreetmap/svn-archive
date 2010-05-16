@@ -49,7 +49,7 @@ public abstract class InputPanel
     }
 
     /**
-     * 
+     * @param mainPanel 
      */
     public InputPanel(MainPanel mainPanel)
     {

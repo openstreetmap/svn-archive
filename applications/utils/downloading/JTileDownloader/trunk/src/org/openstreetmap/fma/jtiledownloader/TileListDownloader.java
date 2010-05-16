@@ -58,6 +58,7 @@ public class TileListDownloader
     /**
      * @param downloadPath
      * @param tilesToDownload
+     * @param tileProvider 
      */
     public TileListDownloader(String downloadPath, TileList tilesToDownload, TileProviderIf tileProvider)
     {
@@ -422,7 +423,6 @@ public class TileListDownloader
     {
         /**
          * @see java.lang.Thread#run()
-         * {@inheritDoc}
          */
         @Override
         public void run()

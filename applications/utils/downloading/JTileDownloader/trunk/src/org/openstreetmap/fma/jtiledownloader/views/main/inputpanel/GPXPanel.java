@@ -72,7 +72,7 @@ public class GPXPanel
     private DownloadConfigurationGPX _downloadConfig;
 
     /**
-     * 
+     * @param mainPanel 
      */
     public GPXPanel(MainPanel mainPanel)
     {
@@ -86,7 +86,6 @@ public class GPXPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getJobType()
-     * {@inheritDoc}
      */
     @Override
     public String getJobType()
@@ -171,7 +170,6 @@ public class GPXPanel
         _sliderCorridor.addChangeListener(new ChangeListener() {
             /**
              * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
-             * {@inheritDoc}
              */
             public void stateChanged(ChangeEvent e)
             {
@@ -220,7 +218,6 @@ public class GPXPanel
 
         /**
          * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
-         * {@inheritDoc}
          */
         public void focusGained(FocusEvent focusevent)
         {
@@ -229,7 +226,6 @@ public class GPXPanel
 
         /**
          * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
-         * {@inheritDoc}
          */
         public void focusLost(FocusEvent focusevent)
         {
@@ -245,7 +241,6 @@ public class GPXPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
-     * {@inheritDoc}
      */
     @Override
     public void updateAll()
@@ -261,7 +256,6 @@ public class GPXPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
-     * {@inheritDoc}
      */
     @Override
     public TileList getTileList()
@@ -271,7 +265,6 @@ public class GPXPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
-     * {@inheritDoc}
      */
     @Override
     public String getInputName()

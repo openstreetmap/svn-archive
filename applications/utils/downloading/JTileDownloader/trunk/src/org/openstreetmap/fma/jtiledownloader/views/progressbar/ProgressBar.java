@@ -109,7 +109,6 @@ public class ProgressBar
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     * {@inheritDoc}
      */
     public void actionPerformed(ActionEvent arg0)
     {
@@ -159,8 +158,7 @@ public class ProgressBar
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector)
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector, int)
      */
     public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount)
     {
@@ -204,7 +202,6 @@ public class ProgressBar
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadStopped(int, int)
-     * {@inheritDoc}
      */
     public void downloadStopped(int actCount, int maxCount)
     {
@@ -213,8 +210,7 @@ public class ProgressBar
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String)
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String, boolean)
      */
     public void downloadedTile(int actCount, int maxCount, String path, boolean updatedTile)
     {
@@ -235,8 +231,7 @@ public class ProgressBar
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, Tile)
      */
     public void errorOccured(int actCount, int maxCount, Tile tile)
     {
@@ -245,7 +240,6 @@ public class ProgressBar
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#setInfo(java.lang.String)
-     * {@inheritDoc}
      */
     public void setInfo(String message)
     {

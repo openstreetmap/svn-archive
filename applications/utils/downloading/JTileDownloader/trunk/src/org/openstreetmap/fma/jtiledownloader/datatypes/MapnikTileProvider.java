@@ -33,10 +33,6 @@ public class MapnikTileProvider
         url = "http://{0}.tile.openstreetmap.org/";
     }
 
-    /**
-     * @see org.openstreetmap.fma.jtiledownloader.datatypes.RotatingTileProvider#getSubDomains()
-     * {@inheritDoc}
-     */
     @Override
     protected String[] getSubDomains()
     {
@@ -45,7 +41,6 @@ public class MapnikTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider#getName()
-     * {@inheritDoc}
      */
     @Override
     public String getName()

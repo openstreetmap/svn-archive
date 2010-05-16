@@ -63,7 +63,7 @@ public class BBoxXYPanel
     private DownloadConfigurationBBoxXY _downloadConfig;
 
     /**
-     * 
+     * @param mainPanel 
      */
     public BBoxXYPanel(MainPanel mainPanel)
     {
@@ -77,7 +77,6 @@ public class BBoxXYPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getJobType()
-     * {@inheritDoc}
      */
     @Override
     public String getJobType()
@@ -248,7 +247,6 @@ public class BBoxXYPanel
 
         /**
          * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
-         * {@inheritDoc}
          */
         public void focusGained(FocusEvent focusevent)
         {
@@ -257,7 +255,6 @@ public class BBoxXYPanel
 
         /**
          * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
-         * {@inheritDoc}
          */
         public void focusLost(FocusEvent focusevent)
         {
@@ -285,7 +282,6 @@ public class BBoxXYPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
-     * {@inheritDoc}
      */
     @Override
     public void updateAll()
@@ -295,7 +291,6 @@ public class BBoxXYPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
-     * {@inheritDoc}
      */
     @Override
     public TileList getTileList()
@@ -305,7 +300,6 @@ public class BBoxXYPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
-     * {@inheritDoc}
      */
     @Override
     public String getInputName()

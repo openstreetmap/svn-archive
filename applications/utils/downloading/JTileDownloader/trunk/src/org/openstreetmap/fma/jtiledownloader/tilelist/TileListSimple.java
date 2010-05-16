@@ -33,7 +33,6 @@ public class TileListSimple
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getTileListToDownload()
-     * {@inheritDoc}
      */
     public Vector<Tile> getTileListToDownload()
     {

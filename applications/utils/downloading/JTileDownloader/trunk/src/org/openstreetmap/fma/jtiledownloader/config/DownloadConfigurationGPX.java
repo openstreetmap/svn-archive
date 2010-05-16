@@ -94,7 +94,6 @@ public class DownloadConfigurationGPX
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getType()
-     * {@inheritDoc}
      */
     @Override
     public String getType()
@@ -103,8 +102,7 @@ public class DownloadConfigurationGPX
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getTileList()
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration#getTileList(DownloadJob)
      */
     @Override
     public TileList getTileList(DownloadJob downloadJob)

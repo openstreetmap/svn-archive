@@ -31,7 +31,7 @@ public interface TileCache {
 
     /**
      * Adds a tile to the cache. How long after adding a tile can be retrieved
-     * via {@link #getTile(int, int, int)} is unspecified and depends on the
+     * via {@link #getTile(TileSource, int, int, int)} is unspecified and depends on the
      * implementation.
      * 
      * @param tile

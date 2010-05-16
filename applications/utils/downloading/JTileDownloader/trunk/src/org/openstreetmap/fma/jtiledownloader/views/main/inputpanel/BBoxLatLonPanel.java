@@ -72,7 +72,7 @@ public class BBoxLatLonPanel
     private SlippyMapChooserWindow smc = null;
 
     /**
-     * 
+     * @param mainPanel 
      */
     public BBoxLatLonPanel(MainPanel mainPanel)
     {
@@ -86,7 +86,6 @@ public class BBoxLatLonPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getJobType()
-     * {@inheritDoc}
      */
     @Override
     public String getJobType()
@@ -275,7 +274,6 @@ public class BBoxLatLonPanel
 
         /**
          * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
-         * {@inheritDoc}
          */
         public void focusGained(FocusEvent focusevent)
         {
@@ -284,7 +282,6 @@ public class BBoxLatLonPanel
 
         /**
          * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
-         * {@inheritDoc}
          */
         public void focusLost(FocusEvent focusevent)
         {
@@ -312,7 +309,6 @@ public class BBoxLatLonPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#updateAll()
-     * {@inheritDoc}
      */
     @Override
     public void updateAll()
@@ -326,7 +322,6 @@ public class BBoxLatLonPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getTileList()
-     * {@inheritDoc}
      */
     @Override
     public TileList getTileList()
@@ -336,7 +331,6 @@ public class BBoxLatLonPanel
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.InputPanel#getInputName()
-     * {@inheritDoc}
      */
     @Override
     public String getInputName()

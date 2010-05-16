@@ -102,7 +102,6 @@ public class JTileDownloaderMainView
     {
         /**
          * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
-         * {@inheritDoc}
          */
         @Override
         public void windowClosing(WindowEvent e)
@@ -124,7 +123,6 @@ public class JTileDownloaderMainView
 
         /**
          * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
-         * {@inheritDoc}
          */
         public void stateChanged(ChangeEvent e)
         {

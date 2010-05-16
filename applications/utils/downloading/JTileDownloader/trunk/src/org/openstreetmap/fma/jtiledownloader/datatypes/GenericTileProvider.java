@@ -59,7 +59,6 @@ public class GenericTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getMaxZoom()
-     * {@inheritDoc}
      */
     public int getMaxZoom()
     {
@@ -68,7 +67,6 @@ public class GenericTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getMinZoom()
-     * {@inheritDoc}
      */
     public int getMinZoom()
     {
@@ -77,7 +75,6 @@ public class GenericTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getName()
-     * {@inheritDoc}
      */
     public String getName()
     {
@@ -86,7 +83,6 @@ public class GenericTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileType()
-     * {@inheritDoc}
      */
     public String getTileType()
     {
@@ -94,8 +90,7 @@ public class GenericTileProvider
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileUrl(int, int, int)
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileUrl(Tile)
      */
     public String getTileUrl(Tile tile)
     {
@@ -104,7 +99,6 @@ public class GenericTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileServerUrl()
-     * {@inheritDoc}
      */
     public String getTileServerUrl()
     {
@@ -113,7 +107,6 @@ public class GenericTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileFilename(org.openstreetmap.fma.jtiledownloader.datatypes.Tile)
-     * {@inheritDoc}
      */
     public String getTileFilename(Tile tile)
     {

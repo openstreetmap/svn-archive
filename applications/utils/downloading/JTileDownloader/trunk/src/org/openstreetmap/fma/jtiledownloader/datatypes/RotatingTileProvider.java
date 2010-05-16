@@ -38,7 +38,6 @@ public abstract class RotatingTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileServerUrl()
-     * {@inheritDoc}
      */
     @Override
     public String getTileServerUrl()

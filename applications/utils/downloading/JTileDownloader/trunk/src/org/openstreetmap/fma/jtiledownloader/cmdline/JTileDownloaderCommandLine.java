@@ -84,7 +84,7 @@ public class JTileDownloaderCommandLine
     private void handleDownloadTemplate(String type)
     {
         DownloadConfiguration _downloadTemplate = null;
-        
+
         if (type.equalsIgnoreCase(DownloadConfigurationUrlSquare.ID))
         {
             _downloadTemplate = new DownloadConfigurationUrlSquare();
@@ -144,8 +144,7 @@ public class JTileDownloaderCommandLine
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int)
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadComplete(int, java.util.Vector, int)
      */
     public void downloadComplete(int errorCount, Vector<TileDownloadError> errorTileList, int updatedTileCount)
     {
@@ -154,8 +153,7 @@ public class JTileDownloaderCommandLine
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String)
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadedTile(int, int, java.lang.String, boolean)
      */
     public void downloadedTile(int actCount, int maxCount, String path, boolean updatedTile)
     {
@@ -163,8 +161,7 @@ public class JTileDownloaderCommandLine
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#waitResume(java.lang.String)
-     * {@inheritDoc}
+     * @param message 
      */
     public void waitResume(String message)
     {
@@ -172,8 +169,7 @@ public class JTileDownloaderCommandLine
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#waitWaitHttp500ErrorToResume(java.lang.String)
-     * {@inheritDoc}
+     * @param message 
      */
     public void waitWaitHttp500ErrorToResume(String message)
     {
@@ -191,8 +187,7 @@ public class JTileDownloaderCommandLine
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, java.lang.String)
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#errorOccured(int, int, Tile)
      */
     public void errorOccured(int actCount, int maxCount, Tile tile)
     {
@@ -201,7 +196,6 @@ public class JTileDownloaderCommandLine
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#downloadStopped(int, int)
-     * {@inheritDoc}
      */
     public void downloadStopped(int actCount, int maxCount)
     {
@@ -210,7 +204,6 @@ public class JTileDownloaderCommandLine
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.listener.TileDownloaderListener#setInfo(java.lang.String)
-     * {@inheritDoc}
      */
     public void setInfo(String message)
     {

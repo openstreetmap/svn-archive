@@ -58,7 +58,6 @@ public class UpdateTilesTableModel
 
     /**
      * @see javax.swing.table.TableModel#getColumnCount()
-     * {@inheritDoc}
      */
     public int getColumnCount()
     {
@@ -67,7 +66,6 @@ public class UpdateTilesTableModel
 
     /**
      * @see javax.swing.table.TableModel#getRowCount()
-     * {@inheritDoc}
      */
     public int getRowCount()
     {
@@ -80,7 +78,6 @@ public class UpdateTilesTableModel
 
     /**
      * @see javax.swing.table.TableModel#getValueAt(int, int)
-     * {@inheritDoc}
      */
     public Object getValueAt(int row, int column)
     {

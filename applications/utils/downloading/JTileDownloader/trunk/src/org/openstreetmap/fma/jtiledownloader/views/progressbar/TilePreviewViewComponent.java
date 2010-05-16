@@ -62,7 +62,6 @@ public class TilePreviewViewComponent
 
     /**
      * @see javax.swing.JComponent#update(java.awt.Graphics)
-     * {@inheritDoc}
      */
     @Override
     public void update(Graphics g)

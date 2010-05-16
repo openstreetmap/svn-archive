@@ -212,7 +212,7 @@ public class AppConfiguration
 
     /**
      * Setter for setProxyServerRequiresAuthentitication
-     * @param setProxyServerRequiresAuthentitication the useProxyServerAuthentitication to set
+     * @param useProxyServerAuthentitication 
      */
     public final void setProxyServerRequiresAuthentitication(boolean useProxyServerAuthentitication)
     {
@@ -416,7 +416,6 @@ public class AppConfiguration
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf#saveDownloadConfig(org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration)
-     * {@inheritDoc}
      */
     public void saveDownloadConfig(DownloadConfiguration config)
     {

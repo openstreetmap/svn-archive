@@ -37,7 +37,6 @@ public class TileListCommonBBox
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.tilelist.TileList#getTileListToDownload()
-     * {@inheritDoc}
      */
     public Vector<Tile> getTileListToDownload()
     {
@@ -168,6 +167,7 @@ public class TileListCommonBBox
     /**
      * Setter for topLeft
      * @param topLeft the xTopLeft to set
+     * @param index 
      */
     public final void setXTopLeft(int topLeft, int index)
     {
@@ -186,6 +186,7 @@ public class TileListCommonBBox
     /**
      * Setter for topLeft
      * @param topLeft the yTopLeft to set
+     * @param index 
      */
     public final void setYTopLeft(int topLeft, int index)
     {
@@ -204,6 +205,7 @@ public class TileListCommonBBox
     /**
      * Setter for bottomRight
      * @param bottomRight the xBottomRight to set
+     * @param index 
      */
     public final void setXBottomRight(int bottomRight, int index)
     {
@@ -222,6 +224,7 @@ public class TileListCommonBBox
     /**
      * Setter for bottomRight
      * @param bottomRight the yBottomRight to set
+     * @param index 
      */
     public final void setYBottomRight(int bottomRight, int index)
     {

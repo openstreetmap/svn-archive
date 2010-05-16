@@ -35,7 +35,6 @@ public class OsmarenderTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.RotatingTileProvider#getSubDomains()
-     * {@inheritDoc}
      */
     @Override
     protected String[] getSubDomains()
@@ -45,7 +44,6 @@ public class OsmarenderTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider#getName()
-     * {@inheritDoc}
      */
     @Override
     public String getName()
@@ -55,7 +53,6 @@ public class OsmarenderTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider#getMaxZoom()
-     * {@inheritDoc}
      */
     @Override
     public int getMaxZoom()

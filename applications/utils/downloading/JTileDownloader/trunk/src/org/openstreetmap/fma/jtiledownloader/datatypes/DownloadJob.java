@@ -167,7 +167,6 @@ public class DownloadJob
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.config.DownloadConfigurationSaverIf#saveDownloadConfig(org.openstreetmap.fma.jtiledownloader.config.DownloadConfiguration)
-     * {@inheritDoc}
      */
     public void saveDownloadConfig(DownloadConfiguration config)
     {

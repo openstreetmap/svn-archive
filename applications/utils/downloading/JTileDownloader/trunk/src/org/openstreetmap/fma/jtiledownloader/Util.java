@@ -37,6 +37,8 @@ public class Util
 {
     /**
      * Returns valid array of zoomlevels to download
+     * @param selectedTileProvider 
+     * @param zoomLevelString 
      * @return int[] zoomlevels
      */
     public static int[] getOutputZoomLevelArray(TileProviderIf selectedTileProvider, String zoomLevelString)

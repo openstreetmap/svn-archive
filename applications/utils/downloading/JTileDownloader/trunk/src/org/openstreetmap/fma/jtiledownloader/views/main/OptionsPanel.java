@@ -135,6 +135,7 @@ public class OptionsPanel
         _chkOverwriteExistingFiles.setSelected(AppConfiguration.getInstance().isOverwriteExistingFiles());
 
     }
+
     /**
      * @return overwrite existing files
      */

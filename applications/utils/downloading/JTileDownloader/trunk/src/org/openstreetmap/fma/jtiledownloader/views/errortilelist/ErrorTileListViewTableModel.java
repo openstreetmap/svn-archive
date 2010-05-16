@@ -56,7 +56,6 @@ public class ErrorTileListViewTableModel
 
     /**
      * @see javax.swing.table.TableModel#getColumnCount()
-     * {@inheritDoc}
      */
     public int getColumnCount()
     {
@@ -65,7 +64,6 @@ public class ErrorTileListViewTableModel
 
     /**
      * @see javax.swing.table.TableModel#getRowCount()
-     * {@inheritDoc}
      */
     public int getRowCount()
     {
@@ -78,7 +76,6 @@ public class ErrorTileListViewTableModel
 
     /**
      * @see javax.swing.table.TableModel#getValueAt(int, int)
-     * {@inheritDoc}
      */
     public Object getValueAt(int row, int column)
     {

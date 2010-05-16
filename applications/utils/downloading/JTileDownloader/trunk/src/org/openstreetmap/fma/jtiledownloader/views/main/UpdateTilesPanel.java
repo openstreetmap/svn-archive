@@ -86,7 +86,7 @@ public class UpdateTilesPanel
     private TileListDownloader _tileListDownloader;
 
     /**
-     * 
+     * @param mainPanel 
      */
     public UpdateTilesPanel(MainPanel mainPanel)
     {
@@ -193,7 +193,6 @@ public class UpdateTilesPanel
 
         /**
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-         * {@inheritDoc}
          */
         public void actionPerformed(ActionEvent e)
         {

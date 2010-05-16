@@ -81,7 +81,6 @@ public class Tile
 
     /**
      * @see java.lang.Object#toString()
-     * {@inheritDoc}
      */
     @Override
     public String toString()
@@ -98,7 +97,6 @@ public class Tile
 
     /**
      * @see java.lang.Object#equals(java.lang.Object)
-     * {@inheritDoc}
      */
     @Override
     public boolean equals(Object obj)

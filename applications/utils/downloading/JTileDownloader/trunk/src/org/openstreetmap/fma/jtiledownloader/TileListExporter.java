@@ -38,7 +38,9 @@ public class TileListExporter
     private TileProviderIf _tileProvider;
 
     /**
+     * @param downloadPathBase 
      * @param tilesToDownload
+     * @param tileProvider 
      */
     public TileListExporter(String downloadPathBase, Vector<Tile> tilesToDownload, TileProviderIf tileProvider)
     {

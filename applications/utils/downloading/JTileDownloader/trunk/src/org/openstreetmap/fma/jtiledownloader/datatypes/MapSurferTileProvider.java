@@ -38,7 +38,6 @@ public class MapSurferTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.RotatingTileProvider#getSubDomains()
-     * {@inheritDoc}
      */
     @Override
     protected String[] getSubDomains()
@@ -47,8 +46,7 @@ public class MapSurferTileProvider
     }
 
     /**
-     * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileUrl(int, int, int)
-     * {@inheritDoc}
+     * @see org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf#getTileUrl(Tile)
      */
     @Override
     public String getTileUrl(Tile tile)
@@ -60,7 +58,6 @@ public class MapSurferTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider#getName()
-     * {@inheritDoc}
      */
     @Override
     public String getName()
@@ -70,7 +67,6 @@ public class MapSurferTileProvider
 
     /**
      * @see org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider#getMaxZoom()
-     * {@inheritDoc}
      */
     @Override
     public int getMaxZoom()

@@ -167,7 +167,6 @@ public class ErrorTileListView
 
         /**
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-         * {@inheritDoc}
          */
         public void actionPerformed(ActionEvent e)
         {

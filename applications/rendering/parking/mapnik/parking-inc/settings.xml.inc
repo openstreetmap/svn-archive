@@ -12,4 +12,4 @@ Settings for symbols, the spatial reference of your postgis tables, coastline sh
 <!ENTITY world_boundaries "/home/project/o/s/m/osm/data/world_boundaries/">
 
 <!-- use 'planet_osm' unless you have customized your database table prefix using the osm2pgsql 'prefix' flag -->
-<!ENTITY prefix "planet_osm">
+<!ENTITY prefix "planet">

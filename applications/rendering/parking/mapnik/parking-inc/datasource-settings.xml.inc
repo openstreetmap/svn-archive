@@ -5,7 +5,7 @@ Note: feel free to leave password, host, port, or use blank
 -->
 
 <Parameter name="type">postgis</Parameter>
-<Parameter name="password">kay</Parameter>
+<Parameter name="password"></Parameter>
 <Parameter name="host">sql-mapnik</Parameter>
 <Parameter name="port">5432</Parameter>
 <Parameter name="user">kayd</Parameter>

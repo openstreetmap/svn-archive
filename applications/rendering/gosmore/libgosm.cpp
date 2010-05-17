@@ -1302,8 +1302,11 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
 
         strcmp (i->second, "tree") != 0 && // A few of these in Berlin
         
+        strncasecmp (i->first, "CoCT:",5) != 0 && // Cape Town import
+        
         strcmp (i->first, "import_uuid") != 0 &&
         strcmp (i->first, "attribution") /* Mostly MassGIS */ != 0 &&
+        strcmp (i->second, "paved") != 0 && //surface=paved is the default
         strcmp (i->first, "layer") != 0 &&
         strcmp (i->first, "history") != 0 &&
         strcmp (i->first, "direction") != 0 &&
@@ -1347,6 +1350,7 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
         strcmp (i->second, "tertiary") != 0 &&
         strcmp (i->second, "secondary") != 0 && 
         strcmp (i->second, "primary") != 0 && // Esp. ValidateMode
+        strcmp (i->first, "service") != 0 && // =driveway/parking_aisle is trivial
         strcmp (i->second, "junction") != 0 && 
    /* Not approved and when it isn't obvious
       from the ways that it's a junction, the tag will 
@@ -1380,9 +1384,13 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
       result.push_back (
         strcmp (i->first, "population") == 0 ? string ("\npop. ") + i->second + '\n':
         // Don't index population figures, but make it obvious what it is.
+        strcmp (i->first, "highway") == 0 ? string ("\n ") :
+        // This is to save space. We don't drop the tag completely because we don't
+        // footways, service roads, cycleways etc to have empty strings because
+        // ValidateMode will highlight them.
         strcmp (i->first, "phone") == 0 || strcmp (i->first, "addr:housenumber") == 0 ?
           string ("\n") + i->second + '\n':
-        // Don't index phonenumbers or housenumbers.
+        // Don't index highway types, phonenumbers or housenumbers.
         // Some day I hope to include housenumber data into the data for the street it is on.
         // Then, when the user enters a housenumber and a street name,
         // we search by street and filter by housenumber
@@ -1395,6 +1403,8 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
                 strcmp (i->second, "yes") == 0 || strcmp (i->second, "1") == 0
                 ? strncasecmp (i->first, "amenity:", 8) == 0 ? i->first + 8
                 // Strip off amenity: from things like amenity:restaurant (BP import)
+                : strcmp (i->first, "bridge") == 0 ? "\nbridge"
+                // No need to index bridge
                 : i->first : i->second) + "\n");
     }
   }

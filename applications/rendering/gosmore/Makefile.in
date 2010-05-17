@@ -5,7 +5,7 @@ TODAY := `exec date +%Y%m%d`
 VERSION = 0.0.0.$(TODAY)
 
 DESTDIR=
-prefix = /usr/local
+prefix = @prefix@
 bindir = $(prefix)/bin
 datarootdir = $(prefix)/share
 

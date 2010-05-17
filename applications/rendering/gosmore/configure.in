@@ -1,0 +1,4 @@
+AC_INIT([gosmore], [1], [nroets@gmail.com])
+AC_PROG_CC
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

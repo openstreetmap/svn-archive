@@ -10,7 +10,6 @@ Build-Depends:
 	debhelper (>> 5.0.0),
 	cdbs,
 	libgtk2.0-dev,
-	dpatch,
 	libxml2-dev,
 	libcurl-dev
 Standards-Version: 3.8.0
@@ -22,8 +21,7 @@ Package: openstreetmap-gosmore
 Priority: optional
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends} unzip
-Recommends: gpsd alsa-utils
-Suggests: josm
+Suggests: alsa-utils, gpsd, josm
 Conflicts: gosmore
 Description: Openstreetmap.org viewer with searching and routing capabilities
  Gosmore is a openstreetmap.org viewer. It uses it's own binary format that

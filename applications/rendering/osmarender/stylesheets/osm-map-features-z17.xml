@@ -97,6 +97,9 @@
 		</rule>
 
 		<!-- Artificial landuse -->
+		<rule e="way" k="landuse" v="allotments|village_green|recreation_ground">
+			<area class="landuse-allotment-village"/>
+		</rule>
 		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
 			<area class="landuse-field"/>
 		</rule>
@@ -5240,6 +5243,11 @@
 			}
 
 			.landuse-field {
+			fill: #d0f5de;
+			stroke: #9ee673;
+			stroke-width: 0.1px;
+			}
+			.landuse-allotment-village {
 			fill: #bde3cb;
 			stroke: #6fc13d;
 			stroke-width: 0.2px;

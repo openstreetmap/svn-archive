@@ -1,4 +1,4 @@
-<!ENTITY background "#f00"> <!-- "#b5d0d0" TODO! -->
+<!ENTITY background "#c1c1c1"> <!-- "#b5d0d0" TODO! -->
 
 <!ENTITY background_world "#eeedec"> <!-- "#f2efe9" -->
 <!ENTITY background_water "#c0c6c6"> <!-- "#b5d0d0" -->

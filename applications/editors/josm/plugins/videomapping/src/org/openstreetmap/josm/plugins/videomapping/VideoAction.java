@@ -8,6 +8,7 @@ import java.util.List;
 
 
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
@@ -34,9 +35,9 @@ public class VideoAction extends JosmAction {
 
 	// Choose a file
 	public void actionPerformed(ActionEvent arg0) {
-	
 		copyGPSLayer();
-		Main.main.addLayer(new PositionLayer("test",ls));
+		Main.main.addLayer(new PositionLayer("test",ls));		
+
 	}
 		
 	

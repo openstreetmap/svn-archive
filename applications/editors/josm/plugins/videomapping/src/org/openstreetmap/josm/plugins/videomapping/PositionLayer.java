@@ -14,6 +14,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -45,9 +46,22 @@ public class PositionLayer extends Layer implements MouseListener, KeyListener {
 	public PositionLayer(String name, final List<WayPoint> ls) {
 		super(name);		
 		this.ls = ls;
+		Action a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.err.println("!!!boom!!!");
+			}};
 		selected = new ArrayList<WayPoint>();
 		Main.map.mapView.addMouseListener(this);
-		Main.map.mapView.addKeyListener(this);
+		
+		//Main.panel.addKeyListener(this);
+		//Main.map.mapView.addKeyListener(this);
+		Main.contentPane.getInputMap().put(KeyStroke.getKeyStroke("SPACE"),"pressed");
+		Main.contentPane.getActionMap().put("pressed",a);
+
+		//Main.contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE,0),a);
+		//Main.contentPane.getActionMap().put("doSomething",a);
+						
 		it=ls.iterator();
 		Timer t  = new Timer();		
 		t.schedule(new TimerTask() {
@@ -187,7 +201,26 @@ public class PositionLayer extends Layer implements MouseListener, KeyListener {
 		System.out.println(e.getKeyCode());
 		switch(e.getKeyCode())
 		{
-			case KeyEvent.VK_LEFT: sel = ls.get(50);
+			case KeyEvent.VK_LEFT:
+				{
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+					it.next();
+				}
 		}
 		
 	}

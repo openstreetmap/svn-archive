@@ -66,7 +66,7 @@
                 });
 
                 var parking = new OpenLayers.Layer.TMS("Base Map",
-                    "http://http://parking.openstreetmap.de/base/",
+                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking/",
                     {
                         type: 'png', getURL: osm_getTileURL,
                         displayOutsideMaxExtent: true, isBaseLayer: true,
@@ -74,7 +74,7 @@
                     }
                 );
                 var parkingbw = new OpenLayers.Layer.TMS("Parking Only Map",
-                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-bw/",
+                    "http://toolserver.org/tiles/parking-bw/",
                     {
                         type: 'png', getURL: osm_getTileURL,
                         displayOutsideMaxExtent: true, isBaseLayer: true,
@@ -97,11 +97,11 @@
 */
 
                 var parkingtrans = new OpenLayers.Layer.TMS("Parking",
-                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-layer/",
+                    "http://toolserver.org/tiles/parktrans/",
                     {
                         type: 'png', getURL: osm_getTileURL,
                         displayOutsideMaxExtent: true, isBaseLayer: false,
-                        transparent: true, opacity: 0.72, "visibility": false 
+                        transparent: true, opacity: 0.9, "visibility": false 
                     }
                 );
                 var parkingerr = new OpenLayers.Layer.TMS("Parking Errors",

@@ -2943,7 +2943,7 @@
 					<line class="pipeline-oil no-bezier" smart-linecap="no"/>
 				</rule>
 				<else>
-					<rule e="way" k="type" v="gas">
+					<rule e="way" k="type" v="gas|natural_gas">
 						<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
 						<line class="pipeline-gas no-bezier" smart-linecap="no"/>
 					</rule>
@@ -5869,7 +5869,7 @@
 
 			/* Power line and pipeline casing */
 			.powerline-pipeline-casing {
-			stroke-width: 0.1px;
+			stroke-width: 0.15px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #ffffff;

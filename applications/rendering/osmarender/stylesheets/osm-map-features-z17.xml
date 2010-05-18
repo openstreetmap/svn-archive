@@ -5243,7 +5243,7 @@
 			}
 
 			.landuse-field {
-			fill: #d0f5de;
+			fill: #ebfff2;
 			stroke: #9ee673;
 			stroke-width: 0.1px;
 			}
@@ -5877,7 +5877,7 @@
 
 			/* Power line and pipeline casing */
 			.powerline-pipeline-casing {
-			stroke-width: 0.15px;
+			stroke-width: 0.2px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #ffffff;

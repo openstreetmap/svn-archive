@@ -53,8 +53,11 @@
 		</rule>
 		
 		<!-- Artificial landuse -->
-		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow">
-			<area class="landuse field"/>
+		<rule e="way" k="landuse" v="field|farm|farmland|meadow|grass">
+			<area class="landuse-field"/>
+		</rule>
+		<rule e="way" k="landuse" v="allotments|village_green|recreation_ground">
+			<area class="landuse-allotment-village"/>
 		</rule>
 		<rule e="way" k="leisure" v="park|garden|golf_course|common|green">
 			<area class="leisure-park"/>
@@ -1662,12 +1665,17 @@
 			stroke-width: 0.2px;
 			}
 			
-			.landuse.field {
+			.landuse-field {
+			fill: #ebfff2;
+			stroke: #9ee673;
+			stroke-width: 0.1px;
+			}
+			.landuse-allotment-village {
 			fill: #bde3cb;
 			stroke: #6fc13d;
 			stroke-width: 0.2px;
 			}
-			
+
 			.landuse.residential {
 			fill: #e4e4e4;
 			}

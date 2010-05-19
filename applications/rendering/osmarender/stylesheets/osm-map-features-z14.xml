@@ -93,8 +93,11 @@
 </rule>
 		
 		<!-- Artificial landuse -->
-		<rule e="way" k="landuse" v="field|farm|farmland|allotments|village_green|recreation_ground|meadow|grass">
+		<rule e="way" k="landuse" v="field|farm|farmland|meadow|grass">
 			<area class="landuse-field"/>
+		</rule>
+		<rule e="way" k="landuse" v="allotments|village_green|recreation_ground">
+			<area class="landuse-allotment-village"/>
 		</rule>
 		<rule e="way" k="leisure" v="park|garden|golf_course|common|green">
 			<area class="leisure-park"/>
@@ -323,7 +326,23 @@
 			</else>
 		</rule>
 		<rule e="way" k="landuse" v="basin">
-			<area class="natural-water"/>
+			<rule e="way" k="basin" v="infiltration">
+				<area class="basin-infiltration"/>
+			</rule>
+			<else>
+				<rule e="way" k="basin" v="detention">
+					<area class="basin-detention"/>
+				</rule>
+				<else>
+					<rule e="way" k="basin" v="retention">
+						<area class="natural-water"/>
+						<area class="basin-retention"/>
+					</rule>
+					<else>
+						<area class="natural-water"/>
+					</else>
+				</else>
+			</else>
 		</rule>
 		<rule e="way" k="waterway" v="riverbank">
 			<area class="waterway-riverbank"/>
@@ -2431,6 +2450,11 @@
 			}
 			
 			.landuse-field {
+			fill: #ebfff2;
+			stroke: #9ee673;
+			stroke-width: 0.2px;
+			}
+			.landuse-allotment-village {
 			fill: #bde3cb;
 			stroke: #6fc13d;
 			stroke-width: 0.4px;
@@ -2952,6 +2976,19 @@
 			stroke: none;
 			}
 
+			.basin-infiltration {
+			fill: url(#basin-infiltration-pattern);
+			stroke: none;
+			}
+			.basin-detention {
+			fill: url(#basin-detention-pattern);
+			stroke: none;
+			}
+			.basin-retention {
+			fill: url(#basin-retention-pattern);
+			stroke: none;
+			}
+
 			/* Area captions */
 			.park-name {
 			fill: #404040;
@@ -3370,6 +3407,40 @@
 		<svg:pattern id="reservoir-tailings-pattern" patternUnits="userSpaceOnUse" width="0.5" height="0.5" >
 			<svg:path style="stroke:black;stroke-width:.1px;" d="M -0.01,-0.01 L 0.51,0.51" />
 		</svg:pattern>
+
+		<svg:pattern id="basin-infiltration-pattern" patternUnits="userSpaceOnUse" width="2" height="2" patternTransform="scale(5.5)" >
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1.5,1.0 C 1.5,1.25 1.2,1.375 1.2,1.625 C 1.2,1.95 1.8,1.95 1.8,1.625 C 1.8,1.375 1.5,1.25 1.5,1.0" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.5,0.0 C 0.5,0.25 0.2,0.375 0.2,0.625 C 0.2,0.95 0.8,0.95 0.8,0.625 C 0.8,0.375 0.5,0.25 0.5,0.0" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1.1,0.2 L 1.9,0.2" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1.25,0.4 L 1.75,0.4" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1.4,0.6 L 1.6,0.6" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.1,1.2 L 0.9,1.2" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.25,1.4 L 0.75,1.4" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.4,1.6 L 0.6,1.6" />
+		</svg:pattern>
+
+		<svg:pattern id="basin-detention-pattern" patternUnits="userSpaceOnUse" width="2" height="2" patternTransform="scale(5.5)" >
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1.5,1.0 C 1.5,1.25 1.2,1.375 1.2,1.625 C 1.2,1.95 1.8,1.95 1.8,1.625 C 1.8,1.375 1.5,1.25 1.5,1.0" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.5,0.0 C 0.5,0.25 0.2,0.375 0.2,0.625 C 0.2,0.95 0.8,0.95 0.8,0.625 C 0.8,0.375 0.5,0.25 0.5,0.0" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1.4,0.2 L 1.6,0.2" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1.25,0.4 L 1.75,0.4" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 1.1,0.6 L 1.9,0.6" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.4,1.2 L 0.6,1.2" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.25,1.4 L 0.75,1.4" />
+			<svg:path style="stroke:#007fff;stroke-width:.06px;fill:none" d="M 0.1,1.6 L 0.9,1.6" />
+		</svg:pattern>
+
+		<svg:pattern id="basin-retention-pattern" patternUnits="userSpaceOnUse" width="2" height="2" patternTransform="scale(5.5)" >
+			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 1.5,1.0 C 1.5,1.25 1.2,1.375 1.2,1.625 C 1.2,1.95 1.8,1.95 1.8,1.625 C 1.8,1.375 1.5,1.25 1.5,1.0" />
+			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 0.5,0.0 C 0.5,0.25 0.2,0.375 0.2,0.625 C 0.2,0.95 0.8,0.95 0.8,0.625 C 0.8,0.375 0.5,0.25 0.5,0.0" />
+			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 1.4,0.2 L 1.6,0.2" />
+			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 1.25,0.4 L 1.75,0.4" />
+			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 1.1,0.6 L 1.9,0.6" />
+			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 0.4,1.2 L 0.6,1.2" />
+			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 0.25,1.4 L 0.75,1.4" />
+			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 0.1,1.6 L 0.9,1.6" />
+		</svg:pattern>
+
 		<svg:marker fill="none" id="canal-lock" markerHeight="5.9px" markerUnits="userSpaceOnUse" markerWidth="5.9px" orient="auto" refX="1px" refY="5px" stroke="#000000" stroke-width="0.75px" stroke-opacity="1" viewBox="0 0 10 10">
 			<svg:path d="M 1,0 L -2,5 L 1,10"/>
 		</svg:marker>

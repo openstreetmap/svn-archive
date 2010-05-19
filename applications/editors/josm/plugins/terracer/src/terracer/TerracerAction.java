@@ -202,12 +202,6 @@ public final class TerracerAction extends JosmAction {
                             + "Parameters were: segments " + segments
                             + " from " + from + " to " + to + " step " + step);
         }
-		
-        // now find which is the longest side connecting the first node
-        Pair<Way, Way> interp = findFrontAndBack(outline);
-
-        final double frontLength = wayLength(interp.a);
-        final double backLength = wayLength(interp.b);
 
         // new nodes array to hold all intermediate nodes
         Node[][] new_nodes = new Node[2][nb + 1];
@@ -215,8 +209,16 @@ public final class TerracerAction extends JosmAction {
         this.commands = new LinkedList<Command>();
         Collection<Way> ways = new LinkedList<Way>();
 
+		// Should this building be terraced (i.e. is there more then one section?)
 		if (nb > 1) {
 		    // create intermediate nodes by interpolating.
+		    
+		    // now find which is the longest side connecting the first node
+			Pair<Way, Way> interp = findFrontAndBack(outline);
+
+			final double frontLength = wayLength(interp.a);
+			final double backLength = wayLength(interp.b);
+			
 		    for (int i = 0; i <= nb; ++i) {
 		        new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i / nb);
 		        new_nodes[1][i] = interpolateAlong(interp.b, backLength * i / nb);
@@ -253,7 +255,7 @@ public final class TerracerAction extends JosmAction {
 		        this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(outline), true, true));
 		    }
 		} else {
-			// Single building, just add the address details
+			// Single section, just add the address details
 			Way newOutline;
 			newOutline = addressBuilding(outline, street, streetName, From);
 			ways.add(newOutline);

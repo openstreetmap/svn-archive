@@ -120,6 +120,14 @@
 				</else>
 			</else>
 		</rule>
+		<rule e="way" k="boundary" v="national_park">
+			<area class="leisure-national_park"/>
+			<symbol ref="bird" position="center"/>
+		</rule>
+		<rule e="way" k="leisure" v="landscape_reserve">
+			<area class="leisure-landscape_reserve"/>
+			<symbol ref="bird" position="center"/>
+		</rule>
 		<rule e="way" k="leisure" v="nature_reserve">
 			<area class="leisure-nature_reserve"/>
 			<symbol ref="bird" position="center"/>
@@ -5416,8 +5424,16 @@
 			stroke-width: 0.2px;
 			}
 
+			.leisure-national_park {
+			fill: url(#national-park-pattern);
+			}
 			.leisure-nature_reserve {
-			fill: #c7f1a3;
+			fill: url(#nature-reserve-pattern);
+			stroke: #6fc18e;
+			stroke-width: 0.2px;
+			}
+			.leisure-landscape_reserve {
+			fill: url(#landscape-reserve-pattern);
 			stroke: #6fc18e;
 			stroke-width: 0.2px;
 			}
@@ -6472,6 +6488,7 @@
 		<svg:pattern id="cycleroad-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#d1fad1" stroke-width="2" d="M5,0 L0,5 M0,0 L5,5"/>
 		</svg:pattern>
+
 		<svg:pattern id="access-private-pattern" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="scale(0.25)">
 			<svg:path fill="none" stroke="#ff4040" stroke-width="0.1" d="M5,0 L0,5 M0,0 L5,5"/>
 		</svg:pattern>
@@ -6583,6 +6600,41 @@
 			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 0.4,1.2 L 0.6,1.2" />
 			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 0.25,1.4 L 0.75,1.4" />
 			<svg:path style="stroke:#ffffff;stroke-width:.06px;fill:none" d="M 0.1,1.6 L 0.9,1.6" />
+		</svg:pattern>
+
+
+
+
+		<svg:pattern id="nature-reserve-pattern" x="0" y="0" width="12" height="6" patternUnits="userSpaceOnUse" patternTransform="scale(1.5)">
+			<svg:path fill="none" stroke="#c7f1a3" stroke-width="0.1" d="
+		M0.2,0.1 L1.8,0.9 M2.2,0.9 L3.8,0.1   M4.2,0.1 L5.8,0.9 M6.2,0.9 L7.8,0.1   M8.2,0.1 L9.8,0.9 M10.2,0.9 L11.8,0.1
+		M0.2,1.9 L1.8,1.1 M2.2,1.1 L3.8,1.9   M4.2,1.9 L5.8,1.1 M6.2,1.1 L7.8,1.9   M8.2,1.9 L9.8,1.1 M10.2,1.1 L11.8,1.9
+		M0.2,2.1 L1.8,2.9 M2.2,2.9 L3.8,2.1   M4.2,2.1 L5.8,2.9 M6.2,2.9 L7.8,2.1   M8.2,2.1 L9.8,2.9 M10.2,2.9 L11.8,2.1
+		M0.2,3.9 L1.8,3.1 M2.2,3.1 L3.8,3.9   M4.2,3.9 L5.8,3.1 M6.2,3.1 L7.8,3.9   M8.2,3.9 L9.8,3.1 M10.2,3.1 L11.8,3.9
+		M0.2,4.1 L1.8,4.9 M2.2,4.9 L3.8,4.1   M4.2,4.1 L5.8,4.9 M6.2,4.9 L7.8,4.1   M8.2,4.1 L9.8,4.9 M10.2,4.9 L11.8,4.1
+		M0.2,5.9 L1.8,5.1 M2.2,5.1 L3.8,5.9   M4.2,5.9 L5.8,5.1 M6.2,5.1 L7.8,5.9   M8.2,5.9 L9.8,5.1 M10.2,5.1 L11.8,5.9"/>
+			<svg:path style="fill:none;stroke:#c7f1a3;stroke-width:0.15;stroke-linecap:round;stroke-linejoin:round;" d="
+		M1.2,2.6 L1.2,1.4 L1.8,2.6 L1.8,1.4
+		M2.2,2.1 2.45,2.1 A 0.25 0.25 0 0 0 2.45,1.4 L2.2,1.4 L2.2,2.6  M2.8,2.6 L2.3,2.1 "/>
+		</svg:pattern>
+
+		<svg:pattern id="landscape-reserve-pattern" x="0" y="0" width="12" height="6" patternUnits="userSpaceOnUse" patternTransform="scale(1.5)">
+			<svg:path fill="none" stroke="#c7f1a3" stroke-width="0.075" d="
+		M0.4,0.2 L1.6,0.8 M2.4,0.8 L3.6,0.2   M4.4,0.2 L5.6,0.8 M6.4,0.8 L7.6,0.2   M8.4,0.2 L9.6,0.8 M10.4,0.8 L11.6,0.2
+		M0.4,1.8 L1.6,1.2 M2.4,1.2 L3.6,1.8   M4.4,1.8 L5.6,1.2 M6.4,1.2 L7.6,1.8   M8.4,1.8 L9.6,1.2 M10.4,1.2 L11.6,1.8
+		M0.4,2.2 L1.6,2.8 M2.4,2.8 L3.6,2.2   M4.4,2.2 L5.6,2.8 M6.4,2.8 L7.6,2.2   M8.4,2.2 L9.6,2.8 M10.4,2.8 L11.6,2.2
+		M0.4,3.8 L1.6,3.2 M2.4,3.2 L3.6,3.8   M4.4,3.8 L5.6,3.2 M6.4,3.2 L7.6,3.8   M8.4,3.8 L9.6,3.2 M10.4,3.2 L11.6,3.8
+		M0.4,4.2 L1.6,4.8 M2.4,4.8 L3.6,4.2   M4.4,4.2 L5.6,4.8 M6.4,4.8 L7.6,4.2   M8.4,4.2 L9.6,4.8 M10.4,4.8 L11.6,4.2
+		M0.4,5.8 L1.6,5.2 M2.4,5.2 L3.6,5.8   M4.4,5.8 L5.6,5.2 M6.4,5.2 L7.6,5.8   M8.4,5.8 L9.6,5.2 M10.4,5.2 L11.6,5.8"/>
+			<svg:path style="fill:none;stroke:#c7f1a3;stroke-width:0.125;stroke-linecap:round;stroke-linejoin:round;" d="
+		M5.2,3.4 L5.2,4.6 L5.8,4.6
+		M6.2,4.1 6.45,4.1 A 0.25 0.25 0 0 0 6.45,3.4 L6.2,3.4 L6.2,4.6  M6.8,4.6 L6.3,4.1 "/>
+		</svg:pattern>
+
+		<svg:pattern id="national-park-pattern" x="0" y="0" width="12" height="6" patternUnits="userSpaceOnUse" patternTransform="scale(1.5)">
+			<svg:path style="fill:none;stroke:#c7f1a3;stroke-width:0.1;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.5;" d="
+		M9.2,6.6 L9.2,5.4 L9.8,6.6 L9.8,5.4
+		M10.2,6.1 10.45,6.1 A 0.25 0.25 0 0 0 10.45,5.4 L10.2,5.4 L10.2,6.6 "/>
 		</svg:pattern>
 
 		<svg:marker fill="none" id="bridge-casing-start" markerHeight="2" markerUnits="strokeWidth" markerWidth="2" orient="auto" refX="1" refY="1" stroke="#707070" stroke-width="0.06px" viewBox="0 0 2 2">

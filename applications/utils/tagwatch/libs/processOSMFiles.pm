@@ -58,6 +58,7 @@ sub processOSMFiles
 		my @FileDetails=split(/\|/,$File);
 
 		my $Country = $FileDetails[0];
+		next if grep(/^$Country$/, split(/,/, $Config{'ignore_osm_files'})); # added to get rid of pseudo-country "Alps" in Europe, 2010-05-20 FR
 		$Country =~ s/.osm(\.bz2|.gz)?$//g;
 		$Country = ucfirst($Country);
 		

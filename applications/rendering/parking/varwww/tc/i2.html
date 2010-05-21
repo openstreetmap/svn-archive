@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head profile="http://www.w3.org/2005/10/profile">
         <title>OpenStreetMap Parking Map</title>
-	<meta name="description" content="A parking map using OpenStreetMap data.">
+	<meta name="description" content="A parking map using OpenStreetMap data." />
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<meta http-equiv="content-script-type" content="text/javascript" />
 	<meta http-equiv="content-style-type" content="text/css" />
 	<link rel="icon" type="image/png" href="favicon.png" />
 	<link rel="stylesheet" type="text/css" href="http://openlayers.org/api/theme/default/style.css" />
 	<link rel="stylesheet" type="text/css" href="map.css" />
-	<link rel="stylesheet" type="text/css" href="print.css" media="print">
+	<link rel="stylesheet" type="text/css" href="print.css" media="print" />
         <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
         <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 	<script type="text/javascript" src="util.js"></script>
@@ -65,7 +65,7 @@
                                                  20037508, 20037508.34)
                 });
 
-                var parking = new OpenLayers.Layer.TMS("Base Map",
+                var parking = new OpenLayers.Layer.TMS("Parking All-In-One Map",
                     "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking/",
                     {
                         type: 'png', getURL: osm_getTileURL,
@@ -74,7 +74,7 @@
                     }
                 );
                 var parkingbw = new OpenLayers.Layer.TMS("Parking Only Map",
-                    "http://toolserver.org/tiles/parking-bw/",
+                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-bw/",
                     {
                         type: 'png', getURL: osm_getTileURL,
                         displayOutsideMaxExtent: true, isBaseLayer: true,
@@ -97,11 +97,11 @@
 */
 
                 var parkingtrans = new OpenLayers.Layer.TMS("Parking",
-                    "http://toolserver.org/tiles/parktrans/",
+                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-layer/",
                     {
                         type: 'png', getURL: osm_getTileURL,
                         displayOutsideMaxExtent: true, isBaseLayer: false,
-                        transparent: true, opacity: 0.8, "visibility": false 
+                        transparent: true, opacity: 0.72, "visibility": false 
                     }
                 );
                 var parkingerr = new OpenLayers.Layer.TMS("Parking Errors",
@@ -151,10 +151,9 @@
     <body onload="init()">
         <div class="noprint" id="descriptionToggle" onclick="toggleInfo()">Parking Map info and legend</div>
         <div class="hide" id="description">A map for parking. Render style by Kay Drangmeister. (<a href="http://wiki.openstreetmap.org/wiki/User:kay_D">Description</a>)<br/>
-            <img title="Legend" src="legend.png" id="legend" alt="The map's legend a.k.a. map key" border="">
+            <img title="Legend" src="legend.png" id="legend" alt="The map's legend a.k.a. map key" />
         </div>
         <!-- define a DIV into which the map will appear. -->
         <div style="position:absolute; top:0; left:0%; width:100%; height:100%" id="map"></div>
     </body>
 </html>
-

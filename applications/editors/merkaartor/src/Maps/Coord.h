@@ -103,6 +103,9 @@ class Coord
         int Lon;
 };
 
+uint qHash(const Coord &c);
+
+
 #ifndef _MOBILE
 #include <ggl/ggl.hpp>
 #include <ggl/geometries/register/point.hpp>

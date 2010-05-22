@@ -372,7 +372,7 @@ foreach ($xml->node as $node) {
 	foreach ($node->tag as $tag) {
 		// Post box reference
 		if ($pbref === True)
-			TagCheck ($node, $tag, "amenity", "post_box", "ref", "Postbox ref", "pb ref");
+			NodeCheck ($node, $tag, "amenity", "post_box", "ref", "Postbox ref", "pb ref");
 
 		// Name
 		if ($name === True) {

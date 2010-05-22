@@ -10,3 +10,4 @@ tr("could not get audio input stream from input URL"); // Java message loading a
 tr("Audio Device Unavailable"); // Java message loading audio data
 tr("You must make your edits public to upload new data"); // use has not made edits public
 tr("town"); // Nominatim search place type
+tr("forest"); // Landuse type used in multipolygons

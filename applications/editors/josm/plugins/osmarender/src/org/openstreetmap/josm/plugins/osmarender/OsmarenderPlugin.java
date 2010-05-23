@@ -25,9 +25,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -58,32 +58,46 @@ public class OsmarenderPlugin extends Plugin {
                 //how handle the exception?
             }
 
-            Set<OsmPrimitive> parents = new HashSet<OsmPrimitive>();
-            DataSet fromDataSet = new DataSet();
-            for (Node n : Main.main.getCurrentDataSet().getNodes()) {
-                if (n.isUsable() && n.getCoor().isWithin(b)) {
-                    fromDataSet.addPrimitive(n);
-                    parents.addAll(n.getReferrers());
-                }
-            }
-            for (OsmPrimitive p : new HashSet<OsmPrimitive>(parents)) {
-                if (p instanceof Way) {
-                    for (Node n : ((Way) p).getNodes()) {
-                        if (n.getCoor().isWithin(b))
-                        	parents.add(n);
-                    }
-                }
-            }
-            for (OsmPrimitive p : parents)
-                fromDataSet.addPrimitive(p);
 
             String firefox = Main.pref.get("osmarender.firefox", "firefox");
             try {
                 // write to plugin dir
-                OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(getPluginDir()+File.separator+"data.osm")), false, fromDataSet.getVersion());
+                OsmWriter w = new OsmWriter(new PrintWriter(new FileOutputStream(getPluginDir()+File.separator+"data.osm")), false, "0.6");
                 w.header();
-                w.writeDataSources(fromDataSet);
-                w.writeContent(fromDataSet);
+
+                // Write nodes, make list of ways and relations
+                Set<OsmPrimitive> parents = new HashSet<OsmPrimitive>();
+                for (Node n : Main.main.getCurrentDataSet().getNodes()) {
+                    if (n.isUsable() && n.getCoor().isWithin(b)) {
+                        parents.addAll(n.getReferrers());
+                        w.visit(n);
+                    }
+                }
+
+                // I'm not sure why (if) is this usefull
+                for (OsmPrimitive p : new HashSet<OsmPrimitive>(parents)) {
+                    if (p instanceof Way) {
+                        for (Node n : ((Way) p).getNodes()) {
+                            if (n.getCoor().isWithin(b))
+                            	parents.add(n);
+                        }
+                    }
+                }
+
+                // Write ways
+                for (OsmPrimitive p: parents) {
+                	if (p instanceof Way) {
+                		w.visit((Way)p);
+                	}
+                }
+
+                // Write relations (should be parent relation also written?)
+                for (OsmPrimitive p: parents) {
+                	if (p instanceof Relation) {
+                		w.visit((Relation)p);
+                	}
+                }
+
                 w.footer();
                 w.close();
 

@@ -24,6 +24,7 @@
 ###########################################################################
 ## History                                                               ##
 ###########################################################################
+## 0.2.19  2010-05-24 Add debug message on ApiError                      ##
 ## 0.2.18  2010-04-20 Fix ChangesetClose and _http_request               ##
 ## 0.2.17  2010-01-02 Capabilities implementation                        ##
 ## 0.2.16  2010-01-02 ChangesetsGet by Alexander Rampp                   ##
@@ -50,18 +51,19 @@
 ## 0.2     2009-05-01 initial import                                     ##
 ###########################################################################
 
-__version__ = '0.2.18'
+__version__ = '0.2.19'
 
 import httplib, base64, xml.dom.minidom, time, sys, urllib
 
 class ApiError(Exception):
     	
-    def __init__(self, status, reason):
-        self.status = status
-        self.reason = reason
+    def __init__(self, status, reason, payload):
+        self.status  = status
+        self.reason  = reason
+        self.payload = payload
     
     def __str__(self):
-        return "Request failed: " + str(self.status) + " - " + self.reason
+        return "Request failed: " + str(self.status) + " - " + self.reason + " - " + self.payload
 
 ###########################################################################
 ## Main class                                                            ##
@@ -589,10 +591,10 @@ class OsmApi:
             self._conn.send(send)
         response = self._conn.getresponse()
         if response.status <> 200:
-            response.read()
+            payload = response.read().strip()
             if response.status == 410:
                 return None
-            raise ApiError(response.status, response.reason)
+            raise ApiError(response.status, response.reason, payload)
         if self._debug:
             print >>sys.stderr, "%s %s %s done"%(time.strftime("%Y-%m-%d %H:%M:%S"),cmd,path2)
         return response.read()

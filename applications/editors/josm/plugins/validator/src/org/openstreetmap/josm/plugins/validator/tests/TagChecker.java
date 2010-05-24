@@ -138,6 +138,8 @@ public class TagChecker extends Test
     protected static int INVALID_KEY_SPACE = 1205;
     protected static int INVALID_HTML      = 1206;
     protected static int PAINT             = 1207;
+    protected static int LONG_VALUE        = 1208;
+    protected static int LONG_KEY          = 1209;
     /** 1250 and up is used by tagcheck */
 
     /** List of sources for spellcheck data */
@@ -471,6 +473,18 @@ public class TagChecker extends Test
             String s = marktr("Key ''{0}'' invalid.");
             String key = prop.getKey();
             String value = prop.getValue();
+            if( checkValues && (value!=null && value.length() > 255) && !withErrors.contains(p, "LV"))
+            {
+                errors.add( new TestError(this, Severity.ERROR, tr("Tag value longer than allowed"),
+                        tr(s, key), MessageFormat.format(s, key), LONG_VALUE, p) );
+                withErrors.add(p, "LV");
+            }
+            if( checkKeys && (value!=null && key.length() > 255) && !withErrors.contains(p, "LK"))
+            {
+                errors.add( new TestError(this, Severity.ERROR, tr("Tag key longer than allowed"),
+                        tr(s, key), MessageFormat.format(s, key), LONG_KEY, p) );
+                withErrors.add(p, "LK");
+            }
             if( checkValues && (value==null || value.trim().length() == 0) && !withErrors.contains(p, "EV"))
             {
                 errors.add( new TestError(this, Severity.WARNING, tr("Tags with empty values"),

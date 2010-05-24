@@ -67,16 +67,17 @@ my $zipfile = File::Spec->join($Config->get("WorkingDirectory"),"uploadable","ti
 $Cmd = sprintf("unzip -d %s -q %s",$tempdir,$zipfile);
 $success = runCommand($Cmd,$PID);
 
-if ($success) 
+if ($success) # remove all zips from the test, because they should not be uploaded to the server.
 { 
-    my @files = glob($zipfile);
-    foreach my $zip (@files) {
+    my @files = glob($zipfile); 
+    foreach my $zip (@files) 
+    {
         print "removing $zip \n";
         unlink($zip) or die "cannot delete $zip";
     }
 }
 
-my @pngList = ("_12_0_0.png","_13_1_0.png","_14_1_1.png");
+my @pngList = ("_12_0_0.png","_13_1_0.png","_14_1_1.png"); # these tiles contain font samples
 foreach my $pngSuffix (@pngList)
 {
     my $fonttestRef = File::Spec->join("tests","fonttest".$pngSuffix);
@@ -93,3 +94,5 @@ foreach my $pngSuffix (@pngList)
     # libGD comparison returns true if images are different. 
     die "Fonttest failed, check installed fonts. $renderResult $fonttestRef" if ($Image->compare($ReferenceImage) & GD_CMP_IMAGE)
 }
+
+

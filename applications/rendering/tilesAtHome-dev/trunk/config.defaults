@@ -84,8 +84,8 @@ ClientID = 0
 # APIServers are used for standard map downloads and XAPIServers are used for downloads 
 # with the specification of predicates.
 # The actual download URLs need to be defined by API_<NAME> and XAPI_<NAME> settings.
-#APIServers = API,ROMA,XAPI
-APIServers = API,TRAPI,ROMA
+#APIServers = TRAPI,ROMA,XAPI,API
+APIServers = TRAPI,ROMA,XAPI
 XAPIServers = XAPI
 
 

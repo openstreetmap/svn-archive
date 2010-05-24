@@ -195,14 +195,19 @@ public class RequestProcessor extends Thread
                                     nodes.add(Long.parseLong(item.substring(4)));
                                 } else if (item.startsWith("relation")) {
                                     relations.add(Long.parseLong(item.substring(8)));
+                                } else if (item.startsWith("rel")) {
+                                    relations.add(Long.parseLong(item.substring(3)));
                                 } else {
                                     System.out.println("RemoteControl: invalid selection '"+item+"' ignored");
                                 }
                             }
-                            for (Way w : Main.main.getCurrentDataSet().getWays()) if (ways.contains(w.getId())) newSel.add(w);
-                            for (Node n : Main.main.getCurrentDataSet().getNodes()) if (nodes.contains(n.getId())) newSel.add(n);
-                            for (Relation r : Main.main.getCurrentDataSet().getRelations()) if (relations.contains(r.getId())) newSel.add(r);
-                            Main.main.getCurrentDataSet().setSelected(newSel);
+                            DataSet ds = Main.main.getCurrentDataSet();
+                            if(ds == null) // e.g. download failed
+                                return;
+                            for (Way w : ds.getWays()) if (ways.contains(w.getId())) newSel.add(w);
+                            for (Node n : ds.getNodes()) if (nodes.contains(n.getId())) newSel.add(n);
+                            for (Relation r : ds.getRelations()) if (relations.contains(r.getId())) newSel.add(r);
+                            ds.setSelected(newSel);
                             if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true))
                                 new AutoScaleAction("selection").actionPerformed(null);
                         }

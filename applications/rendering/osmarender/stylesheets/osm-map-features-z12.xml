@@ -1733,6 +1733,9 @@
 			stroke-width: 0.2px;
 			}
 
+			.leisure-park {
+			fill: #c7f1a3;
+			}
 			.leisure-national_park {
 			fill: url(#national-park-pattern);
 			}

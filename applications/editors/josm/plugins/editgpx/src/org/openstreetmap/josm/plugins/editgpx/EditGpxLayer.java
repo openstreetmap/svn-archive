@@ -37,7 +37,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class EditGpxLayer extends Layer {
 
 	private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(EditGpxPlugin.class.getResource("/images/editgpx_layer.png")));
-	private final EditGpxData data;
+	public final EditGpxData data;
 	private GPXLayerImportAction layerImport;
 
 	public EditGpxLayer(String str, EditGpxData gpxData) {

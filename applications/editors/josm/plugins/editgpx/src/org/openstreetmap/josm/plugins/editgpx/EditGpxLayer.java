@@ -11,14 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -29,31 +21,29 @@ import javax.swing.JSeparator;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
-import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.tools.DateUtils;
+import org.openstreetmap.josm.plugins.editgpx.data.EditGpxData;
+import org.openstreetmap.josm.plugins.editgpx.data.EditGpxTrack;
+import org.openstreetmap.josm.plugins.editgpx.data.EditGpxTrackSegment;
+import org.openstreetmap.josm.plugins.editgpx.data.EditGpxWayPoint;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 
 public class EditGpxLayer extends Layer {
 
 	private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(EditGpxPlugin.class.getResource("/images/editgpx_layer.png")));
-	private DataSet dataSet;
+	private final EditGpxData data;
 	private GPXLayerImportAction layerImport;
 
-	public EditGpxLayer(String str, DataSet ds) {
+	public EditGpxLayer(String str, EditGpxData gpxData) {
 		super(str);
-		dataSet = ds;
-		layerImport = new GPXLayerImportAction(dataSet);
+		data = gpxData;
+		layerImport = new GPXLayerImportAction(data);
 	}
 
 	/**
@@ -62,7 +52,7 @@ public class EditGpxLayer extends Layer {
 	 */
 	public void initializeImport() {
 		try {
-			if(dataSet.getNodes().isEmpty() ) {
+			if(data.isEmpty()) {
 				layerImport.activateImport();
 			}
 		} catch (Exception e) {
@@ -116,10 +106,14 @@ public class EditGpxLayer extends Layer {
 
 		//don't iterate through dataSet whiling making changes
 		synchronized(layerImport.importing) {
-			for(Node n: dataSet.getNodes()) {
-				if (!n.isDeleted()) {
-					Point pnt = Main.map.mapView.getPoint(n.getEastNorth());
-					g.drawOval(pnt.x - 2, pnt.y - 2, 4, 4);
+			for (EditGpxTrack track: data.getTracks()) {
+				for (EditGpxTrackSegment segment: track.getSegments()) {
+					for (EditGpxWayPoint wayPoint: segment.getWayPoints()) {
+						if (!wayPoint.isDeleted()) {
+							Point pnt = Main.map.mapView.getPoint(wayPoint.getCoor().getEastNorth());
+							g.drawOval(pnt.x - 2, pnt.y - 2, 4, 4);
+						}
+					}
 				}
 			}
 		}
@@ -144,76 +138,7 @@ public class EditGpxLayer extends Layer {
 	 * @return GPXData
 	 */
 	private GpxData toGpxData(boolean anonTime) {
-		GpxData gpxData = new GpxData();
-		HashSet<Node> doneNodes = new HashSet<Node>();
-		//add all ways
-		for (Way w : dataSet.getWays()) {
-			if (w.isIncomplete() || w.isDeleted()) continue;
-			List<Collection<WayPoint>> segments = new ArrayList<Collection<WayPoint>>();
-
-			List<WayPoint> trkseg = null;
-			for (Node n : w.getNodes()) {
-				if (n.isIncomplete() || n.isDeleted()) {
-					trkseg = null;
-					continue;
-				}
-
-				Date tstamp = n.getTimestamp();
-
-				if (trkseg == null) {
-					trkseg = new ArrayList<WayPoint>();
-					segments.add(trkseg);
-				}
-				doneNodes.add(n);
-
-				WayPoint wpt = new WayPoint(n.getCoor());
-				if (anonTime) {
-					wpt.attr.put("time", "1970-01-01T00:00:00Z");
-				} else {
-					wpt.attr.put("time", DateUtils.fromDate(tstamp));
-				}
-				wpt.setTime();
-
-				trkseg.add(wpt);
-			}
-
-			// Do not create empty segments
-			for (Iterator<Collection<WayPoint>>  segIt = segments.iterator(); segIt.hasNext(); ) {
-				if (segIt.next().isEmpty()) {
-					segIt.remove();
-				}
-			}
-
-			Map<String, Object> trkAttributes = new HashMap<String, Object>();
-			if (w.get("name") != null) {
-				trkAttributes.put("name", w.get("name"));
-			}
-			if (!segments.isEmpty()) {
-				gpxData.tracks.add(new ImmutableGpxTrack(segments, trkAttributes));
-			}
-
-		}
-
-		// add nodes as waypoints
-		for (Node n : dataSet.getNodes()) {
-			if (n.isIncomplete() || n.isDeleted() || doneNodes.contains(n)) continue;
-
-			Date tstamp = n.getTimestamp();
-
-			WayPoint wpt = new WayPoint(n.getCoor());
-			if (anonTime) {
-				wpt.attr.put("time", "1970-01-01T00:00:00Z");
-			} else {
-				wpt.attr.put("time", DateUtils.fromDate(tstamp));
-			}
-			wpt.setTime();
-
-			if (n.getKeys() != null && n.keySet().contains("name")) {
-				wpt.attr.put("name", n.get("name"));
-			}
-			gpxData.waypoints.add(wpt);
-		}
-		return gpxData;
+		return data.createGpxData();
 	}
 
 	//context item "Convert to GPX layer"

@@ -169,7 +169,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.5' ; 
+$VERSION = '5.6' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -320,15 +320,14 @@ sub getNode2 {
 	my @gTags = () ;
 	if($line =~ /^\s*\<node/) {
 
-		my ($id)   = ($line =~ /^\s*\<node id=[\'\"]([-\d]+)[\'\"]/);	# get node id
-		my ($lon) = ($line =~ /^.+lon=[\'\"]([-\d,\.]+)[\'\"]/);	# get position
-		my ($lat) = ($line =~ /^.+lat=[\'\"]([-\d,\.]+)[\'\"]/);	# get position
+		my $version ; my $timestamp ; my $uid ; my $id ; my $lon ; my $lat ; my $u ;
+		($id, $version, $timestamp, $uid, $u, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
 
-		#my ($u) = ($line =~ /^.+user=[\'\"]([-\w\d\s]+)[\'\"]/);	# get value 
-		my ($u) = ($line =~ /^.+user=[\'\"](.+)[\'\"]/);	# get value 
 
-		if (!$u) {
+		if (!$id) {
+			($id, $version, $timestamp, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
 			$u = "unknown" ;
+			$uid = 0 ;
 		}
 
 		if (!$id or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
@@ -441,16 +440,9 @@ sub getWay2 {
 	my @gTags ;
 	my @gNodes ;
 	if($line =~ /^\s*\<way/) {
-		my ($id)   = ($line =~ /^\s*\<way id=[\'\"]([-\d]+)[\'\"]/); # get way id
-		my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/);       # get value // REGEX???
-		if (!$u) {
-			$u = "unknown" ;
-		}
-		if (!$id) {
-			print "ERROR reading osm file, line follows (expecting way id):\n", $line, "\n" ; 
-		}
-		unless ($id) { next; }
 
+		my $version ; my $timestamp ; my $uid ; my $id ; my $u ;
+		($id, $version, $timestamp, $uid, $u) = ( $line =~ /^\s*<way id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]/ ) ;
 
 		nextLine() ;
 		while (not($line =~ /\/way>/)) { # more way data

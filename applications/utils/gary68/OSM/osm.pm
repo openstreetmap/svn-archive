@@ -169,7 +169,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.6' ; 
+$VERSION = '5.7' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -441,8 +441,20 @@ sub getWay2 {
 	my @gNodes ;
 	if($line =~ /^\s*\<way/) {
 
-		my $version ; my $timestamp ; my $uid ; my $id ; my $u ;
-		($id, $version, $timestamp, $uid, $u) = ( $line =~ /^\s*<way id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]/ ) ;
+		my $version ; my $timestamp ; my $uid ; my $id ; my $u ; my $changeset ;
+		($id, $version, $timestamp, $uid, $u, $changeset) = ( $line =~ /^\s*<way id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]\s*changeset=[\'\"](.+)[\'\"]/ ) ;
+
+		if (!defined $id) {
+			($id, $version, $timestamp, $uid, $u) = ( $line =~ /^\s*<way id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]/ ) ;
+		}
+
+		if (!defined $id) {
+			($id, $version, $timestamp, $changeset) = ( $line =~ /^\s*<way id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*changeset=[\'\"](.+)[\'\"]/ ) ;
+			$u = "unknown" ;
+			$uid = 0 ;
+		}
+
+		if (!defined $id) { print "ERROR: $line" ;}
 
 		nextLine() ;
 		while (not($line =~ /\/way>/)) { # more way data

@@ -15,14 +15,14 @@
  */
 package wmsturbochallenge;
 
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.data.ProjectionBounds;
-import org.openstreetmap.josm.data.coor.EastNorth;
-
-import java.awt.Point;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
+
+import org.openstreetmap.josm.data.ProjectionBounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MapView;
 
 class fake_map_view extends MapView {
 	public ProjectionBounds view_bounds;
@@ -36,6 +36,7 @@ class fake_map_view extends MapView {
 	public double max_east_west;
 
 	public fake_map_view(MapView parent, double scale) {
+		super(null); //TODO MapView constructor contains registering listeners and other code, that probably shouldn't be called in fake map view
 		this.parent = parent;
 		this.scale = scale;
 

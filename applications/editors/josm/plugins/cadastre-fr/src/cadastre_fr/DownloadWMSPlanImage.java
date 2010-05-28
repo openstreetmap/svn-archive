@@ -19,7 +19,7 @@ public class DownloadWMSPlanImage {
     private Future<Task> task = null;
     private WMSLayer wmsLayer;
     private Bounds bounds;
-    private boolean dontGeoreference = false;
+    private static boolean dontGeoreference = false;
     private static String errorMessage;
     
     private class Task extends PleaseWaitRunnable {
@@ -106,6 +106,7 @@ public class DownloadWMSPlanImage {
     public void download(WMSLayer wmsLayer) {
         MapView mv = Main.map.mapView;
         Bounds bounds = new Bounds(mv.getLatLon(0, mv.getHeight()), mv.getLatLon(mv.getWidth(), 0));
+        dontGeoreference = false;
 
         //Main.worker.execute(new DownloadWMSPlanImage(wmsLayer, bounds));
         Task t = new Task(wmsLayer, bounds);

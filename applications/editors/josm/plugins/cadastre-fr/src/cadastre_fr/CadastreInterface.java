@@ -174,7 +174,15 @@ public class CadastreInterface {
                 if (listOfCommunes.size() > 1) {
                     // commune unknown, prompt the list of communes from
                     // server and try with codeCommune
-                    wmsLayer.setCodeCommune(selectCommuneDialog());
+                    String selected = selectMunicipalityDialog(wmsLayer);
+                    if (selected != null) {
+                        String newCodeCommune = selected.substring(1, selected.indexOf(">")-2);
+                        String newLocation = selected.substring(selected.indexOf(">")+1, selected.lastIndexOf(" - "));
+                        wmsLayer.setCodeCommune(newCodeCommune);
+                        wmsLayer.setLocation(newLocation);
+                        Main.pref.put("cadastrewms.codeCommune", newCodeCommune);
+                        Main.pref.put("cadastrewms.location", newLocation);
+                    }
                     checkLayerDuplicates(wmsLayer);
                     interfaceRef = postForm(wmsLayer, wmsLayer.getCodeCommune());
                 }
@@ -380,7 +388,7 @@ public class CadastreInterface {
         }
     }
     
-    private String selectCommuneDialog() {
+    private String selectMunicipalityDialog(WMSLayer wmsLayer) {
         JPanel p = new JPanel(new GridBagLayout());
         String[] communeList = new String[listOfCommunes.size() + 1];
         communeList[0] = tr("Choose from...");
@@ -400,8 +408,7 @@ public class CadastreInterface {
         // till here
         if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
             return null;
-        String result = listOfCommunes.elementAt(inputCommuneList.getSelectedIndex()-1);
-        return result.substring(1, result.indexOf(">")-2);
+        return listOfCommunes.elementAt(inputCommuneList.getSelectedIndex()-1);
     }
 
     private int selectFeuilleDialog() {

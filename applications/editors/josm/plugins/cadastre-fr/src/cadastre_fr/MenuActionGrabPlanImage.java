@@ -63,7 +63,10 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
 
     public void actionInterrupted() {
         actionCompleted();
-        wmsLayer = null;
+        if (wmsLayer != null) {
+            Main.map.mapView.removeLayer(wmsLayer);
+            wmsLayer = null;
+        }
     }
 
     @Override
@@ -100,7 +103,12 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     public void run() {
         // wait until plan image is fully loaded and joined into one single image
         boolean loadedFromCache = downloadWMSPlanImage.waitFinished();
-        if (wmsLayer.images.size() == 1 && !loadedFromCache) {
+        if (loadedFromCache) {
+            Main.map.repaint();
+        } else if (wmsLayer.images.size() == 0) {
+            // action cancelled or image loaded from cache (and already georeferenced)
+            actionInterrupted();
+        } else {
             int reply = JOptionPane.CANCEL_OPTION;
             if (wmsLayer.isAlreadyGeoreferenced()) {
                 reply = JOptionPane.showConfirmDialog(null,
@@ -119,8 +127,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
                 else
                     startGeoreferencing();
             }
-        } else // action cancelled or image loaded from cache (and already georeferenced)
-            Main.map.repaint();
+        }
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -269,14 +276,14 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         				"or just retry "+action+" ?"), "",
         		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
         		null, options, options[0]);
+        countMouseClicked = 0;
         if (selectedValue == 0) { // "Cancel"
         	// remove layer
         	Main.map.mapView.removeLayer(wmsLayer);
             wmsLayer = null;
             Main.map.mapView.removeMouseListener(this);
-        	return false;
-        } else
-            countMouseClicked = 0;
+            return false;
+        }
         return true;
     }
 

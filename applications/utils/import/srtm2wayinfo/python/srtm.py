@@ -5,8 +5,10 @@
 
 """Load and process SRTM data."""
 
-from __future__ import with_statement
+#import xml.dom.minidom
+from HTMLParser import HTMLParser
 import ftplib
+import httplib
 import re
 import pickle
 import os.path
@@ -51,11 +53,16 @@ class InvalidTileError(Exception):
 
 class SRTMDownloader:
     """Automatically download SRTM tiles."""
-    def __init__(self, server="e0srp01u.ecs.nasa.gov",
-            directory="/srtm/version2/SRTM3", cachedir="cache"):
+    def __init__(self, server="dds.cr.usgs.gov",
+                 directory="/srtm/version2_1/SRTM3/",
+                 cachedir="cache",
+                 protocol="http"):
+        self.protocol=protocol
         self.server = server
         self.directory = directory
         self.cachedir = cachedir
+	print "SRTMDownloader - server= %s, directory=%s." % \
+              (self.server, self.directory)
         if not os.path.exists(cachedir):
             os.mkdir(cachedir)
         self.filelist = {}
@@ -83,26 +90,78 @@ class SRTMDownloader:
     def createFileList(self):
         """SRTM data is split into different directories, get a list of all of
             them and create a dictionary for easy lookup."""
-        ftp = ftplib.FTP(self.server)
-        try:
-            ftp.login()
-            ftp.cwd(self.directory)
-            continents = ftp.nlst()
-            for continent in continents:
-                print "Downloading file list for", continent
-                ftp.cwd(self.directory+"/"+continent)
-                files = ftp.nlst()
-                for filename in files:
-                    self.filelist[self.parseFilename(filename)] = (
+        if self.protocol == "ftp":
+            ftp = ftplib.FTP(self.server)
+            try:
+                ftp.login()
+                ftp.cwd(self.directory)
+                continents = ftp.nlst()
+                for continent in continents:
+                    print "Downloading file list for", continent
+                    ftp.cwd(self.directory+"/"+continent)
+                    files = ftp.nlst()
+                    for filename in files:
+                        self.filelist[self.parseFilename(filename)] = (
+                                continent, filename)
+            finally:
+                ftp.close()
+            # Add meta info
+            self.filelist["server"] = self.server
+            self.filelist["directory"] = self.directory
+            with open(self.filelist_file , 'wb') as output:
+                pickle.dump(self.filelist, output)
+        else:
+            self.createFileListHTTP()
+
+    def createFileListHTTP(self):
+        """Create a list of the available SRTM files on the server using
+        HTTP file transfer protocol (rather than ftp).
+        30may2010  GJ ORIGINAL VERSION
+        """
+        print "createFileListHTTP"
+        conn = httplib.HTTPConnection(self.server)
+        conn.request("GET",self.directory)
+        r1 = conn.getresponse()
+        if r1.status==200:
+            print "status200 received ok"
+        else:
+            print "oh no = status=%d %s" \
+                  % (r1.status,r1.reason)
+
+        data = r1.read()
+        parser = parseHTMLDirectoryListing()
+        parser.feed(data)
+        continents = parser.getDirListing()
+        print continents
+
+        for continent in continents:
+            print "Downloading file list for", continent
+            conn.request("GET","%s/%s" % \
+                         (self.directory,continent))
+            r1 = conn.getresponse()
+            if r1.status==200:
+                print "status200 received ok"
+            else:
+                print "oh no = status=%d %s" \
+                      % (r1.status,r1.reason)
+            data = r1.read()
+            parser = parseHTMLDirectoryListing()
+            parser.feed(data)
+            files = parser.getDirListing()
+
+            for filename in files:
+                self.filelist[self.parseFilename(filename)] = (
                             continent, filename)
-        finally:
-            ftp.close()
+
+            print self.filelist
         # Add meta info
         self.filelist["server"] = self.server
         self.filelist["directory"] = self.directory
         with open(self.filelist_file , 'wb') as output:
             pickle.dump(self.filelist, output)
 
+
+        
     def parseFilename(self, filename):
         """Get lat/lon values from filename."""
         match = self.filename_regex.match(filename)
@@ -134,21 +193,43 @@ class SRTMDownloader:
 
     def downloadTile(self, continent, filename):
         """Download a tile from NASA's server and store it in the cache."""
-        ftp = ftplib.FTP(self.server)
-        try:
-            ftp.login()
-            ftp.cwd(self.directory+"/"+continent)
-            # WARNING: This is not thread safe
-            self.ftpfile = open(self.cachedir + "/" + filename, 'wb')
-            self.ftp_bytes_transfered = 0
-            print ""
+        if self.protocol=="ftp":
+            ftp = ftplib.FTP(self.server)
             try:
-                ftp.retrbinary("RETR "+filename, self.ftpCallback)
+                ftp.login()
+                ftp.cwd(self.directory+"/"+continent)
+                # WARNING: This is not thread safe
+                self.ftpfile = open(self.cachedir + "/" + filename, 'wb')
+                self.ftp_bytes_transfered = 0
+                print ""
+                try:
+                    ftp.retrbinary("RETR "+filename, self.ftpCallback)
+                finally:
+                    self.ftpfile.close()
+                    self.ftpfile = None
             finally:
+                ftp.close()
+        else:
+            #Use HTTP
+            conn = httplib.HTTPConnection(self.server)
+            conn.set_debuglevel(0)
+            filepath = "%s%s%s" % \
+                         (self.directory,continent,filename)
+            print "filepath=%s" % filepath
+            conn.request("GET", filepath)
+            r1 = conn.getresponse()
+            if r1.status==200:
+                print "status200 received ok"
+                data = r1.read()
+                self.ftpfile = open(self.cachedir + "/" + filename, 'wb')
+                self.ftpfile.write(data)
                 self.ftpfile.close()
                 self.ftpfile = None
-        finally:
-            ftp.close()
+            else:
+                print "oh no = status=%d %s" \
+                      % (r1.status,r1.reason)
+
+
 
     def ftpCallback(self, data):
         """Called by ftplib when some bytes have been received."""
@@ -221,7 +302,7 @@ class SRTMTile:
         assert y < self.size, "y: %d<%d" % (y, self.size)
         # Same as calcOffset, inlined for performance reasons
         offset = x + self.size * (self.size - y - 1)
-        print offset
+        #print offset
         value = self.data[offset]
         if value == -32768:
             return None # -32768 is a special value for areas with no data
@@ -257,6 +338,59 @@ class SRTMTile:
         #        value00, value10, value1, value01, value11, value2, value)
         return value
 
+
+
+class parseHTMLDirectoryListing(HTMLParser):
+
+    def __init__(self):
+        #print "parseHTMLDirectoryListing.__init__"
+        HTMLParser.__init__(self)
+        self.title="Undefined"
+        self.isDirListing = False
+        self.dirList=[]
+        self.inTitle = False
+        self.inHyperLink = False
+        self.currAttrs=""
+        self.currHref=""
+
+    def handle_starttag(self, tag, attrs):
+        #print "Encountered the beginning of a %s tag" % tag
+        if tag=="title":
+            self.inTitle = True
+        if tag == "a":
+            self.inHyperLink = True
+            self.currAttrs=attrs
+            for attr in attrs:
+                if attr[0]=='href':
+                    self.currHref = attr[1]
+            
+
+    def handle_endtag(self, tag):
+        #print "Encountered the end of a %s tag" % tag
+        if tag=="title":
+            self.inTitle = False
+        if tag == "a":
+            # This is to avoid us adding the parent directory to the list.
+            if self.currHref!="":
+                self.dirList.append(self.currHref)
+            self.currAttrs=""
+            self.currHref=""
+            self.inHyperLink = False
+
+    def handle_data(self,data):
+        if self.inTitle:
+            self.title = data
+            print "title=%s" % data
+            if "Index of" in self.title:
+                #print "it is an index!!!!"
+                self.isDirListing = True
+        if self.inHyperLink:
+            # We do not include parent directory in listing.
+            if  "Parent Directory" in data:
+                self.currHref=""
+
+    def getDirListing(self):
+        return self.dirList
 
 #DEBUG ONLY
 if __name__ == '__main__':

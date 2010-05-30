@@ -151,6 +151,7 @@ public class CadastreInterface {
     public void resetInterfaceRefIfNewLayer(String newWMSLayerName) {
         if (!newWMSLayerName.equals(lastWMSLayerName)) {
             interfaceRef = null;
+            cookie = null; // new since WMS server requires that we come back to the main form
         }
     }
 

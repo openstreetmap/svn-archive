@@ -1,8 +1,12 @@
 package org.openstreetmap.josm.plugins.videomapping;
 
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -46,6 +50,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	private Collection<WayPoint> selected;
 	private TimerTask ani;
 	private boolean dragIcon=false; //do we move the icon by hand?
+	private WayPoint iconPosition;
 	private Point mouse;
 	private ImageIcon icon;
 		
@@ -54,17 +59,12 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		this.ls=ls;
 		l= new GpsPlayer(ls);
 		selected = new ArrayList<WayPoint>();
-		icon=ImageProvider.get("videomapping.png");
-		Action a = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				System.err.println("!!!boom!!!");
-			}};		
+		icon=ImageProvider.get("videomapping.png");		
 		Main.map.mapView.addMouseListener(this);
 		Main.map.mapView.addMouseMotionListener(this);
-		
+		Main.map.mapView.getRootPane().getGlassPane().addKeyListener(this);
 		//Main.panel.addKeyListener(this);
-		Main.map.mapView.addKeyListener(this);
+		//Main.map.mapView.addKeyListener(this);
 		//Main.contentPane.getInputMap().put(KeyStroke.getKeyStroke("SPACE"),"pressed");
 		//Main.contentPane.getActionMap().put("pressed",a);
 
@@ -82,7 +82,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		};
 		Timer t= new Timer();
 		//t.schedule(ani,2000,2000);
-		l.next();l.next();
+		//l.next();
 		
 	}
 
@@ -166,10 +166,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		//draw cam icon
 		if(dragIcon)
 		{
-			if(mouse!=null)
+			if(iconPosition!=null)
 			{
-				p=mouse;
+				p=Main.map.mapView.getPoint(iconPosition.getEastNorth());
 				icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
+				g.drawString(iconPosition.getTime().toString(),p.x,p.y);
 			}
 		}
 		else
@@ -182,10 +183,10 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		}
 	}
 
-	private void markNearestNode(Point mouse) {
+	private void markNearestWayPoints(Point mouse) {
 		final int MAX=10; 
 		Point p;		
-		Rectangle rect = new Rectangle(mouse.x-MAX/2,mouse.y-MAX/2,mouse.x+MAX/2,mouse.y+MAX/2);
+		Rectangle rect = new Rectangle(mouse.x-MAX/2,mouse.y-MAX/2,MAX,MAX);
 		//iterate through all possible notes
 		for(WayPoint n : ls)
 		{
@@ -198,11 +199,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		}	
 	}
 	
-	private WayPoint getNearestPoint(Point mouse)
+	private WayPoint getNearestWayPoint(Point mouse)
 	{
 		final int MAX=10;
 		Point p;
-		Rectangle rect = new Rectangle(mouse.x-MAX/2,mouse.y-MAX/2,mouse.x+MAX/2,mouse.y+MAX/2);
+		Rectangle rect = new Rectangle(mouse.x-MAX/2,mouse.y-MAX/2,MAX,MAX);
 		//iterate through all possible notes
 		for(WayPoint n : ls) //TODO this is not very clever, what better way to find this WP?
 		{
@@ -260,8 +261,8 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			else
 			{
 				//JOptionPane.showMessageDialog(Main.parent,"test");
-				markNearestNode(e.getPoint());
-				WayPoint wp = getNearestPoint(e.getPoint());
+				markNearestWayPoints(e.getPoint());
+				WayPoint wp = getNearestWayPoint(e.getPoint());
 				if(wp!=null)
 				{
 					l.jump(wp);			
@@ -272,29 +273,13 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		
 	}
 	
-	//gets point on the line between
-	private Point getInterpolated(Point m)
-	{		
-		Point highest = Main.map.mapView.getPoint(l.getCurr().getEastNorth());
-		Point smallest = Main.map.mapView.getPoint(l.getNext().getEastNorth());
-		float slope=(float)(highest.y-smallest.y) / (float)(highest.x - smallest.x);
-		
-		m.y = highest.y+Math.round(slope*(m.x-highest.x));
-		if(m.x<smallest.x)
-		{
-			m=smallest;
-		}
-		if(m.x>highest.x) m=highest;
-		System.out.println((m));
-		return m;
-	}
 	
 	public void mouseDragged(MouseEvent e) {		
 		if(dragIcon)
 		{			
 			mouse=e.getPoint();
 			//restrict to GPS track
-			mouse=getInterpolated(mouse);
+			iconPosition=l.getInterpolatedWaypoint(mouse);
 
 			Main.map.mapView.repaint();
 		}
@@ -329,11 +314,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		{
 			case KeyEvent.VK_RIGHT:
 				{
-					l.jump(10);
+					l.jump(1);
 				};break;
 			case KeyEvent.VK_LEFT:
 			{
-				l.jump(-10);
+				l.jump(-1);
 
 			};break;
 			case KeyEvent.VK_SPACE:

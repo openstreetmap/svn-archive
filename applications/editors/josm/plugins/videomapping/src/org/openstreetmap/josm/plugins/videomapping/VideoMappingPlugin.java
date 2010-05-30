@@ -35,10 +35,11 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 		VMenu.add(VAction);
 		//setup
 		MapView.addLayerChangeListener(this);
-		
+		//plugin informations are provided by build.xml properties
 	}
 		
 	
+	//only used with GPS layers
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
 		if (newLayer instanceof GpxLayer)
 		{

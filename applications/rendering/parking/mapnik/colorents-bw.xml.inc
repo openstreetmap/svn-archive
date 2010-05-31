@@ -33,11 +33,11 @@
 <!ENTITY retail "#e5e5e5"> <!-- "#f1dada" -->
 <!ENTITY residential "#dddddd"> <!-- "#ddd" -->
 <!ENTITY commercial "#dbdbdb"> <!-- "#efc8c8" -->
-<!ENTITY industrial "#dad6d8"> <!-- !!!"#dfd1d6" -->
-<!ENTITY wood "#b6bfb3"> <!-- !!!"#aed1a0" -->
+<!ENTITY industrial "#d8d8d8"> <!-- !!!"#dfd1d6" -->
+<!ENTITY wood "#b9b9b9"> <!-- !!!"#aed1a0" -->
 <!ENTITY allotments "#aea99e"> <!-- !!!"#c8b084" -->
 <!ENTITY brownfield "#8b8b7f"> <!-- !!!"#9d9d6c" -->
-<!ENTITY forest "#96a48e"> <!-- !!!"#8dc56c" -->
+<!ENTITY forest "#999999"> <!-- !!!"#8dc56c" -->
 <!ENTITY military "#dfc9c9"> <!-- !!!"#ffa8a8" -->
 <!ENTITY vineyard "#b7c4b2"> <!-- !!!"#abdf96" -->
 <!ENTITY farm "#d9d5cf"> <!-- !!!"#ead8bd" -->

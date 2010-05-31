@@ -101,7 +101,7 @@
 
     <!-- parking area: customers -->
     <Rule>
-      <Filter>[parking:condition:area]='customers'</Filter>
+      <Filter>[parking:condition:area]='customers' or ([amenity]='parking' and [access]='customers')</Filter>
       &maxscale_zoom10;
       <PolygonSymbolizer>
         <CssParameter name="fill">&pa_customers;</CssParameter>
@@ -115,7 +115,7 @@
     </Rule>
     <Rule>
       &maxscale_zoom16;
-      <Filter>[parking:condition:area]='customers'</Filter>
+      <Filter>[parking:condition:area]='customers' or ([amenity]='parking' and [access]='customers')</Filter>
       <PolygonPatternSymbolizer file="&symbols;/parking_area_cust.png" type="png" width="16" height="16"/>
     </Rule>
 
@@ -141,7 +141,7 @@
 
     <!-- parking area: private -->
     <Rule>
-      <Filter>[amenity] = 'parking' and [parking:condition:area]='private'</Filter>
+      <Filter>[amenity] = 'parking' and ([parking:condition:area]='private' or [access]='private' or [access]='permissive')</Filter>
       &maxscale_zoom10;
       <PolygonSymbolizer>
         <CssParameter name="fill">&pa_private;</CssParameter>
@@ -155,7 +155,7 @@
     </Rule>
     <Rule>
       &maxscale_zoom16;
-      <Filter>[amenity] = 'parking' and [parking:condition:area]='private'</Filter>
+      <Filter>[amenity]='parking' and ([parking:condition:area]='private' or [access]='private' or [access]='permissive')</Filter>
       <PolygonPatternSymbolizer file="&symbols;/parking_area_priv.png" type="png" width="16" height="16"/>
     </Rule>
 
@@ -183,7 +183,7 @@
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,(tags->'amenity') as "amenity",(tags->'tourism') as "tourism",(tags->'name') as "name",(tags->'fee') as "fee",(tags->'parking:condition:area') as "parking:condition:area"
+      (select way,(tags->'amenity') as "amenity",(tags->'tourism') as "tourism",(tags->'name') as "name",(tags->'fee') as "fee",(tags->'access') as "access",(tags->'parking:condition:area') as "parking:condition:area"
        from &prefix;_polygon
        where 
           (tags ? 'amenity') AND (tags->'amenity') in ('parking')

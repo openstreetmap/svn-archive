@@ -169,7 +169,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.7' ; 
+$VERSION = '5.8' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -320,9 +320,12 @@ sub getNode2 {
 	my @gTags = () ;
 	if($line =~ /^\s*\<node/) {
 
-		my $version ; my $timestamp ; my $uid ; my $id ; my $lon ; my $lat ; my $u ;
-		($id, $version, $timestamp, $uid, $u, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
+		my $version ; my $timestamp ; my $uid ; my $id ; my $lon ; my $lat ; my $u ; my $cs ;
+		($id, $version, $timestamp, $uid, $u, $cs, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]\s*changeset=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
 
+		if (!$id) {
+			($id, $version, $timestamp, $uid, $u, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
+		}
 
 		if (!$id) {
 			($id, $version, $timestamp, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
@@ -330,7 +333,7 @@ sub getNode2 {
 			$uid = 0 ;
 		}
 
-		if (!$id or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
+		if ( (! defined $id ) or (! defined $lat) or ( ! defined $lon ) ) {
 			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
 		}
 		else {

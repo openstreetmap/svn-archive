@@ -43,7 +43,13 @@ sub getConfig
     $Config->file("config.defaults", "layers.conf", "tilesAtHome.conf", "authentication.conf");
     $Config->args();                # overwrite config options with command line options
     $Config->file("general.conf");  # overwrite with hardcoded values that must not be changed
-
+    if (-e "localtesting.conf") 
+    {
+        $Config->file("localtesting.conf") ; # FIXME: this should *never* be used in production mode
+        print "*** WARNING: localtesting.conf found, you are using config parameters that may be ***\n*** harmful to normal TilesAtHome Operation. ***\n";
+        print "Press Enter to continue, Strg+C to abort: ";
+        my $input = <STDIN>;
+    } 
     $self->{Config} = $Config;
 
     bless $self, $class;

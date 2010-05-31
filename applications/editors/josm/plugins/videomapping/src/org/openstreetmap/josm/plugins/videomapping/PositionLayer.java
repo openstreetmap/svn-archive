@@ -65,6 +65,16 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		Main.map.mapView.getRootPane().getGlassPane().addKeyListener(this);
 		//Main.panel.addKeyListener(this);
 		//Main.map.mapView.addKeyListener(this);
+		System.err.println("key :");
+
+		Action a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.err.println("!!!boom!!!");
+			}};
+		Main.registerActionShortcut(a, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
+
+		//Main.map.mapView.addKeyListener(this);
 		//Main.contentPane.getInputMap().put(KeyStroke.getKeyStroke("SPACE"),"pressed");
 		//Main.contentPane.getActionMap().put("pressed",a);
 

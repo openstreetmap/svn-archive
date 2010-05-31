@@ -1,19 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head profile="http://www.w3.org/2005/10/profile">
-        <title>OpenStreetMap Parking Map</title>
-	<meta name="description" content="A parking map using OpenStreetMap data." />
-	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<meta http-equiv="content-script-type" content="text/javascript" />
-	<meta http-equiv="content-style-type" content="text/css" />
-	<link rel="icon" type="image/png" href="favicon.png" />
-	<link rel="stylesheet" type="text/css" href="http://openlayers.org/api/theme/default/style.css" />
-	<link rel="stylesheet" type="text/css" href="map.css" />
-	<link rel="stylesheet" type="text/css" href="print.css" media="print" />
-        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-        <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-	<script type="text/javascript" src="util.js"></script>
-        <script type="text/javascript">
+<head profile="http://www.w3.org/2005/10/profile">
+<title>OpenStreetMap Parking Map</title>
+<meta name="description"
+	content="A parking map using OpenStreetMap data." />
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="content-script-type" content="text/javascript" />
+<meta http-equiv="content-style-type" content="text/css" />
+<link rel="icon" type="image/png" href="favicon.png" />
+<link rel="stylesheet" type="text/css"
+	href="http://openlayers.org/api/theme/default/style.css" />
+<link rel="stylesheet" type="text/css" href="map.css" />
+<link rel="stylesheet" type="text/css" href="print.css" media="print" />
+<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
 
             var map;
 
@@ -85,6 +87,7 @@
                 var osm   = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
                 var cycle = new OpenLayers.Layer.OSM.CycleMap("Cycle Map");
                 var osma  = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
+
 /*
                 var hikebike = new OpenLayers.Layer.TMS("Hike & Bike Map",
                     "http://cassini.toolserver.org/tiles/hikebike/",
@@ -104,6 +107,12 @@
                         transparent: true, opacity: 0.72, "visibility": false 
                     }
                 );
+                var parkingicons = new OpenLayers.Layer.Text( "Parking Icons",
+                    {
+                        location:"./parkingicons.txt",
+                        projection: map.displayProjection
+                    }
+                );
                 var parkingerr = new OpenLayers.Layer.TMS("Parking Errors",
                     "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-errors/",
                     {
@@ -115,7 +124,7 @@
 
                 map.addLayers([parking, parkingbw, osm, cycle, osma/*, hikebike*/]);
 
-                map.addLayers([parkingtrans, parkingerr]);
+                map.addLayers([parkingtrans, parkingicons, parkingerr]);
 
                 // Würzburg zoom=16&lat=49.79201&lon=9.94524
                 var lon = 9.94524;
@@ -147,13 +156,18 @@
 
         </script>
 
-    </head>
-    <body onload="init()">
-        <div class="noprint" id="descriptionToggle" onclick="toggleInfo()">Parking Map info and legend</div>
-        <div class="hide" id="description">A map for parking. Render style by Kay Drangmeister. (<a href="http://wiki.openstreetmap.org/wiki/User:kay_D">Description</a>)<br/>
-            <img title="Legend" src="legend.png" id="legend" alt="The map's legend a.k.a. map key" />
-        </div>
-        <!-- define a DIV into which the map will appear. -->
-        <div style="position:absolute; top:0; left:0%; width:100%; height:100%" id="map"></div>
-    </body>
+</head>
+<body onload="init()">
+<div class="noprint" id="descriptionToggle" onclick="toggleInfo()">Parking
+Map info and legend</div>
+<div class="hide" id="description">A map for parking. Render style
+by Kay Drangmeister. (<a
+	href="http://wiki.openstreetmap.org/wiki/User:kay_D">Description</a>)<br />
+<img title="Legend" src="legend.png" id="legend"
+	alt="The map's legend a.k.a. map key" /></div>
+<!-- define a DIV into which the map will appear. -->
+<div
+	style="position: absolute; top: 0; left: 0%; width: 100%; height: 100%"
+	id="map"></div>
+</body>
 </html>

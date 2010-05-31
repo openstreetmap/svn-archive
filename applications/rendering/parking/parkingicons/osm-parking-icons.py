@@ -3,12 +3,9 @@
 
 DSN = 'dbname=gis'
 
-#class SimpleQuoter(object):
-#    def sqlquote(x=None):
-#        return "'bar'"
-
 import sys
 import psycopg2
+import csv
 
 if len(sys.argv) > 1:
     DSN = sys.argv[1]
@@ -18,11 +15,120 @@ conn = psycopg2.connect(DSN)
 print "Encoding for this connection is", conn.encoding
 curs = conn.cursor()
 
+openlayertextfile = csv.writer(open('/home/kayd/shellscripts/parkingicons.txt', 'w'), delimiter='\t',quotechar='"', quoting=csv.QUOTE_MINIMAL)
+openlayertextfile.writerow(['lat','lon','title','description','icon','iconSize','iconOffset'])
 
-curs.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='planet_osm_line'")
-colnames = curs.fetchall()
-
+#curs.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='planet_osm_line'")
+#colnames = curs.fetchall()
 #print colnames
+
+### display disc - maxstay
+"""
+curs.execute("SELECT osm_id,ST_Y(ST_Transform(ST_Centroid(way),4326)),ST_X(ST_Transform(ST_Centroid(way),4326)),\"parking:condition:left:maxstay\" FROM planet_osm_line WHERE \"parking:condition:left:maxstay\" is not NULL")
+pclm_ids = curs.fetchall()
+curs.execute("SELECT osm_id,ST_Y(ST_Transform(ST_Centroid(way),4326)),ST_X(ST_Transform(ST_Centroid(way),4326)),\"parking:condition:right:maxstay\" FROM planet_osm_line WHERE \"parking:condition:right:maxstay\" is not NULL")
+pcrm_ids = curs.fetchall()
+"""
+curs.execute("SELECT osm_id,ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),\"parking:condition:left:maxstay\" FROM planet_osm_line WHERE \"parking:condition:left:maxstay\" is not NULL and \"parking:condition:left\"='disc'")
+pclm_ids = curs.fetchall()
+curs.execute("SELECT osm_id,ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),\"parking:condition:right:maxstay\" FROM planet_osm_line WHERE \"parking:condition:right:maxstay\" is not NULL and \"parking:condition:right\"='disc'")
+pcrm_ids = curs.fetchall()
+pcm_ids = pclm_ids + pcrm_ids
+#print pcm_ids
+
+for pcm_id in pcm_ids:
+    openlayertextfile.writerow([pcm_id[1],pcm_id[2],'Disc parking','Maximum parking time:<br>'+pcm_id[3],'parkingicons/pi-disc.png','16,16','-8,-8'])
+
+### display vehicles
+
+curs.execute("SELECT osm_id,ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),\"parking:condition:left:vehicles\" FROM planet_osm_line WHERE \"parking:condition:left:vehicles\" is not NULL")
+pclv_ids = curs.fetchall()
+curs.execute("SELECT osm_id,ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),\"parking:condition:right:vehicles\" FROM planet_osm_line WHERE \"parking:condition:right:vehicles\" is not NULL")
+pcrv_ids = curs.fetchall()
+pcv_ids = pclv_ids + pcrv_ids
+
+vehicle_icons = {"car":"parkingicons/pi-car.png" , "bus":"parkingicons/pi-bus.png" , "motorcycle":"parkingicons/pi-motorcycle.png"}
+
+for pcv_id in pcv_ids:
+    vehicle_icon = vehicle_icons.get(pcv_id[3],"parkingicons/pi-unkn.png");
+    openlayertextfile.writerow([pcv_id[1],pcv_id[2],'Parking only for','Vehicle: '+pcv_id[3],vehicle_icon,'16,16','-8,-8'])
+
+sys.exit(0)
+
+
+
+"""
+SELECT
+   ST_Y(way) AS lat_wgs84,
+   ST_X(way) AS lon_wgs84,
+   ST_X(transform(way, 31466)) AS KOORD_X,
+   ST_Y(transform(way, 31466)) AS KOORD_Y,
+   skeys(tags) AS key,
+   svals(tags) AS value,
+   osm_id
+FROM
+   dortmund_point
+WHERE
+   exist(tags, 'amenity')
+LIMIT 10;
+
+SELECT
+   ST_Y(way) AS lat_wgs84,
+   ST_X(way) AS lon_wgs84,
+   ST_X(transform(way, 31466)) AS KOORD_X,
+   ST_Y(transform(way, 31466)) AS KOORD_Y,
+   key,
+   value,
+   tags->'name' as name,
+   osm_id
+FROM
+   (SELECT
+       osm_id, way, tags,
+       (each(tags)).key,
+       (each(tags)).value
+    FROM
+       dortmund_point
+    WHERE
+       exist(tags, 'amenity') /*AND exist(tags, 'name')*/
+   ) AS sq
+WHERE
+   key = 'amenity'
+LIMIT 10;
+
+SELECT
+   ST_Y(way) AS lat_wgs84,
+   ST_X(way) AS lon_wgs84,
+   ST_X(transform(way, 31466)) AS KOORD_X,
+   ST_Y(transform(way, 31466)) AS KOORD_Y,
+   key,
+   value,
+   tags->'name' as name,
+   tags->'sport' as sport,
+   osm_id
+FROM
+   (SELECT
+       osm_id, tags,
+       ST_Centroid(way) as way,
+       (each(tags)).key,
+       (each(tags)).value
+    FROM
+       dortmund_polygon
+    WHERE
+       tags->'natural' = 'water'
+       AND
+       tags->'sport' = 'swimming'
+   ) AS sq
+WHERE
+   key = 'natural'
+LIMIT 10;
+"""
+
+
+
+
+
+
+
 
 #print "------------------------------"
 
@@ -99,10 +205,6 @@ for condition in ['free','disc','ticket','customers','residents','private']:
   print "Writing 'parking:condition:left/right=%s' where 'parking:lane:both=%s'" % (condition,condition)
   #print curs.mogrify("UPDATE planet_osm_line SET \"parking:condition:left\"=%s,\"parking:condition:right\"=%s,\"parking:condition:both\"=NULL WHERE \"parking:condition:both\"=%s and osm_id=47907684",[condition,condition,condition])
   curs.execute("UPDATE planet_osm_line SET \"parking:condition:left\"=%s,\"parking:condition:right\"=%s,\"parking:condition:both\"=NULL WHERE \"parking:condition:both\"=%s",[condition,condition,condition])
-  print "-> " , curs.statusmessage
-
-  print "Writing 'parking:condition:left/right:vehicles=x' where 'parking:lane:both:vehicles=x'"
-  curs.execute("UPDATE planet_osm_line SET \"parking:condition:left:vehicles\"=\"parking:condition:both:vehicles\",\"parking:condition:right:vehicles\"=\"parking:condition:both:vehicles\",\"parking:condition:both:vehicles\"=NULL WHERE \"parking:condition:both:vehicles\" is not NULL")
   print "-> " , curs.statusmessage
 
 print "--------------------------------------------------"

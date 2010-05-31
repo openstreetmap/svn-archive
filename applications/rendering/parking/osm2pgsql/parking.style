@@ -135,6 +135,10 @@ node,way   parking:condition:both:maxstay         text         linear
 node,way   parking:condition:area:maxstay         text         polygon
 node,way   parking:error:way                      text         linear
 node,way   parking:error:area                     text         polygon
+node,way   parking:condition:left:vehicles        text         linear
+node,way   parking:condition:right:vehicles       text         linear
+node,way   parking:condition:both:vehicles        text         linear
+node,way   parking:condition:area:vehicles        text         linear
 
 # these are temporary for finland
 node,way   parking:left                           text         linear

@@ -759,22 +759,21 @@ sub downloadData
     $::progressPercent = 0;
     $::currentSubTask = "Download";
     
+    my ($N1,$E1,$S1,$W1);
     # Adjust requested area to avoid boundary conditions
     if ($req->Z < 12) # use separate bbox Border for lowzoom conditions.
     {
-        my $N1 = $self->{bbox}->N + ($self->{bbox}->N-$self->{bbox}->S)*$Config->get("BorderNSlowzoom");
-        my $S1 = $self->{bbox}->S - ($self->{bbox}->N-$self->{bbox}->S)*$Config->get("BorderNSlowzoom");
-        my $E1 = $self->{bbox}->E + ($self->{bbox}->E-$self->{bbox}->W)*$Config->get("BorderWElowzoom");
-        my $W1 = $self->{bbox}->W - ($self->{bbox}->E-$self->{bbox}->W)*$Config->get("BorderWElowzoom");
-        $self->{marg_bbox} = bbox->new($N1,$E1,$S1,$W1);
+        $N1 = $self->{bbox}->N + ($self->{bbox}->N-$self->{bbox}->S)*$Config->get("BorderNSlowzoom");
+        $S1 = $self->{bbox}->S - ($self->{bbox}->N-$self->{bbox}->S)*$Config->get("BorderNSlowzoom");
+        $E1 = $self->{bbox}->E + ($self->{bbox}->E-$self->{bbox}->W)*$Config->get("BorderWElowzoom");
+        $W1 = $self->{bbox}->W - ($self->{bbox}->E-$self->{bbox}->W)*$Config->get("BorderWElowzoom");
     }
     else
     {
-        my $N1 = $self->{bbox}->N + ($self->{bbox}->N-$self->{bbox}->S)*$Config->get("BorderNS");
-        my $S1 = $self->{bbox}->S - ($self->{bbox}->N-$self->{bbox}->S)*$Config->get("BorderNS");
-        my $E1 = $self->{bbox}->E + ($self->{bbox}->E-$self->{bbox}->W)*$Config->get("BorderWE");
-        my $W1 = $self->{bbox}->W - ($self->{bbox}->E-$self->{bbox}->W)*$Config->get("BorderWE");
-        $self->{marg_bbox} = bbox->new($N1,$E1,$S1,$W1);
+        $N1 = $self->{bbox}->N + ($self->{bbox}->N-$self->{bbox}->S)*$Config->get("BorderNS");
+        $S1 = $self->{bbox}->S - ($self->{bbox}->N-$self->{bbox}->S)*$Config->get("BorderNS");
+        $E1 = $self->{bbox}->E + ($self->{bbox}->E-$self->{bbox}->W)*$Config->get("BorderWE");
+        $W1 = $self->{bbox}->W - ($self->{bbox}->E-$self->{bbox}->W)*$Config->get("BorderWE");
     }
 
 
@@ -789,6 +788,7 @@ sub downloadData
       $E1 = 180;
     }
 
+    $self->{marg_bbox} = bbox->new($N1,$E1,$S1,$W1);
     my $bbox = sprintf("%f,%f,%f,%f", $W1, $S1, $E1, $N1);
 
     my $DataFile = File::Spec->join($self->{JobDir}, "data.osm");

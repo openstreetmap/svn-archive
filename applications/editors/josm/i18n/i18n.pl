@@ -194,6 +194,7 @@ sub makestring($)
 {
   my ($str) = @_;
   $str =~ s/\\"/"/g;
+  $str =~ s/\\\\/\\/g;
   $str =~ s/\\n/\n/g;
   $str = encode("utf8", $str);
   return pack("n",length($str)).$str;

@@ -2,7 +2,7 @@
 # by kay - basic functions
 
 ### config for Toolserver
-DSN = 'dbname=osm-mapnik'
+DSN = 'dbname=osm_mapnik host=sql-mapnik'
 openlayertextfilename = '/home/kayd/parkingicons/parkingicons.txt'
 
 import sys

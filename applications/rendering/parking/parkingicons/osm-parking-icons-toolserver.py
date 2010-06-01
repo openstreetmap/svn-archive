@@ -24,7 +24,7 @@ latlon= "ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Tra
 FW = "FROM planet_line WHERE"
 
 ### display disc - maxstay
-pc_disc_maxstay = ''
+pc_disc_maxstay = []
 for side in ['left','right']:
     curs.execute("SELECT osm_id,"+latlon+",(tags->'parking:condition:"+side+":maxstay') as \"parking:condition:"+side+":maxstay\" "+FW+" (tags ? 'parking:condition:"+side+":maxstay') and (tags ? 'parking:condition:"+side+"') and (tags->'parking:condition:"+side+"')='disc'")
     pc_disc_maxstay += curs.fetchall()

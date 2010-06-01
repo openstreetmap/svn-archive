@@ -2,15 +2,24 @@
 # by kay - basic functions
 
 ### config for Toolserver
-DSN = 'dbname=osm_mapnik host=sql-mapnik'
-openlayertextfilename = '/home/kayd/parkingicons/parkingicons.txt'
+#DSN = 'dbname=osm_mapnik host=sql-mapnik'
+#openlayertextfilename = '/home/kayd/parkingicons/parkingicons.txt'
+
+### config for devserver
+#DSN = '?'
+#openlayertextfilename = '/osm/parking/parkingicons/parkingicons.txt'
+
 
 import sys
 import psycopg2
 import csv
 
-if len(sys.argv) > 1:
+if len(sys.argv) != 2:
     DSN = sys.argv[1]
+    openlayertextfilename = sys.argv[2]
+else:
+    print "usage: tool 'dbname=osm_mapnik host=sql-mapnik' '/home/kayd/parkingicons/parkingicons.txt'"
+    exit(0);
 
 print "Opening connection using dns:", DSN
 conn = psycopg2.connect(DSN)

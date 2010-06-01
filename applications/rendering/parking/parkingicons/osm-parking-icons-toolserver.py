@@ -40,6 +40,8 @@ for side in ['left','right','both']:
     curs.execute("SELECT osm_id,"+latlon+",text(tags->'parking:condition:"+side+":vehicle') as \"parking:condition:"+side+":vehicles\" "+FW+" (tags ? 'parking:condition:"+side+":vehicles')")
     pc_vehicles += curs.fetchall()
 
+print pc_vehicles
+
 vehicle_icons = {"car":"parkingicons/pi-car.png" , "bus":"parkingicons/pi-bus.png" , "motorcycle":"parkingicons/pi-motorcycle.png"}
 
 for pc_v in pc_vehicles:

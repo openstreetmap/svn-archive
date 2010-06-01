@@ -140,6 +140,8 @@ public class TagChecker extends Test
     protected static int PAINT             = 1207;
     protected static int LONG_VALUE        = 1208;
     protected static int LONG_KEY          = 1209;
+    protected static int LOW_CHAR_VALUE    = 1210;
+    protected static int LOW_CHAR_KEY      = 1211;
     /** 1250 and up is used by tagcheck */
 
     /** List of sources for spellcheck data */
@@ -390,6 +392,18 @@ public class TagChecker extends Test
     }
 
     /**
+     * Checks given string (key or value) if it contains characters with code below 0x20 (either newline or some other special characters)
+     * @param s string to check
+     */
+    private boolean containsLow(String s) {
+        if (s==null) return false;
+        for(int i=0;i<s.length();i++) {
+            if (s.charAt(i)<0x20) return true;
+        }
+        return false;
+    }
+
+    /**
      * Checks the primitive properties
      * @param p The primitive to check
      */
@@ -473,13 +487,25 @@ public class TagChecker extends Test
             String s = marktr("Key ''{0}'' invalid.");
             String key = prop.getKey();
             String value = prop.getValue();
+            if( checkValues && (containsLow(value)) && !withErrors.contains(p, "ICV"))
+            {
+                errors.add( new TestError(this, Severity.WARNING, tr("Tag value contains character with code less than 0x20"),
+                        tr(s, key), MessageFormat.format(s, key), LOW_CHAR_VALUE, p) );
+                withErrors.add(p, "ICV");
+            }
+            if( checkKeys && (containsLow(key)) && !withErrors.contains(p, "ICK"))
+            {
+                errors.add( new TestError(this, Severity.WARNING, tr("Tag key contains character with code less than 0x20"),
+                        tr(s, key), MessageFormat.format(s, key), LOW_CHAR_KEY, p) );
+                withErrors.add(p, "ICK");
+            }
             if( checkValues && (value!=null && value.length() > 255) && !withErrors.contains(p, "LV"))
             {
                 errors.add( new TestError(this, Severity.ERROR, tr("Tag value longer than allowed"),
                         tr(s, key), MessageFormat.format(s, key), LONG_VALUE, p) );
                 withErrors.add(p, "LV");
             }
-            if( checkKeys && (value!=null && key.length() > 255) && !withErrors.contains(p, "LK"))
+            if( checkKeys && (key!=null && key.length() > 255) && !withErrors.contains(p, "LK"))
             {
                 errors.add( new TestError(this, Severity.ERROR, tr("Tag key longer than allowed"),
                         tr(s, key), MessageFormat.format(s, key), LONG_KEY, p) );

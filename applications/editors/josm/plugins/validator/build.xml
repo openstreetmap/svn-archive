@@ -26,7 +26,7 @@
 	  ** update before publishing
 	-->
 	<property name="commit.message" value="don't break relations, when fixing duplicate ways" />
-	<property name="plugin.main.version" value="3118" />
+	<property name="plugin.main.version" value="3289" />
 
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>

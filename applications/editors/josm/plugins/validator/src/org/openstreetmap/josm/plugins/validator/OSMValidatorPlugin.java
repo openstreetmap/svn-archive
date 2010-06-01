@@ -43,6 +43,7 @@ import org.openstreetmap.josm.plugins.validator.tests.MultipolygonTest;
 import org.openstreetmap.josm.plugins.validator.tests.NameMismatch;
 import org.openstreetmap.josm.plugins.validator.tests.NodesWithSameName;
 import org.openstreetmap.josm.plugins.validator.tests.OverlappingWays;
+import org.openstreetmap.josm.plugins.validator.tests.RelationChecker;
 import org.openstreetmap.josm.plugins.validator.tests.SelfIntersectingWay;
 import org.openstreetmap.josm.plugins.validator.tests.SimilarNamedWays;
 import org.openstreetmap.josm.plugins.validator.tests.TagChecker;
@@ -82,7 +83,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
      * TODO: is there any way to find out automatically all available tests?
      */
     @SuppressWarnings("unchecked")
-    public static Class<Test>[] allAvailableTests = new Class[] { DuplicateNode.class, // ID    1 ..   99
+    public static Class<Test>[] allAvailableTests = new Class[] {
+            DuplicateNode.class, // ID    1 ..   99
             OverlappingWays.class, // ID  101 ..  199
             UntaggedNode.class, // ID  201 ..  299
             UntaggedWay.class, // ID  301 ..  399
@@ -99,6 +101,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
             DuplicateWay.class, // ID 1401 .. 1499
             NameMismatch.class, // ID  1501 ..  1599
             MultipolygonTest.class, // ID  1601 ..  1699
+            RelationChecker.class, // ID  1701 ..  1799
     };
 
     /**

@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Timer;
@@ -92,33 +93,17 @@ public class GpsPlayer {
 	private Point getInterpolated(Point m)
 	{
 		Point leftP,rightP,highP,lowP;
-		boolean invalid = false;
+		boolean invalid = false; //when we leave this segment
 		Point p1 = Main.map.mapView.getPoint(getCurr().getEastNorth());
-		if(getNext()!=null) //TODO outsource certain dub routines
+		Point p2 = getEndpoint();
+		//determine which point is what
+		leftP=getLeftPoint(p1, p2);
+		rightP=getRightPoint(p1,p2);
+		highP=getHighPoint(p1, p2);
+		lowP=getLowPoint(p1, p2);
+		if(getNext()!=null)
 		{
-			Point p2 = Main.map.mapView.getPoint(getNext().getEastNorth());
-			//determine which point is what
-			if(p1.x<p2.x)
-			{
-				leftP=p1;
-				rightP=p2;
-			}
-			else
-			{
-				leftP=p2;
-				rightP=p1;
-			}
-			if(p1.y<p2.y)
-			{
-				highP=p1;
-				lowP=p2;
-			}
-			else
-			{
-				highP=p2;
-				lowP=p1;
-			}
-			//we might switch to neighbor segment
+			//we might switch to one neighbor segment
 			if(m.x<leftP.x)
 			{
 				Point c = Main.map.mapView.getPoint(getCurr().getEastNorth());
@@ -137,43 +122,51 @@ public class GpsPlayer {
 				m=rightP;
 				System.out.println("entering right segment");
 			}
-			//highP = Main.map.mapView.getPoint(l.getCurr().getEastNorth());
-			//lowP = Main.map.mapView.getPoint(l.getNext().getEastNorth());
 			if(!invalid)
 			{
-				float slope=(float)(highP.y-lowP.y) / (float)(highP.x - lowP.x);
+				float slope = getSlope(highP, lowP);
 				m.y = highP.y+Math.round(slope*(m.x-highP.x));
 			}
 		}
 		else
 		{
 			//currently we are at the end
-			Point p2 = Main.map.mapView.getPoint(getPrev().getEastNorth());
-			if (p1.x>p2.x)
-			{
-				leftP=p2;
-				rightP=p1;
-			}
-			else
-			{
-				leftP=p1;
-				rightP=p2;
-			}
 			if(m.x>rightP.x)
 			{
 				m=rightP; //we can't move anywhere
 			}
 			else
 			{
-				prev();
-			}
-			
-			
+				prev(); //walk back to the segment before
+			}			
 		}
-		//System.out.println((m));
 		return m;
 	}
 	
+	private Point getInterpolated(float percent)
+	{
+
+		int dX,dY;
+		Point p;
+		Point leftP,rightP,highP,lowP;
+		Point c = Main.map.mapView.getPoint(getCurr().getEastNorth());
+		Point p1 = Main.map.mapView.getPoint(getCurr().getEastNorth());
+		Point p2 = getEndpoint();		
+		//determine which point is what
+		leftP=getLeftPoint(p1, p2);
+		rightP=getRightPoint(p1,p2);
+		highP=getHighPoint(p1, p2);
+		lowP=getLowPoint(p1, p2);
+		//we will never go over the segment
+		percent=percent/100;
+		dX=Math.round((rightP.x-leftP.x)*percent);
+		dY=Math.round((rightP.y-leftP.y)*percent);
+		//move in the right direction
+		p=new Point(rightP.x-dX,rightP.y-dY);
+
+		return p;
+	}
+
 	//gets further infos for a point between two Waypoints
 	public WayPoint getInterpolatedWaypoint(Point m)
 	{	int a,b,length,lengthSeg;
@@ -183,59 +176,113 @@ public class GpsPlayer {
 		Point p2;
 		
 		Point curr =Main.map.mapView.getPoint(getCurr().getEastNorth());
-		m =getInterpolated(m);
+		m =getInterpolated(m); //get the right position
+		//get the right time
+		p2=getEndpoint();
 		if (getNext()!=null)
 		{
-			p2 =Main.map.mapView.getPoint(getNext().getEastNorth());
 			timeSeg=getNext().getTime().getTime()-getCurr().getTime().getTime();
 		}
 		else
 		{
-			p2 =Main.map.mapView.getPoint(getPrev().getEastNorth());
 			timeSeg=-(getPrev().getTime().getTime()-getCurr().getTime().getTime());
 		}
 		WayPoint w =new WayPoint(Main.map.mapView.getLatLon(m.x, m.y));
 		//calc total traversal length
-		a=Math.abs(curr.x-p2.x);
-		b=Math.abs(curr.y-p2.y);
-		lengthSeg= (int) Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2));
-		a=Math.abs(m.x-p2.x);
-		b=Math.abs(m.y-p2.y);
-		length= (int) Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2));
+		lengthSeg = getTraversalLength(p2, curr);
+		length = getTraversalLength(p2, m);
 		length=lengthSeg-length;
+		//calc time difference
 		ratio=(float)length/(float)lengthSeg;
-		long inc=(long) (timeSeg*ratio);
-		SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss:S");
+		long inc=(long) (timeSeg*ratio);		
 		long old = getCurr().getTime().getTime();
 		old=old+inc;
-		System.out.print(length+"px ");
+		Date t = new Date(old);
+		w.time = t.getTime()/1000; //TODO need better way to set time
+		SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss:S");
+		/*System.out.print(length+"px ");
 		System.out.print(ratio+"% ");
 		System.out.print(inc+"ms ");
-		System.out.println(df.format(old));
-		Date t = new Date(old);
+		System.out.println(df.format(t.getTime()));+*/
+		System.out.println(df.format(w.getTime()));
 		//TODO we have to publish the new date to the node...
+		return w;
+	}
+
+	private WayPoint getInterpolatedWaypoint(float percentage)
+	{
+		Point p = getInterpolated(percentage);
+		WayPoint w =new WayPoint(Main.map.mapView.getLatLon(p.x, p.y));
 		return w;
 	}
 	
 	public List<WayPoint> getInterpolatedLine(int interval)
 	{
+		List<WayPoint> ls;
 		Point p2;
-		Point curr =Main.map.mapView.getPoint(getCurr().getEastNorth());
-		if (getNext()!=null)
+		float step;
+		int length;
+		
+		step=100/(float)interval;
+		ls=new LinkedList<WayPoint>();
+		for(float i=step;i<100;i+=step)
 		{
-			p2 =Main.map.mapView.getPoint(getNext().getEastNorth());
+			ls.add(getInterpolatedWaypoint(i));
+		}
+		return ls;
+	}
+	
+	private Point getLeftPoint(Point p1,Point p2)
+	{
+		if(p1.x<p2.x) return p1; else return p2;
+	}
+	
+	private Point getRightPoint(Point p1, Point p2)
+	{
+		if(p1.x>p2.x) return p1; else return p2;
+	}
+	
+	private Point getHighPoint(Point p1, Point p2)
+	{
+		if(p1.y<p2.y)return p1; else return p2;
+	}
+	
+	private Point getLowPoint(Point p1, Point p2)
+	{
+		if(p1.y>p2.y)return p1; else return p2;
+	}
+
+	private Point getEndpoint() {
+		if(getNext()!=null)
+		{
+			return Main.map.mapView.getPoint(getNext().getEastNorth());
 		}
 		else
 		{
-			p2 =Main.map.mapView.getPoint(getPrev().getEastNorth());
+			return Main.map.mapView.getPoint(getPrev().getEastNorth());
 		}
-		int a=Math.abs(curr.x-p2.x);
-		int b=Math.abs(curr.y-p2.y);
-		int length= (int) Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2));
-		float step=length/interval;
-		//TODO here we go
-		return null;
+		
+	}
+
+	private float getSlope(Point highP, Point lowP) {
+		float slope=(float)(highP.y-lowP.y) / (float)(highP.x - lowP.x);
+		return slope;
+	}
+
+	private int getTraversalLength(Point p2, Point curr) {
+		int a;
+		int b;
+		int lengthSeg;
+		a=Math.abs(curr.x-p2.x);
+		b=Math.abs(curr.y-p2.y);
+		lengthSeg= (int) Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2));
+		return lengthSeg;
+	}
+
+	public void pause() {
+		// TODO Auto-generated method stub
+		
 	}
 	
-
+	
 }

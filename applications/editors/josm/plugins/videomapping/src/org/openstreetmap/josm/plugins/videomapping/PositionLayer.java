@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Timer;
@@ -43,57 +44,73 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Shortcut;
 
 public class PositionLayer extends Layer implements MouseListener,MouseMotionListener, KeyListener {
 	private List<WayPoint> ls;
 	private GpsPlayer l;
 	private Collection<WayPoint> selected;
+	private Timer t;
 	private TimerTask ani;
 	private boolean dragIcon=false; //do we move the icon by hand?
 	private WayPoint iconPosition;
 	private Point mouse;
 	private ImageIcon icon;
+	private SimpleDateFormat df;
 		
 	public PositionLayer(String name, final List<WayPoint> ls) {
 		super(name);
 		this.ls=ls;
 		l= new GpsPlayer(ls);
 		selected = new ArrayList<WayPoint>();
-		icon=ImageProvider.get("videomapping.png");		
+		icon=ImageProvider.get("videomapping.png");
+		df = new SimpleDateFormat("hh:mm:ss:S");
 		Main.map.mapView.addMouseListener(this);
 		Main.map.mapView.addMouseMotionListener(this);
-		Main.map.mapView.getRootPane().getGlassPane().addKeyListener(this);
-		//Main.panel.addKeyListener(this);
-		//Main.map.mapView.addKeyListener(this);
-		System.err.println("key :");
-
-		Action a = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				System.err.println("!!!boom!!!");
-			}};
-		Main.registerActionShortcut(a, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
-
-		//Main.map.mapView.addKeyListener(this);
-		//Main.contentPane.getInputMap().put(KeyStroke.getKeyStroke("SPACE"),"pressed");
-		//Main.contentPane.getActionMap().put("pressed",a);
-
-		//Main.contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE,0),a);
-		//Main.contentPane.getActionMap().put("doSomething",a);
-						
-		TimerTask ani=new TimerTask() {
-			
-			@Override
-			//some cheap animation stuff
-			public void run() {				
-				l.next();
-				Main.map.mapView.repaint();
-			}
-		};
-		Timer t= new Timer();
-		//t.schedule(ani,2000,2000);
-		//l.next();
+		addKeys();								
 		
+	}
+
+	//add key bindings for navigate through the track (and if synced trough the video, too)
+	private void addKeys() {
+		Action backward = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if(l!=null)l.prev();
+				Main.map.mapView.repaint();
+			}};
+			
+		Action forward = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if(l!=null)l.next();
+				Main.map.mapView.repaint();
+			}};
+		Action startStop = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (t==null)
+				{
+					//start
+					t= new Timer();
+					TimerTask ani=new TimerTask() {			
+						@Override
+						//some cheap animation stuff
+						public void run() {				
+							l.next();
+							Main.map.mapView.repaint();
+						}
+					};
+					t.schedule(ani,500,500);
+				}
+				else
+				{
+					//stop
+					t.cancel();
+					t=null;					
+				}
+			}};
+		//TODO custome Shortkey management
+		Main.registerActionShortcut(backward, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
+		Main.registerActionShortcut(forward, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
+		//Main.registerActionShortcut(startStop, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
 	}
 
 	@Override
@@ -173,23 +190,57 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			Point p2 = Main.map.mapView.getPoint(l.getCurr().getEastNorth());
 			g.drawLine(p.x, p.y, p2.x, p2.y);
 		}
+		//draw interpolated points
+		g.setColor(Color.CYAN);
+		g.setBackground(Color.CYAN);
+		LinkedList<WayPoint> ipo=(LinkedList<WayPoint>) l.getInterpolatedLine(5);
+		for (WayPoint wp : ipo) {
+			p=Main.map.mapView.getPoint(wp.getEastNorth());
+			g.fillArc(p.x, p.y, 4, 4, 0, 360);
+			//g.drawOval(p.x - 2, p.y - 2, 4, 4);
+		}
 		//draw cam icon
+		g.setColor(Color.RED);
 		if(dragIcon)
 		{
 			if(iconPosition!=null)
 			{
 				p=Main.map.mapView.getPoint(iconPosition.getEastNorth());
-				icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
-				g.drawString(iconPosition.getTime().toString(),p.x,p.y);
+				icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);				
+				g.drawString(df.format(iconPosition.getTime()),p.x,p.y);
 			}
 		}
 		else
 		{
 			if (l.getCurr()!=null){
 			p=Main.map.mapView.getPoint(l.getCurr().getEastNorth());
-			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
-			g.drawString(l.getCurr().getTime().toString(), p.x, p.y);
+			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);			
+			g.drawString(df.format(l.getCurr().getTime()),p.x,p.y);
 			}
+		}
+	}
+	
+	public void pause()
+	{
+		if (t==null)
+		{
+			//start
+			t= new Timer();
+			TimerTask ani=new TimerTask() {			
+				@Override
+				//some cheap animation stuff
+				public void run() {				
+					l.next();
+					Main.map.mapView.repaint();
+				}
+			};
+			t.schedule(ani,500,500);
+		}
+		else
+		{
+			//stop
+			t.cancel();
+			t=null;					
 		}
 	}
 

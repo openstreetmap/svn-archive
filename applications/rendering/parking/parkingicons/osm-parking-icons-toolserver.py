@@ -24,29 +24,27 @@ latlon= "ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Tra
 FW = "FROM planet_line WHERE"
 
 ### display disc - maxstay
+
 pc_disc_maxstay = []
-for side in ['left','right']:
+for side in ['left','right','both']:
     curs.execute("SELECT osm_id,"+latlon+",(tags->'parking:condition:"+side+":maxstay') as \"parking:condition:"+side+":maxstay\" "+FW+" (tags ? 'parking:condition:"+side+":maxstay') and (tags ? 'parking:condition:"+side+"') and (tags->'parking:condition:"+side+"')='disc'")
     pc_disc_maxstay += curs.fetchall()
-print pc_disc_maxstay
-exit(0)
 
-for pcm_id in pcm_ids:
-    openlayertextfile.writerow([pcm_id[1],pcm_id[2],'Disc parking','Maximum parking time:<br>'+pcm_id[3],'parkingicons/pi-disc.png','16,16','-8,-8'])
+for pc_dm in pc_disc_maxstay:
+    openlayertextfile.writerow([pc_dm[1],pc_dm[2],'Disc parking','Maximum parking time:<br>'+pc_dm[3],'parkingicons/pi-disc.png','16,16','-8,-8'])
 
 ### display vehicles
 
-curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:left:vehicles\" "+FW+" \"parking:condition:left:vehicles\" is not NULL")
-pclv_ids = curs.fetchall()
-curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:right:vehicles\" "+FW+" \"parking:condition:right:vehicles\" is not NULL")
-pcrv_ids = curs.fetchall()
-pcv_ids = pclv_ids + pcrv_ids
+pc_vehicles = []
+for side in ['left','right','both']:
+    curs.execute("SELECT osm_id,"+latlon+",(tags->'parking:condition:"+side+":vehicle') as \"parking:condition:"+side+":vehicles\" "+FW+" (tags ? 'parking:condition:"+side+":vehicles')")
+    pc_vehicles += curs.fetchall()
 
 vehicle_icons = {"car":"parkingicons/pi-car.png" , "bus":"parkingicons/pi-bus.png" , "motorcycle":"parkingicons/pi-motorcycle.png"}
 
-for pcv_id in pcv_ids:
-    vehicle_icon = vehicle_icons.get(pcv_id[3],"parkingicons/pi-unkn.png");
-    openlayertextfile.writerow([pcv_id[1],pcv_id[2],'Parking only for','Vehicle: '+pcv_id[3],vehicle_icon,'16,16','-8,-8'])
+for pc_v in pc_vehicles:
+    vehicle_icon = vehicle_icons.get(pc_v[3],"parkingicons/pi-unkn.png");
+    openlayertextfile.writerow([pc_v[1],pc_v[2],'Parking only for','Vehicle: '+pc_v[3],vehicle_icon,'16,16','-8,-8'])
 
 conn.rollback()
 

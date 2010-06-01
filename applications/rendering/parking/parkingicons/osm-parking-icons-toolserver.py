@@ -27,7 +27,7 @@ FW = "FROM planet_line WHERE"
 
 pc_disc_maxstay = []
 for side in ['left','right','both']:
-    curs.execute("SELECT osm_id,"+latlon+",(tags->'parking:condition:"+side+":maxstay') as \"parking:condition:"+side+":maxstay\" "+FW+" (tags ? 'parking:condition:"+side+":maxstay') and (tags ? 'parking:condition:"+side+"') and (tags->'parking:condition:"+side+"')='disc'")
+    curs.execute("SELECT osm_id,"+latlon+",text(tags->'parking:condition:"+side+":maxstay') as \"parking:condition:"+side+":maxstay\" "+FW+" (tags ? 'parking:condition:"+side+":maxstay') and (tags ? 'parking:condition:"+side+"') and (tags->'parking:condition:"+side+"')='disc'")
     pc_disc_maxstay += curs.fetchall()
 
 for pc_dm in pc_disc_maxstay:
@@ -37,7 +37,7 @@ for pc_dm in pc_disc_maxstay:
 
 pc_vehicles = []
 for side in ['left','right','both']:
-    curs.execute("SELECT osm_id,"+latlon+",(tags->'parking:condition:"+side+":vehicle') as \"parking:condition:"+side+":vehicles\" "+FW+" (tags ? 'parking:condition:"+side+":vehicles')")
+    curs.execute("SELECT osm_id,"+latlon+",text(tags->'parking:condition:"+side+":vehicle') as \"parking:condition:"+side+":vehicles\" "+FW+" (tags ? 'parking:condition:"+side+":vehicles')")
     pc_vehicles += curs.fetchall()
 
 vehicle_icons = {"car":"parkingicons/pi-car.png" , "bus":"parkingicons/pi-bus.png" , "motorcycle":"parkingicons/pi-motorcycle.png"}

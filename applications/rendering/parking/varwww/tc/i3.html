@@ -1,21 +1,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head profile="http://www.w3.org/2005/10/profile">
-<title>OpenStreetMap Parking Map</title>
-<meta name="description"
-	content="A parking map using OpenStreetMap data." />
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<meta http-equiv="content-script-type" content="text/javascript" />
-<meta http-equiv="content-style-type" content="text/css" />
-<link rel="icon" type="image/png" href="favicon.png" />
-<link rel="stylesheet" type="text/css"
-	href="http://openlayers.org/api/theme/default/style.css" />
-<link rel="stylesheet" type="text/css" href="map.css" />
-<link rel="stylesheet" type="text/css" href="print.css" media="print" />
-<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
-<script type="text/javascript" src="util.js"></script>
-<script type="text/javascript">
+    <head profile="http://www.w3.org/2005/10/profile">
+        <title>OpenStreetMap Parking Map</title>
+	<meta name="description" content="A parking map using OpenStreetMap data." />
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta http-equiv="content-script-type" content="text/javascript" />
+	<meta http-equiv="content-style-type" content="text/css" />
+	<link rel="icon" type="image/png" href="favicon.png" />
+	<link rel="stylesheet" type="text/css" href="http://openlayers.org/api/theme/default/style.css" />
+	<link rel="stylesheet" type="text/css" href="map.css" />
+	<link rel="stylesheet" type="text/css" href="print.css" media="print" />
+        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+        <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+	<script type="text/javascript" src="util.js"></script>
+        <script type="text/javascript">
 
             var map;
 
@@ -67,16 +65,8 @@
                                                  20037508, 20037508.34)
                 });
 
-                var parking = new OpenLayers.Layer.TMS("Parking All-In-One Map",
-                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking/",
-                    {
-                        type: 'png', getURL: osm_getTileURL,
-                        displayOutsideMaxExtent: true, isBaseLayer: true,
-                        attribution: 'Map Data from <a href="http://www.openstreetmap.org/">OpenStreetMap</a> (<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-by-SA 2.0</a>)<br>Extensions by kay'
-                    }
-                );
-                var parkingbw = new OpenLayers.Layer.TMS("Parking Only Map",
-                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-bw/",
+                var parkingbw = new OpenLayers.Layer.TMS("Parking Map",
+                    "http://toolserver.org/tiles/parking-bw/",
                     {
                         type: 'png', getURL: osm_getTileURL,
                         displayOutsideMaxExtent: true, isBaseLayer: true,
@@ -87,7 +77,6 @@
                 var osm   = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
                 var cycle = new OpenLayers.Layer.OSM.CycleMap("Cycle Map");
                 var osma  = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
-
 /*
                 var hikebike = new OpenLayers.Layer.TMS("Hike & Bike Map",
                     "http://cassini.toolserver.org/tiles/hikebike/",
@@ -100,7 +89,7 @@
 */
 
                 var parkingtrans = new OpenLayers.Layer.TMS("Parking",
-                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-layer/",
+                    "http://toolserver.org/tiles/parktrans/",
                     {
                         type: 'png', getURL: osm_getTileURL,
                         displayOutsideMaxExtent: true, isBaseLayer: false,
@@ -113,6 +102,7 @@
                         projection: map.displayProjection
                     }
                 );
+/*
                 var parkingerr = new OpenLayers.Layer.TMS("Parking Errors",
                     "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-errors/",
                     {
@@ -121,15 +111,14 @@
                         transparent: true, opacity: 0.72, "visibility": false 
                     }
                 );
-
-                map.addLayers([parking, parkingbw, osm, cycle, osma/*, hikebike*/]);
-
-                map.addLayers([parkingtrans, parkingicons, parkingerr]);
+*/
+                map.addLayers([parkingbw, osm, cycle, osma/*, hikebike*/]);
+                map.addLayers([parkingtrans, parkingicons]);
 
                 // Würzburg zoom=16&lat=49.79201&lon=9.94524
                 var lon = 9.94524;
                 var lat =  49.79201;
-                var zoom = 16;
+                var zoom = 17;
 
                 var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
 

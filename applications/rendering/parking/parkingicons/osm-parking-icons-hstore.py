@@ -14,7 +14,7 @@ import sys
 import psycopg2
 import csv
 
-if len(sys.argv) != 2:
+if len(sys.argv) == 2:
     DSN = sys.argv[1]
     openlayertextfilename = sys.argv[2]
 else:

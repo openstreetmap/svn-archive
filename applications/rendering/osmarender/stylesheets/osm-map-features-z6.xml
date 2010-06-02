@@ -44,7 +44,7 @@
         <rule e="way" k="landuse" v="field|village_green|meadow">
             <area class="landuse-field"/>
         </rule>
-        <rule e="way" k="amenity" v="school|college|university">
+        <rule e="way" k="amenity" v="kindergarten|school|college|university">
             <area class="landuse-all"/>
         </rule>
         <rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">

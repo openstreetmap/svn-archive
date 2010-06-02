@@ -1205,7 +1205,7 @@
 		</rule>
 	
 		<!-- Artificial landuse -->
-		<rule e="way" k="amenity" v="school|college|university" layer="-5">
+		<rule e="way" k="amenity" v="kindergarten|school|college|university" layer="-5">
 			<area class="amenity-school" layer="-5"/>
 		</rule>
 		

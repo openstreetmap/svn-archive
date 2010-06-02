@@ -3339,6 +3339,9 @@
 		<rule e="node" k="highway" v="traffic_signals">
 			<symbol ref="traffic_signal" position="center"/>
 		</rule>
+		<rule e="node|way" k="amenity" v="kindergarten">
+			<symbol ref="kindergarten" position="center"/>
+		</rule>
 		<rule e="node|way" k="amenity" v="school">
 			<symbol ref="school" position="center"/>
 		</rule>
@@ -3627,7 +3630,7 @@
 		<rule e="node" k="man_made" v="wastewater_plant">
 			<symbol ref="wastewater" position="center"/>
 		</rule>
-		<rule e="way" k="amenity" v="school|college|university" layer="-5">
+		<rule e="way" k="amenity" v="kindergarten|school|college|university" layer="-5">
 			<area class="amenity-school" layer="-5"/>
 		</rule>
 
@@ -3912,7 +3915,7 @@
 
 		<!-- House numbers -->
 		<rule e="node|way" k="addr:housenumber" v="*" layer="5">
-			<rule e="node|way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|school|university|college|supermarket|bakery|organic|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|bureau_de_change|museum|telephone|fast_food|restaurant" layer="5">
+			<rule e="node|way" k="power|tourism|amenity|man_made|shop|historic" v="tower|hotel|hostel|information|camp_site|hospital|doctor|pharmacy|postoffice|pub|cafe|cinema|theatre|windmill|place_of_worship|parking|kindergarten|school|university|college|supermarket|bakery|organic|shelter|library|fire_station|fuel|recycling|toilets|drinking_water|bank|atm|bureau_de_change|museum|telephone|fast_food|restaurant" layer="5">
 				<!-- circle r="0.9px" class="housenumber-node" transform="translate(1.6,0)" layer="5"/ testweise raus ... -->
 				<caption k="addr:housenumber" startOffset="50%" class="housenumber-casing housenumber-left"  dy="0.3px" dx="0.9px" layer="5"/>
 				<caption k="addr:housenumber" startOffset="50%" class="housenumber-caption housenumber-left" dy="0.3px" dx="0.9px" layer="5"/>
@@ -4020,7 +4023,7 @@
 				<caption k="name" class="caption-core amenity-theatre-caption-core" dy="-3px" layer="5"/>
 			</rule>
 
-			<rule e="node|way" k="amenity" v="school|college|university" layer="5">
+			<rule e="node|way" k="amenity" v="kindergarten|school|college|university" layer="5">
 				<caption k="name" class="caption-casing generic-caption-casing" dy="-3px" layer="5"/>
 				<caption k="name" class="caption-core generic-caption-core" dy="-3px" layer="5"/>
 			</rule>
@@ -4077,7 +4080,7 @@
 		</rule>
 		<rule e="way" k="landuse|military" v="*" layer="5">
 			<!-- Only render landuse caption when no other caption is rendered for the area. -->
-			<rule e="way" k="amenity|shop|tourism" v="pub|cafe|cinema|theatre|school|college|university|restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|supermarket|organic|hotel|hostel|camp_site|information" />
+			<rule e="way" k="amenity|shop|tourism" v="pub|cafe|cinema|theatre|kindergarten|school|college|university|restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|supermarket|organic|hotel|hostel|camp_site|information" />
 			<else>
 				<caption k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
 				<caption k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
@@ -4087,7 +4090,7 @@
 		<rule e="node" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
 			<rule e="node" k="building" v="*" layer="5">
 				<!-- same goes if one of the following is set -->
-				<rule e="node" k="amenity|shop|tourism" v="pub|cafe|cinema|theatre|school|college|university|restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|supermarket|organic|hotel|hostel|camp_site|information|fast_food|fuel" layer="5">
+				<rule e="node" k="amenity|shop|tourism" v="pub|cafe|cinema|theatre|kindergarten|school|college|university|restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|supermarket|organic|hotel|hostel|camp_site|information|fast_food|fuel" layer="5">
 				</rule>
 				<else>
 					<caption k="name" class="caption-casing generic-caption-casing" text-anchor='middle' startOffset='50%' dy="-0.7px" layer="5"/>
@@ -4098,7 +4101,7 @@
 		<rule e="way" k="sport" v="~" layer="5"> <!-- don't render captions for buildings, if sport is also set, thus honor offsets -->
 			<rule e="way" k="building" v="*" layer="5">
 				<!-- same goes if one of the following is set -->
-				<rule e="way" k="amenity|shop|tourism" v="pub|cafe|cinema|theatre|school|college|university|restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|supermarket|organic|hotel|hostel|camp_site|information|fast_food|fuel" layer="5">
+				<rule e="way" k="amenity|shop|tourism" v="pub|cafe|cinema|theatre|kindergarten|school|college|university|restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|supermarket|organic|hotel|hostel|camp_site|information|fast_food|fuel" layer="5">
 				</rule>
 				<else>
 					<rule e="way" k="addr:housenumber" v="*">

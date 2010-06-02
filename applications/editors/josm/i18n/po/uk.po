@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-01 20:08+0200\n"
-"PO-Revision-Date: 2010-05-31 06:41+0000\n"
+"POT-Creation-Date: 2010-06-02 10:51+0200\n"
+"PO-Revision-Date: 2010-06-02 06:58+0000\n"
 "Last-Translator: andygol <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-06-01 17:36+0000\n"
+"X-Launchpad-Export-Date: 2010-06-02 08:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -3957,9 +3957,8 @@ msgid "selected"
 msgstr "виділено"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:15
-#, fuzzy
 msgid "Relation: selected"
-msgstr "Зв’язок вилучено"
+msgstr "Зв’язки: виділені"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:16
 msgid "Node: standard"
@@ -4582,6 +4581,7 @@ msgid "Edit"
 msgstr "Правити"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:170
+#: build/specialmessages.java:38
 msgid "View"
 msgstr "Вид"
 
@@ -5124,6 +5124,7 @@ msgstr "Копіювати всі чужі елементи в місце при
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:696
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
+#: build/specialmessages.java:36
 msgid "Up"
 msgstr "Вгору"
 
@@ -5854,7 +5855,10 @@ msgstr "Показати інформацію"
 msgid "Open a web page for each selected changeset"
 msgstr "Відкрити веб-сторінки для кожного виділеного набору змін"
 
+#. relation type
+#. ** Strings in JFileChooser */
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ChangesetDialog.java:456
+#: build/specialmessages.java:21
 msgid "Details"
 msgstr "Подробиці"
 
@@ -6150,7 +6154,7 @@ msgstr "Об’єднати цей шар з іншим шаром"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:504
 msgid "Duplicate this layer"
-msgstr "Дублюйте цей шар"
+msgstr "Дублювати шар"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:601
 msgid "Move the selected layer one row up."
@@ -6253,11 +6257,11 @@ msgstr "Наблизитися до виділених елементів"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:419
 msgid "Call editor for relation"
-msgstr ""
+msgstr "Запустити редактор зв’язків"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:420
 msgid "Call relation editor for selected relation"
-msgstr ""
+msgstr "Запустити редактор зв’язків для виділеного зв’язку"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:445
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1027
@@ -7329,152 +7333,153 @@ msgstr "Ідентифікатор"
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:21
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:383
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:71
-#: build/trans_presets.java:87 build/trans_presets.java:123
-#: build/trans_presets.java:163 build/trans_presets.java:200
-#: build/trans_presets.java:220 build/trans_presets.java:238
-#: build/trans_presets.java:256 build/trans_presets.java:274
-#: build/trans_presets.java:292 build/trans_presets.java:312
-#: build/trans_presets.java:345 build/trans_presets.java:364
-#: build/trans_presets.java:413 build/trans_presets.java:433
-#: build/trans_presets.java:448 build/trans_presets.java:463
-#: build/trans_presets.java:486 build/trans_presets.java:515
-#: build/trans_presets.java:535 build/trans_presets.java:558
-#: build/trans_presets.java:580 build/trans_presets.java:599
-#: build/trans_presets.java:618 build/trans_presets.java:636
-#: build/trans_presets.java:645 build/trans_presets.java:703
-#: build/trans_presets.java:729 build/trans_presets.java:738
-#: build/trans_presets.java:798 build/trans_presets.java:949
-#: build/trans_presets.java:957 build/trans_presets.java:965
-#: build/trans_presets.java:973 build/trans_presets.java:981
-#: build/trans_presets.java:991 build/trans_presets.java:999
-#: build/trans_presets.java:1004 build/trans_presets.java:1011
-#: build/trans_presets.java:1018 build/trans_presets.java:1023
-#: build/trans_presets.java:1031 build/trans_presets.java:1040
-#: build/trans_presets.java:1046 build/trans_presets.java:1052
-#: build/trans_presets.java:1057 build/trans_presets.java:1063
-#: build/trans_presets.java:1069 build/trans_presets.java:1078
-#: build/trans_presets.java:1087 build/trans_presets.java:1094
-#: build/trans_presets.java:1102 build/trans_presets.java:1115
-#: build/trans_presets.java:1121 build/trans_presets.java:1130
-#: build/trans_presets.java:1136 build/trans_presets.java:1142
-#: build/trans_presets.java:1150 build/trans_presets.java:1247
-#: build/trans_presets.java:1298 build/trans_presets.java:1304
-#: build/trans_presets.java:1310 build/trans_presets.java:1316
-#: build/trans_presets.java:1322 build/trans_presets.java:1328
-#: build/trans_presets.java:1341 build/trans_presets.java:1366
-#: build/trans_presets.java:1381 build/trans_presets.java:1387
-#: build/trans_presets.java:1395 build/trans_presets.java:1402
-#: build/trans_presets.java:1411 build/trans_presets.java:1419
-#: build/trans_presets.java:1430 build/trans_presets.java:1440
-#: build/trans_presets.java:1450 build/trans_presets.java:1470
-#: build/trans_presets.java:1482 build/trans_presets.java:1493
-#: build/trans_presets.java:1513 build/trans_presets.java:1522
-#: build/trans_presets.java:1578 build/trans_presets.java:1595
-#: build/trans_presets.java:1602 build/trans_presets.java:1607
-#: build/trans_presets.java:1613 build/trans_presets.java:1619
-#: build/trans_presets.java:1624 build/trans_presets.java:1630
-#: build/trans_presets.java:1636 build/trans_presets.java:1644
-#: build/trans_presets.java:1652 build/trans_presets.java:1660
-#: build/trans_presets.java:1667 build/trans_presets.java:1673
-#: build/trans_presets.java:1680 build/trans_presets.java:1687
-#: build/trans_presets.java:1695 build/trans_presets.java:1702
-#: build/trans_presets.java:1710 build/trans_presets.java:1717
-#: build/trans_presets.java:1723 build/trans_presets.java:1730
-#: build/trans_presets.java:1737 build/trans_presets.java:1744
-#: build/trans_presets.java:1761 build/trans_presets.java:1769
-#: build/trans_presets.java:1784 build/trans_presets.java:1794
-#: build/trans_presets.java:1806 build/trans_presets.java:1813
-#: build/trans_presets.java:1819 build/trans_presets.java:1829
-#: build/trans_presets.java:1834 build/trans_presets.java:1842
-#: build/trans_presets.java:1849 build/trans_presets.java:1855
-#: build/trans_presets.java:1861 build/trans_presets.java:1867
-#: build/trans_presets.java:1872 build/trans_presets.java:1877
-#: build/trans_presets.java:1882 build/trans_presets.java:1889
-#: build/trans_presets.java:1895 build/trans_presets.java:1900
-#: build/trans_presets.java:1909 build/trans_presets.java:1918
-#: build/trans_presets.java:1927 build/trans_presets.java:1936
-#: build/trans_presets.java:1945 build/trans_presets.java:1951
-#: build/trans_presets.java:1959 build/trans_presets.java:1965
-#: build/trans_presets.java:1971 build/trans_presets.java:1977
-#: build/trans_presets.java:1983 build/trans_presets.java:1989
-#: build/trans_presets.java:1995 build/trans_presets.java:2001
-#: build/trans_presets.java:2007 build/trans_presets.java:2013
-#: build/trans_presets.java:2019 build/trans_presets.java:2025
-#: build/trans_presets.java:2031 build/trans_presets.java:2037
-#: build/trans_presets.java:2043 build/trans_presets.java:2050
-#: build/trans_presets.java:2059 build/trans_presets.java:2067
-#: build/trans_presets.java:2073 build/trans_presets.java:2079
-#: build/trans_presets.java:2085 build/trans_presets.java:2091
-#: build/trans_presets.java:2097 build/trans_presets.java:2103
-#: build/trans_presets.java:2109 build/trans_presets.java:2115
-#: build/trans_presets.java:2121 build/trans_presets.java:2127
-#: build/trans_presets.java:2133 build/trans_presets.java:2139
-#: build/trans_presets.java:2145 build/trans_presets.java:2151
-#: build/trans_presets.java:2157 build/trans_presets.java:2163
-#: build/trans_presets.java:2177 build/trans_presets.java:2183
-#: build/trans_presets.java:2189 build/trans_presets.java:2196
-#: build/trans_presets.java:2203 build/trans_presets.java:2211
-#: build/trans_presets.java:2218 build/trans_presets.java:2224
-#: build/trans_presets.java:2231 build/trans_presets.java:2237
-#: build/trans_presets.java:2243 build/trans_presets.java:2249
-#: build/trans_presets.java:2257 build/trans_presets.java:2264
-#: build/trans_presets.java:2271 build/trans_presets.java:2278
-#: build/trans_presets.java:2286 build/trans_presets.java:2318
-#: build/trans_presets.java:2323 build/trans_presets.java:2333
-#: build/trans_presets.java:2338 build/trans_presets.java:2344
-#: build/trans_presets.java:2350 build/trans_presets.java:2367
-#: build/trans_presets.java:2373 build/trans_presets.java:2379
-#: build/trans_presets.java:2385 build/trans_presets.java:2391
-#: build/trans_presets.java:2402 build/trans_presets.java:2409
-#: build/trans_presets.java:2510 build/trans_presets.java:2517
-#: build/trans_presets.java:2538 build/trans_presets.java:2546
-#: build/trans_presets.java:2551 build/trans_presets.java:2557
-#: build/trans_presets.java:2564 build/trans_presets.java:2571
-#: build/trans_presets.java:2577 build/trans_presets.java:2583
-#: build/trans_presets.java:2590 build/trans_presets.java:2597
-#: build/trans_presets.java:2604 build/trans_presets.java:2610
-#: build/trans_presets.java:2617 build/trans_presets.java:2623
-#: build/trans_presets.java:2629 build/trans_presets.java:2635
-#: build/trans_presets.java:2641 build/trans_presets.java:2647
-#: build/trans_presets.java:2654 build/trans_presets.java:2661
-#: build/trans_presets.java:2668 build/trans_presets.java:2674
-#: build/trans_presets.java:2680 build/trans_presets.java:2686
-#: build/trans_presets.java:2692 build/trans_presets.java:2698
-#: build/trans_presets.java:2705 build/trans_presets.java:2712
-#: build/trans_presets.java:2719 build/trans_presets.java:2725
-#: build/trans_presets.java:2731 build/trans_presets.java:2756
-#: build/trans_presets.java:2765 build/trans_presets.java:2780
-#: build/trans_presets.java:2786 build/trans_presets.java:2794
-#: build/trans_presets.java:2801 build/trans_presets.java:2821
-#: build/trans_presets.java:2832 build/trans_presets.java:2838
-#: build/trans_presets.java:2844 build/trans_presets.java:2850
-#: build/trans_presets.java:2856 build/trans_presets.java:2863
-#: build/trans_presets.java:2870 build/trans_presets.java:2877
-#: build/trans_presets.java:2883 build/trans_presets.java:2889
-#: build/trans_presets.java:2897 build/trans_presets.java:2904
-#: build/trans_presets.java:2911 build/trans_presets.java:2918
-#: build/trans_presets.java:2924 build/trans_presets.java:2931
-#: build/trans_presets.java:2938 build/trans_presets.java:2947
-#: build/trans_presets.java:2953 build/trans_presets.java:2959
-#: build/trans_presets.java:2965 build/trans_presets.java:2971
-#: build/trans_presets.java:2980 build/trans_presets.java:2990
-#: build/trans_presets.java:2999 build/trans_presets.java:3005
-#: build/trans_presets.java:3011 build/trans_presets.java:3016
-#: build/trans_presets.java:3022 build/trans_presets.java:3028
-#: build/trans_presets.java:3037 build/trans_presets.java:3043
-#: build/trans_presets.java:3049 build/trans_presets.java:3055
-#: build/trans_presets.java:3061 build/trans_presets.java:3067
-#: build/trans_presets.java:3073 build/trans_presets.java:3080
-#: build/trans_presets.java:3086 build/trans_presets.java:3091
-#: build/trans_presets.java:3098 build/trans_presets.java:3105
-#: build/trans_presets.java:3111 build/trans_presets.java:3120
-#: build/trans_presets.java:3128 build/trans_presets.java:3134
-#: build/trans_presets.java:3140 build/trans_presets.java:3147
-#: build/trans_presets.java:3153 build/trans_presets.java:3160
-#: build/trans_presets.java:3166 build/trans_presets.java:3172
-#: build/trans_presets.java:3178 build/trans_presets.java:3184
-#: build/trans_presets.java:3196 build/trans_presets.java:3210
-#: build/trans_presets.java:3229 build/trans_presets.java:3243
+#: build/specialmessages.java:24 build/trans_presets.java:87
+#: build/trans_presets.java:123 build/trans_presets.java:163
+#: build/trans_presets.java:200 build/trans_presets.java:220
+#: build/trans_presets.java:238 build/trans_presets.java:256
+#: build/trans_presets.java:274 build/trans_presets.java:292
+#: build/trans_presets.java:312 build/trans_presets.java:345
+#: build/trans_presets.java:364 build/trans_presets.java:413
+#: build/trans_presets.java:433 build/trans_presets.java:448
+#: build/trans_presets.java:463 build/trans_presets.java:486
+#: build/trans_presets.java:515 build/trans_presets.java:535
+#: build/trans_presets.java:558 build/trans_presets.java:580
+#: build/trans_presets.java:599 build/trans_presets.java:618
+#: build/trans_presets.java:636 build/trans_presets.java:645
+#: build/trans_presets.java:703 build/trans_presets.java:729
+#: build/trans_presets.java:738 build/trans_presets.java:798
+#: build/trans_presets.java:949 build/trans_presets.java:957
+#: build/trans_presets.java:965 build/trans_presets.java:973
+#: build/trans_presets.java:981 build/trans_presets.java:991
+#: build/trans_presets.java:999 build/trans_presets.java:1004
+#: build/trans_presets.java:1011 build/trans_presets.java:1018
+#: build/trans_presets.java:1023 build/trans_presets.java:1031
+#: build/trans_presets.java:1040 build/trans_presets.java:1046
+#: build/trans_presets.java:1052 build/trans_presets.java:1057
+#: build/trans_presets.java:1063 build/trans_presets.java:1069
+#: build/trans_presets.java:1078 build/trans_presets.java:1087
+#: build/trans_presets.java:1094 build/trans_presets.java:1102
+#: build/trans_presets.java:1115 build/trans_presets.java:1121
+#: build/trans_presets.java:1130 build/trans_presets.java:1136
+#: build/trans_presets.java:1142 build/trans_presets.java:1150
+#: build/trans_presets.java:1247 build/trans_presets.java:1298
+#: build/trans_presets.java:1304 build/trans_presets.java:1310
+#: build/trans_presets.java:1316 build/trans_presets.java:1322
+#: build/trans_presets.java:1328 build/trans_presets.java:1341
+#: build/trans_presets.java:1366 build/trans_presets.java:1381
+#: build/trans_presets.java:1387 build/trans_presets.java:1395
+#: build/trans_presets.java:1402 build/trans_presets.java:1411
+#: build/trans_presets.java:1419 build/trans_presets.java:1430
+#: build/trans_presets.java:1440 build/trans_presets.java:1450
+#: build/trans_presets.java:1470 build/trans_presets.java:1482
+#: build/trans_presets.java:1493 build/trans_presets.java:1513
+#: build/trans_presets.java:1522 build/trans_presets.java:1578
+#: build/trans_presets.java:1595 build/trans_presets.java:1602
+#: build/trans_presets.java:1607 build/trans_presets.java:1613
+#: build/trans_presets.java:1619 build/trans_presets.java:1624
+#: build/trans_presets.java:1630 build/trans_presets.java:1636
+#: build/trans_presets.java:1644 build/trans_presets.java:1652
+#: build/trans_presets.java:1660 build/trans_presets.java:1667
+#: build/trans_presets.java:1673 build/trans_presets.java:1680
+#: build/trans_presets.java:1687 build/trans_presets.java:1695
+#: build/trans_presets.java:1702 build/trans_presets.java:1710
+#: build/trans_presets.java:1717 build/trans_presets.java:1723
+#: build/trans_presets.java:1730 build/trans_presets.java:1737
+#: build/trans_presets.java:1744 build/trans_presets.java:1761
+#: build/trans_presets.java:1769 build/trans_presets.java:1784
+#: build/trans_presets.java:1794 build/trans_presets.java:1806
+#: build/trans_presets.java:1813 build/trans_presets.java:1819
+#: build/trans_presets.java:1829 build/trans_presets.java:1834
+#: build/trans_presets.java:1842 build/trans_presets.java:1849
+#: build/trans_presets.java:1855 build/trans_presets.java:1861
+#: build/trans_presets.java:1867 build/trans_presets.java:1872
+#: build/trans_presets.java:1877 build/trans_presets.java:1882
+#: build/trans_presets.java:1889 build/trans_presets.java:1895
+#: build/trans_presets.java:1900 build/trans_presets.java:1909
+#: build/trans_presets.java:1918 build/trans_presets.java:1927
+#: build/trans_presets.java:1936 build/trans_presets.java:1945
+#: build/trans_presets.java:1951 build/trans_presets.java:1959
+#: build/trans_presets.java:1965 build/trans_presets.java:1971
+#: build/trans_presets.java:1977 build/trans_presets.java:1983
+#: build/trans_presets.java:1989 build/trans_presets.java:1995
+#: build/trans_presets.java:2001 build/trans_presets.java:2007
+#: build/trans_presets.java:2013 build/trans_presets.java:2019
+#: build/trans_presets.java:2025 build/trans_presets.java:2031
+#: build/trans_presets.java:2037 build/trans_presets.java:2043
+#: build/trans_presets.java:2050 build/trans_presets.java:2059
+#: build/trans_presets.java:2067 build/trans_presets.java:2073
+#: build/trans_presets.java:2079 build/trans_presets.java:2085
+#: build/trans_presets.java:2091 build/trans_presets.java:2097
+#: build/trans_presets.java:2103 build/trans_presets.java:2109
+#: build/trans_presets.java:2115 build/trans_presets.java:2121
+#: build/trans_presets.java:2127 build/trans_presets.java:2133
+#: build/trans_presets.java:2139 build/trans_presets.java:2145
+#: build/trans_presets.java:2151 build/trans_presets.java:2157
+#: build/trans_presets.java:2163 build/trans_presets.java:2177
+#: build/trans_presets.java:2183 build/trans_presets.java:2189
+#: build/trans_presets.java:2196 build/trans_presets.java:2203
+#: build/trans_presets.java:2211 build/trans_presets.java:2218
+#: build/trans_presets.java:2224 build/trans_presets.java:2231
+#: build/trans_presets.java:2237 build/trans_presets.java:2243
+#: build/trans_presets.java:2249 build/trans_presets.java:2257
+#: build/trans_presets.java:2264 build/trans_presets.java:2271
+#: build/trans_presets.java:2278 build/trans_presets.java:2286
+#: build/trans_presets.java:2318 build/trans_presets.java:2323
+#: build/trans_presets.java:2333 build/trans_presets.java:2338
+#: build/trans_presets.java:2344 build/trans_presets.java:2350
+#: build/trans_presets.java:2367 build/trans_presets.java:2373
+#: build/trans_presets.java:2379 build/trans_presets.java:2385
+#: build/trans_presets.java:2391 build/trans_presets.java:2402
+#: build/trans_presets.java:2409 build/trans_presets.java:2510
+#: build/trans_presets.java:2517 build/trans_presets.java:2538
+#: build/trans_presets.java:2546 build/trans_presets.java:2551
+#: build/trans_presets.java:2557 build/trans_presets.java:2564
+#: build/trans_presets.java:2571 build/trans_presets.java:2577
+#: build/trans_presets.java:2583 build/trans_presets.java:2590
+#: build/trans_presets.java:2597 build/trans_presets.java:2604
+#: build/trans_presets.java:2610 build/trans_presets.java:2617
+#: build/trans_presets.java:2623 build/trans_presets.java:2629
+#: build/trans_presets.java:2635 build/trans_presets.java:2641
+#: build/trans_presets.java:2647 build/trans_presets.java:2654
+#: build/trans_presets.java:2661 build/trans_presets.java:2668
+#: build/trans_presets.java:2674 build/trans_presets.java:2680
+#: build/trans_presets.java:2686 build/trans_presets.java:2692
+#: build/trans_presets.java:2698 build/trans_presets.java:2705
+#: build/trans_presets.java:2712 build/trans_presets.java:2719
+#: build/trans_presets.java:2725 build/trans_presets.java:2731
+#: build/trans_presets.java:2756 build/trans_presets.java:2765
+#: build/trans_presets.java:2780 build/trans_presets.java:2786
+#: build/trans_presets.java:2794 build/trans_presets.java:2801
+#: build/trans_presets.java:2821 build/trans_presets.java:2832
+#: build/trans_presets.java:2838 build/trans_presets.java:2844
+#: build/trans_presets.java:2850 build/trans_presets.java:2856
+#: build/trans_presets.java:2863 build/trans_presets.java:2870
+#: build/trans_presets.java:2877 build/trans_presets.java:2883
+#: build/trans_presets.java:2889 build/trans_presets.java:2897
+#: build/trans_presets.java:2904 build/trans_presets.java:2911
+#: build/trans_presets.java:2918 build/trans_presets.java:2924
+#: build/trans_presets.java:2931 build/trans_presets.java:2938
+#: build/trans_presets.java:2947 build/trans_presets.java:2953
+#: build/trans_presets.java:2959 build/trans_presets.java:2965
+#: build/trans_presets.java:2971 build/trans_presets.java:2980
+#: build/trans_presets.java:2990 build/trans_presets.java:2999
+#: build/trans_presets.java:3005 build/trans_presets.java:3011
+#: build/trans_presets.java:3016 build/trans_presets.java:3022
+#: build/trans_presets.java:3028 build/trans_presets.java:3037
+#: build/trans_presets.java:3043 build/trans_presets.java:3049
+#: build/trans_presets.java:3055 build/trans_presets.java:3061
+#: build/trans_presets.java:3067 build/trans_presets.java:3073
+#: build/trans_presets.java:3080 build/trans_presets.java:3086
+#: build/trans_presets.java:3091 build/trans_presets.java:3098
+#: build/trans_presets.java:3105 build/trans_presets.java:3111
+#: build/trans_presets.java:3120 build/trans_presets.java:3128
+#: build/trans_presets.java:3134 build/trans_presets.java:3140
+#: build/trans_presets.java:3147 build/trans_presets.java:3153
+#: build/trans_presets.java:3160 build/trans_presets.java:3166
+#: build/trans_presets.java:3172 build/trans_presets.java:3178
+#: build/trans_presets.java:3184 build/trans_presets.java:3196
+#: build/trans_presets.java:3210 build/trans_presets.java:3229
+#: build/trans_presets.java:3243
 msgid "Name"
 msgstr "Назва"
 
@@ -7928,7 +7933,7 @@ msgstr[2] "Це змінить {0} об’єктів."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:188
 msgid "An empty value deletes the tag."
-msgstr "Пусте значення вилучає теґ."
+msgstr "Пусте значення вилучає теґ"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:237
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:282
@@ -8774,12 +8779,13 @@ msgstr "Запит до сервера імен…"
 #. item "Land use/Wood" text "Name"
 #. item "Land use/Forest" text "Name"
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:440
-#: build/trans_presets.java:411 build/trans_presets.java:669
-#: build/trans_presets.java:678 build/trans_presets.java:1041
-#: build/trans_presets.java:1368 build/trans_presets.java:2358
-#: build/trans_presets.java:2392 build/trans_presets.java:2401
-#: build/trans_presets.java:2427 build/trans_presets.java:2981
-#: build/trans_presets.java:2991 build/trans_presets.java:3000
+#: build/specialmessages.java:27 build/trans_presets.java:411
+#: build/trans_presets.java:669 build/trans_presets.java:678
+#: build/trans_presets.java:1041 build/trans_presets.java:1368
+#: build/trans_presets.java:2358 build/trans_presets.java:2392
+#: build/trans_presets.java:2401 build/trans_presets.java:2427
+#: build/trans_presets.java:2981 build/trans_presets.java:2991
+#: build/trans_presets.java:3000
 msgid "Type"
 msgstr "Тип"
 
@@ -13285,23 +13291,23 @@ msgstr "Більш детальна інформація про цю функц�
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:506
 #, java-format
 msgid "Unknown requisite: {0}"
-msgstr ""
+msgstr "Невідомий запит: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:561
 msgid "Available roles"
-msgstr ""
+msgstr "Доступні ролі"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:562
 msgid "role"
-msgstr ""
+msgstr "роль"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:563
 msgid "count"
-msgstr ""
+msgstr "кількість"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:564
 msgid "elements"
-msgstr ""
+msgstr "елементи"
 
 #. space
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:578
@@ -13319,7 +13325,7 @@ msgstr "Невідомий тип: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:739
 msgid "Preset role element without parent"
-msgstr ""
+msgstr "Роль елемента заготовки без батьків"
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:748
 msgid "Preset sub element without parent"
@@ -15302,7 +15308,7 @@ msgstr ""
 "<strong>Завантаження не вдалося</strong>, якщо ви намагались завантажити цей "
 "об’єкт.<br><br>Повідомлення про помилку:<br>{0}</html>"
 
-#: ../core/src/org/openstreetmap/josm/tools/I18n.java:355
+#: ../core/src/org/openstreetmap/josm/tools/I18n.java:394
 #, java-format
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr "Не вдається знайти переклад мовою «{0}». Повертаємось до {1}."
@@ -16857,6 +16863,7 @@ msgstr "Порт:"
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatImportDialog.java:94
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:133
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:134
+#: build/specialmessages.java:34
 msgid "Refresh"
 msgstr "Оновити"
 
@@ -19386,7 +19393,7 @@ msgstr "Знайдено {0}"
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:84
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:85
 msgid "Validation errors"
-msgstr "Помилки під час перевірки"
+msgstr "Помилки"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ErrorLayer.java:97
 msgid "No validation errors"
@@ -19488,7 +19495,7 @@ msgstr "Перевірка"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:45
 msgid "Performs the data validation"
-msgstr "Виконується перевірка даних."
+msgstr "Перевірити дані"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidateAction.java:121
 msgid "Validating"
@@ -19760,28 +19767,28 @@ msgstr "Перетин ліній"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:44
 msgid "Relation checker :"
-msgstr ""
+msgstr "Перевірка зв’язків:"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:45
 msgid "This plugin checks for errors in relations."
-msgstr ""
+msgstr "Цей втулок перевіряє зв’язки на наявність помилок."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:115
 msgid "Relation type is unknown"
-msgstr ""
+msgstr "Тип зв’язку невідомий"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:145
 msgid "Relation is empty"
-msgstr ""
+msgstr "Зв’язок порожній"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:155
 msgid "<empty>"
-msgstr ""
+msgstr "<порожньо>"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:163
 #, java-format
 msgid "Role {0} missing"
-msgstr ""
+msgstr "Відсутня роль {0}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:164
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:170
@@ -19790,31 +19797,31 @@ msgstr ""
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:195
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:201
 msgid "Role verification problem"
-msgstr ""
+msgstr "Проблеми перевірки ролі"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:169
 #, java-format
 msgid "Number of {0} roles too low ({1})"
-msgstr ""
+msgstr "Номер ролі {0} занизький ({1})"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:175
 #, java-format
 msgid "Number of {0} roles too high ({1})"
-msgstr ""
+msgstr "Номер ролі {0} зависокий ({1})"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:183
 #, java-format
 msgid "Member for role {0} of wrong type"
-msgstr ""
+msgstr "Помилковий тип члену ролі {0}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:194
 #, java-format
 msgid "Role {0} unknown"
-msgstr ""
+msgstr "Невідома роль {0}"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/RelationChecker.java:200
 msgid "Empty role found"
-msgstr ""
+msgstr "Знайдено порожню роль"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:22
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/SelfIntersectingWay.java:34
@@ -19882,11 +19889,11 @@ msgstr "Невірний ключ ''{0}''."
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:492
 msgid "Tag value contains character with code less than 0x20"
-msgstr ""
+msgstr "Значення теґу містить символ з кодом меньшім за 0x20"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:498
 msgid "Tag key contains character with code less than 0x20"
-msgstr ""
+msgstr "Ключ теґу містить символ з кодом меньшім за 0x20"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:504
 msgid "Tag value longer than allowed"
@@ -20216,7 +20223,7 @@ msgstr "Зворотня лінія суші: земля не ліворуч"
 msgid "{0}, ..."
 msgstr "{0}, …"
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:125
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:142
 msgid "Shows current position in the video"
 msgstr "Показати поточне положення у відео-фрагменті"
 
@@ -20783,7 +20790,7 @@ msgstr "кордон"
 #. relation type
 #: build/specialmessages.java:16
 msgid "multipolygon"
-msgstr ""
+msgstr "мультиполігон"
 
 #. relation type
 #. color natural
@@ -20865,6 +20872,65 @@ msgstr ""
 #: build/trans_style.java:3612
 msgid "route"
 msgstr "маршрут"
+
+#: build/specialmessages.java:22
+#, fuzzy
+msgid "Attributes"
+msgstr "Необов’язкові атрибути:"
+
+#: build/specialmessages.java:23
+#, fuzzy
+msgid "Modified"
+msgstr "Модифікатори:"
+
+#: build/specialmessages.java:25
+#, fuzzy
+msgid "File name:"
+msgstr "Назва файлу"
+
+#: build/specialmessages.java:26
+#, fuzzy
+msgid "Size"
+msgstr "Перелаз"
+
+#: build/specialmessages.java:28
+#, fuzzy
+msgid "Files of type:"
+msgstr "Види палива:"
+
+#: build/specialmessages.java:29
+#, fuzzy
+msgid "Home"
+msgstr "Домівка"
+
+#: build/specialmessages.java:30
+#, fuzzy
+msgid "List"
+msgstr "даосизм"
+
+#: build/specialmessages.java:31
+#, fuzzy
+msgid "Look in:"
+msgstr "Наблизити"
+
+#: build/specialmessages.java:32
+#, fuzzy
+msgid "New Folder"
+msgstr "Нова роль"
+
+#: build/specialmessages.java:33
+#, fuzzy
+msgid "Create New Folder"
+msgstr "Створити нову точку."
+
+#: build/specialmessages.java:35
+#, fuzzy
+msgid "Save in:"
+msgstr "Зберегти"
+
+#: build/specialmessages.java:37
+msgid "Up One Level"
+msgstr ""
 
 #. Plugin AddrInterpolation
 #: build/trans_plugins.java:3
@@ -25522,7 +25588,7 @@ msgstr "піші"
 #: build/trans_presets.java:1751 build/trans_presets.java:1774
 #: build/trans_presets.java:1992
 msgid "Cycling"
-msgstr "велосипедні"
+msgstr "Велоспорт"
 
 #. item "Tourism/Map" check "Cycling"
 #. item "Tourism/Guidepost" check "Cycling"
@@ -25535,7 +25601,7 @@ msgstr "для гірського велосипеду"
 #: build/trans_presets.java:1753 build/trans_presets.java:1776
 #: build/trans_presets.java:2046
 msgid "Skiing"
-msgstr "лижні"
+msgstr "Лижі"
 
 #. item "Tourism/Map" check "Skiing"
 #. item "Tourism/Guidepost" check "Skiing"
@@ -29252,7 +29318,7 @@ msgstr "внутрішній сегмент"
 #. </roles>
 #: build/trans_presets.java:3203
 msgid "Boundary"
-msgstr ""
+msgstr "Кордони"
 
 #. item "Relations/Boundary"
 #. <link href="http://wiki.openstreetmap.org/wiki/Relation:boundary"
@@ -29261,44 +29327,44 @@ msgstr ""
 #. fr.href="http://wiki.openstreetmap.org/wiki/FR:Relation:boundary" />
 #: build/trans_presets.java:3208
 msgid "Edit Boundary"
-msgstr ""
+msgstr "Властивості Кордонів"
 
 #. item "Relations/Boundary" text "Name"
 #. <optional>
 #: build/trans_presets.java:3212
 msgid "Boundary type"
-msgstr ""
+msgstr "Тип Кордону"
 
 #. item "Relations/Boundary" combo "Boundary type"
 #: build/trans_presets.java:3212
 msgid "administrative"
-msgstr ""
+msgstr "адміністративний"
 
 #: build/trans_presets.java:3212
 msgid "national"
-msgstr ""
+msgstr "національний"
 
 #: build/trans_presets.java:3212
 msgid "civil"
-msgstr ""
+msgstr "громади"
 
 #: build/trans_presets.java:3212
 msgid "political"
-msgstr ""
+msgstr "політичний"
 
 #: build/trans_presets.java:3213
 msgid "Administrative level"
-msgstr ""
+msgstr "Адміністративний рівень"
 
 #. item "Relations/Boundary" role "inner segment"
 #: build/trans_presets.java:3218
 msgid "Sub area"
-msgstr ""
+msgstr "Підпорядкована територія"
 
 #. item "Relations/Boundary" role "Sub area"
 #: build/trans_presets.java:3219
 msgid "Administration centre"
-msgstr ""
+msgstr "Адміністративний центр"
 
 #. item "Relations/Boundary" role "Administration centre"
 #. </roles>

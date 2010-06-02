@@ -15,3 +15,24 @@ tr("farmland"); // Landuse type used in multipolygons
 tr("boundary"); // relation type
 tr("multipolygon"); // relation type
 tr("route"); // relation type
+
+//** Strings in JFileChooser */
+
+tr("Details");
+tr("Attributes");
+tr("Modified");
+tr("Name");
+tr("File name:");
+tr("Size");
+tr("Type");
+tr("Files of type:");
+tr("Home");
+tr("List");
+tr("Look in:");
+tr("New Folder");
+tr("Create New Folder");
+tr("Refresh");
+tr("Save in:");
+tr("Up");
+tr("Up One Level");
+tr("View");

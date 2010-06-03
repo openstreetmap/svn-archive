@@ -1430,7 +1430,10 @@
 		<!-- Turning circles -->
 		<rule e="node" k="highway" v="turning_circle">
 			<rule e="node" s="way" k="highway" v="unclassified|residential|minor|road">
-				<circle r="1.5" class="highway-unclassified-turningcircle"/>
+				<circle r="1.5" class="highway-unclassified-turningcircle-casing"/>
+			</rule>
+			<rule e="node" s="way" k="highway" v="unclassified|residential|minor|road">
+				<circle r="1.4" class="highway-unclassified-turningcircle-core"/>
 			</rule>
 		</rule>
 
@@ -4750,7 +4753,8 @@
 			.highway-residential-area               { fill: #ffffff; }
 			.highway-unclassified-name              { stroke-width: 0px;     font-size: 1.25px; }
 			.highway-unclassified-ref               { stroke-width: 0px;     font-size: 1.5px; }
-			.highway-unclassified-turningcircle     { fill: #ffffff; stroke-width: 0.125px; stroke: #707070; }
+			.highway-unclassified-turningcircle-casing     { fill: #707070; }
+			.highway-unclassified-turningcircle-core     { fill: #ffffff; }
 			.highway-road-core                      { stroke-width: 1.25px;   stroke: #d0d0d0; }
 			.highway-road-area                      { fill: #d0d0d0; }
 

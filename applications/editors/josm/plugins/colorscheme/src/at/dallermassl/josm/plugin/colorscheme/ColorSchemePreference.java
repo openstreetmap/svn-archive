@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -52,6 +53,9 @@ public class ColorSchemePreference implements PreferenceSetting {
      * @see org.openstreetmap.josm.gui.preferences.PreferenceSetting#addGui(org.openstreetmap.josm.gui.preferences.PreferenceDialog)
      */
     public void addGui(final PreferenceTabbedPane gui) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
         Map<String, String> colorMap = Main.pref.getAllPrefix(PREF_KEY_COLOR_PREFIX);
         colorKeys = new ArrayList<String>(colorMap.keySet());
         Collections.sort(colorKeys);
@@ -109,14 +113,18 @@ public class ColorSchemePreference implements PreferenceSetting {
         addScheme.setToolTipText(tr("Use the current colors as a new color scheme."));
         deleteScheme.setToolTipText(tr("Delete the selected scheme from the list."));
 
-        gui.map.add(new JLabel(tr("Color Schemes")), GBC.eol().insets(0,5,0,0));
-        gui.map.add(new JScrollPane(schemesList), GBC.eol().fill(GBC.BOTH));
+        panel.add(new JLabel(tr("Color Schemes")), GBC.eol().insets(0,5,0,0));
+        panel.add(new JScrollPane(schemesList), GBC.eol().fill(GBC.BOTH));
         JPanel buttonPanel = new JPanel(new GridBagLayout());
-        gui.map.add(buttonPanel, GBC.eol().fill(GBC.HORIZONTAL));
+        panel.add(buttonPanel, GBC.eol().fill(GBC.HORIZONTAL));
         buttonPanel.add(Box.createHorizontalGlue(), GBC.std().fill(GBC.HORIZONTAL));
         buttonPanel.add(useScheme, GBC.std().insets(0,5,5,0));
         buttonPanel.add(addScheme, GBC.std().insets(0,5,5,0));
         buttonPanel.add(deleteScheme, GBC.std().insets(0,5,5,0));
+
+        JScrollPane scrollpane = new JScrollPane(panel);
+        scrollpane.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
+        gui.displaycontent.addTab(tr("Color Schemes"), scrollpane);
     }
 
     /**

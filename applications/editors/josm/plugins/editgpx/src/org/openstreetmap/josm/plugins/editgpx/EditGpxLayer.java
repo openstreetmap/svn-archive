@@ -149,6 +149,7 @@ public class EditGpxLayer extends Layer {
 		public void actionPerformed(ActionEvent e) {
 			Main.main.addLayer(new GpxLayer(toGpxData(false), tr("Converted from: {0}", getName())));
 			Main.main.removeLayer(EditGpxLayer.this);
+			Main.map.selectSelectTool(false);
 		}
 	}
 
@@ -160,6 +161,7 @@ public class EditGpxLayer extends Layer {
 		public void actionPerformed(ActionEvent e) {
 			Main.main.addLayer(new GpxLayer(toGpxData(true), tr("Converted from: {0}", getName())));
 			Main.main.removeLayer(EditGpxLayer.this);
+			Main.map.selectSelectTool(false);
 		}
 	}
 }

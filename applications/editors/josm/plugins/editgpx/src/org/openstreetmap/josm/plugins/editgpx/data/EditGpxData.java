@@ -15,8 +15,9 @@ public class EditGpxData {
 	private final List<GpxRoute> routes = new ArrayList<GpxRoute>();
 	private final List<WayPoint> waypoints = new ArrayList<WayPoint>();
 
-	public void load(GpxData data) {
-		tracks.clear();
+	public void load(GpxData data, boolean drop) {
+		if(drop)
+			tracks.clear();
 		for (GpxTrack track: data.tracks) {
 			tracks.add(new EditGpxTrack(track));
 		}

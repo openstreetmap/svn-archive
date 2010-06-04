@@ -105,7 +105,7 @@ class GPXLayerImportAction extends AbstractAction {
 			GpxLayer gpx = (GpxLayer)layerList.getSelectedValue();
 
 			synchronized(importing) {
-				this.data.load(gpx.data);
+				this.data.load(gpx.data, dropFirst.isSelected());
 			}
 			Main.map.mapView.repaint();
 

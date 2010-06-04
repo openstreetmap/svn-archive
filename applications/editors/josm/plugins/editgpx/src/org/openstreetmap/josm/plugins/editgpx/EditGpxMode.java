@@ -172,6 +172,8 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
 	public void layerRemoved(Layer oldLayer) {
 		if (oldLayer instanceof EditGpxLayer) {
 			currentEditLayer = null;
+			if(Main.map.mapMode instanceof EditGpxMode)
+				Main.map.selectSelectTool(false);
 		}
 	}
 

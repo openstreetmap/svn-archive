@@ -43,6 +43,7 @@
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="terracer"/>
+        <ant antfile="build.xml" target="dist" dir="touchscreenhelper"/>
         <ant antfile="build.xml" target="dist" dir="tracer"/>
         <ant antfile="build.xml" target="dist" dir="turnrestrictions"/>
         <ant antfile="build.xml" target="dist" dir="undelete"/>
@@ -97,6 +98,7 @@
         <ant antfile="build.xml" target="clean" dir="tageditor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="terracer"/>
+        <ant antfile="build.xml" target="clean" dir="touchscreenhelper"/>
         <ant antfile="build.xml" target="clean" dir="tracer"/>
         <ant antfile="build.xml" target="clean" dir="turnrestrictions"/>
         <ant antfile="build.xml" target="clean" dir="undelete"/>

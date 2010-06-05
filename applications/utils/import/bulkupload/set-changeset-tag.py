@@ -205,18 +205,43 @@ try:
         print >>sys.stderr, u"    %s <changeset> <key> <value> [...]"
         sys.exit(1)
 
-    login = raw_input("OSM login: ")
+    args = []
+    param = {}
+    num = 0
+    skip = 0
+    for arg in sys.argv[1:]:
+        num += 1
+        if skip:
+            skip -= 1
+            continue
+
+        if arg == "-u":
+            param['user'] = sys.argv[num + 1]
+            skip = 1
+        elif arg == "-p":
+            param['pass'] = sys.argv[num + 1]
+            skip = 1
+        else:
+            args.append(arg)
+
+    if 'user' in param:
+        login = param['user']
+    else:
+        login = raw_input("OSM login: ")
     if not login:
         sys.exit(1)
-    password = raw_input("OSM password: ")
+    if 'pass' in param:
+        password = param['pass']
+    else:
+        password = raw_input("OSM password: ")
     if not password:
         sys.exit(1)
 
     api = OSM_API(login, password)
-    api.changeset = int(sys.argv[1])
+    api.changeset = int(args[0])
 
     api.get_changeset_tags()
-    api.tags.update(zip(sys.argv[2::2], sys.argv[3::2]))
+    api.tags.update(zip(args[1::2], args[2::2]))
     api.set_changeset_tags()
 except HTTPError, err:
     print >>sys.stderr, err

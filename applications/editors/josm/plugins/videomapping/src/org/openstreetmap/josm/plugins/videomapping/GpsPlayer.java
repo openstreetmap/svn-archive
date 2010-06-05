@@ -17,6 +17,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 public class GpsPlayer {
 	private List<WayPoint> ls;
 	private WayPoint prev,curr,next;
+	private WayPoint start;
 	
 
 	public WayPoint getPrev() {
@@ -34,6 +35,7 @@ public class GpsPlayer {
 	public GpsPlayer(List<WayPoint> l) {
 		super();
 		this.ls = l;
+		start=ls.get(0);
 		prev=null;
 		curr=ls.get(0);
 		next=ls.get(1);
@@ -77,7 +79,6 @@ public class GpsPlayer {
 				next=ls.get(ls.indexOf(curr)+1);
 			}
 			else next=null;
-			
 		}
 	}
 	
@@ -85,7 +86,7 @@ public class GpsPlayer {
 	{
 		if ((ls.indexOf(curr)+t>0)&&(ls.indexOf(curr)<ls.size()))
 		{
-			jump(ls.get(ls.indexOf(curr)+t));
+			jump(ls.get(ls.indexOf(curr)+t)); //FIXME here is a bug
 		}		
 	}
 	
@@ -279,10 +280,15 @@ public class GpsPlayer {
 		return lengthSeg;
 	}
 
-	public void pause() {
-		// TODO Auto-generated method stub
+	public long getRelativeTime()
+	{
+		return curr.getTime().getTime()-start.getTime().getTime(); //TODO assumes timeintervall is constant!!!!
+	}
+
+	//jumps to a speciffic time
+	public void jump(long relTime) {
+		jump(relTime/1000);		//TODO ugly quick hack	
 		
 	}
-	
 	
 }

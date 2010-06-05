@@ -48,7 +48,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class PositionLayer extends Layer implements MouseListener,MouseMotionListener, KeyListener {
 	private List<WayPoint> ls;
-	private GpsPlayer l;
+	public GpsPlayer l;
 	private Collection<WayPoint> selected;
 	private Timer t;
 	private TimerTask ani;
@@ -66,52 +66,10 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		icon=ImageProvider.get("videomapping.png");
 		df = new SimpleDateFormat("hh:mm:ss:S");
 		Main.map.mapView.addMouseListener(this);
-		Main.map.mapView.addMouseMotionListener(this);
-		addKeys();								
+		Main.map.mapView.addMouseMotionListener(this);							
 		
 	}
 
-	//add key bindings for navigate through the track (and if synced trough the video, too)
-	private void addKeys() {
-		Action backward = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				if(l!=null)l.prev();
-				Main.map.mapView.repaint();
-			}};
-			
-		Action forward = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				if(l!=null)l.next();
-				Main.map.mapView.repaint();
-			}};
-		Action startStop = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				if (t==null)
-				{
-					//start
-					t= new Timer();
-					TimerTask ani=new TimerTask() {			
-						@Override
-						//some cheap animation stuff
-						public void run() {				
-							l.next();
-							Main.map.mapView.repaint();
-						}
-					};
-					t.schedule(ani,500,500);
-				}
-				else
-				{
-					//stop
-					t.cancel();
-					t=null;					
-				}
-			}};
-		//TODO custome Shortkey management
-		Main.registerActionShortcut(backward, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
-		Main.registerActionShortcut(forward, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
-		//Main.registerActionShortcut(startStop, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
-	}
 
 	@Override
 	public Icon getIcon() {
@@ -214,36 +172,13 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		{
 			if (l.getCurr()!=null){
 			p=Main.map.mapView.getPoint(l.getCurr().getEastNorth());
-			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);			
-			g.drawString(df.format(l.getCurr().getTime()),p.x,p.y);
+			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
+			SimpleDateFormat ms=new SimpleDateFormat("mm:ss");
+			g.drawString(ms.format(l.getRelativeTime()),p.x,p.y);
 			}
 		}
 	}
 	
-	public void pause()
-	{
-		if (t==null)
-		{
-			//start
-			t= new Timer();
-			TimerTask ani=new TimerTask() {			
-				@Override
-				//some cheap animation stuff
-				public void run() {				
-					l.next();
-					Main.map.mapView.repaint();
-				}
-			};
-			t.schedule(ani,500,500);
-		}
-		else
-		{
-			//stop
-			t.cancel();
-			t=null;					
-		}
-	}
-
 	private void markNearestWayPoints(Point mouse) {
 		final int MAX=10; 
 		Point p;		
@@ -396,6 +331,49 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	}
 
 	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void pause()
+	{
+		if (t==null)
+		{
+			//start
+			t= new Timer();
+			TimerTask ani=new TimerTask() {			
+				@Override
+				//some cheap animation stuff
+				public void run() {				
+					l.next();
+					Main.map.mapView.repaint();
+				}
+			};
+			t.schedule(ani,500,500);
+			//and video
+			
+		}
+		else
+		{
+			//stop
+			t.cancel();
+			t=null;					
+		}
+	}
+
+
+	public void backward() {
+		if(l!=null)l.prev();
+		Main.map.mapView.repaint();
+	}
+	
+	public void forward() {
+		if(l!=null)l.next();
+		Main.map.mapView.repaint();
+	}
+
+
+	public void loop() {
 		// TODO Auto-generated method stub
 		
 	}

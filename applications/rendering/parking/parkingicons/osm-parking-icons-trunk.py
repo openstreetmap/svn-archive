@@ -8,6 +8,34 @@ openlayertextfilename = '/home/kayd/shellscripts/parkingicons.txt'
 import sys
 import psycopg2
 import csv
+from numpy import *
+
+def shift_by_meters(lat, lon, brng, d):
+    R = 6371000.0 # earth's radius in m
+    lat=math.radians(lat)
+    lon=math.radians(lon)
+    lat2 = math.asin( math.sin(lat)*math.cos(d/R) + 
+                      math.cos(lat)*math.sin(d/R)*math.cos(brng))
+    lon2 = lon + math.atan2(math.sin(brng)*math.sin(d/R)*math.cos(lat), 
+                             math.cos(d/R)-math.sin(lat)*math.sin(lat2))
+    lat2=math.degrees(lat2)
+    lon2=math.degrees(lon2)
+    return [lat2,lon2]
+
+def calc_bearing(x1,y1,x2,y2,side):
+    Q = complex(x1,y1)
+    R = complex(x2,y2)
+    v = R-Q
+    if side=='left':
+        v=v*complex(0,1);
+    elif side=='right':
+        v=v*complex(0,-1);
+    else:
+        raise TypeError('side must be left or right')
+    #v=v*(1/abs(v)) # normalize
+    angl = angle(v) # angle (radians) (0°=right, and counterclockwise)
+    bearing = math.pi/2.0-angl # (0°=up, and clockwise)
+    return bearing
 
 if len(sys.argv) > 1:
     DSN = sys.argv[1]
@@ -25,41 +53,55 @@ openlayertextfile.writerow(['lat','lon','title','description','icon','iconSize',
 #print colnames
 
 latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
+coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
 FW = "FROM planet_osm_line WHERE"
 
 ### display disc - maxstay
-curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:left:maxstay\" "+FW+" \"parking:condition:left:maxstay\" is not NULL and \"parking:condition:left\"='disc'")
-#osm_mapnik=> select osm_id,ST_Y(ST_Transform(ST_Centroid(way),4326)),ST_X(ST_Transform(ST_Centroid(way),4326)),(tags->'parking:condition:left:maxstay') as "parking:condition:left:maxstay" FROM planet_line WHERE (tags ? 'parking:condition:left:maxstay');
 
-pclm_ids = curs.fetchall()
-curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:right:maxstay\" "+FW+" \"parking:condition:right:maxstay\" is not NULL and \"parking:condition:right\"='disc'")
-pcrm_ids = curs.fetchall()
-pcm_ids = pclm_ids + pcrm_ids
-#print pcm_ids
+pc_disc_maxstay = []
+for side in ['left','right','both']:
+    curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":maxstay\" is not NULL and \"parking:condition:"+side+"\"='disc'")
+    pc_disc_maxstay += curs.fetchall()
 
-for pcm_id in pcm_ids:
-    openlayertextfile.writerow([pcm_id[1],pcm_id[2],'Disc parking','Maximum parking time:<br>'+pcm_id[3],'parkingicons/pi-disc.png','16,16','-8,-8'])
+for pc_dm in pc_disc_maxstay:
+    bearing = calc_bearing(pc_dm[7],pc_dm[6], pc_dm[9],pc_dm[8], pc_dm[10]) 
+    openlayertextfile.writerow(shift_by_meters(pc_dm[1],pc_dm[2],bearing,4.0)+['Disc parking','Maximum parking time:<br>'+pc_dm[3],'parkingicons/pi-disc.png','16,16','-8,-8'])
 
 ### display vehicles
 
-curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:left:vehicles\" "+FW+" \"parking:condition:left:vehicles\" is not NULL")
-pclv_ids = curs.fetchall()
-curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:right:vehicles\" "+FW+" \"parking:condition:right:vehicles\" is not NULL")
-pcrv_ids = curs.fetchall()
-pcv_ids = pclv_ids + pcrv_ids
+pc_vehicles = []
+for side in ['left','right','both']:
+    curs.execute("SELECT osm_id,"+latlon+",\"parking:condition:"+side+":vehicles\","+coords+",'"+side+"' "+FW+" \"parking:condition:"+side+":vehicles\" is not NULL")
+    pc_vehicles += curs.fetchall()
 
 vehicle_icons = {"car":"parkingicons/pi-car.png" , "bus":"parkingicons/pi-bus.png" , "motorcycle":"parkingicons/pi-motorcycle.png"}
 
-for pcv_id in pcv_ids:
-    vehicle_icon = vehicle_icons.get(pcv_id[3],"parkingicons/pi-unkn.png");
-    openlayertextfile.writerow([pcv_id[1],pcv_id[2],'Parking only for','Vehicle: '+pcv_id[3],vehicle_icon,'16,16','-8,-8'])
+for pc_v in pc_vehicles:
+    vehicle_icon = vehicle_icons.get(pc_v[3],"parkingicons/pi-unkn.png");
+    """
+    P = complex(pc_v[5],pc_v[4])
+    Q = complex(pc_v[7],pc_v[6])
+    R = complex(pc_v[9],pc_v[8])
+    v = R-Q
+    side = pc_v[10]
+    if side=='left':
+        v=v*complex(0,1);
+    elif side=='right':
+        v=v*complex(0,-1);
+    v=v*(1/abs(v)) # normalize
+    angl = angle(v) # angle (radians) (0°=right, and counterclockwise)
+    bearing = math.pi/2.0-angl # (0°=up, and clockwise)
+    #print P,v,angle(v,deg=True),side
+    """
+    bearing = calc_bearing(pc_v[7],pc_v[6], pc_v[9],pc_v[8], pc_v[10])    
+    #openlayertextfile.writerow([pc_v[1],pc_v[2],'Parking only for','Vehicle: '+pc_v[3]+'<br>'+str(math.degrees(angl))+'° '+side,vehicle_icon,'16,16','-8,-8'])
+    openlayertextfile.writerow(shift_by_meters(pc_v[1],pc_v[2],bearing,4.0)+['Parking only for','Vehicle: '+pc_v[3],vehicle_icon,'16,16','-8,-8'])
 
 conn.rollback()
 
 sys.exit(0)
 
-
-
+                             
 """
 SELECT
    ST_Y(way) AS lat_wgs84,

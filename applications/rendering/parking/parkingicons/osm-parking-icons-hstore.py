@@ -30,6 +30,7 @@ openlayertextfile = csv.writer(open(openlayertextfilename, 'w'), delimiter='\t',
 openlayertextfile.writerow(['lat','lon','title','description','icon','iconSize','iconOffset'])
 
 latlon= "ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))"
+coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
 FW = "FROM planet_line WHERE"
 
 ### display disc - maxstay

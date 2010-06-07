@@ -1,7 +1,7 @@
-Index: osmarender.xsl
+Index: xslt/osmarender.xsl
 ===================================================================
---- osmarender.xsl	(Revision 21600)
-+++ osmarender.xsl	(Arbeitskopie)
+--- xslt/osmarender.xsl	(Revision 21606)
++++ xslt/osmarender.xsl	(Arbeitskopie)
 @@ -42,6 +42,11 @@
    xmlns:msxsl="urn:schemas-microsoft-com:xslt"
    xmlns:labels="http://openstreetmap.org/osmarender-labels-rtf"
@@ -617,7 +617,27 @@ Index: osmarender.xsl
      </xsl:apply-templates>
  
    </xsl:template>
-@@ -1400,6 +1639,8 @@
+@@ -1338,6 +1577,7 @@
+        If more than one way passes through the node then the result is a bit unspecified.  -->
+   <xsl:template match="wayMarker" mode="render">
+     <xsl:param name="elements"/>
++    <xsl:param name="onlyCreateSemantics"/>
+     
+     <!-- This is the instruction that is currently being processed -->
+     <xsl:variable name="instruction" select="."/>
+@@ -1390,9 +1630,11 @@
+ 	  </xsl:choose>
+ 	</xsl:variable>
+ 	
++	<xsl:if test="not($onlyCreateSemantics)">
+ 	<path d="{$path}">
+ 		<xsl:apply-templates select="$instruction/@*" mode="copyAttributes" />
+ 	</path>			
++	</xsl:if>
+ 	</xsl:for-each>
+     
+   </xsl:template>
+@@ -1400,6 +1642,8 @@
    <!-- Process an <caption> instruction -->
    <xsl:template match="areaText|caption" mode="render">
      <xsl:param name="elements"/>
@@ -626,7 +646,7 @@ Index: osmarender.xsl
  
      <!-- This is the instruction that is currently being processed -->
      <xsl:variable name="instruction" select="."/>
-@@ -1407,6 +1648,8 @@
+@@ -1407,6 +1651,8 @@
      <!-- Select all <way> elements that have a key that matches the k attribute of the text instruction -->
      <xsl:apply-templates select="$elements[name()='way'][tag[@k=$instruction/@k]]" mode="areaTextPath">
        <xsl:with-param name="instruction" select="$instruction"/>
@@ -635,7 +655,7 @@ Index: osmarender.xsl
      </xsl:apply-templates>
  	<!-- Select all <node> elements that have a key that matches the k attribute of the text instruction -->
  	<xsl:for-each select="$elements[name()='node'][tag[@k=$instruction/@k]]">
-@@ -1415,6 +1658,9 @@
+@@ -1415,6 +1661,9 @@
  			<xsl:with-param name="lon" select="@lon"/>
  			<xsl:with-param name="lat" select="@lat"/>
  			<xsl:with-param name="text" select="tag[@k=$instruction/@k]/@v"/>
@@ -645,7 +665,7 @@ Index: osmarender.xsl
  		</xsl:call-template>
      </xsl:for-each>
    </xsl:template>
-@@ -1425,6 +1671,8 @@
+@@ -1425,6 +1674,8 @@
  
    <xsl:template match="way" mode="areaTextPath">
      <xsl:param name="instruction"/>
@@ -654,7 +674,7 @@ Index: osmarender.xsl
  
      <!-- The current <way> element -->
      <xsl:variable name="way" select="."/>
-@@ -1432,6 +1680,9 @@
+@@ -1432,6 +1683,9 @@
      <xsl:call-template name="renderAreaText">
        <xsl:with-param name="instruction" select="$instruction"/>
        <xsl:with-param name="pathId" select="concat('way_normal_',@id)"/>
@@ -664,7 +684,7 @@ Index: osmarender.xsl
      </xsl:call-template>
  
    </xsl:template>
-@@ -1439,6 +1690,9 @@
+@@ -1439,6 +1693,9 @@
  
    <xsl:template name="renderAreaText">
      <xsl:param name="instruction"/>
@@ -674,7 +694,7 @@ Index: osmarender.xsl
  
      <xsl:variable name="element" select="."/>
      <xsl:variable name="areaLabels" select="exslt:node-set($labels)/labels:area[@id = $element/@id]"/>
-@@ -1454,6 +1708,9 @@
+@@ -1454,6 +1711,9 @@
  						<xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
  						<xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
  						<xsl:with-param name="text" select="$text"/>
@@ -684,7 +704,7 @@ Index: osmarender.xsl
  					</xsl:call-template>
  				</xsl:for-each>
  			</xsl:for-each>
-@@ -1461,9 +1718,11 @@
+@@ -1461,9 +1721,11 @@
  
  		<xsl:otherwise>
  			<xsl:variable name='center'>
@@ -696,7 +716,7 @@ Index: osmarender.xsl
  			</xsl:variable>
  
  			<xsl:message>
-@@ -1475,6 +1734,9 @@
+@@ -1475,6 +1737,9 @@
  				<xsl:with-param name="lon" select="substring-before($center, ',')"/>
  				<xsl:with-param name="lat" select="substring-after($center, ',')"/>
  				<xsl:with-param name="text" select="$text"/>
@@ -706,7 +726,7 @@ Index: osmarender.xsl
  			</xsl:call-template>
  		</xsl:otherwise>
  
-@@ -1488,6 +1750,8 @@
+@@ -1488,6 +1753,8 @@
    <!-- Process an <areaSymbol> instruction -->
    <xsl:template match="areaSymbol" mode="render">
      <xsl:param name="elements"/>
@@ -715,7 +735,7 @@ Index: osmarender.xsl
  
      <!-- This is the instruction that is currently being processed -->
      <xsl:variable name="instruction" select="."/>
-@@ -1495,6 +1759,8 @@
+@@ -1495,6 +1762,8 @@
      <!-- Select all <way> elements -->
      <xsl:apply-templates select="$elements[name()='way']" mode="areaSymbolPath">
        <xsl:with-param name="instruction" select="$instruction"/>
@@ -724,7 +744,7 @@ Index: osmarender.xsl
      </xsl:apply-templates>
    </xsl:template>
  
-@@ -1504,6 +1770,8 @@
+@@ -1504,6 +1773,8 @@
  
    <xsl:template match="way" mode="areaSymbolPath">
      <xsl:param name="instruction"/>
@@ -733,7 +753,7 @@ Index: osmarender.xsl
  
      <!-- The current <way> element -->
      <xsl:variable name="way" select="."/>
-@@ -1511,6 +1779,8 @@
+@@ -1511,6 +1782,8 @@
      <xsl:call-template name="renderAreaSymbol">
        <xsl:with-param name="instruction" select="$instruction"/>
        <xsl:with-param name="pathId" select="concat('way_normal_',@id)"/>
@@ -742,7 +762,7 @@ Index: osmarender.xsl
      </xsl:call-template>
  
    </xsl:template>
-@@ -1518,6 +1788,8 @@
+@@ -1518,6 +1791,8 @@
  
    <xsl:template name="renderAreaSymbol">
      <xsl:param name="instruction"/>
@@ -751,7 +771,7 @@ Index: osmarender.xsl
  
      <xsl:variable name="element" select="."/>
  
-@@ -1532,6 +1804,9 @@
+@@ -1532,6 +1807,9 @@
  						<xsl:with-param name="instruction" select="$instruction"/>
  						<xsl:with-param name="lon" select="key('nodeById', $label/@ref)/@lon"/>
  						<xsl:with-param name="lat" select="key('nodeById', $label/@ref)/@lat"/>
@@ -761,7 +781,7 @@ Index: osmarender.xsl
  					</xsl:call-template>
  				</xsl:for-each>
  			</xsl:for-each>
-@@ -1539,9 +1814,11 @@
+@@ -1539,9 +1817,11 @@
  		
  		<xsl:otherwise>
  			<xsl:variable name='center'>
@@ -773,7 +793,7 @@ Index: osmarender.xsl
  			</xsl:variable>
  			
  			<xsl:message>
-@@ -1552,6 +1829,9 @@
+@@ -1552,6 +1832,9 @@
  				<xsl:with-param name="instruction" select="$instruction"/>
  				<xsl:with-param name="lon" select="substring-before($center, ',')"/>
  				<xsl:with-param name="lat" select="substring-after($center, ',')"/>
@@ -783,7 +803,7 @@ Index: osmarender.xsl
  			</xsl:call-template>
  		</xsl:otherwise>				
  	</xsl:choose>
-@@ -2467,6 +2747,8 @@
+@@ -2467,6 +2750,8 @@
    <!-- Process a <pathText> instruction -->
    <xsl:template match="text|pathText" mode="render">
      <xsl:param name="elements"/>
@@ -792,7 +812,7 @@ Index: osmarender.xsl
  
      <!-- This is the instruction that is currently being processed -->
      <xsl:variable name="instruction" select="."/>
-@@ -2478,12 +2760,17 @@
+@@ -2478,12 +2763,17 @@
  			<xsl:with-param name="lon" select="@lon"/>
  			<xsl:with-param name="lat" select="@lat"/>
  			<xsl:with-param name="text" select="tag[@k=$instruction/@k]/@v"/>
@@ -810,7 +830,7 @@ Index: osmarender.xsl
      </xsl:apply-templates>
    </xsl:template>
  
-@@ -2495,6 +2782,8 @@
+@@ -2495,6 +2785,8 @@
    <!-- Render textPaths for a way -->
    <xsl:template match="way" mode="textPath">
      <xsl:param name="instruction"/>
@@ -819,7 +839,7 @@ Index: osmarender.xsl
  
      <!-- The current <way> element -->
      <xsl:variable name="way" select="."/>
-@@ -2509,6 +2798,7 @@
+@@ -2509,6 +2801,7 @@
  				<xsl:otherwise>
  					<xsl:apply-templates select='$instruction' mode='textformat'>
  						<xsl:with-param name='way' select='$way'/>
@@ -827,7 +847,7 @@ Index: osmarender.xsl
  					</xsl:apply-templates>
  				</xsl:otherwise>
  			</xsl:choose>
-@@ -2547,6 +2837,9 @@
+@@ -2547,6 +2840,9 @@
  				<xsl:with-param name="pathId" select="$waypath"/>
  				<xsl:with-param name="pathDirection" select="$pathdirection"/>
  				<xsl:with-param name="text" select="$text"/>
@@ -837,7 +857,7 @@ Index: osmarender.xsl
  			</xsl:call-template>
  		</xsl:if>
  	</xsl:if>
-@@ -2897,6 +3190,7 @@
+@@ -2897,6 +3193,7 @@
  	-->
  <xsl:template name="processRules">
  
@@ -845,7 +865,7 @@ Index: osmarender.xsl
      <!-- First select all elements - exclude those marked as deleted by JOSM -->
  	<xsl:variable name='elements' select="$data/osm/*[not(@action) or not(@action='delete')]" />
  
-@@ -2922,36 +3216,57 @@
+@@ -2922,36 +3219,57 @@
  	
  	<xsl:for-each select="exslt:node-set($commands)/z:command[z:instruction/*/@z-mode='bottom']">
  		<xsl:sort select="@z-index" data-type="number"/>
@@ -904,7 +924,7 @@ Index: osmarender.xsl
  			</xsl:apply-templates>
  		</xsl:for-each>
  	</xsl:template>
-@@ -3937,6 +4252,12 @@
+@@ -3937,6 +4255,12 @@
            <cc:requires rdf:resource="http://web.resource.org/cc/Attribution"/>
            <cc:requires rdf:resource="http://web.resource.org/cc/ShareAlike"/>
          </cc:License>

@@ -37,11 +37,11 @@ def calc_bearing(x1,y1,x2,y2,side):
     bearing = math.pi/2.0-angl # (0°=up, and clockwise)
     return bearing
 
-if len(sys.argv) == 2:
+if len(sys.argv) == 3:
     DSN = sys.argv[1]
     openlayertextfilename = sys.argv[2]
 else:
-    print "usage: osm-parking-icons 'dbname=osm_mapnik host=sql-mapnik' '/home/kayd/parkingicons/parkingicons.txt'"
+    print "usage: osm-parking-icons.py 'dbname=osm_mapnik host=sql-mapnik' '/home/kayd/parkingicons/parkingicons.txt'"
     exit(0);
 
 print "Opening connection using dns:", DSN

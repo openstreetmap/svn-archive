@@ -37,8 +37,12 @@ def calc_bearing(x1,y1,x2,y2,side):
     bearing = math.pi/2.0-angl # (0°=up, and clockwise)
     return bearing
 
-if len(sys.argv) > 1:
+if len(sys.argv) == 2:
     DSN = sys.argv[1]
+    openlayertextfilename = sys.argv[2]
+else:
+    print "usage: osm-parking-icons 'dbname=osm_mapnik host=sql-mapnik' '/home/kayd/parkingicons/parkingicons.txt'"
+    exit(0);
 
 print "Opening connection using dns:", DSN
 conn = psycopg2.connect(DSN)
@@ -47,10 +51,6 @@ curs = conn.cursor()
 
 openlayertextfile = csv.writer(open(openlayertextfilename, 'w'), delimiter='\t',quotechar='"', quoting=csv.QUOTE_MINIMAL)
 openlayertextfile.writerow(['lat','lon','title','description','icon','iconSize','iconOffset'])
-
-#curs.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='planet_osm_line'")
-#colnames = curs.fetchall()
-#print colnames
 
 latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
 coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"

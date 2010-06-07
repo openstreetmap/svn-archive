@@ -72,27 +72,27 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
 			return new MapBasedTagGroup(primitive.getKeys());
 		}
 	}
-	
+
 	public Object getMember(RelationMember member) {
 		return member.getMember();
 	}
-	
+
 	public String getRole(RelationMember member) {
 		return member.getRole();
 	}
-	
+
 	public boolean isNMember(RelationMember member) {
 		return member.getMember() instanceof Node;
 	}
-	
+
 	public boolean isWMember(RelationMember member) {
 		return member.getMember() instanceof Way;
 	}
-	
+
 	public boolean isRMember(RelationMember member) {
 		return member.getMember() instanceof Relation;
 	}
-	
+
 
 	private static final TagGroup EMPTY_TAG_GROUP;
 	static {
@@ -149,13 +149,13 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
 			}
 
 			private void updateNext() {
-				if (originalIterator.hasNext()) {
-					next = originalIterator.next();
-					if (!accept(next)) {
-						updateNext();
+				next = null;
+				while (originalIterator.hasNext()) {
+					P originalNext = originalIterator.next();
+					if (accept(originalNext)) {
+						next = originalNext;
+						break;
 					}
-				} else {
-					next = null;
 				}
 			}
 

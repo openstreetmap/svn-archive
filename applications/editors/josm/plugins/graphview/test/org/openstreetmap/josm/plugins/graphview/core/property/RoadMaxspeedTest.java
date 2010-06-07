@@ -12,7 +12,7 @@ public class RoadMaxspeedTest extends RoadPropertyTest {
 	@Test
 	public void testEvaluate_numeric() {
 		testMaxspeed(30, "30");
-		testMaxspeed(48, "48.28");
+		testMaxspeed(48.3f, "48.3");
 	}
 
 	@Test
@@ -24,9 +24,9 @@ public class RoadMaxspeedTest extends RoadPropertyTest {
 
 	@Test
 	public void testEvaluate_mph() {
-		testMaxspeed(72, "45 mph");
-		testMaxspeed(64, "40mph");
-		testMaxspeed(24, "15	mph");
+		testMaxspeed(72.42048f, "45 mph");
+		testMaxspeed(64.373764f, "40mph");
+		testMaxspeed(24.14016f, "15	mph");
 	}
 
 }

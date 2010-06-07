@@ -3,17 +3,21 @@
   <!ENTITY owl "http://www.w3.org/2002/07/owl#">
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
-  <!ENTITY svgmap "http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap#">
+  <!ENTITY svgmap "http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap">
+  <!ENTITY vocabulary "http://linkedgeodata.org/vocabulary">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
 ]>
-<rdf:RDF xml:base="http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap"
+<rdf:RDF xml:base="&svgmap;"
          xmlns:owl="&owl;"
          xmlns:rdf="&rdf;"
-         xmlns:rdfs="&rdfs;"
-         xmlns:svgmap="&svgmap;">
+         xmlns:rdfs="&rdfs;">
 
 <!-- Ontology Information -->
-  <owl:Ontology rdf:about=""/>
+  <owl:Ontology rdf:about="">
+    <owl:imports>
+      <owl:Ontology rdf:about="&vocabulary;"/>
+    </owl:imports>
+  </owl:Ontology>
 
 <!-- Classes -->
   <owl:Class rdf:about="#AreaFeature">
@@ -36,18 +40,18 @@
 
   <owl:Class rdf:about="#OSMArea">
     <rdfs:subClassOf rdf:resource="#OSMData"/>
-    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/vocabulary#way"/>
+    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/triplify/way"/>
   </owl:Class>
 
   <owl:Class rdf:about="#OSMData"/>
   <owl:Class rdf:about="#OSMNode">
     <rdfs:subClassOf rdf:resource="#OSMData"/>
-    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/vocabulary#node"/>
+    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/triplify/node"/>
   </owl:Class>
 
   <owl:Class rdf:about="#OSMWay">
     <rdfs:subClassOf rdf:resource="#OSMData"/>
-    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/vocabulary#way"/>
+    <owl:equivalentClass rdf:resource="http://linkedgeodata.org/triplify/way"/>
   </owl:Class>
 
   <owl:Class rdf:about="#PointFeature">
@@ -62,7 +66,10 @@
     <rdfs:subClassOf rdf:resource="#SVGElement"/>
   </owl:Class>
 
-  <owl:Class rdf:about="#SVGElement"/>
+  <owl:Class rdf:about="#SVGElement">
+    <rdfs:subClassOf rdf:resource="#XMLElement"/>
+  </owl:Class>
+
   <owl:Class rdf:about="#SVGGElement">
     <rdfs:subClassOf rdf:resource="#SVGElement"/>
   </owl:Class>
@@ -88,26 +95,27 @@
     <rdfs:subClassOf rdf:resource="#SVGElement"/>
   </owl:Class>
 
-  <owl:Class rdf:about="http://linkedgeodata.org/vocabulary#node"/>
-  <owl:Class rdf:about="http://linkedgeodata.org/vocabulary#way"/>
-  <owl:Class rdf:nodeID="b12">
-    <owl:unionOf rdf:parseType="Collection">
-      <rdf:Description rdf:about="#SVGCircleElement"/>
-      <rdf:Description rdf:about="#SVGPathElement"/>
-    </owl:unionOf>
-  </owl:Class>
-
-  <owl:Class rdf:nodeID="b11">
+  <owl:Class rdf:about="#XMLElement"/>
+  <owl:Class rdf:about="http://linkedgeodata.org/triplify/node"/>
+  <owl:Class rdf:about="http://linkedgeodata.org/triplify/way"/>
+  <owl:Class rdf:nodeID="b19">
     <owl:unionOf rdf:parseType="Collection">
       <rdf:Description rdf:about="#SVGCircleElement"/>
       <rdf:Description rdf:about="#SVGGElement"/>
     </owl:unionOf>
   </owl:Class>
 
+  <owl:Class rdf:nodeID="b18">
+    <owl:unionOf rdf:parseType="Collection">
+      <rdf:Description rdf:about="#SVGCircleElement"/>
+      <rdf:Description rdf:about="#SVGPathElement"/>
+    </owl:unionOf>
+  </owl:Class>
+
 <!-- Object Properties -->
   <owl:ObjectProperty rdf:about="#areaFeatureDrawnBy">
     <rdfs:domain rdf:resource="#AreaFeature"/>
-    <rdfs:range rdf:nodeID="b12"/>
+    <rdfs:range rdf:nodeID="b18"/>
     <rdfs:subPropertyOf rdf:resource="#drawnBy"/>
   </owl:ObjectProperty>
 
@@ -133,6 +141,44 @@
     <rdfs:range rdf:resource="#SVGElement"/>
   </owl:ObjectProperty>
 
+  <owl:ObjectProperty rdf:about="#draws">
+    <owl:inverseOf rdf:resource="#drawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#drawsAreaFeature">
+    <rdfs:subPropertyOf rdf:resource="#draws"/>
+    <owl:inverseOf rdf:resource="#areaFeatureDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#drawsAreaFeatureLabel">
+    <rdfs:subPropertyOf rdf:resource="#drawsLabel"/>
+    <owl:inverseOf rdf:resource="#areaFeatureLabelDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#drawsLabel">
+    <owl:inverseOf rdf:resource="#labelDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#drawsLineFeature">
+    <rdfs:subPropertyOf rdf:resource="#draws"/>
+    <owl:inverseOf rdf:resource="#lineFeatureDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#drawsLineFeatureLabel">
+    <rdfs:subPropertyOf rdf:resource="#drawsLabel"/>
+    <owl:inverseOf rdf:resource="#lineFeatureLabelDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#drawsPointFeature">
+    <rdfs:subPropertyOf rdf:resource="#draws"/>
+    <owl:inverseOf rdf:resource="#pointFeatureDrawnBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#drawsPointFeatureLabel">
+    <rdfs:subPropertyOf rdf:resource="#drawsLabel"/>
+    <owl:inverseOf rdf:resource="#pointFeatureLabelDrawnBy"/>
+  </owl:ObjectProperty>
+
   <owl:ObjectProperty rdf:about="#hasAreaFeatureLabel">
     <rdfs:domain rdf:resource="#AreaFeature"/>
     <rdfs:range rdf:resource="#AreaFeatureLabel"/>
@@ -150,7 +196,12 @@
     <rdfs:subPropertyOf rdf:resource="#hasLabel"/>
   </owl:ObjectProperty>
 
-  <owl:ObjectProperty rdf:about="#hasNode"/>
+  <owl:ObjectProperty rdf:about="#hasNode">
+    <rdfs:domain rdf:resource="#OSMWay"/>
+    <rdfs:range rdf:resource="#OSMNode"/>
+    <owl:equivalentProperty rdf:resource="http://linkedgeodata.org/triplify/hasNode"/>
+  </owl:ObjectProperty>
+
   <owl:ObjectProperty rdf:about="#hasPointFeatureLabel">
     <rdfs:domain rdf:resource="#PointFeature"/>
     <rdfs:range rdf:resource="#PointFeatureLabel"/>
@@ -169,6 +220,10 @@
   <owl:ObjectProperty rdf:about="#isLineFeatureLabel">
     <rdfs:subPropertyOf rdf:resource="#isLabel"/>
     <owl:inverseOf rdf:resource="#hasLineFeatureLabel"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isNodeOf">
+    <owl:inverseOf rdf:resource="#hasNode"/>
   </owl:ObjectProperty>
 
   <owl:ObjectProperty rdf:about="#isPointFeatureLabel">
@@ -206,7 +261,7 @@
 
   <owl:ObjectProperty rdf:about="#pointFeatureDrawnBy">
     <rdfs:domain rdf:resource="#PointFeature"/>
-    <rdfs:range rdf:nodeID="b11"/>
+    <rdfs:range rdf:nodeID="b19"/>
     <rdfs:subPropertyOf rdf:resource="#drawnBy"/>
   </owl:ObjectProperty>
 
@@ -273,5 +328,9 @@
   <owl:ObjectProperty rdf:about="#standsFor">
     <rdfs:domain rdf:resource="#Feature"/>
     <rdfs:range rdf:resource="#OSMData"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="http://linkedgeodata.org/triplify/hasNode">
+    <owl:equivalentProperty rdf:resource="#hasNode"/>
   </owl:ObjectProperty>
 </rdf:RDF>

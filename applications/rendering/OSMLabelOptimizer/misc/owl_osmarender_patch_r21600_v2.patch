@@ -1,12 +1,12 @@
-Index: osmarender/xslt/osmarender.xsl
+Index: osmarender.xsl
 ===================================================================
---- osmarender/xslt/osmarender.xsl	(Revision 17723)
-+++ osmarender/xslt/osmarender.xsl	(Arbeitskopie)
+--- osmarender.xsl	(Revision 21600)
++++ osmarender.xsl	(Arbeitskopie)
 @@ -42,6 +42,11 @@
    xmlns:msxsl="urn:schemas-microsoft-com:xslt"
    xmlns:labels="http://openstreetmap.org/osmarender-labels-rtf"
    xmlns:z="http://openstreetmap.org/osmarender-z-rtf"
-+  xmlns:svgmap="http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap"
++  xmlns:svgmap="http://www.openstreetmap.org/osmarender/ontology/svgmap/01/svgmap#"
 +  xmlns:owl="http://www.w3.org/2002/07/owl#"
 +  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 +  xmlns:xsd ="http://www.w3.org/2001/XMLSchema#"
@@ -55,7 +55,7 @@ Index: osmarender/xslt/osmarender.xsl
 +    <xsl:if test="$onlyCreateSemantics">
 +	    <svgmap:LineFeature rdf:about="#lineFeature_way_{$way/@id}">
 +		<svgmap:lineFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+		<svgmap:lineFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}"/>
++		<svgmap:lineFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}#id"/>
 +		<svgmap:lineFeatureDrawnBy>
 +			<svgmap:SVGUseElement rdf:about="#way_{$pathId}_{$currentCount}"/>
 +		</svgmap:lineFeatureDrawnBy>
@@ -200,7 +200,7 @@ Index: osmarender/xslt/osmarender.xsl
 +	<xsl:if test="$node">
 +	<svgmap:PointFeature rdf:about="#pointFeature_node_{$node/@id}">
 +		<svgmap:pointFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+		<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}"/>
++		<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}#id"/>
 +		<svgmap:pointFeatureDrawnBy>
 +			<svgmap:SVGCircleElement rdf:about="#circle_node_{$node/@id}_{$currentCount}"/>
 +		</svgmap:pointFeatureDrawnBy>
@@ -209,7 +209,7 @@ Index: osmarender/xslt/osmarender.xsl
 +	<xsl:if test="$way">
 +	<svgmap:AreaFeature rdf:about="#areaFeature_way_{$way/@id}">
 +		<svgmap:areaFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+		<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}"/>
++		<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}#id"/>
 +		<svgmap:areaFeatureDrawnBy>
 +			<svgmap:SVGCircleElement rdf:about="#circle_way_{$way/@id}_{$currentCount}"/>
 +		</svgmap:areaFeatureDrawnBy>
@@ -248,7 +248,7 @@ Index: osmarender/xslt/osmarender.xsl
 +	    <xsl:if test="$node">
 +	    <svgmap:PointFeature rdf:about="#pointFeature_node_{$node/@id}">
 +		<svgmap:pointFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+		<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}"/>
++		<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}#id"/>
 +		<svgmap:pointFeatureDrawnBy>
 +			<svgmap:SVGGElement rdf:about="#node_{$node/@id}_{$currentCount}"/>
 +		</svgmap:pointFeatureDrawnBy>
@@ -257,7 +257,7 @@ Index: osmarender/xslt/osmarender.xsl
 +	    <xsl:if test="$area">
 +	    <svgmap:AreaFeature rdf:about="#areaFeature_way_{$area/@id}">
 +		    <svgmap:areaFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+		    <svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$area/@id}"/>
++		    <svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$area/@id}#id"/>
 +		    <svgmap:areaFeatureDrawnBy>
 +			    <svgmap:SVGGElement rdf:about="#area_{$area/@id}_{$currentCount}"/>
 +		    </svgmap:areaFeatureDrawnBy>
@@ -318,7 +318,7 @@ Index: osmarender/xslt/osmarender.xsl
 +		    <svgmap:isPointFeatureLabel>
 +			    <svgmap:PointFeature rdf:about="#pointFeature_node_{$node/@id}">
 +				<svgmap:pointFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+				<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}"/>
++				<svgmap:pointFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/node/{$node/@id}#id"/>
 +			    </svgmap:PointFeature>
 +		    </svgmap:isPointFeatureLabel>
 +		    <svgmap:pointFeatureLabelDrawnBy>
@@ -331,7 +331,7 @@ Index: osmarender/xslt/osmarender.xsl
 +		    <svgmap:isAreaFeatureLabel>
 +			    <svgmap:AreaFeature rdf:about="#areaFeature_way_{$area/@id}">
 +				<svgmap:areaFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+				<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$area/@id}"/>
++				<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$area/@id}#id"/>
 +			    </svgmap:AreaFeature>
 +		    </svgmap:isAreaFeatureLabel>
 +		    <svgmap:areaFeatureLabelDrawnBy>
@@ -399,7 +399,7 @@ Index: osmarender/xslt/osmarender.xsl
 +		<svgmap:isLineFeatureLabel>	
 +			<svgmap:LineFeature rdf:about="#lineFeature_way_{$way/@id}">
 +				<svgmap:lineFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+				<svgmap:lineFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}"/>
++				<svgmap:lineFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{$way/@id}#id"/>
 +			</svgmap:LineFeature>
 +		</svgmap:isLineFeatureLabel>
 +		<svgmap:lineFeatureLabelDrawnBy>
@@ -502,7 +502,7 @@ Index: osmarender/xslt/osmarender.xsl
 +	<xsl:if test="$onlyCreateSemantics">
 +		<svgmap:AreaFeature rdf:about="#areaFeature_way_{@id}">
 +			<svgmap:areaFeatureShownBy rdf:resource="#{$svg_map_id}"/>
-+			<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{@id}"/>
++			<svgmap:areaFeatureStandsFor rdf:resource="http://linkedgeodata.org/triplify/way/{@id}#id"/>
 +			<svgmap:areaFeatureDrawnBy>
 +				<svgmap:SVGPathElement rdf:about="#area_way_{@id}_{$currentCount}"/>
 +			</svgmap:areaFeatureDrawnBy>

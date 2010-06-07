@@ -83,7 +83,7 @@ vehicle_icons = {"car":"parkingicons/pi-car.png" , "bus":"parkingicons/pi-bus.pn
 for pc_v in pc_vehicles:
     vehicle_icon = vehicle_icons.get(pc_v[3],"parkingicons/pi-unkn.png");
     bearing = calc_bearing(pc_v[7],pc_v[6], pc_v[9],pc_v[8], pc_v[10])    
-    openlayertextfile.writerow(shift_by_meters(pc_v[1],pc_v[2],bearing,4.0)+['Parking only for','Vehicle: '+pc_v[3],vehicle_icon,'16,16','-8,-8'])
+    openlayertextfile.writerow(shift_by_meters(pc_v[1],pc_v[2],bearing,4.0)+['Parking only for','Vehicle : '+pc_v[3],vehicle_icon,'16,16','-8,-8'])
 
 conn.rollback()
 

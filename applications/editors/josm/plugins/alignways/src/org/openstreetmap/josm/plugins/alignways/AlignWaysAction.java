@@ -75,7 +75,7 @@ public class AlignWaysAction extends JosmAction {
 						// Revert move
 						((AlignWaysRotateCommand) c).undoCommand();
 						JOptionPane.showMessageDialog(Main.parent,
-								tr("Aligning would result nodes outside the world." +
+								tr("Aligning would result nodes outside the world.\n" +
 								"Your action is being reverted."),
 								tr("AlignWayS message"), JOptionPane.WARNING_MESSAGE);
 						return;

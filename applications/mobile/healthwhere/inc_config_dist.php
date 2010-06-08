@@ -37,7 +37,9 @@ $osm_password = "";
 //OSM API & XAPI base URLs - not including trailing /
 //See http://wiki.openstreetmap.org/wiki/Protocol
 $osm_api_base = "http://api.openstreetmap.org/api/0.6";
-$osm_xapi_base = "http://www.informationfreeway.org/api/0.6";
+$osm_xapi_base = "http://osmxapi.hypercube.telascience.org/api/0.6";
+//$osm_xapi_base = "http://www.informationfreeway.org/api/0.6";
+//$osm_xapi_base = "http://xapi.openstreetmap.org/api/0.6";
 
 //Local SQLite database file used for postcodes etc
 $db_file = "healthware.db";

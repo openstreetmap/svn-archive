@@ -47,6 +47,7 @@ import org.openstreetmap.josm.plugins.validator.tests.RelationChecker;
 import org.openstreetmap.josm.plugins.validator.tests.SelfIntersectingWay;
 import org.openstreetmap.josm.plugins.validator.tests.SimilarNamedWays;
 import org.openstreetmap.josm.plugins.validator.tests.TagChecker;
+import org.openstreetmap.josm.plugins.validator.tests.TurnrestrictionTest;
 import org.openstreetmap.josm.plugins.validator.tests.UnclosedWays;
 import org.openstreetmap.josm.plugins.validator.tests.UnconnectedWays;
 import org.openstreetmap.josm.plugins.validator.tests.UntaggedNode;
@@ -102,6 +103,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
             NameMismatch.class, // ID  1501 ..  1599
             MultipolygonTest.class, // ID  1601 ..  1699
             RelationChecker.class, // ID  1701 ..  1799
+            TurnrestrictionTest.class, // ID  1801 ..  1899
     };
 
     /**

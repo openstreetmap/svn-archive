@@ -11,12 +11,18 @@ import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.paint.relations.Multipolygon;
 import org.openstreetmap.josm.data.osm.visitor.paint.relations.Multipolygon.JoinedWay;
 import org.openstreetmap.josm.data.osm.visitor.paint.relations.Multipolygon.PolyData.Intersection;
+import org.openstreetmap.josm.gui.mappaint.AreaElemStyle;
+import org.openstreetmap.josm.gui.mappaint.ElemStyle;
+import org.openstreetmap.josm.gui.mappaint.ElemStyles;
+import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
+import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -29,12 +35,25 @@ public class MultipolygonTest extends Test {
     protected static final int MISSING_OUTER_WAY = 1604;
     protected static final int INNER_WAY_OUTSIDE = 1605;
     protected static final int CROSSING_WAYS = 1606;
+    protected static final int OUTER_STYLE_MISMATCH = 1607;
+    protected static final int INNER_STYLE_MISMATCH = 1608;
+    protected static final int NOT_CLOSED = 1609;
+    protected static final int NO_STYLE = 1610;
+    protected static final int NO_STYLE_POLYGON = 1611;
+
+    private static ElemStyles.StyleSet styles;
 
     private final List<List<Node>> nonClosedWays = new ArrayList<List<Node>>();
 
     public MultipolygonTest() {
         super(tr("Multipolygon"),
                 tr("This test checks if multipolygons are valid"));
+    }
+
+    @Override
+    public void initialize(OSMValidatorPlugin plugin) throws Exception
+    {
+        styles = MapPaintStyles.getStyles().getStyleSet();
     }
 
     private List<List<Node>> joinWays(Collection<Way> ways) {
@@ -93,6 +112,16 @@ public class MultipolygonTest extends Test {
     }
 
     @Override
+    public void visit(Way w) {
+        if (styles != null && !w.isClosed())
+        {
+            ElemStyle e = styles.getArea(w);
+            if(e instanceof AreaElemStyle && !((AreaElemStyle)e).closed)
+                errors.add( new TestError(this, Severity.WARNING, tr("Area style way is not closed"), NOT_CLOSED,  w));
+        }
+    }
+
+    @Override
     public void visit(Relation r) {
         nonClosedWays.clear();
         if ("multipolygon".equals(r.get("type"))) {
@@ -114,6 +143,50 @@ public class MultipolygonTest extends Test {
             List<List<Node>> innerWays = joinWays(polygon.getInnerWays()); // Side effect - sets nonClosedWays
             List<List<Node>> outerWays = joinWays(polygon.getOuterWays());
 
+            if(styles != null) {
+                ElemStyle wayStyle = styles.get(r);
+
+                // If area style was not found for relation then use style of ways
+                if(!(wayStyle instanceof AreaElemStyle)) {
+                    errors.add( new TestError(this, Severity.OTHER, tr("No style in multipolygon relation"),
+                    NO_STYLE_POLYGON, r));
+                    for (Way w : polygon.getOuterWays()) {
+                        wayStyle = styles.getArea(w);
+                        if(wayStyle != null) {
+                            break;
+                        }
+                    }
+                }
+
+                if (wayStyle instanceof AreaElemStyle) {
+                    for (Way wInner : polygon.getInnerWays())
+                    {
+                        ElemStyle innerStyle = styles.get(wInner);
+                        if(wayStyle != null && wayStyle.equals(innerStyle)) {
+                            List<OsmPrimitive> l = new ArrayList<OsmPrimitive>();
+                            l.add(r);
+                            l.add(wInner);
+                            errors.add( new TestError(this, Severity.WARNING, tr("Style for inner way equals multipolygon"),
+                            INNER_STYLE_MISMATCH, l, Collections.singletonList(wInner)));
+                        }
+                    }
+                    for (Way wOuter : polygon.getOuterWays())
+                    {
+                        ElemStyle outerStyle = styles.get(wOuter);
+                        if(outerStyle instanceof AreaElemStyle && !wayStyle.equals(outerStyle)) {
+                            List<OsmPrimitive> l = new ArrayList<OsmPrimitive>();
+                            l.add(r);
+                            l.add(wOuter);
+                            errors.add( new TestError(this, Severity.WARNING, tr("Style for outer way mismatches"),
+                            OUTER_STYLE_MISMATCH, l, Collections.singletonList(wOuter)));
+                        }
+                    }
+                }
+                else
+                    errors.add( new TestError(this, Severity.OTHER, tr("No style for multipolygon"),
+                    NO_STYLE, r));
+            }
+
             if (!nonClosedWays.isEmpty()) {
                 errors.add( new TestError(this, Severity.WARNING, tr("Multipolygon is not closed"), NON_CLOSED_WAY,  Collections.singletonList(r), nonClosedWays));
             }
@@ -133,11 +206,11 @@ public class MultipolygonTest extends Test {
                         outerWay = outerWays.get(i);
                     }
                 }
-                if (outside | crossing) {
+                if (outside || crossing) {
                     List<List<Node>> highlights = new ArrayList<List<Node>>();
                     highlights.add(pdInner);
                     if (outside) {
-                        errors.add(new TestError(this, Severity.WARNING, tr("Multipolygon inner way is outside."), INNER_WAY_OUTSIDE, Collections.singletonList(r), highlights));
+                        errors.add(new TestError(this, Severity.WARNING, tr("Multipolygon inner way is outside"), INNER_WAY_OUTSIDE, Collections.singletonList(r), highlights));
                     } else if (crossing) {
                         highlights.add(outerWay);
                         errors.add(new TestError(this, Severity.WARNING, tr("Intersection between multipolygon ways"), CROSSING_WAYS, Collections.singletonList(r), highlights));
@@ -154,7 +227,7 @@ public class MultipolygonTest extends Test {
                     errors.add( new TestError(this, Severity.WARNING, tr("No useful role for multipolygon member"), WRONG_MEMBER_ROLE, rm.getMember()));
                 }
             } else {
-                errors.add( new TestError(this, Severity.WARNING, tr("Non-Way in multipolygon."), WRONG_MEMBER_TYPE, rm.getMember()));
+                errors.add( new TestError(this, Severity.WARNING, tr("Non-Way in multipolygon"), WRONG_MEMBER_TYPE, rm.getMember()));
             }
         }
     }

@@ -451,56 +451,59 @@ foreach my $rel (values(%$relation_storage))
     {
         if (!multipolygon_has_tags($multipolygon))
         {
-	    # multipolygon relation without tags on itself
-	    # using deprecated multipolygon relation tagging rules
-	    # to figure out what to do - compatibility mode
-	    my %relation_tags;
-	    for (my $i = 0; $i < scalar @$outerways; $i++)
-	    {
-		my $obj = \%{@$outerways[$i]};
-		while (my ($key, $val) = each(%{$obj->{'tags'}}))
-		{
-		    $relation_tags{"$key=$val"}++;
-		}
-	    }
+            # multipolygon relation without tags on itself
+            # using deprecated multipolygon relation tagging rules
+            # to figure out what to do - compatibility mode
+            my %relation_tags_count;
+            my %relation_tags_tag;
+            my %relation_tags_value;
+            for (my $i = 0; $i < scalar @$outerways; $i++)
+            {
+                my $obj = \%{@$outerways[$i]};
+                while (my ($key, $val) = each(%{$obj->{'tags'}}))
+                {
+                    $relation_tags_count{"$key\0$val"}++;
+                    $relation_tags_tag{"$key\0$val"} = $key;
+                    $relation_tags_value{"$key\0$val"} = $val;
+                }
+            }
 
-	    foreach my $keyval(keys %relation_tags)
-	    {
-		# copy only tags to the multipolygon relation wich are
-		# shared by each outer way
-		if ($relation_tags{$keyval} == scalar @$outerways)
-		{
-		    $keyval =~ m/(.*?)=(.*)/;
-		    my $key = $1;
-		    my $val = $2;
-		    $multipolygon->{'tags'}->{$key} = $val;
-		}
-	    }
+            foreach my $keyval(keys %relation_tags_count)
+            {
+                # copy only tags to the multipolygon relation wich are
+                # shared by each outer way
+                if ($relation_tags_count{$keyval} == scalar @$outerways)
+                {
+                    my $key = $relation_tags_tag{$keyval};
+                    my $val = $relation_tags_value{$keyval};
+                    $multipolygon->{'tags'}->{$key} = $val;
+                }
+            }
 
-	    if (!multipolygon_has_tags($multipolygon))
-	    {
-		# multipolygon has still no tags, do it like earlier in orp.pl
-		# just copy everything from the outer ways to the multipolygon
-		# relation
-		#
-		# pure guessing - results aren't predictable and mostly wrong
-		for (my $i = 0; $i < scalar @$outerways; $i++)
-		{
-		    my $obj = \%{@$outerways[$i]};
-		    while (my ($key, $val) = each(%{$obj->{'tags'}}))
-		    {
-			next if defined($multipolygon->{'tags'}->{$key});
-			$multipolygon->{'tags'}->{$key}=$val;
-		    }
-		}
-		debug("No common tags on outer ways in multipolygon relation $rel->{'id'}!") if $debug->{'multipolygon'};
-	    }
-	    else
-	    {
-		# just a warning
-		debug("Copied common tags from outer way(s) into multipolygon relation $rel->{'id'}!") if $debug->{'multipolygon'};
-	    }
-	}
+            if (!multipolygon_has_tags($multipolygon))
+            {
+                # multipolygon has still no tags, do it like earlier in orp.pl
+                # just copy everything from the outer ways to the multipolygon
+                # relation
+                #
+                # pure guessing - results aren't predictable and mostly wrong
+                for (my $i = 0; $i < scalar @$outerways; $i++)
+                {
+                    my $obj = \%{@$outerways[$i]};
+                    while (my ($key, $val) = each(%{$obj->{'tags'}}))
+                    {
+                        next if defined($multipolygon->{'tags'}->{$key});
+                        $multipolygon->{'tags'}->{$key}=$val;
+                    }
+                }
+                debug("No common tags on outer ways in multipolygon relation $rel->{'id'}!") if $debug->{'multipolygon'};
+            }
+            else
+            {
+                # just a warning
+                debug("Copied common tags from outer way(s) into multipolygon relation $rel->{'id'}!") if $debug->{'multipolygon'};
+            }
+        }
     }
 
     # A list of all outer and inner nodes is assembled, now sort them

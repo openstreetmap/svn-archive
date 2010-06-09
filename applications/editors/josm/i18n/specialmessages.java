@@ -2,7 +2,7 @@
   This file can be used to add some special messages to the translation,
   which are not part of the programm texts, but should be translated nevertheless.
 
-  The tex before is for translators */
+  The tex before is for translators
 */
 
 /* OSM server message */ tr("You requested too many nodes (limit is 50,000). Either request a smaller area, or use planet.osm");
@@ -23,16 +23,20 @@
 /* Strings in JFileChooser */ tr("Modified");
 /* Strings in JFileChooser */ tr("Name");
 /* Strings in JFileChooser */ tr("File name:");
+/* Strings in JFileChooser */ tr("File Name:");
 /* Strings in JFileChooser */ tr("Size");
 /* Strings in JFileChooser */ tr("Type");
 /* Strings in JFileChooser */ tr("Files of type:");
+/* Strings in JFileChooser */ tr("Files of Type:");
 /* Strings in JFileChooser */ tr("Home");
 /* Strings in JFileChooser */ tr("List");
 /* Strings in JFileChooser */ tr("Look in:");
+/* Strings in JFileChooser */ tr("Look In:");
 /* Strings in JFileChooser */ tr("New Folder");
 /* Strings in JFileChooser */ tr("Create New Folder");
 /* Strings in JFileChooser */ tr("Refresh");
 /* Strings in JFileChooser */ tr("Save in:");
+/* Strings in JFileChooser */ tr("Save In:");
 /* Strings in JFileChooser */ tr("Up");
 /* Strings in JFileChooser */ tr("Up One Level");
 /* Strings in JFileChooser */ tr("View");

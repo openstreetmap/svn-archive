@@ -21,6 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -78,7 +79,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		    setSize(400, 300);
 		    df = new SimpleDateFormat("hh:mm:ss:S");
 		    scr=new Canvas();
-		    timeline = new JSlider(0,100,0);
+		    timeline = new JSlider(0,100,0); //TODO better setup for ticks
 		    play= new JButton("play");
 		    back= new JButton("<");
 		    forward= new JButton(">");
@@ -98,7 +99,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 			jump(0);
 			//set updater
 			ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-			executorService.scheduleAtFixedRate(new Syncer(this), 0L, 500L, TimeUnit.MILLISECONDS);
+			executorService.scheduleAtFixedRate(new Syncer(this), 0L, 1000L, TimeUnit.MILLISECONDS);
 		    //setDefaultCloseOperation(EXIT_ON_CLOSE);
 			addWindowListener(this);
 		}
@@ -208,28 +209,25 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 	}
 
 	public void finished(MediaPlayer arg0) {
-		// TODO Auto-generated method stub
-		
+			
 	}
 
 	public void lengthChanged(MediaPlayer arg0, long arg1) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
-	public void metaDataAvailable(MediaPlayer arg0, VideoMetaData arg1) {
-		// TODO Auto-generated method stub
-		
+	public void metaDataAvailable(MediaPlayer arg0, VideoMetaData data) {
+		scr.setSize(data.getVideoDimension());
+		pack();
+
 	}
 
 	public void paused(MediaPlayer arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void playing(MediaPlayer arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void positionChanged(MediaPlayer arg0, float arg1) {
@@ -237,25 +235,17 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 	}
 
 	public void stopped(MediaPlayer arg0) {
-		// TODO Auto-generated method stub
-		
+				
 	}
 
 	public void timeChanged(MediaPlayer arg0, long arg1) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	
 
-	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowActivated(WindowEvent arg0) {	}
 
-	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowClosed(WindowEvent arg0) {	}
 
 	//we have to unload and disconnect to the VLC engine
 	public void windowClosing(WindowEvent evt) {
@@ -265,34 +255,19 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
         System.exit(0);
       }
 
-	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowDeactivated(WindowEvent arg0) {	}
 
-	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowDeiconified(WindowEvent arg0) {	}
 
-	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowIconified(WindowEvent arg0) {	}
 
-	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}	
+	public void windowOpened(WindowEvent arg0) {	}	
 	
 	public void setFile(File f)
 	{
 		String mediaPath = f.getAbsoluteFile().toString();
-		mp.playMedia(mediaPath, mediaOptions);
-		jump(8000);
-		jump(0);
-		mp.stop();
-		pack();
+		mp.playMedia(mediaPath, mediaOptions);		
+		pack();	
 	}
 	
 	public void play()
@@ -327,6 +302,13 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 			timeline.setValue(Math.round(mp.getPosition()*100));
 			syncTimeline=false;
 		}
+	}
+	
+	//allow externals to extend the ui
+	public void addComponent(JComponent c)
+	{
+		controlsPanel.add(c);
+		pack();
 	}
 	
 

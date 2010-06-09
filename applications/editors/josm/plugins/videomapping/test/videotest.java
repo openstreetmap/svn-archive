@@ -1,8 +1,11 @@
 
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,10 +24,17 @@ public class videotest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		SimpleVideoPlayer sVP = new SimpleVideoPlayer();
-		sVP.setFile(new File("C:\\TEMP\\test.mpg"));		
-		sVP.play();
-		sVP.jump(605000);
+		final SimpleVideoPlayer sVP = new SimpleVideoPlayer();
+		sVP.setFile(new File("C:\\TEMP\\test.mpg"));
+		sVP.play(); //FIXME We have a bug so we get out of sync if we jump before the video is up (and this we CAN'T DETECT!!!)
+		JButton b = new JButton("jump");
+		b.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				sVP.jump(610000);				
+			}
+		});
+		sVP.add(b);
 
 	}
 

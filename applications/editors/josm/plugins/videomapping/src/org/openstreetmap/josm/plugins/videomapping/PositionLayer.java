@@ -43,28 +43,30 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class PositionLayer extends Layer implements MouseListener,MouseMotionListener, KeyListener {
+//Basic rendering and GPS layer interaction
+public class PositionLayer extends Layer implements MouseListener,MouseMotionListener {
 	private List<WayPoint> ls;
-	public GpsPlayer l;
-	private Collection<WayPoint> selected;
-	private Timer t;
-	private TimerTask ani;
+	public GpsPlayer player;
 	private boolean dragIcon=false; //do we move the icon by hand?
 	private WayPoint iconPosition;
 	private Point mouse;
 	private ImageIcon icon;
-	private SimpleDateFormat df;
+	private SimpleDateFormat mins;
+	private SimpleDateFormat ms;
+	private GPSVideoPlayer gps;
 		
 	public PositionLayer(String name, final List<WayPoint> ls) {
 		super(name);
 		this.ls=ls;
-		l= new GpsPlayer(ls);
-		selected = new ArrayList<WayPoint>();
+		player= new GpsPlayer(ls);
+
 		icon=ImageProvider.get("videomapping.png");
-		df = new SimpleDateFormat("hh:mm:ss:S");
+		mins = new SimpleDateFormat("hh:mm:ss:S");
+		ms= new SimpleDateFormat("mm:ss");
 		Main.map.mapView.addMouseListener(this);
 		Main.map.mapView.addMouseMotionListener(this);							
 		
@@ -78,7 +80,6 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 
 	@Override
 	public Object getInfoComponent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -114,7 +115,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	
 	
 	@Override
-	//Draw the current position
+	//Draw the current position, infos, waypoints
 	public void paint(Graphics2D g, MapView map, Bounds bound) {
 		Point p;
 		//TODO Source out redundant calculations
@@ -125,33 +126,26 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			p = Main.map.mapView.getPoint(n.getEastNorth());
 			g.drawOval(p.x - 2, p.y - 2, 4, 4);
 			}
-		g.setColor(Color.RED);
-		//draw selected GPS points
-		for(WayPoint n:selected)
-		{
-			p = Main.map.mapView.getPoint(n.getEastNorth());
-			g.drawOval(p.x - 2, p.y - 2, 4, 4);
-		}
 		//draw surrounding points
 		g.setColor(Color.YELLOW);
-		if(l.getPrev()!=null)
+		if(player.getPrev()!=null)
 		{
-			p = Main.map.mapView.getPoint(l.getPrev().getEastNorth());
+			p = Main.map.mapView.getPoint(player.getPrev().getEastNorth());
 			g.drawOval(p.x - 2, p.y - 2, 4, 4);
-			Point p2 = Main.map.mapView.getPoint(l.getCurr().getEastNorth());
+			Point p2 = Main.map.mapView.getPoint(player.getCurr().getEastNorth());
 			g.drawLine(p.x, p.y, p2.x, p2.y);
 		}
-		if(l.getNext()!=null)
+		if(player.getNext()!=null)
 		{
-			p = Main.map.mapView.getPoint(l.getNext().getEastNorth());
+			p = Main.map.mapView.getPoint(player.getNext().getEastNorth());
 			g.drawOval(p.x - 2, p.y - 2, 4, 4);
-			Point p2 = Main.map.mapView.getPoint(l.getCurr().getEastNorth());
+			Point p2 = Main.map.mapView.getPoint(player.getCurr().getEastNorth());
 			g.drawLine(p.x, p.y, p2.x, p2.y);
 		}
 		//draw interpolated points
 		g.setColor(Color.CYAN);
 		g.setBackground(Color.CYAN);
-		LinkedList<WayPoint> ipo=(LinkedList<WayPoint>) l.getInterpolatedLine(5);
+		LinkedList<WayPoint> ipo=(LinkedList<WayPoint>) player.getInterpolatedLine(5);
 		for (WayPoint wp : ipo) {
 			p=Main.map.mapView.getPoint(wp.getEastNorth());
 			g.fillArc(p.x, p.y, 4, 4, 0, 360);
@@ -165,34 +159,17 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			{
 				p=Main.map.mapView.getPoint(iconPosition.getEastNorth());
 				icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);				
-				g.drawString(df.format(iconPosition.getTime()),p.x,p.y);
+				g.drawString(mins.format(iconPosition.getTime()),p.x-10,p.y-10);
 			}
 		}
 		else
 		{
-			if (l.getCurr()!=null){
-			p=Main.map.mapView.getPoint(l.getCurr().getEastNorth());
-			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
-			SimpleDateFormat ms=new SimpleDateFormat("mm:ss");
-			g.drawString(ms.format(l.getRelativeTime()),p.x,p.y);
+			if (player.getCurr()!=null){
+			p=Main.map.mapView.getPoint(player.getCurr().getEastNorth());
+			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);			
+			g.drawString(ms.format(player.getRelativeTime()),p.x-10,p.y-10);
 			}
 		}
-	}
-	
-	private void markNearestWayPoints(Point mouse) {
-		final int MAX=10; 
-		Point p;		
-		Rectangle rect = new Rectangle(mouse.x-MAX/2,mouse.y-MAX/2,MAX,MAX);
-		//iterate through all possible notes
-		for(WayPoint n : ls)
-		{
-			p = Main.map.mapView.getPoint(n.getEastNorth());
-			if (rect.contains(p))
-			{				
-				selected.add(n);
-			}
-			
-		}	
 	}
 	
 	private WayPoint getNearestWayPoint(Point mouse)
@@ -214,13 +191,20 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		
 	}
 	
+	//upper left corner like rectangle
+	private Rectangle getIconRect()
+	{
+		Point p = Main.map.mapView.getPoint(player.getCurr().getEastNorth());
+		return new Rectangle(p.x-icon.getIconWidth()/2,p.y-icon.getIconHeight()/2,icon.getIconWidth(),icon.getIconHeight());
+	}
+
+
 	@Override
 	public void visitBoundingBox(BoundingXYVisitor arg0) {
-		// TODO dunno what to do here
+		// TODO don't know what to do here
 
 	}
 
-	//mark selected points
 	public void mouseClicked(MouseEvent e) {		
 	}
 
@@ -230,10 +214,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	public void mouseExited(MouseEvent arg0) {
 	}
 
+	//init drag&drop
 	public void mousePressed(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1) {
 			//is it on the cam icon?
-			if (l.getCurr()!=null)
+			if (player.getCurr()!=null)
 			{
 				if (getIconRect().contains(e.getPoint()))
 				{
@@ -245,10 +230,10 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		}
 		
 	}
-
-	public void mouseReleased(MouseEvent e) {
-		
-		//only on leftclicks of our layer
+	
+	//
+	public void mouseReleased(MouseEvent e) {		
+		//only leftclicks on our layer
 		if(e.getButton() == MouseEvent.BUTTON1) {
 			if(dragIcon)
 			{
@@ -256,12 +241,12 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			}
 			else
 			{
-				//JOptionPane.showMessageDialog(Main.parent,"test");
-				markNearestWayPoints(e.getPoint());
+				//simple click
 				WayPoint wp = getNearestWayPoint(e.getPoint());
 				if(wp!=null)
 				{
-					l.jump(wp);			
+					player.jump(wp);
+					if(gps!=null) gps.notifyGPSClick();
 				}
 			}
 			Main.map.mapView.repaint();
@@ -269,27 +254,21 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		
 	}
 	
-	
+	//slide and restrict during movement
 	public void mouseDragged(MouseEvent e) {		
 		if(dragIcon)
 		{			
 			mouse=e.getPoint();
 			//restrict to GPS track
-			iconPosition=l.getInterpolatedWaypoint(mouse);
+			iconPosition=player.getInterpolatedWaypoint(mouse);
 
 			Main.map.mapView.repaint();
 		}
 	}
 
-	private Rectangle getIconRect()
-	{
-		Point p = Main.map.mapView.getPoint(l.getCurr().getEastNorth());
-		return new Rectangle(p.x-icon.getIconWidth()/2,p.y-icon.getIconHeight()/2,icon.getIconWidth(),icon.getIconHeight());
-	}
-	
+	//visualize drag&drop
 	public void mouseMoved(MouseEvent e) {		
-		
-		if (l.getCurr()!=null)
+		if (player.getCurr()!=null)
 		{						
 			if (getIconRect().contains(e.getPoint()))
 			{
@@ -303,79 +282,8 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		
 	}
 
-	public void keyPressed(KeyEvent e) {
-		int i;
-		System.out.println(e.getKeyCode());
-		switch(e.getKeyCode())
-		{
-			case KeyEvent.VK_RIGHT:
-				{
-					l.jump(1);
-				};break;
-			case KeyEvent.VK_LEFT:
-			{
-				l.jump(-1);
-
-			};break;
-			case KeyEvent.VK_SPACE:
-			{
-				ani.cancel();
-			}
-		}
+	public void setGPSPlayer(GPSVideoPlayer player) {
+		this.gps = player;
 		
 	}
-
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void pause()
-	{
-		if (t==null)
-		{
-			//start
-			t= new Timer();
-			TimerTask ani=new TimerTask() {			
-				@Override
-				//some cheap animation stuff
-				public void run() {				
-					l.next();
-					Main.map.mapView.repaint();
-				}
-			};
-			t.schedule(ani,500,500);
-			//and video
-			
-		}
-		else
-		{
-			//stop
-			t.cancel();
-			t=null;					
-		}
-	}
-
-
-	public void backward() {
-		if(l!=null)l.prev();
-		Main.map.mapView.repaint();
-	}
-	
-	public void forward() {
-		if(l!=null)l.next();
-		Main.map.mapView.repaint();
-	}
-
-
-	public void loop() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

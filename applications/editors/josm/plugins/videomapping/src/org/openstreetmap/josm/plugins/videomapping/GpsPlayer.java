@@ -18,6 +18,8 @@ public class GpsPlayer {
 	private List<WayPoint> ls;
 	private WayPoint prev,curr,next;
 	private WayPoint start;
+	private Timer t;
+	private TimerTask ani; //for moving trough the list
 	
 
 	public WayPoint getPrev() {
@@ -35,12 +37,14 @@ public class GpsPlayer {
 	public GpsPlayer(List<WayPoint> l) {
 		super();
 		this.ls = l;
+		//set start position
 		start=ls.get(0);
 		prev=null;
 		curr=ls.get(0);
 		next=ls.get(1);
 	}
 	
+	// one secure step forward
 	public void next() {		
 		if(ls.indexOf(curr)+1<ls.size())
 		{
@@ -53,6 +57,7 @@ public class GpsPlayer {
 		
 	}
 	
+	//one secure step backward
 	public void prev()
 	{
 		if(ls.indexOf(curr)>0)
@@ -64,6 +69,7 @@ public class GpsPlayer {
 		else prev=null;		
 	}
 	
+	//select the given waypoint as center
 	public void jump(WayPoint p)
 	{
 		if(ls.contains(p))
@@ -82,15 +88,16 @@ public class GpsPlayer {
 		}
 	}
 	
-	public void jump(int t)
+	//select the k-th waypoint
+	public void jump(int k)
 	{
-		if ((ls.indexOf(curr)+t>0)&&(ls.indexOf(curr)<ls.size()))
+		if ((ls.indexOf(curr)+k>0)&&(ls.indexOf(curr)<ls.size()))
 		{
-			jump(ls.get(ls.indexOf(curr)+t)); //FIXME here is a bug
+			jump(ls.get(ls.indexOf(curr)+k)); //FIXME here is a bug
 		}		
 	}
 	
-	//gets only points on the line of the GPS track between waypoints nearby the point m
+	//gets only points on the line of the GPS track (between waypoints) nearby the point m
 	private Point getInterpolated(Point m)
 	{
 		Point leftP,rightP,highP,lowP;
@@ -144,20 +151,19 @@ public class GpsPlayer {
 		return m;
 	}
 	
+	//returns a point on the p% of the current selected segment
 	private Point getInterpolated(float percent)
 	{
 
 		int dX,dY;
 		Point p;
-		Point leftP,rightP,highP,lowP;
+		Point leftP,rightP;
 		Point c = Main.map.mapView.getPoint(getCurr().getEastNorth());
 		Point p1 = Main.map.mapView.getPoint(getCurr().getEastNorth());
 		Point p2 = getEndpoint();		
 		//determine which point is what
 		leftP=getLeftPoint(p1, p2);
 		rightP=getRightPoint(p1,p2);
-		highP=getHighPoint(p1, p2);
-		lowP=getLowPoint(p1, p2);
 		//we will never go over the segment
 		percent=percent/100;
 		dX=Math.round((rightP.x-leftP.x)*percent);
@@ -199,7 +205,7 @@ public class GpsPlayer {
 		long old = getCurr().getTime().getTime();
 		old=old+inc;
 		Date t = new Date(old);
-		w.time = t.getTime()/1000; //TODO need better way to set time
+		w.time = t.getTime()/1000; //TODO need better way to set time and sync it
 		SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss:S");
 		/*System.out.print(length+"px ");
 		System.out.print(ratio+"% ");
@@ -210,6 +216,7 @@ public class GpsPlayer {
 		return w;
 	}
 
+	//returns a point and time for the current segment
 	private WayPoint getInterpolatedWaypoint(float percentage)
 	{
 		Point p = getInterpolated(percentage);
@@ -217,6 +224,7 @@ public class GpsPlayer {
 		return w;
 	}
 	
+	//returns n points on the current segment
 	public List<WayPoint> getInterpolatedLine(int interval)
 	{
 		List<WayPoint> ls;
@@ -280,15 +288,44 @@ public class GpsPlayer {
 		return lengthSeg;
 	}
 
+	//returns time in ms relatie to startpoint
 	public long getRelativeTime()
 	{
 		return curr.getTime().getTime()-start.getTime().getTime(); //TODO assumes timeintervall is constant!!!!
 	}
 
-	//jumps to a speciffic time
+	//jumps to a specific time
 	public void jump(long relTime) {
-		jump(relTime/1000);		//TODO ugly quick hack	
+		int pos = (int) (relTime/1000);//TODO ugly quick hack	
+		jump(pos);		
 		
+	}
+	
+	//toggles walking along the track
+	public void play()
+	{
+		if (t==null)
+		{
+			//start
+			t= new Timer();
+			ani=new TimerTask() {			
+				@Override
+				//some cheap animation stuff
+				public void run() {				
+					next();
+					Main.map.mapView.repaint();
+				}
+			};
+			t.schedule(ani,1000,1000);			
+		}
+		else
+		{
+			//stop
+			ani.cancel();
+			ani=null;
+			t.cancel();
+			t=null;					
+		}
 	}
 	
 }

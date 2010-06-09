@@ -36,13 +36,15 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
  * @ released under GPL
  * This Plugin allows you to link a video against a GPS track and playback both synchronously 
  */
+
+//Here we manage properties and start the other classes
 public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 	  private JMenu VMenu;
 	  private GpxData GPSTrack;
 	  private List<WayPoint> ls;
 	  private JosmAction VAdd,VStart,Vbackward,Vforward,Vloop;
-	  private GPSVideoPlayer video;
-	private PositionLayer layer;
+	  private GPSVideoPlayer player;
+	  private PositionLayer layer;
 	  
 
 	public VideoMappingPlugin(PluginInformation info) {
@@ -96,27 +98,29 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 
 			public void actionPerformed(ActionEvent arg0) {
 				copyGPSLayer();
-				layer = new PositionLayer("test",ls);
-				Main.main.addLayer(layer);
 				enableControlMenus(true);
-				video = new GPSVideoPlayer(new File("C:\\temp\\test.mpg"), layer.l);
+				layer = new PositionLayer("test",ls);
+				Main.main.addLayer(layer);				
+				player = new GPSVideoPlayer(new File("C:\\temp\\test.mpg"), layer.player);
+				layer.setGPSPlayer(player);
 			}
 		};
 		VStart = new JosmAction("play/pause", "audio-playpause", "starts/pauses video playback",
 				Shortcut.registerShortcut("videomapping:startstop","",KeyEvent.VK_SPACE, Shortcut.GROUP_MENU), false) {
 			
 			public void actionPerformed(ActionEvent e) {								
-				video.play();				
-				video.jump(605000);
-				layer.l.jump(9*60+20);
-				layer.pause();
+				//video.play();				
+				//video.jump(605000);
+				//layer.l.jump(9*60+20);
+				//layer.pause();
+				player.play((9*60+20)*1000);
 			}
 		};
 		Vbackward = new JosmAction("backward", "audio-prev", "jumps n sec back",
 				Shortcut.registerShortcut("videomapping:backward","",KeyEvent.VK_NUMPAD4, Shortcut.GROUP_MENU), false) {
 			
 			public void actionPerformed(ActionEvent e) {
-				layer.backward();
+				//layer.backward();
 							
 			}
 		};
@@ -124,7 +128,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 				Shortcut.registerShortcut("videomapping:forward","",KeyEvent.VK_NUMPAD6, Shortcut.GROUP_MENU), false) {
 			
 			public void actionPerformed(ActionEvent e) {
-				layer.forward();
+				//layer.forward();
 							
 			}
 		};
@@ -132,7 +136,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 				Shortcut.registerShortcut("videomapping:loop","",KeyEvent.VK_NUMPAD5, Shortcut.GROUP_MENU), false) {
 			
 			public void actionPerformed(ActionEvent e) {
-				layer.loop();
+				//layer.loop();
 							
 			}
 		};
@@ -146,7 +150,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 	
 	
 	
-	//we can only move on our layer
+	//we can only work on our own layer
 	private void enableControlMenus(boolean enabled)
 	{
 		VStart.setEnabled(enabled);

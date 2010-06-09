@@ -3,7 +3,7 @@
  */
 package org.openstreetmap.josm.plugins.alignways;
 
-import static org.openstreetmap.josm.tools.I18n.trn;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -169,7 +169,7 @@ public class AlignWaysRotateCommand extends Command {
 	@Override
 	public MutableTreeNode description() {
 		return new DefaultMutableTreeNode(
-				new JLabel(trn("Align way segment", "", 1), ImageProvider.get(
+				new JLabel(tr("Align way segment"), ImageProvider.get(
 						"", "alignways"), SwingConstants.HORIZONTAL));
 	}
 

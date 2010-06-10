@@ -69,8 +69,9 @@ public class RevertChangesetAction extends JosmAction {
             
             @Override
             protected void realRun() throws OsmTransferException {
-                rev = new ChangesetReverter(changesetId, NullProgressMonitor.INSTANCE);
                 progressMonitor.indeterminateSubTask("Downloading changeset");
+                rev = new ChangesetReverter(changesetId, NullProgressMonitor.INSTANCE);
+                if (progressMonitor.isCancelled()) return;
                 if (!checkMissing()) return;
                 rev.downloadObjectsHistory(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
                 if (progressMonitor.isCancelled()) return;

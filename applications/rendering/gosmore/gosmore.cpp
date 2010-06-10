@@ -111,6 +111,7 @@ int Display3D = 0; // Not an option but a button for now.
   o (cmdround6, 0, 0) o (cmdround7, 0, 0) o (cmdround8, 0, 0)
 
 char docPrefix[80] = "";
+int GpsIdle=999;
 
 #if !defined (HEADLESS) && !defined (NOGTK)
 #ifdef USE_GNOMESOUND
@@ -2565,9 +2566,12 @@ gint DrawExpose (void)
   }
   #endif
 
-  char coord[21];
+  char coord[64];
   if (ShowCoordinates == 1) {
-    sprintf (coord, "%9.5lf %10.5lf", LatInverse (clat), LonInverse (clon));
+    if(GpsIdle==999)
+      snprintf (coord, 63, "%9.5lf %10.5lf GPS OFF %s", LatInverse (clat), LonInverse (clon),routeSuccess?"Route":"No Route");
+    else
+      snprintf (coord, 63, "%9.5lf %10.5lf GPS idle %ds %s", LatInverse (clat), LonInverse (clon),GpsIdle,routeSuccess?"Route":"No Route");
     DrawString (0, 5, coord);
   }
   else if (ShowCoordinates == 2) {
@@ -3357,6 +3361,7 @@ volatile int guiDone = FALSE;
 
 DWORD WINAPI NmeaReader (LPVOID lParam)
 {
+  static int lastgps=0;
   // loop back here if existing connection fails
   while (!guiDone) {
   #ifndef _WIN32_WCE
@@ -3476,6 +3481,11 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
 	  //MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),wndStr,STRLEN,NULL);
 	  
 	  if (ProcessNmea (rx, (unsigned*)&got)) {
+            int now;
+            now=GetTickCount();
+            if(!lastgps) lastgps=now;
+            GpsIdle=(lastgps-now)/1000;
+            lastgps=now;
 	    PostMessage (mWnd, WM_USER + 1, 0, (int) /* intptr_t */ gpsNew);
 	  }
 	} // if nBytes > 0
@@ -3487,6 +3497,7 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
   #endif
   } // while !guiDone
   guiDone = FALSE;
+  GpsIdle=999; /* Let user know GPS is off */
   //if (log) fclose (log);
   CloseHandle (port);
   return 0;

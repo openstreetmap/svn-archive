@@ -18,8 +18,7 @@ import org.openstreetmap.josm.tools.GBC;
 public class ChangesetIdQuery extends ExtendedDialog {
     private JFormattedTextField tcid = new JFormattedTextField(NumberFormat.getInstance());
 
-    public int ChangesetId()
-    {
+    public int ChangesetId() {
         try {
           return NumberFormat.getInstance().parse(tcid.getText()).intValue();
         } catch (ParseException e) {            

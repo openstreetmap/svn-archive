@@ -11,8 +11,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 @SuppressWarnings("serial")
 public class ObjectsHistoryAction extends JosmAction {
 
-    public ObjectsHistoryAction()
-    {
+    public ObjectsHistoryAction() {
         super(tr("Objects history"),null,tr("History reverter"),
                 Shortcut.registerShortcut("tool:history",
                         "Tool: Display objects history dialog",

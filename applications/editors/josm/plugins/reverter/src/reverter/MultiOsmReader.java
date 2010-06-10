@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Parser for the Osm Api. Read from an input stream and construct a dataset out of it.
+ * Modified {@see org.openstreetmap.josm.io.OsmReader} that can handle multiple XML streams.
  *
  */
 public class MultiOsmReader {
@@ -425,7 +425,7 @@ public class MultiOsmReader {
      *
      * @throws IllegalDataException thrown if a data integrity problem is detected
      */
-    protected void processWaysAfterParsing() throws IllegalDataException{
+    protected void processWaysAfterParsing() throws IllegalDataException {
         for (Long externalWayId: ways.keySet()) {
             Way w = (Way)externalIdMap.get(new SimplePrimitiveId(externalWayId, OsmPrimitiveType.WAY));
             List<Node> wayNodes = new ArrayList<Node>();
@@ -555,8 +555,7 @@ public class MultiOsmReader {
             throw new IllegalDataException(e);
         }
     }
-    public void ProcessData() throws IllegalDataException
-    {
+    public void ProcessData() throws IllegalDataException {
         processNodesAfterParsing();
         processWaysAfterParsing();
         processRelationsAfterParsing();

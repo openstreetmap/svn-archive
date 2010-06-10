@@ -525,7 +525,12 @@ void Route (int recalculate, int plon, int plat, int _vehicle, int _fast)
     routeHeapMaxSize = lrint (sqrt (dhashSize)) * 3;
     routeHeap = (routeHeapType*) malloc (routeHeapMaxSize * sizeof (*routeHeap));
     if (!routeHeap) return;
-    if (!(route = (routeNodeType*) calloc (sizeof (*route), dhashSize))) return;
+    while (!(route = (routeNodeType*) calloc (sizeof (*route), dhashSize))) {
+      logprintf("calloc(%d) failed ( availPhys=%d , dhashSize=%d )\n",
+        (sizeof(*route)*dhashSize), memStat.dwAvailPhys,dhashSize);
+      dhashSize*=7; dhashSize/=8;
+      if(dhashSize<200000) return;
+    }
     #endif
 
     rlat = flat;

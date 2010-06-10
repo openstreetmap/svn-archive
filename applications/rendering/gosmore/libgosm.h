@@ -505,4 +505,6 @@ int SortRelations (void);
 
 #endif // #ifndef _WIN32
 
+void logprintf(char *format, ...);
+
 #endif

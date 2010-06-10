@@ -202,19 +202,48 @@ public class ChangesetReverter {
             if (!p.isVisible()) {
                 toDelete.add(dp);
             }
-            // Check object version
+        }
+        
+        // Check objects version
+        Iterator<ChangesetDataSetEntry> iterator = cds.iterator();
+        while (iterator.hasNext()) {
+            ChangesetDataSetEntry entry = iterator.next();
+            HistoryOsmPrimitive p = entry.getPrimitive();
+            OsmPrimitive dp = ds.getPrimitiveById(p.getPrimitiveId());
+            if (dp == null)
+                throw new IllegalStateException(tr("Missing merge target for {0} with id {1}",
+                        p.getType(), p.getId()));
+            OsmPrimitive np = nds.getPrimitiveById(p.getPrimitiveId());
+            if (np == null && entry.getModificationType() != ChangesetModificationType.CREATED)
+                throw new IllegalStateException(tr("Missing new dataset object for {0} with id {1}",
+                        p.getType(), p.getId()));
             if (p.getVersion() != dp.getVersion()
                     && (p.isVisible() || dp.isVisible())) {
                 Conflict<? extends OsmPrimitive> c;
                 switch (dp.getType()) {
                 case NODE:
-                    c = new Conflict<Node>((Node)p,new Node((Node)dp),!p.isVisible());
+                    if (np == null) {
+                        np = new Node((Node)dp);
+                        np.setDeleted(true);
+                    }
+                    c = new Conflict<Node>((Node)np,new Node((Node)dp),
+                            entry.getModificationType() == ChangesetModificationType.CREATED);
                     break;
                 case WAY:
-                    c = new Conflict<Way>((Way)p,new Way((Way)dp),!p.isVisible());
+                    if (np == null) {
+                        np = new Way((Way)dp);
+                        np.setDeleted(true);
+                    }
+                    c = new Conflict<Way>((Way)np,new Way((Way)dp),
+                            entry.getModificationType() == ChangesetModificationType.CREATED);
                     break;
                 case RELATION:
-                    c = new Conflict<Relation>((Relation)p,new Relation((Relation)dp),!p.isVisible());
+                    if (np == null) {
+                        np = new Relation((Relation)dp);
+                        np.setDeleted(true);
+                    }
+                    c = new Conflict<Relation>((Relation)np,new Relation((Relation)dp),
+                            entry.getModificationType() == ChangesetModificationType.CREATED);
                     break;
                 default: throw new AssertionError();
                 }

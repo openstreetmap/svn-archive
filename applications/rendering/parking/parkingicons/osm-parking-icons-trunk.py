@@ -37,6 +37,30 @@ def calc_bearing(x1,y1,x2,y2,side):
     bearing = math.pi/2.0-angl # (0°=up, and clockwise)
     return bearing
 
+def unboth(list,sideindex):
+    """ Replace in a list all rows with 'both' with two rows with 'left' and 'right'
+    """
+    list_both = list[:]
+    list_both.reverse()
+    list = []
+    while len(list_both)>0:
+        row = list_both.pop()
+        #print "row=", row
+        side = row[sideindex]
+        if side=='both':
+            row_l = row[:]
+            row_l[sideindex] = 'left'
+            #print 'bothl:', row_l
+            list += [row_l]
+            row_r = row[:]
+            row_r[sideindex] = 'right'
+            #print 'bothr:', row_r
+            list += [row_r]
+        else:
+            #print side, ":", row
+            list += [row]
+    return list
+
 if len(sys.argv) == 3:
     DSN = sys.argv[1]
     openlayertextfilename = sys.argv[2]
@@ -52,7 +76,7 @@ curs = conn.cursor()
 openlayertextfile = csv.writer(open(openlayertextfilename, 'w'), delimiter='\t',quotechar='"', quoting=csv.QUOTE_MINIMAL)
 openlayertextfile.writerow(['lat','lon','title','description','icon','iconSize','iconOffset'])
 
-latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
+latlon= "ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))"
 coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
 FW = "FROM planet_osm_line WHERE"
 
@@ -101,7 +125,6 @@ conn.rollback()
 
 sys.exit(0)
 
-                             
 """
 SELECT
    ST_Y(way) AS lat_wgs84,

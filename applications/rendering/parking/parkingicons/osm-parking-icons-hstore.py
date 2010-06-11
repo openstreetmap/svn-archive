@@ -40,6 +40,29 @@ def calc_bearing(x1,y1,x2,y2,side):
     bearing = math.pi/2.0-angl # (0°=up, and clockwise)
     return bearing
 
+def unboth(list,sideindex):
+    """ Replace in a list all rows with 'both' with two rows with 'left' and 'right'
+    """
+    list_both = list[:]
+    list_both.reverse()
+    list = []
+    while len(list_both)>0:
+        row = list_both.pop()
+        #print "row=", row
+        side = row[sideindex]
+        if side=='both':
+            row_l = row[:]
+            row_l[sideindex] = 'left'
+            #print 'bothl:', row_l
+            list += [row_l]
+            row_r = row[:]
+            row_r[sideindex] = 'right'
+            #print 'bothr:', row_r
+            list += [row_r]
+        else:
+            #print side, ":", row
+            list += [row]
+    return list
 
 if len(sys.argv) == 3:
     DSN = sys.argv[1]
@@ -67,8 +90,11 @@ for side in ['left','right','both']:
     curs.execute("SELECT osm_id,"+latlon+",(tags->'parking:condition:"+side+":maxstay') as \"parking:condition:"+side+":maxstay\","+coords+",'"+side+"' "+FW+" (tags ? 'parking:condition:"+side+":maxstay') and (tags ? 'parking:condition:"+side+"') and (tags->'parking:condition:"+side+"')='disc'")
     pc_disc_maxstay += curs.fetchall()
 
+pc_disc_maxstay = unboth(pc_disc_maxstay,10)
+        
 for pc_dm in pc_disc_maxstay:
-    bearing = calc_bearing(pc_dm[7],pc_dm[6], pc_dm[9],pc_dm[8], pc_dm[10]) 
+    side = pc_dm[10]
+    bearing = calc_bearing(pc_dm[7],pc_dm[6], pc_dm[9],pc_dm[8], side)
     openlayertextfile.writerow(shift_by_meters(pc_dm[1],pc_dm[2],bearing,4.0)+['Disc parking','Maximum parking time:<br>'+pc_dm[3],'parkingicons/pi-disc.png','16,16','-8,-8'])
 
 ### display vehicles
@@ -80,6 +106,8 @@ for side in ['left','right','both']:
 
 vehicle_icons = {"car":"parkingicons/pi-car.png" , "bus":"parkingicons/pi-bus.png" , "motorcycle":"parkingicons/pi-motorcycle.png"}
 
+pc_vehicles = unboth(pc_vehicles,10)
+
 for pc_v in pc_vehicles:
     vehicle_icon = vehicle_icons.get(pc_v[3],"parkingicons/pi-unkn.png");
     bearing = calc_bearing(pc_v[7],pc_v[6], pc_v[9],pc_v[8], pc_v[10])    
@@ -88,8 +116,6 @@ for pc_v in pc_vehicles:
 conn.rollback()
 
 sys.exit(0)
-
-
 
 """
 SELECT

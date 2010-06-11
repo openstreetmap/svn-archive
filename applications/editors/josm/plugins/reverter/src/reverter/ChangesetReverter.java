@@ -184,81 +184,87 @@ public class ChangesetReverter {
         missing.clear();
     }
     
+    private static Conflict<? extends OsmPrimitive> CreateConflict(OsmPrimitive p, boolean isMyDeleted) {
+        switch (p.getType()) {
+        case NODE:
+            return new Conflict<Node>((Node)p,new Node((Node)p), isMyDeleted);
+        case WAY:
+            return new Conflict<Way>((Way)p,new Way((Way)p), isMyDeleted);
+        case RELATION:
+            return new Conflict<Relation>((Relation)p,new Relation((Relation)p), isMyDeleted);
+        default: throw new AssertionError();
+        }
+    }
+    
     /**
      * Builds a list of commands that will revert the changeset
      * 
      */
     public List<Command> getCommands() {
         if (this.nds == null) return null;
-        LinkedList<OsmPrimitive> toDelete = new LinkedList<OsmPrimitive>();
-        LinkedList<Command> cmds = new LinkedList<Command>();
-        for (OsmPrimitive p : nds.allPrimitives()) {
-            if (p.isIncomplete()) continue;
-            OsmPrimitive dp = ds.getPrimitiveById(p);
-            if (dp == null)
-                throw new IllegalStateException(tr("Missing merge target for {0} with id {1}",
-                        p.getType(), p.getUniqueId()));
-            // Mark objects that have visible=false to be deleted
-            if (!p.isVisible()) {
-                toDelete.add(dp);
-            }
-        }
         
-        // Check objects version
-        Iterator<ChangesetDataSetEntry> iterator = cds.iterator();
-        while (iterator.hasNext()) {
-            ChangesetDataSetEntry entry = iterator.next();
-            HistoryOsmPrimitive p = entry.getPrimitive();
-            OsmPrimitive dp = ds.getPrimitiveById(p.getPrimitiveId());
-            if (dp == null)
-                throw new IllegalStateException(tr("Missing merge target for {0} with id {1}",
-                        p.getType(), p.getId()));
-            OsmPrimitive np = nds.getPrimitiveById(p.getPrimitiveId());
-            if (np == null && entry.getModificationType() != ChangesetModificationType.CREATED)
-                throw new IllegalStateException(tr("Missing new dataset object for {0} with id {1}",
-                        p.getType(), p.getId()));
-            if (p.getVersion() != dp.getVersion()
-                    && (p.isVisible() || dp.isVisible())) {
-                Conflict<? extends OsmPrimitive> c;
-                switch (dp.getType()) {
-                case NODE:
-                    if (np == null) {
-                        np = new Node((Node)dp);
-                        np.setDeleted(true);
-                    }
-                    c = new Conflict<Node>((Node)np,new Node((Node)dp),
-                            entry.getModificationType() == ChangesetModificationType.CREATED);
-                    break;
-                case WAY:
-                    if (np == null) {
-                        np = new Way((Way)dp);
-                        np.setDeleted(true);
-                    }
-                    c = new Conflict<Way>((Way)np,new Way((Way)dp),
-                            entry.getModificationType() == ChangesetModificationType.CREATED);
-                    break;
-                case RELATION:
-                    if (np == null) {
-                        np = new Relation((Relation)dp);
-                        np.setDeleted(true);
-                    }
-                    c = new Conflict<Relation>((Relation)np,new Relation((Relation)dp),
-                            entry.getModificationType() == ChangesetModificationType.CREATED);
-                    break;
-                default: throw new AssertionError();
-                }
-                cmds.add(new ConflictAddCommand(layer,c));
-            }
-        }
-        
+        //////////////////////////////////////////////////////////////////////////
         // Create commands to restore/update all affected objects 
-        cmds.addAll(new DataSetToCmd(nds,ds).getCommandList());
-        
+        LinkedList<Command> cmds = new DataSetToCmd(nds,ds).getCommandList();
+
+        //////////////////////////////////////////////////////////////////////////
+        // Create a set of objects to be deleted
+
+        HashSet<OsmPrimitive> toDelete = new HashSet<OsmPrimitive>();
+        // Mark objects that have visible=false to be deleted
+        for (OsmPrimitive p : nds.allPrimitives()) {
+            if (!p.isVisible()) {
+                OsmPrimitive dp = ds.getPrimitiveById(p);
+                if (dp != null) toDelete.add(dp);
+            }
+        }
         // Mark all created objects to be deleted
         for (HistoryOsmPrimitive id : created) {
             OsmPrimitive p = ds.getPrimitiveById(id.getPrimitiveId());
             if (p != null) toDelete.add(p);
         }
+        
+
+        //////////////////////////////////////////////////////////////////////////
+        // Check reversion against current dataset and create necessary conflicts
+        
+        HashSet<OsmPrimitive> conflicted = new HashSet<OsmPrimitive>();
+        // Check objects versions
+        Iterator<ChangesetDataSetEntry> iterator = cds.iterator();
+        while (iterator.hasNext()) {
+            ChangesetDataSetEntry entry = iterator.next();
+            HistoryOsmPrimitive hp = entry.getPrimitive();
+            OsmPrimitive dp = ds.getPrimitiveById(hp.getPrimitiveId());
+            if (dp == null)
+                throw new IllegalStateException(tr("Missing merge target for {0} with id {1}",
+                        hp.getType(), hp.getId()));
+            if (hp.getVersion() != dp.getVersion()
+                    && (hp.isVisible() || dp.isVisible())) {
+                cmds.add(new ConflictAddCommand(layer,CreateConflict(dp, 
+                        entry.getModificationType() == ChangesetModificationType.CREATED)));
+                conflicted.add(dp);
+            }
+        }
+        
+        /* Check referrers for deleted objects: if object is referred by another object that
+         * isn't going to be deleted or modified, create a conflict.
+         */
+        for (OsmPrimitive p : toDelete.toArray(new OsmPrimitive[0])) {
+            for (OsmPrimitive referrer : p.getReferrers()) {
+                if (toDelete.contains(referrer)) continue; // object is going to be deleted
+                if (nds.getPrimitiveById(referrer) != null)
+                    continue; /* object is going to be modified so it cannot refer to
+                               * objects created in same changeset
+                               */
+                if (!conflicted.contains(p)) {
+                    cmds.add(new ConflictAddCommand(layer,CreateConflict(p, true)));
+                    conflicted.add(p);
+                }
+                toDelete.remove(p);
+                break;
+            }
+        }
+        
         // Create a Command to delete all marked objects
         List<? extends OsmPrimitive> list;
         list = OsmPrimitive.getFilteredList(toDelete, Relation.class);

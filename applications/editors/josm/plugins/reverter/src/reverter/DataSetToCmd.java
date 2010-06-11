@@ -9,6 +9,8 @@ import java.util.List;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.conflict.Conflict;
+import org.openstreetmap.josm.data.conflict.ConflictCollection;
 import org.openstreetmap.josm.data.osm.*;
 
 /**
@@ -18,6 +20,8 @@ import org.openstreetmap.josm.data.osm.*;
  */
 final class DataSetToCmd {
 
+    /** the collection of conflicts created during merging */
+    private final ConflictCollection conflicts = new ConflictCollection();
     /** the source dataset where primitives are merged from */
     private final DataSet sourceDataSet;
     private final DataSet targetDataSet;
@@ -96,6 +100,13 @@ final class DataSetToCmd {
         List<Node> newNodes = new ArrayList<Node>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {
             Node targetNode = (Node)getMergeTarget(sourceNode);
+            if (targetNode.isDeleted() && sourceNode.isIncomplete()
+                    && !conflicts.hasConflictForMy(targetNode)) {
+                conflicts.add(new Conflict<OsmPrimitive>(targetNode, sourceNode, true));
+                Node undeletedTargetNode = new Node(targetNode);
+                undeletedTargetNode.setDeleted(false);
+                cmds.add(new ChangeCommand(targetNode,undeletedTargetNode));
+            }
             newNodes.add(targetNode);
         }
         cmds.add(new ChangeNodesCommand(target,newNodes));
@@ -115,6 +126,19 @@ final class DataSetToCmd {
         LinkedList<RelationMember> newMembers = new LinkedList<RelationMember>();
         for (RelationMember sourceMember : source.getMembers()) {
             OsmPrimitive targetMember = getMergeTarget(sourceMember.getMember());
+            if (targetMember.isDeleted() && sourceMember.getMember().isIncomplete()
+                    && !conflicts.hasConflictForMy(targetMember)) {
+                conflicts.add(new Conflict<OsmPrimitive>(targetMember, sourceMember.getMember(), true));
+                OsmPrimitive undeletedTargetMember;
+                switch(targetMember.getType()) {
+                case NODE: undeletedTargetMember = new Node((Node)targetMember); break;
+                case WAY: undeletedTargetMember = new Way((Way)targetMember); break;
+                case RELATION: undeletedTargetMember = new Relation((Relation)targetMember); break;
+                default: throw new AssertionError();
+                }
+                undeletedTargetMember.setDeleted(false);
+                cmds.add(new ChangeCommand(targetMember,undeletedTargetMember));
+            }
             newMembers.add(new RelationMember(sourceMember.getRole(), targetMember));
         }
         Relation newRelation = new Relation(target); 
@@ -136,5 +160,14 @@ final class DataSetToCmd {
 
     public LinkedList<Command> getCommandList() {
         return cmds;
+    }
+
+    /**
+     * replies the map of conflicts
+     *
+     * @return the map of conflicts
+     */
+    public ConflictCollection getConflicts() {
+        return conflicts;
     }
 }

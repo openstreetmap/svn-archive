@@ -180,7 +180,14 @@ public class ChangesetReverter {
             default: throw new AssertionError();
             }
         }
-        layer.mergeFrom(rdr.parseOsm(monitor));
+        DataSet source = rdr.parseOsm(monitor); 
+        for (OsmPrimitive p : source.allPrimitives()) {
+            if (!p.isVisible() && !p.isDeleted()) {
+                p.setDeleted(true);
+                p.setModified(false);
+            }
+        }
+        layer.mergeFrom(source);
         missing.clear();
     }
     
@@ -204,8 +211,9 @@ public class ChangesetReverter {
         if (this.nds == null) return null;
         
         //////////////////////////////////////////////////////////////////////////
-        // Create commands to restore/update all affected objects 
-        LinkedList<Command> cmds = new DataSetToCmd(nds,ds).getCommandList();
+        // Create commands to restore/update all affected objects
+        DataSetToCmd merger = new DataSetToCmd(nds,ds);
+        LinkedList<Command> cmds = merger.getCommandList();
 
         //////////////////////////////////////////////////////////////////////////
         // Create a set of objects to be deleted
@@ -229,6 +237,11 @@ public class ChangesetReverter {
         // Check reversion against current dataset and create necessary conflicts
         
         HashSet<OsmPrimitive> conflicted = new HashSet<OsmPrimitive>();
+        
+        for (Conflict<? extends OsmPrimitive> conflict : merger.getConflicts()) {
+            cmds.add(new ConflictAddCommand(layer,conflict));
+        }
+        
         // Check objects versions
         Iterator<ChangesetDataSetEntry> iterator = cds.iterator();
         while (iterator.hasNext()) {
@@ -250,6 +263,10 @@ public class ChangesetReverter {
          * isn't going to be deleted or modified, create a conflict.
          */
         for (OsmPrimitive p : toDelete.toArray(new OsmPrimitive[0])) {
+            if (p.isDeleted()) {
+                toDelete.remove(p);
+                continue;
+            }
             for (OsmPrimitive referrer : p.getReferrers()) {
                 if (toDelete.contains(referrer)) continue; // object is going to be deleted
                 if (nds.getPrimitiveById(referrer) != null)

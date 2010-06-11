@@ -881,7 +881,38 @@
 					</rule>
 				</rule>
 				<rule e="way" k="highway" v="steps">
-					<line class="highway-casing highway-steps-casing"/>
+					<rule e="way" k="ramp:wheelchair" v="yes">
+						<line class="highway-casing highway-steps-casing-ramp-wheelchair"/>
+						<line class="highway-casing highway-steps-casing-ramp"/>
+
+					</rule>
+					<else>
+						<rule e="way" k="ramp:stroller" v="yes">
+							<line class="highway-casing highway-steps-casing-ramp-stroller"/>
+							<line class="highway-casing highway-steps-casing-ramp"/>
+						</rule>
+						<else>
+							<rule e="way" k="ramp:bicycle" v="yes">
+								<line class="highway-casing highway-steps-casing-ramp-bicycle"/>
+								<line class="highway-casing highway-steps-casing-ramp"/>
+							</rule>
+							<else>
+								<rule e="way" k="ramp" v="yes">
+									<line class="highway-casing highway-steps-casing-ramp-yes"/>
+									<line class="highway-casing highway-steps-casing-ramp"/>
+								</rule>
+								<else>
+									<rule e="way" k="ramp" v="no">
+										<line class="highway-casing highway-steps-casing-ramp-no"/>
+										<line class="highway-casing highway-steps-casing-ramp"/>
+									</rule>
+									<else>
+										<line class="highway-casing highway-steps-casing"/>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
 				</rule>
 				<rule e="way" k="highway" v="footway|footpath">
 					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
@@ -4896,6 +4927,13 @@
 			.highway-steps-bridge-casing            { stroke-width: 1.2px; }
 			.highway-steps-bridge-core              { stroke-width: 1.0px; }
 			.highway-steps-casing                   { stroke-width: 0.6px;   stroke: #707070; }
+			.highway-steps-casing-ramp              { stroke-width: 0.45px;  stroke: #707070; }
+			.highway-steps-casing-ramp-bicycle      { stroke-width: 0.7px;   stroke: #309030; }
+			.highway-steps-casing-ramp-stroller     { stroke-width: 0.7px;   stroke: #903030; }
+			.highway-steps-casing-ramp-wheelchair   { stroke-width: 0.7px;   stroke: #303090; }
+			.highway-steps-casing-ramp-yes          { stroke-width: 0.7px;   stroke: #309090; }
+			.highway-steps-casing-ramp-no	          { stroke-width: 0.7px;   stroke: #303030; }
+
 			.highway-steps-area-casing              { stroke-width: 0.15px; }
 			.highway-steps-core                     { stroke-width: 0.45px;   stroke: #e5e0c2; stroke-dasharray: 0.3, 0.1; stroke-linecap: butt;}
 			.highway-steps-name                     { stroke-width: 0px;     font-size: 1.25px; }

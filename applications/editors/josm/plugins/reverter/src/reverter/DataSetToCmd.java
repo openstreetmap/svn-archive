@@ -46,7 +46,7 @@ final class DataSetToCmd {
         if (!source.isVisible()) return;
         OsmPrimitive target = getMergeTarget(source);
         if (target.getVersion() == 0)
-            throw new IllegalStateException(tr("Target of type {0} with id {1} have invalid version",
+            throw new IllegalStateException(tr("Target of type {0} with id {1} has invalid version",
                     target.getType(), target.getUniqueId()));
         OsmPrimitive newTarget;
         switch(target.getType()) {

@@ -52,7 +52,7 @@ public class RevertChangesetAction extends JosmAction {
                 if (!rev.haveMissingObjects()) return true;
                 if (!downloadConfirmed) {
                     downloadConfirmed = JOptionPane.showConfirmDialog(Main.parent,
-                            tr("This changeset have objects that doesn't present in current dataset.\n" + 
+                            tr("This changeset has objects that are not present in current dataset.\n" + 
                                     "It is needed to download them before reverting. Do you want to continue?"),
                             tr("Confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
                     if (!downloadConfirmed) return false;

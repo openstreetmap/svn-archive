@@ -18,9 +18,9 @@ final class Syncer implements Runnable {
       SwingUtilities.invokeLater(new Runnable() {
     	  //here we update
         public void run() {
-        	pl.updateTime();
-
+        	if (pl.isPlaying())	pl.updateTime(); //if the video is seeking we get a mess
         }
       });
+      
     }
   }

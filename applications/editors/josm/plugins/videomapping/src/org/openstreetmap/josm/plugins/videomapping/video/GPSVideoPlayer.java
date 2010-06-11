@@ -8,8 +8,6 @@ import java.util.TimerTask;
 
 import javax.swing.JButton;
 
-import org.openstreetmap.josm.command.AddCommand;
-import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.videomapping.GpsPlayer;
 
 //combines video and GPS playback
@@ -102,5 +100,54 @@ public class GPSVideoPlayer{
 		if(synced) jumpToGPSTime(gps.getRelativeTime());
 		
 	}
+
+	public void setJumpLength(Integer integer) {
+		video.setJumpLength(integer);
+		
+	}
+
+	public void setLoopLength(Integer integer) {
+		video.setLoopLength(integer);
+		
+	}
+
+	public void loop() {
+		video.loop();
+		
+	}
+
+	public void forward() {
+		video.forward();
+		
+	}
+
+	public void backward() {
+		video.backward();
+		
+	}
+
+	public void removeVideo() {
+		video.removeVideo();
+		
+	}
+
+	public File getVideo() {
+		return file;
+	}
+
+	public float getCoverage() {
+		return gps.getLength()/video.getLength();
+	}
+
+	public void setDeinterlacer(String string) {
+		video.setDeinterlacer(string);
+		
+	}
+
+	public void setAutoCenter(boolean selected) {
+		gps.setAutoCenter(selected);
+		
+	}
+
 	
 }

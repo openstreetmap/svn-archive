@@ -33,6 +33,7 @@ import javax.swing.*;
 import static org.openstreetmap.josm.tools.I18n.*;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.InfoAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.WayPoint;
@@ -46,6 +47,8 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+
+import com.sun.jna.StringArray;
 
 //Basic rendering and GPS layer interaction
 public class PositionLayer extends Layer implements MouseListener,MouseMotionListener {
@@ -80,7 +83,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 
 	@Override
 	public Object getInfoComponent() {
-		return null;
+		return tr("{0} covers {1}% of GPS track",gps.getVideo().getName(),gps.getCoverage()*10);
 	}
 
 	@Override

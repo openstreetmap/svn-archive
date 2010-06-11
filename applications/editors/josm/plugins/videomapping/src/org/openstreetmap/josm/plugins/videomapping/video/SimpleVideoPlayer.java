@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,9 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +27,7 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
@@ -30,6 +35,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.videomapping.PlayerObserver;
 
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.check.EnvironmentCheckerFactory;
@@ -55,6 +61,9 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 	private boolean syncTimeline=false;
 	private SimpleDateFormat df;
 	private static final Logger LOG = Logger.getLogger(SimpleVideoPlayer.class);
+	private int jumpLength=1000;
+	private int  loopLength=6000;
+	private static Set<PlayerObserver> observers = new HashSet<PlayerObserver>(); //we have to implement our own Observer pattern
 	
 	public SimpleVideoPlayer() {
 		super();
@@ -77,17 +86,29 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		    mp.setStandardMediaOptions(standardMediaOptions);
 		    //setup GUI
 		    setSize(400, 300);
+		    setAlwaysOnTop(true);
+		    //setIconImage();
 		    df = new SimpleDateFormat("hh:mm:ss:S");
 		    scr=new Canvas();
-		    timeline = new JSlider(0,100,0); //TODO better setup for ticks
+		    timeline = new JSlider(0,100,0);
+		    timeline.setMajorTickSpacing(10);
+		    timeline.setMajorTickSpacing(5);
+		    timeline.setPaintTicks(true);
 		    play= new JButton("play");
 		    back= new JButton("<");
 		    forward= new JButton(">");
 		    loop= new JToggleButton("loop");
-		    speed = new JSlider(0,2,1);
-			speed.setPaintTicks(true);
-			speed.setMajorTickSpacing(5);
+		    speed = new JSlider(-200,200,0);
+		    speed.setMajorTickSpacing(100);
+			speed.setPaintTicks(true);			
 			speed.setOrientation(Adjustable.VERTICAL);
+			Hashtable labelTable = new Hashtable();
+			labelTable.put( new Integer( 0 ), new JLabel("1x") );
+			labelTable.put( new Integer( -200 ), new JLabel("-2x") );
+			labelTable.put( new Integer( 200 ), new JLabel("2x") );
+			speed.setLabelTable( labelTable );
+			speed.setPaintLabels(true);
+
 		    setLayout();
 			addListeners();
 		    //embed vlc player
@@ -136,8 +157,6 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 
 	//add UI functionality
 	private void addListeners() {
-		final float JUMP_LENGTH=1000;
-		final int  LOOP_LENGTH=6000;
 		timeline.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				if(!syncTimeline) //only if user moves the slider by hand
@@ -161,7 +180,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		back.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				mp.setTime((long) (mp.getTime()-JUMP_LENGTH));
+				mp.setTime((long) (mp.getTime()-jumpLength));
 				//jump(600000); //10,05
 				
 			}
@@ -170,7 +189,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		forward.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				mp.setTime((long) (mp.getTime()+JUMP_LENGTH));
+				mp.setTime((long) (mp.getTime()+jumpLength));
 				
 			}
 		});
@@ -184,7 +203,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 			}
 			else			
 			{
-				final long resetpoint=(long) mp.getTime()-LOOP_LENGTH/2;
+				final long resetpoint=(long) mp.getTime()-loopLength/2;
 				TimerTask ani=new TimerTask() {
 					
 					@Override
@@ -193,7 +212,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 					}
 				};
 				t= new Timer();
-				t.schedule(ani,LOOP_LENGTH/2,LOOP_LENGTH); //first run a half looptime till reset	
+				t.schedule(ani,loopLength/2,loopLength); //first run a half looptime till reset	
 				}
 			}
 		});
@@ -201,7 +220,13 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		speed.addChangeListener(new ChangeListener() {
 			
 			public void stateChanged(ChangeEvent arg0) {
-				// TODO change playback speed
+				if(!speed.getValueIsAdjusting()&&(mp.isPlaying()))
+				{
+					int perc = speed.getValue();
+					float ratio= (float) (perc/400f*1.75);
+					ratio=ratio+(9/8);
+					mp.setRate(ratio);
+				}
 				
 			}
 		});
@@ -217,7 +242,9 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 	}
 
 	public void metaDataAvailable(MediaPlayer arg0, VideoMetaData data) {
-		scr.setSize(data.getVideoDimension());
+		final float perc = 0.5f;
+		Dimension org=data.getVideoDimension();
+		scr.setSize(new Dimension((int)(org.width*perc), (int)(org.height*perc)));
 		pack();
 
 	}
@@ -292,12 +319,17 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		return mp.getPosition();
 	}
 	
+	public boolean isPlaying()
+	{
+		return mp.isPlaying();
+	}
+	
 	//gets called by the Syncer to update all components
 	public void updateTime ()
 	{
 		if(mp.isPlaying())
 		{
-			setTitle(df.format(new Date(mp.getTime()))+" "+mp.getTime());
+			setTitle(df.format(new Date(mp.getTime()))); //FIXME there is a leading hour even at the beginning
 			syncTimeline=true;
 			timeline.setValue(Math.round(mp.getPosition()*100));
 			syncTimeline=false;
@@ -310,6 +342,69 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		controlsPanel.add(c);
 		pack();
 	}
+
+	public long getLength() {		
+		return mp.getLength();
+	}
+
+	public void setDeinterlacer(String string) {
+		mp.setDeinterlace(string);
+		
+	}
+
+	public void setJumpLength(Integer integer) {
+		jumpLength=integer;
+		
+	}
+
+	public void setLoopLength(Integer integer) {
+		loopLength = integer;
+		
+	}
+
+	public void loop() {		
+		loop.notifyAll();
+	}
+
+	public void forward() {
+		forward.notifyAll();	
+	}
+
+	public void backward() {
+		back.notifyAll();
+		
+	}
+
+	public void removeVideo() {
+		if (mp.isPlaying()) mp.stop();
+		mp.release();
+		
+	}
+
+	public static void addObserver(PlayerObserver observer) {
+
+	        observers.add(observer);
+
+	    }
+
+	 
+
+	    public static void removeObserver(PlayerObserver observer) {
+
+	        observers.remove(observer);
+
+	    }
+
+	    private static void notifyObservers() {
+
+	        for (PlayerObserver o : observers) {
+
+	            o.changeSpeed(0.0f);
+
+	        }
+
+	    }
+
 	
 
 }

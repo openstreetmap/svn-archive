@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.videomapping;
 
 import java.awt.Point;
+import java.io.File;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class GpsPlayer {
 	private WayPoint start;
 	private Timer t;
 	private TimerTask ani; //for moving trough the list
+	private boolean autoCenter;
 	
 
 	public WayPoint getPrev() {
@@ -313,6 +315,7 @@ public class GpsPlayer {
 				//some cheap animation stuff
 				public void run() {				
 					next();
+					if(autoCenter) Main.map.mapView.zoomTo(getCurr().getEastNorth());
 					Main.map.mapView.repaint();
 				}
 			};
@@ -327,5 +330,17 @@ public class GpsPlayer {
 			t=null;					
 		}
 	}
+
+	public long getLength() {
+		return ls.size()*1000; //FIXME this is a poor hack
+	}
+	
+	public void setAutoCenter(boolean b)
+	{
+		this.autoCenter=b;
+	}
+
+
+
 	
 }

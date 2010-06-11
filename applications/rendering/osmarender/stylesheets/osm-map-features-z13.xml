@@ -1997,6 +1997,7 @@
 			
 			.military-area {
 			fill: #d0d050;
+			fill-opacity: 0.5;
 			stroke: #e4e4e4;
 			stroke-width: 0.2px;
 			}

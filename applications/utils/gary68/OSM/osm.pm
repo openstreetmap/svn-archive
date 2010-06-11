@@ -84,7 +84,8 @@
 # - support comments in osm files
 # - ignore a space after the last attribute in the <node> tag.
 #
-#
+# Version 6.0
+# - regex improvements
 #
 #
 # USAGE
@@ -158,7 +159,6 @@ use strict;
 use warnings;
 
 use LWP::Simple;
-use LWP::Simple;
 use Math::Trig;
 use File::stat;
 use Time::localtime;
@@ -169,7 +169,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '5.8' ; 
+$VERSION = '6.0' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -254,18 +254,14 @@ sub getNode {
 	my @gTags = () ;
 	if($line =~ /^\s*\<node/) {
 
-		my ($id)   = ($line =~ /^\s*\<node id=[\'\"]([-\d]+)[\'\"]/);	# get node id
-		my ($lon) = ($line =~ /^.+lon=[\'\"]([-\d,\.]+)[\'\"]/);	# get position
-		my ($lat) = ($line =~ /^.+lat=[\'\"]([-\d,\.]+)[\'\"]/);	# get position
+		my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		my ($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+		my ($lon) = ($line =~ / lon=[\'\"](.+?)[\'\"]/ ) ;
+		my ($lat) = ($line =~ / lat=[\'\"](.+?)[\'\"]/ ) ;
 
-		#my ($u) = ($line =~ /^.+user=[\'\"]([-\w\d\s]+)[\'\"]/);	# get value 
-		my ($u) = ($line =~ /^.+user=[\'\"](.+)[\'\"]/);	# get value 
+		if (!defined $u) { $u = "undefined" ; } 
 
-		if (!$u) {
-			$u = "unknown" ;
-		}
-
-		if (!$id or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
+		if (! defined $id ) {
 			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
 		}
 
@@ -276,15 +272,7 @@ sub getNode {
 			nextLine() ;
 			while (!grep(/<\/node>/, $line)) {
 
-				#my ($k) = ($line =~ /^\s*\<tag k=[\'\"]([-\w\d\s\.\,\;\:]+)[\'\"]/);   # get key
-				#my ($v) = ($line =~ /v=[\'\"]([-\w\d\s\.\,\;\:äöüÄÖÜß\/\(\)\+\&]+)[\'\"]/) ;
-				#my ($k) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]/);   # get key
-				#my ($v) = ($line =~ /v=[\'\"](.+)[\'\"]/) ;
 				my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
-
-				#print "line = $line" ;
-				#print "key  = $k\n" ;
-				#print "val  = $v\n\n" ;
 
 				if ( (defined ($k)) and (defined ($v)) ) {
 					my $tag = $k . ":" . $v ;
@@ -321,19 +309,15 @@ sub getNode2 {
 	if($line =~ /^\s*\<node/) {
 
 		my $version ; my $timestamp ; my $uid ; my $id ; my $lon ; my $lat ; my $u ; my $cs ;
-		($id, $version, $timestamp, $uid, $u, $cs, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]\s*changeset=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
 
-		if (!$id) {
-			($id, $version, $timestamp, $uid, $u, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
-		}
+		($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+		($lon) = ($line =~ / lon=[\'\"](.+?)[\'\"]/ ) ;
+		($lat) = ($line =~ / lat=[\'\"](.+?)[\'\"]/ ) ;
 
-		if (!$id) {
-			($id, $version, $timestamp, $lat, $lon) = ( $line =~ /^\s*<node id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*lat=[\'\"](.+)[\'\"]\s*lon=[\'\"](.+)[\'\"]/ ) ;
-			$u = "unknown" ;
-			$uid = 0 ;
-		}
+		if (!defined $u) { $u = "undefined" ; } 
 
-		if ( (! defined $id ) or (! defined $lat) or ( ! defined $lon ) ) {
+		if (! defined $id ) {
 			print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ; 
 		}
 		else {
@@ -390,26 +374,18 @@ sub getWay {
 	my @gTags ;
 	my @gNodes ;
 	if($line =~ /^\s*\<way/) {
-		my ($id)   = ($line =~ /^\s*\<way id=[\'\"]([-\d]+)[\'\"]/); # get way id
-		my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/);       # get value // REGEX???
-		if (!$u) {
-			$u = "unknown" ;
-		}
-		if (!$id) {
-			print "ERROR reading osm file, line follows (expecting way id):\n", $line, "\n" ; 
-		}
-		unless ($id) { next; }
+		my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		my ($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
 
+		if (!defined $u) { $u = "undefined" ; } 
+
+		if (! defined $id ) { print "ERROR: $line\n" ; }
 
 		nextLine() ;
 		while (not($line =~ /\/way>/)) { # more way data
 			#get nodes and type
 			my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
 
-			#my ($k)   = ($line =~ /^\s*\<tag k=[\'\"]([-\w\d\s\.\,\:]+)[\'\"]/); # get key
-			#my ($v) = ($line =~ /v=[\'\"]([-\w\d\s\.\,\;\:äöüÄÖÜß\/\(\)\+\&]+)[\'\"]/) ;
-			#my ($k)   = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]/); # get key
-			#my ($v) = ($line =~ /v=[\'\"](.+)[\'\"]/) ;
 			my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
 
 			if (!(($node) or ($k and defined($v) ))) {
@@ -445,29 +421,20 @@ sub getWay2 {
 	if($line =~ /^\s*\<way/) {
 
 		my $version ; my $timestamp ; my $uid ; my $id ; my $u ; my $changeset ;
-		($id, $version, $timestamp, $uid, $u, $changeset) = ( $line =~ /^\s*<way id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]\s*changeset=[\'\"](.+)[\'\"]/ ) ;
 
-		if (!defined $id) {
-			($id, $version, $timestamp, $uid, $u) = ( $line =~ /^\s*<way id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*uid=[\'\"](.+)[\'\"]\s*user=[\'\"](.+)[\'\"]/ ) ;
-		}
+		($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
 
-		if (!defined $id) {
-			($id, $version, $timestamp, $changeset) = ( $line =~ /^\s*<way id=[\'\"](.+)[\'\"]\s*version=[\'\"](.+)[\'\"]\s*timestamp=[\'\"](.+)[\'\"]\s*changeset=[\'\"](.+)[\'\"]/ ) ;
-			$u = "unknown" ;
-			$uid = 0 ;
-		}
+		if (!defined $u) { $u = "undefined" ; } 
 
-		if (!defined $id) { print "ERROR: $line" ;}
+		if (! defined $id ) { print "ERROR: $line\n" ; }
+
 
 		nextLine() ;
 		while (not($line =~ /\/way>/)) { # more way data
 			#get nodes and type
 			my ($node) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/); # get node id
 
-			#my ($k)   = ($line =~ /^\s*\<tag k=[\'\"]([-\w\d\s\.\,\:]+)[\'\"]/); # get key
-			#my ($v) = ($line =~ /v=[\'\"]([-\w\d\s\.\,\;\:äöüÄÖÜß\/\(\)\+\&]+)[\'\"]/) ;
-			#my ($k)   = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]/); # get key
-			#my ($v) = ($line =~ /v=[\'\"](.+)[\'\"]/) ;
 			my ($k, $v) = ($line =~ /^\s*\<tag k=[\'\"](.+)[\'\"]\s*v=[\'\"](.+)[\'\"]/) ;
 
 			if (!(($node) or ($k and defined($v) ))) {
@@ -508,14 +475,13 @@ sub getRelation {
 
 	if ($line =~ /^\s*\<relation/) {
 
-		my ($id)   = ($line =~ /^\s*\<relation id=[\'\"]([-\d]+)[\'\"]/); # get rel id
-		my ($u) = ($line =~ /^.+user=[\'\"](.*)[\'\"]/);     
-		if (!$u) {
-			$u = "unknown" ;
-		}
-		if (!$id) {
-			print "ERROR reading osm file, line follows (expecting relation id):\n", $line, "\n" ; 
-		}
+		my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		my ($u) = ($line =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+
+		if (!defined $u) { $u = "undefined" ; } 
+
+		if (! defined $id ) { print "ERROR: $line\n" ; }
+
 		unless ($id) { next ; }
 
 		nextLine() ;

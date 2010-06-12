@@ -79,7 +79,7 @@ function updateMapKey(force) {
 }
 
 function mapMoved() {
-    var lonlat = map.getCenter();
+    var lonlat = map.getCenter().clone();
     lonlat.transform(projmerc, proj4326);
     var pos = '?lon=' + lonlat.lon.toFixed(5) + '&lat=' + lonlat.lat.toFixed(5) + '&zoom=' + map.getZoom();
     jQuery('#editlink')[0].href = 'http://www.openstreetmap.org/edit' + pos;

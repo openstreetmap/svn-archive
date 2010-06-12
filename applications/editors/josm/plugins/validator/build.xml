@@ -54,6 +54,7 @@
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="An OSM data validator. It checks for problems in data, and provides fixes for the common ones. Spellcheck integrated for tag names."/>
+				<attribute name="Plugin-Icon" value="images/validator.png"/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Validator"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

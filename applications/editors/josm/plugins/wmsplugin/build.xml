@@ -58,6 +58,7 @@
 				<attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
 				<attribute name="Plugin-Description" value="Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)." />
+				<attribute name="Plugin-Icon" value="images/wms.png"/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WMSPlugin" />
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}" />
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />

@@ -136,7 +136,7 @@ module Expire
           puts "Failed to look up node #{node_id} referenced in way #{node.parent['id']}."
           
         else
-          point = Proj4::Point.new(res[0][0].to_f, res[0][1].to_f)
+          point = Proj4::Point.new(res[0][0].to_f / 100.0, res[0][1].to_f / 100.0)
           nodes[node_id] = tile_from_merc(point, MAX_ZOOM)
         end
       end

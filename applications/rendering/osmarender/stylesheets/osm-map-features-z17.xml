@@ -2598,7 +2598,11 @@
 		<rule e="node" s="way" k="highway" v="trunk|primary|secondary|tertiary|residential|unclassified">
 			<rule e="node" k="highway" v="crossing">
 				<rule e="node" k="crossing" v="~|uncontrolled|zebra|island">
-					<wayMarker k="highway" class="highway-crossing"/>
+					<!-- Order in the v tag is important to make the zebra
+					     crossing render in the direction of the "smaller"
+					     way across the "bigger" way. If both are the same
+					     priority you basically loose -->
+					<wayMarker k="highway" v="motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|road|unclassified|residential|living_street|service|bridleway|steps|pedestrian|path|cycleway|footway|*" class="highway-crossing"/>
 				</rule>
 			</rule>
 		</rule>

@@ -378,13 +378,13 @@
 			<wayMarker k="waterway" class="canal-lock"/>
 		</rule>
 		<rule e="node" s="way" k="lock" v="yes|lock">
-			<wayMarker k="waterway" class="canal-lock"/>
+			<wayMarker k="waterway" v="artificial|canal|ditch|drain|river|stream" class="canal-lock"/>
 		</rule>
 		<rule e="node" k="waterway" v="lock">
 			<wayMarker k="waterway" class="canal-lock"/>
 		</rule>
 		<rule e="node" s="way" k="waterway" v="lock">
-			<wayMarker k="waterway" class="canal-lock"/>
+			<wayMarker k="waterway" v="artificial|canal|ditch|drain|river|stream" class="canal-lock"/>
 		</rule>
 		
 		<rule e="way" k="boundary" v="national_park">

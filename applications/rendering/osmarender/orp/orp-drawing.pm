@@ -801,12 +801,12 @@ sub draw_symbol
 # sub draw_way_markers($rulenode, $layer, $selection)
 #
 # for each selected object referenced by the $selection structure,
-# draw a way marker based on the parameters specified by 
+# draw a way marker based on the parameters specified by
 # $rulenode.
 #
 # From osmarender.xsl:
-# "Draws a marker on a node that is perpendicular to a way that 
-# passes through the node. If more than one way passes through the 
+# "Draws a marker on a node that is perpendicular to a way that
+# passes through the node. If more than one way passes through the
 # node then the result is a bit unspecified."
 #
 # This implementation currently only looks at the first way using
@@ -832,23 +832,34 @@ sub draw_way_markers
     {
         next if (ref $_ eq 'way');
 
-        # find the (first) way using this node and use it to determine
-        # previous and next nodes
+        # find the (first) way using this node and matching one of the keys
+        # in k and one of the values in v (if set) and use it to determine
+        # previous and next nodes. Multiple keys and values can be specified
+        # separated by | chars. Earlier keys are more important then keys
+        # later in the string. Within the same key earlier values are more
+        # important. If two ways match the same key and value the result
+        # is withever way is read first and therefore a bit random.
         my $way = undef;
-        my $k = $markernode->getAttribute('k');
-        my $v = $markernode->getAttribute('v');
-        if ($k || $v) 
-        {
-            foreach (@{$_->{'ways'}}) {
-                next if $k && (!defined($_->{'tags'}->{$k}));
-                next if $k && $v && ($_->{'tags'}{$k} ne $v);
-                $way = $_;
-                last;
+
+        my @ka = split /\|/,$markernode->getAttribute('k');
+        my @va = split /\|/,$markernode->getAttribute('v');
+        # if no value is specified we assume that the user doesn't care and
+        # only the key is important.
+        push(@va, "*") if (scalar(@va) == 0);
+
+        debug("looking for @ka and @va") if $debug->{'selectors'};
+
+        WAYSEARCH: foreach my $k (@ka) {
+            foreach my $v (@va) {
+                foreach my $w (@{$_->{'ways'}}) {
+                    next unless defined($w->{'tags'}->{$k});
+                    # a * matches any value (like osmarender rules, NOT like perl regexp)
+                    next unless ($v eq "*" or $w->{'tags'}{$k} eq $v);
+                    debug("$w->{'id'} matches $k and $v") if $debug->{'selectors'};
+                    $way = $w;
+                    last WAYSEARCH;
+                }
             }
-        } 
-        else 
-        {
-            $way = $_->{'ways'}->[0];
         }
 
         next unless defined($way);

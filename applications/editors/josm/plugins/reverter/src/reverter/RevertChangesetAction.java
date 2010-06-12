@@ -49,7 +49,7 @@ public class RevertChangesetAction extends JosmAction {
             private boolean downloadConfirmed = false;
             
             private boolean checkMissing() throws OsmTransferException {
-                if (!rev.haveMissingObjects()) return true;
+                if (!rev.hasMissingObjects()) return true;
                 if (!downloadConfirmed) {
                     downloadConfirmed = JOptionPane.showConfirmDialog(Main.parent,
                             tr("This changeset has objects that are not present in current dataset.\n" + 
@@ -72,6 +72,11 @@ public class RevertChangesetAction extends JosmAction {
                 progressMonitor.indeterminateSubTask("Downloading changeset");
                 rev = new ChangesetReverter(changesetId, NullProgressMonitor.INSTANCE);
                 if (progressMonitor.isCancelled()) return;
+                rev.checkMissingDeleted();
+                // Don't ask user to download primitives going to be undeleted
+                rev.downloadMissingPrimitives(NullProgressMonitor.INSTANCE);
+                rev.checkMissingCreated();
+                rev.checkMissingUpdated();
                 if (!checkMissing()) return;
                 rev.downloadObjectsHistory(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
                 if (progressMonitor.isCancelled()) return;

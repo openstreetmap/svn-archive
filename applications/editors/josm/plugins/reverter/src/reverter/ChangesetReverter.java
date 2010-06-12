@@ -12,6 +12,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.ConflictAddCommand;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.conflict.Conflict;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.ChangesetDataSet;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -24,6 +25,7 @@ import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.ChangesetDataSet.ChangesetDataSetEntry;
 import org.openstreetmap.josm.data.osm.ChangesetDataSet.ChangesetModificationType;
+import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
 import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
@@ -128,13 +130,15 @@ public class ChangesetReverter {
                 deleted.add(entry.getPrimitive());
             } else throw new AssertionError();
         }
-        
-        /* Create list of objects that created or modified my the changeset but
-         * doesn't present in the current dataset. 
-         */
-        missing.clear();
+    }
+    public void checkMissingCreated() {
         addMissingHistoryIds(created);
+    }
+    public void checkMissingUpdated() {
         addMissingHistoryIds(updated);
+    }
+    public void checkMissingDeleted() {
+        addMissingHistoryIds(deleted);
     }
 
     /**
@@ -165,6 +169,7 @@ public class ChangesetReverter {
     }
     
     public void downloadMissingPrimitives(ProgressMonitor monitor) throws OsmTransferException {
+        if (!hasMissingObjects()) return;
         MultiFetchServerObjectReader rdr = new MultiFetchServerObjectReader();
         for (PrimitiveId id : missing) {
             switch (id.getType()) {
@@ -203,6 +208,37 @@ public class ChangesetReverter {
         }
     }
     
+    private static boolean hasEqualSemanticAttributes(OsmPrimitive current,HistoryOsmPrimitive history) {
+        if (!current.getKeys().equals(history.getTags())) return false;
+        switch (current.getType()) {
+        case NODE:
+            return new LatLon(((Node)current).getCoor()).equals(((HistoryNode)history).getCoords());
+        case WAY:
+            List<Node> currentNodes = ((Way)current).getNodes();
+            List<Long> historyNodes = ((HistoryWay)history).getNodes();
+            if (currentNodes.size() != historyNodes.size()) return false;
+            for (int i = 0; i < currentNodes.size(); i++) {
+                if (currentNodes.get(i).getId() != historyNodes.get(i)) return false;
+            }
+            return true;
+        case RELATION:
+            List<org.openstreetmap.josm.data.osm.RelationMember> currentMembers = 
+                ((Relation)current).getMembers();
+            List<RelationMember> historyMembers = ((HistoryRelation)history).getMembers();
+            if (currentMembers.size() != historyMembers.size()) return false;
+            for (int i = 0; i < currentMembers.size(); i++) {
+                org.openstreetmap.josm.data.osm.RelationMember currentMember = 
+                    currentMembers.get(i);
+                RelationMember historyMember = historyMembers.get(i);
+                if (!currentMember.getRole().equals(historyMember.getRole())) return false;
+                if (currentMember.getMember().getPrimitiveId().equals(new SimplePrimitiveId(
+                        historyMember.getPrimitiveId(),historyMember.getPrimitiveType()))) return false;
+            }
+            return true;
+        default: throw new AssertionError();
+        }
+    }
+    
     /**
      * Builds a list of commands that will revert the changeset
      * 
@@ -219,7 +255,7 @@ public class ChangesetReverter {
         // Create a set of objects to be deleted
 
         HashSet<OsmPrimitive> toDelete = new HashSet<OsmPrimitive>();
-        // Mark objects that have visible=false to be deleted
+        // Mark objects that has visible=false to be deleted
         for (OsmPrimitive p : nds.allPrimitives()) {
             if (!p.isVisible()) {
                 OsmPrimitive dp = ds.getPrimitiveById(p);
@@ -248,11 +284,18 @@ public class ChangesetReverter {
             ChangesetDataSetEntry entry = iterator.next();
             HistoryOsmPrimitive hp = entry.getPrimitive();
             OsmPrimitive dp = ds.getPrimitiveById(hp.getPrimitiveId());
-            if (dp == null)
+            if (dp == null || dp.isIncomplete())
                 throw new IllegalStateException(tr("Missing merge target for {0} with id {1}",
                         hp.getType(), hp.getId()));
+            
             if (hp.getVersion() != dp.getVersion()
-                    && (hp.isVisible() || dp.isVisible())) {
+                    && (hp.isVisible() || dp.isVisible()) &&
+                    /* Don't create conflict if changeset object and dataset object
+                     * has same semantic attributes(but different versions)
+                     */
+                    !hasEqualSemanticAttributes(dp,hp)) {
+                
+                
                 cmds.add(new ConflictAddCommand(layer,CreateConflict(dp, 
                         entry.getModificationType() == ChangesetModificationType.CREATED)));
                 conflicted.add(dp);
@@ -292,7 +335,7 @@ public class ChangesetReverter {
         if (!list.isEmpty()) cmds.add(new DeleteCommand(list));
         return cmds;
     }
-    public boolean haveMissingObjects() {
+    public boolean hasMissingObjects() {
         return !missing.isEmpty();
     }
 }

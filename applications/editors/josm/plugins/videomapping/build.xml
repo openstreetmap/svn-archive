@@ -110,6 +110,10 @@
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>				
 			</manifest>
+			<zipfileset src="lib/vlcj-1.1h.jar" />
+			<zipfileset src="lib/log4j.jar" />
+			<zipfileset src="lib/jna.jar" />
+			<zipfileset src="lib/platform.jar" />
 		</jar>
 	</target>
 

@@ -107,8 +107,15 @@ module Expire
     # we put all the nodes into the hash, as it doesn't matter whether the node was
     # added, deleted or modified - the tile will need updating anyway.
     doc.find('//node').each do |node|
+      lat = node['lat'].to_f
+      if lat < -85
+        lat = -85
+      end
+      if lat > 85
+        lat = 85
+      end
       point = Proj4::Point.new(Math::PI * node['lon'].to_f / 180, 
-                               Math::PI * node['lat'].to_f / 180)
+                               Math::PI * lat / 180)
       nodes[node['id'].to_i] = tile_from_latlon(point, MAX_ZOOM)
     end
     

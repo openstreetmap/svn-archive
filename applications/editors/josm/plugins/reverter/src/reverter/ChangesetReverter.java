@@ -42,6 +42,13 @@ import org.openstreetmap.josm.io.OsmTransferException;
  *
  */
 public class ChangesetReverter {
+
+    public static enum RevertType {
+        FULL,
+        SELECTION,
+        SELECTION_WITH_UNDELETE
+    }
+
     public final int changesetId;
     public final Changeset changeset;
 
@@ -119,9 +126,8 @@ public class ChangesetReverter {
         }
         
         // Build our own lists of created/updated/modified objects for better performance
-        Iterator<ChangesetDataSetEntry> iterator = cds.iterator();
-        while (iterator.hasNext()) {
-            ChangesetDataSetEntry entry = iterator.next();
+        for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
+            ChangesetDataSetEntry entry = it.next();
             if (entry.getModificationType() == ChangesetModificationType.CREATED) {
                 created.add(entry.getPrimitive());
             } else if (entry.getModificationType() == ChangesetModificationType.UPDATED) {
@@ -190,6 +196,8 @@ public class ChangesetReverter {
             if (!p.isVisible() && !p.isDeleted()) {
                 p.setDeleted(true);
                 p.setModified(false);
+                ReverterPlugin.undeletedObjects.addPrimitive(ds,
+                        new PrimitiveIdVersion(p.getPrimitiveId(),(int)p.getVersion()));
             }
         }
         layer.mergeFrom(source);
@@ -279,9 +287,8 @@ public class ChangesetReverter {
         }
         
         // Check objects versions
-        Iterator<ChangesetDataSetEntry> iterator = cds.iterator();
-        while (iterator.hasNext()) {
-            ChangesetDataSetEntry entry = iterator.next();
+        for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
+            ChangesetDataSetEntry entry = it.next();
             HistoryOsmPrimitive hp = entry.getPrimitive();
             OsmPrimitive dp = ds.getPrimitiveById(hp.getPrimitiveId());
             if (dp == null || dp.isIncomplete())
@@ -305,9 +312,10 @@ public class ChangesetReverter {
         /* Check referrers for deleted objects: if object is referred by another object that
          * isn't going to be deleted or modified, create a conflict.
          */
-        for (OsmPrimitive p : toDelete.toArray(new OsmPrimitive[0])) {
+        for (Iterator<OsmPrimitive> it = toDelete.iterator(); it.hasNext();) {
+            OsmPrimitive p = it.next();
             if (p.isDeleted()) {
-                toDelete.remove(p);
+                it.remove();
                 continue;
             }
             for (OsmPrimitive referrer : p.getReferrers()) {
@@ -320,7 +328,7 @@ public class ChangesetReverter {
                     cmds.add(new ConflictAddCommand(layer,CreateConflict(p, true)));
                     conflicted.add(p);
                 }
-                toDelete.remove(p);
+                it.remove();
                 break;
             }
         }

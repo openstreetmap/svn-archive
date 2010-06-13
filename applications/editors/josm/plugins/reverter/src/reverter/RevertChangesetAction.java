@@ -74,7 +74,8 @@ public class RevertChangesetAction extends JosmAction {
                 if (progressMonitor.isCancelled()) return;
                 rev.checkMissingDeleted();
                 // Don't ask user to download primitives going to be undeleted
-                rev.downloadMissingPrimitives(NullProgressMonitor.INSTANCE);
+                rev.downloadMissingPrimitives(progressMonitor.createSubTaskMonitor(0, false));
+                if (progressMonitor.isCancelled()) return;
                 rev.checkMissingCreated();
                 rev.checkMissingUpdated();
                 if (!checkMissing()) return;

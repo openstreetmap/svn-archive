@@ -23,22 +23,25 @@ use warnings;
 # We will get all Nodes required by Ways and Relations
 # We can optionally also get other Nodes, based on their tags
 my @node_sel_tags = (
-	['place','town'], 
-    ['place','city'],
-	['railway',undef],
+#       ['railway',undef],
+#	['place','town'], 
+#	['place','city'],
 );
 
 # We will get all Ways required by Relations
 # We can optionally also get other Ways, based on their tags
 my @way_sel_tags = (
-	['railway',undef],
-	['highway','motorway'],
+#       ['railway',undef],
+#	['highway','motorway'],
 #	['waterway','river'],
 #	['natural','coastline'], # Gives really huge .osm files
 );
 
 # Specify which Relations to get, based on their tags
 my @rel_sel_tags = (
+	['network','lcn'],
+	['network','rcn'],
+	['network','ncn'],
 #	['type','multipolygon'],
 );
 
@@ -103,9 +106,10 @@ unless( -s $xml ) {
 }
 
 
-# We assume IDs to be up to 250 million
-my $wanted_nodes = Bit::Vector->new( 500 * 1000 * 1000 );
-my $wanted_ways  = Bit::Vector->new( 250 * 1000 * 1000 );
+# We assume IDs to be up to 1 billion
+my $wanted_nodes = Bit::Vector->new( 1000 * 1000 * 1000 );
+my $wanted_ways  = Bit::Vector->new( 1000 * 1000 * 1000 );
+my $wanted_relations = Bit::Vector->new( 1000 * 1000 * 1000 );
 
 
 # Sub to open xml
@@ -165,6 +169,7 @@ sub processXML {
 	my $wanted;
 	my @tags;
 	my @nodes;
+	my @rel_relations;
 	my @rel_ways;
 	my @rel_nodes;
 
@@ -172,6 +177,7 @@ sub processXML {
 		$wanted = 0;
 		@tags = ();
 		@nodes = ();
+		@rel_relations = ();
 		@rel_ways = ();
 		@rel_nodes = ();
 	};
@@ -181,19 +187,22 @@ sub processXML {
 			$main_line = $line;
 			$main_type = "node";
 			&$startNewTag();
-			unless($line =~ /\/>\s*$/) { next; }
+			if($line =~ /\/>\s*$/) { goto NODE_CLOSED; }
+			next;
 		}
 		elsif($line =~ /^\s*\<way/) {
 			$main_line = $line;
 			$main_type = "way";
 			&$startNewTag();
-			unless($line =~ /\/>\s*$/) { next; }
+			if($line =~ /\/>\s*$/) { goto WAY_CLOSED; }
+			next;
 		}
 		elsif($line =~ /^\s*<relation/) {
 			$main_line = $line;
 			$main_type = "relation";
 			&$startNewTag();
-			unless($line =~ /\/>\s*$/) { next; }
+			if($line =~ /\/>\s*$/) { goto RELATION_CLOSED; }
+			next;
 		}
 
 		if($line =~ /^\s*\<tag/) {
@@ -226,15 +235,17 @@ sub processXML {
 				push @rel_nodes, \%m;
 			} elsif($type eq "way") {
 				push @rel_ways, \%m;
+			} elsif($type eq "relation") {
+				push @rel_relations, \%m;
 			} else {
-                # FIXME doesn't support nested relations...
 				warn("Got unknown member type '$type' in '$line'"); next;
 			}
 		}
 
 		# Do the decisions when closing tags - can be self closing
 		elsif($line =~ /^\s*<\/?node/) {
-			my ($id,$lat,$long) = ($main_line =~ /^\s*<node.*id=['"](-?\d+)['"].*lat=['"]?(\-?[\d\.]+)['"]?.*lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
+		NODE_CLOSED:
+			my ($id,$lat,$long) = ($main_line =~ /^\s*<node\s+id=['"](-?\d+)['"].*lat=['"]?(\-?[\d\.]+)['"]?.*lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
 
 			unless($id) { warn "Invalid node line '$main_line'"; next; }
 			unless($main_type eq "node") { warn "$main_type ended with $line"; next; }
@@ -243,7 +254,8 @@ sub processXML {
 			}
 		}
 		elsif($line =~ /^\s*\<\/?way/) {
-			my ($id) = ($main_line =~ /^\s*\<way id=[\'\"](-?\d+)[\'\"]/);
+		WAY_CLOSED:
+			my ($id) = ($main_line =~ /^\s*\<way\s+id=[\'\"](-?\d+)[\'\"]/);
 
 			unless($id) { warn "Invalid way line '$main_line'"; next; }
 			unless($main_type eq "way") { warn "$main_type ended with $line"; next; }
@@ -252,26 +264,37 @@ sub processXML {
 			}
 		}
 		elsif($line =~ /^\s*<\/?relation/) {
-			my ($id) = ($main_line =~ /^\s*\<relation id=[\'\"](\d+)[\'\"]/);
+		RELATION_CLOSED:
+			my ($id) = ($main_line =~ /^\s*\<relation\s+id=[\'\"](\d+)[\'\"]/);
 
 			unless($id) { warn "Invalid relation line '$main_line'"; next; }
 			unless($main_type eq "relation") { warn "$main_type ended with $line"; next; }
 			if($relH) {
-				&$relH($id,\@tags,\@rel_nodes,\@rel_ways,$main_line,$line);
+				&$relH($id,\@tags,\@rel_nodes,\@rel_ways,\@rel_relations,$main_line,$line);
 			}
 		}
 		elsif($line =~ /^\s*\<\?xml/) {
-			if($pass == 1) {
+			if($pass == 2) {
 				print $line;
 			}
 		}
 		elsif($line =~ /^\s*\<osm /) {
-			if($pass == 1) {
+			if($pass == 2) {
+				print $line;
+			}
+		}
+		elsif($line =~ /^\s*\<bound /) {
+			if($pass == 2) {
+				print $line;
+			}
+		}
+		elsif($line =~ /^\s*\<bounds /) {
+			if($pass == 2) {
 				print $line;
 			}
 		}
 		elsif($line =~ /^\s*\<\/osm\>/ ) {
-			if($pass == 3) {
+			if($pass == 4) {
 				print $line;
 			}
 		}
@@ -284,15 +307,27 @@ sub processXML {
 	closeXML();
 }
 
-
-# First up, call for relations
+# First detect which relations we have to select (needed because relations could be nested)
 my $relTagHelper = &buildTagMatcher(@rel_sel_tags);
 processXML(undef, undef, sub {
-	my ($id,$tagsRef,$relNodesRef,$relWaysRef,$main_line,$line) = @_;
+	my ($id,$tagsRef,$relNodesRef,$relWaysRef,$relRelationsRef,$main_line,$line) = @_;
 
 	# Test the tags, to see if we want this
 	if(&$relTagHelper(@$tagsRef)) {
 		# Bingo, matched
+		$wanted_relations->Bit_On($id);
+		foreach my $rref (@$relRelationsRef) {
+			$wanted_relations->Bit_On($rref->{'ref'});
+		}
+	}
+});
+
+# Now call for relations
+processXML(undef, undef, sub {
+	my ($id,$tagsRef,$relNodesRef,$relWaysRef,$relRelationsRef,$main_line,$line) = @_;
+
+	# Relation is wanted either because of its tags or because other relation refers to it
+	if($wanted_relations->contains($id)) {
 		# Record the ways and nodes we want to get
 		foreach my $wref (@$relWaysRef) {
 			$wanted_ways->Bit_On($wref->{'ref'});
@@ -303,6 +338,9 @@ processXML(undef, undef, sub {
 
 		# Output
 		print $main_line;
+		foreach my $rref (@$relRelationsRef) {
+			print "    <member type=\"$rref->{'type'}\" ref=\"$rref->{'ref'}\" role=\"$rref->{'role'}\" />\n";
+		}
 		foreach my $wref (@$relWaysRef) {
 			print "    <member type=\"$wref->{'type'}\" ref=\"$wref->{'ref'}\" role=\"$wref->{'role'}\" />\n";
 		}
@@ -322,16 +360,13 @@ processXML(undef, sub {
 	my ($id,$tagsRef,$nodesRef,$main_line,$line) = @_;
 	my $wanted = 0;
 
-	# Test the tags, to see if we want this
-	if(&$wayTagHelper(@$tagsRef)) {
-		# Bingo, matched
+	if($wanted_ways->contains($id)) {
+		# A relation wants this way
 		$wanted = 1;
-	} else {
-		# Does a relation want it?
-		if($wanted_ways->contains($id)) {
-			# A relation wants it
-			$wanted = 1;
-		}
+	}
+	elsif(&$wayTagHelper(@$tagsRef)) {
+		# Way's tags matched
+		$wanted = 1;
 	}
 
 	if($wanted) {
@@ -358,16 +393,13 @@ processXML(sub {
 	my ($id,$lat,$long,$tagsRef,$main_line,$line) = @_;
 	my $wanted = 0;
 
-	# Test the tags, to see if we want this
-	if(&$nodeTagHelper(@$tagsRef)) {
-		# Bingo, matched
+	if($wanted_nodes->contains($id)) {
+		# A relation or way wants this node
 		$wanted = 1;
-	} else {
-		# Does a relation or way want it?
-		if($wanted_nodes->contains($id)) {
-			# Something wants it
-			$wanted = 1;
-		}
+	}
+	elsif(&$nodeTagHelper(@$tagsRef)) {
+		# Node's tags matched
+		$wanted = 1;
 	}
 
 	if($wanted) {
@@ -381,7 +413,6 @@ processXML(sub {
 		# Not wanted, skip
 	}
 }, undef, undef);
-
 
 # All done
 

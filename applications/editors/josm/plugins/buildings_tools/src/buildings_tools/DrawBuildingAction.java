@@ -183,7 +183,7 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 			} else {
 				p2 = latlon2eastNorth(n.getCoor());
 			}
-			building.setPlace(p2, width, e.isControlDown()?0:lenstep);
+			building.setPlace(p2, width, e.isShiftDown()?0:lenstep,e.isShiftDown());
 			Main.map.statusLine.setDist(building.getLength());
 			return;
 		}
@@ -203,7 +203,7 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 				 (p3.north()-p2.north())*(p1.east()-p2.east()))
 				/p1.distanceSq(p2) * building.getLength();
 			
-			building.setPlace(p2, mwidth, lenstep);
+			building.setWidth(mwidth);
 			Main.map.statusLine.setDist(Math.abs(mwidth));			
 			return;
 		}

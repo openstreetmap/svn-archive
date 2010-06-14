@@ -34,7 +34,8 @@ class Building {
 	double meter = 0;
 	
 	private double len = 0;
-	double lwidth;
+	private double lwidth;
+	private double heading;
 	private boolean angconstrainted;
 	private double angconstraint = 0;
 	
@@ -75,10 +76,16 @@ class Building {
 		p1 = latlon2eastNorth(base.getCoor());
 		updMetrics();
 	}
-	public void setPlace(EastNorth p2,double width,double lenstep) {
-		double heading = p1.heading(p2);
+	private void updatePos() {
+		en1 = p1;
+		en2 = new EastNorth(p1.east()+Math.sin(heading)*len*meter,p1.north()+Math.cos(heading)*len*meter);
+		en3 = new EastNorth(p1.east()+Math.sin(heading)*len*meter+Math.cos(heading)*lwidth*meter,p1.north()+Math.cos(heading)*len*meter-Math.sin(heading)*lwidth*meter);
+		en4 = new EastNorth(p1.east()+Math.cos(heading)*lwidth*meter,p1.north()-Math.sin(heading)*lwidth*meter);
+	}
+	public void setPlace(EastNorth p2,double width,double lenstep,boolean ignoreConstraint) {
+		heading = p1.heading(p2);
 		double hdang = 0;
-		if (angconstrainted) {
+		if (angconstrainted && !ignoreConstraint) {
 			hdang = Math.round((heading-angconstraint)/Math.PI*4);
 			if (hdang>=8)hdang-=8;
 			if (hdang<0)hdang+=8;
@@ -87,17 +94,16 @@ class Building {
 		double distance = eastNorth2latlon(p1).greatCircleDistance(eastNorth2latlon(p2));
 		if (lenstep <= 0) len=distance; else len = Math.round(distance/lenstep)*lenstep;
 		if (len == 0) return;
-
-		en1 = p1;
-		en2 = new EastNorth(p1.east()+Math.sin(heading)*len*meter,p1.north()+Math.cos(heading)*len*meter);
-		en3 = new EastNorth(p1.east()+Math.sin(heading)*len*meter+Math.cos(heading)*width*meter,p1.north()+Math.cos(heading)*len*meter-Math.sin(heading)*width*meter);
-		en4 = new EastNorth(p1.east()+Math.cos(heading)*width*meter,p1.north()-Math.sin(heading)*width*meter);
-
 		lwidth = width;
+		updatePos();
 		Main.map.statusLine.setHeading(Math.toDegrees(heading));
-		if (angconstrainted) {
+		if (angconstrainted && !ignoreConstraint) {
 			Main.map.statusLine.setAngle(hdang*45);
 		}
+	}
+	public void setWidth(double width) {
+		lwidth = width;
+		updatePos();
 	}
 	public void paint(Graphics2D g, MapView mv) {
 		if (len == 0) return;

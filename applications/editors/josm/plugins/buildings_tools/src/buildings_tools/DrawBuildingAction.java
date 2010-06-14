@@ -300,7 +300,7 @@ implements MapViewPaintable, AWTEventListener, SelectionChangedListener
 	}
 
 	@Override public String getModeHelpText() {
-		if (mode==Mode.None) return tr("Point on angle of building to start drawing");
+		if (mode==Mode.None) return tr("Point on the corner of building to start drawing");
 		if (mode==Mode.Drawing) return tr("Point on opposite end of building");
 		if (mode==Mode.DrawingWidth) return tr("Set width of building");
 		return "";

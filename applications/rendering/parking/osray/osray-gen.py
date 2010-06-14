@@ -12,9 +12,17 @@ from numpy import *
 highwaytypes = {
     'secondary':['<1,0.9,0.9>',1.0],
     'residential':['<0.9,0.9,0.9>',0.8],
+    'living_street':['<0.8,0.8,0.9>',0.8],
+    'unclassified':['<0.8,0.8,0.8>',0.8],
     'service':['<0.8,0.8,0.8>',0.6],
-    'footway':['<0.8,0.8,0.8>',0.3]
+    'pedestrian':['<0.8,0.9,0.8>',0.8],
+    'footway':['<0.8,0.9,0.8>',0.3],
+    'cycleway':['<0.8,0.8,0.9>',0.3],
+    'path':['<0.8,0.9,0.8>',0.5]
     }
+
+def avg(a,b): return (a+b)/2.0
+
 def shift_by_meters(lat, lon, brng, d):
     R = 6371000.0 # earth's radius in m
     lat=math.radians(lat)
@@ -58,13 +66,13 @@ def pov_highway(f,highway):
     for i,point in enumerate(points):
         latlon = point.split(' ')
         if (i==0):
-            f.write("  <{0}, 0, {1}>,0.002*{2}\n".format(float(latlon[0])*100.0,float(latlon[1])*100.0,highwayparams[1]))
-        f.write("  <{0}, 0, {1}>,0.002*{2}\n".format(float(latlon[0])*100.0,float(latlon[1])*100.0,highwayparams[1]))
+            f.write("  <{0}, 0, {1}>,5*{2}\n".format(latlon[0],latlon[1],highwayparams[1]))
+        f.write("  <{0}, 0, {1}>,5*{2}\n".format(latlon[0],latlon[1],highwayparams[1]))
         if (i==numpoints-1):
-           f.write("  <{0}, 0, {1}>,0.002*{2}\n".format(float(latlon[0])*100.0,float(latlon[1])*100.0,highwayparams[1]))
+           f.write("  <{0}, 0, {1}>,5*{2}\n".format(latlon[0],latlon[1],highwayparams[1]))
 
     print highwayparams[0],highwayparams[1]
-    f.write("""  tolerance 0.001
+    f.write("""  tolerance 1000
    
    pigment {{
       color rgb {0}
@@ -73,24 +81,52 @@ def pov_highway(f,highway):
 }}
 \n""".format(highwayparams[0]))
 
-"""
-sphere_sweep {
-   linear_spline,
-   4,
-   <0, 0, -2.0023>,0.12
-   <0, 0, 0>,0.12
-   <1, 0, 0>,0.12
-   <1, 0, 1>,0.12
-   tolerance 0.1
+def pov_camera(f,bbox):
+    polygonstring = bbox[0][0]
+    polygonstring = polygonstring[9:] # cut off the "POLYGON(("
+    polygonstring = polygonstring[:-2] # cut off the "))"
+    print polygonstring
+    points = polygonstring.split(',')
+
+    numpoints = len(points)
+
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+        if (i==0):
+            left=float(latlon[0])
+            bottom=float(latlon[1])
+        if (i==2):
+            right=float(latlon[0])
+            top=float(latlon[1])
+
+    print bottom,left,top,right
+    zoom = 1.0
+    zoom = 2500.0/zoom
+    f.write("""
+camera {{
+   orthographic
+   location <{0}, 10000, {1}-500>
+   sky <0, 1, 0>
+   direction <0, 0, 1>
+   right <1.3333*{2}, 0, 0>
+   up <0, 1*{2}, 0>
+   look_at <{0}, 0, {1}>
+}}
+\n""".format(avg(left,right),avg(bottom,top),zoom))
+    f.write("""
+box {{
+   <{0}, -0.5, {1}>, <{2}, -0.0, {3}>
    
-   pigment {
-      color rgb <0.345098, 0.345098, 0.345098>
-   }
-   scale <1, 0.1, 1>
-   translate y*(-0.01)
-   rotate y*90
-}
-"""
+   pigment {{
+      color rgb <1, 1, 0.901961>
+   }}
+}}
+\n""".format(left,bottom,right,top))
+    f.write("""
+light_source {{
+   <{0}, 50000, {1}>, rgb <1, 1, 1>
+}}
+\n""".format(avg(left,right),avg(bottom,top)))
 
 
 if len(sys.argv) == 2:
@@ -123,9 +159,13 @@ FW = "FROM planet_osm_line WHERE"
 
 ### display disc - maxstay
 
+curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
+bbox = curs.fetchall()
+pov_camera(f,bbox)
+
 highways = []
 for highwaytype in highwaytypes.iterkeys():
-    curs.execute("SELECT osm_id,highway,ST_AsText(transform(\"way\",4326)) AS geom "+FW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and highway='"+highwaytype+"' LIMIT 2000;")
+    curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom "+FW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and highway='"+highwaytype+"' LIMIT 2000;")
     highways += curs.fetchall()
 
 #print highways

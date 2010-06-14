@@ -23,7 +23,59 @@ light_source {
    <1105654.68222, 50000, 6410707.51183>, rgb <1, 1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
+/* osm_id=4568530 */
+  <1105083.45, 0, 6410564.57>,5*0.8
+  <1105083.45, 0, 6410564.57>,5*0.8
+  <1105112.32, 0, 6410570.97>,5*0.8
+  <1105137.7, 0, 6410574.68>,5*0.8
+  <1105131.64, 0, 6410692.49>,5*0.8
+  <1105131.64, 0, 6410692.49>,5*0.8
+  tolerance 1000
+   
+   pigment {
+      color rgb <0.8,0.8,0.8>
+   }
+   scale <1, 0.1, 1>
+}
+
+sphere_sweep { linear_spline, 6,
+/* osm_id=30333831 */
+  <1105193.41, 0, 6410542.45>,5*0.8
+  <1105193.41, 0, 6410542.45>,5*0.8
+  <1105151.02, 0, 6410543.86>,5*0.8
+  <1105143.28, 0, 6410552.04>,5*0.8
+  <1105137.7, 0, 6410574.68>,5*0.8
+  <1105137.7, 0, 6410574.68>,5*0.8
+  tolerance 1000
+   
+   pigment {
+      color rgb <0.8,0.8,0.8>
+   }
+   scale <1, 0.1, 1>
+}
+
+sphere_sweep { linear_spline, 10,
+/* osm_id=8106712 */
+  <1105775.02, 0, 6410606.13>,5*0.8
+  <1105775.02, 0, 6410606.13>,5*0.8
+  <1105758.78, 0, 6410578.09>,5*0.8
+  <1105729.18, 0, 6410526.96>,5*0.8
+  <1105714.67, 0, 6410490.89>,5*0.8
+  <1105717.07, 0, 6410474.87>,5*0.8
+  <1105725.1, 0, 6410472.25>,5*0.8
+  <1105771.95, 0, 6410555.14>,5*0.8
+  <1105795.25, 0, 6410595.92>,5*0.8
+  <1105795.25, 0, 6410595.92>,5*0.8
+  tolerance 1000
+   
+   pigment {
+      color rgb <0.8,0.8,0.8>
+   }
+   scale <1, 0.1, 1>
+}
+
+sphere_sweep { linear_spline, 6,
 /* osm_id=22956047 */
   <1104824.49, 0, 6410491.63>,5*0.8
   <1104824.49, 0, 6410491.63>,5*0.8
@@ -39,7 +91,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=26158255 */
   <1105120.43, 0, 6410527.45>,5*0.8
   <1105120.43, 0, 6410527.45>,5*0.8
@@ -54,7 +106,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=58532261 */
   <1105180.26, 0, 6410723.34>,5*0.8
   <1105180.26, 0, 6410723.34>,5*0.8
@@ -73,7 +125,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=58532262 */
   <1105177.57, 0, 6410735.57>,5*0.8
   <1105177.57, 0, 6410735.57>,5*0.8
@@ -87,7 +139,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=4568535 */
   <1105200.43, 0, 6410535.02>,5*0.8
   <1105200.43, 0, 6410535.02>,5*0.8
@@ -101,7 +153,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=26150914 */
   <1105200.43, 0, 6410535.02>,5*0.8
   <1105200.43, 0, 6410535.02>,5*0.8
@@ -116,7 +168,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28441626 */
   <1105200.43, 0, 6410535.02>,5*0.8
   <1105200.43, 0, 6410535.02>,5*0.8
@@ -130,7 +182,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=13029698 */
   <1105229.33, 0, 6410753.5>,5*0.8
   <1105229.33, 0, 6410753.5>,5*0.8
@@ -146,7 +198,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=13029701 */
   <1105255.99, 0, 6410598.56>,5*0.8
   <1105255.99, 0, 6410598.56>,5*0.8
@@ -163,7 +215,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13024513 */
   <1105241.63, 0, 6410686.49>,5*0.8
   <1105241.63, 0, 6410686.49>,5*0.8
@@ -177,7 +229,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=4568539 */
   <1105241.86, 0, 6410537.76>,5*0.8
   <1105241.86, 0, 6410537.76>,5*0.8
@@ -192,7 +244,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=29157363 */
   <1105241.86, 0, 6410537.76>,5*0.8
   <1105241.86, 0, 6410537.76>,5*0.8
@@ -208,7 +260,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=28808023 */
   <1105316.59, 0, 6410544.79>,5*0.8
   <1105316.59, 0, 6410544.79>,5*0.8
@@ -226,7 +278,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13012693 */
   <1105257.14, 0, 6410539.67>,5*0.8
   <1105257.14, 0, 6410539.67>,5*0.8
@@ -240,7 +292,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=32275246 */
   <1105280.49, 0, 6410924.69>,5*0.8
   <1105280.49, 0, 6410924.69>,5*0.8
@@ -255,7 +307,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13012694 */
   <1105303.97, 0, 6410543.48>,5*0.8
   <1105303.97, 0, 6410543.48>,5*0.8
@@ -269,7 +321,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=35419675 */
   <1105303.97, 0, 6410543.48>,5*0.8
   <1105303.97, 0, 6410543.48>,5*0.8
@@ -288,7 +340,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=31892910 */
   <1105319.71, 0, 6410835.52>,5*0.8
   <1105319.71, 0, 6410835.52>,5*0.8
@@ -302,7 +354,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=13029696 */
   <1105357.02, 0, 6410879.99>,5*0.8
   <1105357.02, 0, 6410879.99>,5*0.8
@@ -317,7 +369,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=13024517 */
   <1105357.02, 0, 6410879.99>,5*0.8
   <1105357.02, 0, 6410879.99>,5*0.8
@@ -334,7 +386,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=25594017 */
   <1105357.78, 0, 6410690.61>,5*0.8
   <1105357.78, 0, 6410690.61>,5*0.8
@@ -351,7 +403,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=4575580 */
   <1105509.64, 0, 6410663.43>,5*0.8
   <1105509.64, 0, 6410663.43>,5*0.8
@@ -367,7 +419,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=11299271 */
   <1105393.96, 0, 6410501.25>,5*0.8
   <1105393.96, 0, 6410501.25>,5*0.8
@@ -383,7 +435,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=30332075 */
   <1105376.01, 0, 6410517.75>,5*0.8
   <1105376.01, 0, 6410517.75>,5*0.8
@@ -397,7 +449,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=12711062 */
   <1105386.69, 0, 6410932.12>,5*0.8
   <1105386.69, 0, 6410932.12>,5*0.8
@@ -412,7 +464,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=11299274 */
   <1105414.76, 0, 6410415.84>,5*0.8
   <1105414.76, 0, 6410415.84>,5*0.8
@@ -427,7 +479,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=11299272 */
   <1105393.96, 0, 6410501.25>,5*0.8
   <1105393.96, 0, 6410501.25>,5*0.8
@@ -442,7 +494,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13024508 */
   <1105408.83, 0, 6410662.11>,5*0.8
   <1105408.83, 0, 6410662.11>,5*0.8
@@ -456,7 +508,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=26651366 */
   <1105517.12, 0, 6411224.81>,5*0.8
   <1105517.12, 0, 6411224.81>,5*0.8
@@ -472,7 +524,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=6110022 */
   <1105419.54, 0, 6411187.87>,5*0.8
   <1105419.54, 0, 6411187.87>,5*0.8
@@ -486,7 +538,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=30214903 */
   <1105424.46, 0, 6410502.68>,5*0.8
   <1105424.46, 0, 6410502.68>,5*0.8
@@ -500,7 +552,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=28595389 */
   <1105461.99, 0, 6411107.08>,5*0.8
   <1105461.99, 0, 6411107.08>,5*0.8
@@ -518,7 +570,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28458584 */
   <1105438.09, 0, 6410886.22>,5*0.8
   <1105438.09, 0, 6410886.22>,5*0.8
@@ -532,7 +584,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=4568528 */
   <1105534.42, 0, 6411089.87>,5*0.8
   <1105534.42, 0, 6411089.87>,5*0.8
@@ -547,7 +599,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=30186921 */
   <1105486.5, 0, 6410756.43>,5*0.8
   <1105486.5, 0, 6410756.43>,5*0.8
@@ -565,7 +617,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=4575533 */
   <1105508.58, 0, 6410844.71>,5*0.8
   <1105508.58, 0, 6410844.71>,5*0.8
@@ -582,7 +634,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=4575504 */
   <1105507.55, 0, 6410756.24>,5*0.8
   <1105507.55, 0, 6410756.24>,5*0.8
@@ -599,7 +651,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710868 */
   <1105561.21, 0, 6410760.14>,5*0.8
   <1105561.21, 0, 6410760.14>,5*0.8
@@ -613,7 +665,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=6110028 */
   <1105561.44, 0, 6410843.97>,5*0.8
   <1105561.44, 0, 6410843.97>,5*0.8
@@ -631,7 +683,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=30278672 */
   <1105526.97, 0, 6411013.88>,5*0.8
   <1105526.97, 0, 6411013.88>,5*0.8
@@ -647,7 +699,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=4575502 */
   <1105510.34, 0, 6410562.59>,5*0.8
   <1105510.34, 0, 6410562.59>,5*0.8
@@ -663,7 +715,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28441628 */
   <1105510.34, 0, 6410562.59>,5*0.8
   <1105510.34, 0, 6410562.59>,5*0.8
@@ -678,7 +730,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=27531336 */
   <1105512.15, 0, 6410497.63>,5*0.8
   <1105512.15, 0, 6410497.63>,5*0.8
@@ -692,7 +744,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=37656868 */
   <1105525.47, 0, 6411203>,5*0.8
   <1105525.47, 0, 6411203>,5*0.8
@@ -708,7 +760,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=37656870 */
   <1105517.12, 0, 6411224.81>,5*0.8
   <1105517.12, 0, 6411224.81>,5*0.8
@@ -726,7 +778,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=4587362 */
   <1105538.01, 0, 6411158.42>,5*0.8
   <1105538.01, 0, 6411158.42>,5*0.8
@@ -740,7 +792,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=28458585 */
   <1105640.57, 0, 6410950.82>,5*0.8
   <1105640.57, 0, 6410950.82>,5*0.8
@@ -756,7 +808,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=22913012 */
   <1105525.47, 0, 6411203>,5*0.8
   <1105525.47, 0, 6411203>,5*0.8
@@ -773,7 +825,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=42809787 */
   <1105583.64, 0, 6411010.18>,5*0.8
   <1105583.64, 0, 6411010.18>,5*0.8
@@ -788,7 +840,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=4568527 */
   <1105526.97, 0, 6411013.88>,5*0.8
   <1105526.97, 0, 6411013.88>,5*0.8
@@ -802,7 +854,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12654640 */
   <1105538.01, 0, 6411158.42>,5*0.8
   <1105538.01, 0, 6411158.42>,5*0.8
@@ -816,7 +868,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=6110025 */
   <1105612.41, 0, 6410869.42>,5*0.8
   <1105612.41, 0, 6410869.42>,5*0.8
@@ -830,7 +882,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=27176391 */
   <1105561.44, 0, 6410843.97>,5*0.8
   <1105561.44, 0, 6410843.97>,5*0.8
@@ -844,7 +896,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43858594 */
   <1105679.45, 0, 6411473.57>,5*0.8
   <1105679.45, 0, 6411473.57>,5*0.8
@@ -859,7 +911,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28433504 */
   <1105679.6, 0, 6411461.53>,5*0.8
   <1105679.6, 0, 6411461.53>,5*0.8
@@ -874,7 +926,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=45086053 */
   <1105740.11, 0, 6411294.52>,5*0.8
   <1105740.11, 0, 6411294.52>,5*0.8
@@ -888,7 +940,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=26720451 */
   <1105959.37, 0, 6411774.55>,5*0.8
   <1105959.37, 0, 6411774.55>,5*0.8
@@ -909,7 +961,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710910 */
   <1105881.91, 0, 6411491.48>,5*0.8
   <1105881.91, 0, 6411491.48>,5*0.8
@@ -923,7 +975,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=6110033 */
   <1105884.85, 0, 6410997.4>,5*0.8
   <1105884.85, 0, 6410997.4>,5*0.8
@@ -937,7 +989,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=13024550 */
   <1104994.09, 0, 6411350.36>,5*0.8
   <1104994.09, 0, 6411350.36>,5*0.8
@@ -957,7 +1009,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43581887 */
   <1105051.16, 0, 6411354.52>,5*0.8
   <1105051.16, 0, 6411354.52>,5*0.8
@@ -971,7 +1023,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43567480 */
   <1105055.7, 0, 6411343.43>,5*0.8
   <1105055.7, 0, 6411343.43>,5*0.8
@@ -986,7 +1038,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13024546 */
   <1105129.34, 0, 6411242.45>,5*0.8
   <1105129.34, 0, 6411242.45>,5*0.8
@@ -1000,7 +1052,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28876291 */
   <1105167.16, 0, 6411242.82>,5*0.8
   <1105167.16, 0, 6411242.82>,5*0.8
@@ -1014,7 +1066,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=13024530 */
   <1105407.7, 0, 6411239.19>,5*0.8
   <1105407.7, 0, 6411239.19>,5*0.8
@@ -1029,7 +1081,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=11299275 */
   <1105414.76, 0, 6410415.84>,5*0.8
   <1105414.76, 0, 6410415.84>,5*0.8
@@ -1044,7 +1096,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=34680594 */
   <1105478.37, 0, 6410424.53>,5*0.8
   <1105478.37, 0, 6410424.53>,5*0.8
@@ -1060,7 +1112,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=10213071 */
   <1105432.15, 0, 6410309.45>,5*0.8
   <1105432.15, 0, 6410309.45>,5*0.8
@@ -1075,7 +1127,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10213070 */
   <1105450.39, 0, 6410418.36>,5*0.8
   <1105450.39, 0, 6410418.36>,5*0.8
@@ -1089,7 +1141,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=28408949 */
   <1105451.82, 0, 6410230.89>,5*0.8
   <1105451.82, 0, 6410230.89>,5*0.8
@@ -1106,7 +1158,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=30214904 */
   <1105464.74, 0, 6410506.08>,5*0.8
   <1105464.74, 0, 6410506.08>,5*0.8
@@ -1120,7 +1172,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=27411432 */
   <1105471.45, 0, 6410423.24>,5*0.8
   <1105471.45, 0, 6410423.24>,5*0.8
@@ -1135,7 +1187,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 13,
+sphere_sweep { linear_spline, 13,
 /* osm_id=47907681 */
   <1105756.56, 0, 6409622.57>,5*0.8
   <1105756.56, 0, 6409622.57>,5*0.8
@@ -1158,7 +1210,7 @@ sphere_sweep { cubic_spline, 13,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=23034046 */
   <1105865.68, 0, 6410772.64>,5*0.8
   <1105865.68, 0, 6410772.64>,5*0.8
@@ -1173,7 +1225,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=12710971 */
   <1105817.69, 0, 6410149.93>,5*0.8
   <1105817.69, 0, 6410149.93>,5*0.8
@@ -1190,7 +1242,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=12710997 */
   <1105865.68, 0, 6410772.64>,5*0.8
   <1105865.68, 0, 6410772.64>,5*0.8
@@ -1206,7 +1258,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=35145975 */
   <1105884.22, 0, 6410289.43>,5*0.8
   <1105884.22, 0, 6410289.43>,5*0.8
@@ -1221,7 +1273,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=12710967 */
   <1105959.21, 0, 6410097.78>,5*0.8
   <1105959.21, 0, 6410097.78>,5*0.8
@@ -1238,7 +1290,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=35145974 */
   <1105981.49, 0, 6410250.75>,5*0.8
   <1105981.49, 0, 6410250.75>,5*0.8
@@ -1254,7 +1306,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 30,
+sphere_sweep { linear_spline, 30,
 /* osm_id=34419750 */
   <1104688.84, 0, 6411254.7>,5*0.3
   <1104688.84, 0, 6411254.7>,5*0.3
@@ -1294,7 +1346,7 @@ sphere_sweep { cubic_spline, 30,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=19875181 */
   <1104730.01, 0, 6409868.11>,5*0.3
   <1104730.01, 0, 6409868.11>,5*0.3
@@ -1314,7 +1366,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=25828428 */
   <1104767.31, 0, 6411545.64>,5*0.3
   <1104767.31, 0, 6411545.64>,5*0.3
@@ -1332,7 +1384,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 41,
+sphere_sweep { linear_spline, 41,
 /* osm_id=16940921 */
   <1105807.24, 0, 6411805.23>,5*0.3
   <1105807.24, 0, 6411805.23>,5*0.3
@@ -1383,7 +1435,7 @@ sphere_sweep { cubic_spline, 41,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=23022389 */
   <1104819.37, 0, 6410359.83>,5*0.3
   <1104819.37, 0, 6410359.83>,5*0.3
@@ -1397,7 +1449,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28886279 */
   <1104888.88, 0, 6411284.34>,5*0.3
   <1104888.88, 0, 6411284.34>,5*0.3
@@ -1411,7 +1463,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 24,
+sphere_sweep { linear_spline, 24,
 /* osm_id=28369995 */
   <1105387.5, 0, 6411842.33>,5*0.3
   <1105387.5, 0, 6411842.33>,5*0.3
@@ -1445,7 +1497,7 @@ sphere_sweep { cubic_spline, 24,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28886274 */
   <1104956.95, 0, 6411046.74>,5*0.3
   <1104956.95, 0, 6411046.74>,5*0.3
@@ -1459,7 +1511,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=28369982 */
   <1104963.86, 0, 6411691.21>,5*0.3
   <1104963.86, 0, 6411691.21>,5*0.3
@@ -1475,7 +1527,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28369997 */
   <1104971.29, 0, 6411702.49>,5*0.3
   <1104971.29, 0, 6411702.49>,5*0.3
@@ -1490,7 +1542,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28886273 */
   <1104975.96, 0, 6411041.85>,5*0.3
   <1104975.96, 0, 6411041.85>,5*0.3
@@ -1505,7 +1557,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 17,
+sphere_sweep { linear_spline, 17,
 /* osm_id=28886267 */
   <1105023.01, 0, 6411016.37>,5*0.3
   <1105023.01, 0, 6411016.37>,5*0.3
@@ -1532,7 +1584,7 @@ sphere_sweep { cubic_spline, 17,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28886272 */
   <1105017.73, 0, 6411015.75>,5*0.3
   <1105017.73, 0, 6411015.75>,5*0.3
@@ -1546,7 +1598,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=28886268 */
   <1105004.05, 0, 6410874.68>,5*0.3
   <1105004.05, 0, 6410874.68>,5*0.3
@@ -1562,7 +1614,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28886270 */
   <1105011.7, 0, 6410858.76>,5*0.3
   <1105011.7, 0, 6410858.76>,5*0.3
@@ -1576,7 +1628,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28886280 */
   <1105011.01, 0, 6411091.04>,5*0.3
   <1105011.01, 0, 6411091.04>,5*0.3
@@ -1590,7 +1642,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28886265 */
   <1105032.15, 0, 6411022.89>,5*0.3
   <1105032.15, 0, 6411022.89>,5*0.3
@@ -1604,7 +1656,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=25859899 */
   <1105080.24, 0, 6410824.24>,5*0.3
   <1105080.24, 0, 6410824.24>,5*0.3
@@ -1619,7 +1671,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=43581889 */
   <1105062.56, 0, 6411349.6>,5*0.3
   <1105062.56, 0, 6411349.6>,5*0.3
@@ -1637,7 +1689,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43567475 */
   <1105062.41, 0, 6411340.94>,5*0.3
   <1105062.41, 0, 6411340.94>,5*0.3
@@ -1652,7 +1704,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43567482 */
   <1105066.02, 0, 6411364.14>,5*0.3
   <1105066.02, 0, 6411364.14>,5*0.3
@@ -1666,7 +1718,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 12,
+sphere_sweep { linear_spline, 12,
 /* osm_id=31892906 */
   <1105079.01, 0, 6410511.08>,5*0.3
   <1105079.01, 0, 6410511.08>,5*0.3
@@ -1688,7 +1740,7 @@ sphere_sweep { cubic_spline, 12,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=31892905 */
   <1105079.01, 0, 6410511.08>,5*0.3
   <1105079.01, 0, 6410511.08>,5*0.3
@@ -1702,7 +1754,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=31892904 */
   <1105136.55, 0, 6410270.1>,5*0.3
   <1105136.55, 0, 6410270.1>,5*0.3
@@ -1717,7 +1769,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=31965496 */
   <1105095.13, 0, 6410337.88>,5*0.3
   <1105095.13, 0, 6410337.88>,5*0.3
@@ -1736,7 +1788,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=31892907 */
   <1105099.13, 0, 6410524.88>,5*0.3
   <1105099.13, 0, 6410524.88>,5*0.3
@@ -1750,7 +1802,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=46352912 */
   <1105109.89, 0, 6411635.15>,5*0.3
   <1105109.89, 0, 6411635.15>,5*0.3
@@ -1764,7 +1816,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=32461481 */
   <1105129.34, 0, 6411242.45>,5*0.3
   <1105129.34, 0, 6411242.45>,5*0.3
@@ -1779,7 +1831,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=12710854 */
   <1105134.31, 0, 6410347.76>,5*0.3
   <1105134.31, 0, 6410347.76>,5*0.3
@@ -1794,7 +1846,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=28369987 */
   <1105148.07, 0, 6411791.04>,5*0.3
   <1105148.07, 0, 6411791.04>,5*0.3
@@ -1812,7 +1864,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=44835938 */
   <1105179.54, 0, 6411479.33>,5*0.3
   <1105179.54, 0, 6411479.33>,5*0.3
@@ -1826,7 +1878,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43571797 */
   <1105192.47, 0, 6411485.69>,5*0.3
   <1105192.47, 0, 6411485.69>,5*0.3
@@ -1842,7 +1894,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=43571798 */
   <1105182.77, 0, 6411464.93>,5*0.3
   <1105182.77, 0, 6411464.93>,5*0.3
@@ -1859,7 +1911,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=44004709 */
   <1105183.55, 0, 6411449.89>,5*0.3
   <1105183.55, 0, 6411449.89>,5*0.3
@@ -1873,7 +1925,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43571794 */
   <1105183.87, 0, 6411528.74>,5*0.3
   <1105183.87, 0, 6411528.74>,5*0.3
@@ -1887,7 +1939,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43571799 */
   <1105186.77, 0, 6411432.61>,5*0.3
   <1105186.77, 0, 6411432.61>,5*0.3
@@ -1901,7 +1953,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43571796 */
   <1105187.49, 0, 6411511.18>,5*0.3
   <1105187.49, 0, 6411511.18>,5*0.3
@@ -1915,7 +1967,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=28369988 */
   <1105286.89, 0, 6411731.28>,5*0.3
   <1105286.89, 0, 6411731.28>,5*0.3
@@ -1934,7 +1986,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=31892909 */
   <1105293.38, 0, 6410687.47>,5*0.3
   <1105293.38, 0, 6410687.47>,5*0.3
@@ -1948,7 +2000,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=30980476 */
   <1105299.96, 0, 6410628.53>,5*0.3
   <1105299.96, 0, 6410628.53>,5*0.3
@@ -1962,7 +2014,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=58570941 */
   <1105391.8, 0, 6410347.54>,5*0.3
   <1105391.8, 0, 6410347.54>,5*0.3
@@ -1976,7 +2028,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=58570944 */
   <1105439.03, 0, 6410354.8>,5*0.3
   <1105439.03, 0, 6410354.8>,5*0.3
@@ -1992,7 +2044,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=12711043 */
   <1105445.21, 0, 6411109.27>,5*0.3
   <1105445.21, 0, 6411109.27>,5*0.3
@@ -2007,7 +2059,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=44445156 */
   <1105456.21, 0, 6411342.41>,5*0.3
   <1105456.21, 0, 6411342.41>,5*0.3
@@ -2022,7 +2074,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=11299276 */
   <1105434.85, 0, 6410381.75>,5*0.3
   <1105434.85, 0, 6410381.75>,5*0.3
@@ -2036,7 +2088,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557171 */
   <1105444.06, 0, 6411327.34>,5*0.3
   <1105444.06, 0, 6411327.34>,5*0.3
@@ -2052,7 +2104,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=58532800 */
   <1105445.9, 0, 6410354.32>,5*0.3
   <1105445.9, 0, 6410354.32>,5*0.3
@@ -2067,7 +2119,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 12,
+sphere_sweep { linear_spline, 12,
 /* osm_id=43557172 */
   <1105468.62, 0, 6411339.03>,5*0.3
   <1105468.62, 0, 6411339.03>,5*0.3
@@ -2089,7 +2141,7 @@ sphere_sweep { cubic_spline, 12,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 15,
+sphere_sweep { linear_spline, 15,
 /* osm_id=43557190 */
   <1105521.21, 0, 6411422.38>,5*0.3
   <1105521.21, 0, 6411422.38>,5*0.3
@@ -2114,7 +2166,7 @@ sphere_sweep { cubic_spline, 15,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 20,
+sphere_sweep { linear_spline, 20,
 /* osm_id=43557191 */
   <1105524.46, 0, 6411407.79>,5*0.3
   <1105524.46, 0, 6411407.79>,5*0.3
@@ -2144,7 +2196,7 @@ sphere_sweep { cubic_spline, 20,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 14,
+sphere_sweep { linear_spline, 14,
 /* osm_id=43568736 */
   <1105558.46, 0, 6411322.61>,5*0.3
   <1105558.46, 0, 6411322.61>,5*0.3
@@ -2168,7 +2220,7 @@ sphere_sweep { cubic_spline, 14,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557210 */
   <1105468.62, 0, 6411339.03>,5*0.3
   <1105468.62, 0, 6411339.03>,5*0.3
@@ -2184,7 +2236,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 19,
+sphere_sweep { linear_spline, 19,
 /* osm_id=43568738 */
   <1105506.1, 0, 6411298.26>,5*0.3
   <1105506.1, 0, 6411298.26>,5*0.3
@@ -2213,7 +2265,7 @@ sphere_sweep { cubic_spline, 19,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43568745 */
   <1105509.51, 0, 6411300.5>,5*0.3
   <1105509.51, 0, 6411300.5>,5*0.3
@@ -2227,7 +2279,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43568744 */
   <1105514.17, 0, 6411286.98>,5*0.3
   <1105514.17, 0, 6411286.98>,5*0.3
@@ -2241,7 +2293,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=43557175 */
   <1105530.31, 0, 6411428.69>,5*0.3
   <1105530.31, 0, 6411428.69>,5*0.3
@@ -2259,7 +2311,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 30,
+sphere_sweep { linear_spline, 30,
 /* osm_id=43557174 */
   <1105624.89, 0, 6411414.12>,5*0.3
   <1105624.89, 0, 6411414.12>,5*0.3
@@ -2299,7 +2351,7 @@ sphere_sweep { cubic_spline, 30,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=44445159 */
   <1105520.01, 0, 6411417.88>,5*0.3
   <1105520.01, 0, 6411417.88>,5*0.3
@@ -2320,7 +2372,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=43557179 */
   <1105605.84, 0, 6411477.79>,5*0.3
   <1105605.84, 0, 6411477.79>,5*0.3
@@ -2337,7 +2389,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557180 */
   <1105546.79, 0, 6411365.57>,5*0.3
   <1105546.79, 0, 6411365.57>,5*0.3
@@ -2351,7 +2403,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=27137049 */
   <1105538.01, 0, 6411158.42>,5*0.3
   <1105538.01, 0, 6411158.42>,5*0.3
@@ -2372,7 +2424,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43557176 */
   <1105542.2, 0, 6411422>,5*0.3
   <1105542.2, 0, 6411422>,5*0.3
@@ -2387,7 +2439,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=39986023 */
   <1105573.49, 0, 6411266.11>,5*0.3
   <1105573.49, 0, 6411266.11>,5*0.3
@@ -2403,7 +2455,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=22662546 */
   <1105558.12, 0, 6410568.33>,5*0.3
   <1105558.12, 0, 6410568.33>,5*0.3
@@ -2417,7 +2469,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=44445155 */
   <1105569.26, 0, 6411430.28>,5*0.3
   <1105569.26, 0, 6411430.28>,5*0.3
@@ -2431,7 +2483,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=27153004 */
   <1105567.67, 0, 6410587.44>,5*0.3
   <1105567.67, 0, 6410587.44>,5*0.3
@@ -2445,7 +2497,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43557177 */
   <1105624.89, 0, 6411414.12>,5*0.3
   <1105624.89, 0, 6411414.12>,5*0.3
@@ -2460,7 +2512,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=58563358 */
   <1105640.5, 0, 6410684.71>,5*0.3
   <1105640.5, 0, 6410684.71>,5*0.3
@@ -2474,7 +2526,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 19,
+sphere_sweep { linear_spline, 19,
 /* osm_id=43568740 */
   <1105605.94, 0, 6411327.94>,5*0.3
   <1105605.94, 0, 6411327.94>,5*0.3
@@ -2503,7 +2555,7 @@ sphere_sweep { cubic_spline, 19,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557178 */
   <1105615.73, 0, 6411443.92>,5*0.3
   <1105615.73, 0, 6411443.92>,5*0.3
@@ -2519,7 +2571,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43568742 */
   <1105609.44, 0, 6411330.2>,5*0.3
   <1105609.44, 0, 6411330.2>,5*0.3
@@ -2533,7 +2585,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43568743 */
   <1105613.91, 0, 6411316.63>,5*0.3
   <1105613.91, 0, 6411316.63>,5*0.3
@@ -2547,7 +2599,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=27152853 */
   <1105670.84, 0, 6410770.56>,5*0.3
   <1105670.84, 0, 6410770.56>,5*0.3
@@ -2561,7 +2613,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=43557173 */
   <1105657.39, 0, 6411434.69>,5*0.3
   <1105657.39, 0, 6411434.69>,5*0.3
@@ -2578,7 +2630,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710865 */
   <1105707.16, 0, 6410773.85>,5*0.3
   <1105707.16, 0, 6410773.85>,5*0.3
@@ -2592,7 +2644,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710992 */
   <1105865.68, 0, 6410772.64>,5*0.3
   <1105865.68, 0, 6410772.64>,5*0.3
@@ -2606,7 +2658,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=10152028 */
   <1105868.11, 0, 6409871.61>,5*0.3
   <1105868.11, 0, 6409871.61>,5*0.3
@@ -2624,7 +2676,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=32297656 */
   <1105921.61, 0, 6409976.25>,5*0.3
   <1105921.61, 0, 6409976.25>,5*0.3
@@ -2638,7 +2690,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=10152036 */
   <1105947.49, 0, 6409866.35>,5*0.3
   <1105947.49, 0, 6409866.35>,5*0.3
@@ -2653,7 +2705,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=45077168 */
   <1106045.09, 0, 6411769.88>,5*0.3
   <1106045.09, 0, 6411769.88>,5*0.3
@@ -2670,7 +2722,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=46188835 */
   <1106037.85, 0, 6410053.3>,5*0.3
   <1106037.85, 0, 6410053.3>,5*0.3
@@ -2690,7 +2742,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=32295317 */
   <1106026.78, 0, 6410731.74>,5*0.3
   <1106026.78, 0, 6410731.74>,5*0.3
@@ -2705,7 +2757,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=7836916 */
   <1106184.76, 0, 6410125.27>,5*0.3
   <1106184.76, 0, 6410125.27>,5*0.3
@@ -2723,7 +2775,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 13,
+sphere_sweep { linear_spline, 13,
 /* osm_id=46188837 */
   <1106055.68, 0, 6410239.42>,5*0.3
   <1106055.68, 0, 6410239.42>,5*0.3
@@ -2746,7 +2798,7 @@ sphere_sweep { cubic_spline, 13,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=23012280 */
   <1106084.86, 0, 6409614.07>,5*0.3
   <1106084.86, 0, 6409614.07>,5*0.3
@@ -2762,7 +2814,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=46188836 */
   <1106145.61, 0, 6410509.18>,5*0.3
   <1106145.61, 0, 6410509.18>,5*0.3
@@ -2779,7 +2831,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=7835347 */
   <1106341.66, 0, 6410039.3>,5*0.3
   <1106341.66, 0, 6410039.3>,5*0.3
@@ -2794,7 +2846,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=46188838 */
   <1106276.36, 0, 6410497.22>,5*0.3
   <1106276.36, 0, 6410497.22>,5*0.3
@@ -2811,7 +2863,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=23246548 */
   <1106350.59, 0, 6410070.4>,5*0.3
   <1106350.59, 0, 6410070.4>,5*0.3
@@ -2825,7 +2877,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=23246551 */
   <1106184.76, 0, 6410125.27>,5*0.3
   <1106184.76, 0, 6410125.27>,5*0.3
@@ -2843,7 +2895,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28408948 */
   <1106280.63, 0, 6410201.42>,5*0.3
   <1106280.63, 0, 6410201.42>,5*0.3
@@ -2857,7 +2909,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=10202705 */
   <1106193.19, 0, 6409665.01>,5*0.3
   <1106193.19, 0, 6409665.01>,5*0.3
@@ -2878,7 +2930,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=10202692 */
   <1106414.11, 0, 6409677.59>,5*0.3
   <1106414.11, 0, 6409677.59>,5*0.3
@@ -2897,7 +2949,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 13,
+sphere_sweep { linear_spline, 13,
 /* osm_id=23038177 */
   <1106236.35, 0, 6411832.1>,5*0.3
   <1106236.35, 0, 6411832.1>,5*0.3
@@ -2920,7 +2972,7 @@ sphere_sweep { cubic_spline, 13,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=10202693 */
   <1106219.47, 0, 6409627.42>,5*0.3
   <1106219.47, 0, 6409627.42>,5*0.3
@@ -2936,7 +2988,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 17,
+sphere_sweep { linear_spline, 17,
 /* osm_id=20333226 */
   <1106231.67, 0, 6411845.88>,5*0.3
   <1106231.67, 0, 6411845.88>,5*0.3
@@ -2963,7 +3015,7 @@ sphere_sweep { cubic_spline, 17,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=17978474 */
   <1106241.71, 0, 6410372.97>,5*0.3
   <1106241.71, 0, 6410372.97>,5*0.3
@@ -2982,7 +3034,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=59005233 */
   <1106264.43, 0, 6410365.84>,5*0.3
   <1106264.43, 0, 6410365.84>,5*0.3
@@ -2998,7 +3050,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28408947 */
   <1106290.49, 0, 6410235.04>,5*0.3
   <1106290.49, 0, 6410235.04>,5*0.3
@@ -3012,7 +3064,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59007428 */
   <1106274.79, 0, 6410380.89>,5*0.3
   <1106274.79, 0, 6410380.89>,5*0.3
@@ -3026,7 +3078,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=59007430 */
   <1106282.35, 0, 6410516.31>,5*0.3
   <1106282.35, 0, 6410516.31>,5*0.3
@@ -3045,7 +3097,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 17,
+sphere_sweep { linear_spline, 17,
 /* osm_id=23246550 */
   <1106277.13, 0, 6410213.33>,5*0.3
   <1106277.13, 0, 6410213.33>,5*0.3
@@ -3072,7 +3124,7 @@ sphere_sweep { cubic_spline, 17,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59007426 */
   <1106300.54, 0, 6410484.32>,5*0.3
   <1106300.54, 0, 6410484.32>,5*0.3
@@ -3086,7 +3138,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=23246549 */
   <1106304.4, 0, 6410190.48>,5*0.3
   <1106304.4, 0, 6410190.48>,5*0.3
@@ -3100,7 +3152,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59007425 */
   <1106309.78, 0, 6410512.79>,5*0.3
   <1106309.78, 0, 6410512.79>,5*0.3
@@ -3114,7 +3166,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59007427 */
   <1106312.68, 0, 6410497.68>,5*0.3
   <1106312.68, 0, 6410497.68>,5*0.3
@@ -3128,7 +3180,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=59005241 */
   <1106321.97, 0, 6410533.34>,5*0.3
   <1106321.97, 0, 6410533.34>,5*0.3
@@ -3143,7 +3195,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 15,
+sphere_sweep { linear_spline, 15,
 /* osm_id=7835349 */
   <1106341.66, 0, 6410039.3>,5*0.3
   <1106341.66, 0, 6410039.3>,5*0.3
@@ -3168,7 +3220,7 @@ sphere_sweep { cubic_spline, 15,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=4568538 */
   <1106396.81, 0, 6409850.67>,5*0.3
   <1106396.81, 0, 6409850.67>,5*0.3
@@ -3183,7 +3235,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=10202688 */
   <1106336.05, 0, 6409795.65>,5*0.3
   <1106336.05, 0, 6409795.65>,5*0.3
@@ -3199,7 +3251,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=10202690 */
   <1106341.47, 0, 6409795.55>,5*0.3
   <1106341.47, 0, 6409795.55>,5*0.3
@@ -3217,7 +3269,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=7835346 */
   <1106341.66, 0, 6410039.3>,5*0.3
   <1106341.66, 0, 6410039.3>,5*0.3
@@ -3235,7 +3287,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=48996813 */
   <1106478.99, 0, 6411689.78>,5*0.3
   <1106478.99, 0, 6411689.78>,5*0.3
@@ -3250,7 +3302,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=10202691 */
   <1106401.84, 0, 6409866.71>,5*0.3
   <1106401.84, 0, 6409866.71>,5*0.3
@@ -3268,7 +3320,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 13,
+sphere_sweep { linear_spline, 13,
 /* osm_id=10202694 */
   <1106374.86, 0, 6409699.54>,5*0.3
   <1106374.86, 0, 6409699.54>,5*0.3
@@ -3291,7 +3343,7 @@ sphere_sweep { cubic_spline, 13,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=28902367 */
   <1106427.22, 0, 6411485.05>,5*0.3
   <1106427.22, 0, 6411485.05>,5*0.3
@@ -3307,7 +3359,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59007429 */
   <1106387.94, 0, 6410474.73>,5*0.3
   <1106387.94, 0, 6410474.73>,5*0.3
@@ -3321,7 +3373,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=10202689 */
   <1106414.29, 0, 6409871.25>,5*0.3
   <1106414.29, 0, 6409871.25>,5*0.3
@@ -3341,7 +3393,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 15,
+sphere_sweep { linear_spline, 15,
 /* osm_id=10202698 */
   <1106418.48, 0, 6409803.6>,5*0.3
   <1106418.48, 0, 6409803.6>,5*0.3
@@ -3366,7 +3418,7 @@ sphere_sweep { cubic_spline, 15,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 31,
+sphere_sweep { linear_spline, 31,
 /* osm_id=23021992 */
   <1106427.2, 0, 6409864.23>,5*0.3
   <1106427.2, 0, 6409864.23>,5*0.3
@@ -3407,7 +3459,7 @@ sphere_sweep { cubic_spline, 31,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28902365 */
   <1106454.24, 0, 6411473.89>,5*0.3
   <1106454.24, 0, 6411473.89>,5*0.3
@@ -3421,7 +3473,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=13024560 */
   <1104888.88, 0, 6411284.34>,5*0.6
   <1104888.88, 0, 6411284.34>,5*0.6
@@ -3438,7 +3490,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 14,
+sphere_sweep { linear_spline, 14,
 /* osm_id=13024561 */
   <1104695.1, 0, 6411560.78>,5*0.6
   <1104695.1, 0, 6411560.78>,5*0.6
@@ -3462,7 +3514,7 @@ sphere_sweep { cubic_spline, 14,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=13024563 */
   <1104780.94, 0, 6411654.93>,5*0.6
   <1104780.94, 0, 6411654.93>,5*0.6
@@ -3483,7 +3535,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=32433083 */
   <1104855.67, 0, 6409873.76>,5*0.6
   <1104855.67, 0, 6409873.76>,5*0.6
@@ -3498,7 +3550,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=7833383 */
   <1104906.52, 0, 6411284.48>,5*0.6
   <1104906.52, 0, 6411284.48>,5*0.6
@@ -3514,7 +3566,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=43557198 */
   <1105021.27, 0, 6411575.75>,5*0.6
   <1105021.27, 0, 6411575.75>,5*0.6
@@ -3532,7 +3584,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=43567485 */
   <1105061.44, 0, 6411372.9>,5*0.6
   <1105061.44, 0, 6411372.9>,5*0.6
@@ -3551,7 +3603,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=43581888 */
   <1105055.61, 0, 6411354.88>,5*0.6
   <1105055.61, 0, 6411354.88>,5*0.6
@@ -3569,7 +3621,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=43646782 */
   <1105320.7, 0, 6411536.77>,5*0.6
   <1105320.7, 0, 6411536.77>,5*0.6
@@ -3589,7 +3641,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=43557200 */
   <1105062.47, 0, 6411367.71>,5*0.6
   <1105062.47, 0, 6411367.71>,5*0.6
@@ -3608,7 +3660,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557201 */
   <1105090.29, 0, 6411562.47>,5*0.6
   <1105090.29, 0, 6411562.47>,5*0.6
@@ -3622,7 +3674,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557197 */
   <1105067.03, 0, 6411427.24>,5*0.6
   <1105067.03, 0, 6411427.24>,5*0.6
@@ -3638,7 +3690,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=37332617 */
   <1105126.8, 0, 6410811.24>,5*0.6
   <1105126.8, 0, 6410811.24>,5*0.6
@@ -3652,7 +3704,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43557196 */
   <1105081.25, 0, 6411437.23>,5*0.6
   <1105081.25, 0, 6411437.23>,5*0.6
@@ -3667,7 +3719,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=43567484 */
   <1105084.33, 0, 6411367.92>,5*0.6
   <1105084.33, 0, 6411367.92>,5*0.6
@@ -3684,7 +3736,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=31892908 */
   <1105111.35, 0, 6409973.53>,5*0.6
   <1105111.35, 0, 6409973.53>,5*0.6
@@ -3698,7 +3750,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=25859900 */
   <1105108.04, 0, 6410627.88>,5*0.6
   <1105108.04, 0, 6410627.88>,5*0.6
@@ -3712,7 +3764,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=25859901 */
   <1105108.04, 0, 6410627.88>,5*0.6
   <1105108.04, 0, 6410627.88>,5*0.6
@@ -3726,7 +3778,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557204 */
   <1105124.81, 0, 6411570.14>,5*0.6
   <1105124.81, 0, 6411570.14>,5*0.6
@@ -3740,7 +3792,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43567476 */
   <1105118.57, 0, 6411379.32>,5*0.6
   <1105118.57, 0, 6411379.32>,5*0.6
@@ -3754,7 +3806,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43567477 */
   <1105123.44, 0, 6411380.25>,5*0.6
   <1105123.44, 0, 6411380.25>,5*0.6
@@ -3768,7 +3820,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557199 */
   <1105127.55, 0, 6411516.54>,5*0.6
   <1105127.55, 0, 6411516.54>,5*0.6
@@ -3782,7 +3834,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557205 */
   <1105129.46, 0, 6411550.55>,5*0.6
   <1105129.46, 0, 6411550.55>,5*0.6
@@ -3796,7 +3848,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=25846479 */
   <1105131.64, 0, 6410692.49>,5*0.6
   <1105131.64, 0, 6410692.49>,5*0.6
@@ -3810,7 +3862,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=37332616 */
   <1105204.21, 0, 6410989.17>,5*0.6
   <1105204.21, 0, 6410989.17>,5*0.6
@@ -3824,7 +3876,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43581886 */
   <1105343.31, 0, 6411568.64>,5*0.6
   <1105343.31, 0, 6411568.64>,5*0.6
@@ -3840,7 +3892,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=4587363 */
   <1105345.44, 0, 6411104.7>,5*0.6
   <1105345.44, 0, 6411104.7>,5*0.6
@@ -3854,7 +3906,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557184 */
   <1105397.75, 0, 6411479.88>,5*0.6
   <1105397.75, 0, 6411479.88>,5*0.6
@@ -3868,7 +3920,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=44448533 */
   <1105418.13, 0, 6411485.17>,5*0.6
   <1105418.13, 0, 6411485.17>,5*0.6
@@ -3882,7 +3934,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557186 */
   <1105422.72, 0, 6411486.36>,5*0.6
   <1105422.72, 0, 6411486.36>,5*0.6
@@ -3898,7 +3950,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=26701187 */
   <1105415.56, 0, 6409778.05>,5*0.6
   <1105415.56, 0, 6409778.05>,5*0.6
@@ -3914,7 +3966,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=58570939 */
   <1105411.07, 0, 6410325.55>,5*0.6
   <1105411.07, 0, 6410325.55>,5*0.6
@@ -3929,7 +3981,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=22662548 */
   <1105422.61, 0, 6411010.31>,5*0.6
   <1105422.61, 0, 6411010.31>,5*0.6
@@ -3943,7 +3995,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557181 */
   <1105518.24, 0, 6411478.77>,5*0.6
   <1105518.24, 0, 6411478.77>,5*0.6
@@ -3959,7 +4011,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=31824133 */
   <1105503.55, 0, 6411522.23>,5*0.6
   <1105503.55, 0, 6411522.23>,5*0.6
@@ -3974,7 +4026,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43557187 */
   <1105504.59, 0, 6411474.72>,5*0.6
   <1105504.59, 0, 6411474.72>,5*0.6
@@ -3989,7 +4041,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=44445161 */
   <1105438.26, 0, 6411487.78>,5*0.6
   <1105438.26, 0, 6411487.78>,5*0.6
@@ -4003,7 +4055,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=22662549 */
   <1105469.21, 0, 6410133>,5*0.6
   <1105469.21, 0, 6410133>,5*0.6
@@ -4017,7 +4069,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557182 */
   <1105518.24, 0, 6411478.77>,5*0.6
   <1105518.24, 0, 6411478.77>,5*0.6
@@ -4031,7 +4083,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=44445162 */
   <1105507.88, 0, 6411505.01>,5*0.6
   <1105507.88, 0, 6411505.01>,5*0.6
@@ -4046,7 +4098,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43557169 */
   <1105514.14, 0, 6411491.79>,5*0.6
   <1105514.14, 0, 6411491.79>,5*0.6
@@ -4061,7 +4113,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 15,
+sphere_sweep { linear_spline, 15,
 /* osm_id=44448851 */
   <1105534.04, 0, 6411497.59>,5*0.6
   <1105534.04, 0, 6411497.59>,5*0.6
@@ -4086,7 +4138,7 @@ sphere_sweep { cubic_spline, 15,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=35170415 */
   <1105534.31, 0, 6409665.63>,5*0.6
   <1105534.31, 0, 6409665.63>,5*0.6
@@ -4100,7 +4152,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=35170414 */
   <1105556.96, 0, 6409677.01>,5*0.6
   <1105556.96, 0, 6409677.01>,5*0.6
@@ -4115,7 +4167,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710980 */
   <1105564.61, 0, 6410235.44>,5*0.6
   <1105564.61, 0, 6410235.44>,5*0.6
@@ -4129,7 +4181,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710861 */
   <1105609.48, 0, 6410863.39>,5*0.6
   <1105609.48, 0, 6410863.39>,5*0.6
@@ -4143,7 +4195,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43569424 */
   <1105590.8, 0, 6411580.47>,5*0.6
   <1105590.8, 0, 6411580.47>,5*0.6
@@ -4158,7 +4210,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710983 */
   <1105595.68, 0, 6410230.97>,5*0.6
   <1105595.68, 0, 6410230.97>,5*0.6
@@ -4172,7 +4224,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=43557170 */
   <1105606.94, 0, 6411519.16>,5*0.6
   <1105606.94, 0, 6411519.16>,5*0.6
@@ -4189,7 +4241,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43569425 */
   <1105657.48, 0, 6411596.22>,5*0.6
   <1105657.48, 0, 6411596.22>,5*0.6
@@ -4203,7 +4255,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557188 */
   <1105670.97, 0, 6411399.86>,5*0.6
   <1105670.97, 0, 6411399.86>,5*0.6
@@ -4217,7 +4269,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43569426 */
   <1105678.41, 0, 6411600.65>,5*0.6
   <1105678.41, 0, 6411600.65>,5*0.6
@@ -4231,7 +4283,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557183 */
   <1105695.5, 0, 6411600.7>,5*0.6
   <1105695.5, 0, 6411600.7>,5*0.6
@@ -4245,7 +4297,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28412821 */
   <1105704.11, 0, 6411195.6>,5*0.6
   <1105704.11, 0, 6411195.6>,5*0.6
@@ -4259,7 +4311,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10152037 */
   <1105776.97, 0, 6409908.32>,5*0.6
   <1105776.97, 0, 6409908.32>,5*0.6
@@ -4273,7 +4325,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=10152039 */
   <1105818.34, 0, 6409941.41>,5*0.6
   <1105818.34, 0, 6409941.41>,5*0.6
@@ -4290,7 +4342,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10152038 */
   <1105799.25, 0, 6409926.51>,5*0.6
   <1105799.25, 0, 6409926.51>,5*0.6
@@ -4304,7 +4356,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710908 */
   <1105916.02, 0, 6411476.15>,5*0.6
   <1105916.02, 0, 6411476.15>,5*0.6
@@ -4318,7 +4370,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=32297648 */
   <1105939.79, 0, 6410014.78>,5*0.6
   <1105939.79, 0, 6410014.78>,5*0.6
@@ -4336,7 +4388,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=12710923 */
   <1105991.54, 0, 6411362.5>,5*0.6
   <1105991.54, 0, 6411362.5>,5*0.6
@@ -4351,7 +4403,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=12710977 */
   <1105976.42, 0, 6410561.28>,5*0.6
   <1105976.42, 0, 6410561.28>,5*0.6
@@ -4367,7 +4419,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43860425 */
   <1106000.02, 0, 6410528.17>,5*0.6
   <1106000.02, 0, 6410528.17>,5*0.6
@@ -4381,7 +4433,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710954 */
   <1105989.15, 0, 6410785.18>,5*0.6
   <1105989.15, 0, 6410785.18>,5*0.6
@@ -4395,7 +4447,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710956 */
   <1106003.45, 0, 6410767.11>,5*0.6
   <1106003.45, 0, 6410767.11>,5*0.6
@@ -4409,7 +4461,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=49264208 */
   <1106029.47, 0, 6410262.58>,5*0.6
   <1106029.47, 0, 6410262.58>,5*0.6
@@ -4423,7 +4475,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=12711023 */
   <1106012.37, 0, 6411547.72>,5*0.6
   <1106012.37, 0, 6411547.72>,5*0.6
@@ -4438,7 +4490,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10152027 */
   <1106061.37, 0, 6409776.46>,5*0.6
   <1106061.37, 0, 6409776.46>,5*0.6
@@ -4452,7 +4504,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710959 */
   <1106021.14, 0, 6410747.17>,5*0.6
   <1106021.14, 0, 6410747.17>,5*0.6
@@ -4466,7 +4518,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=49264210 */
   <1106043.61, 0, 6410257.08>,5*0.6
   <1106043.61, 0, 6410257.08>,5*0.6
@@ -4481,7 +4533,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=12711036 */
   <1106030.89, 0, 6411565.33>,5*0.6
   <1106030.89, 0, 6411565.33>,5*0.6
@@ -4497,7 +4549,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711032 */
   <1106066.46, 0, 6411617.97>,5*0.6
   <1106066.46, 0, 6411617.97>,5*0.6
@@ -4511,7 +4563,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=59243918 */
   <1106072.63, 0, 6411152.54>,5*0.6
   <1106072.63, 0, 6411152.54>,5*0.6
@@ -4526,7 +4578,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=12711030 */
   <1106117.68, 0, 6411623.66>,5*0.6
   <1106117.68, 0, 6411623.66>,5*0.6
@@ -4543,7 +4595,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=36992693 */
   <1106036.19, 0, 6410046.99>,5*0.6
   <1106036.19, 0, 6410046.99>,5*0.6
@@ -4562,7 +4614,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=12711027 */
   <1106063.84, 0, 6411541.41>,5*0.6
   <1106063.84, 0, 6411541.41>,5*0.6
@@ -4581,7 +4633,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 17,
+sphere_sweep { linear_spline, 17,
 /* osm_id=59005252 */
   <1106100.32, 0, 6410416.39>,5*0.6
   <1106100.32, 0, 6410416.39>,5*0.6
@@ -4608,7 +4660,7 @@ sphere_sweep { cubic_spline, 17,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710915 */
   <1106139.61, 0, 6411345.93>,5*0.6
   <1106139.61, 0, 6411345.93>,5*0.6
@@ -4622,7 +4674,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005265 */
   <1106250.43, 0, 6410399.27>,5*0.6
   <1106250.43, 0, 6410399.27>,5*0.6
@@ -4636,7 +4688,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710948 */
   <1106251.12, 0, 6410816.41>,5*0.6
   <1106251.12, 0, 6410816.41>,5*0.6
@@ -4650,7 +4702,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005247 */
   <1106260.91, 0, 6410430.91>,5*0.6
   <1106260.91, 0, 6410430.91>,5*0.6
@@ -4664,7 +4716,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10202686 */
   <1106158.13, 0, 6410497.51>,5*0.6
   <1106158.13, 0, 6410497.51>,5*0.6
@@ -4678,7 +4730,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711020 */
   <1106190.49, 0, 6411634.8>,5*0.6
   <1106190.49, 0, 6411634.8>,5*0.6
@@ -4692,7 +4744,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=4996467 */
   <1106226.19, 0, 6411861.34>,5*0.6
   <1106226.19, 0, 6411861.34>,5*0.6
@@ -4710,7 +4762,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=12710943 */
   <1106203.73, 0, 6410863.18>,5*0.6
   <1106203.73, 0, 6410863.18>,5*0.6
@@ -4725,7 +4777,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005147 */
   <1106208.01, 0, 6410571.47>,5*0.6
   <1106208.01, 0, 6410571.47>,5*0.6
@@ -4739,7 +4791,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005270 */
   <1106308.08, 0, 6410573.33>,5*0.6
   <1106308.08, 0, 6410573.33>,5*0.6
@@ -4753,7 +4805,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59306161 */
   <1106317.44, 0, 6410601.58>,5*0.6
   <1106317.44, 0, 6410601.58>,5*0.6
@@ -4767,7 +4819,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=59005237 */
   <1106256.76, 0, 6410418.12>,5*0.6
   <1106256.76, 0, 6410418.12>,5*0.6
@@ -4782,7 +4834,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=54985931 */
   <1106261.07, 0, 6411268.25>,5*0.6
   <1106261.07, 0, 6411268.25>,5*0.6
@@ -4796,7 +4848,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005264 */
   <1106283.1, 0, 6410408.08>,5*0.6
   <1106283.1, 0, 6410408.08>,5*0.6
@@ -4810,7 +4862,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=31251405 */
   <1106302.95, 0, 6411013.14>,5*0.6
   <1106302.95, 0, 6411013.14>,5*0.6
@@ -4825,7 +4877,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=59005234 */
   <1106312.56, 0, 6410585.99>,5*0.6
   <1106312.56, 0, 6410585.99>,5*0.6
@@ -4840,7 +4892,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005239 */
   <1106313.19, 0, 6410398.89>,5*0.6
   <1106313.19, 0, 6410398.89>,5*0.6
@@ -4854,7 +4906,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=39986019 */
   <1106539.18, 0, 6410621.62>,5*0.6
   <1106539.18, 0, 6410621.62>,5*0.6
@@ -4869,7 +4921,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005255 */
   <1106340.08, 0, 6410577.42>,5*0.6
   <1106340.08, 0, 6410577.42>,5*0.6
@@ -4883,7 +4935,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005230 */
   <1106347.66, 0, 6410388.36>,5*0.6
   <1106347.66, 0, 6410388.36>,5*0.6
@@ -4897,7 +4949,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005273 */
   <1106362.17, 0, 6410570.68>,5*0.6
   <1106362.17, 0, 6410570.68>,5*0.6
@@ -4911,7 +4963,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005235 */
   <1106370.18, 0, 6410381.48>,5*0.6
   <1106370.18, 0, 6410381.48>,5*0.6
@@ -4925,7 +4977,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005268 */
   <1106396.73, 0, 6410560.11>,5*0.6
   <1106396.73, 0, 6410560.11>,5*0.6
@@ -4939,7 +4991,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59005246 */
   <1106422.7, 0, 6410552.17>,5*0.6
   <1106422.7, 0, 6410552.17>,5*0.6
@@ -4953,7 +5005,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=54614680 */
   <1104780.69, 0, 6411582.37>,5*0.5
   <1104780.69, 0, 6411582.37>,5*0.5
@@ -4973,7 +5025,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=58180049 */
   <1105639.64, 0, 6410471.16>,5*0.5
   <1105639.64, 0, 6410471.16>,5*0.5
@@ -4987,7 +5039,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=25828437 */
   <1104801.83, 0, 6410296.31>,5*0.8
   <1104801.83, 0, 6410296.31>,5*0.8
@@ -5004,7 +5056,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13024626 */
   <1104943.47, 0, 6411805.47>,5*0.8
   <1104943.47, 0, 6411805.47>,5*0.8
@@ -5018,7 +5070,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28882724 */
   <1104867.13, 0, 6410012.09>,5*0.8
   <1104867.13, 0, 6410012.09>,5*0.8
@@ -5032,7 +5084,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=6110019 */
   <1104875.47, 0, 6410012.67>,5*0.8
   <1104875.47, 0, 6410012.67>,5*0.8
@@ -5046,7 +5098,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=7832760 */
   <1104893.89, 0, 6411672.17>,5*0.8
   <1104893.89, 0, 6411672.17>,5*0.8
@@ -5062,7 +5114,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=13024549 */
   <1104982.57, 0, 6411425.91>,5*0.8
   <1104982.57, 0, 6411425.91>,5*0.8
@@ -5079,7 +5131,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557194 */
   <1104995.62, 0, 6411390.11>,5*0.8
   <1104995.62, 0, 6411390.11>,5*0.8
@@ -5095,7 +5147,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=13024548 */
   <1105112.54, 0, 6411284.03>,5*0.8
   <1105112.54, 0, 6411284.03>,5*0.8
@@ -5110,7 +5162,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=13029681 */
   <1105018.5, 0, 6411184.27>,5*0.8
   <1105018.5, 0, 6411184.27>,5*0.8
@@ -5127,7 +5179,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13024543 */
   <1105124.48, 0, 6411195.68>,5*0.8
   <1105124.48, 0, 6411195.68>,5*0.8
@@ -5141,7 +5193,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 13,
+sphere_sweep { linear_spline, 13,
 /* osm_id=26651367 */
   <1105035.02, 0, 6411085.99>,5*0.8
   <1105035.02, 0, 6411085.99>,5*0.8
@@ -5164,7 +5216,7 @@ sphere_sweep { cubic_spline, 13,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=7834767 */
   <1105416.05, 0, 6411207.57>,5*0.8
   <1105416.05, 0, 6411207.57>,5*0.8
@@ -5183,7 +5235,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=25859898 */
   <1105038.74, 0, 6410958.6>,5*0.8
   <1105038.74, 0, 6410958.6>,5*0.8
@@ -5197,7 +5249,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43581881 */
   <1105060.4, 0, 6411500.99>,5*0.8
   <1105060.4, 0, 6411500.99>,5*0.8
@@ -5211,7 +5263,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557195 */
   <1105042.36, 0, 6411412.93>,5*0.8
   <1105042.36, 0, 6411412.93>,5*0.8
@@ -5227,7 +5279,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=13024538 */
   <1105043.31, 0, 6411109.2>,5*0.8
   <1105043.31, 0, 6411109.2>,5*0.8
@@ -5242,7 +5294,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=25859903 */
   <1105056.28, 0, 6410941.9>,5*0.8
   <1105056.28, 0, 6410941.9>,5*0.8
@@ -5262,7 +5314,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=26651368 */
   <1105064.91, 0, 6411070.07>,5*0.8
   <1105064.91, 0, 6411070.07>,5*0.8
@@ -5278,7 +5330,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=33225135 */
   <1105518.89, 0, 6411158.09>,5*0.8
   <1105518.89, 0, 6411158.09>,5*0.8
@@ -5299,7 +5351,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711049 */
   <1105125.78, 0, 6410764.63>,5*0.8
   <1105125.78, 0, 6410764.63>,5*0.8
@@ -5313,7 +5365,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=53827753 */
   <1105090.4, 0, 6410968.77>,5*0.8
   <1105090.4, 0, 6410968.77>,5*0.8
@@ -5328,7 +5380,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=12711059 */
   <1105090.4, 0, 6410968.77>,5*0.8
   <1105090.4, 0, 6410968.77>,5*0.8
@@ -5344,7 +5396,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=4473090 */
   <1105107.33, 0, 6409997.31>,5*0.8
   <1105107.33, 0, 6409997.31>,5*0.8
@@ -5359,7 +5411,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28876288 */
   <1105124.48, 0, 6411195.68>,5*0.8
   <1105124.48, 0, 6411195.68>,5*0.8
@@ -5374,7 +5426,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28876289 */
   <1105141.35, 0, 6411142.41>,5*0.8
   <1105141.35, 0, 6411142.41>,5*0.8
@@ -5388,7 +5440,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=53827754 */
   <1105126.8, 0, 6410811.24>,5*0.8
   <1105126.8, 0, 6410811.24>,5*0.8
@@ -5404,7 +5456,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=27176392 */
   <1105126.12, 0, 6409863.06>,5*0.8
   <1105126.12, 0, 6409863.06>,5*0.8
@@ -5425,7 +5477,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=13024522 */
   <1105126.8, 0, 6410811.24>,5*0.8
   <1105126.8, 0, 6410811.24>,5*0.8
@@ -5446,7 +5498,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28977470 */
   <1105129.34, 0, 6411242.45>,5*0.8
   <1105129.34, 0, 6411242.45>,5*0.8
@@ -5461,7 +5513,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=4575534 */
   <1105130.92, 0, 6410719.39>,5*0.8
   <1105130.92, 0, 6410719.39>,5*0.8
@@ -5477,7 +5529,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=11299260 */
   <1105134.15, 0, 6410294.96>,5*0.8
   <1105134.15, 0, 6410294.96>,5*0.8
@@ -5492,7 +5544,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43567478 */
   <1105165.09, 0, 6411367.76>,5*0.8
   <1105165.09, 0, 6411367.76>,5*0.8
@@ -5508,7 +5560,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=11299264 */
   <1105139.1, 0, 6410236.54>,5*0.8
   <1105139.1, 0, 6410236.54>,5*0.8
@@ -5524,7 +5576,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=32318489 */
   <1105194.86, 0, 6410868.85>,5*0.8
   <1105194.86, 0, 6410868.85>,5*0.8
@@ -5542,7 +5594,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=4587316 */
   <1105156.63, 0, 6409862.95>,5*0.8
   <1105156.63, 0, 6409862.95>,5*0.8
@@ -5557,7 +5609,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10152006 */
   <1105153.47, 0, 6409992.79>,5*0.8
   <1105153.47, 0, 6409992.79>,5*0.8
@@ -5571,7 +5623,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=25964299 */
   <1105154.63, 0, 6410022.52>,5*0.8
   <1105154.63, 0, 6410022.52>,5*0.8
@@ -5587,7 +5639,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=13029689 */
   <1105167.88, 0, 6411359.76>,5*0.8
   <1105167.88, 0, 6411359.76>,5*0.8
@@ -5608,7 +5660,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=13024540 */
   <1105193.66, 0, 6411129.29>,5*0.8
   <1105193.66, 0, 6411129.29>,5*0.8
@@ -5624,7 +5676,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=42499035 */
   <1105359.34, 0, 6409983.2>,5*0.8
   <1105359.34, 0, 6409983.2>,5*0.8
@@ -5643,7 +5695,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=13029844 */
   <1105179.88, 0, 6411207.62>,5*0.8
   <1105179.88, 0, 6411207.62>,5*0.8
@@ -5658,7 +5710,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=10202680 */
   <1105184.35, 0, 6409848.93>,5*0.8
   <1105184.35, 0, 6409848.93>,5*0.8
@@ -5673,7 +5725,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13029685 */
   <1105191.11, 0, 6411305.21>,5*0.8
   <1105191.11, 0, 6411305.21>,5*0.8
@@ -5687,7 +5739,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=13029694 */
   <1105196.95, 0, 6410825.41>,5*0.8
   <1105196.95, 0, 6410825.41>,5*0.8
@@ -5705,7 +5757,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=10152007 */
   <1105198.25, 0, 6409748.22>,5*0.8
   <1105198.25, 0, 6409748.22>,5*0.8
@@ -5725,7 +5777,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=10202682 */
   <1105203.39, 0, 6409662.54>,5*0.8
   <1105203.39, 0, 6409662.54>,5*0.8
@@ -5742,7 +5794,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=28876293 */
   <1105226.02, 0, 6411316.58>,5*0.8
   <1105226.02, 0, 6411316.58>,5*0.8
@@ -5758,7 +5810,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=28876292 */
   <1105226.02, 0, 6411316.58>,5*0.8
   <1105226.02, 0, 6411316.58>,5*0.8
@@ -5774,7 +5826,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=12711052 */
   <1105233.29, 0, 6411119.7>,5*0.8
   <1105233.29, 0, 6411119.7>,5*0.8
@@ -5790,7 +5842,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=13024534 */
   <1105255.39, 0, 6411151.02>,5*0.8
   <1105255.39, 0, 6411151.02>,5*0.8
@@ -5805,7 +5857,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=10202679 */
   <1105243.66, 0, 6409669.4>,5*0.8
   <1105243.66, 0, 6409669.4>,5*0.8
@@ -5825,7 +5877,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 12,
+sphere_sweep { linear_spline, 12,
 /* osm_id=28870148 */
   <1105249.15, 0, 6410451.9>,5*0.8
   <1105249.15, 0, 6410451.9>,5*0.8
@@ -5847,7 +5899,7 @@ sphere_sweep { cubic_spline, 12,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=11299277 */
   <1105246.25, 0, 6410291.57>,5*0.8
   <1105246.25, 0, 6410291.57>,5*0.8
@@ -5862,7 +5914,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=11299270 */
   <1105252.57, 0, 6410431.62>,5*0.8
   <1105252.57, 0, 6410431.62>,5*0.8
@@ -5878,7 +5930,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=43557211 */
   <1105290.74, 0, 6411317.23>,5*0.8
   <1105290.74, 0, 6411317.23>,5*0.8
@@ -5894,7 +5946,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711056 */
   <1105265.78, 0, 6410974.06>,5*0.8
   <1105265.78, 0, 6410974.06>,5*0.8
@@ -5908,7 +5960,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=4568529 */
   <1105265.78, 0, 6410974.06>,5*0.8
   <1105265.78, 0, 6410974.06>,5*0.8
@@ -5928,7 +5980,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=35539018 */
   <1105293.17, 0, 6410096.82>,5*0.8
   <1105293.17, 0, 6410096.82>,5*0.8
@@ -5944,7 +5996,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=35539017 */
   <1105328.57, 0, 6410037.02>,5*0.8
   <1105328.57, 0, 6410037.02>,5*0.8
@@ -5959,7 +6011,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=31824131 */
   <1105294.99, 0, 6411700.67>,5*0.8
   <1105294.99, 0, 6411700.67>,5*0.8
@@ -5974,7 +6026,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=22980381 */
   <1105316.69, 0, 6410035.86>,5*0.8
   <1105316.69, 0, 6410035.86>,5*0.8
@@ -5990,7 +6042,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=11299280 */
   <1105316.69, 0, 6410035.86>,5*0.8
   <1105316.69, 0, 6410035.86>,5*0.8
@@ -6010,7 +6062,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43581885 */
   <1105328.81, 0, 6411537.91>,5*0.8
   <1105328.81, 0, 6411537.91>,5*0.8
@@ -6024,7 +6076,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711014 */
   <1105325.19, 0, 6411564.47>,5*0.8
   <1105325.19, 0, 6411564.47>,5*0.8
@@ -6038,7 +6090,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=13024556 */
   <1105331.33, 0, 6411538.55>,5*0.8
   <1105331.33, 0, 6411538.55>,5*0.8
@@ -6052,7 +6104,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=31824134 */
   <1105331.33, 0, 6411538.55>,5*0.8
   <1105331.33, 0, 6411538.55>,5*0.8
@@ -6071,7 +6123,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=58533363 */
   <1105335.38, 0, 6410379.68>,5*0.8
   <1105335.38, 0, 6410379.68>,5*0.8
@@ -6086,7 +6138,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=58534048 */
   <1105350.53, 0, 6410294.55>,5*0.8
   <1105350.53, 0, 6410294.55>,5*0.8
@@ -6100,7 +6152,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43557185 */
   <1105358.82, 0, 6411469.79>,5*0.8
   <1105358.82, 0, 6411469.79>,5*0.8
@@ -6114,7 +6166,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=58534047 */
   <1105361.64, 0, 6410268.8>,5*0.8
   <1105361.64, 0, 6410268.8>,5*0.8
@@ -6128,7 +6180,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=58534045 */
   <1105378.2, 0, 6410230.42>,5*0.8
   <1105378.2, 0, 6410230.42>,5*0.8
@@ -6142,7 +6194,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=58534044 */
   <1105383.68, 0, 6410217.73>,5*0.8
   <1105383.68, 0, 6410217.73>,5*0.8
@@ -6158,7 +6210,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=11299282 */
   <1105451.82, 0, 6410230.89>,5*0.8
   <1105451.82, 0, 6410230.89>,5*0.8
@@ -6172,7 +6224,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=31903542 */
   <1105384.67, 0, 6411119.34>,5*0.8
   <1105384.67, 0, 6411119.34>,5*0.8
@@ -6186,7 +6238,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=32238009 */
   <1105385.16, 0, 6409964.15>,5*0.8
   <1105385.16, 0, 6409964.15>,5*0.8
@@ -6201,7 +6253,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=10152015 */
   <1105385.16, 0, 6409964.15>,5*0.8
   <1105385.16, 0, 6409964.15>,5*0.8
@@ -6218,7 +6270,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=58533362 */
   <1105386.52, 0, 6410344.31>,5*0.8
   <1105386.52, 0, 6410344.31>,5*0.8
@@ -6233,7 +6285,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=24683265 */
   <1105405.3, 0, 6409777.62>,5*0.8
   <1105405.3, 0, 6409777.62>,5*0.8
@@ -6249,7 +6301,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=24683266 */
   <1105411.01, 0, 6409706.16>,5*0.8
   <1105411.01, 0, 6409706.16>,5*0.8
@@ -6263,7 +6315,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=4473086 */
   <1105432.15, 0, 6410309.45>,5*0.8
   <1105432.15, 0, 6410309.45>,5*0.8
@@ -6279,7 +6331,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=36916665 */
   <1105439.12, 0, 6409864.38>,5*0.8
   <1105439.12, 0, 6409864.38>,5*0.8
@@ -6295,7 +6347,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=11299268 */
   <1105602.43, 0, 6410231.11>,5*0.8
   <1105602.43, 0, 6410231.11>,5*0.8
@@ -6311,7 +6363,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=10152013 */
   <1105475.54, 0, 6409780.55>,5*0.8
   <1105475.54, 0, 6409780.55>,5*0.8
@@ -6329,7 +6381,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=4473085 */
   <1105540.86, 0, 6410436.35>,5*0.8
   <1105540.86, 0, 6410436.35>,5*0.8
@@ -6343,7 +6395,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=47910908 */
   <1105519.96, 0, 6409683.46>,5*0.8
   <1105519.96, 0, 6409683.46>,5*0.8
@@ -6359,7 +6411,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=20213437 */
   <1105571.66, 0, 6409803.52>,5*0.8
   <1105571.66, 0, 6409803.52>,5*0.8
@@ -6375,7 +6427,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=27137247 */
   <1105620.22, 0, 6410762.83>,5*0.8
   <1105620.22, 0, 6410762.83>,5*0.8
@@ -6389,7 +6441,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10202683 */
   <1105568.05, 0, 6409660.78>,5*0.8
   <1105568.05, 0, 6409660.78>,5*0.8
@@ -6403,7 +6455,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=33225132 */
   <1105575.96, 0, 6411171.19>,5*0.8
   <1105575.96, 0, 6411171.19>,5*0.8
@@ -6419,7 +6471,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=30278671 */
   <1105740.7, 0, 6411011.4>,5*0.8
   <1105740.7, 0, 6411011.4>,5*0.8
@@ -6434,7 +6486,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=10202685 */
   <1105641.35, 0, 6409856.54>,5*0.8
   <1105641.35, 0, 6409856.54>,5*0.8
@@ -6450,7 +6502,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=37299754 */
   <1105594.11, 0, 6410415.39>,5*0.8
   <1105594.11, 0, 6410415.39>,5*0.8
@@ -6464,7 +6516,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10152010 */
   <1105595.51, 0, 6409671.2>,5*0.8
   <1105595.51, 0, 6409671.2>,5*0.8
@@ -6478,7 +6530,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=35168656 */
   <1105595.51, 0, 6409671.2>,5*0.8
   <1105595.51, 0, 6409671.2>,5*0.8
@@ -6492,7 +6544,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=57837181 */
   <1105600.14, 0, 6410298.39>,5*0.8
   <1105600.14, 0, 6410298.39>,5*0.8
@@ -6507,7 +6559,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=10213067 */
   <1105619.89, 0, 6410195.38>,5*0.8
   <1105619.89, 0, 6410195.38>,5*0.8
@@ -6522,7 +6574,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=4587366 */
   <1105640.57, 0, 6410950.82>,5*0.8
   <1105640.57, 0, 6410950.82>,5*0.8
@@ -6537,7 +6589,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=51195167 */
   <1105668.66, 0, 6410880.86>,5*0.8
   <1105668.66, 0, 6410880.86>,5*0.8
@@ -6551,7 +6603,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=55199761 */
   <1105618.91, 0, 6410042.43>,5*0.8
   <1105618.91, 0, 6410042.43>,5*0.8
@@ -6566,7 +6618,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 13,
+sphere_sweep { linear_spline, 13,
 /* osm_id=10213066 */
   <1106006.07, 0, 6410099.09>,5*0.8
   <1106006.07, 0, 6410099.09>,5*0.8
@@ -6589,7 +6641,7 @@ sphere_sweep { cubic_spline, 13,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=54266110 */
   <1105641.78, 0, 6410410.89>,5*0.8
   <1105641.78, 0, 6410410.89>,5*0.8
@@ -6603,7 +6655,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=51195166 */
   <1105743.28, 0, 6410928.26>,5*0.8
   <1105743.28, 0, 6410928.26>,5*0.8
@@ -6619,7 +6671,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=10202684 */
   <1105655.5, 0, 6409794.67>,5*0.8
   <1105655.5, 0, 6409794.67>,5*0.8
@@ -6634,7 +6686,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 16,
+sphere_sweep { linear_spline, 16,
 /* osm_id=10152017 */
   <1105967.28, 0, 6410050.64>,5*0.8
   <1105967.28, 0, 6410050.64>,5*0.8
@@ -6660,7 +6712,7 @@ sphere_sweep { cubic_spline, 16,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=57837180 */
   <1105685.53, 0, 6410439.66>,5*0.8
   <1105685.53, 0, 6410439.66>,5*0.8
@@ -6674,7 +6726,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=47907685 */
   <1105656.46, 0, 6409783.77>,5*0.8
   <1105656.46, 0, 6409783.77>,5*0.8
@@ -6688,7 +6740,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=10152024 */
   <1105776.97, 0, 6409811.78>,5*0.8
   <1105776.97, 0, 6409811.78>,5*0.8
@@ -6703,7 +6755,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=47907682 */
   <1105666.91, 0, 6409751.96>,5*0.8
   <1105666.91, 0, 6409751.96>,5*0.8
@@ -6717,7 +6769,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711012 */
   <1105664.63, 0, 6411786.42>,5*0.8
   <1105664.63, 0, 6411786.42>,5*0.8
@@ -6731,7 +6783,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=43557164 */
   <1105710.76, 0, 6411652.01>,5*0.8
   <1105710.76, 0, 6411652.01>,5*0.8
@@ -6752,7 +6804,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28458791 */
   <1105683.8, 0, 6410650.26>,5*0.8
   <1105683.8, 0, 6410650.26>,5*0.8
@@ -6767,7 +6819,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10213069 */
   <1105717.67, 0, 6410468.3>,5*0.8
   <1105717.67, 0, 6410468.3>,5*0.8
@@ -6781,7 +6833,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10152020 */
   <1105688.5, 0, 6409802.43>,5*0.8
   <1105688.5, 0, 6409802.43>,5*0.8
@@ -6795,7 +6847,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=12710999 */
   <1105694.18, 0, 6411214.55>,5*0.8
   <1105694.18, 0, 6411214.55>,5*0.8
@@ -6812,7 +6864,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=12711018 */
   <1105700.51, 0, 6411650.17>,5*0.8
   <1105700.51, 0, 6411650.17>,5*0.8
@@ -6829,7 +6881,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=43870351 */
   <1105702.74, 0, 6411600.7>,5*0.8
   <1105702.74, 0, 6411600.7>,5*0.8
@@ -6843,7 +6895,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=23034045 */
   <1105736.05, 0, 6410681.7>,5*0.8
   <1105736.05, 0, 6410681.7>,5*0.8
@@ -6857,7 +6909,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=10152018 */
   <1105714.08, 0, 6410050.64>,5*0.8
   <1105714.08, 0, 6410050.64>,5*0.8
@@ -6873,7 +6925,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=7834769 */
   <1105717.07, 0, 6410474.87>,5*0.8
   <1105717.07, 0, 6410474.87>,5*0.8
@@ -6887,7 +6939,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=57837179 */
   <1105722.84, 0, 6410727.6>,5*0.8
   <1105722.84, 0, 6410727.6>,5*0.8
@@ -6902,7 +6954,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=12710975 */
   <1105725.1, 0, 6410472.25>,5*0.8
   <1105725.1, 0, 6410472.25>,5*0.8
@@ -6919,7 +6971,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711006 */
   <1105791.98, 0, 6410933.3>,5*0.8
   <1105791.98, 0, 6410933.3>,5*0.8
@@ -6933,7 +6985,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=12711009 */
   <1105830.64, 0, 6411064.45>,5*0.8
   <1105830.64, 0, 6411064.45>,5*0.8
@@ -6951,7 +7003,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711004 */
   <1105746.74, 0, 6411127.41>,5*0.8
   <1105746.74, 0, 6411127.41>,5*0.8
@@ -6965,7 +7017,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=10152025 */
   <1105776.97, 0, 6409811.78>,5*0.8
   <1105776.97, 0, 6409811.78>,5*0.8
@@ -6981,7 +7033,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=6110030 */
   <1105757.47, 0, 6410909.53>,5*0.8
   <1105757.47, 0, 6410909.53>,5*0.8
@@ -6995,7 +7047,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28808701 */
   <1105791.98, 0, 6410933.3>,5*0.8
   <1105791.98, 0, 6410933.3>,5*0.8
@@ -7009,7 +7061,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=10152022 */
   <1105760.42, 0, 6409893.42>,5*0.8
   <1105760.42, 0, 6409893.42>,5*0.8
@@ -7025,7 +7077,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=32703964 */
   <1105811.23, 0, 6410760.8>,5*0.8
   <1105811.23, 0, 6410760.8>,5*0.8
@@ -7040,7 +7092,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=28458790 */
   <1105830.64, 0, 6411064.45>,5*0.8
   <1105830.64, 0, 6411064.45>,5*0.8
@@ -7057,7 +7109,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=6110031 */
   <1105772.99, 0, 6411277.45>,5*0.8
   <1105772.99, 0, 6411277.45>,5*0.8
@@ -7071,7 +7123,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=9035405 */
   <1105837.75, 0, 6410596.18>,5*0.8
   <1105837.75, 0, 6410596.18>,5*0.8
@@ -7086,7 +7138,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=10152021 */
   <1105775.31, 0, 6409846.54>,5*0.8
   <1105775.31, 0, 6409846.54>,5*0.8
@@ -7103,7 +7155,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=28808703 */
   <1105786.92, 0, 6410905.14>,5*0.8
   <1105786.92, 0, 6410905.14>,5*0.8
@@ -7121,7 +7173,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28808702 */
   <1105786.92, 0, 6410905.14>,5*0.8
   <1105786.92, 0, 6410905.14>,5*0.8
@@ -7135,7 +7187,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=37656869 */
   <1105788.51, 0, 6411286.62>,5*0.8
   <1105788.51, 0, 6411286.62>,5*0.8
@@ -7150,7 +7202,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=28808700 */
   <1105791.98, 0, 6410933.3>,5*0.8
   <1105791.98, 0, 6410933.3>,5*0.8
@@ -7166,7 +7218,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=54265631 */
   <1105796.67, 0, 6410051.35>,5*0.8
   <1105796.67, 0, 6410051.35>,5*0.8
@@ -7180,7 +7232,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=6110032 */
   <1105808.61, 0, 6411276.44>,5*0.8
   <1105808.61, 0, 6411276.44>,5*0.8
@@ -7196,7 +7248,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=12654641 */
   <1105808.61, 0, 6411276.44>,5*0.8
   <1105808.61, 0, 6411276.44>,5*0.8
@@ -7211,7 +7263,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=23962661 */
   <1106164.85, 0, 6409707.79>,5*0.8
   <1106164.85, 0, 6409707.79>,5*0.8
@@ -7231,7 +7283,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=10152030 */
   <1105839.3, 0, 6409864.18>,5*0.8
   <1105839.3, 0, 6409864.18>,5*0.8
@@ -7246,7 +7298,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12711001 */
   <1105830.64, 0, 6411064.45>,5*0.8
   <1105830.64, 0, 6411064.45>,5*0.8
@@ -7260,7 +7312,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=59027969 */
   <1105834.45, 0, 6411303.97>,5*0.8
   <1105834.45, 0, 6411303.97>,5*0.8
@@ -7274,7 +7326,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=9035403 */
   <1105837.75, 0, 6410596.18>,5*0.8
   <1105837.75, 0, 6410596.18>,5*0.8
@@ -7293,7 +7345,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=8106716 */
   <1105837.75, 0, 6410596.18>,5*0.8
   <1105837.75, 0, 6410596.18>,5*0.8
@@ -7309,7 +7361,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 14,
+sphere_sweep { linear_spline, 14,
 /* osm_id=12710907 */
   <1106009.03, 0, 6411489.35>,5*0.8
   <1106009.03, 0, 6411489.35>,5*0.8
@@ -7333,7 +7385,7 @@ sphere_sweep { cubic_spline, 14,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=59027970 */
   <1105846.65, 0, 6411310.02>,5*0.8
   <1105846.65, 0, 6411310.02>,5*0.8
@@ -7351,7 +7403,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=54265645 */
   <1105862.23, 0, 6410051.07>,5*0.8
   <1105862.23, 0, 6410051.07>,5*0.8
@@ -7365,7 +7417,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=10213072 */
   <1105871.23, 0, 6410713.29>,5*0.8
   <1105871.23, 0, 6410713.29>,5*0.8
@@ -7383,7 +7435,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=22779407 */
   <1105884.22, 0, 6410289.43>,5*0.8
   <1105884.22, 0, 6410289.43>,5*0.8
@@ -7397,7 +7449,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=54265635 */
   <1105904.13, 0, 6410050.9>,5*0.8
   <1105904.13, 0, 6410050.9>,5*0.8
@@ -7411,7 +7463,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28511087 */
   <1105911.19, 0, 6410393.34>,5*0.8
   <1105911.19, 0, 6410393.34>,5*0.8
@@ -7425,7 +7477,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=25859907 */
   <1105916.8, 0, 6410362.66>,5*0.8
   <1105916.8, 0, 6410362.66>,5*0.8
@@ -7439,7 +7491,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=25859912 */
   <1105920.6, 0, 6410392.93>,5*0.8
   <1105920.6, 0, 6410392.93>,5*0.8
@@ -7457,7 +7509,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=25859904 */
   <1105920.6, 0, 6410392.93>,5*0.8
   <1105920.6, 0, 6410392.93>,5*0.8
@@ -7471,7 +7523,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=25859910 */
   <1105920.6, 0, 6410392.93>,5*0.8
   <1105920.6, 0, 6410392.93>,5*0.8
@@ -7486,7 +7538,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=28413144 */
   <1105927.25, 0, 6410568.18>,5*0.8
   <1105927.25, 0, 6410568.18>,5*0.8
@@ -7500,7 +7552,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710920 */
   <1106019.76, 0, 6411677.99>,5*0.8
   <1106019.76, 0, 6411677.99>,5*0.8
@@ -7514,7 +7566,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=6110036 */
   <1105939.84, 0, 6411059.6>,5*0.8
   <1105939.84, 0, 6411059.6>,5*0.8
@@ -7531,7 +7583,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=45661770 */
   <1105943.28, 0, 6411495.28>,5*0.8
   <1105943.28, 0, 6411495.28>,5*0.8
@@ -7546,7 +7598,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=37652189 */
   <1105945.58, 0, 6410819.29>,5*0.8
   <1105945.58, 0, 6410819.29>,5*0.8
@@ -7563,7 +7615,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=12710950 */
   <1105995.21, 0, 6410556.85>,5*0.8
   <1105995.21, 0, 6410556.85>,5*0.8
@@ -7582,7 +7634,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=28413145 */
   <1105976.42, 0, 6410561.28>,5*0.8
   <1105976.42, 0, 6410561.28>,5*0.8
@@ -7599,7 +7651,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28443292 */
   <1105983.7, 0, 6411326.22>,5*0.8
   <1105983.7, 0, 6411326.22>,5*0.8
@@ -7614,7 +7666,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=12710873 */
   <1106017.59, 0, 6411630.32>,5*0.8
   <1106017.59, 0, 6411630.32>,5*0.8
@@ -7633,7 +7685,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=10152032 */
   <1106025.2, 0, 6409809.57>,5*0.8
   <1106025.2, 0, 6409809.57>,5*0.8
@@ -7650,7 +7702,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=12710901 */
   <1106037.97, 0, 6411318.97>,5*0.8
   <1106037.97, 0, 6411318.97>,5*0.8
@@ -7667,7 +7719,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=51734234 */
   <1106037.97, 0, 6411318.97>,5*0.8
   <1106037.97, 0, 6411318.97>,5*0.8
@@ -7688,7 +7740,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=17978041 */
   <1106076.77, 0, 6410500.04>,5*0.8
   <1106076.77, 0, 6410500.04>,5*0.8
@@ -7702,7 +7754,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=10152034 */
   <1106090.66, 0, 6409740.67>,5*0.8
   <1106090.66, 0, 6409740.67>,5*0.8
@@ -7716,7 +7768,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=12710939 */
   <1106335.25, 0, 6410966.06>,5*0.8
   <1106335.25, 0, 6410966.06>,5*0.8
@@ -7731,7 +7783,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=10202687 */
   <1106336.05, 0, 6409795.65>,5*0.8
   <1106336.05, 0, 6409795.65>,5*0.8
@@ -7747,7 +7799,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=30321025 */
   <1106205.65, 0, 6411235.16>,5*0.8
   <1106205.65, 0, 6411235.16>,5*0.8
@@ -7764,7 +7816,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=6110040 */
   <1106208.38, 0, 6410659.14>,5*0.8
   <1106208.38, 0, 6410659.14>,5*0.8
@@ -7782,7 +7834,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710875 */
   <1106262.2, 0, 6411619.09>,5*0.8
   <1106262.2, 0, 6411619.09>,5*0.8
@@ -7796,7 +7848,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=43128392 */
   <1106335.25, 0, 6410966.06>,5*0.8
   <1106335.25, 0, 6410966.06>,5*0.8
@@ -7811,7 +7863,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=12710937 */
   <1106384.16, 0, 6410895.79>,5*0.8
   <1106384.16, 0, 6410895.79>,5*0.8
@@ -7825,7 +7877,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=12710877 */
   <1106431.91, 0, 6411379.87>,5*0.8
   <1106431.91, 0, 6411379.87>,5*0.8
@@ -7843,7 +7895,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 12,
+sphere_sweep { linear_spline, 12,
 /* osm_id=6110038 */
   <1106443.62, 0, 6411369.42>,5*0.8
   <1106443.62, 0, 6411369.42>,5*0.8
@@ -7865,7 +7917,7 @@ sphere_sweep { cubic_spline, 12,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=11299279 */
   <1105335.38, 0, 6410379.68>,5*0.8
   <1105335.38, 0, 6410379.68>,5*0.8
@@ -7881,7 +7933,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=8106714 */
   <1105668.66, 0, 6410880.86>,5*0.8
   <1105668.66, 0, 6410880.86>,5*0.8
@@ -7899,7 +7951,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=9035401 */
   <1105609.48, 0, 6410863.39>,5*0.8
   <1105609.48, 0, 6410863.39>,5*0.8
@@ -7920,7 +7972,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=54265639 */
   <1105967.28, 0, 6410050.64>,5*0.8
   <1105967.28, 0, 6410050.64>,5*0.8
@@ -7934,7 +7986,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=32295118 */
   <1105997.89, 0, 6410050.4>,5*0.8
   <1105997.89, 0, 6410050.4>,5*0.8
@@ -7948,7 +8000,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 13,
+sphere_sweep { linear_spline, 13,
 /* osm_id=6110037 */
   <1106437.49, 0, 6411357.19>,5*0.8
   <1106437.49, 0, 6411357.19>,5*0.8
@@ -7971,7 +8023,7 @@ sphere_sweep { cubic_spline, 13,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=45285258 */
   <1105771.42, 0, 6411207.76>,5*0.8
   <1105771.42, 0, 6411207.76>,5*0.8
@@ -7986,7 +8038,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=10213068 */
   <1105629.66, 0, 6410400.27>,5*0.8
   <1105629.66, 0, 6410400.27>,5*0.8
@@ -8002,7 +8054,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=4473087 */
   <1105618.91, 0, 6410042.43>,5*0.8
   <1105618.91, 0, 6410042.43>,5*0.8
@@ -8018,7 +8070,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=47907684 */
   <1105705.93, 0, 6409644.51>,5*0.8
   <1105705.93, 0, 6409644.51>,5*0.8
@@ -8033,7 +8085,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=4568540 */
   <1105757.47, 0, 6410909.53>,5*0.8
   <1105757.47, 0, 6410909.53>,5*0.8
@@ -8047,7 +8099,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=58531773 */
   <1105320.75, 0, 6410286.31>,5*0.8
   <1105320.75, 0, 6410286.31>,5*0.8
@@ -8061,7 +8113,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=4587315 */
   <1105154.63, 0, 6410022.52>,5*0.8
   <1105154.63, 0, 6410022.52>,5*0.8
@@ -8079,7 +8131,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=30962563 */
   <1105134.31, 0, 6410347.76>,5*0.8
   <1105134.31, 0, 6410347.76>,5*0.8
@@ -8096,7 +8148,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=11299255 */
   <1105144.76, 0, 6410132.55>,5*0.8
   <1105144.76, 0, 6410132.55>,5*0.8
@@ -8111,7 +8163,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=12710897 */
   <1106287.55, 0, 6411096.26>,5*0.8
   <1106287.55, 0, 6411096.26>,5*0.8
@@ -8128,7 +8180,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 23,
+sphere_sweep { linear_spline, 23,
 /* osm_id=12710893 */
   <1106437.49, 0, 6411357.19>,5*0.8
   <1106437.49, 0, 6411357.19>,5*0.8
@@ -8161,7 +8213,7 @@ sphere_sweep { cubic_spline, 23,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=4568541 */
   <1105757.47, 0, 6410909.53>,5*0.8
   <1105757.47, 0, 6410909.53>,5*0.8
@@ -8175,7 +8227,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=11299265 */
   <1105177.72, 0, 6410230.59>,5*0.8
   <1105177.72, 0, 6410230.59>,5*0.8
@@ -8189,7 +8241,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=57837182 */
   <1105602.43, 0, 6410231.11>,5*0.8
   <1105602.43, 0, 6410231.11>,5*0.8
@@ -8204,7 +8256,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=24277689 */
   <1104831.32, 0, 6409863.9>,5*0.3
   <1104831.32, 0, 6409863.9>,5*0.3
@@ -8221,7 +8273,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=24277691 */
   <1104870.35, 0, 6409966.79>,5*0.3
   <1104870.35, 0, 6409966.79>,5*0.3
@@ -8235,7 +8287,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=24277690 */
   <1104870.35, 0, 6409966.79>,5*0.3
   <1104870.35, 0, 6409966.79>,5*0.3
@@ -8249,7 +8301,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=31554236 */
   <1104718.74, 0, 6411864.37>,5*1.0
   <1104718.74, 0, 6411864.37>,5*1.0
@@ -8265,7 +8317,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=6999927 */
   <1104780.69, 0, 6411582.37>,5*1.0
   <1104780.69, 0, 6411582.37>,5*1.0
@@ -8283,7 +8335,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=48013654 */
   <1104780.69, 0, 6411582.37>,5*1.0
   <1104780.69, 0, 6411582.37>,5*1.0
@@ -8297,7 +8349,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=5669299 */
   <1104879.53, 0, 6410011.65>,5*1.0
   <1104879.53, 0, 6410011.65>,5*1.0
@@ -8316,7 +8368,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=5669300 */
   <1104824.97, 0, 6409588.05>,5*1.0
   <1104824.97, 0, 6409588.05>,5*1.0
@@ -8331,7 +8383,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=24277693 */
   <1104846.52, 0, 6409795.39>,5*1.0
   <1104846.52, 0, 6409795.39>,5*1.0
@@ -8346,7 +8398,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=30336480 */
   <1104850.61, 0, 6411719.62>,5*1.0
   <1104850.61, 0, 6411719.62>,5*1.0
@@ -8362,7 +8414,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=24277692 */
   <1104852.79, 0, 6409863.57>,5*1.0
   <1104852.79, 0, 6409863.57>,5*1.0
@@ -8378,7 +8430,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=30094281 */
   <1104893.89, 0, 6411672.17>,5*1.0
   <1104893.89, 0, 6411672.17>,5*1.0
@@ -8394,7 +8446,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=26651369 */
   <1104906.52, 0, 6411284.48>,5*1.0
   <1104906.52, 0, 6411284.48>,5*1.0
@@ -8409,7 +8461,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=6999923 */
   <1104967.44, 0, 6411322.25>,5*1.0
   <1104967.44, 0, 6411322.25>,5*1.0
@@ -8423,7 +8475,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 20,
+sphere_sweep { linear_spline, 20,
 /* osm_id=6999920 */
   <1104938.8, 0, 6411617.35>,5*1.0
   <1104938.8, 0, 6411617.35>,5*1.0
@@ -8453,7 +8505,7 @@ sphere_sweep { cubic_spline, 20,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=4482145 */
   <1104938.8, 0, 6411617.35>,5*1.0
   <1104938.8, 0, 6411617.35>,5*1.0
@@ -8468,7 +8520,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 11,
+sphere_sweep { linear_spline, 11,
 /* osm_id=6999913 */
   <1105035.02, 0, 6411085.99>,5*1.0
   <1105035.02, 0, 6411085.99>,5*1.0
@@ -8489,7 +8541,7 @@ sphere_sweep { cubic_spline, 11,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 14,
+sphere_sweep { linear_spline, 14,
 /* osm_id=4568542 */
   <1105035.02, 0, 6411085.99>,5*1.0
   <1105035.02, 0, 6411085.99>,5*1.0
@@ -8513,7 +8565,7 @@ sphere_sweep { cubic_spline, 14,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=30409334 */
   <1105083.63, 0, 6410546.26>,5*1.0
   <1105083.63, 0, 6410546.26>,5*1.0
@@ -8528,7 +8580,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=6999933 */
   <1105085.6, 0, 6410498.92>,5*1.0
   <1105085.6, 0, 6410498.92>,5*1.0
@@ -8543,7 +8595,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=6999930 */
   <1105089.85, 0, 6410069.14>,5*1.0
   <1105089.85, 0, 6410069.14>,5*1.0
@@ -8557,7 +8609,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=25964298 */
   <1105107.33, 0, 6409997.31>,5*1.0
   <1105107.33, 0, 6409997.31>,5*1.0
@@ -8574,7 +8626,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=53826874 */
   <1105133.58, 0, 6409800.33>,5*1.0
   <1105133.58, 0, 6409800.33>,5*1.0
@@ -8588,7 +8640,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=30094857 */
   <1105925.85, 0, 6411033.61>,5*1.0
   <1105925.85, 0, 6411033.61>,5*1.0
@@ -8603,7 +8655,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=4482139 */
   <1105939.84, 0, 6411059.6>,5*1.0
   <1105939.84, 0, 6411059.6>,5*1.0
@@ -8617,7 +8669,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=24338192 */
   <1105983.7, 0, 6411326.22>,5*1.0
   <1105983.7, 0, 6411326.22>,5*1.0
@@ -8635,7 +8687,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 13,
+sphere_sweep { linear_spline, 13,
 /* osm_id=4482143 */
   <1106034.48, 0, 6411760.42>,5*1.0
   <1106034.48, 0, 6411760.42>,5*1.0
@@ -8658,7 +8710,7 @@ sphere_sweep { cubic_spline, 13,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 10,
+sphere_sweep { linear_spline, 10,
 /* osm_id=4454269 */
   <1106006.07, 0, 6410099.09>,5*1.0
   <1106006.07, 0, 6410099.09>,5*1.0
@@ -8678,7 +8730,7 @@ sphere_sweep { cubic_spline, 10,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 12,
+sphere_sweep { linear_spline, 12,
 /* osm_id=59041363 */
   <1106135.61, 0, 6409759.75>,5*1.0
   <1106135.61, 0, 6409759.75>,5*1.0
@@ -8700,7 +8752,7 @@ sphere_sweep { cubic_spline, 12,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=28420005 */
   <1106034.48, 0, 6411760.42>,5*1.0
   <1106034.48, 0, 6411760.42>,5*1.0
@@ -8715,7 +8767,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 9,
+sphere_sweep { linear_spline, 9,
 /* osm_id=30191718 */
   <1106047.62, 0, 6410856.87>,5*1.0
   <1106047.62, 0, 6410856.87>,5*1.0
@@ -8734,7 +8786,7 @@ sphere_sweep { cubic_spline, 9,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=45401885 */
   <1106097.74, 0, 6410899.32>,5*1.0
   <1106097.74, 0, 6410899.32>,5*1.0
@@ -8748,7 +8800,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 6,
+sphere_sweep { linear_spline, 6,
 /* osm_id=45770167 */
   <1106292.09, 0, 6411028.94>,5*1.0
   <1106292.09, 0, 6411028.94>,5*1.0
@@ -8764,7 +8816,7 @@ sphere_sweep { cubic_spline, 6,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=33775397 */
   <1106100.32, 0, 6410416.39>,5*1.0
   <1106100.32, 0, 6410416.39>,5*1.0
@@ -8779,7 +8831,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=30426298 */
   <1106164.85, 0, 6409707.79>,5*1.0
   <1106164.85, 0, 6409707.79>,5*1.0
@@ -8794,7 +8846,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=37651574 */
   <1106135.89, 0, 6410511.98>,5*1.0
   <1106135.89, 0, 6410511.98>,5*1.0
@@ -8811,7 +8863,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=4454268 */
   <1106255.25, 0, 6409591.45>,5*1.0
   <1106255.25, 0, 6409591.45>,5*1.0
@@ -8829,7 +8881,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=50848932 */
   <1106193.09, 0, 6411723.78>,5*1.0
   <1106193.09, 0, 6411723.78>,5*1.0
@@ -8843,7 +8895,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=30279007 */
   <1106398.67, 0, 6409671.4>,5*1.0
   <1106398.67, 0, 6409671.4>,5*1.0
@@ -8861,7 +8913,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=31953472 */
   <1106284.08, 0, 6411703.3>,5*1.0
   <1106284.08, 0, 6411703.3>,5*1.0
@@ -8876,7 +8928,7 @@ sphere_sweep { cubic_spline, 5,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 8,
+sphere_sweep { linear_spline, 8,
 /* osm_id=4454267 */
   <1106398.67, 0, 6409671.4>,5*1.0
   <1106398.67, 0, 6409671.4>,5*1.0
@@ -8894,7 +8946,7 @@ sphere_sweep { cubic_spline, 8,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 19,
+sphere_sweep { linear_spline, 19,
 /* osm_id=30094855 */
   <1106844.26, 0, 6410233.18>,5*1.0
   <1106844.26, 0, 6410233.18>,5*1.0
@@ -8923,7 +8975,7 @@ sphere_sweep { cubic_spline, 19,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 7,
+sphere_sweep { linear_spline, 7,
 /* osm_id=4482138 */
   <1106208.38, 0, 6410659.14>,5*1.0
   <1106208.38, 0, 6410659.14>,5*1.0
@@ -8940,7 +8992,7 @@ sphere_sweep { cubic_spline, 7,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 14,
+sphere_sweep { linear_spline, 14,
 /* osm_id=43938501 */
   <1106753.89, 0, 6411362.97>,5*1.0
   <1106753.89, 0, 6411362.97>,5*1.0
@@ -8964,7 +9016,7 @@ sphere_sweep { cubic_spline, 14,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 4,
+sphere_sweep { linear_spline, 4,
 /* osm_id=52874467 */
   <1105104.7, 0, 6411656.62>,5*1.0
   <1105104.7, 0, 6411656.62>,5*1.0
@@ -8978,7 +9030,7 @@ sphere_sweep { cubic_spline, 4,
    scale <1, 0.1, 1>
 }
 
-sphere_sweep { cubic_spline, 5,
+sphere_sweep { linear_spline, 5,
 /* osm_id=37651987 */
   <1105294.99, 0, 6411700.67>,5*1.0
   <1105294.99, 0, 6411700.67>,5*1.0

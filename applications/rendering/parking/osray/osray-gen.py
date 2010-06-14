@@ -60,7 +60,7 @@ def pov_highway(f,highway):
     points = linestring.split(',')
 
     numpoints = len(points)
-    f.write("sphere_sweep {{ cubic_spline, {0},\n".format(numpoints+2))
+    f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+2))
     f.write("/* osm_id={0} */\n".format(highway[0]))
 
     for i,point in enumerate(points):

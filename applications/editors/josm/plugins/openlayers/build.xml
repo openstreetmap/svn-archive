@@ -71,6 +71,7 @@
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.openLayers.OpenLayersPlugin" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Displays an OpenLayers background image" />
+				<attribute name="Plugin-Icon" value="images/OpenLayers.png"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 			</manifest>

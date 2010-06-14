@@ -56,6 +56,7 @@
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.editgpx.EditGpxPlugin" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Allows the user to anonymize timestamps and delete parts of huge GPX tracks very fast." />
+				<attribute name="Plugin-Icon" value="images/mapmode/editgpx_mode.png"/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/EditGpx" />
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}" />
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

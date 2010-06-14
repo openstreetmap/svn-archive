@@ -112,6 +112,7 @@
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
 				<attribute name="Plugin-Description"
 					value="Makes a pair of selected way segments parallel by rotating one of them around a chosen pivot." />
+				<attribute name="Plugin-Icon" value="images/alignways.png"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}" />
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
 				<attribute name="Plugin-Link"

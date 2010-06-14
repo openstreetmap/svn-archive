@@ -103,6 +103,8 @@
 		                <attribute name="Plugin-Class" value="buildings_tools.BuildingsToolsPlugin"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 		                <attribute name="Plugin-Description" value="Tools for drawing buildings."/>
+				<attribute name="Plugin-Icon" value="images/mapmode/building.png"/>
+
 		                <attribute name="ru_Plugin-Description" value="Инструменты для прорисовки зданий."/>
 		                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/BuildingsTools"/>
 		                <attribute name="ru_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/BuildingsTools"/>

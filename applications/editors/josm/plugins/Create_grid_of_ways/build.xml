@@ -60,6 +60,7 @@
 				<attribute name="Plugin-Class" value="CreateGridOfWaysPlugin.CreateGridOfWaysPlugin"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Create a grid of ways."/>
+				<attribute name="Plugin-Icon" value="images/creategridofways.png"/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/Create_grid_of_ways"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

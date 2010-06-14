@@ -84,6 +84,7 @@
 				<attribute name="Author" value="Bilbo" />
 				<attribute name="Plugin-Class" value="multipoly.MultipolyPlugin" />
 				<attribute name="Plugin-Description" value="Create multipolygons by one click, much easier than standard way with relation editor." />
+				<attribute name="Plugin-Icon" value="images/multipoly_create.png"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
 				<attribute name="Plugin-Link" value="http://svn.openstreetmap.org/applications/editors/josm/plugins/multipoly/" />

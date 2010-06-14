@@ -57,6 +57,7 @@
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTesterAction"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Adds a tagging preset tester to the help menu, which helps you developing of tagging presets (quick preview of the dialog that will popup). You can start the jar-file as standalone as well."/>
+				<attribute name="Plugin-Icon" value="images/tagging-preset-tester.png"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 			</manifest>

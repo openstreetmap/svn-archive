@@ -60,6 +60,7 @@
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Dependencies" value="jgrapht-jdk1.5"/>
 				<attribute name="Plugin-Description" value="Allows opening gpx/osm files that intersect the currently visible screen area"/>
+				<attribute name="Plugin-Icon" value="images/openvisible.png"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Stage" value="50"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

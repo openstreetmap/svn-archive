@@ -20,6 +20,9 @@ highwaytypes = {
     'cycleway':['<0.8,0.8,0.9>',0.3],
     'path':['<0.8,0.9,0.8>',0.5]
     }
+buildingtypes = {
+    'yes':['<1,0.8,0.8>',1.0],
+    }
 
 def avg(a,b): return (a+b)/2.0
 
@@ -81,6 +84,38 @@ def pov_highway(f,highway):
 }}
 \n""".format(highwayparams[0]))
 
+def pov_building(f,building):
+    buildingtype = building[1]
+    #buildingtype = 'secondary'
+    buildingparams = buildingtypes.get(buildingtype)
+    linestring = building[2]
+    linestring = linestring[8:] # cut off the "POLYGON("
+    linestring = linestring[:-1] # cut off the ")"
+    points = linestring.split(',')#.strip('(').strip(')')
+    print points
+
+    numpoints = len(points)
+    f.write("prism {{ linear_spline  0, 1, {0},\n".format(numpoints))
+    f.write("/* osm_id={0} */\n".format(building[0]))
+
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+        if (i==0):
+            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+        if (i!=numpoints-1):
+            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+        else:
+            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+    #f.write(firstpoint)
+
+    f.write("""
+   pigment {{
+      color rgb {0}
+   }}
+   scale <1, 100, 1>
+}}
+\n""".format(buildingparams[0]))
+
 def pov_camera(f,bbox):
     polygonstring = bbox[0][0]
     polygonstring = polygonstring[9:] # cut off the "POLYGON(("
@@ -124,9 +159,14 @@ box {{
 \n""".format(left,bottom,right,top))
     f.write("""
 light_source {{
-   <{0}, 50000, {1}>, rgb <1, 1, 1>
+   <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5>
 }}
-\n""".format(avg(left,right),avg(bottom,top)))
+\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
+    f.write("""
+light_source {{
+   <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5>
+}}
+\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
 
 
 if len(sys.argv) == 2:
@@ -155,9 +195,8 @@ and highway='secondary' LIMIT 50;
 
 latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
 coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
-FW = "FROM planet_osm_line WHERE"
-
-### display disc - maxstay
+FlW = "FROM planet_osm_line WHERE"
+FpW = "FROM planet_osm_polygon WHERE"
 
 curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
 bbox = curs.fetchall()
@@ -165,13 +204,20 @@ pov_camera(f,bbox)
 
 highways = []
 for highwaytype in highwaytypes.iterkeys():
-    curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom "+FW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and highway='"+highwaytype+"' LIMIT 2000;")
+    curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom "+FlW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and highway='"+highwaytype+"' LIMIT 2000;")
     highways += curs.fetchall()
-
-#print highways
 
 for highway in highways:
     pov_highway(f,highway)
+    #pass
+
+buildings = []
+for buildingtype in buildingtypes.iterkeys():
+    curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom "+FpW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and building='"+buildingtype+"' LIMIT 1700;")
+    buildings += curs.fetchall()
+
+for building in buildings:
+    pov_building(f,building)
 
 f.close()
 

@@ -1,7 +1,6 @@
 package reverter;
 
 import org.openstreetmap.josm.data.osm.PrimitiveId;
-import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 public class PrimitiveIdVersion {

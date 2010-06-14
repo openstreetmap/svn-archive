@@ -51,6 +51,7 @@ public class ChangesetReverter {
 
     public final int changesetId;
     public final Changeset changeset;
+    public final RevertType revertType;
 
     private final OsmDataLayer layer; // data layer associated with reverter 
     private final DataSet ds; // DataSet associated with reverter 
@@ -106,15 +107,33 @@ public class ChangesetReverter {
     }
     
     /**
+     * Checks if {@see ChangesetDataSetEntry} conforms to current RevertType
+     * @param entry entry to be checked
+     * @return <code>true</code> if {@see ChangesetDataSetEntry} conforms to current RevertType 
+     */
+    private boolean CheckOsmChangeEntry(ChangesetDataSetEntry entry) {
+        if (revertType == RevertType.FULL) return true;
+        if (revertType == RevertType.SELECTION_WITH_UNDELETE &&
+                entry.getModificationType() == ChangesetModificationType.DELETED) {
+            return true;
+        }
+        OsmPrimitive p = ds.getPrimitiveById(entry.getPrimitive().getPrimitiveId());
+        if (p == null) return false;
+        return p.isSelected();
+    }
+    
+    /**
      * creates a reverter for specific changeset and fetches initial data
      * @param changesetId
      * @param monitor
      * @throws OsmTransferException
      */
-    public ChangesetReverter(int changesetId, ProgressMonitor monitor) throws OsmTransferException {
+    public ChangesetReverter(int changesetId, RevertType revertType, ProgressMonitor monitor)
+            throws OsmTransferException {
         this.changesetId = changesetId;
         this.layer = Main.main.getEditLayer();
         this.ds = layer.data;
+        this.revertType = revertType;
 
         OsmServerChangesetReader csr = new OsmServerChangesetReader();
         monitor.beginTask("", 2);
@@ -128,6 +147,7 @@ public class ChangesetReverter {
         // Build our own lists of created/updated/modified objects for better performance
         for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
             ChangesetDataSetEntry entry = it.next();
+            if (!CheckOsmChangeEntry(entry)) continue;
             if (entry.getModificationType() == ChangesetModificationType.CREATED) {
                 created.add(entry.getPrimitive());
             } else if (entry.getModificationType() == ChangesetModificationType.UPDATED) {
@@ -289,6 +309,7 @@ public class ChangesetReverter {
         // Check objects versions
         for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
             ChangesetDataSetEntry entry = it.next();
+            if (!CheckOsmChangeEntry(entry)) continue;
             HistoryOsmPrimitive hp = entry.getPrimitive();
             OsmPrimitive dp = ds.getPrimitiveById(hp.getPrimitiveId());
             if (dp == null || dp.isIncomplete())
@@ -322,7 +343,7 @@ public class ChangesetReverter {
                 if (toDelete.contains(referrer)) continue; // object is going to be deleted
                 if (nds.getPrimitiveById(referrer) != null)
                     continue; /* object is going to be modified so it cannot refer to
-                               * objects created in same changeset
+                               * objects created in changeset to be reverted
                                */
                 if (!conflicted.contains(p)) {
                     cmds.add(new ConflictAddCommand(layer,CreateConflict(p, true)));

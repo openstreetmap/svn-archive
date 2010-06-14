@@ -13,11 +13,11 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.Shortcut;
+import reverter.ChangesetReverter.RevertType;
 
 @SuppressWarnings("serial")
 public class RevertChangesetAction extends JosmAction {
@@ -39,16 +39,19 @@ public class RevertChangesetAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0)  {
         if (getCurrentDataSet() == null)
             return;
-        ChangesetIdQuery dlg = new ChangesetIdQuery();
+        final ChangesetIdQuery dlg = new ChangesetIdQuery();
         dlg.setVisible(true);
         if (dlg.getValue() != 1) return;
-        final int changesetId = dlg.ChangesetId();
+        final int changesetId = dlg.getChangesetId();
+        final RevertType revertType = dlg.getRevertType();
         if (changesetId == 0) return;
+        if (revertType == null) return;
+        
         Main.worker.submit(new PleaseWaitRunnable(tr("Reverting...")) {
             private ChangesetReverter rev;
             private boolean downloadConfirmed = false;
             
-            private boolean checkMissing() throws OsmTransferException {
+            private boolean checkAndDownloadMissing() throws OsmTransferException {
                 if (!rev.hasMissingObjects()) return true;
                 if (!downloadConfirmed) {
                     downloadConfirmed = JOptionPane.showConfirmDialog(Main.parent,
@@ -64,26 +67,36 @@ public class RevertChangesetAction extends JosmAction {
                 } finally {
                     monitor.close();
                 }
-                return true;
+                return !monitor.isCancelled();
             }
             
             @Override
             protected void realRun() throws OsmTransferException {
-                progressMonitor.indeterminateSubTask("Downloading changeset");
-                rev = new ChangesetReverter(changesetId, NullProgressMonitor.INSTANCE);
+                progressMonitor.indeterminateSubTask(tr("Downloading changeset"));
+                rev = new ChangesetReverter(changesetId, revertType,
+                        progressMonitor.createSubTaskMonitor(0, true));
                 if (progressMonitor.isCancelled()) return;
-                rev.checkMissingDeleted();
-                // Don't ask user to download primitives going to be undeleted
-                rev.downloadMissingPrimitives(progressMonitor.createSubTaskMonitor(0, false));
-                if (progressMonitor.isCancelled()) return;
+
+                // Check missing objects
                 rev.checkMissingCreated();
                 rev.checkMissingUpdated();
-                if (!checkMissing()) return;
+                if (rev.hasMissingObjects()) {
+                    // If missing created or updated objects, ask user
+                    rev.checkMissingDeleted();
+                    if (!checkAndDownloadMissing()) return;
+                } else {
+                    // Don't ask user to download primitives going to be undeleted
+                    rev.checkMissingDeleted();
+                    rev.downloadMissingPrimitives(progressMonitor.createSubTaskMonitor(0, false));
+                }
+                
+                if (progressMonitor.isCancelled()) return;
                 rev.downloadObjectsHistory(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
                 if (progressMonitor.isCancelled()) return;
-                if (!checkMissing()) return;
+                if (!checkAndDownloadMissing()) return;
                 List<Command> cmds = rev.getCommands();
-                Command cmd = new SequenceCommand(tr("Revert changeset #{0}",changesetId),cmds);
+                Command cmd = new SequenceCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" : 
+                        "Partially revert changeset #{0}",changesetId),cmds);
                 Main.main.undoRedo.add(cmd);
             }
 

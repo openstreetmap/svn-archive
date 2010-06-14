@@ -30,7 +30,7 @@
 <project name="reverter" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Trivial fixes" />
+	<property name="commit.message" value="Added image icon" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3000" />
 
@@ -103,6 +103,7 @@
 				<attribute name="Plugin-Class" value="reverter.ReverterPlugin"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Plugin for reverting changesets"/>
+				<attribute name="Plugin-Icon" value="images/revert-changeset.png"/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Reverter"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

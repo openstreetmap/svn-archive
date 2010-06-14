@@ -23,7 +23,7 @@
 <project name="AddrInterpolation" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="Changed constructor for Plugin" />
+	<property name="commit.message" value="Impoved Icon" />
 	<property name="plugin.main.version" value="2830" />
 
 	<!--

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -65,11 +66,11 @@ public class UndeletedObjectsStorage implements LayerChangeListener, PropertyCha
         pruneEmptyLayers();
     }
     
-    public List<OsmPrimitive> getUndeletedObjects(DataSet dataSet) {
+    public Set<OsmPrimitive> getUndeletedObjects(DataSet dataSet) {
         pruneObsolete();
         HashSet<PrimitiveIdVersion> idSet = undeletedPrimitives.get(dataSet);
-        if (idSet == null) return null;
-        LinkedList<OsmPrimitive> undeleted = new LinkedList<OsmPrimitive>();
+        HashSet<OsmPrimitive> undeleted = new HashSet<OsmPrimitive>();
+        if (idSet == null) return undeleted;
         for (PrimitiveIdVersion id : idSet) {
             undeleted.add(dataSet.getPrimitiveById(id.getPrimitiveId()));
         }

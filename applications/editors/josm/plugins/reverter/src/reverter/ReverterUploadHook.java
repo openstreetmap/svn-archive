@@ -47,7 +47,7 @@ public class ReverterUploadHook implements UploadHook {
          * cannot be referenced as well as deleted objects. Without this the "precondition failed"
          * error appears when trying to upload objects undeleted by reverter.
          */
-        if (undeletedStorage.haveUndeletedObjects(ds)) {
+        if (true) {
             Collections.sort(
                     apiDataSet.getPrimitivesToUpdate(),
                     new Comparator<OsmPrimitive>() {

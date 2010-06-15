@@ -1,6 +1,12 @@
 global_settings {
    assumed_gamma 1.5
    noise_generator 2
+   radiosity {
+      count 1000
+      error_bound 0.7
+      recursion_limit 6
+      pretrace_end 0.002
+   }
 }
 
 box {

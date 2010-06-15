@@ -7,6 +7,7 @@ DSN = 'dbname=gis'
 import sys
 import psycopg2
 import csv
+import re
 from numpy import *
 
 highwaytypes = {
@@ -22,6 +23,14 @@ highwaytypes = {
     }
 buildingtypes = {
     'yes':['<1,0.8,0.8>',1.0],
+    'office':['<1,0.6,0.6>',1.0],
+    'apartments':['<0.8,1,0.6>',1.0],
+    'garages':['<0.8,0.8,0.8>',1.0],
+    }
+amenitybuildingtypes = {
+    'place_of_worship':['<1,1,0.6>',1.0],
+    'hospital':['<1,0.6,0.6>',1.0],
+    'university':['<0.6,1,0.8>',1.0]
     }
 
 def avg(a,b): return (a+b)/2.0
@@ -84,15 +93,50 @@ def pov_highway(f,highway):
 }}
 \n""".format(highwayparams[0]))
 
+def parse_length_in_meters(length,default):
+    units={
+           'm':1.0, 'metres':1.0, 'meters':1.0, 'metre':1.0, 'meter':1.0,
+           'km':1000.0,
+           'ft':0.3,
+           'yd':1.1,
+           }
+    parsed = re.split('(\d*[,.]?\d+)','length')
+    if len(parsed)!=3:
+        print "### unparsable length '{0}'".format(length)
+        return default
+    prefix = parsed[0].strip()
+    if prefix!='':
+        print "### unknown prefix '{0}' in length '{1}'".format(prefix,length)
+        return default
+    unit = parsed[2].strip().lower()
+    if unit=='': unit='m' # defaults to m
+    factor = units.get(unit,0.0)
+    if factor==0.0:
+        print "### unknown unit '{0}' in length '{1}'".format(unit,length)
+    meter = float(parsed[1])*factor
+    return meter
+
 def pov_building(f,building):
     buildingtype = building[1]
     #buildingtype = 'secondary'
     buildingparams = buildingtypes.get(buildingtype)
+
     linestring = building[2]
     linestring = linestring[8:] # cut off the "POLYGON("
     linestring = linestring[:-1] # cut off the ")"
+
+    heightstring = building[3]
+    print 'hs="{0}"'.format(heightstring)
+    if (heightstring==None):
+        height = 10.0
+    else:
+        height = parse_length_in_meters(heightstring,0.01)
+
+    amenity = building[4]
+    print amenity
+    
     points = linestring.split(',')#.strip('(').strip(')')
-    print points
+    #print points
 
     numpoints = len(points)
     f.write("prism {{ linear_spline  0, 1, {0},\n".format(numpoints))
@@ -108,13 +152,21 @@ def pov_building(f,building):
             f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
     #f.write(firstpoint)
 
+    color = buildingparams[0]
+    if amenitybuildingtypes.has_key(amenity): # if amenity is known, use that color
+        amenitybuildingparams = amenitybuildingtypes.get(amenity)
+        color = amenitybuildingparams[0]
+
+    if height != 10.0:
+        print 'height:', height
+        color = '<0,1,0>'
     f.write("""
    pigment {{
       color rgb {0}
    }}
    scale <1, 100, 1>
 }}
-\n""".format(buildingparams[0]))
+\n""".format(color))
 
 def pov_camera(f,bbox):
     polygonstring = bbox[0][0]
@@ -157,16 +209,10 @@ box {{
    }}
 }}
 \n""".format(left,bottom,right,top))
-    f.write("""
-light_source {{
-   <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5>
-}}
-\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
-    f.write("""
-light_source {{
-   <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5>
-}}
-\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
+
+    #f.write("""light_source {{ <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
+    #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
+    f.write("""light_source { <100000, 5000000, -200000>, rgb <1, 1, 1> }\n""")
 
 
 if len(sys.argv) == 2:
@@ -213,7 +259,7 @@ for highway in highways:
 
 buildings = []
 for buildingtype in buildingtypes.iterkeys():
-    curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom "+FpW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and building='"+buildingtype+"' LIMIT 1700;")
+    curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+FpW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and building='"+buildingtype+"' LIMIT 1700;")
     buildings += curs.fetchall()
 
 for building in buildings:

@@ -193,7 +193,7 @@ FILE * logFP(bool create = true) {
   return f;
 }
 
-void logprintf(char * format, ...)
+void logprintf(const char * format, ...)
 {
 // print [hh:mm:ss] timestamp to log first
 #ifdef _WIN32_CE
@@ -2107,7 +2107,7 @@ gint DrawExpose (void)
             k = j;
           }
           sort (nx.begin (), nx.end ());
-          for (int j = 0; j < nx.size (); j += 2) {
+          for (unsigned int j = 0; j < nx.size (); j += 2) {
             if (nx[j + 1] - nx[j] > text2B.top ().dst) {
               text2B.top ().x = nx[j];
               text2B.top ().x2 = nx[j + 1];
@@ -3504,7 +3504,7 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
 }
 
 
-void XmlOut (FILE *newWayFile, char *k, char *v)
+void XmlOut (FILE *newWayFile, const char *k, const char *v)
 {
   if (*v != '\0') {
     fprintf (newWayFile, "  <tag k='%s' v='", k);

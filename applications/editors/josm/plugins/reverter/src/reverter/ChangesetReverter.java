@@ -80,12 +80,6 @@ public class ChangesetReverter {
                     addIfMissing(new SimplePrimitiveId(nd,OsmPrimitiveType.NODE));
                 }
             }
-            if (p.getType() == OsmPrimitiveType.RELATION) {
-                for (RelationMember member : ((HistoryRelation)p).getMembers()) {
-                    addIfMissing(new SimplePrimitiveId(member.getPrimitiveId(),
-                            member.getPrimitiveType()));
-                }
-            }
         }
     }
 
@@ -95,12 +89,6 @@ public class ChangesetReverter {
             if (p.getType() == OsmPrimitiveType.WAY) {
                 for (Node nd : ((Way)p).getNodes()) {
                     addIfMissing(nd);
-                }
-            }
-            if (p.getType() == OsmPrimitiveType.RELATION) {
-                for (org.openstreetmap.josm.data.osm.RelationMember member
-                        : ((Relation)p).getMembers()) {
-                    addIfMissing(member.getMember());
                 }
             }
         }

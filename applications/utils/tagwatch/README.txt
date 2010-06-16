@@ -7,7 +7,8 @@ of all Keys/Tags/Relations of the given osm files.
 Dependencies:
  + Perl
  + LWP::Simple
- + MediaWiki-1.13
+ + MediaWiki-1.13 (used in libs/getWikiTags, should be replace by MediaWiki::API usage)
+ + MediaWiki::API-0.33
  + HTML-Template-2.9
  + Math::Round
  + GD

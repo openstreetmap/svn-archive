@@ -17,18 +17,16 @@
 # along with Tagwatch.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------
 use strict;
-use MediaWiki;
+use MediaWiki::API;
+use Encode;
 
-my $c = MediaWiki->new;
-   $c->setup({'wiki' => {
-	                 'host' => 'wiki.openstreetmap.org',
-	                 'path' => '',
-			 'has_filepath' => 1}});
+my $c = MediaWiki::API->new( { api_url => 'http://wiki.openstreetmap.org/w/api.php' } );
 
 sub getPhotos
 {
 	my (%Config) = @_;
 
+	$c->{ua}->agent($Config{'user_agent'} || "TagWatch/1.0");
 	my $CacheDir = "$Config{'cache_folder'}/photos";
 	mkdir $CacheDir if ! -d $CacheDir;
 
@@ -41,9 +39,10 @@ sub getPhotos
 			print "\t skip $Filename ($ImageList{$Filename}) ...\n";
 			next;
 		}
+		$ImageList{$Filename} =~ s/^File://;
 		print "\t get $Filename ($ImageList{$Filename}) ...\n";
 
-		my $Data =  $c->download($ImageList{$Filename});
+		my $Data =  $c->download({title => decode("utf-8", "File:$ImageList{$Filename}")});
 
 		if($Data ne "")
 		{
@@ -197,6 +196,5 @@ sub getImageList
 
 	return %ImageList;
 } 
-
 
 1;

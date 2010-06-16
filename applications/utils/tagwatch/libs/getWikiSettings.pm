@@ -17,12 +17,9 @@
 # along with Tagwatch.  If not, see <http://www.gnu.org/licenses/>.
 #---------------------------------------------------------------
 #use strict;
-use MediaWiki;
+use MediaWiki::API;
 
-my $c = MediaWiki->new;
-   $c->setup({'wiki' => {
-	                 'host' => 'wiki.openstreetmap.org',
-	                 'path' => ''}});
+my $c = MediaWiki::API->new( { api_url => 'http://wiki.openstreetmap.org/w/api.php' } );
 
 my @Languages;
 
@@ -62,7 +59,7 @@ sub parseIgnoredTags
 
 	open(IGNORETAGLIST,  ">$CacheDir/ignored_tags.txt");
 
-	foreach my $Line(split(/\n/, $c->text("Tagwatch/Ignore")))
+	foreach my $Line(split(/\n/, $c->get_page({ title => "Tagwatch/Ignore"})->{'*'}))
 	{
 		if($Line =~ m{\* (.+):(.*)})
 		{
@@ -81,7 +78,7 @@ sub parseIgnoredValues
 
 	open(LIST,  ">$CacheDir/ignored_values.txt");
 
-	foreach my $Line(split(/\n/, $c->text("Tagwatch/Volatile")))
+	foreach my $Line(split(/\n/, $c->get_page({title => "Tagwatch/Volatile"})->{'*'}))
 	{
 		if($Line =~ m{\* (.*)})
 		{
@@ -101,7 +98,7 @@ sub parseWatchlist
 
 	open(WATCHLIST,  ">$CacheDir/watchlist.txt");
 
-	foreach my $Line(split(/\n/, $c->text("Tagwatch/Watchlist")))
+	foreach my $Line(split(/\n/, $c->get_page({title => "Tagwatch/Watchlist"})->{'*'}))
 	{
 		if($Line =~ m{\* (.*)})
 		{
@@ -124,7 +121,7 @@ sub parseInterface
 
 	foreach my $Language (@Languages)
 	{
-		foreach my $Line(split(/\n/, $c->text("Tagwatch/Interface/".ucfirst($Language))))
+		foreach my $Line(split(/\n/, $c->get_page({title=>"Tagwatch/Interface/".ucfirst($Language)})))
 		{
 			if($Line =~ m{^\* (.*?) *= *(.*?)$})
 			{

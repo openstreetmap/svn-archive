@@ -4,7 +4,7 @@ PREREQUISITES
 The Tahngo server, as currently tested, requires the following software:
 
 - Python.  (2.4 works)
-- Django.  (>0.96. 1.0 beta works)
+- Django.  (>=1.2)
 - Apache.  (2.2 works)
 - mod_python.  (3.3 works)
 

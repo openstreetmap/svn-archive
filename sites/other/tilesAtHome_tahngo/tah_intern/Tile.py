@@ -60,11 +60,16 @@ class Tile:
     f.close()
     return data
 
+
   def serve_tile_sendfile(self, layername):
-    """ Return the (filename,offset,datalength) of a tile. If a full file should be sent, 
-        offset is 0, and datalength -1. This is geared to apache.sendfile()
+    """Return the (filename,offset,datalength) of a tile.
+       If a full file should be sent, 
+       offset is 0, and datalength -1. This is geared to apache.sendfile()
+       Note that this still expects the .tileset file version 1 and cannot
+       cope with "emptiness" values set in the header.
+       #XXX TODO: add that
     """
-    (layer, base_z,base_x,base_y) = self.basetileset() 
+    (layer, base_z, base_x, base_y) = self.basetileset() 
     # basetilepath could be taken from the Settings, hardcode for efficiency 
     basetilepath='/SX40/Tiles'
     blanktilepath='/SX40/Tiles'
@@ -77,6 +82,7 @@ class Tile:
     try:
       self.mtime = os.stat(tilesetfile)[8] #set mtime to be used by 'Last-Modified' header
       f = open(tilesetfile,'rb')
+      #try to find the right offset where we find our data      
       #calculate file offset
       offset = 8 # skip the header data
       i_step = 4 # bytes per index entry

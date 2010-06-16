@@ -44,8 +44,6 @@ class Lowzoom(Tileset):
       for rec_y in range(2*y,2*y+2):
         self.stitch(layer,z+1,rec_x,rec_y)
 
-    # temporarily insert sleeps to no stress the NFS disk so much
-    #if ((x+y) % 10 == 0): time.sleep(5)
     #print "tile %s %d %d %d " % (layer,z,x,y)
     pngfilepath = os.path.join(self.tmpdir,"%d_%d_%d.png" % (z,x,y))
     im = Image.new('RGB', (512,512))

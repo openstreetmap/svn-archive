@@ -50,9 +50,15 @@ class TileUpload (object):
 
       # start timing tileset handling now
       starttime = (time(),clock())
-      #self.fname = self.upload.get_file_filename()
-      self.fname = self.upload.file.path
 
+      try:
+        self.fname = self.upload.file.path
+      except ValueError:
+        # there is no corresponding file, so clean up and delete this request
+          logging.info('No corresponding file to upload')
+          self.cleanup(True)
+          return
+        
       if self.upload.file.name.lower().endswith('.zip') and os.path.isfile(self.fname):
         # existing zip file
         #logging.debug('Handling next zip file: ' + self.upload.file.name)
@@ -121,11 +127,18 @@ class TileUpload (object):
         self.cleanup(True)
         #---------------------------------------
 
-      elif self.upload.file.name.lower().endswith('.tileset') and os.path.isfile(self.fname):
-          # existing .tileset file
+      elif self.upload.file.name.lower().endswith('.tileset') \
+          and os.path.isfile(self.fname):
+          # handle existing .tileset file
           logging.info("upload processor does not handle tileset files %s. user %s(%d)." % (self.upload.file.name,self.upload.user_id,self.upload.client_uuid))
           self.cleanup(True)
-
+          
+      else:
+          # in all other cases (invalid file ending, or file missing)
+          logging.info('Invalid uploaded file or file not found: ' + \
+                        self.upload.file.name)
+          self.cleanup(True)
+          
   #-----------------------------------------------------------------
   # fetch next request from the db
   @transaction.commit_on_success  
@@ -135,15 +148,21 @@ class TileUpload (object):
       while not upload:
           # repeat fetching until there is one
           try:
-              upload = Upload.objects.get_next_and_lock();
+              #upload = Upload.objects.get_next_and_lock();
               #upload = Upload.objects.filter(is_locked=False).order_by('upload_time')[0]
+              upload = Upload.objects.all().order_by('upload_time')[0]
               upload.is_locked = True
               upload.save()
           except Upload.DoesNotExist:
-              # logging.debug('No uploaded request. Sleeping 10 sec.')
+              logging.debug('No uploaded request. Sleeping 10 sec.')
               # commit here, so next round see current status
-              transaction.commit()
+              #transaction.commit()
               sleep(10)
+          except IndexError:
+              logging.debug('No uploaded request. Sleeping 10 sec.')
+              # commit here, so next round see current status
+              #transaction.commit()
+              sleep(10)            
           except OperationalError, e:
               # Transaction timeout throws an OperationalError, 1205
               logging.warn("MySQL failed to fetch next upload: %s: %s" % (e[0],e[1]))
@@ -248,13 +267,15 @@ class TileUpload (object):
         (and the uploaded file if 'del_upload' is True.
     """
     # Delete the unzipped files directory
-    shutil.rmtree(self.tmptiledir, True)
+    if self.tmptiledir is not None:
+      shutil.rmtree(self.tmptiledir, True)
     self.uid=None
     self.fname=None
     self.tmptiledir=None
     if del_upload:
         # delete the uploaded file itself
-        try: os.unlink(self.upload.file.path)
+        try:
+          os.unlink(self.upload.file.path)
         except: pass
         # delete the upload db entry
         self.upload.delete()

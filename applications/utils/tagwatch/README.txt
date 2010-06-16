@@ -18,10 +18,11 @@ Dependencies:
 | 1 | edit conf file |
 |   |                |
 +---+----------------+-----------------------------------------------------+
-| 2 | run the script | perl run.pl everything else should work on its own
+| 2 | run the script | perl tagwatch.pl everything else should work on its
+|   |                | own
 |   |                |
 |   |                | Additionally all options can be pased in commandline
-|   |                |  run.pl option1=val option2=val ...
+|   |                |  tagwatch.pl option1=val option2=val ...
 |   |                | The option config_file can be used to choose another
 |   |                | configuration file.
 |   |                |

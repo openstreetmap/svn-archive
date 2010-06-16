@@ -3,7 +3,7 @@
 # Creates pages describing the tagging schemes in use within 
 # OpenStreetmap
 #-----------------------------------------------------------------
-# Usage: perl run.pl
+# Usage: perl tagwatch.pl
 # Will create an ./html/ directory and fill it with HTML files
 # Uses input from http://wiki.openstreetmap.org/index.php/Tagwatch/*
 # and other OSMwiki pages

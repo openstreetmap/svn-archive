@@ -1,0 +1,62 @@
+#! /usr/bin/perl
+
+my $BASETMP="/osm/tagwatch/tmp";
+my $WEBDIR="/osm/tagwatch/webpage/";
+my $HOME="/osm/tagwatch/tagwatch_svn";
+my $TWD;
+my @cfg =();
+system "rm","-r","$BASETMP/html";
+system "rm","-r","$BASETMP/osmfiles";
+system "rm","-r","$BASETMP/osmarender";
+system "rm -r $BASETMP/cache/outp*";
+unlink "/osm/stampfiles/tagwatch_is_NOT_running.stamp";
+if(open FILE,">","/osm/stampfiles/tagwatch_is_running.stamp")
+{
+  print FILE $$;
+  close FILE;
+}
+foreach my $arg (@ARGV)
+{
+  eval
+  {
+  chdir $HOME;
+  my $a = `date`; chomp $a; print "$a Start $arg\n";
+
+  my $cfg = `cat cron_$arg.conf`;
+  ($TWD) = ($cfg =~ /basedir *= *(.*)/);
+  my ($HTML) = ($cfg =~ /output_folder *= *(.*)/);
+  my ($OSMA) = ($cfg =~ /osmarender_folder *= *(.*)/);
+  my ($OSM) = ($cfg =~ /osmfile_folder *= *(.*)/);
+  my $FILE="upload_tw_$arg.tbz2";
+  if(!$TWD || !$HTML || !$OSMA || !$OSM)
+  {
+    die "Could not read data.";
+  }
+
+  # start building
+  system "./tagwatch.pl","config_file=cron_$arg.conf",@cfg;
+
+  my $a = `date`; chomp $a; print "$a Start uploading $arg\n";
+  # start upload
+  if(!chdir "$TWD/$HTML")
+  {
+    print "$TWD .. $HTML\n";
+    print "$TWD/$HTML\n";
+    system "pwd";
+    system "ls";
+    die "Could not change directory.";
+  }
+  my $a = `date`; chomp $a; print "$a Copy files $arg\n";
+  system "cp -r . $WEBDIR";
+  system "rm -r $TWD/$HTML/*";
+  $a = `date`; chomp $a; print "$a End $arg\n";
+  push(@cfg, "use_WikiTag_Cache=yes");
+  push(@cfg, "use_Photo_Cache=yes");
+  push(@cfg, "use_WikiSettings_Cache=yes");
+  };
+  print $@ if $@;
+}
+chdir $HOME;
+system "rm","-r",$TWD if $TWD;
+unlink "/osm/stampfiles/tagwatch_is_running.stamp";
+close FILE if open FILE,">","/osm/stampfiles/tagwatch_is_NOT_running.stamp";

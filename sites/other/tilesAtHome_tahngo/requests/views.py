@@ -1,4 +1,7 @@
-import logging, os
+import logging
+import os
+import urllib
+import xml.dom.minidom
 from django.db import transaction   #, connection
 from django.shortcuts import render_to_response
 import django.views.generic.list_detail
@@ -9,8 +12,6 @@ from tah.requests.uploadhandler import handle_uploaded_tileset
 from django.conf import settings
 from django.forms import widgets
 from datetime import datetime, timedelta
-import urllib
-import xml.dom.minidom
 from django.contrib.auth import authenticate
 from tah.tah_intern.models import Layer
 from tah.tah_intern.Tile import Tile

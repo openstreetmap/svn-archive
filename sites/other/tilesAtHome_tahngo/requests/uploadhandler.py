@@ -9,16 +9,21 @@ from shutil import move
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.models import Layer
 
-# handle uploaded tileset file
-# returns true, if it has been successfully handled (no need
-# to save the entry in the db anymore)
+
 def handle_uploaded_tileset(file, form):
-  # only handle .tileset files now
+  """Handle uploaded tileset file
+     :returns: True if it has been successfully handled
+               (no need to save the entry in the db anymore)
+  """
+
+  # only handle .tileset files
   if not file.name.lower().endswith('.tileset'):
       return False
 
+  # retrieve the uploader user id
   user = User.objects.get(pk=form['user_id'])
   logging.info("Handle uploaded file %s directly (user %s)" % (file.name,form['user_id']))
+
   # if temporary_file_path exists, the file has been saved to a tmp loc,
   # otherwise it's in RAM and still needs saving
   try:
@@ -30,9 +35,16 @@ def handle_uploaded_tileset(file, form):
       for chunk in file.chunks():
           f.write(chunk)
 
-  # set upload user id field
-  f.seek(4)
-  f.write(struct.pack('<I',form['user_id']))
+  #check whether the emptyness value is set and if yes, discard the file
+  #later. We rely on our blank database file in that case.
+  f.seek(3)
+  empty = f.read(1)
+
+  if not empty: 
+     # set upload user id field
+     f.seek(4)
+     f.write(struct.pack('<I',form['user_id']))
+
   f.close()
   # more liberal permisssions
   os.chmod(tmp_fullpath,0664)
@@ -60,11 +72,11 @@ def handle_uploaded_tileset(file, form):
   if not os.path.isdir(tset_path): os.makedirs(tset_path, 0775)
 
   # move tmp tilesetfile to final location, if it's a regular tileset
-  if tset_fsize > 1:
+  if tset_fsize > 1 and not empty:
     move(tmp_fullpath, os.path.join(tset_path, tset_fname))
     logging.info("file moved to %s" % (os.path.join(tset_path, tset_fname)))
   else:
-    # if it's empty (0 or 1 byte, delete the existing one)
+    # if it's empty (0 or 1 byte or emptiness header, delete the existing one)
     os.unlink(tmp_fullpath)
     os.unlink(os.path.join(tset_path, tset_fname))
     logging.info("delete empty tileset, layer=%s (%s,%s,%s)" % (layer, form['z'], form['x'], form['y']))

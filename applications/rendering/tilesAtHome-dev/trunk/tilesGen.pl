@@ -648,8 +648,8 @@ sub ProcessRequestsFromServer
 
     if ($Config->get("CreateTilesetFile"))
     {
-        print "Config option CreateTilesetFile is set.\n";
-        print "This is BETA, please monitor your client closely.\n";
+        print "* Config option CreateTilesetFile is set.\n";
+        print "* This is considered BETA, please monitor your client closely.\n";
     }
 
     my $req;

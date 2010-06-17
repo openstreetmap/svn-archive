@@ -1608,7 +1608,7 @@ sub createTilesetFile
     my ($z, $x, $y) = $self->{req}->ZXY();
 
     my $index_start = 8;                                    # start of tile index, currently 8
-    my $levels = $Config->get("${layer}_MaxZoom") - $z + 1; # number of layers in a tileset file, usually 6
+    my $levels = 6;                                         # number of layers in a tileset file, must be == 6 in v1 and v2 of tileset files
     my $tiles = ((4 ** $levels) - 1) / 3;                   # number of tiles, 1365 for 6 zoom levels
     my $data_offset = $index_start + (4 * ($tiles + 1));    # start offset of tile data, 5472 for 6 zoom levels
     my $size = 1;                                           # size of base zoom level, for t@h always 1

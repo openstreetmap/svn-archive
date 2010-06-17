@@ -121,7 +121,7 @@ sub parseInterface
 
 	foreach my $Language (@Languages)
 	{
-		foreach my $Line(split(/\n/, $c->get_page({title=>"Tagwatch/Interface/".ucfirst($Language)})))
+		foreach my $Line(split(/\n/, $c->get_page({title=>"Tagwatch/Interface/".ucfirst($Language)})->{'*'}))
 		{
 			if($Line =~ m{^\* (.*?) *= *(.*?)$})
 			{

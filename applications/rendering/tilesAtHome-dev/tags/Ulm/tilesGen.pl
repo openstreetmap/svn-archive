@@ -397,7 +397,7 @@ elsif ($Mode eq "upload_loop")
             
         if ($files_uploaded == 0) {
             # no error, but no files uploaded
-            talkInSleep("waiting for new ZIP files to upload",30);
+            talkInSleep("waiting for new tileset files to upload",30);
         }
         else {
             $elapsedTime = time() - $startTime;

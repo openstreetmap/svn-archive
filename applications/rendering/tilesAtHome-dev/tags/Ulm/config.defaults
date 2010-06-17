@@ -68,7 +68,7 @@ UploadTargetDirectory = /set/this/to/your/upload/directory
 UploadToDirectoryMaxQueue = 20
 
 DeleteZipFilesAfterUpload = 1
-CreateTilesetFile = 0
+CreateTilesetFile = 1
 
 Fork = 0
 ForkForUpload = 1

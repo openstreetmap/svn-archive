@@ -9,6 +9,8 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.Main;
 
 import javax.swing.JMenu;
@@ -16,8 +18,9 @@ import javax.swing.JMenuItem;
 
 import java.awt.event.ActionEvent;
 
-public class WMSRacer implements LayerChangeListener {
-	public WMSRacer() {
+public class WMSRacer extends Plugin implements LayerChangeListener {
+	public WMSRacer(PluginInformation info) {
+		super(info);
 		driveAction.updateEnabledState();
 
 		JMenu toolsMenu = Main.main.menu.toolsMenu;

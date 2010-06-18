@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from tempfile import mkstemp
 from datetime import datetime
 import logging, os, struct, stat
-from shutil import move
+import shutil
 from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.models import Layer
 
@@ -28,28 +28,27 @@ def handle_uploaded_tileset(file, form):
   # otherwise it's in RAM and still needs saving
   try:
       tmp_fullpath = file.temporary_file_path()
-      f = open(tmp_fullpath, 'r+b')
   except AttributeError:
       (tmp_fd, tmp_fullpath) = mkstemp()
       f = os.fdopen(tmp_fd, 'r+b')
       for chunk in file.chunks():
           f.write(chunk)
+          f.close()
 
   #check whether the emptyness value is set and if yes, discard the file
   #later. We rely on our blank database file in that case.
-  f.seek(3)
-  empty = f.read(1)
+  f = open(tmp_fullpath, 'r+b')
+  header = f.read(8)
+  (FILEVER, levels, size, empty, userid) = struct.unpack('<BBBBI', header)
 
-  if not empty: 
+  if not empty and userid != form['user_id']:
      # set upload user id field
      f.seek(4)
      f.write(struct.pack('<I',form['user_id']))
 
   f.close()
-  # more liberal permisssions
+  # more liberal permisssions are needed to allow reading
   os.chmod(tmp_fullpath,0664)
-
-  tset_fsize = os.stat(tmp_fullpath)[stat.ST_SIZE]
 
   ## init layer and Tileset object to retrieve the file locations
   try:
@@ -68,20 +67,18 @@ def handle_uploaded_tileset(file, form):
       logging.info("%s is no valid tileset, layer=%s, (z,x,y)=(%s,%s,%s)" % (file.name,layer, form['z'], form['x'], form['y']))
       return False
 
-  # if the path does not exist yet, create it
-  if not os.path.isdir(tset_path): os.makedirs(tset_path, 0775)
-
-  # move tmp tilesetfile to final location, if it's a regular tileset
-  if tset_fsize > 1 and not empty:
-    move(tmp_fullpath, os.path.join(tset_path, tset_fname))
-    logging.info("file moved to %s" % (os.path.join(tset_path, tset_fname)))
-  else:
-    # if it's empty (0 or 1 byte or emptiness header, delete the existing one)
+  # delete new and existing tileset if the new signals empty, and quit with success
+  if empty:
     os.unlink(tmp_fullpath)
     os.unlink(os.path.join(tset_path, tset_fname))
     logging.info("delete empty tileset, layer=%s (%s,%s,%s)" % (layer, form['z'], form['x'], form['y']))
+    return True
 
-
+  # if the path does not exist yet, create it
+  # move tmp tilesetfile to final location
+  if not os.path.isdir(tset_path): os.makedirs(tset_path, 0775)
+  shutil.move(tmp_fullpath, os.path.join(tset_path, tset_fname))
+  logging.info("file moved to %s" % (os.path.join(tset_path, tset_fname)))
 
   ### mark all satisfied requests as such.
   # now match upload with a request and mark request finished

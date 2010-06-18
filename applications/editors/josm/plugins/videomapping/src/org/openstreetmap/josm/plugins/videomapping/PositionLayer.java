@@ -7,10 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,6 +54,7 @@ import com.sun.jna.StringArray;
 
 //Basic rendering and GPS layer interaction
 public class PositionLayer extends Layer implements MouseListener,MouseMotionListener {
+	private static Set<PlayerObserver> observers = new HashSet<PlayerObserver>(); //we have to implement our own Observer pattern
 	private List<WayPoint> ls;
 	public GpsPlayer player;
 	private boolean dragIcon=false; //do we move the icon by hand?
@@ -66,8 +69,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		super(name);
 		this.ls=ls;
 		player= new GpsPlayer(ls);
-
-		icon=ImageProvider.get("videomapping.png");
+		icon = new ImageIcon("images/videomapping.png");
 		mins = new SimpleDateFormat("hh:mm:ss:S");
 		ms= new SimpleDateFormat("mm:ss");
 		Main.map.mapView.addMouseListener(this);
@@ -83,7 +85,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 
 	@Override
 	public Object getInfoComponent() {
-		return tr("{0} covers {1}% of GPS track",gps.getVideo().getName(),gps.getCoverage()*10);
+		String temp;
+		String sep=System.getProperty("line.separator");
+		temp=tr("{0} {1}% of GPS track",gps.getVideo().getName(),gps.getCoverage()*10+sep);
+		temp=temp+gps.getNativePlayerInfos();
+		return temp;
 	}
 
 	@Override
@@ -128,8 +134,17 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		for(WayPoint n: ls) {
 			p = Main.map.mapView.getPoint(n.getEastNorth());
 			g.drawOval(p.x - 2, p.y - 2, 4, 4);
+		}
+		//draw synced points
+		g.setColor(Color.ORANGE);
+		for(WayPoint n: ls) {
+			if(n.attr.containsKey("synced"))
+			{
+				p = Main.map.mapView.getPoint(n.getEastNorth());
+				g.drawOval(p.x - 2, p.y - 2, 4, 4);
 			}
-		//draw surrounding points
+		}
+		//draw current segment points
 		g.setColor(Color.YELLOW);
 		if(player.getPrev()!=null)
 		{
@@ -175,13 +190,14 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		}
 	}
 	
+	//finds the first waypoint that is nearby the given point
 	private WayPoint getNearestWayPoint(Point mouse)
 	{
 		final int MAX=10;
 		Point p;
 		Rectangle rect = new Rectangle(mouse.x-MAX/2,mouse.y-MAX/2,MAX,MAX);
 		//iterate through all possible notes
-		for(WayPoint n : ls) //TODO this is not very clever, what better way to find this WP?
+		for(WayPoint n : ls) //TODO this is not very clever, what better way to find this WP? Hashmaps? Divide and Conquer?
 		{
 			p = Main.map.mapView.getPoint(n.getEastNorth());
 			if (rect.contains(p))
@@ -227,7 +243,6 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 				{
 					mouse=e.getPoint();
 					dragIcon=true;
-					//ani.cancel();
 				}
 			}
 		}
@@ -249,7 +264,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 				if(wp!=null)
 				{
 					player.jump(wp);
-					if(gps!=null) gps.notifyGPSClick();
+					if(gps!=null) notifyObservers(player.getRelativeTime()); //call videoplayer to set rigth position
 				}
 			}
 			Main.map.mapView.repaint();
@@ -289,4 +304,28 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		this.gps = player;
 		
 	}
+	
+	public static void addObserver(PlayerObserver observer) {
+
+        observers.add(observer);
+
+    }
+
+ 
+
+    public static void removeObserver(PlayerObserver observer) {
+
+        observers.remove(observer);
+
+    }
+
+    private static void notifyObservers(long newTime) {
+
+        for (PlayerObserver o : observers) {
+
+            o.jumping(newTime);
+
+        }
+
+    }
 }

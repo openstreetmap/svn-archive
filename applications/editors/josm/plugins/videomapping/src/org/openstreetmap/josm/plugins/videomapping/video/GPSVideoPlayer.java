@@ -8,10 +8,12 @@ import java.util.TimerTask;
 
 import javax.swing.JButton;
 
+import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.videomapping.GpsPlayer;
+import org.openstreetmap.josm.plugins.videomapping.PlayerObserver;
 
-//combines video and GPS playback
-public class GPSVideoPlayer{
+//combines video and GPS playback, major control has the video player
+public class GPSVideoPlayer implements PlayerObserver{
 	Timer t;
 	TimerTask syncGPSTrack;
 	private GpsPlayer gps;
@@ -41,14 +43,41 @@ public class GPSVideoPlayer{
 				file= new GPSVideoFile(file, diff);
 				syncBtn.setBackground(Color.GREEN);
 				synced=true;
+				markSyncedPoints();
 				gps.play();
 			}
 		});
 		setSyncMode(true);
 		video.addComponent(syncBtn);
+		//allow sync
+		SimpleVideoPlayer.addObserver(new PlayerObserver() {
+
+			public void playing(long time) {
+				//sync the GPS back
+				if(synced) gps.jump(getGPSTime(time));
+				
+			}
+
+			public void jumping(long time) {
+			
+			}
+			
+			
+		});
 		t = new Timer();		
 	}
 	
+	//marks all points that are covered by video AND GPS track
+	private void markSyncedPoints() {
+		long time;
+		//TODO this is poor, a start/end calculation would be better
+		for (WayPoint wp : gps.getTrack()) {
+			time=getVideoTime(gps.getRelativeTime(wp));
+			if(time>0) wp.attr.put("synced", "true");
+		}
+		
+	}
+
 	public void setSyncMode(boolean b)
 	{
 		if(b)
@@ -72,9 +101,20 @@ public class GPSVideoPlayer{
 	
 	public void play(long gpsstart)
 	{
+		//video is already playing
 		jumpToGPSTime(gpsstart);
 		gps.jump(gpsstart);
-		gps.play();
+		//gps.play();
+	}
+	
+	public void play()
+	{
+		video.play();
+	}
+	
+	public void pause()
+	{
+		video.pause();
 	}
 	
 	//jumps in video to the corresponding linked time
@@ -95,11 +135,7 @@ public class GPSVideoPlayer{
 		return videoTime+file.offset;
 	}
 
-	//when we clicked on the layer, here we update the video position
-	public void notifyGPSClick() {
-		if(synced) jumpToGPSTime(gps.getRelativeTime());
-		
-	}
+	
 
 	public void setJumpLength(Integer integer) {
 		video.setJumpLength(integer);
@@ -146,6 +182,37 @@ public class GPSVideoPlayer{
 
 	public void setAutoCenter(boolean selected) {
 		gps.setAutoCenter(selected);
+		
+	}
+
+	
+	//not called by GPS
+	public boolean playing() {
+		return video.playing();
+	}
+
+	//when we clicked on the layer, here we update the video position
+	public void jumping(long time) {
+		if(synced) jumpToGPSTime(gps.getRelativeTime());
+		
+	}
+
+	public String getNativePlayerInfos() {
+		return video.getNativePlayerInfos();
+	}
+
+	public void faster() {
+		video.faster();
+		
+	}
+
+	public void slower() {
+		video.slower();
+		
+	}
+
+	public void playing(long time) {
+		// TODO Auto-generated method stub
 		
 	}
 

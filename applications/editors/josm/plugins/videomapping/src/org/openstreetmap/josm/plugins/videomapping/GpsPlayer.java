@@ -90,13 +90,28 @@ public class GpsPlayer {
 		}
 	}
 	
+	//wal k waypoints forward/backward
+	public void jumpRel(int k)
+	{
+
+		if ((ls.indexOf(curr)+k>0)&&(ls.indexOf(curr)<ls.size())) //check range
+		{
+			jump(ls.get(ls.indexOf(curr)+k));
+		}
+		Main.map.mapView.repaint();
+	}
+	
 	//select the k-th waypoint
 	public void jump(int k)
 	{
-		if ((ls.indexOf(curr)+k>0)&&(ls.indexOf(curr)<ls.size()))
+		if (k>0)
 		{
-			jump(ls.get(ls.indexOf(curr)+k)); //FIXME here is a bug
-		}		
+			if ((ls.indexOf(curr)+k>0)&&(ls.indexOf(curr)<ls.size())) //check range
+			{
+				jump(ls.get(k));
+			}
+			Main.map.mapView.repaint();
+		}
 	}
 	
 	//gets only points on the line of the GPS track (between waypoints) nearby the point m
@@ -293,19 +308,23 @@ public class GpsPlayer {
 	//returns time in ms relatie to startpoint
 	public long getRelativeTime()
 	{
-		return curr.getTime().getTime()-start.getTime().getTime(); //TODO assumes timeintervall is constant!!!!
+		return getRelativeTime(curr);
+	}
+	
+	public long getRelativeTime(WayPoint p)
+	{
+		return p.getTime().getTime()-start.getTime().getTime(); //TODO assumes timeintervall is constant!!!!
 	}
 
 	//jumps to a specific time
 	public void jump(long relTime) {
-		int pos = (int) (relTime/1000);//TODO ugly quick hack	
-		jump(pos);		
-		
+		int pos = Math.round(relTime/1000);//TODO ugly quick hack	
+		jump(pos);				
 	}
 	
 	//toggles walking along the track
 	public void play()
-	{
+	{ /*
 		if (t==null)
 		{
 			//start
@@ -328,7 +347,7 @@ public class GpsPlayer {
 			ani=null;
 			t.cancel();
 			t=null;					
-		}
+		}*/
 	}
 
 	public long getLength() {
@@ -338,6 +357,11 @@ public class GpsPlayer {
 	public void setAutoCenter(boolean b)
 	{
 		this.autoCenter=b;
+	}
+	
+	public List<WayPoint> getTrack()
+	{
+		return ls;
 	}
 
 

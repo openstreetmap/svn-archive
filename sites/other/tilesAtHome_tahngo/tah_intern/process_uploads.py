@@ -58,7 +58,7 @@ class TileUpload (object):
           logging.info('No corresponding file to upload')
           self.cleanup(True)
           return
-        
+
       if self.upload.file.name.lower().endswith('.zip') and os.path.isfile(self.fname):
         # existing zip file
         #logging.debug('Handling next zip file: ' + self.upload.file.name)
@@ -130,7 +130,8 @@ class TileUpload (object):
       elif self.upload.file.name.lower().endswith('.tileset') \
           and os.path.isfile(self.fname):
           # handle existing .tileset file
-          logging.info("upload processor does not handle tileset files %s. user %s(%d)." % (self.upload.file.name,self.upload.user_id,self.upload.client_uuid))
+          logging.info("Processor does not handle tileset files %s. user %s(%d)."
+                       % (self.upload.file.name,self.upload.user_id,self.upload.client_uuid))
           self.cleanup(True)
           
       else:
@@ -156,25 +157,22 @@ class TileUpload (object):
           except Upload.DoesNotExist:
               logging.debug('No uploaded request. Sleeping 10 sec.')
               # commit here, so next round see current status
-              #transaction.commit()
+              transaction.commit()
               sleep(10)
           except IndexError:
               logging.debug('No uploaded request. Sleeping 10 sec.')
               # commit here, so next round see current status
-              #transaction.commit()
+              transaction.commit()
               sleep(10)            
           except OperationalError, e:
               # Transaction timeout throws an OperationalError, 1205
               logging.warn("MySQL failed to fetch next upload: %s: %s" % (e[0],e[1]))
+              # commit here, so next round see current status
+              transaction.commit()
               sleep(10)
 
       logging.debug('Fetching next job from db in %.1f sec' % (time()-before_sql))
       return upload
-  #-----------------------------------------------------------------
-  def handle_tilesetfile(self):
-    #TODO not implemented yet
-    return None
-
 
   #-----------------------------------------------------------------
   def unzip(self):
@@ -293,8 +291,8 @@ def sigterm(signum, frame):
 
 #---------------------------------------------------------------------
 if __name__ == '__main__':
-  config = Settings()
-  logging.basicConfig(level=logging.DEBUG,
+    config = Settings()
+    logging.basicConfig(level=logging.DEBUG,
                     #format='%(asctime)s %(levelname)s %(message)s',
                     format='%(asctime)s %(message)s',
                     datefmt = "%m-%d %H:%M:%S", 
@@ -302,19 +300,21 @@ if __name__ == '__main__':
                     filename= config.getSetting(name='logFile'),
                     ) 
 
-  logging.info('Starting tile upload processor. (log level %s)' %\
-               logging.getLevelName(logging.getLogger().getEffectiveLevel()))
-  signal.signal(signal.SIGTERM, sigterm)
+    logging.info('Starting tile upload processor. (log level %s)' %\
+                 logging.getLevelName(logging.getLogger().getEffectiveLevel()))
+    signal.signal(signal.SIGTERM, sigterm)
 
-  # set all Uploads to unlocked when starting up
-  #Upload.objects.all().update(is_locked=False)
+    # set all Uploads to unlocked when starting up to prevent stale
+    # locked uploads from previous runs
+    Upload.objects.all().update(is_locked=False)
 
-  uploader = TileUpload(config)
-  uploader.run()
-          #logging.critical('Upload handling thread %d returned with error. Aborting.' % i)
-          #sys.stderr.write('Upload handling thread %d returned with error' % i)
-          #sys.exit(1)
-
+    # and start the uploader thread
+    uploader = TileUpload(config)
+    uploader.run()
+    logging.critical('Upload handler exiting now')
+    print('Upload handler exiting now')
+  
 else:
-  sys.stderr.write('You need to run this as the main program.')
-  sys.exit(1)
+    # protect us from being run other than __main__
+    sys.stderr.write('You need to run this as the main program.')
+    sys.exit(1)

@@ -77,7 +77,6 @@ sub processOSMFiles
 		my %IgnoredValues;
 		my %Usage;
 		my %User;
-		my %Editors;
 		my %Stats;
 	
 		my @TempCombi;
@@ -134,11 +133,6 @@ sub processOSMFiles
 						$Relationtype =~ s/^ $/-/g;
 					}
 
-					# get some more statistics about the used editors
-					if($Key eq 'created_by')
-					{
-						$Editors{$Value}++;
-					}
 					if(!$IgnoreTags{$Key})      # Ignored tags
 					{
 						my $TempTagName;
@@ -184,7 +178,7 @@ sub processOSMFiles
 						{
 							foreach my $regex(@IgnoreValues)   # Values that will be ignored (grouped with "*")
 							{
-								if($Key =~ m{$regex}i)
+								if($Key =~ m{$regex})
 								{
 									$TempTagName = "$Key=*";
 									$Value = "*";
@@ -385,17 +379,6 @@ sub processOSMFiles
 			printf KEYUSAGE "%d %s\n", $Keys{$KeyName}, $KeyName;		
 		}
 		close KEYUSAGE;
-
-		#+++++++++++++++++++++++++++++++++++
-		# Write down editor usage stats
-		#+++++++++++++++++++++++++++++++++++
-		open(EDITORUSAGE, ">","$OutputDir/editorlist.txt");
-
-		foreach my $EditorName(sort {$Editors{$b} <=> $Editors{$a}} keys %Editors) 
-		{
-			printf EDITORUSAGE "%d %s\n", $Editors{$EditorName}, $EditorName;		
-		}
-		close EDITORUSAGE;
 
 		#+++++++++++++++++++++++++++++++++++
 		# Write down the user statistics page

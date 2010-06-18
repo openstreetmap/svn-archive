@@ -32,7 +32,6 @@ my %OsmRelationUsage;
 my %UsedUndocumentedKeys;
 my %UsedUndocumentedTags;
 my %UsedUndocumentedRelations;
-my %EditorUsage;
 my $Country;
 my $Date;
 my $curDataDir;
@@ -131,7 +130,6 @@ sub constructHTML
 			buildAllKeyList($Language);
 			buildTopUndocumentedKeys($Language);
 			buildTopUndocumentedTags($Language);
-			buildTopUsedEditors($Language);
 
 			# build index pages
 			buildIndexWatchlist($Language);
@@ -720,103 +718,6 @@ sub buildTopUndocumentedRelations
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_relations'}->{$Language},$Config{'undocumented_list'}));
 	
 	open(TOP, ">","$curOutputDir/top_undocumented_relations$Config{html_file_extension}");
-	print TOP $template->output;
-  	close TOP;
-}
-
-
-#--------------------------------------------------------------------------
-# create list with all tags that are not documented in the wiki
-#--------------------------------------------------------------------------
-sub buildTopUsedEditors
-{
-	my ($Language) = @_;
-
-	my %editorlist;
-
-	# read in the list og the used editors
-	open(EDITORLIST, "<","$curDataDir/editorlist.txt") || return "";
-		
-	while(my $Line = <EDITORLIST>)
-	{
-		if($Line =~ m{(\d+) (.*)})
-		{
-			$editorlist{$2}  = $1;
-		}
-	}
-	close EDITORLIST;
-
-	my @tmplLoop;
-	my $count = 0;
-
-	# go through the list
-	foreach my $Editor(sort {$editorlist{$b} <=> $editorlist{$a}} keys %editorlist)
-	{
-		my %row = ("tag"    => $Editor,
-			   "tagAPI" => api_link("created_by",$Editor),
-               		   "count"  => $editorlist{$Editor});
-
-		# only list as many tags as mentioned in the config file
-		if($count <= $Config{'undocumented_list'})
-		{ 
-			push(@tmplLoop, \%row);
-		}
-		$count++;
-
-		# build short usage statistics
-		if($Editor =~ m{Potlatch (.*)})
-		{
-			$EditorUsage{'Potlatch'} += $editorlist{$Editor};
-		}
-
-		# build short usage statistics
-		if($Editor =~ m{JOSM(.*)})
-		{
-			$EditorUsage{'JOSM'} += $editorlist{$Editor};
-		}
-
-		# build short usage statistics
-		if($Editor =~ m{Merkaartor (.*)})
-		{
-			$EditorUsage{'Merkaartor'} += $editorlist{$Editor};
-		}
-
-		# build short usage statistics
-		if($Editor =~ m{YahooApplet (.*)})
-		{
-			$EditorUsage{'YahooApplet'} += $editorlist{$Editor};
-		}
-	}
-
-	#++++++++++++++++++++++++++++
-	# fill template
-	#++++++++++++++++++++++++++++
-	my $template = HTML::Template->new(filename => 'template/top_editors.tmpl');
-
-	# header informations
-	$template->param(country   => $Country);
-	$template->param(indexfile => $Config{indexname});
-
-	# create translation navigationlist
-	my $linklist = $lang_links;
-	$linklist  =~ s/%s/top_used_editors$Config{html_file_extension}/g;
-	$template->param(lang_links => $linklist);
-
-	# add statistical information
-	$template->param(toplist  => \@tmplLoop);
-
-	# parse translated interface sections
-	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
-	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
-	$template->param(interlang_interlang   => $Interface{'interlang'}->{$Language});
-	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
-	$template->param(interlang_credits     => sprintf($Interface{'credits'}->{$Language}, "<a href=\"http://wiki.openstreetmap.org/index.php/Tagwatch\" target=\"_blank\">Tagwatch</a>"));
-
-	$template->param(interlang_tag             => $Interface{'editors'}->{$Language});
-	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
-	$template->param(interlang_topundocumented => sprintf($Interface{'top_used_editors'}->{$Language},$Config{'undocumented_list'}));
-	
-	open(TOP, ">","$curOutputDir/top_used_editors$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -1655,17 +1556,6 @@ sub buildIndexGeneral
 	}
 	close STATS;
 
-	my @tmplLoop;
-	my $count = 0;
-
-	# go through the list
-	foreach my $Editor(sort {$EditorUsage{$b} <=> $EditorUsage{$a}} keys %EditorUsage)
-	{
-		my %row = ("editor_name" => $Editor,
-               		   "editor_usage"  => $EditorUsage{$Editor});
-		push(@tmplLoop, \%row);
-	}
-
 	#++++++++++++++++++++++++++++
 	# fill template
 	#++++++++++++++++++++++++++++
@@ -1702,9 +1592,6 @@ sub buildIndexGeneral
 	$template->param(all_ways             => $Statistics{$Country}->{'ways'});
 	$template->param(all_relations        => $Statistics{$Country}->{'relations'});
 
-	#editor stats
-	$template->param(editorlist             => \@tmplLoop);
-
 	# parse translated interface sections
 	$template->param(interlang_headertitle => sprintf($Interface{'headertitle'}->{$Language}, $Country));
 	$template->param(interlang_headertext  => sprintf($Interface{'headertext'}->{$Language}, $Country, $Date));
@@ -1724,11 +1611,6 @@ sub buildIndexGeneral
 	$template->param(interlang_generalstats  => $Interface{'generalstats'}->{$Language});
 	$template->param(interlang_generalstats1 => sprintf($Interface{'generalstats1'}->{$Language}, $Country));
 	$template->param(interlang_generalstats2 => sprintf($Interface{'generalstats2'}->{$Language}, $Statistics{$Country}->{'user'}));
-
-	$template->param(interlang_editorstats  => $Interface{'editorstats'}->{$Language});
-	$template->param(interlang_editorstats1 => sprintf($Interface{'editorstats1'}->{$Language},"<a href=\"top_used_editors$Config{html_file_extension}\">$Interface{editorstats2}->{$Language}</a>"));
-	$template->param(interlang_editors      => $Interface{'editors'}->{$Language});
-	$template->param(interlang_usage        => $Interface{'usage'}->{$Language});
 
 	$template->param(interlang_elements    => $Interface{'elements'}->{$Language});
 	$template->param(interlang_key         => $Interface{'key'}->{$Language});

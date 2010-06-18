@@ -5,13 +5,20 @@
 DSN = 'dbname=gis'
 
 import sys
+import commands
 import psycopg2
 import csv
 import re
 from numpy import *
 
 highwaytypes = {
+    'trunk':['<0.9,1,0.9>',1.0],
+    'trunk_link':['<0.9,1,0.9>',1.0],
+    'primary':['<1,1,0.9>',1.0],
+    'primary_link':['<1,1,0.9>',1.0],
     'secondary':['<1,0.9,0.9>',1.0],
+    'secondary_link':['<1,0.9,0.9>',1.0],
+    'tertiary':['<1,0.9,0.8>',1.0],
     'residential':['<0.9,0.9,0.9>',0.8],
     'living_street':['<0.8,0.8,0.9>',0.8],
     'unclassified':['<0.8,0.8,0.8>',0.8],
@@ -30,7 +37,9 @@ buildingtypes = {
 amenitybuildingtypes = {
     'place_of_worship':['<1,1,0.6>',1.0],
     'hospital':['<1,0.6,0.6>',1.0],
-    'university':['<0.6,1,0.8>',1.0]
+    'theatre':['<1,0.6,1>',1.0],
+    'university':['<0.6,1,0.8>',1.0],
+    'parking':['<0.6,0.6,1>',1.0]
     }
 
 def avg(a,b): return (a+b)/2.0
@@ -70,26 +79,77 @@ def pov_highway(f,highway):
     linestring = linestring[11:] # cut off the "LINESTRING("
     linestring = linestring[:-1] # cut off the ")"
     points = linestring.split(',')
+    lanes = highway[3]
+    if lanes==None:
+        lanefactor=2.0 # 2 lanes seems to be default
+    else:
+        lanefactor=float(lanes)
+    lanewidth = 2.5 # m
+    streetwidth = lanewidth * lanefactor
 
+    layer = highway[4]
+    if layer==None:
+        layer='0'
+    layer = int(layer)
+    if layer<0:
+        layer=0 # FIXME
+    layerheight = 4.0*layer # 4 m per layer
+    layerheight = layerheight / 0.05 # counteract the scale statement
     numpoints = len(points)
+
+# draw road
     f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+2))
     f.write("/* osm_id={0} */\n".format(highway[0]))
 
     for i,point in enumerate(points):
         latlon = point.split(' ')
         if (i==0):
-            f.write("  <{0}, 0, {1}>,5*{2}\n".format(latlon[0],latlon[1],highwayparams[1]))
-        f.write("  <{0}, 0, {1}>,5*{2}\n".format(latlon[0],latlon[1],highwayparams[1]))
+            f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth*highwayparams[1],layerheight))
+        f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth*highwayparams[1],layerheight))
         if (i==numpoints-1):
-           f.write("  <{0}, 0, {1}>,5*{2}\n".format(latlon[0],latlon[1],highwayparams[1]))
+           f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth*highwayparams[1],layerheight))
 
-    print highwayparams[0],highwayparams[1]
-    f.write("""  tolerance 1000
-   
-   pigment {{
-      color rgb {0}
-   }}
-   scale <1, 0.1, 1>
+    print highwayparams[0],highwayparams[1],streetwidth
+    f.write("""  tolerance 1
+    texture {{
+        pigment {{
+            color rgb {0}
+        }}
+        finish {{
+            specular 0.05
+            roughness 0.05
+            /*reflection 0.5*/
+        }}
+    }}
+    scale <1, 0.05, 1>
+}}
+\n""".format(highwayparams[0]))
+# draw casing
+    f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+2))
+    f.write("/* osm_id={0} */\n".format(highway[0]))
+
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+        if (i==0):
+            f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],1.2*streetwidth*highwayparams[1],layerheight))
+        f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],1.2*streetwidth*highwayparams[1],layerheight))
+        if (i==numpoints-1):
+           f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],1.2*streetwidth*highwayparams[1],layerheight))
+
+    print highwayparams[0],highwayparams[1],streetwidth
+    f.write("""  tolerance 1
+    texture {{
+        pigment {{
+            color rgb <0.2,0.2,0.2>
+        }}
+        finish {{
+            specular 0.05
+            roughness 0.05
+            /*reflection 0.5*/
+        }}
+    }}
+    scale <1, 0.05, 1>
+    translate <0, -0.1, 0>
 }}
 \n""".format(highwayparams[0]))
 
@@ -100,9 +160,9 @@ def parse_length_in_meters(length,default):
            'ft':0.3,
            'yd':1.1,
            }
-    parsed = re.split('(\d*[,.]?\d+)','length')
+    parsed = re.split('(\d*[,.]?\d+)',length)
     if len(parsed)!=3:
-        print "### unparsable length '{0}'".format(length)
+        print "### unparsable length '{0}', parsed: {1}".format(length,parsed)
         return default
     prefix = parsed[0].strip()
     if prefix!='':
@@ -159,14 +219,38 @@ def pov_building(f,building):
 
     if height != 10.0:
         print 'height:', height
-        color = '<0,1,0>'
+        #color = '<0,1,0>'
     f.write("""
-   pigment {{
-      color rgb {0}
-   }}
-   scale <1, 100, 1>
+    texture {{
+        pigment {{
+            color rgb {0}
+        }}
+        finish {{
+            specular 0.5
+            roughness 0.05
+            /*reflection 0.5*/
+        }}
+    }}
+    scale <1, {1}, 1>
 }}
-\n""".format(color))
+\n""".format(color,height))
+
+def pov_globals(f):
+    globsettings = """
+global_settings {{
+    assumed_gamma 1.5
+    noise_generator 2
+/*
+    radiosity {{
+        count 1000
+        error_bound 0.7
+        recursion_limit 6
+        pretrace_end 0.002
+    }}
+*/
+}}
+"""
+    f.write(globsettings.format())
 
 def pov_camera(f,bbox):
     polygonstring = bbox[0][0]
@@ -187,32 +271,35 @@ def pov_camera(f,bbox):
             top=float(latlon[1])
 
     print bottom,left,top,right
-    zoom = 1.0
-    zoom = 2500.0/zoom
+    zoom = 1.5
+    zoom = 1100.0/zoom
     f.write("""
 camera {{
    orthographic
-   location <{0}, 10000, {1}-500>
+   location <0, 10000, 0>
    sky <0, 1, 0>
    direction <0, 0, 1>
    right <1.3333*{2}, 0, 0>
-   up <0, 1*{2}, 0>
-   look_at <{0}, 0, {1}>
+   up <0, 1*{2}*cos(radians({3})), 0>
+   look_at <0, 0, 0>
+   rotate <-{3},0,0>
+   scale <1,1,1>
+   translate <{0},0,{1}>
 }}
-\n""".format(avg(left,right),avg(bottom,top),zoom))
+""".format(avg(left,right),avg(bottom,top),zoom,10))
     f.write("""
+/* ground */
 box {{
-   <{0}, -0.5, {1}>, <{2}, -0.0, {3}>
-   
-   pigment {{
-      color rgb <1, 1, 0.901961>
-   }}
+    <{0}, -0.5, {1}>, <{2}, -0.0, {3}>
+    pigment {{
+        color rgb <1, 1, 0.901961>
+    }}
 }}
-\n""".format(left,bottom,right,top))
+""".format(left,bottom,right,top))
 
     #f.write("""light_source {{ <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
-    f.write("""light_source { <100000, 5000000, -200000>, rgb <1, 1, 1> }\n""")
+    f.write("""light_source {{ <300000+{0}, 1000000, -1000000+{1}>, rgb <1, 1, 1> }}\n""".format(avg(left,right),avg(bottom,top)))
 
 
 if len(sys.argv) == 2:
@@ -225,7 +312,7 @@ conn = psycopg2.connect(DSN)
 print "Encoding for this connection is", conn.encoding
 curs = conn.cursor()
 
-f = open('/home/kayd/workspace/Parking/osray/pov_highways.pov', 'w')
+f = open('/home/kayd/workspace/Parking/osray/scene-osray.pov', 'w')
 
 """
 SELECT ST_AsText(transform("way",4326)) AS geom
@@ -244,13 +331,19 @@ coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate
 FlW = "FROM planet_osm_line WHERE"
 FpW = "FROM planet_osm_polygon WHERE"
 
-curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
+thebbox = "9.94861 49.79293,9.96912 49.80629"
+googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
+
+#curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
+curs.execute("SELECT ST_AsText("+googbox+") AS geom")
+
 bbox = curs.fetchall()
+pov_globals(f)
 pov_camera(f,bbox)
 
 highways = []
 for highwaytype in highwaytypes.iterkeys():
-    curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom "+FlW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and highway='"+highwaytype+"' LIMIT 2000;")
+    curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer "+FlW+" \"way\" && "+googbox+" and highway='"+highwaytype+"' LIMIT 2000;")
     highways += curs.fetchall()
 
 for highway in highways:
@@ -259,7 +352,7 @@ for highway in highways:
 
 buildings = []
 for buildingtype in buildingtypes.iterkeys():
-    curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+FpW+" \"way\" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913) and building='"+buildingtype+"' LIMIT 1700;")
+    curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+FpW+" \"way\" && "+googbox+" and building='"+buildingtype+"' LIMIT 1700;")
     buildings += curs.fetchall()
 
 for building in buildings:
@@ -269,72 +362,6 @@ f.close()
 
 conn.rollback()
 
+print commands.getstatusoutput('povray osray[hi]')
+
 sys.exit(0)
-
-                             
-"""
-SELECT
-   ST_Y(way) AS lat_wgs84,
-   ST_X(way) AS lon_wgs84,
-   ST_X(transform(way, 31466)) AS KOORD_X,
-   ST_Y(transform(way, 31466)) AS KOORD_Y,
-   skeys(tags) AS key,
-   svals(tags) AS value,
-   osm_id
-FROM
-   dortmund_point
-WHERE
-   exist(tags, 'amenity')
-LIMIT 10;
-
-SELECT
-   ST_Y(way) AS lat_wgs84,
-   ST_X(way) AS lon_wgs84,
-   ST_X(transform(way, 31466)) AS KOORD_X,
-   ST_Y(transform(way, 31466)) AS KOORD_Y,
-   key,
-   value,
-   tags->'name' as name,
-   osm_id
-FROM
-   (SELECT
-       osm_id, way, tags,
-       (each(tags)).key,
-       (each(tags)).value
-    FROM
-       dortmund_point
-    WHERE
-       exist(tags, 'amenity') /*AND exist(tags, 'name')*/
-   ) AS sq
-WHERE
-   key = 'amenity'
-LIMIT 10;
-
-SELECT
-   ST_Y(way) AS lat_wgs84,
-   ST_X(way) AS lon_wgs84,
-   ST_X(transform(way, 31466)) AS KOORD_X,
-   ST_Y(transform(way, 31466)) AS KOORD_Y,
-   key,
-   value,
-   tags->'name' as name,
-   tags->'sport' as sport,
-   osm_id
-FROM
-   (SELECT
-       osm_id, tags,
-       ST_Centroid(way) as way,
-       (each(tags)).key,
-       (each(tags)).value
-    FROM
-       dortmund_polygon
-    WHERE
-       tags->'natural' = 'water'
-       AND
-       tags->'sport' = 'swimming'
-   ) AS sq
-WHERE
-   key = 'natural'
-LIMIT 10;
-"""
-

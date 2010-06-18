@@ -1,4 +1,15 @@
 
+global_settings {
+    assumed_gamma 1.5
+    noise_generator 2
+    radiosity {
+        count 1000
+        error_bound 0.7
+        recursion_limit 6
+        pretrace_end 0.002
+    }
+}
+
 camera {
    orthographic
    location <1105654.68222, 10000, 6410707.51183-500>
@@ -9,16 +20,14 @@ camera {
    look_at <1105654.68222, 0, 6410707.51183>
 }
 
-
+/* ground */
 box {
-   <1104843.71973, -0.5, 6409669.39142>, <1106465.64471, -0.0, 6411745.63224>
-   
-   pigment {
-      color rgb <1, 1, 0.901961>
-   }
+    <1104843.71973, -0.5, 6409669.39142>, <1106465.64471, -0.0, 6411745.63224>
+    pigment {
+        color rgb <1, 1, 0.901961>
+    }
 }
-
-light_source { <100000, 5000000, -200000>, rgb <1, 1, 1> }
+light_source { <100000, 50000000, -200000>, rgb <1, 1, 1> }
 sphere_sweep { linear_spline, 6,
 /* osm_id=4568530 */
   <1105083.45, 0, 6410564.57>,5*0.8

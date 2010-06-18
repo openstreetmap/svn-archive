@@ -79,9 +79,16 @@ def pov_highway(f,highway):
     linestring = linestring[11:] # cut off the "LINESTRING("
     linestring = linestring[:-1] # cut off the ")"
     points = linestring.split(',')
+
+    oneway = False
+    if(highway[5]=='yes'):
+        oneway=True
+
     lanes = highway[3]
     if lanes==None:
         lanefactor=2.0 # 2 lanes seems to be default
+        if oneway:
+            lanefactor=1.0 # except for one-ways
     else:
         lanefactor=float(lanes)
     lanewidth = 2.5 # m
@@ -95,6 +102,7 @@ def pov_highway(f,highway):
         layer=0 # FIXME
     layerheight = 4.0*layer # 4 m per layer
     layerheight = layerheight / 0.05 # counteract the scale statement
+
     numpoints = len(points)
 
 # draw road
@@ -343,7 +351,7 @@ pov_camera(f,bbox)
 
 highways = []
 for highwaytype in highwaytypes.iterkeys():
-    curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer "+FlW+" \"way\" && "+googbox+" and highway='"+highwaytype+"' LIMIT 2000;")
+    curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+FlW+" \"way\" && "+googbox+" and highway='"+highwaytype+"' LIMIT 2000;")
     highways += curs.fetchall()
 
 for highway in highways:

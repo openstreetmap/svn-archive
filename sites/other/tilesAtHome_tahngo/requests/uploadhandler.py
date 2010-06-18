@@ -67,18 +67,28 @@ def handle_uploaded_tileset(file, form):
       logging.info("%s is no valid tileset, layer=%s, (z,x,y)=(%s,%s,%s)" % (file.name,layer, form['z'], form['x'], form['y']))
       return False
 
-  # delete new and existing tileset if the new signals empty, and quit with success
+  # delete new and existing tileset files if the new is 'empty'
   if empty:
-    os.unlink(tmp_fullpath)
-    os.unlink(os.path.join(tset_path, tset_fname))
-    logging.info("delete empty tileset, layer=%s (%s,%s,%s)" % (layer, form['z'], form['x'], form['y']))
-    return True
+      try:
+          os.unlink(tmp_fullpath)
+          os.unlink(os.path.join(tset_path, tset_fname))
+      except OSError, e:
+          if e.errno == 2:
+              pass
+          else:
+              raise
+      logging.debug("delete empty tileset, layer=%s (%s,%s,%s)" % (layer, form['z'], form['x'], form['y']))
+      tset_fsize = 0
+  else:
+      # file size is needed to add them to the user stats later
+      tset_fsize = os.stat(tmp_fullpath)[stat.ST_SIZE]
 
-  # if the path does not exist yet, create it
-  # move tmp tilesetfile to final location
-  if not os.path.isdir(tset_path): os.makedirs(tset_path, 0775)
-  shutil.move(tmp_fullpath, os.path.join(tset_path, tset_fname))
-  logging.debug("Tileset file moved to %s" % (os.path.join(tset_path, tset_fname)))
+      # if the path does not exist yet, create it
+      # move tmp tilesetfile to final location
+      if not os.path.isdir(tset_path): os.makedirs(tset_path, 0775)
+      shutil.move(tmp_fullpath, os.path.join(tset_path, tset_fname))
+      logging.debug("Tileset file moved to %s" %
+                    (os.path.join(tset_path, tset_fname)))
 
   ### mark all satisfied requests as such.
   # now match upload with a request and mark request finished
@@ -98,12 +108,14 @@ def handle_uploaded_tileset(file, form):
               logging.info("tileset marked request as fulfilled (z,x,y) (%d,%d,%d)" % (req.min_z,req.x,req.y))
           except OperationalError, (errnum,errmsg):
               # e.g. MySQL transaction timeout, quit
+              logging.info("MySQL error marking request (%d,%d,%d,%s) finished" % (req.min_z,req.x,req.y,layer))
               return False
 
   ### add user stats for this upload
   tahuser = user.tahuser_set.get()
-  try: tahuser.kb_upload += tset_fsize // 1024
-  except OSError: pass # don't crap out if we don't find a file
+  if tset_fsize:
+    tahuser.kb_upload += tset_fsize // 1024
+  #XXXTODO: rather than hardcoding 1265 tiles per fileset we can now calculate the true number for v2
   tahuser.renderedTiles += 1365
   tahuser.save()
 

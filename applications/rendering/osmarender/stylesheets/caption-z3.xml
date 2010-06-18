@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
-<!-- Render just captions for z4 -->
+<!-- Render just captions for z3 -->
 
 <rules
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -64,8 +64,8 @@
                 stroke-miterlimit: 1.5;
             }
 
-            .country-caption-casing { font-size: 10000px; stroke-width: 3000px; }
-            .country-caption        { font-size: 10000px; }
+            .country-caption-casing { font-size: 20000px; stroke-width: 6000px; }
+            .country-caption        { font-size: 20000px; }
 
 
 

@@ -253,7 +253,7 @@ function init() {
 	MyFirstRoute = new Yours.Route(MyFirstMap, myRouteCallback, updateWaypointCallback);
 
 	initWaypoints();
-
+	
 	// Check if a permalink is used
 	if (location.search.length > 0) {
 		// Add the To/From markers
@@ -297,7 +297,7 @@ function init() {
 					if (value !== 0) {
 						tlonlat.lon = value;
 						MyFirstRoute.selectWaypoint(MyFirstRoute.End.position);
-						MyFirstRoute.updateWaypoint("selected", flonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection));
+						MyFirstRoute.updateWaypoint("selected", tlonlat.clone().transform(MyFirstMap.displayProjection, MyFirstMap.projection));
 					}
 					break;
 				case 'v':
@@ -363,6 +363,8 @@ function init() {
 			MyFirstMap.setCenter(zlonlat, zlevel);
 		}
 	} else {
+		// No permalink used -> start with a clean map
+		
 		var pos;
 		if (!MyFirstMap.getCenter()) {
 			pos = new OpenLayers.LonLat(5, 45);

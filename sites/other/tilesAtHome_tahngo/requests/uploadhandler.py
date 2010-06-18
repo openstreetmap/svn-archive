@@ -78,7 +78,7 @@ def handle_uploaded_tileset(file, form):
   # move tmp tilesetfile to final location
   if not os.path.isdir(tset_path): os.makedirs(tset_path, 0775)
   shutil.move(tmp_fullpath, os.path.join(tset_path, tset_fname))
-  logging.info("file moved to %s" % (os.path.join(tset_path, tset_fname)))
+  logging.debug("Tileset file moved to %s" % (os.path.join(tset_path, tset_fname)))
 
   ### mark all satisfied requests as such.
   # now match upload with a request and mark request finished

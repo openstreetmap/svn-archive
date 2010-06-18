@@ -18,6 +18,12 @@ Pngcrush=pngcrush
 Optipng=optipng
 Subversion=svn
 
+## AllowAutoUpdate: this config option makes the client autoupdate, so you get 
+# the most current version of the client automatically.
+# set to 0 if you don't trust the developers, the client will then exit before update.
+# be advised that only current clients are allowed to take requests from the t@h server.
+#AllowAutoUpdate = 1
+
 ## PNG optimizer to use, "optipng" and "pngcrush" currently supported.
 PngOptimizer=pngcrush
 

@@ -51,6 +51,8 @@ PngQuantizer = pngnq
 Subversion = svn
 SubversionUpdateCmd = up
 
+AllowAutoUpdate = 1
+
 WorkingDirectory = tmp
 
 # the following is deprecated but should be set until all referencing code

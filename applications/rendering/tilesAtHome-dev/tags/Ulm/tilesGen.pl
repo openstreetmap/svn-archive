@@ -837,6 +837,10 @@ sub UpdateClient
         $Config->get("SubversionUpdateCmd"));
 
     statusMessage("Updating the Client",1,0);
+    if ($Config->get('AllowAutoUpdate'))
+    {
+        return cleanUpAndDie("Auto-Update disallowed, but required. Exiting.","EXIT",1);
+    }
     runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
 
     if (ClientModified())

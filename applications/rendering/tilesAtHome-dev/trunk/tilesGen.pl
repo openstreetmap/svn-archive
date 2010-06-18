@@ -837,7 +837,7 @@ sub UpdateClient
         $Config->get("SubversionUpdateCmd"));
 
     statusMessage("Updating the Client",1,0);
-    if ($Config->get('AllowAutoUpdate'))
+    if (not $Config->get('AllowAutoUpdate'))
     {
         return cleanUpAndDie("Auto-Update disallowed, but required. Exiting.","EXIT",1);
     }

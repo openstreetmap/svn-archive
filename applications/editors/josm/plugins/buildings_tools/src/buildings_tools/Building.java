@@ -72,7 +72,7 @@ class Building {
 
 	private void updMetrics() {
 		meter = 2 * Math.PI / (Math.cos(Math.toRadians(eastNorth2latlon(en[0]).lat())) * eqlen);
-		reset();
+		len = 0;
 	}
 
 	public void setBase(EastNorth base) {
@@ -127,7 +127,7 @@ class Building {
 
 	public void setPlace(EastNorth p2, double width, double lenstep, boolean ignoreConstraints) {
 		if (en[0] == null)
-			en[0] = p2;
+			throw new IllegalStateException("setPlace() called without the base point");
 		this.heading = en[0].heading(p2);
 		double hdang = 0;
 		if (angConstrained && !ignoreConstraints) {
@@ -152,6 +152,8 @@ class Building {
 	}
 
 	public void setPlaceRect(EastNorth p2) {
+		if (en[0] == null)
+			throw new IllegalStateException("SetPlaceRect() called without the base point");
 		if (!isRectDrawing())
 			throw new IllegalStateException("Invalid drawing mode");
 		heading = angConstraint;
@@ -186,13 +188,18 @@ class Building {
 	private Node findNode(EastNorth en) {
 		DataSet ds = Main.main.getCurrentDataSet();
 		LatLon l = eastNorth2latlon(en);
-		List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.00001, l.lat() - 0.00001,
-				l.lon() + 0.00001, l.lat() + 0.00001));
+		List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
+				l.lon() + 0.0000001, l.lat() + 0.0000001));
+		Node bestnode = null;
+		double mindist = 0.0003;
 		for (Node n : nodes) {
-			if (OsmPrimitive.isUsablePredicate.evaluate(n))
-				return n;
+			double dist = n.getCoor().distanceSq(l);
+			if (dist < mindist && OsmPrimitive.isUsablePredicate.evaluate(n)) {
+				bestnode = n;
+				mindist = dist;
+			}
 		}
-		return null;
+		return bestnode;
 	}
 
 	public Way create() {
@@ -201,6 +208,7 @@ class Building {
 		final boolean[] created = new boolean[4];
 		final Node[] nodes = new Node[4];
 		for (int i = 0; i < 4; i++) {
+
 			Node n = findNode(en[i]);
 			if (n == null) {
 				nodes[i] = new Node(eastNorth2latlon(en[i]));
@@ -217,7 +225,7 @@ class Building {
 		}
 		Way w = new Way();
 		w.addNode(nodes[0]);
-		if (projection1(latlon2eastNorth(nodes[2].getCoor())) > 0) {
+		if (projection1(en[2]) > 0) {
 			w.addNode(nodes[1]);
 			w.addNode(nodes[2]);
 			w.addNode(nodes[3]);

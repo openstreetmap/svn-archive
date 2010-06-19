@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.geom.GeneralPath;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -18,19 +19,17 @@ import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.*;
+import org.openstreetmap.josm.data.osm.BBox;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MapView;
 
 class Building {
 	private static final double eqlen = 40075004; // length of equator in metres
-	private EastNorth en1;
-	private EastNorth en2;
-	private EastNorth en3;
-	private EastNorth en4;
+	private final EastNorth[] en = new EastNorth[4];
 
-	private EastNorth p1;
-	private Node node;
 	double meter = 0;
 
 	private double len = 0;
@@ -62,42 +61,27 @@ class Building {
 
 	public void reset() {
 		len = 0;
-		en1 = null;
-		en2 = null;
-		en3 = null;
-		en4 = null;
+
+		for (int i = 0; i < 4; i++)
+			en[i] = null;
 	}
 
-	public EastNorth point1() {
-		return en1;
-	}
-
-	public EastNorth point2() {
-		return en2;
-	}
-
-	public EastNorth point3() {
-		return en3;
-	}
-
-	public EastNorth point4() {
-		return en4;
+	public EastNorth getPoint(int num) {
+		return en[num];
 	}
 
 	private void updMetrics() {
-		meter = 2 * Math.PI / (Math.cos(Math.toRadians(eastNorth2latlon(p1).lat())) * eqlen);
+		meter = 2 * Math.PI / (Math.cos(Math.toRadians(eastNorth2latlon(en[0]).lat())) * eqlen);
 		reset();
 	}
 
 	public void setBase(EastNorth base) {
-		node = null;
-		p1 = base;
+		en[0] = base;
 		updMetrics();
 	}
 
 	public void setBase(Node base) {
-		node = base;
-		p1 = latlon2eastNorth(base.getCoor());
+		en[0] = latlon2eastNorth(base.getCoor());
 		updMetrics();
 	}
 
@@ -105,7 +89,7 @@ class Building {
 	 * @returns Projection of the point to the heading vector in metres
 	 */
 	private double projection1(EastNorth p) {
-		final EastNorth vec = p1.sub(p);
+		final EastNorth vec = en[0].sub(p);
 		return (Math.sin(heading) * vec.east() + Math.cos(heading) * vec.north()) / meter;
 	}
 
@@ -114,18 +98,19 @@ class Building {
 	 *          vector in metres
 	 */
 	private double projection2(EastNorth p) {
-		final EastNorth vec = p1.sub(p);
+		final EastNorth vec = en[0].sub(p);
 		return (Math.cos(heading) * vec.east() - Math.sin(heading) * vec.north()) / meter;
 	}
 
 	private void updatePos() {
 		if (len == 0)
 			return;
-		en1 = p1;
-		en2 = new EastNorth(p1.east() + Math.sin(heading) * len * meter, p1.north() + Math.cos(heading) * len * meter);
-		en3 = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter, p1.north()
+		final EastNorth p1 = en[0];
+		en[1] = new EastNorth(p1.east() + Math.sin(heading) * len * meter, p1.north() + Math.cos(heading) * len * meter);
+		en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter, p1
+				.north()
 				+ Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
-		en4 = new EastNorth(p1.east() + Math.cos(heading) * width * meter, p1.north() - Math.sin(heading) * width
+		en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter, p1.north() - Math.sin(heading) * width
 				* meter);
 	}
 
@@ -141,7 +126,9 @@ class Building {
 	}
 
 	public void setPlace(EastNorth p2, double width, double lenstep, boolean ignoreConstraints) {
-		this.heading = p1.heading(p2);
+		if (en[0] == null)
+			en[0] = p2;
+		this.heading = en[0].heading(p2);
 		double hdang = 0;
 		if (angConstrained && !ignoreConstraints) {
 			hdang = Math.round((heading - angConstraint) / Math.PI * 4);
@@ -173,65 +160,79 @@ class Building {
 	}
 
 	public void angFix(EastNorth point) {
-		EastNorth en3 = this.en3;
-		heading = p1.heading(point);
+		EastNorth en3 = this.en[2];
+		heading = en[0].heading(point);
 		setLengthWidth(projection1(en3), projection2(en3));
-		this.en3 = en3;
+		this.en[2] = en3;
 	}
 
 	public void paint(Graphics2D g, MapView mv) {
 		if (len == 0)
 			return;
 		GeneralPath b = new GeneralPath();
-		Point pp1 = mv.getPoint(eastNorth2latlon(en1));
-		Point pp2 = mv.getPoint(eastNorth2latlon(en2));
-		Point pp3 = mv.getPoint(eastNorth2latlon(en4));
-		Point pp4 = mv.getPoint(eastNorth2latlon(en3));
+		Point pp1 = mv.getPoint(eastNorth2latlon(en[0]));
+		Point pp2 = mv.getPoint(eastNorth2latlon(en[1]));
+		Point pp3 = mv.getPoint(eastNorth2latlon(en[2]));
+		Point pp4 = mv.getPoint(eastNorth2latlon(en[3]));
 
 		b.moveTo(pp1.x, pp1.y);
+		b.lineTo(pp2.x, pp2.y);
 		b.lineTo(pp3.x, pp3.y);
 		b.lineTo(pp4.x, pp4.y);
-		b.lineTo(pp2.x, pp2.y);
 		b.lineTo(pp1.x, pp1.y);
 		g.draw(b);
+	}
+
+	private Node findNode(EastNorth en) {
+		DataSet ds = Main.main.getCurrentDataSet();
+		LatLon l = eastNorth2latlon(en);
+		List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.00001, l.lat() - 0.00001,
+				l.lon() + 0.00001, l.lat() + 0.00001));
+		for (Node n : nodes) {
+			if (OsmPrimitive.isUsablePredicate.evaluate(n))
+				return n;
+		}
+		return null;
 	}
 
 	public Way create() {
 		if (len == 0)
 			return null;
-		Node n1;
-		if (node == null)
-			n1 = new Node(eastNorth2latlon(en1));
-		else
-			n1 = node;
-		Node n2 = new Node(eastNorth2latlon(en2));
-		Node n3 = new Node(eastNorth2latlon(en3));
-		Node n4 = new Node(eastNorth2latlon(en4));
-		if (n1.getCoor().isOutSideWorld() || n2.getCoor().isOutSideWorld() ||
-				n3.getCoor().isOutSideWorld() || n4.getCoor().isOutSideWorld()) {
-			JOptionPane.showMessageDialog(Main.parent,
-					tr("Cannot place building outside of the world."));
-			return null;
+		final boolean[] created = new boolean[4];
+		final Node[] nodes = new Node[4];
+		for (int i = 0; i < 4; i++) {
+			Node n = findNode(en[i]);
+			if (n == null) {
+				nodes[i] = new Node(eastNorth2latlon(en[i]));
+				created[i] = true;
+			} else {
+				nodes[i] = n;
+				created[i] = false;
+			}
+			if (nodes[i].getCoor().isOutSideWorld()) {
+				JOptionPane.showMessageDialog(Main.parent,
+						tr("Cannot place building outside of the world."));
+				return null;
+			}
 		}
 		Way w = new Way();
-		w.addNode(n1);
-		if (projection1(en3) > 0) {
-			w.addNode(n2);
-			w.addNode(n3);
-			w.addNode(n4);
+		w.addNode(nodes[0]);
+		if (projection1(latlon2eastNorth(nodes[2].getCoor())) > 0) {
+			w.addNode(nodes[1]);
+			w.addNode(nodes[2]);
+			w.addNode(nodes[3]);
 		} else {
-			w.addNode(n4);
-			w.addNode(n3);
-			w.addNode(n2);
+			w.addNode(nodes[3]);
+			w.addNode(nodes[2]);
+			w.addNode(nodes[1]);
 		}
-		w.addNode(n1);
+		w.addNode(nodes[0]);
 		w.put("building", ToolSettings.getTag());
 		Collection<Command> cmds = new LinkedList<Command>();
-		if (node == null)
-			cmds.add(new AddCommand(n1));
-		cmds.add(new AddCommand(n2));
-		cmds.add(new AddCommand(n3));
-		cmds.add(new AddCommand(n4));
+		for (int i = 0; i < 4; i++) {
+			if (created[i])
+				cmds.add(new AddCommand(nodes[i]));
+		}
 		cmds.add(new AddCommand(w));
 		Command c = new SequenceCommand(tr("Create building"), cmds);
 		Main.main.undoRedo.add(c);

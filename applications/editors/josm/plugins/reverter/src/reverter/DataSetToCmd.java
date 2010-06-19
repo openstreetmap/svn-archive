@@ -59,6 +59,7 @@ final class DataSetToCmd {
         }
         newTarget.mergeFrom(source);
         newTarget.setOsmId(target.getId(), (int)target.getVersion());
+        newTarget.setVisible(target.isVisible());
         newTarget.setDeleted(false);
         cmds.add(new ChangeCommand(target,newTarget));
     }

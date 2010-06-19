@@ -204,8 +204,6 @@ public class ChangesetReverter {
             if (!p.isVisible() && !p.isDeleted()) {
                 p.setDeleted(true);
                 p.setModified(false);
-                ReverterPlugin.undeletedObjects.addPrimitive(ds,
-                        new PrimitiveIdVersion(p.getPrimitiveId(),(int)p.getVersion()));
             }
         }
         layer.mergeFrom(source);

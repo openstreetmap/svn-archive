@@ -16,7 +16,7 @@ import org.openstreetmap.josm.tools.GBC;
 public class AdvancedSettingsDialog extends ExtendedDialog {
 	// TODO: Replace tag textbox to full-fledged tag editor
 	JTextField tBTag = new JTextField();
-	JCheckBox cBigMode = new JCheckBox("Big buildings mode");
+	JCheckBox cBigMode = new JCheckBox(tr("Big buildings mode"));
 
 	public AdvancedSettingsDialog() {
 		super(Main.parent, tr("Advanced settings"),

@@ -242,7 +242,6 @@ public class WMSLayer extends Layer {
 		for(int x = bminx; x<bmaxx; ++x) {
 			for(int y = bminy; y<bmaxy; ++y){
 				GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
-				g.drawRect(x, y, dax, bminy);
 				if(!img.paint(g, mv, dx, dy) && !img.downloadingStarted){
 					img.downloadingStarted = true;
 					img.image = null;

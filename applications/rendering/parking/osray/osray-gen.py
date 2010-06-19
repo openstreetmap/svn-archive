@@ -10,6 +10,7 @@ import psycopg2
 import csv
 import re
 from numpy import *
+from osray_ground import *
 
 highwaytypes = {
     'trunk':['<0.9,1,0.9>',1.0],
@@ -83,12 +84,12 @@ def pov_highway(f,highway):
     oneway = False
     if(highway[5]=='yes'):
         oneway=True
-
+    
     lanes = highway[3]
     if lanes==None:
         lanefactor=2.0 # 2 lanes seems to be default
         if oneway:
-            lanefactor=1.0 # except for one-ways
+            lanefactor=0.2 # except for one-ways
     else:
         lanefactor=float(lanes)
     lanewidth = 2.5 # m
@@ -299,11 +300,20 @@ camera {{
 /* ground */
 box {{
     <{0}, -0.5, {1}>, <{2}, -0.0, {3}>
-    pigment {{
-        color rgb <1, 1, 0.901961>
+    texture {{
+        pigment {{
+            /* color rgb <1, 1, 1> */
+            image_map {{
+                png "scene-osray-landuse-texture.png"
+                map_type 0
+                interpolate 2
+            }}
+        }}
+        scale <{4},{4},{5}>
+        rotate <0,0,0>
     }}
 }}
-""".format(left,bottom,right,top))
+""".format(left,bottom,right,top,(right-left)/10,(top-bottom)/10))
 
     #f.write("""light_source {{ <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
@@ -349,6 +359,8 @@ bbox = curs.fetchall()
 pov_globals(f)
 pov_camera(f,bbox)
 
+#create_landuse_texture(conn,curs)
+
 highways = []
 for highwaytype in highwaytypes.iterkeys():
     curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+FlW+" \"way\" && "+googbox+" and highway='"+highwaytype+"' LIMIT 2000;")
@@ -370,6 +382,6 @@ f.close()
 
 conn.rollback()
 
-print commands.getstatusoutput('povray osray[hi]')
+print commands.getstatusoutput('povray -Iscene-osray.pov -UV -W1600 -H1200 +Q9 -A')
 
 sys.exit(0)

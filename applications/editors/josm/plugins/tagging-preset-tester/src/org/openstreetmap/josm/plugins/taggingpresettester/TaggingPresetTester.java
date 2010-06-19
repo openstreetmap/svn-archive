@@ -37,7 +37,7 @@ public class TaggingPresetTester extends JFrame {
     private JPanel panel = new JPanel(new BorderLayout());
 
     public void reload() {
-        Vector<TaggingPreset> allPresets = new Vector<TaggingPreset>(TaggingPreset.readAll(Arrays.asList(args)));
+        Vector<TaggingPreset> allPresets = new Vector<TaggingPreset>(TaggingPreset.readAll(Arrays.asList(args), true));
         taggingPresets.setModel(new DefaultComboBoxModel(allPresets));
     }
 

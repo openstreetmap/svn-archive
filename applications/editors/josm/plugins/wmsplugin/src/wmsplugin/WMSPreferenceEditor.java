@@ -38,6 +38,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
     JCheckBox overlapCheckBox;
     JSpinner spinEast;
     JSpinner spinNorth;
+    JSpinner spinSimConn;
 
     public void addGui(final PreferenceTabbedPane gui) {
         JPanel p = gui.createPreferenceTab("wms", tr("WMS Plugin Preferences"), tr("Modify list of WMS servers displayed in the WMS plugin menu"));
@@ -162,7 +163,6 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
         p.add(browser);
 
-
         //Overlap
         p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
 
@@ -180,6 +180,15 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         overlapPanel.add(spinNorth);
 
         p.add(overlapPanel);
+               
+        // Simultaneous connections
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+        JLabel labelSimConn = new JLabel(tr("Simultaneous connections"));
+        spinSimConn = new JSpinner(new SpinnerNumberModel(WMSPlugin.simultaneousConnections, 1, 30, 1));
+        JPanel overlapPanelSimConn = new JPanel(new FlowLayout());
+        overlapPanelSimConn.add(labelSimConn);
+        overlapPanelSimConn.add(spinSimConn);
+        p.add(overlapPanelSimConn);
     }
 
     public boolean ok() {
@@ -222,12 +231,13 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         WMSPlugin.doOverlap = overlapCheckBox.getModel().isSelected();
         WMSPlugin.overlapEast = (Integer) spinEast.getModel().getValue();
         WMSPlugin.overlapNorth = (Integer) spinNorth.getModel().getValue();
+        WMSPlugin.simultaneousConnections = (Integer) spinSimConn.getModel().getValue();
 
         Main.pref.put("wmsplugin.url.overlap",    String.valueOf(WMSPlugin.doOverlap));
         Main.pref.put("wmsplugin.url.overlapEast", String.valueOf(WMSPlugin.overlapEast));
         Main.pref.put("wmsplugin.url.overlapNorth", String.valueOf(WMSPlugin.overlapNorth));
 
-        Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
+        Main.pref.put("wmsplugin.simultaneousConnections", String.valueOf(WMSPlugin.simultaneousConnections));
         return false;
     }
 

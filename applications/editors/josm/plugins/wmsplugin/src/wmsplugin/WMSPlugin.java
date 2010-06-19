@@ -52,6 +52,7 @@ public class WMSPlugin extends Plugin {
     static boolean doOverlap = false;
     static int overlapEast = 14;
     static int overlapNorth = 4;
+    static int simultaneousConnections = 3;
 
     // remember state of menu item to restore on changed preferences
     static private boolean menuEnabled = false;
@@ -108,6 +109,11 @@ public class WMSPlugin extends Plugin {
 
         try {
             overlapNorth = Integer.valueOf(prefs.get("wmsplugin.url.overlapNorth"));
+        } catch (Exception e) {} // If sth fails, we drop to default settings.
+               
+        // Load the settings for number of simultaneous connections
+        try {
+            simultaneousConnections = Integer.valueOf(prefs.get("wmsplugin.simultanousConnections"));
         } catch (Exception e) {} // If sth fails, we drop to default settings.
 
         // And then the names+urls of WMS servers

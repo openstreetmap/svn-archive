@@ -32,7 +32,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="fix address dialog" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="2830" />
+	<property name="plugin.main.version" value="3177" />
 
 
 	<!--
@@ -110,7 +110,6 @@
 		                <attribute name="ru_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/BuildingsTools"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-		                <attribute name="2561_Plugin-Url" value="29;http://upliner.openstreetmap.ru/josm/buildings_tools/2561/buildings_tools.jar"/>
 			</manifest>
 		</jar>
 	</target>

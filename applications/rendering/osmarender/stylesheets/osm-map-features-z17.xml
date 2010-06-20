@@ -4930,13 +4930,13 @@
 
 			.highway-steps-bridge-casing            { stroke-width: 1.2px; }
 			.highway-steps-bridge-core              { stroke-width: 1.0px; }
-			.highway-steps-casing                   { stroke-width: 0.6px;   stroke: #707070; }
-			.highway-steps-casing-ramp              { stroke-width: 0.45px;  stroke: #707070; }
-			.highway-steps-casing-ramp-bicycle      { stroke-width: 0.7px;   stroke: #309030; }
-			.highway-steps-casing-ramp-stroller     { stroke-width: 0.7px;   stroke: #903030; }
-			.highway-steps-casing-ramp-wheelchair   { stroke-width: 0.7px;   stroke: #303090; }
-			.highway-steps-casing-ramp-yes          { stroke-width: 0.7px;   stroke: #309090; }
-			.highway-steps-casing-ramp-no	          { stroke-width: 0.7px;   stroke: #303030; }
+			.highway-steps-casing                   { stroke-width: 0.6px;    stroke: #707070; }
+			.highway-steps-casing-ramp              { stroke-width: 0.45px;   stroke: #707070; }
+			.highway-steps-casing-ramp-bicycle      { stroke-width: 0.75px;   stroke: #30c030; }
+			.highway-steps-casing-ramp-stroller     { stroke-width: 0.75px;   stroke: #c03030; }
+			.highway-steps-casing-ramp-wheelchair   { stroke-width: 0.75px;   stroke: #3030c0; }
+			.highway-steps-casing-ramp-yes          { stroke-width: 0.75px;   stroke: #30c0c0; }
+			.highway-steps-casing-ramp-no	          { stroke-width: 0.75px;   stroke: #303030; }
 
 			.highway-steps-area-casing              { stroke-width: 0.15px; }
 			.highway-steps-core                     { stroke-width: 0.45px;   stroke: #e5e0c2; stroke-dasharray: 0.3, 0.1; stroke-linecap: butt;}

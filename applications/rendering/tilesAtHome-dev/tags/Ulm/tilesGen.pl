@@ -646,12 +646,6 @@ sub ProcessRequestsFromServer
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
     }
 
-    if ($Config->get("CreateTilesetFile"))
-    {
-        print "* Config option CreateTilesetFile is set.\n";
-        print "* This is considered BETA, please monitor your client closely.\n";
-    }
-
     my $req;
     my $Server = Server->new();
     do {

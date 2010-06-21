@@ -476,7 +476,7 @@ sub getFile {
         {
             if($self->{Config}->get('Debug'))
             {
-                ::statusMessage("Download file $file",1,6);
+                ::statusMessage("Download file $file from http://tah.openstreetmap.org/Tiles/$Layer/$Z/$X/$Y.png",1,6);
             }
             LWP::Simple::mirror(sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",
             $Layer,$Z,$X,$Y),$pfile);

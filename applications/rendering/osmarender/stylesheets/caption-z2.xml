@@ -64,10 +64,8 @@
                 stroke-miterlimit: 1.5;
             }
 
-            .country-caption-casing { font-size: 20000px; stroke-width: 3200px; }
-            .country-caption        { font-size: 20000px; }
-
-
+           .continent-caption-casing { font-size: 60000px; stroke-width: 4000px; }
+           .continent-caption        { font-size: 600000px; }
 
             /* Map decoration */
             .map-grid-line {

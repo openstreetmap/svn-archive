@@ -437,24 +437,24 @@ elsif ($Mode eq "update")
     UpdateClient();
 }
 #---------------------------------
-elsif ($Mode eq "") 
-{
-    # ----------------------------------
-    # Normal mode renders a single request from server and exits
-    # ----------------------------------
-
-    exit (1) if ClientModified(); # don't interact with server if client was modified!
-
-    my ($did_something, $message) = ProcessRequestsFromServer();
-    
-    if (! $did_something)
-    {
-        statusMessage("you may safely press Ctrl-C now if you want to exit tilesGen.pl",1,0);
-        talkInSleep($message, 60);
-    }
-    statusMessage("if you want to run this program continuously, use loop mode",1,0);
-    statusMessage("please run \"tilesGen.pl upload\" now",1,0);
-}
+#elsif ($Mode eq "") 
+#{
+#    # ----------------------------------
+#    # Normal mode renders a single request from server and exits
+#    # ----------------------------------
+#
+#    exit (1) if ClientModified(); # don't interact with server if client was modified!
+#
+#    my ($did_something, $message) = ProcessRequestsFromServer();
+#    
+#    if (! $did_something)
+#    {
+#        statusMessage("you may safely press Ctrl-C now if you want to exit tilesGen.pl",1,0);
+#        talkInSleep($message, 60);
+#    }
+#    statusMessage("if you want to run this program continuously, use loop mode",1,0);
+#    statusMessage("please run \"tilesGen.pl upload\" now",1,0);
+#}
 #---------------------------------
 elsif ($Mode eq "startBatik")
 {

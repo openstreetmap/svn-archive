@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Built-By: Martin Zdila
-Plugin-Mainversion: 2830
-Plugin-Version: 2
-Plugin-Class: sk.zdila.josm.plugin.simplify.SimplifyAreaPlugin
-Plugin-Description: simplify way based on angles

@@ -339,6 +339,8 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 	private void updCursor() {
 		if (mousePos == null)
 			return;
+		if (!Main.isDisplayingMapView())
+			return;
 		Node n = null;
 		if (!isCtrlDown)
 			n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
@@ -411,14 +413,19 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 			customCursor = null;
 			return;
 		}
-		final int r = 11; // crosshair radius
+		final int R = 9; // crosshair outer radius
+		final int r = 3; // crosshair inner radius
 		BufferedImage img = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = img.createGraphics();
 
 		GeneralPath b = new GeneralPath();
-		b.moveTo(16 - Math.cos(angle) * r, 16 - Math.sin(angle) * r);
+		b.moveTo(16 - Math.cos(angle) * R, 16 - Math.sin(angle) * R);
+		b.lineTo(16 - Math.cos(angle) * r, 16 - Math.sin(angle) * r);
+		b.moveTo(16 + Math.cos(angle) * R, 16 + Math.sin(angle) * R);
 		b.lineTo(16 + Math.cos(angle) * r, 16 + Math.sin(angle) * r);
-		b.moveTo(16 + Math.sin(angle) * r, 16 - Math.cos(angle) * r);
+		b.moveTo(16 + Math.sin(angle) * R, 16 - Math.cos(angle) * R);
+		b.lineTo(16 + Math.sin(angle) * r, 16 - Math.cos(angle) * r);
+		b.moveTo(16 - Math.sin(angle) * R, 16 + Math.cos(angle) * R);
 		b.lineTo(16 - Math.sin(angle) * r, 16 + Math.cos(angle) * r);
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

@@ -5,4 +5,9 @@
     <tag k='name' v='the quick brown fox jumps over the lazy dog' />
     <tag k='place' v='city' />
   </node>
+  <node id="2" lat="85.0444900592091" lon="-179.923095703125" visible="true" timestamp="2010-05-11T17:49:30Z">
+    <tag k="place" v="city"/>
+    <tag k="name" v="ఖమ్మం (Khammam) खम्मम"/>
+  </node>
 </osm>
+

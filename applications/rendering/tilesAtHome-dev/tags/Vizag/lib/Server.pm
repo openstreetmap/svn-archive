@@ -80,23 +80,26 @@ by the server as a number between 0 and 1000, 1000 meaning a full queue.
 #-------------------------------------------------------------------------------
 sub getServerLoad
 {
-    return 1; # no go_nogo query currently necessary. 
-#    my $self = shift();
-#    ::statusMessage("Checking server queue",0,3);
-#    my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
-#    $ua->env_proxy();
-#    my $res = $ua->get($self->{Config}->get("GoNogoURL"));
-#
-#    if (! $res->is_success)
-#    {    # Failed to retrieve server load
-#         # $res->status_line; contains result here.
-#         ::statusMessage("Failed to retrieve server queue load. Assuming full queue.",1,0);
-#         return 1000;
-#    }
-#    # Load is a float value between [0,1]
-#    my $Load = $res->content;
-#    chomp $Load;
-#    return ($Load*1000);
+    my $self = shift();
+    if ($self->{Config}->get("CreateTilesetFile"))
+    {
+       return 1; # no need to check queue when generating tilesets
+    }
+    ::statusMessage("Checking server queue",0,3);
+    my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
+    $ua->env_proxy();
+    my $res = $ua->get($self->{Config}->get("GoNogoURL"));
+
+    if (! $res->is_success)
+    {    # Failed to retrieve server load
+         # $res->status_line; contains result here.
+         ::statusMessage("Failed to retrieve server queue load. Assuming full queue.",1,0);
+         return 1000;
+    }
+    # Load is a float value between [0,1]
+    my $Load = $res->content;
+    chomp $Load;
+    return ($Load*1000);
 }
 
 #-------------------------------------------------------------------------------

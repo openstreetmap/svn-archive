@@ -37,19 +37,21 @@ delete $ENV{LC_NUMERIC};
 delete $ENV{LANG};
 $ENV{LANG} = 'C';
 
-print "Reading Config\n";
+print " - Reading Config ... ";
 my %EnvironmentInfo;
 my $Config = TahConf->getConfig();
+print "OK\n";
 
-print "Testing Basic Config\n";
-
+print " - Testing Basic Config ... ";
 %EnvironmentInfo = $Config->CheckBasicConfig();
+print "OK\n";
 
-print "Testing Full Config\n";
 
+print " - Testing Full Config ... ";
 %EnvironmentInfo = $Config->CheckConfig();
+print "OK\n";
 
-print "\nStart offline tests:\n\n";
+print " - Start offline tests:\n";
 my $Cmd;
 my $success;
 my $PID;
@@ -59,10 +61,11 @@ my $PID;
 
 ##FIXME check result for failure
 
-$Cmd = "perl ./tilesGen.pl --Verbose=3 --CreateTilesetFile=0 localFile tests/fonttest_12_0_0.osm tile"; ##should create zips for font-comparison
+print " * fonttest (will take some time) ... ";
+$Cmd = "perl ./tilesGen.pl --tile_MaxZoom=14 --Verbose=3 --CreateTilesetFile=0 localFile tests/fonttest_12_0_0.osm tile"; ##should create zips for font-comparison
 my $retval = system($Cmd);
 ##FIXME check result for failure, otherwise graphically compare image
-print "\n\n";
+print STDERR "\n\n";
 
 my $tempdir = tempdir ( DIR => $Config->get("WorkingDirectory") );
 my $zipfile = File::Spec->join($Config->get("WorkingDirectory"),"uploadable","tile_12_0_0_*.zip");
@@ -74,7 +77,7 @@ if ($success) # remove all zips from the test, because they should not be upload
     my @files = glob($zipfile); 
     foreach my $zip (@files) 
     {
-        print "removing $zip \n";
+        print STDERR "removing $zip \n";
         unlink($zip) or die "cannot delete $zip";
     }
 }
@@ -85,7 +88,7 @@ foreach my $pngSuffix (@pngList)
     my $fonttestRef = File::Spec->join("tests","fonttest".$pngSuffix);
     my $renderResult = File::Spec->join($tempdir,"tile".$pngSuffix);
 
-    print "testing $fonttestRef \n";
+    print STDERR "testing $fonttestRef \n";
 
     my $ReferenceImage = undef;
     eval { $ReferenceImage = GD::Image->newFromPng($fonttestRef); };
@@ -98,6 +101,6 @@ foreach my $pngSuffix (@pngList)
     # libGD comparison returns true if images are different. 
     die "Fonttest failed, check installed fonts. $renderResult $fonttestRef" if ($Image->compare($ReferenceImage) & GD_CMP_IMAGE)
 }
-
-print "fonttest succeded.\n";
 rmtree($tempdir);
+
+print "OK\n";

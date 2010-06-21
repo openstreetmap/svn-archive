@@ -64,69 +64,12 @@
                 stroke-miterlimit: 1.5;
             }
 
-           .continent-caption-casing { font-size: 50000px; stroke-width: 10000px; }
-           .continent-caption        { font-size: 50000px; }
+           .continent-caption-casing { font-size: 100000px; stroke-width: 10000px; }
+           .continent-caption        { font-size: 100000px; }
 
-           .country-caption-casing { font-size: 40000px; stroke-width: 6000px; }
-           .country-caption        { font-size: 40000px; }
+           .country-caption-casing { font-size: 60000px; stroke-width: 6000px; }
+           .country-caption        { font-size: 60000px; }
 
-
-
-            /* Map decoration */
-            .map-grid-line {
-                fill: none;
-                stroke: #8080ff;
-                stroke-width: 0.1px;
-                stroke-opacity: 0.5;
-            }
-
-            .map-border-casing {
-                fill: none;
-                stroke: #8080ff;
-                stroke-width: 3px;
-                stroke-miterlimit: 4;
-                stroke-dasharray: none;
-                stroke-opacity: 1;
-                stroke-linecap: round;
-            }
-
-            .map-border-core {
-                fill: none;
-                fill-opacity: 1;
-                fill-rule: nonzero;
-                stroke: #ffffff;
-                stroke-width: 2px;
-                stroke-miterlimit: 0;
-                stroke-dashoffset: -0.5px;
-                stroke-opacity: 1;
-            }
-
-            .map-scale-casing {
-                fill: none;
-                stroke: #8080ff;
-                stroke-width: 4px;
-                stroke-linecap: butt;
-            }
-
-            .map-scale-core {
-                fill: none;
-                stroke: #ffffff;
-                stroke-width: 3px;
-                stroke-linecap: butt;
-            }
-
-            .map-scale-bookend {
-                fill: none;
-                stroke: #8080ff;
-                stroke-width: 1px;
-                stroke-linecap: butt;
-            }
-
-            .map-scale-caption {
-                font-family: "DejaVu Sans",sans-serif;
-                font-size: 10px;
-                fill: #8080ff;
-            }
 
             <!-- map background must be the same for all zooms or else empty tile detection will fail -->
             .map-background {

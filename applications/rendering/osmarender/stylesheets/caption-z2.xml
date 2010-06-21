@@ -98,33 +98,6 @@
                 stroke-opacity: 1;
             }
 
-            .map-scale-casing {
-                fill: none;
-                stroke: #8080ff;
-                stroke-width: 4px;
-                stroke-linecap: butt;
-            }
-
-            .map-scale-core {
-                fill: none;
-                stroke: #ffffff;
-                stroke-width: 3px;
-                stroke-linecap: butt;
-            }
-
-            .map-scale-bookend {
-                fill: none;
-                stroke: #8080ff;
-                stroke-width: 1px;
-                stroke-linecap: butt;
-            }
-
-            .map-scale-caption {
-                font-family: "DejaVu Sans",sans-serif;
-                font-size: 10px;
-                fill: #8080ff;
-            }
-
             <!-- map background must be the same for all zooms or else empty tile detection will fail -->
             .map-background {
                 fill: #f8f8f8;

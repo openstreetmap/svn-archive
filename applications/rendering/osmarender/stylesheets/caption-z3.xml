@@ -64,8 +64,8 @@
                 stroke-miterlimit: 1.5;
             }
 
-            .country-caption-casing { font-size: 20000px; stroke-width: 6000px; }
-            .country-caption        { font-size: 20000px; }
+            .country-caption-casing { font-size: 18000px; stroke-width: 6000px; }
+            .country-caption        { font-size: 18000px; }
 
 
 

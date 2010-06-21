@@ -22,7 +22,7 @@ def handle_uploaded_tileset(file, form):
 
   # retrieve the uploader user id
   user = User.objects.get(pk=form['user_id'])
-  logging.info("Handle uploaded file %s directly (user %s)" % (file.name,form['user_id']))
+  logging.debug("Handle uploaded file %s directly (user %s)" % (file.name,form['user_id']))
 
   # if temporary_file_path exists, the file has been saved to a tmp loc,
   # otherwise it's in RAM and still needs saving
@@ -105,7 +105,6 @@ def handle_uploaded_tileset(file, form):
           req.client_id = user.id
           try:
               req.save()
-              logging.info("tileset marked request as fulfilled (z,x,y) (%d,%d,%d)" % (req.min_z,req.x,req.y))
           except OperationalError, (errnum,errmsg):
               # e.g. MySQL transaction timeout, quit
               logging.info("MySQL error marking request (%d,%d,%d,%s) finished" % (req.min_z,req.x,req.y,layer))

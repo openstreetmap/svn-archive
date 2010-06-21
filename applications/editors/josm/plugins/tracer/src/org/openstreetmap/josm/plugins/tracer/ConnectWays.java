@@ -37,7 +37,7 @@ public class ConnectWays {
      */
     public static Command connect(Way way) {
         Map<Way, Way> modifiedWays = new HashMap<Way, Way>();
-        List<Command> cmds = new LinkedList<Command>();
+        LinkedList<Command> cmds = new LinkedList<Command>();
         Way newWay = new Way(way);
         for (int i = 0; i < way.getNodesCount() - 1; i++) { 
             Node n = way.getNode(i); 
@@ -77,7 +77,7 @@ public class ConnectWays {
             cmds.add(new ChangeCommand(e.getKey(), e.getValue()));
         }
 
-        cmds.add(new ChangeCommand(way, trySplitWayByAnyNodes(newWay)));
+        cmds.addFirst(new ChangeCommand(way, trySplitWayByAnyNodes(newWay)));
 
         Command cmd = new SequenceCommand(tr("Merge objects nodes"), cmds);
         return cmd;

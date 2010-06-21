@@ -575,6 +575,7 @@ public class RoutePatternAction extends JosmAction {
       requiredTagsData.addRow(rowContent);
       /*JComboBox*/ comboBox = new JComboBox();
       comboBox.addItem("bus");
+      comboBox.addItem("trolleybus");
       comboBox.addItem("tram");
       comboBox.addItem("light_rail");
       comboBox.addItem("subway");
@@ -1772,6 +1773,11 @@ public class RoutePatternAction extends JosmAction {
 	  stopKey = "highway";
 	  stopValue = "bus_stop";
 	}
+	else if ("trolleybus".equals(currentRoute.get("route")))
+	{
+	  stopKey = "highway";
+	  stopValue = "bus_stop";
+	}
 	else if ("tram".equals(currentRoute.get("route")))
 	{
 	  stopKey = "railway";
@@ -1862,6 +1868,8 @@ public class RoutePatternAction extends JosmAction {
 	{
 	  String routeVal = currentRel.get("route");
 	  if ("bus".equals(routeVal))
+	    relRefs.add(new RouteReference(currentRel));
+	  else if ("trolleybus".equals(routeVal))
 	    relRefs.add(new RouteReference(currentRel));
 	  else if ("tram".equals(routeVal))
 	    relRefs.add(new RouteReference(currentRel));

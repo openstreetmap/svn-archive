@@ -143,7 +143,7 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
 
     my $rasterizer = ref($SVG::Rasterize::object->engine());
 
-    print "- rasterizing using $rasterizer\n";
+    print STDERR "- rasterizing using $rasterizer\n";
 
     # Set engine specific parameters
     if( $SVG::Rasterize::object->engine()->isa('SVG::Rasterize::Engine::BatikAgent') )
@@ -209,18 +209,18 @@ if( $RenderMode || $Mode eq 'startBatik' || $Mode eq 'stopBatik' ){
             }
 
             if( $equal ){
-                printf("! You have a broken version (%s) of your rasterizer. %s\n", join('.', @version), $reason);
+                printf(STDERR "! You have a broken version (%s) of your rasterizer. %s\n", join('.', @version), $reason);
                 sleep 10;
             }
         }
     } otherwise {
-        print "! Could not determine your rasterizer version\n";
+        print STDERR "! Could not determine your rasterizer version\n";
     };
 
     if( $rasterizer eq "SVG::Rasterize::Engine::Inkscape" ){
-        print "* Take care to manually backup your inkscape user preferences\n"; 
-        print "  if you have knowingly changed them. \n";
-        print "  Some tilesets will cause inkscape to clobber that file!\n";
+        print STDERR "* Take care to manually backup your inkscape user preferences\n"; 
+        print STDERR "  if you have knowingly changed them. \n";
+        print STDERR "  Some tilesets will cause inkscape to clobber that file!\n";
 #        print "  ~/.inkscape/preferences.xml\n";
     }
 }
@@ -337,7 +337,7 @@ elsif ($Mode eq "loop")
                 statusMessage("Waiting for previous upload process (this can take a while)",1,0);
                 waitpid($upload_pid, 0);
             }
-            print "We suggest that you set MaxTilesetComplexity to ".int($complexity)."\n";
+            print STDERR "We suggest that you set MaxTilesetComplexity to ".int($complexity)."\n";
             cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
         }
 
@@ -479,7 +479,7 @@ elsif ($Mode eq "stopBatik")
 }
 elsif ($Mode eq "localFile")
 {
-    print "*** Local file rendering mode enabled, please do NOT use upload function ***\n";
+    print STDERR "*** Local file rendering mode enabled, please do NOT use upload function ***\n";
 
     my $DataFile = shift();
 
@@ -640,9 +640,9 @@ sub ProcessRequestsFromServer
     my $Config = TahConf->getConfig();
     if ($Config->get("LocalSlippymap"))
     {
-        print "Config option LocalSlippymap is set. Downloading requests\n";
-        print "from the server in this mode would take them from the tiles\@home\n";
-        print "queue and never upload the results. Program aborted.\n";
+        print STDERR "Config option LocalSlippymap is set. Downloading requests\n";
+        print STDERR "from the server in this mode would take them from the tiles\@home\n";
+        print STDERR "queue and never upload the results. Program aborted.\n";
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1);
     }
 

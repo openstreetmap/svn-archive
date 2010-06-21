@@ -46,8 +46,8 @@ sub getConfig
     if (-e "localtesting.conf") 
     {
         $Config->file("localtesting.conf") ; # FIXME: this should *never* be used in production mode
-        print "*** WARNING: localtesting.conf found, you are using config parameters that may be ***\n*** harmful to normal TilesAtHome Operation. ***\n";
-        print "Press Enter to continue, Strg+C to abort: ";
+        print STDERR "*** WARNING: localtesting.conf found, you are using config parameters that may be ***\n*** harmful to normal TilesAtHome Operation. ***\n";
+        print STDERR "Press Enter to continue, Strg+C to abort: ";
         my $input = <STDIN>;
     } 
     $self->{Config} = $Config;
@@ -118,11 +118,11 @@ sub CheckBasicConfig
 
     #------
     ## Finally create the WorkingDir if necessary.
-    printf "- Using working directory %s\n", $self->get("WorkingDirectory");
+    printf STDERR "- Using working directory %s\n", $self->get("WorkingDirectory");
     File::Path::mkpath($self->get("WorkingDirectory"));
 
     #------
-    printf "- Using process log file %s\n", $self->get("ProcessLogFile") if ($self->get("ProcessLog"));
+    printf STDERR "- Using process log file %s\n", $self->get("ProcessLogFile") if ($self->get("ProcessLog"));
 
     #------
     if ($self->get("Subversion"))
@@ -141,12 +141,12 @@ sub CheckBasicConfig
     # LocalSplippymap
     if ($self->get("LocalSlippymap"))
     {
-        print "- Writing LOCAL slippy map directory hierarchy, no uploading\n";
+        print STDERR "- Writing LOCAL slippy map directory hierarchy, no uploading\n";
     }
     else
     {
         if($self->get("DeleteZipFilesAfterUpload") == 0){
-            print "- Keeping ZIP files after upload\n";
+            print STDERR "- Keeping ZIP files after upload\n";
         }
     }
 
@@ -155,7 +155,7 @@ sub CheckBasicConfig
     {
         if (! -d $self->get("UploadTargetDirectory")) {
             # we chose to upload to directory, but it does not exist!
-            print "- Upload Directory does not exist. Trying to create ",
+            print STDERR "- Upload Directory does not exist. Trying to create ",
                    $self->get("UploadTargetDirectory"),"\n";
             File::Path::mkpath $self->get("UploadTargetDirectory");
            if (! -d $self->get("UploadTargetDirectory")) {
@@ -184,7 +184,7 @@ sub CheckBasicConfig
 	# it's a sane OS and flock is there
         $self->set('flock_available',1);
     } else {
-	print "! 'flock' not available. Do not run concurrent uploads\n";
+	print STDERR "! 'flock' not available. Do not run concurrent uploads\n";
         $self->set('flock_available',0);
     }
 
@@ -205,11 +205,11 @@ sub CheckBasicConfig
 
         if ($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/)
         {
-            print "! Can't find pngcrush (using \"".$self->get("Pngcrush")."\")\n";
+            print STDERR "! Can't find pngcrush (using \"".$self->get("Pngcrush")."\")\n";
         }
         else
         {
-            print "- Pngcrush version $1\n";
+            print STDERR "- Pngcrush version $1\n";
         }
     }
     #------
@@ -226,7 +226,7 @@ sub CheckBasicConfig
         }
         else
         {
-            print "- OptiPNG version $1\n";
+            print STDERR "- OptiPNG version $1\n";
         }
     }
     #------
@@ -237,23 +237,23 @@ sub CheckBasicConfig
         my $PngnqV=`\"$cmd\" -V 2>&1`;
         if ($PngnqV !~ /pngnq.+(\d+(\.\d+)+)/)
         {
-            print "! Can't find pngnq (using \"".$self->get("pngnq")."\")\n";
-            print "! disabling pngnq\n";
+            print STDERR "! Can't find pngnq (using \"".$self->get("pngnq")."\")\n";
+            print STDERR "! disabling pngnq\n";
 	    $self->set("PngQuantizer", undef);
         }
         else
         {
             my $minVersion = "0.5";
             if ($self->CompareVersions($1, $minVersion) == -1) {
-                print "! pngnq version ${1} too low, needs to be at least ${minVersion}\n";
-                print "! disabling pngnq\n";
+                print STDERR "! pngnq version ${1} too low, needs to be at least ${minVersion}\n";
+                print STDERR "! disabling pngnq\n";
                 $self->set("PngQuantizer", undef);
             } else {
-                print "- pngnq version $1\n";
+                print STDERR "- pngnq version $1\n";
             }
         }
     } else {
-        print "! no valid PngQuantizer specified\n";
+        print STDERR "! no valid PngQuantizer specified\n";
     }
     #------
     # check java version and path separator
@@ -263,24 +263,24 @@ sub CheckBasicConfig
     {
        $self->set("JavaVersion", $javaInfo[1]);
        $self->set("JavaSeparator", $javaInfo[2]);
-       print "- Java version $javaInfo[1] is available\n";
+       print STDERR "- Java version $javaInfo[1] is available\n";
     } 
     else 
     {
        $self->set("JavaVersion", 0);
        $self->set("JavaSeparator", ":");
-       print "- Java is not available\n";
+       print STDERR "- Java is not available\n";
     }
     eval
     {
         require Image::Magick;
         if(($Image::Magick::VERSION cmp "6.4.5") < 0)
         {
-            print "- ImageMagick version $Image::Magick::VERSION (lowzoom disabled)\n";
+            print STDERR "- ImageMagick version $Image::Magick::VERSION (lowzoom disabled)\n";
         }
         else
         {
-            print "- ImageMagick version $Image::Magick::VERSION (lowzoom enabled)\n";
+            print STDERR "- ImageMagick version $Image::Magick::VERSION (lowzoom enabled)\n";
         }
     };
 
@@ -306,7 +306,7 @@ sub CheckConfig
     # Rendering through Omsarender/XSLT or or/p
     if ($self->get("Osmarender") eq "XSLT")
     {
-        print "- rendering using Osmarender/XSLT\n";
+        print STDERR "- rendering using Osmarender/XSLT\n";
         die "! Can't find osmarender/xslt/osmarender.xsl" unless (-f "osmarender/xslt/osmarender.xsl");
 
         # XmlStarlet version
@@ -317,11 +317,11 @@ sub CheckConfig
         if($XmlV !~ /(\d+\.\d+\.\d+)/) {
             die("Can't find xmlstarlet (using \"" . $self->get("XmlStarlet") . "\")\n");
         }
-        print "- xmlstarlet version $1\n";
+        print STDERR "- xmlstarlet version $1\n";
     }
     elsif ($self->get("Osmarender") eq "orp")
     {
-        print "- rendering using or/p\n";
+        print STDERR "- rendering using or/p\n";
         die "! Can't find osmarender/orp/orp.pl" unless (-f "osmarender/orp/orp.pl");
     }
     else
@@ -397,13 +397,13 @@ sub CheckConfig
 
     if($self->get("RequestUrl")){ 
         ## put back Verbose output to make remote debugging a bit easier
-        print "- Using ".$self->get("RequestUrl")." for Requests\n" if($self->get("Verbose") >=10); 
+        print STDERR "- Using ".$self->get("RequestUrl")." for Requests\n" if($self->get("Verbose") >=10); 
     }
 
     # Misc stuff
     foreach(qw(NS WE)){
         if($self->get("Border".$_) > 0.5){
-            printf "Border".$_." looks abnormally large\n";
+            printf STDERR "Border".$_." looks abnormally large\n";
         }
     }
     return %EnvironmentInfo;

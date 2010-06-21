@@ -495,9 +495,13 @@ public class CadastreInterface {
             input = input.substring(input.indexOf(cBBoxCommunEnd)+cBBoxCommunEnd.length());
             int i = input.indexOf(",");
             int j = input.indexOf(",", i+1);
-            double angle = Double.parseDouble(input.substring(i+1, j));
-            int k = input.indexOf(",", j+1);
-            double scale_origin = Double.parseDouble(input.substring(j+1, k));
+            String str = input.substring(i+1, j);
+            @SuppressWarnings("unused")
+            double unknown_yet = tryParseDouble(str);
+            int j_ = input.indexOf(",", j+1);
+            double angle = Double.parseDouble(input.substring(j+1, j_));
+            int k = input.indexOf(",", j_+1);
+            double scale_origin = Double.parseDouble(input.substring(j_+1, k));
             int l = input.indexOf(",", k+1);
             double dpi = Double.parseDouble(input.substring(k+1, l));
             int m = input.indexOf(",", l+1);
@@ -516,8 +520,16 @@ public class CadastreInterface {
                 wmsLayer.X0 = X0;
                 wmsLayer.Y0 = Y0;
             }
-            System.out.println("parse georef:"+angle+","+scale_origin+","+dpi+","+fX+","+
+            System.out.println("parse georef:"+unknown_yet+","+angle+","+scale_origin+","+dpi+","+fX+","+
                     fY+","+X0+","+Y0);
+        }
+    }
+    
+    private double tryParseDouble(String str) {
+        try {
+            return Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 

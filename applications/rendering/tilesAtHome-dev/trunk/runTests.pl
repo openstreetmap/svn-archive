@@ -28,6 +28,7 @@ use tahlib;
 use TahConf;
 use File::Temp qw(tempfile tempdir);
 use File::Spec;
+use File::Path qw(rmtree);
 use GD 2 qw(:DEFAULT :cmp);
 
 
@@ -95,4 +96,4 @@ foreach my $pngSuffix (@pngList)
     die "Fonttest failed, check installed fonts. $renderResult $fonttestRef" if ($Image->compare($ReferenceImage) & GD_CMP_IMAGE)
 }
 
-
+rmtree($tempdir);

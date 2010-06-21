@@ -49,7 +49,7 @@ print "Testing Full Config\n";
 
 %EnvironmentInfo = $Config->CheckConfig();
 
-print "\nStart offline tests:\n";
+print "\nStart offline tests:\n\n";
 my $Cmd;
 my $success;
 my $PID;

@@ -1142,7 +1142,7 @@ sub checkDataFaults
             cleanUpAndDie("20 times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1); # allow XAPI more leeway
         }
         else {
-            $sleepdelay=5*(2**$numfaults); # wait 10, 20, 49, 80 seconds
+            $sleepdelay=5*(2**$numfaults); # wait 10, 20, 40, 80 seconds
             $sleepdelay=600 if ($sleepdelay > 600);
             talkInSleep($numfaults." times no XAPI data", $sleepdelay);
         }

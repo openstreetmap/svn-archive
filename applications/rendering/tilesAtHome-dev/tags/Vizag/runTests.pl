@@ -83,6 +83,7 @@ if ($success) # remove all zips from the test, because they should not be upload
 }
 
 my @pngList = ("_13_0_0.png","_13_1_0.png","_13_1_1.png","_14_0_2.png","_14_0_3.png","_14_1_1.png","_14_3_3.png"); # these tiles contain font samples"
+my @failedImages;
 foreach my $pngSuffix (@pngList)
 {
     my $fonttestRef = File::Spec->join("tests","fonttest".$pngSuffix);
@@ -99,12 +100,24 @@ foreach my $pngSuffix (@pngList)
     die "$renderResult not found" if( not defined $Image );
     
     # libGD comparison returns true if images are different. 
-    die "Fonttest failed, check installed fonts. $renderResult $fonttestRef" if ($Image->compare($ReferenceImage) & GD_CMP_IMAGE)
+    if ($Image->compare($ReferenceImage) & GD_CMP_IMAGE)
+    {
+        print STDERR "\nFonttest failed, check installed fonts. $renderResult $fonttestRef\n";
+        push(@failedImages, $renderResult);
+    }
 }
-rmtree($tempdir);
-
-print "OK\n";
-
+if (scalar(@failedImages))
+{
+    print STDERR "please e-mail the following failed images to tah\@deelkar.net:\n";
+    print STDERR join("\n",@failedImages);
+    print STDERR "\n";
+    exit(7);
+}
+else
+{
+    rmtree($tempdir);
+    print "OK\n";
+}
 
 
 print "- done testing.\n";

@@ -59,10 +59,11 @@ my $PID;
 
 ##FIXME check result for failure
 
-$Cmd = "perl ./tilesGen.pl --CreateTilesetFile=0 --Layers=tile localFile tests/fonttest_12_0_0.osm"; ##should create zips for font-comparison
-$success = runCommand($Cmd,$PID); 
-
+$Cmd = "perl ./tilesGen.pl --Verbose=3 --CreateTilesetFile=0 localFile tests/fonttest_12_0_0.osm tile"; ##should create zips for font-comparison
+my $retval = system($Cmd);
 ##FIXME check result for failure, otherwise graphically compare image
+print "\n\n";
+
 my $tempdir = tempdir ( DIR => $Config->get("WorkingDirectory") );
 my $zipfile = File::Spec->join($Config->get("WorkingDirectory"),"uploadable","tile_12_0_0_*.zip");
 $Cmd = sprintf("unzip -d %s -q %s",$tempdir,$zipfile);
@@ -78,11 +79,13 @@ if ($success) # remove all zips from the test, because they should not be upload
     }
 }
 
-my @pngList = ("_12_0_0.png","_13_1_0.png","_14_1_1.png","_14_3_3.png"); # these tiles contain font samples
+my @pngList = ("_13_0_0.png","_13_1_0.png","_13_1_1.png","_14_1_1.png","_14_3_3.png"); # these tiles contain font samples"
 foreach my $pngSuffix (@pngList)
 {
     my $fonttestRef = File::Spec->join("tests","fonttest".$pngSuffix);
     my $renderResult = File::Spec->join($tempdir,"tile".$pngSuffix);
+
+    print "testing $fonttestRef \n";
 
     my $ReferenceImage = undef;
     eval { $ReferenceImage = GD::Image->newFromPng($fonttestRef); };
@@ -96,4 +99,5 @@ foreach my $pngSuffix (@pngList)
     die "Fonttest failed, check installed fonts. $renderResult $fonttestRef" if ($Image->compare($ReferenceImage) & GD_CMP_IMAGE)
 }
 
+print "fonttest succeded.\n";
 rmtree($tempdir);

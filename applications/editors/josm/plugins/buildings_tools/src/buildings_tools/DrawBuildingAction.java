@@ -178,9 +178,11 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 		if (this.isCtrlDown != isCtrlDown || this.isShiftDown != isShiftDown) {
 			this.isCtrlDown = isCtrlDown;
 			this.isShiftDown = isShiftDown;
+			processMouseEvent(null);
 			updCursor();
+			if (mode != Mode.None)
+				Main.map.mapView.repaint();
 		}
-		ev.getID();
 
 		if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
 			if (mode != Mode.None)
@@ -232,9 +234,11 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 	}
 
 	private void processMouseEvent(MouseEvent e) {
-		mousePos = e.getPoint();
-		isCtrlDown = e.isControlDown();
-		isShiftDown = e.isShiftDown();
+		if (e != null) {
+			mousePos = e.getPoint();
+			isCtrlDown = e.isControlDown();
+			isShiftDown = e.isShiftDown();
+		}
 		if (mode == Mode.None) {
 			nextMode = Mode.None;
 			return;
@@ -294,6 +298,10 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 			Way w = building.create();
 			if (w != null && ToolSettings.isUsingAddr())
 				showAddrDialog(w);
+			if (ToolSettings.isAutoSelect() &&
+					(Main.main.getCurrentDataSet().getSelected().isEmpty() || isShiftDown)) {
+				Main.main.getCurrentDataSet().setSelected(w);
+			}
 		}
 		cancelDrawing();
 	}

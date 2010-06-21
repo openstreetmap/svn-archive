@@ -7,6 +7,7 @@ public class ToolSettings {
 	private static double lenstep = 0;
 	private static boolean useAddr;
 	private static String tag = "yes";
+	private static boolean autoSelect;
 
 	public static void setAddrDialog(boolean _useAddr) {
 		useAddr = _useAddr;
@@ -51,5 +52,13 @@ public class ToolSettings {
 
 	public static boolean isSoftCursor() {
 		return Main.pref.getBoolean("buildings_tools.softcursor", false);
+	}
+
+	public static boolean isAutoSelect() {
+		return autoSelect;
+	}
+
+	public static void setAutoSelect(boolean _autoSelect) {
+		autoSelect = _autoSelect;
 	}
 }

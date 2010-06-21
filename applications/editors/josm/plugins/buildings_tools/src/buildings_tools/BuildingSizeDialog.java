@@ -24,6 +24,7 @@ public class BuildingSizeDialog extends ExtendedDialog {
 	private JFormattedTextField twidth = new JFormattedTextField(NumberFormat.getInstance());
 	private JFormattedTextField tlenstep = new JFormattedTextField(NumberFormat.getInstance());
 	private JCheckBox caddr = new JCheckBox(tr("Use Address dialog"));
+	private JCheckBox cAutoSelect = new JCheckBox(tr("Auto-select building"));
 
 	static void addLabelled(JPanel panel, String str, Component c) {
 		JLabel label = new JLabel(str);
@@ -43,10 +44,12 @@ public class BuildingSizeDialog extends ExtendedDialog {
 		addLabelled(panel, tr("Buildings width:"), twidth);
 		addLabelled(panel, tr("Length step:"), tlenstep);
 		panel.add(caddr, GBC.eol().fill(GBC.HORIZONTAL));
+		panel.add(cAutoSelect, GBC.eol().fill(GBC.HORIZONTAL));
 
 		twidth.setValue(ToolSettings.getWidth());
 		tlenstep.setValue(ToolSettings.getLenStep());
 		caddr.setSelected(ToolSettings.isUsingAddr());
+		cAutoSelect.setSelected(ToolSettings.isAutoSelect());
 
 		JButton bAdv = new JButton(tr("Advanced..."));
 		bAdv.addActionListener(new ActionListener() {
@@ -88,5 +91,6 @@ public class BuildingSizeDialog extends ExtendedDialog {
 	public void saveSettings() {
 		ToolSettings.setSizes(width(), lenstep());
 		ToolSettings.setAddrDialog(useAddr());
+		ToolSettings.setAutoSelect(cAutoSelect.isSelected());
 	}
 }

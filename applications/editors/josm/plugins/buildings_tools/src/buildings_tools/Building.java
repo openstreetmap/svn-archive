@@ -121,7 +121,7 @@ class Building {
 		en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter,
 				p1.north() + Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
 		en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter,
-				p1.north() - Math.sin(heading) * width	* meter);
+				p1.north() - Math.sin(heading) * width * meter);
 	}
 
 	public void setLengthWidth(double length, double width) {

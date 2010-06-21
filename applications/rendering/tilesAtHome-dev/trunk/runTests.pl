@@ -79,7 +79,7 @@ if ($success) # remove all zips from the test, because they should not be upload
     }
 }
 
-my @pngList = ("_13_0_0.png","_13_1_0.png","_13_1_1.png","_14_1_1.png","_14_3_3.png"); # these tiles contain font samples"
+my @pngList = ("_13_0_0.png","_13_1_0.png","_13_1_1.png","_14_0_2.png","_14_0_3.png","_14_1_1.png","_14_3_3.png"); # these tiles contain font samples"
 foreach my $pngSuffix (@pngList)
 {
     my $fonttestRef = File::Spec->join("tests","fonttest".$pngSuffix);

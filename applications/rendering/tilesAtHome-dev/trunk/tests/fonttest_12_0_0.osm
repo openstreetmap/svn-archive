@@ -9,5 +9,13 @@
     <tag k="place" v="village"/>
     <tag k="name" v="ఖమ్మం (Khammam) खम्मम"/>
   </node>
+  <node id="3" lat="85.0444900592091" lon="-179.98901367" visible="true" timestamp="2010-05-11T17:49:30Z">
+    <tag k="place" v="village"/>
+    <tag k="name" v="Kyōto 京都市 (カタカナ/ひらがな)"/>
+  </node>
+  <node id="4" lat="85.0463876518586" lon="-179.989013671875" visible="true" timestamp="2010-05-11T17:49:30Z">
+    <tag k="place" v="village"/>
+    <tag k="name" v="北京 (Běijīng)"/>
+  </node>
 </osm>
 

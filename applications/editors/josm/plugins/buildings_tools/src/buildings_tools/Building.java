@@ -237,7 +237,7 @@ class Building {
 		}
 		Way w = new Way();
 		w.addNode(nodes[0]);
-		if (projection2(en[2]) > 0) {
+		if (projection2(en[2]) > 0 ^ len < 0) {
 			w.addNode(nodes[1]);
 			w.addNode(nodes[2]);
 			w.addNode(nodes[3]);

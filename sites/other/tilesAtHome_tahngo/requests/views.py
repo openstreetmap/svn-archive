@@ -382,7 +382,7 @@ def take(request):
 
     #"You provided a correct username and password!"
     # next, check for a valid client version
-    if not form['version'] in ['Ulm']:
+    if not form['version'] in ['Ulm','Vizag']:
         # client version not in whitelist
         logging.info("User %s connects with disallowed client '%s'." %\
                      (user,form['version']))

@@ -50,7 +50,7 @@ my $Config = TahConf->getConfig();
 # Handle the command-line
 our $Mode = shift() || '';
 my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
-my $RenderMode = (($Mode eq "") or ($Mode eq "xy") or ($Mode eq "loop") or ($Mode eq "localFile")) ? 1 : 0;
+my $RenderMode = (($Mode eq "xy") or ($Mode eq "loop") or ($Mode eq "localFile")) ? 1 : 0;
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_loop")) ? 1 : 0;
 my %EnvironmentInfo;
 
@@ -63,6 +63,12 @@ $ENV{LANG} = 'C';
 if ($RenderMode)
 {   # need to check that we can render and stuff
     %EnvironmentInfo = $Config->CheckConfig();
+    if (not ($Mode eq "localFile"))
+    {
+        my $Cmd = "perl runTests.pl";
+        my $success = runCommand($Cmd,$PID);
+        die "tests failed" unless ($success);
+    }
 }
 else
 {   # for uploading we need only basic settings
@@ -518,14 +524,14 @@ else
     # ----------------------------------
     my $Bar = "-" x 78;
     print "\n$Bar\nOpenStreetMap tiles\@home client\n$Bar\n";
-    print "Usage: \nNormal mode:\n  \"$0\", will download requests from server\n";
+    print "Usage: \n";
+    print "Run continuously (preferred mode): $0 loop\n";
     print "Specific area:\n  \"$0 xy <x> <y> [z [layers]]\"\n  (x and y coordinates of a\n";
     print "zoom-12 (default) tile in the slippy-map coordinate system)\n";
     print "See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\n";
     print "z is optional and can be used for low-zoom tilesets\n";
     print "layers is a comma separated list (no spaces) of layers and overrides the config.\n";
     print "Other modes:\n";
-    print "  $0 loop - runs continuously\n";
     print "  $0 upload - uploads any tiles\n";
     print "  $0 upload_loop - uploads tiles in loop mode\n";
     print "  $0 localFile data_<z>_<x>_<y>.osm [layers] - runs offline, rendering from given osm file\n";

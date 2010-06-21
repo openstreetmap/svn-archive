@@ -37,21 +37,21 @@ delete $ENV{LC_NUMERIC};
 delete $ENV{LANG};
 $ENV{LANG} = 'C';
 
-print " - Reading Config ... ";
+print "- Reading Config ... ";
 my %EnvironmentInfo;
 my $Config = TahConf->getConfig();
 print "OK\n";
 
-print " - Testing Basic Config ... ";
+print "- Testing Basic Config ... ";
 %EnvironmentInfo = $Config->CheckBasicConfig();
 print "OK\n";
 
 
-print " - Testing Full Config ... ";
+print "- Testing Full Config ... ";
 %EnvironmentInfo = $Config->CheckConfig();
 print "OK\n";
 
-print " - Start offline tests:\n";
+print "- Start offline tests:\n";
 my $Cmd;
 my $success;
 my $PID;
@@ -104,3 +104,7 @@ foreach my $pngSuffix (@pngList)
 rmtree($tempdir);
 
 print "OK\n";
+
+
+
+print "- done testing.\n";

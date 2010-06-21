@@ -35,16 +35,23 @@ class Building {
 	private double len = 0;
 	private double width;
 	private double heading;
-	private boolean angConstrained;
-	private double angConstraint = 0;
+	private AngleSnap angleSnap = new AngleSnap();
+	private Double drawingAngle;
 
-	public void disableAngConstraint() {
-		angConstrained = false;
+	public void clearAngleSnap() {
+		angleSnap.clear();
+		drawingAngle = null;
 	}
 
-	public void setAngConstraint(double angle) {
-		angConstrained = true;
-		angConstraint = angle;
+	public void addAngleSnap(Node[] nodes) {
+		drawingAngle = angleSnap.addSnap(nodes);
+	}
+
+	public void addAngleSnap(Way way) {
+		angleSnap.addSnap(way);
+		if (drawingAngle == null) {
+			drawingAngle = angleSnap.getAngle();
+		}
 	}
 
 	public double getLength() {
@@ -56,7 +63,11 @@ class Building {
 	}
 
 	public boolean isRectDrawing() {
-		return angConstrained && ToolSettings.getWidth() == 0 && ToolSettings.getLenStep() == 0;
+		return drawingAngle != null && ToolSettings.getWidth() == 0 && ToolSettings.getLenStep() == 0;
+	}
+
+	public Double getDrawingAngle() {
+		return drawingAngle;
 	}
 
 	public void reset() {
@@ -107,11 +118,10 @@ class Building {
 			return;
 		final EastNorth p1 = en[0];
 		en[1] = new EastNorth(p1.east() + Math.sin(heading) * len * meter, p1.north() + Math.cos(heading) * len * meter);
-		en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter, p1
-				.north()
-				+ Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
-		en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter, p1.north() - Math.sin(heading) * width
-				* meter);
+		en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter,
+				p1.north() + Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
+		en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter,
+				p1.north() - Math.sin(heading) * width	* meter);
 	}
 
 	public void setLengthWidth(double length, double width) {
@@ -129,14 +139,8 @@ class Building {
 		if (en[0] == null)
 			throw new IllegalStateException("setPlace() called without the base point");
 		this.heading = en[0].heading(p2);
-		double hdang = 0;
-		if (angConstrained && !ignoreConstraints) {
-			hdang = Math.round((heading - angConstraint) / Math.PI * 4);
-			hdang = hdang % 8;
-			if (hdang < 0)
-				hdang += 8;
-			heading = (hdang * Math.PI / 4 + angConstraint) % (2 * Math.PI);
-		}
+		if (!ignoreConstraints)
+			this.heading = angleSnap.snapAngle(this.heading);
 
 		this.width = width;
 		this.len = projection1(p2);
@@ -146,8 +150,13 @@ class Building {
 		updatePos();
 
 		Main.map.statusLine.setHeading(Math.toDegrees(heading));
-		if (angConstrained && !ignoreConstraints) {
-			Main.map.statusLine.setAngle(hdang * 45);
+		if (this.drawingAngle != null && !ignoreConstraints) {
+			double ang = Math.toDegrees(heading - this.drawingAngle);
+			if (ang < 0)
+				ang += 360;
+			if (ang > 360)
+				ang -= 360;
+			Main.map.statusLine.setAngle(ang);
 		}
 	}
 
@@ -156,16 +165,19 @@ class Building {
 			throw new IllegalStateException("SetPlaceRect() called without the base point");
 		if (!isRectDrawing())
 			throw new IllegalStateException("Invalid drawing mode");
-		heading = angConstraint;
+		heading = drawingAngle;
 		setLengthWidth(projection1(p2), projection2(p2));
 		Main.map.statusLine.setHeading(Math.toDegrees(heading));
 	}
 
 	public void angFix(EastNorth point) {
-		EastNorth en3 = this.en[2];
-		heading = en[0].heading(point);
+		EastNorth en3 = en[2];
+		EastNorth mid = en[0].getCenter(en3);
+		double radius = en3.distance(mid);
+		heading = mid.heading(point);
+		heading = en[0].heading(mid.add(Math.sin(heading) * radius, Math.cos(heading) * radius));
 		setLengthWidth(projection1(en3), projection2(en3));
-		this.en[2] = en3;
+		en[2] = en3;
 	}
 
 	public void paint(Graphics2D g, MapView mv) {
@@ -225,7 +237,7 @@ class Building {
 		}
 		Way w = new Way();
 		w.addNode(nodes[0]);
-		if (projection1(en[2]) > 0) {
+		if (projection2(en[2]) > 0) {
 			w.addNode(nodes[1]);
 			w.addNode(nodes[2]);
 			w.addNode(nodes[3]);

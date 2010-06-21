@@ -54,8 +54,7 @@ public class BuildingSizeDialog extends ExtendedDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				AdvancedSettingsDialog dlg = new AdvancedSettingsDialog();
 				if (dlg.getValue() == 1) {
-					ToolSettings.setTag(dlg.getTag());
-					ToolSettings.setBBMode(dlg.isBBMode());
+					dlg.saveSettings();
 				}
 			}
 		});
@@ -84,5 +83,10 @@ public class BuildingSizeDialog extends ExtendedDialog {
 
 	public boolean useAddr() {
 		return caddr.isSelected();
+	}
+
+	public void saveSettings() {
+		ToolSettings.setSizes(width(), lenstep());
+		ToolSettings.setAddrDialog(useAddr());
 	}
 }

@@ -23,8 +23,7 @@ public class BuildingSizeAction extends JosmAction {
 	public void actionPerformed(ActionEvent arg0) {
 		BuildingSizeDialog dlg = new BuildingSizeDialog();
 		if (dlg.getValue() == 1) {
-			ToolSettings.setSizes(dlg.width(), dlg.lenstep());
-			ToolSettings.setAddrDialog(dlg.useAddr());
+			dlg.saveSettings();
 		}
 	}
 }

@@ -12,11 +12,15 @@ import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.GeneralPath;
+import java.awt.image.BufferedImage;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -36,8 +40,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
-public class DrawBuildingAction extends MapMode
-		implements MapViewPaintable, AWTEventListener, SelectionChangedListener {
+public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWTEventListener, SelectionChangedListener {
 	enum Mode {
 		None, Drawing, DrawingWidth, DrawingAngFix
 	}
@@ -45,13 +48,16 @@ public class DrawBuildingAction extends MapMode
 	final private Cursor cursorCrosshair;
 	final private Cursor cursorJoinNode;
 	private Cursor currCursor;
+	private Cursor customCursor;
 
 	private Mode mode = Mode.None;
 	private Mode nextMode = Mode.None;
 
 	private Color selectedColor;
-	private Point mousePos;
 	private Point drawStartPos;
+	private Point mousePos;
+	private boolean isCtrlDown;
+	private boolean isShiftDown;
 
 	Building building = new Building();
 
@@ -128,7 +134,7 @@ public class DrawBuildingAction extends MapMode
 		Main.map.mapView.addMouseMotionListener(this);
 		Main.map.mapView.addTemporaryLayer(this);
 		DataSet.selListeners.add(this);
-		updateConstraint(getCurrentDataSet().getSelected());
+		updateSnap(getCurrentDataSet().getSelected());
 		try {
 			Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
 		} catch (SecurityException ex) {
@@ -166,13 +172,27 @@ public class DrawBuildingAction extends MapMode
 		if (!(arg0 instanceof KeyEvent))
 			return;
 		KeyEvent ev = (KeyEvent) arg0;
-		if (ev.getKeyCode() == KeyEvent.VK_ESCAPE)
+		int modifiers = ev.getModifiersEx();
+		boolean isCtrlDown = (modifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
+		boolean isShiftDown = (modifiers & KeyEvent.SHIFT_DOWN_MASK) != 0;
+		if (this.isCtrlDown != isCtrlDown || this.isShiftDown != isShiftDown) {
+			this.isCtrlDown = isCtrlDown;
+			this.isShiftDown = isShiftDown;
+			updCursor();
+		}
+		ev.getID();
+
+		if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
+			if (mode != Mode.None)
+				ev.consume();
+
 			cancelDrawing();
+		}
 	}
 
-	private EastNorth getPoint(MouseEvent e) {
+	private EastNorth getEastNorth() {
 		Node n;
-		if (e.isControlDown()) {
+		if (isCtrlDown) {
 			n = null;
 		} else {
 			n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
@@ -184,43 +204,48 @@ public class DrawBuildingAction extends MapMode
 		}
 	}
 
-	private Mode modeDrawing(MouseEvent e) {
-		EastNorth p = getPoint(e);
-		if (building.isRectDrawing() && (!e.isShiftDown() || ToolSettings.isBBMode())) {
+	private boolean isRectDrawing() {
+		return building.isRectDrawing() && (!isShiftDown || ToolSettings.isBBMode());
+	}
+
+	private Mode modeDrawing() {
+		EastNorth p = getEastNorth();
+		if (isRectDrawing()) {
 			building.setPlaceRect(p);
-			return e.isShiftDown() ? Mode.DrawingAngFix : Mode.None;
+			return isShiftDown ? Mode.DrawingAngFix : Mode.None;
 		} else {
-			building.setPlace(p, ToolSettings.getWidth(),
-					ToolSettings.getLenStep(), e.isShiftDown());
+			building.setPlace(p, ToolSettings.getWidth(), ToolSettings.getLenStep(), isShiftDown);
 			Main.map.statusLine.setDist(building.getLength());
 			return this.nextMode = ToolSettings.getWidth() == 0 ? Mode.DrawingWidth : Mode.None;
 		}
 	}
 
-	private Mode modeDrawingWidth(MouseEvent e) {
-		building.setWidth(getPoint(e));
+	private Mode modeDrawingWidth() {
+		building.setWidth(getEastNorth());
 		Main.map.statusLine.setDist(Math.abs(building.getWidth()));
 		return Mode.None;
 	}
 
-	private Mode modeDrawingAngFix(MouseEvent e) {
-		building.angFix(getPoint(e));
+	private Mode modeDrawingAngFix() {
+		building.angFix(getEastNorth());
 		return Mode.None;
 	}
 
 	private void processMouseEvent(MouseEvent e) {
 		mousePos = e.getPoint();
+		isCtrlDown = e.isControlDown();
+		isShiftDown = e.isShiftDown();
 		if (mode == Mode.None) {
 			nextMode = Mode.None;
 			return;
 		}
 
 		if (mode == Mode.Drawing) {
-			nextMode = modeDrawing(e);
+			nextMode = modeDrawing();
 		} else if (mode == Mode.DrawingWidth) {
-			nextMode = modeDrawingWidth(e);
+			nextMode = modeDrawingWidth();
 		} else if (mode == Mode.DrawingAngFix) {
-			nextMode = modeDrawingAngFix(e);
+			nextMode = modeDrawingAngFix();
 		} else
 			throw new AssertionError("Invalid drawing mode");
 	}
@@ -314,11 +339,17 @@ public class DrawBuildingAction extends MapMode
 	private void updCursor() {
 		if (mousePos == null)
 			return;
-		Node n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
-		if (n != null)
+		Node n = null;
+		if (!isCtrlDown)
+			n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
+		if (n != null) {
 			setCursor(cursorJoinNode);
-		else
-			setCursor(cursorCrosshair);
+		} else {
+			if (customCursor != null && (!isShiftDown || isRectDrawing()))
+				setCursor(customCursor);
+			else
+				setCursor(cursorCrosshair);
+		}
 
 	}
 
@@ -348,20 +379,65 @@ public class DrawBuildingAction extends MapMode
 		return l instanceof OsmDataLayer;
 	}
 
-	public void updateConstraint(Collection<? extends OsmPrimitive> newSelection) {
-		building.disableAngConstraint();
-		if (newSelection.size() != 2)
+	public void updateSnap(Collection<? extends OsmPrimitive> newSelection) {
+		building.clearAngleSnap();
+		// update snap only if selection isn't too big
+		if (newSelection.size() <= 10) {
+			LinkedList<Node> nodes = new LinkedList<Node>();
+			LinkedList<Way> ways = new LinkedList<Way>();
+
+			for (OsmPrimitive p : newSelection) {
+				switch (p.getType()) {
+				case NODE:
+					nodes.add((Node) p);
+					break;
+				case WAY:
+					ways.add((Way) p);
+					break;
+				}
+			}
+
+			building.addAngleSnap(nodes.toArray(new Node[0]));
+			for (Way w : ways) {
+				building.addAngleSnap(w);
+			}
+		}
+		updateCustomCursor();
+	}
+
+	private void updateCustomCursor() {
+		Double angle = building.getDrawingAngle();
+		if (angle == null || !ToolSettings.isSoftCursor()) {
+			customCursor = null;
 			return;
-		Object[] arr = newSelection.toArray();
-		if (!(arr[0] instanceof Node && arr[1] instanceof Node))
-			return;
-		EastNorth p1, p2;
-		p1 = latlon2eastNorth(((Node) arr[0]).getCoor());
-		p2 = latlon2eastNorth(((Node) arr[1]).getCoor());
-		building.setAngConstraint(p1.heading(p2));
+		}
+		final int r = 11; // crosshair radius
+		BufferedImage img = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = img.createGraphics();
+
+		GeneralPath b = new GeneralPath();
+		b.moveTo(16 - Math.cos(angle) * r, 16 - Math.sin(angle) * r);
+		b.lineTo(16 + Math.cos(angle) * r, 16 + Math.sin(angle) * r);
+		b.moveTo(16 + Math.sin(angle) * r, 16 - Math.cos(angle) * r);
+		b.lineTo(16 - Math.sin(angle) * r, 16 + Math.cos(angle) * r);
+
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+		g.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g.setColor(Color.WHITE);
+		g.draw(b);
+
+		g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g.setColor(Color.BLACK);
+		g.draw(b);
+
+		customCursor = Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(16, 16), "custom crosshair");
+
+		updCursor();
 	}
 
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-		updateConstraint(newSelection);
+		updateSnap(newSelection);
 	}
 }

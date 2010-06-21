@@ -17,6 +17,7 @@ public class AdvancedSettingsDialog extends ExtendedDialog {
 	// TODO: Replace tag textbox to full-fledged tag editor
 	JTextField tBTag = new JTextField();
 	JCheckBox cBigMode = new JCheckBox(tr("Big buildings mode"));
+	JCheckBox cSoftCur = new JCheckBox(tr("Rotate crosshair"));
 
 	public AdvancedSettingsDialog() {
 		super(Main.parent, tr("Advanced settings"),
@@ -28,9 +29,11 @@ public class AdvancedSettingsDialog extends ExtendedDialog {
 		final JPanel panel = new JPanel(new GridBagLayout());
 		addLabelled(panel, tr("Building tag:"), tBTag);
 		panel.add(cBigMode, GBC.eol().fill(GBC.HORIZONTAL));
+		panel.add(cSoftCur, GBC.eol().fill(GBC.HORIZONTAL));
 
 		tBTag.setText(ToolSettings.getTag());
 		cBigMode.setSelected(ToolSettings.isBBMode());
+		cSoftCur.setSelected(ToolSettings.isSoftCursor());
 
 		setContent(panel);
 		setupDialog();
@@ -43,5 +46,15 @@ public class AdvancedSettingsDialog extends ExtendedDialog {
 
 	public boolean isBBMode() {
 		return cBigMode.isSelected();
+	}
+
+	public boolean isSoftCursor() {
+		return cSoftCur.isSelected();
+	}
+
+	public void saveSettings() {
+		ToolSettings.setTag(getTag());
+		ToolSettings.setBBMode(isBBMode());
+		ToolSettings.setSoftCursor(isSoftCursor());
 	}
 }

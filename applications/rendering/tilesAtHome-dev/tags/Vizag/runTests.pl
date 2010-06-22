@@ -105,7 +105,7 @@ foreach my $pngSuffix (@pngList)
         if (not defined $ReferenceImage[$I]) #we ran out of tests
         {
             print STDERR "\nFonttest failed, check installed fonts. $renderResult doesn't match any of ";
-            print STDERR join(", ",@ReferenceImage);
+            print STDERR join(", ",@FonttestRef);
             print STDERR "\n";
             push(@failedImages, $renderResult);
             die $fonttestRef[$I]." not found" if($I == 0);

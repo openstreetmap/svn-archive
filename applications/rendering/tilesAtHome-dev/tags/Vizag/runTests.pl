@@ -86,17 +86,16 @@ my @pngList = ("_13_0_0.png","_13_1_0.png","_13_1_1.png","_14_0_2.png","_14_0_3.
 my @failedImages;
 foreach my $pngSuffix (@pngList)
 {
-
-    print STDERR "testing $fonttestRef \n";
+    print STDERR "testing tests/fonttest".$pngSuffix."\n";
 
     my $renderResult = File::Spec->join($tempdir,"tile".$pngSuffix);
     my $Image = undef;
     eval { $Image = GD::Image->newFromPng($renderResult); };
     die "$renderResult not found" if( not defined $Image );
 
-    my @fonttestRef;
-    my @ReferenceImage;
-    my $loopmax=5;
+    my @fonttestRef = undef;
+    my @ReferenceImage = undef;
+    my $loopmax = 5;
     my $I = 0;
     for (; $I <= $loopmax;)
     {
@@ -105,14 +104,14 @@ foreach my $pngSuffix (@pngList)
         eval { $ReferenceImage[$I] = GD::Image->newFromPng($fonttestRef[$I]); };
         if (not defined $ReferenceImage[$I]) #we ran out of tests
         {
-            print STDERR "\nFonttest failed, check installed fonts. $renderResult $fonttestRef\n";
+            print STDERR "\nFonttest failed, check installed fonts. $renderResult $fonttestRef[$I]\n";
             push(@failedImages, $renderResult);
             die $fonttestRef[$I]." not found" if($I == 0);
             last; 
         }
          
         # libGD comparison returns true if images are different. 
-        if (not $Image->compare($ReferenceImage) & GD_CMP_IMAGE)
+        if (not $Image->compare($ReferenceImage[$I]) & GD_CMP_IMAGE)
         {
             last; #we found a match, so the client is OK.
         }

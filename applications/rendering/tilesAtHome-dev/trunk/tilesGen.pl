@@ -50,7 +50,7 @@ my $Config = TahConf->getConfig();
 # Handle the command-line
 our $Mode = shift() || '';
 my $LoopMode = (($Mode eq "loop") or ($Mode eq "upload_loop")) ? 1 : 0;
-my $RenderMode = (($Mode eq "xy") or ($Mode eq "loop") or ($Mode eq "localFile")) ? 1 : 0;
+my $RenderMode = (($Mode eq "xy") or ($Mode eq "once") or ($Mode eq "loop") or ($Mode eq "localFile")) ? 1 : 0;
 my $UploadMode = (($Mode eq "upload") or ($Mode eq "upload_loop")) ? 1 : 0;
 my %EnvironmentInfo;
 
@@ -93,7 +93,7 @@ if ($UploadMode or $LoopMode)
             exit;
         }
     }
-    if ($Mode eq "loop") # only really needed for loop rendering mode
+    if (($Mode eq "loop") or ($Mode eq "once")) # only really needed for loop and once rendering mode
     {
         my $Cmd = "perl runTests.pl";
         my $success = runCommand($Cmd,$PID);
@@ -446,24 +446,24 @@ elsif ($Mode eq "update")
     UpdateClient();
 }
 #---------------------------------
-#elsif ($Mode eq "") 
-#{
-#    # ----------------------------------
-#    # Normal mode renders a single request from server and exits
-#    # ----------------------------------
-#
-#    exit (1) if ClientModified(); # don't interact with server if client was modified!
-#
-#    my ($did_something, $message) = ProcessRequestsFromServer();
-#    
-#    if (! $did_something)
-#    {
-#        statusMessage("you may safely press Ctrl-C now if you want to exit tilesGen.pl",1,0);
-#        talkInSleep($message, 60);
-#    }
-#    statusMessage("if you want to run this program continuously, use loop mode",1,0);
-#    statusMessage("please run \"tilesGen.pl upload\" now",1,0);
-#}
+elsif ($Mode eq "once") 
+{
+    # ----------------------------------
+    # Normal mode renders a single request from server and exits
+    # ----------------------------------
+
+    exit (1) if ClientModified(); # don't interact with server if client was modified!
+
+    my ($did_something, $message) = ProcessRequestsFromServer();
+    
+    if (! $did_something)
+    {
+        statusMessage("you may safely press Ctrl-C now if you want to exit tilesGen.pl",1,0);
+        talkInSleep($message, 60);
+    }
+    statusMessage("if you want to run this program continuously, use loop mode",1,0);
+    statusMessage("please run \"tilesGen.pl upload\" now",1,0);
+}
 #---------------------------------
 elsif ($Mode eq "startBatik")
 {
@@ -535,6 +535,7 @@ else
     print "z is optional and can be used for low-zoom tilesets\n";
     print "layers is a comma separated list (no spaces) of layers and overrides the config.\n";
     print "Other modes:\n";
+    print "  $0 once - like loop, just quit after one job.\n";
     print "  $0 upload - uploads any tiles\n";
     print "  $0 upload_loop - uploads tiles in loop mode\n";
     print "  $0 localFile data_<z>_<x>_<y>.osm [layers] - runs offline, rendering from given osm file\n";

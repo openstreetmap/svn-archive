@@ -76,7 +76,7 @@ class OSMBackend:
         #reply line looks like this
         #<user display_name="spaetz" account_created="2007-03-19T19:00:56+00:00">
 
-        p = re.compile('<user display_name="(\w+)"')
+        p = re.compile('<user display_name="([\w@+.-]+)"')
 	m = p.search(data)
 
 	if (m):

@@ -86,26 +86,43 @@ my @pngList = ("_13_0_0.png","_13_1_0.png","_13_1_1.png","_14_0_2.png","_14_0_3.
 my @failedImages;
 foreach my $pngSuffix (@pngList)
 {
-    my $fonttestRef = File::Spec->join("tests","fonttest".$pngSuffix);
-    my $renderResult = File::Spec->join($tempdir,"tile".$pngSuffix);
 
     print STDERR "testing $fonttestRef \n";
 
-    my $ReferenceImage = undef;
-    eval { $ReferenceImage = GD::Image->newFromPng($fonttestRef); };
-    die "$fonttestRef not found" if( not defined $ReferenceImage );
-    
+    my $renderResult = File::Spec->join($tempdir,"tile".$pngSuffix);
     my $Image = undef;
     eval { $Image = GD::Image->newFromPng($renderResult); };
     die "$renderResult not found" if( not defined $Image );
-    
-    # libGD comparison returns true if images are different. 
-    if ($Image->compare($ReferenceImage) & GD_CMP_IMAGE)
+
+    my @fonttestRef;
+    my @ReferenceImage;
+    my $loopmax=5;
+    my $I = 0;
+    for (; $I <= $loopmax;)
     {
-        print STDERR "\nFonttest failed, check installed fonts. $renderResult $fonttestRef\n";
-        push(@failedImages, $renderResult);
+        $fonttestRef[$I] = File::Spec->join("tests","fonttest".$I.$pngSuffix);
+        $ReferenceImage[$I] = undef;
+        eval { $ReferenceImage[$I] = GD::Image->newFromPng($fonttestRef[$I]); };
+        if (not defined $ReferenceImage[$I]) #we ran out of tests
+        {
+            print STDERR "\nFonttest failed, check installed fonts. $renderResult $fonttestRef\n";
+            push(@failedImages, $renderResult);
+            die $fonttestRef[$I]." not found" if($I == 0);
+            last; 
+        }
+         
+        # libGD comparison returns true if images are different. 
+        if (not $Image->compare($ReferenceImage) & GD_CMP_IMAGE)
+        {
+            last; #we found a match, so the client is OK.
+        }
+        else
+        {
+            $I++
+        }
     }
 }
+
 if (scalar(@failedImages))
 {
     print STDERR "please e-mail the following failed images to tah\@deelkar.net:\n";

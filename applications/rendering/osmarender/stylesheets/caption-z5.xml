@@ -23,12 +23,12 @@
 
     <rule e="node|way" k="osmarender:render" v="~|yes">
 
-      <rule e="node" k="place" v="city" horizontalProximity="1.6" verticalProximity="1.2">
+      <rule e="node" k="place" v="city" horizontalProximity="1.0" verticalProximity="0.9">
         <text k="name" class='caption-casing city-caption-casing' />
         <text k="name" class='caption-core city-caption' />
       </rule>
 
-      <rule e="node" k="place" v="country" horizontalProximity="1.6" verticalProximity="1.2">
+      <rule e="node" k="place" v="country" horizontalProximity="0.8" verticalProximity="0.8">
         <text k="name" class='caption-casing country-caption-casing' />
         <text k="name" class='caption-core country-caption' />
       </rule>

@@ -104,6 +104,7 @@ foreach my $pngSuffix (@pngList)
         eval { $ReferenceImage[$I] = GD::Image->newFromPng($fonttestRef[$I]); };
         if (not defined $ReferenceImage[$I]) #we ran out of tests
         {
+            pop(@FonttestRef);
             print STDERR "\nFonttest failed, check installed fonts. $renderResult doesn't match any of ";
             print STDERR join(", ",@FonttestRef);
             print STDERR "\n";

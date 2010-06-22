@@ -1,0 +1,6 @@
+README 
+======
+
+ExtTools is generalization of Fuzzer plugin which uses external python script
+for tracing satellite imagery. With ExtTools you can create your own tools
+that uses external scripts.

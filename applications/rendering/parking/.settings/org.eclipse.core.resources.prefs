@@ -1,7 +1,8 @@
-#Mon Jun 21 19:43:50 CEST 2010
+#Tue Jun 22 12:03:07 CEST 2010
 eclipse.preferences.version=1
 encoding//osray/osray.py=utf-8
 encoding//osray/osray_ground.py=utf-8
+encoding//osray/osray_server.py=utf-8
 encoding//osray/osray_streets.py=utf-8
 encoding//parkingicons/osm-parking-icons-hstore.py=utf-8
 encoding//parkingicons/osm-parking-icons-trunk.py=utf-8

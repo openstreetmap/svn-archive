@@ -21,16 +21,14 @@
     interactive="no">
 
 
-  <rule e="node|way" k="osmarender:render" v="~|yes">
-		<rule e="node|way" k="osmarender:renderName" v="~|yes">
+   <rule e="node|way" k="osmarender:render" v="~|yes">
 
-      <rule e="node" k="place" v="country" horizontalProximity="2.5" verticalProximity="2.5">
-        <text k="name" class='caption-casing country-caption-casing' />
-        <text k="name" class='caption-core country-caption' />
+      <rule e="node" k="place" v="continent">
+        <text k="name" class='caption-casing continent-caption-casing' />
+        <text k="name" class='caption-core continent-caption' />
       </rule>
 
-    </rule> <!-- k="osmarender:renderName" v="~|yes" -->
-	</rule> <!-- k="osmarender:render" v="~|yes" -->
+   </rule> <!-- k="osmarender:render" v="~|yes" -->
 
 
     <!-- SVG Definitions - markers, symbols etc go here -->
@@ -64,8 +62,8 @@
                 stroke-miterlimit: 1.5;
             }
 
-           .continent-caption-casing { font-size: 60000px; stroke-width: 4000px; }
-           .continent-caption        { font-size: 600000px; }
+           .continent-caption-casing { font-size: 60000px; stroke-width: 16000px; }
+           .continent-caption        { font-size: 60000px; }
 
             /* Map decoration */
             .map-grid-line {

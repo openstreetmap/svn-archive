@@ -63,12 +63,6 @@ $ENV{LANG} = 'C';
 if ($RenderMode)
 {   # need to check that we can render and stuff
     %EnvironmentInfo = $Config->CheckConfig();
-    if (not ($Mode eq "localFile"))
-    {
-        my $Cmd = "perl runTests.pl";
-        my $success = runCommand($Cmd,$PID);
-        die "tests failed" unless ($success);
-    }
 }
 else
 {   # for uploading we need only basic settings
@@ -97,6 +91,15 @@ if ($UploadMode or $LoopMode)
         {
             statusMessage("tilesGen.pl has changed. Please restart new version.",1,0);
             exit;
+        }
+    }
+    if ($Mode eq "loop") # only really needed for loop rendering mode
+    {
+        my $Cmd = "perl runTests.pl";
+        my $success = runCommand($Cmd,$PID);
+        if (not $success)
+        {
+            die "tests failed\n";
         }
     }
 }

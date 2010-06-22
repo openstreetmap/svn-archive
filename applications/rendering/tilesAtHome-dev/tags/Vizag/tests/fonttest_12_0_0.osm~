@@ -2,7 +2,7 @@
 <osm version='0.6' generator='JOSM'>
   <bounds minlat='85.0435409' minlon='-180.0' maxlat='85.0511288' maxlon='-179.9121094' origin='OpenStreetMap server' />
   <node id='1' visible='true' lat='85.04813960454631' lon='-179.96632821788043'>
-    <tag k='name' v='the quick brown fox jumps over the lazy dog' />
+    <tag k='name' v='thequick brown fox jumps over the lazy dog' />
     <tag k='place' v='village' />
   </node>
   <node id="2" lat="85.0444900592091" lon="-179.923095703125" visible="true" timestamp="2010-05-11T17:49:30Z">

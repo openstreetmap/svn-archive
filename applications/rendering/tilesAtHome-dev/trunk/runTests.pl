@@ -124,8 +124,8 @@ foreach my $pngSuffix (@pngList)
 
 if (scalar(@failedImages))
 {
-    print STDERR "2009062204\n";
-    print STDERR "please e-mail the following failed images to tah\@deelkar.net:\n";
+    print STDERR "Please e-mail the following failed images to tah\@deelkar.net:\n";
+    print STDERR "Failed images reference number: 2009062205\n";
     print STDERR join("\n",@failedImages);
     print STDERR "\n";
     exit(7);

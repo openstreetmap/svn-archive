@@ -23,15 +23,24 @@
 
     <rule e="node|way" k="osmarender:render" v="~|yes">
 
-      <rule e="node" k="place" v="city" horizontalProximity="1.0" verticalProximity="0.9">
-        <text k="name" class='caption-casing city-caption-casing' />
-        <text k="name" class='caption-core city-caption' />
+    <rule e="node" k="place" v="*" layer="5">
+      <rule e="node" k="capital" v="~|no|false|False" layer="5">
+        <rule e="node" k="place" v="city" horizontalProximity="1.0" verticalProximity="0.9" layer="5">
+          <text k="name" class='caption-casing city-caption-casing' />
+          <text k="name" class='caption-core city-caption' />
+        </rule>
       </rule>
+      <else>
+        <text k="name" class='caption-casing capital-caption-casing' />
+        <text k="name" class='caption-core capital-caption' />
+      </else>
 
       <rule e="node" k="place" v="country" horizontalProximity="0.8" verticalProximity="0.8">
         <text k="name" class='caption-casing country-caption-casing' />
         <text k="name" class='caption-core country-caption' />
       </rule>
+    </rule> <!-- e="node" k="place" v="*" -->
+
 
 
     </rule> <!-- k="osmarender:render" v="~|yes" -->
@@ -67,10 +76,13 @@
                 stroke-miterlimit: 1.5;
             }
 
-            .country-caption-casing { font-size: 6000px; stroke-width: 800px; }
+            .country-caption-casing { font-size: 6000px; stroke-width: 1000px; }
             .country-caption        { font-size: 6000px; }
 
-            .city-caption-casing    { font-size: 4000px; stroke-width: 600px; }
+            .capital-caption-casing    { font-size: 4300px; stroke-width: 1500px; }
+            .capital-caption           { font-size: 4300px; }
+
+            .city-caption-casing    { font-size: 4000px; stroke-width: 500px; }
             .city-caption           { font-size: 4000px; }
 
 

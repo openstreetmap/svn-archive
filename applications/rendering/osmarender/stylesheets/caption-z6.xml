@@ -40,10 +40,8 @@
         </rule>
       </rule>
       <else>
-        <rule>
           <text k="name" class='caption-casing capital-caption-casing' />
           <text k="name" class='caption-core capital-caption' />
-        </rule>
       </else>
     </rule> <!-- e="node" k="place" v="*" -->
 
@@ -94,27 +92,27 @@
             }
             
             .boundary-level-1-casing {
-            stroke-width: 56px;
+            stroke-width: 96px;
             stroke: #ffff00;
-            opacity: 0.5;
+            opacity: 0.8;
             }
             
             .boundary-level-1-core {
-            stroke-width: 8px;
+            stroke-width: 48px;
             stroke: #f9574b;
-            stroke-dasharray: 48, 16, 16, 16;
+            stroke-dasharray: 300, 100, 100, 100;
             }
             
             .boundary-level-2-casing {
-            stroke-width: 24px;
+            stroke-width: 96px;
             stroke: #ffff00;
-            opacity: 0.5;
+            opacity: 0.8;
             }
 			
             .boundary-level-2-core {
-            stroke-width: 8px;
+            stroke-width: 48px;
             stroke: #f9574b;
-            stroke-dasharray: 48, 48;
+            stroke-dasharray: 200, 200;
             }
 			
 

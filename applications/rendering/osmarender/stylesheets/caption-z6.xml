@@ -94,7 +94,7 @@
             .boundary-level-1-casing {
             stroke-width: 9000px;
             stroke: #ffff00;
-            opacity: 0.8;
+            opacity: 0.5;
             }
             
             .boundary-level-1-core {
@@ -106,7 +106,7 @@
             .boundary-level-2-casing {
             stroke-width: 700px;
             stroke: #ffff00;
-            opacity: 0.8;
+            opacity: 0.5;
             }
 			
             .boundary-level-2-core {

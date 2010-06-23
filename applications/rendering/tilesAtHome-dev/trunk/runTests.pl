@@ -98,7 +98,7 @@ foreach my $pngSuffix (@pngList)
 
     my @fonttestRef = undef;
     my @ReferenceImage = undef;
-    my $loopmax = 9;
+    my $loopmax = 15;
     my $I = 0;
     for (; $I <= $loopmax;)
     {
@@ -133,7 +133,7 @@ rmtree($tempdir); #clean up all remaining images not useful for comparison
 if (scalar(@failedImages))
 {
     print STDERR "Please e-mail the following failed images to tah\@deelkar.net:\n";
-    print STDERR "Failed images reference number: 2010062305\n";
+    print STDERR "Failed images reference number: 2010062306\n";
     print STDERR join("\n",@failedImages);
     print STDERR "\n";
     exit(7);

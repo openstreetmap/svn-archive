@@ -93,87 +93,85 @@ box {{
 
 
 
+if __name__ == "__main__":
+    parser = OptionParser()
+    parser.add_option("-d", "--dsn", dest="dsn", help="database name and host (e.g. 'dbname=gis')", default="dbname=gis")
+    parser.add_option("-p", "--prefix", dest="prefix", help="database table prefix (e.g. 'planet_osm')", default="planet_osm")
+    parser.add_option("-q", "--quick", action="store_true", dest="quick", default=False, help="don't generate textures, but use existing ones")
+    parser.add_option("-b", "--bbox", dest="bbox", help="the bounding box as string ('9.94861 49.79293,9.96912 49.80629')", default="9.94861 49.79293,9.96912 49.80629")
+    parser.add_option("-H", "--height", dest="height", help="image height in pixels", default="768", type='int')
+    parser.add_option("-W", "--width", dest="width", help="image width in pixels", default="1024", type='int')
+    (options, args) = parser.parse_args()
+    #if options.a and options.b:
+    #    parser.error("options -a and -b are mutually exclusive")
+    print options
+    main(options)
+    sys.exit(0)
 
+def main(options):
+    DSN = options.dsn
+    thebbox = options.bbox
+    prefix = options.prefix
+    create_textures = not(options.quick)
 
-parser = OptionParser()
-parser.add_option("-d", "--dsn", dest="dsn",
-                  help="database name and host (e.g. 'dbname=gis')", default="dbname=gis")
-parser.add_option("-p", "--prefix", dest="prefix",
-                  help="database table prefix (e.g. 'planet_osm')", default="planet_osm")
-parser.add_option("-q", "--quick",
-                  action="store_true", dest="quick", default=False,
-                  help="don't generate textures, but use existing ones")
-parser.add_option("-b", "--bbox", dest="bbox",
-                  help="the bounding box as string ('9.94861 49.79293,9.96912 49.80629')", default="9.94861 49.79293,9.96912 49.80629")
+    print "Opening connection using dsn:", DSN
+    conn = psycopg2.connect(DSN)
+    print "Encoding for this connection is", conn.encoding
+    curs = conn.cursor()
 
-(options, args) = parser.parse_args()
+    f = open('/home/kayd/workspace/Parking/osray/scene-osray.pov', 'w')
 
-#if options.a and options.b:
-#    parser.error("options -a and -b are mutually exclusive")
+    """
+    SELECT ST_AsText(transform("way",4326)) AS geom
+    FROM planet_osm_line
+    WHERE "way" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)
+    LIMIT 10;
+    
+    SELECT highway,ST_AsText(transform("way",4326)) AS geom
+    FROM planet_osm_line
+    WHERE "way" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)
+    and highway='secondary' LIMIT 50;
+    """
+    
+    latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
+    coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
+    FlW = "FROM "+prefix+"_line WHERE"
+    FpW = "FROM "+prefix+"_polygon WHERE"
+    
+    #thebbox = "9.94861 49.79293,9.96912 49.80629"
+    googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
+    
+    #curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
+    curs.execute("SELECT ST_AsText("+googbox+") AS geom")
+    
+    bbox = curs.fetchall()
+    pov_globals(f)
+    pov_camera(f,bbox)
+    
+    if create_textures:
+        create_landuse_texture(conn,curs)
+    
+    highways = []
+    for highwaytype in highwaytypes.iterkeys():
+        curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+FlW+" \"way\" && "+googbox+" and highway='"+highwaytype+"' LIMIT 2000;")
+        highways += curs.fetchall()
+    
+    for highway in highways:
+        pov_highway(f,highway)
+        #pass
+    
+    buildings = []
+    for buildingtype in buildingtypes.iterkeys():
+        curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+FpW+" \"way\" && "+googbox+" and building='"+buildingtype+"' LIMIT 1700;")
+        buildings += curs.fetchall()
+    
+    for building in buildings:
+        pov_building(f,building)
+    
+    f.close()
+    
+    conn.rollback()
 
-DSN = options.dsn
-thebbox = options.bbox
-prefix = options.prefix
-create_textures = not(options.quick)
-
-print "Opening connection using dsn:", DSN
-conn = psycopg2.connect(DSN)
-print "Encoding for this connection is", conn.encoding
-curs = conn.cursor()
-
-f = open('/home/kayd/workspace/Parking/osray/scene-osray.pov', 'w')
-
-"""
-SELECT ST_AsText(transform("way",4326)) AS geom
-FROM planet_osm_line
-WHERE "way" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)
-LIMIT 10;
-
-SELECT highway,ST_AsText(transform("way",4326)) AS geom
-FROM planet_osm_line
-WHERE "way" && transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)
-and highway='secondary' LIMIT 50;
-"""
-
-latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
-coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
-FlW = "FROM "+prefix+"_line WHERE"
-FpW = "FROM "+prefix+"_polygon WHERE"
-
-#thebbox = "9.94861 49.79293,9.96912 49.80629"
-googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
-
-#curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
-curs.execute("SELECT ST_AsText("+googbox+") AS geom")
-
-bbox = curs.fetchall()
-pov_globals(f)
-pov_camera(f,bbox)
-
-if create_textures:
-    create_landuse_texture(conn,curs)
-
-highways = []
-for highwaytype in highwaytypes.iterkeys():
-    curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+FlW+" \"way\" && "+googbox+" and highway='"+highwaytype+"' LIMIT 2000;")
-    highways += curs.fetchall()
-
-for highway in highways:
-    pov_highway(f,highway)
-    #pass
-
-buildings = []
-for buildingtype in buildingtypes.iterkeys():
-    curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+FpW+" \"way\" && "+googbox+" and building='"+buildingtype+"' LIMIT 1700;")
-    buildings += curs.fetchall()
-
-for building in buildings:
-    pov_building(f,building)
-
-f.close()
-
-conn.rollback()
-
-print commands.getstatusoutput('povray -Iscene-osray.pov -UV -W1600 -H1200 +Q9 -A')
-
-sys.exit(0)
+    image_dimension_parameters = "-W"+string(options.width)+" -H"+string(options.height)
+    print commands.getstatusoutput('povray -Iscene-osray.pov -UV '+image_dimension_parameters+' +Q9 +A')
+    

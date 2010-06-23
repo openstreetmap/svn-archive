@@ -15,6 +15,15 @@ class osrayHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write("")
                 return
+            baseurl = urlparse.urlparse(theurl)[2]
+            if baseurl.endswith(".png"):
+                f = open(curdir + sep + 'scene-osray.png')
+                self.send_response(200)
+                self.send_header('Content-type','image/png')
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()
+                return
             print "URL was ", theurl
             urlqs = urlparse.urlparse(theurl)[4]
             print "URL qs:", urlqs

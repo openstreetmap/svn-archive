@@ -20,7 +20,9 @@ class osrayHandler(BaseHTTPRequestHandler):
                 return
             baseurl = urlparse.urlparse(theurl)[2]
             if baseurl.endswith(".png"):
+                print "--- calling osray"
                 osray.main(options)
+                print "--- calling osray ends"
                 f = open(curdir + sep + 'scene-osray.png')
                 self.send_response(200)
                 self.send_header('Content-type','image/png')

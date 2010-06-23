@@ -133,7 +133,7 @@ rmtree($tempdir); #clean up all remaining images not useful for comparison
 if (scalar(@failedImages))
 {
     print STDERR "Please e-mail the following failed images to tah\@deelkar.net:\n";
-    print STDERR "Failed images reference number: 2010062302\n";
+    print STDERR "Failed images reference number: 2010062303\n";
     print STDERR join("\n",@failedImages);
     print STDERR "\n";
     exit(7);

@@ -18,7 +18,7 @@ class osrayHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write("")
                 return
-            baseurl = urlparse.urlparse(theurl)[3]
+            baseurl = urlparse.urlparse(theurl)[1]
             print "parse=",urlparse.urlparse(theurl)
             print "base=",baseurl
             if baseurl.endswith(".png"):

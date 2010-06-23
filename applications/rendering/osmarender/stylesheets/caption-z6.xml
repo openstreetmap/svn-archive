@@ -92,25 +92,25 @@
             }
             
             .boundary-level-1-casing {
-            stroke-width: 9000px;
+            stroke-width: 8000px;
             stroke: #ffff00;
             opacity: 0.5;
             }
             
             .boundary-level-1-core {
-            stroke-width: 400px;
+            stroke-width: 350px;
             stroke: #f9574b;
             stroke-dasharray: 900, 300, 300, 300;
             }
             
             .boundary-level-2-casing {
-            stroke-width: 700px;
+            stroke-width: 650px;
             stroke: #ffff00;
             opacity: 0.5;
             }
 			
             .boundary-level-2-core {
-            stroke-width: 350px;
+            stroke-width: 300px;
             stroke: #f9574b;
             stroke-dasharray: 800, 800;
             }

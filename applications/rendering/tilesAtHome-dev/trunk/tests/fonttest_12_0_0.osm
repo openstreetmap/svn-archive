@@ -17,5 +17,9 @@
     <tag k="place" v="village"/>
     <tag k="name" v="北京 (Běijīng)"/>
   </node>
+  <node id='5' timestamp='2009-03-27T10:49:31Z' visible='true' version='2' lat='85.0463876518586' lon='-179.945068359375'>
+    <tag k='name' v='นครปฐม (Nakhon Pathom)' />
+    <tag k='place' v='village' />
+  </node>
 </osm>
 

@@ -67,14 +67,14 @@ elsif ($Mode eq "center")
 
     my ($N,$E,$S,$W) = ProjectXY($Z, $X, $Y);
 
-    my $lat = ($W + $E) / 2;
-    my $lon = ($N + $S) / 2;
+    my $lon = ($W + $E) / 2;
+    my $lat = ($N + $S) / 2;
 
     print "bbox center for tile $X,$Y zoom $Z is\n";
     print "  in lat,lon order: $lat,$lon \n\n";
 
-    # lat stays the same
-    (undef,$lon) = Project($Y*2, $Z+1);
+    # lon stays the same
+    (undef,$lat) = Project($Y*2, $Z+1);
 
     print "center of rendered (projected) tile is\n";
     print "  in lat,lon order: $lat,$lon \n\n";

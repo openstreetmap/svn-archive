@@ -83,7 +83,7 @@ if ($success) # remove all zips from the test, because they should not be upload
     }
 }
 
-my @pngList = ("_14_0_2.png","_14_0_3.png","_14_1_1.png","_14_3_3.png"); # these tiles contain font samples"
+my @pngList = ("_14_0_2.png","_14_0_3.png","_14_1_1.png","_14_2_2.png","_14_3_3.png"); # these tiles contain font samples"
 my @failedImages;
 foreach my $pngSuffix (@pngList)
 {

@@ -40,7 +40,7 @@ sub getConfig
     $Config->define("help|usage!");
     $Config->define("nodownload=s");
     $Config->set("nodownload",0);
-    $Config->file("config.defaults", "layers.conf", "tilesAtHome.conf", "authentication.conf");
+    $Config->file("config.defaults");
     $Config->args();                # overwrite config options with command line options
     $Config->file("general.conf");  # overwrite with hardcoded values that must not be changed
 
@@ -292,11 +292,6 @@ sub CheckConfig
 
     my %EnvironmentInfo = $self->CheckBasicConfig();
 
-    if (!defined($self->get("Layers")))
-    {
-        die("no layers configured");
-    }
-
     # Rendering through Omsarender/XSLT or or/p
     if ($self->get("Osmarender") eq "XSLT")
     {
@@ -363,62 +358,6 @@ sub CheckConfig
         }
     }
 
-
-    #-------------------------------------------------------------------
-    # check all layers for existing and sane values
-    #------------------------------------------------------------------
-    foreach my $layer(split(/,/, $self->get("LayersCapability")))
-    {
-        if ($self->get($layer."_MaxZoom") < $self->get($layer."_MinZoom"))
-        {
-            die " ! Check MinZoom and MaxZoom for section [".$layer."]\n";
-        } 
-
-        for(my $zoom=$self->get($layer."_MinZoom"); $zoom<=$self->get($layer."_MaxZoom"); $zoom++)
-        {
-            if (!defined($self->get($layer."_Rules.$zoom")))
-            {
-                die " ! config option Rules.".$zoom." is not set for layer".$layer;
-            }
-            if (!-f $self->get($layer."_Rules.".$zoom))
-            {
-                die " ! rules file ".$self->get($layer."_Rules.".$zoom).
-                    " referenced by config option Rules.".$zoom." in section [".$layer."]".
-                    "is not present";
-            }
-        }
-
-        if (!defined($self->get($layer."_Prefix")))
-        {
-            die " ! config option \"Prefix\" is not set for layer ".$layer;
-        }
-
-        if (!defined($self->get($layer."_Transparent")))
-        {
-            die($layer.": Transparent not configured");
-        }
-
-        if (!defined($self->get($layer."_RenderFullTileset")))
-        {
-            die($layer.": RenderFullTileset not configured");
-        }
-
-        if (!defined($self->get($layer."_Preprocessor")))
-        {
-            die(" ! config option \"Preprocessor\" is not set for layer ".$layer);
-        }
-
-        # any combination of comma-separated preprocessor names is allowed
-        die "config option Preprocessor has invalid value in section [".$layer."]" 
-            if (grep { $_ !~ /maplint|close-areas|autocut|noop|area-center/} split(/,/, $self->get($layer."_Preprocessor")));
-
-        foreach my $reqfile(split(/,/, $self->get($layer."_RequiredFiles")))
-        {
-            die " ! file $reqfile required for layer $layer as per config option ".
-                "RequiredFiles in section [".$layer."] not found" unless (-f $reqfile);
-        }
-
-    }
 
     if($self->get("RequestUrl")){ 
         ## put back Verbose output to make remote debugging a bit easier

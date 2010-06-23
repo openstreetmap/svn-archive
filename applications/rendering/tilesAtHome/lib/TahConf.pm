@@ -293,31 +293,6 @@ sub CheckConfig
     my %EnvironmentInfo = $self->CheckBasicConfig();
 
     # Rendering through Omsarender/XSLT or or/p
-    if ($self->get("Osmarender") eq "XSLT")
-    {
-        print "- rendering using Osmarender/XSLT\n";
-        die "! Can't find osmarender/xslt/osmarender.xsl" unless (-f "osmarender/xslt/osmarender.xsl");
-
-        # XmlStarlet version
-        $cmd=$self->get("XmlStarlet");
-        my $XmlV = `\"$cmd\" --version`;
-        $EnvironmentInfo{Xml}=$XmlV;
-
-        if($XmlV !~ /(\d+\.\d+\.\d+)/) {
-            die("Can't find xmlstarlet (using \"" . $self->get("XmlStarlet") . "\")\n");
-        }
-        print "- xmlstarlet version $1\n";
-    }
-    elsif ($self->get("Osmarender") eq "orp")
-    {
-        print "- rendering using or/p\n";
-        die "! Can't find osmarender/orp/orp.pl" unless (-f "osmarender/orp/orp.pl");
-    }
-    else
-    {
-        die "! invalid configuration setting for 'Osmarender' - allowed values are 'XSLT', 'orp'";
-    }
-
     if( ! $self->get('Rasterizer') && $self->get('Batik') ){
         warn "Deprecated configuration variable Batik found, use Rasterizer instead. For now it will be mapped\n";
         if( $self->get('Batik') == 1 || $self->get('Batik') == 2 ){

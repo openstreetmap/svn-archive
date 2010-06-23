@@ -269,6 +269,7 @@ sub UploadOkOrNot
 {
     my $self = shift;
     my $Config = $self->{Config};
+    return 1 if ($Config->get("CreateTilesetFile")); #no queue for tileset files.
     ::statusMessage("Checking server queue",0,9);
     my $ua = LWP::UserAgent->new('agent' =>'tilesAtHome');
     $ua->env_proxy();

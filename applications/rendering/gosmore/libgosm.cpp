@@ -1793,6 +1793,15 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
           }
 	}
 	
+	#ifdef ONLY_ROUTING
+	if (wStyle != highway_traffic_signals &&
+	    wStyle != highway_mini_roundabout &&
+	    !(wStyle >= restriction_no_right_turn &&
+	      wStyle <= restriction_only_straight_on) &&
+	    !(wStyle >= barrier_bollard &&
+	      wStyle <= barrier_toll_booth) &&
+	    !eMap[wStyle].defaultRestrict) wStyle = elemCnt;
+	#endif
 	if (wStyle == elemCnt /* 1 trick that did help enough to make files < 400MB
 	  || (!k2v["name"] && srec[wStyle].areaColour != -1)*/ ) wayNd.clear ();
 	else {
@@ -1877,6 +1886,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	      const char *compact = tags.front().c_str ();
 	      if (tags.front ()[0] == '\n') compact++;
 	      else {
+	        #ifndef ONLY_ROUTING
 	        // If all the idxes went into a single file, this can
 	        // be simplified a lot. One day when RAM is cheap.
 	        string line;
@@ -1889,6 +1899,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	        for (grp = 0; grp < IDXGROUPS - 1 &&
                  TagCmp (groupName[grp], (char*) line.c_str ()) < 0; grp++) {}
 		FWRITE (&idx, sizeof (idx), 1, groupf[grp]);
+		#endif
 	      }
 	      unsigned l = strlen (compact);
 	      newln = l > 0 && compact[l - 1] == '\n' ? 1 : 0;
@@ -2199,7 +2210,6 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     //  ndWrite.other[0], ndWrite.other[1]);
   }
   
-#ifndef LAMBERTUS
   REBUILDWATCH (for (int i = 0; i < IDXGROUPS; i++)) {
     assert (groupf[i] = fopen64 (groupName[i], "r+"));
     fseek (groupf[i], 0, SEEK_END);
@@ -2220,7 +2230,6 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     fclose (groupf[i]);
     unlink (groupName[i]);
   }
-#endif // LAMBERTUS
   //    printf ("ndCount=%d\n", ndCount);
   munmap (data, ndStart);
   FWRITE (hashTable, sizeof (*hashTable),

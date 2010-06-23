@@ -68,6 +68,7 @@ my $retval = system($Cmd);
 print STDERR "\n\n";
 
 my $tempdir = tempdir ( DIR => $Config->get("WorkingDirectory") );
+my $comparedir = tempdir ( DIR => $Config->get("WorkingDirectory") );
 my $zipfile = File::Spec->join($Config->get("WorkingDirectory"),"uploadable","tile_12_0_0_*.zip");
 $Cmd = sprintf("unzip -d %s -q %s",$tempdir,$zipfile);
 $success = runCommand($Cmd,$PID);
@@ -82,13 +83,15 @@ if ($success) # remove all zips from the test, because they should not be upload
     }
 }
 
-my @pngList = ("_13_0_0.png","_13_1_0.png","_13_1_1.png","_14_0_2.png","_14_0_3.png","_14_1_1.png","_14_3_3.png"); # these tiles contain font samples"
+my @pngList = ("_14_0_2.png","_14_0_3.png","_14_1_1.png","_14_3_3.png"); # these tiles contain font samples"
 my @failedImages;
 foreach my $pngSuffix (@pngList)
 {
     print STDERR "testing tests/fonttest".$pngSuffix."\n";
 
-    my $renderResult = File::Spec->join($tempdir,"tile".$pngSuffix);
+    rename(File::Spec->join($tempdir,"tile".$pngSuffix),File::Spec->join($comparedir,"tile".$pngSuffix)); #move interesting images to $comparedir
+
+    my $renderResult = File::Spec->join($comparedir,"tile".$pngSuffix);
     my $Image = undef;
     eval { $Image = GD::Image->newFromPng($renderResult); };
     die "$renderResult not found" if( not defined $Image );
@@ -125,6 +128,8 @@ foreach my $pngSuffix (@pngList)
     }
 }
 
+rmtree($tempdir); #clean up all remaining images not useful for comparison
+
 if (scalar(@failedImages))
 {
     print STDERR "Please e-mail the following failed images to tah\@deelkar.net:\n";
@@ -135,7 +140,7 @@ if (scalar(@failedImages))
 }
 else
 {
-    rmtree($tempdir);
+    rmtree($comparedir);
     print "OK\n";
 }
 

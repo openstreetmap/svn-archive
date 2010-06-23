@@ -99,7 +99,17 @@ if ($UploadMode or $LoopMode)
         my $success = runCommand($Cmd,$PID);
         if (not $success)
         {
-            die "tests failed\n";
+            if ($Config->get("Rasterizer") ne "Inkscape") 
+            {
+                die "tests failed, try \"Inkscape\" as rasterizer.\n"; 
+# batik is known to mess up composite glyphs, which trips the fontcheck, 
+# but there might be batik versions doing it right, so if they pass the test, we let them continue.
+            }
+            else
+            {
+                print STDERR " *** tests failed *** (non fatal).\n"; 
+                talkInSleep(" *** Please upload failed images as instructed to make this warning go away ***\n",30);
+            }
         }
     }
 }

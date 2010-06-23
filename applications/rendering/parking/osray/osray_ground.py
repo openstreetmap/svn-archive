@@ -79,7 +79,7 @@ def pov_camera(f,bbox):
     polygonstring = bbox[0][0]
     polygonstring = polygonstring[9:] # cut off the "POLYGON(("
     polygonstring = polygonstring[:-2] # cut off the "))"
-    print polygonstring
+    #print polygonstring
     points = polygonstring.split(',')
 
     numpoints = len(points)
@@ -93,7 +93,7 @@ def pov_camera(f,bbox):
             right=float(latlon[0])
             top=float(latlon[1])
 
-    print bottom,left,top,right
+    #print bottom,left,top,right
     zoom = 1.5
     zoom = 1100.0/zoom
     f.write("""

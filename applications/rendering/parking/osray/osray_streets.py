@@ -117,7 +117,7 @@ def pov_highway(f,highway):
         if (i==numpoints-1):
            f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth*highwayparams[1],layerheight))
 
-    print highwayparams[0],highwayparams[1],streetwidth
+    #print highwayparams[0],highwayparams[1],streetwidth
     f.write("""  tolerance 1
     texture {{
         pigment {{
@@ -144,7 +144,7 @@ def pov_highway(f,highway):
         if (i==numpoints-1):
            f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],1.2*streetwidth*highwayparams[1],layerheight))
 
-    print highwayparams[0],highwayparams[1],streetwidth
+    #print highwayparams[0],highwayparams[1],streetwidth
     f.write("""  tolerance 1
     texture {{
         pigment {{
@@ -194,14 +194,14 @@ def pov_building(f,building):
     linestring = linestring[:-1] # cut off the ")"
 
     heightstring = building[3]
-    print 'hs="{0}"'.format(heightstring)
+    #print 'hs="{0}"'.format(heightstring)
     if (heightstring==None):
         height = 10.0
     else:
         height = parse_length_in_meters(heightstring,0.01)
 
     amenity = building[4]
-    print amenity
+    #print amenity
     
     points = linestring.split(',')#.strip('(').strip(')')
     #print points
@@ -225,8 +225,8 @@ def pov_building(f,building):
         amenitybuildingparams = amenitybuildingtypes.get(amenity)
         color = amenitybuildingparams[0]
 
-    if height != 10.0:
-        print 'height:', height
+    #if height != 10.0:
+        #print 'height:', height
         #color = '<0,1,0>'
     f.write("""
     texture {{

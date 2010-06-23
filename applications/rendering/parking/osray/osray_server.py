@@ -18,10 +18,20 @@ class osrayHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write("")
                 return
-            baseurl = urlparse.urlparse(theurl)[2]
+            urlcomponents = urlparse.urlparse(theurl)
+            print urlcomponents
+            baseurl = urlcomponents[2]
             print "parse=",urlparse.urlparse(theurl)
             print "base=",baseurl
+            urlqs = urlparse.urlparse(theurl)[4]
+            print "URL qs:", urlqs
+            queryparams = urlparse.parse_qs(urlqs)
+            print queryparams
             if baseurl.endswith(".png"):
+                if queryparams.has_key('width'):
+                    options['width']=queryparams['width'][0]
+                if queryparams.has_key('height'):
+                    options['height']=queryparams['height'][0]
                 print "--- calling osray"
                 osray.main(options)
                 print "--- calling osray ends"

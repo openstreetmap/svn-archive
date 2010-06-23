@@ -20,6 +20,7 @@
 
 /* Strings in JFileChooser */ tr("All Files");
 /* Strings in JFileChooser */ tr("Attributes");
+/* Strings in JFileChooser */ tr("Abort file chooser dialog");
 /* Strings in JFileChooser */ tr("Abort file chooser dialog.");
 /* Strings in JFileChooser */ tr("Cancel");
 /* Strings in JFileChooser */ tr("Create New Folder");
@@ -48,6 +49,7 @@
 /* Strings in JFileChooser */ tr("Name");
 /* Strings in JFileChooser */ tr("OK");
 /* Strings in JFileChooser */ tr("Open");
+/* Strings in JFileChooser */ tr("Open selected file");
 /* Strings in JFileChooser */ tr("Open selected file.");
 /* Strings in JFileChooser */ tr("Refresh");
 /* Strings in JFileChooser */ tr("Rename File");

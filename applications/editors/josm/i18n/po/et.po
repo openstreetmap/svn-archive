@@ -7,22 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-15 18:25+0200\n"
-"PO-Revision-Date: 2010-06-09 18:57+0000\n"
+"POT-Creation-Date: 2010-06-23 22:47+0200\n"
+"PO-Revision-Date: 2010-06-15 18:14+0000\n"
 "Last-Translator: Dirk Stöcker <launchpad@dstoecker.de>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-06-15 16:21+0000\n"
+"X-Launchpad-Export-Date: 2010-06-23 20:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/Main.java:212
 #: ../core/src/org/openstreetmap/josm/actions/HelpAction.java:25
-#: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:482
+#: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:478
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:107
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:176
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:329
@@ -92,7 +92,7 @@ msgstr "Ignoreerin vigast faili URL''i: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:535
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:53
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:143
-#: ../plugins/reverter/src/reverter/ReverterUploadHook.java:78
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:82
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:68
 #: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:143
 msgid "Warning"
@@ -249,7 +249,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:193
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LatLonDialog.java:244
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:207
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:990
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:997
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1200
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/RelationEditor.java:120
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:376
@@ -270,20 +270,24 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:342
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:198
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:91
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:62
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:913
 #: ../core/src/org/openstreetmap/josm/io/GpxExporter.java:116
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:118
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:330
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:37
-#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:33
+#: ../plugins/buildings_tools/src/buildings_tools/AdvancedSettingsDialog.java:24
+#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:38
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:307
+#: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:46
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:151
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:259
 #: ../plugins/reverter/src/reverter/ChangesetIdQuery.java:45
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:78
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:88
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:287
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:94
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:740
@@ -404,6 +408,7 @@ msgstr "Liiguta valitud sõlmed ringiks."
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:40
 #: ../plugins/multipoly/src/multipoly/MultipolyAction.java:50
 #: ../plugins/reverter/src/reverter/RevertChangesetAction.java:28
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:42
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveAction.java:39
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/SurveyorShowAction.java:47
 #: ../plugins/tagging-preset-tester/src/org/openstreetmap/josm/plugins/taggingpresettester/TaggingPresetTesterAction.java:29
@@ -441,7 +446,7 @@ msgstr "Palun vali vähemalt neli sõlme."
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:689
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:711
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:88
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:119
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:120
 msgid "Information"
 msgstr "Info"
 
@@ -651,7 +656,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:388
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:104
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:276
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1012
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1019
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:986
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:636
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:142
@@ -664,7 +669,7 @@ msgstr ""
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:278
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:62
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:707
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:95
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:96
 msgid "Delete"
 msgstr "Kustuta"
 
@@ -911,6 +916,7 @@ msgstr "\"{0}\" ei ole suletud ning seega ei saa seda ühendada."
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:152
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:80
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:73
 msgid "The selected way has nodes outside of the downloaded data region."
 msgid_plural ""
 "The selected ways have nodes outside of the downloaded data region."
@@ -919,6 +925,7 @@ msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:155
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:85
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:74
 msgid "This can lead to nodes being deleted accidentally."
 msgstr ""
 
@@ -1471,8 +1478,8 @@ msgstr "Ei suuda faili ümbernimetada ''{0}''"
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:259
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ProjectionPreference.java:179
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:753
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:109
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:60
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:108
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:787
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:797
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:63
@@ -1497,14 +1504,16 @@ msgstr "Ei suuda faili ümbernimetada ''{0}''"
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:65
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:70
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:194
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:83
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:91
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveEditLayerTimerTask.java:66
 #: ../plugins/surveyor/src/at/dallermassl/josm/plugin/surveyor/AutoSaveGpsLayerTimerTask.java:82
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:67
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:72
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:284
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:78
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:313
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:445
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:318
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:450
 msgid "Error"
 msgstr "Viga"
 
@@ -1651,59 +1660,72 @@ msgid "Delete unnecessary nodes from a way."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:65
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:69
 msgid "Yes, delete nodes"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:67
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:69
 msgid "Delete nodes outside of downloaded data regions"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:71
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:635
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:676
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:215
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:70
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:221
 msgid "No, abort"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:73
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:119
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:70
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:88
 msgid "Cancel operation"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:86
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:74
 msgid "Do you want to delete them anyway?"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:88
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:75
 msgid "Delete nodes outside of data regions?"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:101
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:82
 msgid "Please select at least one way to simplify."
 msgstr "Palun vali lihtsustamiseks vähemalt üks tee."
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:111
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:44
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:57
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:62
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:87
 msgid "Yes"
 msgstr "Jah"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:113
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:87
 msgid "Simplify all selected ways"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:126
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:89
 #, java-format
 msgid ""
 "The selection contains {0} ways. Are you sure you want to simplify them all?"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:129
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:89
 msgid "Simplify ways?"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:180
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:137
 #, java-format
 msgid "Simplify {0} way"
 msgid_plural "Simplify {0} ways"
@@ -1711,6 +1733,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:251
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:265
 #, java-format
 msgid "Simplify Way (remove {0} node)"
 msgid_plural "Simplify Way (remove {0} nodes)"
@@ -1995,7 +2018,6 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:153
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:99
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:116
-#: ../plugins/reverter/src/reverter/ReverterUploadHook.java:77
 msgid "No changes to upload."
 msgstr "Pole muudatusi mida üles laadida."
 
@@ -2011,16 +2033,16 @@ msgstr "Lae valik üles"
 msgid "Upload all changes in the current selection to the OSM server."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:257
+#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:256
 msgid "Checking parents for deleted objects"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:316
+#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:315
 #, java-format
 msgid "Reading parents of ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:322
+#: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:321
 msgid "Checking for deleted parents in the local dataset"
 msgstr ""
 
@@ -2273,7 +2295,7 @@ msgstr "Kustuta sõlmi või teid"
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:88
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:111
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:47
-#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:77
+#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:67
 #: ../plugins/cadastre-fr/src/cadastre_fr/Buildings.java:102
 #: ../plugins/routes/src/org/openstreetmap/josm/plugins/routes/RelationEditMode.java:29
 #, java-format
@@ -2889,12 +2911,16 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PreferenceDialog.java:109
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:322
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:37
-#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:33
+#: ../plugins/buildings_tools/src/buildings_tools/AdvancedSettingsDialog.java:24
+#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:38
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionGrabPlanImage.java:306
+#: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:46
+#: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:64
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:145
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:110
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:78
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:301
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:94
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:686
@@ -3014,7 +3040,7 @@ msgid "Add conflict for ''{0}''"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/command/ConflictResolveCommand.java:67
-#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:208
+#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:211
 #: ../core/src/org/openstreetmap/josm/command/RelationMemberConflictResolverCommand.java:84
 #, java-format
 msgid ""
@@ -3136,27 +3162,27 @@ msgid_plural "Move {0} nodes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:101
-#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:119
+#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:105
+#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:123
 #, java-format
 msgid "Purged object ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:107
+#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:111
 #, java-format
 msgid "Purged {0} object"
 msgid_plural "Purged {0} objects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:159
+#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:163
 #, java-format
 msgid ""
 "Warning: Purging way {0} because number of nodes dropped below 2. Current is "
 "{1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:168
+#: ../core/src/org/openstreetmap/josm/command/PurgePrimitivesCommand.java:172
 #, java-format
 msgid "Removing reference from relation {0}"
 msgstr ""
@@ -3501,6 +3527,9 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:147
 #: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:185
+#: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:107
+#: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:110
+#: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:121
 #, java-format
 msgid "Missing merge target for way with id {0}"
 msgstr ""
@@ -3510,31 +3539,25 @@ msgstr ""
 msgid "Missing merge target for object with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:201
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:197
+#: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:117
 #, java-format
 msgid "Missing merge target for node with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:216
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:212
+#: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:144
+#: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:148
 #, java-format
 msgid "Missing merge target for relation with id {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:221
-#: ../plugins/reverter/src/reverter/DataSetToCmd.java:69
+#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:217
+#: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:155
+#: ../plugins/ext_tools/src/ext_tools/DataSetToCmd.java:159
+#: ../plugins/reverter/src/reverter/DataSetToCmd.java:70
 #, java-format
 msgid "Missing merge target of type {0} with id {1}"
-msgstr ""
-
-#. should not happen
-#. FIXME: this message does not make sense, source version can not be lower than
-#. target version at this point
-#: ../core/src/org/openstreetmap/josm/data/osm/DataSetMerger.java:258
-#, java-format
-msgid ""
-"Target object with id {0} and version {1} is visible although source object "
-"with lower version {2} is not visible. Cannot deal with this inconsistency. "
-"Keeping target object. "
 msgstr ""
 
 #. translators notes must be in front
@@ -3611,34 +3634,34 @@ msgstr ""
 msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:498
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:506
 msgid "A primitive with ID = 0 cannot be invisible."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:555
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:573
 #, java-format
 msgid "ID > 0 expected. Got {0}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:557
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:575
 #, java-format
 msgid "Version > 0 expected. Got {0}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:777
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:795
 #, java-format
 msgid ""
 "Cannot assign a changesetId > 0 to a new primitive. Value of changesetId is "
 "{0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1149
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1167
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1151
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1169
 #, java-format
 msgid ""
 "Cannot merge primitives with different ids. This id is {0}, the other is {1}"
@@ -3705,7 +3728,7 @@ msgid "inactive"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:14
-#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:85
+#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:75
 msgid "selected"
 msgstr "valitud"
 
@@ -3990,7 +4013,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:178
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:68
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:101
-#: build/trans_style.java:4292
+#: build/trans_style.java:4325
 msgid "building"
 msgstr ""
 
@@ -4075,7 +4098,7 @@ msgstr "Tundmatu host"
 msgid "Object deleted"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:481
+#: ../core/src/org/openstreetmap/josm/gui/ExtendedDialog.java:477
 #: ../core/src/org/openstreetmap/josm/gui/HelpAwareOptionPane.java:109
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictResolutionDialog.java:208
 #: ../core/src/org/openstreetmap/josm/gui/help/ContextSensitiveHelpAction.java:46
@@ -4299,13 +4322,14 @@ msgstr "Fail"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:171
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:89
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1057
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1064
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:179
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:143
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:134
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:484
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:485
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:675
+#: ../plugins/ext_tools/src/ext_tools/preferences/MyToolsPanel.java:55
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:149
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:219
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:667
@@ -4503,7 +4527,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:336
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/relation/RelationMemberListColumnModel.java:26
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolverColumnModel.java:42
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:563
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:567
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTableColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/history/RelationMemberTableColumnModel.java:20
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberColumnModel.java:20
@@ -5147,24 +5171,28 @@ msgstr ""
 #. setting up the properties table
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMergeColumnModel.java:18
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolverColumnModel.java:28
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:211
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:534
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:215
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:538
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:75
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:113
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:261
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:77
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:444
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:466
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TagsTableColumnModel.java:18
 msgid "Key"
 msgstr "Võti"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/tags/TagMergeColumnModel.java:25
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/TagConflictResolverColumnModel.java:35
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:246
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:534
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:250
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:538
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:27
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:75
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:265
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TagTable.java:84
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:444
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:466
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:120
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TagsTableColumnModel.java:25
 msgid "Value"
@@ -5244,6 +5272,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/MultiValueCellEditor.java:168
 #: ../core/src/org/openstreetmap/josm/gui/history/VersionInfoPanel.java:166
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:23
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:227
 msgid "none"
 msgstr ""
 
@@ -5527,7 +5556,7 @@ msgstr "Ava kõikide käskude nimekiri (tagasivõtmise puhver)."
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:91
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:167
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:66
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:530
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:534
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:46
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
@@ -5624,13 +5653,13 @@ msgid "Filter objects and hide/disable them."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:77
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1045
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1052
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:125
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:471
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:83
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:108
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:652
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:73
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:74
 msgid "Add"
 msgstr "Lisa"
 
@@ -5677,7 +5706,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:69
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
-#: ../plugins/reverter/src/reverter/ReverterPlugin.java:21
+#: ../plugins/reverter/src/reverter/ReverterPlugin.java:18
 msgid "History"
 msgstr "Ajalugu"
 
@@ -5895,12 +5924,12 @@ msgid "Call relation editor for selected relation"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:447
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1097
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1104
 msgid "Select in relation list"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:448
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1098
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1105
 msgid "Select relation in relation list."
 msgstr ""
 
@@ -7498,122 +7527,122 @@ msgstr ""
 msgid "This changeset query URL is invalid"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:160
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:164
 msgid "Add Properties"
 msgstr "Lisa seaded"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:192
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:196
 #, java-format
 msgid "This will change {0} object."
 msgid_plural "This will change up to {0} objects."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:194
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:198
 msgid "An empty value deletes the tag."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:243
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:288
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:295
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:548
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:612
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:247
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:292
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:299
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:552
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:616
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:115
 msgid "<different>"
 msgstr "<erinev>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:257
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:398
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:261
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:402
 msgid "Change values?"
 msgstr "Muuta väärtusi?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:317
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:321
 #, java-format
 msgid "Change properties of up to {0} object"
 msgid_plural "Change properties of up to {0} objects"
 msgstr[0] "Muuda kuni {0} objekti seadeid"
 msgstr[1] "Muuda kuni {0} objekti seadeid"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:356
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:360
 #, java-format
 msgid "This will change up to {0} object."
 msgid_plural "This will change up to {0} objects."
 msgstr[0] "See muudab kuni {0} objekti."
 msgstr[1] "See muudab kuni {0} objekti."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:358
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:362
 msgid "Please select a key"
 msgstr "Palun vali võti"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:383
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:387
 msgid "Please select a value"
 msgstr "Palun vali väärtus"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:478
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:482
 msgid "Please select the objects you want to change properties for."
 msgstr "Palun vali objektid mille seadeid soovid muuta."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:529
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:530
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:533
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:534
 msgid "Properties/Memberships"
 msgstr "Seaded/Liikmelisus"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:529
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:533
 msgid "Properties for selected objects."
 msgstr "Valitud objektide seaded"
 
 #. setting up the membership table
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:563
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:567
 msgid "Member Of"
 msgstr "On liikmeks järgnevas"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:563
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:567
 msgid "Position"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:933
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:940
 #, java-format
 msgid "Properties: {0} / Memberships: {1}"
 msgstr "Seaded: {0} / Liikmelisus: {1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:936
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:943
 msgid "Properties / Memberships"
 msgstr "Seaded / Liikmelisus"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:989
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:996
 msgid "Change relation"
 msgstr "Muuda seost"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:990
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:997
 msgid "Delete from relation"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:992
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:999
 #, java-format
 msgid "Really delete selection from relation {0}?"
 msgstr "Tõesti soovid kustutada valikut seosest {0}?"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1013
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1020
 msgid "Delete the selected key in all objects"
 msgstr "Kustuta valitud võti kõkides objektides"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1015
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1022
 msgid "Delete Properties"
 msgstr "Kustuda seadeid"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1046
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1053
 msgid "Add a new key/value pair to all objects"
 msgstr "Lisa uus võtme/väärtuse paar kõikidele objektidele"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1058
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1065
 msgid "Edit the value of the selected key for all objects"
 msgstr "Muuda kõikide valitud objektide võtme väärtust"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1094
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1101
 msgid "Select relation"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1095
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1102
 msgid "Select relation in main selection."
 msgstr ""
 
@@ -8913,7 +8942,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:44
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayerInfoCellRenderer.java:57
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:62
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:61
 msgid "No"
 msgstr ""
 
@@ -9394,7 +9423,7 @@ msgid "Object ''{0}'' is already deleted. Skipping object in upload."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadPrimitivesTask.java:232
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:425
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:426
 #, java-format
 msgid "Uploading {0} object..."
 msgid_plural "Uploading {0} objects..."
@@ -11064,7 +11093,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:247
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:140
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:711
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:100
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:101
 msgid "Please select the row to delete."
 msgstr "Palun vali rida kustutamiseks"
 
@@ -11542,7 +11571,7 @@ msgid "Default (Auto determined)"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/MapPaintPreference.java:35
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:135
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:134
 msgid "Enable built-in defaults"
 msgstr ""
 
@@ -12004,7 +12033,7 @@ msgstr ""
 msgid "Warning: illegal format of entry in style list ''{0}''. Got ''{1}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:63
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:62
 #, java-format
 msgid ""
 "Could not read tagging preset source: {0}\n"
@@ -12012,12 +12041,12 @@ msgid ""
 msgstr ""
 
 #. Should not happen, but at least show message
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:83
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:82
 #, java-format
 msgid "Could not read tagging preset source {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:87
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:86
 #, java-format
 msgid ""
 "<html>Tagging preset source {0} can be loaded but it contains errors. Do you "
@@ -12025,32 +12054,32 @@ msgid ""
 "table></html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:91
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:90
 #, java-format
 msgid ""
 "<html>Unable to parse tagging preset source: {0}. Do you really want to use "
 "it?<br><br><table width=400>Error is: [{1}:{2}] {3}</table></html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:97
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:96
 #, java-format
 msgid ""
 "<html>Tagging preset source {0} can be loaded but it contains errors. Do you "
 "really want to use it?<br><br><table width=600>Error is: {1}</table></html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:101
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:100
 #, java-format
 msgid ""
 "<html>Unable to parse tagging preset source: {0}. Do you really want to use "
 "it?<br><br><table width=600>Error is: {1}</table></html>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:133
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:132
 msgid "Sort presets menu"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:145
+#: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:144
 msgid "Tagging Presets"
 msgstr ""
 
@@ -12493,6 +12522,7 @@ msgid "Apply Preset"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:988
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:111
 msgid "Change Properties"
 msgstr "Muuda seadeid"
 
@@ -12674,7 +12704,7 @@ msgstr ""
 msgid "Parsing response from server..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/DiffResultProcessor.java:169
+#: ../core/src/org/openstreetmap/josm/io/DiffResultProcessor.java:170
 #, java-format
 msgid "Unexpected XML element with name ''{0}''"
 msgstr ""
@@ -12952,82 +12982,82 @@ msgid "Communications with {0} established using protocol version {1}."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmApi.java:257
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:320
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:321
 #, java-format
 msgid "Unexpected format of ID replied by the server. Got ''{0}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:278
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:279
 #, java-format
 msgid ""
 "Unexpected format of new version of modified primitive ''{0}''. Got ''{1}''."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:312
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:313
 msgid "Creating changeset..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:322
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:323
 #, java-format
 msgid "Successfully opened changeset {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:346
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:386
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:662
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:347
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:387
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:663
 #, java-format
 msgid "Changeset ID > 0 expected. Got {0}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:348
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:349
 msgid "Updating changeset..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:350
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:351
 #, java-format
 msgid "Updating changeset {0}..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:388
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:389
 msgid "Closing changeset..."
 msgstr "Sulgen muutustekogumit..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:409
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:410
 msgid "No changeset present for diff upload."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:416
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:417
 msgid "Preparing upload request..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:446
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:447
 msgid "Waiting 10 seconds ... "
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:449
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:450
 #, java-format
 msgid "Starting retry {0} of {1} in {2} seconds ..."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:457
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:458
 msgid "OK - trying again."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:538
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:539
 #, java-format
 msgid "Starting retry {0} of {1}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:634
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:635
 msgid "Current changeset is null. Cannot upload data."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:636
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:637
 #, java-format
 msgid "ID of current changeset > 0 required. Current ID is {0}."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:664
+#: ../core/src/org/openstreetmap/josm/io/OsmApi.java:665
 #, java-format
 msgid "Open changeset expected. Got closed changeset with id {0}."
 msgstr ""
@@ -13203,6 +13233,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/io/OsmDataParsingException.java:44
 #: ../core/src/org/openstreetmap/josm/tools/XmlObjectParser.java:76
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsReader.java:280
 #, java-format
 msgid "(at line {0}, column {1})"
 msgstr ""
@@ -14862,48 +14893,76 @@ msgstr ""
 msgid "Numbers:"
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/Building.java:134
+#: ../plugins/buildings_tools/src/buildings_tools/AdvancedSettingsDialog.java:19
+#, fuzzy
+msgid "Big buildings mode"
+msgstr "Ehitised"
+
+#: ../plugins/buildings_tools/src/buildings_tools/AdvancedSettingsDialog.java:20
+msgid "Rotate crosshair"
+msgstr ""
+
+#: ../plugins/buildings_tools/src/buildings_tools/AdvancedSettingsDialog.java:23
+#, fuzzy
+msgid "Advanced settings"
+msgstr "Kaardi seaded"
+
+#: ../plugins/buildings_tools/src/buildings_tools/AdvancedSettingsDialog.java:30
+#, fuzzy
+msgid "Building tag:"
+msgstr "Hoone"
+
+#: ../plugins/buildings_tools/src/buildings_tools/Building.java:234
 msgid "Cannot place building outside of the world."
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/Building.java:156
+#: ../plugins/buildings_tools/src/buildings_tools/Building.java:257
 #: ../plugins/cadastre-fr/src/cadastre_fr/Buildings.java:221
 msgid "Create building"
 msgstr ""
 
 #: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeAction.java:15
 #: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeAction.java:17
-#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:32
+#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:37
 msgid "Set buildings size"
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:24
+#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:26
 msgid "Use Address dialog"
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:38
+#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:27
+#, fuzzy
+msgid "Auto-select building"
+msgstr "Avalik hoone"
+
+#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:44
 msgid "Buildings width:"
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:39
+#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:45
 msgid "Length step:"
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:75
-#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:77
+#: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:54
+msgid "Advanced..."
+msgstr ""
+
+#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:65
+#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:67
 msgid "Draw buildings"
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:303
-msgid "Point on the corner of building to start drawing"
+#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:379
+msgid "Point on the corner of the building to start drawing"
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:304
-msgid "Point on opposite end of building"
+#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:381
+msgid "Point on opposite end of the building"
 msgstr ""
 
-#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:305
-msgid "Set width of building"
+#: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:383
+msgid "Set width of the building"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/Buildings.java:100
@@ -15122,10 +15181,10 @@ msgstr ""
 #. <icon src="misc/no_icon.png"/>
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:67
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerPreferences.java:23
-#: build/trans_presets.java:2358 build/trans_style.java:993
-#: build/trans_style.java:1010 build/trans_style.java:1026
-#: build/trans_style.java:1033 build/trans_style.java:3492
-#: build/trans_style.java:3500
+#: build/trans_presets.java:2358 build/trans_style.java:1018
+#: build/trans_style.java:1035 build/trans_style.java:1051
+#: build/trans_style.java:1058 build/trans_style.java:3525
+#: build/trans_style.java:3533
 msgid "water"
 msgstr ""
 
@@ -15184,8 +15243,8 @@ msgstr ""
 #. <rule>
 #. <condition k="addr:interpolation" v="alphabetic"/>
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:72
-#: build/trans_style.java:4320 build/trans_style.java:4327
-#: build/trans_style.java:4334 build/trans_style.java:4341
+#: build/trans_style.java:4353 build/trans_style.java:4360
+#: build/trans_style.java:4367 build/trans_style.java:4374
 msgid "address"
 msgstr "aadress"
 
@@ -15641,8 +15700,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:96
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:75
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:187
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:77
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:193
 msgid "Blank Layer"
 msgstr "Tühi kiht"
 
@@ -15822,6 +15881,52 @@ msgstr ""
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementLayer.java:330
 msgid "No GPX data layer found."
 msgstr ""
+
+#: ../plugins/ext_tools/src/ext_tools/ExtTool.java:188
+msgid "Child script have returned invalid data."
+msgstr ""
+
+#: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:45
+#, fuzzy
+msgid "Edit tool"
+msgstr "Vali kool"
+
+#: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:53
+#, fuzzy
+msgid "Name:"
+msgstr "Nimi"
+
+#: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:54
+msgid "CmdLine:"
+msgstr ""
+
+#: ../plugins/ext_tools/src/ext_tools/preferences/ExtToolsPreference.java:26
+msgid "External tools"
+msgstr ""
+
+#. Plugin ext_tools
+#: ../plugins/ext_tools/src/ext_tools/preferences/ExtToolsPreference.java:27
+#: build/trans_plugins.java:24
+msgid "Use external scripts in JOSM"
+msgstr ""
+
+#: ../plugins/ext_tools/src/ext_tools/preferences/MyToolsPanel.java:73
+#, java-format
+msgid "Delete tool \"{0}\"?"
+msgstr ""
+
+#: ../plugins/ext_tools/src/ext_tools/preferences/MyToolsPanel.java:74
+msgid "Are you sure?"
+msgstr "Kas oled kindel?"
+
+#: ../plugins/ext_tools/src/ext_tools/preferences/MyToolsPanel.java:91
+msgid "New tool..."
+msgstr ""
+
+#: ../plugins/ext_tools/src/ext_tools/preferences/ToolsRepositoryPanel.java:54
+#, fuzzy
+msgid "Install"
+msgstr "Tööstus"
 
 #: ../plugins/globalsat/src/org/openstreetmap/josm/plugins/globalsat/GlobalsatConfigDialog.java:81
 msgid "Position only"
@@ -17048,7 +17153,7 @@ msgstr ""
 msgid "Revert"
 msgstr "Taasta"
 
-#: ../plugins/reverter/src/reverter/ChangesetReverter.java:316
+#: ../plugins/reverter/src/reverter/ChangesetReverter.java:302
 #, java-format
 msgid "Missing merge target for {0} with id {1}"
 msgstr ""
@@ -17096,6 +17201,43 @@ msgstr ""
 #: ../plugins/reverter/src/reverter/RevertChangesetAction.java:98
 #, java-format
 msgid "Revert changeset #{0}"
+msgstr ""
+
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:78
+#, fuzzy
+msgid "Road Sign Plugin"
+msgstr "LIsandprogrammide  laadimine"
+
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:53
+msgid "Roadsign tagging"
+msgstr ""
+
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:53
+msgid "Add tags by clicking on road signs"
+msgstr ""
+
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:54
+msgid "Roadsigns plugin: open dialog"
+msgstr ""
+
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:82
+#, fuzzy, java-format
+msgid "Could not read tagging preset source: ''{0}''"
+msgstr "Ei saa lugeda sildistamise eelseadeid: {0}"
+
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignsPlugin.java:90
+#, java-format
+msgid "Error parsing tagging preset from ''{0}'':\n"
+msgstr ""
+
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/Sign.java:104
+#, fuzzy, java-format
+msgid "Sign {0}"
+msgstr "Valik: {0}"
+
+#: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/Sign.java:111
+#, java-format
+msgid "Additional sign {0}"
 msgstr ""
 
 #: ../plugins/routes/src/org/openstreetmap/josm/plugins/routes/RelationEditMode.java:28
@@ -17199,6 +17341,16 @@ msgstr ""
 
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:123
 msgid "Enter weight values"
+msgstr ""
+
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:41
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:42
+#, fuzzy
+msgid "Simplify Area"
+msgstr "Lihtsusta tee"
+
+#: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:41
+msgid "Delete unnecessary nodes from an area."
 msgstr ""
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:139
@@ -19095,7 +19247,7 @@ msgstr ""
 #. <rule>
 #. <condition k="area" b="yes"/>
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UnclosedWays.java:104
-#: build/trans_style.java:4299
+#: build/trans_style.java:4332
 msgid "area"
 msgstr ""
 
@@ -19189,13 +19341,145 @@ msgstr ""
 msgid "{0}, ..."
 msgstr ""
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:86
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:90
 #, java-format
-msgid "{0} covers {1}% of GPS track"
+msgid "{0} {1}% of GPS track"
 msgstr ""
 
-#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:104
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:110
 msgid "Shows current position in the video"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:113
+#, fuzzy
+msgid "Import Video"
+msgstr "Heli import"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:113
+msgid "Sync a video against this GPS track"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:137
+#, fuzzy
+msgid "Remove Video"
+msgstr "Eemalda"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:137
+msgid "removes current video from layer"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:144
+#, fuzzy
+msgid "play/pause"
+msgstr "Esita /paus"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:144
+msgid "starts/pauses video playback"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:151
+#, fuzzy
+msgid "backward"
+msgstr "taust"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:151
+#, fuzzy
+msgid "jumps n sec back"
+msgstr "Hüppa tagasi"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:159
+#, fuzzy
+msgid "forward"
+msgstr "Edasi"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:159
+#, fuzzy
+msgid "jumps n sec forward"
+msgstr "Hüppa edasi"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:167
+#, fuzzy
+msgid "faster"
+msgstr "Kiiremini"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:167
+msgid "faster playback"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:175
+#, fuzzy
+msgid "slower"
+msgstr "Aeglasemalt"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:175
+msgid "slower playback"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:183
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:102
+msgid "loop"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:183
+msgid "loops n sec around current position"
+msgstr ""
+
+#. now the options menu
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:193
+msgid "Keep centered"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:193
+msgid "follows the video icon automaticly"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:203
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:207
+#, fuzzy
+msgid "Jump length"
+msgstr "Hüpe sinna"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:203
+msgid "Set the length of a jump"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:207
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:218
+msgid "Jump in video for x ms"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:214
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:218
+msgid "Loop length"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:214
+msgid "Set the length around a looppoint"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:227
+msgid "no deinterlacing"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:235
+msgid "deinterlacing using line doubling"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:243
+msgid "deinterlacing using linear interpolation"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:99
+#, fuzzy
+msgid "play"
+msgstr "kiht"
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:131
+msgid "Unable to find JNA Java library!"
+msgstr ""
+
+#: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/video/SimpleVideoPlayer.java:135
+msgid "Unable to find native libvlc library!"
 msgstr ""
 
 #: ../plugins/walkingpapers/src/org/openstreetmap/josm/plugins/walkingpapers/WalkingPapersAddLayerAction.java:23
@@ -19406,30 +19690,30 @@ msgid ""
 "This may lead to wrong coordinates."
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:61
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:63
 msgid "Automatic downloading"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:103
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:107
 #, java-format
 msgid "Warning: WMS layer deactivated because of malformed base url ''{0}''"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:105
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:109
 msgid "(deactivated)"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:156
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:162
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:158
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:164
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:206
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:212
 #, java-format
 msgid ""
 "<html>The base URL<br>''{0}''<br>for this WMS layer does neither end with a "
@@ -19438,115 +19722,115 @@ msgid ""
 "tiles anyway?"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:214
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:220
 msgid "Yes, fetch images"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:220
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:226
 msgid "Invalid URL?"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:306
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:311
 msgid "Download visible tiles"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:312
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:317
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:324
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:329
 msgid "Change resolution"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:336
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:341
 msgid "Reload erroneous tiles"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:360
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:365
 msgid "Alpha channel"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:380
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:385
 msgid "Save WMS layer to file"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:384
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:389
 msgid "Save WMS layer"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:408
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:413
 msgid "Load WMS layer from file"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:412
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:417
 msgid "Load WMS layer"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:423
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:428
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:424
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:429
 msgid "File Format Error"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:444
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:449
 msgid "Error loading file"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:457
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:463
 msgid "Set WMS Bookmark"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:174
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:180
 msgid "WMS"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:187
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:193
 msgid "Open a blank WMS layer to load data from a file"
 msgstr "Ava tühi WMS kiht andmete laadimiseks failist"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:43
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:44
 msgid "WMS Plugin Preferences"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:43
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:44
 msgid "Modify list of WMS servers displayed in the WMS plugin menu"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:45
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:78
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:46
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:79
 msgid "Menu Name"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:45
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:82
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:46
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:83
 msgid "WMS URL"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:57
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:58
 msgid "Menu Name (Default)"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:57
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:58
 msgid "WMS URL (Default)"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:86
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:87
 msgid "Enter a menu name and WMS URL"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:110
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:111
 msgid "Copy Selected Default(s)"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:118
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:119
 msgid "Please select at least one row to copy."
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:162
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:163
 msgid "Downloader:"
 msgstr ""
 
@@ -19560,6 +19844,10 @@ msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:171
 msgid "% of north:"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:186
+msgid "Simultaneous connections"
 msgstr ""
 
 #: ../plugins/wmsplugin/src/wmsplugin/io/WMSLayerExporter.java:11
@@ -19621,7 +19909,7 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="landuse" v="forest"/>
-#: build/specialmessages.java:15 build/trans_style.java:3228
+#: build/specialmessages.java:15 build/trans_style.java:3261
 msgid "forest"
 msgstr "kultuurmets"
 
@@ -19714,14 +20002,14 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="boundary" v="national_park"/>
-#: build/specialmessages.java:17 build/trans_style.java:3622
-#: build/trans_style.java:3630 build/trans_style.java:3634
-#: build/trans_style.java:3638 build/trans_style.java:3642
-#: build/trans_style.java:3646 build/trans_style.java:3650
-#: build/trans_style.java:3654 build/trans_style.java:3658
-#: build/trans_style.java:3662 build/trans_style.java:3666
-#: build/trans_style.java:3671 build/trans_style.java:3679
-#: build/trans_style.java:3687 build/trans_style.java:3695
+#: build/specialmessages.java:17 build/trans_style.java:3655
+#: build/trans_style.java:3663 build/trans_style.java:3667
+#: build/trans_style.java:3671 build/trans_style.java:3675
+#: build/trans_style.java:3679 build/trans_style.java:3683
+#: build/trans_style.java:3687 build/trans_style.java:3691
+#: build/trans_style.java:3695 build/trans_style.java:3699
+#: build/trans_style.java:3704 build/trans_style.java:3712
+#: build/trans_style.java:3720 build/trans_style.java:3728
 msgid "boundary"
 msgstr "piir"
 
@@ -19803,11 +20091,11 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="route" v="pub_crawl"/>
-#: build/specialmessages.java:19 build/trans_style.java:3556
-#: build/trans_style.java:3564 build/trans_style.java:3572
-#: build/trans_style.java:3580 build/trans_style.java:3588
-#: build/trans_style.java:3596 build/trans_style.java:3604
-#: build/trans_style.java:3612
+#: build/specialmessages.java:19 build/trans_style.java:3589
+#: build/trans_style.java:3597 build/trans_style.java:3605
+#: build/trans_style.java:3613 build/trans_style.java:3621
+#: build/trans_style.java:3629 build/trans_style.java:3637
+#: build/trans_style.java:3645
 msgid "route"
 msgstr "teekond"
 
@@ -20082,22 +20370,22 @@ msgid ""
 msgstr ""
 
 #. Plugin globalsat
-#: build/trans_plugins.java:24
+#: build/trans_plugins.java:26
 msgid "Download GPS points from Globalsat dg100 data logger directly in JOSM."
 msgstr ""
 
 #. Plugin graphview
-#: build/trans_plugins.java:26
+#: build/trans_plugins.java:28
 msgid "Visualizes routing information as a routing graph."
 msgstr ""
 
 #. Plugin grid
-#: build/trans_plugins.java:28
+#: build/trans_plugins.java:30
 msgid "Provide a background layer that displays a map grid"
 msgstr ""
 
 #. Plugin ImageWayPoint
-#: build/trans_plugins.java:30
+#: build/trans_plugins.java:32
 msgid ""
 "Another plugin to match images to the waypoints in a GPX file. A match is "
 "made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
@@ -20105,18 +20393,18 @@ msgid ""
 msgstr ""
 
 #. Plugin lakewalker
-#: build/trans_plugins.java:32
+#: build/trans_plugins.java:34
 msgid "Helps vectorizing WMS images."
 msgstr "Aitab WMS kujutisi vektoriseerida"
 
 #. Plugin livegps
-#: build/trans_plugins.java:34
+#: build/trans_plugins.java:36
 msgid ""
 "Support live GPS input (moving dot) through a connection to gpsd server."
 msgstr ""
 
 #. Plugin measurement
-#: build/trans_plugins.java:36
+#: build/trans_plugins.java:38
 msgid ""
 "Provide a measurement dialog and a layer to measure length and angle of "
 "segments, area surrounded by a (simple) closed way and create measurement "
@@ -20124,24 +20412,24 @@ msgid ""
 msgstr ""
 
 #. Plugin michigan_left
-#: build/trans_plugins.java:38
+#: build/trans_plugins.java:40
 msgid "Adds no left turn for sets of 4 or 5 ways"
 msgstr ""
 
 #. Plugin multipoly-convert
-#: build/trans_plugins.java:40
+#: build/trans_plugins.java:42
 msgid "Simply convert an area to a multipolygon."
 msgstr ""
 
 #. Plugin multipoly
-#: build/trans_plugins.java:42
+#: build/trans_plugins.java:44
 msgid ""
 "Create multipolygons by one click, much easier than standard way with "
 "relation editor."
 msgstr ""
 
 #. Plugin nearclick
-#: build/trans_plugins.java:44
+#: build/trans_plugins.java:46
 msgid ""
 "Simulates a click when you do a small and short drag. This is useful for "
 "tablet pens, when you have problems just clicking the tablet without the "
@@ -20149,93 +20437,101 @@ msgid ""
 msgstr ""
 
 #. Plugin openlayers
-#: build/trans_plugins.java:46
+#: build/trans_plugins.java:48
 msgid "Displays an OpenLayers background image"
 msgstr ""
 
 #. Plugin openstreetbugs
-#: build/trans_plugins.java:48
+#: build/trans_plugins.java:50
 msgid "Imports issues from OpenStreetBugs"
 msgstr ""
 
 #. Plugin openvisible
-#: build/trans_plugins.java:50
+#: build/trans_plugins.java:52
 msgid ""
 "Allows opening gpx/osm files that intersect the currently visible screen area"
 msgstr ""
 
 #. Plugin osmarender
-#: build/trans_plugins.java:52
+#: build/trans_plugins.java:54
 msgid ""
 "Launches FireFox to display the current visible screen as a nice SVG image."
 msgstr ""
 
 #. Plugin photo_geotagging
-#: build/trans_plugins.java:54
+#: build/trans_plugins.java:56
 msgid ""
 "Write gps position info to the image file header. Run this feature from the "
 "right click menu of the image layer."
 msgstr ""
 
 #. Plugin PicLayer
-#: build/trans_plugins.java:56
+#: build/trans_plugins.java:58
 msgid ""
 "This plugin allows to display any picture as a background in the editor and "
 "align it with the map."
 msgstr ""
 
 #. Plugin plastic_laf
-#: build/trans_plugins.java:58
+#: build/trans_plugins.java:60
 msgid "The great JGoodies Plastic Look and Feel."
 msgstr ""
 
 #. Plugin public_transport
-#: build/trans_plugins.java:60
+#: build/trans_plugins.java:62
 msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr ""
 
 #. Plugin remotecontrol
-#: build/trans_plugins.java:62
+#: build/trans_plugins.java:64
 msgid "Let other applications send commands to JOSM."
 msgstr ""
 
 #. Plugin reverter
-#: build/trans_plugins.java:64
+#: build/trans_plugins.java:66
 msgid "Plugin for reverting changesets"
 msgstr ""
 
+#. File ../plugins/roadsigns/build.xml had no data
 #. Plugin routes
-#: build/trans_plugins.java:66
+#: build/trans_plugins.java:69
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
 msgstr ""
 
 #. Plugin routing
-#: build/trans_plugins.java:68
+#: build/trans_plugins.java:71
 msgid "Provides routing capabilities."
 msgstr ""
 
+#. Plugin SimplifyArea
+#: build/trans_plugins.java:73
+msgid ""
+"Simplify area by removing nodes on very obtuse angles. This can be "
+"constrained by maximum removed area size. Also average nearby nodes."
+msgstr ""
+
 #. Plugin slippymap
-#: build/trans_plugins.java:70
+#: build/trans_plugins.java:75
 msgid ""
 "Displays a slippy map grid in JOSM. Can load tiles from slippy map as "
 "background and request updates."
 msgstr ""
 
 #. Plugin surveyor
-#: build/trans_plugins.java:72
+#: build/trans_plugins.java:77
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr ""
 
 #. Plugin tageditor
-#: build/trans_plugins.java:74
+#: build/trans_plugins.java:79
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr ""
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:76
+#: build/trans_plugins.java:81
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -20243,45 +20539,45 @@ msgid ""
 msgstr ""
 
 #. Plugin terracer
-#: build/trans_plugins.java:78
+#: build/trans_plugins.java:83
 msgid "Make terraced houses out of single blocks."
 msgstr ""
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:80
+#: build/trans_plugins.java:85
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr ""
 
 #. Plugin Tracer
-#: build/trans_plugins.java:82
+#: build/trans_plugins.java:87
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:84
+#: build/trans_plugins.java:89
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
 msgstr ""
 
 #. Plugin undelete
-#: build/trans_plugins.java:86
+#: build/trans_plugins.java:91
 msgid "Allows undeleting object from OSM database"
 msgstr ""
 
 #. Plugin validator
-#: build/trans_plugins.java:88
+#: build/trans_plugins.java:93
 msgid ""
 "An OSM data validator. It checks for problems in data, and provides fixes "
 "for the common ones. Spellcheck integrated for tag names."
 msgstr ""
 
 #. Plugin videomapping
-#: build/trans_plugins.java:90
+#: build/trans_plugins.java:95
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -20289,31 +20585,31 @@ msgid ""
 msgstr ""
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:92
+#: build/trans_plugins.java:97
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
 msgstr ""
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:94
+#: build/trans_plugins.java:99
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr ""
 
 #. Plugin wayselector
-#: build/trans_plugins.java:96
+#: build/trans_plugins.java:101
 msgid "Select a sequence of non-branching connected ways"
 msgstr ""
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:98
+#: build/trans_plugins.java:103
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
 msgstr ""
 
 #. Plugin wmsplugin
-#: build/trans_plugins.java:100
+#: build/trans_plugins.java:105
 msgid ""
 "Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)."
 msgstr ""
@@ -21206,7 +21502,7 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="junction" v="roundabout"/>
-#: build/trans_presets.java:372 build/trans_style.java:898
+#: build/trans_presets.java:372 build/trans_style.java:923
 msgid "roundabout"
 msgstr ""
 
@@ -21667,7 +21963,7 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="landuse" v="residential"/>
-#: build/trans_presets.java:411 build/trans_style.java:3252
+#: build/trans_presets.java:411 build/trans_style.java:3285
 msgid "residential"
 msgstr ""
 
@@ -21700,7 +21996,7 @@ msgstr ""
 #. <condition k="public_transport" v="platform"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
 #: build/trans_presets.java:411 build/trans_style.java:673
-#: build/trans_style.java:4357
+#: build/trans_style.java:4390
 msgid "service"
 msgstr ""
 
@@ -21732,8 +22028,8 @@ msgstr ""
 #. <rule>
 #. <condition k="landuse" v="construction"/>
 #. color construction
-#: build/trans_presets.java:411 build/trans_style.java:880
-#: build/trans_style.java:3317 build/trans_style.java:3318
+#: build/trans_presets.java:411 build/trans_style.java:905
+#: build/trans_style.java:3350 build/trans_style.java:3351
 msgid "construction"
 msgstr ""
 
@@ -22741,7 +23037,7 @@ msgstr ""
 #. <rule>
 #. <condition k="natural" v="wetland"/>
 #. <icon src="misc/no_icon.png"/>
-#: build/trans_presets.java:1041 build/trans_style.java:3484
+#: build/trans_presets.java:1041 build/trans_style.java:3517
 msgid "marsh"
 msgstr ""
 
@@ -23132,11 +23428,11 @@ msgstr ""
 #: build/trans_presets.java:1164 build/trans_presets.java:1176
 #: build/trans_presets.java:1188 build/trans_presets.java:1200
 #: build/trans_presets.java:1212 build/trans_presets.java:1224
-#: build/trans_presets.java:1236 build/trans_style.java:756
-#: build/trans_style.java:1182 build/trans_style.java:1246
-#: build/trans_style.java:1254 build/trans_style.java:1263
-#: build/trans_style.java:1271 build/trans_style.java:1279
-#: build/trans_style.java:1280 build/trans_style.java:1287
+#: build/trans_presets.java:1236 build/trans_style.java:781
+#: build/trans_style.java:1207 build/trans_style.java:1271
+#: build/trans_style.java:1279 build/trans_style.java:1288
+#: build/trans_style.java:1296 build/trans_style.java:1304
+#: build/trans_style.java:1305 build/trans_style.java:1312
 msgid "rail"
 msgstr "raudtee"
 
@@ -25305,30 +25601,30 @@ msgstr "vali spordiala:"
 #. <condition k="sport" v="fishing"/>
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#: build/trans_style.java:3705 build/trans_style.java:3713
-#: build/trans_style.java:3721 build/trans_style.java:3729
-#: build/trans_style.java:3737 build/trans_style.java:3745
-#: build/trans_style.java:3753 build/trans_style.java:3761
-#: build/trans_style.java:3769 build/trans_style.java:3777
-#: build/trans_style.java:3785 build/trans_style.java:3793
-#: build/trans_style.java:3801 build/trans_style.java:3809
-#: build/trans_style.java:3817 build/trans_style.java:3825
-#: build/trans_style.java:3833 build/trans_style.java:3841
-#: build/trans_style.java:3849 build/trans_style.java:3857
-#: build/trans_style.java:3865 build/trans_style.java:3873
-#: build/trans_style.java:3881 build/trans_style.java:3889
-#: build/trans_style.java:3897 build/trans_style.java:3905
-#: build/trans_style.java:3913 build/trans_style.java:3921
-#: build/trans_style.java:3929 build/trans_style.java:3937
-#: build/trans_style.java:3945 build/trans_style.java:3953
-#: build/trans_style.java:3961 build/trans_style.java:3969
-#: build/trans_style.java:3977 build/trans_style.java:3985
-#: build/trans_style.java:3993 build/trans_style.java:4001
-#: build/trans_style.java:4009 build/trans_style.java:4017
-#: build/trans_style.java:4025 build/trans_style.java:4033
-#: build/trans_style.java:4041 build/trans_style.java:4049
-#: build/trans_style.java:4057 build/trans_style.java:4065
-#: build/trans_style.java:4073
+#: build/trans_style.java:3738 build/trans_style.java:3746
+#: build/trans_style.java:3754 build/trans_style.java:3762
+#: build/trans_style.java:3770 build/trans_style.java:3778
+#: build/trans_style.java:3786 build/trans_style.java:3794
+#: build/trans_style.java:3802 build/trans_style.java:3810
+#: build/trans_style.java:3818 build/trans_style.java:3826
+#: build/trans_style.java:3834 build/trans_style.java:3842
+#: build/trans_style.java:3850 build/trans_style.java:3858
+#: build/trans_style.java:3866 build/trans_style.java:3874
+#: build/trans_style.java:3882 build/trans_style.java:3890
+#: build/trans_style.java:3898 build/trans_style.java:3906
+#: build/trans_style.java:3914 build/trans_style.java:3922
+#: build/trans_style.java:3930 build/trans_style.java:3938
+#: build/trans_style.java:3946 build/trans_style.java:3954
+#: build/trans_style.java:3962 build/trans_style.java:3970
+#: build/trans_style.java:3978 build/trans_style.java:3986
+#: build/trans_style.java:3994 build/trans_style.java:4002
+#: build/trans_style.java:4010 build/trans_style.java:4018
+#: build/trans_style.java:4026 build/trans_style.java:4034
+#: build/trans_style.java:4042 build/trans_style.java:4050
+#: build/trans_style.java:4058 build/trans_style.java:4066
+#: build/trans_style.java:4074 build/trans_style.java:4082
+#: build/trans_style.java:4090 build/trans_style.java:4098
+#: build/trans_style.java:4106
 msgid "sport"
 msgstr ""
 
@@ -27073,11 +27369,11 @@ msgstr "pruun"
 #.
 #. <rule>
 #. <condition k="landuse" v="recreation_ground"/>
-#: build/trans_presets.java:2494 build/trans_style.java:3157
-#: build/trans_style.java:3165 build/trans_style.java:3173
-#: build/trans_style.java:3181 build/trans_style.java:3189
-#: build/trans_style.java:3236 build/trans_style.java:3244
-#: build/trans_style.java:3342 build/trans_style.java:3350
+#: build/trans_presets.java:2494 build/trans_style.java:3190
+#: build/trans_style.java:3198 build/trans_style.java:3206
+#: build/trans_style.java:3214 build/trans_style.java:3222
+#: build/trans_style.java:3269 build/trans_style.java:3277
+#: build/trans_style.java:3375 build/trans_style.java:3383
 msgid "green"
 msgstr "roheala"
 
@@ -28514,10 +28810,18 @@ msgstr "teekonna tüüp"
 #. <scale_max>10000</scale_max>
 #. </rule>
 #.
-#. <!-- display path with bicycle/foot=designated as if it was cycleway/footway -->
+#. <!-- display path with bicycle/foot=designated/official as if it was cycleway/footway -->
 #. <rule>
 #. <condition k="highway" v="path"/>
 #. <condition k="bicycle" v="designated"/>
+#. color bicycle
+#. <scale_min>1</scale_min>
+#. <scale_max>50000</scale_max>
+#. </rule>
+#.
+#. <rule>
+#. <condition k="highway" v="path"/>
+#. <condition k="bicycle" v="official"/>
 #. color foot
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
@@ -28527,6 +28831,15 @@ msgstr "teekonna tüüp"
 #. <condition k="highway" v="path"/>
 #. <condition k="bicycle" v="designated"/>
 #. <condition k="foot" v="designated"/>
+#. color bicycle
+#. <scale_min>1</scale_min>
+#. <scale_max>50000</scale_max>
+#. </rule>
+#.
+#. <rule>
+#. <condition k="highway" v="path"/>
+#. <condition k="bicycle" v="official"/>
+#. <condition k="foot" v="official"/>
 #. color roundabout
 #. <!-- tagging a node makes no real sense, a roundabout should be tagged with several nodes, or a highway=mini_roundabout should probably be used -->
 #. <icon annotate="true" src="misc/deprecated.png"/>
@@ -28572,9 +28885,10 @@ msgstr "teekonna tüüp"
 #. <condition k="cycleway" v="opposite"/>
 #: build/trans_presets.java:3242 build/trans_style.java:233
 #: build/trans_style.java:689 build/trans_style.java:715
-#: build/trans_style.java:732 build/trans_style.java:909
-#: build/trans_style.java:917 build/trans_style.java:925
-#: build/trans_style.java:933 build/trans_style.java:941
+#: build/trans_style.java:723 build/trans_style.java:748
+#: build/trans_style.java:757 build/trans_style.java:934
+#: build/trans_style.java:942 build/trans_style.java:950
+#: build/trans_style.java:958 build/trans_style.java:966
 msgid "bicycle"
 msgstr "jalgrattaga"
 
@@ -28632,6 +28946,14 @@ msgstr "suusad"
 #. <rule>
 #. <condition k="highway" v="path"/>
 #. <condition k="foot" v="designated"/>
+#. color foot
+#. <scale_min>1</scale_min>
+#. <scale_max>50000</scale_max>
+#. </rule>
+#.
+#. <rule>
+#. <condition k="highway" v="path"/>
+#. <condition k="foot" v="official"/>
 #. color bicycle
 #. <scale_min>1</scale_min>
 #. <scale_max>50000</scale_max>
@@ -28650,8 +28972,9 @@ msgstr "suusad"
 #. <condition k="highway" v="steps"/>
 #: build/trans_presets.java:3242 build/trans_style.java:247
 #: build/trans_style.java:697 build/trans_style.java:705
-#: build/trans_style.java:723 build/trans_style.java:739
-#: build/trans_style.java:740 build/trans_style.java:748
+#: build/trans_style.java:731 build/trans_style.java:739
+#: build/trans_style.java:764 build/trans_style.java:765
+#: build/trans_style.java:773
 msgid "foot"
 msgstr "jalgsi"
 
@@ -28671,7 +28994,7 @@ msgstr "ümbersõit"
 #.
 #. <rule>
 #. <condition k="railway" v="subway"/>
-#: build/trans_presets.java:3242 build/trans_style.java:1208
+#: build/trans_presets.java:3242 build/trans_style.java:1233
 msgid "subway"
 msgstr "metroo"
 
@@ -28965,7 +29288,7 @@ msgstr "sild"
 #. <condition k="mountain_pass" b="yes"/>
 #: build/trans_style.java:139 build/trans_style.java:174
 #: build/trans_style.java:181 build/trans_style.java:188
-#: build/trans_style.java:633 build/trans_style.java:4087
+#: build/trans_style.java:633 build/trans_style.java:4120
 msgid "deprecated"
 msgstr "kasutusest väljas"
 
@@ -29346,9 +29669,9 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="tracktype" v="grade5"/>
-#: build/trans_style.java:649 build/trans_style.java:951
-#: build/trans_style.java:959 build/trans_style.java:967
-#: build/trans_style.java:975 build/trans_style.java:983
+#: build/trans_style.java:649 build/trans_style.java:976
+#: build/trans_style.java:984 build/trans_style.java:992
+#: build/trans_style.java:1000 build/trans_style.java:1008
 msgid "highway_track"
 msgstr "teerada"
 
@@ -29438,7 +29761,7 @@ msgstr "teerada"
 #.
 #. <rule>
 #. <condition k="highway" v="services"/>
-#: build/trans_style.java:842
+#: build/trans_style.java:867
 msgid "services"
 msgstr "teenused"
 
@@ -29450,7 +29773,7 @@ msgstr "teenused"
 #.
 #. <rule>
 #. <condition k="highway" v="ford"/>
-#: build/trans_style.java:850
+#: build/trans_style.java:875
 msgid "ford"
 msgstr ""
 
@@ -29469,7 +29792,7 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="highway" v="turning_circle"/>
-#: build/trans_style.java:865
+#: build/trans_style.java:890
 msgid "turningcircle"
 msgstr "tagasipööramisring"
 
@@ -29482,7 +29805,7 @@ msgstr "tagasipööramisring"
 #. <rule>
 #. <condition k="highway" v="emergency_access_point"/>
 #. <icon src="service/emergency_access_point.png"/>
-#: build/trans_style.java:889
+#: build/trans_style.java:914
 msgid "emergency_access_point"
 msgstr ""
 
@@ -29495,7 +29818,7 @@ msgstr ""
 #. <rule>
 #. <condition k="waterway" v="riverbank"/>
 #. color riverbank
-#: build/trans_style.java:1001 build/trans_style.java:1002
+#: build/trans_style.java:1026 build/trans_style.java:1027
 msgid "riverbank"
 msgstr "jõekallas"
 
@@ -29507,7 +29830,7 @@ msgstr "jõekallas"
 #.
 #. <rule>
 #. <condition k="waterway" v="stream"/>
-#: build/trans_style.java:1018
+#: build/trans_style.java:1043
 msgid "stream"
 msgstr "oja"
 
@@ -29519,7 +29842,7 @@ msgstr "oja"
 #.
 #. <rule>
 #. <condition k="waterway" v="dock"/>
-#: build/trans_style.java:1041
+#: build/trans_style.java:1066
 msgid "dock"
 msgstr "dokk"
 
@@ -29714,16 +30037,16 @@ msgstr "dokk"
 #. <rule>
 #. <condition k="man_made" v="water_works"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
-#: build/trans_style.java:1064 build/trans_style.java:1093
-#: build/trans_style.java:1109 build/trans_style.java:1110
-#: build/trans_style.java:1118 build/trans_style.java:1603
-#: build/trans_style.java:1610 build/trans_style.java:1619
-#: build/trans_style.java:1627 build/trans_style.java:1659
-#: build/trans_style.java:1667 build/trans_style.java:1675
-#: build/trans_style.java:1683 build/trans_style.java:1690
-#: build/trans_style.java:1699 build/trans_style.java:1707
-#: build/trans_style.java:1715 build/trans_style.java:1723
-#: build/trans_style.java:1731
+#: build/trans_style.java:1089 build/trans_style.java:1118
+#: build/trans_style.java:1134 build/trans_style.java:1135
+#: build/trans_style.java:1143 build/trans_style.java:1628
+#: build/trans_style.java:1635 build/trans_style.java:1644
+#: build/trans_style.java:1652 build/trans_style.java:1684
+#: build/trans_style.java:1692 build/trans_style.java:1700
+#: build/trans_style.java:1708 build/trans_style.java:1715
+#: build/trans_style.java:1724 build/trans_style.java:1732
+#: build/trans_style.java:1740 build/trans_style.java:1748
+#: build/trans_style.java:1756
 msgid "manmade"
 msgstr "inimtekkeline"
 
@@ -29735,7 +30058,7 @@ msgstr "inimtekkeline"
 #. <rule>
 #. <condition k="waterway" v="rapids"/>
 #. <icon annotate="true" src="misc/no_icon.png"/>
-#: build/trans_style.java:1101
+#: build/trans_style.java:1126
 msgid "rapids"
 msgstr ""
 
@@ -29795,9 +30118,9 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="railway" v="level_crossing"/>
-#: build/trans_style.java:1128 build/trans_style.java:1143
-#: build/trans_style.java:1158 build/trans_style.java:1166
-#: build/trans_style.java:1174
+#: build/trans_style.java:1153 build/trans_style.java:1168
+#: build/trans_style.java:1183 build/trans_style.java:1191
+#: build/trans_style.java:1199
 msgid "railwaypoint"
 msgstr ""
 
@@ -29818,12 +30141,12 @@ msgstr ""
 #.
 #. <rule>
 #. <condition k="railway" v="light_rail"/>
-#: build/trans_style.java:1191 build/trans_style.java:1200
+#: build/trans_style.java:1216 build/trans_style.java:1225
 msgid "otherrail"
 msgstr "muu rööbastee"
 
 #. color otherrail
-#: build/trans_style.java:1192
+#: build/trans_style.java:1217
 msgid "railover"
 msgstr "ülarelss"
 
@@ -29857,9 +30180,9 @@ msgstr "ülarelss"
 #. <rule>
 #. <condition k="railway" v="abandoned"/>
 #. color oldrail
-#: build/trans_style.java:1216 build/trans_style.java:1226
-#: build/trans_style.java:1227 build/trans_style.java:1237
-#: build/trans_style.java:1238
+#: build/trans_style.java:1241 build/trans_style.java:1251
+#: build/trans_style.java:1252 build/trans_style.java:1262
+#: build/trans_style.java:1263
 msgid "oldrail"
 msgstr "kasutamata raudtee"
 
@@ -29903,8 +30226,8 @@ msgstr "kasutamata raudtee"
 #.
 #. <rule>
 #. <condition k="aeroway" v="taxiway"/>
-#: build/trans_style.java:1318 build/trans_style.java:1319
-#: build/trans_style.java:1351
+#: build/trans_style.java:1343 build/trans_style.java:1344
+#: build/trans_style.java:1376
 msgid "aeroway"
 msgstr "aeronautika"
 
@@ -29916,7 +30239,7 @@ msgstr "aeronautika"
 #.
 #. <rule>
 #. <condition k="aeroway" v="terminal"/>
-#: build/trans_style.java:1327
+#: build/trans_style.java:1352
 msgid "terminal"
 msgstr "lennuterminal"
 
@@ -29936,7 +30259,7 @@ msgstr "lennuterminal"
 #.
 #. <rule>
 #. <condition k="aeroway" v="runway"/>
-#: build/trans_style.java:1335 build/trans_style.java:1343
+#: build/trans_style.java:1360 build/trans_style.java:1368
 msgid "aeroway_dark"
 msgstr "helikopterid"
 
@@ -29948,7 +30271,7 @@ msgstr "helikopterid"
 #.
 #. <rule>
 #. <condition k="aeroway" v="apron"/>
-#: build/trans_style.java:1359
+#: build/trans_style.java:1384
 msgid "aeroway_light"
 msgstr "kerglennukid"
 
@@ -30016,9 +30339,9 @@ msgstr "kerglennukid"
 #.
 #. <rule>
 #. <condition k="aerialway" v="pylon"/>
-#: build/trans_style.java:1383 build/trans_style.java:1391
-#: build/trans_style.java:1399 build/trans_style.java:1407
-#: build/trans_style.java:1415 build/trans_style.java:1423
+#: build/trans_style.java:1408 build/trans_style.java:1416
+#: build/trans_style.java:1424 build/trans_style.java:1432
+#: build/trans_style.java:1440 build/trans_style.java:1448
 msgid "aerialway"
 msgstr "trosstransport"
 
@@ -30033,7 +30356,7 @@ msgstr "trosstransport"
 #. <rule>
 #. <condition k="piste:difficulty" v="easy"/>
 #. color piste_easy
-#: build/trans_style.java:1433 build/trans_style.java:1434
+#: build/trans_style.java:1458 build/trans_style.java:1459
 msgid "piste_easy"
 msgstr "suusanõlv lihtne"
 
@@ -30046,7 +30369,7 @@ msgstr "suusanõlv lihtne"
 #. <rule>
 #. <condition k="piste:difficulty" v="intermediate"/>
 #. color piste_intermediate
-#: build/trans_style.java:1442 build/trans_style.java:1443
+#: build/trans_style.java:1467 build/trans_style.java:1468
 msgid "piste_intermediate"
 msgstr "suusanõlv keskmine"
 
@@ -30059,7 +30382,7 @@ msgstr "suusanõlv keskmine"
 #. <rule>
 #. <condition k="piste:difficulty" v="advanced"/>
 #. color piste_advanced
-#: build/trans_style.java:1451 build/trans_style.java:1452
+#: build/trans_style.java:1476 build/trans_style.java:1477
 msgid "piste_advanced"
 msgstr "suusanõlv edasijõudnutele"
 
@@ -30072,7 +30395,7 @@ msgstr "suusanõlv edasijõudnutele"
 #. <rule>
 #. <condition k="piste:difficulty" v="expert"/>
 #. color piste_expert
-#: build/trans_style.java:1460 build/trans_style.java:1461
+#: build/trans_style.java:1485 build/trans_style.java:1486
 msgid "piste_expert"
 msgstr ""
 
@@ -30085,7 +30408,7 @@ msgstr ""
 #. <rule>
 #. <condition k="piste:difficulty" v="freeride"/>
 #. color piste_freeride
-#: build/trans_style.java:1469 build/trans_style.java:1470
+#: build/trans_style.java:1494 build/trans_style.java:1495
 msgid "piste_freeride"
 msgstr "suusanõlv klassita"
 
@@ -30098,7 +30421,7 @@ msgstr "suusanõlv klassita"
 #. <rule>
 #. <condition k="piste:difficulty" v="novice"/>
 #. color piste_novice
-#: build/trans_style.java:1478 build/trans_style.java:1479
+#: build/trans_style.java:1503 build/trans_style.java:1504
 msgid "piste_novice"
 msgstr "suusanõlv algajale"
 
@@ -30216,13 +30539,13 @@ msgstr "suusanõlv algajale"
 #. <rule>
 #. <condition k="power" v="generator"/>
 #. <icon annotate="true" src="misc/landmark/power.png" priority="-10000"/>
-#: build/trans_style.java:1490 build/trans_style.java:1504
-#: build/trans_style.java:1512 build/trans_style.java:1521
-#: build/trans_style.java:1529 build/trans_style.java:1537
-#: build/trans_style.java:1545 build/trans_style.java:1553
-#: build/trans_style.java:1561 build/trans_style.java:1569
-#: build/trans_style.java:1577 build/trans_style.java:1585
-#: build/trans_style.java:1593
+#: build/trans_style.java:1515 build/trans_style.java:1529
+#: build/trans_style.java:1537 build/trans_style.java:1546
+#: build/trans_style.java:1554 build/trans_style.java:1562
+#: build/trans_style.java:1570 build/trans_style.java:1578
+#: build/trans_style.java:1586 build/trans_style.java:1594
+#: build/trans_style.java:1602 build/trans_style.java:1610
+#: build/trans_style.java:1618
 msgid "power"
 msgstr "elektrivarustus"
 
@@ -30234,7 +30557,7 @@ msgstr "elektrivarustus"
 #. <rule>
 #. <condition k="man_made" v="pier"/>
 #. color pier
-#: build/trans_style.java:1634 build/trans_style.java:1635
+#: build/trans_style.java:1659 build/trans_style.java:1660
 msgid "pier"
 msgstr "kai"
 
@@ -30246,7 +30569,7 @@ msgstr "kai"
 #.
 #. <rule>
 #. <condition k="man_made" v="pipeline"/>
-#: build/trans_style.java:1643
+#: build/trans_style.java:1668
 msgid "pipeline"
 msgstr "torujuhe"
 
@@ -30388,15 +30711,15 @@ msgstr "torujuhe"
 #. <rule>
 #. <condition k="leisure" v="ice_rink"/>
 #. <icon annotate="true" src="sport/hockey.png"/>
-#: build/trans_style.java:1741 build/trans_style.java:1749
-#: build/trans_style.java:1757 build/trans_style.java:1765
-#: build/trans_style.java:1773 build/trans_style.java:1781
-#: build/trans_style.java:1797 build/trans_style.java:1805
-#: build/trans_style.java:1813 build/trans_style.java:1821
-#: build/trans_style.java:1829 build/trans_style.java:1837
-#: build/trans_style.java:1845 build/trans_style.java:1853
-#: build/trans_style.java:1861 build/trans_style.java:1869
-#: build/trans_style.java:1877
+#: build/trans_style.java:1766 build/trans_style.java:1774
+#: build/trans_style.java:1782 build/trans_style.java:1790
+#: build/trans_style.java:1798 build/trans_style.java:1806
+#: build/trans_style.java:1822 build/trans_style.java:1830
+#: build/trans_style.java:1838 build/trans_style.java:1846
+#: build/trans_style.java:1854 build/trans_style.java:1862
+#: build/trans_style.java:1870 build/trans_style.java:1878
+#: build/trans_style.java:1886 build/trans_style.java:1894
+#: build/trans_style.java:1902
 msgid "leisure"
 msgstr "puhkealad"
 
@@ -30408,7 +30731,7 @@ msgstr "puhkealad"
 #. <rule>
 #. <condition k="leisure" v="marina"/>
 #. <icon annotate="true" src="nautical/marina.png"/>
-#: build/trans_style.java:1789
+#: build/trans_style.java:1814
 msgid "marina"
 msgstr "paadisadam"
 
@@ -30502,12 +30825,12 @@ msgstr "paadisadam"
 #. <rule>
 #. <condition k="amenity" v="ice_cream"/>
 #. <icon annotate="true" src="food/icecream.png"/>
-#: build/trans_style.java:1887 build/trans_style.java:1895
-#: build/trans_style.java:1903 build/trans_style.java:1911
-#: build/trans_style.java:1919 build/trans_style.java:1927
-#: build/trans_style.java:1935 build/trans_style.java:1943
-#: build/trans_style.java:1951 build/trans_style.java:1959
-#: build/trans_style.java:1967
+#: build/trans_style.java:1912 build/trans_style.java:1920
+#: build/trans_style.java:1928 build/trans_style.java:1936
+#: build/trans_style.java:1944 build/trans_style.java:1952
+#: build/trans_style.java:1960 build/trans_style.java:1968
+#: build/trans_style.java:1976 build/trans_style.java:1984
+#: build/trans_style.java:1992
 msgid "amenity"
 msgstr "mugavused"
 
@@ -30607,12 +30930,12 @@ msgstr "mugavused"
 #. <rule>
 #. <condition k="amenity" v="fuel"/>
 #. <icon annotate="true" src="vehicle/fuel.png" priority="10000"/>
-#: build/trans_style.java:1975 build/trans_style.java:1983
-#: build/trans_style.java:1991 build/trans_style.java:1999
-#: build/trans_style.java:2007 build/trans_style.java:2015
-#: build/trans_style.java:2023 build/trans_style.java:2031
-#: build/trans_style.java:2039 build/trans_style.java:2046
-#: build/trans_style.java:2055 build/trans_style.java:2063
+#: build/trans_style.java:2000 build/trans_style.java:2008
+#: build/trans_style.java:2016 build/trans_style.java:2024
+#: build/trans_style.java:2032 build/trans_style.java:2040
+#: build/trans_style.java:2048 build/trans_style.java:2056
+#: build/trans_style.java:2064 build/trans_style.java:2071
+#: build/trans_style.java:2080 build/trans_style.java:2088
 msgid "amenity_traffic"
 msgstr "autohooldus"
 
@@ -30999,6 +31322,14 @@ msgstr "autohooldus"
 #. </rule>
 #.
 #. <rule>
+#. <condition k="amenity" v="fire_hydrant"/>
+#. color amenity_light
+#. <icon annotate="true" src="service/fire_hydrant.png"/>
+#. <scale_min>1</scale_min>
+#. <scale_max>50000</scale_max>
+#. </rule>
+#.
+#. <rule>
 #. <condition k="amenity" v="shelter"/>
 #. color amenity_light
 #. <icon annotate="true" src="accommodation/shelter.png"/>
@@ -31040,25 +31371,26 @@ msgstr "autohooldus"
 #. <rule>
 #. <condition k="amenity" v="vending_machine"/>
 #. <icon src="transport/ticket-machine.png" priority="-10"/>
-#: build/trans_style.java:2078 build/trans_style.java:2093
-#: build/trans_style.java:2101 build/trans_style.java:2109
-#: build/trans_style.java:2124 build/trans_style.java:2132
-#: build/trans_style.java:2140 build/trans_style.java:2148
-#: build/trans_style.java:2263 build/trans_style.java:2271
-#: build/trans_style.java:2278 build/trans_style.java:2287
-#: build/trans_style.java:2295 build/trans_style.java:2303
-#: build/trans_style.java:2311 build/trans_style.java:2319
-#: build/trans_style.java:2327 build/trans_style.java:2335
-#: build/trans_style.java:2398 build/trans_style.java:2406
-#: build/trans_style.java:2414 build/trans_style.java:2423
-#: build/trans_style.java:2431 build/trans_style.java:2438
-#: build/trans_style.java:2446 build/trans_style.java:2454
-#: build/trans_style.java:2462 build/trans_style.java:2470
-#: build/trans_style.java:2478 build/trans_style.java:2486
-#: build/trans_style.java:2494 build/trans_style.java:2502
-#: build/trans_style.java:2510 build/trans_style.java:2518
-#: build/trans_style.java:2526 build/trans_style.java:2534
-#: build/trans_style.java:2543 build/trans_style.java:2558
+#: build/trans_style.java:2103 build/trans_style.java:2118
+#: build/trans_style.java:2126 build/trans_style.java:2134
+#: build/trans_style.java:2149 build/trans_style.java:2157
+#: build/trans_style.java:2165 build/trans_style.java:2173
+#: build/trans_style.java:2288 build/trans_style.java:2296
+#: build/trans_style.java:2303 build/trans_style.java:2312
+#: build/trans_style.java:2320 build/trans_style.java:2328
+#: build/trans_style.java:2336 build/trans_style.java:2344
+#: build/trans_style.java:2352 build/trans_style.java:2360
+#: build/trans_style.java:2423 build/trans_style.java:2431
+#: build/trans_style.java:2439 build/trans_style.java:2448
+#: build/trans_style.java:2456 build/trans_style.java:2463
+#: build/trans_style.java:2471 build/trans_style.java:2479
+#: build/trans_style.java:2487 build/trans_style.java:2495
+#: build/trans_style.java:2503 build/trans_style.java:2511
+#: build/trans_style.java:2519 build/trans_style.java:2527
+#: build/trans_style.java:2535 build/trans_style.java:2543
+#: build/trans_style.java:2551 build/trans_style.java:2559
+#: build/trans_style.java:2567 build/trans_style.java:2576
+#: build/trans_style.java:2591
 msgid "amenity_light"
 msgstr "muud teenused"
 
@@ -31088,8 +31420,8 @@ msgstr "muud teenused"
 #. <rule>
 #. <condition k="natural" v="spring"/>
 #. <icon annotate="true" src="misc/landmark/spring.png"/>
-#: build/trans_style.java:2156 build/trans_style.java:2164
-#: build/trans_style.java:3403
+#: build/trans_style.java:2181 build/trans_style.java:2189
+#: build/trans_style.java:3436
 msgid "light_water"
 msgstr "vesi"
 
@@ -31148,10 +31480,10 @@ msgstr "vesi"
 #.
 #. <rule>
 #. <condition k="amenity" v="veterinary"/>
-#: build/trans_style.java:2342 build/trans_style.java:2350
-#: build/trans_style.java:2358 build/trans_style.java:2367
-#: build/trans_style.java:2374 build/trans_style.java:2382
-#: build/trans_style.java:2390
+#: build/trans_style.java:2367 build/trans_style.java:2375
+#: build/trans_style.java:2383 build/trans_style.java:2392
+#: build/trans_style.java:2399 build/trans_style.java:2407
+#: build/trans_style.java:2415
 msgid "health"
 msgstr "tervishoid"
 
@@ -31502,28 +31834,28 @@ msgstr "tervishoid"
 #. <rule>
 #. <condition k="shop" v="shopping_centre"/>
 #. <icon annotate="true" src="shop/mall.png"/>
-#: build/trans_style.java:2568 build/trans_style.java:2576
-#: build/trans_style.java:2584 build/trans_style.java:2592
-#: build/trans_style.java:2600 build/trans_style.java:2608
-#: build/trans_style.java:2616 build/trans_style.java:2624
-#: build/trans_style.java:2632 build/trans_style.java:2640
-#: build/trans_style.java:2648 build/trans_style.java:2656
-#: build/trans_style.java:2664 build/trans_style.java:2672
-#: build/trans_style.java:2680 build/trans_style.java:2688
-#: build/trans_style.java:2696 build/trans_style.java:2704
-#: build/trans_style.java:2712 build/trans_style.java:2720
-#: build/trans_style.java:2728 build/trans_style.java:2736
-#: build/trans_style.java:2744 build/trans_style.java:2752
-#: build/trans_style.java:2760 build/trans_style.java:2768
-#: build/trans_style.java:2776 build/trans_style.java:2784
-#: build/trans_style.java:2792 build/trans_style.java:2800
-#: build/trans_style.java:2808 build/trans_style.java:2816
-#: build/trans_style.java:2824 build/trans_style.java:2832
-#: build/trans_style.java:2840 build/trans_style.java:2848
-#: build/trans_style.java:2856 build/trans_style.java:2864
-#: build/trans_style.java:2872 build/trans_style.java:2880
-#: build/trans_style.java:2888 build/trans_style.java:2896
-#: build/trans_style.java:2905
+#: build/trans_style.java:2601 build/trans_style.java:2609
+#: build/trans_style.java:2617 build/trans_style.java:2625
+#: build/trans_style.java:2633 build/trans_style.java:2641
+#: build/trans_style.java:2649 build/trans_style.java:2657
+#: build/trans_style.java:2665 build/trans_style.java:2673
+#: build/trans_style.java:2681 build/trans_style.java:2689
+#: build/trans_style.java:2697 build/trans_style.java:2705
+#: build/trans_style.java:2713 build/trans_style.java:2721
+#: build/trans_style.java:2729 build/trans_style.java:2737
+#: build/trans_style.java:2745 build/trans_style.java:2753
+#: build/trans_style.java:2761 build/trans_style.java:2769
+#: build/trans_style.java:2777 build/trans_style.java:2785
+#: build/trans_style.java:2793 build/trans_style.java:2801
+#: build/trans_style.java:2809 build/trans_style.java:2817
+#: build/trans_style.java:2825 build/trans_style.java:2833
+#: build/trans_style.java:2841 build/trans_style.java:2849
+#: build/trans_style.java:2857 build/trans_style.java:2865
+#: build/trans_style.java:2873 build/trans_style.java:2881
+#: build/trans_style.java:2889 build/trans_style.java:2897
+#: build/trans_style.java:2905 build/trans_style.java:2913
+#: build/trans_style.java:2921 build/trans_style.java:2929
+#: build/trans_style.java:2938
 msgid "shop"
 msgstr "pood"
 
@@ -31593,10 +31925,10 @@ msgstr "pood"
 #. <rule>
 #. <condition k="tourism" v="caravan_site"/>
 #. <icon annotate="true" src="accommodation/camping/caravan.png"/>
-#: build/trans_style.java:2915 build/trans_style.java:2923
-#: build/trans_style.java:2931 build/trans_style.java:2939
-#: build/trans_style.java:2947 build/trans_style.java:2955
-#: build/trans_style.java:2963 build/trans_style.java:2971
+#: build/trans_style.java:2948 build/trans_style.java:2956
+#: build/trans_style.java:2964 build/trans_style.java:2972
+#: build/trans_style.java:2980 build/trans_style.java:2988
+#: build/trans_style.java:2996 build/trans_style.java:3004
 msgid "hotel"
 msgstr "hotell"
 
@@ -31695,11 +32027,11 @@ msgstr "hotell"
 #. <rule>
 #. <condition k="tourism" v="information"/>
 #. <icon annotate="true" src="misc/information.png"/>
-#: build/trans_style.java:2979 build/trans_style.java:2987
-#: build/trans_style.java:2995 build/trans_style.java:3003
-#: build/trans_style.java:3011 build/trans_style.java:3019
-#: build/trans_style.java:3020 build/trans_style.java:3028
-#: build/trans_style.java:3044 build/trans_style.java:3066
+#: build/trans_style.java:3012 build/trans_style.java:3020
+#: build/trans_style.java:3028 build/trans_style.java:3036
+#: build/trans_style.java:3044 build/trans_style.java:3052
+#: build/trans_style.java:3053 build/trans_style.java:3061
+#: build/trans_style.java:3077 build/trans_style.java:3099
 msgid "tourism"
 msgstr "turism"
 
@@ -31785,11 +32117,11 @@ msgstr "turism"
 #. <rule>
 #. <condition k="historic" v="boundary_stone"/>
 #. <icon annotate="true" src="historic/boundary_stone.png"/>
-#: build/trans_style.java:3076 build/trans_style.java:3084
-#: build/trans_style.java:3092 build/trans_style.java:3100
-#: build/trans_style.java:3108 build/trans_style.java:3116
-#: build/trans_style.java:3124 build/trans_style.java:3132
-#: build/trans_style.java:3140 build/trans_style.java:3148
+#: build/trans_style.java:3109 build/trans_style.java:3117
+#: build/trans_style.java:3125 build/trans_style.java:3133
+#: build/trans_style.java:3141 build/trans_style.java:3149
+#: build/trans_style.java:3157 build/trans_style.java:3165
+#: build/trans_style.java:3173 build/trans_style.java:3181
 msgid "historic"
 msgstr "alalooline"
 
@@ -31800,7 +32132,7 @@ msgstr "alalooline"
 #.
 #. <rule>
 #. <condition k="landuse" v="quarry"/>
-#: build/trans_style.java:3196
+#: build/trans_style.java:3229
 msgid "quarry"
 msgstr "kivimurd"
 
@@ -31812,7 +32144,7 @@ msgstr "kivimurd"
 #.
 #. <rule>
 #. <condition k="landuse" v="landfill"/>
-#: build/trans_style.java:3204
+#: build/trans_style.java:3237
 msgid "landfill"
 msgstr "prügimägi"
 
@@ -31832,7 +32164,7 @@ msgstr "prügimägi"
 #.
 #. <rule>
 #. <condition k="landuse" v="reservoir"/>
-#: build/trans_style.java:3212 build/trans_style.java:3220
+#: build/trans_style.java:3245 build/trans_style.java:3253
 msgid "basin"
 msgstr "tehisjärv"
 
@@ -31844,7 +32176,7 @@ msgstr "tehisjärv"
 #.
 #. <rule>
 #. <condition k="landuse" v="farmyard"/>
-#: build/trans_style.java:3260
+#: build/trans_style.java:3293
 msgid "farmyard"
 msgstr "taluõu"
 
@@ -31865,7 +32197,7 @@ msgstr "taluõu"
 #.
 #. <rule>
 #. <condition k="landuse" v="commercial"/>
-#: build/trans_style.java:3269 build/trans_style.java:3277
+#: build/trans_style.java:3302 build/trans_style.java:3310
 msgid "retail"
 msgstr "kaubandus"
 
@@ -31877,7 +32209,7 @@ msgstr "kaubandus"
 #.
 #. <rule>
 #. <condition k="landuse" v="industrial"/>
-#: build/trans_style.java:3285
+#: build/trans_style.java:3318
 msgid "industrial"
 msgstr "tööstus"
 
@@ -31889,7 +32221,7 @@ msgstr "tööstus"
 #.
 #. <rule>
 #. <condition k="landuse" v="brownfield"/>
-#: build/trans_style.java:3293
+#: build/trans_style.java:3326
 msgid "brownfield"
 msgstr "jäätmaa"
 
@@ -31901,7 +32233,7 @@ msgstr "jäätmaa"
 #.
 #. <rule>
 #. <condition k="landuse" v="greenfield"/>
-#: build/trans_style.java:3301
+#: build/trans_style.java:3334
 msgid "greenfield"
 msgstr "rohepiirkond"
 
@@ -31913,7 +32245,7 @@ msgstr "rohepiirkond"
 #.
 #. <rule>
 #. <condition k="landuse" v="railway"/>
-#: build/trans_style.java:3309
+#: build/trans_style.java:3342
 msgid "railland"
 msgstr "raudteede piirkond"
 
@@ -31968,9 +32300,9 @@ msgstr "raudteede piirkond"
 #. <rule>
 #. <condition k="military" v="range"/>
 #. <icon src="misc/landmark/range.png"/>
-#: build/trans_style.java:3326 build/trans_style.java:3361
-#: build/trans_style.java:3369 build/trans_style.java:3377
-#: build/trans_style.java:3385 build/trans_style.java:3393
+#: build/trans_style.java:3359 build/trans_style.java:3394
+#: build/trans_style.java:3402 build/trans_style.java:3410
+#: build/trans_style.java:3418 build/trans_style.java:3426
 msgid "military"
 msgstr "militaarala"
 
@@ -31982,7 +32314,7 @@ msgstr "militaarala"
 #.
 #. <rule>
 #. <condition k="landuse" v="cemetery"/>
-#: build/trans_style.java:3334
+#: build/trans_style.java:3367
 msgid "cemetery"
 msgstr "kalmistu"
 
@@ -31993,7 +32325,7 @@ msgstr "kalmistu"
 #.
 #. <rule>
 #. <condition k="natural" v="peak"/>
-#: build/trans_style.java:3410
+#: build/trans_style.java:3443
 msgid "peak"
 msgstr "mäetipp"
 
@@ -32006,7 +32338,7 @@ msgstr "mäetipp"
 #. <rule>
 #. <condition k="natural" v="glacier"/>
 #. <icon annotate="true" src="misc/landmark/glacier_small.png"/>
-#: build/trans_style.java:3419
+#: build/trans_style.java:3452
 msgid "glacier"
 msgstr "liustik"
 
@@ -32018,7 +32350,7 @@ msgstr "liustik"
 #. <rule>
 #. <condition k="natural" v="volcano"/>
 #. <icon annotate="true" src="misc/landmark/volcano_small.png"/>
-#: build/trans_style.java:3427
+#: build/trans_style.java:3460
 msgid "volcano"
 msgstr "vulkaan"
 
@@ -32071,10 +32403,10 @@ msgstr "vulkaan"
 #. <rule>
 #. <condition k="natural" v="cave_entrance"/>
 #. <icon src="misc/no_icon.png"/>
-#: build/trans_style.java:3435 build/trans_style.java:3436
-#: build/trans_style.java:3444 build/trans_style.java:3460
-#: build/trans_style.java:3524 build/trans_style.java:3532
-#: build/trans_style.java:3540
+#: build/trans_style.java:3468 build/trans_style.java:3469
+#: build/trans_style.java:3477 build/trans_style.java:3493
+#: build/trans_style.java:3557 build/trans_style.java:3565
+#: build/trans_style.java:3573
 msgid "natural"
 msgstr "looduslik"
 
@@ -32086,7 +32418,7 @@ msgstr "looduslik"
 #. <rule>
 #. <condition k="natural" v="scrub"/>
 #. <icon src="misc/no_icon.png"/>
-#: build/trans_style.java:3452
+#: build/trans_style.java:3485
 msgid "scrub"
 msgstr "põõsastik"
 
@@ -32098,7 +32430,7 @@ msgstr "põõsastik"
 #. <rule>
 #. <condition k="natural" v="heath"/>
 #. <icon src="misc/no_icon.png"/>
-#: build/trans_style.java:3468
+#: build/trans_style.java:3501
 msgid "heath"
 msgstr "nõmm"
 
@@ -32110,7 +32442,7 @@ msgstr "nõmm"
 #. <rule>
 #. <condition k="natural" v="wood"/>
 #. <icon src="misc/landmark/trees.png"/>
-#: build/trans_style.java:3476
+#: build/trans_style.java:3509
 msgid "woodarea"
 msgstr ""
 
@@ -32122,7 +32454,7 @@ msgstr ""
 #. <rule>
 #. <condition k="natural" v="mud"/>
 #. <icon src="misc/no_icon.png"/>
-#: build/trans_style.java:3508
+#: build/trans_style.java:3541
 msgid "mud"
 msgstr "muda"
 
@@ -32134,7 +32466,7 @@ msgstr "muda"
 #. <rule>
 #. <condition k="natural" v="beach"/>
 #. <icon src="misc/no_icon.png"/>
-#: build/trans_style.java:3516
+#: build/trans_style.java:3549
 msgid "beach"
 msgstr "rand"
 
@@ -32282,13 +32614,13 @@ msgstr "rand"
 #. <rule>
 #. <condition k="place" v="islet"/>
 #. <icon annotate="true" src="place/islet.png"/>
-#: build/trans_style.java:4135 build/trans_style.java:4143
-#: build/trans_style.java:4151 build/trans_style.java:4159
-#: build/trans_style.java:4167 build/trans_style.java:4175
-#: build/trans_style.java:4183 build/trans_style.java:4191
-#: build/trans_style.java:4199 build/trans_style.java:4207
-#: build/trans_style.java:4215 build/trans_style.java:4223
-#: build/trans_style.java:4231
+#: build/trans_style.java:4168 build/trans_style.java:4176
+#: build/trans_style.java:4184 build/trans_style.java:4192
+#: build/trans_style.java:4200 build/trans_style.java:4208
+#: build/trans_style.java:4216 build/trans_style.java:4224
+#: build/trans_style.java:4232 build/trans_style.java:4240
+#: build/trans_style.java:4248 build/trans_style.java:4256
+#: build/trans_style.java:4264
 msgid "place"
 msgstr "koht"
 
@@ -32300,7 +32632,7 @@ msgstr "koht"
 #. <!-- special display of unreviewed tiger data (USA) -->
 #. <rule>
 #. <condition k="tiger:reviewed" v="no"/>
-#: build/trans_style.java:4239
+#: build/trans_style.java:4272
 msgid "tiger_data"
 msgstr ""
 
@@ -33052,6 +33384,3 @@ msgstr "Sitsiilia - Itaalia"
 #~ "Valitud tee(de)l on sõlmi väljaspool  alla laetud andmete ala.\n"
 #~ "See võib põhjustada sõlmede tahtmatud kustutamist.\n"
 #~ "Kas oled tõesti kindel, et soovid jätkata?"
-
-#~ msgid "Are you sure?"
-#~ msgstr "Kas oled kindel?"

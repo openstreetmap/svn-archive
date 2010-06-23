@@ -98,14 +98,14 @@ foreach my $pngSuffix (@pngList)
 
     my @fonttestRef = undef;
     my @ReferenceImage = undef;
-    my $loopmax = 5;
+    my $loopmax = 9;
     my $I = 0;
     for (; $I <= $loopmax;)
     {
         $fonttestRef[$I] = File::Spec->join("tests","fonttest".$I.$pngSuffix);
         $ReferenceImage[$I] = undef;
         eval { $ReferenceImage[$I] = GD::Image->newFromPng($fonttestRef[$I]); };
-        if (not defined $ReferenceImage[$I]) #we ran out of tests
+        if (not defined $ReferenceImage[$I]) # this means we ran out of tests, without finding a match.
         {
             pop(@fonttestRef);
             print STDERR "\nFonttest failed, check installed fonts. $renderResult doesn't match any of ";

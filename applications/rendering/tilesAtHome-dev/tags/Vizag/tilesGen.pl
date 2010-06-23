@@ -93,19 +93,30 @@ if ($UploadMode or $LoopMode)
             exit;
         }
     }
-    if (($Mode eq "loop") or ($Mode eq "once")) # only really needed for loop and once rendering mode
-    {
-        my $Cmd = "perl runTests.pl";
-        my $success = runCommand($Cmd,$PID);
-        if (not $success)
-        {
-            die "tests failed\n";
-        }
-    }
 }
 elsif ($RenderMode and ClientModified())
 {
     statusMessage("! tilesGen.pl differs from svn repository. DO NOT UPLOAD to t\@h server.",1,0);
+}
+
+if (($Mode eq "loop") or ($Mode eq "once")) # only really needed for loop and once rendering mode
+{
+    my $Cmd = "perl runTests.pl";
+    my $success = runCommand($Cmd,$PID);
+    if (not $success)
+    {
+        if ($Config->get("Rasterizer") ne "Inkscape") 
+        {
+            die "tests failed, try \"Inkscape\" as rasterizer.\n"; 
+# batik is known to mess up composite glyphs, which trips the fontcheck, 
+# but there might be batik versions doing it right, so if they pass the test, we let them continue.
+        }
+        else
+        {
+            print STDERR " *** tests failed *** (non fatal).\n"; 
+            talkInSleep(" *** Please upload failed images as instructed to make this warning go away *** ",30);
+        }
+    }
 }
 
 # Get version number from version-control system, as integer

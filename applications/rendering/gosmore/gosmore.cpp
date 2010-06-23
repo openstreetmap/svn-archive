@@ -119,6 +119,7 @@ int GpsIdle=999;
 #endif
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <curl/curl.h>
 #include <curl/types.h>
 #include <curl/easy.h>
@@ -378,6 +379,18 @@ void ChangePak (const TCHAR *pakfile, int mlon, int mlat)
 GtkWidget *draw, *location, *display3D, *followGPSr;
 double cosAzimuth = 1.0, sinAzimuth = 0.0;
 string highlight, searchStr ("Search");
+
+struct tsItem {
+  string cmd;
+  #ifndef NOGTK
+  GdkPixbuf *pix;
+  #else
+  HICON pix;
+  #endif
+//  tsItem () {}
+};
+
+deque<tsItem> tsList;
 
 inline void SetLocation (int nlon, int nlat)
 {
@@ -2452,6 +2465,23 @@ gint DrawExpose (void)
       }
       text2B.pop ();
     }
+    for (deque<tsItem>::iterator i = tsList.begin (); i != tsList.end (); i++) {
+      int x, y, j;
+      const char *p = i->cmd.c_str ();
+      for (j = 0; j < 2; j++) {
+        double coef = atof (p);
+        p += strcspn (p, "whWH;");
+        (j ? y : x) = lrint (*p == ';' ? coef : atoi (p + 1) + 
+          coef * (j ? draw->allocation.height : draw->allocation.width));
+        while (*p != '\0' && *p++ != ';') {}
+      //char *xs = i->cmd.c_str (), *ys = xs + strcspn (xs, ";");
+      }
+      #ifndef NOGTK
+      gdk_draw_pixbuf (GDK_DRAWABLE (draw->window), fg_gc, i->pix, 0, 0, x, y,
+        gdk_pixbuf_get_width (i->pix), gdk_pixbuf_get_height (i->pix), GDK_RGB_DITHER_NONE, 0, 0);
+      #else
+      #endif
+    }
     free (block);
     if (FollowGPSr && command[0] && command[0] == command[1] && command[0] == command[2]) {
       DrawPoI (draw->allocation.width / 2, draw->allocation.height / 6,
@@ -2618,7 +2648,143 @@ void HitGtkButton (GtkWidget * /*w*/, void *data)
   HitButton ((intptr_t)data);
   gtk_widget_queue_clear (draw);
 }
-#endif
+
+//------------------------------------------------------------------------
+// Callbacks that are called with the user drops an icon and then binds it
+static gboolean DropOnDraw (GtkWidget *w, GdkDragContext *c, gint x,
+  gint y, guint time, gpointer)
+{
+  if (c->targets) {
+    gtk_drag_get_data (w, c,
+      GDK_POINTER_TO_ATOM (g_list_nth_data (c->targets, 0)), time);
+  }
+  return c->targets ? TRUE : FALSE;
+}
+
+static void ReadTsList (void)
+{
+  FILE *fp = fopen ("main.ts", "r");
+  gsize siz;
+  for (; !tsList.empty (); tsList.pop_back()) g_object_unref (tsList.back().pix);
+  while (fp && fread (&siz, sizeof (siz), 1, fp) == 1) {
+    printf ("Reading %d\n", siz);
+    void *buf = malloc (siz);
+    fread (buf, siz, 1, fp);
+    tsList.push_back (tsItem ());
+    #ifndef NOGTK
+    GInputStream *gis = g_memory_input_stream_new_from_data (buf, siz, NULL);
+    GError *err = NULL;
+    tsList.back ().pix = gdk_pixbuf_new_from_stream (gis, NULL, &err);
+    #else
+    tsList.back ().pix = CreateIconFromResource (buf, siz, TRUE, 0x30000);
+    #endif
+    int c; 
+    while ((c = fgetc (fp)) != '\0') tsList.back ().cmd += c;
+  }
+  if (fp) fclose (fp);
+}
+
+static void DropReceived (GtkWidget */*draw*/, GdkDragContext *c, gint x,
+  gint y, GtkSelectionData *sdata, guint ttype, guint time, gpointer)
+{
+  //FILE *fp;
+  gchar **arr = sdata != NULL ? gtk_selection_data_get_uris (sdata) : NULL;
+  gchar *f = arr ? g_filename_from_uri (arr[0], NULL, NULL) : NULL;
+//  printf ("x%sx\n", f); //gtk_selection_data_get_text (sdata));
+//  printf ("%p\n", gtk_selection_data_get_pixbuf (sdata));
+//  if (sdata != NULL && sdata->length >= 7) printf ("%s\n----%s----\n", sdata->data,
+//    string ((char*) sdata->data + 7, strcspn ((char*) sdata->data + 7, "\n\r")).c_str());
+
+  GError *err = NULL;
+  tsList.push_back (tsItem ());
+  if ((f && (tsList.back ().pix = gdk_pixbuf_new_from_file (f, &err)))
+      || (tsList.back ().pix = gtk_selection_data_get_pixbuf (sdata))) {
+    //if (ttype == 0) printf ("Data=%s\n", sdata->data);
+    printf ("C %p\n", tsList.back().pix);
+    char a[40];
+    if (draw->allocation.width <= x * 2) x -= draw->allocation.width;
+    if (draw->allocation.height <= y * 2) y -= draw->allocation.height;
+    sprintf (a, "%s %+d; %s %+d; ;", x < 0 ? "1.0 w" : "0.0 w", x,
+                                     y < 0 ? "1.0 h" : "0.0 h", y);
+    tsList.back ().cmd = string (a);
+    
+    GtkWidget *dialog, *dedit;
+    dialog = gtk_dialog_new_with_buttons ("Set icon data", NULL, GTK_DIALOG_MODAL,
+      GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_DELETE, GTK_RESPONSE_NO,
+      GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+    dedit = gtk_entry_new ();
+    gtk_entry_set_text (GTK_ENTRY (dedit), tsList.back ().cmd.c_str ());
+    gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), dedit);
+    gtk_widget_show_all (dialog);
+    int result = gtk_dialog_run (GTK_DIALOG (dialog));
+    if (result == GTK_RESPONSE_OK) {
+      printf ("OK\n");
+      tsList.back ().cmd = string (gtk_entry_get_text (GTK_ENTRY (dedit)));
+    }
+    else if (result == GTK_RESPONSE_NO) {
+      printf ("Delete\n");
+      tsList.pop_back ();
+    }
+    gtk_widget_destroy (dialog);
+
+    FILE *fp = fopen ("main.ts", "w");
+    for (deque<tsItem>::iterator i = tsList.begin (); i != tsList.end (); i++) {
+      gsize siz;
+      gchar *buf;
+      printf ("%p %p\n", err, i->pix);
+      gdk_pixbuf_save_to_buffer (i->pix, &buf, &siz, "ico", &err, NULL);
+      printf ("Saving %u\n", siz);
+  //    gdk_pixbuf_new_from_buffer (
+      fwrite (&siz, sizeof (siz), 1, fp);
+      fwrite (buf, siz, 1, fp);
+      fwrite (i->cmd.c_str (), i->cmd.length () + 1, 1, fp);
+    }
+    fclose (fp);
+    
+    #if 0
+      //(fp = fopen (string ((char*) sdata->data + 7, strcspn ((char*) sdata->data + 7, "\n\r")).c_str(), "r"))) {
+    png_structp pngp = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    printf ("%p\n", pngp);
+    if (pngp) {
+      png_infop infop = png_create_info_struct (pngp);
+      printf ("i %p\n", infop);
+      if (infop && !setjmp (png_jmpbuf (pngp))) {
+        png_init_io (pngp, fp);
+        png_read_png (pngp, infop, PNG_TRANSFORM_IDENTITY |
+          PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING |
+          PNG_TRANSFORM_PACKSWAP /*| PNG_TRANSFORM_GRAY_TO_RGB Missing ?*/, NULL);
+        png_bytep *row = png_get_rows(pngp, infop);
+        printf ("%d %d %d\n", png_get_image_width (pngp, infop), png_get_image_height (pngp, infop),
+          png_get_channels (pngp, infop));
+        for (int i = 0; i < png_get_image_height (pngp, infop); i++) {
+          for (int j = 0; j < png_get_image_width (pngp, infop); j++) {
+            putchar (row[i][j * 4] & 128 ? '*' : ' ');
+          }
+          putchar ('\n');
+        }
+      }
+      png_destroy_read_struct (&pngp, &infop, (png_infopp)NULL);
+    }
+    fclose (fp);
+    #endif
+  }
+  else tsList.pop_back ();
+  g_strfreev (arr);
+  free (f);
+  gtk_drag_finish (c, TRUE, FALSE, time);
+}
+
+void SeUpdate (GtkWidget *w, gpointer p)
+{
+  GdkColor c;
+  if (((int) p & 0xff) == 2) gtk_color_button_get_color (GTK_COLOR_BUTTON (w), &c);
+  if (((int) p & 0xff) == 3) printf ("%s ", gtk_font_button_get_font_name (GTK_FONT_BUTTON (w)));
+  if (((int) p & 0xff) == 4) printf ("%d ", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (w)));
+  if (((int) p & 0xff) == 5) printf ("%d ", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)));
+  printf ("%p | %4x %4x %4x\n", p, c.red, c.green, c.blue);
+}
+
+#endif // HEADLESS
 
 #if 0
 void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
@@ -2802,6 +2968,20 @@ int UserInterface (int argc, char *argv[],
     GDK_BUTTON_PRESS_MASK |  GDK_POINTER_MOTION_MASK);
   gtk_signal_connect (GTK_OBJECT (draw), "scroll_event",
                        (GtkSignalFunc) Scroll, NULL);
+
+#if 0 // New UI editor code                       
+  static GtkTargetEntry drawDndTargets[] = {
+    { (gchar*) "text/uri-list", 0, 0 },
+    { (gchar*) "image/png", 0, 1 /* Will autodetect type on drop */ },
+    { (gchar*) "image/ico", 0, 1 },
+  };
+  gtk_drag_dest_set (draw, GTK_DEST_DEFAULT_ALL /* GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT*/, drawDndTargets,
+    G_N_ELEMENTS (drawDndTargets), GDK_ACTION_COPY);
+                       
+  g_signal_connect (draw, "drag-data-received", G_CALLBACK (DropReceived), NULL);
+  g_signal_connect (draw, "drag-drop", G_CALLBACK (DropOnDraw), NULL);
+  ReadTsList ();
+#endif
   
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_signal_connect (GTK_OBJECT (window), "focus-in-event",
@@ -2881,6 +3061,33 @@ int UserInterface (int argc, char *argv[],
 //  gtk_widget_show (hbox);
 //  gtk_widget_show (vbox);
   gtk_widget_show_all (window);
+
+/*  GtkWidget *styleEditor = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  GtkWidget *seScroll = gtk_scrolled_window_new (NULL, NULL);
+  //gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (seScroll), );
+  gtk_container_add (GTK_CONTAINER (styleEditor), seScroll);
+  #define TCOLS 6
+  GtkWidget *seTable = gtk_table_new (100, TCOLS, FALSE);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (seScroll), seTable);
+  for (int i = 0; i < 100; i++) {
+    GtkWidget *v[TCOLS];
+    v[0] = gtk_label_new ("abcdefghijl" + i % 5);
+    v[1] = gtk_label_new ("01234567" + i % 5);
+//    GdkColor c = { 9999, 8888, 7777, 6666 };
+    v[2] = gtk_color_button_new ();
+    v[3] = gtk_font_button_new ();
+    v[4] = gtk_spin_button_new_with_range (0, 50, 1);
+    v[5] = gtk_toggle_button_new_with_label ("- -");
+    const char *sName[] = { NULL, NULL, "color-set", "font-set", "value-changed", "clicked" };
+    for (int j = 0; j < TCOLS; j++) {
+    //gtk_clist_append (GTK_CLIST (seList), (gchar**) v);
+      gtk_table_attach_defaults (GTK_TABLE (seTable), v[j], j, j + 1, i, i + 1);
+      if (sName[j]) gtk_signal_connect (GTK_OBJECT (v[j]), sName[j],
+        GTK_SIGNAL_FUNC (SeUpdate), (gpointer) (intptr_t) (i * 0x100 + j));
+    }
+  }
+  gtk_widget_show_all (styleEditor); */
+
   ChangeOption ();
   IncrementalSearch ();
   gtk_widget_grab_focus (searchW);

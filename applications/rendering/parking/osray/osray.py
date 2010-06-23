@@ -93,10 +93,13 @@ box {{
 
 
 def main(options):
-    DSN = options.dsn
-    thebbox = options.bbox
-    prefix = options.prefix
-    create_textures = not(options.quick)
+    #print opti.__class__
+    #print opti.__class__.__name__
+    #print "in main:",opti
+    DSN = options['dsn']
+    thebbox = options['bbox']
+    prefix = options['prefix']
+    create_textures = not(options['quick'])
 
     print "Opening connection using dsn:", DSN
     conn = psycopg2.connect(DSN)
@@ -133,7 +136,7 @@ def main(options):
     pov_camera(f,bbox)
     
     if create_textures:
-        create_landuse_texture(conn,curs)
+        create_landuse_texture(conn,curs,options)
     
     highways = []
     for highwaytype in highwaytypes.iterkeys():
@@ -156,8 +159,9 @@ def main(options):
     
     conn.rollback()
 
-    image_dimension_parameters = "-W"+string(options.width)+" -H"+string(options.height)
-    print commands.getstatusoutput('povray -Iscene-osray.pov -UV '+image_dimension_parameters+' +Q9 +A')
+    image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
+    result = commands.getstatusoutput('povray -Iscene-osray.pov -UV '+image_dimension_parameters+' +Q9 +A')
+    print result[1]
     
 
 
@@ -173,5 +177,5 @@ if __name__ == "__main__":
     #if options.a and options.b:
     #    parser.error("options -a and -b are mutually exclusive")
     print options
-    main(options)
+    main(options.__dict__)
     sys.exit(0)

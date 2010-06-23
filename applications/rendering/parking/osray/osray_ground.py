@@ -127,15 +127,17 @@ box {{
     #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <300000+{0}, 1000000, -1000000+{1}>, rgb <1, 1, 1> }}\n""".format(avg(left,right),avg(bottom,top)))
 
-def create_landuse_texture(conn,curs):
+def create_landuse_texture(conn,curs,options):
     f_landuse = open('/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov', 'w')
+
+    thebbox = options['bbox']
+    prefix = options['prefix']
 
     latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
     coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
-    FlW = "FROM planet_osm_line WHERE"
-    FpW = "FROM planet_osm_polygon WHERE"
+    FlW = "FROM "+prefix+"_line WHERE"
+    FpW = "FROM "+prefix+"_polygon WHERE"
 
-    thebbox = "9.94861 49.79293,9.96912 49.80629"
     googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
 
     #curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
@@ -155,5 +157,7 @@ def create_landuse_texture(conn,curs):
 
     f_landuse.close()
 
-    print commands.getstatusoutput('povray -Iscene-osray-landuse-texture.pov -UV -W1600 -H1200 +Q9 -A')
+    image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
+    result = commands.getstatusoutput('povray -Iscene-osray-landuse-texture.pov -UV '+image_dimension_parameters+' +Q9 +A')
+    # print result[1]
 

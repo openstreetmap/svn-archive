@@ -6,7 +6,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
 import osray
 
-options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'bbox': '9.94861 49.79293,9.96912 49.80629', 'quick': True}
+options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'bbox': '9.94861 49.79293,9.96912 49.80629', 'quick': False}
 
 class osrayHandler(BaseHTTPRequestHandler):
 
@@ -18,7 +18,7 @@ class osrayHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write("")
                 return
-            baseurl = urlparse.urlparse(theurl)[1]
+            baseurl = urlparse.urlparse(theurl)[2]
             print "parse=",urlparse.urlparse(theurl)
             print "base=",baseurl
             if baseurl.endswith(".png"):

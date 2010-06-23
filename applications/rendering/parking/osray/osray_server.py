@@ -4,6 +4,9 @@ import string, cgi, time
 from os import curdir, sep
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
+import osray
+
+options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'bbox': '9.94861 49.79293,9.96912 49.80629', 'quick': True}
 
 class osrayHandler(BaseHTTPRequestHandler):
 
@@ -17,6 +20,7 @@ class osrayHandler(BaseHTTPRequestHandler):
                 return
             baseurl = urlparse.urlparse(theurl)[2]
             if baseurl.endswith(".png"):
+                osray.main(options)
                 f = open(curdir + sep + 'scene-osray.png')
                 self.send_response(200)
                 self.send_header('Content-type','image/png')

@@ -92,22 +92,6 @@ box {{
 
 
 
-
-if __name__ == "__main__":
-    parser = OptionParser()
-    parser.add_option("-d", "--dsn", dest="dsn", help="database name and host (e.g. 'dbname=gis')", default="dbname=gis")
-    parser.add_option("-p", "--prefix", dest="prefix", help="database table prefix (e.g. 'planet_osm')", default="planet_osm")
-    parser.add_option("-q", "--quick", action="store_true", dest="quick", default=False, help="don't generate textures, but use existing ones")
-    parser.add_option("-b", "--bbox", dest="bbox", help="the bounding box as string ('9.94861 49.79293,9.96912 49.80629')", default="9.94861 49.79293,9.96912 49.80629")
-    parser.add_option("-H", "--height", dest="height", help="image height in pixels", default="768", type='int')
-    parser.add_option("-W", "--width", dest="width", help="image width in pixels", default="1024", type='int')
-    (options, args) = parser.parse_args()
-    #if options.a and options.b:
-    #    parser.error("options -a and -b are mutually exclusive")
-    print options
-    main(options)
-    sys.exit(0)
-
 def main(options):
     DSN = options.dsn
     thebbox = options.bbox
@@ -175,3 +159,19 @@ def main(options):
     image_dimension_parameters = "-W"+string(options.width)+" -H"+string(options.height)
     print commands.getstatusoutput('povray -Iscene-osray.pov -UV '+image_dimension_parameters+' +Q9 +A')
     
+
+
+if __name__ == "__main__":
+    parser = OptionParser()
+    parser.add_option("-d", "--dsn", dest="dsn", help="database name and host (e.g. 'dbname=gis')", default="dbname=gis")
+    parser.add_option("-p", "--prefix", dest="prefix", help="database table prefix (e.g. 'planet_osm')", default="planet_osm")
+    parser.add_option("-q", "--quick", action="store_true", dest="quick", default=False, help="don't generate textures, but use existing ones")
+    parser.add_option("-b", "--bbox", dest="bbox", help="the bounding box as string ('9.94861 49.79293,9.96912 49.80629')", default="9.94861 49.79293,9.96912 49.80629")
+    parser.add_option("-H", "--height", dest="height", help="image height in pixels", default="768", type='int')
+    parser.add_option("-W", "--width", dest="width", help="image width in pixels", default="1024", type='int')
+    (options, args) = parser.parse_args()
+    #if options.a and options.b:
+    #    parser.error("options -a and -b are mutually exclusive")
+    print options
+    main(options)
+    sys.exit(0)

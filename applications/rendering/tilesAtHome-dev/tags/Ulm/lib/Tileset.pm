@@ -185,6 +185,8 @@ sub generate
         {
             $FullDataFile = File::Spec->join($self->{JobDir}, "data.osm");
             copy($DataFile, $FullDataFile) or throw TilesetError "could not copy data file", "fatal"; ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
+            
+            $self->{JobTime} = (stat($DataFile))[9];
         }
 
         #------------------------------------------------------
@@ -476,7 +478,7 @@ sub getFile {
         {
             if($self->{Config}->get('Debug'))
             {
-                ::statusMessage("Download file $file",1,6);
+                ::statusMessage("Download file $file from http://tah.openstreetmap.org/Tiles/$Layer/$Z/$X/$Y.png",1,6);
             }
             LWP::Simple::mirror(sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",
             $Layer,$Z,$X,$Y),$pfile);
@@ -1746,7 +1748,9 @@ Osm-Timestamp: %d
 
 EOS
 
+    $self->{JobTime} = 0 if (not defined  $self->{JobTime});
     my $meta_data = sprintf($meta_template, $layer_prefix, $req->ZXY(), $self->{JobTime});
+# DEBUG:    print STDERR "\n\n $meta_data \n\n";
     return $meta_data;
 }
 

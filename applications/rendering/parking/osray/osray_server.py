@@ -8,6 +8,9 @@ import osray
 
 options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'bbox': '9.94861 49.79293,9.96912 49.80629', 'quick': False}
 
+# for tile names and coordinates:
+# http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+
 class osrayHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):

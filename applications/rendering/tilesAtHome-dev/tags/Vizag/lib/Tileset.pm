@@ -185,6 +185,8 @@ sub generate
         {
             $FullDataFile = File::Spec->join($self->{JobDir}, "data.osm");
             copy($DataFile, $FullDataFile) or throw TilesetError "could not copy data file", "fatal"; ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
+            
+            $self->{JobTime} = (stat($FullDataFile))[9];
         }
 
         #------------------------------------------------------
@@ -1746,7 +1748,7 @@ Osm-Timestamp: %d
 
 EOS
 
-    $self->{JobTime} = time() if (not defined  $self->{JobTime});
+    $self->{JobTime} = 0 if (not defined  $self->{JobTime});
     my $meta_data = sprintf($meta_template, $layer_prefix, $req->ZXY(), $self->{JobTime});
     return $meta_data;
 }

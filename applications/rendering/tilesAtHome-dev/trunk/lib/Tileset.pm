@@ -1748,7 +1748,7 @@ Osm-Timestamp: %d
 
 EOS
 
-    $self->{JobTime} = time() if (not defined  $self->{JobTime});
+    $self->{JobTime} = 0 if (not defined  $self->{JobTime});
     my $meta_data = sprintf($meta_template, $layer_prefix, $req->ZXY(), $self->{JobTime});
     return $meta_data;
 }

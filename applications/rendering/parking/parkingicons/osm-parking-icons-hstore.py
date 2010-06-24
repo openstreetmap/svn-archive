@@ -40,29 +40,30 @@ def calc_bearing(x1,y1,x2,y2,side):
     bearing = math.pi/2.0-angl # (0°=up, and clockwise)
     return bearing
 
-def unboth(list,sideindex):
+def unboth(lst,sideindex):
     """ Replace in a list all rows with 'both' with two rows with 'left' and 'right'
     """
-    list_both = list[:]
+    list_both = list(lst)
     list_both.reverse()
-    list = []
+    lst = []
     while len(list_both)>0:
         row = list_both.pop()
-        #print "row=", row
+        print "row=", row
+        print "row.type=", type(row)
         side = row[sideindex]
         if side=='both':
-            row_l = row[:]
+            row_l = list(row)
             row_l[sideindex] = 'left'
             #print 'bothl:', row_l
-            list += [row_l]
-            row_r = row[:]
+            lst += [row_l]
+            row_r = list(row)
             row_r[sideindex] = 'right'
             #print 'bothr:', row_r
-            list += [row_r]
+            lst += [row_r]
         else:
             #print side, ":", row
-            list += [row]
-    return list
+            lst += [row]
+    return lst
 
 if len(sys.argv) == 3:
     DSN = sys.argv[1]

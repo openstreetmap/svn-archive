@@ -23,13 +23,15 @@
 
   <rule e="node|way" k="osmarender:renderName" v="~|yes" layer="5">
     <!-- Non-physical boundaries -->
-    <rule e="way" k="admin_level" v="2" layer="5">
-      <line class="boundary boundary-level-2-casing" layer="5"/>
-      <line class="boundary boundary-level-2-core" layer="5"/>
-    </rule>
-    <rule e="way" k="admin_level" v="1" layer="5">
-      <line class="boundary boundary-level-1-casing" layer="5"/>
-      <line class="boundary boundary-level-1-core" layer="5"/>
+    <rule e="way" k="boundary" v="administrative">
+      <rule e="way" k="admin_level" v="2">
+        <line class="boundary boundary-level-2-casing"/>
+        <line class="boundary boundary-level-2-core"/>
+      </rule>
+      <rule e="way" k="admin_level" v="1">
+        <line class="boundary boundary-level-1-casing"/>
+        <line class="boundary boundary-level-1-core"/>
+      </rule>
     </rule>
 
     <rule e="node" k="place" v="*" layer="5">
@@ -92,7 +94,7 @@
             }
             
             .boundary-level-1-casing {
-            stroke-width: 8000px;
+            stroke-width: 800px;
             stroke: #ffff00;
             opacity: 0.5;
             }

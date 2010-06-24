@@ -34,10 +34,18 @@
       </rule>
     </rule>
 
-    <rule e="node" k="place" v="city" horizontalProximity="0.4" verticalProximity="0.2">
-      <text k="name" class='caption-casing city-caption-casing' />
-      <text k="name" class='caption-core city-caption' />
-    </rule>
+    <rule e="node" k="place" v="*" layer="5">
+      <rule e="node" k="capital" v="~|no|false|False" layer="5">
+        <rule e="node" k="place" v="city" layer="5">
+          <text k="name" class='caption-casing city-caption-casing' />
+          <text k="name" class='caption-core city-caption' />
+        </rule>
+      </rule>
+      <else>
+          <text k="name" class='caption-casing capital-caption-casing' />
+          <text k="name" class='caption-core capital-caption' />
+      </else>
+    </rule> <!-- e="node" k="place" v="*" -->
 
   </rule> <!-- k="osmarender:render" v="~|yes" -->
 
@@ -72,8 +80,11 @@
                 stroke-miterlimit: 1.5;
             }
 
-			.city-caption-casing    { font-size: 1500px; stroke-width: 300px; }
-			.city-caption           { font-size: 1500px; }
+            .capital-caption-casing { font-size: 2000px; stroke-width: 400px; }
+            .captial-caption        { font-size: 2000px; }
+
+            .city-caption-casing    { font-size: 1500px; stroke-width: 300px; }
+            .city-caption           { font-size: 1500px; }
 
             /* Non-physical boundaries */
             .boundary {

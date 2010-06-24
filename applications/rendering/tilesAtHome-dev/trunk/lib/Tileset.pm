@@ -185,6 +185,8 @@ sub generate
         {
             $FullDataFile = File::Spec->join($self->{JobDir}, "data.osm");
             copy($DataFile, $FullDataFile) or throw TilesetError "could not copy data file", "fatal"; ## FIXME: do we need full path here for DataFile? currently it's just the plain filename as given on cmdline.
+            
+            $self->{JobTime} = (stat($FullDataFile))[9];
         }
 
         #------------------------------------------------------

@@ -6,7 +6,10 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
 import osray
 
-options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'bbox': '9.94861 49.79293,9.96912 49.80629', 'quick': False}
+options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'quick': False, 'hq': False}
+options['bbox']='9.94861 49.79293,9.96912 49.80629' # Europastern
+#options['bbox']='9.92498 49.78816,9.93955 49.8002' # Innenstadt
+
 
 # for tile names and coordinates:
 # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
@@ -35,6 +38,8 @@ class osrayHandler(BaseHTTPRequestHandler):
                     options['width']=queryparams['width'][0]
                 if queryparams.has_key('height'):
                     options['height']=queryparams['height'][0]
+                if queryparams.has_key('hq'):
+                    options['hq']=(str(queryparams['hq'][0])=='1')
                 print "--- calling osray"
                 osray.main(options)
                 print "--- calling osray ends"

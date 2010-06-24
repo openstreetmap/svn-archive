@@ -7,6 +7,7 @@ import psycopg2
 import csv
 import re
 from numpy import *
+from osray_db import *
 
 def avg(a,b): return (a+b)/2.0
 
@@ -75,41 +76,38 @@ global_settings {{
 """
     f.write(globsettings.format())
 
-def pov_camera(f,bbox):
-    polygonstring = bbox[0][0]
-    polygonstring = polygonstring[9:] # cut off the "POLYGON(("
-    polygonstring = polygonstring[:-2] # cut off the "))"
-    #print polygonstring
-    points = polygonstring.split(',')
+def pov_camera(f,osraydb):
 
-    numpoints = len(points)
+    bottom = float(osraydb.bottom)
+    left = float(osraydb.left)
+    top = float(osraydb.top)
+    right = float(osraydb.right)
+    map_size_x = right-left
+    map_size_y = top-bottom
+    
+    print "map size x = ",map_size_x
+    print "map size y = ",map_size_y
+    
+    #image_aspect = float(options['width'])/float(options['height'])
+    map_aspect = map_size_x/map_size_y
 
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            left=float(latlon[0])
-            bottom=float(latlon[1])
-        if (i==2):
-            right=float(latlon[0])
-            top=float(latlon[1])
+    zoom = 1.0
+    zoom = map_size_y/zoom
 
-    #print bottom,left,top,right
-    zoom = 1.5
-    zoom = 1100.0/zoom
     f.write("""
 camera {{
    orthographic
    location <0, 10000, 0>
    sky <0, 1, 0>
    direction <0, 0, 1>
-   right <1.3333*{2}, 0, 0>
-   up <0, 1*{2}*cos(radians({3})), 0>
+   right <{aspect}*{zoom}, 0, 0>
+   up <0, 1*{zoom}*cos(radians({angle})), 0> /* this stretches in y to compensate for the rotate below */
    look_at <0, 0, 0>
-   rotate <-{3},0,0>
+   rotate <-{angle},0,0>
    scale <1,1,1>
-   translate <{0},0,{1}>
+   translate <{middle_x},0,{middle_z}>
 }}
-""".format(avg(left,right),avg(bottom,top),zoom,10))
+""".format(middle_x=avg(left,right),middle_z=avg(bottom,top),zoom=zoom,angle=10,aspect=map_aspect))
     f.write("""
 /* ground */
 box {{
@@ -123,34 +121,17 @@ box {{
 }}
 """.format(left,bottom,right,top))
 
-    #f.write("""light_source {{ <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
-    #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
-    #f.write("""light_source {{ <300000+{0}, 1000000, -1000000+{1}>, rgb <1, 1, 1> }}\n""".format(avg(left,right),avg(bottom,top)))
+def create_landuse_texture(osraydb,options,texturename):
+    f_landuse = open(texturename, 'w')
 
-def create_landuse_texture(conn,curs,options):
-    f_landuse = open('/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov', 'w')
-
-    thebbox = options['bbox']
-    prefix = options['prefix']
-
-    latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
-    coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
-    FlW = "FROM "+prefix+"_line WHERE"
-    FpW = "FROM "+prefix+"_polygon WHERE"
-
-    googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
-
-    #curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
-    curs.execute("SELECT ST_AsText("+googbox+") AS geom")
-
-    bbox = curs.fetchall()
     pov_globals(f_landuse)
-    pov_camera(f_landuse,bbox)
+    pov_camera(f_landuse,osraydb)
 
     landuses = []
     for landusetype in landusetypes.iterkeys():
-        curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+FpW+" \"way\" && "+googbox+" and landuse='"+landusetype+"' LIMIT 1700;")
-        landuses += curs.fetchall()
+        #curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+FpW+" \"way\" && "+googbox+" and landuse='"+landusetype+"' LIMIT 1700;")
+        #landuses += curs.fetchall()
+        landuses += osraydb.select_landuse(landusetype)
 
         for landuse in landuses:
             pov_landuse(f_landuse,landuse)

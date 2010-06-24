@@ -9,8 +9,8 @@ camera {
    location <0, 10000, 0>
    sky <0, 1, 0>
    direction <0, 0, 1>
-   right <1.3333*733.333333333, 0, 0>
-   up <0, 1*733.333333333*cos(radians(10)), 0>
+   right <0.990901473975*2304.12691487, 0, 0>
+   up <0, 1*2304.12691487*cos(radians(10)), 0> /* this stretches in y to compensate for the rotate below */
    look_at <0, 0, 0>
    rotate <-10,0,0>
    scale <1,1,1>

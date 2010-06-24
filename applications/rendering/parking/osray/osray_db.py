@@ -75,5 +75,9 @@ class OsrayDB:
         self.curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' LIMIT 10000;")
         return self.curs.fetchall()
 
+    def select_landuse(self,landusetype):
+        self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' LIMIT 1700;")
+        return self.curs.fetchall()
+
     def shutdown(self):
         self.conn.rollback()

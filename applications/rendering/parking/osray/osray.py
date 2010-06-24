@@ -32,45 +32,38 @@ global_settings {{
 """
     f.write(globsettings.format())
 
-def pov_camera(f,osraydb):
-    #polygonstring = bbox[0][0]
-    #polygonstring = polygonstring[9:] # cut off the "POLYGON(("
-    #polygonstring = polygonstring[:-2] # cut off the "))"
-    #print polygonstring
-    #points = polygonstring.split(',')
+def pov_camera(f,osraydb,options):
 
-    #numpoints = len(points)
+    bottom = float(osraydb.bottom)
+    left = float(osraydb.left)
+    top = float(osraydb.top)
+    right = float(osraydb.right)
+    map_size_x = right-left
+    map_size_y = top-bottom
+    
+    print "map size x = ",map_size_x
+    print "map size y = ",map_size_y
+    
+    image_aspect = float(options['width'])/float(options['height'])
+    map_aspect = map_size_x/map_size_y
 
-    #for i,point in enumerate(points):
-    #    latlon = point.split(' ')
-    #    if (i==0):
-    #        left=float(latlon[0])
-    #        bottom=float(latlon[1])
-    #    if (i==2):
-    #        right=float(latlon[0])
-    #        top=float(latlon[1])
+    zoom = 1.0
+    zoom = map_size_y/zoom
 
-    bottom = osraydb.bottom
-    left = osraydb.left
-    top = osraydb.top
-    right = osraydb.right
-
-    zoom = 0.4
-    zoom = 1100.0/zoom
     f.write("""
 camera {{
    orthographic
    location <0, 10000, 0>
    sky <0, 1, 0>
    direction <0, 0, 1>
-   right <1.3333*{2}, 0, 0>
-   up <0, 1*{2}*cos(radians({3})), 0>
+   right <{aspect}*{zoom}, 0, 0>
+   up <0, 1*{zoom}*cos(radians({angle})), 0> /* this stretches in y to compensate for the rotate below */
    look_at <0, 0, 0>
-   rotate <-{3},0,0>
+   rotate <-{angle},0,0>
    scale <1,1,1>
-   translate <{0},0,{1}>
+   translate <{middle_x},0,{middle_z}>
 }}
-""".format(avg(left,right),avg(bottom,top),zoom,10))
+""".format(middle_x=avg(left,right),middle_z=avg(bottom,top),zoom=zoom,angle=10,aspect=map_aspect))
     f.write("""
 /* ground */
 box {{
@@ -89,7 +82,7 @@ box {{
         translate <{0},0,{1}>
     }}
 }}
-""".format(left,bottom,right,top,(right-left)/1,(top-bottom)/1))
+""".format(left,bottom,right,top,map_size_x,map_size_y))
 
     #f.write("""light_source {{ <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
@@ -99,37 +92,18 @@ box {{
 
 def main(options):
     print "In main(). Options: ",options
-    #DSN = options['dsn']
-    #thebbox = options['bbox']
-    #prefix = options['prefix']
+
     create_textures = not(options['quick'])
     osraydb = OsrayDB(options)
-    
-    #print "Opening connection using dsn:", DSN
-    #conn = psycopg2.connect(DSN)
-    #print "Encoding for this connection is", conn.encoding
-    #curs = conn.cursor()
 
     f = open('/home/kayd/workspace/Parking/osray/scene-osray.pov', 'w')
 
-    #latlon= 'ST_Y(ST_Transform(ST_line_interpolate_point(way,0.5),4326)),ST_X(ST_Transform(ST_line_interpolate_point(way,0.5),4326))'
-    #coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
-    #FlW = "FROM "+prefix+"_line WHERE"
-    #FpW = "FROM "+prefix+"_polygon WHERE"
-    
-    #thebbox = "9.94861 49.79293,9.96912 49.80629"
-    #googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
-    
-    #curs.execute("SELECT ST_AsText(transform(SetSRID('BOX3D(9.92498 49.78816,9.93955 49.8002)'::box3d,4326),900913)) AS geom")
-    #curs.execute("SELECT ST_AsText("+googbox+") AS geom")
-    
-    #bbox = curs.fetchall()
     pov_globals(f)
-    pov_camera(f,osraydb)
+    pov_camera(f,osraydb,options)
     
     if create_textures:
-        #create_landuse_texture(osray_db.conn,osray_db.curs,options)
-        pass
+        create_landuse_texture(osraydb,options,'/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov')
+        #pass
     
     highways = []
     for highwaytype in highwaytypes.iterkeys():
@@ -168,6 +142,7 @@ if __name__ == "__main__":
     parser.add_option("-b", "--bbox", dest="bbox", help="the bounding box as string ('9.94861 49.79293,9.96912 49.80629')", default="9.94861 49.79293,9.96912 49.80629")
     parser.add_option("-H", "--height", dest="height", help="image height in pixels", default="768", type='int')
     parser.add_option("-W", "--width", dest="width", help="image width in pixels", default="1024", type='int')
+    parser.add_option("-Q", "--high-quality", action="store_true", dest="hq", default=False, help="high quality rendering")
     (options, args) = parser.parse_args()
     #if options.a and options.b:
     #    parser.error("options -a and -b are mutually exclusive")

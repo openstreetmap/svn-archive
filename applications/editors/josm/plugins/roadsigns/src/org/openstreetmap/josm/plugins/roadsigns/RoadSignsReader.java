@@ -107,6 +107,11 @@ public class RoadSignsReader {
                     curSign.isSupplementing = true;
                 }
 
+                curSign.wiki = atts.getValue("wiki");
+                curSign.loc_wiki = getLocalized(atts, "wiki");
+
+                curSign.help = getLocalized(atts, "help");
+
             } else if (curSign != null && qname.equals("tag")) {
                 if (curSign == null) {
                     throwException("found tag outside sign");

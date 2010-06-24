@@ -29,6 +29,9 @@ public class Sign {
     public List<Sign> supplements = new ArrayList<Sign>();
     public List<SignParameter> params = new ArrayList<SignParameter>();
     public boolean isSupplementing;
+    public String loc_wiki;
+    public String wiki;
+    public String help;
 
     public JLabel label; // FIXME: don't put gui stuff here
 
@@ -77,7 +80,7 @@ public class Sign {
 
     public ImageIcon getIcon() {
         if (icon == null) {
-            icon = ImageProvider.get(iconURL);
+            icon = ImageProvider.getIfAvailable(RoadSignsPlugin.iconDirs, "plugin.sign."+id, null, iconURL, null);
         }
         return icon;
     }

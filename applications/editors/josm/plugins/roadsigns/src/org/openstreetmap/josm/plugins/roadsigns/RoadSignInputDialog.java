@@ -32,10 +32,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.openstreetmap.josm.Main;
@@ -48,6 +51,7 @@ import org.openstreetmap.josm.gui.MultiSplitLayout;
 import org.openstreetmap.josm.gui.MultiSplitPane;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
+import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Pair;
 
 /**
@@ -73,6 +77,7 @@ class RoadSignInputDialog extends ExtendedDialog {
     private JPanel pnlPossibleSigns;
     private JPanel pnlPossibleSupplements;
     private JEditorPane info;
+    private JScrollPane scrollInfo;
 
     public RoadSignInputDialog(List<Sign> signs) {
         super(Main.parent, tr("Road Sign Plugin"), new String[] {tr("OK"), tr("Cancel")}, false /* modal */);
@@ -125,7 +130,6 @@ class RoadSignInputDialog extends ExtendedDialog {
         pnlSignSelection = new JPanel();
         pnlSignSelection.setLayout(fLayout);
 
-        
         pnlPossibleSigns = new FixedWidthPanel();
         pnlPossibleSupplements = new FixedWidthPanel();
         fillSigns();
@@ -145,10 +149,21 @@ class RoadSignInputDialog extends ExtendedDialog {
         info = new JEditorPane();
         info.setEditable(false);
         info.setContentType("text/html");
-        info.setText("");
+        info.setText(" ");
         info.setBackground(this.getBackground());
-        JScrollPane scroll3 = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        multiSplitPane.add(scroll3, "bottom");
+        info.addHyperlinkListener(new HyperlinkListener() {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e == null || e.getURL() == null)
+                    return;
+                System.err.println(e.getURL());
+                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    OpenBrowser.displayUrl(e.getURL().toString());
+                }
+            }
+        });
+
+        scrollInfo = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        multiSplitPane.add(scrollInfo, "bottom");
 
         return multiSplitPane;
     }
@@ -161,6 +176,13 @@ class RoadSignInputDialog extends ExtendedDialog {
         pnlPossibleSupplements.removeAll();
         for (Sign s : signs) {
             JLabel lbl = new JLabel(s.getIcon());
+            String tt = "<html>"+s.name;
+            String ref = s.getDefaultRef();
+            if (ref != null) {
+                tt += "  <i><small>("+ref+")</small></i>";
+            }
+            tt += "</html>";
+            lbl.setToolTipText(tt);
             s.label = lbl;
             lbl.addMouseListener(new SignClickListener(s));
             if (s.isSupplementing) {
@@ -620,29 +642,45 @@ class RoadSignInputDialog extends ExtendedDialog {
         }
         @Override
         public void mouseClicked(MouseEvent e) {
+            info.setText(longText());
+            /* scroll up again */
+            SwingUtilities.invokeLater(new Runnable(){
+                public void run() {
+                    scrollInfo.getVerticalScrollBar().setValue(0);
+                }
+            });
             sel.add(sign);
         }
 
-        @Override
-        public void mouseEntered(MouseEvent e) {
+        private String longText() {
             StringBuilder txt = new StringBuilder();
-            txt.append("<p><b><large>");
-            txt.append(sign.name);
-            txt.append("</large></b>");
+            txt.append(sign.long_name == null ? sign.name : sign.long_name);
             String ref = sign.getDefaultRef();
             if (ref != null) {
                 txt.append("  <i><small>("+ref+")</small></i>");
             }
-            txt.append("</p>");
-//            if (sign.long_name != null) {
-//                txt.append("<i><smaller>("+sign.long_name+")</smaller></i>");
-//            }
-            info.setText(txt.toString());
-        }
 
-        @Override
-        public void mouseExited(MouseEvent e) {
-            info.setText("");
+            if (sign.help != null) {
+                txt.append("<p>");
+                txt.append(sign.help);
+                txt.append("</p>");
+            }
+
+            if (sign.wiki != null || sign.loc_wiki != null) {
+                String wikiPrefix = "http://wiki.openstreetmap.org/wiki/";
+                txt.append("<p>");
+                if (sign.loc_wiki != null) {
+                    String link = wikiPrefix+sign.loc_wiki;
+                    txt.append("<a href=\""+link+"\">"+link+"</a>");
+                    txt.append("<br>");
+                }
+                if (sign.wiki != null && ! sign.wiki.equals(sign.loc_wiki)) {
+                    String link = wikiPrefix+sign.wiki;
+                    txt.append("<a href=\""+link+"\">"+link+"</a>");
+                }
+                txt.append("</p>");
+            }
+            return txt.toString();
         }
     }
 
@@ -659,48 +697,48 @@ class RoadSignInputDialog extends ExtendedDialog {
 
         @Override
         public void setBounds(int x, int y, int width, int height) {
-			super.setBounds(x, y, getParent().getWidth(), height);
-		}
+            super.setBounds(x, y, getParent().getWidth(), height);
+        }
 
         @Override
-		public Dimension getPreferredSize() {
-			return new Dimension(getWidth(), getPreferredHeight());
-		}
+        public Dimension getPreferredSize() {
+            return new Dimension(getWidth(), getPreferredHeight());
+        }
 
-		public Dimension getPreferredScrollableViewportSize() {
-			return super.getPreferredSize();
-		}
+        public Dimension getPreferredScrollableViewportSize() {
+            return super.getPreferredSize();
+        }
 
-		public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ) {
+        public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ) {
             final int FRAC = 20;
-			int inc = (orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth()) / FRAC;
-			return Math.max(inc, 1);
-		}
+            int inc = (orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth()) / FRAC;
+            return Math.max(inc, 1);
+        }
 
-		public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ) {
-			return orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth();
-		}
+        public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ) {
+            return orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth();
+        }
 
-		public boolean getScrollableTracksViewportWidth() {
-			return true;
-		}
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
 
-		public boolean getScrollableTracksViewportHeight() {
-			return false;
-		}
+        public boolean getScrollableTracksViewportHeight() {
+            return false;
+        }
 
-		private int getPreferredHeight() {
-			int prefH = 0;
+        private int getPreferredHeight() {
+            int prefH = 0;
             int num = getComponentCount();
-			for (int i = 0; i < num; ++i) {
-				Rectangle rect = getComponent(i).getBounds();
-				int h = rect.y + rect.height;
-				if (h > prefH) {
-					prefH = h;
+            for (int i = 0; i < num; ++i) {
+                Rectangle rect = getComponent(i).getBounds();
+                int h = rect.y + rect.height;
+                if (h > prefH) {
+                    prefH = h;
                 }
-			}
-			prefH += ((FlowLayout) getLayout()).getVgap();
-			return prefH;
-		}
+            }
+            prefH += ((FlowLayout) getLayout()).getVgap();
+            return prefH;
+        }
     }
 }

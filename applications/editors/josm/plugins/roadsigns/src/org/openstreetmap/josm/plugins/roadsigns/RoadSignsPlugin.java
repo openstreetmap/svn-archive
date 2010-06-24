@@ -30,9 +30,9 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class RoadSignsPlugin extends Plugin {
-
     private static boolean presetsLoaded = false;
     public static List<Sign> signs;
+    static List<String> iconDirs;
 
     public RoadSignsPlugin(PluginInformation info) {
         super(info);
@@ -67,8 +67,15 @@ public class RoadSignsPlugin extends Plugin {
             return;
         presetsLoaded=true;
         List<String> files = new ArrayList<String>(
-                                   Main.pref.getCollection("plugin.roadsign.sources",
-                                        Collections.<String>singletonList("resource://data/defaultroadsignpreset.xml")));
+                Main.pref.getCollection("plugin.roadsign.sources",
+                    Collections.<String>singletonList("resource://data/defaultroadsignpreset.xml")));
+        iconDirs = new ArrayList<String>(
+                Main.pref.getCollection("plugin.roadsign.icon.sources", Collections.<String>emptySet()));
+
+        if (Main.pref.getBoolean("plugin.roadsign.use_default_icon_source", true)) {
+            iconDirs.add("resource://images/");
+        }
+
         for (String source : files) {
             try {
                 InputStream in = getInputStream(source);

@@ -2,35 +2,59 @@
 <!--
 Preset file for road signs plugin.
 
-Plugin is in early state of development (05-2010) and it is likely, the preset format will be changing.
+The plugin is in early state of development (05-2010) and the format is likely to change.
+
+How to customize
+================
+
+Add the following to your JOSM preference file
+(or enter it in the advanced preferences tab in JOSM):
+
+plugin.roadsign.sources=/path/to/myroadsignpreset.xml
+plugin.roadsign.icon.sources=/path/to/image/folder
+
+(The second one is only needed if you like to display your own icons.)
+
+
+Preset format
+=============
+
 Some values can contain parameters like $foo, that will be replaced by the value of the parameter named foo.
 
 sign:
     ref             Short official designation of the sign that can be used for the traffic_sign tag. (accepts parameters)
     id              Unique identifier. (If missing, equals ref. Either id or ref must be present.)
-    icon            Icon path. (If missing, id or ref is used as icon path. In this case ':' and '.' characters are converted to underscore '_'.)
+    icon            Icon image name. (If missing, id or ref is used as image name. In this case ':' and '.' characters are converted to underscore '_'.)
     name            Name of the sign. (required)
-    long_name       Official name of the sign. (optional)
+    long_name       Long (e.g. official) name of the sign.
     help            Some notes to guide the user.
     wiki            Page in the osm wiki
-    deprecated      Set to "yes" if authorities have decided to no longer install signs of this kind. 
+    deprecated      Set to "yes" if authorities have decided to no longer install signs of this kind.
                     (But old signs may still be there and need to be recorded.)
-    
+
 tag:
+    Some tags can be named (ident=*) and modified by other subsequent tags. If this finally results in an
+    empty value (""), then the tag is skipped altogether. Note that the default value of a named tag is
+    only used if there are no appending tags. E.g. access=no becomes access=delivery and not access=no;delivery.
+
     static tags:
         key             The key text. (accepts parameters)
         value           The value text. (accepts parameters)
-    
-    identified tags:
+
+    named tags:
         key             The key text.
         value           The default value text. If the final evaluation of the value results in an empty string, the tag is dropped.
         ident           Name a tag so it can later be changed by other tags.
-    
+
     modifying tags:
-        tag_ref         Name of the tag to be changed.
-        append_value    Append a string to the value of the tag. The default value of the identified tag is dropped (unless there is no
-                        modifying tag appending a value).
-            
+        appending:
+            tag_ref         Name of the tag to be changed.
+            append_value    Append a string to the value of the tag. The default value of the identified tag is dropped (unless there is no
+                            modifying tag appending a value).
+        condition:
+            tag_ref         Name of the tag to be changed.
+            condition       The condition to add. (K=V becomes K:cond=V.)
+
 parameter:
     ident           identifier to get the value of this parameter (required)
     input           input type (currently "textfield" and "combo" are possible values) (required)
@@ -38,37 +62,35 @@ parameter:
     suffix          text to put after the input area
     field_width     for text fields: the width of the field (number of characters)
     default         default value (required)
-    
+
 supplementary: (list of recommended additional signs)
     id         the id of the supplementary sign
 
 -->
 <roadsignpreset country="DE">
     <sign ref="DE:110" name="Incline" de.name="Steigung"
-            help="Applies for the road section with steep incline. (Split the way at the ends of the steep section.) \
+            help="Applies for the road section with steep incline. (Split the way at the ends of the steep section.) 
 Positive values indicate movement upward in the direction of the (osm) way and negative values indicate movement downwards in the direction of the way."
-            de.help="&lt;p&gt;Gilt für das Streckenstück mit hoher Steigung. (Weg am Anfang und Ende des steilen Abschnittes auftrennen.) \
-Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte für einen Abfall in Richtung des ways.&lt;/p&gt;\" 
-            wiki="Key:incline" 
+            de.help="Gilt für das Streckenstück mit hoher Steigung. (Weg am Anfang und Ende des steilen Abschnittes auftrennen.) 
+Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte für einen Abfall in Richtung des ways."
+            wiki="Key:incline"
             de.wiki="DE:Key:incline">
         <tag key="incline" value="$val%"/>
         <parameter input="textfield" name="max. incline" de.name="Maximale Steigung" type="int" ident="val" default="12" suffix="%" field_width="3"/>
     </sign>
-    
+
     <sign ref="DE:215" name="Roundabout" de.name="Kreisverkehr"
         wiki="Tag:junction=roundabout"
-        de.wiki="DE:Tag:junction=roundabout"
-        help=""
-        de.help="">
+        de.wiki="DE:Tag:junction=roundabout">
         <tag key="junction" value="roundabout"/>
     </sign>
-    
+
     <sign id="oneway" icon="DE_220;DE_267" name="One-way road" de.name="Einbahnstraße">  <!--ref="DE:220;DE:267"-->
         <tag key="oneway" value="yes"/>
 <!--        <supplementary id="DE:1022-10;DE:1000-33"/>-->
 <!--        FIXME: lane->-->
     </sign>
-    
+
     <sign ref="DE:237" name="Bicycle path" de.name="Radweg">
         <tag key="highway" value="path"/>
         <tag key="bicycle" value="official"/>
@@ -86,7 +108,7 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1026-37"/> <!-- Forstwirtschaftlicher Verkehr frei -->
         <supplementary id="DE:1026-38"/> <!-- Land- und forstwirtschaftlicher Verkehr frei -->
     </sign>
-    
+
     <sign ref="DE:239" name="Pedestrian path" de.name="Gehweg">
         <tag key="highway" value="path"/>
         <tag key="foot" value="official"/>
@@ -138,7 +160,7 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
         <!-- Kraftfahrzeuge frei -->
     </sign>
-    
+
     <sign ref="DE:250" name="All vehicles prohibited" de.name="Verbot für Fahrzeuge aller Art">
         <tag key="vehicle" value="no" ident="mode"/>
         <supplementary id="DE:1020-12"/> <!-- Radfahrer und Anlieger frei -->
@@ -153,9 +175,9 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1026-37"/> <!-- Forstwirtschaftlicher Verkehr frei -->
         <supplementary id="DE:1026-38"/> <!-- Land- und forstwirtschaftlicher Verkehr frei -->
     </sign>
-    
+
     <sign ref="DE:251" name="Motorcars prohibited" de.name="Verbot für Kraftwagen"
-            long_name="Motorcars and other multi-track motorized vehicles prohibited" 
+            long_name="Motorcars and other multi-track motorized vehicles prohibited"
             de.long_name="Verbot für Kraftwagen und sonstige mehrspurige Kraftfahrzeuge"
             wiki="Key:motorcar"
             de.wiki="DE:Key:access">
@@ -195,7 +217,7 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
     </sign>
-    
+
     <sign ref="DE:256" deprecated="yes" name="Mopeds prohibited" de.name="Verbot für Mofas">
         <tag key="mofa" value="no" ident="mode"/>
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
@@ -205,12 +227,12 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     <sign ref="DE:258" deprecated="yes" name="Horses prohibited" de.name="Verbot für Reiter">
         <tag key="horse" value="no" ident="mode"/>
     </sign>
-    
+
     <sign ref="DE:259" name="Pedestrians prohibited" de.name="Verbot für Fußgänger">
         <tag key="foot" value="no" ident="mode"/>
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
     </sign>
-    
+
     <sign ref="DE:260" name="Motor vehicles prohibited" de.name="Verbot für Kraftfahrzeuge"
         long_name="Motorcycles, also with sidecar, mopeds, mofas as well as motorcars and other multi-track motorized vehicles prohibited"
         de.long_name="Verbot für Krafträder, auch mit Beiwagen, Kleinkrafträder und Mofas sowie für Kraftwagen und sonstige mehrspurige Kraftfahrzeuge">
@@ -225,38 +247,40 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1026-38"/> <!-- Land- und forstwirtschaftlicher Verkehr frei -->
     </sign>
 
-    <sign ref="DE:261" name="Hazardous cargo prohibited" de.name="Verbot für kennzeichnungspflichtige Kraftfahrzeuge mit gefährlichen Gütern" wiki="Key:hazmat" de.wiki="DE:Key:hazmat">
-        <tag key="hazmat" value="no" ident="mode"/>        
+    <sign ref="DE:261" name="Hazardous cargo prohibited" de.name="Verbot für kennzeichnungspflichtige Kraftfahrzeuge mit gefährlichen Gütern"
+            wiki="Key:hazmat" 
+            de.wiki="DE:Key:hazmat">
+        <tag key="hazmat" value="no" ident="mode"/>
     </sign>
-    
+
     <sign ref="DE:262[$val]" icon="DE_262" name="Weight limit" de.name="Tatsächliches Gewicht" wiki="Key:maxweight">
         <tag key="maxweight" value="$val"/>
         <parameter ident="val" input="textfield" default="5.5" suffix="t" field_width="3"/>
     </sign>
-    
+
     <sign ref="DE:263[$val]" icon="DE_263" name="Axle weight limit" de.name="Tatsächliche Achslast" wiki="Key:maxaxleload">
         <tag key="maxaxleload" value="$val"/>
         <parameter ident="val" input="textfield" default="8" suffix="t" field_width="3"/>
     </sign>
-    
+
     <sign ref="DE:264[$val]" icon="DE_264" name="Width limit" de.name="Tatsächliche Breite">
         <tag key="maxwidth" value="$val"/>
         <parameter ident="val" input="textfield" default="2" suffix="m" field_width="3"/>
     </sign>
-    
+
     <sign ref="DE:265[$val]" icon="DE_265" name="Height limit" de.name="Tatsächliche Höhe">
         <tag key="maxheight" value="$val"/>
         <parameter ident="val" input="textfield" default="3.8" suffix="m" field_width="3"/>
     </sign>
 
-    <sign ref="DE:266[$val]" icon="DE_266" name="Length limit" de.name="Tatsächliche Länge" 
+    <sign ref="DE:266[$val]" icon="DE_266" name="Length limit" de.name="Tatsächliche Länge"
             wiki="Key:maxlength">
         <tag key="maxlength" value="$val"/>
         <parameter ident="val" input="textfield" default="10" suffix="m" field_width="3"/>
     </sign>
-    
-    <sign ref="DE:269" name="Water polluting cargo prohibited" de.name="Verbot für Fahrzeuge mit wassergefährdender Ladung" 
-            wiki="Key:hazmat" 
+
+    <sign ref="DE:269" name="Water polluting cargo prohibited" de.name="Verbot für Fahrzeuge mit wassergefährdender Ladung"
+            wiki="Key:hazmat"
             de.wiki="DE:Key:hazmat">
         <tag key="hazmat:water" value="no" ident="mode"/>
     </sign>
@@ -267,13 +291,13 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1052-36"/> <!-- Bei nasser Fahrbahn -->
         <supplementary id="DE:1048-12"/> <!-- nur LKW -->
     </sign>
-    
+
     <sign ref="DE:274.1[$val]" icon="DE_274_1" name="Speed limit zone" de.name="Zone mit zulässiger Höchstgeschwindigkeit">
         <tag key="maxspeed" value="$val"/>
         <tag key="zone:maxspeed" value="DE:$val"/>
         <parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" de.text="Höchstgeschwindigkeit" suffix="km/h" values="20,30" default="30" field_width="2"/>
     </sign>
-    
+
     <sign ref="DE:275[$val]" icon="DE_275" name="Minimum speed limit" de.name="Vorgeschriebene Mindestgeschwindigkeit" wiki="Key:minspeed">
         <tag key="minspeed" value="$val"/>
         <parameter ident="val" input="textfield" suffix="km/h" default="30" field_width="2"/>
@@ -282,11 +306,11 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     <sign ref="DE:325" name="Traffic calming zone" de.name="Verkehrsberuhigter Bereich">
         <tag key="highway" value="living_street"/>
     </sign>
-    
+
     <sign ref="DE:327" name="Tunnel" de.name="Tunnel">
         <tag key="tunnel" value="yes"/>
     </sign>
-    
+
     <sign ref="DE:1020-12" supplementary="yes" name="Bicyle and residents allowed" de.name="Radfahrer und Anlieger frei"> <!-- FIXME: bad translation into English -->
         <tag key="bicycle" value="yes"/>
         <tag tag_ref="mode" append_value="destination"/>
@@ -330,11 +354,11 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     <sign ref="DE:1026-35" supplementary="yes" name="Delivery vehicles allowed" de.name="Lieferverkehr frei">
         <tag tag_ref="mode" append_value="delivery"/>
     </sign>
-    
+
     <sign ref="DE:1026-36" supplementary="yes" name="Agricultural vehicles allowed" de.name="Landwirtschaftlicher Verkehr frei">
         <tag tag_ref="mode" append_value="agricultural"/>
     </sign>
-    
+
     <sign ref="DE:1026-37" supplementary="yes" name="Forestry vehicles allowed" de.name="Forstwirtschaftlicher Verkehr frei">
         <tag tag_ref="mode" append_value="forestry"/>
     </sign>
@@ -343,10 +367,10 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag tag_ref="mode" append_value="agricultural"/>
         <tag tag_ref="mode" append_value="forestry"/>
     </sign>
-    
+
     <sign ref="DE:1048-12" supplementary="yes" name="Heavy goods vehicles only" de.name="nur LKW"
             long_name="Vehicles with a permitted gross weight over 3.5 t including their trailers prohibited, except passenger cars and busses, only"
-            de.long_name="nur Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschl. ihrer Anhänger, und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse">
+            de.long_name="Nur Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschl. ihrer Anhänger, und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse">
         <tag tag_ref="restriction" condition="hgv"/>
     </sign>
 

@@ -33,6 +33,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -385,6 +386,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
 
             if (isDblClick) {
                 Main.main.getCurrentDataSet().setSelected(sel);
+                if(Main.pref.getBoolean("validator.autozoom", false))
+                    AutoScaleAction.zoomTo(sel);
             }
         }
 

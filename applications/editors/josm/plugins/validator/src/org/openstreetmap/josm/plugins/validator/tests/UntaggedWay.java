@@ -36,6 +36,8 @@ public class UntaggedWay extends Test
     protected static final int ONE_NODE_WAY = 304;
     /** Unnamed junction error */
     protected static final int UNNAMED_JUNCTION  = 305;
+    /** Untagged, but commented way error */
+    protected static final int COMMENTED_WAY = 306;
 
     private LinkedList<Way> multipolygonways;
 
@@ -98,7 +100,10 @@ public class UntaggedWay extends Test
 
         if(!w.isTagged() && !multipolygonways.contains(w))
         {
-            errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), UNTAGGED_WAY, w) );
+            if(w.hasKeys())
+                errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways (commented)"), COMMENTED_WAY, w) );
+            else
+                errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), UNTAGGED_WAY, w) );
         }
 
         if( w.getNodesCount() == 0 )

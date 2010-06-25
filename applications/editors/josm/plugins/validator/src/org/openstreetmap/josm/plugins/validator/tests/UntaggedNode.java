@@ -25,6 +25,7 @@ import org.openstreetmap.josm.plugins.validator.TestError;
 public class UntaggedNode extends Test
 {
     protected static int UNTAGGED_NODE = 201;
+    protected static int COMMENT_NODE = 202;
 
     /** Bag of all nodes */
     List<Node> emptyNodes;
@@ -67,7 +68,10 @@ public class UntaggedNode extends Test
     {
         for(Node node : emptyNodes)
         {
-            errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes"), UNTAGGED_NODE, node) );
+            if(node.hasKeys())
+                errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes (commented)"), COMMENT_NODE, node) );
+            else
+                errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes"), UNTAGGED_NODE, node) );
         }
         emptyNodes = null;
         super.endTest();

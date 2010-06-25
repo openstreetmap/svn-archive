@@ -21,7 +21,6 @@
     interactive="no">
 
 
-  <rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
     <!-- Non-physical boundaries -->
     <rule e="way" k="boundary" v="administrative">
       <rule e="way" k="admin_level" v="2">
@@ -34,20 +33,18 @@
       </rule>
     </rule>
 
-    <rule e="node" k="place" v="*" layer="5">
-      <rule e="node" k="capital" v="~|no|false|False" layer="5">
-        <rule e="node" k="place" v="city" layer="5">
+    <rule e="node" k="place" v="*">
+      <rule e="node" k="capital" v="~|no|false|False">
+        <rule e="node" k="place" v="city">
           <text k="name" class='caption-casing city-caption-casing' />
           <text k="name" class='caption-core city-caption' />
         </rule>
       </rule>
       <else>
-          <text k="name" class='caption-casing capital-caption-casing' />
-          <text k="name" class='caption-core capital-caption' />
+        <text k="name" class='caption-casing capital-caption-casing' />
+        <text k="name" class='caption-core capital-caption' />
       </else>
     </rule> <!-- e="node" k="place" v="*" -->
-
-  </rule> <!-- k="osmarender:render" v="~|yes" -->
 
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>

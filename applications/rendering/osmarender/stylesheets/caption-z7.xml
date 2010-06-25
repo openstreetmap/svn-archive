@@ -79,7 +79,7 @@
             }
 
             .capital-caption-casing { font-size: 2000px; stroke-width: 300px; }
-            .captial-caption        { font-size: 2000px; }
+            .capital-caption        { font-size: 2000px; }
 
             .city-caption-casing    { font-size: 1500px; stroke-width: 300px; }
             .city-caption           { font-size: 1500px; }

@@ -60,12 +60,12 @@ public class UploadDataGui extends ExtendedDialog {
         PUBLIC       (tr("Public (shown in trace list and as anonymous, unordered points)")),
         TRACKABLE    (tr("Trackable (only shared as anonymous, ordered points with timestamps)")),
         IDENTIFIABLE (tr("Identifiable (shown in trace list and as identifiable, ordered points with timestamps)"));
-        
+
         public final String description;
         visibility(String description) {
             this.description = description;
         }
-        
+
         /**
          * "Converts" a given description into the actual enum. Returns null if no matching description
          * is found.
@@ -74,18 +74,19 @@ public class UploadDataGui extends ExtendedDialog {
          */
         public static visibility desc2visi(Object desc) {
             for (visibility v : visibility.values()) {
-                if(desc.equals((String)v.description))
+                if(desc.equals(v.description))
                     return v;
             }
             return null;
         }
-        
-        public String toString() {
+
+        @Override
+		public String toString() {
             return this.name().toLowerCase();
         }
     }
 
-	
+
     // User for log in when uploading trace
     private String username = Main.pref.get("osm-server.username");
     private String password = Main.pref.get("osm-server.password");
@@ -135,7 +136,7 @@ public class UploadDataGui extends ExtendedDialog {
     	JLabel visibilityLabel = new JLabel(tr("Visibility"));
         visibilityLabel.setToolTipText(tr("Defines the visibility of your trace for other OSM users."));
         for(visibility v : visibility.values()) {
-        	visibilityCombo.addItem((String)v.description);
+        	visibilityCombo.addItem(v.description);
         }
         UrlLabel visiUrl = new UrlLabel(tr("http://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces"), tr("(What does that mean?)"));
 
@@ -507,7 +508,7 @@ public class UploadDataGui extends ExtendedDialog {
     /**
      * Overrides the default actions. Will not close the window when upload trace is clicked
      */
-    @Override protected void buttonAction(ActionEvent evt) {
+    @Override protected void buttonAction(int buttonIndex, ActionEvent evt) {
         String a = evt.getActionCommand();
         if(uploadTraceText.equals(a))
             setupUpload();

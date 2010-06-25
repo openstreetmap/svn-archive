@@ -142,19 +142,19 @@ if __name__ == '__main__':
     # for y in range(0,64):
     #  i += 1
       sys.stdout.write ("%i out of %i: " % (i,n))
-      now = time.time()
-      failed = os.system("nice python %s/stitch_lowzoom.py %d %d %d" % (script_path,z,x,y))
+      failed = os.system("nice python %s/stitch_lowzoom.py %d %02d %20d" % (script_path,z,x,y))
       if failed: sys.exit("Child stitcher failed. Bailing out.")
-      print "(%d,%d,%d)Took %.1f sec." % (z,x,y,time.time()-now)
-    #Finally d
+    #Finally stitch the z0-5
     #now = time.time()
     #lz.create(layer,z,x,y,base_tile_path)
     #print "(0,0,0) took %.1f sec." % (time.time()-now)
+    print ("Run took overall %f hours." % ((time.time()-starttime) / 3600.0))
   else:
     # called with z x y parameters, stitch specific tileset
     (z,x,y) = map(int, sys.argv[1:4])
     layer=Layer.objects.get(name='tile')
-    print "Stitching (%d %d %d)" % (z,x,y)
+    sys.stdout.write ("Stitching %d %02d %02d " % (z,x,y))
     lz = Lowzoom()
     lz.create(layer,z,x,y,base_tile_path)
-  print ("Run took overall %f hours." % (time.time() - starttime) / 3600)
+    sys.stdout.write ("took %.1f sec.\n" % (time.time()-starttime))
+

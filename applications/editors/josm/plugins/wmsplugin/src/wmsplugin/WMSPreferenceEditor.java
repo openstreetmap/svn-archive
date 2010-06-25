@@ -237,6 +237,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         Main.pref.put("wmsplugin.url.overlapEast", String.valueOf(WMSPlugin.overlapEast));
         Main.pref.put("wmsplugin.url.overlapNorth", String.valueOf(WMSPlugin.overlapNorth));
 
+        Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString()); 
         Main.pref.put("wmsplugin.simultaneousConnections", String.valueOf(WMSPlugin.simultaneousConnections));
         return false;
     }

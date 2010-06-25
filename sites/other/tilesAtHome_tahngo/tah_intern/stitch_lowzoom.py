@@ -132,6 +132,7 @@ def find_old_lowzooms(base_tile_path):
 
 if __name__ == '__main__':
   base_tile_path = settings.TILES_ROOT
+  starttime = time.time()
   if len(sys.argv) != 4:
     # find all modified tilesets
     n, old_lowzooms = find_old_lowzooms(base_tile_path)
@@ -140,8 +141,7 @@ if __name__ == '__main__':
     #for x in range(0,64):
     # for y in range(0,64):
     #  i += 1
-      print "%i out of %i) sleep 10 seconds then do %d %d %d" % (i,n, z,x,y)
-      #time.sleep(10)
+      sys.stdout.write ("%i out of %i: " % (i,n))
       now = time.time()
       failed = os.system("nice python %s/stitch_lowzoom.py %d %d %d" % (script_path,z,x,y))
       if failed: sys.exit("Child stitcher failed. Bailing out.")
@@ -151,9 +151,10 @@ if __name__ == '__main__':
     #lz.create(layer,z,x,y,base_tile_path)
     #print "(0,0,0) took %.1f sec." % (time.time()-now)
   else:
-    # called witz z x y parameters, stitch specific tileset
+    # called with z x y parameters, stitch specific tileset
     (z,x,y) = map(int, sys.argv[1:4])
     layer=Layer.objects.get(name='tile')
     print "Stitching (%d %d %d)" % (z,x,y)
     lz = Lowzoom()
     lz.create(layer,z,x,y,base_tile_path)
+  print ("Run took overall %f hours." % (time.time() - starttime) / 3600)

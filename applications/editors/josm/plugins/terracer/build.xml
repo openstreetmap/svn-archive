@@ -32,7 +32,7 @@
 
 
     <property name="commit.message" value="Fix crash when adding a single address to an odd shaped building. See also #2496" />
-    <property name="plugin.main.version" value="3210" />
+    <property name="plugin.main.version" value="3338" />
 
 
     <target name="init">

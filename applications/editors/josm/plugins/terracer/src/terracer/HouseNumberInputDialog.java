@@ -13,30 +13,23 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-
 import java.util.TreeSet;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ExtendedDialog;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox; 
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.tools.GBC;
 
 
@@ -82,7 +75,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     JCheckBox deleteOutlineCheckBox;
 
 	HouseNumberInputHandler inputHandler;
-	
+
     /**
      * @param street If street is not null, we assume, the name of the street to be fixed
      * and just show a label. If street is null, we show a ComboBox/InputField.
@@ -119,7 +112,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         this.segments.addFocusListener(this.inputHandler);
 		this.interpolation.addItemListener(this.inputHandler);
     }
-	
+
     /**
      * This method initializes jContentPane
      *
@@ -153,7 +146,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             messageLabel.setBackground(new Color(238, 238, 238));
             messageLabel.setEditable(false);
             messageLabel.setFocusable(false); // Needed so that lowest number can have focus immediately
-            
+
             interpolationLabel = new JLabel();
             interpolationLabel.setText(tr("Interpolation"));
             segmentsLabel = new JLabel();
@@ -176,7 +169,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             c.fill = GridBagConstraints.HORIZONTAL;
 			c.gridwidth = GridBagConstraints.REMAINDER;
             inputPanel.add(messageLabel, c);
-            
+
             inputPanel.add(loLabel, GBC.std().insets(3,3,0,0));
             inputPanel.add(getLo(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
             inputPanel.add(hiLabel, GBC.std().insets(3,3,0,0));
@@ -200,7 +193,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
 	/**
      * Overrides the default actions. Will not close the window when upload trace is clicked
      */
-    @Override protected void buttonAction(final ActionEvent evt) {
+    @Override protected void buttonAction(int buttonIndex, final ActionEvent evt) {
         String a = evt.getActionCommand();
         this.inputHandler.actionPerformed(evt);
     }

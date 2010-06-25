@@ -21,7 +21,7 @@
     interactive="no">
 
 
-  <rule e="node|way" k="osmarender:render" v="~|yes">
+  <rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
     <!-- Non-physical boundaries -->
     <rule e="way" k="boundary" v="administrative">
       <rule e="way" k="admin_level" v="2">
@@ -63,7 +63,7 @@
             }
 
             .caption-casing {
-				fill: white;
+		fill: white;
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: normal;
@@ -80,7 +80,7 @@
                 stroke-miterlimit: 1.5;
             }
 
-            .capital-caption-casing { font-size: 2000px; stroke-width: 400px; }
+            .capital-caption-casing { font-size: 2000px; stroke-width: 300px; }
             .captial-caption        { font-size: 2000px; }
 
             .city-caption-casing    { font-size: 1500px; stroke-width: 300px; }

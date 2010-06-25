@@ -59,7 +59,7 @@
             }
 
             .caption-casing {
-				fill: white;
+                fill: white;
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: normal;
@@ -70,6 +70,7 @@
             .caption-core {
                 stroke: white;
                 stroke-width: 0px;
+                fill: black;
                 font-family: "DejaVu Sans";
                 font-weight: normal;
                 text-anchor: middle;

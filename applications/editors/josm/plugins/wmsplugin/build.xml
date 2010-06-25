@@ -27,7 +27,7 @@
 <project name="wmsplugin" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="commit message" />
+	<property name="commit.message" value="add commit message" />
 	<property name="plugin.main.version" value="2830" />
 
 

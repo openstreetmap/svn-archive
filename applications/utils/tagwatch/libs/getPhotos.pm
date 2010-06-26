@@ -39,7 +39,6 @@ sub getPhotos
 			print "\t skip $Filename ($ImageList{$Filename}) ...\n";
 			next;
 		}
-		$ImageList{$Filename} =~ s/^File://;
 		print "\t get $Filename ($ImageList{$Filename}) ...\n";
 
 		my $Data =  $c->download({title => decode("utf-8", "File:$ImageList{$Filename}")});
@@ -160,13 +159,13 @@ sub getImageList
 				$KeyLine  =~ s/\n//g;
 
 				# parse key image
-				if($KeyLine =~ m{^image=(?:Image:)?(.*\.[a-zA-Z]+)})
+				if($KeyLine =~ m{^image=(?:(?:Image|image|File):)?(.*\.[a-zA-Z]+)})
 				{
 					my $name = $1;
 					$name =~ s/%(..)/chr(hex($1))/eg;
 					$ImageList{$Key} = $name;
 				}
-				# parse availible tags
+				# parse available tags
 				elsif($KeyLine =~ m{^$Key\s=\s(.*)\s*$})
 				{
 					my $TagValue = $1;

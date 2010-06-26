@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project wms2kml">
-    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required                                        -->
-    <target name="create_run_jar">
-        <jar destfile="./wms2kml.jar" filesetmanifest="mergewithoutmain">
+<project default="dist" name="wms2kml">
+    <target name="dist" depends="compile">
+        <jar destfile="./wms2kml.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.openstreetmap.wms2kml.Main"/>
                 <attribute name="Class-Path" value="."/>
@@ -11,4 +9,21 @@
             <fileset dir="./bin"/>
         </jar>
     </target>
+	
+	<target name="compile" depends="init">
+		<echo message="compiling sources for wms2kml ... "/>
+		<javac srcdir="src" destdir="./bin">
+		</javac>
+	</target>
+
+  <target name="init">
+    <mkdir dir="./bin"/>
+  </target>
+	
+  <target name="clean">
+		<delete dir="./bin"/>
+		<delete file="./wms2kml.jar"/>
+  </target>
+	
+	
 </project>

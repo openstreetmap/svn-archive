@@ -1257,7 +1257,7 @@ sub buildKeyPages
 		my $CountTagUsage_w = 0;
 		my $CountTagUsage_r = 0;
 
-		# sort allavilible tags by total usage
+		# sort all availible tags by total usage
 		foreach my $Value(sort {$TagCount{$b}->{'t'} <=> $TagCount{$a}->{'t'}} keys %TagCount)
 		{
 			my $val = markSpaceCharacter($Value);

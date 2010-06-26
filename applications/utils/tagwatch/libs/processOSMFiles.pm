@@ -42,12 +42,13 @@ sub processOSMFiles
 	my @IgnoreValues;
 	my $IgnoreCount = 0;
 	if($Config{'use_ignorelist_values'} eq "yes")
-        {
-          @IgnoreValues = getIgnoredValues("$Config{'cache_folder'}/wiki_settings");
-        }
+	{
+		@IgnoreValues = getIgnoredValues("$Config{'cache_folder'}/wiki_settings");
+		$IgnoreCount = $Config{'max_volatile_count'} || 5000;
+	}
 	else
 	{
-          $IgnoreCount = $Config{'max_volatile_count'} || 100;
+		$IgnoreCount = $Config{'max_volatile_count'} || 100;
 	}
 	my %WatchedKeys  = buildCombiPageList($Config{'cache_folder'});
 
@@ -135,62 +136,51 @@ sub processOSMFiles
 
 					if(!$IgnoreTags{$Key})      # Ignored tags
 					{
-						my $TempTagName;
-						if($IgnoreCount)
+						my $OrigValue = $Value;
+						my $num = 0;
+						$num = scalar(keys %{$Values{$Key}}) if exists($Values{$Key});
+						if($num == 1 && exists($Values{$Key}->{"*"}))
 						{
-							my $OrigValue = $Value;
-							my $num = 0;
-							$num = scalar(keys %{$Values{$Key}}) if exists($Values{$Key});
-							if($num == 1 && exists($Values{$Key}->{"*"}))
-							{
-								$Value = "*";
-							}
-							elsif($num >= $IgnoreCount)
-							{
-								my $count = 0;
-								foreach my $n (values %{$Values{$Key}})
-								{
-									my $old = "$Key=$Value";
-									my $new = "$Key=*";
-									if(exists($Combinations{$old}))
-									{
-										foreach my $c (keys %{$Combinations{$old}})
-										{
-											$Combinations{$c}{$new} += $Combinations{$c}{$old};
-											delete $Combinations{$c}{$old};
-											$Combinations{$new}{$c} += $Combinations{$old}{$c};
-											delete $Combinations{$old}{$c};
-										}
-										delete $Combinations{$old};
-									}
-									$count += $n;
-								}
-								$IgnoredValues{$Key} = $Values{$Key};
-								$Values{$Key} = {"*" => $count };
-								$Value = "*";
-								print "\tAutoIgnoring key $Key - reached $IgnoreCount entries\n";
-							}
-							$IgnoredValues{$Key}{$OrigValue}++ if($Value eq "*" && exists($IgnoredValues{$Key}{$OrigValue}));
-
-							$TempTagName = "$Key=$Value";
+							$Value = "*";
 						}
-						else
+						elsif($IgnoreCount && $num >= $IgnoreCount)
+						{
+							my $count = 0;
+							foreach my $n (values %{$Values{$Key}})
+							{
+								my $old = "$Key=$Value";
+								my $new = "$Key=*";
+								if(exists($Combinations{$old}))
+								{
+									foreach my $c (keys %{$Combinations{$old}})
+									{
+										$Combinations{$c}{$new} += $Combinations{$c}{$old};
+										delete $Combinations{$c}{$old};
+										$Combinations{$new}{$c} += $Combinations{$old}{$c};
+										delete $Combinations{$old}{$c};
+									}
+									delete $Combinations{$old};
+								}
+								$count += $n;
+							}
+							$IgnoredValues{$Key} = $Values{$Key};
+							$Values{$Key} = {"*" => $count };
+							$Value = "*";
+							print "\tAutoIgnoring key $Key - reached $IgnoreCount entries\n";
+						}
+						elsif($num) # only check when not yet checked
 						{
 							foreach my $regex(@IgnoreValues)   # Values that will be ignored (grouped with "*")
 							{
 								if($Key =~ m{$regex})
 								{
-									$TempTagName = "$Key=*";
 									$Value = "*";
 									last;
 								}
-								else
-								{
-									$TempTagName = "$Key=$Value";
-								}
 							}
 						}
-						push(@TempCombi,$TempTagName);
+						$IgnoredValues{$Key}{$OrigValue}++ if($Value eq "*" && exists($IgnoredValues{$Key}{$OrigValue}));
+						push(@TempCombi,"$Key=$Value");
 
 						$Tags{$Key}++;
 						$Values{$Key}->{$Value}++;
@@ -410,7 +400,7 @@ sub processOSMFiles
 }
 
 #--------------------------------------------------------------------------
-# Create a list of all tags that should be lookied into in deeper detail
+# Create a list of all tags that should be looked into in deeper detail
 #--------------------------------------------------------------------------
 sub buildCombiPageList
 {

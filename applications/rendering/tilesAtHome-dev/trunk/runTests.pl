@@ -98,7 +98,7 @@ foreach my $pngSuffix (@pngList)
 
     my @fonttestRef = undef;
     my @ReferenceImage = undef;
-    my $loopmax = 15;
+    my $loopmax = 1000; #just to prevent endless loops.
     my $I = 0;
     for (; $I <= $loopmax;)
     {
@@ -144,5 +144,6 @@ else
     print "OK\n";
 }
 
+die "something went very wrong\n" if ($I >= $loopmax);
 
 print "- done testing.\n";

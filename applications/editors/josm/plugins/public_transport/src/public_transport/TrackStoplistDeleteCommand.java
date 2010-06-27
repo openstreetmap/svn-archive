@@ -7,8 +7,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
+import javax.swing.JLabel;
 
 public class TrackStoplistDeleteCommand extends Command
 {
@@ -94,8 +93,8 @@ public class TrackStoplistDeleteCommand extends Command
   {
   }
   
-  public MutableTreeNode description()
+  @Override public JLabel getDescription()
   {
-    return new DefaultMutableTreeNode("public_transport.TrackStoplist.Delete");
+    return new JLabel("public_transport.TrackStoplist.Delete");
   }
 };

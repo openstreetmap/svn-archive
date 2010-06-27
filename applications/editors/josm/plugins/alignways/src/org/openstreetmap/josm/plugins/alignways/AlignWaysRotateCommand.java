@@ -13,8 +13,6 @@ import java.util.Stack;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
@@ -167,10 +165,9 @@ public class AlignWaysRotateCommand extends Command {
 	}
 
 	@Override
-	public MutableTreeNode description() {
-		return new DefaultMutableTreeNode(
-				new JLabel(tr("Align way segment"), ImageProvider.get(
-						"", "alignways"), SwingConstants.HORIZONTAL));
+	public JLabel getDescription() {
+		return new JLabel(tr("Align way segment"), ImageProvider.get(
+					"", "alignways"), SwingConstants.HORIZONTAL);
 	}
 
 	/*

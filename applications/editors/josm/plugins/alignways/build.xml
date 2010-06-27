@@ -30,7 +30,7 @@
 <project name="alignways" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Initial release" />
+	<property name="commit.message" value="Update to josm latest" />
 	<!--
 		enter the *lowest* JOSM version this plugin is currently compatible
 		with

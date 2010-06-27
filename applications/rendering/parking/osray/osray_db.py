@@ -13,6 +13,8 @@ from numpy import *
 
 #def avg(a,b): return (a+b)/2.0
 
+LIMIT = 'LIMIT 10000'
+
 class OsrayDB:
 
     bbox = None
@@ -68,15 +70,23 @@ class OsrayDB:
         self.get_bounds()
 
     def select_highways(self,highwaytype):
-        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+self.FlW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' LIMIT 10000;")
+        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+self.FlW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")
+        return self.curs.fetchall()
+
+    def select_highway_areas(self,highwaytype):
+        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity  "+self.FpW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")
         return self.curs.fetchall()
 
     def select_buildings(self,buildingtype):
-        self.curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' LIMIT 10000;")
+        self.curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+LIMIT+";")
         return self.curs.fetchall()
 
     def select_landuse(self,landusetype):
-        self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' LIMIT 1700;")
+        self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' "+LIMIT+";")
+        return self.curs.fetchall()
+
+    def select_waterway(self,waterwaytype):
+        self.curs.execute("SELECT osm_id,waterway,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and waterway='"+waterwaytype+"' "+LIMIT+";")
         return self.curs.fetchall()
 
     def shutdown(self):

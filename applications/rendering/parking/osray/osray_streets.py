@@ -25,6 +25,7 @@ highwaytypes = {
     'service':['<0.8,0.8,0.8>',0.6],
     'pedestrian':['<0.8,0.9,0.8>',0.8],
     'footway':['<0.8,0.9,0.8>',0.3],
+    'steps':['<0.7,0.8,0.7>',0.3],
     'cycleway':['<0.8,0.8,0.9>',0.3],
     'path':['<0.8,0.9,0.8>',0.5]
     }
@@ -85,12 +86,16 @@ def pov_highway(f,highway):
         oneway=True
     
     lanes = highway[3]
+    if lanes!=None:
+        try:
+            lanefactor=float(lanes)
+        except ValueError:
+            lanes = None
     if lanes==None:
         lanefactor=2.0 # 2 lanes seems to be default
         if oneway:
             lanefactor=1.2 # except for one-ways (make them a bit wider than 2 lanes/2)
-    else:
-        lanefactor=float(lanes)
+
     lanewidth = 2.5 # m
     streetwidth = lanewidth * lanefactor
 
@@ -124,8 +129,9 @@ def pov_highway(f,highway):
             color rgb {0}
         }}
         finish {{
-            specular 0.05
+            specular 0.5
             roughness 0.05
+            ambient 0.2
             /*reflection 0.5*/
         }}
     }}
@@ -148,7 +154,7 @@ def pov_highway(f,highway):
     f.write("""  tolerance 1
     texture {{
         pigment {{
-            color rgb <0.2,0.2,0.2>
+            color rgb <0.3,0.3,0.3>
         }}
         finish {{
             specular 0.05
@@ -157,9 +163,66 @@ def pov_highway(f,highway):
         }}
     }}
     scale <1, 0.05, 1>
-    translate <0, -0.1, 0>
+    translate <0, -0.05*{1}, 0>
 }}
-\n""".format(highwayparams[0]))
+\n""".format(highwayparams[0],lanefactor))
+
+def pov_highway_area(f,highway):
+    highwaytype = highway[1]
+    #highwaytype = 'secondary'
+    highwayparams = highwaytypes.get(highwaytype)
+
+    linestring = highway[2]
+    linestring = linestring[8:] # cut off the "POLYGON("
+    linestring = linestring[:-1] # cut off the ")"
+
+    heightstring = highway[3]
+    #print 'hs="{0}"'.format(heightstring)
+    height = 0.1
+
+    amenity = highway[4]
+    #print amenity
+    
+    points = linestring.split(',')#.strip('(').strip(')')
+    #print points
+
+    numpoints = len(points)
+    #f.write("polygon {{ {0},\n".format(numpoints))
+    f.write("prism {{ linear_spline 0, 0.01, {0},\n".format(numpoints))
+    f.write("/* osm_id={0} */\n".format(highway[0]))
+
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+        if (i==0):
+            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+        if (i!=numpoints-1):
+            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+        else:
+            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+    #f.write(firstpoint)
+
+    color = highwayparams[0]
+    #color = "<0,1,0>"
+
+    #if height != 10.0:
+        #print 'height:', height
+        #color = '<0,1,0>'
+    f.write("""
+    texture {{
+        pigment {{
+            color rgb {0}
+        }}
+        finish {{
+            specular 0.5
+            roughness 0.05
+            ambient 0.2
+            /*reflection 0.5*/
+        }}
+    }}
+    translate <0, {1}, 0>
+}}
+\n""".format(color,height))
+
 
 def parse_length_in_meters(length,default):
     units={
@@ -236,6 +299,7 @@ def pov_building(f,building):
         finish {{
             specular 0.5
             roughness 0.05
+            ambient 0.2
             /*reflection 0.5*/
         }}
     }}

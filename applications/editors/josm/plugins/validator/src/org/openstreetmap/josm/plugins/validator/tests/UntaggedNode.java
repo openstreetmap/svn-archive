@@ -1,11 +1,14 @@
 // License: GPL. See LICENSE file for details.
 package org.openstreetmap.josm.plugins.validator.tests;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
@@ -18,17 +21,19 @@ import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
 
 /**
- * Checks for untagged nodes that are in no way
+ * Checks for nodes with uninteresting tags that are in no way
  *
  * @author frsantos
  */
 public class UntaggedNode extends Test
 {
-    protected static int UNTAGGED_NODE = 201;
-    protected static int COMMENT_NODE = 202;
-
-    /** Bag of all nodes */
-    List<Node> emptyNodes;
+    protected static final int UNTAGGED_NODE_BLANK = 201;
+    protected static final int UNTAGGED_NODE_FIXME = 202;
+    protected static final int UNTAGGED_NODE_NOTE = 203;
+    protected static final int UNTAGGED_NODE_CREATED_BY = 204;
+    protected static final int UNTAGGED_NODE_WATCH = 205;
+    protected static final int UNTAGGED_NODE_SOURCE = 206;
+    protected static final int UNTAGGED_NODE_OTHER = 207;
 
     /**
      * Constructor
@@ -43,7 +48,6 @@ public class UntaggedNode extends Test
     public void startTest(ProgressMonitor monitor)
     {
         super.startTest(monitor);
-        emptyNodes = new ArrayList<Node>();
     }
 
     @Override
@@ -59,22 +63,51 @@ public class UntaggedNode extends Test
     @Override
     public void visit(Node n)
     {
-        if(n.isUsable() && !n.isTagged() && n.getReferrers().isEmpty())
-            emptyNodes.add(n);
+        if(n.isUsable() && !n.isTagged() && n.getReferrers().isEmpty()) {
+            if (!n.hasKeys()) {
+                String msg = marktr("No tags");
+                errors.add(new TestError(this, Severity.OTHER, tr("Unconnected nodes without physical tags"), tr(msg), msg, UNTAGGED_NODE_BLANK, n));
+                return;
+            }
+            for (Map.Entry<String, String> tag : n.getKeys().entrySet()) {
+                String key = tag.getKey();
+                String value = tag.getValue();
+                if (contains(tag, "fixme") || contains(tag, "FIXME")) {
+                    String msg = marktr("Has tag containing ''fixme'' or ''FIXME''"); // translation note: don't translate quoted words
+                    errors.add(new TestError(this, Severity.OTHER, tr("Unconnected nodes without physical tags"),
+                                tr(msg), msg, UNTAGGED_NODE_FIXME, n));
+                    return;
+                }
+
+                String msg = null;
+                int code = 0;
+                if (key.startsWith("note") || key.startsWith("comment") || key.startsWith("description")) {
+                    msg = marktr("Has key ''note'' or ''comment'' or ''description''"); // translation note: don't translate quoted words
+                    code = UNTAGGED_NODE_NOTE;
+                } else if (key.startsWith("created_by") || key.startsWith("converted_by")) {
+                    msg = marktr("Has key ''created_by'' or ''converted_by''"); // translation note: don't translate quoted words
+                    code = UNTAGGED_NODE_CREATED_BY;
+                } else if (key.startsWith("watch")) {
+                    msg = marktr("Has key ''watch''"); // translation note: don't translate quoted words
+                    code = UNTAGGED_NODE_WATCH;
+                } else if (key.startsWith("source")) {
+                    msg = marktr("Has key ''source''"); // translation note: don't translate quoted words
+                    code = UNTAGGED_NODE_SOURCE;
+                }
+                if (msg != null) {
+                    errors.add(new TestError(this, Severity.OTHER, tr("Unconnected nodes without physical tags"),
+                                tr(msg), msg, code, n));
+                    return;
+                }
+            }
+            // Does not happen, but just to be sure. Maybe definition of uninteresting tags changes in future.
+            errors.add(new TestError(this, Severity.OTHER, tr("Unconnected nodes without physical tags"),
+                        tr("Other"), "Other", UNTAGGED_NODE_OTHER, n));
+        }
     }
 
-    @Override
-    public void endTest()
-    {
-        for(Node node : emptyNodes)
-        {
-            if(node.hasKeys())
-                errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes (commented)"), COMMENT_NODE, node) );
-            else
-                errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes"), UNTAGGED_NODE, node) );
-        }
-        emptyNodes = null;
-        super.endTest();
+    private boolean contains(Map.Entry<String, String> tag, String s) {
+        return tag.getKey().indexOf(s) != -1 || tag.getValue().indexOf(s) != -1;
     }
 
     @Override
@@ -84,8 +117,17 @@ public class UntaggedNode extends Test
     }
 
     @Override
-    public boolean isFixable(TestError testError)
-    {
-        return (testError.getTester() instanceof UntaggedNode);
+    public boolean isFixable(TestError testError) {
+        if (testError.getTester() instanceof UntaggedNode) {
+            int code = testError.getCode();
+            switch (code) {
+                case UNTAGGED_NODE_BLANK:
+                case UNTAGGED_NODE_CREATED_BY:
+                case UNTAGGED_NODE_WATCH:
+                case UNTAGGED_NODE_SOURCE:
+                    return true;
+            }
+        }
+        return false;
     }
 }

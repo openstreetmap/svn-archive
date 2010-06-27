@@ -124,6 +124,12 @@ int GpsIdle=999;
 #include <curl/types.h>
 #include <curl/easy.h>
 #endif
+#ifdef USE_GEOCLUE // Not used and never worked
+#include <geoclue/geoclue-position.h>
+#endif
+#ifdef USE_GPSD
+#include <gps.h>
+#endif
 
 // We emulate just enough of gtk to make it work
 #ifdef NOGTK
@@ -865,9 +871,41 @@ gint RouteTest (GtkWidget * /*widget*/, GdkEventButton *event, void *)
   DoFollowThing (&gNew);
 }
 #else
-// void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
-void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
+#ifdef USE_GEOCLUE // Not used and never worked
+static void GeoclueUpdate (GeocluePosition *position,
+  GeocluePositionFields fields, int timestamp,
+  double latitude, double longitude, double /*altitude*/,
+  GeoclueAccuracy *, gpointer /*userdata*/)
 {
+  if (fields & GEO_CLUE_POSITION_FIELDS_LATITUDE &&
+      fields & GEO_CLUE_POSITION_FIELDS_LONGITUDE) {
+    gpsNewStruct gNew;
+    gNew.fix.latitude = latitude;
+    gNew.fix.longitude = longitude;
+    DoFollowThing (&gNew);
+  }
+}
+#endif
+
+#ifdef USE_GPSD
+void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
+{
+  gpsNew->fix.latitude = gps->fix.latitude;
+  gpsNew->fix.longitude = gps->fix.longitude;
+  int t = lrint (gps->fix.time) % (3600 * 24);
+  gpsNew->fix.tm[0] = t / 3600 / 10 + '0';
+  gpsNew->fix.tm[1] = t / 3600 % 10 + '0';
+  gpsNew->fix.tm[2] = t / 60 / 10 + '0';
+  gpsNew->fix.tm[3] = t / 60 % 10 + '0';
+  gpsNew->fix.tm[4] = t % 60 / 10 + '0';
+  gpsNew->fix.tm[5] = t % 10 + '0';
+  printf ("%.6s\n", gpsNew->fix.tm);
+  DoFollowThing (gpsNew);
+}
+#endif
+
+//void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
+/*{
   static char rx[1200];
   static unsigned got = 0;
   int cnt = read (source, rx + got, sizeof (rx) - got);
@@ -878,7 +916,7 @@ void ReceiveNmea (gpointer /*data*/, gint source, GdkInputCondition /*c*/)
   got += cnt;
   
   if (ProcessNmea (rx, &got)) DoFollowThing (gpsNew);
-}
+}*/
 #endif // !ROUTE_TEST
 
 #else // else NOGTK
@@ -1050,7 +1088,7 @@ struct wayPointStruct {
 };
 deque<wayPointStruct> wayPoint;
 
-void ExtractClipboard (GtkClipboard *, const gchar *t, void *data)
+void ExtractClipboard (GtkClipboard *, const gchar *t, void */*data*/)
 {
   unsigned lonFirst = FALSE, hash = 0;
   int minLat = INT_MAX, minLon = INT_MAX, maxLat = INT_MIN, maxLon = INT_MIN;
@@ -2651,8 +2689,8 @@ void HitGtkButton (GtkWidget * /*w*/, void *data)
 
 //------------------------------------------------------------------------
 // Callbacks that are called with the user drops an icon and then binds it
-static gboolean DropOnDraw (GtkWidget *w, GdkDragContext *c, gint x,
-  gint y, guint time, gpointer)
+static gboolean DropOnDraw (GtkWidget *w, GdkDragContext *c, gint /*x*/,
+  gint /* y */, guint time, gpointer)
 {
   if (c->targets) {
     gtk_drag_get_data (w, c,
@@ -2685,7 +2723,7 @@ static void ReadTsList (void)
 }
 
 static void DropReceived (GtkWidget */*draw*/, GdkDragContext *c, gint x,
-  gint y, GtkSelectionData *sdata, guint ttype, guint time, gpointer)
+  gint y, GtkSelectionData *sdata, guint /*ttype*/, guint time, gpointer)
 {
   //FILE *fp;
   gchar **arr = sdata != NULL ? gtk_selection_data_get_uris (sdata) : NULL;
@@ -3027,7 +3065,27 @@ int UserInterface (int argc, char *argv[],
 
   followGPSr = gtk_toggle_button_new_with_label ("Lock");
   
-  #if !defined (_WIN32) && !defined (ROUTE_TEST)
+  #ifdef USE_GEOCLUE // Not used and never worked
+  g_type_init ();
+  GeoclueMaster *master = geoclue_master_get_default ();
+  Gerror *error = NULL;
+  GeoclueMasterClient *client =
+    geoclue_master_create_client (master, NULL, &error);
+  g_object_unref (master);
+  if (client) {
+//    if (!geoclue_master_client_set_requirements (client,
+//      GEOCLUE_ACCURACY_LEVEL_LOCALITY, 0, TRUE, GEOCLUE_RESOURSE
+    GeocluePosition *pos = geoclue_master_client_create_position (client, NULL);
+    g_signal_connect (G_OBJECT (pos), "position-changed",
+      G_CALLBACK (GeoclueUpdate), NULL);
+    gtk_box_pack_start (GTK_BOX (hbox), followGPSr, FALSE, FALSE, 5);
+    gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
+      GTK_SIGNAL_FUNC (ChangeOption), NULL);
+  }
+  #endif
+  
+  //#if !defined (_WIN32) && !defined (ROUTE_TEST)
+  #if 0
   struct sockaddr_in sa;
   int gpsSock = socket (PF_INET, SOCK_STREAM, 0);
   sa.sin_family = AF_INET;
@@ -3038,7 +3096,15 @@ int UserInterface (int argc, char *argv[],
     send (gpsSock, "R\n", 2, 0);
     gpsSockTag = gdk_input_add (/*gpsData->gps_fd*/ gpsSock, GDK_INPUT_READ,
       (GdkInputFunction) ReceiveNmea /*gps_poll*/, NULL);
-
+  #endif
+  #ifdef USE_GPSD
+  gps_data_t *gpsData = gps_open ("127.0.0.1", "2947");
+  if (gpsData) {
+    gps_set_raw_hook (gpsData, GpsMove);
+    gps_query (gpsData, "w+x\n");
+    gpsSockTag = gdk_input_add (gpsData->gps_fd, GDK_INPUT_READ,
+      (GdkInputFunction) gps_poll, gpsData);
+    
     gtk_box_pack_start (GTK_BOX (hbox), followGPSr, FALSE, FALSE, 5);
     gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
       GTK_SIGNAL_FUNC (ChangeOption), NULL);

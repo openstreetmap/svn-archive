@@ -118,10 +118,8 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             return;
         MapView mv = Main.map.mapView;
         Point mousePos = e.getPoint();
-//        Node mouseOnExistingNode = null;
         List<Way> mouseOnExistingWays = new ArrayList<Way>();
         mouseOnExistingWays = new ArrayList<Way>();
-//        mouseOnExistingNode = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
         Node currentMouseNode = mv.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
         if(currentMouseNode != null) {
             String num = currentMouseNode.get(tagHouseNumber);
@@ -163,10 +161,27 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                     mouseOnExistingWays.add(ws.way);
             }
             if (mouseOnExistingWays.size() == 1) {
+                // clicked on existing highway => set new street name
                 inputStreet.setText(mouseOnExistingWays.get(0).get(tagHighwayName));
+            } else if (mouseOnExistingWays.size() == 0) {
+                // clicked a non highway and not a node => add the new address 
+                Node n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
+                if (n != null)
+                    if (!n.hasKey(tagHouseNumber))
+                        addAddrToNode(n);
+                else
+                    createNewNode(mousePos);
             }
         }
 
+    }
+    
+    private void addAddrToNode(Node n) {
+        // node exists : just add the tag addr:housenumber and member in relation
+    }
+    
+    private void createNewNode(Point mousePos) {
+        
     }
 
     private static Cursor getCursor() {

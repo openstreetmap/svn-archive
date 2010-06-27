@@ -17,9 +17,11 @@ def avg(a,b): return (a+b)/2.0
 
 def pov_globals(f):
     globsettings = """
+#include "colors.inc"
 global_settings {{
     assumed_gamma 1.5
     noise_generator 2
+    ambient_light rgb <0.9,0.9,1>
 /*
     radiosity {{
         count 1000
@@ -47,6 +49,7 @@ def pov_camera(f,osraydb,options):
     image_aspect = float(options['width'])/float(options['height'])
     map_aspect = map_size_x/map_size_y
 
+    isometric_angle = 20 # in °
     zoom = 1.0
     zoom = map_size_y/zoom
 
@@ -63,7 +66,7 @@ camera {{
    scale <1,1,1>
    translate <{middle_x},0,{middle_z}>
 }}
-""".format(middle_x=avg(left,right),middle_z=avg(bottom,top),zoom=zoom,angle=10,aspect=map_aspect))
+""".format(middle_x=avg(left,right),middle_z=avg(bottom,top),zoom=zoom,angle=isometric_angle,aspect=map_aspect))
     f.write("""
 /* ground */
 box {{
@@ -81,13 +84,41 @@ box {{
         scale <{4},1,{5}>
         translate <{0},0,{1}>
     }}
+    finish {{
+        specular 0.5
+        roughness 0.05
+        ambient 0.2
+        /*reflection 0.5*/
+    }}
+}}
+/* sky */
+sky_sphere {{
+    pigment {{
+        gradient y
+        color_map {{
+            [ 0.5 color CornflowerBlue ]
+            [ 1.0 color MidnightBlue ]
+        }}
+        scale 20
+        translate -10
+    }}
 }}
 """.format(left,bottom,right,top,map_size_x,map_size_y))
 
     #f.write("""light_source {{ <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
-    f.write("""light_source {{ <300000+{0}, 1000000, -1000000+{1}>, rgb <1, 1, 1> }}\n""".format(avg(left,right),avg(bottom,top)))
-
+    #f.write("""light_source {{ <300000+{0}, 1000000, -1000000+{1}>, rgb <1, 1, 1> fade_power 0 }}\n""".format(avg(left,right),avg(bottom,top)))
+    f.write("""
+light_source {{
+    <0, 1000000,0>,
+    rgb <1, 1, 0.9>
+    area_light <100000, 0, 0>, <0, 0, 100000>, 8, 8
+    adaptive 1
+    circular
+    rotate <-45,-10,0>
+    translate <{0},0,{1}>
+}}
+\n""".format(avg(left,right),avg(bottom,top)))
 
 
 def main(options):
@@ -107,18 +138,21 @@ def main(options):
     
     highways = []
     for highwaytype in highwaytypes.iterkeys():
-        #curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+FlW+" \"way\" && "+googbox+" and highway='"+highwaytype+"' LIMIT 2000;")
-        #highways += curs.fetchall()
         highways += osraydb.select_highways(highwaytype)
 
     for highway in highways:
         pov_highway(f,highway)
         #pass
     
+    highway_areas = []
+    for highwaytype in highwaytypes.iterkeys():
+        highway_areas += osraydb.select_highway_areas(highwaytype)
+    
+    for highway in highway_areas:
+        pov_highway_area(f,highway)
+    
     buildings = []
     for buildingtype in buildingtypes.iterkeys():
-        #curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+FpW+" \"way\" && "+googbox+" and building='"+buildingtype+"' LIMIT 1700;")
-        #buildings += curs.fetchall()
         buildings += osraydb.select_buildings(buildingtype)
     
     for building in buildings:
@@ -126,8 +160,6 @@ def main(options):
     
     f.close()
     
-    #conn.rollback()
-
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
     result = commands.getstatusoutput('povray -Iscene-osray.pov -UV '+image_dimension_parameters+' +Q9 +A')
     print result[1]

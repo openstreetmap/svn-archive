@@ -67,6 +67,55 @@ def pov_landuse(f,landuse):
 }}
 \n""".format(color))
 
+waterwaytypes = {
+    'riverbank':['<0.2,0.2,0.9>'],
+    'dock':['<0.2,0.2,0.8>']
+    }
+
+def pov_waterway(f,waterway):
+    waterwaytype = waterway[1]
+    print "waterwaytype=",waterwaytype
+    #waterwaytype = 'secondary'
+    waterwayparams = waterwaytypes.get(waterwaytype)
+
+    linestring = waterway[2]
+    linestring = linestring[8:] # cut off the "POLYGON("
+    linestring = linestring[:-1] # cut off the ")"
+
+    points = linestring.split(',')#.strip('(').strip(')')
+    #print points
+
+    numpoints = len(points)
+    f.write("prism {{ linear_spline  0, 0.01, {0},\n".format(numpoints))
+    f.write("/* osm_id={0} */\n".format(waterway[0]))
+
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+        if (i==0):
+            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+        if (i!=numpoints-1):
+            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+        else:
+            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+    #f.write(firstpoint)
+
+    color = waterwayparams[0]
+
+    f.write("""
+    texture {{
+        pigment {{
+            color rgb {0}
+        }}
+        finish {{
+            ambient 1
+            /*specular 0.5
+            roughness 0.05
+            reflection 0.5*/
+        }}
+    }}
+}}
+\n""".format(color))
+
 def pov_globals(f):
     globsettings = """
 global_settings {{
@@ -129,12 +178,15 @@ def create_landuse_texture(osraydb,options,texturename):
 
     landuses = []
     for landusetype in landusetypes.iterkeys():
-        #curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+FpW+" \"way\" && "+googbox+" and landuse='"+landusetype+"' LIMIT 1700;")
-        #landuses += curs.fetchall()
         landuses += osraydb.select_landuse(landusetype)
+    for landuse in landuses:
+        pov_landuse(f_landuse,landuse)
 
-        for landuse in landuses:
-            pov_landuse(f_landuse,landuse)
+    waterways = []
+    for waterwaytype in waterwaytypes.iterkeys():
+        waterways += osraydb.select_waterway(waterwaytype)
+    for waterway in waterways:
+        pov_waterway(f_landuse,waterway)
 
     f_landuse.close()
 

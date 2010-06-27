@@ -1,0 +1,9 @@
+TileTabber downloads a set of tiles and creates little MapInfo TAB files corresponding to each of them
+ 
+usage:
+  java TileTabber tilexmin=[int] tilexmax=[int] tileymin=[int] tileymax=[int] tileurl=[http://tile.openstreetmap.org/]		
+ 
+Assumes you have an 'output' folder alongside
+ 
+Deliberately all standalone pure java, although it uses an OSGB36 class taken from rmaps for its latlon2osgb method.
+ 

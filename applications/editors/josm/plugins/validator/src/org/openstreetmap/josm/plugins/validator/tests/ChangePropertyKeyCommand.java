@@ -4,15 +4,17 @@ package org.openstreetmap.josm.plugins.validator.tests;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.PseudoCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.validator.util.NameVisitor;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -66,7 +68,7 @@ public class ChangePropertyKeyCommand extends Command {
         modified.addAll(objects);
     }
 
-    @Override public MutableTreeNode description() {
+    @Override public JLabel getDescription() {
         String text = tr( "Replace \"{0}\" by \"{1}\" for", key, newKey);
         if (objects.size() == 1) {
             NameVisitor v = new NameVisitor();
@@ -74,14 +76,26 @@ public class ChangePropertyKeyCommand extends Command {
             text += " "+tr(v.className)+" "+v.name;
         } else
             text += " "+objects.size()+" "+trn("object","objects",objects.size());
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JLabel(text, ImageProvider.get("data", "key"), JLabel.HORIZONTAL));
+        return new JLabel(text, ImageProvider.get("data", "key"), JLabel.HORIZONTAL);
+    }
+
+    @Override public Collection<PseudoCommand> getChildren() {
         if (objects.size() == 1)
-            return root;
-        NameVisitor v = new NameVisitor();
-        for (OsmPrimitive osm : objects) {
+            return null;
+        List<PseudoCommand> children = new ArrayList<PseudoCommand>();
+
+        final NameVisitor v = new NameVisitor();
+        for (final OsmPrimitive osm : objects) {
             osm.visit(v);
-            root.add(new DefaultMutableTreeNode(v.toLabel()));
+            children.add(new PseudoCommand() {
+                @Override public JLabel getDescription() {
+                    return v.toLabel();
+                }
+                @Override public Collection<? extends OsmPrimitive> getParticipatingPrimitives() {
+                    return Collections.singleton(osm);
+                }
+            });
         }
-        return root;
+        return children;
     }
 }

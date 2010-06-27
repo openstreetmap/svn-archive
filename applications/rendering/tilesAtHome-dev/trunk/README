@@ -1,7 +1,7 @@
 == What this is about == 
 
 Original Author: Oliver J White (OJW)
-Maintainer: Dirk-Lueder Kreie (Deelkar) Sebastian Spaeth (spaetz)
+Maintainer: Dirk-Lueder Kreie (Deelkar), Sebastian Spaeth (spaetz)
 
 Purpose: Rendering maps with osmarender for the slippy map osmarender 
          layer, from live OSM data.

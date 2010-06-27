@@ -58,7 +58,7 @@ my $PID;
 
 ##FIXME check result for failure
 
-$Cmd = "perl ./tilesGen.pl --Layers=tile localFile tests/fonttest_12_0_0.osm"; ##should create zips for font-comparison
+$Cmd = "perl ./tilesGen.pl --CreateTilesetFile=0 --Layers=tile localFile tests/fonttest_12_0_0.osm"; ##should create zips for font-comparison
 $success = runCommand($Cmd,$PID); 
 
 ##FIXME check result for failure, otherwise graphically compare image
@@ -77,7 +77,7 @@ if ($success) # remove all zips from the test, because they should not be upload
     }
 }
 
-my @pngList = ("_12_0_0.png","_13_1_0.png","_14_1_1.png"); # these tiles contain font samples
+my @pngList = ("_13_1_0.png","_14_1_1.png"); # these tiles contain font samples
 foreach my $pngSuffix (@pngList)
 {
     my $fonttestRef = File::Spec->join("tests","fonttest".$pngSuffix);

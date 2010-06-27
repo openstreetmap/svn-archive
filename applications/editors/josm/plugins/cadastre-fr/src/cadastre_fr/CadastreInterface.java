@@ -496,7 +496,6 @@ public class CadastreInterface {
             int i = input.indexOf(",");
             int j = input.indexOf(",", i+1);
             String str = input.substring(i+1, j);
-            @SuppressWarnings("unused")
             double unknown_yet = tryParseDouble(str);
             int j_ = input.indexOf(",", j+1);
             double angle = Double.parseDouble(input.substring(j+1, j_));

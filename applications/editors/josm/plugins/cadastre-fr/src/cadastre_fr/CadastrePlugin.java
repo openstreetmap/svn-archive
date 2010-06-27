@@ -196,7 +196,7 @@ public class CadastrePlugin extends Plugin {
             JMenuItem menuLoadFromCache = new JMenuItem(new MenuActionLoadFromCache());
             // temporary disabled:
             //JMenuItem menuActionBoundaries = new JMenuItem(new MenuActionBoundaries());
-            JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
+            //JMenuItem menuActionBuildings = new JMenuItem(new MenuActionBuildings());
 
             cadastreJMenu.add(menuGrab);
             cadastreJMenu.add(menuActionGrabPlanImage);
@@ -204,8 +204,8 @@ public class CadastrePlugin extends Plugin {
             cadastreJMenu.add(menuSource);
             //cadastreJMenu.add(menuResetCookie); not required any more
             //cadastreJMenu.add(menuLambertZone);
-            if (Main.pref.getBoolean("cadastrewms.buildingsMenu", false))
-                cadastreJMenu.add(menuActionBuildings);
+            //if (Main.pref.getBoolean("cadastrewms.buildingsMenu", false))
+            //    cadastreJMenu.add(menuActionBuildings);
             cadastreJMenu.add(menuLoadFromCache);
             // all SVG features disabled until official WMS is released
             //cadastreJMenu.add(menuActionBoundaries);
@@ -334,8 +334,7 @@ public class CadastrePlugin extends Plugin {
             if (oldFrame == null && newFrame != null) {
                 setEnabledAll(true);
                 Main.map.addMapMode(new IconToggleButton(new WMSAdjustAction(Main.map)));
-                if (Main.pref.getBoolean("cadastrewms.buildingsMenu", false))
-                    Main.map.addMapMode(new IconToggleButton(new Buildings(Main.map)));
+                Main.map.addMapMode(new IconToggleButton(new Address(Main.map)));
             } else if (oldFrame != null && newFrame == null) {
                 setEnabledAll(false);
                 //Lambert.layoutZone = -1;

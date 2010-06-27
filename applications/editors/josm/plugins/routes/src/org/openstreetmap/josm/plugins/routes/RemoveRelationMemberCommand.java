@@ -7,8 +7,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Collection;
 
 import javax.swing.JLabel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
@@ -64,23 +62,21 @@ public class RemoveRelationMemberCommand extends Command {
 
     @Override public void fillModifiedData(Collection<OsmPrimitive> modified, Collection<OsmPrimitive> deleted, Collection<OsmPrimitive> added) {}
 
-    @Override public MutableTreeNode description() {
+    @Override public JLabel getDescription() {
         String msg = "";
         switch(OsmPrimitiveType.from(member.getMember())) {
             case NODE: msg = marktr("Remove node ''{0}'' at position {1} from relation ''{2}''"); break;
             case WAY: msg = marktr("Remove way ''{0}'' at position {1} from relation ''{2}''"); break;
             case RELATION: msg = marktr("Remove relation ''{0}'' at position {1} from relation ''{2}''"); break;
         }
-        return new DefaultMutableTreeNode(
-                new JLabel(
-                        tr(msg,
-                                member.getMember().getDisplayName(DefaultNameFormatter.getInstance()),
-                                relation.getMembers().indexOf(member),
-                                relation.getDisplayName(DefaultNameFormatter.getInstance())
-                        ),
-                        ImageProvider.get(OsmPrimitiveType.from(relation)),
-                        JLabel.HORIZONTAL
-                )
+        return new JLabel(
+                tr(msg,
+                        member.getMember().getDisplayName(DefaultNameFormatter.getInstance()),
+                        relation.getMembers().indexOf(member),
+                        relation.getDisplayName(DefaultNameFormatter.getInstance())
+                ),
+                ImageProvider.get(OsmPrimitiveType.from(relation)),
+                JLabel.HORIZONTAL
         );
     }
 }

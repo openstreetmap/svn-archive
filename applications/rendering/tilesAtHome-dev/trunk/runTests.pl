@@ -85,6 +85,8 @@ if ($success) # remove all zips from the test, because they should not be upload
 
 my @pngList = ("_14_0_2.png","_14_0_3.png","_14_1_1.png","_14_2_2.png","_14_3_3.png"); # these tiles contain font samples"
 my @failedImages;
+my ($loopmax,$I);
+
 foreach my $pngSuffix (@pngList)
 {
     print STDERR "testing tests/fonttest".$pngSuffix."\n";
@@ -98,8 +100,8 @@ foreach my $pngSuffix (@pngList)
 
     my @fonttestRef = undef;
     my @ReferenceImage = undef;
-    my $loopmax = 1000; #just to prevent endless loops.
-    my $I = 0;
+    $loopmax = 1000; #just to prevent endless loops.
+    $I = 0;
     for (; $I <= $loopmax;)
     {
         $fonttestRef[$I] = File::Spec->join("tests","fonttest".$I.$pngSuffix);

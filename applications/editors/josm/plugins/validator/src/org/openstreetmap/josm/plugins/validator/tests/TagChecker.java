@@ -576,7 +576,7 @@ public class TagChecker extends Test
                 }
             }
             if (checkFixmes && value != null && value.length() > 0) {
-                if ((value.toLowerCase().contains("FIXME")
+                if ((value.toLowerCase().contains("fixme")
                         || value.contains("check and delete")
                         || key.contains("todo") || key.toLowerCase().contains("fixme"))
                         && !withErrors.contains(p, "FIXME")) {

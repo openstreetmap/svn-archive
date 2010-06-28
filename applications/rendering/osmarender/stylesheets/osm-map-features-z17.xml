@@ -4066,8 +4066,8 @@
 				<caption k="name" class="caption-core generic-caption-core" dy="-1.2px" layer="5"/>
 			</rule>
 			<rule e="node|way" k="amenity" v="restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|fast_food|fuel"  horizontalProximity="1.0" verticalProximity="0.9" layer="5">
-				<caption k="name" class="caption-casing generic-caption-casing" dy="-2px" layer="5"/>
-				<caption k="name" class="caption-core generic-caption-core" dy="-2px" layer="5"/>
+				<caption k="name" class="caption-casing generic-caption-casing" dy="-1px" layer="5"/>
+				<caption k="name" class="caption-core generic-caption-core" dy="-1px" layer="5"/>
 			</rule>
 			<rule e="node|way" k="shop" v="supermarket|organic|bakery"  horizontalProximity="1.0" verticalProximity="0.9" layer="5">
 				<caption k="name" class="caption-casing generic-caption-casing" dy="-2px" layer="5"/>

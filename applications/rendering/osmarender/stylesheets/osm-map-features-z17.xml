@@ -4044,7 +4044,7 @@
 				<caption k="name" class="caption-casing railway-halt-caption-casing" dy="-1px" layer="5"/>
 				<caption k="name" class="caption-core railway-halt-caption-core" dy="-1px" layer="5"/>
 			</rule>
-			<rule e="node|way" k="amenity" v="pub|cafe" layer="5">
+			<rule e="node|way" k="amenity" v="pub|cafe"  horizontalProximity="1.0" verticalProximity="0.9" layer="5">
 				<caption k="name" class="caption-casing amenity-pub-caption-casing" dy="-1.2px" layer="5"/>
 				<caption k="name" class="caption-core amenity-pub-caption-core" dy="-1.2px" layer="5"/>
 			</rule>
@@ -4057,34 +4057,34 @@
 				<caption k="name" class="caption-core amenity-cinema-caption-core" dy="-2px" layer="5"/>
 			</rule>
 			<rule e="node|way" k="amenity" v="theatre" layer="5">
-				<caption k="name" class="caption-casing amenity-theatre-caption-casing" dy="-3px" layer="5"/>
-				<caption k="name" class="caption-core amenity-theatre-caption-core" dy="-3px" layer="5"/>
+				<caption k="name" class="caption-casing amenity-theatre-caption-casing" dy="-2px" layer="5"/>
+				<caption k="name" class="caption-core amenity-theatre-caption-core" dy="-2px" layer="5"/>
 			</rule>
 
 			<rule e="node|way" k="amenity" v="kindergarten|school|college|university" layer="5">
-				<caption k="name" class="caption-casing generic-caption-casing" dy="-3px" layer="5"/>
-				<caption k="name" class="caption-core generic-caption-core" dy="-3px" layer="5"/>
+				<caption k="name" class="caption-casing generic-caption-casing" dy="-1.2px" layer="5"/>
+				<caption k="name" class="caption-core generic-caption-core" dy="-1.2px" layer="5"/>
 			</rule>
-			<rule e="node|way" k="amenity" v="restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|fast_food|fuel" layer="5">
-				<caption k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
-				<caption k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
+			<rule e="node|way" k="amenity" v="restaurant|shelter|supermarket|bakery|library|fire_station|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site|bank|atm|bureau_de_change|bus_station|fast_food|fuel"  horizontalProximity="1.0" verticalProximity="0.9" layer="5">
+				<caption k="name" class="caption-casing generic-caption-casing" dy="-2px" layer="5"/>
+				<caption k="name" class="caption-core generic-caption-core" dy="-2px" layer="5"/>
 			</rule>
-			<rule e="node|way" k="shop" v="supermarket|organic|bakery" layer="5">
-				<caption k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
-				<caption k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
+			<rule e="node|way" k="shop" v="supermarket|organic|bakery"  horizontalProximity="1.0" verticalProximity="0.9" layer="5">
+				<caption k="name" class="caption-casing generic-caption-casing" dy="-2px" layer="5"/>
+				<caption k="name" class="caption-core generic-caption-core" dy="-2px" layer="5"/>
 			</rule>
 			<rule e="node|way" k="tourism" v="hotel|hostel|camp_site|information" layer="5">
 				<rule e="node|way" k="amenity" v="restaurant" layer="5">
 				</rule>
 				<else>
-					<caption k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
-					<caption k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
+					<caption k="name" class="caption-casing generic-caption-casing" dy="-2px" layer="5"/>
+					<caption k="name" class="caption-core generic-caption-core" dy="-2px" layer="5"/>
 				</else>
 			</rule>
 			<rule e="node|way" k="historic" v="*" layer="5">
 				<rule e="node|way" k="building" v="~|no">
-					<caption k="name" class="caption-casing generic-caption-casing" dy="-2.5px" layer="5"/>
-					<caption k="name" class="caption-core generic-caption-core" dy="-2.5px" layer="5"/>
+					<caption k="name" class="caption-casing generic-caption-casing" dy="-2px" layer="5"/>
+					<caption k="name" class="caption-core generic-caption-core" dy="-2px" layer="5"/>
 				</rule>
 			</rule>
 		</rule>

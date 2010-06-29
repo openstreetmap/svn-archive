@@ -12,20 +12,72 @@ from osray_geom import *
 
 landusetypes = {
     'residential':['<0.9,1,0.9>'],
+
+    'retail':['<1,1,0.9>'],
     'commercial':['<1,1,0.9>'],
+    'industrial':['<1,1,0.8>'],
+
     'hospital':['<1,0.8,0.8>'],
     'landfill':['<0.6,0.7,0.4>'],
+    
     'recreation_ground':['<0.8,0.9,0.8>'],
     'city_green':['<0.8,0.9,0.8>'],
-    'farm':['<0.8,0.9,0.8>'],
-    'farmland':['<0.8,0.9,0.8>'],
-    'wood':['<0.8,0.9,0.8>']
+    'village_green':['<0.8,0.9,0.8>'],
+    'meadow':['<0.8,0.9,0.8>'],
+    'grass':['<0.8,0.9,0.8>'],
+
+    'cemetery':['<0.8,0.85,0.8>'],
+
+    'farm':['<0.8,0.9,0.6>'],
+    'farmland':['<0.8,0.9,0.7>'],
+    'farmyard':['<0.8,0.9,0.7>'],
+    'vineyard':['<0.7,0.9,0.7>'],
+
+    'allotments':['<0.6,0.7,0.6>'],
+
+    'forest':['<0.7,0.8,0.7>'],
+    'wood':['<0.7,0.8,0.7>']
     }
+"""
+basin (4356)
+quarry (2410)
+construction (1649)
+reservoir (1475)
+greenfield (1206)
+landfill (1038)
+brownfield (1036)
+orchard (956)
+railway (768)
+military (685)
+wood (491)
+garages (275)
+piste (89)
+mine_spoils (77)
+greenhouse_horticulture (74)
+scrub (65)
+water (54)
+Sand (41)
+building (39)
+park (36)
+resis (34)
+plaza (31)
+civil (31)
+garden (28)
+mining (22)
+yes (22)
+mixed (22)
+common (21)
+paddock (15)
+fields (15)
+Gehege (13)
+conservation (13)
+sport (12)
+green (12)
+wasteland (12)
+"""
 
 def pov_landuse(f,landuse):
     landusetype = landuse[1]
-    print "landusetype=",landusetype
-    #landusetype = 'secondary'
     landuseparams = landusetypes.get(landusetype)
 
     linestring = landuse[2]
@@ -73,8 +125,6 @@ waterwaytypes = {
 
 def pov_waterway(f,waterway):
     waterwaytype = waterway[1]
-    print "waterwaytype=",waterwaytype
-    #waterwaytype = 'secondary'
     waterwayparams = waterwaytypes.get(waterwaytype)
 
     linestring = waterway[2]

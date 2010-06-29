@@ -1174,7 +1174,7 @@
 		
 		<!-- Amenities -->
 		<rule e="node|way" k="amenity" v="hospital">
-			<symbol ref="hospital" position="center"/>
+			<symbol ref="hospital" transform="scale(0.5)" position="center"/>
 		</rule>
 		
 		<!-- Airfields and airports -->

@@ -6,6 +6,7 @@
 #import urlparse
 #import osray
 #import math
+import re
 
 def avg(a,b): return (a+b)/2.0
 

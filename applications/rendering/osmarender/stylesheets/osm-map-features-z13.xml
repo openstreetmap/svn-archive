@@ -1778,8 +1778,8 @@
 			.village-caption        { font-size: 20px; }
 			.suburb-caption         { font-size: 20px; }
 			
-			.largefeature-caption-casing        { stroke-width: 10px; font-size: 20px; }
-			.largefeature-caption-core          { fill: #4040ff;      font-size: 20px; }
+			.largefeature-caption-casing        { stroke-width: 5px; font-size: 15px; }
+			.largefeature-caption-core          { fill: #4040ff;      font-size: 15px; }
 			
 			/* Natural */
 			.natural-water {

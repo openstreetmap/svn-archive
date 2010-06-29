@@ -1604,9 +1604,9 @@
 			}
 			
 			.island-caption         { font-size: 40px; opacity: 0.75; }
-			.county-caption         { font-size: 130px; }
+			.county-caption         { font-size: 80px; font-variant: small-caps; opacity: 0.8; }
 			.city-caption           { font-size: 80px; }
-			.town-caption           { font-size: 50px; }
+			.town-caption           { font-size: 50px; font-weight: normal;}
 			
 			
 			.largefeature-caption-casing        { stroke-width: 25px; font-size: 50px; }

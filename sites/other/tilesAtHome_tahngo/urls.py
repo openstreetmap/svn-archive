@@ -17,5 +17,6 @@ urlpatterns = patterns('',
     (r'Tiles/(?P<layername>\w+)/(?P<z>\d+)/(?P<x>\d+)/(?P<y>\d+)(.png)?/$',show_tile),
     (r'^Log/Requests/Recent/$', redirect_to, {'url': '/Request/show/'}), #temporary redirect
     (r'Requests/Version\.php$', redirect_to, {'url': '/tahngo/Request/latestClientVersion/'}), #temporary redirect
+    (r'clientaccesspolicy.xml$', redirect_to, {'url': '/media/clientaccesspolicy.xml', permanent=True}),
     #(r'/accounts/profile/$', 'redirect_to', {'url': '/user/'}),
 )

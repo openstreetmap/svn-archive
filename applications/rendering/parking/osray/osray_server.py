@@ -39,13 +39,42 @@ class osrayHandler(BaseHTTPRequestHandler):
             queryparams = urlparse.parse_qs(urlqs)
             print queryparams
 
-            options['bbox']=scale_bbox(options['bbox'],float(2**-1))
+            #options['bbox']=scale_bbox(options['bbox'],float(2**-1))
 
-            if baseurl.startswith("povtile"):
-                pass
-                # PLEASE IMPLEMENT HERE - FIXME
+            print "baseagain=",baseurl
+
+            if baseurl.startswith("/povtile/"): # example URL http://localhost/osray/povtile/16/34576/22282.png
+                if baseurl.endswith(".png"):
+                    zxy = baseurl[9:-4].split('/')
+                    if(len(zxy)==3):
+                        print "zxy=",zxy
+                        zoom = float(zxy[0])
+                        xtile = float(zxy[1])
+                        ytile = float(zxy[2])
+                        bbox = num2bbox(xtile,ytile,zoom)
+                        print bbox
+                        options['bbox']=bbox
+                        options['width']=256
+                        options['height']=256
+                        options['hq']=True
+                        print "--- calling osray"
+                        osray.main(options)
+                        print "--- calling osray ends"
+                        f = open(curdir + sep + 'scene-osray.png')
+                        print "--- send_response"
+                        self.send_response(200)
+                        print "--- send_header"
+                        self.send_header('Content-type','image/png')
+                        print "--- send_end_headers"
+                        self.end_headers()
+                        print "--- send_write"
+                        self.wfile.write(f.read())
+                        print "--- close"
+                        f.close()
+                        return
+                        # PLEASE IMPLEMENT HERE - FIXME
             
-            if baseurl.endswith(".png"):
+            if baseurl=="big.png":
                 if queryparams.has_key('width'):
                     options['width']=queryparams['width'][0]
                 if queryparams.has_key('height'):

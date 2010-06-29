@@ -168,7 +168,7 @@ def pov_waterway(f,waterway):
 def pov_globals(f):
     globsettings = """
 global_settings {{
-    assumed_gamma 1.5
+    assumed_gamma 2.0
     noise_generator 2
 }}
 """

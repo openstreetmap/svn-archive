@@ -5,10 +5,11 @@
 #from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 #import urlparse
 #import osray
-#import math
+import math
 import re
 
 def avg(a,b): return (a+b)/2.0
+def swap(tuple): return (tuple[1],tuple[0])
 
 def scale_bbox(self,old_bbox,scale):
     old_bbox = old_bbox.replace(' ',',')
@@ -39,8 +40,10 @@ def num2deg(xtile, ytile, zoom):
     return(lat_deg, lon_deg)
 
 def num2bbox(xtile, ytile, zoom):
-    pass
-    return 0
+    bottomleft = swap(num2deg(xtile,ytile+1,zoom))
+    topright = swap(num2deg(xtile+1,ytile,zoom))
+    bbox = str(bottomleft)[1:-1].replace(',',' ')+","+str(topright)[1:-1].replace(',',' ')
+    return bbox
 
 def shift_by_meters(lat, lon, brng, d):
     R = 6371000.0 # earth's radius in m

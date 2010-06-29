@@ -12,9 +12,6 @@ from osray_ground import *
 from osray_streets import *
 from optparse import OptionParser
 
-
-def avg(a,b): return (a+b)/2.0
-
 def pov_globals(f):
     globsettings = """
 #include "colors.inc"

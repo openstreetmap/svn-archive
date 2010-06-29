@@ -10,6 +10,7 @@ import psycopg2
 import csv
 import re
 from numpy import *
+from osray_geom import *
 
 highwaytypes = {
     'trunk':['<0.9,1,0.9>',1.0],
@@ -51,34 +52,7 @@ amenitybuildingtypes = {
     'parking':['<0.6,0.6,1>',1.0]
     }
 
-def avg(a,b): return (a+b)/2.0
-
-def shift_by_meters(lat, lon, brng, d):
-    R = 6371000.0 # earth's radius in m
-    lat=math.radians(lat)
-    lon=math.radians(lon)
-    lat2 = math.asin( math.sin(lat)*math.cos(d/R) + 
-                      math.cos(lat)*math.sin(d/R)*math.cos(brng))
-    lon2 = lon + math.atan2(math.sin(brng)*math.sin(d/R)*math.cos(lat), 
-                             math.cos(d/R)-math.sin(lat)*math.sin(lat2))
-    lat2=math.degrees(lat2)
-    lon2=math.degrees(lon2)
-    return [lat2,lon2]
-
-def calc_bearing(x1,y1,x2,y2,side):
-    Q = complex(x1,y1)
-    R = complex(x2,y2)
-    v = R-Q
-    if side=='left':
-        v=v*complex(0,1);
-    elif side=='right':
-        v=v*complex(0,-1);
-    else:
-        raise TypeError('side must be left or right')
-    #v=v*(1/abs(v)) # normalize
-    angl = angle(v) # angle (radians) (0°=right, and counterclockwise)
-    bearing = math.pi/2.0-angl # (0°=up, and clockwise)
-    return bearing
+#def avg(a,b): return (a+b)/2.0
 
 def pov_highway(f,highway):
     highwaytype = highway[1]
@@ -231,29 +205,6 @@ def pov_highway_area(f,highway):
 }}
 \n""".format(color,height))
 
-
-def parse_length_in_meters(length,default):
-    units={
-           'm':1.0, 'metres':1.0, 'meters':1.0, 'metre':1.0, 'meter':1.0,
-           'km':1000.0,
-           'ft':0.3,
-           'yd':1.1,
-           }
-    parsed = re.split('(\d*[,.]?\d+)',length)
-    if len(parsed)!=3:
-        print "### unparsable length '{0}', parsed: {1}".format(length,parsed)
-        return default
-    prefix = parsed[0].strip()
-    if prefix!='':
-        print "### unknown prefix '{0}' in length '{1}'".format(prefix,length)
-        return default
-    unit = parsed[2].strip().lower()
-    if unit=='': unit='m' # defaults to m
-    factor = units.get(unit,0.0)
-    if factor==0.0:
-        print "### unknown unit '{0}' in length '{1}'".format(unit,length)
-    meter = float(parsed[1])*factor
-    return meter
 
 def pov_building(f,building):
     buildingtype = building[1]

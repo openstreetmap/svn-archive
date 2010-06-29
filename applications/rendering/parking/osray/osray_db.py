@@ -1,17 +1,8 @@
 # -*- coding: utf-8 -*-
 # by kay drangmeister
 
-#import sys
-#import commands
 import psycopg2
-#import csv
-#import re
 from numpy import *
-#from osray_ground import *
-#from osray_streets import *
-#from optparse import OptionParser
-
-#def avg(a,b): return (a+b)/2.0
 
 LIMIT = 'LIMIT 10000'
 
@@ -35,7 +26,7 @@ class OsrayDB:
                 self.right=float(latlon[0])
                 self.top=float(latlon[1])
                     
-        print self.bottom,self.left,self.top,self.right
+        print "Bounds [b l t r] = ",self.bottom,self.left,self.top,self.right
 
     def __init__(self,options):
         DSN = options['dsn']

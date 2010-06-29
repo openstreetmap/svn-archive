@@ -5,6 +5,7 @@ from os import curdir, sep
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import urlparse
 import osray
+from osray_geom import *
 import math
 
 options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'quick': False, 'hq': False}
@@ -18,41 +19,7 @@ options['bbox']='9.92498 49.78816,9.93955 49.8002' # Innenstadt
 # for tile names and coordinates:
 # http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 
-def avg(a,b): return (a+b)/2.0
-
 class osrayHandler(BaseHTTPRequestHandler):
-
-
-    def scale_bbox(self,old_bbox,scale):
-        old_bbox = old_bbox.replace(' ',',')
-        print "old_bbox ",old_bbox
-        pointlist = map(lambda coord: float(coord), old_bbox.split(','))
-        print "pointlist ",pointlist
-        xmin = pointlist[0]
-        ymin = pointlist[1]
-        xmax = pointlist[2]
-        ymax = pointlist[3]
-        xmid = avg(xmin,xmax)
-        ymid = avg(ymin,ymax)
-        xradius = xmid-xmin
-        yradius = ymid-ymin
-        xradius *= scale
-        yradius *= scale
-        xmin = xmid-xradius
-        xmax = xmid+xradius
-        ymin = ymid-yradius
-        ymax = ymid+yradius
-        return str(xmin)+" "+str(ymin)+","+str(xmax)+" "+str(ymax)
-
-    def num2deg(xtile, ytile, zoom):
-        n = 2.0 ** zoom
-        lon_deg = xtile / n * 360.0 - 180.0
-        lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ytile / n)))
-        lat_deg = math.degrees(lat_rad)
-        return(lat_deg, lon_deg)
-    def num2bbox(xtile, ytile, zoom):
-        pass
-        return 0
 
     def do_GET(self):
         try:
@@ -72,7 +39,7 @@ class osrayHandler(BaseHTTPRequestHandler):
             queryparams = urlparse.parse_qs(urlqs)
             print queryparams
 
-            options['bbox']=self.scale_bbox(options['bbox'],float(2**-1))
+            options['bbox']=scale_bbox(options['bbox'],float(2**-1))
 
             if baseurl.startswith("povtile"):
                 pass

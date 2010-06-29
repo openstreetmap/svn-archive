@@ -8,8 +8,7 @@ import csv
 import re
 from numpy import *
 from osray_db import *
-
-def avg(a,b): return (a+b)/2.0
+from osray_geom import *
 
 landusetypes = {
     'residential':['<0.9,1,0.9>'],
@@ -127,10 +126,10 @@ global_settings {{
 
 def pov_camera(f,osraydb):
 
-    bottom = float(osraydb.bottom)
-    left = float(osraydb.left)
-    top = float(osraydb.top)
-    right = float(osraydb.right)
+    bottom = osraydb.bottom
+    left = osraydb.left
+    top = osraydb.top
+    right = osraydb.right
     map_size_x = right-left
     map_size_y = top-bottom
     

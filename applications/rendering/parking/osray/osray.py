@@ -112,7 +112,7 @@ light_source {{
     area_light <100000, 0, 0>, <0, 0, 100000>, 8, 8
     adaptive 1
     circular
-    rotate <45,-20,0>
+    rotate <45,10,0>
     translate <{0},0,{1}>
 }}
 \n""".format(avg(left,right),avg(bottom,top)))

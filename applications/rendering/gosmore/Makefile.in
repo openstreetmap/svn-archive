@@ -27,7 +27,9 @@ WINDRES=	${ARCH}windres
 
 ifneq (${OS},Windows_NT)
 EXTRA=`pkg-config --cflags --libs gtk+-2.0 || echo -D HEADLESS` \
-  `pkg-config --libs libcurl` `pkg-config --libs pkg-config --libs gthread-2.0`
+  `pkg-config --libs libcurl` \
+  `[ -e /usr/include/gps.h ] && echo -DUSE_GPSD -lgps `\
+  `pkg-config --libs pkg-config --libs gthread-2.0`
 
 # I found that it's more reliable and more portable to use aplay, but
 # gnome sound can still be activated with this:

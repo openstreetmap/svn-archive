@@ -888,17 +888,22 @@ static void GeoclueUpdate (GeocluePosition *position,
 #endif
 
 #ifdef USE_GPSD
-void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
+void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/
+#if GPSD_API_MAJOR_VERSION <= 3
+  , int /*level*/
+#endif
+  )
 {
   gpsNew->fix.latitude = gps->fix.latitude;
   gpsNew->fix.longitude = gps->fix.longitude;
-  int t = lrint (gps->fix.time) % (3600 * 24);
-  gpsNew->fix.tm[0] = t / 3600 / 10 + '0';
-  gpsNew->fix.tm[1] = t / 3600 % 10 + '0';
-  gpsNew->fix.tm[2] = t / 60 / 10 + '0';
-  gpsNew->fix.tm[3] = t / 60 % 10 + '0';
-  gpsNew->fix.tm[4] = t % 60 / 10 + '0';
-  gpsNew->fix.tm[5] = t % 10 + '0';
+  if (gps->fix.time > 1e+9) { // gpsfake produces some 0 values.
+    gpsNew->fix.tm[0] = llrint (gps->fix.time) % (3600 * 24) / 36000 + '0';
+    gpsNew->fix.tm[1] = llrint (gps->fix.time) / 3600 % 10 + '0';
+    gpsNew->fix.tm[2] = llrint (gps->fix.time) % 3600 / 600 + '0';
+    gpsNew->fix.tm[3] = llrint (gps->fix.time) / 60 % 10 + '0';
+    gpsNew->fix.tm[4] = llrint (gps->fix.time) % 60 / 10 + '0';
+    gpsNew->fix.tm[5] = llrint (gps->fix.time) % 10 + '0';
+  }
   printf ("%.6s\n", gpsNew->fix.tm);
   DoFollowThing (gpsNew);
 }
@@ -2815,10 +2820,10 @@ static void DropReceived (GtkWidget */*draw*/, GdkDragContext *c, gint x,
 void SeUpdate (GtkWidget *w, gpointer p)
 {
   GdkColor c;
-  if (((int) p & 0xff) == 2) gtk_color_button_get_color (GTK_COLOR_BUTTON (w), &c);
-  if (((int) p & 0xff) == 3) printf ("%s ", gtk_font_button_get_font_name (GTK_FONT_BUTTON (w)));
-  if (((int) p & 0xff) == 4) printf ("%d ", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (w)));
-  if (((int) p & 0xff) == 5) printf ("%d ", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)));
+  if (((intptr_t) p & 0xff) == 2) gtk_color_button_get_color (GTK_COLOR_BUTTON (w), &c);
+  if (((intptr_t) p & 0xff) == 3) printf ("%s ", gtk_font_button_get_font_name (GTK_FONT_BUTTON (w)));
+  if (((intptr_t) p & 0xff) == 4) printf ("%d ", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (w)));
+  if (((intptr_t) p & 0xff) == 5) printf ("%d ", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)));
   printf ("%p | %4x %4x %4x\n", p, c.red, c.green, c.blue);
 }
 
@@ -3101,7 +3106,11 @@ int UserInterface (int argc, char *argv[],
   gps_data_t *gpsData = gps_open ("127.0.0.1", "2947");
   if (gpsData) {
     gps_set_raw_hook (gpsData, GpsMove);
+    #if GPSD_API_MAJOR_VERSION <= 3
     gps_query (gpsData, "w+x\n");
+    #else
+    gps_stream (gpsData, WATCH_ENABLE, NULL);
+    #endif
     gpsSockTag = gdk_input_add (gpsData->gps_fd, GDK_INPUT_READ,
       (GdkInputFunction) gps_poll, gpsData);
     

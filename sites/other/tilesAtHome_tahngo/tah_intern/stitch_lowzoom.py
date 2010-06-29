@@ -142,6 +142,7 @@ if __name__ == '__main__':
     # for y in range(0,64):
     #  i += 1
       sys.stdout.write ("%i out of %i: " % (i,n))
+      sys.stdout.flush()
       failed = os.system("nice python %s/stitch_lowzoom.py %d %02d %20d" % (script_path,z,x,y))
       if failed: sys.exit("Child stitcher failed. Bailing out.")
     #Finally stitch the z0-5
@@ -154,7 +155,8 @@ if __name__ == '__main__':
     (z,x,y) = map(int, sys.argv[1:4])
     layer=Layer.objects.get(name='tile')
     sys.stdout.write ("Stitching %d %02d %02d " % (z,x,y))
+    sys.stdout.flush()
     lz = Lowzoom()
     lz.create(layer,z,x,y,base_tile_path)
-    sys.stdout.write ("took %.1f sec.\n" % (time.time()-starttime))
+    sys.stdout.write ("took %d sec.\n" % (time.time()-starttime))
 

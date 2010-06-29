@@ -11,7 +11,7 @@ from osray_db import *
 from osray_geom import *
 
 landusetypes = {
-    'residential':['<0.9,1,0.9>'],
+    'residential':['<1,0.95,0.9>'],
 
     'retail':['<1,1,0.9>'],
     'commercial':['<1,1,0.9>'],

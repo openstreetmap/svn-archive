@@ -203,6 +203,42 @@ def pov_highway_area(f,highway):
     translate <0, {1}, 0>
 }}
 \n""".format(color,height))
+    # 
+    # draw the casing
+    #
+    height = 0.08
+    linestring = highway[5]
+    linestring = linestring[8:] # cut off the "POLYGON("
+    linestring = linestring[:-1] # cut off the ")"
+    points = linestring.split(',')#.strip('(').strip(')')
+    numpoints = len(points)
+    f.write("prism {{ linear_spline 0, 0.01, {0},\n".format(numpoints))
+    f.write("/* casing of osm_id={0} */\n".format(highway[0]))
+
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+        if (i==0):
+            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+        if (i!=numpoints-1):
+            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+        else:
+            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+
+    color = highwayparams[0]
+    f.write("""
+    texture {{
+        pigment {{
+            color rgb <0.3,0.3,0.3>
+        }}
+        finish {{
+            specular 0.05
+            roughness 0.05
+            /*reflection 0.5*/
+        }}
+    }}
+    translate <0, {height}, 0>
+}}
+\n""".format(height=height))
 
 
 def pov_building(f,building):

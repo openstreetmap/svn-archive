@@ -9,7 +9,7 @@ from osray_geom import *
 import math
 
 options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'quick': False, 'hq': False}
-options['bbox']='9.94861 49.79293,9.96912 49.80629' # Europastern
+#options['bbox']='9.94861 49.79293,9.96912 49.80629' # Europastern
 options['bbox']='9.92498 49.78816,9.93955 49.8002' # Innenstadt
 #options['bbox']='12.13344 54.08574,12.14387 54.09182' # Rostock
 #options['bbox']='12.03344 53.98574,12.24387 54.19182' # Rostock-xx
@@ -74,7 +74,7 @@ class osrayHandler(BaseHTTPRequestHandler):
                         return
                         # PLEASE IMPLEMENT HERE - FIXME
             
-            if baseurl=="big.png":
+            if baseurl=="/big.png":
                 if queryparams.has_key('width'):
                     options['width']=queryparams['width'][0]
                 if queryparams.has_key('height'):

@@ -13,6 +13,8 @@ from numpy import *
 from osray_geom import *
 
 highwaytypes = {
+    'motorway':['<1,0,0>',0.9],
+    'motorway_link':['<1,0,0>',0.9],
     'trunk':['<0.9,1,0.9>',1.0],
     'trunk_link':['<0.9,1,0.9>',1.0],
     'primary':['<1,1,0.9>',1.0],
@@ -29,9 +31,6 @@ highwaytypes = {
     'steps':['<0.7,0.8,0.7>',0.3],
     'cycleway':['<0.8,0.8,0.9>',0.3],
     'track':['<1,0,0>',0.9],
-    'service':['<1,0,0>',0.9],
-    'motorway':['<1,0,0>',0.9],
-    'motorway_link':['<1,0,0>',0.9],
     'bus_stop':['<1,0,0>',0.9],
     'bus_station':['<1,0,0>',0.9],
     'road':['<1,0,0>',0.9],

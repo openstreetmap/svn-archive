@@ -81,8 +81,8 @@
             .city-caption-casing    { font-size: 2800px; stroke-width: 600px; }
             .city-caption           { font-size: 2800px; }
 
-            .capital-caption-casing { font-size: 3700px; stroke-width: 500px; }
-            .capital-caption        { font-size: 3700px; }
+            .capital-caption-casing { font-size: 3700px; stroke-width: 500px; font-variant: small-caps; }
+            .capital-caption        { font-size: 3700px; font-variant: small-caps; }
             
             /* Non-physical boundaries */
             .boundary {

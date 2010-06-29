@@ -20,18 +20,30 @@
     showLicense="no"
     interactive="no">
 
-
-  <rule e="node|way" k="osmarender:render" v="~|yes">
-		<rule e="node|way" k="osmarender:renderName" v="~|yes">
-		
-      <rule e="node" k="place" v="city" horizontalProximity="0.14" verticalProximity="0.08">
-        <text k="name" class='caption-casing city-caption-casing' />
-        <text k="name" class='caption-core city-caption' />
+    <!-- Non-physical boundaries -->
+    <rule e="way" k="boundary" v="administrative">
+      <rule e="way" k="admin_level" v="2">
+        <line class="boundary boundary-level-2-casing" />
+        <line class="boundary boundary-level-2-core" />
       </rule>
+      <rule e="way" k="admin_level" v="1">
+        <line class="boundary boundary-level-1-casing" />
+        <line class="boundary boundary-level-1-core" />
+      </rule>
+    </rule>
 
-    </rule> <!-- k="osmarender:renderName" v="~|yes" -->
-	</rule> <!-- k="osmarender:render" v="~|yes" -->
-
+    <rule e="node" k="place" v="*">
+      <rule e="node" k="capital" v="~|no|false|False">
+        <rule e="node" k="place" v="city">
+          <text k="name" class='caption-casing city-caption-casing' />
+          <text k="name" class='caption-core city-caption' />
+        </rule>
+      </rule>
+      <else>
+        <text k="name" class='caption-casing capital-caption-casing' />
+        <text k="name" class='caption-core capital-caption' />
+      </else>
+    </rule> <!-- e="node" k="place" v="*" -->
 
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>
@@ -47,10 +59,10 @@
             }
 
             .caption-casing {
-				fill: white;
+		fill: white;
                 stroke: white;
                 font-family: "DejaVu Sans";
-                font-weight: normal;
+                font-weight: bold;
                 text-anchor: middle;
                 stroke-miterlimit: 1.5;
             }
@@ -59,14 +71,48 @@
                 stroke: white;
                 stroke-width: 0px;
                 font-family: "DejaVu Sans";
-                font-weight: normal;
+                font-weight: bold;
                 text-anchor: middle;
                 stroke-miterlimit: 1.5;
             }
 
-			.city-caption-casing    { font-size: 750px; stroke-width: 200px; }
-			.city-caption           { font-size: 750px; }
+            .city-caption-casing    { font-size: 750px; stroke-width: 200px; }
+            .city-caption           { font-size: 750px; }
 
+            .capital-caption-casing { font-size: 800px; stroke-width: 300px; font-variant: small-caps; }
+            .capital-caption        { font-size: 800px; font-variant: small-caps; }
+
+            /* Non-physical boundaries */
+            .boundary {
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            }
+            
+            .boundary-level-1-casing {
+            stroke-width: 200px;
+            stroke: #ffff00;
+            opacity: 0.6;
+            }
+            
+            .boundary-level-1-core {
+            stroke-width: 1500px;
+            stroke: #f9574b;
+            stroke-dasharray: 300, 100, 100, 100;
+            }
+            
+            .boundary-level-2-casing {
+            stroke-width: 200px;
+            stroke: #ffff00;
+            opacity: 0.6;
+            }
+			
+            .boundary-level-2-core {
+            stroke-width: 150px;
+            stroke: #f9574b;
+            stroke-dasharray: 200, 200;
+            }
+			
 
             /* Map decoration */
             .map-grid-line {

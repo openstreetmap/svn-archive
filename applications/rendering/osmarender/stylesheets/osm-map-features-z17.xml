@@ -3409,6 +3409,12 @@
 		<rule e="node|way" k="amenity" v="hunting_stand">
 			<symbol ref="hunting_closed_high" position="center"/>
 		</rule>
+		<rule e="node|way" k="historic" v="battlefield">
+			<symbol ref="cannon" position="center"/>
+		</rule>
+		<rule e="node|way" k="military" v="bunker">
+			<symbol ref="cannon" position="center"/>
+		</rule>
 		<rule e="node|way" k="amenity" v="library">
 			<symbol ref="library" position="center"/>
 		</rule>

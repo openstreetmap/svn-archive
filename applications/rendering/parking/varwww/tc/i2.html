@@ -76,14 +76,23 @@
                     }
                 );
                 var parkingbw = new OpenLayers.Layer.TMS("Parking Only Map",
-                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-bw/",
-                    {
-                        type: 'png', getURL: osm_getTileURL,
-                        displayOutsideMaxExtent: true, isBaseLayer: true,
-                        numZoomLevels: 20,
-                        attribution: 'Map Data from <a href="http://www.openstreetmap.org/">OpenStreetMap</a> (<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-by-SA 2.0</a>)<br>Extensions by kay'
-                    }
-                );
+                        "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-bw/",
+                        {
+                            type: 'png', getURL: osm_getTileURL,
+                            displayOutsideMaxExtent: true, isBaseLayer: true,
+                            numZoomLevels: 20,
+                            attribution: 'Map Data from <a href="http://www.openstreetmap.org/">OpenStreetMap</a> (<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-by-SA 2.0</a>)<br>Extensions by kay'
+                        }
+                    );
+                var pov = new OpenLayers.Layer.TMS("POV",
+                        "http://drangmeister.dyndns.org/osray/povtile/",
+                        {
+                            type: 'png', getURL: osm_getTileURL,
+                            displayOutsideMaxExtent: true, isBaseLayer: true,
+                            numZoomLevels: 20,
+                            attribution: 'Map Data from <a href="http://www.openstreetmap.org/">OpenStreetMap</a> (<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-by-SA 2.0</a>)<br>Rendering by kay'
+                        }
+                    );
                 var osm   = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
                 var cycle = new OpenLayers.Layer.OSM.CycleMap("Cycle Map");
                 var osma  = new OpenLayers.Layer.OSM.Osmarender("Osmarender");
@@ -122,7 +131,7 @@
                     }
                 );
 
-                map.addLayers([parking, parkingbw, osm, cycle, osma/*, hikebike*/]);
+                map.addLayers([parking, parkingbw, pov, osm, cycle, osma/*, hikebike*/]);
 
                 map.addLayers([parkingtrans, parkingicons, parkingerr]);
 

@@ -35,7 +35,7 @@
 
     <rule e="node" k="place" v="*">
       <rule e="node" k="capital" v="~|no|false|False">
-        <rule e="node" k="place" v="city" horizontalProximity="0.001" verticalProximity="0.001" >
+        <rule e="node" k="place" v="city" horizontalProximity="0.01" verticalProximity="0.01" >
           <text k="name" class='caption-casing city-caption-casing' />
           <text k="name" class='caption-core city-caption' />
         </rule>

@@ -73,9 +73,6 @@
 		<delete dir="${basedir}/${bin.dir}" />
 		<mkdir dir="${basedir}/${bin.dir}" />
 		<javac destdir="${basedir}/${bin.dir}" srcdir="${basedir}/${source.dir}" debug="${build.debug}" debuglevel="${build.debuglevel}" source="${target.java.version}" target="${target.java.version}" />
-		<copy todir="${basedir}/${bin.dir}/images">
-			<fileset dir="${basedir}/${source.dir}/images" />
-		</copy>
 		<copy todir="${basedir}/${bin.dir}/org/openstreetmap/gui/jmapviewer/images">
 			<fileset dir="${basedir}/${source.dir}/org/openstreetmap/gui/jmapviewer/images" />
 		</copy>

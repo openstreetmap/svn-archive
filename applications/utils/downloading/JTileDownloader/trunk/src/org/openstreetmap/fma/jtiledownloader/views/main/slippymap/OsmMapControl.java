@@ -1,5 +1,8 @@
 // This code has been adapted and copied from code that has been written by Immanuel Scholz and others for JOSM.
 // License: GPL. Copyright 2007 by Tim Haussmann
+
+// Adapted for JTileDownloader by Sven Strickroth <email@cs-ware.de>, 2010
+
 package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 
 import java.awt.Point;
@@ -52,12 +55,10 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
     // the SlippyMapChooserComponent
     private final SlippyMapChooser iSlippyMapChooser;
 
-    private SourceButton iSourceButton = null;
-
     /**
      * Create a new OsmMapControl
      */
-    public OsmMapControl(SlippyMapChooser navComp, JPanel contentPane, SourceButton sourceButton) {
+    public OsmMapControl(SlippyMapChooser navComp, JPanel contentPane) {
         this.iSlippyMapChooser = navComp;
         iSlippyMapChooser.addMouseListener(this);
         iSlippyMapChooser.addMouseMotionListener(this);
@@ -72,7 +73,6 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
                         KeyStroke.getKeyStroke(k[i], KeyEvent.CTRL_DOWN_MASK), "MapMover.Zoomer." + n[i]);
             }
         }
-        iSourceButton = sourceButton;
 
         InputMap inputMap = navComp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = navComp.getActionMap();
@@ -137,16 +137,6 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
 
-            int sourceButton = iSourceButton.hit(e.getPoint());
-
-            if (sourceButton == SourceButton.HIDE_OR_SHOW) {
-                iSourceButton.toggle();
-                iSlippyMapChooser.repaint();
-
-            } else if (sourceButton == SourceButton.MAPNIK || sourceButton == SourceButton.OSMARENDER
-                    || sourceButton == SourceButton.CYCLEMAP) {
-                iSlippyMapChooser.toggleMapSource(sourceButton);
-            } else {
                 if (e.getClickCount() == 1) {
                     iSlippyMapChooser.setSelection(iStartSelectionPoint, e.getPoint());
 
@@ -154,7 +144,6 @@ public class OsmMapControl extends MouseAdapter implements MouseMotionListener, 
                     iEndSelectionPoint = null;
                     iStartSelectionPoint = null;
                 }
-            }
 
         }
     }

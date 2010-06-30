@@ -50,6 +50,9 @@ public class OptionsPanel
 
     JCheckBox _chkOverwriteExistingFiles = new JCheckBox("Overwrite existing files");
 
+    JCheckBox _slippyMapNoDownload = new JCheckBox("Do not download new tiles");
+    JCheckBox _slippyMapSaveTiles = new JCheckBox("Save downloaded tiles");
+
     /**
      * 
      */
@@ -97,6 +100,23 @@ public class OptionsPanel
         constraints.insets = new Insets(10, 5, 0, 5);
         add(panelWaitOptions, constraints);
 
+        GridBagConstraints constraintsSlippyMapOptions = new GridBagConstraints();
+        constraintsSlippyMapOptions.gridwidth = GridBagConstraints.REMAINDER;
+        constraintsSlippyMapOptions.weightx = 1.0;
+        constraintsSlippyMapOptions.fill = GridBagConstraints.HORIZONTAL;
+        constraintsSlippyMapOptions.insets = new Insets(5, 5, 0, 5);
+
+        JPanel slippyMapOptions = new JPanel();
+        slippyMapOptions.setLayout(new GridBagLayout());
+        Border borderSlippyMapOptions = new TitledBorder("SlippyMap Options");
+        slippyMapOptions.setBorder(borderSlippyMapOptions);
+
+        constraintsSlippyMapOptions.gridwidth = GridBagConstraints.REMAINDER;
+        slippyMapOptions.add(_slippyMapNoDownload, constraintsSlippyMapOptions);
+        slippyMapOptions.add(_slippyMapSaveTiles, constraintsSlippyMapOptions);
+
+        add(slippyMapOptions, constraints);
+
         GridBagConstraints constraintsOtherOptions = new GridBagConstraints();
         constraintsOtherOptions.gridwidth = GridBagConstraints.REMAINDER;
         constraintsOtherOptions.weightx = 1.0;
@@ -113,7 +133,7 @@ public class OptionsPanel
         constraintsWaitOptions.gridwidth = GridBagConstraints.REMAINDER;
         otherOptions.add(_textMinimumAgeInDays, constraintsWaitOptions);
 
-        constraintsOtherOptions.gridwidth = GridBagConstraints.RELATIVE;
+        constraintsOtherOptions.gridwidth = GridBagConstraints.REMAINDER;
         otherOptions.add(_chkOverwriteExistingFiles, constraintsOtherOptions);
 
         add(otherOptions, constraints);
@@ -134,6 +154,8 @@ public class OptionsPanel
 
         _chkOverwriteExistingFiles.setSelected(AppConfiguration.getInstance().isOverwriteExistingFiles());
 
+        _slippyMapNoDownload.setSelected(AppConfiguration.getInstance().isSlippyMap_NoDownload());
+        _slippyMapSaveTiles.setSelected(AppConfiguration.getInstance().isSlippyMap_SaveTiles());
     }
 
     /**
@@ -174,6 +196,22 @@ public class OptionsPanel
     public int getMinimumAgeInDays()
     {
         return Integer.parseInt(_textMinimumAgeInDays.getText());
+    }
+
+    /**
+     * @return the slippyMapNoDownload
+     */
+    public boolean isSlippyMapNoDownload()
+    {
+        return _slippyMapNoDownload.isSelected();
+    }
+
+    /**
+     * @return the slippyMapSaveTiles
+     */
+    public boolean isSlippyMapSaveTiles()
+    {
+        return _slippyMapSaveTiles.isSelected();
     }
 
 }

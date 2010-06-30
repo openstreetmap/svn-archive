@@ -1,5 +1,6 @@
 /*
  * Copyright 2008, Friedrich Maier
+ * Copyright 2010, Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of JTileDownloader.
  *
@@ -31,6 +32,7 @@ import java.awt.event.FocusListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import org.openstreetmap.fma.jtiledownloader.config.AppConfiguration;
@@ -125,11 +127,29 @@ public class BBoxLatLonPanel
         _buttonSlippyMapChooser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0)
             {
-                if (smc == null)
+                boolean isOk = false;
+                if (AppConfiguration.getInstance().isSlippyMap_NoDownload())
                 {
-                    smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component) arg0.getSource()).getParent());
+                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + AppConfiguration.getInstance().getOutputFolder() + "\" as local read-only-cache folder and will only display tiles which are already there (regardless of the selected tile-provider).");
+                    isOk=true;
                 }
-                smc.setVisible(true);
+                else if (!AppConfiguration.getInstance().isSlippyMap_SaveTiles())
+                {
+                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + AppConfiguration.getInstance().getOutputFolder() + "\" as local read-only-cache folder and will load missing tiles from tile provider \"" + _mainPanel.getSelectedTileProvider().getName() + "\" w/o saving them to the output-folder.");
+                    isOk=true;
+                }
+                if (isOk || (AppConfiguration.getInstance().isSlippyMap_SaveTiles() && JOptionPane.showConfirmDialog(null, "SlippyMap will use \"" + AppConfiguration.getInstance().getOutputFolder() + "\" as local cache/download-folder and tileprovider \"" + _mainPanel.getSelectedTileProvider().getName() + "\".\nDo you want to continue?", "JTileDownloader SlippyMap", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION))
+                {
+                    if (smc == null)
+                    {
+                        smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component) arg0.getSource()).getParent(), _mainPanel.getSelectedTileProvider(), AppConfiguration.getInstance().getOutputFolder());
+                    }
+                    smc.getSlippyMapChooser().setSaveTiles(AppConfiguration.getInstance().isSlippyMap_SaveTiles());
+                    smc.getSlippyMapChooser().setNoDownload(AppConfiguration.getInstance().isSlippyMap_NoDownload());
+                    smc.getSlippyMapChooser().setDirectory(AppConfiguration.getInstance().getOutputFolder());
+                    smc.getSlippyMapChooser().setTileProvider(_mainPanel.getSelectedTileProvider());
+                    smc.setVisible(true);
+                }
             }
         });
     }
@@ -175,13 +195,13 @@ public class BBoxLatLonPanel
         _textMaxLat.setText(String.valueOf(maxLatitude));
         _textMinLon.setText(String.valueOf(minLongitude));
         _textMinLat.setText(String.valueOf(minLatitude));
-        updateTileList();
+        updateTileList(true);
     }
 
     /**
      * 
      */
-    private void updateTileList()
+    private void updateTileList(boolean onlyLatLonChanged)
     {
         _tileList.setDownloadZoomLevels(getDownloadZoomLevel());
         _tileList.setMinLat(getMinLat());
@@ -190,6 +210,10 @@ public class BBoxLatLonPanel
         _tileList.setMaxLon(getMaxLon());
         _tileList.calculateTileValuesXY();
         updateNumberOfTiles();
+        if (smc != null && !onlyLatLonChanged)
+        {
+            smc.setVisible(false);
+        }
     }
 
     @Override
@@ -317,7 +341,7 @@ public class BBoxLatLonPanel
         {
             changeListener.boundingBoxChanged();
         }
-        updateTileList();
+        updateTileList(false);
     }
 
     /**

@@ -35,7 +35,7 @@ public abstract class InputPanel
 {
 
     private static final long serialVersionUID = 1L;
-    private final MainPanel _mainPanel;
+    protected final MainPanel _mainPanel;
 
     /**
      * Returns the name/title for the input panel

@@ -44,6 +44,9 @@ public class AppConfiguration
 
     private boolean _showTilePreview = true;
 
+    private boolean _slippyMap_NoDownload = false;
+    private boolean _slippyMap_SaveTiles = false;
+
     private String _tileServer = "";
     private String _lastZoom = "12";
     private String _outputFolder = "tiles";
@@ -66,6 +69,9 @@ public class AppConfiguration
     private static final String PROXY_SERVER_PASSWORD = "ProxyServerPassword";
 
     private static final String SHOW_TILE_PREVIEW = "ShowTilePreview";
+
+    private static final String SLIPPYMAP_NODOWNLOAD = "SlippyMapNoDownload";
+    private static final String SLIPPYMAP_SAVETILES = "SlippyMapSaveTiles";
 
     private static final String TILE_SERVER = "TileServer";
     private static final String LAST_ZOOM = "LastZoom";
@@ -134,6 +140,9 @@ public class AppConfiguration
         setOutputFolder(prop.getProperty(LAST_OUTPUTFOLDER, _outputFolder));
 
         setOverwriteExistingFiles(Boolean.valueOf(prop.getProperty(OVERWRITE_EXISTING_FILES, String.valueOf(isOverwriteExistingFiles()))).booleanValue());
+
+        setSlippyMap_NoDownload(Boolean.valueOf(prop.getProperty(SLIPPYMAP_NODOWNLOAD, String.valueOf(isSlippyMap_NoDownload()))).booleanValue());
+        setSlippyMap_SaveTiles(Boolean.valueOf(prop.getProperty(SLIPPYMAP_SAVETILES, String.valueOf(isSlippyMap_SaveTiles()))).booleanValue());
 
         setMinimumAgeInDays(Integer.parseInt(prop.getProperty(MINIMUM_AGE_IN_DAYS, String.valueOf(getMinimumAgeInDays()))));
 
@@ -486,5 +495,43 @@ public class AppConfiguration
     {
         _tileServer = tileServer;
         setProperty(prop, TILE_SERVER, _tileServer);
+    }
+
+    /**
+     * Getter for slippyMap_NoDownload
+     * @return the slippyMap_NoDownload
+     */
+    public boolean isSlippyMap_NoDownload()
+    {
+        return _slippyMap_NoDownload;
+    }
+
+    /**
+     * Setter for slippyMapNoDownload
+     * @param slippyMapNoDownload the slippyMap_NoDownload to set
+     */
+    public void setSlippyMap_NoDownload(boolean slippyMapNoDownload)
+    {
+        _slippyMap_NoDownload = slippyMapNoDownload;
+        setProperty(prop, SLIPPYMAP_NODOWNLOAD, "" + _slippyMap_NoDownload);
+    }
+
+    /**
+     * Getter for slippyMap_SaveTiles
+     * @return the slippyMap_SaveTiles
+     */
+    public boolean isSlippyMap_SaveTiles()
+    {
+        return _slippyMap_SaveTiles;
+    }
+
+    /**
+     * Setter for slippyMapSaveTiles
+     * @param slippyMapSaveTiles the slippyMap_SaveTiles to set
+     */
+    public void setSlippyMap_SaveTiles(boolean slippyMapSaveTiles)
+    {
+        _slippyMap_SaveTiles = slippyMapSaveTiles;
+        setProperty(prop, SLIPPYMAP_SAVETILES, "" + _slippyMap_SaveTiles);
     }
 }

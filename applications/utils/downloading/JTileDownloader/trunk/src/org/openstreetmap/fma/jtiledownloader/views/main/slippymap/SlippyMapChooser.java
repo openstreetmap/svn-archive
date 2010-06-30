@@ -1,7 +1,7 @@
 // This code has been adapted and copied from code that has been written by Immanuel Scholz and others for JOSM.
 // License: GPL. Copyright 2007 by Tim Haussmann
 
-// Adapted for JTileDownloader by Sven Strickroth <email@cs-ware.de>, 2009
+// Adapted for JTileDownloader by Sven Strickroth <email@cs-ware.de>, 2009 - 2010
 
 package org.openstreetmap.fma.jtiledownloader.views.main.slippymap;
 
@@ -17,11 +17,13 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
+import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
 import org.openstreetmap.fma.jtiledownloader.views.main.inputpanel.BBoxLatLonPanel;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
+import org.openstreetmap.gui.jmapviewer.JTileDownloaderTileLoader;
+import org.openstreetmap.gui.jmapviewer.JTileDownloaderTileSourceWrapper;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
-import org.openstreetmap.gui.jmapviewer.OsmFileCacheTileLoader;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.OsmTileSource;
@@ -42,8 +44,6 @@ public class SlippyMapChooser extends JMapViewer {
     Point iSelectionRectStart;
     Point iSelectionRectEnd;
 
-    private SourceButton iSourceButton = new SourceButton();
-
     // standard dimension
     private Dimension iDownloadDialogDimension;
     // screen size
@@ -51,18 +51,16 @@ public class SlippyMapChooser extends JMapViewer {
     
     private BBoxLatLonPanel bboxlatlonpanel;
 
-    private TileSource[] sources = { new OsmTileSource.Mapnik(), new OsmTileSource.TilesAtHome(),
-            new OsmTileSource.CycleMap() };
-    TileLoader cachedLoader;
+    JTileDownloaderTileLoader cachedLoader;
     TileLoader uncachedLoader;
     JPanel slipyyMapTabPanel;
 
     /**
      * Create the chooser component.
      */
-    public SlippyMapChooser(BBoxLatLonPanel bboxlatlonpanel) {
+    public SlippyMapChooser(BBoxLatLonPanel bboxlatlonpanel, String tileDirectory, TileProviderIf tileProvider) {
         super();
-        cachedLoader = new OsmFileCacheTileLoader(this);
+        cachedLoader = new JTileDownloaderTileLoader(this, tileDirectory);
         uncachedLoader = new OsmTileLoader(this);
         setZoomContolsVisible(true);
         setMapMarkerVisible(false);
@@ -73,16 +71,10 @@ public class SlippyMapChooser extends JMapViewer {
         setFileCacheEnabled(true);
         setMaxTilesInMemory(1000);
 
-        String mapStyle = "mapnik";
-        if (mapStyle.equals("osmarender")) {
-            iSourceButton.setMapStyle(SourceButton.OSMARENDER);
-            this.setTileSource(sources[1]);
-        } else if (mapStyle.equals("cyclemap")) {
-            iSourceButton.setMapStyle(SourceButton.CYCLEMAP);
-            this.setTileSource(sources[2]);
-        }
-        new OsmMapControl(this, slipyyMapTabPanel, iSourceButton);
-        this.bboxlatlonpanel=bboxlatlonpanel;
+        tileSource = new JTileDownloaderTileSourceWrapper(tileProvider);
+
+        new OsmMapControl(this, slipyyMapTabPanel);
+        this.bboxlatlonpanel = bboxlatlonpanel;
         boundingBoxChanged();
         bboxlatlonpanel.setChangeListener(this);
     }
@@ -129,8 +121,6 @@ public class SlippyMapChooser extends JMapViewer {
                 g.drawRect(x_min, y_min, w, h);
 
             }
-
-            iSourceButton.paint(g);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -237,15 +227,40 @@ public class SlippyMapChooser extends JMapViewer {
         repaint();
     }
 
-    public void toggleMapSource(int mapSource) {
+    private void clearCache()
+    {
         this.tileCache = new MemoryTileCache();
-        if (mapSource == SourceButton.MAPNIK) {
-            this.setTileSource(sources[0]);
-        } else if (mapSource == SourceButton.CYCLEMAP) {
-            this.setTileSource(sources[2]);
-        } else {
-            this.setTileSource(sources[1]);
-        }
     }
 
+    /**
+     * @param outputFolder
+     */
+    public void setDirectory(String outputFolder)
+    {
+        cachedLoader.setTileCacheDir(outputFolder);
+        clearCache();
+    }
+
+    /**
+     * @param selectedTileProvider
+     */
+    public void setTileProvider(TileProviderIf selectedTileProvider)
+    {
+        tileSource = new JTileDownloaderTileSourceWrapper(selectedTileProvider);
+        clearCache();
+    }
+
+    /**
+     * @param noDownload
+     */
+    public void setNoDownload(boolean noDownload)
+    {
+        cachedLoader.setNoDownload(noDownload);
+        clearCache();
+    }
+
+    public void setSaveTiles(boolean saveTiles)
+    {
+        cachedLoader.setSaveTiles(saveTiles);
+    }
 }

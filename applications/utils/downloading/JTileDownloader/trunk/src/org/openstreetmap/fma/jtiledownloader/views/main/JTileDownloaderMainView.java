@@ -156,6 +156,8 @@ public class JTileDownloaderMainView
         AppConfiguration.getInstance().setWaitAfterNrTiles(_optionsPanel.isWaitAfterNumberOfTiles());
         AppConfiguration.getInstance().setWaitSeconds(_optionsPanel.getWaitSeconds());
         AppConfiguration.getInstance().setWaitNrTiles(_optionsPanel.getWaitNrTiles());
+        AppConfiguration.getInstance().setSlippyMap_NoDownload(_optionsPanel.isSlippyMapNoDownload());
+        AppConfiguration.getInstance().setSlippyMap_SaveTiles(_optionsPanel.isSlippyMapSaveTiles());
         AppConfiguration.getInstance().saveToFile();
 
     }

@@ -13,11 +13,14 @@ from tah.tah_intern.Tileset import Tileset
 from tah.tah_intern.models import Layer
 
 
-def index(request):
-  layer =  request.GET.get("layer","tile")
-  z     =  int(request.GET.get("z",2))
-  x     =  int(request.GET.get("x",2))
-  y     =  int(request.GET.get("y",1))
+def index(request, layer, z, x, y):
+  if layer is None:
+    #coords have not been passed through URL so get them from query string
+    layer =  request.GET.get("layer","tile")
+    z     =  request.GET.get("z",2)
+    x     =  request.GET.get("x",2)
+    y     =  request.GET.get("y",1)  
+  z,x,y = int(z), int(x), int(y)
 
   t=Tile(layer,z,x,y)
   if not t.is_valid():

@@ -1,7 +1,0 @@
-graph_title Requests queue
-graph_vlabel Requests
-pending.label New requests 1
-new.label New requests 2
-active.label Being rendered
-done.label Complete
-

@@ -1,6 +1,0 @@
-AuthName "admin area of tiles at home"
-AuthUserFile /home/ojw/public_html/Tools/.htpasswd
-AuthType Basic
-<Files *>
-require valid-user
-</Files>

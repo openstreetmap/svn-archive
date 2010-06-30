@@ -31,7 +31,7 @@ public class SlippyMapChooserWindow
     {
         super("Slippy Map Chooser");
         setSize(400, 400);
-        map = new SlippyMapChooser(bboxlatlonpanel, tileProvider, tileDirectory);
+        map = new SlippyMapChooser(bboxlatlonpanel, tileDirectory, tileProvider);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         add(map, BorderLayout.CENTER);

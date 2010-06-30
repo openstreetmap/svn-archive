@@ -11,7 +11,7 @@
   <node id='84490810' lat='49.800679' lon='9.9343002' />
   <node id='105' lat='49.8007032479463' lon='9.934056678065797' />
   <node id='119865069' lat='49.8008264' lon='9.9339072'>
-    <tag k='highway' v='bus_stop' />
+    <tag k='amenity' v='hospital' />
     <tag k='name' v='Steig 4' />
   </node>
   <node id='84490813' lat='49.8008717' lon='9.9347466' />

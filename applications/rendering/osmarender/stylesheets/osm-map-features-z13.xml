@@ -1173,8 +1173,8 @@
 		</rule>
 		
 		<!-- Amenities -->
-		<rule e="node|way" k="amenity" v="hospital">
-			<symbol ref="hospital" transform="scale(0.5)" position="center"/>
+		<rule e="node|way" k="amenity" v="hospital"  horizontalProximity="0.0002" verticalProximity="0.0002">
+			<symbol ref="hospital" transform="scale(0.6)" position="center"/>
 		</rule>
 		
 		<!-- Airfields and airports -->

@@ -24,8 +24,9 @@ If not, see <http://www.gnu.org/licenses/>.
 
 -------------------------------------------------------------------------------
 
-Downloaded data (tiles) is based on
-http://www.openstreetmap.org
+Please always make sure that you agree and stick to the policies of the tile-providers before downloading!
+
+Downloaded data (tiles) based http://www.openstreetmap.org
 see http://wiki.openstreetmap.org/index.php/OpenStreetMap_License
 
 Plase take also a look at the 'Tile usage policy'

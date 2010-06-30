@@ -94,8 +94,10 @@ public class InfoPanel
         _textInfo.append("Project Homepage:\n");
         _textInfo.append("http://wiki.openstreetmap.org/index.php/JTileDownloader\n");
         _textInfo.append("----------------------------------------\n");
-
-        _textInfo.append("Downloaded data (tiles) is based on\nhttp://www.openstreetmap.org\n");
+        _textInfo.append("\n");
+        _textInfo.append("Please always make sure that you agree and stick to the policies of the tile-providers before downloading!");
+        _textInfo.append("\n");
+        _textInfo.append("Downloaded data (tiles) based http://www.openstreetmap.org");
         _textInfo.append("see http://wiki.openstreetmap.org/index.php/OpenStreetMap_License\n");
         _textInfo.append("\n");
         _textInfo.append("Plase take also a look at the 'Tile usage policy'\nhttp://wiki.openstreetmap.org/index.php/Tile_usage_policy\n");

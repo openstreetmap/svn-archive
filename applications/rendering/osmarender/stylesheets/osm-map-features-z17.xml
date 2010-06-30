@@ -3276,7 +3276,7 @@
 			<else>
 				<symbol ref="restaurant" position="center"/>
                                 <rule e="node|way" k="cuisine" v="vegetarian|vegan">
-                                  <circle r="0.3px" transform="translate(-0.8,-0.4)" fill="green"/>
+                                  <circle r="0.3px" transform="translate(-0.8,-0.4)" fill="#42FF29"/>
                        		</rule>         
 			</else>
 		</rule>

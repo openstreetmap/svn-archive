@@ -92,6 +92,7 @@ def pov_highway(f,highway):
     numpoints = len(points)
 
 # draw road
+    f.write("intersection { object { boundbox } ")
     f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+2))
     f.write("/* osm_id={0} */\n".format(highway[0]))
 
@@ -104,7 +105,10 @@ def pov_highway(f,highway):
            f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth*highwayparams[1],layerheight))
 
     #print highwayparams[0],highwayparams[1],streetwidth
-    f.write("""  tolerance 1
+    f.write("  tolerance 1")
+    f.write("  scale <1, 0.05, 1>")
+    f.write("  } ") #end of intersection
+    f.write("""
     texture {{
         pigment {{
             color rgb {0}
@@ -116,7 +120,6 @@ def pov_highway(f,highway):
             /*reflection 0.5*/
         }}
     }}
-    scale <1, 0.05, 1>
 }}
 \n""".format(highwayparams[0]))
 # draw casing

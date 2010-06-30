@@ -10,7 +10,8 @@ import math
 
 options = {'height': 100, 'dsn': 'dbname=gis', 'width': 100, 'prefix': 'planet_osm', 'quick': False, 'hq': False}
 #options['bbox']='9.94861 49.79293,9.96912 49.80629' # Europastern
-options['bbox']='9.92498 49.78816,9.93955 49.8002' # Innenstadt
+#options['bbox']='9.92498 49.78816,9.93955 49.8002' # Innenstadt
+options['bbox']='9.9630547 49.8471708,9.968461999999999 49.8504638' #Technopark
 #options['bbox']='12.13344 54.08574,12.14387 54.09182' # Rostock
 #options['bbox']='12.03344 53.98574,12.24387 54.19182' # Rostock-xx
 #options['bbox']='2.822157 41.983275,2.827371 41.987123' # Girona River

@@ -117,6 +117,28 @@ light_source {{
 }}
 \n""".format(avg(left,right),avg(bottom,top)))
 
+    left,bottom,right,top = scale_coords(left,bottom,right,top,1.1)
+    f.write("""
+#declare boundbox = box {{
+    <0, -1, 0>, <1, 1, 1>
+    scale <{sizex},50,{sizey}>
+    translate <{left},0,{bottom}>
+}}
+/* bounding box viz
+object {{ boundbox
+    texture {{
+        pigment {{
+            color rgb <1, 1, 0>
+        }}
+    }}
+    finish {{
+        specular 0.5
+        roughness 0.05
+        ambient 0.2
+        refraction 0.9
+    }}
+}} */
+""".format(left=left,bottom=bottom,right=right,top=top,sizex=right-left,sizey=top-bottom))
 
 def main(options):
     print "In main(). Options: ",options
@@ -158,7 +180,7 @@ def main(options):
     f.close()
     
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
-    result = commands.getstatusoutput('povray -Iscene-osray.pov -UV '+image_dimension_parameters+' +Q9 +A')
+    result = commands.getstatusoutput('povray -Iscene-osray.pov +UV '+image_dimension_parameters+' +Q9 +A')
     print result[1]
     osraydb.shutdown()
 

@@ -11,15 +11,15 @@ import re
 def avg(a,b): return (a+b)/2.0
 def swap(tuple): return (tuple[1],tuple[0])
 
-def scale_bbox(self,old_bbox,scale):
-    old_bbox = old_bbox.replace(' ',',')
-    print "old_bbox ",old_bbox
-    pointlist = map(lambda coord: float(coord), old_bbox.split(','))
-    print "pointlist ",pointlist
-    xmin = pointlist[0]
-    ymin = pointlist[1]
-    xmax = pointlist[2]
-    ymax = pointlist[3]
+def bbox_string(xmin,ymin,xmax,ymax):
+    return str(xmin)+" "+str(ymin)+","+str(xmax)+" "+str(ymax)
+
+def coords_from_bbox(bbox):
+    bbox = bbox.replace(' ',',')
+    coordslist = map(lambda coord: float(coord), old_bbox.split(','))
+    return tuple(coordslist)
+
+def scale_coords(xmin,ymin,xmax,ymax,scale):
     xmid = avg(xmin,xmax)
     ymid = avg(ymin,ymax)
     xradius = xmid-xmin
@@ -30,7 +30,12 @@ def scale_bbox(self,old_bbox,scale):
     xmax = xmid+xradius
     ymin = ymid-yradius
     ymax = ymid+yradius
-    return str(xmin)+" "+str(ymin)+","+str(xmax)+" "+str(ymax)
+    return (xmin,ymin,xmax,ymax)
+
+def scale_bbox(bbox,scale):
+    xmin,ymin,xmax,ymax = coords_from_bbox(bbox)
+    xmin,ymin,xmax,ymax = scale_coords(xmin,ymin,xmax,ymax,scale)
+    return bbox_string(xmin,ymin,xmax,ymax)
 
 def num2deg(xtile, ytile, zoom):
     n = 2.0 ** zoom

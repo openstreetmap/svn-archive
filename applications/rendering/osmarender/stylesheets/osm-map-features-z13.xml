@@ -1169,7 +1169,7 @@
 		</rule>
 		<!-- Tram stops -->
 		<rule e="node" k="railway" v="tram_stop">
-			<circle r="4" class="railway-halt"/>
+			<circle r="2" class="railway-halt"/>
 		</rule>
 		
 		<!-- Airfields and airports -->

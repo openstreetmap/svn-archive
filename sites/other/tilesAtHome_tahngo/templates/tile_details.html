@@ -26,7 +26,7 @@
       <input type="submit" value="rerender"/> of this tileset.
     </form>{%endifequal%}
   </td>
-  <td align="center"><a href="{% url tah.browse.views.index %}?layer={{tile.layer}}&z={{tile.z}}&x={{tile.x}}&y={{tile.y}}"><img src="http://tah.openstreetmap.org/Tiles/{{tile.layer}}/{{tile.z}}/{{tile.x}}/{{tile.y}}.png" width="256" height="256" class="browseimg"/></a><br/>Click image for map</td>
+  <td align="center"><a href="{% url tah.browse.views.index %}{{tile.layer}}/{{tile.z}}/{{tile.x}}/{{tile.y}}"><img src="http://tah.openstreetmap.org/Tiles/{{tile.layer}}/{{tile.z}}/{{tile.x}}/{{tile.y}}.png" width="256" height="256" class="browseimg"/></a><br/>Click image for map</td>
 </tr>
 </table>
 {% endblock %}

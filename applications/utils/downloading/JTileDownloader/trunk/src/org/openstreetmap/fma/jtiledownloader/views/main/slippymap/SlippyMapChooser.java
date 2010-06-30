@@ -26,10 +26,8 @@ import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
-import org.openstreetmap.gui.jmapviewer.OsmTileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  * JComponent that displays the slippy map tiles
@@ -37,8 +35,9 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  * @author Tim Haussmann
  * 
  */
-public class SlippyMapChooser extends JMapViewer {
-
+public class SlippyMapChooser
+    extends JMapViewer
+{
     // upper left and lower right corners of the selection rectangle (x/y on
     // ZOOM_MAX)
     Point iSelectionRectStart;
@@ -48,7 +47,7 @@ public class SlippyMapChooser extends JMapViewer {
     private Dimension iDownloadDialogDimension;
     // screen size
     private Dimension iScreenSize;
-    
+
     private BBoxLatLonPanel bboxlatlonpanel;
 
     JTileDownloaderTileLoader cachedLoader;
@@ -58,7 +57,8 @@ public class SlippyMapChooser extends JMapViewer {
     /**
      * Create the chooser component.
      */
-    public SlippyMapChooser(BBoxLatLonPanel bboxlatlonpanel, String tileDirectory, TileProviderIf tileProvider) {
+    public SlippyMapChooser(BBoxLatLonPanel bboxlatlonpanel, String tileDirectory, TileProviderIf tileProvider)
+    {
         super();
         cachedLoader = new JTileDownloaderTileLoader(this, tileDirectory);
         uncachedLoader = new OsmTileLoader(this);
@@ -79,18 +79,21 @@ public class SlippyMapChooser extends JMapViewer {
         bboxlatlonpanel.setChangeListener(this);
     }
 
-    public void setMaxTilesInMemory(int tiles) {
+    public void setMaxTilesInMemory(int tiles)
+    {
         ((MemoryTileCache) getTileCache()).setCacheSize(tiles);
     }
 
-    public void setFileCacheEnabled(boolean enabled) {
+    public void setFileCacheEnabled(boolean enabled)
+    {
         if (enabled)
             setTileLoader(cachedLoader);
         else
             setTileLoader(uncachedLoader);
     }
 
-    protected Point getTopLeftCoordinates() {
+    protected Point getTopLeftCoordinates()
+    {
         return new Point(center.x - (getWidth() / 2), center.y - (getHeight() / 2));
     }
 
@@ -98,12 +101,15 @@ public class SlippyMapChooser extends JMapViewer {
      * Draw the map.
      */
     @Override
-    public void paint(Graphics g) {
-        try {
+    public void paint(Graphics g)
+    {
+        try
+        {
             super.paint(g);
 
             // draw selection rectangle
-            if (iSelectionRectStart != null && iSelectionRectEnd != null) {
+            if (iSelectionRectStart != null && iSelectionRectEnd != null)
+            {
 
                 int zoomDiff = MAX_ZOOM - zoom;
                 Point tlc = getTopLeftCoordinates();
@@ -121,12 +127,15 @@ public class SlippyMapChooser extends JMapViewer {
                 g.drawRect(x_min, y_min, w, h);
 
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
-    public void boundingBoxChanged() {
+    public void boundingBoxChanged()
+    {
 
         // test if a bounding box has been set set
         if (bboxlatlonpanel.getMinLat() == 0.0 && bboxlatlonpanel.getMinLon() == 0.0 && bboxlatlonpanel.getMaxLat() == 0.0 && bboxlatlonpanel.getMaxLon() == 0.0)
@@ -159,7 +168,8 @@ public class SlippyMapChooser extends JMapViewer {
      * @param aStart
      * @param aEnd
      */
-    public void setSelection(Point aStart, Point aEnd) {
+    public void setSelection(Point aStart, Point aEnd)
+    {
         if (aStart == null || aEnd == null)
             return;
         Point p_max = new Point(Math.max(aEnd.x, aStart.x), Math.max(aEnd.y, aStart.y));
@@ -180,7 +190,7 @@ public class SlippyMapChooser extends JMapViewer {
 
         Point2D.Double l1 = getPosition(p_max);
         Point2D.Double l2 = getPosition(p_min);
-        
+
         bboxlatlonpanel.setCoordinates(Math.min(l2.x, l1.x), Math.min(l1.y, l2.y), Math.max(l2.x, l1.x), Math.max(l1.y, l2.y));
 
         repaint();
@@ -190,10 +200,11 @@ public class SlippyMapChooser extends JMapViewer {
      * Performs resizing of the DownloadDialog in order to enlarge or shrink the
      * map.
      */
-    public void resizeSlippyMap() {
-        if (iScreenSize == null) {
-            Component c = this.getParent().getParent().getParent().getParent().getParent().getParent().getParent()
-                    .getParent().getParent();
+    public void resizeSlippyMap()
+    {
+        if (iScreenSize == null)
+        {
+            Component c = this.getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent();
             // remember the initial set screen dimensions
             iDownloadDialogDimension = c.getSize();
             // retrive the size of the display
@@ -201,12 +212,12 @@ public class SlippyMapChooser extends JMapViewer {
         }
 
         // resize
-        Component co = this.getParent().getParent().getParent().getParent().getParent().getParent().getParent()
-                .getParent().getParent();
+        Component co = this.getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent().getParent();
         Dimension currentDimension = co.getSize();
 
         // enlarge
-        if (currentDimension.equals(iDownloadDialogDimension)) {
+        if (currentDimension.equals(iDownloadDialogDimension))
+        {
             // make the each dimension 90% of the absolute display size and
             // center the DownloadDialog
             int w = iScreenSize.width * 90 / 100;
@@ -215,7 +226,8 @@ public class SlippyMapChooser extends JMapViewer {
 
         }
         // shrink
-        else {
+        else
+        {
             // set the size back to the initial dimensions and center the
             // DownloadDialog
             int w = iDownloadDialogDimension.width;

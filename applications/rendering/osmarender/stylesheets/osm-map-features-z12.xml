@@ -1609,8 +1609,8 @@
 			.town-caption           { font-size: 50px; font-weight: normal;}
 			
 			
-			.largefeature-caption-casing        { stroke-width: 25px; font-size: 50px; }
-			.largefeature-caption-core          { fill: #4040ff;      font-size: 50px; }
+			.largefeature-caption-casing        { stroke-width: 5px; font-size: 30px; }
+			.largefeature-caption-core          { fill: #4040ff;     font-size: 30px; }
 			
 			/* Natural */
                         .natural.water, .coastline {

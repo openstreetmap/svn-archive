@@ -4121,12 +4121,10 @@
 		<rule e="way" k="sport" v="*" layer="5">
 			<!-- Offset captions for areas with icons -->
 			<rule e="way" k="sport" v="archery|athletics|baseball|basketball|bowls|cricket|curling|diving|equestrian|football|australian_football|american_football|gymnastics|handball|scuba_diving|shooting|soccer|swimming|tennis" layer="5">
-				<caption k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
-				<caption k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
+				<caption k="name" class="caption-core sport-caption-core" text-anchor="middle" startOffset="50%" dy="3.4px" layer="5"/>
 			</rule>
 			<else>
-				<caption k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" layer="5"/>
-				<caption k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
+				<caption k="name" class="caption-core sport-caption-core" text-anchor="middle" startOffset="50%" layer="5"/>
 			</else>
 		</rule>
 		<rule e="way" k="landuse|military" v="*" layer="5">
@@ -5777,6 +5775,8 @@
 
 			.amenity-theatre-caption-casing      { stroke-width: .3px;   font-size: 1px; }
 			.amenity-theatre-caption-core        { fill: #ff00ff;        font-size: 1px; }
+
+			.sport-caption-core { font-weight: bold; fill: #590904; font-size: 1.3px; }
 
 			.generic-caption-casing              { stroke-width: .18px;  font-size: 1px; }
 			.generic-caption-core                { fill: #4040ff;        font-size: 1px; }

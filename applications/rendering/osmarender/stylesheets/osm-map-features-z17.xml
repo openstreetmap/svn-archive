@@ -3500,7 +3500,7 @@
 		<rule e="node" k="sport" v="gymnastics">
 			<symbol ref="gymnastics" position="center"/>
 		</rule>
-		<rule e="node" k="sport" v="football">
+		<rule e="node" k="sport" v="football|australian_football|american_football">
 			<symbol ref="football" position="center"/>
 		</rule>
 		<rule e="node" k="sport" v="handball">
@@ -3547,7 +3547,7 @@
 		<rule e="way" k="sport" v="equestrian">
 			<symbol ref="equestrian-borderless" position="center"/>
 		</rule>
-		<rule e="way" k="sport" v="football">
+		<rule e="way" k="sport" v="football|australian_football|american_football">
 			<symbol ref="football-borderless" position="center"/>
 		</rule>
 		<rule e="way" k="sport" v="gymnastics">
@@ -4120,7 +4120,7 @@
 		</rule>
 		<rule e="way" k="sport" v="*" layer="5">
 			<!-- Offset captions for areas with icons -->
-			<rule e="way" k="sport" v="archery|athletics|baseball|basketball|bowls|cricket|curling|diving|equestrian|football|gymnastics|handball|scuba_diving|shooting|soccer|swimming|tennis" layer="5">
+			<rule e="way" k="sport" v="archery|athletics|baseball|basketball|bowls|cricket|curling|diving|equestrian|football|australian_football|american_football|gymnastics|handball|scuba_diving|shooting|soccer|swimming|tennis" layer="5">
 				<caption k="name" class="caption-casing generic-caption-casing" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
 				<caption k="name" class="caption-core generic-caption-core" text-anchor="middle" startOffset="50%" dy="3.5px" layer="5"/>
 			</rule>

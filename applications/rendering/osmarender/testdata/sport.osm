@@ -116,7 +116,7 @@
   <node id='-449' action='modify' visible='true' lat='0.010248330188916237' lon='0.01874476609555232' />
   <node id='-448' action='modify' visible='true' lat='0.010232547360388774' lon='0.02144626028901709' />
   <node id='-447' action='modify' visible='true' lat='0.01374683031854201' lon='0.0092013887842212'>
-    <tag k='name' v='austrilian_football' />
+    <tag k='name' v='australian_football' />
     <tag k='sport' v='australian_football' />
   </node>
   <node id='-446' action='modify' visible='true' lat='0.013783656917960045' lon='0.0065867001490663955'>
@@ -424,7 +424,7 @@
     <nd ref='-432' />
     <nd ref='-443' />
     <nd ref='-445' />
-    <tag k='name' v='austrilian_football' />
+    <tag k='name' v='australian_football' />
     <tag k='sport' v='australian_football' />
   </way>
   <way id='-476' action='modify' visible='true'>

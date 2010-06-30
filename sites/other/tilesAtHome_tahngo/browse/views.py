@@ -24,7 +24,7 @@ def index(request, layer, z, x, y):
 
   t=Tile(layer,z,x,y)
   if not t.is_valid():
-    return render_to_response('base_errormessage.html',{'header': 'Browse map','reason':'The tile coordinates were invalid. Please check zoom, x, and y values.'})
+    return render_to_response('base_errormessage.html',{'heading': 'Invalid map coordinates','reason':'The tile coordinates (%d,%d,%d) are invalid for layer '%s'.<br/>Please check zoom, x, and y values.' % (z,x,y,layer) })
   (layer, base_z,base_x,base_y) = t.basetileset()
   RequestForm = CreateForm({'min_z': base_z, 'x': base_x, 'y': base_y, 'priority': 1, 'src': 'browse map request'})
 

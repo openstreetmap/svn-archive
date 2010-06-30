@@ -2985,8 +2985,8 @@
 			
 			/* Ferry */
 			.route-ferry {
-			stroke-width: 1.5px;
-			stroke-dasharray: 6,4;
+			stroke-width: 1px;
+			stroke-dasharray: 4,3;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #707070;

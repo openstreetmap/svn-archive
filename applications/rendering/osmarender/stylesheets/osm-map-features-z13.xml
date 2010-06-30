@@ -1172,11 +1172,6 @@
 			<circle r="4" class="railway-halt"/>
 		</rule>
 		
-		<!-- Amenities -->
-		<rule e="node|way" k="amenity" v="hospital"  horizontalProximity="0.0002" verticalProximity="0.0002">
-			<symbol ref="hospital" transform="scale(0.6)" position="center"/>
-		</rule>
-		
 		<!-- Airfields and airports -->
 		<rule e="node|way" k="aeroway" v="aerodrome">
 			<symbol ref="airport" position="center"/>

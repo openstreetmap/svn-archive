@@ -96,7 +96,7 @@
             }
             
             .boundary-level-1-core {
-            stroke-width: 1500px;
+            stroke-width: 180px;
             stroke: #f9574b;
             stroke-dasharray: 300, 100, 100, 100;
             }

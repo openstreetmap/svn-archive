@@ -138,7 +138,7 @@ sub getImageList
 
 	my %ImageList;
 
-	open(WIKIGROUP, "<$CacheFolder/wiki_desc/group_list.txt") || die("Could not find group_list for all keys.");
+	open(WIKIGROUP, "<:utf8", "$CacheFolder/wiki_desc/group_list.txt") || die("Could not find group_list for all keys.");
 
 	# go through the conmplete group list to get the Key/Tag informations
 	while(my $GroupLine = <WIKIGROUP>)
@@ -150,7 +150,7 @@ sub getImageList
 		{
 			my $Key = $1;
 			
-			open(WIKIKEY, "<$CacheFolder/wiki_desc/Key:$Key.txt") || next;
+			open(WIKIKEY, "<:utf8", "$CacheFolder/wiki_desc/Key:$Key.txt") || next;
 
 			# parse all Key informations
 			while(my $KeyLine = <WIKIKEY>)
@@ -170,7 +170,7 @@ sub getImageList
 				{
 					my $TagValue = $1;
 	
-					open(WIKITAG, "<$CacheFolder/wiki_desc/Tag:$Key=$TagValue.txt") || next;
+					open(WIKITAG, "<:utf8", "$CacheFolder/wiki_desc/Tag:$Key=$TagValue.txt") || next;
 
 					# parse all tag informations
 					while(my $TagLine = <WIKITAG>)

@@ -163,23 +163,33 @@ sub processOSMFiles
 								}
 								$count += $n;
 							}
+							foreach my $n (keys %{$Usage{$Key}})
+							{
+								foreach my $tt (keys %{$Usage{$Key}->{$n}})
+								{
+									$Usage{$Key}->{'*'}->{$tt} += $Usage{$Key}->{$n}->{$tt};
+								}
+								delete $Usage{$Key}->{$n};
+							}
 							$IgnoredValues{$Key} = $Values{$Key};
 							$Values{$Key} = {"*" => $count };
 							$Value = "*";
 							print "\tAutoIgnoring key $Key - reached $IgnoreCount entries\n";
 						}
-						elsif($num) # only check when not yet checked
+						elsif(!$num) # only check when not yet checked
 						{
 							foreach my $regex(@IgnoreValues)   # Values that will be ignored (grouped with "*")
 							{
 								if($Key =~ m{$regex})
 								{
 									$Value = "*";
+									print "\tIgnoring key $Key - due to settings\n";
 									last;
 								}
 							}
 						}
-						$IgnoredValues{$Key}{$OrigValue}++ if($Value eq "*" && exists($IgnoredValues{$Key}{$OrigValue}));
+						$IgnoredValues{$Key}{$OrigValue}++ if($Value eq "*" && exists($IgnoredValues{$Key})
+						&& exists($IgnoredValues{$Key}{$OrigValue}));
 						push(@TempCombi,"$Key=$Value");
 
 						$Tags{$Key}++;
@@ -286,7 +296,7 @@ sub processOSMFiles
 			
 			if(($WatchedKeys{$Key} eq 1) || ($Config{'full_key_details'} eq "yes"))
 			{
-				open(COMBI, ">","$OutputDir/combi_$c1.txt");
+				open(COMBI, ">:utf8","$OutputDir/combi_$c1.txt");
 		
 				foreach my $TagName(sort {$Combinations{$c1}->{$b} <=> $Combinations{$c1}->{$b}} keys(%{$Combinations{$c1}}))
 				{
@@ -302,7 +312,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		foreach my $ign (keys %IgnoredValues)
 		{
-			open(IGN, ">","$OutputDir/ignored_$ign.txt");
+			open(IGN, ">:utf8","$OutputDir/ignored_$ign.txt");
 
 			foreach my $Val (sort keys (%{$IgnoredValues{$ign}}))
 			{
@@ -315,13 +325,13 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down all tag pages
 		#+++++++++++++++++++++++++++++++++++
-		open(OUT, ">","$OutputDir/tags.txt");
+		open(OUT, ">:utf8","$OutputDir/tags.txt");
 		foreach my $Tag(keys %Tags)
 		{
 			printf OUT "%d %s\n", $Tags{$Tag}, $Tag;
 			$Stats{"keys"}++;
 		
-			open(TAG, ">","$OutputDir/tag_$Tag.txt");
+			open(TAG, ">:utf8","$OutputDir/tag_$Tag.txt");
 		
 			foreach my $Value(sort {$Values{$b} <=> $Values{$a}} keys(%{$Values{$Tag}}))
 			{
@@ -336,7 +346,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down relation pages
 		#+++++++++++++++++++++++++++++++++++
-		open(OUT, ">","$OutputDir/relations.txt");
+		open(OUT, ">:utf8","$OutputDir/relations.txt");
 		foreach my $Relationtype(keys (%Relations))
 		{
 			# uhm yeah badly hacked but the keys function does not what i expected -.-
@@ -344,7 +354,7 @@ sub processOSMFiles
 			printf OUT "%d %s\n", $Relations{$Relationtype}->{'count'}, $Relationtype;
 			$Stats{"relation"}++;
 		
-			open(RELATION, ">","$OutputDir/relation_$Relationtype.txt");
+			open(RELATION, ">:utf8","$OutputDir/relation_$Relationtype.txt");
 
 			foreach my $Member(sort {$Values{$b} <=> $Values{$a}} keys(%{$Relations{$Relationtype}->{'members'}}))
 			{
@@ -362,7 +372,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down key usage list
 		#+++++++++++++++++++++++++++++++++++
-		open(KEYUSAGE, ">","$OutputDir/keylist.txt");
+		open(KEYUSAGE, ">:utf8","$OutputDir/keylist.txt");
 
 		foreach my $KeyName(sort {$Keys{$b} <=> $Keys{$a}} keys %Keys) 
 		{
@@ -373,7 +383,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down the user statistics page
 		#+++++++++++++++++++++++++++++++++++
-		open(USER, ">","$OutputDir/user.txt");
+		open(USER, ">:utf8","$OutputDir/user.txt");
 
 		foreach my $Name(sort {$User{$b} <=> $User{$a}} keys %User) 
 		{
@@ -385,7 +395,7 @@ sub processOSMFiles
 		#+++++++++++++++++++++++++++++++++++
 		# Write down the general statistic page
 		#+++++++++++++++++++++++++++++++++++		
-		open(STATS, ">","$OutputDir/stats.txt");
+		open(STATS, ">:utf8","$OutputDir/stats.txt");
 
 			printf STATS "%d user\n",	$Stats{"user"};
 			printf STATS "%d keys\n",	$Stats{"keys"};	
@@ -408,7 +418,7 @@ sub buildCombiPageList
 	my %WatchedKeys = getWatchedKeys("$CacheFolder/wiki_settings");
 
 	# read in all keys that have a description on the wiki
-	open(KEYLIST, "<","$CacheFolder/wiki_desc/key_list.txt") || return "";
+	open(KEYLIST, "<:utf8","$CacheFolder/wiki_desc/key_list.txt") || return "";
 	
 	while(my $Line = <KEYLIST>)
 	{
@@ -427,7 +437,7 @@ sub getOsmFileList
 	my ($FileFolder) = @_;
 	my @FileList;
 
-	open(FILELIST, "<","$FileFolder/filelist.txt") || die("missing flilelist :: don't know what osm fiels should be used.");
+	open(FILELIST, "<:utf8","$FileFolder/filelist.txt") || die("missing flilelist :: don't know what osm fiels should be used.");
 
 	while(my $Line = <FILELIST>)
 	{

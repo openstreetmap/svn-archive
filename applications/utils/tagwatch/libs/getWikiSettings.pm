@@ -57,7 +57,7 @@ sub parseIgnoredTags
 {
 	my ($CacheDir) = @_;
 
-	open(IGNORETAGLIST,  ">$CacheDir/ignored_tags.txt");
+	open(IGNORETAGLIST,  ">:utf8", "$CacheDir/ignored_tags.txt");
 
 	foreach my $Line(split(/\n/, $c->get_page({ title => "Tagwatch/Ignore"})->{'*'}))
 	{
@@ -76,7 +76,7 @@ sub parseIgnoredValues
 {
 	my ($CacheDir) = @_;
 
-	open(LIST,  ">$CacheDir/ignored_values.txt");
+	open(LIST,  ">:utf8", "$CacheDir/ignored_values.txt");
 
 	foreach my $Line(split(/\n/, $c->get_page({title => "Tagwatch/Volatile"})->{'*'}))
 	{
@@ -96,7 +96,7 @@ sub parseWatchlist
 {
 	my ($CacheDir) = @_;
 
-	open(WATCHLIST,  ">$CacheDir/watchlist.txt");
+	open(WATCHLIST, ">:utf8", "$CacheDir/watchlist.txt");
 
 	foreach my $Line(split(/\n/, $c->get_page({title => "Tagwatch/Watchlist"})->{'*'}))
 	{
@@ -117,7 +117,7 @@ sub parseInterface
 {
 	my ($CacheDir) = @_;
 
-	open(INTERFACE,  ">$CacheDir/interface.txt");
+	open(INTERFACE, ">:utf8", "$CacheDir/interface.txt");
 
 	foreach my $Language (@Languages)
 	{
@@ -140,7 +140,7 @@ sub getIgnoredTags
 	my ($CacheDir) = @_;
 	my %Ignore;
 
-	open(IGNORELIST,  "<$CacheDir/ignored_tags.txt");
+	open(IGNORELIST, "<:utf8", "$CacheDir/ignored_tags.txt");
 
 	while(my $Line = <IGNORELIST>)
 	{
@@ -160,7 +160,7 @@ sub getIgnoredValues
 	my ($CacheDir) = @_;
 	my @Ignore;
 
-	open(IGNORELIST,  "<$CacheDir/ignored_values.txt");
+	open(IGNORELIST, "<:utf8", "$CacheDir/ignored_values.txt");
 
 	while(my $Line = <IGNORELIST>)
 	{
@@ -180,7 +180,7 @@ sub getWatchedKeys
 	my ($CacheDir) = @_;
 	my %WatchedKeys;
 
-	open(WATCHLIST,  "<$CacheDir/watchlist.txt");
+	open(WATCHLIST, "<:utf8", "$CacheDir/watchlist.txt");
 
 	while(my $Line = <WATCHLIST>)
 	{
@@ -202,7 +202,7 @@ sub getInterfaceTranslations
 	my @Languages = split(/,/, $Config{'languages'});
 	my %Interface;
 
-	open(INTERFACE,  "<$Config{'cache_folder'}/wiki_settings/interface.txt");
+	open(INTERFACE, "<:utf8", "$Config{'cache_folder'}/wiki_settings/interface.txt");
 
 	# read in all cached interface translations
 	while(my $Line = <INTERFACE>)

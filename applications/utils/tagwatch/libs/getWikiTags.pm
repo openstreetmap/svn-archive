@@ -543,7 +543,7 @@ sub groupCleanup
 #--------------------------------------------------------------------------
 sub parseRelationCategory
 {
-	# First check the Relation category for availible languages
+	# First check the Relation category for available languages
 	my($RelationArticles, $RelationSubcats) = $c->readcat("Relations");
 
 	# run through all subcategories
@@ -652,16 +652,16 @@ sub writeData
 {
 	my($CacheDir) = @_;
 
-	open(GROUPLIST,  ">$CacheDir/group_list.txt");
-	open(KEYLIST, ">$CacheDir/key_list.txt");
-	open(GROUPEDKEYS, ">$CacheDir/grouped_keys.txt");
+	open(GROUPLIST, ">:utf8", "$CacheDir/group_list.txt");
+	open(KEYLIST, ">:utf8", "$CacheDir/key_list.txt");
+	open(GROUPEDKEYS, ">:utf8", "$CacheDir/grouped_keys.txt");
 
 	# go through all availible groups
 	foreach my $Group(keys(%KeyByGroup))
 	{
 		printf GROUPLIST "* $Group\n";
 
-		open(GROUP, ">$CacheDir/Group:$Group.txt");
+		open(GROUP, ">:utf8", "$CacheDir/Group:$Group.txt");
 		
 		# go through all keys availible in this group
 		foreach my $KeyName(@{$KeyByGroup{$Group}})
@@ -669,7 +669,7 @@ sub writeData
 			printf GROUPLIST "** $KeyName\n";
 			printf KEYLIST "$KeyName\n";
 
-			open(KEYDESC, ">$CacheDir/Key:$KeyName.txt");
+			open(KEYDESC, ">:utf8", "$CacheDir/Key:$KeyName.txt");
 
 			# print general informations
 			printf KEYDESC "group=%s\n", $KeyDescriptions{$KeyName}->{'group'};
@@ -721,7 +721,7 @@ sub writeData
 				}
 
 				# write down this tag values
-				open(TAG, ">$CacheDir/Tag:$KeyName=$ValueName.txt");
+				open(TAG, ">:utf8", "$CacheDir/Tag:$KeyName=$ValueName.txt");
 	
 				if(exists $TagDescriptions{$KeyName}->{$ValueName}->{'image'})
 				{
@@ -768,14 +768,14 @@ sub writeData
 	close KEYLIST;
 	close GROUPEDKEYS;
 
-	open(RELATIONLIST,  ">$CacheDir/relation_list.txt");
+	open(RELATIONLIST, ">:utf8", "$CacheDir/relation_list.txt");
 
 	# go through all relations availible in the wiki
 	foreach my $RelationName(keys(%RelationDescriptions))
 	{
 		printf RELATIONLIST "$RelationName\n";
 
-		open(RELATION,  ">$CacheDir/Relation:$RelationName.txt");
+		open(RELATION, ">:utf8", "$CacheDir/Relation:$RelationName.txt");
 		
 		printf RELATION "group=$RelationDescriptions{$RelationName}->{'group'}\n";
 		printf RELATION "type=$RelationDescriptions{$RelationName}->{'type'}\n";

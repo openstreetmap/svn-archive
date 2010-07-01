@@ -38,7 +38,7 @@ sub renderExamples
 	#CreateSample("amenity","parking"); die; # testing
 
 	# Loop through the list of image requests, rendering each one
-	open(REQUESTS, "<$Config{'main_folder'}/sample_requests.txt") || die("Must have a sample_requests.txt file as input");
+	open(REQUESTS, "<:utf8", "$Config{'main_folder'}/sample_requests.txt") || die("Must have a sample_requests.txt file as input");
 	while(my $Line = <REQUESTS>)
 	{
 		if($Line =~ m{^(\w+)\s*=\s*(.*?)\s*$})
@@ -62,7 +62,7 @@ sub CreateSample
 	$Data =~ s{\[tag\]}{$Key}g;
 	$Data =~ s{\[value\]}{$Value}g;
 
-	open(OUT, ">$OSMRDir/data.osm");
+	open(OUT, ">:utf8", "$OSMRDir/data.osm");
 	print OUT $Data;
 	close OUT;
 
@@ -98,7 +98,7 @@ sub getDataSample
 {
 	my($osm_example) = @_;
 
-	open(IN, "<$osm_example") || die;  
+	open(IN, "<:utf8", $osm_example) || die;
 	my $Sample;
 	while(my $Line = <IN>)
 	{

@@ -161,7 +161,7 @@ sub constructHTML
 
 	#generate sample output request file
 	print "\tgenerate sample_request.txt.\n";
-	open(SAMPLE_REQUESTS, ">","$Config{'main_folder'}/sample_requests.txt");
+	open(SAMPLE_REQUESTS, ">:utf8","$Config{'main_folder'}/sample_requests.txt");
 	
 	foreach my $request(keys %SampleRequest)
 	{
@@ -187,7 +187,7 @@ sub buildCountryIndex
 	$template->param(countrycount => $CountryCount);
 	$template->param(toplistfile  => $Config{indexname_toplist});
 
-	open(TOP, ">","$Config{'output_folder'}/$Config{'indexname_countries'}");
+	open(TOP, ">:utf8","$Config{'output_folder'}/$Config{'indexname_countries'}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -389,7 +389,7 @@ sub buildCountryTopList
 	$template->param(interlang_countrytoplist  => sprintf($Interface{'countrytoplist'}->{$Language}, $Country, $Date));
 	$template->param(interlang_upmain      => $Interface{'upmain'}->{$Language});
 
-	open(TOP, ">","$Config{'output_folder'}/$Config{indexname_toplist}");
+	open(TOP, ">:utf8","$Config{'output_folder'}/$Config{indexname_toplist}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -492,7 +492,7 @@ sub buildAllKeyList
 	$template->param(interlang_examplevalues => $Interface{'examplevalues'}->{$Language});
 	$template->param(interlang_allkeys       => sprintf($Interface{'allkeys'}->{$Language},$Statistics{$Country}->{'used_unique_keys'} ,$Country));
 	
-	open(OUT, ">","$curOutputDir/tags$Config{html_file_extension}");
+	open(OUT, ">:utf8","$curOutputDir/tags$Config{html_file_extension}");
 	print OUT $template->output;
   	close OUT;
 }
@@ -545,7 +545,7 @@ sub buildAutoIgnoredList
 	$template->param(interlang_examplevalues => $Interface{'ignorecount'}->{$Language});
 	$template->param(interlang_allkeys       => sprintf($Interface{'ignorelist'}->{$Language},$Key,$Config{max_volatile_count}));
 	
-	open(OUT, ">","$curOutputDir/ignored_".name_encode($Key)."$Config{html_file_extension}");
+	open(OUT, ">:utf8","$curOutputDir/ignored_".name_encode($Key)."$Config{html_file_extension}");
 	print OUT $template->output;
 	close OUT;
 	return 1;
@@ -604,7 +604,7 @@ sub buildTopUndocumentedKeys
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_keys'}->{$Language}, $Config{'undocumented_list'}));
 
-	open(TOP, ">","$curOutputDir/top_undocumented_keys$Config{html_file_extension}");
+	open(TOP, ">:utf8","$curOutputDir/top_undocumented_keys$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -661,7 +661,7 @@ sub buildTopUndocumentedTags
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_tags'}->{$Language},$Config{'undocumented_list'}));
 	
-	open(TOP, ">","$curOutputDir/top_undocumented_tags$Config{html_file_extension}");
+	open(TOP, ">:utf8","$curOutputDir/top_undocumented_tags$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -717,7 +717,7 @@ sub buildTopUndocumentedRelations
 	$template->param(interlang_usage           => $Interface{'usage'}->{$Language});
 	$template->param(interlang_topundocumented => sprintf($Interface{'topundocumented_relations'}->{$Language},$Config{'undocumented_list'}));
 	
-	open(TOP, ">","$curOutputDir/top_undocumented_relations$Config{html_file_extension}");
+	open(TOP, ">:utf8","$curOutputDir/top_undocumented_relations$Config{html_file_extension}");
 	print TOP $template->output;
   	close TOP;
 }
@@ -822,7 +822,7 @@ sub buildIndexWatchlist
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 
-	open(INDEXWL, ">","$curOutputDir/watchlist$Config{html_file_extension}"); 
+	open(INDEXWL, ">:utf8","$curOutputDir/watchlist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -938,7 +938,7 @@ sub buildIndexGroupList
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 	
-	open(INDEXWL, ">","$curOutputDir/grouplist$Config{html_file_extension}"); 
+	open(INDEXWL, ">:utf8","$curOutputDir/grouplist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -1073,7 +1073,7 @@ sub buildIndexRelationList
 	$template->param(interlang_usage       => $Interface{'usage'}->{$Language});
 	$template->param(interlang_details     => $Interface{'details'}->{$Language});
 
-	open(INDEXWL, ">","$curOutputDir/relationslist$Config{html_file_extension}"); 
+	open(INDEXWL, ">:utf8","$curOutputDir/relationslist$Config{html_file_extension}"); 
 	print INDEXWL $template->output;
 	close INDEXWL;
 }
@@ -1229,7 +1229,7 @@ sub buildRelationPages
 		$template->param(interlang_usage    => $Interface{'usage'}->{$Language});
 
 		my $filename = name_encode($RelationName);
-		open(OUT, ">","$curOutputDir/relationstats_".$filename.$Config{html_file_extension});
+		open(OUT, ">:utf8","$curOutputDir/relationstats_".$filename.$Config{html_file_extension});
 		print OUT $template->output;
 		close OUT;
 	}
@@ -1396,7 +1396,7 @@ sub buildKeyPages
 		$template->param(interlang_details     => $Interface{'details'}->{$Language});
 
 		my $filename = name_encode($KeyName);
-		open(OUT, ">","$curOutputDir/keystats_$filename$Config{html_file_extension}");
+		open(OUT, ">:utf8","$curOutputDir/keystats_$filename$Config{html_file_extension}");
 		print OUT $template->output;
 		close OUT;
 	}
@@ -1533,7 +1533,7 @@ sub buildTagPages
 	$template->param(interlang_othertags   => $Interface{'othertags'}->{$Language});
 
 	my $filename = name_encode("$KeyName=$Value");
-	open(TAGCOMBI, ">","$curOutputDir/tagstats_$filename$Config{html_file_extension}");
+	open(TAGCOMBI, ">:utf8","$curOutputDir/tagstats_$filename$Config{html_file_extension}");
 	print TAGCOMBI $template->output;
   	close TAGCOMBI;
 }
@@ -1546,7 +1546,7 @@ sub buildIndexGeneral
 	my ($Language) = @_;
 
 	# get some general stats
-	open(STATS, "<","$curDataDir/stats.txt") || return;
+	open(STATS, "<:utf8","$curDataDir/stats.txt") || return;
 	while(my $Line = <STATS> )
 	{
 		if($Line =~ m{(\d+) (.*)})
@@ -1618,7 +1618,7 @@ sub buildIndexGeneral
 	$template->param(interlang_trans       => $Interface{'trans'}->{$Language});
 	$template->param(interlang_mentioned   => $Interface{'mentioned'}->{$Language});
 
-	open(INDEXGENERAL, ">","$curOutputDir/$Config{indexname}"); 
+	open(INDEXGENERAL, ">:utf8","$curOutputDir/$Config{indexname}"); 
 	print INDEXGENERAL $template->output;
 	close INDEXGENERAL;
 }
@@ -1638,7 +1638,7 @@ sub loadWikiInformation
 
 	my $GroupName = "";
 
-	open(WIKIGROUP, "<","$CacheFolder/wiki_desc/group_list.txt") || die("Could not find group_list for all keys.");
+	open(WIKIGROUP, "<:utf8","$CacheFolder/wiki_desc/group_list.txt") || die("Could not find group_list for all keys.");
 
 	# go through the conmplete group list to get the Key/Tag informations
 	while(my $GroupLine = <WIKIGROUP>)
@@ -1658,7 +1658,7 @@ sub loadWikiInformation
 			#add key to grouplist
 			push(@{$WikiDescription{'KeyByGroup'}->{$GroupName}},$Key);
 			
-			open(WIKIKEY, "<","$CacheFolder/wiki_desc/Key:$Key.txt") || next;
+			open(WIKIKEY, "<:utf8","$CacheFolder/wiki_desc/Key:$Key.txt") || next;
 
 			# parse all Key informations
 			while(my $KeyLine = <WIKIKEY>)
@@ -1675,7 +1675,7 @@ sub loadWikiInformation
 				{
 					my $TagValue = $1;
 	
-					open(WIKITAG, "<","$CacheFolder/wiki_desc/Tag:$Key=$TagValue.txt") || next;
+					open(WIKITAG, "<:utf8","$CacheFolder/wiki_desc/Tag:$Key=$TagValue.txt") || next;
 
 					# parse all tag informations
 					while(my $TagLine = <WIKITAG>)
@@ -1706,7 +1706,7 @@ sub loadWikiInformation
 	close WIKIGROUP;
 
 	#Go through the Relations list to get all relation informations
-	open(RELATIONLIST, "<","$CacheFolder/wiki_desc/relation_list.txt") || die("Could not find relation_list for all relations.");
+	open(RELATIONLIST, "<:utf8","$CacheFolder/wiki_desc/relation_list.txt") || die("Could not find relation_list for all relations.");
 
 	# go through the conmplete group list to get the Key/Tag informations
 	while(my $RelationListLine = <RELATIONLIST>)
@@ -1714,7 +1714,7 @@ sub loadWikiInformation
 		$RelationListLine  =~ s/\n//g;
 
 		# open relation description file
-		open(RELATIONDESC, "<","$CacheFolder/wiki_desc/Relation:$RelationListLine.txt") || next;
+		open(RELATIONDESC, "<:utf8","$CacheFolder/wiki_desc/Relation:$RelationListLine.txt") || next;
 
 		# parse all relation informations
 		while(my $RelationLine = <RELATIONDESC>)
@@ -1749,7 +1749,7 @@ sub loadWikiInformation
 
 	# Go through tthe file with all keys where the values will be ignored for the description
 	# these are tags with numbers/names etc as values
-	open(GROUPEDKEYLIST, "<","$CacheFolder/wiki_desc/grouped_keys.txt") || next;
+	open(GROUPEDKEYLIST, "<:utf8","$CacheFolder/wiki_desc/grouped_keys.txt") || next;
 
 	# go through the conmplete group list to get the Key/Tag informations
 	while(my $Line = <GROUPEDKEYLIST>)
@@ -1773,7 +1773,7 @@ sub getOsmFileList
 	my ($FileFolder) = @_;
 	my @FileList;
 
-	open(FILELIST, "<","$FileFolder/filelist.txt") || die("missing filelist :: don't know what osm files should be used.");
+	open(FILELIST, "<:utf8","$FileFolder/filelist.txt") || die("missing filelist :: don't know what osm files should be used.");
 
 	while(my $Line = <FILELIST>)
 	{
@@ -1791,7 +1791,7 @@ sub LoadKeyUsage
 {
 	my ($curDataDir) = @_;
 
-	open(IN, "<","$curDataDir/tags.txt") || return;
+	open(IN, "<:utf8","$curDataDir/tags.txt") || return;
 	my %Keys;
 	while(my $Line = <IN>)
 	{
@@ -1813,7 +1813,7 @@ sub LoadRelationUsage
 {
 	my ($curDataDir) = @_;
 
-	open(IN, "<","$curDataDir/relations.txt") || return;
+	open(IN, "<:utf8","$curDataDir/relations.txt") || return;
 	my %Relations;
 	while(my $Line = <IN>)
 	{
@@ -1833,7 +1833,7 @@ sub LoadRelationUsage
 #--------------------------------------------------------------------------
 sub GetKeyCount
 {
-	open(IN, "<","$curDataDir/keylist.txt") || return;
+	open(IN, "<:utf8","$curDataDir/keylist.txt") || return;
 
 	my %KeyList;
 	while(my $Line = <IN>)
@@ -1853,7 +1853,7 @@ sub GetKeyCount
 sub GetTagCount
 {
 	my ($Key) = @_;
-	open(IN, "<","$curDataDir/tag_$Key.txt") || return;
+	open(IN, "<:utf8","$curDataDir/tag_$Key.txt") || return;
 
 	my %TagList;
 	while(my $Line = <IN>)
@@ -1876,7 +1876,7 @@ sub GetTagCount
 sub GetRelationCount
 {
 	my ($Type) = @_;
-	open(IN, "<","$curDataDir/relation_$Type.txt") || return;
+	open(IN, "<:utf8","$curDataDir/relation_$Type.txt") || return;
 
 	my %RelationList;
 	while(my $Line = <IN>)
@@ -1897,7 +1897,7 @@ sub GetRelationCount
 sub GetCombinations
 {
 	my ($Tag) = @_;
-	open(IN, "<","$curDataDir/combi_$Tag.txt") || return;
+	open(IN, "<:utf8","$curDataDir/combi_$Tag.txt") || return;
 	my %Combis;
 	while(my $Line = <IN> )
 	{
@@ -1916,7 +1916,7 @@ sub GetCombinations
 sub GetAutoIgnored
 {
 	my ($Key) = @_;
-	open(IN, "<","$curDataDir/ignored_$Key.txt") || return;
+	open(IN, "<:utf8","$curDataDir/ignored_$Key.txt") || return;
 	my %Ignored;
 	while(my $Line = <IN> )
 	{
@@ -1937,7 +1937,7 @@ sub buildWatchedKeyList
 	my %WatchedKeys = getWatchedKeys("$Config{'cache_folder'}/wiki_settings");
 
 	# read in all keys that have a description on the wiki
-	open(KEYLIST, "<","$Config{'cache_folder'}/wiki_desc/key_list.txt") || return "";
+	open(KEYLIST, "<:utf8","$Config{'cache_folder'}/wiki_desc/key_list.txt") || return "";
 	
 	while(my $Line = <KEYLIST>)
 	{
@@ -1969,7 +1969,7 @@ sub buildWatchedRelationsList
 		}
 	}
 	# read in all keys that have a description on the wiki
-	open(KEYLIST, "<","$Config{'cache_folder'}/wiki_desc/relation_list.txt") || return "";
+	open(KEYLIST, "<:utf8","$Config{'cache_folder'}/wiki_desc/relation_list.txt") || return "";
 		
 	while(my $Line = <KEYLIST>)
 	{

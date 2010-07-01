@@ -25,6 +25,7 @@ using namespace std;
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/file.h>
 #define TEXT(x) x
 #define TCHAR char
 #else
@@ -2868,6 +2869,43 @@ inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
 }
 
 #ifndef NOGTK
+
+//----------------------------- Load Control ------------------------------
+// The idea is keep everything (pak file + temp data) in RAM and never
+// refuse a request. Only when calculations indicate that resources are
+// low will the oldest process return early with an incomplete (jump)
+// route. A number of constants are hard coded.
+#define MAX_INST 300
+struct ldCtrlType {
+  int free;
+  struct {
+    struct timeval start;
+    volatile int maks; // Reads from this value should be atomic
+  } inst[MAX_INST]; // A circular buffer
+} *ld;
+
+void UpdateLdCtrl (int i, int calls, int li, int aliveCnt, int cpus)
+{
+  do {
+  // From the newest process to the oldest
+    i -= i == 0 ? 1 - MAX_INST : 1;
+    if (ld->inst[i].start.tv_sec) {
+      // Now we wind the clock back to the point where instance i started.
+      // We make the calculation as if aliveCnt+1 equal instances were eating
+      // memory from that point on. So we adjust calls for the amount of
+      // memory the that wasn't consumed due to the later starting times of
+      // the newer processes. A 2.2 Ghz Xeon takes roughly 12ms to complete
+      // a call, but we make it 19ms to be safe.
+      calls += ((ld->inst[li].start.tv_sec - ld->inst[i].start.tv_sec) *
+        1000000 + ld->inst[li].start.tv_usec - ld->inst[i].start.tv_usec)
+        / 19000 * aliveCnt;
+      li = i; // li is oldest process still alive that was started after i.
+      ld->inst[i].maks = aliveCnt > cpus / 2 ? 0 : calls / ++aliveCnt;
+      //fprintf (stderr, "Setting maks for %d to %d\n", i, calls / aliveCnt);
+    }
+  } while (i != ld->free);
+}
+
 int UserInterface (int argc, char *argv[], 
 		   const char* pakfile, const char* stylefile) {
 
@@ -2943,7 +2981,55 @@ int UserInterface (int argc, char *argv[],
     RESTRICTIONS
     #undef M
     Route (TRUE, 0, 0, Vehicle, FastestRoute);
+    #ifdef LD_CTRL
+    struct timezone tz;
+    FILE *f = fopen ("ld_ctrl", "r+");
+    if (!f) {
+      if ((f = fopen ("ld_ctrl", "w+")) == NULL) return 2;
+      for (int i = 0; i < sizeof (*ld); i++) fputc (0, f);
+      fflush (f);
+    }
+    if (!f || (char*)-1L == (char*) (ld = 
+             (ldCtrlType *) mmap (NULL, sizeof (*ld), PROT_READ | PROT_WRITE,
+                                  MAP_SHARED, fileno (f), 0))
+        || flock (fileno (f), LOCK_EX) != 0) {
+      printf ("Content-Type: text/plain\n\r\n\rLd ctrl error\n\r");
+      return 0;
+    }
+    int calls = (sysconf (_SC_PAGESIZE) / 4096 * sysconf (_SC_PHYS_PAGES)
+      - 2200000) / 1500, myInst = ld->free;
+    // Calculate how much memory the machine has left after assuming the pak
+    // file(s) are in RAM. Then calculate how many times RouteLoop() can be
+    // called across all instances under the assumption that each call will
+    // consume roughly 6MB of RAM.
+    //fprintf (stderr, "Starting instance %d\n", ld->free);
+    gettimeofday (&ld->inst[myInst].start, &tz);
+    if (++ld->free >= MAX_INST) ld->free = 0;
+    UpdateLdCtrl (ld->free, calls, 0, 0, sysconf (_SC_NPROCESSORS_ONLN));
+    flock (fileno (f), LOCK_UN);
+    for (int i = 0; i < ld->inst[myInst].maks && RouteLoop (); i++) {}
+    flock (fileno (f), LOCK_EX);
+    ld->inst[myInst].start.tv_sec = 0; // Mark that we're done.
+    UpdateLdCtrl (ld->free, calls, 0, 0, sysconf (_SC_NPROCESSORS_ONLN));
+    flock (fileno (f), LOCK_UN);
+    #else
     while (RouteLoop ()) {}
+/*  It is reasonable to assume that there exists a short route in the actual
+    road network between any two points on the that are closer than 1km to
+    each. Therefore, once we come close to 'to', we should find a route
+    quickly thereafter. If we don't it means 'to' is in a small, unlinked part
+    of the network and trying to complete the route is wasting time.
+    
+    Well, I guess that in developing countries there are many sets of roads
+    that run on opposite sides of rivers with no bridge or tunnel to connect
+    them. So I'm commenting it out, because it's things like these that
+    have bit me in the past.
+    for (int i = 4000; i > 0 && RouteLoop (); i--) {
+      if (flat - 100000 < shortest->nd->lat && shortest->nd->lat < flat + 100000 &&
+          flon - 100000 < shortest->nd->lon && shortest->nd->lon < flon + 100000 &&
+          i > 50) i = 50;
+    } */
+    #endif
     printf ("Content-Type: text/plain\n\r\n\r");
     if (!shortest) printf ("No route found\n\r");
     else {

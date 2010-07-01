@@ -102,10 +102,11 @@ int main (int argc, char *argv[])
       while (n < buf + cnt && isspace (*n)) n++;
       
       if (isEnd && level == 2 && tipe[level - 1] == 'o') { // Note: n may be at buf + cnt
-        for (int j = 0; j < bcnt; j++) {
-          fprintf (f[j], "</osm>\n");
-          pclose (f[j]);
-        }
+        for (int j = 0; j < bcnt; j++) fprintf (f[j], "</osm>\n");
+        // By splitting these two steps we allow downstream XML converters
+        // like gosmore to do their post-XML processing in parallel.
+        for (int j = 0; j < bcnt; j++) pclose (f[j]);
+        
         // Should we close the files and wait for the children to exit ?
         fprintf (stderr, "%s done using %ld area combinations\n", argv[0], areas.size () - 1);
         return 0;
@@ -147,10 +148,10 @@ int main (int argc, char *argv[])
           if (mf == amap.end ()) {
             int pos = areas.size () - 1;
             if (pos >> (sizeof (areasIndexType) * 8)) {
-              for (int j = 0; j < bcnt; j++) {
-                fprintf (f[j], "</osm>\n");
-                pclose (f[j]);
-              }
+              for (int j = 0; j < bcnt; j++) fprintf (f[j], "</osm>\n");
+              // By splitting these two steps we allow downstream XML converters
+              // like gosmore to do their post-XML processing in parallel.
+              for (int j = 0; j < bcnt; j++) pclose (f[j]);
               fprintf (stderr, "%s FATAL: Too many combinations of areas\n", argv[0]);
               return 2;
             }
@@ -195,10 +196,10 @@ int main (int argc, char *argv[])
     cnt -= start - buf;
     start = buf;
   }
-  for (int j = 0; j < bcnt; j++) {
-    fprintf (f[j], "</osm>\n");
-    pclose (f[j]);
-  }
+  for (int j = 0; j < bcnt; j++) fprintf (f[j], "</osm>\n");
+  // By splitting these two steps we allow downstream XML converters
+  // like gosmore to do their post-XML processing in parallel.
+  for (int j = 0; j < bcnt; j++) pclose (f[j]);
   fprintf (stderr, "Warning: Xml termination not found. Files should be OK.\n");
   fprintf (stderr, "%s done using %ld area combinations\n", argv[0], areas.size () - 1);
   return 1;

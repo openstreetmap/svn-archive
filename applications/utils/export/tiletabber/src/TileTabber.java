@@ -153,7 +153,7 @@ public class TileTabber {
 		int tileymin = -1;
 		int tileymax = -1;
 		int tilez = 16;
-		String tileurl = "http://tile.openstreetmap.org/";
+		String tileurl = "http://tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/1/256/";
 		boolean nolimit = false;
 		
 		for (int i=0; i<args.length; i++ ) {
@@ -162,6 +162,7 @@ public class TileTabber {
 				if (args[i].equalsIgnoreCase("tilexmax")) tilexmax = Integer.parseInt(args[i+1]);
 				if (args[i].equalsIgnoreCase("tileymin")) tileymin = Integer.parseInt(args[i+1]);
 				if (args[i].equalsIgnoreCase("tileymax")) tileymax = Integer.parseInt(args[i+1]);
+				if (args[i].equalsIgnoreCase("tilez"))    tilez = Integer.parseInt(args[i+1]);
 				if (args[i].equalsIgnoreCase("tileurl"))  tileurl = args[i+1];
 				if (args[i].equalsIgnoreCase("nolimit"))  nolimit = true;
 				

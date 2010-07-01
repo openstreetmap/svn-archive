@@ -5,9 +5,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Cursor;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -24,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -35,6 +39,7 @@ import javax.swing.JTextField;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -72,6 +77,8 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     JButton clearButton = null;
     final JTextField inputNumber = new JTextField();
     final JTextField inputStreet = new JTextField();
+    JLabel link = new JLabel();
+    private Way selectedWay;
     
     MapFrame mapFrame;
     
@@ -86,39 +93,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     @Override public void enterMode() {
         super.enterMode();
         if (dialog == null) {
-            JPanel p = new JPanel(new GridBagLayout());
-            JLabel number = new JLabel(tr("Number"));
-            JLabel street = new JLabel(tr("Street"));
-            p.add(number, GBC.std().insets(0, 0, 5, 0));
-            p.add(inputNumber, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 5, 0, 5));
-            p.add(street, GBC.std().insets(0, 0, 5, 0));
-            inputStreet.setEditable(false);
-            p.add(inputStreet, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 5, 0, 5));
-            clearButton = new JButton("Clear");
-            clearButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    inputNumber.setText("");
-                    inputStreet.setText("");
-                }
-            });
-            ButtonGroup bgIncremental = new ButtonGroup();
-            bgIncremental.add(plus_one);
-            bgIncremental.add(plus_two);
-            bgIncremental.add(minus_one);
-            bgIncremental.add(minus_two);
-            p.add(minus_one, GBC.std().insets(10, 0, 10, 0));
-            p.add(plus_one, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
-            p.add(minus_two, GBC.std().insets(10, 0, 10, 0));
-            p.add(plus_two, GBC.std().insets(10, 0, 10, 0));
-            p.add(clearButton, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
-
-            final Object[] options = {};
-            final JOptionPane pane = new JOptionPane(p,
-                    JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
-                    null, options, null);
-            dialog = pane.createDialog(Main.parent, tr("Enter addresses"));
-            dialog.setModal(false);
-            dialog.setAlwaysOnTop(true);
+            createDialog();
         }
         dialog.setVisible(true);
         Main.map.mapView.addMouseListener(this);
@@ -134,37 +109,42 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
+
         MapView mv = Main.map.mapView;
         Point mousePos = e.getPoint();
         List<Way> mouseOnExistingWays = new ArrayList<Way>();
         mouseOnExistingWays = new ArrayList<Way>();
         Node currentMouseNode = mv.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
-        if(currentMouseNode != null) {
+        if (currentMouseNode != null) {
             String num = currentMouseNode.get(tagHouseNumber);
             if (num != null) {
                 try {
                     Integer.parseInt(num); 
                     inputNumber.setText(num);
+                    applyInputNumberChange();
                 } catch (NumberFormatException en) {
                     System.out.println("Unable to parse house number \"" + num + "\"");
                 }
             }
-            if (currentMouseNode.get(tagHouseStreet) != null)
+            if (currentMouseNode.get(tagHouseStreet) != null) {
                 inputStreet.setText(currentMouseNode.get(tagHouseNumber));
-            else {
+                setSelectedWay(null);
+            } else {
                 // check if the node belongs to an associatedStreet relation
                 List<OsmPrimitive> l = currentMouseNode.getReferrers();
                 for (OsmPrimitive osm : l) {
                     if (osm instanceof Relation && osm.hasKey("type") && osm.get("type").equals(relationAddrType)) {
                         if (osm.hasKey(relationStreetNameAttr)) {
                             inputStreet.setText(osm.get(relationStreetNameAttr));
+                            setSelectedWay(null);
                             break;
                         } else {
                             for (RelationMember rm : ((Relation)osm).getMembers())
                                 if (rm.getRole().equals(relationAddrStreetRole)) {
                                     OsmPrimitive osp = rm.getMember();
-                                    if (osp.hasKey(tagHighwayName)) {
+                                    if (osp instanceof Way && osp.hasKey(tagHighwayName)) {
                                         inputStreet.setText(osp.get(tagHighwayName));
+                                        setSelectedWay((Way)osp);
                                         break;
                                     }
                                 }
@@ -181,29 +161,41 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             if (mouseOnExistingWays.size() == 1) {
                 // clicked on existing highway => set new street name
                 inputStreet.setText(mouseOnExistingWays.get(0).get(tagHighwayName));
+                setSelectedWay(mouseOnExistingWays.get(0));
             } else if (mouseOnExistingWays.size() == 0) {
                 // clicked a non highway and not a node => add the new address 
                 if (inputStreet.getText().equals("") || inputNumber.getText().equals("")) {
                     Toolkit.getDefaultToolkit().beep();
                 } else {
                     Node n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
+                    Collection<Command> cmds = new LinkedList<Command>();
                     if (n == null)
-                        n = createNewNode(e);
-                    addAddrToNode(n);
+                        n = createNewNode(e, cmds);
+                    addAddrToNode(n, cmds);
+                    if (cmds.size() > 0) {
+                        Command c = new SequenceCommand("Add node address", cmds);
+                        Main.main.undoRedo.add(c);
+                    }
                 }
             }
         }
 
     }
     
-    private void addAddrToNode(Node n) {
-        // add the tag addr:housenumber in node and member in relation
+    private void addAddrToNode(Node n, Collection<Command> cmds) {
+        try {
+            // add the tag addr:housenumber in node and member in relation
+            cmds.add(new ChangePropertyCommand(n, tagHouseNumber, inputNumber.getText()));            
+            cmds.add(new ChangePropertyCommand(n, tagHouseStreet, inputStreet.getText()));            
+            applyInputNumberChange();
+        } catch (NumberFormatException en) {
+            System.out.println("Unable to parse house number \"" + inputNumber.getText() + "\"");
+        }
     }
     
-    private Node createNewNode(MouseEvent e) {
+    private Node createNewNode(MouseEvent e, Collection<Command> cmds) {
         // DrawAction.mouseReleased() but without key modifiers
         Node n = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
-        Collection<Command> cmds = new LinkedList<Command>();
         cmds.add(new AddCommand(n));
         List<WaySegment> wss = Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive.isSelectablePredicate);
         Map<Way, List<Integer>> insertPoints = new HashMap<Way, List<Integer>>();
@@ -238,8 +230,6 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         }
         adjustNode(segSet, n);
 
-        Command c = new SequenceCommand("Add node address", cmds);
-        Main.main.undoRedo.add(c);
         return n;
     }
     
@@ -325,4 +315,92 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         }
         return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
     }
+    
+    private void applyInputNumberChange() {
+        Integer num = Integer.parseInt(inputNumber.getText());
+        if (plus_one.isSelected())
+            num = num + 1;
+        if (plus_two.isSelected())
+            num = num + 2;
+        if (minus_one.isSelected() && num > 1)
+            num = num - 1;
+        if (minus_two.isSelected() && num > 2)
+            num = num - 2;
+        inputNumber.setText(num.toString());
+    }
+    
+    private void createDialog() {
+        ImageIcon iconLink = ImageProvider.get(null, "Mf_relation.png");
+        link.setIcon(iconLink);
+        link.setEnabled(false);
+        JPanel p = new JPanel(new GridBagLayout());
+        JLabel number = new JLabel(tr("Number"));
+        JLabel street = new JLabel(tr("Street"));
+        p.add(number, GBC.std().insets(0, 0, 0, 0));
+        p.add(inputNumber, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
+        p.add(street, GBC.std().insets(0, 0, 0, 0));
+        JPanel p2 = new JPanel(new GridBagLayout());
+        inputStreet.setEditable(false);
+        p2.add(inputStreet, GBC.std().fill(GBC.HORIZONTAL).insets(5, 0, 0, 0));
+        p2.add(link, GBC.eol().insets(10, 0, 0, 0));
+        p.add(p2, GBC.eol().fill(GBC.HORIZONTAL));
+        clearButton = new JButton("Clear");
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                inputNumber.setText("");
+                inputStreet.setText("");
+                setSelectedWay(null);
+            }
+        });
+        ButtonGroup bgIncremental = new ButtonGroup();
+        bgIncremental.add(plus_one);
+        bgIncremental.add(plus_two);
+        bgIncremental.add(minus_one);
+        bgIncremental.add(minus_two);
+        p.add(minus_one, GBC.std().insets(10, 0, 10, 0));
+        p.add(plus_one, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
+        p.add(minus_two, GBC.std().insets(10, 0, 10, 0));
+        p.add(plus_two, GBC.std().insets(10, 0, 10, 0));
+        p.add(clearButton, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
+    
+        final Object[] options = {};
+        final JOptionPane pane = new JOptionPane(p,
+                JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
+                null, options, null);
+        dialog = pane.createDialog(Main.parent, tr("Enter addresses"));
+        dialog.setModal(false);
+        dialog.setAlwaysOnTop(true);
+        dialog.addComponentListener(new ComponentAdapter() {
+            protected void rememberGeometry() {
+                Main.pref.put("cadastrewms.addr_bounds", dialog.getX()+","+dialog.getY()+","+dialog.getWidth()+","+dialog.getHeight());
+            }
+            @Override public void componentMoved(ComponentEvent e) {
+                rememberGeometry();
+            }
+            @Override public void componentResized(ComponentEvent e) {
+                rememberGeometry();
+            }
+        });
+        String bounds = Main.pref.get("cadastrewms.addr_bounds",null);
+        if (bounds != null) {
+            String[] b = bounds.split(",");
+            dialog.setBounds(new Rectangle(
+                    Integer.parseInt(b[0]),Integer.parseInt(b[1]),Integer.parseInt(b[2]),Integer.parseInt(b[3])));
+        }
+
+
+    
+    
+//        exitMode();
+//        Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
+}
+    
+    private void setSelectedWay(Way w) {
+        this.selectedWay = w;
+        if (w == null)
+            link.setEnabled(false);
+        else
+            link.setEnabled(true);
+    }
+
 }

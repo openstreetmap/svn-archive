@@ -273,9 +273,11 @@ public class WMSLayer extends Layer implements ImageObserver {
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             else
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-            for (GeorefImage img : images)
-                img.paint(g, mv, CadastrePlugin.backgroundTransparent,
-                        CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+            synchronized(this){
+                for (GeorefImage img : images)
+                    img.paint(g, mv, CadastrePlugin.backgroundTransparent,
+                            CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+            }
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, savedInterpolation);
         }
         if (this.isRaster) {

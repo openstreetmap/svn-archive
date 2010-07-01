@@ -43,6 +43,7 @@ public class PublicTransportPlugin extends Plugin {
     jMenu.addSeparator();
     jMenu.add(new JMenuItem(new StopImporterAction()));
     jMenu.add(new JMenuItem(new RoutePatternAction()));
+    jMenu.add(new JMenuItem(new GTFSImporterAction()));
     setEnabledAll(true);
   }
 

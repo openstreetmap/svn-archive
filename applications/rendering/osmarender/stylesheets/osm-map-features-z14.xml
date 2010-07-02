@@ -1539,7 +1539,7 @@
 		</rule>
 		
 		<!-- Amenities -->
-		<rule e="node|way" k="amenity" v="hospital"  horizontalProximity="0.0002" verticalProximity="0.0002">
+		<rule e="node|way" k="amenity" v="hospital"  horizontalProximity="0.0004" verticalProximity="0.0004">
 			<symbol ref="hospital" position="center" transform="scale(0.7)"/>
 		</rule>
 		<rule e="node|way" k="tourism" v="alpine_hut">

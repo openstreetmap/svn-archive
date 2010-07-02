@@ -3266,6 +3266,9 @@
 		<rule e="node|way" k="amenity" v="pub">
 			<symbol ref="pub" position="center"/>
 		</rule>
+		 <rule e="node|way" k="amenity" v="bar">
+                        <symbol ref="bar" position="center"/>
+                </rule>
 		<rule e="node|way" k="amenity" v="cafe">
 			<symbol ref="cafe" position="center"/>
 		</rule>

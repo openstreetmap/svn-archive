@@ -178,7 +178,7 @@ sub getImageList
 						next if $TagLine =~ /<!--/;
 						$TagLine  =~ s/\n//g;
 						# parse tag description
-						if($TagLine =~ m{^image=(?:Image|image|File):)?(.*\.[a-zA-Z]+)})
+						if($TagLine =~ m{^image=(?:(?:Image|image|File):)?(.*\.[a-zA-Z]+)})
 						{
 							my $name = $1;
 							$name =~ s/%(..)/chr(hex($1))/eg;

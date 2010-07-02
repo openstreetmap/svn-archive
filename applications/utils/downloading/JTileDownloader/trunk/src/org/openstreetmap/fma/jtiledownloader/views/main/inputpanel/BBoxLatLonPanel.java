@@ -130,23 +130,23 @@ public class BBoxLatLonPanel
                 boolean isOk = false;
                 if (AppConfiguration.getInstance().isSlippyMap_NoDownload())
                 {
-                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + AppConfiguration.getInstance().getOutputFolder() + "\" as local read-only-cache folder and will only display tiles which are already there (regardless of the selected tile-provider).");
+                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + _mainPanel.getOutputfolder() + "\" as local read-only-cache folder and will only display tiles which are already there (regardless of the selected tile-provider).");
                     isOk=true;
                 }
                 else if (!AppConfiguration.getInstance().isSlippyMap_SaveTiles())
                 {
-                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + AppConfiguration.getInstance().getOutputFolder() + "\" as local read-only-cache folder and will load missing tiles from tile provider \"" + _mainPanel.getSelectedTileProvider().getName() + "\" w/o saving them to the output-folder.");
+                    JOptionPane.showMessageDialog(null, "SlippyMap will use \"" + _mainPanel.getOutputfolder() + "\" as local read-only-cache folder and will load missing tiles from tile provider \"" + _mainPanel.getSelectedTileProvider().getName() + "\" w/o saving them to the output-folder.");
                     isOk=true;
                 }
-                if (isOk || (AppConfiguration.getInstance().isSlippyMap_SaveTiles() && JOptionPane.showConfirmDialog(null, "SlippyMap will use \"" + AppConfiguration.getInstance().getOutputFolder() + "\" as local cache/download-folder and tileprovider \"" + _mainPanel.getSelectedTileProvider().getName() + "\".\nDo you want to continue?", "JTileDownloader SlippyMap", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION))
+                if (isOk || (AppConfiguration.getInstance().isSlippyMap_SaveTiles() && JOptionPane.showConfirmDialog(null, "SlippyMap will use \"" + _mainPanel.getOutputfolder() + "\" as local cache/download-folder and tileprovider \"" + _mainPanel.getSelectedTileProvider().getName() + "\".\nDo you want to continue?", "JTileDownloader SlippyMap", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION))
                 {
                     if (smc == null)
                     {
-                        smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component) arg0.getSource()).getParent(), _mainPanel.getSelectedTileProvider(), AppConfiguration.getInstance().getOutputFolder());
+                        smc = new SlippyMapChooserWindow((BBoxLatLonPanel) ((Component) arg0.getSource()).getParent(), _mainPanel.getSelectedTileProvider(), _mainPanel.getOutputfolder());
                     }
                     smc.getSlippyMapChooser().setSaveTiles(AppConfiguration.getInstance().isSlippyMap_SaveTiles());
                     smc.getSlippyMapChooser().setNoDownload(AppConfiguration.getInstance().isSlippyMap_NoDownload());
-                    smc.getSlippyMapChooser().setDirectory(AppConfiguration.getInstance().getOutputFolder());
+                    smc.getSlippyMapChooser().setDirectory(_mainPanel.getOutputfolder());
                     smc.getSlippyMapChooser().setTileProvider(_mainPanel.getSelectedTileProvider());
                     smc.setVisible(true);
                 }

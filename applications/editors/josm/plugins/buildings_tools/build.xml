@@ -30,9 +30,9 @@
 <project name="buildings_tools" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="fix address dialog" />
+	<property name="commit.message" value="update to josm latest" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3177" />
+	<property name="plugin.main.version" value="3348" />
 
 
 	<!--

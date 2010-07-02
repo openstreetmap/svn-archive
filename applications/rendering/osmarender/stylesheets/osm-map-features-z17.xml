@@ -4087,7 +4087,7 @@
                             <caption k="name" class="caption-casing generic-caption-casing" dy="-1.2px" layer="5"/>
                             <caption k="name" class="caption-core generic-caption-core" dy="-1.2px" layer="5"/>
                           </rule>
-                          <rule e="node|way" k="shop" v="supermarket|organic|bakery" layer="5">
+                          <rule e="node|way" k="shop" v="supermarket|organic|bakery|hairdresser" layer="5">
                             <caption k="name" class="caption-casing generic-caption-casing" dy="-1.2px" layer="5"/>
                             <caption k="name" class="caption-core generic-caption-core" dy="-1.2px" layer="5"/>
                           </rule>

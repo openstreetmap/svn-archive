@@ -16,7 +16,8 @@
    inkscape:version="0.47pre4 r22446"
    inkscape:export-xdpi="45"
    inkscape:export-ydpi="45"
-   sodipodi:docname="multipoly_create.svg">
+   sodipodi:docname="multipoly_create.svg"
+   inkscape:export-filename="/home/te/programmierung/josm-dev/plugins/multipoly/images/multipoly_create.png">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -134,7 +135,7 @@
      id="layer1"
      transform="translate(10.9,-1015.2622)">
     <path
-       style="fill:#0000ff;fill-opacity:0.42180094000000001;stroke:#00008f;stroke-width:1.30000000000000004;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-mid:none"
+       style="fill:#0000ff;fill-opacity:0.42180094000000001;stroke:#1919ff;stroke-width:1.30000000000000004;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-mid:none"
        d="m 14,1020.3623 -16,4 -6,36 40,-6 0,-24 -18,-10 z m -4,14 12,4 -14,10 2,-14 z"
        id="path3667" />
     <rect

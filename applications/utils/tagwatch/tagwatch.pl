@@ -215,6 +215,7 @@ sub getOSMFiles
 				my $Date = $2;
 				my $FileName = $1;
 				my $usename = $FileName;
+				next if !($FileName =~ /\.osm/);
 				next if %usefiles && !$usefiles{$usename};
 
 				$usename =~ s/.bz2// if($Config{'extract_OsmFiles'} eq "yes");

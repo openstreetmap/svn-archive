@@ -104,6 +104,7 @@ sub processOSMFiles
 		$openmode = "gunzip <$name |" if($name =~ /\.gz$/);
 
 		open(OSMFILE, $openmode) || die("Could not open osm file! :: $OSMfile");
+		binmode OSMFILE,"encoding(utf-8)";
 		my $count = 1;
 	
 		while(my $Line = <OSMFILE>)

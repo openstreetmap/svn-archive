@@ -30,9 +30,9 @@
 <project name="Tracer" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="build.xml according to official template" />
+	<property name="commit.message" value="adapt to latest josm (getNodePairs changed)" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="2830" />
+	<property name="plugin.main.version" value="3348" />
 
 
 	<!--

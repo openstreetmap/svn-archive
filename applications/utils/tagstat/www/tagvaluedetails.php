@@ -77,7 +77,7 @@
 			}
 		}
 		echo "<TD><A href=\"http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\">xapi</A>\n";
-		echo "<A href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\" target=\"hiddenIframe\">josm</A>";
+		echo "<A href=\"http://localhost:8111/import?url=http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\" target=\"hiddenIframe\"></TD>\n";
 		echo "</TR>\n";
 		$i++;
 	}
@@ -118,6 +118,6 @@
 	echo "<BR><BR>\n";
 	echo "<A href=\"index.php\">Back to index page</A>\n";
 ?>
-  <iframe style="display:none" id="hiddenIframe" name="hiddenIframe"></iframe>
+  <IFRAME style="display:none" id="hiddenIframe" name="hiddenIframe"></IFRAME>
  </BODY>
 </HTML>

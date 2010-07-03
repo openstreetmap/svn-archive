@@ -96,6 +96,16 @@
 
 	echo "<BR><BR>\n";
 	echo "<A href=\"search.php\">Search</A>\n";
+
+	echo "<BR><BR>\n";
+	$file = "/var/www/tagstat/planet-timestamp";
+	if(file_exists($file)) {
+		$d = file_get_contents($file);
+		$d = substr_replace($d, "-", 6, 0);
+		$d = substr_replace($d, "-", 4, 0);
+		echo "OSM tag data as of $d";
+	}
+
 ?>
  </BODY>
 </HTML>

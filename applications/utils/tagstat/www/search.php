@@ -38,7 +38,7 @@
 		if($result->numRows() > 0) {
 			echo "<H3>Matching tags</H3>\n";
 			echo "<TABLE>\n";
-			echo "<TR><TH>tag</TH><TH>uses</TH></TR>\n";
+			echo "<TR><TH>tag</TH><TH>uses</TH><TH></TH></TR>\n";
 			$i = 1;
 			while ($row =& $result->fetchRow()) {
 				if($i % 2) {
@@ -46,8 +46,9 @@
 				} else {
 					$style="even";
 				}
-				printf('<TR class="%1$s"><TD><A href="tagdetails.php?tag=%2$s">%4$s</A></TD><TD class="count">%3$s</TD></TR>', $style, $row[0], displayNum($row[1]), displayTag($row[0]));
-				echo "\n";
+				printf('<TR class="%1$s"><TD><A href="tagdetails.php?tag=%2$s">%4$s</A></TD><TD class="count">%3$s</TD>', $style, $row[0], displayNum($row[1]), displayTag($row[0]));
+				echo "<TD><A href=\"http://www.informationfreeway.org/api/0.6/*[{$row[0]}=*]\">xapi</A></TD>\n";
+				echo "</TR>\n";
 				$i++;
 			}
 			echo "</TABLE>\n";
@@ -62,7 +63,7 @@
 		if($result->numRows() > 0) {
 			echo "<H3>Matching values</H3>\n";
 			echo "<TABLE>\n";
-			echo "<TR><TH>tag</TH><TH>value</TH><TH>uses</TH></TR>\n";
+			echo "<TR><TH>tag</TH><TH>value</TH><TH>uses</TH><TH></TH></TR>\n";
 			$i = 1;
 			while ($row =& $result->fetchRow()) {
 				if($i % 2) {
@@ -70,8 +71,9 @@
 				} else {
 					$style="even";
 				}
-				printf('<TR class="%1$s"><TD><A href="tagdetails.php?tag=%2$s">%4$s</A></TD><TD class="count">%5$s</TD><TD class="count">%3$s</TD></TR>', $style, $row[0], displayNum($row[2]), displayTag($row[0]), displayTag($row[1]));
-				echo "\n";
+				printf('<TR class="%1$s"><TD><A href="tagdetails.php?tag=%2$s">%4$s</A></TD><TD class="count">%5$s</TD><TD class="count">%3$s</TD>', $style, $row[0], displayNum($row[2]), displayTag($row[0]), displayTag($row[1]));
+				echo "<TD><A href=\"http://www.informationfreeway.org/api/0.6/*[{$row[0]}={$row[1]}]\">xapi</A></TD>\n";
+				echo "</TR>\n";
 				$i++;
 			}
 			echo "</TABLE>\n";

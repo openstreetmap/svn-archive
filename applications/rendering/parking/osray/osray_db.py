@@ -30,7 +30,7 @@ class OsrayDB:
 
     def __init__(self,options):
         DSN = options['dsn']
-        thebbox = options['bbox']
+        #thebbox = options['bbox']
         prefix = options['prefix']
 
         print "Opening connection using dsn:", DSN
@@ -55,10 +55,36 @@ class OsrayDB:
         self.FlW = "FROM "+prefix+"_line WHERE"
         self.FpW = "FROM "+prefix+"_polygon WHERE"
     
-        self.googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
+        #self.googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
+        #self.curs.execute("SELECT ST_AsText("+self.googbox+") AS geom")
+        #self.bbox = self.curs.fetchall()
+        #self.get_bounds()
+        srs = options['srs']
+        if srs==None:
+            srs = '4326'
+        if srs=='4326':
+            self.init_bbox_4326(options['bbox'])
+        elif srs=='3857':
+            self.init_bbox_3857(options['bbox'])
+        elif srs=='900913':
+            self.init_bbox_3857(options['bbox'])
+
+
+    def init_bbox_srs(self,bbox,srs):
+        self.googbox = "transform(SetSRID('BOX3D("+bbox+")'::box3d,"+srs+"),900913)"
         self.curs.execute("SELECT ST_AsText("+self.googbox+") AS geom")
         self.bbox = self.curs.fetchall()
         self.get_bounds()
+
+    def init_bbox_4326(self,bbox):
+        self.init_bbox_srs(bbox, '4326')
+
+    def init_bbox_3857(self,bbox): # 900913 Projection
+        self.init_bbox_srs(bbox, '3857')
+        #self.googbox = "'BOX3D("+bbox+")'::box3d"
+        #self.curs.execute("SELECT ST_AsText("+self.googbox+") AS geom")
+        #self.bbox = self.curs.fetchall()
+        #self.get_bounds()
 
     def select_highways(self,highwaytype):
         self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+self.FlW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")
@@ -73,6 +99,7 @@ class OsrayDB:
         return self.curs.fetchall()
 
     def select_landuse(self,landusetype):
+        print "SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' "+LIMIT+";"
         self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' "+LIMIT+";")
         return self.curs.fetchall()
 

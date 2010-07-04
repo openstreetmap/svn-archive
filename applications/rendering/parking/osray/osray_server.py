@@ -44,6 +44,46 @@ class osrayHandler(BaseHTTPRequestHandler):
 
             print "baseagain=",baseurl
 
+            if baseurl=="/wms": # example URL http://localhost/osray/povtile/16/34576/22282.png
+                print "Handling WMS Request with parameters:", queryparams
+# example queryparams {
+#ignore:
+#'LAYERS': ['land'], 
+#'SERVICE': ['WMS'], 
+#'FORMAT': ['image/png'], 
+#'REQUEST': ['GetMap'], 
+#'SRS': ['EPSG:3857'], 
+#'VERSION': ['1.1.1'], 
+#'EXCEPTIONS': ['application/vnd.ogc.se_xml'], 
+#'TRANSPARENT': ['FALSE']}
+#use:
+#'WIDTH': ['2048'], 
+#'HEIGHT': ['2048'], 
+#'BBOX': ['0,0,20037508.3392,20037508.3392'], 
+                options['width']=queryparams['WIDTH'][0]
+                options['height']=queryparams['HEIGHT'][0]
+                bbox_SRS3857 = queryparams['BBOX'][0]
+                print "BBOX=",bbox_SRS3857
+                bbox_SRS3857 = bbox_format_3_to_1_comma(bbox_SRS3857)
+                options['hq']=False
+                options['bbox']=bbox_SRS3857
+                options['srs']='3857'
+                print "--- calling osray"
+                osray.main(options)
+                print "--- calling osray ends"
+                f = open(curdir + sep + 'scene-osray.png')
+                print "--- send_response"
+                self.send_response(200)
+                print "--- send_header"
+                self.send_header('Content-type','image/png')
+                print "--- send_end_headers"
+                self.end_headers()
+                print "--- send_write"
+                self.wfile.write(f.read())
+                print "--- close"
+                f.close()
+                return
+
             if baseurl.startswith("/povtile/"): # example URL http://localhost/osray/povtile/16/34576/22282.png
                 if baseurl.endswith(".png"):
                     zxy = baseurl[9:-4].split('/')
@@ -142,3 +182,16 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+"""
+ParseResult(scheme='', netloc='', path='/wms', params='', query='BBOX=0,0,20037508.3392,20037508.3392&EXCEPTIONS=application/vnd.ogc.se_xml&FORMAT=image/png&HEIGHT=2048&LAYERS=land&REQUEST=GetMap&SERVICE=WMS&SRS=EPSG:3857&STYLES=&TRANSPARENT=FALSE&VERSION=1.1.1&WIDTH=2048', fragment='')
+parse= ParseResult(scheme='', netloc='', path='/wms', params='', query='BBOX=0,0,20037508.3392,20037508.3392&EXCEPTIONS=application/vnd.ogc.se_xml&FORMAT=image/png&HEIGHT=2048&LAYERS=land&REQUEST=GetMap&SERVICE=WMS&SRS=EPSG:3857&STYLES=&TRANSPARENT=FALSE&VERSION=1.1.1&WIDTH=2048', fragment='')
+base= /wms
+URL qs: BBOX=0,0,20037508.3392,20037508.3392&EXCEPTIONS=application/vnd.ogc.se_xml&FORMAT=image/png&HEIGHT=2048&LAYERS=land&REQUEST=GetMap&SERVICE=WMS&SRS=EPSG:3857&STYLES=&TRANSPARENT=FALSE&VERSION=1.1.1&WIDTH=2048
+{'LAYERS': ['land'], 'WIDTH': ['2048'], 'SERVICE': ['WMS'], 'FORMAT': ['image/png'], 'REQUEST': ['GetMap'], 'HEIGHT': ['2048'], 'SRS': ['EPSG:3857'], 'VERSION': ['1.1.1'], 'BBOX': ['0,0,20037508.3392,20037508.3392'], 'EXCEPTIONS': ['application/vnd.ogc.se_xml'], 'TRANSPARENT': ['FALSE']}
+baseagain= /wms
+URL was  /wms?BBOX=0,0,20037508.3392,20037508.3392&EXCEPTIONS=application/vnd.ogc.se_xml&FORMAT=image/png&HEIGHT=2048&LAYERS=land&REQUEST=GetMap&SERVICE=WMS&SRS=EPSG:3857&STYLES=&TRANSPARENT=FALSE&VERSION=1.1.1&WIDTH=2048
+URL qs: BBOX=0,0,20037508.3392,20037508.3392&EXCEPTIONS=application/vnd.ogc.se_xml&FORMAT=image/png&HEIGHT=2048&LAYERS=land&REQUEST=GetMap&SERVICE=WMS&SRS=EPSG:3857&STYLES=&TRANSPARENT=FALSE&VERSION=1.1.1&WIDTH=2048
+{'LAYERS': ['land'], 'WIDTH': ['2048'], 'SERVICE': ['WMS'], 'FORMAT': ['image/png'], 'REQUEST': ['GetMap'], 'HEIGHT': ['2048'], 'SRS': ['EPSG:3857'], 'VERSION': ['1.1.1'], 'BBOX': ['0,0,20037508.3392,20037508.3392'], 'EXCEPTIONS': ['application/vnd.ogc.se_xml'], 'TRANSPARENT': ['FALSE']}
+localhost - - [04/Jul/2010 22:04:44] "GET /wms?BBOX=0,0,20037508.3392,20037508.3392&EXCEPTIONS=application/vnd.ogc.se_xml&FORMAT=image/png&HEIGHT=2048&LAYERS=land&REQUEST=GetMap&SERVICE=WMS&SRS=EPSG:3857&STYLES=&TRANSPARENT=FALSE&VERSION=1.1.1&WIDTH=2048 HTTP/1.1" 200 -
+"""

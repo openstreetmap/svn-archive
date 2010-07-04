@@ -11,9 +11,18 @@ import re
 def avg(a,b): return (a+b)/2.0
 def swap(tuple): return (tuple[1],tuple[0])
 
+#
+# string stuff to handle bbox strings
+#
 def bbox_string(xmin,ymin,xmax,ymax):
     return str(xmin)+" "+str(ymin)+","+str(xmax)+" "+str(ymax)
 
+def bbox_format_3_to_1_comma(bbox):
+    coords = bbox.split(',')
+    if len(coords)!=4:
+        raise 'wrong bbox format: '+bbox
+    return coords[0]+" "+coords[1]+","+coords[2]+" "+coords[3]
+    
 def coords_from_bbox(bbox):
     bbox = bbox.replace(' ',',')
     coordslist = map(lambda coord: float(coord), old_bbox.split(','))

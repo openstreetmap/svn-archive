@@ -3759,26 +3759,42 @@
 				<rule e="way" k="area" v="~|no|false" layer="5"> <!-- area names are done elsewhere -->
 					<rule e="way" k="junction" v="~" layer="5"> <!-- no names on or along junctions -->
 						<!-- Waterway names -->
-						<rule e="way" k="waterway" v="ditch" layer="5">
-							<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-ditch-name-casing" dy="0.5px" layer="5"/>
-							<pathText k="name" startOffset="50%" class="waterway-name-core waterway-ditch-name-core" dy="0.5px" layer="5"/>
+						<rule e="way" k="lock_name" v="~" layer="5"> <!-- locks get their name below -->
+							<rule e="way" k="waterway" v="ditch" layer="5">
+								<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-ditch-name-casing" dy="0.5px" layer="5"/>
+								<pathText k="name" startOffset="50%" class="waterway-name-core waterway-ditch-name-core" dy="0.5px" layer="5"/>
+							</rule>
+							<rule e="way" k="waterway" v="drain" layer="5">
+								<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-drain-name-casing" dy="0.5px" layer="5"/>
+								<pathText k="name" startOffset="50%" class="waterway-name-core waterway-drain-name-core" dy="0.5px" layer="5"/>
+							</rule>
+							<rule e="way" k="waterway" v="canal" layer="5">
+								<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-canal-name-casing" dy="0.5px" layer="5"/>
+								<pathText k="name" startOffset="50%" class="waterway-name-core waterway-canal-name-core" dy="0.5px" layer="5"/>
+							</rule>
+							<rule e="way" k="waterway" v="stream" layer="5">
+								<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-stream-name-casing" dy="0.5px" layer="5"/>
+								<pathText k="name" startOffset="50%" class="waterway-name-core waterway-stream-name-core" dy="0.5px" layer="5"/>
+							</rule>
+							<rule e="way" k="waterway" v="river" layer="5">
+								<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-river-name-casing" dy="0.5px" layer="5"/>
+								<pathText k="name" startOffset="50%" class="waterway-name-core waterway-river-name-core" dy="0.5px" layer="5"/>
+							</rule>
 						</rule>
-						<rule e="way" k="waterway" v="drain" layer="5">
-							<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-drain-name-casing" dy="0.5px" layer="5"/>
-							<pathText k="name" startOffset="50%" class="waterway-name-core waterway-drain-name-core" dy="0.5px" layer="5"/>
-						</rule>
-						<rule e="way" k="waterway" v="canal" layer="5">
-							<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-canal-name-casing" dy="0.5px" layer="5"/>
-							<pathText k="name" startOffset="50%" class="waterway-name-core waterway-canal-name-core" dy="0.5px" layer="5"/>
-						</rule>
-						<rule e="way" k="waterway" v="stream" layer="5">
-							<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-stream-name-casing" dy="0.5px" layer="5"/>
-							<pathText k="name" startOffset="50%" class="waterway-name-core waterway-stream-name-core" dy="0.5px" layer="5"/>
-						</rule>
-						<rule e="way" k="waterway" v="river" layer="5">
-							<pathText k="name" startOffset="50%" class="waterway-name-casing waterway-river-name-casing" dy="0.5px" layer="5"/>
-							<pathText k="name" startOffset="50%" class="waterway-name-core waterway-river-name-core" dy="0.5px" layer="5"/>
-						</rule>
+						<else> <!-- names on locks -->
+							<rule e="way" k="waterway" v="canal" layer="5">
+								<pathText k="lock_name" startOffset="50%" class="waterway-name-casing waterway-canal-name-casing" dy="0.5px" layer="5"/>
+								<pathText k="lock_name" startOffset="50%" class="waterway-name-core waterway-canal-name-core" dy="0.5px" layer="5"/>
+							</rule>
+							<rule e="way" k="waterway" v="stream" layer="5">
+								<pathText k="lock_name" startOffset="50%" class="waterway-name-casing waterway-stream-name-casing" dy="0.5px" layer="5"/>
+								<pathText k="lock_name" startOffset="50%" class="waterway-name-core waterway-stream-name-core" dy="0.5px" layer="5"/>
+							</rule>
+							<rule e="way" k="waterway" v="river" layer="5">
+								<pathText k="lock_name" startOffset="50%" class="waterway-name-casing waterway-river-name-casing" dy="0.5px" layer="5"/>
+								<pathText k="lock_name" startOffset="50%" class="waterway-name-core waterway-river-name-core" dy="0.5px" layer="5"/>
+							</rule>
+						</else>
 
 						<!-- Scramble names -->
 						<rule e="way" k="scramble" v="*" layer="5">

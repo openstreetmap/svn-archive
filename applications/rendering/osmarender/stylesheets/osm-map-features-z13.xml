@@ -1157,22 +1157,22 @@
 		
 		<!-- Railway stations -->
 		<rule e="node" k="railway" v="station">
-                  <rule e="node" s="way" k="railway" v="rail">
-                    <circle r="6" class="railway-station"/>
-                  </rule>
-                  <else>
-                    <circle r="4" class="railway-halt"/>
-                  </else>
+			<rule e="node" s="way" k="railway" v="rail">
+				<circle r="6" class="railway-station"/>
+			</rule>
+			<else>
+				<circle r="4" class="railway-halt"/>
+			</else>
 		</rule>
 
 		<rule e="node" k="railway" v="halt">
-                  <rule e="node" s="way" k="railway" v="tram">
-                    <!-- railway=halt node on railway=tram way -->
-                    <circle r="2" class="railway-halt"/>
-                  </rule>
-                  <else>
-                    <circle r="4" class="railway-halt"/>
-                  </else>
+			<rule e="node" s="way" k="railway" v="tram">
+				<!-- railway=halt node on railway=tram way -->
+				<circle r="2" class="railway-halt"/>
+			</rule>
+			<else>
+				<circle r="4" class="railway-halt"/>
+			</else>
 		</rule>
 		<!-- Tram stops -->
 		<rule e="node" k="railway" v="tram_stop">

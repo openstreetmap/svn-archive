@@ -40,6 +40,10 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JCheckBox disableImageCropping = new JCheckBox(tr("Disable image cropping during georeferencing."));
     
+    private JCheckBox autoFirstLayer = new JCheckBox(tr("Select first WMS layer in list."));
+    
+    private JCheckBox dontUseRelation = new JCheckBox(tr("Don't use relation for addresses (but \"addr:street\" on nodes)."));
+    
     private JRadioButton grabMultiplier1 = new JRadioButton("", true);
 
     private JRadioButton grabMultiplier2 = new JRadioButton("", true);
@@ -56,8 +60,6 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
     private JRadioButton crosspiece4 = new JRadioButton("100m");
 
-    private JCheckBox autoFirstLayer = new JCheckBox(tr("Select first WMS layer in list."));
-    
     private JRadioButton grabRes1 = new JRadioButton("high");
 
     private JRadioButton grabRes2 = new JRadioButton("medium");
@@ -323,18 +325,28 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         cacheSize.setToolTipText(tr("Oldest files are automatically deleted when this size is exceeded"));
         cadastrewms.add(jLabelCacheSize, GBC.std().insets(20, 0, 0, 0));
         cadastrewms.add(cacheSize, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
+
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
+        
+        // option to select the first WMS layer
         autoFirstLayer.setSelected(Main.pref.getBoolean("cadastrewms.autoFirstLayer", false));
         autoFirstLayer.setToolTipText(tr("Automatically selects the first WMS layer if multiple layers exist when grabbing."));
         cadastrewms.add(autoFirstLayer, GBC.eop().insets(0, 0, 0, 0));
+
+        // separator
+        cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
+
+        // option to use or not relations in addresses
+        dontUseRelation.setSelected(Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false));
+        dontUseRelation.setToolTipText(tr("Enable this to use the tag \"add:street\" on nodes."));
+        cadastrewms.add(dontUseRelation, GBC.eop().insets(0, 0, 0, 0));
+        
+        // end of dialog, scroll bar
         cadastrewms.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
-//        JTabbedPane cadastrecontent = new JTabbedPane();
-//        cadastrecontent.add(cadastrewms);
         JScrollPane scrollpane = new JScrollPane(cadastrewms);
         scrollpane.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         cadastrewmsMast.add(scrollpane, GBC.eol().fill(GBC.BOTH));
-
     }
 
     public boolean ok() {
@@ -402,6 +414,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         }
         Main.pref.put("cadastrewms.autoFirstLayer", autoFirstLayer.isSelected());
         CacheControl.cacheEnabled = enableCache.isSelected();
+        Main.pref.put("cadastrewms.addr.dontUseRelation", dontUseRelation.isSelected());
         CadastrePlugin.refreshConfiguration();
         CadastrePlugin.refreshMenu();
 

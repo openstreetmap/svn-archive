@@ -15,6 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,12 +31,15 @@ import java.util.Set;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
@@ -60,18 +65,22 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class Address extends MapMode implements MouseListener, MouseMotionListener, ActionListener {
     private static final long serialVersionUID = 1L;
     
-    static final String tagHighway = "highway";
-    static final String tagHighwayName = "name";
-    static final String tagHouseNumber = "addr:housenumber";
-    static final String tagHouseStreet = "addr:street";
-    static final String relationAddrType = "associatedStreet";
-    static final String relationStreetNameAttr = "name";
-    static final String relationAddrStreetRole = "street";
+    // perhaps make all these tags configurable in the future
+    private String tagHighway = "highway";
+    private String tagHighwayName = "name";
+    private String tagHouseNumber = "addr:housenumber";
+    private String tagHouseStreet = "addr:street";
+    private String tagBuilding = "building";
+    private String relationAddrType = "associatedStreet";
+    private String relationAddrName = "name";
+    private String relationAddrStreetRole = "street";
+    private String relationMemberHouse = "house";
     
     private JRadioButton plus_one = new JRadioButton("+1", false);
-    private JRadioButton plus_two = new JRadioButton("+2", true);
+    private JRadioButton plus_two = new JRadioButton("+2", true); // enable this by default
     private JRadioButton minus_one = new JRadioButton("-1", false);
     private JRadioButton minus_two = new JRadioButton("-2", false);
+    final JCheckBox tagPolygon = new JCheckBox(tr("on polygon"));
 
     JDialog dialog = null;
     JButton clearButton = null;
@@ -79,12 +88,13 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     final JTextField inputStreet = new JTextField();
     JLabel link = new JLabel();
     private Way selectedWay;
+    private Relation selectedRelation;
     
     MapFrame mapFrame;
     
     public Address(MapFrame mapFrame) {
         super(tr("Add address"), "buildings", 
-                tr("Create house number and street name relation"),
+                tr("Helping tool for tag address"),
                 Shortcut.registerShortcut("mapmode:buildings", tr("Mode: {0}", tr("Buildings")), KeyEvent.VK_E, Shortcut.GROUP_EDIT),
                 mapFrame, getCursor());
         this.mapFrame = mapFrame;
@@ -113,12 +123,16 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         MapView mv = Main.map.mapView;
         Point mousePos = e.getPoint();
         List<Way> mouseOnExistingWays = new ArrayList<Way>();
+        List<Way> mouseOnExistingBuildingWays = new ArrayList<Way>();
         mouseOnExistingWays = new ArrayList<Way>();
         Node currentMouseNode = mv.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
         if (currentMouseNode != null) {
+            // click on existing node
+            setNewSelection(currentMouseNode);
             String num = currentMouseNode.get(tagHouseNumber);
             if (num != null) {
                 try {
+                    // add new address
                     Integer.parseInt(num); 
                     inputNumber.setText(num);
                     applyInputNumberChange();
@@ -128,28 +142,30 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             }
             if (currentMouseNode.get(tagHouseStreet) != null) {
                 inputStreet.setText(currentMouseNode.get(tagHouseNumber));
-                setSelectedWay(null);
+                setSelectedWay((Way)null);
             } else {
                 // check if the node belongs to an associatedStreet relation
                 List<OsmPrimitive> l = currentMouseNode.getReferrers();
+                boolean nodeBelongsToRelation = false;
                 for (OsmPrimitive osm : l) {
                     if (osm instanceof Relation && osm.hasKey("type") && osm.get("type").equals(relationAddrType)) {
-                        if (osm.hasKey(relationStreetNameAttr)) {
-                            inputStreet.setText(osm.get(relationStreetNameAttr));
-                            setSelectedWay(null);
-                            break;
-                        } else {
-                            for (RelationMember rm : ((Relation)osm).getMembers())
-                                if (rm.getRole().equals(relationAddrStreetRole)) {
-                                    OsmPrimitive osp = rm.getMember();
-                                    if (osp instanceof Way && osp.hasKey(tagHighwayName)) {
-                                        inputStreet.setText(osp.get(tagHighwayName));
-                                        setSelectedWay((Way)osp);
-                                        break;
-                                    }
+                        for (RelationMember rm : ((Relation)osm).getMembers()) {
+                            if (rm.getRole().equals(relationAddrStreetRole)) {
+                                OsmPrimitive osp = rm.getMember();
+                                if (osp instanceof Way && osp.hasKey(tagHighwayName)) {
+                                    inputStreet.setText(osp.get(tagHighwayName));
+                                    setSelectedWay((Way)osp, (Relation)osm);
+                                    nodeBelongsToRelation = true;
+                                    break;
                                 }
+                            }
                         }
                     }
+                }
+                if (!nodeBelongsToRelation) {
+                    // node exists but doesn't carry address information : add tags like a new node
+                    Collection<Command> cmds = new LinkedList<Command>();
+                    addAddrToPrimitive(currentMouseNode, cmds);
                 }
             }
         } else {
@@ -157,24 +173,26 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             for(WaySegment ws : wss) {
                 if (ws.way.get(tagHighway) != null && ws.way.get(tagHighwayName) != null)
                     mouseOnExistingWays.add(ws.way);
+                else if (ws.way.get(tagBuilding) != null && ws.way.get(tagHouseNumber) == null)
+                    mouseOnExistingBuildingWays.add(ws.way);
             }
             if (mouseOnExistingWays.size() == 1) {
                 // clicked on existing highway => set new street name
                 inputStreet.setText(mouseOnExistingWays.get(0).get(tagHighwayName));
                 setSelectedWay(mouseOnExistingWays.get(0));
+                inputNumber.setText("");
+                setNewSelection(mouseOnExistingWays.get(0));
             } else if (mouseOnExistingWays.size() == 0) {
                 // clicked a non highway and not a node => add the new address 
                 if (inputStreet.getText().equals("") || inputNumber.getText().equals("")) {
                     Toolkit.getDefaultToolkit().beep();
                 } else {
-                    Node n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
                     Collection<Command> cmds = new LinkedList<Command>();
-                    if (n == null)
-                        n = createNewNode(e, cmds);
-                    addAddrToNode(n, cmds);
-                    if (cmds.size() > 0) {
-                        Command c = new SequenceCommand("Add node address", cmds);
-                        Main.main.undoRedo.add(c);
+                    if (tagPolygon.isSelected()) {
+                        addAddrToPolygon(mouseOnExistingBuildingWays, cmds);
+                    } else {
+                        Node n = createNewNode(e, cmds);
+                        addAddrToPrimitive(n, cmds);
                     }
                 }
             }
@@ -182,12 +200,40 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
 
     }
     
-    private void addAddrToNode(Node n, Collection<Command> cmds) {
+    private void addAddrToPolygon(List<Way> mouseOnExistingBuildingWays, Collection<Command> cmds) {
+        for (Way w:mouseOnExistingBuildingWays) {
+            cmds.add(new ChangePropertyCommand(w, tagHouseNumber, inputNumber.getText()));
+            addAddrToPrimitive(w, cmds);
+        }
+    }
+    
+    private void addAddrToPrimitive(OsmPrimitive osm, Collection<Command> cmds) {
+        // add the current tag addr:housenumber in node and member in relation
+        cmds.add(new ChangePropertyCommand(osm, tagHouseNumber, inputNumber.getText()));            
+        if (Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
+            cmds.add(new ChangePropertyCommand(osm, tagHouseStreet, inputStreet.getText()));
+        } else if (selectedWay != null) {
+           // add the node to its relation
+           if (selectedRelation != null) {
+               RelationMember rm = new RelationMember(relationMemberHouse, osm);
+               Relation newRel = new Relation(selectedRelation);
+               newRel.addMember(rm);
+               cmds.add(new ChangeCommand(selectedRelation, newRel));
+           } else {
+               // create new relation
+               Relation newRel = new Relation();
+               newRel.put("type", relationAddrType);
+               newRel.put(relationAddrName, selectedWay.get(tagHighwayName));
+               newRel.addMember(new RelationMember(relationAddrStreetRole, selectedWay));
+               newRel.addMember(new RelationMember(relationMemberHouse, osm));
+               cmds.add(new AddCommand(newRel));
+           }
+        }
         try {
-            // add the tag addr:housenumber in node and member in relation
-            cmds.add(new ChangePropertyCommand(n, tagHouseNumber, inputNumber.getText()));            
-            cmds.add(new ChangePropertyCommand(n, tagHouseStreet, inputStreet.getText()));            
             applyInputNumberChange();
+            Command c = new SequenceCommand("Add node address", cmds);
+            Main.main.undoRedo.add(c);
+            setNewSelection(osm);
         } catch (NumberFormatException en) {
             System.out.println("Unable to parse house number \"" + inputNumber.getText() + "\"");
         }
@@ -334,7 +380,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         link.setIcon(iconLink);
         link.setEnabled(false);
         JPanel p = new JPanel(new GridBagLayout());
-        JLabel number = new JLabel(tr("Number"));
+        JLabel number = new JLabel(tr("Next no"));
         JLabel street = new JLabel(tr("Street"));
         p.add(number, GBC.std().insets(0, 0, 0, 0));
         p.add(inputNumber, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
@@ -349,7 +395,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             public void actionPerformed(ActionEvent e) {
                 inputNumber.setText("");
                 inputStreet.setText("");
-                setSelectedWay(null);
+                setSelectedWay((Way)null);
             }
         });
         ButtonGroup bgIncremental = new ButtonGroup();
@@ -358,10 +404,19 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         bgIncremental.add(minus_one);
         bgIncremental.add(minus_two);
         p.add(minus_one, GBC.std().insets(10, 0, 10, 0));
-        p.add(plus_one, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
+//        p.add(plus_one, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
+        p.add(plus_one, GBC.std().insets(0, 0, 10, 0));
+        tagPolygon.setSelected(Main.pref.getBoolean("cadastrewms.addr.onBuilding", false));
+        tagPolygon.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent arg0) {
+                Main.pref.put("cadastrewms.addr.onBuilding", tagPolygon.isSelected());
+            }
+        });
+        p.add(tagPolygon, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 0));
         p.add(minus_two, GBC.std().insets(10, 0, 10, 0));
-        p.add(plus_two, GBC.std().insets(10, 0, 10, 0));
-        p.add(clearButton, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
+        p.add(plus_two, GBC.std().insets(0, 0, 10, 0));
+        p.add(clearButton, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 0));
     
         final Object[] options = {};
         final JOptionPane pane = new JOptionPane(p,
@@ -372,7 +427,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         dialog.setAlwaysOnTop(true);
         dialog.addComponentListener(new ComponentAdapter() {
             protected void rememberGeometry() {
-                Main.pref.put("cadastrewms.addr_bounds", dialog.getX()+","+dialog.getY()+","+dialog.getWidth()+","+dialog.getHeight());
+                Main.pref.put("cadastrewms.addr.bounds", dialog.getX()+","+dialog.getY()+","+dialog.getWidth()+","+dialog.getHeight());
             }
             @Override public void componentMoved(ComponentEvent e) {
                 rememberGeometry();
@@ -381,26 +436,46 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 rememberGeometry();
             }
         });
-        String bounds = Main.pref.get("cadastrewms.addr_bounds",null);
+        dialog.addWindowListener(new WindowListener() {
+            @Override
+            public void windowClosing(WindowEvent arg0) {
+                exitMode();
+                Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
+            }
+            public void windowClosed(WindowEvent e) {}
+            public void windowActivated(WindowEvent arg0) {}
+            public void windowDeactivated(WindowEvent arg0) {}
+            public void windowDeiconified(WindowEvent arg0) {}
+            public void windowIconified(WindowEvent arg0) {}
+            public void windowOpened(WindowEvent arg0) {}
+        });
+        String bounds = Main.pref.get("cadastrewms.addr.bounds",null);
         if (bounds != null) {
             String[] b = bounds.split(",");
             dialog.setBounds(new Rectangle(
                     Integer.parseInt(b[0]),Integer.parseInt(b[1]),Integer.parseInt(b[2]),Integer.parseInt(b[3])));
         }
-
-
-    
-    
-//        exitMode();
-//        Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
 }
     
     private void setSelectedWay(Way w) {
         this.selectedWay = w;
-        if (w == null)
+        this.selectedRelation = null;
+        if (w == null) {
             link.setEnabled(false);
-        else
+        } else
             link.setEnabled(true);
+    }
+    
+    private void setSelectedWay(Way w, Relation r) {
+        setSelectedWay(w);
+        this.selectedRelation = r;
+    }
+    
+    private void setNewSelection(OsmPrimitive osm) {
+        Collection<OsmPrimitive> newSelection = new LinkedList<OsmPrimitive>(Main.main.getCurrentDataSet().getSelected());
+        newSelection.clear();
+        newSelection.add(osm);
+        getCurrentDataSet().setSelected(osm);
     }
 
 }

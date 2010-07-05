@@ -20,7 +20,7 @@
 use strict;
 use HTML::Template;
 use Math::Round;
-
+use URI::Escape;
 
 # holds all Key/Tag/Relation Information from the Wiki
 my %WikiDescription;
@@ -2156,8 +2156,10 @@ sub name_encode
 sub api_link
 {
 	my ($key, $value) = @_;
-	$key =~ s/([^A-Za-z0-9*_-])/sprintf("%%%02X", ord($1))/seg;
-	$value =~ s/([^A-Za-z0-9*_-])/sprintf("%%%02X", ord($1))/seg;
+#	$key =~ s/([^A-Za-z0-9*_-])/sprintf("%%%02X", ord($1))/seg;
+#	$value =~ s/([^A-Za-z0-9*_-])/sprintf("%%%02X", ord($1))/seg;
+	$key = uri_escape_utf8($key);
+	$value = uri_escape_utf8($value);
 	return $Config{osmxapi_url} . "*[$key=$value]";
 }
 

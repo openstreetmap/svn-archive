@@ -82,7 +82,7 @@ def application(env, start_response):
   
   # MAP=something in request is always an error  
   if "MAP=" in qupper:
-    return SException(start_response,response_headers,'Invalid argument "MAP=..." in request')
+    return SException(start_response,'Invalid argument "MAP=..." in request')
     
   # if tile=something is given we are in TMS mode
   

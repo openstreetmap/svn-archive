@@ -25,7 +25,7 @@
 	<!--
 	  ** update before publishing
 	-->
-	<property name="commit.message" value="fixed josm bug 4220" />
+	<property name="commit.message" value="i18n fix" />
 	<property name="plugin.main.version" value="3289" />
 
 

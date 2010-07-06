@@ -155,6 +155,8 @@ def main(options):
         create_landuse_texture(osraydb,options,'/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov')
         #pass
     
+    pov_declare_highway_textures(f)
+
     highways = []
     for highwaytype in highwaytypes.iterkeys():
         highways += osraydb.select_highways(highwaytype)

@@ -59,9 +59,7 @@ class OsrayDB:
         #self.curs.execute("SELECT ST_AsText("+self.googbox+") AS geom")
         #self.bbox = self.curs.fetchall()
         #self.get_bounds()
-        srs = options['srs']
-        if srs==None:
-            srs = '4326'
+        srs = options.get('srs','4326')
         if srs=='4326':
             self.init_bbox_4326(options['bbox'])
         elif srs=='3857':

@@ -37,6 +37,45 @@ highwaytypes = {
     'path':['<0.8,0.9,0.8>',0.5]
     }
 
+
+def pov_declare_highway_textures(f):
+    declare_highway_texture = """
+#declare texture_highway_{highwaytype} =
+    texture {{
+        pigment {{
+            color rgb {color}
+        }}
+        finish {{
+            specular 0.5
+            roughness 0.05
+            ambient 0.3
+            /*reflection 0.5*/
+        }}
+    }}
+"""
+    for highwaytype in highwaytypes.keys():
+        highwayparams = highwaytypes.get(highwaytype)
+        color = highwayparams[0]
+        f.write(declare_highway_texture.format(color=color,highwaytype=highwaytype))
+
+    f.write("""
+#declare texture_highway_casing =
+    texture {{
+        pigment {{
+            color rgb {color}
+        }}
+        finish {{
+            specular 0.05
+            roughness 0.05
+            ambient 0.3
+            /*reflection 0.5*/
+        }}
+    }}
+""".format(color='<0.3,0.3,0.3>'))
+
+
+
+
 buildingtypes = {
     'yes':['<1,0.8,0.8>',1.0],
     'office':['<1,0.6,0.6>',1.0],
@@ -109,19 +148,9 @@ def pov_highway(f,highway):
     f.write("  scale <1, 0.05, 1>")
     f.write("  } ") #end of intersection
     f.write("""
-    texture {{
-        pigment {{
-            color rgb {0}
-        }}
-        finish {{
-            specular 0.5
-            roughness 0.05
-            ambient 0.2
-            /*reflection 0.5*/
-        }}
-    }}
+    texture {{ texture_highway_{highwaytype} }}
 }}
-\n""".format(highwayparams[0]))
+\n""".format(highwaytype=highwaytype))
 # draw casing
     f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+2))
     f.write("/* osm_id={0} */\n".format(highway[0]))
@@ -136,16 +165,7 @@ def pov_highway(f,highway):
 
     #print highwayparams[0],highwayparams[1],streetwidth
     f.write("""  tolerance 1
-    texture {{
-        pigment {{
-            color rgb <0.3,0.3,0.3>
-        }}
-        finish {{
-            specular 0.05
-            roughness 0.05
-            /*reflection 0.5*/
-        }}
-    }}
+    texture {{ texture_highway_casing }}
     scale <1, 0.05, 1>
     translate <0, -0.05*{1}, 0>
 }}

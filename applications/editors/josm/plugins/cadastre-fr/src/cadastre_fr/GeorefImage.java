@@ -56,8 +56,9 @@ public class GeorefImage implements Serializable, ImageObserver {
         this.orgCroppedRaster[1] = new EastNorth(min.east(), max.north());
         this.orgCroppedRaster[2] = max;
         this.orgCroppedRaster[3] = new EastNorth(max.east(), min.north());
-        this.imageOriginalHeight = img.getHeight();
-        this.imageOriginalWidth = img.getWidth();
+        // img can be null for a hack used in overlapping detection
+        this.imageOriginalHeight = (img == null ? 1 : img.getHeight());
+        this.imageOriginalWidth = (img == null ? 1 : img.getWidth());
         updatePixelPer();
     }
 

@@ -88,7 +88,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     final JTextField inputStreet = new JTextField();
     JLabel link = new JLabel();
     private Way selectedWay;
-    private Relation selectedRelation;
+    //private Relation selectedRelation;
     private boolean shift;
 
     public Address(MapFrame mapFrame) {
@@ -145,27 +145,14 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 setSelectedWay((Way)null);
             } else {
                 // check if the node belongs to an associatedStreet relation
-                List<OsmPrimitive> l = currentMouseNode.getReferrers();
-                boolean nodeBelongsToRelation = false;
-                for (OsmPrimitive osm : l) {
-                    if (osm instanceof Relation && osm.hasKey("type") && osm.get("type").equals(relationAddrType)) {
-                        for (RelationMember rm : ((Relation)osm).getMembers()) {
-                            if (rm.getRole().equals(relationAddrStreetRole)) {
-                                OsmPrimitive osp = rm.getMember();
-                                if (osp instanceof Way && osp.hasKey(tagHighwayName)) {
-                                    inputStreet.setText(osp.get(tagHighwayName));
-                                    setSelectedWay((Way)osp, (Relation)osm);
-                                    nodeBelongsToRelation = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (!nodeBelongsToRelation) {
+                Way wayInRelationAddr = findWayInRelationAddr(currentMouseNode);
+                if (wayInRelationAddr == null) {
                     // node exists but doesn't carry address information : add tags like a new node
                     Collection<Command> cmds = new LinkedList<Command>();
                     addAddrToPrimitive(currentMouseNode, cmds);
+                } else {
+                    inputStreet.setText(wayInRelationAddr.get(tagHighwayName));
+                    setSelectedWay(wayInRelationAddr);
                 }
             }
         } else {
@@ -200,6 +187,23 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
 
     }
     
+    private Way findWayInRelationAddr(Node n) {
+        List<OsmPrimitive> l = n.getReferrers();
+        for (OsmPrimitive osm : l) {
+            if (osm instanceof Relation && osm.hasKey("type") && osm.get("type").equals(relationAddrType)) {
+                for (RelationMember rm : ((Relation)osm).getMembers()) {
+                    if (rm.getRole().equals(relationAddrStreetRole)) {
+                        OsmPrimitive osp = rm.getMember();
+                        if (osp instanceof Way && osp.hasKey(tagHighwayName)) {
+                            return (Way)osp;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
     private void addAddrToPolygon(List<Way> mouseOnExistingBuildingWays, Collection<Command> cmds) {
         for (Way w:mouseOnExistingBuildingWays) {
             addAddrToPrimitive(w, cmds);
@@ -220,21 +224,22 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         if (Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
             cmds.add(new ChangePropertyCommand(osm, tagHouseStreet, inputStreet.getText()));
         } else if (selectedWay != null) {
-           // add the node to its relation
-           if (selectedRelation != null) {
-               RelationMember rm = new RelationMember(relationMemberHouse, osm);
-               Relation newRel = new Relation(selectedRelation);
-               newRel.addMember(rm);
-               cmds.add(new ChangeCommand(selectedRelation, newRel));
-           } else {
-               // create new relation
-               Relation newRel = new Relation();
-               newRel.put("type", relationAddrType);
-               newRel.put(relationAddrName, selectedWay.get(tagHighwayName));
-               newRel.addMember(new RelationMember(relationAddrStreetRole, selectedWay));
-               newRel.addMember(new RelationMember(relationMemberHouse, osm));
-               cmds.add(new AddCommand(newRel));
-           }
+            Relation selectedRelation = findRelationAddr(selectedWay);
+            // add the node to its relation
+            if (selectedRelation != null) {
+                RelationMember rm = new RelationMember(relationMemberHouse, osm);
+                Relation newRel = new Relation(selectedRelation);
+                newRel.addMember(rm);
+                cmds.add(new ChangeCommand(selectedRelation, newRel));
+            } else {
+                // create new relation
+                Relation newRel = new Relation();
+                newRel.put("type", relationAddrType);
+                newRel.put(relationAddrName, selectedWay.get(tagHighwayName));
+                newRel.addMember(new RelationMember(relationAddrStreetRole, selectedWay));
+                newRel.addMember(new RelationMember(relationMemberHouse, osm));
+                cmds.add(new AddCommand(newRel));
+            }
         }
         try {
             applyInputNumberChange();
@@ -244,6 +249,16 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         } catch (NumberFormatException en) {
             System.out.println("Unable to parse house number \"" + inputNumber.getText() + "\"");
         }
+    }
+    
+    private Relation findRelationAddr(Way w) {
+        List<OsmPrimitive> l = w.getReferrers();
+        for (OsmPrimitive osm : l) {
+            if (osm instanceof Relation && osm.hasKey("type") && osm.get("type").equals(relationAddrType)) {
+                return (Relation)osm;
+            }
+        }
+        return null;
     }
     
     private Node createNewNode(MouseEvent e, Collection<Command> cmds) {
@@ -479,16 +494,10 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     
     private void setSelectedWay(Way w) {
         this.selectedWay = w;
-        this.selectedRelation = null;
         if (w == null) {
             link.setEnabled(false);
         } else
             link.setEnabled(true);
-    }
-    
-    private void setSelectedWay(Way w, Relation r) {
-        setSelectedWay(w);
-        this.selectedRelation = r;
     }
     
     private void setNewSelection(OsmPrimitive osm) {

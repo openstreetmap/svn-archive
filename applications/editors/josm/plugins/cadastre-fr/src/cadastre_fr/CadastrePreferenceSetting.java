@@ -42,7 +42,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     
     private JCheckBox autoFirstLayer = new JCheckBox(tr("Select first WMS layer in list."));
     
-    private JCheckBox dontUseRelation = new JCheckBox(tr("Don't use relation for addresses (but \"addr:street\" on nodes)."));
+    private JCheckBox dontUseRelation = new JCheckBox(tr("Don't use relation for addresses (but \"addr:street\" on elements)."));
     
     private JRadioButton grabMultiplier1 = new JRadioButton("", true);
 

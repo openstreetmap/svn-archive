@@ -10,6 +10,7 @@ from numpy import *
 from osray_db import *
 from osray_ground import *
 from osray_streets import *
+from osray_buildings import *
 from optparse import OptionParser
 
 def pov_globals(f):
@@ -109,7 +110,7 @@ sky_sphere {{
 light_source {{
     <0, 1000000,0>,
     rgb <1, 1, 0.9>
-    area_light <100000, 0, 0>, <0, 0, 100000>, 8, 8
+    area_light <100000, 0, 0>, <0, 0, 100000>, 8/4, 8/4
     adaptive 1
     circular
     rotate <45,10,0>
@@ -155,30 +156,8 @@ def main(options):
         create_landuse_texture(osraydb,options,'/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov')
         #pass
     
-    pov_declare_highway_textures(f)
-
-    highways = []
-    for highwaytype in highwaytypes.iterkeys():
-        highways += osraydb.select_highways(highwaytype)
-
-    for highway in highways:
-        pov_highway(f,highway)
-        #pass
-    
-    highway_areas = []
-    for highwaytype in highwaytypes.iterkeys():
-        highway_areas += osraydb.select_highway_areas(highwaytype)
-    
-    for highway in highway_areas:
-        pov_highway_area(f,highway)
-    
-    buildings = []
-    for buildingtype in buildingtypes.iterkeys():
-        buildings += osraydb.select_buildings(buildingtype)
-    
-    for building in buildings:
-        pov_building(f,building)
-    
+    render_highways(f,osraydb)
+    render_buidings(f,osraydb)
     f.close()
     
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])

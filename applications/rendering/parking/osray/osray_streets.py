@@ -1,18 +1,10 @@
 # -*- coding: utf-8 -*-
 # by kay - basic functions
 
-### config for Trunk
-DSN = 'dbname=gis'
-
-import sys
-import commands
-import psycopg2
-import csv
-import re
-from numpy import *
+from osray_db import *
 from osray_geom import *
 
-highwaytypes = {
+highwaytypes = { # highwaytype : [color,lane_width_factor]
     'motorway':['<1,0,0>',0.9],
     'motorway_link':['<1,0,0>',0.9],
     'trunk':['<0.9,1,0.9>',1.0],
@@ -28,7 +20,7 @@ highwaytypes = {
     'service':['<0.8,0.8,0.8>',0.6],
     'pedestrian':['<0.8,0.9,0.8>',0.8],
     'footway':['<0.8,0.9,0.8>',0.3],
-    'steps':['<0.7,0.8,0.7>',0.3],
+    'steps':['<0.6,0.7,0.6>',0.3],
     'cycleway':['<0.8,0.8,0.9>',0.3],
     'track':['<0.7,0.7,0.6>',0.9],
     'bus_stop':['<1,0,0>',0.9],
@@ -57,7 +49,7 @@ def pov_declare_highway_textures(f):
         highwayparams = highwaytypes.get(highwaytype)
         color = highwayparams[0]
         f.write(declare_highway_texture.format(color=color,highwaytype=highwaytype))
-
+    # texture for the highway casing
     f.write("""
 #declare texture_highway_casing =
     texture {{
@@ -74,25 +66,52 @@ def pov_declare_highway_textures(f):
 """.format(color='<0.3,0.3,0.3>'))
 
 
+def draw_lines(f,points,height,streetwidth,highwaytype):
+    numpoints = len(points)
+    f.write("object {")
+    f.write("union {")
+    #f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+0))
 
+    latlon_prev = None
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+        f.write(" sphere {{ <{x}, 0, {y}>,{d} }}\n".format(x=latlon[0],y=latlon[1],d=streetwidth))
+        if(latlon_prev != None):
+            f.write(" cylinder {{ <{x1}, 0, {y1}>,<{x2}, 0, {y2}>,{d} }}\n".format(x1=latlon[0],y1=latlon[1],x2=latlon_prev[0],y2=latlon_prev[1],d=streetwidth))
+        latlon_prev = latlon
+    f.write("}") # union ends
+    f.write("scale <1, 0.05, 1>")
+    f.write("translate <0, {z}, 0>".format(z=height))
+    #f.write("  } ") #end of intersection
+    f.write("""texture {{ texture_highway_{highwaytype} }}
+}}
+\n""".format(highwaytype=highwaytype))
+    
+def draw_lines_sweep(f,points,height,streetwidth,highwaytype):
+    numpoints = len(points)
+    #f.write("intersection { object { boundbox } ")
+    f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+0))
 
-buildingtypes = {
-    'yes':['<1,0.8,0.8>',1.0],
-    'office':['<1,0.6,0.6>',1.0],
-    'apartments':['<0.8,1,0.6>',1.0],
-    'garages':['<0.8,0.8,0.8>',1.0],
-    }
-amenitybuildingtypes = {
-    'place_of_worship':['<1,1,0.6>',1.0],
-    'hospital':['<1,0.6,0.6>',1.0],
-    'theatre':['<1,0.6,1>',1.0],
-    'university':['<0.6,1,0.8>',1.0],
-    'parking':['<0.6,0.6,1>',1.0]
-    }
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+        #if (i==0):
+        #    f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth,height))
+        f.write("  <{x}, 0, {y}>,{d}\n".format(x=latlon[0],y=latlon[1],d=streetwidth))
+        #if (i==numpoints-1):
+        #   f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth,height))
 
-#def avg(a,b): return (a+b)/2.0
-
+    #print highwayparams[0],highwayparams[1],streetwidth
+    f.write("  tolerance 1")
+    f.write("  scale <1, 0.05, 1>")
+    f.write("  translate <0, {z}, 0>".format(z=height))
+    #f.write("  } ") #end of intersection
+    f.write("""
+    texture {{ texture_highway_{highwaytype} }}
+}}
+\n""".format(highwaytype=highwaytype))
+    
 def pov_highway(f,highway):
+    f.write("/* osm_id={0} */\n".format(highway[0]))
     highwaytype = highway[1]
     #highwaytype = 'secondary'
     highwayparams = highwaytypes.get(highwaytype)
@@ -126,50 +145,10 @@ def pov_highway(f,highway):
     if layer<0:
         layer=0 # FIXME
     layerheight = 4.0*layer # 4 m per layer
-    layerheight = layerheight / 0.05 # counteract the scale statement
-
-    numpoints = len(points)
-
 # draw road
-    f.write("intersection { object { boundbox } ")
-    f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+2))
-    f.write("/* osm_id={0} */\n".format(highway[0]))
-
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth*highwayparams[1],layerheight))
-        f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth*highwayparams[1],layerheight))
-        if (i==numpoints-1):
-           f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth*highwayparams[1],layerheight))
-
-    #print highwayparams[0],highwayparams[1],streetwidth
-    f.write("  tolerance 1")
-    f.write("  scale <1, 0.05, 1>")
-    f.write("  } ") #end of intersection
-    f.write("""
-    texture {{ texture_highway_{highwaytype} }}
-}}
-\n""".format(highwaytype=highwaytype))
+    draw_lines(f,points,layerheight,streetwidth*highwayparams[1],highwaytype)
 # draw casing
-    f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+2))
-    f.write("/* osm_id={0} */\n".format(highway[0]))
-
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],1.2*streetwidth*highwayparams[1],layerheight))
-        f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],1.2*streetwidth*highwayparams[1],layerheight))
-        if (i==numpoints-1):
-           f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],1.2*streetwidth*highwayparams[1],layerheight))
-
-    #print highwayparams[0],highwayparams[1],streetwidth
-    f.write("""  tolerance 1
-    texture {{ texture_highway_casing }}
-    scale <1, 0.05, 1>
-    translate <0, -0.05*{1}, 0>
-}}
-\n""".format(highwayparams[0],lanefactor))
+    draw_lines(f,points,layerheight-0.05*lanefactor,1.2*streetwidth*highwayparams[1],'casing')
 
 def pov_highway_area(f,highway):
     highwaytype = highway[1]
@@ -264,63 +243,20 @@ def pov_highway_area(f,highway):
 \n""".format(height=height))
 
 
-def pov_building(f,building):
-    buildingtype = building[1]
-    #buildingtype = 'secondary'
-    buildingparams = buildingtypes.get(buildingtype)
+def render_highways(f,osraydb):
+    pov_declare_highway_textures(f)
 
-    linestring = building[2]
-    linestring = linestring[8:] # cut off the "POLYGON("
-    linestring = linestring[:-1] # cut off the ")"
+    highways = []
+    for highwaytype in highwaytypes.iterkeys():
+        highways += osraydb.select_highways(highwaytype)
 
-    heightstring = building[3]
-    #print 'hs="{0}"'.format(heightstring)
-    if (heightstring==None):
-        height = 10.0
-    else:
-        height = parse_length_in_meters(heightstring,0.01)
-
-    amenity = building[4]
-    #print amenity
+    for highway in highways:
+        pov_highway(f,highway)
+        #pass
     
-    points = linestring.split(',')#.strip('(').strip(')')
-    #print points
-
-    numpoints = len(points)
-    f.write("prism {{ linear_spline  0, 1, {0},\n".format(numpoints))
-    f.write("/* osm_id={0} */\n".format(building[0]))
-
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
-        if (i!=numpoints-1):
-            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
-        else:
-            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
-    #f.write(firstpoint)
-
-    color = buildingparams[0]
-    if amenitybuildingtypes.has_key(amenity): # if amenity is known, use that color
-        amenitybuildingparams = amenitybuildingtypes.get(amenity)
-        color = amenitybuildingparams[0]
-
-    #if height != 10.0:
-        #print 'height:', height
-        #color = '<0,1,0>'
-    f.write("""
-    texture {{
-        pigment {{
-            color rgb {0}
-        }}
-        finish {{
-            specular 0.5
-            roughness 0.05
-            ambient 0.2
-            /*reflection 0.5*/
-        }}
-    }}
-    scale <1, {1}, 1>
-}}
-\n""".format(color,height))
-
+    highway_areas = []
+    for highwaytype in highwaytypes.iterkeys():
+        highway_areas += osraydb.select_highway_areas(highwaytype)
+    
+    for highway in highway_areas:
+        pov_highway_area(f,highway)

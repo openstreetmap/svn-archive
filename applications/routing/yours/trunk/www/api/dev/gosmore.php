@@ -9,6 +9,7 @@ $www_dir = '/home/lambertus/public_html/yours';
 $yours_dir = '/home/lambertus/yours';
 $admin_email = 'osm@na1400.info';
 $ulimit = 30;
+$maxDistanceKm = 1000;
 
 $output = "";
 $nAttempts = 0;
@@ -66,7 +67,7 @@ if (isset($_GET['flat']) && is_numeric($_GET['flat'])) {
 }
 else {	
 	$query .= 'flat=53.04821';
-	$flat = 53.04821;
+	$flat = '53.04821';
 }
 
 if (isset($_GET['flon']) && is_numeric($_GET['flon'])) {
@@ -80,6 +81,7 @@ else {
 
 if (isset($_GET['tlat']) && is_numeric($_GET['tlat'])) {
 	$query .= '&tlat='.$_GET['tlat'];
+	$tlat = $_GET['tlat'];
 }
 else {
 	$query .= '&tlat=53.02616';
@@ -135,6 +137,13 @@ if (isset($_GET['layer']) && in_array($_GET['layer'], $layers)) {
 $format = 'kml';
 if (isset($_GET['format']) && in_array($_GET['format'], $formats)) {
 	$format = $_GET['format'];
+}
+
+// Check if the requested route is too long (spare the server)
+//$latitudeFrom, $longitudeFrom, $latituteTo, $longitudeTo) {
+
+if (getDistanceKm($flat, $flon, $tlat, $tlon) > $maxDistanceKm) {
+	exit("The distance you requested is too long. This specific server is programatically limited to $maxDistanceKm km. This limitation is needed to prevent exhausting the limited server resources. Sorry about this. A bigger/faster server would not have this limit.");
 }
 
 $query .= "'";
@@ -212,7 +221,7 @@ if (count($output) > 1)
 			
 			if ($flat < 360)
 			{
-				$distance += getDistance($flat, $flon, $lat, $lon);
+				$distance += getDistanceKm($flat, $flon, $lat, $lon);
 			}
 			$flat = $lat;
 			$flon = $lon;
@@ -280,7 +289,7 @@ if ($fh) {
 }
 // Done!
 
-function getDistance($latitudeFrom, $longitudeFrom, $latituteTo, $longitudeTo) {
+function getDistanceKm($latitudeFrom, $longitudeFrom, $latituteTo, $longitudeTo) {
     // 1 degree equals 0.017453292519943 radius
     $degreeRadius = deg2rad(1);
  

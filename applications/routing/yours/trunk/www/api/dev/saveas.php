@@ -31,11 +31,16 @@ function GPX($data) {
 	header('Content-Type: text/text');
 	header('Content-Disposition: attachment; filename="route.gpx"');
 	
+	$ref = parse_url($_SERVER['HTTP_REFERER']);
+	$url = $ref['scheme'].'://'.$ref['host'].$ref['path']; //.'?'.urlencode($ref['query']);
+	
 	$xml  = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'."\n";
 	$xml .= '<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="OpenStreetMap routing service" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">'."\n";
     $xml .= "\n";
+    $xml .= '<![CDATA['.$_SERVER['HTTP_REFERER'].']]>'."\n";
+    $xml .= "\n";
     $xml .= '  <metadata>'."\n";
-    $xml .= '    <link href="'.$_SERVER['HTTP_REFERER'].'">'."\n";
+    $xml .= '    <link href="'.$url.'">'."\n";
     $xml .= '      <text>OpenStreetMap routing service</text>'."\n";
     $xml .= '    </link>'."\n";
     $xml .= '    <time>'.date('c').'</time>'."\n";

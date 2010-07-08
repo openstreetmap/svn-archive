@@ -16,7 +16,11 @@
  */
 
 // The domains we're allowed to contact
-$allowedDomains = array('http://gazetteer.openstreetmap.org/', 'http://nominatim.openstreetmap.org/', 'http://dev.openstreetmap.nl/~rullzer');
+$allowedDomains = array('http://gazetteer.openstreetmap.org/', 
+					'http://nominatim.openstreetmap.org/', 
+					'http://dev.openstreetmap.nl/', 
+					'http://www.yournavigation.org/',
+					'http://yournavigation.org/');
 
 // The actual form action
 $action = $_REQUEST['url'];
@@ -77,6 +81,8 @@ else
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
+curl_setopt($ch, CURLOPT_USERAGENT, "transport.php (CURL)");
+ 
 // Get result and close cURL
 $result = curl_exec($ch);
 

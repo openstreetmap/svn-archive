@@ -60,10 +60,10 @@ public class EditToolDialog extends ExtendedDialog {
     }
 
     @Override
-    protected void buttonAction(ActionEvent evt) {
+    protected void buttonAction(int buttonIndex, ActionEvent evt) {
         if (evt.getActionCommand().equals(tr("OK"))) {
             save();
         }
-        super.buttonAction(evt);
+        super.buttonAction(buttonIndex, evt);
     }
 }

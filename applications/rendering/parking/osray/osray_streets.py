@@ -5,10 +5,10 @@ from osray_db import *
 from osray_geom import *
 
 highwaytypes = { # highwaytype : [color,lane_width_factor]
-    'motorway':['<1,0,0>',0.9],
-    'motorway_link':['<1,0,0>',0.9],
-    'trunk':['<0.9,1,0.9>',1.0],
-    'trunk_link':['<0.9,1,0.9>',1.0],
+    'motorway':['<1,0,0>',1.3],
+    'motorway_link':['<1,0,0>',1.3],
+    'trunk':['<0.9,1,0.9>',1.1],
+    'trunk_link':['<0.9,1,0.9>',1.1],
     'primary':['<1,1,0.9>',1.0],
     'primary_link':['<1,1,0.9>',1.0],
     'secondary':['<1,0.9,0.9>',1.0],

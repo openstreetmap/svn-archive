@@ -160,11 +160,15 @@ def main(options):
     render_buidings(f,osraydb)
     f.close()
     
+    command = 'povray'
+    image_parameter = '-Iscene-osray.pov'
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
-    result = commands.getstatusoutput('povray -Iscene-osray.pov +UV '+image_dimension_parameters+' +Q9 +A')
+    antialiasing_parameters = '+A0.1 +AM2 +R3 -J'
+    misc_parameters = '+UV +Q9'
+    commandline = string.join([commandline,image_parameter,image_dimenstion_parameters,antialiasing_parameters,misc_parameters])
+    result = commands.getstatusoutput(commandline)
     print result[1]
     osraydb.shutdown()
-
 
 if __name__ == "__main__":
     parser = OptionParser()

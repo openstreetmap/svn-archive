@@ -111,7 +111,7 @@ public class Main {
         title = el1.getFirstChild().getNodeValue();
       }    
       
-      nl = el.getElementsByTagName("BoundingBox");
+      nl = el.getElementsByTagName("LatLonBoundingBox");
       if (nl!=null&& nl.getLength()>0) {
         Element el1=(Element) nl.item(0);
         minX=el1.getAttribute("minx");

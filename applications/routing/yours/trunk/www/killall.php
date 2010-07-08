@@ -3,7 +3,7 @@
   Yournavigation.org All rights reserved.
  */
  
-$allowed_hosts = array('213.10.112.251', '193.141.16.74');
+$allowed_hosts = array('213.10.112.251', '193.141.16.74','85.144.92.23');
 
 $ps = array();
 $output = array();
@@ -37,23 +37,42 @@ var_dump($output);
 		$bKill = true;
 		$properties = array();
 		$properties = split(" ", $process);
-	
+		
+		echo findPropertyText("grep", $properties)."<br>";
 		foreach ($properties as $item => $property)
 		{
-			//echo "property ".$item." = ".$property."\n";
-			if (strstr($property, "grep"))
+			if (is_numeric($property) )
 			{
-				echo "Not killing ".$properties[0]."<br>";
-				$bKill = false;
+				if (findPropertyText("grep", $properties) == true)
+				{
+					echo "Not killing ".$property."<br>";
+				} 
+				else
+				{
+					echo "Killing ".$property;
+					shell_exec("kill -9 ".$property);
+					echo "<br>";
+				}
+				break;
 			}
-		}
-		if ($bKill == true)
-		{
-			echo "Killing ".$properties[0];
-			shell_exec("kill -9 ".$properties[0]);
-			echo "<br>";
+			else
+			{
+				echo "test: ".$property."<br>";	
+			}
 		}
 	}
 }
 echo '</body>';
+
+function findPropertyText($needle, $haystack)
+{
+	foreach ($haystack as $item => $property)
+	{
+		if (strstr($needle, $property))
+		{
+			return true;
+		} 
+	}
+	return false;
+}
 ?>

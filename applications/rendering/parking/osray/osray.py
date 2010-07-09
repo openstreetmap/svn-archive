@@ -6,6 +6,7 @@ import commands
 import psycopg2
 import csv
 import re
+import string
 from numpy import *
 from osray_db import *
 from osray_ground import *

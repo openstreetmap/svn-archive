@@ -26,6 +26,8 @@ using namespace std;
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/file.h>
+#include <sys/time.h>
+#include <errno.h>
 #define TEXT(x) x
 #define TCHAR char
 #else
@@ -2875,7 +2877,7 @@ inline void SerializeOptions (FILE *optFile, int r, const TCHAR *pakfile)
 // refuse a request. Only when calculations indicate that resources are
 // low will the oldest process return early with an incomplete (jump)
 // route. A number of constants are hard coded.
-#define MAX_INST 300
+#define MAX_INST 170
 struct ldCtrlType {
   int free;
   struct {
@@ -2986,14 +2988,15 @@ int UserInterface (int argc, char *argv[],
     FILE *f = fopen ("ld_ctrl", "r+");
     if (!f) {
       if ((f = fopen ("ld_ctrl", "w+")) == NULL) return 2;
-      for (int i = 0; i < sizeof (*ld); i++) fputc (0, f);
+      for (size_t i = 0; i < sizeof (*ld); i++) fputc (0, f);
       fflush (f);
     }
     if (!f || (char*)-1L == (char*) (ld = 
              (ldCtrlType *) mmap (NULL, sizeof (*ld), PROT_READ | PROT_WRITE,
                                   MAP_SHARED, fileno (f), 0))
-        || flock (fileno (f), LOCK_EX) != 0) {
-      printf ("Content-Type: text/plain\n\r\n\rLd ctrl error\n\r");
+        || lockf (F_LOCK, fileno (f), sizeof (*ld)) != 0) {
+      printf ("Content-Type: text/plain\n\r\n\rLd ctrl error%p %p %s\n\r",
+        f, ld, strerror (errno));
       return 0;
     }
     int calls = (sysconf (_SC_PAGESIZE) / 4096 * sysconf (_SC_PHYS_PAGES)
@@ -3006,12 +3009,12 @@ int UserInterface (int argc, char *argv[],
     gettimeofday (&ld->inst[myInst].start, &tz);
     if (++ld->free >= MAX_INST) ld->free = 0;
     UpdateLdCtrl (ld->free, calls, 0, 0, sysconf (_SC_NPROCESSORS_ONLN));
-    flock (fileno (f), LOCK_UN);
+    lockf (F_ULOCK, fileno (f), sizeof (*ld));
     for (int i = 0; i < ld->inst[myInst].maks && RouteLoop (); i++) {}
-    flock (fileno (f), LOCK_EX);
+    lockf (F_LOCK, fileno (f), sizeof (*ld));
     ld->inst[myInst].start.tv_sec = 0; // Mark that we're done.
     UpdateLdCtrl (ld->free, calls, 0, 0, sysconf (_SC_NPROCESSORS_ONLN));
-    flock (fileno (f), LOCK_UN);
+    lockf (F_ULOCK, fileno (f), sizeof (*ld));
     #else
     while (RouteLoop ()) {}
 /*  It is reasonable to assume that there exists a short route in the actual

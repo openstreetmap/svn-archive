@@ -109,7 +109,7 @@ sub processOSMFiles
 	
 		while(my $Line = <OSMFILE>)
 		{
-			print "\tprocessed line ".int($count/1000000).",000,000\n" if !($count % 10000000);
+			print "\tprocessed line ".int($count/1000000).",000,000\n" if !($count % 10000000) && $Config{'verbose'};
 			++$count;
 			if($Line =~ m{<tag k=["'](.*?)["'] v=["'](.*?)["']\s*/>})
 			{
@@ -184,7 +184,7 @@ sub processOSMFiles
 								if($Key =~ m{$regex})
 								{
 									$Value = "*";
-									print "\tIgnoring key $Key - due to settings\n";
+									print "\tIgnoring key $Key - due to settings\n" if $Config{'verbose'};
 									last;
 								}
 							}

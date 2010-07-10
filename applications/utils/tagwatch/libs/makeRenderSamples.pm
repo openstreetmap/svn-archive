@@ -43,7 +43,7 @@ sub renderExamples
 	{
 		if($Line =~ m{^(\w+)\s*=\s*(.*?)\s*$})
 		{
-			print STDERR "\tCreating $1 = $2\n";
+			print STDERR "\tCreating $1 = $2\n" if $Config{'verbose'};
 			CreateSample($1,$2,$OutputFolder,$Config{'osmarender_folder'},$Config{'sample_width'},$Config{'sample_height'},$SampleData);
 		}
 	}
@@ -87,8 +87,8 @@ sub CreateSample
 sub getOsmarender
 {
 	my($OSMRDir) = @_;
-	mirror("http://svn.openstreetmap.org/applications/rendering/osmarender6/osmarender.xsl", "$OSMRDir/osmarender.xsl");
-	mirror("http://svn.openstreetmap.org/applications/rendering/osmarender6/osm-map-features-z17.xml", "$OSMRDir/map_features.xml");
+	mirror("http://svn.openstreetmap.org/applications/rendering/osmarender/xslt/osmarender.xsl", "$OSMRDir/osmarender.xsl");
+	mirror("http://svn.openstreetmap.org/applications/rendering/osmarender/stylesheets/osm-map-features-z17.xml", "$OSMRDir/map_features.xml");
 }
 
 #--------------------------------------------------------------------------

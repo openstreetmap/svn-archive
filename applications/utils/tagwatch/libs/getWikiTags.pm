@@ -19,12 +19,10 @@
 #---------------------------------------------------------------
 
 use strict;
-use MediaWiki;
+use utf8;
+use MediaWiki::API;
 
-my $c = MediaWiki->new;
-   $c->setup({'wiki' => {
-	                 'host' => 'wiki.openstreetmap.org',
-	                 'path' => ''}});
+my $c = MediaWiki::API->new( { api_url => 'http://wiki.openstreetmap.org/w/api.php' } );
 
 # global hash array that holds all Tag data
 my %RelationDescriptions;
@@ -36,13 +34,14 @@ my %KeyByGroup;
 my %LookupKeyInGroup; 
 my %LookupValueInGroup; 
 my @TemplateGroups;
-
+my $verbose = 0;
 
 sub buildWikiTagCache
 {
 	my (%Config) = @_;
 
 	$c->{ua}->agent($Config{'user_agent'} || "TagWatch/1.0");
+	$verbose = $Config{'verbose'};
 	my $CacheTopDir = $Config{'cache_folder'};
 	mkdir $CacheTopDir if ! -d $CacheTopDir;
 
@@ -50,15 +49,21 @@ sub buildWikiTagCache
 	mkdir $CacheDir if ! -d $CacheDir;
 
 	# get Map Feature Template groups
-	getTemplateGroups();
+	print "\tparse Map_Features templates list ...\n";
+	my @Pages = getTemplateGroups();
 
 	# parse english map feature Templates to get all known keys and tags together with their description.
-	print "\tparse english Map_Features templates ...\n";
+	print "\tparse English Map_Features templates ...\n";
 	parseEnMapFeatures();
 
 	# parse translated Map_Features pages to get the translated descriptions.
-	print "\tparse <lang>:Map_Features pages ...\n";
-	parseTranslatedMapFeatures();
+	for my $PageName (@Pages)
+	{
+		$PageName =~ m{^([A-Za-z-]+)};
+		my $Language = lc($1);
+		print "\tparse $PageName page (language $Language) ...\n";
+		parseTranslatedMapFeatures($Language, $PageName);
+	}
 
 	# parse the Key pages for descriptions and general Key informations
 	print "\tparse Key description and translated tag description from <lang>:Key:<name> pages ...\n";
@@ -87,15 +92,22 @@ sub buildWikiTagCache
 #--------------------------------------------------------------------------
 sub getTemplateGroups
 {
-	my($Template_articles, $Template_subcats) = $c->readcat("Map_Features_template");
-
-	foreach my $PageName (@{$Template_articles})
+	my @pages;
+	foreach my $article (@{$c->list({
+	action => 'query', list => 'categorymembers', cmlimit => 'max',
+	cmtitle => 'Category:Map Features template'})})
 	{
+		my $PageName = $article->{title};
 		if($PageName =~ m{Template:Map Features:(.*)})
 		{
 			push(@TemplateGroups,$1);
 		}
+		elsif($PageName =~ m{^[A-Za-z-]+:Map Features$})
+		{
+			push(@pages, $PageName);
+		}
 	}
+	return @pages;
 }
 
 #--------------------------------------------------------------------------
@@ -114,8 +126,10 @@ sub parseEnMapFeatures
 		$TempValue = "";
 		$TempIdentifier = "";
 
-		# parse every line from every availible template
-		foreach my $Line(split(/\n/, $c->text("Template:Map Features:$Group")))
+		# parse every line from every available template
+		my $page = $c->get_page({title => "Template:Map Features:$Group"})->{'*'};
+		utf8::decode($page);
+		foreach my $Line(split(/\n/, $page))
 		{
 			# get key name
 			if($Line =~ m{\|\s*\[\[\{\{\{\s*(.*)\s*:key\s*\|\s*(.*)\s*\}\}\}\s*\|\s*(.*)\s*\]\]\s*})
@@ -188,86 +202,81 @@ sub parseEnMapFeatures
 #--------------------------------------------------------------------------
 sub parseTranslatedMapFeatures
 {
-	my %PageNames = getMFPageNames();
+	my ($Language, $PageName) = @_;
 	my $Group = "";
-
-	foreach my $Lang (keys %PageNames)
-	{		
-		$Group = "";
-		
-		# parse every line from each translated Map Feature page
-		foreach my $Line(split(/\n/, $c->text("$PageNames{$Lang}:Map Features")))
+	
+	# parse every line from each translated Map Feature page
+	my $page = $c->get_page({title => $PageName})->{'*'};
+	utf8::decode($page);
+	foreach my $Line(split(/\n/, $page))
+	{
+		if($Line =~ m{\s*\{\{Map_Features:(\w*\s\w*|\w*)})
 		{
-			if($Line =~ m{\s*\{\{Map_Features:(\w*\s\w*|\w*)})
+			$Group = $1;
+			$Group =~ s/ /_/g;
+		} #\s*(\||\}\}|\s*)
+		if($Line =~ m{\|?(.*):desc=\s*(.*)})
+		{
+			my $Identifier = $1;
+			my $Description = $2;
+
+			$Identifier =~ s/'//g;
+			if($Identifier eq 'Proposed_features')
 			{
-				$Group = $1;
-				$Group =~ s/ /_/g;
-			} #\s*(\||\}\}|\s*)
-			if($Line =~ m{\|?(.*):desc=\s*(.*)})
-			{
-				my $Identifier = $1;
-				my $Description = $2;
-
-				$Identifier =~ s/'//g;
-				if($Identifier eq 'Proposed_features')
-				{
-					$Identifier = "User_Defined";
-				}
-
-				# Get right Key/Value for this identifier under this Group
-				my $Key = $LookupKeyInGroup{$Group}->{$Identifier};
-				my $Value = $LookupValueInGroup{$Group}->{$Identifier};
-
-				# TODO find better regex to avoid replacing this afterwards
-				$Description =~ s/\|$//g;
-				$Description =~ s/\}\}$//g;
-				$TagDescriptions{$Key}->{$Value}->{'desc'}->{$Lang} = $Description;
+				$Identifier = "User_Defined";
 			}
+
+			# Get right Key/Value for this identifier under this Group
+			my $Key = $LookupKeyInGroup{$Group}->{$Identifier};
+			my $Value = $LookupValueInGroup{$Group}->{$Identifier};
+
+			# TODO find better regex to avoid replacing this afterwards
+			$Description =~ s/\|$//g;
+			$Description =~ s/\}\}$//g;
+			$TagDescriptions{$Key}->{$Value}->{'desc'}->{$Language} = $Description;
 		}
 	}
 }
 
 #--------------------------------------------------------------------------
 # parse the Key category to find all <lang>:Key subcategories
-# parse the subcategories to get all availible Key pages and
+# parse the subcategories to get all available Key pages and
 # the language.
 #--------------------------------------------------------------------------
 sub parseKeyCategories
 {
 	# First check the Key category for available languages
-	my($KeyArticles, $KeySubcats) = $c->readcat("Keys");
-
-	# run through all subcategories
-	foreach my $Pages(@{$KeyArticles})
+	foreach my $article (@{$c->list({
+	action => 'query', list => 'categorymembers', cmlimit => 'max',
+	cmtitle => 'Category:Keys'})})
 	{
-		if($Pages =~ m{^Category:(.*):Keys$})
+		if($article->{title} =~ m{^Category:.*:Keys$})
 		{
-			my $Subcategory = "$1:Keys";
-
-			# get the availible keypages
-			my($LangKeyArticles, $LangKeySubcats) = $c->readcat($Subcategory);
-	
-			# now check the Key page and extract all informations from it.
-			foreach my $KeyPageName(@{$LangKeyArticles})
+			# get the available keypages and extract all informations from it.
+			foreach my $keyarticle (@{$c->list({
+			action => 'query', list => 'categorymembers', cmlimit => 'max',
+			cmtitle => $article->{title}})})
 			{
-				if($KeyPageName =~ m{(\w*):?Key:(.*)})
+				my $KeyPageName = $keyarticle->{title};
+				if($KeyPageName =~ m{([A-Za-z-]*):?Key:(.*)}
+				&& !($KeyPageName =~ m{Category}))
 				{
 					# get language of the Key page
 					my $Language;
 					if($1 eq "")
 					{
-						$Language = "En";
+						$Language = "en";
 					}
 					else
 					{
-						$Language = $1;
+						$Language = lc($1);
 					}
 	
 					# replace spaces with underlines
 					my $KeyName = $2;
 					$KeyName =~ s/ /_/g;
 	
-					parseKeyPages($Language,$KeyName, $KeyPageName);
+					parseKeyPages($Language, $KeyName, $KeyPageName);
 				}
 			}
 		}
@@ -284,14 +293,18 @@ sub parseKeyPages
 {
 	my ($Language, $KeyName, $KeyPageName) = @_;
 
+	print "\t\tParse language $Language key $KeyName pagename $KeyPageName\n" if $verbose;
+
 	my $Section = "-"; # current section of the page (header template or map feature template)
-	my $Group   = "";  # used to create groups for keys according to their usage in the map Feature templates, if no Group info was availible
+	my $Group   = "";  # used to create groups for keys according to their usage in the map Feature templates, if no Group info was available
 
 	# parse the Key page line by line
-	foreach my $Line(split(/\n/, $c->text($KeyPageName)))
+	my $page = $c->get_page({title => $KeyPageName})->{'*'};
+	utf8::decode($page);
+	foreach my $Line(split(/\n/, $page))
 	{
 		# check for Key template section
-		if($Line =~ m{\s*\{\{KeyDescription(.*)})
+		if($Line =~ m{\s*\{\{(Template:.*:)?KeyDescription.*})
 		{
 			$Section = "KeyDescription";
 		}
@@ -345,7 +358,7 @@ sub parseKeyPages
 			{
 				$Section = "-";
 				# stop parsing here if its an english template, because it has no further informations.
-				if($Language eq "En")
+				if($Language eq "en")
 				{
 					last;
 				}
@@ -364,7 +377,6 @@ sub parseKeyPages
 		{ #    \s*(\||\}\})?\s*$
 			if($Line =~ m{\|?(.*):desc=\s*(.*)})
 			{
-				#if($Language eq "Fr") { print "$1 :: $2\n"; }
 				my $Identifier = $1;
 				my $Description = $2;
 	
@@ -391,47 +403,44 @@ sub parseKeyPages
 
 #--------------------------------------------------------------------------
 # parse the Tag category to find all <lang>:Tag subcategories
-# parse the subcategories to get all availible Tag pages and
+# parse the subcategories to get all available Tag pages and
 # the language.
 #--------------------------------------------------------------------------
 sub parseTagCategory
 {
-	# First check the Key category for availible languages
-	my($TagArticles, $TagSubcats) = $c->readcat("Tags");
-
-	# run through all subcategories
-	foreach my $Pages(@{$TagArticles})
+	# First check the Key category for available languages
+	foreach my $article (@{$c->list({
+	action => 'query', list => 'categorymembers', cmlimit => 'max',
+	cmtitle => 'Category:Tags'})})
 	{
-		if($Pages =~ m{^Category:(.*):Tags$})
+		if($article->{title} =~ m{^Category:.*:Tags$})
 		{
-			my $Subcategory = "$1:Tags";
-
-			# get the availible tag pages
-			my($LangTagArticles, $LangTagSubcats) = $c->readcat($Subcategory);
-	
-			# now check the Tag page and extract all informations from it.
-			foreach my $TagPageName(@{$LangTagArticles})
+			# get the available tag pages and extract all informations from it.
+			foreach my $tagarticle (@{$c->list({
+			action => 'query', list => 'categorymembers', cmlimit => 'max',
+			cmtitle => $article->{title}})})
 			{
-				if($TagPageName =~ m{(\w*):?Tag:(.*)=(.*)})
+				my $TagPageName = $tagarticle->{title};
+				if($TagPageName =~ m{([A-Za-z-]*):?Tag:(.*)=(.*)})
 				{
 					# get language of the Key page
 					my $Language;
 					if($1 eq "")
 					{
-						$Language = "En";
+						$Language = "en";
 					}
 					else
 					{
-						$Language = $1;
+						$Language = lc($1);
 					}
 	
 					# replace spaces with underlines
 					my $KeyName = $2;
-					$KeyName =~ s/ /_/g;
 					my $ValueName = $3;
+					$KeyName =~ s/ /_/g;
 					$ValueName =~ s/ /_/g;
 	
-					parseTagPages($Language,$KeyName, $ValueName, $TagPageName);
+					parseTagPages($Language, $KeyName, $ValueName, $TagPageName);
 				}
 			}
 		}
@@ -445,6 +454,8 @@ sub parseTagPages
 {
 	my ($Language,$KeyName, $ValueName, $TagPageName) = @_;
 
+	print "\t\tParse language $Language tag $KeyName=$ValueName pagename $TagPageName\n" if $verbose;
+
 	my $Section = "-"; # used to change parsing mode for the combination or implies list entry
 	my $followredirect = 1;
 
@@ -453,7 +464,9 @@ sub parseTagPages
 		$followredirect = 0;
 
 		# parse the tag page line by line
-		foreach my $Line(split(/\n/, $c->text($TagPageName)))
+		my $page = $c->get_page({title => $TagPageName})->{'*'};
+		utf8::decode($page);
+		foreach my $Line(split(/\n/, $page))
 		{
 			# parse combination list entry
 			if($Section eq "combination")
@@ -461,7 +474,7 @@ sub parseTagPages
 				if($Line =~ m{\|*\*\s*(.*?)\s*\|*\s*$})
 				{
 					# add this just for one language and prefer the english page
-					if($Language eq "En")
+					if($Language eq "en")
 					{
 						push(@{$TagDescriptions{$KeyName}->{$ValueName}->{'combination'}},$1);
 					}
@@ -497,7 +510,7 @@ sub parseTagPages
 					}
 				}
 				# end parsing at the end of the header wiki template
-				if($Line =~ m{.*?\}\}\s*$})
+				if($Line =~ m{\}\}\s*$})
 				{
 					last;
 				}
@@ -538,38 +551,35 @@ sub groupCleanup
 
 #--------------------------------------------------------------------------
 # parse the Relation category to find all <lang>:Relation subcategories
-# parse the subcategories to get all availible Relation pages and
+# parse the subcategories to get all available Relation pages and
 # the language.
 #--------------------------------------------------------------------------
 sub parseRelationCategory
 {
 	# First check the Relation category for available languages
-	my($RelationArticles, $RelationSubcats) = $c->readcat("Relations");
-
-	# run through all subcategories
-	foreach my $Pages(@{$RelationArticles})
+	foreach my $article (@{$c->list({
+	action => 'query', list => 'categorymembers', cmlimit => 'max',
+	cmtitle => 'Category:Relations'})})
 	{
-		if($Pages =~ m{^Category:(.*):Relations$})
+		if($article->{title} =~ m{^Category:.*:Relations$})
 		{
-			my $Subcategory = "$1:Relations";
-
-			# get the availible keypages
-			my($LangRelationArticles, $LangRelationSubcats) = $c->readcat($Subcategory);
-	
-			# now check the Key page and extract all informations from it.
-			foreach my $RelationPageName(@{$LangRelationArticles})
+			# get the available keypages and extract all informations from it.
+			foreach my $relationarticle (@{$c->list({
+			action => 'query', list => 'categorymembers', cmlimit => 'max',
+			cmtitle => $article->{title}})})
 			{
-				if($RelationPageName =~ m{(\w*):?Relation:(.*)})
+				my $RelationPageName = $relationarticle->{title};
+				if($RelationPageName =~ m{([A-Za-z-]*):?Relation:(.*)})
 				{
 					# get language of the Key page
 					my $Language;
 					if($1 eq "")
 					{
-						$Language = "En";
+						$Language = "en";
 					}
 					else
 					{
-						$Language = $1;
+						$Language = lc($1);
 					}
 	
 					# replace spaces with underlines
@@ -590,10 +600,14 @@ sub parseRelationPages
 {
 	my ($Language, $RelationName, $RelationPageName) = @_;
 
+	print "\t\tParse language $Language relation $RelationName pagename $RelationPageName\n" if $verbose;
+
 	my $Section = "-"; # used to change parsing mode for the member list entry
 
 	# parse the relation page line by line
-	foreach my $Line(split(/\n/, $c->text($RelationPageName)))
+	my $page = $c->get_page({title => $RelationPageName})->{'*'};
+	utf8::decode($page);
+	foreach my $Line(split(/\n/, $page))
 	{
 		# parse combination list entry
 		if($Section eq "members")
@@ -601,7 +615,7 @@ sub parseRelationPages
 			if($Line =~ m{\|*\*\s*(.*?)\s*\|*\s*$})
 			{
 				# add this just for one language and prefer the english page
-				if($Language eq "En")
+				if($Language eq "en")
 				{
 					push(@{$RelationDescriptions{$RelationName}->{'members'}},$1);
 				}
@@ -656,14 +670,14 @@ sub writeData
 	open(KEYLIST, ">:utf8", "$CacheDir/key_list.txt");
 	open(GROUPEDKEYS, ">:utf8", "$CacheDir/grouped_keys.txt");
 
-	# go through all availible groups
+	# go through all available groups
 	foreach my $Group(keys(%KeyByGroup))
 	{
 		printf GROUPLIST "* $Group\n";
 
 		open(GROUP, ">:utf8", "$CacheDir/Group:$Group.txt");
 		
-		# go through all keys availible in this group
+		# go through all keys available in this group
 		foreach my $KeyName(@{$KeyByGroup{$Group}})
 		{
 			printf GROUPLIST "** $KeyName\n";
@@ -703,7 +717,7 @@ sub writeData
 				printf KEYDESC "onArea=no\n";
 			}
 
-			# print key description in every availible language
+			# print key description in every available language
 			foreach my $Language (keys(%{$KeyDescriptions{$KeyName}->{'desc'}}))
 			{
 				printf KEYDESC "$Language:desc=%s\n", $KeyDescriptions{$KeyName}->{'desc'}->{$Language};
@@ -752,7 +766,7 @@ sub writeData
 					printf TAG "onArea=no\n";
 				}
 
-				# print key description in every availible language
+				# print key description in every available language
 				foreach my $Language (keys(%{$TagDescriptions{$KeyName}->{$ValueName}->{'desc'}}))
 				{
 					printf TAG "$Language:desc=%s\n", $TagDescriptions{$KeyName}->{$ValueName}->{'desc'}->{$Language};
@@ -770,7 +784,7 @@ sub writeData
 
 	open(RELATIONLIST, ">:utf8", "$CacheDir/relation_list.txt");
 
-	# go through all relations availible in the wiki
+	# go through all relations available in the wiki
 	foreach my $RelationName(keys(%RelationDescriptions))
 	{
 		printf RELATIONLIST "$RelationName\n";
@@ -791,51 +805,6 @@ sub writeData
 		close RELATION;
 	}
 	close RELATIONLIST;
-}
-
-
-#--------------------------------------------------------------------------
-# Workaround ... 
-# used to get all Map_Features pages and their corresponding language
-# mainly used, because the dutch ppl don't use Nl:Map_Features as page name
-#--------------------------------------------------------------------------
-sub getMFPageNames
-{
-	my %workaround = (
-			"Ar" => "Ar",
-			"Bg" => "Bg",
-			"Cz" => "Cz",
-			"Da" => "Da",
-			"De" => "DE",
-			"Es" => "ES",
-			"Et" => "Et",
-			"Fi" => "Fi",
-			"Fr" => "FR",
-			"He" => "He",
-			"Hr" => "Hr",
-			"Hu" => "HU",
-			"Is" => "Is",
-			"It" => "IT",
-			"Ja" => "JA",
-			"Ko" => "Ko",
-			"Lt" => "Lt",
-			"Lv" => "Lv",
-			"Nl" => "NL",
-			"No" => "No",
-			"Pl" => "Pl",
-			"Pt" => "Pt",
-			"Pt-BR" => "Pt-br",
-			"Ro" => "Ro",
-			"Ro-MD" => "Ro-md",
-			"Ru" => "RU",
-			"Sl" => "Sl",
-			"Sv" => "Sv",
-			"Tr" => "Tr",
-			"Uk" => "Uk",
-			"Vi" => "Vi",
-			);
-
-	return %workaround;
 }
 
 1;

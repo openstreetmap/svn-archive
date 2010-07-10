@@ -31,8 +31,8 @@ use libs::processOSMFiles;
 use libs::constructHTMLStats;
 use libs::makeRenderSamples;
 use LWP::Simple;
-
-
+use encoding 'utf8', STDERR => 'utf8';
+ 
 my $configfile = "tagwatch.conf";
 
 foreach my $arg (@ARGV)

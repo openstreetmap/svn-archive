@@ -1994,22 +1994,21 @@ sub getWikiDescriptionList
 	#all languages that this site will be translated into (for tag description details)
 	my @Languages = split(/,/, $Config{'languages_wikidesc'});
 
-	# iterate through all interresting languages for the documentation
+	# iterate through all interesting languages for the documentation
 	my @wikiloop;			
-	foreach my $Language(@Languages)
+	foreach my $Language (@Languages)
 	{
 		my %row_wiki;
-		if(exists $Element->{'description'}->{ucfirst($Language)} && $Element->{'description'}->{ucfirst($Language)} ne ""  && $Element->{'description'}->{ucfirst($Language)} ne " ")
+		$Language = ucfirst($Language);
+		if(exists $Element->{'description'}->{$Language} && $Element->{'description'}->{$Language} ne ""
+		&& $Element->{'description'}->{$Language} ne " ")
 		{
-			%row_wiki = (wikidesc => "wiki_green",
-		 		     language => ucfirst($Language));
+			%row_wiki = (wikidesc => "wiki_green", language => $Language);
 		}
-		# check if maxbe the description exist in the grouped version keyname=*
-		
+		# TODO: check if maybe the description exist in the grouped version keyname=*
 		else
 		{
-			%row_wiki = (wikidesc => "wiki_red",
-		 		     language => ucfirst($Language));
+			%row_wiki = (wikidesc => "wiki_red", language => $Language);
 		}
 		push(@wikiloop, \%row_wiki);
 	}

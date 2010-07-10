@@ -196,7 +196,7 @@ sub parseTranslatedMapFeatures
 		$Group = "";
 		
 		# parse every line from each translated Map Feature page
-		foreach my $Line(split(/\n/, $c->text($PageNames{$Lang})))
+		foreach my $Line(split(/\n/, $c->text("$PageNames{$Lang}:Map Features")))
 		{
 			if($Line =~ m{\s*\{\{Map_Features:(\w*\s\w*|\w*)})
 			{
@@ -234,7 +234,7 @@ sub parseTranslatedMapFeatures
 #--------------------------------------------------------------------------
 sub parseKeyCategories
 {
-	# First check the Key category for availible languages
+	# First check the Key category for available languages
 	my($KeyArticles, $KeySubcats) = $c->readcat("Keys");
 
 	# run through all subcategories
@@ -802,27 +802,37 @@ sub writeData
 sub getMFPageNames
 {
 	my %workaround = (
-			"Bg" => "Bg:Map Features",
-			"Cz" => "Cz:Map Features",
-			"Co" => "Co:Map Features",
-			"De" => "De:Map Features",
-			"Dk" => "Dk:Map Features",
-			"Fr" => "Fr:Map Features",
-			"It" => "It:Map Features",
-			"Es" => "Es:Map Features",
-			"Ja" => "Ja:Map Features",
-			"Hu" => "Hu:Map Features",
-			"Nl" => "Kaart eigenschappen",
-			"Pl" => "Pl:Map Features",
-			"Ro" => "Ro:Map Features",
-			"Ro-md" => "Ro-md:Map Features",
-			"Pt" => "Pt:Map Features",
-			"SK" => "SK:Map Features",
-			"Sl" => "Sl:Map Features",
-			"Fi" => "Fi:Map Features",
-			"Sv" => "Sv:Map Features",
-			"Tr" => "Tr:Map Features",
-			"Ru" => "Ru:Map Features"
+			"Ar" => "Ar",
+			"Bg" => "Bg",
+			"Cz" => "Cz",
+			"Da" => "Da",
+			"De" => "DE",
+			"Es" => "ES",
+			"Et" => "Et",
+			"Fi" => "Fi",
+			"Fr" => "FR",
+			"He" => "He",
+			"Hr" => "Hr",
+			"Hu" => "HU",
+			"Is" => "Is",
+			"It" => "IT",
+			"Ja" => "JA",
+			"Ko" => "Ko",
+			"Lt" => "Lt",
+			"Lv" => "Lv",
+			"Nl" => "NL",
+			"No" => "No",
+			"Pl" => "Pl",
+			"Pt" => "Pt",
+			"Pt-BR" => "Pt-br",
+			"Ro" => "Ro",
+			"Ro-MD" => "Ro-md",
+			"Ru" => "RU",
+			"Sl" => "Sl",
+			"Sv" => "Sv",
+			"Tr" => "Tr",
+			"Uk" => "Uk",
+			"Vi" => "Vi",
 			);
 
 	return %workaround;

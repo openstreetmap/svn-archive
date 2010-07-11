@@ -3047,8 +3047,9 @@ int UserInterface (int argc, char *argv[],
         wayType *w = Way (shortest->nd);
         char *name = (char*)(w + 1) + 1;
         unsigned style= StyleNr(w);
-        printf ("%lf,%lf,%c,%s,%.0lf,%.*s\n\r", LatInverse (shortest->nd->lat),
+        printf ("%lf,%lf,%c%s,%s,%.0lf,%.*s\n\r", LatInverse (shortest->nd->lat),
           LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
+          ((1 << roundaboutR) & (Way (shortest->nd))->bits) ? "r" : "",
           style < sizeof(klasTable)/sizeof(klasTable[0]) ? klasTable[style].desc :
           "(unknown-style)", ((shortest->heapIdx < 0
           ? -shortest->heapIdx : routeHeap[shortest->heapIdx].best) -

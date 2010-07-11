@@ -240,6 +240,6 @@ def create_landuse_texture(osraydb,options,texturename):
     f_landuse.close()
 
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
-    result = commands.getstatusoutput('povray -Iscene-osray-landuse-texture.pov -UV '+image_dimension_parameters+' +Q4 -A')
+    result = commands.getstatusoutput('povray -Iscene-osray-landuse-texture.pov -UV '+image_dimension_parameters+' +Q4 +A')
     # print result[1]
 

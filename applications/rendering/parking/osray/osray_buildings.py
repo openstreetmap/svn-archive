@@ -4,6 +4,8 @@
 from osray_db import *
 from osray_geom import *
 
+Radiosity = True
+
 buildingtypes = {
     'yes':['<1,0.8,0.8>',1.0],
     'office':['<1,0.6,0.6>',1.0],
@@ -19,9 +21,23 @@ amenitybuildingtypes = {
     }
 
 
-def pov_declare_highway_textures(f):
-    declare_highway_texture = """
-#declare texture_highway_{highwaytype} =
+def pov_declare_building_textures(f):
+    if Radiosity:
+        declare_building_texture = """
+#declare texture_building_{buildingtype} =
+    texture {{
+        pigment {{
+            color rgb {color}
+        }}
+        finish {{
+            diffuse 0.5
+            ambient 0
+        }}
+    }}
+"""
+    else:
+        declare_building_texture = """
+#declare texture_building_{buildingtype} =
     texture {{
         pigment {{
             color rgb {color}
@@ -34,46 +50,48 @@ def pov_declare_highway_textures(f):
         }}
     }}
 """
-    for highwaytype in highwaytypes.keys():
-        highwayparams = highwaytypes.get(highwaytype)
-        color = highwayparams[0]
-        f.write(declare_highway_texture.format(color=color,highwaytype=highwaytype))
+    for buildingtype in buildingtypes.keys():
+        buildingparams = buildingtypes.get(buildingtype)
+        color = buildingparams[0]
+        f.write(declare_building_texture.format(color=color,buildingtype=buildingtype))
+    for buildingtype in amenitybuildingtypes.keys():
+        buildingparams = amenitybuildingtypes.get(buildingtype)
+        color = buildingparams[0]
+        f.write(declare_building_texture.format(color=color,buildingtype=buildingtype))
 
-    f.write("""
-#declare texture_highway_casing =
-    texture {{
-        pigment {{
-            color rgb {color}
-        }}
-        finish {{
-            specular 0.05
-            roughness 0.05
-            ambient 0.3
-            /*reflection 0.5*/
-        }}
-    }}
-""".format(color='<0.3,0.3,0.3>'))
-
+def get_building_texture(building,amenity,cladding):
+    buildingparams = buildingtypes.get(building)
+    texture = building
+    if amenity!=None:
+        if amenitybuildingtypes.has_key(amenity): # if amenity is known, use that color
+            texture = amenity
+    if cladding!=None:
+        if claddingtypes.has_key(cladding): # if cladding is known, use that color
+            texture = cladding
+    return texture
 
 def pov_building(f,building):
-    buildingtype = building[1]
+    buildingtype = building[2]
     #buildingtype = 'secondary'
     buildingparams = buildingtypes.get(buildingtype)
 
-    linestring = building[2]
+    linestring = building[1]
     linestring = linestring[8:] # cut off the "POLYGON("
     linestring = linestring[:-1] # cut off the ")"
 
-    heightstring = building[3]
-    #print 'hs="{0}"'.format(heightstring)
+    heightstring = building[4] # building:height
     if (heightstring==None):
-        height = 10.0
+        heightstring = building[3]
+        if (heightstring==None):
+            height = 10.0
+        else:
+            height = parse_length_in_meters(heightstring,0.01)
     else:
         height = parse_length_in_meters(heightstring,0.01)
 
-    amenity = building[4]
+    amenity = building[5]
     #print amenity
-    
+
     points = linestring.split(',')#.strip('(').strip(')')
     #print points
 
@@ -96,26 +114,16 @@ def pov_building(f,building):
         amenitybuildingparams = amenitybuildingtypes.get(amenity)
         color = amenitybuildingparams[0]
 
-    #if height != 10.0:
-        #print 'height:', height
-        #color = '<0,1,0>'
+    texture = get_building_texture(buildingtype,amenity,None)
+    f.write("""texture {{ texture_building_{texture} }}""".format(texture=texture))
     f.write("""
-    texture {{
-        pigment {{
-            color rgb {0}
-        }}
-        finish {{
-            specular 0.5
-            roughness 0.05
-            ambient 0.2
-            /*reflection 0.5*/
-        }}
-    }}
-    scale <1, {1}, 1>
+    scale <1, {height}, 1>
 }}
-\n""".format(color,height))
+\n""".format(height=height))
 
 def render_buidings(f,osraydb):
+    pov_declare_building_textures(f)
+    
     buildings = []
     for buildingtype in buildingtypes.iterkeys():
         buildings += osraydb.select_buildings(buildingtype)

@@ -138,10 +138,7 @@ def pov_highway(f,highway):
     lanewidth = 2.5 # m
     streetwidth = lanewidth * lanefactor
 
-    layer = highway[4]
-    if layer==None:
-        layer='0'
-    layer = int(layer)
+    layer = parse_int_safely(highway[4],default=0)
     if layer<0:
         layer=0 # FIXME
     layerheight = 4.0*layer # 4 m per layer

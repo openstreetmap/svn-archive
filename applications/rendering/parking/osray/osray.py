@@ -14,21 +14,33 @@ from osray_streets import *
 from osray_buildings import *
 from optparse import OptionParser
 
+Radiosity = True
+
 def pov_globals(f):
-    globsettings = """
+    if Radiosity:
+        globsettings = """
 #include "colors.inc"
 global_settings {{
     assumed_gamma 2.0
     noise_generator 2
-    ambient_light rgb <0.9,0.9,1>
-/*
+
+    ambient_light rgb <0.1,0.1,0.1>
     radiosity {{
-        count 1000
-        error_bound 0.7
-        recursion_limit 6
-        pretrace_end 0.002
+        count 60
+        error_bound 0.01
+        recursion_limit 3
+        pretrace_end 0.0005
+        brightness 1
     }}
-*/
+}}
+"""
+    else:
+        globsettings = """
+#include "colors.inc"
+global_settings {{
+    assumed_gamma 2.0
+    noise_generator 2
+    ambient_light rgb <0.8,0.8,0.8>
 }}
 """
     f.write(globsettings.format())
@@ -66,10 +78,25 @@ camera {{
    translate <{middle_x},0,{middle_z}>
 }}
 """.format(middle_x=avg(left,right),middle_z=avg(bottom,top),zoom=zoom,angle=isometric_angle,aspect=map_aspect))
+    if Radiosity:
+        ground_finish = """
+    finish {
+        diffuse 0.5
+        ambient 0.0
+    }
+"""        
+    else:
+        ground_finish = """
+    finish {
+        specular 0.5
+        roughness 0.05
+        ambient 0.2
+    }
+"""
     f.write("""
 /* ground */
 box {{
-    <{0}, -0.5, {1}>, <{2}, -0.2, {3}>
+    <{left}, -0.5, {bottom}>, <{right}, -0.2, {top}>
     texture {{
         pigment {{
             /* color rgb <1, 1, 1> */
@@ -80,15 +107,10 @@ box {{
             }}
         }}
         rotate <90,0,0>
-        scale <{4},1,{5}>
-        translate <{0},0,{1}>
+        scale <{xs},1,{ys}>
+        translate <{left},0,{bottom}>
     }}
-    finish {{
-        specular 0.5
-        roughness 0.05
-        ambient 0.2
-        /*reflection 0.5*/
-    }}
+    {finish}
 }}
 /* sky */
 sky_sphere {{
@@ -98,23 +120,36 @@ sky_sphere {{
             [ 0.5 color CornflowerBlue ]
             [ 1.0 color MidnightBlue ]
         }}
-        scale 20
+        scale 20000
         translate -10
     }}
 }}
-""".format(left,bottom,right,top,map_size_x,map_size_y))
+""".format(left=left,bottom=bottom,right=right,top=top,xs=map_size_x,ys=map_size_y,finish=ground_finish))
 
     #f.write("""light_source {{ <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <300000+{0}, 1000000, -1000000+{1}>, rgb <1, 1, 1> fade_power 0 }}\n""".format(avg(left,right),avg(bottom,top)))
     f.write("""
+/* The Sun */
 light_source {{
     <0, 1000000,0>,
     rgb <1, 1, 0.9>
-    area_light <100000, 0, 0>, <0, 0, 100000>, 8/4, 8/4
+    area_light <100000, 0, 0>, <0, 0, 100000>, 6, 6
     adaptive 1
     circular
     rotate <45,10,0>
+    translate <{0},0,{1}>
+}}
+
+\n""".format(avg(left,right),avg(bottom,top)))
+    f.write("""
+/* Sky blue */
+light_source {{
+    <0, 1000000,0>,
+    rgb <0.06, 0.06, 0.12>
+    area_light <1000000, 0, 0>, <0, 0, 1000000>, 6, 6
+    adaptive 1
+    circular
     translate <{0},0,{1}>
 }}
 \n""".format(avg(left,right),avg(bottom,top)))
@@ -126,20 +161,6 @@ light_source {{
     scale <{sizex},50,{sizey}>
     translate <{left},0,{bottom}>
 }}
-/* bounding box viz
-object {{ boundbox
-    texture {{
-        pigment {{
-            color rgb <1, 1, 0>
-        }}
-    }}
-    finish {{
-        specular 0.5
-        roughness 0.05
-        ambient 0.2
-        refraction 0.9
-    }}
-}} */
 """.format(left=left,bottom=bottom,right=right,top=top,sizex=right-left,sizey=top-bottom))
 
 def main(options):
@@ -166,7 +187,7 @@ def main(options):
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
     antialiasing_parameters = '+A0.1 +AM2 +R3 -J'
     misc_parameters = '+UV +Q9'
-    commandline = string.join([commandline,image_parameter,image_dimenstion_parameters,antialiasing_parameters,misc_parameters])
+    commandline = string.join([command,image_parameter,image_dimension_parameters,antialiasing_parameters,misc_parameters])
     result = commands.getstatusoutput(commandline)
     print result[1]
     osraydb.shutdown()

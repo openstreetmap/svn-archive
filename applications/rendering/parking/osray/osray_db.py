@@ -4,7 +4,7 @@
 import psycopg2
 from numpy import *
 
-LIMIT = 'LIMIT 10000'
+LIMIT = 'LIMIT 5000'
 
 class OsrayDB:
 
@@ -93,7 +93,7 @@ class OsrayDB:
         return self.curs.fetchall()
 
     def select_buildings(self,buildingtype):
-        self.curs.execute("SELECT osm_id,building,ST_AsText(\"way\") AS geom, tags->'height' as height,amenity "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,ST_AsText(\"way\") AS geom, building, tags->'height' as height,tags->'building:height' as bheight,amenity "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+LIMIT+";")
         return self.curs.fetchall()
 
     def select_landuse(self,landusetype):

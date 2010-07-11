@@ -109,3 +109,13 @@ def parse_length_in_meters(length,default):
     meter = float(parsed[1])*factor
     return meter
 
+def parse_int_safely(intstring,default):
+    """ parses a intstring and returns an int - any error: returns default """
+    if intstring==None:
+        return default
+    try:
+        layer = int(intstring)
+    except ValueError:
+        print "### unknown integer '{0}'".format(intstring)
+        layer = default
+    return layer

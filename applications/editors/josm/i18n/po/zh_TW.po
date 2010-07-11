@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-06 17:43+0200\n"
-"PO-Revision-Date: 2010-06-28 15:43+0000\n"
+"POT-Creation-Date: 2010-07-11 21:01+0200\n"
+"PO-Revision-Date: 2010-07-06 16:35+0000\n"
 "Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Traditional Chinese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-07-06 15:06+0000\n"
+"X-Launchpad-Export-Date: 2010-07-11 18:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: zh_TW\n"
 
@@ -267,7 +267,7 @@ msgstr "請點選繼續來開啟 {0} 個瀏覽器"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:175
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:647
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:636
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:205
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:342
@@ -652,11 +652,11 @@ msgstr "請正確的選擇二或三個節點或一條只有二或二個節點的
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:98
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:388
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:276
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1019
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:986
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:636
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:142
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:507
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:96
@@ -1471,7 +1471,7 @@ msgstr "無法重新命名檔案「{0}」"
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:192
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:201
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:230
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:664
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:684
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:255
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:351
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:241
@@ -2716,8 +2716,8 @@ msgstr "使用 <b>(</b> 和 <b>)</b> 將正規表示式群組起來"
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:217
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:66
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:53
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TabularTagSelector.java:48
 #: build/specialmessages.java:39
@@ -2746,9 +2746,8 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:232
-#, fuzzy
 msgid "Invalid search expression"
-msgstr "請輸入搜尋詞句"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:408
 #, java-format
@@ -4272,7 +4271,7 @@ msgid "File"
 msgstr "檔案"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:171
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:86
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:98
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1064
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:179
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:143
@@ -4803,7 +4802,7 @@ msgstr "將他們所有的元素複製到目標"
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:696
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:110
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:122
 #: build/specialmessages.java:64
 msgid "Up"
 msgstr "上"
@@ -4813,7 +4812,7 @@ msgid "Move up the selected elements by one position."
 msgstr "將選取的元件向上移動一個位置"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:728
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:121
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:133
 msgid "Down"
 msgstr "下"
 
@@ -5397,7 +5396,7 @@ msgstr "開啟所有指令的清單 (復原緩衝區)。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:75
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:156
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:91
@@ -5498,11 +5497,11 @@ msgstr "解決衝突"
 msgid "Resolve conflicts for ''{0}''"
 msgstr "調解「{0}」的衝突"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:66
 msgid "Filter objects and hide/disable them."
 msgstr "過濾物件並隱藏/停用它們。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:75
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1052
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:125
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:471
@@ -5513,123 +5512,122 @@ msgstr "過濾物件並隱藏/停用它們。"
 msgid "Add"
 msgstr "加入"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:75
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 msgid "Add filter."
 msgstr "加入過濾條件。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:86
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:98
 msgid "Edit filter."
 msgstr "編輯過濾條件。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 msgid "Delete filter."
 msgstr "刪除過濾條件。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:110
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:122
 msgid "Move filter up."
 msgstr "將過濾條件上移。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:121
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:133
 msgid "Move filter down."
 msgstr "將過濾條件下移。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:135
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:147
 msgid "Enable filter"
 msgstr "啟用過濾條件"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:136
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:148
 msgid "Hide elements"
 msgstr "隱藏元素"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:138
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:150
 msgid "Inverse filter"
 msgstr "反轉過濾條件"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:139
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:151
 msgid "Filter mode"
 msgstr "過濾條件模式"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:210
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:218
 #, java-format
 msgid "Filter Hidden:{0} Disabled:{1}"
 msgstr "過濾隱藏：{0} 停用：{1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:55
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:57
 msgid "Error in filter"
-msgstr "載入檔案有錯誤"
+msgstr ""
 
 #. translators notes must be in front
 #. column header: enable filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:191
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:255
 msgctxt "filter"
 msgid "E"
 msgstr "E"
 
 #. column header: hide filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:192
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:256
 msgctxt "filter"
 msgid "H"
 msgstr "H"
 
 #. column header: filter text
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:193
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:257
 msgctxt "filter"
 msgid "Text"
 msgstr "文字"
 
 #. column header: inverted filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:194
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:258
 msgctxt "filter"
 msgid "I"
 msgstr "I"
 
 #. column header: filter mode
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:195
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:259
 msgctxt "filter"
 msgid "M"
 msgstr "M"
 
 #. translators notes must be in front
 #. filter mode: replace
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:264
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:328
 msgctxt "filter"
 msgid "R"
 msgstr "R"
 
 #. filter mode: add
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:266
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:330
 msgctxt "filter"
 msgid "A"
 msgstr "A"
 
 #. filter mode: remove
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:268
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:332
 msgctxt "filter"
 msgid "D"
 msgstr "D"
 
 #. filter mode: in selection
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:270
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:334
 msgctxt "filter"
 msgid "F"
 msgstr "F"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:300
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:364
 msgid "<h2>Filter active</h2>"
 msgstr "<h2>過濾條件已使用</h2>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:306
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:370
 #, java-format
 msgid "<p><b>{0}</b> objects hidden"
 msgstr "<p><b>{0}</b> 物件已隱藏"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:314
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:378
 #, java-format
 msgid "<b>{0}</b> objects disabled"
 msgstr "<b>{0}</b> 物件已停用"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:317
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:381
 msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
 msgstr "</p><p>關閉過濾條件對話盒以查看所有的物件。<p></html>"
 
@@ -10241,12 +10239,12 @@ msgid "{0} was found to be GPS tagged."
 msgid_plural "{0} were found to be GPS tagged."
 msgstr[0] "發現 {0} 已有 GPS 標籤。"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:635
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:655
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:100
 msgid "Delete image file from disk"
 msgstr "從磁碟刪除圖片檔"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:638
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:658
 #, java-format
 msgid ""
 "<html><h3>Delete the file {0} from disk?<p>The image file will be "
@@ -10254,7 +10252,7 @@ msgid ""
 msgstr ""
 "<html><h3>是否從磁碟刪除檔案 {0}？<p>這個照片檔案會永久消失！</h3></html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:663
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:683
 msgid "Image file could not be deleted."
 msgstr "無法刪除圖片檔案。"
 
@@ -12870,7 +12868,7 @@ msgstr ""
 msgid "Choose a predefined license"
 msgstr "選擇預先定義的授權"
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:62
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:52
 #: ../core/src/org/openstreetmap/josm/io/NMEAImporter.java:34
 #: ../plugins/dataimport/src/org/openstreetmap/josm/plugins/dataimport/io/TangoGPS.java:87
 #: ../plugins/dataimport/src/org/openstreetmap/josm/plugins/dataimport/io/Tcx.java:85
@@ -12879,7 +12877,7 @@ msgstr "選擇預先定義的授權"
 msgid "Markers from {0}"
 msgstr "{0} 的標記"
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:68
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:58
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:214
 #, java-format
 msgid ""
@@ -12887,7 +12885,7 @@ msgid ""
 "available"
 msgstr "解析 gpx 檔案 {0} 時發生錯誤。檔案將只有部分可以使用"
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:79
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:69
 #: ../plugins/public_transport/src/public_transport/GTFSImporterAction.java:199
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:220
 #, java-format
@@ -12895,7 +12893,7 @@ msgid "File \"{0}\" does not exist"
 msgstr "檔案「{0}」不存在"
 
 #. input was not properly parsed, abort
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:82
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:72
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:128
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:225
 #, java-format
@@ -13559,11 +13557,11 @@ msgstr "準備 OSM 資料..."
 msgid "Parsing OSM data..."
 msgstr "正在分析 OSM 資料..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:576
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:577
 msgid "Preparing data set..."
 msgstr "正在準備資料組合..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:592
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:593
 #, java-format
 msgid "Line {0} column {1}: "
 msgstr "行 {0} 欄 {1}： "
@@ -14408,20 +14406,20 @@ msgstr ""
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr "找不到地區設定 {0} 的翻譯檔。回復為 {1}。"
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:151
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:162
 #, java-format
 msgid "Warning: failed to handle zip file ''{0}''. Exception was: {1}"
 msgstr "警告：無法處理 zip 檔案「{0}」。例外為：{1}"
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:203
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:217
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:214
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:228
 #, java-format
 msgid ""
 "Warning: failed to access directory ''{0}'' for security reasons. Exception "
 "was: {1}"
 msgstr "警告：基於安全性理由無法存取目錄「{0}」。例外為：{1}"
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:237
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:248
 #, java-format
 msgid ""
 "Fatal: failed to locate image ''{0}''. This is a serious configuration "
@@ -15169,9 +15167,8 @@ msgid "Set width of the building"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:83
-#, fuzzy
 msgid "on polygon"
-msgstr "多重多邊形"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:95
 msgid "Add address"
@@ -15188,17 +15185,16 @@ msgstr ""
 msgid "Buildings"
 msgstr "建築物"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:403
-#, fuzzy
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:418
 msgid "Next no"
-msgstr "下一幅"
+msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:404
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:419
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:155
 msgid "Street"
 msgstr "街"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:445
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:460
 msgid "Enter addresses"
 msgstr ""
 
@@ -15375,7 +15371,7 @@ msgid "Select first WMS layer in list."
 msgstr "先在清單中選取一個 WMS 圖層。"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:45
-msgid "Don't use relation for addresses (but \"addr:street\" on nodes)."
+msgid "Don't use relation for addresses (but \"addr:street\" on elements)."
 msgstr ""
 
 #. item "Man Made/Pipeline" combo "Type"
@@ -26097,9 +26093,8 @@ msgstr "田徑"
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "american_football"
-msgstr "澳洲足球"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -26128,9 +26123,8 @@ msgstr "保齡球"
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "canadian_football"
-msgstr "澳洲足球"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -26174,9 +26168,8 @@ msgstr "馬術"
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "gaelic_football"
-msgstr "澳洲足球"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -26220,9 +26213,8 @@ msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "rugby_union"
-msgstr "橄欖球"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -26710,37 +26702,31 @@ msgid "Edit Australian Football"
 msgstr "編輯澳洲足球"
 
 #: build/trans_presets.java:2076
-#, fuzzy
 msgid "American Football"
-msgstr "澳洲足球"
+msgstr ""
 
 #. item "Sport (Ball)/American Football"
 #: build/trans_presets.java:2077
-#, fuzzy
 msgid "Edit American Football"
-msgstr "編輯澳洲足球"
+msgstr ""
 
 #: build/trans_presets.java:2082
-#, fuzzy
 msgid "Canadian Football"
-msgstr "編輯美式足球"
+msgstr ""
 
 #. item "Sport (Ball)/Canadian Football"
 #: build/trans_presets.java:2083
-#, fuzzy
 msgid "Edit Canadian Football"
-msgstr "編輯澳洲足球"
+msgstr ""
 
 #: build/trans_presets.java:2088
-#, fuzzy
 msgid "Gaelic Football"
-msgstr "編輯美式足球"
+msgstr ""
 
 #. item "Sport (Ball)/Gaelic Football"
 #: build/trans_presets.java:2089
-#, fuzzy
 msgid "Edit Gaelic Football"
-msgstr "編輯美式足球"
+msgstr ""
 
 #: build/trans_presets.java:2094
 msgid "Rugby League"
@@ -26748,20 +26734,17 @@ msgstr ""
 
 #. item "Sport (Ball)/Rugby League"
 #: build/trans_presets.java:2095
-#, fuzzy
 msgid "Edit Rugby League"
-msgstr "編輯橄欖球"
+msgstr ""
 
 #: build/trans_presets.java:2100
-#, fuzzy
 msgid "Rugby Union"
-msgstr "橄欖球"
+msgstr ""
 
 #. item "Sport (Ball)/Rugby Union"
 #: build/trans_presets.java:2101
-#, fuzzy
 msgid "Edit Rugby Union"
-msgstr "編輯橄欖球"
+msgstr ""
 
 #: build/trans_presets.java:2106
 msgid "Baseball"
@@ -33505,123 +33488,6 @@ msgstr ""
 msgid "Sicily - Italy"
 msgstr ""
 
-#~ msgid ""
-#~ "<html>An error occurred while communicating with the server<br>Details: "
-#~ "{0}</html>"
-#~ msgstr "<html>與伺服器溝通時發生錯誤<br>詳細資料：{0}</html>"
-
-#~ msgid "Communication with server failed"
-#~ msgstr "與伺服器溝通失敗"
-
-#~ msgid "Yes, undelete them too"
-#~ msgstr "是的，也取消它們的刪除"
-
-#~ msgid "No, cancel operation"
-#~ msgstr "不，取消操作"
-
-#~ msgid ""
-#~ "There is {0} additional node used by way {1}<br>which is deleted on the "
-#~ "server.<br><br>Do you want to undelete this node too?"
-#~ msgid_plural ""
-#~ "There are {0} additional nodes used by way {1}<br>which are deleted on "
-#~ "the server.<br><br>Do you want to undelete these nodes too?"
-#~ msgstr[0] ""
-#~ "有 {0} 個額外節點用於<br>在伺服器上刪除的路徑 {1} 。<br><br>您是否也想要取"
-#~ "消刪除這個節點？"
-
-#~ msgid "Undelete additional nodes?"
-#~ msgstr "取消刪除額外的節點？"
-
-#~ msgid ""
-#~ "There is {0} additional primitive referred to by relation {1}<br>which is "
-#~ "deleted on the server.<br><br>Do you want to undelete this too?"
-#~ msgid_plural ""
-#~ "There are {0} additional primitives referred to by relation {1}<br>which "
-#~ "are deleted on the server.<br><br>Do you want to undelete these too?"
-#~ msgstr[0] ""
-#~ "有 {0} 個額外原型用於<br>在伺服器上刪除的關係 {1} 。<br><br>您是否也想要取"
-#~ "消刪除它？"
-
-#~ msgid "Undelete dependent primitives?"
-#~ msgstr "是否取消刪除相依的原型？"
-
-#~ msgid "Visible State:"
-#~ msgstr "可視狀態："
-
-#~ msgid "visible (on the server)"
-#~ msgstr "可視的（在伺服器上）"
-
-#~ msgid "not visible (on the server)"
-#~ msgstr "不可視（在伺服器上）"
-
-#~ msgid "Keep a clone of the local version"
-#~ msgstr "保留本地端版本的複本"
-
-#~ msgid "Physically delete from local dataset"
-#~ msgstr "實際從本地端資料組合中刪除"
-
-#~ msgid "Keep my visible state"
-#~ msgstr "保留我的可見性狀態"
-
-#~ msgid "Yes, reset the id"
-#~ msgstr "是，重設 id"
-
-#~ msgid ""
-#~ "<html>To keep your local version, JOSM<br>has to reset the id of "
-#~ "primitive {0} to 0.<br>On the next upload the server will assign<br>it a "
-#~ "new id.<br>Do you agree?</html>"
-#~ msgstr ""
-#~ "<html>要保留您本地端的版本，JOSM<br>必須將原型 {0} 的 id 重設為 0。<br>在"
-#~ "下次上傳時伺服器會重新<br>指派新的 id 給它。<br>您是否同意？</html>"
-
-#~ msgid "Reset id to 0"
-#~ msgstr "重設 id 為 0"
-
-#~ msgid "Keep their visible state"
-#~ msgstr "保留他們的可見性"
-
-#~ msgid "Yes, purge it"
-#~ msgstr "是，清除它"
-
-#~ msgid ""
-#~ "<html>JOSM will have to remove your local primitive with id {0}<br>from "
-#~ "the dataset.<br>Do you agree?</html>"
-#~ msgstr ""
-#~ "<html>JOSM 即將移除您本地資料組合中 id {0}<br>的原型。<br>您是否同意？</"
-#~ "html>"
-
-#~ msgid "Remove from dataset"
-#~ msgstr "從資料組合移除"
-
-#~ msgid "Undecide conflict between visible state"
-#~ msgstr "在可視狀態間有未決定的衝突"
-
-#~ msgid ""
-#~ "{0} conflict has been <strong>resolved automatically</strong> by purging "
-#~ "{0} object<br>from the local dataset because it is deleted on the server."
-#~ msgid_plural ""
-#~ "{0} conflicts have been <strong>resolved automatically</strong> by "
-#~ "purging {0} objects<br> from the local dataset because they are deleted "
-#~ "on the server."
-#~ msgstr[0] ""
-#~ "{0} 衝突已經以清除本地資料組合 {0} 物件的方式<strong>自動調解</strong> "
-#~ "<br>了。因為它已經從伺服器上刪除了。"
-
-#~ msgid ""
-#~ "{0} conflict remains to be resolved.<br><br>Please open the Conflict List "
-#~ "Dialog and manually resolve it."
-#~ msgid_plural ""
-#~ "{0} conflicts remain to be resolved.<br><br>Please open the Conflict List "
-#~ "Dialog and manually resolve them."
-#~ msgstr[0] ""
-#~ "還有 {0} 個衝突待調解。<br><br>請開啟衝突清單對話盒並手動調解它。"
-
-#~ msgid "football"
-#~ msgstr "美式足球"
-
-#~ msgid "Football"
-#~ msgstr "美式足球"
-
 #~ msgid "Open in Browser"
 #~ msgstr "在瀏覽器中打開"
 
@@ -33701,6 +33567,15 @@ msgstr ""
 
 #~ msgid "Update Data"
 #~ msgstr "更新資料"
+
+#~ msgid "Yes, undelete them too"
+#~ msgstr "是的，也取消它們的刪除"
+
+#~ msgid "No, cancel operation"
+#~ msgstr "不，取消操作"
+
+#~ msgid "Undelete additional nodes?"
+#~ msgstr "取消刪除額外的節點？"
 
 #~ msgid "Update Selection"
 #~ msgstr "更新選擇區域"
@@ -34227,6 +34102,23 @@ msgstr ""
 #~ msgid "Auto-tag source added:"
 #~ msgstr "自動標籤來源已加入："
 
+#~ msgid ""
+#~ "<html>An error occurred while communicating with the server<br>Details: "
+#~ "{0}</html>"
+#~ msgstr "<html>與伺服器溝通時發生錯誤<br>詳細資料：{0}</html>"
+
+#~ msgid "Keep a clone of the local version"
+#~ msgstr "保留本地端版本的複本"
+
+#~ msgid "Physically delete from local dataset"
+#~ msgstr "實際從本地端資料組合中刪除"
+
+#~ msgid "Keep my visible state"
+#~ msgstr "保留我的可見性狀態"
+
+#~ msgid "Keep their visible state"
+#~ msgstr "保留他們的可見性"
+
 #~ msgid "Set manually the Lambert zone (e.g. for locations between two zones)"
 #~ msgstr "手動設定藍勃特區（例如用於兩個區域間的位置）"
 
@@ -34482,6 +34374,30 @@ msgstr ""
 #~ msgid "Edit Demanding Alpine Hiking"
 #~ msgstr "編輯較難的高山健行"
 
+#~ msgid "Communication with server failed"
+#~ msgstr "與伺服器溝通失敗"
+
+#~ msgid "Visible State:"
+#~ msgstr "可視狀態："
+
+#~ msgid "visible (on the server)"
+#~ msgstr "可視的（在伺服器上）"
+
+#~ msgid "not visible (on the server)"
+#~ msgstr "不可視（在伺服器上）"
+
+#~ msgid "Yes, reset the id"
+#~ msgstr "是，重設 id"
+
+#~ msgid "Reset id to 0"
+#~ msgstr "重設 id 為 0"
+
+#~ msgid "Yes, purge it"
+#~ msgstr "是，清除它"
+
+#~ msgid "Remove from dataset"
+#~ msgstr "從資料組合移除"
+
 #~ msgid "Download missing plugins"
 #~ msgstr "下載缺少的外掛程式"
 
@@ -34515,8 +34431,14 @@ msgstr ""
 #~ msgid "hikingmap"
 #~ msgstr "健行地圖"
 
+#~ msgid "Football"
+#~ msgstr "美式足球"
+
 #~ msgid "bicyclemap"
 #~ msgstr "自行車地圖"
+
+#~ msgid "football"
+#~ msgstr "美式足球"
 
 #~ msgid "error requesting update: not zoom-level 12"
 #~ msgstr "要求更新發生錯誤：不縮放-等級 12"
@@ -34648,6 +34570,9 @@ msgstr ""
 #~ "列\n"
 #~ "      Java 選項來增加分配記憶體的最大容量"
 
+#~ msgid "Undecide conflict between visible state"
+#~ msgstr "在可視狀態間有未決定的衝突"
+
 #~ msgid "Parameter ''{0}'' must not be empty."
 #~ msgstr "參數「{0}」不能為空白。"
 
@@ -34677,6 +34602,16 @@ msgstr ""
 
 #~ msgid "Deleted or moved primitives"
 #~ msgstr "已刪除或移動的原型"
+
+#~ msgid "Undelete dependent primitives?"
+#~ msgstr "是否取消刪除相依的原型？"
+
+#~ msgid ""
+#~ "<html>JOSM will have to remove your local primitive with id {0}<br>from "
+#~ "the dataset.<br>Do you agree?</html>"
+#~ msgstr ""
+#~ "<html>JOSM 即將移除您本地資料組合中 id {0}<br>的原型。<br>您是否同意？</"
+#~ "html>"
 
 #~ msgid "Apply also for children"
 #~ msgstr "也套用到子項目"
@@ -34792,6 +34727,46 @@ msgstr ""
 #~ msgstr "使用他們所有的元素"
 
 #~ msgid ""
+#~ "There is {0} additional primitive referred to by relation {1}<br>which is "
+#~ "deleted on the server.<br><br>Do you want to undelete this too?"
+#~ msgid_plural ""
+#~ "There are {0} additional primitives referred to by relation {1}<br>which "
+#~ "are deleted on the server.<br><br>Do you want to undelete these too?"
+#~ msgstr[0] ""
+#~ "有 {0} 個額外原型用於<br>在伺服器上刪除的關係 {1} 。<br><br>您是否也想要取"
+#~ "消刪除它？"
+
+#~ msgid ""
+#~ "There is {0} additional node used by way {1}<br>which is deleted on the "
+#~ "server.<br><br>Do you want to undelete this node too?"
+#~ msgid_plural ""
+#~ "There are {0} additional nodes used by way {1}<br>which are deleted on "
+#~ "the server.<br><br>Do you want to undelete these nodes too?"
+#~ msgstr[0] ""
+#~ "有 {0} 個額外節點用於<br>在伺服器上刪除的路徑 {1} 。<br><br>您是否也想要取"
+#~ "消刪除這個節點？"
+
+#~ msgid ""
+#~ "{0} conflict has been <strong>resolved automatically</strong> by purging "
+#~ "{0} object<br>from the local dataset because it is deleted on the server."
+#~ msgid_plural ""
+#~ "{0} conflicts have been <strong>resolved automatically</strong> by "
+#~ "purging {0} objects<br> from the local dataset because they are deleted "
+#~ "on the server."
+#~ msgstr[0] ""
+#~ "{0} 衝突已經以清除本地資料組合 {0} 物件的方式<strong>自動調解</strong> "
+#~ "<br>了。因為它已經從伺服器上刪除了。"
+
+#~ msgid ""
+#~ "{0} conflict remains to be resolved.<br><br>Please open the Conflict List "
+#~ "Dialog and manually resolve it."
+#~ msgid_plural ""
+#~ "{0} conflicts remain to be resolved.<br><br>Please open the Conflict List "
+#~ "Dialog and manually resolve them."
+#~ msgstr[0] ""
+#~ "還有 {0} 個衝突待調解。<br><br>請開啟衝突清單對話盒並手動調解它。"
+
+#~ msgid ""
 #~ "Target object with id {0} and version {1} is visible although source "
 #~ "object with lower version {2} is not visible. Cannot deal with this "
 #~ "inconsistency. Keeping target object. "
@@ -34801,3 +34776,11 @@ msgstr ""
 
 #~ msgid "Point on angle of building to start drawing"
 #~ msgstr "點到建築的一角以開始繪製"
+
+#~ msgid ""
+#~ "<html>To keep your local version, JOSM<br>has to reset the id of "
+#~ "primitive {0} to 0.<br>On the next upload the server will assign<br>it a "
+#~ "new id.<br>Do you agree?</html>"
+#~ msgstr ""
+#~ "<html>要保留您本地端的版本，JOSM<br>必須將原型 {0} 的 id 重設為 0。<br>在"
+#~ "下次上傳時伺服器會重新<br>指派新的 id 給它。<br>您是否同意？</html>"

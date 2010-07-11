@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-06 17:43+0200\n"
-"PO-Revision-Date: 2010-06-28 18:05+0000\n"
-"Last-Translator: andygol <Unknown>\n"
+"POT-Creation-Date: 2010-07-11 21:01+0200\n"
+"PO-Revision-Date: 2010-07-06 16:21+0000\n"
+"Last-Translator: bastik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-07-06 15:07+0000\n"
+"X-Launchpad-Export-Date: 2010-07-11 18:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -269,7 +269,7 @@ msgstr "Натисніть, щоб продовжити та відкрити {0
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:175
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:647
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:636
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:205
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:342
@@ -661,11 +661,11 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:98
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:388
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:276
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1019
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:986
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:636
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:142
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:507
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:96
@@ -1513,7 +1513,7 @@ msgstr "Не можливо перейменувати файл \"{0}\""
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:192
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:201
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:230
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:664
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:684
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:255
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:351
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:241
@@ -2846,8 +2846,8 @@ msgstr "Використовуйте <b>(</b> та <b>)</b> для групув�
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:217
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:66
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:53
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TabularTagSelector.java:48
 #: build/specialmessages.java:39
@@ -2876,9 +2876,8 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:232
-#, fuzzy
 msgid "Invalid search expression"
-msgstr "Введіть текст для пошуку"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:408
 #, java-format
@@ -4492,7 +4491,7 @@ msgid "File"
 msgstr "Файл"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:171
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:86
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:98
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1064
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:179
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:143
@@ -5052,7 +5051,7 @@ msgstr "Копіювати всі чужі елементи в місце при
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:696
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:110
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:122
 #: build/specialmessages.java:64
 msgid "Up"
 msgstr "Вгору"
@@ -5062,7 +5061,7 @@ msgid "Move up the selected elements by one position."
 msgstr "Підняти виділені елементи на одну позицію."
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:728
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:121
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:133
 msgid "Down"
 msgstr "Вниз"
 
@@ -5677,7 +5676,7 @@ msgstr "Відкрити список всіх команд (буфер відм
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:75
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:156
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:91
@@ -5783,11 +5782,11 @@ msgstr "Розв’язати конфлікти"
 msgid "Resolve conflicts for ''{0}''"
 msgstr "Розв’язати кнофлікти для ''{0}''"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:66
 msgid "Filter objects and hide/disable them."
 msgstr "Відфільтрувати об’єкти і приховати/відключити їх."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:75
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1052
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:125
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:471
@@ -5798,123 +5797,122 @@ msgstr "Відфільтрувати об’єкти і приховати/ві�
 msgid "Add"
 msgstr "Додати"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:75
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 msgid "Add filter."
 msgstr "Додати фільтр."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:86
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:98
 msgid "Edit filter."
 msgstr "Редагувати фільтр."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 msgid "Delete filter."
 msgstr "Вилучити фільтр."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:110
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:122
 msgid "Move filter up."
 msgstr "Перемістити фільтр вгору."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:121
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:133
 msgid "Move filter down."
 msgstr "Перемістити фільтр вниз."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:135
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:147
 msgid "Enable filter"
 msgstr "Увімкнути фільтр"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:136
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:148
 msgid "Hide elements"
 msgstr "Приховати елементи"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:138
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:150
 msgid "Inverse filter"
 msgstr "Інвертувати фільтр"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:139
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:151
 msgid "Filter mode"
 msgstr "Режим фільтра"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:210
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:218
 #, java-format
 msgid "Filter Hidden:{0} Disabled:{1}"
 msgstr "Фільтр Прихований:{0} Відключений:{1}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:55
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:57
 msgid "Error in filter"
-msgstr "Помилка завантаження файлу"
+msgstr ""
 
 #. translators notes must be in front
 #. column header: enable filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:191
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:255
 msgctxt "filter"
 msgid "E"
 msgstr "Вкл."
 
 #. column header: hide filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:192
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:256
 msgctxt "filter"
 msgid "H"
 msgstr "Викл."
 
 #. column header: filter text
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:193
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:257
 msgctxt "filter"
 msgid "Text"
 msgstr "Текст"
 
 #. column header: inverted filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:194
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:258
 msgctxt "filter"
 msgid "I"
 msgstr "I"
 
 #. column header: filter mode
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:195
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:259
 msgctxt "filter"
 msgid "M"
 msgstr "M"
 
 #. translators notes must be in front
 #. filter mode: replace
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:264
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:328
 msgctxt "filter"
 msgid "R"
 msgstr "Замін."
 
 #. filter mode: add
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:266
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:330
 msgctxt "filter"
 msgid "A"
 msgstr "Додати"
 
 #. filter mode: remove
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:268
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:332
 msgctxt "filter"
 msgid "D"
 msgstr "Вилучити"
 
 #. filter mode: in selection
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:270
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:334
 msgctxt "filter"
 msgid "F"
 msgstr "З"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:300
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:364
 msgid "<h2>Filter active</h2>"
 msgstr "<h2>Фільтр активний</h2>"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:306
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:370
 #, java-format
 msgid "<p><b>{0}</b> objects hidden"
 msgstr "<p><b>{0}</b> об’єктів приховано"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:314
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:378
 #, java-format
 msgid "<b>{0}</b> objects disabled"
 msgstr "<b>{0}</b> об’єктів пошкоджено"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:317
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:381
 msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
 msgstr "</p><p>Закрити діалог фільтра, щоб побачити всі об’єкти.<p></html>"
 
@@ -10775,12 +10773,12 @@ msgstr[0] "{0} знайдений, з GPS позначками."
 msgstr[1] "{0} знайдені, з GPS позначками."
 msgstr[2] "{0} знайдено, з GPS позначками."
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:635
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:655
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:100
 msgid "Delete image file from disk"
 msgstr "Вилучити зображення з диску"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:638
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:658
 #, java-format
 msgid ""
 "<html><h3>Delete the file {0} from disk?<p>The image file will be "
@@ -10789,7 +10787,7 @@ msgstr ""
 "<html><h3>Вилучити файл {0} з диску?<p>Файл зображення буде остаточно "
 "втрачено!</h3></html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:663
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:683
 msgid "Image file could not be deleted."
 msgstr "Не можливо вилучити файл зображення"
 
@@ -13580,7 +13578,7 @@ msgstr ""
 msgid "Choose a predefined license"
 msgstr "Виберіть ліцензію з набору"
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:62
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:52
 #: ../core/src/org/openstreetmap/josm/io/NMEAImporter.java:34
 #: ../plugins/dataimport/src/org/openstreetmap/josm/plugins/dataimport/io/TangoGPS.java:87
 #: ../plugins/dataimport/src/org/openstreetmap/josm/plugins/dataimport/io/Tcx.java:85
@@ -13589,7 +13587,7 @@ msgstr "Виберіть ліцензію з набору"
 msgid "Markers from {0}"
 msgstr "Мітки з {0}"
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:68
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:58
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:214
 #, java-format
 msgid ""
@@ -13599,7 +13597,7 @@ msgstr ""
 "Сталася помилка під час розбору файлу GPX {0}. Тільки частина файлу буде "
 "доступною"
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:79
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:69
 #: ../plugins/public_transport/src/public_transport/GTFSImporterAction.java:199
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:220
 #, java-format
@@ -13607,7 +13605,7 @@ msgid "File \"{0}\" does not exist"
 msgstr "Файл \"{0}\" не існує"
 
 #. input was not properly parsed, abort
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:82
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:72
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:128
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:225
 #, java-format
@@ -14317,11 +14315,11 @@ msgstr "Підготовка OSM-даних…"
 msgid "Parsing OSM data..."
 msgstr "Розбір даних OSM…"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:576
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:577
 msgid "Preparing data set..."
 msgstr "Підготовка даних…"
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:592
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:593
 #, java-format
 msgid "Line {0} column {1}: "
 msgstr "Лінія {0} стовпчик {1}: "
@@ -15237,13 +15235,13 @@ msgstr ""
 msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr "Не вдається знайти переклад мовою «{0}». Повертаємось до {1}."
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:151
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:162
 #, java-format
 msgid "Warning: failed to handle zip file ''{0}''. Exception was: {1}"
 msgstr "Попередження: не вдалося обробити zip-файл ''{0}''. Помилка: {1}"
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:203
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:217
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:214
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:228
 #, java-format
 msgid ""
 "Warning: failed to access directory ''{0}'' for security reasons. Exception "
@@ -15252,7 +15250,7 @@ msgstr ""
 "Попередження: не вдалося отримати доступ до каталогу ''{0}'' з міркувань "
 "безпеки. Помилка: {1}"
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:237
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:248
 #, java-format
 msgid ""
 "Fatal: failed to locate image ''{0}''. This is a serious configuration "
@@ -16050,9 +16048,8 @@ msgid "Set width of the building"
 msgstr "Встановіть ширину будівлі"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:83
-#, fuzzy
 msgid "on polygon"
-msgstr "Мультиполігон"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:95
 msgid "Add address"
@@ -16069,17 +16066,16 @@ msgstr ""
 msgid "Buildings"
 msgstr "Будівлі"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:403
-#, fuzzy
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:418
 msgid "Next no"
-msgstr "Наступне"
+msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:404
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:419
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:155
 msgid "Street"
 msgstr "Вулиця"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:445
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:460
 msgid "Enter addresses"
 msgstr "Ввести адреси"
 
@@ -16258,7 +16254,7 @@ msgid "Select first WMS layer in list."
 msgstr "Виберіть перший шар WMS зі списку"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:45
-msgid "Don't use relation for addresses (but \"addr:street\" on nodes)."
+msgid "Don't use relation for addresses (but \"addr:street\" on elements)."
 msgstr ""
 
 #. item "Man Made/Pipeline" combo "Type"
@@ -18218,14 +18214,12 @@ msgstr "Тягніть, щоб масштабувати зображення п�
 
 #: ../plugins/public_transport/src/public_transport/GTFSImporterAction.java:75
 #: ../plugins/public_transport/src/public_transport/GTFSImporterAction.java:110
-#, fuzzy
 msgid "Create Stops from GTFS ..."
-msgstr "Створити зупинки по GPX…"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/GTFSImporterAction.java:76
-#, fuzzy
 msgid "Create Stops from a GTFS file"
-msgstr "Створити зупинки з файла GPX"
+msgstr ""
 
 #: ../plugins/public_transport/src/public_transport/GTFSImporterAction.java:204
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:230
@@ -18234,9 +18228,8 @@ msgid "IOException \"{0}\" occurred"
 msgstr "Сталася помилка вводу/виводу \"{0}\""
 
 #: ../plugins/public_transport/src/public_transport/GTFSImporterDialog.java:85
-#, fuzzy
 msgid "GTFS-Stops"
-msgstr "Зупинки"
+msgstr ""
 
 #. item "Bicycle/Rental" text "Name"
 #: ../plugins/public_transport/src/public_transport/PublicTransportPlugin.java:39
@@ -27189,9 +27182,8 @@ msgstr "атлетика"
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "american_football"
-msgstr "австралійський футбол"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -27220,9 +27212,8 @@ msgstr "боулз"
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "canadian_football"
-msgstr "австралійський футбол"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -27266,9 +27257,8 @@ msgstr "кінний спорт"
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "gaelic_football"
-msgstr "австралійський футбол"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -27312,9 +27302,8 @@ msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "rugby_union"
-msgstr "регбі"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -27802,37 +27791,31 @@ msgid "Edit Australian Football"
 msgstr "Властивості Австралійського футболу"
 
 #: build/trans_presets.java:2076
-#, fuzzy
 msgid "American Football"
-msgstr "Австралійський футбол"
+msgstr ""
 
 #. item "Sport (Ball)/American Football"
 #: build/trans_presets.java:2077
-#, fuzzy
 msgid "Edit American Football"
-msgstr "Властивості Австралійського футболу"
+msgstr ""
 
 #: build/trans_presets.java:2082
-#, fuzzy
 msgid "Canadian Football"
-msgstr "Властивості Американського футболу"
+msgstr ""
 
 #. item "Sport (Ball)/Canadian Football"
 #: build/trans_presets.java:2083
-#, fuzzy
 msgid "Edit Canadian Football"
-msgstr "Властивості Австралійського футболу"
+msgstr ""
 
 #: build/trans_presets.java:2088
-#, fuzzy
 msgid "Gaelic Football"
-msgstr "Властивості Американського футболу"
+msgstr ""
 
 #. item "Sport (Ball)/Gaelic Football"
 #: build/trans_presets.java:2089
-#, fuzzy
 msgid "Edit Gaelic Football"
-msgstr "Властивості Американського футболу"
+msgstr ""
 
 #: build/trans_presets.java:2094
 msgid "Rugby League"
@@ -27840,20 +27823,17 @@ msgstr ""
 
 #. item "Sport (Ball)/Rugby League"
 #: build/trans_presets.java:2095
-#, fuzzy
 msgid "Edit Rugby League"
-msgstr "Властивості Регбі"
+msgstr ""
 
 #: build/trans_presets.java:2100
-#, fuzzy
 msgid "Rugby Union"
-msgstr "Регбі"
+msgstr ""
 
 #. item "Sport (Ball)/Rugby Union"
 #: build/trans_presets.java:2101
-#, fuzzy
 msgid "Edit Rugby Union"
-msgstr "Властивості Регбі"
+msgstr ""
 
 #: build/trans_presets.java:2106
 msgid "Baseball"
@@ -34597,157 +34577,6 @@ msgstr "Італия – Лоді"
 msgid "Sicily - Italy"
 msgstr "Італія – Сицилія"
 
-#~ msgid ""
-#~ "<html>An error occurred while communicating with the server<br>Details: "
-#~ "{0}</html>"
-#~ msgstr ""
-#~ "<html>Під час з’єднання з сервером виникла помилка<br>Подробиці: {0}</"
-#~ "html>"
-
-#~ msgid "Communication with server failed"
-#~ msgstr "Збій під час з’єднання з сервером"
-
-#~ msgid "Yes, undelete them too"
-#~ msgstr "Так, відновити їх теж"
-
-#~ msgid "No, cancel operation"
-#~ msgstr "Ні, відмінити дію"
-
-#~ msgid ""
-#~ "There is {0} additional node used by way {1}<br>which is deleted on the "
-#~ "server.<br><br>Do you want to undelete this node too?"
-#~ msgid_plural ""
-#~ "There are {0} additional nodes used by way {1}<br>which are deleted on "
-#~ "the server.<br><br>Do you want to undelete these nodes too?"
-#~ msgstr[0] ""
-#~ "Є {0} додаткова точка, що використовується в лінії {1}<br>, яку вилучено "
-#~ "на сервері.<br><br>Ви бажаєте відновити цю точку також?"
-#~ msgstr[1] ""
-#~ "Є {0} додаткові точки, що використовуються в лінії {1}<br>, які вилучено "
-#~ "на сервері.<br><br>Ви бажаєте відновити ці точки також?"
-#~ msgstr[2] ""
-#~ "Є {0} додаткових точок, що використовуються в лінії {1}<br>, які вилучено "
-#~ "на сервері.<br><br>Ви бажаєте відновити ці точки також?"
-
-#~ msgid "Undelete additional nodes?"
-#~ msgstr "Відновити додаткові точки?"
-
-#~ msgid ""
-#~ "There is {0} additional primitive referred to by relation {1}<br>which is "
-#~ "deleted on the server.<br><br>Do you want to undelete this too?"
-#~ msgid_plural ""
-#~ "There are {0} additional primitives referred to by relation {1}<br>which "
-#~ "are deleted on the server.<br><br>Do you want to undelete these too?"
-#~ msgstr[0] ""
-#~ "Є {0} додатковий елемент, що входить до зв’язку {1}<br>, який вилучено на "
-#~ "сервері.<br><br>Ви бажаєте відновити його також?"
-#~ msgstr[1] ""
-#~ "Є {0} додаткових елементи, що входять до зв’язку {1}<br>, який вилучено "
-#~ "на сервері.<br><br>Ви бажаєте відновити їх також?"
-#~ msgstr[2] ""
-#~ "Є {0} додаткових елементів, що входять до зв’язку {1}<br>, який вилучено "
-#~ "на сервері.<br><br>Ви бажаєте відновити їх також?"
-
-#~ msgid "Undelete dependent primitives?"
-#~ msgstr "Відновити залежні елементи?"
-
-#~ msgid "Visible State:"
-#~ msgstr "Видимий:"
-
-#~ msgid "visible (on the server)"
-#~ msgstr "видимий ( на сервері)"
-
-#~ msgid "not visible (on the server)"
-#~ msgstr "не видимий (на сервері)"
-
-#~ msgid "Keep a clone of the local version"
-#~ msgstr "Лишити клон локальної версії"
-
-#~ msgid "Physically delete from local dataset"
-#~ msgstr "Фізично вилучити з локального набору даних"
-
-#~ msgid "Keep my visible state"
-#~ msgstr "Залишити мій стан \"Видимий\""
-
-#~ msgid "Yes, reset the id"
-#~ msgstr "Так, перевстановити ідентифікатор"
-
-#~ msgid ""
-#~ "<html>To keep your local version, JOSM<br>has to reset the id of "
-#~ "primitive {0} to 0.<br>On the next upload the server will assign<br>it a "
-#~ "new id.<br>Do you agree?</html>"
-#~ msgstr ""
-#~ "<html>Щоб зберегти свою локальну версію даних, JOSM<br>скине "
-#~ "ідентифікатор елемента {0} на 0.<br>Під час наступного надсилання даних, "
-#~ "сервер призначить<br> їм новий ідентифікатор.<br>Ви згодні?</html>"
-
-#~ msgid "Reset id to 0"
-#~ msgstr "Встановити значення ідентифікатора в 0"
-
-#~ msgid "Keep their visible state"
-#~ msgstr "Лишити чужий стан \"Видимий\""
-
-#~ msgid "Yes, purge it"
-#~ msgstr "Так, очистити"
-
-#~ msgid ""
-#~ "<html>JOSM will have to remove your local primitive with id {0}<br>from "
-#~ "the dataset.<br>Do you agree?</html>"
-#~ msgstr ""
-#~ "<html>JOSM вилучить ваш локальний елемент з ідентифікатором {0}<br>з "
-#~ "набору даних.<br>Ви згодні?</html>"
-
-#~ msgid "Remove from dataset"
-#~ msgstr "Вилучити з набору даних"
-
-#~ msgid "Undecide conflict between visible state"
-#~ msgstr "Не розв’язувати конфлікти між станами \"Видимий\""
-
-#~ msgid ""
-#~ "{0} conflict has been <strong>resolved automatically</strong> by purging "
-#~ "{0} object<br>from the local dataset because it is deleted on the server."
-#~ msgid_plural ""
-#~ "{0} conflicts have been <strong>resolved automatically</strong> by "
-#~ "purging {0} objects<br> from the local dataset because they are deleted "
-#~ "on the server."
-#~ msgstr[0] ""
-#~ "{0} конфлікт був <strong>розв’язаний автоматично</strong> шляхом очищення "
-#~ "{0} об’єкту<br>з локального набору даних, так як об’єкт вже був вилучений "
-#~ "на сервері."
-#~ msgstr[1] ""
-#~ "{0} конфлікти були <strong>розв’язані автоматично</strong> шляхом "
-#~ "очищення {0} об’єктів<br>з локального набору даних, так як об’єкти вже "
-#~ "були вилучений на сервері."
-#~ msgstr[2] ""
-#~ "{0} конфліктів було <strong>розв’язано автоматично</strong> шляхом "
-#~ "очищення {0} об’єктів<br>з локального набору даних, так як об’єкти вже "
-#~ "були вилучений на сервері."
-
-#~ msgid ""
-#~ "{0} conflict remains to be resolved.<br><br>Please open the Conflict List "
-#~ "Dialog and manually resolve it."
-#~ msgid_plural ""
-#~ "{0} conflicts remain to be resolved.<br><br>Please open the Conflict List "
-#~ "Dialog and manually resolve them."
-#~ msgstr[0] ""
-#~ "Лишилось розв’язати {0} конфлікт.<br><br>Будь ласка, відкрийте діалог "
-#~ "списку конфліктів і розв’яжіть конфлікт вручну."
-#~ msgstr[1] ""
-#~ "Лишилось розв’язати {0} конфлікти.<br><br>Будь ласка, відкрийте діалог "
-#~ "списку конфліктів і розв’яжіть конфлікти вручну."
-#~ msgstr[2] ""
-#~ "Лишилось розв’язати {0} конфліктів.<br><br>Будь ласка, відкрийте діалог "
-#~ "списку конфліктів і розв’яжіть конфлікти вручну."
-
-#~ msgid "Create house number and street name relation"
-#~ msgstr "Створити зв’язок номеру будинку з вулицею"
-
-#~ msgid "football"
-#~ msgstr "американський футбол"
-
-#~ msgid "Football"
-#~ msgstr "Американський футбол"
-
 #~ msgid "Error: {0}"
 #~ msgstr "Помилка: {0}"
 
@@ -34816,6 +34645,100 @@ msgstr "Італія – Сицилія"
 #~ msgid "Style for restriction {0} not found."
 #~ msgstr "Стиль для обмеження {0} не знайдено."
 
+#~ msgid "Yes, undelete them too"
+#~ msgstr "Так, відновити їх теж"
+
+#~ msgid "No, cancel operation"
+#~ msgstr "Ні, відмінити дію"
+
+#~ msgid "Undelete additional nodes?"
+#~ msgstr "Відновити додаткові точки?"
+
+#~ msgid ""
+#~ "There is {0} additional primitive referred to by relation {1}<br>which is "
+#~ "deleted on the server.<br><br>Do you want to undelete this too?"
+#~ msgid_plural ""
+#~ "There are {0} additional primitives referred to by relation {1}<br>which "
+#~ "are deleted on the server.<br><br>Do you want to undelete these too?"
+#~ msgstr[0] ""
+#~ "Є {0} додатковий елемент, що входить до зв’язку {1}<br>, який вилучено на "
+#~ "сервері.<br><br>Ви бажаєте відновити його також?"
+#~ msgstr[1] ""
+#~ "Є {0} додаткових елементи, що входять до зв’язку {1}<br>, який вилучено "
+#~ "на сервері.<br><br>Ви бажаєте відновити їх також?"
+#~ msgstr[2] ""
+#~ "Є {0} додаткових елементів, що входять до зв’язку {1}<br>, який вилучено "
+#~ "на сервері.<br><br>Ви бажаєте відновити їх також?"
+
+#~ msgid ""
+#~ "There is {0} additional node used by way {1}<br>which is deleted on the "
+#~ "server.<br><br>Do you want to undelete this node too?"
+#~ msgid_plural ""
+#~ "There are {0} additional nodes used by way {1}<br>which are deleted on "
+#~ "the server.<br><br>Do you want to undelete these nodes too?"
+#~ msgstr[0] ""
+#~ "Є {0} додаткова точка, що використовується в лінії {1}<br>, яку вилучено "
+#~ "на сервері.<br><br>Ви бажаєте відновити цю точку також?"
+#~ msgstr[1] ""
+#~ "Є {0} додаткові точки, що використовуються в лінії {1}<br>, які вилучено "
+#~ "на сервері.<br><br>Ви бажаєте відновити ці точки також?"
+#~ msgstr[2] ""
+#~ "Є {0} додаткових точок, що використовуються в лінії {1}<br>, які вилучено "
+#~ "на сервері.<br><br>Ви бажаєте відновити ці точки також?"
+
+#~ msgid ""
+#~ "<html>An error occurred while communicating with the server<br>Details: "
+#~ "{0}</html>"
+#~ msgstr ""
+#~ "<html>Під час з’єднання з сервером виникла помилка<br>Подробиці: {0}</"
+#~ "html>"
+
+#~ msgid "Communication with server failed"
+#~ msgstr "Збій під час з’єднання з сервером"
+
+#~ msgid "Undelete dependent primitives?"
+#~ msgstr "Відновити залежні елементи?"
+
+#~ msgid "Visible State:"
+#~ msgstr "Видимий:"
+
+#~ msgid "not visible (on the server)"
+#~ msgstr "не видимий (на сервері)"
+
+#~ msgid "visible (on the server)"
+#~ msgstr "видимий ( на сервері)"
+
+#~ msgid "Physically delete from local dataset"
+#~ msgstr "Фізично вилучити з локального набору даних"
+
+#~ msgid "Keep a clone of the local version"
+#~ msgstr "Лишити клон локальної версії"
+
+#~ msgid "Keep their visible state"
+#~ msgstr "Лишити чужий стан \"Видимий\""
+
+#~ msgid "Yes, purge it"
+#~ msgstr "Так, очистити"
+
+#~ msgid ""
+#~ "<html>JOSM will have to remove your local primitive with id {0}<br>from "
+#~ "the dataset.<br>Do you agree?</html>"
+#~ msgstr ""
+#~ "<html>JOSM вилучить ваш локальний елемент з ідентифікатором {0}<br>з "
+#~ "набору даних.<br>Ви згодні?</html>"
+
+#~ msgid "Keep my visible state"
+#~ msgstr "Залишити мій стан \"Видимий\""
+
+#~ msgid "Yes, reset the id"
+#~ msgstr "Так, перевстановити ідентифікатор"
+
+#~ msgid "Remove from dataset"
+#~ msgstr "Вилучити з набору даних"
+
+#~ msgid "Undecide conflict between visible state"
+#~ msgstr "Не розв’язувати конфлікти між станами \"Видимий\""
+
 #~ msgid "Command Stack: {0}"
 #~ msgstr "Стек команд: {0}"
 
@@ -34828,11 +34751,62 @@ msgstr "Італія – Сицилія"
 #~ msgid "Uploading {0} objects ..."
 #~ msgstr "Надсилання об’єктів. Кількість —  {0}…"
 
+#~ msgid ""
+#~ "{0} conflict has been <strong>resolved automatically</strong> by purging "
+#~ "{0} object<br>from the local dataset because it is deleted on the server."
+#~ msgid_plural ""
+#~ "{0} conflicts have been <strong>resolved automatically</strong> by "
+#~ "purging {0} objects<br> from the local dataset because they are deleted "
+#~ "on the server."
+#~ msgstr[0] ""
+#~ "{0} конфлікт був <strong>розв’язаний автоматично</strong> шляхом очищення "
+#~ "{0} об’єкту<br>з локального набору даних, так як об’єкт вже був вилучений "
+#~ "на сервері."
+#~ msgstr[1] ""
+#~ "{0} конфлікти були <strong>розв’язані автоматично</strong> шляхом "
+#~ "очищення {0} об’єктів<br>з локального набору даних, так як об’єкти вже "
+#~ "були вилучений на сервері."
+#~ msgstr[2] ""
+#~ "{0} конфліктів було <strong>розв’язано автоматично</strong> шляхом "
+#~ "очищення {0} об’єктів<br>з локального набору даних, так як об’єкти вже "
+#~ "були вилучений на сервері."
+
+#~ msgid ""
+#~ "{0} conflict remains to be resolved.<br><br>Please open the Conflict List "
+#~ "Dialog and manually resolve it."
+#~ msgid_plural ""
+#~ "{0} conflicts remain to be resolved.<br><br>Please open the Conflict List "
+#~ "Dialog and manually resolve them."
+#~ msgstr[0] ""
+#~ "Лишилось розв’язати {0} конфлікт.<br><br>Будь ласка, відкрийте діалог "
+#~ "списку конфліктів і розв’яжіть конфлікт вручну."
+#~ msgstr[1] ""
+#~ "Лишилось розв’язати {0} конфлікти.<br><br>Будь ласка, відкрийте діалог "
+#~ "списку конфліктів і розв’яжіть конфлікти вручну."
+#~ msgstr[2] ""
+#~ "Лишилось розв’язати {0} конфліктів.<br><br>Будь ласка, відкрийте діалог "
+#~ "списку конфліктів і розв’яжіть конфлікти вручну."
+
 #~ msgid "Create non-audio markers when reading GPX."
 #~ msgstr "Створити не звукові мітки при обробці GPX даних"
 
+#~ msgid "Football"
+#~ msgstr "Американський футбол"
+
+#~ msgid "Reset id to 0"
+#~ msgstr "Встановити значення ідентифікатора в 0"
+
 #~ msgid "Point on angle of building to start drawing"
 #~ msgstr "Вкажіть кут будівлі, щоб почати креслення"
+
+#~ msgid ""
+#~ "<html>To keep your local version, JOSM<br>has to reset the id of "
+#~ "primitive {0} to 0.<br>On the next upload the server will assign<br>it a "
+#~ "new id.<br>Do you agree?</html>"
+#~ msgstr ""
+#~ "<html>Щоб зберегти свою локальну версію даних, JOSM<br>скине "
+#~ "ідентифікатор елемента {0} на 0.<br>Під час наступного надсилання даних, "
+#~ "сервер призначить<br> їм новий ідентифікатор.<br>Ви згодні?</html>"
 
 #~ msgid "reverter: {0}"
 #~ msgstr "відновлювач: {0}"
@@ -34870,6 +34844,12 @@ msgstr "Італія – Сицилія"
 #~ msgid "Check for paint notes."
 #~ msgstr "Перевірити примітки до малюнка."
 
+#~ msgid "football"
+#~ msgstr "американський футбол"
+
 #~ msgctxt "filter"
 #~ msgid "C"
 #~ msgstr "C"
+
+#~ msgid "Create house number and street name relation"
+#~ msgstr "Створити зв’язок номеру будинку з вулицею"

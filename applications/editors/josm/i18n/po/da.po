@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-06 17:43+0200\n"
-"PO-Revision-Date: 2010-06-28 16:18+0000\n"
+"POT-Creation-Date: 2010-07-11 21:01+0200\n"
+"PO-Revision-Date: 2010-07-06 17:18+0000\n"
 "Last-Translator: Esben Damgaard <ebbe@skummer.com>\n"
 "Language-Team: Dansk <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-06 15:06+0000\n"
+"X-Launchpad-Export-Date: 2010-07-11 18:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -267,7 +267,7 @@ msgstr "Klik for at fortsætte og åbne {0} browsere"
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:175
 #: ../core/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:240
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:647
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:636
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:205
 #: ../core/src/org/openstreetmap/josm/gui/oauth/AdvancedOAuthPropertiesPanel.java:129
 #: ../core/src/org/openstreetmap/josm/gui/oauth/OAuthAuthorizationWizard.java:342
@@ -659,11 +659,11 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/actions/DeleteAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:98
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:388
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:276
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1019
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:986
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:636
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:656
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:142
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:507
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:96
@@ -1489,7 +1489,7 @@ msgstr "Kunne ikke omdøbe filen \"{0}\""
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:192
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:201
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:230
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:664
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:684
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:255
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/MarkerLayer.java:351
 #: ../core/src/org/openstreetmap/josm/gui/layer/markerlayer/PlayHeadMarker.java:241
@@ -2774,8 +2774,8 @@ msgstr "Brug <b>(</b> og <b>)</b> for at gruppere udtryk"
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:217
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:66
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:53
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/tagspec/ui/TabularTagSelector.java:48
 #: build/specialmessages.java:39
@@ -2804,9 +2804,8 @@ msgid ""
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:232
-#, fuzzy
 msgid "Invalid search expression"
-msgstr "Angiv et søgeudtryk"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:408
 #, java-format
@@ -4388,7 +4387,7 @@ msgid "File"
 msgstr "Filer"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:171
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:86
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:98
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1064
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:179
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ReferringRelationsBrowser.java:143
@@ -4943,7 +4942,7 @@ msgstr ""
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:696
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:110
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:122
 #: build/specialmessages.java:64
 msgid "Up"
 msgstr "Op"
@@ -4953,7 +4952,7 @@ msgid "Move up the selected elements by one position."
 msgstr "Flyt de valgte elementer ét trin op"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/ListMerger.java:728
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:121
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:133
 msgid "Down"
 msgstr "Ned"
 
@@ -5566,7 +5565,7 @@ msgstr "Åbn en liste over alle kommandoer (fortryd-oversigt)"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:75
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:55
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:156
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:91
@@ -5667,11 +5666,11 @@ msgstr "Løs konflikter"
 msgid "Resolve conflicts for ''{0}''"
 msgstr "Løs konflikter for ''{0}''"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:54
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:66
 msgid "Filter objects and hide/disable them."
 msgstr "Filtrér objekter og skjul/slå dem fra."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:75
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:1052
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:125
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:471
@@ -5682,123 +5681,122 @@ msgstr "Filtrér objekter og skjul/slå dem fra."
 msgid "Add"
 msgstr "Tilføj"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:75
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:87
 msgid "Add filter."
 msgstr "tilføj filter."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:86
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:98
 msgid "Edit filter."
 msgstr "Redigér filter."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:100
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
 msgid "Delete filter."
 msgstr "Slet filter."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:110
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:122
 msgid "Move filter up."
 msgstr "Flyt filter op."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:121
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:133
 msgid "Move filter down."
 msgstr "Flyt filter ned."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:135
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:147
 msgid "Enable filter"
 msgstr "Slå filter til"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:136
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:148
 msgid "Hide elements"
 msgstr "Skjul elementer"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:138
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:150
 msgid "Inverse filter"
 msgstr "Omvend filter"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:139
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:151
 msgid "Filter mode"
 msgstr "Filtertilstand"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:210
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:218
 #, java-format
 msgid "Filter Hidden:{0} Disabled:{1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:55
-#, fuzzy
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:57
 msgid "Error in filter"
-msgstr "Fejl ved indlæsning af fil"
+msgstr ""
 
 #. translators notes must be in front
 #. column header: enable filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:191
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:255
 msgctxt "filter"
 msgid "E"
 msgstr "E"
 
 #. column header: hide filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:192
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:256
 msgctxt "filter"
 msgid "H"
 msgstr "H"
 
 #. column header: filter text
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:193
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:257
 msgctxt "filter"
 msgid "Text"
 msgstr "Tekst"
 
 #. column header: inverted filter
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:194
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:258
 msgctxt "filter"
 msgid "I"
 msgstr "I"
 
 #. column header: filter mode
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:195
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:259
 msgctxt "filter"
 msgid "M"
 msgstr "M"
 
 #. translators notes must be in front
 #. filter mode: replace
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:264
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:328
 msgctxt "filter"
 msgid "R"
 msgstr "R"
 
 #. filter mode: add
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:266
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:330
 msgctxt "filter"
 msgid "A"
 msgstr "A"
 
 #. filter mode: remove
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:268
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:332
 msgctxt "filter"
 msgid "D"
 msgstr "D"
 
 #. filter mode: in selection
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:270
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:334
 msgctxt "filter"
 msgid "F"
 msgstr "F"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:300
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:364
 msgid "<h2>Filter active</h2>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:306
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:370
 #, java-format
 msgid "<p><b>{0}</b> objects hidden"
 msgstr "<p><b>{0}</b> objekter skjult"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:314
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:378
 #, java-format
 msgid "<b>{0}</b> objects disabled"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:317
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterTableModel.java:381
 msgid "</p><p>Close the filter dialog to see all objects.<p></html>"
 msgstr ""
 
@@ -10526,12 +10524,12 @@ msgid_plural "{0} were found to be GPS tagged."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:635
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:655
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/ImageViewerDialog.java:100
 msgid "Delete image file from disk"
 msgstr "Slet billedfil fra disk"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:638
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:658
 #, java-format
 msgid ""
 "<html><h3>Delete the file {0} from disk?<p>The image file will be "
@@ -10540,7 +10538,7 @@ msgstr ""
 "<html><h3>Slet filen {0} fra disk?<p>Billedfilen vil gå permanent tabt!</"
 "h3></html>"
 
-#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:663
+#: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:683
 msgid "Image file could not be deleted."
 msgstr "Billedfilen kunne ikke slettes"
 
@@ -13198,7 +13196,7 @@ msgstr ""
 msgid "Choose a predefined license"
 msgstr "Vælg en forudangivet licens"
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:62
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:52
 #: ../core/src/org/openstreetmap/josm/io/NMEAImporter.java:34
 #: ../plugins/dataimport/src/org/openstreetmap/josm/plugins/dataimport/io/TangoGPS.java:87
 #: ../plugins/dataimport/src/org/openstreetmap/josm/plugins/dataimport/io/Tcx.java:85
@@ -13207,7 +13205,7 @@ msgstr "Vælg en forudangivet licens"
 msgid "Markers from {0}"
 msgstr "Markører fra {0}"
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:68
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:58
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:214
 #, java-format
 msgid ""
@@ -13217,7 +13215,7 @@ msgstr ""
 "Der opstod en fejl under fortolkning af GPX-fil {0}. Kun en del af filen vil "
 "være tilgængelig."
 
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:79
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:69
 #: ../plugins/public_transport/src/public_transport/GTFSImporterAction.java:199
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:220
 #, java-format
@@ -13225,7 +13223,7 @@ msgid "File \"{0}\" does not exist"
 msgstr "Fil \"{0}\" findes ikke"
 
 #. input was not properly parsed, abort
-#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:82
+#: ../core/src/org/openstreetmap/josm/io/GpxImporter.java:72
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:128
 #: ../plugins/public_transport/src/public_transport/StopImporterAction.java:225
 #, java-format
@@ -13907,11 +13905,11 @@ msgstr "Forbereder OSM-data..."
 msgid "Parsing OSM data..."
 msgstr "Fortolker OSM-data..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:576
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:577
 msgid "Preparing data set..."
 msgstr "Forbereder data sæt..."
 
-#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:592
+#: ../core/src/org/openstreetmap/josm/io/OsmReader.java:593
 #, java-format
 msgid "Line {0} column {1}: "
 msgstr ""
@@ -14734,20 +14732,20 @@ msgid "Unable to find translation for the locale {0}. Reverting to {1}."
 msgstr ""
 "Kan ikke finde nogen oversættelse for sprogvalget {0}. Benytter i stedet {1}."
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:151
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:162
 #, java-format
 msgid "Warning: failed to handle zip file ''{0}''. Exception was: {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:203
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:217
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:214
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:228
 #, java-format
 msgid ""
 "Warning: failed to access directory ''{0}'' for security reasons. Exception "
 "was: {1}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:237
+#: ../core/src/org/openstreetmap/josm/tools/ImageProvider.java:248
 #, java-format
 msgid ""
 "Fatal: failed to locate image ''{0}''. This is a serious configuration "
@@ -15438,9 +15436,8 @@ msgid "Set width of the building"
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:83
-#, fuzzy
 msgid "on polygon"
-msgstr "Multipolygon"
+msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:95
 msgid "Add address"
@@ -15457,17 +15454,16 @@ msgstr ""
 msgid "Buildings"
 msgstr "Bygninger"
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:403
-#, fuzzy
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:418
 msgid "Next no"
-msgstr "Næste"
+msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:404
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:419
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:155
 msgid "Street"
 msgstr ""
 
-#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:445
+#: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:460
 msgid "Enter addresses"
 msgstr ""
 
@@ -15632,7 +15628,7 @@ msgid "Select first WMS layer in list."
 msgstr ""
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:45
-msgid "Don't use relation for addresses (but \"addr:street\" on nodes)."
+msgid "Don't use relation for addresses (but \"addr:street\" on elements)."
 msgstr ""
 
 #. item "Man Made/Pipeline" combo "Type"
@@ -26374,9 +26370,8 @@ msgstr "atletik"
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "american_football"
-msgstr "australsk fodbold"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -26405,9 +26400,8 @@ msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "canadian_football"
-msgstr "australsk fodbold"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -26451,9 +26445,8 @@ msgstr "ridning"
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "gaelic_football"
-msgstr "australsk fodbold"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -26497,9 +26490,8 @@ msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
-#, fuzzy
 msgid "rugby_union"
-msgstr "rugby"
+msgstr ""
 
 #: build/trans_presets.java:1913 build/trans_presets.java:1922
 #: build/trans_presets.java:1931 build/trans_presets.java:1940
@@ -26987,37 +26979,31 @@ msgid "Edit Australian Football"
 msgstr "Ret australsk fodbold"
 
 #: build/trans_presets.java:2076
-#, fuzzy
 msgid "American Football"
-msgstr "Australsk fodbold"
+msgstr ""
 
 #. item "Sport (Ball)/American Football"
 #: build/trans_presets.java:2077
-#, fuzzy
 msgid "Edit American Football"
-msgstr "Ret australsk fodbold"
+msgstr ""
 
 #: build/trans_presets.java:2082
-#, fuzzy
 msgid "Canadian Football"
-msgstr "Ret amerikansk fodbold"
+msgstr ""
 
 #. item "Sport (Ball)/Canadian Football"
 #: build/trans_presets.java:2083
-#, fuzzy
 msgid "Edit Canadian Football"
-msgstr "Ret australsk fodbold"
+msgstr ""
 
 #: build/trans_presets.java:2088
-#, fuzzy
 msgid "Gaelic Football"
-msgstr "Ret amerikansk fodbold"
+msgstr ""
 
 #. item "Sport (Ball)/Gaelic Football"
 #: build/trans_presets.java:2089
-#, fuzzy
 msgid "Edit Gaelic Football"
-msgstr "Ret amerikansk fodbold"
+msgstr ""
 
 #: build/trans_presets.java:2094
 msgid "Rugby League"
@@ -27025,20 +27011,17 @@ msgstr ""
 
 #. item "Sport (Ball)/Rugby League"
 #: build/trans_presets.java:2095
-#, fuzzy
 msgid "Edit Rugby League"
-msgstr "Ret rugby"
+msgstr ""
 
 #: build/trans_presets.java:2100
-#, fuzzy
 msgid "Rugby Union"
-msgstr "Rugby"
+msgstr ""
 
 #. item "Sport (Ball)/Rugby Union"
 #: build/trans_presets.java:2101
-#, fuzzy
 msgid "Edit Rugby Union"
-msgstr "Ret rugby"
+msgstr ""
 
 #: build/trans_presets.java:2106
 msgid "Baseball"
@@ -33782,104 +33765,6 @@ msgstr "Lodi - Italien"
 msgid "Sicily - Italy"
 msgstr "Sicilen - Italien"
 
-#~ msgid ""
-#~ "<html>An error occurred while communicating with the server<br>Details: "
-#~ "{0}</html>"
-#~ msgstr ""
-#~ "<html>En fejl opstod under kommunikation med serveren<br>Detaljer: {0}</"
-#~ "html>"
-
-#~ msgid "Communication with server failed"
-#~ msgstr "Kommunikation med server fejlede"
-
-#~ msgid "Yes, undelete them too"
-#~ msgstr "Ja, gendan også dem"
-
-#~ msgid "No, cancel operation"
-#~ msgstr "Nej, fortryd handlingen"
-
-#~ msgid "Undelete additional nodes?"
-#~ msgstr "Gendan yderligere punkter?"
-
-#~ msgid "Undelete dependent primitives?"
-#~ msgstr "Gendan afhængige primitiver?"
-
-#~ msgid "Visible State:"
-#~ msgstr "Synlig status:"
-
-#~ msgid "visible (on the server)"
-#~ msgstr "synlig (på server)"
-
-#~ msgid "not visible (on the server)"
-#~ msgstr "ikke synlig (på server)"
-
-#~ msgid "Keep a clone of the local version"
-#~ msgstr "Behold en klon af den lokale version."
-
-#~ msgid "Physically delete from local dataset"
-#~ msgstr "Slet fysisk fra lokal datasæt"
-
-#~ msgid "Keep my visible state"
-#~ msgstr "Behold min slettede status"
-
-#~ msgid "Yes, reset the id"
-#~ msgstr "Ja, nulstil ID"
-
-#~ msgid "Reset id to 0"
-#~ msgstr "Nulstil ID til 0"
-
-#~ msgid "Keep their visible state"
-#~ msgstr "Behold deres synlige status"
-
-#~ msgid "Yes, purge it"
-#~ msgstr "Ja, udrens det"
-
-#~ msgid ""
-#~ "<html>JOSM will have to remove your local primitive with id {0}<br>from "
-#~ "the dataset.<br>Do you agree?</html>"
-#~ msgstr ""
-#~ "<html>JOSM vil være nødt til at fjerne din lokale primitiv med ID {0}"
-#~ "<br>fra datasættet.<br>Indvilliger du?</html>"
-
-#~ msgid "Remove from dataset"
-#~ msgstr "Fjern fra datasæt"
-
-#~ msgid "Undecide conflict between visible state"
-#~ msgstr "Omgør beslutning om konflikt mellem synlige status"
-
-#~ msgid ""
-#~ "{0} conflict has been <strong>resolved automatically</strong> by purging "
-#~ "{0} object<br>from the local dataset because it is deleted on the server."
-#~ msgid_plural ""
-#~ "{0} conflicts have been <strong>resolved automatically</strong> by "
-#~ "purging {0} objects<br> from the local dataset because they are deleted "
-#~ "on the server."
-#~ msgstr[0] ""
-#~ "{0} konflikt er blevet <strong>løst automatisk</strong> ved udrensning af "
-#~ "{0} objekt<br>fra det lokale datasæt fordi det er slettet på serveren."
-#~ msgstr[1] ""
-#~ "{0} konflikter er blevet <strong>løst automatisk</strong> ved udrensning "
-#~ "af {0} objekter<br>fra det lokale datasæt fordi de er slettet på serveren."
-
-#~ msgid ""
-#~ "{0} conflict remains to be resolved.<br><br>Please open the Conflict List "
-#~ "Dialog and manually resolve it."
-#~ msgid_plural ""
-#~ "{0} conflicts remain to be resolved.<br><br>Please open the Conflict List "
-#~ "Dialog and manually resolve them."
-#~ msgstr[0] ""
-#~ "{0} konflikt mangler endnu at blive løst.<br><br>Åbn venligst "
-#~ "konfliktlistedialogen og løs den manuelt."
-#~ msgstr[1] ""
-#~ "{0} konflikter mangler endnu at blive løst.<br><br>Åbn venligst "
-#~ "konfliktlistedialogen og løs dem manuelt."
-
-#~ msgid "football"
-#~ msgstr "amerikansk fodbold"
-
-#~ msgid "Football"
-#~ msgstr "Amerikansk fodbold"
-
 #~ msgid "Move"
 #~ msgstr "Flyt"
 
@@ -34245,6 +34130,9 @@ msgstr "Sicilen - Italien"
 
 #~ msgid "NullPointerException, possibly some missing tags."
 #~ msgstr "NullPointerException, måske på grund af manglende tags."
+
+#~ msgid "Football"
+#~ msgstr "Amerikansk fodbold"
 
 #~ msgid "Edit Station"
 #~ msgstr "Ret station"
@@ -34743,14 +34631,26 @@ msgstr "Sicilen - Italien"
 #~ "med et datasæt fra Schweiz eller Liechtenstein.\n"
 #~ "Upload ikke noget data efter denne besked."
 
+#~ msgid "Yes, undelete them too"
+#~ msgstr "Ja, gendan også dem"
+
+#~ msgid "No, cancel operation"
+#~ msgstr "Nej, fortryd handlingen"
+
 #~ msgid "Checking whether node {0} is gone ..."
 #~ msgstr "Tjekker om punktet {0} er væk ..."
 
 #~ msgid "Undeleting relation..."
 #~ msgstr "Gendanner relation..."
 
+#~ msgid "Undelete additional nodes?"
+#~ msgstr "Gendan yderligere punkter?"
+
 #~ msgid "Checking whether primitive {0} is gone ..."
 #~ msgstr "Tjekker om primitiven {0} er væk ..."
+
+#~ msgid "Undelete dependent primitives?"
+#~ msgstr "Gendan afhængige primitiver?"
 
 #~ msgid "Update Selection"
 #~ msgstr "Opdater det valgte"
@@ -34978,6 +34878,27 @@ msgstr "Sicilen - Italien"
 #~ msgid "Confirmation"
 #~ msgstr "Bekræftelse"
 
+#~ msgid "football"
+#~ msgstr "amerikansk fodbold"
+
+#~ msgid "Communication with server failed"
+#~ msgstr "Kommunikation med server fejlede"
+
+#~ msgid "not visible (on the server)"
+#~ msgstr "ikke synlig (på server)"
+
+#~ msgid "visible (on the server)"
+#~ msgstr "synlig (på server)"
+
+#~ msgid "Reset id to 0"
+#~ msgstr "Nulstil ID til 0"
+
+#~ msgid "Yes, reset the id"
+#~ msgstr "Ja, nulstil ID"
+
+#~ msgid "Remove from dataset"
+#~ msgstr "Fjern fra datasæt"
+
 #~ msgid "Parameter ''{0}'' must not be empty."
 #~ msgstr "Parameter ''{0}'' må ikke være tom."
 
@@ -35008,6 +34929,41 @@ msgstr "Sicilen - Italien"
 
 #~ msgid "Parameter current out of range. Got {0}."
 #~ msgstr "Parameter ude af intervalområde. Fik {0}."
+
+#~ msgid ""
+#~ "<html>An error occurred while communicating with the server<br>Details: "
+#~ "{0}</html>"
+#~ msgstr ""
+#~ "<html>En fejl opstod under kommunikation med serveren<br>Detaljer: {0}</"
+#~ "html>"
+
+#~ msgid "Visible State:"
+#~ msgstr "Synlig status:"
+
+#~ msgid "Physically delete from local dataset"
+#~ msgstr "Slet fysisk fra lokal datasæt"
+
+#~ msgid "Keep a clone of the local version"
+#~ msgstr "Behold en klon af den lokale version."
+
+#~ msgid "Keep their visible state"
+#~ msgstr "Behold deres synlige status"
+
+#~ msgid "Keep my visible state"
+#~ msgstr "Behold min slettede status"
+
+#~ msgid "Yes, purge it"
+#~ msgstr "Ja, udrens det"
+
+#~ msgid ""
+#~ "<html>JOSM will have to remove your local primitive with id {0}<br>from "
+#~ "the dataset.<br>Do you agree?</html>"
+#~ msgstr ""
+#~ "<html>JOSM vil være nødt til at fjerne din lokale primitiv med ID {0}"
+#~ "<br>fra datasættet.<br>Indvilliger du?</html>"
+
+#~ msgid "Undecide conflict between visible state"
+#~ msgstr "Omgør beslutning om konflikt mellem synlige status"
 
 #~ msgid "Parameter ''{0}'' with tags for exactly one key expected. Got {1}."
 #~ msgstr "Parameter \"{0}\" med tags for præcist en nøgle forventet. Fik {1}."
@@ -35162,11 +35118,38 @@ msgstr "Sicilen - Italien"
 #~ "Udvidelsen kunne ikke fjernes. Den er sandsynligvis allerede slået fra"
 
 #~ msgid ""
+#~ "{0} conflict has been <strong>resolved automatically</strong> by purging "
+#~ "{0} object<br>from the local dataset because it is deleted on the server."
+#~ msgid_plural ""
+#~ "{0} conflicts have been <strong>resolved automatically</strong> by "
+#~ "purging {0} objects<br> from the local dataset because they are deleted "
+#~ "on the server."
+#~ msgstr[0] ""
+#~ "{0} konflikt er blevet <strong>løst automatisk</strong> ved udrensning af "
+#~ "{0} objekt<br>fra det lokale datasæt fordi det er slettet på serveren."
+#~ msgstr[1] ""
+#~ "{0} konflikter er blevet <strong>løst automatisk</strong> ved udrensning "
+#~ "af {0} objekter<br>fra det lokale datasæt fordi de er slettet på serveren."
+
+#~ msgid ""
 #~ "Warning: Failed to retrieve user infos for the current JOSM user. "
 #~ "Exceptions was: {0}"
 #~ msgstr ""
 #~ "Advarsel: Kunne ikke hente brugerinfo for den nuværende JOSM bruger. "
 #~ "Undtagelse var: {0}"
+
+#~ msgid ""
+#~ "{0} conflict remains to be resolved.<br><br>Please open the Conflict List "
+#~ "Dialog and manually resolve it."
+#~ msgid_plural ""
+#~ "{0} conflicts remain to be resolved.<br><br>Please open the Conflict List "
+#~ "Dialog and manually resolve them."
+#~ msgstr[0] ""
+#~ "{0} konflikt mangler endnu at blive løst.<br><br>Åbn venligst "
+#~ "konfliktlistedialogen og løs den manuelt."
+#~ msgstr[1] ""
+#~ "{0} konflikter mangler endnu at blive løst.<br><br>Åbn venligst "
+#~ "konfliktlistedialogen og løs dem manuelt."
 
 #~ msgid "Update Plugins"
 #~ msgstr "Opdatér udvidelser"

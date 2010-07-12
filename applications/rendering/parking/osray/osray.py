@@ -26,7 +26,7 @@ global_settings {{
 
     ambient_light rgb <0.1,0.1,0.1>
     radiosity {{
-        count 60
+        count 30
         error_bound 0.01
         recursion_limit 3
         pretrace_end 0.0005
@@ -147,7 +147,7 @@ light_source {{
 /* Sky blue */
 light_source {{
     <0, 1000000,0>,
-    rgb <0.04, 0.04, 0.8>
+    rgb <0.02, 0.02, 0.3>
     area_light <1000000, 0, 0>, <0, 0, 1000000>, 3, 3
     adaptive 1
     circular

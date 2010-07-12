@@ -85,4 +85,10 @@ public interface TileSource {
      * @return file extension of the tile image type
      */
     public String getTileType();
+
+    /**
+     * Specifies how large each tile is.
+     * @return The size of a single tile in pixels.
+     */
+    public int getTileSize();
 }

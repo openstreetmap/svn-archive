@@ -72,6 +72,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     protected JButton zoomInButton;
     protected JButton zoomOutButton;
 
+    private TileSource tileSource;
+
     /**
      * Creates a standard {@link JMapViewer} instance that can be controlled via
      * mouse: hold right mouse button for moving, double click left mouse button
@@ -86,7 +88,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     public JMapViewer(TileCache tileCache, int downloadThreadCount) {
         super();
-        tileController = new TileController(new OsmTileSource.Mapnik(), tileCache, this);
+        tileSource = new OsmTileSource.Mapnik();
+        tileController = new TileController(tileSource, tileCache, this);
         mapMarkerList = new LinkedList<MapMarker>();
         mapRectangleList = new LinkedList<MapRectangle>();
         mapMarkersVisible = true;
@@ -94,7 +97,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         tileGridVisible = false;
         setLayout(null);
         initializeZoomSlider();
-        setMinimumSize(new Dimension(Tile.SIZE, Tile.SIZE));
+        setMinimumSize(new Dimension(tileSource.getTileSize(), tileSource.getTileSize()));
         setPreferredSize(new Dimension(400, 400));
         setDisplayPositionByLatLon(50, 9, 3);
         //setToolTipText("");
@@ -356,9 +359,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         x -= center.x - getWidth() / 2;
         y -= center.y - getHeight() / 2;
         if (checkOutside) {
-            if (x < 0 || y < 0 || x > getWidth() || y > getHeight()) {
+            if (x < 0 || y < 0 || x > getWidth() || y > getHeight())
                 return null;
-            }
         }
         return new Point(x, y);
     }
@@ -381,11 +383,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * @return point on the map or <code>null</code> if the point is not visible
      */
     public Point getMapPosition(Coordinate coord) {
-        if (coord != null) {
+        if (coord != null)
             return getMapPosition(coord.getLat(), coord.getLon());
-        } else {
+        else
             return null;
-        }
     }
 
     /**
@@ -396,11 +397,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      *         and checkOutside set to <code>true</code>
      */
     public Point getMapPosition(Coordinate coord, boolean checkOutside) {
-        if (coord != null) {
+        if (coord != null)
             return getMapPosition(coord.getLat(), coord.getLon(), checkOutside);
-        } else {
+        else
             return null;
-        }
     }
 
     @Override
@@ -409,10 +409,11 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
         int iMove = 0;
 
-        int tilex = center.x / Tile.SIZE;
-        int tiley = center.y / Tile.SIZE;
-        int off_x = (center.x % Tile.SIZE);
-        int off_y = (center.y % Tile.SIZE);
+        int tilesize = tileSource.getTileSize();
+        int tilex = center.x / tilesize;
+        int tiley = center.y / tilesize;
+        int off_x = (center.x % tilesize);
+        int off_y = (center.y % tilesize);
 
         int w2 = getWidth() / 2;
         int h2 = getHeight() / 2;
@@ -420,26 +421,28 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         int posy = h2 - off_y;
 
         int diff_left = off_x;
-        int diff_right = Tile.SIZE - off_x;
+        int diff_right = tilesize - off_x;
         int diff_top = off_y;
-        int diff_bottom = Tile.SIZE - off_y;
+        int diff_bottom = tilesize - off_y;
 
         boolean start_left = diff_left < diff_right;
         boolean start_top = diff_top < diff_bottom;
 
         if (start_top) {
-            if (start_left)
+            if (start_left) {
                 iMove = 2;
-            else
+            } else {
                 iMove = 3;
+            }
         } else {
-            if (start_left)
+            if (start_left) {
                 iMove = 1;
-            else
+            } else {
                 iMove = 0;
+            }
         } // calculate the visibility borders
-        int x_min = -Tile.SIZE;
-        int y_min = -Tile.SIZE;
+        int x_min = -tilesize;
+        int y_min = -tilesize;
         int x_max = getWidth();
         int y_max = getHeight();
 
@@ -449,8 +452,9 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         while (painted) {
             painted = false;
             for (int i = 0; i < 4; i++) {
-                if (i % 2 == 0)
+                if (i % 2 == 0) {
                     x++;
+                }
                 for (int j = 0; j < x; j++) {
                     if (x_min <= posx && posx <= x_max && y_min <= posy && posy <= y_max) {
                         // tile is visible
@@ -458,13 +462,14 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
                         if (tile != null) {
                             painted = true;
                             tile.paint(g, posx, posy);
-                            if (tileGridVisible)
-                                g.drawRect(posx, posy, Tile.SIZE, Tile.SIZE);
+                            if (tileGridVisible) {
+                                g.drawRect(posx, posy, tilesize, tilesize);
+                            }
                         }
                     }
                     Point p = move[iMove];
-                    posx += p.x * Tile.SIZE;
-                    posy += p.y * Tile.SIZE;
+                    posx += p.x * tilesize;
+                    posy += p.y * tilesize;
                     tilex += p.x;
                     tiley += p.y;
                 }
@@ -472,7 +477,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
             }
         }
         // outer border of the map
-        int mapSize = Tile.SIZE << zoom;
+        int mapSize = tilesize << zoom;
         g.drawRect(w2 - center.x, h2 - center.y, mapSize, mapSize);
 
         // g.drawString("Tiles in cache: " + tileCache.getTileCount(), 50, 20);
@@ -665,6 +670,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
             throw new RuntimeException("Maximum zoom level too high");
         if (tileSource.getMinZoom() < MIN_ZOOM)
             throw new RuntimeException("Minumim zoom level too low");
+        this.tileSource = tileSource;
         tileController.setTileSource(tileSource);
         zoomSlider.setMinimum(tileSource.getMinZoom());
         zoomSlider.setMaximum(tileSource.getMaxZoom());

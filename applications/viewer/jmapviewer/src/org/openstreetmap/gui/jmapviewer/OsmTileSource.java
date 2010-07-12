@@ -53,6 +53,9 @@ public class OsmTileSource {
             return "png";
         }
 
+        public int getTileSize() {
+            return 256;
+        }
     }
 
     public static class Mapnik extends AbstractOsmTileSource {
@@ -85,6 +88,7 @@ public class OsmTileSource {
             return url;
         }
 
+        @Override
         public int getMaxZoom() {
             return 17;
         }
@@ -102,6 +106,7 @@ public class OsmTileSource {
             this.osmaSuffix = osmaSuffix;
         }
 
+        @Override
         public int getMaxZoom() {
             return 17;
         }

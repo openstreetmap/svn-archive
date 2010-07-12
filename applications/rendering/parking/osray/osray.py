@@ -81,7 +81,7 @@ camera {{
     if Radiosity:
         ground_finish = """
     finish {
-        diffuse 0.5
+        diffuse 0.8
         ambient 0.0
     }
 """        
@@ -129,7 +129,33 @@ sky_sphere {{
     #f.write("""light_source {{ <{0}, 50000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*1.5,right*0.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <300000+{0}, 1000000, -1000000+{1}>, rgb <1, 1, 1> fade_power 0 }}\n""".format(avg(left,right),avg(bottom,top)))
-    f.write("""
+    if Radiosity:
+        f.write("""
+/* The Sun */
+light_source {{
+    <0, 1000000,0>,
+    rgb <1, 1, 0.9>
+    area_light <100000, 0, 0>, <0, 0, 100000>, 3, 3
+    adaptive 1
+    circular
+    rotate <45,10,0>
+    translate <{0},0,{1}>
+}}
+
+\n""".format(avg(left,right),avg(bottom,top)))
+        f.write("""
+/* Sky blue */
+light_source {{
+    <0, 1000000,0>,
+    rgb <0.04, 0.04, 0.8>
+    area_light <1000000, 0, 0>, <0, 0, 1000000>, 3, 3
+    adaptive 1
+    circular
+    translate <{0},0,{1}>
+}}
+\n""".format(avg(left,right),avg(bottom,top)))
+    else:
+        f.write("""
 /* The Sun */
 light_source {{
     <0, 1000000,0>,
@@ -142,7 +168,7 @@ light_source {{
 }}
 
 \n""".format(avg(left,right),avg(bottom,top)))
-    f.write("""
+        f.write("""
 /* Sky blue */
 light_source {{
     <0, 1000000,0>,

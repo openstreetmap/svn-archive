@@ -197,7 +197,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
                 }
             }
         } else {
-            downloadAndPaintVisible(g, mv);
+            downloadAndPaintVisible(g, mv, false);
         }
     }
 
@@ -235,7 +235,8 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
         }
     }
 
-    protected void downloadAndPaintVisible(Graphics g, final MapView mv){
+    protected void downloadAndPaintVisible(Graphics g, final MapView mv,
+    boolean real){
         if (usesInvalidUrl)
             return;
 
@@ -248,12 +249,12 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
         for(int x = bminx; x<bmaxx; ++x) {
             for(int y = bminy; y<bmaxy; ++y){
                 GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
-                if(!img.paint(g, mv, dx, dy) && !img.downloadingStarted){
+                if((!img.paint(g, mv, dx, dy) || img.infotext) && !img.downloadingStarted){
                     img.downloadingStarted = true;
                     img.image = null;
                     img.flushedResizedCachedInstance();
                     Grabber gr = WMSPlugin.getGrabber(XYtoBounds(x,y), img, mv, this);
-                    if(!gr.loadFromCache()){
+                    if(!gr.loadFromCache(real)){
                         gr.setPriority(1);
                         executor.submit(gr);
                     }
@@ -319,7 +320,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
                     JOptionPane.ERROR_MESSAGE
                 );
             } else {
-                downloadAndPaintVisible(mv.getGraphics(), mv);
+                downloadAndPaintVisible(mv.getGraphics(), mv, true);
             }
         }
     }

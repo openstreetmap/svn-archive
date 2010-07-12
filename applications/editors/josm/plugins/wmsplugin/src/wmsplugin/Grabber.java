@@ -88,7 +88,7 @@ abstract public class Grabber extends Thread {
         g.drawString(tr("Not in cache"), 10, height()/2);
         image.image = img;
         image.flushedResizedCachedInstance();
-        image.failed = true;
+        image.infotext = true;
         image.downloadingStarted = false;
         g.setFont(font);
     }
@@ -113,5 +113,5 @@ abstract public class Grabber extends Thread {
         return (int)(Math.random() * ((max+1)-min) ) + min;
     }
 
-    abstract public boolean loadFromCache();
+    abstract public boolean loadFromCache(boolean real);
 }

@@ -154,7 +154,7 @@ public class WMSGrabber extends Grabber {
     }
 
     @Override
-	public boolean loadFromCache(){
+	public boolean loadFromCache(boolean real){
         URL url = null;
         try{
            url = getURL(
@@ -165,7 +165,7 @@ public class WMSGrabber extends Grabber {
            return false;
         }
         BufferedImage cached = cache.getImg(url.toString());
-        if(!layer.hasAutoDownload() || cached != null){
+        if((!real && !layer.hasAutoDownload()) || cached != null){
            image.min = b.min;
            image.max = b.max;
            if(cached == null){

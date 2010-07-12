@@ -24,6 +24,7 @@ public class GeorefImage implements Serializable {
 	public EastNorth min, max;
 	public boolean downloadingStarted;
 	public boolean failed = false;
+	public boolean infotext = false;
 
 	public GeorefImage(boolean downloadingStarted) {
 		this.downloadingStarted = downloadingStarted;

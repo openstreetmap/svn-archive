@@ -1,23 +1,18 @@
 // License: GPL. See LICENSE file for details.
 // Derived from DownloadPrimitiveAction by Matthias Julius
 
-package Undelete;
+package org.openstreetmap.josm.plugins.undelete;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
@@ -26,15 +21,10 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadPrimitiveTask;
-import org.openstreetmap.josm.command.AddCommand;
-import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.Way;
@@ -66,9 +56,11 @@ public class Undelete extends Plugin {
     
     
     private class UndeleteAction extends JosmAction {
-        private LinkedList<Command> cmds = new LinkedList<Command>();
-
-        public UndeleteAction() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public UndeleteAction() {
         super(tr("Undelete object..."), "undelete", tr("Undelete object by id"), Shortcut.registerShortcut("tools:undelete", tr("File: {0}", tr("Undelete object...")),
         KeyEvent.VK_U, Shortcut.GROUP_EDIT, KeyEvent.SHIFT_DOWN_MASK|KeyEvent.ALT_DOWN_MASK), true);
       }

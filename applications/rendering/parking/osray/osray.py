@@ -138,7 +138,7 @@ sky_sphere {{
 /* The Sun */
 light_source {{
     <0, 1000000,0>,
-    rgb <1, 0.9, 0.8>
+    rgb <1, 1, 0.9>
     area_light <100000, 0, 0>, <0, 0, 100000>, 3, 3
     adaptive 1
     circular

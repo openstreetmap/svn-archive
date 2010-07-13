@@ -4,6 +4,8 @@
 from osray_db import *
 from osray_geom import *
 
+Radiosity = True
+
 highwaytypes = { # highwaytype : [color,lane_width_factor]
     'motorway':['<1,0,0>',1.3],
     'motorway_link':['<1,0,0>',1.3],
@@ -31,7 +33,21 @@ highwaytypes = { # highwaytype : [color,lane_width_factor]
 
 
 def pov_declare_highway_textures(f):
-    declare_highway_texture = """
+    if Radiosity:
+        declare_highway_texture = """
+#declare texture_highway_{highwaytype} =
+    texture {{
+        pigment {{
+            color rgb {color}
+        }}
+        finish {{
+            diffuse 0.8
+            ambient 0
+        }}
+    }}
+"""
+    else:
+        declare_highway_texture = """
 #declare texture_highway_{highwaytype} =
     texture {{
         pigment {{
@@ -50,20 +66,7 @@ def pov_declare_highway_textures(f):
         color = highwayparams[0]
         f.write(declare_highway_texture.format(color=color,highwaytype=highwaytype))
     # texture for the highway casing
-    f.write("""
-#declare texture_highway_casing =
-    texture {{
-        pigment {{
-            color rgb {color}
-        }}
-        finish {{
-            specular 0.05
-            roughness 0.05
-            ambient 0.3
-            /*reflection 0.5*/
-        }}
-    }}
-""".format(color='<0.3,0.3,0.3>'))
+    f.write(declare_highway_texture.format(color='<0.4,0.4,0.4>',highwaytype='casing'))
 
 
 def draw_lines(f,points,height,streetwidth,highwaytype):
@@ -240,9 +243,9 @@ def pov_highway_area(f,highway):
 \n""".format(height=height))
 
 
-def render_highways(f,osraydb):
+def render_highways(f,osraydb,options):
+    Radiosity = options['Radiosity']
     pov_declare_highway_textures(f)
-
     highways = []
     for highwaytype in highwaytypes.iterkeys():
         highways += osraydb.select_highways(highwaytype)

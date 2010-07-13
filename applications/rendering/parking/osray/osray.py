@@ -208,15 +208,19 @@ def main(options):
         create_landuse_texture(osraydb,options,'/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov')
         #pass
     
-    render_highways(f,osraydb)
-    render_buidings(f,osraydb)
+    render_highways(f,osraydb,options)
+    render_buidings(f,osraydb,options)
     f.close()
     
     command = 'povray'
     image_parameter = '-Iscene-osray.pov'
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
-    antialiasing_parameters = '+A0.1 +AM2 +R3 -J'
-    misc_parameters = '+UV +Q9'
+    if options['hq']==True:
+        antialiasing_parameters = '+A0.1 +AM2 +R3 -J'
+        misc_parameters = '+UV +Q9'
+    else:
+        antialiasing_parameters = '-A'
+        misc_parameters = '+UV +Q4'
     commandline = string.join([command,image_parameter,image_dimension_parameters,antialiasing_parameters,misc_parameters])
     result = commands.getstatusoutput(commandline)
     print result[1]
@@ -231,6 +235,7 @@ if __name__ == "__main__":
     parser.add_option("-H", "--height", dest="height", help="image height in pixels", default="768", type='int')
     parser.add_option("-W", "--width", dest="width", help="image width in pixels", default="1024", type='int')
     parser.add_option("-Q", "--high-quality", action="store_true", dest="hq", default=False, help="high quality rendering")
+    parser.add_option("-R", "--radiosity", action="store_true", dest="radiosity", default=False, help="radiosity rendering")
     (options, args) = parser.parse_args()
     #if options.a and options.b:
     #    parser.error("options -a and -b are mutually exclusive")

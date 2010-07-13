@@ -121,9 +121,9 @@ def pov_building(f,building):
 }}
 \n""".format(height=height))
 
-def render_buidings(f,osraydb):
+def render_buidings(f,osraydb,options):
+    Radiosity = options['Radiosity']
     pov_declare_building_textures(f)
-    
     buildings = []
     for buildingtype in buildingtypes.iterkeys():
         buildings += osraydb.select_buildings(buildingtype)

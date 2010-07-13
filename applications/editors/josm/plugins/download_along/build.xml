@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="michigan_left" default="dist" basedir=".">
+<project name="download_along" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="Changed the constructor signature of the plugin main class" />
@@ -96,11 +96,11 @@
     -->
 			<manifest>
 				<attribute name="Author" value="Nakor"/>
-				<attribute name="Plugin-Class" value="MichiganLeft.MichiganLeft"/>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugin.download_along.DownloadAlong"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Adds no left turn for sets of 4 or 5 ways"/>
-				<attribute name="Plugin-Icon" value="images/michigan_left.png"/>
-				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MichiganLeft"/>
+				<attribute name="Plugin-Icon" value="images/download_along.png"/>
+				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/DownloadAlong"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 			</manifest>

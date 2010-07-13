@@ -6,7 +6,7 @@ global_settings {
 
     ambient_light rgb <0.1,0.1,0.1>
     radiosity {
-        count 60
+        count 30
         error_bound 0.01
         recursion_limit 3
         pretrace_end 0.0005
@@ -45,7 +45,7 @@ box {
     }
     
     finish {
-        diffuse 0.5
+        diffuse 0.8
         ambient 0.0
     }
 
@@ -55,8 +55,12 @@ sky_sphere {
     pigment {
         gradient y
         color_map {
-            [ 0.5 color CornflowerBlue ]
-            [ 1.0 color MidnightBlue ]
+/*
+            [ 0.5 color rgb <0.5,0.6,0.6> ]
+            [ 1.0 color rgb <0.5,0.5,0.6> ]
+*/
+            [ 0.5 color rgb <0.24,0.24,0.24> ]
+            [ 1.0 color rgb <0.2,0.2,0.2> ]
         }
         scale 20000
         translate -10
@@ -66,8 +70,8 @@ sky_sphere {
 /* The Sun */
 light_source {
     <0, 1000000,0>,
-    rgb <1, 1, 0.9>
-    area_light <100000, 0, 0>, <0, 0, 100000>, 6, 6
+    rgb <1, 0.9, 0.8>
+    area_light <100000, 0, 0>, <0, 0, 100000>, 3, 3
     adaptive 1
     circular
     rotate <45,10,0>
@@ -79,8 +83,8 @@ light_source {
 /* Sky blue */
 light_source {
     <0, 1000000,0>,
-    rgb <0.06, 0.06, 0.12>
-    area_light <1000000, 0, 0>, <0, 0, 1000000>, 6, 6
+    rgb <0.04, 0.04, 0.2>
+    area_light <1000000, 0, 0>, <0, 0, 1000000>, 3, 3
     adaptive 1
     circular
     translate <1106196.67314,0,6410314.93896>
@@ -5831,7 +5835,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <0.8,0.8,0.8>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }
@@ -5842,7 +5846,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <1,0.8,0.8>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }
@@ -5853,7 +5857,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <1,0.6,0.6>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }
@@ -5864,7 +5868,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <0.8,1,0.6>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }
@@ -5875,7 +5879,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <1,1,0.6>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }
@@ -5886,7 +5890,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <1,0.6,0.6>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }
@@ -5897,7 +5901,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <0.6,1,0.8>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }
@@ -5908,7 +5912,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <1,0.6,1>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }
@@ -5919,7 +5923,7 @@ prism { linear_spline 0, 0.01, 39,
             color rgb <0.6,0.6,1>
         }
         finish {
-            diffuse 0.5
+            diffuse 0.8
             ambient 0
         }
     }

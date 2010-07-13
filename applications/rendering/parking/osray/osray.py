@@ -117,8 +117,12 @@ sky_sphere {{
     pigment {{
         gradient y
         color_map {{
-            [ 0.5 color CornflowerBlue ]
-            [ 1.0 color MidnightBlue ]
+/*
+            [ 0.5 color rgb <0.5,0.6,0.6> ]
+            [ 1.0 color rgb <0.5,0.5,0.6> ]
+*/
+            [ 0.5 color rgb <0.24,0.24,0.24> ]
+            [ 1.0 color rgb <0.2,0.2,0.2> ]
         }}
         scale 20000
         translate -10
@@ -134,7 +138,7 @@ sky_sphere {{
 /* The Sun */
 light_source {{
     <0, 1000000,0>,
-    rgb <1, 1, 0.9>
+    rgb <1, 0.9, 0.8>
     area_light <100000, 0, 0>, <0, 0, 100000>, 3, 3
     adaptive 1
     circular
@@ -147,7 +151,7 @@ light_source {{
 /* Sky blue */
 light_source {{
     <0, 1000000,0>,
-    rgb <0.02, 0.02, 0.3>
+    rgb <0.04, 0.04, 0.2>
     area_light <1000000, 0, 0>, <0, 0, 1000000>, 3, 3
     adaptive 1
     circular

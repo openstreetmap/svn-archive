@@ -244,7 +244,7 @@ def pov_highway_area(f,highway):
 
 
 def render_highways(f,osraydb,options):
-    Radiosity = options['Radiosity']
+    Radiosity = options['radiosity']
     pov_declare_highway_textures(f)
     highways = []
     for highwaytype in highwaytypes.iterkeys():

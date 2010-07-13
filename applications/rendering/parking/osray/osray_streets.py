@@ -191,20 +191,26 @@ def pov_highway_area(f,highway):
         #print 'height:', height
         #color = '<0,1,0>'
     f.write("""
-    texture {{
-        pigment {{
-            color rgb {0}
-        }}
-        finish {{
-            specular 0.5
-            roughness 0.05
-            ambient 0.2
-            /*reflection 0.5*/
-        }}
+    texture {{ texture_highway_{highwaytype} }}
     }}
-    translate <0, {1}, 0>
+    translate <0, {height}, 0>
 }}
-\n""".format(color,height))
+\n""".format(highwaytype=highwaytype,height=height))
+#    f.write("""
+#    texture {{
+#        pigment {{
+#            color rgb {0}
+#        }}
+#        finish {{
+#            specular 0.5
+#            roughness 0.05
+#            ambient 0.2
+#            /*reflection 0.5*/
+#        }}
+#    }}
+#    translate <0, {1}, 0>
+#}}
+#\n""".format(color,height))
     # 
     # draw the casing
     #

@@ -53,7 +53,9 @@ def pov_camera(f,osraydb,options):
     right = float(osraydb.right)
     map_size_x = right-left
     map_size_y = top-bottom
-    
+    middle_x = avg(left,right)
+    middle_y = avg(bottom,top)
+
     print "map size x = ",map_size_x
     print "map size y = ",map_size_y
     
@@ -75,9 +77,9 @@ camera {{
    look_at <0, 0, 0>
    rotate <-{angle},0,0>
    scale <1,1,1>
-   translate <{middle_x},0,{middle_z}>
+   translate <{middle_x},0,{middle_y}>
 }}
-""".format(middle_x=avg(left,right),middle_z=avg(bottom,top),zoom=zoom,angle=isometric_angle,aspect=map_aspect))
+""".format(middle_x=middle_x,middle_y=middle_y,zoom=zoom,angle=isometric_angle,aspect=map_aspect))
     if Radiosity:
         ground_finish = """
     finish {
@@ -134,55 +136,67 @@ sky_sphere {{
     #f.write("""light_source {{ <{0}, 5000, {1}>, rgb <0.5, 0.5, 0.5> }}\n""".format(avg(left*0.5,right*1.5),avg(bottom*1.5,top*0.5)))
     #f.write("""light_source {{ <300000+{0}, 1000000, -1000000+{1}>, rgb <1, 1, 1> fade_power 0 }}\n""".format(avg(left,right),avg(bottom,top)))
     if Radiosity:
+        arealight_sun = ""
+        arealight_sky = ""
+        if options['hq']:
+            arealight_sun = """    area_light <100000, 0, 0>, <0, 0, 100000>, 3, 3
+    adaptive 1
+    circular
+"""
+            arealight_sky = """    area_light <1000000, 0, 0>, <0, 0, 1000000>, 3, 3
+    adaptive 1
+    circular
+"""
         f.write("""
 /* The Sun */
 light_source {{
     <0, 1000000,0>,
     rgb <1, 1, 0.9>
-    area_light <100000, 0, 0>, <0, 0, 100000>, 3, 3
-    adaptive 1
-    circular
+    {arealight}
     rotate <45,10,0>
-    translate <{0},0,{1}>
+    translate <{middle_x},0,{middle_y}>
 }}
-
-\n""".format(avg(left,right),avg(bottom,top)))
+\n""".format(middle_x=middle_x,middle_y=middle_y,arealight=arealight_sun))
         f.write("""
 /* Sky blue */
 light_source {{
     <0, 1000000,0>,
-    rgb <0.04, 0.04, 0.2>
-    area_light <1000000, 0, 0>, <0, 0, 1000000>, 3, 3
+    rgb <0.1, 0.1, 0.2>
+    {arealight}
+    translate <{middle_x},0,{middle_y}>
+}}
+\n""".format(middle_x=middle_x,middle_y=middle_y,arealight=arealight_sky))
+    else:
+        arealight_sun = ""
+        arealight_sky = ""
+        if options['hq']:
+            arealight_sun = """    area_light <100000, 0, 0>, <0, 0, 100000>, 6, 6
     adaptive 1
     circular
-    translate <{0},0,{1}>
-}}
-\n""".format(avg(left,right),avg(bottom,top)))
-    else:
+"""
+            arealight_sky = """    area_light <1000000, 0, 0>, <0, 0, 1000000>, 6, 6
+    adaptive 1
+    circular
+"""
         f.write("""
 /* The Sun */
 light_source {{
     <0, 1000000,0>,
     rgb <1, 1, 0.9>
-    area_light <100000, 0, 0>, <0, 0, 100000>, 6, 6
-    adaptive 1
-    circular
+    {arealight}
     rotate <45,10,0>
-    translate <{0},0,{1}>
+    translate <{middle_x},0,{middle_y}>
 }}
-
-\n""".format(avg(left,right),avg(bottom,top)))
+\n""".format(middle_x=middle_x,middle_y=middle_y,arealight=arealight_sun))
         f.write("""
 /* Sky blue */
 light_source {{
     <0, 1000000,0>,
     rgb <0.06, 0.06, 0.12>
-    area_light <1000000, 0, 0>, <0, 0, 1000000>, 6, 6
-    adaptive 1
-    circular
-    translate <{0},0,{1}>
+    {arealight}
+    translate <{middle_x},0,{middle_y}>
 }}
-\n""".format(avg(left,right),avg(bottom,top)))
+\n""".format(middle_x=middle_x,middle_y=middle_y,arealight=arealight_sky))
 
     left,bottom,right,top = scale_coords(left,bottom,right,top,1.1)
     f.write("""

@@ -65,9 +65,18 @@ class osrayHandler(BaseHTTPRequestHandler):
                 bbox_SRS3857 = queryparams['BBOX'][0]
                 print "BBOX=",bbox_SRS3857
                 bbox_SRS3857 = bbox_format_3_to_1_comma(bbox_SRS3857)
-                options['hq']=False
+                
                 options['bbox']=bbox_SRS3857
                 options['srs']='3857'
+                layers = queryparams['LAYERS'][0]
+                if layers=='symbolic':
+                    options['hq']=False
+                    options['radiosity']=False
+                elif layers=='realistic':
+                    options['hq']=True
+                    options['radiosity']=True
+                else:
+                    raise RuntimeError('WMS Layer '+layers+' is not implemented')
                 print "--- calling osray"
                 osray.main(options)
                 print "--- calling osray ends"

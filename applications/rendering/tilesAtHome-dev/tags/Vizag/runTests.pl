@@ -70,7 +70,14 @@ print STDERR "\n\n";
 my $tempdir = tempdir ( DIR => $Config->get("WorkingDirectory") );
 my $comparedir = tempdir ( DIR => $Config->get("WorkingDirectory") );
 my $zipfile = File::Spec->join($Config->get("WorkingDirectory"),"uploadable","tile_12_0_0_*.zip");
-$Cmd = sprintf("unzip -d %s -q %s",$tempdir,$zipfile);
+if ($Config->get("7zipWin"))
+{
+    $Cmd = sprintf("%s %s %s %s",$Config->get("Zip"),"e","-o$tempdir",$zipfile);
+}
+else
+{
+    $Cmd = sprintf("unzip -d %s -q %s",$tempdir,$zipfile);
+}
 $success = runCommand($Cmd,$PID);
 
 if ($success) # remove all zips from the test, because they should not be uploaded to the server.

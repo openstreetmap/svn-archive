@@ -192,7 +192,6 @@ def pov_highway_area(f,highway):
         #color = '<0,1,0>'
     f.write("""
     texture {{ texture_highway_{highwaytype} }}
-    }}
     translate <0, {height}, 0>
 }}
 \n""".format(highwaytype=highwaytype,height=height))

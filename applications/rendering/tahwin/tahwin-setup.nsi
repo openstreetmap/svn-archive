@@ -46,7 +46,7 @@ InstallDir C:\TilesAtHome
 ; InstType      klappt damit die Umschaltung zwischen 32bit und 64 bit?
 LicenseForceSelection checkbox
 Name "Tiles@Home for Windows"
-!define VERSION 1.0.0.7
+!define VERSION 1.0.0.8
 OutFile "tahwin-setup_${VERSION}.exe"
 RequestExecutionLevel admin
 ShowInstDetails show
@@ -151,10 +151,10 @@ Section "Core Components" SecCoreComponents
   ;Font installer need local repository of fonts... so I can't download before
   ;NSISdl::download http://surfnet.dl.sourceforge.net/sourceforge/dejavu/dejavu-fonts-ttf-2.25.zip $INSTDIR\binary-source\fonts
   ;goto xmlstarlet_done
-  ${FileDownload} "$TAHDL" "http://subversion.tigris.org/files/documents/15/41077"      "svn-win32-1.4.6.zip"                           "9dfb52e7294e87cfdc20aafda6bf047a"
+  ${FileDownload} "$TAHDL" "http://subversion.tigris.org/files/documents/15/46880"      "svn-win32-1.6.6.zip"                           "BCF5215EBB96756DE94CA0EF209A538A"
       RMDir /r "$INSTDIR\svn"                                                                                                           
       ZipDLL::extractall $TAHDL\$0 $INSTDIR                                                                                             
-      Rename $INSTDIR\svn-win32-1.4.6 $INSTDIR\svn                                                                                      
+      Rename $INSTDIR\svn-win32-1.6.6 $INSTDIR\svn                                                                                      
                                                                                                                                         
   ${FileDownload} "$TAHDL" "http://kent.dl.sourceforge.net/sourceforge/sevenzip"        "7za458.zip"                                    "147ba99dd4c107afd7589c27491548dd"
     RMDir /r "$INSTDIR\zip"                                                                                                             
@@ -209,8 +209,8 @@ Section "Core Components" SecCoreComponents
   ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/J/JO/JOSEPHW"             "XML-Writer-0.606.ppmx"      "507e6a33a48d4993afd86ba01ca2a4b1"
   ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SA/SAMV"                "Set-Object-1.27.ppmx"       "77fbdeb9244d1db0dea7fb58269f4aff"
   ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SH/SHLOMIF"             "Error-0.17015.ppmx"         "d789bfd5887d4ee04b2a326a1be206d6"
-  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run.ppd"                "cac94659dadf837d47f14b23f0d0a8ba"
-  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run-0.84-PPM510.tar.gz" "22bd9a25b2f30a1d8860217d476b8bcc"
+  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run.ppd"                "8033188F0119E791D412018C4B63017F"
+  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run-0.88-PPM510.tar.gz" "CD27B90523807AAB6583C00F5C2FDB16"
   ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SI/SIMONW"              "Module-Pluggable-3.8.ppmx"  "6838970862acd3a387d58864ec0db78e"
 
   ${ppmInstall}   "$TAHDL" "Win32-GUI-1.06.ppmx"
@@ -239,7 +239,7 @@ Section "Core Components" SecCoreComponents
     FileClose $9 ;Closes the filled file
   ${EndIf}
   SetOutPath $INSTDIR
-  nsExec::ExecToLog '"$INSTDIR\svn\bin\svn" "co" "http://svn.openstreetmap.org/applications/rendering/tilesAtHome-dev/tags/Ulm" tilesAtHome'
+  nsExec::ExecToLog '"$INSTDIR\svn\bin\svn" "co" "http://svn.openstreetmap.org/applications/rendering/tilesAtHome-dev/tags/Vizag" tilesAtHome'
   Pop $0
   DetailPrint "svn checkout returned $0"
   RMDir /r $APPDATA\Subversion
@@ -351,7 +351,7 @@ Section "Batik Renderer" SecBatik
   ZipDLL::extractall $TAHDL\$0 $INSTDIR
   Rename $INSTDIR\batik-1.7 $INSTDIR\batik
 
-  ${fileDownload} "$TAHDL" "http://www.apache.org/dist/xerces/j" "Xerces-J-bin.2.9.1.zip" "a0e07ede1c3bd5231fe15eae24032b2e"
+  ${fileDownload} "$TAHDL" "http://www.apache.org/dist/xerces/j" "Xerces-J-bin.2.10.0.zip" "8DA14A7B2848EFF131B7CC10668887E8"
   ZipDLL::extractfile $TAHDL\$0 $INSTDIR\batik "xerces-2_9_1\xercesImpl.jar"
   Rename "$INSTDIR\batik\xerces-2_9_1\xercesImpl.jar" "$INSTDIR\batik\xercesImpl.jar"
   RMDir "$INSTDIR\batik\xerces-2_9_1"

@@ -4077,7 +4077,7 @@
 			</rule>
 			
 			<!-- Limit POI captions  -->
-                        <rule e="node|way" k="amenity|man_made|tourism|shop|historic" v="*" horizontalProximity="0.0002" verticalProximity="0.0002" layer="5">
+                        <rule e="node|way" k="amenity|man_made|tourism|shop|historic" v="*" horizontalProximity="0.0002" verticalProximity="0.0004" layer="5">
                           <rule e="node|way" k="amenity" v="pub|cafe|bar"   layer="5">
                             <caption k="name" class="caption-casing amenity-pub-caption-casing" dy="-1.2px" layer="5"/>
                             <caption k="name" class="caption-core amenity-pub-caption-core" dy="-1.2px" layer="5"/>

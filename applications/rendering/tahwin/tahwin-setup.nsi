@@ -46,7 +46,7 @@ InstallDir C:\TilesAtHome
 ; InstType      klappt damit die Umschaltung zwischen 32bit und 64 bit?
 LicenseForceSelection checkbox
 Name "Tiles@Home for Windows"
-!define VERSION 1.0.0.8
+!define VERSION 1.0.1.0
 OutFile "tahwin-setup_${VERSION}.exe"
 RequestExecutionLevel admin
 ShowInstDetails show
@@ -352,9 +352,9 @@ Section "Batik Renderer" SecBatik
   Rename $INSTDIR\batik-1.7 $INSTDIR\batik
 
   ${fileDownload} "$TAHDL" "http://www.apache.org/dist/xerces/j" "Xerces-J-bin.2.10.0.zip" "8DA14A7B2848EFF131B7CC10668887E8"
-  ZipDLL::extractfile $TAHDL\$0 $INSTDIR\batik "xerces-2_9_1\xercesImpl.jar"
-  Rename "$INSTDIR\batik\xerces-2_9_1\xercesImpl.jar" "$INSTDIR\batik\xercesImpl.jar"
-  RMDir "$INSTDIR\batik\xerces-2_9_1"
+  ZipDLL::extractfile $TAHDL\$0 $INSTDIR\batik "xerces-2_10_0\xercesImpl.jar"
+  Rename "$INSTDIR\batik\xerces-2_10_0\xercesImpl.jar" "$INSTDIR\batik\xercesImpl.jar"
+  RMDir "$INSTDIR\batik\xerces-2_10_0"
   
 SectionEnd
 

@@ -90,14 +90,14 @@ class OsrayDB:
         highways = []
         for res in rs:
             highway = {}
-            highway['osm_id']=rs[0]
-            highway['highway']=rs[1]
-            highway['way']=rs[2]
-            highway['lanes']=rs[3]
-            highway['layer']=rs[4]
-            highway['oneway']=rs[5]
-            highway['lanesfw']=rs[6]
-            highway['lanesbw']=rs[7]
+            highway['osm_id']=res[0]
+            highway['highway']=res[1]
+            highway['way']=res[2]
+            highway['lanes']=res[3]
+            highway['layer']=res[4]
+            highway['oneway']=res[5]
+            highway['lanesfw']=res[6]
+            highway['lanesbw']=res[7]
             highways.append(highway)
         return highways
 

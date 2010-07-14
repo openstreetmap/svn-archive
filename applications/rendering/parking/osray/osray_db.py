@@ -85,8 +85,21 @@ class OsrayDB:
         #self.get_bounds()
 
     def select_highways(self,highwaytype):
-        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway "+self.FlW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")
-        return self.curs.fetchall()
+        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway, tags->'lanes:forward' as lanesfw, tags->'lanes:forward' as lanesbw "+self.FlW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")
+        rs = self.curs.fetchall()
+        highways = []
+        for res in rs:
+            highway = {}
+            highway['osm_id']=rs[0]
+            highway['highway']=rs[1]
+            highway['way']=rs[2]
+            highway['lanes']=rs[3]
+            highway['layer']=rs[4]
+            highway['oneway']=rs[5]
+            highway['lanesfw']=rs[6]
+            highway['lanesbw']=rs[7]
+            highways.append(highway)
+        return highways
 
     def select_highway_areas(self,highwaytype):
         self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'height' as height, amenity, ST_AsText(buffer(\"way\",1)) AS geombuffer  "+self.FpW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")

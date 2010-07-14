@@ -119,3 +119,31 @@ def parse_int_safely(intstring,default):
         print "### unknown integer '{0}'".format(intstring)
         layer = default
     return layer
+
+def parse_float_safely(floatstring,default):
+    if floatstring==None:
+        return default
+    try:
+        f = float(floatstring)
+    except ValueError:
+        print "### unknown float '{0}'".format(floatstring)
+        f = default
+    return f
+
+def parse_yes_no_safely(boolstring,default):
+    if boolstring == None:
+        return default
+    boolstring = boolstring.upper()
+    if boolstring == 'YES':
+        return True
+    if boolstring == 'NO':
+        return False
+    if boolstring == '1':
+        return True
+    if boolstring == '0':
+        return False
+    if boolstring == 'TRUE':
+        return True
+    if boolstring == 'FALSE':
+        return False
+    return default

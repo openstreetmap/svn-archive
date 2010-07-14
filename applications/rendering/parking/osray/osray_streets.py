@@ -112,36 +112,38 @@ def draw_lines_sweep(f,points,height,streetwidth,highwaytype):
     texture {{ texture_highway_{highwaytype} }}
 }}
 \n""".format(highwaytype=highwaytype))
-    
+
+def calculate_lanefactor(lanes,lanesfw,lanesbw,oneway):
+    if lanes==None:#
+        # no lanes specified: look if lanes:forward is specified
+        if lanesfw!=None and lanesbw!=None:
+            return parse_float_safely(lanesfw,1.0) + parse_float_safely(lanesbw,1.0) 
+        # none specified: use defaults
+        lanefactor = 2.0 # 2 lanes seems to be default
+        if parse_yes_no_safely(oneway,False)==True:
+            lanefactor = 1.2 # except for one-ways (make it a bit wider than 2 lanes/2)
+        return lanefactor
+    return parse_float_safely(lanes,2.0)
+
 def pov_highway(f,highway):
-    f.write("/* osm_id={0} */\n".format(highway[0]))
-    highwaytype = highway[1]
+    f.write("/* osm_id={0} */\n".format(highway['osm_id']))
+    highwaytype = highway['highway']
     #highwaytype = 'secondary'
     highwayparams = highwaytypes.get(highwaytype)
-    linestring = highway[2]
+    linestring = highway['way']
     linestring = linestring[11:] # cut off the "LINESTRING("
     linestring = linestring[:-1] # cut off the ")"
     points = linestring.split(',')
 
-    oneway = False
-    if(highway[5]=='yes'):
-        oneway=True
-    
-    lanes = highway[3]
-    if lanes!=None:
-        try:
-            lanefactor=float(lanes)
-        except ValueError:
-            lanes = None
-    if lanes==None:
-        lanefactor=2.0 # 2 lanes seems to be default
-        if oneway:
-            lanefactor=1.2 # except for one-ways (make them a bit wider than 2 lanes/2)
+#    oneway = False
+#    if(highway['oneway']=='yes'):
+#        oneway=True
 
+    lanefactor = calculate_lanefactor(highway['lanes'],highway['lanesfw'],highway['lanesbw'],highway['oneway'])
     lanewidth = 2.5 # m
     streetwidth = lanewidth * lanefactor
 
-    layer = parse_int_safely(highway[4],default=0)
+    layer = parse_int_safely(highway['layer'],default=0)
     if layer<0:
         layer=0 # FIXME
     layerheight = 4.0*layer # 4 m per layer

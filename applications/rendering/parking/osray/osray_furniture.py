@@ -41,7 +41,7 @@ union{
 
 #macro tree_conifer (xp,yp,height)
 #local wipfel = cone {
-  <0,0.3,0>,0.5
+  <0,0.3,0>,0.3
   <0,1.0,0>,0.0
   texture {
     pigment {

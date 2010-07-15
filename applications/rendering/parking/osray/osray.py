@@ -12,6 +12,7 @@ from osray_db import *
 from osray_ground import *
 from osray_streets import *
 from osray_buildings import *
+from osray_furniture import *
 from optparse import OptionParser
 
 Radiosity = True

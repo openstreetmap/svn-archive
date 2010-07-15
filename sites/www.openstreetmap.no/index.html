@@ -1,7 +1,293 @@
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="no" lang="no">
 <head>
-<meta http-equiv="Refresh" content="1; url=http://wiki.openstreetmap.org/wiki/Norway">
+<title>OpenStreetMap Norge</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+<meta content="OpenStreetMap er et prosjekt for å samle inn frie kartdata for hele verden." name="description" />
+
+<!-- bring in the OpenLayers javascript library -->
+<script src="openlayers/OpenLayers.js"></script>
+
+<!-- bring in the OpenStreetMap OpenLayers layers.
+     Using this hosted file will make sure we are kept up
+     to date with any necessary changes -->
+<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+
+<script type="text/javascript">
+// Start position for the map
+var lat=65.4
+var lon=17.0
+var zoom=5
+var epsg4326 = new OpenLayers.Projection("EPSG:4326");
+var map;
+OpenLayers.Lang.setCode("nb");
+
+//Initialise the 'map' object
+function init() {
+
+  map = new OpenLayers.Map ("map", {
+    controls: [
+      new OpenLayers.Control.ArgParser(),
+      new OpenLayers.Control.KeyboardDefaults(),
+      new OpenLayers.Control.Navigation(),
+      new OpenLayers.Control.PanZoomBar(),
+      new OpenLayers.Control.LayerSwitcher(),
+      new OpenLayers.Control.MousePosition({numDigits:4}),
+      new OpenLayers.Control.Attribution(),
+      new OpenLayers.Control.Permalink()
+    ],
+    projection: "EPSG:900913",
+    maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+    maxResolution: 156543.0399,
+    numZoomLevels: 20,
+    units: 'm',
+    displayProjection: epsg4326
+  });
+
+  layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+  layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelkart");
+  map.addLayers([layerMapnik, layerCycle]);
+
+  var lonLat = new OpenLayers.LonLat(lon, lat).transform(
+    epsg4326, map.getProjectionObject());
+  if( ! map.getCenter() ){
+    map.setCenter(lonLat, zoom);
+  }
+  updatelinks();
+  map.events.register("moveend", map, updatelinks);
+  map.events.register("changelayer", map, updatelinks);
+}
+
+/*
+ * Called to interpolate JavaScript variables in strings using a
+ * similar syntax to rails I18n string interpolation - the only
+ * difference is that [[foo]] is the placeholder syntax instead
+ * of {{foo}} which allows the same string to be processed by both
+ * rails and then later by javascript.
+ */
+function i18n(string, keys) {
+  string = i18n_strings[string] || string
+  for (var key in keys) {
+    var re_key = '\\[\\[' + key + '\\]\\]';
+    var re = new RegExp(re_key, "g");
+    string = string.replace(re, keys[key]);
+  }
+  return string;
+}
+
+i18n_strings = new Array();
+i18n_strings['javascripts.site.edit_disabled_tooltip'] = 'Zoom inn for å redigere kartet';
+i18n_strings['javascripts.site.edit_tooltip'] = 'Rediger kartet';
+i18n_strings['javascripts.site.edit_zoom_alert'] = 'Du må zoome inn for å redigere kartet';
+i18n_strings['javascripts.site.history_disabled_tooltip'] = 'Zoom inn for å vise redigeringer i dette området';
+i18n_strings['javascripts.site.history_tooltip'] = 'Vis redigeringer for dette området';
+i18n_strings['javascripts.site.history_zoom_alert'] = 'Du må zoome inn for å vise redigeringer i dette området';
+
+/*
+ * Called to get the arguments from a URL as a hash.
+ */
+function getArgs(url) {
+  var args = new Object();
+  var querystart = url.indexOf("?");
+  if (querystart >= 0) {
+     var querystring = url.substring(querystart + 1);
+     var queryitems = querystring.split("&");
+     for (var i = 0; i < queryitems.length; i++) {
+        if (match = queryitems[i].match(/^(.*)=(.*)$/)) {
+           args[unescape(match[1])] = unescape(match[2]);
+        } else {
+           args[unescape(queryitems[i])] = null
+        }
+     }
+  }
+  return args;
+}
+
+/*
+ * Called to set the arguments on a URL from the given hash.
+ */
+function setArgs(url, args) {
+   var queryitems = new Array();
+   for (arg in args)
+   {
+      if (args[arg] == null) {
+         queryitems.push(escape(arg));
+      } else {
+         queryitems.push(escape(arg) + "=" + escape(args[arg]));
+      }
+   }
+   return url.replace(/\?.*$/, "") + "?" + queryitems.join("&");
+}
+
+function updatelinks() {
+  var lonlat = map.getCenter().clone().transform(map.getProjectionObject(), epsg4326);
+  var zoom = map.getZoom();
+  var extents = map.getExtent().clone().transform(map.getProjectionObject(), epsg4326);
+  var osmorg = 'http://www.openstreetmap.org'
+  var node;
+  var decimals = Math.pow(10, Math.floor(zoom/3));
+  lat = Math.round(lonlat.lat * decimals) / decimals;
+  lon = Math.round(lonlat.lon * decimals) / decimals;
+
+  node = $("exportanchor");
+  if (node) {
+    var args = getArgs(node.href);
+    args["lat"] = lat;
+    args["lon"] = lon;
+    args["zoom"] = zoom;
+    node.href = setArgs(node.href, args);
+  }
+
+  node = $("editanchor");
+  if (node) {
+    if (zoom >= 13) {
+      var args = new Object();
+      args.lat = lat;
+      args.lon = lon;
+      args.zoom = zoom;
+      node.href = setArgs(osmorg+"/edit", args);
+      node.title = i18n("javascripts.site.edit_tooltip");
+    } else {
+      node.href = 'javascript:alert(i18n("javascripts.site.edit_zoom_alert"));';
+      node.title = i18n("javascripts.site.edit_disabled_tooltip");
+    }
+  }
+
+  node = $("historyanchor");
+  if (node) {
+    var minlon = extents.left;
+    var minlat = extents.bottom;
+    var maxlon = extents.right;
+    var maxlat = extents.top
+    if (zoom >= 11) {
+      var args = new Object();
+      //set bbox param from 'extents' object
+      if (typeof minlon == "number" &&
+	  typeof minlat == "number" &&
+	  typeof maxlon == "number" &&
+	  typeof maxlat == "number") {
+        minlon = Math.round(minlon * decimals) / decimals;
+        minlat = Math.round(minlat * decimals) / decimals;
+        maxlon = Math.round(maxlon * decimals) / decimals;
+        maxlat = Math.round(maxlat * decimals) / decimals;
+        args.bbox = minlon + "," + minlat + "," + maxlon + "," + maxlat;
+      }
+      node.href = setArgs(osmorg+"/history", args);
+      node.title = i18n("javascripts.site.history_tooltip");
+    } else {
+      node.href = 'javascript:alert(i18n("javascripts.site.history_zoom_alert"));';
+      node.title = i18n("javascripts.site.history_disabled_tooltip");
+    }
+  }
+}
+
+function toggleVisibility(id) {
+  var e = document.getElementById(id);
+  if(e.style.display == 'block')
+    e.style.display = 'none';
+  else
+    e.style.display = 'block';
+}
+
+window.onload = init;
+</script>
+
+<link rel="stylesheet" type="text/css" href="openlayers/theme/default/style.css"/>
+<style type="text/css">
+  body { margin:0px; }
+  div#map { width:100%; height:100%; }
+  .olControlAttribution {
+    font-size:8pt;
+    left:5px; bottom:5px;
+  }
+  #menu {
+    position: absolute; top:0px; left:50%; 
+    width:36em; margin-left:-18em;
+    z-index:999;
+    vertical-align:middle;
+    font-family:Arial,sans-serif;
+    font-size:13px;
+    background-color:rgba(0,0,139,.7);
+    color:white;
+    padding:4px 20px;
+    border-bottom-left-radius: 7px;
+    -moz-border-radius-bottomleft: 7px;
+    -webkit-border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    -moz-border-radius-bottomright: 7px;
+    -webkit-border-bottom-right-radius: 7px;
+  }
+  #more { display:none; }
+  #videotutorial { display:none; text-align:center; padding-bottom:10px; }
+  #menu * a {
+    text-decoration:none;
+    color:white;
+  }
+  #tabs a { margin-right:.9em; }
+  #more ul li { line-height:1.4em; }
+</style>
+
 </head>
 <body>
-</body>
 
+  <div id="menu">
+    <div id="tabs">
+    <a href="http://www.openstreetmap.org/"
+       title="Fritt Wiki-verdenskart"><img id="logo"
+       src="OpenStreetMapNorge.png"
+       width="13" height="13" /></a>
+    <a href="http://www.openstreetmap.org/edit"
+       id="editanchor"
+       title="Rediger kartet">Rediger</a>
+    <a href="http://www.openstreetmap.org/history"
+       id="historyanchor"
+       title="Vis redigeringer for dette området">Historikk</a>
+    <a href="http://www.openstreetmap.org/export"
+       id="exportanchor"
+       onclick="new Ajax.Request('/export/start', {asynchronous:true, evalScripts:true}); return false;"
+       title="Eksporter kartdata">Eksporter</a>
+    <a href="http://www.openstreetmap.org/traces"
+       title="Del GPS-spor">Sporlogger</a>
+    <a href="http://help.openstreetmap.org/"
+       title="Spør om hjelp her">Hjelp</a>
+    <a href="#"
+       onclick="javascript:toggleVisibility('more');"
+       title="Informasjon om OSM og hint til å komme i gang">Informasjon >></a>
+    </div>
+    <div id="more">
+      <p>
+        <strong>OpenStreetMap</strong> (OSM) er
+        et verdensomspennende prosjekt for å samle inn frie kartdata.
+        Flere titusen mennesker er i aktivitet med å samle inn data
+        og lage løsninger som du kan bruke helt fritt.
+      </p>
+      <p>
+        Denne siden tilbyr norsktilpassede presentasjoner
+        av kartdataene i OSM.<br/>
+        Bruk '+'-menyen til høyre for å bytte mellom disse.
+      </p>
+      <ul>
+        <li><a href="http://wiki.openstreetmap.org/wiki/WikiProject_Norway/Hiking_maps_for_singletrack_mountain_biking_use#Hvordan_bidra.3F"
+              >Hvordan bidra til dugnadskartet</a> —
+            <a href="#"
+               onclick="javascript:toggleVisibility('videotutorial');"
+              >se en instruksjonsfilm >></a></li>
+        <li><a href="http://wiki.openstreetmap.org/wiki/No:Map_Features"
+              >Oversikt over kartegenskaper (tagger) tilpasset Norge</a></li>
+        <li><a href="http://www.frikart.no/garmin/"
+              >Last ned kart basert på OSM til Garmin GPS</a></li>
+        <li><a href="http://www.vidargundersen.com/osm/compare.html"
+              >Sammenlign OSM med offentlige kart fra Statens Kartverk</a></li>
+        <li><a href="http://wiki.nuug.no/grupper/kart"
+              >Diskusjonsforum (epostliste)</a></li>
+      </ul>
+      <div id="videotutorial">
+<object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/1Kd3S53CXQs&amp;hl=en_US&amp;fs=1?rel=0"/><param name="allowFullScreen" value="true"/><param name="allowscriptaccess" value="always"/><embed src="http://www.youtube.com/v/1Kd3S53CXQs&amp;hl=en_US&amp;fs=1?rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"/></object>
+      </div>
+    </div>
+  </div>
+
+  <!-- Define a DIV into which the map will appear. -->
+  <div id="map"></div>
+
+</body>
+</html>

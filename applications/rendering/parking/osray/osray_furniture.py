@@ -43,8 +43,10 @@ def pov_tree(f,tree):
     treetype = tree['type']
 
     pointstring = tree['way']
-    pointstring = linestring[6:] # cut off the "POINT("
-    pointstring = linestring[:-1] # cut off the ")"
+    print "pointstring=", pointstring
+    pointstring = pointstring[6:] # cut off the "POINT("
+    pointstring = pointstring[:-1] # cut off the ")"
+    print "pointstring2=", pointstring
 
     heightstring = tree['height'] # height
     if (heightstring==None):

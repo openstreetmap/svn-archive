@@ -3,6 +3,7 @@
 import xml.etree.ElementTree as ET
 from ceyx.MapCSS import MapCSS
 
+# see http://wiki.openstreetmap.org/wiki/Ceyx#I_want_to_build_my_own_render_based_on_your_MapCSS_parser._How.3F
 
 class OSMstyle:
     def __init__(self, cssfile):

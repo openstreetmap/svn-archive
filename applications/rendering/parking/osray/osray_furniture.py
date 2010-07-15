@@ -44,7 +44,7 @@ def pov_tree(f,tree):
     x,y = tree['coords']
     heightstring = tree['height'] # height
     if (heightstring==None):
-        height = 15.0
+        height = 10.0
     else:
         height = parse_length_in_meters(heightstring,0.01)
     f.write("/* tree osm_id={0} */\n".format(tree['osm_id']))

@@ -121,7 +121,7 @@ class OsrayDB:
 
     def select_trees(self):
         naturaltype='tree'
-        self.curs.execute("SELECT osm_id,natural,ST_AsText(\"way\") AS geom, tags->'type' as type, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and natural='"+naturaltype+"' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,tags->'natural' as natural,ST_AsText(\"way\") AS geom, tags->'type' as type, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags->'natural'='"+naturaltype+"' "+LIMIT+";")
         rs = self.curs.fetchall()
         trees = []
         for res in rs:

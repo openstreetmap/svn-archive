@@ -7,7 +7,7 @@ from osray_geom import *
 Radiosity = True
 
 declarations = """
-#macro tree_broad_leafed (x,y,height)
+#macro tree_broad_leafed (xp,yp,height)
 #local wipfel = sphere {
   <0,1,0>,0.5
   texture {
@@ -34,8 +34,8 @@ declarations = """
 } // end of cylinder
 
 union{
-  object{wipfel scale <height,height,height> translate <x,0,y>}
-  object{stamm scale <height,height,height> translate <x,0,y>}
+  object{wipfel scale <height,height,height> translate <xp,0,yp>}
+  object{stamm scale <height,height,height> translate <xp,0,yp>}
  } // end of tree
 #end
 """

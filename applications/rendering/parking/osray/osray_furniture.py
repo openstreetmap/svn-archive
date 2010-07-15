@@ -21,10 +21,10 @@ declarations = """
   }   
 } // end of sphere
 #local stamm = cylinder {
-  <0,0,0>,<0,1,0>,1.8
+  <0,0,0>,<0,1,0>,0.18
   texture {
     pigment {
-      color rgb <0.6,0.6,0.1>
+      color rgb <0.4,0.3,0.1>
     }
     finish {
       diffuse 0.8
@@ -50,7 +50,7 @@ def pov_tree(f,tree):
 
     heightstring = tree['height'] # height
     if (heightstring==None):
-        height = 9.0
+        height = 15.0
     else:
         height = parse_length_in_meters(heightstring,0.01)
 
@@ -60,7 +60,7 @@ def pov_tree(f,tree):
 
     firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
 
-    f.write("object {{ tree ({x},{y},{height}) }}\n".format(x=latlon[0],y=latlon[1],height=height))
+    f.write("object {{ tree_broad_leafed ({x},{y},{height}) }}\n".format(x=latlon[0],y=latlon[1],height=height))
     
 
 

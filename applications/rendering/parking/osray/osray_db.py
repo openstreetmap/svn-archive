@@ -54,6 +54,7 @@ class OsrayDB:
         self.coords= "ST_Y(ST_line_interpolate_point(way,0.5)) as py,ST_X(ST_line_interpolate_point(way,0.5)) as px,ST_Y(ST_line_interpolate_point(way,0.49)) as qy,ST_X(ST_line_interpolate_point(way,0.49)) as qx,ST_Y(ST_line_interpolate_point(way,0.51)) as ry,ST_X(ST_line_interpolate_point(way,0.51)) as rx"
         self.FlW = "FROM "+prefix+"_line WHERE"
         self.FpW = "FROM "+prefix+"_polygon WHERE"
+        self.FnW = "FROM "+prefix+"_point WHERE"
     
         #self.googbox = "transform(SetSRID('BOX3D("+thebbox+")'::box3d,4326),900913)"
         #self.curs.execute("SELECT ST_AsText("+self.googbox+") AS geom")
@@ -117,6 +118,21 @@ class OsrayDB:
     def select_waterway(self,waterwaytype):
         self.curs.execute("SELECT osm_id,waterway,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and waterway='"+waterwaytype+"' "+LIMIT+";")
         return self.curs.fetchall()
+
+    def select_trees(self):
+        naturaltype='tree'
+        self.curs.execute("SELECT osm_id,natural,ST_AsText(\"way\") AS geom, tags->'type' as type, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and natural='"+naturaltype+"' "+LIMIT+";")
+        rs = self.curs.fetchall()
+        trees = []
+        for res in rs:
+            tree = {}
+            tree['osm_id']=res[0]
+            tree['natural']=res[1]
+            tree['way']=res[2]
+            tree['type']=res[3]
+            tree['height']=res[4]
+            trees.append(tree)
+        return trees
 
     def shutdown(self):
         self.conn.rollback()

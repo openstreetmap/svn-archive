@@ -192,7 +192,7 @@ light_source {{
 /* Sky blue */
 light_source {{
     <0, 1000000,0>,
-    rgb <0.06, 0.06, 0.12>
+    rgb <0.2, 0.2, 0.22>
     {arealight}
     translate <{middle_x},0,{middle_y}>
 }}
@@ -224,6 +224,7 @@ def main(options):
     
     render_highways(f,osraydb,options)
     render_buidings(f,osraydb,options)
+    render_furniture(f,osraydb,options)
     f.close()
     
     command = 'povray'

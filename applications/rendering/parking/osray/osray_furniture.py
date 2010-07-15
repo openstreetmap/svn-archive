@@ -8,7 +8,7 @@ Radiosity = True
 
 declarations = """
 #macro tree_broad_leafed (xp,yp,height)
-#local wipfel = cone {
+#local wipfel = sphere {
   <0,0.666,0>,0.333
   texture {
     pigment {

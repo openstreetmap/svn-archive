@@ -135,5 +135,18 @@ class OsrayDB:
             trees.append(tree)
         return trees
 
+    def select_barriers(self):
+        self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(\"way\") AS geom, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";")
+        rs = self.curs.fetchall()
+        barriers = []
+        for res in rs:
+            barrier = {}
+            barrier['osm_id']=res[0]
+            barrier['barrier']=res[1]
+            barrier['coords']=WKT_to_point(res[2])
+            barrier['height']=res[3]
+            barriers.append(barrier)
+        return barriers
+
     def shutdown(self):
         self.conn.rollback()

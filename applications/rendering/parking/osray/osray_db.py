@@ -3,6 +3,7 @@
 
 import psycopg2
 from numpy import *
+from osray_geom import *
 
 LIMIT = 'LIMIT 5000'
 

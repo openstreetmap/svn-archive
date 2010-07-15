@@ -128,7 +128,7 @@ class OsrayDB:
             tree = {}
             tree['osm_id']=res[0]
             tree['natural']=res[1]
-            tree['way']=res[2]
+            tree['coords']=WKT_to_point(res[2])
             tree['type']=res[3]
             tree['height']=res[4]
             trees.append(tree)

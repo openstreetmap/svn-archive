@@ -12,6 +12,16 @@ def avg(a,b): return (a+b)/2.0
 def swap(tuple): return (tuple[1],tuple[0])
 
 #
+# parsing postgis strings
+#
+
+def WKT_to_point(pointstring):
+    pointstring = pointstring[6:] # cut off the "POINT("
+    pointstring = pointstring[:-1] # cut off the ")"
+    latlon = pointstring.split(' ')
+    return (latlon[0],latlon[1])
+
+#
 # string stuff to handle bbox strings
 #
 def bbox_string(xmin,ymin,xmax,ymax):
@@ -46,6 +56,9 @@ def scale_bbox(bbox,scale):
     xmin,ymin,xmax,ymax = scale_coords(xmin,ymin,xmax,ymax,scale)
     return bbox_string(xmin,ymin,xmax,ymax)
 
+#
+# mathematical calculations
+#
 def num2deg(xtile, ytile, zoom):
     n = 2.0 ** zoom
     lon_deg = xtile / n * 360.0 - 180.0
@@ -86,6 +99,9 @@ def calc_bearing(x1,y1,x2,y2,side):
     bearing = math.pi/2.0-angl # (0°=up, and clockwise)
     return bearing
 
+#
+# parsing OSM strings
+#
 def parse_length_in_meters(length,default):
     units={
            'm':1.0, 'metres':1.0, 'meters':1.0, 'metre':1.0, 'meter':1.0,

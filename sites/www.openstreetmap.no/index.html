@@ -16,11 +16,11 @@
 // Start position for the map
 var lat=65.4
 var lon=17.0
-var zoom=5
+var zoom=4
 var epsg4326 = new OpenLayers.Projection("EPSG:4326");
-var map;
 OpenLayers.Lang.setCode("nb");
 
+var map;
 //Initialise the 'map' object
 function init() {
 
@@ -201,12 +201,12 @@ window.onload = init;
   }
   #menu {
     position: absolute; top:0px; left:50%; 
-    width:36em; margin-left:-18em;
+    width:40em; margin-left:-20em;
     z-index:999;
     vertical-align:middle;
     font-family:Arial,sans-serif;
     font-size:13px;
-    background-color:rgba(0,0,139,.7);
+    background-color:rgb(0,0,139);
     color:white;
     padding:4px 20px;
     border-bottom-left-radius: 7px;
@@ -234,7 +234,7 @@ window.onload = init;
     <a href="http://www.openstreetmap.org/"
        title="Fritt Wiki-verdenskart"><img id="logo"
        src="OpenStreetMapNorge.png"
-       width="13" height="13" /></a>
+       width="13" height="13" border="0" /></a>
     <a href="http://www.openstreetmap.org/edit"
        id="editanchor"
        title="Rediger kartet">Rediger</a>
@@ -251,7 +251,7 @@ window.onload = init;
        title="Spør om hjelp her">Hjelp</a>
     <a href="#"
        onclick="javascript:toggleVisibility('more');"
-       title="Informasjon om OSM og hint til å komme i gang">Informasjon >></a>
+       title="Kort om OSM og hint til å komme i gang">Informasjon &gt;&gt;</a>
     </div>
     <div id="more">
       <p>
@@ -270,7 +270,7 @@ window.onload = init;
               >Hvordan bidra til dugnadskartet</a> —
             <a href="#"
                onclick="javascript:toggleVisibility('videotutorial');"
-              >se en instruksjonsfilm >></a></li>
+              >se en instruksjonsfilm &gt;&gt;</a></li>
         <li><a href="http://wiki.openstreetmap.org/wiki/No:Map_Features"
               >Oversikt over kartegenskaper (tagger) tilpasset Norge</a></li>
         <li><a href="http://www.frikart.no/garmin/"

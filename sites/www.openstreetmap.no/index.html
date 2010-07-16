@@ -178,6 +178,15 @@ function updatelinks() {
       node.title = i18n("javascripts.site.history_disabled_tooltip");
     }
   }
+
+  node = $("compareanchor");
+  if (node) {
+    var args = getArgs(node.href);
+    args["lat"] = lat;
+    args["lon"] = lon;
+    args["zoom"] = zoom;
+    node.href = setArgs(node.href, args);
+  }
 }
 
 function toggleVisibility(id) {
@@ -275,7 +284,8 @@ window.onload = init;
               >Oversikt over kartegenskaper (tagger) tilpasset Norge</a></li>
         <li><a href="http://www.frikart.no/garmin/"
               >Last ned kart basert på OSM til Garmin GPS</a></li>
-        <li><a href="http://www.vidargundersen.com/osm/compare.html"
+        <li><a id="compareanchor"
+              href="http://www.vidargundersen.com/osm/compare.html"
               >Sammenlign OSM med offentlige kart fra Statens Kartverk</a></li>
         <li><a href="http://wiki.nuug.no/grupper/kart"
               >Diskusjonsforum (epostliste)</a></li>

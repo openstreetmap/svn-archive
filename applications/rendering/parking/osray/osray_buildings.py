@@ -30,7 +30,7 @@ def pov_declare_building_textures(f):
             color rgb {color}
         }}
         finish {{
-            diffuse 0.8
+            diffuse 0.7
             ambient 0
         }}
     }}

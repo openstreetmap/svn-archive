@@ -27,7 +27,7 @@ declarations = """
       color rgb <0.4,0.3,0.1>
     }
     finish {
-      diffuse 0.8
+      diffuse 0.7
       ambient 0
     }
   }   
@@ -60,7 +60,7 @@ union{
       color rgb <0.4,0.3,0.1>
     }
     finish {
-      diffuse 0.8
+      diffuse 0.7
       ambient 0
     }
   }   

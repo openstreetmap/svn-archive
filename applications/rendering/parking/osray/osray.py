@@ -84,7 +84,7 @@ camera {{
     if Radiosity:
         ground_finish = """
     finish {
-        diffuse 0.8
+        diffuse 0.7
         ambient 0.0
     }
 """        

@@ -43,9 +43,10 @@ function init() {
     displayProjection: epsg4326
   });
 
-  layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-  layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelkart");
-  map.addLayers([layerMapnik, layerCycle]);
+  layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Vanlig: Mapnik");
+  layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Detaljert: Osmarender");
+  layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter");
+  map.addLayers([layerMapnik, layerTilesAtHome, layerCycle]);
 
   var lonLat = new OpenLayers.LonLat(lon, lat).transform(
     epsg4326, map.getProjectionObject());

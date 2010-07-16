@@ -105,7 +105,18 @@ class OsrayDB:
 
     def select_highway_areas(self,highwaytype):
         self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'height' as height, amenity, ST_AsText(buffer(\"way\",1)) AS geombuffer  "+self.FpW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")
-        return self.curs.fetchall()
+        rs = self.curs.fetchall()
+        areas = []
+        for res in rs:
+            area = {}
+            area['osm_id']=res[0]
+            area['highway']=res[1]
+            area['coords']=WKT_to_polygon(res[2])
+            area['hight']=res[3]
+            area['amenity']=res[4]
+            area['buffercoords']=WKT_to_polygon(res[5])
+            areas.append(area)
+        return areas
 
     def select_buildings(self,buildingtype):
         self.curs.execute("SELECT osm_id,ST_AsText(\"way\") AS geom, building, tags->'height' as height,tags->'building:height' as bheight,amenity "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+LIMIT+";")

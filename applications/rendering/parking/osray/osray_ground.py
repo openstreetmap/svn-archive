@@ -165,6 +165,45 @@ def pov_waterway(f,waterway):
 }}
 \n""".format(color))
 
+def pov_water(f,water):
+    linestring = water['coords']
+    linestring = linestring[8:] # cut off the "POLYGON("
+    linestring = linestring[:-1] # cut off the ")"
+
+    points = linestring.split(',')#.strip('(').strip(')')
+    #print points
+
+    numpoints = len(points)
+    f.write("prism {{ linear_spline  0, 0.01, {0},\n".format(numpoints))
+    f.write("/* osm_id={0} */\n".format(water['osm_id']))
+
+    for i,point in enumerate(points):
+        latlon = point.split(' ')
+#        if (i==0):
+#            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+        if (i!=numpoints-1):
+            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+        else:
+            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+    #f.write(firstpoint)
+
+    color = waterwaytypes['riverbank']
+
+    f.write("""
+    texture {{
+        pigment {{
+            color rgb {0}
+        }}
+        finish {{
+            ambient 1
+            /*specular 0.5
+            roughness 0.05
+            reflection 0.5*/
+        }}
+    }}
+}}
+\n""".format(color))
+
 def pov_globals(f):
     globsettings = """
 global_settings {{
@@ -236,6 +275,10 @@ def create_landuse_texture(osraydb,options,texturename):
         waterways += osraydb.select_waterway(waterwaytype)
     for waterway in waterways:
         pov_waterway(f_landuse,waterway)
+
+    waters = osraydb.select_naturalwater()
+    for water in waters:
+        pov_water(f_landuse,water)
 
     f_landuse.close()
 

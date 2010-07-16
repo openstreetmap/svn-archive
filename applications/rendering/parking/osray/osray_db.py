@@ -120,6 +120,21 @@ class OsrayDB:
         self.curs.execute("SELECT osm_id,waterway,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and waterway='"+waterwaytype+"' "+LIMIT+";")
         return self.curs.fetchall()
 
+    def select_naturalwater(self,waterwaytype):
+        naturaltype='water'
+        self.curs.execute("SELECT osm_id,tags->'natural' as natural,ST_AsText(\"way\") AS geom, tags->'type' as type, layer "+self.FnW+" \"way\" && "+self.googbox+" and tags->'natural'='"+naturaltype+"' "+LIMIT+";")
+        rs = self.curs.fetchall()
+        waters = []
+        for res in rs:
+            water = {}
+            water['osm_id']=res[0]
+            water['natural']=res[1]
+            water['coords']=WKT_to_point(res[2])
+            water['type']=res[3]
+            water['layer']=res[4]
+            waters.append(water)
+        return waters
+
     def select_trees(self):
         naturaltype='tree'
         self.curs.execute("SELECT osm_id,tags->'natural' as natural,ST_AsText(\"way\") AS geom, tags->'type' as type, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags->'natural'='"+naturaltype+"' "+LIMIT+";")

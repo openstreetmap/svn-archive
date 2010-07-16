@@ -277,7 +277,7 @@ if( my $nice = $Config->get("Niceness") ){
     if( $nice =~ /^\d+$/ ){
         my $success=POSIX::nice($nice);
         if( !defined($success) ){
-            printf STDERR "WARNING: Unable to apply Niceness. Will run at normal priority";
+            printf STDERR "! WARNING: Unable to apply Niceness. Will run at normal priority";
         }
     }
 }
@@ -386,6 +386,12 @@ elsif ($Mode eq "upload")
 #---------------------------------
 elsif ($Mode eq "upload_loop")
 {
+    # Ignoring UploadToDirectory in upload_loop mode
+    if ($Config->get("UploadToDirectory") != 0) {
+        print STDERR "! WARNING: UploadToDirectory is set. Ignoring this in upload_loop mode.\n";
+        $Config->set("UploadToDirectory", 0);
+    }
+
     while(1) 
     {
         my $startTime = time();
@@ -948,7 +954,7 @@ sub NewClientVersion
         $LastTimeVersionChecked = time();
         if ($runningVersion > $currentVersion)
         {
-            statusMessage("\n! WARNNG: you cannot have a more current client than the server: $runningVersion > $currentVersion",1,0);
+            statusMessage("\n! WARNING: you cannot have a more current client than the server: $runningVersion > $currentVersion",1,0);
             return 0;
         }
         elsif ($runningVersion == $currentVersion)
@@ -962,7 +968,7 @@ sub NewClientVersion
     }
     else
     {
-        statusMessage(" ! WARNING: Could not get version info from server!",1,0);
+        statusMessage("! WARNING: Could not get version info from server!",1,0);
         return 0;
     }
 }

@@ -166,33 +166,24 @@ def pov_waterway(f,waterway):
 \n""".format(color))
 
 def pov_water(f,water):
-    linestring = water['coords']
-    linestring = linestring[8:] # cut off the "POLYGON("
-    linestring = linestring[:-1] # cut off the ")"
-
-    points = linestring.split(',') #.strip('(').strip(')')
-    #print points
-
-    numpoints = len(points)
+    polygon = water['coords']
+    numpoints = len(polygon)
     f.write("prism {{ linear_spline  0, 0.01, {0},\n".format(numpoints))
     f.write("/* osm_id={0} */\n".format(water['osm_id']))
 
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-#        if (i==0):
-#            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+    for i,point in enumerate(polygon):
+        x,y = point
         if (i!=numpoints-1):
-            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
         else:
-            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
-    #f.write(firstpoint)
+            f.write("  <{x}, {y}>\n".format(x,y))
 
-    color = waterwaytypes['riverbank']
+    color = waterwaytypes['riverbank'][0]
 
     f.write("""
     texture {{
         pigment {{
-            color rgb {0}
+            color rgb {color}
         }}
         finish {{
             ambient 1
@@ -202,7 +193,7 @@ def pov_water(f,water):
         }}
     }}
 }}
-\n""".format(color))
+\n""".format(color=color))
 
 def pov_globals(f):
     globsettings = """

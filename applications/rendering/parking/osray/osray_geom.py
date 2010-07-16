@@ -22,6 +22,19 @@ def WKT_to_point(pointstring):
     latlon = pointstring.split(' ')
     return (latlon[0],latlon[1])
 
+def WKT_to_polygon(polygonstring):
+    polygonstring = polygonstring[8:] # cut off the "POLYGON("
+    polygonstring = polygonstring[:-1] # cut off the ")"
+    points = polygonstring.split(',') #.strip('(').strip(')')
+    numpoints = len(points)
+    polygon=[]
+    for i,point in enumerate(points):
+        x,y = point.split(' ')
+        x=x.strip('(').strip(')')
+        y=y.strip('(').strip(')')
+        polygon.append((x,y))
+    return polygon
+
 #
 # string stuff to handle bbox strings
 #

@@ -124,8 +124,8 @@ sky_sphere {{
             [ 0.5 color rgb <0.5,0.6,0.6> ]
             [ 1.0 color rgb <0.5,0.5,0.6> ]
 */
-            [ 0.5 color rgb <0.24,0.24,0.24> ]
-            [ 1.0 color rgb <0.2,0.2,0.2> ]
+            [ 0.5 color rgb <0.12,0.12,0.12> ]
+            [ 1.0 color rgb <0.1,0.1,0.1> ]
         }}
         scale 20000
         translate -10

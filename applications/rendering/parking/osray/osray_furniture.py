@@ -78,7 +78,7 @@ def pov_tree(f,tree):
     x,y = tree['coords']
     heightstring = tree['height'] # height
     if (heightstring==None):
-        height = 10.0
+        height = random_range_seed(8,12,x+y) # generate a tree about 10 m high, with some variance
     else:
         height = parse_length_in_meters(heightstring,0.01)
     f.write("/* tree osm_id={0} */\n".format(tree['osm_id']))

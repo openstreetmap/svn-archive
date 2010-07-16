@@ -6,6 +6,7 @@
 #import urlparse
 #import osray
 import math
+import random
 import re
 
 def avg(a,b): return (a+b)/2.0
@@ -98,6 +99,10 @@ def calc_bearing(x1,y1,x2,y2,side):
     angl = angle(v) # angle (radians) (0°=right, and counterclockwise)
     bearing = math.pi/2.0-angl # (0°=up, and clockwise)
     return bearing
+
+def random_range_seed(a,b,s):
+    random.seed(s)
+    return random.uniform(a,b)
 
 #
 # parsing OSM strings

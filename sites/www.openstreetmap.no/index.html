@@ -122,7 +122,6 @@ function setArgs(url, args) {
 function updatelinks() {
   var lonlat = map.getCenter().clone().transform(map.getProjectionObject(), epsg4326);
   var zoom = map.getZoom();
-  var extents = map.getExtent().clone().transform(map.getProjectionObject(), epsg4326);
   var osmorg = 'http://www.openstreetmap.org'
   var node;
   var decimals = Math.pow(10, Math.floor(zoom/3));
@@ -155,24 +154,12 @@ function updatelinks() {
 
   node = $("historyanchor");
   if (node) {
-    var minlon = extents.left;
-    var minlat = extents.bottom;
-    var maxlon = extents.right;
-    var maxlat = extents.top
-    if (zoom >= 11) {
+    if (zoom >= 13) {
       var args = new Object();
-      //set bbox param from 'extents' object
-      if (typeof minlon == "number" &&
-	  typeof minlat == "number" &&
-	  typeof maxlon == "number" &&
-	  typeof maxlat == "number") {
-        minlon = Math.round(minlon * decimals) / decimals;
-        minlat = Math.round(minlat * decimals) / decimals;
-        maxlon = Math.round(maxlon * decimals) / decimals;
-        maxlat = Math.round(maxlat * decimals) / decimals;
-        args.bbox = minlon + "," + minlat + "," + maxlon + "," + maxlat;
-      }
-      node.href = setArgs(osmorg+"/history", args);
+      args.lat = lat;
+      args.lon = lon;
+      args.zoom = zoom;
+      node.href = setArgs("http://matt.dev.openstreetmap.org/owl_viewer/weeklymap", args);
       node.title = i18n("javascripts.site.history_tooltip");
     } else {
       node.href = 'javascript:alert(i18n("javascripts.site.history_zoom_alert"));';
@@ -249,7 +236,7 @@ window.onload = init;
     <a href="http://www.openstreetmap.org/edit"
        id="editanchor"
        title="Rediger kartet">Rediger</a>
-    <a href="http://www.openstreetmap.org/history"
+    <a href="http://matt.dev.openstreetmap.org/owl_viewer/weeklymap"
        id="historyanchor"
        title="Vis redigeringer for dette området">Historikk</a>
     <a href="http://www.openstreetmap.org/export"

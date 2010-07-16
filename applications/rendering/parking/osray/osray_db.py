@@ -129,7 +129,7 @@ class OsrayDB:
             water = {}
             water['osm_id']=res[0]
             water['natural']=res[1]
-            water['coords']=WKT_to_point(res[2])
+            water['coords']=res[2]
             water['type']=res[3]
             water['layer']=res[4]
             waters.append(water)

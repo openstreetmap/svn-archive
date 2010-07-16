@@ -170,7 +170,7 @@ def pov_water(f,water):
     linestring = linestring[8:] # cut off the "POLYGON("
     linestring = linestring[:-1] # cut off the ")"
 
-    points = linestring.split(',')#.strip('(').strip(')')
+    points = linestring.split(',') #.strip('(').strip(')')
     #print points
 
     numpoints = len(points)

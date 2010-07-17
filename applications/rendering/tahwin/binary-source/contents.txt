@@ -10,3 +10,8 @@ extract files flat into mentioned subdirectories
 \pngnq\
   source http://sourceforge.net/projects/pngnq/files/pngnq/0.5/pngnq-0.5-i386-win.zip/download
   I included two dlls (libpng13.dll, zlib.dll) that are missing in the distribution but required and hard to find
+
+\snv\
+  source http://subversion.tigris.org/files/documents/15/47914/svn-win32-1.6.6.zip
+  cmd-line client for SVN
+

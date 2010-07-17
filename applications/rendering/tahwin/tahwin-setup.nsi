@@ -46,7 +46,7 @@ InstallDir C:\TilesAtHome
 ; InstType      klappt damit die Umschaltung zwischen 32bit und 64 bit?
 LicenseForceSelection checkbox
 Name "Tiles@Home for Windows"
-!define VERSION 1.0.1.0
+!define VERSION 1.0.1.1
 OutFile "tahwin-setup_${VERSION}.exe"
 RequestExecutionLevel admin
 ShowInstDetails show
@@ -141,6 +141,9 @@ Section "Core Components" SecCoreComponents
   SetOutPath $INSTDIR\pngnq
   File /r /x .svn binary-source\pngnq\*.*
 
+  SetOutPath $INSTDIR\svn
+  File /r /x .svn binary-source\svn\*.*
+
   SetOutPath $INSTDIR
 
   StrCpy $TAHDL "$EXEDIR\tahwin-setup"
@@ -151,10 +154,6 @@ Section "Core Components" SecCoreComponents
   ;Font installer need local repository of fonts... so I can't download before
   ;NSISdl::download http://surfnet.dl.sourceforge.net/sourceforge/dejavu/dejavu-fonts-ttf-2.25.zip $INSTDIR\binary-source\fonts
   ;goto xmlstarlet_done
-  ${FileDownload} "$TAHDL" "http://subversion.tigris.org/files/documents/15/46880"      "svn-win32-1.6.6.zip"                           "BCF5215EBB96756DE94CA0EF209A538A"
-      RMDir /r "$INSTDIR\svn"                                                                                                           
-      ZipDLL::extractall $TAHDL\$0 $INSTDIR                                                                                             
-      Rename $INSTDIR\svn-win32-1.6.6 $INSTDIR\svn                                                                                      
                                                                                                                                         
   ${FileDownload} "$TAHDL" "http://kent.dl.sourceforge.net/sourceforge/sevenzip"        "7za458.zip"                                    "147ba99dd4c107afd7589c27491548dd"
     RMDir /r "$INSTDIR\zip"                                                                                                             
@@ -168,13 +167,7 @@ Section "Core Components" SecCoreComponents
   ${FileDownload} "$TAHDL" "http://kent.dl.sourceforge.net/sourceforge/optipng"			"optipng-0.6-exe.zip"							"dc3461eb125b7cfce333e2fa810f138b"
   	RMDir /r "$INSTDIR\optipng"                                                     	                                				
   	ZipDLL::extractall $TAHDL\$0 $INSTDIR\optipng                                   	                                				
-                                                        
-; http://www.zlib.net/zlib123-dll.zip
-; http://www.cybertherial.com/pngnq/libpng13.dll                                                                                    	                                				
-;  ${FileDownload} "$TAHDL" "http://heanet.dl.sourceforge.net/sourceforge/pngnq"         "pngnq-0.5-i386-win.zip"                        "e9ab002454b60692e309753754ffb281"
-;    RMDir /r "$INSTDIR\pngnq"                                                                                                           
-;    ZipDLL::extractall $TAHDL\$0 $INSTDIR\pngnq                                                                                         
-                                                                                                                                        
+                                                                                                                                                                                                
   ${FileDownload} "$TAHDL" "http://kent.dl.sourceforge.net/sourceforge/xmlstar"         "xmlstarlet-1.0.1-win32.zip"                    "c1ca1e9e999ee6b15a0ba954258be353"
     RMDir /r "$INSTDIR\xmlstarlet"                                                                                                      
     ZipDLL::extractall $TAHDL\$0 $INSTDIR                                                                                               
@@ -209,8 +202,8 @@ Section "Core Components" SecCoreComponents
   ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/J/JO/JOSEPHW"             "XML-Writer-0.606.ppmx"      "507e6a33a48d4993afd86ba01ca2a4b1"
   ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SA/SAMV"                "Set-Object-1.27.ppmx"       "77fbdeb9244d1db0dea7fb58269f4aff"
   ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SH/SHLOMIF"             "Error-0.17015.ppmx"         "d789bfd5887d4ee04b2a326a1be206d6"
-  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run.ppd"                "8033188F0119E791D412018C4B63017F"
-  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run-0.88-PPM510.tar.gz" "CD27B90523807AAB6583C00F5C2FDB16"
+  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run.ppd"                "7532C17433DE135AF7457F8EE590C47B"
+  ${fileDownload} "$TAHDL" "http://www.bribes.org/perl/ppm"                                             "IPC-Run-0.89-PPM510.tar.gz" "1C2FC9B0C27431F745DCADB718252249"
   ${fileDownload} "$TAHDL" "http://ppm4.activestate.com/MSWin32-x86/5.10/1000/S/SI/SIMONW"              "Module-Pluggable-3.8.ppmx"  "6838970862acd3a387d58864ec0db78e"
 
   ${ppmInstall}   "$TAHDL" "Win32-GUI-1.06.ppmx"

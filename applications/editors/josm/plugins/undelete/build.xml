@@ -30,7 +30,7 @@
 <project name="undelete" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Changed the constructor signature of the plugin main class" />
+	<property name="commit.message" value="fix main class" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="2830" />
 
@@ -96,7 +96,7 @@
     -->
 			<manifest>
 				<attribute name="Author" value="Nakor"/>
-				<attribute name="Plugin-Class" value="Undelete.Undelete"/>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.undelete.Undelete"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Allows undeleting object from OSM database"/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Undelete"/>

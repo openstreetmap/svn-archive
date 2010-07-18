@@ -13,6 +13,8 @@ buildingtypes = {
     'garages':['<0.8,0.8,0.8>',1.0],
     }
 amenitybuildingtypes = {
+    'shop':['<1,0.7,0.7>',1.0],
+    'public_building':['<1,0.9,0.9>',1.0],
     'place_of_worship':['<1,1,0.6>',1.0],
     'hospital':['<1,0.6,0.6>',1.0],
     'theatre':['<1,0.6,1>',1.0],
@@ -71,43 +73,32 @@ def get_building_texture(building,amenity,cladding):
     return texture
 
 def pov_building(f,building):
-    buildingtype = building[2]
-    #buildingtype = 'secondary'
+    buildingtype = building['building']
     buildingparams = buildingtypes.get(buildingtype)
 
-    linestring = building[1]
-    linestring = linestring[8:] # cut off the "POLYGON("
-    linestring = linestring[:-1] # cut off the ")"
+    polygon = building['coords']
 
-    heightstring = building[4] # building:height
+    heightstring = building['bheight'] # building:height
     if (heightstring==None):
-        heightstring = building[3]
-        if (heightstring==None):
-            height = 10.0
-        else:
-            height = parse_length_in_meters(heightstring,0.01)
+        heightstring = building['height']
+
+    if (heightstring==None):
+        height = 10.0
     else:
         height = parse_length_in_meters(heightstring,0.01)
 
-    amenity = building[5]
-    #print amenity
+    amenity = building['amenity']
 
-    points = linestring.split(',')#.strip('(').strip(')')
-    #print points
-
-    numpoints = len(points)
+    numpoints = len(polygon)
     f.write("prism {{ linear_spline  0, 1, {0},\n".format(numpoints))
-    f.write("/* osm_id={0} */\n".format(building[0]))
+    f.write("/* osm_id={0} */\n".format(building['osm_id']))
 
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+    for i,point in enumerate(polygon):
+        x,y = point
         if (i!=numpoints-1):
-            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
         else:
-            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
-    #f.write(firstpoint)
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
 
     color = buildingparams[0]
     if amenitybuildingtypes.has_key(amenity): # if amenity is known, use that color

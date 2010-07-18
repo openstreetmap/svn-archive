@@ -3,12 +3,13 @@
 
 from osray_db import *
 from osray_geom import *
+from osray_network import *
 
 Radiosity = True
 
 highwaytypes = { # highwaytype : [color,lane_width_factor]
-    'motorway':['<1,0,0>',1.3],
-    'motorway_link':['<1,0,0>',1.3],
+    'motorway':['<1,0.2,0>',1.3],
+    'motorway_link':['<1,0.2,0>',1.3],
     'trunk':['<0.9,1,0.9>',1.1],
     'trunk_link':['<0.9,1,0.9>',1.1],
     'primary':['<1,1,0.9>',1.0],
@@ -69,22 +70,52 @@ def pov_declare_highway_textures(f):
     f.write(declare_highway_texture.format(color='<0.4,0.4,0.4>',highwaytype='casing'))
 
 
-def draw_lines(f,points,height,streetwidth,highwaytype):
-    numpoints = len(points)
+def draw_lines(f,line,height,streetwidth,highwaytype):
+    numpoints = len(line)
     f.write("object {")
     f.write("union {")
     #f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+0))
 
-    latlon_prev = None
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        f.write(" sphere {{ <{x}, 0, {y}>,{d} }}\n".format(x=latlon[0],y=latlon[1],d=streetwidth))
-        if(latlon_prev != None):
-            f.write(" cylinder {{ <{x1}, 0, {y1}>,<{x2}, 0, {y2}>,{d} }}\n".format(x1=latlon[0],y1=latlon[1],x2=latlon_prev[0],y2=latlon_prev[1],d=streetwidth))
-        latlon_prev = latlon
+    x_prev = None
+    for i,point in enumerate(line):
+        x,y = point
+        f.write(" sphere {{ <{x}, 0, {y}>,{d} }}\n".format(x=x,y=y,d=streetwidth))
+        if(x_prev != None):
+            f.write(" cylinder {{ <{x1}, 0, {y1}>,<{x2}, 0, {y2}>,{d} }}\n".format(x1=x,y1=y,x2=x_prev,y2=y_prev,d=streetwidth))
+        x_prev=x
+        y_prev=y
     f.write("}") # union ends
     f.write("scale <1, 0.05, 1>")
     f.write("translate <0, {z}, 0>".format(z=height))
+    #f.write("  } ") #end of intersection
+    f.write("""texture {{ texture_highway_{highwaytype} }}
+}}
+\n""".format(highwaytype=highwaytype))
+    
+def draw_way(f,line,height_offset,streetwidth,highwaytype,og):
+    squeeze = 0.05
+    #FIXME (make casing very thin, otherwise it draws over ways, if road is not horizontally aligned)
+    #if height_offset>0:
+    #    squeeze = 0.0005
+    numpoints = len(line)
+    f.write("object {")
+    f.write("union {")
+    #f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+0))
+
+    x_prev = None
+    for i,point in enumerate(line):
+        x,y = point
+        z = og.get_height(point)
+        print "G.get_height = ",z
+        f.write(" sphere {{ <{x}, {zs}, {y}>,{d} }}\n".format(x=x,y=y,zs=(z/squeeze),d=streetwidth))
+        if(x_prev != None):
+            f.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{d} }}\n".format(x1=x,y1=y,z1s=(z/squeeze),x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze),d=streetwidth))
+        x_prev=x
+        y_prev=y
+        z_prev=z
+    f.write("}") # union ends
+    f.write("scale <1, {s}, 1>".format(s=squeeze))
+    f.write("translate <0, {z}, 0>".format(z=height_offset))
     #f.write("  } ") #end of intersection
     f.write("""texture {{ texture_highway_{highwaytype} }}
 }}
@@ -125,15 +156,12 @@ def calculate_lanefactor(lanes,lanesfw,lanesbw,oneway):
         return lanefactor
     return parse_float_safely(lanes,2.0)
 
-def pov_highway(f,highway):
+def pov_highway(f,highway,og):
     f.write("/* osm_id={0} */\n".format(highway['osm_id']))
     highwaytype = highway['highway']
     #highwaytype = 'secondary'
     highwayparams = highwaytypes.get(highwaytype)
-    linestring = highway['way']
-    linestring = linestring[11:] # cut off the "LINESTRING("
-    linestring = linestring[:-1] # cut off the ")"
-    points = linestring.split(',')
+    line = highway['coords']
 
 #    oneway = False
 #    if(highway['oneway']=='yes'):
@@ -147,91 +175,61 @@ def pov_highway(f,highway):
     if layer<0:
         layer=0 # FIXME
     layerheight = 4.0*layer # 4 m per layer
-# draw road
-    draw_lines(f,points,layerheight,streetwidth*highwayparams[1],highwaytype)
-# draw casing
-    draw_lines(f,points,layerheight-0.05*lanefactor,1.2*streetwidth*highwayparams[1],'casing')
+## draw road
+#    draw_lines(f,line,layerheight,streetwidth*highwayparams[1],highwaytype)
+## draw casing
+#    draw_lines(f,line,layerheight-0.05*lanefactor,1.2*streetwidth*highwayparams[1],'casing')
+    draw_way(f,line,0,streetwidth*highwayparams[1],highwaytype,og)
+    draw_way(f,line,-0.1*lanefactor,1.2*streetwidth*highwayparams[1],'casing',og)
 
 def pov_highway_area(f,highway):
-    highwaytype = highway[1]
-    #highwaytype = 'secondary'
+    highwaytype = highway['highway']
     highwayparams = highwaytypes.get(highwaytype)
 
-    linestring = highway[2]
-    linestring = linestring[8:] # cut off the "POLYGON("
-    linestring = linestring[:-1] # cut off the ")"
+    polygon = highway['coords']
 
-    heightstring = highway[3]
-    #print 'hs="{0}"'.format(heightstring)
-    height = 0.1
+    heightstring = highway['height']
+    height = 0.1 #FIXME
 
-    amenity = highway[4]
-    #print amenity
+    amenity = highway['amenity']
     
-    points = linestring.split(',')#.strip('(').strip(')')
-    #print points
-
-    numpoints = len(points)
+    # 
+    # draw the casing
+    #
+    numpoints = len(polygon)
     #f.write("polygon {{ {0},\n".format(numpoints))
     f.write("prism {{ linear_spline 0, 0.01, {0},\n".format(numpoints))
-    f.write("/* osm_id={0} */\n".format(highway[0]))
+    f.write("/* osm_id={0} */\n".format(highway['osm_id']))
 
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+    for i,point in enumerate(polygon):
+        x,y = point
         if (i!=numpoints-1):
-            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
         else:
-            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
-    #f.write(firstpoint)
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
 
     color = highwayparams[0]
-    #color = "<0,1,0>"
 
-    #if height != 10.0:
-        #print 'height:', height
-        #color = '<0,1,0>'
     f.write("""
     texture {{ texture_highway_{highwaytype} }}
     translate <0, {height}, 0>
 }}
 \n""".format(highwaytype=highwaytype,height=height))
-#    f.write("""
-#    texture {{
-#        pigment {{
-#            color rgb {0}
-#        }}
-#        finish {{
-#            specular 0.5
-#            roughness 0.05
-#            ambient 0.2
-#            /*reflection 0.5*/
-#        }}
-#    }}
-#    translate <0, {1}, 0>
-#}}
-#\n""".format(color,height))
     # 
     # draw the casing
     #
-    height = 0.08
-    linestring = highway[5]
-    linestring = linestring[8:] # cut off the "POLYGON("
-    linestring = linestring[:-1] # cut off the ")"
-    points = linestring.split(',')#.strip('(').strip(')')
-    numpoints = len(points)
+    height = height-0.02
+    polygon = highway['buffercoords']
+    numpoints = len(polygon)
     f.write("prism {{ linear_spline 0, 0.01, {0},\n".format(numpoints))
-    f.write("/* casing of osm_id={0} */\n".format(highway[0]))
+    f.write("/* casing of osm_id={0} */\n".format(highway['osm_id']))
 
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+    for i,point in enumerate(polygon):
+        x,y = point
         if (i!=numpoints-1):
-            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
         else:
-            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
 
     color = highwayparams[0]
     f.write("""
@@ -252,13 +250,20 @@ def pov_highway_area(f,highway):
 
 def render_highways(f,osraydb,options):
     Radiosity = options['radiosity']
+    og = osrayNetwork()
     pov_declare_highway_textures(f)
     highways = []
     for highwaytype in highwaytypes.iterkeys():
         highways += osraydb.select_highways(highwaytype)
 
     for highway in highways:
-        pov_highway(f,highway)
+        og.add_highway(highway['coords'],parse_int_safely(highway['layer'],default=0))
+        #pass
+
+    og.calculate_height_on_nodes()
+    
+    for highway in highways:
+        pov_highway(f,highway,og)
         #pass
     
     highway_areas = []

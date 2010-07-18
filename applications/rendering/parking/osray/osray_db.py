@@ -94,7 +94,7 @@ class OsrayDB:
             highway = {}
             highway['osm_id']=res[0]
             highway['highway']=res[1]
-            highway['way']=res[2]
+            highway['coords']=WKT_to_line(res[2])
             highway['lanes']=res[3]
             highway['layer']=res[4]
             highway['oneway']=res[5]
@@ -112,7 +112,7 @@ class OsrayDB:
             area['osm_id']=res[0]
             area['highway']=res[1]
             area['coords']=WKT_to_polygon(res[2])
-            area['hight']=res[3]
+            area['height']=res[3]
             area['amenity']=res[4]
             area['buffercoords']=WKT_to_polygon(res[5])
             areas.append(area)
@@ -120,16 +120,43 @@ class OsrayDB:
 
     def select_buildings(self,buildingtype):
         self.curs.execute("SELECT osm_id,ST_AsText(\"way\") AS geom, building, tags->'height' as height,tags->'building:height' as bheight,amenity "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+LIMIT+";")
-        return self.curs.fetchall()
+        rs = self.curs.fetchall()
+        buildings = []
+        for res in rs:
+            building = {}
+            building['osm_id']=res[0]
+            building['coords']=WKT_to_polygon(res[1])
+            building['building']=res[2]
+            building['height']=res[3]
+            building['bheight']=res[4]
+            building['amenity']=res[5]
+            buildings.append(building)
+        return buildings
 
     def select_landuse(self,landusetype):
         #print "SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' "+LIMIT+";"
         self.curs.execute("SELECT osm_id,landuse,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and landuse='"+landusetype+"' "+LIMIT+";")
-        return self.curs.fetchall()
+        rs = self.curs.fetchall()
+        landuses = []
+        for res in rs:
+            landuse = {}
+            landuse['osm_id']=res[0]
+            landuse['landuse']=res[1]
+            landuse['coords']=WKT_to_polygon(res[2])
+            landuses.append(landuse)
+        return landuses
 
     def select_waterway(self,waterwaytype):
         self.curs.execute("SELECT osm_id,waterway,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and waterway='"+waterwaytype+"' "+LIMIT+";")
-        return self.curs.fetchall()
+        rs = self.curs.fetchall()
+        waterways = []
+        for res in rs:
+            waterway = {}
+            waterway['osm_id']=res[0]
+            waterway['waterway']=res[1]
+            waterway['coords']=WKT_to_polygon(res[2])
+            waterways.append(waterway)
+        return waterways
 
     def select_naturalwater(self):
         naturaltype='water'

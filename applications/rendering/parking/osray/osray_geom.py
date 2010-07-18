@@ -22,6 +22,19 @@ def WKT_to_point(pointstring):
     latlon = pointstring.split(' ')
     return (latlon[0],latlon[1])
 
+def WKT_to_line(linestring):
+    linestring = linestring[11:] # cut off the "LINESTRING("
+    linestring = linestring[:-1] # cut off the ")"
+    points = linestring.split(',')
+    numpoints = len(points)
+    line=[]
+    for i,point in enumerate(points):
+        x,y = point.split(' ')
+        #x=x.strip('(').strip(')')
+        #y=y.strip('(').strip(')')
+        line.append((x,y))
+    return line
+
 def WKT_to_polygon(polygonstring):
     polygonstring = polygonstring[8:] # cut off the "POLYGON("
     polygonstring = polygonstring[:-1] # cut off the ")"
@@ -49,7 +62,7 @@ def bbox_format_3_to_1_comma(bbox):
     
 def coords_from_bbox(bbox):
     bbox = bbox.replace(' ',',')
-    coordslist = map(lambda coord: float(coord), old_bbox.split(','))
+    coordslist = map(lambda coord: float(coord), bbox.split(','))
     return tuple(coordslist)
 
 def scale_coords(xmin,ymin,xmax,ymax,scale):

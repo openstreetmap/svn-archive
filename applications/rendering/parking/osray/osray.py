@@ -16,6 +16,7 @@ from osray_furniture import *
 from optparse import OptionParser
 
 Radiosity = True
+gutter_factor = 1.2
 
 def pov_globals(f):
     if Radiosity:
@@ -64,7 +65,7 @@ def pov_camera(f,osraydb,options):
     map_aspect = map_size_x/map_size_y
 
     isometric_angle = 20 # in °
-    zoom = 1.0
+    zoom = gutter_factor
     zoom = map_size_y/zoom
 
     f.write("""
@@ -210,6 +211,10 @@ light_source {{
 
 def main(options):
     print "In main(). Options: ",options
+
+    bbox = options['bbox']
+    bbox = scale_bbox(bbox,gutter_factor)
+    options['bbox']=bbox
 
     create_textures = not(options['quick'])
     osraydb = OsrayDB(options)

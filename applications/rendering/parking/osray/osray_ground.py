@@ -77,29 +77,21 @@ wasteland (12)
 """
 
 def pov_landuse(f,landuse):
-    landusetype = landuse[1]
+    landusetype = landuse['landuse']
     landuseparams = landusetypes.get(landusetype)
 
-    linestring = landuse[2]
-    linestring = linestring[8:] # cut off the "POLYGON("
-    linestring = linestring[:-1] # cut off the ")"
+    polygon = landuse['coords']
 
-    points = linestring.split(',')#.strip('(').strip(')')
-    #print points
-
-    numpoints = len(points)
+    numpoints = len(polygon)
     f.write("prism {{ linear_spline  0, 0.01, {0},\n".format(numpoints))
-    f.write("/* osm_id={0} */\n".format(landuse[0]))
+    f.write("/* osm_id={0} */\n".format(landuse['osm_id']))
 
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+    for i,point in enumerate(polygon):
+        x,y = point
         if (i!=numpoints-1):
-            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
         else:
-            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
-    #f.write(firstpoint)
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
 
     color = landuseparams[0]
 
@@ -124,29 +116,20 @@ waterwaytypes = {
     }
 
 def pov_waterway(f,waterway):
-    waterwaytype = waterway[1]
+    waterwaytype = waterway['waterway']
     waterwayparams = waterwaytypes.get(waterwaytype)
 
-    linestring = waterway[2]
-    linestring = linestring[8:] # cut off the "POLYGON("
-    linestring = linestring[:-1] # cut off the ")"
-
-    points = linestring.split(',')#.strip('(').strip(')')
-    #print points
-
-    numpoints = len(points)
+    polygon = waterway['coords']
+    numpoints = len(polygon)
     f.write("prism {{ linear_spline  0, 0.01, {0},\n".format(numpoints))
-    f.write("/* osm_id={0} */\n".format(waterway[0]))
+    f.write("/* osm_id={0} */\n".format(waterway['osm_id']))
 
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        if (i==0):
-            firstpoint="<{0}, {1}>\n".format(latlon[0],latlon[1])
+    for i,point in enumerate(polygon):
+        x,y = point
         if (i!=numpoints-1):
-            f.write("  <{0}, {1}>,\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
         else:
-            f.write("  <{0}, {1}>\n".format(latlon[0].strip('(').strip(')'),latlon[1].strip('(').strip(')')))
-    #f.write(firstpoint)
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
 
     color = waterwayparams[0]
 
@@ -176,7 +159,7 @@ def pov_water(f,water):
         if (i!=numpoints-1):
             f.write("  <{x}, {y}>,\n".format(x=x,y=y))
         else:
-            f.write("  <{x}, {y}>\n".format(x,y))
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
 
     color = waterwaytypes['riverbank'][0]
 
@@ -273,7 +256,8 @@ def create_landuse_texture(osraydb,options,texturename):
 
     f_landuse.close()
 
+    print "--> povray texture"
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
     result = commands.getstatusoutput('povray -Iscene-osray-landuse-texture.pov -UV '+image_dimension_parameters+' +Q4 +A')
-    # print result[1]
+    print "--> povray texture=",result[1]
 

@@ -54,8 +54,12 @@ public class MichiganLeft extends Plugin {
     }
 
     public void actionPerformed(ActionEvent e) {
-      Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet()
+      Collection<OsmPrimitive> mainSelection = Main.main.getCurrentDataSet()
           .getSelected();
+      
+      ArrayList<OsmPrimitive> selection = new ArrayList<OsmPrimitive>();
+      
+      for (OsmPrimitive prim: mainSelection) selection.add(prim);
 
       int ways = 0;
       for (OsmPrimitive prim : selection) {

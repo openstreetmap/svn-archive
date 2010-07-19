@@ -157,10 +157,12 @@ def pov_leisure(f,leisure):
     f.write(""" text {{
     ttf "timrom.ttf" "{lt}" 1, 0
     pigment {{ Red }}
-    scale <100,0,100>
+    translate <-{center},0,0>
+    rotate <90, 0, 0>
+    scale <18,0,18>
     translate <{x},0.3,{y}>
   }}
-\n""".format(lt=leisuretype,x=x,y=y))
+\n""".format(lt=leisuretype,x=x,y=y,center=0.25*len(leisuretype)))
 
 #-----------------------------------------------------------------------------
 

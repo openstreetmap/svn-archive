@@ -114,6 +114,9 @@ import org.openstreetmap.josm.data.projection.*;
  * 2.0 xx-xxx-xxxx - update projection for "La Reunion" departement to RGR92, UTM40S. 
  *                 - add 'departement' as option in the municipality selection
  *                 - fixed bug in cache directory size control (and disabled by default)
+ *                 - add map mode for addressing
+ *                 - from Nicolas Dumoulin:
+ *                 -     add "tableau d'assemblage" in raster images for georeferencing (as option)
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "2.0";

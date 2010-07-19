@@ -88,8 +88,8 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     final JTextField inputStreet = new JTextField();
     JLabel link = new JLabel();
     private Way selectedWay;
-    //private Relation selectedRelation;
     private boolean shift;
+    private boolean ctrl;
 
     public Address(MapFrame mapFrame) {
         super(tr("Add address"), "buildings", 
@@ -120,6 +120,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
         shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
+        ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
         MapView mv = Main.map.mapView;
         Point mousePos = e.getPoint();
         List<Way> mouseOnExistingWays = new ArrayList<Way>();
@@ -142,6 +143,11 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             }
             if (currentMouseNode.get(tagHouseStreet) != null) {
                 inputStreet.setText(currentMouseNode.get(tagHouseStreet));
+                if (ctrl) {
+                    Collection<Command> cmds = new LinkedList<Command>();
+                    addAddrToPrimitive(currentMouseNode, cmds);
+                    applyInputNumberChange();
+                }
                 setSelectedWay((Way)null);
             } else {
                 // check if the node belongs to an associatedStreet relation

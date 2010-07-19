@@ -58,7 +58,9 @@ public class CadastreInterface {
     final String cInterfaceRasterTA = "afficherCarteTa.do";
     final String cInterfaceRasterFeuille = "afficherCarteFeuille.do";
     final String cImageLinkStart = "title=\"image\"><a href=\"#\" onClick=\"popup('afficherCarteFeuille.do?f=";
+    final String cTAImageLinkStart = "title=\"image\"><a href=\"#\" onClick=\"popup('afficherCarteTa.do?f=";
     final String cImageNameStart = ">Feuille ";
+    final String cTAImageNameStart = "Tableau d'assemblage <strong>";
     
     final static long cCookieExpiration = 30 * 60 * 1000; // 30 minutes expressed in milliseconds
 
@@ -379,6 +381,17 @@ public class CadastreInterface {
     
     private void parseFeuillesList(String input) {
         listOfFeuilles.clear();
+        // get "Tableau d'assemblage"
+        if (Main.pref.getBoolean("cadastrewms.useTA", false)) {
+            while (input.indexOf(cTAImageLinkStart) != -1) {
+                input = input.substring(input.indexOf(cTAImageLinkStart) + cTAImageLinkStart.length());
+                String refTA = input.substring(0, input.indexOf("'"));
+                String nameTA = input.substring(input.indexOf(cTAImageNameStart) + cTAImageNameStart.length());
+                nameTA = nameTA.substring(0, nameTA.indexOf("<"));
+                listOfFeuilles.add(new PlanImage(nameTA, refTA));
+            }
+        }
+        // get "Feuilles"
         while (input.indexOf(cImageLinkStart) != -1) {
             input = input.substring(input.indexOf(cImageLinkStart)+cImageLinkStart.length());
             String refFeuille = input.substring(0, input.indexOf("'"));

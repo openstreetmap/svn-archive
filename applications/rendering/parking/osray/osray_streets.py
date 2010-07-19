@@ -106,7 +106,6 @@ def draw_way(f,line,height_offset,streetwidth,highwaytype,og):
     for i,point in enumerate(line):
         x,y = point
         z = og.get_height(point)
-        print "G.get_height = ",z
         f.write(" sphere {{ <{x}, {zs}, {y}>,{d} }}\n".format(x=x,y=y,zs=(z/squeeze),d=streetwidth))
         if(x_prev != None):
             f.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{d} }}\n".format(x1=x,y1=y,z1s=(z/squeeze),x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze),d=streetwidth))
@@ -179,7 +178,7 @@ def pov_highway(f,highway,og):
 #    draw_lines(f,line,layerheight,streetwidth*highwayparams[1],highwaytype)
 ## draw casing
 #    draw_lines(f,line,layerheight-0.05*lanefactor,1.2*streetwidth*highwayparams[1],'casing')
-    draw_way(f,line,0,streetwidth*highwayparams[1],highwaytype,og)
+    draw_way(f,line,0.1*lanefactor,streetwidth*highwayparams[1],highwaytype,og)
     draw_way(f,line,-0.1*lanefactor,1.2*streetwidth*highwayparams[1],'casing',og)
 
 def pov_highway_area(f,highway):

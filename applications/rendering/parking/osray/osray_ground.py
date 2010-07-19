@@ -10,7 +10,7 @@ from numpy import *
 from osray_db import *
 from osray_geom import *
 
-def pov_text(x,y,txt):
+def pov_text(f,x,y,txt):
     f.write("""text {{
     ttf "timrom.ttf" "{txt}" 1, 0
     pigment {{ rgbt <0.5,0.5,0.5,0.5> }}
@@ -165,7 +165,7 @@ def pov_leisure(f,leisure):
     }}
 }}
 \n""".format(color))
-    pov_text(x,y,leisuretype)
+    pov_text(f,x,y,leisuretype)
 
 #-----------------------------------------------------------------------------
 

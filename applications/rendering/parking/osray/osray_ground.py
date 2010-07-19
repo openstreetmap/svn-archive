@@ -291,7 +291,7 @@ def create_landuse_texture(osraydb,options,texturename):
     for landuse in landuses:
         pov_landuse(f_landuse,landuse)
 
-    leisures = osraydb.select_leisure_areas(leisuretype)
+    leisures = osraydb.select_leisure_areas()
     for leisure in leisures:
         pov_leisure(f_landuse,leisure)
 

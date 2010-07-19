@@ -13,7 +13,6 @@
       map = new OpenLayers.Map("map", {
         controls: [
           new OpenLayers.Control.ArgParser(),
-          new OpenLayers.Control.LayerSwitcher(),
           new OpenLayers.Control.Navigation(),
           new OpenLayers.Control.PanZoomBar(),
           new OpenLayers.Control.Permalink()
@@ -21,12 +20,18 @@
         displayProjection: new OpenLayers.Projection("EPSG:4326")
       });
 
+      var switcher = new OpenLayers.Control.LayerSwitcher();
+      map.addControl(switcher);
+      switcher.maximizeControl();
+
       // Add OS layers
-      var npe = new OpenLayers.Layer.NPE("OS NPE (1:50000)");
+      var npe = new OpenLayers.Layer.NPE("OS NPE (Eng/Wales) (1:50)");
       map.addLayer(npe);
-      var os7 = new OpenLayers.Layer.OS7("OS 7th Series (1:50000)");
+      var npescotland = new OpenLayers.Layer.NPEScotland("OS NPE/7th (Scotland) (1:50)");
+      map.addLayer(npescotland);
+      var os7 = new OpenLayers.Layer.OS7("OS 7th Series (1:50)");
       map.addLayer(os7);
-      var os1 = new OpenLayers.Layer.OS1("OS 1st Edition (1:25000)");
+      var os1 = new OpenLayers.Layer.OS1("OS 1st Edition (1:25)");
       map.addLayer(os1);
 
       // Add OpenStreetMap layers

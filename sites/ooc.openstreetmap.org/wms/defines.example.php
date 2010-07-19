@@ -4,6 +4,10 @@ define ('NPE_MAP_FOLDER', '/home/ooc/npe');
 define ('NPE_ZOOM_MAX', 17);
 define ('NPE_ZOOM_MIN', 1);
 
+define ('NPESCOTLAND_MAP_FOLDER', '/home/ooc/npescotland');
+define ('NPESCOTLAND_ZOOM_MAX', 17);
+define ('NPESCOTLAND_ZOOM_MIN', 1);
+
 define ('OS1_MAP_FOLDER', '/home/ooc/os1');
 define ('OS1_ZOOM_MAX', 17);
 define ('OS1_ZOOM_MIN', 1);

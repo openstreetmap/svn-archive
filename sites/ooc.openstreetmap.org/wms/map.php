@@ -50,6 +50,12 @@ switch($source)
 		$zoom_max = NPE_ZOOM_MAX;
 		$zoom_min = NPE_ZOOM_MIN;
 		break;
+
+        case "npescotland":
+                $mapFolder = NPESCOTLAND_MAP_FOLDER;
+                $zoom_max = NPESCOTLAND_ZOOM_MAX;
+                $zoom_min = NPESCOTLAND_ZOOM_MIN;
+                break;
 	
 	default:
 		$mapFolder = DEFAULT_MAP_FOLDER;

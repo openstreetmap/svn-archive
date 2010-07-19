@@ -136,7 +136,6 @@ def pov_leisure(f,leisure):
         leisureparams = leisuretypes.get(leisuretype)
     else:
         leisureparams = leisuretypes.get('unknown')
-        pov_text(f,x,y,leisuretype)
 
     polygon = leisure['coords']
 
@@ -167,6 +166,10 @@ def pov_leisure(f,leisure):
     }}
 }}
 \n""".format(color))
+    if leisuretype in leisuretypes:
+        pass
+    else:
+        pov_text(f,x,y,leisuretype)
 
 #-----------------------------------------------------------------------------
 

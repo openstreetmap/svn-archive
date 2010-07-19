@@ -225,7 +225,7 @@ def main(options):
     pov_camera(f,osraydb,options)
     
     if create_textures:
-        create_landuse_texture(osraydb,options,'/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov')
+        create_ground_texture(osraydb,options,'/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov')
         #pass
     
     render_highways(f,osraydb,options)

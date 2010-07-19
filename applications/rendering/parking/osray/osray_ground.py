@@ -47,7 +47,8 @@ landusetypes = {
     'allotments':['<0.6,0.7,0.6>'],
 
     'forest':['<0.5,0.8,0.5>'],
-    'wood':['<0.5,0.8,0.5>']
+    'wood':['<0.5,0.8,0.5>'],
+    'unknown':['<1,0,1>']
     }
 """
 basin (4356)
@@ -89,7 +90,10 @@ wasteland (12)
 
 def pov_landuse(f,landuse):
     landusetype = landuse['landuse']
-    landuseparams = landusetypes.get(landusetype)
+    if landusetype in landusetypes:
+        landuseparams = landusetypes.get(landusetype)
+    else:
+        landuseparams = landusetypes.get('unknown')
 
     polygon = landuse['coords']
 
@@ -120,14 +124,21 @@ def pov_landuse(f,landuse):
     }}
 }}
 \n""".format(color))
+    if landusetype in landusetypes:
+        pass
+    else:
+        pov_text(f,x,y,landusetype)
 
 #-----------------------------------------------------------------------------
 
 leisuretypes = {
     'park':['<0.7,1,0.6>'],
     'pitch':['<0.3,1,0.8>'],
+    'sports_centre':['<0.3,1,0.8>'],
+    'track':['<0.9,0.7,0.6>'],
     'playground':['<0.2,0.9,0.9>'],
-    'unknown':['<1,1,0>']
+    'garden':['<1,1,0.1>'],
+    'unknown':['<1,0,1>']
     }
 
 def pov_leisure(f,leisure):
@@ -296,33 +307,31 @@ box {{
 }}
 """.format(left,bottom,right,top))
 
-def create_landuse_texture(osraydb,options,texturename):
-    f_landuse = open(texturename, 'w')
+def create_ground_texture(osraydb,options,texturename):
+    f_ground = open(texturename, 'w')
 
-    pov_globals(f_landuse)
-    pov_camera(f_landuse,osraydb)
+    pov_globals(f_ground)
+    pov_camera(f_ground,osraydb)
 
-    landuses = []
-    for landusetype in landusetypes.iterkeys():
-        landuses += osraydb.select_landuse(landusetype)
+    landuses = osraydb.select_landuse_areas()
     for landuse in landuses:
-        pov_landuse(f_landuse,landuse)
+        pov_landuse(f_ground,landuse)
 
     leisures = osraydb.select_leisure_areas()
     for leisure in leisures:
-        pov_leisure(f_landuse,leisure)
+        pov_leisure(f_ground,leisure)
 
     waterways = []
     for waterwaytype in waterwaytypes.iterkeys():
         waterways += osraydb.select_waterway(waterwaytype)
     for waterway in waterways:
-        pov_waterway(f_landuse,waterway)
+        pov_waterway(f_ground,waterway)
 
     waters = osraydb.select_naturalwater()
     for water in waters:
-        pov_water(f_landuse,water)
+        pov_water(f_ground,water)
 
-    f_landuse.close()
+    f_ground.close()
 
     print "--> povray texture"
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])

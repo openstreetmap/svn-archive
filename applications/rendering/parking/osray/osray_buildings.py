@@ -7,17 +7,17 @@ from osray_geom import *
 Radiosity = True
 
 buildingtypes = {
-    'yes':['<1,0.8,0.8>',1.0],
-    'office':['<1,0.6,0.6>',1.0],
+    'yes':['<1,0.7,0.7>',1.0],
+    'office':['<1,0.6,0.5>',1.0],
     'apartments':['<0.8,1,0.6>',1.0],
     'garages':['<0.8,0.8,0.8>',1.0],
     }
 amenitybuildingtypes = {
-    'shop':['<1,0.7,0.7>',1.0],
+    'shop':['<1,0.5,0.6>',1.0],
     'public_building':['<1,0.9,0.9>',1.0],
-    'place_of_worship':['<1,1,0.6>',1.0],
+    'place_of_worship':['<1,1,0.5>',1.0],
     'hospital':['<1,0.6,0.6>',1.0],
-    'theatre':['<1,0.6,1>',1.0],
+    'theatre':['<1,0.6,0.8>',1.0],
     'university':['<0.6,1,0.8>',1.0],
     'parking':['<0.6,0.6,1>',1.0]
     }

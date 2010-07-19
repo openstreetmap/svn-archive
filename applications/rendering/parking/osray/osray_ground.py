@@ -234,6 +234,7 @@ def pov_water(f,water):
 
 def pov_globals(f):
     globsettings = """
+#include "colors.inc"
 global_settings {{
     assumed_gamma 2.0
     noise_generator 2

@@ -128,7 +128,7 @@ def pov_leisure(f,leisure):
     polygon = leisure['coords']
 
     numpoints = len(polygon)
-    f.write("prism {{ linear_spline  0, 0.01, {0},\n".format(numpoints))
+    f.write("prism {{ linear_spline  0, 0.02, {0},\n".format(numpoints))
     f.write("/* osm_id={0} */\n".format(leisure['osm_id']))
 
     for i,point in enumerate(polygon):
@@ -154,6 +154,13 @@ def pov_leisure(f,leisure):
     }}
 }}
 \n""".format(color))
+    f.write(""" text {
+    ttf "timrom.ttf" "{lt}" 1, 0
+    pigment { Red }
+    scale <100,0,100>
+    translate <{x},0.3,{y}>
+  }
+\n""".format(lt=leisuretype,x=x,y=y))
 
 #-----------------------------------------------------------------------------
 

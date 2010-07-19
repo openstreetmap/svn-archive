@@ -10,6 +10,17 @@ from numpy import *
 from osray_db import *
 from osray_geom import *
 
+def pov_text(x,y,txt):
+    f.write("""text {{
+    ttf "timrom.ttf" "{txt}" 1, 0
+    pigment {{ rgbt <0.5,0.5,0.5,0.5> }}
+    translate <-{center},0,0>
+    rotate <90, 0, 0>
+    scale <18,0,18>
+    translate <{x},0.3,{y}>
+}}
+\n""".format(txt=txt,x=x,y=y,center=0.25*len(txt)))
+
 landusetypes = {
     'residential':['<1,0.95,0.9>'],
 
@@ -154,15 +165,7 @@ def pov_leisure(f,leisure):
     }}
 }}
 \n""".format(color))
-    f.write(""" text {{
-    ttf "timrom.ttf" "{lt}" 1, 0
-    pigment {{ Red }}
-    translate <-{center},0,0>
-    rotate <90, 0, 0>
-    scale <18,0,18>
-    translate <{x},0.3,{y}>
-  }}
-\n""".format(lt=leisuretype,x=x,y=y,center=0.25*len(leisuretype)))
+    pov_text(x,y,leisuretype)
 
 #-----------------------------------------------------------------------------
 

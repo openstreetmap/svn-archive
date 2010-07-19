@@ -110,6 +110,53 @@ def pov_landuse(f,landuse):
 }}
 \n""".format(color))
 
+#-----------------------------------------------------------------------------
+
+leisuretypes = {
+    'park':['<0.5,1,0.5>'],
+
+    'unknown':['<0,1,1>']
+    }
+
+def pov_leisure(f,leisure):
+    leisuretype = leisure['leisure']
+    if leisuretype in leisuretypes:
+        leisureparams = leisuretypes.get(leisuretype)
+    else:
+        leisureparams = leisuretypes.get('unknown')
+
+    polygon = leisure['coords']
+
+    numpoints = len(polygon)
+    f.write("prism {{ linear_spline  0, 0.01, {0},\n".format(numpoints))
+    f.write("/* osm_id={0} */\n".format(leisure['osm_id']))
+
+    for i,point in enumerate(polygon):
+        x,y = point
+        if (i!=numpoints-1):
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
+        else:
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
+
+    color = leisureparams[0]
+
+    f.write("""
+    texture {{
+        pigment {{
+            color rgb {0}
+        }}
+        finish {{
+            ambient 1
+            /*specular 0.5
+            roughness 0.05
+            reflection 0.5*/
+        }}
+    }}
+}}
+\n""".format(color))
+
+#-----------------------------------------------------------------------------
+
 waterwaytypes = {
     'riverbank':['<0.2,0.2,0.9>'],
     'dock':['<0.2,0.2,0.8>']
@@ -243,6 +290,10 @@ def create_landuse_texture(osraydb,options,texturename):
         landuses += osraydb.select_landuse(landusetype)
     for landuse in landuses:
         pov_landuse(f_landuse,landuse)
+
+    leisures = osraydb.select_leisure_areas(leisuretype)
+    for leisure in leisures:
+        pov_leisure(f_landuse,leisure)
 
     waterways = []
     for waterwaytype in waterwaytypes.iterkeys():

@@ -146,6 +146,18 @@ class OsrayDB:
             landuses.append(landuse)
         return landuses
 
+    def select_leisure_areas(self):
+        self.curs.execute("SELECT osm_id,leisure,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and leisure is not NULL "+LIMIT+";")
+        rs = self.curs.fetchall()
+        leisures = []
+        for res in rs:
+            leisure = {}
+            leisure['osm_id']=res[0]
+            leisure['leisure']=res[1]
+            leisure['coords']=WKT_to_polygon(res[2])
+            leisures.append(leisure)
+        return leisures
+
     def select_waterway(self,waterwaytype):
         self.curs.execute("SELECT osm_id,waterway,ST_AsText(\"way\") AS geom "+self.FpW+" \"way\" && "+self.googbox+" and waterway='"+waterwaytype+"' "+LIMIT+";")
         rs = self.curs.fetchall()

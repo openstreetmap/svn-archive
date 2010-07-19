@@ -124,9 +124,10 @@ def pov_landuse(f,landuse):
 #-----------------------------------------------------------------------------
 
 leisuretypes = {
-    'park':['<0.5,1,0.5>'],
-
-    'unknown':['<0,1,1>']
+    'park':['<0.6,1,0.5>'],
+    'pitch':['<0.3,1,0.8>'],
+    'playground':['<0.2,0.9,0.9>'],
+    'unknown':['<1,1,0>']
     }
 
 def pov_leisure(f,leisure):
@@ -135,6 +136,7 @@ def pov_leisure(f,leisure):
         leisureparams = leisuretypes.get(leisuretype)
     else:
         leisureparams = leisuretypes.get('unknown')
+        pov_text(f,x,y,leisuretype)
 
     polygon = leisure['coords']
 
@@ -165,7 +167,6 @@ def pov_leisure(f,leisure):
     }}
 }}
 \n""".format(color))
-    pov_text(f,x,y,leisuretype)
 
 #-----------------------------------------------------------------------------
 

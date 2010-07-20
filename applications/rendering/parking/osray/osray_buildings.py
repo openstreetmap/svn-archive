@@ -113,9 +113,10 @@ def pov_building(f,building):
 \n""".format(height=height))
 
 #---------------------------------------------------------------------
-barriertypes = {
-    'yes':['<0.8,0.8,0.8>',1.0],
-    'unknown':['<1,0.1,1>',1.0]
+barriertypes = { # barrier: type, default-height
+    'yes':['<0.8,0.8,0.8>',1.5],
+    'city_wall':['<1,1,0.8>',9.0],
+    'unknown':['<1,0.1,1>',1.5]
     }
 
 def pov_declare_barrier_textures(f):
@@ -166,9 +167,9 @@ def pov_barrier(f,barrier):
     heightstring = barrier['height']
 
     if (heightstring==None):
-        height = 1.5
+        height = barrierparams[1]
     else:
-        height = parse_length_in_meters(heightstring,1.5)
+        height = parse_length_in_meters(heightstring,25)
 
     numpoints = len(polygon)
     f.write("prism {{ linear_spline  0, 1, {0},\n".format(numpoints))

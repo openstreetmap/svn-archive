@@ -226,11 +226,19 @@ class OsrayDB:
             barrier['height']=res[3]
             barriers.append(barrier)
         return barriers
+
     def select_barrier_lines(self):
-        select="""SELECT ST_Buffer(
- ST_GeomFromText(
-  'LINESTRING(50 50,150 150,150 50)'
- ), 10, 'join=mitre mitre_limit=5.0');"""
+        self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(ST_Buffer(\"way\",0.2,'join=mitre mitre_limit=5.0')) AS geom, tags->'height' as height "+self.FlW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";")
+        rs = self.curs.fetchall()
+        barriers = []
+        for res in rs:
+            barrier = {}
+            barrier['osm_id']=res[0]
+            barrier['barrier']=res[1]
+            barrier['coords']=WKT_to_polygon(res[2])
+            barrier['height']=res[3]
+            barriers.append(barrier)
+        return barriers
 
     def shutdown(self):
         self.conn.rollback()

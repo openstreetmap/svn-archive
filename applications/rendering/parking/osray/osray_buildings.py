@@ -112,6 +112,81 @@ def pov_building(f,building):
 }}
 \n""".format(height=height))
 
+#---------------------------------------------------------------------
+barriertypes = {
+    'yes':['<0.8,0.8,0.8>',1.0],
+    'unknown':['<1,0.1,1>',1.0]
+    }
+
+def pov_declare_barrier_textures(f):
+    if Radiosity:
+        declare_barrier_texture = """
+#declare texture_barrier_{barriertype} =
+    texture {{
+        pigment {{
+            color rgb {color}
+        }}
+        finish {{
+            diffuse 0.7
+            ambient 0
+        }}
+    }}
+"""
+    else:
+        declare_barrier_texture = """
+#declare texture_barrier_{barriertype} =
+    texture {{
+        pigment {{
+            color rgb {color}
+        }}
+        finish {{
+            specular 0.5
+            roughness 0.05
+            ambient 0.3
+            /*reflection 0.5*/
+        }}
+    }}
+"""
+    for barriertype in barriertypes.keys():
+        barrierparams = barriertypes.get(barriertype)
+        color = barrierparams[0]
+        f.write(declare_barrier_texture.format(color=color,barriertype=barriertype))
+
+def pov_barrier(f,barrier):
+    barriertype = barrier['barrier']
+    if barriertype in barriertypes:
+        barrierparams = barriertypes.get(barriertype)
+        texture = barrier
+    else:
+        barrierparams = barriertypes.get('unknown')
+        texture = 'unknown'
+
+    polygon = barrier['coords']
+
+    heightstring = barrier['height']
+
+    if (heightstring==None):
+        height = 1.5
+    else:
+        height = parse_length_in_meters(heightstring,1.5)
+
+    numpoints = len(polygon)
+    f.write("prism {{ linear_spline  0, 1, {0},\n".format(numpoints))
+    f.write("/* barrier osm_id={0} */\n".format(barrier['osm_id']))
+
+    for i,point in enumerate(polygon):
+        x,y = point
+        if (i!=numpoints-1):
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
+        else:
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
+
+    f.write("""texture {{ texture_barrier_{texture} }}""".format(texture=texture))
+    f.write("""
+    scale <1, {height}, 1>
+}}
+\n""".format(height=height))
+#--------------------------------------------------------------------
 def render_buidings(f,osraydb,options):
     Radiosity = options['radiosity']
     pov_declare_building_textures(f)
@@ -121,4 +196,10 @@ def render_buidings(f,osraydb,options):
     
     for building in buildings:
         pov_building(f,building)
+
+    pov_declare_barrier_textures(f)
+    barriers = osraydb.select_barrier_lines()
+
+    for barrier in barriers:
+        pov_barrier(f,barrier)
 

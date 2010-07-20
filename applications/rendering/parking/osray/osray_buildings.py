@@ -157,7 +157,7 @@ def pov_barrier(f,barrier):
     barriertype = barrier['barrier']
     if barriertype in barriertypes:
         barrierparams = barriertypes.get(barriertype)
-        texture = barrier
+        texture = barriertype
     else:
         barrierparams = barriertypes.get('unknown')
         texture = 'unknown'

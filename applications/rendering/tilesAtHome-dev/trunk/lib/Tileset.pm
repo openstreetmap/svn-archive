@@ -1319,7 +1319,7 @@ sub RenderSVG
 
             if( $corrupt ){
                 ## this error is fatal because it needs human intervention before processing can continue
-                addFault("fatal",1);
+                ::addFault("fatal",1);
                 throw TilesetError("Inkscape preference file corrupt. Delete to continue", 'fatal');
             }
 

@@ -248,12 +248,34 @@ def pov_highway_area(f,highway):
 
 # ---------------------------------------------------------------------------
 
-barriertypes = { # barriertype : [color,diameter,height]
+declarations = """
+/* ********* barriers *********** */
+
+#macro barrier_bollard ()
+object {
+  union{
+    sphere { <0, 0.9,0>,0.2 }
+    cylinder { 0, 0, 0>,<0, 0.9, 0>,0.2 }
+  }
+  texture {
+    pigment {
+      color rgb <1,0.1,0.1>
+    }
+    finish {
+      diffuse 0.7
+      ambient 0
+    }
+  }
+}
+#end
+"""
+
+XXX_barriertypes = { # barriertype : [color,diameter,height]
     'bollard':['<1,0.2,0.2>',0.2,0.9],
     'unknown':['<1,0,1>',0.3,0.5]
     }
 
-def pov_barrier(f,barrier,og):
+def pov_XXX_barrier(f,barrier,og):
     f.write("/* osm_id={0} */\n".format(barrier['osm_id']))
     barriertype = barrier['barrier']
 
@@ -287,9 +309,29 @@ def pov_barrier(f,barrier,og):
 }}
 \n""".format(col=color))
 
+barriertypes = { # barriertype : [color,diameter,height]
+    'bollard':['bollard'],
+    'unknown':['bollard']
+    }
+
+def pov_barrier(f,barrier,og):
+    f.write("/* barrier osm_id={0} */\n".format(barrier['osm_id']))
+    barriertype = barrier['barrier']
+
+    if barriertype in barriertypes:
+        barrierparams = barriertypes.get(barriertype)
+    else:
+        barrierparams = barriertypes.get('unknown')
+    point = barrier['coords']
+    x,y = point
+    z = og.get_height(point)
+
+    f.write("object {{ barrier_{{typ}} () translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z))
 
 def render_highways(f,osraydb,options):
     Radiosity = options['radiosity']
+    f.write(declarations)
+
     og = osrayNetwork()
     pov_declare_highway_textures(f)
     highways = []
@@ -305,7 +347,7 @@ def render_highways(f,osraydb,options):
     for highway in highways:
         pov_highway(f,highway,og)
         #pass
-    
+
     highway_areas = []
     for highwaytype in highwaytypes.iterkeys():
         highway_areas += osraydb.select_highway_areas(highwaytype)

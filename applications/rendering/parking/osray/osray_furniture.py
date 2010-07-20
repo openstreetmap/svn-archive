@@ -7,6 +7,8 @@ from osray_geom import *
 Radiosity = True
 
 declarations = """
+/* ********* Trees *********** */
+
 #macro tree_broad_leafed (xp,yp,height)
 #local wipfel = sphere {
   <0,0.666,0>,0.333
@@ -71,7 +73,6 @@ union{
   object{stamm scale <height,height,height> translate <xp,0,yp>}
  } // end of tree
 #end
-
 """
 def pov_tree(f,tree):
     treetype = tree['type']
@@ -86,7 +87,8 @@ def pov_tree(f,tree):
         f.write("object {{ tree_conifer ({x},{y},{height}) }}\n".format(x=x,y=y,height=height))
     else:
         f.write("object {{ tree_broad_leafed ({x},{y},{height}) }}\n".format(x=x,y=y,height=height))
-    
+
+ 
 def render_furniture(f,osraydb,options):
     Radiosity = options['radiosity']
     f.write(declarations)

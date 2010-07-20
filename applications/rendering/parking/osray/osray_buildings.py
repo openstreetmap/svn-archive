@@ -114,9 +114,10 @@ def pov_building(f,building):
 
 #---------------------------------------------------------------------
 barriertypes = { # barrier: type, default-height
-    'yes':['<0.8,0.8,0.8>',1.5],
+    'yes':['<0.8,0.8,0.8>',1.5],'wall':['<0.8,0.8,0.8>',1.5],
     'city_wall':['<1,1,0.8>',9.0],
-    'unknown':['<1,0.1,1>',1.5]
+    'retaining_wall':['<0.8,0.8,0.6>',9.0],
+    'unknown':['<1,0.1,1>',15]
     }
 
 def pov_declare_barrier_textures(f):
@@ -162,7 +163,7 @@ def pov_barrier(f,barrier):
         barrierparams = barriertypes.get('unknown')
         texture = 'unknown'
 
-    print "barrier ",barriertype," -> ",texture
+    #print "barrier ",barriertype," -> ",texture
     polygon = barrier['coords']
 
     heightstring = barrier['height']

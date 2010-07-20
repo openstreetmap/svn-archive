@@ -94,6 +94,7 @@ def pov_landuse(f,landuse):
         landuseparams = landusetypes.get(landusetype)
     else:
         landuseparams = landusetypes.get('unknown')
+        print "### unknown landuse '{l}' found in osm_id {id}".format(l=landusetype,id=landuse['osm_id']) 
 
     polygon = landuse['coords']
 
@@ -136,7 +137,7 @@ leisuretypes = {
     'pitch':['<0.3,1,0.8>'],'sports_centre':['<0.3,1,0.8>'],
     'track':['<0.9,0.7,0.6>'],
     'playground':['<0.2,0.9,0.9>'],
-    'garden':['<1,1,0.1>'],
+    'garden':['<1,1,0.4>'],
     'unknown':['<1,0,1>']
     }
 
@@ -270,8 +271,8 @@ def pov_camera(f,osraydb):
     map_size_x = right-left
     map_size_y = top-bottom
     
-    print "map size x = ",map_size_x
-    print "map size y = ",map_size_y
+    #print "map size x = ",map_size_x
+    #print "map size y = ",map_size_y
     
     #image_aspect = float(options['width'])/float(options['height'])
     map_aspect = map_size_x/map_size_y

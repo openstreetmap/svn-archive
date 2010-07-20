@@ -23,7 +23,7 @@ highwaytypes = { # highwaytype : [color,lane_width_factor]
     'service':['<0.8,0.8,0.8>',0.6],
     'pedestrian':['<0.8,0.9,0.8>',0.8],
     'footway':['<0.8,0.9,0.8>',0.3],
-    'steps':['<0.6,0.7,0.6>',0.3],
+    'steps':['<0.5,0.65,0.5>',0.3],
     'cycleway':['<0.8,0.8,0.9>',0.3],
     'track':['<0.7,0.7,0.6>',0.9],
     'bus_stop':['<1,0,0>',0.9],
@@ -341,12 +341,13 @@ def pov_barrier(f,barrier,og):
         barrierparams = barriertypes.get('unknown')
     point = barrier['coords']
     x,y = point
-    print "trying barrier with points ", point
+    #print "trying barrier with points ", point
     try:
         z = og.get_height(point)
     except KeyError:
         # this happens if a barrier is not part of a way
         z = 0
+        print "### barrier {id} is not part of a way".format(id=barrier['osm_id'])
 
     f.write("object {{ barrier_{typ} () scale <5,5,5> translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z,typ=barrierparams[0]))
 
@@ -365,7 +366,7 @@ def render_highways(f,osraydb,options):
         #pass
 
     og.calculate_height_on_nodes()
-    print og.G.nodes()
+    #print og.G.nodes()
     
     for highway in highways:
         pov_highway(f,highway,og)

@@ -255,11 +255,28 @@ declarations = """
 object {
   union{
     sphere { <0, 0.9,0>,0.2 }
-    cylinder { 0, 0, 0>,<0, 0.9, 0>,0.2 }
+    cylinder { <0, 0, 0>,<0, 0.9, 0>,0.2 }
   }
   texture {
     pigment {
       color rgb <1,0.1,0.1>
+    }
+    finish {
+      diffuse 0.7
+      ambient 0
+    }
+  }
+}
+#end
+#macro barrier_unknown ()
+object {
+  union{
+    sphere { <0, 0.9,0>,0.2 }
+    cylinder { <0, 0, 0>,<0, 0.9, 0>,0.2 }
+  }
+  texture {
+    pigment {
+      color rgb <1,0.1,1>
     }
     finish {
       diffuse 0.7
@@ -311,7 +328,7 @@ def pov_XXX_barrier(f,barrier,og):
 
 barriertypes = { # barriertype : [color,diameter,height]
     'bollard':['bollard'],
-    'unknown':['bollard']
+    'unknown':['unknown']
     }
 
 def pov_barrier(f,barrier,og):
@@ -331,7 +348,7 @@ def pov_barrier(f,barrier,og):
         # this happens if a barrier is not part of a way
         z = 0
 
-    f.write("object {{ barrier_{typ} () translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z,typ=barrierparams[0]))
+    f.write("object {{ barrier_{typ} () scale <5,5,5> translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z,typ=barrierparams[0]))
 
 def render_highways(f,osraydb,options):
     Radiosity = options['radiosity']

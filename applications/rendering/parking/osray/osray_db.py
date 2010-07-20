@@ -226,6 +226,11 @@ class OsrayDB:
             barrier['height']=res[3]
             barriers.append(barrier)
         return barriers
+    def select_barrier_lines(self):
+        select="""SELECT ST_Buffer(
+ ST_GeomFromText(
+  'LINESTRING(50 50,150 150,150 50)'
+ ), 10, 'join=mitre mitre_limit=5.0');"""
 
     def shutdown(self):
         self.conn.rollback()

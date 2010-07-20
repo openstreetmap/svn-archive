@@ -162,6 +162,7 @@ def pov_barrier(f,barrier):
         barrierparams = barriertypes.get('unknown')
         texture = 'unknown'
 
+    print "barrier ",barriertype," -> ",texture
     polygon = barrier['coords']
 
     heightstring = barrier['height']

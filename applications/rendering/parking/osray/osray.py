@@ -154,6 +154,7 @@ sky_sphere {{
 light_source {{
     <0, 1000000,0>,
     rgb <1, 1, 0.9>
+    fade_power 0
     {arealight}
     rotate <45,10,0>
     translate <{middle_x},0,{middle_y}>
@@ -164,6 +165,7 @@ light_source {{
 light_source {{
     <0, 1000000,0>,
     rgb <0.1, 0.1, 0.2>
+    fade_power 0
     {arealight}
     translate <{middle_x},0,{middle_y}>
 }}
@@ -185,6 +187,7 @@ light_source {{
 light_source {{
     <0, 1000000,0>,
     rgb <1, 1, 0.9>
+    fade_power 0
     {arealight}
     rotate <45,10,0>
     translate <{middle_x},0,{middle_y}>
@@ -195,6 +198,7 @@ light_source {{
 light_source {{
     <0, 1000000,0>,
     rgb <0.2, 0.2, 0.22>
+    fade_power 0
     {arealight}
     translate <{middle_x},0,{middle_y}>
 }}

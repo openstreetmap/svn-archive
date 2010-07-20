@@ -246,6 +246,47 @@ def pov_highway_area(f,highway):
 }}
 \n""".format(height=height))
 
+# ---------------------------------------------------------------------------
+
+barriertypes = { # barriertype : [color,diameter,height]
+    'bollard':['<1,0.2,0.2>',0.2,0.9],
+    'unknown':['<1,0,1>',0.3,0.5]
+    }
+
+def pov_barrier(f,barrier,og):
+    f.write("/* osm_id={0} */\n".format(barrier['osm_id']))
+    barriertype = barrier['barrier']
+
+    if barriertype in barriertypes:
+        barrierparams = barriertypes.get(barriertype)
+    else:
+        barrierparams = barriertypes.get('unknown')
+    point = barrier['coords']
+    x,y = point
+    z = og.get_height(point)
+
+    color = barrierparams[0]
+    diameter = barrierparams[1] # FIXME diameter =2*r
+    tallness = barrierparams[2]
+
+    f.write("object {")
+    f.write("union {")
+    f.write(" cylinder {{ <{x1}, {z1}, {y1}>,<{x2}, {z2}, {y2}>,{d} }}\n".format(x1=x,y1=y,z1=z,x2=x,y2=y,z2=(z+tallness),d=diameter))
+    f.write(" sphere {{ <{x}, {z}, {y}>,{d} }}\n".format(x=x,y=y,z=(z+tallness),d=diameter))
+    f.write("}") # union ends
+    f.write("""texture {{
+        pigment {{
+            color rgb {col}
+        }}
+        finish {{
+            specular 0.05
+            roughness 0.05
+            /*reflection 0.5*/
+        }}
+    }}
+}}
+\n""".format(col=color))
+
 
 def render_highways(f,osraydb,options):
     Radiosity = options['radiosity']
@@ -271,3 +312,7 @@ def render_highways(f,osraydb,options):
     
     for highway in highway_areas:
         pov_highway_area(f,highway)
+
+    barriers = osraydb.select_barriers()
+    for barrier in barriers:
+        pov_barrier(f,barrier,og)

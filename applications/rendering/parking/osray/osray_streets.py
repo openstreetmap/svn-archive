@@ -331,7 +331,7 @@ def pov_barrier(f,barrier,og):
         # this happens if a barrier is not part of a way
         z = 0
 
-    f.write("object {{ barrier_{{typ}} () translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z))
+    f.write("object {{ barrier_{typ} () translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z,typ=barrierparams[0]))
 
 def render_highways(f,osraydb,options):
     Radiosity = options['radiosity']

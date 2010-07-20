@@ -30,6 +30,7 @@ class osrayNetwork():
                 #print "Edge(n,m)=",n,m,edge
                 sum_height += edge['layer']*5.0
             self.G.node[n]['height'] = sum_height/len(neighbors)
+            print "setting node ",n," with height ",height
 
     def get_height(self,n):
         return self.G.node[n]['height']

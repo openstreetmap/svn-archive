@@ -324,6 +324,7 @@ def pov_barrier(f,barrier,og):
         barrierparams = barriertypes.get('unknown')
     point = barrier['coords']
     x,y = point
+    print "trying barrier with points ", point
     z = og.get_height(point)
 
     f.write("object {{ barrier_{{typ}} () translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z))

@@ -344,6 +344,7 @@ def render_highways(f,osraydb,options):
         #pass
 
     og.calculate_height_on_nodes()
+    print og.G.nodes()
     
     for highway in highways:
         pov_highway(f,highway,og)

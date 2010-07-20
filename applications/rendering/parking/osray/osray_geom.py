@@ -20,7 +20,12 @@ def WKT_to_point(pointstring):
     pointstring = pointstring[6:] # cut off the "POINT("
     pointstring = pointstring[:-1] # cut off the ")"
     latlon = pointstring.split(' ')
-    return (latlon[0],latlon[1])
+    # fix osm2pgsql problem: truncate all coordinates to 2 decimals
+    x=latlon[0]
+    y=latlon[1]
+    x=re.findall('.*[.].?.?',x)[0]
+    y=re.findall('.*[.].?.?',y)[0]
+    return (x,y)
 
 def WKT_to_line(linestring):
     linestring = linestring[11:] # cut off the "LINESTRING("

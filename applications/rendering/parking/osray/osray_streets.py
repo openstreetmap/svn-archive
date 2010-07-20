@@ -325,7 +325,11 @@ def pov_barrier(f,barrier,og):
     point = barrier['coords']
     x,y = point
     print "trying barrier with points ", point
-    z = og.get_height(point)
+    try:
+        z = og.get_height(point)
+    except KeyError:
+        # this happens if a barrier is not part of a way
+        z = 0
 
     f.write("object {{ barrier_{{typ}} () translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z))
 

@@ -30,6 +30,7 @@ landusetypes = {
 
     'hospital':['<1,0.8,0.8>'],
     'landfill':['<0.6,0.7,0.4>'],
+    'brownfield':['<0.7,0.6,0.3>'],'construction':['<0.7,0.6,0.3>'],
     
     'recreation_ground':['<0.8,0.9,0.8>'],
     'city_green':['<0.7,0.9,0.7>'],
@@ -38,6 +39,7 @@ landusetypes = {
     'grass':['<0.7,0.9,0.6>'],
 
     'cemetery':['<0.8,0.85,0.8>'],
+    'monastery':['<0.8,0.75,0.5>'],'monestery':['<0.8,0.75,0.5>'],
 
     'farm':['<0.8,0.9,0.6>'],
     'farmland':['<0.8,0.9,0.7>'],

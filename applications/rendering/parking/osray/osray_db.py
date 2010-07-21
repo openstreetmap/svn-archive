@@ -214,7 +214,7 @@ class OsrayDB:
         return trees
 
     def select_barriers(self):
-        print "barriers: SELECT osm_id,tags->'barrier' as barrier,ST_AsText(\"way\") AS geom, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";"
+        #print "barriers: SELECT osm_id,tags->'barrier' as barrier,ST_AsText(\"way\") AS geom, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";"
         self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(\"way\") AS geom, tags->'height' as height "+self.FnW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";")
         rs = self.curs.fetchall()
         barriers = []
@@ -228,7 +228,7 @@ class OsrayDB:
         return barriers
 
     def select_barrier_lines(self):
-        self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(ST_Buffer(\"way\",0.2)) AS geom, tags->'height' as height "+self.FlW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,tags->'barrier' as barrier,ST_AsText(ST_Buffer(\"way\",0.35)) AS geom, tags->'height' as height "+self.FlW+" \"way\" && "+self.googbox+" and tags ? 'barrier' "+LIMIT+";")
         # ,'join=mitre mitre_limit=5.0' (requires GEOS 3.2)
         rs = self.curs.fetchall()
         barriers = []

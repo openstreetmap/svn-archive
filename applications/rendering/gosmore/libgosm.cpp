@@ -605,7 +605,7 @@ int RouteLoop (void)
     int rootIsAdestination = Way (root->nd)->destination & (1 << Vehicle);
     /* Now work through the segments connected to root. */
     
-    unsigned layout[4] = { 0, 0, 0, 0 }, lmask = 1;
+    unsigned layout[4] = { 0, 0, 0, 0 }, lmask = 1, motorRoads = 0;
     ndType *rtother = root->nd + root->nd->other[root->dir], *layoutNd[4];
     // We categorize each segment leaving this junction according to the
     // angle it form with the 'root' segment. The angles are 315 to 45,
@@ -622,6 +622,7 @@ int RouteLoop (void)
           int azimuth = (dot > cross ? 0 : 3) ^ (dot + cross > 0 ? 0 : 1);
           layout[azimuth] |= lmask << dir;
           layoutNd[azimuth] = nd;
+          if ((Way (nd)->bits & (1 << motorcarR))) motorRoads++;
         }
       }
     } while (++nd < ndBase + hashTable[bucketsMin1 + 1] &&
@@ -708,19 +709,20 @@ int RouteLoop (void)
           // you will probably have to wait for oncoming traffic.
           }
           
-          if (layout[1] && layout[3] && ((lmask << dir) & layout[0])) {
-            // Straight over a T-junction
-            if ((Way (layoutNd[1])->bits & (1 << motorcarR)) &&
-                (Way (layoutNd[3])->bits & (1 << motorcarR)) && fast) {
-            // And motorcars are allowed on both sides
-              d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
-                    Style (w)->invSpeed[motorcarR] ? 10000 : 3000) *
-                    (fast ? Style (w)->invSpeed[Vehicle] : 1);
+          if (motorRoads > 2 && fast) d += 5000 * (motorRoads - 2) *
+            (fast ? Style (w)->invSpeed[Vehicle] : 1);
+          // T-junction 50m penalty. 4-way junction 100m penalty.
+          
+          if (layout[1] && layout[3] && ((lmask << dir) & layout[0]) &&
+              Style (Way (layoutNd[1]))->invSpeed[bicycleR] > 1.4) {
+            // Straight over a 4 way junction and it is not preferred by
+            // cyclists. Then there is likely to be traffic that will delay us
+//              d += (Style (Way (layoutNd[1]))->invSpeed[motorcarR] <
+//                    Style (w)->invSpeed[motorcarR] && ? 10000 : 3000) *
+//                    (fast ? Style (w)->invSpeed[Vehicle] : 1);
             // Crossing a road that is faster that the road we are traveling
             // on incurs a 100m penalty. If they are equal, the penality is
-            // 30m. TODO: residential crossing residential should be less,
-            // perhaps 20m.
-            }
+            // 30m. 
           }
           
           ndType *n2 = root->nd + root->nd->other[root->dir];
@@ -1422,6 +1424,12 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
     // if part of a cycle route relation or if it has a cycle network reference
     s.aveSpeed[bicycleR] = 20;
     // then we say cyclists will love it.
+  }
+  for (m = membership; m && !Find (m, "route"); m = Next (m)) {}
+  if (m) {
+    for (m = membership; m && !Find (m, "ref"); m = Next (m)) {}
+    if (m) result.push_back (string (Find (m, "ref")) + '\n');
+    // If it's a route with a ref, add it and index it.
   }
   
   if (isRelation && k2v["restriction"] && wayRole["from"] && wayRole["to"]) {

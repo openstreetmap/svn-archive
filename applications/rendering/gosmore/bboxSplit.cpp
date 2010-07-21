@@ -102,6 +102,9 @@ int main (int argc, char *argv[])
       while (n < buf + cnt && isspace (*n)) n++;
       
       if (isEnd && level == 2 && tipe[level - 1] == 'o') { // Note: n may be at buf + cnt
+        nwr[0].clear (); // Free some memory for in case one or more
+        nwr[1].clear (); // processes does heavy postprocessing.
+        nwr[2].clear ();
         for (int j = 0; j < bcnt; j++) fprintf (f[j], "</osm>\n");
         // By splitting these two steps we allow downstream XML converters
         // like gosmore to do their post-XML processing in parallel.

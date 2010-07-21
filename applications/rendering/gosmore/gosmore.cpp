@@ -1,4 +1,4 @@
-/* This software is placed by in the public domain by its authors. */
+/* Copyright 2010 Nic Roets as detailed in the README file. */
 /* Written by Nic Roets with contribution(s) from Dave Hansen, Ted Mielczarek
    David Dean, Pablo D'Angelo and Dmitry.
    Thanks to

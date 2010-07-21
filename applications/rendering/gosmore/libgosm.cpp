@@ -1425,11 +1425,10 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
     s.aveSpeed[bicycleR] = 20;
     // then we say cyclists will love it.
   }
-  for (m = membership; m && !Find (m, "route"); m = Next (m)) {}
-  if (m) {
-    for (m = membership; m && !Find (m, "ref"); m = Next (m)) {}
-    if (m) result.push_back (string (Find (m, "ref")) + '\n');
-    // If it's a route with a ref, add it and index it.
+  for (m = membership; m; m = Next (m)) {
+    if (Find (m, "route")) {
+      result.push_back (string (Find (m, "relation_id")) + '\n');
+    } // If it's a route add it's relation_id and index it.
   }
   
   if (isRelation && k2v["restriction"] && wayRole["from"] && wayRole["to"]) {
@@ -2310,7 +2309,19 @@ int SortRelations (void)
         while (rStart < member.size ()) member[rStart++].tags = s->c_str ();
         s = new string (); // It leaks memory, but it cannot be freed until
                            // moments before exit.
+        while (xmlTextReaderMoveToNextAttribute (xml)) {
+          char *aname = (char *) BAD_CAST xmlTextReaderName (xml);  
+          if (stricmp (aname, "id") == 0) {
+            char *avalue = (char *) BAD_CAST xmlTextReaderValue (xml);
+            *s += "relation_id\nr";
+            *s += avalue;
+            *s += '\n';
+            xmlFree (avalue);
+          }
+          xmlFree (aname);
+        }
       }
+      
       if (rel && (stricmp (name, "member") == 0 || stricmp (name, "tag") == 0)) {
         if (name[0] == 'm') member.push_back (memberType ());
         while (xmlTextReaderMoveToNextAttribute (xml)) {

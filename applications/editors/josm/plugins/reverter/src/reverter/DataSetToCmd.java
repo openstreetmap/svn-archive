@@ -7,11 +7,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.conflict.Conflict;
 import org.openstreetmap.josm.data.conflict.ConflictCollection;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Modified {@see org.openstreetmap.josm.data.osm.DataSetMerger} that
@@ -37,33 +41,6 @@ final class DataSetToCmd {
         merge();
     }
 
-    /**
-     * Merges a primitive <code>other</code> of type <P> onto my primitives.
-     *
-     * @param <P>  the type of the other primitive
-     * @param source  the other primitive
-     */
-    private void mergePrimitive(OsmPrimitive source) {
-        if (source.isIncomplete()) return;
-        if (!source.isVisible()) return;
-        OsmPrimitive target = getMergeTarget(source);
-        if (target.getVersion() == 0)
-            throw new IllegalStateException(tr("Target of type {0} with id {1} has invalid version",
-                    target.getType(), target.getUniqueId()));
-        OsmPrimitive newTarget;
-        switch(target.getType()) {
-        case NODE: newTarget = new Node((Node)target); break;
-        case WAY: newTarget = new Way((Way)target); break;
-        case RELATION: newTarget = new Relation((Relation)target); break;
-        default: throw new AssertionError();
-        }
-        newTarget.mergeFrom(source);
-        newTarget.setOsmId(target.getId(), (int)target.getVersion());
-        newTarget.setVisible(target.isVisible());
-        newTarget.setDeleted(false);
-        cmds.add(new ChangeCommand(target,newTarget));
-    }
-
     private OsmPrimitive getMergeTarget(OsmPrimitive mergeSource) {
         OsmPrimitive p = targetDataSet.getPrimitiveById(mergeSource.getId(), mergeSource.getType());
         if (p == null)
@@ -71,29 +48,38 @@ final class DataSetToCmd {
                     mergeSource.getType(), mergeSource.getUniqueId()));
         return p;
     }
-    
-    /**
-     * Postprocess the dataset and fix all merged references to point to the actual
-     * data.
-     */
-    public void fixReferences() {
-        for (Way w : sourceDataSet.getWays()) {
-                mergeNodeList(w);
-        }
-        for (Relation r : sourceDataSet.getRelations()) {
-                mergeRelationMembers(r);
-        }
+
+    private void mergePrimitive(OsmPrimitive source, OsmPrimitive target, OsmPrimitive newTarget) {
+        newTarget.mergeFrom(source);
+        newTarget.setOsmId(target.getId(), (int)target.getVersion());
+        newTarget.setVisible(target.isVisible());
+        newTarget.setDeleted(false);
     }
 
     /**
-     * Merges the node list of a source way onto its target way.
+     * Merges the source node onto its target node.
+     *
+     * @param source the source way
+     */
+    private void mergeNode(Node source) {
+        if (source.isIncomplete()) return;
+        if (!source.isVisible()) return;
+        Node target = (Node)getMergeTarget(source);
+
+        Node newTarget = new Node(target);
+        mergePrimitive(source, target, newTarget);
+        cmds.add(new ChangeCommand(target,newTarget));
+    }
+
+    /**
+     * Merges the source way onto its target way.
      *
      * @param source the source way
      * @throws IllegalStateException thrown if no target way can be found for the source way
      * @throws IllegalStateException thrown if there isn't a target node for one of the nodes in the source way
      *
      */
-    private void mergeNodeList(Way source) throws IllegalStateException {
+    private void mergeWay(Way source) throws IllegalStateException {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
         Way target = (Way)getMergeTarget(source);
@@ -110,17 +96,20 @@ final class DataSetToCmd {
             }
             newNodes.add(targetNode);
         }
-        cmds.add(new ChangeNodesCommand(target,newNodes));
+        Way newTarget = new Way(target);
+        mergePrimitive(source, target, newTarget);
+        newTarget.setNodes(newNodes);
+        cmds.add(new ChangeCommand(target,newTarget));
     }
 
     /**
-     * Merges the relation members of a source relation onto the corresponding target relation.
+     * Merges the source relation onto the corresponding target relation.
      * @param source the source relation
      * @throws IllegalStateException thrown if there is no corresponding target relation
      * @throws IllegalStateException thrown if there isn't a corresponding target object for one of the relation
      * members in source
      */
-    private void mergeRelationMembers(Relation source) throws IllegalStateException {
+    private void mergeRelation(Relation source) throws IllegalStateException {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
         Relation target = (Relation) getMergeTarget(source);
@@ -142,21 +131,21 @@ final class DataSetToCmd {
             }
             newMembers.add(new RelationMember(sourceMember.getRole(), targetMember));
         }
-        Relation newRelation = new Relation(target); 
+        Relation newRelation = new Relation(target);
+        mergePrimitive(source, target, newRelation);
         newRelation.setMembers(newMembers);
         cmds.add(new ChangeCommand(target,newRelation));
     }
     private void merge() {
         for (Node node: sourceDataSet.getNodes()) {
-            mergePrimitive(node);
+            mergeNode(node);
         }
         for (Way way: sourceDataSet.getWays()) {
-            mergePrimitive(way);
+            mergeWay(way);
         }
         for (Relation relation: sourceDataSet.getRelations()) {
-            mergePrimitive(relation);
+            mergeRelation(relation);
         }
-        fixReferences();
     }
 
     public LinkedList<Command> getCommandList() {

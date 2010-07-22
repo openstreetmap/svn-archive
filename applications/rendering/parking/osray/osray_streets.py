@@ -28,7 +28,7 @@ highwaytypes = { # highwaytype : [color,lane_width_factor]
     'track':['<0.7,0.7,0.6>',0.8],
     'bus_stop':['<1,0,0>',0.9],
     'bus_station':['<1,0,0>',0.9],
-    'bus_guideway':['<0.8,0.9,1>',0.9],
+    'bus_guideway':['<0.8,0.9,1>',1.0],
     'road':['<1,0,0>',0.9],
     'path':['<0.8,0.9,0.8>',0.5],
     'unknown':['<1.0,0,1.0>',1.0]

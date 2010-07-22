@@ -90,7 +90,9 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag key="junction" value="roundabout"/>
     </sign>
 
-    <sign id="oneway" icon="DE_220;DE_267" name="One-way road" de.name="Einbahnstraße">  <!--ref="DE:220;DE:267"-->
+    <sign id="oneway" ref="DE:220&amp;DE:267" traffic_sign_tag="" icon="DE_220;DE_267" name="One-way road" de.name="Einbahnstraße"
+            wiki="Key:oneway"
+            de.wiki="DE:Key:oneway">
         <tag key="oneway" value="yes"/>
 <!--        <supplementary id="DE:1022-10;DE:1000-33"/>-->
 <!--        FIXME: lane->-->
@@ -142,7 +144,9 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
     </sign>
 
-    <sign ref="DE:242" name="Pedestrian zone" de.name="Fußgängerbereich">
+    <sign ref="DE:242" name="Pedestrian zone" de.name="Fußgängerbereich"
+            wiki="Tag:highway%3Dpedestrian"
+            de.wiki="DE:Tag:highway%3Dpedestrian">
         <tag key="highway" value="pedestrian"/>
         <tag key="access" value="" ident="mode"/>
         <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
@@ -173,6 +177,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <supplementary id="DE:1022-10"/> <!-- Radfahrer frei -->
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
         <supplementary id="DE:1022-12"/> <!-- Krafträder frei -->
+        <supplementary id="DE:1024-12"/> <!-- LKW frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
         <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
         <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
@@ -188,6 +194,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
             de.wiki="DE:Key:access">
         <tag key="motorcar" value="no" ident="mode"/>
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1024-12"/> <!-- LKW frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
         <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
         <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
@@ -201,8 +209,9 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
             de.long_name="Verbot für Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschließlich ihrer Anhänger und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse"
             wiki="Key:hgv"
             de.wiki="DE:Key:access">
-        <tag key="motorcar" value="no" ident="mode"/>
+        <tag key="hgv" value="no" ident="mode"/>
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
         <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
         <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
@@ -244,6 +253,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag key="motor_vehicle" value="no" ident="mode"/>
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+        <supplementary id="DE:1024-12"/> <!-- LKW frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
         <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
         <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
@@ -258,22 +269,27 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag key="hazmat" value="no" ident="mode"/>
     </sign>
 
-    <sign ref="DE:262[$val]" icon="DE_262" name="Weight limit" de.name="Tatsächliches Gewicht" wiki="Key:maxweight">
+    <sign ref="DE:262[$val]" icon="DE_262" name="Weight limit" de.name="Tatsächliches Gewicht"
+            wiki="Key:maxweight">
         <tag key="maxweight" value="$val"/>
         <parameter ident="val" input="textfield" default="5.5" suffix="t" field_width="3"/>
     </sign>
 
-    <sign ref="DE:263[$val]" icon="DE_263" name="Axle weight limit" de.name="Tatsächliche Achslast" wiki="Key:maxaxleload">
+    <sign ref="DE:263[$val]" icon="DE_263" name="Axle weight limit" de.name="Tatsächliche Achslast"
+            wiki="Key:maxaxleload">
         <tag key="maxaxleload" value="$val"/>
         <parameter ident="val" input="textfield" default="8" suffix="t" field_width="3"/>
     </sign>
 
-    <sign ref="DE:264[$val]" icon="DE_264" name="Width limit" de.name="Tatsächliche Breite">
+    <sign ref="DE:264[$val]" icon="DE_264" name="Width limit" de.name="Tatsächliche Breite"
+            wiki="Key:maxwidth">
         <tag key="maxwidth" value="$val"/>
         <parameter ident="val" input="textfield" default="2" suffix="m" field_width="3"/>
     </sign>
 
-    <sign ref="DE:265[$val]" icon="DE_265" name="Height limit" de.name="Tatsächliche Höhe">
+    <sign ref="DE:265[$val]" icon="DE_265" name="Height limit" de.name="Tatsächliche Höhe"
+            wiki="Key:maxheight"
+            de.wiki="DE:Key:maxheight">
         <tag key="maxheight" value="$val"/>
         <parameter ident="val" input="textfield" default="3.8" suffix="m" field_width="3"/>
     </sign>
@@ -290,7 +306,9 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <tag key="hazmat:water" value="no" ident="mode"/>
     </sign>
 
-    <sign ref="DE:274[$val]" icon="DE_274" name="Speed limit" de.name="Zulässige Höchstgeschwindigkeit">
+    <sign ref="DE:274[$val]" icon="DE_274" name="Speed limit" de.name="Zulässige Höchstgeschwindigkeit"
+            wiki="Key:maxspeed"
+            de.wiki="DE:Key:maxspeed">
         <tag key="maxspeed" value="$val" ident="restriction"/>
         <parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" de.text="Höchstgeschwindigkeit" suffix="km/h" values="5,10,20,30,40,50,60,70,80,90,100,110,120,130" default="60" field_width="3"/>
         <supplementary id="DE:1052-36"/> <!-- Bei nasser Fahrbahn -->
@@ -303,16 +321,21 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
         <parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" de.text="Höchstgeschwindigkeit" suffix="km/h" values="20,30" default="30" field_width="2"/>
     </sign>
 
-    <sign ref="DE:275[$val]" icon="DE_275" name="Minimum speed limit" de.name="Vorgeschriebene Mindestgeschwindigkeit" wiki="Key:minspeed">
+    <sign ref="DE:275[$val]" icon="DE_275" name="Minimum speed limit" de.name="Vorgeschriebene Mindestgeschwindigkeit"
+            wiki="Key:minspeed">
         <tag key="minspeed" value="$val"/>
         <parameter ident="val" input="textfield" suffix="km/h" default="30" field_width="2"/>
     </sign>
 
-    <sign ref="DE:325" name="Traffic calming zone" de.name="Verkehrsberuhigter Bereich">
+    <sign ref="DE:325" name="Traffic calming zone" de.name="Verkehrsberuhigter Bereich"
+            wiki="Tag:highway%3Dliving_street"
+            de.wiki="DE:Tag:highway%3Dliving_street">
         <tag key="highway" value="living_street"/>
     </sign>
 
-    <sign ref="DE:327" name="Tunnel" de.name="Tunnel">
+    <sign ref="DE:327" name="Tunnel" de.name="Tunnel"
+            wiki="Key:tunnel"
+            de.wiki="DE:Key:tunnel">
         <tag key="tunnel" value="yes"/>
     </sign>
 
@@ -348,11 +371,22 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
 <!--        <tag key="motorcar" value="yes"/>-->
 <!--    </sign>-->
 
+    <sign ref="DE:1024-12" supplementary="yes" name="Heavy goods vehicles allowed" de.name="LKW frei"
+        long_name="Vehicles with a permitted gross weight over 3.5 t including their trailers, except passenger cars and busses, allowed"
+        de.long_name="Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschließlich ihrer Anhänger und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse frei">
+        <tag key="hgv" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1024-14" supplementary="yes" name="Bus allowed" de.name="Kraftomnibus frei">
+        <tag key="bus" value="yes"/>
+    </sign>
+
     <sign ref="DE:1026-30" supplementary="yes" name="Taxi allowed" de.name="Taxi frei">
         <tag key="taxi" value="yes"/>
     </sign>
 
-    <sign ref="DE:1026-32" supplementary="yes" name="Public service vehicles allowed" de.name="Linienverkehr frei">
+    <sign ref="DE:1026-32" supplementary="yes" name="Public service vehicles allowed" de.name="Linienverkehr frei"
+            wiki="Key:psv">
         <tag key="psv" value="yes"/>
     </sign>
 

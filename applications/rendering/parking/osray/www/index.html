@@ -95,14 +95,14 @@
                 var osm   = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
 
                 var parkingtrans = new OpenLayers.Layer.TMS("Parking",
-                    "http://drangmeister.dyndns.org/tc/tilecache.cgi/1.0.0/parking-layer/",
+                    "http://toolserver.org/tiles/parktrans/",
                     {
                         type: 'png', getURL: osm_getTileURL,
                         displayOutsideMaxExtent: true, isBaseLayer: false,
-                        transparent: true, opacity: 0.72, "visibility": false 
+                        transparent: true, opacity: 0.8, "visibility": false 
                     }
                 );
-                var parkingicons = new OpenLayers.Layer.Text( "Parking Icons",
+                var parkingicons = new OpenLayers.Layer.Text("Parking Icons",
                     {
                         location:"./parkingicons.txt",
                         projection: map.displayProjection

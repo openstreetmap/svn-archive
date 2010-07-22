@@ -8,15 +8,15 @@ from osray_network import *
 Radiosity = True
 
 highwaytypes = { # highwaytype : [color,lane_width_factor]
-    'motorway':['<1,0.2,0>',1.3],
-    'motorway_link':['<1,0.2,0>',1.3],
-    'trunk':['<0.9,1,0.9>',1.1],
-    'trunk_link':['<0.9,1,0.9>',1.1],
-    'primary':['<1,1,0.9>',1.0],
-    'primary_link':['<1,1,0.9>',1.0],
-    'secondary':['<1,0.9,0.9>',1.0],
-    'secondary_link':['<1,0.9,0.9>',1.0],
-    'tertiary':['<1,0.9,0.8>',1.0],
+    'motorway':['<1,0.3,0.1>',1.3],
+    'motorway_link':['<1,0.3,0.1>',1.3],
+    'trunk':['<0.85,1,0.85>',1.1],
+    'trunk_link':['<0.85,1,0.85>',1.1],
+    'primary':['<1,1,0.85>',1.0],
+    'primary_link':['<1,1,0.85>',1.0],
+    'secondary':['<1,0.85,0.85>',1.0],
+    'secondary_link':['<1,0.85,0.85>',1.0],
+    'tertiary':['<1,0.85,0.7>',1.0],
     'residential':['<0.9,0.9,0.9>',0.8],
     'living_street':['<0.8,0.8,0.9>',0.8],
     'unclassified':['<0.8,0.8,0.8>',0.8],
@@ -28,6 +28,7 @@ highwaytypes = { # highwaytype : [color,lane_width_factor]
     'track':['<0.7,0.7,0.6>',0.8],
     'bus_stop':['<1,0,0>',0.9],
     'bus_station':['<1,0,0>',0.9],
+    'bus_guideway':['<0.8,0.9,1>',0.9],
     'road':['<1,0,0>',0.9],
     'path':['<0.8,0.9,0.8>',0.5],
     'unknown':['<1.0,0,1.0>',1.0]

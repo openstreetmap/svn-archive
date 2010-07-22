@@ -1,4 +1,4 @@
-//License: GPL (v2 or later)
+// License: GPL (v2 or later)
 package org.openstreetmap.josm.plugins.roadsigns;
 
 import java.util.ArrayList;

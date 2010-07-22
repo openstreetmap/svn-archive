@@ -20,6 +20,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class Sign {
     public String id;
     public ParametrizedString ref;
+    public ParametrizedString traffic_sign_tag;
     public String iconURL;
     public ImageIcon icon;
     public ImageIcon disabledIcon;
@@ -98,7 +99,7 @@ public class Sign {
         /* strip parameters */
         r = r.replaceAll("\\[.*\\]", "");
         if (r.startsWith("DE:")) {
-            r=r.replaceFirst("DE:", "");
+            r=r.replaceAll("DE:", "");
             /* normal sign: starts with 3 digits, then a non-digit */
             {
                 Pattern p = Pattern.compile("^\\d{3}(\\D|$)");

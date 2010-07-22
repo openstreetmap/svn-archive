@@ -10,8 +10,8 @@ How to customize
 Add the following to your JOSM preference file
 (or enter it in the advanced preferences tab in JOSM):
 
-plugin.roadsign.sources=/path/to/myroadsignpreset.xml
-plugin.roadsign.icon.sources=/path/to/image/folder
+plugin.roadsigns.sources=/path/to/myroadsignpreset.xml
+plugin.roadsigns.icon.sources=/path/to/image/folder
 
 (The second one is only needed if you like to display your own icons.)
 
@@ -22,15 +22,16 @@ Preset format
 Some values can contain parameters like $foo, that will be replaced by the value of the parameter named foo.
 
 sign:
-    ref             Short official designation of the sign that can be used for the traffic_sign tag. (accepts parameters)
-    id              Unique identifier. (If missing, equals ref. Either id or ref must be present.)
-    icon            Icon image name. (If missing, id or ref is used as image name. In this case ':' and '.' characters are converted to underscore '_'.)
-    name            Name of the sign. (required)
-    long_name       Long (e.g. official) name of the sign.
-    help            Some notes to guide the user.
-    wiki            Page in the osm wiki
-    deprecated      Set to "yes" if authorities have decided to no longer install signs of this kind.
-                    (But old signs may still be there and need to be recorded.)
+    ref                 Short official designation of the sign that can be used for the traffic_sign tag. (accepts parameters)
+    id                  Unique identifier. (If missing, equals ref. Either id or ref must be present.)
+    icon                Icon image name. (If missing, id or ref is used as image name. In this case ':' and '.' characters are converted to underscore '_'.)
+    name                Name of the sign. (required)
+    long_name           Long (e.g. official) name of the sign.
+    traffic_sign_tag    Value that should be used for traffic_sign tag (if different from ref).
+    help                Some notes to guide the user.
+    wiki                Page in the osm wiki
+    deprecated          Set to "yes" if authorities have decided to no longer install signs of this kind.
+                        (But old signs may still be there and need to be recorded.)
 
 tag:
     Some tags can be named (ident=*) and modified by other subsequent tags. If this finally results in an
@@ -68,13 +69,17 @@ supplementary: (list of recommended additional signs)
 
 -->
 <roadsignpreset country="DE">
-    <sign ref="DE:110" name="Incline" de.name="Steigung"
+    <sign ref="DE:108/DE:110" icon="DE_110" traffic_sign_tag="" name="Incline" de.name="Steigung"
             help="Applies for the road section with steep incline. (Split the way at the ends of the steep section.) 
 Positive values indicate movement upward in the direction of the (osm) way and negative values indicate movement downwards in the direction of the way."
             de.help="Gilt für das Streckenstück mit hoher Steigung. (Weg am Anfang und Ende des steilen Abschnittes auftrennen.) 
 Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte für einen Abfall in Richtung des ways."
             wiki="Key:incline"
             de.wiki="DE:Key:incline">
+        <!--Suppress the traffic_sign tag, because it would be incorrect to add
+            traffic_sign=DE:110, when in reality it is DE:108.
+            Both are essentially equal, so in this tool only the incline symbol
+            should be present.-->
         <tag key="incline" value="$val%"/>
         <parameter input="textfield" name="max. incline" de.name="Maximale Steigung" type="int" ident="val" default="12" suffix="%" field_width="3"/>
     </sign>

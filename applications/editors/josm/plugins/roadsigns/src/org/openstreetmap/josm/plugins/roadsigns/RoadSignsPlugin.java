@@ -67,12 +67,12 @@ public class RoadSignsPlugin extends Plugin {
             return;
         presetsLoaded=true;
         List<String> files = new ArrayList<String>(
-                Main.pref.getCollection("plugin.roadsign.sources",
+                Main.pref.getCollection("plugin.roadsigns.sources",
                     Collections.<String>singletonList("resource://data/defaultroadsignpreset.xml")));
         iconDirs = new ArrayList<String>(
-                Main.pref.getCollection("plugin.roadsign.icon.sources", Collections.<String>emptySet()));
+                Main.pref.getCollection("plugin.roadsigns.icon.sources", Collections.<String>emptySet()));
 
-        if (Main.pref.getBoolean("plugin.roadsign.use_default_icon_source", true)) {
+        if (Main.pref.getBoolean("plugin.roadsigns.use_default_icon_source", true)) {
             iconDirs.add("resource://images/");
         }
 

@@ -10,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -51,6 +53,7 @@ import org.openstreetmap.josm.gui.MultiSplitLayout;
 import org.openstreetmap.josm.gui.MultiSplitPane;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
+import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -68,16 +71,17 @@ import org.openstreetmap.josm.tools.Pair;
  *
  */
 class RoadSignInputDialog extends ExtendedDialog {
-    private final SignSelection sel;
-    private final List<Sign> signs;
-    private JTable previewTable;
+    protected final SignSelection sel;
+    protected final List<Sign> signs;
+    protected JTable previewTable;
+    protected JCheckBox addTrafficSignTag;
 
-    private PreviewTableModel previewModel;
-    private JPanel pnlSignSelection;
-    private JPanel pnlPossibleSigns;
-    private JPanel pnlPossibleSupplements;
-    private JEditorPane info;
-    private JScrollPane scrollInfo;
+    protected PreviewTableModel previewModel;
+    protected JPanel pnlSignSelection;
+    protected JPanel pnlPossibleSigns;
+    protected JPanel pnlPossibleSupplements;
+    protected JEditorPane info;
+    protected JScrollPane scrollInfo;
 
     public RoadSignInputDialog(List<Sign> signs) {
         super(Main.parent, tr("Road Sign Plugin"), new String[] {tr("OK"), tr("Cancel")}, false /* modal */);
@@ -92,6 +96,8 @@ class RoadSignInputDialog extends ExtendedDialog {
         if (i == 0) { // OK Button
             Collection<OsmPrimitive> selPrim = Main.main.getCurrentDataSet().getSelected();
             if (selPrim.size() != 0) {
+                Main.pref.put("plugin.roadsigns.addTrafficSignTag", addTrafficSignTag.isSelected());
+
                 Command cmd = createCommand(selPrim);
                 if (cmd != null) {
                     Main.main.undoRedo.add(cmd);
@@ -463,9 +469,20 @@ class RoadSignInputDialog extends ExtendedDialog {
     }
 
     public JComponent buildPreviewPanel() {
+        JPanel previewPanel = new JPanel(new GridBagLayout());
+        
         String[] columnNames = {tr("Key"), tr("Value")};
         String[][] data = {{}};
-        previewTable = new JTable(data, columnNames);
+        previewTable = new JTable(data, columnNames) {
+            public String getToolTipText(MouseEvent e) {
+                int rowIndex = rowAtPoint(e.getPoint());
+                int colIndex = columnAtPoint(e.getPoint());
+                if (rowIndex == -1 || colIndex == -1)
+                    return null;
+                int realColumnIndex = convertColumnIndexToModel(colIndex);
+                return (String) getValueAt(rowIndex, colIndex);
+            }
+        };
         previewTable.setFillsViewportHeight(true);
         previewTable.setRowSelectionAllowed(false);
         previewTable.setColumnSelectionAllowed(false);
@@ -474,10 +491,21 @@ class RoadSignInputDialog extends ExtendedDialog {
         previewTable.setModel(previewModel);
 
         JScrollPane scroll = new JScrollPane(previewTable);
-        Dimension dim = new Dimension(236, 10);
+        Dimension dim = new Dimension(336, 10);
         scroll.setPreferredSize(dim);
         scroll.setMinimumSize(dim); /* minimum size is relevant for multisplit layout */
-        return scroll;
+        
+        addTrafficSignTag = new JCheckBox(tr("{0} tag", "traffic_sign"));
+        addTrafficSignTag.setSelected(Main.pref.getBoolean("plugin.roadsigns.addTrafficSignTag"));
+        addTrafficSignTag.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                previewModel.update();
+            }
+        });
+        
+        previewPanel.add(scroll, GBC.eol().fill());
+        previewPanel.add(addTrafficSignTag, GBC.eol());
+        return previewPanel;
     }
 
     public class PreviewTableModel extends AbstractTableModel {
@@ -514,8 +542,11 @@ class RoadSignInputDialog extends ExtendedDialog {
          */
         public void update() {
             final TreeMap<String, String> map= new TreeMap<String, String>();
+            String traffic_sign = "";
+            
             for (SignCombination sc : sel.combos) {
                 final Map<String, String> env = new HashMap<String, String>();
+                String combo_traffic_sign = "";
 
                 /**
                  * Keep track of a named tag. It may be changed by
@@ -572,6 +603,14 @@ class RoadSignInputDialog extends ExtendedDialog {
                     }
                     if (sw.sign.ref != null) {
                         sw.signRef = sw.sign.ref.evaluate(env);
+                        if (combo_traffic_sign.length() != 0) {
+                            combo_traffic_sign += ",";
+                        }
+                        if (sw.sign.traffic_sign_tag != null) {
+                            combo_traffic_sign += sw.sign.traffic_sign_tag.evaluate(env);
+                        } else {
+                            combo_traffic_sign += sw.signRef;
+                        }
                     }
                     for (Tag t : sw.sign.tags) {
                         if (t.tag_ref != null) {
@@ -614,6 +653,16 @@ class RoadSignInputDialog extends ExtendedDialog {
                     Map<String, String> result = te.evaluate();
                     map.putAll(result);
                 }
+                
+                if (combo_traffic_sign.length() != 0) {
+                    if (traffic_sign.length() != 0) {
+                        traffic_sign += ";";
+                    }
+                    traffic_sign += combo_traffic_sign;
+                }
+            }
+            if (addTrafficSignTag.isSelected()) {
+                map.put("traffic_sign", traffic_sign);
             }
 
             keys.clear();

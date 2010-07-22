@@ -76,6 +76,7 @@ public class RoadSignsReader {
                 supplementIds.put(curSign, new ArrayList<String>());
                 try {
                     curSign.ref = ParametrizedString.create(atts.getValue("ref"));
+                    curSign.traffic_sign_tag = ParametrizedString.create(atts.getValue("traffic_sign_tag"));
                 } catch (ParseException ex) {
                     throw new SAXException(ex);
                 } catch (TokenMgrError ex) {
@@ -106,7 +107,7 @@ public class RoadSignsReader {
                 if ("yes".equals(atts.getValue("supplementary"))) {
                     curSign.isSupplementing = true;
                 }
-
+                
                 curSign.wiki = atts.getValue("wiki");
                 curSign.loc_wiki = getLocalized(atts, "wiki");
 

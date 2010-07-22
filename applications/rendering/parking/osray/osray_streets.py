@@ -25,11 +25,12 @@ highwaytypes = { # highwaytype : [color,lane_width_factor]
     'footway':['<0.8,0.9,0.8>',0.3],
     'steps':['<0.5,0.65,0.5>',0.3],
     'cycleway':['<0.8,0.8,0.9>',0.3],
-    'track':['<0.7,0.7,0.6>',0.9],
+    'track':['<0.7,0.7,0.6>',0.8],
     'bus_stop':['<1,0,0>',0.9],
     'bus_station':['<1,0,0>',0.9],
     'road':['<1,0,0>',0.9],
-    'path':['<0.8,0.9,0.8>',0.5]
+    'path':['<0.8,0.9,0.8>',0.5],
+    'unknown':['<1.0,0,1.0>',1.0]
     }
 
 
@@ -120,29 +121,6 @@ def draw_way(f,line,height_offset,streetwidth,highwaytype,og):
 }}
 \n""".format(highwaytype=highwaytype))
     
-def draw_lines_sweep(f,points,height,streetwidth,highwaytype):
-    numpoints = len(points)
-    #f.write("intersection { object { boundbox } ")
-    f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+0))
-
-    for i,point in enumerate(points):
-        latlon = point.split(' ')
-        #if (i==0):
-        #    f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth,height))
-        f.write("  <{x}, 0, {y}>,{d}\n".format(x=latlon[0],y=latlon[1],d=streetwidth))
-        #if (i==numpoints-1):
-        #   f.write("  <{0}, {3}, {1}>,{2}\n".format(latlon[0],latlon[1],streetwidth,height))
-
-    #print highwayparams[0],highwayparams[1],streetwidth
-    f.write("  tolerance 1")
-    f.write("  scale <1, 0.05, 1>")
-    f.write("  translate <0, {z}, 0>".format(z=height))
-    #f.write("  } ") #end of intersection
-    f.write("""
-    texture {{ texture_highway_{highwaytype} }}
-}}
-\n""".format(highwaytype=highwaytype))
-
 def calculate_lanefactor(lanes,lanesfw,lanesbw,oneway):
     if lanes==None:#
         # no lanes specified: look if lanes:forward is specified
@@ -158,8 +136,14 @@ def calculate_lanefactor(lanes,lanesfw,lanesbw,oneway):
 def pov_highway(f,highway,og):
     f.write("/* osm_id={0} */\n".format(highway['osm_id']))
     highwaytype = highway['highway']
-    #highwaytype = 'secondary'
-    highwayparams = highwaytypes.get(highwaytype)
+
+    if highwaytype in highwaytypes:
+        highwayparams = highwaytypes.get(highwaytype)
+    else:
+        highwayparams = highwaytypes.get('unknown')
+        print "### highway with id={id} has unknown type {typ}.".format(id=highway['osm_id'],typ=highwaytype)
+        highwaytype = 'unknown'
+
     line = highway['coords']
 
 #    oneway = False
@@ -357,13 +341,11 @@ def render_highways(f,osraydb,options):
 
     og = osrayNetwork()
     pov_declare_highway_textures(f)
-    highways = []
-    for highwaytype in highwaytypes.iterkeys():
-        highways += osraydb.select_highways(highwaytype)
+
+    highways = osraydb.select_highways()
 
     for highway in highways:
         og.add_highway(highway['coords'],parse_int_safely(highway['layer'],default=0))
-        #pass
 
     og.calculate_height_on_nodes()
     #print og.G.nodes()

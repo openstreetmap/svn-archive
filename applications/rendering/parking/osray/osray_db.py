@@ -86,9 +86,8 @@ class OsrayDB:
         #self.bbox = self.curs.fetchall()
         #self.get_bounds()
 
-    def select_highways(self,highwaytype):
-        print "highways: SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway, tags->'lanes:forward' as lanesfw, tags->'lanes:forward' as lanesbw "+self.FlW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";"
-        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway, tags->'lanes:forward' as lanesfw, tags->'lanes:forward' as lanesbw "+self.FlW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")
+    def select_highways(self):
+        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'lanes' as lanes, tags->'layer' as layer, tags->'oneway' as oneway, tags->'lanes:forward' as lanesfw, tags->'lanes:forward' as lanesbw "+self.FlW+" \"way\" && "+self.googbox+" and highway is not NULL "+LIMIT+";")
         rs = self.curs.fetchall()
         highways = []
         for res in rs:

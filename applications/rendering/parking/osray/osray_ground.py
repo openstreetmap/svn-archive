@@ -137,7 +137,7 @@ def pov_landuse(f,landuse):
 leisuretypes = {
     'park':['<0.7,1,0.6>'],'common':['<0.7,1,0.6>'],
     'pitch':['<0.3,1,0.8>'],'sports_centre':['<0.4,1,0.8>'],'stadium':['<0.4,1,0.8>'],
-    'track':['<0.9,0.7,0.6>'],
+    'track':['<1,0.7,0.6>'],
     'playground':['<0.2,0.9,0.9>'],'miniature_golf':['<0.2,0.9,0.9>'],
     'garden':['<1,1,0.4>'],
     'unknown':['<1,0,1>']

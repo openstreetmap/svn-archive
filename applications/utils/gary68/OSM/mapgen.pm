@@ -24,6 +24,7 @@
 # graph top left coordinates: (0,0)
 # size for lines = pixel width / thickness
 #
+# 1.051 l0 calculation adapted
 
 package OSM::mapgen ; #  
 
@@ -42,7 +43,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.05' ;
+$VERSION = '1.061' ;
 
 require Exporter ;
 
@@ -196,7 +197,9 @@ sub initGraph {
 #
 	my ($x, $l, $b, $r, $t, $color, $projection, $ellipsoid) = @_ ;	
 
-	my $l0 = int($l) - 1 ;
+	# my $l0 = int($l) - 1 ;
+	my $l0 = int(($r+$l) / 2 ) ;
+
 	$proj = Geo::Proj4->new(
 		proj => $projection, 
 		ellps => $ellipsoid, 
@@ -220,6 +223,10 @@ sub initGraph {
 	$sizeY = int ($x * $factor) ;
 
 	# print "PROJ: $sizeX x $sizeY pixels\n" ;
+	# print "PROJ: t b l r $t $b $l $r\n" ;
+	# print "PROJ: pt pb pl pr $projTop $projBottom $projLeft $projRight\n" ;
+	# print "PROJ: factor $factor\n" ;
+	# print "PROJ: l0 $l0\n" ;
 
 	$top = $t ;
 	$left = $l ;

@@ -159,13 +159,32 @@ public class DownloadAlong extends Plugin {
         Way way = (Way) prim;
         for (Node p : way.getNodes()) {
           LatLon c = p.getCoor();
-          if (previous == null || c.greatCircleDistance(previous) > buffer_dist) {
-            // we add a buffer around the point.
-            r.setRect(c.lon() - buffer_x, c.lat() - buffer_y, 2 * buffer_x,
-                2 * buffer_y);
-            a.add(new Area(r));
-            previous = c;
+          ArrayList<LatLon> intermediateNodes = new ArrayList<LatLon>();
+          if (previous != null
+              && c.greatCircleDistance(previous) > buffer_dist) {
+            Double d = c.greatCircleDistance(previous) / buffer_dist;
+            int nbNodes = d.intValue();
+            System.out.println(tr("{0} intermediate nodes to download.", nbNodes));
+            System.out.println(tr("between {0} {1} and {2} {3}", c.lat(), c.lon(), previous.lat(), previous.lon()));
+            for (i = 1; i < nbNodes; i++) {
+              intermediateNodes.add(new LatLon(previous.lat()+(i * (c.lat() - previous.lat())
+                  / (nbNodes+1)), previous.lon()+(i * (c.lon() - previous.lon()) / (nbNodes+1))));
+              System.out.println(tr("  adding {0} {1}", previous.lat()+(i * (c.lat() - previous.lat())
+                  / (nbNodes+1)), previous.lon()+(i * (c.lon() - previous.lon()) / (nbNodes+1))));
+           }
           }
+          intermediateNodes.add(c);
+          for (LatLon d : intermediateNodes) {
+            if (previous == null
+                || d.greatCircleDistance(previous) > buffer_dist) {
+              // we add a buffer around the point.
+              r.setRect(d.lon() - buffer_x, d.lat() - buffer_y, 2 * buffer_x,
+                  2 * buffer_y);
+              a.add(new Area(r));
+              previous = d;
+            }
+          }
+          previous = c;
         }
       }
 

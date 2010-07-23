@@ -69,6 +69,7 @@
 #      scaleing of route icons
 #      [-routeiconscale]
 # 1.05 [-ra]
+# 1.06 eliminate redundancy in svg output
 #
 #
 # TODO
@@ -89,11 +90,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.05 ;
-use OSM::mapgenRules 1.05 ;
+use OSM::mapgen 1.06 ;
+use OSM::mapgenRules 1.06 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.05" ;
+my $version = "1.06" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -1195,7 +1196,11 @@ if ($tagStatOpt eq "1") {
 	}
 	print $tagFile "\n" ;
 	close ($tagFile) ;
-}
+}
+my $percentSaved = simplifiedPercent() ;
+print "simplifyoutput reduction = $percentSaved %\n" ;
+
+
 $time1 = time() ;
 print "\n$programName finished after ", stringTimeSpent ($time1-$time0), "\n\n" ;
 

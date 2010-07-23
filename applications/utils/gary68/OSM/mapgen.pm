@@ -26,6 +26,7 @@
 #
 # 1.051 l0 calculation adapted
 
+
 package OSM::mapgen ; #  
 
 use strict ;
@@ -43,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.061' ;
+$VERSION = '1.06' ;
 
 require Exporter ;
 
@@ -93,6 +94,7 @@ require Exporter ;
 			scaleBase
 			setdpi 
 			setBaseDpi
+			simplifiedPercent
 			sizePNG 
 			sizeSVG
 			writeSVG ) ;
@@ -181,6 +183,9 @@ my $baseDpi ;
 my %clutter = () ;
 my %clutterIcon = () ;
 my @lines ;
+
+my $simplified = 0 ;
+my $simplifyTotal = 0 ;
 
 sub setdpi {
 	$dpi = shift ;
@@ -1172,6 +1177,9 @@ sub svgElementPolyline {
 #
 	my ($col, $size, $dash, @points) = @_ ;
 
+	my $refp = simplifyPoints (\@points) ;
+	@points = @$refp ;
+
 	my $lc = $lineCap ;
 	if ($dash >= 30) { $lc = "butt" ; } 
 
@@ -1194,6 +1202,10 @@ sub svgElementPolylineBridge {
 # draws way to svg
 #
 	my ($col, $size, $dash, @points) = @_ ;
+
+	my $refp = simplifyPoints (\@points) ;
+	@points = @$refp ;
+
 	my $svg = "<polyline points=\"" ;
 	my $i ;
 	for ($i=0; $i<scalar(@points)-1; $i+=2) {
@@ -1213,6 +1225,10 @@ sub svgElementPath {
 # creates path element for later use with textPath
 #
 	my ($pathName, @points) = @_ ;
+
+	my $refp = simplifyPoints (\@points) ;
+	@points = @$refp ;
+
 	my $svg = "<path id=\"" . $pathName . "\" d=\"M " ;
 	my $i ;
 	my $first = 1 ;
@@ -1234,6 +1250,7 @@ sub svgElementPathTextAdvanced {
 # draws text to path element; anchors: start, middle, end
 #
 	my ($col, $size, $font, $text, $pathName, $tSpan, $alignment, $offset, $halo) = @_ ;
+
 	my $svg = "<text font-family=\"" . $font . "\" " ;
 	$svg = $svg . "font-size=\"" . $size . "\" " ;
 
@@ -1257,6 +1274,10 @@ sub svgElementPolygonFilled {
 # draws areas in svg, filled with color 
 #
 	my ($col, $icon, @points) = @_ ;
+
+	my $refp = simplifyPoints (\@points) ;
+	@points = @$refp ;
+
 	my $i ;
 	my $svg ;
 	if (defined $areaDef{$icon}) {
@@ -1289,6 +1310,7 @@ sub svgElementMultiPolygonFilled {
 # draws mp in svg, filled with color. accepts holes. receives ARRAY of ARRAY of coordinates
 #
 	my ($col, $icon, $ref) = @_ ;
+
 	my @ways = @$ref ;
 	my $i ;
 	my $svg ;
@@ -1527,6 +1549,9 @@ sub svgElementPolylineOpacity {
 # draws way to svg with opacity; for routes
 #
 	my ($col, $size, $dash, $opacity, @points) = @_ ;
+
+	my $refp = simplifyPoints (\@points) ;
+	@points = @$refp ;
 
 	my $lc = $lineCap ;
 	if ($dash >= 30) { $lc = "butt" ; } 
@@ -1973,6 +1998,43 @@ sub scaleBase {
 	my $b = $a / 300 * $baseDpi ;
 	return $b ;
 }
+
+#-----------------------------------------------------------------------------
+
+sub simplifyPoints {
+	my $ref = shift ;
+	my @points = @$ref ;
+	my @newPoints ;
+	my $maxIndex = $#points ;
+
+	if (scalar @points > 4) {
+		# push first
+		push @newPoints, $points[0], $points[1] ;
+
+		# push other
+		for (my $i=2; $i <= $maxIndex; $i+=2) {
+			$simplifyTotal++ ;
+			if ( ($points[$i]==$points[$i-2]) and ($points[$i+1]==$points[$i-1]) ) {
+				# same
+				$simplified++ ;
+			}
+			else {
+				push @newPoints, $points[$i], $points[$i+1] ;
+			}
+		}
+		return (\@newPoints) ;
+	}
+	else {
+		return ($ref) ;
+	}
+
+}
+
+sub simplifiedPercent {
+	return ( int ($simplified / $simplifyTotal * 100) ) ;
+}
+
+
 
 1 ;
 

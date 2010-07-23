@@ -98,7 +98,7 @@
 				<attribute name="Author" value="Nakor"/>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugin.download_along.DownloadAlong"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-				<attribute name="Plugin-Description" value="Adds no left turn for sets of 4 or 5 ways"/>
+				<attribute name="Plugin-Description" value="Downloads OSM data along a way"/>
 				<attribute name="Plugin-Icon" value="images/download_along.png"/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/DownloadAlong"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>

@@ -1,0 +1,12 @@
+Source: libapache2-mod-mapnik-wms
+Priority: extra
+Maintainer: Frederik Ramm <frederik.ramm@geofabrik.de>
+Build-Depends: debhelper (>= 6), apache2-prefork-dev (>= 2.2.3) | apache2-threaded-dev (>= 2.2.3), libmapnik-dev, libgd2-xpm-dev | libgd2-noxpm-dev, libfreetype6-dev
+Standards-Version: 3.8.0
+Section: web
+
+Package: libapache2-mod-mapnik-wms
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, apache2.2-common, libgd2-xpm | libgd2-noxpm, apache2-mpm-prefork
+Description: Mapnik WMS module for apache2
+ This module implements an OGC Web Map Service based on Mapnik.

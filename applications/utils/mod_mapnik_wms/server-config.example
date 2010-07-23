@@ -1,0 +1,33 @@
+<VirtualHost *:80>
+
+    ServerName full.wms.geofabrik.de
+    ServerAdmin webmaster@geofabrik.de
+
+    # this is required. it will pass all requests to our module. 
+    # if you want only *certain* requests passed to the module, you can use
+    # a qualified version of SetHandler.
+    SetHandler wms-handler
+    DocumentRoot /tmp
+
+    # various mapnik configuration options.
+    MapnikDatasources /usr/lib/mapnik/0.6/input
+    MapnikFonts /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf
+    MapnikFonts /usr/share/fonts/truetype/ttf-dejavu//DejaVuSans.ttf
+    MapnikFonts /usr/share/fonts/truetype/ttf-dejavu//DejaVuSans-Oblique.ttf
+    MapnikMap /etc/mapnik-osm-data/wms.xml
+    MapnikLog /tmp/mapnik.log
+
+    WmsSrs EPSG:4326
+    WmsTitle "Geofabrik Test Server"
+    WmsUrl "http://full.wms.geofabrik.de/"
+
+    ErrorLog /var/log/apache2/wms/full/error.log
+    RewriteLog /var/log/apache2/wms/full/rewrite.log
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    CustomLog /var/log/apache2/wms/full/access.log combined
+
+</VirtualHost>

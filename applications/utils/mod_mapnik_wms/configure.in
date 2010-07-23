@@ -1,0 +1,101 @@
+# Process this file with autoconf to produce a configure script.
+
+AC_INIT(mod_mapnik_wms.c,0.1)
+AM_INIT_AUTOMAKE()
+AC_CONFIG_HEADERS(config.h)
+
+AC_PROG_CXX
+AC_PROG_CXXCPP
+AC_LANG_CPLUSPLUS
+AC_CANONICAL_HOST
+AC_PROG_INSTALL
+AC_PROG_LIBTOOL
+
+AC_HEADER_STDC
+
+
+# this will look for apxs command - put it in $APXS, fail on failure
+AX_WITH_APXS()
+# find apr-config binary
+AC_ARG_WITH(apr_config, AC_HELP_STRING([[--with-apr-config=FILE]], [Path to apr-config program]),
+    [ apr_config="$withval" ],
+    [AC_PATH_PROGS(apr_config,
+        [apr-config apr-0-config apr-1-config],
+        [no],
+        [$PATH:/usr/sbin/:/usr/local/apache2/bin]
+    )]
+)
+
+if test "$apr_config" = "no"; then
+   AC_MSG_ERROR(Could not find the apr-config program.  You can specify a location with the --with-apr-config=FILE option.  It may be named apr-0-config or apr-1-config and can be found in your apache2 bin directory.)
+fi
+$apr_config --cppflags &> /dev/null
+if test "$?" != "0"; then
+  AC_MSG_ERROR($apr_config is not a valid apr-config program)
+fi
+
+APACHE_CFLAGS="-I`${APXS} -q INCLUDEDIR` -I`${apr_config} --includedir`"
+AC_SUBST(APACHE_CFLAGS)
+
+
+AX_PATH_BDB([3], [], [
+    AC_MSG_ERROR([No C++ BDB library found])
+  ])
+AC_SUBST([BDB_LIBS])
+AC_SUBST([BDB_CPPFLAGS])
+
+
+AC_ARG_WITH(mapnik-headers,
+            [AC_HELP_STRING(
+              [--with-mapnik-headers],
+              [Path to mapnik header files])
+            ],
+            [CPPFLAGS="-I$withval"])
+
+AC_ARG_WITH(mapnik-libdir,
+            [AC_HELP_STRING(
+              [--with-mapnik-libdir],
+              [Path to mapnik libraries])
+            ],
+            [LDFLAGS="-L$withval"])
+
+AC_ARG_WITH(freetype,dnl
+[  --with-freetype=DIR     where to find the freetype 2.x library],
+  [if test "$withval" != no; then
+     if test "$withval" != yes; then
+       FREETYPE_DIR=$withval
+     fi
+   fi])
+
+if test -n "$FREETYPE_DIR"; then
+    AC_PATH_PROG(FREETYPE_CONFIG,freetype-config,,[$FREETYPE_DIR/bin:$PATH])
+else
+    AC_PATH_PROG(FREETYPE_CONFIG,freetype-config)
+fi
+
+if test -n "$FREETYPE_CONFIG"; then
+    if test -n "$FREETYPE_DIR"; then
+      libft_INCLUDES="`$FREETYPE_CONFIG --cflags` -I$FREETYPE_DIR/include"
+    else
+      libft_INCLUDES=`$FREETYPE_CONFIG --cflags`
+    fi
+    libft_LDFLAGS=`$FREETYPE_CONFIG --libs`
+    libft_LDFLAGS=`echo " $libft_LDFLAGS" |sed 's/ -l[[^ ]][[^ ]]*//g'`
+else
+    AC_MSG_ERROR(You must have freetype-config to build mod_mapnik_wms.)
+fi
+CPPFLAGS="$libft_INCLUDES $CPPFLAGS"
+LDFLAGS="$libft_LDFLAGS $LDFLAGS"
+
+AC_CHECK_HEADERS(mapnik/map.hpp, , 
+        AC_MSG_ERROR(You must have mapnik.hpp to build mod_mapnik_wms.))
+
+AC_CHECK_HEADERS(gd.h, , 
+        AC_MSG_ERROR(You must have gd.h to build mod_mapnik_wms.))
+
+AC_SUBST(CPPFLAGS)
+AC_SUBST(LDFLAGS)
+AC_SUBST(LIBS)
+
+AC_OUTPUT(Makefile)
+

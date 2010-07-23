@@ -1,0 +1,7 @@
+mod_mapnik_wms
+--------------
+
+initially written by Frederik Ramm <frederik@remote.org>
+
+Re-uses parts of Mapnik (LGPL licensed) and mod_tile (GPL licensed).
+

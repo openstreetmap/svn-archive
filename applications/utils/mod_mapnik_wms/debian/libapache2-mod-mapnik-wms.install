@@ -1,0 +1,4 @@
+.libs/mod_mapnik_wms.so usr/lib/apache2/modules
+debian/mapnik_wms.load etc/apache2/mods-available
+README usr/share/doc/libapache2-mod-mapnik-wms
+server-config.example usr/share/doc/libapache2-mod-mapnik-wms

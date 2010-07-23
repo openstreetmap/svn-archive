@@ -1,0 +1,5 @@
+libapache2-mod-mapnik-wms (0.5-1) jaunty; urgency=low
+
+  * First public release.
+
+ -- Frederik Ramm <frederik@remote.org>  Fri, 23 Jul 2010 22:10:17 +0200

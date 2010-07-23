@@ -1,0 +1,5 @@
+LoadFile /usr/lib/libstdc++.so.6
+LoadFile /usr/lib/libmapnik.so.0.6
+LoadFile /usr/lib/libgd.so.2
+LoadFile /usr/lib/libdb-4.6.so
+LoadModule mapnik_wms_module /usr/lib/apache2/modules/mod_mapnik_wms.so

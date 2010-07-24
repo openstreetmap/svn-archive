@@ -5,8 +5,32 @@ mod_mapnik_wms is a WMS module for Apache2/Mapnik. It is very basic,
 supports only GetCapabilities and GetMap, no GetFeatureInfo or 
 custom styling.
 
-* run autogen.sh
+dependencies
+
+* mapnik - mapnik.org
+* apache development tools
+* libgd
+* libproj
+* berkeley-db - http://download.oracle.com/berkeley-db/db-4.8.24.tar.gz
+
+compiling
+
+* install dependencies
+* run ./autogen.sh
 * probably fix mapnik package versions in debian/*
 * run debuild
 * install resulting package on a server that has Apache and Mapnik
 * configure your virtual host according to server-config.example
+
+Mac osx notes -->
+* export cppflags/ldflags for mapnik and dependencies:
+  - e.g. export CPPFLAGS='-I/usr/local/include'
+  - e.g. export LDFLAGS="-L/usr/local/lib -lmapnik -lproj -lgd"
+
+* manually copy the mod:
+  sudo cp .libs/mod_mapnik_wms.so /usr/libexec/apache2/mod_mapnik_wms.so
+
+* add to /etc/apache2/httpd.conf:
+    LoadModule mapnik_wms_module        libexec/apache2/mod_mapnik_wms.so
+
+* apachectl configtest # should get 'SYNTAX OKAY'

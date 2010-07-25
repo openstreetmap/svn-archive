@@ -307,7 +307,10 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
 
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-            zoomToNode(getSelectedNode());
+            Node selectedNode = getSelectedNode();
+            if(selectedNode != null) {
+                zoomToNode(selectedNode);
+            }
         }
     }
 

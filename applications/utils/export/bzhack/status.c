@@ -9,18 +9,19 @@
 int main() {
    FILE *f, *fplanet;
    struct stat s;
-   struct bz2index b;
+   int id;
+   unsigned long long filepos;
    char buf[7];
-   f = fopen("/media/esata/2000/bz2changeset","r");
-   fplanet = fopen("/media/esata/2000/planet-090608.osm.bz2","r");
+   f = fopen("/media/esata/2000/bz2nodeindex","r");
+   fplanet = fopen("/media/esata/2000/planet-100717.osm.bz2","r");
    fstat(fileno(f), &s);
-//   fseek(f, 3018744, SEEK_SET);
-//   fseek(f, 5079024, SEEK_SET);
-//   fseek(f, 0, SEEK_SET);
+//   fseek(f, sizeof(struct bz2index), SEEK_SET);
    while (1) {
       int off = 0;
-      fread(&b, sizeof(struct bz2index), 1, f);
-      fseeko(fplanet, b.filepos, SEEK_SET);
+      fread(&id, sizeof(id), 1, f);
+      fread(&filepos, sizeof(filepos), 1, f);
+      printf("%i %llu\n", id, filepos);
+      fseek(fplanet, filepos, SEEK_SET);
       fread(&buf, 7, 1, fplanet);
 
       if (strncmp("\x31\x41\x59\x26\x53", buf, 5) == 0) off = 1;
@@ -33,7 +34,7 @@ int main() {
       else if (strncmp("\xA0\xAC\x93\x29\xAC", buf, 5) == 0) off = 8;
       else if (strncmp("BZh4\x31", buf, 5) == 0) off = 9;
       printf("id: %i off:%i ftell: %llu value: %2hhx %2hhx %2hhx %2hhx %2hhx %2hhx %2hhx ftell: %li\n",
-         b.id, off, b.filepos, buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], ftell(f));
+         id, off, filepos, buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], ftell(f));
       if (off == 0) {
          printf("%s\n", buf);
          break;

@@ -5,39 +5,86 @@
 #include <xmlparse.h>
 #include <math.h>
 #include "bzhack.h"
+#include "sys/stat.h"
 
-FILE *fnodetile, *fbz2nodeindex, *fbz2wayindex, *fbz2changesetindex;
+FILE *fnodetile, *fwaytile, *fbz2nodeindex, *fbz2wayindex, *fbz2changesetindex;
 
-static int filepos = 0;
-
-struct bz2index sbz2nodeindex, sbz2changesetindex;
+static unsigned long long filepos = 0;
 
 void start_hndl(void *data, const char *el, const char **attr) {
    int i;
+   static int id;
+   short int lon, lat;
    if (strcmp(el, "node") == 0) {
-      struct nodetile s;
       for (i = 0 ; ; i+=2 ) {
          if (attr[i] == 0) break;
          if (strcmp(attr[i], "id") == 0) {
-            s.id = atoi(attr[i+1]);
+            id = atoi(attr[i+1]);
          }
          if (strcmp(attr[i], "lon") == 0) {
-            s.lon = (int)(floor((strtod(attr[i+1], NULL) + 180.0) / 360.0 * pow(2.0, 15))); // z = 15
+            lon = (int)(floor((strtod(attr[i+1], NULL) + 180.0) / 360.0 * pow(2.0, 15))); // z = 15
          }
          if (strcmp(attr[i], "lat") == 0) {
             double latd = strtod(attr[i+1], NULL);
-            s.lat = (int)(floor((1.0 - log( tan(latd * M_PI/180.0) + 1.0 / cos(latd * M_PI/180.0)) / M_PI) / 2.0 * pow(2.0, 15)));
+            lat = (int)(floor((1.0 - log( tan(latd * M_PI/180.0) + 1.0 / cos(latd * M_PI/180.0)) / M_PI) / 2.0 * pow(2.0, 15)));
          }
       }
       if (filepos) {
-         sbz2nodeindex.id = s.id;
-         sbz2nodeindex.filepos = filepos;
-         fwrite(&sbz2nodeindex, sizeof(struct bz2index), 1, fbz2nodeindex);
+         fwrite(&id, sizeof(id), 1, fbz2nodeindex);
+         fwrite(&filepos, sizeof(filepos), 1, fbz2nodeindex);
          filepos = 0;
       }
-      fwrite(&s, sizeof(struct nodetile), 1, fnodetile);
+      fwrite(&id, sizeof(id), 1, fnodetile);
+      fwrite(&lat, sizeof(lat), 1, fnodetile);
+      fwrite(&lon, sizeof(lon), 1, fnodetile);
    } else if (strcmp(el, "way") == 0) {
-      printf("whoei!\n");
+      for (i = 0; ; i+=2) {
+         if (attr[i] == 0) break;
+         if (strcmp(attr[i], "id") == 0) {
+            id = atoi(attr[i+1]);
+         }
+      }
+      if (filepos) {
+         fwrite(&id, sizeof(id), 1, fbz2wayindex);
+         fwrite(&filepos, sizeof(filepos), 1, fbz2wayindex);
+         filepos = 0;
+      }
+   } else if (strcmp(el, "nd") == 0) {
+      if (fnodetile) {
+         fclose(fnodetile);
+         fnodetile = 0;
+      }
+      struct stat st;
+      FILE *f = fopen("/media/esata/2000/nodetile", "r");
+      stat("/media/esata/2000/nodetile", &st);
+
+      long long loindex = 0, hiindex = st.st_size / sizeof(struct nodetile);
+      struct nodetile n;
+      while (1) {
+         long long index = (hiindex+loindex)/2;
+         fseek(f, index*(sizeof(int)+sizeof(short int)+sizeof(short int)), SEEK_SET);
+         int nid;
+         fread(&nid, sizeof(nid), 1, f);
+         if (nid == id) {
+             fread(&lat, sizeof(lat), 1, f);
+             fread(&lon, sizeof(lon), 1, f);
+             break;
+         } else if (nid > id) {
+             hiindex = index;
+         } else {
+             loindex = index;
+         }
+         if ((hiindex - loindex) == 1) {
+             printf("node %i not found in way %i", nid, id);
+             lat = 0;
+             lon = 0;
+             break;
+         }
+         printf("%i %lli\n", id, index);
+      }
+      fwrite(&id, sizeof(id), 1, fwaytile);
+      fwrite(&n.lat, sizeof(id), 1, fwaytile);
+      fwrite(&n.lon, sizeof(id), 1, fwaytile);
    } else if (strcmp(el, "changeset") == 0) {
       if (filepos) {
          int id = 0;
@@ -47,9 +94,8 @@ void start_hndl(void *data, const char *el, const char **attr) {
                id = atoi(attr[i+1]);
             }
          }
-         sbz2changesetindex.id = id;
-         sbz2changesetindex.filepos = filepos;
-         fwrite(&sbz2changesetindex, sizeof(struct bz2index), 1, fbz2changesetindex);
+         fwrite(&id, sizeof(id), 1, fbz2changesetindex);
+         fwrite(&filepos, sizeof(filepos), 1, fbz2changesetindex);
          filepos = 0;
       }
    }
@@ -72,6 +118,7 @@ int main() {
     buf = malloc(avail_in);
 
     fnodetile = fopen("/media/esata/2000/nodetile", "w");
+    fwaytile = fopen("/media/esata/2000/waytile", "w");
     fbz2nodeindex = fopen("/media/esata/2000/bz2nodeindex", "w");
     fbz2wayindex = fopen("/media/esata/2000/bz2wayindex", "w");
     fbz2changesetindex = fopen("/media/esata/2000/bz2changeset", "w");
@@ -87,7 +134,7 @@ int main() {
     strm.next_in = buf;
 
     BZ2_bzDecompressInit(&strm, 0, 0);
-    f = fopen("/media/esata/2000/planet-090822.osm.bz2", "r");
+    f = fopen("/media/esata/2000/planet-100717.osm.bz2", "r");
     if (!f) {
         printf("Kan planet niet openen");
         return 1;

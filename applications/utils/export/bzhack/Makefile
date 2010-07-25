@@ -1,4 +1,4 @@
-CFLAGS=-Wall -O2 -g -D_FILE_OFFSET_BITS=64
+CFLAGS=-Wall -O3 -g -D_FILE_OFFSET_BITS=64
 OBJ=bzhack.o
 
 all : bzhack status

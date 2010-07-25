@@ -168,7 +168,13 @@ def pov_highway(f,highway,og):
 
 def pov_highway_area(f,highway):
     highwaytype = highway['highway']
-    highwayparams = highwaytypes.get(highwaytype)
+
+    if highwaytype in highwaytypes:
+        highwayparams = highwaytypes.get(highwaytype)
+    else:
+        highwayparams = highwaytypes.get('unknown')
+        print "### unknown highway area type {typ} in object {id}.".format(typ=highwaytype,id=format(highway['osm_id'])) 
+        highwaytype = 'unknown'
 
     polygon = highway['coords']
 
@@ -176,9 +182,9 @@ def pov_highway_area(f,highway):
     height = 0.1 #FIXME
 
     amenity = highway['amenity']
-    
+
     # 
-    # draw the casing
+    # draw the highway area
     #
     numpoints = len(polygon)
     #f.write("polygon {{ {0},\n".format(numpoints))
@@ -216,6 +222,139 @@ def pov_highway_area(f,highway):
             f.write("  <{x}, {y}>\n".format(x=x,y=y))
 
     color = highwayparams[0]
+    f.write("""
+    texture {{
+        pigment {{
+            color rgb <0.3,0.3,0.3>
+        }}
+        finish {{
+            specular 0.05
+            roughness 0.05
+            /*reflection 0.5*/
+        }}
+    }}
+    translate <0, {height}, 0>
+}}
+\n""".format(height=height))
+
+# ---------------------------------------------------------------------------
+
+amenitytypes = { # amenitytype : [color,lane_width_factor]
+    'parking':['<0.9,0.9,0.75>',1.0],
+    'bus_station':['<0.9,1,0.9>',1.0],
+    'university':['<0.6,1,0.85>',1.0],
+    'hospital':['<1,0.8,0.8>',1.0],
+    'fire_station':['<1,0.8,0.8>',1.0],
+    'school':['<0.8,1,0.9>',1.0],
+    'police':['<0.6,0.85,1>',1.0],
+    'unknown':['<1.0,0.2,1.0>',1.0]
+    }
+"""
+### unknown amenity area type public_building in object 39987595.
+### unknown amenity area type fire_station in object 44963474.
+### unknown amenity area type bus_station in object 28489712.
+### unknown amenity area type theatre in object 31251406.
+### unknown amenity area type public_building in object 39986017.
+### unknown amenity area type public_building in object 27754502.
+### unknown amenity area type fuel in object -317758.
+### unknown amenity area type school in object 44003162.
+### unknown amenity area type place_of_worship in object 28788986.
+### unknown amenity area type fire_station in object -317719.
+### unknown amenity area type fast_food in object 43525324.
+
+"""
+
+
+def pov_declare_amenity_textures(f):
+    if Radiosity:
+        declare_amenity_texture = """
+#declare texture_amenity_{amenitytype} =
+    texture {{
+        pigment {{
+            color rgb {color}
+        }}
+        finish {{
+            diffuse 0.7
+            ambient 0
+        }}
+    }}
+"""
+    else:
+        declare_amenity_texture = """
+#declare texture_amenity_{amenitytype} =
+    texture {{
+        pigment {{
+            color rgb {color}
+        }}
+        finish {{
+            specular 0.5
+            roughness 0.05
+            ambient 0.3
+            /*reflection 0.5*/
+        }}
+    }}
+"""
+    for amenitytype in amenitytypes.keys():
+        amenityparams = amenitytypes.get(amenitytype)
+        color = amenityparams[0]
+        f.write(declare_amenity_texture.format(color=color,amenitytype=amenitytype))
+    # texture for the amenity casing
+    f.write(declare_amenity_texture.format(color='<0.4,0.4,0.4>',amenitytype='casing'))
+
+def pov_amenity_area(f,amenity):
+    amenitytype = amenity['amenity']
+
+    if amenitytype in amenitytypes:
+        amenityparams = amenitytypes.get(amenitytype)
+    else:
+        amenityparams = amenitytypes.get('unknown')
+        print "### unknown amenity area type {typ} in object {id}.".format(typ=amenitytype,id=format(amenity['osm_id'])) 
+        amenitytype = 'unknown'
+
+    polygon = amenity['coords']
+
+    heightstring = amenity['height']
+    height = 0.1 #FIXME
+
+    # 
+    # draw the amenity area
+    #
+    numpoints = len(polygon)
+    #f.write("polygon {{ {0},\n".format(numpoints))
+    f.write("prism {{ linear_spline 0, 0.01, {0},\n".format(numpoints))
+    f.write("/* osm_id={0} */\n".format(amenity['osm_id']))
+
+    for i,point in enumerate(polygon):
+        x,y = point
+        if (i!=numpoints-1):
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
+        else:
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
+
+    color = amenityparams[0]
+
+    f.write("""
+    texture {{ texture_amenity_{amenitytype} }}
+    translate <0, {height}, 0>
+}}
+\n""".format(amenitytype=amenitytype,height=height))
+    # 
+    # draw the casing
+    #
+    height = height-0.02
+    polygon = amenity['buffercoords']
+    numpoints = len(polygon)
+    f.write("prism {{ linear_spline 0, 0.01, {0},\n".format(numpoints))
+    f.write("/* casing of osm_id={0} */\n".format(amenity['osm_id']))
+
+    for i,point in enumerate(polygon):
+        x,y = point
+        if (i!=numpoints-1):
+            f.write("  <{x}, {y}>,\n".format(x=x,y=y))
+        else:
+            f.write("  <{x}, {y}>\n".format(x=x,y=y))
+
+    color = amenityparams[0]
     f.write("""
     texture {{
         pigment {{
@@ -342,6 +481,7 @@ def render_highways(f,osraydb,options):
 
     og = osrayNetwork()
     pov_declare_highway_textures(f)
+    pov_declare_amenity_textures(f)
 
     highways = osraydb.select_highways()
 
@@ -355,12 +495,14 @@ def render_highways(f,osraydb,options):
         pov_highway(f,highway,og)
         #pass
 
-    highway_areas = []
-    for highwaytype in highwaytypes.iterkeys():
-        highway_areas += osraydb.select_highway_areas(highwaytype)
-    
+    highway_areas = osraydb.select_highway_areas()
     for highway in highway_areas:
         pov_highway_area(f,highway)
+
+
+    amenity_areas = osraydb.select_amenity_areas()
+    for amenity in amenity_areas:
+        pov_amenity_area(f,amenity)
 
     barriers = osraydb.select_barriers()
     for barrier in barriers:

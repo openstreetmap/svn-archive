@@ -43,6 +43,7 @@ global_settings {{
     assumed_gamma 2.0
     noise_generator 2
     ambient_light rgb <0.8,0.8,0.8>
+    max_trace_level 10
 }}
 """
     f.write(globsettings.format())

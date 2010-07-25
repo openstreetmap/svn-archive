@@ -103,8 +103,8 @@ class OsrayDB:
             highways.append(highway)
         return highways
 
-    def select_highway_areas(self,highwaytype):
-        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'height' as height, amenity, ST_AsText(buffer(\"way\",1)) AS geombuffer  "+self.FpW+" \"way\" && "+self.googbox+" and highway='"+highwaytype+"' "+LIMIT+";")
+    def select_highway_areas(self):
+        self.curs.execute("SELECT osm_id,highway,ST_AsText(\"way\") AS geom, tags->'height' as height, amenity, ST_AsText(buffer(\"way\",1)) AS geombuffer  "+self.FpW+" \"way\" && "+self.googbox+" and highway is not NULL "+LIMIT+";")
         rs = self.curs.fetchall()
         areas = []
         for res in rs:
@@ -118,8 +118,22 @@ class OsrayDB:
             areas.append(area)
         return areas
 
+    def select_amenity_areas(self):
+        self.curs.execute("SELECT osm_id,amenity,ST_AsText(\"way\") AS geom, ST_AsText(buffer(\"way\",1)) AS geombuffer, tags->'height' as height  "+self.FpW+" \"way\" && "+self.googbox+" and amenity is not NULL and (building is NULL or building='no')"+LIMIT+";")
+        rs = self.curs.fetchall()
+        areas = []
+        for res in rs:
+            area = {}
+            area['osm_id']=res[0]
+            area['amenity']=res[1]
+            area['coords']=WKT_to_polygon(res[2])
+            area['buffercoords']=WKT_to_polygon(res[3])
+            area['height']=res[4]
+            areas.append(area)
+        return areas
+
     def select_buildings(self,buildingtype):
-        self.curs.execute("SELECT osm_id,ST_AsText(\"way\") AS geom, building, tags->'height' as height,tags->'building:height' as bheight,amenity "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+LIMIT+";")
+        self.curs.execute("SELECT osm_id,ST_AsText(\"way\") AS geom, building, tags->'height' as height,tags->'building:height' as bheight,amenity,shop "+self.FpW+" \"way\" && "+self.googbox+" and building='"+buildingtype+"' "+LIMIT+";")
         rs = self.curs.fetchall()
         buildings = []
         for res in rs:
@@ -130,6 +144,7 @@ class OsrayDB:
             building['height']=res[3]
             building['bheight']=res[4]
             building['amenity']=res[5]
+            building['shop']=res[6]
             buildings.append(building)
         return buildings
 

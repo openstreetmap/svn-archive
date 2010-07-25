@@ -19,6 +19,7 @@ amenitybuildingtypes = {
     'hospital':['<1,0.6,0.6>',1.0],
     'theatre':['<1,0.6,0.8>',1.0],
     'university':['<0.6,1,0.8>',1.0],
+    'school':['<0.8,1,0.9>',1.0],
     'parking':['<0.6,0.6,1>',1.0]
     }
 
@@ -118,6 +119,7 @@ barriertypes = { # barrier: type, default-height
     'city_wall':['<1,1,0.8>',9.0],
     'retaining_wall':['<0.8,0.8,0.6>',9.0],
     'fence':['<0.7,0.7,0.2>',2.0],
+    'wire_fence':['<0.7,0.7,0.2>',2.5],
     'hedge':['<0.3,0.8,0.4>',2.0],
     'unknown':['<1,0.1,1>',15]
     }

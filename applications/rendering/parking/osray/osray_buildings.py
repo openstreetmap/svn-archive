@@ -20,7 +20,8 @@ amenitybuildingtypes = {
     'theatre':['<1,0.6,0.8>',1.0],
     'university':['<0.6,1,0.8>',1.0],
     'school':['<0.8,1,0.9>',1.0],
-    'parking':['<0.6,0.6,1>',1.0]
+    'parking':['<0.6,0.6,1>',1.0],
+    'unknown':['<1.0,0,1.0>',1.0]
     }
 
 
@@ -68,6 +69,8 @@ def get_building_texture(building,amenity,cladding):
     if amenity!=None:
         if amenitybuildingtypes.has_key(amenity): # if amenity is known, use that color
             texture = amenity
+        else:
+            texture = 'unknown'
     if cladding!=None:
         if claddingtypes.has_key(cladding): # if cladding is known, use that color
             texture = cladding

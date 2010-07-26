@@ -7,7 +7,7 @@
 
 #define BOOST_SPIRIT_THREADSAFE
 
-/* for jpeg compresion */
+/* for jpeg compression */
 #define BUFFER_SIZE 4096
 #define QUALITY 90
 

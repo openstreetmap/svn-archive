@@ -1,0 +1,284 @@
+<Style name="symbols">
+
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[natural]='cave_entrance'</Filter>
+    <PointSymbolizer file="&symbols;/cave.png"
+       type="png" width="15" height="15"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[waterway]='waterfall'</Filter>
+    <PointSymbolizer file="&symbols;/waterfall.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom7;
+    <Filter>([tourism]='guest_house' or [tourism]='hostel') and [operator]='Den Norske Turistforening'</Filter>
+    <PointSymbolizer file="&symbols;/tourist-cabin-staffed-lodge.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom8;
+    <Filter>[tourism]='cabin' and [service]='self' and [operator]='Den Norske Turistforening'</Filter>
+    <PointSymbolizer file="&symbols;/tourist-cabin-selfservice.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom9;
+    <Filter>[tourism]='cabin' and [service]='no' and [operator]='Den Norske Turistforening'</Filter>
+    <PointSymbolizer file="&symbols;/tourist-cabin-unprovisioned.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom12;
+    <Filter>(([building]='cabin' or [tourism]='cabin') and ([access]='permissive' or [access]='emergency')) or [tourism]='basic_hut' or [tourism]='wilderness_hut'</Filter>
+    <PointSymbolizer file="&symbols;/shelter.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[building]='lean_to' or [tourism]='lean_to' or [amenity]='shelter'</Filter>
+    <PointSymbolizer file="&symbols;/leanto.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[leisure]='golf_course' or [sport]='golf'</Filter>
+    <PointSymbolizer file="&symbols;/golfcourse.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[sport]='shooting'</Filter>
+    <PointSymbolizer file="&symbols;/shootingrange.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[natural]='beach'</Filter>
+    <PointSymbolizer file="&symbols;/beach.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[tourism]='viewpoint' and not ([man_made]='tower')</Filter>
+    <PointSymbolizer file="&symbols;/viewpoint.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[tourism]='viewpoint' and [man_made]='tower'</Filter>
+    <PointSymbolizer file="&symbols;/viewtower.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom12;
+    <Filter>[tourism]='hotel' and [hiking]='yes'</Filter>
+    <PointSymbolizer file="&symbols;/hotel.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[tourism]='hotel' or [tourism]='motel'</Filter>
+    <PointSymbolizer file="&symbols;/hotel.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[amenity]='parking' and [hiking]='yes'</Filter>
+    <PointSymbolizer file="&symbols;/parking.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[tourism]='information' and [information]='map' and [hiking]='yes'</Filter>
+    <PointSymbolizer file="&symbols;/information.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[tourism]='information' and [information]='guidepost' and [hiking]='yes'</Filter>
+    <PointSymbolizer file="&symbols;/signpost.png"
+       width="12" height="16" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[amenity]='parking' and not ([access]='private')</Filter>
+    <PointSymbolizer file="&symbols;/parking.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[tourism]='camp_site'</Filter>
+    <PointSymbolizer file="&symbols;/campsite.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[tourism]='caravan_site'</Filter>
+    <PointSymbolizer file="&symbols;/caravansite.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[highway]='bus_stop' or [amenity]='bus_station'</Filter>
+    <PointSymbolizer file="&symbols;/bus.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[railway]='station'</Filter>
+    <PointSymbolizer file="&symbols;/railwaystation.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[amenity]='cafe'</Filter>
+    <PointSymbolizer file="&symbols;/cafe.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[leisure]='picnic_table' or [tourism]='picnic_site'</Filter>
+    <PointSymbolizer file="&symbols;/picnicsite.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+<!--
+    <Rule>
+      &maxscale_zoom15;
+      <Filter>[fireplace]='yes'</Filter>
+      <PointSymbolizer file="&symbols;/fireplace.png"
+         width="15" height="15" type="png"
+         allow_overlap="false"/>
+    </Rule>
+-->
+
+  <Rule>
+    &maxscale_zoom12;
+    <Filter>[amenity]='place_of_worship' and [hiking]='yes'</Filter>
+    <PointSymbolizer file="&symbols;/sportschapel.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[amenity]='place_of_worship' and not ([hiking]='yes')</Filter>
+    <PointSymbolizer file="&symbols;/church.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[historic]='archaeological_site' or [historic]='yes'</Filter>
+    <PointSymbolizer file="&symbols;/relic.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[building]='cabin'</Filter><!--or [tourism]='cabin'-->
+    <PointSymbolizer file="&symbols;/building.png"
+        width="5" height="5" type="png" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[historic]='ruins'</Filter>
+    <PointSymbolizer file="&symbols;/ruin.png"
+        width="5" height="5" type="png" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[man_made]='tower' or [man_made]='mast' or [amenity]='hunting_stand' or [man_made]='lighthouse' or [man_made]='windmill' or [man_made]='power_wind' or ([power]='generator' and [power_source] = 'wind')</Filter>
+    <PointSymbolizer file="&symbols;/tower.png"
+        width="11" height="11" type="png" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[man_made]='cairn' or [historic]='monument' or [historic]='memorial'</Filter>
+    <PointSymbolizer file="&symbols;/cairn.png"
+        width="11" height="11" type="png" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[natural]='tree'</Filter>
+    <PointSymbolizer file="&symbols;/tree.png"
+        width="8" height="8" type="png" />
+  </Rule>
+
+</Style>
+
+<Layer name="symbols" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>symbols</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select *
+    from &prefix;_point
+    where man_made in ('cairn','tower','mast','lighthouse','power_wind','windmill')
+       or amenity in ('shelter','cafe','place_of_worship','parking','bus_station','hunting_stand')
+       or historic in ('monument','memorial','ruins','archaeological_site','yes')
+       or tourism in ('viewpoint','information','cabin','guest_house','alpine_hut','hostel','hotel','motel','lean_to','picnic_site','camp_site','caravan_site')
+       or "natural" in ('cave_entrance','beach','tree')
+       or (power='generator' and power_source='wind')
+       or highway='bus_stop'
+       or railway='station'
+       or waterway='waterfall'
+       or sport in ('golf','shooting')
+    ) as symbols</Parameter>
+    &datasource-settings;
+  </Datasource>
+       <!-- or fireplace='yes' -->
+</Layer>
+<Layer name="symbols-poly" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>symbols</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select *
+    from &prefix;_polygon
+    where amenity in ('parking','bus_station')
+       or "natural"='beach'
+       or leisure='golf_course'
+       or sport in ('golf','shooting')
+       or historic in ('monument','memorial','ruins','archaeological_site')
+       or tourism in ('picnic_site','camp_site','caravan_site')
+    ) as symbols</Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>
+
+<!--
+or barrier in ('bollard','gate','lift_gate','windfall')
+-->

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map [
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+<!ENTITY % sharedentities SYSTEM "entities.xml.ent">
+
+<!ENTITY background-color "#F8F8F8"><!-- background (default land) -->
+<!ENTITY forestland-color "#E2FADA"><!-- wood, #EFFDE3 -->
+<!ENTITY farmland-color "#FFC675"><!-- farmland, field, orchard -->
+<!ENTITY openland-color "#FFDE9B"><!-- meadow, recreation ground, park -->
+<!ENTITY roadcore-color "#E7B27E"><!-- roads core, parking, pitch, yard -->
+<!ENTITY urbanarea-color "#C3D3AC"><!-- residential, industrial -->
+<!ENTITY regulatedarea-color "#D8E6C6"><!-- construction, landfill, quarry -->
+<!ENTITY water-color "#87D2E5"><!-- water -->
+<!ENTITY waterline-color "#009DDD"><!-- stream, shoreline -->
+<!ENTITY naturearea-color "#007D33">
+<!ENTITY trail-color "#000"><!-- path, track, footway, cycleway -->
+<!ENTITY trailblazed-color "#0E3CCC"><!-- trailblazes, #007AC8 -->
+
+%sharedentities;
+%entities;
+]>
+
+<Map bgcolor="&water-color;" srs="&osm2pgsql_projection;">
+  &fontset-settings;
+
+<Style name="trails">
+  <Rule>
+    <Filter>[marked_trail] = 'blue' or [trailblazed] = 'yes'</Filter>
+    &maxscale_zoom12;
+    &minscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&trailblazed-color;</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+      <CssParameter name="stroke-width">2.5</CssParameter>
+      <CssParameter name="stroke-dasharray">1,6</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[marked_trail] = 'blue' or [trailblazed] = 'yes'</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&trailblazed-color;</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+      <CssParameter name="stroke-width">5</CssParameter>
+      <CssParameter name="stroke-dasharray">1,12</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+&layer-world;
+&layer-landscape;
+&layer-linefeatures;
+&layer-roads;
+&layer-buildings;
+&layer-nationalpark;
+
+<Layer name="trails" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>trails</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,trailblazed,marked_trail
+     from &prefix;_line
+     where highway is not null
+    ) as trails
+    </Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>
+
+&layer-resurvey;
+
+&layer-powerlines;
+&layer-symbols-hiking;
+&layer-areatext;
+&layer-placenames;
+</Map>

@@ -1,0 +1,66 @@
+<Style name="cliffs">
+     <Rule>
+      &maxscale_zoom13;
+      <Filter>[natural] = 'cliff'</Filter>
+       <LinePatternSymbolizer file="&symbols;/cliff.png"
+          type="png" width="8" height="5" />
+    </Rule>
+</Style>
+
+<Style name="barriers">
+    <Rule>
+      &maxscale_zoom12;
+      &minscale_zoom12;
+      <Filter>[natural]='hedge' or [barrier] = 'hedge'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">&naturearea-color;</CssParameter>
+        <CssParameter name="stroke-width">0.75</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom13;
+      &minscale_zoom13;
+      <Filter>[natural]='hedge' or [barrier] = 'hedge'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">&naturearea-color;</CssParameter>
+        <CssParameter name="stroke-width">1.5</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom14;
+      <Filter>[natural]='hedge' or [barrier] = 'hedge'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">&naturearea-color;</CssParameter>
+        <CssParameter name="stroke-width">3</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      &maxscale_zoom13;
+      <Filter>[barrier] &lt;&gt; '' and not [barrier] = 'hedge'</Filter>
+       <LinePatternSymbolizer file="&symbols;/wall.png" type="png" width="15" height="3" />
+    </Rule>
+</Style>
+
+<Layer name="line features" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>cliffs</StyleName>
+  <StyleName>barriers</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,barrier,"natural",man_made from &prefix;_line
+     where barrier is not null
+        or "natural" in ('hedge','cliff')
+    ) as roads
+    </Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>
+
+<Layer name="polygon barriers" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>barriers</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,barrier,"natural" from &prefix;_polygon where barrier is not null or "natural"='hedge') as barriers
+    </Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>

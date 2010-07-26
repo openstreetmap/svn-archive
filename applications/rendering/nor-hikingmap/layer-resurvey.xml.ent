@@ -1,0 +1,55 @@
+<Style name="fixme-lines">
+  <Rule>
+    <Filter>[fixme] = 'resurvey'</Filter>
+    &maxscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#D0006F</CssParameter>
+      <CssParameter name="stroke-width">0.75</CssParameter>
+      <CssParameter name="stroke-dasharray">4,4</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+<Layer name="fixme-lines" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>fixme-lines</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,fixme
+       from &prefix;_line
+       where fixme in ('resurvey','stub')
+      ) as fixme
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+
+<!--
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+
+<Style name="fixme-points">
+  <Rule>
+    <Filter>[fixme] = 'continues'</Filter>
+    &maxscale_zoom13;
+    <PointSymbolizer file="&symbols;/fixme-continues.png"
+         width="11" height="11" type="png"
+         allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    <Filter>[fixme] = 'position'</Filter>
+    &maxscale_zoom13;
+    <PointSymbolizer file="&symbols;/fixme-position.png"
+         width="11" height="11" type="png"
+         allow_overlap="false"/>
+  </Rule>
+</Style>
+<Layer name="fixme-points" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>fixme-points</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select *
+       from &prefix;_point
+       where fixme is not null
+      ) as fixme-points</Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+-->

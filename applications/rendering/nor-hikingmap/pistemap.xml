@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map [
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+<!ENTITY % sharedentities SYSTEM "entities.xml.ent">
+
+<!ENTITY background-color "#E9F8FF"><!-- background (default land) -->
+<!ENTITY forestland-color "#E9F8FF"><!-- wood -->
+<!ENTITY farmland-color "#FFF"><!-- farmland, field, orchard -->
+<!ENTITY openland-color "#FFF"><!-- meadow, recreation ground, park -->
+<!ENTITY roadcore-color "#FFF"><!-- roads core, parking, pitch, yard -->
+<!ENTITY urbanarea-color "#CCC"><!-- residential, industrial -->
+<!ENTITY regulatedarea-color "#CCC"><!-- construction, landfill, quarry -->
+<!ENTITY water-color "#0077AD"><!-- water -->
+<!ENTITY waterline-color "#0077AD"><!-- stream, shoreline -->
+<!ENTITY naturearea-color "#007D33">
+<!ENTITY trail-color "#DDD"><!-- path, track, footway, cycleway -->
+<!ENTITY nordic-color "#F90025"><!-- piste:type=nordic, route=ski -->
+
+%sharedentities;
+%entities;
+]>
+
+<Map bgcolor="&water-color;" srs="&osm2pgsql_projection;">
+  &fontset-settings;
+
+<Style name="skiing">
+  <Rule>
+    <Filter>[piste:grooming] = 'backcountry'</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&nordic-color;</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
+      <CssParameter name="stroke-dasharray">8,6</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:grooming] = 'scooter'</Filter>
+    &maxscale_zoom12;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&nordic-color;</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
+      <CssParameter name="stroke-dasharray">20,4</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'nordic'</Filter>
+    &maxscale_zoom12;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&nordic-color;</CssParameter>
+      <CssParameter name="stroke-width">2</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+<!--
+    <Filter>[lit]='yes'</Filter>
+-->
+
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'novice'</Filter>
+    &maxscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#00A245</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'easy'</Filter>
+    &maxscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#00A4DF</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'intermediate'</Filter>
+    &maxscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#E70019</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and ([piste:difficulty] = 'advanced' or [piste:difficulty] = 'expert')</Filter>
+    &maxscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#17180D</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+<!-- Expert orange #FF8040 -->
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'freeride'</Filter>
+    &maxscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#F6E760</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+
+</Style>
+
+&layer-world;
+&layer-landscape;
+&layer-linefeatures;
+&layer-roads;
+&layer-buildings;
+&layer-nationalpark;
+
+<Layer name="skiing" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>skiing</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,"piste:type","piste:grooming","piste:difficulty",route
+       from &prefix;_line
+       where "piste:type" in ('nordic','downhill')
+          or "piste:grooming" is not null
+          or route='ski'
+      ) as skiing
+      </Parameter>
+      &datasource-settings;
+   </Datasource>
+</Layer>
+
+&layer-powerlines;
+&layer-symbols-hiking;
+&layer-areatext;
+&layer-placenames;
+</Map>

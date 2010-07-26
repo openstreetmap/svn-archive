@@ -1,0 +1,27 @@
+<!ENTITY layer-world SYSTEM "layer-world.xml.ent">
+<!ENTITY layer-landscape SYSTEM "layer-landscape.xml.ent">
+<!ENTITY layer-roads SYSTEM "layer-roads.xml.ent">
+<!ENTITY layer-linefeatures SYSTEM "layer-linefeatures.xml.ent">
+<!ENTITY layer-buildings SYSTEM "layer-buildings.xml.ent">
+<!ENTITY layer-nationalpark SYSTEM "layer-nationalpark.xml.ent">
+<!ENTITY layer-powerlines SYSTEM "layer-powerlines.xml.ent">
+<!ENTITY layer-symbols-hiking SYSTEM "layer-symbols-hiking.xml.ent">
+<!ENTITY layer-areatext SYSTEM "layer-areanames.xml.ent">
+<!ENTITY layer-resurvey SYSTEM "layer-resurvey.xml.ent">
+
+<!ENTITY white "#FFF">
+<!ENTITY black "#000">
+<!ENTITY grey50 "#888">
+
+<!ENTITY water_area "([natural] = 'lake' or [natural] = 'water' or [natural] = 'pond' or [waterway] = 'dock' or [landuse] = 'reservoir' or [landuse] = 'water' or [landuse] = 'basin' or [waterway] = 'mill_pond' or [waterway] = 'riverbank' or [waterway] = 'river') and not ([natural] = 'land')">
+<!ENTITY major_road "([highway] = 'motorway' or [highway]='motorway_link' or [highway] = 'trunk' or [highway]='trunk_link' or [highway] = 'primary' or [highway] = 'primary_link' or [highway] = 'secondary' or [highway] = 'secondary_link')">
+<!ENTITY minor_road "([highway] = 'tertiary' or [highway] = 'minor' or [highway] = 'road')">
+<!ENTITY residential_road "([highway] = 'residential' or [highway] = 'unclassified' or [highway] = 'construction')">
+<!ENTITY service_road "([highway] = 'byway' or [highway] = 'service' or [highway] = 'living_street')">
+<!ENTITY cycle_track "(([highway] = 'track' and ([tracktype]='grade1' or [tracktype]='grade2')) or [highway] = 'cycleway' or [highway] = 'unsurfaced')">
+<!ENTITY track "(([highway] = 'track' and not ([tracktype]='grade1' or [tracktype]='grade2')) or [highway] = 'bridleway')">
+<!ENTITY path "([highway] = 'path' or [highway] = 'footway' or [highway] = 'steps' or [highway] = 'pedestrian')">
+<!ENTITY railway "([railway] = 'rail' or [railway] = 'narrow_gauge' or [railway] = 'light_rail' or [railway] = 'subway')">
+<!ENTITY tram "([railway] = 'tram')">
+<!ENTITY tunnel "([tunnel] = 'yes' or [tunnel] = 'true' or [tunnel] = '1')">
+<!ENTITY indistinct_path "([trail_visibility] = 'no' or [trail_visibility] = 'horrible' or [trail_visibility] = 'bad' or [trail_visibility] = 'intermediate')">

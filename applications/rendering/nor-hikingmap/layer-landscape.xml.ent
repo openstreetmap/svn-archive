@@ -1,0 +1,362 @@
+
+<Style name="leisure">
+  <Rule>
+    <Filter>[landuse] = 'brownfield' or [landuse] = 'landfill' or [landuse] = 'greenfield' or [landuse] = 'construction' or [landuse] = 'quarry'</Filter>
+    &maxscale_zoom10;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&regulatedarea-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+   <Rule>
+    <Filter>[natural] = 'wood' or [landuse] = 'wood' or [landuse] = 'forest'</Filter>
+    &maxscale_zoom9;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&forestland-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom12;
+    <Filter>([landuse] = 'cemetery' or [landuse] = 'grave_yard' or [amenity] = 'grave_yard')</Filter>
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&openland-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[leisure] = 'common' or [leisure] = 'park' or [leisure] = 'recreation_ground' or [leisure] = 'golf_course' or [landuse] = 'sport' or [landuse] = 'recreational' or [leisure] = 'winter_sport'</Filter>
+    &maxscale_zoom11;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&openland-color;</CssParameter>
+   </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[landuse] = 'park' or [landuse] = 'meadow' or [landuse] = 'grass' or [landuse] = 'recreation_ground' or [landuse] = 'village_green' or [landuse] = 'green'</Filter>
+    &maxscale_zoom11;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&openland-color;</CssParameter>
+   </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom11;
+    <Filter>[natural] = 'grass' or [natural] = 'grassland' or [natural] = 'meadow' or [tourism] = 'camp_site' or [tourism]='caravan_site' or [tourism] = 'picnic_site'</Filter>
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&openland-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom11;
+    <Filter>[natural] = 'field' or [natural] = 'heath' or [landuse] = 'conservation'</Filter>
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&openland-color;</CssParameter>
+     </PolygonSymbolizer>
+  </Rule>
+ <Rule>
+    <Filter>[natural] = 'scrub'</Filter>
+    &maxscale_zoom12;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&openland-color;</CssParameter>
+     </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom8;
+     <Filter>[landuse] = 'residential' or [landuse] ='commercial' or [landuse] = 'industrial' or [landuse] = 'retail'</Filter>
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&urbanarea-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom12;
+     <Filter>[landuse] = 'school' or [amenity] = 'school' or [amenity] = 'college' or [amenity] = 'university' or [amenity]='kindergarten' or [military] = 'barracks' or [amenity] = 'hospital'</Filter>
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&urbanarea-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[leisure] = 'garden' or [landuse] = 'allotments' or [landuse] = 'military' or [landuse] = 'railway' or [landuse] = 'garden' or [tourism] = 'zoo'</Filter>
+    &maxscale_zoom12;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&urbanarea-color;</CssParameter>
+   </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[landuse] = 'field' or [natural] = 'crop' or [landuse] = 'farm' or [landuse] = 'farmland'</Filter>
+    &maxscale_zoom11;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&farmland-color;</CssParameter>
+   </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom11;
+    <Filter>[landuse] = 'orchard' or [landuse] = 'vineyard'</Filter>
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&farmland-color;</CssParameter>
+     </PolygonSymbolizer>
+  </Rule>
+<!--
+  <Rule>
+    <Filter>[natural] = 'mud' or [natural] = 'beach' or [natural] = 'sand'</Filter>
+    &maxscale_zoom12;
+    <PolygonSymbolizer>
+       <CssParameter name="fill">&background-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+-->
+  <Rule>
+    <Filter>[amenity]='parking' or [landuse]='playground' or [leisure]='playground' or [landuse]='farmyard' or [landuse]='parking' or [highway]='pedestrian' or [highway]='services' or [highway]='turning_circle' or [power]='station' or [power]='sub_station'</Filter>
+    &maxscale_zoom12;
+   <PolygonSymbolizer>
+       <CssParameter name="fill">&roadcore-color;</CssParameter>
+    </PolygonSymbolizer>
+   <LineSymbolizer>
+      <CssParameter name="stroke">&black;</CssParameter>
+      <CssParameter name="stroke-width">0.6</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[leisure] = 'track'</Filter>
+    &maxscale_zoom12;
+     <LineSymbolizer>
+      <CssParameter name="stroke">&black;</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+      <CssParameter name="stroke-width">0.75</CssParameter>
+      <CssParameter name="stroke-dasharray">4,2</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="sports_grounds">
+  <Rule>
+   &maxscale_zoom12;
+    <Filter>[leisure] = 'sports_centre' or [leisure] = 'stadium'</Filter>
+    <PolygonSymbolizer>
+       <CssParameter name="fill">&black;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="sports_grounds_pitch">
+  <Rule>
+    &maxscale_zoom12;
+   <PolygonSymbolizer>
+       <CssParameter name="fill">&roadcore-color;</CssParameter>
+    </PolygonSymbolizer>
+   <LineSymbolizer>
+      <CssParameter name="stroke">&black;</CssParameter>
+      <CssParameter name="stroke-width">0.6</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="islands">
+  <Rule>
+    &maxscale_zoom8;
+    &minscale_zoom11;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&background-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom12;
+    &minscale_zoom12;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&background-color;</CssParameter>
+    </PolygonSymbolizer>
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">0.4</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&background-color;</CssParameter>
+    </PolygonSymbolizer>
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">0.8</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="water_areas_casing">
+  <Rule>
+    <Filter>&water_area;</Filter>
+    &maxscale_zoom12;
+    &minscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">0.8</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+   </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>&water_area;</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">1.6</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="water_lines_casing">
+  <Rule>
+    &maxscale_zoom10;
+    &minscale_zoom11;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">0.3</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom12;
+    &minscale_zoom12;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">0.5</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    &minscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">0.7</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">0.9</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="water_areas_core">
+  <Rule>
+    <Filter>&water_area;</Filter>
+    &maxscale_zoom6;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&water-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="marshes">
+  <Rule>
+    <Filter>([natural] = 'wetland' or [natural] = 'marsh')</Filter>
+    &maxscale_zoom12;
+   <PolygonPatternSymbolizer file="&symbols;/marsh.png" type="png" width="1" height="3" />
+  </Rule>
+</Style>
+
+<Layer name="leisure" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>leisure</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,aeroway,amenity,landuse,leisure,man_made,military,highway,"natural",power,tourism,name
+     from &prefix;_polygon
+     where landuse is not null
+        or leisure is not null
+        or aeroway in ('apron','aerodrome')
+        or amenity in ('parking','university','college','school','hospital','grave_yard')
+        or highway in ('pedestrian','services','turning_circle')
+        or military in ('barracks','danger_area')
+        or "natural" in ('field','beach','heath','mud','wood','scrub','meadow','crop','grass','grassland')
+        or power in ('station','sub_station')
+        or tourism in ('attraction','camp_site','caravan_site','picnic_site','zoo')
+     order by z_order,way_area desc
+    ) as leisure
+    </Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>
+
+<Layer name="sports_grounds" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>sports_grounds</StyleName>
+  <StyleName>sports_grounds_pitch</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,leisure
+     from &prefix;_polygon
+     where leisure in ('sports_centre','stadium','pitch')
+     order by z_order,way_area desc) as sports_grounds
+    </Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>
+
+<Layer name="water_areas" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>water_areas_casing</StyleName>
+  <StyleName>marshes</StyleName>
+  <Datasource>
+    &datasource-settings;
+    <Parameter name="table">
+    (select way,"natural",waterway,landuse,name,way_area
+     from &prefix;_polygon
+     where waterway in ('dock','mill_pond','riverbank','canal','river')
+        or landuse in ('reservoir','water','basin')
+        or "natural" in ('lake','water','land','wetland','marsh','glacier','pond')
+     order by z_order,way_area desc
+    ) as water_areas
+    </Parameter>
+  </Datasource>
+</Layer>
+
+<Layer name="water_lines" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>water_lines_casing</StyleName>
+  <Datasource>
+    &datasource-settings;
+    <Parameter name="table">
+    (select way,waterway,disused,name,
+     case when tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel
+     from &prefix;_line
+     where waterway in ('weir','river','canal','derelict_canal','stream','drain')
+       and (bridge is null or bridge not in ('yes','true','1','aqueduct'))
+     order by z_order
+    ) as water_lines</Parameter>
+  </Datasource>
+</Layer>
+
+<Layer name="water_areas" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>water_areas_core</StyleName>
+  <Datasource>
+    &datasource-settings;
+    <Parameter name="table">
+    (select way,"natural",waterway,landuse,name,way_area
+     from &prefix;_polygon
+     where waterway in ('dock','mill_pond','riverbank','canal','river')
+        or landuse in ('reservoir','water','basin')
+        or "natural" in ('lake','water','land','glacier','pond')
+     order by z_order,way_area desc
+    ) as water_areas</Parameter>
+  </Datasource>
+</Layer>
+
+<Layer name="islands" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>islands</StyleName>
+  <Datasource>
+    &datasource-settings;
+    <Parameter name="table">
+    (select way,"natural" from &prefix;_polygon
+     where "natural" in ('land', 'island')
+     order by z_order,way_area desc) as land
+    </Parameter>
+  </Datasource>
+</Layer>

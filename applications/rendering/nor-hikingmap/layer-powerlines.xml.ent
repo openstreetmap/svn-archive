@@ -1,0 +1,22 @@
+<Style name="power">
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[power]='line' or [aerialway]='cable_car' or [aerialway]='gondola' or [aerialway]='chair_lift' or [aerialway]='drag_lift' or [aerialway]='t-bar' or [aerialway]='platter'</Filter>
+    <LinePatternSymbolizer file="&symbols;/power.png"
+       type="png" width="32" height="5" />
+  </Rule>
+</Style>
+
+<Layer name="power" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>power</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,power,aerialway
+     from &prefix;_line
+     where "power"='line'
+        or aerialway is not null
+    ) as power
+    </Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>

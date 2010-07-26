@@ -1,0 +1,25 @@
+
+<Style name="buildings">
+  <Rule>
+    &maxscale_zoom13;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">#333</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+</Style>
+
+<Layer name="buildings" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>buildings</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,building,leisure,railway,amenity,aeroway,landuse from &prefix;_polygon
+     where building is not null
+        or landuse='building'
+        or railway='station'
+        or amenity='place_of_worship'
+        or aeroway='terminal'
+     order by z_order,way_area desc) as buildings
+    </Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>

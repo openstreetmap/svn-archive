@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+#
+#  mkkeydb
+#  
+#  Reads keys.csv and creates new keys.db file.
+#
+#  0: key
+#  1: type
+#  2: maps
+#  3: id
+
+use strict;
+
+use Text::CSV_XS;
+
+my $csv = Text::CSV_XS->new ({ binary => 1 });
+
+open(KEYS, '<', 'keys.csv') or die("Can't open keys.csv\n");
+open(OUT, '| db4.6_load -T -t hash keys.db.new') or die("Can't start db load\n");
+
+while (<KEYS>) {
+    if ($csv->parse ($_)) {
+        my @field = $csv->fields;
+
+        # ignore first line and empty lines
+        next if ($field[0] eq 'key' || $field[0] eq '');
+
+        # ignore if no type (to delete keys)
+        next if ($field[1] eq '');
+        
+        my $val = "$field[1]:$field[2]:$field[3]";
+        print OUT "$field[0]\n$val\n";
+    }
+    else {
+        my $err = $csv->error_input;
+        print STDERR "parse () failed on argument: ", $err, "\n";
+        $csv->error_diag ();
+        exit(1);
+    }
+}
+
+close OUT;
+close KEYS;
+
+rename("keys.db.new", "keys.db");
+

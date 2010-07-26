@@ -1,36 +1,235 @@
+Mod mapnik wms README
+---------------------
 
-More detailed README will come in a few days.
+(created from http://wiki.openstreetmap.org/wiki/Mod_mapnik_wms - see that
+page for a potentially more current version)
 
-mod_mapnik_wms is a WMS module for Apache2/Mapnik. It is very basic, 
-supports only GetCapabilities and GetMap, no GetFeatureInfo or 
-custom styling.
+Overview
 
-dependencies
+   mod_mapnik_wms is an Apache module for building a Mapnik based WMS server.
+   It was initially written by Frederik Ramm for internal Geofabrik use, but
+   now is available under the GPL from the OpenStreetMap SVN
+   (applications/utils/mod_mapnik_wms).
 
-* mapnik - mapnik.org
-* apache development tools
-* libgd
-* libproj
-* berkeley-db - http://download.oracle.com/berkeley-db/db-4.8.24.tar.gz
+   Contents                                          
+                                                     
+     * 1 What is WMS?                                
+     * 2 What is mod_mapnik_wms?                     
+     * 3 Building mod_mapnik_wms                     
+     * 4 Installing and Configuring mod_mapnik_wms   
+     * 5 Layers                                      
+     * 6 Key Database                                
+     * 7 Testing                                     
 
-compiling
+What is WMS?
 
-* install dependencies
-* run ./autogen.sh
-* probably fix mapnik package versions in debian/*
-* run debuild
-* install resulting package on a server that has Apache and Mapnik
-* configure your virtual host according to server-config.example
+   WMS (Web Map Service) is an OGC standard for serving maps. Essentially, it
+   specifies a set of HTTP URL parameters used by a client to retrieve a map
+   image from a server.
 
-Mac osx notes -->
-* export cppflags/ldflags for mapnik and dependencies:
-  - e.g. export CPPFLAGS='-I/usr/local/include'
-  - e.g. export LDFLAGS="-L/usr/local/lib -lmapnik -lproj -lgd"
+   Compared to the usual tile servers we use in OSM, a WMS offers more
+   flexibility but eats more server resources. You can think of it like this:
+   a tile server is like buying off-the-shelf clothing at H&M. Your choices
+   are limited by what has been produced before you ever entered the shop;
+   but it is cheap and efficient. A WMS, on the other hand, is like
+   tailor-made clothing. You can request anything within a broad range of
+   options, and what you get is made to your specifications. This gives a
+   nicer fit but costs much more.
 
-* manually copy the mod:
-  sudo cp .libs/mod_mapnik_wms.so /usr/libexec/apache2/mod_mapnik_wms.so
+   So if you want to clothe the masses (offer a fast slippy map for a lot of
+   users), you should use a tile server. If you want to server a small number
+   of users with custom maps, use a WMS.
 
-* add to /etc/apache2/httpd.conf:
-    LoadModule mapnik_wms_module        libexec/apache2/mod_mapnik_wms.so
+What is mod_mapnik_wms?
 
-* apachectl configtest # should get 'SYNTAX OKAY'
+   mod_mapnik_wms is a module for the widely-used Apache web server that
+   speaks the WMS protocol. In fact the WMS standard is a bit convoluted and
+   has many extensions and optional extras, but mot_mapnik_wms currently only
+   supports the bare minimum: The GetCapabilities call which tells the client
+   what this server can do, and the GetMap call which produces a map. For
+   rendering the map, mod_mapnik_wms uses the Mapnik library.
+
+Building mod_mapnik_wms
+
+   To build mod_mapnik_wms, you need to have the following installed:
+
+     * Mapnik
+     * Apache2 development package (apache2-prefork-dev)
+     * libgd2 development package
+     * possibly a libdb development package (if you use the key database
+       described later)
+
+   You should be able to build a Debian package by just running "debuild",
+   but you can also choose to run "make". If you run "make" as root, Apache's
+   apxs2 will install the module right away.
+
+   You may have to adjust some Mapnik version numbers (grep -i mapnk
+   debian/*).
+
+Installing and Configuring mod_mapnik_wms
+
+   Before you install mod_mapnik_wms, make sure to have a working Mapnik
+   installation, including the style sheet you want to use, with the database
+   connection and shape files properly set up and configured. Test that with
+   generate_image.py from the OSM Mapnik package, or with nik2img.py. Do not
+   continue with mod_mapnik_wms installation if you are unsure whether your
+   Mapnik installation works at all.
+
+   Your Apache configuration must be modified to load the new module. If you
+   install the module per Debian package, that should be done automatically.
+   Otherwise you will have to place the commands
+
+ LoadFile /usr/lib/libstdc++.so.6
+ LoadFile /usr/lib/libmapnik.so.0.6
+ LoadFile /usr/lib/libgd.so.2
+ LoadFile /usr/lib/libdb-4.6.so
+ LoadModule mapnik_wms_module /usr/lib/apache2/modules/mod_mapnik_wms.so
+
+   somewhere in your Apache config. The library version numbers may have to
+   be changed depending on what's available on your system (which is
+   hopefully the same you had on the build system).
+
+   Then you must configure the WMS module. This is done through Apache
+   configuration directives, usually in the virtual host's config file in
+   your /etc/apache/sites_available directory. An example configuration is
+   provided in server_config.example.
+
+   The mod_mapnik_wms-specific configuration options are:
+
+   +------------------------------------------------------------------------+
+   |       Option        |     Default      |              Use              |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | A list of allowed SRS names,  |
+   |                     |                  | separated by spaces. They     |
+   |                     |                  | must be supported by the      |
+   |                     |                  | underlying Mapnik             |
+   | WmsSrs              | none             | installation.                 |
+   |                     |                  |                               |
+   |                     |                  | You will usually want to have |
+   |                     |                  | at least EPSG:4326 in that    |
+   |                     |                  | list.                         |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | Path to Mapnik data source    |
+   | MapnikDatasources   | none (required)  | modules (plugins), usually    |
+   |                     |                  | /usr/lib/mapnik/input. May    |
+   |                     |                  | occur more than once.         |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | Path to ttf font used in map  |
+   | MapnikFonts         | none (required)  | files. May occur more than    |
+   |                     |                  | once.                         |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | Path to the map file.         |
+   | MapnikMap           | none (required)  | Currently only one is         |
+   |                     |                  | supported.                    |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | WMS server title you want to  |
+   | WmsTitle            | empty            | return for GetCapability      |
+   |                     |                  | requests.                     |
+   |---------------------+------------------+-------------------------------|
+   | WmsTopLayerTitle    | OpenStreetMap    | WMS top layer title.          |
+   |                     | WMS              |                               |
+   |---------------------+------------------+-------------------------------|
+   | WmsTopLayerName     | OpenStreetMap    | WMS top layer name.           |
+   |                     | WMS              |                               |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | Expose individual Mapnik      |
+   |                     |                  | layers to WMS client. This is |
+   |                     |                  | currently commented           |
+   | WmsIncludeSubLayers | false            |                               |
+   |                     |                  | out in the code because       |
+   |                     |                  | Mapnik layers are really not  |
+   |                     |                  | adequate for selecting        |
+   |                     |                  | individually.                 |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | If true, the map file will be |
+   |                     |                  | loaded for each request       |
+   | WmsDebug            | false            | instead of once at startup    |
+   |                     |                  |                               |
+   |                     |                  | which makes fiddling with the |
+   |                     |                  | style easier.                 |
+   |---------------------+------------------+-------------------------------|
+   | MapnikLog           | none             | File to redirect the "clog"   |
+   |                     |                  | stream to.                    |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | The URL under which your WMS  |
+   |                     |                  | server can be reached from    |
+   |                     |                  | the outside. It is used in    |
+   |                     |                  |                               |
+   |                     |                  | constructing the              |
+   |                     |                  | GetCapabilities response.     |
+   |                     |                  | Note that clients will use    |
+   |                     |                  | this URL to access the WMS    |
+   |                     |                  | service even if they have     |
+   | WmsUrl              | empty            | retrieved the capabilities    |
+   |                     |                  | document through another      |
+   |                     |                  | channel, e.g. if you have a   |
+   |                     |                  | port forwarding set up and    |
+   |                     |                  | have your client connect to   |
+   |                     |                  | localhost:1234 to retrieve    |
+   |                     |                  | the capabilities document, it |
+   |                     |                  | will only use localhost:1234  |
+   |                     |                  | for the map request if this   |
+   |                     |                  | is actually specified in the  |
+   |                     |                  | WmsUrl.                       |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | Path the the key database     |
+   |                     |                  | (see below). Only available   |
+   |                     |                  | if compiled with              |
+   | WmsKeyDb            | empty            | USE_KEY_DATABASE.             |
+   |                     |                  |                               |
+   |                     |                  | If empty, no key checking     |
+   |                     |                  | will be done.                 |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | Maximum image width for       |
+   |                     |                  | "demo" class requests. Only   |
+   |                     |                  | available if compiled with    |
+   | WmsMaxDemoWidth     | unset            | USE_KEY_DATABASE.             |
+   |                     |                  |                               |
+   |                     |                  | Demo requests use standard    |
+   |                     |                  | limits if unset.              |
+   |---------------------+------------------+-------------------------------|
+   |                     |                  | Maximum image height for      |
+   |                     |                  | "demo" class requests. Only   |
+   |                     |                  | available if compiled with    |
+   | WmsMaxDemoHeight    | unset            | USE_KEY_DATABASE.             |
+   |                     |                  |                               |
+   |                     |                  | Demo requests use standard    |
+   |                     |                  | limits if unset.              |
+   |---------------------+------------------+-------------------------------|
+   | WmsExtentMinLon,    |                  |                               |
+   |                     | -179.9999,       | The data bounding box to be   |
+   | WmsExtentMaxLon,    | -89.999,         | published in the capabilities |
+   | WmsExtentMinLat,    | 179.9999, 89.999 | document                      |
+   | WmsExtentMaxLat     |                  |                               |
+   +------------------------------------------------------------------------+
+
+Layers
+
+   WMS supports layers. The server can announce to the client which layers it
+   supports, and the client can make a selection from them. In theory, this
+   module can publish the individual Mapnik layers to the client, and the
+   client can select which ones it wants. In practice this makes little sense
+   as Mapnik layers are not really made for separate use.
+
+Key Database
+
+   This module is used by Geofabrik to serve WMS content to paying customers.
+   Since not all WMS clients support HTTP authentication, we embed a customer
+   specific hash key in the URL (http://servername/maptype/hashkey?...). The
+   module checks whether the given key is in the database and disallows
+   access otherwise.
+
+   You can enable this mechanism if you set USE_KEY_DATABASE when compiling
+   mod_mapnik_wms. There's a small utility that creates the required databas
+   files from a CSV file in the keydb directory.
+
+Testing
+
+   You should be able to test your server with any WMS client, e.g.
+   OpenLayers or Quantum GIS. However, a simple check can be performed
+   directly in the browser:
+
+ http://servername/?LAYERS=&FORMAT=image%2Fjpeg&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX=-58.0078125,-13.359375,76.2890625,85.78125&WIDTH=382&HEIGHT=282
+
+   This should bring up a small map image with Europe and Northern Africa in
+   view.

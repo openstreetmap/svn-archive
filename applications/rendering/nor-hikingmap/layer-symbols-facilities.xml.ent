@@ -1,0 +1,257 @@
+<Style name="facilities">
+
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[leisure]='playground'</Filter>
+    <PointSymbolizer file="&symbols;/playground.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='drinking_water' or [natural]='spring' or [waterway]='water_point'</Filter>
+    <PointSymbolizer file="&symbols;/drinkingwater.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='restaurant' or [amenity]='fast_food' or [amenity]='food_court'</Filter>
+    <PointSymbolizer file="&symbols;/restaurant.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+<!--
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[tourism]='information'</Filter>
+    <PointSymbolizer file="&symbols;/information.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+-->
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[tourism]='hotel' or [tourism]='motel'</Filter>
+    <PointSymbolizer file="&symbols;/hotel.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[railway]='subway_entrance'</Filter>
+    <PointSymbolizer file="&symbols;/subway.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='fuel'</Filter>
+    <PointSymbolizer file="&symbols;/fuel.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='taxi'</Filter>
+    <PointSymbolizer file="&symbols;/taxi.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='telephone' or [amenity]='emergency_phone'</Filter>
+    <PointSymbolizer file="&symbols;/telephone.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='ferry_terminal'</Filter>
+    <PointSymbolizer file="&symbols;/ferry.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[leisure]='marina'</Filter>
+    <PointSymbolizer file="&symbols;/marina.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[leisure]='slipway'</Filter>
+    <PointSymbolizer file="&symbols;/slipway.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='pharmacy'</Filter>
+    <PointSymbolizer file="&symbols;/pharmacy.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='hospital'</Filter>
+    <PointSymbolizer file="&symbols;/hospital.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='doctors'</Filter>
+    <PointSymbolizer file="&symbols;/doctors.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='dentist'</Filter>
+    <PointSymbolizer file="&symbols;/dentist.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='theatre'</Filter>
+    <PointSymbolizer file="&symbols;/theatre.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='cinema'</Filter>
+    <PointSymbolizer file="&symbols;/cinema.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='community_centre' or [amenity]='arts_centre' or [leisure]='music_venue'</Filter>
+    <PointSymbolizer file="&symbols;/concerthall.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[tourism]='museum'</Filter>
+    <PointSymbolizer file="&symbols;/museum.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[tourism]='attraction'</Filter>
+    <PointSymbolizer file="&symbols;/attraction.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='supermarket'</Filter>
+    <PointSymbolizer file="&symbols;/groceries.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='kiosk'</Filter>
+    <PointSymbolizer file="&symbols;/kiosk.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='alcohol'</Filter>
+    <PointSymbolizer file="&symbols;/alcohol.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='post_office' or [amenity]='post_box'</Filter>
+    <PointSymbolizer file="&symbols;/postoffice.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='bank' or [amenity]='atm' or [amenity]='bureau_de_change' or [atm]='yes'</Filter>
+    <PointSymbolizer file="&symbols;/bank.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='library'</Filter>
+    <PointSymbolizer file="&symbols;/library.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='police'</Filter>
+    <PointSymbolizer file="&symbols;/police.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='toilets'</Filter>
+    <PointSymbolizer file="&symbols;/toilets.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='waste_basket' or [amenity]='waste_disposal' or [amenity]='recycling'</Filter>
+    <PointSymbolizer file="&symbols;/waste.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+
+</Style>
+
+<Layer name="facilities" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>facilities</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select *
+    from &prefix;_point
+    where amenity is not null
+       or sport is not null
+       or "natural" in ('spring')
+       or waterway='water_point'
+       or railway in ('station','subway_entrance','halt','stop')
+       or tourism in ('museum','attraction','hotel','motel')
+       or leisure in ('playground','marina','slipway')
+    ) as facilities</Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>
+<Layer name="facilities-poly" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>facilities</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select *
+    from &prefix;_polygon
+    where amenity is not null
+       or sport is not null
+       or tourism in ('museum','attraction','hotel','motel')
+       or leisure in ('playground','marina')
+    ) as facilities</Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>

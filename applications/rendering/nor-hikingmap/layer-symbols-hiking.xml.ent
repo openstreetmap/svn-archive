@@ -60,6 +60,13 @@
        allow_overlap="false"/>
   </Rule>
   <Rule>
+    &maxscale_zoom16;
+    <Filter>[leisure]='miniature_golf'</Filter>
+    <PointSymbolizer file="&symbols;/minigolf.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
     &maxscale_zoom14;
     <Filter>[sport]='shooting'</Filter>
     <PointSymbolizer file="&symbols;/shootingrange.png"
@@ -96,13 +103,6 @@
        allow_overlap="false"/>
   </Rule>
   <Rule>
-    &maxscale_zoom14;
-    <Filter>[tourism]='hotel' or [tourism]='motel'</Filter>
-    <PointSymbolizer file="&symbols;/hotel.png"
-       width="15" height="15" type="png"
-       allow_overlap="false"/>
-  </Rule>
-  <Rule>
     &maxscale_zoom13;
     <Filter>[amenity]='parking' and [hiking]='yes'</Filter>
     <PointSymbolizer file="&symbols;/parking.png"
@@ -122,6 +122,13 @@
     <Filter>[tourism]='information' and [information]='guidepost' and [hiking]='yes'</Filter>
     <PointSymbolizer file="&symbols;/signpost.png"
        width="12" height="16" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[tourism]='information' and [board_type]='nature'</Filter>
+    <PointSymbolizer file="&symbols;/natureboard.png"
+       width="15" height="15" type="png"
        allow_overlap="false"/>
   </Rule>
 
@@ -175,15 +182,13 @@
        width="15" height="15" type="png"
        allow_overlap="false"/>
   </Rule>
-<!--
-    <Rule>
-      &maxscale_zoom15;
-      <Filter>[fireplace]='yes'</Filter>
-      <PointSymbolizer file="&symbols;/fireplace.png"
-         width="15" height="15" type="png"
-         allow_overlap="false"/>
-    </Rule>
--->
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[amenity]='bbq' or [fireplace]='yes'</Filter>
+    <PointSymbolizer file="&symbols;/fireplace.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
 
   <Rule>
     &maxscale_zoom12;
@@ -210,7 +215,7 @@
 
   <Rule>
     &maxscale_zoom14;
-    <Filter>[building]='cabin'</Filter><!--or [tourism]='cabin'-->
+    <Filter>[building]='cabin'</Filter>
     <PointSymbolizer file="&symbols;/building.png"
         width="5" height="5" type="png" />
   </Rule>
@@ -256,11 +261,13 @@
        or highway='bus_stop'
        or railway='station'
        or waterway='waterfall'
+       or leisure in ('golf_course','miniature_golf')
        or sport in ('golf','shooting')
+       or fireplace='yes'
+       or building='cabin'
     ) as symbols</Parameter>
     &datasource-settings;
   </Datasource>
-       <!-- or fireplace='yes' -->
 </Layer>
 <Layer name="symbols-poly" status="on" srs="&osm2pgsql_projection;">
   <StyleName>symbols</StyleName>
@@ -270,7 +277,7 @@
     from &prefix;_polygon
     where amenity in ('parking','bus_station')
        or "natural"='beach'
-       or leisure='golf_course'
+       or leisure in ('golf_course','miniature_golf')
        or sport in ('golf','shooting')
        or historic in ('monument','memorial','ruins','archaeological_site')
        or tourism in ('picnic_site','camp_site','caravan_site')
@@ -278,7 +285,3 @@
     &datasource-settings;
   </Datasource>
 </Layer>
-
-<!--
-or barrier in ('bollard','gate','lift_gate','windfall')
--->

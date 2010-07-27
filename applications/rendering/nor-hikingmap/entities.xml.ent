@@ -6,6 +6,7 @@
 <!ENTITY layer-nationalpark SYSTEM "layer-nationalpark.xml.ent">
 <!ENTITY layer-powerlines SYSTEM "layer-powerlines.xml.ent">
 <!ENTITY layer-symbols-hiking SYSTEM "layer-symbols-hiking.xml.ent">
+<!ENTITY layer-symbols-facilities SYSTEM "layer-symbols-facilities.xml.ent">
 <!ENTITY layer-areatext SYSTEM "layer-areanames.xml.ent">
 <!ENTITY layer-resurvey SYSTEM "layer-resurvey.xml.ent">
 

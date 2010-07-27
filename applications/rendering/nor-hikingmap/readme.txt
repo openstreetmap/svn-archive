@@ -82,12 +82,14 @@ to hikingmap.xml and/or pistemap.xml
 TODO
 ====
 
-tourism=information & information=board & board_type=nature
-amenity=* symbols from zoom 16
 sport=* symbols from zoom 17
+motorsport
+leisure=fishing
+clay pigeon, pistol
+"post i butikk"
+natural=stone
 text: place=locality|farm|isolated_dwelling|island|islet|suburb
 text: road names from zoom=15/16
-natural=stone
 man_made=pier
 highway=turning_circle or (highway=* and area=yes)
-barrier=gate|cycle_barrier|stile|windfall
+barrier=gate|rift_gate|bollard|cycle_barrier|stile|windfall

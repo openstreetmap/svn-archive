@@ -34,8 +34,22 @@
 -->
   <Rule>
     &maxscale_zoom15;
-    <Filter>[tourism]='hotel' or [tourism]='motel'</Filter>
+    <Filter>[tourism]='hotel' or [tourism]='motel' or [tourism]='guest_house'</Filter>
     <PointSymbolizer file="&symbols;/hotel.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[tourism]='hostel'</Filter>
+    <PointSymbolizer file="&symbols;/hostel.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[tourism]='chalet'</Filter>
+    <PointSymbolizer file="&symbols;/chalet.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>
   </Rule>
@@ -159,21 +173,21 @@
 
   <Rule>
     &maxscale_zoom16;
-    <Filter>[amenity]='supermarket'</Filter>
+    <Filter>[shop]='supermarket' or [shop]='convenience' or [shop]='mall'</Filter>
     <PointSymbolizer file="&symbols;/groceries.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>[amenity]='kiosk'</Filter>
+    <Filter>[shop]='kiosk' or [shop]='ice_cream'</Filter>
     <PointSymbolizer file="&symbols;/kiosk.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>[amenity]='alcohol'</Filter>
+    <Filter>[shop]='alcohol' or [shop]='beverages'</Filter>
     <PointSymbolizer file="&symbols;/alcohol.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>
@@ -231,11 +245,12 @@
     (select *
     from &prefix;_point
     where amenity is not null
+       or shop is not null
        or sport is not null
        or "natural" in ('spring')
        or waterway='water_point'
        or railway in ('station','subway_entrance','halt','stop')
-       or tourism in ('museum','attraction','hotel','motel')
+       or tourism in ('museum','attraction','hotel','motel','hostel','chalet')
        or leisure in ('playground','marina','slipway')
     ) as facilities</Parameter>
     &datasource-settings;
@@ -248,8 +263,9 @@
     (select *
     from &prefix;_polygon
     where amenity is not null
+       or shop is not null
        or sport is not null
-       or tourism in ('museum','attraction','hotel','motel')
+       or tourism in ('museum','attraction','hotel','motel','hostel','chalet')
        or leisure in ('playground','marina')
     ) as facilities</Parameter>
     &datasource-settings;

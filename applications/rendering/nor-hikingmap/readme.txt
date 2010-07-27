@@ -83,6 +83,7 @@ TODO
 ====
 
 sport=* symbols from zoom 17
+tourism=guest_house, tourism=alpine_hut
 motorsport
 leisure=fishing
 clay pigeon, pistol

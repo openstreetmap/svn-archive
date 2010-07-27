@@ -160,11 +160,14 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
     <sign ref="DE:244" name="Bicycle road" de.name="Fahrradstraße">
         <!-- highway=* -->
         <tag key="bicycle" value="official"/>
-        <tag key="foot" value="yes"/>
         <tag key="maxspeed" value="30"/> <!-- FIXME: no override but min. value -->
         <tag key="access" value="" ident="mode"/>
         <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
         <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+        <supplementary id="DE:1022-12"/> <!-- Krafträder frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
+        <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
         <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
         <!-- Kraftfahrzeuge frei -->
@@ -228,6 +231,7 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
 
     <sign ref="DE:255" name="Motorcycles prohibited" de.name="Verbot für Krafträder">
         <tag key="motorcycle" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
         <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
         <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
     </sign>
@@ -240,6 +244,8 @@ Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte
 
     <sign ref="DE:258" deprecated="yes" name="Horses prohibited" de.name="Verbot für Reiter">
         <tag key="horse" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
     </sign>
 
     <sign ref="DE:259" name="Pedestrians prohibited" de.name="Verbot für Fußgänger">

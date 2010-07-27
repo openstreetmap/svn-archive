@@ -11,8 +11,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 final public class TaggingCellRenderer extends DefaultListCellRenderer {
     @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -39,7 +39,7 @@ final public class TaggingCellRenderer extends DefaultListCellRenderer {
             else if (a.types.size() != 1)
                 l.setIcon(ImageProvider.get("data", "object"));
             else
-                l.setIcon(ImageProvider.get("Mf_" + a.types.get(0)));
+                l.setIcon(ImageProvider.get(a.types.iterator().next().getIconName()));
         }
         l.setOpaque(true);
         return l;

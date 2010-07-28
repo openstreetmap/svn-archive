@@ -14,9 +14,17 @@
 /* Nominatim search place type */ tr("town");
 /* Landuse type used in multipolygons */ tr("forest");
 /* Landuse type used in multipolygons */ tr("farmland");
-/* relation type */ tr("boundary");
-/* relation type */ tr("multipolygon");
-/* relation type */ tr("route");
+/* relation type */ trc("Relation type", "associatedStreet");
+/* relation type */ trc("Relation type", "boundary");
+/* relation type */ trc("Relation type", "enforcement");
+/* relation type */ trc("Relation type", "line");
+/* relation type */ trc("Relation type", "multipolygon");
+/* relation type */ trc("Relation type", "network");
+/* relation type */ trc("Relation type", "public_transport");
+/* relation type */ trc("Relation type", "restriction");
+/* relation type */ trc("Relation type", "route");
+/* relation type */ trc("Relation type", "site");
+/* relation type */ trc("Relation type", "waterway");
 
 /* Strings in JFileChooser */ tr("All Files");
 /* Strings in JFileChooser */ tr("Attributes");

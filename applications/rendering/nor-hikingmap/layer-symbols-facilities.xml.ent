@@ -195,7 +195,7 @@
 
   <Rule>
     &maxscale_zoom16;
-    <Filter>[amenity]='post_office' or [amenity]='post_box'</Filter>
+    <Filter>[amenity]='post_office'</Filter>
     <PointSymbolizer file="&symbols;/postoffice.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>

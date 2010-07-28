@@ -82,12 +82,10 @@ to hikingmap.xml and/or pistemap.xml
 TODO
 ====
 
-sport=* symbols from zoom 17
-tourism=guest_house, tourism=alpine_hut
 motorsport
-leisure=fishing
 clay pigeon, pistol
-"post i butikk"
+sport=* symbols from zoom 17
+"post i butikk": shop=* and amenity=post_office
 natural=stone
 text: place=locality|farm|isolated_dwelling|island|islet|suburb
 text: road names from zoom=15/16

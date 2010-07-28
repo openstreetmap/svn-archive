@@ -17,7 +17,7 @@
 
   <Rule>
     &maxscale_zoom7;
-    <Filter>([tourism]='guest_house' or [tourism]='hostel') and [operator]='Den Norske Turistforening'</Filter>
+    <Filter>([tourism]='guest_house' or [tourism]='hostel' or [tourism]='alpine_hut') and [operator]='Den Norske Turistforening'</Filter>
     <PointSymbolizer file="&symbols;/tourist-cabin-staffed-lodge.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>
@@ -77,6 +77,13 @@
     &maxscale_zoom14;
     <Filter>[natural]='beach'</Filter>
     <PointSymbolizer file="&symbols;/beach.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[leisure]='fishing'</Filter>
+    <PointSymbolizer file="&symbols;/fishing.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>
   </Rule>
@@ -255,13 +262,13 @@
     where man_made in ('cairn','tower','mast','lighthouse','power_wind','windmill')
        or amenity in ('shelter','cafe','place_of_worship','parking','bus_station','hunting_stand')
        or historic in ('monument','memorial','ruins','archaeological_site','yes')
-       or tourism in ('viewpoint','information','cabin','guest_house','alpine_hut','hostel','hotel','motel','lean_to','picnic_site','camp_site','caravan_site')
+       or tourism in ('viewpoint','information','cabin','guest_house','alpine_hut','hostel','hotel','motel','lean_to','picnic_site','camp_site','caravan_site','basic_hut','wilderness_hut')
        or "natural" in ('cave_entrance','beach','tree')
        or (power='generator' and power_source='wind')
        or highway='bus_stop'
        or railway='station'
        or waterway='waterfall'
-       or leisure in ('golf_course','miniature_golf')
+       or leisure in ('picnic_table','golf_course','miniature_golf','fishing')
        or sport in ('golf','shooting')
        or fireplace='yes'
        or building='cabin'
@@ -277,7 +284,7 @@
     from &prefix;_polygon
     where amenity in ('parking','bus_station')
        or "natural"='beach'
-       or leisure in ('golf_course','miniature_golf')
+       or leisure in ('golf_course','miniature_golf','fishing')
        or sport in ('golf','shooting')
        or historic in ('monument','memorial','ruins','archaeological_site')
        or tourism in ('picnic_site','camp_site','caravan_site')

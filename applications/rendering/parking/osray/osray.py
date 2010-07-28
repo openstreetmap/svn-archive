@@ -22,6 +22,7 @@ def pov_globals(f):
     if Radiosity:
         globsettings = """
 #include "colors.inc"
+#include "scene-osray-tunnels.inc"
 global_settings {{
     assumed_gamma 1.0
     noise_generator 2
@@ -39,6 +40,7 @@ global_settings {{
     else:
         globsettings = """
 #include "colors.inc"
+#include "scene-osray-tunnels.inc"
 global_settings {{
     assumed_gamma 2.0
     noise_generator 2
@@ -232,8 +234,10 @@ def main(options):
     if create_textures:
         create_ground_texture(osraydb,options,'/home/kayd/workspace/Parking/osray/scene-osray-landuse-texture.pov')
         #pass
+
+    digname = '/home/kayd/workspace/Parking/osray/scene-osray-tunnels.inc'
     
-    render_highways(f,osraydb,options)
+    render_highways(f,osraydb,options,digname)
     render_buidings(f,osraydb,options)
     render_furniture(f,osraydb,options)
     f.close()

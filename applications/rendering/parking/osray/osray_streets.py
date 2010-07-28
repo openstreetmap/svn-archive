@@ -6,32 +6,33 @@ from osray_geom import *
 from osray_network import *
 
 Radiosity = True
+meter = 2 # FIXME: calculate 1 meter for given latitude
 
-highwaytypes = { # highwaytype : [color,lane_width_factor]
-    'motorway':['<1,0.3,0.1>',1.3],
-    'motorway_link':['<1,0.3,0.1>',1.3],
-    'trunk':['<0.85,1,0.85>',1.1],
-    'trunk_link':['<0.85,1,0.85>',1.1],
-    'primary':['<1,1,0.85>',1.0],
-    'primary_link':['<1,1,0.85>',1.0],
-    'secondary':['<1,0.85,0.85>',1.0],
-    'secondary_link':['<1,0.85,0.85>',1.0],
-    'tertiary':['<1,0.85,0.7>',1.0],
-    'residential':['<0.9,0.9,0.9>',0.8],
-    'living_street':['<0.8,0.8,0.9>',0.8],
-    'unclassified':['<0.8,0.8,0.8>',0.8],
-    'service':['<0.8,0.8,0.8>',0.6],
-    'pedestrian':['<0.8,0.9,0.8>',0.8],
-    'footway':['<0.8,0.9,0.8>',0.3],
-    'steps':['<0.5,0.65,0.5>',0.3],
-    'cycleway':['<0.8,0.8,0.9>',0.3],
-    'track':['<0.7,0.7,0.6>',0.8],
-    'bus_stop':['<1,0,0>',0.9],
-    'bus_station':['<1,0,0>',0.9],
-    'bus_guideway':['<0.8,0.9,1>',1.0],
-    'road':['<1,0,0>',0.9],
-    'path':['<0.8,0.9,0.8>',0.5],
-    'unknown':['<1.0,0,1.0>',1.0]
+highwaytypes = { # highwaytype : [color,lane_width in meters]
+    'motorway':['<1,0.3,0.1>',3.0],
+    'motorway_link':['<1,0.3,0.1>',3.0],
+    'trunk':['<0.85,1,0.85>',2.75],
+    'trunk_link':['<0.85,1,0.85>',2.75],
+    'primary':['<1,1,0.85>',2.5],
+    'primary_link':['<1,1,0.85>',2.5],
+    'secondary':['<1,0.85,0.85>',2.5],
+    'secondary_link':['<1,0.85,0.85>',2.5],
+    'tertiary':['<1,0.85,0.7>',2.5],
+    'residential':['<0.9,0.9,0.9>',2.0],
+    'living_street':['<0.8,0.8,0.9>',2.0],
+    'unclassified':['<0.8,0.8,0.8>',2.0],
+    'service':['<0.8,0.8,0.8>',2.0],
+    'pedestrian':['<0.8,0.9,0.8>',2.0],
+    'footway':['<0.8,0.9,0.8>',0.75],
+    'steps':['<0.5,0.65,0.5>',0.75],
+    'cycleway':['<0.8,0.8,0.9>',0.75],
+    'track':['<0.7,0.7,0.6>',2.0],
+    'bus_stop':['<1,0,0>',2.25],
+    'bus_station':['<1,0,0>',2.25],
+    'bus_guideway':['<0.8,0.9,1>',2.75],
+    'road':['<1,0,0>',2.25],
+    'path':['<0.8,0.9,0.8>',1.25],
+    'unknown':['<1.0,0,1.0>',2.5]
     }
 
 
@@ -72,7 +73,7 @@ def pov_declare_highway_textures(f):
     f.write(declare_highway_texture.format(color='<0.4,0.4,0.4>',highwaytype='casing'))
 
 
-def draw_lines(f,line,height,streetwidth,highwaytype):
+def draw_lines_XXX(f,line,height,streetwidth,highwaytype):
     numpoints = len(line)
     f.write("object {")
     f.write("union {")
@@ -96,6 +97,7 @@ def draw_lines(f,line,height,streetwidth,highwaytype):
     
 def draw_way(f,line,height_offset,streetwidth,highwaytype,og):
     squeeze = 0.05
+    r=streetwidth/2.0 # radius=d/2
     #FIXME (make casing very thin, otherwise it draws over ways, if road is not horizontally aligned)
     #if height_offset>0:
     #    squeeze = 0.0005
@@ -108,21 +110,69 @@ def draw_way(f,line,height_offset,streetwidth,highwaytype,og):
     for i,point in enumerate(line):
         x,y = point
         z = og.get_height(point)
-        f.write(" sphere {{ <{x}, {zs}, {y}>,{d} }}\n".format(x=x,y=y,zs=(z/squeeze),d=streetwidth))
+        f.write(" sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=r*meter))
         if(x_prev != None):
-            f.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{d} }}\n".format(x1=x,y1=y,z1s=(z/squeeze),x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze),d=streetwidth))
+            f.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=r*meter))
         x_prev=x
         y_prev=y
         z_prev=z
     f.write("}") # union ends
     f.write("scale <1, {s}, 1>".format(s=squeeze))
-    f.write("translate <0, {z}, 0>".format(z=height_offset))
+    f.write("translate <0, {z}, 0>".format(z=height_offset*meter))
     #f.write("  } ") #end of intersection
     f.write("""texture {{ texture_highway_{highwaytype} }}
 }}
 \n""".format(highwaytype=highwaytype))
+
+def draw_digout(dig,line,height_offset,streetwidth,highwaytype,og):
+    """ digs canyons into the ground - if level<0 but tunnel=no """
+    rx = streetwidth/2.0 # radius=d/2
+    rx *= 2 # canyon must be larger than highway
+    ry = 4.0 
+    squeeze = ry/rx
+
+    numpoints = len(line)
+    dig.write("object {")
+    dig.write("union {")
+
+    x_prev = None
+    for i,point in enumerate(line):
+        x,y = point
+        z = og.get_height(point)
+        dig.write(" sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=r*meter))
+        if(x_prev != None):
+            dig.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=r*meter))
+        x_prev=x
+        y_prev=y
+        z_prev=z
+    dig.write("}") # union ends
+    dig.write("translate <0, {z}, 0>".format(z=height_offset*meter))
     
-def calculate_lanefactor(lanes,lanesfw,lanesbw,oneway):
+def draw_tunnel(dig,line,height_offset,streetwidth,highwaytype,og):
+    """ digs holes in the ground - tunnels """
+    rx = streetwidth/2.0 # radius=d/2
+    rx *= 5.0/4.0 # tunnel must be larger than highway
+    ry = 4.0
+    squeeze = ry/rx
+    
+    numpoints = len(line)
+    dig.write("object {")
+    dig.write("union {")
+
+    x_prev = None
+    for i,point in enumerate(line):
+        x,y = point
+        z = og.get_height(point) + 1.3 # tunnel center is 1.3 m above street level
+        dig.write(" sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=r*meter))
+        if(x_prev != None):
+            dig.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=r*meter))
+        x_prev=x
+        y_prev=y
+        z_prev=z
+    dig.write("}") # union ends
+    dig.write("translate <0, {z}, 0>".format(z=height_offset*meter))
+    
+def calculate_number_of_lanes(lanes,lanesfw,lanesbw,oneway):
     if lanes==None:#
         # no lanes specified: look if lanes:forward is specified
         if lanesfw!=None and lanesbw!=None:
@@ -130,11 +180,12 @@ def calculate_lanefactor(lanes,lanesfw,lanesbw,oneway):
         # none specified: use defaults
         lanefactor = 2.0 # 2 lanes seems to be default
         if parse_yes_no_safely(oneway,False)==True:
-            lanefactor = 1.2 # except for one-ways (make it a bit wider than 2 lanes/2)
+            lanefactor = 1.0 # except for one-ways (make it a bit wider than 2 lanes/2)
         return lanefactor
     return parse_float_safely(lanes,2.0)
 
 def pov_highway(f,highway,og):
+    
     f.write("/* osm_id={0} */\n".format(highway['osm_id']))
     highwaytype = highway['highway']
 
@@ -151,20 +202,18 @@ def pov_highway(f,highway,og):
 #    if(highway['oneway']=='yes'):
 #        oneway=True
 
-    lanefactor = calculate_lanefactor(highway['lanes'],highway['lanesfw'],highway['lanesbw'],highway['oneway'])
-    lanewidth = 2.5 # m
+    lanefactor = calculate_number_of_lanes(highway['lanes'],highway['lanesfw'],highway['lanesbw'],highway['oneway'])
+    lanewidth = highwayparams[1]
+    if lanefactor==1 and parse_yes_no_safely(highway['oneway'],False)==True:
+        lanewith *= 1.2 # make one lane oneways a bit wider
     streetwidth = lanewidth * lanefactor
 
     layer = parse_int_safely(highway['layer'],default=0)
     if layer<0:
         layer=0 # FIXME
-    layerheight = 4.0*layer # 4 m per layer
-## draw road
-#    draw_lines(f,line,layerheight,streetwidth*highwayparams[1],highwaytype)
-## draw casing
-#    draw_lines(f,line,layerheight-0.05*lanefactor,1.2*streetwidth*highwayparams[1],'casing')
-    draw_way(f,line,0.1*lanefactor,streetwidth*highwayparams[1],highwaytype,og)
-    draw_way(f,line,-0.1*lanefactor,1.2*streetwidth*highwayparams[1],'casing',og)
+    layerheight = 4.0 * layer # 4 m per layer
+    draw_way(f,line,0.2*lanefactor,streetwidth,highwaytype,og)
+    draw_way(f,line,0,1.2*streetwidth,'casing',og)
 
 def pov_highway_area(f,highway):
     highwaytype = highway['highway']
@@ -180,6 +229,7 @@ def pov_highway_area(f,highway):
 
     heightstring = highway['height']
     height = 0.1 #FIXME
+    height = height+0.02
 
     amenity = highway['amenity']
 
@@ -188,7 +238,7 @@ def pov_highway_area(f,highway):
     #
     numpoints = len(polygon)
     #f.write("polygon {{ {0},\n".format(numpoints))
-    f.write("prism {{ linear_spline 0, 0.01, {0},\n".format(numpoints))
+    f.write("prism {{ linear_spline 0, 0.01, {n},\n".format(n=numpoints))
     f.write("/* osm_id={0} */\n".format(highway['osm_id']))
 
     for i,point in enumerate(polygon):
@@ -317,6 +367,8 @@ def pov_amenity_area(f,amenity):
 
     heightstring = amenity['height']
     height = 0.1 #FIXME
+    height = height+0.01
+
 
     # 
     # draw the amenity area
@@ -477,7 +529,8 @@ def pov_barrier(f,barrier,og):
 
     f.write("object {{ barrier_{typ} () scale <5,5,5> translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z,typ=barrierparams[0]))
 
-def render_highways(f,osraydb,options):
+def render_highways(f,osraydb,options,digname):
+    dig = open(digname, 'w')
     Radiosity = options['radiosity']
     f.write(declarations)
 

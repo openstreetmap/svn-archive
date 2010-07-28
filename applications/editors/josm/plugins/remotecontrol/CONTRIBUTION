@@ -1,2 +1,6 @@
 Originally developed by Frederik Ramm <frederik@remote.org>. Add yourself
 if you contribute.
+
+Stephan Knauss <osm@stephans-server.de>:
+   added /version command to return protocol version
+   added CORS headers for modern browsers, legacy browsers can use jsonp

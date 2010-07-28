@@ -42,6 +42,13 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
  */
 public class RequestProcessor extends Thread
 {
+	/**
+	 * RemoteControl protocol version.
+	 * Change minor number for compatible interface extensions. Change major number in case of incompatible changes.
+	 */
+	public static final String PROTOCOLVERSION = "{\"protocolversion\": {\"major\": 1, \"minor\": 0}, \"application\": \"JOSM RemoteControl\"}";
+
+	
     /** The socket this processor listens on */
     private Socket request;
 
@@ -79,6 +86,9 @@ public class RequestProcessor extends Thread
         Writer out = null;
         try
         {
+			String content = "OK\r\n";
+			String contentType = "text/plain";
+			
             OutputStream raw = new BufferedOutputStream( request.getOutputStream());
             out = new OutputStreamWriter(raw);
             Reader in = new InputStreamReader(new BufferedInputStream(request.getInputStream()), "ASCII");
@@ -277,11 +287,17 @@ public class RequestProcessor extends Thread
                     return;
                 }
                 // TODO: select/zoom to downloaded
-            }
-            sendHeader(out, "200 OK", "text/plain", false);
-            out.write("Content-length: 4\r\n");
+            } else if (command.equals("/version")) {
+				content = RequestProcessor.PROTOCOLVERSION;
+				contentType = "application/json";
+				if (args.containsKey("jsonp")) {
+					content = args.get("jsonp")+ " && " + args.get("jsonp") + "(" + content + ")";
+				}
+			}
+            sendHeader(out, "200 OK", contentType, false);
+            out.write("Content-length: "+content.length()+"\r\n");
             out.write("\r\n");
-            out.write("OK\r\n");
+            out.write(content);
             out.flush();
         }
         catch (IOException ioe) { }
@@ -408,6 +424,7 @@ public class RequestProcessor extends Thread
         out.write("Date: " + now + "\r\n");
         out.write("Server: JOSM RemoteControl\r\n");
         out.write("Content-type: " + contentType + "\r\n");
+		out.write("Access-Control-Allow-Origin: *\r\n");
         if (endHeaders)
             out.write("\r\n");
     }

@@ -3,6 +3,7 @@
 	<name>remotecontrol</name>
 	<comment></comment>
 	<projects>
+		<project>JOSM</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

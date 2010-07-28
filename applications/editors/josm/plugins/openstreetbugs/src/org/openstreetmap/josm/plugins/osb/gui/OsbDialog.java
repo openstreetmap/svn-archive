@@ -326,7 +326,10 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
         if (e.isPopupTrigger()) {
             int selectedRow = bugList.locationToIndex(e.getPoint());
             bugList.setSelectedIndex(selectedRow);
-            PopupFactory.createPopup(getSelectedNode(), this).show(e.getComponent(), e.getX(), e.getY());
+            Node selectedNode = getSelectedNode();
+            if(selectedNode != null) {
+                PopupFactory.createPopup(selectedNode, this).show(e.getComponent(), e.getX(), e.getY());
+            }
         }
     }
 

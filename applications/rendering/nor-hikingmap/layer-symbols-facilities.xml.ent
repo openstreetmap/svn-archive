@@ -202,7 +202,8 @@
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>[amenity]='bank' or [amenity]='atm' or [amenity]='bureau_de_change' or [atm]='yes'</Filter>
+    <Filter>[amenity]='bank' or [amenity]='atm' or [amenity]='bureau_de_change'</Filter>
+    <!-- or [atm]='yes'-->
     <PointSymbolizer file="&symbols;/bank.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>

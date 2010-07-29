@@ -25,13 +25,13 @@ import java.text.MessageFormat;
 /**
  * Mapnik Tile Provider
  */
-public class MapSurferTileProvider
+public class MapSurferProfileTileProvider
     extends RotatingTileProvider
 {
-    private final static String[] SUBDOMAINS = { "1" };
+    private final static String[] SUBDOMAINS = { "2" };
     private int serverNumber = -1;
 
-    public MapSurferTileProvider()
+    public MapSurferProfileTileProvider()
     {
         url = "http://tiles{0}.mapsurfer.net/tms_r.ashx?x={2}&y={3}&z={1}";
     }
@@ -62,7 +62,7 @@ public class MapSurferTileProvider
     @Override
     public String getName()
     {
-        return "MapSurfer (Road)";
+        return "MapSurfer (Profile)";
     }
 
     /**

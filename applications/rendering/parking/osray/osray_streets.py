@@ -126,6 +126,14 @@ def draw_way(f,line,height_offset,streetwidth,highwaytype,og):
 
 def draw_digout(dig,line,height_offset,streetwidth,highwaytype,og):
     """ digs canyons into the ground - if level<0 but tunnel=no """
+
+    bailout = True
+    for point in enumerate(line):
+        if og.get_height(point)<0.0:
+            beilout = False
+    if bailout:
+        return
+
     rx = streetwidth/2.0 # radius=d/2
     rx *= 2 # canyon must be larger than highway
     ry = 4.0 
@@ -148,8 +156,16 @@ def draw_digout(dig,line,height_offset,streetwidth,highwaytype,og):
     dig.write("}") # union ends
     dig.write("translate <0, {z}, 0>".format(z=height_offset*meter))
     
-def draw_tunnel(dig,line,height_offset,streetwidth,highwaytype,og):
+def draw_tunnel(dig,line,height_offset,streetwidth,og):
     """ digs holes in the ground - tunnels """
+
+    bailout = True
+    for point in enumerate(line):
+        if og.get_height(point)<0.0:
+            beilout = False
+    if bailout:
+        return
+
     rx = streetwidth/2.0 # radius=d/2
     rx *= 5.0/4.0 # tunnel must be larger than highway
     ry = 4.0
@@ -184,7 +200,7 @@ def calculate_number_of_lanes(lanes,lanesfw,lanesbw,oneway):
         return lanefactor
     return parse_float_safely(lanes,2.0)
 
-def pov_highway(f,highway,og):
+def pov_highway(f,highway,og,dig):
     
     f.write("/* osm_id={0} */\n".format(highway['osm_id']))
     highwaytype = highway['highway']
@@ -214,6 +230,7 @@ def pov_highway(f,highway,og):
     layerheight = 4.0 * layer # 4 m per layer
     draw_way(f,line,0.2*lanefactor,streetwidth,highwaytype,og)
     draw_way(f,line,0,1.2*streetwidth,'casing',og)
+    draw_tunnel(dig,line,0,streetwidth,og)
 
 def pov_highway_area(f,highway):
     highwaytype = highway['highway']
@@ -547,7 +564,7 @@ def render_highways(f,osraydb,options,digname):
     #print og.G.nodes()
     
     for highway in highways:
-        pov_highway(f,highway,og)
+        pov_highway(f,highway,og,dig)
         #pass
 
     highway_areas = osraydb.select_highway_areas()
@@ -562,3 +579,5 @@ def render_highways(f,osraydb,options,digname):
     barriers = osraydb.select_barriers()
     for barrier in barriers:
         pov_barrier(f,barrier,og)
+
+    dig.close()

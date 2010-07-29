@@ -128,7 +128,7 @@ def draw_digout(dig,line,height_offset,streetwidth,highwaytype,og):
     """ digs canyons into the ground - if level<0 but tunnel=no """
 
     bailout = True
-    for point in enumerate(line):
+    for point in line:
         if og.get_height(point)<0.0:
             beilout = False
     if bailout:
@@ -160,7 +160,7 @@ def draw_tunnel(dig,line,height_offset,streetwidth,og):
     """ digs holes in the ground - tunnels """
 
     bailout = True
-    for point in enumerate(line):
+    for point in line:
         if og.get_height(point)<0.0:
             beilout = False
     if bailout:

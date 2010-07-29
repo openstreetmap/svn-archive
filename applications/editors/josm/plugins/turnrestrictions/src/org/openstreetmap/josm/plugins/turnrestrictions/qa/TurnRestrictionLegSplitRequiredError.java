@@ -11,6 +11,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.actions.SplitWayAction.SplitWayResult;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionLegRole;
@@ -27,9 +28,9 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
 	private Node interesect;
 
 	/**
-	 * Create the issue 
-	 * 
-	 * @param parent the parent model 
+	 * Create the issue
+	 *
+	 * @param parent the parent model
 	 * @param role the role of the way which should be splitted
 	 * @param from the way with role 'from'
 	 * @param to the way with role 'to'
@@ -45,7 +46,7 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
 	}
 
 	@Override
-	public String getText() {		
+	public String getText() {
 		String msg = null;
 		switch(role){
 		case FROM:
@@ -54,7 +55,7 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
 				from.getDisplayName(DefaultNameFormatter.getInstance()),
 				role.getOsmRole(),
 				interesect.getDisplayName(DefaultNameFormatter.getInstance()),
-				to.getDisplayName(DefaultNameFormatter.getInstance())				
+				to.getDisplayName(DefaultNameFormatter.getInstance())
 			);
 			break;
 		case TO:
@@ -69,7 +70,7 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
 		}
 		return msg;
 	}
-	
+
 	class SplitAction extends AbstractAction {
 		public SplitAction() {
 			putValue(NAME, tr("Split now"));
@@ -82,13 +83,14 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
 			case TO: way = to; break;
 			}
 			SplitWayResult result = SplitWayAction.split(
-					parent.getEditorModel().getLayer(), 
-					way, 
-					Collections.singletonList(interesect)
+					parent.getEditorModel().getLayer(),
+					way,
+					Collections.singletonList(interesect),
+					Collections.<OsmPrimitive>emptyList()
 			);
 			if (result != null){
 				Main.main.undoRedo.add(result.getCommand());
 			}
-		}		
+		}
 	}
 }

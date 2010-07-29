@@ -28,6 +28,7 @@ public class RemoteControlPreferences implements PreferenceSetting
     private JCheckBox permissionCreateObjects = new JCheckBox(tr("create new objects"));
     private JCheckBox permissionChangeSelection = new JCheckBox(tr("change the selection"));
     private JCheckBox permissionChangeViewport = new JCheckBox(tr("change the viewport"));
+    private JCheckBox permissionReadProtocolversion = new JCheckBox(tr("read protocol version"));
     private JCheckBox alwaysAskUserConfirm = new JCheckBox(tr("confirm all Remote Control actions manually"));
 
     public void addGui(final PreferenceTabbedPane gui)
@@ -43,6 +44,7 @@ public class RemoteControlPreferences implements PreferenceSetting
         perms.add(permissionLoadData, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         perms.add(permissionChangeSelection, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         perms.add(permissionChangeViewport, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
+        perms.add(permissionReadProtocolversion, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         remote.add(perms, GBC.eol().fill(GBC.HORIZONTAL));
 
         remote.add(alwaysAskUserConfirm, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
@@ -53,6 +55,7 @@ public class RemoteControlPreferences implements PreferenceSetting
         permissionChangeSelection.setSelected(Main.pref.getBoolean("remotecontrol.permission.change-selection", true));
         permissionChangeViewport.setSelected(Main.pref.getBoolean("remotecontrol.permission.change-viewport", true));
         permissionCreateObjects.setSelected(Main.pref.getBoolean("remotecontrol.permission.create-objects", true));
+        permissionReadProtocolversion.setSelected(Main.pref.getBoolean("remotecontrol.permission.read-protocolversion", true));
         alwaysAskUserConfirm.setSelected(Main.pref.getBoolean("remotecontrol.always-confirm", false));
 
     }
@@ -62,6 +65,7 @@ public class RemoteControlPreferences implements PreferenceSetting
         Main.pref.put("remotecontrol.permission.change-selection", permissionChangeSelection.isSelected());
         Main.pref.put("remotecontrol.permission.change-viewport", permissionChangeViewport.isSelected());
         Main.pref.put("remotecontrol.permission.create-objects", permissionCreateObjects.isSelected());
+        Main.pref.put("remotecontrol.permission.read-protocolversion", permissionReadProtocolversion.isSelected());
         Main.pref.put("remotecontrol.always-confirm", alwaysAskUserConfirm.isSelected());
         // FIXME confirm return value - really no restart needed?
         return false /* no restart needed */;

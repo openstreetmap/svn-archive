@@ -27,7 +27,7 @@
 <project name="remotecontrol" default="dist" basedir=".">
 	
 	<!-- set before publising -->
-	<property name="commit.message" value="Added version info capable of jsonp. Also made header CORS aware" />		
+	<property name="commit.message" value="version command evaluates permission flags" />		
 	<property name="plugin.main.version" value="2830" />
 	
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>

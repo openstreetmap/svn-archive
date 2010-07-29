@@ -288,6 +288,22 @@ public class RequestProcessor extends Thread
                 }
                 // TODO: select/zoom to downloaded
             } else if (command.equals("/version")) {
+                if (!Main.pref.getBoolean("remotecontrol.permission.read-protocolversion", true)) {
+                    sendForbidden(out);
+                    System.out.println("RemoteControl: /version forbidden by preferences");
+                    return;
+                }
+                if (Main.pref.getBoolean("remotecontrol.always-confirm", false)) {
+                    if (JOptionPane.showConfirmDialog(Main.parent,
+                        "<html>" + tr("Remote Control has been asked to report its protocol version. This enables web sites to detect a running JOSM.") +
+                        "<br>" + tr("Do you want to allow this?"),
+                        tr("Confirm Remote Control action"),
+                        JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+                            sendForbidden(out);
+                            return;
+                    }
+                }
+
 				content = RequestProcessor.PROTOCOLVERSION;
 				contentType = "application/json";
 				if (args.containsKey("jsonp")) {

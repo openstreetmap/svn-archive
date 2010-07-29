@@ -130,7 +130,7 @@ def draw_digout(dig,line,height_offset,streetwidth,highwaytype,og):
     bailout = True
     for point in line:
         if og.get_height(point)<0.0:
-            beilout = False
+            bailout = False
     if bailout:
         return
 
@@ -140,29 +140,31 @@ def draw_digout(dig,line,height_offset,streetwidth,highwaytype,og):
     squeeze = ry/rx
 
     numpoints = len(line)
-    dig.write("object {")
-    dig.write("union {")
+    dig.write("object {\n")
+    dig.write(" union {\n")
 
     x_prev = None
     for i,point in enumerate(line):
         x,y = point
         z = og.get_height(point)
-        dig.write(" sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=r*meter))
         if(x_prev != None):
-            dig.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=r*meter))
+            dig.write("  cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=rx*meter))
+        dig.write("  sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=rx*meter))
         x_prev=x
         y_prev=y
         z_prev=z
-    dig.write("}") # union ends
-    dig.write("translate <0, {z}, 0>".format(z=height_offset*meter))
-    
+    dig.write(" }\n") # union ends
+    dig.write(" scale <1, {s}, 1>\n".format(s=squeeze))
+    dig.write(" translate <0, {z}, 0>\n".format(z=height_offset*meter))
+    dig.write("}\n") # object ends
+
 def draw_tunnel(dig,line,height_offset,streetwidth,og):
     """ digs holes in the ground - tunnels """
 
     bailout = True
     for point in line:
         if og.get_height(point)<0.0:
-            beilout = False
+            bailout = False
     if bailout:
         return
 
@@ -170,24 +172,26 @@ def draw_tunnel(dig,line,height_offset,streetwidth,og):
     rx *= 5.0/4.0 # tunnel must be larger than highway
     ry = 4.0
     squeeze = ry/rx
-    
+
     numpoints = len(line)
-    dig.write("object {")
-    dig.write("union {")
+    dig.write("object {\n")
+    dig.write(" union {\n")
 
     x_prev = None
     for i,point in enumerate(line):
         x,y = point
         z = og.get_height(point) + 1.3 # tunnel center is 1.3 m above street level
-        dig.write(" sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=r*meter))
         if(x_prev != None):
-            dig.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=r*meter))
+            dig.write("  cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=rx*meter))
+        dig.write("  sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=rx*meter))
         x_prev=x
         y_prev=y
         z_prev=z
-    dig.write("}") # union ends
-    dig.write("translate <0, {z}, 0>".format(z=height_offset*meter))
-    
+    dig.write(" }\n") # union ends
+    dig.write(" scale <1, {s}, 1>\n".format(s=squeeze))
+    dig.write(" translate <0, {z}, 0>\n".format(z=height_offset*meter))
+    dig.write("}\n") # object ends
+
 def calculate_number_of_lanes(lanes,lanesfw,lanesbw,oneway):
     if lanes==None:#
         # no lanes specified: look if lanes:forward is specified
@@ -548,6 +552,9 @@ def pov_barrier(f,barrier,og):
 
 def render_highways(f,osraydb,options,digname):
     dig = open(digname, 'w')
+    dig.write("#declare digout = /* union of all digout */\n")
+    dig.write("union {\n\n")
+
     Radiosity = options['radiosity']
     f.write(declarations)
 
@@ -580,4 +587,5 @@ def render_highways(f,osraydb,options,digname):
     for barrier in barriers:
         pov_barrier(f,barrier,og)
 
+    dig.write("}n} /* end of union of all digout */\n")
     dig.close()

@@ -191,7 +191,7 @@
   </Rule>
   <Rule>
     &maxscale_zoom15;
-    <Filter>[amenity]='bbq' or [fireplace]='yes'</Filter>
+    <Filter>[amenity]='bbq'</Filter>
     <PointSymbolizer file="&symbols;/fireplace.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>
@@ -270,7 +270,6 @@
        or waterway='waterfall'
        or leisure in ('picnic_table','golf_course','miniature_golf','fishing')
        or sport in ('golf','shooting')
-       or fireplace='yes'
        or building='cabin'
     ) as symbols</Parameter>
     &datasource-settings;

@@ -86,7 +86,11 @@ motorsport
 clay pigeon, pistol
 sport=* symbols from zoom 17
 "post i butikk": shop=* and amenity=post_office
+"selvplukk": landuse=orchard and service=self
 natural=stone
+leisure=picnic_table and fireplace=yes as amenity=bbq, or
+  stack symbol below lean_to
+  <!-- or ([leisure]='picnic_table' and [fireplace]='yes') -->
 text: place=locality|farm|isolated_dwelling|island|islet|suburb
 text: road names from zoom=15/16
 man_made=pier

@@ -126,7 +126,7 @@ way        mtb:scale         text    linear
 way        sac_scale         text    linear
 node       information       text    linear
 node       board_type        text    linear
-node       fireplace         text    linear
+#node       fireplace         text    linear
 way        piste:type        text    linear
 way        piste:grooming    text    linear
 way        piste:difficulty  text    linear

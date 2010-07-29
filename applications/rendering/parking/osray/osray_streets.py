@@ -587,5 +587,5 @@ def render_highways(f,osraydb,options,digname):
     for barrier in barriers:
         pov_barrier(f,barrier,og)
 
-    dig.write("}\n} /* end of union of all digout */\n")
+    dig.write("\n} /* end of union of all digout */\n")
     dig.close()

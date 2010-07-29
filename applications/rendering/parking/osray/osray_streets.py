@@ -205,7 +205,7 @@ def pov_highway(f,highway,og):
     lanefactor = calculate_number_of_lanes(highway['lanes'],highway['lanesfw'],highway['lanesbw'],highway['oneway'])
     lanewidth = highwayparams[1]
     if lanefactor==1 and parse_yes_no_safely(highway['oneway'],False)==True:
-        lanewith *= 1.2 # make one lane oneways a bit wider
+        lanewidth *= 1.2 # make one lane oneways a bit wider
     streetwidth = lanewidth * lanefactor
 
     layer = parse_int_safely(highway['layer'],default=0)

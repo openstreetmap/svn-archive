@@ -123,7 +123,7 @@ box {{
 */
 
 /* ground */
-intersection {{
+difference {{
 box {{
     <{left}, -0.5, {bottom}>, <{right}, -0.2, {top}>
     texture {{

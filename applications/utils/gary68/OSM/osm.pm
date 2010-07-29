@@ -87,6 +87,9 @@
 # Version 6.0
 # - regex improvements
 #
+# Version 7.0
+# - skip nodes and skip ways performance boost by using seek in files
+#
 #
 # USAGE
 #
@@ -160,6 +163,7 @@ use warnings;
 
 use LWP::Simple;
 use Math::Trig;
+# use IO::Handle ;
 use File::stat;
 use Time::localtime;
 use List::Util qw[min max] ;
@@ -169,7 +173,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '6.0' ; 
+$VERSION = '7.0' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -182,6 +186,7 @@ require Exporter ;
 our $line ; 
 our $file ; 
 our $fileName ;
+my $bufferSize = 512000 ;
 
 my $bz ; my $isBz2 ;
 
@@ -234,13 +239,92 @@ sub nextLine {
 	} while ($line =~ /^<!--/) ;
 }
 
+sub seek_to_way_section
+{
+	my $sb = stat ($fileName) ;
+	my $size = $sb->size ;
+
+     my $firstindex = 0;
+     my $lastindex = $size;
+     my $index = int($size / 2) ;
+
+     while(1)
+     {
+         my $buf;
+         seek($file, $index, 0);
+         read($file, $buf, $bufferSize);
+         my $relationstart = index($buf, "<relation id");
+         my $waystart = index($buf, "<way id");
+         my $nodestart = index($buf, "<node id");
+	# print "$index $nodestart $waystart $relationstart\n" ;
+         if (($waystart > -1) && ($nodestart > -1))
+         {
+             seek($file, $index + $waystart - 1, 0);
+             return;
+         }
+         # elsif ($waystart > -1)
+         elsif ( ($waystart > -1) or ($relationstart > -1) )
+         {
+             $lastindex = $index;
+             $index = int(($index + $firstindex) / 2);
+         }
+         else
+         {
+             $firstindex = $index;
+             $index = int(($index + $lastindex) / 2);
+         }
+     }
+}
+
+sub seek_to_relation_section
+{
+	my $sb = stat ($fileName) ;
+	my $size = $sb->size ;
+     my $firstindex = 0;
+     my $lastindex = $size;
+     my $index = int($size / 2);
+
+     while(1)
+     {
+         my $buf;
+         seek($file, $index, 0);
+         read($file, $buf, $bufferSize);
+         my $relationstart = index($buf, "<relation id");
+         my $waystart = index($buf, "<way id");
+         my $nodestart = index($buf, "<node id");
+	# print "$index $nodestart $waystart $relationstart\n" ;
+         if (($relationstart > -1) && ($waystart > -1))
+         {
+             seek($file, $index + $relationstart - 1, 0);
+             return;
+         }
+         elsif ($relationstart > -1)
+         {
+             $lastindex = $index;
+             $index = int(($index + $firstindex) / 2);
+         }
+         else
+         {
+             $firstindex = $index;
+             $index = int(($index + $lastindex) / 2);
+         }
+     }
+}
+
+
 
 #######
 # NODES
 #######
 sub skipNodes {
-	while ( ! (grep /<way/, $line) ) {
-		nextLine() ;		
+	if ($isBz2) {
+		while ( ! (grep /<way/, $line) ) {
+			nextLine() ;		
+		}
+	}
+	else {
+		seek_to_way_section() ;
+		nextLine() ;
 	}
 }
 
@@ -362,8 +446,14 @@ sub getNode2 {
 ######
 
 sub skipWays {
-	while ( ! (grep /<relation/, $line) ) {
-		nextLine() ;		
+	if ($isBz2) {
+		while ( ! (grep /<relation/, $line) ) {
+			nextLine() ;		
+		}
+	}
+	else {
+		seek_to_relation_section() ;
+		nextLine() ;
 	}
 }
 

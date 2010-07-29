@@ -102,6 +102,7 @@ camera {{
 """
     f.write("""
 /* ground */
+/* old ### FIXME REMOVEME 
 box {{
     <{left}, -0.5, {bottom}>, <{right}, -0.2, {top}>
     texture {{
@@ -119,6 +120,30 @@ box {{
     }}
     {finish}
 }}
+*/
+
+/* ground */
+intersection {{
+box {{
+    <{left}, -0.5, {bottom}>, <{right}, -0.2, {top}>
+    texture {{
+        pigment {{
+            /* color rgb <1, 1, 1> */
+            image_map {{
+                png "scene-osray-landuse-texture.png"
+                map_type 0
+                interpolate 2
+            }}
+        }}
+        rotate <90,0,0>
+        scale <{xs},1,{ys}>
+        translate <{left},0,{bottom}>
+    }}
+    {finish}
+}} /* end of ground box */
+object {{ digout }}
+}} /* end of intersection */
+
 /* sky */
 sky_sphere {{
     pigment {{

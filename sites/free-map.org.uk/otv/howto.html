@@ -6,13 +6,36 @@
 <body>
 <h1>OpenTrailView</h1>
 <h2>How to contribute</h2>
-<p>This page details how to contribute a panorama to 
-OpenTrailView. Note that this procedure is likely to be refined as soon as
-it's worked out what the optimal dimensions of a panorama are, etc.</p>
+<p>This page details how to contribute photos or panoramas to 
+OpenTrailView. </p>
 <h3>Sign up</h3>
 <p>You need to be logged in to submit a photo. So 
 <a href='user.php?action=signup'>sign up</a> now!</p>
-<h3>Taking the panorama</h3>
+<h3>What type of photos should be contributed?</h3>
+<p>One of OpenTrailView's aims is to produce a "Google StreetView" like
+experience for paths and trails, by creating a linked database of 360
+degree panoramas. However, creating a panorama can take some patience, so
+for that reason, you can now contribute regular georeferenced
+photos too. (However, note that these currently will not show properly
+in the viewing interface). 
+The sections below deal with contributing regular photos, 
+and 360 degree panoramas.</p>
+<h3>Taking photos or panoramas</h3>
+<h4>Regular photos</h4>
+<ul>
+<li>While out for a walk or hike, simply take a series of photos along
+the path or trail you're following, ideally aligned with the path or trail
+so that they can be orientated easily later on.</li>
+<li>Ideally, every time you take a photo in the direction you're
+travelling, also take a photo in the <em>opposite</em> direction, so that
+someone travelling in the opposite direction can see a sequence of
+photos in the correct order.</li>
+<li>At certain places, e.g. crossroads, you might also want to take 4
+photos at 90 degrees to each other. The upload interface (see below) can
+handle individual photos, photo pairs at 180 degrees to each other,
+and sets of four at 90 degrees to each other.</li>
+</ul>
+<h4>Taking 360 degree panoramas</h4>
 <ul>
 <li>
 It's important to make the centre of the panorama face your direction
@@ -26,17 +49,6 @@ direction to the direction you're travelling and slightly to the left, at
 the same angle (but left, rather than right) as your original photo.
 Ensure each successive photo overlaps with the previous as the photo stitching
 software works by identifying common features.</li>
-<li>Also ideally record a GPS track of your trip and save it as a GPX file.
-A GPS track with timestamps can now be used in conjunction with timestamped 
-photos to work out where the photos was taken as part of the photo upload
-process. (To avoid this procedure taking too long and overloading the server, 
-create a GPX file with
-minimal trackpoints; adjust the settings on your
-GPS device to record trackpoints as infrequently as possible). As an 
-alternative, you can estimate the position by
-clicking on the map on the main page, or, if you are using a camera with
-GPS (e.g. smartphone), the EXIF latitude and longitude tags will be 
-automatically read.</li>
 <li> To actually create a panorama, do the following:
 use photo stitching
 software, such as the free and open source
@@ -58,25 +70,65 @@ convert -resize x400 in.jpg out.jpg
 </pre>
 </li>
 </ul>
+<h3>Georeferencing photos and panoramas</h3>
+<ul>
+<li>The most automatic way of georeferencing your photos is to 
+record a GPS track of your trip and save it as a GPX file.
+A GPS track with timestamps can now be used in conjunction with timestamped 
+photos to work out where the photos was taken as part of the photo upload
+process. 
+You can avoid this procedure taking too long and overloading the server
+by creating a GPX file with
+minimal trackpoints; adjust the settings on your
+GPS device to record trackpoints as infrequently as possible. As an 
+alternative, you can estimate the position by
+clicking on the map on the submission page, or, if you are using a camera with
+GPS (e.g. smartphone), the EXIF latitude and longitude tags will be 
+automatically read.</li>
+</ul>
 <h3>Uploading</h3>
 <ul>
-<li>Submit panoramas by following the link on the form on the main page. 
-Upload your panoramas one by one; you can use the map to estimate the latitude
-and longitude or use a GPS track (see below).</li>
-<li>Once you've uploaded all the panoramas from a trip, you can optionally 
+<li>Submit photos and panoramas by following the link on the form on the main 
+page. 
+Upload your photos one by one; you can use the map to estimate the latitude
+and longitude or use a GPS track (see above).
+</li>
+<li>
+For single photos and panoramas, click "New
+photo set" once it's uploaded.However, if
+you are uploading pairs or sets of four, you need to make sure that each
+photo in the pair or set is linked. To do this, click "Add another photo to
+set", upload the next in the set and specify the orientation of the next
+photo <em>with respect to the first photo in the set</em>. The orientation
+currently must be 180 degrees, 90 degrees clockwise, or 90 degrees
+anticlockwise. </li>
+<li>Once you've uploaded all the photos or panoramas
+from a trip, you can optionally 
 upload a GPX track; this will automatically calculate the position of each
-panorama if both the track and the panoramas have timestamps.</li>
-<li>Wait for your panoramas to be authorised.</li>
+photo or panorama if both the track and the panoramas have timestamps.</li>
+<li>Wait for your photos or panoramas to be authorised.</li>
 <li>On the map on the main page, click the "Align photos" button below the
 map, and align an authorised
-panorama by rotating the camera icons. The camera should face
-the same direction as the centre of the panorama.
+photo or panorama by rotating the camera icons. The camera should face
+the same direction as either:
+	<ul>
+	<li>the centre of a single photo;</li>
+	<li>the centre of a panorama;</li>
+	<li>or the centre of the <em>first photo in a set</em> for photo pairs
+	or sets of four.</li>
+	</ul>
 Align it with the footpath or trail that you took
 it from, by rotating the camera icon on the map so that it faces the same
-direction as the centre of the panorama. To get back to the normal mode,
-where moving over a camera icon shows a panorama, click the "View photos"
+direction as the centre of the photo. To get back to the normal mode,
+where moving over a camera icon shows a photo, click the "View photos"
 button.</li>
 </ul>
+<h3>Credits</h3>
+<p>Maps are provided by
+<a href='http://www.openstreetmap.org'>OpenStreetMap</a>.
+Panoramas make use of
+<a href='http://code.google.com/p/jspanoviewer'>JSPanoViewer</a>, a JavaScript
+class for displaying panoramas.</p>
 <a href='index.php'>Back to main page</a>
 </body>
 </html>

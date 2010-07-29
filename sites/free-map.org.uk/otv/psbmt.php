@@ -1,76 +1,73 @@
 <?php
 
-/* iframe based pseudo-ajax upload:
-   see
-   http://ehsun7b.blogspot.com/2007/11/uploading-files-using-ajax_12.html
-*/
-
 session_start();
-include('../lib/functionsnew.php');
+include('IframeForm.php');
+require_once('../lib/functionsnew.php');
 
-
-?>
-<?php
-if (isset($_FILES["panorama"]))
+class PsbmtForm extends IframeForm
 {
-   ?>
-	<?php
-	$conn=dbconnect("otv");
-    $cleaned=clean_input($_POST);
-	$cleaned["lat"] = ($cleaned["lat"]!="") ? $cleaned["lat"]: 999;
-	$cleaned["lon"] = ($cleaned["lon"]!="") ? $cleaned["lon"]: 999;
 
+    private $id, $displat, $displon;
 
-    // upload panorama
-    $panorama=$_FILES['panorama']['tmp_name'];
-    $panorama_name=$_FILES['panorama']['name'];
-    $panorama_size=$_FILES['panorama']['size'];
-    $panorama_type=$_FILES['panorama']['type'];
-    $panorama_error=$_FILES['panorama']['error'];
-    
-    $msg="Successfully uploaded file ". $_FILES['panorama']['name'];
-	$error=false;
-
-    if ($panorama_error>0)
+    function __construct ($file,$errorDiv, $uploadMsg)
     {
-		$error=true;
-        switch($panorama_error)
+        IframeForm::__construct($file,$errorDiv,$uploadMsg);
+        if(!isset($_POST['photosubmit']) &&
+          !isset($_POST['first']) && !isset($_POST['second']))
         {
-            case 1: $msg= "Exceeded upload max filesize (1MB)"; break;
-            case 2: $msg= "Exceeded max filesize (1MB)"; break;
-            case 3: $msg= "Partially uploaded"; break;
-            case 4: $msg= "Nothing uploaded"; break;
+            $_SESSION['parentID'] = null;
         }
     }
-    else
+
+    function doProcessUpload()
     {
 
-		$time=0;
-		$q=("INSERT INTO panoramas ".
-						"(lat,lon,time,user,photosession) ".
-                            "VALUES ($cleaned[lat],$cleaned[lon],$time,".
-                            "'$_SESSION[gatekeeper]',$_SESSION[photosession])")
-							or die(mysql_error());
-		mysql_query($q) or die(mysql_error());
-        $id=mysql_insert_id();
-
-        $upfile = "/home/www-data/uploads/otv/$id.jpg";
-        if(!is_uploaded_file($panorama))
+        if(!isset($_POST['photosubmit']))
         {
-			$msg="Go away cracker!";
-			$error=true;
-		}
-		else
-		{
-            if(!move_uploaded_file($panorama,$upfile))
+            return;
+        }
+
+        $conn=dbconnect("otv");
+        $cleaned=clean_input($_POST);
+        $cleaned["lat"] = ($cleaned["lat"]!="") ? $cleaned["lat"]: 999;
+        $cleaned["lon"] = ($cleaned["lon"]!="") ? $cleaned["lon"]: 999;
+        $isPano = (isset($_POST["isPano"])) ? "true":"false";
+
+        $time=0;
+        $q=("INSERT INTO panoramas ".
+                        "(lat,lon,time,user,photosession,isPano) ".
+                            "VALUES ($cleaned[lat],$cleaned[lon],$time,".
+                            "'$_SESSION[gatekeeper]',$_SESSION[photosession],".
+                            "$isPano)")
+                            or die(mysql_error());
+        mysql_query($q) or die(mysql_error());
+        $this->id=mysql_insert_id();
+        if(!isset($_SESSION['parentID']))
+            $_SESSION['parentID'] = $this->id;
+      
+          $orientation=isset($cleaned['orientation'])?$cleaned['orientation']:0;
+        if(! $this->error)
+        {
+            mysql_query("INSERT INTO photogroups ".
+            "(photoID,parentID,orientation) VALUES (".
+            $this->id.",$_SESSION[parentID],$orientation)");
+
+
+            $upfile = "/home/www-data/uploads/otv/".$this->id.".jpg";
+            if(!move_uploaded_file($this->filename,$upfile))
             {
-                $msg= "Could not move file to images directory"; 
-				$error=true;
+                $this->msg= "Could not move file to images directory"; 
+                $this->error=true;
+                mysql_query("DELETE FROM panoramas where id=".$this->id);
             }
             else // get EXIF lat/lon if present
             {
-            	$msg= "Uploaded $panorama_name successfully."; 
-                $exif=exif_read_data($upfile);
+                $this->msg= "Uploaded $panorama_name successfully."; 
+                
+                // Note exif_read_data complains about certain non-standard
+                // tags. However it doesn't prevent working. So shut it up
+                // with @.
+                $exif=@exif_read_data($upfile);
                 if(isset($exif['GPSLatitude']) && isset($exif['GPSLongitude']))
                 {
                     $cleaned['lat']=to_decimal_degrees($exif['GPSLatitude']);
@@ -79,105 +76,156 @@ if (isset($_FILES["panorama"]))
                         $cleaned['lat']=-$cleaned['lat'];
                     if($exif['GPSLongitudeRef']=='W')
                         $cleaned['lon']=-$cleaned['lon'];
-					mysql_query
-						("UPDATE panoramas SET lat=$cleaned[lat],".
-						 "lon=$cleaned[lon] WHERE ID=$id");
+                    mysql_query
+                        ("UPDATE panoramas SET lat=$cleaned[lat],".
+                         "lon=$cleaned[lon] WHERE ID=".$this->id);
                 }
-				if(isset($exif['DateTimeOriginal']))
-				{
-					$time = strtotime($exif['DateTimeOriginal']);
-					$q= ("UPDATE panoramas SET time=$time WHERE ID=$id");
-					mysql_query($q);
-				}
+                if(isset($exif['DateTimeOriginal']))
+                {
+                    $time = strtotime($exif['DateTimeOriginal']);
+                    $q= ("UPDATE panoramas SET time=$time WHERE ID=".
+                            $this->id);
+                    mysql_query($q);
+                }
             }
-        }
-		if($error==true)
-        {
 
-            mysql_query("DELETE FROM panoramas where id=$id");
+            $this->displat=($cleaned['lat'] <= 90)?$cleaned['lat'] : "Unknown";
+            $this->displon=($cleaned['lon'] <= 180)?$cleaned['lon'] : "Unknown";
         }
+        mysql_close($conn);
     }
 
-	$displat = ($cleaned['lat'] <= 90) ? $cleaned['lat'] : "Unknown";
-	$displon = ($cleaned['lon'] <= 180) ? $cleaned['lon'] : "Unknown";
-	$errHTML = "<strong>$msg</strong>";
-	mysql_close($conn);
+    function doWriteOutput()
+    {
+        if(!isset($_POST['photosubmit']))
+            return;
+
+        ?>
+        <script type='text/javascript'>
+        var el = pg.getElementById
+            ('name_'+<?php echo $_SESSION['parentID']; ?>);
+        if(el)
+        {
+            var existing = el.innerHTML;
+            el.innerHTML = existing + "," +
+                '<?php echo $_FILES['panorama']['name'] ?>';
+        }
+        else
+        {
+            var tbl = pg.getElementById('uploadTable');
+            var tr=pg.createElement('tr');
+            tbl.appendChild(tr);
+            var td1=pg.createElement('td');
+            td1.setAttribute('id','name_'+<?php echo $this->id; ?>);
+            var txt1=pg.createTextNode
+                ('<?php echo $_FILES['panorama']['name'];?>');
+            td1.appendChild(txt1);
+            tr.appendChild(td1);
+            var td2=pg.createElement('td');
+            td2.setAttribute('id','lat_'+<?php echo $this->id; ?>);
+            var txt2=pg.createTextNode('<?php echo $this->displat; ?>');
+            td2.appendChild(txt2);
+            tr.appendChild(td2);
+            var td3=pg.createElement('td');
+            td3.setAttribute('id','lon_'+<?php echo $this->id; ?>);
+            var txt3=pg.createTextNode('<?php echo $this->displon; ?>');
+            td3.appendChild(txt3);
+            tr.appendChild(td3);
+        }
+        </script>
+        <?php
+    }
+
+    function doWriteForm()
+    {
+
+        if(!isset($_POST['photosubmit']))
+        {
+            if(isset($_POST["first"]))
+                $_SESSION['parentID'] =  null;
+
+            ?>
+            <div id='pansubmit'>
+            <form method='post' enctype='multipart/form-data' action='' 
+            onsubmit='return loadingMsg()'>
+            <fieldset id='panorama_submit'>
+            <legend>Please submit your photo</legend>
+            <label for='panorama'>Photo:</label>
+            <input type="file" name="panorama" id="panorama" />  
+            <br />
+            <?php
+            if(isset($_SESSION['parentID']))
+            {
+                ?>
+                <label for='orientation'>Orientation relative to first in
+                set:</label>
+                <select name='orientation' id='orientation'>
+                <option value='-90'>90 degrees clockwise</option>
+                <option selected='selected' value='180'>180 degrees</option>
+                <option value='90'>90 degrees anticlockwise</option>
+                </select>
+                <br />
+                <?php
+            }
+            else
+            {
+
+                ?>
+                <label for='lat'>Latitude:</label>
+                <br />
+                <input name='lat' id='ifr_lat' class='narrow' value=''/> 
+                <br />
+                <label for='lat'>Longitude:</label>
+                <br />
+                <input name='lon' id='ifr_lon' class='narrow' value=''/> 
+                <br />
+                <?php
+            }
+        
+            ?>
+            <label for='isPano'>Is it a panorama?</label>
+            <input type='checkbox' name='isPano' />
+            <input type='hidden' name='MAX_FILE_SIZE' value='3200000' />
+            <input type='submit' value='Upload!' name='photosubmit' />
+            </fieldset>
+            </form>
+            </div>
+            <?php
+        }
+        else
+        {
+            ?>
+            <p>If this photo is part of a set (e.g two linked photos
+            from the same position, facing in opposite directions) click
+            'Add another photo to set'. If you have just uploaded a single
+            photo or panorama, or the last photo in a set, click
+            'New photo set'.</p>
+            <p>
+            <form method='post' action=''>
+            <input type='submit'
+            value='Add another photo to set' name='second' />
+            <input type='submit'
+            value='New photo set' name='first' />
+            </form>
+            </p>
+            <?php
+        }
+    }
 }
-	?>
-<html>
-<head>
-   <script type='text/javascript'>
-function loadingMsg()
-{
-   var pg = parent.content.document;
-	pg.getElementById('errors').innerHTML='<img src="ajax-loader.gif" alt="uploading file..." />';
-	return true;
-}
-</script>
-<?php
-if(isset($_FILES["panorama"]))
-{
-?>
-<script type='text/javascript'>
-   var pg = parent.content.document;
-	pg.getElementById('errors').innerHTML = '<?php echo $errHTML; ?>';
-	<?php
-	if($error==false)
-	{
-		?>
-		var tbl = pg.getElementById('uploadTable');
-		var tr=pg.createElement('tr');
-		tbl.appendChild(tr);
-		var td1=pg.createElement('td');
-		var txt1=pg.createTextNode('<?php echo $_FILES['panorama']['name'];?>');
-		td1.appendChild(txt1);
-		tr.appendChild(td1);
-		var td2=pg.createElement('td');
-		td2.setAttribute('id','lat_'+<?php echo $id; ?>);
-		var txt2=pg.createTextNode('<?php echo $displat; ?>');
-		td2.appendChild(txt2);
-		tr.appendChild(td2);
-		var td3=pg.createElement('td');
-		td3.setAttribute('id','lon_'+<?php echo $id; ?>);
-		var txt3=pg.createTextNode('<?php echo $displon; ?>');
-		td3.appendChild(txt3);
-		tr.appendChild(td3);
-		var td4=pg.createElement('td');
-		var txt4=pg.createTextNode('<?php echo $_SESSION['photosession']; ?>');
-		td4.appendChild(txt4);
-		tr.appendChild(td4);
-		<?php
-	}
-	?>
-	</script>
-<?php
-}
-?>
-<link rel='stylesheet' type='text/css' href='css/osv.css' />
-</head>
-<body>
-<div id='pansubmit'>
-<form method='post' enctype='multipart/form-data' action='' 
-onsubmit='return loadingMsg()'>
-<fieldset id='panorama_submit'>
-<legend>Please submit your panorama</legend>
-<label for='panorama'>Panorama:</label>
-<input type="file" name="panorama" id="panorama" /> 
-<label for='lat'>Latitude:</label>
-<input name='lat' id='ifr_lat' class='narrow' /> 
-<label for='lat'>Longitude:</label>
-<input name='lon' id='ifr_lon' class='narrow'/> 
-<input type='hidden' name='MAX_FILE_SIZE' value='2097152' />
-<input type='submit' value='Go!' />
-</fieldset>
-</form>
-</div>
-</body>
-</html>
-	<?php
+
+
+
 
 function to_decimal_degrees($dms)
 {
     return $dms[0] + $dms[1]/60.0 + $dms[2]/3600.0;
 }
+
+
+
+
+$form = new PsbmtForm("panorama","errors",
+    '<img src="ajax-loader.gif" alt="uploading file..." />');
+$form->createPage();
+
 ?>

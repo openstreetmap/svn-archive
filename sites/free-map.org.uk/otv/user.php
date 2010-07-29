@@ -78,8 +78,8 @@ switch($cleaned['action'])
     case "activate":
         if(isset($_GET['userid']) && isset($_GET['key']))
         {
-            $id=$inp['userid'];
-            $key=$inp['key'];
+            $id=$cleaned['userid'];
+            $key=$cleaned['key'];
             $result=mysql_query
                 ("SELECT * FROM users WHERE id=$id AND active=0");
             if(mysql_num_rows($result)==1)

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+	<meta name="generator" content="HTML Tidy for Windows (vers 14 February 2006), see www.w3.org">
+	<title>Pure JavaScript pano viewer</title>
+	<style type='text/css'>
+		input[type='text'] { width: 400px; }
+	</style>
+	<script type='text/javascript' src='jspanoviewer.js'></script>
+</head>
+<body onload='popupateSelect()'>
+	<div class='panoviewer' id='panoContainer'>Load a pano...</div>
+	<form id="filechooser">
+		<label>Enter file URL: </label>
+		<input type='text' name='url' id='url' />
+		<input type='button' name='load' value='load' onclick='loadFromURL(this.form.url.value)' /><br />
+		<label>Or select one from the following list</label><br />
+		<select name='urllist' id='urllist' onchange='loadFromPreset(this.value); return; loadFromURL(this.form.urllist.value)'>
+			<option value='-1'>--- Select preset ---</option>
+		</select>
+	</form>
+	<script type='text/javascript'>
+		var urlElem = document.getElementById('url');
+		var urlListElem = document.getElementById('urllist');
+		pv = new JSPanoViewer({
+			containerId : 'panoContainer',
+			//mode        : 51,
+			//hFovDst     : 330,
+			mode        : 1,
+			hFovDst     : 90,
+			hFovSrc     : 360,
+			cssWidth    : '800px',
+			cssHeight   : '400px'
+		});
+		var presets = [
+			{ title   : 'Cows in the evening sun',
+			  url     : 'http://lh5.ggpht.com/_Fel5i-Q8T8g/SYhTM8TVGTI/AAAAAAAACD8/W2zSzjRM39M/100_2851-100_2853.jpg',
+			  options : {hFovSrc: 140, hFovDst: 100, mode: 1}
+			},
+			{ title   : 'Parking lot',
+			  url     : 'http://www.360-vr-tour.com/pano/cajun_palms/crawtown/pano_crawfishtown.jpg',
+			  options : {hFovSrc: 360, hFovDst: 300, mode: 51}
+			},
+			{ title   : 'Twin lakes',
+			  url     : 'http://www.johnfrazee.com/hdr/hdr-pano-converse-lake-sm.jpg',
+			  options : {hFovSrc: 360, hFovDst: 140, mode: 1}
+			}
+		];
+		function loadFromURL(url, options) {
+			pv.loadImage(url, options);
+			urlElem.value = url;
+			urlListElem.value = -1;
+		}
+		function loadFromPreset(index) {
+			if(index >= 0) {
+				var url = presets[index].url;
+				var options = presets[index].options;
+				pv.loadImage(url, options);
+				urlElem.value = url;
+			}
+		}
+		function popupateSelect() {
+			for(i in presets) {
+				var option = document.createElement('option');
+				option.value = i;
+				option.innerHTML = presets[i].title;
+				urlListElem.appendChild(option);
+			}
+		}
+	</script>
+	<!--img src='img/12-cathedrale-2-ok.jpg' class='panoviewer' /-->
+</body>
+</html>

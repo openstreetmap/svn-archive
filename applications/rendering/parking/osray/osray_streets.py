@@ -6,7 +6,8 @@ from osray_geom import *
 from osray_network import *
 
 Radiosity = True
-meter = 2 # FIXME: calculate 1 meter for given latitude
+zpermeter = 1.5 # FIXME: calculate 1 meter for given latitude
+layerunit = 4.0 # this many meters per layer
 
 highwaytypes = { # highwaytype : [color,lane_width in meters]
     'motorway':['<1,0.3,0.1>',3.0],
@@ -72,28 +73,6 @@ def pov_declare_highway_textures(f):
     # texture for the highway casing
     f.write(declare_highway_texture.format(color='<0.4,0.4,0.4>',highwaytype='casing'))
 
-
-def draw_lines_XXX(f,line,height,streetwidth,highwaytype):
-    numpoints = len(line)
-    f.write("object {")
-    f.write("union {")
-    #f.write("sphere_sweep {{ linear_spline, {0},\n".format(numpoints+0))
-
-    x_prev = None
-    for i,point in enumerate(line):
-        x,y = point
-        f.write(" sphere {{ <{x}, 0, {y}>,{d} }}\n".format(x=x,y=y,d=streetwidth))
-        if(x_prev != None):
-            f.write(" cylinder {{ <{x1}, 0, {y1}>,<{x2}, 0, {y2}>,{d} }}\n".format(x1=x,y1=y,x2=x_prev,y2=y_prev,d=streetwidth))
-        x_prev=x
-        y_prev=y
-    f.write("}") # union ends
-    f.write("scale <1, 0.05, 1>")
-    f.write("translate <0, {z}, 0>".format(z=height))
-    #f.write("  } ") #end of intersection
-    f.write("""texture {{ texture_highway_{highwaytype} }}
-}}
-\n""".format(highwaytype=highwaytype))
     
 def draw_way(f,line,height_offset,streetwidth,highwaytype,og):
     squeeze = 0.05
@@ -110,15 +89,15 @@ def draw_way(f,line,height_offset,streetwidth,highwaytype,og):
     for i,point in enumerate(line):
         x,y = point
         z = og.get_height(point)
-        f.write(" sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=r*meter))
+        f.write(" sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*zpermeter,r=r*zpermeter))
         if(x_prev != None):
-            f.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=r*meter))
+            f.write(" cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*zpermeter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*zpermeter,r=r*zpermeter))
         x_prev=x
         y_prev=y
         z_prev=z
     f.write("}") # union ends
     f.write("scale <1, {s}, 1>".format(s=squeeze))
-    f.write("translate <0, {z}, 0>".format(z=height_offset*meter))
+    f.write("translate <0, {z}, 0>".format(z=height_offset*zpermeter))
     #f.write("  } ") #end of intersection
     f.write("""texture {{ texture_highway_{highwaytype} }}
 }}
@@ -148,14 +127,14 @@ def draw_digout(dig,line,height_offset,streetwidth,highwaytype,og):
         x,y = point
         z = og.get_height(point)
         if(x_prev != None):
-            dig.write("  cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=rx*meter))
-        dig.write("  sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=rx*meter))
+            dig.write("  cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*zpermeter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*zpermeter,r=rx*zpermeter))
+        dig.write("  sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*zpermeter,r=rx*zpermeter))
         x_prev=x
         y_prev=y
         z_prev=z
     dig.write(" }\n") # union ends
     dig.write(" scale <1, {s}, 1>\n".format(s=squeeze))
-    dig.write(" translate <0, {z}, 0>\n".format(z=height_offset*meter))
+    dig.write(" translate <0, {z}, 0>\n".format(z=height_offset*zpermeter))
     dig.write("}\n") # object ends
 
 def draw_tunnel(dig,line,height_offset,streetwidth,og):
@@ -170,7 +149,7 @@ def draw_tunnel(dig,line,height_offset,streetwidth,og):
 
     rx = streetwidth/2.0 # radius=d/2
     rx *= 5.0/4.0 # tunnel must be larger than highway
-    ry = 4.0
+    ry = 2.0
     squeeze = ry/rx
 
     numpoints = len(line)
@@ -182,14 +161,14 @@ def draw_tunnel(dig,line,height_offset,streetwidth,og):
         x,y = point
         z = og.get_height(point) + 1.3 # tunnel center is 1.3 m above street level
         if(x_prev != None):
-            dig.write("  cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*meter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*meter,r=rx*meter))
-        dig.write("  sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*meter,r=rx*meter))
+            dig.write("  cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*zpermeter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*zpermeter,r=rx*zpermeter))
+        dig.write("  sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*zpermeter,r=rx*zpermeter))
         x_prev=x
         y_prev=y
         z_prev=z
     dig.write(" }\n") # union ends
     dig.write(" scale <1, {s}, 1>\n".format(s=squeeze))
-    dig.write(" translate <0, {z}, 0>\n".format(z=height_offset*meter))
+    dig.write(" translate <0, {z}, 0>\n".format(z=height_offset*zpermeter))
     dig.write("}\n") # object ends
 
 def calculate_number_of_lanes(lanes,lanesfw,lanesbw,oneway):
@@ -228,12 +207,12 @@ def pov_highway(f,highway,og,dig):
         lanewidth *= 1.2 # make one lane oneways a bit wider
     streetwidth = lanewidth * lanefactor
 
-    layer = parse_int_safely(highway['layer'],default=0)
-    if layer<0:
-        layer=0 # FIXME
-    layerheight = 4.0 * layer # 4 m per layer
-    draw_way(f,line,0.2*lanefactor,streetwidth,highwaytype,og)
-    draw_way(f,line,0,1.2*streetwidth,'casing',og)
+    #layer = parse_int_safely(highway['layer'],default=0)
+    #if layer<0:
+    #    layer=0 # FIXME
+    #layerheight = layerunit * layer # 4 m per layer
+    draw_way(f,line,0.04*streetwidth,streetwidth,highwaytype,og)
+    draw_way(f,line,0,0.5+1.1*streetwidth,'casing',og)
     draw_tunnel(dig,line,0,streetwidth,og)
 
 def pov_highway_area(f,highway):

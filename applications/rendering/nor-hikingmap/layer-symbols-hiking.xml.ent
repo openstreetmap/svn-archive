@@ -131,7 +131,6 @@
        width="12" height="16" type="png"
        allow_overlap="false"/>
   </Rule>
-<!--
   <Rule>
     &maxscale_zoom16;
     <Filter>[tourism]='information' and [board_type]='nature'</Filter>
@@ -139,7 +138,6 @@
        width="15" height="15" type="png"
        allow_overlap="false"/>
   </Rule>
--->
 
   <Rule>
     &maxscale_zoom15;

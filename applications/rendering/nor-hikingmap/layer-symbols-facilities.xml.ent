@@ -7,6 +7,13 @@
        width="15" height="15" type="png"
        allow_overlap="false"/>
   </Rule>
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[sport]='motor' or [highway]='raceway'</Filter>
+    <PointSymbolizer file="&symbols;/motorsport.png"
+       width="15" height="15" type="png"
+       allow_overlap="false"/>
+  </Rule>
 
   <Rule>
     &maxscale_zoom16;
@@ -203,7 +210,6 @@
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='bank' or [amenity]='atm' or [amenity]='bureau_de_change'</Filter>
-    <!-- or [atm]='yes'-->
     <PointSymbolizer file="&symbols;/bank.png"
        width="15" height="15" type="png"
        allow_overlap="false"/>
@@ -266,6 +272,7 @@
     where amenity is not null
        or shop is not null
        or sport is not null
+       or highway='raceway'
        or tourism in ('museum','attraction','hotel','motel','hostel','chalet')
        or leisure in ('playground','marina')
     ) as facilities</Parameter>

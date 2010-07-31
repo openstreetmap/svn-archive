@@ -16,6 +16,7 @@ amenitybuildingtypes = {
     'shop':['<1,0.5,0.6>',1.0],
     'public_building':['<1,0.9,0.9>',1.0],
     'place_of_worship':['<1,1,0.5>',1.0],
+    'restaurant':['<0.9,0.8,0.3>',1.0],'fast_food':['<0.9,0.8,0.3>',1.0],
     'hospital':['<1,0.6,0.6>',1.0],
     'theatre':['<1,0.6,0.8>',1.0],
     'university':['<0.6,1,0.8>',1.0],
@@ -63,9 +64,16 @@ def pov_declare_building_textures(f):
         color = buildingparams[0]
         f.write(declare_building_texture.format(color=color,buildingtype=buildingtype))
 
-def get_building_texture(building,amenity,cladding):
+def get_building_texture(building,amenity,shop,cladding):
     buildingparams = buildingtypes.get(building)
     texture = building
+    if shop!=None:
+        texture = 'shop'
+        if amenity!=None:
+            if amenity!='shop':
+                texture = 'unknown'
+                print "### amenity is not shop ({am}), but shop is declared ({sh}) for building {id}"
+        return texture
     if amenity!=None:
         if amenitybuildingtypes.has_key(amenity): # if amenity is known, use that color
             texture = amenity
@@ -92,7 +100,8 @@ def pov_building(f,building):
         height = parse_length_in_meters(heightstring,0.01)
 
     amenity = building['amenity']
-
+    shop = building['shop']
+        
     numpoints = len(polygon)
     f.write("prism {{ linear_spline  0, 1, {0},\n".format(numpoints))
     f.write("/* osm_id={0} */\n".format(building['osm_id']))
@@ -109,7 +118,7 @@ def pov_building(f,building):
         amenitybuildingparams = amenitybuildingtypes.get(amenity)
         color = amenitybuildingparams[0]
 
-    texture = get_building_texture(buildingtype,amenity,None)
+    texture = get_building_texture(buildingtype,amenity,shop,None)
     f.write("""texture {{ texture_building_{texture} }}""".format(texture=texture))
     f.write("""
     scale <1, {height}, 1>

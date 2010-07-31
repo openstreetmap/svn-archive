@@ -70,10 +70,9 @@
 </Layer>
 
 &layer-resurvey;
-
 &layer-powerlines;
-&layer-symbols-hiking;
 &layer-symbols-facilities;
+&layer-symbols-hiking;
 &layer-areatext;
 &layer-placenames;
 </Map>

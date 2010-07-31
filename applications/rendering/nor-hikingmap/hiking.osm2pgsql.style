@@ -126,19 +126,22 @@ way        mtb:scale         text    linear
 way        sac_scale         text    linear
 node       information       text    linear
 node       board_type        text    linear
-#node       fireplace         text    linear
+node       fireplace         text    linear
+node,way   ski               text    linear
 way        piste:type        text    linear
 way        piste:grooming    text    linear
 way        piste:difficulty  text    linear
 node,way   lit               text    linear
 node,way   abandoned         text    linear
 
+# Additional POI properties
+#
+node,way   site_type         text    linear
+node,way   fortification_type text    linear
+node,way   type              text    linear  # sport=shooting
+node       atm               text    linear
+
 # Quality assurance and survey planning
 #
 node,way   fixme             text    linear
 node       noexit            text    linear
-
-# Additional urban properties
-# 
-node       type         text         linear
-node       atm          text         linear

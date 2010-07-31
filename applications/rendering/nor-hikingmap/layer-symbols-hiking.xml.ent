@@ -40,7 +40,7 @@
   </Rule>
   <Rule>
     &maxscale_zoom14;
-    <Filter>[man_made]='mine_shaft' and ([access]='public' or [access]='')</Filter>
+    <Filter>[man_made]='mineshaft' and ([access]='public' or [access]='')</Filter>
     <PointSymbolizer file="&symbols;/mine.png"
        width="15" height="15" type="png" allow_overlap="false"/>
   </Rule>

@@ -115,7 +115,7 @@ def draw_digout(dig,line,height_offset,streetwidth,highwaytype,og):
 
     rx = streetwidth/2.0 # radius=d/2
     rx *= 2 # canyon must be larger than highway
-    ry = 4.0 
+    ry = layerunit
     squeeze = ry/rx
 
     numpoints = len(line)
@@ -149,7 +149,7 @@ def draw_tunnel(dig,line,height_offset,streetwidth,og):
 
     rx = streetwidth/2.0 # radius=d/2
     rx *= 5.0/4.0 # tunnel must be larger than highway
-    ry = 2.0
+    ry = layerunit/2.0 # radius=d/2
     squeeze = ry/rx
 
     numpoints = len(line)
@@ -254,7 +254,7 @@ def pov_highway_area(f,highway):
     texture {{ texture_highway_{highwaytype} }}
     translate <0, {height}, 0>
 }}
-\n""".format(highwaytype=highwaytype,height=height))
+\n""".format(highwaytype=highwaytype,height=height*zpermeter))
     # 
     # draw the casing
     #
@@ -285,7 +285,7 @@ def pov_highway_area(f,highway):
     }}
     translate <0, {height}, 0>
 }}
-\n""".format(height=height))
+\n""".format(height=height*zpermeter))
 
 # ---------------------------------------------------------------------------
 
@@ -366,7 +366,7 @@ def pov_amenity_area(f,amenity):
     polygon = amenity['coords']
 
     heightstring = amenity['height']
-    height = 0.1 #FIXME
+    height = 0.02 #FIXME
     height = height+0.01
 
 
@@ -391,7 +391,7 @@ def pov_amenity_area(f,amenity):
     texture {{ texture_amenity_{amenitytype} }}
     translate <0, {height}, 0>
 }}
-\n""".format(amenitytype=amenitytype,height=height))
+\n""".format(amenitytype=amenitytype,height=height*zpermeter))
     # 
     # draw the casing
     #
@@ -422,7 +422,7 @@ def pov_amenity_area(f,amenity):
     }}
     translate <0, {height}, 0>
 }}
-\n""".format(height=height))
+\n""".format(height=height*zpermeter))
 
 # ---------------------------------------------------------------------------
 
@@ -527,7 +527,7 @@ def pov_barrier(f,barrier,og):
         z = 0
         print "### barrier {id} is not part of a way".format(id=barrier['osm_id'])
 
-    f.write("object {{ barrier_{typ} () scale <5,5,5> translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z,typ=barrierparams[0]))
+    f.write("object {{ barrier_{typ} () scale <5,5,5> translate <{x},{z},{y}> }}\n".format(x=x,y=y,z=z*zpermeter,typ=barrierparams[0]))
 
 def render_highways(f,osraydb,options,digname):
     dig = open(digname, 'w')

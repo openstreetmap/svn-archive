@@ -272,10 +272,10 @@ def main(options):
     image_dimension_parameters = "-W"+str(options['width'])+" -H"+str(options['height'])
     if options['hq']==True:
         antialiasing_parameters = '+A0.1 +AM2 +R3 -J'
-        misc_parameters = '+UV +Q9'
+        misc_parameters = '+UV +Q9 -D -V'
     else:
         antialiasing_parameters = '-A'
-        misc_parameters = '+UV +Q4'
+        misc_parameters = '+UV +Q4 -D -V'
     commandline = string.join([command,image_parameter,image_dimension_parameters,antialiasing_parameters,misc_parameters])
     result = commands.getstatusoutput(commandline)
     print result[1]

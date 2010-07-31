@@ -146,7 +146,8 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 if (ctrl) {
                     Collection<Command> cmds = new LinkedList<Command>();
                     addAddrToPrimitive(currentMouseNode, cmds);
-                    applyInputNumberChange();
+                    if (num == null)
+                        applyInputNumberChange();
                 }
                 setSelectedWay((Way)null);
             } else {
@@ -154,6 +155,9 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 Way wayInRelationAddr = findWayInRelationAddr(currentMouseNode);
                 if (wayInRelationAddr == null) {
                     // node exists but doesn't carry address information : add tags like a new node
+                    if (ctrl) {
+                        applyInputNumberChange();
+                    }
                     Collection<Command> cmds = new LinkedList<Command>();
                     addAddrToPrimitive(currentMouseNode, cmds);
                 } else {
@@ -181,6 +185,9 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                     Toolkit.getDefaultToolkit().beep();
                 } else {
                     Collection<Command> cmds = new LinkedList<Command>();
+                    if (ctrl) {
+                        applyInputNumberChange();
+                    }
                     if (tagPolygon.isSelected()) {
                         addAddrToPolygon(mouseOnExistingBuildingWays, cmds);
                     } else {
@@ -217,7 +224,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     }
     
     private void addAddrToPrimitive(OsmPrimitive osm, Collection<Command> cmds) {
-        // add the current tag addr:housenumber in node and member in relation
+        // add the current tag addr:housenumber in node and member in relation (if so configured)
         if (shift) {
             try {
                 revertInputNumberChange();

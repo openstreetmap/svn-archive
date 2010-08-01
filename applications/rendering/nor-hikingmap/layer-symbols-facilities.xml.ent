@@ -210,7 +210,7 @@
     &maxscale_zoom16;
     <Filter>[amenity]='post_office' and ([shop]='convenience' or [shop]='supermarket')</Filter>
     <PointSymbolizer file="&symbols;/groceries-postalservices.png"
-       width="15" height="15" type="png"/>
+       width="15" height="30" type="png"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;

@@ -15,6 +15,8 @@ void start_hndl(void *data, const char *el, const char **attr) {
    int i;
    static int id;
    short int lon, lat;
+   static long long lastwaytileoffset = 0;
+   static int nodetiles = 0;
    if (strcmp(el, "node") == 0) {
       for (i = 0 ; ; i+=2 ) {
          if (attr[i] == 0) break;
@@ -37,6 +39,7 @@ void start_hndl(void *data, const char *el, const char **attr) {
       fwrite(&id, sizeof(id), 1, fnodetile);
       fwrite(&lat, sizeof(lat), 1, fnodetile);
       fwrite(&lon, sizeof(lon), 1, fnodetile);
+      nodetiles++;
    } else if (strcmp(el, "way") == 0) {
       for (i = 0; ; i+=2) {
          if (attr[i] == 0) break;
@@ -49,42 +52,57 @@ void start_hndl(void *data, const char *el, const char **attr) {
          fwrite(&filepos, sizeof(filepos), 1, fbz2wayindex);
          filepos = 0;
       }
+      lastwaytileoffset = ftell(fwaytile);
    } else if (strcmp(el, "nd") == 0) {
-      if (fnodetile) {
-         fclose(fnodetile);
-         fnodetile = 0;
+      int ref = 0;
+      for (i = 0 ; ; i+=2 ) {
+         if (attr[i] == 0) break;
+         if (strcmp(attr[i], "ref") == 0) {
+            ref = atoi(attr[i+1]);
+         }
       }
-      struct stat st;
-      FILE *f = fopen("/media/esata/2000/nodetile", "r");
-      stat("/media/esata/2000/nodetile", &st);
 
-      long long loindex = 0, hiindex = st.st_size / sizeof(struct nodetile);
-      struct nodetile n;
+      long long loindex = 0, hiindex = nodetiles;
       while (1) {
          long long index = (hiindex+loindex)/2;
-         fseek(f, index*(sizeof(int)+sizeof(short int)+sizeof(short int)), SEEK_SET);
+         fseek(fnodetile, index*(sizeof(int)+sizeof(short int)+sizeof(short int)), SEEK_SET);
          int nid;
-         fread(&nid, sizeof(nid), 1, f);
-         if (nid == id) {
-             fread(&lat, sizeof(lat), 1, f);
-             fread(&lon, sizeof(lon), 1, f);
+         fread(&nid, sizeof(nid), 1, fnodetile);
+         if (nid == ref) {
+             fread(&lat, sizeof(lat), 1, fnodetile);
+             fread(&lon, sizeof(lon), 1, fnodetile);
              break;
-         } else if (nid > id) {
+         } else if (nid > ref) {
              hiindex = index;
          } else {
              loindex = index;
          }
          if ((hiindex - loindex) == 1) {
-             printf("node %i not found in way %i", nid, id);
+             printf("node %i from way %i not found at %lli - %lli = %i\n", ref, id, loindex, hiindex, nid);
              lat = 0;
              lon = 0;
              break;
          }
-         printf("%i %lli\n", id, index);
       }
-      fwrite(&id, sizeof(id), 1, fwaytile);
-      fwrite(&n.lat, sizeof(id), 1, fwaytile);
-      fwrite(&n.lon, sizeof(id), 1, fwaytile);
+      int found = 0;
+      fseek(fwaytile,lastwaytileoffset,SEEK_SET);
+      while (!feof(fwaytile)) {
+         int tid;
+         int tlat;
+         int tlon;
+         fread(&tid, sizeof(id), 1, fwaytile);
+         fread(&tlat, sizeof(lat), 1, fwaytile);
+         fread(&tlon, sizeof(lon), 1, fwaytile);
+         if (tlat == lat && tlon == lon) {
+             found = 1;
+             break;
+         }
+      }
+      if (!found) {
+          fwrite(&id, sizeof(id), 1, fwaytile);
+          fwrite(&lat, sizeof(id), 1, fwaytile);
+          fwrite(&lon, sizeof(id), 1, fwaytile);
+      }
    } else if (strcmp(el, "changeset") == 0) {
       if (filepos) {
          int id = 0;
@@ -117,8 +135,8 @@ int main() {
 
     buf = malloc(avail_in);
 
-    fnodetile = fopen("/media/esata/2000/nodetile", "w");
-    fwaytile = fopen("/media/esata/2000/waytile", "w");
+    fnodetile = fopen("/media/esata/2000/nodetile", "w+");
+    fwaytile = fopen("/media/esata/2000/waytile", "w+");
     fbz2nodeindex = fopen("/media/esata/2000/bz2nodeindex", "w");
     fbz2wayindex = fopen("/media/esata/2000/bz2wayindex", "w");
     fbz2changesetindex = fopen("/media/esata/2000/bz2changeset", "w");

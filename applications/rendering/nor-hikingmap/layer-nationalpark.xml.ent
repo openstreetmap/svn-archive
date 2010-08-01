@@ -41,12 +41,14 @@
     <Rule>
       &maxscale_zoom8;
       &minscale_zoom9;
+      <Filter>[way_area] &gt;= 150000</Filter>
       <TextSymbolizer name="name" fontset_name="bold-fonts"
         size="8" dy="-8" fill="#9c9" halo_radius="1" wrap_width="14"/>
     </Rule>
     <Rule>
       &maxscale_zoom10;
       &minscale_zoom11;
+      <Filter>[way_area] &gt;= 150000</Filter>
       <TextSymbolizer name="name" fontset_name="bold-fonts"
         size="11" fill="#9c9" halo_radius="1" wrap_width="14"/>
     </Rule>
@@ -56,7 +58,7 @@
     <StyleName>nationalpark</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,name,boundary,leisure
+      (select way,boundary,leisure,name,way_area
        from &prefix;_polygon
        where boundary='national_park'
           or leisure='nature_reserve'

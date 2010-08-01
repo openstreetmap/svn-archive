@@ -1,18 +1,5 @@
 <Style name="symbols-landmarks">
   <Rule>
-    &maxscale_zoom9;
-    &minscale_zoom10;
-    <Filter>[natural]='peak' and [ele] &gt;= 2000</Filter>
-    <PointSymbolizer file="&symbols;/peak.png"
-       width="6" height="6" type="png"/>
-  </Rule>
-  <Rule>
-    &maxscale_zoom11;
-    <Filter>[natural]='peak'</Filter>
-    <PointSymbolizer file="&symbols;/peak.png"
-       width="6" height="6" type="png"/>
-  </Rule>
-  <Rule>
     &maxscale_zoom14;
     <Filter>([man_made]='tower' and not [tourism]='viewpoint') or [man_made]='mast' or [amenity]='hunting_stand' or [man_made]='lighthouse' or [man_made]='windmill' or [man_made]='power_wind' or ([power]='generator' and [power_source] = 'wind')</Filter>
     <PointSymbolizer file="&symbols;/tower.png"
@@ -41,6 +28,22 @@
     <Filter>[historic]='ruins'</Filter>
     <PointSymbolizer file="&symbols;/ruin.png"
        width="5" height="5" type="png" allow_overlap="false"/>
+  </Rule>
+<!--
+  <Rule>
+    &maxscale_zoom9;
+    &minscale_zoom10;
+    <Filter>[natural]='peak' and [ele] &gt;= 2000</Filter>
+    <PointSymbolizer file="&symbols;/peak.png"
+       width="6" height="6" type="png"/>
+  </Rule>
+-->
+  <Rule>
+    &maxscale_zoom14;
+    &minscale_zoom16;
+    <Filter>[natural]='peak'</Filter>
+    <PointSymbolizer file="&symbols;/peak.png"
+       width="6" height="6" type="png"/>
   </Rule>
 </Style>
 
@@ -231,7 +234,6 @@
         or waterway='waterfall'
         or leisure in ('picnic_table')
         or building in ('cabin','lean_to')
-     order by z_order
     ) as symbols</Parameter>
     &datasource-settings;
   </Datasource>
@@ -249,7 +251,6 @@
         or "natural"='beach'
         or historic in ('monument','memorial','ruins','archaeological_site')
         or tourism in ('picnic_site')
-     order by z_order
     ) as symbols</Parameter>
     &datasource-settings;
   </Datasource>

@@ -196,6 +196,24 @@
 
   <Rule>
     &maxscale_zoom16;
+    <Filter>([shop]='supermarket' or [shop]='convenience' or [shop]='mall') and not [amenity]='post_office'</Filter>
+    <PointSymbolizer file="&symbols;/groceries.png"
+       width="15" height="15" type="png" allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='post_office' and not ([shop]='supermarket' or [shop]='convenience')</Filter>
+    <PointSymbolizer file="&symbols;/postoffice.png"
+       width="15" height="15" type="png" allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>[amenity]='post_office' and ([shop]='convenience' or [shop]='supermarket')</Filter>
+    <PointSymbolizer file="&symbols;/groceries-postalservices.png"
+       width="15" height="15" type="png"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
     <Filter>[shop]='kiosk' or [shop]='ice_cream'</Filter>
     <PointSymbolizer file="&symbols;/kiosk.png"
        width="15" height="15" type="png" allow_overlap="false"/>
@@ -234,24 +252,6 @@
     &maxscale_zoom16;
     <Filter>[amenity]='waste_basket' or [amenity]='waste_disposal' or [amenity]='recycling'</Filter>
     <PointSymbolizer file="&symbols;/waste.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    <Filter>[shop]='supermarket' or [shop]='convenience' or [shop]='mall'</Filter>
-    <PointSymbolizer file="&symbols;/groceries.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    <Filter>[amenity]='post_office' and not ([shop]='supermarket' or [shop]='convenience')</Filter>
-    <PointSymbolizer file="&symbols;/postoffice.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    <Filter>[amenity]='post_office' and ([shop]='convenience' or [shop]='supermarket')</Filter>
-    <PointSymbolizer file="&symbols;/postoffice.png" dy='15'
        width="15" height="15" type="png" allow_overlap="false"/>
   </Rule>
 

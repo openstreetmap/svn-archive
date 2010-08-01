@@ -1,5 +1,18 @@
 <Style name="symbols-landmarks">
   <Rule>
+    &maxscale_zoom9;
+    &minscale_zoom10;
+    <Filter>[natural]='peak' and [ele] &gt;= 2000</Filter>
+    <PointSymbolizer file="&symbols;/peak.png"
+       width="6" height="6" type="png"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom11;
+    <Filter>[natural]='peak'</Filter>
+    <PointSymbolizer file="&symbols;/peak.png"
+       width="6" height="6" type="png"/>
+  </Rule>
+  <Rule>
     &maxscale_zoom14;
     <Filter>([man_made]='tower' and not [tourism]='viewpoint') or [man_made]='mast' or [amenity]='hunting_stand' or [man_made]='lighthouse' or [man_made]='windmill' or [man_made]='power_wind' or ([power]='generator' and [power_source] = 'wind')</Filter>
     <PointSymbolizer file="&symbols;/tower.png"
@@ -211,7 +224,7 @@
         or amenity in ('shelter','cafe','bbq','place_of_worship','parking','bus_station','hunting_stand')
         or historic in ('monument','memorial','ruins','archaeological_site','yes')
         or tourism in ('viewpoint','information','cabin','guest_house','alpine_hut','hostel','hotel','lean_to','picnic_site','basic_hut','wilderness_hut')
-        or "natural" in ('cave_entrance','tree','beach')
+        or "natural" in ('peak','cave_entrance','tree','beach')
         or (power='generator' and power_source='wind')
         or highway='bus_stop'
         or railway='station'

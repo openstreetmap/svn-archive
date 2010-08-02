@@ -70,7 +70,7 @@ abstract public class Buoy extends SeaMark {
 		dlg.cM01Fired.setSelected(fired);
 
 	}
-
+	
 	private String LightChar = "";
 
 	public String getLightChar() {

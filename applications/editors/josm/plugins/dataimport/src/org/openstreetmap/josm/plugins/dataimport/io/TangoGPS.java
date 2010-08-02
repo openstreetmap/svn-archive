@@ -61,7 +61,7 @@ public class TangoGPS extends FileImporter {
 			while ((line = rd.readLine()) != null) {
 				failure++;
 				String[] lineElements = line.split(",");
-				if (lineElements.length == 7) {
+				if (lineElements.length >= 7) {
 					try {
 						WayPoint currentWayPoint = new WayPoint(
 								parseLatLon(lineElements));

@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Choice;
 import java.awt.Component;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -37,7 +38,7 @@ public class AddressDialog extends ExtendedDialog {
 				new String[] { tr("OK"), tr("Cancel") },
 				true);
 		
-		contentConstraints = GBC.eol().fill().insets(15,15,15,5);
+		contentInsets = new Insets(15,15,5,15);
 		setButtonIcons(new String[] {"ok.png", "cancel.png" });
 		
 		addLabelled(tr("House number:"),housenum);

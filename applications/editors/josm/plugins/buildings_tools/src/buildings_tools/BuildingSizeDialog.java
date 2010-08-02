@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
@@ -37,7 +38,7 @@ public class BuildingSizeDialog extends ExtendedDialog {
 		super(Main.parent, tr("Set buildings size"),
 				new String[] { tr("OK"), tr("Cancel") },
 				true);
-		contentConstraints = GBC.eol().fill().insets(15, 15, 15, 5);
+		contentInsets = new Insets(15, 15, 5, 15);
 		setButtonIcons(new String[] { "ok.png", "cancel.png" });
 
 		final JPanel panel = new JPanel(new GridBagLayout());

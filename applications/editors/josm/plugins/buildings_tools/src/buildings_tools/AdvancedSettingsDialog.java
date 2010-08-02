@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import static buildings_tools.BuildingSizeDialog.addLabelled;
 
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -23,7 +24,7 @@ public class AdvancedSettingsDialog extends ExtendedDialog {
 		super(Main.parent, tr("Advanced settings"),
 				new String[] { tr("OK"), tr("Cancel") },
 				true);
-		contentConstraints = GBC.eol().fill().insets(15, 15, 15, 5);
+		contentInsets = new Insets(15, 15, 5, 15);
 		setButtonIcons(new String[] { "ok.png", "cancel.png" });
 
 		final JPanel panel = new JPanel(new GridBagLayout());

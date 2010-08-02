@@ -3,6 +3,7 @@ package reverter;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -43,7 +44,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
 
     public ChangesetIdQuery() {
         super(Main.parent, tr("Revert changeset"), new String[] {tr("Revert"),tr("Cancel")}, true);
-        contentConstraints = GBC.eol().fill().insets(10,10,10,5);
+        contentInsets = new Insets(10,10,10,5);
         setButtonIcons(new String[] {"ok.png", "cancel.png" });
         JPanel panel = new JPanel(new GridBagLayout());
         panel.add(new JLabel(tr("Changeset id:")));

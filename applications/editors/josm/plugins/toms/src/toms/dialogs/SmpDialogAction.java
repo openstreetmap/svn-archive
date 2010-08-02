@@ -1208,6 +1208,8 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Kennung.setBounds(new Rectangle(160, 230, 70, 20));
 			cbM01Kennung.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					int i1, i2;
+					String g = "", c = "";
 					String it = (String) cbM01Kennung.getSelectedItem();
 
 					if (it == null)
@@ -1219,7 +1221,31 @@ public class SmpDialogAction extends JosmAction {
 					if (buoy == null) {
 						return;
 					}
-					buoy.setLightChar(it);
+
+					i1 = it.indexOf("(");
+					i2 = it.indexOf(")", i1);
+
+					if (i1 >= 0) {
+						c = it.substring(0, i1);
+						if (i1 >= 0)
+							g = it.substring(i1 + 1, i2);
+					}
+
+					if (it.contains("+")) {
+						i1 = it.indexOf("+");
+						i2 = it.length();
+						if (c == "")
+							c = it;
+						else
+							c = c + it.substring(i1, i2);
+					}
+
+					if (c == "")
+						c = it;
+					buoy.setLightChar(c);
+					buoy.setLightGroup(g);
+//					buoy.setLightColour();
+
 					buoy.paintSign();
 				}
 			});

@@ -32,7 +32,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="videomapping" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="1234" />
+	<property name="plugin.main.version" value="3408" />
 
 
 	<!--
@@ -109,7 +109,7 @@
 				<attribute name="Plugin-Icon" value="images/videomapping.png"/>
 				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/VideoMapping"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>				
+				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 			</manifest>
 			<zipfileset src="lib/vlcj-1.1h.jar" />
 			<zipfileset src="lib/log4j.jar" />
@@ -164,10 +164,10 @@
 
 
 	<!--
-	************************** Publishing the plugin *********************************** 
+	************************** Publishing the plugin ***********************************
 	-->
 	<!--
-		** extracts the JOSM release for the JOSM version in ../core and saves it in the 
+		** extracts the JOSM release for the JOSM version in ../core and saves it in the
 		** property ${coreversion.info.entry.revision}
 		**
 		-->
@@ -216,17 +216,17 @@
 	</target>
 
 	<!--
-		** commits the plugin.jar 
+		** commits the plugin.jar
 		-->
 	<target name="commit-dist">
 		<echo>
 	***** Properties of published ${plugin.jar} *****
-	Commit message    : '${commit.message}'					
+	Commit message    : '${commit.message}'
 	Plugin-Mainversion: ${plugin.main.version}
 	JOSM build version: ${coreversion.info.entry.revision}
 	Plugin-Version    : ${version.entry.commit.revision}
-	***** / Properties of published ${plugin.jar} *****					
-						
+	***** / Properties of published ${plugin.jar} *****
+
 	Now commiting ${plugin.jar} ...
 	</echo>
 		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">

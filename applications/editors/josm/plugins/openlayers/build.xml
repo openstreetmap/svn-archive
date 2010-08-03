@@ -32,7 +32,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="Changed the constructor signature of the plugin main class" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="2830" />
+	<property name="plugin.main.version" value="3408" />
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.dist.dir"        value="../../dist"/>
@@ -102,10 +102,10 @@
 	</target>
 
 	<!--
-	************************** Publishing the plugin *********************************** 
+	************************** Publishing the plugin ***********************************
 	-->
 	<!--
-		** extracts the JOSM release for the JOSM version in ../core and saves it in the 
+		** extracts the JOSM release for the JOSM version in ../core and saves it in the
 		** property ${coreversion.info.entry.revision}
 		**
 		-->
@@ -154,17 +154,17 @@
 	</target>
 
 	<!--
-		** commits the plugin.jar 
+		** commits the plugin.jar
 		-->
 	<target name="commit-dist">
 		<echo>
 	***** Properties of published ${plugin.jar} *****
-	Commit message    : '${commit.message}'					
+	Commit message    : '${commit.message}'
 	Plugin-Mainversion: ${plugin.main.version}
 	JOSM build version: ${coreversion.info.entry.revision}
 	Plugin-Version    : ${version.entry.commit.revision}
-	***** / Properties of published ${plugin.jar} *****					
-						
+	***** / Properties of published ${plugin.jar} *****
+
 	Now commiting ${plugin.jar} ...
 	</echo>
 		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
@@ -196,7 +196,7 @@
 			</condition>
 		</fail>
 	</target>
- 
+
 	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
 	</target>
 </project>

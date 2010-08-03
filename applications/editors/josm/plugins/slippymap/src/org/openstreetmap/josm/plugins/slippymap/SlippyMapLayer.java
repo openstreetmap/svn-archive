@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.slippymap;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -20,11 +19,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.gui.jmapviewer.JobDispatcher;
@@ -43,11 +42,11 @@ import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 
 /**
  * Class that displays a slippy map layer.
@@ -992,15 +991,15 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
     }
 
     @Override
-    public Component[] getMenuEntries() {
-        return new Component[] {
-                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-                new JSeparator(),
+    public Action[] getMenuEntries() {
+        return new Action[] {
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                SeparatorLayerAction.INSTANCE,
                 // color,
-                new JMenuItem(new RenameLayerAction(this.getAssociatedFile(), this)),
-                new JSeparator(),
-                new JMenuItem(new LayerListPopup.InfoAction(this)) };
+                new RenameLayerAction(this.getAssociatedFile(), this),
+                SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this) };
     }
 
     @Override

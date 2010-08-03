@@ -1,14 +1,12 @@
 package org.openstreetmap.josm.plugins.openLayers;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 
 import org.mozilla.javascript.NativeArray;
 import org.openstreetmap.josm.Main;
@@ -76,15 +74,15 @@ public class OpenLayersLayer extends Layer implements PropertyChangeListener, My
     }
 
     @Override
-    public Component[] getMenuEntries() {
-        return new Component[] {
-            new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-            new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-            new JSeparator(),
+    public Action[] getMenuEntries() {
+        return new Action[] {
+            LayerListDialog.getInstance().createShowHideLayerAction(),
+            LayerListDialog.getInstance().createDeleteLayerAction(),
+            SeparatorLayerAction.INSTANCE,
             // color,
-            new JMenuItem(new RenameLayerAction(getAssociatedFile(), this)),
-            new JSeparator(),
-            new JMenuItem(new LayerListPopup.InfoAction(this)) };
+            new RenameLayerAction(getAssociatedFile(), this),
+            SeparatorLayerAction.INSTANCE,
+            new LayerListPopup.InfoAction(this) };
     }
 
     @Override

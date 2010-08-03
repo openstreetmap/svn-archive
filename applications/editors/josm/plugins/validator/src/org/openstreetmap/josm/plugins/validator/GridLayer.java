@@ -2,15 +2,13 @@
 package org.openstreetmap.josm.plugins.validator;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
@@ -122,15 +120,15 @@ public class GridLayer extends Layer
     }
 
     @Override
-    public Component[] getMenuEntries()
+    public Action[] getMenuEntries()
     {
-        return new Component[]{
-                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-                new JSeparator(),
-                new JMenuItem(new RenameLayerAction(null, this)),
-                new JSeparator(),
-                new JMenuItem(new LayerListPopup.InfoAction(this))};
+        return new Action[] {
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                SeparatorLayerAction.INSTANCE,
+                new RenameLayerAction(null, this),
+                SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this)};
     }
 
     @Override public void destroy() { }

@@ -3,14 +3,12 @@ package org.openstreetmap.josm.plugins.validator;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.openstreetmap.josm.Main;
@@ -123,12 +121,14 @@ public class ErrorLayer extends Layer implements LayerChangeListener {
     }
 
     @Override
-    public Component[] getMenuEntries() {
-        return new Component[] { new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-                new JSeparator(),
-                new JMenuItem(new RenameLayerAction(null, this)), new JSeparator(),
-                new JMenuItem(new LayerListPopup.InfoAction(this)) };
+    public Action[] getMenuEntries() {
+        return new Action[] {
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                SeparatorLayerAction.INSTANCE,
+                new RenameLayerAction(null, this),
+                SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this) };
     }
 
     @Override

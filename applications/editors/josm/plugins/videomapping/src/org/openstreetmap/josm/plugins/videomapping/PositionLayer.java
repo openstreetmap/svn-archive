@@ -1,56 +1,35 @@
 package org.openstreetmap.josm.plugins.videomapping;
 
 
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
-import javax.swing.*;
-
-import static org.openstreetmap.josm.tools.I18n.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.InfoAction;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
-import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Shortcut;
-
-import com.sun.jna.StringArray;
 
 //Basic rendering and GPS layer interaction
 public class PositionLayer extends Layer implements MouseListener,MouseMotionListener {
@@ -64,7 +43,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	private SimpleDateFormat mins;
 	private SimpleDateFormat ms;
 	private GPSVideoPlayer gps;
-		
+
 	public PositionLayer(String name, final List<WayPoint> ls) {
 		super(name);
 		this.ls=ls;
@@ -73,8 +52,8 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		mins = new SimpleDateFormat("hh:mm:ss:S");
 		ms= new SimpleDateFormat("mm:ss");
 		Main.map.mapView.addMouseListener(this);
-		Main.map.mapView.addMouseMotionListener(this);							
-		
+		Main.map.mapView.addMouseMotionListener(this);
+
 	}
 
 
@@ -93,16 +72,15 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	}
 
 	@Override
-	public Component[] getMenuEntries() {
-        return new Component[]{
-                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-                new JSeparator(),
+	public Action[] getMenuEntries() {
+        return new Action[]{
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                SeparatorLayerAction.INSTANCE,
                 //TODO here my stuff
-                new JSeparator(),
-                new JMenuItem(new LayerListPopup.InfoAction(this))};//TODO here infos about the linked videos
+                new LayerListPopup.InfoAction(this)};//TODO here infos about the linked videos
 	}
-	  
+
 
 
 	@Override
@@ -118,11 +96,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 
 	@Override
 	public void mergeFrom(Layer arg0) {
-		
+
 	}
 
-	
-	
+
+
 	@Override
 	//Draw the current position, infos, waypoints
 	public void paint(Graphics2D g, MapView map, Bounds bound) {
@@ -176,7 +154,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			if(iconPosition!=null)
 			{
 				p=Main.map.mapView.getPoint(iconPosition.getEastNorth());
-				icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);				
+				icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
 				g.drawString(mins.format(iconPosition.getTime()),p.x-10,p.y-10);
 			}
 		}
@@ -184,12 +162,12 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		{
 			if (player.getCurr()!=null){
 			p=Main.map.mapView.getPoint(player.getCurr().getEastNorth());
-			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);			
+			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
 			g.drawString(ms.format(player.getRelativeTime()),p.x-10,p.y-10);
 			}
 		}
 	}
-	
+
 	//finds the first waypoint that is nearby the given point
 	private WayPoint getNearestWayPoint(Point mouse)
 	{
@@ -201,15 +179,15 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		{
 			p = Main.map.mapView.getPoint(n.getEastNorth());
 			if (rect.contains(p))
-			{				
+			{
 				return n;
 			}
-			
+
 		}
 		return null;
-		
+
 	}
-	
+
 	//upper left corner like rectangle
 	private Rectangle getIconRect()
 	{
@@ -224,10 +202,10 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 
 	}
 
-	public void mouseClicked(MouseEvent e) {		
+	public void mouseClicked(MouseEvent e) {
 	}
 
-	public void mouseEntered(MouseEvent arg0) {	
+	public void mouseEntered(MouseEvent arg0) {
 	}
 
 	public void mouseExited(MouseEvent arg0) {
@@ -246,11 +224,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 				}
 			}
 		}
-		
+
 	}
-	
+
 	//
-	public void mouseReleased(MouseEvent e) {		
+	public void mouseReleased(MouseEvent e) {
 		//only leftclicks on our layer
 		if(e.getButton() == MouseEvent.BUTTON1) {
 			if(dragIcon)
@@ -269,13 +247,13 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			}
 			Main.map.mapView.repaint();
 		}
-		
+
 	}
-	
+
 	//slide and restrict during movement
-	public void mouseDragged(MouseEvent e) {		
+	public void mouseDragged(MouseEvent e) {
 		if(dragIcon)
-		{			
+		{
 			mouse=e.getPoint();
 			//restrict to GPS track
 			iconPosition=player.getInterpolatedWaypoint(mouse);
@@ -285,9 +263,9 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	}
 
 	//visualize drag&drop
-	public void mouseMoved(MouseEvent e) {		
+	public void mouseMoved(MouseEvent e) {
 		if (player.getCurr()!=null)
-		{						
+		{
 			if (getIconRect().contains(e.getPoint()))
 			{
 				Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -297,21 +275,21 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 				Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		}
-		
+
 	}
 
 	public void setGPSPlayer(GPSVideoPlayer player) {
 		this.gps = player;
-		
+
 	}
-	
+
 	public static void addObserver(PlayerObserver observer) {
 
         observers.add(observer);
 
     }
 
- 
+
 
     public static void removeObserver(PlayerObserver observer) {
 

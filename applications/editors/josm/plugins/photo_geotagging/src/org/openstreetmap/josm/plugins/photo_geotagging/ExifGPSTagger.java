@@ -8,10 +8,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import java.text.DecimalFormat;
 
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.ImageWriteException;
@@ -20,9 +20,7 @@ import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.jpeg.exifRewrite.ExifRewriter;
 import org.apache.sanselan.formats.tiff.TiffImageMetadata;
-import org.apache.sanselan.formats.tiff.constants.TagInfo;
-import org.apache.sanselan.formats.tiff.constants.TiffConstants;
-import org.apache.sanselan.formats.tiff.fieldtypes.FieldType;
+import org.apache.sanselan.formats.tiff.constants.GPSTagConstants;
 import org.apache.sanselan.formats.tiff.write.TiffOutputDirectory;
 import org.apache.sanselan.formats.tiff.write.TiffOutputField;
 import org.apache.sanselan.formats.tiff.write.TiffOutputSet;
@@ -92,20 +90,20 @@ public class ExifGPSTagger {
 
             Double[] timeStamp = {new Double(hour), new Double(minute), new Double(second)};
             TiffOutputField gpsTimeStamp = TiffOutputField.create(
-                    TiffConstants.GPS_TAG_GPS_TIME_STAMP,
+                    GPSTagConstants.GPS_TAG_GPS_TIME_STAMP,
                     outputSet.byteOrder, timeStamp);
             TiffOutputDirectory exifDirectory = outputSet.getOrCreateGPSDirectory();
             // make sure to remove old value if present (this method will
             // not fail if the tag does not exist).
-            exifDirectory.removeField(TiffConstants.GPS_TAG_GPS_TIME_STAMP);
+            exifDirectory.removeField(GPSTagConstants.GPS_TAG_GPS_TIME_STAMP);
             exifDirectory.add(gpsTimeStamp);
 
             TiffOutputField gpsDateStamp = SanselanFixes.create(
-                    TiffConstants.GPS_TAG_GPS_DATE_STAMP,
+                    GPSTagConstants.GPS_TAG_GPS_DATE_STAMP,
                     outputSet.byteOrder, dateStamp);
             // make sure to remove old value if present (this method will
             // not fail if the tag does not exist).
-            exifDirectory.removeField(TiffConstants.GPS_TAG_GPS_DATE_STAMP);
+            exifDirectory.removeField(GPSTagConstants.GPS_TAG_GPS_DATE_STAMP);
             exifDirectory.add(gpsDateStamp);
 
             SanselanFixes.setGPSInDegrees(outputSet, lon, lat);

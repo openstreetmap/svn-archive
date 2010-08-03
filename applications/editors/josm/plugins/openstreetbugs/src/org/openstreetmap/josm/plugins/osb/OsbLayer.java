@@ -29,7 +29,6 @@ package org.openstreetmap.josm.plugins.osb;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -41,10 +40,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 import javax.swing.JToolTip;
 
 import org.openstreetmap.josm.Main;
@@ -73,7 +71,7 @@ public class OsbLayer extends Layer implements MouseListener {
 
     private static ImageIcon iconError = OsbPlugin.loadIcon("icon_error16.png");
     private static ImageIcon iconValid = OsbPlugin.loadIcon("icon_valid16.png");
-    
+
     private OsbDialog dialog;
 
     public OsbLayer(DataSet dataSet, String name, OsbDialog dialog) {
@@ -99,14 +97,14 @@ public class OsbLayer extends Layer implements MouseListener {
     }
 
     @Override
-    public Component[] getMenuEntries() {
-        return new Component[]{
-                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-                new JSeparator(),
-                new JMenuItem(new RenameLayerAction(null, this)),
-                new JSeparator(),
-                new JMenuItem(new LayerListPopup.InfoAction(this))};
+    public Action[] getMenuEntries() {
+        return new Action[]{
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                SeparatorLayerAction.INSTANCE,
+                new RenameLayerAction(null, this),
+                SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this)};
     }
 
     @Override
@@ -271,7 +269,7 @@ public class OsbLayer extends Layer implements MouseListener {
     public void mouseEntered(MouseEvent e) {}
 
     public void mouseExited(MouseEvent e) {}
-    
+
     public DataSet getDataSet() {
         return data;
     }

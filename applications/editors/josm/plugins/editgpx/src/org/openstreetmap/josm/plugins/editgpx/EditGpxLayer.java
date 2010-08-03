@@ -6,17 +6,15 @@ package org.openstreetmap.josm.plugins.editgpx;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -72,16 +70,16 @@ public class EditGpxLayer extends Layer {
 	}
 
 	@Override
-	public Component[] getMenuEntries() {
-		return new Component[] {
-				new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-				new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-				new JSeparator(),
-				new JMenuItem(layerImport),
-				new JMenuItem(new ConvertToGpxLayerAction()),
-				new JMenuItem(new ConvertToAnonTimeGpxLayerAction()),
-				new JSeparator(),
-				new JMenuItem(new LayerListPopup.InfoAction(this))};
+	public Action[] getMenuEntries() {
+		return new Action[] {
+				LayerListDialog.getInstance().createShowHideLayerAction(),
+				LayerListDialog.getInstance().createDeleteLayerAction(),
+				SeparatorLayerAction.INSTANCE,
+				layerImport,
+				new ConvertToGpxLayerAction(),
+				new ConvertToAnonTimeGpxLayerAction(),
+				SeparatorLayerAction.INSTANCE,
+				new LayerListPopup.InfoAction(this)};
 	}
 
 	@Override

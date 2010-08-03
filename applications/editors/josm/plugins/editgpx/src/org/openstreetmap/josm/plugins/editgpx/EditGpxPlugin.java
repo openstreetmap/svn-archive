@@ -24,7 +24,6 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  *
  * TODO:
  * - BUG: when importing eGpxLayer is shown as RawGpxLayer??
- * - BUG: after deletion of layer not all data is deleted (eg dataset)
  * - implement reset if user made mistake while marking
  *
  *

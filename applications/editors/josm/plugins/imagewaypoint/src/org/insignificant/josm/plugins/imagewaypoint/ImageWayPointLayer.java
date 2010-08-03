@@ -2,13 +2,13 @@ package org.insignificant.josm.plugins.imagewaypoint;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 
 import org.openstreetmap.josm.Main;
@@ -50,14 +50,7 @@ public final class ImageWayPointLayer extends Layer {
         }
     }
 
-    private static final class ImageChangeListener implements
-    IImageChangeListener {
-        private final ImageWayPointLayer layer;
-
-        public ImageChangeListener(final ImageWayPointLayer layer) {
-            this.layer = layer;
-        }
-
+    private static final class ImageChangeListener implements IImageChangeListener {
         public final void onAvailableImageEntriesChanged(
         final ImageEntries entries) {
             Main.map.repaint();
@@ -79,7 +72,7 @@ public final class ImageWayPointLayer extends Layer {
         this.layerMouseListener = new ImageWayPointMouseListener(this);
         Main.map.mapView.addMouseListener(this.layerMouseListener);
 
-        this.imageChangeListener = new ImageChangeListener(this);
+        this.imageChangeListener = new ImageChangeListener();
         ImageEntries.getInstance().addListener(this.imageChangeListener);
     }
 
@@ -94,8 +87,8 @@ public final class ImageWayPointLayer extends Layer {
     }
 
     @Override
-    public final Component[] getMenuEntries() {
-        return new Component[0];
+    public final Action[] getMenuEntries() {
+        return new Action[0];
     }
 
     @Override

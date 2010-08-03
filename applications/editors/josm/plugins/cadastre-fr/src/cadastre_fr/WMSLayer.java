@@ -4,7 +4,6 @@ package cadastre_fr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -21,9 +20,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Vector;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
@@ -43,8 +42,6 @@ import org.openstreetmap.josm.io.OsmTransferException;
  */
 public class WMSLayer extends Layer implements ImageObserver {
 
-    Component[] component = null;
-
     private int lambertZone = -1;
 
     protected static final Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
@@ -58,9 +55,9 @@ public class WMSLayer extends Layer implements ImageObserver {
      * v3 to v4 = add original raster image width and height
      */
     protected final int serializeFormatVersion = 4;
-    
+
     public static int currentFormat;
-    
+
     private static final int cBBoxForBuildings = 50; // hard coded size of grabbed boxes for building layers
 
     private ArrayList<EastNorthBound> dividedBbox = new ArrayList<EastNorthBound>();
@@ -68,7 +65,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     private CacheControl cacheControl = null;
 
     private String location = "";
-    
+
     private String departement = "";
 
     private String codeCommune = "";
@@ -87,8 +84,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     private EastNorth rasterMax;
     private double rasterRatio;
 
-    private JMenuItem saveAsPng;
-    
+    private Action saveAsPng;
+
     public boolean adjustModeEnabled;
 
 
@@ -105,7 +102,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         CadastrePlugin.pluginUsed = true;
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
         // if the layer is currently saving the images in the cache, wait until it's finished
         if (cacheControl != null) {
             while (!cacheControl.isCachePipeEmpty()) {
@@ -118,9 +116,9 @@ public class WMSLayer extends Layer implements ImageObserver {
         dividedBbox = null;
         System.out.println("Layer "+location+" destroyed");
     }
-    
+
     private static String buildName(String location, String codeCommune, boolean buildingOnly) {
-        String ret = new String(location.toUpperCase());
+        String ret = location.toUpperCase();
         if (codeCommune != null && !codeCommune.equals(""))
             ret += "(" + codeCommune + ")";
         if (buildingOnly)
@@ -135,7 +133,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     public void grab(CadastreGrabber grabber, Bounds b) throws IOException {
         grab(grabber, b, true);
     }
-    
+
     public void grab(CadastreGrabber grabber, Bounds b, boolean useFactor) throws IOException {
         cancelled = false;
         if (useFactor) {
@@ -224,7 +222,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             }
         } else {
             // divide to fixed size squares
-            int cSquare = factor == 4 ? Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100")) : optionalSize;   
+            int cSquare = factor == 4 ? Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100")) : optionalSize;
             minEast = minEast - minEast % cSquare;
             minNorth = minNorth - minNorth % cSquare;
             for (int xEast = (int)minEast; xEast < lambertMax.east(); xEast+=cSquare)
@@ -285,7 +283,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         }
         if (this.adjustModeEnabled) {
             WMSAdjustAction.paintAdjustFrames(g, mv);
-        }            
+        }
     }
 
     @Override
@@ -302,17 +300,17 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     @Override
-    public Component[] getMenuEntries() {
-        saveAsPng = new JMenuItem(new MenuActionSaveRasterAs(this));
+    public Action[] getMenuEntries() {
+        saveAsPng = new MenuActionSaveRasterAs(this);
         saveAsPng.setEnabled(isRaster);
-        component = new Component[] { new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-                new JMenuItem(new MenuActionLoadFromCache()),
+        return new Action[] {
+        		LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                new MenuActionLoadFromCache(),
                 saveAsPng,
-                new JMenuItem(new LayerListPopup.InfoAction(this)),
+                new LayerListPopup.InfoAction(this),
 
         };
-        return component;
     }
 
     public GeorefImage findImage(EastNorth eastNorth) {
@@ -442,8 +440,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         double rasterSizeY = communeBBox.max.getY() - communeBBox.min.getY();
         double ratio = rasterSizeY/rasterSizeX;
         // keep same ratio on screen as WMS bbox (stored in communeBBox)
-        rasterMin = new EastNorth(eaMin.getX(), rasterCenter.getY()-(eaMax.getX()-eaMin.getX())*ratio/2); 
-        rasterMax = new EastNorth(eaMax.getX(), rasterCenter.getY()+(eaMax.getX()-eaMin.getX())*ratio/2); 
+        rasterMin = new EastNorth(eaMin.getX(), rasterCenter.getY()-(eaMax.getX()-eaMin.getX())*ratio/2);
+        rasterMax = new EastNorth(eaMax.getX(), rasterCenter.getY()+(eaMax.getX()-eaMin.getX())*ratio/2);
         rasterRatio = (rasterMax.getX()-rasterMin.getX())/rasterSizeX;
     }
 
@@ -597,7 +595,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         setCommuneBBox(new EastNorthBound(new EastNorth(0,0), new EastNorth(images.get(0).image.getWidth()-1,images.get(0).image.getHeight()-1)));
         rasterRatio = (rasterMax.getX()-rasterMin.getX())/(communeBBox.max.getX() - communeBBox.min.getX());
     }
-    
+
     public EastNorthBound getCommuneBBox() {
         return communeBBox;
     }
@@ -639,7 +637,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         this.rasterMax = rasterMax.rotate(rasterCenter, angle);
 //        double proportion = dst1.distance(dst2)/org1.distance(org2);
         images.get(0).rotate(rasterCenter, angle);
-        this.angle += angle; 
+        this.angle += angle;
     }
 
     private void paintCrosspieces(Graphics g, MapView mv) {

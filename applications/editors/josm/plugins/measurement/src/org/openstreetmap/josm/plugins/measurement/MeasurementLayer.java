@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -23,9 +24,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -93,14 +92,14 @@ public class MeasurementLayer extends Layer {
         return getToolTipText();
     }
 
-    @Override public Component[] getMenuEntries() {
-        return new Component[]{
-            new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+    @Override public Action[] getMenuEntries() {
+        return new Action[]{
+            LayerListDialog.getInstance().createShowHideLayerAction(),
             // TODO: implement new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
-            new JSeparator(),
-            new JMenuItem(new GPXLayerImportAction(this)),
-            new JSeparator(),
-            new JMenuItem(new LayerListPopup.InfoAction(this))};
+            SeparatorLayerAction.INSTANCE,
+            new GPXLayerImportAction(this),
+            SeparatorLayerAction.INSTANCE,
+            new LayerListPopup.InfoAction(this)};
     }
 
     public void removeLastPoint(){
@@ -221,7 +220,7 @@ public class MeasurementLayer extends Layer {
                            Math.sin(lat1) * coslat2 * Math.cos(dlon)))) / Math.PI;
     }
 
-    public static double OldangleBetween(LatLon p1, LatLon p2){
+    public static double oldAngleBetween(LatLon p1, LatLon p2){
         double lat1, lon1, lat2, lon2;
         double dlon, dlat;
         double heading;

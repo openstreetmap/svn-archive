@@ -3,53 +3,59 @@ package org.openstreetmap.josm.plugins.photo_geotagging;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.io.IOException;
 import java.io.File;
-
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import java.text.DecimalFormat;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * The action to aks the user for confirmation and then do the tagging.
  */
-class GeotaggingAction implements ActionListener {
+class GeotaggingAction extends AbstractAction implements LayerAction {
     final static boolean debug = false;
     final static String KEEP_BACKUP = "plugins.photo_geotagging.keep_backup";
     final static int MTIME_MODE_GPS = 1;
     final static int MTIME_MODE_PREVIOUS_VALUE = 2;
 
-    final private GeoImageLayer layer;
-    public GeotaggingAction(GeoImageLayer layer) {
-        this.layer = layer;
+    public GeotaggingAction() {
+    	super(tr("Write coordinates to image header"), ImageProvider.get("geotagging"));
     }
 
     public void actionPerformed(ActionEvent arg0) {
+
+    	GeoImageLayer layer = getLayer();
+
         final List<ImageEntry> images = new ArrayList<ImageEntry>();
         for (ImageEntry e : layer.getImages()) {
              /* Only write lat/lon to the file, if the position is known and
@@ -124,7 +130,7 @@ class GeotaggingAction implements ActionListener {
         Main.worker.execute(new GeoTaggingRunnable(images, keep_backup, mTimeMode.getSelectedIndex()));
     }
 
-    class GeoTaggingRunnable extends PleaseWaitRunnable {
+    static class GeoTaggingRunnable extends PleaseWaitRunnable {
         final private List<ImageEntry> images;
         final private boolean keep_backup;
         final private int mTimeMode;
@@ -163,7 +169,7 @@ class GeotaggingAction implements ActionListener {
                     if (mTimeMode != 0) {
                         testMTimeReadAndWrite(e.getFile());
                     }
-                    
+
                     Long mTime = null;
                     if (mTimeMode == MTIME_MODE_PREVIOUS_VALUE) {
                         mTime = e.getFile().lastModified();
@@ -280,9 +286,9 @@ class GeotaggingAction implements ActionListener {
                     throw new IOException(tr("Could not delete temporary file!"));
             }
         }
-        
+
         boolean testMTimeReadAndWriteDone = false;
-        
+
         private void testMTimeReadAndWrite(File file) throws IOException {
             if (testMTimeReadAndWriteDone)  // do this only once
                 return;
@@ -307,4 +313,29 @@ class GeotaggingAction implements ActionListener {
             cancelled = true;
         }
     }
+
+    private GeoImageLayer getLayer() {
+    	return (GeoImageLayer)LayerListDialog.getInstance().getModel().getSelectedLayers().get(0);
+    }
+
+    /**
+     * Check if there is any suitable image.
+     */
+    private boolean enabled(GeoImageLayer layer) {
+        for (ImageEntry e : layer.getImages()) {
+            if (e.getPos() != null && e.getGpsTime() != null)
+                return true;
+        }
+        return false;
+    }
+
+	public Component createMenuComponent() {
+        JMenuItem geotaggingItem = new JMenuItem(this);
+        geotaggingItem.setEnabled(enabled(getLayer()));
+        return geotaggingItem;
+	}
+
+	public boolean supportLayers(List<Layer> layers) {
+		return layers.size() == 1 && layers.get(0) instanceof GeoImageLayer;
+	}
 }

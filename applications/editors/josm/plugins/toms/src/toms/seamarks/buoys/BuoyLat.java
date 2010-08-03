@@ -487,7 +487,7 @@ public class BuoyLat extends Buoy {
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "beacon"));
+						"seamark:buoy_lateral:shape", "stake"));
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral");
@@ -562,7 +562,7 @@ public class BuoyLat extends Buoy {
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "beacon"));
+						"seamark:buoy_lateral:shape", "stake"));
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral");
@@ -620,7 +620,7 @@ public class BuoyLat extends Buoy {
 			case LAT_CONE:
 				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "cone"));
+						"seamark:buoy_lateral:shape", "conical"));
 				break;
 			case LAT_PILLAR:
 				super.saveSign("buoy_lateral");
@@ -635,7 +635,7 @@ public class BuoyLat extends Buoy {
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "beacon"));
+						"seamark:buoy_lateral:shape", "stake"));
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral");
@@ -694,7 +694,7 @@ public class BuoyLat extends Buoy {
 			case LAT_CONE:
 				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "cone"));
+						"seamark:buoy_lateral:shape", "conical"));
 				break;
 			case LAT_PILLAR:
 				super.saveSign("buoy_lateral");
@@ -709,7 +709,7 @@ public class BuoyLat extends Buoy {
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "beacon"));
+						"seamark:buoy_lateral:shape", "stake"));
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral");
@@ -938,7 +938,7 @@ public class BuoyLat extends Buoy {
 				break;
 
 			case STARBOARD_HAND:
-				if (str.compareTo("cone") == 0)
+				if (str.compareTo("conical") == 0)
 					setStyleIndex(LAT_CONE);
 				else if (str.compareTo("pillar") == 0)
 					setStyleIndex(LAT_PILLAR);
@@ -953,7 +953,7 @@ public class BuoyLat extends Buoy {
 				break;
 
 			case PREF_STARBOARD_HAND:
-				if (str.compareTo("cone") == 0)
+				if (str.compareTo("conical") == 0)
 					setStyleIndex(LAT_CONE);
 				else if (str.compareTo("pillar") == 0)
 					setStyleIndex(LAT_PILLAR);

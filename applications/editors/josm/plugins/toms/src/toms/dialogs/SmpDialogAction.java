@@ -711,7 +711,7 @@ public class SmpDialogAction extends JosmAction {
 			lM01Name.setText("Name:");
 
 			lM01Icon03 = new JLabel();
-			lM01Icon03.setBounds(new Rectangle(205, 130, 60, 70));
+			lM01Icon03.setBounds(new Rectangle(205, 135, 70, 60));
 			lM01Icon03.setIcon(null);
 			lM01Icon03.setText("");
 
@@ -1244,7 +1244,7 @@ public class SmpDialogAction extends JosmAction {
 						c = it;
 					buoy.setLightChar(c);
 					buoy.setLightGroup(g);
-//					buoy.setLightColour();
+					// buoy.setLightColour();
 
 					buoy.paintSign();
 				}

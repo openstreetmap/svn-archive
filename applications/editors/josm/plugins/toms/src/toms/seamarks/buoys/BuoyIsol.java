@@ -116,7 +116,7 @@ public class BuoyIsol extends Buoy {
 			break;
 		case ISOL_BEACON:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_isolated_danger:shape", "beacon"));
+					"seamark:beacon_isolated_danger:shape", "stake"));
 			break;
 		default:
 		}

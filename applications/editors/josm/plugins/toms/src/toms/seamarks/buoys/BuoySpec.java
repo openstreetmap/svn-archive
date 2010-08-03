@@ -22,7 +22,7 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Not set");
 		dlg.cbM01StyleOfMark.addItem("Pillar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Spar Buoy");
-		dlg.cbM01StyleOfMark.addItem("Beacon Buoy");
+		dlg.cbM01StyleOfMark.addItem("Beacon");
 		dlg.cbM01StyleOfMark.addItem("Sphere Buoy");
 		dlg.cbM01StyleOfMark.addItem("Barrel");
 
@@ -64,11 +64,11 @@ public class BuoySpec extends Buoy {
 			break;
 		case SPEC_BEACON:
 			if (isFired())
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Special_Purpose_Beacon_Lit.png")));
+				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Special_Purpose_Beacon_Lit.png")));
 			else
 				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-				"/images/Special_Purpose_Beacon.png")));
+						"/images/Special_Purpose_Beacon.png")));
 			break;
 		case SPEC_SPHERE:
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
@@ -90,7 +90,7 @@ public class BuoySpec extends Buoy {
 			if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
 				c = "";
 		}
-		
+
 		switch (getStyleIndex()) {
 		case SPEC_PILLAR:
 		case SPEC_SPAR:
@@ -114,7 +114,10 @@ public class BuoySpec extends Buoy {
 			return;
 		}
 
-		super.saveSign("buoy_special_purpose");
+		if (getStyleIndex() == SPEC_BEACON)
+			super.saveSign("beacon_special_purpose");
+		else
+			super.saveSign("buoy_special_purpose");
 
 		switch (getStyleIndex()) {
 		case SPEC_PILLAR:
@@ -128,6 +131,10 @@ public class BuoySpec extends Buoy {
 		case SPEC_SPHERE:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:shape", "sphere"));
+			break;
+		case SPEC_BEACON:
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_special_purpose:shape", "stake"));
 			break;
 		case SPEC_BARREL:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
@@ -223,7 +230,7 @@ public class BuoySpec extends Buoy {
 
 		if (keys.containsKey("seamark:buoy_special_purpose:shape")) {
 			str = keys.get("seamark:buoy_special_purpose:shape");
-			
+
 			if (str.compareTo("pillar") == 0)
 				setStyleIndex(SPEC_PILLAR);
 			else if (str.compareTo("spar") == 0)

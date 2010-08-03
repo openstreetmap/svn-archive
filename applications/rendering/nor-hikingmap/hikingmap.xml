@@ -25,8 +25,8 @@
 
 <Style name="trails">
   <Rule>
-    <Filter>[marked_trail] = 'blue' or [trailblazed] = 'yes'</Filter>
-    &maxscale_zoom12;
+    <Filter>[trailblazed] = 'yes' or [marked_trail] = 'blue'</Filter>
+    &maxscale_zoom10;
     &minscale_zoom13;
     <LineSymbolizer>
       <CssParameter name="stroke">&trailblazed-color;</CssParameter>
@@ -37,7 +37,7 @@
     </LineSymbolizer>
   </Rule>
   <Rule>
-    <Filter>[marked_trail] = 'blue' or [trailblazed] = 'yes'</Filter>
+    <Filter>[trailblazed] = 'yes' or [marked_trail] = 'blue'</Filter>
     &maxscale_zoom14;
     <LineSymbolizer>
       <CssParameter name="stroke">&trailblazed-color;</CssParameter>

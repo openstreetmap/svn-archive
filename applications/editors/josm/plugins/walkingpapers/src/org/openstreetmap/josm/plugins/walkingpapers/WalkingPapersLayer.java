@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.walkingpapers;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -13,9 +12,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -118,7 +116,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 		checkTileStorage();
 	}
 
-	class TileTimeComp implements Comparator<WalkingPapersTile> {
+	static class TileTimeComp implements Comparator<WalkingPapersTile> {
 		public int compare(WalkingPapersTile s1, WalkingPapersTile s2) {
 			long t1 = s1.access_time();
 			long t2 = s2.access_time();
@@ -348,15 +346,15 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 	}
 
 	@Override
-	public Component[] getMenuEntries() {
-		return new Component[] {
-				new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-				new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-				new JSeparator(),
+	public Action[] getMenuEntries() {
+		return new Action[] {
+				LayerListDialog.getInstance().createShowHideLayerAction(),
+				LayerListDialog.getInstance().createDeleteLayerAction(),
+				SeparatorLayerAction.INSTANCE,
 				// color,
 				// new JMenuItem(new RenameLayerAction(associatedFile, this)),
-				new JSeparator(),
-				new JMenuItem(new LayerListPopup.InfoAction(this)) };
+				SeparatorLayerAction.INSTANCE,
+				new LayerListPopup.InfoAction(this) };
 	}
 
 	@Override

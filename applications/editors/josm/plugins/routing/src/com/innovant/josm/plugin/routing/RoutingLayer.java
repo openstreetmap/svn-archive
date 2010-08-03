@@ -29,7 +29,6 @@ package com.innovant.josm.plugin.routing;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -38,9 +37,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
@@ -181,16 +179,16 @@ public class RoutingLayer extends Layer {
      * @see org.openstreetmap.josm.gui.layer.Layer#getMenuEntries()
      */
     @Override
-    public Component[] getMenuEntries() {
-        Collection<Component> components = new ArrayList<Component>();
-        components.add(new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)));
+    public Action[] getMenuEntries() {
+        Collection<Action> components = new ArrayList<Action>();
+        components.add(LayerListDialog.getInstance().createShowHideLayerAction());
 //        components.add(new JMenuItem(new LayerListDialog.ShowHideMarkerText(this)));
-        components.add(new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)));
-        components.add(new JSeparator());
-        components.add(new JMenuItem(new RenameLayerAction(getAssociatedFile(), this)));
-        components.add(new JSeparator());
-        components.add(new JMenuItem(new LayerListPopup.InfoAction(this)));
-        return components.toArray(new Component[0]);
+        components.add(LayerListDialog.getInstance().createDeleteLayerAction());
+        components.add(SeparatorLayerAction.INSTANCE);
+        components.add(new RenameLayerAction(getAssociatedFile(), this));
+        components.add(SeparatorLayerAction.INSTANCE);
+        components.add(new LayerListPopup.InfoAction(this));
+        return components.toArray(new Action[0]);
     }
 
     /*

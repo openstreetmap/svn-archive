@@ -50,7 +50,7 @@ public class NewLayerFromClipboardAction extends JosmAction {
 		PicLayerFromClipboard layer = new PicLayerFromClipboard();
 		// Add layer only if successfully initialized
 		try {
-			layer.Initialize();
+			layer.initialize();
 		}
 		catch (IOException e) {
 			// Failed

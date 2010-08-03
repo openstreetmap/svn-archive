@@ -1,12 +1,12 @@
 package org.openstreetmap.josm.plugins.routes;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 
 import org.openstreetmap.josm.Main;
@@ -72,8 +72,8 @@ public class RouteLayer extends Layer implements DataSetListenerAdapter.Listener
 	}
 
 	@Override
-	public Component[] getMenuEntries() {
-		return new Component[0];
+	public Action[] getMenuEntries() {
+		return new Action[0];
 	}
 
 	@Override

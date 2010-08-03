@@ -28,15 +28,17 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -68,8 +70,6 @@ public abstract class PicLayerAbstract extends Layer
     private double m_scaley = 1.0;
     // The scale that was set on the map during image creation
     private double m_initial_scale = 0;
-    // Popup menu items
-    private Component m_popupmenu[] = null;
     // Layer icon
     private Icon m_layericon = null;
 
@@ -92,22 +92,6 @@ public abstract class PicLayerAbstract extends Layer
         //Increase number
         m_counter++;
 
-        // Create popup menu
-        // Reset submenu
-        JMenu reset_submenu = new JMenu(tr("Reset"));
-        reset_submenu.add( new ResetPictureAllAction( this ) );
-        reset_submenu.addSeparator();
-        reset_submenu.add( new ResetPicturePositionAction( this ) );
-        reset_submenu.add( new ResetPictureAngleAction( this ) );
-        reset_submenu.add( new ResetPictureScaleAction( this ) );
-        // Main menu
-        m_popupmenu = new Component[]{
-                reset_submenu,
-                new JSeparator(),
-                new JMenuItem( new SavePictureCalibrationAction(this)),
-                new JMenuItem( new LoadPictureCalibrationAction(this)),
-        };
-
         // Load layer icon
         m_layericon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(PicLayerAbstract.class.getResource("/images/layericon.png")));
     }
@@ -116,7 +100,7 @@ public abstract class PicLayerAbstract extends Layer
      * Initializes the image. Gets the image from a subclass and stores some
      * initial parameters. Throws exception if something fails.
      */
-    public void Initialize() throws IOException {
+    public void initialize() throws IOException {
 
         // Create image
         Image image = createImage();
@@ -164,8 +148,14 @@ public abstract class PicLayerAbstract extends Layer
     }
 
     @Override
-    public Component[] getMenuEntries() {
-        return m_popupmenu;
+    public Action[] getMenuEntries() {
+        // Main menu
+        return new Action[] {
+                new ResetSubmenuAction(),
+                SeparatorLayerAction.INSTANCE,
+                new SavePictureCalibrationAction(this),
+                new LoadPictureCalibrationAction(this),
+        };
     }
 
     @Override
@@ -188,7 +178,7 @@ public abstract class PicLayerAbstract extends Layer
     @Override
     public void paint(Graphics2D g2, MapView mv, Bounds bounds) {
 
-        if ( m_image != null && g2 instanceof Graphics2D) {
+        if ( m_image != null) {
 
             // Position image at the right graphical place
             EastNorth center = Main.map.mapView.getCenter();
@@ -318,5 +308,30 @@ public abstract class PicLayerAbstract extends Layer
     		m_initial_scale = in_scale;
     		// Refresh
             Main.map.mapView.repaint();
+    }
+
+    private class ResetSubmenuAction extends AbstractAction implements LayerAction {
+
+    	public ResetSubmenuAction() {
+    		super(tr("Reset"));
+		}
+
+		public void actionPerformed(ActionEvent e) {
+		}
+
+		public Component createMenuComponent() {
+			JMenu reset_submenu = new JMenu(this);
+	        reset_submenu.add( new ResetPictureAllAction( PicLayerAbstract.this ) );
+	        reset_submenu.addSeparator();
+	        reset_submenu.add( new ResetPicturePositionAction( PicLayerAbstract.this ) );
+	        reset_submenu.add( new ResetPictureAngleAction( PicLayerAbstract.this ) );
+	        reset_submenu.add( new ResetPictureScaleAction( PicLayerAbstract.this ) );
+	        return reset_submenu;
+		}
+
+		public boolean supportLayers(List<Layer> layers) {
+			return layers.size() == 1 && layers.get(0) instanceof PicLayerAbstract;
+		}
+
     }
 }

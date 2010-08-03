@@ -90,7 +90,7 @@ public class NewLayerFromFileAction extends JosmAction {
 			PicLayerFromFile layer = new PicLayerFromFile( fc.getSelectedFile() );
 			// Add layer only if successfully initialized
 			try {
-				layer.Initialize();
+				layer.initialize();
 			}
 			catch (IOException e) {
 				// Failed

@@ -580,15 +580,15 @@ public class SmpDialogAction extends JosmAction {
 			}
 
 			// Test buoy_safewater
-			if (keys.containsKey("seamark:buoy_safewater:shape") == true) {
+			if (keys.containsKey("seamark:buoy_water:shape") == true) {
 
-				if (keys.containsKey("seamark:buoy_safewater:colour") == false) {
+				if (keys.containsKey("seamark:buoy_safe_water:colour") == false) {
 					buoy = new BuoyUkn(this, "Parse-Error: No colour set");
 					buoy.setNode(node);
 					return;
 				}
 
-				str = keys.get("seamark:buoy_safewater:colour");
+				str = keys.get("seamark:buoy_safe_water:colour");
 				if (str.compareTo("red;white") != 0) {
 					buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
 					buoy.setNode(node);

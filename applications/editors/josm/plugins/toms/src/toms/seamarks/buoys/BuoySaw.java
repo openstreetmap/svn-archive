@@ -108,31 +108,31 @@ public class BuoySaw extends Buoy {
 			return;
 		}
 
-		super.saveSign("buoy_safewater");
+		super.saveSign("buoy_safe_water");
 
 		switch (getStyleIndex()) {
 		case SAFE_PILLAR:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_safewater:shape", "pillar"));
+					"seamark:buoy_safe_water:shape", "pillar"));
 			break;
 		case SAFE_SPAR:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_safewater:shape", "spar"));
+					"seamark:buoy_safe_water:shape", "spar"));
 			break;
 		case SAFE_SPHERE:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_safewater:shape", "sphere"));
+					"seamark:buoy_safe_water:shape", "sphere"));
 			break;
 		case SAFE_FLOAT:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_safewater:shape", "float"));
+					"seamark:buoy_safe_water:shape", "float"));
 			break;
 		default:
 		}
 		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:buoy_safewater:colour_pattern", "vertical stripes"));
+				"seamark:buoy_safe_water:colour_pattern", "vertical stripes"));
 		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:buoy_safewater:colour", "red;white"));
+				"seamark:buoy_safe_water:colour", "red;white"));
 
 		saveTopMarkData("spherical", "red");
 
@@ -214,8 +214,8 @@ public class BuoySaw extends Buoy {
 
 		keys = node.getKeys();
 
-		if (keys.containsKey("seamark:buoy_safewater:shape")) {
-			str = keys.get("seamark:buoy_safewater:shape");
+		if (keys.containsKey("seamark:buoy_safe_water:shape")) {
+			str = keys.get("seamark:buoy_safe_water:shape");
 			
 			if (str.compareTo("pillar") == 0)
 				setStyleIndex(SAFE_PILLAR);

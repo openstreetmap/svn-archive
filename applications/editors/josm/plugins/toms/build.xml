@@ -32,7 +32,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="New release" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="1465" />
+	<property name="plugin.main.version" value="3329" />
 
 
 	<!--
@@ -82,16 +82,13 @@
             <fileset dir="${plugin.src.dir}/images"/>
         </copy>
 
-		<copy todir="${plugin.build.dir}/resources">
-			<fileset dir="resources"/>
-		</copy>
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images"/>
 		</copy>
 		<copy todir="${plugin.build.dir}">
 			<fileset dir=".">
-				<include name="README" />
-				<include name="LICENSE" />
+                <include name="copyright.txt" />
+                <include name="LICENSE.txt" />
 			</fileset>
 		</copy>
 		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
@@ -108,7 +105,7 @@
 				<attribute name="Plugin-Class" value="toms.Toms"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Create and edit seamarks for OpenSeaMap"/>
-				<!-- <attribute name="Plugin-Icon" value="..."/> -->
+				<attribute name="Plugin-Icon" value="images/Smp.png"/>
 				<attribute name="Plugin-Link" value="http://openseamap.org/"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

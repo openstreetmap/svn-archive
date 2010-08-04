@@ -133,6 +133,7 @@ way        piste:grooming    text    linear
 way        piste:difficulty  text    linear
 node,way   lit               text    linear
 node,way   abandoned         text    linear
+node,way   network           text    linear
 
 # Additional POI properties
 #

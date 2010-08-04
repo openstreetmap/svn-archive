@@ -157,13 +157,13 @@
        width="15" height="15" type="png" allow_overlap="false"/>
   </Rule>
   <Rule>
-    &maxscale_zoom9;
+    &maxscale_zoom10;
     <Filter>([building]='cabin' or [tourism]='cabin') and [service]='no' and [operator]='Den Norske Turistforening'</Filter>
     <PointSymbolizer file="&symbols;/cabin-unprovisioned.png"
        width="15" height="15" type="png" allow_overlap="false"/>
   </Rule>
   <Rule>
-    &maxscale_zoom12;
+    &maxscale_zoom11;
     <Filter>(([building]='cabin' or [tourism]='cabin') and ([access]='permissive' or [access]='public' or [access]='emergency' or [access]='yes')) or [tourism]='basic_hut' or [tourism]='wilderness_hut'</Filter>
     <PointSymbolizer file="&symbols;/shelter.png"
        width="15" height="15" type="png" allow_overlap="false"/>

@@ -120,10 +120,17 @@ public class BuoyIsol extends Buoy {
 			break;
 		default:
 		}
+		if (getStyleIndex() == ISOL_BEACON) {
 		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:buoy_isolated_danger:colour_pattern", "horizontal stripes"));
+				"seamark:beacon_isolated_danger:colour_pattern", "horizontal stripes"));
 		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:buoy_isolated_danger:colour", "black;red;black"));
+				"seamark:beacon_isolated_danger:colour", "black;red;black"));
+		} else {
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_isolated_danger:colour_pattern", "horizontal stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_isolated_danger:colour", "black;red;black"));
+		}
 
 		saveTopMarkData("2 spheres", "black");
 
@@ -171,10 +178,7 @@ public class BuoyIsol extends Buoy {
 
 			if (keys.containsKey("seamark:light:character")) {
 				setLightGroup(keys);
-
 				String c = keys.get("seamark:light:character");
-				String ce = c;
-
 				setLightChar(c);
 				setLightPeriod(keys);
 			}
@@ -185,9 +189,9 @@ public class BuoyIsol extends Buoy {
 
 			} else {
 				if (getErrMsg() == null)
-					setErrMsg("Parse-Error: Licht falsch");
+					setErrMsg("Parse-Error: Invalid light");
 				else
-					setErrMsg(getErrMsg() + " / Licht falsch");
+					setErrMsg(getErrMsg() + " / Invalid light");
 
 				ret = false;
 			}
@@ -215,7 +219,13 @@ public class BuoyIsol extends Buoy {
 				setStyleIndex(ISOL_PILLAR);
 			else if (str.compareTo("spar") == 0)
 				setStyleIndex(ISOL_SPAR);
-			else if (str.compareTo("beacon") == 0)
+			else
+				ret = false;
+		}
+		if (keys.containsKey("seamark:beacon_isolated_danger:shape")) {
+			str = keys.get("seamark:beacon_isolated_danger:shape");
+
+			if (str.compareTo("stake") == 0)
 				setStyleIndex(ISOL_BEACON);
 			else
 				ret = false;

@@ -54,10 +54,10 @@ public class BuoyNota extends Buoy {
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
+		dlg.cbM01StyleOfMark.addItem("Lighthouse");
 		dlg.cbM01StyleOfMark.addItem("Major Light");
 		dlg.cbM01StyleOfMark.addItem("Minor Light");
 		dlg.cbM01StyleOfMark.addItem("Light Float");
-		dlg.cbM01StyleOfMark.addItem("Lighthouse");
 
 		if (style >= dlg.cbM01StyleOfMark.getItemCount())
 			style = 0;
@@ -79,8 +79,8 @@ public class BuoyNota extends Buoy {
 
 
 		switch (getStyleIndex()) {
-		case SeaMark.LIGHT_MAJOR:
 		case SeaMark.LIGHT_HOUSE:
+		case SeaMark.LIGHT_MAJOR:
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Light_Major.png")));
 			break;
@@ -118,6 +118,9 @@ public class BuoyNota extends Buoy {
 		}
 
 		switch (getStyleIndex()) {
+		case LIGHT_HOUSE:
+			super.saveSign("lighthouse");
+			break;
 		case LIGHT_MAJOR:
 			super.saveSign("major_light");
 			break;

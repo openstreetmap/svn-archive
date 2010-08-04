@@ -159,7 +159,7 @@ public class BuoySaw extends Buoy {
 				setTopMark(true);
 
 			} else {
-				setErrMsg("Parse-Error: Topmark unbekannt");
+				setErrMsg("Parse-Error: Unknown topmark");
 				ret = false;
 			}
 		}
@@ -180,10 +180,7 @@ public class BuoySaw extends Buoy {
 
 			if (keys.containsKey("seamark:light:character")) {
 				setLightGroup(keys);
-
 				String c = keys.get("seamark:light:character");
-				String ce = c;
-
 				setLightChar(c);
 				setLightPeriod(keys);
 			}

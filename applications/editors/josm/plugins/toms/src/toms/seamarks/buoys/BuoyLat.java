@@ -487,12 +487,12 @@ public class BuoyLat extends Buoy {
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "stake"));
+						"seamark:beacon_lateral:shape", "stake"));
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "tower"));
+						"seamark:beacon_lateral:shape", "tower"));
 				break;
 			case LAT_FLOAT:
 				super.saveSign("buoy_lateral");
@@ -562,12 +562,12 @@ public class BuoyLat extends Buoy {
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "stake"));
+						"seamark:beacon_lateral:shape", "stake"));
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "tower"));
+						"seamark:beacon_lateral:shape", "tower"));
 				break;
 			case LAT_FLOAT:
 				super.saveSign("buoy_lateral");
@@ -635,12 +635,12 @@ public class BuoyLat extends Buoy {
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "stake"));
+						"seamark:beacon_lateral:shape", "stake"));
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "tower"));
+						"seamark:beacon_lateral:shape", "tower"));
 				break;
 			case LAT_FLOAT:
 				super.saveSign("buoy_lateral");
@@ -709,12 +709,12 @@ public class BuoyLat extends Buoy {
 			case LAT_BEACON:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "stake"));
+						"seamark:beacon_lateral:shape", "stake"));
 				break;
 			case LAT_TOWER:
 				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "tower"));
+						"seamark:beacon_lateral:shape", "tower"));
 				break;
 			default:
 			}
@@ -831,9 +831,7 @@ public class BuoyLat extends Buoy {
 
 			if (keys.containsKey("seamark:light:character")) {
 				setLightGroup(keys);
-
 				String c = keys.get("seamark:light:character");
-				String ce = c;
 				setLightChar(c);
 				setLightPeriod(keys);
 			}
@@ -972,7 +970,7 @@ public class BuoyLat extends Buoy {
 			int cat = getBuoyIndex();
 			switch (cat) {
 			case PORT_HAND:
-				if (str.compareTo("beacon") == 0)
+				if (str.compareTo("stake") == 0)
 					setStyleIndex(LAT_BEACON);
 				else if (str.compareTo("tower") == 0)
 					setStyleIndex(LAT_TOWER);
@@ -981,7 +979,7 @@ public class BuoyLat extends Buoy {
 				break;
 
 			case PREF_PORT_HAND:
-				if (str.compareTo("beacon") == 0)
+				if (str.compareTo("stake") == 0)
 					setStyleIndex(LAT_BEACON);
 				else if (str.compareTo("tower") == 0)
 					setStyleIndex(LAT_TOWER);
@@ -990,7 +988,7 @@ public class BuoyLat extends Buoy {
 				break;
 
 			case STARBOARD_HAND:
-				if (str.compareTo("beacon") == 0)
+				if (str.compareTo("stake") == 0)
 					setStyleIndex(LAT_BEACON);
 				else if (str.compareTo("tower") == 0)
 					setStyleIndex(LAT_TOWER);
@@ -999,7 +997,7 @@ public class BuoyLat extends Buoy {
 				break;
 
 			case PREF_STARBOARD_HAND:
-				if (str.compareTo("beacon") == 0)
+				if (str.compareTo("stake") == 0)
 					setStyleIndex(LAT_BEACON);
 				else if (str.compareTo("tower") == 0)
 					setStyleIndex(LAT_TOWER);

@@ -22,7 +22,6 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Not set");
 		dlg.cbM01StyleOfMark.addItem("Pillar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Spar Buoy");
-		dlg.cbM01StyleOfMark.addItem("Beacon");
 		dlg.cbM01StyleOfMark.addItem("Sphere Buoy");
 		dlg.cbM01StyleOfMark.addItem("Barrel");
 
@@ -62,14 +61,6 @@ public class BuoySpec extends Buoy {
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Special_Purpose_Spar.png")));
 			break;
-		case SPEC_BEACON:
-			if (isFired())
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Special_Purpose_Beacon_Lit.png")));
-			else
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Special_Purpose_Beacon.png")));
-			break;
 		case SPEC_SPHERE:
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Special_Purpose_Sphere.png")));
@@ -96,9 +87,6 @@ public class BuoySpec extends Buoy {
 		case SPEC_SPAR:
 			Checker("/images/Cross_Top_Buoy_Yellow.png", "/images/Light_White.png");
 			break;
-		case SPEC_BEACON:
-			Checker("/images/Cross_Top_Post_Yellow.png", "/images/Light_White.png");
-			break;
 		case SPEC_SPHERE:
 		case SPEC_BARREL:
 			Checker("/images/Cross_Top_Sphere_Yellow.png", "/images/Light_White.png");
@@ -114,10 +102,7 @@ public class BuoySpec extends Buoy {
 			return;
 		}
 
-		if (getStyleIndex() == SPEC_BEACON)
-			super.saveSign("beacon_special_purpose");
-		else
-			super.saveSign("buoy_special_purpose");
+		super.saveSign("buoy_special_purpose");
 
 		switch (getStyleIndex()) {
 		case SPEC_PILLAR:
@@ -131,10 +116,6 @@ public class BuoySpec extends Buoy {
 		case SPEC_SPHERE:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:shape", "sphere"));
-			break;
-		case SPEC_BEACON:
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_special_purpose:shape", "stake"));
 			break;
 		case SPEC_BARREL:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
@@ -193,7 +174,6 @@ public class BuoySpec extends Buoy {
 				setLightGroup(keys);
 
 				String c = keys.get("seamark:light:character");
-				String ce = c;
 
 				setLightChar(c);
 				setLightPeriod(keys);

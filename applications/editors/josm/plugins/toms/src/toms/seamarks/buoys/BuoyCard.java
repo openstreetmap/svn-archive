@@ -310,7 +310,6 @@ public class BuoyCard extends Buoy {
 				setLightGroup(keys);
 
 				String c = keys.get("seamark:light:character");
-				String ce = c;
 
 				if (c.contains("+")) {
 					i1 = c.indexOf("+");
@@ -319,10 +318,8 @@ public class BuoyCard extends Buoy {
 				}
 
 				if (getLightGroup() != "")
-					ce = c + "(" + getLightGroup() + ")";
 				if (tmp != null) {
 					c = c + tmp;
-					ce = ce + tmp;
 				}
 
 				setLightChar(c);

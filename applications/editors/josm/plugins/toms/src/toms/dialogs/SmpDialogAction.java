@@ -925,7 +925,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TypeOfMark.addItem("Cardinal West");
 			cbM01TypeOfMark.addItem("Isolated Danger");
 			cbM01TypeOfMark.addItem("Special Purpose");
-			cbM01TypeOfMark.addItem("Light");
+			// cbM01TypeOfMark.addItem("Light");
 
 			cbM01TypeOfMark.setBounds(new Rectangle(50, 25, 150, 25));
 			cbM01TypeOfMark.setEditable(false);
@@ -1025,12 +1025,10 @@ public class SmpDialogAction extends JosmAction {
 						if (!(buoy instanceof BuoySpec))
 							buoy = new BuoySpec(dia, SeaMark.SPECIAL_PURPOSE);
 						break;
-
-					case SeaMark.LIGHT:
-						if (!(buoy instanceof BuoyNota))
-							buoy = new BuoyNota(dia, type);
-						break;
-
+					/*
+					 * case SeaMark.LIGHT: if (!(buoy instanceof BuoyNota)) buoy = new
+					 * BuoyNota(dia, type); break;
+					 */
 					default:
 						if (!(buoy instanceof BuoyUkn))
 							buoy = new BuoyUkn(dia, "Not Implemented");

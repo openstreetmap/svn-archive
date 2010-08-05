@@ -867,10 +867,10 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap = new JPanel();
 			pM01SeaMap.setLayout(null);
 			pM01SeaMap.add(lM01TimeUnit, null);
-			pM01SeaMap.add(lM01HeightUnit, null);
-			pM01SeaMap.add(lM01RangeUnit, null);
-			pM01SeaMap.add(lM01Height, null);
-			pM01SeaMap.add(lM01Range, null);
+//			pM01SeaMap.add(lM01HeightUnit, null);
+//			pM01SeaMap.add(lM01RangeUnit, null);
+//			pM01SeaMap.add(lM01Height, null);
+//			pM01SeaMap.add(lM01Range, null);
 			pM01SeaMap.add(lM01RepeatTime, null);
 			pM01SeaMap.add(lM01Colour, null);
 			pM01SeaMap.add(lM01Kennung, null);
@@ -895,8 +895,8 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(getTfM01Name(), null);
 			pM01SeaMap.add(getBM01Close(), null);
 			pM01SeaMap.add(getTfM01RepeatTime(), null);
-			pM01SeaMap.add(getTfM01Range(), null);
-			pM01SeaMap.add(getTfM01Height(), null);
+//			pM01SeaMap.add(getTfM01Range(), null);
+//			pM01SeaMap.add(getTfM01Height(), null);
 			pM01SeaMap.add(getCbM01Kennung(), null);
 			pM01SeaMap.add(getCbM01Colour(), null);
 			pM01SeaMap.add(getTfM01FireMark(), null);

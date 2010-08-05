@@ -70,6 +70,7 @@
 #      [-routeiconscale]
 # 1.05 [-ra]
 # 1.06 eliminate redundancy in svg output
+# 1.07 circle around POIs
 #
 #
 # TODO
@@ -90,11 +91,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.06 ;
-use OSM::mapgenRules 1.06 ;
+use OSM::mapgen 1.07 ;
+use OSM::mapgenRules 1.07 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.06" ;
+my $version = "1.07" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -137,6 +138,7 @@ perl mapgen.pl
 -dirtitle=TEXT (title for PDF directory of streets and POIs; DEFAULT="mapgen map")
 -tagstat (lists keys and values used in osm file; program filters list to keep them short!!! see code array noListTags)
 -poifile=<TEXT> (name of file with POIs to be displayed in map)
+-circle=<TEXT> (TEXT=key,value,distance,color,thickness[#key,value,distance,color,thickness...])
 
 -routelabelcolor=TEXT (color for labels of routes)
 -routelabelsize=INTEGER (DEFAULT=28)
@@ -185,6 +187,7 @@ my $pdfOpt = 0 ;
 my $pngOpt = 0 ;
 my $dirOpt = 0 ;
 my $poiOpt = 0 ;
+my $circleOpt= "" ;
 my $dirPdfOpt = 0 ;
 my $dirColNum = 3 ;
 my $dirTitle = "mapgen map" ;
@@ -220,6 +223,7 @@ my $onewayOpt = 0 ;
 my $onewayColor = "white" ;
 my $halo = 0 ;
 my $extPoiFileName = "" ;
+my @circles = () ;
 
 
 # keys from tags listed here will not be shown in tag stat
@@ -360,6 +364,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"coords"	=> \$coordsOpt,		# 
 				"coordsexp:i"	=> \$coordsExp,		# 
 				"coordscolor:s"	=> \$coordsColor,		# 
+				"circle:s"	=> \$circleOpt,		
 				"clip:i"	=> \$clip,		# specifies how many percent data to clip on each side
 				"clipbbox:s"	=> \$clipbbox,		# bbox data for clipping map out of data
 				"pad:i"		=> \$pad,		# specifies how many percent data to pad on each side
@@ -408,6 +413,9 @@ if ($helpOpt eq "1") {
 	print $usage . "\n" ;
 	die() ;
 }
+
+# print "-circle= $circleOpt\n" ;
+if ($circleOpt ne "") { checkCircleOpt() ; }
 
 setdpi ($scaleDpi) ;
 setBaseDpi ($baseDpi) ;
@@ -752,6 +760,16 @@ if ($multiOnly eq "1") { 	# clear all data so nothing else will be drawn
 # NODES
 print "draw nodes...\n" ;
 foreach my $nodeId (keys %memNodeTags) {
+
+	if (scalar @circles > 0) {
+		foreach my $rule (@circles) {
+			my ($value) = getValue ($rule->[0], $memNodeTags{$nodeId}) ;
+			if ( ($value eq $rule->[1]) or ($rule->[1] eq "*") ) {
+				drawCircle ($lon{$nodeId}, $lat{$nodeId}, $rule->[2], $rule->[3], $rule->[4]) ;
+			}
+		}
+	}
+
 	my $test = getNodeRule (\@{$memNodeTags{$nodeId}}, \@nodes, $ruleScaleSet) ;
 	if (defined $test) {
 		$dirName = getValue ("name", \@{$memNodeTags{$nodeId}}) ;
@@ -2415,6 +2433,20 @@ sub preprocessWayLabels {
 
 				push @labelCandidates, [$ruleNum, $name, $segmentLengthPixels, $labelLengthPixels, [@points]] ;
 			}
+		}
+	}
+}
+
+sub checkCircleOpt {
+	my @entries = split /#/, $circleOpt ;
+	foreach my $e (@entries) {
+		my ($key, $value, $distance, $color, $thickness) = ($e =~ /(.+)\,(.+)\,(\d+)\,(.+)\,(\d+)/) ;
+		if ( (defined $key) and (defined $value) and (defined $distance) and (defined $color) and (defined $thickness) ) {
+			push @circles, [$key, $value, $distance, $color, $thickness] ;
+			# print "CIRCLES PARSE: $key, $value, $distance, $color, $thickness\n" ;
+		}
+		else {
+			print "ERROR (circle definition): text = $e\n" ;
 		}
 	}
 }

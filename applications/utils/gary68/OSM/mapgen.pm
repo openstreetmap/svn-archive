@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.06' ;
+$VERSION = '1.07' ;
 
 require Exporter ;
 
@@ -61,6 +61,7 @@ require Exporter ;
 			drawAreaMP
 			drawAreaOcean
 			drawAreaPix 
+			drawCircle 
 			drawCircleRadius 
 			drawCircleRadiusText 
 			drawCoords
@@ -453,6 +454,17 @@ sub drawNodeDotPix {
 	push @svgOutputPixel, svgElementCircleFilled ($x1, $y1, $size, $col) ;
 }
 
+
+sub drawCircle {
+	my ($lon, $lat, $radius, $color, $thickness) = @_ ;
+	# radius in meters
+
+	my ($x, $y) = convert ($lon, $lat) ;
+	my $thickness2 = scalePoints (scaleBase ($thickness)) ;
+
+	my $radiusPixel = $radius / (1000 * distance ($left, $bottom, $right, $bottom) ) * $sizeX ;
+	push @svgOutputPixelGrid, svgElementCircle ($x, $y, $radiusPixel, $thickness2, $color) ;
+}
 
 sub drawWay {
 #

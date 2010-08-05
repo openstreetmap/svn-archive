@@ -421,7 +421,7 @@
 		<!-- Highway area casings -->
 		<rule e="way" k="area" v="yes|true">
 
-			<rule e="way" k="bicycle_road" v="yes">
+			<rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
 				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
 				</rule>
@@ -555,7 +555,7 @@
 		<rule e="way" k="tunnel" v="~|no|false">
 			<rule e="way" k="area" v="~|no|false">
 
-				<rule e="way" k="bicycle_road" v="yes">
+				<rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
 					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 						<line class="highway-casing highway-cycleroad-casing"/>
 					</rule>
@@ -1018,7 +1018,7 @@
 		<!-- Highway area cores -->
 		<rule e="way" k="area" v="yes|true">
 
-			<rule e="way" k="bicycle_road" v="yes">
+			<rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
 				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 					<area class="highway-core highway-cycleroad-area-1 no-bezier"/>
 					<area class="highway-core highway-cycleroad-area-2 no-bezier"/>
@@ -1164,7 +1164,7 @@
 		<rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="area" v="~|false|no">
 
-				<rule e="way" k="bicycle_road" v="yes">
+				<rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
 					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 						<line class="highway-core highway-cycleroad-core-1" smart-linecap="no"/>
 						<line class="highway-core highway-cycleroad-core-2" smart-linecap="no"/>

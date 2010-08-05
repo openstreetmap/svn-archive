@@ -743,87 +743,7 @@
 
 		<!-- Highway area casings -->
 		<rule e="way" k="area" v="yes|true">
-			<rule e="way" k="highway" v="track">
-				<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="footway|footpath">
-				<area class="highway-casing highway-footway-casing highway-footway-area-casing no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="pedestrian">
-				<area class="highway-casing highway-pedestrian-casing highway-pedestrian-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="cycleway">
-				<area class="highway-casing highway-cycleway-casing highway-cycleway-area-casing no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="path">
-				<rule e="way" k="bicycle" v="yes|designated">
-					<area class="highway-casing highway-cycleway-casing highway-cycleway-area-casing no-bezier" smart-linecap="no"/>
-				</rule>
-				<else>
-					<rule e="way" k="horse" v="yes|designated">
-						<area class="highway-casing highway-bridleway-casing highway-bridleway-area-casing no-bezier" smart-linecap="no"/>
-					</rule>
-					<else>
-						<area class="highway-casing highway-footway-casing highway-footway-area-casing no-bezier" smart-linecap="no"/>
-					</else></else>
-			</rule>
-			<rule e="way" k="highway" v="bridleway">
-				<area class="highway-casing highway-bridleway-casing highway-bridleway-area-casing no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="byway">
-				<area class="highway-casing highway-byway-1-casing highway-byway-1-area-casing no-bezier" smart-linecap="no"/>
-				<area class="highway-casing highway-byway-2-casing highway-byway-2-area-casing no-bezier" smart-linecap="no"/>
-				<area class="highway-casing highway-byway-3-casing highway-byway-3-area-casing no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="track">
-				<rule e="way" k="tracktype" v="grade1">
-					<area class="highway-casing highway-track-casing highway-track-grade1-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
-				</rule>
-				<else>
-					<rule e="way" k="tracktype" v="grade2">
-						<area class="highway-casing highway-track-casing highway-track-grade2-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
-					</rule>
-					<else>
-						<rule e="way" k="tracktype" v="grade3">
-							<area class="highway-casing highway-track-casing highway-track-grade3-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
-						</rule>
-						<else>
-							<rule e="way" k="tracktype" v="grade4">
-								<area class="highway-casing highway-track-casing highway-track-grade4-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
-							</rule>
-							<else>
-								<rule e="way" k="tracktype" v="grade5">
-									<area class="highway-casing highway-track-casing highway-track-grade5-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
-								</rule>
-								<else>
-									<area class="highway-casing highway-track-casing highway-track-gradex-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
-								</else>
-							</else>
-						</else>
-					</else>
-				</else>
-			</rule>
-			<rule e="way" k="highway" v="unsurfaced">
-				<area class="highway-casing highway-unsurfaced-casing highway-unsurfaced-area-casing no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="service">
-				<rule e="way" k="service" v="parking_aisle|driveway">
-					<area class="highway-casing highway-aisle-casing highway-aisle-area-casing no-bezier"/>
-				</rule>
-				<else>
-					<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
-				</else>
-			</rule>
-			<rule e="way" k="highway" v="unclassified|minor|road">
-				<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="residential">
-				<area class="highway-casing highway-residential-casing highway-residential-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="living_street">
-				<area class="highway-casing highway-livingstreet-casing highway-livingstreet-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="cycleroad">
+			<rule e="way" k="bicycle_road" v="yes">
 				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
 				</rule>
@@ -831,157 +751,62 @@
 					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
 				</else>
 			</rule>
-			<rule e="way" k="highway" v="tertiary_link">
-				<area class="highway-casing highway-tertiary-link-casing highway-tertiary-link-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="tertiary">
-				<area class="highway-casing highway-tertiary-casing highway-tertiary-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="secondary_link">
-				<area class="highway-casing highway-secondary-link-casing highway-secondary-link-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="secondary">
-				<area class="highway-casing highway-secondary-casing highway-secondary-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="primary_link">
-				<area class="highway-casing highway-primary-link-casing highway-primary-link-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="trunk_link">
-				<area class="highway-casing highway-trunk-link-casing highway-trunk-link-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="motorway_link">
-				<area class="highway-casing highway-motorway-link-casing highway-motorway-link-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="primary">
-				<area class="highway-casing highway-primary-casing highway-primary-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="trunk">
-				<area class="highway-casing highway-trunk-casing highway-trunk-area-casing no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="motorway">
-				<area class="highway-casing highway-motorway-casing highway-motorway-area-casing no-bezier"/>
-			</rule>
-		</rule>
-
-		<!-- Linear casings -->
-		<rule e="way" k="tunnel" v="~|no|false">
-			<rule e="way" k="area" v="~|no|false">
+			<else>
 				<rule e="way" k="highway" v="track">
-					<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="raceway">
-					<rule e="way" k="use_status" v="~">
-						<line class="highway-raceway-casing"/>
-					</rule>
-					<rule e="way" k="use_status" v="disused">
-						<line class="highway-raceway-casing-disused"/>
-					</rule>
-					<rule e="way" k="use_status" v="dismantled">
-						<line class="highway-raceway-casing-dismantled"/>
-					</rule>
-				</rule>
-				<rule e="way" k="highway" v="steps">
-					<rule e="way" k="ramp:wheelchair" v="yes">
-						<line class="highway-casing highway-steps-casing-ramp-wheelchair"/>
-						<line class="highway-casing highway-steps-casing-ramp"/>
-
-					</rule>
-					<else>
-						<rule e="way" k="ramp:stroller" v="yes">
-							<line class="highway-casing highway-steps-casing-ramp-stroller"/>
-							<line class="highway-casing highway-steps-casing-ramp"/>
-						</rule>
-						<else>
-							<rule e="way" k="ramp:bicycle" v="yes">
-								<line class="highway-casing highway-steps-casing-ramp-bicycle"/>
-								<line class="highway-casing highway-steps-casing-ramp"/>
-							</rule>
-							<else>
-								<rule e="way" k="ramp" v="yes">
-									<line class="highway-casing highway-steps-casing-ramp-yes"/>
-									<line class="highway-casing highway-steps-casing-ramp"/>
-								</rule>
-								<else>
-									<rule e="way" k="ramp" v="no">
-										<line class="highway-casing highway-steps-casing-ramp-no"/>
-										<line class="highway-casing highway-steps-casing-ramp"/>
-									</rule>
-									<else>
-										<line class="highway-casing highway-steps-casing"/>
-									</else>
-								</else>
-							</else>
-						</else>
-					</else>
+					<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="footway|footpath">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-footway-cy1-casing" smart-linecap="no"/>
-					</rule>
-					<else>
-						<line class="highway-casing highway-footway-casing" smart-linecap="no"/>
-					</else>
+					<area class="highway-casing highway-footway-casing highway-footway-area-casing no-bezier" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="pedestrian">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-pedestrian-cy1-casing"/>
-					</rule>
-					<else>
-						<line class="highway-casing highway-pedestrian-casing"/>
-					</else>
+					<area class="highway-casing highway-pedestrian-casing highway-pedestrian-area-casing no-bezier"/>
 				</rule>
 				<rule e="way" k="highway" v="cycleway">
-					<line class="highway-casing highway-cycleway-casing" smart-linecap="no"/>
+					<area class="highway-casing highway-cycleway-casing highway-cycleway-area-casing no-bezier" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="path">
 					<rule e="way" k="bicycle" v="yes|designated">
-						<line class="highway-casing highway-cycleway-casing" smart-linecap="no"/>
+						<area class="highway-casing highway-cycleway-casing highway-cycleway-area-casing no-bezier" smart-linecap="no"/>
 					</rule>
 					<else>
 						<rule e="way" k="horse" v="yes|designated">
-							<line class="highway-casing highway-bridleway-casing" smart-linecap="no"/>
+							<area class="highway-casing highway-bridleway-casing highway-bridleway-area-casing no-bezier" smart-linecap="no"/>
 						</rule>
 						<else>
-							<line class="highway-casing highway-footway-casing" smart-linecap="no"/>
+							<area class="highway-casing highway-footway-casing highway-footway-area-casing no-bezier" smart-linecap="no"/>
 						</else>
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="bridleway">
-					<line class="highway-casing highway-bridleway-casing" smart-linecap="no"/>
+					<area class="highway-casing highway-bridleway-casing highway-bridleway-area-casing no-bezier" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="byway">
-					<line class="highway-casing highway-byway-1-casing" smart-linecap="no"/>
-					<line class="highway-casing highway-byway-2-casing" smart-linecap="no"/>
-					<line class="highway-casing highway-byway-3-casing" smart-linecap="no"/>
+					<area class="highway-casing highway-byway-1-casing highway-byway-1-area-casing no-bezier" smart-linecap="no"/>
+					<area class="highway-casing highway-byway-2-casing highway-byway-2-area-casing no-bezier" smart-linecap="no"/>
+					<area class="highway-casing highway-byway-3-casing highway-byway-3-area-casing no-bezier" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="track">
 					<rule e="way" k="tracktype" v="grade1">
-						<line class="highway-casing highway-track-casing highway-track-grade1-casing" smart-linecap="no"/>
+						<area class="highway-casing highway-track-casing highway-track-grade1-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 					</rule>
 					<else>
 						<rule e="way" k="tracktype" v="grade2">
-							<line class="highway-casing highway-track-casing highway-track-grade2-casing" smart-linecap="no"/>
+							<area class="highway-casing highway-track-casing highway-track-grade2-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 						</rule>
 						<else>
 							<rule e="way" k="tracktype" v="grade3">
-								<line class="highway-casing highway-track-casing highway-track-grade3-casing" smart-linecap="no"/>
+								<area class="highway-casing highway-track-casing highway-track-grade3-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 							</rule>
 							<else>
 								<rule e="way" k="tracktype" v="grade4">
-									<line class="highway-casing highway-track-casing highway-track-grade4-casing" smart-linecap="no"/>
+									<area class="highway-casing highway-track-casing highway-track-grade4-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 								</rule>
 								<else>
 									<rule e="way" k="tracktype" v="grade5">
-										<line class="highway-casing highway-track-casing highway-track-grade5-casing" smart-linecap="no"/>
+										<area class="highway-casing highway-track-casing highway-track-grade5-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 									</rule>
 									<else>
-										<rule e="way" k="track" v="racetrack">
-											<line class="highway-racetrack-casing-white" smart-linecap="no"/>
-											<line class="highway-racetrack-casing-red" smart-linecap="no"/>
-										</rule>
-										<else>
-											<line class="highway-casing highway-track-casing highway-track-gradex-casing" smart-linecap="no"/>
-										</else>
+										<area class="highway-casing highway-track-casing highway-track-gradex-casing highway-track-area-casing no-bezier" smart-linecap="no"/>
 									</else>
 								</else>
 							</else>
@@ -989,50 +814,71 @@
 					</else>
 				</rule>
 				<rule e="way" k="highway" v="unsurfaced">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-unsurfaced-cy1-casing" smart-linecap="no"/>
-					</rule>
-					<else>
-						<line class="highway-casing highway-unsurfaced-casing" smart-linecap="no"/>
-					</else>
+					<area class="highway-casing highway-unsurfaced-casing highway-unsurfaced-area-casing no-bezier" smart-linecap="no"/>
 				</rule>
 				<rule e="way" k="highway" v="service">
 					<rule e="way" k="service" v="parking_aisle|driveway">
-						<line class="highway-casing highway-aisle-casing"/>
+						<area class="highway-casing highway-aisle-casing highway-aisle-area-casing no-bezier"/>
 					</rule>
 					<else>
-						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-							<line class="highway-casing highway-service-cy1-casing"/>
-						</rule>
-						<else>
-							<line class="highway-casing highway-service-casing"/>
-						</else>
+						<area class="highway-casing highway-service-casing highway-service-area-casing no-bezier"/>
 					</else>
 				</rule>
-
-				<rule e="way" k="highway" v="unclassified|minor|road|ford">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-unclassified-cy1-casing"/>
-					</rule>
-					<else>
-						<line class="highway-casing highway-unclassified-casing"/>
-					</else>
+				<rule e="way" k="highway" v="unclassified|minor|road">
+					<area class="highway-casing highway-unclassified-casing highway-unclassified-area-casing no-bezier"/>
 				</rule>
-
 				<rule e="way" k="highway" v="residential">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-residential-cy1-casing"/>
+					<area class="highway-casing highway-residential-casing highway-residential-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="living_street">
+					<area class="highway-casing highway-livingstreet-casing highway-livingstreet-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="cycleroad">
+					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+						<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
 					</rule>
 					<else>
-						<line class="highway-casing highway-residential-casing"/>
+						<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
 					</else>
 				</rule>
-
-				<rule e="way" k="highway" v="living_street">
-					<line class="highway-casing highway-livingstreet-casing"/>
+				<rule e="way" k="highway" v="tertiary_link">
+					<area class="highway-casing highway-tertiary-link-casing highway-tertiary-link-area-casing no-bezier"/>
 				</rule>
+				<rule e="way" k="highway" v="tertiary">
+					<area class="highway-casing highway-tertiary-casing highway-tertiary-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="secondary_link">
+					<area class="highway-casing highway-secondary-link-casing highway-secondary-link-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="secondary">
+					<area class="highway-casing highway-secondary-casing highway-secondary-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="primary_link">
+					<area class="highway-casing highway-primary-link-casing highway-primary-link-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="trunk_link">
+					<area class="highway-casing highway-trunk-link-casing highway-trunk-link-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="motorway_link">
+					<area class="highway-casing highway-motorway-link-casing highway-motorway-link-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="primary">
+					<area class="highway-casing highway-primary-casing highway-primary-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="trunk">
+					<area class="highway-casing highway-trunk-casing highway-trunk-area-casing no-bezier"/>
+				</rule>
+				<rule e="way" k="highway" v="motorway">
+					<area class="highway-casing highway-motorway-casing highway-motorway-area-casing no-bezier"/>
+				</rule>
+			</else>
+		</rule>
 
-				<rule e="way" k="highway" v="cycleroad">
+		<!-- Linear casings -->
+		<rule e="way" k="tunnel" v="~|no|false">
+			<rule e="way" k="area" v="~|no|false">
+
+				<rule e="way" k="bicycle_road" v="yes">
 					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 						<line class="highway-casing highway-cycleroad-casing"/>
 					</rule>
@@ -1040,359 +886,555 @@
 						<line class="highway-casing highway-cycleroad-casing"/>
 					</else>
 				</rule>
+				<else>
+					<rule e="way" k="highway" v="track">
+						<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
+					</rule>
 
-				<rule e="way" k="highway" v="tertiary_link">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-tertiary-link-mrcy1-casing"/>
+					<rule e="way" k="highway" v="raceway">
+						<rule e="way" k="use_status" v="~">
+							<line class="highway-raceway-casing"/>
+						</rule>
+						<rule e="way" k="use_status" v="disused">
+							<line class="highway-raceway-casing-disused"/>
+						</rule>
+						<rule e="way" k="use_status" v="dismantled">
+							<line class="highway-raceway-casing-dismantled"/>
+						</rule>
+					</rule>
+
+					<rule e="way" k="highway" v="steps">
+						<rule e="way" k="ramp:wheelchair" v="yes">
+							<line class="highway-casing highway-steps-casing-ramp-wheelchair"/>
+							<line class="highway-casing highway-steps-casing-ramp"/>
 						</rule>
 						<else>
-							<line class="highway-casing highway-tertiary-link-cy1-casing"/>
+							<rule e="way" k="ramp:stroller" v="yes">
+								<line class="highway-casing highway-steps-casing-ramp-stroller"/>
+								<line class="highway-casing highway-steps-casing-ramp"/>
+							</rule>
+							<else>
+								<rule e="way" k="ramp:bicycle" v="yes">
+									<line class="highway-casing highway-steps-casing-ramp-bicycle"/>
+									<line class="highway-casing highway-steps-casing-ramp"/>
+								</rule>
+								<else>
+									<rule e="way" k="ramp" v="yes">
+										<line class="highway-casing highway-steps-casing-ramp-yes"/>
+										<line class="highway-casing highway-steps-casing-ramp"/>
+									</rule>
+									<else>
+										<rule e="way" k="ramp" v="no">
+											<line class="highway-casing highway-steps-casing-ramp-no"/>
+											<line class="highway-casing highway-steps-casing-ramp"/>
+										</rule>
+										<else>
+											<line class="highway-casing highway-steps-casing"/>
+										</else>
+									</else>
+								</else>
+							</else>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-tertiary-link-mr1-casing"/>
-						</rule>
-						<else>
-							<line class="highway-casing highway-tertiary-link-casing"/>
-						</else>
-					</else>
-				</rule>
 
-				<rule e="way" k="highway" v="tertiary">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-tertiary-mrcy1-casing"/>
+					<rule e="way" k="highway" v="footway|footpath">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-footway-cy1-casing" smart-linecap="no"/>
 						</rule>
 						<else>
-							<line class="highway-casing highway-tertiary-cy1-casing"/>
+							<line class="highway-casing highway-footway-casing" smart-linecap="no"/>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-tertiary-mr1-casing"/>
-						</rule>
-						<else>
-							<line class="highway-casing highway-tertiary-casing"/>
-						</else>
-					</else>
-				</rule>
 
-				<rule e="way" k="highway" v="secondary_link">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-secondary-link-mrcy1-casing"/>
+					<rule e="way" k="highway" v="pedestrian">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-pedestrian-cy1-casing"/>
 						</rule>
 						<else>
-							<line class="highway-casing highway-secondary-link-cy1-casing"/>
+							<line class="highway-casing highway-pedestrian-casing"/>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-secondary-link-mr1-casing"/>
-						</rule>
-						<else>
-							<line class="highway-casing highway-secondary-link-casing"/>
-						</else>
-					</else>
-				</rule>
 
-				<rule e="way" k="highway" v="secondary">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-secondary-mrcy1-casing"/>
+					<rule e="way" k="highway" v="cycleway">
+						<line class="highway-casing highway-cycleway-casing" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="path">
+						<rule e="way" k="bicycle" v="yes|designated">
+							<line class="highway-casing highway-cycleway-casing" smart-linecap="no"/>
 						</rule>
 						<else>
-							<line class="highway-casing highway-secondary-cy1-casing"/>
+							<rule e="way" k="horse" v="yes|designated">
+								<line class="highway-casing highway-bridleway-casing" smart-linecap="no"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-footway-casing" smart-linecap="no"/>
+							</else>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-secondary-mr1-casing"/>
-						</rule>
-						<else>
-							<line class="highway-casing highway-secondary-casing"/>
-						</else>
-					</else>
-				</rule>
 
-				<rule e="way" k="highway" v="primary_link">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-primary-link-mrcy1-casing"/>
+					<rule e="way" k="highway" v="bridleway">
+						<line class="highway-casing highway-bridleway-casing" smart-linecap="no"/>
+					</rule>
+					<rule e="way" k="highway" v="byway">
+						<line class="highway-casing highway-byway-1-casing" smart-linecap="no"/>
+						<line class="highway-casing highway-byway-2-casing" smart-linecap="no"/>
+						<line class="highway-casing highway-byway-3-casing" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="track">
+						<rule e="way" k="tracktype" v="grade1">
+							<line class="highway-casing highway-track-casing highway-track-grade1-casing" smart-linecap="no"/>
 						</rule>
 						<else>
-							<line class="highway-casing highway-primary-link-cy1-casing"/>
+							<rule e="way" k="tracktype" v="grade2">
+								<line class="highway-casing highway-track-casing highway-track-grade2-casing" smart-linecap="no"/>
+							</rule>
+							<else>
+								<rule e="way" k="tracktype" v="grade3">
+									<line class="highway-casing highway-track-casing highway-track-grade3-casing" smart-linecap="no"/>
+								</rule>
+								<else>
+									<rule e="way" k="tracktype" v="grade4">
+										<line class="highway-casing highway-track-casing highway-track-grade4-casing" smart-linecap="no"/>
+									</rule>
+									<else>
+										<rule e="way" k="tracktype" v="grade5">
+											<line class="highway-casing highway-track-casing highway-track-grade5-casing" smart-linecap="no"/>
+										</rule>
+										<else>
+											<rule e="way" k="track" v="racetrack">
+												<line class="highway-racetrack-casing-white" smart-linecap="no"/>
+												<line class="highway-racetrack-casing-red" smart-linecap="no"/>
+											</rule>
+											<else>
+												<line class="highway-casing highway-track-casing highway-track-gradex-casing" smart-linecap="no"/>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-primary-link-mr1-casing"/>
-						</rule>
-						<else>
-							<line class="highway-casing highway-primary-link-casing"/>
-						</else>
-					</else>
-				</rule>
 
-				<rule e="way" k="highway" v="primary">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-primary-mrcy1-casing"/>
+					<rule e="way" k="highway" v="unsurfaced">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-unsurfaced-cy1-casing" smart-linecap="no"/>
 						</rule>
 						<else>
-							<line class="highway-casing highway-primary-cy1-casing"/>
+							<line class="highway-casing highway-unsurfaced-casing" smart-linecap="no"/>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-primary-mr1-casing"/>
-						</rule>
-						<else>
-							<line class="highway-casing highway-primary-casing"/>
-						</else>
-					</else>
-				</rule>
 
-				<rule e="way" k="highway" v="trunk_link">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-link-mrcy1-casing"/>
+					<rule e="way" k="highway" v="service">
+						<rule e="way" k="service" v="parking_aisle|driveway">
+							<line class="highway-casing highway-aisle-casing"/>
 						</rule>
 						<else>
-							<rule e="way" k="motorroad" v="no">
+							<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+								<line class="highway-casing highway-service-cy1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-service-casing"/>
+							</else>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="unclassified|minor|road|ford">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-unclassified-cy1-casing"/>
+						</rule>
+						<else>
+							<line class="highway-casing highway-unclassified-casing"/>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="residential">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-residential-cy1-casing"/>
+						</rule>
+						<else>
+							<line class="highway-casing highway-residential-casing"/>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="living_street">
+						<line class="highway-casing highway-livingstreet-casing"/>
+					</rule>
+
+					<rule e="way" k="highway" v="cycleroad">
+						<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+							<line class="highway-casing highway-cycleroad-casing"/>
+						</rule>
+						<else>
+							<line class="highway-casing highway-cycleroad-casing"/>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="tertiary_link">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-tertiary-link-mrcy1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-tertiary-link-cy1-casing"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-tertiary-link-mr1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-tertiary-link-casing"/>
+							</else>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="tertiary">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-tertiary-mrcy1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-tertiary-cy1-casing"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-tertiary-mr1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-tertiary-casing"/>
+							</else>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="secondary_link">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-secondary-link-mrcy1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-secondary-link-cy1-casing"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-secondary-link-mr1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-secondary-link-casing"/>
+							</else>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="secondary">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-secondary-mrcy1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-secondary-cy1-casing"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-secondary-mr1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-secondary-casing"/>
+							</else>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="primary_link">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-primary-link-mrcy1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-primary-link-cy1-casing"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-primary-link-mr1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-primary-link-casing"/>
+							</else>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="primary">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-primary-mrcy1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-primary-cy1-casing"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-primary-mr1-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-primary-casing"/>
+							</else>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="trunk_link">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
 								<line class="highway-casing highway-trunk-link-mrcy1-casing"/>
 							</rule>
 							<else>
-								<line class="highway-casing highway-trunk-link-cy1-casing"/>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-link-mrcy1-casing"/>
+								</rule>
+								<else>
+									<line class="highway-casing highway-trunk-link-cy1-casing"/>
+								</else>
 							</else>
-						</else>
-					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-link-mr1-casing"/>
 						</rule>
 						<else>
-							<rule e="way" k="motorroad" v="no">
+							<rule e="way" k="motorroad" v="yes">
 								<line class="highway-casing highway-trunk-link-mr1-casing"/>
 							</rule>
 							<else>
-								<line class="highway-casing highway-trunk-link-casing"/>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-link-mr1-casing"/>
+								</rule>
+								<else>
+									<line class="highway-casing highway-trunk-link-casing"/>
+								</else>
 							</else>
 						</else>
-					</else>
-				</rule>
+					</rule>
 
-				<rule e="way" k="highway" v="trunk">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-mrcy1-casing"/>
-						</rule>
-						<else>
-							<rule e="way" k="motorroad" v="no">
+					<rule e="way" k="highway" v="trunk">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
 								<line class="highway-casing highway-trunk-mrcy1-casing"/>
 							</rule>
 							<else>
-								<line class="highway-casing highway-trunk-cy1-casing"/>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-mrcy1-casing"/>
+								</rule>
+								<else>
+									<line class="highway-casing highway-trunk-cy1-casing"/>
+								</else>
 							</else>
-						</else>
-					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-mr1-casing"/>
 						</rule>
 						<else>
-							<rule e="way" k="motorroad" v="no">
+							<rule e="way" k="motorroad" v="yes">
 								<line class="highway-casing highway-trunk-mr1-casing"/>
 							</rule>
 							<else>
-								<line class="highway-casing highway-trunk-casing"/>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-mr1-casing"/>
+								</rule>
+								<else>
+									<line class="highway-casing highway-trunk-casing"/>
+								</else>
 							</else>
 						</else>
-					</else>
-				</rule>
+					</rule>
 
-				<rule e="way" k="highway" v="motorway_link">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-motorway-link-cy1-casing"/>
-					</rule>
-					<else>
-						<line class="highway-casing highway-motorway-link-casing"/>
-					</else>
-				</rule>
-
-				<rule e="way" k="highway" v="motorway">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-motorway-cy1-casing"/>
-					</rule>
-					<else>
-						<line class="highway-casing highway-motorway-casing"/>
-					</else>
-				</rule>
-
-				<rule e="way" k="highway" v="footway|footpath">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-footway-cy2-casing" smart-linecap="no"/>
-					</rule>
-				</rule>
-				<rule e="way" k="highway" v="pedestrian">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-pedestrian-cy2-casing"/>
-					</rule>
-				</rule>
-				<rule e="way" k="highway" v="unsurfaced">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-unsurfaced-cy2-casing" smart-linecap="no"/>
-					</rule>
-				</rule>
-				<rule e="way" k="highway" v="service">
-					<rule e="way" k="service" v="parking_aisle|driveway">
-						<line class="highway-casing highway-aisle-casing"/>
-					</rule>
-					<else>
+					<rule e="way" k="highway" v="motorway_link">
 						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-							<line class="highway-casing highway-service-cy2-casing"/>
-						</rule>
-					</else>
-				</rule>
-				<rule e="way" k="highway" v="unclassified|minor|road|ford">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-unclassified-cy2-casing"/>
-					</rule>
-				</rule>
-
-				<rule e="way" k="highway" v="residential">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-residential-cy2-casing"/>
-					</rule>
-				</rule>
-
-				<rule e="way" k="highway" v="tertiary_link|tertiary|secondary_link|secondary|primary_link|primary">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-tertiary-link-mrcy2-casing"/>
+							<line class="highway-casing highway-motorway-link-cy1-casing"/>
 						</rule>
 						<else>
-							<line class="highway-casing highway-tertiary-link-cy2-casing"/>
+							<line class="highway-casing highway-motorway-link-casing"/>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-tertiary-link-mr2-casing"/>
-						</rule>
-					</else>
-				</rule>
-				<rule e="way" k="highway" v="trunk_link">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-link-mrcy2-casing"/>
+
+					<rule e="way" k="highway" v="motorway">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-motorway-cy1-casing"/>
 						</rule>
 						<else>
-							<rule e="way" k="motorroad" v="no">
+							<line class="highway-casing highway-motorway-casing"/>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="footway|footpath">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-footway-cy2-casing" smart-linecap="no"/>
+						</rule>
+					</rule>
+
+					<rule e="way" k="highway" v="pedestrian">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-pedestrian-cy2-casing"/>
+						</rule>
+					</rule>
+
+					<rule e="way" k="highway" v="unsurfaced">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-unsurfaced-cy2-casing" smart-linecap="no"/>
+						</rule>
+					</rule>
+
+					<rule e="way" k="highway" v="service">
+						<rule e="way" k="service" v="parking_aisle|driveway">
+							<line class="highway-casing highway-aisle-casing"/>
+						</rule>
+						<else>
+							<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+								<line class="highway-casing highway-service-cy2-casing"/>
+							</rule>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="unclassified|minor|road|ford">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-unclassified-cy2-casing"/>
+						</rule>
+					</rule>
+
+					<rule e="way" k="highway" v="residential">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-residential-cy2-casing"/>
+						</rule>
+					</rule>
+
+					<rule e="way" k="highway" v="tertiary_link|tertiary|secondary_link|secondary|primary_link|primary">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-tertiary-link-mrcy2-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-tertiary-link-cy2-casing"/>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-tertiary-link-mr2-casing"/>
+							</rule>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="trunk_link">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
 								<line class="highway-casing highway-trunk-link-mrcy2-casing"/>
 							</rule>
 							<else>
-								<line class="highway-casing highway-trunk-link-cy2-casing"/>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-link-mrcy2-casing"/>
+								</rule>
+								<else>
+									<line class="highway-casing highway-trunk-link-cy2-casing"/>
+								</else>
 							</else>
-						</else>
-					</rule>
-				</rule>
-				<rule e="way" k="highway" v="trunk">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-mrcy2-casing"/>
-							<line class="highway-casing highway-trunk-mrcy3-casing"/>
 						</rule>
-						<else>
-							<rule e="way" k="motorroad" v="no">
+					</rule>
+
+					<rule e="way" k="highway" v="trunk">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
 								<line class="highway-casing highway-trunk-mrcy2-casing"/>
-								<line class="highway-casing highway-trunk-mrcy4-casing"/>
+								<line class="highway-casing highway-trunk-mrcy3-casing"/>
 							</rule>
 							<else>
-								<line class="highway-casing highway-trunk-cy2-casing"/>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-mrcy2-casing"/>
+									<line class="highway-casing highway-trunk-mrcy4-casing"/>
+								</rule>
+								<else>
+									<line class="highway-casing highway-trunk-cy2-casing"/>
+								</else>
+							</else>
+						</rule>
+						<else>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-trunk-mr2-casing"/>
+							</rule>
+							<else>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-mr3-casing"/>
+								</rule>
 							</else>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-mr2-casing"/>
-						</rule>
-						<else>
-							<rule e="way" k="motorroad" v="no">
-								<line class="highway-casing highway-trunk-mr3-casing"/>
-							</rule>
-						</else>
-					</else>
-				</rule>
-				<rule e="way" k="highway" v="motorway_link">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-motorway-link-cy2-casing"/>
-					</rule>
-				</rule>
 
-				<rule e="way" k="highway" v="motorway">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<line class="highway-casing highway-motorway-cy2-casing"/>
+					<rule e="way" k="highway" v="motorway_link">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-motorway-link-cy2-casing"/>
+						</rule>
 					</rule>
-				</rule>
 
-				<rule e="way" k="highway" v="tertiary_link|tertiary|secondary_link|secondary|primary_link|primary">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-tertiary-link-mrcy3-casing"/>
+					<rule e="way" k="highway" v="motorway">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<line class="highway-casing highway-motorway-cy2-casing"/>
 						</rule>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-tertiary-link-mr2-casing"/>
-						</rule>
-					</else>
-				</rule>
-				<rule e="way" k="highway" v="trunk_link">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-link-mrcy3-casing"/>
+
+					<rule e="way" k="highway" v="tertiary_link|tertiary|secondary_link|secondary|primary_link|primary">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-tertiary-link-mrcy3-casing"/>
+							</rule>
 						</rule>
 						<else>
-							<rule e="way" k="motorroad" v="no">
-								<line class="highway-casing highway-trunk-link-mrcy4-casing"/>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-tertiary-link-mr2-casing"/>
 							</rule>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-link-mr2-casing"/>
+
+					<rule e="way" k="highway" v="trunk_link">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-trunk-link-mrcy3-casing"/>
+							</rule>
+							<else>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-link-mrcy4-casing"/>
+								</rule>
+							</else>
 						</rule>
 						<else>
-							<rule e="way" k="motorroad" v="no">
-								<line class="highway-casing highway-trunk-link-mr3-casing"/>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-trunk-link-mr2-casing"/>
 							</rule>
-						</else>
-					</else>
-				</rule>
-				<rule e="way" k="highway" v="trunk">
-					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-mrcy3-casing"/>
-						</rule>
-						<else>
-							<rule e="way" k="motorroad" v="no">
-								<line class="highway-casing highway-trunk-mrcy4-casing"/>
-							</rule>
+							<else>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-link-mr3-casing"/>
+								</rule>
+							</else>
 						</else>
 					</rule>
-					<else>
-						<rule e="way" k="motorroad" v="yes">
-							<line class="highway-casing highway-trunk-mr2-casing"/>
+
+					<rule e="way" k="highway" v="trunk">
+						<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-trunk-mrcy3-casing"/>
+							</rule>
+							<else>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-mrcy4-casing"/>
+								</rule>
+							</else>
 						</rule>
 						<else>
-							<rule e="way" k="motorroad" v="no">
-								<line class="highway-casing highway-trunk-mr3-casing"/>
+							<rule e="way" k="motorroad" v="yes">
+								<line class="highway-casing highway-trunk-mr2-casing"/>
 							</rule>
+							<else>
+								<rule e="way" k="motorroad" v="no">
+									<line class="highway-casing highway-trunk-mr3-casing"/>
+								</rule>
+							</else>
 						</else>
-					</else>
-				</rule>
+					</rule>
+				</else>
+
+
 				<rule e="way" k="railway" v="*">
 					<rule e="way" k="construction" v="*">
 						<line class="railway-con-casing railway-con-casing-color railway-casing" smart-linecap="no"/>
@@ -1478,86 +1520,8 @@
 
 		<!-- Highway area cores -->
 		<rule e="way" k="area" v="yes|true">
-			<rule e="way" k="highway" v="footway|footpath">
-				<area class="highway-core highway-footway-area no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="pedestrian">
-				<area class="highway-core highway-pedestrian-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="cycleway">
-				<area class="highway-core highway-cycleway-area no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="path">
-				<rule e="way" k="bicycle" v="yes|designated">
-					<area class="highway-core highway-cycleway-area no-bezier" smart-linecap="no"/>
-				</rule>
-				<else>
-					<rule e="way" k="horse" v="yes|designated">
-						<area class="highway-core highway-bridleway-area no-bezier" smart-linecap="no"/>
-					</rule>
-					<else>
-						<area class="highway-core highway-path-area no-bezier" smart-linecap="no"/>
-					</else></else>
-			</rule>
-			<rule e="way" k="highway" v="bridleway">
-				<area class="highway-core highway-bridleway-area no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="byway">
-				<area class="highway-core highway-byway-area no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="track">
-				<rule e="way" k="tracktype" v="grade1">
-					<area class="highway-core highway-track-grade1-area no-bezier" smart-linecap="no"/>
-				</rule>
-				<else>
-					<rule e="way" k="tracktype" v="grade2">
-						<area class="highway-core highway-track-grade2-area no-bezier" smart-linecap="no"/>
-					</rule>
-					<else>
-						<rule e="way" k="tracktype" v="grade3">
-							<area class="highway-core highway-track-grade3-area no-bezier" smart-linecap="no"/>
-						</rule>
-						<else>
-							<rule e="way" k="tracktype" v="grade4">
-								<area class="highway-core highway-track-grade4-area no-bezier" smart-linecap="no"/>
-							</rule>
-							<else>
-								<rule e="way" k="tracktype" v="grade5">
-									<area class="highway-core highway-track-grade5-area no-bezier" smart-linecap="no"/>
-								</rule>
-								<else>
-									<area class="highway-core highway-track-gradex-area no-bezier" smart-linecap="no"/>
-								</else>
-							</else>
-						</else>
-					</else>
-				</else>
-			</rule>
-			<rule e="way" k="highway" v="unsurfaced">
-				<area class="highway-core highway-unsurfaced-area no-bezier" smart-linecap="no"/>
-			</rule>
-			<rule e="way" k="highway" v="service">
-				<rule e="way" k="service" v="parking_aisle|driveway">
-					<area class="highway-core highway-aisle-area no-bezier"/>
-				</rule>
-				<else>
-					<area class="highway-core highway-service-area no-bezier"/>
-				</else>
-			</rule>
-			<rule e="way" k="highway" v="unclassified|minor">
-				<area class="highway-core highway-unclassified-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="residential">
-				<area class="highway-core highway-residential-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="road">
-				<area class="highway-core highway-road-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="living_street">
-				<area class="highway-core highway-livingstreet-area-1 no-bezier"/>
-				<area class="highway-core highway-livingstreet-area-2 no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="cycleroad">
+
+			<rule e="way" k="bicycle_road" v="yes">
 				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 					<area class="highway-core highway-cycleroad-area-1 no-bezier"/>
 					<area class="highway-core highway-cycleroad-area-2 no-bezier"/>
@@ -1566,36 +1530,151 @@
 					<area class="highway-core highway-cycleroad-area-3 no-bezier"/>
 				</else>
 			</rule>
-			<rule e="way" k="highway" v="tertiary_link">
-				<area class="highway-core highway-tertiary-link-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="tertiary">
-				<area class="highway-core highway-tertiary-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="secondary_link">
-				<area class="highway-core highway-secondary-link-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="secondary">
-				<area class="highway-core highway-secondary-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="primary_link">
-				<area class="highway-core highway-primary-link-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="trunk_link">
-				<area class="highway-core highway-trunk-link-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="motorway_link">
-				<area class="highway-core highway-motorway-link-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="primary">
-				<area class="highway-core highway-primary-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="trunk">
-				<area class="highway-core highway-trunk-area no-bezier"/>
-			</rule>
-			<rule e="way" k="highway" v="motorway">
-				<area class="highway-core highway-motorway-area no-bezier"/>
-			</rule>
+			<else>
+
+				<rule e="way" k="highway" v="footway|footpath">
+					<area class="highway-core highway-footway-area no-bezier" smart-linecap="no"/>
+				</rule>
+
+				<rule e="way" k="highway" v="pedestrian">
+					<area class="highway-core highway-pedestrian-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="cycleway">
+					<area class="highway-core highway-cycleway-area no-bezier" smart-linecap="no"/>
+				</rule>
+
+				<rule e="way" k="highway" v="path">
+					<rule e="way" k="bicycle" v="yes|designated">
+						<area class="highway-core highway-cycleway-area no-bezier" smart-linecap="no"/>
+					</rule>
+					<else>
+						<rule e="way" k="horse" v="yes|designated">
+							<area class="highway-core highway-bridleway-area no-bezier" smart-linecap="no"/>
+						</rule>
+						<else>
+							<area class="highway-core highway-path-area no-bezier" smart-linecap="no"/>
+						</else>
+					</else>
+				</rule>
+
+				<rule e="way" k="highway" v="bridleway">
+					<area class="highway-core highway-bridleway-area no-bezier" smart-linecap="no"/>
+				</rule>
+
+				<rule e="way" k="highway" v="byway">
+					<area class="highway-core highway-byway-area no-bezier" smart-linecap="no"/>
+				</rule>
+
+				<rule e="way" k="highway" v="track">
+					<rule e="way" k="tracktype" v="grade1">
+						<area class="highway-core highway-track-grade1-area no-bezier" smart-linecap="no"/>
+					</rule>
+					<else>
+						<rule e="way" k="tracktype" v="grade2">
+							<area class="highway-core highway-track-grade2-area no-bezier" smart-linecap="no"/>
+						</rule>
+						<else>
+							<rule e="way" k="tracktype" v="grade3">
+								<area class="highway-core highway-track-grade3-area no-bezier" smart-linecap="no"/>
+							</rule>
+							<else>
+								<rule e="way" k="tracktype" v="grade4">
+									<area class="highway-core highway-track-grade4-area no-bezier" smart-linecap="no"/>
+								</rule>
+								<else>
+									<rule e="way" k="tracktype" v="grade5">
+										<area class="highway-core highway-track-grade5-area no-bezier" smart-linecap="no"/>
+									</rule>
+									<else>
+										<area class="highway-core highway-track-gradex-area no-bezier" smart-linecap="no"/>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</rule>
+
+				<rule e="way" k="highway" v="unsurfaced">
+					<area class="highway-core highway-unsurfaced-area no-bezier" smart-linecap="no"/>
+				</rule>
+
+				<rule e="way" k="highway" v="service">
+					<rule e="way" k="service" v="parking_aisle|driveway">
+						<area class="highway-core highway-aisle-area no-bezier"/>
+					</rule>
+					<else>
+						<area class="highway-core highway-service-area no-bezier"/>
+					</else>
+				</rule>
+
+				<rule e="way" k="highway" v="unclassified|minor">
+					<area class="highway-core highway-unclassified-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="residential">
+					<area class="highway-core highway-residential-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="road">
+					<area class="highway-core highway-road-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="living_street">
+					<area class="highway-core highway-livingstreet-area-1 no-bezier"/>
+					<area class="highway-core highway-livingstreet-area-2 no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="cycleroad">
+					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+						<area class="highway-core highway-cycleroad-area-1 no-bezier"/>
+						<area class="highway-core highway-cycleroad-area-2 no-bezier"/>
+					</rule>
+					<else>
+						<area class="highway-core highway-cycleroad-area-3 no-bezier"/>
+					</else>
+				</rule>
+
+				<rule e="way" k="highway" v="tertiary_link">
+					<area class="highway-core highway-tertiary-link-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="tertiary">
+					<area class="highway-core highway-tertiary-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="secondary_link">
+					<area class="highway-core highway-secondary-link-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="secondary">
+					<area class="highway-core highway-secondary-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="primary_link">
+					<area class="highway-core highway-primary-link-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="trunk_link">
+					<area class="highway-core highway-trunk-link-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="motorway_link">
+					<area class="highway-core highway-motorway-link-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="primary">
+					<area class="highway-core highway-primary-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="trunk">
+					<area class="highway-core highway-trunk-area no-bezier"/>
+				</rule>
+
+				<rule e="way" k="highway" v="motorway">
+					<area class="highway-core highway-motorway-area no-bezier"/>
+				</rule>
+			</else>
 		</rule>
 
 		<!-- Buildings -->
@@ -1612,117 +1691,7 @@
 		<!-- Linear cores -->
 		<rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="area" v="~|false|no">
-				<rule e="way" k="highway" v="ford">
-					<line class="highway-core highway-ford-core" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="raceway">
-					<rule e="way" k="use_status" v="~">
-						<line class="highway-raceway-core"/>
-					</rule>
-					<rule e="way" k="use_status" v="disused">
-						<line class="highway-raceway-core-disused"/>
-					</rule>
-					<rule e="way" k="use_status" v="dismantled">
-						<line class="highway-raceway-core-dismantled"/>
-					</rule>
-				</rule>
-				<rule e="way" k="scramble" v="*">
-					<line class="highway-core highway-scramble-core"/>
-				</rule>
-				<rule e="way" k="highway" v="steps">
-					<line class="highway-core highway-steps-core" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="footway|footpath">
-					<line class="highway-core highway-footway-core" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="pedestrian">
-					<line class="highway-core highway-pedestrian-core"/>
-				</rule>
-				<rule e="way" k="highway" v="cycleway">
-					<line class="highway-core highway-cycleway-core" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="path">
-					<rule e="way" k="bicycle" v="yes|designated">
-						<line class="highway-core highway-cycleway-core" smart-linecap="no"/>
-					</rule>
-					<else>
-						<rule e="way" k="horse" v="yes|designated">
-							<line class="highway-core highway-bridleway-core" smart-linecap="no"/>
-						</rule>
-						<else>
-							<rule e="way" k="foot" v="yes|designated">
-								<line class="highway-core highway-footway-core" smart-linecap="no"/>
-							</rule>
-							<else>
-								<line class="highway-core highway-path-core" smart-linecap="no"/>
-							</else></else></else>
-				</rule>
-				<rule e="way" k="highway" v="bridleway">
-					<line class="highway-core highway-bridleway-core" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="byway">
-					<line class="highway-core highway-byway-2-casing" smart-linecap="no"/>
-					<line class="highway-core highway-byway-3-casing" smart-linecap="no"/>
-					<line class="highway-core highway-byway-1-core" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="track">
-					<rule e="way" k="track" v="racetrack">
-						<line class="highway-racetrack-core" smart-linecap="no"/>
-					</rule>
-					<else>
-						<rule e="way" k="tracktype" v="grade1">
-							<line class="highway-core highway-track-core2 highway-track-grade1-core" smart-linecap="no"/>
-						</rule>
-						<else>
-							<rule e="way" k="tracktype" v="grade2">
-								<line class="highway-core highway-track-core2 highway-track-grade2-core" smart-linecap="no"/>
-							</rule>
-							<else>
-								<rule e="way" k="tracktype" v="grade3">
-									<line class="highway-core highway-track-core highway-track-grade3-core" smart-linecap="no"/>
-								</rule>
-								<else>
-									<rule e="way" k="tracktype" v="grade4">
-										<line class="highway-core highway-track-core highway-track-grade4-core" smart-linecap="no"/>
-									</rule>
-									<else>
-										<rule e="way" k="tracktype" v="grade5">
-											<line class="highway-core highway-track-core  highway-track-grade5-core" smart-linecap="no"/>
-										</rule>
-										<else>
-											<line class="highway-core highway-track-core2 highway-track-gradex-core" smart-linecap="no"/>
-										</else>
-									</else>
-								</else>
-							</else>
-						</else>
-					</else>
-				</rule>
-				<rule e="way" k="highway" v="unsurfaced">
-					<line class="highway-core highway-unsurfaced-core" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="service">
-					<rule e="way" k="service" v="parking_aisle|driveway">
-						<line class="highway-core highway-aisle-core"/>
-					</rule>
-					<else>
-						<line class="highway-core highway-service-core"/>
-					</else>
-				</rule>
-				<rule e="way" k="highway" v="unclassified|minor">
-					<line class="highway-core highway-unclassified-core"/>
-				</rule>
-				<rule e="way" k="highway" v="residential">
-					<line class="highway-core highway-residential-core"/>
-				</rule>
-				<rule e="way" k="highway" v="road">
-					<line class="highway-core highway-road-core"/>
-				</rule>
-				<rule e="way" k="highway" v="living_street">
-					<line class="highway-core highway-livingstreet-core-1" smart-linecap="no"/>
-					<line class="highway-core highway-livingstreet-core-2" smart-linecap="no"/>
-				</rule>
-				<rule e="way" k="highway" v="cycleroad">
+				<rule e="way" k="bicycle_road" v="yes">
 					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 						<line class="highway-core highway-cycleroad-core-1" smart-linecap="no"/>
 						<line class="highway-core highway-cycleroad-core-2" smart-linecap="no"/>
@@ -1731,36 +1700,184 @@
 						<line class="highway-core highway-cycleroad-core-3"/>
 					</else>
 				</rule>
-				<rule e="way" k="highway" v="tertiary_link">
-					<line class="highway-core highway-tertiary-link-core"/>
-				</rule>
-				<rule e="way" k="highway" v="tertiary">
-					<line class="highway-core highway-tertiary-core"/>
-				</rule>
-				<rule e="way" k="highway" v="secondary_link">
-					<line class="highway-core highway-secondary-link-core"/>
-				</rule>
-				<rule e="way" k="highway" v="secondary">
-					<line class="highway-core highway-secondary-core"/>
-				</rule>
-				<rule e="way" k="highway" v="primary_link">
-					<line class="highway-core highway-primary-link-core"/>
-				</rule>
-				<rule e="way" k="highway" v="trunk_link">
-					<line class="highway-core highway-trunk-link-core"/>
-				</rule>
-				<rule e="way" k="highway" v="motorway_link">
-					<line class="highway-core highway-motorway-link-core"/>
-				</rule>
-				<rule e="way" k="highway" v="primary">
-					<line class="highway-core highway-primary-core"/>
-				</rule>
-				<rule e="way" k="highway" v="trunk">
-					<line class="highway-core highway-trunk-core"/>
-				</rule>
-				<rule e="way" k="highway" v="motorway">
-					<line class="highway-core highway-motorway-core"/>
-				</rule>
+				<else>
+
+					<rule e="way" k="highway" v="ford">
+						<line class="highway-core highway-ford-core" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="raceway">
+						<rule e="way" k="use_status" v="~">
+							<line class="highway-raceway-core"/>
+						</rule>
+						<rule e="way" k="use_status" v="disused">
+							<line class="highway-raceway-core-disused"/>
+						</rule>
+						<rule e="way" k="use_status" v="dismantled">
+							<line class="highway-raceway-core-dismantled"/>
+						</rule>
+					</rule>
+
+					<rule e="way" k="scramble" v="*">
+						<line class="highway-core highway-scramble-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="steps">
+						<line class="highway-core highway-steps-core" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="footway|footpath">
+						<line class="highway-core highway-footway-core" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="pedestrian">
+						<line class="highway-core highway-pedestrian-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="cycleway">
+						<line class="highway-core highway-cycleway-core" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="path">
+						<rule e="way" k="bicycle" v="yes|designated">
+							<line class="highway-core highway-cycleway-core" smart-linecap="no"/>
+						</rule>
+						<else>
+							<rule e="way" k="horse" v="yes|designated">
+								<line class="highway-core highway-bridleway-core" smart-linecap="no"/>
+							</rule>
+							<else>
+								<rule e="way" k="foot" v="yes|designated">
+									<line class="highway-core highway-footway-core" smart-linecap="no"/>
+								</rule>
+								<else>
+									<line class="highway-core highway-path-core" smart-linecap="no"/>
+								</else></else></else>
+					</rule>
+
+					<rule e="way" k="highway" v="bridleway">
+						<line class="highway-core highway-bridleway-core" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="byway">
+						<line class="highway-core highway-byway-2-casing" smart-linecap="no"/>
+						<line class="highway-core highway-byway-3-casing" smart-linecap="no"/>
+						<line class="highway-core highway-byway-1-core" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="track">
+						<rule e="way" k="track" v="racetrack">
+							<line class="highway-racetrack-core" smart-linecap="no"/>
+						</rule>
+						<else>
+							<rule e="way" k="tracktype" v="grade1">
+								<line class="highway-core highway-track-core2 highway-track-grade1-core" smart-linecap="no"/>
+							</rule>
+							<else>
+								<rule e="way" k="tracktype" v="grade2">
+									<line class="highway-core highway-track-core2 highway-track-grade2-core" smart-linecap="no"/>
+								</rule>
+								<else>
+									<rule e="way" k="tracktype" v="grade3">
+										<line class="highway-core highway-track-core highway-track-grade3-core" smart-linecap="no"/>
+									</rule>
+									<else>
+										<rule e="way" k="tracktype" v="grade4">
+											<line class="highway-core highway-track-core highway-track-grade4-core" smart-linecap="no"/>
+										</rule>
+										<else>
+											<rule e="way" k="tracktype" v="grade5">
+												<line class="highway-core highway-track-core  highway-track-grade5-core" smart-linecap="no"/>
+											</rule>
+											<else>
+												<line class="highway-core highway-track-core2 highway-track-gradex-core" smart-linecap="no"/>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="unsurfaced">
+						<line class="highway-core highway-unsurfaced-core" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="service">
+						<rule e="way" k="service" v="parking_aisle|driveway">
+							<line class="highway-core highway-aisle-core"/>
+						</rule>
+						<else>
+							<line class="highway-core highway-service-core"/>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="unclassified|minor">
+						<line class="highway-core highway-unclassified-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="residential">
+						<line class="highway-core highway-residential-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="road">
+						<line class="highway-core highway-road-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="living_street">
+						<line class="highway-core highway-livingstreet-core-1" smart-linecap="no"/>
+						<line class="highway-core highway-livingstreet-core-2" smart-linecap="no"/>
+					</rule>
+
+					<rule e="way" k="highway" v="cycleroad">
+						<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+							<line class="highway-core highway-cycleroad-core-1" smart-linecap="no"/>
+							<line class="highway-core highway-cycleroad-core-2" smart-linecap="no"/>
+						</rule>
+						<else>
+							<line class="highway-core highway-cycleroad-core-3"/>
+						</else>
+					</rule>
+
+					<rule e="way" k="highway" v="tertiary_link">
+						<line class="highway-core highway-tertiary-link-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="tertiary">
+						<line class="highway-core highway-tertiary-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="secondary_link">
+						<line class="highway-core highway-secondary-link-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="secondary">
+						<line class="highway-core highway-secondary-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="primary_link">
+						<line class="highway-core highway-primary-link-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="trunk_link">
+						<line class="highway-core highway-trunk-link-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="motorway_link">
+						<line class="highway-core highway-motorway-link-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="primary">
+						<line class="highway-core highway-primary-core"/>
+					</rule>
+					<rule e="way" k="highway" v="trunk">
+						<line class="highway-core highway-trunk-core"/>
+					</rule>
+
+					<rule e="way" k="highway" v="motorway">
+						<line class="highway-core highway-motorway-core"/>
+					</rule>
+				</else>
 
 				<rule e="way" k="railway" v="*">
 					<rule e="way" k="construction" v="*">

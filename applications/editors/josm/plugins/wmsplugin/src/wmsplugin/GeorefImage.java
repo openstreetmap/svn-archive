@@ -13,7 +13,6 @@ import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
@@ -78,7 +77,7 @@ public class GeorefImage implements Serializable {
 			return true;
 		}
 
-		boolean alphaChannel = Main.pref.getBoolean("wmsplugin.alpha_channel") && image.getTransparency() != Transparency.OPAQUE;
+		boolean alphaChannel = WMSLayer.PROP_ALPHA_CHANNEL.get() && image.getTransparency() != Transparency.OPAQUE;
 
 		try {
 			if(reImg != null) reImg.flush();

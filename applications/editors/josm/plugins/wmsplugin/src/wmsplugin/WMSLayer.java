@@ -49,7 +49,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	protected static final Icon icon =
 		new ImageIcon(Toolkit.getDefaultToolkit().createImage(WMSPlugin.class.getResource("/images/wms_small.png")));
 
-	private static final BooleanProperty PROP_ALPHA_CHANNEL = new BooleanProperty("wmsplugin.alpha_channel", true);
+	public static final BooleanProperty PROP_ALPHA_CHANNEL = new BooleanProperty("wmsplugin.alpha_channel", true);
 
 	public int messageNum = 5; //limit for messages per layer
 	protected MapView mv;

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[
+    <!ENTITY % utils SYSTEM "include/utils.inc">
+    <!ENTITY % colors SYSTEM "include/colors.inc">
+	<!ENTITY dbsettings SYSTEM "include/dbsettings.inc">
+	<!ENTITY extents SYSTEM "include/extents.inc">
+	<!ENTITY waterfillcolor "#adf">
+	%utils;
+	%colors;
+]>
+
+<Map
+	bgcolor="transparent"
+	srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+
+	<Style name="surface-water-fill">
+	  <Rule>
+	    &minz6;
+		<Filter>
+		    <!-- NOTE: data source is filtered on these properties as well -->
+			[natural] = 'water' or
+			[landuse] = 'reservoir' or
+			[landuse] = 'basin' or
+			[waterway] = 'riverbank' or
+			[waterway] = 'dock'
+		</Filter>
+		<PolygonSymbolizer>
+		  <CssParameter name="fill">&waterfillcolor;</CssParameter>
+		</PolygonSymbolizer>
+	  </Rule>
+	</Style>
+	
+	<Layer name="polygons" status="on">
+		<StyleName>surface-water-fill</StyleName>
+		<Datasource>
+			&dbsettings;
+			&extents;
+			<Parameter name="table">
+				(select * from us_osm_polygon where (
+				    "natural" = 'water' or
+				    landuse = 'reservoir' or
+				    landuse = 'basin' or
+				    waterway = 'riverbank' or
+				    waterway = 'dock')
+				order by z_order,way_area desc) as polygons
+	  		</Parameter>
+		</Datasource>
+	</Layer>
+</Map>

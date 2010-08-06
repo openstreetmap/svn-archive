@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# syntax: combine <rootTileDir> <z> <x> <y> <size(pixels)>
+
+ROOTTILEDIR=$1
+Z=$2
+X=$3
+Y=$4
+SIZE=$5
+
+# Gamma values for hillshade highlight and shadows
+LIGHT_GAMMA=0.9
+DARK_GAMMA=1.0
+
+echo "Combining color-relief tile at $Z $X $Y..."
+
+# * Multiplies/screens hillshade over colormap tile.
+# * Pastes "areas" on top
+# * Fills non-masked areas from watermask with blue.
+COLORRELDESTDIR="$ROOTTILEDIR/color-relief/$Z"
+COLORRELTILE="$COLORRELDESTDIR/s${X}_${Y}.png"
+HILLSHADETILE="$ROOTTILEDIR/hillshade/$Z/s${X}_${Y}.png"
+COLORMAPTILE="$ROOTTILEDIR/colormap/$Z/s${X}_${Y}.png"
+WATERMASKTILE="$ROOTTILEDIR/watermask/$Z/s${X}_${Y}.png"
+AREATILE="$ROOTTILEDIR/area/$Z/s${X}_${Y}.png"
+mkdir -p "$COLORRELDESTDIR"
+if [ ! -f "$COLORRELTILE" ] ; then
+    convert \
+    	-size ${SIZE}x${SIZE} xc:"#aaddff" \
+    	\( \
+    		"$COLORMAPTILE" -modulate 120 \
+    		"$AREATILE" -compose Over -composite \
+    		\( "$HILLSHADETILE" -level 70,93%,$LIGHT_GAMMA +level 0%,80% \) \
+    		-compose screen -composite \
+    		\( "$HILLSHADETILE" -level 0,75%,$DARK_GAMMA +level 40%,100% \) \
+    		-compose multiply -composite \
+    	\) \
+    	"$WATERMASKTILE" -compose Src_over -composite \
+    	-quality 90 "$COLORRELTILE"
+else
+    echo "Color-relief tile at $Z $X $Y exists."
+fi
+

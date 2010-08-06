@@ -1,0 +1,1029 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[
+    <!ENTITY % utils SYSTEM "include/utils.inc">
+    <!ENTITY % colors SYSTEM "include/colors.inc">
+	<!ENTITY dbsettings SYSTEM "include/dbsettings.inc">
+	<!ENTITY extents SYSTEM "include/extents.inc">
+	<!ENTITY extentsLatLon SYSTEM "include/extentsLatLon.inc">
+	<!ENTITY rounded SYSTEM "include/rounded.inc">
+	<!ENTITY bridgeoutline SYSTEM "include/bridgeoutline.inc">
+	%utils;
+	%colors;
+]>
+
+<Map bgcolor="transparent"
+   srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+
+<Style name="parking">
+  <Rule>
+	&minz14;
+	&maxz15;
+    <Filter>[amenity] = 'parking'</Filter>
+	<PolygonSymbolizer>
+         <CssParameter name="fill">&parkingcolor;</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+	&minz16;
+    <Filter>[amenity] = 'parking'</Filter>
+    <PolygonSymbolizer>
+         <CssParameter name="fill">&parkingcolor;</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+</Style>
+
+
+<!-- Duplicated in tmp-watermask.xml -->
+<!--
+Perennial lakes and ponds (39000, 39003, 39004, 39009-39012)
+Intermittent lakes and ponds (39001, 39002, 39005, 39006)
+Perennial rivers/streams (46000, 46004, 46005, 46006)
+Intermittent rivers/streams (46001, 46002, 46003)
+Reservoirs (Reservoir) (436xx)
+Canals and ditches (CanalDitch) (336xx)
+-->
+<!--
+<Style name="water">
+  <Rule>
+    &minz10;
+    <Filter>
+    	[fcode] = 39000 or [fcode] = 39003 or [fcode] = 39004 or ([fcode] &gt;= 39009 and [fcode] &lt;= 39012) or
+    	[fcode] = 46000 or [fcode] = 46004 or [fcode] = 46005 or [fcode] = 46006 or
+		([fcode] &gt;= 43600 and [fcode] &lt;= 43699) or
+    	([fcode] &gt;= 33600 and [fcode] &lt;= 33699) or
+    	[fcode] = 39001 or [fcode] = 39002 or [fcode] = 39005 or [fcode] = 39006 or
+    	[fcode] = 46001 or [fcode] = 46002 or [fcode] = 46003
+    </Filter>
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&waterfillcolor;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+</Style>
+-->
+
+<Style name="highway">
+
+  <!--
+  Bridge outlines
+  (roads, paths, rail - scales below 60000 (z14 and up) only)
+  
+  NOTE: Bridge outlines don't *really* belong here (should
+  be "cut" by halos), but there is no other way since they need to
+  be drawn "between" road fills at difference levels.
+  -->
+
+  <Rule>
+	&minz14;
+	&maxz15;
+    <Filter>([highway] = 'motorway' or [highway] = 'trunk') and [bridge] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       	<CssParameter name="stroke-width">9.0</CssParameter>
+		&bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz16;
+    <Filter>([highway] = 'motorway' or [highway] = 'trunk') and [bridge] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       	<CssParameter name="stroke-width">16.0</CssParameter>
+		&bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz14;
+	&maxz15;
+    <Filter>([highway] = 'primary') and [bridge] = 'yes'</Filter>
+    <LineSymbolizer>
+		<CssParameter name="stroke-width">7.5</CssParameter>
+		&bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz16;
+    <Filter>([highway] = 'primary') and [bridge] = 'yes'</Filter>
+    <LineSymbolizer>
+		<CssParameter name="stroke-width">13</CssParameter>
+		&bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz14;
+	&maxz15;
+    <Filter>([highway] = 'secondary' or [highway] = 'tertiary') and [bridge] = 'yes'</Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke-width">7.5</CssParameter>
+       &bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz16;
+    <Filter>([highway] = 'secondary' or [highway] = 'tertiary') and [bridge] = 'yes'</Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke-width">13</CssParameter>
+       &bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+	<Rule>
+  	&minz14;
+  	&maxz15;
+    <Filter>
+      ([highway] = 'motorway_link' or
+      [highway] = 'trunk_link' or
+      [highway] = 'primary_link' or
+      [highway] = 'secondary_link' or 
+      [highway] = 'residential' or
+      [highway] = 'unclassified' or
+      [highway] = 'service') and [bridge] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke-width">6.0</CssParameter>
+       &bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+    <Filter>
+      ([highway] = 'motorway_link' or
+      [highway] = 'trunk_link' or
+      [highway] = 'primary_link' or
+      [highway] = 'secondary_link' or
+      [highway] = 'residential' or
+      [highway] = 'unclassified' or
+      [highway] = 'service') and [bridge] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke-width">10</CssParameter>
+       &bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz14;
+  	&maxz14;
+  	<Filter>
+  		([highway] = 'cycleway' or
+  		[highway] = 'bikeway' or
+  		[highway] = 'path' or
+	    [highway] = 'trail' or
+        [highway] = 'footway' or
+        [highway] = 'steps' or
+        [highway] = 'pedestrian') and [bridge] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke-width">2.5</CssParameter>
+       &bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz15;
+	<Filter>
+  		([highway] = 'cycleway' or
+  		[highway] = 'bikeway' or
+  		[highway] = 'path' or
+	    [highway] = 'trail' or
+        [highway] = 'footway' or
+        [highway] = 'steps' or
+        [highway] = 'pedestrian') and [bridge] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke-width">4.0</CssParameter>
+       &bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  
+
+
+  <!-- Road (incl tunnel) fills -->
+  
+  <Rule>
+	&minz9;
+	&maxz11;
+    <Filter>[highway] = 'motorway' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&interstatecolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">2.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz12;
+	&maxz15;
+    <Filter>[highway] = 'motorway' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&interstatecolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">4.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz16;
+    <Filter>[highway] = 'motorway' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&interstatecolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">8</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz10;
+	&maxz11;
+    <Filter>[highway] = 'motorway' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&interstatecolor;</CssParameter>
+    	<CssParameter name="stroke-width">2.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz12;
+	&maxz14;
+    <Filter>[highway] = 'motorway' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&interstatecolor;</CssParameter>
+    	<CssParameter name="stroke-width">4.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz15;
+    <Filter>[highway] = 'motorway' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&interstatecolor;</CssParameter>
+    	<CssParameter name="stroke-width">8</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+
+  <Rule>
+  	&minz10;
+	&maxz11;
+    <Filter>[highway] = 'trunk' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&trunkcolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">2.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz12;
+  	&maxz14;
+    <Filter>[highway] = 'trunk' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&trunkcolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">4.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz15;
+    <Filter>[highway] = 'trunk' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&trunkcolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">8</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz10;
+	&maxz11;
+    <Filter>[highway] = 'trunk' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&trunkcolor;</CssParameter>
+    	<CssParameter name="stroke-width">2.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz12;
+  	&maxz14;
+    <Filter>[highway] = 'trunk' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&trunkcolor;</CssParameter>
+    	<CssParameter name="stroke-width">4.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz15;
+    <Filter>[highway] = 'trunk' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&trunkcolor;</CssParameter>
+    	<CssParameter name="stroke-width">8</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  
+  <!--
+  <Rule>
+    &minz10;
+	&maxz11;
+    <Filter>[highway] = 'primary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&primarycolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">1.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  -->
+  <Rule>
+  	&minz12;
+  	&maxz14;
+    <Filter>[highway] = 'primary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&primarycolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">3.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz15;
+    <Filter>[highway] = 'primary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&primarycolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">6</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  
+  <Rule>
+    &minz10;
+	&maxz11;
+    <Filter>[highway] = 'primary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&primarycolor;</CssParameter>
+    	<CssParameter name="stroke-width">1.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz12;
+  	&maxz14;
+    <Filter>[highway] = 'primary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&primarycolor;</CssParameter>
+    	<CssParameter name="stroke-width">3.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz15;
+    <Filter>[highway] = 'primary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&primarycolor;</CssParameter>
+    	<CssParameter name="stroke-width">6</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  
+  <!--
+  <Rule>
+  	&minz10;
+	&maxz11;
+    <Filter>[highway] = 'secondary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&secondarycolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">1.0</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  -->
+  <Rule>
+  	&minz12;
+	&maxz13;
+    <Filter>[highway] = 'secondary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&secondarycolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">2.0</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz14;
+	&maxz15;
+    <Filter>[highway] = 'secondary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&secondarycolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">3.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+    <Rule>
+  	&minz16;
+    <Filter>[highway] = 'secondary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&secondarycolortunnel;</CssParameter>
+    	<CssParameter name="stroke-width">6</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  
+  <!--
+  <Rule>
+  	&minz10;
+	&maxz11;
+    <Filter>[highway] = 'secondary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&secondarycolor;</CssParameter>
+    	<CssParameter name="stroke-width">1.0</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  -->
+  <Rule>
+  	&minz12;
+	&maxz13;
+    <Filter>[highway] = 'secondary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&secondarycolor;</CssParameter>
+    	<CssParameter name="stroke-width">2.0</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz14;
+	&maxz15;
+    <Filter>[highway] = 'secondary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&secondarycolor;</CssParameter>
+    	<CssParameter name="stroke-width">3.5</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+    <Rule>
+  	&minz16;
+    <Filter>[highway] = 'secondary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&secondarycolor;</CssParameter>
+    	<CssParameter name="stroke-width">6</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+
+  <Rule>
+  	&minz12;
+	&maxz13;
+    <Filter>[highway] = 'tertiary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz14;
+	&maxz15;
+    <Filter>[highway] = 'tertiary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+    <Filter>[highway] = 'tertiary' and [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">6</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  
+  <!--
+  <Rule>
+  	&minz10;
+	&maxz11;
+    <Filter>[highway] = 'tertiary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+    	<CssParameter name="stroke">&smallroadcolor;</CssParameter>
+    	<CssParameter name="stroke-width">1.0</CssParameter>
+    	&rounded;
+    </LineSymbolizer>
+  </Rule>
+  -->
+  <Rule>
+  	&minz12;
+	&maxz13;
+    <Filter>[highway] = 'tertiary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolor;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz14;
+	&maxz15;
+    <Filter>[highway] = 'tertiary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolor;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+    <Filter>[highway] = 'tertiary' and not [tunnel] = 'yes'</Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolor;</CssParameter>
+       <CssParameter name="stroke-width">6</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+
+  <Rule>
+	&minz14;
+	&maxz15;
+    <Filter>
+      ([highway] = 'residential' or
+      [highway] = 'unclassified' or
+      [highway] = 'service' or
+      ([highway] = 'track' and not [bicycle] = 'designated') or
+	  [highway] = 'unsurfaced' or
+  	  [highway] = 'unimproved') and [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz16;
+    <Filter>
+      ([highway] = 'residential' or
+      [highway] = 'unclassified' or
+      [highway] = 'service' or
+      ([highway] = 'track' and not [bicycle] = 'designated') or
+	  [highway] = 'unsurfaced' or
+  	  [highway] = 'unimproved') and [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz14;
+	&maxz15;
+    <Filter>
+      ([highway] = 'residential' or
+      [highway] = 'unclassified' or
+      [highway] = 'service' or
+      ([highway] = 'track' and not [bicycle] = 'designated') or
+	  [highway] = 'unsurfaced' or
+  	  [highway] = 'unimproved') and not [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolor;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz16;
+    <Filter>
+      ([highway] = 'residential' or
+      [highway] = 'unclassified' or
+      [highway] = 'service' or
+      ([highway] = 'track' and not [bicycle] = 'designated') or
+	  [highway] = 'unsurfaced' or
+  	  [highway] = 'unimproved') and not [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolor;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  
+  <!-- ramps etc. -->
+  <Rule>
+  	&minz12;
+	&maxz15;
+  	<Filter>[highway] = 'motorway_link' and [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&interstatecolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>	
+  <Rule>
+  	&minz16;
+  	<Filter>[highway] = 'motorway_link' and [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&interstatecolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>	
+  <Rule>
+  	&minz12;
+	&maxz15;
+  	<Filter>[highway] = 'motorway_link' and not [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&interstatecolor;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>	
+  <Rule>
+  	&minz16;
+  	<Filter>[highway] = 'motorway_link' and not [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&interstatecolor;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>	
+  <Rule>
+	&minz12;
+	&maxz15;
+  	<Filter>[highway] = 'trunk_link' and [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&trunkcolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz13;
+  	<Filter>[highway] = 'trunk_link' and [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&trunkcolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz12;
+	&maxz15;
+  	<Filter>[highway] = 'trunk_link' and not [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&trunkcolor;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz13;
+  	<Filter>[highway] = 'trunk_link' and not [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&trunkcolor;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz12;
+	&maxz15;
+  	<Filter>[highway] = 'primary_link' and [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&primarycolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+  	<Filter>[highway] = 'primary_link' and [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&primarycolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz12;
+	&maxz15;
+  	<Filter>[highway] = 'primary_link' and not [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&primarycolor;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+  	<Filter>[highway] = 'primary_link' and not [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&primarycolor;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz12;
+	&maxz15;
+  	<Filter>[highway] = 'secondary_link' and [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&secondarycolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+  	<Filter>[highway] = 'secondary_link' and [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&secondarycolortunnel;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz12;
+	&maxz15;
+  	<Filter>[highway] = 'secondary_link' and not [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&secondarycolor;</CssParameter>
+       <CssParameter name="stroke-width">2.0</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+  	<Filter>[highway] = 'secondary_link' and not [tunnel] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">&secondarycolor;</CssParameter>
+       <CssParameter name="stroke-width">3.5</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  
+</Style>
+
+
+
+<Style name="railway">
+  
+  <Rule>
+  	&minz14;
+  	&maxz14;
+  	<Filter>[railway] = 'rail' and [bridge] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke-width">3.7</CssParameter>
+       &bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz15;
+  	<Filter>[railway] = 'rail' and [bridge] = 'yes'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke-width">7.0</CssParameter>
+       &bridgeoutline;
+    </LineSymbolizer>
+  </Rule>
+  
+  <Rule>
+  	&minz10;
+  	&maxz14;
+  	<Filter>[railway] = 'rail'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">white</CssParameter>
+       <CssParameter name="stroke-width">0.9</CssParameter>
+       <CssParameter name="stroke-dasharray">4,4</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz15;
+	<Filter>[railway] = 'rail'</Filter>
+  	<LineSymbolizer>
+       <CssParameter name="stroke">white</CssParameter>
+       <CssParameter name="stroke-width">2.5</CssParameter>
+       <CssParameter name="stroke-dasharray">10,10</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  
+</Style>
+
+
+<Style name="aeroway">
+  
+  <!-- Airport runways -->
+	<Rule>
+	  <Filter>[aeroway] = 'runway'</Filter>
+	  &minz11;
+	  &maxz11;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">#99a</CssParameter>
+		<CssParameter name="stroke-width">2</CssParameter>
+		<CssParameter name="stroke-linecap">square</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'runway'</Filter>
+	  &minz12;
+	  &maxz12;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">3</CssParameter>
+		<CssParameter name="stroke-linecap">square</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'runway'</Filter>
+	  &minz13;
+	  &maxz13;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">5</CssParameter>
+		<CssParameter name="stroke-linecap">square</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'runway'</Filter>
+	  &minz14;
+ 	  &maxz14;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">9</CssParameter>
+		<CssParameter name="stroke-linecap">square</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'runway'</Filter>
+	  &minz15;
+ 	  &maxz15;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">17</CssParameter>
+		<CssParameter name="stroke-linecap">square</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'runway'</Filter>
+	  &minz16;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">30</CssParameter>
+		<CssParameter name="stroke-linecap">square</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<!-- Airport taxiways -->
+	<Rule>
+	  <Filter>[aeroway] = 'taxiway'</Filter>
+	  &minz11;
+	  &maxz11;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">0.8</CssParameter>
+		<CssParameter name="stroke-linejoin">round</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'taxiway'</Filter>
+	  &minz12;
+	  &maxz12;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">1</CssParameter>
+		<CssParameter name="stroke-linejoin">round</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'taxiway'</Filter>
+	  &minz13;
+	  &maxz13;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">2</CssParameter>
+		<CssParameter name="stroke-linejoin">round</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'taxiway'</Filter>
+	  &minz14;
+	  &maxz14;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">3</CssParameter>
+		<CssParameter name="stroke-linejoin">round</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'taxiway'</Filter>
+	  &minz15;
+	  &minz16;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">5</CssParameter>
+		<CssParameter name="stroke-linejoin">round</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+	<Rule>
+	  <Filter>[aeroway] = 'taxiway'</Filter>
+	  &minz16;
+	  <LineSymbolizer>
+		<CssParameter name="stroke">&aerowaycolor;</CssParameter>
+		<CssParameter name="stroke-width">10</CssParameter>
+		<CssParameter name="stroke-linejoin">round</CssParameter>
+	  </LineSymbolizer>
+	</Rule>
+  
+</Style>
+
+<Style name="parking">
+  <Rule>
+	<Filter>[amenity] = 'parking'</Filter>
+	&minz12;
+    <PolygonSymbolizer>
+         <CssParameter name="fill">&smallroadcolor;</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="areafeatures">
+  <Rule>
+      <Filter>[aeroway] = 'apron'</Filter>
+      &minz12;
+      <PolygonSymbolizer>
+         <CssParameter name="fill">&aerowaycolor;</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+</Style>
+
+
+<!-- Layers -->
+
+<!--
+<Layer name="nhdwaterbody" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+        <StyleName>water</StyleName>
+        <Datasource>
+                &dbsettings;
+                &extentsLatLon;
+                <Parameter name="table">nhdwaterbody</Parameter>
+        </Datasource>
+</Layer>
+-->
+
+<Layer name="areas" status="on">
+    <StyleName>areafeatures</StyleName>
+    <StyleName>parking</StyleName>
+    <Datasource>
+		&dbsettings;
+		&extents;
+		<Parameter name="table">
+			(select way, amenity, aeroway
+			from us_osm_polygon order by z_order,way_area desc) as areas
+  		</Parameter>
+		<!-- because the subselect messes the GEOMETRY type -->
+		<Parameter name="geometry_field">way</Parameter>
+    </Datasource>
+</Layer>
+
+<!--
+<Layer name="lines" status="on">
+    <StyleName>roads</StyleName>
+    <Datasource>
+	  &dbsettings;
+	  &extents;
+      <Parameter name="table">
+      	(select * from us_osm_line order by z_order) as lines
+      </Parameter>
+    </Datasource>
+</Layer>
+-->
+
+<Layer name="highway" status="on">
+    <StyleName>highway</StyleName>
+    <Datasource>
+	  &dbsettings;
+	  &extents;
+      <Parameter name="table">
+      	(select way, highway, bridge, tunnel, bicycle from us_osm_line
+      	where highway is not null
+      	order by z_order) as lines
+      </Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="railway" status="on">
+    <StyleName>railway</StyleName>
+    <Datasource>
+	  &dbsettings;
+	  &extents;
+      <Parameter name="table">
+      	(select way, railway, bridge, tunnel from us_osm_line
+      	where railway is not null
+      	order by z_order) as lines
+      </Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="aeroway" status="on">
+    <StyleName>aeroway</StyleName>
+    <Datasource>
+	  &dbsettings;
+	  &extents;
+      <Parameter name="table">
+      	(select way, aeroway from us_osm_line
+      	where aeroway is not null
+      	order by z_order) as lines
+      </Parameter>
+    </Datasource>
+</Layer>
+
+</Map>

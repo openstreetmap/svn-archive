@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# syntax: combine <rootTileDir> <z> <x> <y> <size(pixels)>
+
+ROOTTILEDIR=$1
+Z=$2
+X=$3
+Y=$4
+SIZE=$5
+
+# * Cuts "halos" from contour lines around contour labels
+# * Adds contour labels on top
+CONTOURSDESTDIR="$ROOTTILEDIR/contours/$Z"
+CONTOURSTILE="$CONTOURSDESTDIR/s${X}_${Y}.png"
+CONTOURLINESTILE="$ROOTTILEDIR/contourlines/$Z/s${X}_${Y}.png"
+CONTOURLABELSTILE="$ROOTTILEDIR/contourlabels/$Z/s${X}_${Y}.png"
+mkdir -p "$CONTOURSDESTDIR"
+if [ ! -f "$CONTOURSTILE" ] ; then
+    echo "Combining contours tile at $Z $X $Y..."
+    convert \
+	    -size ${SIZE}x${SIZE} xc:black \( "$CONTOURLABELSTILE" -channel \
+    	Alpha -blur 0x2.0 -channel matte -separate +channel -negate \
+    	-level 5,8% \) -compose Copy_Opacity -composite \
+    	"$CONTOURLINESTILE" -compose Src_Out -composite \
+	    "$CONTOURLABELSTILE" -compose Over -composite \
+	    -colors 256 -quality 90 -depth 8 "$CONTOURSTILE"
+else
+    echo "Contours tile at $Z $X $Y exists."
+fi
+rm "$CONTOURLABELSTILE"
+rm "$CONTOURLINESTILE"
+
+# * Starts with features-main
+# * Cuts out halos for labels
+# * Adds features-fill
+# * Adds labels
+FEATURESDESTDIR="$ROOTTILEDIR/features/$Z"
+FEATURESTILE="$FEATURESDESTDIR/s${X}_${Y}.png"
+FEATURESMAINTILE="$ROOTTILEDIR/features-main/$Z/s${X}_${Y}.png"
+FEATURESFILLTILE="$ROOTTILEDIR/features-fill/$Z/s${X}_${Y}.png"
+LABELSTILE="$ROOTTILEDIR/labels/$Z/s${X}_${Y}.png"
+LABELSNOHALOTILE="$ROOTTILEDIR/labels-nohalo/$Z/s${X}_${Y}.png"
+mkdir -p "$FEATURESDESTDIR"
+if [ ! -f "$FEATURESTILE" ] ; then
+    echo "Combining features tile at $Z $X $Y..."
+    convert \
+	    \( \
+	    	-size ${SIZE}x${SIZE} xc:black \( "$LABELSTILE" -channel \
+	    	Alpha -blur 0x2.0 -channel matte -separate +channel -negate \
+	    	-level 5,8% \) -compose Copy_Opacity -composite \
+	    	"$FEATURESMAINTILE" -compose Src_Out -composite \
+	    \) \
+	    "$FEATURESFILLTILE" -compose Over -composite \
+	    "$LABELSTILE" -compose Over -composite \
+	    "$LABELSNOHALOTILE" -compose Over -composite \
+	    "$FEATURESTILE"
+else
+    echo "Features tile at $X $Y $Z exists."
+fi
+rm "$FEATURESMAINTILE"
+rm "$FEATURESFILLTILE"
+rm "$LABELSTILE"
+rm "$LABELSNOHALOTILE"
+

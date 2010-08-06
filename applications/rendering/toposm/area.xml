@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[
+    <!ENTITY % utils SYSTEM "include/utils.inc">
+    <!ENTITY % colors SYSTEM "include/colors.inc">
+	<!ENTITY dbsettings SYSTEM "include/dbsettings.inc">
+	<!ENTITY extents SYSTEM "include/extents.inc">
+    <!ENTITY extentsLatLon SYSTEM "include/extentsLatLon.inc">
+	%utils;
+	%colors;
+]>
+
+<Map
+   bgcolor="&landcolor;"
+   srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+
+<Style name="builtup">
+    <Rule>
+      &minz8;
+      <PolygonSymbolizer>
+        <CssParameter name="fill">&builtupcolor;</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+</Style>
+
+<Style name="areafeatures">
+    
+  <Rule>
+      &minz8;
+  	  <!-- this should be the same as "builtup" -->
+  	  <Filter>[landuse] = 'residential'</Filter>
+  	  <PolygonSymbolizer>
+        <CssParameter name="fill">&builtupcolor;</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+      &minz8;
+      <Filter>
+		[leisure] = 'nature_reserve' or
+        [leisure] = 'park' or
+        [leisure] = 'common' or
+        [leisure] = 'playground' or
+        [leisure] = 'garden' or
+		[leisure] = 'golf_course' or
+        [landuse] = 'forest' or
+		[landuse] = 'vineyard' or
+		[landuse] = 'conservation' or
+		[landuse] = 'recreation_ground' or
+		[leisure] = 'recreation_ground' or
+		[landuse] = 'village_green' or
+		[landuse] = 'allotments'
+      </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#bea</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+      &minz10;
+      <Filter>
+		[landuse] = 'cemetary' or
+		[amenity] = 'grave_yard'
+      </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#aca</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+      &minz10;
+      <Filter>[landuse] = 'construction'</Filter>
+      <PolygonSymbolizer>
+         <CssParameter name="fill">#adad7c</CssParameter>
+         <CssParameter name="fill-opacity">0.7</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+      &minz8;
+      <Filter>[landuse] = 'military' or [military] &lt;&gt; ''</Filter>
+	  <PolygonSymbolizer>
+        <CssParameter name="fill">#ffa8a8</CssParameter>
+        <CssParameter name="fill-opacity">0.4</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+    <Rule>
+      &minz10;
+      <Filter>[natural] = 'beach'</Filter>
+      <PolygonSymbolizer>
+         <CssParameter name="fill">#ffe0c0</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+    <Rule>
+      &minz8;
+      <Filter>[landuse] = 'salt_pond'</Filter>
+      <PolygonSymbolizer>
+         <CssParameter name="fill">#f8f8f8</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+    <Rule>
+      &minz10;
+      <Filter>[natural] = 'glacier'</Filter>
+      <PolygonSymbolizer>
+         <CssParameter name="fill">#f5f8ff</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+    <Rule>
+	  <!-- open areas and fields -->
+      &minz10;
+      <Filter>
+		[natural] = 'heath' or
+		[landuse] = 'meadow' or
+		[landuse] = 'farm' or
+		[landuse] = 'farmyard' or
+      </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#eeb</CssParameter>
+      </PolygonSymbolizer>
+  </Rule>
+    
+    <!-- these are basically copied from osm.xml -->
+
+	<!-- industrial areas -->
+    <Rule>
+      &minz10;
+      <Filter>
+      	[landuse] = 'industrial' or
+      	[landuse] = 'railway' or
+      	[landuse] = 'brownfield' or
+      	[landuse] = 'landfill' or
+      	[landuse] = 'quarry'
+      </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#dfd1d6</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+    
+    <!-- commercial/public facilities -->
+    <Rule>
+      &minz10;
+      <Filter>
+      	[landuse] = 'commercial' or
+      	[landuse] = 'retail' or
+      	[amenity] = 'hospital'
+      </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#efc8c8</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+    
+    <!-- educational facilities -->
+    <Rule>
+      &minz10;
+      <Filter>
+      	[amenity] = 'university' or
+      	[amenity] = 'college' or
+      	[amenity] = 'school'
+      </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#f0f0d8</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+</Style>
+
+<!-- NHD -->
+<Style name="washes">
+	<Rule>
+		&minz8;
+		<Filter>[ftype] = 'Wash'</Filter>	 
+		<PolygonSymbolizer>
+			<CssParameter name="fill">&waterfillcolor;</CssParameter>
+			<CssParameter name="fill-opacity">0.5</CssParameter>
+		</PolygonSymbolizer>
+	</Rule>
+</Style>
+
+<!-- NHD -->
+<Style name="ice">
+  <Rule>
+  	&minz8;
+    <Filter>[ftype] = 'Ice Mass'</Filter>
+    <PolygonSymbolizer>
+		<CssParameter name="fill">#eee</CssParameter>
+		<CssParameter name="fill-opacity">0.5</CssParameter>
+	</PolygonSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="county-borders">
+	<Rule>
+		&minz8;
+		&maxz12;
+  		<Filter>[boundary] = 'administrative' and [admin_level] = '6'</Filter>
+		<LineSymbolizer>
+			<CssParameter name="stroke">#e8b898</CssParameter>
+			<CssParameter name="stroke-width">2.5</CssParameter>
+		</LineSymbolizer>
+	</Rule>
+	<Rule>
+		&minz13;
+		<Filter>[boundary] = 'administrative' and [admin_level] = '6'</Filter>
+		<LineSymbolizer>
+			<CssParameter name="stroke">#e8b898</CssParameter>
+			<CssParameter name="stroke-width">6</CssParameter>
+		</LineSymbolizer>
+	</Rule>
+</Style>
+
+<Style name="state-borders">
+	<Rule>
+		&minz6;
+		&maxz12;
+  		<Filter>[boundary] = 'administrative' and [admin_level] = '4'</Filter>
+		<LineSymbolizer>
+			<CssParameter name="stroke">#aa6</CssParameter>
+			<CssParameter name="stroke-width">5</CssParameter>
+		</LineSymbolizer>
+	</Rule>
+	<Rule>
+		&minz13;
+		<Filter>[boundary] = 'administrative' and [admin_level] = '4'</Filter>
+		<LineSymbolizer>
+			<CssParameter name="stroke">#aa6</CssParameter>
+			<CssParameter name="stroke-width">12</CssParameter>
+		</LineSymbolizer>
+	</Rule>
+</Style>
+
+<Style name="country-borders">
+	<Rule>
+	    &minz2;
+		&maxz12;
+  		<Filter>[boundary] = 'administrative' and [admin_level] = '2'</Filter>
+		<LineSymbolizer>
+			<CssParameter name="stroke">#7b7</CssParameter>
+			<CssParameter name="stroke-width">7</CssParameter>
+		</LineSymbolizer>
+	</Rule>
+	<Rule>
+		&minz13;
+		<Filter>[boundary] = 'administrative' and [admin_level] = '2'</Filter>
+		<LineSymbolizer>
+			<CssParameter name="stroke">#7b7</CssParameter>
+			<CssParameter name="stroke-width">15</CssParameter>
+		</LineSymbolizer>
+	</Rule>
+</Style>
+
+<!-- Layers -->
+
+<!--
+<Layer name="world" status="on" srs="+proj=merc +datum=WGS84 +over">
+    <StyleName>world</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">geodata/osm/world_boundaries/world_bnd_m</Parameter>
+    </Datasource>
+</Layer>
+-->
+<!--
+<Layer name="land-poly" status="on" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <StyleName>land-poly</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">geodata/osm/world_boundaries/processed_p</Parameter>
+    </Datasource>
+</Layer>
+-->
+
+<Layer name="builtup" status="on" srs="+proj=merc +datum=WGS84 +over">
+    <StyleName>builtup</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">geodata/osm/world_boundaries/builtup_area</Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="nhdarea" srs="+proj=latlong +datum=WGS84">
+	<StyleName>washes</StyleName>
+	<Datasource>
+		&dbsettings; &extentsLatLon;
+		<Parameter name="table">(select way, ftype from nhdarea) as nhdarea</Parameter>
+	</Datasource>
+</Layer>
+
+<Layer name="nhdwaterbodyUpper" srs="+proj=latlong +datum=WGS84">
+	<StyleName>ice</StyleName>
+	<Datasource>
+		&dbsettings; &extentsLatLon;
+		<Parameter name="table">(select way, ftype from nhdwaterbody) as nhdwaterbody</Parameter>
+	</Datasource>
+</Layer>
+
+<Layer name="polygons" status="on">
+    <StyleName>areafeatures</StyleName>
+    <Datasource>
+		&dbsettings; &extents;
+		<Parameter name="table">(select * from us_osm_polygon order by z_order,way_area desc) as polygons</Parameter>
+    </Datasource>
+</Layer>
+
+<!--
+<Layer name="border-poly" status="on">
+    <StyleName>county-borders</StyleName>
+	<StyleName>state-borders</StyleName>
+	<StyleName>country-borders</StyleName>
+	<Datasource>
+		&dbsettings;
+		&extents;
+		<Parameter name="table">(select * from us_osm_polygon where boundary = 'administrative' order by z_order,way_area desc) as polygons</Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="border-line" status="on">
+    <StyleName>county-borders</StyleName>
+	<StyleName>state-borders</StyleName>
+	<StyleName>country-borders</StyleName>
+	<Datasource>
+		&dbsettings;
+		&extents;
+		<Parameter name="table">(select * from us_osm_line where boundary = 'administrative' order by z_order,way_area desc) as polygons</Parameter>
+    </Datasource>
+</Layer>
+-->
+
+<Layer name="borders" status="on">
+    <StyleName>county-borders</StyleName>
+	<StyleName>state-borders</StyleName>
+	<StyleName>country-borders</StyleName>
+	<Datasource>
+		&dbsettings;
+		&extents;
+		<Parameter name="table">
+		(select way,boundary,admin_level from us_osm_roads
+        where "boundary"='administrative') as borders
+        </Parameter>
+    </Datasource>
+</Layer>
+
+</Map>

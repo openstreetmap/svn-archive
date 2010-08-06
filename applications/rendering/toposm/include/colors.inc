@@ -1,0 +1,31 @@
+<!-- Colors -->
+
+<!ENTITY landcolor "transparent">
+<!ENTITY builtupcolor "#d0d0d0">
+
+<!ENTITY watermaskcolor "black">
+<!ENTITY landmaskcolor "white">
+
+<!ENTITY contourcolor "#530">
+
+<!ENTITY waterlinecolor "#15c">
+<!ENTITY waterfillcolor "#adf">
+
+<!ENTITY aerowaycolor "#99a">
+<!ENTITY aerowayoutlinecolor "#556">
+
+<!ENTITY transportationcolor "#069">
+<!ENTITY tunneloutlinecolor "#000">
+<!ENTITY lightrailcolor "#666">
+<!ENTITY interstatecolor "#8899EE">
+<!ENTITY interstatecolortunnel "#C0CCFF">
+<!ENTITY trunkcolor "#FF8888">
+<!ENTITY trunkcolortunnel "#FFC0C0">
+<!ENTITY primarycolor "#FFCC88">
+<!ENTITY primarycolortunnel "#FFE6C0">
+<!ENTITY secondarycolor "#FFFF88">
+<!ENTITY secondarycolortunnel "#FFFFC0">
+<!ENTITY smallroadcolor "#FFFFFF">
+<!ENTITY smallroadcolortunnel "#FFFFFF">
+<!ENTITY parkingcolor "#fffbe0">
+

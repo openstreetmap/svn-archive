@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[
+    <!ENTITY % utils SYSTEM "include/utils.inc">
+    <!ENTITY % colors SYSTEM "include/colors.inc">
+	<!ENTITY dbsettings SYSTEM "include/dbsettings.inc">
+	<!ENTITY extents SYSTEM "include/extents.inc">
+	<!ENTITY extentsLatLon SYSTEM "include/extentsLatLon.inc">
+	<!ENTITY symbolsdir "geodata/osm/symbols">
+	<!ENTITY customsymbolsdir "custom-symbols">
+	%utils;
+	%colors;
+]>
+
+<Map
+   bgcolor="transparent"
+   srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+
+<Style name="nhdline">
+	<Rule>
+		&minz12;
+  		&maxz13;
+		<Filter>
+			([ftype] = 'StreamRiver' or
+			[ftype] = 'Pipeline' or
+			[ftype] = 'CanalDitch') and
+			[lengthkm] &gt; 2
+		</Filter>
+		<TextSymbolizer name="gnis_name" face_name="DejaVu Sans Book" size="9" fill="&waterlinecolor;" placement="line" max_char_angle_delta="35"/>
+	</Rule>
+	<Rule>
+		&minz14;
+		<Filter>
+			[ftype] = 'StreamRiver' or
+			[ftype] = 'Pipeline' or
+			[ftype] = 'CanalDitch'
+		</Filter>
+		<TextSymbolizer name="gnis_name" face_name="DejaVu Sans Book" size="10" fill="&waterlinecolor;" placement="line" max_char_angle_delta="35"/>
+	</Rule>
+</Style>
+
+<Style name="nhdarea">
+    <Rule>
+  		&minz10;
+  		&maxz11;
+	    <Filter>
+    		([ftype] = 'LakePond' or
+    		[ftype] = 'Reservoir' or
+    		[ftype] = 'StreamRiver' or
+    		[ftype] = 'SwampMarsh') and
+    		[areasqkm] &gt; 4
+    	</Filter>
+    	<TextSymbolizer name="gnis_name" face_name="DejaVu Sans Oblique" size="10" fill="&waterlinecolor;" dy="0" wrap_width="0"/>
+	</Rule>
+	<Rule>
+  		&minz12;
+  		&maxz13;
+	    <Filter>
+    		([ftype] = 'LakePond' or
+    		[ftype] = 'Reservoir' or
+    		[ftype] = 'StreamRiver' or
+    		[ftype] = 'SwampMarsh') and
+    		[areasqkm] &gt; 1
+    	</Filter>
+    	<TextSymbolizer name="gnis_name" face_name="DejaVu Sans Oblique" size="10" fill="&waterlinecolor;" dy="0" wrap_width="0"/>
+	</Rule>
+	<Rule>
+  		&minz14;
+	    <Filter>
+    		[ftype] = 'LakePond' or
+    		[ftype] = 'Reservoir' or
+    		[ftype] = 'StreamRiver' or
+    		[ftype] = 'SwampMarsh'
+    	</Filter>
+    	<TextSymbolizer name="gnis_name" face_name="DejaVu Sans Oblique" size="11" fill="&waterlinecolor;" dy="0" wrap_width="0"/>
+	</Rule>
+</Style>
+
+
+<Style name="placenames">
+	<Rule>
+      &minz7;
+      &maxz9;
+      <Filter>[place] = 'city'</Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Condensed Bold" size="10" fill="#000" dy="0" wrap_width="0"/>
+    </Rule>
+    <Rule>
+      &minz10;
+      <Filter>[place] = 'city'</Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Condensed Bold" size="16" fill="#000" dy="0" wrap_width="0"/>
+    </Rule>
+    <Rule>
+      &minz10;
+      &maxz10;
+      <Filter>[place] = 'town' or [place] = 'suburb'</Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Condensed Bold" size="10" fill="#000" dy="0" wrap_width="0"/>
+    </Rule>
+    <Rule>
+      &minz11;
+      <Filter>[place] = 'town' or [place] = 'suburb'</Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Condensed Bold" size="13" fill="#000" dy="0" wrap_width="0"/>
+    </Rule>
+    <!-- NOTE: aerodrome can be either area or point -->
+	<Rule>
+      &minz13;
+      <Filter>[aeroway] = 'aerodrome'</Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Book" size="9" fill="&transportationcolor;" dy="10" wrap_width="200"/>
+    </Rule>
+    <Rule>
+    	&minz15;
+    	<Filter>[railway] = 'station'</Filter>
+    	<TextSymbolizer name="name" face_name="DejaVu Sans Book" size="10" fill="&transportationcolor;" dy="10" wrap_width="200"/> />
+    </Rule>
+    <Rule>
+      &minz11;
+      &maxz12;
+      <Filter>
+		[place] = 'village'
+      </Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Condensed Bold" size="10" fill="#000" dy="0" wrap_width="0"/>
+    </Rule>
+    <Rule>
+      &minz13;
+      <Filter>
+		[place] = 'village'
+      </Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Condensed Bold" size="12" fill="#000" dy="0" wrap_width="0"/>
+    </Rule>
+    <Rule>
+      &minz13;
+      <Filter>
+		[place] = 'locality' or 
+		[place] = 'hamlet'
+      </Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Condensed Bold" size="10" fill="#000" dy="0" wrap_width="0"/>
+    </Rule>
+    <Rule>
+      &minz14;
+      <Filter>
+		[natural] = 'peak'
+      </Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Book" size="10" fill="&contourcolor;" dy="10" wrap_width="100"/>
+      <TextSymbolizer name="ele_w_unit" face_name="DejaVu Sans Book" size="9" fill="#530" dy="22" wrap_width="100"/>
+    </Rule>
+</Style>
+
+<Style name="areanames">
+  <Rule>
+    &minz13;
+    &maxz13;
+    <Filter>
+      [place] = 'island' or
+      [natural] = 'wood' or
+      [landuse] = 'conservation' or
+      [landuse] = 'recreation_ground' or
+	  [leisure] = 'recreation_ground' or
+      [landuse] = 'forest'
+    </Filter>
+    <TextSymbolizer name="name" face_name="DejaVu Sans Oblique" size="10" fill="#050" dy="0" wrap_width="0"/>
+  </Rule>
+  <Rule>
+    &minz14;
+    <Filter>
+      [place] = 'island' or
+      [natural] = 'wood' or
+      [landuse] = 'conservation' or
+      [landuse] = 'recreation_ground' or
+	  [leisure] = 'recreation_ground' or
+      [landuse] = 'forest'
+    </Filter>
+    <TextSymbolizer name="name" face_name="DejaVu Sans Oblique" size="11" fill="#050" dy="0" wrap_width="0"/>
+  </Rule>
+  <!--
+  <Rule>
+  	&minz13;
+    <Filter>
+      	[natural] = 'water' or
+		[landuse] = 'reservoir' or
+		[landuse] = 'basin' or
+		[waterway] = 'riverbank' or
+		[waterway] = 'dock' or
+		[natural] = 'coastline'
+    </Filter>
+    <TextSymbolizer name="name" face_name="DejaVu Sans Oblique" size="10" fill="&waterlinecolor;" dy="0" wrap_width="0"/>
+  </Rule>
+  -->
+</Style>
+
+<!--
+<Style name="linenames">
+  <Rule>
+	  &minz14;
+      <Filter>
+		[waterway] = 'river' or
+        [waterway] = 'canal' or
+		[waterway] = 'stream'
+      </Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Book" size="9" fill="&waterlinecolor;" placement="line" max_char_angle_delta="35"/>
+    </Rule>
+</Style>
+-->
+
+<Style name="streetnames">
+    <!-- text labels -->
+    <Rule>
+	  &minz13;
+      <Filter>
+      	[highway] = 'motorway' or
+      	[highway] = 'trunk'
+      </Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Book" size="11" fill="black" spacing="300" placement="line" max_char_angle_delta="35"/>
+    </Rule>
+    <Rule>
+	  &minz14;
+      <Filter>
+      	[highway] = 'primary' or
+      	[highway] = 'secondary' or
+      	[highway] = 'tertiary'
+      </Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Book" size="10" fill="black" spacing="300" placement="line" max_char_angle_delta="35"/>
+    </Rule>
+    <Rule>
+      &minz15;
+      <Filter>
+      	[highway] = 'residential' or
+      	[highway] = 'unclassified' or
+      	[highway] = 'track' or
+      	[highway] = 'path' or
+      	[highway] = 'cycleway' or
+      	[highway] = 'footway' or
+      	[highway] = 'service' or
+      	[highway] = 'proposed'
+      </Filter>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Book" size="9" fill="black" spacing="300" placement="line" max_char_angle_delta="35"/>
+    </Rule>
+</Style>
+
+
+<!-- Layers -->
+
+<!-- TODO: split placenames into pure places and other features? -->
+<Layer name="placenames" status="on">
+    <StyleName>placenames</StyleName>
+    <Datasource>
+		&dbsettings;
+		&extents;
+		<!-- HACK: postgres converts elevation m -> ft, and appends unit -->
+		<Parameter name="table">(select *, CAST(round((CAST(ele as numeric) * 3.2787), 0) as varchar(10)) || ' ft' as ele_w_unit from us_osm_point) as placenames</Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="areanames" status="on">
+    <StyleName>areanames</StyleName>
+    <Datasource>
+		&dbsettings;
+		&extents;
+		<Parameter name="table">(select * from us_osm_polygon order by z_order,way_area desc) as areanames</Parameter>
+    </Datasource>
+</Layer>
+
+<!--
+<Layer name="linenames" status="on">
+    <StyleName>linenames</StyleName>
+    <Datasource>
+		&dbsettings;
+		&extents;
+		<Parameter name="table">(select * from us_osm_line order by z_order) as linenames</Parameter>
+    </Datasource>
+</Layer>
+-->
+
+<Layer name="nhdarea" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+	<StyleName>nhdarea</StyleName>
+	<Datasource>
+		&dbsettings;
+		&extentsLatLon;
+		<Parameter name="table">nhdarea</Parameter>
+	</Datasource>
+</Layer>
+
+<Layer name="nhdwaterbody" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+	<StyleName>nhdarea</StyleName>
+	<Datasource>
+		&dbsettings;
+		&extentsLatLon;
+		<Parameter name="table">nhdwaterbody</Parameter>
+	</Datasource>
+</Layer>
+
+<Layer name="nhdflowline" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+	<StyleName>nhdline</StyleName>
+	<Datasource>
+		&dbsettings;
+		&extentsLatLon;
+		<Parameter name="table">nhdflowline</Parameter>
+	</Datasource>
+</Layer>
+
+<Layer name="streetnames" status="on">
+    <StyleName>streetnames</StyleName>
+    <Datasource>
+		&dbsettings;
+		&extents;
+		<Parameter name="table">(select * from us_osm_roads order by z_order) as streetnames</Parameter>
+    </Datasource>
+</Layer>
+
+</Map>

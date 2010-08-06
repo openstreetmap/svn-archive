@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[
+    <!ENTITY % utils SYSTEM "include/utils.inc">
+    <!ENTITY % colors SYSTEM "include/colors.inc">
+	<!ENTITY dbsettings SYSTEM "include/dbsettings.inc">
+	<!ENTITY extents SYSTEM "include/extents.inc">
+	
+	<!ENTITY symbolsdir "geodata/osm/symbols">
+	<!ENTITY customsymbolsdir "custom-symbols">
+	%utils;
+	%colors;
+]>
+
+<!-- NOTE: symbols that need to go on top of road fills are
+considered "labels-nohalo" as well... -->
+
+
+<Map
+   bgcolor="transparent"
+   srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+
+<Style name="interstateshields">
+	<Rule>
+      &minz8;
+      <ShieldSymbolizer name="roadnumber" face_name="DejaVu Sans Bold" size="10"
+      	fill="white" placement="line"
+      	file="&customsymbolsdir;/shield-interstate.png"
+      	type="png" width="22" height="21"
+      	min_distance="100" />
+    </Rule>
+</Style>
+
+<Style name="usshields">
+	<Rule>
+      &minz11;
+      <ShieldSymbolizer name="roadnumber" face_name="DejaVu Sans Bold" size="10"
+      	fill="black" placement="line"
+      	file="&customsymbolsdir;/shield-us-3.png"
+      	type="png" width="22" height="18"
+      	min_distance="100" />
+    </Rule>
+</Style>
+
+<Style name="stateshields">
+	<Rule>
+      &minz12;
+      <ShieldSymbolizer name="roadnumber" face_name="DejaVu Sans Book" size="9"
+      	fill="black" placement="line"
+      	file="&customsymbolsdir;/shield-ma-3.png"
+      	type="png" width="21" height="16"
+      	min_distance="100" />
+    </Rule>
+</Style>
+
+<Style name="symbols">
+
+	<!-- airports -->
+	<Rule>
+    	&minz12;
+    	&maxz13;
+    	<Filter>[aeroway] = 'aerodrome'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-xs/airport.png" type="png" width="11" height="11" />
+    </Rule>
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[aeroway] = 'aerodrome'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/airport.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+    	<Filter>[aeroway] = 'aerodrome'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/airport.png" type="png" width="17" height="17" />
+	</Rule>
+	
+	<!-- rail stations, other stations -->
+    <Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>
+    		[railway] = 'station' or
+    		[railway] = 'halt' or
+    		[railway] = 'tram_station' or
+    		[aerialway] = 'station'
+    	</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/rail-station-s.png" type="png" width="6" height="6" />
+    </Rule>
+    <Rule>
+    	&minz15;
+    	<Filter>
+    		[railway] = 'station' or
+    		[railway] = 'halt' or
+    		[railway] = 'tram_station' or
+    		[aerialway] = 'station'
+    	</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/rail-station-m.png" type="png" width="10" height="10" />
+    </Rule>
+
+	<!-- mountain huts -->
+	<Rule>
+    	&minz13;
+    	&maxz13;
+    	<Filter>[tourism] = 'alpine_hut'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-xs/hut.png" type="png" width="11" height="11" />
+    </Rule>
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[tourism] = 'alpine_hut'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/hut.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[tourism] = 'alpine_hut'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/hut.png" type="png" width="17" height="17" />
+	</Rule>
+
+	<!-- shelters -->
+	<Rule>
+    	&minz13;
+    	&maxz13;
+    	<Filter>[amenity] = 'shelter'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-xs/shelter.png" type="png" width="11" height="11" />
+    </Rule>
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[amenity] = 'shelter'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/shelter.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[amenity] = 'shelter'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/shelter.png" type="png" width="17" height="17" />
+	</Rule>
+
+	<!-- parking lots -->
+	<Rule>
+    	&minz13;
+    	&maxz13;
+    	<Filter>[amenity] = 'parking'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-xs/parking.png" type="png" width="11" height="11" />
+    </Rule>
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[amenity] = 'parking'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/parking.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[amenity] = 'parking'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/parking.png" type="png" width="17" height="17" />
+	</Rule>
+	
+	<!-- viewpoints -->
+	<Rule>
+    	&minz13;
+    	&maxz13;
+    	<Filter>[tourism] = 'viewpoint'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-xs/view.png" type="png" width="11" height="11" />
+    </Rule>
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[tourism] = 'viewpoint'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/view.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[tourism] = 'viewpoint'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/view.png" type="png" width="17" height="17" />
+	</Rule>
+
+	<!-- public restrooms -->
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[amenity] = 'toilets' or [amenity] = 'restrooms'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/restrooms.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[amenity] = 'toilets' or [amenity] = 'restrooms'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/restrooms.png" type="png" width="17" height="17" />
+	</Rule>
+	
+	<!-- campgrounds -->
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[tourism] = 'camp_site'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/campground.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[tourism] = 'camp_site'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/campground.png" type="png" width="17" height="17" />
+	</Rule>
+	
+	<!-- information -->
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[tourism] = 'information'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/info.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[tourism] = 'information'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/info.png" type="png" width="17" height="17" />
+	</Rule>
+	
+	<!-- drinking water -->
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[amenity] = 'drinking_water'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/water.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[amenity] = 'drinking_water'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/water.png" type="png" width="17" height="17" />
+	</Rule>
+	
+	<!-- picnic sites -->
+	<Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[tourism] = 'picnic_site'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/picnic-area.png" type="png" width="14" height="14" />
+    </Rule>
+	<Rule>
+		&minz15;
+		<Filter>[tourism] = 'picnic_site'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/picnic-area.png" type="png" width="17" height="17" />
+	</Rule>
+    
+    <!-- restaurants -->
+	<Rule>
+		&minz15;
+		<Filter>
+			[amenity] = 'restaurant' or
+			[amenity] = 'fast_food' or
+			[amenity] = 'food_court'
+		</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/food.png" type="png" width="17" height="17" />
+	</Rule>
+	
+	<!-- mines etc (tagged 'quarry' from the GNIS import) -->
+	<!--
+    <Rule>
+    	&minz14;
+    	&maxz14;
+    	<Filter>[landuse] = 'quarry'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-s/mine.png" type="png" width="14" height="14" />
+    </Rule>
+    -->
+    <Rule>
+    	&minz15;
+    	<Filter>[landuse] = 'quarry'</Filter>
+    	<PointSymbolizer file="&customsymbolsdir;/black-m/mine.png" type="png" width="17" height="17" />
+    </Rule>
+</Style>
+
+
+<!-- Layers -->
+
+
+<!-- NOTE: symbols may be needed for both point and area objects -->
+
+<Layer name="point-symbols" status="on">
+    <StyleName>symbols</StyleName>
+    <Datasource>
+      &dbsettings;
+      &extents;
+      <Parameter name="table">us_osm_point</Parameter>
+    </Datasource>
+</Layer>
+
+<!--
+<Layer name="area-symbols" status="on">
+    <StyleName>symbols</StyleName>
+    <Datasource>
+      &dbsettings;
+      &extents;
+      <Parameter name="table">us_osm_area</Parameter>
+    </Datasource>
+</Layer>
+-->
+
+
+<Layer name="interstateshields" status="on">
+    <StyleName>interstateshields</StyleName>
+    <Datasource>
+    	&dbsettings;
+    	&extents;		
+		<Parameter name="table">
+		(select * from us_osm_roads
+		where (highway = 'motorway' or highway = 'trunk') and (ref like 'I %' or ref like 'I-%')
+		order by z_order) as interstateshields
+		</Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="usshields" status="on">
+    <StyleName>usshields</StyleName>
+    <Datasource>
+		&dbsettings;
+		&extents;		
+		<Parameter name="table">
+		(select * from us_osm_roads
+		where (highway &lt;&gt; '' AND highway IS NOT NULL) and ref like 'US %'
+		order by z_order) as usshields
+		</Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="stateshields" status="on">
+    <StyleName>stateshields</StyleName>
+    <Datasource>
+    	&dbsettings;
+    	&extents;
+		<Parameter name="table">
+		(select * from us_osm_roads
+		where (highway &lt;&gt; '' AND highway IS NOT NULL) and ref like 'SR %'
+		order by z_order) as stateshields
+		</Parameter>
+    </Datasource>
+</Layer>
+
+</Map>

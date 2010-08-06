@@ -1,0 +1,4 @@
+#!/bin/sh
+shp2pgsql -p -I -g way contours.shp contours_us_50ft | psql -q gis
+echo "ALTER TABLE contours_us_50ft ADD COLUMN height_ft INT" | psql -q gis
+

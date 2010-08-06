@@ -656,7 +656,7 @@
 
 		<!-- Bridge cores -->
 		<rule e="way" k="bridge" v="yes|true">
-			<rule e="way" k="railway" v="*">
+			<rule e="way" k="railway" v="rail|narrow_gauge|preserved|light_rail|tram|subway|incline|funicular|monorail|spur|yard|siding|disused|abandoned|dismantled|construction|planned|proposed">
 				<line class="bridge-core railway-bridge-core" smart-linecap="no"/>
 			</rule>
 			<rule e="way" k="highway" v="motorway">
@@ -1448,6 +1448,10 @@
 								<line class="railway-dis-casing railway-dis-casing-color railway-casing" smart-linecap="no" />
 							</rule>
 							<else>
+							   <rule e="way" k="razed" v="*">
+									<line class="railway-raz-casing railway-raz-casing-color railway-casing" smart-linecap="no" />
+							   </rule>
+							   <else>
 								<rule e="way" k="abandoned|dismantled" v="*">
 									<line class="railway-aba-casing railway-aba-casing-color railway-casing" smart-linecap="no" />
 								</rule>
@@ -1463,6 +1467,9 @@
 									</rule>
 									<rule e="way" k="railway" v="abandoned|dismantled">
 										<line class="railway-aba-casing railway-aba-casing-color railway-casing" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="razed">
+										<line class="railway-raz-casing railway-raz-casing-color railway-casing" smart-linecap="no" />
 									</rule>
 									<rule e="way" k="railway" v="rail">
 										<line class="railway-rail-casing railway-rail-casing-color railway-casing" smart-linecap="no" />
@@ -1492,6 +1499,7 @@
 										<line class="railway-yard-casing railway-yard-casing-color railway-casing" smart-linecap="no" />
 									</rule>
 								</else>
+							   </else>
 							</else>
 						</else>
 					</else>
@@ -1892,6 +1900,10 @@
 								<line class="railway-dis-1-core railway-dis-1-core-color railway-1-core" smart-linecap="no" />
 							</rule>
 							<else>
+							   <rule e="way" k="razed" v="*">
+								<line class="railway-raz-1-core railway-raz-1-core-color railway-1-core" smart-linecap="no" />
+							   </rule>
+							   <else>
 								<rule e="way" k="abandoned|dismantled" v="*">
 									<line class="railway-aba-1-core railway-aba-1-core-color railway-1-core" smart-linecap="no" />
 								</rule>
@@ -1904,6 +1916,9 @@
 									</rule>
 									<rule e="way" k="railway" v="disused">
 										<line class="railway-dis-1-core railway-dis-1-core-color railway-1-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="razed">
+										<line class="railway-raz-1-core railway-raz-1-core-color railway-1-core" smart-linecap="no" />
 									</rule>
 									<rule e="way" k="railway" v="abandoned|dismantled">
 										<line class="railway-aba-1-core railway-aba-1-core-color railway-1-core" smart-linecap="no" />
@@ -1936,6 +1951,7 @@
 										<line class="railway-yard-1-core railway-yard-1-core-color railway-1-core" smart-linecap="no" />
 									</rule>
 								</else>
+							   </else>
 							</else>
 						</else>
 					</else>
@@ -1954,6 +1970,10 @@
 								<line class="railway-dis-2-core railway-dis-2-core-color railway-2-core" smart-linecap="no" />
 							</rule>
 							<else>
+							   <rule e="way" k="razed" v="*">
+									<line class="railway-raz-2-core railway-raz-2-core-color railway-2-core" smart-linecap="no" />
+							   </rule>
+							   <else>
 								<rule e="way" k="abandoned|dismantled" v="*">
 									<line class="railway-aba-2-core railway-aba-2-core-color railway-2-core" smart-linecap="no" />
 								</rule>
@@ -1966,6 +1986,9 @@
 									</rule>
 									<rule e="way" k="railway" v="disused">
 										<line class="railway-dis-2-core railway-dis-2-core-color railway-2-core" smart-linecap="no" />
+									</rule>
+									<rule e="way" k="railway" v="razed">
+										<line class="railway-raz-2-core railway-raz-2-core-color railway-2-core" smart-linecap="no" />
 									</rule>
 									<rule e="way" k="railway" v="abandoned|dismantled">
 										<line class="railway-aba-2-core railway-aba-2-core-color railway-2-core" smart-linecap="no" />
@@ -1998,6 +2021,7 @@
 										<line class="railway-yard-2-core railway-yard-2-core-color railway-2-core" smart-linecap="no" />
 									</rule>
 								</else>
+							   </else>
 							</else>
 						</else>
 					</else>
@@ -4759,6 +4783,12 @@
 			.railway-aba-2-core-color          { stroke: #b2b2b2; }
 			.railway-aba-tunnel-core               { stroke-opacity: 0.1; }
 
+			.railway-raz-casing                { stroke-width: 0.4px; stroke-opacity: 0.3; stroke-dasharray: 0.3,0.3; }
+			.railway-raz-1-core                { stroke-width: 0.25px; stroke-opacity: 0.3; }
+			.railway-raz-2-core                { stroke-width: 0.25px; stroke-opacity: 0.3; stroke-dasharray: 0.3,0.3,0.3,0.3,0.3,1.5; }
+			.railway-raz-casing-color          { stroke: #c2c2c2; }
+			.railway-raz-1-core-color          { stroke: #ffffff; }
+			.railway-raz-2-core-color          { stroke: #c2c2c2; }
 
 			.highway-motorway-bridge-casing         { stroke-width: 2.70px; }
 			.highway-motorway-bridge-core           { stroke-width: 2.40px; }

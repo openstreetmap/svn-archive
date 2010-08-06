@@ -41,10 +41,6 @@ public abstract class AbstractLinePainter implements PathPainter {
 			intersection.y = (int)(y1 + ua * (y2 - y1));
 		}
 
-		if (intersection.x > 600) {
-			System.out.println();
-		}
-
 		return true;
 	}
 

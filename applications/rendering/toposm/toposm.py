@@ -22,7 +22,7 @@ NUM_THREADS = 4
 # perrygeo apps
 HILLSHADE = '/home/lars/bin/hillshade'
 COLORRELIEF = '/home/lars/bin/color-relief'
-ERRORLOG = './errors.log'
+COLORFILE = 'colors.txt' # Color-by-altitude gradient definition
 
 # constants
 MAPNIK_LAYERS = ['watermask', 'area', 'areansh', 'contourlines', 'contourlabels',

@@ -299,15 +299,6 @@ File "bookmarks"
 dont_overwrite_bookmarks:
 
 ; write reasonable defaults for some preferences
-; XXX - some of this should be done in JOSM itself, see also JOSM core, data\Preferences.java function resetToDefault()
-; XXX - just using JOSM defaults doesn't work here, as JOSM doesn't set some defaults if a preferences file doesn't exist
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "projection" "org.openstreetmap.josm.data.projection.Epsg4326"
-;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "draw.segment.direction" "true"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "layerlist.visible" "true"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "selectionlist.visible" "true"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "commandstack.visible" "true"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "propertiesdialog.visible" "true"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osm-server.url" "http://www.openstreetmap.org/api"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "laf" "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
 
 SectionEnd

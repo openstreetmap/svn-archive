@@ -359,6 +359,7 @@ sub draw_text_on_path
 
     my $nodes = $way->{'nodes'};
     my $bucket;
+    my $threshold = 500;
 
     if ($textnode->getAttribute("avoid-duplicates") =~ /^1|yes|true$/)
     {
@@ -373,7 +374,7 @@ sub draw_text_on_path
                 my $d1 = distance($nodes->[0], $label->{'n0'});
                 my $d2 = distance($nodes->[scalar @$nodes -1], $label->{'n1'});
                 debug ("   distance to other: $d1 $d2") if ($debug->{"drawing"});
-                if ($d1<1000 && $d2<1000)
+                if ($d1<$threshold && $d2<$threshold)
                 {
                     debug("ignore '$text'") if ($debug->{"drawing"});
                     return;
@@ -382,7 +383,7 @@ sub draw_text_on_path
                 $d1 = distance($nodes->[0], $label->{'n1'});
                 $d2 = distance($nodes->[scalar @$nodes -1], $label->{'n0'});
                 debug ("   distance to other: $d1 $d2") if ($debug->{"drawing"});
-                if ($d1<1000 && $d2<1000)
+                if ($d1<$threshold && $d2<$threshold)
                 {
                     debug("ignore '$text'") if ($debug->{"drawing"});
                     return;

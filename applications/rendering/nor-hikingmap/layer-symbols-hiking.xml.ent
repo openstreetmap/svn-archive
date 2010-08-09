@@ -146,7 +146,7 @@
 <Style name="symbols-cabins">
   <Rule>
     &maxscale_zoom7;
-    <Filter>([tourism]='guest_house' or [tourism]='hostel' or [tourism]='alpine_hut' or [toursim]='hotel') and ([operator]='Den Norske Turistforening' or [affiliation]='Den Norske Turistforening')</Filter>
+    <Filter>([tourism]='guest_house' or [tourism]='hostel' or [tourism]='alpine_hut' or [tourism]='hotel') and ([operator]='Den Norske Turistforening' or [affiliation]='Den Norske Turistforening')</Filter>
     <PointSymbolizer file="&symbols;/cabin-staffedlodge.png"
        width="15" height="15" type="png" allow_overlap="false"/>
   </Rule>

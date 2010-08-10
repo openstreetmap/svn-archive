@@ -41,7 +41,7 @@ sub getPhotos
 		}
 		print "\t get $Filename ($ImageList{$Filename}) ...\n";
 
-		my $Data =  $c->download({title => decode("utf-8", "File:$ImageList{$Filename}")});
+		my $Data =  $c->download({title => "File:$ImageList{$Filename}"});
 
 		if($Data ne "")
 		{

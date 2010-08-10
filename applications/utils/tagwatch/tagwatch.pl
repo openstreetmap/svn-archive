@@ -216,13 +216,15 @@ sub getOSMFiles
 				my $FileName = $1;
 				my $usename = $FileName;
 				next if (!($FileName =~ /\.osm/)) || ($FileName =~ /\.md5/);
+				# strip date
+				$usename =~ s/-\d+(\.osm.*)$/$1/;
 				next if %usefiles && !$usefiles{$usename};
 
 				$usename =~ s/.bz2// if($Config{'extract_OsmFiles'} eq "yes");
 
 				if(!$files{$usename} || $files{$usename} ne $Date)#
 				{
-                                        system "ln -sf '$Url/$FileName' '$Folder/'";
+					system "ln -sf '$Url/$FileName' '$Folder/$usename'";
 					++$new;
 					if($Config{'extract_OsmFiles'} eq "yes")
 					{

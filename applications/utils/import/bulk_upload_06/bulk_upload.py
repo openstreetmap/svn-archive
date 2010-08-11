@@ -295,7 +295,7 @@ class DiffSet:
             self.upload()
 
     def upload(self):
-        if not self.itemcount:
+        if not self.itemcount or self.closed==True:
             return False
     
         xml = ET.Element('osmChange')

@@ -101,7 +101,11 @@ class ImportProcessor:
                 # If elem contains nodes, ways or relations as a child
                 # then the ids need to be remapped.
                 if elem.tag=='way':
+                    count=0
                     for child in elem.getiterator('nd'):
+                        count=count + 1
+                        if count > 2000:
+                            raise XMLException("\nnode count >= 2000 in <%s>\n" % elem.attrib['id'])
                         if child.attrib.has_key('ref'):
                             old_id=child.attrib['ref']
                             if idMap['node'].has_key(old_id):

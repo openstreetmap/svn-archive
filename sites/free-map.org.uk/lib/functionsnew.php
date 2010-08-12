@@ -185,7 +185,8 @@ function searchby($table,$searchterm,$searchby,$db='mysql')
 	return $userdetails;
 }
 
-function upload_file($fname,$uploaddir="/home/www-data/uploads")
+function upload_file($fname,$uploaddir="/home/www-data/uploads",
+					$uploadfname=null)
 {
 	$userfile = $_FILES[$fname]['tmp_name'];
 	$userfile_name = $_FILES[$fname]['name'];
@@ -205,7 +206,10 @@ function upload_file($fname,$uploaddir="/home/www-data/uploads")
 	}
 	else
 	{
-		$upfile = "$uploaddir/$userfile_name";
+		$upfile = ($uploadfname) ?
+					"$uploaddir/$uploadfname":
+					"$uploaddir/$userfile_name";
+
 		if(is_uploaded_file($userfile))
 		{
 			if(!move_uploaded_file($userfile,$upfile))

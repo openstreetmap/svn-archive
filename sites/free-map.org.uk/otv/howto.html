@@ -16,8 +16,7 @@ OpenTrailView. </p>
 experience for paths and trails, by creating a linked database of 360
 degree panoramas. However, creating a panorama can take some patience, so
 for that reason, you can now contribute regular georeferenced
-photos too. (However, note that these currently will not show properly
-in the viewing interface). 
+photos too. 
 The sections below deal with contributing regular photos, 
 and 360 degree panoramas.</p>
 <h3>Taking photos or panoramas</h3>
@@ -31,7 +30,7 @@ travelling, also take a photo in the <em>opposite</em> direction, so that
 someone travelling in the opposite direction can see a sequence of
 photos in the correct order.</li>
 <li>At certain places, e.g. crossroads, you might also want to take 4
-photos at 90 degrees to each other. The upload interface (see below) can
+photos at 90 degrees to each other. The photo manager (see below) can
 handle individual photos, photo pairs at 180 degrees to each other,
 and sets of four at 90 degrees to each other.</li>
 </ul>
@@ -70,58 +69,49 @@ convert -resize x400 in.jpg out.jpg
 </pre>
 </li>
 </ul>
-<h3>Georeferencing photos and panoramas</h3>
-<ul>
-<li>The most automatic way of georeferencing your photos is to 
-record a GPS track of your trip and save it as a GPX file.
-A GPS track with timestamps can now be used in conjunction with timestamped 
-photos to work out where the photos was taken as part of the photo upload
-process. 
-You can avoid this procedure taking too long and overloading the server
-by creating a GPX file with
-minimal trackpoints; adjust the settings on your
-GPS device to record trackpoints as infrequently as possible. As an 
-alternative, you can estimate the position by
-clicking on the map on the submission page, or, if you are using a camera with
-GPS (e.g. smartphone), the EXIF latitude and longitude tags will be 
-automatically read.</li>
-</ul>
-<h3>Uploading</h3>
+<h3>Uploading and managing photos</h3>
 <ul>
 <li>Submit photos and panoramas by following the link on the form on the main 
 page. 
-Upload your photos one by one; you can use the map to estimate the latitude
-and longitude or use a GPS track (see above).
-</li>
-<li>
-For single photos and panoramas, click "New
-photo set" once it's uploaded.However, if
-you are uploading pairs or sets of four, you need to make sure that each
-photo in the pair or set is linked. To do this, click "Add another photo to
-set", upload the next in the set and specify the orientation of the next
-photo <em>with respect to the first photo in the set</em>. The orientation
-currently must be 180 degrees, 90 degrees clockwise, or 90 degrees
-anticlockwise. </li>
+You can now upload a whole batch of photos at once; thanks to Andrew Valums
+for his JavaScript photo uploader.</li>
 <li>Once you've uploaded all the photos or panoramas
 from a trip, you can optionally 
-upload a GPX track; this will automatically calculate the position of each
+upload a GPS track in GPX format; 
+this will automatically calculate the position of each
 photo or panorama if both the track and the panoramas have timestamps.</li>
-<li>Wait for your photos or panoramas to be authorised.</li>
-<li>On the map on the main page, click the "Align photos" button below the
-map, and align an authorised
+<li>You can then visit the photo manager page to position any unpositioned
+photos (using an OSM slippy map) or group together photos taken in different
+directions from the same place.</li>
+<li>The next stage is to orientate your photos. On the map on the main page, 
+click the "Align photos" button below the map, and align a
 photo or panorama by rotating the camera icons. The camera should face
 the same direction as either:
 	<ul>
 	<li>the centre of a single photo;</li>
 	<li>the centre of a panorama;</li>
-	<li>or the centre of the <em>first photo in a set</em> for photo pairs
-	or sets of four.</li>
+	<li>in a group of photos, it should face the direction of the
+	<em>first photo in the group</em> (the one that the angles of the other
+	members of the group were specified relative to).</li>
 	</ul>
 Align it with the footpath or trail that you took
 it from, by rotating the camera icon on the map so that it faces the same
 direction as the centre of the photo. To get back to the normal mode,
 where moving over a camera icon shows a photo, click the "View photos"
 button.</li>
+<li>The key feature of OTV, when done, is that <strong>photos will be
+able to be linked together in a route</strong>, which users can 
+virtually "walk" down, a la StreetView. Some functionality is
+already implemented on the main page; select <em>Connect photos</em>, click
+on a photo and drag to the next photo to link them together. Repeat for further
+photos in the route and double-click to end the route. At the moment
+however route forming is very rudimentary; you can't edit a route, for 
+example, once you've made it, and you can't yet follow a route as an end-user
+(at the moment OTV is still geared towards collection of data - rather 
+like OSM in the early days).</li>
+<li>Wait for your photos or panoramas to be authorised. You will be able
+to see them in the meantime, but other people will not. Authorisation should
+normally take place within a day (unless I'm on holiday!)</li>
 </ul>
 <h3>Credits</h3>
 <p>Maps are provided by

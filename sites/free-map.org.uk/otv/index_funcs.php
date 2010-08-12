@@ -5,44 +5,67 @@ function psbmt()
 {
     if(isset($_SESSION['gatekeeper']))
     {
-        $_SESSION['photosession'] = newsession();
+        //$_SESSION['photosession'] = newsession();
         ?>
         <div id='pansubmit_all'>
         <?php
-        display_map(320,320);
+        //display_map(320,320);
         ?>
         <div id='psbmt0'>
         <h2>Submit a series of photos</h2>
         <p>
-        Upload each photo or panorama in your trip, one after the
-        other. Then, if you also recorded a GPX trace
+        Upload each photo or panorama in your trip (you can now select
+		more than one at once, thanks to Andrew Valums' multi-file
+		uploader, see <a href='http://valums.com/ajax-upload'>here</a>).
+        Then, if you also recorded a GPX trace
         while out, you can select "Auto-position with GPX", below, to 
-        automatically position each photo or panorama. If not, just click 
-        "Finish trip".</p>
+        automatically position each photo or panorama. </p>
+		<p>You can then:
+			<ul>
+			<li>use the <a href='photomgr.php'>photo management
+			page</a> to manage your photos (position any not auto-located
+			using your GPX trace, group photos taken from the same point in
+			different directions, or specify which photos are panoramas);</li>
+			<li>orientate a photo on the main page by rotating its camera
+			icon.</li>
+			</ul>
+		</p>
+		<p>Note that photos will need to be authorised before they become
+		visible to the public; however you can still manage them on the
+		<a href='photomgr.php'>photo management page</a> and orientate
+		them on the main page.</p>
+		
 
-        <iframe src='psbmt.php' id='iframe1'></iframe>
-        </div>
-        </div>
-        <div id='errors'></div>
-        <h3>Uploaded photos or panoramas for this trip</h3>
-        <div id='uptbl'>
-        <table id='uploadTable'>
-        <tr>
-        <th>Photo filename</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        </tr>
-        </table>
-        </div>
-        <div>
-        <input type='button' value='Auto-position with GPX' id='apbtn'
-        onclick='document.getElementById("iframe1").src="gpxupload.php";
-        document.getElementById("apbtn").style.visibility="hidden"' />
-        <input type='button' value='Finish trip' 
-        onclick='window.location="index.php"' />
-        </div>
 
-        <?php
+		<div id='div1'>this is div1</div>
+
+		<script type='text/javascript'>
+		function uploadFiles()
+		{
+			var uploader = new qq.FileUploader( {
+			element: document.getElementById('div1'),
+			action: '/otv/photoupload.php',
+			sizeLimit: 3*1024*1024,
+			onComplete: function(id,fileName,responseJSON)
+			{
+				var str="";
+				for(x in responseJSON)
+					str +=  x+"="+responseJSON[x]+":";
+			
+			}
+			} );
+			init();
+		}
+
+		window.onload = uploadFiles;
+		</script>
+		<p>
+		<a href='gpxupload.php'>
+		Auto-position uploaded photos with GPX
+		</a> |
+		<a href='index.php'>Back to map</a>
+		</p>
+		<?php
     }
     else
     {

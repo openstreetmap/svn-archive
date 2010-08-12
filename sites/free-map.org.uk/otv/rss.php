@@ -1,11 +1,16 @@
 <?php
 include('../lib/functionsnew.php');
 
-header("Content-type: application/atom+xml");
+session_start();
+
 
 $conn=dbconnect("otv");
 $cleaned = clean_input($_GET);
-$admin = (isset($cleaned['auth'])) && $cleaned['auth']==0;
+$cleaned['auth'] = (isset($cleaned['auth']))?$cleaned['auth']:1;
+$admin = ($cleaned['auth']==0);
+if($admin && !isset($_SESSION['admin']))
+	die("Not an admin");
+header("Content-type: application/atom+xml");
 $title = $admin ?  "Unmoderated OTV Panoramas" : "Moderated OTV Panoramas";
 to_georss(get_markers_by_bbox($cleaned['bbox'],$cleaned['auth']),$title,$admin);
 mysql_close($conn);
@@ -15,8 +20,20 @@ function get_markers_by_bbox($bbox,$auth)
 {
     list($bllon,$bllat,$trlon,$trlat) = explode(",",$bbox);
 
-    $q = "select * from panoramas where authorised=";
-    $q .= (isset($auth)) ? $auth:1;
+    $q = "select * from panoramas where ";
+
+	if($auth==1)
+	{
+		$q .= "(authorised=1 ";
+		if(isset($_SESSION["gatekeeper"]))
+			$q .= " or user=$_SESSION[gatekeeper]";
+		$q .= ") ";
+	}
+	else
+	{
+		$q .= "authorised=0 ";
+	}
+
     if(isset($bbox))    
     {    
         $q .= " and lat between $bllat and $trlat and lon between ".
@@ -24,7 +41,6 @@ function get_markers_by_bbox($bbox,$auth)
     }
 
     $markers=array();
-
 
 
     $result = mysql_query($q) or die(mysql_error()); 
@@ -77,7 +93,6 @@ function to_georss($markers,$title,$admin)
             echo "<title>$t</title>\n";
             echo "<link href='$url' />\n";
             $description="none";
-            //echo "<summary>$marker[direction]</summary>\n";
             echo "<summary>$marker[direction]</summary>\n";
             // according to the rss 2.0 spec the guid is a unique string
             // identifier for each item. so this is acceptable. it means

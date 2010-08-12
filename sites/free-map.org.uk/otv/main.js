@@ -9,11 +9,30 @@
 
         function onFeatureSelect(feature)
         {
+			// find out if it's a panorama
+			/*
+			OpenLayers.loadURL
+				('/otv/panorama.php?action=getJSON&id='+feature.fid,
+				'',null,onFeatureSelect2,failcb)	
+			*/
+			onFeatureSelect2(feature);
+		}
+
+		//function onFeatureSelect2(xmlHTTP)
+		function onFeatureSelect2(feature)
+		{
+			/*
+			var featureData = xmlHTTP.responseText.evalJSON();
+			var id = featureData.ID;
+			*/
+			var id = feature.fid;
             $('map').style.width='0px';
+
+			$('panimg').style.visibility='visible';
+			$('panimg').src='/otv/panorama/'+id;
+			/*
             $('photodiv').style.width='1024px';
             $('photodiv').style.visibility='visible';
-            //$('panimg').src='/otv/panorama/'+feature.fid;
-            // do panorama instead
             pv=new JSPanoViewer({
                 containerId: 'photodiv',
                 mode: 1, 
@@ -22,19 +41,17 @@
                 cssWidth : '1024px',
                 cssHeight : '400px'
             } );
-            pv.loadImage('/otv/panorama/'+feature.fid,null);
-            /*
-            $('mainctrl').onclick = onPanoramaClose;
-            $('mainctrl').value='Map';
-            */
+            pv.loadImage('/otv/panorama/'+id,null);
+            //$('mainctrl').onclick = onPanoramaClose;
+            //$('mainctrl').value='Map';
+			*/
             $('backtomap').style.visibility='visible';
         }
 
         function onPanoramaClose()
         {
             $('map').style.width='1024px';
-            $('photodiv').style.width='0px';
-            $('photodiv').style.visibility='hidden';
+            $('panimg').style.visibility='hidden';
             pv=null;
             /*
             $('mainctrl').value =
@@ -329,4 +346,13 @@
             var dx = x2-x1, dy=y2-y1;
             return Math.sqrt(dx*dx+dy*dy);
         }
+
+		function savePageState()
+		{
+			var lonLat = map.getCenter(). transform
+                (map.getProjectionObject(),wgs84);
+			document.cookie='otvLon='+lonLat.lon;
+			document.cookie='otvLat='+lonLat.lat;
+			document.cookie='otvZoom='+map.getZoom();
+		}
 

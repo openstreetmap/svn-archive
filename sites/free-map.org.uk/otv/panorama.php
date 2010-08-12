@@ -6,7 +6,7 @@ $cleaned=clean_input($_GET);
 $result=mysql_query("SELECT * FROM panoramas WHERE ID=$cleaned[id]");
 if(mysql_num_rows($result)==1)
 {
-    $row=mysql_fetch_array($result);
+    $row=mysql_fetch_assoc($result);
         switch($cleaned['action'])
         {
             case "rotate":
@@ -23,6 +23,32 @@ if(mysql_num_rows($result)==1)
                 }
                 break;
 
+			case "setAttributes":
+                if(isset($_SESSION['gatekeeper']))
+                {
+					$editables = array ("lat","lon","isPano");
+					$q = "UPDATE panoramas SET ";
+					$first=true;
+					foreach($editables as $editable)
+					{
+						if(isset($cleaned[$editable]))
+						{
+							if(!$first)
+								$q .= ",";
+							else
+								$first=false;
+							$q .= "$editable='".$cleaned[$editable]."'";
+						}
+					}
+					$q .= " WHERE ID=$cleaned[id]";
+					echo $q;
+					mysql_query($q) or die(mysql_error());
+                }
+                else
+                {
+                    header("HTTP/1.1 401 Unauthorized");
+                }
+                break;
             case "authorise":
                 if(isset($_SESSION['admin']))
                 {
@@ -75,8 +101,14 @@ if(mysql_num_rows($result)==1)
 						"/otv/panorama/$cleaned[id]/moderate");
                 }
                 break;
+			case "getJSON":
+				header("Content-type: application/json");
+				echo json_encode($row);
+				break;
             default:
-                if($row['authorised']==1 || isset($_SESSION['admin']))
+                if($row['authorised']==1 || isset($_SESSION['admin']) ||
+						(isset($_SESSION['gatekeeper']) &&
+						$row['user']==$_SESSION['gatekeeper']))
                 {
                     $file = "/home/www-data/uploads/otv/${cleaned[id]}.jpg";
                     if(file_exists($file))

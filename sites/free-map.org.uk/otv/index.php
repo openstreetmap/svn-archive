@@ -2,9 +2,12 @@
 require_once("../lib/functionsnew.php");
 include('index_funcs.php');
 
-$lat = (isset($_GET['lat'])) ? $_GET['lat']:50.89;
-$lon = (isset($_GET['lon'])) ? $_GET['lon']:-1.52;
-$zoom = (isset($_GET['lon'])) ? $_GET['zoom']:14;
+$lat = (isset($_GET['lat'])) ? $_GET['lat']:
+	(isset($_COOKIE['otvLat']) ? $_COOKIE['otvLat'] : 50);
+$lon = (isset($_GET['lon'])) ? $_GET['lon']:
+	(isset($_COOKIE['otvLon']) ? $_COOKIE['otvLon'] : 0);
+$zoom = (isset($_GET['lon'])) ? $_GET['zoom']:
+	(isset($_COOKIE['otvZoom']) ? $_COOKIE['otvZoom'] : 4);
 $uploading = (isset($_GET['sbmt'])) ? "true":"false";
 
 $mapWidth=($uploading=="true")?320:1024;
@@ -31,20 +34,27 @@ session_start();
  
     </script>
     <script type='text/javascript' src='main.js'></script>
-    <!-- Prototype and JSPanoviewer don't like each other
+    <!-- Prototype and JSPanoviewer don't like each other-->
     <script type='text/javascript' 
     src='../freemap/javascript/prototype/prototype.js'></script>
-    -->
+    <!--    -->
     <script type='text/javascript' src='PanoRoute.js'></script>
     <script type='text/javascript' src='js/jspanoviewer.js'></script>
+	<script type='text/javascript' src='js/fileuploader.js'></script>
     <link rel='stylesheet' type='text/css' href='css/osv.css' />
+    <link rel='stylesheet' type='text/css' href='css/fileuploader.css' />
     <style type='text/css'>
     #photocanvas {background-color: yellow }
     </style>
 </head>
  
 <!-- body.onload is called once the page is loaded (call the init function) -->
-<body onload="init()">
+<?php
+if(isset($_GET['sbmt']))
+	echo "<body>\n";
+else
+	echo "<body onload='init()' onunload='savePageState()'>\n";
+?>
 
 <div id='maindiv'>
 <h1>OpenTrailView</h1>
@@ -72,11 +82,14 @@ if (isset($_GET['sbmt']))
     psbmt();
 else 
 {
-    echo "<div id='pansubmit_all'>\n";
+    echo "<div id='pansubmit_all' style='overflow: auto'>\n";
     display_map($mapWidth,$mapHeight);
+	// for panoramas
+	/*
     echo "<div id='photodiv' style='width:0px; height:400px; ".
-        "position: relative'></div>";
-    //echo "\n<img id='panimg' height='400px'/>";
+        "position: relative; visibility: hidden'></div>";
+	*/
+    echo "\n<img id='panimg' height='400px' style='visibility:hidden'/>";
     echo "</div><!--pansubmit_all-->\n";
     ?>
     <div id='controls'>

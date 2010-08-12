@@ -1,9 +1,5 @@
 <?php
 
-// Very Web 1.5 this :-)
-// Still that seems to be what you get if you want a pseudo-AJAX file upload
-// system...
-
 session_start();
 
 require_once('../lib/gpx.php');
@@ -16,10 +12,10 @@ if(!isset($_SESSION['gatekeeper']))
     die("Must be logged in!");
 
 
+    $conn=dbconnect("otv");
 if(isset($_FILES["gpx"]))
 {
     $pan=array();
-    $conn=dbconnect("otv");
     $u = upload_file("gpx","/home/www-data/uploads/otv/gpx");
     if($u["file"]!==null)
     {
@@ -64,15 +60,19 @@ if(isset($_FILES["gpx"]))
                     }
                 }
                 $msg = 'GPX upload ok!';
+                // blank out photosession
+                $_SESSION['photosession'] = null;
             }
             else
             {
-                $msg = 'Error parsing GPX file!';
+                $msg = 'Error interpreting the GPX file - '.
+                        'check that it is a valid GPX file';
             }
         }
         else
         {
-            $msg = 'Error reading GPX file!'; 
+            $msg = 'Error reading the GPX file; '.
+                    'might not have uploaded correctly'; 
         }
     }
     else
@@ -82,10 +82,6 @@ if(isset($_FILES["gpx"]))
 
     echo "<html>\n";
     echo "<head>\n";
-    echo "<script type='text/javascript'>\n";
-    echo "var pg = parent.content.document;\n";
-    echo "pg.getElementById('errors').innerHTML = ".
-            "'<strong>$msg</strong>';\n";
     foreach($pan as $p)
     {
         $lat = ($p["lat"]>=-90 && $p["lat"]<=90) ? $p["lat"]:"Unknown";
@@ -95,14 +91,21 @@ if(isset($_FILES["gpx"]))
     }
     echo "</script>\n";
     echo "</head><body>\n";
+    echo "$msg";
     ?>
+    <a href='index.php'>Back to index page</a>
+    </body></html>
     <?php
-    mysql_close($conn);
 }
 else
 {
-	echo "<html><body>";
-}
+    echo "<html><body>";
+	echo "<h1>Auto-position photos with GPX</h1>";
+        $q= ("SELECT * FROM panoramas where ".
+                "photosession=$_SESSION[photosession] ".
+                "AND user=$_SESSION[gatekeeper] ORDER BY time");
+        $result=mysql_query($q);
+    echo "<p>".mysql_num_rows($result)." photos will be positioned.</p>";
 ?>
     <div id='gpxsubmit'>
     <form method='post' enctype='multipart/form-data' action=''>
@@ -116,3 +119,7 @@ else
     </form>
     </div>
     </body></html>
+<?php
+    mysql_close($conn);
+}
+?>

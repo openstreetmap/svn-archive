@@ -1,0 +1,78 @@
+svn, version 1.6.5 (r38866)
+   compiled Oct 16 2009, 02:54:10
+
+Copyright (C) 2000-2009 CollabNet.
+Subversion is open source software, see http://subversion.tigris.org/
+This product includes software developed by CollabNet (http://www.Collab.Net/).
+
+The following repository access (RA) modules are available:
+
+* ra_neon : Module for accessing a repository via WebDAV protocol using Neon.
+  - handles 'http' scheme
+  - handles 'https' scheme
+* ra_svn : Module for accessing a repository using the svn network protocol.
+  - handles 'svn' scheme
+* ra_local : Module for accessing a repository on local disk.
+  - handles 'file' scheme
+
+Sending        toms/build.xml
+Transmitting file data .
+Committed revision 22566.
+At revision 22566.
+   C ../../dist/toms.jar
+At revision 22566.
+Summary of conflicts:
+  Tree conflicts: 1
+svn: Commit failed (details follow):
+svn: Aborting commit: '/Users/mherring/josm/dist/toms.jar' remains in conflict
+svn, version 1.6.5 (r38866)
+   compiled Oct 16 2009, 02:54:10
+
+Copyright (C) 2000-2009 CollabNet.
+Subversion is open source software, see http://subversion.tigris.org/
+This product includes software developed by CollabNet (http://www.Collab.Net/).
+
+The following repository access (RA) modules are available:
+
+* ra_neon : Module for accessing a repository via WebDAV protocol using Neon.
+  - handles 'http' scheme
+  - handles 'https' scheme
+* ra_svn : Module for accessing a repository using the svn network protocol.
+  - handles 'svn' scheme
+* ra_local : Module for accessing a repository on local disk.
+  - handles 'file' scheme
+
+At revision 22571.
+Skipped '../../dist/toms.jar'
+At revision 22571.
+Summary of conflicts:
+  Skipped paths: 1
+svn: Commit failed (details follow):
+svn: Aborting commit: '/Users/mherring/josm/dist/toms.jar' remains in conflict
+svn, version 1.6.5 (r38866)
+   compiled Oct 16 2009, 02:54:10
+
+Copyright (C) 2000-2009 CollabNet.
+Subversion is open source software, see http://subversion.tigris.org/
+This product includes software developed by CollabNet (http://www.Collab.Net/).
+
+The following repository access (RA) modules are available:
+
+* ra_neon : Module for accessing a repository via WebDAV protocol using Neon.
+  - handles 'http' scheme
+  - handles 'https' scheme
+* ra_svn : Module for accessing a repository using the svn network protocol.
+  - handles 'svn' scheme
+* ra_local : Module for accessing a repository on local disk.
+  - handles 'file' scheme
+
+Sending        toms/src/toms/dialogs/SmpDialogAction.java
+Transmitting file data .
+Committed revision 22572.
+At revision 22572.
+Skipped '../../dist/toms.jar'
+At revision 22572.
+Summary of conflicts:
+  Skipped paths: 1
+svn: Commit failed (details follow):
+svn: Aborting commit: '/Users/mherring/josm/dist/toms.jar' remains in conflict

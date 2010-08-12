@@ -23,7 +23,6 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Pillar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Spar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Sphere Buoy");
-		dlg.cbM01StyleOfMark.addItem("Barrel");
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
@@ -52,47 +51,43 @@ public class BuoySpec extends Buoy {
 		dlg.cM01Fired.setEnabled(true);
 		dlg.cM01TopMark.setEnabled(true);
 
+		String image = "/images/Special_Purpose";
+
 		switch (getStyleIndex()) {
 		case SPEC_PILLAR:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Special_Purpose_Pillar.png")));
+			image += "_Pillar";
 			break;
 		case SPEC_SPAR:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Special_Purpose_Spar.png")));
+			image += "_Spar";
 			break;
 		case SPEC_SPHERE:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Special_Purpose_Sphere.png")));
-			break;
-		case SPEC_BARREL:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Special_Purpose_Barrel.png")));
+			image += "_Sphere";
 			break;
 		default:
 		}
 
-		if (getLightChar() != "") {
-			String c;
+		if (image != "/images/Special_Purpose") {
 
-			c = getLightChar();
+			if (hasTopMark())
+				image += "_CrossY";
 
-			dlg.cbM01Kennung.setSelectedItem(c);
-			if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
-				c = "";
-		}
+			if (isFired()) {
+				image += "_Lit";
+				if (getLightChar() != "") {
+					String c;
 
-		switch (getStyleIndex()) {
-		case SPEC_PILLAR:
-		case SPEC_SPAR:
-			Checker("/images/Cross_Top_Buoy_Yellow.png", "/images/Light_White.png");
-			break;
-		case SPEC_SPHERE:
-		case SPEC_BARREL:
-			Checker("/images/Cross_Top_Sphere_Yellow.png", "/images/Light_White.png");
-			break;
-		default:
-		}
+					c = getLightChar();
+
+					dlg.cbM01Kennung.setSelectedItem(c);
+					if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
+						c = "";
+				}
+			}
+			image += ".png";
+
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
+		} else
+			dlg.lM01Icon01.setIcon(null);
 	}
 
 	public void saveSign() {
@@ -126,7 +121,7 @@ public class BuoySpec extends Buoy {
 		Main.main.undoRedo.add(new ChangePropertyCommand(node,
 				"seamark:buoy_special_purpose:colour", "yellow"));
 
-		saveTopMarkData("cross", "yellow");
+		saveTopMarkData("x-shape", "yellow");
 
 		saveLightData("white");
 
@@ -147,7 +142,7 @@ public class BuoySpec extends Buoy {
 		if (keys.containsKey("seamark:topmark:shape")) {
 			str = keys.get("seamark:topmark:shape");
 
-			if (str.compareTo("cross") == 0) {
+			if (str.compareTo("x-shape") == 0) {
 				setTopMark(true);
 
 			} else {

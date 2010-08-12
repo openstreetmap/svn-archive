@@ -37,10 +37,6 @@ public class BuoyUkn extends Buoy {
 
 		if (dlg.lM01Icon01 != null)
 			dlg.lM01Icon01.setIcon(null);
-		if (dlg.lM01Icon02 != null)
-			dlg.lM01Icon02.setIcon(null);
-		if (dlg.lM01Icon03 != null)
-			dlg.lM01Icon03.setIcon(null);
 		if (getErrMsg() != null)
 			dlg.sM01StatusBar.setText(getErrMsg());
 

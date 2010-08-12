@@ -116,8 +116,6 @@ public class SmpDialogAction extends JosmAction {
 	private JLabel lM01Height = null;
 	private JLabel lM01Range = null;
 	private JLabel lM01Name = null;
-	public JLabel lM01Icon03 = null;
-	public JLabel lM01Icon02 = null;
 	private JLabel lM01Props02 = null;
 	private JLabel lM01StyleOfMark = null;
 	private JLabel lM01TypeOfMark = null;
@@ -176,7 +174,7 @@ public class SmpDialogAction extends JosmAction {
 	}
 
 	public SmpDialogAction() {
-		super(tr("SeaMap Symbol Entry"), "Smp", tr("Seamark Editor"), Shortcut
+		super(tr("Edit SeaMap Symbols"), "Smp", tr("Seamark Editor"), Shortcut
 				.registerShortcut("tools:Semarks",
 						tr("Tool: {0}", tr("Seamark Editor")), KeyEvent.VK_S,
 						Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
@@ -825,16 +823,6 @@ public class SmpDialogAction extends JosmAction {
 			lM01Name.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01Name.setText("Name:");
 
-			lM01Icon03 = new JLabel();
-			lM01Icon03.setBounds(new Rectangle(205, 135, 70, 60));
-			lM01Icon03.setIcon(null);
-			lM01Icon03.setText("");
-
-			lM01Icon02 = new JLabel();
-			lM01Icon02.setBounds(new Rectangle(250, 0, 85, 140));
-			lM01Icon02.setIcon(null);
-			lM01Icon02.setText("");
-
 			lM01Props02 = new JLabel();
 			lM01Props02.setBounds(new Rectangle(5, 170, 90, 16));
 			lM01Props02.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -860,7 +848,7 @@ public class SmpDialogAction extends JosmAction {
 			lM01Head.setText("Seamark Properties");
 
 			lM01Icon01 = new JLabel();
-			lM01Icon01.setBounds(new Rectangle(250, 0, 85, 140));
+			lM01Icon01.setBounds(new Rectangle(225, 0, 160, 200));
 			lM01Icon01.setIcon(null);
 			lM01Icon01.setText("");
 
@@ -875,8 +863,6 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(lM01Colour, null);
 			pM01SeaMap.add(lM01Kennung, null);
 			pM01SeaMap.add(lM01Name, null);
-			pM01SeaMap.add(lM01Icon03, null);
-			pM01SeaMap.add(lM01Icon02, null);
 			pM01SeaMap.add(lM01Props02, null);
 			pM01SeaMap.add(lM01StyleOfMark, null);
 			pM01SeaMap.add(lM01TypeOfMark, null);
@@ -1199,7 +1185,7 @@ public class SmpDialogAction extends JosmAction {
 	private JTextField getTfM01Name() {
 		if (tfM01Name == null) {
 			tfM01Name = new JTextField();
-			tfM01Name.setBounds(new Rectangle(50, 120, 190, 20));
+			tfM01Name.setBounds(new Rectangle(50, 120, 175, 20));
 			tfM01Name.addFocusListener(new java.awt.event.FocusAdapter() {
 				public void focusLost(java.awt.event.FocusEvent e) {
 					buoy.setName(tfM01Name.getText());
@@ -1396,7 +1382,7 @@ public class SmpDialogAction extends JosmAction {
 	private JTextField getTfM01FireMark() {
 		if (tfM01FireMark == null) {
 			tfM01FireMark = new JTextField();
-			tfM01FireMark.setBounds(new Rectangle(240, 180, 100, 20));
+			tfM01FireMark.setBounds(new Rectangle(240, 160, 100, 20));
 			tfM01FireMark.setEditable(false);
 		}
 

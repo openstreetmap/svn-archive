@@ -23,6 +23,8 @@ public class BuoyIsol extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Pillar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Spar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Beacon");
+		dlg.cbM01StyleOfMark.addItem("Tower");
+		dlg.cbM01StyleOfMark.addItem("Float");
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
@@ -54,46 +56,44 @@ public class BuoyIsol extends Buoy {
 		dlg.cM01Fired.setEnabled(true);
 		dlg.cM01TopMark.setEnabled(false);
 
+		String image = "/images/Cardinal";
+
 		switch (getStyleIndex()) {
 		case ISOL_PILLAR:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Isolated_Danger_Pillar.png")));
+			image += "_Pillar_Single";
 			break;
 		case ISOL_SPAR:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Isolated_Danger_Spar.png")));
+			image += "_Spar_Single";
 			break;
 		case ISOL_BEACON:
-			if (isFired())
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Isolated_Danger_Beacon_Lit.png")));
-			else
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Isolated_Danger_Beacon.png")));
+			image += "_Beacon_Single";
+			break;
+		case ISOL_TOWER:
+			image += "_Tower_Single";
+			break;
+		case ISOL_FLOAT:
+			image += "_Float_Single";
 			break;
 		default:
 		}
 
-		if (getLightChar() != "") {
-			String c;
+		if (image != "/images/Cardinal") {
+			if (isFired()) {
+				image += "_Lit";
+				if (getLightChar() != "") {
+					String c;
 
-			c = getLightChar();
+					c = getLightChar();
 
-			dlg.cbM01Kennung.setSelectedItem(c);
-			if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
-				c = "";
-		}
-
-		switch (getStyleIndex()) {
-		case ISOL_PILLAR:
-		case ISOL_SPAR:
-			Checker("/images/Danger_Top_Buoy.png", "/images/Light_White.png");
-			break;
-		case ISOL_BEACON:
-			Checker("/images/Danger_Top_Post.png", "/images/Light_White.png");
-			break;
-		default:
-		}
+					dlg.cbM01Kennung.setSelectedItem(c);
+					if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
+						c = "";
+				}
+			}
+			image += ".png";
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
+		} else
+			dlg.lM01Icon01.setIcon(null);
 	}
 
 	public void saveSign() {
@@ -103,33 +103,54 @@ public class BuoyIsol extends Buoy {
 			return;
 		}
 
-		super.saveSign("buoy_isolated_danger");
-
 		switch (getStyleIndex()) {
 		case ISOL_PILLAR:
+			super.saveSign("buoy_isolated_danger");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_isolated_danger:shape", "pillar"));
 			break;
 		case ISOL_SPAR:
+			super.saveSign("buoy_isolated_danger");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_isolated_danger:shape", "spar"));
 			break;
 		case ISOL_BEACON:
+			super.saveSign("beacon_isolated_danger");
+			break;
+		case ISOL_TOWER:
+			super.saveSign("beacon_isolated_danger");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_isolated_danger:shape", "stake"));
+					"seamark:beacon_isolated_danger:shape", "tower"));
+			break;
+		case ISOL_FLOAT:
+			super.saveSign("light_float");
 			break;
 		default:
 		}
-		if (getStyleIndex() == ISOL_BEACON) {
-		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:beacon_isolated_danger:colour_pattern", "horizontal stripes"));
-		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:beacon_isolated_danger:colour", "black;red;black"));
-		} else {
+		
+		switch (getStyleIndex()) {
+		case ISOL_PILLAR:
+		case ISOL_SPAR:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_isolated_danger:colour_pattern", "horizontal stripes"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_isolated_danger:colour", "black;red;black"));
+			break;
+		case ISOL_BEACON:
+		case ISOL_TOWER:
+			Main.main.undoRedo
+					.add(new ChangePropertyCommand(node,
+							"seamark:beacon_isolated_danger:colour_pattern",
+							"horizontal stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_isolated_danger:colour", "black;red;black"));
+			break;
+		case ISOL_FLOAT:
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:colour_pattern", "horizontal stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:colour", "black;red;black"));
+			break;
 		}
 
 		saveTopMarkData("2 spheres", "black");

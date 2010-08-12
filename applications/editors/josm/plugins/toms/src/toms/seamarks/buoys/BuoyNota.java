@@ -98,16 +98,6 @@ public class BuoyNota extends Buoy {
 		default:
 		}
 
-		if (getLightColour() == "W")
-			dlg.lM01Icon03.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Light_White.png")));
-		else if (getLightColour() == "R")
-			dlg.lM01Icon03.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Light_Red.png")));
-		else if (getLightColour() == "G")
-			dlg.lM01Icon03.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Light_Green.png")));
-
 	}
 
 	public void saveSign() {

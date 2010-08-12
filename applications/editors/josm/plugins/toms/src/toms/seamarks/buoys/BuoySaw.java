@@ -56,49 +56,46 @@ public class BuoySaw extends Buoy {
 		dlg.cM01Fired.setEnabled(true);
 		dlg.cM01TopMark.setEnabled(true);
 
+		String image = "/images/Safe_Water";
+
 		switch (getStyleIndex()) {
 		case SAFE_PILLAR:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Safe_Water_Pillar.png")));
+			image += "_Pillar";
 			break;
 		case SAFE_SPAR:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Safe_Water_Spar.png")));
+			image += "_Spar";
 			break;
 		case SAFE_SPHERE:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Safe_Water_Sphere.png")));
+			image += "_Sphere";
 			break;
 		case SAFE_FLOAT:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Safe_Water_Float.png")));
+			image += "_Float";
 			break;
 		default:
 		}
 
-		if (getLightChar() != "") {
-			String c;
+		if (image != "/images/Safe_Water") {
 
-			c = getLightChar();
+			if (hasTopMark())
+				image += "_Sphere";
 
-			dlg.cbM01Kennung.setSelectedItem(c);
-			if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
-				c = "";
-		}
-		
-		switch (getStyleIndex()) {
-		case SAFE_PILLAR:
-		case SAFE_SPAR:
-			Checker("/images/Sphere_Top_Buoy_Red.png", "/images/Light_White.png");
-			break;
-		case SAFE_SPHERE:
-			Checker("/images/Sphere_Top_Sphere_Red.png", "/images/Light_White.png");
-			break;
-		case SAFE_FLOAT:
-			Checker("/images/Sphere_Top_Post_Red.png", "/images/Light_White.png");
-			break;
-		default:
-		}
+			if (isFired()) {
+				image += "_Lit";
+				if (getLightChar() != "") {
+					String c;
+
+					c = getLightChar();
+
+					dlg.cbM01Kennung.setSelectedItem(c);
+					if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
+						c = "";
+				}
+			}
+			image += ".png";
+
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
+		} else
+			dlg.lM01Icon01.setIcon(null);
 	}
 
 	public void saveSign() {
@@ -108,32 +105,38 @@ public class BuoySaw extends Buoy {
 			return;
 		}
 
-		super.saveSign("buoy_safe_water");
-
 		switch (getStyleIndex()) {
 		case SAFE_PILLAR:
+			super.saveSign("buoy_safe_water");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_safe_water:shape", "pillar"));
 			break;
 		case SAFE_SPAR:
+			super.saveSign("buoy_safe_water");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_safe_water:shape", "spar"));
 			break;
 		case SAFE_SPHERE:
+			super.saveSign("buoy_safe_water");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_safe_water:shape", "sphere"));
 			break;
 		case SAFE_FLOAT:
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_safe_water:shape", "float"));
+			super.saveSign("light_float");
 			break;
 		default:
 		}
-		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:buoy_safe_water:colour_pattern", "vertical stripes"));
-		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:buoy_safe_water:colour", "red;white"));
-
+		if (getStyleIndex() == SAFE_FLOAT) {
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:colour_pattern", "vertical stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:colour", "red;white"));
+		} else {
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_safe_water:colour_pattern", "vertical stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_safe_water:colour", "red;white"));
+		}
 		saveTopMarkData("spherical", "red");
 
 		saveLightData("white");
@@ -216,7 +219,7 @@ public class BuoySaw extends Buoy {
 
 		if (keys.containsKey("seamark:buoy_safe_water:shape")) {
 			str = keys.get("seamark:buoy_safe_water:shape");
-			
+
 			if (str.compareTo("pillar") == 0)
 				setStyleIndex(SAFE_PILLAR);
 			else if (str.compareTo("spar") == 0)

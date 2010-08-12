@@ -83,6 +83,8 @@ abstract public class SeaMark {
 	public final static int ISOL_PILLAR = 1;
 	public final static int ISOL_SPAR = 2;
 	public final static int ISOL_BEACON = 3;
+	public final static int ISOL_TOWER = 4;
+	public final static int ISOL_FLOAT = 5;
 	public final static int SPEC_PILLAR = 1;
 	public final static int SPEC_SPAR = 2;
 	public final static int SPEC_SPHERE = 3;

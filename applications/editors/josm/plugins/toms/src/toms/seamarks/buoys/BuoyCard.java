@@ -103,193 +103,82 @@ public class BuoyCard extends Buoy {
 		dlg.cM01TopMark.setEnabled(false);
 		dlg.cM01Fired.setEnabled(true);
 
-		switch (getBuoyIndex()) {
-		case SeaMark.CARD_NORTH:
-			switch (getStyleIndex()) {
-			case CARD_PILLAR:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Pillar_North.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/North_Top_Buoy.png")));
-				break;
-			case CARD_SPAR:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Spar_North.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/North_Top_Buoy.png")));
-				break;
-			case CARD_BEACON:
-				if (isFired())
-					dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Cardinal_Beacon_Lit_North.png")));
-				else
-					dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Cardinal_Beacon_North.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/North_Top_Post.png")));
-				break;
-			case CARD_TOWER:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Tower_North.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/North_Top_Post.png")));
-				break;
-			case CARD_FLOAT:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Float_North.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/North_Top_Post.png")));
-				break;
-			default:
-			}
+		String image = "/images/Cardinal";
+
+		switch (getStyleIndex()) {
+		case SeaMark.CARD_PILLAR:
+			image += "_Pillar";
 			break;
 
-		case SeaMark.CARD_EAST:
-			switch (getStyleIndex()) {
-			case CARD_PILLAR:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Pillar_East.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/East_Top_Buoy.png")));
-				break;
-			case CARD_SPAR:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Spar_East.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/East_Top_Buoy.png")));
-				break;
-			case CARD_BEACON:
-				if (isFired())
-					dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Cardinal_Beacon_Lit_East.png")));
-				else
-					dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Cardinal_Beacon_East.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/East_Top_Post.png")));
-				break;
-			case CARD_TOWER:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Tower_East.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/East_Top_Post.png")));
-				break;
-			case CARD_FLOAT:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Float_East.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/East_Top_Post.png")));
-				break;
-			default:
-			}
+		case SeaMark.CARD_SPAR:
+			image += "_Spar";
 			break;
 
-		case SeaMark.CARD_SOUTH:
-			switch (getStyleIndex()) {
-			case CARD_PILLAR:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Pillar_South.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/South_Top_Buoy.png")));
-				break;
-			case CARD_SPAR:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Spar_South.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/South_Top_Buoy.png")));
-				break;
-			case CARD_BEACON:
-				if (isFired())
-					dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Cardinal_Beacon_Lit_South.png")));
-				else
-					dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Cardinal_Beacon_South.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/South_Top_Post.png")));
-				break;
-			case CARD_TOWER:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Tower_South.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/South_Top_Post.png")));
-				break;
-			case CARD_FLOAT:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Float_South.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/South_Top_Post.png")));
-				break;
-			default:
-			}
+		case SeaMark.CARD_BEACON:
+			image += "_Beacon";
 			break;
 
-		case SeaMark.CARD_WEST:
-			switch (getStyleIndex()) {
-			case CARD_PILLAR:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Pillar_West.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/West_Top_Buoy.png")));
-				break;
-			case CARD_SPAR:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Spar_West.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/West_Top_Buoy.png")));
-				break;
-			case CARD_BEACON:
-				if (isFired())
-					dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Cardinal_Beacon_Lit_West.png")));
-				else
-					dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Cardinal_Beacon_Lit_West.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/West_Top_Post.png")));
-				break;
-			case CARD_TOWER:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Tower_West.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/West_Top_Post.png")));
-				break;
-			case CARD_FLOAT:
-				dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Cardinal_Float_West.png")));
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-						"/images/West_Top_Post.png")));
-				break;
-			default:
-			}
+		case SeaMark.CARD_TOWER:
+			image += "_Tower";
+			break;
+
+		case SeaMark.CARD_FLOAT:
+			image += "_Float";
 			break;
 
 		default:
+			return;
 		}
 
-		if (getLightChar() != "") {
-			String tmp = null;
-			String c;
-			int i1;
+		switch (getBuoyIndex()) {
+		case CARD_NORTH:
+			image += "_North";
+			break;
+		case CARD_EAST:
+			image += "_East";
+			break;
+		case CARD_SOUTH:
+			image += "_South";
+			break;
+		case CARD_WEST:
+			image += "_West";
+			break;
+		default:
+			return;
+		}
 
-			c = getLightChar();
-			if (c.contains("+")) {
-				i1 = c.indexOf("+");
-				tmp = c.substring(i1, c.length());
-				c = c.substring(0, i1);
+		if (image != "") {
+			if (isFired()) {
+				image += "_Lit";
+
+				if (getLightChar() != "") {
+					String tmp = null;
+					String c;
+					int i1;
+
+					c = getLightChar();
+					if (c.contains("+")) {
+						i1 = c.indexOf("+");
+						tmp = c.substring(i1, c.length());
+						c = c.substring(0, i1);
+					}
+
+					if (getLightGroup() != "")
+						c = c + "(" + getLightGroup() + ")";
+					if (tmp != null)
+						c = c + tmp;
+
+					dlg.cbM01Kennung.setSelectedItem(c);
+					if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
+						c = "";
+				}
 			}
 
-			if (getLightGroup() != "")
-				c = c + "(" + getLightGroup() + ")";
-			if (tmp != null)
-				c = c + tmp;
+			image += ".png";
 
-			dlg.cbM01Kennung.setSelectedItem(c);
-			if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
-				c = "";
-		}
-
-		Checker(null, "/images/Light_White.png");
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
+		} else
+			dlg.lM01Icon01.setIcon(null);
 	}
 
 	public boolean parseLight(Node node) {
@@ -318,9 +207,9 @@ public class BuoyCard extends Buoy {
 				}
 
 				if (getLightGroup() != "")
-				if (tmp != null) {
-					c = c + tmp;
-				}
+					if (tmp != null) {
+						c = c + tmp;
+					}
 
 				setLightChar(c);
 				setLightPeriod(keys);
@@ -365,18 +254,15 @@ public class BuoyCard extends Buoy {
 				setStyleIndex(CARD_FLOAT);
 			else
 				ret = false;
-		}
-		else if (keys.containsKey("seamark:beacon_cardinal:shape")) {
-			str = keys.get("seamark:beacon_cardinal:shape");
+		} else if (keys.containsKey("seamark:beacon_cardinal")) {
+			if (keys.containsKey("seamark:beacon_cardinal:shape")) {
+				str = keys.get("seamark:beacon_cardinal:shape");
 
-			if (str.compareTo("stake") == 0)
+				if (str.compareTo("tower") == 0)
+					setStyleIndex(CARD_TOWER);
+			} else
 				setStyleIndex(CARD_BEACON);
-			else if (str.compareTo("tower") == 0)
-				setStyleIndex(CARD_TOWER);
-			else
-				ret = false;
 		}
-
 		return ret;
 	}
 
@@ -389,6 +275,8 @@ public class BuoyCard extends Buoy {
 		if (node == null) {
 			return;
 		}
+
+		String shape = "";
 
 		switch (getStyleIndex()) {
 		case CARD_PILLAR:
@@ -403,8 +291,6 @@ public class BuoyCard extends Buoy {
 			break;
 		case CARD_BEACON:
 			super.saveSign("beacon_cardinal");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_cardinal:shape", "stake"));
 			break;
 		case CARD_TOWER:
 			super.saveSign("beacon_cardinal");
@@ -412,25 +298,21 @@ public class BuoyCard extends Buoy {
 					"seamark:beacon_cardinal:shape", "tower"));
 			break;
 		case CARD_FLOAT:
-			super.saveSign("buoy_cardinal");
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_cardinal:shape", "float"));
+			super.saveSign("light_float");
 			break;
 		default:
 		}
-		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:buoy_cardinal:colour_pattern", "horizontal stripes"));
 
 		switch (getStyleIndex()) {
 		case CARD_PILLAR:
 		case CARD_SPAR:
-		case CARD_FLOAT:
 			switch (getBuoyIndex()) {
 			case SeaMark.CARD_NORTH:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_cardinal:category", "north"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_cardinal:colour", "black;yellow"));
+				shape = "2 cones up";
 				break;
 
 			case SeaMark.CARD_EAST:
@@ -438,6 +320,7 @@ public class BuoyCard extends Buoy {
 						"seamark:buoy_cardinal:category", "east"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_cardinal:colour", "black;yellow;black"));
+				shape = "2 cones base together";
 				break;
 
 			case SeaMark.CARD_SOUTH:
@@ -445,6 +328,7 @@ public class BuoyCard extends Buoy {
 						"seamark:buoy_cardinal:category", "south"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_cardinal:colour", "yellow;black"));
+				shape = "2 cones down";
 				break;
 
 			case SeaMark.CARD_WEST:
@@ -452,8 +336,12 @@ public class BuoyCard extends Buoy {
 						"seamark:buoy_cardinal:category", "west"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_cardinal:colour", "yellow;black;yellow"));
+				shape = "2 cones point together";
 				break;
 			}
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_cardinal:colour_pattern", "horizontal stripes"));
+			break;
 		case CARD_BEACON:
 		case CARD_TOWER:
 			switch (getBuoyIndex()) {
@@ -462,6 +350,7 @@ public class BuoyCard extends Buoy {
 						"seamark:beacon_cardinal:category", "north"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_cardinal:colour", "black;yellow"));
+				shape = "2 cones up";
 				break;
 
 			case SeaMark.CARD_EAST:
@@ -469,6 +358,7 @@ public class BuoyCard extends Buoy {
 						"seamark:beacon_cardinal:category", "east"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_cardinal:colour", "black;yellow;black"));
+				shape = "2 cones base together";
 				break;
 
 			case SeaMark.CARD_SOUTH:
@@ -476,6 +366,7 @@ public class BuoyCard extends Buoy {
 						"seamark:beacon_cardinal:category", "south"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_cardinal:colour", "yellow;black"));
+				shape = "2 cones down";
 				break;
 
 			case SeaMark.CARD_WEST:
@@ -483,10 +374,43 @@ public class BuoyCard extends Buoy {
 						"seamark:beacon_cardinal:category", "west"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_cardinal:colour", "yellow;black;yellow"));
+				shape = "2 cones point together";
 				break;
 			}
-		}
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_cardinal:colour_pattern", "horizontal stripes"));
+			break;
+		case CARD_FLOAT:
+			switch (getBuoyIndex()) {
+			case SeaMark.CARD_NORTH:
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:light_float:colour", "black;yellow"));
+				shape = "2 cones up";
+				break;
 
+			case SeaMark.CARD_EAST:
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:light_float:colour", "black;yellow;black"));
+				shape = "2 cones base together";
+				break;
+
+			case SeaMark.CARD_SOUTH:
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:light_float:colour", "yellow;black"));
+				shape = "2 cones down";
+				break;
+
+			case SeaMark.CARD_WEST:
+				Main.main.undoRedo.add(new ChangePropertyCommand(node,
+						"seamark:light_float:colour", "yellow;black;yellow"));
+				shape = "2 cones point together";
+				break;
+			}
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:colour_pattern", "horizontal stripes"));
+			break;
+		}
+		saveTopMarkData(shape, "black");
 		saveLightData("white");
 
 	}

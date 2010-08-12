@@ -70,7 +70,7 @@ abstract public class Buoy extends SeaMark {
 		dlg.cM01Fired.setSelected(fired);
 
 	}
-	
+
 	private String LightChar = "";
 
 	public String getLightChar() {
@@ -189,7 +189,6 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public boolean parseShape(Node node, String str) {
-		String lstr;
 		boolean ret = true;
 		Map<String, String> keys;
 
@@ -278,8 +277,6 @@ abstract public class Buoy extends SeaMark {
 		dlg.bM01Save.setEnabled(true);
 
 		dlg.lM01Icon01.setIcon(null);
-		dlg.lM01Icon02.setIcon(null);
-		dlg.lM01Icon03.setIcon(null);
 	}
 
 	public void saveSign(String type) {
@@ -299,16 +296,19 @@ abstract public class Buoy extends SeaMark {
 		}
 
 		if (dlg.cM01Fired.isSelected()) {
-			if (LightColour == "R")
+			if (colour == "red") {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "red"));
-			else if (LightColour == "G")
+				setLightColour("R");
+			} else if (colour == "green") {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "green"));
-			else if (LightColour == "W")
+				setLightColour("G");
+			} else if (colour == "white") {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "white"));
-
+				setLightColour("W");
+			}
 			if (LightPeriod != "" && LightPeriod != " " && LightChar != "Q")
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:period", LightPeriod));
@@ -330,25 +330,6 @@ abstract public class Buoy extends SeaMark {
 					"seamark:topmark:shape", shape));
 			Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 					"seamark:topmark:colour", colour));
-		}
-
-	}
-
-	protected void Checker(String pic1, String pic2) {
-		// Abfrage Topzeichen
-		if (pic1 != null) {
-			if (dlg.cM01TopMark.isSelected())
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(pic1)));
-			else
-				dlg.lM01Icon02.setIcon(null);
-		}
-
-		// Abfrage befeuert
-		if (pic2 != null) {
-			if (dlg.cM01Fired.isSelected())
-				dlg.lM01Icon03.setIcon(new ImageIcon(getClass().getResource(pic2)));
-			else
-				dlg.lM01Icon03.setIcon(null);
 		}
 
 	}

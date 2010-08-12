@@ -134,7 +134,7 @@ way        piste:difficulty  text    linear
 node,way   lit               text    linear
 node,way   abandoned         text    linear
 node,way   network           text    linear
-node       affiliation       text    linear
+node,way   affiliation       text    linear
 
 # Additional POI properties
 #

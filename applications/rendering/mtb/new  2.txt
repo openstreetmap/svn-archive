@@ -1,0 +1,1 @@
+SELECT way FROM planet_line WHERE (tags ? 'mtb:scale');

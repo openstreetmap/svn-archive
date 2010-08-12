@@ -249,6 +249,7 @@
   <StyleName>symbols-sights</StyleName>
   <StyleName>symbols-trailheads</StyleName>
   <StyleName>symbols-eating</StyleName>
+  <StyleName>symbols-cabins</StyleName>
   <Datasource>
     <Parameter name="table">
     (select *

@@ -32,12 +32,9 @@ public class BuoySaw extends Buoy {
 		dlg.cbM01Kennung.addItem("LFl");
 		dlg.cbM01Kennung.addItem("Mo()");
 
-		dlg.cbM01Colour.removeAllItems();
-		dlg.cbM01Colour.addItem("W");
-		dlg.cbM01Colour.setSelectedIndex(0);
-		dlg.cbM01Colour.setEnabled(false);
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
+		dlg.tbM01Region.setEnabled(false);
 
 		setColour(SeaMark.RED_WHITE);
 		setLightColour("W");
@@ -226,10 +223,11 @@ public class BuoySaw extends Buoy {
 				setStyleIndex(SAFE_SPAR);
 			else if (str.compareTo("sphere") == 0)
 				setStyleIndex(SAFE_SPHERE);
-			else if (str.compareTo("float") == 0)
-				setStyleIndex(SAFE_FLOAT);
 			else
 				ret = false;
+		} else if ((keys.containsKey("seamark:type") == true)
+				&& (keys.get("seamark:type").equals("light_float"))) {
+			setStyleIndex(SAFE_FLOAT);
 		}
 
 		return ret;

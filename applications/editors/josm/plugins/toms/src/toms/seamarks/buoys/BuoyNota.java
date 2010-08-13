@@ -31,12 +31,7 @@ public class BuoyNota extends Buoy {
 		dlg.cbM01Kennung.addItem("IQ");
 		dlg.cbM01Kennung.setSelectedIndex(0);
 
-		dlg.cbM01Colour.removeAllItems();
-		dlg.cbM01Colour.addItem("Not set");
-		dlg.cbM01Colour.addItem("R");
-		dlg.cbM01Colour.addItem("G");
-		dlg.cbM01Colour.addItem("W");
-		dlg.cbM01Colour.setEnabled(true);
+		dlg.tbM01Region.setEnabled(false);
 
 		setBuoyIndex(type);
 		setStyleIndex(0);

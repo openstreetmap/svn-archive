@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -107,14 +108,9 @@ public class SmpDialogAction extends JosmAction {
 	 */
 	private JDialog dM01SeaMap = null;
 	private JPanel pM01SeaMap = null;
-	private JLabel lM01Colour = null;
 	private JLabel lM01TimeUnit = null;
-	private JLabel lM01HeightUnit = null;
-	private JLabel lM01RangeUnit = null;
 	private JLabel lM01RepeatTime = null;
 	private JLabel lM01Kennung = null;
-	private JLabel lM01Height = null;
-	private JLabel lM01Range = null;
 	private JLabel lM01Name = null;
 	private JLabel lM01Props02 = null;
 	private JLabel lM01StyleOfMark = null;
@@ -122,7 +118,7 @@ public class SmpDialogAction extends JosmAction {
 	private JLabel lM01Region = null;
 	private JLabel lM01Head = null;
 	public JLabel lM01Icon01 = null;
-	public JComboBox cbM01Region = null;
+	public JToggleButton tbM01Region = null;
 	public JComboBox cbM01TypeOfMark = null;
 	public JComboBox cbM01StyleOfMark = null;
 	public JButton bM01Save = null;
@@ -134,10 +130,7 @@ public class SmpDialogAction extends JosmAction {
 	public JTextField tfM01Name = null;
 	private JButton bM01Close = null;
 	public JTextField tfM01RepeatTime = null;
-	public JTextField tfM01Range = null;
-	public JTextField tfM01Height = null;
 	public JComboBox cbM01Kennung = null;
-	public JComboBox cbM01Colour = null;
 	public JTextField tfM01FireMark = null;
 	private JCheckBox cM01IconVisible = null;
 
@@ -319,7 +312,7 @@ public class SmpDialogAction extends JosmAction {
 		cM01IconVisible.setIcon(new ImageIcon(getClass().getResource(
 				"/images/Auge.png")));
 
-		cbM01Region.setEnabled(true);
+		tbM01Region.setEnabled(true);
 		cbM01TypeOfMark.setEnabled(true);
 		cbM01StyleOfMark.setEnabled(true);
 
@@ -341,14 +334,11 @@ public class SmpDialogAction extends JosmAction {
 		}
 
 		if (keys.containsKey("seamark") || keys.containsKey("seamark:type")) {
-			if (keys.containsKey("seamark:type")) {
-			}
 
-			if ((keys.containsKey("seamark:buoy_lateral:category") == true)
-					|| (keys.containsKey("seamark:beacon_lateral:category") == true)) {
+			if (keys.containsKey("seamark:buoy_lateral:category")
+					|| keys.containsKey("seamark:beacon_lateral:category")) {
 
 				buoy = null; // Prototyp der Lateraltonne
-				int ind = 0; // index für cbM01TypeOfMark
 				String cat; // Kathegorie
 
 				if ((keys.containsKey("seamark:buoy_lateral:colour") == false)
@@ -384,7 +374,6 @@ public class SmpDialogAction extends JosmAction {
 						buoy.setColour(SeaMark.GREEN);
 					}
 					buoy.setName(name);
-					ind = SeaMark.PORT_HAND;
 				}
 
 				if (cat.compareTo("starboard") == 0) {
@@ -398,7 +387,6 @@ public class SmpDialogAction extends JosmAction {
 						buoy.setColour(SeaMark.RED);
 					}
 					buoy.setName(name);
-					ind = SeaMark.STARBOARD_HAND;
 				}
 
 				if (cat.compareTo("preferred_channel_port") == 0) {
@@ -413,7 +401,6 @@ public class SmpDialogAction extends JosmAction {
 					}
 
 					buoy.setName(name);
-					ind = SeaMark.PREF_PORT_HAND;
 				}
 
 				if (cat.compareTo("preferred_channel_starboard") == 0) {
@@ -428,7 +415,6 @@ public class SmpDialogAction extends JosmAction {
 					}
 
 					buoy.setName(name);
-					ind = SeaMark.PREF_STARBOARD_HAND;
 				}
 
 				// b != null true, wenn eine gültige Lateraltonne gefunden wurde
@@ -454,7 +440,6 @@ public class SmpDialogAction extends JosmAction {
 
 					buoy.setNode(node);
 					buoy.setValid(true);
-					buoy.setBuoyIndex(ind);
 					cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
 					buoy.paintSign();
 
@@ -472,7 +457,6 @@ public class SmpDialogAction extends JosmAction {
 					|| (keys.containsKey("seamark:beacon_cardinal:category") == true)) {
 
 				buoy = null; // Prototyp der Kardinaltonne
-				int ind = 6; // index für cbM01TypeOfMark
 				String cat; // Kathegorie
 
 				if ((keys.containsKey("seamark:buoy_cardinal:colour") == false)
@@ -484,9 +468,9 @@ public class SmpDialogAction extends JosmAction {
 
 				if (name.compareTo("") == 0) {
 					if (keys.containsKey("seamark:buoy_cardinal:name"))
-						name = keys.get("seamark:buoy_lateral:name");
+						name = keys.get("seamark:buoy_cardinal:name");
 					if (keys.containsKey("seamark:beacon_cardinal:name"))
-						name = keys.get("seamark:beacon_lateral:name");
+						name = keys.get("seamark:beacon_cardinal:name");
 				}
 
 				if (keys.containsKey("seamark:buoy_cardinal:category") == true) {
@@ -506,7 +490,6 @@ public class SmpDialogAction extends JosmAction {
 						buoy.setErrMsg("Parse-Error: falsche category");
 
 					buoy.setName(name);
-					ind = SeaMark.CARD_NORTH;
 				} // Ende if(str.compareTo("black;yellow")== 0)
 
 				// Test auf Kardinaltonne Ost
@@ -518,7 +501,6 @@ public class SmpDialogAction extends JosmAction {
 						buoy.setErrMsg("Parse-Error: falsche category");
 
 					buoy.setName(name);
-					ind = SeaMark.CARD_EAST;
 				} // Ende if(str.compareTo("black;yellow;black")== 0)
 
 				// Test auf Kardinaltonne Sued
@@ -530,7 +512,6 @@ public class SmpDialogAction extends JosmAction {
 						buoy.setErrMsg("Parse-Error: falsche category");
 
 					buoy.setName(name);
-					ind = SeaMark.CARD_SOUTH;
 				} // Ende if(str.compareTo("yellow;black")== 0)
 
 				// Test auf Kardinaltonne West
@@ -542,7 +523,6 @@ public class SmpDialogAction extends JosmAction {
 						buoy.setErrMsg("Parse-Error: falsche category");
 
 					buoy.setName(name);
-					ind = SeaMark.CARD_WEST;
 				} // Ende if(str.compareTo("yellow;black;black")== 0)
 
 				// b != null true, wenn eine gültige Kardinaltonne gefunden wurde
@@ -563,7 +543,6 @@ public class SmpDialogAction extends JosmAction {
 
 					buoy.setNode(node);
 					buoy.setValid(true);
-					buoy.setBuoyIndex(ind);
 					cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
 					buoy.paintSign();
 
@@ -578,7 +557,7 @@ public class SmpDialogAction extends JosmAction {
 			}
 
 			// Test buoy_safewater
-			if (keys.containsKey("seamark:buoy_water:shape") == true) {
+			if (keys.containsKey("seamark:buoy_safe_water:shape") == true) {
 
 				if (keys.containsKey("seamark:buoy_safe_water:colour") == false) {
 					buoy = new BuoyUkn(this, "Parse-Error: No colour set");
@@ -619,7 +598,6 @@ public class SmpDialogAction extends JosmAction {
 
 				buoy.setValid(true);
 				buoy.setNode(node);
-				buoy.setBuoyIndex(5);
 				cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
 				buoy.paintSign();
 
@@ -669,7 +647,6 @@ public class SmpDialogAction extends JosmAction {
 
 				buoy.setValid(true);
 				buoy.setNode(node);
-				buoy.setBuoyIndex(5);
 				cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
 				buoy.paintSign();
 
@@ -678,17 +655,17 @@ public class SmpDialogAction extends JosmAction {
 			}
 
 			// Test buoy_isolated_danger
-			if ((keys.containsKey("seamark:buoy_isolated_danger:shape") == true)
-					|| (keys.containsKey("seamark:beacon_isolated_danger:shape") == true)) {
+			if ((keys.containsKey("seamark:buoy_isolated_danger:colour") == true)
+					|| (keys.containsKey("seamark:beacon_isolated_danger:colour") == true)) {
 
-				if ((keys.containsKey("seamark:buoy_isolated_danger:colour") == false)
-						&& (keys.containsKey("seamark:beacon_isolated_danger:colour") == false)) {
-					buoy = new BuoyUkn(this, "Parse-Error: No colour set");
+				if ((keys.containsKey("seamark:buoy_isolated_danger:colour") == true)
+						&& (keys.containsKey("seamark:buoy_isolated_danger:shape") == false)) {
+					buoy = new BuoyUkn(this, "Parse-Error: No shape set");
 					buoy.setNode(node);
 					return;
 				}
 
-				if (keys.containsKey("seamark:buoy_isolated_danger:shape") == true)
+				if (keys.containsKey("seamark:buoy_isolated_danger:colour") == true)
 					str = keys.get("seamark:buoy_isolated_danger:colour");
 				else
 					str = keys.get("seamark:beacon_isolated_danger:colour");
@@ -724,7 +701,113 @@ public class SmpDialogAction extends JosmAction {
 
 				buoy.setValid(true);
 				buoy.setNode(node);
-				buoy.setBuoyIndex(5);
+				cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
+				buoy.paintSign();
+
+				return;
+
+			}
+
+			// Test light_float
+
+			if ((keys.containsKey("seamark:type") == true)
+					&& (keys.get("seamark:type").equals("light_float"))) {
+
+				if (keys.containsKey("seamark:light_float:colour") == false) {
+					buoy = new BuoyUkn(this, "Parse-Error: No colour set");
+					buoy.setNode(node);
+					return;
+				}
+
+				str = keys.get("seamark:light_float:colour");
+				if (str.equals("red") || str.equals("green")
+						|| str.equals("red;green;red") || str.equals("green;red;green")) {
+					boolean region = Main.pref.get("tomsplugin.IALA").equals("B");
+					if (str.equals("red")) {
+						if ((keys.containsKey("seamark:topmark:shape") && keys.get(
+								"seamark:topmark:shape").equals("cylinder"))
+								|| (region == SeaMark.IALA_A)) {
+							buoy = new BuoyLat(this, SeaMark.PORT_HAND);
+						} else {
+							buoy = new BuoyLat(this, SeaMark.STARBOARD_HAND);
+						}
+						buoy.setColour(SeaMark.RED);
+					} else if (str.equals("green")) {
+						if ((keys.containsKey("seamark:topmark:shape") && keys.get(
+								"seamark:topmark:shape").equals("cone, point up"))
+								|| (region == SeaMark.IALA_A)) {
+							buoy = new BuoyLat(this, SeaMark.STARBOARD_HAND);
+						} else {
+							buoy = new BuoyLat(this, SeaMark.PORT_HAND);
+						}
+						buoy.setColour(SeaMark.GREEN);
+					} else if (str.equals("red;green;red")) {
+						if ((keys.containsKey("seamark:topmark:shape") && keys.get(
+								"seamark:topmark:shape").equals("cylinder"))
+								|| (region == SeaMark.IALA_A)) {
+							buoy = new BuoyLat(this, SeaMark.PREF_PORT_HAND);
+						} else {
+							buoy = new BuoyLat(this, SeaMark.PREF_STARBOARD_HAND);
+						}
+						buoy.setColour(SeaMark.RED_GREEN_RED);
+					} else if (str.equals("green;red;green")) {
+						if ((keys.containsKey("seamark:topmark:shape") && keys.get(
+								"seamark:topmark:shape").equals("cone, point up"))
+								|| (region == SeaMark.IALA_A)) {
+							buoy = new BuoyLat(this, SeaMark.PREF_STARBOARD_HAND);
+						} else {
+							buoy = new BuoyLat(this, SeaMark.PREF_PORT_HAND);
+						}
+						buoy.setColour(SeaMark.GREEN_RED_GREEN);
+					}
+				} else if (str.equals("black;yellow")) {
+					buoy = new BuoyCard(this, SeaMark.CARD_NORTH);
+					buoy.setColour(SeaMark.BLACK_YELLOW);
+				} else if (str.equals("black;yellow;black")) {
+					buoy = new BuoyCard(this, SeaMark.CARD_EAST);
+					buoy.setColour(SeaMark.BLACK_YELLOW_BLACK);
+				} else if (str.equals("yellow;black")) {
+					buoy = new BuoyCard(this, SeaMark.CARD_SOUTH);
+					buoy.setColour(SeaMark.YELLOW_BLACK);
+				} else if (str.equals("yellow;black;yellow")) {
+					buoy = new BuoyCard(this, SeaMark.CARD_WEST);
+					buoy.setColour(SeaMark.YELLOW_BLACK_YELLOW);
+				} else if (str.equals("black;red;black")) {
+					buoy = new BuoyIsol(this, SeaMark.ISOLATED_DANGER);
+					buoy.setColour(SeaMark.BLACK_RED_BLACK);
+				} else if (str.equals("red;white")) {
+					buoy = new BuoySaw(this, SeaMark.SAFE_WATER);
+					buoy.setColour(SeaMark.RED_WHITE);
+				} else {
+					buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
+					buoy.setNode(node);
+					return;
+				}
+
+				buoy.setName(name);
+
+				if (buoy.parseTopMark(node) == false) {
+					str = buoy.getErrMsg();
+					if (str == null)
+						buoy.setValid(false);
+				}
+
+				if (buoy.parseLight(node) == false) {
+					str = buoy.getErrMsg();
+					if (str == null)
+						buoy.setValid(false);
+				}
+
+				if (buoy.parseShape(node) == false) {
+					str = buoy.getErrMsg();
+					if (str == null)
+						buoy = new BuoyUkn(this, str);
+					buoy.setNode(node);
+					return;
+				}
+
+				buoy.setValid(true);
+				buoy.setNode(node);
 				cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
 				buoy.paintSign();
 
@@ -779,32 +862,12 @@ public class SmpDialogAction extends JosmAction {
 	private JPanel getPM01SeaMap() {
 		if (pM01SeaMap == null) {
 			lM01TimeUnit = new JLabel();
-			lM01TimeUnit.setBounds(new Rectangle(125, 250, 26, 20));
+			lM01TimeUnit.setBounds(new Rectangle(325, 230, 26, 20));
 			lM01TimeUnit.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01TimeUnit.setText("s");
 
-			lM01HeightUnit = new JLabel();
-			lM01HeightUnit.setBounds(new Rectangle(220, 250, 26, 20));
-			lM01HeightUnit.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01HeightUnit.setText("m");
-
-			lM01RangeUnit = new JLabel();
-			lM01RangeUnit.setBounds(new Rectangle(320, 250, 26, 20));
-			lM01RangeUnit.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01RangeUnit.setText("M");
-
-			lM01Height = new JLabel();
-			lM01Height.setBounds(new Rectangle(140, 250, 70, 20));
-			lM01Height.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Height.setText("Height:");
-
-			lM01Range = new JLabel();
-			lM01Range.setBounds(new Rectangle(240, 250, 70, 20));
-			lM01Range.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Range.setText("Range:");
-
 			lM01RepeatTime = new JLabel();
-			lM01RepeatTime.setBounds(new Rectangle(45, 250, 70, 20));
+			lM01RepeatTime.setBounds(new Rectangle(245, 230, 70, 20));
 			lM01RepeatTime.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01RepeatTime.setText("Period:");
 
@@ -812,11 +875,6 @@ public class SmpDialogAction extends JosmAction {
 			lM01Kennung.setBounds(new Rectangle(95, 230, 60, 20));
 			lM01Kennung.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01Kennung.setText("Character:");
-
-			lM01Colour = new JLabel();
-			lM01Colour.setBounds(new Rectangle(240, 230, 60, 20));
-			lM01Colour.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Colour.setText("Colour:");
 
 			lM01Name = new JLabel();
 			lM01Name.setBounds(new Rectangle(5, 120, 82, 16));
@@ -855,12 +913,7 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap = new JPanel();
 			pM01SeaMap.setLayout(null);
 			pM01SeaMap.add(lM01TimeUnit, null);
-//			pM01SeaMap.add(lM01HeightUnit, null);
-//			pM01SeaMap.add(lM01RangeUnit, null);
-//			pM01SeaMap.add(lM01Height, null);
-//			pM01SeaMap.add(lM01Range, null);
 			pM01SeaMap.add(lM01RepeatTime, null);
-			pM01SeaMap.add(lM01Colour, null);
 			pM01SeaMap.add(lM01Kennung, null);
 			pM01SeaMap.add(lM01Name, null);
 			pM01SeaMap.add(lM01Props02, null);
@@ -869,7 +922,7 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(lM01Region, null);
 			pM01SeaMap.add(lM01Head, null);
 			pM01SeaMap.add(lM01Icon01, null);
-			pM01SeaMap.add(getCbM01Region(), null);
+			pM01SeaMap.add(getTbM01Region(), null);
 			pM01SeaMap.add(getCbM01TypeOfMark(), null);
 			pM01SeaMap.add(getCbM01StyleOfMark(), null);
 			pM01SeaMap.add(getBM01Save(), null);
@@ -881,10 +934,7 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(getTfM01Name(), null);
 			pM01SeaMap.add(getBM01Close(), null);
 			pM01SeaMap.add(getTfM01RepeatTime(), null);
-//			pM01SeaMap.add(getTfM01Range(), null);
-//			pM01SeaMap.add(getTfM01Height(), null);
 			pM01SeaMap.add(getCbM01Kennung(), null);
-			pM01SeaMap.add(getCbM01Colour(), null);
 			pM01SeaMap.add(getTfM01FireMark(), null);
 			pM01SeaMap.add(getCM01IconVisible(), null);
 		}
@@ -947,7 +997,7 @@ public class SmpDialogAction extends JosmAction {
 						if (buoy.getRegion() != SeaMark.IALA_B) {
 							buoy.setColour(SeaMark.RED);
 							buoy.setRegion(SeaMark.IALA_A);
-							cbM01Region.setSelectedIndex(SeaMark.IALA_A);
+							tbM01Region.setSelected(SeaMark.IALA_A);
 						} else {
 							buoy.setColour(SeaMark.GREEN);
 						}
@@ -959,7 +1009,7 @@ public class SmpDialogAction extends JosmAction {
 						if (buoy.getRegion() != SeaMark.IALA_B) {
 							buoy.setColour(SeaMark.GREEN);
 							buoy.setRegion(SeaMark.IALA_A);
-							cbM01Region.setSelectedIndex(SeaMark.IALA_A);
+							tbM01Region.setSelected(SeaMark.IALA_A);
 						} else {
 							buoy.setColour(SeaMark.RED);
 						}
@@ -971,7 +1021,7 @@ public class SmpDialogAction extends JosmAction {
 						if (buoy.getRegion() != SeaMark.IALA_B) {
 							buoy.setColour(SeaMark.RED_GREEN_RED);
 							buoy.setRegion(SeaMark.IALA_A);
-							cbM01Region.setSelectedIndex(SeaMark.IALA_A);
+							tbM01Region.setSelected(SeaMark.IALA_A);
 						} else {
 							buoy.setColour(SeaMark.GREEN_RED_GREEN);
 						}
@@ -983,7 +1033,7 @@ public class SmpDialogAction extends JosmAction {
 						if (buoy.getRegion() != SeaMark.IALA_B) {
 							buoy.setColour(SeaMark.GREEN_RED_GREEN);
 							buoy.setRegion(SeaMark.IALA_A);
-							cbM01Region.setSelectedIndex(SeaMark.IALA_A);
+							tbM01Region.setSelected(SeaMark.IALA_A);
 						} else {
 							buoy.setColour(SeaMark.RED_GREEN_RED);
 						}
@@ -1036,23 +1086,30 @@ public class SmpDialogAction extends JosmAction {
 		return cbM01TypeOfMark;
 	}
 
-	private JComboBox getCbM01Region() {
-		if (cbM01Region == null) {
-			cbM01Region = new JComboBox();
+	private JToggleButton getTbM01Region() {
+		if (tbM01Region == null) {
+			tbM01Region = new JToggleButton();
 
-			// Inhalt der ComboBox
-			cbM01Region.addItem("Not set");
-			cbM01Region.addItem("IALA-A");
-			cbM01Region.addItem("IALA-B");
+			tbM01Region.setBounds(new Rectangle(60, 55, 80, 25));
+			tbM01Region.setFont(new Font("Dialog", Font.PLAIN, 12));
+			tbM01Region.setEnabled(false);
+			if (Main.pref.get("tomsplugin.IALA").equals("B")) {
+				tbM01Region.setSelected(true);
+				tbM01Region.setText("IALA-B");
+			} else {
+				tbM01Region.setSelected(false);
+				tbM01Region.setText("IALA-A");
+			}
 
-			cbM01Region.setBounds(new Rectangle(60, 55, 100, 25));
-			cbM01Region.setEditable(false);
-			cbM01Region.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cbM01Region.setEnabled(true);
-
-			cbM01Region.addActionListener(new java.awt.event.ActionListener() {
+			tbM01Region.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					buoy.setRegion(cbM01Region.getSelectedIndex());
+					if (tbM01Region.isSelected()) {
+						buoy.setRegion(true);
+						tbM01Region.setText("IALA-B");
+					} else {
+						buoy.setRegion(false);
+						tbM01Region.setText("IALA-A");
+					}
 					if (buoy instanceof BuoyLat)
 						buoy.setLightColour();
 					buoy.paintSign();
@@ -1060,7 +1117,7 @@ public class SmpDialogAction extends JosmAction {
 			});
 		}
 
-		return cbM01Region;
+		return tbM01Region;
 	}
 
 	private JComboBox getCbM01StyleOfMark() {
@@ -1224,7 +1281,7 @@ public class SmpDialogAction extends JosmAction {
 	private JTextField getTfM01RepeatTime() {
 		if (tfM01RepeatTime == null) {
 			tfM01RepeatTime = new JTextField();
-			tfM01RepeatTime.setBounds(new Rectangle(90, 250, 30, 20));
+			tfM01RepeatTime.setBounds(new Rectangle(290, 230, 30, 20));
 			tfM01RepeatTime.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String s = tfM01RepeatTime.getText();
@@ -1245,60 +1302,6 @@ public class SmpDialogAction extends JosmAction {
 		}
 
 		return tfM01RepeatTime;
-	}
-
-	private JTextField getTfM01Range() {
-		if (tfM01Range == null) {
-			tfM01Range = new JTextField();
-			tfM01Range.setBounds(new Rectangle(285, 250, 30, 20));
-			tfM01Range.setEnabled(false);
-			tfM01Range.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					String s = tfM01Range.getText();
-
-					buoy.setRange(s);
-					buoy.paintSign();
-				}
-			});
-
-			tfM01Range.addFocusListener(new java.awt.event.FocusAdapter() {
-				public void focusLost(java.awt.event.FocusEvent e) {
-					String s = tfM01Range.getText();
-
-					buoy.setRange(s);
-					buoy.paintSign();
-				}
-			});
-		}
-
-		return tfM01Range;
-	}
-
-	private JTextField getTfM01Height() {
-		if (tfM01Height == null) {
-			tfM01Height = new JTextField();
-			tfM01Height.setBounds(new Rectangle(185, 250, 30, 20));
-			tfM01Height.setEnabled(false);
-			tfM01Height.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					String s = tfM01Height.getText();
-
-					buoy.setHeight(s);
-					buoy.paintSign();
-				}
-			});
-
-			tfM01Height.addFocusListener(new java.awt.event.FocusAdapter() {
-				public void focusLost(java.awt.event.FocusEvent e) {
-					String s = tfM01Height.getText();
-
-					buoy.setHeight(s);
-					buoy.paintSign();
-				}
-			});
-		}
-
-		return tfM01Height;
 	}
 
 	private JComboBox getCbM01Kennung() {
@@ -1351,32 +1354,6 @@ public class SmpDialogAction extends JosmAction {
 		}
 
 		return cbM01Kennung;
-	}
-
-	private JComboBox getCbM01Colour() {
-		if (cbM01Colour == null) {
-			cbM01Colour = new JComboBox();
-			cbM01Colour.setBounds(new Rectangle(285, 230, 50, 20));
-			cbM01Colour.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					String it = (String) cbM01Colour.getSelectedItem();
-
-					if (it == null)
-						return;
-
-					if (it.compareTo("Not set") == 0)
-						return;
-
-					if (buoy == null) {
-						return;
-					}
-					buoy.setLightColour(it);
-					buoy.paintSign();
-				}
-			});
-		}
-
-		return cbM01Colour;
 	}
 
 	private JTextField getTfM01FireMark() {

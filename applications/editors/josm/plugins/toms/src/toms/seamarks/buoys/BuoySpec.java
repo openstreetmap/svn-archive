@@ -27,12 +27,9 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
 
-		dlg.cbM01Colour.removeAllItems();
-		dlg.cbM01Colour.addItem("W");
-		dlg.cbM01Colour.setSelectedIndex(0);
-		dlg.cbM01Colour.setEnabled(false);
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
+		dlg.tbM01Region.setEnabled(false);
 
 		setColour(SeaMark.YELLOW);
 		setLightColour("W");

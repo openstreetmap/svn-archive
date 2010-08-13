@@ -46,14 +46,16 @@ abstract public class Buoy extends SeaMark {
 		StyleIndex = styleIndex;
 	}
 
-	private int Region = 0;
+	private boolean Region = false;
 
-	public int getRegion() {
+	public boolean getRegion() {
 		return Region;
 	}
 
-	public void setRegion(int region) {
+	public void setRegion(boolean region) {
 		Region = region;
+		dlg.tbM01Region.setSelected(region);
+		dlg.tbM01Region.setText(region ? "IALA-B" : "IALA-A");
 	}
 
 	private boolean Fired = false;

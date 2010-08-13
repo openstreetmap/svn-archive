@@ -30,13 +30,10 @@ public class BuoyIsol extends Buoy {
 		dlg.cbM01Kennung.addItem("Not set");
 		dlg.cbM01Kennung.addItem("Fl(2)");
 
-		dlg.cbM01Colour.removeAllItems();
-		dlg.cbM01Colour.addItem("W");
-		dlg.cbM01Colour.setSelectedIndex(0);
-		dlg.cbM01Colour.setEnabled(false);
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(true);
 		dlg.cM01TopMark.setEnabled(false);
+		dlg.tbM01Region.setEnabled(false);
 
 		setColour(SeaMark.BLACK_RED_BLACK);
 		setLightColour("W");
@@ -242,16 +239,20 @@ public class BuoyIsol extends Buoy {
 				setStyleIndex(ISOL_SPAR);
 			else
 				ret = false;
-		}
-		if (keys.containsKey("seamark:beacon_isolated_danger:shape")) {
-			str = keys.get("seamark:beacon_isolated_danger:shape");
+		} else if (keys.containsKey("seamark:beacon_isolated_danger:colour")) {
+			if (keys.containsKey("seamark:beacon_isolated_danger:shape")) {
+				str = keys.get("seamark:beacon_isolated_danger:shape");
 
-			if (str.compareTo("stake") == 0)
+				if (str.compareTo("tower") == 0)
+					setStyleIndex(ISOL_TOWER);
+				else
+					setStyleIndex(ISOL_BEACON);
+			} else
 				setStyleIndex(ISOL_BEACON);
-			else
-				ret = false;
+		} else if ((keys.containsKey("seamark:type") == true)
+				&& (keys.get("seamark:type").equals("light_float"))) {
+			setStyleIndex(CARD_FLOAT);
 		}
-
 		return ret;
 	}
 

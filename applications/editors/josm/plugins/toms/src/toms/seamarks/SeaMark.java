@@ -55,9 +55,8 @@ abstract public class SeaMark {
 	/**
 	 * Regions
 	 */
-	public final static int UNKNOWN_REGION = 0;
-	public final static int IALA_A = 1;
-	public final static int IALA_B = 2;
+	public final static boolean IALA_A = false;
+	public final static boolean IALA_B = true;
 
 	/**
 	 * Shapes - correspond to StyleIndex

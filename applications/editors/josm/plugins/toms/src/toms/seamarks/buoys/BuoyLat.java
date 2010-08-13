@@ -31,18 +31,12 @@ public class BuoyLat extends Buoy {
 		dlg.cbM01Kennung.addItem("IQ");
 		dlg.cbM01Kennung.setSelectedIndex(0);
 
-		dlg.cbM01Colour.removeAllItems();
-		dlg.cbM01Colour.addItem("");
-		dlg.cbM01Colour.addItem("R");
-		dlg.cbM01Colour.addItem("G");
-		dlg.cbM01Colour.setSelectedIndex(0);
-		dlg.cbM01Colour.setEnabled(false);
-
 		setBuoyIndex(type);
 		setStyleIndex(0);
 		setLightColour();
 		setFired(false);
 		setTopMark(false);
+		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
 		refreshStyles();
 
@@ -118,7 +112,7 @@ public class BuoyLat extends Buoy {
 		String image = "/images/Lateral";
 
 		int cat = getBuoyIndex();
-		int region = getRegion();
+		boolean region = getRegion();
 		int style = getStyleIndex();
 
 		switch (getBuoyIndex()) {
@@ -350,7 +344,7 @@ public class BuoyLat extends Buoy {
 
 			image += ".png";
 
-// System.out.println("finename: " + image);
+			// System.out.println("finename: " + image);
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 		} else
 			dlg.lM01Icon01.setIcon(null);
@@ -700,8 +694,9 @@ public class BuoyLat extends Buoy {
 		}
 
 		saveTopMarkData(shape, colour);
-
 		saveLightData(colour);
+
+		Main.pref.put("tomsplugin.IALA", getRegion() ? "B" : "A");
 	}
 
 	public boolean parseTopMark(Node node) {
@@ -722,9 +717,12 @@ public class BuoyLat extends Buoy {
 			switch (cat) {
 			case PORT_HAND:
 			case PREF_PORT_HAND:
-				if (str.compareTo("cylinder") == 0) {
+				if (str.equals("cylinder")) {
 					setTopMark(true);
-
+					setRegion(IALA_A);
+				} else if (str.equals("cone, point up")) {
+					setTopMark(true);
+					setRegion(IALA_B);
 				} else {
 					setTopMark(false);
 					ret = false;
@@ -733,9 +731,12 @@ public class BuoyLat extends Buoy {
 
 			case STARBOARD_HAND:
 			case PREF_STARBOARD_HAND:
-				if (str.compareTo("cone, point up") == 0 || str.compareTo("cone") == 0) {
+				if (str.equals("cone, point up")) {
 					setTopMark(true);
-
+					setRegion(IALA_A);
+				} else if (str.equals("cylinder")) {
+					setTopMark(true);
+					setRegion(IALA_B);
 				} else {
 					setTopMark(false);
 					ret = false;
@@ -745,14 +746,11 @@ public class BuoyLat extends Buoy {
 			default:
 				ret = false;
 			}
-
 			if (!hasTopMark()) {
 				setErrMsg("Parse-Error: Topmark falsch");
 				ret = false;
 			}
-
 		}
-
 		return ret;
 	}
 
@@ -778,6 +776,7 @@ public class BuoyLat extends Buoy {
 			setLightColour(str);
 
 			if (isFired()) {
+
 			} else {
 				if (getErrMsg() == null)
 					setErrMsg("Parse-Error: Befeuerung falsch");
@@ -791,13 +790,11 @@ public class BuoyLat extends Buoy {
 	}
 
 	public void setLightColour() {
-		if (getRegion() != IALA_B
+		if (getRegion() == IALA_A
 				&& (getBuoyIndex() == PORT_HAND || getBuoyIndex() == PREF_PORT_HAND)) {
 			super.setLightColour("R");
-			dlg.cbM01Colour.setSelectedIndex(RED_LIGHT);
 		} else {
 			super.setLightColour("G");
-			dlg.cbM01Colour.setSelectedIndex(GREEN_LIGHT);
 		}
 	}
 
@@ -811,23 +808,39 @@ public class BuoyLat extends Buoy {
 		switch (cat) {
 		case PORT_HAND:
 		case PREF_PORT_HAND:
-			if (str.compareTo("red") == 0) {
-
-				setFired(true);
-				super.setLightColour("R");
+			if (getRegion() == IALA_A) {
+				if (str.compareTo("red") == 0) {
+					setFired(true);
+					super.setLightColour("R");
+				} else {
+					super.setLightColour("");
+				}
 			} else {
-				super.setLightColour("");
+				if (str.compareTo("green") == 0) {
+					setFired(true);
+					super.setLightColour("G");
+				} else {
+					super.setLightColour("");
+				}
 			}
-
 			break;
 
 		case STARBOARD_HAND:
 		case PREF_STARBOARD_HAND:
-			if (str.compareTo("green") == 0) {
-				setFired(true);
-				super.setLightColour("G");
+			if (getRegion() == IALA_A) {
+				if (str.compareTo("green") == 0) {
+					setFired(true);
+					super.setLightColour("G");
+				} else {
+					super.setLightColour("");
+				}
 			} else {
-				super.setLightColour("");
+				if (str.compareTo("red") == 0) {
+					setFired(true);
+					super.setLightColour("R");
+				} else {
+					super.setLightColour("");
+				}
 			}
 			break;
 
@@ -855,10 +868,6 @@ public class BuoyLat extends Buoy {
 					setStyleIndex(LAT_PILLAR);
 				else if (str.compareTo("spar") == 0)
 					setStyleIndex(LAT_SPAR);
-				else if (str.compareTo("float") == 0)
-					setStyleIndex(LAT_FLOAT);
-				else if (str.compareTo("perch") == 0)
-					setStyleIndex(LAT_PERCH);
 				else
 					ret = false;
 				break;
@@ -881,10 +890,6 @@ public class BuoyLat extends Buoy {
 					setStyleIndex(LAT_PILLAR);
 				else if (str.compareTo("spar") == 0)
 					setStyleIndex(LAT_SPAR);
-				else if (str.compareTo("float") == 0)
-					setStyleIndex(LAT_FLOAT);
-				else if (str.compareTo("perch") == 0)
-					setStyleIndex(LAT_PERCH);
 				else
 					ret = false;
 				break;
@@ -903,50 +908,18 @@ public class BuoyLat extends Buoy {
 			default:
 				ret = false;
 			}
-		} else if (keys.containsKey("seamark:beacon_lateral:shape")) {
-			str = keys.get("seamark:beacon_lateral:shape");
-
-			int cat = getBuoyIndex();
-			switch (cat) {
-			case PORT_HAND:
-				if (str.compareTo("stake") == 0)
-					setStyleIndex(LAT_BEACON);
-				else if (str.compareTo("tower") == 0)
+		} else if (keys.containsKey("seamark:beacon_lateral:colour")) {
+			if (keys.containsKey("seamark:beacon_lateral:shape")) {
+				str = keys.get("seamark:beacon_lateral:shape");
+				if (str.compareTo("tower") == 0)
 					setStyleIndex(LAT_TOWER);
 				else
-					ret = false;
-				break;
-
-			case PREF_PORT_HAND:
-				if (str.compareTo("stake") == 0)
 					setStyleIndex(LAT_BEACON);
-				else if (str.compareTo("tower") == 0)
-					setStyleIndex(LAT_TOWER);
-				else
-					ret = false;
-				break;
-
-			case STARBOARD_HAND:
-				if (str.compareTo("stake") == 0)
-					setStyleIndex(LAT_BEACON);
-				else if (str.compareTo("tower") == 0)
-					setStyleIndex(LAT_TOWER);
-				else
-					ret = false;
-				break;
-
-			case PREF_STARBOARD_HAND:
-				if (str.compareTo("stake") == 0)
-					setStyleIndex(LAT_BEACON);
-				else if (str.compareTo("tower") == 0)
-					setStyleIndex(LAT_TOWER);
-				else
-					ret = false;
-				break;
-
-			default:
-				ret = false;
-			}
+			} else
+				setStyleIndex(LAT_BEACON);
+		} else if ((keys.containsKey("seamark:type") == true)
+				&& (keys.get("seamark:type").equals("light_float"))) {
+			setStyleIndex(LAT_FLOAT);
 		}
 		return ret;
 	}

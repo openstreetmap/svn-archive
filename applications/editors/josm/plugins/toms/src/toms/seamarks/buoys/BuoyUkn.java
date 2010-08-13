@@ -12,22 +12,21 @@ public class BuoyUkn extends Buoy {
 	public BuoyUkn(SmpDialogAction dia, String Msg) {
 		super(dia);
 
-		setBuoyIndex(0);
 		if (dlg.cbM01Kennung != null) {
 			dlg.cbM01Kennung.removeAllItems();
 			dlg.cbM01Kennung.addItem("Not set");
 		}
 
-		dlg.cbM01Colour.removeAllItems();
-		dlg.cbM01Colour.setEnabled(false);
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
+		dlg.tbM01Region.setEnabled(false);
 
 		setErrMsg(Msg);
 		setName("");
 		setTopMark(false);
 		setFired(false);
 		setValid(false);
+		setBuoyIndex(0);
 
 		paintSign();
 	}

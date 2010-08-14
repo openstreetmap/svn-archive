@@ -749,15 +749,10 @@
 
 		<!-- Highway area casings -->
 		<rule e="way" k="area" v="yes|true">
-			<rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
-				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
-					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
-				</rule>
-				<else>
-					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
-				</else>
-			</rule>
-			<else>
+		  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes"></rule>
+		  <else>
+		    <rule e="way" k="cycleway" v="cyclestreet"></rule>
+		    <else>
 
 			<rule e="way" k="highway" v="track">
 				<area class="highway-casing highway-track-area-back-casing" smart-linecap="no"/>
@@ -837,7 +832,10 @@
 			<rule e="way" k="highway" v="living_street">
 				<area class="highway-casing highway-livingstreet-casing highway-livingstreet-area-casing no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="cycleroad">
+		    </else>
+		  </else>
+
+		  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
 				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
 				</rule>
@@ -845,6 +843,32 @@
 					<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
 				</else>
 			</rule>
+			<else>
+				<rule e="way" k="cycleway" v="cyclestreet">
+					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+						<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
+					</rule>
+					<else>
+						<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="highway" v="cycleroad">
+						<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+							<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
+						</rule>
+						<else>
+							<area class="highway-casing highway-cycleroad-casing highway-cycleroad-area-casing no-bezier"/>
+						</else>
+					</rule>
+				</else>
+		  </else>
+
+		  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes"></rule>
+		  <else>
+		    <rule e="way" k="cycleway" v="cyclestreet"></rule>
+		    <else>
+
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-casing highway-tertiary-link-casing highway-tertiary-link-area-casing no-bezier"/>
 			</rule>
@@ -876,22 +900,17 @@
 				<area class="highway-casing highway-motorway-casing highway-motorway-area-casing no-bezier"/>
 			</rule>
 
-			</else>
-
+		    </else>
+		  </else>
 		</rule>
 
 		<!-- Linear casings -->
 		<rule e="way" k="tunnel" v="~|no|false">
 			<rule e="way" k="area" v="~|no|false">
-				<rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
-					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
-						<line class="highway-casing highway-cycleroad-casing"/>
-					</rule>
-					<else>
-						<line class="highway-casing highway-cycleroad-casing"/>
-					</else>
-				</rule>
-				<else>
+			  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes"></rule>
+			  <else>
+			    <rule e="way" k="cycleway" v="cyclestreet"></rule>
+			    <else>
 
 				<rule e="way" k="highway" v="track">
 					<line class="highway-casing highway-track-back-casing" smart-linecap="no"/>
@@ -1023,14 +1042,42 @@
 					<line class="highway-casing highway-livingstreet-casing"/>
 				</rule>
 
-				<rule e="way" k="highway" v="cycleroad">
+			    </else>
+			  </else>
+
+			  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
 					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 						<line class="highway-casing highway-cycleroad-casing"/>
 					</rule>
 					<else>
 						<line class="highway-casing highway-cycleroad-casing"/>
 					</else>
-				</rule>
+			  </rule>
+			  <else>
+					<rule e="way" k="cycleway" v="cyclestreet">
+						<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+							<line class="highway-casing highway-cycleroad-casing"/>
+						</rule>
+						<else>
+							<line class="highway-casing highway-cycleroad-casing"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="highway" v="cycleroad">
+							<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+								<line class="highway-casing highway-cycleroad-casing"/>
+							</rule>
+							<else>
+								<line class="highway-casing highway-cycleroad-casing"/>
+							</else>
+						</rule>
+					</else>
+			  </else>
+
+			  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes"></rule>
+			  <else>
+			    <rule e="way" k="cycleway" v="cyclestreet"></rule>
+			    <else>
 
 				<rule e="way" k="highway" v="tertiary_link">
 					<rule e="way" k="cycleway" v="track|lane|opposite_track|opposite_lane|yes">
@@ -1263,7 +1310,8 @@
 					</else>
 				</rule>
 
-				</else>
+			    </else>
+			  </else>
 
 				<rule e="way" k="railway" v="*">
 					<rule e="way" k="construction" v="*">
@@ -1334,7 +1382,6 @@
 						</else>
 					</else>
 				</rule>
-
 			</rule>
 		</rule>
 		
@@ -1356,16 +1403,10 @@
 		<!-- Highway area cores -->
 		<rule e="way" k="area" v="yes|true">
 
-			<rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
-				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
-					<area class="highway-core highway-cycleroad-area-1 no-bezier"/>
-					<area class="highway-core highway-cycleroad-area-2 no-bezier"/>
-				</rule>
-				<else>
-					<area class="highway-core highway-cycleroad-area-3 no-bezier"/>
-				</else>
-			</rule>
-			<else>
+		  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes"></rule>
+		  <else>
+		    <rule e="way" k="cycleway" v="cyclestreet"></rule>
+		    <else>
 
 			<rule e="way" k="highway" v="footway|footpath">
 				<area class="highway-core highway-footway-area no-bezier"/>
@@ -1443,7 +1484,11 @@
 				<area class="highway-core highway-livingstreet-area-1 no-bezier"/>
 				<area class="highway-core highway-livingstreet-area-2 no-bezier"/>
 			</rule>
-			<rule e="way" k="highway" v="cycleroad">
+
+		    </else>
+		  </else>
+
+		  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
 				<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 					<area class="highway-core highway-cycleroad-area-1 no-bezier"/>
 					<area class="highway-core highway-cycleroad-area-2 no-bezier"/>
@@ -1452,6 +1497,34 @@
 					<area class="highway-core highway-cycleroad-area-3 no-bezier"/>
 				</else>
 			</rule>
+			<else>
+				<rule e="way" k="cycleway" v="cyclestreet">
+					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+						<area class="highway-core highway-cycleroad-area-1 no-bezier"/>
+						<area class="highway-core highway-cycleroad-area-2 no-bezier"/>
+					</rule>
+					<else>
+						<area class="highway-core highway-cycleroad-area-3 no-bezier"/>
+					</else>
+				</rule>
+				<else>
+					<rule e="way" k="highway" v="cycleroad">
+						<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+							<area class="highway-core highway-cycleroad-area-1 no-bezier"/>
+							<area class="highway-core highway-cycleroad-area-2 no-bezier"/>
+						</rule>
+						<else>
+							<area class="highway-core highway-cycleroad-area-3 no-bezier"/>
+						</else>
+					</rule>
+				</else>
+		  </else>
+
+		  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes"></rule>
+		  <else>
+		    <rule e="way" k="cycleway" v="cyclestreet"></rule>
+		    <else>
+
 			<rule e="way" k="highway" v="tertiary_link">
 				<area class="highway-core highway-tertiary-link-area no-bezier"/>
 			</rule>
@@ -1483,8 +1556,8 @@
 				<area class="highway-core highway-motorway-area no-bezier"/>
 			</rule>
 
-			</else>
-
+		    </else>
+		  </else>
 		</rule>
 		
 		<!-- Buildings -->
@@ -1502,16 +1575,10 @@
 		<rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="area" v="~|false|no">
 
-				<rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
-					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
-						<line class="highway-core highway-cycleroad-core-1" smart-linecap="no"/>
-						<line class="highway-core highway-cycleroad-core-2" smart-linecap="no"/>
-					</rule>
-					<else>
-						<line class="highway-core highway-cycleroad-core-3"/>
-					</else>
-				</rule>
-				<else>
+			  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes"></rule>
+			  <else>
+			    <rule e="way" k="cycleway" v="cyclestreet"></rule>
+			    <else>
 
 				<rule e="way" k="highway" v="ford">
 					<line class="highway-core highway-ford-core" smart-linecap="no"/>
@@ -1623,7 +1690,11 @@
 					<line class="highway-core highway-livingstreet-core-1" smart-linecap="no"/>
 					<line class="highway-core highway-livingstreet-core-2" smart-linecap="no"/>
 				</rule>
-				<rule e="way" k="highway" v="cycleroad">
+
+			    </else>
+			  </else>
+
+			  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes">
 					<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
 						<line class="highway-core highway-cycleroad-core-1" smart-linecap="no"/>
 						<line class="highway-core highway-cycleroad-core-2" smart-linecap="no"/>
@@ -1632,6 +1703,34 @@
 						<line class="highway-core highway-cycleroad-core-3"/>
 					</else>
 				</rule>
+				<else>
+					<rule e="way" k="cycleway" v="cyclestreet">
+						<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+							<line class="highway-core highway-cycleroad-core-1" smart-linecap="no"/>
+							<line class="highway-core highway-cycleroad-core-2" smart-linecap="no"/>
+						</rule>
+						<else>
+							<line class="highway-core highway-cycleroad-core-3"/>
+						</else>
+					</rule>
+					<else>
+						<rule e="way" k="highway" v="cycleroad">
+							<rule e="way" k="motorcar|motor_vehicle" v="yes|destination|private">
+								<line class="highway-core highway-cycleroad-core-1" smart-linecap="no"/>
+								<line class="highway-core highway-cycleroad-core-2" smart-linecap="no"/>
+							</rule>
+							<else>
+								<line class="highway-core highway-cycleroad-core-3"/>
+							</else>
+						</rule>
+					</else>
+			  </else>
+
+			  <rule e="way" k="bicycle_road|cycleroad|cyclestreet" v="yes"></rule>
+			  <else>
+			    <rule e="way" k="cycleway" v="cyclestreet"></rule>
+			    <else>
+
 				<rule e="way" k="highway" v="tertiary_link">
 					<line class="highway-core highway-tertiary-link-core"/>
 				</rule>
@@ -1662,8 +1761,8 @@
 				<rule e="way" k="highway" v="motorway">
 					<line class="highway-core highway-motorway-core"/>
 				</rule>
-
-				</else>
+			    </else>
+			  </else>
 
 				<rule e="way" k="railway" v="*">
 					<rule e="way" k="construction" v="*">
@@ -3771,14 +3870,14 @@
 			.highway-livingstreet-casing            { stroke-width: 2.5px;  stroke: #707070; }
 			.highway-livingstreet-area-casing       { stroke-width: 0.25px; }
 			.highway-livingstreet-core-1            { stroke-width: 2.25px; stroke: #ffffff; }
-			.highway-livingstreet-core-2            { stroke-width: 2.25px; stroke: #e5e0c2; stroke-dasharray: 0.3,0.8; stroke-linecap: butt; }
+			.highway-livingstreet-core-2            { stroke-width: 2.25px; stroke: #e5e0c2; stroke-dasharray: 0.55,0.8; stroke-linecap: butt; }
 			.highway-livingstreet-area-1            { fill: #ffffff; }
 			.highway-livingstreet-area-2            { fill: url(#livingstreet-pattern); stroke: #e5e0c2; stroke-width: 0px; }
 			
 			.highway-cycleroad-casing               { stroke-width: 2.5px;  stroke: #707070; }
 			.highway-cycleroad-area-casing          { stroke-width: 0.25px; }
 			.highway-cycleroad-core-1               { stroke-width: 2.25px; stroke: #ffffff; }
-			.highway-cycleroad-core-2               { stroke-width: 2.25px; stroke: #d1fad1; stroke-dasharray: 0.3,0.8; stroke-linecap: butt; }
+			.highway-cycleroad-core-2               { stroke-width: 2.25px; stroke: #d1fad1; stroke-dasharray: 0.55,0.8; stroke-linecap: butt; }
 			.highway-cycleroad-area-1               { fill: #ffffff; }
 			.highway-cycleroad-area-2               { fill: url(#cycleroad-pattern); stroke: #d1fad1; stroke-width: 0px; }
 			.highway-cycleroad-core-3               { stroke-width: 2.25px;   stroke: #d1fad1; }

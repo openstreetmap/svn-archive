@@ -8,18 +8,36 @@
 <!ENTITY % entities SYSTEM "/home/project/o/s/m/osm/data/mapnik/inc/entities.xml.inc">
 %entities;
 ]>	
+
+<!--
+Changeset:
+
+________________________________________________________________
+V_0.2
+
+________________________________________________________________
+V_0.1
+2010-08-13
+mtb:scale und mtb:scale:uphill werden ausgewertet
+________________________________________________________________
+
+
+-->
+
+
 <Map bgcolor="transparent" srs="&srs900913;" minimum_version="0.6.1">
   &fontset-settings;
+  
 	<Style name="mtb:scale">
 		<Rule>
-			&maxscale_zoom10;
+			&maxscale_zoom16;
 			&minscale_zoom18;
 			<Filter>[mtb:scale] = '1'</Filter>
 			<LinePatternSymbolizer file="Icon/1.png" type="png" width="100" height="20"></LinePatternSymbolizer>	
 		</Rule>
 		
 		<Rule>
-			&maxscale_zoom10;
+			&maxscale_zoom16;
 			&minscale_zoom18;
 			<Filter>[mtb:scale] = '2'</Filter>
 			<LinePatternSymbolizer file="Icon/2.png" type="png" width="100" height="20"></LinePatternSymbolizer>	
@@ -27,21 +45,21 @@
 
 			
 		<Rule>
-			&maxscale_zoom10;
+			&maxscale_zoom16;
 			&minscale_zoom18;
 			<Filter>[mtb:scale] = '3'</Filter>
 			<LinePatternSymbolizer file="Icon/3.png" type="png" width="100" height="20"></LinePatternSymbolizer>	
 		</Rule>	
 		
 		<Rule>
-			&maxscale_zoom10;
+			&maxscale_zoom16;
 			&minscale_zoom18;
 			<Filter>[mtb:scale] = '4'</Filter>
 			<LinePatternSymbolizer file="Icon/4.png" type="png" width="100" height="20"></LinePatternSymbolizer>	
 		</Rule>	
 
 		<Rule>
-			&maxscale_zoom10;
+			&maxscale_zoom16;
 			&minscale_zoom18;
 			<Filter>[mtb:scale] = '5'</Filter>
 			<LinePatternSymbolizer file="Icon/5.png" type="png" width="100" height="20"></LinePatternSymbolizer>	

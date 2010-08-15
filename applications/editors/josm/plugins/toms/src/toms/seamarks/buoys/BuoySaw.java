@@ -23,6 +23,7 @@ public class BuoySaw extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Pillar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Spar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Sphere Buoy");
+		dlg.cbM01StyleOfMark.addItem("Beacon");
 		dlg.cbM01StyleOfMark.addItem("Float");
 
 		dlg.cbM01Kennung.removeAllItems();
@@ -64,6 +65,9 @@ public class BuoySaw extends Buoy {
 			break;
 		case SAFE_SPHERE:
 			image += "_Sphere";
+			break;
+		case SAFE_BEACON:
+			image += "_Beacon";
 			break;
 		case SAFE_FLOAT:
 			image += "_Float";
@@ -118,22 +122,39 @@ public class BuoySaw extends Buoy {
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_safe_water:shape", "sphere"));
 			break;
+		case SAFE_BEACON:
+			super.saveSign("beacon_safe_water");
+			break;
 		case SAFE_FLOAT:
 			super.saveSign("light_float");
 			break;
 		default:
 		}
-		if (getStyleIndex() == SAFE_FLOAT) {
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:light_float:colour_pattern", "vertical stripes"));
-			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:light_float:colour", "red;white"));
-		} else {
+
+		switch (getStyleIndex()) {
+		case SAFE_PILLAR:
+		case SAFE_SPAR:
+		case SAFE_SPHERE:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_safe_water:colour_pattern", "vertical stripes"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_safe_water:colour", "red;white"));
+			break;
+		case SAFE_BEACON:
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_safe_water:colour_pattern", "vertical stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_safe_water:colour", "red;white"));
+			break;
+		case SAFE_FLOAT:
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:colour_pattern", "vertical stripes"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:colour", "red;white"));
+			break;
+		default:
 		}
+
 		saveTopMarkData("spherical", "red");
 
 		saveLightData("white");
@@ -228,6 +249,9 @@ public class BuoySaw extends Buoy {
 		} else if ((keys.containsKey("seamark:type") == true)
 				&& (keys.get("seamark:type").equals("light_float"))) {
 			setStyleIndex(SAFE_FLOAT);
+		} else if ((keys.containsKey("seamark:type") == true)
+				&& (keys.get("seamark:type").equals("beacon_safe_water"))) {
+			setStyleIndex(SAFE_BEACON);
 		}
 
 		return ret;

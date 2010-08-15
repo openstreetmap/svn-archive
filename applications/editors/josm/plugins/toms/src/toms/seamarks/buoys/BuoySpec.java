@@ -23,6 +23,8 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Pillar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Spar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Sphere Buoy");
+		dlg.cbM01StyleOfMark.addItem("Barrel");
+		dlg.cbM01StyleOfMark.addItem("Beacon");
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
@@ -60,6 +62,12 @@ public class BuoySpec extends Buoy {
 		case SPEC_SPHERE:
 			image += "_Sphere";
 			break;
+		case SPEC_BARREL:
+			image += "_Barrel";
+			break;
+		case SPEC_BEACON:
+			image += "_Beacon";
+			break;
 		default:
 		}
 
@@ -94,29 +102,42 @@ public class BuoySpec extends Buoy {
 			return;
 		}
 
-		super.saveSign("buoy_special_purpose");
-
 		switch (getStyleIndex()) {
 		case SPEC_PILLAR:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:shape", "pillar"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case SPEC_SPAR:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:shape", "spar"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case SPEC_SPHERE:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:shape", "sphere"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case SPEC_BARREL:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:shape", "barrel"));
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_special_purpose:colour", "yellow"));
+			break;
+		case SPEC_BEACON:
+			super.saveSign("beacon_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_special_purpose:colour", "yellow"));
 			break;
 		default:
 		}
-		Main.main.undoRedo.add(new ChangePropertyCommand(node,
-				"seamark:buoy_special_purpose:colour", "yellow"));
 
 		saveTopMarkData("x-shape", "yellow");
 
@@ -215,7 +236,9 @@ public class BuoySpec extends Buoy {
 				ret = false;
 		}
 
-		return ret;
+		if (keys.containsKey("seamark:beacon_special_purpose"))
+			setStyleIndex(SPEC_BEACON);
+			return ret;
 	}
 
 }

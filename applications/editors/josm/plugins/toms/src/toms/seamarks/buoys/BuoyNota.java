@@ -72,9 +72,12 @@ public class BuoyNota extends Buoy {
 		dlg.cM01TopMark.setEnabled(false);
 		dlg.cM01TopMark.setSelected(false);
 
-
 		switch (getStyleIndex()) {
 		case SeaMark.LIGHT_HOUSE:
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
+					"/images/Light_House.png")));
+			break;
+
 		case SeaMark.LIGHT_MAJOR:
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Light_Major.png")));

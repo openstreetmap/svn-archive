@@ -78,7 +78,8 @@ abstract public class SeaMark {
 	public final static int SAFE_PILLAR = 1;
 	public final static int SAFE_SPAR = 2;
 	public final static int SAFE_SPHERE = 3;
-	public final static int SAFE_FLOAT = 4;
+	public final static int SAFE_BEACON = 4;
+	public final static int SAFE_FLOAT = 5;
 	public final static int ISOL_PILLAR = 1;
 	public final static int ISOL_SPAR = 2;
 	public final static int ISOL_BEACON = 3;
@@ -88,6 +89,7 @@ abstract public class SeaMark {
 	public final static int SPEC_SPAR = 2;
 	public final static int SPEC_SPHERE = 3;
 	public final static int SPEC_BARREL = 4;
+	public final static int SPEC_BEACON = 5;
 	public final static int LIGHT_HOUSE = 1;
 	public final static int LIGHT_MAJOR = 2;
 	public final static int LIGHT_MINOR = 3;

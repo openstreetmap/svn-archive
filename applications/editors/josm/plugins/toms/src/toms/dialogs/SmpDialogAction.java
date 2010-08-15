@@ -167,7 +167,7 @@ public class SmpDialogAction extends JosmAction {
 	}
 
 	public SmpDialogAction() {
-		super(tr("Edit SeaMap Symbols"), "Smp", tr("Seamark Editor"), Shortcut
+		super(tr("Edit OpenSeaMap"), "Smp", tr("Seamark Editor"), Shortcut
 				.registerShortcut("tools:Semarks",
 						tr("Tool: {0}", tr("Seamark Editor")), KeyEvent.VK_S,
 						Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);

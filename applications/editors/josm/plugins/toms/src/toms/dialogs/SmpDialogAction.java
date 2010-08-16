@@ -1258,7 +1258,7 @@ public class SmpDialogAction extends JosmAction {
 		if (bM01Close == null) {
 			bM01Close = new JButton();
 			bM01Close.setBounds(new Rectangle(20, 290, 80, 20));
-			bM01Close.setText("Cancel");
+			bM01Close.setText("Close");
 			bM01Close.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					// aufraeumen

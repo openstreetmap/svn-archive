@@ -249,7 +249,7 @@ abstract public class Buoy extends SeaMark {
 			dlg.cbM01Kennung.setEnabled(true);
 
 			c = getLightChar();
-			if (c.compareTo("Q") == 0)
+			if (dlg.cbM01Kennung.getSelectedIndex() == 0)
 				dlg.tfM01RepeatTime.setEnabled(false);
 			else
 				dlg.tfM01RepeatTime.setEnabled(true);

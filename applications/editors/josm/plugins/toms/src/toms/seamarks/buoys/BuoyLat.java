@@ -38,6 +38,10 @@ public class BuoyLat extends Buoy {
 		setTopMark(false);
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
+		dlg.cM01Fired.setSelected(false);
+		dlg.cM01TopMark.setSelected(false);
+		dlg.tbM01Region.setEnabled(true);
+
 		refreshStyles();
 
 		paintSign();

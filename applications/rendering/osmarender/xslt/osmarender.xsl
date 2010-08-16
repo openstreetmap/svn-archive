@@ -1467,7 +1467,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 			</xsl:variable>
 
 			<xsl:message>
-				areaCenter: <xsl:value-of select="$center" />
+				areaCenter for <xsl:value-of select="@id" /> at: <xsl:value-of select="$center" />
 			</xsl:message>
 
 			<xsl:call-template name="renderText">
@@ -1545,7 +1545,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 			</xsl:variable>
 			
 			<xsl:message>
-				areaCenter: <xsl:value-of select="$center" />
+				areaCenter for <xsl:value-of select="@id" /> at: <xsl:value-of select="$center" />
 			</xsl:message>
 			
 			<xsl:call-template name="renderSymbol">

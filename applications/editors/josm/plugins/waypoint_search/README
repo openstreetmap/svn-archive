@@ -1,4 +1,8 @@
 README 
 ======
 
-Readme for your plugin 
+This plugin enables a user to search for waypoint imported from a gpx file.
+After the plugin is installed a new button is presented on the left side of the map window. 
+Pressing this buttons open the search dialog on the right side.
+Click on one of the search results/waypoints to move the map.
+

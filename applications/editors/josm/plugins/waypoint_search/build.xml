@@ -99,7 +99,7 @@
         ************************************************
     -->
             <manifest>
-                <attribute name="Author" value="Åsmund Realfsen"/>
+                <attribute name="Author" value="Åsmund Realfsen - realfsen at gmx.net"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.waypointSearch.WaypointSearchPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Enables searching for waypoint imported from gpx file."/>
@@ -120,8 +120,7 @@
     -->
 	
 
-    <target name="revision">
-    	
+    <target name="revision">  	
          <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
@@ -129,8 +128,7 @@
             <arg value="."/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <delete file="REVISION"/>  
-       	
+        <delete file="REVISION"/>     	
     </target>
 
     <!--

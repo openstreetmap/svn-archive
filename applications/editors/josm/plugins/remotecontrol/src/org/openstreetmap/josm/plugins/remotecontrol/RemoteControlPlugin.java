@@ -20,6 +20,10 @@ public class RemoteControlPlugin extends Plugin
     public RemoteControlPlugin(PluginInformation info)
     {
     	super(info);
+    	/*
+		System.out.println("constructor " + this.getClass().getName() + " (" + info.name +
+				" v " + info.version + " stage " + info.stage + ")");
+		*/
         restartServer();
     }
 
@@ -49,4 +53,16 @@ public class RemoteControlPlugin extends Plugin
             ioe.printStackTrace();
         }
     }
+
+    /**
+     * Add external external request handler.
+     * Can be used by other plug-ins that want to use remote control.
+     *
+     * @param handler The additional request handler.
+     */
+    public void addRequestHandler(String command, Class<? extends RequestHandler> handlerClass)
+    {
+        RequestProcessor.addRequestHandlerClass(command, handlerClass);
+    }
+    
 }

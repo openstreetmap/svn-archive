@@ -28,9 +28,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
@@ -309,6 +309,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	}
 
 	public class DownloadAction extends AbstractAction {
+		private static final long serialVersionUID = -7183852461015284020L;
 		public DownloadAction() {
 			super(tr("Download visible tiles"));
 		}

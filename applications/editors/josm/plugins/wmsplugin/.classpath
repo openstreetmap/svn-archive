@@ -4,5 +4,6 @@
 	<classpathentry including="images/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/remotecontrol"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

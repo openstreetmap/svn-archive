@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -38,7 +40,6 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginHandler;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.PluginProxy;
-import org.openstreetmap.josm.plugins.remotecontrol.RemoteControlPlugin;
 
 import wmsplugin.io.WMSLayerExporter;
 import wmsplugin.io.WMSLayerImporter;
@@ -60,6 +61,7 @@ public class WMSPlugin extends Plugin {
 	static private boolean menuEnabled = false;
 
 	static boolean remoteControlAvailable = false;
+	static String remoteControlVersion = null;
 
 	protected void initExporterAndImporter() {
 		ExtensionFileFilter.exporters.add(new WMSLayerExporter());
@@ -85,20 +87,21 @@ public class WMSPlugin extends Plugin {
 	 */
 	private void initRemoteControl() {
 		final String remotecontrolName = "remotecontrol";
-		final String remotecontrolVersion = "22675";
+		final String remotecontrolMinVersion = "22675";
 		for(PluginProxy pp: PluginHandler.pluginList)
 		{
 			PluginInformation info = pp.getPluginInformation();
 			if(remotecontrolName.equals(info.name))
 			{
-				if(remotecontrolVersion.compareTo(info.version) <= 0)
+				if(remotecontrolMinVersion.compareTo(info.version) <= 0)
 				{
 					remoteControlAvailable = true;
+					remoteControlVersion = info.version;
 				}
 				else
 				{
 					System.out.println("wmsplugin: remote control plugin version is " +
-							info.version + ", need " + remotecontrolVersion + " or newer");
+							info.version + ", need " + remotecontrolMinVersion + " or newer");
 				}
 				break;
 			}
@@ -106,12 +109,27 @@ public class WMSPlugin extends Plugin {
 
 		if(remoteControlAvailable)
 		{
+			remoteControlAvailable = false;
 			System.out.println("wmsplugin: initializing remote control");
-			RemoteControlPlugin plugin =
-				(RemoteControlPlugin) PluginHandler.getPlugin(remotecontrolName);
-			plugin.addRequestHandler(WMSRemoteHandler.command, WMSRemoteHandler.class);
+			Plugin plugin =
+				(Plugin) PluginHandler.getPlugin(remotecontrolName);
+			try {
+				Method method = plugin.getClass().getMethod("addRequestHandler", String.class, Class.class);
+				method.invoke(plugin, WMSRemoteHandler.command, WMSRemoteHandler.class);
+				remoteControlAvailable = true;
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}
-		else
+		if(!remoteControlAvailable)
 		{
 			System.out.println("wmsplugin: cannot use remote control");
 		}

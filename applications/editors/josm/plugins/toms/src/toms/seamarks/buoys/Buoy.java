@@ -141,7 +141,7 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setLightPeriod(String lightPeriod) {
-		String regex = "^[\\d\\s]+$";
+		String regex = "^[\\d\\s.]+$";
 
 		if (lightPeriod.length() == 0)
 			lightPeriod = " ";
@@ -298,15 +298,15 @@ abstract public class Buoy extends SeaMark {
 		}
 
 		if (dlg.cM01Fired.isSelected()) {
-			if (colour == "red") {
+			if (colour.equals("red")) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "red"));
 				setLightColour("R");
-			} else if (colour == "green") {
+			} else if (colour.equals("green")) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "green"));
 				setLightColour("G");
-			} else if (colour == "white") {
+			} else if (colour.equals("white")) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "white"));
 				setLightColour("W");

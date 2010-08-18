@@ -342,7 +342,7 @@ public class BuoyLat extends Buoy {
 					c = c + "(" + getLightGroup() + ")";
 
 				dlg.cbM01Kennung.setSelectedItem(c);
-				if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
+				if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
 					c = "";
 			}
 
@@ -813,14 +813,14 @@ public class BuoyLat extends Buoy {
 		case PORT_HAND:
 		case PREF_PORT_HAND:
 			if (getRegion() == IALA_A) {
-				if (str.compareTo("red") == 0) {
+				if (str.equals("red")) {
 					setFired(true);
 					super.setLightColour("R");
 				} else {
 					super.setLightColour("");
 				}
 			} else {
-				if (str.compareTo("green") == 0) {
+				if (str.equals("green")) {
 					setFired(true);
 					super.setLightColour("G");
 				} else {
@@ -832,14 +832,14 @@ public class BuoyLat extends Buoy {
 		case STARBOARD_HAND:
 		case PREF_STARBOARD_HAND:
 			if (getRegion() == IALA_A) {
-				if (str.compareTo("green") == 0) {
+				if (str.equals("green")) {
 					setFired(true);
 					super.setLightColour("G");
 				} else {
 					super.setLightColour("");
 				}
 			} else {
-				if (str.compareTo("red") == 0) {
+				if (str.equals("red")) {
 					setFired(true);
 					super.setLightColour("R");
 				} else {

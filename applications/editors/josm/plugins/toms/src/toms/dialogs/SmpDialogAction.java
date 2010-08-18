@@ -348,7 +348,7 @@ public class SmpDialogAction extends JosmAction {
 					return;
 				}
 
-				if (name.compareTo("") == 0) {
+				if (name.equals("")) {
 					if (keys.containsKey("seamark:buoy_lateral:name"))
 						name = keys.get("seamark:buoy_lateral:name");
 					if (keys.containsKey("seamark:beacon_lateral:name"))
@@ -363,7 +363,7 @@ public class SmpDialogAction extends JosmAction {
 					cat = keys.get("seamark:beacon_lateral:category");
 				}
 
-				if (cat.compareTo("port") == 0) {
+				if (cat.equals("port")) {
 
 					buoy = new BuoyLat(this, SeaMark.PORT_HAND);
 					if (str.compareTo("red") == 0) {
@@ -1336,13 +1336,13 @@ public class SmpDialogAction extends JosmAction {
 					if (it.contains("+")) {
 						i1 = it.indexOf("+");
 						i2 = it.length();
-						if (c == "")
+						if (c.equals(""))
 							c = it;
 						else
 							c = c + it.substring(i1, i2);
 					}
 
-					if (c == "")
+					if (c.equals(""))
 						c = it;
 					buoy.setLightChar(c);
 					buoy.setLightGroup(g);

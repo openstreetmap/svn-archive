@@ -88,7 +88,7 @@ public class BuoySaw extends Buoy {
 					c = getLightChar();
 
 					dlg.cbM01Kennung.setSelectedItem(c);
-					if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
+					if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
 						c = "";
 				}
 			}

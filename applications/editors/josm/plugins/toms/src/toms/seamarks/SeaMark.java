@@ -89,7 +89,8 @@ abstract public class SeaMark {
 	public final static int SPEC_SPAR = 2;
 	public final static int SPEC_SPHERE = 3;
 	public final static int SPEC_BARREL = 4;
-	public final static int SPEC_BEACON = 5;
+	public final static int SPEC_FLOAT = 5;
+	public final static int SPEC_BEACON = 6;
 	public final static int LIGHT_HOUSE = 1;
 	public final static int LIGHT_MAJOR = 2;
 	public final static int LIGHT_MINOR = 3;

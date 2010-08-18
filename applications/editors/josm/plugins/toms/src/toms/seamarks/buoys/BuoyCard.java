@@ -166,7 +166,7 @@ public class BuoyCard extends Buoy {
 						c = c + tmp;
 
 					dlg.cbM01Kennung.setSelectedItem(c);
-					if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
+					if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
 						c = "";
 				}
 			}

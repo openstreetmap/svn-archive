@@ -24,10 +24,21 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Spar Buoy");
 		dlg.cbM01StyleOfMark.addItem("Sphere Buoy");
 		dlg.cbM01StyleOfMark.addItem("Barrel");
+		dlg.cbM01StyleOfMark.addItem("Float");
 		dlg.cbM01StyleOfMark.addItem("Beacon");
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
+		dlg.cbM01Kennung.addItem("Fl");
+		dlg.cbM01Kennung.addItem("Fl(2)");
+		dlg.cbM01Kennung.addItem("Fl(3)");
+		dlg.cbM01Kennung.addItem("Fl(4)");
+		dlg.cbM01Kennung.addItem("Fl(5)");
+		dlg.cbM01Kennung.addItem("Oc(2)");
+		dlg.cbM01Kennung.addItem("Oc(3)");
+		dlg.cbM01Kennung.addItem("Q");
+		dlg.cbM01Kennung.addItem("IQ");
+		dlg.cbM01Kennung.setSelectedIndex(0);
 
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
@@ -65,6 +76,9 @@ public class BuoySpec extends Buoy {
 		case SPEC_BARREL:
 			image += "_Barrel";
 			break;
+		case SPEC_FLOAT:
+			image += "_Float";
+			break;
 		case SPEC_BEACON:
 			image += "_Beacon";
 			break;
@@ -84,7 +98,7 @@ public class BuoySpec extends Buoy {
 					c = getLightChar();
 
 					dlg.cbM01Kennung.setSelectedItem(c);
-					if (dlg.cbM01Kennung.getSelectedItem() == "Not set")
+					if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
 						c = "";
 				}
 			}
@@ -131,6 +145,11 @@ public class BuoySpec extends Buoy {
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
+		case SPEC_FLOAT:
+			super.saveSign("light_Float");
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:light_float:colour", "yellow"));
+			break;
 		case SPEC_BEACON:
 			super.saveSign("beacon_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
@@ -160,7 +179,7 @@ public class BuoySpec extends Buoy {
 		if (keys.containsKey("seamark:topmark:shape")) {
 			str = keys.get("seamark:topmark:shape");
 
-			if (str.compareTo("x-shape") == 0) {
+			if (str.equals("x-shape")) {
 				setTopMark(true);
 
 			} else {
@@ -192,7 +211,7 @@ public class BuoySpec extends Buoy {
 				setLightPeriod(keys);
 			}
 
-			if (str.compareTo("white") == 0) {
+			if (str.equals("white")) {
 				setFired(true);
 				setLightColour("W");
 
@@ -224,13 +243,13 @@ public class BuoySpec extends Buoy {
 		if (keys.containsKey("seamark:buoy_special_purpose:shape")) {
 			str = keys.get("seamark:buoy_special_purpose:shape");
 
-			if (str.compareTo("pillar") == 0)
+			if (str.equals("pillar"))
 				setStyleIndex(SPEC_PILLAR);
-			else if (str.compareTo("spar") == 0)
+			else if (str.equals("spar"))
 				setStyleIndex(SPEC_SPAR);
-			else if (str.compareTo("sphere") == 0)
+			else if (str.equals("sphere"))
 				setStyleIndex(SPEC_SPHERE);
-			else if (str.compareTo("barrel") == 0)
+			else if (str.equals("barrel"))
 				setStyleIndex(SPEC_BARREL);
 			else
 				ret = false;
@@ -238,7 +257,12 @@ public class BuoySpec extends Buoy {
 
 		if (keys.containsKey("seamark:beacon_special_purpose"))
 			setStyleIndex(SPEC_BEACON);
-			return ret;
+		else if (keys.containsKey("seamark:light_float")
+				&& keys.containsKey("seamark:light_float:colour")
+				&& keys.get("seamark:light_float:colour").equals("yellow"))
+			setStyleIndex(SPEC_FLOAT);
+
+		return ret;
 	}
 
 }

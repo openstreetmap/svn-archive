@@ -70,6 +70,7 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -87,7 +88,7 @@ import org.openstreetmap.josm.plugins.osb.gui.action.ToggleConnectionModeAction;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener, 
+public class OsbDialog extends ToggleDialog implements OsbObserver, ListSelectionListener, LayerChangeListener,
 DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
 
     private static final long serialVersionUID = 1L;
@@ -105,6 +106,7 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
     private JToggleButton toggleConnectionMode;
     private JTabbedPane tabbedPane = new JTabbedPane();
     private boolean queuePanelVisible = false;
+    private final ActionQueue actionQueue = new ActionQueue();
 
     private boolean buttonLabels = Main.pref.getBoolean(ConfigKeys.OSB_BUTTON_LABELS);
 
@@ -184,7 +186,7 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
 
         queuePanel = new JPanel(new BorderLayout());
         queuePanel.setName(tr("Queue"));
-        queueList = new JList(ActionQueue.getInstance());
+        queueList = new JList(getActionQueue());
         queueList.setCellRenderer(new OsbQueueListCellRenderer());
         queuePanel.add(new JScrollPane(queueList), BorderLayout.CENTER);
         queuePanel.add(processQueue, BorderLayout.SOUTH);
@@ -193,7 +195,7 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
                 Main.pref.put(ConfigKeys.OSB_API_OFFLINE, "false");
                 setConnectionMode(false);
                 try {
-                    ActionQueue.getInstance().processQueue();
+                    getActionQueue().processQueue();
 
                     // refresh, if the api is enabled
                     if(!Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
@@ -224,7 +226,26 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
         addCommentAction.addActionObserver(this);
         closeIssueAction.addActionObserver(this);
         setConnectionMode(offline);
-        DataSet.selListeners.add(this);
+
+
+        MapView.addLayerChangeListener(this);
+    }
+
+    @Override
+    public void showNotify() {
+        DataSet.addSelectionListener(this);
+    }
+
+    @Override
+    public void hideNotify() {
+        DataSet.removeSelectionListener(this);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        MapView.removeLayerChangeListener(this);
+
     }
 
     public synchronized void update(final DataSet dataset) {
@@ -345,7 +366,7 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
         }
     }
 
-    private class BugComparator implements Comparator<Node> {
+    private static class BugComparator implements Comparator<Node> {
 
         public int compare(Node o1, Node o2) {
             String state1 = o1.get("state");
@@ -444,7 +465,7 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
             Node selectedNode = (Node) newSelection.iterator().next();
             if(osbPlugin.getLayer() != null && osbPlugin.getLayer().getDataSet() != null
                     && osbPlugin.getLayer().getDataSet().getNodes() != null
-                    && osbPlugin.getLayer().getDataSet().getNodes().contains(selectedNode)) 
+                    && osbPlugin.getLayer().getDataSet().getNodes().contains(selectedNode))
             {
                 setSelectedNode(selectedNode);
             } else {
@@ -453,5 +474,9 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
         } else {
             bugList.clearSelection();
         }
+    }
+
+    public ActionQueue getActionQueue() {
+        return actionQueue;
     }
 }

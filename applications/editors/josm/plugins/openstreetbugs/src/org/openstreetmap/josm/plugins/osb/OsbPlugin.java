@@ -78,9 +78,8 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             dialog = new OsbDialog(this);
             newFrame.addToggleDialog(dialog);
 
-            MapView.addLayerChangeListener(dialog);
             MapView.addLayerChangeListener(this);
-            
+
             uploadHook = new OsbUploadHook();
             UploadAction.registerUploadHook(uploadHook);
         } else {
@@ -162,7 +161,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
     public void updateData() {
         // store the current selected node
         Node selectedNode = getDialog().getSelectedNode();
-        
+
         // determine the bounds of the currently visible area
         Bounds bounds = null;
         try {
@@ -178,7 +177,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             try {
                 // download the data
                 download.execute(dataSet, bounds);
-    
+
                 // display the parsed data
                 if(!dataSet.getNodes().isEmpty() && dialog.isDialogShowing()) {
                     // if the map layer has been closed, while we are requesting the osb db,
@@ -193,7 +192,7 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
                 e.printStackTrace();
             }
         }
-        
+
         // restore node selection
         dialog.setSelectedNode(selectedNode);
     }

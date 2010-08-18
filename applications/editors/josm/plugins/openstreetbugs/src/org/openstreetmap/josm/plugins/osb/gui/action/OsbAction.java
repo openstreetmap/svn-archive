@@ -48,14 +48,16 @@ public abstract class OsbAction extends AbstractAction {
     private static final long serialVersionUID = 1L;
 
     private List<OsbActionObserver> observers = new ArrayList<OsbActionObserver>();
-    
-    protected OsbDialog dialog;
-    
+
+    protected final OsbDialog dialog;
+
     protected boolean cancelled = false;
+    protected final ActionQueue actionQueue;
 
     public OsbAction(String name, OsbDialog osbDialog) {
         super(name);
         this.dialog = osbDialog;
+        this.actionQueue = osbDialog.getActionQueue();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -70,7 +72,7 @@ public abstract class OsbAction extends AbstractAction {
                     }
                 } else {
                     OsbAction action = clone();
-                    ActionQueue.getInstance().offer(action);
+                    actionQueue.offer(action);
                 }
             }
         } catch (Exception e1) {
@@ -88,7 +90,7 @@ public abstract class OsbAction extends AbstractAction {
     public void removeActionObserver(OsbActionObserver obs) {
         observers.remove(obs);
     }
-    
+
     protected String addMesgInfo(String msg) {
         // get the user nickname
         String nickname = Main.pref.get(ConfigKeys.OSB_NICKNAME);
@@ -100,29 +102,28 @@ public abstract class OsbAction extends AbstractAction {
                 Main.pref.put(ConfigKeys.OSB_NICKNAME, nickname);
             }
         }
-        
+
         // concatenate nickname and date, if date should be included
         String info = nickname;
         if(Main.pref.getBoolean(ConfigKeys.OSB_INCLUDE_DATE)) {
             // get the date
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, Locale.getDefault());
             String date = df.format(new Date());
-            
+
             // concatenate nickname and date
             info = info.concat(", ").concat(date);
         }
-        
+
         // add user and date info to the message
-        msg = msg.concat(" [").concat(info).concat("]");
-        
-        return msg;
+        return msg.concat(" [").concat(info).concat("]");
     }
-    
+
     public List<OsbActionObserver> getActionObservers() {
         return observers;
     }
-    
+
     public abstract void execute() throws Exception;
-    
+
+    @Override
     public abstract OsbAction clone();
 }

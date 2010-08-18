@@ -6,18 +6,7 @@ import javax.swing.AbstractListModel;
 
 public class ActionQueue extends AbstractListModel {
 
-    private static ActionQueue instance;
-
     private LinkedList<OsbAction> queue = new LinkedList<OsbAction>();
-
-    private ActionQueue() {}
-
-    public static synchronized ActionQueue getInstance() {
-        if(instance == null) {
-            instance = new ActionQueue();
-        }
-        return instance;
-    }
 
     public boolean offer(OsbAction e) {
         boolean result = queue.offer(e);
@@ -50,7 +39,7 @@ public class ActionQueue extends AbstractListModel {
 
             // execute the action
             action.execute();
-            
+
             // notify observers
             for (OsbActionObserver obs : action.getActionObservers()) {
                 obs.actionPerformed(action);

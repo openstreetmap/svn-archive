@@ -83,8 +83,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
      */
     public ValidatorDialog(OSMValidatorPlugin plugin) {
         super(tr("Validation errors"), "validator", tr("Open the validation window."),
-        Shortcut.registerShortcut("subwindow:validator", tr("Toggle: {0}", tr("Validation errors")),
-        KeyEvent.VK_V, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
+                Shortcut.registerShortcut("subwindow:validator", tr("Toggle: {0}", tr("Validation errors")),
+                        KeyEvent.VK_V, Shortcut.GROUP_LAYER, Shortcut.SHIFT_DEFAULT), 150);
 
         this.plugin = plugin;
         popupMenu = new JPopupMenu();
@@ -122,7 +122,21 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
             ignoreButton = null;
         }
         add(buttonPanel, BorderLayout.SOUTH);
-        DataSet.selListeners.add(this);
+
+    }
+
+    @Override
+    public void showNotify() {
+        DataSet.addSelectionListener(this);
+        DataSet ds = Main.main.getCurrentDataSet();
+        if (ds != null) {
+            updateSelection(ds.getSelected());
+        }
+    }
+
+    @Override
+    public void hideNotify() {
+        DataSet.removeSelectionListener(this);
     }
 
     @Override
@@ -446,13 +460,17 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
         }
     }
 
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void updateSelection(Collection<? extends OsmPrimitive> newSelection) {
         if (!Main.pref.getBoolean(PreferenceEditor.PREF_FILTER_BY_SELECTION, false))
             return;
         if (newSelection.isEmpty())
             tree.setFilter(null);
         HashSet<OsmPrimitive> filter = new HashSet<OsmPrimitive>(newSelection);
         tree.setFilter(filter);
+    }
+
+    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        updateSelection(newSelection);
     }
 
     /**
@@ -481,7 +499,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener, Sel
 
         @Override
         protected void realRun() throws SAXException, IOException,
-                OsmTransferException {
+        OsmTransferException {
             ProgressMonitor monitor = getProgressMonitor();
             try {
                 monitor.setTicksCount(testErrors.size());

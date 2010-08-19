@@ -43,17 +43,17 @@ public class RemoteControlPreferences implements PreferenceSetting
         perms.add(permissionLoadData, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         perms.add(permissionChangeSelection, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         perms.add(permissionChangeViewport, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
+        perms.add(permissionCreateObjects, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         perms.add(permissionReadProtocolversion, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         remote.add(perms, GBC.eol().fill(GBC.HORIZONTAL));
 
         remote.add(alwaysAskUserConfirm, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         remote.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
 
-
         permissionLoadData.setSelected(Main.pref.getBoolean("remotecontrol.permission.load-data", true));
         permissionChangeSelection.setSelected(Main.pref.getBoolean("remotecontrol.permission.change-selection", true));
         permissionChangeViewport.setSelected(Main.pref.getBoolean("remotecontrol.permission.change-viewport", true));
-        permissionCreateObjects.setSelected(Main.pref.getBoolean("remotecontrol.permission.create-objects", true));
+        permissionCreateObjects.setSelected(Main.pref.getBoolean("remotecontrol.permission.create-objects", false));
         permissionReadProtocolversion.setSelected(Main.pref.getBoolean("remotecontrol.permission.read-protocolversion", true));
         alwaysAskUserConfirm.setSelected(Main.pref.getBoolean("remotecontrol.always-confirm", false));
 

@@ -71,7 +71,7 @@ public class OsmTileSource {
 
     public static class CycleMap extends AbstractOsmTileSource {
 
-        private static final String PATTERN = "http://%s.andy.sandbox.cloudmade.com/tiles/cycle";
+        private static final String PATTERN = "http://%s.tile.opencyclemap.org/cycle";
 
         private static final String[] SERVER = { "a", "b", "c" };
 

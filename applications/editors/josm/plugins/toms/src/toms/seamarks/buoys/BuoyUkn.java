@@ -12,6 +12,9 @@ public class BuoyUkn extends Buoy {
 	public BuoyUkn(SmpDialogAction dia, String Msg) {
 		super(dia);
 
+		dlg.cbM01StyleOfMark.removeAllItems();
+		dlg.cbM01StyleOfMark.addItem("Not set");
+
 		if (dlg.cbM01Kennung != null) {
 			dlg.cbM01Kennung.removeAllItems();
 			dlg.cbM01Kennung.addItem("Not set");

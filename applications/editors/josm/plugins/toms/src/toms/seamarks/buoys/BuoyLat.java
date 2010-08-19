@@ -348,7 +348,6 @@ public class BuoyLat extends Buoy {
 
 			image += ".png";
 
-			// System.out.println("finename: " + image);
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 		} else
 			dlg.lM01Icon01.setIcon(null);
@@ -751,7 +750,7 @@ public class BuoyLat extends Buoy {
 				ret = false;
 			}
 			if (!hasTopMark()) {
-				setErrMsg("Parse-Error: Topmark falsch");
+				setErrMsg("Parse-Error: Invalid topmark");
 				ret = false;
 			}
 		}
@@ -783,9 +782,9 @@ public class BuoyLat extends Buoy {
 
 			} else {
 				if (getErrMsg() == null)
-					setErrMsg("Parse-Error: Befeuerung falsch");
+					setErrMsg("Parse-Error: Invalid light");
 				else
-					setErrMsg(getErrMsg() + " / Befeuerung falsch");
+					setErrMsg(getErrMsg() + " / Invalid light");
 			}
 
 		}

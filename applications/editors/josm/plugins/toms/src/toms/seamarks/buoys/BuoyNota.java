@@ -147,7 +147,8 @@ public class BuoyNota extends Buoy {
 				setLightGroup(keys);
 
 				String c = keys.get("seamark:light:character");
-				String ce = c;
+				if (getLightGroup() != "")
+					c = c + "(" + getLightGroup() + ")";
 				setLightChar(c);
 				setLightPeriod(keys);
 			}

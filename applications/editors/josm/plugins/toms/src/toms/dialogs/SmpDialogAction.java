@@ -778,6 +778,9 @@ public class SmpDialogAction extends JosmAction {
 				} else if (str.equals("red;white")) {
 					buoy = new BuoySaw(this, SeaMark.SAFE_WATER);
 					buoy.setColour(SeaMark.RED_WHITE);
+				} else if (str.equals("yellow")) {
+					buoy = new BuoySaw(this, SeaMark.SPECIAL_PURPOSE);
+					buoy.setColour(SeaMark.YELLOW);
 				} else {
 					buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
 					buoy.setNode(node);

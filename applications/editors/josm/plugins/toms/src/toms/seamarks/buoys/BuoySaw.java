@@ -202,6 +202,8 @@ public class BuoySaw extends Buoy {
 			if (keys.containsKey("seamark:light:character")) {
 				setLightGroup(keys);
 				String c = keys.get("seamark:light:character");
+				if (getLightGroup() != "")
+					c = c + "(" + getLightGroup() + ")";
 				setLightChar(c);
 				setLightPeriod(keys);
 			}

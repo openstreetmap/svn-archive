@@ -81,10 +81,9 @@ public class BuoyIsol extends Buoy {
 					String c;
 
 					c = getLightChar();
-
+					if (getLightGroup() != "")
+						c = c + "(" + getLightGroup() + ")";
 					dlg.cbM01Kennung.setSelectedItem(c);
-					if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
-						c = "";
 				}
 			}
 			image += ".png";
@@ -171,7 +170,7 @@ public class BuoyIsol extends Buoy {
 		if (keys.containsKey("seamark:topmark:shape")) {
 			str = keys.get("seamark:topmark:shape");
 
-			if (str.compareTo("2 spheres") == 0) {
+			if (str.equals("2 spheres")) {
 				setTopMark(true);
 
 			} else {
@@ -201,7 +200,7 @@ public class BuoyIsol extends Buoy {
 				setLightPeriod(keys);
 			}
 
-			if (str.compareTo("white") == 0) {
+			if (str.equals("white")) {
 				setFired(true);
 				setLightColour("W");
 

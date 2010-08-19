@@ -146,7 +146,7 @@ public class BuoySpec extends Buoy {
 					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
 		case SPEC_FLOAT:
-			super.saveSign("light_Float");
+			super.saveSign("light_float");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:light_float:colour", "yellow"));
 			break;
@@ -206,6 +206,8 @@ public class BuoySpec extends Buoy {
 				setLightGroup(keys);
 
 				String c = keys.get("seamark:light:character");
+				if (getLightGroup() != "")
+					c = c + "(" + getLightGroup() + ")";
 
 				setLightChar(c);
 				setLightPeriod(keys);
@@ -217,9 +219,9 @@ public class BuoySpec extends Buoy {
 
 			} else {
 				if (getErrMsg() == null)
-					setErrMsg("Parse-Error: Licht falsch");
+					setErrMsg("Parse-Error: Invalid light");
 				else
-					setErrMsg(getErrMsg() + " / Licht falsch");
+					setErrMsg(getErrMsg() + " / Invalid light");
 
 				ret = false;
 			}

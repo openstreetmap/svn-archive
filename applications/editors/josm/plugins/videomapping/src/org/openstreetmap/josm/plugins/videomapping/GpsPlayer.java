@@ -35,6 +35,12 @@ public class GpsPlayer {
 	public WayPoint getNext() {
 		return next;
 	}
+	
+	public WayPoint getWaypoint(long relTime)
+	{
+		int pos = Math.round(relTime/1000);//TODO ugly quick hack	
+		return ls.get(pos);
+	}
 
 	public GpsPlayer(List<WayPoint> l) {
 		super();
@@ -90,7 +96,7 @@ public class GpsPlayer {
 		}
 	}
 	
-	//wal k waypoints forward/backward
+	//walk k waypoints forward/backward
 	public void jumpRel(int k)
 	{
 
@@ -98,7 +104,7 @@ public class GpsPlayer {
 		{
 			jump(ls.get(ls.indexOf(curr)+k));
 		}
-		Main.map.mapView.repaint();
+		Main.map.mapView.repaint(); //seperate modell and view logic...
 	}
 	
 	//select the k-th waypoint
@@ -112,6 +118,26 @@ public class GpsPlayer {
 			}
 			Main.map.mapView.repaint();
 		}
+	}
+	
+	//go to the position at the timecode e.g.g "14:00:01";
+	public void jump(Time GPSAbsTime)
+	{
+		jump(getWaypoint(GPSAbsTime.getTime()-start.getTime().getTime())); //TODO replace Time by Date?
+	}
+	
+	//go to the position at 
+	public void jump(Date GPSDate)
+	{
+		long s,m,h,diff;
+		//calculate which waypoint is at the offset
+		System.out.println(start.getTime());
+		System.out.println(start.getTime().getHours()+":"+start.getTime().getMinutes()+":"+start.getTime().getSeconds());
+		s=GPSDate.getSeconds()-start.getTime().getSeconds();
+		m=GPSDate.getMinutes()-start.getTime().getMinutes();
+		h=GPSDate.getHours()-start.getTime().getHours();
+		diff=s*1000+m*60*1000+h*60*60*1000; //TODO ugly hack but nothing else works right
+		jump(getWaypoint(diff)); 
 	}
 	
 	//gets only points on the line of the GPS track (between waypoints) nearby the point m
@@ -315,7 +341,8 @@ public class GpsPlayer {
 	{
 		return p.getTime().getTime()-start.getTime().getTime(); //TODO assumes timeintervall is constant!!!!
 	}
-
+	
+	
 	//jumps to a specific time
 	public void jump(long relTime) {
 		int pos = Math.round(relTime/1000);//TODO ugly quick hack	

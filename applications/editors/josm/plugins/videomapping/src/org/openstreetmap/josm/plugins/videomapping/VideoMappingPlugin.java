@@ -5,7 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,13 +51,13 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 	  private JMenu VMenu,VDeinterlacer;
 	  private GpxData GPSTrack;
 	  private List<WayPoint> ls;
-	  private JosmAction VAdd,VRemove,VStart,Vbackward,Vforward,Vfaster,Vslower,Vloop;
+	  private JosmAction VAdd,VRemove,VStart,Vbackward,Vforward,VJump,Vfaster,Vslower,Vloop;
 	  private JRadioButtonMenuItem VIntBob,VIntNone,VIntLinear;
-	  private JCheckBoxMenuItem VCenterIcon;
+	  private JCheckBoxMenuItem VCenterIcon,VSubTitles;
 	  private JMenuItem VJumpLength,VLoopLength;
 	  private GPSVideoPlayer player;
 	  private PositionLayer layer;
-	  private final String VM_DEINTERLACER="videomapping.deinterlacer";
+	  private final String VM_DEINTERLACER="videomapping.deinterlacer"; //where we store settings
 	  private final String VM_MRU="videomapping.mru";
 	  private final String VM_AUTOCENTER="videomapping.autocenter";
 	  private final String VM_JUMPLENGTH="videomapping.jumplength";
@@ -73,7 +77,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 		addMenuItems();
 		enableControlMenus(true);
 		loadSettings();
-		applySettings();		
+		applySettings();
 		//further plugin informations are provided by build.xml properties
 	}
 			
@@ -114,9 +118,8 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent arg0) {					
-					JFileChooser fc = new JFileChooser();
+					JFileChooser fc = new JFileChooser("C:\\TEMP\\");
 					//fc.setSelectedFile(new File(mru));
-					fc.setSelectedFile(new File("C:\\TEMP"));
 					if(fc.showOpenDialog(Main.main.parent)!=JFileChooser.CANCEL_OPTION)
 					{
 						saveSettings();
@@ -125,11 +128,12 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 						layer = new PositionLayer(fc.getSelectedFile().getName(),ls);
 						Main.main.addLayer(layer);
 						player = new GPSVideoPlayer(fc.getSelectedFile(), layer.player);
-						//TODO Check here if we can sync by hand
+						//TODO Check here if we can sync allready now
 						layer.setGPSPlayer(player);
 						layer.addObserver(player);
 						VAdd.setEnabled(false);
 						VRemove.setEnabled(true);
+						player.setSubtitleAction(VSubTitles);
 					}
 				}
 		
@@ -141,6 +145,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 				player.removeVideo();
 			}
 		};
+		
 		VStart = new JosmAction(tr("play/pause"), "audio-playpause", tr("starts/pauses video playback"),
 				Shortcut.registerShortcut("videomapping:startstop","",KeyEvent.VK_SPACE, Shortcut.GROUP_DIRECT), false) {
 			
@@ -151,8 +156,31 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 		Vbackward = new JosmAction(tr("backward"), "audio-prev", tr("jumps n sec back"),
 				Shortcut.registerShortcut("videomapping:backward","",KeyEvent.VK_NUMPAD4, Shortcut.GROUP_DIRECT), false) {
 			
+			/**
+					 * 
+					 */
+					private static final long serialVersionUID = -1060444361541900464L;
+
 			public void actionPerformed(ActionEvent e) {
 				player.backward();
+							
+			}
+		};
+		Vbackward = new JosmAction(tr("jump"), null, tr("jumps to the entered gps time"),null, false) {			
+			public void actionPerformed(ActionEvent e) {
+				String s =JOptionPane.showInputDialog(tr("please enter GPS timecode"),"10:07:57");
+				SimpleDateFormat format= new SimpleDateFormat("hh:mm:ss");
+				Date t;
+				try {
+					t = format.parse(s);
+					if (t!=null)
+						{							
+							player.jumpToGPSTime(t.getTime());
+						}						
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 							
 			}
 		};
@@ -196,6 +224,14 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 				autocenter=VCenterIcon.isSelected();
 				applySettings();
 				saveSettings();
+							
+			}
+		});
+		//now the options menu
+		VSubTitles = new JCheckBoxMenuItem(new JosmAction(tr("Subtitles"), "cursor/crosshair", tr("Show subtitles in video"),null, false) {
+			
+			public void actionPerformed(ActionEvent e) {
+				player.toggleSubtitles();
 							
 			}
 		});
@@ -264,6 +300,8 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 		VMenu.add(VJumpLength);
 		VMenu.add(VLoopLength);
 		VMenu.add(VDeinterlacer);
+		VMenu.add(VSubTitles);
+		
 	}
 	
 	

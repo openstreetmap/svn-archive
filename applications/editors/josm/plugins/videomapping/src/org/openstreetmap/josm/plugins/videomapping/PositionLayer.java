@@ -42,6 +42,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	private ImageIcon icon;
 	private SimpleDateFormat mins;
 	private SimpleDateFormat ms;
+	private SimpleDateFormat gpsTimeCode;
 	private GPSVideoPlayer gps;
 
 	public PositionLayer(String name, final List<WayPoint> ls) {
@@ -51,6 +52,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		icon = new ImageIcon("images/videomapping.png");
 		mins = new SimpleDateFormat("hh:mm:ss:S");
 		ms= new SimpleDateFormat("mm:ss");
+		gpsTimeCode= new SimpleDateFormat("hh:mm:ss");
 		Main.map.mapView.addMouseListener(this);
 		Main.map.mapView.addMouseMotionListener(this);
 
@@ -108,13 +110,13 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		//TODO Source out redundant calculations
 		//TODO make icon transparent
 		//draw all GPS points
-		g.setColor(Color.GREEN);
+		g.setColor(new Color(0,255,0,128));
 		for(WayPoint n: ls) {
 			p = Main.map.mapView.getPoint(n.getEastNorth());
 			g.drawOval(p.x - 2, p.y - 2, 4, 4);
 		}
 		//draw synced points
-		g.setColor(Color.ORANGE);
+		g.setColor(Color.GREEN);
 		for(WayPoint n: ls) {
 			if(n.attr.containsKey("synced"))
 			{
@@ -155,7 +157,8 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			{
 				p=Main.map.mapView.getPoint(iconPosition.getEastNorth());
 				icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
-				g.drawString(mins.format(iconPosition.getTime()),p.x-10,p.y-10);
+				//g.drawString(mins.format(iconPosition.getTime()),p.x-10,p.y-10); //TODO when synced we might wan't to use a different layout
+				g.drawString(gpsTimeCode.format(iconPosition.getTime()),p.x-10,p.y-10);
 			}
 		}
 		else
@@ -163,7 +166,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 			if (player.getCurr()!=null){
 			p=Main.map.mapView.getPoint(player.getCurr().getEastNorth());
 			icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);
-			g.drawString(ms.format(player.getRelativeTime()),p.x-10,p.y-10);
+			g.drawString(gpsTimeCode.format(player.getCurr().getTime()),p.x-10,p.y-10);
 			}
 		}
 	}
@@ -301,7 +304,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 
         for (PlayerObserver o : observers) {
 
-            o.jumping(newTime);
+            o.jumping(newTime); //TODO has to become just a single procedure?
 
         }
 

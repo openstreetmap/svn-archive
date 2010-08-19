@@ -39,23 +39,21 @@ import org.openstreetmap.josm.plugins.videomapping.PlayerObserver;
 import static org.openstreetmap.josm.tools.I18n.*;
 
 import uk.co.caprica.vlcj.binding.LibVlc;
-import uk.co.caprica.vlcj.check.EnvironmentCheckerFactory;
-import uk.co.caprica.vlcj.player.DefaultFullScreenStrategy;
-import uk.co.caprica.vlcj.player.FullScreenStrategy;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.VideoMetaData;
+import uk.co.caprica.vlcj.player.embedded.*;
 
 //basic class of a videoplayer for one video
 public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListener, WindowListener{
-	private MediaPlayer mp;
+	private EmbeddedMediaPlayer mp;
 	private Timer t;
 	private JPanel screenPanel,controlsPanel;
 	private JSlider timeline;
 	private JButton play,back,forward;
-	private JToggleButton loop;
+	private JToggleButton loop,mute;
 	private JSlider speed;
 	private Canvas scr;
 	private final String[] mediaOptions = {""};
@@ -75,11 +73,12 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 			}
 		 */
 		try
-		{			
+		{
+			//we don't need any options
 			String[] libvlcArgs = {""};
 			String[] standardMediaOptions = {""}; 
 			
-			System.out.println("libvlc version: " + LibVlc.INSTANCE.libvlc_get_version());
+			//System.out.println("libvlc version: " + LibVlc.INSTANCE.libvlc_get_version());
 			//setup Media Player
 			//TODO we have to deal with unloading things....
 			MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(libvlcArgs);
@@ -87,40 +86,19 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		    mp = mediaPlayerFactory.newMediaPlayer(fullScreenStrategy);
 		    mp.setStandardMediaOptions(standardMediaOptions);
 		    //setup GUI
-		    setSize(400, 300); //later we resize
+		    setSize(400, 300); //later we apply movie size
 		    setAlwaysOnTop(true);
-		    //setIconImage();
-		    ms = new SimpleDateFormat("hh:mm:ss:S");
-		    scr=new Canvas();
-		    timeline = new JSlider(0,100,0);
-		    timeline.setMajorTickSpacing(10);
-		    timeline.setMajorTickSpacing(5);
-		    timeline.setPaintTicks(true);
-		    play= new JButton(tr("play"));
-		    back= new JButton("<");
-		    forward= new JButton(">");
-		    loop= new JToggleButton(tr("loop"));
-		    speed = new JSlider(-200,200,0);
-		    speed.setMajorTickSpacing(100);
-			speed.setPaintTicks(true);			
-			speed.setOrientation(Adjustable.VERTICAL);
-			Hashtable labelTable = new Hashtable();
-			labelTable.put( new Integer( 0 ), new JLabel("1x") );
-			labelTable.put( new Integer( -200 ), new JLabel("-2x") );
-			labelTable.put( new Integer( 200 ), new JLabel("2x") );
-			speed.setLabelTable( labelTable );
-			speed.setPaintLabels(true);
-
+		    createUI();
 		    setLayout();
-			addListeners();
+			addListeners(); //registering shortcuts is task of the outer plugin class!
 		    //embed vlc player
 			scr.setVisible(true);
 			setVisible(true);
 			mp.setVideoSurface(scr);
 			mp.addMediaPlayerEventListener(this);
-			mp.pause();
-			jump(0);
-			//set updater
+			//mp.pause();
+			//jump(0);
+			//create updater
 			ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 			executorService.scheduleAtFixedRate(new Syncer(this), 0L, 1000L, TimeUnit.MILLISECONDS);
 		    //setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -135,6 +113,32 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 			System.err.println(tr("Unable to find native libvlc library!"));
 		}
 		
+	}
+
+	private void createUI() {
+		//setIconImage();
+		ms = new SimpleDateFormat("hh:mm:ss");
+		scr=new Canvas();
+		timeline = new JSlider(0,100,0);
+		timeline.setMajorTickSpacing(10);
+		timeline.setMajorTickSpacing(5);
+		timeline.setPaintTicks(true);
+		//TODO we need Icons instead
+		play= new JButton(tr("play"));
+		back= new JButton("<");
+		forward= new JButton(">");
+		loop= new JToggleButton(tr("loop"));
+		mute= new JToggleButton(tr("mute"));
+		speed = new JSlider(-200,200,0);
+		speed.setMajorTickSpacing(100);
+		speed.setPaintTicks(true);			
+		speed.setOrientation(Adjustable.VERTICAL);
+		Hashtable labelTable = new Hashtable();
+		labelTable.put( new Integer( 0 ), new JLabel("1x") );
+		labelTable.put( new Integer( -200 ), new JLabel("-2x") );
+		labelTable.put( new Integer( 200 ), new JLabel("2x") );
+		speed.setLabelTable( labelTable );
+		speed.setPaintLabels(true);
 	}
 	
 	//creates a layout like the most mediaplayers are...
@@ -154,7 +158,9 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		controlsPanel.add(back);
 		controlsPanel.add(forward);
 		controlsPanel.add(loop);
+		controlsPanel.add(mute);
 		loop.setSelected(false);
+		mute.setSelected(false);
 	}
 
 	//add UI functionality
@@ -175,7 +181,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		play.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				if(mp.isPlaying()) mp.stop(); else mp.play();				
+				if(mp.isPlaying()) mp.pause(); else mp.play();				
 			}
 		});
 		
@@ -200,6 +206,13 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 			}
 		});
 		
+		mute.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+				mute();
+			}
+		});
+		
 		speed.addChangeListener(new ChangeListener() {
 			
 			public void stateChanged(ChangeEvent arg0) {
@@ -214,7 +227,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 			}
 		});
 		
-	}
+	}	
 
 	public void finished(MediaPlayer arg0) {
 			
@@ -229,7 +242,10 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		Dimension org=data.getVideoDimension();
 		scr.setSize(new Dimension((int)(org.width*perc), (int)(org.height*perc)));
 		pack();
-
+		//send out metadatas to all observers
+		for (PlayerObserver o : observers) {
+            o.metadata(0, hasSubtitles());
+        }
 	}
 
 	public void paused(MediaPlayer arg0) {
@@ -276,7 +292,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 	public void setFile(File f)
 	{
 		String mediaPath = f.getAbsoluteFile().toString();
-		mp.playMedia(mediaPath, mediaOptions);		
+		mp.playMedia(mediaPath, mediaOptions);
 		pack();	
 	}
 	
@@ -307,12 +323,12 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		return mp.isPlaying();
 	}
 	
-	//gets called by the Syncer to update all components
+	//gets called by the Syncer thread to update all observers
 	public void updateTime ()
 	{
 		if(mp.isPlaying())
 		{
-			setTitle(ms.format(new Date(mp.getTime()))); //FIXME there is a leading hour even at the beginning
+			setTitle(ms.format(new Date(mp.getTime())));
 			syncTimeline=true;
 			timeline.setValue(Math.round(mp.getPosition()*100));
 			syncTimeline=false;
@@ -368,6 +384,11 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 			}
 		
 	}
+	
+	protected void mute() {
+		mp.mute();
+		
+	}
 
 	public void forward() {
 		mp.setTime((long) (mp.getTime()+jumpLength));
@@ -382,6 +403,22 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 		if (mp.isPlaying()) mp.stop();
 		mp.release();
 		
+	}
+	
+	public void toggleSubs()
+	{
+		//vlc manages it's subtitles in a own list so we have to cycle trough
+		int spu = mp.getSpu();
+        if(spu > -1) {
+          spu++;
+          if(spu > mp.getSpuCount()) {
+            spu = -1;
+          }
+        }
+        else {
+          spu = 0;
+        }
+        mp.setSpu(spu);
 	}
 
 	public static void addObserver(PlayerObserver observer) {
@@ -401,9 +438,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 	    private static void notifyObservers(long newTime) {
 
 	        for (PlayerObserver o : observers) {
-
 	            o.playing(newTime);
-
 	        }
 
 	    }
@@ -429,6 +464,20 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 
 		public boolean playing() {
 			return mp.isPlaying();
+		}
+
+		public void error(MediaPlayer arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void mediaChanged(MediaPlayer arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public boolean hasSubtitles() {
+			if (mp.getSpuCount()==0) return false; else   return true;
 		}
 
 	

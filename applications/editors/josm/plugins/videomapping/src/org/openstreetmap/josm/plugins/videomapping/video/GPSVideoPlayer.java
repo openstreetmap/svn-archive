@@ -1,13 +1,20 @@
 package org.openstreetmap.josm.plugins.videomapping.video;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.sql.Time;
+import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.videomapping.GpsPlayer;
 import org.openstreetmap.josm.plugins.videomapping.PlayerObserver;
@@ -21,6 +28,7 @@ public class GPSVideoPlayer implements PlayerObserver{
 	private JButton syncBtn;
 	private GPSVideoFile file;
 	private boolean synced=false; //do we playback the players together?
+	private JCheckBoxMenuItem subtTitleComponent;
 	
 
 	public GPSVideoPlayer(File f, final GpsPlayer pl) {
@@ -33,7 +41,7 @@ public class GPSVideoPlayer implements PlayerObserver{
 		long videoT=10*60*1000+5*1000;
 		setFile(new GPSVideoFile(f, gpsT-videoT)); */
 		setFile(new GPSVideoFile(f, 0L));
-		//extend GUI
+		//add Sync Button to the Player
 		syncBtn= new JButton("sync");
 		syncBtn.setBackground(Color.RED);
 		syncBtn.addActionListener(new ActionListener() {
@@ -44,24 +52,28 @@ public class GPSVideoPlayer implements PlayerObserver{
 				syncBtn.setBackground(Color.GREEN);
 				synced=true;
 				markSyncedPoints();
-				gps.play();
+				video.play();
+				//gps.play();
 			}
 		});
-		setSyncMode(true);
+		setAsyncMode(true);
 		video.addComponent(syncBtn);
-		//allow sync
-		SimpleVideoPlayer.addObserver(new PlayerObserver() {
+		//a observer to communicate
+		SimpleVideoPlayer.addObserver(new PlayerObserver() { //TODO has o become this
 
 			public void playing(long time) {
 				//sync the GPS back
-				if(synced) gps.jump(getGPSTime(time));
-				
+				if(synced) gps.jump(getGPSTime(time));			
 			}
 
 			public void jumping(long time) {
 			
 			}
-			
+
+			//a push way to set video attirbutes
+			public void metadata(long time, boolean subtitles) {
+				if(subtTitleComponent!=null) subtTitleComponent.setSelected(subtitles);				
+			}
 			
 		});
 		t = new Timer();		
@@ -69,16 +81,32 @@ public class GPSVideoPlayer implements PlayerObserver{
 	
 	//marks all points that are covered by video AND GPS track
 	private void markSyncedPoints() {
-		long time;
-		//TODO this is poor, a start/end calculation would be better
-		for (WayPoint wp : gps.getTrack()) {
-			time=getVideoTime(gps.getRelativeTime(wp));
-			if(time>0) wp.attr.put("synced", "true");
+		//GPS or video stream starts first in time?
+		WayPoint start,end;
+		long t;
+		if(gps.getLength()<video.getLength())
+		{
+			//GPS is within video timeperiod
+			start=gps.getWaypoint(0);
+			end=gps.getWaypoint(gps.getLength());			
 		}
+		else
+		{
+			//video is within gps timeperiod
+			t=getGPSTime(0);
+			if(t<0) t=0;
+			start=gps.getWaypoint(t);
+			end=gps.getWaypoint(getGPSTime(video.getLength()));
+		}
+		//mark as synced
+		List<WayPoint> ls = gps.getTrack().subList(gps.getTrack().indexOf(start), gps.getTrack().indexOf(end));
 		
+		for (WayPoint wp : ls) {
+			wp.attr.put("synced", "true");
+		}	
 	}
 
-	public void setSyncMode(boolean b)
+	public void setAsyncMode(boolean b)
 	{
 		if(b)
 		{
@@ -96,7 +124,7 @@ public class GPSVideoPlayer implements PlayerObserver{
 		
 		file=f;
 		video.setFile(f.getAbsoluteFile());
-		video.play();
+		//video.play();
 	}
 	
 	public void play(long gpsstart)
@@ -118,8 +146,20 @@ public class GPSVideoPlayer implements PlayerObserver{
 	}
 	
 	//jumps in video to the corresponding linked time
+	public void jumpToGPSTime(Time GPSTime)
+	{
+		gps.jump(GPSTime);
+	}
+	
+	//jumps in video to the corresponding linked time
 	public void jumpToGPSTime(long gpsT)
 	{
+		if(!synced)
+		{
+			//when not synced we can just move the icon to the right position			
+			gps.jump(new Date(gpsT));
+			Main.map.mapView.repaint();
+		}
 		video.jump(getVideoTime(gpsT));
 	}
 	
@@ -215,6 +255,28 @@ public class GPSVideoPlayer implements PlayerObserver{
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void toggleSubtitles() {
+		video.toggleSubs();
+		
+	}
+	
+	public boolean hasSubtitles(){
+		return video.hasSubtitles();
+	}
+
+	public void setSubtitleAction(JCheckBoxMenuItem a)
+	{
+		subtTitleComponent=a;
+	}
+
+	public void metadata(long time, boolean subtitles) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	
 
 	
 }

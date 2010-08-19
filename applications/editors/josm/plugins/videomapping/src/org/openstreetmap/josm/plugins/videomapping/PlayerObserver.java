@@ -4,5 +4,6 @@ package org.openstreetmap.josm.plugins.videomapping;
 public interface PlayerObserver {
 	void playing(long time);
 	void jumping(long time);
+	void metadata(long time,boolean subtitles);
 
 }

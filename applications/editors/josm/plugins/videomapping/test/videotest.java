@@ -25,8 +25,8 @@ public class videotest {
 	 */
 	public static void main(String[] args) {
 		final SimpleVideoPlayer sVP = new SimpleVideoPlayer();
-		sVP.setFile(new File("C:\\TEMP\\test.mpg"));
-		sVP.play(); //FIXME We have a bug so we get out of sync if we jump before the video is up (and this we CAN'T DETECT!!!)
+		sVP.setFile(new File("C:\\TEMP\\122_0159.MOV"));
+		//sVP.play(); //FIXME We have a bug so we get out of sync if we jump before the video is up (and this we CAN'T DETECT!!!)
 		/*
 		JButton b = new JButton("jump");
 		b.addActionListener(new ActionListener() {

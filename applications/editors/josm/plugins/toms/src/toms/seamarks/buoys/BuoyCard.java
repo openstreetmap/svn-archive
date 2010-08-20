@@ -212,7 +212,7 @@ public class BuoyCard extends Buoy {
 				setLightPeriod(keys);
 			}
 
-			if (str.compareTo("white") == 0) {
+			if (str.equals("white")) {
 				setFired(true);
 				setLightColour("W");
 
@@ -243,9 +243,9 @@ public class BuoyCard extends Buoy {
 		if (keys.containsKey("seamark:buoy_cardinal:shape")) {
 			str = keys.get("seamark:buoy_cardinal:shape");
 
-			if (str.compareTo("pillar") == 0)
+			if (str.equals("pillar"))
 				setStyleIndex(CARD_PILLAR);
-			else if (str.compareTo("spar") == 0)
+			else if (str.equals("spar"))
 				setStyleIndex(CARD_SPAR);
 			else
 				ret = false;
@@ -253,7 +253,7 @@ public class BuoyCard extends Buoy {
 			if (keys.containsKey("seamark:beacon_cardinal:shape")) {
 				str = keys.get("seamark:beacon_cardinal:shape");
 
-				if (str.compareTo("tower") == 0)
+				if (str.equals("tower"))
 					setStyleIndex(CARD_TOWER);
 				else
 					setStyleIndex(CARD_BEACON);

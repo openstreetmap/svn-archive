@@ -232,9 +232,9 @@ public class BuoyIsol extends Buoy {
 		if (keys.containsKey("seamark:buoy_isolated_danger:shape")) {
 			str = keys.get("seamark:buoy_isolated_danger:shape");
 
-			if (str.compareTo("pillar") == 0)
+			if (str.equals("pillar"))
 				setStyleIndex(ISOL_PILLAR);
-			else if (str.compareTo("spar") == 0)
+			else if (str.equals("spar"))
 				setStyleIndex(ISOL_SPAR);
 			else
 				ret = false;
@@ -242,7 +242,7 @@ public class BuoyIsol extends Buoy {
 			if (keys.containsKey("seamark:beacon_isolated_danger:shape")) {
 				str = keys.get("seamark:beacon_isolated_danger:shape");
 
-				if (str.compareTo("tower") == 0)
+				if (str.equals("tower"))
 					setStyleIndex(ISOL_TOWER);
 				else
 					setStyleIndex(ISOL_BEACON);

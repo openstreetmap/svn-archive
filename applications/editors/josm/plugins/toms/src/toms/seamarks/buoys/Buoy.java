@@ -154,7 +154,7 @@ abstract public class Buoy extends SeaMark {
 
 			setErrMsg(null);
 		} else {
-			setErrMsg("Als Periodendauer sind nur Zahlen erlaubt");
+			setErrMsg("Must be a number");
 			dlg.tfM01RepeatTime.requestFocus();
 		}
 
@@ -293,7 +293,7 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	protected void saveLightData(String colour) {
-		if (colour.compareTo("") == 0) {
+		if (colour.equals("")) {
 			return;
 		}
 

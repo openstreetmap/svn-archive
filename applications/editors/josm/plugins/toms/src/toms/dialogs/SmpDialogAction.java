@@ -892,7 +892,7 @@ public class SmpDialogAction extends JosmAction {
 			lM01StyleOfMark = new JLabel();
 			lM01StyleOfMark.setBounds(new Rectangle(5, 90, 148, 16));
 			lM01StyleOfMark.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01StyleOfMark.setText("Style:");
+			lM01StyleOfMark.setText("Shape:");
 
 			lM01TypeOfMark = new JLabel();
 			lM01TypeOfMark.setBounds(new Rectangle(5, 30, 120, 16));

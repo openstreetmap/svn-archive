@@ -166,8 +166,7 @@ public class DuplicateWay extends Test
         //Note: nodes are not deleted, these can be detected and deleted at next pass
         ways.remove(wayToKeep);
         commands.add(new DeleteCommand(ways));
-        Main.main.undoRedo.add(new SequenceCommand(tr("Delete duplicate ways"), commands));
-        return null;
+        return new SequenceCommand(tr("Delete duplicate ways"), commands);
     }
 
     @Override

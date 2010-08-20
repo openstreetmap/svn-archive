@@ -12,9 +12,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,9 +32,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
-import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
@@ -40,6 +44,8 @@ import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.tools.ImageProvider;
+
+import wmsplugin.GeorefImage.State;
 
 /**
  * This is a layer that grabs the current screen from an WMS server. The data
@@ -68,7 +74,25 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	protected final int serializeFormatVersion = 5;
 	protected boolean autoDownloadEnabled = true;
 
-	private ExecutorService executor = null;
+	// Image index boundary for current view
+	private volatile int bminx;
+	private volatile int bminy;
+	private volatile int bmaxx;
+	private volatile int bmaxy;
+	private volatile int leftEdge;
+	private volatile int bottomEdge;
+
+
+	private final List<WMSRequest> requestQueue = new ArrayList<WMSRequest>();
+	private final List<WMSRequest> finishedRequests = new ArrayList<WMSRequest>();
+	private final Lock requestQueueLock = new ReentrantLock();
+	private final Condition queueEmpty = requestQueueLock.newCondition();
+	private final List<Grabber> grabbers = new ArrayList<Grabber>();
+	private final List<Thread> grabberThreads = new ArrayList<Thread>();
+	private int threadCount;
+	private int workingThreadCount;
+	private boolean canceled;
+
 
 	/** set to true if this layer uses an invalid base url */
 	private boolean usesInvalidUrl = false;
@@ -99,9 +123,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 		}
 		resolution = mv.getDist100PixelText();
 
-		executor = Executors.newFixedThreadPool(
-				Main.pref.getInteger("wmsplugin.numThreads",
-						WMSPlugin.simultaneousConnections));
+		startGrabberThreads();
 		if (baseURL != null && !baseURL.startsWith("html:") && !WMSGrabber.isUrlWithPatterns(baseURL)) {
 			if (!(baseURL.endsWith("&") || baseURL.endsWith("?"))) {
 				if (!confirmMalformedUrl(baseURL)) {
@@ -122,34 +144,17 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 		return autoDownloadEnabled;
 	}
 
-	public double getDx(){
-		return dx;
-	}
-
-	public double getDy(){
-		return dy;
-	}
 
 	@Override
 	public void destroy() {
-		try {
-			executor.shutdownNow();
-			// Might not be initialized, so catch NullPointer as well
-		} catch(Exception x) {
-			x.printStackTrace();
-		}
-	}
-
-	public double getPPD(){
-		ProjectionBounds bounds = mv.getProjectionBounds();
-		return mv.getWidth() / (bounds.max.east() - bounds.min.east());
+		cancelGrabberThreads(false);
 	}
 
 	public void initializeImages() {
 		images = new GeorefImage[dax][day];
 		for(int x = 0; x<dax; ++x) {
 			for(int y = 0; y<day; ++y) {
-				images[x][y]= new GeorefImage(false);
+				images[x][y]= new GeorefImage(this);
 			}
 		}
 	}
@@ -172,12 +177,6 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	@Override public void mergeFrom(Layer from) {
 	}
 
-	private ProjectionBounds XYtoBounds (int x, int y) {
-		return new ProjectionBounds(
-				new EastNorth(      x * imageSize / pixelPerDegree,       y * imageSize / pixelPerDegree),
-				new EastNorth((x + 1) * imageSize / pixelPerDegree, (y + 1) * imageSize / pixelPerDegree));
-	}
-
 	private int modulo (int a, int b) {
 		return a % b >= 0 ? a%b : a%b+b;
 	}
@@ -187,24 +186,28 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 		return pixelPerDegree / getPPD() > minZoom;
 	}
 
-	@Override public void paint(Graphics2D g, final MapView mv, Bounds bounds) {
+	@Override public void paint(Graphics2D g, final MapView mv, Bounds b) {
 		if(baseURL == null) return;
 		if (usesInvalidUrl && !isInvalidUrlConfirmed) return;
 
+		ProjectionBounds bounds = mv.getProjectionBounds();
+		bminx= getImageXIndex(bounds.min.east());
+		bminy= getImageYIndex(bounds.min.north());
+		bmaxx= getImageXIndex(bounds.max.east());
+		bmaxy= getImageYIndex(bounds.max.north());
+
+		leftEdge = (int)(bounds.min.east() * getPPD());
+		bottomEdge = (int)(bounds.min.north() * getPPD());
+
 		if (zoomIsTooBig()) {
-			for(int x = 0; x<dax; ++x) {
-				for(int y = 0; y<day; ++y) {
-					images[modulo(x,dax)][modulo(y,day)].paint(g, mv, dx, dy);
+			for(int x = bminx; x<=bmaxx; ++x) {
+				for(int y = bminy; y<=bmaxy; ++y) {
+					images[modulo(x,dax)][modulo(y,day)].paint(g, mv, x, y, leftEdge, bottomEdge);
 				}
 			}
 		} else {
 			downloadAndPaintVisible(g, mv, false);
 		}
-	}
-
-	public void displace(double dx, double dy) {
-		this.dx += dx;
-		this.dy += dy;
 	}
 
 	protected boolean confirmMalformedUrl(String url) {
@@ -236,29 +239,59 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 		}
 	}
 
-	protected void downloadAndPaintVisible(Graphics g, final MapView mv,
-			boolean real){
-		if (usesInvalidUrl)
-			return;
-
+	public double getPPD(){
 		ProjectionBounds bounds = mv.getProjectionBounds();
-		int bminx= (int)Math.floor (((bounds.min.east() - dx) * pixelPerDegree) / imageSize );
-		int bminy= (int)Math.floor (((bounds.min.north() - dy) * pixelPerDegree) / imageSize );
-		int bmaxx= (int)Math.ceil  (((bounds.max.east() - dx) * pixelPerDegree) / imageSize );
-		int bmaxy= (int)Math.ceil  (((bounds.max.north() - dy) * pixelPerDegree) / imageSize );
+		return mv.getWidth() / (bounds.max.east() - bounds.min.east());
+	}
 
-		for(int x = bminx; x<bmaxx; ++x) {
-			for(int y = bminy; y<bmaxy; ++y){
+	public void displace(double dx, double dy) {
+		this.dx += dx;
+		this.dy += dy;
+	}
+
+	public int getImageXIndex(double coord) {
+		return (int)Math.floor( ((coord - dx) * pixelPerDegree) / imageSize);
+	}
+
+	public int getImageYIndex(double coord) {
+		return (int)Math.floor( ((coord - dy) * pixelPerDegree) / imageSize);
+	}
+
+	public int getImageX(int imageIndex) {
+		return (int)(imageIndex * imageSize * (getPPD() / pixelPerDegree) + dx * getPPD());
+	}
+
+	public int getImageY(int imageIndex) {
+		return (int)(imageIndex * imageSize * (getPPD() / pixelPerDegree) + dy * getPPD());
+	}
+
+	/**
+	 *
+	 * @param xIndex
+	 * @param yIndex
+	 * @return Real EastNorth of given tile. dx/dy is not counted in
+	 */
+	public EastNorth getEastNorth(int xIndex, int yIndex) {
+		return new EastNorth((xIndex * imageSize) / pixelPerDegree, (yIndex * imageSize) / pixelPerDegree);
+	}
+
+
+	protected void downloadAndPaintVisible(Graphics g, final MapView mv, boolean real){
+
+		for(int x = bminx; x<=bmaxx; ++x) {
+			for(int y = bminy; y<=bmaxy; ++y){
+				images[modulo(x,dax)][modulo(y,day)].changePosition(x, y);
+			}
+		}
+
+		gatherFinishedRequests();
+
+		for(int x = bminx; x<=bmaxx; ++x) {
+			for(int y = bminy; y<=bmaxy; ++y){
 				GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
-				if((!img.paint(g, mv, dx, dy) || img.infotext) && !img.downloadingStarted){
-					img.downloadingStarted = true;
-					img.image = null;
-					img.flushedResizedCachedInstance();
-					Grabber gr = WMSPlugin.getGrabber(XYtoBounds(x,y), img, mv, this);
-					if(!gr.loadFromCache(real)){
-						gr.setPriority(1);
-						executor.submit(gr);
-					}
+				if (!img.paint(g, mv, x, y, leftEdge, bottomEdge)) {
+					WMSRequest request = new WMSRequest(x, y, pixelPerDegree, real);
+					addRequest(request);
 				}
 			}
 		}
@@ -267,9 +300,9 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	@Override public void visitBoundingBox(BoundingXYVisitor v) {
 		for(int x = 0; x<dax; ++x) {
 			for(int y = 0; y<day; ++y)
-				if(images[x][y].image!=null){
-					v.visit(images[x][y].min);
-					v.visit(images[x][y].max);
+				if(images[x][y].getImage() != null){
+					v.visit(images[x][y].getMin());
+					v.visit(images[x][y].getMax());
 				}
 		}
 	}
@@ -299,13 +332,122 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	}
 
 	public GeorefImage findImage(EastNorth eastNorth) {
-		for(int x = 0; x<dax; ++x) {
-			for(int y = 0; y<day; ++y)
-				if(images[x][y].image!=null && images[x][y].min!=null && images[x][y].max!=null)
-					if(images[x][y].contains(eastNorth, dx, dy))
-						return images[x][y];
+		int xIndex = getImageXIndex(eastNorth.east());
+		int yIndex = getImageYIndex(eastNorth.north());
+		GeorefImage result = images[modulo(xIndex, dax)][modulo(yIndex, day)];
+		if (result.getXIndex() == xIndex && result.getYIndex() == yIndex) {
+			return result;
+		} else {
+			return null;
 		}
-		return null;
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @return -1 if request is no longer needed, otherwise priority of request (lower number <=> more important request)
+	 */
+	private int getRequestPriority(WMSRequest request) {
+		if (request.getPixelPerDegree() != pixelPerDegree) {
+			return -1;
+		}
+		if (bminx > request.getXIndex()
+				|| bmaxx < request.getXIndex()
+				|| bminy > request.getYIndex()
+				|| bmaxy < request.getYIndex()) {
+			return -1;
+		}
+
+		EastNorth cursorEastNorth = mv.getEastNorth(mv.lastMEvent.getX(), mv.lastMEvent.getY());
+		int mouseX = getImageXIndex(cursorEastNorth.east());
+		int mouseY = getImageYIndex(cursorEastNorth.north());
+		int dx = request.getXIndex() - mouseX;
+		int dy = request.getYIndex() - mouseY;
+
+		return dx * dx + dy * dy;
+	}
+
+	public WMSRequest getRequest() {
+		requestQueueLock.lock();
+		try {
+			workingThreadCount--;
+			Iterator<WMSRequest> it = requestQueue.iterator();
+			while (it.hasNext()) {
+				WMSRequest item = it.next();
+				int priority = getRequestPriority(item);
+				if (priority == -1) {
+					it.remove();
+				} else {
+					item.setPriority(priority);
+				}
+			}
+			Collections.sort(requestQueue);
+
+			EastNorth cursorEastNorth = mv.getEastNorth(mv.lastMEvent.getX(), mv.lastMEvent.getY());
+			int mouseX = getImageXIndex(cursorEastNorth.east());
+			int mouseY = getImageYIndex(cursorEastNorth.north());
+			boolean isOnMouse = requestQueue.size() > 0 && requestQueue.get(0).getXIndex() == mouseX && requestQueue.get(0).getYIndex() == mouseY;
+
+			// If there is only one thread left then keep it in case we need to download other tile urgently
+			while (!canceled &&
+					(requestQueue.isEmpty() || (!isOnMouse && threadCount - workingThreadCount == 0 && threadCount > 1))) {
+				try {
+					queueEmpty.await();
+				} catch (InterruptedException e) {
+					// Shouldn't happen
+				}
+			}
+
+			workingThreadCount++;
+			if (canceled) {
+				return null;
+			} else {
+				return requestQueue.remove(0);
+			}
+
+		} finally {
+			requestQueueLock.unlock();
+		}
+	}
+
+	public void finishRequest(WMSRequest request) {
+		requestQueueLock.lock();
+		try {
+			finishedRequests.add(request);
+		} finally {
+			requestQueueLock.unlock();
+		}
+	}
+
+	public void addRequest(WMSRequest request) {
+		requestQueueLock.lock();
+		try {
+			if (!requestQueue.contains(request)) {
+				requestQueue.add(request);
+				queueEmpty.signalAll();
+			}
+		} finally {
+			requestQueueLock.unlock();
+		}
+	}
+
+	public boolean requestIsValid(WMSRequest request) {
+		return bminx <= request.getXIndex() && bmaxx >= request.getXIndex() && bminy <= request.getYIndex() && bmaxy >= request.getYIndex();
+	}
+
+	private void gatherFinishedRequests() {
+		requestQueueLock.lock();
+		try {
+			for (WMSRequest request: finishedRequests) {
+				GeorefImage img = images[modulo(request.getXIndex(),dax)][modulo(request.getYIndex(),day)];
+				if (img.equalPosition(request.getXIndex(), request.getYIndex())) {
+					img.changeImage(request.getState(), request.getImage());
+				}
+			}
+			finishedRequests.clear();
+		} finally {
+			requestQueueLock.unlock();
+		}
 	}
 
 	public class DownloadAction extends AbstractAction {
@@ -351,11 +493,8 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 			for (int x = 0; x < dax; ++x) {
 				for (int y = 0; y < day; ++y) {
 					GeorefImage img = images[modulo(x,dax)][modulo(y,day)];
-					if(img.failed){
-						img.image = null;
-						img.flushedResizedCachedInstance();
-						img.downloadingStarted = false;
-						img.failed = false;
+					if(img.getState() == State.FAILED){
+						addRequest(new WMSRequest(img.getXIndex(), img.getYIndex(), pixelPerDegree, true));
 						mv.repaint();
 					}
 				}
@@ -512,16 +651,61 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 
 		public void actionPerformed(ActionEvent e) {
 			autoDownloadEnabled = !autoDownloadEnabled;
+			if (autoDownloadEnabled) {
+				mv.repaint();
+			}
 		}
+	}
 
+	private void cancelGrabberThreads(boolean wait) {
+		requestQueueLock.lock();
+		try {
+			canceled = true;
+			for (Grabber grabber: grabbers) {
+				grabber.cancel();
+			}
+			queueEmpty.signalAll();
+		} finally {
+			requestQueueLock.unlock();
+		}
+		if (wait) {
+			for (Thread t: grabberThreads) {
+				try {
+					t.join();
+				} catch (InterruptedException e) {
+					// Shouldn't happen
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private void startGrabberThreads() {
+		int threadCount = WMSPlugin.PROP_SIMULTANEOUS_CONNECTIONS.get();
+		requestQueueLock.lock();
+		try {
+			canceled = false;
+			grabbers.clear();
+			grabberThreads.clear();
+			for (int i=0; i<threadCount; i++) {
+				Grabber grabber = WMSPlugin.getGrabber(mv, this);
+				grabbers.add(grabber);
+				Thread t = new Thread(grabber, "WMS " + getName() + " " + i);
+				t.setDaemon(true);
+				t.start();
+				grabberThreads.add(t);
+			}
+			this.workingThreadCount = grabbers.size();
+			this.threadCount = grabbers.size();
+		} finally {
+			requestQueueLock.unlock();
+		}
 	}
 
 	public void preferenceChanged(PreferenceChangeEvent event) {
-		if (event.getKey().equals("wmsplugin.simultaneousConnections")) {
-			executor.shutdownNow();
-			executor = Executors.newFixedThreadPool(
-					Main.pref.getInteger("wmsplugin.numThreads",
-							WMSPlugin.simultaneousConnections));
+		if (event.getKey().equals(WMSPlugin.PROP_SIMULTANEOUS_CONNECTIONS.getKey())) {
+			cancelGrabberThreads(true);
+			startGrabberThreads();
 		}
 	}
 }

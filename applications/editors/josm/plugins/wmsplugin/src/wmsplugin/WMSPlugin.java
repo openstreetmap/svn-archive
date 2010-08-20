@@ -28,7 +28,7 @@ import javax.swing.JMenuItem;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.ProjectionBounds;
+import org.openstreetmap.josm.data.preferences.IntegerProperty;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -47,6 +47,8 @@ import wmsplugin.io.WMSLayerImporter;
 public class WMSPlugin extends Plugin {
 	static CacheFiles cache = new CacheFiles("wmsplugin");
 
+	public static final IntegerProperty PROP_SIMULTANEOUS_CONNECTIONS = new IntegerProperty("wmsplugin.simultaneousConnections", 3);
+
 	WMSLayer wmsLayer;
 	static JMenu wmsJMenu;
 
@@ -56,7 +58,6 @@ public class WMSPlugin extends Plugin {
 	static boolean doOverlap = false;
 	static int overlapEast = 14;
 	static int overlapNorth = 4;
-	static int simultaneousConnections = 3;
 	// remember state of menu item to restore on changed preferences
 	static private boolean menuEnabled = false;
 
@@ -176,11 +177,6 @@ public class WMSPlugin extends Plugin {
 			overlapNorth = Integer.valueOf(prefs.get("wmsplugin.url.overlapNorth"));
 		} catch (Exception e) {} // If sth fails, we drop to default settings.
 
-		// Load the settings for number of simultaneous connections
-		try {
-			simultaneousConnections = Integer.valueOf(Main.pref.get("wmsplugin.simultanousConnections"));
-		} catch (Exception e) {} // If sth fails, we drop to default settings.
-
 		// And then the names+urls of WMS servers
 		int prefid = 0;
 		String name = null;
@@ -286,11 +282,11 @@ public class WMSPlugin extends Plugin {
 		}
 	}
 
-	public static Grabber getGrabber(ProjectionBounds bounds, GeorefImage img, MapView mv, WMSLayer layer){
+	public static Grabber getGrabber(MapView mv, WMSLayer layer){
 		if(layer.baseURL.startsWith("html:"))
-			return new HTMLGrabber(bounds, img, mv, layer, cache);
+			return new HTMLGrabber(mv, layer, cache);
 		else
-			return new WMSGrabber(bounds, img, mv, layer, cache);
+			return new WMSGrabber(mv, layer, cache);
 	}
 
 	private static void setEnabledAll(boolean isEnabled) {

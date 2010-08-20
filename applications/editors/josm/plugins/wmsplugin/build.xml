@@ -28,7 +28,7 @@
 
 
 	<property name="commit.message" value="add commit message" />
-	<property name="plugin.main.version" value="3408" />
+	<property name="plugin.main.version" value="3451" />
 
 
 	<property name="josm" location="../../core/dist/josm-custom.jar" />

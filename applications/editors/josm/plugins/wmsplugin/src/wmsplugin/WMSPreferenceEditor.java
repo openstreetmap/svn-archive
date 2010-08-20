@@ -186,7 +186,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 		// Simultaneous connections
 		p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
 		JLabel labelSimConn = new JLabel(tr("Simultaneous connections"));
-		spinSimConn = new JSpinner(new SpinnerNumberModel(WMSPlugin.simultaneousConnections, 1, 30, 1));
+		spinSimConn = new JSpinner(new SpinnerNumberModel(WMSPlugin.PROP_SIMULTANEOUS_CONNECTIONS.get(), 1, 30, 1));
 		JPanel overlapPanelSimConn = new JPanel(new FlowLayout());
 		overlapPanelSimConn.add(labelSimConn);
 		overlapPanelSimConn.add(spinSimConn);
@@ -242,7 +242,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 		WMSPlugin.doOverlap = overlapCheckBox.getModel().isSelected();
 		WMSPlugin.overlapEast = (Integer) spinEast.getModel().getValue();
 		WMSPlugin.overlapNorth = (Integer) spinNorth.getModel().getValue();
-		WMSPlugin.simultaneousConnections = (Integer) spinSimConn.getModel().getValue();
+		WMSPlugin.PROP_SIMULTANEOUS_CONNECTIONS.put((Integer) spinSimConn.getModel().getValue());
 		allowRemoteControl = remoteCheckBox.getModel().isSelected();
 
 		Main.pref.put("wmsplugin.url.overlap",    String.valueOf(WMSPlugin.doOverlap));
@@ -250,7 +250,6 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 		Main.pref.put("wmsplugin.url.overlapNorth", String.valueOf(WMSPlugin.overlapNorth));
 
 		Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
-		Main.pref.put("wmsplugin.simultaneousConnections", String.valueOf(WMSPlugin.simultaneousConnections));
 
 		Main.pref.put("wmsplugin.remotecontrol",    String.valueOf(allowRemoteControl));
 		return false;

@@ -411,6 +411,9 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	}
 
 	public void finishRequest(WMSRequest request) {
+		if (request.getState() == null) {
+			throw new IllegalArgumentException("Finished request without state");
+		}
 		requestQueueLock.lock();
 		try {
 			finishedRequests.add(request);
@@ -444,8 +447,8 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 					img.changeImage(request.getState(), request.getImage());
 				}
 			}
-			finishedRequests.clear();
 		} finally {
+			finishedRequests.clear();
 			requestQueueLock.unlock();
 		}
 	}

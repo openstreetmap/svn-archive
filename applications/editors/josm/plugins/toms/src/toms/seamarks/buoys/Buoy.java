@@ -190,18 +190,6 @@ abstract public class Buoy extends SeaMark {
 		Node = node;
 	}
 
-	public boolean parseShape(Node node, String str) {
-		boolean ret = true;
-		Map<String, String> keys;
-
-		keys = node.getKeys();
-		if (keys.containsKey(str) == false) {
-			setErrMsg("Parse-Error: Seezeichen ohne Form");
-			return false;
-		}
-		return ret;
-	}
-
 	private boolean TopMark = false;
 
 	public boolean hasTopMark() {
@@ -235,6 +223,7 @@ abstract public class Buoy extends SeaMark {
 		dlg.cbM01StyleOfMark.setEnabled(true);
 
 		dlg.cbM01TypeOfMark.setSelectedIndex(getBuoyIndex());
+		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
 
 		dlg.cM01TopMark.setSelected(hasTopMark());
 		dlg.cM01Fired.setSelected(isFired());
@@ -334,10 +323,6 @@ abstract public class Buoy extends SeaMark {
 					"seamark:topmark:colour", colour));
 		}
 
-	}
-
-	public boolean parseShape(Node node) {
-		return false;
 	}
 
 	public void refreshStyles() {

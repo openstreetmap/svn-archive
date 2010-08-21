@@ -106,10 +106,6 @@ abstract public class SeaMark {
 
 	public abstract void paintSign();
 
-	public abstract boolean parseTopMark(Node node);
-
-	public abstract boolean parseLight(Node node);
-
 	public abstract void saveSign();
 
 	private int Colour = UNKNOWN_COLOUR;

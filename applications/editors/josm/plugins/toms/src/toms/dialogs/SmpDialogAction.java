@@ -77,7 +77,6 @@ public class SmpDialogAction extends JosmAction {
 	private SelectionChangedListener SmpListener = new SelectionChangedListener() {
 		public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 			Node node;
-			Map<String, String> keys = null;
 			Selection = newSelection;
 
 			// System.out.println("hello");
@@ -88,12 +87,7 @@ public class SmpDialogAction extends JosmAction {
 						// Absicherung gegen Doppelevents
 						if (node.compareTo(SelNode) != 0) {
 							SelNode = node;
-
-							keys = node.getKeys();
-							if (keys.containsKey("seamark")
-									|| keys.containsKey("seamark:type")) {
-								parseSeaMark();
-							}
+							parseSeaMark();
 						}
 				}
 			}
@@ -317,510 +311,96 @@ public class SmpDialogAction extends JosmAction {
 		cbM01StyleOfMark.setEnabled(true);
 
 		// Soweit das Vorspiel. Ab hier beginnt das Parsen
-		String str = null;
-		String name;
+		String type = "";
+		String str = "";
 
 		keys = node.getKeys();
-		name = "";
 
 		// vorsorglich den Namen holen und verwenden, wenn es ein
 		// Seezeichen ist. Name kann durch die weiteren Tags ueber-
 		// schrieben werden
-		if (keys.containsKey("name"))
-			name = keys.get("name");
 
-		if (keys.containsKey("seamark:name")) {
-			name = keys.get("seamark:name");
+		if (keys.containsKey("seamark:type")) {
+			type = keys.get("seamark:type");
+
+			if (type.equals("buoy_lateral") || type.equals("beacon_lateral")
+					|| keys.containsKey("seamark:buoy_lateral")
+					|| keys.containsKey("seamark:beacon_lateral")) {
+				buoy = new BuoyLat(this, node);
+				return;
+
+			} else if (type.equals("buoy_cardinal") || type.equals("beacon_cardinal")
+					|| keys.containsKey("seamark:buoy_cardinal")
+					|| keys.containsKey("seamark:beacon_cardinal")) {
+				buoy = new BuoyCard(this, node);
+				return;
+
+			} else if (type.equals("buoy_safe_water")
+					|| type.equals("beacon_safe_water")
+					|| keys.containsKey("seamark:buoy_safe_water")
+					|| keys.containsKey("seamark:beacon_safe_water")) {
+				buoy = new BuoySaw(this, node);
+				return;
+
+			} else if (type.equals("buoy_special_purpose")
+					|| type.equals("beacon_special_purpose")
+					|| keys.containsKey("seamark:buoy_special_purpose")
+					|| keys.containsKey("seamark:beacon_special_purpose")) {
+				buoy = new BuoySpec(this, node);
+				return;
+
+			} else if (type.equals("buoy_isolated_danger")
+					|| type.equals("beacon_isolated_danger")
+					|| (keys.containsKey("seamark:buoy_isolated_danger"))
+					|| (keys.containsKey("seamark:beacon_isolated_danger"))) {
+				buoy = new BuoyIsol(this, node);
+				return;
+
+			} else if (type.equals("light_float")) {
+				if (keys.containsKey("seamark:light_float:colour")) {
+					str = keys.get("seamark:light_float:colour");
+					if (str.equals("red") || str.equals("green")
+							|| str.equals("red;green;red") || str.equals("green;red;green")) {
+						buoy = new BuoyLat(this, node);
+						return;
+					} else if (str.equals("black;yellow")
+							|| str.equals("black;yellow;black") || str.equals("yellow;black")
+							|| str.equals("yellow;black;yellow")) {
+						buoy = new BuoyCard(this, node);
+						return;
+					} else if (str.equals("black;red;black")) {
+						buoy = new BuoyIsol(this, node);
+						return;
+					} else if (str.equals("red;white")) {
+						buoy = new BuoySaw(this, node);
+						return;
+					} else if (str.equals("yellow")) {
+						buoy = new BuoySaw(this, node);
+						return;
+					} else {
+						buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
+						buoy.setNode(node);
+						return;
+					}
+				} else if (keys.containsKey("seamark:light_float:topmark")) {
+					if (keys.containsKey("seamark:light_float:topmark:shape")) {
+						str = keys.get("seamark:light_float:topmark:shape");
+						if (str.equals("cylinder") || str.equals("cone, point up")) {
+							buoy = new BuoyLat(this, node);
+							return;
+						}
+					} else if (keys.containsKey("seamark:light_float:topmark:colour")) {
+						str = keys.get("seamark:light_float:topmark:colour");
+						if (str.equals("red") || str.equals("green")) {
+							buoy = new BuoyLat(this, node);
+							return;
+						}
+					}
+				}
+			}
 		}
 
-		if (keys.containsKey("seamark") || keys.containsKey("seamark:type")) {
-
-			if (keys.containsKey("seamark:buoy_lateral:category")
-					|| keys.containsKey("seamark:beacon_lateral:category")) {
-
-				buoy = null; // Prototyp der Lateraltonne
-				String cat; // Kathegorie
-
-				if ((keys.containsKey("seamark:buoy_lateral:colour") == false)
-						&& (keys.containsKey("seamark:beacon_lateral:colour") == false)) {
-					buoy = new BuoyUkn(this, "Parse-Error: Buoy without colour");
-					buoy.setNode(node);
-					return;
-				}
-
-				if (name.equals("")) {
-					if (keys.containsKey("seamark:buoy_lateral:name"))
-						name = keys.get("seamark:buoy_lateral:name");
-					if (keys.containsKey("seamark:beacon_lateral:name"))
-						name = keys.get("seamark:beacon_lateral:name");
-				}
-
-				if (keys.containsKey("seamark:buoy_lateral:category") == true) {
-					str = keys.get("seamark:buoy_lateral:colour");
-					cat = keys.get("seamark:buoy_lateral:category");
-				} else {
-					str = keys.get("seamark:beacon_lateral:colour");
-					cat = keys.get("seamark:beacon_lateral:category");
-				}
-
-				if (cat.equals("port")) {
-
-					buoy = new BuoyLat(this, SeaMark.PORT_HAND);
-					if (str.compareTo("red") == 0) {
-						buoy.setRegion(SeaMark.IALA_A);
-						buoy.setColour(SeaMark.RED);
-					} else {
-						buoy.setRegion(SeaMark.IALA_B);
-						buoy.setColour(SeaMark.GREEN);
-					}
-					buoy.setName(name);
-				}
-
-				if (cat.compareTo("starboard") == 0) {
-
-					buoy = new BuoyLat(this, SeaMark.STARBOARD_HAND);
-					if (str.compareTo("green") == 0) {
-						buoy.setRegion(SeaMark.IALA_A);
-						buoy.setColour(SeaMark.GREEN);
-					} else {
-						buoy.setRegion(SeaMark.IALA_B);
-						buoy.setColour(SeaMark.RED);
-					}
-					buoy.setName(name);
-				}
-
-				if (cat.compareTo("preferred_channel_port") == 0) {
-
-					buoy = new BuoyLat(this, SeaMark.PREF_PORT_HAND);
-					if (str.compareTo("red;green;red") == 0) {
-						buoy.setRegion(SeaMark.IALA_A);
-						buoy.setColour(SeaMark.RED_GREEN_RED);
-					} else {
-						buoy.setRegion(SeaMark.IALA_B);
-						buoy.setColour(SeaMark.GREEN_RED_GREEN);
-					}
-
-					buoy.setName(name);
-				}
-
-				if (cat.compareTo("preferred_channel_starboard") == 0) {
-
-					buoy = new BuoyLat(this, SeaMark.PREF_STARBOARD_HAND);
-					if (str.compareTo("green;red;green") == 0) {
-						buoy.setRegion(SeaMark.IALA_A);
-						buoy.setColour(SeaMark.GREEN_RED_GREEN);
-					} else {
-						buoy.setRegion(SeaMark.IALA_B);
-						buoy.setColour(SeaMark.RED_GREEN_RED);
-					}
-
-					buoy.setName(name);
-				}
-
-				// b != null true, wenn eine gültige Lateraltonne gefunden wurde
-				if (buoy != null) {
-					if (buoy.parseTopMark(node) == false) {
-						str = buoy.getErrMsg();
-						if (str == null)
-							buoy.setValid(false);
-					}
-
-					if (buoy.parseLight(node) == false) {
-						str = buoy.getErrMsg();
-						if (str == null)
-							buoy.setValid(false);
-					}
-
-					if (buoy.parseShape(node) == false) {
-						str = buoy.getErrMsg();
-						if (str == null)
-							buoy = new BuoyUkn(this, str);
-						return;
-					}
-
-					buoy.setNode(node);
-					buoy.setValid(true);
-					cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
-					buoy.paintSign();
-
-					return;
-
-				} else { // Ende if(b != null)
-					buoy = new BuoyUkn(this, "Parse-Error: Seamark not set");
-					buoy.setNode(node);
-					return;
-				} // Ende else if(b != null)
-			} else // Ende if(keys.containsKey("seamark:buoy_lateral:category") ==
-							// true)
-			// Test auf Kardinal-
-			if ((keys.containsKey("seamark:buoy_cardinal:category") == true)
-					|| (keys.containsKey("seamark:beacon_cardinal:category") == true)) {
-
-				buoy = null; // Prototyp der Kardinaltonne
-				String cat; // Kathegorie
-
-				if ((keys.containsKey("seamark:buoy_cardinal:colour") == false)
-						&& (keys.containsKey("seamark:beacon_cardinal:colour") == false)) {
-					buoy = new BuoyUkn(this, "Parse-Error: No colour set");
-					buoy.setNode(node);
-					return;
-				}
-
-				if (name.compareTo("") == 0) {
-					if (keys.containsKey("seamark:buoy_cardinal:name"))
-						name = keys.get("seamark:buoy_cardinal:name");
-					if (keys.containsKey("seamark:beacon_cardinal:name"))
-						name = keys.get("seamark:beacon_cardinal:name");
-				}
-
-				if (keys.containsKey("seamark:buoy_cardinal:category") == true) {
-					str = keys.get("seamark:buoy_cardinal:colour");
-					cat = keys.get("seamark:buoy_cardinal:category");
-				} else {
-					str = keys.get("seamark:beacon_cardinal:colour");
-					cat = keys.get("seamark:beacon_cardinal:category");
-				}
-
-				// Test auf Kardinaltonne Nord
-				if (str.compareTo("black;yellow") == 0) {
-
-					buoy = new BuoyCard(this, SeaMark.CARD_NORTH);
-
-					if (cat.compareTo("north") != 0)
-						buoy.setErrMsg("Parse-Error: falsche category");
-
-					buoy.setName(name);
-				} // Ende if(str.compareTo("black;yellow")== 0)
-
-				// Test auf Kardinaltonne Ost
-				if (str.compareTo("black;yellow;black") == 0) {
-
-					buoy = new BuoyCard(this, SeaMark.CARD_EAST);
-
-					if (cat.compareTo("east") != 0)
-						buoy.setErrMsg("Parse-Error: falsche category");
-
-					buoy.setName(name);
-				} // Ende if(str.compareTo("black;yellow;black")== 0)
-
-				// Test auf Kardinaltonne Sued
-				if (str.compareTo("yellow;black") == 0) {
-
-					buoy = new BuoyCard(this, SeaMark.CARD_SOUTH);
-
-					if (cat.compareTo("south") != 0)
-						buoy.setErrMsg("Parse-Error: falsche category");
-
-					buoy.setName(name);
-				} // Ende if(str.compareTo("yellow;black")== 0)
-
-				// Test auf Kardinaltonne West
-				if (str.compareTo("yellow;black;yellow") == 0) {
-
-					buoy = new BuoyCard(this, SeaMark.CARD_WEST);
-
-					if (cat.compareTo("west") != 0)
-						buoy.setErrMsg("Parse-Error: falsche category");
-
-					buoy.setName(name);
-				} // Ende if(str.compareTo("yellow;black;black")== 0)
-
-				// b != null true, wenn eine gültige Kardinaltonne gefunden wurde
-				if (buoy != null) {
-
-					if (buoy.parseLight(node) == false) {
-						str = buoy.getErrMsg();
-						if (str == null)
-							buoy.setValid(false);
-					}
-
-					if (buoy.parseShape(node) == false) {
-						str = buoy.getErrMsg();
-						if (str == null)
-							buoy = new BuoyUkn(this, str);
-						return;
-					}
-
-					buoy.setNode(node);
-					buoy.setValid(true);
-					cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
-					buoy.paintSign();
-
-					return;
-
-				} else { // Ende if(b != null)
-					buoy = new BuoyUkn(this, "Parse-Error: Seamark not set");
-					buoy.setNode(node);
-					return;
-				} // Ende else if(b != null)
-
-			}
-
-			// Test buoy_safewater
-			if (keys.containsKey("seamark:buoy_safe_water:shape") == true) {
-
-				if (keys.containsKey("seamark:buoy_safe_water:colour") == false) {
-					buoy = new BuoyUkn(this, "Parse-Error: No colour set");
-					buoy.setNode(node);
-					return;
-				}
-
-				str = keys.get("seamark:buoy_safe_water:colour");
-				if (str.compareTo("red;white") != 0) {
-					buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
-					buoy.setNode(node);
-					return;
-				}
-
-				buoy = new BuoySaw(this, SeaMark.SAFE_WATER);
-				buoy.setName(name);
-				buoy.setColour(SeaMark.RED_WHITE);
-
-				if (buoy.parseTopMark(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy.setValid(false);
-				}
-
-				if (buoy.parseLight(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy.setValid(false);
-				}
-
-				if (buoy.parseShape(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy = new BuoyUkn(this, str);
-					buoy.setNode(node);
-					return;
-				}
-
-				buoy.setValid(true);
-				buoy.setNode(node);
-				cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
-				buoy.paintSign();
-
-				return;
-
-			}
-
-			// Test buoy_special_purpose
-			if (keys.containsKey("seamark:buoy_special_purpose:shape") == true) {
-
-				if (keys.containsKey("seamark:buoy_special_purpose:colour") == false) {
-					buoy = new BuoyUkn(this, "Parse-Error: No colour set");
-					buoy.setNode(node);
-					return;
-				}
-
-				str = keys.get("seamark:buoy_special_purpose:colour");
-				if (str.compareTo("yellow") != 0) {
-					buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
-					buoy.setNode(node);
-					return;
-				}
-
-				buoy = new BuoySpec(this, SeaMark.SPECIAL_PURPOSE);
-				buoy.setName(name);
-				buoy.setColour(SeaMark.YELLOW);
-
-				if (buoy.parseTopMark(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy.setValid(false);
-				}
-
-				if (buoy.parseLight(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy.setValid(false);
-				}
-
-				if (buoy.parseShape(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy = new BuoyUkn(this, str);
-					buoy.setNode(node);
-					return;
-				}
-
-				buoy.setValid(true);
-				buoy.setNode(node);
-				cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
-				buoy.paintSign();
-
-				return;
-
-			}
-
-			// Test buoy_isolated_danger
-			if ((keys.containsKey("seamark:buoy_isolated_danger:colour") == true)
-					|| (keys.containsKey("seamark:beacon_isolated_danger:colour") == true)) {
-
-				if ((keys.containsKey("seamark:buoy_isolated_danger:colour") == true)
-						&& (keys.containsKey("seamark:buoy_isolated_danger:shape") == false)) {
-					buoy = new BuoyUkn(this, "Parse-Error: No shape set");
-					buoy.setNode(node);
-					return;
-				}
-
-				if (keys.containsKey("seamark:buoy_isolated_danger:colour") == true)
-					str = keys.get("seamark:buoy_isolated_danger:colour");
-				else
-					str = keys.get("seamark:beacon_isolated_danger:colour");
-				if (str.compareTo("black;red;black") != 0) {
-					buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
-					buoy.setNode(node);
-					return;
-				}
-
-				buoy = new BuoyIsol(this, SeaMark.ISOLATED_DANGER);
-				buoy.setName(name);
-				buoy.setColour(SeaMark.BLACK_RED_BLACK);
-
-				if (buoy.parseTopMark(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy.setValid(false);
-				}
-
-				if (buoy.parseLight(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy.setValid(false);
-				}
-
-				if (buoy.parseShape(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy = new BuoyUkn(this, str);
-					buoy.setNode(node);
-					return;
-				}
-
-				buoy.setValid(true);
-				buoy.setNode(node);
-				cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
-				buoy.paintSign();
-
-				return;
-
-			}
-
-			// Test light_float
-
-			if ((keys.containsKey("seamark:type") == true)
-					&& (keys.get("seamark:type").equals("light_float"))) {
-
-				if (keys.containsKey("seamark:light_float:colour") == false) {
-					buoy = new BuoyUkn(this, "Parse-Error: No colour set");
-					buoy.setNode(node);
-					return;
-				}
-
-				str = keys.get("seamark:light_float:colour");
-				if (str.equals("red") || str.equals("green")
-						|| str.equals("red;green;red") || str.equals("green;red;green")) {
-					boolean region = Main.pref.get("tomsplugin.IALA").equals("B");
-					if (str.equals("red")) {
-						if ((keys.containsKey("seamark:topmark:shape") && keys.get(
-								"seamark:topmark:shape").equals("cylinder"))
-								|| (region == SeaMark.IALA_A)) {
-							buoy = new BuoyLat(this, SeaMark.PORT_HAND);
-						} else {
-							buoy = new BuoyLat(this, SeaMark.STARBOARD_HAND);
-						}
-						buoy.setColour(SeaMark.RED);
-					} else if (str.equals("green")) {
-						if ((keys.containsKey("seamark:topmark:shape") && keys.get(
-								"seamark:topmark:shape").equals("cone, point up"))
-								|| (region == SeaMark.IALA_A)) {
-							buoy = new BuoyLat(this, SeaMark.STARBOARD_HAND);
-						} else {
-							buoy = new BuoyLat(this, SeaMark.PORT_HAND);
-						}
-						buoy.setColour(SeaMark.GREEN);
-					} else if (str.equals("red;green;red")) {
-						if ((keys.containsKey("seamark:topmark:shape") && keys.get(
-								"seamark:topmark:shape").equals("cylinder"))
-								|| (region == SeaMark.IALA_A)) {
-							buoy = new BuoyLat(this, SeaMark.PREF_PORT_HAND);
-						} else {
-							buoy = new BuoyLat(this, SeaMark.PREF_STARBOARD_HAND);
-						}
-						buoy.setColour(SeaMark.RED_GREEN_RED);
-					} else if (str.equals("green;red;green")) {
-						if ((keys.containsKey("seamark:topmark:shape") && keys.get(
-								"seamark:topmark:shape").equals("cone, point up"))
-								|| (region == SeaMark.IALA_A)) {
-							buoy = new BuoyLat(this, SeaMark.PREF_STARBOARD_HAND);
-						} else {
-							buoy = new BuoyLat(this, SeaMark.PREF_PORT_HAND);
-						}
-						buoy.setColour(SeaMark.GREEN_RED_GREEN);
-					}
-				} else if (str.equals("black;yellow")) {
-					buoy = new BuoyCard(this, SeaMark.CARD_NORTH);
-					buoy.setColour(SeaMark.BLACK_YELLOW);
-				} else if (str.equals("black;yellow;black")) {
-					buoy = new BuoyCard(this, SeaMark.CARD_EAST);
-					buoy.setColour(SeaMark.BLACK_YELLOW_BLACK);
-				} else if (str.equals("yellow;black")) {
-					buoy = new BuoyCard(this, SeaMark.CARD_SOUTH);
-					buoy.setColour(SeaMark.YELLOW_BLACK);
-				} else if (str.equals("yellow;black;yellow")) {
-					buoy = new BuoyCard(this, SeaMark.CARD_WEST);
-					buoy.setColour(SeaMark.YELLOW_BLACK_YELLOW);
-				} else if (str.equals("black;red;black")) {
-					buoy = new BuoyIsol(this, SeaMark.ISOLATED_DANGER);
-					buoy.setColour(SeaMark.BLACK_RED_BLACK);
-				} else if (str.equals("red;white")) {
-					buoy = new BuoySaw(this, SeaMark.SAFE_WATER);
-					buoy.setColour(SeaMark.RED_WHITE);
-				} else if (str.equals("yellow")) {
-					buoy = new BuoySaw(this, SeaMark.SPECIAL_PURPOSE);
-					buoy.setColour(SeaMark.YELLOW);
-				} else {
-					buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
-					buoy.setNode(node);
-					return;
-				}
-
-				buoy.setName(name);
-
-				if (buoy.parseTopMark(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy.setValid(false);
-				}
-
-				if (buoy.parseLight(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy.setValid(false);
-				}
-
-				if (buoy.parseShape(node) == false) {
-					str = buoy.getErrMsg();
-					if (str == null)
-						buoy = new BuoyUkn(this, str);
-					buoy.setNode(node);
-					return;
-				}
-
-				buoy.setValid(true);
-				buoy.setNode(node);
-				cbM01StyleOfMark.setSelectedIndex(buoy.getStyleIndex());
-				buoy.paintSign();
-
-				return;
-
-			}
-		} // Ende if(keys.containsKey("seamark") || keys.containsKey("seamark:type")
-			// )
-
-		buoy = new BuoyUkn(this, "Parse-Error: Seamark not set");
+		buoy = new BuoyUkn(this, "Seamark not set");
 		buoy.setNode(node);
 		return;
 	}
@@ -830,6 +410,7 @@ public class SmpDialogAction extends JosmAction {
 		if (dM01SeaMap == null) {
 			dM01SeaMap = new JDialog();
 			dM01SeaMap.setSize(new Dimension(353, 373));
+			// dM01SeaMap.setSize(new Dimension(400, 400));
 			dM01SeaMap.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			dM01SeaMap.setModal(false);
 			dM01SeaMap.setResizable(false);
@@ -977,17 +558,19 @@ public class SmpDialogAction extends JosmAction {
 					String name;
 					int type = cbM01TypeOfMark.getSelectedIndex();
 
-					if (buoy == null)
+					if (buoy == null) {
 						buoy = new BuoyUkn(dia, "Seamark not set");
-					;
-					if (type == buoy.getBuoyIndex() && type != 0) {
 						return;
 					}
+					if ((type == 0) || (type == buoy.getBuoyIndex()))
+						return;
 
 					n = buoy.getNode();
+					if (n == null)
+						n = onode;
 					name = buoy.getName();
-
 					switch (type) {
+
 					case SeaMark.UNKNOWN_CAT:
 						if (!(buoy instanceof BuoyUkn))
 							buoy = new BuoyUkn(dia, "Seamark not set");
@@ -995,56 +578,16 @@ public class SmpDialogAction extends JosmAction {
 						break;
 
 					case SeaMark.PORT_HAND:
-						if (!(buoy instanceof BuoyLat))
-							buoy = new BuoyLat(dia, SeaMark.PORT_HAND);
-						if (buoy.getRegion() != SeaMark.IALA_B) {
-							buoy.setColour(SeaMark.RED);
-							buoy.setRegion(SeaMark.IALA_A);
-							tbM01Region.setSelected(SeaMark.IALA_A);
-						} else {
-							buoy.setColour(SeaMark.GREEN);
-						}
-						break;
-
 					case SeaMark.STARBOARD_HAND:
-						if (!(buoy instanceof BuoyLat))
-							buoy = new BuoyLat(dia, SeaMark.STARBOARD_HAND);
-						if (buoy.getRegion() != SeaMark.IALA_B) {
-							buoy.setColour(SeaMark.GREEN);
-							buoy.setRegion(SeaMark.IALA_A);
-							tbM01Region.setSelected(SeaMark.IALA_A);
-						} else {
-							buoy.setColour(SeaMark.RED);
-						}
-						break;
-
 					case SeaMark.PREF_PORT_HAND:
-						if (!(buoy instanceof BuoyLat))
-							buoy = new BuoyLat(dia, SeaMark.PREF_PORT_HAND);
-						if (buoy.getRegion() != SeaMark.IALA_B) {
-							buoy.setColour(SeaMark.RED_GREEN_RED);
-							buoy.setRegion(SeaMark.IALA_A);
-							tbM01Region.setSelected(SeaMark.IALA_A);
-						} else {
-							buoy.setColour(SeaMark.GREEN_RED_GREEN);
-						}
-						break;
-
 					case SeaMark.PREF_STARBOARD_HAND:
 						if (!(buoy instanceof BuoyLat))
-							buoy = new BuoyLat(dia, SeaMark.PREF_STARBOARD_HAND);
-						if (buoy.getRegion() != SeaMark.IALA_B) {
-							buoy.setColour(SeaMark.GREEN_RED_GREEN);
-							buoy.setRegion(SeaMark.IALA_A);
-							tbM01Region.setSelected(SeaMark.IALA_A);
-						} else {
-							buoy.setColour(SeaMark.RED_GREEN_RED);
-						}
+							buoy = new BuoyLat(dia, n);
 						break;
 
 					case SeaMark.SAFE_WATER:
 						if (!(buoy instanceof BuoySaw))
-							buoy = new BuoySaw(dia, SeaMark.SAFE_WATER);
+							buoy = new BuoySaw(dia, n);
 						break;
 
 					case SeaMark.CARD_NORTH:
@@ -1052,22 +595,18 @@ public class SmpDialogAction extends JosmAction {
 					case SeaMark.CARD_SOUTH:
 					case SeaMark.CARD_WEST:
 						if (!(buoy instanceof BuoyCard))
-							buoy = new BuoyCard(dia, type);
+							buoy = new BuoyCard(dia, n);
 						break;
 
 					case SeaMark.ISOLATED_DANGER:
 						if (!(buoy instanceof BuoyIsol))
-							buoy = new BuoyIsol(dia, SeaMark.ISOLATED_DANGER);
+							buoy = new BuoyIsol(dia, n);
 						break;
 
 					case SeaMark.SPECIAL_PURPOSE:
 						if (!(buoy instanceof BuoySpec))
-							buoy = new BuoySpec(dia, SeaMark.SPECIAL_PURPOSE);
+							buoy = new BuoySpec(dia, n);
 						break;
-					/*
-					 * case SeaMark.LIGHT: if (!(buoy instanceof BuoyNota)) buoy = new
-					 * BuoyNota(dia, type); break;
-					 */
 					default:
 						if (!(buoy instanceof BuoyUkn))
 							buoy = new BuoyUkn(dia, "Not Implemented");

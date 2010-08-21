@@ -15,8 +15,13 @@ import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
 public class BuoySpec extends Buoy {
-	public BuoySpec(SmpDialogAction dia, int type) {
+	public BuoySpec(SmpDialogAction dia,  Node node) {
 		super(dia);
+
+		String str;
+		Map<String, String> keys;
+		keys = node.getKeys();
+		setNode(node);
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
@@ -46,7 +51,56 @@ public class BuoySpec extends Buoy {
 
 		setColour(SeaMark.YELLOW);
 		setLightColour("W");
-		setBuoyIndex(type);
+		setBuoyIndex(SPECIAL_PURPOSE);
+
+		if (keys.containsKey("seamark:buoy_special_purpose:shape")) {
+			str = keys.get("seamark:buoy_special_purpose:shape");
+
+			if (str.equals("pillar"))
+				setStyleIndex(SPEC_PILLAR);
+			else if (str.equals("spar"))
+				setStyleIndex(SPEC_SPAR);
+			else if (str.equals("sphere"))
+				setStyleIndex(SPEC_SPHERE);
+			else if (str.equals("barrel"))
+				setStyleIndex(SPEC_BARREL);
+		}
+
+		if (keys.containsKey("seamark:beacon_special_purpose"))
+			setStyleIndex(SPEC_BEACON);
+		else if (keys.containsKey("seamark:light_float")
+				&& keys.containsKey("seamark:light_float:colour")
+				&& keys.get("seamark:light_float:colour").equals("yellow"))
+			setStyleIndex(SPEC_FLOAT);
+
+		keys = node.getKeys();
+		if (keys.containsKey("seamark:topmark:shape")) {
+			str = keys.get("seamark:topmark:shape");
+
+			if (str.equals("x-shape")) {
+				setTopMark(true);
+			}
+		}
+
+		if (keys.containsKey("seamark:light:colour")) {
+			str = keys.get("seamark:light:colour");
+
+			if (keys.containsKey("seamark:light:character")) {
+				setLightGroup(keys);
+
+				String c = keys.get("seamark:light:character");
+				if (getLightGroup() != "")
+					c = c + "(" + getLightGroup() + ")";
+
+				setLightChar(c);
+				setLightPeriod(keys);
+			}
+
+			if (str.equals("white")) {
+				setFired(true);
+				setLightColour("W");
+			}
+		}
 
 		paintSign();
 	}
@@ -85,7 +139,7 @@ public class BuoySpec extends Buoy {
 		default:
 		}
 
-		if (image != "/images/Special_Purpose") {
+		if (!image.equals("/images/Special_Purpose")) {
 
 			if (hasTopMark())
 				image += "_CrossY";
@@ -164,107 +218,8 @@ public class BuoySpec extends Buoy {
 
 	}
 
-	public boolean parseTopMark(Node node) {
-		if (node == null) {
-			return false;
-		}
-
-		String str;
-		boolean ret = true;
-		Map<String, String> keys;
-
-		setTopMark(false);
-
-		keys = node.getKeys();
-		if (keys.containsKey("seamark:topmark:shape")) {
-			str = keys.get("seamark:topmark:shape");
-
-			if (str.equals("x-shape")) {
-				setTopMark(true);
-
-			} else {
-				setErrMsg("Parse-Error: Topmark unbekannt");
-				ret = false;
-			}
-		}
-
-		return ret;
-	}
-
-	public boolean parseLight(Node node) {
-		String str;
-		boolean ret = true;
-		Map<String, String> keys;
-
-		setFired(false);
-
-		keys = node.getKeys();
-		if (keys.containsKey("seamark:light:colour")) {
-			str = keys.get("seamark:light:colour");
-
-			if (keys.containsKey("seamark:light:character")) {
-				setLightGroup(keys);
-
-				String c = keys.get("seamark:light:character");
-				if (getLightGroup() != "")
-					c = c + "(" + getLightGroup() + ")";
-
-				setLightChar(c);
-				setLightPeriod(keys);
-			}
-
-			if (str.equals("white")) {
-				setFired(true);
-				setLightColour("W");
-
-			} else {
-				if (getErrMsg() == null)
-					setErrMsg("Parse-Error: Invalid light");
-				else
-					setErrMsg(getErrMsg() + " / Invalid light");
-
-				ret = false;
-			}
-
-		}
-
-		return ret;
-	}
-
 	public void setLightColour() {
 		super.setLightColour("W");
-	}
-
-	public boolean parseShape(Node node) {
-		String str;
-		boolean ret = true;
-		Map<String, String> keys;
-
-		keys = node.getKeys();
-
-		if (keys.containsKey("seamark:buoy_special_purpose:shape")) {
-			str = keys.get("seamark:buoy_special_purpose:shape");
-
-			if (str.equals("pillar"))
-				setStyleIndex(SPEC_PILLAR);
-			else if (str.equals("spar"))
-				setStyleIndex(SPEC_SPAR);
-			else if (str.equals("sphere"))
-				setStyleIndex(SPEC_SPHERE);
-			else if (str.equals("barrel"))
-				setStyleIndex(SPEC_BARREL);
-			else
-				ret = false;
-		}
-
-		if (keys.containsKey("seamark:beacon_special_purpose"))
-			setStyleIndex(SPEC_BEACON);
-		else if (keys.containsKey("seamark:light_float")
-				&& keys.containsKey("seamark:light_float:colour")
-				&& keys.get("seamark:light_float:colour").equals("yellow"))
-			setStyleIndex(SPEC_FLOAT);
-
-		return ret;
 	}
 
 }

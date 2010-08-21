@@ -15,8 +15,13 @@ import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
 public class BuoyIsol extends Buoy {
-	public BuoyIsol(SmpDialogAction dia, int type) {
+	public BuoyIsol(SmpDialogAction dia, Node node) {
 		super(dia);
+
+		String str;
+		Map<String, String> keys;
+		keys = node.getKeys();
+		setNode(node);
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
@@ -37,8 +42,53 @@ public class BuoyIsol extends Buoy {
 
 		setColour(SeaMark.BLACK_RED_BLACK);
 		setLightColour("W");
-		setBuoyIndex(type);
+		setBuoyIndex(ISOLATED_DANGER);
 		setTopMark(true);
+
+		if (keys.containsKey("seamark:buoy_isolated_danger:shape")) {
+			str = keys.get("seamark:buoy_isolated_danger:shape");
+
+			if (str.equals("pillar"))
+				setStyleIndex(ISOL_PILLAR);
+			else if (str.equals("spar"))
+				setStyleIndex(ISOL_SPAR);
+		} else if (keys.containsKey("seamark:beacon_isolated_danger:colour")) {
+			if (keys.containsKey("seamark:beacon_isolated_danger:shape")) {
+				str = keys.get("seamark:beacon_isolated_danger:shape");
+
+				if (str.equals("tower"))
+					setStyleIndex(ISOL_TOWER);
+				else
+					setStyleIndex(ISOL_BEACON);
+			} else
+				setStyleIndex(ISOL_BEACON);
+		} else if ((keys.containsKey("seamark:type") == true)
+				&& (keys.get("seamark:type").equals("light_float"))) {
+			setStyleIndex(CARD_FLOAT);
+		}
+
+		if (keys.containsKey("seamark:topmark:shape")) {
+			str = keys.get("seamark:topmark:shape");
+			if (str.equals("2 spheres")) {
+				setTopMark(true);
+			}
+		}
+
+		if (keys.containsKey("seamark:light:colour")) {
+			str = keys.get("seamark:light:colour");
+
+			if (keys.containsKey("seamark:light:character")) {
+				setLightGroup(keys);
+				String c = keys.get("seamark:light:character");
+				setLightChar(c);
+				setLightPeriod(keys);
+			}
+
+			if (str.equals("white")) {
+				setFired(true);
+				setLightColour("W");
+			}
+		}
 
 		paintSign();
 	}
@@ -74,7 +124,7 @@ public class BuoyIsol extends Buoy {
 		default:
 		}
 
-		if (image != "/images/Cardinal") {
+		if (!image.equals("/images/Cardinal")) {
 			if (isFired()) {
 				image += "_Lit";
 				if (getLightChar() != "") {
@@ -123,7 +173,7 @@ public class BuoyIsol extends Buoy {
 			break;
 		default:
 		}
-		
+
 		switch (getStyleIndex()) {
 		case ISOL_PILLAR:
 		case ISOL_SPAR:
@@ -155,104 +205,8 @@ public class BuoyIsol extends Buoy {
 
 	}
 
-	public boolean parseTopMark(Node node) {
-		if (node == null) {
-			return false;
-		}
-
-		String str;
-		boolean ret = true;
-		Map<String, String> keys;
-
-		setTopMark(false);
-
-		keys = node.getKeys();
-		if (keys.containsKey("seamark:topmark:shape")) {
-			str = keys.get("seamark:topmark:shape");
-
-			if (str.equals("2 spheres")) {
-				setTopMark(true);
-
-			} else {
-				setErrMsg("Parse-Error: Topmark invalid");
-				ret = false;
-			}
-		}
-
-		return ret;
-	}
-
-	public boolean parseLight(Node node) {
-		String str;
-		boolean ret = true;
-		Map<String, String> keys;
-
-		setFired(false);
-
-		keys = node.getKeys();
-		if (keys.containsKey("seamark:light:colour")) {
-			str = keys.get("seamark:light:colour");
-
-			if (keys.containsKey("seamark:light:character")) {
-				setLightGroup(keys);
-				String c = keys.get("seamark:light:character");
-				setLightChar(c);
-				setLightPeriod(keys);
-			}
-
-			if (str.equals("white")) {
-				setFired(true);
-				setLightColour("W");
-
-			} else {
-				if (getErrMsg() == null)
-					setErrMsg("Parse-Error: Invalid light");
-				else
-					setErrMsg(getErrMsg() + " / Invalid light");
-
-				ret = false;
-			}
-
-		}
-
-		return ret;
-	}
-
 	public void setLightColour() {
 		super.setLightColour("W");
-	}
-
-	public boolean parseShape(Node node) {
-		String str;
-		boolean ret = true;
-		Map<String, String> keys;
-
-		keys = node.getKeys();
-
-		if (keys.containsKey("seamark:buoy_isolated_danger:shape")) {
-			str = keys.get("seamark:buoy_isolated_danger:shape");
-
-			if (str.equals("pillar"))
-				setStyleIndex(ISOL_PILLAR);
-			else if (str.equals("spar"))
-				setStyleIndex(ISOL_SPAR);
-			else
-				ret = false;
-		} else if (keys.containsKey("seamark:beacon_isolated_danger:colour")) {
-			if (keys.containsKey("seamark:beacon_isolated_danger:shape")) {
-				str = keys.get("seamark:beacon_isolated_danger:shape");
-
-				if (str.equals("tower"))
-					setStyleIndex(ISOL_TOWER);
-				else
-					setStyleIndex(ISOL_BEACON);
-			} else
-				setStyleIndex(ISOL_BEACON);
-		} else if ((keys.containsKey("seamark:type") == true)
-				&& (keys.get("seamark:type").equals("light_float"))) {
-			setStyleIndex(CARD_FLOAT);
-		}
-		return ret;
 	}
 
 }

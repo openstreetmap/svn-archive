@@ -58,14 +58,6 @@ public class BuoyUkn extends Buoy {
 		super.setLightColour("");
 	}
 
-	public boolean parseTopMark(Node node) {
-		return false;
-	}
-
-	public boolean parseLight(Node node) {
-		return false;
-	}
-
 	public void saveSign() {
 	}
 }

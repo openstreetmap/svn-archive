@@ -568,6 +568,8 @@ public class SmpDialogAction extends JosmAction {
 					n = buoy.getNode();
 					if (n == null)
 						n = onode;
+					if (n == null)
+						return;
 					name = buoy.getName();
 					switch (type) {
 

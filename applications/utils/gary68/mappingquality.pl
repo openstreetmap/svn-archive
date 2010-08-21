@@ -42,7 +42,9 @@
 # Version 2.2
 # - population bug fixed 
 #
-
+# Version 2.3
+# - place = X in files for map
+#
 
 
 use strict ;
@@ -59,7 +61,7 @@ use OSM::osmgraph 1.0 ;
 #
 my $program = "mappingquality.pl" ;
 my $usage = $program . " file.osm basename size" ;
-my $version = "2.2" ;
+my $version = "2.3" ;
 #
 my $iconRed = "unmapped_red.png" ; my $iconYellow = "unmapped_yellow.png" ;
 my $colorRed = "#FF0000" ;
@@ -1163,7 +1165,7 @@ foreach $key (keys %placeType) {
 		print $text $lat {$key}, "\t" ;
 		print $text $lon {$key}, "\t" ;
 		print $text $placeName {$key}, "\t" ;
-		print $text "potentially $tmp place\t" ;
+		print $text "potentially $tmp place=$placeType{$key}\t" ;
 		print $text "./", $icon, "\t" ;
 		print $text "24,24", "\t" ;
 		print $text "-12,-12", "\n" ;

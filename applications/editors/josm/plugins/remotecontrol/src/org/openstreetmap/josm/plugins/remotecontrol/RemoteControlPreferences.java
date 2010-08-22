@@ -14,6 +14,10 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.plugins.remotecontrol.handler.AddNodeHandler;
+import org.openstreetmap.josm.plugins.remotecontrol.handler.ImportHandler;
+import org.openstreetmap.josm.plugins.remotecontrol.handler.LoadAndZoomHandler;
+import org.openstreetmap.josm.plugins.remotecontrol.handler.VersionHandler;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -24,6 +28,7 @@ import org.openstreetmap.josm.tools.GBC;
 public class RemoteControlPreferences implements PreferenceSetting
 {
     private JCheckBox permissionLoadData = new JCheckBox(tr("load data from API"));
+    private JCheckBox permissionImportData = new JCheckBox(tr("import data from URL"));
     private JCheckBox permissionCreateObjects = new JCheckBox(tr("create new objects"));
     private JCheckBox permissionChangeSelection = new JCheckBox(tr("change the selection"));
     private JCheckBox permissionChangeViewport = new JCheckBox(tr("change the viewport"));
@@ -41,6 +46,7 @@ public class RemoteControlPreferences implements PreferenceSetting
         perms.setLayout(new GridBagLayout());
         perms.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray), tr("Permitted actions")));
         perms.add(permissionLoadData, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
+        perms.add(permissionImportData, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         perms.add(permissionChangeSelection, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         perms.add(permissionChangeViewport, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         perms.add(permissionCreateObjects, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
@@ -50,22 +56,24 @@ public class RemoteControlPreferences implements PreferenceSetting
         remote.add(alwaysAskUserConfirm, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
         remote.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
 
-        permissionLoadData.setSelected(Main.pref.getBoolean("remotecontrol.permission.load-data", true));
-        permissionChangeSelection.setSelected(Main.pref.getBoolean("remotecontrol.permission.change-selection", true));
-        permissionChangeViewport.setSelected(Main.pref.getBoolean("remotecontrol.permission.change-viewport", true));
-        permissionCreateObjects.setSelected(Main.pref.getBoolean("remotecontrol.permission.create-objects", false));
-        permissionReadProtocolversion.setSelected(Main.pref.getBoolean("remotecontrol.permission.read-protocolversion", true));
-        alwaysAskUserConfirm.setSelected(Main.pref.getBoolean("remotecontrol.always-confirm", false));
+        permissionLoadData.setSelected(Main.pref.getBoolean(LoadAndZoomHandler.loadDataPermissionKey, LoadAndZoomHandler.loadDataPermissionDefault));
+        permissionImportData.setSelected(Main.pref.getBoolean(ImportHandler.permissionKey, ImportHandler.permissionDefault));
+        permissionChangeSelection.setSelected(Main.pref.getBoolean(LoadAndZoomHandler.changeSelectionPermissionKey, LoadAndZoomHandler.changeSelectionPermissionDefault));
+        permissionChangeViewport.setSelected(Main.pref.getBoolean(LoadAndZoomHandler.changeViewportPermissionKey, LoadAndZoomHandler.changeViewportPermissionDefault));
+        permissionCreateObjects.setSelected(Main.pref.getBoolean(AddNodeHandler.permissionKey, AddNodeHandler.permissionDefault));
+        permissionReadProtocolversion.setSelected(Main.pref.getBoolean(VersionHandler.permissionKey, VersionHandler.permissionDefault));
+        alwaysAskUserConfirm.setSelected(Main.pref.getBoolean(RequestHandler.globalConfirmationKey, RequestHandler.globalConfirmationDefault));
 
     }
 
     public boolean ok() {
-        Main.pref.put("remotecontrol.permission.load-data", permissionLoadData.isSelected());
-        Main.pref.put("remotecontrol.permission.change-selection", permissionChangeSelection.isSelected());
-        Main.pref.put("remotecontrol.permission.change-viewport", permissionChangeViewport.isSelected());
-        Main.pref.put("remotecontrol.permission.create-objects", permissionCreateObjects.isSelected());
-        Main.pref.put("remotecontrol.permission.read-protocolversion", permissionReadProtocolversion.isSelected());
-        Main.pref.put("remotecontrol.always-confirm", alwaysAskUserConfirm.isSelected());
+        Main.pref.put(LoadAndZoomHandler.loadDataPermissionKey, permissionLoadData.isSelected());
+        Main.pref.put(ImportHandler.permissionKey, permissionImportData.isSelected());
+        Main.pref.put(LoadAndZoomHandler.changeSelectionPermissionKey, permissionChangeSelection.isSelected());
+        Main.pref.put(LoadAndZoomHandler.changeViewportPermissionKey, permissionChangeViewport.isSelected());
+        Main.pref.put(AddNodeHandler.permissionKey, permissionCreateObjects.isSelected());
+        Main.pref.put(VersionHandler.permissionKey, permissionReadProtocolversion.isSelected());
+        Main.pref.put(RequestHandler.globalConfirmationKey, alwaysAskUserConfirm.isSelected());
         // FIXME confirm return value - really no restart needed?
         return false /* no restart needed */;
     }

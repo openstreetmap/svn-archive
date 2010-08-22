@@ -2,7 +2,7 @@ package org.openstreetmap.josm.plugins.remotecontrol.handler;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.plugins.remotecontrol.PermissionPref;
+import org.openstreetmap.josm.plugins.remotecontrol.PermissionPrefWithDefault;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandler;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerBadRequestException;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerErrorException;
@@ -13,7 +13,9 @@ import org.openstreetmap.josm.plugins.remotecontrol.RequestProcessor;
  */
 public class VersionHandler extends RequestHandler {
 
-	public static final String command = "/version";
+	public static final String command = "version";
+	public static final String permissionKey = "remotecontrol.permission.read-protocolversion";
+	public static final boolean permissionDefault = true;
 
 	@Override
 	protected void handleRequest() throws RequestHandlerErrorException,
@@ -30,9 +32,10 @@ public class VersionHandler extends RequestHandler {
 		return tr("Remote Control has been asked to report its protocol version. This enables web sites to detect a running JOSM.");
 	}
 
-	public PermissionPref getPermissionPref()
+	@Override
+	public PermissionPrefWithDefault getPermissionPref()
 	{
-		return new PermissionPref("remotecontrol.permission.read-protocolversion",
+		return new PermissionPrefWithDefault(permissionKey, permissionDefault,
 				"RemoteControl: /version forbidden by preferences");
 	}
 }

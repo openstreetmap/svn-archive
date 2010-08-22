@@ -27,7 +27,10 @@ public class RequestProcessor extends Thread {
 	 * interface extensions. Change major number in case of incompatible
 	 * changes.
 	 */
-	public static final String PROTOCOLVERSION = "{\"protocolversion\": {\"major\": 1, \"minor\": 0}, \"application\": \"JOSM RemoteControl\"}";
+	public static final String PROTOCOLVERSION = "{\"protocolversion\": {\"major\": " +
+		RemoteControlPlugin.protocolMajorVersion + ", \"minor\": " + 
+		RemoteControlPlugin.protocolMinorVersion +
+		"}, \"application\": \"JOSM RemoteControl\"}";
 
 	/** The socket this processor listens on */
 	private Socket request;
@@ -81,12 +84,16 @@ public class RequestProcessor extends Thread {
 	 */
 	private static void addRequestHandlerClass(String command,
 				Class<? extends RequestHandler> handler, boolean silent) {
-		if (handlers.get(command) != null) {
-			System.out.println("RemoteControl: duplicate command " + command
+		if(command.charAt(0) == '/')
+		{
+			command = command.substring(1);
+		}
+		if (handlers.get("/" + command) != null) {
+			System.out.println("RemoteControl: ignoring duplicate command " + command
 					+ " with handler " + handler.getName());
 		} else {
-			if(!silent) System.out.println("RemoteControl: adding command command " + 
-					command + " (handled by " + handler.getName() + ")");
+			if(!silent) System.out.println("RemoteControl: adding command \"" + 
+					command + "\" (handled by " + handler.getSimpleName() + ")");
 			handlers.put(command, handler);
 		}
 	}
@@ -94,6 +101,8 @@ public class RequestProcessor extends Thread {
 	/** Add default request handlers */
 	static {
 		addRequestHandlerClass(LoadAndZoomHandler.command,
+				LoadAndZoomHandler.class, true);
+		addRequestHandlerClass(LoadAndZoomHandler.command2,
 				LoadAndZoomHandler.class, true);
 		addRequestHandlerClass(AddNodeHandler.command, AddNodeHandler.class, true);
 		addRequestHandlerClass(ImportHandler.command, ImportHandler.class, true);

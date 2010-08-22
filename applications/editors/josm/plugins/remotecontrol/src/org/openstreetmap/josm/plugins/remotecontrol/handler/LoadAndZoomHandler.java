@@ -21,7 +21,6 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandler;
-import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerBadRequestException;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerErrorException;
 
 /**
@@ -29,8 +28,16 @@ import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerErrorException
  */
 public class LoadAndZoomHandler extends RequestHandler
 {
-	public static final String command = "/load_and_zoom";
-
+	public static final String command = "load_and_zoom";
+	public static final String command2 = "zoom";
+	
+	public static final String loadDataPermissionKey = "remotecontrol.permission.load-data";
+	public static final boolean loadDataPermissionDefault = true;
+	public static final String changeSelectionPermissionKey = "remotecontrol.permission.change-selection";
+	public static final boolean changeSelectionPermissionDefault = true;
+	public static final String changeViewportPermissionKey = "remotecontrol.permission.change-viewport";
+	public static final boolean changeViewportPermissionDefault = true;
+	
     @Override
     public String getPermissionMessage()
     {
@@ -58,40 +65,43 @@ public class LoadAndZoomHandler extends RequestHandler
 			minlon = Double.parseDouble(args.get("left"));
 			maxlon = Double.parseDouble(args.get("right"));
 
-			if (!Main.pref.getBoolean("remotecontrol.permission.load-data", true))
+			if(command.equals(myCommand))
 			{
-				System.out.println("RemoteControl: download forbidden by preferences");
-			}
-			else
-			{
-
-				// find out whether some data has already been downloaded
-				Area present = null;
-				Area toDownload = null;
-				DataSet ds = Main.main.getCurrentDataSet();
-				if (ds != null)
-					present = ds.getDataSourceArea();
-				if (present != null && !present.isEmpty()) {
-					toDownload = new Area(new Rectangle2D.Double(minlon,minlat,maxlon-minlon,maxlat-minlat));
-					toDownload.subtract(present);
-					if (!toDownload.isEmpty())
-					{
-						// the result might not be a rectangle (L shaped etc)
-						Rectangle2D downloadBounds = toDownload.getBounds2D();
-						minlat = downloadBounds.getMinY();
-						minlon = downloadBounds.getMinX();
-						maxlat = downloadBounds.getMaxY();
-						maxlon = downloadBounds.getMaxX();
-					}
-				}
-				if((toDownload != null) && toDownload.isEmpty())
+				if (!Main.pref.getBoolean(loadDataPermissionKey, loadDataPermissionDefault))
 				{
-					System.out.println("RemoteControl: no download necessary");
+					System.out.println("RemoteControl: download forbidden by preferences");
 				}
 				else
 				{
-                    Future<?> future = osmTask.download(false /*no new layer*/, new Bounds(minlat,minlon,maxlat,maxlon), null /* let the task manage the progress monitor */);
-                    Main.worker.submit(new PostDownloadHandler(osmTask, future));
+	
+					// find out whether some data has already been downloaded
+					Area present = null;
+					Area toDownload = null;
+					DataSet ds = Main.main.getCurrentDataSet();
+					if (ds != null)
+						present = ds.getDataSourceArea();
+					if (present != null && !present.isEmpty()) {
+						toDownload = new Area(new Rectangle2D.Double(minlon,minlat,maxlon-minlon,maxlat-minlat));
+						toDownload.subtract(present);
+						if (!toDownload.isEmpty())
+						{
+							// the result might not be a rectangle (L shaped etc)
+							Rectangle2D downloadBounds = toDownload.getBounds2D();
+							minlat = downloadBounds.getMinY();
+							minlon = downloadBounds.getMinX();
+							maxlat = downloadBounds.getMaxY();
+							maxlon = downloadBounds.getMaxX();
+						}
+					}
+					if((toDownload != null) && toDownload.isEmpty())
+					{
+						System.out.println("RemoteControl: no download necessary");
+					}
+					else
+					{
+	                    Future<?> future = osmTask.download(false /*no new layer*/, new Bounds(minlat,minlon,maxlat,maxlon), null /* let the task manage the progress monitor */);
+	                    Main.worker.submit(new PostDownloadHandler(osmTask, future));
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -99,7 +109,7 @@ public class LoadAndZoomHandler extends RequestHandler
 			ex.printStackTrace();
 			throw new RequestHandlerErrorException();
 		}
-		if (args.containsKey("select") && Main.pref.getBoolean("remotecontrol.permission.change-selection", true)) {
+		if (args.containsKey("select") && Main.pref.getBoolean(changeSelectionPermissionKey, changeSelectionPermissionDefault)) {
 			// select objects after downloading, zoom to selection.
 			final String selection = args.get("select");
 			Main.worker.execute(new Runnable() {
@@ -128,26 +138,30 @@ public class LoadAndZoomHandler extends RequestHandler
 					for (Node n : ds.getNodes()) if (nodes.contains(n.getId())) newSel.add(n);
 					for (Relation r : ds.getRelations()) if (relations.contains(r.getId())) newSel.add(r);
 					ds.setSelected(newSel);
-					if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true))
+					if (Main.pref.getBoolean(changeViewportPermissionKey, changeViewportPermissionDefault))
 						new AutoScaleAction("selection").actionPerformed(null);
 				}
 			});
-		} else if (Main.pref.getBoolean("remotecontrol.permission.change-viewport", true)) {
+		} else if (Main.pref.getBoolean(changeViewportPermissionKey, changeViewportPermissionDefault)) {
 			// after downloading, zoom to downloaded area.
-			final Bounds bounds = new Bounds(new LatLon(minlat, minlon),
-					new LatLon(maxlat, maxlon));
+			zoom(minlat, maxlat, minlon, maxlon);
+		}
+	}
 
-			// make sure this isn't called unless there *is* a MapView
-			//
-			if (Main.map != null && Main.map.mapView != null) {
-				Main.worker.execute(new Runnable() {
-					public void run() {
-						BoundingXYVisitor bbox = new BoundingXYVisitor();
-						bbox.visit(bounds);
-						Main.map.mapView.recalculateCenterScale(bbox);
-					}
-				});
-			}
+	protected void zoom(double minlat, double maxlat, double minlon, double maxlon) {
+		final Bounds bounds = new Bounds(new LatLon(minlat, minlon),
+				new LatLon(maxlat, maxlon));
+
+		// make sure this isn't called unless there *is* a MapView
+		//
+		if (Main.map != null && Main.map.mapView != null) {
+			Main.worker.execute(new Runnable() {
+				public void run() {
+					BoundingXYVisitor bbox = new BoundingXYVisitor();
+					bbox.visit(bounds);
+					Main.map.mapView.recalculateCenterScale(bbox);
+				}
+			});
 		}
 	}
 }

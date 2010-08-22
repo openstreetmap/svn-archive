@@ -6,9 +6,8 @@ import java.net.URLDecoder;
 
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadTask;
-import org.openstreetmap.josm.plugins.remotecontrol.PermissionPref;
+import org.openstreetmap.josm.plugins.remotecontrol.PermissionPrefWithDefault;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandler;
-import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerBadRequestException;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerErrorException;
 
 /**
@@ -16,7 +15,9 @@ import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerErrorException
  */
 public class ImportHandler extends RequestHandler {
 
-	public static final String command = "/import";
+	public static final String command = "import";
+	public static final String permissionKey = "remotecontrol.permission.import";
+	public static final boolean permissionDefault = true;
 
 	@Override
 	protected void handleRequest() throws RequestHandlerErrorException {
@@ -43,9 +44,9 @@ public class ImportHandler extends RequestHandler {
 	}
 
 	@Override
-	public PermissionPref getPermissionPref()
+	public PermissionPrefWithDefault getPermissionPref()
 	{
-		return new PermissionPref("remotecontrol.permission.import",
+		return new PermissionPrefWithDefault(permissionKey, permissionDefault,
 				"RemoteControl: import forbidden by preferences");
 	}
 }

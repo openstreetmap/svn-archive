@@ -8,16 +8,17 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.plugins.remotecontrol.PermissionPref;
+import org.openstreetmap.josm.plugins.remotecontrol.PermissionPrefWithDefault;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandler;
-import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerBadRequestException;
 
 /**
  * Handler for add_node request.
  */
 public class AddNodeHandler extends RequestHandler {
 
-	public static final String command = "/add_node";
+	public static final String command = "add_node";
+	public static final String permissionKey = "remotecontrol.permission.create-objects";
+	public static final boolean permissionDefault = false;
 
 	@Override
 	protected void handleRequest() {
@@ -36,9 +37,9 @@ public class AddNodeHandler extends RequestHandler {
 	}
 
 	@Override
-	public PermissionPref getPermissionPref()
+	public PermissionPrefWithDefault getPermissionPref()
 	{
-		return new PermissionPref("remotecontrol.permission.create-objects",
+		return new PermissionPrefWithDefault(permissionKey, permissionDefault,
 				"RemoteControl: creating objects forbidden by preferences");
 	}
 	

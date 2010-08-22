@@ -17,6 +17,9 @@ import org.openstreetmap.josm.Main;
  */
 public abstract class RequestHandler
 {
+	public static final String globalConfirmationKey = "remotecontrol.always-confirm";
+	public static final boolean globalConfirmationDefault = false;
+	
 	/** The GET request arguments */
 	protected HashMap<String,String> args;
 	
@@ -29,7 +32,7 @@ public abstract class RequestHandler
     protected String contentType = "text/plain";
 
     /** will be filled with the command assigned to the subclass */
-    private String myCommand;
+    protected String myCommand;
     
     /**
      * Check permission and parameters and handle request.
@@ -76,10 +79,12 @@ public abstract class RequestHandler
      * 
      * @return the preference name and error message or null
      */
-    public PermissionPref getPermissionPref()
+	@SuppressWarnings("deprecation")
+	public PermissionPref getPermissionPref()
     {
         /* Example:
-        return new PermissionPref("fooobar.remotecontrol",
+        return new PermissionPrefWithDefault("fooobar.remotecontrol",
+        true
         "RemoteControl: foobar forbidden by preferences");
         */
         return null;
@@ -96,17 +101,31 @@ public abstract class RequestHandler
      * 
      * @throws RequestHandlerForbiddenException
      */
-    final public void checkPermission() throws RequestHandlerForbiddenException
+    @SuppressWarnings("deprecation")
+	final public void checkPermission() throws RequestHandlerForbiddenException
     {
         /* 
          * If the subclass defines a specific preference and if this is set
          * to false, abort with an error message.
+         * 
+         * Note: we use the deprecated class here for compatibility with
+         * older versions of WMSPlugin.
          */
         PermissionPref permissionPref = getPermissionPref();
         if((permissionPref != null) && (permissionPref.pref != null))
         {
-            if (!Main.pref.getBoolean(permissionPref.pref, true)) {
-                System.out.println(permissionPref.message);
+            PermissionPrefWithDefault permissionPrefWithDefault;
+            if(permissionPref instanceof PermissionPrefWithDefault)
+            {
+            	permissionPrefWithDefault = (PermissionPrefWithDefault) permissionPref;
+            }
+            else 
+            {
+            	permissionPrefWithDefault = new PermissionPrefWithDefault(permissionPref);
+            }
+            if (!Main.pref.getBoolean(permissionPrefWithDefault.pref,
+            		permissionPrefWithDefault.defaultVal)) {
+                System.out.println(permissionPrefWithDefault.message);
                 throw new RequestHandlerForbiddenException();
             }
         }
@@ -114,7 +133,7 @@ public abstract class RequestHandler
         /* Does the user want to confirm everything?
          * If yes, display specific confirmation message.
          */
-        if (Main.pref.getBoolean("remotecontrol.always-confirm", false)) {
+        if (Main.pref.getBoolean(globalConfirmationKey, globalConfirmationDefault)) {
             if (JOptionPane.showConfirmDialog(Main.parent,
                 "<html>" + getPermissionMessage() +
                 "<br>" + tr("Do you want to allow this?"),

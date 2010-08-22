@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.remotecontrol.PermissionPref;
+import org.openstreetmap.josm.plugins.remotecontrol.PermissionPrefWithDefault;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandler;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerErrorException;
 
 public class WMSRemoteHandler extends RequestHandler {
 
-	public static final String command = "/wms";
+	public static final String command = "wms";
 
 	@Override
 	public String getPermissionMessage() {
@@ -23,9 +23,11 @@ public class WMSRemoteHandler extends RequestHandler {
 	}
 
 	@Override
-	public PermissionPref getPermissionPref()
+	public PermissionPrefWithDefault getPermissionPref()
 	{
-		return new PermissionPref("wmsplugin.remotecontrol",
+		return new PermissionPrefWithDefault(
+				"wmsplugin.remotecontrol",
+				true,
 		"RemoteControl: WMS forbidden by preferences");
 	}
 

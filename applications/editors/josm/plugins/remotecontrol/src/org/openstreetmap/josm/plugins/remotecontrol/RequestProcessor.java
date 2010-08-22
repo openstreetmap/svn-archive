@@ -88,13 +88,14 @@ public class RequestProcessor extends Thread {
 		{
 			command = command.substring(1);
 		}
-		if (handlers.get("/" + command) != null) {
+		String commandWithSlash = "/" + command;
+		if (handlers.get(commandWithSlash) != null) {
 			System.out.println("RemoteControl: ignoring duplicate command " + command
 					+ " with handler " + handler.getName());
 		} else {
 			if(!silent) System.out.println("RemoteControl: adding command \"" + 
 					command + "\" (handled by " + handler.getSimpleName() + ")");
-			handlers.put(command, handler);
+			handlers.put(commandWithSlash, handler);
 		}
 	}
 

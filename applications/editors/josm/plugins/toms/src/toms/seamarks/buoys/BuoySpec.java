@@ -15,7 +15,7 @@ import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
 public class BuoySpec extends Buoy {
-	public BuoySpec(SmpDialogAction dia,  Node node) {
+	public BuoySpec(SmpDialogAction dia, Node node) {
 		super(dia);
 
 		String str;
@@ -55,6 +55,19 @@ public class BuoySpec extends Buoy {
 		setLightColour("W");
 		setBuoyIndex(SPECIAL_PURPOSE);
 
+		if (keys.containsKey("name"))
+			setName(keys.get("name"));
+
+		if (keys.containsKey("seamark:name"))
+			setName(keys.get("seamark:name"));
+
+		if (keys.containsKey("seamark:buoy_special_purpose:name"))
+			setName(keys.get("seamark:buoy_special_purpose:name"));
+		else if (keys.containsKey("seamark:beacon_special_purpose:name"))
+			setName(keys.get("seamark:beacon_special_purpose:name"));
+		else if (keys.containsKey("seamark:light_float:name"))
+			setName(keys.get("seamark:light_float:name"));
+
 		if (keys.containsKey("seamark:buoy_special_purpose:shape")) {
 			str = keys.get("seamark:buoy_special_purpose:shape");
 
@@ -68,10 +81,12 @@ public class BuoySpec extends Buoy {
 				setStyleIndex(SPEC_BARREL);
 		}
 
-		if (keys.containsKey("seamark:beacon_special_purpose"))
+		if ((keys.containsKey("seamark:type") && keys.get("seamark:type").equals(
+				"beacon_special_purpose"))
+				|| keys.containsKey("seamark:special_purpose_beacon:colour")
+				|| keys.containsKey("seamark:special_purpose_beacon:shape"))
 			setStyleIndex(SPEC_BEACON);
-		else if (keys.containsKey("seamark:light_float")
-				&& keys.containsKey("seamark:light_float:colour")
+		else if (keys.containsKey("seamark:light_float:colour")
 				&& keys.get("seamark:light_float:colour").equals("yellow"))
 			setStyleIndex(SPEC_FLOAT);
 
@@ -103,8 +118,6 @@ public class BuoySpec extends Buoy {
 				setLightColour("W");
 			}
 		}
-
-		paintSign();
 	}
 
 	public void setStyleIndex(int styleIndex) {

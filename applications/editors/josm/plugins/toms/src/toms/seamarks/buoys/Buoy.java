@@ -230,6 +230,8 @@ abstract public class Buoy extends SeaMark {
 
 		dlg.tfM01RepeatTime.setText(LightPeriod);
 
+		dlg.tfM01Name.setText(getName());
+		
 		if (isFired()) {
 			String lp, c;
 			String tmp = null;

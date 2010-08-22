@@ -45,6 +45,19 @@ public class BuoyIsol extends Buoy {
 		setBuoyIndex(ISOLATED_DANGER);
 		setTopMark(true);
 
+		if (keys.containsKey("name"))
+			setName(keys.get("name"));
+
+		if (keys.containsKey("seamark:name"))
+			setName(keys.get("seamark:name"));
+
+		if (keys.containsKey("seamark:buoy_isolated_danger:name"))
+			setName(keys.get("seamark:buoy_isolated_danger:name"));
+		else if (keys.containsKey("seamark:beacon_isolated_danger:name"))
+			setName(keys.get("seamark:beacon_isolated_danger:name"));
+		else if (keys.containsKey("seamark:light_float:name"))
+			setName(keys.get("seamark:light_float:name"));
+
 		if (keys.containsKey("seamark:buoy_isolated_danger:shape")) {
 			str = keys.get("seamark:buoy_isolated_danger:shape");
 
@@ -62,7 +75,7 @@ public class BuoyIsol extends Buoy {
 					setStyleIndex(ISOL_BEACON);
 			} else
 				setStyleIndex(ISOL_BEACON);
-		} else if ((keys.containsKey("seamark:type") == true)
+		} else if (keys.containsKey("seamark:type")
 				&& (keys.get("seamark:type").equals("light_float"))) {
 			setStyleIndex(CARD_FLOAT);
 		}
@@ -89,8 +102,6 @@ public class BuoyIsol extends Buoy {
 				setLightColour("W");
 			}
 		}
-
-		paintSign();
 	}
 
 	public void paintSign() {

@@ -30,8 +30,6 @@ public class BuoyUkn extends Buoy {
 		setFired(false);
 		setValid(false);
 		setBuoyIndex(0);
-
-		paintSign();
 	}
 
 	public void paintSign() {

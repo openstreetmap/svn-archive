@@ -109,7 +109,7 @@ public class BuoyCard extends Buoy {
 					setStyleIndex(CARD_BEACON);
 			} else
 				setStyleIndex(CARD_BEACON);
-		} else if ((keys.containsKey("seamark:type") == true)
+		} else if (keys.containsKey("seamark:type")
 				&& (keys.get("seamark:type").equals("light_float"))) {
 			setStyleIndex(CARD_FLOAT);
 		}
@@ -147,8 +147,6 @@ public class BuoyCard extends Buoy {
 				setLightColour("W");
 			}
 		}
-
-		paintSign();
 	}
 
 	public void refreshLights() {
@@ -277,7 +275,7 @@ public class BuoyCard extends Buoy {
 	public void setLightColour() {
 		super.setLightColour("W");
 	}
-	
+
 	public void saveSign() {
 		Node node = getNode();
 		if (node == null) {

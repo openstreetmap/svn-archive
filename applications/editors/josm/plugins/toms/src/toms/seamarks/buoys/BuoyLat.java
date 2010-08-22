@@ -218,7 +218,7 @@ public class BuoyLat extends Buoy {
 					setStyleIndex(LAT_BEACON);
 			} else
 				setStyleIndex(LAT_BEACON);
-		} else if ((keys.containsKey("seamark:type") == true)
+		} else if (keys.containsKey("seamark:type")
 				&& (keys.get("seamark:type").equals("light_float"))) {
 			setStyleIndex(LAT_FLOAT);
 		}
@@ -265,8 +265,6 @@ public class BuoyLat extends Buoy {
 			setLightChar(keys.get("seamark:light:character"));
 			setLightPeriod(keys);
 		}
-
-		paintSign();
 	}
 
 	public void refreshStyles() {

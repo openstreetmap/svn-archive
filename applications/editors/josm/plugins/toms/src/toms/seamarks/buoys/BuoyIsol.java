@@ -80,11 +80,9 @@ public class BuoyIsol extends Buoy {
 			setStyleIndex(CARD_FLOAT);
 		}
 
-		if (keys.containsKey("seamark:topmark:shape")) {
-			str = keys.get("seamark:topmark:shape");
-			if (str.equals("2 spheres")) {
+		if (keys.containsKey("seamark:topmark:shape")
+				|| keys.containsKey("seamark:topmark:colour")) {
 				setTopMark(true);
-			}
 		}
 
 		if (keys.containsKey("seamark:light:colour")) {

@@ -94,12 +94,9 @@ public class BuoySaw extends Buoy {
 			}
 		}
 
-		if (keys.containsKey("seamark:topmark:shape")) {
-			str = keys.get("seamark:topmark:shape");
-
-			if (str.equals("spherical") || str.equals("sphere")) {
+		if (keys.containsKey("seamark:topmark:shape")
+				|| keys.containsKey("seamark:topmark:colour")) {
 				setTopMark(true);
-			}
 		}
 	}
 

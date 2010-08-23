@@ -219,6 +219,7 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void paintSign() {
+		
 		dlg.cbM01TypeOfMark.setEnabled(true);
 		dlg.cbM01StyleOfMark.setEnabled(true);
 

@@ -167,8 +167,6 @@ public class BuoyLat extends Buoy {
 			}
 		}
 
-		refreshStyles();
-
 		if (keys.containsKey("seamark:buoy_lateral:shape")) {
 			str = keys.get("seamark:buoy_lateral:shape");
 
@@ -223,36 +221,11 @@ public class BuoyLat extends Buoy {
 			setStyleIndex(LAT_FLOAT);
 		}
 
-		if (keys.containsKey("seamark:topmark:shape")) {
-			str = keys.get("seamark:topmark:shape");
+		refreshStyles();
 
-			switch (getBuoyIndex()) {
-			case PORT_HAND:
-			case PREF_PORT_HAND:
-				if (str.equals("cylinder")) {
-					setTopMark(true);
-					setRegion(IALA_A);
-				} else if (str.equals("cone, point up")) {
-					setTopMark(true);
-					setRegion(IALA_B);
-				} else {
-					setTopMark(false);
-				}
-				break;
-
-			case STARBOARD_HAND:
-			case PREF_STARBOARD_HAND:
-				if (str.equals("cone, point up")) {
-					setTopMark(true);
-					setRegion(IALA_A);
-				} else if (str.equals("cylinder")) {
-					setTopMark(true);
-					setRegion(IALA_B);
-				} else {
-					setTopMark(false);
-				}
-				break;
-			}
+		if (keys.containsKey("seamark:topmark:shape")
+				|| keys.containsKey("seamark:topmark:colour")) {
+			setTopMark(true);
 		}
 
 		if (keys.containsKey("seamark:light:colour")) {
@@ -320,7 +293,6 @@ public class BuoyLat extends Buoy {
 			style = 0;
 		setStyleIndex(style);
 		dlg.cbM01StyleOfMark.setSelectedIndex(style);
-
 	}
 
 	public void paintSign() {

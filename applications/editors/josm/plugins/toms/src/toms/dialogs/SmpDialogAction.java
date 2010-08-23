@@ -88,6 +88,7 @@ public class SmpDialogAction extends JosmAction {
 						if (node.compareTo(SelNode) != 0) {
 							SelNode = node;
 							parseSeaMark();
+							buoy.paintSign();
 						}
 				}
 			}
@@ -270,7 +271,6 @@ public class SmpDialogAction extends JosmAction {
 		if (ds == null) {
 			buoy = new BuoyUkn(this, "active layer contains no OSM data");
 			buoy.setNode(null);
-			buoy.paintSign();
 			return;
 		}
 
@@ -280,14 +280,12 @@ public class SmpDialogAction extends JosmAction {
 		if (nodes == 0) {
 			buoy = new BuoyUkn(this, "Please select a node");
 			buoy.setNode(null);
-			buoy.paintSign();
 			return;
 		}
 
 		if (nodes > 1) {
 			buoy = new BuoyUkn(this, "Please select only one node");
 			buoy.setNode(null);
-			buoy.paintSign();
 			return;
 		}
 
@@ -334,7 +332,6 @@ public class SmpDialogAction extends JosmAction {
 					|| keys.containsKey("seamark:beacon_lateral:shape")
 					|| keys.containsKey("seamark:beacon_lateral:colour")) {
 				buoy = new BuoyLat(this, node);
-				buoy.paintSign();
 				return;
 
 			} else if (type.equals("buoy_cardinal") || type.equals("beacon_cardinal")
@@ -345,7 +342,6 @@ public class SmpDialogAction extends JosmAction {
 					|| keys.containsKey("seamark:beacon_cardinal:shape")
 					|| keys.containsKey("seamark:beacon_cardinal:colour")) {
 				buoy = new BuoyCard(this, node);
-				buoy.paintSign();
 				return;
 
 			} else if (type.equals("buoy_safe_water")
@@ -355,7 +351,6 @@ public class SmpDialogAction extends JosmAction {
 					|| keys.containsKey("seamark:beacon_safe_water:shape")
 					|| keys.containsKey("seamark:beacon_safe_water:colour")) {
 				buoy = new BuoySaw(this, node);
-				buoy.paintSign();
 				return;
 
 			} else if (type.equals("buoy_special_purpose")
@@ -365,7 +360,6 @@ public class SmpDialogAction extends JosmAction {
 					|| keys.containsKey("seamark:beacon_special_purpose:shape")
 					|| keys.containsKey("seamark:beacon_special_purpose:colour")) {
 				buoy = new BuoySpec(this, node);
-				buoy.paintSign();
 				return;
 
 			} else if (type.equals("buoy_isolated_danger")
@@ -375,7 +369,6 @@ public class SmpDialogAction extends JosmAction {
 					|| keys.containsKey("seamark:beacon_isolated_danger:shape")
 					|| keys.containsKey("seamark:beacon_isolated_danger:colour")) {
 				buoy = new BuoyIsol(this, node);
-				buoy.paintSign();
 				return;
 
 			} else if (type.equals("light_float")) {
@@ -384,44 +377,36 @@ public class SmpDialogAction extends JosmAction {
 					if (str.equals("red") || str.equals("green")
 							|| str.equals("red;green;red") || str.equals("green;red;green")) {
 						buoy = new BuoyLat(this, node);
-						buoy.paintSign();
 						return;
 					} else if (str.equals("black;yellow")
 							|| str.equals("black;yellow;black") || str.equals("yellow;black")
 							|| str.equals("yellow;black;yellow")) {
 						buoy = new BuoyCard(this, node);
-						buoy.paintSign();
 						return;
 					} else if (str.equals("black;red;black")) {
 						buoy = new BuoyIsol(this, node);
-						buoy.paintSign();
 						return;
 					} else if (str.equals("red;white")) {
 						buoy = new BuoySaw(this, node);
-						buoy.paintSign();
 						return;
 					} else if (str.equals("yellow")) {
 						buoy = new BuoySaw(this, node);
-						buoy.paintSign();
 						return;
 					} else {
 						buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
 						buoy.setNode(node);
-						buoy.paintSign();
 						return;
 					}
 				} else if (keys.containsKey("seamark:light_float:topmark:shape")) {
 					str = keys.get("seamark:light_float:topmark:shape");
 					if (str.equals("cylinder") || str.equals("cone, point up")) {
 						buoy = new BuoyLat(this, node);
-						buoy.paintSign();
 						return;
 					}
 				} else if (keys.containsKey("seamark:light_float:topmark:colour")) {
 					str = keys.get("seamark:light_float:topmark:colour");
 					if (str.equals("red") || str.equals("green")) {
 						buoy = new BuoyLat(this, node);
-						buoy.paintSign();
 						return;
 					}
 				}
@@ -430,7 +415,6 @@ public class SmpDialogAction extends JosmAction {
 
 		buoy = new BuoyUkn(this, "Seamark not set");
 		buoy.setNode(node);
-		buoy.paintSign();
 		return;
 	}
 
@@ -463,6 +447,7 @@ public class SmpDialogAction extends JosmAction {
 				public void windowActivated(WindowEvent arg0) {
 
 					parseSeaMark();
+					buoy.paintSign();
 				}
 
 			});
@@ -588,7 +573,6 @@ public class SmpDialogAction extends JosmAction {
 
 					if (buoy == null) {
 						buoy = new BuoyUkn(dia, "Seamark not set");
-						buoy.paintSign();
 						return;
 					}
 					if ((type == 0) || (type == buoy.getBuoyIndex()))

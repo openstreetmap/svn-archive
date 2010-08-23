@@ -1836,7 +1836,9 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
             FWRITE (s, sizeof (s), 1, groupf[S1GROUP (s[0].lat)]);
 	  }
 	  
-	  w.bits |= ~noMask & (yesMask | (eMap[wStyle].defaultRestrict &
+	  w.bits |= ~noMask & ((yesMask & (1 << accessR)) 
+	                       ? yesMask | ((1 << onewayR) - (1 << (accessR + 1)))
+	                       : yesMask | (eMap[wStyle].defaultRestrict &
 					  ((noMask & (1 << accessR)) ? (1 << onewayR) : ~0)));
 	  if (w.destination & (1 << accessR)) w.destination = ~0;
 	  memcpy (&srec[styleCnt], &srec[wStyle], sizeof (srec[0]));

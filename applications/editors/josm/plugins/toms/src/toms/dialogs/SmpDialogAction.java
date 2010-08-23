@@ -321,94 +321,93 @@ public class SmpDialogAction extends JosmAction {
 		// Seezeichen ist. Name kann durch die weiteren Tags ueber-
 		// schrieben werden
 
-		if (keys.containsKey("seamark:type")) {
+		if (keys.containsKey("seamark:type"))
 			type = keys.get("seamark:type");
 
-			if (type.equals("buoy_lateral") || type.equals("beacon_lateral")
-					|| keys.containsKey("seamark:buoy_lateral:category")
-					|| keys.containsKey("seamark:buoy_lateral:shape")
-					|| keys.containsKey("seamark:buoy_lateral:colour")
-					|| keys.containsKey("seamark:beacon_lateral:category")
-					|| keys.containsKey("seamark:beacon_lateral:shape")
-					|| keys.containsKey("seamark:beacon_lateral:colour")) {
-				buoy = new BuoyLat(this, node);
-				return;
+		if (type.equals("buoy_lateral") || type.equals("beacon_lateral")
+				|| keys.containsKey("seamark:buoy_lateral:category")
+				|| keys.containsKey("seamark:buoy_lateral:shape")
+				|| keys.containsKey("seamark:buoy_lateral:colour")
+				|| keys.containsKey("seamark:beacon_lateral:category")
+				|| keys.containsKey("seamark:beacon_lateral:shape")
+				|| keys.containsKey("seamark:beacon_lateral:colour")) {
+			buoy = new BuoyLat(this, node);
+			return;
 
-			} else if (type.equals("buoy_cardinal") || type.equals("beacon_cardinal")
-					|| keys.containsKey("seamark:buoy_cardinal:category")
-					|| keys.containsKey("seamark:buoy_cardinal:shape")
-					|| keys.containsKey("seamark:buoy_cardinal:colour")
-					|| keys.containsKey("seamark:beacon_cardinal:category")
-					|| keys.containsKey("seamark:beacon_cardinal:shape")
-					|| keys.containsKey("seamark:beacon_cardinal:colour")) {
-				buoy = new BuoyCard(this, node);
-				return;
+		} else if (type.equals("buoy_cardinal") || type.equals("beacon_cardinal")
+				|| keys.containsKey("seamark:buoy_cardinal:category")
+				|| keys.containsKey("seamark:buoy_cardinal:shape")
+				|| keys.containsKey("seamark:buoy_cardinal:colour")
+				|| keys.containsKey("seamark:beacon_cardinal:category")
+				|| keys.containsKey("seamark:beacon_cardinal:shape")
+				|| keys.containsKey("seamark:beacon_cardinal:colour")) {
+			buoy = new BuoyCard(this, node);
+			return;
 
-			} else if (type.equals("buoy_safe_water")
-					|| type.equals("beacon_safe_water")
-					|| keys.containsKey("seamark:buoy_safe_water:shape")
-					|| keys.containsKey("seamark:buoy_safe_water:colour")
-					|| keys.containsKey("seamark:beacon_safe_water:shape")
-					|| keys.containsKey("seamark:beacon_safe_water:colour")) {
-				buoy = new BuoySaw(this, node);
-				return;
+		} else if (type.equals("buoy_safe_water")
+				|| type.equals("beacon_safe_water")
+				|| keys.containsKey("seamark:buoy_safe_water:shape")
+				|| keys.containsKey("seamark:buoy_safe_water:colour")
+				|| keys.containsKey("seamark:beacon_safe_water:shape")
+				|| keys.containsKey("seamark:beacon_safe_water:colour")) {
+			buoy = new BuoySaw(this, node);
+			return;
 
-			} else if (type.equals("buoy_special_purpose")
-					|| type.equals("beacon_special_purpose")
-					|| keys.containsKey("seamark:buoy_special_purpose:shape")
-					|| keys.containsKey("seamark:buoy_special_purpose:colour")
-					|| keys.containsKey("seamark:beacon_special_purpose:shape")
-					|| keys.containsKey("seamark:beacon_special_purpose:colour")) {
-				buoy = new BuoySpec(this, node);
-				return;
+		} else if (type.equals("buoy_special_purpose")
+				|| type.equals("beacon_special_purpose")
+				|| keys.containsKey("seamark:buoy_special_purpose:shape")
+				|| keys.containsKey("seamark:buoy_special_purpose:colour")
+				|| keys.containsKey("seamark:beacon_special_purpose:shape")
+				|| keys.containsKey("seamark:beacon_special_purpose:colour")) {
+			buoy = new BuoySpec(this, node);
+			return;
 
-			} else if (type.equals("buoy_isolated_danger")
-					|| type.equals("beacon_isolated_danger")
-					|| keys.containsKey("seamark:buoy_isolated_danger:shape")
-					|| keys.containsKey("seamark:buoy_isolated_danger:colour")
-					|| keys.containsKey("seamark:beacon_isolated_danger:shape")
-					|| keys.containsKey("seamark:beacon_isolated_danger:colour")) {
-				buoy = new BuoyIsol(this, node);
-				return;
+		} else if (type.equals("buoy_isolated_danger")
+				|| type.equals("beacon_isolated_danger")
+				|| keys.containsKey("seamark:buoy_isolated_danger:shape")
+				|| keys.containsKey("seamark:buoy_isolated_danger:colour")
+				|| keys.containsKey("seamark:beacon_isolated_danger:shape")
+				|| keys.containsKey("seamark:beacon_isolated_danger:colour")) {
+			buoy = new BuoyIsol(this, node);
+			return;
 
-			} else if (type.equals("light_float")) {
-				if (keys.containsKey("seamark:light_float:colour")) {
-					str = keys.get("seamark:light_float:colour");
-					if (str.equals("red") || str.equals("green")
-							|| str.equals("red;green;red") || str.equals("green;red;green")) {
-						buoy = new BuoyLat(this, node);
-						return;
-					} else if (str.equals("black;yellow")
-							|| str.equals("black;yellow;black") || str.equals("yellow;black")
-							|| str.equals("yellow;black;yellow")) {
-						buoy = new BuoyCard(this, node);
-						return;
-					} else if (str.equals("black;red;black")) {
-						buoy = new BuoyIsol(this, node);
-						return;
-					} else if (str.equals("red;white")) {
-						buoy = new BuoySaw(this, node);
-						return;
-					} else if (str.equals("yellow")) {
-						buoy = new BuoySaw(this, node);
-						return;
-					} else {
-						buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
-						buoy.setNode(node);
-						return;
-					}
-				} else if (keys.containsKey("seamark:light_float:topmark:shape")) {
-					str = keys.get("seamark:light_float:topmark:shape");
-					if (str.equals("cylinder") || str.equals("cone, point up")) {
-						buoy = new BuoyLat(this, node);
-						return;
-					}
-				} else if (keys.containsKey("seamark:light_float:topmark:colour")) {
-					str = keys.get("seamark:light_float:topmark:colour");
-					if (str.equals("red") || str.equals("green")) {
-						buoy = new BuoyLat(this, node);
-						return;
-					}
+		} else if (type.equals("light_float")) {
+			if (keys.containsKey("seamark:light_float:colour")) {
+				str = keys.get("seamark:light_float:colour");
+				if (str.equals("red") || str.equals("green")
+						|| str.equals("red;green;red") || str.equals("green;red;green")) {
+					buoy = new BuoyLat(this, node);
+					return;
+				} else if (str.equals("black;yellow")
+						|| str.equals("black;yellow;black") || str.equals("yellow;black")
+						|| str.equals("yellow;black;yellow")) {
+					buoy = new BuoyCard(this, node);
+					return;
+				} else if (str.equals("black;red;black")) {
+					buoy = new BuoyIsol(this, node);
+					return;
+				} else if (str.equals("red;white")) {
+					buoy = new BuoySaw(this, node);
+					return;
+				} else if (str.equals("yellow")) {
+					buoy = new BuoySaw(this, node);
+					return;
+				} else {
+					buoy = new BuoyUkn(this, "Parse-Error: Invalid colour");
+					buoy.setNode(node);
+					return;
+				}
+			} else if (keys.containsKey("seamark:light_float:topmark:shape")) {
+				str = keys.get("seamark:light_float:topmark:shape");
+				if (str.equals("cylinder") || str.equals("cone, point up")) {
+					buoy = new BuoyLat(this, node);
+					return;
+				}
+			} else if (keys.containsKey("seamark:light_float:topmark:colour")) {
+				str = keys.get("seamark:light_float:topmark:colour");
+				if (str.equals("red") || str.equals("green")) {
+					buoy = new BuoyLat(this, node);
+					return;
 				}
 			}
 		}

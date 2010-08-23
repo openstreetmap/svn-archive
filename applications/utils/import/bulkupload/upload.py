@@ -35,7 +35,6 @@ import http.client as httplib
 import xml.etree.cElementTree as ElementTree
 import urllib.parse as urlparse
 
-
 class HTTPError(Exception):
     pass
 
@@ -267,12 +266,15 @@ try:
         if not os.path.exists(filename):
             sys.stderr.write("File %r doesn't exist!\n" % (filename,))
             sys.exit(1)
-        tree = ElementTree.parse(filename)
-        root = tree.getroot()
-        if root.tag != "osmChange" or (root.attrib.get("version") != "0.3" and
-                root.attrib.get("version") != "0.6"):
-            sys.stderr.write("File %s is not a v0.3 osmChange file!\n" % (filename,))
-            sys.exit(1)
+        if 'start' not in param:
+            # Should still check validity, but let's save time
+
+            tree = ElementTree.parse(filename)
+            root = tree.getroot()
+            if root.tag != "osmChange" or (root.attrib.get("version") != "0.3" and
+                    root.attrib.get("version") != "0.6"):
+                sys.stderr.write("File %s is not a v0.3 osmChange file!\n" % (filename,))
+                sys.exit(1)
 
         if filename.endswith(".osc"):
             diff_fn = filename[:-4] + ".diff.xml"
@@ -345,9 +347,10 @@ try:
                     for oper in root:
                         todel = []
                         for elem in oper:
-                            if elem.attrib.get("id") == id:
-                                todel.append(elem)
-                                found = 1
+                            if elem.attrib.get("id") != id:
+                                continue
+                            todel.append(elem)
+                            found = 1
                         for elem in todel:
                             oper.remove(elem)
                     if not found:
@@ -357,6 +360,55 @@ try:
                         sys.exit(1)
                     sys.stderr.write("\nRetrying upload without element " +
                             id + "\n")
+                    continue
+                if 'try' in param and e.args[0] == 400 and \
+                        errstr.find("Placeholder Way not found") > -1:
+                    id = errstr.replace(".", "").split(" ")[-1]
+                    found = 0
+                    for oper in root:
+                        todel = []
+                        for elem in oper:
+                            if elem.attrib.get("id") != id:
+                                continue
+                            todel.append(elem)
+                            found = 1
+                        for elem in todel:
+                            oper.remove(elem)
+                    if not found:
+                        sys.stderr.write("\nElement " + id + " not found\n")
+                        if 'changeset' not in param:
+                            api.close_changeset()
+                        sys.exit(1)
+                    sys.stderr.write("\nRetrying upload without element " +
+                            id + "\n")
+                    continue
+                if 'try' in param and e.args[0] == 412 and \
+                        errstr.find(" requires ") > -1:
+                    idlist = errstr.split("id in (")[1].split(")")[0].split(",")
+                    found = 0
+                    delids = []
+                    for oper in root:
+                        todel = []
+                        for elem in oper:
+                            for nd in elem:
+                                if nd.tag not in [ "nd", "member" ]:
+                                    continue
+                                if nd.attrib.get("ref") not in idlist:
+                                    continue
+                                found = 1
+                                delids.append(elem.attrib.get("id"))
+                                todel.append(elem)
+                                break
+                        for elem in todel:
+                            oper.remove(elem)
+                    if not found:
+                        sys.stderr.write("\nElement " + str(idlist) +
+                                " not found\n")
+                        if 'changeset' not in param:
+                            api.close_changeset()
+                        sys.exit(1)
+                    sys.stderr.write("\nRetrying upload without elements " +
+                            str(delids) + "\n")
                     continue
                 if 'changeset' not in param:
                    api.close_changeset()

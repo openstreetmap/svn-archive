@@ -1,0 +1,106 @@
+/*
+DIGIT ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+WEEKDAY ::= "Mo" | "Tu" | "We" | "Th" | "Fr" | "Sa" | "Su"
+PLUS ::= "+"
+OFF ::= "off"
+
+startCompile ::= "24/7" | timespanlist
+timespanlist ::= timespan [ "; " timespanlist ]
+timespan ::= [ dayspanlist " " ] daytimespanlist
+
+daytimespanlist ::=	daytimespan [ "," daytimespanlist ]
+daytimespan ::= off | ( daytime ( openend |  [ "-" daytime ]) )
+daytime ::=	(DIGIT DIGIT ":" DIGIT DIGIT )
+openend ::= PLUS
+off ::= OFF
+
+dayspanlist ::=	dayspan [ "," dayspanlist ]
+dayspan ::=	WEEKDAY [ "-" WEEKDAY ]
+*/
+options{  LOOKAHEAD= 1;  CHOICE_AMBIGUITY_CHECK = 2;  OTHER_AMBIGUITY_CHECK = 1;  STATIC = false;  DEBUG_PARSER = false;  DEBUG_LOOKAHEAD = false;  DEBUG_TOKEN_MANAGER = false;  ERROR_REPORTING = true;  JAVA_UNICODE_ESCAPE = false;  UNICODE_INPUT = false;  IGNORE_CASE = false;  USER_TOKEN_MANAGER = false;  USER_CHAR_STREAM = false;  BUILD_PARSER = true;  BUILD_TOKEN_MANAGER = true;  SANITY_CHECK = true;  FORCE_LA_CHECK = false;}PARSER_BEGIN(OpeningTimeCompiler)package org.openstreetmap.josm.plugins.ohe.parser;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Vector;
+import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils.DaySpan;
+import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils.DaytimeSpan;
+import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils.DateTime;public class OpeningTimeCompiler{  public static final String[] WEEKDAYS = new String[] {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};  public OpeningTimeCompiler(String time)  {    this(new ByteArrayInputStream(time.getBytes()), null);  }}PARSER_END(OpeningTimeCompiler)TOKEN : { < DIGIT : [ "0"-"9" ] > }
+TOKEN : { < WEEKDAY : "Mo" | "Tu" | "We" | "Th" | "Fr" | "Sa" | "Su" > }
+TOKEN : { < PLUS : "+" > }
+TOKEN : { < OFF : "off" > }
+
+// returns a list of timesArrayList<DateTime> startCompile() throws ParseException, SyntaxException :{
+  Vector<Token> usedTokens = new Vector<Token>();  ArrayList<DateTime> time = new ArrayList<DateTime>();}{  ( time = timespanlist(usedTokens) | "24/7" ) <EOF>  {    if (time.size() == 0) {
+  		ArrayList<DaySpan> daySpans = new ArrayList<DaySpan>();
+    	daySpans.add(new DaySpan(0,6));
+  		ArrayList<DaytimeSpan> timeSpans = new ArrayList<DaytimeSpan>();
+    	timeSpans.add(new DaytimeSpan(0, 24 * 60));
+    	time.add(new DateTime(daySpans, timeSpans));
+	}
+    	    return time;  }}
+//ArrayList<DateTime> timespanlist(Vector<Token> usedTokens) throws ParseException, SyntaxException :{
+  ArrayList<DateTime> list = new ArrayList<DateTime>();
+  DateTime first = null;  ArrayList<DateTime> second = null;}{  first = timespan(usedTokens) [ "; " second = timespanlist(usedTokens) ]  {
+    list.add(first);
+    if(second != null)    	list.addAll(second);    return list;  }}
+//DateTime timespan(Vector<Token> usedTokens) throws ParseException, SyntaxException :{  ArrayList<DaySpan> dayspanlist = new ArrayList<DaySpan>();  dayspanlist.add(new DaySpan(0, 6)); // if no days are given the timespan is applied to day 0-6  ArrayList<DaytimeSpan> daytimespanlist = null;}{  [ dayspanlist = dayspanlist(usedTokens) " " ] daytimespanlist = daytimespanlist(usedTokens)  {
+    return new DateTime(dayspanlist, daytimespanlist);  }}
+// returns a list of daytimes as ArrayList<int[2]>ArrayList<DaytimeSpan> daytimespanlist(Vector<Token> usedTokens) throws ParseException, SyntaxException :{
+  ArrayList<DaytimeSpan> list = new ArrayList<DaytimeSpan>();  DaytimeSpan first;  ArrayList<DaytimeSpan> second = new ArrayList<DaytimeSpan>();}{  first = daytimespan(usedTokens) [ "," second = daytimespanlist(usedTokens) ]  {    list.add(first);
+    if(second != null)
+    	list.addAll(second);
+    return list;  }}
+// returns the minutes from 00:00 of a daytimespan as integer[2]
+// int[0] == int[1] means it is just one daytime
+// int[0] == int[1] == -1 means off
+//           int[1] == 24*60+1 means openendDaytimeSpan daytimespan(Vector<Token> usedTokens) throws ParseException, SyntaxException :{  int start, end =-1;}{  ( start = off(usedTokens) | ( start = daytime(usedTokens) ( end = openend(usedTokens) | [ "-" end = daytime(usedTokens) ] ) ) )  {    if (end < 0)
+    	end = start;
+    else if(end < start)
+    	throw new SyntaxException(null, usedTokens.lastElement().beginColumn - 1, usedTokens.lastElement().endColumn + 1);
+        return new DaytimeSpan(start, end);  }}
+// returns the minutes from 00:00 as integerint daytime(Vector<Token> usedTokens) throws ParseException, SyntaxException :{  Token th0, th1, tm0, tm1;}{  th1 = <DIGIT> th0 = <DIGIT> ":" tm1 = <DIGIT> tm0 = <DIGIT>  {
+    usedTokens.add(th1);
+    usedTokens.add(th0);
+    usedTokens.add(tm1);
+    usedTokens.add(tm0);    int hour = Integer.parseInt(th1.image) * 10 + Integer.parseInt(th0.image);    int minute = Integer.parseInt(tm1.image) * 10 + Integer.parseInt(tm0.image);
+    if (hour > 24)
+    	throw new SyntaxException(null, th1.beginColumn - 1, th0.endColumn + 1);    if (minute >= 60 || (hour == 24 && minute != 0))
+    	throw new SyntaxException(null, tm1.beginColumn - 1, tm0.endColumn + 1);
+    return hour * 60 + minute;  }}
+//
+int openend(Vector<Token> usedTokens) throws ParseException, SyntaxException :
+{
+  Token plus;
+}
+{
+  plus = <PLUS>
+  {
+    usedTokens.add(plus);
+    return 24 * 60 + 1;
+  }
+}
+//
+int off(Vector<Token> usedTokens) throws ParseException, SyntaxException :
+{
+  Token off;
+}
+{
+  off = <OFF>
+  {
+    usedTokens.add(off);
+    return -1;
+  }
+}
+// returns a list of days as ArrayList<int[2]>ArrayList<DaySpan> dayspanlist(Vector<Token> usedTokens) throws ParseException, SyntaxException :{  ArrayList<DaySpan> list = new ArrayList<DaySpan>();  DaySpan first;  ArrayList<DaySpan> second = null;}{  first = dayspan(usedTokens) [ "," second = dayspanlist(usedTokens) ]  {    if (second == null) {      //second dayspanlist is empty, only the first is returned      list.add(first);    } else {      if (first.endDay + 1 == second.get(0).startDay) {        //the second dayspanlist and the first are coherent, both are joined and returned
+        list.addAll(second);        list.set(0, new DaySpan(first.startDay, second.get(0).endDay));      } else {        //the first and the second dayspans are not coherent, both are added to the returnStatement
+        list.add(first);        list.addAll(second);      }    }    return list;  }}
+// returns the span of two days as int[2]
+// int[0] == int[1] means it is just one dayDaySpan dayspan(Vector<Token> usedTokens) throws ParseException, SyntaxException :{  int start, end = -1;}{  start = day(usedTokens) [ "-" end = day(usedTokens) ]  {    if(end < 0)
+    	end = start;
+    else if(end < start)
+    	throw new SyntaxException(null, usedTokens.lastElement().beginColumn - 1, usedTokens.lastElement().endColumn + 1);
+        return new DaySpan(start, end);  }}
+// returns the weekday as integerint day(Vector<Token> usedTokens) throws ParseException, SyntaxException :{  Token t;}{  t = <WEEKDAY>  {
+    usedTokens.add(t);    for (int i = 0; i < WEEKDAYS.length; ++i)
+      if (WEEKDAYS[i].equals(t.image))
+    	return i;
+    	    throw new SyntaxException(null, t.beginColumn - 1, t.endColumn + 1);  }}

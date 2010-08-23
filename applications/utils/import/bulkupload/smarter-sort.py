@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python2
 # vim: fileencoding=utf-8 encoding=utf-8 et sw=4
 
 # Copyright (C) 2009 Andrzej Zaborowski <balrogg@gmail.com>

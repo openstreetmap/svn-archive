@@ -80,16 +80,6 @@ public class AlignWaysRotateCommand extends Command {
 		this.pivot = algnSeg.getCurrPivotCoord();
 		this.nodes = algnSeg.getSegmentEndPoints();
 
-		for (Node n : this.nodes) {
-			OldState os = new OldState();
-			os.latlon = new LatLon(n.getCoor());
-			os.eastNorth = n.getEastNorth();
-			os.ws = algnWS;
-			os.modified = n.isModified();
-			oldState.put(n, os);
-		}
-		oldWS.push(algnWS);
-
 		EastNorth enRefNode1 = refWS.way.getNode(refWS.lowerIndex)
 		.getEastNorth();
 		EastNorth enRefNode2 = refWS.way.getNode(refWS.lowerIndex + 1)
@@ -118,7 +108,7 @@ public class AlignWaysRotateCommand extends Command {
 				+ Math.toDegrees(rotationAngle) + ")";
 		 */
 
-		rotateNodes(true);
+		// rotateNodes(true);
 
 	}
 
@@ -129,6 +119,20 @@ public class AlignWaysRotateCommand extends Command {
 	 *            - true if rotated nodes should be flagged "modified"
 	 */
 	private void rotateNodes(boolean setModified) {
+
+		// "Backup" state
+		WaySegment algnWS = algnSeg.getSegment();
+		for (Node n : this.nodes) {
+			OldState os = new OldState();
+			os.latlon = new LatLon(n.getCoor());
+			os.eastNorth = n.getEastNorth();
+			os.ws = algnWS;
+			os.modified = n.isModified();
+			oldState.put(n, os);
+		}
+		oldWS.push(algnWS);
+
+		// Rotate
 		for (Node n : nodes) {
 			double cosPhi = Math.cos(rotationAngle);
 			double sinPhi = Math.sin(rotationAngle);
@@ -167,7 +171,7 @@ public class AlignWaysRotateCommand extends Command {
 	@Override
 	public JLabel getDescription() {
 		return new JLabel(tr("Align way segment"), ImageProvider.get(
-					"", "alignways"), SwingConstants.HORIZONTAL);
+				"", "alignways"), SwingConstants.HORIZONTAL);
 	}
 
 	/*
@@ -215,19 +219,31 @@ public class AlignWaysRotateCommand extends Command {
 		return nodes;
 	}
 
-	public boolean areSegsConnected() {
+	/** Returns true if the two selected segments are alignable.
+	 *  They are not if they are connected *and* the pivot is not the connection node.
+	 */
+	public boolean areSegsAlignable() {
 		Collection<Node> algnNodes = nodes;
 		Collection<Node> refNodes = AlignWaysSegmentMgr.getInstance(Main.map.mapView)
 		.getRefSeg().getSegmentEndPoints();
+
+		// First check if the pivot node of the alignee exists in the reference:
+		// in this case the pivot is the shared node and alignment is possible
+		for (Node nR : refNodes) {
+			if (nR.getEastNorth().equals(pivot))
+				return true;
+		}
+
+		// Otherwise if the segments are connected, alignment is not possible
 		for (Node nA : algnNodes) {
 			for (Node nR : refNodes) {
 				if (nA.equals(nR))
-					return true;
+					return false;
 			}
 		}
 
-		return false;
+		// In all other cases alignment is possible
+		return true;
 	}
-
 
 }

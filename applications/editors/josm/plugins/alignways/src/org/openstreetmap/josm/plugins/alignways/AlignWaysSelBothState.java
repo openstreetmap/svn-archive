@@ -24,7 +24,8 @@ public class AlignWaysSelBothState extends AlignWaysState {
 	@Override
 	public void setHelpText() {
 		Main.map.statusLine
-				.setHelpText("Shift-A: Align segments; Alt-click: Clear selection");
+		.setHelpText(AlignWaysPlugin.getAwAction().getShortcut().getKeyText() +
+				": Align segments; Alt-click: Clear selection");
 	}
 
 }

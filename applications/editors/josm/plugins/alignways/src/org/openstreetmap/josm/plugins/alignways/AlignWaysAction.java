@@ -55,37 +55,50 @@ public class AlignWaysAction extends JosmAction {
 
 				if (!(c instanceof AlignWaysRotateCommand &&
 						affectedNodes.equals(((AlignWaysRotateCommand) c).getRotatedNodes()))) {
-					Main.main.undoRedo.add(c = new AlignWaysRotateCommand());
-				}
-
-				// Warn user if reference and alignee segment nodes are common:
-				// We cannot align two connected segment
-				if (((AlignWaysRotateCommand) c).areSegsConnected()) {
-					// Revert move
-					((AlignWaysRotateCommand) c).undoCommand();
-					JOptionPane.showMessageDialog(Main.parent,
-							tr("You cannot align connected segments.\n"
-									+ "Please select two segments that don''t share any nodes."),
-									tr("AlignWayS message"), JOptionPane.WARNING_MESSAGE);
-					return;
-				}
-
-				for (Node n : affectedNodes) {
-					if (n.getCoor().isOutSideWorld()) {
-						// Revert move
-						((AlignWaysRotateCommand) c).undoCommand();
-						JOptionPane.showMessageDialog(Main.parent,
-								tr("Aligning would result nodes outside the world.\n" +
-								"Your action is being reverted."),
-								tr("AlignWayS message"), JOptionPane.WARNING_MESSAGE);
-						return;
+					c = new AlignWaysRotateCommand();
+					if (actionValid((AlignWaysRotateCommand)c, affectedNodes)) {
+						Main.main.undoRedo.add(c);
 					}
-
 				}
 
 				Main.map.mapView.repaint();
 
 				return;
+	}
+
+
+	/**
+	 * Validates the circumstances of the alignment (rotation) command to be executed.
+	 * @param c Command to be verified.
+	 * @param affectedNodes Nodes to be affected by the action.
+	 * @return true if the aligning action can be done, false otherwise.
+	 */
+	private boolean actionValid(AlignWaysRotateCommand c, Collection<Node> affectedNodes) {
+		// Deny action if reference and alignee segment cannot be aligned
+		if (!c.areSegsAlignable()) {
+			JOptionPane.showMessageDialog(Main.parent,
+					tr("Please select two segments that don''t share any nodes or put the pivot on their common node.\n" +
+					"Your action is being igonred."),
+					tr("AlignWayS: Alignment not possible"), JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+
+		// Deny action if the nodes would end up outside world
+		for (Node n : affectedNodes) {
+			if (n.getCoor().isOutSideWorld()) {
+				// Revert move
+				(c).undoCommand();
+				JOptionPane.showMessageDialog(Main.parent,
+						tr("Aligning would result nodes outside the world.\n" +
+						"Your action is being ignored."),
+						tr("AlignWayS: Alignment denied"), JOptionPane.WARNING_MESSAGE);
+				return false;
+			}
+
+		}
+
+		// Action valid
+		return true;
 	}
 
 }

@@ -26,6 +26,7 @@
         <ant antfile="build.xml" target="dist" dir="multipoly"/>
         <ant antfile="build.xml" target="dist" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
+        <ant antfile="build.xml" target="dist" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="dist" dir="openlayers"/>
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
@@ -81,6 +82,7 @@
         <ant antfile="build.xml" target="clean" dir="multipoly"/>
         <ant antfile="build.xml" target="clean" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
+        <ant antfile="build.xml" target="clean" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="clean" dir="openlayers"/>
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="clean" dir="openvisible"/>

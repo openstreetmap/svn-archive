@@ -5,130 +5,237 @@
 #
 #
 MAP
-    NAME OSM-WMS
-    FONTSET "/osm/wms/fonts.list"
+  NAME OSM-WMS
+  FONTSET "/osm/wms/fonts.list"
+  STATUS ON
+  UNITS METERS
+  WEB
+    METADATA
+      "wms_title"          "openstreetmap.de WMS-Server"
+      "wms_onlineresource" "to_be_replaced_by_wms.py"
+      "wms_srs"            "EPSG:4326 EPSG:900913"
+    END
+  END
+
+  EXTENT 11.1747901 48.7403310 13.1960986 50.0685678
+
+  PROJECTION
+    "init=epsg:4326"
+  END
+
+  IMAGETYPE jpeg
+  SHAPEPATH "/osm/wms/"
+  OUTPUTFORMAT
+    NAME png
+    DRIVER "GD/PNG"
+    MIMETYPE "image/png"
+    IMAGEMODE RGB
+    EXTENSION "png"
+  END
+
+  WEB
+    IMAGEPATH "/tmp/ms_tmp/"
+  END
+
+  LAYER
+    NAME "Witten"
+    METADATA
+      "wms_title"  "Luftbilder Stadtwerke Witten (2009, 10 cm)"
+      "wms_extent" "7.220357 51.364269 7.438294 51.498894"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Stadtwerke Witten: OSM use only"
+    END
+    TYPE RASTER
     STATUS ON
-    UNITS METERS
-    WEB         
-        METADATA
-			"wms_title"     "openstreetmap.de WMS-Server"
-			"wms_onlineresource" "to_be_replaced_by_wms.py"
-			"wms_srs"       "EPSG:4326 EPSG:900913"
-        END
-    END    
-    EXTENT 11.1747901 48.7403310 13.1960986 50.0685678
+    DATA "witten/witten-4326.img"
     PROJECTION
-		"init=epsg:4326"
+      "init=epsg:4326"
     END
-        
-	IMAGETYPE jpeg                  
-	SHAPEPATH "/osm/wms/"
-	OUTPUTFORMAT
-		NAME png
-		DRIVER "GD/PNG"
-		MIMETYPE "image/png"
-		IMAGEMODE RGB
-		EXTENSION "png"
-    END                                                               
-    LAYER                                                      
-        NAME "Lauf"
-        METADATA
-			"wms_title"    "Luftbilder Stadt Lauf an der Pegnitz"  ##required
-			"wms_extent"   "11.1828049 49.4630117 11.3570980 49.5764818"
-			"wms_srs"      "EPSG:4326"
-			"copyright"    "© Stadt Lauf: OSM use only"
-        END
-        TYPE RASTER
-        STATUS ON
-	DATA "luftbilder-lauf/beta2007-4326.img"
-        PROJECTION
-			"init=epsg:4326"
-        END
-    END
+  END
 
-    LAYER                                                      
-        NAME "Dortmund"
-        METADATA
-			"wms_title"    "Luftbilder Dortmund Firma Aerowest"  ##required
-			"wms_extent" "7.293047 51.409698 7.644673 51.602716"
-			"wms_srs"      "EPSG:4326"
-			"copyright"    "© Aerowest GmbH: OSM use only"
-        END
-        TYPE RASTER
-        STATUS ON
-	DATA "aerowest/dortmund_5cm_4326.img"
-        PROJECTION
-			"init=epsg:4326"
-        END
+  LAYER
+    NAME "Lauf"
+    METADATA
+      "wms_title"  "Luftbilder Stadt Lauf an der Pegnitz"
+      "wms_extent" "11.1828049 49.4630117 11.3570980 49.5764818"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Stadt Lauf: OSM use only"
     END
+    TYPE RASTER
+    STATUS ON
+    DATA "luftbilder-lauf/beta2007-4326.img"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
 
-    LAYER                                                      
-        NAME "Neunkirchen"
-        METADATA
-		        "wms_title" "Katasterplan Gemeinde Neunkirchen am Sand"
-                        "wms_extent" "11.3014 49.5112 11.3869 49.558"
-			"copyright"  "© Gem. Neunkirchen: OSM use only"
-        END
-        DATA "neunkirchen/neunkirchen-4326.shp"
-             TYPE LINE
-             DUMP TRUE
-             PROJECTION
-                     "init=epsg:4326"
-             END
-             STATUS ON
-             SYMBOLSCALE 5000
-             CLASS
-               STYLE
-                 SIZE 1
-                 COLOR 0 128 128
-                 ANTIALIAS true
-             END
-        END
+  LAYER
+    NAME "Neunkirchen"
+    METADATA
+     "wms_title"  "Neunkirchen"
+     "wms_extent" "11.3 49.50 11.386 49.55"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "© Gem. Neunkirchen: OSM use only"
     END
+    STATUS ON
+    TYPE LINE
+    DATA "neunkirchen/neunkirchen-4326b.shp"
+    PROJECTION
+          "init=epsg:4326"
+    END
+    CLASS
+      NAME "14 - sonstige Grenze (vermutet)"
+      EXPRESSION ([SUMME] = 14)
+      STYLE
+        SIZE 1
+        COLOR 0 128 128
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "15 - Markierung auf Anbau oder Wirtschaftsgebäude (vermutet)"
+      EXPRESSION ([SUMME] = 15)
+      STYLE
+        SIZE 1
+        COLOR 0 0 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "16 - Gebäude"
+      EXPRESSION ([SUMME] = 16)
+      STYLE
+        SIZE 1
+        COLOR 255 0 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "17 - Markierung auf Kirche"
+      EXPRESSION ([SUMME] = 17)
+      STYLE
+        SIZE 1
+        COLOR 0 0 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "18 - Gemarkungsgrenze (vermutet)"
+      EXPRESSION ([SUMME] = 18)
+      STYLE
+        SIZE 1
+        COLOR 128 128 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "19 - Grenze eines Weges (vermutet)"
+      EXPRESSION ([SUMME] = 19)
+      STYLE
+        SIZE 1
+        COLOR 0 128 255
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "20 - Grundstücks- und Gewässergrenze"
+      EXPRESSION ([SUMME] = 20)
+      STYLE
+        SIZE 1
+        COLOR 0 0 160
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "22 - Markierung auf Brücke"
+      EXPRESSION ([SUMME] = 22)
+      STYLE
+        SIZE 1
+        COLOR 0 0 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "23 - Straßenbegrenzung"
+      EXPRESSION ([SUMME] = 23)
+      STYLE
+        SIZE 1
+        COLOR 0 128 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "24 - Grenze eines Feldes (vermutet)"
+      EXPRESSION ([SUMME] = 24)
+      STYLE
+        SIZE 1
+        COLOR 0 128 128
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "26 - Grenze eines Feldes"
+      EXPRESSION ([SUMME] = 26)
+      STYLE
+        SIZE 1
+        COLOR 128 64 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      NAME "28 - unbekannt"
+      EXPRESSION ([SUMME] = 28)
+      STYLE
+        SIZE 1
+        COLOR 128 128 128
+        ANTIALIAS true
+      END
+    END
+  END
 
-    LAYER                                                      
-        NAME "Chile"
-        METADATA
-                        "wms_title"    "Rapideye Images from Chile"  ##required
-                        "wms_extent"   "-73.655740 -37.944243 -72.090433 -34.879482"
-                        "wms_srs"      "EPSG:4326"
-			"copyright"    "© RapidEye AG: OSM use only"
-        END
-        TYPE RASTER
-        STATUS ON
-        OFFSITE 0 0 0
-        TILEINDEX "chile/chile.shp"
-        PROJECTION
-                        "init=epsg:4326"
-        END
+  LAYER
+    NAME "Chile"
+    METADATA
+      "wms_title"  "Rapideye Images from Chile"##required
+      "wms_extent" "-73.655740 -37.944243 -72.090433 -34.879482"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© RapidEye AG: OSM use only"
     END
+    TYPE RASTER
+    STATUS ON
+    OFFSITE 0 0 0
+    TILEINDEX "chile/chile.shp"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
 
-    LAYER
-	METADATA
-		"wms_title" "Copyright Notice"
-		"ows_service"  "none"
-	END
-        NAME copyright
-        STATUS DEFAULT
-        TYPE annotation
-        TRANSFORM ll #set the image origin to be lower left
-        FEATURE
-          POINTS
-            128 -10 #set the offset from lower left position in pixels
-          END
-        END   
-        CLASS
-	  TEXT "to be set from mapscript"
-          LABEL #defines the font, colors etc. of the text
-            FONT arial-bold
-            TYPE TRUETYPE
-            SIZE 10
-            BUFFER 1
-            COLOR 255 0 0
-#            BACKGROUNDCOLOR 255 255 255
-            FORCE TRUE
-          END
-        END 
-        UNITS PIXELS #sets the units for the feature object
+  LAYER
+    METADATA
+      "wms_title"   "Copyright Notice"
+      "ows_service" "none"
     END
+    NAME copyright
+    STATUS DEFAULT
+    TYPE annotation
+    TRANSFORM ll #set the image origin to be lower left
+      FEATURE
+        POINTS
+        128 -10 #set the offset from lower left position in pixels
+      END
+    END
+    CLASS
+      TEXT "to be set from mapscript"
+      LABEL #defines the font, colors etc. of the text
+        FONT arial-bold
+        TYPE TRUETYPE
+        SIZE 10
+        BUFFER 1
+        COLOR 255 0 0
+        #BACKGROUNDCOLOR 255 255 255
+        FORCE TRUE
+      END
+    END
+    UNITS PIXELS #sets the units for the feature object
+  END
 END

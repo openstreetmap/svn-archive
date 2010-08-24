@@ -30,9 +30,9 @@
 <project name="OpeningHoursEditor" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message" />
+    <property name="commit.message" value="fixed main version" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="2830" />
+	<property name="plugin.main.version" value="3021" />
 
 
     <!--

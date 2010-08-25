@@ -24,12 +24,12 @@
     <!-- Non-physical boundaries -->
     <rule e="way" k="boundary" v="administrative">
       <rule e="way" k="admin_level" v="2">
-        <line class="boundary boundary-level-2-casing" />
-        <line class="boundary boundary-level-2-core" />
+        <line class="boundary boundary-level-2-casing no-bezier" />
+        <line class="boundary boundary-level-2-core no-bezier" />
       </rule>
       <rule e="way" k="admin_level" v="1">
-        <line class="boundary boundary-level-1-casing" />
-        <line class="boundary boundary-level-1-core" />
+        <line class="boundary boundary-level-1-casing no-bezier" />
+        <line class="boundary boundary-level-1-core no-bezier" />
       </rule>
     </rule>
 

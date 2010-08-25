@@ -3940,63 +3940,63 @@
 		<rule e="way" k="boundary" v="administrative" layer="5">
 			<rule e="way" k="admin_level" v="1|2|3|4|5|6|7|8|9|10|11" layer="5">
 				<rule e="way" k="admin_level" v="11" layer="5">
-					<line class="boundary boundary-level-11-core" layer="5"/>
+					<line class="boundary boundary-level-11-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="10" layer="5">
-					<line class="boundary boundary-level-10-core" layer="5"/>
+					<line class="boundary boundary-level-10-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="9" layer="5">
-					<line class="boundary boundary-level-9-core" layer="5"/>
+					<line class="boundary boundary-level-9-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="8" layer="5">
-					<line class="boundary boundary-level-8-core" layer="5"/>
+					<line class="boundary boundary-level-8-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="7" layer="5">
-					<line class="boundary boundary-level-7-core" layer="5"/>
+					<line class="boundary boundary-level-7-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="6" layer="5">
-					<line class="boundary boundary-level-6-core" layer="5"/>
+					<line class="boundary boundary-level-6-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="5" layer="5">
-					<line class="boundary boundary-level-5-core" layer="5"/>
+					<line class="boundary boundary-level-5-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="4" layer="5">
-					<line class="boundary boundary-level-4-core" layer="5"/>
+					<line class="boundary boundary-level-4-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="3" layer="5">
-					<line class="boundary boundary-level-3-core" layer="5"/>
+					<line class="boundary boundary-level-3-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="2" layer="5">
-					<line class="boundary boundary-level-2-casing" layer="5"/>
-					<line class="boundary boundary-level-2-core" layer="5"/>
+					<line class="boundary boundary-level-2-casing no-bezier" layer="5"/>
+					<line class="boundary boundary-level-2-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="admin_level" v="1" layer="5">
-					<line class="boundary boundary-level-1-casing" layer="5"/>
-					<line class="boundary boundary-level-1-core" layer="5"/>
+					<line class="boundary boundary-level-1-casing no-bezier" layer="5"/>
+					<line class="boundary boundary-level-1-core no-bezier" layer="5"/>
 				</rule>
 			</rule>
 			<!-- If we don't have explicit admin_level then guess -->
 			<else>
 				<rule e="way" k="border_type" v="suburb" layer="5">
-					<line class="boundary boundary-level-10-core" layer="5"/>
+					<line class="boundary boundary-level-10-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="border_type" v="municipality|city" layer="5">
-					<line class="boundary boundary-level-8-core" layer="5"/>
+					<line class="boundary boundary-level-8-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="border_type" v="county|district" layer="5">
-					<line class="boundary boundary-level-6-core" layer="5"/>
+					<line class="boundary boundary-level-6-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="border_type" v="region|state" layer="5">
-					<line class="boundary boundary-level-4-core" layer="5"/>
+					<line class="boundary boundary-level-4-core no-bezier" layer="5"/>
 				</rule>
 				<rule e="way" k="border_type" v="nation|country" layer="5">
-					<line class="boundary boundary-level-2-casing" layer="5"/>
-					<line class="boundary boundary-level-2-core" layer="5"/>
+					<line class="boundary boundary-level-2-casing no-bezier" layer="5"/>
+					<line class="boundary boundary-level-2-core no-bezier" layer="5"/>
 				</rule>
 			</else>
 		</rule>
 		<rule e="way" k="boundary" v="national_park" layer="5">
-			<line class="boundary boundary-nationalpark-core" layer="5"/>
+			<line class="boundary boundary-nationalpark-core no-bezier" layer="5"/>
 		</rule>
 
 		<!-- Waterway and Street names -->

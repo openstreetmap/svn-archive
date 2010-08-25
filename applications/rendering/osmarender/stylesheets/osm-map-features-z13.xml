@@ -242,6 +242,9 @@
 		<rule e="way" k="natural" v="water|pond|lake">
 			<area class="natural-water"/>
 		</rule>
+		<rule e="way" k="landuse" v="reservoir">
+			<area class="natural-water"/>
+		</rule>
 		<rule e="way" k="landuse" v="basin">
 			<area class="natural-water"/>
 		</rule>

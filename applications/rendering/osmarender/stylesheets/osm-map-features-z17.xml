@@ -138,6 +138,9 @@
 		<rule e="way" k="leisure" v="swimming_pool">
 			<area class="leisure-swimming-pool"/>
 		</rule>
+		<rule e="way" k="amenity" v="fountain" closed="yes">
+			<area class="fountain" />
+		</rule>
 
 		<!-- Airports and runways -->
 		<rule e="way" k="aeroway" v="aerodrome" closed="yes">
@@ -6029,6 +6032,11 @@
 			font-size: 1px;
 			font-weight: bold;
 			text-anchor: middle;
+			}
+			.fountain {
+				stroke: #000080;
+				stroke-width: 0.15px;
+				fill: #b5d6f1;
 			}
 
 			.man_made-lighthouse-caption-casing  { stroke-width: .5px;   font-size: 1px; }

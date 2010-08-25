@@ -131,6 +131,9 @@
 		<rule e="way" k="leisure" v="swimming_pool">
 			<area class="leisure-swimming-pool"/>
 		</rule>
+		<rule e="way" k="amenity" v="fountain" closed="yes">
+			<area class="fountain" />
+		</rule>
 		<rule e="way" k="man_made" v="wastewater_plant" layer="-5" closed="yes">
 			<area class="man_made-wastewater" layer="-5"/>
 		</rule>
@@ -4774,7 +4777,12 @@
 			stroke: #800000;
 			stroke-width: 0.2px;
 			}
-			
+
+			.fountain {
+				stroke: #000080;
+				stroke-width: 0.15px;
+				fill: #b5d6f1;
+			}
 			
 			/* Aerialway */
 			.aerialway-line {

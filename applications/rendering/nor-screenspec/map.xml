@@ -10,7 +10,7 @@
 <!ENTITY urbanarea-color "#f7be8c"><!-- residential, industrial -->
 <!ENTITY regulatedarea-color "#d7d7d7"><!-- construction, landfill, quarry -->
 <!ENTITY water-color "#e0ffff"><!-- water -->
-<!ENTITY waterline-color "#0a6ff"><!-- stream, shoreline -->
+<!ENTITY waterline-color "#00a6ff"><!-- stream, shoreline -->
 <!ENTITY border-admin-regional-color "#b487ff">
 <!ENTITY border-admin-country-color "#be5abe">
 <!ENTITY border-naturereserve-color "#009c00">

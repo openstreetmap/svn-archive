@@ -17,6 +17,7 @@ abstract public class Grabber implements Runnable {
 	protected ProjectionBounds b;
 	protected Projection proj;
 	protected double pixelPerDegree;
+	protected WMSRequest request;
 	protected volatile boolean canceled;
 
 	Grabber(MapView mv, WMSLayer layer, CacheFiles cache) {
@@ -29,12 +30,12 @@ abstract public class Grabber implements Runnable {
 		b = new ProjectionBounds(
 				layer.getEastNorth(request.getXIndex(), request.getYIndex()),
 				layer.getEastNorth(request.getXIndex() + 1, request.getYIndex() + 1));
-		if (b.min != null && b.max != null && WMSPlugin.doOverlap) {
+		if (b.min != null && b.max != null && WMSPlugin.PROP_OVERLAP.get()) {
 			double eastSize =  b.max.east() - b.min.east();
 			double northSize =  b.max.north() - b.min.north();
 
-			double eastCoef = WMSPlugin.overlapEast / 100.0;
-			double northCoef = WMSPlugin.overlapNorth / 100.0;
+			double eastCoef = WMSPlugin.PROP_OVERLAP_EAST.get() / 100.0;
+			double northCoef = WMSPlugin.PROP_OVERLAP_NORTH.get() / 100.0;
 
 			this.b = new ProjectionBounds( new EastNorth(b.min.east(),
 					b.min.north()),
@@ -44,15 +45,16 @@ abstract public class Grabber implements Runnable {
 
 		this.proj = Main.proj;
 		this.pixelPerDegree = request.getPixelPerDegree();
+		this.request = request;
 	}
 
 	abstract void fetch(WMSRequest request) throws Exception; // the image fetch code
 
 	int width(){
-		return (int) ((b.max.north() - b.min.north()) * pixelPerDegree);
+		return layer.getImageWidth(request.getXIndex());
 	}
 	int height(){
-		return (int) ((b.max.east() - b.min.east()) * pixelPerDegree);
+		return layer.getImageHeight(request.getYIndex());
 	}
 
 	@Override

@@ -52,6 +52,7 @@ import wmsplugin.GeorefImage.State;
  * fetched this way is tiled and managed to the disc to reduce server load.
  */
 public class WMSLayer extends Layer implements PreferenceChangedListener {
+
 	protected static final Icon icon =
 		new ImageIcon(Toolkit.getDefaultToolkit().createImage(WMSPlugin.class.getResource("/images/wms_small.png")));
 
@@ -66,7 +67,6 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	protected int daStep = 5;
 	protected int minZoom = 3;
 
-	protected boolean deltaChanged;
 	protected double dx = 0.0;
 	protected double dy = 0.0;
 
@@ -76,6 +76,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	protected String cookies;
 	protected final int serializeFormatVersion = 5;
 	protected boolean autoDownloadEnabled = true;
+	protected boolean settingsChanged;
 
 	// Image index boundary for current view
 	private volatile int bminx;
@@ -85,7 +86,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	private volatile int leftEdge;
 	private volatile int bottomEdge;
 
-
+	// Request queue
 	private final List<WMSRequest> requestQueue = new ArrayList<WMSRequest>();
 	private final List<WMSRequest> finishedRequests = new ArrayList<WMSRequest>();
 	private final Lock requestQueueLock = new ReentrantLock();
@@ -201,9 +202,10 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	}
 
 	@Override public void paint(Graphics2D g, final MapView mv, Bounds b) {
-		deltaChanged = false;
 		if(baseURL == null) return;
 		if (usesInvalidUrl && !isInvalidUrlConfirmed) return;
+
+		settingsChanged = false;
 
 		ProjectionBounds bounds = mv.getProjectionBounds();
 		bminx= getImageXIndex(bounds.min.east());
@@ -260,7 +262,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	}
 
 	public void displace(double dx, double dy) {
-		deltaChanged = true;
+		settingsChanged = true;
 		this.dx += dx;
 		this.dy += dy;
 	}
@@ -279,6 +281,16 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 
 	public int getImageY(int imageIndex) {
 		return (int)(imageIndex * imageSize * (getPPD() / pixelPerDegree) + dy * getPPD());
+	}
+
+	public int getImageWidth(int xIndex) {
+		int overlap = (int)(WMSPlugin.PROP_OVERLAP.get()?WMSPlugin.PROP_OVERLAP_EAST.get() * imageSize * getPPD() / pixelPerDegree / 100:0);
+		return getImageX(xIndex + 1) - getImageX(xIndex) + overlap;
+	}
+
+	public int getImageHeight(int yIndex) {
+		int overlap = (int)(WMSPlugin.PROP_OVERLAP.get()?WMSPlugin.PROP_OVERLAP_NORTH.get() * imageSize * getPPD() / pixelPerDegree / 100:0);
+		return getImageY(yIndex + 1) - getImageY(yIndex) + overlap;
 	}
 
 	/**
@@ -513,6 +525,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 			initializeImages();
 			resolution = mv.getDist100PixelText();
 			pixelPerDegree = getPPD();
+			settingsChanged = true;
 			mv.repaint();
 		}
 	}
@@ -626,6 +639,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 				images = (GeorefImage[][])ois.readObject();
 				ois.close();
 				fis.close();
+				settingsChanged = true;
 				mv.repaint();
 			}
 			catch (Exception ex) {
@@ -742,7 +756,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	public boolean isChanged() {
 		requestQueueLock.lock();
 		try {
-			return !finishedRequests.isEmpty() || deltaChanged;
+			return !finishedRequests.isEmpty() || settingsChanged;
 		} finally {
 			requestQueueLock.unlock();
 		}
@@ -752,6 +766,18 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 		if (event.getKey().equals(WMSPlugin.PROP_SIMULTANEOUS_CONNECTIONS.getKey())) {
 			cancelGrabberThreads(true);
 			startGrabberThreads();
+		} else if (
+				event.getKey().equals(WMSPlugin.PROP_OVERLAP.getKey())
+				|| event.getKey().equals(WMSPlugin.PROP_OVERLAP_EAST.getKey())
+				|| event.getKey().equals(WMSPlugin.PROP_OVERLAP_NORTH.getKey())) {
+			for (int i=0; i<images.length; i++) {
+				for (int k=0; k<images[i].length; k++) {
+					images[i][k] = new GeorefImage(this);
+				}
+			}
+
+			settingsChanged = true;
 		}
 	}
+
 }

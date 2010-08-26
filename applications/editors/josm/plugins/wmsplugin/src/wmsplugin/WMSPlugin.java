@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -49,6 +50,9 @@ public class WMSPlugin extends Plugin {
 	static CacheFiles cache = new CacheFiles("wmsplugin");
 
 	public static final IntegerProperty PROP_SIMULTANEOUS_CONNECTIONS = new IntegerProperty("wmsplugin.simultaneousConnections", 3);
+	public static final BooleanProperty PROP_OVERLAP = new BooleanProperty("wmsplugin.url.overlap", false);
+	public static final IntegerProperty PROP_OVERLAP_EAST = new IntegerProperty("wmsplugin.url.overlapEast", 14);
+	public static final IntegerProperty PROP_OVERLAP_NORTH = new IntegerProperty("wmsplugin.url.overlapNorth", 4);
 
 	WMSLayer wmsLayer;
 	static JMenu wmsJMenu;
@@ -56,9 +60,6 @@ public class WMSPlugin extends Plugin {
 	static ArrayList<WMSInfo> wmsList = new ArrayList<WMSInfo>();
 	static TreeMap<String,String> wmsListDefault = new TreeMap<String,String>();
 
-	static boolean doOverlap = false;
-	static int overlapEast = 14;
-	static int overlapNorth = 4;
 	// remember state of menu item to restore on changed preferences
 	static private boolean menuEnabled = false;
 
@@ -253,20 +254,6 @@ public class WMSPlugin extends Plugin {
 		Map<String,String> prefs = Main.pref.getAllPrefix("wmsplugin.url.");
 
 		TreeSet<String> keys = new TreeSet<String>(prefs.keySet());
-
-		// Here we load the settings for "overlap" checkbox and spinboxes.
-
-		try {
-			doOverlap = Boolean.valueOf(prefs.get("wmsplugin.url.overlap"));
-		} catch (Exception e) {} // If sth fails, we drop to default settings.
-
-		try {
-			overlapEast = Integer.valueOf(prefs.get("wmsplugin.url.overlapEast"));
-		} catch (Exception e) {} // If sth fails, we drop to default settings.
-
-		try {
-			overlapNorth = Integer.valueOf(prefs.get("wmsplugin.url.overlapNorth"));
-		} catch (Exception e) {} // If sth fails, we drop to default settings.
 
 		// And then the names+urls of WMS servers
 		int prefid = 0;

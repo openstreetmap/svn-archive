@@ -168,11 +168,11 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 		//Overlap
 		p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
 
-		overlapCheckBox = new JCheckBox(tr("Overlap tiles"), WMSPlugin.doOverlap );
+		overlapCheckBox = new JCheckBox(tr("Overlap tiles"), WMSPlugin.PROP_OVERLAP.get() );
 		JLabel labelEast = new JLabel(tr("% of east:"));
 		JLabel labelNorth = new JLabel(tr("% of north:"));
-		spinEast = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapEast, 1, 50, 1));
-		spinNorth = new JSpinner(new SpinnerNumberModel(WMSPlugin.overlapNorth, 1, 50, 1));
+		spinEast = new JSpinner(new SpinnerNumberModel(WMSPlugin.PROP_OVERLAP_EAST.get(), 1, 50, 1));
+		spinNorth = new JSpinner(new SpinnerNumberModel(WMSPlugin.PROP_OVERLAP_NORTH.get(), 1, 50, 1));
 
 		JPanel overlapPanel = new JPanel(new FlowLayout());
 		overlapPanel.add(overlapCheckBox);
@@ -239,15 +239,11 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 
 		if (change) WMSPlugin.refreshMenu();
 
-		WMSPlugin.doOverlap = overlapCheckBox.getModel().isSelected();
-		WMSPlugin.overlapEast = (Integer) spinEast.getModel().getValue();
-		WMSPlugin.overlapNorth = (Integer) spinNorth.getModel().getValue();
+		WMSPlugin.PROP_OVERLAP.put(overlapCheckBox.getModel().isSelected());
+		WMSPlugin.PROP_OVERLAP_EAST.put((Integer) spinEast.getModel().getValue());
+		WMSPlugin.PROP_OVERLAP_NORTH.put((Integer) spinNorth.getModel().getValue());
 		WMSPlugin.PROP_SIMULTANEOUS_CONNECTIONS.put((Integer) spinSimConn.getModel().getValue());
 		allowRemoteControl = remoteCheckBox.getModel().isSelected();
-
-		Main.pref.put("wmsplugin.url.overlap",    String.valueOf(WMSPlugin.doOverlap));
-		Main.pref.put("wmsplugin.url.overlapEast", String.valueOf(WMSPlugin.overlapEast));
-		Main.pref.put("wmsplugin.url.overlapNorth", String.valueOf(WMSPlugin.overlapNorth));
 
 		Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
 

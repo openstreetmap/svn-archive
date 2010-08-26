@@ -98,12 +98,7 @@ public class GeorefImage implements Serializable {
 	}
 
 	private BufferedImage createImage() {
-		int left = layer.getImageX(xIndex);
-		int bottom = layer.getImageY(yIndex);
-		int width = layer.getImageX(xIndex + 1) - left;
-		int height = layer.getImageY(yIndex + 1) - bottom;
-
-		return new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		return new BufferedImage(layer.getImageWidth(xIndex), layer.getImageHeight(yIndex), BufferedImage.TYPE_INT_RGB);
 	}
 
 	public boolean paint(Graphics g, NavigatableComponent nc, int xIndex, int yIndex, int leftEdge, int bottomEdge) {
@@ -116,8 +111,8 @@ public class GeorefImage implements Serializable {
 
 		int left = layer.getImageX(xIndex);
 		int bottom = layer.getImageY(yIndex);
-		int width = layer.getImageX(xIndex + 1) - left;
-		int height = layer.getImageY(yIndex + 1) - bottom;
+		int width = layer.getImageWidth(xIndex);
+		int height = layer.getImageHeight(yIndex);
 
 		int x = left - leftEdge;
 		int y = nc.getHeight() - (bottom - bottomEdge) - height;

@@ -55,7 +55,7 @@
     <LineSymbolizer>
       <CssParameter name="stroke">&border-admin-country-color;</CssParameter>
       <CssParameter name="stroke-width">0.5</CssParameter>
-      <CssParameter name="stroke-dash-array">4,2</CssParameter>
+      <CssParameter name="stroke-dasharray">4,2</CssParameter>
     </LineSymbolizer>
   </Rule>
 </Style>

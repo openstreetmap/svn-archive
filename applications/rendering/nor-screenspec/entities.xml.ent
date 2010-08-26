@@ -1,5 +1,0 @@
-<!ENTITY layer-world SYSTEM "layer-world.xml.ent">
-
-<!ENTITY white "#FFF">
-<!ENTITY black "#000">
-<!ENTITY grey50 "#888">

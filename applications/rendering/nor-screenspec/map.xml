@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map [
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+<!ENTITY % sharedentities SYSTEM "entities.xml.ent">
+
+<!ENTITY background-color "#ffffe6"><!-- background (default land) -->
+<!ENTITY forestland-color "#d2e67c"><!-- wood, #EFFDE3 -->
+<!ENTITY farmland-color "#fff7a3"><!-- farmland, field, orchard -->
+<!ENTITY openland-color "#9bb93c"><!-- meadow, recreation ground, park -->
+<!ENTITY urbanarea-color "#f7be8c"><!-- residential, industrial -->
+<!ENTITY regulatedarea-color "#d7d7d7"><!-- construction, landfill, quarry -->
+<!ENTITY water-color "#e0ffff"><!-- water -->
+<!ENTITY waterline-color "#0a6ff"><!-- stream, shoreline -->
+<!ENTITY border-admin-regional-color "#b487ff">
+<!ENTITY border-admin-country-color "#be5abe">
+<!ENTITY border-naturereserve-color "#009c00">
+
+%sharedentities;
+%entities;
+]>
+
+<Map bgcolor="&water-color;" srs="&osm2pgsql_projection;">
+  &fontset-settings;
+
+&layer-world;
+
+</Map>

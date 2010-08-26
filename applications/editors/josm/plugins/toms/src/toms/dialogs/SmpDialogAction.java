@@ -174,6 +174,7 @@ public class SmpDialogAction extends JosmAction {
 	public void CloseDialog() {
 		onode = null;
 		DataSet.selListeners.remove(SmpListener);
+//		DataSet.removeSelectionListener(SmpListener);
 		Selection = null;
 
 		if (isOpen)
@@ -220,6 +221,7 @@ public class SmpDialogAction extends JosmAction {
 		// siehe org.openstreetmap.josm.plugins.osb -> OsbLayer.java
 		// Einhängen des Listeners in die Eventqueue von josm
 		DataSet.selListeners.add(SmpListener);
+//		DataSet.addSelectionListener(SmpListener);
 	}
 
 	private void PicRebuild() {
@@ -438,6 +440,7 @@ public class SmpDialogAction extends JosmAction {
 						PicRebuild();
 					// Deaktivierung des Listeners
 					DataSet.selListeners.remove(SmpListener);
+//				DataSet.removeSelectionListener(SmpListener);
 					Selection = null;
 
 					SmpItem.setEnabled(true);
@@ -810,6 +813,7 @@ public class SmpDialogAction extends JosmAction {
 						PicRebuild();
 					// Deaktivierung des Listeners
 					DataSet.selListeners.remove(SmpListener);
+//				DataSet.removeSelectionListener(SmpListener);
 					Selection = null;
 					SmpItem.setEnabled(true);
 					onode = null;

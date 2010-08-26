@@ -1,0 +1,26 @@
+Næringsbygg [building=yes][zoom>=16] {
+  fill-color: rgb(115,163,212);
+  line-color: black;
+  line-width: 0.5;
+}
+Bolig [building=yes & building:use=residential][zoom>=16] {
+  fill-color: rgb(196,135,35);
+  line-color: black;
+  line-width: 0.5;
+}
+Fritidsbolig [building=cabin][zoom>=16] {
+  fill-color: rgb(196,135,35); line-color:black;
+  line-color: black;
+  line-width: 0.5;
+}
+
+Næringsbygg [building=yes][zoom>=13][zoom<=15] {
+  fill-color: rgb(90,135,222);
+}
+Bolig [building=yes][building:type=residential][zoom>=13][zoom<=15] {
+  fill-color: rgb(153,95,32);
+}
+Fritidsbolig [building=cabin][zoom>=15 & <=15] {
+  fill-color: rgb(214,135,35);
+}
+

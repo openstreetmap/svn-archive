@@ -1,6 +1,6 @@
 <?php
 require_once('../lib/functionsnew.php');
-require_once('index_funcs.php');
+require_once('otv_funcs.php');
 
 // partly based on example from Andrew Valums' site
 
@@ -57,13 +57,14 @@ if (!isset($_SESSION['gatekeeper']))
 }
 else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
 {
+    $resp = array ("success" => true);
     $maxMB = 3;
     $filename = (isset($_GET['qqfile'])) ? $_GET['qqfile']:
                     $_FILES['qqfile']['name'];
     if(!toobig($maxMB*1024*1024))
     {
         $pathinfo = pathinfo($filename);
-        if($pathinfo['extension'] != 'jpg')
+        if(strtolower($pathinfo['extension']) != 'jpg')
         {
             $resp = array ("success" => false,
                         "error" => "$filename: not a JPEG");
@@ -72,12 +73,11 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
         {
             $conn = dbconnect("otv");
 
-            if(!isset($_SESSION['photosession']))
-                $_SESSION['photosession'] = newsession();
+			$pssn = newsession();
 
             mysql_query("INSERT INTO panoramas ".
                 "(authorised,user,photosession) VALUES ".
-                "(0,$_SESSION[gatekeeper],$_SESSION[photosession])");
+                "(0,$_SESSION[gatekeeper],$pssn)");
             $id = mysql_insert_id();
 
             $outdir = "/home/www-data/uploads/otv";
@@ -85,9 +85,16 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
 
             if(writeFile($outdir,$outfile)===true)
             {
+				$str = "";
+                $sz = getimagesize("$outdir/$outfile");
+
+                // criteria for panoramas - width>1024 and width > 2*height
+                if($sz[0]>1024 && $sz[0]>2*$sz[1])
+                    mysql_query("UPDATE panoramas SET isPano=1 WHERE id=$id");
+
                 // Note exif_read_data complains about certain non-standard
                 // tags. However it doesn't prevent working.
-                $exif=@exif_read_data($outfile);
+                $exif=@exif_read_data("$outdir/$outfile");
                 if(isset($exif['GPSLatitude']) && isset($exif['GPSLongitude']))
                 {
                     $lat=to_decimal_degrees($exif['GPSLatitude']);
@@ -101,9 +108,11 @@ else if(isset($_GET['qqfile']) || isset($_FILES['qqfile']))
                 }
                 if(isset($exif['DateTimeOriginal']))
                 {
+					$str .= "DateTimeOriginal = ".$exif['DateTimeOriginal'];
                     $time = strtotime($exif['DateTimeOriginal']);
                     $q= ("UPDATE panoramas SET time=$time WHERE ID=$id");
-                    mysql_query($q);
+                    if (!mysql_query($q))
+						$str .= " error= ".mysql_error();
                 }
 
                 $resp = array ("success" => true,"id" => $id);
@@ -133,6 +142,14 @@ echo json_encode($resp);
 
 function to_decimal_degrees($dms)
 {
-    return $dms[0] + $dms[1]/60.0 + $dms[2]/3600.0;
+    return frac_to_dec($dms[0]) + frac_to_dec($dms[1])/60.0 + 
+			frac_to_dec($dms[2])/3600.0;
+}
+
+function frac_to_dec($frac)
+{
+	$components = explode("/", $frac);
+	return (is_array($components) && count($components)==2) ? 
+		$components[0]/$components[1] : $frac;
 }
 ?>

@@ -1,13 +1,13 @@
 <?php
 require_once("../lib/functionsnew.php");
-include('index_funcs.php');
+include('otv_funcs.php');
 
 $lat = (isset($_GET['lat'])) ? $_GET['lat']:
-	(isset($_COOKIE['otvLat']) ? $_COOKIE['otvLat'] : 50);
+	(isset($_COOKIE['otvLat']) ? $_COOKIE['otvLat'] : 50.88);
 $lon = (isset($_GET['lon'])) ? $_GET['lon']:
-	(isset($_COOKIE['otvLon']) ? $_COOKIE['otvLon'] : 0);
-$zoom = (isset($_GET['lon'])) ? $_GET['zoom']:
-	(isset($_COOKIE['otvZoom']) ? $_COOKIE['otvZoom'] : 4);
+	(isset($_COOKIE['otvLon']) ? $_COOKIE['otvLon'] : -1.5);
+$zoom = (isset($_GET['zoom'])) ? $_GET['zoom']:
+	(isset($_COOKIE['otvZoom']) ? $_COOKIE['otvZoom'] : 14);
 $uploading = (isset($_GET['sbmt'])) ? "true":"false";
 
 $mapWidth=($uploading=="true")?320:1024;
@@ -38,13 +38,17 @@ session_start();
     <script type='text/javascript' 
     src='../freemap/javascript/prototype/prototype.js'></script>
     <!--    -->
-    <script type='text/javascript' src='PanoRoute.js'></script>
+    <script type='text/javascript' src='GeoRSSExt.js'></script>
+    <script type='text/javascript' src='RouteJSON.js'></script>
+    <script type='text/javascript' src='OSM2.js'></script>
+    <script type='text/javascript' src='HTTP2.js'></script>
     <script type='text/javascript' src='js/jspanoviewer.js'></script>
 	<script type='text/javascript' src='js/fileuploader.js'></script>
+	<script type='text/javascript' src='canvas/cpv.js'></script>
     <link rel='stylesheet' type='text/css' href='css/osv.css' />
     <link rel='stylesheet' type='text/css' href='css/fileuploader.css' />
     <style type='text/css'>
-    #photocanvas {background-color: yellow }
+    #pancanvas {background-color: yellow; }
     </style>
 </head>
  
@@ -75,21 +79,18 @@ else
 </div><!--login-->
 <p>StreetView for the world's trails and footpaths!
 Read <a href='howto.html'>how to contribute</a> or
-<a href='index.php?sbmt'>submit some photos...</a></p>
+<a href='psbmt.php'>submit some photos...</a></p>
 
 <?php
-if (isset($_GET['sbmt']))
-    psbmt();
-else 
+if(true)
 {
-    echo "<div id='pansubmit_all' style='overflow: auto'>\n";
+    echo "<div id='pansubmit_all' >\n";
     display_map($mapWidth,$mapHeight);
-	// for panoramas
-	/*
-    echo "<div id='photodiv' style='width:0px; height:400px; ".
-        "position: relative; visibility: hidden'></div>";
-	*/
-    echo "\n<img id='panimg' height='400px' style='visibility:hidden'/>";
+	echo "\n<div id='imgdiv' style='visibility:hidden; width:800px; height:0px'>";
+    //echo "\n<img id='panimg'  style='visibility:hidden'/>";
+	echo "\n</div>\n";
+    echo "\n<canvas id='pancanvas'  style='visibility:hidden' ".
+		" width='1024' height='400'></canvas>";
     echo "</div><!--pansubmit_all-->\n";
     ?>
     <div id='controls'>
@@ -97,11 +98,22 @@ else
     <input type='button' id='mainctrl' 
      onclick='modeSet()' value='Align photos' />
      -->
+	 <!--
      <select id='mainctrl' onchange='modeSet()'>
-     <option>View photos</option>
-     <option>Align photos</option>
-     <option>Connect photos</option>
+     <option value='0'>View photos</option>
+     <option value='1'>Rotate photos</option>
+     <option value='2'>Make new route</option>
+     <option value='3'>Move photos, add photos to route</option>
+     <option value='4'>Delete</option>
      </select>
+	 -->
+	 <input type='radio' id='mode0' name='modes' checked='checked' 
+	 onclick='modeSet(this)'/>View
+	 <input type='radio' id='mode1' name='modes' onclick='modeSet(this)'/>Rotate
+	 <input type='radio' id='mode2' name='modes' onclick='modeSet(this)'/>
+	 New route
+	 <input type='radio' id='mode3' name='modes' onclick='modeSet(this)'/>Move
+	 <input type='radio' id='mode4' name='modes' onclick='modeSet(this)'/>Delete
      <input type='button' id='backtomap' value='Map' />
     </div>
     <?php
@@ -110,6 +122,7 @@ else
 mysql_close($conn);
 ?>
 </div> <!--maindiv-->
+<div id='status' style='height:200px; overflow:auto'></div>
 </body>
  
 </html>

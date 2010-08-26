@@ -1,7 +1,7 @@
 <?php
 
 include ('../lib/functionsnew.php');
-include('index_funcs.php');
+include('otv_funcs.php');
 
 session_start();
 
@@ -13,14 +13,17 @@ else
 {
 	$cleaned = clean_input($_GET);
     $conn=dbconnect("otv");
+	$sess_cond = (isset($cleaned["pssn"])) ?  
+		" AND photosession=$cleaned[pssn] ": "";
 	$result=mysql_query("SELECT * FROM panoramas WHERE user=".
 						"$_SESSION[gatekeeper] AND parent IS NULL ".
+						"$sess_cond ORDER BY ID DESC ".
 						"LIMIT ". ($cleaned["pg"]*$cleaned["n"]).
-							",$cleaned[n]");
+							",$cleaned[n]") or die(mysql_error());
 
 	$result_all=mysql_query
 		("SELECT * FROM panoramas WHERE user=$_SESSION[gatekeeper] AND ".
-		"parent IS NULL");
+		"parent IS NULL $sess_cond");
 	$num_photos=mysql_num_rows($result_all);
 
 	$data = array();

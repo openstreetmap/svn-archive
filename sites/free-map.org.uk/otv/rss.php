@@ -8,8 +8,6 @@ $conn=dbconnect("otv");
 $cleaned = clean_input($_GET);
 $cleaned['auth'] = (isset($cleaned['auth']))?$cleaned['auth']:1;
 $admin = ($cleaned['auth']==0);
-if($admin && !isset($_SESSION['admin']))
-	die("Not an admin");
 header("Content-type: application/atom+xml");
 $title = $admin ?  "Unmoderated OTV Panoramas" : "Moderated OTV Panoramas";
 to_georss(get_markers_by_bbox($cleaned['bbox'],$cleaned['auth']),$title,$admin);
@@ -84,7 +82,9 @@ function to_georss($markers,$title,$admin)
             echo "<guid>$marker[ID]</guid>\n";
             echo "<georss:point>$marker[lat] $marker[lon]</georss:point>\n";
             echo "<geo:dir>$marker[direction]</geo:dir>\n";
-            echo "<georss:featuretypetag>panorama</georss:featuretypetag>".
+            echo "<georss:featuretypetag>".
+				($marker["isPano"]==1 ? "panorama":"photo").
+				"</georss:featuretypetag>".
                 "\n";
             echo "</item>\n";
             */
@@ -101,7 +101,9 @@ function to_georss($markers,$title,$admin)
             echo "<id>$marker[ID]</id>\n";
             echo "<georss:point>$marker[lat] $marker[lon]</georss:point>\n";
             echo "<geo:dir>$marker[direction]</geo:dir>\n";
-            echo "<georss:featuretypetag>panorama</georss:featuretypetag>".
+            echo "<georss:featuretypetag>".
+				($marker["isPano"]==1 ? "panorama":"photo").
+				"</georss:featuretypetag>".
                 "\n";
             echo "</entry>\n";
     }

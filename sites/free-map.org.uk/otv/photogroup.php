@@ -12,66 +12,39 @@ switch($cleaned['action'])
     case "add":
     if(!isset($_SESSION["gatekeeper"]))
     {
-        echo "You need to be logged in to manage your photos!";
+           header("HTTP/1.1 401 Unauthorized"); 
     }
-    else if (!isset($_POST['submitted']))
-    {
-        $cleaned=clean_input($_GET);
-        $parent = $cleaned['parent'];
-        $others = explode(",", $cleaned['others']);
-        echo "<html>";
-        echo "<body>";
-        echo "<h2>Parent photo</h2>";
-        echo "<img src='/otv/panorama/$parent/' alt='Parent photo' /><br />";
-        echo "<h2>Other photos</h2>";
-        echo "<form method='post' action=''>";
-        foreach($others as $other)
-        {
-            echo "<p>";
-            echo "<img src='/otv/panorama/$other/' ".
-                "alt='ID $other' width='25%' />".  "<br />";
-            echo "Angle, with respect to parent: ";
-            echo "<select name='angle$other'>\n";
-            echo "<option value='90'>90 deg clockwise</option>";
-            echo "<option value='180'>180 deg</option>";
-            echo "<option value='-90'>90 deg anticlockwise</option>";
-            echo "</select>";
-            echo "</p>";
-        }
-        echo "<input type='hidden' name='parent' value='$parent' />";
-        echo "<input type='hidden' name='action' value='add' />";
-        echo "<input type='submit' value='Go!' name='submitted' />";
-        echo "</body></html>\n";
-    } 
     else
     {
-        foreach($_POST as $field=>$value)
+        $others = explode(",", $cleaned['others']);
+        $angles = explode(",", $cleaned['angles']);
+
+        if(count($others) != count($angles) || !isset($cleaned['parent']))
         {
-            if(substr($field,0,5)=="angle")
-            {
-                $id=substr($field,5);
-				/*
-                $q="INSERT INTO photogroups(photoID,parentID,orientation) ".
-                    "VALUES ($id,$_POST[parent],$value)";
-				*/
-				$q = "UPDATE panoramas SET parent=$_POST[parent],".
-					"orientation=$value WHERE ID=$id";
-                mysql_query($q) or die(mysql_error());
-            }
+            header("HTTP/1.1 400 Bad Request");
         }
-        js_error('grouped successfully',"/otv/photomgr.php");
+        else
+        {
+            for($i=0; $i<count($others); $i++)
+            {
+                $q = "UPDATE panoramas SET parent=$cleaned[parent],".
+                    "orientation=".$angles[$i]." WHERE ID=".$others[$i];
+                mysql_query($q) or die(mysql_error());
+            }    
+        }
     }
+
     break;
 
 
     case "view":
-		?>
-		<html>
-		<head>
-		<link rel='stylesheet' type='text/css' href='css/osv.css' />
-		</head>
-		<body>
-		<?php
+        ?>
+        <html>
+        <head>
+        <link rel='stylesheet' type='text/css' href='css/osv.css' />
+        </head>
+        <body>
+        <?php
         $parent = $cleaned['parent'];
         $result=mysql_query("SELECT * FROM panoramas WHERE parent=$parent");
         $nresults = mysql_num_rows($result);

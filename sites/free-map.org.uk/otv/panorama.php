@@ -23,26 +23,27 @@ if(mysql_num_rows($result)==1)
                 }
                 break;
 
-			case "setAttributes":
+            case "setAttributes":
                 if(isset($_SESSION['gatekeeper']))
                 {
-					$editables = array ("lat","lon","isPano");
-					$q = "UPDATE panoramas SET ";
-					$first=true;
-					foreach($editables as $editable)
-					{
-						if(isset($cleaned[$editable]))
-						{
-							if(!$first)
-								$q .= ",";
-							else
-								$first=false;
-							$q .= "$editable='".$cleaned[$editable]."'";
-						}
-					}
-					$q .= " WHERE ID=$cleaned[id]";
-					echo $q;
-					mysql_query($q) or die(mysql_error());
+                    $editables = array ("lat","lon","isPano");
+                    $q = "UPDATE panoramas SET ";
+                    $first=true;
+                    foreach($editables as $editable)
+                    {
+                        if(isset($cleaned[$editable]))
+                        {
+                            if(!$first)
+                                $q .= ",";
+                            else
+                                $first=false;
+                            $q .= "$editable='".$cleaned[$editable]."'";
+                        }
+                    }
+                    $q .= " WHERE ID=$cleaned[id]";
+                    //echo $q;
+                    echo "setAttributes";
+                    mysql_query($q) or die(mysql_error());
                 }
                 else
                 {
@@ -63,13 +64,24 @@ if(mysql_num_rows($result)==1)
                 break;
             case "delete":
                 if( (isset($_SESSION['gatekeeper']) &&
-						$row['user']==$_SESSION['gatekeeper']) ||
-							isset($_SESSION['admin']))
-				{
-                    	mysql_query
-							("DELETE FROM panoramas WHERE ID=$cleaned[id]");
-						unlink("/home/www-data/uploads/otv/${cleaned[id]}.jpg");
-                    	echo "Deleted";
+                        $row['user']==$_SESSION['gatekeeper']) ||
+                            isset($_SESSION['admin']))
+                {
+                        mysql_query
+                            ("DELETE FROM panoramas WHERE ID=$cleaned[id]");
+                        unlink("/home/www-data/uploads/otv/${cleaned[id]}.jpg");
+                        $result2=mysql_query("SELECT * FROM routes WHERE ".
+                                            "fid=$cleaned[id]");
+                        while($row2=mysql_fetch_array($result2))
+                        {
+                            mysql_query("DELETE FROM routes WHERE ".
+                                        "id=$row2[id]");
+                            mysql_query("UPDATE routes SET routepoint=".
+                                        "routepoint-1 WHERE ".
+                                        "routeid=$row2[routeid] AND ".
+                                        "routepoint>$row2[routepoint]");
+                        }
+                        echo "Deleted";
                 }
                 else
                 {
@@ -80,11 +92,11 @@ if(mysql_num_rows($result)==1)
                 if(isset($_SESSION['admin']))
                 {
                     echo "<html>";
-					echo "<head>";
-					echo "<link rel='stylesheet' type='text/css' ".
-						"href='css/osv.css' />";
-					echo "</head>";
-					echo "<body><p>";
+                    echo "<head>";
+                    echo "<link rel='stylesheet' type='text/css' ".
+                        "href='css/osv.css' />";
+                    echo "</head>";
+                    echo "<body><p>";
                     echo "<h1>Submitted photo $cleaned[id]</h1>\n";
                     echo "<p><img src='/otv/panorama/$cleaned[id]' ".
                     "alt='Panorama $cleaned[id]' /></p>\n";
@@ -98,17 +110,17 @@ if(mysql_num_rows($result)==1)
                 {
                     header("Location: ".
                         "/otv/user.php?action=login&redirect=".
-						"/otv/panorama/$cleaned[id]/moderate");
+                        "/otv/panorama/$cleaned[id]/moderate");
                 }
                 break;
-			case "getJSON":
-				header("Content-type: application/json");
-				echo json_encode($row);
-				break;
+            case "getJSON":
+                header("Content-type: application/json");
+                echo json_encode($row);
+                break;
             default:
                 if($row['authorised']==1 || isset($_SESSION['admin']) ||
-						(isset($_SESSION['gatekeeper']) &&
-						$row['user']==$_SESSION['gatekeeper']))
+                        (isset($_SESSION['gatekeeper']) &&
+                        $row['user']==$_SESSION['gatekeeper']))
                 {
                     $file = "/home/www-data/uploads/otv/${cleaned[id]}.jpg";
                     if(file_exists($file))

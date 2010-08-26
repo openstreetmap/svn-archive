@@ -1,0 +1,13 @@
+
+# Additional import rules for osm2pgsql
+# Append these to a recent checkout of
+# http://svn.openstreetmap.org/applications/utils/export/osm2pgsql/default.style
+
+node       information       text    linear
+
+# Path attributes
+#
+way        trailblazed       text    linear
+way        marked_trail      text    linear
+way        trail_visibility  text    linear
+node,way   lit               text    linear

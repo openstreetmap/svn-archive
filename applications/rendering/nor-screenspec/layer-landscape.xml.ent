@@ -127,24 +127,10 @@
 
 <Style name="sports_grounds">
   <Rule>
-   &maxscale_zoom12;
-    <Filter>[leisure] = 'sports_centre' or [leisure] = 'stadium'</Filter>
-    <PolygonSymbolizer>
-       <CssParameter name="fill">&black;</CssParameter>
-    </PolygonSymbolizer>
-  </Rule>
-</Style>
-
-<Style name="sports_grounds_pitch">
-  <Rule>
     &maxscale_zoom12;
    <PolygonSymbolizer>
        <CssParameter name="fill">&openland-color;</CssParameter>
     </PolygonSymbolizer>
-   <LineSymbolizer>
-      <CssParameter name="stroke">&black;</CssParameter>
-      <CssParameter name="stroke-width">0.6</CssParameter>
-    </LineSymbolizer>
   </Rule>
 </Style>
 
@@ -291,7 +277,6 @@
 
 <Layer name="sports_grounds" status="on" srs="&osm2pgsql_projection;">
   <StyleName>sports_grounds</StyleName>
-  <StyleName>sports_grounds_pitch</StyleName>
   <Datasource>
     <Parameter name="table">
     (select way,leisure

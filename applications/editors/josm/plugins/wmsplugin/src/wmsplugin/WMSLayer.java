@@ -60,15 +60,18 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	public int messageNum = 5; //limit for messages per layer
 	protected MapView mv;
 	protected String resolution;
-	protected boolean stopAfterPaint = false;
 	protected int imageSize = 500;
 	protected int dax = 10;
 	protected int day = 10;
+	protected int daStep = 5;
 	protected int minZoom = 3;
+
+	protected boolean deltaChanged;
 	protected double dx = 0.0;
 	protected double dy = 0.0;
+
 	protected double pixelPerDegree;
-	protected GeorefImage[][] images = new GeorefImage[dax][day];
+	protected GeorefImage[][] images;
 	protected String baseURL;
 	protected String cookies;
 	protected final int serializeFormatVersion = 5;
@@ -151,10 +154,21 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	}
 
 	public void initializeImages() {
+		GeorefImage[][] old = images;
 		images = new GeorefImage[dax][day];
+		if (old != null) {
+			for (int i=0; i<old.length; i++) {
+				for (int k=0; k<old[i].length; k++) {
+					GeorefImage o = old[i][k];
+					images[modulo(o.getXIndex(),dax)][modulo(o.getYIndex(),day)] = old[i][k];
+				}
+			}
+		}
 		for(int x = 0; x<dax; ++x) {
 			for(int y = 0; y<day; ++y) {
-				images[x][y]= new GeorefImage(this);
+				if (images[x][y] == null) {
+					images[x][y]= new GeorefImage(this);
+				}
 			}
 		}
 	}
@@ -187,6 +201,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	}
 
 	@Override public void paint(Graphics2D g, final MapView mv, Bounds b) {
+		deltaChanged = false;
 		if(baseURL == null) return;
 		if (usesInvalidUrl && !isInvalidUrlConfirmed) return;
 
@@ -245,6 +260,7 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 	}
 
 	public void displace(double dx, double dy) {
+		deltaChanged = true;
 		this.dx += dx;
 		this.dy += dy;
 	}
@@ -277,6 +293,23 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 
 
 	protected void downloadAndPaintVisible(Graphics g, final MapView mv, boolean real){
+
+		int newDax = dax;
+		int newDay = day;
+
+		if (bmaxx - bminx >= dax || bmaxx - bminx < dax - 2 * daStep) {
+			newDax = ((bmaxx - bminx) / daStep + 1) * daStep;
+		}
+
+		if (bmaxy - bminy >= day || bmaxy - bminx < day - 2 * daStep) {
+			newDay = ((bmaxy - bminy) / daStep + 1) * daStep;
+		}
+
+		if (newDax != dax || newDay != day) {
+			dax = newDax;
+			day = newDay;
+			initializeImages();
+		}
 
 		for(int x = bminx; x<=bmaxx; ++x) {
 			for(int y = bminy; y<=bmaxy; ++y){
@@ -700,6 +733,16 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 			}
 			this.workingThreadCount = grabbers.size();
 			this.threadCount = grabbers.size();
+		} finally {
+			requestQueueLock.unlock();
+		}
+	}
+
+	@Override
+	public boolean isChanged() {
+		requestQueueLock.lock();
+		try {
+			return !finishedRequests.isEmpty() || deltaChanged;
 		} finally {
 			requestQueueLock.unlock();
 		}

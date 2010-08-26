@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
 
 import javax.imageio.ImageIO;
 
@@ -27,7 +28,7 @@ public class GeorefImage implements Serializable {
 	private State state;
 
 	private BufferedImage image;
-	private BufferedImage reImg = null;
+	private SoftReference<BufferedImage> reImg;
 	private int xIndex;
 	private int yIndex;
 
@@ -50,7 +51,7 @@ public class GeorefImage implements Serializable {
 			this.xIndex = xIndex;
 			this.yIndex = yIndex;
 			this.image = null;
-			this.reImg = null;
+			flushedResizedCachedInstance();
 		}
 	}
 
@@ -59,8 +60,8 @@ public class GeorefImage implements Serializable {
 	}
 
 	public void changeImage(State state, BufferedImage image) {
+		flushedResizedCachedInstance();
 		this.image = image;
-		this.reImg = null;
 		this.state = state;
 
 		switch (state) {
@@ -125,15 +126,16 @@ public class GeorefImage implements Serializable {
 		if(width == 0 || height == 0)
 			return false;
 
-		if(reImg != null && reImg.getWidth() == width && reImg.getHeight() == height) {
-			g.drawImage(reImg, x, y, null);
+		BufferedImage img = reImg == null?null:reImg.get();
+		if(img != null && img.getWidth() == width && img.getHeight() == height) {
+			g.drawImage(img, x, y, null);
 			return true;
 		}
 
 		boolean alphaChannel = WMSLayer.PROP_ALPHA_CHANNEL.get() && getImage().getTransparency() != Transparency.OPAQUE;
 
 		try {
-			if(reImg != null) reImg.flush();
+			if(img != null) img.flush();
 			long freeMem = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory();
 			//System.out.println("Free Memory:           "+ (freeMem/1024/1024) +" MB");
 			// Notice that this value can get negative due to integer overflows
@@ -148,13 +150,14 @@ public class GeorefImage implements Serializable {
 				fallbackDraw(g, getImage(), x, y, width, height);
 			} else {
 				// We haven't got a saved resized copy, so resize and cache it
-				reImg = new BufferedImage(width, height, alphaChannel?BufferedImage.TYPE_INT_ARGB:BufferedImage.TYPE_3BYTE_BGR);
-				reImg.getGraphics().drawImage(getImage(),
+				img = new BufferedImage(width, height, alphaChannel?BufferedImage.TYPE_INT_ARGB:BufferedImage.TYPE_3BYTE_BGR);
+				img.getGraphics().drawImage(getImage(),
 						0, 0, width, height, // dest
 						0, 0, getImage().getWidth(null), getImage().getHeight(null), // src
 						null);
-				reImg.getGraphics().dispose();
-				g.drawImage(reImg, x, y, null);
+				img.getGraphics().dispose();
+				g.drawImage(img, x, y, null);
+				reImg = new SoftReference<BufferedImage>(img);
 			}
 		} catch(Exception e) {
 			fallbackDraw(g, getImage(), x, y, width, height);
@@ -163,10 +166,7 @@ public class GeorefImage implements Serializable {
 	}
 
 	private void fallbackDraw(Graphics g, Image img, int x, int y, int width, int height) {
-		if(reImg != null) {
-			reImg.flush();
-			reImg = null;
-		}
+		flushedResizedCachedInstance();
 		g.drawImage(
 				img, x, y, x + width, y + height,
 				0, 0, img.getWidth(null), img.getHeight(null),
@@ -194,6 +194,12 @@ public class GeorefImage implements Serializable {
 	}
 
 	public void flushedResizedCachedInstance() {
+		if (reImg != null) {
+			BufferedImage img = reImg.get();
+			if (img != null) {
+				img.flush();
+			}
+		}
 		reImg = null;
 	}
 

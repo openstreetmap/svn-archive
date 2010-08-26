@@ -415,7 +415,7 @@
       <CssParameter name="stroke">&trail-color;</CssParameter>
       <CssParameter name="stroke-linejoin">round</CssParameter>
       <CssParameter name="stroke-linecap">round</CssParameter>
-      <CssParameter name="stroke-width">0.55</CssParameter>
+      <CssParameter name="stroke-width">0.8</CssParameter>
       <CssParameter name="stroke-dasharray">3,3</CssParameter>
     </LineSymbolizer>
   </Rule>
@@ -426,7 +426,7 @@
       <CssParameter name="stroke">&trail-color;</CssParameter>
       <CssParameter name="stroke-linejoin">round</CssParameter>
       <CssParameter name="stroke-linecap">round</CssParameter>
-      <CssParameter name="stroke-width">0.9</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
       <CssParameter name="stroke-dasharray">6,6</CssParameter>
     </LineSymbolizer>
   </Rule>

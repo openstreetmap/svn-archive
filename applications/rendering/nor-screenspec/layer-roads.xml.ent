@@ -146,30 +146,16 @@
     &minscale_zoom13;
     <Filter>&tram; and not &tunnel;</Filter>
     <LineSymbolizer>
-      <CssParameter name="stroke">&white;</CssParameter>
-      <CssParameter name="stroke-width">0.9</CssParameter>
-      <CssParameter name="stroke-linejoin">round</CssParameter>
-    </LineSymbolizer>
-    <LineSymbolizer>
       <CssParameter name="stroke">&black;</CssParameter>
       <CssParameter name="stroke-width">1.0</CssParameter>
-      <CssParameter name="stroke-linejoin">round</CssParameter>
-      <CssParameter name="stroke-dasharray">0,2,4,1</CssParameter>
     </LineSymbolizer>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>&tram; and not &tunnel;</Filter>
     <LineSymbolizer>
-      <CssParameter name="stroke">&white;</CssParameter>
-      <CssParameter name="stroke-width">1.8</CssParameter>
-      <CssParameter name="stroke-linejoin">round</CssParameter>
-    </LineSymbolizer>
-    <LineSymbolizer>
       <CssParameter name="stroke">&black;</CssParameter>
       <CssParameter name="stroke-width">2.5</CssParameter>
-      <CssParameter name="stroke-linejoin">round</CssParameter>
-      <CssParameter name="stroke-dasharray">0,5,8,1</CssParameter>
     </LineSymbolizer>
   </Rule>
 </Style>
@@ -389,30 +375,30 @@
     &maxscale_zoom12;
     &minscale_zoom13;
     <LineSymbolizer>
+      <CssParameter name="stroke">&white;</CssParameter>
+      <CssParameter name="stroke-width">0.75</CssParameter>
+    </LineSymbolizer>
+    <LineSymbolizer>
       <CssParameter name="stroke">&track-color;</CssParameter>
       <CssParameter name="stroke-linejoin">round</CssParameter>
       <CssParameter name="stroke-linecap">round</CssParameter>
       <CssParameter name="stroke-width">0.75</CssParameter>
       <CssParameter name="stroke-dasharray">5,2</CssParameter>
     </LineSymbolizer>
-    <LineSymbolizer>
-      <CssParameter name="stroke">&white;</CssParameter>
-      <CssParameter name="stroke-width">0.75</CssParameter>
-    </LineSymbolizer>
   </Rule>
   <Rule>
     <Filter>&track; and not &tunnel;</Filter>
     &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&white;</CssParameter>
+      <CssParameter name="stroke-width">1.5</CssParameter>
+    </LineSymbolizer>
     <LineSymbolizer>
       <CssParameter name="stroke">&track-color;</CssParameter>
       <CssParameter name="stroke-linejoin">round</CssParameter>
       <CssParameter name="stroke-linecap">round</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
       <CssParameter name="stroke-dasharray">10,4</CssParameter>
-    </LineSymbolizer>
-    <LineSymbolizer>
-      <CssParameter name="stroke">&white;</CssParameter>
-      <CssParameter name="stroke-width">1.5</CssParameter>
     </LineSymbolizer>
   </Rule>
   <Rule>

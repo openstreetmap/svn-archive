@@ -14,11 +14,11 @@
 <!ENTITY border-admin-country-color "#be5abe">
 <!ENTITY border-naturereserve-color "#009c00">
 <!ENTITY road-major-color "#d2232a">
-<!ENTITY road-color "#b3b3b3">
+<!ENTITY road-color "#6e6e6e">
 <!ENTITY road-casing-color "#828282">
 <!ENTITY trail-color "#c31e28">
-<!ENTITY track-color "#9c9c9c">
-<!ENTITY cycleway-color "#e0e0e0">
+<!ENTITY track-color "#6e6e6e">
+<!ENTITY cycleway-color "#6e6e6e">
 
 <!ENTITY white "#FFF">
 <!ENTITY black "#000">

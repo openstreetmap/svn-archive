@@ -27,6 +27,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
  * Dialog for selecting the current loaction.
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
+ * @author Libor Pechacek, lpechacek@gmx.com
  */
 public class LocationSelector extends ExtendedDialog {
 

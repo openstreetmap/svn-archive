@@ -15,8 +15,10 @@
     (select way,building,leisure,railway,amenity,aeroway,landuse from &prefix;_polygon
      where building is not null
         or landuse='building'
+        or leisure in ('sports_centre','stadium')
+        or historic='castle'
+        or amenity in ('place_of_worship','townhall')
         or railway='station'
-        or amenity='place_of_worship'
         or aeroway='terminal'
      order by z_order,way_area desc) as buildings
     </Parameter>

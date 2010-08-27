@@ -91,6 +91,7 @@
             <jvmarg value="-Xmx1024m"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-ea"/>
+            <jvmarg value="-Djava.net.useSystemProxies=true"/>
             <classpath>
                 <pathelement location="${plugin.build.dir}"/>
                 <pathelement path="${java.class.path}"/>

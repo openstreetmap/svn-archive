@@ -32,6 +32,10 @@ public class LocationSelector extends ExtendedDialog {
 
     protected ElementWithStreets selectedElement;
     protected ArrayList<ItemListener> listeners = new ArrayList<ItemListener>();
+    int regionHlIndex, vitociHlIndex, suburbHlIndex;
+    protected ArrayList<AddressElement> hlRegions = new ArrayList<AddressElement>();
+    protected ArrayList<AddressElement> hlViToCis = new ArrayList<AddressElement>();
+    protected ArrayList<AddressElement> hlSuburbs = new ArrayList<AddressElement>();
 
 
     public static ElementWithStreets selectLocation() {
@@ -51,37 +55,34 @@ public class LocationSelector extends ExtendedDialog {
         initComponents();
         setContent(mainPanel);
         setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setDefaultButton(1);
         setupDialog();
 
         oblastComboBox.setRenderer(new AddressElementRenderer());
         vitociComboBox.setRenderer(new AddressElementRenderer());
         suburbComboBox.setRenderer(new SuburbRenderer());
 
-        oblastComboBox.setModel(new DefaultComboBoxModel(
-                Database.getInstance().regions.toArray()));
+        initLocationHints();
 
-        try {
-            autodetectLocation();
-        } catch (Exception e) {}
-        //oblastComboBoxItemStateChanged(null);
+        DefaultComboBoxModel regions = new DefaultComboBoxModel(Database.getInstance().regions.toArray());
+        regionHlIndex = reshuffleListItems(regions, hlRegions);
+        oblastComboBox.setModel(regions);
+        oblastComboBox.setSelectedItem(regions.getElementAt(0));
+
+        oblastComboBoxItemStateChanged(null);
     }
 
     /**
-     * Hardly ever working method for autodetecting the current location.
+     * Guess location name from the map and put all matches to the top of the
+     * list.
      *
-     * @deprecated
      */
-    @Deprecated
-	private void autodetectLocation() {
+	private void initLocationHints() {
         boolean assertions = false;
         assert  assertions = true;
 
         OsmPrimitive bestFit = null;
         double bestLen = 0;
-
-        // TODO: center se počítá jako střed stažené oblasti. Měl by to však
-        // být střed obrazovky... Jen vědět, jak získat souřadnici středu
-        // obrazovky.
 
         BoundingXYVisitor visitor = new BoundingXYVisitor();
         for (OsmPrimitive op : Main.main.getCurrentDataSet().allPrimitives()) {
@@ -95,7 +96,7 @@ public class LocationSelector extends ExtendedDialog {
         LatLon center;
 
         try {
-            center = Main.proj.eastNorth2latlon(visitor.getBounds().getCenter());
+            center = Main.proj.eastNorth2latlon(Main.map.mapView.getCenter());
         } catch (Exception e) {
             System.err.println("AUTO: No bounds to determine autolocation.");
             return;
@@ -142,30 +143,46 @@ public class LocationSelector extends ExtendedDialog {
             for (Region oblast : Database.getInstance().regions) {
                 for (ViToCi obec : oblast.getViToCis()) {
                     if (!bestFit.get("place").equals("suburb")) {
-                        if (obec.getName().toUpperCase().equals(bestFit.get("name").toUpperCase())) {
-                            oblastComboBox.setSelectedItem(oblast);
-                            vitociComboBox.setSelectedItem(obec);
-                            for (Suburb castObce : obec.getSuburbs()) {
-                                if (castObce.getName().toUpperCase().equals(bestFit.get("name").toUpperCase())) {
-                                    suburbComboBox.setSelectedItem(castObce);
-                                    break;
-                                }
-                            }
-                            break;
+                        if (obec.getName().equalsIgnoreCase(bestFit.get("name"))) {
+                            hlRegions.add(oblast);
+                            hlViToCis.add(obec);
+                            for (Suburb castObce : obec.getSuburbs())
+                                if (castObce.getName().equalsIgnoreCase(bestFit.get("name")))
+                                    hlSuburbs.add(castObce);
                         }
                     } else {
                         for (Suburb castObce : obec.getSuburbs()) {
-                            if (castObce.getName().toUpperCase().equals(bestFit.get("name").toUpperCase())) {
-                                oblastComboBox.setSelectedItem(oblast);
-                                vitociComboBox.setSelectedItem(obec);
-                                suburbComboBox.setSelectedItem(castObce);
-                                break;
+                            if (castObce.getName().equalsIgnoreCase(bestFit.get("name"))) {
+                                hlRegions.add(oblast);
+                                hlViToCis.add(obec);
+                                hlSuburbs.add(castObce);
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    /**
+    * Reshuffle items in combo box list, put those in hlList to the
+    * beginning, return number of moved items.
+    */
+
+    private int reshuffleListItems(DefaultComboBoxModel list, final ArrayList<AddressElement> hlList) {
+        int curHlIndex = 0;
+
+        for (int i = 0; i < list.getSize(); i++) 
+            for (int j = 0; j < hlList.size(); j++) {
+                Object t = list.getElementAt(i);
+                if (t == hlList.get(j)) {
+                    list.removeElementAt(i);
+                    list.insertElementAt(t, curHlIndex++);
+                    break;
+                }
+            }
+
+        return curHlIndex;
     }
 
     /** This method is called from within the constructor to
@@ -277,7 +294,10 @@ public class LocationSelector extends ExtendedDialog {
         Region oblast = (Region) oblastComboBox.getSelectedItem();
         if (oblast == null) return;
 
-        vitociComboBox.setModel(new DefaultComboBoxModel(oblast.getViToCis().toArray()));
+        DefaultComboBoxModel vitocis = new DefaultComboBoxModel(oblast.getViToCis().toArray());
+        vitociHlIndex = reshuffleListItems(vitocis, hlViToCis);
+        vitociComboBox.setModel(vitocis);
+        vitociComboBox.setSelectedItem(vitocis.getElementAt(0));
         vitociComboBox.setEnabled(vitociComboBox.getModel().getSize() > 1);
         vitociComboBoxItemStateChanged(null);
     }//GEN-LAST:event_oblastComboBoxItemStateChanged
@@ -292,7 +312,10 @@ public class LocationSelector extends ExtendedDialog {
             for (int i=0; i<obec.getSuburbs().size(); i++)
                 suburbs[i] = obec.getSuburbs().get(i);
             suburbs[obec.getSuburbs().size()] = obec;
-            suburbComboBox.setModel(new DefaultComboBoxModel(suburbs));
+            DefaultComboBoxModel suburbsList = new DefaultComboBoxModel(suburbs);
+            suburbHlIndex = reshuffleListItems(suburbsList, hlSuburbs);
+            suburbComboBox.setModel(suburbsList);
+            suburbComboBox.setSelectedItem(suburbsList.getElementAt(0));
         } else
             suburbComboBox.setModel(new DefaultComboBoxModel());
 
@@ -344,6 +367,12 @@ public class LocationSelector extends ExtendedDialog {
             if (value instanceof AddressElement && !(value instanceof Region))
                 setText(((AddressElement) value).getName());
 
+            if ((value instanceof Region && index < regionHlIndex) ||
+                (value instanceof ViToCi && index < vitociHlIndex))
+                setFont(getFont().deriveFont(Font.BOLD));
+            else
+                setFont(getFont().deriveFont(Font.PLAIN));
+
             return c;
         }
     }
@@ -359,8 +388,10 @@ public class LocationSelector extends ExtendedDialog {
                 setFont(getFont().deriveFont(Font.BOLD));
 //                setText(((ViToCi) value).getName() + ", všechny části [experimentální]");
                 setText("všechny části obce [experimentální]");
-            } else
-                setFont(getFont().deriveFont(Font.PLAIN));
+            } else if (index < suburbHlIndex)
+                    setFont(getFont().deriveFont(Font.BOLD));
+                else
+                    setFont(getFont().deriveFont(Font.PLAIN));
 
             return c;
         }

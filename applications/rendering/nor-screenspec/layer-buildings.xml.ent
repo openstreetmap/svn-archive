@@ -27,7 +27,7 @@
   <StyleName>buildings</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,building,leisure,railway,amenity,aeroway,landuse from &prefix;_polygon
+    (select way,building,leisure,railway,amenity,aeroway,landuse,historic from &prefix;_polygon
      where building is not null
         or landuse='building'
         or leisure in ('sports_centre','stadium')

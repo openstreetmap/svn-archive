@@ -6,7 +6,7 @@
 <!ENTITY forestland-color "#d2e67c"><!-- wood -->
 <!ENTITY farmland-color "#fff7a3"><!-- farmland, field, orchard -->
 <!ENTITY openland-color "#9bb93c"><!-- meadow, recreation ground, park -->
-<!ENTITY urbanarea-color "#ffdcbe"><!-- residential, industrial; #f7be8c -->
+<!ENTITY urbanarea-color "#ffdcbe"><!-- residential, industrial -->
 <!ENTITY regulatedarea-color "#d7d7d7"><!-- construction, landfill, quarry -->
 <!ENTITY water-color "#e0ffff"><!-- water -->
 <!ENTITY waterline-color "#00a6ff"><!-- stream, shoreline -->
@@ -28,6 +28,7 @@
 <!ENTITY layer-landscape SYSTEM "layer-landscape.xml.ent">
 <!ENTITY layer-roads SYSTEM "layer-roads.xml.ent">
 <!ENTITY layer-buildings SYSTEM "layer-buildings.xml.ent">
+<!ENTITY layer-adminborder SYSTEM "layer-adminborder.xml.ent">
 <!ENTITY layer-nationalpark SYSTEM "layer-nationalpark.xml.ent">
 <!ENTITY layer-powerlines SYSTEM "layer-powerlines.xml.ent">
 <!ENTITY layer-textareas SYSTEM "layer-textareas.xml.ent">
@@ -57,6 +58,7 @@
 &layer-landscape;
 &layer-roads;
 &layer-buildings;
+&layer-adminborder;
 &layer-nationalpark;
 &layer-textareas;
 

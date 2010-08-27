@@ -22,6 +22,7 @@ administrative grenser,
 symboler,
 tekst,
 kraftlinjer, stup, myr,
+building=*
 
 
 Contributors

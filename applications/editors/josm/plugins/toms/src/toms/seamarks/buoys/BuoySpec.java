@@ -31,6 +31,7 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Barrel");
 		dlg.cbM01StyleOfMark.addItem("Float");
 		dlg.cbM01StyleOfMark.addItem("Beacon");
+		dlg.cbM01StyleOfMark.addItem("Tower");
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
@@ -84,9 +85,13 @@ public class BuoySpec extends Buoy {
 		if ((keys.containsKey("seamark:type") && keys.get("seamark:type").equals(
 				"beacon_special_purpose"))
 				|| keys.containsKey("seamark:special_purpose_beacon:colour")
-				|| keys.containsKey("seamark:special_purpose_beacon:shape"))
-			setStyleIndex(SPEC_BEACON);
-		else if (keys.containsKey("seamark:light_float:colour")
+				|| keys.containsKey("seamark:special_purpose_beacon:shape")) {
+			if (keys.containsKey("seamark:special_purpose_beacon:shape")
+					&& keys.get("seamark:soecial_purpose_beacon:shape").equals("tower"))
+				setStyleIndex(SPEC_TOWER);
+			else
+				setStyleIndex(SPEC_BEACON);
+		} else if (keys.containsKey("seamark:light_float:colour")
 				&& keys.get("seamark:light_float:colour").equals("yellow"))
 			setStyleIndex(SPEC_FLOAT);
 
@@ -162,6 +167,9 @@ public class BuoySpec extends Buoy {
 		case SPEC_BEACON:
 			image += "_Beacon";
 			break;
+		case SPEC_TOWER:
+			image += "_Tower";
+			break;
 		default:
 		}
 
@@ -232,6 +240,13 @@ public class BuoySpec extends Buoy {
 			break;
 		case SPEC_BEACON:
 			super.saveSign("beacon_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_special_purpose:colour", "yellow"));
+			break;
+		case SPEC_TOWER:
+			super.saveSign("beacon_special_purpose");
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:beacon_special_purpose:shape", "tower"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:beacon_special_purpose:colour", "yellow"));
 			break;

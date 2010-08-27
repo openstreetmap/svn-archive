@@ -13,6 +13,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset.PresetType;
 import org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -174,8 +175,8 @@ public class RelationChecker extends Test
                                     tr(s, keyname, count), MessageFormat.format(s, keyname, count), HIGH_COUNT, n) );
                         }
                     }
-                    if(ri != null && ((!r.types.contains("way") && (r.types.contains("closedway") ? ri.openways > 0 : ri.ways > 0))
-                            || (!r.types.contains("node") && ri.nodes > 0) || (!r.types.contains("relation") && ri.relations > 0)))
+                    if(ri != null && ((!r.types.contains(PresetType.WAY) && (r.types.contains(PresetType.CLOSEDWAY) ? ri.openways > 0 : ri.ways > 0))
+                            || (!r.types.contains(PresetType.NODE) && ri.nodes > 0) || (!r.types.contains(PresetType.RELATION) && ri.relations > 0)))
                     {
                         String s = marktr("Member for role {0} of wrong type");
                         errors.add( new TestError(this, Severity.WARNING, tr("Role verification problem"),

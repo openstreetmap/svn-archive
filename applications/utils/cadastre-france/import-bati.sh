@@ -42,7 +42,7 @@ villeHTTP=`echo "${ville}" | sed 's/ /+/g'`
 data="numeroVoie=&indiceRepetition=&nomVoie=&lieuDit=&ville=${villeHTTP}&codePostal=&codeDepartement=${departement}&nbResultatParPage=10&x=31&y=11"
 
 # Recuperation du code de la commune
-code=`ls "$dir/pdf/${departement}-${ville}-"*.bbox | sed "s/^.*$dir\/pdf\/${departement}-${ville}-\([^-]*\)\.bbox.*$/\1/"`
+code=`find "$dir/pdf/" -depth -name "${departement}-${ville}-*.bbox" | head -n1 | sed "s/^$dir\/pdf\/${departement}-${ville}-\([^-]*\)\.bbox.*$/\1/"`
 if [ -z "$code" ] || $force ; then
     curl -c tmp/cookies-$$-1 "http://www.cadastre.gouv.fr/scpc/rechercherPlan.do" > tmp/page-$$-1.html
     curl -b tmp/cookies-$$-1 -c tmp/cookies-$$-2 -d "$data" "http://www.cadastre.gouv.fr/scpc/rechercherPlan.do" > tmp/page-$$-2.html
@@ -77,6 +77,7 @@ if $force || [ !  -f "$dir/pdf/$baseName.pdf"  ] || [ !  -f "$dir/pdf/$baseName.
 else
     bb=`cat "$dir/pdf/$baseName.bbox"`
 fi;
+[ -z "$bb" ] && rm "$dir/pdf/$baseName.bbox"
 
 echo BB=${bb}
 

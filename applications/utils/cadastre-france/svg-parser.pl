@@ -74,11 +74,11 @@ sub hdl_start {
 	    if (defined($relations[$refrel])) {
 		do {
 		    my @points = lire_points (\$s,@m);
-		    if (!defined(@bbox_pts) && $relations[$refrel] eq "bbox")
+		    if (($#bbox_pts == -1) && $relations[$refrel] eq "bbox")
 		    {
 			@bbox_pts = minmax(@points);
 		    }
-		    elsif (defined(@points))
+		    elsif ($#points >= 0)
 		    {
 			$relations[$refrel] .="$refways ";
 			new_way(@points);
@@ -121,7 +121,7 @@ sub transform_point {
 
     ($p->[0],$p->[1]) = (($m[0]*$p->[0] +  $m[2]*$p->[1] + $m[4]),($m[1]*$p->[0] +  $m[3]*$p->[1] + $m[5]));
 
-    if (defined(@bbox_pts))
+    if ($#bbox_pts == 3)
     {
 	($p->[0],$p->[1]) = (
 	    (($p->[0] - $bbox_pts[0]) * ($bbox_lbr93[2]-$bbox_lbr93[0])/($bbox_pts[2]-$bbox_pts[0]) + $bbox_lbr93[0]),

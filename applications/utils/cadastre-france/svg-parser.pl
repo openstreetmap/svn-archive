@@ -143,10 +143,10 @@ sub minmax {
     my ($xmin,$ymin,$xmax,$ymax);
     my $node;
     foreach $node (@nodes) {
-	$xmin = $node->[0] if ($node->[0] < $xmin);
-	$ymin = $node->[1] if ($node->[1] < $ymin);
-	$xmax = $node->[0] if ($node->[0] > $xmax);
-	$ymax = $node->[1] if ($node->[1] > $ymax);
+	$xmin = $node->[0] if (!defined($xmin) || $node->[0] < $xmin);
+	$ymin = $node->[1] if (!defined($ymin) || $node->[1] < $ymin);
+	$xmax = $node->[0] if (!defined($xmax) || $node->[0] > $xmax);
+	$ymax = $node->[1] if (!defined($ymax) || $node->[1] > $ymax);
     }
     return ($xmin,$ymin,$xmax,$ymax)
 }

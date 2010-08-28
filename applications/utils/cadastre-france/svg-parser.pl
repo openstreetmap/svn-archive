@@ -73,7 +73,7 @@ sub hdl_start {
 	    my $s = $atts{'d'};
 	    if (defined($relations[$refrel])) {
 		do {
-		    my @points = format_point (\$s,@m);
+		    my @points = lire_points (\$s,@m);
 		    if (!defined(@bbox_pts) && $relations[$refrel] eq "bbox")
 		    {
 			@bbox_pts = minmax(@points);
@@ -95,7 +95,7 @@ sub hdl_end {    my  ($p, $elt, %atts) = @_;
 
 sub hdl_def {}
 
-sub format_point {
+sub lire_points {
     my ($s,@m) = @_;
     my @points;
     return unless $$s =~ s/^M //;
@@ -110,6 +110,8 @@ sub format_point {
     return @points
 }
 
+# Transforme les coordonnées d'un point pris à la tête d'une chaîne
+# pour obtenir des coordonnées en WGS84
 sub transform_point {
     my ($s,@m) = @_;
     my $p;
@@ -151,6 +153,7 @@ sub minmax {
     return ($xmin,$ymin,$xmax,$ymax)
 }
 
+# Transforme un pourcentage en sa valeur héxadécimale (de 00 à ff)
 sub hexa {
     my ($pourcent) = @_;
     # on arrondi au plus proche car sinon sprintf prend la valeur tronquée

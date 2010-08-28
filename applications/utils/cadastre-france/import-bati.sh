@@ -37,15 +37,20 @@ IGNF=$4
 [ -d "${dir}/osm" ] || mkdir "${dir}/osm"
 
 
-# Requete POST
+# Requête POST
 villeHTTP=`echo "${ville}" | sed 's/ /+/g'`
 data="numeroVoie=&indiceRepetition=&nomVoie=&lieuDit=&ville=${villeHTTP}&codePostal=&codeDepartement=${departement}&nbResultatParPage=10&x=31&y=11"
 
-# Recuperation du code de la commune
-code=`find "$dir/pdf/" -depth -name "${departement}-${ville}-*.bbox" | head -n1 | sed "s/^$dir\/pdf\/${departement}-${ville}-\([^-]*\)\.bbox.*$/\1/"`
+# Récupération du code de la commune
+code=`find "$dir/pdf/" -depth -name "${departement}-${ville}-*.bbox" | head -n1 \
+    | sed "s/^$dir\/pdf\/${departement}-${ville}-\([^-]*\)\.bbox.*$/\1/"`
 if [ -z "$code" ] || $force ; then
-    curl -c tmp/cookies-$$-1 "http://www.cadastre.gouv.fr/scpc/rechercherPlan.do" > tmp/page-$$-1.html
-    curl -b tmp/cookies-$$-1 -c tmp/cookies-$$-2 -d "$data" "http://www.cadastre.gouv.fr/scpc/rechercherPlan.do" > tmp/page-$$-2.html
+    curl -c tmp/cookies-$$-1 \
+	"http://www.cadastre.gouv.fr/scpc/rechercherPlan.do" > tmp/page-$$-1.html
+    curl -b tmp/cookies-$$-1 \
+	-c tmp/cookies-$$-2 \
+	-d "$data" \
+	"http://www.cadastre.gouv.fr/scpc/rechercherPlan.do" > tmp/page-$$-2.html
 
     code=`grep 'afficherCarteCommune.do?c=' tmp/page-$$-2.html | sed 's/.*afficherCarteCommune.do?c=\([A-Z0-9]*\).*/\1/'`
     if [ -z "$code" ]; then
@@ -59,12 +64,16 @@ fi
 echo CODE=$code
 baseName=${departement}-${ville}-${code}
 
-# Recuperation de la bounding-box de la commune
 if $force || [ !  -f "$dir/pdf/$baseName.pdf"  ] || [ !  -f "$dir/pdf/$baseName.bbox"  ] ;  then
-
-    curl -b tmp/cookies-$$-2 -c tmp/cookies-$$-3 "http://www.cadastre.gouv.fr/scpc/afficherCarteCommune.do?c=${code}&dontSaveLastForward&keepVolatileSession=" > tmp/page-$$-3.html
-    bb=`grep -A4 -m1 'new GeoBox' tmp/page-$$-3.html | tr "[:cntrl:]" " " | tr -s "[:space:]" | sed 's/.* \([0-9.]\+\), \([0-9.]\+\), \([0-9.]\+\), \([0-9.]\+\).*/\1 \2 \3 \4/'`
-    echo ${bb} > "$dir/pdf/$baseName.bbox" ;
+# Récupération de la bounding-box de la commune
+    curl -b tmp/cookies-$$-2 \
+	-c tmp/cookies-$$-3 \
+	"http://www.cadastre.gouv.fr/scpc/afficherCarteCommune.do?c=${code}&dontSaveLastForward&keepVolatileSession=" \
+	> tmp/page-$$-3.html
+    bb=`grep -A4 -m1 'new GeoBox' tmp/page-$$-3.html \
+	| tr "[:cntrl:]" " " | tr -s "[:space:]" \
+	| sed 's/.* \([0-9.]\+\), \([0-9.]\+\), \([0-9.]\+\), \([0-9.]\+\).*/\1 \2 \3 \4/'`
+    echo ${bb} > "$dir/pdf/$baseName.bbox";
     x1=`echo ${bb} | awk '{print $1}'`
     x2=`echo ${bb} | awk '{print $3}'`
     y1=`echo ${bb} | awk '{print $2}'`

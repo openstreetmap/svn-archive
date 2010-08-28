@@ -170,15 +170,16 @@ public class SmpDialogAction extends JosmAction {
 		dia = this;
 		String str = Main.pref.get("mappaint.style.sources");
 		if (!str.contains("dev.openseamap.org")) {
-			if (!str.equals("")) str += new String(new char[] {0x1e});
-			Main.pref.put("mappaint.style.sources", str + "http://dev.openseamap.org/josm/seamark_styles.xml");
+			if (!str.equals(""))
+				str += new String(new char[] { 0x1e });
+			Main.pref.put("mappaint.style.sources", str
+					+ "http://dev.openseamap.org/josm/seamark_styles.xml");
 		}
 	}
 
 	public void CloseDialog() {
 		onode = null;
-		DataSet.selListeners.remove(SmpListener);
-//		DataSet.removeSelectionListener(SmpListener);
+		DataSet.removeSelectionListener(SmpListener);
 		Selection = null;
 
 		if (isOpen)
@@ -224,8 +225,7 @@ public class SmpDialogAction extends JosmAction {
 		// private Collection<? extends OsmPrimitive> sel;
 		// siehe org.openstreetmap.josm.plugins.osb -> OsbLayer.java
 		// Einhängen des Listeners in die Eventqueue von josm
-		DataSet.selListeners.add(SmpListener);
-//		DataSet.addSelectionListener(SmpListener);
+		DataSet.addSelectionListener(SmpListener);
 	}
 
 	private void PicRebuild() {
@@ -443,8 +443,7 @@ public class SmpDialogAction extends JosmAction {
 					if (obuoy != null)
 						PicRebuild();
 					// Deaktivierung des Listeners
-					DataSet.selListeners.remove(SmpListener);
-//				DataSet.removeSelectionListener(SmpListener);
+					DataSet.removeSelectionListener(SmpListener);
 					Selection = null;
 
 					SmpItem.setEnabled(true);
@@ -816,8 +815,7 @@ public class SmpDialogAction extends JosmAction {
 					if (obuoy != null)
 						PicRebuild();
 					// Deaktivierung des Listeners
-					DataSet.selListeners.remove(SmpListener);
-//				DataSet.removeSelectionListener(SmpListener);
+					DataSet.removeSelectionListener(SmpListener);
 					Selection = null;
 					SmpItem.setEnabled(true);
 					onode = null;

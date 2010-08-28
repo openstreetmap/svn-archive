@@ -55,9 +55,11 @@ my $parser = new XML::Parser ( Handlers => {
     Default => \&hdl_def
 			       });
 my $surface = 0;
+my $profondeur_groupe = 0;
 
 sub hdl_start {
     my  ($p, $elt, %atts) = @_;
+    $profondeur_groupe++ if ($surface == 1 && $elt eq 'g');
     $surface = 1  if ($surface == 0 && $elt eq 'g' && $atts{'id'} eq 'surface0');
     if ($surface && $elt eq 'path' )
     {
@@ -88,8 +90,18 @@ sub hdl_start {
     }
 }
 
-sub hdl_end {    my  ($p, $elt, %atts) = @_;
-		 $surface = 0  if ($surface == 1 && $elt eq 'g' && $atts{'id'} eq 'surface0');}
+sub hdl_end {
+    my  ($p, $elt, %atts) = @_;
+    if ($surface == 1 && $elt eq 'g') {
+	if ($profondeur_groupe == 0) {
+	    $surface = 0;
+	    @bbox_pts = ();
+	}
+	else {
+	    $profondeur_groupe--;
+	}
+    }
+}
 
 sub hdl_def {}
 

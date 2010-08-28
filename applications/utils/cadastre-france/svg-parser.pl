@@ -154,7 +154,8 @@ sub hdl_start {
 			while ($s =~ m/M (-?\d*\.?\d*) (-?\d*\.?\d*) L/)
 			{
 			    my @points = lire_points (\$s,@m);
-			    rel_add_way($ref,new_way($type,\@points)) if ($#points >= 0);
+# Le signe de la référence au way indique le sens d'orientation du polygone
+			    rel_add_way($ref,(-1+2*(aire_polygone(@points)>0)) * new_way($type,\@points)) if ($#points >= 0);
 			}
 			$refrel++;
 		    }
@@ -290,6 +291,18 @@ sub est_dans_bbox {
 	}
     }
     return 1;
+}
+
+# Retourne l'aire d'un polygone * 2 (peut servir à déterminer le sens)
+sub aire_polygone
+{
+    my (@points) = @_;
+    my $somme;
+
+    for my $i (0..$#points) {
+	$somme += $points[$i-1][0]*$points[$i][1] - $points[$i][0]*$points[$i-1][1];
+    }
+    return $somme;
 }
 
 # Transforme un pourcentage en sa valeur héxadécimale (de 00 à ff)
@@ -435,19 +448,27 @@ for my $rel (@relations) {
 
 	for my $ref_way (@{$rel->{"ways"}}) {
 	    my $type = $ways[$ref_way]{"type"};
-	    print_way($ref_way,$file,$type,$tag);
-	    $tag = (!$tag || $type eq "riverbank");
+	    # N'écrit pas le tag pour un inner
+	    print_way(abs($ref_way),$file,$type,($ref_way>=0));
 	}
 	if ($#{$rel->{"ways"}} >= 1) {
 	    print {${$files{$file}}} "<relation id=\"" , -1-$rel->{"ref"} , "\">\n";
 	    print {${$files{$file}}} " <tag k=\"type\" v=\"" , $rel->{"type"} , "\"/>\n";
 	    print {${$files{$file}}} " <member type=\"way\" ref=\"" , -1-$rel->{"ways"}[0] , "\" role=\"outer\"/>\n";
-	    # Le lit des cours d'eau a l'air d'être défini par plusieurs outers
-	    my $role = ($type eq "riverbank") ? "outer" : "inner" ;
 	    my $ways = $rel->{"ways"};
 	    foreach my $way (@{$ways}[1..$#{$ways}])
 	    {
-		print {${$files{$file}}} " <member type=\"way\" ref=\"" , -1-$way , "\" role=\"$role\"/>\n";
+		# L'orientation du polygone indique si on ajoute ou si on enlève
+		my ($role,$ref);
+		if ($way > 0) {
+		    $role = "outer";
+		    $ref = $way;
+		}
+		else {
+		    $role = "inner";
+		    $ref = -$way;
+		}
+		print {${$files{$file}}} " <member type=\"way\" ref=\"" , -1-$ref , "\" role=\"$role\"/>\n";
 	    }
 	    print {${$files{$file}}} "</relation>\n";
 	}

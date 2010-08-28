@@ -150,7 +150,13 @@ do
     i=$((i+1))
 done;
 
-perl svg-parser.pl $IGNF ${fichiers[*]} > "$dir/osm/$baseName.osm"
+perl svg-parser.pl \
+    -l "$dir/osm/${baseName}-limite.osm" \
+    -b "$dir/osm/$baseName.osm" \
+    -r "$dir/osm/$baseName.osm" \
+    -w "$dir/osm/$baseName.osm" \
+    -t "$dir/osm/$baseName.osm" \
+    $IGNF ${fichiers[*]}
 while [ $i -lt $m ] ;
 do
     j=0

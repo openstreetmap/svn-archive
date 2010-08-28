@@ -70,9 +70,9 @@ if $force || [ !  -f "$dir/pdf/$baseName.pdf"  ] || [ !  -f "$dir/pdf/$baseName.
 	-c tmp/cookies-$$-3 \
 	"http://www.cadastre.gouv.fr/scpc/afficherCarteCommune.do?c=${code}&dontSaveLastForward&keepVolatileSession=" \
 	> tmp/page-$$-3.html
-    bb=`grep -A4 -m1 'new GeoBox' tmp/page-$$-3.html \
+    bb=`grep -A4 'new GeoBox' tmp/page-$$-3.html | head -n5 \
 	| tr "[:cntrl:]" " " | tr -s "[:space:]" \
-	| sed 's/.* \([0-9.]\+\), \([0-9.]\+\), \([0-9.]\+\), \([0-9.]\+\).*/\1 \2 \3 \4/'`
+	| sed -r 's/.*\( ([0-9.]+), ([0-9.]+), ([0-9.]+), ([0-9.]+)\).*/\1 \2 \3 \4/'`
     echo ${bb} > "$dir/pdf/$baseName.bbox";
     x1=`echo ${bb} | awk '{print $1}'`
     x2=`echo ${bb} | awk '{print $3}'`

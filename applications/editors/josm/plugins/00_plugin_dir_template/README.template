@@ -9,8 +9,10 @@ Layout
   |- images                             images your plugin needs
   |- resources                          resources your plugin needs
 
-  LICENSE                               license file 
   README                                README for your plugin
+
+  GPL-v2.0.txt                          GPL version 2 license text
+  GPL-v3.0.txt                          GPL version 3 license text
   
   README.template                       this file 
   
@@ -27,6 +29,7 @@ Maintaining versions
 ====================
 There are two versions maintained with each plugin:
    1) the main version
+      This is the lowest JOSM version required by this plugin.
       You have to manually set the plugins main version in the build script.
       Set the property plugin.main.version in build.xml accordingly. 
 
@@ -63,7 +66,7 @@ There are two versions maintained with each plugin:
 See also
 ========
 * Developing Plugins 
-  http://josm.openstreetmap.de/wiki/DevelopingPlugins
+  http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
   
 * List of JOSM Plugins
   http://josm.openstreetmap.de/wiki/Plugins

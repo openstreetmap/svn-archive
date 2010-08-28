@@ -4,8 +4,8 @@ use strict;
 use XML::Parser;
 use Geo::OSR;
 
-if ($#ARGV != 5) {
-    print "Usage: svg-parser.pl [IGNF] [fichier.svg] [bbox]\n";
+if (($#ARGV % 5) != 0) {
+    print "Usage: svg-parser.pl [IGNF] [[fichier.svg] [bbox] ..]\n";
     exit;
 }
 
@@ -31,9 +31,8 @@ my %tags = ("building" => " <tag k=\"building\" v=\"yes\"/>\n",
 	    "riverbank" => " <tag k=\"waterway\" v=\"riverbank\"/>\n"
     );
 
-
-my @bbox_lbr93;
-my @bbox_pts;
+our @bbox_lbr93;
+our @bbox_pts;
 # Hash qui à chaque point associe une ref
 my %points;
 my @ways;
@@ -45,7 +44,7 @@ my $refrel = 0;
 my $source = Geo::OSR::SpatialReference->create ();
 my $target = Geo::OSR::SpatialReference->create ();
 
-$source->ImportFromProj4("+init=IGNF:" . "$ARGV[0]" . " +wktext");
+$source->ImportFromProj4("+init=IGNF:" . shift . " +wktext");
 $target->ImportFromEPSG ('4326');
 
 my $transf = new Geo::OSR::CoordinateTransformation ($source, $target);
@@ -59,7 +58,6 @@ my $surface = 0;
 
 sub hdl_start {
     my  ($p, $elt, %atts) = @_;
-    @bbox_lbr93 = ($ARGV[2],$ARGV[3],$ARGV[4],$ARGV[5]);
     $surface = 1  if ($surface == 0 && $elt eq 'g' && $atts{'id'} eq 'surface0');
     if ($surface && $elt eq 'path' )
     {
@@ -81,7 +79,7 @@ sub hdl_start {
 		    elsif ($#points >= 0)
 		    {
 			$relations[$refrel] .="$refways ";
-			new_way(@points);
+			new_way(@points) if (est_dans_bbox(@points));
 		    }
 		} while ($s =~ m/M (-?\d*\.?\d*) (-?\d*\.?\d*) L/);
 		$refrel++;
@@ -111,7 +109,7 @@ sub lire_points {
 }
 
 # Transforme les coordonnées d'un point pris à la tête d'une chaîne
-# pour obtenir des coordonnées en WGS84
+# pour obtenir des coordonnées en Lambert93
 sub transform_point {
     my ($s,@m) = @_;
     my $p;
@@ -127,11 +125,8 @@ sub transform_point {
 	    (($p->[0] - $bbox_pts[0]) * ($bbox_lbr93[2]-$bbox_lbr93[0])/($bbox_pts[2]-$bbox_pts[0]) + $bbox_lbr93[0]),
 	    (($p->[1] - $bbox_pts[1]) * ($bbox_lbr93[1]-$bbox_lbr93[3])/($bbox_pts[3]-$bbox_pts[1]) + $bbox_lbr93[3])
 	    );
-	return ($transf->TransformPoint ($p->[0],$p->[1]));
     }
-    else {
-	return $p;
-    }
+    return $p;
 }
 
 sub get_matrix {
@@ -151,6 +146,33 @@ sub minmax {
 	$ymax = $node->[1] if (!defined($ymax) || $node->[1] > $ymax);
     }
     return ($xmin,$ymin,$xmax,$ymax)
+}
+
+# Teste si le premier node d'un way se trouve dans la bbox, si il est
+# sur un bord, teste le point suivant, si tous les points sont sur des
+# bords retourne vrai
+sub est_dans_bbox {
+    my @nodes = @_;
+    for my $node (@nodes) {
+	if ($node->[0] >= $bbox_lbr93[0] &&
+	    $node->[1] >= $bbox_lbr93[1] &&
+	    $node->[0] <= $bbox_lbr93[2] &&
+	    $node->[1] <= $bbox_lbr93[3])
+	{
+	    if (!($node->[0] == $bbox_lbr93[0] ||
+		  $node->[1] == $bbox_lbr93[1] ||
+		  $node->[0] == $bbox_lbr93[2] ||
+		  $node->[1] == $bbox_lbr93[3]))
+	    {
+		return 1;
+	    }
+	}
+	else
+	{
+	    return 0;
+	}
+    }
+    return 1;
 }
 
 # Transforme un pourcentage en sa valeur héxadécimale (de 00 à ff)
@@ -179,16 +201,38 @@ sub new_way {
     $refways++;
 }
 
-$parser->parsefile($ARGV[1]);
+# Traite chaque fichier associé à sa bbox dans l'ordre des arguments
+my @bbox_lbr93_glob;
+while (@ARGV) {
+    my $fichier = shift;
+    $bbox_lbr93[0] = shift;
+    $bbox_lbr93[1] = shift;
+    $bbox_lbr93[2] = shift;
+    $bbox_lbr93[3] = shift;
 
-my $bbox_wgs84_min = ($transf->TransformPoint (@bbox_lbr93[0,1]));
-my $bbox_wgs84_max = ($transf->TransformPoint (@bbox_lbr93[2,3]));
+# Calcule la bbox globale
+    $bbox_lbr93_glob[0] = $bbox_lbr93[0]
+	if (!defined($bbox_lbr93_glob[0]) || $bbox_lbr93[0] < $bbox_lbr93_glob[0]);
+    $bbox_lbr93_glob[1] = $bbox_lbr93[1]
+	if (!defined($bbox_lbr93_glob[1]) || $bbox_lbr93[1] < $bbox_lbr93_glob[1]);
+    $bbox_lbr93_glob[2] = $bbox_lbr93[2]
+	if (!defined($bbox_lbr93_glob[2]) || $bbox_lbr93[2] > $bbox_lbr93_glob[2]);
+    $bbox_lbr93_glob[3] = $bbox_lbr93[3]
+	if (!defined($bbox_lbr93_glob[3]) || $bbox_lbr93[3] > $bbox_lbr93_glob[3]);
+
+    $parser->parsefile($fichier);
+}
+
+my @bbox_wgs84_glob;
+@bbox_wgs84_glob[0,1] = @{$transf->TransformPoint (@bbox_lbr93_glob[0,1])};
+@bbox_wgs84_glob[2,3] = @{$transf->TransformPoint (@bbox_lbr93_glob[2,3])};
 print "<?xml version='1.0' encoding='UTF-8'?>\n";
 print "<osm version='0.6' generator='plop'>\n";
-print "<bounds minlat=\"$bbox_wgs84_min->[1]\" minlon=\"$bbox_wgs84_min->[0]\" maxlat=\"$bbox_wgs84_max->[1]\" maxlon=\"$bbox_wgs84_max->[0]\"/>\n";
+print "<bounds minlat=\"$bbox_wgs84_glob[1]\" minlon=\"$bbox_wgs84_glob[0]\" maxlat=\"$bbox_wgs84_glob[3]\" maxlon=\"$bbox_wgs84_glob[2]\"/>\n";
 foreach my $node (keys %points)
 {
     my ($lon,$lat) = split (/,/, $node);
+    ($lon,$lat) = @{$transf->TransformPoint ($lon,$lat)};
     print "<node id=\"" , -1-$points{$node} , "\" lat=\"$lat\" lon=\"$lon\"/>\n";
 }
 

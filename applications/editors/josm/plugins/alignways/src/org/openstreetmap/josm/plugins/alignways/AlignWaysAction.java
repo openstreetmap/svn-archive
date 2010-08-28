@@ -77,9 +77,9 @@ public class AlignWaysAction extends JosmAction {
 		// Deny action if reference and alignee segment cannot be aligned
 		if (!c.areSegsAlignable()) {
 			JOptionPane.showMessageDialog(Main.parent,
-					tr("Please select two segments that don''t share any nodes or put the pivot on their common node.\n" +
-					"Your action is being igonred."),
-					tr("AlignWayS: Alignment not possible"), JOptionPane.WARNING_MESSAGE);
+					tr("Please select two segments that don''t share any nodes\n"
+							+ " or put the pivot on their common node.\n"),
+							tr("AlignWayS: Alignment not possible"), JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 
@@ -89,9 +89,8 @@ public class AlignWaysAction extends JosmAction {
 				// Revert move
 				(c).undoCommand();
 				JOptionPane.showMessageDialog(Main.parent,
-						tr("Aligning would result nodes outside the world.\n" +
-						"Your action is being ignored."),
-						tr("AlignWayS: Alignment denied"), JOptionPane.WARNING_MESSAGE);
+						tr("Aligning would result nodes outside the world.\n"),
+						tr("AlignWayS: Alignment not possible"), JOptionPane.WARNING_MESSAGE);
 				return false;
 			}
 

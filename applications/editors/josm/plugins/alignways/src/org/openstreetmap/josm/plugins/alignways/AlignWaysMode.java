@@ -61,8 +61,8 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 	@Override
 	public void exitMode() {
 		super.exitMode();
-		Main.map.mapView.removeMouseListener(this);
 		setCurrentState(noneSelected);
+		Main.map.mapView.removeMouseListener(this);
 		AlignWaysPlugin.getAwAction().setEnabled(false);
 	}
 
@@ -118,7 +118,12 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
 		if (currentState == noneSelected) {
 			awSegs.cleanupWays();
-			getCurrentDataSet().clearSelection();
+			// FIX: getCurrentDataSet may return null when the editable layer had
+			// already been removed by JOSM. This happens e.g. when the user closes
+			// JOSM while AlignWays mode is still active.
+			if (getCurrentDataSet() != null) {
+				getCurrentDataSet().clearSelection();
+			}
 		}
 	}
 

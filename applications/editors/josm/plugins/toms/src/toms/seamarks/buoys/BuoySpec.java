@@ -49,7 +49,7 @@ public class BuoySpec extends Buoy {
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
 		dlg.cM01Fired.setEnabled(false);
-		dlg.cM01TopMark.setEnabled(false);
+		dlg.cM01TopMark.setEnabled(true);
 		dlg.tbM01Region.setEnabled(false);
 
 		setColour(SeaMark.YELLOW);
@@ -129,9 +129,8 @@ public class BuoySpec extends Buoy {
 		super.setStyleIndex(styleIndex);
 		if (styleIndex == SPEC_BARREL) {
 			dlg.cM01Fired.setSelected(false);
-			dlg.cM01TopMark.setSelected(false);
 			dlg.cM01Fired.setEnabled(false);
-			dlg.cM01TopMark.setEnabled(false);
+			dlg.cM01TopMark.setEnabled(true);
 		} else {
 			dlg.cM01Fired.setEnabled(true);
 			dlg.cM01TopMark.setEnabled(true);

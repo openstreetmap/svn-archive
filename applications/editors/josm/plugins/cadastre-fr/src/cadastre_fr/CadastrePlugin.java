@@ -104,7 +104,7 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - improved download cancellation
  *                 - from Erik Amzallag:
  *                 -     possibility to modify the auto-sourcing text just before upload 
- *                 - from Clément Ménier:
+ *                 - from ClÃ©ment MÃ©nier:
  *                 -     new option allowing an auto-selection of the first cadastre layer for grab
  *                 -     non-modal JDialog in MenuActionGrabPlanImage
  *                 -     new options in the image filter (bilinear, bicubic)

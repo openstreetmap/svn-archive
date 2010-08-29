@@ -75,8 +75,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		ms= new SimpleDateFormat("mm:ss");
 		gpsTimeCode= new SimpleDateFormat("hh:mm:ss");
 		Main.map.mapView.addMouseListener(this);
-		Main.map.mapView.addMouseMotionListener(this);							
-		
+		Main.map.mapView.addMouseMotionListener(this);
 	}
 
 
@@ -95,17 +94,16 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	}
 
 	@Override
-	public Component[] getMenuEntries() {
-        return new Component[]{
-                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-                new JSeparator(),
+	public Action[] getMenuEntries() {
+        return new Action[]{
+                LayerListDialog.getInstance().createActivateLayerAction(this),
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                SeparatorLayerAction.INSTANCE,
                 //TODO here my stuff
-                new JSeparator(),
-                new JMenuItem(new LayerListPopup.InfoAction(this))};//TODO here infos about the linked videos
+                SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this)};//TODO here infos about the linked videos
 	}
-	  
-
 
 	@Override
 	public String getToolTipText() {
@@ -122,8 +120,6 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	public void mergeFrom(Layer arg0) {
 		
 	}
-
-	
 	
 	@Override
 	//Draw the current position, infos, waypoints

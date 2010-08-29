@@ -58,14 +58,14 @@ public class SmpDialogAction extends JosmAction {
 	/**
 	 * lokale Variable, private
 	 */
-	private SmpDialogAction dia = null; // Variable für den Handle von
+	private SmpDialogAction dia = null; // Variable fÃ¼r den Handle von
 																			// SmpDialogAction
-	private Buoy buoy = null; // Variable für Objekte des Typs "Tonne" //
+	private Buoy buoy = null; // Variable fÃ¼r Objekte des Typs "Tonne" //
 														// @jve:decl-index=0:
 	private boolean isOpen = false; // zeigt den Status des Dialogs an
 	private Node onode = null; // gemerkter Knoten
 	private Buoy obuoy = null; // gemerkte Tonne // @jve:decl-index=0:
-	private JMenuItem SmpItem = null; // Info über item in der Werkzeugleiste
+	private JMenuItem SmpItem = null; // Info Ã¼ber item in der Werkzeugleiste
 	private String smt = ""; // value vom key "seamark:type" // @jve:decl-index=0:
 	private String smb = ""; // value vom key "seamark" // @jve:decl-index=0:
 	private Collection<? extends OsmPrimitive> Selection = null; // @jve:decl-index=0:
@@ -73,7 +73,7 @@ public class SmpDialogAction extends JosmAction {
 	private String Os = ""; // @jve:decl-index=0:
 	private String UserHome = ""; // @jve:decl-index=0:
 
-	// SelectionChangedListner der in die Eventqueue von josm eingehängt wird
+	// SelectionChangedListner der in die Eventqueue von josm eingehÃ¤ngt wird
 	private SelectionChangedListener SmpListener = new SelectionChangedListener() {
 		public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 			Node node;
@@ -219,11 +219,11 @@ public class SmpDialogAction extends JosmAction {
 		}
 		SmpItem.setEnabled(false);
 
-		// Ausprobe: Möglichkeit der Benachrichtigung, wenn etwas neu
+		// Ausprobe: MÃ¶glichkeit der Benachrichtigung, wenn etwas neu
 		// selektiert wird (ueber SelectionChangedListener)
 		// private Collection<? extends OsmPrimitive> sel;
 		// siehe org.openstreetmap.josm.plugins.osb -> OsbLayer.java
-		// Einhängen des Listeners in die Eventqueue von josm
+		// EinhÃ¤ngen des Listeners in die Eventqueue von josm
 		DataSet.selListeners.add(SmpListener);
 //		DataSet.addSelectionListener(SmpListener);
 	}

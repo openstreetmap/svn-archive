@@ -8,6 +8,7 @@
     <target name="dist" depends="compile">
         <mkdir dir="../dist"/>
         <ant antfile="build.xml" target="dist" dir="addrinterpolation"/>
+        <ant antfile="build.xml" target="dist" dir="alignways"/>
         <ant antfile="build.xml" target="dist" dir="buildings_tools"/>
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
@@ -15,7 +16,9 @@
         <ant antfile="build.xml" target="dist" dir="czechaddress"/>
         <ant antfile="build.xml" target="dist" dir="dataimport"/>
         <ant antfile="build.xml" target="dist" dir="DirectUpload"/>
+        <ant antfile="build.xml" target="dist" dir="download_along"/>
         <ant antfile="build.xml" target="dist" dir="editgpx"/>
+        <ant antfile="build.xml" target="dist" dir="ext_tools"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
@@ -37,13 +40,16 @@
         <ant antfile="build.xml" target="dist" dir="public_transport"/>
         <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
         <ant antfile="build.xml" target="dist" dir="reverter"/>
+        <ant antfile="build.xml" target="dist" dir="roadsigns"/>
         <ant antfile="build.xml" target="dist" dir="routes"/>
         <ant antfile="build.xml" target="dist" dir="routing"/>
+        <ant antfile="build.xml" target="dist" dir="simplifyarea"/>
         <ant antfile="build.xml" target="dist" dir="slippymap"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="tageditor"/>
         <ant antfile="build.xml" target="dist" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="dist" dir="terracer"/>
+        <ant antfile="build.xml" target="dist" dir="toms"/>
         <ant antfile="build.xml" target="dist" dir="touchscreenhelper"/>
         <ant antfile="build.xml" target="dist" dir="tracer"/>
         <ant antfile="build.xml" target="dist" dir="turnrestrictions"/>
@@ -52,6 +58,7 @@
         <ant antfile="build.xml" target="dist" dir="videomapping"/>
         <ant antfile="build.xml" target="dist" dir="walkingpapers"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
+        <ant antfile="build.xml" target="dist" dir="waypoint_search"/>
         <ant antfile="build.xml" target="dist" dir="wayselector"/>
         <ant antfile="build.xml" target="dist" dir="wmsplugin"/>
         <ant antfile="build.xml" target="dist" dir="wms-turbo-challenge2"/>
@@ -62,6 +69,7 @@
     </target>
     <target name="clean">
         <ant antfile="build.xml" target="clean" dir="addrinterpolation"/>
+        <ant antfile="build.xml" target="clean" dir="alignways"/>
         <ant antfile="build.xml" target="clean" dir="buildings_tools"/>
         <ant antfile="build.xml" target="clean" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="clean" dir="colorscheme"/>
@@ -69,8 +77,10 @@
         <ant antfile="build.xml" target="clean" dir="czechaddress"/>
         <ant antfile="build.xml" target="clean" dir="dataimport"/>
         <ant antfile="build.xml" target="clean" dir="DirectUpload"/>
+        <ant antfile="build.xml" target="clean" dir="download_along"/>
         <ant antfile="build.xml" target="clean" dir="duplicateway"/>
         <ant antfile="build.xml" target="clean" dir="editgpx"/>
+        <ant antfile="build.xml" target="clean" dir="ext_tools"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>
         <ant antfile="build.xml" target="clean" dir="grid"/>
@@ -93,13 +103,16 @@
         <ant antfile="build.xml" target="clean" dir="public_transport"/>
         <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
         <ant antfile="build.xml" target="clean" dir="reverter"/>
+        <ant antfile="build.xml" target="clean" dir="roadsigns"/>
         <ant antfile="build.xml" target="clean" dir="routes"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>
+        <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
         <ant antfile="build.xml" target="clean" dir="slippymap"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="tageditor"/>
         <ant antfile="build.xml" target="clean" dir="tagging-preset-tester"/>
         <ant antfile="build.xml" target="clean" dir="terracer"/>
+        <ant antfile="build.xml" target="clean" dir="toms"/>
         <ant antfile="build.xml" target="clean" dir="touchscreenhelper"/>
         <ant antfile="build.xml" target="clean" dir="tracer"/>
         <ant antfile="build.xml" target="clean" dir="turnrestrictions"/>
@@ -108,6 +121,7 @@
         <ant antfile="build.xml" target="clean" dir="videomapping"/>
         <ant antfile="build.xml" target="clean" dir="walkingpapers"/>
         <ant antfile="build.xml" target="clean" dir="waydownloader"/>
+        <ant antfile="build.xml" target="clean" dir="waypoint_search"/>
         <ant antfile="build.xml" target="clean" dir="wayselector"/>
         <ant antfile="build.xml" target="clean" dir="wmsplugin"/>
         <ant antfile="build.xml" target="clean" dir="wms-turbo-challenge2"/>

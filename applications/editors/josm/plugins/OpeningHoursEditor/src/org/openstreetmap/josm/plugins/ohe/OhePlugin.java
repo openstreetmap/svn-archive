@@ -64,11 +64,11 @@ public class OhePlugin extends Plugin {
 	class OheMenuAction extends JosmAction {
 		public OheMenuAction() {
 			super(
-					tr("edit opening_hours"),
+					tr("Edit opening hours"),
 					"opening_hours.png",
-					tr("edit time-tag of selcted Element in a graphical interface"),
+					tr("Edit time-tag of selected element in a graphical interface"),
 					Shortcut.registerShortcut("tools:opening_hourseditor", tr(
-							"Tool: {0}", tr("edit opening_hours")),
+							"Tool: {0}", tr("Edit opening hours")),
 							KeyEvent.VK_T, Shortcut.GROUP_MENU), false);
 		}
 

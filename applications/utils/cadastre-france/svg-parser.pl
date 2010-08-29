@@ -157,7 +157,6 @@ sub hdl_start {
 # Le signe de la référence au way indique le sens d'orientation du polygone
 			    rel_add_way($ref,(-1+2*(aire_polygone(@points)>0)) * new_way($type,\@points)) if ($#points >= 0);
 			}
-			$refrel++;
 		    }
 		}
 	    }
@@ -166,19 +165,24 @@ sub hdl_start {
 	{
 	    $atts{'style'} =~ s/^ *//;
 	    $atts{'style'} =~ s/ *$//;
-	    my $style;
+	    my $type;
 	    if ($atts{'d'} =~ m/Z/) {
-		$style = $style_closed{$atts{'style'}};
+		$type = $style_closed{$atts{'style'}};
 	    }
 	    else {
-		$style = $style_opened{$atts{'style'}};
+		$type = $style_opened{$atts{'style'}};
 	    }
-	    if (defined($style)) {
+	    if (defined($type)) {
 		my $s = $atts{'d'};
 		my @points = lire_points (\$s,@m);
 		if (est_dans_bbox(@points)) {
 		    my $ref = new_rel("multipolygon");
-		    rel_add_way($ref,new_way($style,\@points)) if ($#points >= 0);
+		    rel_add_way($ref,new_way($type,\@points)) if ($#points >= 0);
+		    while ($s =~ m/M (-?\d*\.?\d*) (-?\d*\.?\d*) L/)
+		    {
+			my @points = lire_points (\$s,@m);
+			rel_add_way($ref,new_way($type,\@points)) if ($#points >= 0);
+		    }
 		}
 	    }
 	}

@@ -47,7 +47,18 @@ foreach my $arg (@ARGV)
     die "Could not change directory.";
   }
   my $a = `date`; chomp $a; print "$a Copy files $arg\n";
-  system "cp -r . $WEBDIR";
+  foreach my $name (glob("*"))
+  {
+    if(-d $name)
+    {
+      system "rm -r $WEBDIR/$name";
+      system "mv $name $WEBDIR";
+    }
+    else
+    {
+      system "mv -f $name $WEBDIR";
+    }
+  }
   system "rm -r $TWD/$HTML/*";
   $a = `date`; chomp $a; print "$a End $arg\n";
   push(@cfg, "use_WikiTag_Cache=yes");

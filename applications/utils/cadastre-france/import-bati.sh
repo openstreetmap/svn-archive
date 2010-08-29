@@ -26,8 +26,8 @@ IGNF=$4
 # Pour obtenir une bonne précision sur les communes étendues, on prend
 # des rectangles de l_deg x h_deg (en degrés) pour les imprimer sur
 # une zone de l_pix x h_pix (en pixels)
-l_deg=3000
-h_deg=3000
+l_deg=2000
+h_deg=2000
 l_pix=9000
 h_pix=9000
 IFS="\n"
@@ -151,11 +151,11 @@ do
 done;
 
 perl svg-parser.pl \
-    -l "$dir/osm/${baseName}-limite.osm" \
+    -l "$dir/osm/$baseName-limite.osm" \
     -b "$dir/osm/$baseName.osm" \
     -r "$dir/osm/$baseName.osm" \
     -w "$dir/osm/$baseName.osm" \
-    -t "$dir/osm/$baseName.osm" \
+    -t "$dir/osm/$baseName-train.osm" \
     $IGNF ${fichiers[*]}
 while [ $i -lt $m ] ;
 do

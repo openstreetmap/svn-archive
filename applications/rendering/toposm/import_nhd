@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
-# unpacked NHD shapefiles in the following directory:
-SRCDIR="temp/nhd"
-
-DATABASE="gis"
+if [[ -z $TOPOSM_ENV_SET ]]; then
+    echo "Error: TopOSM environment not set."
+    exit 1
+fi
 
 # HACK: Removes transaction support for shp2pgsql
 # because a few lines in each file contain illegal characters, aborting
@@ -11,79 +11,75 @@ DATABASE="gis"
 # but that's for later...
 FILTER='s/BEGIN;//g'
 
+DBCMD="psql -q -p $DB_PORT $DB_NAME $DB_USER"
+
 # NOTE: The data type for fcode and ftype is changed because, for some
 # reason, mapnik (silently) fails to filter on bigint columns.
 
 # areas
 PREP_TABLE=1
-for SRCFILE in $SRCDIR/nhdarhi*.shp; do
-#for SRCFILE in $SRCDIR/processed/area*.shp; do
+for SRCFILE in $NHD_DIR/nhdarhi*.shp; do
     if [ "$PREP_TABLE" ]; then 
-	echo "Creating nhdarea table..."
-	shp2pgsql -p -I -g way "$SRCFILE" nhdarea | psql -q $DATABASE
-	shp2pgsql -p -I -g way "$SRCFILE" nhdarea_major | psql -q $DATABASE
+	    echo "Creating ${NHD_TABLE_PREFIX}_area table..."
+	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_area | $DBCMD
+	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_area_major | $DBCMD
     fi
     echo "Importing $SRCFILE..."
-    shp2pgsql -a -g way "$SRCFILE" nhdarea | psql -q $DATABASE
+    shp2pgsql -a -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_area | \
+        sed "$FILTER" | $DBCMD
     unset PREP_TABLE
 done
-echo "ALTER TABLE nhdarea ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | psql -q $DATABASE
-echo "ALTER TABLE nhdarea_major ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | psql -q $DATABASE
-
+echo "ALTER TABLE ${NHD_TABLE_PREFIX}_area ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD
+echo "ALTER TABLE ${NHD_TABLE_PREFIX}_area_major ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD
 echo "Extracting major areas..."
-echo "INSERT INTO nhdarea_major SELECT * FROM nhdarea WHERE areasqkm > 1" | psql -q $DATABASE
+echo "INSERT INTO ${NHD_TABLE_PREFIX}_area_major SELECT * FROM ${NHD_TABLE_PREFIX}_area WHERE areasqkm > 1" | $DBCMD
 
 # flowlines
 PREP_TABLE=1
-for SRCFILE in $SRCDIR/nhdflh??.shp; do
+for SRCFILE in $NHD_DIR/nhdflh??.shp; do
     if [ "$PREP_TABLE" ]; then 
-	echo "Creating nhdflowline table..."
-	shp2pgsql -p -I -g way "$SRCFILE" nhdflowline | psql -q $DATABASE
-	shp2pgsql -p -I -g way "$SRCFILE" nhdflowline_major | psql -q $DATABASE
+	    echo "Creating ${NHD_TABLE_PREFIX}_flowline table..."
+	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline | $DBCMD
+	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline_major | $DBCMD
     fi
     echo "Importing $SRCFILE..."
-    shp2pgsql -a -g way "$SRCFILE" nhdflowline | \
-	sed "$FILTER" | \
-	psql -q $DATABASE
+    shp2pgsql -a -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline | \
+	    sed "$FILTER" | $DBCMD
     unset PREP_TABLE
 done
-echo "ALTER TABLE nhflowline ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | psql -q $DATABASE
-
+echo "ALTER TABLE ${NHD_TABLE_PREFIX}_flowline ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD
 echo "Extracting major flowlines..."
-echo "INSERT INTO nhdflowline_major SELECT * FROM nhdflowline WHERE lengthkm > 2" | psql -q $DATABASE
+echo "INSERT INTO ${NHD_TABLE_PREFIX}_flowline_major SELECT * FROM ${NHD_TABLE_PREFIX}_flowline WHERE lengthkm > 2" | $DBCMD
 
 # points
 PREP_TABLE=1
-for SRCFILE in $SRCDIR/nhdpthi*.shp; do
+for SRCFILE in $NHD_DIR/nhdpthi*.shp; do
     if [ "$PREP_TABLE" ]; then 
-	echo "Creating nhdpoint table..."
-	shp2pgsql -p -I -g way "$SRCFILE" nhdpoint | psql -q $DATABASE
+	    echo "Creating ${NHD_TABLE_PREFIX}_point table..."
+	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_point | $DBCMD
     fi
     echo "Importing $SRCFILE..."
-    shp2pgsql -a -g way "$SRCFILE" nhdpoint | \
-	sed "$FILTER" | \
-	psql -q $DATABASE
+    shp2pgsql -a -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_point | \
+	    sed "$FILTER" | $DBCMD
     unset PREP_TABLE
 done
-echo "ALTER TABLE nhdpoint ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | psql -q $DATABASE
+echo "ALTER TABLE ${NHD_TABLE_PREFIX}_point ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD
 
 # waterbodies
 PREP_TABLE=1
-for SRCFILE in $SRCDIR/nhdwbhi*.shp; do
+for SRCFILE in $NHD_DIR/nhdwbhi*.shp; do
     if [ "$PREP_TABLE" ]; then 
-	echo "Creating nhdwaterbody table..."
-	shp2pgsql -p -I -g way "$SRCFILE" nhdwaterbody | psql -q $DATABASE
-	shp2pgsql -p -I -g way "$SRCFILE" nhdwaterbody_major | psql -q $DATABASE
+	    echo "Creating ${NHD_TABLE_PREFIX}_waterbody table..."
+	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody | $DBCMD
+	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody_major | $DBCMD
     fi
     echo "Importing $SRCFILE..."
-    shp2pgsql -a -g way "$SRCFILE" nhdwaterbody | \
-	sed "$FILTER" | \
-	psql -q $DATABASE
+    shp2pgsql -a -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody | \
+	    sed "$FILTER" | $DBCMD
     unset PREP_TABLE
 done
-echo "ALTER TABLE nhdwaterbody ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | psql -q $DATABASE
-
+echo "ALTER TABLE ${NHD_TABLE_PREFIX}_waterbody ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD
 echo "Extracting major waterbodies..."
-echo "INSERT INTO nhdwaterbody_major SELECT * FROM nhdwaterbody WHERE areasqkm > 1" | psql -q $DATABASE
+echo "INSERT INTO ${NHD_TABLE_PREFIX}_waterbody_major SELECT * FROM ${NHD_TABLE_PREFIX}_waterbody WHERE areasqkm > 1" | $DBCMD
 
 echo "Done."

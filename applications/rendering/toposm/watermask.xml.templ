@@ -9,9 +9,7 @@
     %colors;
 ]>
 
-<Map
-	bgcolor="&watermaskcolor;"
-	srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+<Map bgcolor="&watermaskcolor;" srs="&srs900913;">
 	
 <Style name="land-poly">
 	<Rule>
@@ -61,42 +59,42 @@
     <StyleName>land-poly</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">geodata/osm/world_boundaries/processed_p</Parameter>
+      <Parameter name="file">${WORLD_BOUNDARIES_DIR}/processed_p</Parameter>
     </Datasource>
 </Layer>
 
-<Layer name="waterbody_major" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+<Layer name="waterbody_major" status="on" srs="&srsLatLongNAD83;">
 	<StyleName>water-major</StyleName>
 	<Datasource>
 		&dbsettings; &extentsLatLon;
-		<Parameter name="table">(select way, fcode from nhdwaterbody_major) as waterbody_major</Parameter>
+		<Parameter name="table">(select way, fcode from ${NHD_TABLE_PREFIX}_waterbody_major) as waterbody_major</Parameter>
 	</Datasource>
 </Layer>
 
 
-<Layer name="waterbody_minor" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+<Layer name="waterbody_minor" status="on" srs="&srsLatLongNAD83;">
 	<StyleName>water-minor</StyleName>
 	<Datasource>
 		&dbsettings; &extentsLatLon;
-		<Parameter name="table">(select way, fcode from nhdwaterbody) as waterbody_minor</Parameter>
+		<Parameter name="table">(select way, fcode from ${NHD_TABLE_PREFIX}_waterbody) as waterbody_minor</Parameter>
 	</Datasource>
 </Layer>
 
-<Layer name="nhdarea_major" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+<Layer name="nhdarea_major" status="on" srs="&srsLatLongNAD83;">
 	<StyleName>water-major</StyleName>
 	<Datasource>
 		&dbsettings;
 		&extentsLatLon;
-		<Parameter name="table">(select way, fcode from nhdarea_major) as nhdarea_major</Parameter>
+		<Parameter name="table">(select way, fcode from ${NHD_TABLE_PREFIX}_area_major) as nhdarea_major</Parameter>
 	</Datasource>
 </Layer>
 
-<Layer name="nhdarea_minor" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+<Layer name="nhdarea_minor" status="on" srs="&srsLatLongNAD83;">
 	<StyleName>water-minor</StyleName>
 	<Datasource>
 		&dbsettings;
 		&extentsLatLon;
-		<Parameter name="table">(select way, fcode from nhdarea) as nhdarea_minor</Parameter>
+		<Parameter name="table">(select way, fcode from ${NHD_TABLE_PREFIX}_area) as nhdarea_minor</Parameter>
 	</Datasource>
 </Layer>
 

@@ -14,10 +14,7 @@
 <!-- NOTE: symbols that need to go on top of road fills are
 considered "labels-nohalo" as well... -->
 
-
-<Map
-   bgcolor="transparent"
-   srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+<Map bgcolor="&landcolor;" srs="&srs900913;">
 
 <Style name="interstateshields">
 	<Rule>
@@ -275,7 +272,7 @@ considered "labels-nohalo" as well... -->
     <Datasource>
       &dbsettings;
       &extents;
-      <Parameter name="table">us_osm_point</Parameter>
+      <Parameter name="table">${DB_PREFIX}_point</Parameter>
     </Datasource>
 </Layer>
 
@@ -285,7 +282,7 @@ considered "labels-nohalo" as well... -->
     <Datasource>
       &dbsettings;
       &extents;
-      <Parameter name="table">us_osm_area</Parameter>
+      <Parameter name="table">${DB_PREFIX}_area</Parameter>
     </Datasource>
 </Layer>
 -->
@@ -297,7 +294,7 @@ considered "labels-nohalo" as well... -->
     	&dbsettings;
     	&extents;		
 		<Parameter name="table">
-		(select * from us_osm_roads
+		(select * from ${DB_PREFIX}_roads
 		where (highway = 'motorway' or highway = 'trunk') and (ref like 'I %' or ref like 'I-%')
 		order by z_order) as interstateshields
 		</Parameter>
@@ -310,7 +307,7 @@ considered "labels-nohalo" as well... -->
 		&dbsettings;
 		&extents;		
 		<Parameter name="table">
-		(select * from us_osm_roads
+		(select * from ${DB_PREFIX}_roads
 		where (highway &lt;&gt; '' AND highway IS NOT NULL) and ref like 'US %'
 		order by z_order) as usshields
 		</Parameter>
@@ -323,7 +320,7 @@ considered "labels-nohalo" as well... -->
     	&dbsettings;
     	&extents;
 		<Parameter name="table">
-		(select * from us_osm_roads
+		(select * from ${DB_PREFIX}_roads
 		where (highway &lt;&gt; '' AND highway IS NOT NULL) and ref like 'SR %'
 		order by z_order) as stateshields
 		</Parameter>

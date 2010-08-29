@@ -11,8 +11,7 @@
 	%colors;
 ]>
 
-<Map bgcolor="transparent"
-   srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+<Map bgcolor="&landcolor;" srs="&srs900913;">
 
 <Style name="parking">
   <Rule>
@@ -967,7 +966,7 @@ Canals and ditches (CanalDitch) (336xx)
 		&extents;
 		<Parameter name="table">
 			(select way, amenity, aeroway
-			from us_osm_polygon order by z_order,way_area desc) as areas
+			from ${DB_PREFIX}_polygon order by z_order,way_area desc) as areas
   		</Parameter>
 		<!-- because the subselect messes the GEOMETRY type -->
 		<Parameter name="geometry_field">way</Parameter>
@@ -981,7 +980,7 @@ Canals and ditches (CanalDitch) (336xx)
 	  &dbsettings;
 	  &extents;
       <Parameter name="table">
-      	(select * from us_osm_line order by z_order) as lines
+      	(select * from ${DB_PREFIX}_line order by z_order) as lines
       </Parameter>
     </Datasource>
 </Layer>
@@ -993,7 +992,7 @@ Canals and ditches (CanalDitch) (336xx)
 	  &dbsettings;
 	  &extents;
       <Parameter name="table">
-      	(select way, highway, bridge, tunnel, bicycle from us_osm_line
+      	(select way, highway, bridge, tunnel, bicycle from ${DB_PREFIX}_line
       	where highway is not null
       	order by z_order) as lines
       </Parameter>
@@ -1006,7 +1005,7 @@ Canals and ditches (CanalDitch) (336xx)
 	  &dbsettings;
 	  &extents;
       <Parameter name="table">
-      	(select way, railway, bridge, tunnel from us_osm_line
+      	(select way, railway, bridge, tunnel from ${DB_PREFIX}_line
       	where railway is not null
       	order by z_order) as lines
       </Parameter>
@@ -1019,7 +1018,7 @@ Canals and ditches (CanalDitch) (336xx)
 	  &dbsettings;
 	  &extents;
       <Parameter name="table">
-      	(select way, aeroway from us_osm_line
+      	(select way, aeroway from ${DB_PREFIX}_line
       	where aeroway is not null
       	order by z_order) as lines
       </Parameter>

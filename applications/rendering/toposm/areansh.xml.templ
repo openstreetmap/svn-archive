@@ -9,9 +9,7 @@
 	%colors;
 ]>
 
-<Map
-	bgcolor="transparent"
-	srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+<Map bgcolor="&landcolor;" srs="&srs900913;">
 
 	<Style name="surface-water-fill">
 	  <Rule>
@@ -36,7 +34,7 @@
 			&dbsettings;
 			&extents;
 			<Parameter name="table">
-				(select * from us_osm_polygon where (
+				(select * from ${DB_PREFIX}_polygon where (
 				    "natural" = 'water' or
 				    landuse = 'reservoir' or
 				    landuse = 'basin' or

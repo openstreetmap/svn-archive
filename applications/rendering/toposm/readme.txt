@@ -3,12 +3,10 @@ TopOSM README
 Lars Ahlzen
 lars (at) ahlzen.com
 
-TODO: Improve! 
-
 
 Requirements:
 -------------
-* Standard UN*X tools (bash, sed, ...)
+* Standard UN*X tools (bash, sed, awk, ...)
 * Mapnik
 * PostgreSQL
 * _int.sql (from postgresql-contrib) for PostgreSQL
@@ -41,18 +39,18 @@ Setup
 * Build/install requirements (see above).
 * Download required data sets.
 * Setup PostgreSQL with PostGIS. See OSM wiki.
-* Create a 'gis' database.
-* Modify and run import_planet.
-* Modify and run import_nhd.
-* Modify and run prep_contours_table.
-* Modify include/dbsettings.inc.
-* Modify toposm.py.
+* Create a PostGIS database.
+* Modify and source set-toposm-env.
+* Run import_planet.
+* Run import_nhd.
+* Run prep_contours_table.
 
 Render an area:
 ---------------
 This example will render the area UTM19T (defined in areas.py) from
 zoom level 4 through 16:
 
+$ source set-toposm-env
 $ python
 Python 2.6.5 (r265:79063, Apr 16 2010, 13:57:41)
 [GCC 4.4.3] on linux2
@@ -63,9 +61,9 @@ Type "help", "copyright", "credits" or "license" for more information.
 ...
 >>> render_tiles_single(UTM19T, 5, 16)
 ...
-$ optimize_png.py tiles/contours
+$ optimize_png.py tile/contours
 ...
-$ optimize_png.py tiles/features
+$ optimize_png.py tile/features
 ...
 
 
@@ -89,4 +87,3 @@ not pretty.
 
 In TopOSM, rendering quality takes precedence over speed. You'll
 notice.
-

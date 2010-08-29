@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# Configures the environment for TopOSM rendering.
+# Change these settings to match your setup.
+
+# Postgres settings
+export DB_NAME="gis"
+export DB_PORT=5432 # local postgres port
+export DB_PREFIX="us_osm" # prefix for all tables
+export DB_USER="lars" # username
+export CONTOURS_TABLE="contours_us_50ft"
+export NHD_TABLE_PREFIX="nhd"
+
+# Data directories
+export WORLD_BOUNDARIES_DIR="geodata/osm/world_boundaries"
+export NHD_DIR="temp/nhd" # contains (unpacked) NHD shapefiles
+export NED13_DIR="usgs/hsm/iadd1/ned/13arcsec/grid" # 1/3" NED data
+
+# Output directories
+export BASE_TILE_DIR="tile" # output directory
+export TEMP_DIR="temp" # preprocessed data and temporary files
+
+# Program locations
+export HILLSHADE="$HOME/bin/hillshade"
+export COLORRELIEF="$HOME/bin/color-relief"
+
+# Misc files
+export OSM2PGSQL_STYLE_FILE="/usr/share/osm2pgsql/default.style"
+export COLORFILE="colors.txt" # elevation-to-color mapping
+
+# Render settings
+export RENDER_THREADS=4 # typically equal to # of cores
+export SUBTILE_SIZE=256
+export BORDER_WIDTH=128
+export ERROR_LOG="errors.log"
+
+# The area we're interested in
+# (this setting limits both import and rendering)
+# E.g. Conterminous US: "-127,23,-65,51"
+export EXTENTS_LATLON="-127,23,-65,51"
+
+# Used to check that the env is set. Don't modify.
+export TOPOSM_ENV_SET=1
+

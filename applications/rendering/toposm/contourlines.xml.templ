@@ -9,10 +9,7 @@
 	%colors;
 ]>
 
-<Map
-   bgcolor="transparent"
-   srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
-
+<Map bgcolor="&landcolor;" srs="&srs900913;">
 
 <!--
 <Style name="supermajor1k">
@@ -89,24 +86,24 @@
 </Layer>
 -->
 
-<Layer name="major" status="on" srs="+proj=latlong +datum=NAD83">
+<Layer name="major" status="on" srs="&srsLatLongNAD83;">
   <StyleName>major</StyleName>
   <Datasource>
 	&dbsettings;
 	&extentsLatLon;
     <Parameter name="table">
-    (select * from contours_us_50ft WHERE height_ft % 250 = 0) AS major
+    (select * from ${CONTOURS_TABLE} WHERE height_ft % 250 = 0) AS major
     </Parameter>
   </Datasource>
 </Layer>
 
-<Layer name="minor" status="on" srs="+proj=latlong +datum=NAD83">
+<Layer name="minor" status="on" srs="&srsLatLongNAD83;">
   <StyleName>minor</StyleName>
   <Datasource>
 	&dbsettings;
 	&extentsLatLon;
     <Parameter name="table">
-    (select * from contours_us_50ft WHERE height_ft % 250 &lt;&gt; 0) AS minor
+    (select * from ${CONTOURS_TABLE} WHERE height_ft % 250 &lt;&gt; 0) AS minor
     </Parameter>
   </Datasource>
 </Layer>

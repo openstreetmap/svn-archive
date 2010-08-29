@@ -7,30 +7,29 @@ from math import pi,cos,sin,log,exp,atan,ceil,floor
 from subprocess import call
 from mapnik import *
 
-# Configuration
-BASE_TILE_DIR = 'tile'
-CONTOUR_INTERVAL = 15.24 # 50 ft in meters
-CONTOURS_TABLE = 'contours_us_50ft'
-DATABASE = 'gis'
-TEMPDIR = 'temp' # working directory... ensure it has plenty of space
-NED13DIR = 'usgs/hsm/iadd1/ned/13arcsec/grid'
-ERRORLOG = 'errors.log'
-
-# Number of rendering threads.
-NUM_THREADS = 4
-
-# perrygeo apps
-HILLSHADE = '/home/lars/bin/hillshade'
-COLORRELIEF = '/home/lars/bin/color-relief'
-COLORFILE = 'colors.txt' # Color-by-altitude gradient definition
+# Check that the environment is set and import configuration
+if not 'TOPOSM_ENV_SET' in os.environ:
+    print "Error: TopOSM environment not set."
+    sys.exit(1)
+BASE_TILE_DIR = os.environ['BASE_TILE_DIR']
+CONTOURS_TABLE = os.environ['CONTOURS_TABLE']
+DATABASE = os.environ['DB_NAME']
+TEMPDIR = os.environ['TEMP_DIR']
+NED13DIR = os.environ['NED13_DIR']
+HILLSHADE = os.environ['HILLSHADE']
+COLORRELIEF = os.environ['COLORRELIEF']
+COLORFILE = os.environ['COLORFILE']
+NUM_THREADS = int(os.environ['RENDER_THREADS'])
+SUBTILE_SIZE = int(os.environ['SUBTILE_SIZE'])
+BORDER_WIDTH = int(os.environ['BORDER_WIDTH'])
+ERRORLOG = os.environ['ERROR_LOG']
 
 # constants
+CONTOUR_INTERVAL = 15.24 # 50 ft in meters
 MAPNIK_LAYERS = ['watermask', 'area', 'areansh', 'contourlines', 'contourlabels',
                  'features-main', 'features-fill', 'labels', 'labels-nohalo']
 OSM_SRS = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 ' + \
     '+y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
-SUBTILE_SIZE = 256
-BORDER_WIDTH = 128
 
 # Optimal supertile size (N x N subtiles) by zoom level.
 # A too low number is inefficient. A too high number uses
@@ -557,6 +556,7 @@ def prepare_data_single(envLL, minz, maxz):
     envLL = pad_envelope(envLL, minz, ntiles)
     tiles = get_ned13_tiles(envLL)
     for tile in tiles:
+        print tile
         prep_ned13_data_file(tile[0], tile[1])
     print '  Converting meters to feet...'
     cmd = 'echo "UPDATE %s SET height_ft = CAST(height * 3.28085 AS INT) WHERE height_ft IS NULL;" | psql -q "%s"' % (CONTOURS_TABLE, DATABASE)
@@ -624,3 +624,4 @@ def render_tiles_single(envLL, minz, maxz):
         for x in range(fromx, tox+1, ntiles):
             for y in range(fromy, toy+1, ntiles):
                 renderer.render('render', z, x, y)
+

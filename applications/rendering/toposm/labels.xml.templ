@@ -11,9 +11,7 @@
 	%colors;
 ]>
 
-<Map
-   bgcolor="transparent"
-   srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+<Map bgcolor="&landcolor;" srs="&srs900913;">
 
 <Style name="nhdline">
 	<Rule>
@@ -244,7 +242,7 @@
 		&dbsettings;
 		&extents;
 		<!-- HACK: postgres converts elevation m -> ft, and appends unit -->
-		<Parameter name="table">(select *, CAST(round((CAST(ele as numeric) * 3.2787), 0) as varchar(10)) || ' ft' as ele_w_unit from us_osm_point) as placenames</Parameter>
+		<Parameter name="table">(select *, CAST(round((CAST(ele as numeric) * 3.2787), 0) as varchar(10)) || ' ft' as ele_w_unit from ${DB_PREFIX}_point) as placenames</Parameter>
     </Datasource>
 </Layer>
 
@@ -253,7 +251,7 @@
     <Datasource>
 		&dbsettings;
 		&extents;
-		<Parameter name="table">(select * from us_osm_polygon order by z_order,way_area desc) as areanames</Parameter>
+		<Parameter name="table">(select * from ${DB_PREFIX}_polygon order by z_order,way_area desc) as areanames</Parameter>
     </Datasource>
 </Layer>
 
@@ -263,35 +261,35 @@
     <Datasource>
 		&dbsettings;
 		&extents;
-		<Parameter name="table">(select * from us_osm_line order by z_order) as linenames</Parameter>
+		<Parameter name="table">(select * from ${DB_PREFIX}_line order by z_order) as linenames</Parameter>
     </Datasource>
 </Layer>
 -->
 
-<Layer name="nhdarea" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+<Layer name="nhdarea" status="on" srs="&srsLatLongNAD83;">
 	<StyleName>nhdarea</StyleName>
 	<Datasource>
 		&dbsettings;
 		&extentsLatLon;
-		<Parameter name="table">nhdarea</Parameter>
+		<Parameter name="table">${NHD_TABLE_PREFIX}_area</Parameter>
 	</Datasource>
 </Layer>
 
-<Layer name="nhdwaterbody" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+<Layer name="nhdwaterbody" status="on" srs="&srsLatLongNAD83;">
 	<StyleName>nhdarea</StyleName>
 	<Datasource>
 		&dbsettings;
 		&extentsLatLon;
-		<Parameter name="table">nhdwaterbody</Parameter>
+		<Parameter name="table">${NHD_TABLE_PREFIX}_waterbody</Parameter>
 	</Datasource>
 </Layer>
 
-<Layer name="nhdflowline" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
+<Layer name="nhdflowline" status="on" srs="&srsLatLongNAD83;">
 	<StyleName>nhdline</StyleName>
 	<Datasource>
 		&dbsettings;
 		&extentsLatLon;
-		<Parameter name="table">nhdflowline</Parameter>
+		<Parameter name="table">${NHD_TABLE_PREFIX}_flowline</Parameter>
 	</Datasource>
 </Layer>
 
@@ -300,7 +298,7 @@
     <Datasource>
 		&dbsettings;
 		&extents;
-		<Parameter name="table">(select * from us_osm_roads order by z_order) as streetnames</Parameter>
+		<Parameter name="table">(select * from ${DB_PREFIX}_roads order by z_order) as streetnames</Parameter>
     </Datasource>
 </Layer>
 

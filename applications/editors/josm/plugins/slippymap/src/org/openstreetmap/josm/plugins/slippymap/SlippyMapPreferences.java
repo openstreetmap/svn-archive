@@ -1,12 +1,15 @@
 package org.openstreetmap.josm.plugins.slippymap;
 
-import org.openstreetmap.josm.Main;
-import java.util.List;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import org.openstreetmap.gui.jmapviewer.*;
-import org.openstreetmap.gui.jmapviewer.interfaces.*;
+
+import org.openstreetmap.gui.jmapviewer.OsmTileSource;
+import org.openstreetmap.gui.jmapviewer.OsmTileSource.AbstractOsmTileSource;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+import org.openstreetmap.josm.Main;
 
 /**
  * Preferences for Slippy Map Tiles
@@ -17,6 +20,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.*;
  */
 public class SlippyMapPreferences
 {
+	public static final String NO_DEFAULT_TILE_SOURCE_NAME = "{%no_default%}";
     public static final String PREFERENCE_PREFIX   = "slippymap";
 
     public static final String PREFERENCE_TILE_CUSTOM_SOURCE = PREFERENCE_PREFIX + ".custom_tile_source_";
@@ -34,6 +38,7 @@ public class SlippyMapPreferences
     public static final int DEFAULT_MAX_ZOOM = 20;
     public static final int DEFAULT_MIN_ZOOM = 2;
 
+
     public static TileSource getMapSource()
     {
         String name = Main.pref.get(PREFERENCE_TILE_SOURCE);
@@ -41,23 +46,27 @@ public class SlippyMapPreferences
     }
     public static TileSource getMapSource(String name)
     {
+    	if (NO_DEFAULT_TILE_SOURCE_NAME.equals(name)) {
+    		return NO_DEFAULT_TILE_SOURCE; // User don't want to load slippy layer on startup
+    	}
+
         List<TileSource> sources = SlippyMapPreferences.getAllMapSources();
-        TileSource source = sources.get(0);
+
         if (name == null || "".equals(name)) {
-            name = source.getName();
-            Main.pref.put(PREFERENCE_TILE_SOURCE, name);
+            Main.pref.put(PREFERENCE_TILE_SOURCE, sources.get(0).getName());
+            return sources.get(0);
         }
+
         for (TileSource s : sources) {
-            if (!name.equals(s.getName()))
-                continue;
-            source = s;
-            break;
+            if (name.equals(s.getName()))
+            	return s;
         }
-        return source;
+
+        return sources.get(0);
     }
 
     public static void setMapSource(TileSource source) {
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_TILE_SOURCE, source.getName());
+    	Main.pref.put(SlippyMapPreferences.PREFERENCE_TILE_SOURCE, source == NO_DEFAULT_TILE_SOURCE?NO_DEFAULT_TILE_SOURCE_NAME:source.getName());
     }
 
     public static boolean getAutozoom()
@@ -235,6 +244,12 @@ public class SlippyMapPreferences
     	Main.pref.put(SlippyMapPreferences.PREFERENCE_MIN_ZOOM_LVL, "" + minZoomLvl);
     }
 
+    public static TileSource NO_DEFAULT_TILE_SOURCE = new AbstractOsmTileSource(tr("(none)"), "") {
+		public TileUpdate getTileUpdate() {
+			return null;
+		}
+    };
+
     public static class Coastline extends OsmTileSource.AbstractOsmTileSource {
         public Coastline() {
             super("Coastline", "http://hypercube.telascience.org/tiles/1.0.0/coastline");
@@ -265,11 +280,13 @@ public class SlippyMapPreferences
             super("NearMap Australia", "http://www.nearmap.com/maps/hl=en&nml=Vert&");
         }
 
-        public int getMaxZoom() {
+        @Override
+		public int getMaxZoom() {
             return 21;
         }
 
-        public String getTilePath(int zoom, int tilex, int tiley) {
+        @Override
+		public String getTilePath(int zoom, int tilex, int tiley) {
             return "z=" + zoom + "&x=" + tilex + "&y=" + tiley;
         }
 
@@ -277,18 +294,20 @@ public class SlippyMapPreferences
             return TileUpdate.IfNoneMatch;
         }
     }
-    
+
 
     public static class HaitiImagery extends OsmTileSource.AbstractOsmTileSource {
         public HaitiImagery() {
             super("HaitiImagery", "http://gravitystorm.dev.openstreetmap.org/imagery/haiti");
         }
 
-        public int getMaxZoom() {
+        @Override
+		public int getMaxZoom() {
             return 21;
         }
 
-        public String getTilePath(int zoom, int tilex, int tiley) {
+        @Override
+		public String getTilePath(int zoom, int tilex, int tiley) {
         	return "/" + zoom + "/" + tilex + "/" + tiley + ".png";
         }
 

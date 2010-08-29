@@ -37,8 +37,6 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
@@ -56,7 +54,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Dave Hansen <dave@sr71.net>
  *
  */
-public class SlippyMapLayer extends Layer implements PreferenceChangedListener, ImageObserver,
+public class SlippyMapLayer extends Layer implements ImageObserver,
     TileLoaderListener {
     boolean debug = false;
     void out(String s)
@@ -262,13 +260,10 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
 
                     public void layerRemoved(Layer oldLayer) {
                     	MapView.removeLayerChangeListener(this);
-                        Main.pref.removePreferenceChangeListener(SlippyMapLayer.this);
                     }
                 });
             }
         });
-
-        Main.pref.addPreferenceChangeListener(this);
     }
 
     void zoomChanged()
@@ -878,8 +873,6 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
             ts.loadAllTiles(false);
         }
 
-        int fontHeight = g.getFontMetrics().getHeight();
-
         g.setColor(Color.DARK_GRAY);
 
         List<Tile> missedTiles = this.paintTileImages(g, ts, currentZoomLevel, null);
@@ -961,7 +954,6 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
         if (!ts.tooLarge())
             ts.loadAllTiles(false); // make sure there are tile objects for all tiles
         Tile clickedTile = null;
-        Point p1 = null, p2 = null;
         for (Tile t1 : ts.allTiles()) {
             Tile t2 = tempCornerTile(t1);
             Rectangle r = new Rectangle(pixelPos(t1));
@@ -1038,32 +1030,5 @@ public class SlippyMapLayer extends Layer implements PreferenceChangedListener, 
 
     private double tileXToLon(int x, int zoom) {
         return x * 45.0 / Math.pow(2.0, zoom - 3) - 180.0;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @seeorg.openstreetmap.josm.data.Preferences.PreferenceChangedListener#
-     * preferenceChanged(java.lang.String, java.lang.String)
-     */
-    public void preferenceChanged(PreferenceChangeEvent event) {
-        if (event.getKey().startsWith(SlippyMapPreferences.PREFERENCE_PREFIX)) {
-            // System.err.println(this + ".preferenceChanged('" + key + "', '"
-            // + newValue + "') called");
-            // when fade background changed, no need to clear tile storage
-            // TODO move this code to SlippyMapPreferences class.
-            if (!event.getKey().equals(SlippyMapPreferences.PREFERENCE_FADE_BACKGROUND)) {
-                autoZoomPopup.setSelected(SlippyMapPreferences.getAutozoom());
-            }
-            if (event.getKey().equals(SlippyMapPreferences.PREFERENCE_TILE_SOURCE)) {
-                newTileStorage();
-            }
-            redraw();
-        }
-    }
-
-    @Override
-    public void destroy() {
-        Main.pref.removePreferenceChangeListener(SlippyMapLayer.this);
     }
 }

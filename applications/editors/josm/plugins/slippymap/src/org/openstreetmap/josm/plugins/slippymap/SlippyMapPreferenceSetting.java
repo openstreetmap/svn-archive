@@ -2,6 +2,11 @@ package org.openstreetmap.josm.plugins.slippymap;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -10,14 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.Collection;
 
-import org.openstreetmap.gui.jmapviewer.*;
-import org.openstreetmap.gui.jmapviewer.interfaces.*;
-
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
@@ -33,20 +32,21 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
      * ComboBox with all known tile sources.
      */
     private JComboBox tileSourceCombo;
-    
+
     private JCheckBox autozoomActive = new JCheckBox(tr("autozoom"));
     private JCheckBox autoloadTiles = new JCheckBox(tr("autoload tiles"));
     private JSpinner maxZoomLvl;
     private JSpinner minZoomLvl = new JSpinner();
     private JSlider fadeBackground = new JSlider(0, 100);
-    
+
     public void addGui(PreferenceTabbedPane gui)
     {
         minZoomLvl = new JSpinner(new SpinnerNumberModel(SlippyMapPreferences.DEFAULT_MIN_ZOOM, SlippyMapPreferences.MIN_ZOOM, SlippyMapPreferences.MAX_ZOOM, 1));
         maxZoomLvl = new JSpinner(new SpinnerNumberModel(SlippyMapPreferences.DEFAULT_MAX_ZOOM, SlippyMapPreferences.MIN_ZOOM, SlippyMapPreferences.MAX_ZOOM, 1));
         //String description = tr("A plugin that adds to JOSM new layer. This layer could render external tiles.");
         JPanel slippymapTab = gui.createPreferenceTab("slippymap.png", tr("SlippyMap"), tr("Settings for the SlippyMap plugin."));
-        Collection<TileSource> allSources = SlippyMapPreferences.getAllMapSources();
+        List<TileSource> allSources = new ArrayList<TileSource>(SlippyMapPreferences.getAllMapSources());
+        allSources.add(0, SlippyMapPreferences.NO_DEFAULT_TILE_SOURCE);
         //Collection<String> allSources = SlippyMapPreferences.getAllMapNames();
         tileSourceCombo = new JComboBox(allSources.toArray());
         //tileSourceCombo.setEditable(true);
@@ -54,19 +54,19 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
         slippymapTab.add(new JLabel(tr("Tile Sources")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std());
         slippymapTab.add(tileSourceCombo, GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         slippymapTab.add(new JLabel(tr("Auto zoom: ")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         slippymapTab.add(autozoomActive, GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         slippymapTab.add(new JLabel(tr("Autoload Tiles: ")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         slippymapTab.add(autoloadTiles, GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         slippymapTab.add(new JLabel(tr("Min zoom lvl: ")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         slippymapTab.add(this.minZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         slippymapTab.add(new JLabel(tr("Max zoom lvl: ")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         slippymapTab.add(this.maxZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
@@ -74,7 +74,7 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
         slippymapTab.add(new JLabel(tr("Fade background: ")), GBC.std());
         slippymapTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         slippymapTab.add(this.fadeBackground, GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         slippymapTab.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
 
         tileSourceCombo.addActionListener(new ActionListener() {
@@ -127,7 +127,7 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
         this.minZoomLvl.setValue(SlippyMapPreferences.getMinZoomLvl());
         this.fadeBackground.setValue(Math.round(SlippyMapPreferences.getFadeBackground()*100f));
     }
-    
+
     /**
      * <p>
      * Someone pressed the "ok" button
@@ -138,7 +138,7 @@ public class SlippyMapPreferenceSetting implements PreferenceSetting {
      */
     public boolean ok()
     {
-        SlippyMapPreferences.setMapSource((TileSource)this.tileSourceCombo.getSelectedItem());
+    	SlippyMapPreferences.setMapSource((TileSource)this.tileSourceCombo.getSelectedItem());
         SlippyMapPreferences.setAutozoom(this.autozoomActive.isSelected());
         SlippyMapPreferences.setAutoloadTiles(this.autoloadTiles.isSelected());
         SlippyMapPreferences.setMaxZoomLvl((Integer)this.maxZoomLvl.getValue());

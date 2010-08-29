@@ -24,7 +24,7 @@ public class GeorefImage implements Serializable {
 
 	public enum State { IMAGE, NOT_IN_CACHE, FAILED};
 
-	private final WMSLayer layer;
+	private WMSLayer layer;
 	private State state;
 
 	private BufferedImage image;
@@ -169,6 +169,7 @@ public class GeorefImage implements Serializable {
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		state = (State) in.readObject();
 		boolean hasImage = in.readBoolean();
 		if (hasImage)
 			image = (ImageIO.read(ImageIO.createImageInputStream(in)));
@@ -179,6 +180,7 @@ public class GeorefImage implements Serializable {
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {
+		out.writeObject(state);
 		if(getImage() == null) {
 			out.writeBoolean(false);
 			out.writeObject(null);
@@ -213,5 +215,9 @@ public class GeorefImage implements Serializable {
 
 	public int getYIndex() {
 		return yIndex;
+	}
+	
+	public void setLayer(WMSLayer layer) {
+	    this.layer = layer;
 	}
 }

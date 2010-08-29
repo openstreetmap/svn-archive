@@ -639,6 +639,13 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 				images = (GeorefImage[][])ois.readObject();
 				ois.close();
 				fis.close();
+			    for (GeorefImage[] imgs : images) {
+			        for (GeorefImage img : imgs) {
+			            if (img != null) {
+					        img.setLayer(WMSLayer.this);
+			            }
+			        }
+			    }
 				settingsChanged = true;
 				mv.repaint();
 			}

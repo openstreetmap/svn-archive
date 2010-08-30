@@ -216,6 +216,9 @@ public class BuoyLat extends Buoy {
 			else
 				setStyleIndex(LAT_BEACON);
 		} else if (keys.containsKey("seamark:type")
+				&& (keys.get("seamark:type").equals("beacon_lateral"))) {
+			setStyleIndex(LAT_BEACON);
+		} else if (keys.containsKey("seamark:type")
 				&& (keys.get("seamark:type").equals("light_float"))) {
 			setStyleIndex(LAT_FLOAT);
 		}

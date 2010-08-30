@@ -65,7 +65,7 @@
 
   <Rule>
     &maxscale_zoom16;
-    <Filter>[tourism]='information' and not ([hiking]='yes' or [ski]='yes' or [board_type]='nature')</Filter>
+    <Filter>[tourism]='information'</Filter>
     <PointSymbolizer file="&symbols;/information.png"
        width="15" height="15" type="png" allow_overlap="false"/>
   </Rule>

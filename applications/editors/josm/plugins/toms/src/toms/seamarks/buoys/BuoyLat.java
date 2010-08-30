@@ -61,11 +61,17 @@ public class BuoyLat extends Buoy {
 
 		String cat = "";
 		String col = "";
+		String top = "";
 
-		if (keys.containsKey("seamark:buoy_lateral:category"))
-			cat = keys.get("seamark:buoy_lateral:category");
-		else if (keys.containsKey("seamark:beacon_lateral:category"))
-			cat = keys.get("seamark:beacon_lateral:category");
+		if (getStyleIndex() != LAT_PERCH) {
+			if (keys.containsKey("seamark:topmark:shape")) {
+				top = keys.get("seamark:topmark:shape");
+				setTopMark(true);
+			}
+			if (keys.containsKey("seamark:topmark:colour")) {
+				setTopMark(true);
+			}
+		}
 
 		if (keys.containsKey("seamark:buoy_lateral:colour"))
 			col = keys.get("seamark:buoy_lateral:colour");
@@ -74,31 +80,68 @@ public class BuoyLat extends Buoy {
 		else if (keys.containsKey("seamark:light_float:colour"))
 			col = keys.get("seamark:light_float:colour");
 
+		if (keys.containsKey("seamark:buoy_lateral:category"))
+			cat = keys.get("seamark:buoy_lateral:category");
+		else if (keys.containsKey("seamark:beacon_lateral:category"))
+			cat = keys.get("seamark:beacon_lateral:category");
+
 		if (cat.equals("")) {
 			if (col.equals("red")) {
 				setColour(RED);
-				if (getRegion() == IALA_A)
+				if (top.equals("cylinder")) {
 					setBuoyIndex(PORT_HAND);
-				else
+					setRegion(IALA_A);
+				} else if (top.equals("cone, point up")) {
 					setBuoyIndex(STARBOARD_HAND);
+					setRegion(IALA_B);
+				} else {
+					if (getRegion() == IALA_A)
+						setBuoyIndex(PORT_HAND);
+					else
+						setBuoyIndex(STARBOARD_HAND);
+				}
 			} else if (col.equals("green")) {
 				setColour(GREEN);
-				if (getRegion() == IALA_A)
+				if (top.equals("cone, point up")) {
 					setBuoyIndex(STARBOARD_HAND);
-				else
+					setRegion(IALA_A);
+				} else if (top.equals("cylinder")) {
 					setBuoyIndex(PORT_HAND);
+					setRegion(IALA_B);
+				} else {
+					if (getRegion() == IALA_A)
+						setBuoyIndex(STARBOARD_HAND);
+					else
+						setBuoyIndex(PORT_HAND);
+				}
 			} else if (col.equals("red;green;red")) {
 				setColour(RED_GREEN_RED);
-				if (getRegion() == IALA_A)
+				if (top.equals("cylinder")) {
 					setBuoyIndex(PREF_PORT_HAND);
-				else
+					setRegion(IALA_A);
+				} else if (top.equals("cone, point up")) {
 					setBuoyIndex(PREF_STARBOARD_HAND);
+					setRegion(IALA_B);
+				} else {
+					if (getRegion() == IALA_A)
+						setBuoyIndex(PREF_PORT_HAND);
+					else
+						setBuoyIndex(PREF_STARBOARD_HAND);
+				}
 			} else if (col.equals("green;red;green")) {
 				setColour(GREEN_RED_GREEN);
-				if (getRegion() == IALA_A)
+				if (top.equals("cone, point up")) {
 					setBuoyIndex(PREF_STARBOARD_HAND);
-				else
+					setRegion(IALA_A);
+				} else if (top.equals("cylinder")) {
 					setBuoyIndex(PREF_PORT_HAND);
+					setRegion(IALA_B);
+				} else {
+					if (getRegion() == IALA_A)
+						setBuoyIndex(PREF_STARBOARD_HAND);
+					else
+						setBuoyIndex(PREF_PORT_HAND);
+				}
 			}
 		} else if (cat.equals("port")) {
 
@@ -225,22 +268,15 @@ public class BuoyLat extends Buoy {
 
 		refreshStyles();
 
-		if (getStyleIndex() != LAT_PERCH) {
-			if (keys.containsKey("seamark:topmark:shape")
-					|| keys.containsKey("seamark:topmark:colour")) {
-				setTopMark(true);
-			}
+		if (keys.containsKey("seamark:light:colour")) {
+			setLightColour(keys.get("seamark:light:colour"));
+			setFired(true);
+		}
 
-			if (keys.containsKey("seamark:light:colour")) {
-				setLightColour(keys.get("seamark:light:colour"));
-				setFired(true);
-			}
-
-			if (keys.containsKey("seamark:light:character")) {
-				setLightGroup(keys);
-				setLightChar(keys.get("seamark:light:character"));
-				setLightPeriod(keys);
-			}
+		if (keys.containsKey("seamark:light:character")) {
+			setLightGroup(keys);
+			setLightChar(keys.get("seamark:light:character"));
+			setLightPeriod(keys);
 		}
 	}
 
@@ -543,9 +579,11 @@ public class BuoyLat extends Buoy {
 
 			if (isFired())
 				if (getLightColour().equals("R"))
-					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_Red_240.png")));
+					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_Red_240.png")));
 				else
-					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_240.png")));
+					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_Green_240.png")));
 			if (getLightChar() != "") {
 				String c;
 

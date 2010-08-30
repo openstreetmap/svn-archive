@@ -36,6 +36,7 @@ public class BuoyCard extends Buoy {
 		dlg.cM01TopMark.setSelected(false);
 		dlg.tbM01Region.setEnabled(false);
 
+		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 		if (keys.containsKey("name"))
 			setName(keys.get("name"));
 
@@ -186,6 +187,7 @@ public class BuoyCard extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
+		dlg.lM01Icon02.setIcon(null);
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
@@ -238,9 +240,12 @@ public class BuoyCard extends Buoy {
 			return;
 		}
 
-		if (!image.equals("")) {
+		if (!image.equals("/images/Cardinal")) {
+			image += ".png";
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
+			
 			if (isFired()) {
-				image += "_Lit";
+				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_240.png")));
 
 				if (getLightChar() != "") {
 					String tmp = null;
@@ -265,9 +270,6 @@ public class BuoyCard extends Buoy {
 				}
 			}
 
-			image += ".png";
-
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 		} else
 			dlg.lM01Icon01.setIcon(null);
 	}

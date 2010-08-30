@@ -300,6 +300,7 @@ public class BuoyLat extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
+		dlg.lM01Icon02.setIcon(null);
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
@@ -534,9 +535,14 @@ public class BuoyLat extends Buoy {
 				else
 					image += "_Cone";
 			}
+			image += ".png";
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 
 			if (isFired())
-				image += "_Lit";
+				if (getLightColour().equals("R"))
+					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_Red_240.png")));
+				else
+					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_240.png")));
 			if (getLightChar() != "") {
 				String c;
 
@@ -549,9 +555,6 @@ public class BuoyLat extends Buoy {
 					c = "";
 			}
 
-			image += ".png";
-
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 		} else
 			dlg.lM01Icon01.setIcon(null);
 	}

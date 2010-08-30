@@ -113,6 +113,7 @@ public class SmpDialogAction extends JosmAction {
 	private JLabel lM01Region = null;
 	private JLabel lM01Head = null;
 	public JLabel lM01Icon01 = null;
+	public JLabel lM01Icon02 = null;
 	public JToggleButton tbM01Region = null;
 	public JComboBox cbM01TypeOfMark = null;
 	public JComboBox cbM01StyleOfMark = null;
@@ -514,6 +515,11 @@ public class SmpDialogAction extends JosmAction {
 			lM01Icon01.setIcon(null);
 			lM01Icon01.setText("");
 
+			lM01Icon02 = new JLabel();
+			lM01Icon02.setBounds(new Rectangle(225, 0, 160, 200));
+			lM01Icon02.setIcon(null);
+			lM01Icon02.setText("");
+
 			pM01SeaMap = new JPanel();
 			pM01SeaMap.setLayout(null);
 			pM01SeaMap.add(lM01TimeUnit, null);
@@ -526,6 +532,7 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(lM01Region, null);
 			pM01SeaMap.add(lM01Head, null);
 			pM01SeaMap.add(lM01Icon01, null);
+			pM01SeaMap.add(lM01Icon02, null);
 			pM01SeaMap.add(getTbM01Region(), null);
 			pM01SeaMap.add(getCbM01TypeOfMark(), null);
 			pM01SeaMap.add(getCbM01StyleOfMark(), null);
@@ -666,6 +673,7 @@ public class SmpDialogAction extends JosmAction {
 						buoy.setRegion(false);
 						tbM01Region.setText("IALA-A");
 					}
+					buoy.paintSign();
 				}
 			});
 		}

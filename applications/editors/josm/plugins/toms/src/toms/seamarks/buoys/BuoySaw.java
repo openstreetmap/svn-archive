@@ -45,6 +45,7 @@ public class BuoySaw extends Buoy {
 		setColour(SeaMark.RED_WHITE);
 		setLightColour("W");
 		setBuoyIndex(SAFE_WATER);
+		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
 		if (keys.containsKey("name"))
 			setName(keys.get("name"));
@@ -104,6 +105,7 @@ public class BuoySaw extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
+		dlg.lM01Icon02.setIcon(null);
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
@@ -132,12 +134,14 @@ public class BuoySaw extends Buoy {
 		}
 
 		if (!image.equals("/images/Safe_Water")) {
+			image += ".png";
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 
 			if (hasTopMark())
 				image += "_Sphere";
 
 			if (isFired()) {
-				image += "_Lit";
+				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_240.png")));
 				if (getLightChar() != "") {
 					String c;
 
@@ -148,9 +152,6 @@ public class BuoySaw extends Buoy {
 						c = "";
 				}
 			}
-			image += ".png";
-
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 		} else
 			dlg.lM01Icon01.setIcon(null);
 	}

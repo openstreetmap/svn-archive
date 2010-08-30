@@ -3,6 +3,7 @@
 
 package toms.seamarks.buoys;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 
 import toms.dialogs.SmpDialogAction;
@@ -30,13 +31,14 @@ public class BuoyUkn extends Buoy {
 		setFired(false);
 		setValid(false);
 		setBuoyIndex(0);
+		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 	}
 
 	public void paintSign() {
 		super.paintSign();
 
-		if (dlg.lM01Icon01 != null)
-			dlg.lM01Icon01.setIcon(null);
+		dlg.lM01Icon01.setIcon(null);
+		dlg.lM01Icon02.setIcon(null);
 		if (getErrMsg() != null)
 			dlg.sM01StatusBar.setText(getErrMsg());
 

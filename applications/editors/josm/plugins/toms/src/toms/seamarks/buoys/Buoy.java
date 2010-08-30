@@ -271,6 +271,7 @@ abstract public class Buoy extends SeaMark {
 		dlg.bM01Save.setEnabled(true);
 
 		dlg.lM01Icon01.setIcon(null);
+		dlg.lM01Icon02.setIcon(null);
 	}
 
 	public void saveSign(String type) {

@@ -44,6 +44,7 @@ public class BuoyIsol extends Buoy {
 		setLightColour("W");
 		setBuoyIndex(ISOLATED_DANGER);
 		setTopMark(true);
+		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
 		if (keys.containsKey("name"))
 			setName(keys.get("name"));
@@ -106,6 +107,7 @@ public class BuoyIsol extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
+		dlg.lM01Icon02.setIcon(null);
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
@@ -134,8 +136,10 @@ public class BuoyIsol extends Buoy {
 		}
 
 		if (!image.equals("/images/Cardinal")) {
+			image += ".png";
+			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 			if (isFired()) {
-				image += "_Lit";
+				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_240.png")));
 				if (getLightChar() != "") {
 					String c;
 
@@ -145,8 +149,6 @@ public class BuoyIsol extends Buoy {
 					dlg.cbM01Kennung.setSelectedItem(c);
 				}
 			}
-			image += ".png";
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 		} else
 			dlg.lM01Icon01.setIcon(null);
 	}

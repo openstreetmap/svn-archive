@@ -26,14 +26,8 @@
   </Rule>
   <Rule>
     &maxscale_zoom14;
-    <Filter>[sport]='shooting' and not ([type]='clay_pigeon')</Filter>
+    <Filter>[sport]='shooting'</Filter>
     <PointSymbolizer file="&symbols;/shootingrange.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
-  </Rule>
-  <Rule>
-    &maxscale_zoom14;
-    <Filter>[sport]='shooting' and [type]='clay_pigeon'</Filter>
-    <PointSymbolizer file="&symbols;/skeet.png"
        width="15" height="15" type="png" allow_overlap="false"/>
   </Rule>
   <Rule>

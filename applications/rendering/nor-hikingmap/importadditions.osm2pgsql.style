@@ -26,8 +26,8 @@ node,way   affiliation        text    linear
 
 # Additional POI properties
 #
-node,way   site_type          text    linear
-node,way   fortification_type text    linear
+#node,way   site_type          text    linear
+#node,way   fortification_type text    linear
 node,way   type               text    linear  # sport=shooting
 node       atm                text    linear
 

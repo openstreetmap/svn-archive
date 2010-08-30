@@ -10,6 +10,9 @@ Specification (PDF):
 http://www.statkart.no/?module=Files;action=File.getFile;ID=37612
 
 
+Presented at http://www.openstreetmap.no/
+
+
 Buildings and surfaces change color at 1:7000 (zoom 16)
 Roads get casing from 1:3000 (zoom 17)
 
@@ -17,12 +20,9 @@ Roads get casing from 1:3000 (zoom 17)
 Todo
 ====
 
-nationalpark border is solid,
-administrative grenser,
 symboler,
 tekst,
 kraftlinjer, stup, myr,
-building=*
 
 
 Contributors

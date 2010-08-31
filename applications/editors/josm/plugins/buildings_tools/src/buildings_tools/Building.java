@@ -247,7 +247,7 @@ class Building {
 			w.addNode(nodes[1]);
 		}
 		w.addNode(nodes[0]);
-		w.put("building", ToolSettings.getTag());
+		w.setKeys(ToolSettings.getTags());
 		Collection<Command> cmds = new LinkedList<Command>();
 		for (int i = 0; i < 4; i++) {
 			if (created[i])

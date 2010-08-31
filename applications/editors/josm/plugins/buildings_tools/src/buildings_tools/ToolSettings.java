@@ -1,13 +1,20 @@
 package buildings_tools;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.openstreetmap.josm.Main;
 
 public class ToolSettings {
 	private static double width = 0;
 	private static double lenstep = 0;
 	private static boolean useAddr;
-	private static String tag = "yes";
+	private static final Map<String, String> tags = new HashMap<String, String>();
 	private static boolean autoSelect;
+
+	static {
+		tags.put("building", "yes");
+	}
 
 	public static void setAddrDialog(boolean _useAddr) {
 		useAddr = _useAddr;
@@ -30,12 +37,8 @@ public class ToolSettings {
 		return useAddr;
 	}
 
-	public static void setTag(String newtag) {
-		tag = newtag;
-	}
-
-	public static String getTag() {
-		return tag;
+	public static Map<String, String> getTags() {
+		return tags;
 	}
 
 	public static void setBBMode(boolean bbmode) {

@@ -41,7 +41,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
 public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWTEventListener, SelectionChangedListener {
-	enum Mode {
+	private enum Mode {
 		None, Drawing, DrawingWidth, DrawingAngFix
 	}
 
@@ -64,8 +64,8 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 	public DrawBuildingAction(MapFrame mapFrame) {
 		super(tr("Draw buildings"), "building", tr("Draw buildings"),
 				Shortcut.registerShortcut("mapmode:buildings",
-				tr("Mode: {0}", tr("Draw buildings")),
-				KeyEvent.VK_W, Shortcut.GROUP_EDIT),
+						tr("Mode: {0}", tr("Draw buildings")),
+						KeyEvent.VK_W, Shortcut.GROUP_EDIT),
 				mapFrame, getCursor());
 
 		cursorCrosshair = getCursor();
@@ -133,7 +133,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 		Main.map.mapView.addMouseListener(this);
 		Main.map.mapView.addMouseMotionListener(this);
 		Main.map.mapView.addTemporaryLayer(this);
-		DataSet.selListeners.add(this);
+		DataSet.addSelectionListener(this);
 		updateSnap(getCurrentDataSet().getSelected());
 		try {
 			Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
@@ -147,7 +147,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 		Main.map.mapView.removeMouseListener(this);
 		Main.map.mapView.removeMouseMotionListener(this);
 		Main.map.mapView.removeTemporaryLayer(this);
-		DataSet.selListeners.remove(this);
+		DataSet.removeSelectionListener(this);
 		try {
 			Toolkit.getDefaultToolkit().removeAWTEventListener(this);
 		} catch (SecurityException ex) {

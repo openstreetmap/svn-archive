@@ -174,7 +174,8 @@ public class SmpDialogAction extends JosmAction {
 			if (!str.equals("")) str += new String(new char[] {0x1e});
 			Main.pref.put("mappaint.style.sources", str + "http://dev.openseamap.org/josm/seamark_styles.xml");
 		}
-		if (Main.pref.get("color.background").equals("#000000"))
+		str = Main.pref.get("color.background");
+		if (str.equals("#000000") || str.equals(""))
 			Main.pref.put("color.background", "#606060");
 	}
 

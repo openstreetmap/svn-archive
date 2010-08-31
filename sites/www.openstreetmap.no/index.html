@@ -43,10 +43,54 @@ function init() {
     displayProjection: epsg4326
   });
 
+  // Tiles kan kun benyttes etter avtale
+  layerScreenspec = new OpenLayers.Layer.XYZ(
+    "Skjermkartografi (beta)",
+    ["http://a.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
+     "http://b.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
+     "http://c.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png",
+     "http://d.tile.tusvik.no/tiles/screenspec/${z}/${x}/${y}.png"],
+    {transitionEffect:"resize",
+     numZoomLevels: 19, maxZoomLevel: 18,
+     attribution:
+      'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
+      'Kartografi: <a href="http://www.statkart.no/Skjermkartografi.d25-SwJjM0n.ips">Statens Kartverk</a>, ' +
+      'Driftet av Safe Computing AS'});
+
+  // Tiles kan kun benyttes etter avtale
+  layerHiking = new OpenLayers.Layer.XYZ(
+    "Turstier (beta)",
+    ["http://a.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
+     "http://b.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
+     "http://c.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png",
+     "http://d.tile.tusvik.no/tiles/hiking/${z}/${x}/${y}.png"],
+    {transitionEffect:"resize",
+     numZoomLevels: 19, maxZoomLevel: 18,
+     attribution:
+      'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
+      'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>, ' +
+      'Driftet av Safe Computing AS'});
+
+  // Tiles kan kun benyttes etter avtale
+  layerSkiing = new OpenLayers.Layer.XYZ(
+    "Skiløyper (beta)",
+    ["http://a.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
+     "http://b.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
+     "http://c.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png",
+     "http://d.tile.tusvik.no/tiles/skiing/${z}/${x}/${y}.png"],
+    {transitionEffect:"resize",
+     numZoomLevels: 19, maxZoomLevel: 18,
+     attribution:
+      'Kartdata: <a href="http://wiki.openstreetmap.org/">OpenStreetMap</a>, ' +
+      'Symboler: <a href="http://www.statkart.no/filestore/Standardisering/docs/symbol.pdf">ISBN 82-90408-52-8</a>, ' +
+      'Driftet av Safe Computing AS'});
+
   layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Vanlig: Mapnik");
   layerTilesAtHome = new OpenLayers.Layer.OSM.Osmarender("Detaljert: Osmarender");
   layerCycle = new OpenLayers.Layer.OSM.CycleMap("Sykkelruter");
+
   map.addLayers([layerMapnik, layerTilesAtHome, layerCycle]);
+  map.addLayers([layerScreenspec, layerHiking, layerSkiing]);
 
   var lonLat = new OpenLayers.LonLat(lon, lat).transform(
     epsg4326, map.getProjectionObject());

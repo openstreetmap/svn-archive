@@ -296,6 +296,25 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 
 	/**
 	 *
+	 * @return Size of image in original zoom
+	 */
+	public int getBaseImageWidth() {
+		int overlap = (WMSPlugin.PROP_OVERLAP.get()?WMSPlugin.PROP_OVERLAP_EAST.get() * imageSize / 100:0);
+		return imageSize + overlap;
+	}
+
+	/**
+	 *
+	 * @return Size of image in original zoom
+	 */
+	public int getBaseImageHeight() {
+		int overlap = (WMSPlugin.PROP_OVERLAP.get()?WMSPlugin.PROP_OVERLAP_NORTH.get() * imageSize / 100:0);
+		return imageSize + overlap;
+	}
+
+
+	/**
+	 *
 	 * @param xIndex
 	 * @param yIndex
 	 * @return Real EastNorth of given tile. dx/dy is not counted in

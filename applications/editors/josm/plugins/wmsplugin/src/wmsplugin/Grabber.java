@@ -51,10 +51,10 @@ abstract public class Grabber implements Runnable {
 	abstract void fetch(WMSRequest request) throws Exception; // the image fetch code
 
 	int width(){
-		return layer.getImageWidth(request.getXIndex());
+		return layer.getBaseImageWidth();
 	}
 	int height(){
-		return layer.getImageHeight(request.getYIndex());
+		return layer.getBaseImageHeight();
 	}
 
 	@Override

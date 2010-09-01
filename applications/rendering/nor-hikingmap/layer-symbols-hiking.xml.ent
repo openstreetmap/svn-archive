@@ -41,7 +41,7 @@
   <Rule>
     &maxscale_zoom14;
     &minscale_zoom16;
-    <Filter>[natural]='peak'</Filter>
+    <Filter>[natural]='peak' or [man_made]='survey_point'</Filter>
     <PointSymbolizer file="&symbols;/peak.png"
        width="6" height="6" type="png"/>
   </Rule>
@@ -217,7 +217,7 @@
     <Parameter name="table">
     (select *
      from &prefix;_point
-     where man_made in ('cairn','tower','mast','lighthouse','power_wind','windmill')
+     where man_made in ('cairn','tower','mast','survey_point','lighthouse','power_wind','windmill')
         or amenity in ('shelter','cafe','bbq','place_of_worship','parking','bus_station','hunting_stand')
         or historic in ('monument','memorial','ruins','archaeological_site','yes')
         or tourism in ('viewpoint','information','cabin','guest_house','alpine_hut','hostel','hotel','lean_to','picnic_site','basic_hut','wilderness_hut')

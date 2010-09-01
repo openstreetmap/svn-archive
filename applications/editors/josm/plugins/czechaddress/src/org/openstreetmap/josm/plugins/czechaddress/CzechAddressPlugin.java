@@ -49,6 +49,7 @@ import org.openstreetmap.josm.plugins.czechaddress.parser.MvcrParser;
  * Plugin for handling address nodes within the Czech Republic.
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
+ * @author Libor Pechacek, lpechacek@gmx.com
  */
 public class CzechAddressPlugin extends Plugin implements StatusListener {
 
@@ -149,9 +150,12 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             for (Street street : location.getAllStreets())
                 reasoner.update(street);
 
-            for (OsmPrimitive prim : Main.main.getCurrentDataSet().allPrimitives()) {
-                if (House.isMatchable(prim) || Street.isMatchable(prim))
-                    reasoner.update(prim);
+            org.openstreetmap.josm.data.osm.DataSet dataSet = Main.main.getCurrentDataSet();
+            if (dataSet != null) {
+                for (OsmPrimitive prim : dataSet.allPrimitives()) {
+                    if (House.isMatchable(prim) || Street.isMatchable(prim))
+                        reasoner.update(prim);
+                }
             }
             reasoner.closeTransaction();
         }

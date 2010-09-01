@@ -31,6 +31,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * automatic street renaming.</p>
  *
  * @author Radomír Černoch radomir.cernoch@gmail.com
+ * @author Libor Pechacek, lpechacek@gmx.com
  */
 public class ManagerDialog extends ExtendedDialog {
 
@@ -45,19 +46,21 @@ public class ManagerDialog extends ExtendedDialog {
 
         dbEditButton.setIcon(ImageProvider.get("actions", "edit.png"));
 
-        Capitalizator cap = new Capitalizator(
-                                Main.main.getCurrentDataSet().allPrimitives(),
-                                CzechAddressPlugin.getLocation().getStreets());
+        org.openstreetmap.josm.data.osm.DataSet dataSet = Main.main.getCurrentDataSet();
+        if (dataSet != null) {
+            Capitalizator cap = new Capitalizator(dataSet.allPrimitives(),
+                                    CzechAddressPlugin.getLocation().getStreets());
 
-        for (Street capStreet : cap.getCapitalised()) {
-            assert cap.translate(capStreet).get("name") != null : capStreet;
+            for (Street capStreet : cap.getCapitalised()) {
+                assert cap.translate(capStreet).get("name") != null : capStreet;
 
-            String elemName = capStreet.getName();
-            String primName = cap.translate(capStreet).get("name");
+                String elemName = capStreet.getName();
+                String primName = cap.translate(capStreet).get("name");
 
-            if (!elemName.equals(primName)) {
-                streetModel.elems.add(capStreet);
-                streetModel.names.add(primName);
+                if (!elemName.equals(primName)) {
+                    streetModel.elems.add(capStreet);
+                    streetModel.names.add(primName);
+                }
             }
         }
 

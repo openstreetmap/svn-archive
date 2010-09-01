@@ -86,7 +86,10 @@ public class LocationSelector extends ExtendedDialog {
         double bestLen = 0;
 
         BoundingXYVisitor visitor = new BoundingXYVisitor();
-        for (OsmPrimitive op : Main.main.getCurrentDataSet().allPrimitives()) {
+        org.openstreetmap.josm.data.osm.DataSet dataSet = Main.main.getCurrentDataSet();
+        if (dataSet == null) return;
+
+        for (OsmPrimitive op : dataSet.allPrimitives()) {
             if (op instanceof Node) {
                 ((Node) op).visit(visitor);
             } else if (op instanceof Way) {

@@ -1,6 +1,6 @@
 // Cascadenik inspired reformulation of http://www.statkart.no/Skjermkartografi.d25-SwJjM0n.ips
 // Kartlagsnavn; maxscale; minscale; Tykkelse/Fontstørrelse (mm); Stipling (mm); Beskrivelse/ merknad
-Gateadresse [zoom>=18] { text-fill: black; text-size: 4; font-weight:bold; } // (Husnr og bokstav symbolisesres)
+Gateadresse [addr:housenumber=*][zoom>=18] { text-fill: black; text-size: 4; font-weight:bold; } // (Husnr og bokstav symbolisesres)
 Dam [zoom>=16] { line-color: #828282; }
 Flytebrygge [zoom>=16] { line-color: #828282; }
 Frittstående trapp [zoom>=16] { line-color: #E1E1E1; }
@@ -21,7 +21,7 @@ Kai og bryggekant [zoom>=16] { line-color: black; line-width: 0.01; }
 Pipekant [zoom>=16] { line-color: black; line-width: 0.01; }
 Rørgate [zoom>=16] { line-color: black; line-width: 0.1/0.02; }
 Silokant [zoom>=16] { line-color: black; line-width: 0.01; }
-Skitrekk [zoom>=16] { line-color: #C31E28; line-width: 0.03; }
+Skitrekk [zoom>=16] { line-pattern-file: url; line-color: #C31E28; line-width: 0.03; }
 Skytebaneinnretning [zoom>=16] { line-color: black; line-width: 0.01; }
 Steingjerde [zoom>=16] { line-color: black; line-width: 0.01; }
 Svømmebassengkant [zoom>=16] { line-color: black; line-width: 0.01; }
@@ -65,11 +65,11 @@ Fritidsbolig [zoom>=16] { line-color: #C48723; line-width: 0.25(2,5); }
 Garasje og uthus [zoom>=16] { line-color: #C48723; line-width: 0.25(2,5); }
 Udefinert [zoom>=16] { line-color: #C48723; line-width: 0.25(2,5); }
 Annen næring [zoom>=16] { line-color: #73A3D4; line-width: 0.25(2,5); }
-Matrikkelnummer(Gnr/Bnr) [zoom>=18] { line-color: #C8;0;14; line-width: 2; }
+Matrikkelnummer (Gnr/Bnr) [zoom>=18] { text-fill: #C80014; text-size: 2; }
 Teiggrense [zoom>=17] { line-color: #FF;0;0; line-width: 0.005(0,1); }
 Teiggrense generert [zoom>=17] { line-color: #FF;0;0; line-width: 0.005(0,1); line-dasharray: 0.6,0.6; }
 Teiggrense fiktiv [zoom>=17] { line-color: #FF;0;0; line-width: 0.005(0,1); line-dasharray: 0.3,0.7; }
-Teiggrensepunkt [zoom>=18] { line-color: #FF;0;0; line-width: 0.03; }
+Teiggrensepunkt [zoom>=18] { point-file: url; point-fill: #FF0000; line-width: 0.03; }
 Bruddlinje [zoom>=18] { line-color: #C88546; line-width: 0.01(0,1); }
 Forsenkningskurve [zoom>=18] { line-color: #C88546; line-width: 0.01(0,1); }
 Fyllingskant [zoom>=18] { line-color: #C88546; line-width: 0.01(0,1); }
@@ -90,8 +90,8 @@ Mast for telekommunikasjon, grunnriss [zoom>=16] { line-color: black; line-width
 Nettstasjon grunnriss [zoom>=16] { line-color: black; line-width: 0.01(0,1); }
 Rullebanegrense [zoom>=15] { line-color: black; line-width: 0.01(0,1); }
 Bebygd område [zoom>=15] { line-color: #FFDCBE; }
-Myr [natural=wetland][zoom>=15] { line-color: #2E5E9E; }
-Myr med skog [zoom>=15] { line-color: #2E5E9E; }
+Myr [natural=wetland][zoom>=15] { polygon-pattern-file: url; line-color: #2E5E9E; }
+Myr med skog [natural=wetland][zoom>=15] { polygon-pattern-file: url; line-color: #2E5E9E; }
 Dyrka mark [zoom>=15] { polygon-fill: #FFF7A3; }
 Skog [natural=wood][zoom>=15] { polygon-fill: #D2E67C; }
 Ur, steinrøys og grustak [zoom>=15] { polygon-fill: #D7D7D7; }
@@ -122,8 +122,8 @@ Innsjøkant regulert [zoom>=15] { line-color: #00A6FF; line-width: 0.01(0,1); }
 Kanal- og grøftekant [zoom>=15] { line-color: #00A6FF; line-width: 0.01(0,1); }
 Kanal og grøft [zoom>=15] { line-color: #00A6FF; line-width: 0.015(0,1); }
 Kystkontur [zoom>=15] { line-color: #00A6FF; line-width: 0.01(0,1); }
-Fyr [zoom>=16] { text-fill: black; ??: 0.2(2,0); } // 3 fonter danner symbolet
-Lykt [zoom>=16] { text-fill: black; ??: 0.25(2,5); } // 3 fonter danner symbolet
+Fyr [zoom>=16] { point-file: url; ??: 0.2(2,0); } // 3 fonter danner symbolet
+Lykt [zoom>=16] { point-fill: url; ??: 0.25(2,5); } // 3 fonter danner symbolet
 Gang- og sykkelveg [zoom>=16] { line-color: #E1E1E1; }
 Veg [zoom>=16] { line-color: #B2B2B2; }
 Gang- og sykkelveg, undergang [zoom>=16] { line-color: #F5F5F5; }
@@ -134,7 +134,7 @@ Veg på bru [zoom>=16] { line-color: #B2B2B2; }
 Fortauskant ytre [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Gang- og sykkelvegkant [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Kulvert [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
-Lysløype [zoom>=17] { line-color: #C31E28; line-width: 0.03(0,1)/0.05(0,15); line-dasharray: 0.4/heltrukken;0.2/heltrukken; } //Rød stiplet linje på heltrukken gul linje
+Lysløype [zoom>=17] { inline-color: #C31E28; inline-width: 0.03; inline-dasharray: 0.4;0.2; line-color: #FAEB00; line-width: 0.05; } //Rød stiplet linje på heltrukken gul linje
 Parkeringsområdeavgrensning [zoom>=17] { line-color: #686868; line-width: 0.005(0,1); }
 Sti [zoom>=17] { line-color: #C31E28; line-width: 0.03(0,1); }
 Merket sti [zoom>=17] { line-color: #C31E28; line-width: 0.04(0,1); }
@@ -147,7 +147,7 @@ Annet vegareal avgrensning [zoom>=17] { line-color: black; line-width: 0.005(0,1
 Vegkantavkjørsel [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Trafikkøykant [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Vegsperring [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
-Lysløype [zoom>=16][zoom<=17] { line-color: #FA;EB;0; line-width: 0.03(0,1)/0.05(0,15); line-dasharray: 0.4/heltrukken;0.2/heltrukken; } //Rød stiplet/heltrukken gul
+Lysløype [zoom>=16][zoom<=17] { inline-color: #C31E28; inline-width: 0.03; inline-dasharray: 0.4;0.2; line-color: #FAEB00; line-width: 0.05; } //Rød stiplet/heltrukken gul
 Sti [zoom>=16][zoom<=17] { line-color: #C31E28; line-width: 0.03(0,1); line-dasharray: 0.4,0.2; }
 Merket sti [zoom>=16][zoom<=17] { line-color: #C31E28; line-width: 0.04(0,1); line-dasharray: 0.6,0.3; }
 Traktorveg midtlinje [zoom>=16][zoom<=17] { line-color: #9C9C9C; line-width: 0.08(0,1); line-dasharray: 1,0.4; }
@@ -179,7 +179,7 @@ Fylkesgrense [zoom>=13][zoom<=15] { line-color: #B487FF; line-width: 0.9; line-d
 Kommunegrense [zoom>=13][zoom<=15] { line-color: #B487FF; line-width: 0.7; line-dasharray: 5,3; }
 Riksgrense [zoom>=13][zoom<=15] { line-color: #BE5ABE; line-width: 1.1; line-dasharray: 10,5; }
 Grunnlinje [zoom>=13][zoom<=15] { line-color: #D2733C; line-width: 0.2; line-dasharray: 6,3; }
-Territorialgrense [zoom>=13][zoom<=15] { line-color: #BE5ABE; line-width: 0.35; line-dasharray: 5/1/1,1; } //En lang og to korte streker med 1 pkt mellomrom
+Territorialgrense [zoom>=13][zoom<=15] { line-color: #BE5ABE; line-width: 0.35; line-dasharray: 5,1,1,1; } //En lang og to korte streker med 1 pkt mellomrom
 Grunnlinjepunkt [zoom>=15][zoom<=16] { line-color: black; line-width: 0.6; }
 Riksgrensemerke [zoom>=15][zoom<=16] { line-color: black; line-width: 0.6; }
 Riksgrenserøys [zoom>=15][zoom<=16] { line-color: black; line-width: 1.2; }
@@ -190,7 +190,7 @@ Hoppakke [zoom>=15][zoom<=16] { line-color: black; } // 3 fonter danner symbolet
 Kai og brygge [zoom>=15][zoom<=16] { line-color: black; line-width: 0.05(0,1); }
 Kraftspenn [zoom>=15][zoom<=16] { line-color: black; line-width: 0.05(0,1); }
 Luftledning, lav- og høyspent [zoom>=15][zoom<=16] { line-color: black; line-width: 0.05(0,1); }
-Lysløype [zoom>=15][zoom<=16] { line-color: #FCFAB3; } // Rød stipling på heltrukken gul
+Lysløype [zoom>=15][zoom<=16] { inline-color: red; inline-width: 0.03; inline-dasharray: 0.4;0.2; line-color: #FCFAB3; line-width: 0.05; } // Rød stipling på heltrukken gul
 Molo [zoom>=15][zoom<=16] { line-color: black; }
 Rørgate [zoom>=15][zoom<=16] { line-color: black; }
 Skitrekk [zoom>=15][zoom<=16] { line-color: #FF;0;0; }
@@ -204,7 +204,7 @@ Hoppbakke [zoom>=13][zoom<=15] { line-color: black; } // 3 fonter danner symbole
 Kai og brygge [zoom>=13][zoom<=15] { line-color: black; }
 Kraftspenn [zoom>=13][zoom<=15] { line-color: black; }
 Luftledning, lav- og høyspent [zoom>=13][zoom<=15] { line-color: black; }
-Lysløype [zoom>=13][zoom<=15] { line-color: #FCFAB3; }
+Lysløype [zoom>=13][zoom<=15] { inline-color: red; inline-width: 0.03; inline-dasharray: 0.4;0.2; line-color: #FCFAB3; line-width: 0.05; }
 Molo [zoom>=13][zoom<=15] { line-color: black; }
 Rørgate [zoom>=13][zoom<=15] { line-color: black; }
 Skitrekk [zoom>=13][zoom<=15] { line-color: #FF;0;0; }
@@ -222,7 +222,7 @@ Umerket sti [zoom>=13][zoom<=15] { line-color: #C31E28; line-width: 0.15; line-d
 Merket sti [zoom>=13][zoom<=15] { line-color: #C31E28; line-width: 0.18; line-dasharray: 2.1,1.4; }
 Traktorveg, gang- og sykkelveg [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.25/0.25; line-dasharray: 2.1,1.4; } //Grå stiplet linje på heltrukken hvit linje
 Vannflate [zoom>=13][zoom<=15] { line-color: #E0FFFF; }
-Myr [natural=wetland][zoom>=13][zoom<=15] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 0,5 mm
+Myr [natural=wetland][zoom>=13][zoom<=15] { polygon-pattern-file: url; line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 0,5 mm
 Snø og isbre [natural=glacier][zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
 Skog [natural=wood][zoom>=13][zoom<=15] { line-color: #D2E67C; }
 Dyrket mark [zoom>=13][zoom<=15] { line-color: #FFF7A3; }
@@ -239,19 +239,19 @@ Jernbane i tunnel [zoom>=13][zoom<=15] { line-color: #7F7F7F; line-width: 0.31; 
 Jernbane på bru [zoom>=13][zoom<=15] { line-color: #7F7F7F; line-width: 0.2; outline-color: black; outline-width: 0.4; } // Grå linje på svart linje
 Jernbane på bru [zoom>=15][zoom<=16] { line-color: #7F7F7F; line-width: 0.07; outline-color: black; outline-width: 0.14; } // Grå linje på svart linje
 Bilferjestrekning [zoom>=13][zoom<=15] { line-color: #C21F29; line-width: 0.15; line-dasharray: 5,4; }
-Europa- og riksveg, motorveg klasse A [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.15/0.85; } // Gul linje på rød linje
+Europa- og riksveg, motorveg klasse A [highway=motorway][zoom>=13][zoom<=15] { inline-color: #D12429; inline-width: 0.15; line-color: red; line-width: 0.85; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=13][zoom<=15] { line-color: #D2232A; line-width: 0.55; }
 Fylkesveg [zoom>=13][zoom<=15] { line-color: #D2232A; line-width: 0.45; }
 Kommunal veg [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.35; }
 Privat vei [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.25; }
 Veg under anlegg [zoom>=13][zoom<=15] { line-color: #686868; line-width: 0.20/0.40; line-dasharray: 4,2; } //Hvite heltrukne linjer på grå heltrukken linje
-Europa- og riksveg i tunnel, motorveg klasse A [zoom>=13][zoom<=15] { line-color: #FF6666; line-width: 0.15/0.85; line-dasharray: 7,2.5; } //Gul stiplet linje på rød stiplet linje
+Europa- og riksveg i tunnel, motorveg klasse A [highway=motorway][tunnel=yes][zoom>=13][zoom<=15] { inline-color: #FF6666; inline-width: 0.15; inline-dasharray: 7,2.5; line-color: red; line-width: 0.85; } //Gul stiplet linje på rød stiplet linje
 Europa- og riksveg i tunnel [zoom>=13][zoom<=15] { line-color: #FF6666; line-width: 0.55; line-dasharray: 5.5,2.5; }
 Fylkesveg i tunnel [zoom>=13][zoom<=15] { line-color: #FF6666; line-width: 0.45; line-dasharray: 5.5,2.5; }
 Kommunal veg i tunnel [zoom>=13][zoom<=15] { line-color: #C8C8C8; line-width: 0.4; line-dasharray: 4.25,0.5; }
 Privat veg i tunnel [zoom>=13][zoom<=15] { line-color: black; line-width: 0.1; line-dasharray: 4.75,1.75; } //2 linjer med ulik forskyvning (-0.2 og 0.2)
 Veg under anlegg [zoom>=13][zoom<=15] { line-color: #686868; line-width: 0.20/0.40; line-dasharray: 4,2; } //Hvit stiplet linje på grå stiplet linje
-Europa- og riksveg på bru, motorveg klasse A [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.15/0.55/0.85; } // Gul linje på rød linje på svart linje
+Europa- og riksveg på bru, motorveg klasse A [highway=motorway][bridge=yes][zoom>=13][zoom<=15] { inline-color: #D12429; inline-width: 0.15; line-color: red; line-width: 0.55; outline-color: black; outline-width: 0.85; } // Gul linje på rød linje på svart linje
 Europa- og riksveg på bru [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.35; outline-color: black; outline-width: 0.55; } // Rød linje på svart linje
 Fylkesveg på bru [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.25; outline-color: black; outline-width: 0.45; } // Rød linje på svart linje
 Kommunal veg på bru [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.20; outline-color: black; outline-width: 0.45; } // Grå linje på svart linje
@@ -358,7 +358,7 @@ Fylkesgrense [zoom>=11][zoom<=14] { line-color: #B487FF; line-width: 1.5; line-d
 Kommunegrense [zoom>=11][zoom<=14] { line-color: #B487FF; line-width: 1.4; line-dasharray: 10,6; }
 Riksgrense [zoom>=11][zoom<=14] { line-color: #BE5ABE; line-width: 2; line-dasharray: 20,10; }
 Grunnlinje [zoom>=11][zoom<=14] { line-color: #D2733C; line-width: 0.4; line-dasharray: 12,6; }
-Territorialgrense [zoom>=11][zoom<=14] { line-color: #BE5ABE; line-width: 0.7; line-dasharray: ??,2; }
+Territorialgrense [zoom>=11][zoom<=14] { line-color: #BE5ABE; line-width: 0.7; line-dasharray: 10,2,2,2; }
 Grunnlinjepunkt [zoom>=12][zoom<=15] { line-color: black; line-width: 0.6; }
 Riksgrenserøys [zoom>=12][zoom<=15] { line-color: #FFFFFF; line-width: 1.2/1.2; }
 Dam [zoom>=11][zoom<=14] { line-color: black; line-width: 0.7; }
@@ -367,7 +367,7 @@ Molo [zoom>=11][zoom<=14] { line-color: black; line-width: 0.53; }
 Fyr [zoom>=11][zoom<=14] { line-color: black; } // 3 fonter danner et symbol
 Gruve [zoom>=11][zoom<=14] { line-color: black; line-width: 5.3; }
 Vannflate [zoom>=11][zoom<=14] { line-color: #E0FFFF; }
-Myr [natural=wetland][zoom>=11][zoom<=14] { line-color: #82C8F0; line-width: 0.25; } // Linjeavstand 1,5 mm
+Myr [natural=wetland][zoom>=11][zoom<=14] { polygon-pattern-file: url; line-color: #82C8F0; line-width: 0.25; } // Linjeavstand 1,5 mm
 Snø og isbre [natural=glacier][zoom>=11][zoom<=14] { line-color: #00A6FF; line-width: 0.21; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
 Skog [natural=wood][zoom>=11][zoom<=14] { line-color: #D2E67C; }
 Dyrket mark [zoom>=11][zoom<=14] { line-color: #FFF7A3; }
@@ -382,13 +382,13 @@ Jernbane [zoom>=11][zoom<=14] { line-color: black; line-width: 1.2; }
 Jernbane i tunnel [zoom>=11][zoom<=14] { line-color: #828282; line-width: 0.9; line-dasharray: 6,3.6; }
 Jernbane på bru [zoom>=11][zoom<=14] { line-color: #828282; line-width: 0.6/1.1; } // Grå linje på svart linje
 Bilferjestrekning [zoom>=11][zoom<=14] { line-color: #C31E28; line-width: 0.7; line-dasharray: 10,8; }
-Europa- og riksveg, motorveg klasse A, [zoom>=11][zoom<=14] { line-color: #D12429; line-width: 0.5/2.0; } // Gul linje på rød linje
+Europa- og riksveg, motorveg klasse A, [highway=motorway][zoom>=11][zoom<=14] { inline-color: #D12429; inline-width: 0.5; line-color: red; line-width: 2.0; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=11][zoom<=14] { line-color: #D2232A; line-width: 1.4; }
 Fylkesveg [zoom>=11][zoom<=14] { line-color: #D2232A; line-width: 1.1; }
 Kommunal veg [zoom>=11][zoom<=14] { line-color: #6E6E6E; line-width: 1; }
 Privat veg [zoom>=11][zoom<=14] { line-color: #6E6E6E; line-width: 0.9; }
 Veg under anlegg [zoom>=11][zoom<=14] { line-color: #686868; line-width: 0.7/1.3; line-dasharray: 8,4; } //Hvit stiplet linje på grå striplet linje
-Europa- og riksveg i tunnel, motorveg klasse A [zoom>=11][zoom<=14] { line-color: #FF6666; line-width: 0.5/2.0; line-dasharray: 14,5; } //Gul stiplet linje på rød stiplet linje
+Europa- og riksveg i tunnel, motorveg klasse A [highway=motorway][tunnel=yes][zoom>=11][zoom<=14] { inline-color: #FF6666; inline-width: 0.5; inline-dasharray: 14,5; line-color: red; line-width: 2.0; } //Gul stiplet linje på rød stiplet linje
 Europa- og riksveg i tunnel [zoom>=11][zoom<=14] { line-color: #FF6666; line-width: 1.4; line-dasharray: 11,5; }
 Fylkesveg i tunnel [zoom>=11][zoom<=14] { line-color: #FF6666; line-width: 1.1; line-dasharray: 11,5; }
 Kommunal veg i tunnel [zoom>=11][zoom<=14] { line-color: #C8C8C8; line-width: 1; line-dasharray: 8.5,1; }
@@ -451,7 +451,7 @@ Rastebu/nødbu [zoom>=11][zoom<=14] { line-color: #FCFAB3; line-width: 2.5/0.35 
 Selvbetjent [zoom>=11][zoom<=14] { line-color: #FF;0;0; line-width: 4.6; }
 Ubetjent [zoom>=11][zoom<=14] { line-color: #FF;0;0; line-width: 2.5/1.9; } // Rød flate med hvitt fyll
 Elv, innsjø- og kystkontur [zoom>=11][zoom<=14] { line-color: #00A6FF; line-width: 0.2; }
-Europa- og riksveg på bru - motorveg klasse A [zoom>=11][zoom<=14] { line-color: #D12429; line-width: 0.5/2.0/2.6; } // Gul linje på rød linje på svart linje
+Europa- og riksveg på bru - motorveg klasse A [highway=motorway][bridge=yes][zoom>=11][zoom<=14] { inline-color: #D12429; inline-width: 0.5; line-color: red; line-width: 2.0; outline-color: black; outline-width: 2.6; } // Gul linje på rød linje på svart linje
 Europa- og riksveg på bru [zoom>=11][zoom<=14] { line-color: #D12429; line-width: 1.4/2.1; } // Rød linje på svart linje
 Fylkesveg på bru [zoom>=11][zoom<=14] { line-color: #D12429; line-width: 1.1/1.7; } // Rød linje på svart linje
 Kommunal veg på bru [zoom>=11][zoom<=14] { line-color: #6E6E6E; line-width: 1.0/1.6; } // Grå linje på svart linje
@@ -465,7 +465,7 @@ Fylkesgrense [zoom>=10][zoom<=12] { line-color: #B487FF; line-width: 4; line-das
 Kommunegrense [zoom>=10][zoom<=12] { line-color: #B487FF; line-width: 3; line-dasharray: 30,18; }
 Riksgrense [zoom>=10][zoom<=12] { line-color: #BE5ABE; line-width: 5; line-dasharray: 60,30; }
 Grunnlinje [zoom>=10][zoom<=12] { line-color: #D2733C; line-width: 1.5; line-dasharray: 36,18; }
-Territorialgrense [zoom>=10][zoom<=12] { line-color: #BE5ABE; line-width: 2; line-dasharray: ??,6; }
+Territorialgrense [zoom>=10][zoom<=12] { line-color: #BE5ABE; line-width: 2; line-dasharray: 30,6,6,6; }
 Dam [zoom>=10][zoom<=12] { line-color: black; line-width: 3.5278; }
 Kai og brygge [zoom>=10][zoom<=12] { line-color: black; line-width: 2.1167; }
 Molo [zoom>=10][zoom<=12] { line-color: black; line-width: 3.175; }
@@ -538,16 +538,16 @@ Rastebu/nødbu [zoom>=10][zoom<=12] { line-color: #FCFAB3; line-width: 7.0/0.6; 
 Selvbetjent [zoom>=10][zoom<=12] { #FF0000; line-width: 10; }
 Ubetjent [zoom>=10][zoom<=12] { line-color: #FF;0;0; line-width: 7.0/5.0; } // Rød kvadratisk flatemed hvit maske
 Elv, innsjø- og kystkontur [zoom>=10][zoom<=12] { line-color: #00A6FF; line-width: 1.41; }
-Europa- og riksveg, motorveg klasse A [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 2.0/6.5; } // Gul linje på rød linje
+Europa- og riksveg, motorveg klasse A [highway=motorway][zoom>=10][zoom<=12] { inline-color: #D12429; inline-width: 2.0; line-color: red; line-width: 6.5; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=10][zoom<=12] { line-color: #D2232A; line-width: 4; }
 Fylkesveg [zoom>=10][zoom<=12] { line-color: #D2232A; line-width: 2.5; }
 Kommunal veg [zoom>=10][zoom<=12] { line-color: #6E6E6E; line-width: 2.5; }
-Europa- og riksveg i tunnel, motorveg klasse A [zoom>=10][zoom<=12] { line-color: #FF6666; line-width: 1.5/6.5; line-dasharray: 21,7.5; } //Gul stiplet linje på rød stiplet linje
+Europa- og riksveg i tunnel, motorveg klasse A [highway=motorway][tunnel=yes][zoom>=10][zoom<=12] { inline-color: #FF6666; inline-width: 1.5; inline-dasharray: 21,7.5; line-color: red; line-width: 6.5; } //Gul stiplet linje på rød stiplet linje
 Europa- og riksveg i tunnel [zoom>=10][zoom<=12] { line-color: #FF6666; line-width: 4; line-dasharray: 15.4,7; }
 Fylkesveg i tunnel [zoom>=10][zoom<=12] { line-color: #FF6666; line-width: 2.5; line-dasharray: 16.5,7.5; }
 Kommunal veg i tunnel [zoom>=10][zoom<=12] { line-color: #C8C8C8; line-width: 2; line-dasharray: 12.75,1.5; }
 Privat veg i tunnel [zoom>=10][zoom<=12] { text-fill: black; line-width: 0.7; line-dasharray: 13.5,5.25; } //2 linjer med ulik for- skyvning (-0.7 og 0.7)
-Europa- og riksveg på bru, motorveg klasse A [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 2.0/6.5/9.0; } // Gul linje på rød linje på svart linje
+Europa- og riksveg på bru, motorveg klasse A [highway=motorway][bridge=yes][zoom>=10][zoom<=12] { inline-color: #D12429; inline-width: 2.0; line-color: red; line-width: 6.5; outline-color: black; outline-width: 9.0; } // Gul linje på rød linje på svart linje
 Europa- og riksveg på bru [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 4.0; outline-color: black; outline-width: 8.0; } // Rød linje på svart linje
 Fylkesveg på bru [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 3.0; outline-color: black; outline-width: 5.5; } // Rød linje på svart linje
 Kommunalveg på bru [zoom>=10][zoom<=12] { line-color: #6E6E6E; line-width: 3.5; outline-color: black; outline-width: 6.0; } // Grå linje på svart linje
@@ -556,11 +556,11 @@ Fylkesgrense [zoom>=10][zoom<=11] { line-color: #B487FF; line-width: 7; line-das
 Kommunegrense [zoom>=10][zoom<=11] { line-color: #B487FF; line-width: 4; line-dasharray: 50,30; }
 Riksgrense [zoom>=10][zoom<=11] { line-color: #BE5ABE; line-width: 10; line-dasharray: 120,60; }
 Grunnlinje [zoom>=10][zoom<=11] { line-color: #D2733C; line-width: 3; line-dasharray: 60,30; }
-Territorialgrense [zoom>=10][zoom<=11] { line-color: #BE5ABE; line-width: 5; line-dasharray: 75/15/15,15; }
+Territorialgrense [zoom>=10][zoom<=11] { line-color: #BE5ABE; line-width: 5; line-dasharray: 75,15,15,15; }
 Fyr og lykt [zoom>=10][zoom<=11] { line-color: #5D;0;9C; line-width: 1.41/0.35; } // Lilla sirkelflate medsvart omriss
 Gruve [zoom>=10][zoom<=11] { line-color: #B0;39;0; line-width: 1.41/0.35; } // Brun sirkelflate medsvart omriss
 Vannflate [zoom>=10][zoom<=11] { line-color: #E0FFFF; }
-Myr [natural=wetland][zoom>=10][zoom<=11] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 10.0 mm
+Myr [natural=wetland][zoom>=10][zoom<=11] { polygon-pattern-file: url; line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 10.0 mm
 Snø og isbre [natural=glacier][zoom>=10][zoom<=11] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
 Skog [natural=wood][zoom>=10][zoom<=11] { line-color: #D2E67C; }
 Tettbebyggelse [landuse=residential][zoom>=10][zoom<=11] { polygon-fill: #F7BE8C; line-color: black; line-width: 0.5; } // Orange flate med svartomriss
@@ -605,14 +605,14 @@ Verneområder [zoom>=9][zoom<=10] { text-fill: black; text-size: 6; }
 By og tettsted [zoom>=9][zoom<=10] { text-fill: black; text-size: 6; }
 Tettsted [zoom>=10][zoom<=11] { polygon-fill: #F7BE8C; line-color: black; line-width: 20/0.5; } // Oransje sirkelflate medsvart omriss
 Elv, innsjø- og kystkontur [zoom>=10][zoom<=11] { line-color: #00A6FF; line-width: 2.5; }
-Europa- og riksveg, motorveg klasse A [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 4.0/12.0; } // Gul linje på rød linje
+Europa- og riksveg, motorveg klasse A [highway=motorway][zoom>=10][zoom<=11] { inline-color: #D12429; inline-width: 4.0; line-color: red; line-width: 12.0; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=10][zoom<=11] { line-color: #D2232A; line-width: 6; }
 Fylkesveg [zoom>=10][zoom<=11] { line-color: #D2232A; line-width: 4; }
 Kommunal veg [zoom>=10][zoom<=11] { line-color: #6E6E6E; line-width: 4; }
-Europa- og riksveg i tunnel, motorveg klasse A [zoom>=10][zoom<=11] { line-color: #FF6666; line-width: 3.5/12.0; line-dasharray: 60,25; } //Gul stiplet linje på rød stiplet linje
+Europa- og riksveg i tunnel, motorveg klasse A [highway=motorway][tunnel=yes][zoom>=10][zoom<=11] { inline-color: #FF6666; inline-width: 3.5; inline-dasharray: 60,25; line-color: red; line-width: 12.0; } //Gul stiplet linje på rød stiplet linje
 Europa- og riksveg i tunnel [zoom>=10][zoom<=11] { line-color: #FF6666; line-width: 6; line-dasharray: 33,15; }
 Fylkesveg i tunnel [zoom>=10][zoom<=11] { line-color: #FF6666; line-width: 4; line-dasharray: 22,10; }
-Europa- og riksveg på bru, motorveg klasse A [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 2.0/10.0/12.0; } // Gul linje på rød linje på svart linje
+Europa- og riksveg på bru, motorveg klasse A [highway=motorway][bridge=yes][zoom>=10][zoom<=11] { inline-color: #D12429; inline-width: 2.0; line-color: red; line-width: 10.0; outline-color: black; outline-width: 12.0; } // Gul linje på rød linje på svart linje
 Europa- og riksveg på bru [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 7.0; outline-color: black; outline-width: 9.0; } // Rød linje på svart linje
 Fylkesveg på bru [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 5.0; outline-color: black; outline-width: 6.5; } // Rød linje på svart linje
 Naturverngrense [zoom>=10][zoom<=11] { line-color: #009C00; line-width: 5; }
@@ -620,9 +620,9 @@ Fylkesgrense [zoom>=8][zoom<=10] { line-color: #B487FF; line-width: 12; line-das
 Kommunegrense [zoom>=8][zoom<=10] { line-color: #B487FF; line-width: 7; line-dasharray: 75,45; }
 Riksgrense [zoom>=8][zoom<=10] { line-color: #BE5ABE; line-width: 19; line-dasharray: 160,80; }
 Grunnlinje [zoom>=8][zoom<=10] { line-color: #D2733C; line-width: 3; line-dasharray: 60,30; }
-Territorialgrense [zoom>=8][zoom<=10] { line-color: #BE5ABE; line-width: 5; line-dasharray: 90/18/18,18; }
+Territorialgrense [zoom>=8][zoom<=10] { line-color: #BE5ABE; line-width: 5; line-dasharray: 90,18,18,18; }
 Vannflate [zoom>=8][zoom<=10] { line-color: #E0FFFF; }
-Myr [natural=wetland][zoom>=8][zoom<=10] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 23.0 mm
+Myr [natural=wetland][zoom>=8][zoom<=10] { polygon-pattern-file: url; line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 23.0 mm
 Snø og isbre [natural=glacier][zoom>=8][zoom<=10] { polygon-fill; white: line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
 Skog [natural=wood][zoom>=8][zoom<=10] { line-color: #D2E67C; }
 Tettbebyggelse [landuse=residential][zoom>=8][zoom<=10] { polygon-fill: #F7BE8C; line-color: black; line-width: 0.15; } // Oransje flate med svartomriss
@@ -660,14 +660,14 @@ Høydepunkt [zoom>=7][zoom<=9] { text-fill: black; text-size: 4; }
 By og tettsted [zoom>=7][zoom<=9] { text-fill: black; line-width: 5; }
 Tettsted [zoom>=8][zoom<=10] { line-color: #F78080; line-width: 40/1.0; } // Rød sirkelflate medsvart omriss
 Elv, innsjø- og kystkontur [zoom>=8][zoom<=10] { line-color: #00A6FF; line-width: 2.5; }
-Europa- og riksveg, motorveg klasse A [zoom>=8][zoom<=10] { line-color: #D12429; line-width: 6.0/18.0; } // Gul linje på rød linje
+Europa- og riksveg, motorveg klasse A [highway=motorway][zoom>=8][zoom<=10] { inline-color: #D12429; inline-width: 6.0; line-color: red; line-width: 18.0; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=8][zoom<=10] { line-color: #D12429; line-width: 10; }
 Fylkesveg [zoom>=8][zoom<=10] { line-color: #D12429; line-width: 8; }
 Kommunal veg [zoom>=8][zoom<=10] { line-color: #6E6E6E; line-width: 8; }
-Europa- og riksveg i tunnel, motorveg klasse A [zoom>=8][zoom<=10] { line-color: #FF6666; line-width: 6.5/18; line-dasharray: 90,25; } //Gul stiplet linje på rød stiplet linje
+Europa- og riksveg i tunnel, motorveg klasse A [highway=motorway][tunnel=yes][zoom>=8][zoom<=10] { inline-color: #FF6666; inline-width: 6.5; inline-dasharray: 90,25; line-color: red; line-width: 18; } //Gul stiplet linje på rød stiplet linje
 Europa- og riksveg i tunnel [zoom>=8][zoom<=10] { line-color: #FF6666; line-width: 10; line-dasharray: 77,35; }
 Fylkesveg i tunnel [zoom>=8][zoom<=10] { line-color: #FF6666; line-width: 8; line-dasharray: 33,15; }
-Europa- og riksveg, motorveg klasse A [zoom>=8][zoom<=10] { line-color: #D12429; line-width: 6.0/18.0; } // Gul linje på rød linje
+Europa- og riksveg, motorveg klasse A [highway=motorway][zoom>=8][zoom<=10] { inline-color: #D12429; inline-width: 6.0; line-color: red; line-width: 18.0; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=8][zoom<=10] { line-color: #D12429; line-width: 10; }
 Fylkesveg [zoom>=8][zoom<=10] { line-color: #D12429; line-width: 8; }
 Kommunal veg [zoom>=8][zoom<=10] { line-color: #6E6E6E; line-width: 8; }
@@ -676,9 +676,9 @@ Fylkesgrense [zoom>=6][zoom<=8] { line-color: #B487FF; line-width: 35; line-dash
 Kommunegrense [zoom>=6][zoom<=8] { line-color: #B487FF; line-width: 20; line-dasharray: 200,120; }
 Riksgrense [zoom>=6][zoom<=8] { line-color: #BE5ABE; line-width: 40; line-dasharray: 400,200; }
 Grunnlinje [zoom>=6][zoom<=8] { line-color: #D2733C; line-width: 15; line-dasharray: 210,105; }
-Territorialgrense [zoom>=6][zoom<=8] { line-color: #BE5ABE; line-width: 15; line-dasharray: 200/40/40,40; }
+Territorialgrense [zoom>=6][zoom<=8] { line-color: #BE5ABE; line-width: 15; line-dasharray: 200,40,40,40; }
 Vannflate [zoom>=6][zoom<=8] { line-color: #E0FFFF; }
-Myr [natural=wetland][zoom>=6][zoom<=8] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 40.0 mm
+Myr [natural=wetland][zoom>=6][zoom<=8] { polygon-pattern-file: url; line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 40.0 mm
 Snø og isbre [natural=glacier][zoom>=6][zoom<=8] { line-color: #00A6FF; line-width: 5; line-dasharray: 100,60; } //Hvit flate med stipletblått omriss
 Skog [natural=wood][zoom>=6][zoom<=8] { line-color: #D2E67C; }
 Tettbebyggelse [landuse=residential][zoom>=6][zoom<=8] { polygon-fill: #F7BE8C; line-color: black; line-width: 0.15; } // Oransje flate med svartomriss
@@ -693,14 +693,14 @@ Høydelag 2400-3000 moh [zoom>=6][zoom<=8] { polygon-fill: #D1A880; }
 Flyplass [zoom>=6][zoom<=8] { text-fill; black; line-width: 250; }
 Tettsted [zoom>=6][zoom<=8] { line-color: #F78080; line-width: 70.0/2.0; } // Rød sirkelflate medsvart omriss
 Elv, innsjø- og kystkontur [zoom>=6][zoom<=8] { line-color: #00A6FF; line-width: 10; }
-Europa- og riksveg, motorveg klasse A [zoom>=6][zoom<=8] { line-color: #D12429; line-width: 11.0/35.0; } // Gul linje på rød linje
+Europa- og riksveg, motorveg klasse A [highway=motorway][zoom>=6][zoom<=8] { inline-color: #D12429; inline-width: 11.0; line-color: red; line-width: 35.0; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=6][zoom<=8] { line-color: #D12429; line-width: 22; }
 Fylkesveg [zoom>=6][zoom<=8] { line-color: #D12429; line-width: 13; }
 Kommunal veg [zoom>=6][zoom<=8] { line-color: #6E6E6E; line-width: 13; }
-Europa- og riksveg i tunnel, motorveg klasse A [zoom>=6][zoom<=8] { line-color: #FF6666; line-width: 10.0/35.0; line-dasharray: 140,50; } //Gul stiplet linje på rød stiplet linje
+Europa- og riksveg i tunnel, motorveg klasse A [highway=motorway][tunnel=yes][zoom>=6][zoom<=8] { inline-color: #FF6666; inline-width: 10.0; inline-dasharray: 140,50; line-color: red; line-width: 35.0; } //Gul stiplet linje på rød stiplet linje
 Europa- og riksveg i tunnel [zoom>=6][zoom<=8] { line-color: #FF6666; line-width: 22; line-dasharray: 77,35; }
 Fylkesveg i tunnel [zoom>=6][zoom<=8] { line-color: #FF6666; line-width: 13; line-dasharray: 33,15; }
-Europa- og riksveg, motorveg klasse A [zoom>=6][zoom<=8] { line-color: #D12429; line-width: 11.0/35.0; } // Gul linje på rød linje
+Europa- og riksveg, motorveg klasse A [highway=motorway][zoom>=6][zoom<=8] { inline-color: #D12429; inline-width: 11.0; line-color: red; line-width: 35.0; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=6][zoom<=8] { line-color: #D12429; line-width: 22; }
 Fylkesveg [zoom>=6][zoom<=8] { line-color: #D12429; line-width: 13; }
 Kommunal veg [zoom>=6][zoom<=8] { line-color: #6E6E6E; line-width: 13; }

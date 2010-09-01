@@ -10,7 +10,7 @@ Specification (PDF):
 http://www.statkart.no/?module=Files;action=File.getFile;ID=37612
 
 
-Presented at http://www.openstreetmap.no/
+Presented at http://www.openstreetmap.no/?layers=000B00
 
 
 Buildings and surfaces change color at 1:7000 (zoom 16)
@@ -23,6 +23,12 @@ Todo
 symboler,
 tekst,
 kraftlinjer, stup, myr,
+tunneller: jernbane, bybane
+roads names
+road numbers
+highway=pedestrian as cycleway
+wetland
+dagsturhytte
 
 
 Contributors

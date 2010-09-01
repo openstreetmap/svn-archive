@@ -1,37 +1,37 @@
 // Cascadenik inspired reformulation of http://www.statkart.no/Skjermkartografi.d25-SwJjM0n.ips
 // Kartlagsnavn; maxscale; minscale; Tykkelse/Fontstørrelse (mm); Stipling (mm); Beskrivelse/ merknad
-Gateadresse [zoom>=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; font-weight:bold; } // (Husnr og bokstav symbolisesres)
+Gateadresse [zoom>=18] { text-fill: black; text-size: 4; font-weight:bold; } // (Husnr og bokstav symbolisesres)
 Dam [zoom>=16] { line-color: #828282; }
 Flytebrygge [zoom>=16] { line-color: #828282; }
 Frittstående trapp [zoom>=16] { line-color: #E1E1E1; }
 Fundament [zoom>=16] { line-color: #E1E1E1; }
 Kai og brygge [zoom>=16] { line-color: #828282; }
 Mur [zoom>=16] { line-color: #828282; }
-Pipe [zoom>=16] { line-color: #000; }
+Pipe [zoom>=16] { line-color: black; }
 Silo [zoom>=16] { line-color: #73A3D4; }
 Svømmebasseng [zoom>=16] { line-color: #E0FFFF; }
 Tank [zoom>=16] { line-color: #828282; }
 Tribune [zoom>=16] { line-color: #E1E1E1; }
-Damkant [zoom>=16] { line-color: #000; line-width: 0.01; }
-Elveforbygningskant [zoom>=16] { line-color: #000; line-width: 0.01; }
-Flytebryggekant [zoom>=16] { line-color: #000; line-width: 0.01; }
-Hoppbakke [zoom>=16] { line-color: #000; line-width: 0.01; }
-Idrettsanlegg [zoom>=16] { line-color: #000; line-width: 0.01; }
-Kai og bryggekant [zoom>=16] { line-color: #000; line-width: 0.01; }
-Pipekant [zoom>=16] { line-color: #000; line-width: 0.01; }
-Rørgate [zoom>=16] { line-color: #000; line-width: 0.1/0.02; }
-Silokant [zoom>=16] { line-color: #000; line-width: 0.01; }
+Damkant [zoom>=16] { line-color: black; line-width: 0.01; }
+Elveforbygningskant [zoom>=16] { line-color: black; line-width: 0.01; }
+Flytebryggekant [zoom>=16] { line-color: black; line-width: 0.01; }
+Hoppbakke [zoom>=16] { line-color: black; line-width: 0.01; }
+Idrettsanlegg [zoom>=16] { line-color: black; line-width: 0.01; }
+Kai og bryggekant [zoom>=16] { line-color: black; line-width: 0.01; }
+Pipekant [zoom>=16] { line-color: black; line-width: 0.01; }
+Rørgate [zoom>=16] { line-color: black; line-width: 0.1/0.02; }
+Silokant [zoom>=16] { line-color: black; line-width: 0.01; }
 Skitrekk [zoom>=16] { line-color: #C31E28; line-width: 0.03; }
-Skytebaneinnretning [zoom>=16] { line-color: #000; line-width: 0.01; }
-Steingjerde [zoom>=16] { line-color: #000; line-width: 0.01; }
-Svømmebassengkant [zoom>=16] { line-color: #000; line-width: 0.01; }
-Tankkant [zoom>=16] { line-color: #000; line-width: 0.01; }
-Tribunekant [zoom>=16] { line-color: #000; line-width: 0.01; }
-Tårnkant [zoom>=16] { line-color: #000; line-width: 0.01; }
+Skytebaneinnretning [zoom>=16] { line-color: black; line-width: 0.01; }
+Steingjerde [zoom>=16] { line-color: black; line-width: 0.01; }
+Svømmebassengkant [zoom>=16] { line-color: black; line-width: 0.01; }
+Tankkant [zoom>=16] { line-color: black; line-width: 0.01; }
+Tribunekant [zoom>=16] { line-color: black; line-width: 0.01; }
+Tårnkant [zoom>=16] { line-color: black; line-width: 0.01; }
 Campingplass [zoom>=15] { line-color: #9BB93C; }
 Gravplass [zoom>=15] { line-color: #9BB93C; }
-Grustak [zoom>=15] { line-color: #D7D7D7; }
-Industriområde [zoom>=15] { line-color: #D7D7D7; }
+Grustak [landuse=quarry][zoom>=15] { line-color: #D7D7D7; }
+Industriområde [landuse=industrial][zoom>=15] { line-color: #D7D7D7; }
 Lekeplass [zoom>=15] { line-color: #9BB93C; }
 Skytebane [zoom>=15] { line-color: #E1E1E1; }
 Sport og idrettsplass [zoom>=15] { line-color: #9BB93C; }
@@ -49,16 +49,16 @@ Fiskeri og landbruk [zoom>=15][zoom<=16] { line-color: #995E24; }
 Fritidsbolig [zoom>=15][zoom<=16] { line-color: #DCAA28; }
 Garasje og uthus [zoom>=15][zoom<=16] { line-color: #995E24; }
 Udefinerte bygg [zoom>=15][zoom<=16] { line-color: #995E24; }
-Bygningsdelelinje [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Bygningslinje [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Grunnmur [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Låvebru [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Mønelinje [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Takkant [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Takoverbyggkant [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Taksprang [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Trapp inntil bygg [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Veranda [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
+Bygningsdelelinje [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Bygningslinje [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Grunnmur [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Låvebru [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Mønelinje [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Takkant [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Takoverbyggkant [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Taksprang [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Trapp inntil bygg [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Veranda [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Bolig [zoom>=16] { line-color: #C48723; line-width: 0.25(2,5); }
 Fiskeri og landbruk [zoom>=16] { line-color: #C48723; line-width: 0.25(2,5); }
 Fritidsbolig [zoom>=16] { line-color: #C48723; line-width: 0.25(2,5); }
@@ -80,41 +80,41 @@ Terrenglinje [zoom>=18] { line-color: #C88546; line-width: 0.01(0,1); }
 Forsenkningskurve [zoom>=16][zoom<=18] { line-color: #C88546; line-width: 0.01(0,1); }
 Høydekurve [zoom>=16][zoom<=18] { line-color: #C88546; line-width: 0.01(0,1); }
 Toppunkt [zoom>=16] { line-color: #C88546; line-width: 0.1(1,0); }
-Plattformkant for jernbane [zoom>=16] { line-color: #000; line-width: 0.01(0,1); }
-Midtlinje bane [zoom>=16] { line-color: #000; line-width: 0.05(0,1); }
+Plattformkant for jernbane [zoom>=16] { line-color: black; line-width: 0.01(0,1); }
+Midtlinje bane [zoom>=16] { line-color: black; line-width: 0.05(0,1); }
 Midtlinje bane i tunnel [zoom>=16] { line-color: #7F7F7F; line-width: 0.05(0,1); line-dasharray: 5,3; }
-Midtlinje bane på bru [zoom>=16] { line-color: #000; line-width: 0.05(0,1); }
-Luftledning høyspent [zoom>=16] { line-color: #000; line-width: 0.01(0,1)/0.2; line-dasharray: 1,1 } // Tynn heltrukken med tykk stipling (lang avstand)
-Mast for elektrisitet, grunnriss [zoom>=16] { line-color: #000; line-width: 0.01(0,1); }
-Mast for telekommunika- sjon, grunnriss [zoom>=16] { line-color: #000; line-width: 0.01(0,1); }
-Nettstasjon grunnriss [zoom>=16] { line-color: #000; line-width: 0.01(0,1); }
-Rullebanegrense [zoom>=15] { line-color: #000; line-width: 0.01(0,1); }
+Midtlinje bane på bru [zoom>=16] { line-color: black; line-width: 0.05(0,1); }
+Luftledning høyspent [zoom>=16] { line-color: black; line-width: 0.01(0,1)/0.2; line-dasharray: 1,1 } // Tynn heltrukken med tykk stipling (lang avstand)
+Mast for elektrisitet, grunnriss [zoom>=16] { line-color: black; line-width: 0.01(0,1); }
+Mast for telekommunikasjon, grunnriss [zoom>=16] { line-color: black; line-width: 0.01(0,1); }
+Nettstasjon grunnriss [zoom>=16] { line-color: black; line-width: 0.01(0,1); }
+Rullebanegrense [zoom>=15] { line-color: black; line-width: 0.01(0,1); }
 Bebygd område [zoom>=15] { line-color: #FFDCBE; }
-Myr [zoom>=15] { line-color: #2E5E9E; }
+Myr [natural=wetland][zoom>=15] { line-color: #2E5E9E; }
 Myr med skog [zoom>=15] { line-color: #2E5E9E; }
-Dyrka mark [zoom>=15] { line-color: #FFF7A3; }
-Skog [zoom>=15] { line-color: #D2E67C; }
-Ur, steinrøys og grustak [zoom>=15] { line-color: #D7D7D7; }
-Annet [zoom>=15] { line-color: #FFFFE6; }
-Diverse [zoom>=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Terrengform [zoom>=18] { text-fill: #8F5F24; text-size: 4; text-face-name: Verdana; }
-Vann [zoom>=18] { text-fill: #3278FF; text-size: 4; text-face-name: Verdana; }
-Administrative områder [zoom>=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Bygg og anlegg [zoom>=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Samferdsel [zoom>=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Vegnummer [zoom>=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; } Bold
-Diverse [zoom>=16][zoom<=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Terrengform [zoom>=16][zoom<=18] { text-fill: #8F5F24; text-size: 4; text-face-name: Verdana; }
-Vann [zoom>=16][zoom<=18] { text-fill: #3278FF; text-size: 4; text-face-name: Verdana; }
-Administrative områder [zoom>=16][zoom<=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Bygg og anlegg [zoom>=16][zoom<=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Samferdsel [zoom>=16][zoom<=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Vegnummer [zoom>=16][zoom<=18] { text-fill: #000; text-size: 4; text-face-name: Verdana; } Bold
-Elv og bekk [zoom>=15] { line-color: #E0FFFF; }
-Havflate [zoom>=15] { line-color: #E0FFFF; }
-Innsjø [zoom>=15] { line-color: #E0FFFF; }
-Kanal og grøft [zoom>=15] { line-color: #E0FFFF; }
-Snø- og isbre [zoom>=15] { line-color: #00A6FF; line-width: 0.03(0,1); line-dasharray: 6,4; } //Hvit flate med stipletblått omriss
+Dyrka mark [zoom>=15] { polygon-fill: #FFF7A3; }
+Skog [natural=wood][zoom>=15] { polygon-fill: #D2E67C; }
+Ur, steinrøys og grustak [zoom>=15] { polygon-fill: #D7D7D7; }
+Annet [zoom>=15] { polygon-fill: #FFFFE6; }
+Diverse [zoom>=18] { text-fill: black; text-size: 4; }
+Terrengform [zoom>=18] { text-fill: #8F5F24; text-size: 4; }
+Vann [zoom>=18] { text-fill: #3278FF; text-size: 4; }
+Administrative områder [zoom>=18] { text-fill: black; text-size: 4; }
+Bygg og anlegg [zoom>=18] { text-fill: black; text-size: 4; }
+Samferdsel [zoom>=18] { text-fill: black; text-size: 4; }
+Vegnummer [zoom>=18] { text-fill: black; text-size: 4; } Bold
+Diverse [zoom>=16][zoom<=18] { text-fill: black; text-size: 4; }
+Terrengform [zoom>=16][zoom<=18] { text-fill: #8F5F24; text-size: 4; }
+Vann [zoom>=16][zoom<=18] { text-fill: #3278FF; text-size: 4; }
+Administrative områder [zoom>=16][zoom<=18] { text-fill: black; text-size: 4; }
+Bygg og anlegg [zoom>=16][zoom<=18] { text-fill: black; text-size: 4; }
+Samferdsel [zoom>=16][zoom<=18] { text-fill: black; text-size: 4; }
+Vegnummer [zoom>=16][zoom<=18] { text-fill: black; text-size: 4; } Bold
+Elv og bekk [zoom>=15] { polygon-fill: #E0FFFF; }
+Havflate [zoom>=15] { polygon-fill: #E0FFFF; }
+Innsjø [zoom>=15] { polygon-fill: #E0FFFF; }
+Kanal og grøft [zoom>=15] { polygon-fill: #E0FFFF; }
+Snø- og isbre [zoom>=15] { polygon-fill: white; line-color: #00A6FF; line-width: 0.03(0,1); line-dasharray: 6,4; } //Hvit flate med stipletblått omriss
 Elve- og bekkekant [zoom>=15] { line-color: #00A6FF; line-width: 0.01(0,1); }
 Elve- og bekkemidtlinje [zoom>=15] { line-color: #00A6FF; line-width: 0.015(0,1); }
 Innsjøkant [zoom>=15] { line-color: #00A6FF; line-width: 0.01(0,1); }
@@ -122,8 +122,8 @@ Innsjøkant regulert [zoom>=15] { line-color: #00A6FF; line-width: 0.01(0,1); }
 Kanal- og grøftekant [zoom>=15] { line-color: #00A6FF; line-width: 0.01(0,1); }
 Kanal og grøft [zoom>=15] { line-color: #00A6FF; line-width: 0.015(0,1); }
 Kystkontur [zoom>=15] { line-color: #00A6FF; line-width: 0.01(0,1); }
-Fyr [zoom>=16] { text-fill: #000; ??: 0.2(2,0); } // 3 fonter danner symbolet
-Lykt [zoom>=16] { text-fill: #000; ??: 0.25(2,5); } // 3 fonter danner symbolet
+Fyr [zoom>=16] { text-fill: black; ??: 0.2(2,0); } // 3 fonter danner symbolet
+Lykt [zoom>=16] { text-fill: black; ??: 0.25(2,5); } // 3 fonter danner symbolet
 Gang- og sykkelveg [zoom>=16] { line-color: #E1E1E1; }
 Veg [zoom>=16] { line-color: #B2B2B2; }
 Gang- og sykkelveg, undergang [zoom>=16] { line-color: #F5F5F5; }
@@ -131,22 +131,22 @@ Vegundergang [zoom>=16] { line-color: #EBEBEB; }
 Brukonstruksjon [zoom>=16] { line-color: #9C9C9C; }
 Gang- og sykkelveg på bru [zoom>=16] { line-color: #E1E1E1; }
 Veg på bru [zoom>=16] { line-color: #B2B2B2; }
-Fortauskant ytre [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Gang- og sykkelvegkant [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Kulvert [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
+Fortauskant ytre [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Gang- og sykkelvegkant [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Kulvert [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Lysløype [zoom>=17] { line-color: #C31E28; line-width: 0.03(0,1)/0.05(0,15); line-dasharray: 0.4/heltrukken;0.2/heltrukken; } //Rød stiplet linje på heltrukken gul linje
-Parkeringsområde- avgrensning [zoom>=17] { line-color: #686868; line-width: 0.005(0,1); }
+Parkeringsområdeavgrensning [zoom>=17] { line-color: #686868; line-width: 0.005(0,1); }
 Sti [zoom>=17] { line-color: #C31E28; line-width: 0.03(0,1); }
 Merket sti [zoom>=17] { line-color: #C31E28; line-width: 0.04(0,1); }
 Støyskjerm [zoom>=17] { line-color: #828282; line-width: 0.01(0,1); }
-Traktorvegkant [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
+Traktorvegkant [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Traktorveg midtlinje [zoom>=17] { line-color: #B2B2B2; line-width: 0.05(0,1); line-dasharray: 0.6,0.3; }
-Vegkant annet vegareal avgrensning [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Vegdekkekant [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Annet vegareal avgrensning [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Vegkantavkjørsel [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Trafikkøykant [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Vegsperring [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
+Vegkant annet vegareal avgrensning [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Vegdekkekant [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Annet vegareal avgrensning [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Vegkantavkjørsel [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Trafikkøykant [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Vegsperring [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Lysløype [zoom>=16][zoom<=17] { line-color: #FA;EB;0; line-width: 0.03(0,1)/0.05(0,15); line-dasharray: 0.4/heltrukken;0.2/heltrukken; } //Rød stiplet/heltrukken gul
 Sti [zoom>=16][zoom<=17] { line-color: #C31E28; line-width: 0.03(0,1); line-dasharray: 0.4,0.2; }
 Merket sti [zoom>=16][zoom<=17] { line-color: #C31E28; line-width: 0.04(0,1); line-dasharray: 0.6,0.3; }
@@ -155,22 +155,22 @@ Vegdekkekant [zoom>=16][zoom<=17] { line-color: #828282; line-width: 0.005(0,1);
 Sti [zoom>=15][zoom<=16] { line-color: #C31E28; line-width: 0.03(0,1); line-dasharray: 0.4,0.2; }
 Merket sti [zoom>=15][zoom<=16] { line-color: #C31E28; line-width: 0.04(0,1); line-dasharray: 0.6,0.6; }
 Traktorveg midtlinje [zoom>=15][zoom<=16] { line-color: #9C9C9C; line-width: 0.08; line-dasharray: 1,0.4; }
-Gang- og sykkelvegkant på bru [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
+Gang- og sykkelvegkant på bru [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Gang- og sykkelveg på bru [zoom>=17] { line-color: #828282; line-width: 0.05(0,1); line-dasharray: 0.7,0.2; }
 Sti på bru [zoom>=17] { line-color: #C31E28; line-width: 0.03(0,1); line-dasharray: 0.3,0.6; }
 Merket sti på bru [zoom>=17] { line-color: #C31E28; line-width: 0.04(0,1); line-dasharray: 0.6,0.6; }
-Traktorvegkant på bru [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
+Traktorvegkant på bru [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
 Traktorveg på bru [zoom>=17] { line-color: #B2B2B2; line-width: 0.05(0,1); line-dasharray: 0.6,0.3; }
-Vegkant annet vegareal avgrensning på bru [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Vegdekkekant på bru [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Annet vegareal avgrensning på bru [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Trafikkøykant på bru [zoom>=17] { line-color: #000; line-width: 0.005(0,1); }
-Vegnavn [zoom>=15] { line-color: #000; line-width: 1.3; }
+Vegkant annet vegareal avgrensning på bru [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Vegdekkekant på bru [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Annet vegareal avgrensning på bru [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Trafikkøykant på bru [zoom>=17] { line-color: black; line-width: 0.005(0,1); }
+Vegnavn [zoom>=15] { line-color: black; line-width: 1.3; }
 Offentlig veg [zoom>=15] { line-color: #B3B3B3; line-width: 0.1; }
 Gang- og sykkelveg [zoom>=15] { line-color: #E0E0E0; line-width: 0.06(0,1); }
 Privat- og skogsbilveg [zoom>=15] { line-color: #B3B3B3; line-width: 0.08(0,1); }
 Naturverngrense [zoom>=16] { line-color: #00;9C;0; line-width: 0.005(0,1); }
-Naturvernområde [zoom>=16] { line-color: #000; }
+Naturvernområde [zoom>=16] { line-color: black; }
 Naturvernpunkt [zoom>=16] { line-color: #00;C8;0; line-width: 0.2; }
 Fylkesgrense [zoom>=15][zoom<=17] { line-color: #B487FF; line-width: 0.18; line-dasharray: 21,9; }
 Kommunegrense [zoom>=15][zoom<=17] { line-color: #B487FF; line-width: 0.15; line-dasharray: 15,9; }
@@ -180,64 +180,64 @@ Kommunegrense [zoom>=13][zoom<=15] { line-color: #B487FF; line-width: 0.7; line-
 Riksgrense [zoom>=13][zoom<=15] { line-color: #BE5ABE; line-width: 1.1; line-dasharray: 10,5; }
 Grunnlinje [zoom>=13][zoom<=15] { line-color: #D2733C; line-width: 0.2; line-dasharray: 6,3; }
 Territorialgrense [zoom>=13][zoom<=15] { line-color: #BE5ABE; line-width: 0.35; line-dasharray: 5/1/1,1; } //En lang og to korte streker med 1 pkt mellomrom
-Grunnlinjepunkt [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.6; }
-Riksgrensemerke [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.6; }
-Riksgrenserøys [zoom>=15][zoom<=16] { line-color: #000; line-width: 1.2; }
-Reingjerde [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.5; line-dasharray: 0.5,1.5/9.5; } //Heltrukken med hash- line symbol
-Reingjerde [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.05(0,1); } // Heltrukken med hash- line symbol
-Dam [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.2; }
-Hoppakke [zoom>=15][zoom<=16] { line-color: #000; } // 3 fonter danner symbolet
-Kai og brygge [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.05(0,1); }
-Kraftspenn [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.05(0,1); }
-Luftledning, lav- og høyspent [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.05(0,1); }
-Lysløype [zoom>=15][zoom<=16] { line-color: #FCFAB3; } // Rød stipling på hel- trukken gul
-Molo [zoom>=15][zoom<=16] { line-color: #000; }
-Rørgate [zoom>=15][zoom<=16] { line-color: #000; }
+Grunnlinjepunkt [zoom>=15][zoom<=16] { line-color: black; line-width: 0.6; }
+Riksgrensemerke [zoom>=15][zoom<=16] { line-color: black; line-width: 0.6; }
+Riksgrenserøys [zoom>=15][zoom<=16] { line-color: black; line-width: 1.2; }
+Reingjerde [zoom>=15][zoom<=16] { line-color: black; line-width: 0.5; line-dasharray: 0.5,1.5/9.5; } //Heltrukken med hash-line symbol
+Reingjerde [zoom>=15][zoom<=16] { line-color: black; line-width: 0.05(0,1); } // Heltrukken med hash-line symbol
+Dam [zoom>=15][zoom<=16] { line-color: black; line-width: 0.2; }
+Hoppakke [zoom>=15][zoom<=16] { line-color: black; } // 3 fonter danner symbolet
+Kai og brygge [zoom>=15][zoom<=16] { line-color: black; line-width: 0.05(0,1); }
+Kraftspenn [zoom>=15][zoom<=16] { line-color: black; line-width: 0.05(0,1); }
+Luftledning, lav- og høyspent [zoom>=15][zoom<=16] { line-color: black; line-width: 0.05(0,1); }
+Lysløype [zoom>=15][zoom<=16] { line-color: #FCFAB3; } // Rød stipling på heltrukken gul
+Molo [zoom>=15][zoom<=16] { line-color: black; }
+Rørgate [zoom>=15][zoom<=16] { line-color: black; }
 Skitrekk [zoom>=15][zoom<=16] { line-color: #FF;0;0; }
-Skytebane [zoom>=15][zoom<=16] { line-color: #000; }
-Spesiell linjedetalj [zoom>=15][zoom<=16] { line-color: #000; }
-Taubane [zoom>=15][zoom<=16] { line-color: #000; }
-Reingjerde [zoom>=13][zoom<=15] { line-color: #000; } // Heltrukken med hash- line symbol
-Reingjerde [zoom>=13][zoom<=15] { line-color: #000; } // Heltrukken med hash- line symbol
-Dam [zoom>=13][zoom<=15] { line-color: #000; }
-Hoppbakke [zoom>=13][zoom<=15] { line-color: #000; } // 3 fonter danner symbolet
-Kai og brygge [zoom>=13][zoom<=15] { line-color: #000; }
-Kraftspenn [zoom>=13][zoom<=15] { line-color: #000; }
-Luftledning, lav- og høyspent [zoom>=13][zoom<=15] { line-color: #000; }
+Skytebane [zoom>=15][zoom<=16] { line-color: black; }
+Spesiell linjedetalj [zoom>=15][zoom<=16] { line-color: black; }
+Taubane [zoom>=15][zoom<=16] { line-color: black; }
+Reingjerde [zoom>=13][zoom<=15] { line-color: black; } // Heltrukken med hash-line symbol
+Reingjerde [zoom>=13][zoom<=15] { line-color: black; } // Heltrukken med hash-line symbol
+Dam [zoom>=13][zoom<=15] { line-color: black; }
+Hoppbakke [zoom>=13][zoom<=15] { line-color: black; } // 3 fonter danner symbolet
+Kai og brygge [zoom>=13][zoom<=15] { line-color: black; }
+Kraftspenn [zoom>=13][zoom<=15] { line-color: black; }
+Luftledning, lav- og høyspent [zoom>=13][zoom<=15] { line-color: black; }
 Lysløype [zoom>=13][zoom<=15] { line-color: #FCFAB3; }
-Molo [zoom>=13][zoom<=15] { line-color: #000; }
-Rørgate [zoom>=13][zoom<=15] { line-color: #000; }
+Molo [zoom>=13][zoom<=15] { line-color: black; }
+Rørgate [zoom>=13][zoom<=15] { line-color: black; }
 Skitrekk [zoom>=13][zoom<=15] { line-color: #FF;0;0; }
-Skytebane [zoom>=13][zoom<=15] { line-color: #000; }
-Spesiell linjedetalj [zoom>=13][zoom<=15] { line-color: #000; }
-Taubane [zoom>=13][zoom<=15] { line-color: #000; }
+Skytebane [zoom>=13][zoom<=15] { line-color: black; }
+Spesiell linjedetalj [zoom>=13][zoom<=15] { line-color: black; }
+Taubane [zoom>=13][zoom<=15] { line-color: black; }
 Campingplass [zoom>=13][zoom<=15] { line-color: #FF;0;0; line-width: 3; }
-Fyr [zoom>=13][zoom<=15] { line-color: #000; } // 3 fonter danner symbolet
-Gruve [zoom>=13][zoom<=15] { line-color: #000; line-width: 3; }
-Telekommunikasjonsmast [zoom>=13][zoom<=15] { line-color: #000; line-width: 3; }
+Fyr [zoom>=13][zoom<=15] { line-color: black; } // 3 fonter danner symbolet
+Gruve [zoom>=13][zoom<=15] { line-color: black; line-width: 3; }
+Telekommunikasjonsmast [zoom>=13][zoom<=15] { line-color: black; line-width: 3; }
 Spesiell punktdetalj [zoom>=13][zoom<=15] { line-color: #FCF7D7; line-width: 0.8/0.1 forskyvning; } // Gul ring med svart omriss
-Tank [zoom>=13][zoom<=15] { line-color: #000; line-width: 0.7; }
-Tårn [zoom>=13][zoom<=15] { line-color: #000; line-width: 3; }
+Tank [zoom>=13][zoom<=15] { line-color: black; line-width: 0.7; }
+Tårn [zoom>=13][zoom<=15] { line-color: black; line-width: 3; }
 Umerket sti [zoom>=13][zoom<=15] { line-color: #C31E28; line-width: 0.15; line-dasharray: 1.2,1.6; }
 Merket sti [zoom>=13][zoom<=15] { line-color: #C31E28; line-width: 0.18; line-dasharray: 2.1,1.4; }
 Traktorveg, gang- og sykkelveg [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.25/0.25; line-dasharray: 2.1,1.4; } //Grå stiplet linje på heltrukken hvit linje
 Vannflate [zoom>=13][zoom<=15] { line-color: #E0FFFF; }
-Myr [zoom>=13][zoom<=15] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 0,5 mm
-Snø og isbre [zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
-Skog [zoom>=13][zoom<=15] { line-color: #D2E67C; }
+Myr [natural=wetland][zoom>=13][zoom<=15] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 0,5 mm
+Snø og isbre [natural=glacier][zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
+Skog [natural=wood][zoom>=13][zoom<=15] { line-color: #D2E67C; }
 Dyrket mark [zoom>=13][zoom<=15] { line-color: #FFF7A3; }
-Tettbebyggelse [zoom>=13][zoom<=15] { line-color: #F7BE8C; }
+Tettbebyggelse [landuse=residential][zoom>=13][zoom<=15] { polygon-fill: #F7BE8C; }
 Sport, park og gravplass [zoom>=13][zoom<=15] { line-color: #9BB93C; }
 Flyplass [zoom>=13][zoom<=15] { line-color: #FFFFFF; line-width: 0.15; } // Hvit flate med svartomriss
-Dagbrudd og steintipp [zoom>=13][zoom<=15] { line-color: #D7D7D7; line-width: 0.15; } // Grå flate med svartomriss
+Dagbrudd og steintipp [landuse=quarry][zoom>=13][zoom<=15] { line-color: #D7D7D7; line-width: 0.15; } // Grå flate med svartomriss
 Industri [zoom>=13][zoom<=15] { line-color: #D7D7D7; }
 Åpent område [zoom>=13][zoom<=15] { line-color: #FFFFE6; }
-Jernbane [zoom>=13][zoom<=15] { line-color: #000; line-width: 0.31; }
-Jernbane [zoom>=15][zoom<=16] { line-color: #000; line-width: 0.1; }
+Jernbane [zoom>=13][zoom<=15] { line-color: black; line-width: 0.31; }
+Jernbane [zoom>=15][zoom<=16] { line-color: black; line-width: 0.1; }
 Jernbane i tunnel [zoom>=15][zoom<=16] { line-color: #7F7F7F; line-width: 0.1; line-dasharray: 3,1.8; }
 Jernbane i tunnel [zoom>=13][zoom<=15] { line-color: #7F7F7F; line-width: 0.31; line-dasharray: 3,1.8; }
-Jernbane på bru [zoom>=13][zoom<=15] { line-color: #7F7F7F; line-width: 0.2/0.4; } // Grå linje på svart linje
-Jernbane på bru [zoom>=15][zoom<=16] { line-color: #7F7F7F; line-width: 0.07/0.14; } // Grå linje på svart linje
+Jernbane på bru [zoom>=13][zoom<=15] { line-color: #7F7F7F; line-width: 0.2; outline-color: black; outline-width: 0.4; } // Grå linje på svart linje
+Jernbane på bru [zoom>=15][zoom<=16] { line-color: #7F7F7F; line-width: 0.07; outline-color: black; outline-width: 0.14; } // Grå linje på svart linje
 Bilferjestrekning [zoom>=13][zoom<=15] { line-color: #C21F29; line-width: 0.15; line-dasharray: 5,4; }
 Europa- og riksveg, motorveg klasse A [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.15/0.85; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=13][zoom<=15] { line-color: #D2232A; line-width: 0.55; }
@@ -249,30 +249,30 @@ Europa- og riksveg i tunnel, motorveg klasse A [zoom>=13][zoom<=15] { line-color
 Europa- og riksveg i tunnel [zoom>=13][zoom<=15] { line-color: #FF6666; line-width: 0.55; line-dasharray: 5.5,2.5; }
 Fylkesveg i tunnel [zoom>=13][zoom<=15] { line-color: #FF6666; line-width: 0.45; line-dasharray: 5.5,2.5; }
 Kommunal veg i tunnel [zoom>=13][zoom<=15] { line-color: #C8C8C8; line-width: 0.4; line-dasharray: 4.25,0.5; }
-Privat veg i tunnel [zoom>=13][zoom<=15] { line-color: #000; line-width: 0.1; line-dasharray: 4.75,1.75; } //2 linjer med ulik for- skyvning (-0.2 og 0.2)
+Privat veg i tunnel [zoom>=13][zoom<=15] { line-color: black; line-width: 0.1; line-dasharray: 4.75,1.75; } //2 linjer med ulik forskyvning (-0.2 og 0.2)
 Veg under anlegg [zoom>=13][zoom<=15] { line-color: #686868; line-width: 0.20/0.40; line-dasharray: 4,2; } //Hvit stiplet linje på grå stiplet linje
 Europa- og riksveg på bru, motorveg klasse A [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.15/0.55/0.85; } // Gul linje på rød linje på svart linje
-Europa- og riksveg på bru [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.35/0.55; } // Rød linje på svart linje
-Fylkesveg på bru [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.25/0.45; } // Rød linje på svart linje
-Kommunal veg på bru [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.20/0.45; } // Grå linje på svart linje
-Privat veg på bru [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.20/0.40; } // Grå linje på svart linje
-Bolig [zoom>=13][zoom<=15] { line-color: #995F20; }
+Europa- og riksveg på bru [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.35; outline-color: black; outline-width: 0.55; } // Rød linje på svart linje
+Fylkesveg på bru [zoom>=13][zoom<=15] { line-color: #D12429; line-width: 0.25; outline-color: black; outline-width: 0.45; } // Rød linje på svart linje
+Kommunal veg på bru [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.20; outline-color: black; outline-width: 0.45; } // Grå linje på svart linje
+Privat veg på bru [zoom>=13][zoom<=15] { line-color: #6E6E6E; line-width: 0.20; outline-color: black; outline-width: 0.40; } // Grå linje på svart linje
+Bolig [building=house|apartments][zoom>=13][zoom<=15] { line-color: #995F20; }
 Gardsbruk [zoom>=13][zoom<=15] { line-color: #9A5F21; }
-Fritidsbolig [zoom>=13][zoom<=15] { line-color: #D68723; }
-Garasje og uthus [zoom>=13][zoom<=15] { line-color: #9A5F21; }
-Annen næring [zoom>=13][zoom<=15] { line-color: #5A87DE; }
+Fritidsbolig [building=cabin|hut][zoom>=13][zoom<=15] { line-color: #D68723; }
+Garasje og uthus [building=barn][zoom>=13][zoom<=15] { line-color: #9A5F21; }
+Annen næring [building=office|factory][zoom>=13][zoom<=15] { line-color: #5A87DE; }
 Bolig [zoom>=13][zoom<=15] { line-color: #9A5F21; line-width: 0.7; }
 Gardsbruk [zoom>=13][zoom<=15] { line-color: #9A5F21; line-width: 1.058; }
 Fritidsbolig [zoom>=13][zoom<=15] { line-color: #D68723; line-width: 0.7; }
 Garasje og uthus [zoom>=13][zoom<=15] { line-color: #D68723; line-width: 0.882; }
-Kirke/kapell [zoom>=13][zoom<=15] { line-color: #000; line-width: 3.528; }
+Kirke/kapell [zoom>=13][zoom<=15] { line-color: black; line-width: 3.528; }
 Sykehus [zoom>=13][zoom<=15] { line-color: #FF;0;33; line-width: 2; }
 Sykehus [zoom>=13][zoom<=15] { line-color: #FF;0;33; line-width: 3; }
 Annen fiskeri og landbruk [zoom>=13][zoom<=15] { line-color: #9A5F21; line-width: 0.882; }
 Annen mindre næring [zoom>=13][zoom<=15] { line-color: #5A87DE; line-width: 0.882; }
 Annen næring [zoom>=13][zoom<=15] { line-color: #5A87DE; line-width: 1.058; }
-Liten bekk [zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; }
-Stor bekk [zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.15; }
+Liten bekk [waterway=stream][zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; }
+Stor bekk [waterway=stream][zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.15; }
 Flomløpkant [zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.15; line-dasharray: 6,2; }
 Forsenkningskurve [zoom>=15][zoom<=16] { line-color: #C88546; line-width: 0.75/0.06; line-dasharray: 1,12; } //Loddrett strek på tynn heltrukken linje
 Hjelpekurve [zoom>=15][zoom<=16] { line-color: #C88546; line-width: 0.06; line-dasharray: 3,0.75; }
@@ -280,69 +280,69 @@ Høydekurve [zoom>=15][zoom<=16] { line-color: #C88546; line-width: 0.06; }
 Forsenkningskurve [zoom>=13][zoom<=15] { line-color: #C88546; line-width: 1.5/0.1; line-dasharray: 1,12; } //Loddrett strek på tynn heltrukken linje
 Hjelpekurve [zoom>=13][zoom<=15] { line-color: #C88546; line-width: 0.1; line-dasharray: 3,0.75; }
 Høydekurve [zoom>=13][zoom<=15] { line-color: #C88546; line-width: 0.1; }
-Trigonometrisk punkt [zoom>=15][zoom<=16] { line-color: #8F5F24; line-width: 0.75; }
+Trigonometrisk punkt [man_made=survey_point][zoom>=15][zoom<=16] { line-color: #8F5F24; line-width: 0.75; }
 Terrengpunkt [zoom>=15][zoom<=16] { line-color: #8F5F24; line-width: 0.75; }
-Trigonometrisk punkt [zoom>=13][zoom<=15] { line-color: #8F5F24; line-width: 1.5; }
+Trigonometrisk punkt [man_made=survey_point][zoom>=13][zoom<=15] { line-color: #8F5F24; line-width: 1.5; }
 Terrengpunkt [zoom>=13][zoom<=15] { line-color: #8F5F24; line-width: 1.5; }
 Jernbanestasjon [zoom>=13][zoom<=15] { line-color: #FFFFFF; line-width: 2.0/1.5; }
-Passasjerferjestrekning [zoom>=13][zoom<=15] { line-color: #C21F29; line-width: 0.15; line-dasharray: 3,6; }
+Passasjerferjestrekning [route=ferry][zoom>=13][zoom<=15] { line-color: #C21F29; line-width: 0.15; line-dasharray: 3,6; }
 Skytefelt [zoom>=13][zoom<=16] { } // Ikke symbolisert
-Skytefeltsgrense [zoom>=13][zoom<=16] { line-color: #FFC8FF; line-width: 0.17/0.8; line-dasharray: 2,2; } //Rosa heltrukken linje med svart strek - for- skyvning 0.4 mm
+Skytefeltsgrense [zoom>=13][zoom<=16] { outline-color: #FFC8FF; line-color: black; outline-width:0.17; line-width: 0.8; line-dasharray: 2,2; } //Rosa heltrukken linje med svart strek - forskyvning 0.4 mm
 Allmenning [zoom>=13][zoom<=16] { } // Ikke symbolisert
-Allmenninggrense [zoom>=13][zoom<=16] { line-color: #000; line-width: 0.15; line-dasharray: 5,4/6; } //Svart stipling med ulike mellomrom
+Allmenninggrense [zoom>=13][zoom<=16] { line-color: black; line-width: 0.15; line-dasharray: 5,4/6; } //Svart stipling med ulike mellomrom
 Lik N50 stedsnavn, se merknadsfeltet [zoom>=15][zoom<=16] { } // Lik presentasjon som for referansemålestokk1:40000
 Lik N50 stedsnavn, se merknadsfeltet [zoom>=15][zoom<=15] { } // Lik presentasjon som for referansemålestokk1:40000
-By og tettsted [zoom>=14][zoom<=15] { text-fill: #000; text-size: 13; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=14][zoom<=15] { text-fill: #000; text-size: 10; text-face-name: Verdana; } Bold
-By og tettsted [zoom>=14][zoom<=15] { text-fill: #000; text-size: 10; text-face-name: Verdana; } Bold
-By og tettsted [zoom>=14][zoom<=15] { text-fill: #000; text-size: 9; text-face-name: Verdana; } Bold
-By og tettsted [zoom>=14][zoom<=15] { text-fill: #000; text-size: 7; text-face-name: Verdana; } Bold
-Bygd og bebyggelse [zoom>=14][zoom<=15] { text-fill: #000; text-size: 12; text-transform:uppercase; text-face-name: Verdana; }
-Bygd og bebyggelse [zoom>=14][zoom<=15] { text-fill: #000; text-size: 10; text-face-name: Verdana; }
-Bygd og bebyggelse [zoom>=14][zoom<=15] { text-fill: #000; text-size: 9; text-face-name: Verdana; }
-Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: #000; text-size: 11; text-face-name: Verdana; }
-Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: #000; text-size: 10; text-face-name: Verdana; }
-Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Administrative områder [zoom>=14][zoom<=15] { text-fill: #000; text-size: 9; text-face-name: Verdana; }
-Administrative områder [zoom>=14][zoom<=15] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Administrative områder [zoom>=14][zoom<=15] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 14; text-transform:uppercase; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 12; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 9; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Høydepunkt [zoom>=14][zoom<=15] { text-fill: #000; text-size: 5; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 14; text-transform:uppercase; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 11; text-transform:uppercase; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 9; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Områdenavn [zoom>=14][zoom<=15] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Havområde [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 17; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 15; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 11; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 9; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 9; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 8; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 7; text-face-name: Verdana; }
-Vannhøydetall [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 5; text-face-name: Verdana; }
-Sjø [zoom>=14][zoom<=15] { text-fill: #000; text-size: 10; text-transform:uppercase; text-face-name: Verdana; }
-Sjø [zoom>=14][zoom<=15] { text-fill: #000; text-size: 9; text-face-name: Verdana; }
-Sjø [zoom>=14][zoom<=15] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Sjø [zoom>=14][zoom<=15] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Sjø [zoom>=14][zoom<=15] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Sjø [zoom>=14][zoom<=15] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 14; text-transform:uppercase; text-face-name: Verdana; }
-Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 12; text-face-name: Verdana; }
-Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 9; text-face-name: Verdana; }
-Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 7; text-face-name: Verdana; }
-Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 6; text-face-name: Verdana; }
-Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 5; text-face-name: Verdana; }
-Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 4; text-face-name: Verdana; }
-Tank [zoom>=13][zoom<=15] { #000; }
+By og tettsted [zoom>=14][zoom<=15] { text-fill: black; text-size: 13; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=14][zoom<=15] { text-fill: black; text-size: 10; } Bold
+By og tettsted [zoom>=14][zoom<=15] { text-fill: black; text-size: 10; } Bold
+By og tettsted [zoom>=14][zoom<=15] { text-fill: black; text-size: 9; } Bold
+By og tettsted [zoom>=14][zoom<=15] { text-fill: black; text-size: 7; } Bold
+Bygd og bebyggelse [zoom>=14][zoom<=15] { text-fill: black; text-size: 12; text-transform:uppercase; }
+Bygd og bebyggelse [zoom>=14][zoom<=15] { text-fill: black; text-size: 10; }
+Bygd og bebyggelse [zoom>=14][zoom<=15] { text-fill: black; text-size: 9; }
+Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: black; text-size: 8; }
+Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: black; text-size: 7; }
+Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: black; text-size: 11; }
+Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: black; text-size: 10; }
+Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: black; text-size: 8; }
+Bygning og institusjon [zoom>=14][zoom<=15] { text-fill: black; text-size: 7; }
+Administrative områder [zoom>=14][zoom<=15] { text-fill: black; text-size: 9; }
+Administrative områder [zoom>=14][zoom<=15] { text-fill: black; text-size: 6; }
+Administrative områder [zoom>=14][zoom<=15] { text-fill: black; text-size: 6; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 14; text-transform:uppercase; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 12; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 9; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 7; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 7; }
+Høydepunkt [zoom>=14][zoom<=15] { text-fill: black; text-size: 5; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 4; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 14; text-transform:uppercase; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 11; text-transform:uppercase; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 9; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 8; }
+Områdenavn [zoom>=14][zoom<=15] { text-fill: black; text-size: 7; }
+Havområde [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 17; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 15; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 11; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 9; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 9; }
+Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 8; }
+Kyst, innsjø og vassdrag [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 7; }
+Vannhøydetall [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 5; }
+Sjø [zoom>=14][zoom<=15] { text-fill: black; text-size: 10; text-transform:uppercase; }
+Sjø [zoom>=14][zoom<=15] { text-fill: black; text-size: 9; }
+Sjø [zoom>=14][zoom<=15] { text-fill: black; text-size: 8; }
+Sjø [zoom>=14][zoom<=15] { text-fill: black; text-size: 7; }
+Sjø [zoom>=14][zoom<=15] { text-fill: black; text-size: 6; }
+Sjø [zoom>=14][zoom<=15] { text-fill: black; text-size: 4; }
+Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 14; text-transform:uppercase; }
+Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 12; }
+Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 9; }
+Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 7; }
+Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 6; }
+Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 5; }
+Bre [zoom>=14][zoom<=15] { text-fill: #3278FF; text-size: 4; }
+Tank [zoom>=13][zoom<=15] { black; }
 Betjent [zoom>=13][zoom<=15] { #FF0000; line-width: 1.3; }
 Dagsturhytte [zoom>=13][zoom<=15] { line-color: #FF;0;0; line-width: 1.3/1.0; } // Rødt kvadrat med hvitt fyll
 Rastebu/nødbu [zoom>=13][zoom<=15] { line-color: #FCFAB3; line-width: 1.4/0.35 omriss; } // Gul sirkel med rødt omriss
@@ -351,7 +351,7 @@ Ubetjent [zoom>=13][zoom<=15] { line-color: #FF;0;0; line-width: 1.3/1.0; } // R
 Elv [zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; }
 Innsjøkant [zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; }
 Kystkontur [zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; }
-Vegsperring [zoom>=13][zoom<=15] { text-fill: #000; text-size: 1; } // Arial black, unicode 124
+Vegsperring [zoom>=13][zoom<=15] { point-file: url; text-fill: black; text-size: 1; } // Arial black, unicode 124
 Naturvernområde [zoom>=13][zoom<=16] { } // Ikke symbolisert
 Naturverngrense [zoom>=13][zoom<=16] { line-color: #00;9C;0; line-width: 0.2; }
 Fylkesgrense [zoom>=11][zoom<=14] { line-color: #B487FF; line-width: 1.5; line-dasharray: 17,6; }
@@ -359,26 +359,26 @@ Kommunegrense [zoom>=11][zoom<=14] { line-color: #B487FF; line-width: 1.4; line-
 Riksgrense [zoom>=11][zoom<=14] { line-color: #BE5ABE; line-width: 2; line-dasharray: 20,10; }
 Grunnlinje [zoom>=11][zoom<=14] { line-color: #D2733C; line-width: 0.4; line-dasharray: 12,6; }
 Territorialgrense [zoom>=11][zoom<=14] { line-color: #BE5ABE; line-width: 0.7; line-dasharray: ??,2; }
-Grunnlinjepunkt [zoom>=12][zoom<=15] { line-color: #000; line-width: 0.6; }
+Grunnlinjepunkt [zoom>=12][zoom<=15] { line-color: black; line-width: 0.6; }
 Riksgrenserøys [zoom>=12][zoom<=15] { line-color: #FFFFFF; line-width: 1.2/1.2; }
-Dam [zoom>=11][zoom<=14] { line-color: #000; line-width: 0.7; }
-Kai og brygge [zoom>=11][zoom<=14] { line-color: #000; line-width: 0.35; }
-Molo [zoom>=11][zoom<=14] { line-color: #000; line-width: 0.53; }
-Fyr [zoom>=11][zoom<=14] { line-color: #000; } // 3 fonter danner et symbol
-Gruve [zoom>=11][zoom<=14] { line-color: #000; line-width: 5.3; }
+Dam [zoom>=11][zoom<=14] { line-color: black; line-width: 0.7; }
+Kai og brygge [zoom>=11][zoom<=14] { line-color: black; line-width: 0.35; }
+Molo [zoom>=11][zoom<=14] { line-color: black; line-width: 0.53; }
+Fyr [zoom>=11][zoom<=14] { line-color: black; } // 3 fonter danner et symbol
+Gruve [zoom>=11][zoom<=14] { line-color: black; line-width: 5.3; }
 Vannflate [zoom>=11][zoom<=14] { line-color: #E0FFFF; }
-Myr [zoom>=11][zoom<=14] { line-color: #82C8F0; line-width: 0.25; } // Linjeavstand 1,5 mm
-Snø og isbre [zoom>=11][zoom<=14] { line-color: #00A6FF; line-width: 0.21; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
-Skog [zoom>=11][zoom<=14] { line-color: #D2E67C; }
+Myr [natural=wetland][zoom>=11][zoom<=14] { line-color: #82C8F0; line-width: 0.25; } // Linjeavstand 1,5 mm
+Snø og isbre [natural=glacier][zoom>=11][zoom<=14] { line-color: #00A6FF; line-width: 0.21; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
+Skog [natural=wood][zoom>=11][zoom<=14] { line-color: #D2E67C; }
 Dyrket mark [zoom>=11][zoom<=14] { line-color: #FFF7A3; }
-Tettbebyggelse [zoom>=11][zoom<=14] { line-color: #F7BE8C; line-width: 0.15; } // Orange flate med svartomriss
+Tettbebyggelse [landuse=residential][zoom>=11][zoom<=14] { polygon-fill: #F7BE8C; line-color: black; line-width: 0.15; } // Orange flate med svartomriss
 Flyplass [zoom>=11][zoom<=14] { line-color: #FFFFFF; line-width: 0.15; } // Hvit flate med svartomriss
-Dagbrudd og steintipp [zoom>=11][zoom<=14] { line-color: #D7D7D7; line-width: 0.15; } // Grå flate med svartomriss
-Industriområde [zoom>=11][zoom<=14] { line-color: #D7D7D7; line-width: 0.15; } // Grå flate med svartomriss
-Flyplass [zoom>=11][zoom<=14] { line-color: #000; line-width: 6.35; }
+Dagbrudd og steintipp [landuse=quarry][zoom>=11][zoom<=14] { polygon-fill: #D7D7D7; line-color: black; line-width: 0.15; } // Grå flate med svartomriss
+Industriområde [landuse=industrial][zoom>=11][zoom<=14] { polygon-fill: #D7D7D7; line-color: black; line-width: 0.15; } // Grå flate med svartomriss
+Flyplass [zoom>=11][zoom<=14] { line-color: black; line-width: 6.35; }
 Industri og steinbrudd [zoom>=11][zoom<=14] { line-color: #D7D7D7; line-width: 4/0.3; } // Grå sirkelflate medsvart omriss
-Tettbebyggelse [zoom>=11][zoom<=14] { line-color: #F7BE8C; line-width: 4/0.3; } // Orange sirkelflate medsvart omriss
-Jernbane [zoom>=11][zoom<=14] { line-color: #000; line-width: 1.2; }
+Tettbebyggelse [landuse=residential][zoom>=11][zoom<=14] { polygon-fill: #F7BE8C; line-color: black; line-width: 4/0.3; } // Orange sirkelflate medsvart omriss
+Jernbane [zoom>=11][zoom<=14] { line-color: black; line-width: 1.2; }
 Jernbane i tunnel [zoom>=11][zoom<=14] { line-color: #828282; line-width: 0.9; line-dasharray: 6,3.6; }
 Jernbane på bru [zoom>=11][zoom<=14] { line-color: #828282; line-width: 0.6/1.1; } // Grå linje på svart linje
 Bilferjestrekning [zoom>=11][zoom<=14] { line-color: #C31E28; line-width: 0.7; line-dasharray: 10,8; }
@@ -392,10 +392,10 @@ Europa- og riksveg i tunnel, motorveg klasse A [zoom>=11][zoom<=14] { line-color
 Europa- og riksveg i tunnel [zoom>=11][zoom<=14] { line-color: #FF6666; line-width: 1.4; line-dasharray: 11,5; }
 Fylkesveg i tunnel [zoom>=11][zoom<=14] { line-color: #FF6666; line-width: 1.1; line-dasharray: 11,5; }
 Kommunal veg i tunnel [zoom>=11][zoom<=14] { line-color: #C8C8C8; line-width: 1; line-dasharray: 8.5,1; }
-Privat veg i tunnel [zoom>=11][zoom<=14] { line-color: #000; line-width: 0.4; line-dasharray: 9,3.5; } //2 linjer med ulik for- skyvning (-0.5 og 0.5)
+Privat veg i tunnel [zoom>=11][zoom<=14] { line-color: black; line-width: 0.4; line-dasharray: 9,3.5; } //2 linjer med ulik for- skyvning (-0.5 og 0.5)
 Gardsbruk/bolig [zoom>=11][zoom<=14] { line-color: #9A5F21; line-width: 2.8; }
 Overnattingssted [zoom>=11][zoom<=14] { line-color: #5A87DE; line-width: 2.8; }
-Kirkebygg [zoom>=11][zoom<=14] { line-color: #000; line-width: 10.5; }
+Kirkebygg [zoom>=11][zoom<=14] { line-color: black; line-width: 10.5; }
 Sykehus [zoom>=11][zoom<=14] { line-color: #FF;0;33; line-width: 6; }
 Sykehus [zoom>=11][zoom<=14] { line-color: #FF;0;33; line-width: 7.5; }
 Fritidsbolig [zoom>=11][zoom<=14] { line-color: #D68723; line-width: 2.1; }
@@ -410,41 +410,41 @@ Høydelag 500-1000 moh [zoom>=11][zoom<=14] { line-color: #FFEBB3; }
 Høydelag 1000-1500 moh [zoom>=11][zoom<=14] { line-color: #F2D999; }
 Høydelag 1500-2000 moh [zoom>=11][zoom<=14] { line-color: #E0C38D; }
 Høydelag 2000-2500 moh [zoom>=11][zoom<=14] { line-color: #D1A880; }
-Trigonometrisk punkt [zoom>=11][zoom<=14] { line-color: #8F5F24; line-width: 3.5; }
+Trigonometrisk punkt [man_made=survey_point][zoom>=11][zoom<=14] { line-color: #8F5F24; line-width: 3.5; }
 Terrengpunkt [zoom>=11][zoom<=14] { line-color: #8F5F24; line-width: 3.5; }
 Jernbanestasjon [zoom>=11][zoom<=14] { line-color: #FFFFFF; line-width: 3/0.5; } // Hvit sirkel med svart omriss
-Passasjerferjestrekning [zoom>=11][zoom<=14] { line-color: #C31E28; line-width: 0.7; line-dasharray: 6,12; }
+Passasjerferjestrekning [route=ferry][zoom>=11][zoom<=14] { line-color: #C31E28; line-width: 0.7; line-dasharray: 6,12; }
 Lik N250 stedsnavn, se merknadsfeltet [zoom>=13][zoom<=14] { } // Lik presentasjon som for referansemålestokk 1:170000
-By og tettsted [zoom>=12][zoom<=13] { text-fill: #000; text-size: 11; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=12][zoom<=13] { text-fill: #000; text-size: 9; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=12][zoom<=13] { text-fill: #000; text-size: 9; text-face-name: Verdana; } Bold
-By og tettsted [zoom>=12][zoom<=13] { text-fill: #000; text-size: 8; text-face-name: Verdana; } Bold
-Bygd og bebyggelse [zoom>=12][zoom<=13] { text-fill: #000; text-size: 7; text-face-name: Verdana; } Bold
-Bygd og bebyggelse [zoom>=12][zoom<=13] { text-fill: #000; text-size: 6; text-face-name: Verdana; } Bold
-Bygning og institusjon [zoom>=12][zoom<=13] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Bygning og institusjon [zoom>=12][zoom<=13] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Områdenavn [zoom>=12][zoom<=13] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Områdenavn [zoom>=12][zoom<=13] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Områdenavn [zoom>=12][zoom<=13] { text-fill: #000; text-size: 12; text-transform:uppercase; text-face-name: Verdana; }
-Områdenavn [zoom>=12][zoom<=13] { text-fill: #000; text-size: 12; text-face-name: Verdana; }
-Områdenavn [zoom>=12][zoom<=13] { text-fill: #000; text-size: 9; text-face-name: Verdana; }
-Områdenavn [zoom>=12][zoom<=13] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Havområde [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 15; text-transform:uppercase; text-face-name: Verdana; }
-Havområde [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 11; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 9; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 9; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 8; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 6; text-face-name: Verdana; }
-Bre [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 10; text-transform:uppercase; text-face-name: Verdana; }
-Bre [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 7; text-face-name: Verdana; }
-Sjø [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 9; text-face-name: Verdana; }
-Administrative områder [zoom>=12][zoom<=13] { text-fill: #000; text-size: 16; text-transform:uppercase; text-face-name: Verdana; }
-Administrative områder [zoom>=12][zoom<=13] { text-fill: #96;4B;0; text-size: 15; text-transform:uppercase; text-face-name: Verdana; }
-Administrative områder [zoom>=12][zoom<=13] { text-fill: #96;4B;0; text-size: 11; text-transform:uppercase; text-face-name: Verdana; }
-Verneområder [zoom>=12][zoom<=13] { text-fill: #000; text-size: 10; text-face-name: Verdana; }
-Verneområder [zoom>=12][zoom<=13] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Høydepunkt [zoom>=12][zoom<=13] { text-fill: #000; text-size: 5; text-face-name: Verdana; }
-Vannhøydetall [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 5; text-face-name: Verdana; }
+By og tettsted [zoom>=12][zoom<=13] { text-fill: black; text-size: 11; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=12][zoom<=13] { text-fill: black; text-size: 9; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=12][zoom<=13] { text-fill: black; text-size: 9; } Bold
+By og tettsted [zoom>=12][zoom<=13] { text-fill: black; text-size: 8; } Bold
+Bygd og bebyggelse [zoom>=12][zoom<=13] { text-fill: black; text-size: 7; } Bold
+Bygd og bebyggelse [zoom>=12][zoom<=13] { text-fill: black; text-size: 6; } Bold
+Bygning og institusjon [zoom>=12][zoom<=13] { text-fill: black; text-size: 6; }
+Bygning og institusjon [zoom>=12][zoom<=13] { text-fill: black; text-size: 7; }
+Områdenavn [zoom>=12][zoom<=13] { text-fill: black; text-size: 8; }
+Områdenavn [zoom>=12][zoom<=13] { text-fill: black; text-size: 6; }
+Områdenavn [zoom>=12][zoom<=13] { text-fill: black; text-size: 12; text-transform:uppercase; }
+Områdenavn [zoom>=12][zoom<=13] { text-fill: black; text-size: 12; }
+Områdenavn [zoom>=12][zoom<=13] { text-fill: black; text-size: 9; }
+Områdenavn [zoom>=12][zoom<=13] { text-fill: black; text-size: 7; }
+Havområde [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 15; text-transform:uppercase; }
+Havområde [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 11; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 9; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 9; }
+Kyst, innsjø og vassdrag [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 8; }
+Kyst, innsjø og vassdrag [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 6; }
+Bre [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 10; text-transform:uppercase; }
+Bre [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 7; }
+Sjø [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 9; }
+Administrative områder [zoom>=12][zoom<=13] { text-fill: black; text-size: 16; text-transform:uppercase; }
+Administrative områder [zoom>=12][zoom<=13] { text-fill: #96;4B;0; text-size: 15; text-transform:uppercase; }
+Administrative områder [zoom>=12][zoom<=13] { text-fill: #96;4B;0; text-size: 11; text-transform:uppercase; }
+Verneområder [zoom>=12][zoom<=13] { text-fill: black; text-size: 10; }
+Verneområder [zoom>=12][zoom<=13] { text-fill: black; text-size: 8; }
+Høydepunkt [zoom>=12][zoom<=13] { text-fill: black; text-size: 5; }
+Vannhøydetall [zoom>=12][zoom<=13] { text-fill: #3278FF; text-size: 5; }
 Betjent [zoom>=11][zoom<=14] { line-color: #FF;0;0; line-width: 2.5; }
 Dagsturhytte [zoom>=11][zoom<=14] { line-color: #FF;0;0; line-width: 2.5/1.9; } // Rød flate med hvitt fyll
 Rastebu/nødbu [zoom>=11][zoom<=14] { line-color: #FCFAB3; line-width: 2.5/0.35 omriss; } // Gul sirkel med rødt omriss
@@ -458,35 +458,35 @@ Kommunal veg på bru [zoom>=11][zoom<=14] { line-color: #6E6E6E; line-width: 1.0
 Privat veg på bru [zoom>=11][zoom<=14] { line-color: #6E6E6E; line-width: 0.8/1.4; } // Grå linje på svart linje
 Naturvernområde [zoom>=11][zoom<=14] { }
 Naturverngrense [zoom>=11][zoom<=14] { line-color: #00;9C;0; line-width: 0.8; }
-Dam [zoom>=10][zoom<=11] { line-color: #000; line-width: 0.35; }
-Kai og brygge [zoom>=10][zoom<=11] { line-color: #000; line-width: 0.35; }
-Molo [zoom>=10][zoom<=11] { line-color: #000; line-width: 0.35; }
+Dam [zoom>=10][zoom<=11] { line-color: black; line-width: 0.35; }
+Kai og brygge [zoom>=10][zoom<=11] { line-color: black; line-width: 0.35; }
+Molo [zoom>=10][zoom<=11] { line-color: black; line-width: 0.35; }
 Fylkesgrense [zoom>=10][zoom<=12] { line-color: #B487FF; line-width: 4; line-dasharray: 42,18; }
 Kommunegrense [zoom>=10][zoom<=12] { line-color: #B487FF; line-width: 3; line-dasharray: 30,18; }
 Riksgrense [zoom>=10][zoom<=12] { line-color: #BE5ABE; line-width: 5; line-dasharray: 60,30; }
 Grunnlinje [zoom>=10][zoom<=12] { line-color: #D2733C; line-width: 1.5; line-dasharray: 36,18; }
 Territorialgrense [zoom>=10][zoom<=12] { line-color: #BE5ABE; line-width: 2; line-dasharray: ??,6; }
-Dam [zoom>=10][zoom<=12] { line-color: #000; line-width: 3.5278; }
-Kai og brygge [zoom>=10][zoom<=12] { line-color: #000; line-width: 2.1167; }
-Molo [zoom>=10][zoom<=12] { line-color: #000; line-width: 3.175; }
-Fyr [zoom>=10][zoom<=12] { line-color: #000; } // 3 fonter danner1 symbol
-Gruve [zoom>=10][zoom<=12] { text-fill: #000; text-size: 35; } // Arial, unicode 169
+Dam [zoom>=10][zoom<=12] { line-color: black; line-width: 3.5278; }
+Kai og brygge [zoom>=10][zoom<=12] { line-color: black; line-width: 2.1167; }
+Molo [zoom>=10][zoom<=12] { line-color: black; line-width: 3.175; }
+Fyr [zoom>=10][zoom<=12] { line-color: black; } // 3 fonter danner1 symbol
+Gruve [zoom>=10][zoom<=12] { point-file: url; text-fill: black; text-size: 35; } // Arial, unicode 169
 Vannflate [zoom>=10][zoom<=12] { line-color: #E0FFFF; }
-Myr [zoom>=10][zoom<=12] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 4.0 mm
-Snø og isbre [zoom>=10][zoom<=12] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
-Skog [zoom>=10][zoom<=12] { line-color: #D2E67C; }
-Tettbebyggelse [zoom>=10][zoom<=12] { line-color: #F7BE8C; line-width: 0.5; } // Oransje flate med svartomriss
-Industri [zoom>=10][zoom<=12] { line-color: #D7D7D7; line-width: 0.5; } // Grå flate med svartomriss
-Flyplass [zoom>=10][zoom<=12] { line-color: #000; line-width: 31.75; }
-Industri og steinbrudd [zoom>=10][zoom<=12] { line-color: #D7D7D7; line-width: 8/0.5; } // Grå sirkelflate medsvart omriss
-Tettbebyggelse [zoom>=10][zoom<=12] { line-color: #F7BE8C; line-width: 8/0.5; } // Oransje sirkelflate medsvart omriss
-Jernbane enkeltspor [zoom>=10][zoom<=12] { line-color: #000; line-width: 2.5; } // Grå linje på svart linje
+Myr [natural=wetland][zoom>=10][zoom<=12] { polygon-pattern-file: url; line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 4.0 mm
+Snø og isbre [natural=glacier][zoom>=10][zoom<=12] { polygon-fill: white; line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
+Skog [natural=wood][zoom>=10][zoom<=12] { polygon-fill: #D2E67C; }
+Tettbebyggelse [landuse=residential][zoom>=10][zoom<=12] { polygon-fill: #F7BE8C; line-color: black; line-width: 0.5; } // Oransje flate med svartomriss
+Industri [zoom>=10][zoom<=12] { polygon-fill: #D7D7D7; line-color: black; line-width: 0.5; } // Grå flate med svartomriss
+Flyplass [zoom>=10][zoom<=12] { polygon-fill: white; line-color: black; line-width: 31.75; }
+Industri og steinbrudd [zoom>=10][zoom<=12] { polygon-fill: #D7D7D7; line-color: black; line-width: 8/0.5; } // Grå sirkelflate medsvart omriss
+Tettbebyggelse [landuse=residential][zoom>=10][zoom<=12] { polygon-fill: #F7BE8C; line-color: black; line-width: 8/0.5; } // Oransje sirkelflate medsvart omriss
+Jernbane enkeltspor [zoom>=10][zoom<=12] { line-color: black; line-width: 2.5; } // Grå linje på svart linje
 Jernbane i tunnel [zoom>=10][zoom<=12] { line-color: #828282; line-width: 2; line-dasharray: 15,9; }
 Jernbane på bru [zoom>=10][zoom<=12] { line-color: #828282; line-width: 3.0/5.0; } // Grå linje på svart linje
 Bilferjestrekning [zoom>=10][zoom<=12] { line-color: #C21F29; line-width: 1.5; line-dasharray: 25,20; }
 Gård [zoom>=10][zoom<=12] { line-color: #9A5F21; line-width: 7; }
 Overnattingssted [zoom>=10][zoom<=12] { line-color: #5A87DE; line-width: 7; }
-Kirkebygg [zoom>=10][zoom<=12] { line-color: #000; line-width: 31.75; }
+Kirkebygg [zoom>=10][zoom<=12] { line-color: black; line-width: 31.75; }
 Fritidsbolig [zoom>=10][zoom<=12] { line-color: #D68723; line-width: 6.35; }
 Andre Bygg [zoom>=10][zoom<=12] { line-color: #9A5F21; line-width: 7; }
 Stor bekk [zoom>=10][zoom<=12] { line-color: #00A6FF; line-width: 1.06; }
@@ -498,40 +498,40 @@ Høydelag 500-1000 moh [zoom>=10][zoom<=12] { line-color: #FFEBB3; }
 Høydelag 1000-1500 moh [zoom>=10][zoom<=12] { line-color: #F2D999; }
 Høydelag 1500-2000 moh [zoom>=10][zoom<=12] { line-color: #E0C38D; }
 Høydelag 2000-2500 moh [zoom>=10][zoom<=12] { line-color: #D1A880; }
-Trigonometrisk punkt [zoom>=10][zoom<=12] { line-color: #8F5F24; line-width: 14.11; }
+Trigonometrisk punkt [man_made=survey_point][zoom>=10][zoom<=12] { line-color: #8F5F24; line-width: 14.11; }
 Terrengpunkt [zoom>=10][zoom<=12] { line-color: #8F5F24; line-width: 14.11; }
 Jernbanestasjon [zoom>=10][zoom<=12] { line-color: #FFFFFF; line-width: 9/1.5; } // Hvit sirkelflate medsvart omriss
-Passasjerferjestrekning [zoom>=10][zoom<=12] { line-color: #C21F29; line-width: 1.5; line-dasharray: 15,30; }
+Passasjerferjestrekning [route=ferry][zoom>=10][zoom<=12] { line-color: #C21F29; line-width: 1.5; line-dasharray: 15,30; }
 Lik N500 stedsnavn, se merknadsfeltet [zoom>=11][zoom<=12] { } // Lik presentasjon som for referansemålestokk1:350000
-By og tettsted [zoom>=11][zoom<=11] { text-fill: #000; text-size: 10; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=11][zoom<=11] { text-fill: #000; text-size: 8; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=11][zoom<=11] { text-fill: #000; text-size: 8; text-face-name: Verdana; } Bold
-By og tettsted [zoom>=11][zoom<=11] { text-fill: #000; text-size: 7; text-face-name: Verdana; } Bold
-Bygd og bebyggelse [zoom>=11][zoom<=11] { text-fill: #000; text-size: 6; text-face-name: Verdana; } Bold
-Bygd og bebyggelse [zoom>=11][zoom<=11] { text-fill: #000; text-size: 5; text-face-name: Verdana; } Bold
-Bygning og institusjon [zoom>=11][zoom<=11] { text-fill: #000; text-size: 6.5; text-face-name: Verdana; }
-Bygning og institusjon [zoom>=11][zoom<=11] { text-fill: #000; text-size: 12; text-transform:uppercase; text-face-name: Verdana; }
-Områdenavn [zoom>=11][zoom<=11] { text-fill: #000; text-size: 9; text-face-name: Verdana; }
-Områdenavn [zoom>=11][zoom<=11] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Områdenavn [zoom>=11][zoom<=11] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Områdenavn [zoom>=11][zoom<=11] { text-fill: #000; text-size: 9; text-face-name: Verdana; }
-Områdenavn [zoom>=11][zoom<=11] { text-fill: #000; text-size: 6.5; text-face-name: Verdana; }
-Områdenavn [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 15; text-transform:uppercase; text-face-name: Verdana; }
-Havområde [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 11; text-transform:uppercase; text-face-name: Verdana; }
-Havområde [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 9; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 9; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 7.5; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 6; text-face-name: Verdana; }
-Bre [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 10; text-face-name: Verdana; }
-Bre [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 7; text-face-name: Verdana; }
-Administrative områder [zoom>=11][zoom<=11] { text-fill: #96;4B;0; text-size: 11; text-transform:uppercase; text-face-name: Verdana; }
-Administrative områder [zoom>=11][zoom<=11] { text-fill: #96;4B;0; text-size: 8; text-transform:uppercase; text-face-name: Verdana; }
-Verneområder [zoom>=11][zoom<=11] { text-fill: #000; text-size: 10; text-face-name: Verdana; }
-Verneområder [zoom>=11][zoom<=11] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Verneområder [zoom>=11][zoom<=11] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Høydepunkt [zoom>=11][zoom<=11] { text-fill: #000; text-size: 5; text-face-name: Verdana; }
-Vannhøydetall [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 5; text-face-name: Verdana; }
-Tettsted [zoom>=10][zoom<=12] { line-color: #F7BE8C; line-width: 8/0.5; } // Oransje punkt med svart omriss
+By og tettsted [zoom>=11][zoom<=11] { text-fill: black; text-size: 10; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=11][zoom<=11] { text-fill: black; text-size: 8; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=11][zoom<=11] { text-fill: black; text-size: 8; } Bold
+By og tettsted [zoom>=11][zoom<=11] { text-fill: black; text-size: 7; } Bold
+Bygd og bebyggelse [zoom>=11][zoom<=11] { text-fill: black; text-size: 6; } Bold
+Bygd og bebyggelse [zoom>=11][zoom<=11] { text-fill: black; text-size: 5; } Bold
+Bygning og institusjon [zoom>=11][zoom<=11] { text-fill: black; text-size: 6.5; }
+Bygning og institusjon [zoom>=11][zoom<=11] { text-fill: black; text-size: 12; text-transform:uppercase; }
+Områdenavn [zoom>=11][zoom<=11] { text-fill: black; text-size: 9; }
+Områdenavn [zoom>=11][zoom<=11] { text-fill: black; text-size: 8; }
+Områdenavn [zoom>=11][zoom<=11] { text-fill: black; text-size: 6; }
+Områdenavn [zoom>=11][zoom<=11] { text-fill: black; text-size: 9; }
+Områdenavn [zoom>=11][zoom<=11] { text-fill: black; text-size: 6.5; }
+Områdenavn [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 15; text-transform:uppercase; }
+Havområde [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 11; text-transform:uppercase; }
+Havområde [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 9; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 9; }
+Kyst, innsjø og vassdrag [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 7.5; }
+Kyst, innsjø og vassdrag [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 6; }
+Bre [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 10; }
+Bre [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 7; }
+Administrative områder [zoom>=11][zoom<=11] { text-fill: #96;4B;0; text-size: 11; text-transform:uppercase; }
+Administrative områder [zoom>=11][zoom<=11] { text-fill: #96;4B;0; text-size: 8; text-transform:uppercase; }
+Verneområder [zoom>=11][zoom<=11] { text-fill: black; text-size: 10; }
+Verneområder [zoom>=11][zoom<=11] { text-fill: black; text-size: 8; }
+Verneområder [zoom>=11][zoom<=11] { text-fill: black; text-size: 6; }
+Høydepunkt [zoom>=11][zoom<=11] { text-fill: black; text-size: 5; }
+Vannhøydetall [zoom>=11][zoom<=11] { text-fill: #3278FF; text-size: 5; }
+Tettsted [zoom>=10][zoom<=12] { polygon-fill: #F7BE8C; line-color: black; line-width: 8/0.5; } // Oransje punkt med svart omriss
 Betjent [zoom>=10][zoom<=12] { #FF0000; line-width: 6; }
 Dagsturhytte [zoom>=10][zoom<=12] { line-color: #FF;0;0; line-width: 7.0/5.0; } // Rød flate med hvitmaske
 Rastebu/nødbu [zoom>=10][zoom<=12] { line-color: #FCFAB3; line-width: 7.0/0.6; } // Gul sirkelflate medrødt omriss
@@ -546,11 +546,11 @@ Europa- og riksveg i tunnel, motorveg klasse A [zoom>=10][zoom<=12] { line-color
 Europa- og riksveg i tunnel [zoom>=10][zoom<=12] { line-color: #FF6666; line-width: 4; line-dasharray: 15.4,7; }
 Fylkesveg i tunnel [zoom>=10][zoom<=12] { line-color: #FF6666; line-width: 2.5; line-dasharray: 16.5,7.5; }
 Kommunal veg i tunnel [zoom>=10][zoom<=12] { line-color: #C8C8C8; line-width: 2; line-dasharray: 12.75,1.5; }
-Privat veg i tunnel [zoom>=10][zoom<=12] { text-fill: #000; line-width: 0.7; line-dasharray: 13.5,5.25; } //2 linjer med ulik for- skyvning (-0.7 og 0.7)
+Privat veg i tunnel [zoom>=10][zoom<=12] { text-fill: black; line-width: 0.7; line-dasharray: 13.5,5.25; } //2 linjer med ulik for- skyvning (-0.7 og 0.7)
 Europa- og riksveg på bru, motorveg klasse A [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 2.0/6.5/9.0; } // Gul linje på rød linje på svart linje
-Europa- og riksveg på bru [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 4.0/8.0; } // Rød linje på svart linje
-Fylkesveg på bru [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 3.0/5.5; } // Rød linje på svart linje
-Kommunalveg på bru [zoom>=10][zoom<=12] { line-color: #6E6E6E; line-width: 3.5/6.0; } // Grå linje på svart linje
+Europa- og riksveg på bru [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 4.0; outline-color: black; outline-width: 8.0; } // Rød linje på svart linje
+Fylkesveg på bru [zoom>=10][zoom<=12] { line-color: #D12429; line-width: 3.0; outline-color: black; outline-width: 5.5; } // Rød linje på svart linje
+Kommunalveg på bru [zoom>=10][zoom<=12] { line-color: #6E6E6E; line-width: 3.5; outline-color: black; outline-width: 6.0; } // Grå linje på svart linje
 Naturverngrense [zoom>=10][zoom<=12] { line-color: #00;9C;0; line-width: 3; }
 Fylkesgrense [zoom>=10][zoom<=11] { line-color: #B487FF; line-width: 7; line-dasharray: 70,30; }
 Kommunegrense [zoom>=10][zoom<=11] { line-color: #B487FF; line-width: 4; line-dasharray: 50,30; }
@@ -560,15 +560,15 @@ Territorialgrense [zoom>=10][zoom<=11] { line-color: #BE5ABE; line-width: 5; lin
 Fyr og lykt [zoom>=10][zoom<=11] { line-color: #5D;0;9C; line-width: 1.41/0.35; } // Lilla sirkelflate medsvart omriss
 Gruve [zoom>=10][zoom<=11] { line-color: #B0;39;0; line-width: 1.41/0.35; } // Brun sirkelflate medsvart omriss
 Vannflate [zoom>=10][zoom<=11] { line-color: #E0FFFF; }
-Myr [zoom>=10][zoom<=11] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 10.0 mm
-Snø og isbre [zoom>=10][zoom<=11] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
-Skog [zoom>=10][zoom<=11] { line-color: #D2E67C; }
-Tettbebyggelse [zoom>=10][zoom<=11] { line-color: #F7BE8C; line-width: 0.5; } // Orange flate med svartomriss
+Myr [natural=wetland][zoom>=10][zoom<=11] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 10.0 mm
+Snø og isbre [natural=glacier][zoom>=10][zoom<=11] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
+Skog [natural=wood][zoom>=10][zoom<=11] { line-color: #D2E67C; }
+Tettbebyggelse [landuse=residential][zoom>=10][zoom<=11] { polygon-fill: #F7BE8C; line-color: black; line-width: 0.5; } // Orange flate med svartomriss
 Industri [zoom>=10][zoom<=11] { line-color: #D7D7D7; line-width: 0.5; } // Grå flate med svartomriss
-Flyplass [zoom>=10][zoom<=11] { line-color: #000; line-width: 60; }
+Flyplass [zoom>=10][zoom<=11] { line-color: black; line-width: 60; }
 Industri og steinbrudd [zoom>=10][zoom<=11] { line-color: #D7D7D7; line-width: 20/0.5; } // Grå sirkelflate medsvart omriss
-Tettbebyggelse [zoom>=10][zoom<=11] { line-color: #F7BE8C; line-width: 20/0.5; } // Orange sirkelflate medsvart omriss
-Jernbane [zoom>=10][zoom<=11] { line-color: #000; line-width: 5; }
+Tettbebyggelse [landuse=residential][zoom>=10][zoom<=11] { polygon-fill: #F7BE8C; line-color: black; line-width: 20/0.5; } // Orange sirkelflate medsvart omriss
+Jernbane [zoom>=10][zoom<=11] { line-color: black; line-width: 5; }
 Jernbane i tunnel [zoom>=10][zoom<=11] { line-color: #7F7F7F; line-width: 4.31; line-dasharray: 25,15; }
 Bilferjestrekning [zoom>=10][zoom<=11] { line-color: #C21F29; line-width: 3; line-dasharray: 50,40; }
 Bygning [zoom>=10][zoom<=11] { line-color: #9A5F21; line-width: 15; }
@@ -582,28 +582,28 @@ Høydelag 1200-1800 moh [zoom>=10][zoom<=11] { line-color: #F2D999; }
 Høydelag 1800-2400 moh [zoom>=10][zoom<=11] { line-color: #E0C38D; }
 Høydelag 2400-3000 moh [zoom>=10][zoom<=11] { line-color: #D1A880; }
 Terrengpunkt [zoom>=10][zoom<=11] { line-color: #8F5F24; line-width: 3.5; }
-Passasjerferjestrekning [zoom>=10][zoom<=11] { line-color: #C21F29; line-width: 3; line-dasharray: 30,60; }
+Passasjerferjestrekning [route=ferry][zoom>=10][zoom<=11] { line-color: #C21F29; line-width: 3; line-dasharray: 30,60; }
 Lik N1000 stedsnavn, se merknadsfelt [zoom>=10][zoom<=11] { } // Lik presentasjon som for referansemålestokk1:800000
-By og tettsted [zoom>=9][zoom<=10] { text-fill: #000; text-size: 10; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=9][zoom<=10] { text-fill: #000; text-size: 8; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=9][zoom<=10] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-By og tettsted [zoom>=9][zoom<=10] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Bygd og bebyggelse [zoom>=9][zoom<=10] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Områdenavn [zoom>=9][zoom<=10] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Områdenavn [zoom>=9][zoom<=10] { text-fill: #000; text-size: 9.5; text-face-name: Verdana; }
-Områdenavn [zoom>=9][zoom<=10] { text-fill: #000; text-size: 8; text-face-name: Verdana; }
-Områdenavn [zoom>=9][zoom<=10] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Områdenavn [zoom>=9][zoom<=10] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Havområde [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 13; text-transform:uppercase; text-face-name: Verdana; }
-Havområde [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 9; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 7.5; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 6; text-face-name: Verdana; }
-Bre [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 8; text-face-name: Verdana; }
-Bre [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 7; text-face-name: Verdana; }
-Administrative områder [zoom>=9][zoom<=10] { text-fill: #96;4B;0; text-size: 10; text-transform:uppercase; text-face-name: Verdana; }
-Verneområder [zoom>=9][zoom<=10] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-By og tettsted [zoom>=9][zoom<=10] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Tettsted [zoom>=10][zoom<=11] { line-color: #F7BE8C; line-width: 20/0.5; } // Oransje sirkelflate medsvart omriss
+By og tettsted [zoom>=9][zoom<=10] { text-fill: black; text-size: 10; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=9][zoom<=10] { text-fill: black; text-size: 8; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=9][zoom<=10] { text-fill: black; text-size: 8; }
+By og tettsted [zoom>=9][zoom<=10] { text-fill: black; text-size: 7; }
+Bygd og bebyggelse [zoom>=9][zoom<=10] { text-fill: black; text-size: 6; }
+Områdenavn [zoom>=9][zoom<=10] { text-fill: black; text-size: 6; }
+Områdenavn [zoom>=9][zoom<=10] { text-fill: black; text-size: 9.5; }
+Områdenavn [zoom>=9][zoom<=10] { text-fill: black; text-size: 8; }
+Områdenavn [zoom>=9][zoom<=10] { text-fill: black; text-size: 7; }
+Områdenavn [zoom>=9][zoom<=10] { text-fill: black; text-size: 6; }
+Havområde [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 13; text-transform:uppercase; }
+Havområde [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 9; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 7.5; }
+Kyst, innsjø og vassdrag [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 6; }
+Bre [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 8; }
+Bre [zoom>=9][zoom<=10] { text-fill: #3278FF; text-size: 7; }
+Administrative områder [zoom>=9][zoom<=10] { text-fill: #96;4B;0; text-size: 10; text-transform:uppercase; }
+Verneområder [zoom>=9][zoom<=10] { text-fill: black; text-size: 6; }
+By og tettsted [zoom>=9][zoom<=10] { text-fill: black; text-size: 6; }
+Tettsted [zoom>=10][zoom<=11] { polygon-fill: #F7BE8C; line-color: black; line-width: 20/0.5; } // Oransje sirkelflate medsvart omriss
 Elv, innsjø- og kystkontur [zoom>=10][zoom<=11] { line-color: #00A6FF; line-width: 2.5; }
 Europa- og riksveg, motorveg klasse A [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 4.0/12.0; } // Gul linje på rød linje
 Europa- og riksveg [zoom>=10][zoom<=11] { line-color: #D2232A; line-width: 6; }
@@ -613,8 +613,8 @@ Europa- og riksveg i tunnel, motorveg klasse A [zoom>=10][zoom<=11] { line-color
 Europa- og riksveg i tunnel [zoom>=10][zoom<=11] { line-color: #FF6666; line-width: 6; line-dasharray: 33,15; }
 Fylkesveg i tunnel [zoom>=10][zoom<=11] { line-color: #FF6666; line-width: 4; line-dasharray: 22,10; }
 Europa- og riksveg på bru, motorveg klasse A [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 2.0/10.0/12.0; } // Gul linje på rød linje på svart linje
-Europa- og riksveg på bru [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 7.0/9.0; } // Rød linje på svart linje
-Fylkesveg på bru [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 5.0/6.5; } // Rød linje på svart linje
+Europa- og riksveg på bru [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 7.0; outline-color: black; outline-width: 9.0; } // Rød linje på svart linje
+Fylkesveg på bru [zoom>=10][zoom<=11] { line-color: #D12429; line-width: 5.0; outline-color: black; outline-width: 6.5; } // Rød linje på svart linje
 Naturverngrense [zoom>=10][zoom<=11] { line-color: #009C00; line-width: 5; }
 Fylkesgrense [zoom>=8][zoom<=10] { line-color: #B487FF; line-width: 12; line-dasharray: 105,45; }
 Kommunegrense [zoom>=8][zoom<=10] { line-color: #B487FF; line-width: 7; line-dasharray: 75,45; }
@@ -622,11 +622,11 @@ Riksgrense [zoom>=8][zoom<=10] { line-color: #BE5ABE; line-width: 19; line-dasha
 Grunnlinje [zoom>=8][zoom<=10] { line-color: #D2733C; line-width: 3; line-dasharray: 60,30; }
 Territorialgrense [zoom>=8][zoom<=10] { line-color: #BE5ABE; line-width: 5; line-dasharray: 90/18/18,18; }
 Vannflate [zoom>=8][zoom<=10] { line-color: #E0FFFF; }
-Myr [zoom>=8][zoom<=10] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 23.0 mm
-Snø og isbre [zoom>=8][zoom<=10] { polygon-fill; white: line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
-Skog [zoom>=8][zoom<=10] { line-color: #D2E67C; }
-Tettbebyggelse [zoom>=8][zoom<=10] { line-color: #F7BE8C; line-width: 0.15; } // Oransje flate med svartomriss
-Jernbane [zoom>=8][zoom<=10] { text-fill: #000; line-width: 10; }
+Myr [natural=wetland][zoom>=8][zoom<=10] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 23.0 mm
+Snø og isbre [natural=glacier][zoom>=8][zoom<=10] { polygon-fill; white: line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
+Skog [natural=wood][zoom>=8][zoom<=10] { line-color: #D2E67C; }
+Tettbebyggelse [landuse=residential][zoom>=8][zoom<=10] { polygon-fill: #F7BE8C; line-color: black; line-width: 0.15; } // Oransje flate med svartomriss
+Jernbane [zoom>=8][zoom<=10] { text-fill: black; line-width: 10; }
 Hurtigruta [zoom>=8][zoom<=10] { line-color: #C21F29; line-width: 10.15; line-dasharray: 60,120; }
 Stor bekk [zoom>=8][zoom<=10] { line-color: #00A6FF; line-width: 2; }
 Elv [zoom>=8][zoom<=10] { line-color: #00A6FF; line-width: 3; }
@@ -636,28 +636,28 @@ Høydelag 600-1200 moh [zoom>=8][zoom<=10] { line-color: #FFEBB3; }
 Høydelag 1200-1800 moh [zoom>=8][zoom<=10] { line-color: #F2D999; }
 Høydelag 1800-2400 moh [zoom>=8][zoom<=10] { line-color: #E0C38D; }
 Høydelag 2400-3000 moh [zoom>=8][zoom<=10] { line-color: #D1A880; }
-Flyplass [zoom>=8][zoom<=10] { text-fill: #000; line-width: 150; }
-Lik N2000 stedsnavn, se merknadsfelt [zoom>=9][zoom<=10] : x; } // Lik presentasjon som for referansemålestokk1:2000000
-By og tettsted [zoom>=7][zoom<=9] { text-fill: #000; text-size: 9; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=7][zoom<=9] { text-fill: #000; text-size: 7; text-transform:uppercase; text-face-name: Verdana; font-weight:bold; }
-By og tettsted [zoom>=7][zoom<=9] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-By og tettsted [zoom>=7][zoom<=9] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Bygd og bebyggelse [zoom>=7][zoom<=9] { text-fill: #000; text-size: 5; text-face-name: Verdana; }
-Områdenavn [zoom>=7][zoom<=9] { text-fill: #000; text-size: 5; text-face-name: Verdana; }
-Områdenavn [zoom>=7][zoom<=9] { text-fill: #000; text-size: 8.5; text-face-name: Verdana; }
-Områdenavn [zoom>=7][zoom<=9] { text-fill: #000; text-size: 7; text-face-name: Verdana; }
-Områdenavn [zoom>=7][zoom<=9] { text-fill: #000; text-size: 6; text-face-name: Verdana; }
-Områdenavn [zoom>=7][zoom<=9] { text-fill: #000; text-size: 5; text-face-name: Verdana; }
-Havområde [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 12; text-face-name: Verdana; }
-Havområde [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 8; text-transform:uppercase; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 6.5; text-face-name: Verdana; }
-Kyst, innsjø og vassdrag [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 5; text-face-name: Verdana; }
-Bre [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 7; text-face-name: Verdana; }
-Bre [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 6; text-face-name: Verdana; }
-Administrative områder [zoom>=7][zoom<=9] { text-fill: #96;4B;0; text-size: 9; text-transform:uppercase; text-face-name: Verdana; }
-Verneområder [zoom>=7][zoom<=9] { text-fill: #000; text-size: 5; text-face-name: Verdana; }
-Høydepunkt [zoom>=7][zoom<=9] { text-fill: #000; text-size: 4; text-face-name: Verdana; }
-By og tettsted [zoom>=7][zoom<=9] { text-fill: #000; line-width: 5; }
+Flyplass [zoom>=8][zoom<=10] { text-fill: black; line-width: 150; }
+Lik N2000 stedsnavn, se merknadsfelt [zoom>=9][zoom<=10] { } // Lik presentasjon som for referansemålestokk1:2000000
+By og tettsted [zoom>=7][zoom<=9] { text-fill: black; text-size: 9; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=7][zoom<=9] { text-fill: black; text-size: 7; text-transform:uppercase; font-weight:bold; }
+By og tettsted [zoom>=7][zoom<=9] { text-fill: black; text-size: 7; }
+By og tettsted [zoom>=7][zoom<=9] { text-fill: black; text-size: 6; }
+Bygd og bebyggelse [zoom>=7][zoom<=9] { text-fill: black; text-size: 5; }
+Områdenavn [zoom>=7][zoom<=9] { text-fill: black; text-size: 5; }
+Områdenavn [zoom>=7][zoom<=9] { text-fill: black; text-size: 8.5; }
+Områdenavn [zoom>=7][zoom<=9] { text-fill: black; text-size: 7; }
+Områdenavn [zoom>=7][zoom<=9] { text-fill: black; text-size: 6; }
+Områdenavn [zoom>=7][zoom<=9] { text-fill: black; text-size: 5; }
+Havområde [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 12; }
+Havområde [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 8; text-transform:uppercase; }
+Kyst, innsjø og vassdrag [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 6.5; }
+Kyst, innsjø og vassdrag [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 5; }
+Bre [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 7; }
+Bre [zoom>=7][zoom<=9] { text-fill: #3278FF; text-size: 6; }
+Administrative områder [zoom>=7][zoom<=9] { text-fill: #96;4B;0; text-size: 9; text-transform:uppercase; }
+Verneområder [zoom>=7][zoom<=9] { text-fill: black; text-size: 5; }
+Høydepunkt [zoom>=7][zoom<=9] { text-fill: black; text-size: 4; }
+By og tettsted [zoom>=7][zoom<=9] { text-fill: black; line-width: 5; }
 Tettsted [zoom>=8][zoom<=10] { line-color: #F78080; line-width: 40/1.0; } // Rød sirkelflate medsvart omriss
 Elv, innsjø- og kystkontur [zoom>=8][zoom<=10] { line-color: #00A6FF; line-width: 2.5; }
 Europa- og riksveg, motorveg klasse A [zoom>=8][zoom<=10] { line-color: #D12429; line-width: 6.0/18.0; } // Gul linje på rød linje
@@ -678,11 +678,11 @@ Riksgrense [zoom>=6][zoom<=8] { line-color: #BE5ABE; line-width: 40; line-dashar
 Grunnlinje [zoom>=6][zoom<=8] { line-color: #D2733C; line-width: 15; line-dasharray: 210,105; }
 Territorialgrense [zoom>=6][zoom<=8] { line-color: #BE5ABE; line-width: 15; line-dasharray: 200/40/40,40; }
 Vannflate [zoom>=6][zoom<=8] { line-color: #E0FFFF; }
-Myr [zoom>=6][zoom<=8] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 40.0 mm
-Snø og isbre [zoom>=6][zoom<=8] { line-color: #00A6FF; line-width: 5; line-dasharray: 100,60; } //Hvit flate med stipletblått omriss
-Skog [zoom>=6][zoom<=8] { line-color: #D2E67C; }
-Tettbebyggelse [zoom>=6][zoom<=8] { line-color: #F7BE8C; line-width: 0.15; } // Oransje flate med svartomriss
-Jernbane [zoom>=6][zoom<=8] { text-fill: #000; line-width: 18; }
+Myr [natural=wetland][zoom>=6][zoom<=8] { line-color: #82C8F0; line-width: 0.025; } // Linjeavstand 40.0 mm
+Snø og isbre [natural=glacier][zoom>=6][zoom<=8] { line-color: #00A6FF; line-width: 5; line-dasharray: 100,60; } //Hvit flate med stipletblått omriss
+Skog [natural=wood][zoom>=6][zoom<=8] { line-color: #D2E67C; }
+Tettbebyggelse [landuse=residential][zoom>=6][zoom<=8] { polygon-fill: #F7BE8C; line-color: black; line-width: 0.15; } // Oransje flate med svartomriss
+Jernbane [zoom>=6][zoom<=8] { text-fill: black; line-width: 18; }
 Hurtigruta [zoom>=6][zoom<=8] { line-color: #C21F29; line-width: 15; line-dasharray: 105,210; }
 Elv og bekk [zoom>=6][zoom<=8] { line-color: #00A6FF; line-width: 12; }
 Høydelag 0-600 moh [zoom>=6][zoom<=8] { polygon-fill: #FFFFCC; }
@@ -690,7 +690,7 @@ Høydelag 600-1200 moh [zoom>=6][zoom<=8] { polygon-fill: #FFEBB3; }
 Høydelag 1200-1800 moh [zoom>=6][zoom<=8] { polygon-fill: #F2D999; }
 Høydelag 1800-2400 moh [zoom>=6][zoom<=8] { polygon-fill: #E0C38D; }
 Høydelag 2400-3000 moh [zoom>=6][zoom<=8] { polygon-fill: #D1A880; }
-Flyplass [zoom>=6][zoom<=8] { text-fill; #000; line-width: 250; }
+Flyplass [zoom>=6][zoom<=8] { text-fill; black; line-width: 250; }
 Tettsted [zoom>=6][zoom<=8] { line-color: #F78080; line-width: 70.0/2.0; } // Rød sirkelflate medsvart omriss
 Elv, innsjø- og kystkontur [zoom>=6][zoom<=8] { line-color: #00A6FF; line-width: 10; }
 Europa- og riksveg, motorveg klasse A [zoom>=6][zoom<=8] { line-color: #D12429; line-width: 11.0/35.0; } // Gul linje på rød linje

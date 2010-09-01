@@ -44,7 +44,6 @@ public class BuoyLat extends Buoy {
 
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
-		dlg.tbM01Region.setEnabled(true);
 
 		if (keys.containsKey("name"))
 			setName(keys.get("name"));
@@ -148,48 +147,48 @@ public class BuoyLat extends Buoy {
 			setBuoyIndex(PORT_HAND);
 
 			if (col.equals("red")) {
-				setRegion(SeaMark.IALA_A);
-				setColour(SeaMark.RED);
+				setRegion(IALA_A);
+				setColour(RED);
 			} else if (col.equals("green")) {
-				setRegion(SeaMark.IALA_B);
-				setColour(SeaMark.GREEN);
+				setRegion(IALA_B);
+				setColour(GREEN);
 			} else {
 				if (getRegion() == IALA_A)
-					setColour(SeaMark.RED);
+					setColour(RED);
 				else
-					setColour(SeaMark.GREEN);
+					setColour(GREEN);
 			}
 		} else if (cat.equals("starboard")) {
 
 			setBuoyIndex(STARBOARD_HAND);
 
 			if (col.equals("green")) {
-				setRegion(SeaMark.IALA_A);
-				setColour(SeaMark.GREEN);
+				setRegion(IALA_A);
+				setColour(GREEN);
 			} else if (col.equals("red")) {
-				setRegion(SeaMark.IALA_B);
-				setColour(SeaMark.RED);
+				setRegion(IALA_B);
+				setColour(RED);
 			} else {
 				if (getRegion() == IALA_A)
-					setColour(SeaMark.GREEN);
+					setColour(GREEN);
 				else
-					setColour(SeaMark.RED);
+					setColour(RED);
 			}
 		} else if (cat.equals("preferred_channel_port")) {
 
 			setBuoyIndex(PREF_PORT_HAND);
 
 			if (col.equals("red;green;red")) {
-				setRegion(SeaMark.IALA_A);
-				setColour(SeaMark.RED_GREEN_RED);
+				setRegion(IALA_A);
+				setColour(RED_GREEN_RED);
 			} else if (col.equals("green;red;green")) {
-				setRegion(SeaMark.IALA_B);
-				setColour(SeaMark.GREEN_RED_GREEN);
+				setRegion(IALA_B);
+				setColour(GREEN_RED_GREEN);
 			} else {
 				if (getRegion() == IALA_A)
-					setColour(SeaMark.RED_GREEN_RED);
+					setColour(RED_GREEN_RED);
 				else
-					setColour(SeaMark.GREEN_RED_GREEN);
+					setColour(GREEN_RED_GREEN);
 			}
 
 		} else if (cat.equals("preferred_channel_starboard")) {
@@ -197,16 +196,16 @@ public class BuoyLat extends Buoy {
 			setBuoyIndex(PREF_STARBOARD_HAND);
 
 			if (col.equals("green;red;green")) {
-				setRegion(SeaMark.IALA_A);
-				setColour(SeaMark.GREEN_RED_GREEN);
+				setRegion(IALA_A);
+				setColour(GREEN_RED_GREEN);
 			} else if (col.equals("red;green;red")) {
-				setRegion(SeaMark.IALA_B);
-				setColour(SeaMark.RED_GREEN_RED);
+				setRegion(IALA_B);
+				setColour(RED_GREEN_RED);
 			} else {
 				if (getRegion() == IALA_A)
-					setColour(SeaMark.GREEN_RED_GREEN);
+					setColour(GREEN_RED_GREEN);
 				else
-					setColour(SeaMark.RED_GREEN_RED);
+					setColour(RED_GREEN_RED);
 			}
 		}
 
@@ -277,7 +276,9 @@ public class BuoyLat extends Buoy {
 			setLightGroup(keys);
 			setLightChar(keys.get("seamark:light:character"));
 			setLightPeriod(keys);
+			setFired(true);
 		}
+		setLightColour();
 	}
 
 	public void refreshStyles() {
@@ -363,8 +364,8 @@ public class BuoyLat extends Buoy {
 		}
 
 		switch (getBuoyIndex()) {
-		case SeaMark.PORT_HAND:
-			if (region != SeaMark.IALA_B)
+		case PORT_HAND:
+			if (region == IALA_A)
 				switch (style) {
 				case LAT_CAN:
 					image += "_Can_Red";
@@ -416,8 +417,8 @@ public class BuoyLat extends Buoy {
 				}
 			break;
 
-		case SeaMark.STARBOARD_HAND:
-			if (region != SeaMark.IALA_B)
+		case STARBOARD_HAND:
+			if (region == IALA_A)
 				switch (style) {
 				case LAT_CONE:
 					image += "_Cone_Green";
@@ -469,8 +470,8 @@ public class BuoyLat extends Buoy {
 				}
 			break;
 
-		case SeaMark.PREF_PORT_HAND:
-			if (region != SeaMark.IALA_B)
+		case PREF_PORT_HAND:
+			if (region == IALA_A)
 				switch (style) {
 				case LAT_CAN:
 					image += "_Can_Red_Green_Red";
@@ -516,8 +517,8 @@ public class BuoyLat extends Buoy {
 				}
 			break;
 
-		case SeaMark.PREF_STARBOARD_HAND:
-			if (region != SeaMark.IALA_B)
+		case PREF_STARBOARD_HAND:
+			if (region == IALA_A)
 				switch (style) {
 				case LAT_CONE:
 					image += "_Cone_Green_Red_Green";
@@ -654,7 +655,7 @@ public class BuoyLat extends Buoy {
 			case LAT_SPAR:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_lateral:category", "port"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:buoy_lateral:colour", "red"));
 					colour = "red";
@@ -672,7 +673,7 @@ public class BuoyLat extends Buoy {
 			case LAT_TOWER:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_lateral:category", "port"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:beacon_lateral:colour", "red"));
 					colour = "red";
@@ -683,7 +684,7 @@ public class BuoyLat extends Buoy {
 				}
 				break;
 			case LAT_FLOAT:
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:light_float:colour", "red"));
 					colour = "red";
@@ -735,7 +736,7 @@ public class BuoyLat extends Buoy {
 						"seamark:buoy_lateral:category", "preferred_channel_port"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_lateral:colour_pattern", "horizontal stripes"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:buoy_lateral:colour", "red;green;red"));
 					colour = "red";
@@ -751,7 +752,7 @@ public class BuoyLat extends Buoy {
 						"seamark:beacon_lateral:category", "preferred_channel_port"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_lateral:colour_pattern", "horizontal stripes"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:beacon_lateral:colour", "red;green;red"));
 					colour = "red";
@@ -764,7 +765,7 @@ public class BuoyLat extends Buoy {
 			case LAT_FLOAT:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:light_float:colour_pattern", "horizontal stripes"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:light_float:colour", "red;green;red"));
 					colour = "red";
@@ -821,7 +822,7 @@ public class BuoyLat extends Buoy {
 			case LAT_SPAR:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_lateral:category", "starboard"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:buoy_lateral:colour", "green"));
 					colour = "green";
@@ -835,7 +836,7 @@ public class BuoyLat extends Buoy {
 			case LAT_TOWER:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_lateral:category", "starboard"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:beacon_lateral:colour", "green"));
 					colour = "green";
@@ -846,7 +847,7 @@ public class BuoyLat extends Buoy {
 				}
 				break;
 			case LAT_FLOAT:
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:light_float:colour", "green"));
 					colour = "green";
@@ -904,7 +905,7 @@ public class BuoyLat extends Buoy {
 						"seamark:buoy_lateral:category", "preferred_channel_starboard"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:buoy_lateral:colour_pattern", "horizontal stripes"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:buoy_lateral:colour", "green;red;green"));
 					colour = "green";
@@ -920,7 +921,7 @@ public class BuoyLat extends Buoy {
 						"seamark:beacon_lateral:category", "preferred_channel_starboard"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:beacon_lateral:colour_pattern", "horizontal stripes"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:beacon_lateral:colour", "green;red;green"));
 					colour = "green";
@@ -933,7 +934,7 @@ public class BuoyLat extends Buoy {
 			case LAT_FLOAT:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
 						"seamark:light_float:colour_pattern", "horizontal stripes"));
-				if (getRegion() != SeaMark.IALA_B) {
+				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
 							"seamark:light_float:colour", "green;red;green"));
 					colour = "green";
@@ -957,11 +958,16 @@ public class BuoyLat extends Buoy {
 	}
 
 	public void setLightColour() {
-		if (getRegion() == IALA_A
-				&& (getBuoyIndex() == PORT_HAND || getBuoyIndex() == PREF_PORT_HAND)) {
-			super.setLightColour("R");
+		if (getRegion() == IALA_A) {
+			if (getBuoyIndex() == PORT_HAND || getBuoyIndex() == PREF_PORT_HAND)
+				super.setLightColour("R");
+			else
+				super.setLightColour("G");
 		} else {
-			super.setLightColour("G");
+			if (getBuoyIndex() == PORT_HAND || getBuoyIndex() == PREF_PORT_HAND)
+				super.setLightColour("G");
+			else
+				super.setLightColour("R");
 		}
 	}
 
@@ -1010,10 +1016,8 @@ public class BuoyLat extends Buoy {
 				}
 			}
 			break;
-
 		default:
 		}
-
 	}
 
 }

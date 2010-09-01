@@ -40,7 +40,6 @@ public class BuoySaw extends Buoy {
 
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
-		dlg.tbM01Region.setEnabled(false);
 
 		setColour(SeaMark.RED_WHITE);
 		setLightColour("W");

@@ -34,7 +34,6 @@ public class BuoyCard extends Buoy {
 
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
-		dlg.tbM01Region.setEnabled(false);
 
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 		if (keys.containsKey("name"))

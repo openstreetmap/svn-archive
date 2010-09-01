@@ -18,7 +18,8 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JToggleButton;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -50,9 +51,6 @@ import toms.seamarks.buoys.BuoySpec;
 import toms.seamarks.buoys.BuoyNota;
 
 public class SmpDialogAction extends JosmAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2976230949744302905L;
 
 	/**
@@ -114,7 +112,9 @@ public class SmpDialogAction extends JosmAction {
 	private JLabel lM01Head = null;
 	public JLabel lM01Icon01 = null;
 	public JLabel lM01Icon02 = null;
-	public JToggleButton tbM01Region = null;
+	public ButtonGroup bgM01Region = null;
+	public JRadioButton rbM01RegionA = null;
+	public JRadioButton rbM01RegionB = null;
 	public JComboBox cbM01TypeOfMark = null;
 	public JComboBox cbM01StyleOfMark = null;
 	public JButton bM01Save = null;
@@ -171,8 +171,10 @@ public class SmpDialogAction extends JosmAction {
 		dia = this;
 		String str = Main.pref.get("mappaint.style.sources");
 		if (!str.contains("dev.openseamap.org")) {
-			if (!str.equals("")) str += new String(new char[] {0x1e});
-			Main.pref.put("mappaint.style.sources", str + "http://dev.openseamap.org/josm/seamark_styles.xml");
+			if (!str.equals(""))
+				str += new String(new char[] { 0x1e });
+			Main.pref.put("mappaint.style.sources", str
+					+ "http://dev.openseamap.org/josm/seamark_styles.xml");
 		}
 		str = Main.pref.get("color.background");
 		if (str.equals("#000000") || str.equals(""))
@@ -182,7 +184,7 @@ public class SmpDialogAction extends JosmAction {
 	public void CloseDialog() {
 		onode = null;
 		DataSet.selListeners.remove(SmpListener);
-//		DataSet.removeSelectionListener(SmpListener);
+		// DataSet.removeSelectionListener(SmpListener);
 		Selection = null;
 
 		if (isOpen)
@@ -229,7 +231,7 @@ public class SmpDialogAction extends JosmAction {
 		// siehe org.openstreetmap.josm.plugins.osb -> OsbLayer.java
 		// Einhängen des Listeners in die Eventqueue von josm
 		DataSet.selListeners.add(SmpListener);
-//		DataSet.addSelectionListener(SmpListener);
+		// DataSet.addSelectionListener(SmpListener);
 	}
 
 	private void PicRebuild() {
@@ -317,7 +319,6 @@ public class SmpDialogAction extends JosmAction {
 		cM01IconVisible.setIcon(new ImageIcon(getClass().getResource(
 				"/images/Auge.png")));
 
-		tbM01Region.setEnabled(true);
 		cbM01TypeOfMark.setEnabled(true);
 		cbM01StyleOfMark.setEnabled(true);
 
@@ -448,7 +449,7 @@ public class SmpDialogAction extends JosmAction {
 						PicRebuild();
 					// Deaktivierung des Listeners
 					DataSet.selListeners.remove(SmpListener);
-//				DataSet.removeSelectionListener(SmpListener);
+					// DataSet.removeSelectionListener(SmpListener);
 					Selection = null;
 
 					SmpItem.setEnabled(true);
@@ -523,6 +524,28 @@ public class SmpDialogAction extends JosmAction {
 			lM01Icon02.setIcon(null);
 			lM01Icon02.setText("");
 
+			rbM01RegionA = new JRadioButton("A", Main.pref.get("tomsplugin.IALA")
+					.equals("A"));
+			rbM01RegionA.setBounds(new Rectangle(60, 55, 40, 30));
+			rbM01RegionB = new JRadioButton("B", Main.pref.get("tomsplugin.IALA")
+					.equals("B"));
+			rbM01RegionB.setBounds(new Rectangle(100, 55, 40, 30));
+			bgM01Region = new ButtonGroup();
+			bgM01Region.add(rbM01RegionA);
+			bgM01Region.add(rbM01RegionB);
+			
+			java.awt.event.ActionListener alM01Region = new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					if (buoy instanceof BuoyLat) {
+						buoy.setRegion(rbM01RegionB.isSelected());
+						buoy.setLightColour();
+						buoy.paintSign();
+					}
+				}
+			};
+			rbM01RegionA.addActionListener(alM01Region);
+			rbM01RegionB.addActionListener(alM01Region);
+
 			pM01SeaMap = new JPanel();
 			pM01SeaMap.setLayout(null);
 			pM01SeaMap.add(lM01TimeUnit, null);
@@ -536,7 +559,9 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(lM01Head, null);
 			pM01SeaMap.add(lM01Icon01, null);
 			pM01SeaMap.add(lM01Icon02, null);
-			pM01SeaMap.add(getTbM01Region(), null);
+			pM01SeaMap.add(rbM01RegionA, null);
+			pM01SeaMap.add(rbM01RegionB, null);
+			// pM01SeaMap.add(getTbM01Region(), null);
 			pM01SeaMap.add(getCbM01TypeOfMark(), null);
 			pM01SeaMap.add(getCbM01StyleOfMark(), null);
 			pM01SeaMap.add(getBM01Save(), null);
@@ -652,38 +677,26 @@ public class SmpDialogAction extends JosmAction {
 		return cbM01TypeOfMark;
 	}
 
-	private JToggleButton getTbM01Region() {
-		if (tbM01Region == null) {
-			tbM01Region = new JToggleButton();
-
-			tbM01Region.setBounds(new Rectangle(60, 55, 80, 25));
-			tbM01Region.setFont(new Font("Dialog", Font.PLAIN, 12));
-			tbM01Region.setEnabled(false);
-			if (Main.pref.get("tomsplugin.IALA").equals("B")) {
-				tbM01Region.setSelected(true);
-				tbM01Region.setText("IALA-B");
-			} else {
-				tbM01Region.setSelected(false);
-				tbM01Region.setText("IALA-A");
-			}
-
-			tbM01Region.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (tbM01Region.isSelected()) {
-						buoy.setRegion(true);
-						tbM01Region.setText("IALA-B");
-					} else {
-						buoy.setRegion(false);
-						tbM01Region.setText("IALA-A");
-					}
-					buoy.paintSign();
-				}
-			});
-		}
-
-		return tbM01Region;
-	}
-
+	/*
+	 * private JToggleButton getTbM01Region() { if (tbM01Region == null) {
+	 * tbM01Region = new JToggleButton();
+	 * 
+	 * tbM01Region.setBounds(new Rectangle(60, 55, 80, 25));
+	 * tbM01Region.setFont(new Font("Dialog", Font.PLAIN, 12));
+	 * tbM01Region.setEnabled(false); if
+	 * (Main.pref.get("tomsplugin.IALA").equals("B")) {
+	 * tbM01Region.setSelected(true); tbM01Region.setText("IALA-B"); } else {
+	 * tbM01Region.setSelected(false); tbM01Region.setText("IALA-A"); }
+	 * 
+	 * tbM01Region.addActionListener(new java.awt.event.ActionListener() { public
+	 * void actionPerformed(java.awt.event.ActionEvent e) { if
+	 * (tbM01Region.isSelected()) { buoy.setRegion(true);
+	 * tbM01Region.setText("IALA-B"); } else { buoy.setRegion(false);
+	 * tbM01Region.setText("IALA-A"); } buoy.paintSign(); } }); }
+	 * 
+	 * return tbM01Region; }
+	 */
+	
 	private JComboBox getCbM01StyleOfMark() {
 		if (cbM01StyleOfMark == null) {
 			cbM01StyleOfMark = new JComboBox();
@@ -828,7 +841,7 @@ public class SmpDialogAction extends JosmAction {
 						PicRebuild();
 					// Deaktivierung des Listeners
 					DataSet.selListeners.remove(SmpListener);
-//				DataSet.removeSelectionListener(SmpListener);
+					// DataSet.removeSelectionListener(SmpListener);
 					Selection = null;
 					SmpItem.setEnabled(true);
 					onode = null;

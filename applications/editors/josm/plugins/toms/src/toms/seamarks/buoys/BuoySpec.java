@@ -50,7 +50,6 @@ public class BuoySpec extends Buoy {
 		dlg.cM01TopMark.setSelected(false);
 		dlg.cM01Fired.setEnabled(false);
 		dlg.cM01TopMark.setEnabled(true);
-		dlg.tbM01Region.setEnabled(false);
 
 		setColour(SeaMark.YELLOW);
 		setLightColour("W");

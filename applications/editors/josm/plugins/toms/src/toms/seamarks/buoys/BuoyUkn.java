@@ -4,10 +4,8 @@
 package toms.seamarks.buoys;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.Node;
 
 import toms.dialogs.SmpDialogAction;
-import toms.seamarks.SeaMark;
 
 public class BuoyUkn extends Buoy {
 	public BuoyUkn(SmpDialogAction dia, String Msg) {
@@ -23,7 +21,6 @@ public class BuoyUkn extends Buoy {
 
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(false);
-		dlg.tbM01Region.setEnabled(false);
 
 		setErrMsg(Msg);
 		setName("");

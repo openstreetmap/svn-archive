@@ -38,7 +38,6 @@ public class BuoyIsol extends Buoy {
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(true);
 		dlg.cM01TopMark.setEnabled(false);
-		dlg.tbM01Region.setEnabled(false);
 
 		setColour(SeaMark.BLACK_RED_BLACK);
 		setLightColour("W");

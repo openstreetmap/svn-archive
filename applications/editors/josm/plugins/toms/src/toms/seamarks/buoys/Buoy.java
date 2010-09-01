@@ -54,8 +54,8 @@ abstract public class Buoy extends SeaMark {
 
 	public void setRegion(boolean region) {
 		Region = region;
-		dlg.tbM01Region.setSelected(region);
-		dlg.tbM01Region.setText(region ? "IALA-B" : "IALA-A");
+		dlg.rbM01RegionA.setSelected(!region);
+		dlg.rbM01RegionB.setSelected(region);
 	}
 
 	private boolean Fired = false;
@@ -66,11 +66,6 @@ abstract public class Buoy extends SeaMark {
 
 	public void setFired(boolean fired) {
 		Fired = fired;
-		/*
-		 * if (dlg.cM01Fired == null) { return; }
-		 */
-		dlg.cM01Fired.setSelected(fired);
-
 	}
 
 	private String LightChar = "";

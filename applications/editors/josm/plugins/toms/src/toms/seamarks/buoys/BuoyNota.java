@@ -31,8 +31,6 @@ public class BuoyNota extends Buoy {
 		dlg.cbM01Kennung.addItem("IQ");
 		dlg.cbM01Kennung.setSelectedIndex(0);
 
-		dlg.tbM01Region.setEnabled(false);
-
 		setBuoyIndex(type);
 		setStyleIndex(0);
 		setLightColour();

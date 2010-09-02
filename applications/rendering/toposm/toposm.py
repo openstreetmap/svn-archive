@@ -50,7 +50,7 @@ def minmax (a,b,c):
     return a
 
 class GoogleProjection:
-    def __init__(self,levels=18):
+    def __init__(self,levels=20):
         self.Bc = []
         self.Cc = []
         self.zc = []
@@ -132,6 +132,15 @@ class RenderThread:
     def print_message(self, message):
         print_message("[%02d] %s" % (self.threadNumber+1, message))
 
+    def prepare_data(self, basename, env):
+        self.print_message("Preparing %s at %s" % (basename, env))
+        try:
+            prep_ned13_data_file(basename, env)
+        except Exception as ex:
+            message = "Failed prepare_data %s %s" % (basename, env)
+            self.print_message(message)
+            log_error(message, ex) 
+
     def render_topo_tiles(self, z, x, y):
         ntiles = NTILES[z]
         for mapname in ['hillshade', 'colormap']:    
@@ -209,14 +218,16 @@ class RenderThread:
         while True:
             r = self.q.get()
             if (r == None):
-                self.print_message("Done")
                 self.q.task_done()
                 break
             (action, z, x, y) = r
             self.render(action, z, x, y)
+            self.q.task_done()
 
     def render(self, action, z, x, y):
-        if action == 'render':
+        if action == 'prepare_data':
+            self.prepare_data(x, y)
+        elif action == 'render':
             # NOTE: Mapnik tiles must be rendered before topo
             if allFinalMapnikSubtilesExist(z, x, y):
                 self.print_message('Mapnik tiles exist. Skipping.')
@@ -230,7 +241,7 @@ class RenderThread:
                     self.render_topo_tiles(z, x, y)
                     self.combine_topo_tiles(z, x, y)
                 else:
-                    self.merge_topo_subtiles(z, x, y)
+                    self.merge_topo_subtiles(z, x, y)     
 
 def getTileDir(mapname, z):
     return path.join(BASE_TILE_DIR, mapname, str(z))
@@ -566,7 +577,6 @@ def prepare_data(envLL, minz, maxz):
     ntiles = NTILES[maxz]
     envLL = pad_envelope(envLL, minz, ntiles)
     tiles = get_ned13_tiles(envLL)
-    # Create threads
     queue = Queue(32)
     renderers = {}
     for i in range(NUM_THREADS):
@@ -575,17 +585,16 @@ def prepare_data(envLL, minz, maxz):
         render_thread.start()
         renderers[i] = render_thread
     for tile in tiles:
-#        prep_ned13_data_file(tile[0], tile[1])
         queue.put(('prepare_data', minz, tile[0], tile[1]))
-    # Signal render threads to exit and join threads
     for i in range(NUM_THREADS):
         queue.put(None)
     queue.join()
     for i in range(NUM_THREADS):
         renderers[i].join()
-    print '  Converting meters to feet...'
+    print 'Converting meters to feet...'
     cmd = 'echo "UPDATE %s SET height_ft = CAST(height * 3.28085 AS INT) WHERE height_ft IS NULL;" | psql -q "%s"' % (CONTOURS_TABLE, DATABASE)
     call(cmd, shell=True)
+    print 'Done.'
 
 def render_tiles(envLL, minz, maxz):
     print 'Using mapnik version:', mapnik_version()

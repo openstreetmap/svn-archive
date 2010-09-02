@@ -176,25 +176,30 @@ public class WMSPlugin extends Plugin {
 
 			if(msg != null)
 			{
-				String versionMessage = tr("{0} will work but remote control is disabled.\n"
-						+ "Current version of \"{1}\": {2}, internal version {3}. "
+				String additionalMessage = tr("{0} will work but remote control for this plugin is disabled.\n"
+						+ "You should update the plugins.",
+						this.getClass().getSimpleName());
+				String versionMessage = tr("Current version of \"{1}\": {2}, internal version {3}. "
 						+ "Need version {4}, internal version {5}.\n"
-						+ "You should update the plugins. If this does not help report a bug for \"{0}\".",
+						+ "If updating the plugins does not help report a bug for \"{0}\".",
 						this.getClass().getSimpleName(),
 						REMOTECONTROL_NAME,
 						""+remoteControlRevision,
 						(remoteControlApiMajor != 0) ?
 								""+remoteControlApiMajor+"."+remoteControlApiMinor :
-									"unknown",
+									tr("unknown"),
 									""+REMOTECONTROL_MIN_REVISION,
 									""+REMOTECONTROL_NEED_API_MAJOR+"."+REMOTECONTROL_MIN_API_MINOR );
 
 				String title = tr("{0}: Problem with remote control",
 						this.getClass().getSimpleName());
 
+				System.out.println(this.getClass().getSimpleName() + ": " +
+						msg + "\n" + versionMessage);
+
 				JOptionPane.showMessageDialog(
 						Main.parent,
-						msg + "\n" + versionMessage,
+						msg + "\n" + additionalMessage,
 						title,
 						JOptionPane.WARNING_MESSAGE
 				);
@@ -202,7 +207,7 @@ public class WMSPlugin extends Plugin {
 		}
 
 		if(!remoteControlAvailable) {
-			System.out.println("wmsplugin: remote control not available");
+			System.out.println(this.getClass().getSimpleName() + ": remote control not available");
 		}
 	}
 

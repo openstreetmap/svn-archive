@@ -17,11 +17,11 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -45,6 +45,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.ProjectionSubPrefs;
 import org.openstreetmap.josm.gui.bbox.SlippyMapBBoxChooser;
 import org.openstreetmap.josm.tools.GBC;
 import org.w3c.dom.Document;
@@ -53,6 +54,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
 
 public class AddWMSLayerPanel extends JPanel {
     private List<LayerDetails> selectedLayers;
@@ -67,13 +69,6 @@ public class AddWMSLayerPanel extends JPanel {
     private JButton showBoundsButton;
 
     private boolean previouslyShownUnsupportedCrsError = false;
-
-    private static final Map<String, Projection> supportedProjections = new HashMap<String, Projection>();
-    static {
-        for (Projection proj : Projection.allProjections) {
-            supportedProjections.put(proj.toCode().trim().toUpperCase(), proj);
-        }
-    }
 
     public AddWMSLayerPanel() {
         JPanel wmsFetchPanel = new JPanel(new GridBagLayout());
@@ -279,7 +274,7 @@ public class AddWMSLayerPanel extends JPanel {
         treeRootNode.setUserObject(serviceUrl.getHost());
         Element capabilityElem = getChild(document.getDocumentElement(), "Capability");
         List<Element> children = getChildren(capabilityElem, "Layer");
-        List<LayerDetails> layers = parseLayers(children);
+        List<LayerDetails> layers = parseLayers(children, new HashSet<String>());
 
         updateTreeList(layers);
     }
@@ -297,20 +292,24 @@ public class AddWMSLayerPanel extends JPanel {
         }
     }
 
-    private List<LayerDetails> parseLayers(List<Element> children) {
+    private List<LayerDetails> parseLayers(List<Element> children, Set<String> parentCrs) {
         List<LayerDetails> details = new LinkedList<LayerDetails>();
         for (Element element : children) {
-            details.add(parseLayer(element));
+            details.add(parseLayer(element, parentCrs));
         }
         return details;
     }
 
-    private LayerDetails parseLayer(Element element) {
+    private LayerDetails parseLayer(Element element, Set<String> parentCrs) {
         String name = getChildContent(element, "Title", null, null);
         String ident = getChildContent(element, "Name", null, null);
 
-        boolean josmSupportsThisLayer = false;
-        List<String> crsList = new LinkedList<String>();
+        // The set of supported CRS/SRS for this layer
+        Set<String> crsList = new HashSet<String>();
+        // ...including this layer's already-parsed parent projections
+        crsList.addAll(parentCrs);
+
+        // Parse the CRS/SRS pulled out of this layer's XML element
         // I think CRS and SRS are the same at this point
         List<Element> crsChildren = getChildren(element, "CRS");
         crsChildren.addAll(getChildren(element, "SRS"));
@@ -319,8 +318,13 @@ public class AddWMSLayerPanel extends JPanel {
             if(crs != null) {
                 String upperCase = crs.trim().toUpperCase();
                 crsList.add(upperCase);
-                josmSupportsThisLayer |= supportedProjections.containsKey(upperCase);
             }
+        }
+
+        // Check to see if any of the specified projections are supported by JOSM
+        boolean josmSupportsThisLayer = false;
+        for (String crs : crsList) {
+            josmSupportsThisLayer |= isProjSupported(crs);
         }
 
         Bounds bounds = null;
@@ -345,9 +349,20 @@ public class AddWMSLayerPanel extends JPanel {
         }
 
         List<Element> layerChildren = getChildren(element, "Layer");
-        List<LayerDetails> childLayers = parseLayers(layerChildren);
+        List<LayerDetails> childLayers = parseLayers(layerChildren, crsList);
 
         return new LayerDetails(name, ident, crsList, josmSupportsThisLayer, bounds, childLayers);
+    }
+
+    private boolean isProjSupported(String crs) {
+        for (Projection proj : Projection.allProjections) {
+            if (proj instanceof ProjectionSubPrefs) {
+                return ((ProjectionSubPrefs) proj).getPreferencesFromCode(crs) == null;
+            } else {
+                return proj.toCode().equals(crs);
+            }
+        }
+        return false;
     }
 
     public String getUrlName() {
@@ -416,12 +431,12 @@ public class AddWMSLayerPanel extends JPanel {
 
         private String name;
         private String ident;
-        private List<String> crsList;
+        private Set<String> crsList;
         private List<LayerDetails> children;
         private Bounds bounds;
         private boolean supported;
 
-        public LayerDetails(String name, String ident, List<String> crsList,
+        public LayerDetails(String name, String ident, Set<String> crsList,
                 boolean supportedLayer, Bounds bounds,
                 List<LayerDetails> childLayers) {
             this.name = name;

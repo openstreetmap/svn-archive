@@ -52,6 +52,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -254,8 +255,15 @@ public class AddWMSLayerPanel extends JPanel {
         Document document;
         try {
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            builderFactory.setValidating(false);
             builderFactory.setNamespaceAware(true);
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
+            builder.setEntityResolver(new EntityResolver() {
+                public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+                    System.out.println("Ignoring DTD " + publicId + ", " + systemId);
+                    return new InputSource(new StringReader(""));
+                }
+            });
             document = builder.parse(new InputSource(new StringReader(incomingData)));
         } catch (ParserConfigurationException e) {
             JOptionPane.showMessageDialog(this, tr("Could not parse WMS layer list."),

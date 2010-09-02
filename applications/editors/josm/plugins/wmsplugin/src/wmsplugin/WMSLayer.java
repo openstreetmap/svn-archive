@@ -32,9 +32,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
@@ -127,7 +127,10 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 		}
 		resolution = mv.getDist100PixelText();
 
-		startGrabberThreads();
+		if(baseURL != null)
+		{
+			startGrabberThreads();
+		}
 		if (baseURL != null && !baseURL.startsWith("html:") && !WMSGrabber.isUrlWithPatterns(baseURL)) {
 			if (!(baseURL.endsWith("&") || baseURL.endsWith("?"))) {
 				if (!confirmMalformedUrl(baseURL)) {
@@ -668,6 +671,10 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
 				}
 				settingsChanged = true;
 				mv.repaint();
+				if(baseURL != null)
+				{
+					startGrabberThreads();
+				}
 			}
 			catch (Exception ex) {
 				// FIXME be more specific

@@ -256,11 +256,11 @@ abstract public class Buoy extends SeaMark {
 			lp = getLightPeriod();
 			if (lp != "" && lp != " ")
 				c = c + " " + lp + "s";
-			dlg.tfM01FireMark.setText(c);
+			dlg.lM01FireMark.setText(c);
 		} else {
 			dlg.tfM01RepeatTime.setEnabled(false);
 			dlg.cbM01Kennung.setEnabled(false);
-			dlg.tfM01FireMark.setText("");
+			dlg.lM01FireMark.setText("");
 		}
 
 		dlg.bM01Save.setEnabled(true);

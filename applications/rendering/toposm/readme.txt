@@ -16,12 +16,11 @@ Requirements:
   - Numpy
   - Mapnik
 * Imagemagick
-* GDAL/OGR, including software (gdal_translate, gdalcontour etc.)
+* GDAL/OGR (including utility programs)
 * osm2pgsql (for planet import)
 * shp2pgsql (for NHD import)
 * Perrygeo DEM tools (hillshade, color-relief)
   See: http://www.perrygeo.net/wordpress/?p=7
-* gcc, g++ (for building PerryGeo tools)
 * OptiPNG (for tile optimization)
 
 Data needed:
@@ -33,6 +32,7 @@ Data needed:
   (you can use the supplied get_ned script)
 * USGS NHD http://www.openstreetmap.us/nhd/
 * Planet.osm http://planet.openstreetmap.org/
+  (or other OSM data dump)
 
 Setup
 -----
@@ -48,27 +48,20 @@ Setup
 Render an area:
 ---------------
 This example will render the area UTM19T (defined in areas.py) from
-zoom level 4 through 16:
+zoom level 5 through 16:
 
 $ source set-toposm-env
 $ python
-Python 2.6.5 (r265:79063, Apr 16 2010, 13:57:41)
-[GCC 4.4.3] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
 >>> from toposm import *
 >>> from areas import *
->>> prepare_data_single(UTM19T, 10, 16)
-...
->>> render_tiles_single(UTM19T, 5, 16)
-...
+>>> prepare_data(UTM19T, 10, 16)
+>>> render_tiles(UTM19T, 5, 16)
 $ optimize_png.py tile/contours
-...
 $ optimize_png.py tile/features
-...
 
 
 Notes:
-
+------
 Make sure that you have plenty of disk space for temporary
 files and tiles, and database space for contour lines.
 
@@ -76,10 +69,9 @@ The prepare_data* methods will "expand" the area to cover a full tile
 at the lowest zoom level. This is why the example prepares zoom levels
 10 through 16. Otherwise the area may be unnecessarily large.
 
-The *_single methods are single-threaded versions. The multi-threaded
-code appears to still suffer from a memory leak. For multi-core machines,
-a workaround is to run separate simultaneous instances rendering
-different areas.
+The multi-threaded code may still suffer from a memory leak. If you
+experience this, use the *_single methods to run several single-threaded
+instances rendering different areas.
 
 Don't run prepare_data* on the same area twice or on overlapping
 areas. You'll end up with duplicated contour lines, which is

@@ -288,8 +288,8 @@ window.onload = init;
     -moz-border-radius-bottomright: 7px;
     -webkit-border-bottom-right-radius: 7px;
   }
-  #more { display:none; }
-  #videotutorial { display:none; text-align:center; padding-bottom:10px; }
+  #more, #search { display:none; }
+  #videotutorial { display:none; text-align:center; }
   #menu * a {
     text-decoration:none;
     color:white;
@@ -322,8 +322,22 @@ window.onload = init;
     <a href="http://help.openstreetmap.org/"
        title="Spør om hjelp her">Hjelp</a>
     <a href="#"
+       onclick="javascript:toggleVisibility('search');"
+       title="Naviger ved hjelp av stedsnavn">Søk &gt;&gt;</a>
+    <a href="#"
        onclick="javascript:toggleVisibility('more');"
        title="Kort om OSM og hint til å komme i gang">Informasjon &gt;&gt;</a>
+    </div>
+    <div id="search">
+      <p>
+        <form action="http://nominatim.openstreetmap.org/search"
+              onSubmit="search(this.action, this.q.value);return false;"
+              method="get" target="_blank">
+        Finn et sted:
+          <input id="q" name="q" value="" style="width:270px;"/>
+          <input type="submit" value="Søk"/>
+        </form>
+      </p>
     </div>
     <div id="more">
       <p>
@@ -358,18 +372,9 @@ window.onload = init;
                target="_blank"
               >Diskusjonsforum (epostliste)</a></li>
       </ul>
-      <p>
-        <form action="http://nominatim.openstreetmap.org/search"
-              onSubmit="search(this.action, this.q.value);return false;"
-              method="get" target="_blank">
-        Finn et sted:
-          <input id="q" name="q" value="" style="width:270px;"/>
-          <input type="submit" value="Søk"/>
-        </form>
-      </p>
-      <div id="videotutorial">
+      <p id="videotutorial">
 <object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/1Kd3S53CXQs&amp;hl=en_US&amp;fs=1?rel=0"/><param name="allowFullScreen" value="true"/><param name="allowscriptaccess" value="always"/><embed src="http://www.youtube.com/v/1Kd3S53CXQs&amp;hl=en_US&amp;fs=1?rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"/></object>
-      </div>
+      </p>
     </div>
   </div>
 

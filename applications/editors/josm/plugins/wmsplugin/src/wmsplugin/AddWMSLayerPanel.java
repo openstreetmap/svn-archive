@@ -213,17 +213,13 @@ public class AddWMSLayerPanel extends JPanel {
     private void attemptGetCapabilities(String serviceUrlStr) {
         serviceUrl = null;
         try {
-            if (serviceUrlStr.endsWith("?")) {
-                // It's the root of the URL. We need to append the GetCapabilities
-                // query parameters
+            if (!serviceUrlStr.trim().contains("capabilities")) {
+                // If the url doesn't already have GetCapabilities, add it in
                 serviceUrl = new URL(serviceUrlStr + "VERSION=1.1.1&SERVICE=WMS&REQUEST=GetCapabilities");
-            } else if (serviceUrlStr.toLowerCase().contains("getcapabilities")) {
-                // The URL already contains the GetCapabilities query parameters
-                serviceUrl = new URL(serviceUrlStr);
             } else {
-                JOptionPane.showMessageDialog(this, tr("Invalid service URL."),
-                        tr("WMS Error"), JOptionPane.ERROR_MESSAGE);
-                return;
+                // Otherwise assume it's a good URL and let the subsequent error
+                // handling systems deal with problems
+                serviceUrl = new URL(serviceUrlStr);
             }
         } catch (HeadlessException e) {
             return;
@@ -232,6 +228,8 @@ public class AddWMSLayerPanel extends JPanel {
                     tr("WMS Error"), JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        System.out.println("Connecting to: " + serviceUrl);
 
         String incomingData;
         try {
@@ -250,6 +248,8 @@ public class AddWMSLayerPanel extends JPanel {
                     tr("WMS Error"), JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        System.out.println(incomingData);
 
         Document document;
         try {
@@ -271,12 +271,18 @@ public class AddWMSLayerPanel extends JPanel {
             return;
         }
 
-        treeRootNode.setUserObject(serviceUrl.getHost());
-        Element capabilityElem = getChild(document.getDocumentElement(), "Capability");
-        List<Element> children = getChildren(capabilityElem, "Layer");
-        List<LayerDetails> layers = parseLayers(children, new HashSet<String>());
-
-        updateTreeList(layers);
+        try {
+            treeRootNode.setUserObject(serviceUrl.getHost());
+            Element capabilityElem = getChild(document.getDocumentElement(), "Capability");
+            List<Element> children = getChildren(capabilityElem, "Layer");
+            List<LayerDetails> layers = parseLayers(children, new HashSet<String>());
+            updateTreeList(layers);
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(this, tr("Could not parse WMS layer list."),
+                    tr("WMS Error"), JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            return;
+        }
     }
 
     private void updateTreeList(List<LayerDetails> layers) {
@@ -357,9 +363,13 @@ public class AddWMSLayerPanel extends JPanel {
     private boolean isProjSupported(String crs) {
         for (Projection proj : Projection.allProjections) {
             if (proj instanceof ProjectionSubPrefs) {
-                return ((ProjectionSubPrefs) proj).getPreferencesFromCode(crs) == null;
+                if (((ProjectionSubPrefs) proj).getPreferencesFromCode(crs) == null) {
+                    return true;
+                }
             } else {
-                return proj.toCode().equals(crs);
+                if (proj.toCode().equals(crs)) {
+                    return true;
+                }
             }
         }
         return false;

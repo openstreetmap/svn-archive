@@ -229,6 +229,37 @@ function toggleVisibility(id) {
     e.style.display = 'block';
 }
 
+function search(baseurl, term) {
+  var url = baseurl;
+
+  var args = new Object();
+  args.format = 'json';
+  args.json_callback = 'searchCallback';
+  args.q = term;
+  args.viewbox = map.getExtent().transform(
+    map.getProjectionObject(),
+    epsg4326
+  );
+
+  url = setArgs(url, args);
+
+  var scriptelem = document.createElement('script');
+  scriptelem.type = 'text/javascript';
+  scriptelem.src = url;
+
+  document.getElementsByTagName("head")[0].appendChild( scriptelem );
+}
+
+function searchCallback(result) {
+  var bottom = result[0].boundingbox[0];
+  var top = result[0].boundingbox[1];
+  var left = result[0].boundingbox[2];
+  var right = result[0].boundingbox[3];
+  var bbox = new OpenLayers.Bounds(left,bottom,right,top)
+    .transform(epsg4326, map.getProjectionObject());
+  map.zoomToExtent(bbox);
+}
+
 window.onload = init;
 </script>
 
@@ -329,6 +360,7 @@ window.onload = init;
       </ul>
       <p>
         <form action="http://nominatim.openstreetmap.org/search"
+              onSubmit="search(this.action, this.q.value);return false;"
               method="get" target="_blank">
         Finn et sted:
           <input id="q" name="q" value="" style="width:270px;"/>

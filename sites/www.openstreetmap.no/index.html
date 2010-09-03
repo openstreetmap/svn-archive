@@ -236,7 +236,7 @@ function search(baseurl, term) {
   args.format = 'json';
   args.json_callback = 'searchCallback';
   args.q = term;
-  args.viewbox = map.getExtent().transform(
+  args.viewboxlbrt = map.getExtent().transform(
     map.getProjectionObject(),
     epsg4326
   );

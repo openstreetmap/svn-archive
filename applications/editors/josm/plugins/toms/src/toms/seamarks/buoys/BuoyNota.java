@@ -17,6 +17,8 @@ import toms.seamarks.SeaMark;
 public class BuoyNota extends Buoy {
 	public BuoyNota(SmpDialogAction dia, int type) {
 		super(dia);
+		
+		resetMask();
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");

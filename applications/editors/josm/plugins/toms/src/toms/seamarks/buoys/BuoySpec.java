@@ -22,6 +22,8 @@ public class BuoySpec extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
+		
+		resetMask();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
@@ -46,9 +48,6 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01Kennung.addItem("IQ");
 		dlg.cbM01Kennung.setSelectedIndex(0);
 
-		dlg.cM01Fired.setSelected(false);
-		dlg.cM01TopMark.setSelected(false);
-		dlg.cM01Fired.setEnabled(false);
 		dlg.cM01TopMark.setEnabled(true);
 
 		setColour(SeaMark.YELLOW);
@@ -180,7 +179,7 @@ public class BuoySpec extends Buoy {
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 
 			if (isFired()) {
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_240.png")));
+				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
 				if (getLightChar() != "") {
 					String c;
 

@@ -38,19 +38,26 @@ abstract public class SeaMark {
 	/**
 	 * Types - correspond to TypeIndex
 	 */
+	public final static int UNKNOWN_TYPE = 0;
+	public final static int LATERAL = 1;
+	public final static int CARDINAL = 2;
+	public final static int SAFE_WATER = 3;
+	public final static int ISOLATED_DANGER = 4;
+	public final static int SPECIAL_PURPOSE = 5;
+	public final static int LIGHT = 6;
+
+	/**
+	 * Categories - correspond to CatIndex
+	 */
 	public final static int UNKNOWN_CAT = 0;
 	public final static int PORT_HAND = 1;
 	public final static int STARBOARD_HAND = 2;
 	public final static int PREF_PORT_HAND = 3;
 	public final static int PREF_STARBOARD_HAND = 4;
-	public final static int SAFE_WATER = 5;
-	public final static int CARD_NORTH = 6;
-	public final static int CARD_EAST = 7;
-	public final static int CARD_SOUTH = 8;
-	public final static int CARD_WEST = 9;
-	public final static int ISOLATED_DANGER = 10;
-	public final static int SPECIAL_PURPOSE = 11;
-	public final static int LIGHT = 12;
+	public final static int CARD_NORTH = 1;
+	public final static int CARD_EAST = 2;
+	public final static int CARD_SOUTH = 3;
+	public final static int CARD_WEST = 4;
 
 	/**
 	 * Regions

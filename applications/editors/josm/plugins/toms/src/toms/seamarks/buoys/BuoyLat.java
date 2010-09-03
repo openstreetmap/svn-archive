@@ -12,7 +12,6 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
 
 import toms.dialogs.SmpDialogAction;
-import toms.seamarks.SeaMark;
 
 public class BuoyLat extends Buoy {
 	public BuoyLat(SmpDialogAction dia, Node node) {
@@ -22,28 +21,31 @@ public class BuoyLat extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
+		
+		resetMask();
+
+		dlg.rbM01RegionA.setEnabled(true);
+		dlg.rbM01RegionB.setEnabled(true);
+
+		dlg.cbM01StyleOfMark.removeAllItems();
+		dlg.cbM01StyleOfMark.addItem("Not set");
+		dlg.cbM01StyleOfMark.addItem("Pillar Buoy");
+		dlg.cbM01StyleOfMark.addItem("Spar Buoy");
+		dlg.cbM01StyleOfMark.addItem("Beacon");
+		dlg.cbM01StyleOfMark.addItem("Tower");
+		dlg.cbM01StyleOfMark.addItem("Float");
+		dlg.cbM01StyleOfMark.setEnabled(true);
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
 		dlg.cbM01Kennung.addItem("Fl");
-		dlg.cbM01Kennung.addItem("Fl(2)");
-		dlg.cbM01Kennung.addItem("Fl(3)");
-		dlg.cbM01Kennung.addItem("Fl(4)");
-		dlg.cbM01Kennung.addItem("Fl(5)");
-		dlg.cbM01Kennung.addItem("Oc(2)");
-		dlg.cbM01Kennung.addItem("Oc(3)");
+		dlg.cbM01Kennung.addItem("Fl()");
+		dlg.cbM01Kennung.addItem("Oc");
+		dlg.cbM01Kennung.addItem("Oc()");
 		dlg.cbM01Kennung.addItem("Q");
 		dlg.cbM01Kennung.addItem("IQ");
+		dlg.cbM01Kennung.addItem("Mo()");
 		dlg.cbM01Kennung.setSelectedIndex(0);
-
-		setStyleIndex(0);
-		setLightColour();
-		setFired(false);
-		setTopMark(false);
-		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
-
-		dlg.cM01Fired.setSelected(false);
-		dlg.cM01TopMark.setSelected(false);
 
 		if (keys.containsKey("name"))
 			setName(keys.get("name"));
@@ -286,7 +288,7 @@ public class BuoyLat extends Buoy {
 		int style = getStyleIndex();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem("Not set");
+		dlg.cbM01StyleOfMark.addItem("*Select Shape*");
 
 		switch (type) {
 		case PORT_HAND:
@@ -581,10 +583,10 @@ public class BuoyLat extends Buoy {
 			if (isFired())
 				if (getLightColour().equals("R"))
 					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Light_Red_240.png")));
+							"/images/Light_Red_120.png")));
 				else
 					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Light_Green_240.png")));
+							"/images/Light_Green_120.png")));
 			if (getLightChar() != "") {
 				String c;
 

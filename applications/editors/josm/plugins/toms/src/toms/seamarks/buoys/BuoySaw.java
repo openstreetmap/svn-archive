@@ -22,6 +22,8 @@ public class BuoySaw extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
+		
+		resetMask();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
@@ -37,9 +39,6 @@ public class BuoySaw extends Buoy {
 		dlg.cbM01Kennung.addItem("Oc");
 		dlg.cbM01Kennung.addItem("LFl");
 		dlg.cbM01Kennung.addItem("Mo()");
-
-		dlg.cM01Fired.setSelected(false);
-		dlg.cM01TopMark.setSelected(false);
 
 		setColour(SeaMark.RED_WHITE);
 		setLightColour("W");
@@ -140,7 +139,7 @@ public class BuoySaw extends Buoy {
 				image += "_Sphere";
 
 			if (isFired()) {
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_240.png")));
+				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
 				if (getLightChar() != "") {
 					String c;
 

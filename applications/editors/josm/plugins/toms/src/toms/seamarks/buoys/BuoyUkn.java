@@ -3,6 +3,8 @@
 
 package toms.seamarks.buoys;
 
+import javax.swing.ImageIcon;
+
 import org.openstreetmap.josm.Main;
 
 import toms.dialogs.SmpDialogAction;
@@ -10,45 +12,20 @@ import toms.dialogs.SmpDialogAction;
 public class BuoyUkn extends Buoy {
 	public BuoyUkn(SmpDialogAction dia, String Msg) {
 		super(dia);
-
-		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem("Not set");
-
-		if (dlg.cbM01Kennung != null) {
-			dlg.cbM01Kennung.removeAllItems();
-			dlg.cbM01Kennung.addItem("Not set");
-		}
-
-		dlg.cM01Fired.setSelected(false);
-		dlg.cM01TopMark.setSelected(false);
-
+		resetMask();
+		dlg.cbM01CatOfMark.removeAllItems();
+		dlg.cbM01CatOfMark.setEnabled(false);
+		dlg.tfM01Name.setText(getName());
 		setErrMsg(Msg);
-		setName("");
-		setTopMark(false);
-		setFired(false);
-		setValid(false);
-		setBuoyIndex(0);
-		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 	}
 
 	public void paintSign() {
 		super.paintSign();
 
-		dlg.lM01Icon01.setIcon(null);
-		dlg.lM01Icon02.setIcon(null);
 		if (getErrMsg() != null)
 			dlg.sM01StatusBar.setText(getErrMsg());
 
 		setErrMsg(null);
-
-		dlg.tfM01Name.setText(getName());
-		dlg.tfM01Name.setEnabled(false);
-
-		dlg.cM01Fired.setEnabled(false);
-		dlg.cM01TopMark.setEnabled(false);
-
-		dlg.bM01Save.setEnabled(false);
-
 	}
 
 	public void setLightColour() {

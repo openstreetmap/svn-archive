@@ -215,12 +215,6 @@ abstract public class Buoy extends SeaMark {
 
 	public void paintSign() {
 		
-		dlg.cbM01TypeOfMark.setEnabled(true);
-		dlg.cbM01StyleOfMark.setEnabled(true);
-
-		dlg.cbM01TypeOfMark.setSelectedIndex(getBuoyIndex());
-		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
-
 		dlg.cM01TopMark.setSelected(hasTopMark());
 		dlg.cM01Fired.setSelected(isFired());
 
@@ -262,8 +256,6 @@ abstract public class Buoy extends SeaMark {
 			dlg.cbM01Kennung.setEnabled(false);
 			dlg.lM01FireMark.setText("");
 		}
-
-		dlg.bM01Save.setEnabled(true);
 
 		dlg.lM01Icon01.setIcon(null);
 		dlg.lM01Icon02.setIcon(null);
@@ -328,6 +320,66 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void refreshLights() {
+	}
+
+	public void resetMask() {
+		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
+
+		dlg.lM01Icon01.setIcon(null);
+		dlg.lM01Icon02.setIcon(null);
+
+		dlg.rbM01RegionA.setEnabled(false);
+		dlg.rbM01RegionB.setEnabled(false);
+		dlg.cbM01StyleOfMark.removeAllItems();
+		dlg.cbM01StyleOfMark.setEnabled(false);
+		dlg.tfM01Name.setText("");
+		dlg.tfM01Name.setEnabled(false);
+		setName("");
+		dlg.cM01TopMark.setSelected(false);
+		dlg.cM01TopMark.setEnabled(false);
+		dlg.cbM01TopMark.removeAllItems();
+		dlg.cbM01TopMark.setEnabled(false);
+		setTopMark(false);
+		dlg.cM01Radar.setSelected(false);
+		dlg.cM01Radar.setEnabled(false);
+		dlg.cM01Racon.setSelected(false);
+		dlg.cM01Racon.setEnabled(false);
+		dlg.cbM01Racon.removeAllItems();
+		dlg.cbM01Racon.setEnabled(false);
+		dlg.tfM01Racon.setText("");
+		dlg.tfM01Racon.setEnabled(false);
+		dlg.cM01Fog.setSelected(false);
+		dlg.cM01Fog.setEnabled(false);
+		dlg.cbM01Fog.removeAllItems();
+		dlg.cbM01Fog.setEnabled(false);
+		dlg.tfM01FogGroup.setText("");
+		dlg.tfM01FogGroup.setEnabled(false);
+		dlg.tfM01FogPeriod.setText("");
+		dlg.tfM01FogPeriod.setEnabled(false);
+		dlg.cM01Fired.setSelected(false);
+		dlg.cM01Fired.setEnabled(false);
+		setFired(false);
+		dlg.rbM01Fired1.setEnabled(false);
+		dlg.rbM01FiredN.setEnabled(false);
+		dlg.cbM01Kennung.removeAllItems();
+		dlg.cbM01Kennung.setEnabled(false);
+		dlg.cbM01Sector.setEnabled(false);
+		dlg.tfM01Group.setText("");
+		dlg.tfM01Group.setEnabled(false);
+		dlg.tfM01RepeatTime.setText("");
+		dlg.tfM01RepeatTime.setEnabled(false);
+		dlg.tfM01Bearing.setText("");
+		dlg.tfM01Bearing.setEnabled(false);
+		dlg.tfM02Bearing.setText("");
+		dlg.tfM02Bearing.setEnabled(false);
+		dlg.tfM01Radius.setText("");
+		dlg.tfM01Radius.setEnabled(false);
+		dlg.tfM01Height.setText("");
+		dlg.tfM01Height.setEnabled(false);
+		dlg.tfM01Range.setText("");
+		dlg.tfM01Range.setEnabled(false);
+
+		dlg.bM01Save.setEnabled(false);
 	}
 
 }

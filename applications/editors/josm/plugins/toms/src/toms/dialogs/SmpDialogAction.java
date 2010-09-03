@@ -115,46 +115,51 @@ public class SmpDialogAction extends JosmAction {
 	public JLabel lM01Icon01 = null;
 	public JLabel lM01Icon02 = null;
 	public JLabel lM01FireMark = null;
+	private JLabel lM01TypeOfMark = null;
+	public JComboBox cbM01TypeOfMark = null;
+	private JLabel lM01CatOfMark = null;
+	public JComboBox cbM01CatOfMark = null;
+	private JLabel lM01StyleOfMark = null;
+	public JComboBox cbM01StyleOfMark = null;
 	private JLabel lM01Name = null;
 	public JTextField tfM01Name = null;
-	private JLabel lM01StyleOfMark = null;
-	private JLabel lM01CatOfMark = null;
-	private JLabel lM01TypeOfMark = null;
 	private JLabel lM01Props02 = null;
-	public JComboBox cbM01TypeOfMark = null;
-	public JComboBox cbM01CatOfMark = null;
-	public JComboBox cbM01StyleOfMark = null;
 	public JCheckBox cM01TopMark = null;
 	public JComboBox cbM01TopMark = null;
-	private JCheckBox cM01Radar = null;
-	private JCheckBox cM01Racon = null;
-	private JComboBox cbM01Racon = null;
-	private JTextField tfM01Racon = null;
+	public JCheckBox cM01Radar = null;
+	public JCheckBox cM01Racon = null;
+	public JComboBox cbM01Racon = null;
+	public JTextField tfM01Racon = null;
 	private JLabel lM01Racon = null;
-	private JCheckBox cM01Fog = null;
-	private JComboBox cbM01Fog = null;
+	public JCheckBox cM01Fog = null;
+	public JComboBox cbM01Fog = null;
 	private JLabel lM01FogGroup = null;
-	private JTextField tfM01FogGroup = null;
+	public JTextField tfM01FogGroup = null;
 	private JLabel lM01FogPeriod = null;
-	private JTextField tfM01FogPeriod = null;
+	public JTextField tfM01FogPeriod = null;
 	public JCheckBox cM01Fired = null;
 	public ButtonGroup bgM01Fired = null;
 	public JRadioButton rbM01Fired1 = null;
 	public JRadioButton rbM01FiredN = null;
+	private JLabel lM01Kennung = null;
+	public JComboBox cbM01Kennung = null;
+	private JLabel lM01Sector = null;
 	public JComboBox cbM01Sector = null;
 	private JLabel lM01Group = null;
 	public JTextField tfM01Group = null;
 	private JLabel lM01RepeatTime = null;
 	public JTextField tfM01RepeatTime = null;
-	private JLabel lM01Kennung = null;
-	public JComboBox cbM01Kennung = null;
 	private JLabel lM01Height = null;
+	private JLabel lM01Bearing = null;
+	public JTextField tfM01Bearing = null;
+	public JTextField tfM02Bearing = null;
+	public JTextField tfM01Radius = null;
 	public JTextField tfM01Height = null;
 	private JLabel lM01Range = null;
 	public JTextField tfM01Range = null;
 	public JButton bM01Save = null;
-	private JButton bM01Close = null;
-	private JCheckBox cM01IconVisible = null;
+	public JButton bM01Close = null;
+	public JCheckBox cM01IconVisible = null;
 	public JTextField sM01StatusBar = null;
 
 	public JMenuItem getSmpItem() {
@@ -347,7 +352,6 @@ public class SmpDialogAction extends JosmAction {
 				"/images/Auge.png")));
 
 		cbM01TypeOfMark.setEnabled(true);
-		cbM01StyleOfMark.setEnabled(true);
 
 		// Soweit das Vorspiel. Ab hier beginnt das Parsen
 		String type = "";
@@ -480,6 +484,7 @@ public class SmpDialogAction extends JosmAction {
 
 					SmpItem.setEnabled(true);
 				}
+
 				public void windowActivated(WindowEvent arg0) {
 					parseSeaMark();
 					buoy.paintSign();
@@ -493,17 +498,17 @@ public class SmpDialogAction extends JosmAction {
 		if (pM01SeaMap == null) {
 
 			lM01Icon01 = new JLabel();
-			lM01Icon01.setBounds(new Rectangle(200, 20, 160, 200));
+			lM01Icon01.setBounds(new Rectangle(210, 30, 160, 200));
 			lM01Icon01.setIcon(null);
 			lM01Icon01.setText("");
 
 			lM01Icon02 = new JLabel();
-			lM01Icon02.setBounds(new Rectangle(200, 20, 160, 200));
+			lM01Icon02.setBounds(new Rectangle(210, 30, 160, 200));
 			lM01Icon02.setIcon(null);
 			lM01Icon02.setText("");
 
 			lM01FireMark = new JLabel();
-			lM01FireMark.setBounds(new Rectangle(310, 70, 80, 20));
+			lM01FireMark.setBounds(new Rectangle(305, 90, 90, 20));
 			lM01FireMark.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01FireMark.setText("");
 
@@ -562,9 +567,14 @@ public class SmpDialogAction extends JosmAction {
 			lM01FogPeriod.setText("Period:          s");
 
 			lM01Kennung = new JLabel();
-			lM01Kennung.setBounds(new Rectangle(35, 270, 60, 20));
+			lM01Kennung.setBounds(new Rectangle(240, 245, 60, 20));
 			lM01Kennung.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01Kennung.setText("Character:");
+
+			lM01Sector = new JLabel();
+			lM01Sector.setBounds(new Rectangle(80, 270, 180, 20));
+			lM01Sector.setFont(new Font("Dialog", Font.PLAIN, 12));
+			lM01Sector.setText("Sector:");
 
 			lM01Group = new JLabel();
 			lM01Group.setBounds(new Rectangle(190, 270, 100, 20));
@@ -575,6 +585,11 @@ public class SmpDialogAction extends JosmAction {
 			lM01RepeatTime.setBounds(new Rectangle(300, 270, 100, 20));
 			lM01RepeatTime.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01RepeatTime.setText("Period:          s");
+
+			lM01Bearing = new JLabel();
+			lM01Bearing.setBounds(new Rectangle(35, 295, 180, 20));
+			lM01Bearing.setFont(new Font("Dialog", Font.PLAIN, 12));
+			lM01Bearing.setText("         ¼-        ¼, r:");
 
 			lM01Height = new JLabel();
 			lM01Height.setBounds(new Rectangle(190, 295, 100, 20));
@@ -595,7 +610,7 @@ public class SmpDialogAction extends JosmAction {
 			bgM01Region = new ButtonGroup();
 			bgM01Region.add(rbM01RegionA);
 			bgM01Region.add(rbM01RegionB);
-			
+
 			ActionListener alM01Region = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (buoy instanceof BuoyLat) {
@@ -609,16 +624,16 @@ public class SmpDialogAction extends JosmAction {
 			rbM01RegionB.addActionListener(alM01Region);
 
 			rbM01Fired1 = new JRadioButton("Single", true);
-			rbM01Fired1.setBounds(new Rectangle(100, 240, 80, 30));
+			rbM01Fired1.setBounds(new Rectangle(80, 240, 65, 30));
 			rbM01FiredN = new JRadioButton("Sectored", false);
-			rbM01FiredN.setBounds(new Rectangle(190, 240, 100, 30));
+			rbM01FiredN.setBounds(new Rectangle(145, 240, 80, 30));
 			bgM01Fired = new ButtonGroup();
 			bgM01Fired.add(rbM01Fired1);
 			bgM01Fired.add(rbM01FiredN);
-			
+
 			ActionListener alM01Fired = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-						buoy.paintSign();
+					buoy.paintSign();
 				}
 			};
 			rbM01Fired1.addActionListener(alM01Fired);
@@ -658,13 +673,18 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(getCM01Fired(), null);
 			pM01SeaMap.add(rbM01Fired1, null);
 			pM01SeaMap.add(rbM01FiredN, null);
-			pM01SeaMap.add(getCbM01Sector(), null);
 			pM01SeaMap.add(getTfM01RepeatTime(), null);
 			pM01SeaMap.add(lM01RepeatTime, null);
 			pM01SeaMap.add(getCbM01Kennung(), null);
 			pM01SeaMap.add(lM01Kennung, null);
+			pM01SeaMap.add(getCbM01Sector(), null);
 			pM01SeaMap.add(lM01Group, null);
 			pM01SeaMap.add(getTfM01Group(), null);
+			pM01SeaMap.add(lM01Sector, null);
+			pM01SeaMap.add(lM01Bearing, null);
+			pM01SeaMap.add(getTfM01Bearing(), null);
+			pM01SeaMap.add(getTfM02Bearing(), null);
+			pM01SeaMap.add(getTfM01Radius(), null);
 			pM01SeaMap.add(lM01Height, null);
 			pM01SeaMap.add(getTfM01Height(), null);
 			pM01SeaMap.add(lM01Range, null);
@@ -685,19 +705,13 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TypeOfMark = new JComboBox();
 
 			// Inhalt der ComboBox
-			cbM01TypeOfMark.addItem("Not set");
-			cbM01TypeOfMark.addItem("Port");
-			cbM01TypeOfMark.addItem("Starboard");
-			cbM01TypeOfMark.addItem("Preferred Port");
-			cbM01TypeOfMark.addItem("Preferred Starboard");
-			cbM01TypeOfMark.addItem("Safe Water");
-			cbM01TypeOfMark.addItem("Cardinal North");
-			cbM01TypeOfMark.addItem("Cardinal East");
-			cbM01TypeOfMark.addItem("Cardinal South");
-			cbM01TypeOfMark.addItem("Cardinal West");
+			cbM01TypeOfMark.addItem("* Select Seamark *");
+			cbM01TypeOfMark.addItem("Lateral Mark");
+			cbM01TypeOfMark.addItem("Cardinal Mark");
+			cbM01TypeOfMark.addItem("Safe Water Mark");
 			cbM01TypeOfMark.addItem("Isolated Danger");
 			cbM01TypeOfMark.addItem("Special Purpose");
-			// cbM01TypeOfMark.addItem("Light");
+			cbM01TypeOfMark.addItem("Light");
 
 			cbM01TypeOfMark.setBounds(new Rectangle(50, 25, 150, 25));
 			cbM01TypeOfMark.setEditable(false);
@@ -706,83 +720,115 @@ public class SmpDialogAction extends JosmAction {
 
 			cbM01TypeOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					Node n;
 					int type = cbM01TypeOfMark.getSelectedIndex();
 
 					if (buoy == null) {
 						buoy = new BuoyUkn(dia, "Seamark not set");
 						return;
 					}
-					if ((type == 0) || (type == buoy.getBuoyIndex()))
-						return;
 
-					n = buoy.getNode();
+					Node n = buoy.getNode();
 					if (n == null)
 						return;
+
 					switch (type) {
 
-					case SeaMark.UNKNOWN_CAT:
+					case SeaMark.UNKNOWN_TYPE:
 						if (!(buoy instanceof BuoyUkn))
 							buoy = new BuoyUkn(dia, "Seamark not set");
 						buoy.setBuoyIndex(type);
 						break;
 
-					case SeaMark.PORT_HAND:
-					case SeaMark.STARBOARD_HAND:
-					case SeaMark.PREF_PORT_HAND:
-					case SeaMark.PREF_STARBOARD_HAND:
-						if (!(buoy instanceof BuoyLat))
-							buoy = new BuoyLat(dia, n);
+					case SeaMark.LATERAL:
+						if (!(buoy instanceof BuoyLat)) {
+							buoy.setBuoyIndex(0);
+							cbM01CatOfMark.removeAllItems();
+							cbM01CatOfMark.addItem("*Select Category*");
+							cbM01CatOfMark.addItem("Port");
+							cbM01CatOfMark.addItem("Starboard");
+							cbM01CatOfMark.addItem("Preferred Port");
+							cbM01CatOfMark.addItem("Preferred Starboard");
+							cbM01CatOfMark.setEnabled(true);
+						}
+						break;
+
+					case SeaMark.CARDINAL:
+						if (!(buoy instanceof BuoyCard)) {
+							buoy.setBuoyIndex(0);
+							cbM01CatOfMark.removeAllItems();
+							cbM01CatOfMark.addItem("*Select Category*");
+							cbM01CatOfMark.addItem("North");
+							cbM01CatOfMark.addItem("East");
+							cbM01CatOfMark.addItem("South");
+							cbM01CatOfMark.addItem("West");
+							cbM01CatOfMark.setEnabled(true);
+						}
 						break;
 
 					case SeaMark.SAFE_WATER:
 						if (!(buoy instanceof BuoySaw))
 							buoy = new BuoySaw(dia, n);
-						break;
-
-					case SeaMark.CARD_NORTH:
-					case SeaMark.CARD_EAST:
-					case SeaMark.CARD_SOUTH:
-					case SeaMark.CARD_WEST:
-						if (!(buoy instanceof BuoyCard))
-							buoy = new BuoyCard(dia, n);
+						buoy.setBuoyIndex(type);
 						break;
 
 					case SeaMark.ISOLATED_DANGER:
 						if (!(buoy instanceof BuoyIsol))
 							buoy = new BuoyIsol(dia, n);
+						buoy.setBuoyIndex(type);
 						break;
 
 					case SeaMark.SPECIAL_PURPOSE:
 						if (!(buoy instanceof BuoySpec))
 							buoy = new BuoySpec(dia, n);
+						buoy.setBuoyIndex(type);
 						break;
-					default:
-						if (!(buoy instanceof BuoyUkn))
-							buoy = new BuoyUkn(dia, "Not Implemented");
 					}
 
-					buoy.setBuoyIndex(type);
 					buoy.refreshStyles();
 					buoy.refreshLights();
+					buoy.setLightColour();
 					buoy.paintSign();
 				}
 			});
-
 		}
-
 		return cbM01TypeOfMark;
 	}
 
 	private JComboBox getCbM01CatOfMark() {
 		if (cbM01CatOfMark == null) {
 			cbM01CatOfMark = new JComboBox();
-			cbM01CatOfMark.setBounds(new Rectangle(80, 55, 120, 25));
+			cbM01CatOfMark.setBounds(new Rectangle(75, 55, 125, 25));
 			cbM01CatOfMark.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cbM01CatOfMark.setEnabled(true);
 			cbM01CatOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int cat = cbM01CatOfMark.getSelectedIndex();
+
+					if (buoy == null) {
+						buoy = new BuoyUkn(dia, "Seamark not set");
+						return;
+					}
+					if (cat == 0)
+						return;
+
+					Node n = buoy.getNode();
+					if (n == null)
+						return;
+
+					if (cbM01TypeOfMark.getSelectedIndex() == SeaMark.LATERAL) {
+						if (!(buoy instanceof BuoyLat))
+							buoy = new BuoyLat(dia, n);
+						buoy.setBuoyIndex(cat);
+					}
+					if (cbM01TypeOfMark.getSelectedIndex() == SeaMark.CARDINAL) {
+						if (!(buoy instanceof BuoyCard))
+							buoy = new BuoyCard(dia, n);
+						buoy.setBuoyIndex(cat);
+					}
+
+					buoy.refreshStyles();
+					buoy.refreshLights();
+					buoy.setLightColour();
+					buoy.paintSign();
 				}
 			});
 		}
@@ -794,7 +840,6 @@ public class SmpDialogAction extends JosmAction {
 			cbM01StyleOfMark = new JComboBox();
 			cbM01StyleOfMark.setBounds(new Rectangle(50, 85, 150, 25));
 			cbM01StyleOfMark.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cbM01StyleOfMark.setEnabled(true);
 			cbM01StyleOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int style = cbM01StyleOfMark.getSelectedIndex();
@@ -846,7 +891,6 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TopMark = new JComboBox();
 			cbM01TopMark.setBounds(new Rectangle(100, 170, 70, 20));
 			cbM01TopMark.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cbM01TopMark.setEnabled(true);
 			cbM01TopMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int top = cbM01TopMark.getSelectedIndex();
@@ -861,7 +905,6 @@ public class SmpDialogAction extends JosmAction {
 			cM01Radar = new JCheckBox();
 			cM01Radar.setBounds(new Rectangle(10, 195, 120, 20));
 			cM01Radar.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cM01Radar.setEnabled(false);
 			cM01Radar.setText("Radar Reflector");
 		}
 		return cM01Radar;
@@ -872,7 +915,6 @@ public class SmpDialogAction extends JosmAction {
 			cM01Racon = new JCheckBox();
 			cM01Racon.setBounds(new Rectangle(130, 195, 110, 20));
 			cM01Racon.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cM01Racon.setEnabled(false);
 			cM01Racon.setText("Radar Beacon");
 		}
 		return cM01Racon;
@@ -883,7 +925,6 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Racon = new JComboBox();
 			cbM01Racon.setBounds(new Rectangle(240, 195, 80, 20));
 			cbM01Racon.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cbM01Racon.setEnabled(true);
 			cbM01Racon.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int rac = cbM01Racon.getSelectedIndex();
@@ -911,7 +952,6 @@ public class SmpDialogAction extends JosmAction {
 			cM01Fog = new JCheckBox();
 			cM01Fog.setBounds(new Rectangle(10, 220, 90, 20));
 			cM01Fog.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cM01Fog.setEnabled(false);
 			cM01Fog.setText("Fog Signal");
 		}
 		return cM01Fog;
@@ -922,7 +962,6 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Fog = new JComboBox();
 			cbM01Fog.setBounds(new Rectangle(100, 220, 70, 20));
 			cbM01Fog.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cbM01Fog.setEnabled(true);
 			cbM01Fog.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int fog = cbM01Fog.getSelectedIndex();
@@ -964,15 +1003,13 @@ public class SmpDialogAction extends JosmAction {
 			cM01Fired.setBounds(new Rectangle(10, 245, 70, 20));
 			cM01Fired.setFont(new Font("Dialog", Font.PLAIN, 12));
 			cM01Fired.setText("Lighted");
-			cM01Fired.setEnabled(false);
 			cM01Fired.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
 					if (buoy == null) {
 						return;
 					}
-
 					buoy.setFired(cM01Fired.isSelected());
-
+					buoy.setLightColour();
 					buoy.paintSign();
 				}
 			});
@@ -984,7 +1021,7 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01Kennung() {
 		if (cbM01Kennung == null) {
 			cbM01Kennung = new JComboBox();
-			cbM01Kennung.setBounds(new Rectangle(100, 270, 70, 20));
+			cbM01Kennung.setBounds(new Rectangle(305, 245, 70, 20));
 			cbM01Kennung.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int i1, i2;
@@ -1000,10 +1037,15 @@ public class SmpDialogAction extends JosmAction {
 
 					i1 = it.indexOf("(");
 					i2 = it.indexOf(")", i1);
+					tfM01Group.setText("");
+					tfM01Group.setEnabled(false);
 					if (i1 >= 0) {
 						c = it.substring(0, i1);
-						if (i1 >= 0)
+						if (i1 >= 0) {
 							g = it.substring(i1 + 1, i2);
+							if (g.equals(""))
+								tfM01Group.setEnabled(true);
+						}
 					}
 					if (it.contains("+")) {
 						i1 = it.indexOf("+");
@@ -1017,7 +1059,6 @@ public class SmpDialogAction extends JosmAction {
 						c = it;
 					buoy.setLightChar(c);
 					buoy.setLightGroup(g);
-					// buoy.setLightColour();
 					buoy.paintSign();
 				}
 			});
@@ -1028,9 +1069,18 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01Sector() {
 		if (cbM01Sector == null) {
 			cbM01Sector = new JComboBox();
-			cbM01Sector.setBounds(new Rectangle(300, 245, 50, 20));
+			cbM01Sector.setBounds(new Rectangle(120, 270, 50, 20));
 			cbM01Sector.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cbM01Sector.setEnabled(true);
+			cbM01Sector.addItem("0");
+			cbM01Sector.addItem("1");
+			cbM01Sector.addItem("2");
+			cbM01Sector.addItem("3");
+			cbM01Sector.addItem("4");
+			cbM01Sector.addItem("5");
+			cbM01Sector.addItem("6");
+			cbM01Sector.addItem("7");
+			cbM01Sector.addItem("8");
+			cbM01Sector.addItem("9");
 			cbM01Sector.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int sec = cbM01Sector.getSelectedIndex();
@@ -1072,11 +1122,50 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Group.setBounds(new Rectangle(243, 270, 30, 20));
 			tfM01Group.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-					buoy.setName(tfM01Group.getText());
+					buoy.setLightGroup(tfM01Group.getText());
 				}
 			});
 		}
 		return tfM01Group;
+	}
+
+	private JTextField getTfM01Bearing() {
+		if (tfM01Bearing == null) {
+			tfM01Bearing = new JTextField();
+			tfM01Bearing.setBounds(new Rectangle(40, 295, 30, 20));
+			tfM01Bearing.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					buoy.setName(tfM01Bearing.getText());
+				}
+			});
+		}
+		return tfM01Bearing;
+	}
+
+	private JTextField getTfM02Bearing() {
+		if (tfM02Bearing == null) {
+			tfM02Bearing = new JTextField();
+			tfM02Bearing.setBounds(new Rectangle(85, 295, 30, 20));
+			tfM02Bearing.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					buoy.setName(tfM02Bearing.getText());
+				}
+			});
+		}
+		return tfM02Bearing;
+	}
+
+	private JTextField getTfM01Radius() {
+		if (tfM01Radius == null) {
+			tfM01Radius = new JTextField();
+			tfM01Radius.setBounds(new Rectangle(140, 295, 30, 20));
+			tfM01Radius.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					buoy.setName(tfM01Radius.getText());
+				}
+			});
+		}
+		return tfM01Radius;
 	}
 
 	private JTextField getTfM01Height() {
@@ -1135,6 +1224,7 @@ public class SmpDialogAction extends JosmAction {
 			bM01Save = new JButton();
 			bM01Save.setBounds(new Rectangle(120, 325, 80, 20));
 			bM01Save.setText("Save");
+			bM01Save.setEnabled(false);
 
 			bM01Save.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1203,7 +1293,7 @@ public class SmpDialogAction extends JosmAction {
 		}
 		return cM01IconVisible;
 	}
-	
+
 	private JTextField getSM01StatusBar() {
 		if (sM01StatusBar == null) {
 			sM01StatusBar = new JTextField();

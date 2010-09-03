@@ -22,6 +22,8 @@ public class BuoyIsol extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
+		
+		resetMask();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
@@ -30,14 +32,13 @@ public class BuoyIsol extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Beacon");
 		dlg.cbM01StyleOfMark.addItem("Tower");
 		dlg.cbM01StyleOfMark.addItem("Float");
+		dlg.cbM01StyleOfMark.setEnabled(true);
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
 		dlg.cbM01Kennung.addItem("Fl(2)");
 
-		dlg.cM01Fired.setSelected(false);
 		dlg.cM01TopMark.setSelected(true);
-		dlg.cM01TopMark.setEnabled(false);
 
 		setColour(SeaMark.BLACK_RED_BLACK);
 		setLightColour("W");
@@ -138,7 +139,7 @@ public class BuoyIsol extends Buoy {
 			image += ".png";
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 			if (isFired()) {
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_240.png")));
+				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
 				if (getLightChar() != "") {
 					String c;
 

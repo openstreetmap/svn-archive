@@ -23,6 +23,8 @@ public class BuoyCard extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
+		
+		resetMask();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
@@ -31,9 +33,7 @@ public class BuoyCard extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Beacon");
 		dlg.cbM01StyleOfMark.addItem("Tower");
 		dlg.cbM01StyleOfMark.addItem("Float");
-
-		dlg.cM01Fired.setSelected(false);
-		dlg.cM01TopMark.setSelected(false);
+		dlg.cbM01StyleOfMark.setEnabled(true);
 
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 		if (keys.containsKey("name"))
@@ -244,7 +244,7 @@ public class BuoyCard extends Buoy {
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 			
 			if (isFired()) {
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_240.png")));
+				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
 
 				if (getLightChar() != "") {
 					String tmp = null;

@@ -191,6 +191,29 @@
       <CssParameter name="stroke-linecap">round</CssParameter>
     </LineSymbolizer>
   </Rule>
+  <Rule>
+    <Filter>[natural]='glacier'</Filter>
+    &maxscale_zoom12;
+    &minscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">0.8</CssParameter>
+      <CssParameter name="stroke-dasharray">5,3</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+   </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[natural]='glacier'</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&waterline-color;</CssParameter>
+      <CssParameter name="stroke-width">1.6</CssParameter>
+      <CssParameter name="stroke-dasharray">5,3</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
 </Style>
 
 <Style name="water_lines_casing">
@@ -241,6 +264,14 @@
     &maxscale_zoom6;
     <PolygonSymbolizer>
       <CssParameter name="fill">&water-color;</CssParameter>
+    </PolygonSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[natural]='glacier'</Filter>
+    <Filter>&water_area;</Filter>
+    &maxscale_zoom6;
+    <PolygonSymbolizer>
+      <CssParameter name="fill">&white;</CssParameter>
     </PolygonSymbolizer>
   </Rule>
 </Style>

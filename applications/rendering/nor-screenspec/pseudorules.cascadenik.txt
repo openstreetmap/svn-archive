@@ -565,10 +565,9 @@ Skytebane [zoom>=15][zoom<=16] { line-color: black; }
 Skytebaneinnretning [zoom>=16] { line-color: black; line-width: 0.01; }
 Skytefelt [zoom>=13][zoom<=16] { } // Ikke symbolisert
 Skytefeltsgrense [zoom>=13][zoom<=16] { outline-color: #FFC8FF; line-color: black; outline-width:0.17; line-width: 0.8; line-dasharray: 2,2; } //Rosa heltrukken linje med svart strek - forskyvning 0.4 mm
-Snø og isbre [natural=glacier][zoom>=10][zoom<=11] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
 Snø og isbre [natural=glacier][zoom>=10][zoom<=12] { polygon-fill: white; line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
-Snø og isbre [natural=glacier][zoom>=11][zoom<=14] { line-color: #00A6FF; line-width: 0.21; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
-Snø og isbre [natural=glacier][zoom>=13][zoom<=15] { line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
+Snø og isbre [natural=glacier][zoom>=11][zoom<=14] { polygon-fill: white; line-color: #00A6FF; line-width: 0.21; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
+Snø og isbre [natural=glacier][zoom>=13][zoom<=15] { polygon-fill: white; line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
 Snø og isbre [natural=glacier][zoom>=6][zoom<=8] { line-color: #00A6FF; line-width: 5; line-dasharray: 100,60; } //Hvit flate med stipletblått omriss
 Snø og isbre [natural=glacier][zoom>=8][zoom<=10] { polygon-fill; white: line-color: #00A6FF; line-width: 0.1; line-dasharray: 5,3; } //Hvit flate med stipletblått omriss
 Snø- og isbre [zoom>=15] { polygon-fill: white; line-color: #00A6FF; line-width: 0.03(0,1); line-dasharray: 6,4; } //Hvit flate med stipletblått omriss

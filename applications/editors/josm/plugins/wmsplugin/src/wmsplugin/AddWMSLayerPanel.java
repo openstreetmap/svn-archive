@@ -185,7 +185,7 @@ public class AddWMSLayerPanel extends JPanel {
         a.append("?");
         if(serviceUrl.getQuery() != null) {
             a.append(serviceUrl.getQuery());
-            if (!serviceUrl.getQuery().endsWith("&")) {
+            if (!serviceUrl.getQuery().isEmpty() && !serviceUrl.getQuery().endsWith("&")) {
                 a.append("&");
             }
         }

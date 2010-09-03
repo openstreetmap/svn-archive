@@ -258,6 +258,8 @@ function searchCallback(result) {
   var bbox = new OpenLayers.Bounds(left,bottom,right,top)
     .transform(epsg4326, map.getProjectionObject());
   map.zoomToExtent(bbox);
+  document.getElementById("searchCount").innerHTML =
+    '<a href="">'+result.length+' treff.</a>';
 }
 
 window.onload = init;
@@ -336,6 +338,7 @@ window.onload = init;
         Finn et sted:
           <input id="q" name="q" value="" style="width:270px;"/>
           <input type="submit" value="Søk"/>
+          <span id="searchCount"></span>
         </form>
       </p>
     </div>

@@ -183,6 +183,12 @@ public class AddWMSLayerPanel extends JPanel {
         }
         a.append(serviceUrl.getPath());
         a.append("?");
+        if(serviceUrl.getQuery() != null) {
+            a.append(serviceUrl.getQuery());
+            if (!serviceUrl.getQuery().endsWith("&")) {
+                a.append("&");
+            }
+        }
         return a.toString();
     }
 
@@ -212,16 +218,17 @@ public class AddWMSLayerPanel extends JPanel {
     }
 
     private void attemptGetCapabilities(String serviceUrlStr) {
-        serviceUrl = null;
+        URL getCapabilitiesUrl = null;
         try {
             if (!serviceUrlStr.trim().contains("capabilities")) {
                 // If the url doesn't already have GetCapabilities, add it in
-                serviceUrl = new URL(serviceUrlStr + "VERSION=1.1.1&SERVICE=WMS&REQUEST=GetCapabilities");
+                getCapabilitiesUrl = new URL(serviceUrlStr + "VERSION=1.1.1&SERVICE=WMS&REQUEST=GetCapabilities");
             } else {
                 // Otherwise assume it's a good URL and let the subsequent error
                 // handling systems deal with problems
-                serviceUrl = new URL(serviceUrlStr);
+                getCapabilitiesUrl = new URL(serviceUrlStr);
             }
+            serviceUrl = new URL(serviceUrlStr);
         } catch (HeadlessException e) {
             return;
         } catch (MalformedURLException e) {
@@ -230,11 +237,11 @@ public class AddWMSLayerPanel extends JPanel {
             return;
         }
 
-        System.out.println("Connecting to: " + serviceUrl);
+        System.out.println("Connecting to: " + getCapabilitiesUrl);
 
         String incomingData;
         try {
-            URLConnection openConnection = serviceUrl.openConnection();
+            URLConnection openConnection = getCapabilitiesUrl.openConnection();
             InputStream inputStream = openConnection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String line;
@@ -280,7 +287,7 @@ public class AddWMSLayerPanel extends JPanel {
         }
 
         try {
-            treeRootNode.setUserObject(serviceUrl.getHost());
+            treeRootNode.setUserObject(getCapabilitiesUrl.getHost());
             Element capabilityElem = getChild(document.getDocumentElement(), "Capability");
             List<Element> children = getChildren(capabilityElem, "Layer");
             List<LayerDetails> layers = parseLayers(children, new HashSet<String>());

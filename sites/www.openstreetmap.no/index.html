@@ -258,8 +258,7 @@ function searchCallback(result) {
   var bbox = new OpenLayers.Bounds(left,bottom,right,top)
     .transform(epsg4326, map.getProjectionObject());
   map.zoomToExtent(bbox);
-  document.getElementById("searchCount").innerHTML =
-    '<a href="">'+result.length+' treff.</a>';
+  document.getElementById("searchCount").innerHTML = result.length+' treff.';
 }
 
 window.onload = init;

@@ -25,6 +25,7 @@ import toms.seamarks.SeaMark;
 
 // Kommentar zum Ausprobieren von svn
 // und nochmal
+// und nochmal, diesmal mit kwallet als Passwortmanager
 
 public class Toms extends Plugin {
 

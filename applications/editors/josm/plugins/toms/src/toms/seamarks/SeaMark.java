@@ -9,6 +9,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
 
+// Kommentar zur Ausprobe svn
+
 abstract public class SeaMark {
 
 	/**

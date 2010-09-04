@@ -3,6 +3,8 @@
 
 package toms.dialogs;
 
+// necessary adaption to my environment 04.09.2010 kg
+
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
@@ -589,7 +591,7 @@ public class SmpDialogAction extends JosmAction {
 			lM01Bearing = new JLabel();
 			lM01Bearing.setBounds(new Rectangle(35, 295, 180, 20));
 			lM01Bearing.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Bearing.setText("         ¼-        ¼, r:");
+			lM01Bearing.setText("         ï¿½-        ï¿½, r:");
 
 			lM01Height = new JLabel();
 			lM01Height.setBounds(new Rectangle(190, 295, 100, 20));

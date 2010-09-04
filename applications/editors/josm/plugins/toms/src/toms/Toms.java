@@ -23,6 +23,8 @@ import org.openstreetmap.josm.gui.MapFrame;
 import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
+// Kommentar zum Ausprobieren von svn
+
 public class Toms extends Plugin {
 
 	private JMenuItem Smp;

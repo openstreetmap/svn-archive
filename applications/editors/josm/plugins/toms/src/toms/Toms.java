@@ -24,6 +24,7 @@ import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
 // Kommentar zum Ausprobieren von svn
+// und nochmal
 
 public class Toms extends Plugin {
 

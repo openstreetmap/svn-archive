@@ -35,8 +35,8 @@ public class Toms extends Plugin {
 	public Toms(PluginInformation info) {
 		super(info);
 
-		String os = "";
-		String userHome = "";
+		String os = ""; //$NON-NLS-1$
+		String userHome = ""; //$NON-NLS-1$
 
 		SmpDialog = new SmpDialogAction();
 		Smp = Main.main.menu.toolsMenu.add(SmpDialog);
@@ -47,6 +47,7 @@ public class Toms extends Plugin {
 		SmpDialog.setUserHome(userHome);
 		Smp.setEnabled(false);
 
+		System.out.println(Messages.getString("Toms.2")); //$NON-NLS-1$
 	}
 
 	@Override

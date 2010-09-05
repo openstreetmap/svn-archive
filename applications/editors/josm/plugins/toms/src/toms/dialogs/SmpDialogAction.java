@@ -608,7 +608,7 @@ public class SmpDialogAction extends JosmAction {
 			lM01Bearing = new JLabel();
 			lM01Bearing.setBounds(new Rectangle(228, 295, 180, 20));
 			lM01Bearing.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Bearing.setText("Brg:         ¼-        ¼, r:");
+			lM01Bearing.setText("Brg:         ï¿½-        ï¿½, r:");
 
 			rbM01RegionA = new JRadioButton("-A", Main.pref.get("tomsplugin.IALA")
 					.equals("A"));

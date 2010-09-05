@@ -363,6 +363,11 @@ abstract public class Buoy extends SeaMark {
 		dlg.rbM01FiredN.setEnabled(false);
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.setEnabled(false);
+		dlg.tfM01Height.setText("");
+		dlg.tfM01Height.setEnabled(false);
+		dlg.tfM01Range.setText("");
+		dlg.tfM01Range.setEnabled(false);
+		dlg.cbM01Colour.setEnabled(false);
 		dlg.cbM01Sector.setEnabled(false);
 		dlg.tfM01Group.setText("");
 		dlg.tfM01Group.setEnabled(false);
@@ -374,10 +379,6 @@ abstract public class Buoy extends SeaMark {
 		dlg.tfM02Bearing.setEnabled(false);
 		dlg.tfM01Radius.setText("");
 		dlg.tfM01Radius.setEnabled(false);
-		dlg.tfM01Height.setText("");
-		dlg.tfM01Height.setEnabled(false);
-		dlg.tfM01Range.setText("");
-		dlg.tfM01Range.setEnabled(false);
 
 		dlg.bM01Save.setEnabled(false);
 	}

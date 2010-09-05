@@ -145,19 +145,21 @@ public class SmpDialogAction extends JosmAction {
 	public JRadioButton rbM01FiredN = null;
 	private JLabel lM01Kennung = null;
 	public JComboBox cbM01Kennung = null;
-	private JLabel lM01Sector = null;
-	public JComboBox cbM01Sector = null;
+	private JLabel lM01Height = null;
+	public JTextField tfM01Height = null;
+	private JLabel lM01Range = null;
 	private JLabel lM01Group = null;
 	public JTextField tfM01Group = null;
 	private JLabel lM01RepeatTime = null;
 	public JTextField tfM01RepeatTime = null;
-	private JLabel lM01Height = null;
+	private JLabel lM01Sector = null;
+	public JComboBox cbM01Sector = null;
+	private JLabel lM01Colour = null;
+	public JComboBox cbM01Colour = null;
 	private JLabel lM01Bearing = null;
 	public JTextField tfM01Bearing = null;
 	public JTextField tfM02Bearing = null;
 	public JTextField tfM01Radius = null;
-	public JTextField tfM01Height = null;
-	private JLabel lM01Range = null;
 	public JTextField tfM01Range = null;
 	public JButton bM01Save = null;
 	public JButton bM01Close = null;
@@ -573,35 +575,40 @@ public class SmpDialogAction extends JosmAction {
 			lM01Kennung.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01Kennung.setText("Character:");
 
-			lM01Sector = new JLabel();
-			lM01Sector.setBounds(new Rectangle(80, 270, 180, 20));
-			lM01Sector.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Sector.setText("Sector:");
+			lM01Height = new JLabel();
+			lM01Height.setBounds(new Rectangle(10, 270, 100, 20));
+			lM01Height.setFont(new Font("Dialog", Font.PLAIN, 12));
+			lM01Height.setText("Height:         m");
+
+			lM01Range = new JLabel();
+			lM01Range.setBounds(new Rectangle(108, 270, 100, 20));
+			lM01Range.setFont(new Font("Dialog", Font.PLAIN, 12));
+			lM01Range.setText("Range:         M");
 
 			lM01Group = new JLabel();
-			lM01Group.setBounds(new Rectangle(190, 270, 100, 20));
+			lM01Group.setBounds(new Rectangle(204, 270, 100, 20));
 			lM01Group.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Group.setText("Group: (          )");
+			lM01Group.setText("Group: (         )");
 
 			lM01RepeatTime = new JLabel();
 			lM01RepeatTime.setBounds(new Rectangle(300, 270, 100, 20));
 			lM01RepeatTime.setFont(new Font("Dialog", Font.PLAIN, 12));
 			lM01RepeatTime.setText("Period:          s");
 
+			lM01Sector = new JLabel();
+			lM01Sector.setBounds(new Rectangle(10, 295, 180, 20));
+			lM01Sector.setFont(new Font("Dialog", Font.PLAIN, 12));
+			lM01Sector.setText("Sector:");
+
+			lM01Colour = new JLabel();
+			lM01Colour.setBounds(new Rectangle(120, 295, 180, 20));
+			lM01Colour.setFont(new Font("Dialog", Font.PLAIN, 12));
+			lM01Colour.setText("Colour:");
+
 			lM01Bearing = new JLabel();
-			lM01Bearing.setBounds(new Rectangle(35, 295, 180, 20));
+			lM01Bearing.setBounds(new Rectangle(228, 295, 180, 20));
 			lM01Bearing.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Bearing.setText("         ï¿½-        ï¿½, r:");
-
-			lM01Height = new JLabel();
-			lM01Height.setBounds(new Rectangle(190, 295, 100, 20));
-			lM01Height.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Height.setText("Height:           m");
-
-			lM01Range = new JLabel();
-			lM01Range.setBounds(new Rectangle(300, 295, 100, 20));
-			lM01Range.setFont(new Font("Dialog", Font.PLAIN, 12));
-			lM01Range.setText("Range:          M");
+			lM01Bearing.setText("Brg:         ¼-        ¼, r:");
 
 			rbM01RegionA = new JRadioButton("-A", Main.pref.get("tomsplugin.IALA")
 					.equals("A"));
@@ -679,10 +686,12 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(lM01RepeatTime, null);
 			pM01SeaMap.add(getCbM01Kennung(), null);
 			pM01SeaMap.add(lM01Kennung, null);
-			pM01SeaMap.add(getCbM01Sector(), null);
 			pM01SeaMap.add(lM01Group, null);
 			pM01SeaMap.add(getTfM01Group(), null);
 			pM01SeaMap.add(lM01Sector, null);
+			pM01SeaMap.add(getCbM01Sector(), null);
+			pM01SeaMap.add(lM01Colour, null);
+			pM01SeaMap.add(getCbM01Colour(), null);
 			pM01SeaMap.add(lM01Bearing, null);
 			pM01SeaMap.add(getTfM01Bearing(), null);
 			pM01SeaMap.add(getTfM02Bearing(), null);
@@ -1068,28 +1077,43 @@ public class SmpDialogAction extends JosmAction {
 		return cbM01Kennung;
 	}
 
-	private JComboBox getCbM01Sector() {
-		if (cbM01Sector == null) {
-			cbM01Sector = new JComboBox();
-			cbM01Sector.setBounds(new Rectangle(120, 270, 50, 20));
-			cbM01Sector.setFont(new Font("Dialog", Font.PLAIN, 12));
-			cbM01Sector.addItem("0");
-			cbM01Sector.addItem("1");
-			cbM01Sector.addItem("2");
-			cbM01Sector.addItem("3");
-			cbM01Sector.addItem("4");
-			cbM01Sector.addItem("5");
-			cbM01Sector.addItem("6");
-			cbM01Sector.addItem("7");
-			cbM01Sector.addItem("8");
-			cbM01Sector.addItem("9");
-			cbM01Sector.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int sec = cbM01Sector.getSelectedIndex();
+	private JTextField getTfM01Height() {
+		if (tfM01Height == null) {
+			tfM01Height = new JTextField();
+			tfM01Height.setBounds(new Rectangle(54, 270, 30, 20));
+			tfM01Height.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					buoy.setName(tfM01Height.getText());
 				}
 			});
 		}
-		return cbM01Sector;
+		return tfM01Height;
+	}
+
+	private JTextField getTfM01Range() {
+		if (tfM01Range == null) {
+			tfM01Range = new JTextField();
+			tfM01Range.setBounds(new Rectangle(151, 270, 30, 20));
+			tfM01Range.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					buoy.setName(tfM01Range.getText());
+				}
+			});
+		}
+		return tfM01Range;
+	}
+
+	private JTextField getTfM01Group() {
+		if (tfM01Group == null) {
+			tfM01Group = new JTextField();
+			tfM01Group.setBounds(new Rectangle(255, 270, 30, 20));
+			tfM01Group.addFocusListener(new FocusAdapter() {
+				public void focusLost(FocusEvent e) {
+					buoy.setLightGroup(tfM01Group.getText());
+				}
+			});
+		}
+		return tfM01Group;
 	}
 
 	private JTextField getTfM01RepeatTime() {
@@ -1118,23 +1142,51 @@ public class SmpDialogAction extends JosmAction {
 		return tfM01RepeatTime;
 	}
 
-	private JTextField getTfM01Group() {
-		if (tfM01Group == null) {
-			tfM01Group = new JTextField();
-			tfM01Group.setBounds(new Rectangle(243, 270, 30, 20));
-			tfM01Group.addFocusListener(new FocusAdapter() {
-				public void focusLost(FocusEvent e) {
-					buoy.setLightGroup(tfM01Group.getText());
+	private JComboBox getCbM01Colour() {
+		if (cbM01Colour == null) {
+			cbM01Colour = new JComboBox();
+			cbM01Colour.setBounds(new Rectangle(165, 295, 40, 20));
+			cbM01Colour.setFont(new Font("Dialog", Font.PLAIN, 12));
+			cbM01Colour.addItem("W");
+			cbM01Colour.addItem("R");
+			cbM01Colour.addItem("G");
+			cbM01Colour.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int col = cbM01Colour.getSelectedIndex();
 				}
 			});
 		}
-		return tfM01Group;
+		return cbM01Colour;
+	}
+
+	private JComboBox getCbM01Sector() {
+		if (cbM01Sector == null) {
+			cbM01Sector = new JComboBox();
+			cbM01Sector.setBounds(new Rectangle(55, 295, 50, 20));
+			cbM01Sector.setFont(new Font("Dialog", Font.PLAIN, 12));
+			cbM01Sector.addItem("Com");
+			cbM01Sector.addItem("1");
+			cbM01Sector.addItem("2");
+			cbM01Sector.addItem("3");
+			cbM01Sector.addItem("4");
+			cbM01Sector.addItem("5");
+			cbM01Sector.addItem("6");
+			cbM01Sector.addItem("7");
+			cbM01Sector.addItem("8");
+			cbM01Sector.addItem("9");
+			cbM01Sector.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int sec = cbM01Sector.getSelectedIndex();
+				}
+			});
+		}
+		return cbM01Sector;
 	}
 
 	private JTextField getTfM01Bearing() {
 		if (tfM01Bearing == null) {
 			tfM01Bearing = new JTextField();
-			tfM01Bearing.setBounds(new Rectangle(40, 295, 30, 20));
+			tfM01Bearing.setBounds(new Rectangle(255, 295, 30, 20));
 			tfM01Bearing.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setName(tfM01Bearing.getText());
@@ -1147,7 +1199,7 @@ public class SmpDialogAction extends JosmAction {
 	private JTextField getTfM02Bearing() {
 		if (tfM02Bearing == null) {
 			tfM02Bearing = new JTextField();
-			tfM02Bearing.setBounds(new Rectangle(85, 295, 30, 20));
+			tfM02Bearing.setBounds(new Rectangle(300, 295, 30, 20));
 			tfM02Bearing.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setName(tfM02Bearing.getText());
@@ -1160,7 +1212,7 @@ public class SmpDialogAction extends JosmAction {
 	private JTextField getTfM01Radius() {
 		if (tfM01Radius == null) {
 			tfM01Radius = new JTextField();
-			tfM01Radius.setBounds(new Rectangle(140, 295, 30, 20));
+			tfM01Radius.setBounds(new Rectangle(355, 295, 30, 20));
 			tfM01Radius.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setName(tfM01Radius.getText());
@@ -1168,32 +1220,6 @@ public class SmpDialogAction extends JosmAction {
 			});
 		}
 		return tfM01Radius;
-	}
-
-	private JTextField getTfM01Height() {
-		if (tfM01Height == null) {
-			tfM01Height = new JTextField();
-			tfM01Height.setBounds(new Rectangle(243, 295, 30, 20));
-			tfM01Height.addFocusListener(new FocusAdapter() {
-				public void focusLost(FocusEvent e) {
-					buoy.setName(tfM01Height.getText());
-				}
-			});
-		}
-		return tfM01Height;
-	}
-
-	private JTextField getTfM01Range() {
-		if (tfM01Range == null) {
-			tfM01Range = new JTextField();
-			tfM01Range.setBounds(new Rectangle(345, 295, 30, 20));
-			tfM01Range.addFocusListener(new FocusAdapter() {
-				public void focusLost(FocusEvent e) {
-					buoy.setName(tfM01Range.getText());
-				}
-			});
-		}
-		return tfM01Range;
 	}
 
 	private JButton getBM01Close() {

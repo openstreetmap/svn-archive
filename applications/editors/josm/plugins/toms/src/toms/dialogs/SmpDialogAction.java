@@ -120,9 +120,9 @@ public class SmpDialogAction extends JosmAction {
 	public JLabel lM01FireMark = null;
 	private JLabel lM01TypeOfMark = null;
 	public JComboBox cbM01TypeOfMark = null;
-	private JLabel lM01CatOfMark = null;
+	public JLabel lM01CatOfMark = null;
 	public JComboBox cbM01CatOfMark = null;
-	private JLabel lM01StyleOfMark = null;
+	public JLabel lM01StyleOfMark = null;
 	public JComboBox cbM01StyleOfMark = null;
 	private JLabel lM01Name = null;
 	public JTextField tfM01Name = null;
@@ -630,9 +630,9 @@ public class SmpDialogAction extends JosmAction {
 			rbM01RegionB.addActionListener(alM01Region);
 
 			rbM01Fired1 = new JRadioButton(Messages.getString("SmpDialogAction.140"), true); //$NON-NLS-1$
-			rbM01Fired1.setBounds(new Rectangle(80, 240, 65, 30));
+			rbM01Fired1.setBounds(new Rectangle(85, 240, 70, 30));
 			rbM01FiredN = new JRadioButton(Messages.getString("SmpDialogAction.141"), false); //$NON-NLS-1$
-			rbM01FiredN.setBounds(new Rectangle(145, 240, 80, 30));
+			rbM01FiredN.setBounds(new Rectangle(155, 240, 80, 30));
 			bgM01Fired = new ButtonGroup();
 			bgM01Fired.add(rbM01Fired1);
 			bgM01Fired.add(rbM01FiredN);
@@ -721,8 +721,8 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TypeOfMark.addItem(Messages.getString("SmpDialogAction.147")); //$NON-NLS-1$
 			cbM01TypeOfMark.addItem(Messages.getString("SmpDialogAction.148")); //$NON-NLS-1$
 
-			cbM01TypeOfMark.setBounds(new Rectangle(50, 25, 150, 25));
-			cbM01TypeOfMark.setEditable(false);
+			cbM01TypeOfMark.setBounds(new Rectangle(45, 25, 165, 25));
+//			cbM01TypeOfMark.setEditable(false);
 			cbM01TypeOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01TypeOfMark.setEnabled(true);
 
@@ -749,6 +749,7 @@ public class SmpDialogAction extends JosmAction {
 
 					case SeaMark.LATERAL:
 						if (!(buoy instanceof BuoyLat)) {
+							buoy = new BuoyLat(dia, n);
 							buoy.setBuoyIndex(0);
 							cbM01CatOfMark.removeAllItems();
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.152")); //$NON-NLS-1$
@@ -756,12 +757,12 @@ public class SmpDialogAction extends JosmAction {
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.154")); //$NON-NLS-1$
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.155")); //$NON-NLS-1$
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.156")); //$NON-NLS-1$
-							cbM01CatOfMark.setEnabled(true);
 						}
 						break;
 
 					case SeaMark.CARDINAL:
 						if (!(buoy instanceof BuoyCard)) {
+							buoy = new BuoyCard(dia, n);
 							buoy.setBuoyIndex(0);
 							cbM01CatOfMark.removeAllItems();
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
@@ -769,26 +770,41 @@ public class SmpDialogAction extends JosmAction {
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.159")); //$NON-NLS-1$
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.160")); //$NON-NLS-1$
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.161")); //$NON-NLS-1$
-							cbM01CatOfMark.setEnabled(true);
 						}
 						break;
 
 					case SeaMark.SAFE_WATER:
-						if (!(buoy instanceof BuoySaw))
+						if (!(buoy instanceof BuoySaw)) {
 							buoy = new BuoySaw(dia, n);
+						}
 						buoy.setBuoyIndex(type);
 						break;
 
 					case SeaMark.ISOLATED_DANGER:
-						if (!(buoy instanceof BuoyIsol))
+						if (!(buoy instanceof BuoyIsol)) {
 							buoy = new BuoyIsol(dia, n);
+						}
 						buoy.setBuoyIndex(type);
 						break;
 
 					case SeaMark.SPECIAL_PURPOSE:
-						if (!(buoy instanceof BuoySpec))
+						if (!(buoy instanceof BuoySpec)) {
 							buoy = new BuoySpec(dia, n);
+						}
 						buoy.setBuoyIndex(type);
+						break;
+
+					case SeaMark.LIGHT:
+						if (!(buoy instanceof BuoyNota)) {
+							buoy = new BuoyNota(dia, n);
+							buoy.setBuoyIndex(0);
+							cbM01CatOfMark.removeAllItems();
+							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
+							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.206")); //$NON-NLS-1$
+							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.207")); //$NON-NLS-1$
+							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.208")); //$NON-NLS-1$
+							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.209")); //$NON-NLS-1$
+						}
 						break;
 					}
 
@@ -805,8 +821,10 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01CatOfMark() {
 		if (cbM01CatOfMark == null) {
 			cbM01CatOfMark = new JComboBox();
-			cbM01CatOfMark.setBounds(new Rectangle(75, 55, 125, 25));
+			cbM01CatOfMark.setBounds(new Rectangle(60, 55, 150, 25));
 			cbM01CatOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
+			cbM01CatOfMark.setEnabled(true);
+			
 			cbM01CatOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int cat = cbM01CatOfMark.getSelectedIndex();
@@ -832,6 +850,11 @@ public class SmpDialogAction extends JosmAction {
 							buoy = new BuoyCard(dia, n);
 						buoy.setBuoyIndex(cat);
 					}
+					if (cbM01TypeOfMark.getSelectedIndex() == SeaMark.LIGHT) {
+						if (!(buoy instanceof BuoyNota))
+							buoy = new BuoyNota(dia, n);
+						buoy.setBuoyIndex(cat);
+					}
 
 					buoy.refreshStyles();
 					buoy.refreshLights();
@@ -846,7 +869,7 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01StyleOfMark() {
 		if (cbM01StyleOfMark == null) {
 			cbM01StyleOfMark = new JComboBox();
-			cbM01StyleOfMark.setBounds(new Rectangle(50, 85, 150, 25));
+			cbM01StyleOfMark.setBounds(new Rectangle(45, 85, 165, 25));
 			cbM01StyleOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01StyleOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -878,7 +901,7 @@ public class SmpDialogAction extends JosmAction {
 	private JCheckBox getCM01TopMark() {
 		if (cM01TopMark == null) {
 			cM01TopMark = new JCheckBox();
-			cM01TopMark.setBounds(new Rectangle(10, 170, 90, 20));
+			cM01TopMark.setBounds(new Rectangle(10, 170, 100, 20));
 			cM01TopMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cM01TopMark.setText(Messages.getString("SmpDialogAction.166")); //$NON-NLS-1$
 			cM01TopMark.addItemListener(new ItemListener() {
@@ -1008,7 +1031,7 @@ public class SmpDialogAction extends JosmAction {
 	private JCheckBox getCM01Fired() {
 		if (cM01Fired == null) {
 			cM01Fired = new JCheckBox();
-			cM01Fired.setBounds(new Rectangle(10, 245, 70, 20));
+			cM01Fired.setBounds(new Rectangle(10, 245, 75, 20));
 			cM01Fired.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cM01Fired.setText(Messages.getString("SmpDialogAction.177")); //$NON-NLS-1$
 			cM01Fired.addItemListener(new ItemListener() {

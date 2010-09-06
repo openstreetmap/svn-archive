@@ -34,6 +34,8 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Float");
 		dlg.cbM01StyleOfMark.addItem("Beacon");
 		dlg.cbM01StyleOfMark.addItem("Tower");
+		dlg.cbM01StyleOfMark.setVisible(true);
+		dlg.lM01StyleOfMark.setVisible(true);
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");

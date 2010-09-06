@@ -15,49 +15,34 @@ import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
 public class BuoyNota extends Buoy {
-	public BuoyNota(SmpDialogAction dia, int type) {
+	public BuoyNota(SmpDialogAction dia, Node node) {
 		super(dia);
 		
+		String str;
+		Map<String, String> keys;
+		keys = node.getKeys();
+		setNode(node);
+		
 		resetMask();
+
+		dlg.cbM01CatOfMark.setEnabled(true);
+		dlg.cbM01CatOfMark.setVisible(true);
+		dlg.lM01CatOfMark.setVisible(true);
 
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
 		dlg.cbM01Kennung.addItem("Fl");
-		dlg.cbM01Kennung.addItem("Fl(2)");
-		dlg.cbM01Kennung.addItem("Fl(3)");
-		dlg.cbM01Kennung.addItem("Fl(4)");
-		dlg.cbM01Kennung.addItem("Fl(5)");
-		dlg.cbM01Kennung.addItem("Oc(2)");
-		dlg.cbM01Kennung.addItem("Oc(3)");
+		dlg.cbM01Kennung.addItem("Fl()");
+		dlg.cbM01Kennung.addItem("Oc()");
 		dlg.cbM01Kennung.addItem("Q");
 		dlg.cbM01Kennung.addItem("IQ");
 		dlg.cbM01Kennung.setSelectedIndex(0);
 
-		setBuoyIndex(type);
-		setStyleIndex(0);
 		setLightColour();
 
 		setFired(true);
 		setTopMark(false);
-		refreshStyles();
 		paintSign();
-	}
-
-	public void refreshStyles() {
-		int type = getBuoyIndex();
-		int style = getStyleIndex();
-
-		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem("Not set");
-		dlg.cbM01StyleOfMark.addItem("Lighthouse");
-		dlg.cbM01StyleOfMark.addItem("Major Light");
-		dlg.cbM01StyleOfMark.addItem("Minor Light");
-		dlg.cbM01StyleOfMark.addItem("Light Float");
-
-		if (style >= dlg.cbM01StyleOfMark.getItemCount())
-			style = 0;
-		setStyleIndex(style);
-		dlg.cbM01StyleOfMark.setSelectedIndex(style);
 	}
 
 	public void paintSign() {
@@ -69,7 +54,7 @@ public class BuoyNota extends Buoy {
 		dlg.tfM01Name.setText(getName());
 		dlg.cM01Fired.setSelected(true);
 		dlg.cM01Fired.setEnabled(false);
-		dlg.cM01TopMark.setEnabled(false);
+		dlg.cM01TopMark.setVisible(false);
 		dlg.cM01TopMark.setSelected(false);
 
 		switch (getStyleIndex()) {
@@ -89,8 +74,8 @@ public class BuoyNota extends Buoy {
 			break;
 
 		case SeaMark.LIGHT_FLOAT:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Major_Float.png")));
+//			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
+//					"/images/Light_Float.png")));
 			break;
 
 		default:
@@ -114,9 +99,6 @@ public class BuoyNota extends Buoy {
 			break;
 		case LIGHT_MINOR:
 			super.saveSign("minor_light");
-			break;
-		case LIGHT_FLOAT:
-			super.saveSign("major_floating_light");
 			break;
 		default:
 		}

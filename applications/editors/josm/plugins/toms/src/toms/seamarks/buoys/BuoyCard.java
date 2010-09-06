@@ -25,6 +25,9 @@ public class BuoyCard extends Buoy {
 		setNode(node);
 		
 		resetMask();
+		dlg.cbM01CatOfMark.setEnabled(true);
+		dlg.cbM01CatOfMark.setVisible(true);
+		dlg.lM01CatOfMark.setVisible(true);
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
@@ -33,7 +36,8 @@ public class BuoyCard extends Buoy {
 		dlg.cbM01StyleOfMark.addItem("Beacon");
 		dlg.cbM01StyleOfMark.addItem("Tower");
 		dlg.cbM01StyleOfMark.addItem("Float");
-		dlg.cbM01StyleOfMark.setEnabled(true);
+		dlg.cbM01StyleOfMark.setVisible(true);
+		dlg.lM01StyleOfMark.setVisible(true);
 
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 		if (keys.containsKey("name"))

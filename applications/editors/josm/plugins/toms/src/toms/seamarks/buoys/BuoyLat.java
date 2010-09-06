@@ -26,6 +26,9 @@ public class BuoyLat extends Buoy {
 
 		dlg.rbM01RegionA.setEnabled(true);
 		dlg.rbM01RegionB.setEnabled(true);
+		dlg.cbM01CatOfMark.setEnabled(true);
+		dlg.cbM01CatOfMark.setVisible(true);
+		dlg.lM01CatOfMark.setVisible(true);
 
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem("Not set");
@@ -336,6 +339,8 @@ public class BuoyLat extends Buoy {
 			style = 0;
 		setStyleIndex(style);
 		dlg.cbM01StyleOfMark.setSelectedIndex(style);
+		dlg.cbM01StyleOfMark.setVisible(true);
+		dlg.lM01StyleOfMark.setVisible(true);
 	}
 
 	public void paintSign() {

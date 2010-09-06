@@ -244,6 +244,11 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void paintSign() {
+
+		dlg.lM01Icon.setIcon(null);
+		dlg.lM02Icon.setIcon(null);
+		dlg.lM03Icon.setIcon(null);
+		dlg.lM04Icon.setIcon(null);
 		
 		dlg.cM01TopMark.setSelected(hasTopMark());
 		dlg.cM01Fired.setSelected(isFired());
@@ -251,6 +256,16 @@ abstract public class Buoy extends SeaMark {
 		dlg.tfM01RepeatTime.setText(LightPeriod);
 
 		dlg.tfM01Name.setText(getName());
+		
+		if (hasRadar()) {
+			dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector.png")));
+		}
+		
+		if (hasRacon()) {
+			dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+			dlg.cbM01Racon.setVisible(true);
+		} else 
+			dlg.cbM01Racon.setVisible(false);
 		
 		if (isFired()) {
 			String lp, c;
@@ -286,11 +301,6 @@ abstract public class Buoy extends SeaMark {
 			dlg.cbM01Kennung.setEnabled(false);
 			dlg.lM01FireMark.setText("");
 		}
-
-		dlg.lM01Icon.setIcon(null);
-		dlg.lM02Icon.setIcon(null);
-		dlg.lM03Icon.setIcon(null);
-		dlg.lM04Icon.setIcon(null);
 	}
 
 	public void saveSign(String type) {

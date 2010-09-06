@@ -49,9 +49,6 @@ public class BuoyNota extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
-		dlg.lM02Icon.setIcon(null);
-		dlg.lM03Icon.setIcon(null);
-		dlg.lM04Icon.setIcon(null);
 
 		switch (getStyleIndex()) {
 		case SeaMark.LIGHT_HOUSE:

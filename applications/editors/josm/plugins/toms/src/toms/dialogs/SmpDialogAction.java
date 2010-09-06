@@ -948,6 +948,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TopMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int top = cbM01TopMark.getSelectedIndex();
+					buoy.paintSign();
 				}
 			});
 		}

@@ -473,7 +473,7 @@ public class SmpDialogAction extends JosmAction {
 			dM01SeaMap.setModal(false);
 			dM01SeaMap.setResizable(false);
 			dM01SeaMap.setContentPane(getPM01SeaMap());
-			dM01SeaMap.setTitle(Messages.getString("SmpDialogAction.92")); //$NON-NLS-1$
+			dM01SeaMap.setTitle(Messages.getString("SmpDialogAction.9")); //$NON-NLS-1$
 			dM01SeaMap.setVisible(false);
 			dM01SeaMap.setAlwaysOnTop(true);
 			dM01SeaMap.addWindowListener(new java.awt.event.WindowAdapter() {

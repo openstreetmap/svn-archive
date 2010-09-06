@@ -115,8 +115,10 @@ public class SmpDialogAction extends JosmAction {
 	public ButtonGroup bgM01Region = null;
 	public JRadioButton rbM01RegionA = null;
 	public JRadioButton rbM01RegionB = null;
-	public JLabel lM01Icon01 = null;
-	public JLabel lM01Icon02 = null;
+	public JLabel lM01Icon = null;
+	public JLabel lM02Icon = null;
+	public JLabel lM03Icon = null;
+	public JLabel lM04Icon = null;
 	public JLabel lM01FireMark = null;
 	private JLabel lM01TypeOfMark = null;
 	public JComboBox cbM01TypeOfMark = null;
@@ -498,15 +500,25 @@ public class SmpDialogAction extends JosmAction {
 	private JPanel getPM01SeaMap() {
 		if (pM01SeaMap == null) {
 
-			lM01Icon01 = new JLabel();
-			lM01Icon01.setBounds(new Rectangle(210, 30, 160, 200));
-			lM01Icon01.setIcon(null);
-			lM01Icon01.setText(""); //$NON-NLS-1$
+			lM01Icon = new JLabel();
+			lM01Icon.setBounds(new Rectangle(210, 30, 150, 200));
+			lM01Icon.setIcon(null);
+			lM01Icon.setText(""); //$NON-NLS-1$
 
-			lM01Icon02 = new JLabel();
-			lM01Icon02.setBounds(new Rectangle(210, 30, 160, 200));
-			lM01Icon02.setIcon(null);
-			lM01Icon02.setText(""); //$NON-NLS-1$
+			lM02Icon = new JLabel();
+			lM02Icon.setBounds(new Rectangle(210, 30, 150, 200));
+			lM02Icon.setIcon(null);
+			lM02Icon.setText(""); //$NON-NLS-1$
+
+			lM03Icon = new JLabel();
+			lM03Icon.setBounds(new Rectangle(210, -40, 150, 200));
+			lM03Icon.setIcon(null);
+			lM03Icon.setText(""); //$NON-NLS-1$
+
+			lM04Icon = new JLabel();
+			lM04Icon.setBounds(new Rectangle(210, 30, 150, 200));
+			lM04Icon.setIcon(null);
+			lM04Icon.setText(""); //$NON-NLS-1$
 
 			lM01FireMark = new JLabel();
 			lM01FireMark.setBounds(new Rectangle(305, 90, 90, 20));
@@ -652,8 +664,10 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(rbM01RegionB, null);
 			pM01SeaMap.add(lM01Region, null);
 			pM01SeaMap.add(lM02Region, null);
-			pM01SeaMap.add(lM01Icon01, null);
-			pM01SeaMap.add(lM01Icon02, null);
+			pM01SeaMap.add(lM01Icon, null);
+			pM01SeaMap.add(lM02Icon, null);
+			pM01SeaMap.add(lM03Icon, null);
+			pM01SeaMap.add(lM04Icon, null);
 			pM01SeaMap.add(getCbM01TypeOfMark(), null);
 			pM01SeaMap.add(lM01TypeOfMark, null);
 			pM01SeaMap.add(getCbM01CatOfMark(), null);
@@ -941,6 +955,12 @@ public class SmpDialogAction extends JosmAction {
 			cM01Radar.setBounds(new Rectangle(10, 195, 120, 20));
 			cM01Radar.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cM01Radar.setText(Messages.getString("SmpDialogAction.169")); //$NON-NLS-1$
+			cM01Radar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					buoy.setRadar(cM01Radar.isSelected());
+					buoy.paintSign();
+				}
+			});
 		}
 		return cM01Radar;
 	}

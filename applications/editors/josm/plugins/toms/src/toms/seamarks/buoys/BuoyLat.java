@@ -347,12 +347,16 @@ public class BuoyLat extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
-		dlg.lM01Icon02.setIcon(null);
+		dlg.lM02Icon.setIcon(null);
+		dlg.lM03Icon.setIcon(null);
+		dlg.lM04Icon.setIcon(null);
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
 		dlg.cM01TopMark.setEnabled(true);
 		dlg.cM01TopMark.setVisible(true);
+		dlg.cM01Radar.setEnabled(true);
+		dlg.cM01Radar.setVisible(true);
 		dlg.cM01Fired.setEnabled(true);
 
 		String image = "/images/Lateral";
@@ -584,14 +588,18 @@ public class BuoyLat extends Buoy {
 					image += "_Cone";
 			}
 			image += ".png";
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
+			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 
+			if (hasRadar()) {
+				dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector.png")));
+			}
+			
 			if (isFired())
 				if (getLightColour().equals("R"))
-					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
+					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
 							"/images/Light_Red_120.png")));
 				else
-					dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
+					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
 							"/images/Light_Green_120.png")));
 			if (getLightChar() != "") {
 				String c;
@@ -606,7 +614,7 @@ public class BuoyLat extends Buoy {
 			}
 
 		} else
-			dlg.lM01Icon01.setIcon(null);
+			dlg.lM01Icon.setIcon(null);
 	}
 
 	public void saveSign() {

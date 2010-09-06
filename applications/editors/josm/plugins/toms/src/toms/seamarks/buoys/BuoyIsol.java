@@ -22,7 +22,7 @@ public class BuoyIsol extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
-		
+
 		resetMask();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
@@ -84,7 +84,7 @@ public class BuoyIsol extends Buoy {
 
 		if (keys.containsKey("seamark:topmark:shape")
 				|| keys.containsKey("seamark:topmark:colour")) {
-				setTopMark(true);
+			setTopMark(true);
 		}
 
 		if (keys.containsKey("seamark:light:colour")) {
@@ -108,12 +108,16 @@ public class BuoyIsol extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
-		dlg.lM01Icon02.setIcon(null);
+		dlg.lM02Icon.setIcon(null);
+		dlg.lM03Icon.setIcon(null);
+		dlg.lM04Icon.setIcon(null);
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
 		dlg.cM01TopMark.setEnabled(false);
 		dlg.cM01TopMark.setVisible(false);
+		dlg.cM01Radar.setEnabled(true);
+		dlg.cM01Radar.setVisible(true);
 		dlg.cM01Fired.setEnabled(true);
 
 		String image = "/images/Cardinal";
@@ -139,9 +143,15 @@ public class BuoyIsol extends Buoy {
 
 		if (!image.equals("/images/Cardinal")) {
 			image += ".png";
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
+			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
+
+			if (hasRadar()) {
+				dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector.png")));
+			}
+			
 			if (isFired()) {
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_White_120.png")));
 				if (getLightChar() != "") {
 					String c;
 
@@ -152,7 +162,7 @@ public class BuoyIsol extends Buoy {
 				}
 			}
 		} else
-			dlg.lM01Icon01.setIcon(null);
+			dlg.lM01Icon.setIcon(null);
 	}
 
 	public void saveSign() {

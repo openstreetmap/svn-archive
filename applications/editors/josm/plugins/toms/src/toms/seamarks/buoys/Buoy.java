@@ -58,6 +58,26 @@ abstract public class Buoy extends SeaMark {
 		dlg.rbM01RegionB.setSelected(region);
 	}
 
+	private boolean Radar = false;
+
+	public boolean hasRadar() {
+		return Radar;
+	}
+
+	public void setRadar(boolean radar) {
+		Radar = radar;
+	}
+
+	private boolean Fog = false;
+
+	public boolean hasFog() {
+		return Fog;
+	}
+
+	public void setFog(boolean fog) {
+		Fog = fog;
+	}
+
 	private boolean Fired = false;
 
 	public boolean isFired() {
@@ -257,8 +277,10 @@ abstract public class Buoy extends SeaMark {
 			dlg.lM01FireMark.setText("");
 		}
 
-		dlg.lM01Icon01.setIcon(null);
-		dlg.lM01Icon02.setIcon(null);
+		dlg.lM01Icon.setIcon(null);
+		dlg.lM02Icon.setIcon(null);
+		dlg.lM03Icon.setIcon(null);
+		dlg.lM04Icon.setIcon(null);
 	}
 
 	public void saveSign(String type) {
@@ -325,8 +347,10 @@ abstract public class Buoy extends SeaMark {
 	public void resetMask() {
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
-		dlg.lM01Icon01.setIcon(null);
-		dlg.lM01Icon02.setIcon(null);
+		dlg.lM01Icon.setIcon(null);
+		dlg.lM02Icon.setIcon(null);
+		dlg.lM03Icon.setIcon(null);
+		dlg.lM04Icon.setIcon(null);
 
 		dlg.rbM01RegionA.setEnabled(false);
 		dlg.rbM01RegionB.setEnabled(false);
@@ -346,6 +370,7 @@ abstract public class Buoy extends SeaMark {
 		setTopMark(false);
 		dlg.cM01Radar.setSelected(false);
 		dlg.cM01Radar.setVisible(false);
+		setRadar(false);
 		dlg.cM01Racon.setSelected(false);
 		dlg.cM01Racon.setVisible(false);
 		dlg.cbM01Racon.removeAllItems();
@@ -363,6 +388,7 @@ abstract public class Buoy extends SeaMark {
 		dlg.tfM01FogPeriod.setText("");
 		dlg.tfM01FogPeriod.setVisible(false);
 		dlg.lM01FogPeriod.setVisible(false);
+		setFog(false);
 		dlg.cM01Fired.setSelected(false);
 		dlg.cM01Fired.setVisible(false);
 		setFired(false);

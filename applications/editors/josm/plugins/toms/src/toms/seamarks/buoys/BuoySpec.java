@@ -142,7 +142,9 @@ public class BuoySpec extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
-		dlg.lM01Icon02.setIcon(null);
+		dlg.lM02Icon.setIcon(null);
+		dlg.lM03Icon.setIcon(null);
+		dlg.lM04Icon.setIcon(null);
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
@@ -185,10 +187,14 @@ public class BuoySpec extends Buoy {
 			if (hasTopMark())
 				image += "_CrossY";
 			image += ".png";
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
+			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 
+			if (hasRadar()) {
+				dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector.png")));
+			}
+			
 			if (isFired()) {
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
 						"/images/Light_White_120.png")));
 				if (getLightChar() != "") {
 					String c;
@@ -201,7 +207,7 @@ public class BuoySpec extends Buoy {
 				}
 			}
 		} else
-			dlg.lM01Icon01.setIcon(null);
+			dlg.lM01Icon.setIcon(null);
 	}
 
 	public void saveSign() {

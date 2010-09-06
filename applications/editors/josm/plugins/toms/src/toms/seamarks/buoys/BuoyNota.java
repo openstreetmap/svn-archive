@@ -49,27 +49,23 @@ public class BuoyNota extends Buoy {
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
-
-		dlg.tfM01Name.setEnabled(true);
-		dlg.tfM01Name.setText(getName());
-		dlg.cM01Fired.setSelected(true);
-		dlg.cM01Fired.setEnabled(false);
-		dlg.cM01TopMark.setVisible(false);
-		dlg.cM01TopMark.setSelected(false);
+		dlg.lM02Icon.setIcon(null);
+		dlg.lM03Icon.setIcon(null);
+		dlg.lM04Icon.setIcon(null);
 
 		switch (getStyleIndex()) {
 		case SeaMark.LIGHT_HOUSE:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
+			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Light_House.png")));
 			break;
 
 		case SeaMark.LIGHT_MAJOR:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
+			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Light_Major.png")));
 			break;
 
 		case SeaMark.LIGHT_MINOR:
-			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
+			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Light_Minor.png")));
 			break;
 

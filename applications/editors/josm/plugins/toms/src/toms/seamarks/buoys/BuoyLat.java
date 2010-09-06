@@ -351,8 +351,9 @@ public class BuoyLat extends Buoy {
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
-		dlg.cM01Fired.setEnabled(true);
 		dlg.cM01TopMark.setEnabled(true);
+		dlg.cM01TopMark.setVisible(true);
+		dlg.cM01Fired.setEnabled(true);
 
 		String image = "/images/Lateral";
 

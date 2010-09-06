@@ -196,8 +196,10 @@ public class BuoyCard extends Buoy {
 		dlg.tfM01Name.setText(getName());
 
 		dlg.cM01TopMark.setSelected(true);
+		dlg.cM01TopMark.setVisible(true);
 		dlg.cM01TopMark.setEnabled(false);
 		dlg.cM01Fired.setEnabled(true);
+		dlg.cM01Fired.setVisible(true);
 
 		String image = "/images/Cardinal";
 

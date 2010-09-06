@@ -790,6 +790,10 @@ public class SmpDialogAction extends JosmAction {
 					case SeaMark.SPECIAL_PURPOSE:
 						if (!(buoy instanceof BuoySpec)) {
 							buoy = new BuoySpec(dia, n);
+							cbM01TopMark.removeAllItems();
+							cbM01TopMark.addItem("");
+							cbM01TopMark.addItem(Messages.getString("SmpDialogAction.210")); //$NON-NLS-1$
+							cbM01TopMark.addItem(Messages.getString("SmpDialogAction.211")); //$NON-NLS-1$
 						}
 						buoy.setBuoyIndex(type);
 						break;
@@ -920,7 +924,7 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01TopMark() {
 		if (cbM01TopMark == null) {
 			cbM01TopMark = new JComboBox();
-			cbM01TopMark.setBounds(new Rectangle(100, 170, 70, 20));
+			cbM01TopMark.setBounds(new Rectangle(110, 170, 80, 20));
 			cbM01TopMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01TopMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {

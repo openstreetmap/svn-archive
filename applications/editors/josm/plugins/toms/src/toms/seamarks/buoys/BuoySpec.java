@@ -22,7 +22,7 @@ public class BuoySpec extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
-		
+
 		resetMask();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
@@ -146,6 +146,13 @@ public class BuoySpec extends Buoy {
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
+		dlg.cM01TopMark.setEnabled(true);
+		dlg.cM01TopMark.setVisible(true);
+		if (hasTopMark()) {
+			dlg.cbM01TopMark.setEnabled(true);
+			dlg.cbM01TopMark.setVisible(true);
+		} else
+			dlg.cbM01TopMark.setVisible(false);
 
 		String image = "/images/Special_Purpose";
 
@@ -181,7 +188,8 @@ public class BuoySpec extends Buoy {
 			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(image)));
 
 			if (isFired()) {
-				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+				dlg.lM01Icon02.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_White_120.png")));
 				if (getLightChar() != "") {
 					String c;
 

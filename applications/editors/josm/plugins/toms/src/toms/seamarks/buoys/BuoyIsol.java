@@ -112,8 +112,9 @@ public class BuoyIsol extends Buoy {
 
 		dlg.tfM01Name.setEnabled(true);
 		dlg.tfM01Name.setText(getName());
-		dlg.cM01Fired.setEnabled(true);
 		dlg.cM01TopMark.setEnabled(false);
+		dlg.cM01TopMark.setVisible(false);
+		dlg.cM01Fired.setEnabled(true);
 
 		String image = "/images/Cardinal";
 

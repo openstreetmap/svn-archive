@@ -133,31 +133,31 @@ public class SmpDialogAction extends JosmAction {
 	public JCheckBox cM01Racon = null;
 	public JComboBox cbM01Racon = null;
 	public JTextField tfM01Racon = null;
-	private JLabel lM01Racon = null;
+	public JLabel lM01Racon = null;
 	public JCheckBox cM01Fog = null;
 	public JComboBox cbM01Fog = null;
-	private JLabel lM01FogGroup = null;
+	public JLabel lM01FogGroup = null;
 	public JTextField tfM01FogGroup = null;
-	private JLabel lM01FogPeriod = null;
+	public JLabel lM01FogPeriod = null;
 	public JTextField tfM01FogPeriod = null;
 	public JCheckBox cM01Fired = null;
 	public ButtonGroup bgM01Fired = null;
 	public JRadioButton rbM01Fired1 = null;
 	public JRadioButton rbM01FiredN = null;
-	private JLabel lM01Kennung = null;
+	public JLabel lM01Kennung = null;
 	public JComboBox cbM01Kennung = null;
-	private JLabel lM01Height = null;
+	public JLabel lM01Height = null;
 	public JTextField tfM01Height = null;
-	private JLabel lM01Range = null;
-	private JLabel lM01Group = null;
+	public JLabel lM01Range = null;
+	public JLabel lM01Group = null;
 	public JTextField tfM01Group = null;
-	private JLabel lM01RepeatTime = null;
+	public JLabel lM01RepeatTime = null;
 	public JTextField tfM01RepeatTime = null;
-	private JLabel lM01Sector = null;
+	public JLabel lM01Sector = null;
 	public JComboBox cbM01Sector = null;
-	private JLabel lM01Colour = null;
+	public JLabel lM01Colour = null;
 	public JComboBox cbM01Colour = null;
-	private JLabel lM01Bearing = null;
+	public JLabel lM01Bearing = null;
 	public JTextField tfM01Bearing = null;
 	public JTextField tfM02Bearing = null;
 	public JTextField tfM01Radius = null;
@@ -438,10 +438,6 @@ public class SmpDialogAction extends JosmAction {
 					return;
 				} else if (str.equals("yellow")) { //$NON-NLS-1$
 					buoy = new BuoySaw(this, node);
-					return;
-				} else {
-					buoy = new BuoyUkn(this, Messages.getString("SmpDialogAction.82")); //$NON-NLS-1$
-					buoy.setNode(node);
 					return;
 				}
 			} else if (keys.containsKey("seamark:light_float:topmark:shape")) { //$NON-NLS-1$

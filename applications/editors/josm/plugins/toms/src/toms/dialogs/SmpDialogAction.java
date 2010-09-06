@@ -202,10 +202,12 @@ public class SmpDialogAction extends JosmAction {
 	}
 
 	public SmpDialogAction() {
-		super(Messages.getString("SmpDialogAction.4"), "Smp",Messages.getString("SmpDialogAction.0"), Shortcut //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				.registerShortcut("tools:Semarks", //$NON-NLS-1$
-						tr("Tool: {0}", Messages.getString("SmpDialogAction.9")), KeyEvent.VK_S, //$NON-NLS-1$ //$NON-NLS-2$
-						Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+		super(
+				Messages.getString("SmpDialogAction.4"), "Smp", Messages.getString("SmpDialogAction.0"), Shortcut //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						.registerShortcut(
+								"tools:Semarks", //$NON-NLS-1$
+								tr("Tool: {0}", Messages.getString("SmpDialogAction.9")), KeyEvent.VK_S, //$NON-NLS-1$ //$NON-NLS-2$
+								Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
 
 		dia = this;
 		String str = Main.pref.get("mappaint.style.sources"); //$NON-NLS-1$
@@ -619,8 +621,9 @@ public class SmpDialogAction extends JosmAction {
 			lM01Bearing.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			lM01Bearing.setText(Messages.getString("SmpDialogAction.133")); //$NON-NLS-1$
 
-			rbM01RegionA = new JRadioButton(Messages.getString("SmpDialogAction.134"), Main.pref.get("tomsplugin.IALA") //$NON-NLS-1$ //$NON-NLS-2$
-					.equals("A")); //$NON-NLS-1$
+			rbM01RegionA = new JRadioButton(
+					Messages.getString("SmpDialogAction.134"), Main.pref.get("tomsplugin.IALA") //$NON-NLS-1$ //$NON-NLS-2$
+							.equals("A")); //$NON-NLS-1$
 			rbM01RegionA.setBounds(new Rectangle(305, 0, 50, 30));
 			rbM01RegionB = new JRadioButton("-B", Main.pref.get("tomsplugin.IALA") //$NON-NLS-1$ //$NON-NLS-2$
 					.equals("B")); //$NON-NLS-1$
@@ -641,9 +644,11 @@ public class SmpDialogAction extends JosmAction {
 			rbM01RegionA.addActionListener(alM01Region);
 			rbM01RegionB.addActionListener(alM01Region);
 
-			rbM01Fired1 = new JRadioButton(Messages.getString("SmpDialogAction.140"), true); //$NON-NLS-1$
+			rbM01Fired1 = new JRadioButton(
+					Messages.getString("SmpDialogAction.140"), true); //$NON-NLS-1$
 			rbM01Fired1.setBounds(new Rectangle(85, 240, 70, 30));
-			rbM01FiredN = new JRadioButton(Messages.getString("SmpDialogAction.141"), false); //$NON-NLS-1$
+			rbM01FiredN = new JRadioButton(
+					Messages.getString("SmpDialogAction.141"), false); //$NON-NLS-1$
 			rbM01FiredN.setBounds(new Rectangle(155, 240, 80, 30));
 			bgM01Fired = new ButtonGroup();
 			bgM01Fired.add(rbM01Fired1);
@@ -736,7 +741,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TypeOfMark.addItem(Messages.getString("SmpDialogAction.148")); //$NON-NLS-1$
 
 			cbM01TypeOfMark.setBounds(new Rectangle(45, 25, 165, 25));
-//			cbM01TypeOfMark.setEditable(false);
+			// cbM01TypeOfMark.setEditable(false);
 			cbM01TypeOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01TypeOfMark.setEnabled(true);
 
@@ -842,7 +847,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01CatOfMark.setBounds(new Rectangle(60, 55, 150, 25));
 			cbM01CatOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01CatOfMark.setEnabled(true);
-			
+
 			cbM01CatOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int cat = cbM01CatOfMark.getSelectedIndex();
@@ -957,7 +962,13 @@ public class SmpDialogAction extends JosmAction {
 			cM01Radar.setText(Messages.getString("SmpDialogAction.169")); //$NON-NLS-1$
 			cM01Radar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					buoy.setRadar(cM01Radar.isSelected());
+					if (cM01Radar.isSelected()) {
+						buoy.setRadar(true);
+						buoy.setRacon(false);
+						cM01Racon.setSelected(false);
+					} else {
+						buoy.setRadar(false);
+					}
 					buoy.paintSign();
 				}
 			});
@@ -971,6 +982,18 @@ public class SmpDialogAction extends JosmAction {
 			cM01Racon.setBounds(new Rectangle(130, 195, 110, 20));
 			cM01Racon.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cM01Racon.setText(Messages.getString("SmpDialogAction.171")); //$NON-NLS-1$
+			cM01Racon.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (cM01Racon.isSelected()) {
+						buoy.setRacon(true);
+						buoy.setRadar(false);
+						cM01Radar.setSelected(false);
+					} else {
+						buoy.setRacon(false);
+					}
+					buoy.paintSign();
+				}
+			});
 		}
 		return cM01Racon;
 	}
@@ -1354,7 +1377,8 @@ public class SmpDialogAction extends JosmAction {
 
 						}
 					} else {
-						cM01IconVisible.setIcon(new ImageIcon(getClass().getResource("/images/Auge.png"))); //$NON-NLS-1$
+						cM01IconVisible.setIcon(new ImageIcon(getClass().getResource(
+								"/images/Auge.png"))); //$NON-NLS-1$
 						PicRebuild();
 						obuoy = null;
 					}

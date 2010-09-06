@@ -202,6 +202,15 @@ public class BuoyCard extends Buoy {
 		dlg.cM01TopMark.setEnabled(false);
 		dlg.cM01Radar.setEnabled(true);
 		dlg.cM01Radar.setVisible(true);
+		dlg.cM01Racon.setEnabled(true);
+		dlg.cM01Racon.setVisible(true);
+		if (hasRacon()) {
+			dlg.cbM01Racon.setEnabled(true);
+			dlg.cbM01Racon.setVisible(true);
+			dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+		} else {
+			dlg.cbM01Racon.setVisible(false);
+		}
 		dlg.cM01Fired.setEnabled(true);
 		dlg.cM01Fired.setVisible(true);
 

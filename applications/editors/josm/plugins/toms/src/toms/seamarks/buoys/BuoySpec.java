@@ -192,6 +192,15 @@ public class BuoySpec extends Buoy {
 			if (hasRadar()) {
 				dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector.png")));
 			}
+			dlg.cM01Racon.setEnabled(true);
+			dlg.cM01Racon.setVisible(true);
+			if (hasRacon()) {
+				dlg.cbM01Racon.setEnabled(true);
+				dlg.cbM01Racon.setVisible(true);
+				dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+			} else {
+				dlg.cbM01Racon.setVisible(false);
+			}
 			
 			if (isFired()) {
 				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(

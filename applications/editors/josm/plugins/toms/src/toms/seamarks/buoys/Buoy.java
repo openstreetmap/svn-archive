@@ -68,6 +68,16 @@ abstract public class Buoy extends SeaMark {
 		Radar = radar;
 	}
 
+	private boolean Racon = false;
+
+	public boolean hasRacon() {
+		return Racon;
+	}
+
+	public void setRacon(boolean racon) {
+		Racon = racon;
+	}
+
 	private boolean Fog = false;
 
 	public boolean hasFog() {
@@ -378,6 +388,7 @@ abstract public class Buoy extends SeaMark {
 		dlg.tfM01Racon.setText("");
 		dlg.tfM01Racon.setVisible(false);
 		dlg.lM01Racon.setVisible(false);
+		setRacon(false);
 		dlg.cM01Fog.setSelected(false);
 		dlg.cM01Fog.setVisible(false);
 		dlg.cbM01Fog.removeAllItems();

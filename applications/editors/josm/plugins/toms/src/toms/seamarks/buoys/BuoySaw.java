@@ -108,7 +108,7 @@ public class BuoySaw extends Buoy {
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		if ((getBuoyIndex() != 0) && (getStyleIndex() != 0)) {
+		if ((getBuoyIndex() > 0) && (getStyleIndex() > 0)) {
 			dlg.tfM01Name.setEnabled(true);
 			dlg.tfM01Name.setText(getName());
 			dlg.cM01TopMark.setEnabled(true);

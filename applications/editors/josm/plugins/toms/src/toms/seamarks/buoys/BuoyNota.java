@@ -51,7 +51,7 @@ public class BuoyNota extends Buoy {
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		if (getBuoyIndex() != 0) {
+		if (getBuoyIndex() > 0) {
 			dlg.cM01Radar.setEnabled(true);
 			dlg.cM01Radar.setVisible(true);
 			dlg.cM01Racon.setEnabled(true);

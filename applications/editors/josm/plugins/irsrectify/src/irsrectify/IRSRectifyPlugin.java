@@ -109,12 +109,11 @@ public class IRSRectifyPlugin extends Plugin {
         }
 
         private boolean isOffsetLayer( OsmDataLayer l ) {
+            if( l == null || l.data == null ) return false;
             for( Way way : l.data.getWays() ) {
-                System.out.println("Found way " + way);
                 if( !way.isDeleted() && (way.getNodesCount() != 2 || !way.hasKey("timestamp") || !way.hasKey("user")) )
                     return false;
             }
-            System.out.println("isOffsetlayer: OK");
             return true;
         }
 

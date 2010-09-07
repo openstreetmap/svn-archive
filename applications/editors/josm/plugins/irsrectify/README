@@ -1,0 +1,11 @@
+README 
+======
+
+A helper for IRS satellite adjustment. Use with WMS Plugin. Resulting files
+send to Komzpa (#osm-ru at irc.oftc.net).
+
+http://forum.openstreetmap.org/viewtopic.php?id=6817
+
+Supported WMS is only (note force=nocorrect):
+
+http://irs.gis-lab.info/?layers=irs&force=nocorrect&

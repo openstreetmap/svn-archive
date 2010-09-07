@@ -51,7 +51,19 @@ public class BuoyNota extends Buoy {
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		switch (getStyleIndex()) {
+		dlg.cM01Radar.setEnabled(true);
+		dlg.cM01Radar.setVisible(true);
+		dlg.cM01Racon.setEnabled(true);
+		dlg.cM01Racon.setVisible(true);
+
+		dlg.cM01Fog.setEnabled(true);
+		dlg.cM01Fog.setVisible(true);
+
+		dlg.cM01Fired.setVisible(true);
+		dlg.cM01Fired.setEnabled(false);
+		dlg.cM01Fired.setSelected(true);
+
+		switch (getBuoyIndex()) {
 		case SeaMark.LIGHT_HOUSE:
 			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Light_House.png")));
@@ -65,11 +77,6 @@ public class BuoyNota extends Buoy {
 		case SeaMark.LIGHT_MINOR:
 			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
 					"/images/Light_Minor.png")));
-			break;
-
-		case SeaMark.LIGHT_FLOAT:
-//			dlg.lM01Icon01.setIcon(new ImageIcon(getClass().getResource(
-//					"/images/Light_Float.png")));
 			break;
 
 		default:

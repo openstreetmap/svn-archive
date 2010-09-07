@@ -63,7 +63,6 @@ abstract public class SeaMark {
 	public final static int LIGHT_HOUSE = 1;
 	public final static int LIGHT_MAJOR = 2;
 	public final static int LIGHT_MINOR = 3;
-	public final static int LIGHT_FLOAT = 4;
 
 	/**
 	 * Regions

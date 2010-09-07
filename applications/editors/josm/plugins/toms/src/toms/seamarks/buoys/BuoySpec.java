@@ -157,6 +157,12 @@ public class BuoySpec extends Buoy {
 			dlg.cbM01TopMark.setVisible(false);
 		}
 
+		dlg.cM01Fog.setEnabled(true);
+		dlg.cM01Fog.setVisible(true);
+
+		dlg.cM01Fired.setVisible(true);
+		dlg.cM01Fired.setEnabled(true);
+
 		String image = "/images/Special_Purpose";
 
 		switch (getStyleIndex()) {

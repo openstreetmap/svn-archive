@@ -258,6 +258,7 @@ abstract public class Buoy extends SeaMark {
 		dlg.lM02Icon.setIcon(null);
 		dlg.lM03Icon.setIcon(null);
 		dlg.lM04Icon.setIcon(null);
+		dlg.lM05Icon.setIcon(null);
 		
 		dlg.rbM01RegionA.setSelected(!getRegion());
 		dlg.rbM01RegionB.setSelected(getRegion());
@@ -288,6 +289,10 @@ abstract public class Buoy extends SeaMark {
 			dlg.cbM01Racon.setVisible(false);
 			dlg.lM01Racon.setVisible(false);
 			dlg.tfM01Racon.setVisible(false);
+		}
+		
+		if (hasFog()) {
+			dlg.lM05Icon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
 		}
 		
 		if (isFired()) {
@@ -417,11 +422,11 @@ abstract public class Buoy extends SeaMark {
 		dlg.cM01Racon.setSelected(false);
 		dlg.cM01Racon.setVisible(false);
 		dlg.cbM01Racon.setVisible(false);
-		setRatyp(0);
 		dlg.tfM01Racon.setText("");
 		dlg.tfM01Racon.setVisible(false);
 		dlg.lM01Racon.setVisible(false);
 		setRacon(false);
+		setRatyp(0);
 		dlg.cM01Fog.setSelected(false);
 		dlg.cM01Fog.setVisible(false);
 		dlg.cbM01Fog.removeAllItems();

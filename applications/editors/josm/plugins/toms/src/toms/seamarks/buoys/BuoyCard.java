@@ -202,6 +202,9 @@ public class BuoyCard extends Buoy {
 		dlg.cM01Radar.setVisible(true);
 		dlg.cM01Racon.setEnabled(true);
 		dlg.cM01Racon.setVisible(true);
+		dlg.cM01Fog.setEnabled(true);
+		dlg.cM01Fog.setVisible(true);
+
 		dlg.cM01Fired.setEnabled(true);
 		dlg.cM01Fired.setVisible(true);
 

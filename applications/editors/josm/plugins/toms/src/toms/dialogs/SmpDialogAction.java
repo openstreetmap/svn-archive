@@ -115,10 +115,11 @@ public class SmpDialogAction extends JosmAction {
 	public ButtonGroup bgM01Region = null;
 	public JRadioButton rbM01RegionA = null;
 	public JRadioButton rbM01RegionB = null;
-	public JLabel lM01Icon = null;
-	public JLabel lM02Icon = null;
-	public JLabel lM03Icon = null;
-	public JLabel lM04Icon = null;
+	public JLabel lM01Icon = null;	// Shape
+	public JLabel lM02Icon = null;	// Light
+	public JLabel lM03Icon = null;	// Reflector
+	public JLabel lM04Icon = null;	// Racon
+	public JLabel lM05Icon = null;	// Fog
 	public JLabel lM01FireMark = null;
 	private JLabel lM01TypeOfMark = null;
 	public JComboBox cbM01TypeOfMark = null;
@@ -524,6 +525,11 @@ public class SmpDialogAction extends JosmAction {
 			lM04Icon.setIcon(null);
 			lM04Icon.setText(""); //$NON-NLS-1$
 
+			lM05Icon = new JLabel();
+			lM05Icon.setBounds(new Rectangle(210, 20, 150, 200));
+			lM05Icon.setIcon(null);
+			lM05Icon.setText(""); //$NON-NLS-1$
+
 			lM01FireMark = new JLabel();
 			lM01FireMark.setBounds(new Rectangle(300, 85, 95, 20));
 			lM01FireMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
@@ -675,6 +681,7 @@ public class SmpDialogAction extends JosmAction {
 			pM01SeaMap.add(lM02Icon, null);
 			pM01SeaMap.add(lM03Icon, null);
 			pM01SeaMap.add(lM04Icon, null);
+			pM01SeaMap.add(lM05Icon, null);
 			pM01SeaMap.add(getCbM01TypeOfMark(), null);
 			pM01SeaMap.add(lM01TypeOfMark, null);
 			pM01SeaMap.add(getCbM01CatOfMark(), null);
@@ -829,7 +836,6 @@ public class SmpDialogAction extends JosmAction {
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.206")); //$NON-NLS-1$
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.207")); //$NON-NLS-1$
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.208")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.209")); //$NON-NLS-1$
 						}
 						break;
 					}
@@ -1043,6 +1049,12 @@ public class SmpDialogAction extends JosmAction {
 			cM01Fog.setBounds(new Rectangle(10, 220, 90, 20));
 			cM01Fog.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cM01Fog.setText(Messages.getString("SmpDialogAction.174")); //$NON-NLS-1$
+			cM01Fog.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					buoy.setFog(cM01Fog.isSelected());
+					buoy.paintSign();
+				}
+			});
 		}
 		return cM01Fog;
 	}

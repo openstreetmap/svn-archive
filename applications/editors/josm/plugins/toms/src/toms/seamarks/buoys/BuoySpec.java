@@ -136,83 +136,71 @@ public class BuoySpec extends Buoy {
 	}
 
 	public void paintSign() {
-		if (dlg.paintlock) return;
+		if (dlg.paintlock)
+			return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		dlg.tfM01Name.setEnabled(true);
-		dlg.tfM01Name.setText(getName());
-		dlg.cM01Radar.setEnabled(true);
-		dlg.cM01Radar.setVisible(true);
-		dlg.cM01Racon.setEnabled(true);
-		dlg.cM01Racon.setVisible(true);
-		
-		dlg.cM01TopMark.setEnabled(true);
-		dlg.cM01TopMark.setVisible(true);
-		if (hasTopMark()) {
-			dlg.cbM01TopMark.setEnabled(true);
-			dlg.cbM01TopMark.setVisible(true);
-		} else {
-			dlg.cbM01TopMark.setVisible(false);
-		}
+		if ((getBuoyIndex() != 0) && (getStyleIndex() != 0)) {
+			dlg.tfM01Name.setEnabled(true);
+			dlg.tfM01Name.setText(getName());
+			dlg.cM01Radar.setEnabled(true);
+			dlg.cM01Radar.setVisible(true);
+			dlg.cM01Racon.setEnabled(true);
+			dlg.cM01Racon.setVisible(true);
 
-		dlg.cM01Fog.setEnabled(true);
-		dlg.cM01Fog.setVisible(true);
-
-		dlg.cM01Fired.setVisible(true);
-		dlg.cM01Fired.setEnabled(true);
-
-		String image = "/images/Special_Purpose";
-
-		switch (getStyleIndex()) {
-		case SPEC_PILLAR:
-			image += "_Pillar";
-			break;
-		case SPEC_SPAR:
-			image += "_Spar";
-			break;
-		case SPEC_SPHERE:
-			image += "_Sphere";
-			break;
-		case SPEC_BARREL:
-			image += "_Barrel";
-			break;
-		case SPEC_FLOAT:
-			image += "_Float";
-			break;
-		case SPEC_BEACON:
-			image += "_Beacon";
-			break;
-		case SPEC_TOWER:
-			image += "_Tower";
-			break;
-		default:
-		}
-
-		if (!image.equals("/images/Special_Purpose")) {
-			if (hasTopMark())
-				image += "_CrossY";
-			image += ".png";
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
-
-			if (isFired()) {
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_White_120.png")));
-				if (getLightChar() != "") {
-					String c;
-
-					c = getLightChar();
-
-					dlg.cbM01Kennung.setSelectedItem(c);
-					if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
-						c = "";
-				}
+			dlg.cM01TopMark.setEnabled(true);
+			dlg.cM01TopMark.setVisible(true);
+			if (hasTopMark()) {
+				dlg.cbM01TopMark.setEnabled(true);
+				dlg.cbM01TopMark.setVisible(true);
+			} else {
+				dlg.cbM01TopMark.setVisible(false);
 			}
-		} else
-			dlg.lM01Icon.setIcon(null);
-	}
 
+			dlg.cM01Fog.setEnabled(true);
+			dlg.cM01Fog.setVisible(true);
+
+			dlg.cM01Fired.setVisible(true);
+			dlg.cM01Fired.setEnabled(true);
+
+			String image = "/images/Special_Purpose";
+
+			switch (getStyleIndex()) {
+			case SPEC_PILLAR:
+				image += "_Pillar";
+				break;
+			case SPEC_SPAR:
+				image += "_Spar";
+				break;
+			case SPEC_SPHERE:
+				image += "_Sphere";
+				break;
+			case SPEC_BARREL:
+				image += "_Barrel";
+				break;
+			case SPEC_FLOAT:
+				image += "_Float";
+				break;
+			case SPEC_BEACON:
+				image += "_Beacon";
+				break;
+			case SPEC_TOWER:
+				image += "_Tower";
+				break;
+			default:
+			}
+
+			if (!image.equals("/images/Special_Purpose")) {
+				if (hasTopMark())
+					image += "_CrossY";
+				image += ".png";
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
+			} else
+				dlg.lM01Icon.setIcon(null);
+		}
+	}
 
 	public void saveSign() {
 		Node node = getNode();

@@ -17,12 +17,12 @@ import toms.seamarks.SeaMark;
 public class BuoyNota extends Buoy {
 	public BuoyNota(SmpDialogAction dia, Node node) {
 		super(dia);
-		
+
 		String str;
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
-		
+
 		resetMask();
 
 		dlg.cbM01CatOfMark.setEnabled(true);
@@ -40,48 +40,50 @@ public class BuoyNota extends Buoy {
 
 		setLightColour();
 
-		setFired(true);
 		setTopMark(false);
 		paintSign();
 	}
 
 	public void paintSign() {
-		if (dlg.paintlock) return;
+		if (dlg.paintlock)
+			return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		dlg.cM01Radar.setEnabled(true);
-		dlg.cM01Radar.setVisible(true);
-		dlg.cM01Racon.setEnabled(true);
-		dlg.cM01Racon.setVisible(true);
+		if (getBuoyIndex() != 0) {
+			dlg.cM01Radar.setEnabled(true);
+			dlg.cM01Radar.setVisible(true);
+			dlg.cM01Racon.setEnabled(true);
+			dlg.cM01Racon.setVisible(true);
 
-		dlg.cM01Fog.setEnabled(true);
-		dlg.cM01Fog.setVisible(true);
+			dlg.cM01Fog.setEnabled(true);
+			dlg.cM01Fog.setVisible(true);
 
-		dlg.cM01Fired.setVisible(true);
-		dlg.cM01Fired.setEnabled(false);
-		dlg.cM01Fired.setSelected(true);
+			setFired(true);
+			dlg.cM01Fired.setVisible(true);
+			dlg.cM01Fired.setEnabled(false);
+			dlg.cM01Fired.setSelected(true);
 
-		switch (getBuoyIndex()) {
-		case SeaMark.LIGHT_HOUSE:
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Light_House.png")));
-			break;
+			switch (getBuoyIndex()) {
+			case SeaMark.LIGHT_HOUSE:
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_House.png")));
+				break;
 
-		case SeaMark.LIGHT_MAJOR:
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Light_Major.png")));
-			break;
+			case SeaMark.LIGHT_MAJOR:
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_Major.png")));
+				break;
 
-		case SeaMark.LIGHT_MINOR:
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Light_Minor.png")));
-			break;
+			case SeaMark.LIGHT_MINOR:
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_Minor.png")));
+				break;
 
-		default:
+			default:
+			}
 		}
-
 	}
 
 	public void saveSign() {

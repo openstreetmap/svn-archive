@@ -15,14 +15,14 @@ import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
 public class BuoySaw extends Buoy {
-	public BuoySaw(SmpDialogAction dia,  Node node) {
+	public BuoySaw(SmpDialogAction dia, Node node) {
 		super(dia);
 
 		String str;
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
-		
+
 		resetMask();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
@@ -97,73 +97,63 @@ public class BuoySaw extends Buoy {
 
 		if (keys.containsKey("seamark:topmark:shape")
 				|| keys.containsKey("seamark:topmark:colour")) {
-				setTopMark(true);
+			setTopMark(true);
 		}
 	}
 
 	public void paintSign() {
-		if (dlg.paintlock) return;
+		if (dlg.paintlock)
+			return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		dlg.tfM01Name.setEnabled(true);
-		dlg.tfM01Name.setText(getName());
-		dlg.cM01TopMark.setEnabled(true);
-		dlg.cM01TopMark.setVisible(true);
-		dlg.cM01Radar.setEnabled(true);
-		dlg.cM01Radar.setVisible(true);
-		dlg.cM01Racon.setEnabled(true);
-		dlg.cM01Racon.setVisible(true);
-		dlg.cM01Fired.setEnabled(true);
+		if ((getBuoyIndex() != 0) && (getStyleIndex() != 0)) {
+			dlg.tfM01Name.setEnabled(true);
+			dlg.tfM01Name.setText(getName());
+			dlg.cM01TopMark.setEnabled(true);
+			dlg.cM01TopMark.setVisible(true);
+			dlg.cM01Radar.setEnabled(true);
+			dlg.cM01Radar.setVisible(true);
+			dlg.cM01Racon.setEnabled(true);
+			dlg.cM01Racon.setVisible(true);
+			dlg.cM01Fired.setEnabled(true);
 
-		dlg.cM01Fog.setEnabled(true);
-		dlg.cM01Fog.setVisible(true);
+			dlg.cM01Fog.setEnabled(true);
+			dlg.cM01Fog.setVisible(true);
 
-		dlg.cM01Fired.setVisible(true);
-		dlg.cM01Fired.setEnabled(true);
+			dlg.cM01Fired.setVisible(true);
+			dlg.cM01Fired.setEnabled(true);
 
-		String image = "/images/Safe_Water";
+			String image = "/images/Safe_Water";
 
-		switch (getStyleIndex()) {
-		case SAFE_PILLAR:
-			image += "_Pillar";
-			break;
-		case SAFE_SPAR:
-			image += "_Spar";
-			break;
-		case SAFE_SPHERE:
-			image += "_Sphere";
-			break;
-		case SAFE_BEACON:
-			image += "_Beacon";
-			break;
-		case SAFE_FLOAT:
-			image += "_Float";
-			break;
-		default:
-		}
-
-		if (!image.equals("/images/Safe_Water")) {
-			if (hasTopMark())
+			switch (getStyleIndex()) {
+			case SAFE_PILLAR:
+				image += "_Pillar";
+				break;
+			case SAFE_SPAR:
+				image += "_Spar";
+				break;
+			case SAFE_SPHERE:
 				image += "_Sphere";
-			image += ".png";
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
-
-			if (isFired()) {
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
-				if (getLightChar() != "") {
-					String c;
-
-					c = getLightChar();
-
-					dlg.cbM01Kennung.setSelectedItem(c);
-					if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
-						c = "";
-				}
+				break;
+			case SAFE_BEACON:
+				image += "_Beacon";
+				break;
+			case SAFE_FLOAT:
+				image += "_Float";
+				break;
+			default:
 			}
-		} else
-			dlg.lM01Icon.setIcon(null);
+
+			if (!image.equals("/images/Safe_Water")) {
+				if (hasTopMark())
+					image += "_Sphere";
+				image += ".png";
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
+			} else
+				dlg.lM01Icon.setIcon(null);
+		}
 	}
 
 	public void saveSign() {

@@ -23,7 +23,7 @@ public class BuoyCard extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
-		
+
 		resetMask();
 		dlg.cbM01CatOfMark.setEnabled(true);
 		dlg.cbM01CatOfMark.setVisible(true);
@@ -187,103 +187,78 @@ public class BuoyCard extends Buoy {
 	}
 
 	public void paintSign() {
-		if (dlg.paintlock) return;
+		if (dlg.paintlock)
+			return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		dlg.tfM01Name.setEnabled(true);
-		dlg.tfM01Name.setText(getName());
+		if ((getBuoyIndex() != 0) && (getStyleIndex() != 0)) {
+			dlg.tfM01Name.setEnabled(true);
+			dlg.tfM01Name.setText(getName());
+			dlg.cM01TopMark.setSelected(true);
+			dlg.cM01TopMark.setVisible(true);
+			dlg.cM01TopMark.setEnabled(false);
+			dlg.cM01Radar.setEnabled(true);
+			dlg.cM01Radar.setVisible(true);
+			dlg.cM01Racon.setEnabled(true);
+			dlg.cM01Racon.setVisible(true);
+			dlg.cM01Fog.setEnabled(true);
+			dlg.cM01Fog.setVisible(true);
+			dlg.cM01Fired.setEnabled(true);
+			dlg.cM01Fired.setVisible(true);
 
-		dlg.cM01TopMark.setSelected(true);
-		dlg.cM01TopMark.setVisible(true);
-		dlg.cM01TopMark.setEnabled(false);
-		dlg.cM01Radar.setEnabled(true);
-		dlg.cM01Radar.setVisible(true);
-		dlg.cM01Racon.setEnabled(true);
-		dlg.cM01Racon.setVisible(true);
-		dlg.cM01Fog.setEnabled(true);
-		dlg.cM01Fog.setVisible(true);
+			String image = "/images/Cardinal";
 
-		dlg.cM01Fired.setEnabled(true);
-		dlg.cM01Fired.setVisible(true);
+			switch (getStyleIndex()) {
+			case SeaMark.CARD_PILLAR:
+				image += "_Pillar";
+				break;
 
-		String image = "/images/Cardinal";
+			case SeaMark.CARD_SPAR:
+				image += "_Spar";
+				break;
 
-		switch (getStyleIndex()) {
-		case SeaMark.CARD_PILLAR:
-			image += "_Pillar";
-			break;
+			case SeaMark.CARD_BEACON:
+				image += "_Beacon";
+				break;
 
-		case SeaMark.CARD_SPAR:
-			image += "_Spar";
-			break;
+			case SeaMark.CARD_TOWER:
+				image += "_Tower";
+				break;
 
-		case SeaMark.CARD_BEACON:
-			image += "_Beacon";
-			break;
+			case SeaMark.CARD_FLOAT:
+				image += "_Float";
+				break;
 
-		case SeaMark.CARD_TOWER:
-			image += "_Tower";
-			break;
-
-		case SeaMark.CARD_FLOAT:
-			image += "_Float";
-			break;
-
-		default:
-			return;
-		}
-
-		switch (getBuoyIndex()) {
-		case CARD_NORTH:
-			image += "_North";
-			break;
-		case CARD_EAST:
-			image += "_East";
-			break;
-		case CARD_SOUTH:
-			image += "_South";
-			break;
-		case CARD_WEST:
-			image += "_West";
-			break;
-		default:
-			return;
-		}
-
-		if (!image.equals("/images/Cardinal")) {
-			image += ".png";
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
-			
-			if (isFired()) {
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
-
-				if (getLightChar() != "") {
-					String tmp = null;
-					String c;
-					int i1;
-
-					c = getLightChar();
-					if (c.contains("+")) {
-						i1 = c.indexOf("+");
-						tmp = c.substring(i1, c.length());
-						c = c.substring(0, i1);
-					}
-
-					if (getLightGroup() != "")
-						c = c + "(" + getLightGroup() + ")";
-					if (tmp != null)
-						c = c + tmp;
-
-					dlg.cbM01Kennung.setSelectedItem(c);
-					if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
-						c = "";
-				}
+			default:
+				return;
 			}
 
-		} else
-			dlg.lM01Icon.setIcon(null);
+			switch (getBuoyIndex()) {
+			case CARD_NORTH:
+				image += "_North";
+				break;
+			case CARD_EAST:
+				image += "_East";
+				break;
+			case CARD_SOUTH:
+				image += "_South";
+				break;
+			case CARD_WEST:
+				image += "_West";
+				break;
+			default:
+				return;
+			}
+
+			if (!image.equals("/images/Cardinal")) {
+				image += ".png";
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
+
+			} else
+				dlg.lM01Icon.setIcon(null);
+		}
 	}
 
 	public void setLightColour() {

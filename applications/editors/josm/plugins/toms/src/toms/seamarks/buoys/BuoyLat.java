@@ -21,7 +21,7 @@ public class BuoyLat extends Buoy {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
-		
+
 		resetMask();
 
 		dlg.rbM01RegionA.setEnabled(true);
@@ -344,281 +344,266 @@ public class BuoyLat extends Buoy {
 	}
 
 	public void paintSign() {
-		if (dlg.paintlock) return;
+		if (dlg.paintlock)
+			return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		dlg.tfM01Name.setEnabled(true);
-		dlg.tfM01Name.setText(getName());
-		dlg.cM01TopMark.setEnabled(true);
-		dlg.cM01TopMark.setVisible(true);
-		dlg.cM01Radar.setEnabled(true);
-		dlg.cM01Radar.setVisible(true);
-		dlg.cM01Racon.setEnabled(true);
-		dlg.cM01Racon.setVisible(true);
-		dlg.cM01Fog.setEnabled(true);
-		dlg.cM01Fog.setVisible(true);
-
-		dlg.cM01Fired.setVisible(true);
-		dlg.cM01Fired.setEnabled(true);
-
-		String image = "/images/Lateral";
-
-		int cat = getBuoyIndex();
-		boolean region = getRegion();
-		int style = getStyleIndex();
-
-		if (style == LAT_PERCH) {
-			dlg.cM01Fired.setSelected(false);
-			dlg.cM01TopMark.setSelected(false);
-			dlg.cM01Fired.setEnabled(false);
-			dlg.cM01TopMark.setEnabled(false);
-		} else {
-			dlg.cM01Fired.setEnabled(true);
+		if ((getBuoyIndex() != 0) && (getStyleIndex() != 0)) {
+			dlg.tfM01Name.setEnabled(true);
+			dlg.tfM01Name.setText(getName());
 			dlg.cM01TopMark.setEnabled(true);
-		}
+			dlg.cM01TopMark.setVisible(true);
+			dlg.cM01Radar.setEnabled(true);
+			dlg.cM01Radar.setVisible(true);
+			dlg.cM01Racon.setEnabled(true);
+			dlg.cM01Racon.setVisible(true);
+			dlg.cM01Fog.setEnabled(true);
+			dlg.cM01Fog.setVisible(true);
 
-		switch (getBuoyIndex()) {
-		case PORT_HAND:
-			if (region == IALA_A)
-				switch (style) {
-				case LAT_CAN:
-					image += "_Can_Red";
-					break;
-				case LAT_PILLAR:
-					image += "_Pillar_Red";
-					break;
-				case LAT_SPAR:
-					image += "_Spar_Red";
-					break;
-				case LAT_BEACON:
-					image += "_Beacon_Red";
-					break;
-				case LAT_TOWER:
-					image += "_Tower_Red";
-					break;
-				case LAT_FLOAT:
-					image += "_Float_Red";
-					break;
-				case LAT_PERCH:
-					image += "_Perch_Port";
-					break;
-				default:
-				}
-			else
-				switch (style) {
-				case LAT_CAN:
-					image += "_Can_Green";
-					break;
-				case LAT_PILLAR:
-					image += "_Pillar_Green";
-					break;
-				case LAT_SPAR:
-					image += "_Spar_Green";
-					break;
-				case LAT_BEACON:
-					image += "_Beacon_Green";
-					break;
-				case LAT_TOWER:
-					image += "_Tower_Green";
-					break;
-				case LAT_FLOAT:
-					image += "_Float_Green";
-					break;
-				case LAT_PERCH:
-					image += "_Perch_Port";
-					break;
-				default:
-				}
-			break;
+			dlg.cM01Fired.setVisible(true);
+			dlg.cM01Fired.setEnabled(true);
 
-		case STARBOARD_HAND:
-			if (region == IALA_A)
-				switch (style) {
-				case LAT_CONE:
-					image += "_Cone_Green";
-					break;
-				case LAT_PILLAR:
-					image += "_Pillar_Green";
-					break;
-				case LAT_SPAR:
-					image += "_Spar_Green";
-					break;
-				case LAT_BEACON:
-					image += "_Beacon_Green";
-					break;
-				case LAT_TOWER:
-					image += "_Tower_Green";
-					break;
-				case LAT_FLOAT:
-					image += "_Float_Green";
-					break;
-				case LAT_PERCH:
-					image += "_Perch_Starboard";
-					break;
-				default:
-				}
-			else
-				switch (style) {
-				case LAT_CONE:
-					image += "_Cone_Red";
-					break;
-				case LAT_PILLAR:
-					image += "_Pillar_Red";
-					break;
-				case LAT_SPAR:
-					image += "_Spar_Red";
-					break;
-				case LAT_BEACON:
-					image += "_Beacon_Red";
-					break;
-				case LAT_TOWER:
-					image += "_Tower_Red";
-					break;
-				case LAT_FLOAT:
-					image += "_Float_Red";
-					break;
-				case LAT_PERCH:
-					image += "_Perch_Starboard";
-					break;
-				default:
-				}
-			break;
+			String image = "/images/Lateral";
 
-		case PREF_PORT_HAND:
-			if (region == IALA_A)
-				switch (style) {
-				case LAT_CAN:
-					image += "_Can_Red_Green_Red";
-					break;
-				case LAT_PILLAR:
-					image += "_Pillar_Red_Green_Red";
-					break;
-				case LAT_SPAR:
-					image += "_Spar_Red_Green_Red";
-					break;
-				case LAT_BEACON:
-					image += "_Beacon_Red_Green_Red";
-					break;
-				case LAT_TOWER:
-					image += "_Tower_Red_Green_Red";
-					break;
-				case LAT_FLOAT:
-					image += "_Float_Red_Green_Red";
-					break;
-				default:
-				}
-			else
-				switch (style) {
-				case LAT_CAN:
-					image += "_Can_Green_Red_Green";
-					break;
-				case LAT_PILLAR:
-					image += "_Pillar_Green_Red_Green";
-					break;
-				case LAT_SPAR:
-					image += "_Spar_Green_Red_Green";
-					break;
-				case LAT_BEACON:
-					image += "_Beacon_Green_Red_Green";
-					break;
-				case LAT_TOWER:
-					image += "_Tower_Green_Red_Green";
-					break;
-				case LAT_FLOAT:
-					image += "_Float_Green_Red_Green";
-					break;
-				default:
-				}
-			break;
+			int cat = getBuoyIndex();
+			boolean region = getRegion();
+			int style = getStyleIndex();
 
-		case PREF_STARBOARD_HAND:
-			if (region == IALA_A)
-				switch (style) {
-				case LAT_CONE:
-					image += "_Cone_Green_Red_Green";
-					break;
-				case LAT_PILLAR:
-					image += "_Pillar_Green_Red_Green";
-					break;
-				case LAT_SPAR:
-					image += "_Spar_Green_Red_Green";
-					break;
-				case LAT_BEACON:
-					image += "_Beacon_Green_Red_Green";
-					break;
-				case LAT_TOWER:
-					image += "_Tower_Green_Red_Green";
-					break;
-				case LAT_FLOAT:
-					image += "_Float_Green_Red_Green";
-					break;
-				default:
-				}
-			else
-				switch (style) {
-				case LAT_CONE:
-					image += "_Cone_Red_Green_Red";
-					break;
-				case LAT_PILLAR:
-					image += "_Pillar_Red_Green_Red";
-					break;
-				case LAT_SPAR:
-					image += "_Spar_Red_Green_Red";
-					break;
-				case LAT_BEACON:
-					image += "_Beacon_Red_Green_Red";
-					break;
-				case LAT_TOWER:
-					image += "_Tower_Red_Green_Red";
-					break;
-				case LAT_FLOAT:
-					image += "_Float_Red_Green_Red";
-					break;
-				default:
-				}
-			break;
+			if (style == LAT_PERCH) {
+				dlg.cM01Fired.setSelected(false);
+				dlg.cM01TopMark.setSelected(false);
+				dlg.cM01Fired.setEnabled(false);
+				dlg.cM01TopMark.setEnabled(false);
+			} else {
+				dlg.cM01Fired.setEnabled(true);
+				dlg.cM01TopMark.setEnabled(true);
+			}
 
-		default:
-		}
-
-		if (!image.equals("/images/Lateral")) {
-
-			if (hasTopMark()) {
-				if (cat == PORT_HAND || cat == PREF_PORT_HAND)
-					image += "_Can";
+			switch (getBuoyIndex()) {
+			case PORT_HAND:
+				if (region == IALA_A)
+					switch (style) {
+					case LAT_CAN:
+						image += "_Can_Red";
+						break;
+					case LAT_PILLAR:
+						image += "_Pillar_Red";
+						break;
+					case LAT_SPAR:
+						image += "_Spar_Red";
+						break;
+					case LAT_BEACON:
+						image += "_Beacon_Red";
+						break;
+					case LAT_TOWER:
+						image += "_Tower_Red";
+						break;
+					case LAT_FLOAT:
+						image += "_Float_Red";
+						break;
+					case LAT_PERCH:
+						image += "_Perch_Port";
+						break;
+					default:
+					}
 				else
-					image += "_Cone";
-			}
-			image += ".png";
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
+					switch (style) {
+					case LAT_CAN:
+						image += "_Can_Green";
+						break;
+					case LAT_PILLAR:
+						image += "_Pillar_Green";
+						break;
+					case LAT_SPAR:
+						image += "_Spar_Green";
+						break;
+					case LAT_BEACON:
+						image += "_Beacon_Green";
+						break;
+					case LAT_TOWER:
+						image += "_Tower_Green";
+						break;
+					case LAT_FLOAT:
+						image += "_Float_Green";
+						break;
+					case LAT_PERCH:
+						image += "_Perch_Port";
+						break;
+					default:
+					}
+				break;
 
-			if (hasRadar()) {
-				dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector.png")));
-			}
-			
-			if (isFired())
-				if (getLightColour().equals("R"))
-					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Light_Red_120.png")));
+			case STARBOARD_HAND:
+				if (region == IALA_A)
+					switch (style) {
+					case LAT_CONE:
+						image += "_Cone_Green";
+						break;
+					case LAT_PILLAR:
+						image += "_Pillar_Green";
+						break;
+					case LAT_SPAR:
+						image += "_Spar_Green";
+						break;
+					case LAT_BEACON:
+						image += "_Beacon_Green";
+						break;
+					case LAT_TOWER:
+						image += "_Tower_Green";
+						break;
+					case LAT_FLOAT:
+						image += "_Float_Green";
+						break;
+					case LAT_PERCH:
+						image += "_Perch_Starboard";
+						break;
+					default:
+					}
 				else
-					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Light_Green_120.png")));
-			if (getLightChar() != "") {
-				String c;
+					switch (style) {
+					case LAT_CONE:
+						image += "_Cone_Red";
+						break;
+					case LAT_PILLAR:
+						image += "_Pillar_Red";
+						break;
+					case LAT_SPAR:
+						image += "_Spar_Red";
+						break;
+					case LAT_BEACON:
+						image += "_Beacon_Red";
+						break;
+					case LAT_TOWER:
+						image += "_Tower_Red";
+						break;
+					case LAT_FLOAT:
+						image += "_Float_Red";
+						break;
+					case LAT_PERCH:
+						image += "_Perch_Starboard";
+						break;
+					default:
+					}
+				break;
 
-				c = getLightChar();
-				if (getLightGroup() != "")
-					c = c + "(" + getLightGroup() + ")";
+			case PREF_PORT_HAND:
+				if (region == IALA_A)
+					switch (style) {
+					case LAT_CAN:
+						image += "_Can_Red_Green_Red";
+						break;
+					case LAT_PILLAR:
+						image += "_Pillar_Red_Green_Red";
+						break;
+					case LAT_SPAR:
+						image += "_Spar_Red_Green_Red";
+						break;
+					case LAT_BEACON:
+						image += "_Beacon_Red_Green_Red";
+						break;
+					case LAT_TOWER:
+						image += "_Tower_Red_Green_Red";
+						break;
+					case LAT_FLOAT:
+						image += "_Float_Red_Green_Red";
+						break;
+					default:
+					}
+				else
+					switch (style) {
+					case LAT_CAN:
+						image += "_Can_Green_Red_Green";
+						break;
+					case LAT_PILLAR:
+						image += "_Pillar_Green_Red_Green";
+						break;
+					case LAT_SPAR:
+						image += "_Spar_Green_Red_Green";
+						break;
+					case LAT_BEACON:
+						image += "_Beacon_Green_Red_Green";
+						break;
+					case LAT_TOWER:
+						image += "_Tower_Green_Red_Green";
+						break;
+					case LAT_FLOAT:
+						image += "_Float_Green_Red_Green";
+						break;
+					default:
+					}
+				break;
 
-				dlg.cbM01Kennung.setSelectedItem(c);
-				if (dlg.cbM01Kennung.getSelectedItem().equals("Not set"))
-					c = "";
+			case PREF_STARBOARD_HAND:
+				if (region == IALA_A)
+					switch (style) {
+					case LAT_CONE:
+						image += "_Cone_Green_Red_Green";
+						break;
+					case LAT_PILLAR:
+						image += "_Pillar_Green_Red_Green";
+						break;
+					case LAT_SPAR:
+						image += "_Spar_Green_Red_Green";
+						break;
+					case LAT_BEACON:
+						image += "_Beacon_Green_Red_Green";
+						break;
+					case LAT_TOWER:
+						image += "_Tower_Green_Red_Green";
+						break;
+					case LAT_FLOAT:
+						image += "_Float_Green_Red_Green";
+						break;
+					default:
+					}
+				else
+					switch (style) {
+					case LAT_CONE:
+						image += "_Cone_Red_Green_Red";
+						break;
+					case LAT_PILLAR:
+						image += "_Pillar_Red_Green_Red";
+						break;
+					case LAT_SPAR:
+						image += "_Spar_Red_Green_Red";
+						break;
+					case LAT_BEACON:
+						image += "_Beacon_Red_Green_Red";
+						break;
+					case LAT_TOWER:
+						image += "_Tower_Red_Green_Red";
+						break;
+					case LAT_FLOAT:
+						image += "_Float_Red_Green_Red";
+						break;
+					default:
+					}
+				break;
+
+			default:
 			}
 
-		} else
-			dlg.lM01Icon.setIcon(null);
+			if (!image.equals("/images/Lateral")) {
+
+				if (hasTopMark()) {
+					if (cat == PORT_HAND || cat == PREF_PORT_HAND)
+						image += "_Can";
+					else
+						image += "_Cone";
+				}
+				image += ".png";
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
+
+				if (hasRadar()) {
+					dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Radar_Reflector.png")));
+				}
+
+			} else
+				dlg.lM01Icon.setIcon(null);
+		}
 	}
 
 	public void saveSign() {

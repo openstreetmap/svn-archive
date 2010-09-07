@@ -300,6 +300,16 @@ abstract public class Buoy extends SeaMark {
 			String tmp = null;
 			int i1;
 
+			String col = getLightColour();
+			if (col.equals("W"))
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+			else if (col.equals("R"))
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")));
+			else if (col.equals("G"))
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")));
+			else
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
+	
 			dlg.cbM01Kennung.setEnabled(true);
 
 			c = getLightChar();

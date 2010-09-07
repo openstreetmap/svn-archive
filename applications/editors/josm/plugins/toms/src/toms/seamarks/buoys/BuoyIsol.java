@@ -103,64 +103,54 @@ public class BuoyIsol extends Buoy {
 	}
 
 	public void paintSign() {
-		if (dlg.paintlock) return;
+		if (dlg.paintlock)
+			return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		dlg.tfM01Name.setEnabled(true);
-		dlg.tfM01Name.setText(getName());
-		dlg.cM01TopMark.setEnabled(false);
-		dlg.cM01TopMark.setVisible(true);
-		dlg.cM01Radar.setEnabled(true);
-		dlg.cM01Radar.setVisible(true);
-		dlg.cM01Racon.setEnabled(true);
-		dlg.cM01Racon.setVisible(true);
-		dlg.cM01Fog.setEnabled(true);
-		dlg.cM01Fog.setVisible(true);
+		if ((getBuoyIndex() != 0) && (getStyleIndex() != 0)) {
+			dlg.tfM01Name.setEnabled(true);
+			dlg.tfM01Name.setText(getName());
+			dlg.cM01TopMark.setEnabled(false);
+			dlg.cM01TopMark.setVisible(true);
+			dlg.cM01Radar.setEnabled(true);
+			dlg.cM01Radar.setVisible(true);
+			dlg.cM01Racon.setEnabled(true);
+			dlg.cM01Racon.setVisible(true);
+			dlg.cM01Fog.setEnabled(true);
+			dlg.cM01Fog.setVisible(true);
 
-		dlg.cM01Fired.setVisible(true);
-		dlg.cM01Fired.setEnabled(true);
+			dlg.cM01Fired.setVisible(true);
+			dlg.cM01Fired.setEnabled(true);
 
-		String image = "/images/Cardinal";
+			String image = "/images/Cardinal";
 
-		switch (getStyleIndex()) {
-		case ISOL_PILLAR:
-			image += "_Pillar_Single";
-			break;
-		case ISOL_SPAR:
-			image += "_Spar_Single";
-			break;
-		case ISOL_BEACON:
-			image += "_Beacon_Single";
-			break;
-		case ISOL_TOWER:
-			image += "_Tower_Single";
-			break;
-		case ISOL_FLOAT:
-			image += "_Float_Single";
-			break;
-		default:
-		}
-
-		if (!image.equals("/images/Cardinal")) {
-			image += ".png";
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
-
-			if (isFired()) {
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_White_120.png")));
-				if (getLightChar() != "") {
-					String c;
-
-					c = getLightChar();
-					if (getLightGroup() != "")
-						c = c + "(" + getLightGroup() + ")";
-					dlg.cbM01Kennung.setSelectedItem(c);
-				}
+			switch (getStyleIndex()) {
+			case ISOL_PILLAR:
+				image += "_Pillar_Single";
+				break;
+			case ISOL_SPAR:
+				image += "_Spar_Single";
+				break;
+			case ISOL_BEACON:
+				image += "_Beacon_Single";
+				break;
+			case ISOL_TOWER:
+				image += "_Tower_Single";
+				break;
+			case ISOL_FLOAT:
+				image += "_Float_Single";
+				break;
+			default:
 			}
-		} else
-			dlg.lM01Icon.setIcon(null);
+
+			if (!image.equals("/images/Cardinal")) {
+				image += ".png";
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
+			} else
+				dlg.lM01Icon.setIcon(null);
+		}
 	}
 
 	public void saveSign() {

@@ -119,14 +119,14 @@
     -->
     <target name="revision">
 
-        <exec append="false" output="EVISION" executable="svn" failifexecutionfails="false">
+        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
             <arg value="."/>
         </exec>
         <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-        <!--delete file="REVISION"/-->
+        <delete file="REVISION"/>
     </target>
 
     <!--

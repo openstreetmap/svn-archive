@@ -276,8 +276,19 @@ abstract public class Buoy extends SeaMark {
 		if (hasRacon()) {
 			dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
 			dlg.cbM01Racon.setVisible(true);
-		} else 
+			if (getRatyp() == RATYP_RACON) {
+				dlg.lM01Racon.setVisible(true);
+				dlg.tfM01Racon.setVisible(true);
+				dlg.tfM01Racon.setEnabled(true);
+			} else {
+				dlg.lM01Racon.setVisible(false);
+				dlg.tfM01Racon.setVisible(false);
+			}
+		} else {
 			dlg.cbM01Racon.setVisible(false);
+			dlg.lM01Racon.setVisible(false);
+			dlg.tfM01Racon.setVisible(false);
+		}
 		
 		if (isFired()) {
 			String lp, c;

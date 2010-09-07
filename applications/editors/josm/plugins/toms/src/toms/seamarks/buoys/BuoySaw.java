@@ -139,11 +139,10 @@ public class BuoySaw extends Buoy {
 		}
 
 		if (!image.equals("/images/Safe_Water")) {
-			image += ".png";
-			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
-
 			if (hasTopMark())
 				image += "_Sphere";
+			image += ".png";
+			dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 
 			if (isFired()) {
 				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));

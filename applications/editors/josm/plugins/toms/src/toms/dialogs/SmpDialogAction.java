@@ -813,7 +813,7 @@ public class SmpDialogAction extends JosmAction {
 						if (!(buoy instanceof BuoySpec)) {
 							buoy = new BuoySpec(dia, n);
 							cbM01TopMark.removeAllItems();
-							cbM01TopMark.addItem("");
+							cbM01TopMark.addItem(Messages.getString("SmpDialogAction.212"));
 							cbM01TopMark.addItem(Messages.getString("SmpDialogAction.210")); //$NON-NLS-1$
 							cbM01TopMark.addItem(Messages.getString("SmpDialogAction.211")); //$NON-NLS-1$
 						}

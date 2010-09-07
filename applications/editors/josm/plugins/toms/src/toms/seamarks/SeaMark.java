@@ -111,9 +111,9 @@ abstract public class SeaMark {
 	 */
 	
 	public final static int UNKNOWN_RATYP = 0;
-	public final static int RATYP_RACON = 0;
-	public final static int RATYP_RAMARK = 0;
-	public final static int RATYP_LEADING = 0;
+	public final static int RATYP_RACON = 1;
+	public final static int RATYP_RAMARK = 2;
+	public final static int RATYP_LEADING = 3;
 
 	/**
 	 * Variables

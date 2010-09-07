@@ -42,9 +42,9 @@ public class BuoySaw extends Buoy {
 		dlg.cbM01Kennung.addItem("LFl");
 		dlg.cbM01Kennung.addItem("Mo()");
 
+		setBuoyIndex(SAFE_WATER);
 		setColour(SeaMark.RED_WHITE);
 		setLightColour("W");
-		setBuoyIndex(SAFE_WATER);
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
 		if (keys.containsKey("name"))
@@ -102,6 +102,7 @@ public class BuoySaw extends Buoy {
 	}
 
 	public void paintSign() {
+		if (dlg.paintlock) return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());

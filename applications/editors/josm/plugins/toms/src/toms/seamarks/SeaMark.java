@@ -105,6 +105,15 @@ abstract public class SeaMark {
 	public final static int SPEC_FLOAT = 5;
 	public final static int SPEC_BEACON = 6;
 	public final static int SPEC_TOWER = 7;
+	
+	/**
+	 * Radar Beacons - correspond to Ratyp
+	 */
+	
+	public final static int UNKNOWN_RATYP = 0;
+	public final static int RATYP_RACON = 0;
+	public final static int RATYP_RAMARK = 0;
+	public final static int RATYP_LEADING = 0;
 
 	/**
 	 * Variables

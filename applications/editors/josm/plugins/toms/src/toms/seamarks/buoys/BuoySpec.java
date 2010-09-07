@@ -40,21 +40,18 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem("Not set");
 		dlg.cbM01Kennung.addItem("Fl");
-		dlg.cbM01Kennung.addItem("Fl(2)");
-		dlg.cbM01Kennung.addItem("Fl(3)");
-		dlg.cbM01Kennung.addItem("Fl(4)");
-		dlg.cbM01Kennung.addItem("Fl(5)");
-		dlg.cbM01Kennung.addItem("Oc(2)");
-		dlg.cbM01Kennung.addItem("Oc(3)");
+		dlg.cbM01Kennung.addItem("Fl()");
+		dlg.cbM01Kennung.addItem("Oc");
+		dlg.cbM01Kennung.addItem("Oc()");
 		dlg.cbM01Kennung.addItem("Q");
 		dlg.cbM01Kennung.addItem("IQ");
 		dlg.cbM01Kennung.setSelectedIndex(0);
 
 		dlg.cM01TopMark.setEnabled(true);
 
+		setBuoyIndex(SPECIAL_PURPOSE);
 		setColour(SeaMark.YELLOW);
 		setLightColour("W");
-		setBuoyIndex(SPECIAL_PURPOSE);
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
 		if (keys.containsKey("name"))
@@ -139,6 +136,7 @@ public class BuoySpec extends Buoy {
 	}
 
 	public void paintSign() {
+		if (dlg.paintlock) return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
@@ -208,6 +206,7 @@ public class BuoySpec extends Buoy {
 		} else
 			dlg.lM01Icon.setIcon(null);
 	}
+
 
 	public void saveSign() {
 		Node node = getNode();

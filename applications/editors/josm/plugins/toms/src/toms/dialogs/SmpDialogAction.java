@@ -169,6 +169,8 @@ public class SmpDialogAction extends JosmAction {
 	public JCheckBox cM01IconVisible = null;
 	public JTextField sM01StatusBar = null;
 
+	public boolean paintlock = false;
+	
 	public JMenuItem getSmpItem() {
 		return SmpItem;
 	}
@@ -503,27 +505,27 @@ public class SmpDialogAction extends JosmAction {
 		if (pM01SeaMap == null) {
 
 			lM01Icon = new JLabel();
-			lM01Icon.setBounds(new Rectangle(210, 30, 150, 200));
+			lM01Icon.setBounds(new Rectangle(210, 20, 150, 200));
 			lM01Icon.setIcon(null);
 			lM01Icon.setText(""); //$NON-NLS-1$
 
 			lM02Icon = new JLabel();
-			lM02Icon.setBounds(new Rectangle(210, 30, 150, 200));
+			lM02Icon.setBounds(new Rectangle(210, 20, 150, 200));
 			lM02Icon.setIcon(null);
 			lM02Icon.setText(""); //$NON-NLS-1$
 
 			lM03Icon = new JLabel();
-			lM03Icon.setBounds(new Rectangle(210, -40, 150, 200));
+			lM03Icon.setBounds(new Rectangle(210, -50, 150, 200));
 			lM03Icon.setIcon(null);
 			lM03Icon.setText(""); //$NON-NLS-1$
 
 			lM04Icon = new JLabel();
-			lM04Icon.setBounds(new Rectangle(210, 30, 150, 200));
+			lM04Icon.setBounds(new Rectangle(210, 20, 150, 200));
 			lM04Icon.setIcon(null);
 			lM04Icon.setText(""); //$NON-NLS-1$
 
 			lM01FireMark = new JLabel();
-			lM01FireMark.setBounds(new Rectangle(305, 90, 90, 20));
+			lM01FireMark.setBounds(new Rectangle(300, 85, 95, 20));
 			lM01FireMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			lM01FireMark.setText(""); //$NON-NLS-1$
 
@@ -758,6 +760,7 @@ public class SmpDialogAction extends JosmAction {
 					if (n == null)
 						return;
 
+					paintlock = true;
 					switch (type) {
 
 					case SeaMark.UNKNOWN_TYPE:
@@ -834,6 +837,7 @@ public class SmpDialogAction extends JosmAction {
 					buoy.refreshStyles();
 					buoy.refreshLights();
 					buoy.setLightColour();
+					paintlock = false;
 					buoy.paintSign();
 				}
 			});
@@ -1004,9 +1008,16 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Racon = new JComboBox();
 			cbM01Racon.setBounds(new Rectangle(240, 195, 80, 20));
 			cbM01Racon.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
+			cbM01Racon.removeAllItems();
+			cbM01Racon.addItem("Not Set");
+			cbM01Racon.addItem("Racon");
+			cbM01Racon.addItem("Ramark");
+			cbM01Racon.addItem("Leading");
 			cbM01Racon.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int rac = cbM01Racon.getSelectedIndex();
+					buoy.setRatyp(rac);
+					buoy.paintSign();
 				}
 			});
 		}

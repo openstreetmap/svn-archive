@@ -39,9 +39,9 @@ public class BuoyIsol extends Buoy {
 		dlg.cbM01Kennung.addItem("Not set");
 		dlg.cbM01Kennung.addItem("Fl(2)");
 
+		setBuoyIndex(ISOLATED_DANGER);
 		setColour(SeaMark.BLACK_RED_BLACK);
 		setLightColour("W");
-		setBuoyIndex(ISOLATED_DANGER);
 		setTopMark(true);
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
@@ -103,6 +103,7 @@ public class BuoyIsol extends Buoy {
 	}
 
 	public void paintSign() {
+		if (dlg.paintlock) return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());

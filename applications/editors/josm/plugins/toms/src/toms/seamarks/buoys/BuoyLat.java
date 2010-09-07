@@ -344,6 +344,7 @@ public class BuoyLat extends Buoy {
 	}
 
 	public void paintSign() {
+		if (dlg.paintlock) return;
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());

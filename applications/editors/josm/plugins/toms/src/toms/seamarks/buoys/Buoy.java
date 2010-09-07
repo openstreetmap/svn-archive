@@ -54,8 +54,6 @@ abstract public class Buoy extends SeaMark {
 
 	public void setRegion(boolean region) {
 		Region = region;
-		dlg.rbM01RegionA.setSelected(!region);
-		dlg.rbM01RegionB.setSelected(region);
 	}
 
 	private boolean Radar = false;
@@ -78,6 +76,16 @@ abstract public class Buoy extends SeaMark {
 		Racon = racon;
 	}
 
+	private int Ratyp = 0;
+	
+	public int getRatyp() {
+		return Ratyp;
+	}
+	
+	public void setRatyp(int typ) {
+		Ratyp = typ;
+	}
+	
 	private boolean Fog = false;
 
 	public boolean hasFog() {
@@ -245,11 +253,15 @@ abstract public class Buoy extends SeaMark {
 
 	public void paintSign() {
 
+		if (dlg.paintlock) return;
 		dlg.lM01Icon.setIcon(null);
 		dlg.lM02Icon.setIcon(null);
 		dlg.lM03Icon.setIcon(null);
 		dlg.lM04Icon.setIcon(null);
 		
+		dlg.rbM01RegionA.setSelected(!getRegion());
+		dlg.rbM01RegionB.setSelected(getRegion());
+
 		dlg.cM01TopMark.setSelected(hasTopMark());
 		dlg.cM01Fired.setSelected(isFired());
 
@@ -393,8 +405,8 @@ abstract public class Buoy extends SeaMark {
 		setRadar(false);
 		dlg.cM01Racon.setSelected(false);
 		dlg.cM01Racon.setVisible(false);
-		dlg.cbM01Racon.removeAllItems();
 		dlg.cbM01Racon.setVisible(false);
+		setRatyp(0);
 		dlg.tfM01Racon.setText("");
 		dlg.tfM01Racon.setVisible(false);
 		dlg.lM01Racon.setVisible(false);

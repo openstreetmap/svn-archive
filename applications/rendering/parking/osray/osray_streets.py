@@ -148,8 +148,9 @@ def draw_tunnel(dig,line,height_offset,streetwidth,og):
         return
 
     rx = streetwidth/2.0 # radius=d/2
-    rx *= 5.0/4.0 # tunnel must be larger than highway
-    ry = layerunit/2.0 # radius=d/2
+    rx *= 1.5 # tunnel must be larger than highway
+    tunnel_center_y = 1.3 # tunnel center is 1.3 m above street level
+    ry = layerunit-tunnel_center_y
     squeeze = ry/rx
 
     numpoints = len(line)
@@ -159,7 +160,7 @@ def draw_tunnel(dig,line,height_offset,streetwidth,og):
     x_prev = None
     for i,point in enumerate(line):
         x,y = point
-        z = og.get_height(point) + 1.3 # tunnel center is 1.3 m above street level
+        z = og.get_height(point) + tunnel_center_y
         if(x_prev != None):
             dig.write("  cylinder {{ <{x1}, {z1s}, {y1}>,<{x2}, {z2s}, {y2}>,{r} }}\n".format(x1=x,y1=y,z1s=(z/squeeze)*zpermeter,x2=x_prev,y2=y_prev,z2s=(z_prev/squeeze)*zpermeter,r=rx*zpermeter))
         dig.write("  sphere {{ <{x}, {zs}, {y}>,{r} }}\n".format(x=x,y=y,zs=(z/squeeze)*zpermeter,r=rx*zpermeter))

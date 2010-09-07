@@ -53,7 +53,7 @@ public class IRSRectifyPlugin extends Plugin {
             int dx = wms.getImageX(0);
             int dy = wms.getImageY(0);
             if( dx == 0 && dy == 0 ) {
-                JOptionPane.showMessageDialog(Main.parent, tr("This option creates IRS adjustment layer and a little way inside it. You need to adjust WMS layer placement first.\nResulting layer is to be saved as .osm and sent to Komzpa (find him at #osm-ru on irc.oftc.net)."));
+                JOptionPane.showMessageDialog(Main.parent, tr("This option creates IRS adjustment layer and a little way inside it. You need to adjust WMS layer placement first.\nResulting layer is to be saved as .osm and sent to Komzpa (me@komzpa.net) with [irs rectify] in subject."));
                 return;
             }
             // create an offset way and add to dataset

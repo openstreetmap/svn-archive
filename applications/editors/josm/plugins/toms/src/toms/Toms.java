@@ -21,6 +21,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.gui.MapFrame;
 
 import toms.dialogs.SmpDialogAction;
+import toms.plug.PluginApp;
 import toms.seamarks.SeaMark;
 
 // Kommentar zum Ausprobieren von svn
@@ -46,6 +47,8 @@ public class Toms extends Plugin {
 		SmpDialog.setOs(os);
 		SmpDialog.setUserHome(userHome);
 		Smp.setEnabled(false);
+		
+		PluginApp.runPlugins();
 	}
 
 	@Override

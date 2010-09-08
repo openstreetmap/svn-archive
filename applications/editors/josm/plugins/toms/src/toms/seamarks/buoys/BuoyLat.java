@@ -292,7 +292,7 @@ public class BuoyLat extends Buoy {
 		int style = getStyleIndex();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.11")); //$NON-NLS-1$
+		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.213")); //$NON-NLS-1$
 
 		switch (type) {
 		case PORT_HAND:

@@ -11,6 +11,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
 
+import toms.Messages;
 import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
@@ -30,12 +31,12 @@ public class BuoyNota extends Buoy {
 		dlg.lM01CatOfMark.setVisible(true);
 
 		dlg.cbM01Kennung.removeAllItems();
-		dlg.cbM01Kennung.addItem("Not set");
-		dlg.cbM01Kennung.addItem("Fl");
-		dlg.cbM01Kennung.addItem("Fl()");
-		dlg.cbM01Kennung.addItem("Oc()");
-		dlg.cbM01Kennung.addItem("Q");
-		dlg.cbM01Kennung.addItem("IQ");
+		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Fl"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Fl()"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Oc()"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Q"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("IQ"); //$NON-NLS-1$
 		dlg.cbM01Kennung.setSelectedIndex(0);
 
 		setLightColour();
@@ -72,22 +73,22 @@ public class BuoyNota extends Buoy {
 			switch (getBuoyIndex()) {
 			case SeaMark.LIGHT_HOUSE:
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_House.png")));
+						"/images/Light_House.png"))); //$NON-NLS-1$
 				break;
 
 			case SeaMark.LIGHT_MAJOR:
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Major.png")));
+						"/images/Light_Major.png"))); //$NON-NLS-1$
 				break;
 
 			case SeaMark.LIGHT_MINOR:
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Minor.png")));
+						"/images/Light_Minor.png"))); //$NON-NLS-1$
 				break;
 
 			case SeaMark.LIGHT_VESSEL:
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Major_Float.png")));
+						"/images/Major_Float.png"))); //$NON-NLS-1$
 				break;
 
 			default:
@@ -104,17 +105,17 @@ public class BuoyNota extends Buoy {
 
 		switch (getStyleIndex()) {
 		case LIGHT_HOUSE:
-			super.saveSign("lighthouse");
+			super.saveSign("lighthouse"); //$NON-NLS-1$
 			break;
 		case LIGHT_MAJOR:
-			super.saveSign("major_light");
+			super.saveSign("major_light"); //$NON-NLS-1$
 			break;
 		case LIGHT_MINOR:
-			super.saveSign("minor_light");
+			super.saveSign("minor_light"); //$NON-NLS-1$
 			break;
 		default:
 		}
-		saveLightData("white");
+		saveLightData("white"); //$NON-NLS-1$
 		saveRadarFogData();
 	}
 
@@ -134,15 +135,15 @@ public class BuoyNota extends Buoy {
 
 		keys = node.getKeys();
 
-		if (keys.containsKey("seamark:light:colour")) {
-			str = keys.get("seamark:light:colour");
+		if (keys.containsKey("seamark:light:colour")) { //$NON-NLS-1$
+			str = keys.get("seamark:light:colour"); //$NON-NLS-1$
 
-			if (keys.containsKey("seamark:light:character")) {
+			if (keys.containsKey("seamark:light:character")) { //$NON-NLS-1$
 				setLightGroup(keys);
 
-				String c = keys.get("seamark:light:character");
-				if (getLightGroup() != "")
-					c = c + "(" + getLightGroup() + ")";
+				String c = keys.get("seamark:light:character"); //$NON-NLS-1$
+				if (getLightGroup() != "") //$NON-NLS-1$
+					c = c + "(" + getLightGroup() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 				setLightChar(c);
 				setLightPeriod(keys);
 			}

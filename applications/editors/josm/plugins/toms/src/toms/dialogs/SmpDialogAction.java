@@ -1328,7 +1328,7 @@ public class SmpDialogAction extends JosmAction {
 		if (bM01Close == null) {
 			bM01Close = new JButton();
 			bM01Close.setBounds(new Rectangle(20, 325, 110, 20));
-			bM01Close.setText(Messages.getString("SmpDialogAction.204")); //$NON-NLS-1$
+			bM01Close.setText(tr("close"));
 			bM01Close.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					// aufraeumen
@@ -1352,7 +1352,7 @@ public class SmpDialogAction extends JosmAction {
 		if (bM01Save == null) {
 			bM01Save = new JButton();
 			bM01Save.setBounds(new Rectangle(150, 325, 110, 20));
-			bM01Save.setText(Messages.getString("SmpDialogAction.205")); //$NON-NLS-1$
+			bM01Save.setText(tr("save"));
 			bM01Save.setEnabled(false);
 
 			bM01Save.addActionListener(new ActionListener() {

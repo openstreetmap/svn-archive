@@ -46,8 +46,6 @@ public class Toms extends Plugin {
 		SmpDialog.setOs(os);
 		SmpDialog.setUserHome(userHome);
 		Smp.setEnabled(false);
-
-		System.out.println(Messages.getString("Toms.2")); //$NON-NLS-1$
 	}
 
 	@Override

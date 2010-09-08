@@ -76,16 +76,26 @@ abstract public class Buoy extends SeaMark {
 		Racon = racon;
 	}
 
-	private int Ratyp = 0;
-	
-	public int getRatyp() {
-		return Ratyp;
+	private int RaType = 0;
+
+	public int getRaType() {
+		return RaType;
 	}
-	
-	public void setRatyp(int typ) {
-		Ratyp = typ;
+
+	public void setRaType(int type) {
+		RaType = type;
 	}
-	
+
+	private String RaconGroup = "";
+
+	public String getRaconGroup() {
+		return RaconGroup;
+	}
+
+	public void setRaconGroup(String raconGroup) {
+		RaconGroup = raconGroup;
+	}
+
 	private boolean Fog = false;
 
 	public boolean hasFog() {
@@ -94,6 +104,36 @@ abstract public class Buoy extends SeaMark {
 
 	public void setFog(boolean fog) {
 		Fog = fog;
+	}
+
+	private String FogSound = "";
+
+	public String getFogSound() {
+		return FogSound;
+	}
+
+	public void setFogSound(String fogSound) {
+		FogSound = fogSound;
+	}
+
+	private String FogGroup = "";
+
+	public String getFogGroup() {
+		return FogGroup;
+	}
+
+	public void setFogGroup(String fogGroup) {
+		FogSound = fogGroup;
+	}
+
+	private String FogPeriod = "";
+
+	public String getFogPeriod() {
+		return FogPeriod;
+	}
+
+	public void setFogPeriod(String fogPeriod) {
+		FogPeriod = fogPeriod;
 	}
 
 	private boolean Fired = false;
@@ -253,13 +293,14 @@ abstract public class Buoy extends SeaMark {
 
 	public void paintSign() {
 
-		if (dlg.paintlock) return;
+		if (dlg.paintlock)
+			return;
 		dlg.lM01Icon.setIcon(null);
 		dlg.lM02Icon.setIcon(null);
 		dlg.lM03Icon.setIcon(null);
 		dlg.lM04Icon.setIcon(null);
 		dlg.lM05Icon.setIcon(null);
-		
+
 		dlg.rbM01RegionA.setSelected(!getRegion());
 		dlg.rbM01RegionB.setSelected(getRegion());
 
@@ -269,15 +310,17 @@ abstract public class Buoy extends SeaMark {
 		dlg.tfM01RepeatTime.setText(LightPeriod);
 
 		dlg.tfM01Name.setText(getName());
-		
+
 		if (hasRadar()) {
-			dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Reflector.png")));
+			dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource(
+					"/images/Radar_Reflector.png")));
 		}
-		
+
 		if (hasRacon()) {
-			dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+			dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource(
+					"/images/Radar_Station.png")));
 			dlg.cbM01Racon.setVisible(true);
-			if (getRatyp() == RATYP_RACON) {
+			if (getRaType() == RATYP_RACON) {
 				dlg.lM01Racon.setVisible(true);
 				dlg.tfM01Racon.setVisible(true);
 				dlg.tfM01Racon.setEnabled(true);
@@ -290,11 +333,30 @@ abstract public class Buoy extends SeaMark {
 			dlg.lM01Racon.setVisible(false);
 			dlg.tfM01Racon.setVisible(false);
 		}
-		
+
 		if (hasFog()) {
-			dlg.lM05Icon.setIcon(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
+			dlg.lM05Icon.setIcon(new ImageIcon(getClass().getResource(
+					"/images/Fog_Signal.png")));
+			dlg.cbM01Fog.setVisible(true);
+			if (getFogSound().equals("")) {
+				dlg.lM01FogGroup.setVisible(false);
+				dlg.tfM01FogGroup.setVisible(false);
+				dlg.lM01FogPeriod.setVisible(false);
+				dlg.tfM01FogPeriod.setVisible(false);
+			} else {
+				dlg.lM01FogGroup.setVisible(true);
+				dlg.tfM01FogGroup.setVisible(true);
+				dlg.lM01FogPeriod.setVisible(true);
+				dlg.tfM01FogPeriod.setVisible(true);
+			}
+		} else {
+			dlg.cbM01Fog.setVisible(false);
+			dlg.lM01FogGroup.setVisible(false);
+			dlg.tfM01FogGroup.setVisible(false);
+			dlg.lM01FogPeriod.setVisible(false);
+			dlg.tfM01FogPeriod.setVisible(false);
 		}
-		
+
 		if (isFired()) {
 			String lp, c;
 			String tmp = null;
@@ -302,14 +364,18 @@ abstract public class Buoy extends SeaMark {
 
 			String col = getLightColour();
 			if (col.equals("W"))
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_White_120.png")));
 			else if (col.equals("R"))
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Red_120.png")));
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_Red_120.png")));
 			else if (col.equals("G"))
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Green_120.png")));
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_Green_120.png")));
 			else
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource("/images/Light_Magenta_120.png")));
-	
+				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Light_Magenta_120.png")));
+
 			dlg.cbM01Kennung.setEnabled(true);
 
 			c = getLightChar();
@@ -436,11 +502,11 @@ abstract public class Buoy extends SeaMark {
 		dlg.tfM01Racon.setVisible(false);
 		dlg.lM01Racon.setVisible(false);
 		setRacon(false);
-		setRatyp(0);
+		setRaType(0);
 		dlg.cM01Fog.setSelected(false);
 		dlg.cM01Fog.setVisible(false);
-		dlg.cbM01Fog.removeAllItems();
 		dlg.cbM01Fog.setVisible(false);
+		setFogSound("");
 		dlg.tfM01FogGroup.setText("");
 		dlg.tfM01FogGroup.setVisible(false);
 		dlg.lM01FogGroup.setVisible(false);

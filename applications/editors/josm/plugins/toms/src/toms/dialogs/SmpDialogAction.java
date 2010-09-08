@@ -115,11 +115,11 @@ public class SmpDialogAction extends JosmAction {
 	public ButtonGroup bgM01Region = null;
 	public JRadioButton rbM01RegionA = null;
 	public JRadioButton rbM01RegionB = null;
-	public JLabel lM01Icon = null;	// Shape
-	public JLabel lM02Icon = null;	// Light
-	public JLabel lM03Icon = null;	// Reflector
-	public JLabel lM04Icon = null;	// Racon
-	public JLabel lM05Icon = null;	// Fog
+	public JLabel lM01Icon = null; // Shape
+	public JLabel lM02Icon = null; // Light
+	public JLabel lM03Icon = null; // Reflector
+	public JLabel lM04Icon = null; // Racon
+	public JLabel lM05Icon = null; // Fog
 	public JLabel lM01FireMark = null;
 	private JLabel lM01TypeOfMark = null;
 	public JComboBox cbM01TypeOfMark = null;
@@ -171,7 +171,7 @@ public class SmpDialogAction extends JosmAction {
 	public JTextField sM01StatusBar = null;
 
 	public boolean paintlock = false;
-	
+
 	public JMenuItem getSmpItem() {
 		return SmpItem;
 	}
@@ -1022,7 +1022,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Racon.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int rac = cbM01Racon.getSelectedIndex();
-					buoy.setRatyp(rac);
+					buoy.setRaType(rac);
 					buoy.paintSign();
 				}
 			});
@@ -1036,7 +1036,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Racon.setBounds(new Rectangle(345, 195, 30, 20));
 			tfM01Racon.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-					buoy.setName(tfM01Racon.getText());
+					buoy.setRaconGroup(tfM01Racon.getText());
 				}
 			});
 		}
@@ -1064,9 +1064,22 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Fog = new JComboBox();
 			cbM01Fog.setBounds(new Rectangle(100, 220, 70, 20));
 			cbM01Fog.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
+			cbM01Fog.removeAllItems();
+			cbM01Fog.addItem("Not Set");
+			cbM01Fog.addItem("Horn");
+			cbM01Fog.addItem("Siren");
+			cbM01Fog.addItem("Dia");
+			cbM01Fog.addItem("Bell");
+			cbM01Fog.addItem("Whis");
+			cbM01Fog.addItem("Gong");
+			cbM01Fog.addItem("Explos");
 			cbM01Fog.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int fog = cbM01Fog.getSelectedIndex();
+					if (cbM01Fog.getSelectedIndex() > 0)
+						buoy.setFogSound((String) cbM01Fog.getSelectedItem());
+					else
+						buoy.setFogSound("");
+					buoy.paintSign();
 				}
 			});
 		}
@@ -1079,7 +1092,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01FogGroup.setBounds(new Rectangle(243, 220, 30, 20));
 			tfM01FogGroup.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-					buoy.setName(tfM01FogGroup.getText());
+					buoy.setFogGroup(tfM01FogGroup.getText());
 				}
 			});
 		}
@@ -1092,7 +1105,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01FogPeriod.setBounds(new Rectangle(345, 220, 30, 20));
 			tfM01FogPeriod.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-					buoy.setName(tfM01FogPeriod.getText());
+					buoy.setFogPeriod(tfM01FogPeriod.getText());
 				}
 			});
 		}

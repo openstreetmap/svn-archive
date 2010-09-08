@@ -101,6 +101,10 @@ public class BuoySaw extends Buoy {
 		}
 	}
 
+	public boolean isValid() {
+		return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
+	}
+
 	public void paintSign() {
 		if (dlg.paintlock)
 			return;
@@ -211,11 +215,9 @@ public class BuoySaw extends Buoy {
 			break;
 		default:
 		}
-
 		saveTopMarkData("spherical", "red");
-
 		saveLightData("white");
-
+		saveRadarFogData();
 	}
 
 	public void setLightColour() {

@@ -135,6 +135,10 @@ public class BuoySpec extends Buoy {
 		}
 	}
 
+	public boolean isValid() {
+		return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
+	}
+
 	public void paintSign() {
 		if (dlg.paintlock)
 			return;
@@ -257,11 +261,9 @@ public class BuoySpec extends Buoy {
 			break;
 		default:
 		}
-
 		saveTopMarkData("x-shape", "yellow");
-
 		saveLightData("white");
-
+		saveRadarFogData();
 	}
 
 	public void setLightColour() {

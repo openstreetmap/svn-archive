@@ -344,6 +344,10 @@ public class BuoyLat extends Buoy {
 		dlg.lM01StyleOfMark.setVisible(true);
 	}
 
+	public boolean isValid() {
+		return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
+	}
+
 	public void paintSign() {
 		if (dlg.paintlock)
 			return;
@@ -956,9 +960,9 @@ public class BuoyLat extends Buoy {
 
 		default:
 		}
-
 		saveTopMarkData(shape, colour);
 		saveLightData(colour);
+		saveRadarFogData();
 
 		Main.pref.put("tomsplugin.IALA", getRegion() ? "B" : "A"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

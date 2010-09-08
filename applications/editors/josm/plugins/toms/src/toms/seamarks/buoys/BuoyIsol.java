@@ -101,29 +101,28 @@ public class BuoyIsol extends Buoy {
 			}
 		}
 	}
+	
+	public boolean isValid() {
+		return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
+	}
 
 	public void paintSign() {
 		if (dlg.paintlock)
 			return;
+		
 		super.paintSign();
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		if ((getBuoyIndex() > 0) && (getStyleIndex() > 0)) {
+		if (isValid()) {
 			dlg.tfM01Name.setEnabled(true);
 			dlg.tfM01Name.setText(getName());
-			dlg.cM01TopMark.setEnabled(false);
 			dlg.cM01TopMark.setVisible(true);
-			dlg.cM01Radar.setEnabled(true);
 			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setEnabled(true);
 			dlg.cM01Racon.setVisible(true);
-			dlg.cM01Fog.setEnabled(true);
 			dlg.cM01Fog.setVisible(true);
-
 			dlg.cM01Fired.setVisible(true);
-			dlg.cM01Fired.setEnabled(true);
-
+			
 			String image = "/images/Cardinal";
 
 			switch (getStyleIndex()) {
@@ -150,6 +149,14 @@ public class BuoyIsol extends Buoy {
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 			} else
 				dlg.lM01Icon.setIcon(null);
+		} else {
+			dlg.tfM01Name.setEnabled(false);
+			dlg.tfM01Name.setText("");
+			dlg.cM01TopMark.setVisible(false);
+			dlg.cM01Radar.setVisible(false);
+			dlg.cM01Racon.setVisible(false);
+			dlg.cM01Fog.setVisible(false);
+			dlg.cM01Fired.setVisible(false);
 		}
 	}
 
@@ -211,8 +218,8 @@ public class BuoyIsol extends Buoy {
 		}
 
 		saveTopMarkData("2 spheres", "black");
-
 		saveLightData("white");
+		saveRadarFogData();
 
 	}
 

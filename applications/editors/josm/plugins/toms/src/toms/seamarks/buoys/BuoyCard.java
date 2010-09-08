@@ -186,6 +186,10 @@ public class BuoyCard extends Buoy {
 
 	}
 
+	public boolean isValid() {
+		return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
+	}
+
 	public void paintSign() {
 		if (dlg.paintlock)
 			return;
@@ -407,6 +411,6 @@ public class BuoyCard extends Buoy {
 		}
 		saveTopMarkData(shape, "black");
 		saveLightData("white");
-
+		saveRadarFogData();
 	}
 }

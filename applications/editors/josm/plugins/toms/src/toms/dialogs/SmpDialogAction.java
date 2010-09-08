@@ -1015,7 +1015,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Racon.setBounds(new Rectangle(240, 195, 80, 20));
 			cbM01Racon.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01Racon.removeAllItems();
-			cbM01Racon.addItem("Not Set");
+			cbM01Racon.addItem("Any");
 			cbM01Racon.addItem("Racon");
 			cbM01Racon.addItem("Ramark");
 			cbM01Racon.addItem("Leading");
@@ -1065,7 +1065,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Fog.setBounds(new Rectangle(100, 220, 70, 20));
 			cbM01Fog.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01Fog.removeAllItems();
-			cbM01Fog.addItem("Not Set");
+			cbM01Fog.addItem("Any");
 			cbM01Fog.addItem("Horn");
 			cbM01Fog.addItem("Siren");
 			cbM01Fog.addItem("Dia");
@@ -1076,9 +1076,9 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Fog.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (cbM01Fog.getSelectedIndex() > 0)
-						buoy.setFogSound((String) cbM01Fog.getSelectedItem());
+						buoy.setFogSound(cbM01Fog.getSelectedIndex());
 					else
-						buoy.setFogSound("");
+						buoy.setFogSound(0);
 					buoy.paintSign();
 				}
 			});

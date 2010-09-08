@@ -106,13 +106,13 @@ abstract public class Buoy extends SeaMark {
 		Fog = fog;
 	}
 
-	private String FogSound = "";
+	private int FogSound = 0;
 
-	public String getFogSound() {
+	public int getFogSound() {
 		return FogSound;
 	}
 
-	public void setFogSound(String fogSound) {
+	public void setFogSound(int fogSound) {
 		FogSound = fogSound;
 	}
 
@@ -123,7 +123,7 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setFogGroup(String fogGroup) {
-		FogSound = fogGroup;
+		FogGroup = fogGroup;
 	}
 
 	private String FogPeriod = "";
@@ -291,6 +291,10 @@ abstract public class Buoy extends SeaMark {
 		dlg = dia;
 	}
 
+	public boolean isValid() {
+		return false;
+	}
+
 	public void paintSign() {
 
 		if (dlg.paintlock)
@@ -304,106 +308,146 @@ abstract public class Buoy extends SeaMark {
 		dlg.rbM01RegionA.setSelected(!getRegion());
 		dlg.rbM01RegionB.setSelected(getRegion());
 
-		dlg.cM01TopMark.setSelected(hasTopMark());
-		dlg.cM01Fired.setSelected(isFired());
+		if (isValid()) {
+			dlg.bM01Save.setEnabled(true);
 
-		dlg.tfM01RepeatTime.setText(LightPeriod);
+			dlg.cM01TopMark.setSelected(hasTopMark());
+			dlg.cM01Fired.setSelected(isFired());
 
-		dlg.tfM01Name.setText(getName());
+			dlg.tfM01RepeatTime.setText(LightPeriod);
 
-		if (hasRadar()) {
-			dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Radar_Reflector.png")));
-		}
+			dlg.tfM01Name.setText(getName());
 
-		if (hasRacon()) {
-			dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Radar_Station.png")));
-			dlg.cbM01Racon.setVisible(true);
-			if (getRaType() == RATYP_RACON) {
-				dlg.lM01Racon.setVisible(true);
-				dlg.tfM01Racon.setVisible(true);
-				dlg.tfM01Racon.setEnabled(true);
+			if (hasRadar()) {
+				dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Radar_Reflector.png")));
+			}
+
+			if (hasRacon()) {
+				dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Radar_Station.png")));
+				dlg.cbM01Racon.setVisible(true);
+				if (getRaType() == RATYP_RACON) {
+					dlg.lM01Racon.setVisible(true);
+					dlg.tfM01Racon.setVisible(true);
+					dlg.tfM01Racon.setEnabled(true);
+				} else {
+					dlg.lM01Racon.setVisible(false);
+					dlg.tfM01Racon.setVisible(false);
+				}
 			} else {
+				dlg.cbM01Racon.setVisible(false);
 				dlg.lM01Racon.setVisible(false);
 				dlg.tfM01Racon.setVisible(false);
 			}
-		} else {
-			dlg.cbM01Racon.setVisible(false);
-			dlg.lM01Racon.setVisible(false);
-			dlg.tfM01Racon.setVisible(false);
-		}
 
-		if (hasFog()) {
-			dlg.lM05Icon.setIcon(new ImageIcon(getClass().getResource(
-					"/images/Fog_Signal.png")));
-			dlg.cbM01Fog.setVisible(true);
-			if (getFogSound().equals("")) {
+			if (hasFog()) {
+				dlg.lM05Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Fog_Signal.png")));
+				dlg.cbM01Fog.setVisible(true);
+				if (getFogSound() == 0) {
+					dlg.lM01FogGroup.setVisible(false);
+					dlg.tfM01FogGroup.setVisible(false);
+					dlg.lM01FogPeriod.setVisible(false);
+					dlg.tfM01FogPeriod.setVisible(false);
+				} else {
+					dlg.lM01FogGroup.setVisible(true);
+					dlg.tfM01FogGroup.setVisible(true);
+					dlg.lM01FogPeriod.setVisible(true);
+					dlg.tfM01FogPeriod.setVisible(true);
+				}
+			} else {
+				dlg.cbM01Fog.setVisible(false);
 				dlg.lM01FogGroup.setVisible(false);
 				dlg.tfM01FogGroup.setVisible(false);
 				dlg.lM01FogPeriod.setVisible(false);
 				dlg.tfM01FogPeriod.setVisible(false);
+			}
+
+			if (isFired()) {
+				String lp, c;
+				String tmp = null;
+				int i1;
+
+				String col = getLightColour();
+				if (col.equals("W"))
+					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_White_120.png")));
+				else if (col.equals("R"))
+					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_Red_120.png")));
+				else if (col.equals("G"))
+					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_Green_120.png")));
+				else
+					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
+							"/images/Light_Magenta_120.png")));
+
+				dlg.cbM01Kennung.setEnabled(true);
+
+				c = getLightChar();
+				if (dlg.cbM01Kennung.getSelectedIndex() == 0)
+					dlg.tfM01RepeatTime.setEnabled(false);
+				else
+					dlg.tfM01RepeatTime.setEnabled(true);
+
+				if (c.contains("+")) {
+					i1 = c.indexOf("+");
+					tmp = c.substring(i1, c.length());
+					c = c.substring(0, i1);
+				}
+
+				if (getLightGroup() != "")
+					c = c + "(" + getLightGroup() + ")";
+				if (tmp != null)
+					c = c + tmp;
+
+				c = c + " " + getLightColour();
+				lp = getLightPeriod();
+				if (lp != "" && lp != " ")
+					c = c + " " + lp + "s";
+				dlg.lM01FireMark.setText(c);
 			} else {
-				dlg.lM01FogGroup.setVisible(true);
-				dlg.tfM01FogGroup.setVisible(true);
-				dlg.lM01FogPeriod.setVisible(true);
-				dlg.tfM01FogPeriod.setVisible(true);
-			}
-		} else {
-			dlg.cbM01Fog.setVisible(false);
-			dlg.lM01FogGroup.setVisible(false);
-			dlg.tfM01FogGroup.setVisible(false);
-			dlg.lM01FogPeriod.setVisible(false);
-			dlg.tfM01FogPeriod.setVisible(false);
-		}
-
-		if (isFired()) {
-			String lp, c;
-			String tmp = null;
-			int i1;
-
-			String col = getLightColour();
-			if (col.equals("W"))
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_White_120.png")));
-			else if (col.equals("R"))
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Red_120.png")));
-			else if (col.equals("G"))
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Green_120.png")));
-			else
-				dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Magenta_120.png")));
-
-			dlg.cbM01Kennung.setEnabled(true);
-
-			c = getLightChar();
-			if (dlg.cbM01Kennung.getSelectedIndex() == 0)
 				dlg.tfM01RepeatTime.setEnabled(false);
-			else
-				dlg.tfM01RepeatTime.setEnabled(true);
-
-			if (c.contains("+")) {
-				i1 = c.indexOf("+");
-				tmp = c.substring(i1, c.length());
-				c = c.substring(0, i1);
+				dlg.cbM01Kennung.setEnabled(false);
+				dlg.lM01FireMark.setText("");
 			}
-
-			if (getLightGroup() != "")
-				c = c + "(" + getLightGroup() + ")";
-			if (tmp != null)
-				c = c + tmp;
-
-			c = c + " " + getLightColour();
-			lp = getLightPeriod();
-			if (lp != "" && lp != " ")
-				c = c + " " + lp + "s";
-			dlg.lM01FireMark.setText(c);
 		} else {
-			dlg.tfM01RepeatTime.setEnabled(false);
-			dlg.cbM01Kennung.setEnabled(false);
-			dlg.lM01FireMark.setText("");
+			dlg.bM01Save.setEnabled(false);
+			dlg.cM01TopMark.setVisible(false);
+			dlg.cbM01TopMark.setVisible(false);
+			dlg.cM01Radar.setVisible(false);
+			dlg.cM01Racon.setVisible(false);
+			dlg.cbM01Racon.setVisible(false);
+			dlg.tfM01Racon.setVisible(false);
+			dlg.lM01Racon.setVisible(false);
+			dlg.cM01Fog.setVisible(false);
+			dlg.cbM01Fog.setVisible(false);
+			dlg.tfM01FogGroup.setVisible(false);
+			dlg.lM01FogGroup.setVisible(false);
+			dlg.tfM01FogPeriod.setVisible(false);
+			dlg.lM01FogPeriod.setVisible(false);
+			dlg.cM01Fired.setVisible(false);
+			dlg.rbM01Fired1.setVisible(false);
+			dlg.rbM01FiredN.setVisible(false);
+			dlg.cbM01Kennung.setVisible(false);
+			dlg.lM01Kennung.setVisible(false);
+			dlg.tfM01Height.setVisible(false);
+			dlg.lM01Height.setVisible(false);
+			dlg.tfM01Range.setVisible(false);
+			dlg.lM01Range.setVisible(false);
+			dlg.cbM01Colour.setVisible(false);
+			dlg.lM01Colour.setVisible(false);
+			dlg.cbM01Sector.setVisible(false);
+			dlg.lM01Sector.setVisible(false);
+			dlg.tfM01Group.setVisible(false);
+			dlg.lM01Group.setVisible(false);
+			dlg.tfM01RepeatTime.setVisible(false);
+			dlg.lM01RepeatTime.setVisible(false);
+			dlg.tfM01Bearing.setVisible(false);
+			dlg.lM01Bearing.setVisible(false);
+			dlg.tfM02Bearing.setVisible(false);
+			dlg.tfM01Radius.setVisible(false);
 		}
 	}
 
@@ -449,7 +493,6 @@ abstract public class Buoy extends SeaMark {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:group", LightGroup));
 		}
-
 	}
 
 	protected void saveTopMarkData(String shape, String colour) {
@@ -459,8 +502,87 @@ abstract public class Buoy extends SeaMark {
 			Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 					"seamark:topmark:colour", colour));
 		}
-
 	}
+
+	protected void saveRadarFogData() {
+		if (hasRadar()) {
+			Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+					"seamark:radar_reflector", "yes"));
+		}
+		if (hasRacon()) {
+			switch (RaType) {
+			case RATYP_RACON:
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:radar_transponder:category", "racon"));
+				if (!getRaconGroup().equals(""))
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:radar_transponder:group", getRaconGroup()));
+				break;
+			case RATYP_RAMARK:
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:radar_transponder:category", "ramark"));
+				break;
+			case RATYP_LEADING:
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:radar_transponder:category", "leading"));
+				break;
+			default:
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:radar_transponder", "yes"));
+			}
+		}
+		if (hasFog()) {
+			if (FogSound == 0) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:fog_signal", "yes"));
+			} else {
+				switch (FogSound) {
+				case FOG_HORN:
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_signal:category", "horn"));
+					break;
+				case FOG_SIREN:
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_signal:category", "siren"));
+					break;
+				case FOG_DIA:
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_signal:category", "diaphone"));
+					break;
+				case FOG_BELL:
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_signal:category", "bell"));
+					break;
+				case FOG_WHIS:
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_signal:category", "whistle"));
+					break;
+				case FOG_GONG:
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_signal:category", "gong"));
+					break;
+				case FOG_EXPLOS:
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_signal:category", "explosive"));
+					break;
+				}
+			if (!getFogGroup().equals(""))
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:fog_group:group", getFogGroup()));
+			if (!getFogPeriod().equals(""))
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:fog_period:group", getFogPeriod()));
+			}
+		}
+	}
+
+	public final static int FOG_HORN = 1;
+	public final static int FOG_SIREN = 2;
+	public final static int FOG_DIA = 3;
+	public final static int FOG_BELL = 4;
+	public final static int FOG_WHIS = 5;
+	public final static int FOG_GONG = 6;
+	public final static int FOG_EXPLOS = 7;
 
 	public void refreshStyles() {
 	}
@@ -506,7 +628,7 @@ abstract public class Buoy extends SeaMark {
 		dlg.cM01Fog.setSelected(false);
 		dlg.cM01Fog.setVisible(false);
 		dlg.cbM01Fog.setVisible(false);
-		setFogSound("");
+		setFogSound(0);
 		dlg.tfM01FogGroup.setText("");
 		dlg.tfM01FogGroup.setVisible(false);
 		dlg.lM01FogGroup.setVisible(false);

@@ -44,6 +44,10 @@ public class BuoyNota extends Buoy {
 		paintSign();
 	}
 
+	public boolean isValid() {
+		return (getBuoyIndex() > 0);
+	}
+
 	public void paintSign() {
 		if (dlg.paintlock)
 			return;
@@ -105,8 +109,8 @@ public class BuoyNota extends Buoy {
 			break;
 		default:
 		}
-
 		saveLightData("white");
+		saveRadarFogData();
 	}
 
 	public void setLightColour() {

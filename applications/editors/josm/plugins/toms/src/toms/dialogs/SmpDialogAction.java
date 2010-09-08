@@ -836,6 +836,7 @@ public class SmpDialogAction extends JosmAction {
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.206")); //$NON-NLS-1$
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.207")); //$NON-NLS-1$
 							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.208")); //$NON-NLS-1$
+							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.209")); //$NON-NLS-1$
 						}
 						break;
 					}

@@ -85,6 +85,11 @@ public class BuoyNota extends Buoy {
 						"/images/Light_Minor.png")));
 				break;
 
+			case SeaMark.LIGHT_VESSEL:
+				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
+						"/images/Major_Float.png")));
+				break;
+
 			default:
 			}
 		}

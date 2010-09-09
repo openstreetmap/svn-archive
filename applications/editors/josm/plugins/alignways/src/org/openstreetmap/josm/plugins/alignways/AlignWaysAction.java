@@ -15,8 +15,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.visitor.AllNodesVisitor;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -46,8 +44,7 @@ public class AlignWaysAction extends JosmAction {
 		if (getCurrentDataSet() == null)
 			return;
 
-		Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
-		Collection<Node> affectedNodes = AllNodesVisitor.getAllNodes(selection);
+		Collection<Node> affectedNodes = AlignWaysSegmentMgr.getInstance(Main.map.mapView).getSelectedNodes();
 
 		Command c = !Main.main.undoRedo.commands.isEmpty() ? Main.main.undoRedo.commands
 				.getLast()

@@ -85,9 +85,6 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
 					if (awSegs.algnUpdate(clickedPoint)) {
 						currentState.leftClick(this);
-						// Alignee changed, update selected nodes in the map
-						getCurrentDataSet().setSelected(
-								awSegs.getSelectedNodes());
 					}
 
 				} else {

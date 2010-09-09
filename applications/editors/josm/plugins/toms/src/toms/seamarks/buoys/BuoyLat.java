@@ -40,16 +40,7 @@ public class BuoyLat extends Buoy {
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.setEnabled(true);
 
-		dlg.cbM01Kennung.removeAllItems();
-		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Fl"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Fl()"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Oc"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Oc()"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Q"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("IQ"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Mo()"); //$NON-NLS-1$
-		dlg.cbM01Kennung.setSelectedIndex(0);
+		refreshLights();
 
 		if (keys.containsKey("name")) //$NON-NLS-1$
 			setName(keys.get("name")); //$NON-NLS-1$
@@ -355,20 +346,9 @@ public class BuoyLat extends Buoy {
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		if ((getBuoyIndex() > 0) && (getStyleIndex() > 0)) {
+		if (isValid()) {
 			dlg.tfM01Name.setEnabled(true);
 			dlg.tfM01Name.setText(getName());
-			dlg.cM01TopMark.setEnabled(true);
-			dlg.cM01TopMark.setVisible(true);
-			dlg.cM01Radar.setEnabled(true);
-			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setEnabled(true);
-			dlg.cM01Racon.setVisible(true);
-			dlg.cM01Fog.setEnabled(true);
-			dlg.cM01Fog.setVisible(true);
-
-			dlg.cM01Fired.setVisible(true);
-			dlg.cM01Fired.setEnabled(true);
 
 			String image = "/images/Lateral"; //$NON-NLS-1$
 
@@ -377,11 +357,20 @@ public class BuoyLat extends Buoy {
 			int style = getStyleIndex();
 
 			if (style == LAT_PERCH) {
-				dlg.cM01Fired.setSelected(false);
+				dlg.cM01TopMark.setVisible(false);
 				dlg.cM01TopMark.setSelected(false);
-				dlg.cM01Fired.setEnabled(false);
-				dlg.cM01TopMark.setEnabled(false);
+				dlg.cM01Radar.setVisible(false);
+				dlg.cM01Racon.setVisible(false);
+				dlg.cM01Fog.setVisible(false);
+				dlg.cM01Fired.setVisible(false);
+				dlg.cM01Fired.setSelected(false);
 			} else {
+				dlg.cM01TopMark.setEnabled(true);
+				dlg.cM01TopMark.setVisible(true);
+				dlg.cM01Radar.setVisible(true);
+				dlg.cM01Racon.setVisible(true);
+				dlg.cM01Fog.setVisible(true);
+				dlg.cM01Fired.setVisible(true);
 				dlg.cM01Fired.setEnabled(true);
 				dlg.cM01TopMark.setEnabled(true);
 			}

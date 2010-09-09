@@ -36,9 +36,7 @@ public class BuoyIsol extends Buoy {
 		dlg.cbM01StyleOfMark.setVisible(true);
 		dlg.lM01StyleOfMark.setVisible(true);
 
-		dlg.cbM01Kennung.removeAllItems();
-		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Fl(2)"); //$NON-NLS-1$
+		refreshLights();
 
 		setBuoyIndex(ISOLATED_DANGER);
 		setColour(SeaMark.BLACK_RED_BLACK);
@@ -101,6 +99,13 @@ public class BuoyIsol extends Buoy {
 				setLightColour("W"); //$NON-NLS-1$
 			}
 		}
+	}
+	
+	public void refreshLights() {
+		dlg.cbM01Kennung.removeAllItems();
+		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Fl(2)"); //$NON-NLS-1$
+		dlg.cbM01Kennung.setSelectedIndex(0);
 	}
 	
 	public boolean isValid() {

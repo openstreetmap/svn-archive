@@ -38,15 +38,7 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.setVisible(true);
 		dlg.lM01StyleOfMark.setVisible(true);
 
-		dlg.cbM01Kennung.removeAllItems();
-		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Fl"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Fl()"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Oc"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Oc()"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Q"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("IQ"); //$NON-NLS-1$
-		dlg.cbM01Kennung.setSelectedIndex(0);
+		refreshLights();
 
 		dlg.cM01TopMark.setEnabled(true);
 
@@ -147,14 +139,11 @@ public class BuoySpec extends Buoy {
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		if ((getBuoyIndex() > 0) && (getStyleIndex() > 0)) {
+		if (isValid()) {
 			dlg.tfM01Name.setEnabled(true);
 			dlg.tfM01Name.setText(getName());
-			dlg.cM01Radar.setEnabled(true);
 			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setEnabled(true);
 			dlg.cM01Racon.setVisible(true);
-
 			dlg.cM01TopMark.setEnabled(true);
 			dlg.cM01TopMark.setVisible(true);
 			if (hasTopMark()) {
@@ -163,10 +152,7 @@ public class BuoySpec extends Buoy {
 			} else {
 				dlg.cbM01TopMark.setVisible(false);
 			}
-
-			dlg.cM01Fog.setEnabled(true);
 			dlg.cM01Fog.setVisible(true);
-
 			dlg.cM01Fired.setVisible(true);
 			dlg.cM01Fired.setEnabled(true);
 

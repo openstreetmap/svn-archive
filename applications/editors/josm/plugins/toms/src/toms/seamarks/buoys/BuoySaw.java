@@ -36,13 +36,8 @@ public class BuoySaw extends Buoy {
 		dlg.cbM01StyleOfMark.setVisible(true);
 		dlg.lM01StyleOfMark.setVisible(true);
 
-		dlg.cbM01Kennung.removeAllItems();
-		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Iso"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Oc"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("LFl"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Mo()"); //$NON-NLS-1$
-
+		refreshLights();
+		
 		setBuoyIndex(SAFE_WATER);
 		setColour(SeaMark.RED_WHITE);
 		setLightColour("W"); //$NON-NLS-1$
@@ -102,6 +97,16 @@ public class BuoySaw extends Buoy {
 		}
 	}
 
+	public void refreshLights() {
+		dlg.cbM01Kennung.removeAllItems();
+		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Iso"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Oc"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("LFl"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Mo()"); //$NON-NLS-1$
+		dlg.cbM01Kennung.setSelectedIndex(0);
+	}
+	
 	public boolean isValid() {
 		return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
 	}
@@ -113,20 +118,14 @@ public class BuoySaw extends Buoy {
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		if ((getBuoyIndex() > 0) && (getStyleIndex() > 0)) {
+		if (isValid()) {
 			dlg.tfM01Name.setEnabled(true);
 			dlg.tfM01Name.setText(getName());
 			dlg.cM01TopMark.setEnabled(true);
 			dlg.cM01TopMark.setVisible(true);
-			dlg.cM01Radar.setEnabled(true);
 			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setEnabled(true);
 			dlg.cM01Racon.setVisible(true);
-			dlg.cM01Fired.setEnabled(true);
-
-			dlg.cM01Fog.setEnabled(true);
 			dlg.cM01Fog.setVisible(true);
-
 			dlg.cM01Fired.setVisible(true);
 			dlg.cM01Fired.setEnabled(true);
 

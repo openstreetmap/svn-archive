@@ -198,17 +198,14 @@ public class BuoyCard extends Buoy {
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		if ((getBuoyIndex() > 0) && (getStyleIndex() > 0)) {
+		if (isValid()) {
 			dlg.tfM01Name.setEnabled(true);
 			dlg.tfM01Name.setText(getName());
 			dlg.cM01TopMark.setSelected(true);
 			dlg.cM01TopMark.setVisible(true);
 			dlg.cM01TopMark.setEnabled(false);
-			dlg.cM01Radar.setEnabled(true);
 			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setEnabled(true);
 			dlg.cM01Racon.setVisible(true);
-			dlg.cM01Fog.setEnabled(true);
 			dlg.cM01Fog.setVisible(true);
 			dlg.cM01Fired.setEnabled(true);
 			dlg.cM01Fired.setVisible(true);

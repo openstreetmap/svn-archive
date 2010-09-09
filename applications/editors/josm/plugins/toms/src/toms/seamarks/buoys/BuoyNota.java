@@ -30,14 +30,7 @@ public class BuoyNota extends Buoy {
 		dlg.cbM01CatOfMark.setVisible(true);
 		dlg.lM01CatOfMark.setVisible(true);
 
-		dlg.cbM01Kennung.removeAllItems();
-		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Fl"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Fl()"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Oc()"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Q"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("IQ"); //$NON-NLS-1$
-		dlg.cbM01Kennung.setSelectedIndex(0);
+		refreshLights();
 
 		setLightColour();
 
@@ -56,19 +49,44 @@ public class BuoyNota extends Buoy {
 
 		dlg.sM01StatusBar.setText(getErrMsg());
 
-		if (getBuoyIndex() > 0) {
-			dlg.cM01Radar.setEnabled(true);
+		if (isValid()) {
 			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setEnabled(true);
 			dlg.cM01Racon.setVisible(true);
-
-			dlg.cM01Fog.setEnabled(true);
 			dlg.cM01Fog.setVisible(true);
 
 			setFired(true);
 			dlg.cM01Fired.setVisible(true);
 			dlg.cM01Fired.setEnabled(false);
 			dlg.cM01Fired.setSelected(true);
+			dlg.rbM01Fired1.setVisible(true);
+			dlg.rbM01FiredN.setVisible(true);
+			dlg.lM01Kennung.setVisible(true);
+			dlg.cbM01Kennung.setVisible(true);
+			dlg.lM01Height.setVisible(true);
+			dlg.tfM01Height.setVisible(true);
+			dlg.lM01Range.setVisible(true);
+			dlg.tfM01Range.setVisible(true);
+			dlg.lM01Group.setVisible(true);
+			dlg.tfM01Group.setVisible(true);
+			dlg.lM01RepeatTime.setVisible(true);
+			dlg.tfM01RepeatTime.setVisible(true);
+			dlg.lM01Colour.setVisible(true);
+			dlg.cbM01Colour.setVisible(true);
+			if (isSectored()) {
+				dlg.lM01Sector.setVisible(true);
+				dlg.cbM01Sector.setVisible(true);
+				dlg.lM01Bearing.setVisible(true);
+				dlg.tfM01Bearing.setVisible(true);
+				dlg.tfM02Bearing.setVisible(true);
+				dlg.tfM01Radius.setVisible(true);
+			} else {
+				dlg.lM01Sector.setVisible(false);
+				dlg.cbM01Sector.setVisible(false);
+				dlg.lM01Bearing.setVisible(false);
+				dlg.tfM01Bearing.setVisible(false);
+				dlg.tfM02Bearing.setVisible(false);
+				dlg.tfM01Radius.setVisible(false);
+			}
 
 			switch (getBuoyIndex()) {
 			case SeaMark.LIGHT_HOUSE:

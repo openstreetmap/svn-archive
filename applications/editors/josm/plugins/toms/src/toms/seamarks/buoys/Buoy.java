@@ -15,6 +15,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
 
+import toms.Messages;
 import toms.dialogs.SmpDialogAction;
 import toms.seamarks.SeaMark;
 
@@ -144,6 +145,16 @@ abstract public class Buoy extends SeaMark {
 
 	public void setFired(boolean fired) {
 		Fired = fired;
+	}
+
+	private boolean Sectored = false;
+
+	public boolean isSectored() {
+		return Sectored;
+	}
+
+	public void setSectored(boolean sectored) {
+		Sectored = sectored;
 	}
 
 	private String LightChar = "";
@@ -386,10 +397,13 @@ abstract public class Buoy extends SeaMark {
 				dlg.cbM01Kennung.setEnabled(true);
 
 				c = getLightChar();
-				if (dlg.cbM01Kennung.getSelectedIndex() == 0)
+				if (dlg.cbM01Kennung.getSelectedIndex() == 0) {
+					dlg.tfM01Group.setEnabled(false);
 					dlg.tfM01RepeatTime.setEnabled(false);
-				else
+				} else {
+					dlg.tfM01Group.setEnabled(true);
 					dlg.tfM01RepeatTime.setEnabled(true);
+				}
 
 				if (c.contains("+")) {
 					i1 = c.indexOf("+");
@@ -397,14 +411,14 @@ abstract public class Buoy extends SeaMark {
 					c = c.substring(0, i1);
 				}
 
-				if (getLightGroup() != "")
+				if (!getLightGroup().equals(""))
 					c = c + "(" + getLightGroup() + ")";
 				if (tmp != null)
 					c = c + tmp;
 
 				c = c + " " + getLightColour();
 				lp = getLightPeriod();
-				if (lp != "" && lp != " ")
+				if (!lp.equals(""))
 					c = c + " " + lp + "s";
 				dlg.lM01FireMark.setText(c);
 			} else {
@@ -588,6 +602,22 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void refreshLights() {
+		dlg.cbM01Kennung.removeAllItems();
+		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Fl"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("LFl"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Iso"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("F"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("FFl"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Oc"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Q"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("IQ"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("VQ"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("IVQ"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("UQ"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("IUQ"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Mo"); //$NON-NLS-1$
+		dlg.cbM01Kennung.setSelectedIndex(0);
 	}
 
 	public void resetMask() {
@@ -600,6 +630,7 @@ abstract public class Buoy extends SeaMark {
 
 		dlg.rbM01RegionA.setEnabled(false);
 		dlg.rbM01RegionB.setEnabled(false);
+		dlg.lM01FireMark.setText("");
 		dlg.cbM01CatOfMark.removeAllItems();
 		dlg.cbM01CatOfMark.setVisible(false);
 		dlg.lM01CatOfMark.setVisible(false);
@@ -641,6 +672,7 @@ abstract public class Buoy extends SeaMark {
 		setFired(false);
 		dlg.rbM01Fired1.setVisible(false);
 		dlg.rbM01FiredN.setVisible(false);
+		setSectored(false);
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.setVisible(false);
 		dlg.lM01Kennung.setVisible(false);

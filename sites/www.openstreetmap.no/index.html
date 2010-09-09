@@ -20,6 +20,28 @@ var zoom=4
 var epsg4326 = new OpenLayers.Projection("EPSG:4326");
 OpenLayers.Lang.setCode("nb");
 
+// Use cookies to remember last map view
+var cookiename = "mapView";  // Name for this cookie
+var expiredays = 7;          // Number of days before cookie expiry
+// Look for the cookie
+if (document.cookie.length>0) {
+  cookieStart = document.cookie.indexOf(cookiename + "=");
+  if (cookieStart!=-1) {
+    cookieStart += cookiename.length+1;
+    cookieEnd=document.cookie.indexOf(";",cookieStart);
+    if (cookieEnd==-1) {
+      cookieEnd=document.cookie.length;
+    }
+    cookietext = document.cookie.substring(cookieStart,cookieEnd);
+    // Split the cookie text and create the variables
+    bits = cookietext.split("|");
+    lat = parseFloat(bits[0]);
+    lon = parseFloat(bits[1]);
+    zoom = parseInt(bits[2]);
+    layers = bits[3];
+  }
+}
+
 var map;
 //Initialise the 'map' object
 function init() {
@@ -97,9 +119,54 @@ function init() {
   if( ! map.getCenter() ){
     map.setCenter(lonLat, zoom);
   }
+  if (layers) {
+    setActiveLayers(layers);
+  }
   updatelinks();
   map.events.register("moveend", map, updatelinks);
   map.events.register("changelayer", map, updatelinks);
+}
+
+// Returns a string representation of layers in map
+function getActiveLayers() {
+  var layers = '';
+  for (var i=0; i< map.layers.length; i++) {
+    var layer = map.layers[i];
+    if (layer.isBaseLayer) {
+      layers += (layer == map.baseLayer) ? "B" : "0";
+    } else {
+      layers += (layer.getVisibility()) ? "T" : "F";
+    }
+  }
+  return layers;
+}
+
+// Reads a string like the one getActiveLayers makes and
+// sets the active layers correspondingly
+function setActiveLayers(layers) {
+  for(var i=0; i < layers.length; i++) {
+    var layer = map.layers[i];
+    var c = layers.charAt(i);
+    if (c == "B") {
+        map.setBaseLayer(layer);
+    } else if ( (c == "T") || (c == "F") ) {
+        layer.setVisibility(c == "T");
+    }
+  }
+}
+
+// Set the cookie before exiting
+function setCookie() {
+  var lonlat = map.getCenter().clone()
+    .transform(map.getProjectionObject(), epsg4326);
+  var cookietext = cookiename+"="+lonlat.lat+"|"+lonlat.lon+"|"+
+    map.getZoom()+"|"+getActiveLayers();
+  if (expiredays) {
+    var exdate=new Date();
+    exdate.setDate(exdate.getDate()+expiredays);
+    cookietext += ";expires="+exdate.toGMTString();
+  }
+  document.cookie=cookietext;
 }
 
 /*
@@ -260,6 +327,7 @@ function searchCallback(result) {
 }
 
 window.onload = init;
+window.onunload = setCookie;
 </script>
 
 <link rel="stylesheet" type="text/css" href="openlayers/theme/default/style.css"/>

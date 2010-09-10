@@ -31,11 +31,10 @@ public class BuoyNota extends Buoy {
 		dlg.lM01CatOfMark.setVisible(true);
 
 		refreshLights();
-
 		setLightColour();
 
 		setTopMark(false);
-		paintSign();
+		setFired(true);
 	}
 
 	public boolean isValid() {
@@ -54,7 +53,6 @@ public class BuoyNota extends Buoy {
 			dlg.cM01Racon.setVisible(true);
 			dlg.cM01Fog.setVisible(true);
 
-			setFired(true);
 			dlg.cM01Fired.setVisible(true);
 			dlg.cM01Fired.setEnabled(false);
 			dlg.cM01Fired.setSelected(true);

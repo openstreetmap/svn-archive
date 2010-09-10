@@ -68,16 +68,28 @@ public class WaySelection {
      @param selection current selection (ways and others)
      @param node perimeter node from which to extend the selection
      @return a way by which to extend the selection, or null */
-    private Way findWay(Collection<OsmPrimitive> selection, Node node) {
-        TreeSet<Way> foundWays = new TreeSet<Way>();
+    private static Way findWay(Collection<OsmPrimitive> selection, Node node) {
+        Way foundWay = null;
 
         for (Way way : OsmPrimitive.getFilteredList(node.getReferrers(),
-                                                    Way.class))
-            if (way.getNodesCount() >= 2 && !selection.contains(way) &&
-                way.isFirstLastNode(node))
-                foundWays.add(way);
+                                                    Way.class)) {
+            if (way.getNodesCount() < 2 || !way.isFirstLastNode(node)
+                || selection.contains(way))
+                continue;
 
-        return foundWays.size() == 1 ? foundWays.first() : null;
+            /* A previously unselected way was found that is connected
+            to the node. */
+            if (foundWay != null)
+                /* This is not the only qualifying way. There is a
+                branch at the node, and we cannot extend the selection. */
+                return null;
+
+            /* Remember the first found qualifying way. */
+            foundWay = way;
+        }
+
+        /* Return the only way found, or null if none was found. */
+        return foundWay;
     }
 
     /**

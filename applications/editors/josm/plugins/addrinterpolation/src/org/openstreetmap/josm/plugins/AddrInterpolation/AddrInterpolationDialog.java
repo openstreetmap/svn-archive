@@ -282,8 +282,9 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			@Override
 			public void focusGained(FocusEvent fe){
 				if (!interpolationMethodSet) {
-					AutoDetectInterpolationMethod();
-					interpolationMethodSet = true;  // Don't auto detect over a previous choice
+					if (AutoDetectInterpolationMethod()) {
+						interpolationMethodSet = true;  // Don't auto detect over a previous choice
+					}
 				}
 			}
 		});
@@ -342,13 +343,14 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
 	// Call after both starting and ending housenumbers have been entered - usually when
 	// combo box gets focus.
-	private void AutoDetectInterpolationMethod() {
+	// Return true if a method was detected
+	private boolean AutoDetectInterpolationMethod() {
 
 		String startValueString = ReadTextField(startTextField);
 		String endValueString = ReadTextField(endTextField);
-		if (startValueString.equals("") || endValueString.equals("")) {
+		if ( (startValueString == null) || (endValueString== null) ) {
 			// Not all values entered yet
-			return;
+			return false;
 		}
 
 		// String[] addrInterpolationTags = { "odd", "even", "all", "alphabetic", ### };  // Tag values for map
@@ -383,7 +385,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 			if ( (!IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
 				// Both end with alpha
 				SelectInterpolationMethod("alphabetic");
-				return;
+				return true;
 			}
 
 			if ( (IsNumeric("" + startingChar)) &&  (!IsNumeric("" + endingChar)) ) {
@@ -391,12 +393,16 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 				if ( (endingChar >= 'A') && (endingChar <= 'Z') ) {
 					// First is a number, last is Latin alpha
 					SelectInterpolationMethod("alphabetic");
+					return true;
 				}
 			}
-
+			
+			// Did not detect alpha
+			return false;
 
 		}
-
+		
+		return true;
 
 	}
 

@@ -17,11 +17,11 @@ while(my $line = <>)
   chomp($line);
   if($line =~ /<rules\s+name=(".*?")/)
   {
-    print "tr($1); /* mappaint style named $1 */\n";
+    print "/* mappaint style named $1 */ tr($1);\n";
   }
   elsif($line =~ /colour="([^"]+)#/)
   {
-    print "tr(\"$1\"); /* color $1 */\n";
+    print "/* color $1 */ tr(\"$1\");\n";
   }
   else
   {

@@ -20,7 +20,7 @@ while(my $line = <>)
   chomp($line);
   if($line =~ /^#(.*)$/)
   {
-    print "//$1\n";
+    print "/* $1 */\n";
   }
   elsif($line =~ /^$/)
   {
@@ -28,7 +28,7 @@ while(my $line = <>)
   }
   elsif($line =~ /<button label=\"(.*?)\"/)
   {
-    print "tr(\"$1\"); // $line\n";
+    print "/* $line*/ tr(\"$1\");\n";
   }
   else
   {

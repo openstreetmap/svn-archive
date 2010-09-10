@@ -26,11 +26,11 @@ while(my $line = <>)
     $item =~ s/""/\//;
     if($line =~ /name_context=(".*?")/)
     {
-      print "trc($1, $val); /* item $item */\n";
+      print "/* item $item */ trc($1, $val);\n";
     }
     else
     {
-      print "tr($val); /* item $item */\n";
+      print "/* item $item */ tr($val);\n";
     }
   }
   elsif($line =~ /<group.*\s+name=(".*?")/)
@@ -40,11 +40,11 @@ while(my $line = <>)
     $group =~ s/\"\"/\//;
     if($line =~ /name_context=(".*?")/)
     {
-      print "trc($1,$gr); /* group $group */\n";
+      print "/* group $group */ trc($1,$gr);\n";
     }
     else
     {
-      print "tr($gr); /* group $group */\n";
+      print "/* group $group */ tr($gr);\n";
     }
   }
   elsif($line =~ /<label.*\s+text=" "/)
@@ -56,11 +56,11 @@ while(my $line = <>)
     my $text = $1;
     if($line =~ /text_context=(".*?")/)
     {
-      print "trc($1,$text); /* item $item label $text */\n";
+      print "/* item $item label $text */ trc($1,$text);\n";
     }
     else
     {
-      print "tr($text); /* item $item label $text */\n";
+      print "/* item $item label $text */ tr($text);\n";
     }
   }
   elsif($line =~ /<text.*\s+text=(".*?")/)
@@ -68,11 +68,11 @@ while(my $line = <>)
     my $n = $1;
     if($line =~ /text_context=(".*?")/)
     {
-      print "trc($1,$n); /* item $item text $n */\n";
+      print "/* item $item text $n */ trc($1,$n);\n";
     }
     else
     {
-      print "tr($n); /* item $item text $n */\n";
+      print "/* item $item text $n */ tr($n);\n";
     }
   }
   elsif($line =~ /<check.*\s+text=(".*?")/)
@@ -80,11 +80,11 @@ while(my $line = <>)
     my $n = $1;
     if($line =~ /text_context=(".*?")/)
     {
-      print "trc($1,$n); /* item $item check $n */\n";
+      print "/* item $item check $n */ trc($1,$n);\n";
     }
     else
     {
-      print "tr($n); /* item $item check $n */\n";
+      print "/* item $item check $n */ tr($n);\n";
     }
   }
   elsif($line =~ /<role.*\s+text=(".*?")/)
@@ -92,11 +92,11 @@ while(my $line = <>)
     my $n = $1;
     if($line =~ /text_context=(".*?")/)
     {
-      print "trc($1,$n); /* item $item role $n */\n";
+      print "/* item $item role $n */ trc($1,$n);\n";
     }
     else
     {
-      print "tr($n); /* item $item role $n */\n";
+      print "/* item $item role $n */ tr($n);\n";
     }
   }
   # first handle display values
@@ -106,11 +106,11 @@ while(my $line = <>)
     my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
     if($line =~ /text_context=(".*?")/)
     {
-      print "trc($1,$n); /* item $item combo $n */";
+      print "/* item $item combo $n */ trc($1,$n);";
     }
     else
     {
-      print "tr($n); /* item $item combo $n */";
+      print "/* item $item combo $n */ tr($n);";
     }
     foreach my $val (split ",",$vals)
     {
@@ -125,11 +125,11 @@ while(my $line = <>)
     my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
     if($line =~ /text_context=(".*?")/)
     {
-      print "trc($1,$n); /* item $item combo $n */";
+      print "/* item $item combo $n */ trc($1,$n);";
     }
     else
     {
-      print "tr($n); /* item $item combo $n */";
+      print "/* item $item combo $n */ tr($n);";
     }
     foreach my $val (split ",",$vals)
     {

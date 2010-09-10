@@ -20,7 +20,7 @@ while(my $line = <>)
   chomp($line);
   if($line =~ /^#(.*)$/)
   {
-    print "//$1\n";
+    print "/* $1 */\n";
   }
   elsif($line =~ /^$/)
   {
@@ -28,7 +28,7 @@ while(my $line = <>)
   }
   elsif($line =~ /^(.*?);(.*?);(.*)$/)
   {
-    print "tr(\"$2\"); // $3\n";
+    print "/* $3 */ tr(\"$2\");\n";
   }
   else
   {

@@ -24,7 +24,7 @@ public class BuoyLat extends Buoy {
 		setNode(node);
 
 		resetMask();
-
+		
 		dlg.rbM01RegionA.setEnabled(true);
 		dlg.rbM01RegionB.setEnabled(true);
 		dlg.cbM01CatOfMark.setEnabled(true);

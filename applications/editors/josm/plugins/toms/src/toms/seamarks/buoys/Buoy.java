@@ -5,6 +5,7 @@ package toms.seamarks.buoys;
 
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -157,71 +158,78 @@ abstract public class Buoy extends SeaMark {
 		Sectored = sectored;
 	}
 
-	private String LightChar = "";
+	private int SectorIndex = 0;
+
+	public int getSectorIndex() {
+		return SectorIndex;
+	}
+
+	public void setSectorIndex(int sector) {
+		SectorIndex = sector;
+	}
+
+	private String[] LightChar = new String[10];
 
 	public String getLightChar() {
-		return LightChar;
+		return LightChar[getSectorIndex()];
 	}
 
 	public void setLightChar(String lightChar) {
-		LightChar = lightChar;
+		LightChar[getSectorIndex()] = lightChar;
 	}
 
-	private String LightColour = "";
+	private String[] LightColour = new String[10];
 
 	public String getLightColour() {
-		return LightColour;
+		return LightColour[getSectorIndex()];
 	}
 
 	public void setLightColour(String lightColour) {
-		LightColour = lightColour;
+		LightColour[getSectorIndex()] = lightColour;
 	}
 
-	private String LightGroup = "";
+	private String[] LightGroup = new String[10];
 
 	public String getLightGroup() {
-		return LightGroup;
+		return LightGroup[getSectorIndex()];
 	}
 
 	public void setLightGroup(String lightGroup) {
-		LightGroup = lightGroup;
+		LightGroup[getSectorIndex()] = lightGroup;
 	}
 
 	protected void setLightGroup(Map<String, String> k) {
 		String s = "";
-
 		if (k.containsKey("seamark:light:group")) {
 			s = k.get("seamark:light:group");
-
-			LightGroup = s;
+			setLightGroup(s);
 		}
-
 	}
 
-	private String Height = "";
+	private String[] Height = new String[10];
 
 	public String getHeight() {
-		return Height;
+		return Height[getSectorIndex()];
 	}
 
 	public void setHeight(String height) {
-		Height = height;
+		Height[getSectorIndex()] = height;
 	}
 
-	private String Range = "";
+	private String[] Range = new String[10];
 
 	public String getRange() {
-		return Range;
+		return Range[getSectorIndex()];
 	}
 
 	public void setRange(String range) {
-		Range = range;
+		Range[getSectorIndex()] = range;
 	}
 
-	private String LightPeriod = "";
+	private String[] LightPeriod = new String[10];
 
 	public String getLightPeriod() {
-		return LightPeriod;
+		return LightPeriod[getSectorIndex()];
 	}
 
 	public void setLightPeriod(String lightPeriod) {
@@ -234,36 +242,35 @@ abstract public class Buoy extends SeaMark {
 		Matcher matcher = pat.matcher(lightPeriod);
 
 		if (matcher.find()) {
-			LightPeriod = lightPeriod;
-
+			LightPeriod[getSectorIndex()] = lightPeriod;
 			setErrMsg(null);
 		} else {
 			setErrMsg("Must be a number");
 			dlg.tfM01RepeatTime.requestFocus();
 		}
-
 	}
 
 	protected void setLightPeriod(Map<String, String> k) {
-		String s;
-
-		s = "";
-
-		if (k.containsKey("seamark:light:signal:period")) {
-			s = k.get("seamark:light:signal:period");
-			LightPeriod = s;
-
-			return;
-		}
-
+		String s = "";
 		if (k.containsKey("seamark:light:period")) {
 			s = k.get("seamark:light:period");
-			LightPeriod = s;
-
+			setSectorIndex(0);
+			setLightPeriod(s);
 			return;
 		}
 	}
 
+	public void parseLights(Map<String, String> k) {
+    Iterator it = k.entrySet().iterator();
+    while (it.hasNext()) {
+        String key = (String)((Map.Entry)it.next()).getKey();
+        if (key.contains("seamark:light:")) {
+          String value = ((String)((Map.Entry)it.next()).getValue()).trim();
+        	
+        }
+    }
+}
+	
 	private Node Node = null;
 
 	public Node getNode() {
@@ -325,7 +332,7 @@ abstract public class Buoy extends SeaMark {
 			dlg.cM01TopMark.setSelected(hasTopMark());
 			dlg.cM01Fired.setSelected(isFired());
 
-			dlg.tfM01RepeatTime.setText(LightPeriod);
+			dlg.tfM01RepeatTime.setText(getLightPeriod());
 
 			dlg.tfM01Name.setText(getName());
 
@@ -495,17 +502,18 @@ abstract public class Buoy extends SeaMark {
 						"seamark:light:colour", "white"));
 				setLightColour("W");
 			}
-			if (LightPeriod != "" && LightPeriod != " " && LightChar != "Q")
+			if (getLightPeriod() != "" && getLightPeriod() != " "
+					&& getLightChar() != "Q")
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-						"seamark:light:period", LightPeriod));
+						"seamark:light:period", getLightPeriod()));
 
-			if (LightChar != "")
+			if (getLightChar() != "")
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-						"seamark:light:character", LightChar));
+						"seamark:light:character", getLightChar()));
 
-			if (LightGroup != "")
+			if (getLightGroup() != "")
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-						"seamark:light:group", LightGroup));
+						"seamark:light:group", getLightGroup()));
 		}
 	}
 
@@ -580,23 +588,15 @@ abstract public class Buoy extends SeaMark {
 							"seamark:fog_signal:category", "explosive"));
 					break;
 				}
-			if (!getFogGroup().equals(""))
-				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-						"seamark:fog_group:group", getFogGroup()));
-			if (!getFogPeriod().equals(""))
-				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-						"seamark:fog_period:group", getFogPeriod()));
+				if (!getFogGroup().equals(""))
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_group:group", getFogGroup()));
+				if (!getFogPeriod().equals(""))
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:fog_period:group", getFogPeriod()));
 			}
 		}
 	}
-
-	public final static int FOG_HORN = 1;
-	public final static int FOG_SIREN = 2;
-	public final static int FOG_DIA = 3;
-	public final static int FOG_BELL = 4;
-	public final static int FOG_WHIS = 5;
-	public final static int FOG_GONG = 6;
-	public final static int FOG_EXPLOS = 7;
 
 	public void refreshStyles() {
 	}
@@ -673,25 +673,32 @@ abstract public class Buoy extends SeaMark {
 		dlg.rbM01Fired1.setVisible(false);
 		dlg.rbM01FiredN.setVisible(false);
 		setSectored(false);
+		setSectorIndex(0);
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.setVisible(false);
 		dlg.lM01Kennung.setVisible(false);
+		setLightChar("");
 		dlg.tfM01Height.setText("");
 		dlg.tfM01Height.setVisible(false);
 		dlg.lM01Height.setVisible(false);
+		setHeight("");
 		dlg.tfM01Range.setText("");
 		dlg.tfM01Range.setVisible(false);
 		dlg.lM01Range.setVisible(false);
+		setRange("");
 		dlg.cbM01Colour.setVisible(false);
 		dlg.lM01Colour.setVisible(false);
+		setLightColour("");
 		dlg.cbM01Sector.setVisible(false);
 		dlg.lM01Sector.setVisible(false);
 		dlg.tfM01Group.setText("");
 		dlg.tfM01Group.setVisible(false);
 		dlg.lM01Group.setVisible(false);
+		setLightGroup("");
 		dlg.tfM01RepeatTime.setText("");
 		dlg.tfM01RepeatTime.setVisible(false);
 		dlg.lM01RepeatTime.setVisible(false);
+		setLightPeriod("");
 		dlg.tfM01Bearing.setText("");
 		dlg.tfM01Bearing.setVisible(false);
 		dlg.lM01Bearing.setVisible(false);

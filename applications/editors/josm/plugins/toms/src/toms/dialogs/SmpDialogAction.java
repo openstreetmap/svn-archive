@@ -662,6 +662,7 @@ public class SmpDialogAction extends JosmAction {
 			ActionListener alM01Fired = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					buoy.setSectored(rbM01FiredN.isSelected());
+					if (rbM01Fired1.isSelected()) buoy.setSectorIndex(0);
 					buoy.paintSign();
 				}
 			};
@@ -1184,7 +1185,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Height.setBounds(new Rectangle(54, 270, 30, 20));
 			tfM01Height.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-					buoy.setName(tfM01Height.getText().trim());
+					buoy.setHeight(tfM01Height.getText().trim());
 				}
 			});
 		}
@@ -1197,7 +1198,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Range.setBounds(new Rectangle(151, 270, 30, 20));
 			tfM01Range.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-					buoy.setName(tfM01Range.getText().trim());
+					buoy.setRange(tfM01Range.getText().trim());
 				}
 			});
 		}
@@ -1275,7 +1276,8 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Sector.addItem(Messages.getString("SmpDialogAction.203")); //$NON-NLS-1$
 			cbM01Sector.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int sec = cbM01Sector.getSelectedIndex();
+					buoy.setSectorIndex(cbM01Sector.getSelectedIndex());
+					buoy.paintSign();
 				}
 			});
 		}
@@ -1288,7 +1290,6 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Bearing.setBounds(new Rectangle(255, 295, 30, 20));
 			tfM01Bearing.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-//					buoy.setName(tfM01Bearing.getText());
 				}
 			});
 		}
@@ -1301,7 +1302,6 @@ public class SmpDialogAction extends JosmAction {
 			tfM02Bearing.setBounds(new Rectangle(300, 295, 30, 20));
 			tfM02Bearing.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-//					buoy.setName(tfM02Bearing.getText());
 				}
 			});
 		}
@@ -1314,7 +1314,6 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Radius.setBounds(new Rectangle(355, 295, 30, 20));
 			tfM01Radius.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
-//					buoy.setName(tfM01Radius.getText());
 				}
 			});
 		}

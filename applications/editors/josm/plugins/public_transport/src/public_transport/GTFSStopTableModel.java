@@ -25,11 +25,22 @@ public class GTFSStopTableModel extends DefaultTableModel
   private int nameCol = -1;
   private int latCol = -1;
   private int lonCol = -1;
+  private char separator = ',';
   
   public GTFSStopTableModel(GTFSImporterAction controller,
 			    String columnConfig)
   {
-    int pos = columnConfig.indexOf(',');
+    int pos = columnConfig.indexOf(separator);
+    if (pos == -1)
+    {
+      separator = ';';
+      pos = columnConfig.indexOf(separator);
+    }
+    if (pos == -1)
+    {
+      separator = '\t';
+      pos = columnConfig.indexOf(separator);
+    }
     int oldPos = 0;
     int i = 0;
     while (pos > -1)
@@ -45,7 +56,7 @@ public class GTFSStopTableModel extends DefaultTableModel
 	lonCol = i;
       ++i;
       oldPos = pos + 1;
-      pos = columnConfig.indexOf(',', oldPos);
+      pos = columnConfig.indexOf(separator, oldPos);
     }
     String title = columnConfig.substring(oldPos);
     if ("stop_id".equals(title))
@@ -88,37 +99,76 @@ public class GTFSStopTableModel extends DefaultTableModel
   {
     insertRow(-1, s, existingStops);
   }
+
+  /* tokenizes a line as follows:
+     any comma outside a pair of double quotation marks is taken as field separator.
+     In particular, neither \" nor \, have a special meaning.
+     Returns the position of the next field separator, if any. Otherwise it returns -1.
+     s - the string to tokenize.
+     startPos - the position of the last field separator plus 1 or the value 0. */
+  private int tokenize(String s, int startPos)
+  {
+    int pos = startPos;
+    boolean insideDoubleQuoted = false;
+    while (pos < s.length())
+    {
+      if ('"' == s.charAt(pos))
+        insideDoubleQuoted = !insideDoubleQuoted;
+      else if ((separator == s.charAt(pos)) && (!insideDoubleQuoted))
+        break;
+      ++pos;
+    }
+    if (pos < s.length())
+      return pos;
+    else
+      return -1;
+  }
+
+  private String stripQuot(String s)
+  {
+    int pos = s.indexOf('"');
+    while (pos > -1)
+    {
+      s = s.substring(0, pos) + s.substring(pos + 1);
+      pos = s.indexOf('"');
+    }
+    return s;
+  }
   
   public void insertRow(int insPos, String s, Vector< Node > existingStops)
   {
+    System.out.println("insertRow(" + insPos + ", [" + s + "], ..)");
+
     String[] buf = { "", "", "pending" };
-    int pos = s.indexOf(',');
+    int pos = tokenize(s, 0);
     int oldPos = 0;
     int i = 0;
     double lat = 0;
     double lon = 0;
     while (pos > -1)
     {
+      System.out.println("[" + stripQuot(s.substring(oldPos, pos)) + "]");
+
       if (i == idCol)
-	buf[0] = s.substring(oldPos, pos);
+	buf[0] = stripQuot(s.substring(oldPos, pos));
       else if (i == nameCol)
-	buf[1] = s.substring(oldPos, pos);
+	buf[1] = stripQuot(s.substring(oldPos, pos));
       else if (i == latCol)
-	lat = Double.parseDouble(s.substring(oldPos, pos));
+	lat = Double.parseDouble(stripQuot(s.substring(oldPos, pos)));
       else if (i == lonCol)
-	lon = Double.parseDouble(s.substring(oldPos, pos));
+	lon = Double.parseDouble(stripQuot(s.substring(oldPos, pos)));
       ++i;
       oldPos = pos + 1;
-      pos = s.indexOf(',', oldPos);
+      pos = tokenize(s, oldPos);
     }
     if (i == idCol)
-      buf[0] = s.substring(oldPos);
+      buf[0] = stripQuot(s.substring(oldPos));
     else if (i == nameCol)
-      buf[1] = s.substring(oldPos);
+      buf[1] = stripQuot(s.substring(oldPos));
     else if (i == latCol)
-      lat = Double.parseDouble(s.substring(oldPos));
+      lat = Double.parseDouble(stripQuot(s.substring(oldPos)));
     else if (i == lonCol)
-      lon = Double.parseDouble(s.substring(oldPos));
+      lon = Double.parseDouble(stripQuot(s.substring(oldPos)));
     
     LatLon coor = new LatLon(lat, lon);
     

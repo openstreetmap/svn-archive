@@ -218,6 +218,8 @@ public class GTFSImporterAction extends JosmAction
      "No data found", JOptionPane.ERROR_MESSAGE);
       
         System.out.println("Public Transport: StopInserter: No data found");
+
+        return;
       }
       else
       {
@@ -240,7 +242,9 @@ public class GTFSImporterAction extends JosmAction
 	(null, "The GTFS file was empty.", "No data found",
 	 JOptionPane.ERROR_MESSAGE);
 	 
-	 System.out.println("Public Transport: GTFSImporter: No data found");
+        System.out.println("Public Transport: GTFSImporter: No data found");
+
+        return;
       }
       
       while (iter.hasNext())

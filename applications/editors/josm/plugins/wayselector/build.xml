@@ -30,7 +30,7 @@
 <project name="wayselector" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Adjust to read-only JOSM selection object" />
+	<property name="commit.message" value="Do not mutate the collection of selected ways. Convert TAB to spaces." />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3095" />
 

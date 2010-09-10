@@ -137,8 +137,6 @@ public class GTFSStopTableModel extends DefaultTableModel
   
   public void insertRow(int insPos, String s, Vector< Node > existingStops)
   {
-    System.out.println("insertRow(" + insPos + ", [" + s + "], ..)");
-
     String[] buf = { "", "", "pending" };
     int pos = tokenize(s, 0);
     int oldPos = 0;
@@ -147,8 +145,6 @@ public class GTFSStopTableModel extends DefaultTableModel
     double lon = 0;
     while (pos > -1)
     {
-      System.out.println("[" + stripQuot(s.substring(oldPos, pos)) + "]");
-
       if (i == idCol)
 	buf[0] = stripQuot(s.substring(oldPos, pos));
       else if (i == nameCol)

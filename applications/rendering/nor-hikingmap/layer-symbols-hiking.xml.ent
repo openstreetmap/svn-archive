@@ -1,6 +1,11 @@
 <Style name="symbols-landmarks">
   <Rule>
     &maxscale_zoom14;
+    <Filter>[building]='cabin' and not ([access]='permissive' or [access]='public' or [access]='emergency' or [access]='yes' or [service]='self' or [service]='no')</Filter>
+    <PointSymbolizer file="&symbols;/building.png" allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
     <Filter>([man_made]='tower' and not [tourism]='viewpoint') or [man_made]='mast' or [amenity]='hunting_stand' or [man_made]='lighthouse' or [man_made]='windmill' or [man_made]='power_wind' or ([power]='generator' and [power_source] = 'wind')</Filter>
     <PointSymbolizer file="&symbols;/tower.png" allow_overlap="false"/>
   </Rule>
@@ -16,22 +21,9 @@
   </Rule>
   <Rule>
     &maxscale_zoom14;
-    <Filter>[building]='cabin' and not ([access]='permissive' or [access]='public' or [access]='emergency' or [access]='yes' or [service]='self' or [service]='no')</Filter>
-    <PointSymbolizer file="&symbols;/building.png" allow_overlap="false"/>
-  </Rule>
-  <Rule>
-    &maxscale_zoom14;
     <Filter>[historic]='ruins'</Filter>
     <PointSymbolizer file="&symbols;/ruin.png" allow_overlap="false"/>
   </Rule>
-<!--
-  <Rule>
-    &maxscale_zoom9;
-    &minscale_zoom10;
-    <Filter>[natural]='peak' and [ele] &gt;= 2000</Filter>
-    <PointSymbolizer file="&symbols;/peak.png"/>
-  </Rule>
--->
   <Rule>
     &maxscale_zoom14;
     &minscale_zoom16;
@@ -119,12 +111,12 @@
   </Rule>
   <Rule>
     &maxscale_zoom8;
-    <Filter>([building]='cabin' or [tourism]='cabin') and [service]='self' and [operator]='Den Norske Turistforening'</Filter>
+    <Filter>[tourism]='cabin' and [service]='self'</Filter>
     <PointSymbolizer file="&symbols;/cabin-selfservice.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom10;
-    <Filter>([building]='cabin' or [tourism]='cabin') and [service]='no' and [operator]='Den Norske Turistforening'</Filter>
+    <Filter>[tourism]='cabin' and [service]='no'</Filter>
     <PointSymbolizer file="&symbols;/cabin-unprovisioned.png" allow_overlap="false"/>
   </Rule>
   <Rule>
@@ -175,6 +167,75 @@
   </Rule>
 </Style>
 
+<Style name="symbols-text">
+  <Rule>
+    &maxscale_zoom7;
+    <Filter>[tourism]='alpine_hut' or ([tourism]='guest_house' or [tourism]='hostel' or [tourism]='hotel') and [operator]='Den Norske Turistforening'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom8;
+    <Filter>[tourism]='cabin' and [service]='self'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom10;
+    <Filter>[tourism]='cabin' and [service]='no'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom11;
+    <Filter>(([building]='cabin' or [tourism]='cabin') and ([access]='permissive' or [access]='public' or [access]='emergency' or [access]='yes')) or [tourism]='basic_hut' or [tourism]='wilderness_hut'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    <Filter>([tourism]='alpine_hut' or [tourism]='cabin') and [operator]!=''</Filter>
+    <TextSymbolizer name="operator" fontset_name="book-fonts" size="8"
+      fill="&grey50;" dy="20" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[amenity]='place_of_worship' and [hiking]='yes'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[amenity]='cafe'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom13;
+    <Filter>[railway]='station'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[amenity]='parking' and [hiking]='yes'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[natural]='beach'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom17;
+    <Filter>[tourism]='information' and [information]='guidepost' and ([hiking]='yes' or [ski]='yes')</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="&black;" dy="9" halo_radius="1"/>
+  </Rule>
+</Style>
+
 <Layer name="symbols" status="on" srs="&osm2pgsql_projection;">
   <StyleName>symbols-landmarks</StyleName>
   <StyleName>symbols-sights</StyleName>
@@ -211,11 +272,41 @@
     <Parameter name="table">
     (select *
      from &prefix;_polygon
-     where amenity in ('parking','bus_station')
+     where amenity in ('cafe','place_of_worship','parking','bus_station')
         or "natural"='beach'
         or historic in ('monument','memorial','ruins','archaeological_site')
         or tourism in ('viewpoint','information','cabin','guest_house','alpine_hut','hostel','hotel','lean_to','picnic_site','basic_hut','wilderness_hut')
     ) as symbols</Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>
+
+<Layer name="symbols-text" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>symbols-text</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,amenity,tourism,"natural",railway,building,name,operator,service,access,information,hiking,ski,'yes'::text as point
+     from &prefix;_point
+     where amenity in ('cafe','place_of_worship','parking')
+        or tourism in ('information','cabin','guest_house','alpine_hut','hostel','hotel','basic_hut','wilderness_hut')
+        or building='cabin'
+        or "natural"='beach'
+        or railway='station'
+    ) as text</Parameter>
+    &datasource-settings;
+  </Datasource>
+</Layer>
+<Layer name="symbols-text-poly" status="on" srs="&osm2pgsql_projection;">
+  <StyleName>symbols-text</StyleName>
+  <Datasource>
+    <Parameter name="table">
+    (select way,amenity,tourism,"natural",railway,building,name,operator,service,access,hiking,ski,'no'::text as point
+     from &prefix;_polygon
+     where amenity in ('cafe','place_of_worship','parking')
+        or tourism in ('cabin','guest_house','alpine_hut','hostel','hotel','basic_hut','wilderness_hut')
+        or building='cabin'
+        or "natural"='beach'
+    ) as text</Parameter>
     &datasource-settings;
   </Datasource>
 </Layer>

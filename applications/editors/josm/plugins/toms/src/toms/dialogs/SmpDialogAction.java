@@ -215,13 +215,13 @@ public class SmpDialogAction extends JosmAction {
 		dia = this;
 		String str = Main.pref.get("mappaint.style.sources"); //$NON-NLS-1$
 		if (!str.contains("dev.openseamap.org")) { //$NON-NLS-1$
-			if (!str.equals("")) //$NON-NLS-1$
+			if (!str.isEmpty()) //$NON-NLS-1$
 				str += new String(new char[] { 0x1e });
 			Main.pref.put("mappaint.style.sources", str //$NON-NLS-1$
 					+ "http://dev.openseamap.org/josm/seamark_styles.xml"); //$NON-NLS-1$
 		}
 		str = Main.pref.get("color.background"); //$NON-NLS-1$
-		if (str.equals("#000000") || str.equals("")) //$NON-NLS-1$ //$NON-NLS-2$
+		if (str.equals("#000000") || str.isEmpty()) //$NON-NLS-1$ //$NON-NLS-2$
 			Main.pref.put("color.background", "#606060"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -1156,19 +1156,19 @@ public class SmpDialogAction extends JosmAction {
 						c = it.substring(0, i1);
 						if (i1 >= 0) {
 							g = it.substring(i1 + 1, i2);
-							if (g.equals("")) //$NON-NLS-1$
+							if (g.isEmpty()) //$NON-NLS-1$
 								tfM01Group.setEnabled(true);
 						}
 					}
 					if (it.contains("+")) { //$NON-NLS-1$
 						i1 = it.indexOf("+"); //$NON-NLS-1$
 						i2 = it.length();
-						if (c.equals("")) //$NON-NLS-1$
+						if (c.isEmpty()) //$NON-NLS-1$
 							c = it;
 						else
 							c = c + it.substring(i1, i2);
 					}
-					if (c.equals("")) //$NON-NLS-1$
+					if (c.isEmpty()) //$NON-NLS-1$
 						c = it;
 					buoy.setLightChar(c);
 					buoy.setLightGroup(g);

@@ -81,7 +81,7 @@ public class BuoyLat extends Buoy {
 		else if (keys.containsKey("seamark:beacon_lateral:category")) //$NON-NLS-1$
 			cat = keys.get("seamark:beacon_lateral:category"); //$NON-NLS-1$
 
-		if (cat.equals("")) { //$NON-NLS-1$
+		if (cat.isEmpty()) { //$NON-NLS-1$
 			if (col.equals("red")) { //$NON-NLS-1$
 				setColour(RED);
 				if (top.equals("cylinder")) { //$NON-NLS-1$

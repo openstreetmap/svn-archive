@@ -53,38 +53,14 @@ public class BuoyNota extends Buoy {
 			dlg.cM01Racon.setVisible(true);
 			dlg.cM01Fog.setVisible(true);
 
-			dlg.cM01Fired.setVisible(true);
-			dlg.cM01Fired.setEnabled(false);
-			dlg.cM01Fired.setSelected(true);
 			dlg.rbM01Fired1.setVisible(true);
 			dlg.rbM01FiredN.setVisible(true);
-			dlg.lM01Kennung.setVisible(true);
-			dlg.cbM01Kennung.setVisible(true);
 			dlg.lM01Height.setVisible(true);
 			dlg.tfM01Height.setVisible(true);
 			dlg.lM01Range.setVisible(true);
 			dlg.tfM01Range.setVisible(true);
-			dlg.lM01Group.setVisible(true);
-			dlg.tfM01Group.setVisible(true);
-			dlg.lM01RepeatTime.setVisible(true);
-			dlg.tfM01RepeatTime.setVisible(true);
 			dlg.lM01Colour.setVisible(true);
 			dlg.cbM01Colour.setVisible(true);
-			if (isSectored()) {
-				dlg.lM01Sector.setVisible(true);
-				dlg.cbM01Sector.setVisible(true);
-				dlg.lM01Bearing.setVisible(true);
-				dlg.tfM01Bearing.setVisible(true);
-				dlg.tfM02Bearing.setVisible(true);
-				dlg.tfM01Radius.setVisible(true);
-			} else {
-				dlg.lM01Sector.setVisible(false);
-				dlg.cbM01Sector.setVisible(false);
-				dlg.lM01Bearing.setVisible(false);
-				dlg.tfM01Bearing.setVisible(false);
-				dlg.tfM02Bearing.setVisible(false);
-				dlg.tfM01Radius.setVisible(false);
-			}
 
 			switch (getBuoyIndex()) {
 			case SeaMark.LIGHT_HOUSE:

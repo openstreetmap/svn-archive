@@ -235,19 +235,20 @@ abstract public class Buoy extends SeaMark {
 	public void setLightPeriod(String lightPeriod) {
 		String regex = "^[\\d\\s.]+$";
 
-		if (lightPeriod.length() == 0)
-			lightPeriod = " ";
+		if (!lightPeriod.isEmpty()) {
 
-		Pattern pat = Pattern.compile(regex);
-		Matcher matcher = pat.matcher(lightPeriod);
+			Pattern pat = Pattern.compile(regex);
+			Matcher matcher = pat.matcher(lightPeriod);
 
-		if (matcher.find()) {
-			LightPeriod[getSectorIndex()] = lightPeriod;
-			setErrMsg(null);
-		} else {
-			setErrMsg("Must be a number");
-			dlg.tfM01RepeatTime.requestFocus();
+			if (matcher.find()) {
+				setErrMsg(null);
+			} else {
+				setErrMsg("Must be a number");
+				lightPeriod = "";
+				dlg.tfM01RepeatTime.requestFocus();
+			}
 		}
+		LightPeriod[getSectorIndex()] = lightPeriod;
 	}
 
 	protected void setLightPeriod(Map<String, String> k) {
@@ -261,16 +262,16 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void parseLights(Map<String, String> k) {
-    Iterator it = k.entrySet().iterator();
-    while (it.hasNext()) {
-        String key = (String)((Map.Entry)it.next()).getKey();
-        if (key.contains("seamark:light:")) {
-          String value = ((String)((Map.Entry)it.next()).getValue()).trim();
-        	
-        }
-    }
-}
-	
+		Iterator it = k.entrySet().iterator();
+		while (it.hasNext()) {
+			String key = (String) ((Map.Entry) it.next()).getKey();
+			if (key.contains("seamark:light:")) {
+				String value = ((String) ((Map.Entry) it.next()).getValue()).trim();
+
+			}
+		}
+	}
+
 	private Node Node = null;
 
 	public Node getNode() {
@@ -418,19 +419,42 @@ abstract public class Buoy extends SeaMark {
 					c = c.substring(0, i1);
 				}
 
-				if (!getLightGroup().equals(""))
+				if (!getLightGroup().isEmpty())
 					c = c + "(" + getLightGroup() + ")";
 				if (tmp != null)
 					c = c + tmp;
 
 				c = c + " " + getLightColour();
 				lp = getLightPeriod();
-				if (!lp.equals(""))
+				if (!lp.isEmpty())
 					c = c + " " + lp + "s";
 				dlg.lM01FireMark.setText(c);
+
+				dlg.cM01Fired.setVisible(true);
+				dlg.cM01Fired.setEnabled(false);
+				dlg.cM01Fired.setSelected(true);
+				dlg.lM01Kennung.setVisible(true);
+				dlg.cbM01Kennung.setVisible(true);
+				dlg.lM01Group.setVisible(true);
+				dlg.tfM01Group.setVisible(true);
+				dlg.lM01RepeatTime.setVisible(true);
+				dlg.tfM01RepeatTime.setVisible(true);
+				if (isSectored()) {
+					dlg.lM01Sector.setVisible(true);
+					dlg.cbM01Sector.setVisible(true);
+					dlg.lM01Bearing.setVisible(true);
+					dlg.tfM01Bearing.setVisible(true);
+					dlg.tfM02Bearing.setVisible(true);
+					dlg.tfM01Radius.setVisible(true);
+				} else {
+					dlg.lM01Sector.setVisible(false);
+					dlg.cbM01Sector.setVisible(false);
+					dlg.lM01Bearing.setVisible(false);
+					dlg.tfM01Bearing.setVisible(false);
+					dlg.tfM02Bearing.setVisible(false);
+					dlg.tfM01Radius.setVisible(false);
+				}
 			} else {
-				dlg.tfM01RepeatTime.setEnabled(false);
-				dlg.cbM01Kennung.setEnabled(false);
 				dlg.lM01FireMark.setText("");
 			}
 		} else {
@@ -476,7 +500,7 @@ abstract public class Buoy extends SeaMark {
 		delSeaMarkKeys(Node);
 
 		String str = dlg.tfM01Name.getText();
-		if (str.compareTo("") != 0)
+		if (!str.isEmpty())
 			Main.main.undoRedo.add(new ChangePropertyCommand(Node, "seamark:name",
 					str));
 		Main.main.undoRedo
@@ -484,7 +508,7 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	protected void saveLightData(String colour) {
-		if (colour.equals("")) {
+		if (colour.isEmpty()) {
 			return;
 		}
 
@@ -536,7 +560,7 @@ abstract public class Buoy extends SeaMark {
 			case RATYP_RACON:
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:radar_transponder:category", "racon"));
-				if (!getRaconGroup().equals(""))
+				if (!getRaconGroup().isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:radar_transponder:group", getRaconGroup()));
 				break;
@@ -588,10 +612,10 @@ abstract public class Buoy extends SeaMark {
 							"seamark:fog_signal:category", "explosive"));
 					break;
 				}
-				if (!getFogGroup().equals(""))
+				if (!getFogGroup().isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:fog_group:group", getFogGroup()));
-				if (!getFogPeriod().equals(""))
+				if (!getFogPeriod().isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:fog_period:group", getFogPeriod()));
 			}

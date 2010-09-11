@@ -69,7 +69,7 @@ public class BuoyCard extends Buoy {
 		else if (keys.containsKey("seamark:light_float:colour")) //$NON-NLS-1$
 			col = keys.get("seamark:light_float:colour"); //$NON-NLS-1$
 
-		if (cat.equals("")) { //$NON-NLS-1$
+		if (cat.isEmpty()) { //$NON-NLS-1$
 			if (col.equals("black;yellow")) { //$NON-NLS-1$
 				setBuoyIndex(CARD_NORTH);
 				setColour(BLACK_YELLOW);

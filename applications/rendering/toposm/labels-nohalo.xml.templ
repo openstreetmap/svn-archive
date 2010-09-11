@@ -18,34 +18,54 @@ considered "labels-nohalo" as well... -->
 
 <Style name="interstateshields">
 	<Rule>
-      &minz8;
+      &minz6;
       <ShieldSymbolizer name="roadnumber" face_name="DejaVu Sans Bold" size="10"
       	fill="white" placement="line"
       	file="&customsymbolsdir;/shield-interstate.png"
       	type="png" width="22" height="21"
-      	min_distance="100" />
+      	min_distance="45" spacing="750" />
     </Rule>
 </Style>
 
 <Style name="usshields">
 	<Rule>
-      &minz11;
+      &minz9;
+      <Filter>[highway] = 'motorway' or [highway] = 'trunk'</Filter>
       <ShieldSymbolizer name="roadnumber" face_name="DejaVu Sans Bold" size="10"
       	fill="black" placement="line"
       	file="&customsymbolsdir;/shield-us-3.png"
       	type="png" width="22" height="18"
-      	min_distance="100" />
+      	min_distance="45" spacing="750" />
+    </Rule>
+	<Rule>
+      &minz11;
+      <Filter>[highway] &lt;&gt; 'motorway' and [highway] &lt;&gt; 'trunk'</Filter>
+      <ShieldSymbolizer name="roadnumber" face_name="DejaVu Sans Bold" size="10"
+      	fill="black" placement="line"
+      	file="&customsymbolsdir;/shield-us-3.png"
+      	type="png" width="22" height="18"
+      	min_distance="45" spacing="750" />
     </Rule>
 </Style>
 
 <Style name="stateshields">
-	<Rule>
-      &minz12;
+    <Rule>
+      &minz9;
+      <Filter>[highway] = 'motorway' or [highway] = 'trunk'</Filter>
       <ShieldSymbolizer name="roadnumber" face_name="DejaVu Sans Book" size="9"
       	fill="black" placement="line"
       	file="&customsymbolsdir;/shield-ma-3.png"
       	type="png" width="21" height="16"
-      	min_distance="100" />
+      	min_distance="45" spacing="750" />
+    </Rule>
+	<Rule>
+      &minz12;
+      <Filter>[highway] &lt;&gt; 'motorway' and [highway] &lt;&gt; 'trunk'</Filter>
+      <ShieldSymbolizer name="roadnumber" face_name="DejaVu Sans Book" size="9"
+      	fill="black" placement="line"
+      	file="&customsymbolsdir;/shield-ma-3.png"
+      	type="png" width="21" height="16"
+      	min_distance="45" spacing="750" />
     </Rule>
 </Style>
 
@@ -295,7 +315,7 @@ considered "labels-nohalo" as well... -->
     	&extents;		
 		<Parameter name="table">
 		(select * from ${DB_PREFIX}_roads
-		where (highway = 'motorway' or highway = 'trunk') and (ref like 'I %' or ref like 'I-%')
+		where (highway = 'motorway' or highway = 'trunk') and roadtype = 'I'
 		order by z_order) as interstateshields
 		</Parameter>
     </Datasource>
@@ -308,7 +328,7 @@ considered "labels-nohalo" as well... -->
 		&extents;		
 		<Parameter name="table">
 		(select * from ${DB_PREFIX}_roads
-		where (highway &lt;&gt; '' AND highway IS NOT NULL) and ref like 'US %'
+		where (highway &lt;&gt; '' AND highway IS NOT NULL) and roadtype = 'U'
 		order by z_order) as usshields
 		</Parameter>
     </Datasource>
@@ -321,7 +341,7 @@ considered "labels-nohalo" as well... -->
     	&extents;
 		<Parameter name="table">
 		(select * from ${DB_PREFIX}_roads
-		where (highway &lt;&gt; '' AND highway IS NOT NULL) and ref like 'SR %'
+		where (highway &lt;&gt; '' AND highway IS NOT NULL) and roadtype = 'S'
 		order by z_order) as stateshields
 		</Parameter>
     </Datasource>

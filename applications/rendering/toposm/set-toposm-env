@@ -7,7 +7,7 @@
 export DB_NAME="gis"
 export DB_PORT=5432 # local postgres port
 export DB_PREFIX="us_osm" # prefix for all tables
-export DB_USER="lars" # username
+export DB_USER=`whoami` # username
 export CONTOURS_TABLE="contours_us_50ft"
 export NHD_TABLE_PREFIX="nhd"
 

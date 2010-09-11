@@ -29,16 +29,12 @@
   <Rule>
     <Filter>[fixme] = 'continues'</Filter>
     &maxscale_zoom13;
-    <PointSymbolizer file="&symbols;/fixme-continues.png"
-         width="11" height="11" type="png"
-         allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/fixme-continues.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     <Filter>[fixme] = 'position'</Filter>
     &maxscale_zoom13;
-    <PointSymbolizer file="&symbols;/fixme-position.png"
-         width="11" height="11" type="png"
-         allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/fixme-position.png" allow_overlap="false"/>
   </Rule>
 </Style>
 <Layer name="fixme-points" status="on" srs="&osm2pgsql_projection;">

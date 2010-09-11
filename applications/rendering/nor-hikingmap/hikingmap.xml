@@ -20,7 +20,8 @@
 %entities;
 ]>
 
-<Map bgcolor="&water-color;" srs="&osm2pgsql_projection;">
+<Map bgcolor="&water-color;" srs="&osm2pgsql_projection;"
+     minimum_version="0.7.1">
   &fontset-settings;
 
 <Style name="trails">

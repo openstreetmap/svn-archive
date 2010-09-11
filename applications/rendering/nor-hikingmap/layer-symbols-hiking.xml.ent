@@ -2,48 +2,41 @@
   <Rule>
     &maxscale_zoom14;
     <Filter>([man_made]='tower' and not [tourism]='viewpoint') or [man_made]='mast' or [amenity]='hunting_stand' or [man_made]='lighthouse' or [man_made]='windmill' or [man_made]='power_wind' or ([power]='generator' and [power_source] = 'wind')</Filter>
-    <PointSymbolizer file="&symbols;/tower.png"
-       width="11" height="11" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/tower.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[man_made]='cairn' or [historic]='monument' or [historic]='memorial'</Filter>
-    <PointSymbolizer file="&symbols;/cairn.png"
-       width="11" height="11" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/cairn.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[natural]='tree'</Filter>
-    <PointSymbolizer file="&symbols;/tree.png"
-       width="8" height="8" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/tree.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[building]='cabin' and not ([access]='permissive' or [access]='public' or [access]='emergency' or [access]='yes' or [service]='self' or [service]='no')</Filter>
-    <PointSymbolizer file="&symbols;/building.png"
-       width="5" height="5" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/building.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[historic]='ruins'</Filter>
-    <PointSymbolizer file="&symbols;/ruin.png"
-       width="5" height="5" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/ruin.png" allow_overlap="false"/>
   </Rule>
 <!--
   <Rule>
     &maxscale_zoom9;
     &minscale_zoom10;
     <Filter>[natural]='peak' and [ele] &gt;= 2000</Filter>
-    <PointSymbolizer file="&symbols;/peak.png"
-       width="6" height="6" type="png"/>
+    <PointSymbolizer file="&symbols;/peak.png"/>
   </Rule>
 -->
   <Rule>
     &maxscale_zoom14;
     &minscale_zoom16;
     <Filter>[natural]='peak' or [man_made]='survey_point'</Filter>
-    <PointSymbolizer file="&symbols;/peak.png"
-       width="6" height="6" type="png"/>
+    <PointSymbolizer file="&symbols;/peak.png"/>
   </Rule>
 </Style>
 
@@ -51,56 +44,47 @@
   <Rule>
     &maxscale_zoom14;
     <Filter>[natural]='cave_entrance'</Filter>
-    <PointSymbolizer file="&symbols;/cave.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/cave.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[man_made]='mineshaft' and ([access]='public' or [access]='')</Filter>
-    <PointSymbolizer file="&symbols;/mine.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/mine.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[waterway]='waterfall'</Filter>
-    <PointSymbolizer file="&symbols;/waterfall.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/waterfall.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom13;
     <Filter>[tourism]='viewpoint' and not ([man_made]='tower')</Filter>
-    <PointSymbolizer file="&symbols;/viewpoint.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/viewpoint.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom13;
     <Filter>[tourism]='viewpoint' and [man_made]='tower'</Filter>
-    <PointSymbolizer file="&symbols;/viewtower.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/viewtower.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[amenity]='place_of_worship' and not ([hiking]='yes')</Filter>
-    <PointSymbolizer file="&symbols;/church.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/church.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom12;
     <Filter>[amenity]='place_of_worship' and [hiking]='yes'</Filter>
-    <PointSymbolizer file="&symbols;/sportschapel.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/sportschapel.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[historic]='archaeological_site' or [historic]='yes'</Filter>
-    <PointSymbolizer file="&symbols;/relic.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/relic.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[natural]='beach'</Filter>
-    <PointSymbolizer file="&symbols;/beach.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/beach.png" allow_overlap="false"/>
   </Rule>
 </Style>
 
@@ -108,26 +92,22 @@
   <Rule>
     &maxscale_zoom13;
     <Filter>[amenity]='parking' and [hiking]='yes'</Filter>
-    <PointSymbolizer file="&symbols;/parking.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/parking.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[amenity]='parking' and not ([access]='private')</Filter>
-    <PointSymbolizer file="&symbols;/parking.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/parking.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom13;
     <Filter>[railway]='station'</Filter>
-    <PointSymbolizer file="&symbols;/railwaystation.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/railwaystation.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[highway]='bus_stop' or [amenity]='bus_station'</Filter>
-    <PointSymbolizer file="&symbols;/bus.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/bus.png" allow_overlap="false"/>
   </Rule>
 </Style>
 
@@ -135,38 +115,32 @@
   <Rule>
     &maxscale_zoom7;
     <Filter>[tourism]='alpine_hut' or ([tourism]='guest_house' or [tourism]='hostel' or [tourism]='hotel') and [operator]='Den Norske Turistforening'</Filter>
-    <PointSymbolizer file="&symbols;/cabin-staffedlodge.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/cabin-staffedlodge.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom8;
     <Filter>([building]='cabin' or [tourism]='cabin') and [service]='self' and [operator]='Den Norske Turistforening'</Filter>
-    <PointSymbolizer file="&symbols;/cabin-selfservice.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/cabin-selfservice.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom10;
     <Filter>([building]='cabin' or [tourism]='cabin') and [service]='no' and [operator]='Den Norske Turistforening'</Filter>
-    <PointSymbolizer file="&symbols;/cabin-unprovisioned.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/cabin-unprovisioned.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom11;
     <Filter>(([building]='cabin' or [tourism]='cabin') and ([access]='permissive' or [access]='public' or [access]='emergency' or [access]='yes')) or [tourism]='basic_hut' or [tourism]='wilderness_hut'</Filter>
-    <PointSymbolizer file="&symbols;/shelter.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/shelter.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom13;
     <Filter>[tourism]='lean_to' or [amenity]='shelter'</Filter>
-    <PointSymbolizer file="&symbols;/leanto.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/leanto.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom12;
     <Filter>[tourism]='hotel' and [hiking]='yes'</Filter>
-    <PointSymbolizer file="&symbols;/hotel.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/hotel.png" allow_overlap="false"/>
   </Rule>
 </Style>
 
@@ -174,20 +148,17 @@
   <Rule>
     &maxscale_zoom13;
     <Filter>[amenity]='cafe'</Filter>
-    <PointSymbolizer file="&symbols;/cafe.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/cafe.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[amenity]='bbq'</Filter>
-    <PointSymbolizer file="&symbols;/fireplace.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/fireplace.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[leisure]='picnic_table' or [tourism]='picnic_site'</Filter>
-    <PointSymbolizer file="&symbols;/picnicsite.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/picnicsite.png" allow_overlap="false"/>
   </Rule>
 </Style>
 
@@ -195,14 +166,12 @@
   <Rule>
     &maxscale_zoom15;
     <Filter>[tourism]='information' and [information]='map' and ([hiking]='yes' or [ski]='yes')</Filter>
-    <PointSymbolizer file="&symbols;/information.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/information.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[tourism]='information' and [information]='guidepost' and ([hiking]='yes' or [ski]='yes')</Filter>
-    <PointSymbolizer file="&symbols;/signpost.png"
-       width="12" height="16" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/signpost.png" allow_overlap="false"/>
   </Rule>
 </Style>
 

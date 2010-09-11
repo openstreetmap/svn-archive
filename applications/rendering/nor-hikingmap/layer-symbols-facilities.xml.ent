@@ -3,250 +3,210 @@
   <Rule>
     &maxscale_zoom15;
     <Filter>[leisure]='playground'</Filter>
-    <PointSymbolizer file="&symbols;/playground.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/playground.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[sport]='motor' or [highway]='raceway'</Filter>
-    <PointSymbolizer file="&symbols;/motorsport.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/motorsport.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[leisure]='miniature_golf'</Filter>
-    <PointSymbolizer file="&symbols;/minigolf.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/minigolf.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[leisure]='golf_course' or [sport]='golf'</Filter>
-    <PointSymbolizer file="&symbols;/golfcourse.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/golfcourse.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
     <Filter>[sport]='shooting'</Filter>
-    <PointSymbolizer file="&symbols;/shootingrange.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/shootingrange.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[leisure]='fishing'</Filter>
-    <PointSymbolizer file="&symbols;/fishing.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/fishing.png" allow_overlap="false"/>
   </Rule>
 
   <Rule>
     &maxscale_zoom14;
     <Filter>[tourism]='camp_site'</Filter>
-    <PointSymbolizer file="&symbols;/campsite.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/campsite.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom13;
     <Filter>[tourism]='caravan_site'</Filter>
-    <PointSymbolizer file="&symbols;/caravansite.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/caravansite.png" allow_overlap="false"/>
   </Rule>
 
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='drinking_water' or [natural]='spring' or [waterway]='water_point'</Filter>
-    <PointSymbolizer file="&symbols;/drinkingwater.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/drinkingwater.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='restaurant' or [amenity]='fast_food' or [amenity]='food_court'</Filter>
-    <PointSymbolizer file="&symbols;/restaurant.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/restaurant.png" allow_overlap="false"/>
   </Rule>
 
   <Rule>
     &maxscale_zoom16;
     <Filter>[tourism]='information'</Filter>
-    <PointSymbolizer file="&symbols;/information.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/information.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[tourism]='hotel' or [tourism]='motel' or [tourism]='guest_house'</Filter>
-    <PointSymbolizer file="&symbols;/hotel.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/hotel.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[tourism]='hostel'</Filter>
-    <PointSymbolizer file="&symbols;/hostel.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/hostel.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom15;
     <Filter>[tourism]='chalet'</Filter>
-    <PointSymbolizer file="&symbols;/chalet.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/chalet.png" allow_overlap="false"/>
   </Rule>
 
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='taxi'</Filter>
-    <PointSymbolizer file="&symbols;/taxi.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/taxi.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[railway]='subway_entrance'</Filter>
-    <PointSymbolizer file="&symbols;/subway.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/subway.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='fuel'</Filter>
-    <PointSymbolizer file="&symbols;/fuel.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/fuel.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='telephone' or [amenity]='emergency_phone'</Filter>
-    <PointSymbolizer file="&symbols;/telephone.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/telephone.png" allow_overlap="false"/>
   </Rule>
 
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='ferry_terminal'</Filter>
-    <PointSymbolizer file="&symbols;/ferry.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/ferry.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[leisure]='marina'</Filter>
-    <PointSymbolizer file="&symbols;/marina.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/marina.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[leisure]='slipway'</Filter>
-    <PointSymbolizer file="&symbols;/slipway.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/slipway.png" allow_overlap="false"/>
   </Rule>
 
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='pharmacy'</Filter>
-    <PointSymbolizer file="&symbols;/pharmacy.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/pharmacy.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='hospital'</Filter>
-    <PointSymbolizer file="&symbols;/hospital.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/hospital.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='doctors'</Filter>
-    <PointSymbolizer file="&symbols;/doctors.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/doctors.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='dentist'</Filter>
-    <PointSymbolizer file="&symbols;/dentist.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/dentist.png" allow_overlap="false"/>
   </Rule>
 
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='theatre'</Filter>
-    <PointSymbolizer file="&symbols;/theatre.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/theatre.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='cinema'</Filter>
-    <PointSymbolizer file="&symbols;/cinema.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/cinema.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='community_centre' or [amenity]='arts_centre' or [leisure]='music_venue'</Filter>
-    <PointSymbolizer file="&symbols;/concerthall.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/concerthall.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[tourism]='museum'</Filter>
-    <PointSymbolizer file="&symbols;/museum.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/museum.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[tourism]='attraction'</Filter>
-    <PointSymbolizer file="&symbols;/attraction.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/attraction.png" allow_overlap="false"/>
   </Rule>
 
   <Rule>
     &maxscale_zoom16;
     <Filter>([shop]='supermarket' or [shop]='convenience' or [shop]='mall') and not [amenity]='post_office'</Filter>
-    <PointSymbolizer file="&symbols;/groceries.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/groceries.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='post_office' and not ([shop]='supermarket' or [shop]='convenience')</Filter>
-    <PointSymbolizer file="&symbols;/postoffice.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/postoffice.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='post_office' and ([shop]='convenience' or [shop]='supermarket')</Filter>
-    <PointSymbolizer file="&symbols;/groceries-postalservices.png"
-       width="15" height="30" type="png"/>
+    <PointSymbolizer file="&symbols;/groceries-postalservices.png"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[shop]='kiosk' or [shop]='ice_cream'</Filter>
-    <PointSymbolizer file="&symbols;/kiosk.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/kiosk.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[shop]='alcohol' or [shop]='beverages'</Filter>
-    <PointSymbolizer file="&symbols;/alcohol.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/alcohol.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='bank' or [amenity]='atm' or [amenity]='bureau_de_change'</Filter>
-    <PointSymbolizer file="&symbols;/bank.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/bank.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='library'</Filter>
-    <PointSymbolizer file="&symbols;/library.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/library.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='police'</Filter>
-    <PointSymbolizer file="&symbols;/police.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/police.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='toilets'</Filter>
-    <PointSymbolizer file="&symbols;/toilets.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/toilets.png" allow_overlap="false"/>
   </Rule>
   <Rule>
     &maxscale_zoom16;
     <Filter>[amenity]='waste_basket' or [amenity]='waste_disposal' or [amenity]='recycling'</Filter>
-    <PointSymbolizer file="&symbols;/waste.png"
-       width="15" height="15" type="png" allow_overlap="false"/>
+    <PointSymbolizer file="&symbols;/waste.png" allow_overlap="false"/>
   </Rule>
 
 </Style>

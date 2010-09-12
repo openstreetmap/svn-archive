@@ -85,7 +85,6 @@ TODO
 leisure=track, highway=raceway
 clay pigeon, pistol
 sport=* symbols from zoom 17
-"post i butikk": shop=* and amenity=post_office
 "selvplukk": landuse=orchard,service=self,trees=strawberry_plants
 natural=stone
 leisure=picnic_table and fireplace=yes as amenity=bbq, or

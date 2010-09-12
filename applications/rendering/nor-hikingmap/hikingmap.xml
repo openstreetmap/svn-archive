@@ -65,8 +65,9 @@
 &layer-world;
 &layer-landscape;
 &layer-linefeatures;
-&layer-roads;
 &layer-buildings;
+&layer-roads;
+&layer-roadnames;
 &layer-nationalpark;
 
 <Layer name="trails" status="on" srs="&osm2pgsql_projection;">

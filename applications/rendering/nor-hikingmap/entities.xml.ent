@@ -1,6 +1,7 @@
 <!ENTITY layer-world SYSTEM "layer-world.xml.ent">
 <!ENTITY layer-landscape SYSTEM "layer-landscape.xml.ent">
 <!ENTITY layer-roads SYSTEM "layer-roads.xml.ent">
+<!ENTITY layer-roadnames SYSTEM "layer-roadnames.xml.ent">
 <!ENTITY layer-linefeatures SYSTEM "layer-linefeatures.xml.ent">
 <!ENTITY layer-buildings SYSTEM "layer-buildings.xml.ent">
 <!ENTITY layer-nationalpark SYSTEM "layer-nationalpark.xml.ent">

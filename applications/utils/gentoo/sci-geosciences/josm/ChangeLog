@@ -2,7 +2,14 @@
 # Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
 # $Header: $
 
+*josm-9999
+  12 Sep 2009; Dennis <dennis.lists@googlemail.com> josm-9999.ebuild, +files/josm-9999-buildxml.patch:
+  fixed svn-build to use the env-variable ESVN_WC_PATH to generate the revision-files
+
 *josm-1.5_p1530
+  12 Sep 2009; Dennis <dennis.lists@googlemail.com> -josm-1.5_p1530.ebuild:
+  removed ancient version
+
   18 Apr 2009; Dennis <dennis.lists@googlemail.com> +josm-1.5_p1530.ebuild, -josm-1.5_p1212.ebuild, -josm-1.5_p1348.ebuild:
   bump to most current version (needed for API 0.6!), removed old version which are removed upstream
 

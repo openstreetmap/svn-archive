@@ -1,0 +1,28 @@
+--- 1/build.xml	2010-09-12 10:30:00.628154001 +0200
++++ 2/build.xml	2010-09-12 10:30:00.344154000 +0200
+@@ -12,6 +12,7 @@
+ 	<property name="test.dir" value="test" />
+ 	<property name="src.dir" value="src" />
+ 	<property name="build.dir" value="build"/>
++	<property environment="env"/>
+ 	<!-- build parameter: compression level (ant -Dclevel=N)
+              N ranges from 0 (no compression) to 9 (maximum compression)
+              default: 9 -->
+@@ -46,7 +47,7 @@
+ 			<env key="LANG" value="C"/>
+ 			<arg value="info"/>
+ 			<arg value="--xml"/>
+-			<arg value="."/>
++			<arg value="${env.ESVN_WC_PATH}"/>
+ 		</exec>
+ 		<xmlproperty file="REVISION.XML" prefix="version" keepRoot="false" collapseAttributes="true"/>
+ 		<delete file="REVISION.XML" />
+@@ -71,7 +72,7 @@
+ 			<env key="LANG" value="C"/>
+ 			<arg value="info"/>
+ 			<arg value="--xml"/>
+-			<arg value="."/>
++			<arg value="${env.ESVN_WC_PATH}"/>
+ 		</exec>
+ 		<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+ 		<delete file="REVISION"/>

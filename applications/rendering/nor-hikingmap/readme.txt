@@ -91,7 +91,15 @@ leisure=picnic_table and fireplace=yes as amenity=bbq, or
   stack symbol below lean_to
   <!-- or ([leisure]='picnic_table' and [fireplace]='yes') -->
 text: place=locality|farm|isolated_dwelling|island|islet|suburb
-text: road names from zoom=15/16
+railway tunnels
 man_made=pier
 highway=turning_circle or (highway=* and area=yes)
-barrier=gate|rift_gate|bollard|cycle_barrier|stile|windfall
+barrier=gate|lift_gate|bollard|cycle_barrier|stile|windfall
+
+(albinbakke/alpintbakke) Jeg ville rendret heisene litt lenger ut, for eksempel zoom 11 eller 12 for å indikere at "her er det noe" og en liten ide om hvor stort anlegget er.
+
+Lenger inn burde løypestrekene være en god del bredere og heisene blir litt lite synlige.
+
+forøvrig kom jeg nå på noe jeg tenkte på: jeg _tror_ leisure=winter_sports er ment å tegnes som et stort polygon rundt skisteder. på høyere zoom kan denne dermed benyttes til å sette på et symbol for alpinanlegg.
+
+seasonal på skiforeningens kafeer

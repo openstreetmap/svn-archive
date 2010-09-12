@@ -3,6 +3,7 @@ package ext_tools;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Cursor;
+import java.awt.GridBagLayout;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,9 @@ import java.util.StringTokenizer;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
@@ -21,11 +25,13 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.gui.JMultilineLabel;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmReader;
+import org.openstreetmap.josm.tools.GBC;
 
 public class ExtTool {
 
@@ -109,6 +115,18 @@ public class ExtTool {
                 (bounds.max.east() - bounds.min.east());
     }
 
+    protected void showErrorMessage(String message, String details) {
+        JPanel p = new JPanel(new GridBagLayout());
+        p.add(new JMultilineLabel(message),GBC.eol());
+        if (details != null) {
+            JTextArea info = new JTextArea(details, 20, 60);
+            info.setCaretPosition(0);
+            info.setEditable(false);
+            p.add(new JScrollPane(info), GBC.eop());
+        }
+        JOptionPane.showMessageDialog(Main.parent, p, tr("External tool error"), JOptionPane.ERROR_MESSAGE);
+    }
+
     public void runTool(LatLon pos) {
         Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         // parse cmdline and build cmdParams array
@@ -137,10 +155,13 @@ public class ExtTool {
         builder = new ProcessBuilder(cmdParams);
         builder.directory(new File(ExtToolsPlugin.plugin.getPluginDir()));
 
+        final StringBuilder debugstr = new StringBuilder();
+
         // debug: print resulting cmdline
         for (String s : builder.command())
-            System.out.print(s + " ");
-        System.out.print("\n");
+            debugstr.append(s + " ");
+        debugstr.append("\n");
+        System.out.print(debugstr.toString());
 
         final ToolProcess tp = new ToolProcess();
         try {
@@ -158,6 +179,9 @@ public class ExtTool {
                     InputStream errStream = tp.process.getErrorStream();
                     int len;
                     while ((len = errStream.read(buffer)) > 0) {
+                        synchronized (debugstr) {
+                            debugstr.append(new String(buffer, 0, len));
+                        }
                         System.err.write(buffer, 0, len);
                     }
                 } catch (IOException e) {
@@ -184,8 +208,11 @@ public class ExtTool {
                         tp.process.destroy();
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
-                                JOptionPane.showMessageDialog(Main.parent,
-                                        tr("Child script have returned invalid data."));
+                                synchronized (debugstr) {
+                                    showErrorMessage(
+                                            tr("Child script have returned invalid data.\n\nstderr contents:"),
+                                            debugstr.toString());
+                                }
                             }
                         });
                     }

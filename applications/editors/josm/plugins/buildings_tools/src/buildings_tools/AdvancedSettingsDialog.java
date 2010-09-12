@@ -35,7 +35,7 @@ public class AdvancedSettingsDialog extends ExtendedDialog {
 		for (Entry<String, String> entry : ToolSettings.getTags().entrySet()) {
 			tagsModel.add(entry.getKey(), entry.getValue());
 		}
-		panel.add(new TagEditorPanel(tagsModel), GBC.eop().fill(GBC.BOTH));
+		panel.add(new TagEditorPanel(tagsModel, null), GBC.eop().fill(GBC.BOTH));
 
 		panel.add(cBigMode, GBC.eol().fill(GBC.HORIZONTAL));
 		panel.add(cSoftCur, GBC.eol().fill(GBC.HORIZONTAL));

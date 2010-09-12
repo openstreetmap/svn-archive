@@ -11,7 +11,7 @@ import toms.plug.ifc.Pluggable;
 import toms.plug.ifc.PluginManager;
 import toms.plug.util.PluginLoader;
 
-public class PluginApp {
+public class PluginApp implements Runnable {
 	
 	public static void runPlugins() throws IOException {
 		String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath();
@@ -33,6 +33,16 @@ public class PluginApp {
 		}
 		
 		for(Pluggable p: plugins) p.stop();
+	}
+
+	@Override
+	public void run() {
+		try {
+			runPlugins();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

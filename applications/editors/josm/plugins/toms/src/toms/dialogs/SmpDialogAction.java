@@ -19,6 +19,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,6 +49,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.tools.Shortcut;
 
 import toms.Messages;
+import toms.plug.PluginApp;
 import toms.seamarks.SeaMark;
 import toms.seamarks.buoys.Buoy;
 import toms.seamarks.buoys.BuoyCard;
@@ -260,7 +262,7 @@ public class SmpDialogAction extends JosmAction {
 				dialog.setVisible(true);
 			}
 		});
-
+		
 		setOpen(true);
 
 		if (SmpItem == null) {

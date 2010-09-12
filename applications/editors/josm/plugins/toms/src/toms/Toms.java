@@ -30,6 +30,7 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -135,9 +136,10 @@ public class Toms extends Plugin {
 		
 		try {
 			PluginApp.runPlugins();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 

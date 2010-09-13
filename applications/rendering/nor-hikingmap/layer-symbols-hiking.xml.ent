@@ -59,6 +59,11 @@
     <PointSymbolizer file="&symbols;/viewtower.png" allow_overlap="false"/>
   </Rule>
   <Rule>
+    &maxscale_zoom16; 
+    <Filter>[tourism]='information' and [board_type]='nature'</Filter> 
+    <PointSymbolizer file="&symbols;/natureboard.png" allow_overlap="false"/> 
+  </Rule> 
+  <Rule>
     &maxscale_zoom14;
     <Filter>[amenity]='place_of_worship' and not ([hiking]='yes')</Filter>
     <PointSymbolizer file="&symbols;/church.png" allow_overlap="false"/>
@@ -245,7 +250,7 @@
   <StyleName>symbols-cabins</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select *
+    (select *,htag->board_type as board_type
      from &prefix;_point
      where man_made in ('cairn','tower','mast','survey_point','lighthouse','power_wind','windmill')
         or amenity in ('shelter','cafe','bbq','place_of_worship','parking','bus_station','hunting_stand')
@@ -270,7 +275,7 @@
   <StyleName>symbols-cabins</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select *
+    (select *,htag->board_type as board_type
      from &prefix;_polygon
      where amenity in ('cafe','place_of_worship','parking','bus_station')
         or "natural"='beach'

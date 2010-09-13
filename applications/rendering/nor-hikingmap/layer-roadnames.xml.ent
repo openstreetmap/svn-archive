@@ -89,6 +89,7 @@
          and leisure IS NULL
          and landuse IS NULL
          and boundary IS NULL
+         and place IS NULL
          and (name is not null or ref is not null)
       ) as roads
       </Parameter>

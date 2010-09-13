@@ -44,7 +44,7 @@
     </LineSymbolizer>
   </Rule>
   <Rule>
-    <Filter>[piste:type] = 'nordic'</Filter>
+    <Filter>[piste:type] = 'nordic' and not ([piste:grooming] = 'backcountry' or [piste:grooming] = 'scooter')</Filter>
     &maxscale_zoom12;
     <LineSymbolizer>
       <CssParameter name="stroke">&nordic-color;</CssParameter>

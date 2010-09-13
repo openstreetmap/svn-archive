@@ -82,24 +82,26 @@ to hikingmap.xml and/or pistemap.xml
 TODO
 ====
 
+text: place=locality|farm|isolated_dwelling|island|islet|suburb
+text: water/bay/wetland in blue text
+split hiking symbols into layers to control presentation
+regional hiking routes network=iwn/nwn/rwn at zoom=10-11
+
 leisure=track, highway=raceway
 clay pigeon, pistol
 sport=* symbols from zoom 17
 "selvplukk": landuse=orchard,service=self,trees=strawberry_plants
 natural=stone
-leisure=picnic_table and fireplace=yes as amenity=bbq, or
-  stack symbol below lean_to
+leisure=picnic_table and fireplace=yes as amenity=bbq
   <!-- or ([leisure]='picnic_table' and [fireplace]='yes') -->
-text: place=locality|farm|isolated_dwelling|island|islet|suburb
-railway tunnels
 man_made=pier
 highway=turning_circle or (highway=* and area=yes)
 barrier=gate|lift_gate|bollard|cycle_barrier|stile|windfall
 
+add symbol to leisure=winter_sports, how to determine activity type?
+
 (albinbakke/alpintbakke) Jeg ville rendret heisene litt lenger ut, for eksempel zoom 11 eller 12 for å indikere at "her er det noe" og en liten ide om hvor stort anlegget er.
 
 Lenger inn burde løypestrekene være en god del bredere og heisene blir litt lite synlige.
-
-forøvrig kom jeg nå på noe jeg tenkte på: jeg _tror_ leisure=winter_sports er ment å tegnes som et stort polygon rundt skisteder. på høyere zoom kan denne dermed benyttes til å sette på et symbol for alpinanlegg.
 
 seasonal på skiforeningens kafeer

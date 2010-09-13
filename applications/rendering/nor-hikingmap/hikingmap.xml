@@ -67,7 +67,6 @@
 &layer-linefeatures;
 &layer-buildings;
 &layer-roads;
-&layer-roadnames;
 &layer-nationalpark;
 
 <Layer name="trails" status="on" srs="&osm2pgsql_projection;">
@@ -83,6 +82,7 @@
   </Datasource>
 </Layer>
 
+&layer-roadnames;
 &layer-resurvey;
 &layer-powerlines;
 &layer-symbols-facilities;

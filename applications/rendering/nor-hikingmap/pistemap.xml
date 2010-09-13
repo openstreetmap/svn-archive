@@ -132,7 +132,6 @@
 &layer-linefeatures;
 &layer-buildings;
 &layer-roads;
-&layer-roadnames;
 &layer-nationalpark;
 
 <Layer name="skiing" status="on" srs="&osm2pgsql_projection;">
@@ -150,6 +149,7 @@
    </Datasource>
 </Layer>
 
+&layer-roadnames;
 &layer-powerlines;
 &layer-symbols-facilities;
 &layer-symbols-hiking;

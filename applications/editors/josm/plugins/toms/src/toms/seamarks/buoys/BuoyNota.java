@@ -35,6 +35,8 @@ public class BuoyNota extends Buoy {
 
 		setTopMark(false);
 		setFired(true);
+		dlg.cM01Fired.setEnabled(false);
+		dlg.cM01Fired.setSelected(true);
 	}
 
 	public boolean isValid() {
@@ -59,8 +61,6 @@ public class BuoyNota extends Buoy {
 			dlg.tfM01Height.setVisible(true);
 			dlg.lM01Range.setVisible(true);
 			dlg.tfM01Range.setVisible(true);
-			dlg.lM01Colour.setVisible(true);
-			dlg.cbM01Colour.setVisible(true);
 
 			switch (getBuoyIndex()) {
 			case SeaMark.LIGHT_HOUSE:

@@ -18,16 +18,16 @@ import toms.plug.ifc.Pluggable;
 
 public class PluginLoader {
 
-	public static List<Pluggable> loadPlugins(File plugDir) throws IOException {
-		File[] plugJars = plugDir.listFiles(new JARFileFilter());
-		ClassLoader cl = new URLClassLoader(PluginLoader.fileArrayToURLArray(plugJars));
+//!!	public static List<Pluggable> loadPlugins(File plugDir) throws IOException {
+//!!		File[] plugJars = plugDir.listFiles(new JARFileFilter());
+//!!		ClassLoader cl = new URLClassLoader(PluginLoader.fileArrayToURLArray(plugJars));
 		
-		if(cl == null) return null;
+//!!		if(cl == null) return null;
 		
-		List<Class<Pluggable>> plugClasses = PluginLoader.extractClassesFromJARs(plugJars, cl);
+//!!		List<Class<Pluggable>> plugClasses = PluginLoader.extractClassesFromJARs(plugJars, cl);
 		
-		return PluginLoader.createPluggableObjects(plugClasses);
-	}
+//!!		return PluginLoader.createPluggableObjects(plugClasses);
+//!!	}
 
 	private static List<Pluggable> createPluggableObjects(List<Class<Pluggable>> pluggables) {
 		List<Pluggable> plugs = new ArrayList<Pluggable>(pluggables.size());

@@ -33,9 +33,9 @@ abstract public class SeaMark {
 	public final static int YELLOW_BLACK_YELLOW = 9;
 	public final static int BLACK_RED_BLACK = 10;
 	public final static int YELLOW = 11;
-	public final static int RED_LIGHT = 1;
-	public final static int GREEN_LIGHT = 2;
-	public final static int WHITE_LIGHT = 3;
+	public final static int WHITE_LIGHT = 1;
+	public final static int RED_LIGHT = 2;
+	public final static int GREEN_LIGHT = 3;
 
 	/**
 	 * Types - correspond to TypeIndex

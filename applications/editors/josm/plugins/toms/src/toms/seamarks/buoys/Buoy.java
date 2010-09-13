@@ -171,30 +171,42 @@ abstract public class Buoy extends SeaMark {
 	private String[] LightChar = new String[10];
 
 	public String getLightChar() {
+		if (LightChar[getSectorIndex()] == null)
+			return (LightChar[0]);
 		return LightChar[getSectorIndex()];
 	}
 
 	public void setLightChar(String lightChar) {
+		if (getSectorIndex() == 0)
+			LightChar = new String[10];
 		LightChar[getSectorIndex()] = lightChar;
 	}
 
 	private String[] LightColour = new String[10];
 
 	public String getLightColour() {
+		if (LightColour[getSectorIndex()] == null)
+			return (LightColour[0]);
 		return LightColour[getSectorIndex()];
 	}
 
 	public void setLightColour(String lightColour) {
+		if (getSectorIndex() == 0)
+			LightColour = new String[10];
 		LightColour[getSectorIndex()] = lightColour;
 	}
 
 	private String[] LightGroup = new String[10];
 
 	public String getLightGroup() {
+		if (LightGroup[getSectorIndex()] == null)
+			return (LightGroup[0]);
 		return LightGroup[getSectorIndex()];
 	}
 
 	public void setLightGroup(String lightGroup) {
+		if (getSectorIndex() == 0)
+			LightGroup = new String[10];
 		LightGroup[getSectorIndex()] = lightGroup;
 	}
 
@@ -209,26 +221,78 @@ abstract public class Buoy extends SeaMark {
 	private String[] Height = new String[10];
 
 	public String getHeight() {
+		if (Height[getSectorIndex()] == null)
+			return (Height[0]);
 		return Height[getSectorIndex()];
 	}
 
 	public void setHeight(String height) {
+		if (getSectorIndex() == 0)
+			Height = new String[10];
 		Height[getSectorIndex()] = height;
 	}
 
 	private String[] Range = new String[10];
 
 	public String getRange() {
+		if (Range[getSectorIndex()] == null)
+			return (Range[0]);
 		return Range[getSectorIndex()];
 	}
 
 	public void setRange(String range) {
+		if (getSectorIndex() == 0)
+			Range = new String[10];
 		Range[getSectorIndex()] = range;
+	}
+
+	private String[] Bearing1 = new String[10];
+
+	public String getBearing1() {
+		if (Bearing1[getSectorIndex()] == null)
+			return (Bearing1[0]);
+		return Bearing1[getSectorIndex()];
+	}
+
+	public void setBearing1(String bearing) {
+		if (getSectorIndex() == 0)
+			Bearing1 = new String[10];
+		Bearing1[getSectorIndex()] = bearing;
+	}
+
+	private String[] Bearing2 = new String[10];
+
+	public String getBearing2() {
+		if (Bearing2[getSectorIndex()] == null)
+			return (Bearing2[0]);
+		return Bearing2[getSectorIndex()];
+	}
+
+	public void setBearing2(String bearing) {
+		if (getSectorIndex() == 0)
+			Bearing2 = new String[10];
+		Bearing2[getSectorIndex()] = bearing;
+	}
+
+	private String[] Radius = new String[10];
+
+	public String getRadius() {
+		if (Radius[getSectorIndex()] == null)
+			return (Radius[0]);
+		return Radius[getSectorIndex()];
+	}
+
+	public void setRadius(String radius) {
+		if (getSectorIndex() == 0)
+			Radius = new String[10];
+		Radius[getSectorIndex()] = radius;
 	}
 
 	private String[] LightPeriod = new String[10];
 
 	public String getLightPeriod() {
+		if (LightPeriod[getSectorIndex()] == null)
+			return (LightPeriod[0]);
 		return LightPeriod[getSectorIndex()];
 	}
 
@@ -248,6 +312,8 @@ abstract public class Buoy extends SeaMark {
 				dlg.tfM01RepeatTime.requestFocus();
 			}
 		}
+		if (getSectorIndex() == 0)
+			LightPeriod = new String[10];
 		LightPeriod[getSectorIndex()] = lightPeriod;
 	}
 
@@ -318,6 +384,9 @@ abstract public class Buoy extends SeaMark {
 
 		if (dlg.paintlock)
 			return;
+		else
+			dlg.paintlock = true;
+
 		dlg.lM01Icon.setIcon(null);
 		dlg.lM02Icon.setIcon(null);
 		dlg.lM03Icon.setIcon(null);
@@ -389,29 +458,25 @@ abstract public class Buoy extends SeaMark {
 				int i1;
 
 				String col = getLightColour();
-				if (col.equals("W"))
+				if (col.equals("W")) {
 					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
 							"/images/Light_White_120.png")));
-				else if (col.equals("R"))
+					dlg.cbM01Colour.setSelectedIndex(WHITE_LIGHT);
+				} else if (col.equals("R")) {
 					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
 							"/images/Light_Red_120.png")));
-				else if (col.equals("G"))
+					dlg.cbM01Colour.setSelectedIndex(RED_LIGHT);
+				} else if (col.equals("G")) {
 					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
 							"/images/Light_Green_120.png")));
-				else
+					dlg.cbM01Colour.setSelectedIndex(GREEN_LIGHT);
+				} else {
 					dlg.lM02Icon.setIcon(new ImageIcon(getClass().getResource(
 							"/images/Light_Magenta_120.png")));
-
-				dlg.cbM01Kennung.setEnabled(true);
+					dlg.cbM01Colour.setSelectedIndex(UNKNOWN_COLOUR);
+				}
 
 				c = getLightChar();
-				if (dlg.cbM01Kennung.getSelectedIndex() == 0) {
-					dlg.tfM01Group.setEnabled(false);
-					dlg.tfM01RepeatTime.setEnabled(false);
-				} else {
-					dlg.tfM01Group.setEnabled(true);
-					dlg.tfM01RepeatTime.setEnabled(true);
-				}
 
 				if (c.contains("+")) {
 					i1 = c.indexOf("+");
@@ -431,8 +496,6 @@ abstract public class Buoy extends SeaMark {
 				dlg.lM01FireMark.setText(c);
 
 				dlg.cM01Fired.setVisible(true);
-				dlg.cM01Fired.setEnabled(false);
-				dlg.cM01Fired.setSelected(true);
 				dlg.lM01Kennung.setVisible(true);
 				dlg.cbM01Kennung.setVisible(true);
 				dlg.lM01Group.setVisible(true);
@@ -440,13 +503,59 @@ abstract public class Buoy extends SeaMark {
 				dlg.lM01RepeatTime.setVisible(true);
 				dlg.tfM01RepeatTime.setVisible(true);
 				if (isSectored()) {
+					if ((getSectorIndex() != 0) && (!LightChar[0].isEmpty()))
+						dlg.cbM01Kennung.setEnabled(false);
+					else
+						dlg.cbM01Kennung.setEnabled(true);
+					dlg.cbM01Kennung.setSelectedItem(getLightChar());
+					if ((getSectorIndex() != 0) && (!LightGroup[0].isEmpty()))
+						dlg.tfM01Group.setEnabled(false);
+					else
+						dlg.tfM01Group.setEnabled(true);
+					dlg.tfM01Group.setText(getLightGroup());
+					if ((getSectorIndex() != 0) && (!LightPeriod[0].isEmpty()))
+						dlg.tfM01RepeatTime.setEnabled(false);
+					else
+						dlg.tfM01RepeatTime.setEnabled(true);
+					dlg.tfM01RepeatTime.setText(getLightPeriod());
+					if ((getSectorIndex() != 0) && (!Height[0].isEmpty()))
+						dlg.tfM01Height.setEnabled(false);
+					else
+						dlg.tfM01Height.setEnabled(true);
+					dlg.tfM01Height.setText(getHeight());
+					if ((getSectorIndex() != 0) && (!Range[0].isEmpty()))
+						dlg.tfM01Range.setEnabled(false);
+					else
+						dlg.tfM01Range.setEnabled(true);
+					dlg.tfM01Range.setText(getRange());
 					dlg.lM01Sector.setVisible(true);
 					dlg.cbM01Sector.setVisible(true);
-					dlg.lM01Bearing.setVisible(true);
-					dlg.tfM01Bearing.setVisible(true);
-					dlg.tfM02Bearing.setVisible(true);
-					dlg.tfM01Radius.setVisible(true);
+					if (getSectorIndex() == 0) {
+						dlg.lM01Colour.setVisible(false);
+						dlg.cbM01Colour.setVisible(false);
+						dlg.lM01Bearing.setVisible(false);
+						dlg.tfM01Bearing.setVisible(false);
+						dlg.tfM02Bearing.setVisible(false);
+						dlg.tfM01Radius.setVisible(false);
+					} else {
+						dlg.lM01Colour.setVisible(true);
+						dlg.cbM01Colour.setVisible(true);
+						dlg.lM01Bearing.setVisible(true);
+						dlg.tfM01Bearing.setVisible(true);
+						dlg.tfM01Bearing.setText(getBearing1());
+						dlg.tfM02Bearing.setVisible(true);
+						dlg.tfM02Bearing.setText(getBearing2());
+						dlg.tfM01Radius.setVisible(true);
+						dlg.tfM01Radius.setText(getRadius());
+					}
 				} else {
+					dlg.cbM01Kennung.setEnabled(true);
+					dlg.tfM01Group.setEnabled(true);
+					dlg.tfM01RepeatTime.setEnabled(true);
+					dlg.tfM01Height.setEnabled(true);
+					dlg.tfM01Range.setEnabled(true);
+					dlg.lM01Colour.setVisible(true);
+					dlg.cbM01Colour.setVisible(true);
 					dlg.lM01Sector.setVisible(false);
 					dlg.cbM01Sector.setVisible(false);
 					dlg.lM01Bearing.setVisible(false);
@@ -494,6 +603,7 @@ abstract public class Buoy extends SeaMark {
 			dlg.tfM02Bearing.setVisible(false);
 			dlg.tfM01Radius.setVisible(false);
 		}
+		dlg.paintlock = false;
 	}
 
 	public void saveSign(String type) {
@@ -695,9 +805,10 @@ abstract public class Buoy extends SeaMark {
 		dlg.cM01Fired.setVisible(false);
 		setFired(false);
 		dlg.rbM01Fired1.setVisible(false);
+		dlg.rbM01Fired1.setSelected(true);
 		dlg.rbM01FiredN.setVisible(false);
+		dlg.rbM01FiredN.setSelected(false);
 		setSectored(false);
-		setSectorIndex(0);
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.setVisible(false);
 		dlg.lM01Kennung.setVisible(false);
@@ -715,6 +826,7 @@ abstract public class Buoy extends SeaMark {
 		setLightColour("");
 		dlg.cbM01Sector.setVisible(false);
 		dlg.lM01Sector.setVisible(false);
+		setSectorIndex(0);
 		dlg.tfM01Group.setText("");
 		dlg.tfM01Group.setVisible(false);
 		dlg.lM01Group.setVisible(false);
@@ -726,10 +838,13 @@ abstract public class Buoy extends SeaMark {
 		dlg.tfM01Bearing.setText("");
 		dlg.tfM01Bearing.setVisible(false);
 		dlg.lM01Bearing.setVisible(false);
+		setBearing1("");
 		dlg.tfM02Bearing.setText("");
 		dlg.tfM02Bearing.setVisible(false);
+		setBearing2("");
 		dlg.tfM01Radius.setText("");
 		dlg.tfM01Radius.setVisible(false);
+		setRadius("");
 
 		dlg.bM01Save.setEnabled(false);
 	}

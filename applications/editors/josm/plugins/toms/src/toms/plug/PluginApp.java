@@ -16,14 +16,14 @@ public class PluginApp implements Runnable {
 	public static void runPlugins() throws IOException {
 		String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath();
 
-		List<Pluggable> plugins = PluginLoader.loadPlugins(new File(pluginDirName + "/tplug"));
+//!!		List<Pluggable> plugins = PluginLoader.loadPlugins(new File(pluginDirName + "/tplug"));
 
-		if(plugins == null) return;
+//!!		if(plugins == null) return;
 		
-		PluginManager manager = new PluginManagerImpl();
+//!!		PluginManager manager = new PluginManagerImpl();
 		
-		for(Pluggable p : plugins) p.setPluginManager(manager);
-		for(Pluggable p : plugins) p.start();
+//!!		for(Pluggable p : plugins) p.setPluginManager(manager);
+//!!		for(Pluggable p : plugins) p.start();
 		
 		// wait
 		try {
@@ -32,7 +32,7 @@ public class PluginApp implements Runnable {
 			e.printStackTrace();
 		}
 		
-		for(Pluggable p: plugins) p.stop();
+//!!		for(Pluggable p: plugins) p.stop();
 	}
 
 	@Override

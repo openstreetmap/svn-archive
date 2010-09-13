@@ -853,7 +853,7 @@ void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
 #define MAX_BUCKETS (1<<26)
 #define IDXGROUPS 676
 #define NGROUPS 60
-#define MAX_NODES 15000000 /* Max in a group */
+#define MAX_NODES 16000000 /* Max in a group */
 #define S2GROUPS 129 // Last group is reserved for lowzoom halfSegs
 #define NGROUP(x)  ((x) / MAX_NODES % NGROUPS + IDXGROUPS)
 #define S1GROUPS NGROUPS
@@ -1466,7 +1466,9 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
   if ((w.bits & (1 << onewayR)) && !(k2v["cycleway"] &&
     (strcmp (k2v["cycleway"], "opposite_lane") == 0 ||
      strcmp (k2v["cycleway"], "opposite_track") == 0 ||
-     strcmp (k2v["cycleway"], "opposite") == 0))) {
+     strcmp (k2v["cycleway"], "opposite") == 0)) &&
+     !(k2v["oneway:bicyle"] && (strcmp (k2v["oneway:bicycle"], "0") == 0 ||
+                                strcmp (k2v["oneway:bicycle"], "no") == 0))) {
     // On oneway roads, cyclists are only allowed to go in the opposite
     // direction, if the cycleway tag exist and starts with "opposite"
     w.bits |= 1 << bicycleOneway;

@@ -128,7 +128,30 @@ public class BuoyIsol extends Buoy {
 			dlg.cM01Racon.setVisible(true);
 			dlg.cM01Fog.setVisible(true);
 			dlg.cM01Fired.setVisible(true);
+			dlg.cbM01Colour.setVisible(false);
+			dlg.lM01Colour.setVisible(false);
 			
+			if (isFired()) {
+				switch (getStyleIndex()) {
+				case SPEC_FLOAT:
+					dlg.lM01Height.setVisible(true);
+					dlg.tfM01Height.setVisible(true);
+					dlg.lM01Range.setVisible(true);
+					dlg.tfM01Range.setVisible(true);
+					break;
+				case SPEC_BEACON:
+				case SPEC_TOWER:
+					dlg.rbM01Fired1.setVisible(true);
+					dlg.rbM01FiredN.setVisible(true);
+					dlg.lM01Height.setVisible(true);
+					dlg.tfM01Height.setVisible(true);
+					dlg.lM01Range.setVisible(true);
+					dlg.tfM01Range.setVisible(true);
+					break;
+				default:
+				}
+			}
+
 			String image = "/images/Cardinal"; //$NON-NLS-1$
 
 			switch (getStyleIndex()) {

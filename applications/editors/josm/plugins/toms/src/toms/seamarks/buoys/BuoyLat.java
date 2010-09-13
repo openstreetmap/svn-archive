@@ -24,7 +24,7 @@ public class BuoyLat extends Buoy {
 		setNode(node);
 
 		resetMask();
-		
+
 		dlg.rbM01RegionA.setEnabled(true);
 		dlg.rbM01RegionB.setEnabled(true);
 		dlg.cbM01CatOfMark.setEnabled(true);
@@ -350,8 +350,6 @@ public class BuoyLat extends Buoy {
 			dlg.tfM01Name.setEnabled(true);
 			dlg.tfM01Name.setText(getName());
 
-			String image = "/images/Lateral"; //$NON-NLS-1$
-
 			int cat = getBuoyIndex();
 			boolean region = getRegion();
 			int style = getStyleIndex();
@@ -374,6 +372,30 @@ public class BuoyLat extends Buoy {
 				dlg.cM01Fired.setEnabled(true);
 				dlg.cM01TopMark.setEnabled(true);
 			}
+			dlg.cbM01Colour.setVisible(false);
+			dlg.lM01Colour.setVisible(false);
+
+			if (isFired()) {
+				switch (style) {
+				case LAT_BEACON:
+				case LAT_TOWER:
+					dlg.rbM01Fired1.setVisible(true);
+					dlg.rbM01FiredN.setVisible(true);
+					dlg.lM01Height.setVisible(true);
+					dlg.tfM01Height.setVisible(true);
+					dlg.lM01Range.setVisible(true);
+					dlg.tfM01Range.setVisible(true);
+					break;
+				case LAT_FLOAT:
+					dlg.lM01Height.setVisible(true);
+					dlg.tfM01Height.setVisible(true);
+					dlg.lM01Range.setVisible(true);
+					dlg.tfM01Range.setVisible(true);
+					break;
+				default:
+				}
+			}
+			String image = "/images/Lateral"; //$NON-NLS-1$
 
 			switch (getBuoyIndex()) {
 			case PORT_HAND:

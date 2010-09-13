@@ -216,7 +216,7 @@ public class BuoySaw extends Buoy {
 		default:
 		}
 		saveTopMarkData("spherical", "red"); //$NON-NLS-1$ //$NON-NLS-2$
-		saveLightData("white"); //$NON-NLS-1$
+		saveLightData(); //$NON-NLS-1$
 		saveRadarFogData();
 	}
 

@@ -224,7 +224,7 @@ public class BuoyIsol extends Buoy {
 		}
 
 		saveTopMarkData("2 spheres", "black"); //$NON-NLS-1$ //$NON-NLS-2$
-		saveLightData("white"); //$NON-NLS-1$
+		saveLightData(); //$NON-NLS-1$
 		saveRadarFogData();
 
 	}

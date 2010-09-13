@@ -95,7 +95,7 @@ public class BuoyNota extends Buoy {
 			return;
 		}
 
-		switch (getStyleIndex()) {
+		switch (getBuoyIndex()) {
 		case LIGHT_HOUSE:
 			super.saveSign("lighthouse"); //$NON-NLS-1$
 			break;
@@ -107,7 +107,7 @@ public class BuoyNota extends Buoy {
 			break;
 		default:
 		}
-		saveLightData("white"); //$NON-NLS-1$
+		saveLightData(); //$NON-NLS-1$
 		saveRadarFogData();
 	}
 

@@ -950,7 +950,7 @@ public class BuoyLat extends Buoy {
 		default:
 		}
 		saveTopMarkData(shape, colour);
-		saveLightData(colour);
+		saveLightData();
 		saveRadarFogData();
 
 		Main.pref.put("tomsplugin.IALA", getRegion() ? "B" : "A"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

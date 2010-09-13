@@ -408,7 +408,7 @@ public class BuoyCard extends Buoy {
 			break;
 		}
 		saveTopMarkData(shape, "black"); //$NON-NLS-1$
-		saveLightData("white"); //$NON-NLS-1$
+		saveLightData(); //$NON-NLS-1$
 		saveRadarFogData();
 	}
 }

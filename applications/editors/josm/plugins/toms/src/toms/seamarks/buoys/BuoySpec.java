@@ -249,7 +249,7 @@ public class BuoySpec extends Buoy {
 		default:
 		}
 		saveTopMarkData("x-shape", "yellow"); //$NON-NLS-1$ //$NON-NLS-2$
-		saveLightData("white"); //$NON-NLS-1$
+		saveLightData(); //$NON-NLS-1$
 		saveRadarFogData();
 	}
 

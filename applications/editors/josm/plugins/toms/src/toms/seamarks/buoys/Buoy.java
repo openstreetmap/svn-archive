@@ -405,6 +405,7 @@ abstract public class Buoy extends SeaMark {
 			dlg.tfM01RepeatTime.setText(getLightPeriod());
 
 			dlg.tfM01Name.setText(getName());
+			dlg.tfM01Name.setEnabled(true);
 
 			if (hasRadar()) {
 				dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource(
@@ -568,6 +569,7 @@ abstract public class Buoy extends SeaMark {
 			}
 		} else {
 			dlg.bM01Save.setEnabled(false);
+			dlg.tfM01Name.setEnabled(false);
 			dlg.cM01TopMark.setVisible(false);
 			dlg.cbM01TopMark.setVisible(false);
 			dlg.cM01Radar.setVisible(false);
@@ -617,37 +619,77 @@ abstract public class Buoy extends SeaMark {
 				.add(new ChangePropertyCommand(Node, "seamark:type", type));
 	}
 
-	protected void saveLightData(String colour) {
-		if (colour.isEmpty()) {
-			return;
-		}
+	protected void saveLightData() {
 
 		if (dlg.cM01Fired.isSelected()) {
-			if (colour.equals("red")) {
+			setSectorIndex(0);
+			String colour = getLightColour();
+			if (colour.equals("R")) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "red"));
-				setLightColour("R");
-			} else if (colour.equals("green")) {
+			} else if (colour.equals("G")) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "green"));
-				setLightColour("G");
-			} else if (colour.equals("white")) {
+			} else if (colour.equals("W")) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:colour", "white"));
-				setLightColour("W");
 			}
-			if (getLightPeriod() != "" && getLightPeriod() != " "
-					&& getLightChar() != "Q")
+
+			if (!getLightPeriod().isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:period", getLightPeriod()));
 
-			if (getLightChar() != "")
+			if (!getLightChar().isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:character", getLightChar()));
 
-			if (getLightGroup() != "")
+			if (!getLightGroup().isEmpty())
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:light:group", getLightGroup()));
+
+			if (!getHeight().isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:light:height", getHeight()));
+
+			if (!getRange().isEmpty())
+				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+						"seamark:light:range", getRange()));
+
+			for (int i = 1; i < 10; i++) {
+				setSectorIndex(i);
+				
+				colour = getLightColour();
+				if (colour.equals("R")) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:colour:" + i, "red"));
+				} else if (colour.equals("G")) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:colour:" + i, "green"));
+				} else if (colour.equals("W")) {
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:colour:" + i, "white"));
+				}
+
+				if (!getLightPeriod().isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:period:" + i, getLightPeriod()));
+
+				if (!getLightChar().isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:character:" + i, getLightChar()));
+
+				if (!getLightGroup().isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:group:" + i, getLightGroup()));
+
+				if (!getHeight().isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:height:" + i, getHeight()));
+
+				if (!getRange().isEmpty())
+					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+							"seamark:light:range:" + i, getRange()));
+			}
 		}
 	}
 

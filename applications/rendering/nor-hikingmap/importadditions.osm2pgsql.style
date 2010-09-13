@@ -12,7 +12,7 @@ way        trail_visibility   text    linear
 #node,way   indistinct         text    linear
 way        mtb:scale          text    linear
 way        sac_scale          text    linear
-node       information        text    linear
+node,way   information        text    linear
 node       board_type         text    linear
 node       fireplace          text    linear
 node,way   ski                text    linear

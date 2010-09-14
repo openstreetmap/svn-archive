@@ -19,7 +19,6 @@ public class BuoyNota extends Buoy {
 	public BuoyNota(SmpDialogAction dia, Node node) {
 		super(dia);
 
-		String str;
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);

@@ -386,7 +386,16 @@ abstract public class Buoy extends SeaMark {
 					key = key.substring(2);
 				} else if (key.matches("^\\d$")) {
 					index = key.charAt(0) - '0';
-					key = "";
+					String values[] = value.split(":");
+					if (values[0].equals("red"))
+						LightColour[index] = "R";
+					else if (values[0].equals("green"))
+						LightColour[index] = "G";
+					else if (values[0].equals("white"))
+						LightColour[index] = "W";
+					Bearing1[index] = values[1];
+					Bearing2[index] = values[2];
+					Radius[index] = values[3];
 				} else {
 					index = 0;
 				}

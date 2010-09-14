@@ -425,6 +425,11 @@ public class SmpDialogAction extends JosmAction {
 			buoy = new BuoyIsol(this, node);
 			return;
 
+		} else if (type.equals("landmark") || type.equals("light_vessel") //$NON-NLS-1$
+				|| type.equals("light_major") || type.equals("light_minor")) { //$NON-NLS-1$
+			buoy = new BuoyNota(this, node);
+			return;
+
 		} else if (type.equals("light_float")) { //$NON-NLS-1$
 			if (keys.containsKey("seamark:light_float:colour")) { //$NON-NLS-1$
 				str = keys.get("seamark:light_float:colour"); //$NON-NLS-1$
@@ -782,12 +787,6 @@ public class SmpDialogAction extends JosmAction {
 						if (!(buoy instanceof BuoyLat)) {
 							buoy = new BuoyLat(dia, n);
 							buoy.setBuoyIndex(0);
-							cbM01CatOfMark.removeAllItems();
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.152")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.153")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.154")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.155")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.156")); //$NON-NLS-1$
 						}
 						break;
 
@@ -795,12 +794,6 @@ public class SmpDialogAction extends JosmAction {
 						if (!(buoy instanceof BuoyCard)) {
 							buoy = new BuoyCard(dia, n);
 							buoy.setBuoyIndex(0);
-							cbM01CatOfMark.removeAllItems();
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.158")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.159")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.160")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.161")); //$NON-NLS-1$
 						}
 						break;
 
@@ -821,10 +814,6 @@ public class SmpDialogAction extends JosmAction {
 					case SeaMark.SPECIAL_PURPOSE:
 						if (!(buoy instanceof BuoySpec)) {
 							buoy = new BuoySpec(dia, n);
-							cbM01TopMark.removeAllItems();
-							cbM01TopMark.addItem(Messages.getString("SmpDialogAction.212"));
-							cbM01TopMark.addItem(Messages.getString("SmpDialogAction.210")); //$NON-NLS-1$
-							cbM01TopMark.addItem(Messages.getString("SmpDialogAction.211")); //$NON-NLS-1$
 						}
 						buoy.setBuoyIndex(type);
 						break;
@@ -833,12 +822,6 @@ public class SmpDialogAction extends JosmAction {
 						if (!(buoy instanceof BuoyNota)) {
 							buoy = new BuoyNota(dia, n);
 							buoy.setBuoyIndex(0);
-							cbM01CatOfMark.removeAllItems();
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.206")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.207")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.208")); //$NON-NLS-1$
-							cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.209")); //$NON-NLS-1$
 						}
 						break;
 					}

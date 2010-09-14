@@ -26,6 +26,13 @@ public class BuoyCard extends Buoy {
 		setNode(node);
 
 		resetMask();
+		dlg.cbM01CatOfMark.removeAllItems();
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.158")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.159")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.160")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.161")); //$NON-NLS-1$
+
 		dlg.cbM01CatOfMark.setEnabled(true);
 		dlg.cbM01CatOfMark.setVisible(true);
 		dlg.lM01CatOfMark.setVisible(true);
@@ -39,6 +46,8 @@ public class BuoyCard extends Buoy {
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.setVisible(true);
 		dlg.lM01StyleOfMark.setVisible(true);
+
+		dlg.cbM01TypeOfMark.setSelectedIndex(CARDINAL);
 
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (keys.containsKey("name")) //$NON-NLS-1$
@@ -97,6 +106,8 @@ public class BuoyCard extends Buoy {
 			setColour(YELLOW_BLACK_YELLOW);
 		}
 
+		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
+
 		if (keys.containsKey("seamark:buoy_cardinal:shape")) { //$NON-NLS-1$
 			str = keys.get("seamark:buoy_cardinal:shape"); //$NON-NLS-1$
 
@@ -119,39 +130,12 @@ public class BuoyCard extends Buoy {
 			setStyleIndex(CARD_FLOAT);
 		}
 
+		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
+			setStyleIndex(0);
+		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+
+		parseLights(keys);
 		refreshLights();
-
-		if (keys.containsKey("seamark:light:colour")) { //$NON-NLS-1$
-			str = keys.get("seamark:light:colour"); //$NON-NLS-1$
-
-			if (keys.containsKey("seamark:light:character")) { //$NON-NLS-1$
-				int i1;
-				String tmp = null;
-
-				setLightGroup(keys);
-
-				String c = keys.get("seamark:light:character"); //$NON-NLS-1$
-
-				if (c.contains("+")) { //$NON-NLS-1$
-					i1 = c.indexOf("+"); //$NON-NLS-1$
-					tmp = c.substring(i1, c.length());
-					c = c.substring(0, i1);
-				}
-
-				if (getLightGroup() != "") //$NON-NLS-1$
-					if (tmp != null) {
-						c = c + tmp;
-					}
-
-				setLightChar(c);
-				setLightPeriod(keys);
-			}
-
-			if (str.equals("white")) { //$NON-NLS-1$
-				setFired(true);
-				setLightColour("W"); //$NON-NLS-1$
-			}
-		}
 	}
 
 	public void refreshLights() {

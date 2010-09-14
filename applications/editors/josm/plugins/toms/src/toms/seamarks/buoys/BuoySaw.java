@@ -26,6 +26,8 @@ public class BuoySaw extends Buoy {
 
 		resetMask();
 
+		dlg.cbM01TypeOfMark.setSelectedIndex(SAFE_WATER);
+
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
@@ -36,8 +38,6 @@ public class BuoySaw extends Buoy {
 		dlg.cbM01StyleOfMark.setVisible(true);
 		dlg.lM01StyleOfMark.setVisible(true);
 
-		refreshLights();
-		
 		setBuoyIndex(SAFE_WATER);
 		setColour(SeaMark.RED_WHITE);
 		setLightColour("W"); //$NON-NLS-1$
@@ -73,28 +73,17 @@ public class BuoySaw extends Buoy {
 			setStyleIndex(SAFE_BEACON);
 		}
 
-		if (keys.containsKey("seamark:light:colour")) { //$NON-NLS-1$
-			str = keys.get("seamark:light:colour"); //$NON-NLS-1$
-
-			if (keys.containsKey("seamark:light:character")) { //$NON-NLS-1$
-				setLightGroup(keys);
-				String c = keys.get("seamark:light:character"); //$NON-NLS-1$
-				if (getLightGroup() != "") //$NON-NLS-1$
-					c = c + "(" + getLightGroup() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-				setLightChar(c);
-				setLightPeriod(keys);
-			}
-
-			if (str.equals("white")) { //$NON-NLS-1$
-				setFired(true);
-				setLightColour("W"); //$NON-NLS-1$
-			}
-		}
-
+		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
+			setStyleIndex(0);
+		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+		
 		if (keys.containsKey("seamark:topmark:shape") //$NON-NLS-1$
 				|| keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
 			setTopMark(true);
 		}
+
+		parseLights(keys);
+		refreshLights();
 	}
 
 	public void refreshLights() {
@@ -103,7 +92,7 @@ public class BuoySaw extends Buoy {
 		dlg.cbM01Kennung.addItem("Iso"); //$NON-NLS-1$
 		dlg.cbM01Kennung.addItem("Oc"); //$NON-NLS-1$
 		dlg.cbM01Kennung.addItem("LFl"); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Mo()"); //$NON-NLS-1$
+		dlg.cbM01Kennung.addItem("Mo"); //$NON-NLS-1$
 		dlg.cbM01Kennung.setSelectedIndex(0);
 	}
 	

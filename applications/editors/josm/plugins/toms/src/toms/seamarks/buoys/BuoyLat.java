@@ -25,6 +25,13 @@ public class BuoyLat extends Buoy {
 
 		resetMask();
 
+		dlg.cbM01CatOfMark.removeAllItems();
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.152")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.153")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.154")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.155")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.156")); //$NON-NLS-1$
+
 		dlg.rbM01RegionA.setEnabled(true);
 		dlg.rbM01RegionB.setEnabled(true);
 		dlg.cbM01CatOfMark.setEnabled(true);
@@ -40,7 +47,7 @@ public class BuoyLat extends Buoy {
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.setEnabled(true);
 
-		refreshLights();
+		dlg.cbM01TypeOfMark.setSelectedIndex(LATERAL);
 
 		if (keys.containsKey("name")) //$NON-NLS-1$
 			setName(keys.get("name")); //$NON-NLS-1$
@@ -206,6 +213,8 @@ public class BuoyLat extends Buoy {
 			}
 		}
 
+		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
+
 		if (keys.containsKey("seamark:buoy_lateral:shape")) { //$NON-NLS-1$
 			str = keys.get("seamark:buoy_lateral:shape"); //$NON-NLS-1$
 
@@ -263,18 +272,8 @@ public class BuoyLat extends Buoy {
 		}
 
 		refreshStyles();
-
-		if (keys.containsKey("seamark:light:colour")) { //$NON-NLS-1$
-			setLightColour(keys.get("seamark:light:colour")); //$NON-NLS-1$
-			setFired(true);
-		}
-
-		if (keys.containsKey("seamark:light:character")) { //$NON-NLS-1$
-			setLightGroup(keys);
-			setLightChar(keys.get("seamark:light:character")); //$NON-NLS-1$
-			setLightPeriod(keys);
-			setFired(true);
-		}
+		parseLights(keys);
+		refreshLights();
 		setLightColour();
 	}
 

@@ -26,13 +26,52 @@ public class BuoyNota extends Buoy {
 
 		resetMask();
 
+		dlg.cbM01TypeOfMark.setSelectedIndex(LIGHT);
+
 		dlg.cbM01CatOfMark.setEnabled(true);
 		dlg.cbM01CatOfMark.setVisible(true);
 		dlg.lM01CatOfMark.setVisible(true);
 
-		refreshLights();
-		setLightColour();
+		dlg.cbM01CatOfMark.removeAllItems();
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.206")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.207")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.208")); //$NON-NLS-1$
+		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.209")); //$NON-NLS-1$
 
+		setRegion(Main.pref.get("tomsplugin.IALA").equals("B")); //$NON-NLS-1$ //$NON-NLS-2$
+
+		if (keys.containsKey("name")) //$NON-NLS-1$
+			setName(keys.get("name")); //$NON-NLS-1$
+
+		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
+			setName(keys.get("seamark:name")); //$NON-NLS-1$
+
+		if (keys.containsKey("seamark:landmark:name")) //$NON-NLS-1$
+			setName(keys.get("seamark:landmark:name")); //$NON-NLS-1$
+		else if (keys.containsKey("seamark:light_major:name")) //$NON-NLS-1$
+			setName(keys.get("seamark:light_major:name")); //$NON-NLS-1$
+		else if (keys.containsKey("seamark:light_minor:name")) //$NON-NLS-1$
+			setName(keys.get("seamark:light_minor:name")); //$NON-NLS-1$
+		else if (keys.containsKey("seamark:light_vessel:name")) //$NON-NLS-1$
+			setName(keys.get("seamark:light_vessel:name")); //$NON-NLS-1$
+
+		if (keys.containsKey("seamark:type")) { //$NON-NLS-1$
+			String type = keys.get("seamark:type"); //$NON-NLS-1$
+			if (type.equals("landmark"))
+				setBuoyIndex(LIGHT_HOUSE);
+			else if (type.equals("light_major"))
+				setBuoyIndex(LIGHT_MAJOR);
+			else if (type.equals("light_minor"))
+				setBuoyIndex(LIGHT_MINOR);
+			else if (type.equals("light_vessel"))
+				setBuoyIndex(LIGHT_VESSEL);
+		}
+
+		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
+
+		parseLights(keys);
+		refreshLights();
 		setTopMark(false);
 		setFired(true);
 		dlg.cM01Fired.setEnabled(false);
@@ -97,13 +136,16 @@ public class BuoyNota extends Buoy {
 
 		switch (getBuoyIndex()) {
 		case LIGHT_HOUSE:
-			super.saveSign("lighthouse"); //$NON-NLS-1$
+			super.saveSign("landmark"); //$NON-NLS-1$
 			break;
 		case LIGHT_MAJOR:
-			super.saveSign("major_light"); //$NON-NLS-1$
+			super.saveSign("light_major"); //$NON-NLS-1$
 			break;
 		case LIGHT_MINOR:
-			super.saveSign("minor_light"); //$NON-NLS-1$
+			super.saveSign("light_minor"); //$NON-NLS-1$
+			break;
+		case LIGHT_VESSEL:
+			super.saveSign("light_vessel"); //$NON-NLS-1$
 			break;
 		default:
 		}
@@ -112,39 +154,6 @@ public class BuoyNota extends Buoy {
 	}
 
 	public void setLightColour() {
-	}
-
-	public boolean parseTopMark(Node node) {
-		return false;
-	}
-
-	public boolean parseLight(Node node) {
-		String str;
-		boolean ret = true;
-		Map<String, String> keys;
-
-		setFired(true);
-
-		keys = node.getKeys();
-
-		if (keys.containsKey("seamark:light:colour")) { //$NON-NLS-1$
-			str = keys.get("seamark:light:colour"); //$NON-NLS-1$
-
-			if (keys.containsKey("seamark:light:character")) { //$NON-NLS-1$
-				setLightGroup(keys);
-
-				String c = keys.get("seamark:light:character"); //$NON-NLS-1$
-				if (getLightGroup() != "") //$NON-NLS-1$
-					c = c + "(" + getLightGroup() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-				setLightChar(c);
-				setLightPeriod(keys);
-			}
-
-			setLightColour(str);
-
-		}
-
-		return ret;
 	}
 
 }

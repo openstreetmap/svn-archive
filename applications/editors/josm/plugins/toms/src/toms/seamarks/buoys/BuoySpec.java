@@ -26,6 +26,8 @@ public class BuoySpec extends Buoy {
 
 		resetMask();
 
+		dlg.cbM01TypeOfMark.setSelectedIndex(SPECIAL_PURPOSE);
+
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
@@ -38,7 +40,10 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.setVisible(true);
 		dlg.lM01StyleOfMark.setVisible(true);
 
-		refreshLights();
+		dlg.cbM01TopMark.removeAllItems();
+		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.212"));
+		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.210")); //$NON-NLS-1$
+		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.211")); //$NON-NLS-1$
 
 		dlg.cM01TopMark.setEnabled(true);
 
@@ -86,6 +91,10 @@ public class BuoySpec extends Buoy {
 				&& keys.get("seamark:light_float:colour").equals("yellow")) //$NON-NLS-1$ //$NON-NLS-2$
 			setStyleIndex(SPEC_FLOAT);
 
+		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
+			setStyleIndex(0);
+		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+
 		keys = node.getKeys();
 		if (keys.containsKey("seamark:topmark:shape")) { //$NON-NLS-1$
 			str = keys.get("seamark:topmark:shape"); //$NON-NLS-1$
@@ -95,25 +104,8 @@ public class BuoySpec extends Buoy {
 			}
 		}
 
-		if (keys.containsKey("seamark:light:colour")) { //$NON-NLS-1$
-			str = keys.get("seamark:light:colour"); //$NON-NLS-1$
-
-			if (keys.containsKey("seamark:light:character")) { //$NON-NLS-1$
-				setLightGroup(keys);
-
-				String c = keys.get("seamark:light:character"); //$NON-NLS-1$
-				if (getLightGroup() != "") //$NON-NLS-1$
-					c = c + "(" + getLightGroup() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-
-				setLightChar(c);
-				setLightPeriod(keys);
-			}
-
-			if (str.equals("white")) { //$NON-NLS-1$
-				setFired(true);
-				setLightColour("W"); //$NON-NLS-1$
-			}
-		}
+		parseLights(keys);
+		refreshLights();
 	}
 
 	public void setStyleIndex(int styleIndex) {

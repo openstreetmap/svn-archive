@@ -172,7 +172,7 @@
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>[tourism]='information' and [information]='guidepost' and ([hiking]='yes' or [ski]='yes')</Filter>
+    <Filter>[tourism]='information' and [information]='guidepost'</Filter>
     <PointSymbolizer file="&symbols;/signpost.png" allow_overlap="false"/>
   </Rule>
 </Style>
@@ -252,7 +252,7 @@
   </Rule>
   <Rule>
     &maxscale_zoom17;
-    <Filter>[tourism]='information' and [information]='guidepost' and ([hiking]='yes' or [ski]='yes')</Filter>
+    <Filter>[tourism]='information' and [information]='guidepost'</Filter>
     <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
       fill="black" dy="9" halo_radius="1"/>
   </Rule>

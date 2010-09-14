@@ -519,25 +519,22 @@ abstract public class Buoy extends SeaMark {
 					dlg.cbM01Colour.setSelectedIndex(UNKNOWN_COLOUR);
 				}
 
-				c = LightChar[0];
-
+				c = getLightChar();
 				if (c.contains("+")) {
 					i1 = c.indexOf("+");
 					tmp = c.substring(i1, c.length());
 					c = c.substring(0, i1);
 				}
-
-				if (!LightGroup[0].isEmpty())
-					c = c + "(" + LightGroup[0] + ")";
+				if (!getLightGroup().isEmpty())
+					c = c + "(" + getLightGroup() + ")";
 				if (tmp != null)
 					c = c + tmp;
-
-				c = c + " " + LightColour[0];
-				lp = LightPeriod[0];
+				dlg.cbM01Kennung.setSelectedItem(c);
+				c = c + " " + getLightColour();
+				lp = getLightPeriod();
 				if (!lp.isEmpty())
 					c = c + " " + lp + "s";
 				dlg.lM01FireMark.setText(c);
-
 				dlg.cM01Fired.setVisible(true);
 				dlg.lM01Kennung.setVisible(true);
 				dlg.cbM01Kennung.setVisible(true);
@@ -613,6 +610,26 @@ abstract public class Buoy extends SeaMark {
 				}
 			} else {
 				dlg.lM01FireMark.setText("");
+				dlg.rbM01Fired1.setVisible(false);
+				dlg.rbM01FiredN.setVisible(false);
+				dlg.cbM01Kennung.setVisible(false);
+				dlg.lM01Kennung.setVisible(false);
+				dlg.tfM01Height.setVisible(false);
+				dlg.lM01Height.setVisible(false);
+				dlg.tfM01Range.setVisible(false);
+				dlg.lM01Range.setVisible(false);
+				dlg.cbM01Colour.setVisible(false);
+				dlg.lM01Colour.setVisible(false);
+				dlg.cbM01Sector.setVisible(false);
+				dlg.lM01Sector.setVisible(false);
+				dlg.tfM01Group.setVisible(false);
+				dlg.lM01Group.setVisible(false);
+				dlg.tfM01RepeatTime.setVisible(false);
+				dlg.lM01RepeatTime.setVisible(false);
+				dlg.tfM01Bearing.setVisible(false);
+				dlg.lM01Bearing.setVisible(false);
+				dlg.tfM02Bearing.setVisible(false);
+				dlg.tfM01Radius.setVisible(false);
 			}
 		} else {
 			dlg.bM01Save.setEnabled(false);

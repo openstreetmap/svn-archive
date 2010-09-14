@@ -1129,22 +1129,21 @@ public class SmpDialogAction extends JosmAction {
 
 					if (it == null)
 						return;
-					if (it.compareTo(Messages.getString("SmpDialogAction.212")) == 0) //$NON-NLS-1$
+					if (it.equals(Messages.getString("SmpDialogAction.212"))) //$NON-NLS-1$
 						return;
 					if (buoy == null)
 						return;
 
-					if (it.contains("+")) { //$NON-NLS-1$
-						i1 = it.indexOf("+"); //$NON-NLS-1$
-						i2 = it.length();
-						if (c.isEmpty()) //$NON-NLS-1$
-							c = it;
-						else
-							c = c + it.substring(i1, i2);
+					if (it.contains("(")) {
+						i1 = it.indexOf("(");
+						i2 = it.indexOf(")");
+						c = it.substring(i1+1, i2);
+						it = it.substring(0, i1) + it.substring(i2+1);
 					}
-					if (c.isEmpty()) //$NON-NLS-1$
-						c = it;
-					buoy.setLightChar(c);
+System.out.println(it + " " + c);
+					if (!c.isEmpty())
+						buoy.setLightGroup(c);;
+					buoy.setLightChar(it);
 					buoy.paintSign();
 				}
 			});

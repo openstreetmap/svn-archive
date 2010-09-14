@@ -93,7 +93,12 @@
   </Rule>
   <Rule>
     &maxscale_zoom13;
-    <Filter>[railway]='station' or [railway]='halt'</Filter>
+    <Filter>[railway]='station'</Filter>
+    <PointSymbolizer file="&symbols;/railwaystation.png" allow_overlap="false"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[railway]='halt'</Filter>
     <PointSymbolizer file="&symbols;/railwaystation.png" allow_overlap="false"/>
   </Rule>
   <Rule>
@@ -217,7 +222,19 @@
   </Rule>
   <Rule>
     &maxscale_zoom13;
-    <Filter>[railway]='station' or [railway]='halt'</Filter>
+    <Filter>[railway]='station'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="black" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom14;
+    <Filter>[railway]='halt'</Filter>
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="black" dy="9" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[railway]='tram_stop'</Filter>
     <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
       fill="black" dy="9" halo_radius="1"/>
   </Rule>

@@ -1140,7 +1140,6 @@ public class SmpDialogAction extends JosmAction {
 						c = it.substring(i1+1, i2);
 						it = it.substring(0, i1) + it.substring(i2+1);
 					}
-System.out.println(it + " " + c);
 					if (!c.isEmpty())
 						buoy.setLightGroup(c);;
 					buoy.setLightChar(it);

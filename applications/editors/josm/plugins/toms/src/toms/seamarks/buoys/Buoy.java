@@ -524,12 +524,17 @@ abstract public class Buoy extends SeaMark {
 					i1 = c.indexOf("+");
 					tmp = c.substring(i1, c.length());
 					c = c.substring(0, i1);
+					if (!getLightGroup().isEmpty()) {
+						c = c + "(" + getLightGroup() + ")";
+					}
+					if (tmp != null)
+						c = c + tmp;
 				}
-				if (!getLightGroup().isEmpty())
-					c = c + "(" + getLightGroup() + ")";
-				if (tmp != null)
-					c = c + tmp;
 				dlg.cbM01Kennung.setSelectedItem(c);
+				if ((dlg.cbM01Kennung.getSelectedIndex() == 0) && !getLightGroup().isEmpty()) {
+					c = c + "(" + getLightGroup() + ")";
+					dlg.cbM01Kennung.setSelectedItem(c);
+				}
 				c = c + " " + getLightColour();
 				lp = getLightPeriod();
 				if (!lp.isEmpty())
@@ -538,8 +543,13 @@ abstract public class Buoy extends SeaMark {
 				dlg.cM01Fired.setVisible(true);
 				dlg.lM01Kennung.setVisible(true);
 				dlg.cbM01Kennung.setVisible(true);
-				dlg.lM01Group.setVisible(true);
-				dlg.tfM01Group.setVisible(true);
+				if (((String)dlg.cbM01Kennung.getSelectedItem()).contains("(")) {
+					dlg.tfM01Group.setVisible(false);
+					dlg.lM01Group.setVisible(false);
+				} else {
+					dlg.lM01Group.setVisible(true);
+					dlg.tfM01Group.setVisible(true);
+				}
 				dlg.tfM01Group.setText(getLightGroup());
 				dlg.lM01RepeatTime.setVisible(true);
 				dlg.tfM01RepeatTime.setVisible(true);

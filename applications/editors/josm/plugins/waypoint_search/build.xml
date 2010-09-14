@@ -30,7 +30,7 @@
 <project name="waypoint_search" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="correct plugin main version" />
+    <property name="commit.message" value="better integration wih JOSM gui" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3514" />
 

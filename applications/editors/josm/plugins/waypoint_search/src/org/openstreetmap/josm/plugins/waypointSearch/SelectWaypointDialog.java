@@ -35,11 +35,14 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
 	
 
     protected void build() {
+    	//add panel - all the gui of the plugin goes in here
+    	JPanel panel = new JPanel(new BorderLayout());
+    	
     	//search field
-    	searchPattern.setText("Enter search expression here..");
+    	searchPattern.setText(tr("Enter search expression here.."));
     	searchPattern.addKeyListener(this);
     	searchPattern.addMouseListener(this);
-    	add(searchPattern,BorderLayout.NORTH);
+    	panel.add(searchPattern,BorderLayout.NORTH);
     	
     	//add result table
     	searchResult.setLayoutOrientation(JList.VERTICAL);
@@ -47,11 +50,14 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
     	searchResult.addMouseListener(this);
     	JScrollPane scrollPane = new JScrollPane(searchResult);
     	scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    	add(scrollPane,BorderLayout.CENTER);
+    	panel.add(scrollPane,BorderLayout.CENTER);
     	
     	//add label
     	JLabel label = new JLabel(tr("Select waypoint to move map"));
-    	add(label,BorderLayout.SOUTH);
+    	panel.add(label,BorderLayout.SOUTH);
+    	
+    	//add panel to JOSM gui
+    	add(panel,BorderLayout.CENTER);
     }
 
     

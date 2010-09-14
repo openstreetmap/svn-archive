@@ -9,6 +9,7 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JDialog;
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * @author tilusnet <tilusnet@gmail.com>
@@ -35,9 +37,11 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 	boolean tipShown;
 
 	public AlignWaysMode(MapFrame mapFrame, String name, String desc) {
-		super(name, "alignways.png", desc, mapFrame, Cursor
-				.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
+		super(tr(name), "alignways.png", tr(desc),
+				Shortcut.registerShortcut("mapmode:alignways",
+						tr("Mode: {0}", tr("Align Ways")),
+						KeyEvent.VK_N, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT),
+						mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		noneSelected = new AlignWaysSelNoneState();
 		referenceSelected = new AlignWaysSelRefState();
 		aligneeSelected = new AlignWaysSelAlgnState();

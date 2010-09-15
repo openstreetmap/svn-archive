@@ -48,367 +48,367 @@ import uk.co.caprica.vlcj.player.embedded.*;
 
 //basic class of a videoplayer for one video
 public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListener, WindowListener{
-	private EmbeddedMediaPlayer mp;
-	private Timer t;
-	private JPanel screenPanel,controlsPanel;
-	private JSlider timeline;
-	private JButton play,back,forward;
-	private JToggleButton loop,mute;
-	private JSlider speed;
-	private Canvas scr;
-	private final String[] mediaOptions = {""};
-	private boolean syncTimeline=false;
-	private boolean looping=false;
-	private SimpleDateFormat ms;
-	private static final Logger LOG = Logger.getLogger(MediaPlayerFactory.class);
-	private int jumpLength=1000;
-	private int  loopLength=6000;
-	private static Set<PlayerObserver> observers = new HashSet<PlayerObserver>(); //we have to implement our own Observer pattern
-	
-	public SimpleVideoPlayer() {
-		super();
-		/*TODO new EnvironmentCheckerFactory().newEnvironmentChecker().checkEnvironment();
-		 * if(RuntimeUtil.isWindows()) {
-	  			vlcArgs.add("--plugin-path=" + WindowsRuntimeUtil.getVlcInstallDir() + "\\plugins");
-			}
-		 */
-		try
-		{
-			//we don't need any options
-			String[] libvlcArgs = {""};
-			String[] standardMediaOptions = {""}; 
-			
-			//System.out.println("libvlc version: " + LibVlc.INSTANCE.libvlc_get_version());
-			//setup Media Player
-			//TODO we have to deal with unloading things....
-			MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(libvlcArgs);
-		    FullScreenStrategy fullScreenStrategy = new DefaultFullScreenStrategy(this);
-		    mp = mediaPlayerFactory.newMediaPlayer(fullScreenStrategy);
-		    mp.setStandardMediaOptions(standardMediaOptions);
-		    //setup GUI
-		    setSize(400, 300); //later we apply movie size
-		    setAlwaysOnTop(true);
-		    createUI();
-		    setLayout();
-			addListeners(); //registering shortcuts is task of the outer plugin class!
-		    //embed vlc player
-			scr.setVisible(true);
-			setVisible(true);
-			mp.setVideoSurface(scr);
-			mp.addMediaPlayerEventListener(this);
-			//mp.pause();
-			//jump(0);
-			//create updater
-			ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-			executorService.scheduleAtFixedRate(new Syncer(this), 0L, 1000L, TimeUnit.MILLISECONDS);
-		    //setDefaultCloseOperation(EXIT_ON_CLOSE);
-			addWindowListener(this);
-		}
-		catch (NoClassDefFoundError e)
-		{
-			System.err.println(tr("Unable to find JNA Java library!"));
-		}
-		catch (UnsatisfiedLinkError e)
-		{
-			System.err.println(tr("Unable to find native libvlc library!"));
-		}
-		
-	}
+    private EmbeddedMediaPlayer mp;
+    private Timer t;
+    private JPanel screenPanel,controlsPanel;
+    private JSlider timeline;
+    private JButton play,back,forward;
+    private JToggleButton loop,mute;
+    private JSlider speed;
+    private Canvas scr;
+    private final String[] mediaOptions = {""};
+    private boolean syncTimeline=false;
+    private boolean looping=false;
+    private SimpleDateFormat ms;
+    private static final Logger LOG = Logger.getLogger(MediaPlayerFactory.class);
+    private int jumpLength=1000;
+    private int  loopLength=6000;
+    private static Set<PlayerObserver> observers = new HashSet<PlayerObserver>(); //we have to implement our own Observer pattern
+    
+    public SimpleVideoPlayer() {
+        super();
+        /*TODO new EnvironmentCheckerFactory().newEnvironmentChecker().checkEnvironment();
+         * if(RuntimeUtil.isWindows()) {
+                vlcArgs.add("--plugin-path=" + WindowsRuntimeUtil.getVlcInstallDir() + "\\plugins");
+            }
+         */
+        try
+        {
+            //we don't need any options
+            String[] libvlcArgs = {""};
+            String[] standardMediaOptions = {""}; 
+            
+            //System.out.println("libvlc version: " + LibVlc.INSTANCE.libvlc_get_version());
+            //setup Media Player
+            //TODO we have to deal with unloading things....
+            MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(libvlcArgs);
+            FullScreenStrategy fullScreenStrategy = new DefaultFullScreenStrategy(this);
+            mp = mediaPlayerFactory.newMediaPlayer(fullScreenStrategy);
+            mp.setStandardMediaOptions(standardMediaOptions);
+            //setup GUI
+            setSize(400, 300); //later we apply movie size
+            setAlwaysOnTop(true);
+            createUI();
+            setLayout();
+            addListeners(); //registering shortcuts is task of the outer plugin class!
+            //embed vlc player
+            scr.setVisible(true);
+            setVisible(true);
+            mp.setVideoSurface(scr);
+            mp.addMediaPlayerEventListener(this);
+            //mp.pause();
+            //jump(0);
+            //create updater
+            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+            executorService.scheduleAtFixedRate(new Syncer(this), 0L, 1000L, TimeUnit.MILLISECONDS);
+            //setDefaultCloseOperation(EXIT_ON_CLOSE);
+            addWindowListener(this);
+        }
+        catch (NoClassDefFoundError e)
+        {
+            System.err.println(tr("Unable to find JNA Java library!"));
+        }
+        catch (UnsatisfiedLinkError e)
+        {
+            System.err.println(tr("Unable to find native libvlc library!"));
+        }
+        
+    }
 
-	private void createUI() {
-		//setIconImage();
-		ms = new SimpleDateFormat("hh:mm:ss");
-		scr=new Canvas();
-		timeline = new JSlider(0,100,0);
-		timeline.setMajorTickSpacing(10);
-		timeline.setMajorTickSpacing(5);
-		timeline.setPaintTicks(true);
-		//TODO we need Icons instead
-		play= new JButton(tr("play"));
-		back= new JButton("<");
-		forward= new JButton(">");
-		loop= new JToggleButton(tr("loop"));
-		mute= new JToggleButton(tr("mute"));
-		speed = new JSlider(-200,200,0);
-		speed.setMajorTickSpacing(100);
-		speed.setPaintTicks(true);			
-		speed.setOrientation(Adjustable.VERTICAL);
-		Hashtable labelTable = new Hashtable();
-		labelTable.put( new Integer( 0 ), new JLabel("1x") );
-		labelTable.put( new Integer( -200 ), new JLabel("-2x") );
-		labelTable.put( new Integer( 200 ), new JLabel("2x") );
-		speed.setLabelTable( labelTable );
-		speed.setPaintLabels(true);
-	}
-	
-	//creates a layout like the most mediaplayers are...
-	private void setLayout() {
-		this.setLayout(new BorderLayout());
-		screenPanel=new JPanel();
-		screenPanel.setLayout(new BorderLayout());
-		controlsPanel=new JPanel();
-		controlsPanel.setLayout(new FlowLayout());
-		add(screenPanel,BorderLayout.CENTER);
-		add(controlsPanel,BorderLayout.SOUTH);
-		//fill screen panel
-		screenPanel.add(scr,BorderLayout.CENTER);
-		screenPanel.add(timeline,BorderLayout.SOUTH);
-		screenPanel.add(speed,BorderLayout.EAST);
-		controlsPanel.add(play);
-		controlsPanel.add(back);
-		controlsPanel.add(forward);
-		controlsPanel.add(loop);
-		controlsPanel.add(mute);
-		loop.setSelected(false);
-		mute.setSelected(false);
-	}
+    private void createUI() {
+        //setIconImage();
+        ms = new SimpleDateFormat("hh:mm:ss");
+        scr=new Canvas();
+        timeline = new JSlider(0,100,0);
+        timeline.setMajorTickSpacing(10);
+        timeline.setMajorTickSpacing(5);
+        timeline.setPaintTicks(true);
+        //TODO we need Icons instead
+        play= new JButton(tr("play"));
+        back= new JButton("<");
+        forward= new JButton(">");
+        loop= new JToggleButton(tr("loop"));
+        mute= new JToggleButton(tr("mute"));
+        speed = new JSlider(-200,200,0);
+        speed.setMajorTickSpacing(100);
+        speed.setPaintTicks(true);          
+        speed.setOrientation(Adjustable.VERTICAL);
+        Hashtable labelTable = new Hashtable();
+        labelTable.put( new Integer( 0 ), new JLabel("1x") );
+        labelTable.put( new Integer( -200 ), new JLabel("-2x") );
+        labelTable.put( new Integer( 200 ), new JLabel("2x") );
+        speed.setLabelTable( labelTable );
+        speed.setPaintLabels(true);
+    }
+    
+    //creates a layout like the most mediaplayers are...
+    private void setLayout() {
+        this.setLayout(new BorderLayout());
+        screenPanel=new JPanel();
+        screenPanel.setLayout(new BorderLayout());
+        controlsPanel=new JPanel();
+        controlsPanel.setLayout(new FlowLayout());
+        add(screenPanel,BorderLayout.CENTER);
+        add(controlsPanel,BorderLayout.SOUTH);
+        //fill screen panel
+        screenPanel.add(scr,BorderLayout.CENTER);
+        screenPanel.add(timeline,BorderLayout.SOUTH);
+        screenPanel.add(speed,BorderLayout.EAST);
+        controlsPanel.add(play);
+        controlsPanel.add(back);
+        controlsPanel.add(forward);
+        controlsPanel.add(loop);
+        controlsPanel.add(mute);
+        loop.setSelected(false);
+        mute.setSelected(false);
+    }
 
-	//add UI functionality
-	private void addListeners() {
-		timeline.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				if(!syncTimeline) //only if user moves the slider by hand
-				{
-					if(!timeline.getValueIsAdjusting()) //and the slider is fixed
-					{
-						//recalc to 0.x percent value
-						mp.setPosition((float)timeline.getValue()/100.0f);
-					}					
-				}
-			}
-		    });
-		
-		play.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				if(mp.isPlaying()) mp.pause(); else mp.play();				
-			}
-		});
-		
-		back.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				backward();
-			}
-		});
-		
-		forward.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				forward();
-			}
-		});
-		
-		loop.addActionListener(new ActionListener() {
+    //add UI functionality
+    private void addListeners() {
+        timeline.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                if(!syncTimeline) //only if user moves the slider by hand
+                {
+                    if(!timeline.getValueIsAdjusting()) //and the slider is fixed
+                    {
+                        //recalc to 0.x percent value
+                        mp.setPosition((float)timeline.getValue()/100.0f);
+                    }                   
+                }
+            }
+            });
+        
+        play.addActionListener(new ActionListener() {
+            
+            public void actionPerformed(ActionEvent arg0) {
+                if(mp.isPlaying()) mp.pause(); else mp.play();              
+            }
+        });
+        
+        back.addActionListener(new ActionListener() {
+            
+            public void actionPerformed(ActionEvent arg0) {
+                backward();
+            }
+        });
+        
+        forward.addActionListener(new ActionListener() {
+            
+            public void actionPerformed(ActionEvent arg0) {
+                forward();
+            }
+        });
+        
+        loop.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent arg0) {
-				loop();
-			}
-		});
-		
-		mute.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                loop();
+            }
+        });
+        
+        mute.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent arg0) {
-				mute();
-			}
-		});
-		
-		speed.addChangeListener(new ChangeListener() {
-			
-			public void stateChanged(ChangeEvent arg0) {
-				if(!speed.getValueIsAdjusting()&&(mp.isPlaying()))
-				{
-					int perc = speed.getValue();
-					float ratio= (float) (perc/400f*1.75);
-					ratio=ratio+(9/8);
-					mp.setRate(ratio);
-				}
-				
-			}
-		});
-		
-	}	
+            public void actionPerformed(ActionEvent arg0) {
+                mute();
+            }
+        });
+        
+        speed.addChangeListener(new ChangeListener() {
+            
+            public void stateChanged(ChangeEvent arg0) {
+                if(!speed.getValueIsAdjusting()&&(mp.isPlaying()))
+                {
+                    int perc = speed.getValue();
+                    float ratio= (float) (perc/400f*1.75);
+                    ratio=ratio+(9/8);
+                    mp.setRate(ratio);
+                }
+                
+            }
+        });
+        
+    }   
 
-	public void finished(MediaPlayer arg0) {
-			
-	}
+    public void finished(MediaPlayer arg0) {
+            
+    }
 
-	public void lengthChanged(MediaPlayer arg0, long arg1) {
+    public void lengthChanged(MediaPlayer arg0, long arg1) {
 
-	}
+    }
 
-	public void metaDataAvailable(MediaPlayer arg0, VideoMetaData data) {
-		final float perc = 0.5f;
-		Dimension org=data.getVideoDimension();
-		scr.setSize(new Dimension((int)(org.width*perc), (int)(org.height*perc)));
-		pack();
-		//send out metadatas to all observers
-		for (PlayerObserver o : observers) {
+    public void metaDataAvailable(MediaPlayer arg0, VideoMetaData data) {
+        final float perc = 0.5f;
+        Dimension org=data.getVideoDimension();
+        scr.setSize(new Dimension((int)(org.width*perc), (int)(org.height*perc)));
+        pack();
+        //send out metadatas to all observers
+        for (PlayerObserver o : observers) {
             o.metadata(0, hasSubtitles());
         }
-	}
+    }
 
-	public void paused(MediaPlayer arg0) {
+    public void paused(MediaPlayer arg0) {
 
-	}
+    }
 
-	public void playing(MediaPlayer arg0) {
+    public void playing(MediaPlayer arg0) {
 
-	}
+    }
 
-	public void positionChanged(MediaPlayer arg0, float arg1) {
-		
-	}
+    public void positionChanged(MediaPlayer arg0, float arg1) {
+        
+    }
 
-	public void stopped(MediaPlayer arg0) {
-				
-	}
+    public void stopped(MediaPlayer arg0) {
+                
+    }
 
-	public void timeChanged(MediaPlayer arg0, long arg1) {
+    public void timeChanged(MediaPlayer arg0, long arg1) {
 
-	}
-	
+    }
+    
 
-	public void windowActivated(WindowEvent arg0) {	}
+    public void windowActivated(WindowEvent arg0) { }
 
-	public void windowClosed(WindowEvent arg0) {	}
+    public void windowClosed(WindowEvent arg0) {    }
 
-	//we have to unload and disconnect to the VLC engine
-	public void windowClosing(WindowEvent evt) {
+    //we have to unload and disconnect to the VLC engine
+    public void windowClosing(WindowEvent evt) {
         if(LOG.isDebugEnabled()) {LOG.debug("windowClosing(evt=" + evt + ")");}
         mp.release();
         mp = null;
         System.exit(0);
       }
 
-	public void windowDeactivated(WindowEvent arg0) {	}
+    public void windowDeactivated(WindowEvent arg0) {   }
 
-	public void windowDeiconified(WindowEvent arg0) {	}
+    public void windowDeiconified(WindowEvent arg0) {   }
 
-	public void windowIconified(WindowEvent arg0) {	}
+    public void windowIconified(WindowEvent arg0) { }
 
-	public void windowOpened(WindowEvent arg0) {	}	
-	
-	public void setFile(File f)
-	{
-		String mediaPath = f.getAbsoluteFile().toString();
-		mp.playMedia(mediaPath, mediaOptions);
-		pack();	
-	}
-	
-	public void play()
-	{
-		mp.play();
-	}
-	
-	public void jump(long time)
-	{
-		/*float pos = (float)mp.getLength()/(float)time;
-		mp.setPosition(pos);*/
-		mp.setTime(time);
-	}
-	
-	public long getTime()
-	{
-		return mp.getTime();
-	}
-	
-	public float getPosition()
-	{
-		return mp.getPosition();
-	}
-	
-	public boolean isPlaying()
-	{
-		return mp.isPlaying();
-	}
-	
-	//gets called by the Syncer thread to update all observers
-	public void updateTime ()
-	{
-		if(mp.isPlaying())
-		{
-			setTitle(ms.format(new Date(mp.getTime())));
-			syncTimeline=true;
-			timeline.setValue(Math.round(mp.getPosition()*100));
-			syncTimeline=false;
-			notifyObservers(mp.getTime());
-		}
-	}
-	
-	//allow externals to extend the ui
-	public void addComponent(JComponent c)
-	{
-		controlsPanel.add(c);
-		pack();
-	}
+    public void windowOpened(WindowEvent arg0) {    }   
+    
+    public void setFile(File f)
+    {
+        String mediaPath = f.getAbsoluteFile().toString();
+        mp.playMedia(mediaPath, mediaOptions);
+        pack(); 
+    }
+    
+    public void play()
+    {
+        mp.play();
+    }
+    
+    public void jump(long time)
+    {
+        /*float pos = (float)mp.getLength()/(float)time;
+        mp.setPosition(pos);*/
+        mp.setTime(time);
+    }
+    
+    public long getTime()
+    {
+        return mp.getTime();
+    }
+    
+    public float getPosition()
+    {
+        return mp.getPosition();
+    }
+    
+    public boolean isPlaying()
+    {
+        return mp.isPlaying();
+    }
+    
+    //gets called by the Syncer thread to update all observers
+    public void updateTime ()
+    {
+        if(mp.isPlaying())
+        {
+            setTitle(ms.format(new Date(mp.getTime())));
+            syncTimeline=true;
+            timeline.setValue(Math.round(mp.getPosition()*100));
+            syncTimeline=false;
+            notifyObservers(mp.getTime());
+        }
+    }
+    
+    //allow externals to extend the ui
+    public void addComponent(JComponent c)
+    {
+        controlsPanel.add(c);
+        pack();
+    }
 
-	public long getLength() {		
-		return mp.getLength();
-	}
+    public long getLength() {       
+        return mp.getLength();
+    }
 
-	public void setDeinterlacer(String string) {
-		mp.setDeinterlace(string);
-		
-	}
+    public void setDeinterlacer(String string) {
+        mp.setDeinterlace(string);
+        
+    }
 
-	public void setJumpLength(Integer integer) {
-		jumpLength=integer;
-		
-	}
+    public void setJumpLength(Integer integer) {
+        jumpLength=integer;
+        
+    }
 
-	public void setLoopLength(Integer integer) {
-		loopLength = integer;
-		
-	}
+    public void setLoopLength(Integer integer) {
+        loopLength = integer;
+        
+    }
 
-	public void loop() {
-		if(looping)
-		{
-			t.cancel();
-			looping=false;
-		}
-		else			
-		{
-			final long resetpoint=(long) mp.getTime()-loopLength/2;
-			TimerTask ani=new TimerTask() {
-				
-				@Override
-				public void run() {
-					mp.setTime(resetpoint);
-				}
-			};
-			t= new Timer();
-			t.schedule(ani,loopLength/2,loopLength); //first run a half looptime till reset
-			looping=true;
-			}
-		
-	}
-	
-	protected void mute() {
-		mp.mute();
-		
-	}
+    public void loop() {
+        if(looping)
+        {
+            t.cancel();
+            looping=false;
+        }
+        else            
+        {
+            final long resetpoint=(long) mp.getTime()-loopLength/2;
+            TimerTask ani=new TimerTask() {
+                
+                @Override
+                public void run() {
+                    mp.setTime(resetpoint);
+                }
+            };
+            t= new Timer();
+            t.schedule(ani,loopLength/2,loopLength); //first run a half looptime till reset
+            looping=true;
+            }
+        
+    }
+    
+    protected void mute() {
+        mp.mute();
+        
+    }
 
-	public void forward() {
-		mp.setTime((long) (mp.getTime()+jumpLength));
-	}
+    public void forward() {
+        mp.setTime((long) (mp.getTime()+jumpLength));
+    }
 
-	public void backward() {
-		mp.setTime((long) (mp.getTime()-jumpLength));
-		
-	}
+    public void backward() {
+        mp.setTime((long) (mp.getTime()-jumpLength));
+        
+    }
 
-	public void removeVideo() {
-		if (mp.isPlaying()) mp.stop();
-		mp.release();
-		
-	}
-	
-	public void toggleSubs()
-	{
-		//vlc manages it's subtitles in a own list so we have to cycle trough
-		int spu = mp.getSpu();
+    public void removeVideo() {
+        if (mp.isPlaying()) mp.stop();
+        mp.release();
+        
+    }
+    
+    public void toggleSubs()
+    {
+        //vlc manages it's subtitles in a own list so we have to cycle trough
+        int spu = mp.getSpu();
         if(spu > -1) {
           spu++;
           if(spu > mp.getSpuCount()) {
@@ -419,67 +419,67 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
           spu = 0;
         }
         mp.setSpu(spu);
-	}
+    }
 
-	public static void addObserver(PlayerObserver observer) {
+    public static void addObserver(PlayerObserver observer) {
 
-	        observers.add(observer);
+            observers.add(observer);
 
-	    }
+        }
 
-	 
+     
 
-	    public static void removeObserver(PlayerObserver observer) {
+        public static void removeObserver(PlayerObserver observer) {
 
-	        observers.remove(observer);
+            observers.remove(observer);
 
-	    }
+        }
 
-	    private static void notifyObservers(long newTime) {
+        private static void notifyObservers(long newTime) {
 
-	        for (PlayerObserver o : observers) {
-	            o.playing(newTime);
-	        }
+            for (PlayerObserver o : observers) {
+                o.playing(newTime);
+            }
 
-	    }
+        }
 
-		public String getNativePlayerInfos() {
-			return "VLC "+LibVlc.INSTANCE.libvlc_get_version();
-		}
+        public String getNativePlayerInfos() {
+            return "VLC "+LibVlc.INSTANCE.libvlc_get_version();
+        }
 
-		public void faster() {
-			speed.setValue(speed.getValue()+100);
-			
-		}
+        public void faster() {
+            speed.setValue(speed.getValue()+100);
+            
+        }
 
-		public void slower() {
-			speed.setValue(speed.getValue()-100);
-			
-		}
+        public void slower() {
+            speed.setValue(speed.getValue()-100);
+            
+        }
 
-		public void pause() {
-			if (mp.isPlaying()) mp.pause();
-			
-		}
+        public void pause() {
+            if (mp.isPlaying()) mp.pause();
+            
+        }
 
-		public boolean playing() {
-			return mp.isPlaying();
-		}
+        public boolean playing() {
+            return mp.isPlaying();
+        }
 
-		public void error(MediaPlayer arg0) {
-			// TODO Auto-generated method stub
-			
-		}
+        public void error(MediaPlayer arg0) {
+            // TODO Auto-generated method stub
+            
+        }
 
-		public void mediaChanged(MediaPlayer arg0) {
-			// TODO Auto-generated method stub
-			
-		}
+        public void mediaChanged(MediaPlayer arg0) {
+            // TODO Auto-generated method stub
+            
+        }
 
-		public boolean hasSubtitles() {
-			if (mp.getSpuCount()==0) return false; else   return true;
-		}
+        public boolean hasSubtitles() {
+            if (mp.getSpuCount()==0) return false; else   return true;
+        }
 
-	
+    
 
 }

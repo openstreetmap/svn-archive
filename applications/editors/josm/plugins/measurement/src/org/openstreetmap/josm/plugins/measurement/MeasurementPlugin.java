@@ -19,7 +19,7 @@ public class MeasurementPlugin extends Plugin {
     protected static MeasurementLayer currentLayer;
 
     public MeasurementPlugin(PluginInformation info) {
-    	super(info);
+        super(info);
         mode = new MeasurementMode(Main.map, "measurement", tr("measurement mode"));
         btn = new IconToggleButton(mode);
         btn.setVisible(true);
@@ -46,8 +46,8 @@ public class MeasurementPlugin extends Plugin {
                 public void layerAdded(final Layer newLayer) {
                 }
                 public void layerRemoved(final Layer oldLayer) {
-                	if (oldLayer != null && oldLayer == currentLayer)
-                		MapView.removeLayerChangeListener(this);
+                    if (oldLayer != null && oldLayer == currentLayer)
+                        MapView.removeLayerChangeListener(this);
                 }
             });
         }

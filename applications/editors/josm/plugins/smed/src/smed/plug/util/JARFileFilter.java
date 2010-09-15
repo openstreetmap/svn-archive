@@ -5,9 +5,9 @@ import java.io.FileFilter;
 
 public class JARFileFilter implements FileFilter {
 
-	@Override
-	public boolean accept(File f) {
-		return f.getName().toLowerCase().endsWith(".jar");
-	}
+    @Override
+    public boolean accept(File f) {
+        return f.getName().toLowerCase().endsWith(".jar");
+    }
 
 }

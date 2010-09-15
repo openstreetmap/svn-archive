@@ -7,9 +7,9 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class SimplifyAreaPlugin extends Plugin {
 
-	public SimplifyAreaPlugin(final PluginInformation info) {
-		super(info);
-		MainMenu.add(Main.main.menu.toolsMenu, new SimplifyAreaAction());
-	}
+    public SimplifyAreaPlugin(final PluginInformation info) {
+        super(info);
+        MainMenu.add(Main.main.menu.toolsMenu, new SimplifyAreaAction());
+    }
 
 }

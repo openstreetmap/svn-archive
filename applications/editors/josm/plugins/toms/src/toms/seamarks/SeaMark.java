@@ -99,12 +99,14 @@ abstract public class SeaMark {
 	public final static int ISOL_TOWER = 4;
 	public final static int ISOL_FLOAT = 5;
 	public final static int SPEC_PILLAR = 1;
-	public final static int SPEC_SPAR = 2;
-	public final static int SPEC_SPHERE = 3;
-	public final static int SPEC_BARREL = 4;
-	public final static int SPEC_FLOAT = 5;
-	public final static int SPEC_BEACON = 6;
-	public final static int SPEC_TOWER = 7;
+	public final static int SPEC_CAN = 2;
+	public final static int SPEC_CONE = 3;
+	public final static int SPEC_SPAR = 4;
+	public final static int SPEC_BEACON = 5;
+	public final static int SPEC_TOWER = 6;
+	public final static int SPEC_FLOAT = 7;
+	public final static int SPEC_SPHERE = 8;
+	public final static int SPEC_BARREL = 9;
 	
 	/**
 	 * Radar Beacons - correspond to Ratyp Index

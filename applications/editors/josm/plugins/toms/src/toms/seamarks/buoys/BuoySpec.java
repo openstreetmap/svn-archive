@@ -31,12 +31,14 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01StyleOfMark.removeAllItems();
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
+		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.02")); //$NON-NLS-1$
+		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.03")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.08")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.09")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
+		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
+		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.08")); //$NON-NLS-1$
+		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.09")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.setVisible(true);
 		dlg.lM01StyleOfMark.setVisible(true);
 
@@ -70,6 +72,10 @@ public class BuoySpec extends Buoy {
 
 			if (str.equals("pillar")) //$NON-NLS-1$
 				setStyleIndex(SPEC_PILLAR);
+			else if (str.equals("can")) //$NON-NLS-1$
+				setStyleIndex(SPEC_CAN);
+			else if (str.equals("conical")) //$NON-NLS-1$
+				setStyleIndex(SPEC_CONE);
 			else if (str.equals("spar")) //$NON-NLS-1$
 				setStyleIndex(SPEC_SPAR);
 			else if (str.equals("sphere")) //$NON-NLS-1$
@@ -78,6 +84,18 @@ public class BuoySpec extends Buoy {
 				setStyleIndex(SPEC_BARREL);
 		}
 
+		if (keys.containsKey("seamark:beacon_special_purpose:shape")) { //$NON-NLS-1$
+			str = keys.get("seamark:beacon_special_purpose:shape"); //$NON-NLS-1$
+		if (str.equals("tower")) //$NON-NLS-1$
+			setStyleIndex(SPEC_TOWER);
+		else 
+			setStyleIndex(SPEC_BEACON);
+		}
+
+		if (keys.containsKey("seamark:light_float:colour")) {
+			setStyleIndex(SPEC_FLOAT);
+		}
+		
 		if ((keys.containsKey("seamark:type") && keys.get("seamark:type").equals( //$NON-NLS-1$ //$NON-NLS-2$
 				"beacon_special_purpose")) //$NON-NLS-1$
 				|| keys.containsKey("seamark:beacon_special_purpose:colour") //$NON-NLS-1$

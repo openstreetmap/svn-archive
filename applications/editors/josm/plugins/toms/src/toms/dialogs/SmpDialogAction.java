@@ -449,7 +449,7 @@ public class SmpDialogAction extends JosmAction {
 					buoy = new BuoySaw(this, node);
 					return;
 				} else if (str.equals("yellow")) { //$NON-NLS-1$
-					buoy = new BuoySaw(this, node);
+					buoy = new BuoySpec(this, node);
 					return;
 				}
 			} else if (keys.containsKey("seamark:light_float:topmark:shape")) { //$NON-NLS-1$

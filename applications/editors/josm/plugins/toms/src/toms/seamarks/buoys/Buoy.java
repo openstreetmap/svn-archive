@@ -412,6 +412,7 @@ abstract public class Buoy extends SeaMark {
 			}
 		}
 		setSectorIndex(0);
+		dlg.cbM01Sector.setSelectedIndex(0);
 		dlg.cM01Fired.setSelected(isFired());
 		dlg.rbM01Fired1.setSelected(!isSectored());
 		dlg.rbM01FiredN.setSelected(isSectored());

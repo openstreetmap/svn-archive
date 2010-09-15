@@ -134,6 +134,7 @@
 		} else {
 			c=preferences.data.tilecustom;
 			if (c.toLowerCase().indexOf('google')>-1) { c='http://tile.openstreetmap.org/16/18222/24892.png?!!!'; }
+			else if (c.toLowerCase().indexOf('nearmap')>-1) { c='http://tile.openstreetmap.org/17/31017/50324.png?!!!'; }
 		}
 		var a=c.split('!');
 		return tileprefix+a[0]+_root.scale+a[1]+x+a[2]+y+a[3];

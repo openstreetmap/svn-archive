@@ -136,7 +136,7 @@
 	var lang=System.capabilities.language; // language (e.g. 'en', 'fr')
 	var signature="1.4";			// current version
 	var maximised=false;			// minimised/maximised?
-	var sourcetags=new Array("","","","","OS OpenData StreetView","NPE","Popular Edition (Scotland)","OS7","OS 1:25k", "nearmap", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo","Surrey Air Survey");
+	var sourcetags=new Array("","","","","OS OpenData StreetView","NPE","Popular Edition (Scotland)","OS7","OS 1:25k", "GeoEye", "GeoEye", "digitalglobe","Haiti DMA Topo","Surrey Air Survey");
 	var lastgroup='road';			// last preset group used
 	var wayrels=new Object();		// which relations are in ways?
 	var noderels=new Object();		// which relations are in nodes?
@@ -162,7 +162,6 @@
 						   "http://gibin.geog.ucl.ac.uk/~ollie/scotland/tiles/!/!/!.jpg",
 						   "http://ooc.openstreetmap.org/os7/!/!/!.jpg",
 						   "http://ooc.openstreetmap.org/os1/!/!/!.jpg",
-                           "http://www.nearmap.com/maps/nml=Vert&zxy=!,!,!",
                            "http://gravitystorm.dev.openstreetmap.org/imagery/haiti/!/!/!.png",
                            "http://maps.nypl.org/tilecache/1/geoeye/!/!/!.jpg",
                            "http://maps.nypl.org/tilecache/1/dg_crisis/!/!/!.jpg",
@@ -1081,7 +1080,6 @@
                       iText('option_layer_ooc_scotland'),
                       iText('option_layer_ooc_7th'),
                       iText('option_layer_ooc_25k'),
-                      iText('option_layer_nearmap'),
                       iText('option_layer_geoeye_gravitystorm_haiti'),
                       iText('option_layer_geoeye_nypl_haiti'),
                       iText('option_layer_digitalglobe_haiti'),

@@ -2131,6 +2131,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
       way->clon = ndItr->lon + way->dlon;
     }
 
+    #ifndef ONLY_ROUTING
     // This is a simplified version of the rebuild: It does not use groups or files
     // and the lats & lons have been dereferenced previously. So the pairing is
     // simplified a lot.
@@ -2190,6 +2191,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
         //printf ("%d %d\n", lowzOther, lseg.size ());
       } // If the way belongs in the lowzoom
     } // If it was the start of a way
+    #endif
   } // For each highzoom nd
   REBUILDWATCH (qsort (&lseg[0], lseg.size () / 2, sizeof (lseg[0]) * 2, 
     (int (*)(const void *, const void *))HalfSegCmp));

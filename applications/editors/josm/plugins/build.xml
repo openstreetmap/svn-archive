@@ -22,6 +22,7 @@
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
+        <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
         <ant antfile="build.xml" target="dist" dir="livegps"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
@@ -62,6 +63,8 @@
         <ant antfile="build.xml" target="dist" dir="wayselector"/>
         <ant antfile="build.xml" target="dist" dir="wmsplugin"/>
         <ant antfile="build.xml" target="dist" dir="wms-turbo-challenge2"/>
+        <!-- behind wms plugin! -->
+        <ant antfile="build.xml" target="dist" dir="irsrectify"/>
     </target>
     <target name="build_defect" depends="compile">
         <ant antfile="build.xml" target="dist" dir="duplicateway"/>
@@ -85,6 +88,8 @@
         <ant antfile="build.xml" target="clean" dir="graphview"/>
         <ant antfile="build.xml" target="clean" dir="grid"/>
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>
+        <ant antfile="build.xml" target="clean" dir="ImportImagePlugin"/>
+        <ant antfile="build.xml" target="clean" dir="irsrectify"/>
         <ant antfile="build.xml" target="clean" dir="lakewalker"/>
         <ant antfile="build.xml" target="clean" dir="livegps"/>
         <ant antfile="build.xml" target="clean" dir="measurement"/>

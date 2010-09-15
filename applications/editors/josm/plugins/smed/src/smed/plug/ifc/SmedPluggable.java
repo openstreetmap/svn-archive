@@ -5,11 +5,13 @@ import javax.swing.JComponent;
 
 public interface SmedPluggable {
 
-    boolean start();
-    boolean start(JComponent panel);
-    boolean stop();
-    String getName();
-    
-    void setPluginManager(SmedPluginManager manager);
+	boolean start();
+	boolean stop();
+	String getName();
+	String getInfo();
+	JComponent getComponent();
+	
+	void setPluginManager(SmedPluginManager manager);
+
 }
 

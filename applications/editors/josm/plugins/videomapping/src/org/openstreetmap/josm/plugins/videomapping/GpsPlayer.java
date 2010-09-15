@@ -346,7 +346,8 @@ public class GpsPlayer {
 	//jumps to a specific time
 	public void jump(long relTime) {
 		int pos = Math.round(relTime/1000);//TODO ugly quick hack	
-		jump(pos);				
+		jump(pos);
+		//if (autoCenter) Main.map.mapView.
 	}
 	
 	//toggles walking along the track

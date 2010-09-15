@@ -146,27 +146,21 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 			}
 		};
 		
-		VStart = new JosmAction(tr("play/pause"), "audio-playpause", tr("starts/pauses video playback"),
-				Shortcut.registerShortcut("videomapping:startstop","",KeyEvent.VK_SPACE, Shortcut.GROUP_DIRECT), false) {
+		VStart = new JosmAction(tr("Play/Pause"), "audio-playpause", tr("starts/pauses video playback"),
+				Shortcut.registerShortcut("videomapping:startstop","",KeyEvent.VK_NUMPAD5, Shortcut.GROUP_DIRECT), false) {
 			
 			public void actionPerformed(ActionEvent e) {								
 				if(player.playing()) player.pause(); else player.play();
 			}
 		};
-		Vbackward = new JosmAction(tr("backward"), "audio-prev", tr("jumps n sec back"),
+		Vbackward = new JosmAction(tr("Backward"), "audio-prev", tr("jumps n sec back"),
 				Shortcut.registerShortcut("videomapping:backward","",KeyEvent.VK_NUMPAD4, Shortcut.GROUP_DIRECT), false) {
-			
-			/**
-					 * 
-					 */
-					private static final long serialVersionUID = -1060444361541900464L;
-
 			public void actionPerformed(ActionEvent e) {
 				player.backward();
 							
 			}
 		};
-		Vbackward = new JosmAction(tr("jump"), null, tr("jumps to the entered gps time"),null, false) {			
+		Vbackward = new JosmAction(tr("Jump To"), null, tr("jumps to the entered gps time"),null, false) {			
 			public void actionPerformed(ActionEvent e) {
 				String s =JOptionPane.showInputDialog(tr("please enter GPS timecode"),"10:07:57");
 				SimpleDateFormat format= new SimpleDateFormat("hh:mm:ss");
@@ -184,7 +178,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 							
 			}
 		};
-		Vforward= new JosmAction(tr("forward"), "audio-next", tr("jumps n sec forward"),
+		Vforward= new JosmAction(tr("Forward"), "audio-next", tr("jumps n sec forward"),
 				Shortcut.registerShortcut("videomapping:forward","",KeyEvent.VK_NUMPAD6, Shortcut.GROUP_DIRECT), false) {
 			
 			public void actionPerformed(ActionEvent e) {
@@ -192,24 +186,24 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 							
 			}
 		};
-		Vfaster= new JosmAction(tr("faster"), "audio-faster", tr("faster playback"),
-				Shortcut.registerShortcut("videomapping:faster","",KeyEvent.VK_PLUS, Shortcut.GROUP_DIRECT), false) {
+		Vfaster= new JosmAction(tr("Faster"), "audio-faster", tr("faster playback"),
+				Shortcut.registerShortcut("videomapping:faster","",KeyEvent.VK_NUMPAD8, Shortcut.GROUP_DIRECT), false) {
 			
 			public void actionPerformed(ActionEvent e) {
 				player.faster();
 							
 			}
 		};
-		Vslower= new JosmAction(tr("slower"), "audio-slower", tr("slower playback"),
-				Shortcut.registerShortcut("videomapping:slower","",KeyEvent.VK_MINUS, Shortcut.GROUP_DIRECT), false) {
+		Vslower= new JosmAction(tr("Slower"), "audio-slower", tr("slower playback"),
+				Shortcut.registerShortcut("videomapping:slower","",KeyEvent.VK_NUMPAD2, Shortcut.GROUP_DIRECT), false) {
 			
 			public void actionPerformed(ActionEvent e) {
 				player.slower();
 							
 			}
 		};
-		Vloop= new JosmAction(tr("loop"), "clock", tr("loops n sec around current position"),
-				Shortcut.registerShortcut("videomapping:loop","",KeyEvent.VK_NUMPAD5, Shortcut.GROUP_DIRECT), false) {
+		Vloop= new JosmAction(tr("Loop"), null, tr("loops n sec around current position"),
+				Shortcut.registerShortcut("videomapping:loop","",KeyEvent.VK_NUMPAD7, Shortcut.GROUP_DIRECT), false) {
 			
 			public void actionPerformed(ActionEvent e) {
 				player.loop();
@@ -218,17 +212,18 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 		};
 		
 		//now the options menu
-		VCenterIcon = new JCheckBoxMenuItem(new JosmAction(tr("Keep centered"), "cursor/crosshair", tr("follows the video icon automaticly"),null, false) {
+		VCenterIcon = new JCheckBoxMenuItem(new JosmAction(tr("Keep centered"), null, tr("follows the video icon automaticly"),null, false) {
 			
 			public void actionPerformed(ActionEvent e) {
 				autocenter=VCenterIcon.isSelected();
+				player.setAutoCenter(autocenter);
 				applySettings();
 				saveSettings();
 							
 			}
 		});
 		//now the options menu
-		VSubTitles = new JCheckBoxMenuItem(new JosmAction(tr("Subtitles"), "cursor/crosshair", tr("Show subtitles in video"),null, false) {
+		VSubTitles = new JCheckBoxMenuItem(new JosmAction(tr("Subtitles"), null, tr("Show subtitles in video"),null, false) {
 			
 			public void actionPerformed(ActionEvent e) {
 				player.toggleSubtitles();

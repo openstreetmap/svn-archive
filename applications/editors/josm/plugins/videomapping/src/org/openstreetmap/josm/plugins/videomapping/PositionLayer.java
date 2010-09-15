@@ -267,7 +267,11 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 				if(wp!=null)
 				{
 					player.jump(wp);
-					if(gps!=null) notifyObservers(player.getRelativeTime()); //call videoplayer to set rigth position
+					//jump if we know position
+					if(wp.attr.containsKey("synced"))
+					{						
+						if(gps!=null) notifyObservers(player.getRelativeTime()); //call videoplayers to set right position
+					}
 				}
 			}
 			Main.map.mapView.repaint();

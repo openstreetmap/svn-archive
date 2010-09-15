@@ -22,7 +22,7 @@ import org.openstreetmap.josm.plugins.videomapping.PlayerObserver;
 //combines video and GPS playback, major control has the video player
 public class GPSVideoPlayer implements PlayerObserver{
 	Timer t;
-	TimerTask syncGPSTrack;
+	TimerTask updateGPSTrack;
 	private GpsPlayer gps;
 	private SimpleVideoPlayer video;
 	private JButton syncBtn;
@@ -63,7 +63,8 @@ public class GPSVideoPlayer implements PlayerObserver{
 
 			public void playing(long time) {
 				//sync the GPS back
-				if(synced) gps.jump(getGPSTime(time));			
+				if(synced) gps.jump(getGPSTime(time));
+				
 			}
 
 			public void jumping(long time) {
@@ -185,6 +186,11 @@ public class GPSVideoPlayer implements PlayerObserver{
 	public void setLoopLength(Integer integer) {
 		video.setLoopLength(integer);
 		
+	}
+	
+	public boolean isSynced()
+	{
+		return isSynced();
 	}
 
 	public void loop() {

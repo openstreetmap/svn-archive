@@ -81,7 +81,7 @@ public class UploadDataGui extends ExtendedDialog {
         }
 
         @Override
-		public String toString() {
+        public String toString() {
             return this.name().toLowerCase();
         }
     }
@@ -133,10 +133,10 @@ public class UploadDataGui extends ExtendedDialog {
      * @return JPanel with components
      */
     private JPanel initComponents() {
-    	JLabel visibilityLabel = new JLabel(tr("Visibility"));
+        JLabel visibilityLabel = new JLabel(tr("Visibility"));
         visibilityLabel.setToolTipText(tr("Defines the visibility of your trace for other OSM users."));
         for(visibility v : visibility.values()) {
-        	visibilityCombo.addItem(v.description);
+            visibilityCombo.addItem(v.description);
         }
         UrlLabel visiUrl = new UrlLabel(tr("http://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces"), tr("(What does that mean?)"));
 
@@ -204,55 +204,55 @@ public class UploadDataGui extends ExtendedDialog {
      * @param GpxData The GPX Data to upload
      */
     private void upload(String description, String tags, String visi, GpxData gpxData, ProgressMonitor progressMonitor) throws IOException {
-    	progressMonitor.beginTask(null);
-    	try {
-    		if(checkForErrors(username, password, description, gpxData))
-    			return;
+        progressMonitor.beginTask(null);
+        try {
+            if(checkForErrors(username, password, description, gpxData))
+                return;
 
-    		// Clean description/tags from disallowed chars
-    		description = description.replaceAll("[&?/\\\\]"," ");
-    		tags = tags.replaceAll("[&?/\\\\.;]"," ");
+            // Clean description/tags from disallowed chars
+            description = description.replaceAll("[&?/\\\\]"," ");
+            tags = tags.replaceAll("[&?/\\\\.;]"," ");
 
-    		// Set progress dialog to indeterminate while connecting
-    		progressMonitor.indeterminateSubTask(tr("Connecting..."));
+            // Set progress dialog to indeterminate while connecting
+            progressMonitor.indeterminateSubTask(tr("Connecting..."));
 
-    		try {
-    			// Generate data for upload
-    			ByteArrayOutputStream baos  = new ByteArrayOutputStream();
-    			writeGpxFile(baos, "file", gpxData);
-    			writeField(baos, "description", description);
-    			writeField(baos, "tags", (tags != null && tags.length() > 0) ? tags : "");
-    			writeField(baos, "visibility", visi);
-    			writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
+            try {
+                // Generate data for upload
+                ByteArrayOutputStream baos  = new ByteArrayOutputStream();
+                writeGpxFile(baos, "file", gpxData);
+                writeField(baos, "description", description);
+                writeField(baos, "tags", (tags != null && tags.length() > 0) ? tags : "");
+                writeField(baos, "visibility", visi);
+                writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
 
-    			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-    			HttpURLConnection conn = setupConnection(baos.size());
+                ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                HttpURLConnection conn = setupConnection(baos.size());
 
-    			progressMonitor.setTicksCount(baos.size());
-    			progressMonitor.subTask(null);
+                progressMonitor.setTicksCount(baos.size());
+                progressMonitor.subTask(null);
 
-    			try {
-    				flushToServer(bais, conn.getOutputStream(), progressMonitor);
-    			} catch(Exception e) {}
+                try {
+                    flushToServer(bais, conn.getOutputStream(), progressMonitor);
+                } catch(Exception e) {}
 
-    			if(cancelled) {
-    				conn.disconnect();
-    				OutputDisplay.setText(tr("Upload cancelled"));
-    				buttons.get(0).setEnabled(true);
-    				cancelled = false;
-    			} else {
-    				boolean success = finishUpConnection(conn);
-    				buttons.get(0).setEnabled(!success);
-    				if(success)
-    					buttons.get(1).setText(tr("Close"));
-    			}
-    		} catch(Exception e) {
-    			OutputDisplay.setText(tr("Error while uploading"));
-    			e.printStackTrace();
-    		}
-    	} finally {
-    		progressMonitor.finishTask();
-    	}
+                if(cancelled) {
+                    conn.disconnect();
+                    OutputDisplay.setText(tr("Upload cancelled"));
+                    buttons.get(0).setEnabled(true);
+                    cancelled = false;
+                } else {
+                    boolean success = finishUpConnection(conn);
+                    buttons.get(0).setEnabled(!success);
+                    if(success)
+                        buttons.get(1).setText(tr("Close"));
+                }
+            } catch(Exception e) {
+                OutputDisplay.setText(tr("Error while uploading"));
+                e.printStackTrace();
+            }
+        } finally {
+            progressMonitor.finishTask();
+        }
     }
 
     /**

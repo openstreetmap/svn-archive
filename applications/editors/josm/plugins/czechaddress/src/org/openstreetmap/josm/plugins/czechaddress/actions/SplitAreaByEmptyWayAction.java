@@ -62,7 +62,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
             for (OsmPrimitive prim2 : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
                 if (!(prim2 instanceof Way)) continue;
                 if (prim2.equals(prim))      continue;
-               	Way border = (Way) prim2;
+                Way border = (Way) prim2;
                 if (border.getNodes().size() == 0)   continue;
                 if (border.keySet().size() > 0) continue;
                 if (!area.getNodes().contains(border.firstNode())) continue;

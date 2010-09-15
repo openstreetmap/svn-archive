@@ -19,7 +19,7 @@ import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFacto
  * <p><b>WARNING:</b> Every house must have a parent, whose type is
  * {@link ElementWithHouses}. The {@code setParent()} method should
  * be called immediatelly after the constructor.</p>
- * 
+ *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
 public class House extends AddressElement {
@@ -43,11 +43,11 @@ public class House extends AddressElement {
         if (co != null) this.co = co.toLowerCase();
 
         assert (co != null) || (cp != null);
-        
+
         //... but the the name is overwritten.
         this.name = generateName(this.cp, this.co);
     }
-    
+
     /**
      * Returns the number unique in a suburb (číslo popisné)
      */
@@ -127,7 +127,7 @@ public class House extends AddressElement {
         assert parent instanceof ElementWithHouses;
         super.setParent(parent);
     }
-    
+
     /**
      * Returns the parent of this house with type-checking.
      *
@@ -158,7 +158,7 @@ public class House extends AddressElement {
         // First field is the AlternateNubmer
         result[0] = matchField(this.cp, prim.get(PrimUtils.KEY_ADDR_CP));
         result[2] = matchField(name,    prim.get(PrimUtils.KEY_ADDR_HOUSE_N));
-        
+
         // Second field is the Housenumber
         if (parent instanceof Street)
             result[1] = Math.min(
@@ -177,7 +177,7 @@ public class House extends AddressElement {
         return result;
     }
 
-    
+
 
     /**
      * Gives all proposals to make the primitive be an address primitive.
@@ -187,7 +187,7 @@ public class House extends AddressElement {
      */
     @Override
     public List<Proposal> getDiff(OsmPrimitive prim) {
-        
+
         List<Proposal> props = new NotNullList<Proposal>();
         ParentResolver resolver = new ParentResolver(this);
 

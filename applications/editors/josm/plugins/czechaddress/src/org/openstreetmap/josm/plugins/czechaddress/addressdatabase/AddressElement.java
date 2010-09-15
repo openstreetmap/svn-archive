@@ -13,7 +13,7 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
  * The most general element of the houses and streets database.
  *
  * <p>Every element must have a <i>name</i> and may have a <i>parent</i>.</p>
- * 
+ *
  * @author Radomír Černoch radomir.cernoch@gmail.com
  */
 public abstract class AddressElement implements Comparable<AddressElement> {
@@ -98,7 +98,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         if (prim instanceof Node) {
             Node node = (Node) prim;
             result += " " + StringUtils.latLonToString(node.getCoor());
-            
+
         } else if (prim instanceof Way) {
             Way way = (Way) prim;
             if (way.getNodesCount() > 0)
@@ -134,7 +134,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
 
     /**
      * Compares 2 elements.
-     * 
+     *
      * <p>Basic criterion to comparing elements is their <i>name</i> and the
      * </i>parent</i>. Notice that this behaviour might be changed
      * in subclasses.</p>
@@ -216,9 +216,9 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         return StringUtils.matchAbbrev(primValue, elemValue) ? 1 : -1;
     }
 
-    
+
     protected int[] getFieldMatchList(OsmPrimitive primitive) {
-        int[] result = {0};        
+        int[] result = {0};
         return result;
     }
 
@@ -241,11 +241,11 @@ public abstract class AddressElement implements Comparable<AddressElement> {
      * describes how well does the given primitive match to this element.</p>
      */
     public int getQ(OsmPrimitive primitive) {
-        
+
         // Firstly get integers representing a match of every matchable field.
         int[] fieldMatches = getFieldMatchList(primitive);
         assert fieldMatches.length > 0;
-        
+
         // Now find the max and min of this array.
         int minVal = fieldMatches[0];
         int maxVal = fieldMatches[0];
@@ -259,12 +259,12 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         // Check valid results
         assert Math.abs(minVal) <= 1;
         assert Math.abs(maxVal) <= 1;
-        
+
         // If the best among all fields is 'neutral' match, the given primitive
         // has nothing to do with our field.
         if (maxVal <= 0)
             return Reasoner.MATCH_NOMATCH;
-        
+
         // If all fields are 1    --> ROCKSOLID MATCH
         // If some are 1, none -1 --> PARTIAL MATCH
         // If some are 1, some -1 --> CONFLICT
@@ -273,7 +273,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
             case  0 : return Reasoner.MATCH_PARTIAL;
             case +1 : return Reasoner.MATCH_ROCKSOLID;
         }
-        
+
         return 0; // <-- just to make compilers happy. We cannot get here.
     }
 

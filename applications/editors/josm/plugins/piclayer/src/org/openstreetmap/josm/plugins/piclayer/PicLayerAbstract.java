@@ -274,15 +274,15 @@ public abstract class PicLayerAbstract extends Layer
      * @param props Properties to save to
      */
     public void saveCalibration( Properties props ) {
-    	// Save
-    	props.put(INITIAL_POS_X, "" + m_initial_position.getX());
-    	props.put(INITIAL_POS_Y, "" + m_initial_position.getY());
-    	props.put(POSITION_X, "" + m_position.getX());
-    	props.put(POSITION_Y, "" + m_position.getY());
-    	props.put(INITIAL_SCALE, "" + m_initial_scale);
-    	props.put(SCALEX, "" + m_scalex);
-    	props.put(SCALEY, "" + m_scaley);
-    	props.put(ANGLE, "" + m_angle);
+        // Save
+        props.put(INITIAL_POS_X, "" + m_initial_position.getX());
+        props.put(INITIAL_POS_Y, "" + m_initial_position.getY());
+        props.put(POSITION_X, "" + m_position.getX());
+        props.put(POSITION_Y, "" + m_position.getY());
+        props.put(INITIAL_SCALE, "" + m_initial_scale);
+        props.put(SCALEX, "" + m_scalex);
+        props.put(SCALEY, "" + m_scaley);
+        props.put(ANGLE, "" + m_angle);
     }
 
     /**
@@ -291,47 +291,47 @@ public abstract class PicLayerAbstract extends Layer
      * @return
      */
     public void loadCalibration( Properties props ) {
-    	// Load
-    		double pos_x = Double.valueOf( props.getProperty(POSITION_X));
-    		double pos_y = Double.valueOf( props.getProperty(POSITION_Y));
-    		double in_pos_x = Double.valueOf( props.getProperty(INITIAL_POS_X));
-    		double in_pos_y = Double.valueOf( props.getProperty(INITIAL_POS_Y));
-    		double angle = Double.valueOf( props.getProperty(ANGLE));
-    		double in_scale = Double.valueOf( props.getProperty(INITIAL_SCALE));
-    		double scale_x = Double.valueOf( props.getProperty(SCALEX));
-    		double scale_y = Double.valueOf( props.getProperty(SCALEY));
-  			m_position.setLocation(pos_x, pos_y);
-    		m_initial_position.setLocation(pos_x, pos_y);
-    		m_angle = angle;
-    		m_scalex = scale_x;
-    		m_scaley = scale_y;
-    		m_initial_scale = in_scale;
-    		// Refresh
+        // Load
+            double pos_x = Double.valueOf( props.getProperty(POSITION_X));
+            double pos_y = Double.valueOf( props.getProperty(POSITION_Y));
+            double in_pos_x = Double.valueOf( props.getProperty(INITIAL_POS_X));
+            double in_pos_y = Double.valueOf( props.getProperty(INITIAL_POS_Y));
+            double angle = Double.valueOf( props.getProperty(ANGLE));
+            double in_scale = Double.valueOf( props.getProperty(INITIAL_SCALE));
+            double scale_x = Double.valueOf( props.getProperty(SCALEX));
+            double scale_y = Double.valueOf( props.getProperty(SCALEY));
+            m_position.setLocation(pos_x, pos_y);
+            m_initial_position.setLocation(pos_x, pos_y);
+            m_angle = angle;
+            m_scalex = scale_x;
+            m_scaley = scale_y;
+            m_initial_scale = in_scale;
+            // Refresh
             Main.map.mapView.repaint();
     }
 
     private class ResetSubmenuAction extends AbstractAction implements LayerAction {
 
-    	public ResetSubmenuAction() {
-    		super(tr("Reset"));
-		}
+        public ResetSubmenuAction() {
+            super(tr("Reset"));
+        }
 
-		public void actionPerformed(ActionEvent e) {
-		}
+        public void actionPerformed(ActionEvent e) {
+        }
 
-		public Component createMenuComponent() {
-			JMenu reset_submenu = new JMenu(this);
-	        reset_submenu.add( new ResetPictureAllAction( PicLayerAbstract.this ) );
-	        reset_submenu.addSeparator();
-	        reset_submenu.add( new ResetPicturePositionAction( PicLayerAbstract.this ) );
-	        reset_submenu.add( new ResetPictureAngleAction( PicLayerAbstract.this ) );
-	        reset_submenu.add( new ResetPictureScaleAction( PicLayerAbstract.this ) );
-	        return reset_submenu;
-		}
+        public Component createMenuComponent() {
+            JMenu reset_submenu = new JMenu(this);
+            reset_submenu.add( new ResetPictureAllAction( PicLayerAbstract.this ) );
+            reset_submenu.addSeparator();
+            reset_submenu.add( new ResetPicturePositionAction( PicLayerAbstract.this ) );
+            reset_submenu.add( new ResetPictureAngleAction( PicLayerAbstract.this ) );
+            reset_submenu.add( new ResetPictureScaleAction( PicLayerAbstract.this ) );
+            return reset_submenu;
+        }
 
-		public boolean supportLayers(List<Layer> layers) {
-			return layers.size() == 1 && layers.get(0) instanceof PicLayerAbstract;
-		}
+        public boolean supportLayers(List<Layer> layers) {
+            return layers.size() == 1 && layers.get(0) instanceof PicLayerAbstract;
+        }
 
     }
 }

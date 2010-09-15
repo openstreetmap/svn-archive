@@ -10,7 +10,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * Shows the manager window for editing the database.
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
- * 
+ *
  * @see ManagerDialog
  */
 public class ManagerAction extends JosmAction {

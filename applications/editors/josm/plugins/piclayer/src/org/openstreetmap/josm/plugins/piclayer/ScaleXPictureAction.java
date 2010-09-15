@@ -32,17 +32,17 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * This class handles the input during scaling the picture.
  */
-public class ScaleXPictureAction extends ScalePictureActionAbstract 
+public class ScaleXPictureAction extends ScalePictureActionAbstract
 {
-	/*
-	 * Constructor
-	 */
-	public ScaleXPictureAction(MapFrame frame) {
-		super(tr("PicLayer scale X"), "scale_x", tr("Drag to scale the picture in the X Axis"), frame);
-		// TODO Auto-generated constructor stub
-	}
+    /*
+     * Constructor
+     */
+    public ScaleXPictureAction(MapFrame frame) {
+        super(tr("PicLayer scale X"), "scale_x", tr("Drag to scale the picture in the X Axis"), frame);
+        // TODO Auto-generated constructor stub
+    }
 
-	public void doTheScale( double scale ) {
+    public void doTheScale( double scale ) {
             m_currentLayer.scalePictureBy( scale, 0.0 );
         }
 }

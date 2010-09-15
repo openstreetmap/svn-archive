@@ -20,12 +20,12 @@ public class SlippyMapPlugin extends Plugin implements PreferenceChangedListener
 {
     public SlippyMapPlugin(PluginInformation info)
     {
-    	super(info);
-    	Main.pref.addPreferenceChangeListener(this);
+        super(info);
+        Main.pref.addPreferenceChangeListener(this);
     }
 
     @Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
     {
         if (newFrame != null && SlippyMapPreferences.getMapSource() != SlippyMapPreferences.NO_DEFAULT_TILE_SOURCE) {
             SlippyMapLayer smlayer;
@@ -52,23 +52,23 @@ public class SlippyMapPlugin extends Plugin implements PreferenceChangedListener
      * preferenceChanged(java.lang.String, java.lang.String)
      */
     public void preferenceChanged(PreferenceChangeEvent event) {
-    	if (!Main.isDisplayingMapView()) {
-    		return;
-    	}
-    	List<SlippyMapLayer> layes = Main.map.mapView.getLayersOfType(SlippyMapLayer.class);
-    	assert layes.size() <= 1;
-    	SlippyMapLayer layer = layes.isEmpty()?null:layes.get(0);
+        if (!Main.isDisplayingMapView()) {
+            return;
+        }
+        List<SlippyMapLayer> layes = Main.map.mapView.getLayersOfType(SlippyMapLayer.class);
+        assert layes.size() <= 1;
+        SlippyMapLayer layer = layes.isEmpty()?null:layes.get(0);
 
         if (event.getKey().equals(SlippyMapPreferences.PREFERENCE_TILE_SOURCE)) {
-        	if (layer == null && SlippyMapPreferences.getMapSource() != SlippyMapPreferences.NO_DEFAULT_TILE_SOURCE) {
-        		Main.map.mapView.addLayer(new SlippyMapLayer());
-        	} else if (layer != null && SlippyMapPreferences.getMapSource() == SlippyMapPreferences.NO_DEFAULT_TILE_SOURCE) {
-        		Main.map.mapView.removeLayer(layer);
-        	} else if (layer == null && SlippyMapPreferences.getMapSource() == SlippyMapPreferences.NO_DEFAULT_TILE_SOURCE) {
-        		// Do nothing
-        	} else {
-        		layer.newTileStorage();
-        	}
+            if (layer == null && SlippyMapPreferences.getMapSource() != SlippyMapPreferences.NO_DEFAULT_TILE_SOURCE) {
+                Main.map.mapView.addLayer(new SlippyMapLayer());
+            } else if (layer != null && SlippyMapPreferences.getMapSource() == SlippyMapPreferences.NO_DEFAULT_TILE_SOURCE) {
+                Main.map.mapView.removeLayer(layer);
+            } else if (layer == null && SlippyMapPreferences.getMapSource() == SlippyMapPreferences.NO_DEFAULT_TILE_SOURCE) {
+                // Do nothing
+            } else {
+                layer.newTileStorage();
+            }
         } else  if (event.getKey().startsWith(SlippyMapPreferences.PREFERENCE_PREFIX) && layer != null) {
             // System.err.println(this + ".preferenceChanged('" + key + "', '"
             // + newValue + "') called");

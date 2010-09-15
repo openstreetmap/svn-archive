@@ -26,7 +26,7 @@ public class UploadDataGuiPlugin extends Plugin{
     UploadAction openaction;
 
     public UploadDataGuiPlugin(PluginInformation info) {
-    	super(info);
+        super(info);
         openaction = new UploadAction();
         Main.main.menu.toolsMenu.add(openaction);
     }
@@ -43,15 +43,15 @@ public class UploadDataGuiPlugin extends Plugin{
         }
 
         @Override
-		protected void updateEnabledState() {
-           	// enable button if there is "one active GpxLayer" or "exactly one GpxLayer in the list of all layers available"
-           	if(Main.map == null
+        protected void updateEnabledState() {
+            // enable button if there is "one active GpxLayer" or "exactly one GpxLayer in the list of all layers available"
+            if(Main.map == null
                     || Main.map.mapView == null
                     || Main.map.mapView.getActiveLayer() == null
-                    || !(Main.map.mapView.getActiveLayer() instanceof GpxLayer)) {                
+                    || !(Main.map.mapView.getActiveLayer() instanceof GpxLayer)) {
                 setEnabled(false);
             } else {
-            	setEnabled(true);
+                setEnabled(true);
             }
 
             if(Main.map != null && Main.map.mapView.getNumLayers() > 1) {
@@ -60,6 +60,6 @@ public class UploadDataGuiPlugin extends Plugin{
                     setEnabled(true);
             }
 
-        }		
+        }
     }
 }

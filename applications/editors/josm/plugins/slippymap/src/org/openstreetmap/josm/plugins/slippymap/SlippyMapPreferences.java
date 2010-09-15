@@ -20,7 +20,7 @@ import org.openstreetmap.josm.Main;
  */
 public class SlippyMapPreferences
 {
-	public static final String NO_DEFAULT_TILE_SOURCE_NAME = "{%no_default%}";
+    public static final String NO_DEFAULT_TILE_SOURCE_NAME = "{%no_default%}";
     public static final String PREFERENCE_PREFIX   = "slippymap";
 
     public static final String PREFERENCE_TILE_CUSTOM_SOURCE = PREFERENCE_PREFIX + ".custom_tile_source_";
@@ -46,9 +46,9 @@ public class SlippyMapPreferences
     }
     public static TileSource getMapSource(String name)
     {
-    	if (NO_DEFAULT_TILE_SOURCE_NAME.equals(name)) {
-    		return NO_DEFAULT_TILE_SOURCE; // User don't want to load slippy layer on startup
-    	}
+        if (NO_DEFAULT_TILE_SOURCE_NAME.equals(name)) {
+            return NO_DEFAULT_TILE_SOURCE; // User don't want to load slippy layer on startup
+        }
 
         List<TileSource> sources = SlippyMapPreferences.getAllMapSources();
 
@@ -59,14 +59,14 @@ public class SlippyMapPreferences
 
         for (TileSource s : sources) {
             if (name.equals(s.getName()))
-            	return s;
+                return s;
         }
 
         return sources.get(0);
     }
 
     public static void setMapSource(TileSource source) {
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_TILE_SOURCE, source == NO_DEFAULT_TILE_SOURCE?NO_DEFAULT_TILE_SOURCE_NAME:source.getName());
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_TILE_SOURCE, source == NO_DEFAULT_TILE_SOURCE?NO_DEFAULT_TILE_SOURCE_NAME:source.getName());
     }
 
     public static boolean getAutozoom()
@@ -75,7 +75,7 @@ public class SlippyMapPreferences
 
         if (autozoom == null || "".equals(autozoom))
         {
-        	autozoom = "true";
+            autozoom = "true";
             Main.pref.put(PREFERENCE_AUTOZOOM, autozoom);
         }
 
@@ -83,18 +83,18 @@ public class SlippyMapPreferences
     }
 
     public static void setAutozoom(boolean autozoom) {
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_AUTOZOOM, autozoom);
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_AUTOZOOM, autozoom);
     }
 
     public static void setDrawDebug(boolean drawDebug) {
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_DRAW_DEBUG, drawDebug);
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_DRAW_DEBUG, drawDebug);
     }
 
     public static void setLastZoom(int zoom) {
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_LAST_ZOOM, ""+zoom);
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_LAST_ZOOM, ""+zoom);
     }
     public static int getLastZoom() {
-    	int ret = -1;
+        int ret = -1;
         String pref = Main.pref.get(SlippyMapPreferences.PREFERENCE_LAST_ZOOM);
         try {
             ret = Integer.parseInt(pref);
@@ -109,7 +109,7 @@ public class SlippyMapPreferences
 
         if (drawDebug == null || "".equals(drawDebug))
         {
-        	drawDebug = "false";
+            drawDebug = "false";
             Main.pref.put(PREFERENCE_DRAW_DEBUG, drawDebug);
         }
 
@@ -122,7 +122,7 @@ public class SlippyMapPreferences
 
         if (autoloadTiles == null || "".equals(autoloadTiles))
         {
-        	autoloadTiles = "true";
+            autoloadTiles = "true";
             Main.pref.put(PREFERENCE_AUTOLOADTILES, autoloadTiles);
         }
 
@@ -130,55 +130,55 @@ public class SlippyMapPreferences
     }
 
     public static void setFadeBackground(float fadeBackground) {
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_FADE_BACKGROUND, fadeBackground + "");
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_FADE_BACKGROUND, fadeBackground + "");
     }
 
     /**
      *
-     * @return	number between 0 and 1, inclusive
+     * @return  number between 0 and 1, inclusive
      */
     public static float getFadeBackground() {
         String fadeBackground = Main.pref.get(PREFERENCE_FADE_BACKGROUND);
 
         if (fadeBackground == null || "".equals(fadeBackground))
         {
-        	fadeBackground = "0.0";
+            fadeBackground = "0.0";
             Main.pref.put(PREFERENCE_FADE_BACKGROUND, fadeBackground);
         }
 
         float parsed;
         try {
-        	parsed = Float.parseFloat(fadeBackground);
+            parsed = Float.parseFloat(fadeBackground);
         } catch (Exception ex) {
-        	setFadeBackground(0.1f);
-        	System.out.println("Error while parsing setting fade background to float! returning 0.1, because of error:");
-        	ex.printStackTrace(System.out);
-        	return 0.1f;
+            setFadeBackground(0.1f);
+            System.out.println("Error while parsing setting fade background to float! returning 0.1, because of error:");
+            ex.printStackTrace(System.out);
+            return 0.1f;
         }
         if(parsed < 0f) {
-        	parsed = 0f;
+            parsed = 0f;
         } else {
-        	if(parsed > 1f) {
-            	parsed = 1f;
+            if(parsed > 1f) {
+                parsed = 1f;
             }
         }
         return parsed;
     }
 
     public static void setAutoloadTiles(boolean autoloadTiles) {
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_AUTOLOADTILES, autoloadTiles);
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_AUTOLOADTILES, autoloadTiles);
     }
 
     private static int getIntPref(String prefName, int def)
     {
         int pref;
         try {
-        	//Should we use Main.pref.getInteger(str)?
-        	pref = Main.pref.getInteger(prefName, def);
+            //Should we use Main.pref.getInteger(str)?
+            pref = Main.pref.getInteger(prefName, def);
         } catch (Exception ex) {
             String str = Main.pref.get(prefName);
             Main.pref.put(prefName, null);
-        	throw new RuntimeException("Problem while converting string to int. "
+            throw new RuntimeException("Problem while converting string to int. "
                                        + "Converting value of preferences "
                                        + prefName + ". Value=\"" + str
                                        + "\". Should be an integer. Error: "
@@ -189,17 +189,17 @@ public class SlippyMapPreferences
 
     static int checkMaxZoomLvl(int maxZoomLvl)
     {
-    	if(maxZoomLvl > MAX_ZOOM) {
-    		System.err.println("MaxZoomLvl shouldnt be more than 30! Setting to 30.");
-    		maxZoomLvl = MAX_ZOOM;
-    	}
-    	if(maxZoomLvl < SlippyMapPreferences.__getMinZoomLvl()) {
-    		System.err.println("maxZoomLvl shouldnt be more than minZoomLvl! Setting to minZoomLvl.");
-    		maxZoomLvl = SlippyMapPreferences.__getMinZoomLvl();
-    	}
+        if(maxZoomLvl > MAX_ZOOM) {
+            System.err.println("MaxZoomLvl shouldnt be more than 30! Setting to 30.");
+            maxZoomLvl = MAX_ZOOM;
+        }
+        if(maxZoomLvl < SlippyMapPreferences.__getMinZoomLvl()) {
+            System.err.println("maxZoomLvl shouldnt be more than minZoomLvl! Setting to minZoomLvl.");
+            maxZoomLvl = SlippyMapPreferences.__getMinZoomLvl();
+        }
         TileSource ts = getMapSource();
         if (ts != null && ts.getMaxZoom() < SlippyMapPreferences.__getMinZoomLvl()) {
-    		System.err.println("decreasing maxZoomLvl to match new tile source");
+            System.err.println("decreasing maxZoomLvl to match new tile source");
             maxZoomLvl = ts.getMaxZoom();
         }
         return maxZoomLvl;
@@ -213,19 +213,19 @@ public class SlippyMapPreferences
 
     public static void setMaxZoomLvl(int maxZoomLvl) {
         maxZoomLvl = checkMaxZoomLvl(maxZoomLvl);
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_MAX_ZOOM_LVL, "" + maxZoomLvl);
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_MAX_ZOOM_LVL, "" + maxZoomLvl);
     }
 
     static int checkMinZoomLvl(int minZoomLvl)
     {
         if(minZoomLvl < MIN_ZOOM) {
-    		System.err.println("minZoomLvl shouldnt be lees than "+MIN_ZOOM+"! Setting to that.");
-    		minZoomLvl = MIN_ZOOM;
-    	}
-    	if(minZoomLvl > SlippyMapPreferences.getMaxZoomLvl()) {
-    		System.err.println("minZoomLvl shouldnt be more than maxZoomLvl! Setting to maxZoomLvl.");
-    		minZoomLvl = SlippyMapPreferences.getMaxZoomLvl();
-    	}
+            System.err.println("minZoomLvl shouldnt be lees than "+MIN_ZOOM+"! Setting to that.");
+            minZoomLvl = MIN_ZOOM;
+        }
+        if(minZoomLvl > SlippyMapPreferences.getMaxZoomLvl()) {
+            System.err.println("minZoomLvl shouldnt be more than maxZoomLvl! Setting to maxZoomLvl.");
+            minZoomLvl = SlippyMapPreferences.getMaxZoomLvl();
+        }
         return minZoomLvl;
     }
 
@@ -241,13 +241,13 @@ public class SlippyMapPreferences
 
     public static void setMinZoomLvl(int minZoomLvl) {
         minZoomLvl = checkMinZoomLvl(minZoomLvl);
-    	Main.pref.put(SlippyMapPreferences.PREFERENCE_MIN_ZOOM_LVL, "" + minZoomLvl);
+        Main.pref.put(SlippyMapPreferences.PREFERENCE_MIN_ZOOM_LVL, "" + minZoomLvl);
     }
 
     public static TileSource NO_DEFAULT_TILE_SOURCE = new AbstractOsmTileSource(tr("(none)"), "") {
-		public TileUpdate getTileUpdate() {
-			return null;
-		}
+        public TileUpdate getTileUpdate() {
+            return null;
+        }
     };
 
     public static class Coastline extends OsmTileSource.AbstractOsmTileSource {
@@ -281,12 +281,12 @@ public class SlippyMapPreferences
         }
 
         @Override
-		public int getMaxZoom() {
+        public int getMaxZoom() {
             return 21;
         }
 
         @Override
-		public String getTilePath(int zoom, int tilex, int tiley) {
+        public String getTilePath(int zoom, int tilex, int tiley) {
             return "z=" + zoom + "&x=" + tilex + "&y=" + tiley;
         }
 
@@ -302,13 +302,13 @@ public class SlippyMapPreferences
         }
 
         @Override
-		public int getMaxZoom() {
+        public int getMaxZoom() {
             return 21;
         }
 
         @Override
-		public String getTilePath(int zoom, int tilex, int tiley) {
-        	return "/" + zoom + "/" + tilex + "/" + tiley + ".png";
+        public String getTilePath(int zoom, int tilex, int tiley) {
+            return "/" + zoom + "/" + tilex + "/" + tiley + ".png";
         }
 
         public TileUpdate getTileUpdate() {

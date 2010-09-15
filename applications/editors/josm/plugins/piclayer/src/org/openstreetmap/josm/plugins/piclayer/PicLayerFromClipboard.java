@@ -34,35 +34,35 @@ import java.io.IOException;
  */
 public class PicLayerFromClipboard extends PicLayerAbstract {
 
-	@Override
-	protected Image createImage() throws IOException {
-		// Return item
-		Image image = null;
-		// Access the clipboard
+    @Override
+    protected Image createImage() throws IOException {
+        // Return item
+        Image image = null;
+        // Access the clipboard
         Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
         // Check result
         if ( t == null ) {
-        	throw new IOException(tr("Nothing in clipboard"));
+            throw new IOException(tr("Nothing in clipboard"));
         }
-        
+
         // TODO: Why is it so slow?
         // Try to make it an image data
         try {
             if (t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
                 image = (Image)t.getTransferData(DataFlavor.imageFlavor);
             } else {
-            	throw new IOException(tr("The clipboard data is not an image"));
+                throw new IOException(tr("The clipboard data is not an image"));
             }
         } catch (UnsupportedFlavorException e) {
-        	throw new IOException( e.getMessage() );
-        } 
-        
-        return image;
-	}
+            throw new IOException( e.getMessage() );
+        }
 
-	@Override
-	protected String getPicLayerName() {
-		return "Clipboard";
-	}
+        return image;
+    }
+
+    @Override
+    protected String getPicLayerName() {
+        return "Clipboard";
+    }
 
 }

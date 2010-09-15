@@ -34,25 +34,25 @@ import org.openstreetmap.josm.actions.JosmAction;
  */
 public class ResetPictureScaleAction extends JosmAction {
 
-	// Owner layer of the action
-	PicLayerAbstract m_owner = null;
-	
-	/**
-	 * Constructor
-	 */
-	public ResetPictureScaleAction( PicLayerAbstract owner ) {
-		super(tr("Scale"), null, tr("Resets picture scale"), null, false);
-		// Remember the owner...
-		m_owner = owner;
-	}
-	
-	/**
-	 * Action handler
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		// Reset
-		m_owner.resetScale();
-		// Redraw
+    // Owner layer of the action
+    PicLayerAbstract m_owner = null;
+    
+    /**
+     * Constructor
+     */
+    public ResetPictureScaleAction( PicLayerAbstract owner ) {
+        super(tr("Scale"), null, tr("Resets picture scale"), null, false);
+        // Remember the owner...
+        m_owner = owner;
+    }
+    
+    /**
+     * Action handler
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        // Reset
+        m_owner.resetScale();
+        // Redraw
         Main.map.mapView.repaint();
-	}
+    }
 }

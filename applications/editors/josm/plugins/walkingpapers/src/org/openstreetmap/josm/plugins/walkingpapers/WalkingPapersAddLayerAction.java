@@ -20,14 +20,14 @@ import org.openstreetmap.josm.data.coor.LatLon;
 public class WalkingPapersAddLayerAction extends JosmAction {
 
     public WalkingPapersAddLayerAction() {
-        super(tr("Scanned Map..."), "walkingpapers", 
-        	tr("Display a map that was previously scanned and uploaded to walking-papers.org"), null, false);
+        super(tr("Scanned Map..."), "walkingpapers",
+            tr("Display a map that was previously scanned and uploaded to walking-papers.org"), null, false);
     }
 
     public void actionPerformed(ActionEvent e) {
-        String wpid = JOptionPane.showInputDialog(Main.parent, 
-        	tr("Enter a walking-papers.org URL or ID (the bit after the ?id= in the URL)"),
-        		Main.pref.get("walkingpapers.last-used-id"));
+        String wpid = JOptionPane.showInputDialog(Main.parent,
+            tr("Enter a walking-papers.org URL or ID (the bit after the ?id= in the URL)"),
+                Main.pref.get("walkingpapers.last-used-id"));
 
         if (wpid == null || wpid.equals("")) return;
 
@@ -41,7 +41,7 @@ public class WalkingPapersAddLayerAction extends JosmAction {
 
         Pattern spanPattern = Pattern.compile("<span class=\"(\\S+)\">(\\S+)</span>");
         Matcher m;
-        
+
         double north = 0;
         double south = 0;
         double east = 0;
@@ -51,24 +51,24 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         String tile = null;
 
         try {
-        	BufferedReader r = new BufferedReader(new InputStreamReader(new URL(wpUrl).openStream(), "utf-8"));
-        	for (String line = r.readLine(); line != null; line = r.readLine()) {
-        		m = spanPattern.matcher(line);
-        		if (m.find()) {
-        			if ("tile".equals(m.group(1))) tile = m.group(2);
-        			else if ("north".equals(m.group(1))) north = Double.parseDouble(m.group(2));
-        			else if ("south".equals(m.group(1))) south = Double.parseDouble(m.group(2));
-        			else if ("east".equals(m.group(1))) east = Double.parseDouble(m.group(2));
-        			else if ("west".equals(m.group(1))) west = Double.parseDouble(m.group(2));
-        			else if ("minzoom".equals(m.group(1))) minz = Integer.parseInt(m.group(2));
-        			else if ("maxzoom".equals(m.group(1))) maxz = Integer.parseInt(m.group(2));
-        		}
-        	}
-        	r.close();
-        	if ((tile == null) || (north == 0 && south == 0) || (east == 0 && west == 0)) throw new Exception();
+            BufferedReader r = new BufferedReader(new InputStreamReader(new URL(wpUrl).openStream(), "utf-8"));
+            for (String line = r.readLine(); line != null; line = r.readLine()) {
+                m = spanPattern.matcher(line);
+                if (m.find()) {
+                    if ("tile".equals(m.group(1))) tile = m.group(2);
+                    else if ("north".equals(m.group(1))) north = Double.parseDouble(m.group(2));
+                    else if ("south".equals(m.group(1))) south = Double.parseDouble(m.group(2));
+                    else if ("east".equals(m.group(1))) east = Double.parseDouble(m.group(2));
+                    else if ("west".equals(m.group(1))) west = Double.parseDouble(m.group(2));
+                    else if ("minzoom".equals(m.group(1))) minz = Integer.parseInt(m.group(2));
+                    else if ("maxzoom".equals(m.group(1))) maxz = Integer.parseInt(m.group(2));
+                }
+            }
+            r.close();
+            if ((tile == null) || (north == 0 && south == 0) || (east == 0 && west == 0)) throw new Exception();
         } catch (Exception ex) {
-        	JOptionPane.showMessageDialog(Main.parent,tr("Could not read information from walking-papers.org the id \"{0}\"", mungedWpId));
-        	return;
+            JOptionPane.showMessageDialog(Main.parent,tr("Could not read information from walking-papers.org the id \"{0}\"", mungedWpId));
+            return;
         }
 
 
@@ -81,7 +81,7 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         Main.pref.put("walkingpapers.last-used-id", mungedWpId);
 
         Bounds b = new Bounds(new LatLon(south, west), new LatLon(north, east));
-        
+
         WalkingPapersLayer wpl = new WalkingPapersLayer(mungedWpId, tile, b, minz, maxz);
         Main.main.addLayer(wpl);
 

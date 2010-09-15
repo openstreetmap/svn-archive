@@ -30,7 +30,7 @@ public class EastNorthBound implements Serializable {
                 this.max.interpolate(en2.max, proportion));
         return enb;
     }
-    
+
     public Bounds toBounds() {
         return new Bounds(Main.proj.eastNorth2latlon(min), Main.proj.eastNorth2latlon(max));
     }

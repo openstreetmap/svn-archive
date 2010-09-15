@@ -206,7 +206,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         jLabel1.setText("Číslo popisné:");
 
         alternateNumberEdit.addKeyListener(new java.awt.event.KeyAdapter() {
-        	@Override
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 PointManipulatorDialog.this.keyReleased(evt);
             }
@@ -227,7 +227,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
         proposalList.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
                 proposalListKeyReleased(evt);
             }
         });

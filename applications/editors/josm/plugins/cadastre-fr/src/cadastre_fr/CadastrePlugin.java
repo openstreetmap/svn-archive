@@ -95,7 +95,7 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - cookie expiration automatically detected and renewed (after 30 minutes)
  *                 - proper WMS layer cleanup at destruction (workaround for memory leak)
  *                 - new cache format (v3) storing original image and cropped image bbox + angle
- *                 - new cache format (v4) storing original image size for later rotation 
+ *                 - new cache format (v4) storing original image size for later rotation
  *                 - cache files read compatible with previous formats
  *                 - raster image rotation issues fixed, now using shift+ctrl key instead of ctrl
  *                 - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support
@@ -103,7 +103,7 @@ import org.openstreetmap.josm.data.projection.*;
  *                 - layer selection configurable for vectorized images
  *                 - improved download cancellation
  *                 - from Erik Amzallag:
- *                 -     possibility to modify the auto-sourcing text just before upload 
+ *                 -     possibility to modify the auto-sourcing text just before upload
  *                 - from Clément Ménier:
  *                 -     new option allowing an auto-selection of the first cadastre layer for grab
  *                 -     non-modal JDialog in MenuActionGrabPlanImage
@@ -111,7 +111,7 @@ import org.openstreetmap.josm.data.projection.*;
  * 1.9 05-Apr-2010 - added a scroll bar in preferences
  *                 - download cancellation improved
  *                 - last deployment for Java1.5 compatibility
- * 2.0 xx-xxx-xxxx - update projection for "La Reunion" departement to RGR92, UTM40S. 
+ * 2.0 xx-xxx-xxxx - update projection for "La Reunion" departement to RGR92, UTM40S.
  *                 - add 'departement' as option in the municipality selection
  *                 - fixed bug in cache directory size control (and disabled by default)
  *                 - add map mode for addressing
@@ -144,7 +144,7 @@ public class CadastrePlugin extends Plugin {
     public static boolean drawBoundaries = false;
 
     public static int imageWidth, imageHeight;
-    
+
     public static String grabLayers, grabStyles = null;
 
     static private boolean menuEnabled = false;
@@ -155,7 +155,7 @@ public class CadastrePlugin extends Plugin {
      * @throws Exception
      */
     public CadastrePlugin(PluginInformation info) throws Exception {
-    	super(info);
+        super(info);
         System.out.println("Pluging cadastre-fr v"+VERSION+" started...");
         if (Main.pref.get("cadastrewms.cacheDir").equals(""))
             cacheDir = Main.pref.getPreferencesDir()+"plugins"+File.separatorChar+"cadastrewms"+File.separatorChar;
@@ -217,7 +217,7 @@ public class CadastrePlugin extends Plugin {
     }
 
     public static void refreshConfiguration() {
-        source = checkSourceMillesime(); 
+        source = checkSourceMillesime();
         autoSourcing = Main.pref.getBoolean("cadastrewms.autosourcing", true);
         alterColors = Main.pref.getBoolean("cadastrewms.alterColors");
         drawBoundaries = Main.pref.getBoolean("cadastrewms.drawBoundaries", false);
@@ -233,11 +233,11 @@ public class CadastrePlugin extends Plugin {
             imageWidth = 1000; imageHeight = 800;
         } else if (currentResolution.equals("medium")){
             imageWidth = 800; imageHeight = 600;
-        } else { 
+        } else {
             imageWidth = 600; imageHeight = 400;
         }
         refreshLayersURL();
-        
+
         // overwrite F11 shortcut used from the beginning by this plugin and recently used
         // for full-screen switch in JOSM core
         int i = 0;
@@ -267,7 +267,7 @@ public class CadastrePlugin extends Plugin {
 
         refreshMenu();
     }
-    
+
     private static void refreshLayersURL() {
         grabLayers = "";
         grabStyles = "";
@@ -345,7 +345,7 @@ public class CadastrePlugin extends Plugin {
             }
         }
     }
-    
+
     public static boolean isCadastreProjection() {
         return Main.proj.toString().equals(new Lambert().toString())
             || Main.proj.toString().equals(new UTM_France_DOM().toString())
@@ -359,7 +359,7 @@ public class CadastrePlugin extends Plugin {
     }
 
     // See OptionPaneUtil
-    // FIXME: this is a temporary solution. 
+    // FIXME: this is a temporary solution.
     public static void prepareDialog(JDialog dialog) {
         if (Main.pref.getBoolean("window-handling.option-pane-always-on-top", true)) {
             try {
@@ -372,7 +372,7 @@ public class CadastrePlugin extends Plugin {
         dialog.toFront();
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
-    
+
     /**
      * Adds the WMSLayer following this rule:<br/>
      * - if a WMSLayer exists place this new layer just before this layer<br/>
@@ -392,7 +392,7 @@ public class CadastrePlugin extends Plugin {
         } else
             Main.main.addLayer(wmsLayer);
     }
-    
+
     private static String checkSourceMillesime() {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         int currentYear = calendar.get(java.util.Calendar.YEAR);
@@ -410,5 +410,5 @@ public class CadastrePlugin extends Plugin {
         }
         return src;
     }
-    
+
 }

@@ -9,24 +9,24 @@ import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class WaypointSearchPlugin extends Plugin implements LayerChangeListener  {
-	/**
+    /**
     * Will be invoked by JOSM to bootstrap the plugin
     *
     * @param info  information about the plugin and its local installation    
     */
-	private Engine engine = new Engine();
-	private SelectWaypointDialog waypointDialog = new SelectWaypointDialog(tr("Waypoint search"), "ToolbarIcon", tr("Search after waypoint. Click and move the map view to the waypoint."), null, 100);
-	
+    private Engine engine = new Engine();
+    private SelectWaypointDialog waypointDialog = new SelectWaypointDialog(tr("Waypoint search"), "ToolbarIcon", tr("Search after waypoint. Click and move the map view to the waypoint."), null, 100);
+    
     public WaypointSearchPlugin(PluginInformation info) {
        super(info);
        MapView.addLayerChangeListener(this);
     }
      
-	@Override
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+        // TODO Auto-generated method stub
+        
+    }
 
 	
 	@Override
@@ -43,12 +43,12 @@ public class WaypointSearchPlugin extends Plugin implements LayerChangeListener 
 
 
 
-	@Override
-	public void layerRemoved(Layer oldLayer) {
-		if (!engine.gpxLayersExist()) {
-			waypointDialog.updateSearchResults();
-		}	
-	}
+    @Override
+    public void layerRemoved(Layer oldLayer) {
+        if (!engine.gpxLayersExist()) {
+            waypointDialog.updateSearchResults();
+        }   
+    }
  
 }
 

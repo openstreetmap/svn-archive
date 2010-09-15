@@ -98,7 +98,7 @@ public class Reasoner {
      * <p>This method must be called before <u>any</u> method, which might
      * modify the data in the reasoner.
      * The only exception is {@code reset()}.</p>
-     * 
+     *
      * <p>When there's an open transaction, the result of most output methods
      * undefined. Exceptions to this rules are indicated.</p>
      *
@@ -386,7 +386,7 @@ public class Reasoner {
         AddressElement elem = getStrictlyBest(prim);
         if (getStrictlyBest(elem) == prim)
             return elem;
-        
+
         return null;
     }
 
@@ -416,7 +416,7 @@ public class Reasoner {
         OsmPrimitive prim = getStrictlyBest(elem);
         if (getStrictlyBest(prim) == elem)
             return prim;
-        
+
         return null;
     }
 
@@ -514,7 +514,7 @@ public class Reasoner {
             if (best < cand)
                 best = cand;
         }
-        
+
         for (OsmPrimitive prim : elemMatchIndex.get(elem).keySet()) {
             int cand = elemMatchIndex.get(elem).get(prim);
             if (best == cand)
@@ -541,7 +541,7 @@ public class Reasoner {
      * constant thanks to using indexes.</p>
      */
     public AddressElement getStrictlyBest(OsmPrimitive prim) {
-        
+
         AddressElement result = null;
         try {
             if (!transactionOpened)
@@ -562,7 +562,7 @@ public class Reasoner {
                     result = elem;
                 }
             }
-            
+
         } catch (NullPointerException except) {
             System.err.println("Strange exception occured." +
                 " If you find a way to reproduce this situation, please "+
@@ -600,7 +600,7 @@ public class Reasoner {
             if (matches == null) {
                 return null;
             }
-            
+
             int bestQ = MATCH_NOMATCH;
             for (OsmPrimitive prim : matches.keySet()) {
                 if (matches.get(prim) == bestQ) {
@@ -682,7 +682,7 @@ public class Reasoner {
 
             ProposalContainer container = new ProposalContainer(prim);
             container.addProposals(elem.getDiff(prim));
-            
+
             if (container.getProposals().size() > 0)
                 database.addContainer(container);
         }

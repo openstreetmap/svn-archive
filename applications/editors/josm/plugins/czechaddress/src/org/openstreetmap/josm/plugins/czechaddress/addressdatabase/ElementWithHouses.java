@@ -46,7 +46,7 @@ public abstract class ElementWithHouses extends AddressElement {
 
     /**
      * Returns all houses directly contained in this element.
-     * 
+     *
      * NOTICE: If a subclass element contains other data structured capable
      * of storing houses, they are not included in the returned set.
      *

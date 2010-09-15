@@ -39,13 +39,13 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     private JComboBox imageInterpolationMethod = new JComboBox();
 
     private JCheckBox disableImageCropping = new JCheckBox(tr("Disable image cropping during georeferencing."));
-    
+
     private JCheckBox enableTableauAssemblage = new JCheckBox(tr("Use \"Tableau d''assemblage\""));
-    
+
     private JCheckBox autoFirstLayer = new JCheckBox(tr("Select first WMS layer in list."));
-    
+
     private JCheckBox dontUseRelation = new JCheckBox(tr("Don't use relation for addresses (but \"addr:street\" on elements)."));
-    
+
     private JRadioButton grabMultiplier1 = new JRadioButton("", true);
 
     private JRadioButton grabMultiplier2 = new JRadioButton("", true);
@@ -53,9 +53,9 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     private JRadioButton grabMultiplier3 = new JRadioButton("", true);
 
     private JRadioButton grabMultiplier4 = new JRadioButton("", true);
-    
+
     private JRadioButton crosspiece1 = new JRadioButton("off");
-    
+
     private JRadioButton crosspiece2 = new JRadioButton("25m");
 
     private JRadioButton crosspiece3 = new JRadioButton("50m");
@@ -86,12 +86,12 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
     static final int DEFAULT_CACHE_SIZE = 0; // disabled by default
     JLabel jLabelCacheSize = new JLabel(tr("Max. cache size (in MB)"));
     private JTextField cacheSize = new JTextField(20);
-    
+
     static final String DEFAULT_RASTER_DIVIDER = "5";
     private JTextField rasterDivider = new JTextField(10);
 
     static final int DEFAULT_CROSSPIECES = 0;
-    
+
     public void addGui(final PreferenceTabbedPane gui) {
 
         String description = tr("A special handler of the French cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
@@ -100,7 +100,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
                 + "http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html</a> <BR>"
                 + "before any upload of data created by this plugin.");
         JPanel cadastrewmsMast = gui.createPreferenceTab("cadastrewms.gif", I18n.tr("French cadastre WMS"), description);
-        
+
         JPanel cadastrewms = new JPanel(new GridBagLayout());
         cadastrewms.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 
@@ -176,7 +176,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         cadastrewms.add(grabRes1, GBC.std().insets(5, 0, 5, 0));
         cadastrewms.add(grabRes2, GBC.std().insets(5, 0, 5, 0));
         cadastrewms.add(grabRes3, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));
-        
+
         // option to select image zooming interpolation method
         JLabel jLabelImageZoomInterpolation = new JLabel(tr("Image filter interpolation:"));
         cadastrewms.add(jLabelImageZoomInterpolation, GBC.std().insets(0, 0, 10, 0));
@@ -184,9 +184,9 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         imageInterpolationMethod.addItem(tr("Bilinear (fast)"));
         imageInterpolationMethod.addItem(tr("Bicubic (slow)"));
         String savedImageInterpolationMethod = Main.pref.get("cadastrewms.imageInterpolation", "standard");
-        if (savedImageInterpolationMethod.equals("bilinear")) 
+        if (savedImageInterpolationMethod.equals("bilinear"))
             imageInterpolationMethod.setSelectedIndex(1);
-        else if (savedImageInterpolationMethod.equals("bicubic")) 
+        else if (savedImageInterpolationMethod.equals("bicubic"))
             imageInterpolationMethod.setSelectedIndex(2);
         else
             imageInterpolationMethod.setSelectedIndex(0);
@@ -194,7 +194,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         // the vectorized images multiplier
         JLabel jLabelScale = new JLabel(tr("Vector images grab multiplier:"));
         cadastrewms.add(jLabelScale, GBC.std().insets(0, 5, 10, 0));
@@ -274,7 +274,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         layerCommune.setSelected(Main.pref.getBoolean("cadastrewms.layerCommune", true));
         layerCommune.setToolTipText(tr("Municipality administrative borders."));
         cadastrewms.add(layerCommune, GBC.eop().insets(5, 0, 5, 0));
-        
+
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
 
@@ -334,7 +334,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
 
         // separator
         cadastrewms.add(new JSeparator(SwingConstants.HORIZONTAL), GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         // option to select the first WMS layer
         autoFirstLayer.setSelected(Main.pref.getBoolean("cadastrewms.autoFirstLayer", false));
         autoFirstLayer.setToolTipText(tr("Automatically selects the first WMS layer if multiple layers exist when grabbing."));
@@ -347,7 +347,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
         dontUseRelation.setSelected(Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false));
         dontUseRelation.setToolTipText(tr("Enable this to use the tag \"add:street\" on nodes."));
         cadastrewms.add(dontUseRelation, GBC.eop().insets(0, 0, 0, 0));
-        
+
         // end of dialog, scroll bar
         cadastrewms.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
         JScrollPane scrollpane = new JScrollPane(cadastrewms);
@@ -373,7 +373,7 @@ public class CadastrePreferenceSetting implements PreferenceSetting {
             Main.pref.put("cadastrewms.imageInterpolation", "bicubic");
         else if (imageInterpolationMethod.getSelectedIndex() == 1)
             Main.pref.put("cadastrewms.imageInterpolation", "bilinear");
-        else 
+        else
             Main.pref.put("cadastrewms.imageInterpolation", "standard");
         if (grabMultiplier1.isSelected())
             Main.pref.put("cadastrewms.scale", Scale.X1.toString());

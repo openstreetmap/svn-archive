@@ -211,7 +211,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
         // FIXME: currently ran in errors
 
-		tileOptionMenu.add(new JMenuItem(
+        tileOptionMenu.add(new JMenuItem(
                 new AbstractAction(tr("Snap to tile size")) {
                     public void actionPerformed(ActionEvent ae) {
                         if (lastImageScale == null) {
@@ -251,15 +251,15 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
 
                 MapView.addLayerChangeListener(new LayerChangeListener() {
                     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-                    	//
+                        //
                     }
 
                     public void layerAdded(Layer newLayer) {
-                    	//
+                        //
                     }
 
                     public void layerRemoved(Layer oldLayer) {
-                    	MapView.removeLayerChangeListener(this);
+                        MapView.removeLayerChangeListener(this);
                     }
                 });
             }

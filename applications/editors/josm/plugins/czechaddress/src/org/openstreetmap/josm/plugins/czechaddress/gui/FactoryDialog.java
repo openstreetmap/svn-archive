@@ -51,7 +51,7 @@ public class FactoryDialog extends ToggleDialog
 
     private HouseListModel  houseModel  = new HouseListModel();
     private StreetListModel streetModel = new StreetListModel();
-    
+
     private FactoryDialog() {
 
         super( "Továrna na adresy",
@@ -88,7 +88,7 @@ public class FactoryDialog extends ToggleDialog
             relocateButton.setEnabled(true);
             return;
         }
-        
+
         if (message == MESSAGE_LOCATION_CHANGED) {
             DataSet.selListeners.add(this);
 
@@ -98,7 +98,7 @@ public class FactoryDialog extends ToggleDialog
             houseList.setEnabled(true);
             keepOddityCheckBox.setEnabled(true);
             return;
-        }        
+        }
     }
 
     public void setSelectedHouse(House house) {
@@ -173,7 +173,7 @@ public class FactoryDialog extends ToggleDialog
             int oldNum = -1, newNum = -1;
             do {
                 selectNextUnmatchedHouse();
-                    
+
                 String newStr = StringUtils.extractNumber(getSelectedHouse().getCO());
 
                 if (oldNum == -1)
@@ -359,12 +359,12 @@ public class FactoryDialog extends ToggleDialog
             if (value instanceof Street) {
                 setFont(getFont().deriveFont(Font.PLAIN));
                 setText(((Street) value).getName());
-                
+
             } else if (value instanceof ElementWithHouses) {
                 setFont(getFont().deriveFont(Font.BOLD));
                 setText("[" + ((ElementWithHouses) value).getName() + "]");
             }
-            
+
             return c;
         }
     }
@@ -434,13 +434,13 @@ public class FactoryDialog extends ToggleDialog
             if (!(elem instanceof House)) return;
             House house = (House) elem;
             int index = Collections.binarySearch(houses, house);
-            
+
             if (Reasoner.getInstance().translate(house) != null) {
                 if (index >= 0) houses.remove(index);
             } else {
                 if (index < 0)  houses.add(-index-1, house);
             }
-            
+
             houseModel.notifyAllListeners();
         }
     }
@@ -471,7 +471,7 @@ public class FactoryDialog extends ToggleDialog
 
             this.selected = parent;
             this.parent   = parent;
-            
+
             metaElem.set(0, parent);
             metaElem.get(1).setHouses(parent.getAllHouses());
             notifyAllListeners();

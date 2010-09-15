@@ -24,7 +24,7 @@ import org.openstreetmap.josm.data.projection.LambertCC9Zones;
 import org.openstreetmap.josm.data.projection.UTM_France_DOM;
 
 public class CacheControl implements Runnable {
-    
+
     public static final String cLambertCC9Z = "CC";
 
     public static final String cUTM20N = "UTM";
@@ -54,7 +54,7 @@ public class CacheControl implements Runnable {
         imagesLock.unlock();
         return ret;
     }
-    
+
     public CacheControl(WMSLayer wmsLayer) {
         cacheEnabled = Main.pref.getBoolean("cadastrewms.enableCaching", true);
         this.wmsLayer = wmsLayer;
@@ -109,7 +109,7 @@ public class CacheControl implements Runnable {
                     dialog.setVisible(true);
                     int reply = (Integer)pane.getValue();
                     // till here
-    
+
                     if (reply == JOptionPane.OK_OPTION && loadCache(file, wmsLayer.getLambertZone())) {
                         return true;
                     } else {
@@ -135,7 +135,7 @@ public class CacheControl implements Runnable {
             e.printStackTrace(System.out);
         }
     }
-    
+
     private void delete(File file) {
         System.out.println("Delete file "+file);
         if (file.exists())
@@ -214,7 +214,7 @@ public class CacheControl implements Runnable {
             }
         }
     }
-    
+
     private String WMSFileExtension() {
         String ext = String.valueOf((wmsLayer.getLambertZone() + 1));
         if (Main.proj instanceof LambertCC9Zones)

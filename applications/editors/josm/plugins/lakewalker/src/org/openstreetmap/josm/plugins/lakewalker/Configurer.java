@@ -13,7 +13,7 @@
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, copies are available 
+ * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
 package org.openstreetmap.josm.plugins.lakewalker;
@@ -138,7 +138,7 @@ public abstract class Configurer {
   public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
     changeSupport.addPropertyChangeListener(l);
   }
-  
+
   public void removePropertyChangeListener(PropertyChangeListener l) {
     changeSupport.removePropertyChangeListener(l);
   }

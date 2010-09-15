@@ -23,7 +23,7 @@ public abstract class ElementWithStreets extends ElementWithHouses {
      */
     public void addStreet(Street streetToAdd) {
         //if (streetToAdd.getParent() instanceof ElementWithStreets)
-        
+
         streetToAdd.setParent(this);
         streets.add(streetToAdd);
     }
@@ -78,12 +78,12 @@ public abstract class ElementWithStreets extends ElementWithHouses {
     public List<House> getAllHouses() {
         // We make an conservative estimate...
         List<House> result = new ArrayList<House>(20 * streets.size());
-        
+
         result.addAll(this.houses);
-        
+
         for (Street street : streets)
             result.addAll(street.getHouses());
-        
+
         return result;
     }
 }

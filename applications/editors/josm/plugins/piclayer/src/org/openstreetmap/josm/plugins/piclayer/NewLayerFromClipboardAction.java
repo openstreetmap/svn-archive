@@ -34,31 +34,31 @@ import org.openstreetmap.josm.actions.JosmAction;
  * the content of the clipboard.
  */
 public class NewLayerFromClipboardAction extends JosmAction {
-	
-	/**
-	 * Constructor...
-	 */
-	public NewLayerFromClipboardAction() {
-		super(tr("New picture layer from clipboard"), null, null, null, false);
-	}
 
-	/**
-	 * Action handler
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		// Create layer from clipboard
-		PicLayerFromClipboard layer = new PicLayerFromClipboard();
-		// Add layer only if successfully initialized
-		try {
-			layer.initialize();
-		}
-		catch (IOException e) {
-			// Failed
-			System.out.println( "NewLayerFromClipboardAction::actionPerformed - " + e.getMessage() );
-			JOptionPane.showMessageDialog(null, e.getMessage() );  
-			return;
-		}
-		// Add layer
-		Main.main.addLayer( layer );
-	}
+    /**
+     * Constructor...
+     */
+    public NewLayerFromClipboardAction() {
+        super(tr("New picture layer from clipboard"), null, null, null, false);
+    }
+
+    /**
+     * Action handler
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        // Create layer from clipboard
+        PicLayerFromClipboard layer = new PicLayerFromClipboard();
+        // Add layer only if successfully initialized
+        try {
+            layer.initialize();
+        }
+        catch (IOException e) {
+            // Failed
+            System.out.println( "NewLayerFromClipboardAction::actionPerformed - " + e.getMessage() );
+            JOptionPane.showMessageDialog(null, e.getMessage() );
+            return;
+        }
+        // Add layer
+        Main.main.addLayer( layer );
+    }
 }

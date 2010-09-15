@@ -233,7 +233,7 @@ public class ConflictResolver extends ExtendedDialog {
 
                 if (r.translate(prim) != null)
                     r.unOverwrite(prim, r.translate(prim));
-                
+
                 ComboBoxModel model = candField.getModel();
                 for (int i = 0; i < model.getSize(); i++) {
                     AddressElement elem = (AddressElement) model.getElementAt(i);
@@ -241,7 +241,7 @@ public class ConflictResolver extends ExtendedDialog {
                     if (r.translate(elem) != null)
                         r.unOverwrite(r.translate(elem), elem);
                 }
-                
+
                 r.doOverwrite(prim, (AddressElement) model.getSelectedItem());
             }
 
@@ -357,13 +357,13 @@ public class ConflictResolver extends ExtendedDialog {
                                        "["+String.valueOf(-index-1)+"]=„"
                                         +AddressElement.getName(prim) + "“");
                 primitives.add(-index-1, prim);
-                
+
                 ListDataEvent evt = new ListDataEvent(this,
                         ListDataEvent.INTERVAL_ADDED,
                         -index-1 + elements.size(), -index-1 + elements.size());
                 for (ListDataListener listener : listeners)
                     listener.intervalAdded(evt);
-                
+
                 if (mainField.getSelectedItem() == null)
                     mainField.setSelectedIndex(-index-1);
             }
@@ -377,7 +377,7 @@ public class ConflictResolver extends ExtendedDialog {
                                         "[" + String.valueOf(index) + "]=„"
                                         + elem.getName() + "“");
                 elements.remove(index);
-                
+
                 if (selected == elem)
                     setSelectedItem(null);
 
@@ -400,7 +400,7 @@ public class ConflictResolver extends ExtendedDialog {
 
                 if (selected == prim)
                     setSelectedItem(null);
-                
+
                 ListDataEvent evt = new ListDataEvent(this,
                         ListDataEvent.INTERVAL_REMOVED,
                         index + elements.size(), index + elements.size());
@@ -418,11 +418,11 @@ public class ConflictResolver extends ExtendedDialog {
 
             elements.clear();
             primitives.clear();
-            
+
             for (ListDataListener listener : listeners)
                 listener.contentsChanged(evt);
         }
-        
+
         public void setSelectedItem(Object anItem) {
 
             if (anItem == null && getSize() > 0) {
@@ -446,12 +446,12 @@ public class ConflictResolver extends ExtendedDialog {
         public Object getElementAt(int index) {
             if (index< elements.size())
                 return elements.get(index);
-            
+
             index -= elements.size();
 
             if (index< primitives.size())
                 return primitives.get(index);
-            
+
             return null;
         }
 
@@ -465,7 +465,7 @@ public class ConflictResolver extends ExtendedDialog {
     }
 
     private void updateCandidatesModel(Object selected) {
-        
+
         if (selected instanceof AddressElement) {
             AddressElement selElem = (AddressElement) selected;
             List<OsmPrimitive> conflPrims = new NotNullList<OsmPrimitive>();

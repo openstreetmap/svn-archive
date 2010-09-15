@@ -20,7 +20,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
  * {@code removeStatusListener()}.
  *
  * @see CzechAddressPlugin
- * 
+ *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
 public interface StatusListener {

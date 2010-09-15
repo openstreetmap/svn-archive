@@ -27,7 +27,7 @@ public class SuburbEditor extends ExtendedDialog {
         this.suburb = suburb;
         this.parent = suburb.getParent();
         nameField.setText(suburb.getName());
-        
+
         if (parent != null)
             parentField.setText(parent.getName());
         else

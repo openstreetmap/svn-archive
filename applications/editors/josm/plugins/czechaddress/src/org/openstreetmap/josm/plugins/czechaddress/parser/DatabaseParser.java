@@ -13,7 +13,7 @@ import org.openstreetmap.josm.plugins.czechaddress.DatabaseLoadException;
 
 /**
  * General superclass for any parser capable of filling the database.
- * 
+ *
  * @see Database
  *
  * @author Radomír Černoch, raodmir.cernoch@gmail.com
@@ -42,7 +42,7 @@ public abstract class DatabaseParser {
 
     /**
      * The ultimate method, which starts filling the database.
-     * 
+     *
      * @throws DatabaseLoadException if anything goes wrong...
      */
     public void fillDatabase() throws DatabaseLoadException {
@@ -59,7 +59,7 @@ public abstract class DatabaseParser {
 
     /**
      * The internal method, which does the actual parsing.
-     * 
+     *
      * @throws DatabaseLoadException should be thrown if anything gets wrong...
      */
     protected abstract void parseDatabase() throws DatabaseLoadException;
@@ -86,7 +86,7 @@ public abstract class DatabaseParser {
      * Downloads the database from remote URL.
      *
      * The URL is provided by {@code getDatabaseUrl()} method.
-     * 
+     *
      * @throws DatabaseLoadException if any error occurs during the download.
      */
     protected void downloadDatabase() throws DatabaseLoadException {

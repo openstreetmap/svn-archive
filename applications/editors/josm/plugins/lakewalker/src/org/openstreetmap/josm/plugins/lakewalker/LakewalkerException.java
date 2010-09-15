@@ -4,7 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 class LakewalkerException extends Exception {
     public LakewalkerException(){
-    	super(tr("An unknown error has occurred"));
+        super(tr("An unknown error has occurred"));
     }
 
     public LakewalkerException(String err){

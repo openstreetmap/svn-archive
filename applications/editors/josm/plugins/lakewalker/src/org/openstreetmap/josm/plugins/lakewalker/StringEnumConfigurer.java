@@ -63,7 +63,7 @@ public class StringEnumConfigurer extends Configurer {
         tooltipText = s;
     }
     @Override
-	public Component getControls() {
+    public Component getControls() {
         if (panel == null) {
             panel = Box.createHorizontalBox();
             panel.add(new JLabel(name));
@@ -84,7 +84,7 @@ public class StringEnumConfigurer extends Configurer {
     }
 
     @Override
-	public void setValue(Object o) {
+    public void setValue(Object o) {
         if(o == null)
             o = 0;
         super.setValue(o);
@@ -93,7 +93,7 @@ public class StringEnumConfigurer extends Configurer {
     }
 
     @Override
-	public void setValue(String s) {
+    public void setValue(String s) {
         Integer n = 0;
         for (int i = 0; i < transValues.length; ++i)
         {
@@ -106,7 +106,7 @@ public class StringEnumConfigurer extends Configurer {
     }
 
     @Override
-	public String getValueString() {
+    public String getValueString() {
         return validValues[(Integer)value];
     }
 }

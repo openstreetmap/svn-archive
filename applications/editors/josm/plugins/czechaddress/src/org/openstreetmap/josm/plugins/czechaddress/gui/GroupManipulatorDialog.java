@@ -123,7 +123,7 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         proposalTree.addKeyListener(new java.awt.event.KeyAdapter() {
-        	@Override
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 proposalTreeKeyReleased(evt);
             }

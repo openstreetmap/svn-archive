@@ -78,7 +78,7 @@ public class LocationSelector extends ExtendedDialog {
      * list.
      *
      */
-	private void initLocationHints() {
+    private void initLocationHints() {
         boolean assertions = false;
         assert  assertions = true;
 
@@ -176,7 +176,7 @@ public class LocationSelector extends ExtendedDialog {
     private int reshuffleListItems(DefaultComboBoxModel list, final ArrayList<AddressElement> hlList) {
         int curHlIndex = 0;
 
-        for (int i = 0; i < list.getSize(); i++) 
+        for (int i = 0; i < list.getSize(); i++)
             for (int j = 0; j < hlList.size(); j++) {
                 Object t = list.getElementAt(i);
                 if (t == hlList.get(j)) {

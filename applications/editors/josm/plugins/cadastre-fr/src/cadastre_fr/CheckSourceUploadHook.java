@@ -37,7 +37,7 @@ public class CheckSourceUploadHook implements UploadHook
     /**
      * Add the tag "source" if it doesn't exist for all new Nodes and Ways before uploading
      */
-    public boolean checkUpload(APIDataSet apiDataSet) 
+    public boolean checkUpload(APIDataSet apiDataSet)
     {
         if (CadastrePlugin.autoSourcing && CadastrePlugin.pluginUsed && !apiDataSet.getPrimitivesToAdd().isEmpty()) {
             Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>();

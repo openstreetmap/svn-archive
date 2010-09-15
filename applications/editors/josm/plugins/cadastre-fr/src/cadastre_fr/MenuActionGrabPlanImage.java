@@ -179,20 +179,20 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
      * @return false if all operations are canceled
      */
     private boolean startCropping() {
-	    mode = cGetCorners;
-	    countMouseClicked = 0;
-		Object[] options = { "OK", "Cancel" };
-		int ret = JOptionPane.showOptionDialog( null,
-				tr("Click first corner for image cropping\n(two points required)"),
-				tr("Image cropping"),
-	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-	    		null, options, options[0]);
-	    if (ret == JOptionPane.OK_OPTION) {
-	        mouseClickedTime = System.currentTimeMillis();
-	    } else
-	    	if (canceledOrRestartCurrAction("image cropping"))
-	    		return startCropping();
-	    return true;
+        mode = cGetCorners;
+        countMouseClicked = 0;
+        Object[] options = { "OK", "Cancel" };
+        int ret = JOptionPane.showOptionDialog( null,
+                tr("Click first corner for image cropping\n(two points required)"),
+                tr("Image cropping"),
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
+        if (ret == JOptionPane.OK_OPTION) {
+            mouseClickedTime = System.currentTimeMillis();
+        } else
+            if (canceledOrRestartCurrAction("image cropping"))
+                return startCropping();
+        return true;
     }
 
     /**
@@ -200,17 +200,17 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
      * @return false if all operations are canceled
      */
     private boolean continueCropping() {
-		Object[] options = { "OK", "Cancel" };
-		int ret = JOptionPane.showOptionDialog( null,
-				tr("Click second corner for image cropping"),
-				tr("Image cropping"),
-	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-	    		null, options, options[0]);
-	    if (ret != JOptionPane.OK_OPTION) {
-	    	if (canceledOrRestartCurrAction("image cropping"))
-	    		return startCropping();
-	    }
-	    return true;
+        Object[] options = { "OK", "Cancel" };
+        int ret = JOptionPane.showOptionDialog( null,
+                tr("Click second corner for image cropping"),
+                tr("Image cropping"),
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
+        if (ret != JOptionPane.OK_OPTION) {
+            if (canceledOrRestartCurrAction("image cropping"))
+                return startCropping();
+        }
+        return true;
     }
 
     /**
@@ -218,20 +218,20 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
      * @return false if all operations are canceled
      */
     private boolean startGeoreferencing() {
-	    countMouseClicked = 0;
-	    mode = cGetLambertCrosspieces;
-		Object[] options = { "OK", "Cancel" };
-		int ret = JOptionPane.showOptionDialog( null,
-				tr("Click first Lambert crosspiece for georeferencing\n(two points required)"),
-				tr("Image georeferencing"),
-	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-	    		null, options, options[0]);
-	    if (ret == JOptionPane.OK_OPTION) {
-	        mouseClickedTime = System.currentTimeMillis();
-	    } else
-	    	if (canceledOrRestartCurrAction("georeferencing"))
-	    		return startGeoreferencing();
-	    return true;
+        countMouseClicked = 0;
+        mode = cGetLambertCrosspieces;
+        Object[] options = { "OK", "Cancel" };
+        int ret = JOptionPane.showOptionDialog( null,
+                tr("Click first Lambert crosspiece for georeferencing\n(two points required)"),
+                tr("Image georeferencing"),
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
+        if (ret == JOptionPane.OK_OPTION) {
+            mouseClickedTime = System.currentTimeMillis();
+        } else
+            if (canceledOrRestartCurrAction("georeferencing"))
+                return startGeoreferencing();
+        return true;
     }
 
     /**
@@ -239,17 +239,17 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
      * @return false if all operations are canceled
      */
     private boolean continueGeoreferencing() {
-		Object[] options = { "OK", "Cancel" };
-		int ret = JOptionPane.showOptionDialog( null,
-				tr("Click second Lambert crosspiece for georeferencing"),
-				tr("Image georeferencing"),
-	    		JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-	    		null, options, options[0]);
-	    if (ret != JOptionPane.OK_OPTION) {
-	    	if (canceledOrRestartCurrAction("georeferencing"))
-	    		return startGeoreferencing();
-	    }
-	    return true;
+        Object[] options = { "OK", "Cancel" };
+        int ret = JOptionPane.showOptionDialog( null,
+                tr("Click second Lambert crosspiece for georeferencing"),
+                tr("Image georeferencing"),
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
+        if (ret != JOptionPane.OK_OPTION) {
+            if (canceledOrRestartCurrAction("georeferencing"))
+                return startGeoreferencing();
+        }
+        return true;
     }
     
     /**
@@ -270,16 +270,16 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
      * @return false if all operations are canceled
      */
     private boolean canceledOrRestartCurrAction(String action) {
-    	Object[] options = { "Cancel", "Retry" };
-    	int selectedValue = JOptionPane.showOptionDialog( null,
-        		tr("Do you want to cancel completely\n"+
-        				"or just retry "+action+" ?"), "",
-        		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-        		null, options, options[0]);
+        Object[] options = { "Cancel", "Retry" };
+        int selectedValue = JOptionPane.showOptionDialog( null,
+                tr("Do you want to cancel completely\n"+
+                        "or just retry "+action+" ?"), "",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, options, options[0]);
         countMouseClicked = 0;
         if (selectedValue == 0) { // "Cancel"
-        	// remove layer
-        	Main.map.mapView.removeLayer(wmsLayer);
+            // remove layer
+            Main.map.mapView.removeLayer(wmsLayer);
             wmsLayer = null;
             Main.map.mapView.removeMouseListener(this);
             return false;

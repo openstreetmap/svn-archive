@@ -9,10 +9,10 @@ import java.util.ArrayList;
  * @author Radomír Černoch radomir.cernoch@gmail.com
  */
 public class Region extends ElementWithStreets {
-    
+
     private ArrayList<ViToCi> vitocis
             = new ArrayList<ViToCi>();
-    
+
     /**
      * Adds a single municipality into this element.
      */
@@ -20,7 +20,7 @@ public class Region extends ElementWithStreets {
         municipality.setParent(this);
         vitocis.add(municipality);
     }
-    
+
     /**
      * Replaces the list of municipalities of this element.
      */
@@ -29,7 +29,7 @@ public class Region extends ElementWithStreets {
         for (ViToCi obec : municipalities)
             obec.setParent(this);
     }
-    
+
     /**
      * Returns the list of all municipalities in this region.
      */
@@ -52,7 +52,7 @@ public class Region extends ElementWithStreets {
 
     String nuts3name = null;
     String nuts4name = null;
-    
+
     /**
      * Default constructor setting the name of this region.
      * @param name
@@ -60,7 +60,7 @@ public class Region extends ElementWithStreets {
     public Region(String name) {
         super(name);
     }
-    
+
     /**
      * Constructor which sets the region's name together with higher
      * administrative areas.
@@ -70,27 +70,27 @@ public class Region extends ElementWithStreets {
         if (nuts3name != null) this.nuts3name = nuts3name;
         if (nuts4name != null) this.nuts4name = nuts4name;
     }
-    
+
     public String getNuts3Name() {
         return nuts3name;
     }
-    
+
     public String getNuts4Name() {
         return nuts4name;
     }
-    
+
     /**
      * Returns the name of this region. If the NUTS3 name was entered,
      * its name is appended to the result.
      */
     @Override
     public String toString() {
-        
+
         String thisString = name;
-        
+
         if (nuts3name != null)
             thisString += " (kraj " + nuts3name + ")";
-        
+
         return thisString;
     }
 }

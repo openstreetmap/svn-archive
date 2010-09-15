@@ -72,7 +72,7 @@ public java.awt.Component getControls() {
       p.add(nameField);
       nameField.addKeyListener(new java.awt.event.KeyAdapter() {
         @Override
-		public void keyReleased(java.awt.event.KeyEvent evt) {
+        public void keyReleased(java.awt.event.KeyEvent evt) {
           noUpdate = true;
           setValue(nameField.getText());
           noUpdate = false;

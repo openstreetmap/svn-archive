@@ -24,7 +24,7 @@ public class Street extends ElementWithHouses  {
         assert parent instanceof ElementWithStreets;
         super.setParent(parent);
     }
-    
+
     @Override
     public ElementWithStreets getParent() {
         assert parent instanceof ElementWithStreets;
@@ -35,7 +35,7 @@ public class Street extends ElementWithHouses  {
     protected int[] getFieldMatchList(OsmPrimitive primitive) {
         int[] result = {0};
         if (!isMatchable(primitive)) return result;
-        
+
         result[0] = matchFieldAbbrev(name, primitive.get("name"));
         return result;
     }
@@ -43,7 +43,7 @@ public class Street extends ElementWithHouses  {
     @Override
     public List<Proposal> getDiff(OsmPrimitive prim) {
         List<Proposal> props = new NotNullList<Proposal>();
-        
+
         props.add(getStringFieldDiff(PrimUtils.KEY_NAME, prim.get(PrimUtils.KEY_NAME), getName()));
         return props;
     }

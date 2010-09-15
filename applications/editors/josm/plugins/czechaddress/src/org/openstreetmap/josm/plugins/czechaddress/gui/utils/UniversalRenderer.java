@@ -33,7 +33,7 @@ public abstract class UniversalRenderer {
     private static final ImageIcon envelopeExclIcon = ImageProvider.get("envelope-closed-exclamation-small.png");
 
     public static ImageIcon getIcon(Object value) {
-        
+
              if (value instanceof AddKeyValueProposal)    return iconAdd;
         else if (value instanceof KeyValueChangeProposal) return iconEdit;
         else if (value instanceof RemoveKeyProposal)      return iconRemove;
@@ -68,13 +68,13 @@ public abstract class UniversalRenderer {
 
         if (value instanceof AddressElement)
             return ((AddressElement) value).getName();
-                
+
         if (value instanceof OsmPrimitive)
             return AddressElement.getName(value);
 
         if (value == null)
             return "";
-        
+
         return value.toString();
     }
 

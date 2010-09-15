@@ -8,7 +8,7 @@ import org.openstreetmap.josm.plugins.czechaddress.parser.DatabaseParser;
  *
  * <p>Contains the tree of all regions, municipalities, suburbs, streets
  * and houses in the Czech republic.</p>
- * 
+ *
  * @see AddressElement
  * @see DatabaseParser
 

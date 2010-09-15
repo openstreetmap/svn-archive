@@ -6,20 +6,20 @@ import java.net.URL;
 
 /**
  * Class that contains information about one single slippy map tile.
- * 
+ *
  * @author Frederik Ramm <frederik@remote.org>
  * @author LuVar <lubomir.varga@freemap.sk>
  * @author Dave Hansen <dave@sr71.net>
- * 
+ *
  */
 public class WalkingPapersTile {
     private Image tileImage;
-	long timestamp;
+    long timestamp;
 
     int x;
     int y;
     int z;
-    
+
     WalkingPapersLayer parentLayer;
 
 
@@ -28,18 +28,18 @@ public class WalkingPapersTile {
         this.y = y;
         this.z = z;
         parentLayer = parent;
-		timestamp = System.currentTimeMillis();
+        timestamp = System.currentTimeMillis();
     }
 
     public URL getImageUrl() {
-    	return parentLayer.formatImageUrl(x, y, z);
+        return parentLayer.formatImageUrl(x, y, z);
     }
 
     public void loadImage() {
         URL imageUrl = this.getImageUrl();
         tileImage = Toolkit.getDefaultToolkit().createImage(imageUrl);
-		Toolkit.getDefaultToolkit().sync();
-   		timestamp = System.currentTimeMillis();
+        Toolkit.getDefaultToolkit().sync();
+        timestamp = System.currentTimeMillis();
     }
 
     public Image getImage() {
@@ -48,10 +48,10 @@ public class WalkingPapersTile {
     }
 
     public void dropImage() {
-		tileImage = null;
-		//  This should work in theory but doesn't seem to actually
-		//  reduce the X server memory usage
-		//tileImage.flush();
+        tileImage = null;
+        //  This should work in theory but doesn't seem to actually
+        //  reduce the X server memory usage
+        //tileImage.flush();
     }
 
     public long access_time() {

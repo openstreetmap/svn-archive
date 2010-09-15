@@ -11,23 +11,23 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class BuildingsToolsPlugin extends Plugin {
-	public static Mercator proj = new Mercator();
+    public static Mercator proj = new Mercator();
 
-	public static EastNorth latlon2eastNorth(LatLon p) {
-		return proj.latlon2eastNorth(p); 
-	}
-	public static LatLon eastNorth2latlon(EastNorth p) {
-		return proj.eastNorth2latlon(p); 
-	}
+    public static EastNorth latlon2eastNorth(LatLon p) {
+        return proj.latlon2eastNorth(p);
+    }
+    public static LatLon eastNorth2latlon(EastNorth p) {
+        return proj.eastNorth2latlon(p);
+    }
 
-	public BuildingsToolsPlugin(PluginInformation info) {
-		super(info);
-		Main.main.menu.editMenu.addSeparator();
-		MainMenu.add(Main.main.menu.editMenu, new BuildingSizeAction());
-	}
-	@Override public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (oldFrame==null && newFrame!=null) {
-			Main.map.addMapMode(new IconToggleButton(new DrawBuildingAction(Main.map)));
-		}
-	}
+    public BuildingsToolsPlugin(PluginInformation info) {
+        super(info);
+        Main.main.menu.editMenu.addSeparator();
+        MainMenu.add(Main.main.menu.editMenu, new BuildingSizeAction());
+    }
+    @Override public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (oldFrame==null && newFrame!=null) {
+            Main.map.addMapMode(new IconToggleButton(new DrawBuildingAction(Main.map)));
+        }
+    }
 }

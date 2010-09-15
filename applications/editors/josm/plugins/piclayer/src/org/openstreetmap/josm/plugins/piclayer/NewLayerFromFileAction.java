@@ -38,69 +38,69 @@ import org.openstreetmap.josm.actions.JosmAction;
  * an image file.
  */
 public class NewLayerFromFileAction extends JosmAction {
-	
-	/**
-	 * Provides filtering of only image files.
-	 */
-	private class ImageFileFilter extends FileFilter {
 
-		@Override
-		public boolean accept(File f) {
-		    
-		    String ext3 = ( f.getName().length() > 4 ) ?  f.getName().substring( f.getName().length() - 4 ).toLowerCase() : "";
-		    String ext4 = ( f.getName().length() > 5 ) ?  f.getName().substring( f.getName().length() - 5 ).toLowerCase() : "";
+    /**
+     * Provides filtering of only image files.
+     */
+    private class ImageFileFilter extends FileFilter {
 
-		    // TODO: check what is supported by Java :)
-		    return ( f.isDirectory() 
-		    	||	ext3.equals( ".jpg" )
-		    	||	ext4.equals( ".jpeg" )
-		    	||	ext3.equals( ".png" )
-		    	);
-		}
+        @Override
+        public boolean accept(File f) {
+
+            String ext3 = ( f.getName().length() > 4 ) ?  f.getName().substring( f.getName().length() - 4 ).toLowerCase() : "";
+            String ext4 = ( f.getName().length() > 5 ) ?  f.getName().substring( f.getName().length() - 5 ).toLowerCase() : "";
+
+            // TODO: check what is supported by Java :)
+            return ( f.isDirectory()
+                ||  ext3.equals( ".jpg" )
+                ||  ext4.equals( ".jpeg" )
+                ||  ext3.equals( ".png" )
+                );
+        }
 
 
-		@Override
-		public String getDescription() {
-			return tr("Image files");
-		}
-		
-	}
-	
-	/**
-	 * Constructor...
-	 */
-	public NewLayerFromFileAction() {
-		super(tr("New picture layer from file..."), null, null, null, false);
-	}
+        @Override
+        public String getDescription() {
+            return tr("Image files");
+        }
 
-	/**
-	 * Action handler
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		
-		// Choose a file
-		JFileChooser fc = new JFileChooser();
-		fc.setAcceptAllFileFilterUsed( false );
-		fc.setFileFilter( new ImageFileFilter() );
-		int result = fc.showOpenDialog( Main.parent );
-		
-		// Create a layer?
-		if ( result == JFileChooser.APPROVE_OPTION ) {
-			// Create layer from file
-			PicLayerFromFile layer = new PicLayerFromFile( fc.getSelectedFile() );
-			// Add layer only if successfully initialized
-			try {
-				layer.initialize();
-			}
-			catch (IOException e) {
-				// Failed
-				System.out.println( "NewLayerFromFileAction::actionPerformed - " + e.getMessage() );
-				JOptionPane.showMessageDialog(null, e.getMessage() );  
-				return;
-			}
-			// Add layer
-			Main.main.addLayer( layer );
-		}
-		
-	}
+    }
+
+    /**
+     * Constructor...
+     */
+    public NewLayerFromFileAction() {
+        super(tr("New picture layer from file..."), null, null, null, false);
+    }
+
+    /**
+     * Action handler
+     */
+    public void actionPerformed(ActionEvent arg0) {
+
+        // Choose a file
+        JFileChooser fc = new JFileChooser();
+        fc.setAcceptAllFileFilterUsed( false );
+        fc.setFileFilter( new ImageFileFilter() );
+        int result = fc.showOpenDialog( Main.parent );
+
+        // Create a layer?
+        if ( result == JFileChooser.APPROVE_OPTION ) {
+            // Create layer from file
+            PicLayerFromFile layer = new PicLayerFromFile( fc.getSelectedFile() );
+            // Add layer only if successfully initialized
+            try {
+                layer.initialize();
+            }
+            catch (IOException e) {
+                // Failed
+                System.out.println( "NewLayerFromFileAction::actionPerformed - " + e.getMessage() );
+                JOptionPane.showMessageDialog(null, e.getMessage() );
+                return;
+            }
+            // Add layer
+            Main.main.addLayer( layer );
+        }
+
+    }
 }

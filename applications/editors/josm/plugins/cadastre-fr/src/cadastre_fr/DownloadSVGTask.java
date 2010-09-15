@@ -56,7 +56,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
 
     @Override
     public void realRun() throws IOException, OsmTransferException {
-    	progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
+        progressMonitor.indeterminateSubTask(tr("Contacting WMS Server..."));
         errorMessage = null;
         try {
             if (wmsInterface.retrieveInterface(wmsLayer)) {

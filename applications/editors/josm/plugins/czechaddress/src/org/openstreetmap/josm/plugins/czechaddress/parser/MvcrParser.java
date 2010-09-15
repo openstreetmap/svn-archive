@@ -56,7 +56,7 @@ public class MvcrParser extends XMLParser {
             topElem.addHouse(new House(cp, co));
             return;
         }
-        
+
         // ========== PARSING STREET ========== //
         if (name.equals("ulice")) {
             String nazev = tryTrim(attributes.getValue("nazev"));
@@ -244,18 +244,18 @@ public class MvcrParser extends XMLParser {
         ZipInputStream zis;
         ZipEntry zipEntry = null;
         try {
-	    zis = new ZipInputStream(new FileInputStream(getDatabasePath()));
+        zis = new ZipInputStream(new FileInputStream(getDatabasePath()));
 
-	    while ((zipEntry = zis.getNextEntry()) != null)
-	    	if (zipEntry.getName().equals("adresy.xml"))
-	    		break;
+        while ((zipEntry = zis.getNextEntry()) != null)
+            if (zipEntry.getName().equals("adresy.xml"))
+                break;
 
         } catch (IOException ioexp) {
             throw new DatabaseLoadException("Chyba při čtení archivu s databází.");
         }
 
         if (zipEntry == null)
-	    throw new DatabaseLoadException(
+        throw new DatabaseLoadException(
                     "ZIP archiv s databází neobsahuje soubor 'adresy.xml'.");
 
         return zis;

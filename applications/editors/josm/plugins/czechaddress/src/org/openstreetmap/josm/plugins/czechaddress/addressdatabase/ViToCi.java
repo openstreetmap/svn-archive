@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * ViToCi is either a village, town or a city.
- * 
+ *
  * @author Radomír Černoch radomir.cernoch@gmail.com
  */
 public class ViToCi extends ElementWithStreets {

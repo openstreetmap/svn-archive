@@ -15,8 +15,8 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 public class DownloadWMSVectorImage extends PleaseWaitRunnable {
 
     private WMSLayer wmsLayer;
-    private Bounds bounds;    
-    private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;    
+    private Bounds bounds;
+    private CadastreGrabber grabber = CadastrePlugin.cadastreGrabber;
     private static String errorMessage;
 
     public DownloadWMSVectorImage(WMSLayer wmsLayer, Bounds bounds, boolean buildingsOnly) {

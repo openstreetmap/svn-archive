@@ -34,68 +34,68 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * This class handles the input during scaling the picture.
  */
-public abstract class ScalePictureActionAbstract extends MapMode implements MouseListener, MouseMotionListener 
+public abstract class ScalePictureActionAbstract extends MapMode implements MouseListener, MouseMotionListener
 {
-	// Scaling ongoing?
-	private boolean mb_dragging = false;
-	
-	// Last mouse position
-	private int m_prevY;
-	
-	// Layer we're working on
-	protected PicLayerAbstract m_currentLayer = null;
-	
-	/**
-	 * Constructor
-	 */
-	public ScalePictureActionAbstract (String name, String icon, String tooltip, MapFrame frame) {
-		super(name, icon, tooltip, frame, ImageProvider.getCursor("crosshair", null));
-		// TODO Auto-generated constructor stub
-	}
+    // Scaling ongoing?
+    private boolean mb_dragging = false;
 
-    @Override 
+    // Last mouse position
+    private int m_prevY;
+
+    // Layer we're working on
+    protected PicLayerAbstract m_currentLayer = null;
+
+    /**
+     * Constructor
+     */
+    public ScalePictureActionAbstract (String name, String icon, String tooltip, MapFrame frame) {
+        super(name, icon, tooltip, frame, ImageProvider.getCursor("crosshair", null));
+        // TODO Auto-generated constructor stub
+    }
+
+    @Override
     public void enterMode() {
         super.enterMode();
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
     }
 
-    @Override 
+    @Override
     public void exitMode() {
         super.exitMode();
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
-    }	
-	
-    @Override 
+    }
+
+    @Override
     public void mousePressed(MouseEvent e) {
-    	// Start scaling
-    	if ( Main.map.mapView.getActiveLayer() instanceof PicLayerAbstract ) {
-	        m_currentLayer = (PicLayerAbstract)Main.map.mapView.getActiveLayer();
-	        
-	        if ( m_currentLayer != null && e.getButton() == MouseEvent.BUTTON1 ) {
-	        	mb_dragging = true;
-	        	m_prevY = e.getY();
-	        }
-    	}
-    }   
-    
-    @Override 
+        // Start scaling
+        if ( Main.map.mapView.getActiveLayer() instanceof PicLayerAbstract ) {
+            m_currentLayer = (PicLayerAbstract)Main.map.mapView.getActiveLayer();
+
+            if ( m_currentLayer != null && e.getButton() == MouseEvent.BUTTON1 ) {
+                mb_dragging = true;
+                m_prevY = e.getY();
+            }
+        }
+    }
+
+    @Override
     public void mouseDragged(MouseEvent e) {
-    	// Scale the picture
+        // Scale the picture
         if(mb_dragging) {
             doTheScale( ( e.getY() - m_prevY ) / 500.0 );
             m_prevY = e.getY();
             Main.map.mapView.repaint();
         }
     }
-    
-    @Override 
+
+    @Override
     public void mouseReleased(MouseEvent e) {
-    	// Stop scaling
-    	mb_dragging = false;
+        // Stop scaling
+        mb_dragging = false;
     }
-    
+
     /**
     * Does the actual scaling in the inherited class.
     */

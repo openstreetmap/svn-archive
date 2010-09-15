@@ -36,66 +36,66 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * This class handles the input during rotating the picture.
  */
-public class RotatePictureAction extends MapMode implements MouseListener, MouseMotionListener 
+public class RotatePictureAction extends MapMode implements MouseListener, MouseMotionListener
 {
-	// Action ongoing?
-	private boolean mb_dragging = false;
-	
-	// Last mouse position
-	private int m_prevY;
-	
-	// Layer we're working on
-	private PicLayerAbstract m_currentLayer = null;
-	
-	/**
-	 * Constructor
-	 */
-	public RotatePictureAction(MapFrame frame) {
-		super(tr("PicLayer rotate"), "rotate", tr("Drag to rotate the picture"), frame, ImageProvider.getCursor("crosshair", null));
-		// TODO Auto-generated constructor stub
-	}
+    // Action ongoing?
+    private boolean mb_dragging = false;
 
-    @Override 
+    // Last mouse position
+    private int m_prevY;
+
+    // Layer we're working on
+    private PicLayerAbstract m_currentLayer = null;
+
+    /**
+     * Constructor
+     */
+    public RotatePictureAction(MapFrame frame) {
+        super(tr("PicLayer rotate"), "rotate", tr("Drag to rotate the picture"), frame, ImageProvider.getCursor("crosshair", null));
+        // TODO Auto-generated constructor stub
+    }
+
+    @Override
     public void enterMode() {
         super.enterMode();
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
     }
 
-    @Override 
+    @Override
     public void exitMode() {
         super.exitMode();
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
-    }	
-	
-    @Override 
+    }
+
+    @Override
     public void mousePressed(MouseEvent e) {
-    	// Start rotating
-    	if ( Main.map.mapView.getActiveLayer() instanceof PicLayerAbstract ) {
-	        m_currentLayer = (PicLayerAbstract)Main.map.mapView.getActiveLayer();
-	        
-	        if ( m_currentLayer != null && e.getButton() == MouseEvent.BUTTON1 ) {
-	        	mb_dragging = true;
-	        	m_prevY=e.getY();
-	        }
-    	}
-    }   
-    
-    @Override 
+        // Start rotating
+        if ( Main.map.mapView.getActiveLayer() instanceof PicLayerAbstract ) {
+            m_currentLayer = (PicLayerAbstract)Main.map.mapView.getActiveLayer();
+
+            if ( m_currentLayer != null && e.getButton() == MouseEvent.BUTTON1 ) {
+                mb_dragging = true;
+                m_prevY=e.getY();
+            }
+        }
+    }
+
+    @Override
     public void mouseDragged(MouseEvent e) {
-    	// Rotate the picture
+        // Rotate the picture
         if(mb_dragging) {
             // TODO: Magic number
             m_currentLayer.rotatePictureBy( ( e.getY() - m_prevY ) / 10.0 );
             m_prevY = e.getY();
             Main.map.mapView.repaint();
         }
-    }    
-    
+    }
+
     @Override public void mouseReleased(MouseEvent e) {
-    	// End rotating
-    	mb_dragging = false;
-    }    
+        // End rotating
+        mb_dragging = false;
+    }
 
 }

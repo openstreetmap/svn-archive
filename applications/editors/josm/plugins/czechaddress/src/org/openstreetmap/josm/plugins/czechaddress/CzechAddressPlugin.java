@@ -85,7 +85,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
     }
 
     public CzechAddressPlugin(PluginInformation info) {
-    	super(info);
+        super(info);
 
         /*boolean x;
         x = StringUtils.matchAbbrev("Ahoj lidi", "Ahoj lidi");

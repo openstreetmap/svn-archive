@@ -43,41 +43,41 @@ import org.openstreetmap.josm.actions.JosmAction;
  */
 public class LoadPictureCalibrationAction extends JosmAction {
 
-	// Owner layer of the action
-	PicLayerAbstract m_owner = null;
-	
-	/**
-	 * Constructor
-	 */
-	public LoadPictureCalibrationAction( PicLayerAbstract owner ) {
-		super(tr("Load Picture Calibration..."), null, tr("Loads calibration data to a file"), null, false);
-		// Remember the owner...
-		m_owner = owner;
-	}
-	
-	/**
-	 * Action handler
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		// Save dialog
-		final JFileChooser fc = new JFileChooser();
-		fc.setAcceptAllFileFilterUsed( false );
-		fc.setFileFilter( new CalibrationFileFilter() );
-		fc.setSelectedFile( new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
-		int result = fc.showOpenDialog(Main.parent );
+    // Owner layer of the action
+    PicLayerAbstract m_owner = null;
+    
+    /**
+     * Constructor
+     */
+    public LoadPictureCalibrationAction( PicLayerAbstract owner ) {
+        super(tr("Load Picture Calibration..."), null, tr("Loads calibration data to a file"), null, false);
+        // Remember the owner...
+        m_owner = owner;
+    }
+    
+    /**
+     * Action handler
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        // Save dialog
+        final JFileChooser fc = new JFileChooser();
+        fc.setAcceptAllFileFilterUsed( false );
+        fc.setFileFilter( new CalibrationFileFilter() );
+        fc.setSelectedFile( new File(m_owner.getPicLayerName() + CalibrationFileFilter.EXTENSION));
+        int result = fc.showOpenDialog(Main.parent );
 
-		if ( result == JFileChooser.APPROVE_OPTION ) {
-					
-			// Load	
-			try {
-				Properties props = new Properties();
-				props.load(new FileInputStream(fc.getSelectedFile()));
-				m_owner.loadCalibration(props);
-			} catch (Exception e) {
-				// Error
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", e.getMessage()));
-			}
-		}
-	}
+        if ( result == JFileChooser.APPROVE_OPTION ) {
+                    
+            // Load 
+            try {
+                Properties props = new Properties();
+                props.load(new FileInputStream(fc.getSelectedFile()));
+                m_owner.loadCalibration(props);
+            } catch (Exception e) {
+                // Error
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", e.getMessage()));
+            }
+        }
+    }
 }

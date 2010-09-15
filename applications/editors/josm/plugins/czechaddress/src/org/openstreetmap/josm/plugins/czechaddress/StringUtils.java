@@ -106,7 +106,7 @@ public abstract class StringUtils {
             if (pos1 >= s1.length() ^ pos2 >= s2.length())
                 return false;
         }
-        
+
         return true;
     }
 

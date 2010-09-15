@@ -103,7 +103,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     }
 
     @Override
-	public void destroy() {
+    public void destroy() {
         // if the layer is currently saving the images in the cache, wait until it's finished
         if (cacheControl != null) {
             while (!cacheControl.isCachePipeEmpty()) {
@@ -304,7 +304,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         saveAsPng = new MenuActionSaveRasterAs(this);
         saveAsPng.setEnabled(isRaster);
         return new Action[] {
-        		LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createShowHideLayerAction(),
                 LayerListDialog.getInstance().createDeleteLayerAction(),
                 new MenuActionLoadFromCache(),
                 saveAsPng,

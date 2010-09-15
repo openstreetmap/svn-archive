@@ -34,25 +34,25 @@ import org.openstreetmap.josm.actions.JosmAction;
  */
 public class ResetPictureAngleAction extends JosmAction {
 
-	// Owner layer of the action
-	PicLayerAbstract m_owner = null;
-	
-	/**
-	 * Constructor
-	 */
-	public ResetPictureAngleAction( PicLayerAbstract owner ) {
-		super(tr("Angle"), null, tr("Resets picture rotation"), null, false);
-		// Remember the owner...
-		m_owner = owner;
-	}
-	
-	/**
-	 * Action handler
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		// Reset
-		m_owner.resetAngle();
-		// Redraw
+    // Owner layer of the action
+    PicLayerAbstract m_owner = null;
+    
+    /**
+     * Constructor
+     */
+    public ResetPictureAngleAction( PicLayerAbstract owner ) {
+        super(tr("Angle"), null, tr("Resets picture rotation"), null, false);
+        // Remember the owner...
+        m_owner = owner;
+    }
+    
+    /**
+     * Action handler
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        // Reset
+        m_owner.resetAngle();
+        // Redraw
         Main.map.mapView.repaint();
-	}
+    }
 }

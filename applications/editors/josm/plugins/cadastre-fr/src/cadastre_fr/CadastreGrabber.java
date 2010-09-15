@@ -51,7 +51,7 @@ public class CadastreGrabber {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
         }
     }
-    
+
     public GeorefImage grabParcels(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws IOException, OsmTransferException {
         try {
             URL url = getURLVectorParcels(lambertMin, lambertMax);
@@ -62,7 +62,7 @@ public class CadastreGrabber {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
         }
     }
-    
+
     private URL getURLRaster(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
         // GET /scpc/wms?version=1.1&request=GetMap&layers=CDIF:PMC@QH4480001701&format=image/png&bbox=-1186,0,13555,8830&width=576&height=345&exception=application/vnd.ogc.se_inimage&styles= HTTP/1.1
         final int cRasterX = CadastrePlugin.imageWidth; // keep width constant and adjust width to original image proportions
@@ -84,7 +84,7 @@ public class CadastreGrabber {
             int width, int height,
             EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
         String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
-        str += "&layers="+ layers;  
+        str += "&layers="+ layers;
         str += "&format=image/png";
         //str += "&format=image/jpeg";
         str += "&bbox="+lambertMin.east()+",";
@@ -99,8 +99,8 @@ public class CadastreGrabber {
     }
 
     private URL getURLVector(EastNorth lambertMin, EastNorth lambertMax) throws MalformedURLException {
-        return buildURLVector(CadastrePlugin.grabLayers, CadastrePlugin.grabStyles, 
-                CadastrePlugin.imageWidth, CadastrePlugin.imageHeight, 
+        return buildURLVector(CadastrePlugin.grabLayers, CadastrePlugin.grabStyles,
+                CadastrePlugin.imageWidth, CadastrePlugin.imageHeight,
                 lambertMin, lambertMax);
     }
 

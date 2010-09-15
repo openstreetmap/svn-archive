@@ -5,7 +5,7 @@ import org.openstreetmap.josm.plugins.czechaddress.parser.DatabaseParser;
 
 /**
  * Exception occuring during parsing the database.
- * 
+ *
  * <p>This exception is used during <i>download</i>, <i>extraction</i> or
  * <i>parsing</i> of the database. It can set a message to be displayed
  * to the user by front-end components.</p>

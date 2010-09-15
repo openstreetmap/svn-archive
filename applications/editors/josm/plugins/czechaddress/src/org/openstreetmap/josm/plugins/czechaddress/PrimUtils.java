@@ -5,7 +5,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
  * Utilities for handling {@link OsmPrimitive}s.
- * 
+ *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
 public class PrimUtils {

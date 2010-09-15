@@ -47,116 +47,116 @@ public class LakewalkerWMS {
     }
 
     public BufferedImage getTile(int x, int y, ProgressMonitor progressMonitor) throws LakewalkerException {
-    	progressMonitor.beginTask(tr("Downloading image tile..."));
-    	try {
-    		String layer = "global_mosaic_base";
+        progressMonitor.beginTask(tr("Downloading image tile..."));
+        try {
+            String layer = "global_mosaic_base";
 
-    		int[] bottom_left_xy = new int[2];
-    		bottom_left_xy[0] = floor(x,this.tilesize);
-    		bottom_left_xy[1] = floor(y,this.tilesize);
+            int[] bottom_left_xy = new int[2];
+            bottom_left_xy[0] = floor(x,this.tilesize);
+            bottom_left_xy[1] = floor(y,this.tilesize);
 
-    		int[] top_right_xy = new int[2];
-    		top_right_xy[0] = bottom_left_xy[0] + this.tilesize;
-    		top_right_xy[1] = bottom_left_xy[1] + this.tilesize;
+            int[] top_right_xy = new int[2];
+            top_right_xy[0] = bottom_left_xy[0] + this.tilesize;
+            top_right_xy[1] = bottom_left_xy[1] + this.tilesize;
 
-    		double[] topright_geo = xy_to_geo(top_right_xy[0],top_right_xy[1],this.resolution);
-    		double[] bottomleft_geo = xy_to_geo(bottom_left_xy[0],bottom_left_xy[1],this.resolution);
+            double[] topright_geo = xy_to_geo(top_right_xy[0],top_right_xy[1],this.resolution);
+            double[] bottomleft_geo = xy_to_geo(bottom_left_xy[0],bottom_left_xy[1],this.resolution);
 
-    		String filename = this.wmslayer+"/landsat_"+this.resolution+"_"+this.tilesize+
-    		"_xy_"+bottom_left_xy[0]+"_"+bottom_left_xy[1]+".png";
+            String filename = this.wmslayer+"/landsat_"+this.resolution+"_"+this.tilesize+
+            "_xy_"+bottom_left_xy[0]+"_"+bottom_left_xy[1]+".png";
 
-    		// The WMS server only understands decimal points using periods, so we need
-    		// to convert to a locale that uses that to build the proper URL
-    		NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
-    		DecimalFormat df = (DecimalFormat)nf;
-    		df.applyLocalizedPattern("0.000000");
+            // The WMS server only understands decimal points using periods, so we need
+            // to convert to a locale that uses that to build the proper URL
+            NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+            DecimalFormat df = (DecimalFormat)nf;
+            df.applyLocalizedPattern("0.000000");
 
-    		String urlloc = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers="+layer+
-    		"&styles="+wmslayer+"&srs=EPSG:4326&format=image/png"+
-    		"&bbox="+df.format(bottomleft_geo[1])+","+df.format(bottomleft_geo[0])+
-    		","+df.format(topright_geo[1])+","+df.format(topright_geo[0])+
-    		"&width="+this.tilesize+"&height="+this.tilesize;
+            String urlloc = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers="+layer+
+            "&styles="+wmslayer+"&srs=EPSG:4326&format=image/png"+
+            "&bbox="+df.format(bottomleft_geo[1])+","+df.format(bottomleft_geo[0])+
+            ","+df.format(topright_geo[1])+","+df.format(topright_geo[0])+
+            "&width="+this.tilesize+"&height="+this.tilesize;
 
-    		File file = new File(this.working_dir,filename);
+            File file = new File(this.working_dir,filename);
 
-    		// Calculate the hashmap key
-    		String hashkey = Integer.toString(bottom_left_xy[0])+":"+Integer.toString(bottom_left_xy[1]);
+            // Calculate the hashmap key
+            String hashkey = Integer.toString(bottom_left_xy[0])+":"+Integer.toString(bottom_left_xy[1]);
 
-    		// See if this image is already loaded
-    		if(this.image != null){
-    			if(this.imagex != bottom_left_xy[0] || this.imagey != bottom_left_xy[1]){
+            // See if this image is already loaded
+            if(this.image != null){
+                if(this.imagex != bottom_left_xy[0] || this.imagey != bottom_left_xy[1]){
 
-    				// Check if this image exists in the hashmap
-    				if(this.imageindex.containsKey(hashkey)){
-    					// Store which image we have
-    					this.imagex = bottom_left_xy[0];
-    					this.imagey = bottom_left_xy[1];
+                    // Check if this image exists in the hashmap
+                    if(this.imageindex.containsKey(hashkey)){
+                        // Store which image we have
+                        this.imagex = bottom_left_xy[0];
+                        this.imagey = bottom_left_xy[1];
 
-    					// Retrieve from cache
-    					this.image = this.images.get(this.imageindex.get(hashkey));
-    					return this.image;
-    				} else {
-    					this.image = null;
-    				}
-    			} else {
-    				return this.image;
-    			}
-    		}
+                        // Retrieve from cache
+                        this.image = this.images.get(this.imageindex.get(hashkey));
+                        return this.image;
+                    } else {
+                        this.image = null;
+                    }
+                } else {
+                    return this.image;
+                }
+            }
 
-    		try {
-    			System.out.println("Looking for image in disk cache: "+filename);
+            try {
+                System.out.println("Looking for image in disk cache: "+filename);
 
-    			// Read from a file
-    			this.image = ImageIO.read(file);
+                // Read from a file
+                this.image = ImageIO.read(file);
 
-    			this.images.add(this.image);
-    			this.imageindex.put(hashkey,this.images.size()-1);
+                this.images.add(this.image);
+                this.imageindex.put(hashkey,this.images.size()-1);
 
-    		} catch(FileNotFoundException e){
-    			System.out.println("Could not find cached image, downloading.");
-    		} catch(IOException e){
-    			System.out.println(e.getMessage());
-    		} catch(Exception e){
-    			System.out.println(e.getMessage());
-    		}
+            } catch(FileNotFoundException e){
+                System.out.println("Could not find cached image, downloading.");
+            } catch(IOException e){
+                System.out.println(e.getMessage());
+            } catch(Exception e){
+                System.out.println(e.getMessage());
+            }
 
-    		if(this.image == null){
-    			/**
-    			 * Try downloading the image
-    			 */
-    			try {
-    				System.out.println("Downloading from "+urlloc);
+            if(this.image == null){
+                /**
+                 * Try downloading the image
+                 */
+                try {
+                    System.out.println("Downloading from "+urlloc);
 
-    				// Read from a URL
-    				URL url = new URL(urlloc);
-    				this.image = ImageIO.read(url); // this can return null!
-    			} catch(MalformedURLException e){
-    				System.out.println(e.getMessage());
-    			} catch(IOException e){
-    				System.out.println(e.getMessage());
-    			} catch(Exception e){
-    				System.out.println(e.getMessage());
-    			}
+                    // Read from a URL
+                    URL url = new URL(urlloc);
+                    this.image = ImageIO.read(url); // this can return null!
+                } catch(MalformedURLException e){
+                    System.out.println(e.getMessage());
+                } catch(IOException e){
+                    System.out.println(e.getMessage());
+                } catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
 
-    			if (this.image != null) {
-    				this.images.add(this.image);
-    				this.imageindex.put(hashkey,this.images.size()-1);
+                if (this.image != null) {
+                    this.images.add(this.image);
+                    this.imageindex.put(hashkey,this.images.size()-1);
 
-    				this.saveimage(file,this.image);
-    			}
-    		}
+                    this.saveimage(file,this.image);
+                }
+            }
 
-    		this.imagex = bottom_left_xy[0];
-    		this.imagey = bottom_left_xy[1];
+            this.imagex = bottom_left_xy[0];
+            this.imagey = bottom_left_xy[1];
 
-    		if(this.image == null){
-    			throw new LakewalkerException(tr("Could not acquire image"));
-    		}
+            if(this.image == null){
+                throw new LakewalkerException(tr("Could not acquire image"));
+            }
 
-    		return this.image;
-    	} finally {
-    		progressMonitor.finishTask();
-    	}
+            return this.image;
+        } finally {
+            progressMonitor.finishTask();
+        }
     }
 
     public void saveimage(File file, BufferedImage image){

@@ -27,235 +27,235 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MapView;
 
 class Building {
-	private static final double eqlen = 40075004; // length of equator in metres
-	private final EastNorth[] en = new EastNorth[4];
+    private static final double eqlen = 40075004; // length of equator in metres
+    private final EastNorth[] en = new EastNorth[4];
 
-	double meter = 0;
+    double meter = 0;
 
-	private double len = 0;
-	private double width;
-	private double heading;
-	private AngleSnap angleSnap = new AngleSnap();
-	private Double drawingAngle;
+    private double len = 0;
+    private double width;
+    private double heading;
+    private AngleSnap angleSnap = new AngleSnap();
+    private Double drawingAngle;
 
-	public void clearAngleSnap() {
-		angleSnap.clear();
-		drawingAngle = null;
-	}
+    public void clearAngleSnap() {
+        angleSnap.clear();
+        drawingAngle = null;
+    }
 
-	public void addAngleSnap(Node[] nodes) {
-		drawingAngle = angleSnap.addSnap(nodes);
-	}
+    public void addAngleSnap(Node[] nodes) {
+        drawingAngle = angleSnap.addSnap(nodes);
+    }
 
-	public void addAngleSnap(Way way) {
-		angleSnap.addSnap(way);
-		if (drawingAngle == null) {
-			drawingAngle = angleSnap.getAngle();
-		}
-	}
+    public void addAngleSnap(Way way) {
+        angleSnap.addSnap(way);
+        if (drawingAngle == null) {
+            drawingAngle = angleSnap.getAngle();
+        }
+    }
 
-	public double getLength() {
-		return len;
-	}
+    public double getLength() {
+        return len;
+    }
 
-	public double getWidth() {
-		return width;
-	}
+    public double getWidth() {
+        return width;
+    }
 
-	public boolean isRectDrawing() {
-		return drawingAngle != null && ToolSettings.getWidth() == 0 && ToolSettings.getLenStep() == 0;
-	}
+    public boolean isRectDrawing() {
+        return drawingAngle != null && ToolSettings.getWidth() == 0 && ToolSettings.getLenStep() == 0;
+    }
 
-	public Double getDrawingAngle() {
-		return drawingAngle;
-	}
+    public Double getDrawingAngle() {
+        return drawingAngle;
+    }
 
-	public void reset() {
-		len = 0;
+    public void reset() {
+        len = 0;
 
-		for (int i = 0; i < 4; i++)
-			en[i] = null;
-	}
+        for (int i = 0; i < 4; i++)
+            en[i] = null;
+    }
 
-	public EastNorth getPoint(int num) {
-		return en[num];
-	}
+    public EastNorth getPoint(int num) {
+        return en[num];
+    }
 
-	private void updMetrics() {
-		meter = 2 * Math.PI / (Math.cos(Math.toRadians(eastNorth2latlon(en[0]).lat())) * eqlen);
-		len = 0;
-	}
+    private void updMetrics() {
+        meter = 2 * Math.PI / (Math.cos(Math.toRadians(eastNorth2latlon(en[0]).lat())) * eqlen);
+        len = 0;
+    }
 
-	public void setBase(EastNorth base) {
-		en[0] = base;
-		updMetrics();
-	}
+    public void setBase(EastNorth base) {
+        en[0] = base;
+        updMetrics();
+    }
 
-	public void setBase(Node base) {
-		en[0] = latlon2eastNorth(base.getCoor());
-		updMetrics();
-	}
+    public void setBase(Node base) {
+        en[0] = latlon2eastNorth(base.getCoor());
+        updMetrics();
+    }
 
-	/**
-	 * @returns Projection of the point to the heading vector in metres
-	 */
-	private double projection1(EastNorth p) {
-		final EastNorth vec = en[0].sub(p);
-		return (Math.sin(heading) * vec.east() + Math.cos(heading) * vec.north()) / meter;
-	}
+    /**
+     * @returns Projection of the point to the heading vector in metres
+     */
+    private double projection1(EastNorth p) {
+        final EastNorth vec = en[0].sub(p);
+        return (Math.sin(heading) * vec.east() + Math.cos(heading) * vec.north()) / meter;
+    }
 
-	/**
-	 * @returns Projection of the point to the perpendicular of the heading
-	 *          vector in metres
-	 */
-	private double projection2(EastNorth p) {
-		final EastNorth vec = en[0].sub(p);
-		return (Math.cos(heading) * vec.east() - Math.sin(heading) * vec.north()) / meter;
-	}
+    /**
+     * @returns Projection of the point to the perpendicular of the heading
+     *          vector in metres
+     */
+    private double projection2(EastNorth p) {
+        final EastNorth vec = en[0].sub(p);
+        return (Math.cos(heading) * vec.east() - Math.sin(heading) * vec.north()) / meter;
+    }
 
-	private void updatePos() {
-		if (len == 0)
-			return;
-		final EastNorth p1 = en[0];
-		en[1] = new EastNorth(p1.east() + Math.sin(heading) * len * meter, p1.north() + Math.cos(heading) * len * meter);
-		en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter,
-				p1.north() + Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
-		en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter,
-				p1.north() - Math.sin(heading) * width * meter);
-	}
+    private void updatePos() {
+        if (len == 0)
+            return;
+        final EastNorth p1 = en[0];
+        en[1] = new EastNorth(p1.east() + Math.sin(heading) * len * meter, p1.north() + Math.cos(heading) * len * meter);
+        en[2] = new EastNorth(p1.east() + Math.sin(heading) * len * meter + Math.cos(heading) * width * meter,
+                p1.north() + Math.cos(heading) * len * meter - Math.sin(heading) * width * meter);
+        en[3] = new EastNorth(p1.east() + Math.cos(heading) * width * meter,
+                p1.north() - Math.sin(heading) * width * meter);
+    }
 
-	public void setLengthWidth(double length, double width) {
-		this.len = length;
-		this.width = width;
-		updatePos();
-	}
+    public void setLengthWidth(double length, double width) {
+        this.len = length;
+        this.width = width;
+        updatePos();
+    }
 
-	public void setWidth(EastNorth p3) {
-		this.width = projection2(p3);
-		updatePos();
-	}
+    public void setWidth(EastNorth p3) {
+        this.width = projection2(p3);
+        updatePos();
+    }
 
-	public void setPlace(EastNorth p2, double width, double lenstep, boolean ignoreConstraints) {
-		if (en[0] == null)
-			throw new IllegalStateException("setPlace() called without the base point");
-		this.heading = en[0].heading(p2);
-		if (!ignoreConstraints)
-			this.heading = angleSnap.snapAngle(this.heading);
+    public void setPlace(EastNorth p2, double width, double lenstep, boolean ignoreConstraints) {
+        if (en[0] == null)
+            throw new IllegalStateException("setPlace() called without the base point");
+        this.heading = en[0].heading(p2);
+        if (!ignoreConstraints)
+            this.heading = angleSnap.snapAngle(this.heading);
 
-		this.width = width;
-		this.len = projection1(p2);
-		if (lenstep > 0 && !ignoreConstraints)
-			this.len = Math.round(this.len / lenstep) * lenstep;
+        this.width = width;
+        this.len = projection1(p2);
+        if (lenstep > 0 && !ignoreConstraints)
+            this.len = Math.round(this.len / lenstep) * lenstep;
 
-		updatePos();
+        updatePos();
 
-		Main.map.statusLine.setHeading(Math.toDegrees(heading));
-		if (this.drawingAngle != null && !ignoreConstraints) {
-			double ang = Math.toDegrees(heading - this.drawingAngle);
-			if (ang < 0)
-				ang += 360;
-			if (ang > 360)
-				ang -= 360;
-			Main.map.statusLine.setAngle(ang);
-		}
-	}
+        Main.map.statusLine.setHeading(Math.toDegrees(heading));
+        if (this.drawingAngle != null && !ignoreConstraints) {
+            double ang = Math.toDegrees(heading - this.drawingAngle);
+            if (ang < 0)
+                ang += 360;
+            if (ang > 360)
+                ang -= 360;
+            Main.map.statusLine.setAngle(ang);
+        }
+    }
 
-	public void setPlaceRect(EastNorth p2) {
-		if (en[0] == null)
-			throw new IllegalStateException("SetPlaceRect() called without the base point");
-		if (!isRectDrawing())
-			throw new IllegalStateException("Invalid drawing mode");
-		heading = drawingAngle;
-		setLengthWidth(projection1(p2), projection2(p2));
-		Main.map.statusLine.setHeading(Math.toDegrees(heading));
-	}
+    public void setPlaceRect(EastNorth p2) {
+        if (en[0] == null)
+            throw new IllegalStateException("SetPlaceRect() called without the base point");
+        if (!isRectDrawing())
+            throw new IllegalStateException("Invalid drawing mode");
+        heading = drawingAngle;
+        setLengthWidth(projection1(p2), projection2(p2));
+        Main.map.statusLine.setHeading(Math.toDegrees(heading));
+    }
 
-	public void angFix(EastNorth point) {
-		EastNorth en3 = en[2];
-		EastNorth mid = en[0].getCenter(en3);
-		double radius = en3.distance(mid);
-		heading = mid.heading(point);
-		heading = en[0].heading(mid.add(Math.sin(heading) * radius, Math.cos(heading) * radius));
-		setLengthWidth(projection1(en3), projection2(en3));
-		en[2] = en3;
-	}
+    public void angFix(EastNorth point) {
+        EastNorth en3 = en[2];
+        EastNorth mid = en[0].getCenter(en3);
+        double radius = en3.distance(mid);
+        heading = mid.heading(point);
+        heading = en[0].heading(mid.add(Math.sin(heading) * radius, Math.cos(heading) * radius));
+        setLengthWidth(projection1(en3), projection2(en3));
+        en[2] = en3;
+    }
 
-	public void paint(Graphics2D g, MapView mv) {
-		if (len == 0)
-			return;
-		GeneralPath b = new GeneralPath();
-		Point pp1 = mv.getPoint(eastNorth2latlon(en[0]));
-		Point pp2 = mv.getPoint(eastNorth2latlon(en[1]));
-		Point pp3 = mv.getPoint(eastNorth2latlon(en[2]));
-		Point pp4 = mv.getPoint(eastNorth2latlon(en[3]));
+    public void paint(Graphics2D g, MapView mv) {
+        if (len == 0)
+            return;
+        GeneralPath b = new GeneralPath();
+        Point pp1 = mv.getPoint(eastNorth2latlon(en[0]));
+        Point pp2 = mv.getPoint(eastNorth2latlon(en[1]));
+        Point pp3 = mv.getPoint(eastNorth2latlon(en[2]));
+        Point pp4 = mv.getPoint(eastNorth2latlon(en[3]));
 
-		b.moveTo(pp1.x, pp1.y);
-		b.lineTo(pp2.x, pp2.y);
-		b.lineTo(pp3.x, pp3.y);
-		b.lineTo(pp4.x, pp4.y);
-		b.lineTo(pp1.x, pp1.y);
-		g.draw(b);
-	}
+        b.moveTo(pp1.x, pp1.y);
+        b.lineTo(pp2.x, pp2.y);
+        b.lineTo(pp3.x, pp3.y);
+        b.lineTo(pp4.x, pp4.y);
+        b.lineTo(pp1.x, pp1.y);
+        g.draw(b);
+    }
 
-	private Node findNode(EastNorth en) {
-		DataSet ds = Main.main.getCurrentDataSet();
-		LatLon l = eastNorth2latlon(en);
-		List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
-				l.lon() + 0.0000001, l.lat() + 0.0000001));
-		Node bestnode = null;
-		double mindist = 0.0003;
-		for (Node n : nodes) {
-			double dist = n.getCoor().distanceSq(l);
-			if (dist < mindist && OsmPrimitive.isUsablePredicate.evaluate(n)) {
-				bestnode = n;
-				mindist = dist;
-			}
-		}
-		return bestnode;
-	}
+    private Node findNode(EastNorth en) {
+        DataSet ds = Main.main.getCurrentDataSet();
+        LatLon l = eastNorth2latlon(en);
+        List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
+                l.lon() + 0.0000001, l.lat() + 0.0000001));
+        Node bestnode = null;
+        double mindist = 0.0003;
+        for (Node n : nodes) {
+            double dist = n.getCoor().distanceSq(l);
+            if (dist < mindist && OsmPrimitive.isUsablePredicate.evaluate(n)) {
+                bestnode = n;
+                mindist = dist;
+            }
+        }
+        return bestnode;
+    }
 
-	public Way create() {
-		if (len == 0)
-			return null;
-		final boolean[] created = new boolean[4];
-		final Node[] nodes = new Node[4];
-		for (int i = 0; i < 4; i++) {
+    public Way create() {
+        if (len == 0)
+            return null;
+        final boolean[] created = new boolean[4];
+        final Node[] nodes = new Node[4];
+        for (int i = 0; i < 4; i++) {
 
-			Node n = findNode(en[i]);
-			if (n == null) {
-				nodes[i] = new Node(eastNorth2latlon(en[i]));
-				created[i] = true;
-			} else {
-				nodes[i] = n;
-				created[i] = false;
-			}
-			if (nodes[i].getCoor().isOutSideWorld()) {
-				JOptionPane.showMessageDialog(Main.parent,
-						tr("Cannot place building outside of the world."));
-				return null;
-			}
-		}
-		Way w = new Way();
-		w.addNode(nodes[0]);
-		if (projection2(en[2]) > 0 ^ len < 0) {
-			w.addNode(nodes[1]);
-			w.addNode(nodes[2]);
-			w.addNode(nodes[3]);
-		} else {
-			w.addNode(nodes[3]);
-			w.addNode(nodes[2]);
-			w.addNode(nodes[1]);
-		}
-		w.addNode(nodes[0]);
-		w.setKeys(ToolSettings.getTags());
-		Collection<Command> cmds = new LinkedList<Command>();
-		for (int i = 0; i < 4; i++) {
-			if (created[i])
-				cmds.add(new AddCommand(nodes[i]));
-		}
-		cmds.add(new AddCommand(w));
-		Command c = new SequenceCommand(tr("Create building"), cmds);
-		Main.main.undoRedo.add(c);
-		return w;
-	}
+            Node n = findNode(en[i]);
+            if (n == null) {
+                nodes[i] = new Node(eastNorth2latlon(en[i]));
+                created[i] = true;
+            } else {
+                nodes[i] = n;
+                created[i] = false;
+            }
+            if (nodes[i].getCoor().isOutSideWorld()) {
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("Cannot place building outside of the world."));
+                return null;
+            }
+        }
+        Way w = new Way();
+        w.addNode(nodes[0]);
+        if (projection2(en[2]) > 0 ^ len < 0) {
+            w.addNode(nodes[1]);
+            w.addNode(nodes[2]);
+            w.addNode(nodes[3]);
+        } else {
+            w.addNode(nodes[3]);
+            w.addNode(nodes[2]);
+            w.addNode(nodes[1]);
+        }
+        w.addNode(nodes[0]);
+        w.setKeys(ToolSettings.getTags());
+        Collection<Command> cmds = new LinkedList<Command>();
+        for (int i = 0; i < 4; i++) {
+            if (created[i])
+                cmds.add(new AddCommand(nodes[i]));
+        }
+        cmds.add(new AddCommand(w));
+        Command c = new SequenceCommand(tr("Create building"), cmds);
+        Main.main.undoRedo.add(c);
+        return w;
+    }
 }

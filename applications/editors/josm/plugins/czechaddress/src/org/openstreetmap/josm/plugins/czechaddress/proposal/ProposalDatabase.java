@@ -84,7 +84,7 @@ public class ProposalDatabase implements TreeModel {
      */
     public void addProposals(OsmPrimitive primitive,
                              Collection<Proposal> proposal) {
-        
+
         ProposalContainer container = findContainer(primitive);
         if (container == null) {
             container = new ProposalContainer(primitive);
@@ -113,7 +113,7 @@ public class ProposalDatabase implements TreeModel {
 
     /**
      * Gives a reference to the internal list of {@link ProposalContainer}s.
-     * 
+     *
      * @return the refernence to internal changeset.
      */
     public List<ProposalContainer> getContainers() {

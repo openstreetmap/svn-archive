@@ -52,7 +52,7 @@ public class CadastreInterface {
     final String c0ptionListStart = "<option value=\"";
     final String cOptionListEnd = "</option>";
     final String cBBoxCommunStart = "new GeoBox(";
-    final String cBBoxCommunEnd = ")";    
+    final String cBBoxCommunEnd = ")";
 
     final String cInterfaceVector = "afficherCarteCommune.do";
     final String cInterfaceRasterTA = "afficherCarteTa.do";
@@ -61,7 +61,7 @@ public class CadastreInterface {
     final String cTAImageLinkStart = "title=\"image\"><a href=\"#\" onClick=\"popup('afficherCarteTa.do?f=";
     final String cImageNameStart = ">Feuille ";
     final String cTAImageNameStart = "Tableau d'assemblage <strong>";
-    
+
     final static long cCookieExpiration = 30 * 60 * 1000; // 30 minutes expressed in milliseconds
 
     final  int cRetriesGetCookie = 10; // 10 times every 3 seconds means 30 seconds trying to get a cookie
@@ -96,7 +96,7 @@ public class CadastreInterface {
     }
 
     /**
-     * 
+     *
      * @return true if a cookie is delivered by WMS and false is WMS is not opening a client session
      *         (too many clients or in maintenance)
      * @throws IOException
@@ -140,7 +140,7 @@ public class CadastreInterface {
         lastWMSLayerName = null;
         cookie = null;
     }
-    
+
     public boolean isCookieExpired() {
         long now = new Date().getTime();
         if ((now - cookieTimestamp) > cCookieExpiration) {
@@ -164,7 +164,7 @@ public class CadastreInterface {
     public void setCookie(HttpURLConnection urlConn) {
         urlConn.setRequestProperty("Cookie", this.cookie);
     }
-    
+
     private void getInterface(WMSLayer wmsLayer) throws IOException, DuplicateLayerException {
         // first attempt : search for given name without codeCommune
         interfaceRef = postForm(wmsLayer, "");
@@ -378,7 +378,7 @@ public class CadastreInterface {
         }
         return lines;
     }
-    
+
     private void parseFeuillesList(String input) {
         listOfFeuilles.clear();
         // get "Tableau d'assemblage"
@@ -401,7 +401,7 @@ public class CadastreInterface {
             listOfFeuilles.add(new PlanImage(nameFeuille, refFeuille));
         }
     }
-    
+
     private String selectMunicipalityDialog(WMSLayer wmsLayer) {
         JPanel p = new JPanel(new GridBagLayout());
         String[] communeList = new String[listOfCommunes.size() + 1];
@@ -454,7 +454,7 @@ public class CadastreInterface {
      * Retrieve the bounding box size in pixels of the whole commune (point 0,0 at top, left corner)
      * and store it in given wmsLayer
      * In case of raster image, we also check in the same http request if the image is already georeferenced
-     * and store the result in the wmsLayer as well. 
+     * and store the result in the wmsLayer as well.
      * @param wmsLayer the WMSLayer where the commune data and images are stored
      * @throws IOException
      */
@@ -501,7 +501,7 @@ public class CadastreInterface {
             wmsLayer.setCommuneBBox( new EastNorthBound(new EastNorth(minx,miny), new EastNorth(maxx,maxy)));
         }
     }
-    
+
     private void parseGeoreferences(WMSLayer wmsLayer, String input) {
         if (input.lastIndexOf(cBBoxCommunStart) != -1) {
             input = input.substring(input.lastIndexOf(cBBoxCommunStart));
@@ -536,7 +536,7 @@ public class CadastreInterface {
                     fY+","+X0+","+Y0);
         }
     }
-    
+
     private double tryParseDouble(String str) {
         try {
             return Double.parseDouble(str);

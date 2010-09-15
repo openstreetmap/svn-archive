@@ -18,7 +18,7 @@ public abstract class ImageModifier {
     private static final long serialVersionUID = 1L;
 
     protected int parcelColor = Color.RED.getRGB();
-    
+
     public BufferedImage bufferedImage;
 
     public static int[] cRoofColors = new int[] {-197380, -592138};
@@ -30,21 +30,21 @@ public abstract class ImageModifier {
             new byte[] { (byte) 0, (byte) 0xFF },
             new byte[] { (byte) 0, (byte) 0xFF }
         );
-        
+
         BufferedImage dest = new BufferedImage(
             src.getWidth(), src.getHeight(),
             BufferedImage.TYPE_BYTE_BINARY,
             icm
             );
-        
+
         ColorConvertOp cco = new ColorConvertOp(
             src.getColorModel().getColorSpace(),
             dest.getColorModel().getColorSpace(),
             null
             );
-        
+
         cco.filter(src, dest);
-        
+
         return dest;
       }
 
@@ -71,7 +71,7 @@ public abstract class ImageModifier {
         };
         return convert4(src, cmap);
       }
-        
+
       /**
        * Converts the source image to 4-bit colour
        * using the given colour map.  No transparency.
@@ -95,10 +95,10 @@ public abstract class ImageModifier {
             null
             );
         cco.filter(src, dest);
-        
+
         return dest;
       }
-      
+
     protected BufferedImage convert8(BufferedImage src) {
         BufferedImage dest = new BufferedImage(
             src.getWidth(), src.getHeight(),
@@ -114,7 +114,7 @@ public abstract class ImageModifier {
       }
 
     public boolean isBuildingColor(int rgb, boolean ignoreParcelColor) {
-        for (int i = 0; i < cBuilingFootColors.length; i++) 
+        for (int i = 0; i < cBuilingFootColors.length; i++)
             if (rgb == cBuilingFootColors[i])
                     return true;
         if (ignoreParcelColor && (rgb == parcelColor))
@@ -123,7 +123,7 @@ public abstract class ImageModifier {
     }
 
     public boolean isRoofColor(int rgb, boolean ignoreParcelColor) {
-        for (int i = 0; i < cRoofColors.length; i++) 
+        for (int i = 0; i < cRoofColors.length; i++)
             if (rgb == cRoofColors[i])
                     return true;
         if (ignoreParcelColor && (rgb == parcelColor))
@@ -151,10 +151,10 @@ public abstract class ImageModifier {
             ret = isRoofColor(rgb, ignoreParcelColor);
         return ret;
     }
-    
+
     /**
      * Checks if the rgb value is the black background color
-     * @param  
+     * @param
      * @return
      */
     public boolean isBackgroundColor(BufferedImage img, int x, int y) {

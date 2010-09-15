@@ -29,9 +29,9 @@ public class GeorefImage implements Serializable, ImageObserver {
     public EastNorth min;
     public EastNorth max;
     // bbox of the georeferenced original image (raster only) (inclined if rotated and before cropping)
-    // P[0] is bottom,left then next are clockwise. 
+    // P[0] is bottom,left then next are clockwise.
     public EastNorth[] orgRaster = new EastNorth[4];
-    // bbox of the georeferenced original image (raster only) after cropping 
+    // bbox of the georeferenced original image (raster only) after cropping
     public EastNorth[] orgCroppedRaster = new EastNorth[4];
     // angle with georeferenced original image after rotation (raster images only)(in radian)
     public double angle = 0;
@@ -45,7 +45,7 @@ public class GeorefImage implements Serializable, ImageObserver {
 
     public GeorefImage(BufferedImage img, EastNorth min, EastNorth max) {
         image = img;
-        
+
         this.min = min;
         this.max = max;
         this.orgRaster[0] = min;
@@ -69,8 +69,8 @@ public class GeorefImage implements Serializable, ImageObserver {
     }
 
     /**
-     * Recalculate the new bounding box of the image based on the four points provided as parameters. 
-     * The new bbox defined in [min.max] will retain the extreme values of both boxes. 
+     * Recalculate the new bounding box of the image based on the four points provided as parameters.
+     * The new bbox defined in [min.max] will retain the extreme values of both boxes.
      * @param p1 one of the bounding box corner
      * @param p2 one of the bounding box corner
      * @param p3 one of the bounding box corner
@@ -127,7 +127,7 @@ public class GeorefImage implements Serializable, ImageObserver {
                     g.setColor(Color.green);
                     g.drawLine(croppedPoint[i].x, croppedPoint[i].y, croppedPoint[i+1].x, croppedPoint[i+1].y);
                 }
-                /* 
+                /*
                 //Uncomment this section to display the original image size (before cropping)
                 Point[] orgPoint = new Point[5];
                 for (int i=0; i<4; i++)
@@ -211,7 +211,7 @@ public class GeorefImage implements Serializable, ImageObserver {
         if (WMSLayer.currentFormat >= 4) {
             imageOriginalHeight = in.readInt();
             imageOriginalWidth =  in.readInt();
-        }        
+        }
         image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
         updatePixelPer();
     }
@@ -275,10 +275,10 @@ public class GeorefImage implements Serializable, ImageObserver {
             orgCroppedRaster[i] = new EastNorth(orgCroppedRaster[i].east() + dx, orgCroppedRaster[i].north() + dy);
         }
     }
-    
+
     /**
      * Change this image scale by moving the min,max coordinates around an anchor
-     * @param anchor 
+     * @param anchor
      * @param proportion
      */
     public void scale(EastNorth anchor, double proportion) {
@@ -323,7 +323,7 @@ public class GeorefImage implements Serializable, ImageObserver {
         max = enb.max;
         angle+=delta_ang;
     }
-    
+
     /**
      * Crop the image based on new bbox coordinates adj1 and adj2 (for raster images only).
      * @param adj1 is the new corner bottom, left

@@ -377,6 +377,12 @@ public class BuoyLat extends Buoy {
 			}
 			dlg.cbM01Colour.setVisible(false);
 			dlg.lM01Colour.setVisible(false);
+			dlg.rbM01Fired1.setVisible(false);
+			dlg.rbM01FiredN.setVisible(false);
+			dlg.lM01Height.setVisible(false);
+			dlg.tfM01Height.setVisible(false);
+			dlg.lM01Range.setVisible(false);
+			dlg.tfM01Range.setVisible(false);
 
 			if (isFired()) {
 				switch (style) {

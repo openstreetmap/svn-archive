@@ -171,6 +171,12 @@ public class BuoySpec extends Buoy {
 			dlg.cM01Fired.setEnabled(true);
 			dlg.cbM01Colour.setVisible(false);
 			dlg.lM01Colour.setVisible(false);
+			dlg.rbM01Fired1.setVisible(false);
+			dlg.rbM01FiredN.setVisible(false);
+			dlg.lM01Height.setVisible(false);
+			dlg.tfM01Height.setVisible(false);
+			dlg.lM01Range.setVisible(false);
+			dlg.tfM01Range.setVisible(false);
 			
 			if (isFired()) {
 				switch (getStyleIndex()) {
@@ -199,6 +205,12 @@ public class BuoySpec extends Buoy {
 			case SPEC_PILLAR:
 				image += "_Pillar"; //$NON-NLS-1$
 				break;
+			case SPEC_CAN:
+				image += "_Can"; //$NON-NLS-1$
+				break;
+			case SPEC_CONE:
+				image += "_Cone"; //$NON-NLS-1$
+				break;
 			case SPEC_SPAR:
 				image += "_Spar"; //$NON-NLS-1$
 				break;
@@ -221,8 +233,8 @@ public class BuoySpec extends Buoy {
 			}
 
 			if (!image.equals("/images/Special_Purpose")) { //$NON-NLS-1$
-				if (hasTopMark())
-					image += "_CrossY"; //$NON-NLS-1$
+//				if (hasTopMark())
+//					image += "_CrossY"; //$NON-NLS-1$
 				image += ".png"; //$NON-NLS-1$
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 			} else

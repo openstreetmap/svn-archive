@@ -911,7 +911,6 @@ public class SmpDialogAction extends JosmAction {
 				}
 			});
 		}
-
 		return tfM01Name;
 	}
 

@@ -17,11 +17,6 @@ public class SmedEx implements SmedPluggable {
 
 	private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="78,30"
 	private JButton jButton = null;
-	@Override
-	public boolean start() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public boolean stop() {
@@ -89,6 +84,12 @@ public class SmedEx implements SmedPluggable {
 			});
 		}
 		return jButton;
+	}
+
+	@Override
+	public boolean start() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

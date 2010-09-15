@@ -120,8 +120,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.ImageImportPlugin.ImageImportPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Plugin for importing spatial referenced images"/>
-                <attribute name="Plugin-Link" value=" -- will soon be added -- "/>
-                <attribute name="Plugin-Mainversion" value="1.0"/>
+                <attribute name="Plugin-Mainversion" value="3376"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 				<attribute name="Class-Path" value="."/>
 			</manifest>

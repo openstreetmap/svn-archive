@@ -5,11 +5,11 @@ import static org.openstreetmap.josm.plugins.graphview.core.property.VehicleProp
 import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
 
 public class RoadMaxheight extends RoadValueLimit {
-	public RoadMaxheight() {
-		super("maxheight", HEIGHT, LimitType.MAXIMUM);
-	}
-	@Override
-	protected Float parse(String valueString) {
-		return ValueStringParser.parseMeasure(valueString);
-	}
+    public RoadMaxheight() {
+        super("maxheight", HEIGHT, LimitType.MAXIMUM);
+    }
+    @Override
+    protected Float parse(String valueString) {
+        return ValueStringParser.parseMeasure(valueString);
+    }
 }

@@ -8,33 +8,33 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
 
 public class RoadSurface implements RoadPropertyType<String> {
 
-	public <N, W, R, M> String evaluateN(N node, AccessParameters accessParameters,
-			DataSource<N,W,R,M> dataSource) {
-		return null;
-	};
+    public <N, W, R, M> String evaluateN(N node, AccessParameters accessParameters,
+            DataSource<N,W,R,M> dataSource) {
+        return null;
+    };
 
-	public <N, W, R, M> String evaluateW(W way, boolean forward, AccessParameters accessParameters,
-			DataSource<N,W,R,M> dataSource) {
-		assert way != null && accessParameters != null && dataSource != null;
+    public <N, W, R, M> String evaluateW(W way, boolean forward, AccessParameters accessParameters,
+            DataSource<N,W,R,M> dataSource) {
+        assert way != null && accessParameters != null && dataSource != null;
 
-		TagGroup tags = dataSource.getTagsW(way);
-		return tags.getValue("surface");
+        TagGroup tags = dataSource.getTagsW(way);
+        return tags.getValue("surface");
 
-	};
+    };
 
-	public boolean isUsable(Object propertyValue, AccessParameters accessParameters) {
-		assert propertyValue instanceof String;
+    public boolean isUsable(Object propertyValue, AccessParameters accessParameters) {
+        assert propertyValue instanceof String;
 
-		String surface = (String)propertyValue;
+        String surface = (String)propertyValue;
 
-		Collection<String> surfaceBlacklist =
-			accessParameters.getVehiclePropertyValue(VehiclePropertyTypes.SURFACE_BLACKLIST);
+        Collection<String> surfaceBlacklist =
+            accessParameters.getVehiclePropertyValue(VehiclePropertyTypes.SURFACE_BLACKLIST);
 
-		if (surfaceBlacklist != null && surfaceBlacklist.contains(surface)) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+        if (surfaceBlacklist != null && surfaceBlacklist.contains(surface)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 }

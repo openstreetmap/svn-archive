@@ -16,19 +16,19 @@ import org.openstreetmap.josm.plugins.graphview.core.transition.TransitionStruct
  * @param <V>  property value type
  */
 public interface GraphEdgePropertyType<V> {
-	
-	/**
-	 * determines the property value for segments created from junction groups
-	 */
-	public V evaluate(JunctionEvaluationGroup junctionGroup,
-			List<Segment> segmentSequence,
-			TransitionStructure transitionStructure);
 
-	/**
-	 * determines the property value for segments created from connector groups
-	 */
-	public V evaluate(ConnectorEvaluationGroup connectorGroup,
-			List<Segment> segmentSequence,
-			TransitionStructure transitionStructure);
-	
+    /**
+     * determines the property value for segments created from junction groups
+     */
+    public V evaluate(JunctionEvaluationGroup junctionGroup,
+            List<Segment> segmentSequence,
+            TransitionStructure transitionStructure);
+
+    /**
+     * determines the property value for segments created from connector groups
+     */
+    public V evaluate(ConnectorEvaluationGroup connectorGroup,
+            List<Segment> segmentSequence,
+            TransitionStructure transitionStructure);
+
 }

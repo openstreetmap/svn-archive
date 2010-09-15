@@ -16,33 +16,33 @@ import org.openstreetmap.josm.plugins.remotecontrol.RequestHandler;
  */
 public class AddNodeHandler extends RequestHandler {
 
-	public static final String command = "add_node";
-	public static final String permissionKey = "remotecontrol.permission.create-objects";
-	public static final boolean permissionDefault = false;
+    public static final String command = "add_node";
+    public static final String permissionKey = "remotecontrol.permission.create-objects";
+    public static final boolean permissionDefault = false;
 
-	@Override
-	protected void handleRequest() {
+    @Override
+    protected void handleRequest() {
         addNode(args);
-	}
+    }
 
-	@Override
-	protected String[] getMandatoryParams()
-	{
-		return new String[] { "lat", "lon" };
-	}
-	
-	@Override
-	public String getPermissionMessage() {
-		return tr("Remote Control has been asked to create a new node.");
-	}
+    @Override
+    protected String[] getMandatoryParams()
+    {
+        return new String[] { "lat", "lon" };
+    }
 
-	@Override
-	public PermissionPrefWithDefault getPermissionPref()
-	{
-		return new PermissionPrefWithDefault(permissionKey, permissionDefault,
-				"RemoteControl: creating objects forbidden by preferences");
-	}
-	
+    @Override
+    public String getPermissionMessage() {
+        return tr("Remote Control has been asked to create a new node.");
+    }
+
+    @Override
+    public PermissionPrefWithDefault getPermissionPref()
+    {
+        return new PermissionPrefWithDefault(permissionKey, permissionDefault,
+                "RemoteControl: creating objects forbidden by preferences");
+    }
+
     /**
      * Adds a node, implements the GET /add_node?lon=...&amp;lat=... request.
      * @param args

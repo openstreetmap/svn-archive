@@ -7,48 +7,48 @@ import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
 
 public class RoadIncline implements RoadPropertyType<Float> {
 
-	public <N, W, R, M> Float evaluateN(N node, AccessParameters accessParameters,
-			DataSource<N,W,R,M> dataSource) {
-		return null;
-	};
+    public <N, W, R, M> Float evaluateN(N node, AccessParameters accessParameters,
+            DataSource<N,W,R,M> dataSource) {
+        return null;
+    };
 
-	public <N, W, R, M> Float evaluateW(W way, boolean forward, AccessParameters accessParameters,
-			DataSource<N,W,R,M> dataSource) {
-		assert way != null && accessParameters != null && dataSource != null;
+    public <N, W, R, M> Float evaluateW(W way, boolean forward, AccessParameters accessParameters,
+            DataSource<N,W,R,M> dataSource) {
+        assert way != null && accessParameters != null && dataSource != null;
 
-		TagGroup tags = dataSource.getTagsW(way);
-		String inclineString = tags.getValue("incline");
+        TagGroup tags = dataSource.getTagsW(way);
+        String inclineString = tags.getValue("incline");
 
-		if (inclineString != null) {
-			Float incline = ValueStringParser.parseIncline(inclineString);
-			if (incline != null) {
-				if (!forward) {
-					incline = -incline;
-				}
-				return incline;
-			}
-		}
+        if (inclineString != null) {
+            Float incline = ValueStringParser.parseIncline(inclineString);
+            if (incline != null) {
+                if (!forward) {
+                    incline = -incline;
+                }
+                return incline;
+            }
+        }
 
-		return null;
-	};
+        return null;
+    };
 
-	public boolean isUsable(Object propertyValue, AccessParameters accessParameters) {
-		assert propertyValue instanceof Float;
+    public boolean isUsable(Object propertyValue, AccessParameters accessParameters) {
+        assert propertyValue instanceof Float;
 
-		float incline = (Float)propertyValue;
+        float incline = (Float)propertyValue;
 
-		Float maxInclineUp =
-			accessParameters.getVehiclePropertyValue(VehiclePropertyTypes.MAX_INCLINE_UP);
-		Float maxInclineDown =
-			accessParameters.getVehiclePropertyValue(VehiclePropertyTypes.MAX_INCLINE_DOWN);
+        Float maxInclineUp =
+            accessParameters.getVehiclePropertyValue(VehiclePropertyTypes.MAX_INCLINE_UP);
+        Float maxInclineDown =
+            accessParameters.getVehiclePropertyValue(VehiclePropertyTypes.MAX_INCLINE_DOWN);
 
-		if (maxInclineUp != null && incline > maxInclineUp) {
-			return false;
-		} else if (maxInclineDown != null && -incline > maxInclineDown) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+        if (maxInclineUp != null && incline > maxInclineUp) {
+            return false;
+        } else if (maxInclineDown != null && -incline > maxInclineDown) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 }

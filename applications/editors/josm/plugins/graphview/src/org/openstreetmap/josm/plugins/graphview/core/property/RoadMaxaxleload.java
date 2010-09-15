@@ -5,11 +5,11 @@ import static org.openstreetmap.josm.plugins.graphview.core.property.VehicleProp
 import org.openstreetmap.josm.plugins.graphview.core.util.ValueStringParser;
 
 public class RoadMaxaxleload extends RoadValueLimit {
-	public RoadMaxaxleload() {
-		super("maxaxleload", AXLELOAD, LimitType.MAXIMUM);
-	}
-	@Override
-	protected Float parse(String valueString) {
-		return ValueStringParser.parseWeight(valueString);
-	}
+    public RoadMaxaxleload() {
+        super("maxaxleload", AXLELOAD, LimitType.MAXIMUM);
+    }
+    @Override
+    protected Float parse(String valueString) {
+        return ValueStringParser.parseWeight(valueString);
+    }
 }

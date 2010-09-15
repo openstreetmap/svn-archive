@@ -18,25 +18,25 @@ import org.openstreetmap.josm.plugins.graphview.core.property.RoadPropertyType;
  */
 public interface AccessEvaluator<N, W> {
 
-	/**
-	 * checks whether a way may be accessed in the given direction
-	 *
-	 * @param way                object to be checked; != null
-	 * @param segmentProperties  map from road property types to their values for this way's
-	 *                           segments; each value must be a valid value for its property type;
-	 *                           != null
-	 */
-	public boolean wayUsable(W way, boolean forward,
-			Map<RoadPropertyType<?>, Object> roadPropertyValues);
+    /**
+     * checks whether a way may be accessed in the given direction
+     *
+     * @param way                object to be checked; != null
+     * @param segmentProperties  map from road property types to their values for this way's
+     *                           segments; each value must be a valid value for its property type;
+     *                           != null
+     */
+    public boolean wayUsable(W way, boolean forward,
+            Map<RoadPropertyType<?>, Object> roadPropertyValues);
 
-	/**
-	 * checks whether a node may be accessed/passed
-	 *
-	 * @param node               object to be checked; != null
-	 * @param segmentProperties  map from road property types to their values for SegmentNodes
-	 *                           based on this node, each value must be a valid value for its
-	 *                           property type; != null
-	 */
-	public boolean nodeUsable(N node, Map<RoadPropertyType<?>, Object> roadPropertyValues);
+    /**
+     * checks whether a node may be accessed/passed
+     *
+     * @param node               object to be checked; != null
+     * @param segmentProperties  map from road property types to their values for SegmentNodes
+     *                           based on this node, each value must be a valid value for its
+     *                           property type; != null
+     */
+    public boolean nodeUsable(N node, Map<RoadPropertyType<?>, Object> roadPropertyValues);
 
 }

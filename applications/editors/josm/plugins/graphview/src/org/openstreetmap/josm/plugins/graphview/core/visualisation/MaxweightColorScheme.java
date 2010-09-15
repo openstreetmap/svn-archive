@@ -11,16 +11,16 @@ import org.openstreetmap.josm.plugins.graphview.core.property.RoadMaxweight;
  */
 public class MaxweightColorScheme extends FloatPropertyColorScheme {
 
-	private static final Map<Float, Color> COLOR_MAP;
+    private static final Map<Float, Color> COLOR_MAP;
 
-	static {
-		COLOR_MAP = new HashMap<Float, Color>();
-		COLOR_MAP.put(0f, new Color(0, 0, 50));
-		COLOR_MAP.put(20f, new Color(100, 100, 255));
-		COLOR_MAP.put(50f, new Color(200, 200, 255));
-	}
+    static {
+        COLOR_MAP = new HashMap<Float, Color>();
+        COLOR_MAP.put(0f, new Color(0, 0, 50));
+        COLOR_MAP.put(20f, new Color(100, 100, 255));
+        COLOR_MAP.put(50f, new Color(200, 200, 255));
+    }
 
-	public MaxweightColorScheme() {
-		super(RoadMaxweight.class, COLOR_MAP, Color.WHITE);
-	}
+    public MaxweightColorScheme() {
+        super(RoadMaxweight.class, COLOR_MAP, Color.WHITE);
+    }
 }

@@ -5,20 +5,20 @@ package org.openstreetmap.josm.plugins.graphview.core.visualisation;
  */
 public final class LatLonCoords {
 
-	private final double lat;
-	private final double lon;
+    private final double lat;
+    private final double lon;
 
-	public LatLonCoords(double lat, double lon) {
-		this.lat = lat;
-		this.lon = lon;
-	}
+    public LatLonCoords(double lat, double lon) {
+        this.lat = lat;
+        this.lon = lon;
+    }
 
-	public double getLat() {
-		return lat;
-	}
+    public double getLat() {
+        return lat;
+    }
 
-	public double getLon() {
-		return lon;
-	}
+    public double getLon() {
+        return lon;
+    }
 
 }

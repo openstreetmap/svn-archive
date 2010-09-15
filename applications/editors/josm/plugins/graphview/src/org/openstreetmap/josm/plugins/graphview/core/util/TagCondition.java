@@ -8,11 +8,11 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
  */
 public interface TagCondition {
 
-	/**
-	 * returns true if the tags match the condition
-	 *
-	 * @param tags  tags to check against the condition; != null
-	 */
-	boolean matches(TagGroup tags);
+    /**
+     * returns true if the tags match the condition
+     *
+     * @param tags  tags to check against the condition; != null
+     */
+    boolean matches(TagGroup tags);
 
 }

@@ -14,14 +14,14 @@ import org.openstreetmap.josm.gui.MapView;
  */
 public class AlignWaysRefSegment extends AlignWaysSegment {
 
-	// Note: segment may be null. This is normal.
+    // Note: segment may be null. This is normal.
 
-	public AlignWaysRefSegment(MapView mapview, Point p)
-	throws IllegalArgumentException {
-		super(mapview, p);
-		setSegment(getNearestWaySegment(p));
-		segmentColor = Color.GREEN;
+    public AlignWaysRefSegment(MapView mapview, Point p)
+    throws IllegalArgumentException {
+        super(mapview, p);
+        setSegment(getNearestWaySegment(p));
+        segmentColor = Color.GREEN;
 
-	}
+    }
 
 }

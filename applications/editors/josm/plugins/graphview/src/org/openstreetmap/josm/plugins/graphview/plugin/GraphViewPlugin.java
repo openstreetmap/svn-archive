@@ -51,223 +51,223 @@ import org.openstreetmap.josm.plugins.graphview.plugin.preferences.InternalRules
  */
 public class GraphViewPlugin extends Plugin implements LayerChangeListener, Observer {
 
-	private static final Collection<RoadPropertyType<?>> PROPERTIES;
+    private static final Collection<RoadPropertyType<?>> PROPERTIES;
 
-	static {
-		PROPERTIES = new LinkedList<RoadPropertyType<?>>();
-		PROPERTIES.add(new RoadIncline());
-		PROPERTIES.add(new RoadMaxaxleload());
-		PROPERTIES.add(new RoadMaxheight());
-		PROPERTIES.add(new RoadMaxlength());
-		PROPERTIES.add(new RoadMaxspeed());
-		PROPERTIES.add(new RoadMaxweight());
-		PROPERTIES.add(new RoadMaxwidth());
-		PROPERTIES.add(new RoadMinspeed());
-		PROPERTIES.add(new RoadSurface());
-		PROPERTIES.add(new RoadTracktype());
-		PROPERTIES.add(new RoadWidth());
-	}
+    static {
+        PROPERTIES = new LinkedList<RoadPropertyType<?>>();
+        PROPERTIES.add(new RoadIncline());
+        PROPERTIES.add(new RoadMaxaxleload());
+        PROPERTIES.add(new RoadMaxheight());
+        PROPERTIES.add(new RoadMaxlength());
+        PROPERTIES.add(new RoadMaxspeed());
+        PROPERTIES.add(new RoadMaxweight());
+        PROPERTIES.add(new RoadMaxwidth());
+        PROPERTIES.add(new RoadMinspeed());
+        PROPERTIES.add(new RoadSurface());
+        PROPERTIES.add(new RoadTracktype());
+        PROPERTIES.add(new RoadWidth());
+    }
 
-	private final GraphViewPreferences preferences;
+    private final GraphViewPreferences preferences;
 
-	private JOSMTransitionStructure transitionStructure;
-	private GraphViewLayer graphViewLayer;
+    private JOSMTransitionStructure transitionStructure;
+    private GraphViewLayer graphViewLayer;
 
-	/** creates the plugin */
-	public GraphViewPlugin(PluginInformation info) {
-		super(info);
-		preferences = GraphViewPreferences.getInstance();
-		this.preferences.addObserver(this);
+    /** creates the plugin */
+    public GraphViewPlugin(PluginInformation info) {
+        super(info);
+        preferences = GraphViewPreferences.getInstance();
+        this.preferences.addObserver(this);
 
-	}
+    }
 
-	/** allows creation/update of GraphViewLayer */
-	public void createGraphViewLayer() {
+    /** allows creation/update of GraphViewLayer */
+    public void createGraphViewLayer() {
 
-		try {
+        try {
 
-			if (graphViewLayer != null) {
+            if (graphViewLayer != null) {
 
-				AccessRuleset accessRuleset = getAccessRuleset();
+                AccessRuleset accessRuleset = getAccessRuleset();
 
-				if (accessRuleset == null) {
-					JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!", "No ruleset", JOptionPane.ERROR_MESSAGE);
-				} else {
-					transitionStructure.setAccessParametersAndRuleset(preferences.getCurrentParameterBookmark(), accessRuleset);
-					transitionStructure.forceUpdate();
-				}
+                if (accessRuleset == null) {
+                    JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!", "No ruleset", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    transitionStructure.setAccessParametersAndRuleset(preferences.getCurrentParameterBookmark(), accessRuleset);
+                    transitionStructure.forceUpdate();
+                }
 
-			} else {
+            } else {
 
-				AccessRuleset accessRuleset = getAccessRuleset();
+                AccessRuleset accessRuleset = getAccessRuleset();
 
-				if (accessRuleset == null) {
-					JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!",
-							"No ruleset", JOptionPane.ERROR_MESSAGE);
-				} else {
+                if (accessRuleset == null) {
+                    JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!",
+                            "No ruleset", JOptionPane.ERROR_MESSAGE);
+                } else {
 
-					transitionStructure = new JOSMTransitionStructure(
-							preferences.getCurrentParameterBookmark(),
-							accessRuleset,
-							PROPERTIES);
+                    transitionStructure = new JOSMTransitionStructure(
+                            preferences.getCurrentParameterBookmark(),
+                            accessRuleset,
+                            PROPERTIES);
 
-					WayGraph graph = new TSBasedWayGraph(transitionStructure);
+                    WayGraph graph = new TSBasedWayGraph(transitionStructure);
 
-					graphViewLayer = new GraphViewLayer();
-					graphViewLayer.setWayGraph(graph);
-					graphViewLayer.setColorScheme(preferences.getCurrentColorScheme());
-					graphViewLayer.setNodePositioner(new DefaultNodePositioner());
+                    graphViewLayer = new GraphViewLayer();
+                    graphViewLayer.setWayGraph(graph);
+                    graphViewLayer.setColorScheme(preferences.getCurrentColorScheme());
+                    graphViewLayer.setNodePositioner(new DefaultNodePositioner());
 
-					Main.main.addLayer(graphViewLayer);
+                    Main.main.addLayer(graphViewLayer);
 
-				}
+                }
 
-			}
+            }
 
-		} catch (AccessRulesetSyntaxException e) {
-			JOptionPane.showMessageDialog(Main.parent, "syntax exception in access ruleset:\n" + e);
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(Main.parent, "file not found:\n" + e);
-			e.printStackTrace();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(Main.parent, "problem when accessing a file:\n" + e);
-			e.printStackTrace();
-		}
+        } catch (AccessRulesetSyntaxException e) {
+            JOptionPane.showMessageDialog(Main.parent, "syntax exception in access ruleset:\n" + e);
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(Main.parent, "file not found:\n" + e);
+            e.printStackTrace();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(Main.parent, "problem when accessing a file:\n" + e);
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	/** allows update of GraphViewLayer */
-	public void updateGraphViewLayer() {
+    /** allows update of GraphViewLayer */
+    public void updateGraphViewLayer() {
 
-		try {
+        try {
 
-			if (graphViewLayer != null) {
+            if (graphViewLayer != null) {
 
-				AccessRuleset accessRuleset = getAccessRuleset();
+                AccessRuleset accessRuleset = getAccessRuleset();
 
-				if (accessRuleset == null) {
-					JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!",
-							"No ruleset", JOptionPane.ERROR_MESSAGE);
-				} else {
-					transitionStructure.setAccessParametersAndRuleset(
-							preferences.getCurrentParameterBookmark(), accessRuleset);
-					transitionStructure.forceUpdate();
-				}
+                if (accessRuleset == null) {
+                    JOptionPane.showMessageDialog(Main.parent, "No ruleset has been selected!",
+                            "No ruleset", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    transitionStructure.setAccessParametersAndRuleset(
+                            preferences.getCurrentParameterBookmark(), accessRuleset);
+                    transitionStructure.forceUpdate();
+                }
 
-			}
+            }
 
-		} catch (AccessRulesetSyntaxException e) {
-			JOptionPane.showMessageDialog(Main.parent, "syntax exception in access ruleset:\n" + e);
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(Main.parent, "file not found:\n" + e);
-			e.printStackTrace();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(Main.parent, "problem when accessing a file:\n" + e);
-			e.printStackTrace();
-		}
+        } catch (AccessRulesetSyntaxException e) {
+            JOptionPane.showMessageDialog(Main.parent, "syntax exception in access ruleset:\n" + e);
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(Main.parent, "file not found:\n" + e);
+            e.printStackTrace();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(Main.parent, "problem when accessing a file:\n" + e);
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	/** repaints the GraphViewLayer without recalculating the graph (visual update) */
-	public void repaintGraphViewLayer() {
+    /** repaints the GraphViewLayer without recalculating the graph (visual update) */
+    public void repaintGraphViewLayer() {
 
-		if (graphViewLayer != null) {
-			Main.panel.repaint();
-		}
+        if (graphViewLayer != null) {
+            Main.panel.repaint();
+        }
 
-	}
+    }
 
-	/**
-	 * @return ruleset read from a source as specified by preferences, null if the preferences
-	 *         don't specify a ruleset source
-	 * @throws AccessRulesetSyntaxException
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
-	private AccessRuleset getAccessRuleset()
-	throws AccessRulesetSyntaxException, IOException, FileNotFoundException {
+    /**
+     * @return ruleset read from a source as specified by preferences, null if the preferences
+     *         don't specify a ruleset source
+     * @throws AccessRulesetSyntaxException
+     * @throws IOException
+     * @throws FileNotFoundException
+     */
+    private AccessRuleset getAccessRuleset()
+    throws AccessRulesetSyntaxException, IOException, FileNotFoundException {
 
-		InputStream rulesetInputStream;
+        InputStream rulesetInputStream;
 
-		if (preferences.getUseInternalRulesets()) {
+        if (preferences.getUseInternalRulesets()) {
 
-			InternalRuleset ruleset = preferences.getCurrentInternalRuleset();
+            InternalRuleset ruleset = preferences.getCurrentInternalRuleset();
 
-			if (ruleset == null) {
-				return null;
-			}
+            if (ruleset == null) {
+                return null;
+            }
 
-			ClassLoader classLoader = this.getClass().getClassLoader();
-			URL rulesetURL = classLoader.getResource(ruleset.getResourceName());
+            ClassLoader classLoader = this.getClass().getClassLoader();
+            URL rulesetURL = classLoader.getResource(ruleset.getResourceName());
 
-			if (rulesetURL != null) {
-				rulesetInputStream = rulesetURL.openStream();
-			} else {
-				throw new FileNotFoundException("couldn't find built-in ruleset " + ruleset);
-			}
+            if (rulesetURL != null) {
+                rulesetInputStream = rulesetURL.openStream();
+            } else {
+                throw new FileNotFoundException("couldn't find built-in ruleset " + ruleset);
+            }
 
-		} else {
+        } else {
 
-			File rulesetFile = preferences.getCurrentRulesetFile();
+            File rulesetFile = preferences.getCurrentRulesetFile();
 
-			if (rulesetFile == null) {
-				return null;
-			}
+            if (rulesetFile == null) {
+                return null;
+            }
 
-			rulesetInputStream = new FileInputStream(rulesetFile);
+            rulesetInputStream = new FileInputStream(rulesetFile);
 
-		}
+        }
 
-		return AccessRulesetReader.readAccessRuleset(rulesetInputStream);
+        return AccessRulesetReader.readAccessRuleset(rulesetInputStream);
 
-	}
+    }
 
-	@Override
-	public PreferenceSetting getPreferenceSetting() {
-		return new GraphViewPreferenceEditor();
-	}
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+        return new GraphViewPreferenceEditor();
+    }
 
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (newFrame != null) {
-			if (oldFrame == null) {
-				final GraphViewDialog laneDialog
-					= new GraphViewDialog(this);
-				newFrame.addToggleDialog(laneDialog);
-			}
-			MapView.addLayerChangeListener(this);
-		} else {
-			MapView.removeLayerChangeListener(this);
-		}
-	}
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (newFrame != null) {
+            if (oldFrame == null) {
+                final GraphViewDialog laneDialog
+                    = new GraphViewDialog(this);
+                newFrame.addToggleDialog(laneDialog);
+            }
+            MapView.addLayerChangeListener(this);
+        } else {
+            MapView.removeLayerChangeListener(this);
+        }
+    }
 
-	public void layerRemoved(Layer oldLayer) {
-		if (oldLayer == graphViewLayer) {
-			graphViewLayer = null;
-		} else if (oldLayer == Main.map.mapView.getEditLayer()) { //data layer removed
-			if (graphViewLayer != null) {
-				Main.map.mapView.removeLayer(graphViewLayer);
-				graphViewLayer = null;
-			}
-		}
-	}
+    public void layerRemoved(Layer oldLayer) {
+        if (oldLayer == graphViewLayer) {
+            graphViewLayer = null;
+        } else if (oldLayer == Main.map.mapView.getEditLayer()) { //data layer removed
+            if (graphViewLayer != null) {
+                Main.map.mapView.removeLayer(graphViewLayer);
+                graphViewLayer = null;
+            }
+        }
+    }
 
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		//do nothing
-	}
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+        //do nothing
+    }
 
-	public void layerAdded(Layer newLayer) {
-		//do nothing
-	}
+    public void layerAdded(Layer newLayer) {
+        //do nothing
+    }
 
-	public void update(Observable arg0, Object arg1) {
-		if (arg0 == preferences) {
-			if (graphViewLayer != null) {
-				graphViewLayer.setColorScheme(preferences.getCurrentColorScheme());
-			}
-		}
-	}
+    public void update(Observable arg0, Object arg1) {
+        if (arg0 == preferences) {
+            if (graphViewLayer != null) {
+                graphViewLayer.setColorScheme(preferences.getCurrentColorScheme());
+            }
+        }
+    }
 
 }

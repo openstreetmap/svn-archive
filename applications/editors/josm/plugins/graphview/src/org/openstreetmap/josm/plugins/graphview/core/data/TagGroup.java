@@ -7,33 +7,33 @@ package org.openstreetmap.josm.plugins.graphview.core.data;
  */
 public interface TagGroup extends Iterable<Tag> {
 
-	/**
-	 * returns the value for the given key or null if no tag in this group uses that key
-	 * @param key  key whose value will be returned; != null
-	 */
-	public String getValue(String key);
+    /**
+     * returns the value for the given key or null if no tag in this group uses that key
+     * @param key  key whose value will be returned; != null
+     */
+    public String getValue(String key);
 
-	/**
-	 * returns true if this tag group contains a tag with the given key
-	 * @param key  key to check for; != null
-	 */
-	public boolean containsKey(String key);
+    /**
+     * returns true if this tag group contains a tag with the given key
+     * @param key  key to check for; != null
+     */
+    public boolean containsKey(String key);
 
-	/**
-	 * returns true if this tag group contains at least one tag with the given value
-	 * @param value  value to check for; != null
-	 */
-	public boolean containsValue(String value);
+    /**
+     * returns true if this tag group contains at least one tag with the given value
+     * @param value  value to check for; != null
+     */
+    public boolean containsValue(String value);
 
-	/**
-	 * returns true if this tag group contains the given tag
-	 * @param tag  tag to check for; != null
-	 */
-	public boolean contains(Tag tag);
+    /**
+     * returns true if this tag group contains the given tag
+     * @param tag  tag to check for; != null
+     */
+    public boolean contains(Tag tag);
 
-	/**
-	 * returns the number of tags in this group
-	 */
-	public int size();
+    /**
+     * returns the number of tags in this group
+     */
+    public int size();
 
 }

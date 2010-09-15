@@ -49,9 +49,9 @@ public class WaySelectorPlugin extends Plugin {
         }
 
         public void actionPerformed(ActionEvent ev) {
-	    DataSet ds = Main.main.getCurrentDataSet();
-	    WaySelection ws = new WaySelection(ds.getSelectedWays());
-	    ws.extend(ds);
+        DataSet ds = Main.main.getCurrentDataSet();
+        WaySelection ws = new WaySelection(ds.getSelectedWays());
+        ws.extend(ds);
         }
 
         /**

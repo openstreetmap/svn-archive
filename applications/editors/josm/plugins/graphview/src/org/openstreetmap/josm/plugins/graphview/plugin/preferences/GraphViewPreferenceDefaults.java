@@ -21,91 +21,91 @@ import org.openstreetmap.josm.plugins.graphview.plugin.preferences.VehicleProper
  */
 public final class GraphViewPreferenceDefaults {
 
-	/** prevents instantiation */
-	private GraphViewPreferenceDefaults() { }
+    /** prevents instantiation */
+    private GraphViewPreferenceDefaults() { }
 
-	/** creates a default "empty" bookmark */
-	public static PreferenceAccessParameters createDefaultBookmarkAccessParameters() {
+    /** creates a default "empty" bookmark */
+    public static PreferenceAccessParameters createDefaultBookmarkAccessParameters() {
 
-		Collection<AccessType> accessTypes =
-			Arrays.asList(UNDEFINED, YES, PERMISSIVE, DESIGNATED);
+        Collection<AccessType> accessTypes =
+            Arrays.asList(UNDEFINED, YES, PERMISSIVE, DESIGNATED);
 
-		Map<VehiclePropertyType<?>, String> propertyStringMap =
-			new HashMap<VehiclePropertyType<?>, String>();
+        Map<VehiclePropertyType<?>, String> propertyStringMap =
+            new HashMap<VehiclePropertyType<?>, String>();
 
-		try {
-			return new PreferenceAccessParameters("", accessTypes, propertyStringMap);
-		} catch (PropertyValueSyntaxException e) {
-			throw new AssertionError(e);
-		}
+        try {
+            return new PreferenceAccessParameters("", accessTypes, propertyStringMap);
+        } catch (PropertyValueSyntaxException e) {
+            throw new AssertionError(e);
+        }
 
-	}
+    }
 
-	/** creates the default map of access parameter bookmarks */
-	public static Map<String, PreferenceAccessParameters> createDefaultAccessParameterBookmarks() {
+    /** creates the default map of access parameter bookmarks */
+    public static Map<String, PreferenceAccessParameters> createDefaultAccessParameterBookmarks() {
 
-		try {
+        try {
 
-			Map<String, PreferenceAccessParameters> result =
-				new HashMap<String, PreferenceAccessParameters>();
+            Map<String, PreferenceAccessParameters> result =
+                new HashMap<String, PreferenceAccessParameters>();
 
-			Collection<AccessType> accessTypes =
-				Arrays.asList(UNDEFINED, YES, PERMISSIVE, DESIGNATED);
+            Collection<AccessType> accessTypes =
+                Arrays.asList(UNDEFINED, YES, PERMISSIVE, DESIGNATED);
 
-			/* create motorcar bookmark */
-			{
-				Map<VehiclePropertyType<?>, String> propertyMap =
-					new HashMap<VehiclePropertyType<?>, String>();
+            /* create motorcar bookmark */
+            {
+                Map<VehiclePropertyType<?>, String> propertyMap =
+                    new HashMap<VehiclePropertyType<?>, String>();
 
-				PreferenceAccessParameters accessParameters =
-					new PreferenceAccessParameters("motorcar", accessTypes, propertyMap);
+                PreferenceAccessParameters accessParameters =
+                    new PreferenceAccessParameters("motorcar", accessTypes, propertyMap);
 
-				result.put("motorcar", accessParameters);
-			}
+                result.put("motorcar", accessParameters);
+            }
 
-			/* create hgv bookmark */
-			{
-				Map<VehiclePropertyType<?>, String> propertyMap =
-					new HashMap<VehiclePropertyType<?>, String>();
-				propertyMap.put(VehiclePropertyTypes.WEIGHT, "3.5");
+            /* create hgv bookmark */
+            {
+                Map<VehiclePropertyType<?>, String> propertyMap =
+                    new HashMap<VehiclePropertyType<?>, String>();
+                propertyMap.put(VehiclePropertyTypes.WEIGHT, "3.5");
 
-				PreferenceAccessParameters accessParameters =
-					new PreferenceAccessParameters("hgv", accessTypes, propertyMap);
+                PreferenceAccessParameters accessParameters =
+                    new PreferenceAccessParameters("hgv", accessTypes, propertyMap);
 
-				result.put("hgv (3.5 t)", accessParameters);
-			}
+                result.put("hgv (3.5 t)", accessParameters);
+            }
 
-			/* create bicycle bookmark */
-			{
-				Map<VehiclePropertyType<?>, String> propertyMap =
-					new HashMap<VehiclePropertyType<?>, String>();
+            /* create bicycle bookmark */
+            {
+                Map<VehiclePropertyType<?>, String> propertyMap =
+                    new HashMap<VehiclePropertyType<?>, String>();
 
-				PreferenceAccessParameters accessParameters =
-					new PreferenceAccessParameters("bicycle", accessTypes, propertyMap);
+                PreferenceAccessParameters accessParameters =
+                    new PreferenceAccessParameters("bicycle", accessTypes, propertyMap);
 
-				result.put("bicycle", accessParameters);
-			}
+                result.put("bicycle", accessParameters);
+            }
 
-			/* create pedestrian bookmark */
-			{
-				Map<VehiclePropertyType<?>, String> propertyMap =
-					new HashMap<VehiclePropertyType<?>, String>();
+            /* create pedestrian bookmark */
+            {
+                Map<VehiclePropertyType<?>, String> propertyMap =
+                    new HashMap<VehiclePropertyType<?>, String>();
 
-				PreferenceAccessParameters accessParameters =
-					new PreferenceAccessParameters("foot", accessTypes, propertyMap);
+                PreferenceAccessParameters accessParameters =
+                    new PreferenceAccessParameters("foot", accessTypes, propertyMap);
 
-				result.put("pedestrian", accessParameters);
-			}
+                result.put("pedestrian", accessParameters);
+            }
 
-			return result;
+            return result;
 
-		} catch (PropertyValueSyntaxException e) {
-			throw new AssertionError(e);
-		}
-	}
+        } catch (PropertyValueSyntaxException e) {
+            throw new AssertionError(e);
+        }
+    }
 
-	public static File getDefaultRulesetFolder() {
-		return new File(System.getProperty("user.home"));
-	}
+    public static File getDefaultRulesetFolder() {
+        return new File(System.getProperty("user.home"));
+    }
 
 }

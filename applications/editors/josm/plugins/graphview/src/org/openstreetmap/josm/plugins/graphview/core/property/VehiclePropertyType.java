@@ -10,10 +10,10 @@ package org.openstreetmap.josm.plugins.graphview.core.property;
  */
 public interface VehiclePropertyType<V> {
 
-	/**
-	 * determines whether a value is valid.
-	 * null is never a valid value and must not be used as parameter.
-	 */
-	public boolean isValidValue(Object value);
+    /**
+     * determines whether a value is valid.
+     * null is never a valid value and must not be used as parameter.
+     */
+    public boolean isValidValue(Object value);
 
 }

@@ -6,10 +6,10 @@ package org.openstreetmap.josm.plugins.graphview.core.graph;
  */
 public interface WayGraphObserver {
 
-	/**
-	 * informs this observer about changes in an observed graph
-	 * @param wayGraph  observed graph that has changed; != null
-	 */
-	public void update(WayGraph wayGraph);
+    /**
+     * informs this observer about changes in an observed graph
+     * @param wayGraph  observed graph that has changed; != null
+     */
+    public void update(WayGraph wayGraph);
 
 }

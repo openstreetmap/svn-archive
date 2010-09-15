@@ -93,7 +93,7 @@ public class OsmEdge extends DefaultWeightedEdge {
   public double getLength() {
     return length;
   }
-  
+
   public void setLength(double length) {
     this.length = length;
 }

@@ -49,18 +49,18 @@ public class Undelete extends Plugin {
     JMenuItem Undelete;
 
     public Undelete(PluginInformation info) {
-    	super(info);
+        super(info);
         Undelete = MainMenu.add(Main.main.menu.fileMenu, new UndeleteAction());
 
     }
-    
-    
+
+
     private class UndeleteAction extends JosmAction {
         /**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		public UndeleteAction() {
+         *
+         */
+        private static final long serialVersionUID = 1L;
+        public UndeleteAction() {
         super(tr("Undelete object..."), "undelete", tr("Undelete object by id"), Shortcut.registerShortcut("tools:undelete", tr("File: {0}", tr("Undelete object...")),
         KeyEvent.VK_U, Shortcut.GROUP_EDIT, KeyEvent.SHIFT_DOWN_MASK|KeyEvent.ALT_DOWN_MASK), true);
       }
@@ -116,8 +116,8 @@ public class Undelete extends Plugin {
         ids.add((long)tfId.getOsmId());
         undelete(layer.isSelected(), cbType.getType(), ids, 0);
       }
-    }      
-          
+    }
+
     /**
      * Download the given primitive.
      */
@@ -127,20 +127,20 @@ public class Undelete extends Plugin {
             tmpLayer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
             Main.main.addLayer(tmpLayer);
         }
-        
+
         final DataSet datas = tmpLayer.data;
         final OsmDataLayer layer=tmpLayer;
-        
+
         HistoryLoadTask task  = new HistoryLoadTask();
         for (long id: ids)
         {
           task.add (id, type);
         }
 
-        
-        
+
+
         Main.worker.execute(task);
-        
+
         Runnable r = new Runnable() {
             public void run() {
               List<Node> nodes=new ArrayList<Node>();
@@ -148,22 +148,22 @@ public class Undelete extends Plugin {
               {
 
                 History h = HistoryDataSet.getInstance().getHistory(id, type);
-                
+
                 OsmPrimitive primitive;
                 HistoryOsmPrimitive hPrimitive1=h.getLatest();
                 HistoryOsmPrimitive hPrimitive2;
-                
+
                 boolean visible=hPrimitive1.isVisible();
-                
+
                 if (visible)
                 {
                   // If the object is not deleted we get the real object
                   DownloadPrimitiveTask download=new DownloadPrimitiveTask(new SimplePrimitiveId(id, type), layer);
-                  System.out.println(tr("Will get {0}", id));                 
+                  System.out.println(tr("Will get {0}", id));
                   download.run();
-                  
-                  
-                  System.out.println(tr("Looking for {0}", id));                 
+
+
+                  System.out.println(tr("Looking for {0}", id));
                   primitive=datas.getPrimitiveById(id, type);
                   System.out.println(tr("Found {0}", primitive.getId()));
                   if (parent>0 && type.equals(OsmPrimitiveType.NODE))
@@ -177,12 +177,12 @@ public class Undelete extends Plugin {
                   {
                     // We get all info from the latest version
                     hPrimitive2=hPrimitive1;
-                    
+
                     Node node = new Node(id, (int) hPrimitive1.getVersion());
 
                     HistoryNode hNode = (HistoryNode) hPrimitive1;
                     node.setCoor(hNode.getCoords());
-                    
+
                     primitive=node;
                     if (parent>0)
                     {
@@ -195,53 +195,53 @@ public class Undelete extends Plugin {
                     hPrimitive1 = h.getLatest();
                     hPrimitive2 = h.getByVersion(h.getNumVersions()-1);
 
-                    
-                    
+
+
                     Way way = new Way(id, (int) hPrimitive1.getVersion());
-                    
+
                     HistoryWay hWay = (HistoryWay) hPrimitive2;
                     //System.out.println(tr("Primitive {0} version {1}: {2} nodes", hPrimitive2.getId(), hPrimitive2.getVersion(), hWay.getNumNodes()));
                     List<Long> nodeIds = hWay.getNodes();
                     undelete(false, OsmPrimitiveType.NODE, nodeIds, id);
-                    
+
                     primitive=way;
-                    
+
                   }
                   else
-                  { 
+                  {
                       primitive=new Node();
                       hPrimitive1=h.getLatest();
                       hPrimitive2=h.getLatest();
                   }
 
                   User user = User.createOsmUser(hPrimitive1.getUid(), hPrimitive1.getUser());
-                  
+
                   primitive.setUser(user);
-                  
+
                   primitive.setKeys(hPrimitive2.getTags());
-                  
+
                   primitive.put("history", "retrieved using undelete JOSM plugin");
-                  
+
                   primitive.setModified(true);
-                  
-                  datas.addPrimitive(primitive);                
+
+                  datas.addPrimitive(primitive);
                 }
-                  
+
 
                 //HistoryBrowserDialogManager.getInstance().show(h);
               }
               if ((parent>0) && (type.equals(OsmPrimitiveType.NODE)))
               {
                 Way parentWay=(Way)datas.getPrimitiveById(parent, OsmPrimitiveType.WAY);
-                
+
                 parentWay.setNodes(nodes);
               }
             }
         };
         Main.worker.submit(r);
-        
+
         //if (downloadReferrers) {
         //    Main.worker.submit(new DownloadReferrersTask(layer, id, type));
         //}
-    }      
+    }
 }

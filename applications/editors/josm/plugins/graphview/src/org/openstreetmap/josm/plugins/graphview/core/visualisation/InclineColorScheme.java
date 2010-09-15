@@ -11,16 +11,16 @@ import org.openstreetmap.josm.plugins.graphview.core.property.RoadIncline;
  */
 public class InclineColorScheme extends FloatPropertyColorScheme {
 
-	private static final Map<Float, Color> COLOR_MAP;
+    private static final Map<Float, Color> COLOR_MAP;
 
-	static {
-		COLOR_MAP = new HashMap<Float, Color>();
-		COLOR_MAP.put(-30f, Color.BLUE);
-		COLOR_MAP.put(0f, Color.WHITE);
-		COLOR_MAP.put(30f, Color.RED);
-	}
+    static {
+        COLOR_MAP = new HashMap<Float, Color>();
+        COLOR_MAP.put(-30f, Color.BLUE);
+        COLOR_MAP.put(0f, Color.WHITE);
+        COLOR_MAP.put(30f, Color.RED);
+    }
 
-	public InclineColorScheme() {
-		super(RoadIncline.class, COLOR_MAP, Color.GRAY);
-	}
+    public InclineColorScheme() {
+        super(RoadIncline.class, COLOR_MAP, Color.GRAY);
+    }
 }

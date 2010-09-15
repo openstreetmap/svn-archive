@@ -9,26 +9,26 @@ import java.util.Collection;
  */
 public interface Restriction {
 
-	/**
-	 * returns the starting segment that will trigger the restriction when used;
-	 * != null
-	 */
-	public Segment getFrom();
+    /**
+     * returns the starting segment that will trigger the restriction when used;
+     * != null
+     */
+    public Segment getFrom();
 
-	/**
-	 * returns the "via" segments.
-	 * The restriction will remain active as long as only via segments are used.
-	 *
-	 * @return  unmodifiable collection of segments; != null
-	 */
-	public Collection<Segment> getVias();
+    /**
+     * returns the "via" segments.
+     * The restriction will remain active as long as only via segments are used.
+     *
+     * @return  unmodifiable collection of segments; != null
+     */
+    public Collection<Segment> getVias();
 
-	/**
-	 * returns the forbidden "to" segments.
-	 * The restriction prevents leaving the via segment set by using one of the to segments.
-	 *
-	 * @return  unmodifiable collection of segments; != null
-	 */
-	public Collection<Segment> getTos();
+    /**
+     * returns the forbidden "to" segments.
+     * The restriction prevents leaving the via segment set by using one of the to segments.
+     *
+     * @return  unmodifiable collection of segments; != null
+     */
+    public Collection<Segment> getTos();
 
 }

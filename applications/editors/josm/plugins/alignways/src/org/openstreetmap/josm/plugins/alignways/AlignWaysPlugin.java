@@ -19,45 +19,45 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class AlignWaysPlugin extends Plugin {
 
-	static AlignWaysMode awMode;
-	private final IconToggleButton btn;
-	static JMenuItem alignWaysMenuItem;
-	static JosmAction awAction;
+    static AlignWaysMode awMode;
+    private final IconToggleButton btn;
+    static JMenuItem alignWaysMenuItem;
+    static JosmAction awAction;
 
-	/**
-	 * 
-	 */
-	public AlignWaysPlugin(PluginInformation info) {
-		super(info);
-		awMode = new AlignWaysMode(Main.map, "alignways", tr("Align Ways mode"));
-		btn = new IconToggleButton(awMode);
-		btn.setVisible(true);
-		Main.main.menu.toolsMenu.addSeparator();
-		awAction = new AlignWaysAction();
-		alignWaysMenuItem = MainMenu.add(Main.main.menu.toolsMenu, awAction);
-		Main.main.menu.toolsMenu.addSeparator();
+    /**
+     * 
+     */
+    public AlignWaysPlugin(PluginInformation info) {
+        super(info);
+        awMode = new AlignWaysMode(Main.map, "alignways", tr("Align Ways mode"));
+        btn = new IconToggleButton(awMode);
+        btn.setVisible(true);
+        Main.main.menu.toolsMenu.addSeparator();
+        awAction = new AlignWaysAction();
+        alignWaysMenuItem = MainMenu.add(Main.main.menu.toolsMenu, awAction);
+        Main.main.menu.toolsMenu.addSeparator();
 
-	}
+    }
 
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (Main.map != null) {
-			Main.map.addMapMode(btn);
-		}
-	}
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (Main.map != null) {
+            Main.map.addMapMode(btn);
+        }
+    }
 
-	/**
-	 * @return the awAction
-	 */
-	public static JosmAction getAwAction() {
-		return awAction;
-	}
+    /**
+     * @return the awAction
+     */
+    public static JosmAction getAwAction() {
+        return awAction;
+    }
 
-	/**
-	 * @return the awMode
-	 */
-	public static AlignWaysMode getAwMode() {
-		return awMode;
-	}
+    /**
+     * @return the awMode
+     */
+    public static AlignWaysMode getAwMode() {
+        return awMode;
+    }
 
 }

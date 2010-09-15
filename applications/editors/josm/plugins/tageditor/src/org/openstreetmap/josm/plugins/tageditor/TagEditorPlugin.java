@@ -6,14 +6,14 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class TagEditorPlugin extends Plugin {
-	LaunchAction action;
-	
-	/**
-	 * constructor 
-	 */
-	public TagEditorPlugin(PluginInformation info) {
-		super(info);
-		action = new LaunchAction();
-		MainMenu.add(Main.main.menu.editMenu, action);
-	}
+    LaunchAction action;
+    
+    /**
+     * constructor 
+     */
+    public TagEditorPlugin(PluginInformation info) {
+        super(info);
+        action = new LaunchAction();
+        MainMenu.add(Main.main.menu.editMenu, action);
+    }
 }

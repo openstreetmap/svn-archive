@@ -16,20 +16,20 @@ import org.openstreetmap.josm.plugins.graphview.core.transition.GenericTransitio
  */
 public class JOSMTransitionStructure extends GenericTransitionStructure<Node, Way, Relation, RelationMember> {
 
-	private static final JOSMDataSource DATA_SOURCE = new JOSMDataSource();
+    private static final JOSMDataSource DATA_SOURCE = new JOSMDataSource();
 
-	public JOSMTransitionStructure(AccessParameters accessParameters, AccessRuleset ruleset,
-			Collection<RoadPropertyType<?>> properties) {
+    public JOSMTransitionStructure(AccessParameters accessParameters, AccessRuleset ruleset,
+            Collection<RoadPropertyType<?>> properties) {
 
-		super(accessParameters, ruleset,
-				DATA_SOURCE,
-				properties);
+        super(accessParameters, ruleset,
+                DATA_SOURCE,
+                properties);
 
-	}
+    }
 
-	/** causes an update (as if the DataSource had noticed a change) */
-	public void forceUpdate() {
-		super.update(DATA_SOURCE);
-	}
+    /** causes an update (as if the DataSource had noticed a change) */
+    public void forceUpdate() {
+        super.update(DATA_SOURCE);
+    }
 
 }

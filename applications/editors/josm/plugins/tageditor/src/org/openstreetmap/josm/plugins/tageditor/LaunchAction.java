@@ -20,39 +20,39 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class LaunchAction extends JosmAction implements SelectionChangedListener {
 
-	public LaunchAction()  {
-		super(
-				tr("Edit tags"),
-				null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
-				tr("Launches the tag editor dialog"),
-				Shortcut.registerShortcut(
-						"edit:launchtageditor",
-						tr("Launches the tag editor dialog"),
-						KeyEvent.VK_T,
-						Shortcut.GROUP_EDIT),
-						true
-		);
+    public LaunchAction()  {
+        super(
+                tr("Edit tags"),
+                null, //TODO: set "tag-editor" and add /images/tag-editor.png to distrib
+                tr("Launches the tag editor dialog"),
+                Shortcut.registerShortcut(
+                        "edit:launchtageditor",
+                        tr("Launches the tag editor dialog"),
+                        KeyEvent.VK_T,
+                        Shortcut.GROUP_EDIT),
+                        true
+        );
 
-		DataSet.selListeners.add(this);
-		setEnabled(false);
-	}
+        DataSet.selListeners.add(this);
+        setEnabled(false);
+    }
 
-	/**
-	 * launch the editor
-	 */
-	protected void launchEditor() {
-		if (!isEnabled())
-			return;
-		TagEditorDialog dialog = TagEditorDialog.getInstance();
-		dialog.startEditSession();
-		dialog.setVisible(true);
-	}
+    /**
+     * launch the editor
+     */
+    protected void launchEditor() {
+        if (!isEnabled())
+            return;
+        TagEditorDialog dialog = TagEditorDialog.getInstance();
+        dialog.startEditSession();
+        dialog.setVisible(true);
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		launchEditor();
-	}
+    public void actionPerformed(ActionEvent e) {
+        launchEditor();
+    }
 
-	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-		setEnabled(newSelection != null && newSelection.size() >0);
-	}
+    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        setEnabled(newSelection != null && newSelection.size() >0);
+    }
 }

@@ -11,16 +11,16 @@ import org.openstreetmap.josm.plugins.graphview.core.transition.Segment;
  */
 public interface GraphEdge {
 
-	/** returns the node this edge starts at; != null */
-	GraphNode getStartNode();
+    /** returns the node this edge starts at; != null */
+    GraphNode getStartNode();
 
-	/** returns the node this edge leads to; != null */
-	GraphNode getTargetNode();
+    /** returns the node this edge leads to; != null */
+    GraphNode getTargetNode();
 
-	/** returns all property types for which property values are available */
-	Collection<GraphEdgePropertyType<?>> getAvailableProperties();
-	
-	/** TODO */
-	<V> V getPropertyValue(GraphEdgePropertyType<V> property);
-	
+    /** returns all property types for which property values are available */
+    Collection<GraphEdgePropertyType<?>> getAvailableProperties();
+
+    /** TODO */
+    <V> V getPropertyValue(GraphEdgePropertyType<V> property);
+
 }

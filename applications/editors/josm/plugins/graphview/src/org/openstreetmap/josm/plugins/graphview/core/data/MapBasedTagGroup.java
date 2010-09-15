@@ -12,94 +12,94 @@ import java.util.Map;
  */
 public class MapBasedTagGroup implements TagGroup {
 
-	private final Map<String, String> tagMap;
+    private final Map<String, String> tagMap;
 
-	/**
-	 * @param tagMap  map from keys to values; != null;
-	 *                must not be modified after being used as parameter
-	 */
-	public MapBasedTagGroup(Map<String, String> tagMap) {
-		if (tagMap == null) {
-			throw new IllegalArgumentException();
-		}
+    /**
+     * @param tagMap  map from keys to values; != null;
+     *                must not be modified after being used as parameter
+     */
+    public MapBasedTagGroup(Map<String, String> tagMap) {
+        if (tagMap == null) {
+            throw new IllegalArgumentException();
+        }
 
-		this.tagMap = tagMap;
-	}
+        this.tagMap = tagMap;
+    }
 
-	/**
-	 * @param tags  tags to add to the group; != null, each != null
-	 */
-	public MapBasedTagGroup(Iterable<Tag> tags) {
-		if (tags == null) {
-			throw new IllegalArgumentException();
-		}
-		this.tagMap = new HashMap<String, String>();
-		for (Tag tag : tags) {
-			if (tag == null) {
-				throw new IllegalArgumentException();
-			} else {
-				this.tagMap.put(tag.key, tag.value);
-			}
-		}
-	}
+    /**
+     * @param tags  tags to add to the group; != null, each != null
+     */
+    public MapBasedTagGroup(Iterable<Tag> tags) {
+        if (tags == null) {
+            throw new IllegalArgumentException();
+        }
+        this.tagMap = new HashMap<String, String>();
+        for (Tag tag : tags) {
+            if (tag == null) {
+                throw new IllegalArgumentException();
+            } else {
+                this.tagMap.put(tag.key, tag.value);
+            }
+        }
+    }
 
-	/**
-	 * @param tags  tags to add to the group; each != null
-	 */
-	public MapBasedTagGroup(Tag... tags) {
-		this.tagMap = new HashMap<String, String>(tags.length);
-		for (Tag tag : tags) {
-			if (tag == null) {
-				throw new IllegalArgumentException();
-			} else {
-				this.tagMap.put(tag.key, tag.value);
-			}
-		}
-	}
+    /**
+     * @param tags  tags to add to the group; each != null
+     */
+    public MapBasedTagGroup(Tag... tags) {
+        this.tagMap = new HashMap<String, String>(tags.length);
+        for (Tag tag : tags) {
+            if (tag == null) {
+                throw new IllegalArgumentException();
+            } else {
+                this.tagMap.put(tag.key, tag.value);
+            }
+        }
+    }
 
-	public String getValue(String key) {
-		assert key != null;
-		return tagMap.get(key);
-	}
+    public String getValue(String key) {
+        assert key != null;
+        return tagMap.get(key);
+    }
 
-	public boolean containsKey(String key) {
-		assert key != null;
-		return tagMap.containsKey(key);
-	}
+    public boolean containsKey(String key) {
+        assert key != null;
+        return tagMap.containsKey(key);
+    }
 
-	public boolean containsValue(String value) {
-		assert value != null;
-		return tagMap.containsValue(value);
-	}
+    public boolean containsValue(String value) {
+        assert value != null;
+        return tagMap.containsValue(value);
+    }
 
-	public boolean contains(Tag tag) {
-		assert tag != null;
-		return tag.value.equals(tagMap.get(tag.key));
-	}
+    public boolean contains(Tag tag) {
+        assert tag != null;
+        return tag.value.equals(tagMap.get(tag.key));
+    }
 
-	public int size() {
-		return tagMap.size();
-	}
+    public int size() {
+        return tagMap.size();
+    }
 
-	/**
-	 * returns an Iterator providing access to all Tags.
-	 * The Iterator does not support the {@link Iterator#remove()} method.
-	 */
-	public Iterator<Tag> iterator() {
+    /**
+     * returns an Iterator providing access to all Tags.
+     * The Iterator does not support the {@link Iterator#remove()} method.
+     */
+    public Iterator<Tag> iterator() {
 
-		Collection<Tag> tagCollection = new LinkedList<Tag>();
+        Collection<Tag> tagCollection = new LinkedList<Tag>();
 
-		for (String key : tagMap.keySet()) {
-			tagCollection.add(new Tag(key, tagMap.get(key)));
-		}
+        for (String key : tagMap.keySet()) {
+            tagCollection.add(new Tag(key, tagMap.get(key)));
+        }
 
-		return Collections.unmodifiableCollection(tagCollection).iterator();
+        return Collections.unmodifiableCollection(tagCollection).iterator();
 
-	}
+    }
 
-	@Override
-	public String toString() {
-		return tagMap.toString();
-	}
+    @Override
+    public String toString() {
+        return tagMap.toString();
+    }
 
 }

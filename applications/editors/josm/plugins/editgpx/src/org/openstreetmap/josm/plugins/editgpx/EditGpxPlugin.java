@@ -30,32 +30,32 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class EditGpxPlugin extends Plugin {
 
-	private IconToggleButton btn;
-	private EditGpxMode mode;
+    private IconToggleButton btn;
+    private EditGpxMode mode;
 
-	public EditGpxPlugin(PluginInformation info) {
-		super(info);
-		mode = new EditGpxMode(Main.map, "editgpx", tr("edit gpx tracks"));
+    public EditGpxPlugin(PluginInformation info) {
+        super(info);
+        mode = new EditGpxMode(Main.map, "editgpx", tr("edit gpx tracks"));
 
-		btn = new IconToggleButton(mode);
-		btn.setVisible(true);
-	}
+        btn = new IconToggleButton(mode);
+        btn.setVisible(true);
+    }
 
-	/**
-	 * initialize button. if button is pressed create new layer.
-	 */
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if(oldFrame == null && newFrame != null) {
-			mode.setFrame(newFrame);
+    /**
+     * initialize button. if button is pressed create new layer.
+     */
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if(oldFrame == null && newFrame != null) {
+            mode.setFrame(newFrame);
 
-			if(Main.map != null)
-				Main.map.addMapMode(btn);
-		}
-	}
+            if(Main.map != null)
+                Main.map.addMapMode(btn);
+        }
+    }
 
-	public static ImageIcon loadIcon(String name) {
-		URL url = EditGpxPlugin.class.getResource("/images/editgpx.png");
-		return new ImageIcon(url);
-	}
+    public static ImageIcon loadIcon(String name) {
+        URL url = EditGpxPlugin.class.getResource("/images/editgpx.png");
+        return new ImageIcon(url);
+    }
 }

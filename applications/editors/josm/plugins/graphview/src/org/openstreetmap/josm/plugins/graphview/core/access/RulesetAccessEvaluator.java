@@ -17,182 +17,182 @@ import org.openstreetmap.josm.plugins.graphview.core.property.RoadPropertyType;
  */
 public class RulesetAccessEvaluator<N, W, R, M> implements AccessEvaluator<N, W> {
 
-	private final DataSource<N, W, R, M> dataSource;
-	private final AccessRuleset ruleset;
-	private final AccessParameters parameters;
+    private final DataSource<N, W, R, M> dataSource;
+    private final AccessRuleset ruleset;
+    private final AccessParameters parameters;
 
-	/**
-	 * @param dataSource  object that allows access to data objects and tags/members; != null
-	 * @param ruleset     ruleset that is used for evaluation; != null
-	 * @param parameters  parameters object that describes the vehicle
-	 *                    and situation to evaluate access for; != null
-	 */
-	public RulesetAccessEvaluator(DataSource<N, W, R, M> dataSource, AccessRuleset ruleset, AccessParameters parameters) {
-		assert dataSource != null && ruleset != null && parameters != null;
+    /**
+     * @param dataSource  object that allows access to data objects and tags/members; != null
+     * @param ruleset     ruleset that is used for evaluation; != null
+     * @param parameters  parameters object that describes the vehicle
+     *                    and situation to evaluate access for; != null
+     */
+    public RulesetAccessEvaluator(DataSource<N, W, R, M> dataSource, AccessRuleset ruleset, AccessParameters parameters) {
+        assert dataSource != null && ruleset != null && parameters != null;
 
-		this.dataSource = dataSource;
-		this.ruleset = ruleset;
-		this.parameters = parameters;
+        this.dataSource = dataSource;
+        this.ruleset = ruleset;
+        this.parameters = parameters;
 
-	}
+    }
 
-	public boolean wayUsable(W way, boolean forward,
-			Map<RoadPropertyType<?>, Object> segmentPropertyValues) {
+    public boolean wayUsable(W way, boolean forward,
+            Map<RoadPropertyType<?>, Object> segmentPropertyValues) {
 
-		TagGroup wayTags = dataSource.getTagsW(way);
+        TagGroup wayTags = dataSource.getTagsW(way);
 
-		TagGroup wayTagsWithImplications = new MapBasedTagGroup(wayTags);
-		for (Implication implication : ruleset.getImplications()) {
-			wayTagsWithImplications = implication.apply(wayTagsWithImplications);
-		}
+        TagGroup wayTagsWithImplications = new MapBasedTagGroup(wayTags);
+        for (Implication implication : ruleset.getImplications()) {
+            wayTagsWithImplications = implication.apply(wayTagsWithImplications);
+        }
 
-		/* check base tagging */
+        /* check base tagging */
 
-		boolean usableWay = false;
-		for (Tag tag : ruleset.getBaseTags()) {
-			if (wayTags.contains(tag)) {
-				usableWay = true;
-				break;
-			}
-		}
+        boolean usableWay = false;
+        for (Tag tag : ruleset.getBaseTags()) {
+            if (wayTags.contains(tag)) {
+                usableWay = true;
+                break;
+            }
+        }
 
-		if (!usableWay) {
-			return false;
-		}
+        if (!usableWay) {
+            return false;
+        }
 
-		/* evaluate one-way tagging */
+        /* evaluate one-way tagging */
 
-		String onewayValue =  wayTagsWithImplications.getValue("oneway");
+        String onewayValue =  wayTagsWithImplications.getValue("oneway");
 
-		if (forward && "-1".equals(onewayValue)
-				&& !"foot".equals(parameters.getAccessClass())) {
-			return false;
-		}
+        if (forward && "-1".equals(onewayValue)
+                && !"foot".equals(parameters.getAccessClass())) {
+            return false;
+        }
 
-		if (!forward
-				&& ("1".equals(onewayValue) || "yes".equals(onewayValue) || "true".equals(onewayValue))
-				&& !"foot".equals(parameters.getAccessClass())) {
-			return false;
-		}
+        if (!forward
+                && ("1".equals(onewayValue) || "yes".equals(onewayValue) || "true".equals(onewayValue))
+                && !"foot".equals(parameters.getAccessClass())) {
+            return false;
+        }
 
-		/* evaluate properties and access tagging */
+        /* evaluate properties and access tagging */
 
-		return objectUsable(segmentPropertyValues, wayTags);
-	}
+        return objectUsable(segmentPropertyValues, wayTags);
+    }
 
-	public boolean nodeUsable(N node, Map<RoadPropertyType<?>,Object> roadPropertyValues) {
+    public boolean nodeUsable(N node, Map<RoadPropertyType<?>,Object> roadPropertyValues) {
 
-		TagGroup nodeTags = dataSource.getTagsN(node);
+        TagGroup nodeTags = dataSource.getTagsN(node);
 
-		return objectUsable(roadPropertyValues, nodeTags);
-	};
+        return objectUsable(roadPropertyValues, nodeTags);
+    };
 
-	private boolean objectUsable(Map<RoadPropertyType<?>, Object> roadPropertyValues,
-			TagGroup tags) {
+    private boolean objectUsable(Map<RoadPropertyType<?>, Object> roadPropertyValues,
+            TagGroup tags) {
 
-		/* evaluate road properties */
+        /* evaluate road properties */
 
-		for (RoadPropertyType<?> property : roadPropertyValues.keySet()) {
-			if (!property.isUsable(roadPropertyValues.get(property), parameters)) {
-				return false;
-			}
-		}
+        for (RoadPropertyType<?> property : roadPropertyValues.keySet()) {
+            if (!property.isUsable(roadPropertyValues.get(property), parameters)) {
+                return false;
+            }
+        }
 
-		/* evaluate access type */
+        /* evaluate access type */
 
-		AccessType accessType = UNDEFINED;
+        AccessType accessType = UNDEFINED;
 
-		if (tags.size() > 0) {
+        if (tags.size() > 0) {
 
-			Map<String, AccessType> accessTypePerClass =
-				createAccessTypePerClassMap(tags, ruleset.getAccessHierarchyAncestors(parameters.getAccessClass()));
+            Map<String, AccessType> accessTypePerClass =
+                createAccessTypePerClassMap(tags, ruleset.getAccessHierarchyAncestors(parameters.getAccessClass()));
 
-			for (String accessClass : ruleset.getAccessHierarchyAncestors(parameters.getAccessClass())) {
-				accessType = accessTypePerClass.get(accessClass);
-				if (accessType != UNDEFINED) { break; }
-			}
+            for (String accessClass : ruleset.getAccessHierarchyAncestors(parameters.getAccessClass())) {
+                accessType = accessTypePerClass.get(accessClass);
+                if (accessType != UNDEFINED) { break; }
+            }
 
-		}
+        }
 
-		return parameters.getAccessTypeUsable(accessType);
-	}
+        return parameters.getAccessTypeUsable(accessType);
+    }
 
-	private Map<String, AccessType> createAccessTypePerClassMap(
-			TagGroup wayTags, Collection<String> accessClasses) {
+    private Map<String, AccessType> createAccessTypePerClassMap(
+            TagGroup wayTags, Collection<String> accessClasses) {
 
-		/*
-		 * create map and fill with UNDEFINED values
-		 * (this also allows to use keySet instead of accessClasses later)
-		 */
+        /*
+         * create map and fill with UNDEFINED values
+         * (this also allows to use keySet instead of accessClasses later)
+         */
 
-		Map<String, AccessType> accessTypePerClass = new HashMap<String, AccessType>();
+        Map<String, AccessType> accessTypePerClass = new HashMap<String, AccessType>();
 
-		for (String accessClass : accessClasses) {
-			accessTypePerClass.put(accessClass, AccessType.UNDEFINED);
-		}
+        for (String accessClass : accessClasses) {
+            accessTypePerClass.put(accessClass, AccessType.UNDEFINED);
+        }
 
-		/* evaluate implied tagging of base tag */
+        /* evaluate implied tagging of base tag */
 
-		Tag baseTag = null;
-		for (Tag tag : wayTags) {
-			if (ruleset.getBaseTags().contains(tag)) {
-				baseTag = tag;
-				break;
-			}
-		}
+        Tag baseTag = null;
+        for (Tag tag : wayTags) {
+            if (ruleset.getBaseTags().contains(tag)) {
+                baseTag = tag;
+                break;
+            }
+        }
 
-		if (baseTag != null) {
+        if (baseTag != null) {
 
-			TagGroup tagsWithBaseImplications = new MapBasedTagGroup(baseTag);
-			for (Implication implication : ruleset.getImplications()) {
-				tagsWithBaseImplications = implication.apply(tagsWithBaseImplications);
-			}
+            TagGroup tagsWithBaseImplications = new MapBasedTagGroup(baseTag);
+            for (Implication implication : ruleset.getImplications()) {
+                tagsWithBaseImplications = implication.apply(tagsWithBaseImplications);
+            }
 
-			setAccessTypesFromTags(accessTypePerClass, tagsWithBaseImplications);
+            setAccessTypesFromTags(accessTypePerClass, tagsWithBaseImplications);
 
-		}
+        }
 
-		/* evaluate implied tagging of other tags */
+        /* evaluate implied tagging of other tags */
 
-		Map<String, String> tagMap = new HashMap<String, String>();
-		for (Tag tag : wayTags) {
-			if (!tag.equals(baseTag)) {
-				tagMap.put(tag.key, tag.value);
-			}
-		}
+        Map<String, String> tagMap = new HashMap<String, String>();
+        for (Tag tag : wayTags) {
+            if (!tag.equals(baseTag)) {
+                tagMap.put(tag.key, tag.value);
+            }
+        }
 
-		TagGroup tagsWithOtherImplications = new MapBasedTagGroup(tagMap);
-		for (Implication implication : ruleset.getImplications()) {
-			tagsWithOtherImplications = implication.apply(tagsWithOtherImplications);
-		}
+        TagGroup tagsWithOtherImplications = new MapBasedTagGroup(tagMap);
+        for (Implication implication : ruleset.getImplications()) {
+            tagsWithOtherImplications = implication.apply(tagsWithOtherImplications);
+        }
 
-		setAccessTypesFromTags(accessTypePerClass, tagsWithOtherImplications);
+        setAccessTypesFromTags(accessTypePerClass, tagsWithOtherImplications);
 
-		/* evaluate explicit access tagging */
+        /* evaluate explicit access tagging */
 
-		for (String key : ruleset.getAccessHierarchyAncestors(parameters.getAccessClass())) {
-			String value = wayTags.getValue(key);
-			if (value != null) {
-				AccessType accessType = AccessType.getAccessType(value);
-				accessTypePerClass.put(key, accessType);
-			}
-		}
+        for (String key : ruleset.getAccessHierarchyAncestors(parameters.getAccessClass())) {
+            String value = wayTags.getValue(key);
+            if (value != null) {
+                AccessType accessType = AccessType.getAccessType(value);
+                accessTypePerClass.put(key, accessType);
+            }
+        }
 
-		return accessTypePerClass;
-	}
+        return accessTypePerClass;
+    }
 
-	/**
-	 * adds all access information from a collection of tags to a [access class -> access type] map.
-	 * Existing entries will be replaced.
-	 */
-	private void setAccessTypesFromTags(Map<String, AccessType> accessTypePerClass, TagGroup tags) {
-		for (String accessClass : accessTypePerClass.keySet()) {
-			String value = tags.getValue(accessClass);
-			if (value != null) {
-				AccessType accessType = AccessType.getAccessType(value);
-				accessTypePerClass.put(accessClass, accessType);
-			}
-		}
-	}
+    /**
+     * adds all access information from a collection of tags to a [access class -> access type] map.
+     * Existing entries will be replaced.
+     */
+    private void setAccessTypesFromTags(Map<String, AccessType> accessTypePerClass, TagGroup tags) {
+        for (String accessClass : accessTypePerClass.keySet()) {
+            String value = tags.getValue(accessClass);
+            if (value != null) {
+                AccessType accessType = AccessType.getAccessType(value);
+                accessTypePerClass.put(accessClass, accessType);
+            }
+        }
+    }
 
 }

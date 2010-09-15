@@ -8,6 +8,6 @@ import org.openstreetmap.josm.plugins.graphview.core.graph.WayGraph;
  */
 public interface NodePositioner {
 
-	LatLonCoords getPosition(GraphNode node);
+    LatLonCoords getPosition(GraphNode node);
 
 }

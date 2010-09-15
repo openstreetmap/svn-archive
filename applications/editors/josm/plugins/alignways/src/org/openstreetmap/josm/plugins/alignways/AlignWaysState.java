@@ -11,16 +11,16 @@ import org.openstreetmap.josm.Main;
  */
 public abstract class AlignWaysState {
 
-	public abstract void leftClick(AlignWaysMode alignWaysMode);
+    public abstract void leftClick(AlignWaysMode alignWaysMode);
 
-	public abstract void ctrlLClick(AlignWaysMode alignWaysMode);
+    public abstract void ctrlLClick(AlignWaysMode alignWaysMode);
 
-	public abstract void setHelpText();
+    public abstract void setHelpText();
 
-	public void altLClick(AlignWaysMode alignWaysMode) {
-		alignWaysMode.setCurrentState(alignWaysMode.getNoneSelected());
-		Main.map.statusLine
-		.setHelpText("Ctrl-Click: select reference way segment; Click: select way segment to be aligned");
-	}
+    public void altLClick(AlignWaysMode alignWaysMode) {
+        alignWaysMode.setCurrentState(alignWaysMode.getNoneSelected());
+        Main.map.statusLine
+        .setHelpText("Ctrl-Click: select reference way segment; Click: select way segment to be aligned");
+    }
 
 }

@@ -11,22 +11,22 @@ import org.openstreetmap.josm.plugins.graphview.core.util.GraphUtil;
  */
 public class EndNodeColorScheme implements ColorScheme {
 
-	private final Color nodeColor;
-	private final Color endNodeColor;
-	private final Color segmentColor;
+    private final Color nodeColor;
+    private final Color endNodeColor;
+    private final Color segmentColor;
 
-	public EndNodeColorScheme(Color nodeColor, Color endNodeColor, Color segmentColor) {
-		this.nodeColor = nodeColor;
-		this.endNodeColor = endNodeColor;
-		this.segmentColor = segmentColor;
-	}
+    public EndNodeColorScheme(Color nodeColor, Color endNodeColor, Color segmentColor) {
+        this.nodeColor = nodeColor;
+        this.endNodeColor = endNodeColor;
+        this.segmentColor = segmentColor;
+    }
 
-	public Color getNodeColor(GraphNode node) {
-		return GraphUtil.isEndNode(node) ? endNodeColor : nodeColor;
-	}
+    public Color getNodeColor(GraphNode node) {
+        return GraphUtil.isEndNode(node) ? endNodeColor : nodeColor;
+    }
 
-	public Color getSegmentColor(Segment segment) {
-		return segmentColor;
-	}
+    public Color getSegmentColor(Segment segment) {
+        return segmentColor;
+    }
 
 }

@@ -20,79 +20,79 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class RelationEditMode extends MapMode {
-	private static final long serialVersionUID = -7767329767438266289L;
+    private static final long serialVersionUID = -7767329767438266289L;
 
-	private Way highlightedWay;
+    private Way highlightedWay;
 
-	public RelationEditMode(MapFrame mapFrame) {
-		super(tr("Edit relation"), "node/autonode", tr("Edit relations"),
-				Shortcut.registerShortcut("mapmode:editRelation", tr("Mode: {0}", tr("Edit relation")), KeyEvent.VK_H, Shortcut.GROUP_EDIT),
-				mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-	}
+    public RelationEditMode(MapFrame mapFrame) {
+        super(tr("Edit relation"), "node/autonode", tr("Edit relations"),
+                Shortcut.registerShortcut("mapmode:editRelation", tr("Mode: {0}", tr("Edit relation")), KeyEvent.VK_H, Shortcut.GROUP_EDIT),
+                mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }
 
-	@Override
-	public void enterMode() {
-		super.enterMode();
-		Main.map.mapView.addMouseListener(this);
-		Main.map.mapView.addMouseMotionListener(this);
-	}
+    @Override
+    public void enterMode() {
+        super.enterMode();
+        Main.map.mapView.addMouseListener(this);
+        Main.map.mapView.addMouseMotionListener(this);
+    }
 
-	@Override
-	public void exitMode() {
-		super.exitMode();
-		Main.map.mapView.removeMouseListener(this);
-		Main.map.mapView.removeMouseMotionListener(this);
-	}
+    @Override
+    public void exitMode() {
+        super.exitMode();
+        Main.map.mapView.removeMouseListener(this);
+        Main.map.mapView.removeMouseMotionListener(this);
+    }
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		Way nearestWay = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive.isUsablePredicate);
-		if (nearestWay != highlightedWay) {
-			if (highlightedWay != null) {
-				highlightedWay.setHighlighted(false);
-			}
-			if (nearestWay != null) {
-				nearestWay.setHighlighted(true);
-			}
-			highlightedWay = nearestWay;
-			Main.map.mapView.repaint();
-		}
-	}
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Way nearestWay = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive.isUsablePredicate);
+        if (nearestWay != highlightedWay) {
+            if (highlightedWay != null) {
+                highlightedWay.setHighlighted(false);
+            }
+            if (nearestWay != null) {
+                nearestWay.setHighlighted(true);
+            }
+            highlightedWay = nearestWay;
+            Main.map.mapView.repaint();
+        }
+    }
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		if (Main.main.getCurrentDataSet() == null)
-			return;
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (Main.main.getCurrentDataSet() == null)
+            return;
 
-		Way way = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive.isUsablePredicate);
-		Collection<Relation> selectedRelations = Main.main.getCurrentDataSet().getSelectedRelations();
+        Way way = Main.map.mapView.getNearestWay(e.getPoint(), OsmPrimitive.isUsablePredicate);
+        Collection<Relation> selectedRelations = Main.main.getCurrentDataSet().getSelectedRelations();
 
-		if (way != null) {
+        if (way != null) {
 
-			if (selectedRelations.isEmpty()) {
-				JOptionPane.showMessageDialog(Main.parent, tr("No relation is selected"));
-			}
+            if (selectedRelations.isEmpty()) {
+                JOptionPane.showMessageDialog(Main.parent, tr("No relation is selected"));
+            }
 
-			for (OsmPrimitive rel:selectedRelations) {
-				Relation r = (Relation)rel;
-				RelationMember foundMember = null;
-				for (RelationMember member:r.getMembers()) {
-					if (member.getMember() == way) {
-						foundMember = member;
-						break;
-					}
-				}
+            for (OsmPrimitive rel:selectedRelations) {
+                Relation r = (Relation)rel;
+                RelationMember foundMember = null;
+                for (RelationMember member:r.getMembers()) {
+                    if (member.getMember() == way) {
+                        foundMember = member;
+                        break;
+                    }
+                }
 
-				if (foundMember != null) {
-					Main.main.undoRedo.add(new RemoveRelationMemberCommand(r, new RelationMember("", way)));
-				} else {
-					Relation newRelation = new Relation(r);
-					newRelation.addMember(new RelationMember("", way));
-					Main.main.undoRedo.add(new ChangeCommand(r, newRelation));
-				}
-			}
-		}
-	}
+                if (foundMember != null) {
+                    Main.main.undoRedo.add(new RemoveRelationMemberCommand(r, new RelationMember("", way)));
+                } else {
+                    Relation newRelation = new Relation(r);
+                    newRelation.addMember(new RelationMember("", way));
+                    Main.main.undoRedo.add(new ChangeCommand(r, newRelation));
+                }
+            }
+        }
+    }
 
 
 

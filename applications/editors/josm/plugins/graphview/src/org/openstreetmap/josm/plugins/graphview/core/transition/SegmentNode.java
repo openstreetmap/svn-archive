@@ -7,16 +7,16 @@ import java.util.Collection;
  */
 public interface SegmentNode extends TransitionStructureElement {
 
-	/** returns the node's latitude */
-	public double getLat();
+    /** returns the node's latitude */
+    public double getLat();
 
-	/** returns the node's longitude */
-	public double getLon();
+    /** returns the node's longitude */
+    public double getLon();
 
-	/** returns all segments that end at this node */
-	Collection<Segment> getInboundSegments();
+    /** returns all segments that end at this node */
+    Collection<Segment> getInboundSegments();
 
-	/** returns all segments that start at this node */
-	Collection<Segment> getOutboundSegments();
+    /** returns all segments that start at this node */
+    Collection<Segment> getOutboundSegments();
 
 }

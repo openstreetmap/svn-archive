@@ -11,20 +11,20 @@ import org.openstreetmap.josm.Main;
  */
 public class AlignWaysSelAlgnState extends AlignWaysState {
 
-	@Override
-	public void leftClick(AlignWaysMode alignWaysMode) {
-		// No state change, nothing to do
-	}
+    @Override
+    public void leftClick(AlignWaysMode alignWaysMode) {
+        // No state change, nothing to do
+    }
 
-	@Override
-	public void ctrlLClick(AlignWaysMode alignWaysMode) {
-		alignWaysMode.setCurrentState(alignWaysMode.getBothSelected());
-	}
+    @Override
+    public void ctrlLClick(AlignWaysMode alignWaysMode) {
+        alignWaysMode.setCurrentState(alignWaysMode.getBothSelected());
+    }
 
-	@Override
-	public void setHelpText() {
-		Main.map.statusLine
-				.setHelpText("Ctrl-Click: select reference way segment; Alt-click: Clear selection");
-	}
+    @Override
+    public void setHelpText() {
+        Main.map.statusLine
+                .setHelpText("Ctrl-Click: select reference way segment; Alt-click: Clear selection");
+    }
 
 }

@@ -18,84 +18,84 @@ import org.openstreetmap.josm.plugins.tageditor.preset.Item;
 
 public class PresetManager extends JPanel {
 
-	static private final Logger logger = Logger.getLogger(PresetManager.class.getName());
+    static private final Logger logger = Logger.getLogger(PresetManager.class.getName());
 
-	private JComboBox presets;
-	private JButton btnRemove;
-	private JButton btnHighlight;
-	private TagEditorModel model = null;
+    private JComboBox presets;
+    private JButton btnRemove;
+    private JButton btnHighlight;
+    private TagEditorModel model = null;
 
-	protected void build() {
-		setLayout(new FlowLayout(FlowLayout.LEFT));
+    protected void build() {
+        setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		// create the combobox to display the list of applied presets
-		//
-		presets = new JComboBox() {
-			@Override
-			public Dimension getPreferredSize() {
-				Dimension d = super.getPreferredSize();
-				d.width = 200;
-				return d;
-			}
-		};
+        // create the combobox to display the list of applied presets
+        //
+        presets = new JComboBox() {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension d = super.getPreferredSize();
+                d.width = 200;
+                return d;
+            }
+        };
 
-		presets.addItemListener(
-				new ItemListener(){
-					public void itemStateChanged(ItemEvent e) {
-						syncWidgetStates();
-					}
-				}
-		);
+        presets.addItemListener(
+                new ItemListener(){
+                    public void itemStateChanged(ItemEvent e) {
+                        syncWidgetStates();
+                    }
+                }
+        );
 
-		presets.setRenderer(new PresetItemListCellRenderer());
-		add(presets);
+        presets.setRenderer(new PresetItemListCellRenderer());
+        add(presets);
 
-		btnHighlight = new JButton(tr("Highlight"));
-		btnHighlight.addActionListener(
-				new ActionListener()  {
-					public void actionPerformed(ActionEvent arg0) {
-						highlightCurrentPreset();
-					}
-				}
-		);
+        btnHighlight = new JButton(tr("Highlight"));
+        btnHighlight.addActionListener(
+                new ActionListener()  {
+                    public void actionPerformed(ActionEvent arg0) {
+                        highlightCurrentPreset();
+                    }
+                }
+        );
 
-		add(btnHighlight);
+        add(btnHighlight);
 
-		btnRemove = new JButton(tr("Remove"));
-		btnRemove.addActionListener(
-				new ActionListener()  {
-					public void actionPerformed(ActionEvent arg0) {
-						removeCurrentPreset();
-					}
-				}
-		);
+        btnRemove = new JButton(tr("Remove"));
+        btnRemove.addActionListener(
+                new ActionListener()  {
+                    public void actionPerformed(ActionEvent arg0) {
+                        removeCurrentPreset();
+                    }
+                }
+        );
 
-		add(btnRemove);
-		syncWidgetStates();
-	}
+        add(btnRemove);
+        syncWidgetStates();
+    }
 
-	protected void syncWidgetStates() {
-		btnRemove.setEnabled(presets.getSelectedItem() != null);
-		btnHighlight.setEnabled(presets.getSelectedItem() != null);
-	}
+    protected void syncWidgetStates() {
+        btnRemove.setEnabled(presets.getSelectedItem() != null);
+        btnHighlight.setEnabled(presets.getSelectedItem() != null);
+    }
 
-	protected void removeCurrentPreset() {
-		Item item= (Item)presets.getSelectedItem();
-		if (item != null && model !=null) {
-			model.removeAppliedPreset(item);
-		}
-	}
+    protected void removeCurrentPreset() {
+        Item item= (Item)presets.getSelectedItem();
+        if (item != null && model !=null) {
+            model.removeAppliedPreset(item);
+        }
+    }
 
-	protected void highlightCurrentPreset() {
-		model.highlightCurrentPreset();
-	}
+    protected void highlightCurrentPreset() {
+        model.highlightCurrentPreset();
+    }
 
-	public PresetManager() {
-		build();
-	}
+    public PresetManager() {
+        build();
+    }
 
-	public void setModel(TagEditorModel model) {
-		presets.setModel(model.getAppliedPresetsModel());
-		this.model = model;
-	}
+    public void setModel(TagEditorModel model) {
+        presets.setModel(model.getAppliedPresetsModel());
+        this.model = model;
+    }
 }

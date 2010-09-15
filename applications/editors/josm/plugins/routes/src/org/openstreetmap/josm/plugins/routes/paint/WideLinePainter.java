@@ -14,41 +14,41 @@ import org.openstreetmap.josm.plugins.routes.RouteLayer;
 
 public class WideLinePainter extends AbstractLinePainter {
 
-	private static final float LINE_WIDTH = 10;
-	private final RouteLayer layer;
+    private static final float LINE_WIDTH = 10;
+    private final RouteLayer layer;
 
-	public WideLinePainter(RouteLayer layer) {
-		this.layer = layer;
-	}
+    public WideLinePainter(RouteLayer layer) {
+        this.layer = layer;
+    }
 
-	public void drawWay(ConvertedWay way, MapView mapView, Graphics2D g) {
-		List<Node> nodes = way.getNodes();
-		BitSet routes = way.getRoutes();
+    public void drawWay(ConvertedWay way, MapView mapView, Graphics2D g) {
+        List<Node> nodes = way.getNodes();
+        BitSet routes = way.getRoutes();
 
-		if (nodes.size() < 2) {
-			return;
-		}
+        if (nodes.size() < 2) {
+            return;
+        }
 
-		double totalWidth = LINE_WIDTH + (routes.size() - 1) * 4;
-		double width = totalWidth / routes.cardinality();
-		double shift = -totalWidth / 2 + width / 2;
+        double totalWidth = LINE_WIDTH + (routes.size() - 1) * 4;
+        double width = totalWidth / routes.cardinality();
+        double shift = -totalWidth / 2 + width / 2;
 
-		for (int k=0; k<routes.length(); k++) {
+        for (int k=0; k<routes.length(); k++) {
 
-			if (!routes.get(k)) {
-				continue;
-			}
+            if (!routes.get(k)) {
+                continue;
+            }
 
-			RouteDefinition route = layer.getRoutes().get(k);
+            RouteDefinition route = layer.getRoutes().get(k);
 
-			Color color = route.getColor();
-			g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 100));
-			g.setStroke(new BasicStroke((float) width));
+            Color color = route.getColor();
+            g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 100));
+            g.setStroke(new BasicStroke((float) width));
 
-			g.draw(getPath(g, mapView, nodes, shift));
+            g.draw(getPath(g, mapView, nodes, shift));
 
-			shift += width;
-		}
-	}
+            shift += width;
+        }
+    }
 
 }

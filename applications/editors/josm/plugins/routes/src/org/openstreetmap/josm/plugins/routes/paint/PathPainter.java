@@ -6,7 +6,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.routes.ConvertedWay;
 
 public interface PathPainter {
-	
-	public void drawWay(ConvertedWay way, MapView mapView, Graphics2D g);
+
+    public void drawWay(ConvertedWay way, MapView mapView, Graphics2D g);
 
 }

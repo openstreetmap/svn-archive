@@ -12,18 +12,18 @@ import org.openstreetmap.josm.plugins.graphview.plugin.preferences.GraphViewPref
  */
 public class PreferencesColorScheme implements ColorScheme {
 
-	private final GraphViewPreferences preferences;
+    private final GraphViewPreferences preferences;
 
-	public PreferencesColorScheme(GraphViewPreferences preferences) {
-		this.preferences = preferences;
-	}
+    public PreferencesColorScheme(GraphViewPreferences preferences) {
+        this.preferences = preferences;
+    }
 
-	public Color getNodeColor(GraphNode node) {
-		return preferences.getNodeColor();
-	}
+    public Color getNodeColor(GraphNode node) {
+        return preferences.getNodeColor();
+    }
 
-	public Color getSegmentColor(Segment segment) {
-		return preferences.getSegmentColor();
-	}
+    public Color getSegmentColor(Segment segment) {
+        return preferences.getSegmentColor();
+    }
 
 }

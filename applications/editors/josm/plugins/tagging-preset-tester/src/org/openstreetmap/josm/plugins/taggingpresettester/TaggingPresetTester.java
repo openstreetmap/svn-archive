@@ -54,7 +54,7 @@ public class TaggingPresetTester extends JFrame {
         panel.validate();
         panel.repaint();
     }
-   
+
     public TaggingPresetTester(String[] args) {
         super(tr("Tagging Preset Tester"));
         this.args = args;

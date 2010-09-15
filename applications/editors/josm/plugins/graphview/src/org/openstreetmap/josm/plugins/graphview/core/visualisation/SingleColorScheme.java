@@ -11,20 +11,20 @@ import org.openstreetmap.josm.plugins.graphview.core.transition.Segment;
  */
 public class SingleColorScheme implements ColorScheme {
 
-	private final Color nodeColor;
-	private final Color segmentColor;
+    private final Color nodeColor;
+    private final Color segmentColor;
 
-	public SingleColorScheme(Color nodeColor, Color segmentColor) {
-		this.nodeColor = nodeColor;
-		this.segmentColor = segmentColor;
-	}
+    public SingleColorScheme(Color nodeColor, Color segmentColor) {
+        this.nodeColor = nodeColor;
+        this.segmentColor = segmentColor;
+    }
 
-	public Color getNodeColor(GraphNode node) {
-		return nodeColor;
-	}
+    public Color getNodeColor(GraphNode node) {
+        return nodeColor;
+    }
 
-	public Color getSegmentColor(Segment segment) {
-		return segmentColor;
-	}
+    public Color getSegmentColor(Segment segment) {
+        return segmentColor;
+    }
 
 }

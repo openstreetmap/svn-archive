@@ -55,13 +55,13 @@ import org.openstreetmap.josm.plugins.tageditor.ac.IAutoCompletionListListener;
  */
 public class TagEditor extends JPanel implements IAutoCompletionListListener {
 
-	private static final Logger logger = Logger.getLogger(TagEditor.class.getName());
+    private static final Logger logger = Logger.getLogger(TagEditor.class.getName());
 
-	private TagEditorModel tagEditorModel;
-	private TagTable tblTagEditor;
-	private PresetManager presetManager;
-	
-	 /**
+    private TagEditorModel tagEditorModel;
+    private TagTable tblTagEditor;
+    private PresetManager presetManager;
+    
+     /**
      * builds the panel with the button row
      *
      * @return the panel
@@ -84,7 +84,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
     }
     
     public void addComponentNotStoppingCellEditing(Component c) {
-    	tblTagEditor.addComponentNotStoppingCellEditing(c);
+        tblTagEditor.addComponentNotStoppingCellEditing(c);
     }
     
     /**
@@ -93,22 +93,22 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
     protected JPanel buildTagEditorPanel() {
         JPanel pnl = new JPanel(new GridBagLayout());
 
-		DefaultListSelectionModel rowSelectionModel = new DefaultListSelectionModel();
-		DefaultListSelectionModel colSelectionModel = new DefaultListSelectionModel();
-		
-		tagEditorModel = new TagEditorModel(rowSelectionModel,colSelectionModel);
-		
-		// build the scrollable table for editing tag names and tag values
-		//
-		tblTagEditor = new TagTable(tagEditorModel);
-		tblTagEditor.setTagCellEditor(new TagSpecificationAwareTagCellEditor());
-		TableCellRenderer renderer = new TableCellRenderer();
-		tblTagEditor.getColumnModel().getColumn(0).setCellRenderer(renderer);
-		tblTagEditor.getColumnModel().getColumn(1).setCellRenderer(renderer);
+        DefaultListSelectionModel rowSelectionModel = new DefaultListSelectionModel();
+        DefaultListSelectionModel colSelectionModel = new DefaultListSelectionModel();
+        
+        tagEditorModel = new TagEditorModel(rowSelectionModel,colSelectionModel);
+        
+        // build the scrollable table for editing tag names and tag values
+        //
+        tblTagEditor = new TagTable(tagEditorModel);
+        tblTagEditor.setTagCellEditor(new TagSpecificationAwareTagCellEditor());
+        TableCellRenderer renderer = new TableCellRenderer();
+        tblTagEditor.getColumnModel().getColumn(0).setCellRenderer(renderer);
+        tblTagEditor.getColumnModel().getColumn(1).setCellRenderer(renderer);
 
-		final JScrollPane scrollPane = new JScrollPane(tblTagEditor);
-		JPanel pnlTagTable = new JPanel(new BorderLayout());
-		pnlTagTable.add(scrollPane, BorderLayout.CENTER);
+        final JScrollPane scrollPane = new JScrollPane(tblTagEditor);
+        JPanel pnlTagTable = new JPanel(new BorderLayout());
+        pnlTagTable.add(scrollPane, BorderLayout.CENTER);
 
         GridBagConstraints gc = new GridBagConstraints();
 
@@ -132,69 +132,69 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         return pnl;
     }
     
-	/**
-	 * builds the GUI
-	 * 
-	 */
-	protected void build() {
-		setLayout(new BorderLayout());
-		
-		add(buildTagEditorPanel(), BorderLayout.CENTER);
+    /**
+     * builds the GUI
+     * 
+     */
+    protected void build() {
+        setLayout(new BorderLayout());
+        
+        add(buildTagEditorPanel(), BorderLayout.CENTER);
 
-		// build the preset manager which shows a list of applied presets
-		//
-		presetManager = new PresetManager();
-		presetManager.setModel(tagEditorModel);
-		add(presetManager, BorderLayout.NORTH);
-	}
+        // build the preset manager which shows a list of applied presets
+        //
+        presetManager = new PresetManager();
+        presetManager.setModel(tagEditorModel);
+        add(presetManager, BorderLayout.NORTH);
+    }
 
-	/**
-	 * constructor
-	 */
-	public TagEditor() {
-		build();
-	}
+    /**
+     * constructor
+     */
+    public TagEditor() {
+        build();
+    }
 
-	/**
-	 * replies the tag editor model
-	 * @return the tag editor model
-	 */
-	public TagEditorModel getTagEditorModel() {
-		return tagEditorModel;
-	}
-	
-	public void clearSelection() {
-		tblTagEditor.getSelectionModel().clearSelection();
-	}
+    /**
+     * replies the tag editor model
+     * @return the tag editor model
+     */
+    public TagEditorModel getTagEditorModel() {
+        return tagEditorModel;
+    }
+    
+    public void clearSelection() {
+        tblTagEditor.getSelectionModel().clearSelection();
+    }
 
-	public void stopEditing() {
-		TableCellEditor editor = tblTagEditor.getCellEditor();
-		if (editor != null) {
-			editor.stopCellEditing();
-		}
-	}
-	
-	public void setAutoCompletionList(AutoCompletionList autoCompletionList) {
-		tblTagEditor.setAutoCompletionList(autoCompletionList);
-	}
+    public void stopEditing() {
+        TableCellEditor editor = tblTagEditor.getCellEditor();
+        if (editor != null) {
+            editor.stopCellEditing();
+        }
+    }
+    
+    public void setAutoCompletionList(AutoCompletionList autoCompletionList) {
+        tblTagEditor.setAutoCompletionList(autoCompletionList);
+    }
 
-	public void setAutoCompletionManager(AutoCompletionManager autocomplete) {
-		tblTagEditor.setAutoCompletionManager(autocomplete);
-	}
+    public void setAutoCompletionManager(AutoCompletionManager autocomplete) {
+        tblTagEditor.setAutoCompletionManager(autocomplete);
+    }
 
-	public void autoCompletionItemSelected(String item) {
-		logger.info("autocompletion item selected ...");
-		TagSpecificationAwareTagCellEditor editor = (TagSpecificationAwareTagCellEditor)tblTagEditor.getCellEditor();
-		if (editor != null) {
-			editor.autoCompletionItemSelected(item);
-		}
-	}
+    public void autoCompletionItemSelected(String item) {
+        logger.info("autocompletion item selected ...");
+        TagSpecificationAwareTagCellEditor editor = (TagSpecificationAwareTagCellEditor)tblTagEditor.getCellEditor();
+        if (editor != null) {
+            editor.autoCompletionItemSelected(item);
+        }
+    }
 
-	public void requestFocusInTopLeftCell() {
-		tblTagEditor.requestFocusInCell(0,0);
-	}
-	
-	public TagEditorModel getModel() {
-		return tagEditorModel;
-	}
+    public void requestFocusInTopLeftCell() {
+        tblTagEditor.requestFocusInCell(0,0);
+    }
+    
+    public TagEditorModel getModel() {
+        return tagEditorModel;
+    }
 }

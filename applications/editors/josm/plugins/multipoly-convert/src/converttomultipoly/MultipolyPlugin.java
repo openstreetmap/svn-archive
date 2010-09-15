@@ -14,28 +14,28 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class MultipolyPlugin extends Plugin {
 
-	protected String name;
+    protected String name;
 
 //        public MultipolyPlugin(PluginInformation info) {
         public MultipolyPlugin(PluginInformation info) {
-		super(info);
-		name = tr("Convert to multipolygon");
-		JMenu toolsMenu = null;
-		for (int i = 0; i < Main.main.menu.getMenuCount() && toolsMenu == null; i++) {
-			JMenu menu = Main.main.menu.getMenu(i);
-			String name = menu.getText();
-			if (name != null && name.equals(tr("Tools"))) {
-				toolsMenu = menu;
-			}
-		}
+        super(info);
+        name = tr("Convert to multipolygon");
+        JMenu toolsMenu = null;
+        for (int i = 0; i < Main.main.menu.getMenuCount() && toolsMenu == null; i++) {
+            JMenu menu = Main.main.menu.getMenu(i);
+            String name = menu.getText();
+            if (name != null && name.equals(tr("Tools"))) {
+                toolsMenu = menu;
+            }
+        }
 
-		if (toolsMenu == null) {
-			toolsMenu = new JMenu(name);
-			toolsMenu.add(new JMenuItem(new MultipolyAction()));
-			Main.main.menu.add(toolsMenu, 2);
-		} else {
-			toolsMenu.addSeparator();
-			toolsMenu.add(new JMenuItem(new MultipolyAction()));
-		}
-	}
+        if (toolsMenu == null) {
+            toolsMenu = new JMenu(name);
+            toolsMenu.add(new JMenuItem(new MultipolyAction()));
+            Main.main.menu.add(toolsMenu, 2);
+        } else {
+            toolsMenu.addSeparator();
+            toolsMenu.add(new JMenuItem(new MultipolyAction()));
+        }
+    }
 }

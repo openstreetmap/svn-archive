@@ -114,8 +114,8 @@ abstract public class Buoy extends SeaMark {
 		return FogSound;
 	}
 
-	public void setFogSound(int fogSound) {
-		FogSound = fogSound;
+	public void setFogSound(int sound) {
+		FogSound = sound;
 	}
 
 	private String FogGroup = "";
@@ -124,8 +124,8 @@ abstract public class Buoy extends SeaMark {
 		return FogGroup;
 	}
 
-	public void setFogGroup(String fogGroup) {
-		FogGroup = fogGroup;
+	public void setFogGroup(String group) {
+		FogGroup = group;
 	}
 
 	private String FogPeriod = "";
@@ -134,8 +134,8 @@ abstract public class Buoy extends SeaMark {
 		return FogPeriod;
 	}
 
-	public void setFogPeriod(String fogPeriod) {
-		FogPeriod = fogPeriod;
+	public void setFogPeriod(String period) {
+		FogPeriod = period;
 	}
 
 	private boolean Fired = false;
@@ -171,43 +171,43 @@ abstract public class Buoy extends SeaMark {
 	private String[] LightChar = new String[10];
 
 	public String getLightChar() {
-		if (LightChar[getSectorIndex()] == null)
+		if (LightChar[SectorIndex] == null)
 			return (LightChar[0]);
-		return LightChar[getSectorIndex()];
+		return LightChar[SectorIndex];
 	}
 
 	public void setLightChar(String lightChar) {
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			LightChar = new String[10];
-		LightChar[getSectorIndex()] = lightChar;
+		LightChar[SectorIndex] = lightChar;
 	}
 
 	private String[] LightColour = new String[10];
 
 	public String getLightColour() {
-		if (LightColour[getSectorIndex()] == null)
+		if (LightColour[SectorIndex] == null)
 			return (LightColour[0]);
-		return LightColour[getSectorIndex()];
+		return LightColour[SectorIndex];
 	}
 
 	public void setLightColour(String lightColour) {
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			LightColour = new String[10];
-		LightColour[getSectorIndex()] = lightColour;
+		LightColour[SectorIndex] = lightColour;
 	}
 
 	private String[] LightGroup = new String[10];
 
 	public String getLightGroup() {
-		if (LightGroup[getSectorIndex()] == null)
+		if (LightGroup[SectorIndex] == null)
 			return (LightGroup[0]);
-		return LightGroup[getSectorIndex()];
+		return LightGroup[SectorIndex];
 	}
 
 	public void setLightGroup(String lightGroup) {
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			LightGroup = new String[10];
-		LightGroup[getSectorIndex()] = lightGroup;
+		LightGroup[SectorIndex] = lightGroup;
 	}
 
 	protected void setLightGroup(Map<String, String> k) {
@@ -221,79 +221,79 @@ abstract public class Buoy extends SeaMark {
 	private String[] Height = new String[10];
 
 	public String getHeight() {
-		if (Height[getSectorIndex()] == null)
+		if (Height[SectorIndex] == null)
 			return (Height[0]);
-		return Height[getSectorIndex()];
+		return Height[SectorIndex];
 	}
 
 	public void setHeight(String height) {
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			Height = new String[10];
-		Height[getSectorIndex()] = height;
+		Height[SectorIndex] = height;
 	}
 
 	private String[] Range = new String[10];
 
 	public String getRange() {
-		if (Range[getSectorIndex()] == null)
+		if (Range[SectorIndex] == null)
 			return (Range[0]);
-		return Range[getSectorIndex()];
+		return Range[SectorIndex];
 	}
 
 	public void setRange(String range) {
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			Range = new String[10];
-		Range[getSectorIndex()] = range;
+		Range[SectorIndex] = range;
 	}
 
 	private String[] Bearing1 = new String[10];
 
 	public String getBearing1() {
-		if (Bearing1[getSectorIndex()] == null)
+		if (Bearing1[SectorIndex] == null)
 			return (Bearing1[0]);
-		return Bearing1[getSectorIndex()];
+		return Bearing1[SectorIndex];
 	}
 
 	public void setBearing1(String bearing) {
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			Bearing1 = new String[10];
-		Bearing1[getSectorIndex()] = bearing;
+		Bearing1[SectorIndex] = bearing;
 	}
 
 	private String[] Bearing2 = new String[10];
 
 	public String getBearing2() {
-		if (Bearing2[getSectorIndex()] == null)
+		if (Bearing2[SectorIndex] == null)
 			return (Bearing2[0]);
-		return Bearing2[getSectorIndex()];
+		return Bearing2[SectorIndex];
 	}
 
 	public void setBearing2(String bearing) {
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			Bearing2 = new String[10];
-		Bearing2[getSectorIndex()] = bearing;
+		Bearing2[SectorIndex] = bearing;
 	}
 
 	private String[] Radius = new String[10];
 
 	public String getRadius() {
-		if (Radius[getSectorIndex()] == null)
+		if (Radius[SectorIndex] == null)
 			return (Radius[0]);
-		return Radius[getSectorIndex()];
+		return Radius[SectorIndex];
 	}
 
 	public void setRadius(String radius) {
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			Radius = new String[10];
-		Radius[getSectorIndex()] = radius;
+		Radius[SectorIndex] = radius;
 	}
 
 	private String[] LightPeriod = new String[10];
 
 	public String getLightPeriod() {
-		if (LightPeriod[getSectorIndex()] == null)
+		if (LightPeriod[SectorIndex] == null)
 			return (LightPeriod[0]);
-		return LightPeriod[getSectorIndex()];
+		return LightPeriod[SectorIndex];
 	}
 
 	public void setLightPeriod(String lightPeriod) {
@@ -312,19 +312,9 @@ abstract public class Buoy extends SeaMark {
 				dlg.tfM01RepeatTime.requestFocus();
 			}
 		}
-		if (getSectorIndex() == 0)
+		if (SectorIndex == 0)
 			LightPeriod = new String[10];
-		LightPeriod[getSectorIndex()] = lightPeriod;
-	}
-
-	protected void setLightPeriod(Map<String, String> k) {
-		String s = "";
-		if (k.containsKey("seamark:light:period")) {
-			s = k.get("seamark:light:period");
-			setSectorIndex(0);
-			setLightPeriod(s);
-			return;
-		}
+		LightPeriod[SectorIndex] = lightPeriod;
 	}
 
 	private Node Node = null;
@@ -374,7 +364,7 @@ abstract public class Buoy extends SeaMark {
 		setSectored(false);
 		Iterator it = k.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry)it.next();
+			Map.Entry entry = (Map.Entry) it.next();
 			String key = (String) entry.getKey();
 			String value = ((String) entry.getValue()).trim();
 			if (key.contains("seamark:light:")) {
@@ -399,7 +389,8 @@ abstract public class Buoy extends SeaMark {
 				} else {
 					index = 0;
 				}
-				if (index != 0) setSectored(true);
+				if (index != 0)
+					setSectored(true);
 				if (key.equals("colour")) {
 					if (value.equals("red"))
 						LightColour[index] = "R";
@@ -420,6 +411,80 @@ abstract public class Buoy extends SeaMark {
 				}
 			}
 		}
+		setSectorIndex(0);
+		dlg.cM01Fired.setSelected(isFired());
+		dlg.rbM01Fired1.setSelected(!isSectored());
+		dlg.rbM01FiredN.setSelected(isSectored());
+		dlg.cbM01Kennung.setSelectedItem(getLightChar());
+		dlg.tfM01Height.setText(getHeight());
+		dlg.tfM01Range.setText(getRange());
+		dlg.tfM01Group.setText(getLightGroup());
+		dlg.tfM01RepeatTime.setText(getLightPeriod());
+		dlg.cbM01Colour.setSelectedItem(getLightColour());
+	}
+
+	public void parseFogRadar(Map<String, String> k) {
+		String str;
+		setFog(false);
+		setRadar(false);
+		setRacon(false);
+		if (k.containsKey("seamark:fog_signal")
+				|| k.containsKey("seamark:fog_signal:category")
+				|| k.containsKey("seamark:fog_signal:group")
+				|| k.containsKey("seamark:fog_signal:period")) {
+			setFog(true);
+			if (k.containsKey("seamark:fog_signal:category")) {
+				str = k.get("seamark:fog_signal:category");
+				if (str.equals("horn"))
+					setFogSound(FOG_HORN);
+				else if (str.equals("siren"))
+					setFogSound(FOG_SIREN);
+				else if (str.equals("diaphone"))
+					setFogSound(FOG_DIA);
+				else if (str.equals("bell"))
+					setFogSound(FOG_BELL);
+				else if (str.equals("whis"))
+					setFogSound(FOG_WHIS);
+				else if (str.equals("gong"))
+					setFogSound(FOG_GONG);
+				else if (str.equals("explosive"))
+					setFogSound(FOG_EXPLOS);
+				else
+					setFogSound(UNKNOWN_FOG);
+			}
+			if (k.containsKey("seamark:fog_signal:group"))
+				setFogGroup(k.get("seamark:fog_signal:group"));
+			if (k.containsKey("seamark:fog_signal:period"))
+				setFogPeriod(k.get("seamark:fog_signal:period"));
+		}
+		dlg.cM01Fog.setSelected(hasFog());
+		dlg.cbM01Fog.setSelectedIndex(getFogSound());
+		dlg.tfM01FogGroup.setText(getFogGroup());
+		dlg.tfM01FogPeriod.setText(getFogPeriod());
+
+		if (k.containsKey("seamark:radar_transponder")
+				|| k.containsKey("seamark:radar_transponder:category")
+				|| k.containsKey("seamark:radar_transponder:group")) {
+			setRacon(true);
+			if (k.containsKey("seamark:radar_transponder:category")) {
+				str = k.get("seamark:radar_transponder:category");
+				if (str.equals("racon"))
+					setRaType(RATYPE_RACON);
+				else if (str.equals("ramark"))
+					setRaType(RATYPE_RAMARK);
+				else if (str.equals("leading"))
+					setRaType(RATYPE_LEADING);
+				else
+					setRaType(UNKNOWN_RATYPE);
+			}
+			if (k.containsKey("seamark:radar_transponder:group"))
+				setRaconGroup(k.get("seamark:radar_transponder:group"));
+		} else if (k.containsKey("seamark:radar_reflector"))
+			setRadar(true);
+		dlg.cM01Radar.setSelected(hasRadar());
+		dlg.cM01Racon.setSelected(hasRacon());
+		dlg.cbM01Racon.setSelectedIndex(getRaType());
+		dlg.tfM01Racon.setText(getRaconGroup());
 	}
 
 	public void paintSign() {
@@ -458,7 +523,7 @@ abstract public class Buoy extends SeaMark {
 				dlg.lM04Icon.setIcon(new ImageIcon(getClass().getResource(
 						"/images/Radar_Station.png")));
 				dlg.cbM01Racon.setVisible(true);
-				if (getRaType() == RATYP_RACON) {
+				if (getRaType() == RATYPE_RACON) {
 					dlg.lM01Racon.setVisible(true);
 					dlg.tfM01Racon.setVisible(true);
 					dlg.tfM01Racon.setEnabled(true);
@@ -531,7 +596,10 @@ abstract public class Buoy extends SeaMark {
 						c = c + tmp;
 				}
 				dlg.cbM01Kennung.setSelectedItem(c);
-				if ((dlg.cbM01Kennung.getSelectedIndex() == 0) && !getLightGroup().isEmpty()) {
+				if (((dlg.cbM01Kennung.getSelectedIndex() == 0) && !getLightGroup()
+						.isEmpty())
+						|| (((String) dlg.cbM01Kennung.getSelectedItem()).contains("("))
+						&& !(((String) dlg.cbM01Kennung.getSelectedItem()).contains("+"))) {
 					c = c + "(" + getLightGroup() + ")";
 					dlg.cbM01Kennung.setSelectedItem(c);
 				}
@@ -543,7 +611,7 @@ abstract public class Buoy extends SeaMark {
 				dlg.cM01Fired.setVisible(true);
 				dlg.lM01Kennung.setVisible(true);
 				dlg.cbM01Kennung.setVisible(true);
-				if (((String)dlg.cbM01Kennung.getSelectedItem()).contains("(")) {
+				if (((String) dlg.cbM01Kennung.getSelectedItem()).contains("(")) {
 					dlg.tfM01Group.setVisible(false);
 					dlg.lM01Group.setVisible(false);
 				} else {
@@ -803,18 +871,18 @@ abstract public class Buoy extends SeaMark {
 		}
 		if (hasRacon()) {
 			switch (RaType) {
-			case RATYP_RACON:
+			case RATYPE_RACON:
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:radar_transponder:category", "racon"));
 				if (!getRaconGroup().isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:radar_transponder:group", getRaconGroup()));
 				break;
-			case RATYP_RAMARK:
+			case RATYPE_RAMARK:
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:radar_transponder:category", "ramark"));
 				break;
-			case RATYP_LEADING:
+			case RATYPE_LEADING:
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:radar_transponder:category", "leading"));
 				break;
@@ -824,11 +892,11 @@ abstract public class Buoy extends SeaMark {
 			}
 		}
 		if (hasFog()) {
-			if (FogSound == 0) {
+			if (getFogSound() == 0) {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:fog_signal", "yes"));
 			} else {
-				switch (FogSound) {
+				switch (getFogSound()) {
 				case FOG_HORN:
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 							"seamark:fog_signal:category", "horn"));
@@ -860,10 +928,10 @@ abstract public class Buoy extends SeaMark {
 				}
 				if (!getFogGroup().isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-							"seamark:fog_group:group", getFogGroup()));
+							"seamark:fog_signal:group", getFogGroup()));
 				if (!getFogPeriod().isEmpty())
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-							"seamark:fog_period:group", getFogPeriod()));
+							"seamark:fog_signal:period", getFogPeriod()));
 			}
 		}
 	}

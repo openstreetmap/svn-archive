@@ -75,15 +75,19 @@ public class BuoySaw extends Buoy {
 
 		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
 			setStyleIndex(0);
-		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
 		
 		if (keys.containsKey("seamark:topmark:shape") //$NON-NLS-1$
 				|| keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
 			setTopMark(true);
 		}
 
-		parseLights(keys);
 		refreshLights();
+		parseLights(keys);
+		parseFogRadar(keys);
+
+		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+		dlg.tfM01Name.setText(getName());
+		dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
 	public void refreshLights() {

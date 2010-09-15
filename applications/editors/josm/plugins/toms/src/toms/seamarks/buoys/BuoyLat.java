@@ -213,8 +213,6 @@ public class BuoyLat extends Buoy {
 			}
 		}
 
-		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
-
 		if (keys.containsKey("seamark:buoy_lateral:shape")) { //$NON-NLS-1$
 			str = keys.get("seamark:buoy_lateral:shape"); //$NON-NLS-1$
 
@@ -272,9 +270,15 @@ public class BuoyLat extends Buoy {
 		}
 
 		refreshStyles();
-		parseLights(keys);
 		refreshLights();
 		setLightColour();
+		parseLights(keys);
+		parseFogRadar(keys);
+		
+		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
+		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+		dlg.tfM01Name.setText(getName());
+		dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
 	public void refreshStyles() {

@@ -88,8 +88,13 @@ public class BuoyIsol extends Buoy {
 			setTopMark(true);
 		}
 
-		parseLights(keys);
 		refreshLights();
+		parseLights(keys);
+		parseFogRadar(keys);
+
+		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+		dlg.tfM01Name.setText(getName());
+		dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 	
 	public void refreshLights() {

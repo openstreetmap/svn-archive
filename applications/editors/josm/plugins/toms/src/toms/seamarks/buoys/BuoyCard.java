@@ -106,8 +106,6 @@ public class BuoyCard extends Buoy {
 			setColour(YELLOW_BLACK_YELLOW);
 		}
 
-		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
-
 		if (keys.containsKey("seamark:buoy_cardinal:shape")) { //$NON-NLS-1$
 			str = keys.get("seamark:buoy_cardinal:shape"); //$NON-NLS-1$
 
@@ -132,10 +130,15 @@ public class BuoyCard extends Buoy {
 
 		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
 			setStyleIndex(0);
-		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
 
-		parseLights(keys);
 		refreshLights();
+		parseLights(keys);
+		parseFogRadar(keys);
+		
+		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
+		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+		dlg.tfM01Name.setText(getName());
+		dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
 	public void refreshLights() {

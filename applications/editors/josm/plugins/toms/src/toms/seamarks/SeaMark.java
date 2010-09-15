@@ -110,10 +110,10 @@ abstract public class SeaMark {
 	 * Radar Beacons - correspond to Ratyp Index
 	 */
 	
-	public final static int UNKNOWN_RATYP = 0;
-	public final static int RATYP_RACON = 1;
-	public final static int RATYP_RAMARK = 2;
-	public final static int RATYP_LEADING = 3;
+	public final static int UNKNOWN_RATYPE = 0;
+	public final static int RATYPE_RACON = 1;
+	public final static int RATYPE_RAMARK = 2;
+	public final static int RATYPE_LEADING = 3;
 
 	/**
 	 * Fog Signals - correspond to FogSound Index

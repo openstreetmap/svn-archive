@@ -67,12 +67,14 @@ public class BuoyNota extends Buoy {
 				setBuoyIndex(LIGHT_VESSEL);
 		}
 
-		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
-
-		parseLights(keys);
 		refreshLights();
+		parseLights(keys);
+		parseFogRadar(keys);
 		setTopMark(false);
 		setFired(true);
+
+		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
+		dlg.tfM01Name.setText(getName());
 		dlg.cM01Fired.setEnabled(false);
 		dlg.cM01Fired.setSelected(true);
 	}

@@ -75,7 +75,8 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		ms= new SimpleDateFormat("mm:ss");
 		gpsTimeCode= new SimpleDateFormat("hh:mm:ss");
 		Main.map.mapView.addMouseListener(this);
-		Main.map.mapView.addMouseMotionListener(this);
+		Main.map.mapView.addMouseMotionListener(this);							
+		
 	}
 
 
@@ -94,16 +95,17 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	}
 
 	@Override
-	public Action[] getMenuEntries() {
-        return new Action[]{
-                LayerListDialog.getInstance().createActivateLayerAction(this),
-                LayerListDialog.getInstance().createShowHideLayerAction(),
-                LayerListDialog.getInstance().createDeleteLayerAction(),
-                SeparatorLayerAction.INSTANCE,
+	public Component[] getMenuEntries() {
+        return new Component[]{
+                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
+                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
+                new JSeparator(),
                 //TODO here my stuff
-                SeparatorLayerAction.INSTANCE,
-                new LayerListPopup.InfoAction(this)};//TODO here infos about the linked videos
+                new JSeparator(),
+                new JMenuItem(new LayerListPopup.InfoAction(this))};//TODO here infos about the linked videos
 	}
+	  
+
 
 	@Override
 	public String getToolTipText() {
@@ -120,6 +122,8 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 	public void mergeFrom(Layer arg0) {
 		
 	}
+
+	
 	
 	@Override
 	//Draw the current position, infos, waypoints
@@ -128,7 +132,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
 		//TODO Source out redundant calculations
 		//TODO make icon transparent
 		//draw all GPS points
-		g.setColor(new Color(0,255,0,128));
+		g.setColor(Color.YELLOW); //new Color(0,255,0,128)
 		for(WayPoint n: ls) {
 			p = Main.map.mapView.getPoint(n.getEastNorth());
 			g.drawOval(p.x - 2, p.y - 2, 4, 4);

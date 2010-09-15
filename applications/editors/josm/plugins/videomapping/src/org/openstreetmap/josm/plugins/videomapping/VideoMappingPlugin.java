@@ -41,7 +41,7 @@ import static org.openstreetmap.josm.tools.I18n.*;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 
   /**
- * @author Matthias Mei√üer (digi_c at arcor dot de)
+ * @author Matthias Meiﬂer (digi_c at arcor dot de)
  * @ released under GPL
  * This Plugin allows you to link a video against a GPS track and playback both synchronously 
  */
@@ -68,6 +68,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 	  private String mru;
 	  //TODO What more to store during sessions? Size/Position
 	  
+
 	public VideoMappingPlugin(PluginInformation info) {
 		super(info);
 		MapView.addLayerChangeListener(this);

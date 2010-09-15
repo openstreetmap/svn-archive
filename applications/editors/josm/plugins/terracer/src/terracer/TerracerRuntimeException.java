@@ -9,41 +9,41 @@ package terracer;
 
 /**
  * The Class TerracerRuntimeException indicates errors from the Terracer Plugin.
- * 
+ *
  * @author casualwalker
  */
 public class TerracerRuntimeException extends RuntimeException {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 857926026580277816L;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 857926026580277816L;
 
-	/**
-	 * Default constructor.
-	 */
-	public TerracerRuntimeException() {
-		super();
-	}
+    /**
+     * Default constructor.
+     */
+    public TerracerRuntimeException() {
+        super();
+    }
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public TerracerRuntimeException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    /**
+     * @param message
+     * @param cause
+     */
+    public TerracerRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	/**
-	 * @param message
-	 */
-	public TerracerRuntimeException(String message) {
-		super(message);
-	}
+    /**
+     * @param message
+     */
+    public TerracerRuntimeException(String message) {
+        super(message);
+    }
 
-	/**
-	 * @param cause
-	 */
-	public TerracerRuntimeException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * @param cause
+     */
+    public TerracerRuntimeException(Throwable cause) {
+        super(cause);
+    }
 
 }

@@ -77,12 +77,12 @@ public class ReverseTerraceAction extends JosmAction {
                 break;
             }
         }
-        
+
         if (front.isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Cannot reverse!"));
             return;
-        }                
+        }
 
         // This is like a visitedWays set, but in a linear order.
         LinkedList<Way> orderedWays = new LinkedList<Way>();
@@ -129,5 +129,5 @@ public class ReverseTerraceAction extends JosmAction {
     @Override
     protected void updateEnabledState() {
         setEnabled(getCurrentDataSet() != null);
-    }    
+    }
 }

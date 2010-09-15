@@ -74,7 +74,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     JCheckBox handleRelationCheckBox;
     JCheckBox deleteOutlineCheckBox;
 
-	HouseNumberInputHandler inputHandler;
+    HouseNumberInputHandler inputHandler;
 
     /**
      * @param street If street is not null, we assume, the name of the street to be fixed
@@ -101,7 +101,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         lo.requestFocus();
     }
 
-	/**
+    /**
      * This method initializes this
      *
      * @return void
@@ -110,7 +110,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         this.lo.addFocusListener(this.inputHandler);
         this.hi.addFocusListener(this.inputHandler);
         this.segments.addFocusListener(this.inputHandler);
-		this.interpolation.addItemListener(this.inputHandler);
+        this.interpolation.addItemListener(this.inputHandler);
     }
 
     /**
@@ -135,9 +135,9 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     private JPanel getInputPanel() {
         if (inputPanel == null) {
 
-        	GridBagConstraints c = new GridBagConstraints();
+            GridBagConstraints c = new GridBagConstraints();
 
-        	messageLabel = new JTextArea();
+            messageLabel = new JTextArea();
             messageLabel.setText(DEFAULT_MESSAGE);
             messageLabel.setAutoscrolls(true);
 
@@ -167,7 +167,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             inputPanel = new JPanel();
             inputPanel.setLayout(new GridBagLayout());
             c.fill = GridBagConstraints.HORIZONTAL;
-			c.gridwidth = GridBagConstraints.REMAINDER;
+            c.gridwidth = GridBagConstraints.REMAINDER;
             inputPanel.add(messageLabel, c);
 
             inputPanel.add(loLabel, GBC.std().insets(3,3,0,0));
@@ -190,7 +190,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         return inputPanel;
     }
 
-	/**
+    /**
      * Overrides the default actions. Will not close the window when upload trace is clicked
      */
     @Override protected void buttonAction(int buttonIndex, final ActionEvent evt) {
@@ -267,9 +267,9 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             interpolation.add(tr("All"));
             interpolation.add(tr("Even/Odd"));
             if (Main.pref.getInteger(INTERPOLATION, 2) == 1) {
-            	interpolation.select(tr("All"));
+                interpolation.select(tr("All"));
             } else {
-            	interpolation.select(tr("Even/Odd"));
+                interpolation.select(tr("Even/Odd"));
             }
             //return (dialog.interpolation.getSelectedItem().equals(tr("All"))) ? 1 : 2;
         }

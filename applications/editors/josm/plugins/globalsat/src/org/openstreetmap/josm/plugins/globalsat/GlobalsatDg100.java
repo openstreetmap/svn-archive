@@ -134,41 +134,41 @@ public class GlobalsatDg100
      * @param port DG-100 is connected to port.
      */
     public GpxData readData(ProgressMonitor progressMonitor) throws ConnectionException {
-    	progressMonitor.beginTask(null);
-    	try {
-    		GpxData result = null;
-    		cancelled = false;
-    		if(port == null){
-    			connect();
-    		}
+        progressMonitor.beginTask(null);
+        try {
+            GpxData result = null;
+            cancelled = false;
+            if(port == null){
+                connect();
+            }
 
-    		List<FileInfoRec> fileInfoList = readFileInfoList();
-    		List<GpsRec> gpsRecList = readGpsRecList(fileInfoList);
+            List<FileInfoRec> fileInfoList = readFileInfoList();
+            List<GpsRec> gpsRecList = readGpsRecList(fileInfoList);
 
-    		progressMonitor.setTicksCount(gpsRecList.size());
-    		if(gpsRecList.size() > 0){
-    			GpsRec last = null;
-    			result = new GpxData();
-    			Collection<WayPoint> seg = new ArrayList<WayPoint>(100);
-    			for(GpsRec r:gpsRecList){
-    				if(cancelled){
-    					return result;
-    				}
-    				WayPoint p = wayPointFrom(r);
-    				if(r.equals(last)){
-    					result.waypoints.add(p);
-    				}else{
-    					seg.add(p);
-    				}
-    				last = r;
-    				progressMonitor.worked(1);
-    			}
-    			result.tracks.add(new SingleSegmentGpxTrack(new ImmutableGpxTrackSegment(seg), Collections.<String, Object>emptyMap()));
-    		}
-    		return result;
-    	} finally {
-    		progressMonitor.finishTask();
-    	}
+            progressMonitor.setTicksCount(gpsRecList.size());
+            if(gpsRecList.size() > 0){
+                GpsRec last = null;
+                result = new GpxData();
+                Collection<WayPoint> seg = new ArrayList<WayPoint>(100);
+                for(GpsRec r:gpsRecList){
+                    if(cancelled){
+                        return result;
+                    }
+                    WayPoint p = wayPointFrom(r);
+                    if(r.equals(last)){
+                        result.waypoints.add(p);
+                    }else{
+                        seg.add(p);
+                    }
+                    last = r;
+                    progressMonitor.worked(1);
+                }
+                result.tracks.add(new SingleSegmentGpxTrack(new ImmutableGpxTrackSegment(seg), Collections.<String, Object>emptyMap()));
+            }
+            return result;
+        } finally {
+            progressMonitor.finishTask();
+        }
     }
 
     private WayPoint wayPointFrom(GpsRec r){

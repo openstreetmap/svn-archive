@@ -39,8 +39,8 @@ public class ConnectWays {
         Map<Way, Way> modifiedWays = new HashMap<Way, Way>();
         LinkedList<Command> cmds = new LinkedList<Command>();
         Way newWay = new Way(way);
-        for (int i = 0; i < way.getNodesCount() - 1; i++) { 
-            Node n = way.getNode(i); 
+        for (int i = 0; i < way.getNodesCount() - 1; i++) {
+            Node n = way.getNode(i);
             System.out.println("-------");
             System.out.println("Node: " + n);
             LatLon ll = n.getCoor();
@@ -92,8 +92,8 @@ public class ConnectWays {
      */
     private static List<Command> mergeNodes(Node n1, Node n2, Way way){
         List<Command> cmds = new LinkedList<Command>();
-        cmds.add(new MoveCommand(n2, 
-                 (n1.getEastNorth().getX() - n2.getEastNorth().getX())/2, 
+        cmds.add(new MoveCommand(n2,
+                 (n1.getEastNorth().getX() - n2.getEastNorth().getX())/2,
                  (n1.getEastNorth().getY() - n2.getEastNorth().getY())/2
                  ));
 
@@ -122,7 +122,7 @@ public class ConnectWays {
      */
     private static void tryConnectNodeToAnyWay(Node node, Map<Way, Way> m)
             throws IllegalStateException, IndexOutOfBoundsException {
-        
+
         List<Command> cmds = new LinkedList<Command>();
 
         LatLon ll = node.getCoor();

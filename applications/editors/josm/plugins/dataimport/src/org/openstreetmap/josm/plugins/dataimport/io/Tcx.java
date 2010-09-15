@@ -118,8 +118,8 @@ public class Tcx extends FileImporter {
     }
 
     /** Convert a TrackpointT to a WayPoint.
-     * @param tp	TrackpointT to convert
-     * @return		tp converted to WayPoint, or null
+     * @param tp    TrackpointT to convert
+     * @return      tp converted to WayPoint, or null
      */
     private static WayPoint convertPoint(TrackpointT tp) {
 

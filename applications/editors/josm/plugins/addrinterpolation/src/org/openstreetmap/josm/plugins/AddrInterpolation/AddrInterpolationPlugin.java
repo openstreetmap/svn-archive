@@ -8,14 +8,14 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class AddrInterpolationPlugin extends Plugin {
 
-	AddrInterpolationAction action = null;
+    AddrInterpolationAction action = null;
 
-	/**
-	 * constructor
-	 */
-	public AddrInterpolationPlugin(PluginInformation info) {
-		super(info);
-		action = new AddrInterpolationAction();
-		Main.main.menu.toolsMenu.add(action);
-	}
+    /**
+     * constructor
+     */
+    public AddrInterpolationPlugin(PluginInformation info) {
+        super(info);
+        action = new AddrInterpolationAction();
+        Main.main.menu.toolsMenu.add(action);
+    }
 }

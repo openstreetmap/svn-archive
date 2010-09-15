@@ -44,7 +44,7 @@ public class WayDownloaderPlugin extends Plugin {
 
     /** Plugin constructor called at JOSM startup */
     public WayDownloaderPlugin(PluginInformation info) {
-    	super(info);
+        super(info);
         //add WayDownloadAction to tools menu
         MainMenu.add(Main.main.menu.toolsMenu, new WayDownloadAction());
     }

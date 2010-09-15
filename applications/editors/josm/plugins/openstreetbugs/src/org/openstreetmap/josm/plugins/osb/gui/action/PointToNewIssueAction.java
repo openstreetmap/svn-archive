@@ -45,11 +45,11 @@ public class PointToNewIssueAction extends AbstractAction implements MouseListen
     private static final long serialVersionUID = 1L;
 
     private JToggleButton button;
-    
+
     private OsbPlugin plugin;
 
     private Cursor previousCursor;
-    
+
     public PointToNewIssueAction(JToggleButton button, OsbPlugin plugin) {
         super(tr("New issue"));
         this.button = button;

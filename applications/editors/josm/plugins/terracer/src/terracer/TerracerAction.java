@@ -57,9 +57,9 @@ public final class TerracerAction extends JosmAction {
     // smsms1 asked for the last value to be remembered to make it easier to do
     // repeated terraces. this is the easiest, but not necessarily nicest, way.
     // private static String lastSelectedValue = "";
-	
-	Collection<Command> commands;
-	
+
+    Collection<Command> commands;
+
     public TerracerAction() {
         super(tr("Terrace a building"), "terrace",
                 tr("Creates individual buildings from a long building."),
@@ -151,14 +151,14 @@ public final class TerracerAction extends JosmAction {
         new HouseNumberInputHandler(this, outline, street, associatedStreet, title);
     }
 
-	public Integer getNumber(String number) {
-		try {
+    public Integer getNumber(String number) {
+        try {
             return Integer.parseInt(number);
         } catch (NumberFormatException ex) {
             return null;
         }
-	}
-	
+    }
+
     /**
      * Terraces a single, closed, quadrilateral way.
      *
@@ -177,17 +177,17 @@ public final class TerracerAction extends JosmAction {
      * @param deleteOutline If the outline way should be deleted, when done
      */
     public void terraceBuilding(Way outline,
-				Way street,
-				Relation associatedStreet,
-				Integer segments,
-				String From,
-				String To,
-				int step,
-				String streetName,
-				boolean handleRelations,
-				boolean deleteOutline) {
+                Way street,
+                Relation associatedStreet,
+                Integer segments,
+                String From,
+                String To,
+                int step,
+                String streetName,
+                boolean handleRelations,
+                boolean deleteOutline) {
         final int nb;
-        
+
         Integer to, from;
         to = getNumber(To);
         from = getNumber(From);
@@ -209,90 +209,90 @@ public final class TerracerAction extends JosmAction {
         this.commands = new LinkedList<Command>();
         Collection<Way> ways = new LinkedList<Way>();
 
-		// Should this building be terraced (i.e. is there more then one section?)
-		if (nb > 1) {
-		    // create intermediate nodes by interpolating.
-		    
-		    // now find which is the longest side connecting the first node
-			Pair<Way, Way> interp = findFrontAndBack(outline);
+        // Should this building be terraced (i.e. is there more then one section?)
+        if (nb > 1) {
+            // create intermediate nodes by interpolating.
 
-			final double frontLength = wayLength(interp.a);
-			final double backLength = wayLength(interp.b);
-			
-		    for (int i = 0; i <= nb; ++i) {
-		        new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i / nb);
-		        new_nodes[1][i] = interpolateAlong(interp.b, backLength * i / nb);
-		        this.commands.add(new AddCommand(new_nodes[0][i]));
-		        this.commands.add(new AddCommand(new_nodes[1][i]));
-		    }
+            // now find which is the longest side connecting the first node
+            Pair<Way, Way> interp = findFrontAndBack(outline);
 
-		    // assemble new quadrilateral, closed ways
-		    for (int i = 0; i < nb; ++i) {
-		        Way terr = new Way();
-		        // Using Way.nodes.add rather than Way.addNode because the latter
-		        // doesn't
-		        // exist in older versions of JOSM.
-		        terr.addNode(new_nodes[0][i]);
-		        terr.addNode(new_nodes[0][i + 1]);
-		        terr.addNode(new_nodes[1][i + 1]);
-		        terr.addNode(new_nodes[1][i]);
-		        terr.addNode(new_nodes[0][i]);
-		        
-		        // add the tags of the outline to each building (e.g. source=*)
-		        TagCollection.from(outline).applyTo(terr);
+            final double frontLength = wayLength(interp.a);
+            final double backLength = wayLength(interp.b);
 
-				String number = null;
-				if (from != null) {
-					number = Integer.toString(from + i * step);
-				}
-		       	terr = addressBuilding(terr, street, streetName, number);
+            for (int i = 0; i <= nb; ++i) {
+                new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i / nb);
+                new_nodes[1][i] = interpolateAlong(interp.b, backLength * i / nb);
+                this.commands.add(new AddCommand(new_nodes[0][i]));
+                this.commands.add(new AddCommand(new_nodes[1][i]));
+            }
 
-		        ways.add(terr);
-		        this.commands.add(new AddCommand(terr));
-		    }
+            // assemble new quadrilateral, closed ways
+            for (int i = 0; i < nb; ++i) {
+                Way terr = new Way();
+                // Using Way.nodes.add rather than Way.addNode because the latter
+                // doesn't
+                // exist in older versions of JOSM.
+                terr.addNode(new_nodes[0][i]);
+                terr.addNode(new_nodes[0][i + 1]);
+                terr.addNode(new_nodes[1][i + 1]);
+                terr.addNode(new_nodes[1][i]);
+                terr.addNode(new_nodes[0][i]);
 
-		    if (deleteOutline) {
-		        this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(outline), true, true));
-		    }
-		} else {
-			// Single section, just add the address details
-			Way newOutline;
-			newOutline = addressBuilding(outline, street, streetName, From);
-			ways.add(newOutline);
-			this.commands.add(new ChangeCommand(outline, newOutline));
-		}
-		
-		if (handleRelations) { // create a new relation or merge with existing
-		    if (associatedStreet == null) {  // create a new relation
-		        associatedStreet = new Relation();
-		        associatedStreet.put("type", "associatedStreet");
-		        if (street != null) { // a street was part of the selection
-		            associatedStreet.put("name", street.get("name"));
-		            associatedStreet.addMember(new RelationMember("street", street));
-		        } else {
-		            associatedStreet.put("name", streetName);
-		        }
-		        for (Way w : ways) {
-		            associatedStreet.addMember(new RelationMember("house", w));
-		        }
-		        this.commands.add(new AddCommand(associatedStreet));
-		    }
-		    else { // relation exists already - add new members
-		        Relation newAssociatedStreet = new Relation(associatedStreet);
-		        for (Way w : ways) {
-		            newAssociatedStreet.addMember(new RelationMember("house", w));
-		        }
-		        this.commands.add(new ChangeCommand(associatedStreet, newAssociatedStreet));
-		    }
-		}
-		Main.main.undoRedo.add(new SequenceCommand(tr("Terrace"), commands));
-		if (nb > 1) {
-			// Select the new building outlines (for quick reversing)
-		    Main.main.getCurrentDataSet().setSelected(ways);
-		} else if (street != null) {
-			// Select the way (for quick selection of a new house (with the same way))
-		    Main.main.getCurrentDataSet().setSelected(street);
-		}
+                // add the tags of the outline to each building (e.g. source=*)
+                TagCollection.from(outline).applyTo(terr);
+
+                String number = null;
+                if (from != null) {
+                    number = Integer.toString(from + i * step);
+                }
+                terr = addressBuilding(terr, street, streetName, number);
+
+                ways.add(terr);
+                this.commands.add(new AddCommand(terr));
+            }
+
+            if (deleteOutline) {
+                this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(outline), true, true));
+            }
+        } else {
+            // Single section, just add the address details
+            Way newOutline;
+            newOutline = addressBuilding(outline, street, streetName, From);
+            ways.add(newOutline);
+            this.commands.add(new ChangeCommand(outline, newOutline));
+        }
+
+        if (handleRelations) { // create a new relation or merge with existing
+            if (associatedStreet == null) {  // create a new relation
+                associatedStreet = new Relation();
+                associatedStreet.put("type", "associatedStreet");
+                if (street != null) { // a street was part of the selection
+                    associatedStreet.put("name", street.get("name"));
+                    associatedStreet.addMember(new RelationMember("street", street));
+                } else {
+                    associatedStreet.put("name", streetName);
+                }
+                for (Way w : ways) {
+                    associatedStreet.addMember(new RelationMember("house", w));
+                }
+                this.commands.add(new AddCommand(associatedStreet));
+            }
+            else { // relation exists already - add new members
+                Relation newAssociatedStreet = new Relation(associatedStreet);
+                for (Way w : ways) {
+                    newAssociatedStreet.addMember(new RelationMember("house", w));
+                }
+                this.commands.add(new ChangeCommand(associatedStreet, newAssociatedStreet));
+            }
+        }
+        Main.main.undoRedo.add(new SequenceCommand(tr("Terrace"), commands));
+        if (nb > 1) {
+            // Select the new building outlines (for quick reversing)
+            Main.main.getCurrentDataSet().setSelected(ways);
+        } else if (street != null) {
+            // Select the way (for quick selection of a new house (with the same way))
+            Main.main.getCurrentDataSet().setSelected(street);
+        }
     }
 
     /**
@@ -305,7 +305,7 @@ public final class TerracerAction extends JosmAction {
      * @return the way with added address details
      */
     private Way addressBuilding(Way outline, Way street, String streetName, String number) {
-    	Way changedOutline = outline;
+        Way changedOutline = outline;
         if (number != null) {
             // only, if the user has specified house numbers
             this.commands.add(new ChangePropertyCommand(changedOutline, "addr:housenumber", number));
@@ -430,12 +430,12 @@ public final class TerracerAction extends JosmAction {
     private int indexDistance(int i1, int i2, int n) {
         return Math.min(positiveModulus(i1 - i2, n), positiveModulus(i2 - i1, n));
     }
-    
+
     /**
      * return the modulus in the range [0, n)
      */
     private int positiveModulus(int a, int n) {
-        if (n <=0) 
+        if (n <=0)
             throw new IllegalArgumentException();
         int res = a % n;
         if (res < 0) {
@@ -443,7 +443,7 @@ public final class TerracerAction extends JosmAction {
         }
         return res;
     }
-    
+
     /**
      * Calculate the length of a side (from node i to i+1) in a way. This assumes that
      * the way is closed, but I only ever call it for buildings.
@@ -547,5 +547,5 @@ public final class TerracerAction extends JosmAction {
     @Override
     protected void updateEnabledState() {
         setEnabled(getCurrentDataSet() != null);
-    }    
+    }
 }

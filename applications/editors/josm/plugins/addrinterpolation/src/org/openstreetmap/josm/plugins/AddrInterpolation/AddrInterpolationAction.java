@@ -21,33 +21,33 @@ import org.openstreetmap.josm.tools.Shortcut;
 public  class AddrInterpolationAction extends JosmAction implements
 SelectionChangedListener {
 
-	public AddrInterpolationAction(){
-		super(tr("Address Interpolation"), "AddrInterpolation", tr("Handy Address Interpolation Functions"),
-				Shortcut.registerShortcut("tools:AddressInterpolation", tr("Tool: {0}", tr("Address Interpolation")),
-						KeyEvent.VK_A, Shortcut.GROUP_MENU,
-						InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), false);
-		setEnabled(false);
-		DataSet.selListeners.add(this);
-	}
+    public AddrInterpolationAction(){
+        super(tr("Address Interpolation"), "AddrInterpolation", tr("Handy Address Interpolation Functions"),
+                Shortcut.registerShortcut("tools:AddressInterpolation", tr("Tool: {0}", tr("Address Interpolation")),
+                        KeyEvent.VK_A, Shortcut.GROUP_MENU,
+                        InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), false);
+        setEnabled(false);
+        DataSet.selListeners.add(this);
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		AddrInterpolationDialog addrDialog = new AddrInterpolationDialog(tr("Define Address Interpolation"));
+    public void actionPerformed(ActionEvent e) {
+        AddrInterpolationDialog addrDialog = new AddrInterpolationDialog(tr("Define Address Interpolation"));
 
 
-	}
+    }
 
-	public void selectionChanged(
-			Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(
+            Collection<? extends OsmPrimitive> newSelection) {
 
-		for (OsmPrimitive osm : newSelection) {
-			if (osm instanceof Way) {
-				setEnabled(true);
-				return;
-			}
-		}
-		setEnabled(false);
+        for (OsmPrimitive osm : newSelection) {
+            if (osm instanceof Way) {
+                setEnabled(true);
+                return;
+            }
+        }
+        setEnabled(false);
 
-	}
+    }
 
 }
 

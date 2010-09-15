@@ -40,7 +40,7 @@ final class DataSetToCmd {
      * Merges a primitive <code>other</code> of type
      * <P>
      * onto my primitives.
-     * 
+     *
      * @param <P>
      *            the type of the other primitive
      * @param source
@@ -90,7 +90,7 @@ final class DataSetToCmd {
 
     /**
      * Merges the node list of a source way onto its target way.
-     * 
+     *
      * @param source
      *            the source way
      * @throws IllegalStateException
@@ -98,7 +98,7 @@ final class DataSetToCmd {
      * @throws IllegalStateException
      *             thrown if there isn't a target node for one of the nodes in
      *             the source way
-     * 
+     *
      */
     private void mergeNodeList(Way source) throws IllegalStateException {
         Way target = (Way) getMergeTarget(source);
@@ -128,7 +128,7 @@ final class DataSetToCmd {
     /**
      * Merges the relation members of a source relation onto the corresponding
      * target relation.
-     * 
+     *
      * @param source
      *            the source relation
      * @throws IllegalStateException

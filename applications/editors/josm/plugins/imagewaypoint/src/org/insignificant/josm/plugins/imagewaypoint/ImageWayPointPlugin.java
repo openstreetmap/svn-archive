@@ -95,8 +95,8 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
      * no-arg constructor is required by JOSM
      */
     public ImageWayPointPlugin(PluginInformation info) {
-    	super(info);
-    	
+        super(info);
+
         MainMenu menu = Main.main.menu;
         menu.add(menu.fileMenu, new LoadImagesAction(this));
     }

@@ -13,50 +13,50 @@ import org.openstreetmap.josm.tools.CopyList;
  */
 public class AppendableGpxTrackSegment implements GpxTrackSegment {
 
-	private WayPoint[] wayPoints = new WayPoint[16];
-	private int size;
-	private Bounds bounds;
-	private double length;
+    private WayPoint[] wayPoints = new WayPoint[16];
+    private int size;
+    private Bounds bounds;
+    private double length;
 
-	public Bounds getBounds() {
-		return bounds;
-	}
+    public Bounds getBounds() {
+        return bounds;
+    }
 
-	public Collection<WayPoint> getWayPoints() {
-		return new CopyList<WayPoint>(wayPoints, size);
-	}
+    public Collection<WayPoint> getWayPoints() {
+        return new CopyList<WayPoint>(wayPoints, size);
+    }
 
-	public void addWaypoint(WayPoint p) {
-		if (wayPoints.length == size) {
-			WayPoint[] newWaypoints = new WayPoint[wayPoints.length * 2];
-			System.arraycopy(wayPoints, 0, newWaypoints, 0, wayPoints.length);
-			wayPoints = newWaypoints;
-		}
+    public void addWaypoint(WayPoint p) {
+        if (wayPoints.length == size) {
+            WayPoint[] newWaypoints = new WayPoint[wayPoints.length * 2];
+            System.arraycopy(wayPoints, 0, newWaypoints, 0, wayPoints.length);
+            wayPoints = newWaypoints;
+        }
 
-		if (size > 0) {
-			Double distance = wayPoints[size - 1].getCoor().greatCircleDistance(p.getCoor());
-			if (!distance.isNaN() && !distance.isInfinite()) {
-				length += distance;
-			}
-		}
+        if (size > 0) {
+            Double distance = wayPoints[size - 1].getCoor().greatCircleDistance(p.getCoor());
+            if (!distance.isNaN() && !distance.isInfinite()) {
+                length += distance;
+            }
+        }
 
-		if (bounds == null) {
-			bounds = new Bounds(p.getCoor());
-		} else {
-			bounds.extend(p.getCoor());
-		}
+        if (bounds == null) {
+            bounds = new Bounds(p.getCoor());
+        } else {
+            bounds.extend(p.getCoor());
+        }
 
-		wayPoints[size] = p;
-		size++;
-	}
+        wayPoints[size] = p;
+        size++;
+    }
 
-	public double length() {
-		return length;
-	}
+    public double length() {
+        return length;
+    }
 
-	@Override
-	public int getUpdateCount() {
-		return size;
-	}
+    @Override
+    public int getUpdateCount() {
+        return size;
+    }
 
 }

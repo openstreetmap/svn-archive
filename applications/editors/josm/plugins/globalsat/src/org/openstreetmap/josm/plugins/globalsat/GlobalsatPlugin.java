@@ -46,7 +46,7 @@ public class GlobalsatPlugin extends Plugin {
         }
 
         @Override public void realRun() throws IOException, SAXException {
-        	progressMonitor.subTask(tr("Importing data from DG100..."));
+            progressMonitor.subTask(tr("Importing data from DG100..."));
             try{
                 data = GlobalsatPlugin.dg100().readData(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, true));
             }catch(Exception e){
@@ -88,7 +88,7 @@ public class GlobalsatPlugin extends Plugin {
 
     GlobalsatImportAction importAction;
     public GlobalsatPlugin(PluginInformation info) {
-    	super(info);
+        super(info);
         boolean error = false;
         try{
             Enumeration e = CommPortIdentifier.getPortIdentifiers();

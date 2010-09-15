@@ -48,9 +48,9 @@ public class AddCommentAction extends OsbAction {
     private static final long serialVersionUID = 1L;
 
     private EditAction editAction = new EditAction();
-    
+
     private String comment;
-    
+
     private Node node;
 
     public AddCommentAction(OsbDialog dialog) {
@@ -72,7 +72,7 @@ public class AddCommentAction extends OsbAction {
                 tr("Enter your comment"),
                 OsbPlugin.loadIcon("add_comment22.png"),
                 history, l);
-        
+
         if(comment == null) {
             cancelled = true;
         }
@@ -83,12 +83,12 @@ public class AddCommentAction extends OsbAction {
         comment = addMesgInfo(comment);
         editAction.execute(node, comment);
     }
-    
+
     @Override
     public String toString() {
         return tr("Comment: " + node.get("note") + " - " + comment);
     }
-    
+
     @Override
     public AddCommentAction clone() {
         AddCommentAction action = new AddCommentAction(dialog);

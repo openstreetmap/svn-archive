@@ -33,81 +33,81 @@ import org.openstreetmap.josm.io.FileImporter;
  */
 public class TangoGPS extends FileImporter {
 
-	public TangoGPS() {
-		super(new ExtensionFileFilter("log", "log",tr("TangoGPS Files (*.log)")));
-	}
+    public TangoGPS() {
+        super(new ExtensionFileFilter("log", "log",tr("TangoGPS Files (*.log)")));
+    }
 
-	/**
-	 * @author cbrill
-	 * This function imports data from file and adds trackpoints
-	 *         to a layer.
-	 * Read a log file from TangoGPS. These are simple text files in the
-	 * form: <lat>,<lon>,<elevation>,<speed>,<course>,<hdop>,<datetime>
-	 */
-	@Override
-	public void importData(File file, ProgressMonitor progressMonitor) throws IOException {
-		// create the data tree
-		List<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
+    /**
+     * @author cbrill
+     * This function imports data from file and adds trackpoints
+     *         to a layer.
+     * Read a log file from TangoGPS. These are simple text files in the
+     * form: <lat>,<lon>,<elevation>,<speed>,<course>,<hdop>,<datetime>
+     */
+    @Override
+    public void importData(File file, ProgressMonitor progressMonitor) throws IOException {
+        // create the data tree
+        List<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
 
-		int imported = 0;
-		int failure = 0;
+        int imported = 0;
+        int failure = 0;
 
-		BufferedReader rd = null;
-		try {
-			InputStream source = new FileInputStream(file);
-			rd = new BufferedReader(new InputStreamReader(source));
+        BufferedReader rd = null;
+        try {
+            InputStream source = new FileInputStream(file);
+            rd = new BufferedReader(new InputStreamReader(source));
 
-			String line;
-			while ((line = rd.readLine()) != null) {
-				failure++;
-				String[] lineElements = line.split(",");
-				if (lineElements.length >= 7) {
-					try {
-						WayPoint currentWayPoint = new WayPoint(
-								parseLatLon(lineElements));
-						currentWayPoint.attr.put("ele", lineElements[2]);
-						currentWayPoint.attr.put("time", lineElements[6]);
-						currentWayPoint.setTime();
-						currentTrackSeg.add(currentWayPoint);
-						imported++;
-					} catch (NumberFormatException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			failure = failure - imported;
-			if(imported > 0) {
-				GpxData data = new GpxData();
-				data.tracks.add(new SingleSegmentGpxTrack(new ImmutableGpxTrackSegment(currentTrackSeg), Collections.<String, Object>emptyMap()));
-				data.recalculateBounds();
-				data.storageFile = file;
-				GpxLayer gpxLayer = new GpxLayer(data, file.getName());
-				Main.main.addLayer(gpxLayer);
-				if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
-					MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", file.getName()), file, gpxLayer);
-					if (ml.data.size() > 0) {
-						Main.main.addLayer(ml);
-					}
-				}
-			}
-			showInfobox(imported,failure);
-		} finally {
-			if (rd != null) {
-				rd.close();
-			}
-		}
-	}
+            String line;
+            while ((line = rd.readLine()) != null) {
+                failure++;
+                String[] lineElements = line.split(",");
+                if (lineElements.length >= 7) {
+                    try {
+                        WayPoint currentWayPoint = new WayPoint(
+                                parseLatLon(lineElements));
+                        currentWayPoint.attr.put("ele", lineElements[2]);
+                        currentWayPoint.attr.put("time", lineElements[6]);
+                        currentWayPoint.setTime();
+                        currentTrackSeg.add(currentWayPoint);
+                        imported++;
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            failure = failure - imported;
+            if(imported > 0) {
+                GpxData data = new GpxData();
+                data.tracks.add(new SingleSegmentGpxTrack(new ImmutableGpxTrackSegment(currentTrackSeg), Collections.<String, Object>emptyMap()));
+                data.recalculateBounds();
+                data.storageFile = file;
+                GpxLayer gpxLayer = new GpxLayer(data, file.getName());
+                Main.main.addLayer(gpxLayer);
+                if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
+                    MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", file.getName()), file, gpxLayer);
+                    if (ml.data.size() > 0) {
+                        Main.main.addLayer(ml);
+                    }
+                }
+            }
+            showInfobox(imported,failure);
+        } finally {
+            if (rd != null) {
+                rd.close();
+            }
+        }
+    }
 
-	private double parseCoord(String s) {
-		return Double.parseDouble(s);
-	}
+    private double parseCoord(String s) {
+        return Double.parseDouble(s);
+    }
 
-	private LatLon parseLatLon(String[] lineElements) {
-		if (lineElements.length < 2)
-			return null;
-		return new LatLon(parseCoord(lineElements[0]),
-				parseCoord(lineElements[1]));
-	}
+    private LatLon parseLatLon(String[] lineElements) {
+        if (lineElements.length < 2)
+            return null;
+        return new LatLon(parseCoord(lineElements[0]),
+                parseCoord(lineElements[1]));
+    }
 
     private void showInfobox(int success,int failure) {
         String msg = tr("Coordinates imported: ") + success + " " + tr("Format errors: ") + failure + "\n";

@@ -50,11 +50,11 @@ public class NewIssueAction extends OsbAction {
     private OsbPlugin plugin;
 
     private String result;
-    
+
     private Point p;
-    
+
     private NewAction newAction = new NewAction();
-    
+
     public NewIssueAction(OsbPlugin plugin, Point p) {
         super(tr("New issue"), plugin.getDialog());
         this.plugin = plugin;
@@ -76,7 +76,7 @@ public class NewIssueAction extends OsbAction {
                 tr("Describe the problem precisely"),
                 OsbPlugin.loadIcon("icon_error_add22.png"),
                 history, l);
-        
+
         if(result == null) {
             cancelled = true;
         }
@@ -95,12 +95,12 @@ public class NewIssueAction extends OsbAction {
             }
         }
     }
-    
+
     @Override
     public String toString() {
         return tr("Create: " + result);
     }
-    
+
     @Override
     public OsbAction clone() {
         NewIssueAction action = new NewIssueAction(plugin, p);

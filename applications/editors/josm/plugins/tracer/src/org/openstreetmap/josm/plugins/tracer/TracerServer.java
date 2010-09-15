@@ -15,11 +15,11 @@ import org.openstreetmap.josm.data.coor.LatLon;
 public class TracerServer {
 
     static final String URL = "http://localhost:5050/";
-    
+
     public TracerServer() {
 
     }
-   
+
     /**
      * Call Trace server.
      * @param urlString Input parameters.

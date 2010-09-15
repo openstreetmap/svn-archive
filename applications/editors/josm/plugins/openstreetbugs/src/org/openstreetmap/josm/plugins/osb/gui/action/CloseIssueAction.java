@@ -50,9 +50,9 @@ public class CloseIssueAction extends OsbAction {
 
     private CloseAction closeAction = new CloseAction();
     private EditAction commentAction = new EditAction();
-    
+
     private String comment;
-    
+
     private Node node;
 
     public CloseIssueAction(OsbDialog dialog) {
@@ -73,7 +73,7 @@ public class CloseIssueAction extends OsbAction {
                 tr("<html>Really mark this issue as ''done''?<br><br>You may add an optional comment:</html>"),
                 OsbPlugin.loadIcon("icon_valid22.png"),
                 history, l);
-        
+
         if(comment == null) {
             cancelled = true;
         }
@@ -88,12 +88,12 @@ public class CloseIssueAction extends OsbAction {
         }
         closeAction.execute(node);
     }
-    
+
     @Override
     public String toString() {
         return tr("Close: " + node.get("note") + " - Comment: " + comment);
     }
-    
+
     @Override
     public CloseIssueAction clone() {
         CloseIssueAction action = new CloseIssueAction(dialog);

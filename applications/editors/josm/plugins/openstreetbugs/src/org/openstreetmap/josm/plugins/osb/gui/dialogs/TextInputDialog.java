@@ -1,18 +1,18 @@
 /* Copyright (c) 2008, Henrik Niehaus
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its 
- *    contributors may be used to endorse or promote products derived from this 
+ * 3. Neither the name of the project nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -73,9 +73,9 @@ public class TextInputDialog extends JDialog {
     private HistoryComboBox input;
     private JLabel lblText;
     private JPanel pnlMain;
-    
+
     private String value = null;
-    
+
     private TextInputDialog() {
         initGUI();
         initListeners();
@@ -87,20 +87,20 @@ public class TextInputDialog extends JDialog {
                 okPressed();
             }
         });
-        
+
         btnOk.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 okPressed();
             }
         });
-        
+
         btnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
         });
     }
-    
+
     private void okPressed() {
         value = input.getText();
         input.addCurrentItemToHistory();
@@ -154,11 +154,11 @@ public class TextInputDialog extends JDialog {
         }
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
-    
+
     public static String showDialog(JComponent parent, String title, String text, List<String> history, HistoryChangedListener l) {
         return showDialog(parent, title, text, null, history, l);
     }
-    
+
     /**
      * Opens a text input dialog and returns the entered text
      * @return the entered text or null if the cancel button has been pressed;
@@ -179,7 +179,7 @@ public class TextInputDialog extends JDialog {
         int x = (int) (p.getX() + (double)(parent.getWidth() - tid.getWidth()) / 2);
         int y = (int) (p.getY() +  (double)(parent.getHeight() - tid.getHeight()) / 2);
         tid.setLocation(x, y);
-        
+
         //tid.pack();
         tid.setVisible(true);
         return tid.getValue();
@@ -188,21 +188,21 @@ public class TextInputDialog extends JDialog {
     private String getValue() {
         return this.value;
     }
-    
+
     public void setDescription(String text) {
         lblText.setText(text);
     }
-    
+
     public void setHistory(List<String> history) {
         input.setHistory(history);
         input.setText("");
         value = null;
     }
-    
+
     public void addHistoryChangedListener(HistoryChangedListener l) {
         ((ComboBoxHistory)input.getModel()).addHistoryChangedListener(l);
     }
-    
+
     public void setIcon(Icon icon) {
         lblIcon.setIcon(icon);
     }

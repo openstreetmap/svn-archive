@@ -83,9 +83,9 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
             uploadHook = new OsbUploadHook();
             UploadAction.registerUploadHook(uploadHook);
         } else {
-        	MapView.removeLayerChangeListener(this);
-        	UploadAction.unregisterUploadHook(uploadHook);
-        	uploadHook = null;
+            MapView.removeLayerChangeListener(this);
+            UploadAction.unregisterUploadHook(uploadHook);
+            uploadHook = null;
         }
     }
 
@@ -230,8 +230,8 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
 
     public void layerRemoved(Layer oldLayer) {
         if(oldLayer == layer) {
-        	MapView.removeLayerChangeListener(this);
-        	MapView.removeLayerChangeListener(dialog);
+            MapView.removeLayerChangeListener(this);
+            MapView.removeLayerChangeListener(dialog);
             layer = null;
         }
     }

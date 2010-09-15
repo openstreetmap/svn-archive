@@ -21,7 +21,7 @@ public class TrackStoplistNameCommand extends Command
   private String oldShelter = null;
   private String shelter = null;
   private LatLon oldLatLon = null;
-  
+
   @SuppressWarnings("unchecked")
   public TrackStoplistNameCommand(TrackReference trackref, int workingLine)
   {
@@ -41,7 +41,7 @@ public class TrackStoplistNameCommand extends Command
     if ("".equals(this.shelter))
       this.shelter = null;
   }
-  
+
   public boolean executeCommand()
   {
     Node node = trackref.stoplistTM.nodeAt(workingLine);
@@ -68,7 +68,7 @@ public class TrackStoplistNameCommand extends Command
     trackref.inEvent = false;
     return true;
   }
-  
+
   public void undoCommand()
   {
     Node node = trackref.stoplistTM.nodeAt(workingLine);
@@ -93,13 +93,13 @@ public class TrackStoplistNameCommand extends Command
       trackref.stoplistTM.setValueAt(oldShelter, workingLine, 2);
     trackref.inEvent = false;
   }
-  
+
   public void fillModifiedData
     (Collection< OsmPrimitive > modified, Collection< OsmPrimitive > deleted,
      Collection< OsmPrimitive > added)
   {
   }
-  
+
   @Override public JLabel getDescription()
   {
     return new JLabel("public_transport.TrackStoplist.Edit");

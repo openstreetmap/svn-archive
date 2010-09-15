@@ -19,7 +19,7 @@ public class ColorSchemePlugin extends Plugin {
      * Default Constructor
      */
     public ColorSchemePlugin(PluginInformation info) {
-    	super(info);
+        super(info);
     }
 
     @Override

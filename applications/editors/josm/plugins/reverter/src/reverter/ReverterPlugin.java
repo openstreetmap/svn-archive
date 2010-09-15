@@ -17,7 +17,7 @@ public class ReverterPlugin extends Plugin {
         super(info);
         JMenu historyMenu = Main.main.menu.addMenu(marktr("History"), KeyEvent.VK_R,
                 Main.main.menu.defaultMenuPos,ht("/Plugin/Reverter"));
-        //MainMenu.add(historyMenu, new ObjectsHistoryAction());       
+        //MainMenu.add(historyMenu, new ObjectsHistoryAction());
         MainMenu.add(historyMenu, new RevertChangesetAction());
     }
 }

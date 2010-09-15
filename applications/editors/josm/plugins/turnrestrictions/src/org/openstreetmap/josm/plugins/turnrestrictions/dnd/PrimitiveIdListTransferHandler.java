@@ -19,45 +19,45 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * 
  */
 public class PrimitiveIdListTransferHandler extends TransferHandler {
-	static private final Logger logger = Logger.getLogger(PrimitiveIdListTransferHandler.class.getName());
-	private PrimitiveIdListProvider provider;
-	
-	/**
-	 * Replies true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
+    static private final Logger logger = Logger.getLogger(PrimitiveIdListTransferHandler.class.getName());
+    private PrimitiveIdListProvider provider;
+    
+    /**
+     * Replies true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
 
-	 * @param transferFlavors an array of transferFlavors
-	 * @return true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
-	 */
-	public static boolean isSupportedFlavor(DataFlavor[] transferFlavors) {
-		for (DataFlavor df: transferFlavors) {
-			if (df.equals(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR)) return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Creates the transfer handler 
-	 * 
-	 * @param provider the provider of the primitive IDs. Must not be null.
-	 * @throws IllegalArgumentException thrown if provider is null.
-	 */
-	public PrimitiveIdListTransferHandler(PrimitiveIdListProvider provider) throws IllegalArgumentException{
-		CheckParameterUtil.ensureParameterNotNull(provider, "provider");
-		this.provider = provider;
-	}
+     * @param transferFlavors an array of transferFlavors
+     * @return true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
+     */
+    public static boolean isSupportedFlavor(DataFlavor[] transferFlavors) {
+        for (DataFlavor df: transferFlavors) {
+            if (df.equals(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR)) return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Creates the transfer handler 
+     * 
+     * @param provider the provider of the primitive IDs. Must not be null.
+     * @throws IllegalArgumentException thrown if provider is null.
+     */
+    public PrimitiveIdListTransferHandler(PrimitiveIdListProvider provider) throws IllegalArgumentException{
+        CheckParameterUtil.ensureParameterNotNull(provider, "provider");
+        this.provider = provider;
+    }
 
-	
-	
-	protected Transferable createTransferable(JComponent c) {
-		return new PrimitiveIdTransferable(provider.getSelectedPrimitiveIds());			
-	}
+    
+    
+    protected Transferable createTransferable(JComponent c) {
+        return new PrimitiveIdTransferable(provider.getSelectedPrimitiveIds());         
+    }
 
-	public int getSourceActions(JComponent c) {
-		return COPY;
-	}
+    public int getSourceActions(JComponent c) {
+        return COPY;
+    }
 
-	@Override
-	public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
-		return isSupportedFlavor(transferFlavors);	
-	}	
+    @Override
+    public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
+        return isSupportedFlavor(transferFlavors);  
+    }   
 }

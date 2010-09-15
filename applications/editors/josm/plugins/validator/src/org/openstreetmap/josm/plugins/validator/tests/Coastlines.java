@@ -46,7 +46,7 @@ public class Coastlines extends Test
     @Override
     public void startTest(ProgressMonitor monitor)
     {
-    	super.startTest(monitor);
+        super.startTest(monitor);
 
         OsmDataLayer layer = Main.map.mapView.getEditLayer();
 

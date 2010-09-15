@@ -17,19 +17,19 @@ public class GTFSJoinCommand extends Command
   private Node undoTableNode = null;
   private GTFSStopTableModel gtfsStopTM = null;
   private String type = null;
-  
+
   public GTFSJoinCommand(GTFSImporterAction controller)
   {
     gtfsStopTM = controller.getGTFSStopTableModel();
     workingLines = new Vector< Integer >();
-    
+
     // use either selected lines or all lines if no line is selected
     int[] selectedLines = controller.getDialog().getGTFSStopTable().getSelectedRows();
     if (selectedLines.length != 1)
       return;
     workingLines.add(selectedLines[0]);
   }
-  
+
   public boolean executeCommand()
   {
     if (workingLines.size() != 1)
@@ -42,15 +42,15 @@ public class GTFSJoinCommand extends Command
     {
       Node n = iter.next();
       if ((n != null) && (n.equals(gtfsStopTM.nodes.elementAt(j))))
-	continue;
+    continue;
       if (dest != null)
-	return false;
+    return false;
       dest = n;
     }
     if (dest == null)
       return false;
     undoMapNode = new Node(dest);
-    
+
     Node node = gtfsStopTM.nodes.elementAt(j);
     undoTableNode = node;
     if (node != null)
@@ -58,7 +58,7 @@ public class GTFSJoinCommand extends Command
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
-    
+
     dest.put("highway", "bus_stop");
     dest.put("stop_id", (String)gtfsStopTM.getValueAt(j, 0));
     if (dest.get("name") == null)
@@ -66,23 +66,23 @@ public class GTFSJoinCommand extends Command
     gtfsStopTM.nodes.set(j, dest);
     type = (String)gtfsStopTM.getValueAt(j, 2);
     gtfsStopTM.setValueAt("moved", j, 2);
-    
+
     return true;
   }
-  
+
   public void undoCommand()
   {
     if (workingLines.size() != 1)
       return;
     int j = workingLines.elementAt(0);
-    
+
     Node node = gtfsStopTM.nodes.elementAt(j);
     if (node != null)
     {
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
-    
+
     if (undoMapNode != null)
     {
       undoMapNode.setDeleted(false);
@@ -96,13 +96,13 @@ public class GTFSJoinCommand extends Command
     gtfsStopTM.nodes.set(j, undoTableNode);
     gtfsStopTM.setValueAt(type, j, 2);
   }
-  
+
   public void fillModifiedData
     (Collection< OsmPrimitive > modified, Collection< OsmPrimitive > deleted,
      Collection< OsmPrimitive > added)
   {
   }
-  
+
   @Override public JLabel getDescription()
   {
     return new JLabel("public_transport.GTFSStops.Join");

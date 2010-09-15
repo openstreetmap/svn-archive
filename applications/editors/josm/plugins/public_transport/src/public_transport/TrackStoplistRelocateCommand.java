@@ -20,7 +20,7 @@ public class TrackStoplistRelocateCommand extends Command
   private String oldStopwatchStart = null;
   private String gpsSyncTime = null;
   private String stopwatchStart = null;
-  
+
   public TrackStoplistRelocateCommand(StopImporterAction controller)
   {
     this.controller = controller;
@@ -30,7 +30,7 @@ public class TrackStoplistRelocateCommand extends Command
     this.oldGpsSyncTime = currentTrack.gpsSyncTime;
     this.oldStopwatchStart = currentTrack.stopwatchStart;
   }
-  
+
   public boolean executeCommand()
   {
     currentTrack.gpsSyncTime = gpsSyncTime;
@@ -39,10 +39,10 @@ public class TrackStoplistRelocateCommand extends Command
     {
       Node node = currentTrack.stoplistTM.nodeAt(i);
       if (node == null)
-	continue;
-	
+    continue;
+
       double time = StopImporterDialog.parseTime
-	    ((String)currentTrack.stoplistTM.getValueAt(i, 0));
+        ((String)currentTrack.stoplistTM.getValueAt(i, 0));
       node.setCoor(currentTrack.computeCoor(time));
     }
     if (currentTrack == controller.getCurrentTrack())
@@ -52,10 +52,10 @@ public class TrackStoplistRelocateCommand extends Command
       controller.getDialog().setStopwatchStart(stopwatchStart);
       controller.inEvent = false;
     }
-    
+
     return true;
   }
-  
+
   public void undoCommand()
   {
     currentTrack.gpsSyncTime = oldGpsSyncTime;
@@ -64,10 +64,10 @@ public class TrackStoplistRelocateCommand extends Command
     {
       Node node = currentTrack.stoplistTM.nodeAt(i);
       if (node == null)
-	continue;
-	
+    continue;
+
       double time = StopImporterDialog.parseTime
-	    ((String)currentTrack.stoplistTM.getValueAt(i, 0));
+        ((String)currentTrack.stoplistTM.getValueAt(i, 0));
       node.setCoor(currentTrack.computeCoor(time));
     }
     if (currentTrack == controller.getCurrentTrack())
@@ -78,13 +78,13 @@ public class TrackStoplistRelocateCommand extends Command
       controller.inEvent = false;
     }
   }
-  
+
   public void fillModifiedData
     (Collection< OsmPrimitive > modified, Collection< OsmPrimitive > deleted,
      Collection< OsmPrimitive > added)
   {
   }
-  
+
   @Override public JLabel getDescription()
   {
     return new JLabel("public_transport.TrackStoplist.RelocateNodes");

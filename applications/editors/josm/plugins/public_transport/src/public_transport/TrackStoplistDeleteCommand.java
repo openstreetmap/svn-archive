@@ -20,39 +20,39 @@ public class TrackStoplistDeleteCommand extends Command
       this.name = name;
       this.shelter = shelter;
     }
-    
+
     public Node node;
     public String time;
     public String name;
     public String shelter;
   };
-  
+
   private Vector< Integer > workingLines = null;
   private Vector< NodeTimeName > nodesForUndo = null;
   private TrackStoplistTableModel stoplistTM = null;
-  
+
   public TrackStoplistDeleteCommand(StopImporterAction controller)
   {
     stoplistTM = controller.getCurrentTrack().stoplistTM;
     workingLines = new Vector< Integer >();
     nodesForUndo = new Vector< NodeTimeName >();
-    
+
     // use selected lines or all lines if no line is selected
     int[] selectedLines = controller.getDialog().getStoplistTable().getSelectedRows();
     if (selectedLines.length > 0)
     {
       for (int i = 0; i < selectedLines.length; ++i)
       {
-	workingLines.add(selectedLines[i]);
+    workingLines.add(selectedLines[i]);
       }
     }
     else
     {
       for (int i = 0; i < stoplistTM.getRowCount(); ++i)
-	workingLines.add(new Integer(i));
+    workingLines.add(new Integer(i));
     }
   }
-  
+
   public boolean executeCommand()
   {
     nodesForUndo.clear();
@@ -61,18 +61,18 @@ public class TrackStoplistDeleteCommand extends Command
       int j = workingLines.elementAt(i).intValue();
       Node node = stoplistTM.nodeAt(j);
       nodesForUndo.add(new NodeTimeName
-	  (node, (String)stoplistTM.getValueAt(j, 0),
-	   (String)stoplistTM.getValueAt(j, 1),
-	   (String)stoplistTM.getValueAt(j, 2)));
+      (node, (String)stoplistTM.getValueAt(j, 0),
+       (String)stoplistTM.getValueAt(j, 1),
+       (String)stoplistTM.getValueAt(j, 2)));
       stoplistTM.removeRow(j);
       if (node == null)
-	continue;
+    continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
     return true;
   }
-  
+
   public void undoCommand()
   {
     for (int i = 0; i < workingLines.size(); ++i)
@@ -81,18 +81,18 @@ public class TrackStoplistDeleteCommand extends Command
       NodeTimeName ntn = nodesForUndo.elementAt(workingLines.size() - i - 1);
       stoplistTM.insertRow(j, ntn.node, ntn.time, ntn.name, ntn.shelter);
       if (ntn.node == null)
-	continue;
+    continue;
       ntn.node.setDeleted(false);
       Main.main.getCurrentDataSet().addPrimitive(ntn.node);
     }
   }
-  
+
   public void fillModifiedData
     (Collection< OsmPrimitive > modified, Collection< OsmPrimitive > deleted,
      Collection< OsmPrimitive > added)
   {
   }
-  
+
   @Override public JLabel getDescription()
   {
     return new JLabel("public_transport.TrackStoplist.Delete");

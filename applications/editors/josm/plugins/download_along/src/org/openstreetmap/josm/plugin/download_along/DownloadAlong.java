@@ -47,8 +47,8 @@ public class DownloadAlong extends Plugin {
 
   private static class DownloadAlongAction extends JosmAction {
     /**
-		 * 
-		 */
+         *
+         */
     private static final long serialVersionUID = 1L;
 
     public DownloadAlongAction() {
@@ -192,7 +192,7 @@ public class DownloadAlong extends Plugin {
        * Area "a" now contains the hull that we would like to download data for.
        * however we can only download rectangles, so the following is an attempt
        * at finding a number of rectangles to download.
-       * 
+       *
        * The idea is simply: Start out with the full bounding box. If it is too
        * large, then split it in half and repeat recursively for each half until
        * you arrive at something small enough to download. The algorithm is

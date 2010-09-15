@@ -52,7 +52,7 @@ public class CrossingWays extends Test
     @Override
     public void startTest(ProgressMonitor monitor)
     {
-    	super.startTest(monitor);
+        super.startTest(monitor);
         cellSegments = new HashMap<Point2D,List<ExtendedSegment>>(1000);
         errorSegments = new HashSet<WaySegment>();
         ways_seen = new HashMap<List<Way>, List<WaySegment>>(50);
@@ -61,7 +61,7 @@ public class CrossingWays extends Test
     @Override
     public void endTest()
     {
-    	super.endTest();
+        super.endTest();
         cellSegments = null;
         errorSegments = null;
         ways_seen = null;

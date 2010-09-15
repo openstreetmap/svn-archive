@@ -13,7 +13,7 @@ public class TrackStoplistTableModel extends DefaultTableModel
   private Vector< Node > nodes = null;
   private Vector< String > times = null;
   private static Vector< String > columns = null;
-    
+
   public TrackStoplistTableModel(TrackReference tr)
   {
     if (columns == null)
@@ -25,27 +25,27 @@ public class TrackStoplistTableModel extends DefaultTableModel
     }
     nodes = new Vector< Node >();
     times = new Vector< String >();
-      
+
     setColumnIdentifiers(columns);
     addTableModelListener(tr);
   }
-    
+
   public boolean isCellEditable(int row, int column) {
     return true;
   }
-    
+
   public void addRow(Object[] obj) {
     throw new UnsupportedOperationException();
   }
-    
+
   public void insertRow(int insPos, Object[] obj) {
     throw new UnsupportedOperationException();
   }
-    
+
   public void addRow(String time) {
     insertRow(-1, time);
   }
-    
+
   public void insertRow(int insPos, String time)
   {
     insertRow(insPos, null, time, "", "");
@@ -117,14 +117,14 @@ public class TrackStoplistTableModel extends DefaultTableModel
       super.insertRow(insPos, buf);
     }
   }
-    
+
   public void clear()
   {
     nodes.clear();
     times.clear();
     super.setRowCount(0);
   }
-    
+
   public void setDataVector(Vector< Vector< Object > > dataVector)
   {
     setDataVector(dataVector, columns);

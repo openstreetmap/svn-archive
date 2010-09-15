@@ -30,7 +30,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
     public int getChangesetId() {
         try {
           return NumberFormat.getInstance().parse(tcid.getText()).intValue();
-        } catch (ParseException e) {            
+        } catch (ParseException e) {
           return 0;
         }
     }
@@ -49,17 +49,17 @@ public class ChangesetIdQuery extends ExtendedDialog {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.add(new JLabel(tr("Changeset id:")));
         panel.add(tcid, GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         bgRevertType.add(rbFull);
         bgRevertType.add(rbSelection);
         bgRevertType.add(rbSelectionUndelete);
-        
+
         rbFull.setSelected(true);
         panel.add(rbFull, GBC.eol().insets(0,10,0,0).fill(GBC.HORIZONTAL));
         panel.add(rbSelection, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(rbSelectionUndelete, GBC.eol().fill(GBC.HORIZONTAL));
-        
+
         setContent(panel);
-        setupDialog();        
+        setupDialog();
     }
 }

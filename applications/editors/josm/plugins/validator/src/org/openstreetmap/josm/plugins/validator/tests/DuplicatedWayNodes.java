@@ -49,11 +49,11 @@ public class DuplicatedWayNodes extends Test {
         Node lastN = null;
         for (Node n : w.getNodes()) {
             if (lastN == null) {
-            	wnew.addNode(n);
+                wnew.addNode(n);
             } else if (n == lastN) {
                 // Skip this node
             } else {
-            	wnew.addNode(n);
+                wnew.addNode(n);
             }
             lastN = n;
         }

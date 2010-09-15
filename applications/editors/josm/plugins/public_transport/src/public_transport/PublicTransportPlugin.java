@@ -22,7 +22,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class PublicTransportPlugin extends Plugin {
-    
+
   static JMenu jMenu;
 
   public PublicTransportPlugin(PluginInformation info)

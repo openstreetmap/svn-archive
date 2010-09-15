@@ -26,11 +26,11 @@ public class RevertChangesetAction extends JosmAction {
         super(tr("Revert changeset"),"revert-changeset",tr("Revert changeset"),
                 Shortcut.registerShortcut("tool:revert",
                         tr("Tool: {0}", tr("Revert changeset")),
-                        KeyEvent.VK_T, Shortcut.GROUP_EDIT, 
-                        Shortcut.SHIFT_DEFAULT),  
+                        KeyEvent.VK_T, Shortcut.GROUP_EDIT,
+                        Shortcut.SHIFT_DEFAULT),
                 true);
     }
-    
+
     @Override
     protected void updateEnabledState() {
         setEnabled(getCurrentDataSet() != null);
@@ -46,21 +46,21 @@ public class RevertChangesetAction extends JosmAction {
         final RevertType revertType = dlg.getRevertType();
         if (changesetId == 0) return;
         if (revertType == null) return;
-        
+
         Main.worker.submit(new PleaseWaitRunnable(tr("Reverting...")) {
             private ChangesetReverter rev;
             private boolean downloadConfirmed = false;
-            
+
             private boolean checkAndDownloadMissing() throws OsmTransferException {
                 if (!rev.hasMissingObjects()) return true;
                 if (!downloadConfirmed) {
                     downloadConfirmed = JOptionPane.showConfirmDialog(Main.parent,
-                            tr("This changeset has objects that are not present in current dataset.\n" + 
+                            tr("This changeset has objects that are not present in current dataset.\n" +
                                     "It is needed to download them before reverting. Do you want to continue?"),
                             tr("Confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
                     if (!downloadConfirmed) return false;
                 }
-                final PleaseWaitProgressMonitor monitor = 
+                final PleaseWaitProgressMonitor monitor =
                     new PleaseWaitProgressMonitor(tr("Fetching missing primitives"));
                 try {
                     rev.downloadMissingPrimitives(monitor);
@@ -69,7 +69,7 @@ public class RevertChangesetAction extends JosmAction {
                 }
                 return !monitor.isCancelled();
             }
-            
+
             @Override
             protected void realRun() throws OsmTransferException {
                 progressMonitor.indeterminateSubTask(tr("Downloading changeset"));
@@ -89,13 +89,13 @@ public class RevertChangesetAction extends JosmAction {
                     rev.checkMissingDeleted();
                     rev.downloadMissingPrimitives(progressMonitor.createSubTaskMonitor(0, false));
                 }
-                
+
                 if (progressMonitor.isCancelled()) return;
                 rev.downloadObjectsHistory(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
                 if (progressMonitor.isCancelled()) return;
                 if (!checkAndDownloadMissing()) return;
                 List<Command> cmds = rev.getCommands();
-                Command cmd = new SequenceCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" : 
+                Command cmd = new SequenceCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
                         "Partially revert changeset #{0}",changesetId),cmds);
                 Main.main.undoRedo.add(cmd);
             }

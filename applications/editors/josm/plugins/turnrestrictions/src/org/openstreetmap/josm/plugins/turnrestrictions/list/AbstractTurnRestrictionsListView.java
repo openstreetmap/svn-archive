@@ -14,27 +14,27 @@ import org.openstreetmap.josm.data.Preferences;
  *
  */
 abstract class AbstractTurnRestrictionsListView extends JPanel {
-	protected TurnRestrictionsListModel model;
-	protected JList lstTurnRestrictions;
-	
-	public TurnRestrictionsListModel getModel(){
-		return model;
-	}
-	
-	public JList getList() {
-		return lstTurnRestrictions;
-	}
-	
-	public void addListSelectionListener(ListSelectionListener listener) {
-		lstTurnRestrictions.addListSelectionListener(listener);
-	}
-	 
-	public void removeListSelectionListener(ListSelectionListener listener) {
-		lstTurnRestrictions.addListSelectionListener(listener);
-	}
-	
-	public void initIconSetFromPreferences(Preferences prefs){
-		TurnRestrictionCellRenderer renderer = (TurnRestrictionCellRenderer)lstTurnRestrictions.getCellRenderer();
-		renderer.initIconSetFromPreferences(prefs);
-	}
+    protected TurnRestrictionsListModel model;
+    protected JList lstTurnRestrictions;
+    
+    public TurnRestrictionsListModel getModel(){
+        return model;
+    }
+    
+    public JList getList() {
+        return lstTurnRestrictions;
+    }
+    
+    public void addListSelectionListener(ListSelectionListener listener) {
+        lstTurnRestrictions.addListSelectionListener(listener);
+    }
+     
+    public void removeListSelectionListener(ListSelectionListener listener) {
+        lstTurnRestrictions.addListSelectionListener(listener);
+    }
+    
+    public void initIconSetFromPreferences(Preferences prefs){
+        TurnRestrictionCellRenderer renderer = (TurnRestrictionCellRenderer)lstTurnRestrictions.getCellRenderer();
+        renderer.initIconSetFromPreferences(prefs);
+    }
 }

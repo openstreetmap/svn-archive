@@ -69,14 +69,14 @@ public class DuplicateWay extends Test
     @Override
     public void startTest(ProgressMonitor monitor)
     {
-    	super.startTest(monitor);
+        super.startTest(monitor);
         ways = new Bag<WayPair, OsmPrimitive>(1000);
     }
 
     @Override
     public void endTest()
     {
-    	super.endTest();
+        super.endTest();
         for(List<OsmPrimitive> duplicated : ways.values() )
         {
             if( duplicated.size() > 1)

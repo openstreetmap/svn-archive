@@ -17,6 +17,6 @@ public class ObjectsHistoryDialog extends ExtendedDialog {
         contentInsets = new Insets(10,10,10,5);
         setButtonIcons(new String[] {"ok.png", "cancel.png" });
         setContent(new JPanel(new GridBagLayout()));
-        setupDialog();        
+        setupDialog();
     }
 }

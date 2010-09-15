@@ -470,7 +470,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
     public JComponent buildPreviewPanel() {
         JPanel previewPanel = new JPanel(new GridBagLayout());
-        
+
         String[] columnNames = {tr("Key"), tr("Value")};
         String[][] data = {{}};
         previewTable = new JTable(data, columnNames) {
@@ -494,7 +494,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         Dimension dim = new Dimension(336, 10);
         scroll.setPreferredSize(dim);
         scroll.setMinimumSize(dim); /* minimum size is relevant for multisplit layout */
-        
+
         addTrafficSignTag = new JCheckBox(tr("{0} tag", "traffic_sign"));
         addTrafficSignTag.setSelected(Main.pref.getBoolean("plugin.roadsigns.addTrafficSignTag"));
         addTrafficSignTag.addActionListener(new ActionListener() {
@@ -502,7 +502,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                 previewModel.update();
             }
         });
-        
+
         previewPanel.add(scroll, GBC.eol().fill());
         previewPanel.add(addTrafficSignTag, GBC.eol());
         return previewPanel;
@@ -543,7 +543,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         public void update() {
             final TreeMap<String, String> map= new TreeMap<String, String>();
             String traffic_sign = "";
-            
+
             for (SignCombination sc : sel.combos) {
                 final Map<String, String> env = new HashMap<String, String>();
                 String combo_traffic_sign = "";
@@ -595,7 +595,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                         }
                     }
                 }
-                
+
                 Map<String, TagEvaluater> tags = new LinkedHashMap<String, TagEvaluater>();
                 for (SignWrapper sw : sc.signs) {
                     for (Map.Entry<String,String> entry : sw.paramValues.entrySet()) {
@@ -653,7 +653,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                     Map<String, String> result = te.evaluate();
                     map.putAll(result);
                 }
-                
+
                 if (combo_traffic_sign.length() != 0) {
                     if (traffic_sign.length() != 0) {
                         traffic_sign += ";";

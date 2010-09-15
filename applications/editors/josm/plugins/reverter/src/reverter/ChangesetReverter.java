@@ -53,9 +53,9 @@ public class ChangesetReverter {
     public final Changeset changeset;
     public final RevertType revertType;
 
-    private final OsmDataLayer layer; // data layer associated with reverter 
-    private final DataSet ds; // DataSet associated with reverter 
-    private final ChangesetDataSet cds; // Current changeset data 
+    private final OsmDataLayer layer; // data layer associated with reverter
+    private final DataSet ds; // DataSet associated with reverter
+    private final ChangesetDataSet cds; // Current changeset data
     private DataSet nds; // Dataset that contains new objects downloaded by reverter
 
     private final HashSet<PrimitiveId> missing = new HashSet<PrimitiveId>();
@@ -67,7 +67,7 @@ public class ChangesetReverter {
     //// Handling missing objects
     ////////////////////////////////////////
     private void addIfMissing(PrimitiveId id) {
-        OsmPrimitive p = ds.getPrimitiveById(id); 
+        OsmPrimitive p = ds.getPrimitiveById(id);
         if (p == null || p.isIncomplete()) {
             missing.add(id);
         }
@@ -93,11 +93,11 @@ public class ChangesetReverter {
             }
         }
     }
-    
+
     /**
      * Checks if {@see ChangesetDataSetEntry} conforms to current RevertType
      * @param entry entry to be checked
-     * @return <code>true</code> if {@see ChangesetDataSetEntry} conforms to current RevertType 
+     * @return <code>true</code> if {@see ChangesetDataSetEntry} conforms to current RevertType
      */
     private boolean CheckOsmChangeEntry(ChangesetDataSetEntry entry) {
         if (revertType == RevertType.FULL) return true;
@@ -109,7 +109,7 @@ public class ChangesetReverter {
         if (p == null) return false;
         return p.isSelected();
     }
-    
+
     /**
      * creates a reverter for specific changeset and fetches initial data
      * @param changesetId
@@ -131,7 +131,7 @@ public class ChangesetReverter {
         } finally {
             monitor.finishTask();
         }
-        
+
         // Build our own lists of created/updated/modified objects for better performance
         for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
             ChangesetDataSetEntry entry = it.next();
@@ -162,7 +162,7 @@ public class ChangesetReverter {
      */
     public void downloadObjectsHistory(ProgressMonitor progressMonitor) throws OsmTransferException {
         final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
-        
+
         progressMonitor.beginTask("Downloading objects history",updated.size()+deleted.size()+1);
         try {
             for (HistoryOsmPrimitive entry : updated) {
@@ -181,7 +181,7 @@ public class ChangesetReverter {
             progressMonitor.finishTask();
         }
     }
-    
+
     public void downloadMissingPrimitives(ProgressMonitor monitor) throws OsmTransferException {
         if (!hasMissingObjects()) return;
         MultiFetchServerObjectReader rdr = new MultiFetchServerObjectReader();
@@ -199,7 +199,7 @@ public class ChangesetReverter {
             default: throw new AssertionError();
             }
         }
-        DataSet source = rdr.parseOsm(monitor); 
+        DataSet source = rdr.parseOsm(monitor);
         for (OsmPrimitive p : source.allPrimitives()) {
             if (!p.isVisible() && !p.isDeleted()) {
                 p.setDeleted(true);
@@ -209,7 +209,7 @@ public class ChangesetReverter {
         layer.mergeFrom(source);
         missing.clear();
     }
-    
+
     private static Conflict<? extends OsmPrimitive> CreateConflict(OsmPrimitive p, boolean isMyDeleted) {
         switch (p.getType()) {
         case NODE:
@@ -221,7 +221,7 @@ public class ChangesetReverter {
         default: throw new AssertionError();
         }
     }
-    
+
     private static boolean hasEqualSemanticAttributes(OsmPrimitive current,HistoryOsmPrimitive history) {
         if (!current.getKeys().equals(history.getTags())) return false;
         switch (current.getType()) {
@@ -236,12 +236,12 @@ public class ChangesetReverter {
             }
             return true;
         case RELATION:
-            List<org.openstreetmap.josm.data.osm.RelationMember> currentMembers = 
+            List<org.openstreetmap.josm.data.osm.RelationMember> currentMembers =
                 ((Relation)current).getMembers();
             List<RelationMember> historyMembers = ((HistoryRelation)history).getMembers();
             if (currentMembers.size() != historyMembers.size()) return false;
             for (int i = 0; i < currentMembers.size(); i++) {
-                org.openstreetmap.josm.data.osm.RelationMember currentMember = 
+                org.openstreetmap.josm.data.osm.RelationMember currentMember =
                     currentMembers.get(i);
                 RelationMember historyMember = historyMembers.get(i);
                 if (!currentMember.getRole().equals(historyMember.getRole())) return false;
@@ -252,14 +252,14 @@ public class ChangesetReverter {
         default: throw new AssertionError();
         }
     }
-    
+
     /**
      * Builds a list of commands that will revert the changeset
-     * 
+     *
      */
     public List<Command> getCommands() {
         if (this.nds == null) return null;
-        
+
         //////////////////////////////////////////////////////////////////////////
         // Create commands to restore/update all affected objects
         DataSetToCmd merger = new DataSetToCmd(nds,ds);
@@ -281,17 +281,17 @@ public class ChangesetReverter {
             OsmPrimitive p = ds.getPrimitiveById(id.getPrimitiveId());
             if (p != null) toDelete.add(p);
         }
-        
+
 
         //////////////////////////////////////////////////////////////////////////
         // Check reversion against current dataset and create necessary conflicts
-        
+
         HashSet<OsmPrimitive> conflicted = new HashSet<OsmPrimitive>();
-        
+
         for (Conflict<? extends OsmPrimitive> conflict : merger.getConflicts()) {
             cmds.add(new ConflictAddCommand(layer,conflict));
         }
-        
+
         // Check objects versions
         for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
             ChangesetDataSetEntry entry = it.next();
@@ -301,21 +301,21 @@ public class ChangesetReverter {
             if (dp == null || dp.isIncomplete())
                 throw new IllegalStateException(tr("Missing merge target for {0} with id {1}",
                         hp.getType(), hp.getId()));
-            
+
             if (hp.getVersion() != dp.getVersion()
                     && (hp.isVisible() || dp.isVisible()) &&
                     /* Don't create conflict if changeset object and dataset object
                      * has same semantic attributes(but different versions)
                      */
                     !hasEqualSemanticAttributes(dp,hp)) {
-                
-                
-                cmds.add(new ConflictAddCommand(layer,CreateConflict(dp, 
+
+
+                cmds.add(new ConflictAddCommand(layer,CreateConflict(dp,
                         entry.getModificationType() == ChangesetModificationType.CREATED)));
                 conflicted.add(dp);
             }
         }
-        
+
         /* Check referrers for deleted objects: if object is referred by another object that
          * isn't going to be deleted or modified, create a conflict.
          */
@@ -339,7 +339,7 @@ public class ChangesetReverter {
                 break;
             }
         }
-        
+
         // Create a Command to delete all marked objects
         List<? extends OsmPrimitive> list;
         list = OsmPrimitive.getFilteredList(toDelete, Relation.class);

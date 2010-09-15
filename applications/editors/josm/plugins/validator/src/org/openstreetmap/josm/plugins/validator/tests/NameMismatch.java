@@ -73,8 +73,8 @@ public class NameMismatch extends Test {
             errors.add(new TestError(this, Severity.OTHER,
                 tr("A name is missing, even though name:* exists."),
                                      NAME_MISSING, p));
-	    return;
-	}
+        return;
+    }
 
         if (names.contains(name)) return;
         /* If name is not equal to one of the name:*, it should be a

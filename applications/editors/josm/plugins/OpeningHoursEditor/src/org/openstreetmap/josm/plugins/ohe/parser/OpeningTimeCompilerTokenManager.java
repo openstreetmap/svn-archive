@@ -273,7 +273,7 @@ static final int[] jjnextStates = {
 
 /** Token literal values. */
 public static final String[] jjstrLiteralImages = {
-"", null, null, "\53", "\157\146\146", "\62\64\57\67", "\73\40", "\40", "\54", 
+"", null, null, "\53", "\157\146\146", "\62\64\57\67", "\73\40", "\40", "\54",
 "\55", "\72", };
 
 /** Lexer state names. */
@@ -361,7 +361,7 @@ int jjmatchedPos;
 int jjmatchedKind;
 
 /** Get the next Token. */
-public Token getNextToken() 
+public Token getNextToken()
 {
   Token matchedToken;
   int curPos = 0;

@@ -25,46 +25,46 @@ import org.openstreetmap.josm.plugins.ImageImportPlugin.ImageLayer.LayerCreation
  *
  */
 public class LoadImageAction extends JosmAction {
-	
-	private Logger logger = Logger.getLogger(LoadImageAction.class);
+    
+    private Logger logger = Logger.getLogger(LoadImageAction.class);
 
-	/**
-	 * Constructor...
-	 */
-	public LoadImageAction() {
-		super(tr("Import image"), null, tr("Import georeferenced image"), null, false);
-	}
+    /**
+     * Constructor...
+     */
+    public LoadImageAction() {
+        super(tr("Import image"), null, tr("Import georeferenced image"), null, false);
+    }
 
-	public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent arg0) {
 
-		// Choose a file
-		JFileChooser fc = new JFileChooser();
-		fc.setAcceptAllFileFilterUsed(false);
-		int result = fc.showOpenDialog(Main.parent);
-		
-		ImageLayer layer = null;
-		if (result == JFileChooser.APPROVE_OPTION) {
-			logger.info("File choosed:" + fc.getSelectedFile());
-			try {
-				layer = new ImageLayer(fc.getSelectedFile());
-			} catch (LayerCreationCancledException e) {
-				// if user decides that layer should not be created just return.
-				return;
-			}catch (Exception e) {
-				logger.error("Error while creating image layer: \n" + e.getMessage());
-				JOptionPane.showMessageDialog(null, marktr("Error while creating image layer: " + e.getCause()));
-				return;
-				
-			}
-			
-			// Add layer:
-			Main.main.addLayer(layer);
-			LatLon min = new LatLon(layer.getBbox().getMinX(), layer.getBbox().getMinY());
-			LatLon max = new LatLon(layer.getBbox().getMaxX(), layer.getBbox().getMaxY());
-			BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
-			boundingXYVisitor.visit(new Bounds(min, max));
-			Main.map.mapView.recalculateCenterScale(boundingXYVisitor);
-			Main.map.mapView.zoomTo(new Bounds(min, max));
-		}
-	}
+        // Choose a file
+        JFileChooser fc = new JFileChooser();
+        fc.setAcceptAllFileFilterUsed(false);
+        int result = fc.showOpenDialog(Main.parent);
+        
+        ImageLayer layer = null;
+        if (result == JFileChooser.APPROVE_OPTION) {
+            logger.info("File choosed:" + fc.getSelectedFile());
+            try {
+                layer = new ImageLayer(fc.getSelectedFile());
+            } catch (LayerCreationCancledException e) {
+                // if user decides that layer should not be created just return.
+                return;
+            }catch (Exception e) {
+                logger.error("Error while creating image layer: \n" + e.getMessage());
+                JOptionPane.showMessageDialog(null, marktr("Error while creating image layer: " + e.getCause()));
+                return;
+                
+            }
+            
+            // Add layer:
+            Main.main.addLayer(layer);
+            LatLon min = new LatLon(layer.getBbox().getMinX(), layer.getBbox().getMinY());
+            LatLon max = new LatLon(layer.getBbox().getMaxX(), layer.getBbox().getMaxY());
+            BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
+            boundingXYVisitor.visit(new Bounds(min, max));
+            Main.map.mapView.recalculateCenterScale(boundingXYVisitor);
+            Main.map.mapView.zoomTo(new Bounds(min, max));
+        }
+    }
 }

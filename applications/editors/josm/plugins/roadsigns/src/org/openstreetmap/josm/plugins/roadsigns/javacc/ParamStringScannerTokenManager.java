@@ -166,7 +166,7 @@ private int jjMoveNfa_0(int startState, int curPos)
    }
 }
 static final int[] jjnextStates = {
-   1, 3, 5, 6, 9, 10, 
+   1, 3, 5, 6, 9, 10,
 };
 
 /** Token literal values. */
@@ -175,7 +175,7 @@ public static final String[] jjstrLiteralImages = {
 
 /** Lexer state names. */
 public static final String[] lexStateNames = {
-   "DEFAULT", 
+   "DEFAULT",
 };
 protected SimpleCharStream input_stream;
 private final int[] jjrounds = new int[11];
@@ -258,20 +258,20 @@ int jjmatchedPos;
 int jjmatchedKind;
 
 /** Get the next Token. */
-public Token getNextToken() 
+public Token getNextToken()
 {
   Token matchedToken;
   int curPos = 0;
 
   EOFLoop :
   for (;;)
-  {   
-   try   
-   {     
+  {
+   try
+   {
       curChar = input_stream.BeginToken();
-   }     
+   }
    catch(java.io.IOException e)
-   {        
+   {
       jjmatchedKind = 0;
       matchedToken = jjFillToken();
       return matchedToken;

@@ -72,11 +72,11 @@ public class TurnRestrictionsListModel extends AbstractListModel {
      * an OSM turn restriction; false, otherwise
      */
     protected boolean isTurnRestriction(OsmPrimitive primitive) {
-    	if (primitive == null) return false;
-    	if (! (primitive instanceof Relation)) return false;
-    	String type = primitive.get("type");
-    	if (type == null || ! type.equals("restriction")) return false;
-    	return true;
+        if (primitive == null) return false;
+        if (! (primitive instanceof Relation)) return false;
+        String type = primitive.get("type");
+        if (type == null || ! type.equals("restriction")) return false;
+        return true;
     }
     
     /**
@@ -121,8 +121,8 @@ public class TurnRestrictionsListModel extends AbstractListModel {
             if (turnrestrictions.contains(r)) {
                 continue;
             }
-			turnrestrictions.add(r);
-			added = true;
+            turnrestrictions.add(r);
+            added = true;
         }
         if (added) {
             List<Relation> sel = getSelectedTurnRestrictions();
@@ -142,7 +142,7 @@ public class TurnRestrictionsListModel extends AbstractListModel {
         if (removedPrimitives == null) return;
         Set<Relation> removedTurnRestrictions = new HashSet<Relation>();
         for (OsmPrimitive p: removedPrimitives) {
-        	if (!isTurnRestriction(p)) continue;
+            if (!isTurnRestriction(p)) continue;
             removedTurnRestrictions.add((Relation)p);
         }
         if (removedTurnRestrictions.isEmpty())return;

@@ -14,35 +14,35 @@ public class TrackStoplistDetachCommand extends Command
   private Vector< Integer > workingLines = null;
   private Vector< Node > nodesForUndo = null;
   private TrackStoplistTableModel stoplistTM = null;
-  
+
   public TrackStoplistDetachCommand(StopImporterAction controller)
   {
     stoplistTM = controller.getCurrentTrack().stoplistTM;
     workingLines = new Vector< Integer >();
     nodesForUndo = new Vector< Node >();
-    
+
     // use either selected lines or all lines if no line is selected
     int[] selectedLines = controller.getDialog().getStoplistTable().getSelectedRows();
     Vector< Integer > consideredLines = new Vector< Integer >();
     if (selectedLines.length > 0)
     {
       for (int i = 0; i < selectedLines.length; ++i)
-	consideredLines.add(selectedLines[i]);
+    consideredLines.add(selectedLines[i]);
     }
     else
     {
       for (int i = 0; i < stoplistTM.getRowCount(); ++i)
-	consideredLines.add(new Integer(i));
+    consideredLines.add(new Integer(i));
     }
-    
+
     // keep only lines where a node can be added
     for (int i = 0; i < consideredLines.size(); ++i)
     {
       if (stoplistTM.nodeAt(consideredLines.elementAt(i)) != null)
-	workingLines.add(consideredLines.elementAt(i));
+    workingLines.add(consideredLines.elementAt(i));
     }
   }
-  
+
   public boolean executeCommand()
   {
     nodesForUndo.clear();
@@ -55,7 +55,7 @@ public class TrackStoplistDetachCommand extends Command
     }
     return true;
   }
-  
+
   public void undoCommand()
   {
     for (int i = 0; i < workingLines.size(); ++i)
@@ -65,13 +65,13 @@ public class TrackStoplistDetachCommand extends Command
       stoplistTM.setNodeAt(j, node);
     }
   }
-  
+
   public void fillModifiedData
     (Collection< OsmPrimitive > modified, Collection< OsmPrimitive > deleted,
      Collection< OsmPrimitive > added)
   {
   }
-  
+
   @Override public JLabel getDescription()
   {
     return new JLabel("public_transport.TrackStoplist.Detach");

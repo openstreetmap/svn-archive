@@ -79,23 +79,23 @@ public class OsmarenderPlugin extends Plugin {
                     if (p instanceof Way) {
                         for (Node n : ((Way) p).getNodes()) {
                             if (n.getCoor().isWithin(b))
-                            	parents.add(n);
+                                parents.add(n);
                         }
                     }
                 }
 
                 // Write ways
                 for (OsmPrimitive p: parents) {
-                	if (p instanceof Way) {
-                		w.visit((Way)p);
-                	}
+                    if (p instanceof Way) {
+                        w.visit((Way)p);
+                    }
                 }
 
                 // Write relations (should be parent relation also written?)
                 for (OsmPrimitive p: parents) {
-                	if (p instanceof Relation) {
-                		w.visit((Relation)p);
-                	}
+                    if (p instanceof Relation) {
+                        w.visit((Relation)p);
+                    }
                 }
 
                 w.footer();
@@ -119,7 +119,7 @@ public class OsmarenderPlugin extends Plugin {
     private JMenuItem osmarenderMenu;
 
     public OsmarenderPlugin(PluginInformation info) throws IOException {
-    	super(info);
+        super(info);
         osmarenderMenu = MainMenu.add(Main.main.menu.viewMenu, new Action());
         osmarenderMenu.setVisible(false);
 

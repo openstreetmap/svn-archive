@@ -20,7 +20,7 @@ public class WaypointTableModel extends DefaultTableModel
   public boolean inEvent = false;
   public Vector< Node > nodes = new Vector< Node >();
   public Vector< LatLon > coors = new Vector< LatLon >();
-    
+
   public WaypointTableModel(StopImporterAction controller)
   {
     this.controller = controller;
@@ -29,29 +29,29 @@ public class WaypointTableModel extends DefaultTableModel
     addColumn("Shelter");
     addTableModelListener(this);
   }
-    
+
   public boolean isCellEditable(int row, int column)
   {
     if (column >= 1)
       return true;
     return false;
   }
-    
+
   public void addRow(Object[] obj)
   {
     throw new UnsupportedOperationException();
   }
-    
+
   public void insertRow(int insPos, Object[] obj)
   {
     throw new UnsupportedOperationException();
   }
-    
+
   public void addRow(WayPoint wp)
   {
     insertRow(-1, wp);
   }
-    
+
   public void insertRow(int insPos, WayPoint wp)
   {
     String[] buf = { "", "", "" };
@@ -63,7 +63,7 @@ public class WaypointTableModel extends DefaultTableModel
       buf[1] = "";
 
     Node node = controller.createNode(wp.getCoor(), buf[1]);
-    
+
     if (insPos == -1)
     {
       nodes.addElement(node);
@@ -77,22 +77,22 @@ public class WaypointTableModel extends DefaultTableModel
       super.insertRow(insPos, buf);
     }
   }
-    
+
   public void clear()
   {
     nodes.clear();
     super.setRowCount(0);
   }
-  
+
   public void tableChanged(TableModelEvent e)
   {
     if (e.getType() == TableModelEvent.UPDATE)
     {
       if (inEvent)
-	return;
+    return;
       Main.main.undoRedo.add(new WaypointsNameCommand
-	  (this, e.getFirstRow(), (String)getValueAt(e.getFirstRow(), 1),
-	   (String)getValueAt(e.getFirstRow(), 2)));
+      (this, e.getFirstRow(), (String)getValueAt(e.getFirstRow(), 1),
+       (String)getValueAt(e.getFirstRow(), 2)));
     }
   }
 };

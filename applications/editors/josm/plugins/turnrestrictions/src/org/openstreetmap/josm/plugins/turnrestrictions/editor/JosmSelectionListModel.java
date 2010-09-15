@@ -39,8 +39,8 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * 
  */
 public class JosmSelectionListModel extends AbstractListModel implements EditLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider{
-	static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
-	
+    static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
+    
     private final List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>();
     private DefaultListSelectionModel selectionModel;
     private OsmDataLayer layer;
@@ -54,9 +54,9 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
      * @throws IllegalArgumentException thrown if {@code layer} is null
      */
     public JosmSelectionListModel(OsmDataLayer layer, DefaultListSelectionModel selectionModel) {
-    	CheckParameterUtil.ensureParameterNotNull(selectionModel, "selectionModel");
-    	CheckParameterUtil.ensureParameterNotNull(layer, "layer");
-    	this.layer = layer;
+        CheckParameterUtil.ensureParameterNotNull(selectionModel, "selectionModel");
+        CheckParameterUtil.ensureParameterNotNull(layer, "layer");
+        this.layer = layer;
         this.selectionModel = selectionModel;
         setJOSMSelection(layer.data.getSelected());
     }
@@ -114,7 +114,7 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
      * @param selection the collection of currently selected OSM objects
      */
     public void setJOSMSelection(Collection<? extends OsmPrimitive> selection) {
-    	Collection<OsmPrimitive> sel = getSelected();
+        Collection<OsmPrimitive> sel = getSelected();
         this.selection.clear();
         if (selection == null) {
             fireContentsChanged(this, 0, getSize());
@@ -149,12 +149,12 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     /* ------------------------------------------------------------------------ */
     public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
         if (newLayer == null) {
-        	// don't show a JOSM selection if we don't have a data layer 
+            // don't show a JOSM selection if we don't have a data layer 
             setJOSMSelection(null);
         } else if (newLayer != layer){
-        	// don't show a JOSM selection if this turn restriction editor doesn't
-        	// manipulate data in the current data layer
-        	setJOSMSelection(null);
+            // don't show a JOSM selection if this turn restriction editor doesn't
+            // manipulate data in the current data layer
+            setJOSMSelection(null);
         } else {
             setJOSMSelection(newLayer.data.getSelected());
         }
@@ -164,11 +164,11 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     /* interface SelectionChangeListener                                        */
     /* ------------------------------------------------------------------------ */
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-    	// only update the JOSM selection if it is changed in the same data layer
-    	// this turn restriction editor is working on
-    	OsmDataLayer layer = Main.main.getEditLayer();
-    	if(layer == null) return;
-    	if (layer != this.layer) return;
+        // only update the JOSM selection if it is changed in the same data layer
+        // this turn restriction editor is working on
+        OsmDataLayer layer = Main.main.getEditLayer();
+        if(layer == null) return;
+        if (layer != this.layer) return;
         setJOSMSelection(newSelection);
     }
 
@@ -183,7 +183,7 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     public void nodeMoved(NodeMovedEvent event) {
         if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
-    	update(event.getPrimitives());
+        update(event.getPrimitives());
     }
 
     public void otherDatasetChange(AbstractDatasetChangedEvent event) {
@@ -216,13 +216,13 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     /* ------------------------------------------------------------------------ */
     /* interface PrimitiveIdListProvider                                        */
     /* ------------------------------------------------------------------------ */
-	public List<PrimitiveId> getSelectedPrimitiveIds() {
-		List<PrimitiveId> ret = new ArrayList<PrimitiveId>(getSelected().size());
-		for(int i=0; i< selection.size(); i++) {
-			if (selectionModel.isSelectedIndex(i)) {
-				ret.add(selection.get(i).getPrimitiveId());
-			}
-		}
-		return ret;
-	}
+    public List<PrimitiveId> getSelectedPrimitiveIds() {
+        List<PrimitiveId> ret = new ArrayList<PrimitiveId>(getSelected().size());
+        for(int i=0; i< selection.size(); i++) {
+            if (selectionModel.isSelectedIndex(i)) {
+                ret.add(selection.get(i).getPrimitiveId());
+            }
+        }
+        return ret;
+    }
 }

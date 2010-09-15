@@ -43,7 +43,7 @@ public class SimilarNamedWays extends Test
     @Override
     public void startTest(ProgressMonitor monitor)
     {
-    	super.startTest(monitor);
+        super.startTest(monitor);
         cellWays = new HashMap<Point2D,List<Way>>(1000);
         errorWays = new Bag<Way, Way>();
     }

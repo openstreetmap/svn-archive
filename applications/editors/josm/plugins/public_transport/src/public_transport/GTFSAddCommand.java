@@ -15,36 +15,36 @@ public class GTFSAddCommand extends Command
   private Vector< String > typesForUndo = null;
   private GTFSStopTableModel gtfsStopTM = null;
   private String type = null;
-  
+
   public GTFSAddCommand(GTFSImporterAction controller)
   {
     gtfsStopTM = controller.getGTFSStopTableModel();
     type = controller.getDialog().getStoptype();
     workingLines = new Vector< Integer >();
     typesForUndo = new Vector< String >();
-    
+
     // use either selected lines or all lines if no line is selected
     int[] selectedLines = controller.getDialog().getGTFSStopTable().getSelectedRows();
     Vector< Integer > consideredLines = new Vector< Integer >();
     if (selectedLines.length > 0)
     {
       for (int i = 0; i < selectedLines.length; ++i)
-	consideredLines.add(selectedLines[i]);
+    consideredLines.add(selectedLines[i]);
     }
     else
     {
       for (int i = 0; i < gtfsStopTM.getRowCount(); ++i)
-	consideredLines.add(new Integer(i));
+    consideredLines.add(new Integer(i));
     }
-    
+
     // keep only lines where a node can be added
     for (int i = 0; i < consideredLines.size(); ++i)
     {
       if (gtfsStopTM.nodes.elementAt(consideredLines.elementAt(i)) == null)
-	workingLines.add(consideredLines.elementAt(i));
+    workingLines.add(consideredLines.elementAt(i));
     }
   }
-  
+
   public boolean executeCommand()
   {
     typesForUndo.clear();
@@ -60,7 +60,7 @@ public class GTFSAddCommand extends Command
     }
     return true;
   }
-  
+
   public void undoCommand()
   {
     for (int i = 0; i < workingLines.size(); ++i)
@@ -70,18 +70,18 @@ public class GTFSAddCommand extends Command
       gtfsStopTM.nodes.set(j, null);
       gtfsStopTM.setValueAt(typesForUndo.elementAt(i), j, 2);
       if (node == null)
-	continue;
+    continue;
       Main.main.getCurrentDataSet().removePrimitive(node);
       node.setDeleted(true);
     }
   }
-  
+
   public void fillModifiedData
     (Collection< OsmPrimitive > modified, Collection< OsmPrimitive > deleted,
      Collection< OsmPrimitive > added)
   {
   }
-  
+
   @Override public JLabel getDescription()
   {
     return new JLabel("public_transport.GTFSStops.Enable");

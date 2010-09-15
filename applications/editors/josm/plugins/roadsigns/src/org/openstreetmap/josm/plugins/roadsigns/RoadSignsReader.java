@@ -103,11 +103,11 @@ public class RoadSignsReader {
                     iconURL = iconURL.replace('.', '_');
                 }
                 curSign.iconURL = iconURL;
-                 
+
                 if ("yes".equals(atts.getValue("supplementary"))) {
                     curSign.isSupplementing = true;
                 }
-                
+
                 curSign.wiki = atts.getValue("wiki");
                 curSign.loc_wiki = getLocalized(atts, "wiki");
 
@@ -295,7 +295,7 @@ public class RoadSignsReader {
             return lineNumber;
         }
     }
-    
+
     /**
      *
      * @return True if file was properly parsed, false if there was error during parsing but some data were parsed anyway

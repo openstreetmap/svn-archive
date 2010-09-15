@@ -23,35 +23,35 @@ import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
  */
 public class TurnRestrictionsInSelectionView extends AbstractTurnRestrictionsListView {
 
-	protected void build() {
-		DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-		model = new TurnRestrictionsInSelectionListModel(selectionModel);
-		lstTurnRestrictions = new JList(model);
-		lstTurnRestrictions.setSelectionModel(selectionModel);
-		lstTurnRestrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		lstTurnRestrictions.setCellRenderer(new TurnRestrictionCellRenderer());
-		
-		setLayout(new BorderLayout());
-		add(new JScrollPane(lstTurnRestrictions), BorderLayout.CENTER);
-	}
+    protected void build() {
+        DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
+        model = new TurnRestrictionsInSelectionListModel(selectionModel);
+        lstTurnRestrictions = new JList(model);
+        lstTurnRestrictions.setSelectionModel(selectionModel);
+        lstTurnRestrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        lstTurnRestrictions.setCellRenderer(new TurnRestrictionCellRenderer());
+        
+        setLayout(new BorderLayout());
+        add(new JScrollPane(lstTurnRestrictions), BorderLayout.CENTER);
+    }
 
-	protected void registerAsListener() {
-		MapView.addEditLayerChangeListener((EditLayerChangeListener)model);
-		SelectionEventManager.getInstance().addSelectionListener((SelectionChangedListener)model, FireMode.IN_EDT_CONSOLIDATED);
-		TurnRestrictionsInSelectionListModel m = (TurnRestrictionsInSelectionListModel)model;
-		if (Main.main.getEditLayer() != null){
-			m.initFromSelection(Main.main.getEditLayer().data.getSelected());
-		} else {
-			m.initFromSelection(Collections.<OsmPrimitive>emptyList());
-		}
-	}
+    protected void registerAsListener() {
+        MapView.addEditLayerChangeListener((EditLayerChangeListener)model);
+        SelectionEventManager.getInstance().addSelectionListener((SelectionChangedListener)model, FireMode.IN_EDT_CONSOLIDATED);
+        TurnRestrictionsInSelectionListModel m = (TurnRestrictionsInSelectionListModel)model;
+        if (Main.main.getEditLayer() != null){
+            m.initFromSelection(Main.main.getEditLayer().data.getSelected());
+        } else {
+            m.initFromSelection(Collections.<OsmPrimitive>emptyList());
+        }
+    }
 
-	protected void unregisterAsListener() {
-		MapView.removeEditLayerChangeListener((EditLayerChangeListener)model);
-		SelectionEventManager.getInstance().removeSelectionListener((SelectionChangedListener)model);		
-	}
+    protected void unregisterAsListener() {
+        MapView.removeEditLayerChangeListener((EditLayerChangeListener)model);
+        SelectionEventManager.getInstance().removeSelectionListener((SelectionChangedListener)model);       
+    }
 
-	public TurnRestrictionsInSelectionView() {
-		build();
-	}
+    public TurnRestrictionsInSelectionView() {
+        build();
+    }
 }

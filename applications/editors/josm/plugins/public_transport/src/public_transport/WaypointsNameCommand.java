@@ -17,7 +17,7 @@ public class WaypointsNameCommand extends Command
   private String name = null;
   private String oldShelter = null;
   private String shelter = null;
-  
+
   public WaypointsNameCommand
       (WaypointTableModel waypointTM, int workingLine, String name, String shelter)
   {
@@ -33,7 +33,7 @@ public class WaypointsNameCommand extends Command
     if ("".equals(shelter))
       this.shelter = null;
   }
-  
+
   public boolean executeCommand()
   {
     if (waypointTM.nodes.elementAt(workingLine) != null)
@@ -53,7 +53,7 @@ public class WaypointsNameCommand extends Command
     waypointTM.inEvent = false;
     return true;
   }
-  
+
   public void undoCommand()
   {
     if (waypointTM.nodes.elementAt(workingLine) != null)
@@ -72,13 +72,13 @@ public class WaypointsNameCommand extends Command
       waypointTM.setValueAt(oldShelter, workingLine, 2);
     waypointTM.inEvent = false;
   }
-  
+
   public void fillModifiedData
     (Collection< OsmPrimitive > modified, Collection< OsmPrimitive > deleted,
      Collection< OsmPrimitive > added)
   {
   }
-  
+
   @Override public JLabel getDescription()
   {
     return new JLabel("public_transport.Waypoints.EditName");

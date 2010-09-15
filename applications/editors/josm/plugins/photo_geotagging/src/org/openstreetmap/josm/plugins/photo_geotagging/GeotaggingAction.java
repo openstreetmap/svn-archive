@@ -49,12 +49,12 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
     final static int MTIME_MODE_PREVIOUS_VALUE = 2;
 
     public GeotaggingAction() {
-    	super(tr("Write coordinates to image header"), ImageProvider.get("geotagging"));
+        super(tr("Write coordinates to image header"), ImageProvider.get("geotagging"));
     }
 
     public void actionPerformed(ActionEvent arg0) {
 
-    	GeoImageLayer layer = getLayer();
+        GeoImageLayer layer = getLayer();
 
         final List<ImageEntry> images = new ArrayList<ImageEntry>();
         for (ImageEntry e : layer.getImages()) {
@@ -315,7 +315,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
     }
 
     private GeoImageLayer getLayer() {
-    	return (GeoImageLayer)LayerListDialog.getInstance().getModel().getSelectedLayers().get(0);
+        return (GeoImageLayer)LayerListDialog.getInstance().getModel().getSelectedLayers().get(0);
     }
 
     /**
@@ -329,13 +329,13 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         return false;
     }
 
-	public Component createMenuComponent() {
+    public Component createMenuComponent() {
         JMenuItem geotaggingItem = new JMenuItem(this);
         geotaggingItem.setEnabled(enabled(getLayer()));
         return geotaggingItem;
-	}
+    }
 
-	public boolean supportLayers(List<Layer> layers) {
-		return layers.size() == 1 && layers.get(0) instanceof GeoImageLayer;
-	}
+    public boolean supportLayers(List<Layer> layers) {
+        return layers.size() == 1 && layers.get(0) instanceof GeoImageLayer;
+    }
 }

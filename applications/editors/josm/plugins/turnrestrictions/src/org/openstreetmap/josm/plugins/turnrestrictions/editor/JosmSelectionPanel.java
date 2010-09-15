@@ -41,106 +41,106 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  */
 public class JosmSelectionPanel extends JPanel {
-	/**  the list view */
-	private JList lstSelection;
-	/** the model managing the selection */
-	private JosmSelectionListModel model;
-	
-	private CopyAction actCopy;
-	private TransferHandler transferHandler;
-	
-	/**
-	 * builds the UI for the panel 
-	 */
-	protected void build(OsmDataLayer layer) {
-		setLayout(new BorderLayout());
-		DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-		model = new JosmSelectionListModel(layer,selectionModel);
-		lstSelection = new JList(model);
-		lstSelection.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		lstSelection.setSelectionModel(selectionModel);
-		lstSelection.setCellRenderer(new OsmPrimitivRenderer());
-		lstSelection.setTransferHandler(transferHandler = new JosmSelectionTransferHandler(model));
-		lstSelection.setDragEnabled(true);
-		
-		add(new JScrollPane(lstSelection), BorderLayout.CENTER);
-		add(new JLabel(tr("Selection")), BorderLayout.NORTH);
-		
-		setBorder(BorderFactory.createEmptyBorder(5,5,5,5));		
-		actCopy = new CopyAction();
-		lstSelection.addMouseListener(new PopupLauncher());
-	}
-	
-	/**
-	 * Creates the JOSM selection panel for the selection in an OSM data layer
-	 * 
-	 * @param layer the data layer. Must not be null.
-	 * @exception IllegalArgumentException thrown if {@code layer} is null
-	 */
-	public JosmSelectionPanel(OsmDataLayer layer) throws IllegalArgumentException{
-		CheckParameterUtil.ensureParameterNotNull(layer, "layer");
-		build(layer); 
-	}
-	
-	/**
-	 * wires the UI as listener to global event sources 
-	 */
-	public void wireListeners() {
-		MapView.addEditLayerChangeListener(model);
-		DatasetEventManager.getInstance().addDatasetListener(model, FireMode.IN_EDT);
-		SelectionEventManager.getInstance().addSelectionListener(model, FireMode.IN_EDT_CONSOLIDATED);
-	}
-	
-	/**
-	 * removes the UI as listener to global event sources 
-	 */
-	public void unwireListeners() {
-		MapView.removeEditLayerChangeListener(model);
-		DatasetEventManager.getInstance().removeDatasetListener(model);
-		SelectionEventManager.getInstance().removeSelectionListener(model);		
-	}
-	
-	class PopupLauncher extends PopupMenuLauncher {
-		@Override
-		public void launch(MouseEvent evt) {
-			new PopupMenu().show(lstSelection, evt.getX(), evt.getY());
-		}		
-	}
-	
-	class PopupMenu extends JPopupMenu {
-		public PopupMenu() {
-			JMenuItem item = add(actCopy);
-			item.setTransferHandler(transferHandler);
-			actCopy.setEnabled(!model.getSelected().isEmpty());
-		}
-	}
+    /**  the list view */
+    private JList lstSelection;
+    /** the model managing the selection */
+    private JosmSelectionListModel model;
+    
+    private CopyAction actCopy;
+    private TransferHandler transferHandler;
+    
+    /**
+     * builds the UI for the panel 
+     */
+    protected void build(OsmDataLayer layer) {
+        setLayout(new BorderLayout());
+        DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
+        model = new JosmSelectionListModel(layer,selectionModel);
+        lstSelection = new JList(model);
+        lstSelection.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        lstSelection.setSelectionModel(selectionModel);
+        lstSelection.setCellRenderer(new OsmPrimitivRenderer());
+        lstSelection.setTransferHandler(transferHandler = new JosmSelectionTransferHandler(model));
+        lstSelection.setDragEnabled(true);
+        
+        add(new JScrollPane(lstSelection), BorderLayout.CENTER);
+        add(new JLabel(tr("Selection")), BorderLayout.NORTH);
+        
+        setBorder(BorderFactory.createEmptyBorder(5,5,5,5));        
+        actCopy = new CopyAction();
+        lstSelection.addMouseListener(new PopupLauncher());
+    }
+    
+    /**
+     * Creates the JOSM selection panel for the selection in an OSM data layer
+     * 
+     * @param layer the data layer. Must not be null.
+     * @exception IllegalArgumentException thrown if {@code layer} is null
+     */
+    public JosmSelectionPanel(OsmDataLayer layer) throws IllegalArgumentException{
+        CheckParameterUtil.ensureParameterNotNull(layer, "layer");
+        build(layer); 
+    }
+    
+    /**
+     * wires the UI as listener to global event sources 
+     */
+    public void wireListeners() {
+        MapView.addEditLayerChangeListener(model);
+        DatasetEventManager.getInstance().addDatasetListener(model, FireMode.IN_EDT);
+        SelectionEventManager.getInstance().addSelectionListener(model, FireMode.IN_EDT_CONSOLIDATED);
+    }
+    
+    /**
+     * removes the UI as listener to global event sources 
+     */
+    public void unwireListeners() {
+        MapView.removeEditLayerChangeListener(model);
+        DatasetEventManager.getInstance().removeDatasetListener(model);
+        SelectionEventManager.getInstance().removeSelectionListener(model);     
+    }
+    
+    class PopupLauncher extends PopupMenuLauncher {
+        @Override
+        public void launch(MouseEvent evt) {
+            new PopupMenu().show(lstSelection, evt.getX(), evt.getY());
+        }       
+    }
+    
+    class PopupMenu extends JPopupMenu {
+        public PopupMenu() {
+            JMenuItem item = add(actCopy);
+            item.setTransferHandler(transferHandler);
+            actCopy.setEnabled(!model.getSelected().isEmpty());
+        }
+    }
 
-	class CopyAction extends AbstractAction {
-		private Action delegate;
-		
-		public CopyAction(){
-			putValue(NAME, tr("Copy"));
-			putValue(SHORT_DESCRIPTION, tr("Copy to the clipboard"));
-			putValue(SMALL_ICON, ImageProvider.get("copy"));
-			putValue(ACCELERATOR_KEY, Shortcut.getCopyKeyStroke());
-			delegate = lstSelection.getActionMap().get("copy");
-		}
+    class CopyAction extends AbstractAction {
+        private Action delegate;
+        
+        public CopyAction(){
+            putValue(NAME, tr("Copy"));
+            putValue(SHORT_DESCRIPTION, tr("Copy to the clipboard"));
+            putValue(SMALL_ICON, ImageProvider.get("copy"));
+            putValue(ACCELERATOR_KEY, Shortcut.getCopyKeyStroke());
+            delegate = lstSelection.getActionMap().get("copy");
+        }
 
-		public void actionPerformed(ActionEvent e) {
-			delegate.actionPerformed(e);
-		}
-	}
-	
-	static private class JosmSelectionTransferHandler extends PrimitiveIdListTransferHandler {
-		public JosmSelectionTransferHandler(PrimitiveIdListProvider provider) {
-			super(provider);
-		}
+        public void actionPerformed(ActionEvent e) {
+            delegate.actionPerformed(e);
+        }
+    }
+    
+    static private class JosmSelectionTransferHandler extends PrimitiveIdListTransferHandler {
+        public JosmSelectionTransferHandler(PrimitiveIdListProvider provider) {
+            super(provider);
+        }
 
-		@Override
-		public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
-			// the JOSM selection list is read-only. Don't allow to drop or paste
-			// data on it
-			return false;
-		}
-	}
+        @Override
+        public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
+            // the JOSM selection list is read-only. Don't allow to drop or paste
+            // data on it
+            return false;
+        }
+    }
 }

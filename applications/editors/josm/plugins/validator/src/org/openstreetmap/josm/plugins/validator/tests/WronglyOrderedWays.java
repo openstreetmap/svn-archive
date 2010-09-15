@@ -39,7 +39,7 @@ public class WronglyOrderedWays extends Test  {
     @Override
     public void startTest(ProgressMonitor monitor)
     {
-    	super.startTest(monitor);
+        super.startTest(monitor);
         _errorWays = new Bag<Way, Way>();
     }
 

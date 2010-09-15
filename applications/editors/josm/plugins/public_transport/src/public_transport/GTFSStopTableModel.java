@@ -26,9 +26,9 @@ public class GTFSStopTableModel extends DefaultTableModel
   private int latCol = -1;
   private int lonCol = -1;
   private char separator = ',';
-  
+
   public GTFSStopTableModel(GTFSImporterAction controller,
-			    String columnConfig)
+                String columnConfig)
   {
     int pos = columnConfig.indexOf(separator);
     if (pos == -1)
@@ -47,13 +47,13 @@ public class GTFSStopTableModel extends DefaultTableModel
     {
       String title = columnConfig.substring(oldPos, pos);
       if ("stop_id".equals(title))
-	idCol = i;
+    idCol = i;
       else if ("stop_name".equals(title))
-	nameCol = i;
+    nameCol = i;
       else if ("stop_lat".equals(title))
-	latCol = i;
+    latCol = i;
       else if ("stop_lon".equals(title))
-	lonCol = i;
+    lonCol = i;
       ++i;
       oldPos = pos + 1;
       pos = columnConfig.indexOf(separator, oldPos);
@@ -67,34 +67,34 @@ public class GTFSStopTableModel extends DefaultTableModel
       latCol = i;
     else if ("stop_lon".equals(title))
       lonCol = i;
-    
+
     this.controller = controller;
     addColumn("Id");
     addColumn("Name");
     addColumn("State");
     addTableModelListener(this);
   }
-    
+
   public boolean isCellEditable(int row, int column)
   {
     return false;
   }
-    
+
   public void addRow(Object[] obj)
   {
     throw new UnsupportedOperationException();
   }
-    
+
   public void insertRow(int insPos, Object[] obj)
   {
     throw new UnsupportedOperationException();
   }
-    
+
   public void addRow(String s)
   {
     insertRow(-1, s, new Vector< Node >());
   }
-  
+
   public void addRow(String s, Vector< Node > existingStops)
   {
     insertRow(-1, s, existingStops);
@@ -134,7 +134,7 @@ public class GTFSStopTableModel extends DefaultTableModel
     }
     return s;
   }
-  
+
   public void insertRow(int insPos, String s, Vector< Node > existingStops)
   {
     String[] buf = { "", "", "pending" };
@@ -146,13 +146,13 @@ public class GTFSStopTableModel extends DefaultTableModel
     while (pos > -1)
     {
       if (i == idCol)
-	buf[0] = stripQuot(s.substring(oldPos, pos));
+    buf[0] = stripQuot(s.substring(oldPos, pos));
       else if (i == nameCol)
-	buf[1] = stripQuot(s.substring(oldPos, pos));
+    buf[1] = stripQuot(s.substring(oldPos, pos));
       else if (i == latCol)
-	lat = Double.parseDouble(stripQuot(s.substring(oldPos, pos)));
+    lat = Double.parseDouble(stripQuot(s.substring(oldPos, pos)));
       else if (i == lonCol)
-	lon = Double.parseDouble(stripQuot(s.substring(oldPos, pos)));
+    lon = Double.parseDouble(stripQuot(s.substring(oldPos, pos)));
       ++i;
       oldPos = pos + 1;
       pos = tokenize(s, oldPos);
@@ -165,9 +165,9 @@ public class GTFSStopTableModel extends DefaultTableModel
       lat = Double.parseDouble(stripQuot(s.substring(oldPos)));
     else if (i == lonCol)
       lon = Double.parseDouble(stripQuot(s.substring(oldPos)));
-    
+
     LatLon coor = new LatLon(lat, lon);
-    
+
     if (Main.main.getCurrentDataSet() != null)
     {
       boolean inside = false;
@@ -175,16 +175,16 @@ public class GTFSStopTableModel extends DefaultTableModel
           Main.main.getCurrentDataSet().dataSources.iterator();
       while (iter.hasNext())
       {
-	if (iter.next().bounds.contains(coor))
-	{
-	  inside = true;
-	  break;
-	}
+    if (iter.next().bounds.contains(coor))
+    {
+      inside = true;
+      break;
+    }
       }
       if (!inside)
-	buf[2] = "outside";
+    buf[2] = "outside";
     }
-    
+
     boolean nearBusStop = false;
     Iterator< Node > iter = existingStops.iterator();
     while (iter.hasNext())
@@ -192,20 +192,20 @@ public class GTFSStopTableModel extends DefaultTableModel
       Node node = iter.next();
       if (coor.greatCircleDistance(node.getCoor()) < 1000)
       {
-	nearBusStop = true;
-	break;
+    nearBusStop = true;
+    break;
       }
     }
-    
+
     if (insPos == -1)
     {
       if ((nearBusStop) || !("pending".equals(buf[2])))
-	nodes.addElement(null);
+    nodes.addElement(null);
       else
       {
-	Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
-	nodes.addElement(node);
-	buf[2] = "added";
+    Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
+    nodes.addElement(node);
+    buf[2] = "added";
       }
       coors.addElement(coor);
       super.addRow(buf);
@@ -213,24 +213,24 @@ public class GTFSStopTableModel extends DefaultTableModel
     else
     {
       if ((nearBusStop) || !("pending".equals(buf[2])))
-	nodes.insertElementAt(null, insPos);
+    nodes.insertElementAt(null, insPos);
       else
       {
-	Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
-	nodes.insertElementAt(node, insPos);
-	buf[2] = "added";
+    Node node = GTFSImporterAction.createNode(coor, buf[0], buf[1]);
+    nodes.insertElementAt(node, insPos);
+    buf[2] = "added";
       }
       coors.insertElementAt(coor, insPos);
       super.insertRow(insPos, buf);
     }
   }
-    
+
   public void clear()
   {
     nodes.clear();
     super.setRowCount(0);
   }
-  
+
   public void tableChanged(TableModelEvent e)
   {
   }

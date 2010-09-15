@@ -21,7 +21,7 @@ import org.openstreetmap.josm.tools.GBC;
 
 /**
  * Preference settings for the validator plugin
- * 
+ *
  * @author frsantos
  */
 public class PreferenceEditor implements PreferenceSetting
@@ -51,7 +51,7 @@ public class PreferenceEditor implements PreferenceSetting
 
     /**
      * The preferences key for enabling the permanent filtering
-     * of the displayed errors in the tree regarding the current selection 
+     * of the displayed errors in the tree regarding the current selection
      */
     public static final String PREF_FILTER_BY_SELECTION = PREFIX + ".selectionFilter";
 

@@ -12,26 +12,26 @@ import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceEdi
  * 
  */
 public class TurnRestrictionsPlugin extends Plugin{
-	
-	public TurnRestrictionsPlugin(PluginInformation info) {
-		super(info);		
-	}
-	
-	/**
-	 * Called when the JOSM map frame is created or destroyed. 
-	 */
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {				
-		if (oldFrame == null && newFrame != null) { // map frame added
-			TurnRestrictionsListDialog dialog  = new TurnRestrictionsListDialog();
-			// add the dialog
-			newFrame.addToggleDialog(dialog);
-			CreateOrEditTurnRestrictionAction.install();
-		}
-	}
+    
+    public TurnRestrictionsPlugin(PluginInformation info) {
+        super(info);        
+    }
+    
+    /**
+     * Called when the JOSM map frame is created or destroyed. 
+     */
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {             
+        if (oldFrame == null && newFrame != null) { // map frame added
+            TurnRestrictionsListDialog dialog  = new TurnRestrictionsListDialog();
+            // add the dialog
+            newFrame.addToggleDialog(dialog);
+            CreateOrEditTurnRestrictionAction.install();
+        }
+    }
 
-	@Override
-	public PreferenceSetting getPreferenceSetting() {
-		return new PreferenceEditor();
-	}
+    @Override
+    public PreferenceSetting getPreferenceSetting() {
+        return new PreferenceEditor();
+    }
 }

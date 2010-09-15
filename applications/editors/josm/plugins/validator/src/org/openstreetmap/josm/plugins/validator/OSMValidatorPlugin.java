@@ -110,7 +110,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
      * Creates the plugin
      */
     public OSMValidatorPlugin(PluginInformation info) {
-    	super(info);
+        super(info);
         checkPluginDir();
         initializeGridDetail();
         initializeTests(getTests());
@@ -174,12 +174,12 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
                 Main.main.addLayer(new GridLayer(tr("Grid")));
             MapView.addLayerChangeListener(this);
         } else
-        	MapView.removeLayerChangeListener(this);
+            MapView.removeLayerChangeListener(this);
         if (newFrame != null) {
-        	UploadAction.registerUploadHook(uploadHook = new ValidateUploadHook(this));
+            UploadAction.registerUploadHook(uploadHook = new ValidateUploadHook(this));
         } else {
-        	UploadAction.unregisterUploadHook(uploadHook);
-        	uploadHook = null;
+            UploadAction.unregisterUploadHook(uploadHook);
+            uploadHook = null;
         }
     }
 
@@ -279,7 +279,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(Main.parent,
-                		tr("Error initializing test {0}:\n {1}", test.getClass()
+                        tr("Error initializing test {0}:\n {1}", test.getClass()
                         .getSimpleName(), e),
                         tr("Error"),
                         JOptionPane.ERROR_MESSAGE);
@@ -305,15 +305,15 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener {
     }
 
     public void layerRemoved(Layer oldLayer) {
-    	if (oldLayer == errorLayer) {
-    		errorLayer = null;
-    		return;
-    	}
+        if (oldLayer == errorLayer) {
+            errorLayer = null;
+            return;
+        }
         layerErrors.remove(oldLayer);
         if (Main.map.mapView.getLayersOfType(OsmDataLayer.class).isEmpty()) {
-        	if (errorLayer != null) {
-        		Main.map.mapView.removeLayer(errorLayer);
-        	}
+            if (errorLayer != null) {
+                Main.map.mapView.removeLayer(errorLayer);
+            }
         }
     }
 }

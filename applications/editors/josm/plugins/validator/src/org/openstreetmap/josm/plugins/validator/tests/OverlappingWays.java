@@ -51,7 +51,7 @@ public class OverlappingWays extends Test
     @Override
     public void startTest(ProgressMonitor monitor)
     {
-    	super.startTest(monitor);
+        super.startTest(monitor);
         nodePairs = new Bag<Pair<Node,Node>, WaySegment>(1000);
     }
 

@@ -7,7 +7,7 @@ import org.openstreetmap.josm.gui.MainMenu;
 
 public class CreateGridOfWaysPlugin extends Plugin {
     public CreateGridOfWaysPlugin(PluginInformation info) {
-    	super(info);
+        super(info);
         MainMenu.add(Main.main.menu.toolsMenu, new CreateGridOfWaysAction());
     }
 }

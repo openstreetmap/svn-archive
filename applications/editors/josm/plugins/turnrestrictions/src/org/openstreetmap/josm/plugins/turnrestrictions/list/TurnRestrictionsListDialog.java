@@ -51,164 +51,164 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  */
 public class TurnRestrictionsListDialog extends ToggleDialog{
-	private static final Logger logger = Logger.getLogger(TurnRestrictionsListDialog.class.getName());
+    private static final Logger logger = Logger.getLogger(TurnRestrictionsListDialog.class.getName());
 
-	/** checkbox for switching between the two list views */
-	private JCheckBox cbInSelectionOnly;
-	/** the view for the turn restrictions in the current data set */
-	private TurnRestrictionsInDatasetView pnlTurnRestrictionsInDataSet;
-	/** the view for the turn restrictions related to the current selection */
-	private TurnRestrictionsInSelectionView pnlTurnRestrictionsInSelection;
-	
-	/** three actions */
-	private NewAction actNew;
-	private EditAction actEdit;
-	private DeleteAction actDelete;	 
-	private SelectSelectedTurnRestrictions actSelectSelectedTurnRestrictions;
-	private ZoomToAction actZoomTo;
-	private SwitchListViewHandler switchListViewHandler;
-	
-	private AbstractTurnRestrictionsListView currentListView = null;
-	
-	/** the main content panel in this toggle dialog */
-	private JPanel pnlContent;
-	private PreferenceChangeHandler preferenceChangeHandler;
-	
-	@Override
-	public void showNotify() {
-		pnlTurnRestrictionsInDataSet.registerAsListener();		
-		pnlTurnRestrictionsInSelection.registerAsListener();
-		MapView.addEditLayerChangeListener(actNew);
-		actNew.updateEnabledState();
-		Main.pref.addPreferenceChangeListener(preferenceChangeHandler);
-		preferenceChangeHandler.refreshIconSet();
-	}
+    /** checkbox for switching between the two list views */
+    private JCheckBox cbInSelectionOnly;
+    /** the view for the turn restrictions in the current data set */
+    private TurnRestrictionsInDatasetView pnlTurnRestrictionsInDataSet;
+    /** the view for the turn restrictions related to the current selection */
+    private TurnRestrictionsInSelectionView pnlTurnRestrictionsInSelection;
+    
+    /** three actions */
+    private NewAction actNew;
+    private EditAction actEdit;
+    private DeleteAction actDelete;  
+    private SelectSelectedTurnRestrictions actSelectSelectedTurnRestrictions;
+    private ZoomToAction actZoomTo;
+    private SwitchListViewHandler switchListViewHandler;
+    
+    private AbstractTurnRestrictionsListView currentListView = null;
+    
+    /** the main content panel in this toggle dialog */
+    private JPanel pnlContent;
+    private PreferenceChangeHandler preferenceChangeHandler;
+    
+    @Override
+    public void showNotify() {
+        pnlTurnRestrictionsInDataSet.registerAsListener();      
+        pnlTurnRestrictionsInSelection.registerAsListener();
+        MapView.addEditLayerChangeListener(actNew);
+        actNew.updateEnabledState();
+        Main.pref.addPreferenceChangeListener(preferenceChangeHandler);
+        preferenceChangeHandler.refreshIconSet();
+    }
 
-	@Override
-	public void hideNotify() {
-		pnlTurnRestrictionsInDataSet.unregisterAsListener();
-		pnlTurnRestrictionsInSelection.unregisterAsListener();
-		MapView.removeEditLayerChangeListener(actNew);
-		Main.pref.removePreferenceChangeListener(preferenceChangeHandler);
-	}
+    @Override
+    public void hideNotify() {
+        pnlTurnRestrictionsInDataSet.unregisterAsListener();
+        pnlTurnRestrictionsInSelection.unregisterAsListener();
+        MapView.removeEditLayerChangeListener(actNew);
+        Main.pref.removePreferenceChangeListener(preferenceChangeHandler);
+    }
 
-	/**
-	 * Builds the panel with the checkbox for switching between the two
-	 * list views
-	 * 
-	 * @return the panel
-	 */
-	protected JPanel buildInSelectionOnlyTogglePanel(){
-		JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-		pnl.setBorder(null);
-		pnl.add(cbInSelectionOnly = new JCheckBox(tr("Only participating in selection")));
-		cbInSelectionOnly.setToolTipText(tr(
-		   "<html>Select to display turn restrictions related to object in the current selection only.<br>"
-		 + "Deselect to display all turn restrictions in the current data set.</html>"));
-		return pnl;
-	}
-	
-	/**
-	 * Builds the panel with the action buttons 
-	 * 
-	 * @return the panel 
-	 */
-	protected JPanel buildCommandPanel() {
-		JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-		pnl.setBorder(null);
-		pnl.add(new SideButton(actNew = new NewAction(), false /* don't show the name */));
-		pnl.add(new SideButton(actEdit = new EditAction(), false /* don't show the name */));
-		pnl.add(new SideButton(actDelete = new DeleteAction(), false /* don't show the name */));
-		
-		actSelectSelectedTurnRestrictions = new SelectSelectedTurnRestrictions();
-		actZoomTo = new ZoomToAction();
-		return pnl;
-	}
-	
-	/**
-	 * Builds the UI
-	 */
-	protected void build() {
-		pnlContent = new JPanel(new BorderLayout(0,0));
-		pnlContent.setBorder(null);
-		pnlContent.add(buildInSelectionOnlyTogglePanel(),  BorderLayout.NORTH);
-		pnlContent.add(buildCommandPanel(), BorderLayout.SOUTH);
-		
-		add(pnlContent, BorderLayout.CENTER);
-		
-		// create the two list views 
-		pnlTurnRestrictionsInDataSet = new TurnRestrictionsInDatasetView();
-		pnlTurnRestrictionsInSelection = new TurnRestrictionsInSelectionView();
-		
-		// wire the handler for switching between list views 
-		switchListViewHandler = new SwitchListViewHandler();
-		switchListViewHandler.activateListView(pnlTurnRestrictionsInDataSet);
-		cbInSelectionOnly.addItemListener(switchListViewHandler);
-		
-		// wire the popup menu launcher to the two turn restriction lists  
-		TurnRestrictionsPopupLauncher launcher = new TurnRestrictionsPopupLauncher();
-		pnlTurnRestrictionsInDataSet.getList().addMouseListener(launcher);
-		pnlTurnRestrictionsInSelection.getList().addMouseListener(launcher);
-		
-		preferenceChangeHandler = new PreferenceChangeHandler();
-		
-	}
-	
-	/**
-	 * Constructor
-	 */
-	public TurnRestrictionsListDialog() {
-		super(
-				tr("Turn Restrictions"), 
-				"turnrestrictions",
-				tr("Display and manage turn restrictions in the current data set"),
-				null, // no shortcut
-				150   // default height
-		);
-		build();
-		HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#TurnRestrictionToggleDialog"));
-	}	
-	
-	/**
-	 * Switches between the two list view.
-	 */
-	class SwitchListViewHandler implements ItemListener {
-		public void activateListView(AbstractTurnRestrictionsListView view) {
-			if (currentListView != null) {
-				currentListView.removeListSelectionListener(actEdit);
-				currentListView.removeListSelectionListener(actDelete);
-				currentListView.removeListSelectionListener(actSelectSelectedTurnRestrictions);
-				currentListView.removeListSelectionListener(actZoomTo);
-				pnlContent.remove(currentListView);
-			}
-			pnlContent.add(view,BorderLayout.CENTER);
-			currentListView = view;						
-			view.addListSelectionListener(actEdit);
-			view.addListSelectionListener(actDelete);
-			view.addListSelectionListener(actSelectSelectedTurnRestrictions);
-			view.addListSelectionListener(actZoomTo);
-			actEdit.updateEnabledState();
-			actDelete.updateEnabledState();
-			actSelectSelectedTurnRestrictions.updateEnabledState();
-			actZoomTo.updateEnabledState();
-			currentListView.revalidate();
-			currentListView.repaint();			
-		}
+    /**
+     * Builds the panel with the checkbox for switching between the two
+     * list views
+     * 
+     * @return the panel
+     */
+    protected JPanel buildInSelectionOnlyTogglePanel(){
+        JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
+        pnl.setBorder(null);
+        pnl.add(cbInSelectionOnly = new JCheckBox(tr("Only participating in selection")));
+        cbInSelectionOnly.setToolTipText(tr(
+           "<html>Select to display turn restrictions related to object in the current selection only.<br>"
+         + "Deselect to display all turn restrictions in the current data set.</html>"));
+        return pnl;
+    }
+    
+    /**
+     * Builds the panel with the action buttons 
+     * 
+     * @return the panel 
+     */
+    protected JPanel buildCommandPanel() {
+        JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
+        pnl.setBorder(null);
+        pnl.add(new SideButton(actNew = new NewAction(), false /* don't show the name */));
+        pnl.add(new SideButton(actEdit = new EditAction(), false /* don't show the name */));
+        pnl.add(new SideButton(actDelete = new DeleteAction(), false /* don't show the name */));
+        
+        actSelectSelectedTurnRestrictions = new SelectSelectedTurnRestrictions();
+        actZoomTo = new ZoomToAction();
+        return pnl;
+    }
+    
+    /**
+     * Builds the UI
+     */
+    protected void build() {
+        pnlContent = new JPanel(new BorderLayout(0,0));
+        pnlContent.setBorder(null);
+        pnlContent.add(buildInSelectionOnlyTogglePanel(),  BorderLayout.NORTH);
+        pnlContent.add(buildCommandPanel(), BorderLayout.SOUTH);
+        
+        add(pnlContent, BorderLayout.CENTER);
+        
+        // create the two list views 
+        pnlTurnRestrictionsInDataSet = new TurnRestrictionsInDatasetView();
+        pnlTurnRestrictionsInSelection = new TurnRestrictionsInSelectionView();
+        
+        // wire the handler for switching between list views 
+        switchListViewHandler = new SwitchListViewHandler();
+        switchListViewHandler.activateListView(pnlTurnRestrictionsInDataSet);
+        cbInSelectionOnly.addItemListener(switchListViewHandler);
+        
+        // wire the popup menu launcher to the two turn restriction lists  
+        TurnRestrictionsPopupLauncher launcher = new TurnRestrictionsPopupLauncher();
+        pnlTurnRestrictionsInDataSet.getList().addMouseListener(launcher);
+        pnlTurnRestrictionsInSelection.getList().addMouseListener(launcher);
+        
+        preferenceChangeHandler = new PreferenceChangeHandler();
+        
+    }
+    
+    /**
+     * Constructor
+     */
+    public TurnRestrictionsListDialog() {
+        super(
+                tr("Turn Restrictions"), 
+                "turnrestrictions",
+                tr("Display and manage turn restrictions in the current data set"),
+                null, // no shortcut
+                150   // default height
+        );
+        build();
+        HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#TurnRestrictionToggleDialog"));
+    }   
+    
+    /**
+     * Switches between the two list view.
+     */
+    class SwitchListViewHandler implements ItemListener {
+        public void activateListView(AbstractTurnRestrictionsListView view) {
+            if (currentListView != null) {
+                currentListView.removeListSelectionListener(actEdit);
+                currentListView.removeListSelectionListener(actDelete);
+                currentListView.removeListSelectionListener(actSelectSelectedTurnRestrictions);
+                currentListView.removeListSelectionListener(actZoomTo);
+                pnlContent.remove(currentListView);
+            }
+            pnlContent.add(view,BorderLayout.CENTER);
+            currentListView = view;                     
+            view.addListSelectionListener(actEdit);
+            view.addListSelectionListener(actDelete);
+            view.addListSelectionListener(actSelectSelectedTurnRestrictions);
+            view.addListSelectionListener(actZoomTo);
+            actEdit.updateEnabledState();
+            actDelete.updateEnabledState();
+            actSelectSelectedTurnRestrictions.updateEnabledState();
+            actZoomTo.updateEnabledState();
+            currentListView.revalidate();
+            currentListView.repaint();          
+        }
 
-		public void itemStateChanged(ItemEvent e) {
-			switch(e.getStateChange()) {
-			case ItemEvent.SELECTED:
-				activateListView(pnlTurnRestrictionsInSelection);
-				break;
-				
-			case ItemEvent.DESELECTED:		
-				activateListView(pnlTurnRestrictionsInDataSet);
-				break;
-			}
-		}
-	}
-	
-	 /**
+        public void itemStateChanged(ItemEvent e) {
+            switch(e.getStateChange()) {
+            case ItemEvent.SELECTED:
+                activateListView(pnlTurnRestrictionsInSelection);
+                break;
+                
+            case ItemEvent.DESELECTED:      
+                activateListView(pnlTurnRestrictionsInDataSet);
+                break;
+            }
+        }
+    }
+    
+     /**
      * The edit action
      *
      */
@@ -230,23 +230,23 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
             return members;
         }
 
-		public void launchEditor(Relation toEdit) {
-			if (toEdit == null)
-				return;
-			OsmDataLayer layer = Main.main.getEditLayer();
-			TurnRestrictionEditorManager manager = TurnRestrictionEditorManager.getInstance();
-			TurnRestrictionEditor editor = manager.getEditorForRelation(layer, toEdit);
-			if (editor != null) {
-				editor.setVisible(true);
-				editor.toFront();
-			} else {
-				editor = new TurnRestrictionEditor(
-						TurnRestrictionsListDialog.this, layer,toEdit);
-				manager.positionOnScreen(editor);
-				manager.register(layer, toEdit,editor);
-				editor.setVisible(true);
-			}
-		}
+        public void launchEditor(Relation toEdit) {
+            if (toEdit == null)
+                return;
+            OsmDataLayer layer = Main.main.getEditLayer();
+            TurnRestrictionEditorManager manager = TurnRestrictionEditorManager.getInstance();
+            TurnRestrictionEditor editor = manager.getEditorForRelation(layer, toEdit);
+            if (editor != null) {
+                editor.setVisible(true);
+                editor.toFront();
+            } else {
+                editor = new TurnRestrictionEditor(
+                        TurnRestrictionsListDialog.this, layer,toEdit);
+                manager.positionOnScreen(editor);
+                manager.register(layer, toEdit,editor);
+                editor.setVisible(true);
+            }
+        }
 
         public void actionPerformed(ActionEvent e) {
             if (!isEnabled())
@@ -257,7 +257,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
 
         public void updateEnabledState() {
-        	setEnabled(currentListView!= null && currentListView.getModel().getSelectedTurnRestrictions().size() == 1);
+            setEnabled(currentListView!= null && currentListView.getModel().getSelectedTurnRestrictions().size() == 1);
         }
         
         public void valueChanged(ListSelectionEvent e) {
@@ -297,11 +297,11 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
         
         public void updateEnabledState() {
-        	setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
+            setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
         }
 
         public void valueChanged(ListSelectionEvent e) {
-        	updateEnabledState();
+            updateEnabledState();
         }
     }
 
@@ -318,10 +318,10 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
 
         public void run() {
-        	 OsmDataLayer layer =  Main.main.getEditLayer();
-        	 if (layer == null) return;
-        	 Relation tr = new TurnRestrictionBuilder().buildFromSelection(layer);
-        	 TurnRestrictionEditor editor = new TurnRestrictionEditor(TurnRestrictionsListDialog.this, layer, tr);
+             OsmDataLayer layer =  Main.main.getEditLayer();
+             if (layer == null) return;
+             Relation tr = new TurnRestrictionBuilder().buildFromSelection(layer);
+             TurnRestrictionEditor editor = new TurnRestrictionEditor(TurnRestrictionsListDialog.this, layer, tr);
              TurnRestrictionEditorManager.getInstance().positionOnScreen(editor);             
              TurnRestrictionEditorManager.getInstance().register(layer, tr, editor);
              editor.setVisible(true);
@@ -335,10 +335,10 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
             setEnabled(Main.main != null && Main.main.getEditLayer() != null);
         }
 
-		public void editLayerChanged(OsmDataLayer oldLayer,
-				OsmDataLayer newLayer) {
+        public void editLayerChanged(OsmDataLayer oldLayer,
+                OsmDataLayer newLayer) {
             updateEnabledState();
-		}
+        }
     }
     
     /**
@@ -366,11 +366,11 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
         
         public void updateEnabledState() {
-        	setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
+            setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
         }
 
         public void valueChanged(ListSelectionEvent e) {
-        	updateEnabledState();
+            updateEnabledState();
         }
     }
     
@@ -400,11 +400,11 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
         
         public void updateEnabledState() {
-        	setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
+            setEnabled(currentListView != null && !currentListView.getModel().getSelectedTurnRestrictions().isEmpty());
         }
 
         public void valueChanged(ListSelectionEvent e) {
-        	updateEnabledState();
+            updateEnabledState();
         }
     }
     
@@ -447,16 +447,16 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
      * and refreshes the set of road icons 
      *
      */
-    class PreferenceChangeHandler implements PreferenceChangedListener {    	
-    	public void refreshIconSet() {
-    		pnlTurnRestrictionsInDataSet.initIconSetFromPreferences(Main.pref);
-			pnlTurnRestrictionsInSelection.initIconSetFromPreferences(Main.pref);
-			repaint();
-    	}
-    	
-		public void preferenceChanged(PreferenceChangeEvent evt) {			
-			if (!evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)) return;
-			refreshIconSet();
-		}
+    class PreferenceChangeHandler implements PreferenceChangedListener {        
+        public void refreshIconSet() {
+            pnlTurnRestrictionsInDataSet.initIconSetFromPreferences(Main.pref);
+            pnlTurnRestrictionsInSelection.initIconSetFromPreferences(Main.pref);
+            repaint();
+        }
+        
+        public void preferenceChanged(PreferenceChangeEvent evt) {          
+            if (!evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)) return;
+            refreshIconSet();
+        }
     }
 }

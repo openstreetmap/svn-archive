@@ -560,6 +560,6 @@ public class MultiOsmReader {
         processWaysAfterParsing();
         processRelationsAfterParsing();
     }
-    
-    
+
+
 }

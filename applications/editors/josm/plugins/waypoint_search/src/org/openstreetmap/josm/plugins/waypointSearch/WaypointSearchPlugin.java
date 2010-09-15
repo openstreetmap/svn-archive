@@ -28,18 +28,18 @@ public class WaypointSearchPlugin extends Plugin implements LayerChangeListener 
         
     }
 
-	
-	@Override
-	public void layerAdded(Layer newLayer) {
-		//add dialog
-		if (Main.map.getToggleDialog(SelectWaypointDialog.class)==null) {
-			Main.map.addToggleDialog(waypointDialog);
-		}
-		//update search
-		if (engine.gpxLayersExist()) {
-			waypointDialog.updateSearchResults();
-		}
-	}
+    
+    @Override
+    public void layerAdded(Layer newLayer) {
+        //add dialog
+        if (Main.map.getToggleDialog(SelectWaypointDialog.class)==null) {
+            Main.map.addToggleDialog(waypointDialog);
+        }
+        //update search
+        if (engine.gpxLayersExist()) {
+            waypointDialog.updateSearchResults();
+        }
+    }
 
 
 

@@ -22,7 +22,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  *
  */
 public class TurnRestrictionEditorManager extends WindowAdapter implements MapView.LayerChangeListener{
-	static private final Logger logger = Logger.getLogger(TurnRestrictionEditorManager.class.getName());
+    static private final Logger logger = Logger.getLogger(TurnRestrictionEditorManager.class.getName());
 
     /** keeps track of open relation editors */
     static TurnRestrictionEditorManager instance;
@@ -54,38 +54,38 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
         }
 
         @Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((layer == null) ? 0 : layer.hashCode());
-			result = prime * result
-					+ ((primitiveId == null) ? 0 : primitiveId.hashCode());
-			return result;
-		}
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((layer == null) ? 0 : layer.hashCode());
+            result = prime * result
+                    + ((primitiveId == null) ? 0 : primitiveId.hashCode());
+            return result;
+        }
 
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			DialogContext other = (DialogContext) obj;
-			if (layer == null) {
-				if (other.layer != null)
-					return false;
-			} else if (!layer.equals(other.layer))
-				return false;
-			if (primitiveId == null) {
-				if (other.primitiveId != null)
-					return false;
-			} else if (!primitiveId.equals(other.primitiveId))
-				return false;
-			return true;
-		}
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            DialogContext other = (DialogContext) obj;
+            if (layer == null) {
+                if (other.layer != null)
+                    return false;
+            } else if (!layer.equals(other.layer))
+                return false;
+            if (primitiveId == null) {
+                if (other.primitiveId != null)
+                    return false;
+            } else if (!primitiveId.equals(other.primitiveId))
+                return false;
+            return true;
+        }
 
-		public boolean matchesLayer(OsmDataLayer layer) {
+        public boolean matchesLayer(OsmDataLayer layer) {
             if (layer == null) return false;
             return this.layer.equals(layer);
         }
@@ -186,7 +186,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
 
     @Override
     public void windowClosed(WindowEvent e) {
-    	TurnRestrictionEditor editor = (TurnRestrictionEditor)e.getWindow();
+        TurnRestrictionEditor editor = (TurnRestrictionEditor)e.getWindow();
         DialogContext context = null;
         for (DialogContext c : openDialogs.keySet()) {
             if (editor.equals(openDialogs.get(c))) {
@@ -199,7 +199,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
         }
     }
 
-	/**
+    /**
      * Positions an {@see TurnRestrictionEditor} centered on the screen
      *
      * @param editor the editor
@@ -285,7 +285,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
         while(it.hasNext()) {
             Entry<DialogContext,TurnRestrictionEditor> entry = it.next();
             if (entry.getKey().matchesLayer(dataLayer)) {
-            	TurnRestrictionEditor editor = entry.getValue();
+                TurnRestrictionEditor editor = entry.getValue();
                 it.remove();
                 editor.setVisible(false);
                 editor.dispose();

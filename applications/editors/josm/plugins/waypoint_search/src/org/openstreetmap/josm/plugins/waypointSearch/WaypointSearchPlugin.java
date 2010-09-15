@@ -35,7 +35,7 @@ public class WaypointSearchPlugin extends Plugin implements LayerChangeListener 
 		if (Main.map.getToggleDialog(SelectWaypointDialog.class)==null) {
 			Main.map.addToggleDialog(waypointDialog);
 		}
-		//Enable to menu
+		//update search
 		if (engine.gpxLayersExist()) {
 			waypointDialog.updateSearchResults();
 		}

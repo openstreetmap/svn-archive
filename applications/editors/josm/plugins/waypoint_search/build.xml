@@ -30,7 +30,7 @@
 <project name="waypoint_search" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="better integration wih JOSM gui" />
+    <property name="commit.message" value="bugfix of search when layer is added" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3514" />
 

@@ -63,13 +63,10 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
     
     
 	public void updateSearchResults(){
-		String searchfor;
+		String searchfor = "";
 		listModel.clear();
 		SearchResultObjectCache.clear();
-		if (first_time_search) {
-			searchfor = "";
-			first_time_search = false;
-		} else {
+		if (!first_time_search) {
 			searchfor = searchPattern.getText();
 		}
 		for (Iterator<Marker> i = engine.searchGpxWaypoints(searchfor).iterator(); i.hasNext();) {
@@ -95,7 +92,7 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+		first_time_search = false;
 	}
 
 

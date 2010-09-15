@@ -112,7 +112,6 @@
 				<attribute name="Plugin-Link" value="http://openseamap.org/"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-				<attribute name="Class-Path" value="./tplug/ifc.jar"/>
 			</manifest>
 		</jar>
 	</target>

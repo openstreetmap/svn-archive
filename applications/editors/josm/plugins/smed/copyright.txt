@@ -1,0 +1,7 @@
+Plugin toms
+
+This plugin is copyrighted 2009-2010 
+by Werner Koenig <werner.koenig@t-online.de>
+and by Malcolm Herring <malcolm.herring@btinternet.com>.
+
+It is distributed under GPL-v3 license (see file  LICENSE.txt in this directory).

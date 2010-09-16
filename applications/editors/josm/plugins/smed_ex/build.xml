@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="smed_ex" basedir=".">
+<project name="01_smed_ex" basedir=".">
 
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="New release" />
@@ -44,6 +44,7 @@
 	<property name="plugin.build.dir"       value="build"/>
 	<property name="smed.build.dir"         value="../smed/build"/>
 	<property name="smed.src.dir"           value="../smed/src"/>
+	<property name="smed.plugins"           value="../smed/plugins"/>
 	<property name="plugin.src.dir"         value="src"/>
 	<!-- this is the directory where the plugin jar is copied to -->
 	<property name="plugin.dist.dir"        value="../../dist"/>
@@ -191,6 +192,9 @@
 				<attribute name="Class-Path" value="./tplug/ifc.jar"/>
 			</manifest>
 		</jar>
+		
+		<copy file="${plugin.jar}" todir="${smed.plugins}"/>
+		
 	</target>
 	
 	<!--

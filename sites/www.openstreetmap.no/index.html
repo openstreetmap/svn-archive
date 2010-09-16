@@ -300,11 +300,14 @@ function search(baseurl, term) {
   var url = baseurl;
 
   var args = new Object();
-  args.format = 'json';
-  args.json_callback = 'searchCallback';
   args.q = term;
   args.viewboxlbrt = map.getExtent()
     .transform(map.getProjectionObject(), epsg4326).toBBOX();
+
+  document.getElementById("searchCount").href = setArgs(url, args);
+
+  args.format = 'json';
+  args.json_callback = 'searchCallback';
 
   url = setArgs(url, args);
 
@@ -407,7 +410,8 @@ window.onunload = setCookie;
         Finn et sted:
           <input id="q" name="q" value="" style="width:270px;"/>
           <input type="submit" value="Søk"/>
-          <span id="searchCount"></span>
+          <a id="searchCount" href="#"
+             title="Se alle søkeresultatene med Nominatim"></a>
         </form>
       </p>
     </div>

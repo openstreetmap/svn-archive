@@ -316,6 +316,11 @@ function search(baseurl, term) {
 }
 
 function searchCallback(result) {
+  if (result.length>0) {
+    document.getElementById("searchCount").innerHTML = result.length+' treff.';
+  } else {
+    document.getElementById("searchCount").innerHTML = 'Ingen treff.';
+  }
   var bottom = result[0].boundingbox[0];
   var top = result[0].boundingbox[1];
   var left = result[0].boundingbox[2];
@@ -323,7 +328,6 @@ function searchCallback(result) {
   var bbox = new OpenLayers.Bounds(left,bottom,right,top)
     .transform(epsg4326, map.getProjectionObject());
   map.zoomToExtent(bbox);
-  document.getElementById("searchCount").innerHTML = result.length+' treff.';
 }
 
 window.onload = init;

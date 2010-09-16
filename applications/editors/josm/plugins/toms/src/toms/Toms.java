@@ -39,8 +39,6 @@ public class Toms extends Plugin {
 		Smp.setEnabled(false);
 	}
 
-
-	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (oldFrame == null && newFrame != null) {
 			Smp.setEnabled(true);
@@ -49,5 +47,6 @@ public class Toms extends Plugin {
 			SmpDialog.CloseDialog();
 		}
 	}
-
 }
+
+

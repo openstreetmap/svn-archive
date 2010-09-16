@@ -20,19 +20,19 @@ import smed.plug.ifc.SmedPluggable;
 public class SmedPluginLoader {
 
 
-	public static List<SmedPluggable> loadPlugins(File plugDir) throws IOException {
-		File[] plugJars = plugDir.listFiles(new JARFileFilter());
-		Arrays.sort(plugJars);
-		
-		URL[] urls = fileArrayToURLArray(plugJars);
-		if(urls == null) return null;
-		
-		ClassLoader cl = new URLClassLoader(urls);
-		List<Class<SmedPluggable>> plugClasses = extractClassesFromJARs(plugJars, cl);
-		
-		if(plugClasses == null) return null;
-		else return createPluggableObjects(plugClasses);
-	}
+    public static List<SmedPluggable> loadPlugins(File plugDir) throws IOException {
+        File[] plugJars = plugDir.listFiles(new JARFileFilter());
+        Arrays.sort(plugJars);
+        
+        URL[] urls = fileArrayToURLArray(plugJars);
+        if(urls == null) return null;
+        
+        ClassLoader cl = new URLClassLoader(urls);
+        List<Class<SmedPluggable>> plugClasses = extractClassesFromJARs(plugJars, cl);
+        
+        if(plugClasses == null) return null;
+        else return createPluggableObjects(plugClasses);
+    }
 
     private static List<SmedPluggable> createPluggableObjects(List<Class<SmedPluggable>> pluggables) {
         List<SmedPluggable> plugs = new ArrayList<SmedPluggable>(pluggables.size());

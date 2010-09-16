@@ -211,6 +211,49 @@ MAP
   END
 
   LAYER
+    NAME "Mautknoten"
+    TYPE POINT
+    STATUS ON
+    OPACITY ALPHA
+
+    METADATA
+      "wms_title" "Mautknoten (Deutschland)"
+      "wms_extent" "6.024531 54.805774 15.008569 47.547219"
+      "wms_srs" "EPSG:4326"
+      "copyright"  "© Enaikoon: released with no restrictions"
+    END
+
+    DATA "mautknoten/mautknoten_4326"
+
+    PROJECTION
+      "init=epsg:4326"
+    END
+
+    CLASSITEM "beschr"
+    CLASS
+        NAME "Ausfahrten"
+        EXPRESSION /Aus./
+        STYLE
+            COLOR 229 245 224
+            SYMBOL 0
+            OUTLINECOLOR 0 0 0
+            SIZE 7
+        END
+    END
+    CLASS
+        NAME "Auffahrten"
+        EXPRESSION /Auf./
+        STYLE
+            COLOR 49 163 84
+            SYMBOL 0
+            OUTLINECOLOR 0 0 0
+            SIZE 7
+        END
+    END
+  END
+
+
+  LAYER
     METADATA
       "wms_title"   "Copyright Notice"
       "ows_service" "none"

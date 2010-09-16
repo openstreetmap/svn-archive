@@ -612,13 +612,13 @@ public class BuoyLat extends Buoy {
 
             if (!image.equals("/images/Lateral")) { //$NON-NLS-1$
 
-                if (hasTopMark()) {
+/*                if (hasTopMark()) {
                     if (cat == PORT_HAND || cat == PREF_PORT_HAND)
                         image += "_Can"; //$NON-NLS-1$
                     else
                         image += "_Cone"; //$NON-NLS-1$
                 }
-                image += ".png"; //$NON-NLS-1$
+*/                image += ".png"; //$NON-NLS-1$
                 dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 
                 if (hasRadar()) {

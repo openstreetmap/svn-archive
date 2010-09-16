@@ -173,8 +173,8 @@ public class BuoySaw extends Buoy {
             }
 
             if (!image.equals("/images/Safe_Water")) { //$NON-NLS-1$
-                if (hasTopMark())
-                    image += "_Sphere"; //$NON-NLS-1$
+//                if (hasTopMark())
+//                    image += "_Sphere"; //$NON-NLS-1$
                 image += ".png"; //$NON-NLS-1$
                 dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
             } else
@@ -237,7 +237,7 @@ public class BuoySaw extends Buoy {
             break;
         default:
         }
-        saveTopMarkData("spherical", "red"); //$NON-NLS-1$ //$NON-NLS-2$
+        saveTopMarkData("sphere", "red"); //$NON-NLS-1$ //$NON-NLS-2$
         saveLightData(); //$NON-NLS-1$
         saveRadarFogData();
     }

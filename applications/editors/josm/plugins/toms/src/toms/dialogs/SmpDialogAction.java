@@ -122,6 +122,7 @@ public class SmpDialogAction extends JosmAction {
     public JLabel lM03Icon = null; // Reflector
     public JLabel lM04Icon = null; // Racon
     public JLabel lM05Icon = null; // Fog
+    public JLabel lM06Icon = null; // Topmark
     public JLabel lM01FireMark = null;
     private JLabel lM01TypeOfMark = null;
     public JComboBox cbM01TypeOfMark = null;
@@ -534,6 +535,11 @@ public class SmpDialogAction extends JosmAction {
             lM05Icon.setIcon(null);
             lM05Icon.setText(""); //$NON-NLS-1$
 
+            lM06Icon = new JLabel();
+            lM06Icon.setBounds(new Rectangle(210, 20, 150, 200));
+            lM06Icon.setIcon(null);
+            lM06Icon.setText(""); //$NON-NLS-1$
+
             lM01FireMark = new JLabel();
             lM01FireMark.setBounds(new Rectangle(300, 85, 95, 20));
             lM01FireMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
@@ -689,6 +695,7 @@ public class SmpDialogAction extends JosmAction {
             pM01SeaMap.add(lM03Icon, null);
             pM01SeaMap.add(lM04Icon, null);
             pM01SeaMap.add(lM05Icon, null);
+            pM01SeaMap.add(lM06Icon, null);
             pM01SeaMap.add(getCbM01TypeOfMark(), null);
             pM01SeaMap.add(lM01TypeOfMark, null);
             pM01SeaMap.add(getCbM01CatOfMark(), null);

@@ -498,6 +498,7 @@ abstract public class Buoy extends SeaMark {
         dlg.lM03Icon.setIcon(null);
         dlg.lM04Icon.setIcon(null);
         dlg.lM05Icon.setIcon(null);
+		dlg.lM06Icon.setIcon(null);
 
         dlg.rbM01RegionA.setSelected(!getRegion());
         dlg.rbM01RegionB.setSelected(getRegion());
@@ -964,6 +965,8 @@ abstract public class Buoy extends SeaMark {
         dlg.lM02Icon.setIcon(null);
         dlg.lM03Icon.setIcon(null);
         dlg.lM04Icon.setIcon(null);
+		dlg.lM05Icon.setIcon(null);
+		dlg.lM06Icon.setIcon(null);
 
         dlg.rbM01RegionA.setEnabled(false);
         dlg.rbM01RegionB.setEnabled(false);

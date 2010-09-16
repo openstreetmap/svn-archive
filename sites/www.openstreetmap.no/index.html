@@ -224,7 +224,7 @@ function setArgs(url, args) {
       if (args[arg] == null) {
          queryitems.push(escape(arg));
       } else {
-         queryitems.push(escape(arg) + "=" + escape(args[arg]));
+         queryitems.push(escape(arg) + "=" + encodeURIComponent(args[arg]));
       }
    }
    return url.replace(/\?.*$/, "") + "?" + queryitems.join("&");

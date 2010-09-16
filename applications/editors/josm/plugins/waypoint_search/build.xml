@@ -101,7 +101,6 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Enables searching for waypoint imported from gpx file."/>
                 <attribute name="Plugin-Icon" value="images/WaypointSearch.png"/>
-                <attribute name="Plugin-Link" value="..."/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

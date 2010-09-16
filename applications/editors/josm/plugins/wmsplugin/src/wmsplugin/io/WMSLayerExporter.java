@@ -6,8 +6,8 @@ import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.io.FileExporter;
 
 public class WMSLayerExporter extends FileExporter{
-	
-	public WMSLayerExporter() {
-		super(new ExtensionFileFilter("wms", "wms", tr("WMS Files (*.wms)")));
-	}
+    
+    public WMSLayerExporter() {
+        super(new ExtensionFileFilter("wms", "wms", tr("WMS Files (*.wms)")));
+    }
 }

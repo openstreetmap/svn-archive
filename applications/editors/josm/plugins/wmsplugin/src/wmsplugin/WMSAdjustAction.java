@@ -30,187 +30,187 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 
 public class WMSAdjustAction extends MapMode implements MouseListener, MouseMotionListener{
-	//static private final Logger logger = Logger.getLogger(WMSAdjustAction.class.getName());
+    //static private final Logger logger = Logger.getLogger(WMSAdjustAction.class.getName());
 
-	GeorefImage selectedImage;
-	boolean mouseDown;
-	EastNorth prevEastNorth;
-	private WMSLayer adjustingLayer;
+    GeorefImage selectedImage;
+    boolean mouseDown;
+    EastNorth prevEastNorth;
+    private WMSLayer adjustingLayer;
 
-	public WMSAdjustAction(MapFrame mapFrame) {
-		super(tr("Adjust WMS"), "adjustwms",
-				tr("Adjust the position of the selected WMS layer"), mapFrame,
-				ImageProvider.getCursor("normal", "move"));
-	}
+    public WMSAdjustAction(MapFrame mapFrame) {
+        super(tr("Adjust WMS"), "adjustwms",
+                tr("Adjust the position of the selected WMS layer"), mapFrame,
+                ImageProvider.getCursor("normal", "move"));
+    }
 
 
 
-	@Override public void enterMode() {
-		super.enterMode();
-		if (!hasWMSLayersToAdjust()) {
-			warnNoWMSLayers();
-			return;
-		}
-		List<WMSLayer> wmsLayers = Main.map.mapView.getLayersOfType(WMSLayer.class);
-		if (wmsLayers.size() == 1) {
-			adjustingLayer = wmsLayers.get(0);
-		} else {
-			adjustingLayer = (WMSLayer)askAdjustLayer(Main.map.mapView.getLayersOfType(WMSLayer.class));
-		}
-		if (adjustingLayer == null)
-			return;
-		if (!adjustingLayer.isVisible()) {
-			adjustingLayer.setVisible(true);
-		}
-		Main.map.mapView.addMouseListener(this);
-		Main.map.mapView.addMouseMotionListener(this);
-	}
+    @Override public void enterMode() {
+        super.enterMode();
+        if (!hasWMSLayersToAdjust()) {
+            warnNoWMSLayers();
+            return;
+        }
+        List<WMSLayer> wmsLayers = Main.map.mapView.getLayersOfType(WMSLayer.class);
+        if (wmsLayers.size() == 1) {
+            adjustingLayer = wmsLayers.get(0);
+        } else {
+            adjustingLayer = (WMSLayer)askAdjustLayer(Main.map.mapView.getLayersOfType(WMSLayer.class));
+        }
+        if (adjustingLayer == null)
+            return;
+        if (!adjustingLayer.isVisible()) {
+            adjustingLayer.setVisible(true);
+        }
+        Main.map.mapView.addMouseListener(this);
+        Main.map.mapView.addMouseMotionListener(this);
+    }
 
-	@Override public void exitMode() {
-		super.exitMode();
-		Main.map.mapView.removeMouseListener(this);
-		Main.map.mapView.removeMouseMotionListener(this);
-		adjustingLayer = null;
-	}
+    @Override public void exitMode() {
+        super.exitMode();
+        Main.map.mapView.removeMouseListener(this);
+        Main.map.mapView.removeMouseMotionListener(this);
+        adjustingLayer = null;
+    }
 
-	@Override public void mousePressed(MouseEvent e) {
-		if (e.getButton() != MouseEvent.BUTTON1)
-			return;
+    @Override public void mousePressed(MouseEvent e) {
+        if (e.getButton() != MouseEvent.BUTTON1)
+            return;
 
-		if (adjustingLayer.isVisible()) {
-			prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
-			selectedImage = adjustingLayer.findImage(prevEastNorth);
-			if(selectedImage!=null) {
-				Main.map.mapView.setCursor
-				(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-			}
-		}
-	}
+        if (adjustingLayer.isVisible()) {
+            prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
+            selectedImage = adjustingLayer.findImage(prevEastNorth);
+            if(selectedImage!=null) {
+                Main.map.mapView.setCursor
+                (Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+            }
+        }
+    }
 
-	@Override public void mouseDragged(MouseEvent e) {
-		if(selectedImage!=null) {
-			EastNorth eastNorth=
-				Main.map.mapView.getEastNorth(e.getX(),e.getY());
-			adjustingLayer.displace(
-					eastNorth.east()-prevEastNorth.east(),
-					eastNorth.north()-prevEastNorth.north()
-			);
-			prevEastNorth = eastNorth;
-			Main.map.mapView.repaint();
-		}
-	}
+    @Override public void mouseDragged(MouseEvent e) {
+        if(selectedImage!=null) {
+            EastNorth eastNorth=
+                Main.map.mapView.getEastNorth(e.getX(),e.getY());
+            adjustingLayer.displace(
+                    eastNorth.east()-prevEastNorth.east(),
+                    eastNorth.north()-prevEastNorth.north()
+            );
+            prevEastNorth = eastNorth;
+            Main.map.mapView.repaint();
+        }
+    }
 
-	@Override public void mouseReleased(MouseEvent e) {
-		Main.map.mapView.repaint();
-		Main.map.mapView.setCursor(Cursor.getDefaultCursor());
-		selectedImage = null;
-		prevEastNorth = null;
-	}
+    @Override public void mouseReleased(MouseEvent e) {
+        Main.map.mapView.repaint();
+        Main.map.mapView.setCursor(Cursor.getDefaultCursor());
+        selectedImage = null;
+        prevEastNorth = null;
+    }
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
 
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-	}
+    @Override
+    public void mouseMoved(MouseEvent e) {
+    }
 
-	@Override public void mouseClicked(MouseEvent e) {
-	}
+    @Override public void mouseClicked(MouseEvent e) {
+    }
 
-	@Override public boolean layerIsSupported(Layer l) {
-		return hasWMSLayersToAdjust();
-	}
+    @Override public boolean layerIsSupported(Layer l) {
+        return hasWMSLayersToAdjust();
+    }
 
-	/**
-	 * the list cell renderer used to render layer list entries
-	 *
-	 */
-	static public class LayerListCellRenderer extends DefaultListCellRenderer {
+    /**
+     * the list cell renderer used to render layer list entries
+     *
+     */
+    static public class LayerListCellRenderer extends DefaultListCellRenderer {
 
-		protected boolean isActiveLayer(Layer layer) {
-			if (Main.map == null)
-				return false;
-			if (Main.map.mapView == null)
-				return false;
-			return Main.map.mapView.getActiveLayer() == layer;
-		}
+        protected boolean isActiveLayer(Layer layer) {
+            if (Main.map == null)
+                return false;
+            if (Main.map.mapView == null)
+                return false;
+            return Main.map.mapView.getActiveLayer() == layer;
+        }
 
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus) {
-			Layer layer = (Layer) value;
-			JLabel label = (JLabel) super.getListCellRendererComponent(list, layer.getName(), index, isSelected,
-					cellHasFocus);
-			Icon icon = layer.getIcon();
-			label.setIcon(icon);
-			label.setToolTipText(layer.getToolTipText());
-			return label;
-		}
-	}
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+                boolean cellHasFocus) {
+            Layer layer = (Layer) value;
+            JLabel label = (JLabel) super.getListCellRendererComponent(list, layer.getName(), index, isSelected,
+                    cellHasFocus);
+            Icon icon = layer.getIcon();
+            label.setIcon(icon);
+            label.setToolTipText(layer.getToolTipText());
+            return label;
+        }
+    }
 
-	/**
-	 * Prompts the user with a list of WMS layers which can be adjusted
-	 *
-	 * @param adjustableLayers the list of adjustable layers
-	 * @return  the selected layer; null, if no layer was selected
-	 */
-	protected Layer askAdjustLayer(List<? extends Layer> adjustableLayers) {
-		JComboBox layerList = new JComboBox();
-		layerList.setRenderer(new LayerListCellRenderer());
-		layerList.setModel(new DefaultComboBoxModel(adjustableLayers.toArray()));
-		layerList.setSelectedIndex(0);
+    /**
+     * Prompts the user with a list of WMS layers which can be adjusted
+     *
+     * @param adjustableLayers the list of adjustable layers
+     * @return  the selected layer; null, if no layer was selected
+     */
+    protected Layer askAdjustLayer(List<? extends Layer> adjustableLayers) {
+        JComboBox layerList = new JComboBox();
+        layerList.setRenderer(new LayerListCellRenderer());
+        layerList.setModel(new DefaultComboBoxModel(adjustableLayers.toArray()));
+        layerList.setSelectedIndex(0);
 
-		JPanel pnl = new JPanel();
-		pnl.setLayout(new GridBagLayout());
-		pnl.add(new JLabel(tr("Please select the WMS layer to adjust.")), GBC.eol());
-		pnl.add(layerList, GBC.eol());
+        JPanel pnl = new JPanel();
+        pnl.setLayout(new GridBagLayout());
+        pnl.add(new JLabel(tr("Please select the WMS layer to adjust.")), GBC.eol());
+        pnl.add(layerList, GBC.eol());
 
-		ExtendedDialog diag = new ExtendedDialog(
-				Main.parent,
-				tr("Select WMS layer"),
-				new String[] { tr("Start adjusting"),tr("Cancel") }
-		);
-		diag.setContent(pnl);
-		diag.setButtonIcons(new String[] { "mapmode/adjustwms", "cancel" });
-		diag.showDialog();
-		int decision = diag.getValue();
-		if (decision != 1)
-			return null;
-		Layer adjustLayer = (Layer) layerList.getSelectedItem();
-		return adjustLayer;
-	}
+        ExtendedDialog diag = new ExtendedDialog(
+                Main.parent,
+                tr("Select WMS layer"),
+                new String[] { tr("Start adjusting"),tr("Cancel") }
+        );
+        diag.setContent(pnl);
+        diag.setButtonIcons(new String[] { "mapmode/adjustwms", "cancel" });
+        diag.showDialog();
+        int decision = diag.getValue();
+        if (decision != 1)
+            return null;
+        Layer adjustLayer = (Layer) layerList.getSelectedItem();
+        return adjustLayer;
+    }
 
-	/**
-	 * Displays a warning message if there are no WMS layers to adjust
-	 *
-	 */
-	protected void warnNoWMSLayers() {
-		JOptionPane.showMessageDialog(
-				Main.parent,
-				tr("There are currently no WMS layer to adjust."),
-				tr("No layers to adjust"),
-				JOptionPane.WARNING_MESSAGE
-		);
-	}
+    /**
+     * Displays a warning message if there are no WMS layers to adjust
+     *
+     */
+    protected void warnNoWMSLayers() {
+        JOptionPane.showMessageDialog(
+                Main.parent,
+                tr("There are currently no WMS layer to adjust."),
+                tr("No layers to adjust"),
+                JOptionPane.WARNING_MESSAGE
+        );
+    }
 
-	/**
-	 * Replies true if there is at least one WMS layer
-	 *
-	 * @return true if there is at least one WMS layer
-	 */
-	protected boolean hasWMSLayersToAdjust() {
-		if (Main.map == null) return false;
-		if (Main.map.mapView == null) return false;
-		return ! Main.map.mapView.getLayersOfType(WMSLayer.class).isEmpty();
-	}
+    /**
+     * Replies true if there is at least one WMS layer
+     *
+     * @return true if there is at least one WMS layer
+     */
+    protected boolean hasWMSLayersToAdjust() {
+        if (Main.map == null) return false;
+        if (Main.map.mapView == null) return false;
+        return ! Main.map.mapView.getLayersOfType(WMSLayer.class).isEmpty();
+    }
 
-	@Override
-	protected void updateEnabledState() {
-		setEnabled(hasWMSLayersToAdjust());
-	}
+    @Override
+    protected void updateEnabledState() {
+        setEnabled(hasWMSLayersToAdjust());
+    }
 }

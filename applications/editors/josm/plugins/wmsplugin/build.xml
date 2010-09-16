@@ -28,8 +28,7 @@
 
 
 	<property name="commit.message" value="fixed josm bug 4671 - wms url for sicily has changed" />
-	<property name="plugin.main.version" value="3451" />
-
+	<property name="plugin.main.version" value="3530" />
 
 	<property name="josm" location="../../core/dist/josm-custom.jar" />
 	<property name="remotecontrol" location="../../dist/remotecontrol.jar" />

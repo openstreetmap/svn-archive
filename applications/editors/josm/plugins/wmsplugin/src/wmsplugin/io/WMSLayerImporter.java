@@ -6,8 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class WMSLayerImporter extends FileImporter{
 
-	public WMSLayerImporter() {
-		super(new ExtensionFileFilter("wms", "wms", tr("WMS Files (*.wms)")));
-	}
-	
+    public WMSLayerImporter() {
+        super(new ExtensionFileFilter("wms", "wms", tr("WMS Files (*.wms)")));
+    }
+    
 }

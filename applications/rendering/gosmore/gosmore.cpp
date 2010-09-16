@@ -3292,7 +3292,7 @@ int main (int argc, char *argv[])
   const char* master = "";
   int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
   
-  setlocale (LC_ALL, ""); /* Ensure decimal sign is "." for NMEA parsing. */
+  setlocale (LC_ALL, "C"); /* Ensure decimal sign is "." for NMEA parsing. */
   
   if (argc > 1 && stricmp (argv[1], "sortRelations") == 0) {
     return SortRelations ();

@@ -524,7 +524,7 @@ public class SmpDialogAction extends JosmAction {
 			lM02Icon.setText(""); //$NON-NLS-1$
 
 			lM03Icon = new JLabel();
-			lM03Icon.setBounds(new Rectangle(220, -50, 150, 200));
+			lM03Icon.setBounds(new Rectangle(220, 20, 150, 200));
 			lM03Icon.setIcon(null);
 			lM03Icon.setText(""); //$NON-NLS-1$
 

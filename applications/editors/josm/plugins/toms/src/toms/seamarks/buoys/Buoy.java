@@ -525,7 +525,7 @@ abstract public class Buoy extends SeaMark {
 
 			if (hasRadar()) {
 				dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Radar_Reflector.png")));
+						"/images/Radar_Reflector_355.png")));
 			}
 
 			else if (hasRacon()) {

@@ -698,11 +698,6 @@ public class BuoyLat extends Buoy {
 					if (!image.isEmpty())
 						dlg.lM06Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 				}
-				if (hasRadar()) {
-					dlg.lM03Icon.setIcon(new ImageIcon(getClass().getResource(
-							"/images/Radar_Reflector.png"))); //$NON-NLS-1$
-				}
-
 			} else
 				dlg.lM01Icon.setIcon(null);
 		}

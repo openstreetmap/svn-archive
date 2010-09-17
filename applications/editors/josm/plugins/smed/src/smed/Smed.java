@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -22,6 +23,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 import smed.plug.SmedPluginApp;
 import smed.plug.ifc.SmedPluggable;
+import smed.plug.util.JARFileFilter;
 import smed.plug.util.SmedPluginLoader;
 import smed.tabs.SmedTabAction;
 
@@ -38,9 +40,12 @@ public class Smed extends Plugin{
 
         File pluginDir = Main.pref.getPluginsDirectory();
         String pluginDirName = pluginDir.getAbsolutePath();
-        File splug = new File(pluginDirName + "/splug");
-        if(!splug.exists()) splug.mkdir();
+        SmedFile splugDir = new SmedFile(pluginDirName + "/splug");
+        
+        if(!splugDir.exists()) splugDir.mkdir();
 
+        File[] jars = splugDir.listFiles(new JARFileFilter());
+        
         // build smed_ifc.jar from smed.jar
         JarEntry e = null;
         BufferedInputStream inp = null;
@@ -48,36 +53,36 @@ public class Smed extends Plugin{
         byte[] buffer = new byte[16384];
         int len;
 
-        System.out.println(new java.util.Date());
-        
         try {
             JarFile file = new JarFile(pluginDirName  + "/smed.jar");
             FileOutputStream fos = new FileOutputStream(pluginDirName + "/splug/smed_ifc.jar");
             JarOutputStream jos = new JarOutputStream(fos);
             BufferedOutputStream oos = new BufferedOutputStream( jos);
             
-            /* nicht ohne Versionierung freigeben
             // extract *.jar to splug
             Enumeration<JarEntry> ent = file.entries();
             while(ent.hasMoreElements()) {
             	e = ent.nextElement();
             	eName = e.getName(); 
             	if(eName.endsWith(".jar")) {
-            		FileOutputStream pfos = new FileOutputStream(pluginDirName + "/splug/" + eName);
-            		BufferedOutputStream pos = new BufferedOutputStream(pfos);
-            		inp = new BufferedInputStream(file.getInputStream( e ));
+            		if(splugDir.needUpdate(jars,eName)) {
+            			FileOutputStream pfos = new FileOutputStream(pluginDirName + "/splug/" + eName);
+            			BufferedOutputStream pos = new BufferedOutputStream(pfos);
+            			inp = new BufferedInputStream(file.getInputStream( e ));
             		
-                    while ((len = inp.read(buffer)) > 0) {
-                        pos.write(buffer, 0, len);
-                    }
+            			while ((len = inp.read(buffer)) > 0) {
+            				pos.write(buffer, 0, len);
+            			}
             		
-            		pos.flush();
-            		pos.close();
-            		inp.close();
-            		pfos.close();
+            			pos.flush();
+            			pos.close();
+            			inp.close();
+            			pfos.close();
+            		}
             	}
             }
-            */
+            
+
             
             // write smed_ifc.jar to splug
             e = file.getJarEntry("smed/plug/ifc/SmedPluggable.class");

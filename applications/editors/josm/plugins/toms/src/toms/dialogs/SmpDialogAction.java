@@ -936,6 +936,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Name.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setName(tfM01Name.getText());
+					buoy.paintSign();
 				}
 			});
 		}
@@ -1048,6 +1049,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Racon.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setRaconGroup(tfM01Racon.getText().trim());
+					buoy.paintSign();
 				}
 			});
 		}
@@ -1104,6 +1106,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01FogGroup.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setFogGroup(tfM01FogGroup.getText().trim());
+					buoy.paintSign();
 				}
 			});
 		}
@@ -1117,6 +1120,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01FogPeriod.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setFogPeriod(tfM01FogPeriod.getText().trim());
+					buoy.paintSign();
 				}
 			});
 		}
@@ -1185,6 +1189,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Height.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setHeight(tfM01Height.getText().trim());
+					buoy.paintSign();
 				}
 			});
 		}
@@ -1198,6 +1203,7 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Range.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
 					buoy.setRange(tfM01Range.getText().trim());
+					buoy.paintSign();
 				}
 			});
 		}

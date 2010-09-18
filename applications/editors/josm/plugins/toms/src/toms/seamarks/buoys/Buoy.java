@@ -177,9 +177,11 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	public void setLightChar(String lightChar) {
-		if (SectorIndex == 0)
+		if (SectorIndex == 0) {
 			LightChar = new String[10];
-		LightChar[SectorIndex] = lightChar;
+			LightChar[0] = lightChar;
+		} else if (LightChar[0].isEmpty())
+			LightChar[SectorIndex] = lightChar;
 	}
 
 	private String[] LightColour = new String[10];

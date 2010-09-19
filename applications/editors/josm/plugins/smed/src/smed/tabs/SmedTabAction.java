@@ -21,7 +21,7 @@ public class SmedTabAction extends JosmAction {
     /**
      *
      */
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
     public SmedTabAction() {
         super( "Seekarten Editor", "Smed","Seekarten Editor", Shortcut.registerShortcut(

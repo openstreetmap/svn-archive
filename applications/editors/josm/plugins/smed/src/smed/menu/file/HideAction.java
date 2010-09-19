@@ -1,61 +1,93 @@
 package smed.menu.file;
 
+
+import java.awt.Dialog;
+
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
-import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JButton;
-import java.awt.GridBagConstraints;
-import javax.swing.JList;
 import java.awt.Rectangle;
+import javax.swing.JList;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
-public class HideAction extends JPanel {
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+public class HideAction {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="80,35"
-	private JButton jButton = null;
-	private JList jList = null;
+	private JDialog hideDialog = null;  //  @jve:decl-index=0:visual-constraint="62,8"
+	private JPanel jContentPane = null;
+	private JButton okButton = null;
+	private JList hideList = null;
 	/**
-	 * This method initializes jPanel	
+	 * This method initializes hideDialog	
+	 * 	
+	 * @return javax.swing.JDialog	
+	 */
+	public JDialog getHideDialog() {
+		if (hideDialog == null) {
+			hideDialog = new JDialog();
+			hideDialog.setResizable(false);
+			hideDialog.setSize(new Dimension(360, 480));
+			hideDialog.setModal(false);
+			hideDialog.setTitle("Hide Tab");
+			hideDialog.setContentPane(getJContentPane());
+		}
+		return hideDialog;
+	}
+	/**
+	 * This method initializes jContentPane	
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	private JPanel getJPanel() {
-		if (jPanel == null) {
-			jPanel = new JPanel();
-			jPanel.setLayout(null);
-			jPanel.setSize(new Dimension(296, 443));
-			jPanel.add(getJButton(), null);
-			jPanel.add(getJList(), null);
+	private JPanel getJContentPane() {
+		if (jContentPane == null) {
+			jContentPane = new JPanel();
+			jContentPane.setLayout(null);
+			jContentPane.add(getOkButton(), null);
+			jContentPane.add(getHideList(), null);
 		}
-		return jPanel;
+		return jContentPane;
 	}
 	/**
-	 * This method initializes jButton	
+	 * This method initializes okButton	
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJButton() {
-		if (jButton == null) {
-			jButton = new JButton();
-			jButton.setBounds(new Rectangle(90, 391, 114, 35));
-			jButton.setText("Ok");
+	private JButton getOkButton() {
+		if (okButton == null) {
+			okButton = new JButton();
+			okButton.setBounds(new Rectangle(115, 400, 110, 20));
+			okButton.setName("");
+			okButton.setText("Ok");
+			okButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					hideDialog.dispose();
+				}
+			});
 		}
-		return jButton;
+		return okButton;
 	}
 	/**
-	 * This method initializes jList	
+	 * This method initializes hideList	
 	 * 	
 	 * @return javax.swing.JList	
 	 */
-	private JList getJList() {
-		if (jList == null) {
-			jList = new JList();
-			jList.setBounds(new Rectangle(34, 43, 230, 307));
+	private JList getHideList() {
+		if (hideList == null) {
+			hideList = new JList();
+			hideList.setBounds(new Rectangle(20, 15, 315, 370));
+			hideList.setBorder(LineBorder.createBlackLineBorder());
+			JCheckBoxMenuItem item = new JCheckBoxMenuItem();
 		}
-		return jList;
+		return hideList;
 	}
-
 }

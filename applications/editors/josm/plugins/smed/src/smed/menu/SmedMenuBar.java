@@ -1,11 +1,15 @@
 package smed.menu;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import smed.menu.file.HideAction;
 
@@ -34,8 +38,11 @@ public class SmedMenuBar extends JMenuBar {
         menuItem.addActionListener(new java.awt.event.ActionListener() {
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				JPanel panelHide = new HideAction();
-				panelHide.setVisible(true);
+				HideAction hideAction = new HideAction();
+
+				JDialog dialogHide = hideAction.getHideDialog();
+				
+				dialogHide.setVisible(true);
 			}
 		});
 

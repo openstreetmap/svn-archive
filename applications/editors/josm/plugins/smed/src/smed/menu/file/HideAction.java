@@ -17,6 +17,9 @@ import javax.swing.border.LineBorder;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import javax.swing.JCheckBox;
+
+import smed.list.JCheckBoxList;
 public class HideAction {
 
 	/**
@@ -26,7 +29,8 @@ public class HideAction {
 	private JDialog hideDialog = null;  //  @jve:decl-index=0:visual-constraint="62,8"
 	private JPanel jContentPane = null;
 	private JButton okButton = null;
-	private JList hideList = null;
+	private JCheckBoxList hideList = null;
+	private JCheckBox jCheckBox = null;
 	/**
 	 * This method initializes hideDialog	
 	 * 	
@@ -37,7 +41,7 @@ public class HideAction {
 			hideDialog = new JDialog();
 			hideDialog.setResizable(false);
 			hideDialog.setSize(new Dimension(360, 480));
-			hideDialog.setModal(false);
+			hideDialog.setModal(true);
 			hideDialog.setTitle("Hide Tab");
 			hideDialog.setContentPane(getJContentPane());
 		}
@@ -81,13 +85,26 @@ public class HideAction {
 	 * 	
 	 * @return javax.swing.JList	
 	 */
-	private JList getHideList() {
+	private JCheckBoxList getHideList() {
 		if (hideList == null) {
-			hideList = new JList();
+			hideList = new JCheckBoxList();
 			hideList.setBounds(new Rectangle(20, 15, 315, 370));
 			hideList.setBorder(LineBorder.createBlackLineBorder());
-			JCheckBoxMenuItem item = new JCheckBoxMenuItem();
-		}
+			hideList.add(getJCheckBox());			
+			}
 		return hideList;
 	}
+	/**
+	 * This method initializes jCheckBox	
+	 * 	
+	 * @return javax.swing.JCheckBox	
+	 */
+	private JCheckBox getJCheckBox() {
+		if (jCheckBox == null) {
+			jCheckBox = new JCheckBox();
+			jCheckBox.setBounds(new Rectangle(10, 10, 100, 20));
+		}
+		return jCheckBox;
+	}
+
 }

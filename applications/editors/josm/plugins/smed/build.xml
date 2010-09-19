@@ -55,6 +55,8 @@
     -->
 	<target name="init">
 		<mkdir dir="${plugin.build.dir}"/>
+		<mkdir dir="../smed_about/smed_dist"/>
+		<mkdir dir="../smed_ex/smed_dist"/>
 	</target>
 
 	<!--

@@ -179,7 +179,17 @@ public class ChangesetReverter {
             }
             nds = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
             for (OsmPrimitive p : nds.allPrimitives()) {
-                if (!p.isIncomplete()) addMissingIds(Collections.singleton(p));
+                if (!p.isIncomplete()) {
+                    addMissingIds(Collections.singleton(p));
+                } else {
+                    if (ds.getPrimitiveById(p.getPrimitiveId()) == null) {
+                        switch (p.getType()) {
+                        case NODE: ds.addPrimitive(new Node(p.getUniqueId())); break;
+                        case WAY: ds.addPrimitive(new Way(p.getUniqueId())); break;
+                        case RELATION: ds.addPrimitive(new Relation(p.getUniqueId())); break;
+                        }
+                    }
+                }
             }
         } finally {
             progressMonitor.finishTask();

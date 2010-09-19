@@ -17,21 +17,21 @@ public class BuoyUkn extends Buoy {
 		setErrMsg(Msg);
 	}
 
-    public void paintSign() {
-        if (dlg.paintlock)
-            return;
-        super.paintSign();
+	public void paintSign() {
+		if (dlg.paintlock)
+			return;
+		super.paintSign();
 
-        if (getErrMsg() != null)
-            dlg.sM01StatusBar.setText(getErrMsg());
+		if (getErrMsg() != null)
+			dlg.sM01StatusBar.setText(getErrMsg());
 
-        setErrMsg(null);
-    }
+		setErrMsg(null);
+	}
 
-    public void setLightColour() {
-        super.setLightColour("");
-    }
+	public void setLightColour() {
+		super.setLightColour("");
+	}
 
-    public void saveSign() {
-    }
+	public void saveSign() {
+	}
 }

@@ -104,52 +104,51 @@ public class BuoySaw extends Buoy {
         return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
     }
 
-    public void paintSign() {
-        if (dlg.paintlock)
-            return;
-        super.paintSign();
+	public void setLightColour() {
+		super.setLightColour("W"); //$NON-NLS-1$
+	}
+
+	public void paintSign() {
+		if (dlg.paintlock)
+			return;
+		super.paintSign();
 
         dlg.sM01StatusBar.setText(getErrMsg());
 
-        if (isValid()) {
-            dlg.tfM01Name.setEnabled(true);
-            dlg.tfM01Name.setText(getName());
-            dlg.cM01TopMark.setEnabled(true);
-            dlg.cM01TopMark.setVisible(true);
-            dlg.cM01Radar.setVisible(true);
-            dlg.cM01Racon.setVisible(true);
-            dlg.cM01Fog.setVisible(true);
-            dlg.cM01Fired.setVisible(true);
-            dlg.cM01Fired.setEnabled(true);
-            dlg.cbM01Colour.setVisible(false);
-            dlg.lM01Colour.setVisible(false);
-            dlg.rbM01Fired1.setVisible(false);
-            dlg.rbM01FiredN.setVisible(false);
-            dlg.lM01Height.setVisible(false);
-            dlg.tfM01Height.setVisible(false);
-            dlg.lM01Range.setVisible(false);
-            dlg.tfM01Range.setVisible(false);
+		if (isValid()) {
+			dlg.tfM01Name.setEnabled(true);
+			dlg.tfM01Name.setText(getName());
+			dlg.cM01TopMark.setEnabled(true);
+			dlg.cM01TopMark.setVisible(true);
+			dlg.cM01Radar.setVisible(true);
+			dlg.cM01Racon.setVisible(true);
+			dlg.cM01Fog.setVisible(true);
+			dlg.cM01Fired.setVisible(true);
+			dlg.cM01Fired.setEnabled(true);
+			if (!isSectored()) {
+				dlg.cbM01Colour.setVisible(false);
+				dlg.lM01Colour.setVisible(false);
+			}
+			dlg.rbM01Fired1.setVisible(false);
+			dlg.rbM01FiredN.setVisible(false);
+			dlg.lM01Height.setVisible(false);
+			dlg.tfM01Height.setVisible(false);
+			dlg.lM01Range.setVisible(false);
+			dlg.tfM01Range.setVisible(false);
 
-            if (isFired()) {
-                switch (getStyleIndex()) {
-                case SPEC_FLOAT:
-                    dlg.lM01Height.setVisible(true);
-                    dlg.tfM01Height.setVisible(true);
-                    dlg.lM01Range.setVisible(true);
-                    dlg.tfM01Range.setVisible(true);
-                    break;
-                case SPEC_BEACON:
-                case SPEC_TOWER:
-                    dlg.rbM01Fired1.setVisible(true);
-                    dlg.rbM01FiredN.setVisible(true);
-                    dlg.lM01Height.setVisible(true);
-                    dlg.tfM01Height.setVisible(true);
-                    dlg.lM01Range.setVisible(true);
-                    dlg.tfM01Range.setVisible(true);
-                    break;
-                default:
-                }
-            }
+			if (isFired()) {
+				switch (getStyleIndex()) {
+				case SPEC_FLOAT:
+				case SPEC_BEACON:
+				case SPEC_TOWER:
+					dlg.lM01Height.setVisible(true);
+					dlg.tfM01Height.setVisible(true);
+					dlg.lM01Range.setVisible(true);
+					dlg.tfM01Range.setVisible(true);
+					break;
+				default:
+				}
+			}
 
             String image = "/images/Safe_Water"; //$NON-NLS-1$
 
@@ -259,9 +258,4 @@ public class BuoySaw extends Buoy {
         saveLightData(); //$NON-NLS-1$
         saveRadarFogData();
     }
-
-    public void setLightColour() {
-        super.setLightColour("W"); //$NON-NLS-1$
-    }
-
 }

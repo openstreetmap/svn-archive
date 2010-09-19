@@ -471,10 +471,11 @@ public class SmpDialogAction extends JosmAction {
             }
         }
 
-        buoy = new BuoyUkn(this, Messages.getString("SmpDialogAction.91")); //$NON-NLS-1$
-        buoy.setNode(node);
-        return;
-    }
+		buoy = new BuoyUkn(this, Messages.getString("SmpDialogAction.91")); //$NON-NLS-1$
+		buoy.setNode(node);
+		buoy.paintSign();
+		return;
+	}
 
     private JDialog getDM01SeaMap() {
 
@@ -793,10 +794,11 @@ public class SmpDialogAction extends JosmAction {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     int type = cbM01TypeOfMark.getSelectedIndex();
 
-                    if (buoy == null) {
-                        buoy = new BuoyUkn(dia, Messages.getString("SmpDialogAction.150")); //$NON-NLS-1$
-                        return;
-                    }
+					if (buoy == null) {
+						buoy = new BuoyUkn(dia, Messages.getString("SmpDialogAction.150")); //$NON-NLS-1$
+						buoy.paintSign();
+						return;
+					}
 
                     Node n = buoy.getNode();
                     if (n == null)
@@ -805,11 +807,11 @@ public class SmpDialogAction extends JosmAction {
                     paintlock = true;
                     switch (type) {
 
-                    case SeaMark.UNKNOWN_TYPE:
-                        if (!(buoy instanceof BuoyUkn))
-                            buoy = new BuoyUkn(dia, Messages.getString("SmpDialogAction.150")); //$NON-NLS-1$
-                        buoy.setBuoyIndex(type);
-                        break;
+					case SeaMark.UNKNOWN_TYPE:
+						if (!(buoy instanceof BuoyUkn))
+							buoy = new BuoyUkn(dia, Messages.getString("SmpDialogAction.150")); //$NON-NLS-1$
+						buoy.setBuoyIndex(0);
+						break;
 
                     case SeaMark.LATERAL:
                         if (!(buoy instanceof BuoyLat)) {
@@ -876,31 +878,17 @@ public class SmpDialogAction extends JosmAction {
                 public void actionPerformed(ActionEvent e) {
                     int cat = cbM01CatOfMark.getSelectedIndex();
 
-                    if (buoy == null) {
-                        buoy = new BuoyUkn(dia, Messages.getString("SmpDialogAction.150")); //$NON-NLS-1$
-                        return;
-                    }
+					if (buoy == null) {
+						buoy = new BuoyUkn(dia, Messages.getString("SmpDialogAction.150")); //$NON-NLS-1$
+						buoy.paintSign();
+						return;
+					}
 
                     Node n = buoy.getNode();
                     if (n == null)
                         return;
 
-                    if (cbM01TypeOfMark.getSelectedIndex() == SeaMark.LATERAL) {
-                        if (!(buoy instanceof BuoyLat))
-                            buoy = new BuoyLat(dia, n);
-                        buoy.setBuoyIndex(cat);
-                    }
-                    if (cbM01TypeOfMark.getSelectedIndex() == SeaMark.CARDINAL) {
-                        if (!(buoy instanceof BuoyCard))
-                            buoy = new BuoyCard(dia, n);
-                        buoy.setBuoyIndex(cat);
-                    }
-                    if (cbM01TypeOfMark.getSelectedIndex() == SeaMark.LIGHT) {
-                        if (!(buoy instanceof BuoyNota))
-                            buoy = new BuoyNota(dia, n);
-                        buoy.setBuoyIndex(cat);
-                    }
-
+					buoy.setBuoyIndex(cat);
                     buoy.refreshStyles();
                     buoy.refreshLights();
                     buoy.setLightColour();
@@ -911,23 +899,25 @@ public class SmpDialogAction extends JosmAction {
         return cbM01CatOfMark;
     }
 
-    private JComboBox getCbM01StyleOfMark() {
-        if (cbM01StyleOfMark == null) {
-            cbM01StyleOfMark = new JComboBox();
-            cbM01StyleOfMark.setBounds(new Rectangle(45, 85, 165, 25));
-            cbM01StyleOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
-            cbM01StyleOfMark.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    int style = cbM01StyleOfMark.getSelectedIndex();
-                    if (buoy != null && style != buoy.getStyleIndex()) {
-                        buoy.setStyleIndex(style);
-                        buoy.paintSign();
-                    }
-                }
-            });
-        }
-        return cbM01StyleOfMark;
-    }
+	private JComboBox getCbM01StyleOfMark() {
+		if (cbM01StyleOfMark == null) {
+			cbM01StyleOfMark = new JComboBox();
+			cbM01StyleOfMark.setBounds(new Rectangle(45, 85, 165, 25));
+			cbM01StyleOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
+			cbM01StyleOfMark.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int style = cbM01StyleOfMark.getSelectedIndex();
+					if (buoy != null && style != buoy.getStyleIndex()) {
+						buoy.setStyleIndex(style);
+						buoy.refreshLights();
+						buoy.setLightColour();
+						buoy.paintSign();
+					}
+				}
+			});
+		}
+		return cbM01StyleOfMark;
+	}
 
     private JTextField getTfM01Name() {
         if (tfM01Name == null) {

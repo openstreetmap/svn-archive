@@ -10,15 +10,12 @@ import org.openstreetmap.josm.Main;
 import toms.dialogs.SmpDialogAction;
 
 public class BuoyUkn extends Buoy {
-    public BuoyUkn(SmpDialogAction dia, String Msg) {
-        super(dia);
-        resetMask();
-        dlg.cbM01TypeOfMark.setSelectedIndex(0);
-        dlg.cbM01CatOfMark.removeAllItems();
-        dlg.cbM01CatOfMark.setEnabled(false);
-        dlg.tfM01Name.setText(getName());
-        setErrMsg(Msg);
-    }
+	public BuoyUkn(SmpDialogAction dia, String Msg) {
+		super(dia);
+		resetMask();
+		dlg.cbM01TypeOfMark.setSelectedIndex(0);
+		setErrMsg(Msg);
+	}
 
     public void paintSign() {
         if (dlg.paintlock)

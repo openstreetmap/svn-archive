@@ -138,9 +138,8 @@ public class BuoySaw extends Buoy {
 
 			if (isFired()) {
 				switch (getStyleIndex()) {
-				case SPEC_FLOAT:
-				case SPEC_BEACON:
-				case SPEC_TOWER:
+				case SAFE_FLOAT:
+				case SAFE_BEACON:
 					dlg.lM01Height.setVisible(true);
 					dlg.tfM01Height.setVisible(true);
 					dlg.lM01Range.setVisible(true);

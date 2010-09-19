@@ -41,11 +41,11 @@ public class Smed extends Plugin{
         File pluginDir = Main.pref.getPluginsDirectory();
         String pluginDirName = pluginDir.getAbsolutePath();
         SmedFile splugDir = new SmedFile(pluginDirName + "/splug");
-        
+
         if(!splugDir.exists()) splugDir.mkdir();
 
         File[] jars = splugDir.listFiles(new JARFileFilter());
-        
+
         // build smed_ifc.jar from smed.jar
         JarEntry e = null;
         BufferedInputStream inp = null;
@@ -58,32 +58,32 @@ public class Smed extends Plugin{
             FileOutputStream fos = new FileOutputStream(pluginDirName + "/splug/smed_ifc.jar");
             JarOutputStream jos = new JarOutputStream(fos);
             BufferedOutputStream oos = new BufferedOutputStream( jos);
-            
+
             // extract *.jar to splug
             Enumeration<JarEntry> ent = file.entries();
             while(ent.hasMoreElements()) {
-            	e = ent.nextElement();
-            	eName = e.getName(); 
-            	if(eName.endsWith(".jar")) {
-            		if(splugDir.needUpdate(jars,eName)) {
-            			FileOutputStream pfos = new FileOutputStream(pluginDirName + "/splug/" + eName);
-            			BufferedOutputStream pos = new BufferedOutputStream(pfos);
-            			inp = new BufferedInputStream(file.getInputStream( e ));
-            		
-            			while ((len = inp.read(buffer)) > 0) {
-            				pos.write(buffer, 0, len);
-            			}
-            		
-            			pos.flush();
-            			pos.close();
-            			inp.close();
-            			pfos.close();
-            		}
-            	}
-            }
-            
+                e = ent.nextElement();
+                eName = e.getName();
+                if(eName.endsWith(".jar")) {
+                    if(splugDir.needUpdate(jars,eName)) {
+                        FileOutputStream pfos = new FileOutputStream(pluginDirName + "/splug/" + eName);
+                        BufferedOutputStream pos = new BufferedOutputStream(pfos);
+                        inp = new BufferedInputStream(file.getInputStream( e ));
 
-            
+                        while ((len = inp.read(buffer)) > 0) {
+                            pos.write(buffer, 0, len);
+                        }
+
+                        pos.flush();
+                        pos.close();
+                        inp.close();
+                        pfos.close();
+                    }
+                }
+            }
+
+
+
             // write smed_ifc.jar to splug
             e = file.getJarEntry("smed/plug/ifc/SmedPluggable.class");
             inp = new BufferedInputStream(file.getInputStream( e ));

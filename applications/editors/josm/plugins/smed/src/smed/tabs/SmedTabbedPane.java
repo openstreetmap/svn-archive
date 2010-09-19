@@ -23,36 +23,36 @@ public class SmedTabbedPane extends JPanel {
      */
     private static final long serialVersionUID = 1L;
 
-	public SmedTabbedPane() {
-		super(new GridLayout(1, 1));
-		
-		List<SmedPluggable> plugins = null;
-		String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath();
-		try {
-			plugins = SmedPluginLoader.loadPlugins(new File(pluginDirName + "/splug"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(plugins != null) {
-			Icon icon = null;
-			JTabbedPane tabbedPane = new JTabbedPane();
+    public SmedTabbedPane() {
+        super(new GridLayout(1, 1));
 
-			JComponent panel;
-			int i = 0;
-			for(SmedPluggable p : plugins) {
-				panel = p.getComponent();
-				tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
-				tabbedPane.setMnemonicAt(i, KeyEvent.VK_1 + i);
-			
-				i++;
-			}
+        List<SmedPluggable> plugins = null;
+        String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath();
+        try {
+            plugins = SmedPluginLoader.loadPlugins(new File(pluginDirName + "/splug"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-			//Add the tabbed pane to this panel.
-			add(tabbedPane);
+        if(plugins != null) {
+            Icon icon = null;
+            JTabbedPane tabbedPane = new JTabbedPane();
 
-			//The following line enables to use scrolling tabs.
-			tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		}
+            JComponent panel;
+            int i = 0;
+            for(SmedPluggable p : plugins) {
+                panel = p.getComponent();
+                tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
+                tabbedPane.setMnemonicAt(i, KeyEvent.VK_1 + i);
+
+                i++;
+            }
+
+            //Add the tabbed pane to this panel.
+            add(tabbedPane);
+
+            //The following line enables to use scrolling tabs.
+            tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        }
     }
 }

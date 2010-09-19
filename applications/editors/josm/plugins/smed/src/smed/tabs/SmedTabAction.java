@@ -14,6 +14,8 @@ import javax.swing.WindowConstants;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.tools.Shortcut;
 
+import smed.menu.SmedMenuBar;
+
 public class SmedTabAction extends JosmAction {
 
     /**
@@ -26,12 +28,6 @@ public class SmedTabAction extends JosmAction {
                                 "tools:Semmaps",
                                 tr("Tool: {0}", "Seekarten Editor"), KeyEvent.VK_K, //$NON-NLS-1$ //$NON-NLS-2$
                                 Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
-
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -48,11 +44,10 @@ public class SmedTabAction extends JosmAction {
     protected void createAndShowTabs() {
         //Create and set up the window.
         JFrame frame = new JFrame("TabbedPaneDemo");
-        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         //Add content to the window.
+        frame.setJMenuBar(new SmedMenuBar());
         frame.add(new SmedTabbedPane(), BorderLayout.CENTER);
 
         //Display the window.

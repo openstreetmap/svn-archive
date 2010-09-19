@@ -812,6 +812,15 @@ sub downloadData
 
     my @OSMServers = (@predicates) ? split(/,/, $Config->get("XAPIServers")) : split(/,/, $Config->get("APIServers"));
 
+    my @multipolygon_closing_predicates = ();
+    if ($req->Z >= 12) {
+	my $mpc_predicates = $Config->get("MultiPolygonClosingPredicates");
+	if ($mpc_predicates) {
+	    $mpc_predicates =~ s/\s+//g;
+	    push(@multipolygon_closing_predicates, split(/,/, $mpc_predicates));
+	}
+    }
+
     my $Server = Server->new();
     my $res;
     my $reason;
@@ -833,15 +842,24 @@ sub downloadData
         my @URLS;
         my @title;
         if (@predicates) {
-            foreach my $predicate (@predicates) {
-                my $URL = $Config->get("XAPI_$OSMServer");
-                $URL =~ s/%p/${predicate}/g;                # substitute %p place holder with predicate
-                $URL =~ s/%v/$Config->get('OSMVersion')/ge; # substitute %v place holder with API version
-                push(@URLS, $URL);
-                push(@title, $predicate);
-            }
+            $self->substitutePredicates($OSMServer,
+                    \$Config->get(@predicates),
+                    \@URLS,
+                    \@title);
         }
         else {
+            if (@multipolygon_closing_predicates) {
+                my @XAPIServers = split(/,/, $Config->get("XAPIServers"));
+
+                foreach my $xapiServer (@XAPIServers) {
+                    $self->substitutePredicates($xapiServer,
+                           \@multipolygon_closing_predicates,
+                           \@URLS,
+                           \@title);
+                }
+                undef @multipolygon_closing_predicates;
+            }
+
             my $URL = $Config->get("API_$OSMServer");
             $URL =~ s/%v/$Config->get('OSMVersion')/ge; # substitute %v place holder with API version
             push(@URLS, $URL);
@@ -942,6 +960,26 @@ sub downloadData
     }
     ::resetFault("utf8"); #reset to zero if no UTF8 errors found.
     return $DataFile;
+}
+
+sub substitutePredicates {
+    #
+    my $self = shift;
+
+    my ($xapiServer, $predicates, $URLS, $title) = @_;
+
+    my $Config = $self->{Config};
+    my $servers = $Config->get("XAPI_$xapiServer");
+    my $osm_version = $Config->get('OSMVersion');
+
+    foreach my $predicate (@$predicates) {
+         my $URL = $servers;
+
+         $URL =~ s/%p/${predicate}/g; # substitute %p place holder with predicate
+         $URL =~ s/%v/$osm_version/ge; # substitute %v place holder with API version
+         push(@$URLS, $URL);
+         push(@$title, $predicate);
+    }
 }
 
 

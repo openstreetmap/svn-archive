@@ -2,6 +2,7 @@ package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,7 +15,6 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.conflict.Conflict;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Changeset;
-import org.openstreetmap.josm.data.osm.ChangesetDataSet;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -23,8 +23,6 @@ import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.ChangesetDataSet.ChangesetDataSetEntry;
-import org.openstreetmap.josm.data.osm.ChangesetDataSet.ChangesetModificationType;
 import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
 import org.openstreetmap.josm.data.osm.history.HistoryRelation;
@@ -33,8 +31,12 @@ import org.openstreetmap.josm.data.osm.history.RelationMember;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.MultiFetchServerObjectReader;
-import org.openstreetmap.josm.io.OsmServerChangesetReader;
 import org.openstreetmap.josm.io.OsmTransferException;
+
+import reverter.corehacks.ChangesetDataSet;
+import reverter.corehacks.OsmServerChangesetReader;
+import reverter.corehacks.ChangesetDataSet.ChangesetDataSetEntry;
+import reverter.corehacks.ChangesetDataSet.ChangesetModificationType;
 
 /**
  * Fetches and stores data for reverting of specific changeset.
@@ -166,17 +168,19 @@ public class ChangesetReverter {
         progressMonitor.beginTask("Downloading objects history",updated.size()+deleted.size()+1);
         try {
             for (HistoryOsmPrimitive entry : updated) {
-                rdr.ReadObject(entry.getPrimitiveId(), (int)entry.getVersion()-1,
+                rdr.ReadObject(entry.getPrimitiveId(), cds.getEarliestVersion(entry.getPrimitiveId())-1,
                         progressMonitor.createSubTaskMonitor(1, true));
                 if (progressMonitor.isCancelled()) return;
             }
             for (HistoryOsmPrimitive entry : deleted) {
-                rdr.ReadObject(entry.getPrimitiveId(), (int)entry.getVersion()-1,
+                rdr.ReadObject(entry.getPrimitiveId(), cds.getEarliestVersion(entry.getPrimitiveId())-1,
                         progressMonitor.createSubTaskMonitor(1, true));
                 if (progressMonitor.isCancelled()) return;
             }
             nds = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
-            addMissingIds(nds.allPrimitives());
+            for (OsmPrimitive p : nds.allPrimitives()) {
+                if (!p.isIncomplete()) addMissingIds(Collections.singleton(p));
+            }
         } finally {
             progressMonitor.finishTask();
         }
@@ -245,7 +249,7 @@ public class ChangesetReverter {
                     currentMembers.get(i);
                 RelationMember historyMember = historyMembers.get(i);
                 if (!currentMember.getRole().equals(historyMember.getRole())) return false;
-                if (currentMember.getMember().getPrimitiveId().equals(new SimplePrimitiveId(
+                if (!currentMember.getMember().getPrimitiveId().equals(new SimplePrimitiveId(
                         historyMember.getPrimitiveId(),historyMember.getPrimitiveType()))) return false;
             }
             return true;
@@ -262,7 +266,7 @@ public class ChangesetReverter {
 
         //////////////////////////////////////////////////////////////////////////
         // Create commands to restore/update all affected objects
-        DataSetToCmd merger = new DataSetToCmd(nds,ds);
+        DataSetCommandMerger merger = new DataSetCommandMerger(nds,ds);
         LinkedList<Command> cmds = merger.getCommandList();
 
         //////////////////////////////////////////////////////////////////////////

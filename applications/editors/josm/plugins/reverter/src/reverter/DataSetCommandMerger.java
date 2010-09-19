@@ -22,7 +22,7 @@ import org.openstreetmap.josm.data.osm.Way;
  * produces list of commands instead of directly merging layers.
  *
  */
-final class DataSetToCmd {
+final class DataSetCommandMerger {
 
     /** the collection of conflicts created during merging */
     private final ConflictCollection conflicts = new ConflictCollection();
@@ -35,7 +35,7 @@ final class DataSetToCmd {
     /**
      * constructor
      */
-    public DataSetToCmd(DataSet sourceDataSet, DataSet targetDataSet) {
+    public DataSetCommandMerger(DataSet sourceDataSet, DataSet targetDataSet) {
         this.sourceDataSet = sourceDataSet;
         this.targetDataSet = targetDataSet;
         merge();

@@ -1,4 +1,4 @@
-package reverter;
+package reverter.corehacks;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -56,7 +56,7 @@ public class MultiOsmReader {
     /**
      * The dataset to add parsed objects to.
      */
-    private DataSet ds = new DataSet();
+    private final DataSet ds = new DataSet();
 
     /**
      * Replies the parsed data set
@@ -96,12 +96,12 @@ public class MultiOsmReader {
     /**
      * Data structure for the remaining way objects
      */
-    private Map<Long, Collection<Long>> ways = new HashMap<Long, Collection<Long>>();
+    private final Map<Long, Collection<Long>> ways = new HashMap<Long, Collection<Long>>();
 
     /**
      * Data structure for relation objects
      */
-    private Map<Long, Collection<RelationMemberData>> relations = new HashMap<Long, Collection<RelationMemberData>>();
+    private final Map<Long, Collection<RelationMemberData>> relations = new HashMap<Long, Collection<RelationMemberData>>();
 
     private class Parser extends DefaultHandler {
         private Locator locator;
@@ -120,7 +120,7 @@ public class MultiOsmReader {
         private OsmPrimitive currentPrimitive;
         private long currentExternalId;
         private String generator;
-        private Storage<String> internedStrings = new Storage<String>();
+        private final Storage<String> internedStrings = new Storage<String>();
 
         // Memory optimization - see #2312
         private String intern(String s) {
@@ -371,7 +371,7 @@ public class MultiOsmReader {
                 // do nothing
             } else if (action.equals("delete")) {
                 current.setDeleted(true);
-                current.setModified(true);
+                current.setModified(current.isVisible());
             } else if (action.equals("modify")) {
                 current.setModified(true);
             }

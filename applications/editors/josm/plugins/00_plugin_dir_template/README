@@ -1,17 +1,11 @@
-ImportImagePlugin:
+README 
+======
 
-This Plugin makes use of the Geotools library to provide a method to 
-import spatial referenced images into JOSM.
+Readme for your plugin 
 
-Basically, the plugin import function needs:
-- the image file (Supported formats: GeoTiff, Tiff, jpg, bmp, png, gif)
-- a world file (<image_name>.wld (or other extensions like ".bpw" for BMP files, ".tfw" for Tiffs))
-- a projection file (<image_name>.prj) with a WKT-representation of the source projection for this image
-
-If no world file can be found, the plugin cannot continue.
-If no projection file can be found, the plugin asks to use the DEFAULT reference system,
-which can be set either in "<APP_DATA_DIR>/JOSM/plugins/ImportImagePlugin/pluginProperties.properties" file
-or in the layer-properties dialog after a layer is created.
-
-For a more detailed documentation you may visit the WIKI-entry for the plugin.
-
+    * Plugin author and contact email address.
+    
+    * The license for your plugin source code. If you have no special preferences, 
+      you can pick the license that is used for JOSM ("GPL v2 or later").
+      
+    * Notes for future developers, if needed.

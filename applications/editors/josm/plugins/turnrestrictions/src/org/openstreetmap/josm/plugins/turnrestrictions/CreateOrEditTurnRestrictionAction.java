@@ -21,26 +21,26 @@ import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionSel
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 
 /**
- * This action is triggered by a global shortcut (default is Shift-Ctrl-T on windows). 
+ * This action is triggered by a global shortcut (default is Shift-Ctrl-T on windows).
  * Depending on the current selection it either launches an editor for a new turn
  * restriction or a popup component from which one can choose a turn restriction to
- * edit. 
+ * edit.
  *
  */
 public class CreateOrEditTurnRestrictionAction extends JosmAction {
     static private final Logger logger = Logger.getLogger(CreateOrEditTurnRestrictionAction.class.getName());
-    
+
     /**
      * Installs the global key stroke with which creating/editing a turn restriction
      * is triggered.
-     * 
-     * @param keyStroke the key stroke 
+     *
+     * @param keyStroke the key stroke
      */
     static public void install(KeyStroke keyStroke){
         InputMap im = Main.contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         Object actionMapKey = im.get(keyStroke);
         if (actionMapKey != null && !actionMapKey.toString().equals("turnrestrictions:create-or-edit")) {
-            System.out.println(tr("Warning: turnrestrictions plugin replaces already existing action ''{0}'' behind shortcut ''{1}'' by action ''{2}''", actionMapKey.toString(), keyStroke.toString(), "turnrestrictions:create-or-edit"));            
+            System.out.println(tr("Warning: turnrestrictions plugin replaces already existing action ''{0}'' behind shortcut ''{1}'' by action ''{2}''", actionMapKey.toString(), keyStroke.toString(), "turnrestrictions:create-or-edit"));
         }
         KeyStroke[] keys = im.keys();
         if (keys != null){
@@ -54,11 +54,11 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
         ActionMap am = Main.contentPane.getActionMap();
         am.put("turnrestrictions:create-or-edit", getInstance());
     }
-    
+
     /**
      * Installs  global key stroke configured in the preferences.
-     * 
-     * @param keyStroke the key stroke 
+     *
+     * @param keyStroke the key stroke
      */
     static public void install(){
         String value = Main.pref.get(PreferenceKeys.EDIT_SHORTCUT, "shift ctrl T");
@@ -69,13 +69,13 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
         }
         install(key);
     }
-    
+
     /** the singleton instance of this action */
     private static CreateOrEditTurnRestrictionAction instance;
-    
+
     /**
      * Replies the unique instance of this action
-     * 
+     *
      * @return
      */
     public static CreateOrEditTurnRestrictionAction getInstance() {
@@ -84,25 +84,24 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
         }
         return instance;
     }
-    
+
     protected CreateOrEditTurnRestrictionAction() {
         super(
             tr("Create/Edit turn restriction..."),
             null,
             tr("Create or edit a turn restriction."),
-            null, // shortcut is going to be registered later 
-            false 
+            null, // shortcut is going to be registered later
+            false
         );
-    }   
-    
+    }
+
     public void actionPerformed(ActionEvent e) {
         OsmDataLayer layer = Main.main.getEditLayer();
         if (layer == null) return;
         Collection<Relation> trs = TurnRestrictionSelectionPopupPanel.getTurnRestrictionsParticipatingIn(layer.data.getSelected());
-        if (layer == null) return;
         if (trs.isEmpty()){
             // current selection isn't participating in turn restrictions. Launch
-            // an editor for a new turn restriction 
+            // an editor for a new turn restriction
             //
             Relation tr = new TurnRestrictionBuilder().buildFromSelection(layer);
             TurnRestrictionEditor editor = new TurnRestrictionEditor(Main.map.mapView,layer,tr);
@@ -111,7 +110,7 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
             editor.setVisible(true);
         } else {
             // let the user choose whether he wants to create a new turn restriction or
-            // edit one of the turn restrictions participating in the current selection 
+            // edit one of the turn restrictions participating in the current selection
             TurnRestrictionSelectionPopupPanel pnl = new TurnRestrictionSelectionPopupPanel(
                     layer
             );

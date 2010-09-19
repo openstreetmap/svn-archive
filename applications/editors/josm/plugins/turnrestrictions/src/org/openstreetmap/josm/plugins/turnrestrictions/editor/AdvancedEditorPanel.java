@@ -1,7 +1,8 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
-import java.awt.BorderLayout;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.BorderLayout;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.util.logging.Logger;
@@ -15,7 +16,6 @@ import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.tagging.TagEditorPanel;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * AdvancedEditorPanel consists of two advanced editors for parts of the turn
@@ -25,45 +25,45 @@ public class AdvancedEditorPanel extends JPanel {
     private static final Logger logger = Logger.getLogger(AdvancedEditorPanel.class.getName());
 
     private TurnRestrictionEditorModel model;
-    private TagEditorPanel pnlTagEditor; 
+    private TagEditorPanel pnlTagEditor;
     private JPanel pnlRelationMemberEditor;
     private JTable tblRelationMemberEditor;
     private JSplitPane spEditors;
-    
+
     /**
-     * Creates the panel with the tag editor 
-     * 
+     * Creates the panel with the tag editor
+     *
      * @return
      */
     protected JPanel buildTagEditorPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         HtmlPanel msg = new HtmlPanel();
-        msg.setText("<html><body>" + 
+        msg.setText("<html><body>" +
                 tr("In the following table you can edit the <strong>raw tags</strong>"
               + " of the OSM relation representing this turn restriction.")
               + "</body></html>"
         );
         pnl.add(msg, BorderLayout.NORTH);
-        pnlTagEditor = new TagEditorPanel(model.getTagEditorModel());   
+        pnlTagEditor = new TagEditorPanel(model.getTagEditorModel(), null);
         pnlTagEditor.initAutoCompletion(model.getLayer());
         pnl.add(pnlTagEditor, BorderLayout.CENTER);
         return pnl;
     }
-    
+
     /**
      * Builds the panel with the table for editing relation members
-     * 
+     *
      * @return
      */
     protected JPanel buildMemberEditorPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         HtmlPanel msg = new HtmlPanel();
-        msg.setText("<html><body>"  
+        msg.setText("<html><body>"
               + tr("In the following table you can edit the <strong>raw members</strong>"
               + " of the OSM relation representing this turn restriction.") + "</body></html>"
         );
         pnl.add(msg, BorderLayout.NORTH);
-        
+
         tblRelationMemberEditor = new RelationMemberTable(model);
         JScrollPane pane = new JScrollPane(tblRelationMemberEditor);
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -71,9 +71,9 @@ public class AdvancedEditorPanel extends JPanel {
         pnl.add(pane);
         return pnl;
     }
-    
+
     /**
-     * Creates the main split panel 
+     * Creates the main split panel
      * @return
      */
     protected JSplitPane buildSplitPane() {
@@ -85,7 +85,7 @@ public class AdvancedEditorPanel extends JPanel {
         spEditors.addHierarchyListener(new SplitPaneDividerInitializer());
         return spEditors;
     }
-    
+
     /**
      * Builds the user interface
      */
@@ -93,10 +93,10 @@ public class AdvancedEditorPanel extends JPanel {
         setLayout(new BorderLayout());
         add(buildSplitPane(), BorderLayout.CENTER);
     }
-    
+
     /**
      * Creates the advanced editor
-     * 
+     *
      * @param model the editor model. Must not be null.
      * @throws IllegalArgumentException thrown if model is null
      */
@@ -106,17 +106,17 @@ public class AdvancedEditorPanel extends JPanel {
         build();
         HelpUtil.setHelpContext(this, HelpUtil.ht("/Plugins/turnrestrictions#AdvancedEditor"));
     }
-    
+
     /**
      * Initializes the divider location when the components becomes visible the
-     * first time 
+     * first time
      */
     class SplitPaneDividerInitializer implements HierarchyListener {
         public void hierarchyChanged(HierarchyEvent e) {
             if (isShowing()) {
                 spEditors.setDividerLocation(0.5);
                 spEditors.removeHierarchyListener(this);
-            }           
-        }       
+            }
+        }
     }
 }

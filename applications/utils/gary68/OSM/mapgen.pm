@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.07' ;
+$VERSION = '1.08' ;
 
 require Exporter ;
 
@@ -556,6 +556,8 @@ sub createWayLabels {
 	my ($ref, $ruleRef, $declutter, $halo) = @_ ;
 	my @labelCandidates = @$ref ;
 	my @wayRules = @$ruleRef ;
+	my %notDrawnLabels = () ;
+	my %drawnLabels = () ;
 
 	# calc ratio to label ways first where label just fits
 	# these will be drawn first
@@ -579,6 +581,10 @@ sub createWayLabels {
 		my $toLabel = 1 ;
 		if ( ($declutter eq "1") and ($points[0] > $points[-2]) and ( ($ruleData[1] eq "motorway") or ($ruleData[1] eq "trunk") ) ) {
 			$toLabel = 0 ;
+		}
+
+		if ($lLen > $wLen*0.95) {
+			$notDrawnLabels { $name } = 1 ;
 		}
 
 		if ( ($lLen > $wLen*0.95) or ($toLabel == 0) ) {
@@ -610,6 +616,7 @@ sub createWayLabels {
 					$actual += $step ;
 				}
 				if (scalar @positions > 0) {
+					$drawnLabels { $name } = 1 ;
 					# sort by quality and take best one
 					@positions = sort {$a->[2] <=> $b->[2]} @positions ;
 					my ($pos) = shift @positions ;
@@ -626,6 +633,7 @@ sub createWayLabels {
 				}
 			}
 			else { # more than one label
+				my $labelDrawn = 0 ;
 				my $interval = int (100 / ($numLabels + 1)) ;
 				my @positions = () ;
 				for (my $i=1; $i<=$numLabels; $i++) {
@@ -637,6 +645,8 @@ sub createWayLabels {
 					my (@finalWay) = @$refFinal ;
 					my ($collision) = lineCrossings (\@finalWay) ;
 					if ($collision == 0) {
+						$labelDrawn = 1 ;
+						$drawnLabels { $name } = 1 ;
 						my $pathName = "Path" . $pathNumber ; $pathNumber++ ;
 						push @svgOutputDef, svgElementPath ($pathName, @finalWay) ;
 						push @svgOutputPathText, svgElementPathTextAdvanced ($ruleData[$wayIndexLabelColor], $ruleData[$wayIndexLabelSize], 
@@ -647,9 +657,23 @@ sub createWayLabels {
 						# print "INFO: $name labeled less often than desired.\n" ;
 					}
 				}
+				if ($labelDrawn == 0) {
+					$notDrawnLabels { $name } = 1 ;
+				}
 			}
 		}
 	}
+	my $labelFileName = "./NotDrawnLabels.txt" ;
+	my $labelFile ;
+	open ($labelFile, ">", $labelFileName) or die ("couldn't open label file $labelFileName") ;
+	print $labelFile "Not drawn labels\n\n" ;
+	foreach my $labelName (sort keys %notDrawnLabels) {
+		if (!defined $drawnLabels { $labelName } ) {
+			print $labelFile "$labelName\n" ;
+		}
+	}
+	close ($labelFile) ;
+
 }
 
 

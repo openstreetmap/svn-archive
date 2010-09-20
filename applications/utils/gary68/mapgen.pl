@@ -71,6 +71,7 @@
 # 1.05 [-ra]
 # 1.06 eliminate redundancy in svg output
 # 1.07 circle around POIs
+# 1.08 create list of not drawn labels in file
 #
 #
 # TODO
@@ -91,11 +92,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.07 ;
-use OSM::mapgenRules 1.07 ;
+use OSM::mapgen 1.08 ;
+use OSM::mapgenRules 1.08 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.07" ;
+my $version = "1.08" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;

@@ -264,8 +264,9 @@
 <Layer name="builtup" status="on" srs="&srsmercator;">
     <StyleName>builtup</StyleName>
     <Datasource>
-      <Parameter name="type">shape</Parameter>
-      <Parameter name="file">${WORLD_BOUNDARIES_DIR}/builtup_area</Parameter>
+        &extents;    
+        <Parameter name="type">shape</Parameter>
+        <Parameter name="file">${WORLD_BOUNDARIES_DIR}/builtup_area</Parameter>
     </Datasource>
 </Layer>
 
@@ -293,31 +294,7 @@
     </Datasource>
 </Layer>
 
-<!--
-<Layer name="border-poly" status="on">
-    <StyleName>county-borders</StyleName>
-	<StyleName>state-borders</StyleName>
-	<StyleName>country-borders</StyleName>
-	<Datasource>
-		&dbsettings;
-		&extents;
-		<Parameter name="table">(select * from ${DB_PREFIX}_polygon where boundary = 'administrative' order by z_order,way_area desc) as polygons</Parameter>
-    </Datasource>
-</Layer>
-
-<Layer name="border-line" status="on">
-    <StyleName>county-borders</StyleName>
-	<StyleName>state-borders</StyleName>
-	<StyleName>country-borders</StyleName>
-	<Datasource>
-		&dbsettings;
-		&extents;
-		<Parameter name="table">(select * from ${DB_PREFIX}_line where boundary = 'administrative' order by z_order,way_area desc) as polygons</Parameter>
-    </Datasource>
-</Layer>
--->
-
-<Layer name="borders" status="on">
+<Layer name="borders" status="off">
     <StyleName>county-borders</StyleName>
 	<StyleName>state-borders</StyleName>
 	<StyleName>country-borders</StyleName>
@@ -330,5 +307,6 @@
         </Parameter>
     </Datasource>
 </Layer>
+
 
 </Map>

@@ -38,6 +38,7 @@ export ERROR_LOG="errors.log"
 # (this setting limits both import and rendering)
 # E.g. Conterminous US: "-127,23,-65,51"
 export EXTENTS_LATLON="-127,23,-65,51"
+export EXTENTS_MERCATOR="-20037508,-19929239,20037508,19929239"
 
 # Used to check that the env is set. Don't modify.
 export TOPOSM_ENV_SET=1

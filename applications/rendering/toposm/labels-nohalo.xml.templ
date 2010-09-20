@@ -151,22 +151,37 @@ considered "labels-nohalo" as well... -->
     	<PointSymbolizer file="&customsymbolsdir;/black-m/shelter.png" type="png" width="17" height="17" />
 	</Rule>
 
-	<!-- parking lots -->
+	<!-- public parking lots -->
 	<Rule>
     	&minz13;
     	&maxz13;
-    	<Filter>[amenity] = 'parking'</Filter>
+    	<Filter>
+    	    [amenity] = 'parking'
+    	    and [access] &lt;&gt; 'destination'
+    	    and [access] &lt;&gt; 'private'
+    	    and [access] &lt;&gt; 'no'
+    	</Filter>
     	<PointSymbolizer file="&customsymbolsdir;/black-xs/parking.png" type="png" width="11" height="11" />
     </Rule>
 	<Rule>
     	&minz14;
     	&maxz14;
-    	<Filter>[amenity] = 'parking'</Filter>
+    	<Filter>
+    	    [amenity] = 'parking'
+    	    and [access] &lt;&gt; 'destination'
+    	    and [access] &lt;&gt; 'private'
+    	    and [access] &lt;&gt; 'no'
+    	</Filter>
     	<PointSymbolizer file="&customsymbolsdir;/black-s/parking.png" type="png" width="14" height="14" />
     </Rule>
 	<Rule>
 		&minz15;
-		<Filter>[amenity] = 'parking'</Filter>
+		<Filter>
+		    [amenity] = 'parking'
+    	    and [access] &lt;&gt; 'destination'
+    	    and [access] &lt;&gt; 'private'
+    	    and [access] &lt;&gt; 'no'
+		</Filter>
     	<PointSymbolizer file="&customsymbolsdir;/black-m/parking.png" type="png" width="17" height="17" />
 	</Rule>
 	

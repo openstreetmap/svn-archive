@@ -450,7 +450,7 @@ def prep_ned13_data_file(basename, env):
                     (HILLSHADE, nedslice, hillshadeslice)
                 call(cmd, shell = True)
                 # convert to PNG + world file to save space
-                cmd = 'gdal_translate -of PNG -co WORLDFILE=YES "%s" "%s"' % \
+                cmd = 'gdal_translate -quiet -of PNG -co WORLDFILE=YES "%s" "%s"' % \
                     (hillshadeslice, hillshadeslicePng)
                 call(cmd, shell = True)
                 tryRemove(hillshadeslice)
@@ -463,7 +463,7 @@ def prep_ned13_data_file(basename, env):
                     (COLORRELIEF, nedslice, COLORFILE, colormapslice)
                 call(cmd, shell = True)
                 # convert to PNG + world file to save space
-                cmd = 'gdal_translate -of PNG -co WORLDFILE=YES "%s" "%s"' % \
+                cmd = 'gdal_translate -quiet -of PNG -co WORLDFILE=YES "%s" "%s"' % \
                     (colormapslice, colormapslicePng)
                 call(cmd, shell = True)
                 tryRemove(colormapslice)
@@ -536,7 +536,7 @@ def slice_tile(z, x, y, ntiles, mapname, destSuffix = '.png'):
             else:
 #                print '-',
                 pass
-    tryRemove(srcTilePath)
+    #tryRemove(srcTilePath)
 #    print
 
 def merge_subtiles(z, x, y, mapname, suffix = '.jpg'):
@@ -615,7 +615,10 @@ def render_tiles(envLL, minz, maxz):
         for x in range(fromx, tox+1, ntiles):
             for y in range(fromy, toy+1, ntiles):
                 queue.put(('render', z, x, y))
-#                print "render ", z, x, y
+        # Join threads after each completed level, because
+        # the color-relief layer of a lower zoom level depends
+        # on that of the next higher level being finished.
+        queue.join()
     # Signal render threads to exit and join threads
     for i in range(NUM_THREADS):
         queue.put(None)

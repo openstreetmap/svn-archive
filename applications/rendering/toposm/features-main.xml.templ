@@ -335,23 +335,26 @@ Canals and ditches (CanalDitch) (336xx)
 <Style name="major-highway">
 
   <Rule>
-  	&minz5; &maxz7;
+  	&minz5; &maxz6;
     <Filter>[highway] = 'motorway'</Filter>
     <LineSymbolizer>
-		<CssParameter name="stroke-width">1.0</CssParameter>
-		&roadoutline;
+        <CssParameter name="stroke">&interstatecolorlowzoom;</CssParameter>
+		<CssParameter name="stroke-width">1.2</CssParameter>
+		&rounded;
     </LineSymbolizer>
   </Rule> 
   <Rule>
-  	&minz8; &maxz9;
+  	&minz7; &maxz8;
     <Filter>[highway] = 'motorway' or [highway] = 'trunk'</Filter>
     <LineSymbolizer>
-		<CssParameter name="stroke-width">2.0</CssParameter>
-		&roadoutline;
+		<CssParameter name="stroke">&interstatecolorlowzoom;</CssParameter>
+		<CssParameter name="stroke-width">1.8</CssParameter>
+		&rounded;
     </LineSymbolizer>
-  </Rule> 
+  </Rule>
+  
   <Rule>
-	&minz10; &maxz11;
+	&minz9; &maxz11;
     <Filter>([highway] = 'motorway' or [highway] = 'trunk') and not [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
@@ -673,8 +676,7 @@ Canals and ditches (CanalDitch) (336xx)
 	&maxz10;
     <Filter>
       ([highway] = 'residential' or
-      [highway] = 'unclassified' or
-      [highway] = 'service') and not [tunnel] = 'yes'
+      [highway] = 'unclassified') and not [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
        <CssParameter name="stroke">#444</CssParameter>
@@ -688,8 +690,7 @@ Canals and ditches (CanalDitch) (336xx)
 	&maxz11;
     <Filter>
       ([highway] = 'residential' or
-      [highway] = 'unclassified' or
-      [highway] = 'service') and not [tunnel] = 'yes'
+      [highway] = 'unclassified') and not [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
        <CssParameter name="stroke">#444</CssParameter>
@@ -702,8 +703,7 @@ Canals and ditches (CanalDitch) (336xx)
 	&maxz13;
     <Filter>
       ([highway] = 'residential' or
-      [highway] = 'unclassified' or
-      [highway] = 'service') and not [tunnel] = 'yes'
+      [highway] = 'unclassified') and not [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
        <CssParameter name="stroke">#444</CssParameter>
@@ -716,8 +716,7 @@ Canals and ditches (CanalDitch) (336xx)
   	&maxz15;
     <Filter>
       ([highway] = 'residential' or
-      [highway] = 'unclassified' or
-      [highway] = 'service') and not [tunnel] = 'yes'
+      [highway] = 'unclassified') and not [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
        <CssParameter name="stroke-width">4.0</CssParameter>
@@ -728,8 +727,7 @@ Canals and ditches (CanalDitch) (336xx)
   	&minz16;
     <Filter>
       ([highway] = 'residential' or
-      [highway] = 'unclassified' or
-      [highway] = 'service') and not [tunnel] = 'yes'
+      [highway] = 'unclassified') and not [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
        <CssParameter name="stroke-width">7.0</CssParameter>
@@ -743,8 +741,7 @@ Canals and ditches (CanalDitch) (336xx)
 	&maxz13;
     <Filter>
       ([highway] = 'residential' or
-      [highway] = 'unclassified' or
-      [highway] = 'service') and [tunnel] = 'yes'
+      [highway] = 'unclassified') and [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
        	<CssParameter name="stroke-width">1.2</CssParameter>
@@ -757,8 +754,7 @@ Canals and ditches (CanalDitch) (336xx)
   	&maxz15;
     <Filter>
       ([highway] = 'residential' or
-      [highway] = 'unclassified' or
-      [highway] = 'service') and [tunnel] = 'yes'
+      [highway] = 'unclassified') and [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
        	<CssParameter name="stroke-width">4.0</CssParameter>
@@ -770,8 +766,7 @@ Canals and ditches (CanalDitch) (336xx)
   	&minz16;
     <Filter>
       ([highway] = 'residential' or
-      [highway] = 'unclassified' or
-      [highway] = 'service') and [tunnel] = 'yes'
+      [highway] = 'unclassified') and [tunnel] = 'yes'
     </Filter>
     <LineSymbolizer>
        	<CssParameter name="stroke-width">7.0</CssParameter>
@@ -779,6 +774,78 @@ Canals and ditches (CanalDitch) (336xx)
 		<CssParameter name="stroke">&tunneloutlinecolor;</CssParameter>
     </LineSymbolizer>
   </Rule>
+ 
+  
+  <!-- Service roads -->
+  <Rule>
+  	&minz12; &maxz13;
+    <Filter>
+      [highway] = 'service' and not [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">#444</CssParameter>
+       <CssParameter name="stroke-width">0.8</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz14; &maxz15;
+    <Filter>
+      [highway] = 'service' and not [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke-width">2.5</CssParameter>
+       &roadoutline;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+    <Filter>
+      [highway] = 'service' and not [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke-width">4.0</CssParameter>
+       &roadoutline;
+    </LineSymbolizer>
+  </Rule>
+  
+  <!-- Service road tunnels -->
+  <Rule>
+  	&minz12;
+	&maxz13;
+    <Filter>
+      [highway] = 'service' and [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       	<CssParameter name="stroke-width">0.8</CssParameter>
+       	<CssParameter name="stroke-dasharray">6,3</CssParameter>
+		<CssParameter name="stroke">&tunneloutlinecolor;</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz14;
+  	&maxz15;
+    <Filter>
+      [highway] = 'service' and [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       	<CssParameter name="stroke-width">2.5</CssParameter>
+		<CssParameter name="stroke-dasharray">6,3</CssParameter>
+		<CssParameter name="stroke">&tunneloutlinecolor;</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz16;
+    <Filter>
+      [highway] = 'service' and [tunnel] = 'yes'
+    </Filter>
+    <LineSymbolizer>
+       	<CssParameter name="stroke-width">4.0</CssParameter>
+		<CssParameter name="stroke-dasharray">10,5</CssParameter>
+		<CssParameter name="stroke">&tunneloutlinecolor;</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  
   
   <!-- Unimproved roads -->
   <Rule>
@@ -1129,12 +1196,21 @@ Canals and ditches (CanalDitch) (336xx)
 </Style>
 
 <Style name="state-borders">	
-	<Rule>
-  		&maxz10;
+    <Rule>
+  		&maxz5;
   		<Filter>[boundary] = 'administrative' and [admin_level] = '4'</Filter>
   		<LineSymbolizer>
 			<CssParameter name="stroke">black</CssParameter>
-			<CssParameter name="stroke-width">1</CssParameter>
+			<CssParameter name="stroke-width">0.5</CssParameter>
+			<CssParameter name="stroke-dasharray">8,3,2,3</CssParameter>
+		</LineSymbolizer>
+	</Rule>
+	<Rule>
+  		&minz6; &maxz10;
+  		<Filter>[boundary] = 'administrative' and [admin_level] = '4'</Filter>
+  		<LineSymbolizer>
+			<CssParameter name="stroke">black</CssParameter>
+			<CssParameter name="stroke-width">0.8</CssParameter>
 			<CssParameter name="stroke-dasharray">10,3,2,3</CssParameter>
 		</LineSymbolizer>
 	</Rule>
@@ -1142,16 +1218,30 @@ Canals and ditches (CanalDitch) (336xx)
 		&minz11;
 		<Filter>[boundary] = 'administrative' and [admin_level] = '4'</Filter>
 		<LineSymbolizer>
+			<CssParameter name="stroke">#825</CssParameter>
+			<CssParameter name="stroke-width">8</CssParameter>
+			<CssParameter name="stroke-opacity">0.5</CssParameter>
+	    </LineSymbolizer>
+		<LineSymbolizer>
 			<CssParameter name="stroke">black</CssParameter>
-			<CssParameter name="stroke-width">2</CssParameter>
+			<CssParameter name="stroke-width">1.5</CssParameter>
 			<CssParameter name="stroke-dasharray">20,5,4,5</CssParameter>
 		</LineSymbolizer>
 	</Rule>
 </Style>
 
 <Style name="country-borders">	
+    <Rule>
+  		&maxz5;
+  		<Filter>[boundary] = 'administrative' and [admin_level] = '2'</Filter>
+  		<LineSymbolizer>
+			<CssParameter name="stroke">black</CssParameter>
+			<CssParameter name="stroke-width">1.0</CssParameter>
+			<CssParameter name="stroke-dasharray">10,3,2,3</CssParameter>
+		</LineSymbolizer>
+	</Rule>
 	<Rule>
-  		&maxz10;
+  		&minz6; &maxz10;
   		<Filter>[boundary] = 'administrative' and [admin_level] = '2'</Filter>
   		<LineSymbolizer>
 			<CssParameter name="stroke">black</CssParameter>
@@ -1162,10 +1252,15 @@ Canals and ditches (CanalDitch) (336xx)
 	<Rule>
 		&minz11;
 		<Filter>[boundary] = 'administrative' and [admin_level] = '2'</Filter>
+        <LineSymbolizer>
+			<CssParameter name="stroke">#880</CssParameter>
+			<CssParameter name="stroke-width">12</CssParameter>
+			<CssParameter name="stroke-opacity">0.5</CssParameter>
+	    </LineSymbolizer>
 		<LineSymbolizer>
 			<CssParameter name="stroke">black</CssParameter>
-			<CssParameter name="stroke-width">2.5</CssParameter>
-			<CssParameter name="stroke-dasharray">25,5,4,5</CssParameter>
+			<CssParameter name="stroke-width">3</CssParameter>
+			<CssParameter name="stroke-dasharray">30,5,4,5</CssParameter>
 		</LineSymbolizer>
 	</Rule>
 </Style>
@@ -1182,17 +1277,6 @@ Canals and ditches (CanalDitch) (336xx)
 
 
 <!-- Layers -->
-
-<!--
-<Layer name="nhdtest" status="on" srs="+proj=latlong +ellps=GRS80 +datum=NAD83 +no_defs">
-	<StyleName>nhdtest</StyleName>
-	<Datasource>
-		&dbsettings;
-		&extentsLatLon;
-		<Parameter name="table">nhdwaterbody</Parameter>
-	</Datasource>
-</Layer>
--->
 
 <!-- parcel data from MassGIS test -->
 <!--
@@ -1398,16 +1482,29 @@ Canals and ditches (CanalDitch) (336xx)
 </Layer>
 -->
 
-<Layer name="borders" status="on">
+<Layer name="borders-6" status="off">
     <StyleName>county-borders</StyleName>
+	<Datasource>
+		&dbsettings;
+		&extents;
+		<Parameter name="table">
+		(SELECT way,boundary,admin_level FROM ${DB_PREFIX}_roads
+        WHERE "boundary"='administrative' AND admin_level = '6')
+        AS borders
+        </Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="borders-24" status="on">
 	<StyleName>state-borders</StyleName>
 	<StyleName>country-borders</StyleName>
 	<Datasource>
 		&dbsettings;
 		&extents;
 		<Parameter name="table">
-		(select way,boundary,admin_level from ${DB_PREFIX}_roads
-        where "boundary"='administrative') as borders
+		(SELECT way,boundary,admin_level FROM ${DB_PREFIX}_roads
+        WHERE "boundary"='administrative' AND admin_level IN ('2','4'))
+        AS borders
         </Parameter>
     </Datasource>
 </Layer>

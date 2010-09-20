@@ -195,6 +195,7 @@ Canals and ditches (CanalDitch) (336xx)
 
   <!-- Road (incl tunnel) fills -->
   
+  <!-- Interstates -->
   <Rule>
 	&minz9;
 	&maxz11;
@@ -207,7 +208,7 @@ Canals and ditches (CanalDitch) (336xx)
   </Rule>
   <Rule>
 	&minz12;
-	&maxz15;
+	&maxz14;
     <Filter>[highway] = 'motorway' and [tunnel] = 'yes'</Filter>
     <LineSymbolizer>
     	<CssParameter name="stroke">&interstatecolortunnel;</CssParameter>
@@ -216,7 +217,7 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   <Rule>
-	&minz16;
+	&minz15;
     <Filter>[highway] = 'motorway' and [tunnel] = 'yes'</Filter>
     <LineSymbolizer>
     	<CssParameter name="stroke">&interstatecolortunnel;</CssParameter>
@@ -224,8 +225,9 @@ Canals and ditches (CanalDitch) (336xx)
     	&rounded;
     </LineSymbolizer>
   </Rule>
+  
   <Rule>
-	&minz10;
+	&minz9;
 	&maxz11;
     <Filter>[highway] = 'motorway' and not [tunnel] = 'yes'</Filter>
     <LineSymbolizer>
@@ -254,8 +256,9 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
 
+  <!-- Trunk -->
   <Rule>
-  	&minz10;
+  	&minz9;
 	&maxz11;
     <Filter>[highway] = 'trunk' and [tunnel] = 'yes'</Filter>
     <LineSymbolizer>
@@ -283,8 +286,9 @@ Canals and ditches (CanalDitch) (336xx)
     	&rounded;
     </LineSymbolizer>
   </Rule>
+  
   <Rule>
-  	&minz10;
+  	&minz9;
 	&maxz11;
     <Filter>[highway] = 'trunk' and not [tunnel] = 'yes'</Filter>
     <LineSymbolizer>
@@ -313,18 +317,7 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   
-  <!--
-  <Rule>
-    &minz10;
-	&maxz11;
-    <Filter>[highway] = 'primary' and [tunnel] = 'yes'</Filter>
-    <LineSymbolizer>
-    	<CssParameter name="stroke">&primarycolortunnel;</CssParameter>
-    	<CssParameter name="stroke-width">1.5</CssParameter>
-    	&rounded;
-    </LineSymbolizer>
-  </Rule>
-  -->
+  <!-- Primary -->
   <Rule>
   	&minz12;
   	&maxz14;
@@ -375,18 +368,7 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   
-  <!--
-  <Rule>
-  	&minz10;
-	&maxz11;
-    <Filter>[highway] = 'secondary' and [tunnel] = 'yes'</Filter>
-    <LineSymbolizer>
-    	<CssParameter name="stroke">&secondarycolortunnel;</CssParameter>
-    	<CssParameter name="stroke-width">1.0</CssParameter>
-    	&rounded;
-    </LineSymbolizer>
-  </Rule>
-  -->
+  <!-- Secondary -->
   <Rule>
   	&minz12;
 	&maxz13;
@@ -416,19 +398,7 @@ Canals and ditches (CanalDitch) (336xx)
     	&rounded;
     </LineSymbolizer>
   </Rule>
-  
-  <!--
-  <Rule>
-  	&minz10;
-	&maxz11;
-    <Filter>[highway] = 'secondary' and not [tunnel] = 'yes'</Filter>
-    <LineSymbolizer>
-    	<CssParameter name="stroke">&secondarycolor;</CssParameter>
-    	<CssParameter name="stroke-width">1.0</CssParameter>
-    	&rounded;
-    </LineSymbolizer>
-  </Rule>
-  -->
+
   <Rule>
   	&minz12;
 	&maxz13;
@@ -459,6 +429,7 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
 
+  <!-- Tertiary -->
   <Rule>
   	&minz12;
 	&maxz13;
@@ -489,18 +460,6 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   
-  <!--
-  <Rule>
-  	&minz10;
-	&maxz11;
-    <Filter>[highway] = 'tertiary' and not [tunnel] = 'yes'</Filter>
-    <LineSymbolizer>
-    	<CssParameter name="stroke">&smallroadcolor;</CssParameter>
-    	<CssParameter name="stroke-width">1.0</CssParameter>
-    	&rounded;
-    </LineSymbolizer>
-  </Rule>
-  -->
   <Rule>
   	&minz12;
 	&maxz13;
@@ -531,13 +490,13 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
 
+  <!-- Minor roads -->
   <Rule>
 	&minz14;
 	&maxz15;
     <Filter>
       ([highway] = 'residential' or
       [highway] = 'unclassified' or
-      [highway] = 'service' or
       ([highway] = 'track' and not [bicycle] = 'designated') or
 	  [highway] = 'unsurfaced' or
   	  [highway] = 'unimproved') and [tunnel] = 'yes'
@@ -553,7 +512,6 @@ Canals and ditches (CanalDitch) (336xx)
     <Filter>
       ([highway] = 'residential' or
       [highway] = 'unclassified' or
-      [highway] = 'service' or
       ([highway] = 'track' and not [bicycle] = 'designated') or
 	  [highway] = 'unsurfaced' or
   	  [highway] = 'unimproved') and [tunnel] = 'yes'
@@ -570,7 +528,6 @@ Canals and ditches (CanalDitch) (336xx)
     <Filter>
       ([highway] = 'residential' or
       [highway] = 'unclassified' or
-      [highway] = 'service' or
       ([highway] = 'track' and not [bicycle] = 'designated') or
 	  [highway] = 'unsurfaced' or
   	  [highway] = 'unimproved') and not [tunnel] = 'yes'
@@ -586,7 +543,6 @@ Canals and ditches (CanalDitch) (336xx)
     <Filter>
       ([highway] = 'residential' or
       [highway] = 'unclassified' or
-      [highway] = 'service' or
       ([highway] = 'track' and not [bicycle] = 'designated') or
 	  [highway] = 'unsurfaced' or
   	  [highway] = 'unimproved') and not [tunnel] = 'yes'
@@ -598,7 +554,31 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   
-  <!-- ramps etc. -->
+  <!-- Service roads -->
+  <Rule>
+	&minz14; &maxz15;
+    <Filter>
+      [highway] = 'service'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolor;</CssParameter>
+       <CssParameter name="stroke-width">1.3</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+	&minz16;
+    <Filter>
+      [highway] = 'service'
+    </Filter>
+    <LineSymbolizer>
+       <CssParameter name="stroke">&smallroadcolor;</CssParameter>
+       <CssParameter name="stroke-width">2</CssParameter>
+       &rounded;
+    </LineSymbolizer>
+  </Rule>
+  
+  <!-- Ramps, connectors etc. -->
   <Rule>
   	&minz12;
 	&maxz15;

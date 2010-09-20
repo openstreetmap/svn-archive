@@ -11,8 +11,18 @@
 
 <Map bgcolor="&watermaskcolor;" srs="&srs900913;">
 	
-<Style name="land-poly">
+<Style name="land-poly-lores">
+    <Rule>
+        &maxz9;
+        <PolygonSymbolizer>
+			<CssParameter name="fill">&landmaskcolor;</CssParameter>
+		</PolygonSymbolizer>
+    </Rule>
+</Style>
+
+<Style name="land-poly-hires">
 	<Rule>
+	    &minz10;
 		<PolygonSymbolizer>
 			<CssParameter name="fill">&landmaskcolor;</CssParameter>
 		</PolygonSymbolizer>
@@ -55,11 +65,21 @@
   </Rule>
 </Style>
 
-<Layer name="land-poly" status="on">
-    <StyleName>land-poly</StyleName>
+<Layer name="land-poly-lores" status="on" srs="&srs900913;">
+    <StyleName>land-poly-lores</StyleName>
     <Datasource>
-      <Parameter name="type">shape</Parameter>
-      <Parameter name="file">${WORLD_BOUNDARIES_DIR}/processed_p</Parameter>
+        &extents;  
+        <Parameter name="type">shape</Parameter>
+        <Parameter name="file">${WORLD_BOUNDARIES_DIR}/shoreline_300</Parameter>
+    </Datasource>
+</Layer>
+
+<Layer name="land-poly-hires" status="on" srs="&srs900913;">
+    <StyleName>land-poly-hires</StyleName>
+    <Datasource>
+        &extents;
+        <Parameter name="type">shape</Parameter>
+        <Parameter name="file">${WORLD_BOUNDARIES_DIR}/processed_p</Parameter>
     </Datasource>
 </Layer>
 

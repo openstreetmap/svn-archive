@@ -31,6 +31,7 @@ public class Smed extends Plugin{
 
     private JMenuItem item;
     private SmedTabAction SmedTab;
+	private List<SmedPluggable> plugins = null;
 
     public Smed(PluginInformation info) {
         super(info);
@@ -144,6 +145,11 @@ public class Smed extends Plugin{
             item.setEnabled(false);
             // SmpDialog.CloseDialog();
         }
+    }
+
+    public void setPlugins(List<SmedPluggable> plugins)  {
+    	this.plugins = plugins;
+    	
     }
 
 }

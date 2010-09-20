@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -15,6 +16,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.tools.Shortcut;
 
 import smed.menu.SmedMenuBar;
+import smed.plug.ifc.SmedPluggable;
 
 public class SmedTabAction extends JosmAction {
 

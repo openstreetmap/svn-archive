@@ -20,7 +20,7 @@ import java.awt.GridBagConstraints;
 import javax.swing.JCheckBox;
 
 import smed.list.JCheckBoxList;
-public class HideAction {
+public class HideAction extends JDialog {
 
 	/**
 	 * 
@@ -31,6 +31,8 @@ public class HideAction {
 	private JButton okButton = null;
 	private JCheckBoxList hideList = null;
 	private JCheckBox jCheckBox = null;
+	
+	
 	/**
 	 * This method initializes hideDialog	
 	 * 	
@@ -85,26 +87,12 @@ public class HideAction {
 	 * 	
 	 * @return javax.swing.JList	
 	 */
-	private JCheckBoxList getHideList() {
+	public JCheckBoxList getHideList() {
 		if (hideList == null) {
 			hideList = new JCheckBoxList();
 			hideList.setBounds(new Rectangle(20, 15, 315, 370));
 			hideList.setBorder(LineBorder.createBlackLineBorder());
-			hideList.add(getJCheckBox());			
 			}
 		return hideList;
 	}
-	/**
-	 * This method initializes jCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private JCheckBox getJCheckBox() {
-		if (jCheckBox == null) {
-			jCheckBox = new JCheckBox();
-			jCheckBox.setBounds(new Rectangle(10, 10, 100, 20));
-		}
-		return jCheckBox;
-	}
-
 }

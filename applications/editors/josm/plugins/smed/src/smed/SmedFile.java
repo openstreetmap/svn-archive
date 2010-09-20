@@ -2,8 +2,6 @@ package smed;
 
 import java.io.File;
 
-import smed.plug.util.JARFileFilter;
-
 public class SmedFile extends File{
 
     /**

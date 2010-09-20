@@ -17,6 +17,8 @@ import smed.plug.ifc.SmedPluggable;
 import smed.plug.util.SmedPluginLoader;
 
 public class SmedTabbedPane extends JPanel {
+	
+	private List<SmedPluggable> plugins = null;
 
     /**
      *
@@ -26,10 +28,10 @@ public class SmedTabbedPane extends JPanel {
     public SmedTabbedPane() {
         super(new GridLayout(1, 1));
 
-        List<SmedPluggable> plugins = null;
         String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath();
-        try {
+		try {
             plugins = SmedPluginLoader.loadPlugins(new File(pluginDirName + "/splug"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }

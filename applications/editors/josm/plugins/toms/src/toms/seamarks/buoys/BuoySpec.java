@@ -46,6 +46,8 @@ public class BuoySpec extends Buoy {
 		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.212"));
 		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.210")); //$NON-NLS-1$
 		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.211")); //$NON-NLS-1$
+		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.214")); //$NON-NLS-1$
+		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.215")); //$NON-NLS-1$
 
 		dlg.cM01TopMark.setEnabled(true);
 
@@ -115,9 +117,18 @@ public class BuoySpec extends Buoy {
 		keys = node.getKeys();
 		if (keys.containsKey("seamark:topmark:shape")) { //$NON-NLS-1$
 			str = keys.get("seamark:topmark:shape"); //$NON-NLS-1$
-
+			setTopMark(true);
 			if (str.equals("x-shape")) { //$NON-NLS-1$
-				setTopMark(true);
+				if (keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
+					if (keys.get("seamark:topmark:colour").equals("red"))
+						setTopMarkIndex(TOP_RED_X);
+					else
+						setTopMarkIndex(TOP_YELLOW_X);
+				}
+			} else if (str.equals("cone, point up")) { //$NON-NLS-1$
+					setTopMarkIndex(TOP_YELLOW_CONE);
+			} else if (str.equals("cylinder")) { //$NON-NLS-1$
+				setTopMarkIndex(TOP_YELLOW_CAN);
 			}
 		}
 
@@ -242,20 +253,72 @@ public class BuoySpec extends Buoy {
 					switch (getStyleIndex()) {
 					case SPEC_PILLAR:
 					case SPEC_SPAR:
-						image = "/images/Top_X_Yellow_Buoy.png"; //$NON-NLS-1$
+						switch (getTopMarkIndex()) {
+						case TOP_YELLOW_X:
+							image = "/images/Top_X_Yellow_Buoy.png"; //$NON-NLS-1$
+							break;
+						case TOP_RED_X:
+							image = "/images/Top_X_Red_Buoy.png"; //$NON-NLS-1$
+							break;
+						case TOP_YELLOW_CAN:
+							image = "/images/Top_Can_Yellow_Buoy.png"; //$NON-NLS-1$
+							break;
+						case TOP_YELLOW_CONE:
+							image = "/images/Top_Cone_Yellow_Buoy.png"; //$NON-NLS-1$
+							break;
+						}
 						break;
 					case SPEC_CAN:
 					case SPEC_CONE:
 					case SPEC_SPHERE:
 					case SPEC_BARREL:
-						image = "/images/Top_X_Yellow_Buoy_Small.png"; //$NON-NLS-1$
+						switch (getTopMarkIndex()) {
+						case TOP_YELLOW_X:
+							image = "/images/Top_X_Yellow_Buoy_Small.png"; //$NON-NLS-1$
+							break;
+						case TOP_RED_X:
+							image = "/images/Top_X_Red_Buoy_Small.png"; //$NON-NLS-1$
+							break;
+						case TOP_YELLOW_CAN:
+							image = "/images/Top_Can_Yellow_Buoy_Small.png"; //$NON-NLS-1$
+							break;
+						case TOP_YELLOW_CONE:
+							image = "/images/Top_Cone_Yellow_Buoy_Small.png"; //$NON-NLS-1$
+							break;
+						}
 						break;
 					case SPEC_BEACON:
 					case SPEC_TOWER:
-						image = "/images/Top_X_Yellow_Beacon.png"; //$NON-NLS-1$
+						switch (getTopMarkIndex()) {
+						case TOP_YELLOW_X:
+							image = "/images/Top_X_Yellow_Beacon.png"; //$NON-NLS-1$
+							break;
+						case TOP_RED_X:
+							image = "/images/Top_X_Red_Beacon.png"; //$NON-NLS-1$
+							break;
+						case TOP_YELLOW_CAN:
+							image = "/images/Top_Can_Yellow_Beacon.png"; //$NON-NLS-1$
+							break;
+						case TOP_YELLOW_CONE:
+							image = "/images/Top_Cone_Yellow_Beacon.png"; //$NON-NLS-1$
+							break;
+						}
 						break;
 					case SPEC_FLOAT:
-						image = "/images/Top_X_Yellow_Float.png"; //$NON-NLS-1$
+						switch (getTopMarkIndex()) {
+						case TOP_YELLOW_X:
+							image = "/images/Top_X_Yellow_Float.png"; //$NON-NLS-1$
+							break;
+						case TOP_RED_X:
+							image = "/images/Top_X_Red_Float.png"; //$NON-NLS-1$
+							break;
+						case TOP_YELLOW_CAN:
+							image = "/images/Top_Can_Yellow_Float.png"; //$NON-NLS-1$
+							break;
+						case TOP_YELLOW_CONE:
+							image = "/images/Top_Cone_Yellow_Float.png"; //$NON-NLS-1$
+							break;
+						}
 						break;
 					}
 					if (!image.isEmpty())
@@ -321,7 +384,20 @@ public class BuoySpec extends Buoy {
 			break;
 		default:
 		}
-		saveTopMarkData("x-shape", "yellow"); //$NON-NLS-1$ //$NON-NLS-2$
+		switch (getTopMarkIndex()) {
+		case TOP_YELLOW_X:
+			saveTopMarkData("x-shape", "yellow"); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		case TOP_RED_X:
+			saveTopMarkData("x-shape", "red"); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		case TOP_YELLOW_CAN:
+			saveTopMarkData("cylinder", "yellow"); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		case TOP_YELLOW_CONE:
+			saveTopMarkData("cone, point up", "yellow"); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		}
 		saveLightData(); //$NON-NLS-1$
 		saveRadarFogData();
 	}

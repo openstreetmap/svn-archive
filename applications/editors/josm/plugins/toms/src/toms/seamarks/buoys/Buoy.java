@@ -354,6 +354,16 @@ abstract public class Buoy extends SeaMark {
 		dlg.cM01TopMark.setSelected(topMark);
 	}
 
+	private int TopMarkIndex = 0;
+
+	public int getTopMarkIndex() {
+		return TopMarkIndex;
+	}
+
+	public void setTopMarkIndex(int index) {
+		TopMarkIndex = index;
+	}
+
 	protected SmpDialogAction dlg = null; // hier wird der Dialog referenziert
 
 	public SmpDialogAction getDlg() {
@@ -894,7 +904,7 @@ abstract public class Buoy extends SeaMark {
 	}
 
 	protected void saveTopMarkData(String shape, String colour) {
-		if (dlg.cM01TopMark.isSelected()) {
+		if (hasTopMark()) {
 			Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 					"seamark:topmark:shape", shape));
 			Main.main.undoRedo.add(new ChangePropertyCommand(Node,

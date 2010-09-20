@@ -959,7 +959,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TopMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01TopMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int top = cbM01TopMark.getSelectedIndex();
+					buoy.setTopMarkIndex(cbM01TopMark.getSelectedIndex());
 					buoy.paintSign();
 				}
 			});

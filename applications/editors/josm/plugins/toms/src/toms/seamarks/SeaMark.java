@@ -109,6 +109,16 @@ abstract public class SeaMark {
 	public final static int SPEC_BARREL = 9;
 
 	/**
+	 * Topmark Shapes - correspond to TopMarkIndex
+	 */
+
+	public final static int UNKNOWN_TOPMARK = 0;
+	public final static int TOP_YELLOW_X = 1;
+	public final static int TOP_RED_X = 2;
+	public final static int TOP_YELLOW_CAN = 3;
+	public final static int TOP_YELLOW_CONE = 4;
+
+	/**
 	 * Radar Beacons - correspond to Ratyp Index
 	 */
 

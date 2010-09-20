@@ -18,7 +18,7 @@ import smed.plug.util.SmedPluginLoader;
 
 public class SmedTabbedPane extends JPanel {
 	
-	private List<SmedPluggable> plugins = null;
+	List<SmedPluggable> plugins = null;
 
     /**
      *

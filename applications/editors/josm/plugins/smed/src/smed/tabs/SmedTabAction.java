@@ -24,6 +24,8 @@ public class SmedTabAction extends JosmAction {
      *
      */
 	private static final long serialVersionUID = 1L;
+	private SmedTabbedPane smedTabs = new SmedTabbedPane();
+	private SmedMenuBar smedMenu = new SmedMenuBar();
 
     public SmedTabAction() {
         super( "Seekarten Editor", "Smed","Seekarten Editor", Shortcut.registerShortcut(
@@ -48,9 +50,11 @@ public class SmedTabAction extends JosmAction {
         JFrame frame = new JFrame("TabbedPaneDemo");
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
+        smedMenu.plugins = smedTabs.plugins;
+        
         //Add content to the window.
-        frame.setJMenuBar(new SmedMenuBar());
-        frame.add(new SmedTabbedPane(), BorderLayout.CENTER);
+        frame.setJMenuBar(smedMenu);
+        frame.add(smedTabs, BorderLayout.CENTER);
 
         //Display the window.
         frame.pack();

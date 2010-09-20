@@ -3,6 +3,7 @@ package smed.menu.file;
 
 import java.awt.Dialog;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -14,12 +15,14 @@ import javax.swing.JList;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JCheckBox;
 
-import smed.list.JCheckBoxList;
+import smed.list.CheckBoxJList;
 public class HideAction extends JDialog {
 
 	/**
@@ -29,9 +32,16 @@ public class HideAction extends JDialog {
 	private JDialog hideDialog = null;  //  @jve:decl-index=0:visual-constraint="62,8"
 	private JPanel jContentPane = null;
 	private JButton okButton = null;
-	private JCheckBoxList hideList = null;
+	private CheckBoxJList hideList = null;
 	private JCheckBox jCheckBox = null;
+	private DefaultListModel model = null;
 	
+	
+	public HideAction(DefaultListModel model) {
+		this.model = model;
+		
+		getHideDialog().setVisible(true);
+	}
 	
 	/**
 	 * This method initializes hideDialog	
@@ -76,6 +86,7 @@ public class HideAction extends JDialog {
 			okButton.setText("Ok");
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					hideDialog.setVisible(true);
 					hideDialog.dispose();
 				}
 			});
@@ -87,12 +98,22 @@ public class HideAction extends JDialog {
 	 * 	
 	 * @return javax.swing.JList	
 	 */
-	public JCheckBoxList getHideList() {
+	public JList getHideList() {
 		if (hideList == null) {
-			hideList = new JCheckBoxList();
+			hideList = new CheckBoxJList();
+			hideList.setModel (model);
 			hideList.setBounds(new Rectangle(20, 15, 315, 370));
 			hideList.setBorder(LineBorder.createBlackLineBorder());
-			}
+			hideList.addListSelectionListener(new ListSelectionListener() {
+
+				@Override
+				public void valueChanged(ListSelectionEvent arg0) {
+					int i = hideList.getSelectedIndex();
+					System.out.println("i:\t" + i);
+				}
+			});
+		}
+		
 		return hideList;
 	}
 }

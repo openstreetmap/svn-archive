@@ -30,7 +30,7 @@
 <project name="ImportImagePlugin" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="fixed #j5485 - class path property does not work like this (causes crash)" />
+	<property name="commit.message" value="fix main class; add link" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3376" />
 
@@ -117,9 +117,10 @@
 
 			<manifest>
                 <attribute name="Author" value="Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.ImageImportPlugin.ImageImportPlugin"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.ImportImagePlugin.ImageImportPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Plugin for importing spatial referenced images"/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportImagePlugin"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 			</manifest>

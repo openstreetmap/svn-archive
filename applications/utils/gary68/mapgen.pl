@@ -72,6 +72,7 @@
 # 1.06 eliminate redundancy in svg output
 # 1.07 circle around POIs
 # 1.08 create list of not drawn labels in file
+# 1.09 list of not drawn labels now derives file name from svg name
 #
 #
 # TODO
@@ -92,11 +93,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.08 ;
-use OSM::mapgenRules 1.08 ;
+use OSM::mapgen 1.09 ;
+use OSM::mapgenRules 1.09 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.08" ;
+my $version = "1.09" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -908,7 +909,7 @@ if ($extPoiFileName ne "") {
 	}
 }
 preprocessWayLabels() ;
-createWayLabels (\@labelCandidates, \@ways, $declutterOpt, $halo) ;
+createWayLabels (\@labelCandidates, \@ways, $declutterOpt, $halo, $svgName) ;
 
 
 if ($ra ne "") {

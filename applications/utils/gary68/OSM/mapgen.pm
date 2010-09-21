@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.08' ;
+$VERSION = '1.09' ;
 
 require Exporter ;
 
@@ -553,7 +553,7 @@ sub createWayLabels {
 #
 # finally take all way label candidates and try to label them
 #
-	my ($ref, $ruleRef, $declutter, $halo) = @_ ;
+	my ($ref, $ruleRef, $declutter, $halo, $svgName) = @_ ;
 	my @labelCandidates = @$ref ;
 	my @wayRules = @$ruleRef ;
 	my %notDrawnLabels = () ;
@@ -663,7 +663,8 @@ sub createWayLabels {
 			}
 		}
 	}
-	my $labelFileName = "./NotDrawnLabels.txt" ;
+	my $labelFileName = $svgName ;
+	$labelFileName =~ s/\.svg/_NotDrawnLabels.txt/ ;
 	my $labelFile ;
 	open ($labelFile, ">", $labelFileName) or die ("couldn't open label file $labelFileName") ;
 	print $labelFile "Not drawn labels\n\n" ;

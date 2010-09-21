@@ -51,9 +51,17 @@
       <CssParameter name="stroke-width">2</CssParameter>
     </LineSymbolizer>
   </Rule>
-<!--
-    <Filter>[lit]='yes'</Filter>
--->
+  <Rule>
+    <Filter>[piste:type] = 'nordic' and [lit]='yes'</Filter>
+    &maxscale_zoom12;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&nordic-color;</CssParameter>
+      <CssParameter name="stroke-width">5</CssParameter>
+      <CssParameter name="stroke-dasharray">1,18</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+    </LineSymbolizer>
+  </Rule>
 
   <Rule>
     <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'novice'</Filter>
@@ -138,7 +146,7 @@
     <StyleName>skiing</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,"piste:type","piste:grooming","piste:difficulty",route
+      (select way,"piste:type","piste:grooming","piste:difficulty",route,lit
        from &prefix;_line
        where "piste:type" in ('nordic','downhill')
           or "piste:grooming" is not null

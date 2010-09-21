@@ -382,50 +382,23 @@ public class SmpDialogAction extends JosmAction {
 		if (keys.containsKey("seamark:type")) //$NON-NLS-1$
 			type = keys.get("seamark:type"); //$NON-NLS-1$
 
-		if (type.equals("buoy_lateral") || type.equals("beacon_lateral") //$NON-NLS-1$ //$NON-NLS-2$
-				|| keys.containsKey("seamark:buoy_lateral:category") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_lateral:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_lateral:colour") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_lateral:category") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_lateral:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_lateral:colour")) { //$NON-NLS-1$
+		if (type.equals("buoy_lateral") || type.equals("beacon_lateral")) { //$NON-NLS-1$ //$NON-NLS-2$
 			buoy = new BuoyLat(this, node);
 			return;
 
-		} else if (type.equals("buoy_cardinal") || type.equals("beacon_cardinal") //$NON-NLS-1$ //$NON-NLS-2$
-				|| keys.containsKey("seamark:buoy_cardinal:category") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_cardinal:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_cardinal:colour") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_cardinal:category") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_cardinal:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_cardinal:colour")) { //$NON-NLS-1$
+		} else if (type.equals("buoy_cardinal") || type.equals("beacon_cardinal")) { //$NON-NLS-1$ //$NON-NLS-2$
 			buoy = new BuoyCard(this, node);
 			return;
 
-		} else if (type.equals("buoy_safe_water") //$NON-NLS-1$
-				|| type.equals("beacon_safe_water") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_safe_water:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_safe_water:colour") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_safe_water:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_safe_water:colour")) { //$NON-NLS-1$
+		} else if (type.equals("buoy_safe_water") || type.equals("beacon_safe_water")) { //$NON-NLS-1$
 			buoy = new BuoySaw(this, node);
 			return;
 
-		} else if (type.equals("buoy_special_purpose") //$NON-NLS-1$
-				|| type.equals("beacon_special_purpose") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_special_purpose:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_special_purpose:colour") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_special_purpose:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_special_purpose:colour")) { //$NON-NLS-1$
+		} else if (type.equals("buoy_special_purpose") || type.equals("beacon_special_purpose")) { //$NON-NLS-1$
 			buoy = new BuoySpec(this, node);
 			return;
 
-		} else if (type.equals("buoy_isolated_danger") //$NON-NLS-1$
-				|| type.equals("beacon_isolated_danger") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_isolated_danger:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:buoy_isolated_danger:colour") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_isolated_danger:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_isolated_danger:colour")) { //$NON-NLS-1$
+		} else if (type.equals("buoy_isolated_danger") || type.equals("beacon_isolated_danger")) { //$NON-NLS-1$
 			buoy = new BuoyIsol(this, node);
 			return;
 
@@ -469,6 +442,57 @@ public class SmpDialogAction extends JosmAction {
 					return;
 				}
 			}
+		}
+
+		if (keys.containsKey("buoy_lateral:category") || keys.containsKey("beacon_lateral:category")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyLat(this, node);
+			return;
+		} else if (keys.containsKey("buoy_cardinal:category") || keys.containsKey("beacon_cardinal:category")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyCard(this, node);
+			return;
+		} else if (keys.containsKey("buoy_isolated_danger:category") || keys.containsKey("beacon_isolated_danger:category")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyIsol(this, node);
+			return;
+		} else if (keys.containsKey("buoy_safe_water:category") || keys.containsKey("beacon_safe_water:category")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoySaw(this, node);
+			return;
+		} else if (keys.containsKey("buoy_special_purpose:category") || keys.containsKey("beacon_special_purpose:category")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoySpec(this, node);
+			return;
+		}
+
+		if (keys.containsKey("buoy_lateral:shape") || keys.containsKey("beacon_lateral:shape")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyLat(this, node);
+			return;
+		} else if (keys.containsKey("buoy_cardinal:shape") || keys.containsKey("beacon_cardinal:shape")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyCard(this, node);
+			return;
+		} else if (keys.containsKey("buoy_isolated_danger:shape") || keys.containsKey("beacon_isolated_danger:shape")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyIsol(this, node);
+			return;
+		} else if (keys.containsKey("buoy_safe_water:shape") || keys.containsKey("beacon_safe_water:shape")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoySaw(this, node);
+			return;
+		} else if (keys.containsKey("buoy_special_purpose:shape") || keys.containsKey("beacon_special_purpose:shape")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoySpec(this, node);
+			return;
+		}
+
+		if (keys.containsKey("buoy_lateral:colour") || keys.containsKey("beacon_lateral:colour")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyLat(this, node);
+			return;
+		} else if (keys.containsKey("buoy_cardinal:colour") || keys.containsKey("beacon_cardinal:colour")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyCard(this, node);
+			return;
+		} else if (keys.containsKey("buoy_isolated_danger:colour") || keys.containsKey("beacon_isolated_danger:colour")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoyIsol(this, node);
+			return;
+		} else if (keys.containsKey("buoy_safe_water:colour") || keys.containsKey("beacon_safe_water:colour")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoySaw(this, node);
+			return;
+		} else if (keys.containsKey("buoy_special_purpose:colour") || keys.containsKey("beacon_special_purpose:colour")) { //$NON-NLS-1$ //$NON-NLS-2$
+			buoy = new BuoySpec(this, node);
+			return;
 		}
 
 		buoy = new BuoyUkn(this, Messages.getString("SmpDialogAction.91")); //$NON-NLS-1$
@@ -876,19 +900,9 @@ public class SmpDialogAction extends JosmAction {
 
 			cbM01CatOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int cat = cbM01CatOfMark.getSelectedIndex();
-
-					if (buoy == null) {
-						buoy = new BuoyUkn(dia, Messages.getString("SmpDialogAction.150")); //$NON-NLS-1$
-						buoy.paintSign();
+					if (buoy == null)
 						return;
-					}
-
-					Node n = buoy.getNode();
-					if (n == null)
-						return;
-
-					buoy.setBuoyIndex(cat);
+					buoy.setBuoyIndex(cbM01CatOfMark.getSelectedIndex());
 					buoy.refreshStyles();
 					buoy.refreshLights();
 					buoy.setLightColour();
@@ -906,13 +920,12 @@ public class SmpDialogAction extends JosmAction {
 			cbM01StyleOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01StyleOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int style = cbM01StyleOfMark.getSelectedIndex();
-					if (buoy != null && style != buoy.getStyleIndex()) {
-						buoy.setStyleIndex(style);
-						buoy.refreshLights();
-						buoy.setLightColour();
-						buoy.paintSign();
-					}
+					if (buoy == null)
+						return;
+					buoy.setStyleIndex(cbM01StyleOfMark.getSelectedIndex());
+					buoy.refreshLights();
+					buoy.setLightColour();
+					buoy.paintSign();
 				}
 			});
 		}
@@ -925,6 +938,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Name.setBounds(new Rectangle(50, 120, 150, 20));
 			tfM01Name.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setName(tfM01Name.getText());
 					buoy.paintSign();
 				}
@@ -941,9 +956,8 @@ public class SmpDialogAction extends JosmAction {
 			cM01TopMark.setText(Messages.getString("SmpDialogAction.166")); //$NON-NLS-1$
 			cM01TopMark.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
-					if (buoy == null) {
+					if (buoy == null)
 						return;
-					}
 					buoy.setTopMark(cM01TopMark.isSelected());
 					buoy.paintSign();
 				}
@@ -959,6 +973,8 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TopMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01TopMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setTopMarkIndex(cbM01TopMark.getSelectedIndex());
 					buoy.paintSign();
 				}
@@ -975,6 +991,8 @@ public class SmpDialogAction extends JosmAction {
 			cM01Radar.setText(Messages.getString("SmpDialogAction.169")); //$NON-NLS-1$
 			cM01Radar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					if (cM01Radar.isSelected()) {
 						buoy.setRadar(true);
 						buoy.setRacon(false);
@@ -997,6 +1015,8 @@ public class SmpDialogAction extends JosmAction {
 			cM01Racon.setText(Messages.getString("SmpDialogAction.171")); //$NON-NLS-1$
 			cM01Racon.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					if (cM01Racon.isSelected()) {
 						buoy.setRacon(true);
 						buoy.setRadar(false);
@@ -1023,6 +1043,8 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Racon.addItem("Leading");
 			cbM01Racon.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					int rac = cbM01Racon.getSelectedIndex();
 					buoy.setRaType(rac);
 					buoy.paintSign();
@@ -1038,6 +1060,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Racon.setBounds(new Rectangle(345, 195, 30, 20));
 			tfM01Racon.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setRaconGroup(tfM01Racon.getText().trim());
 					buoy.paintSign();
 				}
@@ -1054,6 +1078,8 @@ public class SmpDialogAction extends JosmAction {
 			cM01Fog.setText(Messages.getString("SmpDialogAction.174")); //$NON-NLS-1$
 			cM01Fog.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setFog(cM01Fog.isSelected());
 					buoy.paintSign();
 				}
@@ -1078,6 +1104,8 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Fog.addItem("Explos");
 			cbM01Fog.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					if (cbM01Fog.getSelectedIndex() > 0)
 						buoy.setFogSound(cbM01Fog.getSelectedIndex());
 					else
@@ -1095,6 +1123,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01FogGroup.setBounds(new Rectangle(243, 220, 30, 20));
 			tfM01FogGroup.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setFogGroup(tfM01FogGroup.getText().trim());
 					buoy.paintSign();
 				}
@@ -1109,6 +1139,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01FogPeriod.setBounds(new Rectangle(345, 220, 30, 20));
 			tfM01FogPeriod.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setFogPeriod(tfM01FogPeriod.getText().trim());
 					buoy.paintSign();
 				}
@@ -1178,6 +1210,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Height.setBounds(new Rectangle(54, 270, 30, 20));
 			tfM01Height.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setHeight(tfM01Height.getText().trim());
 					buoy.paintSign();
 				}
@@ -1192,6 +1226,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Range.setBounds(new Rectangle(151, 270, 30, 20));
 			tfM01Range.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setRange(tfM01Range.getText().trim());
 					buoy.paintSign();
 				}
@@ -1206,6 +1242,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Group.setBounds(new Rectangle(255, 270, 30, 20));
 			tfM01Group.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setLightGroup(tfM01Group.getText().trim());
 					buoy.paintSign();
 				}
@@ -1220,6 +1258,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01RepeatTime.setBounds(new Rectangle(345, 270, 30, 20));
 			tfM01RepeatTime.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setLightPeriod(tfM01RepeatTime.getText().trim());
 					buoy.paintSign();
 				}
@@ -1227,6 +1267,8 @@ public class SmpDialogAction extends JosmAction {
 
 			tfM01RepeatTime.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setLightPeriod(tfM01RepeatTime.getText().trim());
 					buoy.paintSign();
 				}
@@ -1246,6 +1288,8 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Colour.addItem(Messages.getString("SmpDialogAction.192")); //$NON-NLS-1$
 			cbM01Colour.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setLightColour((String) cbM01Colour.getSelectedItem());
 					buoy.paintSign();
 				}
@@ -1271,6 +1315,8 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Sector.addItem(Messages.getString("SmpDialogAction.203")); //$NON-NLS-1$
 			cbM01Sector.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setSectorIndex(cbM01Sector.getSelectedIndex());
 					buoy.paintSign();
 				}
@@ -1285,6 +1331,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Bearing.setBounds(new Rectangle(255, 295, 30, 20));
 			tfM01Bearing.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setBearing1(tfM01Bearing.getText().trim());
 				}
 			});
@@ -1311,6 +1359,8 @@ public class SmpDialogAction extends JosmAction {
 			tfM01Radius.setBounds(new Rectangle(355, 295, 30, 20));
 			tfM01Radius.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					if (buoy == null)
+						return;
 					buoy.setRadius(tfM01Radius.getText().trim());
 				}
 			});

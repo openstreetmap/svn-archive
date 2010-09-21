@@ -25,7 +25,6 @@ public class BuoySaw extends Buoy {
 		setNode(node);
 
 		resetMask();
-
 		dlg.cbM01TypeOfMark.setSelectedIndex(SAFE_WATER);
 
 		dlg.cbM01StyleOfMark.removeAllItems();

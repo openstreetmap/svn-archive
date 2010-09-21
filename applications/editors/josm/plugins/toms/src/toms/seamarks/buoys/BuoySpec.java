@@ -25,7 +25,6 @@ public class BuoySpec extends Buoy {
 		setNode(node);
 
 		resetMask();
-
 		dlg.cbM01TypeOfMark.setSelectedIndex(SPECIAL_PURPOSE);
 
 		dlg.cbM01StyleOfMark.removeAllItems();

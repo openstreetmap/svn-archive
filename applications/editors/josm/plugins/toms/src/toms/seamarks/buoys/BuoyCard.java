@@ -20,12 +20,15 @@ public class BuoyCard extends Buoy {
 	public BuoyCard(SmpDialogAction dia, Node node) {
 		super(dia);
 
+System.out.println("new");
 		String str;
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
 
 		resetMask();
+		dlg.cbM01TypeOfMark.setSelectedIndex(CARDINAL);
+
 		dlg.cbM01CatOfMark.removeAllItems();
 		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
 		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.158")); //$NON-NLS-1$
@@ -46,8 +49,6 @@ public class BuoyCard extends Buoy {
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.setVisible(true);
 		dlg.lM01StyleOfMark.setVisible(true);
-
-		dlg.cbM01TypeOfMark.setSelectedIndex(CARDINAL);
 
 		setRegion(Main.pref.get("tomsplugin.IALA").equals("B")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (keys.containsKey("name")) //$NON-NLS-1$

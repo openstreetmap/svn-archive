@@ -24,6 +24,7 @@ public class BuoyLat extends Buoy {
 		setNode(node);
 
 		resetMask();
+		dlg.cbM01TypeOfMark.setSelectedIndex(LATERAL);
 
 		dlg.cbM01CatOfMark.removeAllItems();
 		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.152")); //$NON-NLS-1$
@@ -46,8 +47,6 @@ public class BuoyLat extends Buoy {
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
 		dlg.cbM01StyleOfMark.setEnabled(true);
-
-		dlg.cbM01TypeOfMark.setSelectedIndex(LATERAL);
 
 		if (keys.containsKey("name")) //$NON-NLS-1$
 			setName(keys.get("name")); //$NON-NLS-1$

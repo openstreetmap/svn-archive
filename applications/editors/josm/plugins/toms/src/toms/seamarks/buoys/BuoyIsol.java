@@ -25,7 +25,6 @@ public class BuoyIsol extends Buoy {
 		setNode(node);
 
 		resetMask();
-
 		dlg.cbM01TypeOfMark.setSelectedIndex(ISOLATED_DANGER);
 
 		dlg.cbM01StyleOfMark.removeAllItems();

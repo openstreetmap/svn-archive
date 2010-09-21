@@ -30,9 +30,9 @@
 <project name="ImportImagePlugin" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Commit message" />
+	<property name="commit.message" value="fixed #j5485 - class path property does not work like this (causes crash)" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="" />
+	<property name="plugin.main.version" value="3376" />
 
 
 	<!--
@@ -120,9 +120,8 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.ImageImportPlugin.ImageImportPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Plugin for importing spatial referenced images"/>
-                <attribute name="Plugin-Mainversion" value="3376"/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-				<attribute name="Class-Path" value="."/>
 			</manifest>
 		</jar>
 	</target>

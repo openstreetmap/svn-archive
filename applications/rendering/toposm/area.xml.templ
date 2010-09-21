@@ -274,7 +274,7 @@
 	<StyleName>washes</StyleName>
 	<Datasource>
 		&dbsettings; &extentsLatLon;
-		<Parameter name="table">(select way, ftype from nhdarea) as nhdarea</Parameter>
+		<Parameter name="table">(select way, ftype from ${NHD_TABLE_PREFIX}_area) as nhdarea</Parameter>
 	</Datasource>
 </Layer>
 
@@ -282,7 +282,7 @@
 	<StyleName>ice</StyleName>
 	<Datasource>
 		&dbsettings; &extentsLatLon;
-		<Parameter name="table">(select way, ftype from nhdwaterbody) as nhdwaterbody</Parameter>
+		<Parameter name="table">(select way, ftype from ${NHD_TABLE_PREFIX}_waterbody) as nhdwaterbody</Parameter>
 	</Datasource>
 </Layer>
 

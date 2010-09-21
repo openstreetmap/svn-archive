@@ -350,16 +350,7 @@ elsif ($Mode eq "loop")
         checkDataFaults();
 
         # look for stopfile and exit if found
-        if (-e "stopfile.txt")
-        {
-            if ($Config->get("ForkForUpload") && $upload_pid != -1)
-            {
-                statusMessage("Waiting for previous upload process (this can take a while)",1,0);
-                waitpid($upload_pid, 0);
-            }
-            print STDERR "We suggest that you set MaxTilesetComplexity to ".int($complexity)."\n";
-            cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
-        }
+        checkForStopfile();
 
         # Add a basic auto-updating mechanism. 
         if (NewClientVersion()) 
@@ -753,6 +744,7 @@ sub ProcessRequestsFromServer
             }
             else {
                 talkInSleep("Server: ".$err->text(), 60);
+                checkForStopfile();    # ticket #2972: existence of stopfile.txt should be analyzed during an idle loop
             }
         };
     } until ($req);
@@ -1169,5 +1161,25 @@ sub checkDataFaults
         }
     }
 }
+
+
+#--------------------------------------------------------------------------------------
+# check for stopfile and exit if found
+#--------------------------------------------------------------------------------------
+sub checkForStopfile
+{
+    # look for stopfile and exit if found
+    if (-e "stopfile.txt")
+    {
+        if ($Config->get("ForkForUpload") && $upload_pid != -1)
+        {
+            statusMessage("Waiting for previous upload process (this can take a while)",1,0);
+            waitpid($upload_pid, 0);
+        }
+        print STDERR "We suggest that you set MaxTilesetComplexity to ".int($complexity)."\n";
+        cleanUpAndDie("Stopfile found, exiting","EXIT",7); ## TODO: agree on an exit code scheme for different types of errors
+    }
+}
+
 
 #sub fileUTF8ErrCheck moved to lib/tahlib.pm

@@ -20,7 +20,6 @@ public class BuoyCard extends Buoy {
 	public BuoyCard(SmpDialogAction dia, Node node) {
 		super(dia);
 
-System.out.println("new");
 		String str;
 		Map<String, String> keys;
 		keys = node.getKeys();

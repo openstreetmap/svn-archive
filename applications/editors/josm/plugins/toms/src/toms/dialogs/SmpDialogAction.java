@@ -381,7 +381,7 @@ public class SmpDialogAction extends JosmAction {
 
 		if (keys.containsKey("seamark:type")) //$NON-NLS-1$
 			type = keys.get("seamark:type"); //$NON-NLS-1$
-
+		
 		if (type.equals("buoy_lateral") || type.equals("beacon_lateral")) { //$NON-NLS-1$ //$NON-NLS-2$
 			buoy = new BuoyLat(this, node);
 			return;

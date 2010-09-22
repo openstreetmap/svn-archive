@@ -282,6 +282,23 @@ public class AddWMSLayerPanel extends JPanel {
             return;
         }
 
+        // Some WMS service URLs specify a different base URL for their GetMap service
+        Element child = getChild(document.getDocumentElement(), "Capability");
+        child = getChild(child, "Request");
+        child = getChild(child, "GetMap");
+        child = getChild(child, "DCPType");
+        child = getChild(child, "HTTP");
+        child = getChild(child, "Get");
+        child = getChild(child, "OnlineResource");
+        String baseURL = child.getAttribute("xlink:href");
+        if(baseURL != null) {
+            try {
+                System.out.println("GetCapabilities specifies a different service URL: " + baseURL);
+                serviceUrl = new URL(baseURL);
+            } catch (MalformedURLException e1) {
+            }
+        }
+
         try {
             treeRootNode.setUserObject(getCapabilitiesUrl.getHost());
             Element capabilityElem = getChild(document.getDocumentElement(), "Capability");

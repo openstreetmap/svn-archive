@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.ImageImportPlugin;
+package org.openstreetmap.josm.plugins.ImportImagePlugin;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.plugins.ImageImportPlugin.ImageLayer.LayerCreationCancledException;
+import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCancledException;
 
 
 /**

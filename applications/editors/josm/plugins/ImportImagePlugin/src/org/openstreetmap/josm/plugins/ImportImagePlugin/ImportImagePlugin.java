@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.ImageImportPlugin;
+package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -29,7 +29,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * @author Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny
  *
  */
-public class ImageImportPlugin extends Plugin{
+public class ImportImagePlugin extends Plugin{
     
     private static Logger logger;
     
@@ -43,11 +43,11 @@ public class ImageImportPlugin extends Plugin{
     static Properties pluginProps;
     
     // path constants
-    static final String PLUGIN_DIR = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImageImportPlugin/";
-    static final String PLUGINPROPERTIES_PATH = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImageImportPlugin/pluginProperties.properties"; 
-    static final String PLUGINLIBRARIES_DIR = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImageImportPlugin/lib/"; 
+    static final String PLUGIN_DIR = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/";
+    static final String PLUGINPROPERTIES_PATH = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/pluginProperties.properties"; 
+    static final String PLUGINLIBRARIES_DIR = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/lib/"; 
     static final String PLUGINPROPERTIES_FILENAME = "pluginProperties.properties";
-    static final String LOGGING_PROPERTIES_FILEPATH = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImageImportPlugin/log4j.properties/";
+    static final String LOGGING_PROPERTIES_FILEPATH = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/log4j.properties/";
     
     
     public Properties getPluginProps() {
@@ -60,7 +60,7 @@ public class ImageImportPlugin extends Plugin{
      * 
      * @param info
      */
-    public ImageImportPlugin(PluginInformation info){
+    public ImportImagePlugin(PluginInformation info){
         super(info);
         
         try {
@@ -237,11 +237,11 @@ public class ImageImportPlugin extends Plugin{
             
             // Set file for logging here:
             props.setProperty("log4j.appender.MyRoFiAppender.file",
-                    (Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImageImportPlugin/" + "log.log"));
+                    (Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/" + "log.log"));
             
             PropertyConfigurator.configure(props);
 
-            logger = Logger.getLogger(ImageImportPlugin.class);
+            logger = Logger.getLogger(ImportImagePlugin.class);
             
             logger.info("Logger successfully initialized.");
             
@@ -263,10 +263,10 @@ public class ImageImportPlugin extends Plugin{
 
         // Set file for logging here:
         props.setProperty("log4j.appender.A.file",
-                (Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImageImportPlugin/" + "log.log"));
+                (Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/" + "log.log"));
         
         PropertyConfigurator.configure(props);
-        logger = Logger.getLogger(ImageImportPlugin.class);
+        logger = Logger.getLogger(ImportImagePlugin.class);
         logger.info("Logger successfully initialized with standard settings.");
         
     }
@@ -282,7 +282,7 @@ public class ImageImportPlugin extends Plugin{
         ClassLoader loader = null;
         loader = URLClassLoader.newInstance(
                 new URL[] { new File(Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin.jar").toURI().toURL()},
-                ImageImportPlugin.class.getClassLoader()
+                ImportImagePlugin.class.getClassLoader()
                 );
         
         return loader;

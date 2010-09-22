@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.ImageImportPlugin;
+package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -80,7 +80,7 @@ public class ImageLayer extends Layer {
         
         this.imageFile = file;
         this.image = (BufferedImage) createImage();
-        layericon = new ImageIcon(ImageImportPlugin.pluginClassLoader.getResource("images/layericon.png"));
+        layericon = new ImageIcon(ImportImagePlugin.pluginClassLoader.getResource("images/layericon.png"));
         
     }
 

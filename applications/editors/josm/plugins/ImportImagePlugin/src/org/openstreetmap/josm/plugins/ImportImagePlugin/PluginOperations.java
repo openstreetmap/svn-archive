@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.ImageImportPlugin;
+package org.openstreetmap.josm.plugins.ImportImagePlugin;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;

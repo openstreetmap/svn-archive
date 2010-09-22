@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.ImageImportPlugin;
+package org.openstreetmap.josm.plugins.ImportImagePlugin;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -526,10 +526,10 @@ public class LayerPropertiesDialog extends JFrame{
                                     PluginOperations.defaultSourceCRS = CRS.decode(code, eastingFirstCheckBox.isSelected());
                                     PluginOperations.defaultSourceCRSDescription = selection;
                                     
-                                    ImageImportPlugin.pluginProps.setProperty("default_crs_eastingfirst", "" + eastingFirstCheckBox.isSelected());
-                                    ImageImportPlugin.pluginProps.setProperty("default_crs_srid", code);
-                                    FileWriter fileWriter = new FileWriter(new File(ImageImportPlugin.PLUGINPROPERTIES_PATH));
-                                    ImageImportPlugin.pluginProps.store(fileWriter, null);
+                                    ImportImagePlugin.pluginProps.setProperty("default_crs_eastingfirst", "" + eastingFirstCheckBox.isSelected());
+                                    ImportImagePlugin.pluginProps.setProperty("default_crs_srid", code);
+                                    FileWriter fileWriter = new FileWriter(new File(ImportImagePlugin.PLUGINPROPERTIES_PATH));
+                                    ImportImagePlugin.pluginProps.store(fileWriter, null);
                                     fileWriter.close();
                                     
                                     defaultCRSLabel.setText(selection);

@@ -237,8 +237,6 @@ public class AddWMSLayerPanel extends JPanel {
             return;
         }
 
-        System.out.println("Connecting to: " + getCapabilitiesUrl);
-
         String incomingData;
         try {
             URLConnection openConnection = getCapabilitiesUrl.openConnection();
@@ -256,8 +254,6 @@ public class AddWMSLayerPanel extends JPanel {
                     tr("WMS Error"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        System.out.println(incomingData);
 
         Document document;
         try {

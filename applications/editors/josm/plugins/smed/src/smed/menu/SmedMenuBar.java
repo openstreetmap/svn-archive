@@ -9,7 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import smed.menu.file.HideAction;
+import smed.menu.file.TabManager;
 import smed.plug.ifc.SmedPluggable;
 
 public class SmedMenuBar extends JMenuBar {
@@ -23,7 +23,7 @@ public class SmedMenuBar extends JMenuBar {
      JMenu menu, submenu;
      JMenuItem menuItem;
      public List<SmedPluggable> plugins = null;
-     HideAction hideAction = null;
+     TabManager hideAction = null;
      
      public SmedMenuBar() {
         menuBar = new JMenuBar();
@@ -33,8 +33,8 @@ public class SmedMenuBar extends JMenuBar {
         menu.getAccessibleContext().setAccessibleDescription(
                 "The only menu in this program that has menu items");
 
-        menuItem = new JMenuItem("Hide",
-                KeyEvent.VK_H);
+        menuItem = new JMenuItem("Tabmanager",
+                KeyEvent.VK_T);
 
         menuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -43,7 +43,7 @@ public class SmedMenuBar extends JMenuBar {
 
 				for(SmedPluggable p : plugins) myModel.addElement (p.getName());
 				
-				hideAction = new HideAction(myModel);
+				hideAction = new TabManager(myModel);
 			}
 		});
 

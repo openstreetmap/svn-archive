@@ -27,25 +27,25 @@
 <Style name="skiing">
   <Rule>
     <Filter>[piste:grooming] = 'backcountry'</Filter>
-    &maxscale_zoom14;
+    &maxscale_zoom13;
     <LineSymbolizer>
       <CssParameter name="stroke">&nordic-color;</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
-      <CssParameter name="stroke-dasharray">8,6</CssParameter>
+      <CssParameter name="stroke-dasharray">6,8</CssParameter>
     </LineSymbolizer>
   </Rule>
   <Rule>
     <Filter>[piste:grooming] = 'scooter'</Filter>
-    &maxscale_zoom12;
+    &maxscale_zoom11;
     <LineSymbolizer>
       <CssParameter name="stroke">&nordic-color;</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
-      <CssParameter name="stroke-dasharray">20,4</CssParameter>
+      <CssParameter name="stroke-dasharray">20,3</CssParameter>
     </LineSymbolizer>
   </Rule>
   <Rule>
     <Filter>[piste:type] = 'nordic' and not ([piste:grooming] = 'backcountry' or [piste:grooming] = 'scooter')</Filter>
-    &maxscale_zoom12;
+    &maxscale_zoom11;
     <LineSymbolizer>
       <CssParameter name="stroke">&nordic-color;</CssParameter>
       <CssParameter name="stroke-width">2</CssParameter>
@@ -53,11 +53,11 @@
   </Rule>
   <Rule>
     <Filter>[piste:type] = 'nordic' and [lit]='yes'</Filter>
-    &maxscale_zoom12;
+    &maxscale_zoom13;
     <LineSymbolizer>
       <CssParameter name="stroke">&nordic-color;</CssParameter>
-      <CssParameter name="stroke-width">5</CssParameter>
-      <CssParameter name="stroke-dasharray">1,18</CssParameter>
+      <CssParameter name="stroke-width">6</CssParameter>
+      <CssParameter name="stroke-dasharray">1,21</CssParameter>
       <CssParameter name="stroke-linejoin">round</CssParameter>
       <CssParameter name="stroke-linecap">round</CssParameter>
     </LineSymbolizer>

@@ -7,58 +7,54 @@ import javax.swing.JScrollPane;
 
 import javax.swing.JPanel;
 import java.awt.Dimension;
-import javax.swing.JList;
 import java.awt.Rectangle;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import smed.jide.swing.CheckBoxList;
+import smed.jide.swing.CheckBoxListSelectionModel;
+import smed.plug.ifc.SmedPluggable;
+import smed.tabs.SmedTabbedPane;
 
-public class TabManager extends JDialog {
+
+public class TabManager extends JDialog implements ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	DefaultListModel model;
-
+	private DefaultListModel model;
+	private CheckBoxListSelectionModel selModel;
+	private List<SmedPluggable> plugins = null;
+	private int modelSize = 0;
 
 	private JDialog tabManagerDialog = null;  //  @jve:decl-index=0:visual-constraint="59,23"
-
 	private JPanel tabManagerPanel = null;
-
 	private JScrollPane tabScrollPane = null;
-
-	private JList tabList = null;
-
+	private CheckBoxList tabList = null;
 	private JButton tabButtonOk = null;
-
 	private JButton tabButtonCancel = null;
-
 	private JButton tabButtonUndo = null;
-
 	private JButton tabButtonLoad = null;
-
 	private JButton tabButtonSave = null;
-
 	private JButton tabButtonDelete = null;
-
 	private JButton tabButtonVisible = null;
-
 	private JButton tabButtonAll = null;
-
 	private JButton tabButtonNone = null;
-
 	private JLabel tabLabelSelect = null;
-
 	private JLabel tabLabelRename = null;
-
 	private JTextField tabTextFieldRename = null;
 
 	public TabManager(DefaultListModel model) {
 		this.model = model;
-		
+		plugins = SmedTabbedPane.getPlugins();
+		modelSize = model.getSize();
 		getTabManagerDialog().setVisible(true);
 	}
 
@@ -135,9 +131,10 @@ public class TabManager extends JDialog {
 	 * 	
 	 * @return javax.swing.JList	
 	 */
-	private JList getTabList() {
+	private CheckBoxList getTabList() {
 		if (tabList == null) {
-			tabList = new JList();
+			tabList = new CheckBoxList(model);
+			selModel = ((CheckBoxList) tabList).getCheckBoxListSelectionModel();
 		}
 		return tabList;
 	}
@@ -153,6 +150,8 @@ public class TabManager extends JDialog {
 			tabButtonOk.setBounds(new Rectangle(254, 4, 130, 30));
 			tabButtonOk.setFont(new Font("Dialog", Font.BOLD, 12));
 			tabButtonOk.setText("Ok");
+			tabButtonOk.addActionListener(this);
+			tabButtonOk.setActionCommand("ok");
 		}
 		return tabButtonOk;
 	}
@@ -168,6 +167,8 @@ public class TabManager extends JDialog {
 			tabButtonCancel.setBounds(new Rectangle(254, 44, 130, 30));
 			tabButtonCancel.setFont(new Font("Dialog", Font.BOLD, 12));
 			tabButtonCancel.setText("Cancel");
+			tabButtonCancel.addActionListener(this);
+			tabButtonCancel.setActionCommand("cancel");
 		}
 		return tabButtonCancel;
 	}
@@ -183,6 +184,8 @@ public class TabManager extends JDialog {
 			tabButtonUndo.setBounds(new Rectangle(254, 84, 130, 30));
 			tabButtonUndo.setFont(new Font("Dialog", Font.BOLD, 12));
 			tabButtonUndo.setText("Undo");
+			tabButtonUndo.addActionListener(this);
+			tabButtonUndo.setActionCommand("undo");
 		}
 		return tabButtonUndo;
 	}
@@ -198,6 +201,8 @@ public class TabManager extends JDialog {
 			tabButtonLoad.setBounds(new Rectangle(186, 328, 104, 30));
 			tabButtonLoad.setFont(new Font("Dialog", Font.BOLD, 12));
 			tabButtonLoad.setText("Load");
+			tabButtonLoad.addActionListener(this);
+			tabButtonLoad.setActionCommand("load");
 		}
 		return tabButtonLoad;
 	}
@@ -213,6 +218,8 @@ public class TabManager extends JDialog {
 			tabButtonSave.setBounds(new Rectangle(293, 328, 104, 30));
 			tabButtonSave.setFont(new Font("Dialog", Font.BOLD, 12));
 			tabButtonSave.setText("Save");
+			tabButtonSave.addActionListener(this);
+			tabButtonSave.setActionCommand("save");
 		}
 		return tabButtonSave;
 	}
@@ -227,6 +234,8 @@ public class TabManager extends JDialog {
 			tabButtonDelete = new JButton();
 			tabButtonDelete.setBounds(new Rectangle(186, 362, 104, 30));
 			tabButtonDelete.setText("Delete");
+			tabButtonDelete.addActionListener(this);
+			tabButtonDelete.setActionCommand("delete");
 		}
 		return tabButtonDelete;
 	}
@@ -240,7 +249,9 @@ public class TabManager extends JDialog {
 		if (tabButtonVisible == null) {
 			tabButtonVisible = new JButton();
 			tabButtonVisible.setBounds(new Rectangle(293, 362, 104, 30));
-			tabButtonVisible.setText("visible");
+			tabButtonVisible.setText("invisible");
+			tabButtonVisible.addActionListener(this);
+			tabButtonVisible.setActionCommand("invisible");
 		}
 		return tabButtonVisible;
 	}
@@ -256,6 +267,8 @@ public class TabManager extends JDialog {
 			tabButtonAll.setBounds(new Rectangle(92, 300, 72, 20));
 			tabButtonAll.setFont(new Font("Dialog", Font.PLAIN, 12));
 			tabButtonAll.setText("all");
+			tabButtonAll.addActionListener(this);
+			tabButtonAll.setActionCommand("all");
 		}
 		return tabButtonAll;
 	}
@@ -271,6 +284,8 @@ public class TabManager extends JDialog {
 			tabButtonNone.setBounds(new Rectangle(166, 300, 72, 20));
 			tabButtonNone.setFont(new Font("Dialog", Font.PLAIN, 12));
 			tabButtonNone.setText("none");
+			tabButtonNone.addActionListener(this);
+			tabButtonNone.setActionCommand("none");
 		}
 		return tabButtonNone;
 	}
@@ -286,6 +301,54 @@ public class TabManager extends JDialog {
 			tabTextFieldRename.setBounds(new Rectangle(14, 362, 167, 32));
 		}
 		return tabTextFieldRename;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String cmd = e.getActionCommand();
+		
+		if(cmd.equals("ok")) {
+			System.out.println("Aufraeumarbeiten beginnen");
+			tabManagerDialog.setVisible(false);
+			tabManagerDialog.dispose();
+			return;
+		}
+		
+		if(cmd.equals("cancel")) {
+			tabManagerDialog.setVisible(false);
+			tabManagerDialog.dispose();
+			return;
+		}
+		
+		if(cmd.equals("all")) {
+			selModel.addSelectionInterval(0, modelSize - 1);
+			return;
+		}
+		
+		if(cmd.equals("none")) {
+			selModel.removeSelectionInterval(0, modelSize - 1);
+			return;
+		}
+		
+		if(cmd.equals("invisible")) {
+			for(int i = 0; i < modelSize ; i++) {
+				if(selModel.isSelectedIndex(i)) model.set(i,"invisible");				
+			}
+		}
+		
+		if(cmd.equals("delete")) {
+			for(int i = 0; i < modelSize ; i++) {
+				if(selModel.isSelectedIndex(i)) model.set(i,"");				
+			}
+		}
+		
+		if(cmd.equals("undo")) {
+			int i = 0;
+			
+			for(SmedPluggable p : plugins) model.set(i++,p.getName());
+			selModel.removeSelectionInterval(0, modelSize - 1);
+		}
+
 	}
 
 }

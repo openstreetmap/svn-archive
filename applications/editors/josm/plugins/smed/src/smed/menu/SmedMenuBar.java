@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 
 import smed.menu.file.TabManager;
 import smed.plug.ifc.SmedPluggable;
+import smed.tabs.SmedTabbedPane;
 
 public class SmedMenuBar extends JMenuBar {
 
@@ -22,8 +23,7 @@ public class SmedMenuBar extends JMenuBar {
      JMenuBar menuBar;
      JMenu menu, submenu;
      JMenuItem menuItem;
-     public List<SmedPluggable> plugins = null;
-     TabManager hideAction = null;
+     private List<SmedPluggable> plugins = null;
      
      public SmedMenuBar() {
         menuBar = new JMenuBar();
@@ -37,13 +37,14 @@ public class SmedMenuBar extends JMenuBar {
                 KeyEvent.VK_T);
 
         menuItem.addActionListener(new java.awt.event.ActionListener() {
-
+        	
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				DefaultListModel myModel = new DefaultListModel();
+				plugins = SmedTabbedPane.getPlugins();
 
 				for(SmedPluggable p : plugins) myModel.addElement (p.getName());
 				
-				hideAction = new TabManager(myModel);
+				new TabManager(myModel);
 			}
 		});
 

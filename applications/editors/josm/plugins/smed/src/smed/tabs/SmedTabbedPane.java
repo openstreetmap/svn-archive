@@ -17,14 +17,14 @@ import smed.plug.ifc.SmedPluggable;
 import smed.plug.util.SmedPluginLoader;
 
 public class SmedTabbedPane extends JPanel {
-	
-	List<SmedPluggable> plugins = null;
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
+	static private List<SmedPluggable> plugins = null;
+	
     public SmedTabbedPane() {
         super(new GridLayout(1, 1));
 
@@ -56,5 +56,9 @@ public class SmedTabbedPane extends JPanel {
             //The following line enables to use scrolling tabs.
             tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         }
+    }
+    
+    public static List<SmedPluggable> getPlugins() {
+		return plugins;
     }
 }

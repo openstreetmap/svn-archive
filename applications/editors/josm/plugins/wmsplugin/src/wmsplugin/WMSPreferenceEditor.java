@@ -9,14 +9,16 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -57,7 +59,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         };
         JScrollPane scroll = new JScrollPane(list);
         p.add(scroll, GBC.eol().fill(GridBagConstraints.BOTH));
-        scroll.setPreferredSize(new Dimension(200,200));
+        scroll.setPreferredSize(new Dimension(200, 200));
 
         final WMSDefaultLayerTableModel modeldef = new WMSDefaultLayerTableModel();
         final JTable listdef = new JTable(modeldef) {
@@ -70,7 +72,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         JScrollPane scrolldef = new JScrollPane(listdef);
         // scrolldef is added after the buttons so it's clearer the buttons
         // control the top list and not the default one
-        scrolldef.setPreferredSize(new Dimension(200,200));
+        scrolldef.setPreferredSize(new Dimension(200, 200));
 
         TableColumnModel mod = listdef.getColumnModel();
         mod.getColumn(1).setPreferredWidth(800);
@@ -83,8 +85,8 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
         JButton add = new JButton(tr("Add"));
-        buttonPanel.add(add, GBC.std().insets(0,5,0,0));
-        add.addActionListener(new ActionListener(){
+        buttonPanel.add(add, GBC.std().insets(0, 5, 0, 0));
+        add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 AddWMSLayerPanel p = new AddWMSLayerPanel();
                 int answer = JOptionPane.showConfirmDialog(
@@ -98,13 +100,12 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         });
 
         JButton delete = new JButton(tr("Delete"));
-        buttonPanel.add(delete, GBC.std().insets(0,5,0,0));
-        delete.addActionListener(new ActionListener(){
+        buttonPanel.add(delete, GBC.std().insets(0, 5, 0, 0));
+        delete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (list.getSelectedRow() == -1)
                     JOptionPane.showMessageDialog(gui, tr("Please select the row to delete."));
-                else
-                {
+                else {
                     Integer i;
                     while ((i = list.getSelectedRow()) != -1)
                         model.removeRow(i);
@@ -113,8 +114,8 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         });
 
         JButton copy = new JButton(tr("Copy Selected Default(s)"));
-        buttonPanel.add(copy, GBC.std().insets(0,5,0,0));
-        copy.addActionListener(new ActionListener(){
+        buttonPanel.add(copy, GBC.std().insets(0, 5, 0, 0));
+        copy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int[] lines = listdef.getSelectedRows();
                 if (lines.length == 0) {
@@ -122,24 +123,28 @@ public class WMSPreferenceEditor implements PreferenceSetting {
                             gui,
                             tr("Please select at least one row to copy."),
                             tr("Information"),
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
+                            JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
 
-                outer: for(int i = 0; i < lines.length; i++) {
+                outer: for (int i = 0; i < lines.length; i++) {
                     WMSInfo info = modeldef.getRow(lines[i]);
 
                     // Check if an entry with exactly the same values already
                     // exists
-                    for(int j = 0; j < model.getRowCount(); j++) {
-                        if(info.equalsBaseValues(model.getRow(j))) {
+                    for (int j = 0; j < model.getRowCount(); j++) {
+                        if (info.equalsBaseValues(model.getRow(j))) {
                             // Select the already existing row so the user has
                             // some feedback in case an entry exists
                             list.getSelectionModel().setSelectionInterval(j, j);
                             list.scrollRectToVisible(list.getCellRect(j, 0, true));
                             continue outer;
                         }
+                    }
+
+                    if (info.eulaAcceptanceRequired != null) {
+                        if (!confirmeEulaAcceptance(gui, info.eulaAcceptanceRequired))
+                            continue outer;
                     }
 
                     model.addRow(new WMSInfo(info));
@@ -153,9 +158,9 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         p.add(buttonPanel);
         p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
         // Add default item list
-        p.add(scrolldef, GBC.eol().insets(0,5,0,0).fill(GridBagConstraints.BOTH));
+        p.add(scrolldef, GBC.eol().insets(0, 5, 0, 0).fill(GridBagConstraints.BOTH));
 
-        browser = new JComboBox(new String[]{
+        browser = new JComboBox(new String[] {
                 "webkit-image {0}",
                 "gnome-web-photo --mode=photo --format=png {0} /dev/stdout",
                 "gnome-web-photo-fixed {0}",
@@ -165,10 +170,10 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
         p.add(browser);
 
-        //Overlap
+        // Overlap
         p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
 
-        overlapCheckBox = new JCheckBox(tr("Overlap tiles"), plugin.PROP_OVERLAP.get() );
+        overlapCheckBox = new JCheckBox(tr("Overlap tiles"), plugin.PROP_OVERLAP.get());
         JLabel labelEast = new JLabel(tr("% of east:"));
         JLabel labelNorth = new JLabel(tr("% of north:"));
         spinEast = new JSpinner(new SpinnerNumberModel(plugin.PROP_OVERLAP_EAST.get(), 1, 50, 1));
@@ -192,9 +197,8 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         overlapPanelSimConn.add(spinSimConn);
         p.add(overlapPanelSimConn, GBC.eol().fill(GridBagConstraints.HORIZONTAL));
 
-
         allowRemoteControl = Main.pref.getBoolean("wmsplugin.remotecontrol", true);
-        remoteCheckBox = new JCheckBox(tr("Allow remote control (reqires remotecontrol plugin)"), allowRemoteControl );
+        remoteCheckBox = new JCheckBox(tr("Allow remote control (reqires remotecontrol plugin)"), allowRemoteControl);
         JPanel remotePanel = new JPanel(new FlowLayout());
         remotePanel.add(remoteCheckBox);
 
@@ -213,42 +217,39 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 
         Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
 
-        Main.pref.put("wmsplugin.remotecontrol",    String.valueOf(allowRemoteControl));
+        Main.pref.put("wmsplugin.remotecontrol", String.valueOf(allowRemoteControl));
         return false;
     }
 
     /**
      * Updates a server URL in the preferences dialog. Used by other plugins.
      *
-     * @param server The server name
-     * @param url The server URL
+     * @param server
+     *            The server name
+     * @param url
+     *            The server URL
      */
-    public void setServerUrl(String server, String url)
-    {
-        for (int i = 0; i < model.getRowCount(); i++)
-        {
-            if( server.equals(model.getValueAt(i,0).toString()) )
-            {
+    public void setServerUrl(String server, String url) {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (server.equals(model.getValueAt(i, 0).toString())) {
                 model.setValueAt(url, i, 1);
                 return;
             }
         }
-        model.addRow(new String[]{server, url});
+        model.addRow(new String[] { server, url });
     }
 
     /**
      * Gets a server URL in the preferences dialog. Used by other plugins.
      *
-     * @param server The server name
+     * @param server
+     *            The server name
      * @return The server URL
      */
-    public String getServerUrl(String server)
-    {
-        for (int i = 0; i < model.getRowCount(); i++)
-        {
-            if( server.equals(model.getValueAt(i,0).toString()) )
-            {
-                return model.getValueAt(i,1).toString();
+    public String getServerUrl(String server) {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (server.equals(model.getValueAt(i, 0).toString())) {
+                return model.getValueAt(i, 1).toString();
             }
         }
         return null;
@@ -260,7 +261,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
      */
     class WMSLayerTableModel extends DefaultTableModel {
         public WMSLayerTableModel() {
-            setColumnIdentifiers(new String[]{tr("Menu Name"), tr("WMS URL"), trc("layer", "Zoom")});
+            setColumnIdentifiers(new String[] { tr("Menu Name"), tr("WMS URL"), trc("layer", "Zoom") });
         }
 
         public WMSInfo getRow(int row) {
@@ -269,13 +270,14 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 
         public void addRow(WMSInfo i) {
             plugin.info.add(i);
-            int p = getRowCount()-1;
-            fireTableRowsInserted(p,p);
+            int p = getRowCount() - 1;
+            fireTableRowsInserted(p, p);
         }
 
+        @Override
         public void removeRow(int i) {
             plugin.info.remove(getRow(i));
-            fireTableRowsDeleted(i,i);
+            fireTableRowsDeleted(i, i);
         }
 
         @Override
@@ -286,10 +288,13 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         @Override
         public Object getValueAt(int row, int column) {
             WMSInfo info = plugin.info.layers.get(row);
-            switch(column) {
-            case 0: return info.name;
-            case 1: return info.getFullURL();
-            case 2: return info.pixelPerDegree == 0.0 ? "" : info.pixelPerDegree;
+            switch (column) {
+            case 0:
+                return info.name;
+            case 1:
+                return info.getFullURL();
+            case 2:
+                return info.pixelPerDegree == 0.0 ? "" : info.pixelPerDegree;
             }
             return null;
         }
@@ -306,7 +311,7 @@ public class WMSPreferenceEditor implements PreferenceSetting {
      */
     class WMSDefaultLayerTableModel extends DefaultTableModel {
         public WMSDefaultLayerTableModel() {
-            setColumnIdentifiers(new String[]{tr("Menu Name (Default)"), tr("WMS URL (Default)")});
+            setColumnIdentifiers(new String[] { tr("Menu Name (Default)"), tr("WMS URL (Default)") });
         }
 
         public WMSInfo getRow(int row) {
@@ -321,9 +326,11 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         @Override
         public Object getValueAt(int row, int column) {
             WMSInfo info = plugin.info.defaultLayers.get(row);
-            switch(column) {
-            case 0: return info.name;
-            case 1: return info.getFullURL();
+            switch (column) {
+            case 0:
+                return info.name;
+            case 1:
+                return info.getFullURL();
             }
             return null;
         }
@@ -332,5 +339,38 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         public boolean isCellEditable(int row, int column) {
             return false;
         }
+    }
+
+    private boolean confirmeEulaAcceptance(PreferenceTabbedPane gui, String eulaUrl) {
+        URL url = null;
+        try {
+            url = new URL(eulaUrl.replaceAll("\\{lang\\}", Locale.getDefault().toString()));
+            JEditorPane htmlPane = null;
+            try {
+                htmlPane = new JEditorPane(url);
+            } catch (IOException e1) {
+                // give a second chance with a default Locale 'en'
+                try {
+                    url = new URL(eulaUrl.replaceAll("\\{lang\\}", "en"));
+                    htmlPane = new JEditorPane(url);
+                } catch (IOException e2) {
+                    JOptionPane.showMessageDialog(gui ,tr("EULA license URL not available: {0}", eulaUrl));
+                    return false;
+                }
+            }
+            Box box = Box.createVerticalBox();
+            htmlPane.setEditable(false);
+            JScrollPane scrollPane = new JScrollPane(htmlPane);
+            scrollPane.setPreferredSize(new Dimension(400, 400));
+            box.add(scrollPane);
+            int option = JOptionPane.showConfirmDialog(Main.parent, box, tr("Please abort if you are not sure"), JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (option == JOptionPane.YES_OPTION) {
+                return true;
+            }
+        } catch (MalformedURLException e2) {
+            JOptionPane.showMessageDialog(gui ,tr("Malformed URL for the EULA licence: {0}", eulaUrl));
+        }
+        return false;
     }
 }

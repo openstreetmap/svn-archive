@@ -3,12 +3,11 @@ package wmsplugin;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -102,12 +101,16 @@ public class WMSLayerInfo {
                 while((line = reader.readLine()) != null)
                 {
                     String val[] = line.split(";");
-                    if(!line.startsWith("#") && val.length == 3) {
+                    if(!line.startsWith("#") && (val.length == 3 || val.length == 4)) {
                         boolean force = "true".equals(val[0]);
                         String name = tr(val[1]);
                         String url = val[2];
-
-                        defaultLayers.add(new WMSInfo(name, url));
+                        String eulaAcceptanceRequired = null;
+                        if (val.length == 4) {
+                            // 4th parameter optional for license agreement (EULA)
+                            eulaAcceptanceRequired = val[3];
+                        }
+                        defaultLayers.add(new WMSInfo(name, url, eulaAcceptanceRequired));
 
                         if(force) {
                             defaultsSave.add(url);

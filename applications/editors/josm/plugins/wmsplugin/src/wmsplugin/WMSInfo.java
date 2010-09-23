@@ -3,8 +3,6 @@ package wmsplugin;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.openstreetmap.josm.Main;
-
 /**
  * Class that stores info about a WMS server.
  *
@@ -15,6 +13,7 @@ public class WMSInfo implements Comparable<WMSInfo> {
     String name;
     String url=null;
     String cookies = null;
+    String eulaAcceptanceRequired = null;
     boolean html = false;
     double pixelPerDegree = 0.0;
 
@@ -27,7 +26,13 @@ public class WMSInfo implements Comparable<WMSInfo> {
         setURL(url);
     }
 
-    public WMSInfo(String name, String url, String cookies) {
+    public WMSInfo(String name, String url, String eulaAcceptanceRequired) {
+        this.name=name;
+        setURL(url);
+        this.eulaAcceptanceRequired = eulaAcceptanceRequired;
+    }
+
+    public WMSInfo(String name, String url, String eulaAcceptanceRequired, String cookies) {
         this.name=name;
         setURL(url);
         this.cookies=cookies;

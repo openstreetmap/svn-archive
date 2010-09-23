@@ -2637,7 +2637,12 @@
 				<line class="power-line power-dash-tunnel no-bezier" smart-linecap="no"/>
 			</rule>
 			<else>
-				<line class="power-line power-dash no-bezier" smart-linecap="no"/>
+				<rule e="way" k="location" v="underground|submarine">
+					<line class="power-line power-dash-tunnel no-bezier" smart-linecap="no"/>
+				</rule>
+				<else>
+					<line class="power-line power-dash no-bezier" smart-linecap="no"/>
+				</else>
 			</else>
 		</rule>
 		<rule e="way" k="power" v="minor_line">
@@ -2646,7 +2651,12 @@
 				<line class="power-minor-line minor-dash-tunnel no-bezier" smart-linecap="no"/>
 			</rule>
 			<else>
-				<line class="power-minor-line minor-dash no-bezier" smart-linecap="no"/>
+				<rule e="way" k="location" v="underground|submarine">
+				</rule>
+					<line class="power-minor-line minor-dash-tunnel no-bezier" smart-linecap="no"/>
+				<else>
+					<line class="power-minor-line minor-dash no-bezier" smart-linecap="no"/>
+				</else>
 			</else>
 		</rule>
 		<rule e="node|way" k="power" v="tower">
@@ -2706,66 +2716,71 @@
 				<line class="communication-line pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
 			</rule>
 			<else>
-				<line class="communication-line pipeline-dash no-bezier" smart-linecap="no"/>
+				<rule e="way" k="location" v="underground|submarine">
+					<line class="communication-line pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+				</rule>
+				<else>
+					<line class="communication-line pipeline-dash no-bezier" smart-linecap="no"/>
+				</else>
 			</else>
 		</rule>
 		<rule e="way" k="man_made" v="pipeline">
 			<rule e="way" k="type" v="water">
 				<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-				<rule e="way" k="submarine|tunnel" v="yes">
-					<line class="pipeline-water pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+				<rule e="way" k="location" v="overground">
+					<line class="pipeline-water pipeline-dash no-bezier" smart-linecap="no"/>
 				</rule>
 				<else>
-					<line class="pipeline-water pipeline-dash no-bezier" smart-linecap="no"/>
+					<line class="pipeline-water pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
 				</else>
 			</rule>
 			<else>
 				<rule e="way" k="type" v="oil">
 					<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-					<rule e="way" k="submarine|tunnel" v="yes">
-						<line class="pipeline-oil pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+					<rule e="way" k="location" v="overground">
+						<line class="pipeline-oil pipeline-dash no-bezier" smart-linecap="no"/>
 					</rule>
 					<else>
-						<line class="pipeline-oil pipeline-dash no-bezier" smart-linecap="no"/>
+						<line class="pipeline-oil pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
 					</else>
 				</rule>
 				<else>
 					<rule e="way" k="type" v="gas|natural_gas">
 						<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-						<rule e="way" k="submarine|tunnel" v="yes">
-							<line class="pipeline-gas pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+						<rule e="way" k="location" v="overground">
+							<line class="pipeline-gas pipeline-dash no-bezier" smart-linecap="no"/>
 						</rule>
 						<else>
-							<line class="pipeline-gas pipeline-dash no-bezier" smart-linecap="no"/>
+							<line class="pipeline-gas pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
 						</else>
 					</rule>
 					<else>
 						<rule e="way" k="type" v="sewage">
 							<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-							<rule e="way" k="submarine|tunnel" v="yes">
-								<line class="pipeline-sewage pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+							<rule e="way" k="location" v="overground">
+								<line class="pipeline-sewage pipeline-dash no-bezier" smart-linecap="no"/>
 							</rule>
 							<else>
-								<line class="pipeline-sewage pipeline-dash no-bezier" smart-linecap="no"/>
+								<line class="pipeline-sewage pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
 							</else>
 						</rule>
 						<else>
 							<rule e="way" k="type" v="hot_water|heat">
 								<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-								<rule e="way" k="submarine|tunnel" v="yes">
-									<line class="pipeline-heat pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+								<rule e="way" k="location" v="overground">
+									<line class="pipeline-heat pipeline-dash no-bezier" smart-linecap="no"/>
 								</rule>
 								<else>
-									<line class="pipeline-heat pipeline-dash no-bezier" smart-linecap="no"/>
+									<line class="pipeline-heat pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
 								</else>
 							</rule>
 							<else>
 								<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-								<rule e="way" k="submarine|tunnel" v="yes">
-									<line class="pipeline-unknown pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+								<rule e="way" k="location" v="overground">
+									<line class="pipeline-unknown pipeline-dash no-bezier" smart-linecap="no"/>
 								</rule>
 								<else>
-									<line class="pipeline-unknown pipeline-dash no-bezier" smart-linecap="no"/>
+									<line class="pipeline-unknown pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
 								</else>
 							</else>
 						</else>
@@ -5063,10 +5078,10 @@
 
 			/* Pipelines */
 			.pipeline-dash {
-			stroke-dasharray: 1, 1;
+			stroke-dasharray: 2, 1;
 			}
 			.pipeline-dash-tunnel {
-			stroke-dasharray: 0.3, 0.4, 0.3, 1;
+			stroke-dasharray: 0.3, 0.5, 0.3, 0.5, 0.3, 1.1;
 			}
 
 			.pipeline-unknown {

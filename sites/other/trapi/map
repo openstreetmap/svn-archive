@@ -113,6 +113,110 @@ while (my $query = new CGI::Fast) {
 #	print "<bound box=\"$bbs,$bbw,$bbn,$bbe\" origin=\"http://www.openstreetmap.org/api/0.6\"/>\n";
 	print "<bounds minlat=\"$bbs\" minlon=\"$bbw\" maxlat=\"$bbn\" maxlon=\"$bbe\" origin=\"http://www.openstreetmap.org/api/0.6\"/>\n";
     }
+
+    # reload outer ways
+    if ($query->param('reload_outer_ways') eq '1')
+    {
+        my $debug_outer= 1; # 0, 1 or 2 (0: quiet,  1: some debug output,  2: full debug output)
+        print "<!-- reload_outer_ways -->\n" if ($debug_outer>0);
+        printf("<!-- %s   %s -->\n", join("&", map { $_ . "=" . $query->param($_) } $query->param()), scalar gmtime() ) if ($debug_outer>0);
+        if ($debug_outer>1)
+        {
+            foreach my $ptn (sort {
+                # sorting tiles...
+                my ($za, $xa, $ya)= fromptn($a);
+                my ($zb, $xb, $yb)= fromptn($b);
+                my $xa12= $xa/(1<<($za-12));
+                my $ya12= $ya/(1<<($za-12));
+                my $xb12= $xb/(1<<($zb-12));
+                my $yb12= $yb/(1<<($zb-12));
+                if ($xa12==$xb12) { return $ya12 <=> $yb12; }
+                else { return $xa12<=>$xb12; }
+            } keys %tiles)
+            {
+                my ($z, $x, $y)= fromptn($ptn);
+                printf("<!-- TILE %s    %7.2f  %7.2f -->\n", join(",", fromptn($ptn)), $x/(1<<($z-12)), $y/(1<<($z-12)) );
+            }
+        }
+        
+        my %rels= ();
+        foreach $ptn (keys %tiles) {
+            my $nd = openptn($ptn, "data");
+            my $rf = openptn($ptn, "relations");
+                
+            my ($z, $x, $y) = fromptn($ptn);
+            print "<!-- PASS1: searching for relations in zxy=$z $x $y-->\n" if ($debug_outer>1); 
+            seek $rf, 0, 0;
+            while (my ($tr, $off) = readrel($rf)) {
+                last unless (defined $tr);
+                my $r = relationptn($tr);
+                printf ("<!-- PASS1: found relation $tr: it is in %s-->\n", join(",", fromptn($r)) ) if ($debug_outer>1);
+                                            
+                $rels{$r} //= {};
+                $rels{$r}->{$tr}= 1;
+            }
+        }
+        
+        foreach my $tp (keys %rels)
+        {
+            my $nd = openptn($tp, "data");
+            my $rf = openptn($tp, "relations");
+                
+            my ($z, $x, $y) = fromptn($tp);
+            printf "<!-- PASS2: searching for relations in zxy=$z $x $y-->\n" if ($debug_outer>1); 
+                    
+            seek $rf, 0, 0;
+            while (my ($tr, $off) = readrel($rf)) {
+                last unless (defined $tr);
+                my $r = relationptn($tr);
+                printf ("<!-- PASS2: found relation $tr in %s -->\n", join(",", fromptn($r)) ) if ($debug_outer>1);
+                next unless ($tr && $off);
+                printf "<!-- PASS2: $tr $off -->\n" if ($debug_outer>1);
+                if ($rels{$tp}->{$tr}) {
+                    printf "<!-- PASS2: HIT $tr -->\n" if ($debug_outer>1);
+
+                    seek $nd, $off, 0;
+                    my @members = readmemb($nd);
+
+                    my $multipolygon= 0;                    
+                    my $exclude= 0;                    
+                    my @tv = readtags($nd, RELATION);
+                    while (my $key = shift(@tv)) {
+                        $val = shift(@tv) // '';
+                        $multipolygon= 1 if ( $key eq "type" && $val eq "multipolygon" );
+                        if ( ( ($key eq "boundary") && ($val eq "region" || $val eq "administrative") ) ||   # boundary=region, boundary=administrative
+                             $key eq "land_area"   )                                                         # land_area=*
+                        {
+                            $exclude= 1;
+                            last;
+                        }
+                    }
+
+                    if ($multipolygon && !$exclude) {                    
+                        foreach my $m (@members) {
+                            my ($type, $mid, $role) = @$m;
+                            if ( ($role eq "outer") && ($type==WAY) ) {
+                                my $wayptn= wayptn($mid);
+                                my $in= exists($tiles{$wayptn}); # is it "in", i.e. will it be loaded later anyway?
+                                printf ("<!-- PASS2: OUTER : $mid   %d   %s-->\n", $in, join(",", fromptn($wayptn)) ) if ($debug_outer>1);
+                                unless ($in) { # not "in" -> reload
+                                    $pw{$wayptn} //= {};
+                                    $pw{$wayptn}->{$mid} = 1;
+                                    printf ("<!-- PASS2: added outer way $mid for relation $tr  -->\n") if ($debug_outer>0);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        printf "<!-- PASS2: relation $tr has not been examined -->\n" if ($debug_outer>1);
+                    }
+                }
+                else {
+                    printf "<!-- PASS2: MISS $tr -->\n" if ($debug_outer>1);
+                }
+            } # while
+        } # for
+    } # if ($query->param('reload_outer_ways') eq '1')
     
     foreach $ptn (keys %tiles) {
 	my $nd = openptn($ptn, "data");

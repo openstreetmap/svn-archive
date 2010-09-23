@@ -2633,11 +2633,21 @@
 		<!-- Power lines and pylons -->
 		<rule e="way" k="power" v="line">
 			<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-			<line class="power-line no-bezier" smart-linecap="no"/>
+			<rule e="way" k="submarine|tunnel" v="yes">
+				<line class="power-line power-dash-tunnel no-bezier" smart-linecap="no"/>
+			</rule>
+			<else>
+				<line class="power-line power-dash no-bezier" smart-linecap="no"/>
+			</else>
 		</rule>
 		<rule e="way" k="power" v="minor_line">
 			<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-			<line class="power-minor-line no-bezier" smart-linecap="no"/>
+			<rule e="way" k="submarine|tunnel" v="yes">
+				<line class="power-minor-line minor-dash-tunnel no-bezier" smart-linecap="no"/>
+			</rule>
+			<else>
+				<line class="power-minor-line minor-dash no-bezier" smart-linecap="no"/>
+			</else>
 		</rule>
 		<rule e="node|way" k="power" v="tower">
 			<symbol ref="power-tower" position="center"/>
@@ -2690,34 +2700,73 @@
 		</rule>
 
 		<!-- Pipelines -->
+		<rule e="way" k="communication" v="line">
+			<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
+			<rule e="way" k="submarine|tunnel" v="yes">
+				<line class="communication-line pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+			</rule>
+			<else>
+				<line class="communication-line pipeline-dash no-bezier" smart-linecap="no"/>
+			</else>
+		</rule>
 		<rule e="way" k="man_made" v="pipeline">
 			<rule e="way" k="type" v="water">
 				<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-				<line class="pipeline-water no-bezier" smart-linecap="no"/>
+				<rule e="way" k="submarine|tunnel" v="yes">
+					<line class="pipeline-water pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+				</rule>
+				<else>
+					<line class="pipeline-water pipeline-dash no-bezier" smart-linecap="no"/>
+				</else>
 			</rule>
 			<else>
 				<rule e="way" k="type" v="oil">
 					<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-					<line class="pipeline-oil no-bezier" smart-linecap="no"/>
+					<rule e="way" k="submarine|tunnel" v="yes">
+						<line class="pipeline-oil pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+					</rule>
+					<else>
+						<line class="pipeline-oil pipeline-dash no-bezier" smart-linecap="no"/>
+					</else>
 				</rule>
 				<else>
 					<rule e="way" k="type" v="gas|natural_gas">
 						<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-						<line class="pipeline-gas no-bezier" smart-linecap="no"/>
+						<rule e="way" k="submarine|tunnel" v="yes">
+							<line class="pipeline-gas pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+						</rule>
+						<else>
+							<line class="pipeline-gas pipeline-dash no-bezier" smart-linecap="no"/>
+						</else>
 					</rule>
 					<else>
 						<rule e="way" k="type" v="sewage">
 							<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-							<line class="pipeline-sewage no-bezier" smart-linecap="no"/>
+							<rule e="way" k="submarine|tunnel" v="yes">
+								<line class="pipeline-sewage pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+							</rule>
+							<else>
+								<line class="pipeline-sewage pipeline-dash no-bezier" smart-linecap="no"/>
+							</else>
 						</rule>
 						<else>
 							<rule e="way" k="type" v="hot_water|heat">
 								<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-								<line class="pipeline-heat no-bezier" smart-linecap="no"/>
+								<rule e="way" k="submarine|tunnel" v="yes">
+									<line class="pipeline-heat pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+								</rule>
+								<else>
+									<line class="pipeline-heat pipeline-dash no-bezier" smart-linecap="no"/>
+								</else>
 							</rule>
 							<else>
 								<line class="powerline-pipeline-casing no-bezier" smart-linecap="no"/>
-								<line class="pipeline-unknown no-bezier" smart-linecap="no"/>
+								<rule e="way" k="submarine|tunnel" v="yes">
+									<line class="pipeline-unknown pipeline-dash-tunnel no-bezier" smart-linecap="no"/>
+								</rule>
+								<else>
+									<line class="pipeline-unknown pipeline-dash no-bezier" smart-linecap="no"/>
+								</else>
 							</else>
 						</else>
 					</else>
@@ -4951,34 +5000,6 @@
 			fill: #e4e4e4;
 			}
 			
-			/* Power line and pipeline casing */
-			.powerline-pipeline-casing {
-			stroke-width: 0.4px;
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			stroke: #ffffff;
-			stroke-opacity: 0.5;
-			fill: none;
-			}
-			/* Power line */
-			.power-line {
-			stroke-width: 0.2px;
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			stroke: #808080;
-			stroke-dasharray: 4, 2;
-			fill: none;
-			}
-			.power-minor-line {
-			stroke-width: 0.2px;
-			stroke-linecap: butt;
-			stroke-linejoin: round;
-			stroke: #808080;
-			stroke-dasharray: 2, 1;
-			fill: none;
-			}
-
-
 			/* Power Generator */
 			.power-wind {
 			fill: url(#power-wind-pattern);
@@ -5001,13 +5022,58 @@
 			stroke-width: 0.05px;
 			}
 
+			/* Power line and pipeline casing */
+			.powerline-pipeline-casing {
+			stroke-width: 0.4px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #ffffff;
+			stroke-opacity: 0.5;
+			fill: none;
+			}
+			/* Power line */
+			/* Power line */
+			.power-dash {
+			stroke-dasharray: 4 ,2;
+			}
+			.minor-dash {
+			stroke-dasharray: 2, 1;
+			}
+			.power-dash-tunnel {
+			stroke-dasharray: 0.6, 1, 0.6, 1, 0.6 ,2.2;
+			}
+			.minor-dash-tunnel {
+			stroke-dasharray: 0.3, 0.5, 0.3, 0.5, 0.3, 1.1;
+			}
+
+			.power-line {
+			stroke-width: 0.2px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #808080;
+			fill: none;
+			}
+			.power-minor-line {
+			stroke-width: 0.2px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #808080;
+			fill: none;
+			}
+
 			/* Pipelines */
+			.pipeline-dash {
+			stroke-dasharray: 1, 1;
+			}
+			.pipeline-dash-tunnel {
+			stroke-dasharray: 0.3, 0.4, 0.3, 1;
+			}
+
 			.pipeline-unknown {
 			stroke-width: 0.2px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #a0a0a0;
-			stroke-dasharray: 1 ,1;
 			fill: none;
 			}
 			.pipeline-water {
@@ -5015,7 +5081,6 @@
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #4080f0;
-			stroke-dasharray: 1 ,1;
 			fill: none;
 			}
 			.pipeline-gas {
@@ -5023,7 +5088,6 @@
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #e0f000;
-			stroke-dasharray: 1 ,1;
 			fill: none;
 			}
 			.pipeline-oil {
@@ -5031,7 +5095,6 @@
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #40f040;
-			stroke-dasharray: 1 ,1;
 			fill: none;
 			}
 			.pipeline-sewage {
@@ -5039,15 +5102,21 @@
 			stroke-linecap: butt;
 			stroke-linejoin: round;
 			stroke: #908030;
-			stroke-dasharray: 1 ,1;
 			fill: none;
 			}
 			.pipeline-heat {
 			stroke-width: 0.2px;
 			stroke-linecap: butt;
 			stroke-linejoin: round;
-			stroke: #f03060;
-			stroke-dasharray: 1 ,1;
+			stroke: #f03050;
+			fill: none;
+			}
+
+			.communication-line {
+			stroke-width: 0.1px;
+			stroke-linecap: butt;
+			stroke-linejoin: round;
+			stroke: #f080f0;
 			fill: none;
 			}
 

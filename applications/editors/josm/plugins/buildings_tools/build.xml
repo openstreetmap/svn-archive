@@ -30,7 +30,7 @@
 <project name="buildings_tools" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="update to josm latest" />
+	<property name="commit.message" value="remember buildings tags" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3518" />
 

@@ -59,6 +59,7 @@ public class AdvancedSettingsDialog extends ExtendedDialog {
 
     public void saveSettings() {
         tagsModel.applyToTags(ToolSettings.getTags());
+        ToolSettings.saveTags();
         ToolSettings.setBBMode(isBBMode());
         ToolSettings.setSoftCursor(isSoftCursor());
     }

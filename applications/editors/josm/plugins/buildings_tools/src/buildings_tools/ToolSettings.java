@@ -1,7 +1,13 @@
 package buildings_tools;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 
 import org.openstreetmap.josm.Main;
 
@@ -11,10 +17,6 @@ public class ToolSettings {
     private static boolean useAddr;
     private static final Map<String, String> tags = new HashMap<String, String>();
     private static boolean autoSelect;
-
-    static {
-        tags.put("building", "yes");
-    }
 
     public static void setAddrDialog(boolean _useAddr) {
         useAddr = _useAddr;
@@ -38,7 +40,30 @@ public class ToolSettings {
     }
 
     public static Map<String, String> getTags() {
+        loadTags();
         return tags;
+    }
+
+    public static void saveTags() {
+        ArrayList<String> values = new ArrayList<String>(tags.size() * 2);
+        for (Entry<String, String> entry : tags.entrySet()) {
+            values.add(entry.getKey());
+            values.add(entry.getValue());
+        }
+        Main.pref.putCollection("buildings_tools.tags", values);
+    }
+
+    private static void loadTags() {
+        tags.clear();
+        Collection<String> values = Main.pref.getCollection("buildings_tools.tags",
+                Arrays.asList(new String[] { "building", "yes" }));
+        try {
+            for (Iterator<String> iterator = values.iterator(); iterator.hasNext();) {
+                tags.put(iterator.next(), iterator.next());
+            }
+        } catch (NoSuchElementException e) {
+        }
+
     }
 
     public static void setBBMode(boolean bbmode) {

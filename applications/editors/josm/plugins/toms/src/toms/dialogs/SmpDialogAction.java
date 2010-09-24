@@ -390,20 +390,20 @@ public class SmpDialogAction extends JosmAction {
 			buoy = new BuoyCard(this, node);
 			return;
 
-		} else if (type.equals("buoy_safe_water") || type.equals("beacon_safe_water")) { //$NON-NLS-1$
+		} else if (type.equals("buoy_safe_water") || type.equals("beacon_safe_water")) { //$NON-NLS-1$ //$NON-NLS-2$
 			buoy = new BuoySaw(this, node);
 			return;
 
-		} else if (type.equals("buoy_special_purpose") || type.equals("beacon_special_purpose")) { //$NON-NLS-1$
+		} else if (type.equals("buoy_special_purpose") || type.equals("beacon_special_purpose")) { //$NON-NLS-1$ //$NON-NLS-2$
 			buoy = new BuoySpec(this, node);
 			return;
 
-		} else if (type.equals("buoy_isolated_danger") || type.equals("beacon_isolated_danger")) { //$NON-NLS-1$
+		} else if (type.equals("buoy_isolated_danger") || type.equals("beacon_isolated_danger")) { //$NON-NLS-1$ //$NON-NLS-2$
 			buoy = new BuoyIsol(this, node);
 			return;
 
-		} else if (type.equals("landmark") || type.equals("light_vessel") //$NON-NLS-1$
-				|| type.equals("light_major") || type.equals("light_minor")) { //$NON-NLS-1$
+		} else if (type.equals("landmark") || type.equals("light_vessel") //$NON-NLS-1$ //$NON-NLS-2$
+				|| type.equals("light_major") || type.equals("light_minor")) { //$NON-NLS-1$ //$NON-NLS-2$
 			buoy = new BuoyNota(this, node);
 			return;
 
@@ -1037,10 +1037,10 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Racon.setBounds(new Rectangle(240, 195, 80, 20));
 			cbM01Racon.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01Racon.removeAllItems();
-			cbM01Racon.addItem("Any");
-			cbM01Racon.addItem("Racon");
-			cbM01Racon.addItem("Ramark");
-			cbM01Racon.addItem("Leading");
+			cbM01Racon.addItem(Messages.getString("SmpDialogAction.8")); //$NON-NLS-1$
+			cbM01Racon.addItem(Messages.getString("SmpDialogAction.10")); //$NON-NLS-1$
+			cbM01Racon.addItem(Messages.getString("SmpDialogAction.11")); //$NON-NLS-1$
+			cbM01Racon.addItem(Messages.getString("SmpDialogAction.12")); //$NON-NLS-1$
 			cbM01Racon.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (buoy == null)
@@ -1094,14 +1094,14 @@ public class SmpDialogAction extends JosmAction {
 			cbM01Fog.setBounds(new Rectangle(100, 220, 70, 20));
 			cbM01Fog.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01Fog.removeAllItems();
-			cbM01Fog.addItem("Any");
-			cbM01Fog.addItem("Horn");
-			cbM01Fog.addItem("Siren");
-			cbM01Fog.addItem("Dia");
-			cbM01Fog.addItem("Bell");
-			cbM01Fog.addItem("Whis");
-			cbM01Fog.addItem("Gong");
-			cbM01Fog.addItem("Explos");
+			cbM01Fog.addItem(Messages.getString("SmpDialogAction.8")); //$NON-NLS-1$
+			cbM01Fog.addItem(Messages.getString("SmpDialogAction.14")); //$NON-NLS-1$
+			cbM01Fog.addItem(Messages.getString("SmpDialogAction.15")); //$NON-NLS-1$
+			cbM01Fog.addItem(Messages.getString("SmpDialogAction.16")); //$NON-NLS-1$
+			cbM01Fog.addItem(Messages.getString("SmpDialogAction.17")); //$NON-NLS-1$
+			cbM01Fog.addItem(Messages.getString("SmpDialogAction.18")); //$NON-NLS-1$
+			cbM01Fog.addItem(Messages.getString("SmpDialogAction.19")); //$NON-NLS-1$
+			cbM01Fog.addItem(Messages.getString("SmpDialogAction.20")); //$NON-NLS-1$
 			cbM01Fog.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (buoy == null)
@@ -1187,9 +1187,9 @@ public class SmpDialogAction extends JosmAction {
 					if (buoy == null)
 						return;
 
-					if (it.contains("(")) {
-						i1 = it.indexOf("(");
-						i2 = it.indexOf(")");
+					if (it.contains("(")) { //$NON-NLS-1$
+						i1 = it.indexOf("("); //$NON-NLS-1$
+						i2 = it.indexOf(")"); //$NON-NLS-1$
 						c = it.substring(i1 + 1, i2);
 						it = it.substring(0, i1) + it.substring(i2 + 1);
 					}
@@ -1372,7 +1372,7 @@ public class SmpDialogAction extends JosmAction {
 		if (bM01Close == null) {
 			bM01Close = new JButton();
 			bM01Close.setBounds(new Rectangle(20, 325, 110, 20));
-			bM01Close.setText(tr("Close"));
+			bM01Close.setText(tr("Close")); //$NON-NLS-1$
 			bM01Close.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					// aufraeumen
@@ -1396,7 +1396,7 @@ public class SmpDialogAction extends JosmAction {
 		if (bM01Save == null) {
 			bM01Save = new JButton();
 			bM01Save.setBounds(new Rectangle(150, 325, 110, 20));
-			bM01Save.setText(tr("Save"));
+			bM01Save.setText(tr("Save")); //$NON-NLS-1$
 			bM01Save.setEnabled(false);
 
 			bM01Save.addActionListener(new ActionListener() {

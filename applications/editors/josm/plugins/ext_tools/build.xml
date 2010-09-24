@@ -30,7 +30,7 @@
 <project name="ext_tools" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="show stderr contents in debug window" />
+	<property name="commit.message" value="show error if script cannot be executed" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3403" />
 

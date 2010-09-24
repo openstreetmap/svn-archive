@@ -116,7 +116,7 @@ public class ExtTool {
     }
 
     protected void showErrorMessage(String message, String details) {
-        JPanel p = new JPanel(new GridBagLayout());
+        final JPanel p = new JPanel(new GridBagLayout());
         p.add(new JMultilineLabel(message),GBC.eol());
         if (details != null) {
             JTextArea info = new JTextArea(details, 20, 60);
@@ -124,7 +124,11 @@ public class ExtTool {
             info.setEditable(false);
             p.add(new JScrollPane(info), GBC.eop());
         }
-        JOptionPane.showMessageDialog(Main.parent, p, tr("External tool error"), JOptionPane.ERROR_MESSAGE);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JOptionPane.showMessageDialog(Main.parent, p, tr("External tool error"), JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     public void runTool(LatLon pos) {
@@ -166,7 +170,13 @@ public class ExtTool {
         final ToolProcess tp = new ToolProcess();
         try {
             tp.process = builder.start();
-        } catch (IOException e1) {
+        } catch (final IOException e) {
+            e.printStackTrace();
+            synchronized (debugstr) {
+                showErrorMessage(
+                        tr("Error executing the script:"),
+                        debugstr.toString() + e.getMessage() + "\n" + e.getStackTrace());
+            }
             return;
         }
         tp.running = true;
@@ -206,15 +216,11 @@ public class ExtTool {
                     e.printStackTrace();
                     if (tp.running) {
                         tp.process.destroy();
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                synchronized (debugstr) {
-                                    showErrorMessage(
-                                            tr("Child script have returned invalid data.\n\nstderr contents:"),
-                                            debugstr.toString());
-                                }
-                            }
-                        });
+                        synchronized (debugstr) {
+                            showErrorMessage(
+                                    tr("Child script have returned invalid data.\n\nstderr contents:"),
+                                    debugstr.toString());
+                        }
                     }
                 } finally {
                     synchronized (syncObj) {

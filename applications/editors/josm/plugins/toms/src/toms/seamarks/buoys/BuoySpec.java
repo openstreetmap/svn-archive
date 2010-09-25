@@ -350,6 +350,20 @@ public class BuoySpec extends Buoy {
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
 					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
+		case SPEC_CAN:
+			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_special_purpose:shape", "can")); //$NON-NLS-1$ //$NON-NLS-2$
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
+		case SPEC_CONE:
+			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_special_purpose:shape", "conical")); //$NON-NLS-1$ //$NON-NLS-2$
+			Main.main.undoRedo.add(new ChangePropertyCommand(node,
+					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+			break;
 		case SPEC_SPHERE:
 			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,

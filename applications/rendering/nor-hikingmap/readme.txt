@@ -82,9 +82,9 @@ to hikingmap.xml and/or pistemap.xml
 TODO
 ====
 
+split hiking symbols into layers to control presentation
 text: place=locality|farm|isolated_dwelling|island|islet|suburb
 text: water/bay/wetland in blue text
-split hiking symbols into layers to control presentation
 regional hiking routes network=iwn/nwn/rwn at zoom=10-11
 
 leisure=track, highway=raceway
@@ -99,9 +99,5 @@ highway=turning_circle or (highway=* and area=yes)
 barrier=gate|lift_gate|bollard|cycle_barrier|stile|windfall
 
 add symbol to leisure=winter_sports, how to determine activity type?
-
-(albinbakke/alpintbakke) Jeg ville rendret heisene litt lenger ut, for eksempel zoom 11 eller 12 for å indikere at "her er det noe" og en liten ide om hvor stort anlegget er.
-
-Lenger inn burde løypestrekene være en god del bredere og heisene blir litt lite synlige.
 
 seasonal på skiforeningens kafeer

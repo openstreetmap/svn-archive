@@ -65,7 +65,7 @@
 
   <Rule>
     <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'novice'</Filter>
-    &maxscale_zoom13;
+    &maxscale_zoom12;
     <LineSymbolizer>
       <CssParameter name="stroke">#00A245</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
@@ -74,7 +74,7 @@
   </Rule>
   <Rule>
     <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'easy'</Filter>
-    &maxscale_zoom13;
+    &maxscale_zoom12;
     <LineSymbolizer>
       <CssParameter name="stroke">#00A4DF</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
@@ -83,7 +83,7 @@
   </Rule>
   <Rule>
     <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'intermediate'</Filter>
-    &maxscale_zoom13;
+    &maxscale_zoom12;
     <LineSymbolizer>
       <CssParameter name="stroke">#E70019</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
@@ -92,7 +92,7 @@
   </Rule>
   <Rule>
     <Filter>[piste:type] = 'downhill' and ([piste:difficulty] = 'advanced' or [piste:difficulty] = 'expert')</Filter>
-    &maxscale_zoom13;
+    &maxscale_zoom12;
     <LineSymbolizer>
       <CssParameter name="stroke">#17180D</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
@@ -102,13 +102,106 @@
   </Rule>
   <Rule>
     <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'freeride'</Filter>
-    &maxscale_zoom13;
+    &maxscale_zoom12;
     <LineSymbolizer>
       <CssParameter name="stroke">#F6E760</CssParameter>
       <CssParameter name="stroke-width">1.5</CssParameter>
       <CssParameter name="stroke-opacity">0.65</CssParameter>
     </LineSymbolizer>
   </Rule>
+
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'novice'</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#00A245</CssParameter>
+      <CssParameter name="stroke-width">5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'easy'</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#00A4DF</CssParameter>
+      <CssParameter name="stroke-width">5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'intermediate'</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#E70019</CssParameter>
+      <CssParameter name="stroke-width">5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and ([piste:difficulty] = 'advanced' or [piste:difficulty] = 'expert')</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#17180D</CssParameter>
+      <CssParameter name="stroke-width">5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'freeride'</Filter>
+    &maxscale_zoom14;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#F6E760</CssParameter>
+      <CssParameter name="stroke-width">5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'novice'</Filter>
+    &maxscale_zoom15;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#00A245</CssParameter>
+      <CssParameter name="stroke-width">7.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'easy'</Filter>
+    &maxscale_zoom15;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#00A4DF</CssParameter>
+      <CssParameter name="stroke-width">7.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'intermediate'</Filter>
+    &maxscale_zoom15;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#E70019</CssParameter>
+      <CssParameter name="stroke-width">7.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and ([piste:difficulty] = 'advanced' or [piste:difficulty] = 'expert')</Filter>
+    &maxscale_zoom15;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#17180D</CssParameter>
+      <CssParameter name="stroke-width">7.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'freeride'</Filter>
+    &maxscale_zoom15;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#F6E760</CssParameter>
+      <CssParameter name="stroke-width">7.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+
 </Style>
 
 <Style name="symbols-winter">

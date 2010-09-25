@@ -10,7 +10,7 @@
     <LinePatternSymbolizer file="&symbols;/power.png"/>
   </Rule>
   <Rule>
-    &maxscale_zoom13;
+    &maxscale_zoom11;
     <Filter>[aerialway]='cable_car' or [aerialway]='gondola' or [aerialway]='chair_lift' or [aerialway]='drag_lift' or [aerialway]='t-bar' or [aerialway]='platter'</Filter>
     <LinePatternSymbolizer file="&symbols;/lift.png"/>
   </Rule>

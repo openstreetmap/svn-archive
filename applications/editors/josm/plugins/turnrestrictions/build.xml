@@ -30,9 +30,9 @@
 <project name="turnrestrictions" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Update to josm core" />
+	<property name="commit.message" value="Update main version" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3392" />
+	<property name="plugin.main.version" value="3518" />
 
 	<!--
       ************************************************

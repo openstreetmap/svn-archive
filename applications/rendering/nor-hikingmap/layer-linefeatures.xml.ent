@@ -2,8 +2,7 @@
      <Rule>
       &maxscale_zoom13;
       <Filter>[natural] = 'cliff'</Filter>
-       <LinePatternSymbolizer file="&symbols;/cliff.png"
-          type="png" width="8" height="5" />
+       <LinePatternSymbolizer file="&symbols;/cliff.png"/>
     </Rule>
 </Style>
 
@@ -37,7 +36,7 @@
     <Rule>
       &maxscale_zoom13;
       <Filter>[barrier] &lt;&gt; '' and not [barrier] = 'hedge'</Filter>
-       <LinePatternSymbolizer file="&symbols;/wall.png" type="png" width="15" height="3" />
+       <LinePatternSymbolizer file="&symbols;/wall.png"/>
     </Rule>
 </Style>
 

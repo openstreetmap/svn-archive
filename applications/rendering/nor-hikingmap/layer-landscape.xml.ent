@@ -262,7 +262,7 @@
   <Rule>
     <Filter>([natural] = 'wetland' or [natural] = 'marsh')</Filter>
     &maxscale_zoom12;
-   <PolygonPatternSymbolizer file="&symbols;/marsh.png" type="png" width="1" height="3" />
+   <PolygonPatternSymbolizer file="&symbols;/marsh.png"/>
   </Rule>
 </Style>
 

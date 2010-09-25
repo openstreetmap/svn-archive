@@ -300,6 +300,17 @@ public class WMSPreferenceEditor implements PreferenceSetting {
         }
 
         @Override
+        public void setValueAt(Object o, int row, int column) {
+            WMSInfo info = plugin.info.layers.get(row);
+            switch (column) {
+            case 0:
+                info.name = (String) o;
+            case 1:
+                info.setURL((String)o);
+            }
+        }
+
+        @Override
         public boolean isCellEditable(int row, int column) {
             return (column != 2);
         }

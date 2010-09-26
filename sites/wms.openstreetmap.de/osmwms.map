@@ -27,7 +27,7 @@ MAP
   SHAPEPATH "/osm/wms/"
   OUTPUTFORMAT
     NAME png
-    DRIVER "GD/PNG"
+    DRIVER "AGG/PNG"
     MIMETYPE "image/png"
     IMAGEMODE RGB
     EXTENSION "png"

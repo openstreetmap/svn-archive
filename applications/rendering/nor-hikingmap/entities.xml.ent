@@ -17,8 +17,8 @@
 
 <!ENTITY water_area "([natural] = 'lake' or [natural] = 'water' or [natural] = 'pond' or [waterway] = 'dock' or [landuse] = 'reservoir' or [landuse] = 'water' or [landuse] = 'basin' or [waterway] = 'mill_pond' or [waterway] = 'riverbank' or [waterway] = 'river') and not ([natural] = 'land')">
 <!ENTITY major_road "([highway] = 'motorway' or [highway]='motorway_link' or [highway] = 'trunk' or [highway]='trunk_link' or [highway] = 'primary' or [highway] = 'primary_link' or [highway] = 'secondary' or [highway] = 'secondary_link')">
-<!ENTITY minor_road "([highway] = 'tertiary' or [highway] = 'minor' or [highway] = 'road')">
-<!ENTITY residential_road "([highway] = 'residential' or [highway] = 'unclassified' or [highway] = 'construction')">
+<!ENTITY minor_road "([highway] = 'tertiary' or [highway] = 'minor')">
+<!ENTITY residential_road "([highway] = 'residential' or [highway] = 'unclassified' or [highway] = 'construction' or [highway] = 'road')">
 <!ENTITY service_road "([highway] = 'byway' or [highway] = 'service' or [highway] = 'living_street')">
 <!ENTITY cycle_track "(([highway] = 'track' and ([tracktype]='grade1' or [tracktype]='grade2')) or [highway] = 'cycleway' or [highway] = 'unsurfaced')">
 <!ENTITY track "(([highway] = 'track' and not ([tracktype]='grade1' or [tracktype]='grade2')) or [highway] = 'bridleway')">

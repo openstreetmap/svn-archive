@@ -40,11 +40,13 @@ import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * The action to aks the user for confirmation and then do the tagging.
+ * The action to ask the user for confirmation and then do the tagging.
  */
 class GeotaggingAction extends AbstractAction implements LayerAction {
     final static boolean debug = false;
     final static String KEEP_BACKUP = "plugins.photo_geotagging.keep_backup";
+    final static String CHANGE_MTIME = "plugins.photo_geotagging.change-mtime";
+    final static String MTIME_MODE = "plugins.photo_geotagging.mtime-mode";
     final static int MTIME_MODE_GPS = 1;
     final static int MTIME_MODE_PREVIOUS_VALUE = 2;
 
@@ -88,11 +90,21 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         final JCheckBox backups = new JCheckBox(tr("keep backup files"), Main.pref.getBoolean(KEEP_BACKUP, true));
         settingsPanel.add(backups, GBC.eol().insets(3,3,0,0));
 
-        final JCheckBox setMTime = new JCheckBox(tr("change file modification time:"), false);
+        final JCheckBox setMTime = new JCheckBox(tr("change file modification time:"), Main.pref.getBoolean(CHANGE_MTIME, false));
         settingsPanel.add(setMTime, GBC.std().insets(3,3,5,3));
 
         final String[] mTimeModeArray = {"----", tr("to gps time"), tr("to previous value (unchanged mtime)")};
         final JComboBox mTimeMode = new JComboBox(mTimeModeArray);
+        {
+            String mTimeModePref = Main.pref.get(MTIME_MODE, null);
+            int mTimeIdx = 0;
+            if ("gps".equals(mTimeModePref)) {
+                mTimeIdx = 1;
+            } else if ("previous".equals(mTimeModePref)) {
+                mTimeIdx = 2;
+            }
+            mTimeMode.setSelectedIndex(setMTime.isSelected() ? mTimeIdx : 0);
+        }
         settingsPanel.add(mTimeMode, GBC.eol().insets(3,3,3,3));
 
         setMTime.addActionListener(new ActionListener(){
@@ -125,7 +137,23 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             return;
 
         final boolean keep_backup = backups.isSelected();
+        final boolean change_mtime = setMTime.isSelected();
         Main.pref.put(KEEP_BACKUP, keep_backup);
+        Main.pref.put(CHANGE_MTIME, change_mtime);
+        if (change_mtime) {
+            String mTimeModePref;
+            switch (mTimeMode.getSelectedIndex()) {
+            case 1:
+                mTimeModePref = "gps";
+                break;
+            case 2:
+                mTimeModePref = "previous";
+                break;
+            default:
+                mTimeModePref = null;
+            }
+            Main.pref.put(MTIME_MODE, mTimeModePref);
+        }
 
         Main.worker.execute(new GeoTaggingRunnable(images, keep_backup, mTimeMode.getSelectedIndex()));
     }

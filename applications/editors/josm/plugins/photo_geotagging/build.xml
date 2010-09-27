@@ -24,7 +24,7 @@
 <project name="photo_geotagging" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="update to josm latest; only recompile (setCancelButton)" />
+	<property name="commit.message" value="remember selection of mtime (save to preference file)" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3408" />
 

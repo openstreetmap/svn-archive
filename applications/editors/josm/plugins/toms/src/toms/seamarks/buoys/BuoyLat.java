@@ -65,15 +65,10 @@ public class BuoyLat extends Buoy {
 		String col = ""; //$NON-NLS-1$
 		String top = ""; //$NON-NLS-1$
 
-		if (getStyleIndex() != LAT_PERCH) {
-			if (keys.containsKey("seamark:topmark:shape")) { //$NON-NLS-1$
-				top = keys.get("seamark:topmark:shape"); //$NON-NLS-1$
-				setTopMark(true);
-			}
-			if (keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
-				setTopMark(true);
-			}
-		}
+		if (keys.containsKey("seamark:buoy_lateral:category")) //$NON-NLS-1$
+			cat = keys.get("seamark:buoy_lateral:category"); //$NON-NLS-1$
+		else if (keys.containsKey("seamark:beacon_lateral:category")) //$NON-NLS-1$
+			cat = keys.get("seamark:beacon_lateral:category"); //$NON-NLS-1$
 
 		if (keys.containsKey("seamark:buoy_lateral:colour")) //$NON-NLS-1$
 			col = keys.get("seamark:buoy_lateral:colour"); //$NON-NLS-1$
@@ -82,10 +77,21 @@ public class BuoyLat extends Buoy {
 		else if (keys.containsKey("seamark:light_float:colour")) //$NON-NLS-1$
 			col = keys.get("seamark:light_float:colour"); //$NON-NLS-1$
 
-		if (keys.containsKey("seamark:buoy_lateral:category")) //$NON-NLS-1$
-			cat = keys.get("seamark:buoy_lateral:category"); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_lateral:category")) //$NON-NLS-1$
-			cat = keys.get("seamark:beacon_lateral:category"); //$NON-NLS-1$
+		if (getStyleIndex() != LAT_PERCH) {
+			if (keys.containsKey("seamark:topmark:shape")) { //$NON-NLS-1$
+				top = keys.get("seamark:topmark:shape"); //$NON-NLS-1$
+				setTopMark(true);
+			}
+			if (keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
+				if (col.isEmpty()) col = keys.get("seamark:topmark:colour");
+				setTopMark(true);
+			}
+		}
+		
+		if (col.isEmpty()) {
+			if (keys.containsKey("seamark:light:colour")) //$NON-NLS-1$
+				col = keys.get("seamark:light:colour"); //$NON-NLS-1$
+		}
 
 		if (cat.isEmpty()) { //$NON-NLS-1$
 			if (col.equals("red")) { //$NON-NLS-1$

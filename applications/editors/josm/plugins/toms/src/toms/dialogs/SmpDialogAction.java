@@ -643,7 +643,7 @@ public class SmpDialogAction extends JosmAction {
 			lM01FogPeriod.setText(Messages.getString("SmpDialogAction.117")); //$NON-NLS-1$
 
 			lM01Kennung = new JLabel();
-			lM01Kennung.setBounds(new Rectangle(240, 245, 60, 20));
+			lM01Kennung.setBounds(new Rectangle(235, 245, 70, 20));
 			lM01Kennung.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			lM01Kennung.setText(Messages.getString("SmpDialogAction.119")); //$NON-NLS-1$
 
@@ -809,7 +809,7 @@ public class SmpDialogAction extends JosmAction {
 			cbM01TypeOfMark.addItem(Messages.getString("SmpDialogAction.147")); //$NON-NLS-1$
 			cbM01TypeOfMark.addItem(Messages.getString("SmpDialogAction.148")); //$NON-NLS-1$
 
-			cbM01TypeOfMark.setBounds(new Rectangle(45, 25, 165, 25));
+			cbM01TypeOfMark.setBounds(new Rectangle(50, 25, 170, 25));
 			// cbM01TypeOfMark.setEditable(false);
 			cbM01TypeOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01TypeOfMark.setEnabled(true);
@@ -894,7 +894,7 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01CatOfMark() {
 		if (cbM01CatOfMark == null) {
 			cbM01CatOfMark = new JComboBox();
-			cbM01CatOfMark.setBounds(new Rectangle(60, 55, 150, 25));
+			cbM01CatOfMark.setBounds(new Rectangle(65, 55, 155, 25));
 			cbM01CatOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01CatOfMark.setEnabled(true);
 
@@ -916,7 +916,7 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01StyleOfMark() {
 		if (cbM01StyleOfMark == null) {
 			cbM01StyleOfMark = new JComboBox();
-			cbM01StyleOfMark.setBounds(new Rectangle(45, 85, 165, 25));
+			cbM01StyleOfMark.setBounds(new Rectangle(50, 85, 170, 25));
 			cbM01StyleOfMark.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01StyleOfMark.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -1091,7 +1091,7 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01Fog() {
 		if (cbM01Fog == null) {
 			cbM01Fog = new JComboBox();
-			cbM01Fog.setBounds(new Rectangle(100, 220, 70, 20));
+			cbM01Fog.setBounds(new Rectangle(100, 220, 75, 20));
 			cbM01Fog.setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 			cbM01Fog.removeAllItems();
 			cbM01Fog.addItem(Messages.getString("SmpDialogAction.8")); //$NON-NLS-1$
@@ -1173,7 +1173,7 @@ public class SmpDialogAction extends JosmAction {
 	private JComboBox getCbM01Kennung() {
 		if (cbM01Kennung == null) {
 			cbM01Kennung = new JComboBox();
-			cbM01Kennung.setBounds(new Rectangle(305, 245, 70, 20));
+			cbM01Kennung.setBounds(new Rectangle(300, 245, 75, 20));
 			cbM01Kennung.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int i1, i2;

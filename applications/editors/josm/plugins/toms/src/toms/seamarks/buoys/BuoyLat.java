@@ -276,9 +276,9 @@ public class BuoyLat extends Buoy {
 
 		refreshStyles();
 		refreshLights();
-		setLightColour();
 		parseLights(keys);
 		parseFogRadar(keys);
+		setLightColour();
 
 		dlg.cbM01CatOfMark.setSelectedIndex(getBuoyIndex());
 		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());

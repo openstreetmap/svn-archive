@@ -192,6 +192,8 @@ public class BuoyCard extends Buoy {
 			dlg.cM01Fog.setVisible(true);
 			dlg.cM01Fired.setEnabled(true);
 			dlg.cM01Fired.setVisible(true);
+			dlg.tfM01Group.setVisible(false);
+			dlg.lM01Group.setVisible(false);
 			if (!isSectored()) {
 				dlg.cbM01Colour.setVisible(false);
 				dlg.lM01Colour.setVisible(false);

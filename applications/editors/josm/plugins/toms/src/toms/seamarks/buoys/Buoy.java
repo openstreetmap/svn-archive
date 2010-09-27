@@ -633,6 +633,7 @@ abstract public class Buoy extends SeaMark {
 				}
 
 				c = getLightChar();
+				dlg.cbM01Kennung.setSelectedItem(c);
 				if (c.contains("+")) {
 					i1 = c.indexOf("+");
 					tmp = c.substring(i1, c.length());
@@ -642,15 +643,11 @@ abstract public class Buoy extends SeaMark {
 					}
 					if (tmp != null)
 						c = c + tmp;
-				}
-				dlg.cbM01Kennung.setSelectedItem(c);
-				if ((dlg.cbM01Kennung.getSelectedIndex() != 0)
-						&& (!getLightGroup().isEmpty())
-						|| (((String) dlg.cbM01Kennung.getSelectedItem()).contains("("))
-						&& !(((String) dlg.cbM01Kennung.getSelectedItem()).contains("+"))) {
-					c = c + "(" + getLightGroup() + ")";
 					dlg.cbM01Kennung.setSelectedItem(c);
-				}
+				} else if (!getLightGroup().isEmpty())
+					c = c + "(" + getLightGroup() + ")";
+				if (dlg.cbM01Kennung.getSelectedIndex() == 0)
+					dlg.cbM01Kennung.setSelectedItem(c);
 				c = c + " " + getLightColour();
 				lp = getLightPeriod();
 				if (!lp.isEmpty())

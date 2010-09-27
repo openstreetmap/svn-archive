@@ -49,9 +49,9 @@ public class SmedTabAction extends JosmAction {
         //Create and set up the window.
         JFrame frame = new JFrame("TabbedPaneDemo");
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setAlwaysOnTop(true);
 
-        smedMenu.plugins = smedTabs.plugins;
-        
         //Add content to the window.
         frame.setJMenuBar(smedMenu);
         frame.add(smedTabs, BorderLayout.CENTER);

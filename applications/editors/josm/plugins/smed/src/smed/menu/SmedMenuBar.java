@@ -37,16 +37,8 @@ public class SmedMenuBar extends JMenuBar {
                 KeyEvent.VK_T);
 
         menuItem.addActionListener(new java.awt.event.ActionListener() {
-        	
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				DefaultListModel myModel = new DefaultListModel();
-				plugins = SmedTabbedPane.getPlugins();
-
-				for(SmedPluggable p : plugins) myModel.addElement (p.getName());
-				
-				new TabManager(myModel);
-			}
-		});
+			public void actionPerformed(java.awt.event.ActionEvent e) { new TabManager(); } 
+			});
 
 
         menu.add(menuItem);

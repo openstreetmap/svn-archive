@@ -134,7 +134,7 @@
         ************************************************
     -->
 			<manifest>
-				<attribute name="Author" value="Werner, Malcolm"/>
+				<attribute name="Author" value="Werner"/>
 				<attribute name="Plugin-Class" value="smed.Smed"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Create and edit seamaps for OpenSeaMap"/>
@@ -187,7 +187,7 @@
         ************************************************
     -->
 			<manifest>
-				<attribute name="Author" value="Werner, Malcolm"/>
+				<attribute name="Author" value="Werner"/>
 				<attribute name="Plugin-Class" value="smed_ex.impl.SmedExImpl"/>
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Plugin-Description" value="Plugin for Seamap Editor"/>

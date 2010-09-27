@@ -21,6 +21,7 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+import smed.io.SmedFile;
 import smed.plug.SmedPluginApp;
 import smed.plug.ifc.SmedPluggable;
 import smed.plug.util.JARFileFilter;
@@ -46,6 +47,7 @@ public class Smed extends Plugin{
         if(!splugDir.exists()) splugDir.mkdir();
 
         File[] jars = splugDir.listFiles(new JARFileFilter());
+        SmedFile.init();
 
         // build smed_ifc.jar from smed.jar
         JarEntry e = null;
@@ -79,6 +81,8 @@ public class Smed extends Plugin{
                         pos.close();
                         inp.close();
                         pfos.close();
+                        
+                        SmedFile.createMF(eName);
                     }
                 }
             }
@@ -129,7 +133,7 @@ public class Smed extends Plugin{
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
+        
         SmedTab = new SmedTabAction();
         item = Main.main.menu.toolsMenu.add(SmedTab);
 

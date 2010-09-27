@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 
 public class SmedEx implements SmedPluggable {
 
+	private boolean visible = true;
+	
     private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="78,30"
     private JButton jButton = null;
 
@@ -92,4 +94,6 @@ public class SmedEx implements SmedPluggable {
         return false;
     }
 
+	@Override
+	public String getFileName() { return "smed_ex.jar"; }
 }

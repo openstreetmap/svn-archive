@@ -2,8 +2,11 @@ package smed.menu.file;
 
 
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 import javax.swing.JPanel;
 import java.awt.Dimension;
@@ -12,11 +15,16 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.openstreetmap.josm.Main;
+
+import smed.io.SmedFile;
 import smed.jide.swing.CheckBoxList;
 import smed.jide.swing.CheckBoxListSelectionModel;
 import smed.plug.ifc.SmedPluggable;
@@ -32,6 +40,7 @@ public class TabManager extends JDialog implements ActionListener {
 	private DefaultListModel model;
 	private CheckBoxListSelectionModel selModel;
 	private List<SmedPluggable> plugins = null;
+	private SmedFile splugDir = null;
 	private int modelSize = 0;
 
 	private JDialog tabManagerDialog = null;  //  @jve:decl-index=0:visual-constraint="59,23"
@@ -51,13 +60,23 @@ public class TabManager extends JDialog implements ActionListener {
 	private JLabel tabLabelRename = null;
 	private JTextField tabTextFieldRename = null;
 
-	public TabManager(DefaultListModel model) {
-		this.model = model;
+	public TabManager() {
+		model = new DefaultListModel(); //model;
 		plugins = SmedTabbedPane.getPlugins();
+		String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath();
+		splugDir = new SmedFile(pluginDirName + "/splug");
+		
+		for(SmedPluggable p : plugins){
+			if(splugDir.isVisible(p.getFileName()) && !splugDir.isDeleted(p.getFileName())) model.addElement (p.getName());
+			else if(splugDir.isDeleted(p.getFileName())) model.addElement("delete - " + p.getName());
+			else model.addElement("invisible - " + p.getName());
+		}
+		
 		modelSize = model.getSize();
 		getTabManagerDialog().setVisible(true);
 	}
 
+	
 	/**
 	 * This method initializes tabManagerDialog	
 	 * 	
@@ -199,7 +218,7 @@ public class TabManager extends JDialog implements ActionListener {
 		if (tabButtonLoad == null) {
 			tabButtonLoad = new JButton();
 			tabButtonLoad.setBounds(new Rectangle(186, 328, 104, 30));
-			tabButtonLoad.setFont(new Font("Dialog", Font.BOLD, 12));
+			tabButtonLoad.setFont(new Font("Dialog", Font.PLAIN, 12));
 			tabButtonLoad.setText("Load");
 			tabButtonLoad.addActionListener(this);
 			tabButtonLoad.setActionCommand("load");
@@ -216,7 +235,7 @@ public class TabManager extends JDialog implements ActionListener {
 		if (tabButtonSave == null) {
 			tabButtonSave = new JButton();
 			tabButtonSave.setBounds(new Rectangle(293, 328, 104, 30));
-			tabButtonSave.setFont(new Font("Dialog", Font.BOLD, 12));
+			tabButtonSave.setFont(new Font("Dialog", Font.PLAIN, 12));
 			tabButtonSave.setText("Save");
 			tabButtonSave.addActionListener(this);
 			tabButtonSave.setActionCommand("save");
@@ -233,6 +252,7 @@ public class TabManager extends JDialog implements ActionListener {
 		if (tabButtonDelete == null) {
 			tabButtonDelete = new JButton();
 			tabButtonDelete.setBounds(new Rectangle(186, 362, 104, 30));
+			tabButtonDelete.setFont(new Font("Dialog", Font.PLAIN, 12));
 			tabButtonDelete.setText("Delete");
 			tabButtonDelete.addActionListener(this);
 			tabButtonDelete.setActionCommand("delete");
@@ -249,6 +269,7 @@ public class TabManager extends JDialog implements ActionListener {
 		if (tabButtonVisible == null) {
 			tabButtonVisible = new JButton();
 			tabButtonVisible.setBounds(new Rectangle(293, 362, 104, 30));
+			tabButtonVisible.setFont(new Font("Dialog", Font.PLAIN, 12));
 			tabButtonVisible.setText("invisible");
 			tabButtonVisible.addActionListener(this);
 			tabButtonVisible.setActionCommand("invisible");
@@ -308,6 +329,36 @@ public class TabManager extends JDialog implements ActionListener {
 		String cmd = e.getActionCommand();
 		
 		if(cmd.equals("ok")) {
+			int i = 0;
+			JTabbedPane tabbedPane = SmedTabbedPane.getTabbedPane();
+			Icon icon = null;
+			
+			for(SmedPluggable p : plugins) {
+				String str = model.get(i).toString();
+
+				if(str.length() > 9 && str.substring(0,9).equals("invisible")) { 
+					splugDir.setVisible(p.getFileName(),false);
+				} else splugDir.setVisible(p.getFileName(),true);
+				
+				if(str.length() > 6 && str.substring(0,6).equals("delete")) {
+					splugDir.setDeleted(p.getFileName(),true);
+				} else splugDir.setDeleted(p.getFileName(),false);
+				
+				i++;
+			}
+			
+			tabbedPane.removeAll();
+ 
+			JComponent panel = null;
+			
+			for(SmedPluggable p : plugins) {
+				if(splugDir.isVisible(p.getFileName()) && !splugDir.isDeleted(p.getFileName())) {
+        			panel = p.getComponent();
+        			
+        			tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
+        		}
+			}
+
 			System.out.println("Aufraeumarbeiten beginnen");
 			tabManagerDialog.setVisible(false);
 			tabManagerDialog.dispose();
@@ -330,25 +381,18 @@ public class TabManager extends JDialog implements ActionListener {
 			return;
 		}
 		
-		if(cmd.equals("invisible")) {
-			for(int i = 0; i < modelSize ; i++) {
-				if(selModel.isSelectedIndex(i)) model.set(i,"invisible");				
-			}
-		}
-		
-		if(cmd.equals("delete")) {
-			for(int i = 0; i < modelSize ; i++) {
-				if(selModel.isSelectedIndex(i)) model.set(i,"");				
-			}
-		}
-		
-		if(cmd.equals("undo")) {
-			int i = 0;
-			
-			for(SmedPluggable p : plugins) model.set(i++,p.getName());
-			selModel.removeSelectionInterval(0, modelSize - 1);
-		}
+		if(cmd.equals("invisible")) cmd("invisible - ");
+		if(cmd.equals("delete")) cmd ("delete - ");
+		if(cmd.equals("undo"))  cmd("");
+	}
 
+	private void cmd(String s) {
+		int i = 0;
+		
+		for(SmedPluggable p : plugins) { 
+			if(selModel.isSelectedIndex(i)) model.set(i,s + p.getName());
+			i++;
+		}
 	}
 
 }

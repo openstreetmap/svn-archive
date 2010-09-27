@@ -11,6 +11,8 @@ import java.awt.Rectangle;
 
 public class SmedAbout implements SmedPluggable{
 
+	private boolean visible = true;
+	
     private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="43,24"
     private JLabel jLabel = null;
     private JLabel jLabel1 = null;
@@ -77,4 +79,6 @@ public class SmedAbout implements SmedPluggable{
         return jPanel;
     }
 
+	@Override
+	public String getFileName() { return "smed_about.jar"; }
 }

@@ -57,8 +57,12 @@
     **********************************************************
     -->
 	<target name="compile" depends="init">
+		<echo message="compiling sanselan sources ... "/>
+		<javac srcdir="${plugin.src.dir}" excludes="org/openstreetmap/**" debug="true" destdir="${plugin.build.dir}" encoding="iso-8859-1">
+			<compilerarg value="-Xlint:deprecation"/>
+		</javac>
 		<echo message="compiling sources for  ${plugin.jar} ... "/>
-		<javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" encoding="iso-8859-1">
+		<javac srcdir="${plugin.src.dir}" excludes="org/apache/sanselan/**" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
 			<compilerarg value="-Xlint:deprecation"/>
 			<compilerarg value="-Xlint:unchecked"/>
 		</javac>

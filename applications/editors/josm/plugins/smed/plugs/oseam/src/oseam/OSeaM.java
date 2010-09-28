@@ -9,13 +9,13 @@ import smed.plug.ifc.SmedPluginManager;
 
 public class OSeaM implements SmedPluggable {
 
-	private OSeaMAction os = null;
+	private OSeaMAction osm = null;
 	
 	@Override
 	public JComponent getComponent() {
-		os = new OSeaMAction();
-		os.init();
-		return os.getPM01SeaMap();
+		osm = new OSeaMAction();
+		osm.init();
+		return osm.getPM01SeaMap();
 	}
 
 	@Override
@@ -38,8 +38,8 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public boolean stop() {
-		// TODO Auto-generated method stub
-		return false;
+		osm.closePanel();
+		return true;
 	}
 
 	@Override

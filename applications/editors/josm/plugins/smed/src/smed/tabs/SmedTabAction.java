@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -27,7 +28,10 @@ public class SmedTabAction extends JosmAction {
 	private static final long serialVersionUID = 1L;
 	private SmedTabbedPane smedTabs = new SmedTabbedPane();
 	private SmedMenuBar smedMenu = new SmedMenuBar();
-
+	private JFrame frame = null;
+	private boolean isOpen = false;
+	private JMenuItem osmItem;
+	
     public SmedTabAction() {
         super( "Seekarten Editor", "Smed","Seekarten Editor", Shortcut.registerShortcut(
                                 "tools:Semmaps",
@@ -43,12 +47,17 @@ public class SmedTabAction extends JosmAction {
                 createAndShowTabs();
             }
         });
+        
+        isOpen = true;
+		if (osmItem == null) return;
+
+		osmItem.setEnabled(false);
     }
 
 
     protected void createAndShowTabs() {
         //Create and set up the window.
-        JFrame frame = new JFrame("TabbedPaneDemo");
+        frame = new JFrame("TabbedPaneDemo");
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setResizable(false);
         frame.setAlwaysOnTop(true);
@@ -63,5 +72,25 @@ public class SmedTabAction extends JosmAction {
         frame.setVisible(true);
     }
 
+
+	public void closeDialog() {
+		List<SmedPluggable> plugins = SmedTabbedPane.getPlugins();
+		
+		if(plugins != null) {
+			for(SmedPluggable p : plugins) p.stop();
+		}
+		
+		if(isOpen) {
+			frame.setVisible(false);
+			frame.dispose();
+		}
+		
+		isOpen = false;
+	}
+
+
+	public void setOsmItem(JMenuItem item) {
+		osmItem = item;		
+	}
 
 }

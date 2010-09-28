@@ -54,7 +54,6 @@ public class OSeaMAction {
 	private OSeaMAction dia = null; // Variable f�r den Handle von
 																				// SmpDialogAction
 	private Buoy buoy = null; // Variable f�r Objekte des Typs "Tonne" //
-	private boolean isOpen = false; // zeigt den Status des Dialogs an
 	private Node onode = null; // gemerkter Knoten
 	private Buoy obuoy = null; // gemerkte Tonne // @jve:decl-index=0:
 	private JMenuItem SmpItem = null; // Info über item in der Werkzeugleiste
@@ -186,14 +185,6 @@ public class OSeaMAction {
 		SmpItem = smpItem;
 	}
 
-	public boolean isOpen() {
-		return isOpen;
-	}
-
-	public void setOpen(boolean isOpen) {
-		this.isOpen = isOpen;
-	}
-
 	public String getOs() {
 		return Os;
 	}
@@ -210,22 +201,15 @@ public class OSeaMAction {
 		UserHome = userHome;
 	}
 
-	public void CloseDialog() {
+	public void closePanel() {
 		onode = null;
 		DataSet.removeSelectionListener(SmpListener);
 		Selection = null;
-
-		/*
-		if (isOpen)
-			dM01SeaMap.dispose();
-		*/
-		isOpen = false;
 	}
 
 	public void init() {
 		onode = null;
 		obuoy = null;
-		setOpen(true);
 
 		/*
 		if (SmpItem == null) {

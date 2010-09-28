@@ -47,7 +47,6 @@
 	<property name="plugin.src.dir"         value="src"/>
 	<property name="smed.build.dir"         value="../smed/build"/>
 	<property name="smed.src.dir"           value="../smed/src"/>
-	<property name="smed.plugins"           value="../smed/plugins"/>
 	<!-- this is the directory where the plugin jar is copied to -->
 	<property name="ant.build.javac.target" value="1.5"/>
 	<property name="plugin.dist.dir"        value="smed_dist"/>

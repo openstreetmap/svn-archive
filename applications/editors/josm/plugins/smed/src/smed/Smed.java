@@ -31,8 +31,8 @@ import smed.tabs.SmedTabAction;
 public class Smed extends Plugin{
 
     private JMenuItem item;
-    private SmedTabAction SmedTab;
-	private List<SmedPluggable> plugins = null;
+    private SmedTabAction smedTab;
+	// private List<SmedPluggable> plugins = null;
 
     public Smed(PluginInformation info) {
         super(info);
@@ -134,9 +134,10 @@ public class Smed extends Plugin{
             ex.printStackTrace();
         }
         
-        SmedTab = new SmedTabAction();
-        item = Main.main.menu.toolsMenu.add(SmedTab);
-
+        smedTab = new SmedTabAction();
+        item = Main.main.menu.toolsMenu.add(smedTab);
+        smedTab.setOsmItem(item);
+        
         item.setEnabled(false);
 
     }
@@ -147,13 +148,15 @@ public class Smed extends Plugin{
             item.setEnabled(true);
         } else {
             item.setEnabled(false);
-            // SmpDialog.CloseDialog();
+            smedTab.closeDialog();
         }
     }
 
+    /*
     public void setPlugins(List<SmedPluggable> plugins)  {
     	this.plugins = plugins;
     	
     }
+    */
 
 }

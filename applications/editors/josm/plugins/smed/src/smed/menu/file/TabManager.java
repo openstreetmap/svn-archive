@@ -66,11 +66,13 @@ public class TabManager extends JDialog implements ActionListener {
 		String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath();
 		splugDir = new SmedFile(pluginDirName + "/splug");
 		
-		for(SmedPluggable p : plugins){
-			if(splugDir.isVisible(p.getFileName()) && !splugDir.isDeleted(p.getFileName())) model.addElement (p.getName());
-			else if(splugDir.isDeleted(p.getFileName())) model.addElement("delete - " + p.getName());
-			else model.addElement("invisible - " + p.getName());
-		}
+		if(plugins != null) {
+			for(SmedPluggable p : plugins){
+				if(splugDir.isVisible(p.getFileName()) && !splugDir.isDeleted(p.getFileName())) model.addElement (p.getName());
+				else if(splugDir.isDeleted(p.getFileName())) model.addElement("delete - " + p.getName());
+				else model.addElement("invisible - " + p.getName());
+			}
+		} else model.addElement("no plugin loaded");
 		
 		modelSize = model.getSize();
 		getTabManagerDialog().setVisible(true);
@@ -333,30 +335,32 @@ public class TabManager extends JDialog implements ActionListener {
 			JTabbedPane tabbedPane = SmedTabbedPane.getTabbedPane();
 			Icon icon = null;
 			
-			for(SmedPluggable p : plugins) {
-				String str = model.get(i).toString();
+			if(plugins != null) {
+				for(SmedPluggable p : plugins) {
+					String str = model.get(i).toString();
 
-				if(str.length() > 9 && str.substring(0,9).equals("invisible")) { 
-					splugDir.setVisible(p.getFileName(),false);
-				} else splugDir.setVisible(p.getFileName(),true);
+					if(str.length() > 9 && str.substring(0,9).equals("invisible")) { 
+						splugDir.setVisible(p.getFileName(),false);
+					} else splugDir.setVisible(p.getFileName(),true);
 				
-				if(str.length() > 6 && str.substring(0,6).equals("delete")) {
-					splugDir.setDeleted(p.getFileName(),true);
-				} else splugDir.setDeleted(p.getFileName(),false);
+					if(str.length() > 6 && str.substring(0,6).equals("delete")) {
+						splugDir.setDeleted(p.getFileName(),true);
+					} else splugDir.setDeleted(p.getFileName(),false);
 				
-				i++;
-			}
+					i++;
+				}
 			
-			tabbedPane.removeAll();
+				tabbedPane.removeAll();
  
-			JComponent panel = null;
+				JComponent panel = null;
 			
-			for(SmedPluggable p : plugins) {
-				if(splugDir.isVisible(p.getFileName()) && !splugDir.isDeleted(p.getFileName())) {
-        			panel = p.getComponent();
+				for(SmedPluggable p : plugins) {
+					if(splugDir.isVisible(p.getFileName()) && !splugDir.isDeleted(p.getFileName())) {
+						panel = p.getComponent();
         			
-        			tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
-        		}
+						tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
+					}
+				}
 			}
 
 			System.out.println("Aufraeumarbeiten beginnen");
@@ -389,9 +393,11 @@ public class TabManager extends JDialog implements ActionListener {
 	private void cmd(String s) {
 		int i = 0;
 		
-		for(SmedPluggable p : plugins) { 
-			if(selModel.isSelectedIndex(i)) model.set(i,s + p.getName());
-			i++;
+		if(plugins != null) {
+			for(SmedPluggable p : plugins) { 
+				if(selModel.isSelectedIndex(i)) model.set(i,s + p.getName());
+				i++;
+			}
 		}
 	}
 

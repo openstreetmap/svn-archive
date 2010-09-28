@@ -3,6 +3,7 @@ package smed.tabs;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -57,7 +58,8 @@ public class SmedTabAction extends JosmAction {
         frame.add(smedTabs, BorderLayout.CENTER);
 
         //Display the window.
-        frame.pack();
+        frame.setSize(new Dimension(420, 460));
+        // frame.pack();
         frame.setVisible(true);
     }
 

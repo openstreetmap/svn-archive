@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="OSeaM" default="dist" basedir=".">
+<project name="oseam" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="New release" />
@@ -42,13 +42,13 @@
       ** should not be necessary to change the following properties
      -->
 	<property name="josm"                   location="../../../../core/dist/josm-custom.jar"/>
-	<property name="smed"					location="../../../../dist/smed.jar/"/>
+	<property name="smed"					location="../../core/dist/smed.jar"/>
 	<property name="plugin.build.dir"       value="build"/>
 	<property name="plugin.src.dir"         value="src"/>
 	<property name="smed.build.dir"         value="../../../smed/build"/>
-	<property name="smed.src.dir"           value="../../../smed/src"/>
+	<property name="delete_string"          value="*${ant.project.name}.jar"/>
 	<!-- this is the directory where the plugin jar is copied to -->
-	<property name="plugin.dist.dir"        value="../../../../dist"/>
+	<property name="plugin.dist.dir"        value="../../dist"/>
 	<property name="ant.build.javac.target" value="1.5"/>
 	<property name="plugin.jar"             value="${plugin.dist.dir}/00_${DSTAMP}_${TSTAMP}_${ant.project.name}.jar"/>
 
@@ -59,84 +59,15 @@
     -->
 	<target name="init">
 		<mkdir dir="${plugin.build.dir}"/>
-	</target>
-
-	<!--
-    **********************************************************
-    ** init_smed - initializes the build of smed
-    **********************************************************
-    -->
-	<target name="init_smed">
-		<mkdir dir="${smed.build.dir}"/>
-	</target>
-
-	<!--
-    **********************************************************
-    ** compile_smed - compiles the source tree of smed
-    **********************************************************
-    -->
-	<target name="compile_smed" depends="init_smed">
-		<echo message="compiling sources for smed.jar ... "/>
-		<javac srcdir="${smed.src.dir}" classpath="${josm}" debug="true" destdir="${smed.build.dir}">
-			<compilerarg value="-Xlint:deprecation"/>
-			<compilerarg value="-Xlint:unchecked"/>
-		</javac>
+		<mkdir dir="${plugin.dist.dir}"/>
 	</target>
 	
-	<!--
-    **********************************************************
-    ** dist_smed - creates smed.jar
-    **********************************************************
-    -->
-	<target name="dist_smed" depends="compile_smed">
-		<echo message="creating smed.jar ... "/>
-
-		<copy todir="${smed.build.dir}/images">
-			<fileset dir="${smed.src.dir}/images"/>
-		</copy>
-		
-		<copy todir="${smed.build.dir}/images">
-			<fileset dir="../../../smed/images"/>
-		</copy>
-
-		<copy todir="${smed.build.dir}/smed/msg">
-			<fileset dir="${smed.src.dir}/smed/msg"/>
-		</copy>
-
-		<copy todir="${smed.build.dir}">
-			<fileset dir="../../../smed">
-                <include name="*.txt" />
-			</fileset>
-		</copy>
-
-		<jar destfile="${smed}" basedir="${smed.build.dir}">
-			<!--
-        ************************************************
-        ** configure these properties. Most of them will be copied to the plugins
-        ** manifest file. Property values will also show up in the list available
-        ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-        **
-        ************************************************
-    -->
-			<manifest>
-				<attribute name="Author" value="Werner"/>
-				<attribute name="Plugin-Class" value="smed.Smed"/>
-				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-				<attribute name="Plugin-Description" value="Create and edit seamaps for OpenSeaMap"/>
-				<attribute name="Plugin-Icon" value="images/Smed.png"/>
-				<attribute name="Plugin-Link" value="http://openseamap.org/"/>
-				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-			</manifest>
-		</jar>
-	</target>
-
 	<!--
     **********************************************************
     ** compile - complies the source tree
     **********************************************************
     -->
-	<target name="compile" depends="init,dist_smed">
+	<target name="compile" depends="init">
 		<echo message="compiling sources for  ${plugin.jar} ... "/>
 		<javac srcdir="src" classpath="${josm}:${smed}" debug="true" destdir="${plugin.build.dir}">
 			<compilerarg value="-Xlint:deprecation"/>
@@ -160,8 +91,8 @@
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images"/>
 		</copy>
-		<copy todir="${plugin.build.dir}/oseam/msg">
-			<fileset dir="${plugin.src.dir}/oseam/msg"/>
+		<copy todir="${plugin.build.dir}/${ant.project.name}/msg">
+			<fileset dir="${plugin.src.dir}/${ant.project.name}/msg"/>
 		</copy>
 		<copy todir="${plugin.build.dir}">
 			<fileset dir=".">
@@ -172,7 +103,7 @@
 		
 		<delete>
 			<fileset dir="${plugin.dist.dir}">
-	    		<include name="*OSeaM.jar"/>
+	    		<include name="${delete_string}"/>
 			</fileset>
 		</delete>
 
@@ -195,7 +126,6 @@
 				<attribute name="Plugin-Link" value="http://openseamap.org/"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-				<attribute name="Class-Path" value="./tplug/ifc.jar"/>
 			</manifest>
 		</jar>
 	</target>
@@ -226,10 +156,9 @@
     -->
 	<target name="clean">
 		<delete dir="${plugin.build.dir}"/>
-		<delete file="${plugin.jar}"/>
 		<delete>
 			<fileset dir="${plugin.dist.dir}">
-	    		<include name="*OSeaM.jar"/>
+	    		<include name="${delete_string}"/>
 			</fileset>
 		</delete>
 	</target>
@@ -237,9 +166,10 @@
 	<!--
     **********************************************************
     ** install - install the plugin in your local JOSM installation
+    ** for developing
     **********************************************************
     -->
-	<target name="install" depends="dist">
+	<target name="install-develop" depends="dist">
 		<property environment="env"/>
 		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins/splug" else="${user.home}/.josm/plugins/splug">
 			<and>
@@ -249,13 +179,15 @@
 		
 		<delete>
 			<fileset dir="${josm.plugins.dir}">
-	    		<include name="*OSeaM.jar"/>
+	    		<include name="${delete_string}"/>
 			</fileset>
 		</delete>
-
+		
 		<copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
-	</target>
 
+		<delete file="${plugin.jar}"/>
+		
+	</target>
 
 	<!--
 	************************** Publishing the plugin *********************************** 
@@ -263,8 +195,9 @@
 	<!--
 		** extracts the JOSM release for the JOSM version in ../core and saves it in the 
 		** property ${coreversion.info.entry.revision}
-		**
+		** 
 		-->
+	
 	<target name="core-info">
 		<exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
 			<env key="LANG" value="C"/>
@@ -277,7 +210,7 @@
 		<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
 		<delete file="core.info.xml" />
 	</target>
-
+	
 	<!--
 		** commits the source tree for this plugin
 		-->
@@ -353,7 +286,11 @@
 		</fail>
 	</target>
 
-	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+	<target name="publish"> <!-- depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist" -->
+		<echo>No normal josm-plugin, publishing over smed !!!
+			1. ant - dist to each subplugin
+			2. ant publish to smed
+		</echo>
 	</target>
 </project>
 

@@ -40,11 +40,12 @@
       ** should not be necessary to change the following properties
      -->
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-	<property name="smed_ex" 				value="../dist/"/>
 	<property name="plugin.build.dir"       value="build/"/>
-	<property name="plugin.src.dir"         value="src"/>
+	<property name="plugin.src.dir"         value="src/"/>
+	<property name="smed.dist.dir"        value="dist/"/>
 	<!-- this is the directory where the plugin jar is copied to -->
-	<property name="plugin.dist.dir"        value="../../dist"/>
+	<property name="plugin.dist.dir"        value="../../dist/"/>
+	<property name="smed_core.dist.dir"     value="core/dist/"/>
 	<property name="ant.build.javac.target" value="1.5"/>
 	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
@@ -55,8 +56,8 @@
     -->
 	<target name="init">
 		<mkdir dir="${plugin.build.dir}"/>
-		<mkdir dir="../smed_about/smed_dist"/>
-		<mkdir dir="../smed_ex/smed_dist"/>
+		<mkdir dir="${smed_core.dist.dir}"/>
+		<mkdir dir="${smed.dist.dir}"/>
 	</target>
 
 	<!--
@@ -92,22 +93,10 @@
 			<fileset dir="${plugin.src.dir}/smed/msg"/>
 		</copy>
 		
-		<delete>
-			<fileset dir="${plugin.build.dir}">
-	    		<include name="*smed_ex.jar"/>
-				<include name="*smed_about.jar"/>
-			</fileset>
-		</delete>
-
-		
 		<copy todir="${plugin.build.dir}">
-					<fileset dir="../smed_about/smed_dist"/>
+			<fileset dir="${smed.dist.dir}"/>
 		</copy>
-
-		<copy todir="${plugin.build.dir}">
-					<fileset dir="../smed_ex/smed_dist"/>
-		</copy>
-		
+						
 		<copy todir="${plugin.build.dir}">
 			<fileset dir=".">
                 <include name="*.txt" />
@@ -133,6 +122,9 @@
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 			</manifest>
 		</jar>
+		
+		<!-- install interface -->
+		<copy file="${plugin.jar}" todir="${smed_core.dist.dir}"/>
 	</target>
 	
 	<!--
@@ -159,6 +151,4 @@
 		</condition>
 		<copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
 	</target>
-
-	
 </project>

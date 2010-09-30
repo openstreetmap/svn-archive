@@ -141,7 +141,7 @@ public class BuoyCard extends Buoy {
 		dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
-	public void refreshLights() {
+		public void refreshLights() {
 		dlg.cbM01Kennung.removeAllItems();
 		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
 		dlg.cbM01Kennung.setSelectedIndex(0);

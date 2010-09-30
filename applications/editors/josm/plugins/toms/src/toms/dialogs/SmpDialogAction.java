@@ -381,7 +381,7 @@ public class SmpDialogAction extends JosmAction {
 
 		if (keys.containsKey("seamark:type")) //$NON-NLS-1$
 			type = keys.get("seamark:type"); //$NON-NLS-1$
-		
+
 		if (type.equals("buoy_lateral") || type.equals("beacon_lateral")) { //$NON-NLS-1$ //$NON-NLS-2$
 			buoy = new BuoyLat(this, node);
 			return;
@@ -832,13 +832,16 @@ public class SmpDialogAction extends JosmAction {
 					switch (type) {
 
 					case SeaMark.UNKNOWN_TYPE:
-						if (!(buoy instanceof BuoyUkn))
+						if (!(buoy instanceof BuoyUkn)) {
+							buoy = null;
 							buoy = new BuoyUkn(dia, Messages.getString("SmpDialogAction.150")); //$NON-NLS-1$
+						}
 						buoy.setBuoyIndex(0);
 						break;
 
 					case SeaMark.LATERAL:
 						if (!(buoy instanceof BuoyLat)) {
+							buoy = null;
 							buoy = new BuoyLat(dia, n);
 							buoy.setBuoyIndex(0);
 						}
@@ -846,6 +849,7 @@ public class SmpDialogAction extends JosmAction {
 
 					case SeaMark.CARDINAL:
 						if (!(buoy instanceof BuoyCard)) {
+							buoy = null;
 							buoy = new BuoyCard(dia, n);
 							buoy.setBuoyIndex(0);
 						}
@@ -853,6 +857,7 @@ public class SmpDialogAction extends JosmAction {
 
 					case SeaMark.SAFE_WATER:
 						if (!(buoy instanceof BuoySaw)) {
+							buoy = null;
 							buoy = new BuoySaw(dia, n);
 						}
 						buoy.setBuoyIndex(type);
@@ -860,6 +865,7 @@ public class SmpDialogAction extends JosmAction {
 
 					case SeaMark.ISOLATED_DANGER:
 						if (!(buoy instanceof BuoyIsol)) {
+							buoy = null;
 							buoy = new BuoyIsol(dia, n);
 						}
 						buoy.setBuoyIndex(type);
@@ -867,6 +873,7 @@ public class SmpDialogAction extends JosmAction {
 
 					case SeaMark.SPECIAL_PURPOSE:
 						if (!(buoy instanceof BuoySpec)) {
+							buoy = null;
 							buoy = new BuoySpec(dia, n);
 						}
 						buoy.setBuoyIndex(type);
@@ -874,13 +881,13 @@ public class SmpDialogAction extends JosmAction {
 
 					case SeaMark.LIGHT:
 						if (!(buoy instanceof BuoyNota)) {
+							buoy = null;
 							buoy = new BuoyNota(dia, n);
 							buoy.setBuoyIndex(0);
 						}
 						break;
 					}
 
-					buoy.refreshStyles();
 					buoy.refreshLights();
 					buoy.setLightColour();
 					paintlock = false;

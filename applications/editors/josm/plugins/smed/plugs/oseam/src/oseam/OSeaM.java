@@ -11,11 +11,13 @@ import smed.plug.ifc.SmedPluginManager;
 public class OSeaM implements SmedPluggable {
 
 	private OSeaMAction osm = null;
+	public SmedPluginManager manager = null;
 	
 	@Override
 	public JComponent getComponent() {
 		osm = new OSeaMAction();
 		osm.init();
+		manager.setString("it works realy fine");
 		return osm.getPM01SeaMap();
 	}
 
@@ -27,8 +29,7 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public void setPluginManager(SmedPluginManager manager) {
-		// TODO Auto-generated method stub
-		
+		this.manager = manager;
 	}
 
 	@Override

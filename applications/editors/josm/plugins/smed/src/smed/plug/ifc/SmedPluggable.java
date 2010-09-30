@@ -5,7 +5,7 @@ import javax.swing.JComponent;
 
 
 public interface SmedPluggable {
-
+	
     boolean start();
     boolean stop();
     String getName();

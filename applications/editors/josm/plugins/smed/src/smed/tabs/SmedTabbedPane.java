@@ -16,6 +16,8 @@ import org.openstreetmap.josm.Main;
 
 import smed.io.SmedFile;
 import smed.plug.ifc.SmedPluggable;
+import smed.plug.ifc.SmedPluginManager;
+import smed.plug.manager.SmedPluginManagerImpl;
 import smed.plug.util.SmedPluginLoader;
 
 public class SmedTabbedPane extends JPanel {
@@ -43,8 +45,11 @@ public class SmedTabbedPane extends JPanel {
             	JComponent panel;
             	int i = 0;
             	SmedFile splugDir = new SmedFile(pluginDirName + "/splug");
+            	SmedPluginManager manager = new SmedPluginManagerImpl();
             
             	for(SmedPluggable p : plugins) {
+            		p.setPluginManager(manager);
+            		
             		if(splugDir.isVisible(p.getFileName())) {
             			panel = p.getComponent();
             			icon  = p.getIcon();

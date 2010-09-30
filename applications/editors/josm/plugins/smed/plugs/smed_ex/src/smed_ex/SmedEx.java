@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 public class SmedEx implements SmedPluggable {
 
 	private boolean visible = true;
+	public SmedPluginManager manager = null;
 	
     private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="78,30"
     private JButton jButton = null;
@@ -47,8 +48,7 @@ public class SmedEx implements SmedPluggable {
 
     @Override
     public void setPluginManager(SmedPluginManager manager) {
-        // TODO Auto-generated method stub
-
+    	this.manager = manager;
     }
 
     /**
@@ -81,7 +81,8 @@ public class SmedEx implements SmedPluggable {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog( null, "it works" );
+                    if(manager.getString() == null) JOptionPane.showMessageDialog( null, "it works" );
+                    else JOptionPane.showMessageDialog( null, manager.getString() );
                 }
 
             });

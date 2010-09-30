@@ -27,7 +27,7 @@
 **
 **
 -->
-<project name="smed_about" basedir=".">
+<project name="smed_ex" basedir=".">
 
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="New release" />

@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -37,9 +37,9 @@ public class SmedTabbedPane extends JPanel {
             plugins = SmedPluginLoader.loadPlugins(new File(pluginDirName + "/splug"));
 
             if(plugins != null) {
-            	Icon icon = null;
+            	ImageIcon icon = null;
             	tabbedPane = new JTabbedPane();
-            	
+
             	JComponent panel;
             	int i = 0;
             	SmedFile splugDir = new SmedFile(pluginDirName + "/splug");
@@ -47,6 +47,7 @@ public class SmedTabbedPane extends JPanel {
             	for(SmedPluggable p : plugins) {
             		if(splugDir.isVisible(p.getFileName())) {
             			panel = p.getComponent();
+            			icon  = p.getIcon();
             			
             			tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
             			tabbedPane.setMnemonicAt(i, KeyEvent.VK_1 + i);

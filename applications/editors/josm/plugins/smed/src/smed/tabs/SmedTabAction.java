@@ -67,6 +67,13 @@ public class SmedTabAction extends JosmAction {
         frame.add(smedTabs, BorderLayout.CENTER);
 
         //Display the window.
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+        	public void windowClosing(java.awt.event.WindowEvent e) {
+        		osmItem.setEnabled(true);
+        		
+        		closeDialog();
+        	}
+        });
         frame.setSize(new Dimension(420, 460));
         // frame.pack();
         frame.setVisible(true);

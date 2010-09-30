@@ -202,6 +202,9 @@ public class OSeaMAction {
 	}
 
 	public void closePanel() {
+		// Pictogramme wiederherstellen und aufraeumen
+		if (obuoy != null) PicRebuild();
+		
 		onode = null;
 		DataSet.removeSelectionListener(SmpListener);
 		Selection = null;
@@ -225,6 +228,7 @@ public class OSeaMAction {
 		// siehe org.openstreetmap.josm.plugins.osb -> OsbLayer.java
 		// Einhängen des Listeners in die Eventqueue von josm
 		DataSet.addSelectionListener(SmpListener);
+		
 	}
 	
 	private void PicRebuild() {

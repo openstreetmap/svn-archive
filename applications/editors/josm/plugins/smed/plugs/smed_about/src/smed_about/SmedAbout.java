@@ -1,5 +1,6 @@
 package smed_about;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 import smed.plug.ifc.SmedPluggable;
@@ -81,4 +82,10 @@ public class SmedAbout implements SmedPluggable{
 
 	@Override
 	public String getFileName() { return "smed_about.jar"; }
+
+	@Override
+	public ImageIcon getIcon() {
+
+		return null;
+	}
 }

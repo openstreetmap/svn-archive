@@ -1,5 +1,6 @@
 package smed_ex;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
@@ -96,4 +97,10 @@ public class SmedEx implements SmedPluggable {
 
 	@Override
 	public String getFileName() { return "smed_ex.jar"; }
+
+	@Override
+	public ImageIcon getIcon() {
+
+		return null;
+	}
 }

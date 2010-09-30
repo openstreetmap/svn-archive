@@ -2,7 +2,7 @@ package smed.menu.file;
 
 
 import javax.swing.DefaultListModel;
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
@@ -15,8 +15,6 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -333,7 +331,6 @@ public class TabManager extends JDialog implements ActionListener {
 		if(cmd.equals("ok")) {
 			int i = 0;
 			JTabbedPane tabbedPane = SmedTabbedPane.getTabbedPane();
-			Icon icon = null;
 			
 			if(plugins != null) {
 				for(SmedPluggable p : plugins) {
@@ -351,13 +348,14 @@ public class TabManager extends JDialog implements ActionListener {
 				}
 			
 				tabbedPane.removeAll();
- 
 				JComponent panel = null;
+				ImageIcon icon = null;
 			
 				for(SmedPluggable p : plugins) {
 					if(splugDir.isVisible(p.getFileName()) && !splugDir.isDeleted(p.getFileName())) {
 						panel = p.getComponent();
-        			
+						icon = p.getIcon();
+
 						tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
 					}
 				}

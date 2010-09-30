@@ -1,5 +1,6 @@
 package oseam;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 import oseam.dialogs.OSeaMAction;
@@ -46,6 +47,12 @@ public class OSeaM implements SmedPluggable {
 	public String getFileName() {
 		return "OSeaM.jar";
 	
+	}
+
+	@Override
+	public ImageIcon getIcon() {
+
+		return new ImageIcon(getClass().getResource("/images/Smp.png"));
 	}
 
 

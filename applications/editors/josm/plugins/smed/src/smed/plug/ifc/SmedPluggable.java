@@ -1,5 +1,6 @@
 package smed.plug.ifc;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 
@@ -9,6 +10,7 @@ public interface SmedPluggable {
     boolean stop();
     String getName();
     String getFileName();
+    ImageIcon getIcon();
     String getInfo();
     JComponent getComponent();
     

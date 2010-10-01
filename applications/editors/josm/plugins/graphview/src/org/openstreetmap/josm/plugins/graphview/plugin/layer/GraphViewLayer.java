@@ -178,8 +178,9 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 
         } else {
 
-            g2D.setColor(Color.WHITE);
-
+        	Color color = GraphViewPreferences.getInstance().getSegmentColor();
+            g2D.setColor(color);
+            
             Point p1 = getNodePoint(e.getStartNode(), mv);
             Point p2 = getNodePoint(e.getTargetNode(), mv);
 

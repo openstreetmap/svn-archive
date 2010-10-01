@@ -1,7 +1,9 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -21,7 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.plugins.graphview.plugin.dialogs.AccessParameterDialog.BookmarkAction;
@@ -47,7 +49,11 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
     private JButton deleteBookmarkButton;
 
     private JCheckBox separateDirectionsCheckBox;
-
+    private JButton segmentColorButton;
+    private JPanel segmentColorField;
+    private JButton nodeColorButton;
+    private JPanel nodeColorField;
+    
     public void addGui(PreferenceTabbedPane gui) {
 
         readPreferences();
@@ -173,18 +179,45 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
 
         return vehiclePanel;
     }
-
+    
     private JPanel createVisualizationPanel() {
-
-        JPanel visualizationPanel = new JPanel();
-        visualizationPanel.setBorder(BorderFactory.createTitledBorder("visualization"));
-        visualizationPanel.setLayout(new BoxLayout(visualizationPanel, BoxLayout.Y_AXIS));
-
-        separateDirectionsCheckBox = new JCheckBox("draw directions separately");
-        separateDirectionsCheckBox.setSelected(GraphViewPreferences.getInstance().getSeparateDirections());
-        visualizationPanel.add(separateDirectionsCheckBox);
-
-        return visualizationPanel;
+    	
+    	JPanel visualizationPanel = new JPanel();
+    	visualizationPanel.setBorder(BorderFactory.createTitledBorder("visualization"));
+    	visualizationPanel.setLayout(new BoxLayout(visualizationPanel, BoxLayout.Y_AXIS));
+    	
+    	separateDirectionsCheckBox = new JCheckBox("draw directions separately");
+    	separateDirectionsCheckBox.setSelected(GraphViewPreferences.getInstance().getSeparateDirections());
+    	visualizationPanel.add(separateDirectionsCheckBox);
+    	
+    	{ // create color chooser panel
+    		
+    		JPanel colorPanel = new JPanel();
+    		colorPanel.setLayout(new GridLayout(2, 2));
+    		
+    		Color nodeColor = GraphViewPreferences.getInstance().getNodeColor();
+    		
+    		nodeColorButton = new JButton("node color");
+    		nodeColorButton.addActionListener(chooseNodeColorActionListener);
+    		colorPanel.add(nodeColorButton);
+    		nodeColorField = new JPanel();
+    		nodeColorField.setBackground(nodeColor);
+    		colorPanel.add(nodeColorField);
+    		
+    		Color segmentColor = GraphViewPreferences.getInstance().getSegmentColor();
+    		
+    		segmentColorButton = new JButton("arrow color");
+    		segmentColorButton.addActionListener(chooseSegmentColorActionListener);
+    		colorPanel.add(segmentColorButton);
+    		segmentColorField = new JPanel();
+    		segmentColorField.setBackground(segmentColor);
+    		colorPanel.add(segmentColorField);
+    		
+    		visualizationPanel.add(colorPanel);
+    		
+    	}
+    	
+    	return visualizationPanel;
     }
 
     public boolean ok() {
@@ -201,6 +234,9 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
 
         preferences.setSeparateDirections(separateDirectionsCheckBox.isSelected());
 
+        preferences.setNodeColor(nodeColorField.getBackground());
+        preferences.setSegmentColor(segmentColorField.getBackground());
+        
         preferences.distributeChanges();
 
         return false;
@@ -330,6 +366,32 @@ public class GraphViewPreferenceEditor implements PreferenceSetting {
                 updateVehiclePanel(null);
             }
 
+        }
+    };
+    
+    private final ActionListener chooseNodeColorActionListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        	
+        	Color selectedColor = JColorChooser.showDialog(
+        			preferencePanel, "Choose node color", nodeColorField.getBackground());
+        	
+        	if (selectedColor != null) {
+        		nodeColorField.setBackground(selectedColor);
+        	}
+        	
+        }
+    };
+    
+    private final ActionListener chooseSegmentColorActionListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        	
+        	Color selectedColor = JColorChooser.showDialog(
+        			preferencePanel, "Choose arrow color", segmentColorField.getBackground());
+        	
+        	if (selectedColor != null) {
+        		segmentColorField.setBackground(selectedColor);
+        	}
+        	
         }
     };
 

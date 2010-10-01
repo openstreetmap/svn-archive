@@ -35,6 +35,9 @@ import org.openstreetmap.josm.plugins.graphview.plugin.preferences.VehicleProper
  * Observers will be notified when preferences change,
  * changes will also be synchronized (two-way) with JOSM's preference storage.
  * This is a singleton class.
+ * 
+ * Note: Currently, manual updates in the "advanced preferences" will not have any effect
+ * because this class isn't registered as a preference listener.
  */
 public class GraphViewPreferences extends Observable {
 

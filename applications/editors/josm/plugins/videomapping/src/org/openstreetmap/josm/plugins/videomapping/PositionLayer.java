@@ -50,8 +50,6 @@ import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-import com.sun.jna.StringArray;
-
 //Basic rendering and GPS layer interaction
 public class PositionLayer extends Layer implements MouseListener,MouseMotionListener {
     private static Set<PlayerObserver> observers = new HashSet<PlayerObserver>(); //we have to implement our own Observer pattern
@@ -95,15 +93,17 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
     }
 
     @Override
-    public Component[] getMenuEntries() {
-        return new Component[]{
-                new JMenuItem(LayerListDialog.getInstance().createShowHideLayerAction(this)),
-                new JMenuItem(LayerListDialog.getInstance().createDeleteLayerAction(this)),
-                new JSeparator(),
+	public Action[] getMenuEntries() {
+        return new Action[]{
+                LayerListDialog.getInstance().createActivateLayerAction(this),
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                SeparatorLayerAction.INSTANCE,
                 //TODO here my stuff
-                new JSeparator(),
-                new JMenuItem(new LayerListPopup.InfoAction(this))};//TODO here infos about the linked videos
-    }
+                SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this)};//TODO here infos about the linked videos
+	}
+
       
 
 

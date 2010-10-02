@@ -31,6 +31,8 @@ public class SmedTabbedPane extends JPanel {
 
 	static private List<SmedPluggable> plugins = null;
 	static private JTabbedPane tabbedPane = null;
+	@SuppressWarnings("unused")
+	private int activeIndex = -1;
 	
     public SmedTabbedPane() {
         // super(new GridLayout(1, 1));
@@ -41,17 +43,10 @@ public class SmedTabbedPane extends JPanel {
             plugins = SmedPluginLoader.loadPlugins(new File(pluginDirName + "/splug"));
 
             if(plugins != null) {
-            	ImageIcon icon = null;
-            	if(tabbedPane == null) { 
-            		tabbedPane = new JTabbedPane();
-            		tabbedPane.addChangeListener(new ChangeListener() {
 
-						@Override
-						public void stateChanged(ChangeEvent event) {
-							System.out.println("hello world");
-						}
-            		});
-            	}
+            	if(tabbedPane == null) tabbedPane = new JTabbedPane();
+
+            	ImageIcon icon = null;
 
             	JComponent panel;
             	int i = 0;
@@ -67,6 +62,11 @@ public class SmedTabbedPane extends JPanel {
             			
             			tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
             			tabbedPane.setMnemonicAt(i, KeyEvent.VK_1 + i);
+            			if(i == 0) { 
+            				p.hasFocus();
+            				activeIndex = 0;
+            			}
+            			p.setIndex(i);
                     	
             			i++;
             		} else splugDir.setVisible(p.getFileName(),false);
@@ -79,6 +79,28 @@ public class SmedTabbedPane extends JPanel {
             	
             	//The following line enables to use scrolling tabs.
             	tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+            	
+            	// add ChangeListener
+            	tabbedPane.addChangeListener(new ChangeListener() {
+
+					@Override
+					public void stateChanged(ChangeEvent event) {
+						System.out.println("hello world");
+						System.out.println("activeIndex:\t" + activeIndex);
+						JTabbedPane pane = (JTabbedPane) event.getSource();
+						
+						for(SmedPluggable p : plugins) {
+							if(p.getIndex() == activeIndex) p.lostFocus();
+						}
+						
+						System.out.println(pane.getSelectedIndex());
+						activeIndex = pane.getSelectedIndex();
+						for(SmedPluggable p : plugins) {
+							if(p.getIndex() == activeIndex) p.hasFocus();
+						}
+					}
+            	});
+
         	}
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,12 +110,4 @@ public class SmedTabbedPane extends JPanel {
     
     public static List<SmedPluggable> getPlugins() { return plugins; }
     public static JTabbedPane getTabbedPane() { return tabbedPane; }
-
-    /*
-	@Override
-	public void stateChanged(ChangeEvent event) {
-		System.out.println("hello world");
-		
-	}
-	*/
 }

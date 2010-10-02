@@ -18,6 +18,7 @@ public class SmedEx implements SmedPluggable {
 
 	private boolean visible = true;
 	public SmedPluginManager manager = null;
+	private int index = -1;
 	
     private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="78,30"
     private JButton jButton = null;
@@ -104,4 +105,22 @@ public class SmedEx implements SmedPluggable {
 
 		return null;
 	}
+
+	@Override
+	public boolean hasFocus() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean lostFocus() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getIndex() { return index; }
+
+	@Override
+	public void setIndex(int index) { this.index = index; }
 }

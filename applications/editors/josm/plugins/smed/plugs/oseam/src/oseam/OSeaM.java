@@ -12,6 +12,7 @@ public class OSeaM implements SmedPluggable {
 
 	private OSeaMAction osm = null;
 	public SmedPluginManager manager = null;
+	private int index = -1;
 	
 	@Override
 	public JComponent getComponent() {
@@ -55,6 +56,26 @@ public class OSeaM implements SmedPluggable {
 
 		return new ImageIcon(getClass().getResource("/images/Smp.png"));
 	}
+
+	@Override
+	public boolean hasFocus() {
+		osm.hasFocus = true;
+		osm.setQueued();
+		System.out.println("OSeaM has Focus");
+		return true;
+	}
+
+	@Override
+	public boolean lostFocus() {
+		osm.setDequeued();
+		return true;
+	}
+
+	@Override
+	public int getIndex() { return index; }
+
+	@Override
+	public void setIndex(int index) { this.index = index; }
 
 
 }

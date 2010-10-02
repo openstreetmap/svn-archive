@@ -8,6 +8,10 @@ public interface SmedPluggable {
 	
     boolean start();
     boolean stop();
+    boolean hasFocus();
+    boolean lostFocus();
+    int getIndex();
+    void setIndex(int index);
     String getName();
     String getFileName();
     ImageIcon getIcon();

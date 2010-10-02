@@ -63,6 +63,7 @@ public class OSeaMAction {
 	private OsmPrimitive SelNode = null;
 	private String Os = ""; // @jve:decl-index=0: //$NON-NLS-1$
 	private String UserHome = ""; // @jve:decl-index=0: //$NON-NLS-1$
+	public boolean hasFocus = false;
 
 	// SelectionChangedListner der in die Eventqueue von josm eingehängt wird
 	private SelectionChangedListener SmpListener = new SelectionChangedListener() {
@@ -227,10 +228,20 @@ public class OSeaMAction {
 		// private Collection<? extends OsmPrimitive> sel;
 		// siehe org.openstreetmap.josm.plugins.osb -> OsbLayer.java
 		// Einhängen des Listeners in die Eventqueue von josm
-		DataSet.addSelectionListener(SmpListener);
+		if(hasFocus) DataSet.addSelectionListener(SmpListener);
 		
 	}
 	
+	public void setQueued() {
+		System.out.println("OSeaM is queued");
+		DataSet.addSelectionListener(SmpListener);
+	}
+
+	public void setDequeued() {
+		System.out.println("OSeaM is dequeued");
+		DataSet.removeSelectionListener(SmpListener);
+	}
+
 	private void PicRebuild() {
 
 		DataSet ds = Main.main.getCurrentDataSet();
@@ -1403,4 +1414,5 @@ public class OSeaMAction {
 		}
 		return sM01StatusBar;
 	}
+
 }

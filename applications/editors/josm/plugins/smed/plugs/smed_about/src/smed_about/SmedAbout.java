@@ -13,6 +13,7 @@ import java.awt.Rectangle;
 public class SmedAbout implements SmedPluggable{
 
 	private boolean visible = true;
+	private int index = -1;
 	
     private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="43,24"
     private JLabel jLabel = null;
@@ -88,4 +89,22 @@ public class SmedAbout implements SmedPluggable{
 
 		return null;
 	}
+
+	@Override
+	public boolean hasFocus() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean lostFocus() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getIndex() { return index; }
+
+	@Override
+	public void setIndex(int index) { this.index = index; }
 }

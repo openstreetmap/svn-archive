@@ -74,7 +74,7 @@ public class SmedTabAction extends JosmAction {
         		closeDialog();
         	}
         });
-        frame.setSize(new Dimension(420, 460));
+        frame.setSize(new Dimension(420, 550));
         // frame.pack();
         frame.setVisible(true);
     }

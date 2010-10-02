@@ -13,13 +13,11 @@ public class SmedPluginManagerImpl implements SmedPluginManager {
 
 	@Override
 	public void setString(String string) {
-		System.out.println("setString string:\t" + string);
 		this.string = string;
 	}
 
 	@Override
 	public String getString() {
-		System.out.println("getString string\t" + string);
 		return string;
 	}
 

@@ -160,7 +160,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
                             
             }
         };
-        Vbackward = new JosmAction(tr("Jump To"), null, tr("jumps to the entered gps time"),null, false) {          
+        Vbackward = new JosmAction(tr("Jump To"), "jumpto", tr("jumps to the entered gps time"),null, false) {          
             public void actionPerformed(ActionEvent e) {
                 String s =JOptionPane.showInputDialog(tr("please enter GPS timecode"),"10:07:57");
                 SimpleDateFormat format= new SimpleDateFormat("hh:mm:ss");
@@ -202,7 +202,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
                             
             }
         };
-        Vloop= new JosmAction(tr("Loop"), null, tr("loops n sec around current position"),
+        Vloop= new JosmAction(tr("Loop"), "loop", tr("loops n sec around current position"),
                 Shortcut.registerShortcut("videomapping:loop","",KeyEvent.VK_NUMPAD7, Shortcut.GROUP_DIRECT), false) {
             
             public void actionPerformed(ActionEvent e) {

@@ -31,7 +31,7 @@ public class SmedTabbedPane extends JPanel {
 
 	static private List<SmedPluggable> plugins = null;
 	static private JTabbedPane tabbedPane = null;
-	@SuppressWarnings("unused")
+	private SmedPluginManager manager = null;
 	private int activeIndex = -1;
 	
     public SmedTabbedPane() {
@@ -51,7 +51,7 @@ public class SmedTabbedPane extends JPanel {
             	JComponent panel;
             	int i = 0;
             	SmedFile splugDir = new SmedFile(pluginDirName + "/splug");
-            	SmedPluginManager manager = new SmedPluginManagerImpl();
+            	manager = new SmedPluginManagerImpl();
             
             	for(SmedPluggable p : plugins) {
             		p.setPluginManager(manager);
@@ -75,7 +75,7 @@ public class SmedTabbedPane extends JPanel {
             	//Add the tabbed pane to this panel.
             	add(tabbedPane);
 
-            	tabbedPane.setPreferredSize(new Dimension(400, 400));
+            	tabbedPane.setPreferredSize(new Dimension(400, 390));
             	
             	//The following line enables to use scrolling tabs.
             	tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -85,15 +85,12 @@ public class SmedTabbedPane extends JPanel {
 
 					@Override
 					public void stateChanged(ChangeEvent event) {
-						System.out.println("hello world");
-						System.out.println("activeIndex:\t" + activeIndex);
 						JTabbedPane pane = (JTabbedPane) event.getSource();
 						
 						for(SmedPluggable p : plugins) {
 							if(p.getIndex() == activeIndex) p.lostFocus();
 						}
 						
-						System.out.println(pane.getSelectedIndex());
 						activeIndex = pane.getSelectedIndex();
 						for(SmedPluggable p : plugins) {
 							if(p.getIndex() == activeIndex) p.hasFocus();

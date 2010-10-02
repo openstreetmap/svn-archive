@@ -115,8 +115,6 @@ public class BuoyIsol extends Buoy {
 
 		super.paintSign();
 
-		dlg.sM01StatusBar.setText(getErrMsg());
-
 		if (isValid()) {
 			dlg.tfM01Name.setEnabled(true);
 			dlg.tfM01Name.setText(getName());

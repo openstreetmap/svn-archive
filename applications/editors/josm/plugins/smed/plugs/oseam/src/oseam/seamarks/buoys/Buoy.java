@@ -12,9 +12,9 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
 
 import oseam.Messages;
+import oseam.OSeaM;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
-
 
 abstract public class Buoy extends SeaMark {
 
@@ -512,6 +512,13 @@ abstract public class Buoy extends SeaMark {
 
 	public void paintSign() {
 
+		if (getErrMsg() != null) { 
+			String str = getErrMsg();
+			
+			OSeaM.manager.showVisualMessage(str);
+			OSeaMAction.errMsg = str;
+		}
+
 		if (dlg.paintlock)
 			return;
 		else
@@ -796,10 +803,10 @@ abstract public class Buoy extends SeaMark {
 
 		String str = dlg.tfM01Name.getText();
 		if (!str.isEmpty())
-			Main.main.undoRedo.add(new ChangePropertyCommand(Node, "seamark:name",
-					str));
-		Main.main.undoRedo
-				.add(new ChangePropertyCommand(Node, "seamark:type", type));
+			Main.main.undoRedo.add(new ChangePropertyCommand(Node,
+					"seamark:name", str));
+		Main.main.undoRedo.add(new ChangePropertyCommand(Node, "seamark:type",
+				type));
 	}
 
 	protected void saveLightData() {
@@ -844,25 +851,28 @@ abstract public class Buoy extends SeaMark {
 								"seamark:light:" + i + ":colour", "red"));
 						if ((Bearing1[i] != null) && (Bearing2[i] != null)
 								&& (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-									"seamark:light:" + i, "red:" + Bearing1[i] + ":"
-											+ Bearing2[i] + ":" + Radius[i]));
+							Main.main.undoRedo.add(new ChangePropertyCommand(
+									Node, "seamark:light:" + i, "red:"
+											+ Bearing1[i] + ":" + Bearing2[i]
+											+ ":" + Radius[i]));
 					} else if (colour.equals("G")) {
 						Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 								"seamark:light:" + i + ":colour", "green"));
 						if ((Bearing1[i] != null) && (Bearing2[i] != null)
 								&& (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-									"seamark:light:" + i, "green:" + Bearing1[i] + ":"
-											+ Bearing2[i] + ":" + Radius[i]));
+							Main.main.undoRedo.add(new ChangePropertyCommand(
+									Node, "seamark:light:" + i, "green:"
+											+ Bearing1[i] + ":" + Bearing2[i]
+											+ ":" + Radius[i]));
 					} else if (colour.equals("W")) {
 						Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 								"seamark:light:" + i + ":colour", "white"));
 						if ((Bearing1[i] != null) && (Bearing2[i] != null)
 								&& (Radius[i] != null))
-							Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-									"seamark:light:" + i, "white:" + Bearing1[i] + ":"
-											+ Bearing2[i] + ":" + Radius[i]));
+							Main.main.undoRedo.add(new ChangePropertyCommand(
+									Node, "seamark:light:" + i, "white:"
+											+ Bearing1[i] + ":" + Bearing2[i]
+											+ ":" + Radius[i]));
 					}
 
 				if (LightPeriod[i] != null)
@@ -886,8 +896,10 @@ abstract public class Buoy extends SeaMark {
 							"seamark:light:" + i + ":range", Range[i]));
 
 				if (Bearing1[i] != null)
-					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-							"seamark:light:" + i + ":sector_start", Bearing1[i]));
+					Main.main.undoRedo
+							.add(new ChangePropertyCommand(Node,
+									"seamark:light:" + i + ":sector_start",
+									Bearing1[i]));
 
 				if (Bearing2[i] != null)
 					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
@@ -916,8 +928,10 @@ abstract public class Buoy extends SeaMark {
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,
 						"seamark:radar_transponder:category", "racon"));
 				if (!getRaconGroup().isEmpty())
-					Main.main.undoRedo.add(new ChangePropertyCommand(Node,
-							"seamark:radar_transponder:group", getRaconGroup()));
+					Main.main.undoRedo
+							.add(new ChangePropertyCommand(Node,
+									"seamark:radar_transponder:group",
+									getRaconGroup()));
 				break;
 			case RATYPE_RAMARK:
 				Main.main.undoRedo.add(new ChangePropertyCommand(Node,

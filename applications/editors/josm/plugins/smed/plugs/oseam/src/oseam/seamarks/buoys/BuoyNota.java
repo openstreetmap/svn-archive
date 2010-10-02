@@ -86,8 +86,6 @@ public class BuoyNota extends Buoy {
 			return;
 		super.paintSign();
 
-		dlg.sM01StatusBar.setText(getErrMsg());
-
 		if (isValid()) {
 			dlg.cM01Radar.setVisible(true);
 			dlg.cM01Racon.setVisible(true);

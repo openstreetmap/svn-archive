@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -30,7 +31,8 @@ public class SmedTabAction extends JosmAction {
 	private SmedMenuBar smedMenu = new SmedMenuBar();
 	private JFrame frame = null;
 	private boolean isOpen = false;
-	private JMenuItem osmItem;
+	private JMenuItem osmItem =null;
+	public static JTextField smedStatusBar = null;
 	
     public SmedTabAction() {
         super( "Seekarten Editor", "Smed","Seekarten Editor", Shortcut.registerShortcut(
@@ -58,6 +60,7 @@ public class SmedTabAction extends JosmAction {
     protected void createAndShowTabs() {
         //Create and set up the window.
         frame = new JFrame("TabbedPaneDemo");
+        smedStatusBar = new JTextField();
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setResizable(false);
         frame.setAlwaysOnTop(true);
@@ -65,6 +68,7 @@ public class SmedTabAction extends JosmAction {
         //Add content to the window.
         frame.setJMenuBar(smedMenu);
         frame.add(smedTabs, BorderLayout.CENTER);
+        frame.add(smedStatusBar,BorderLayout.PAGE_END);
 
         //Display the window.
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -74,7 +78,7 @@ public class SmedTabAction extends JosmAction {
         		closeDialog();
         	}
         });
-        frame.setSize(new Dimension(420, 550));
+        frame.setSize(new Dimension(420, 470));
         // frame.pack();
         frame.setVisible(true);
     }

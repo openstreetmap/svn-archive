@@ -36,6 +36,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import oseam.Messages;
+import oseam.OSeaM;
 import oseam.seamarks.SeaMark;
 import oseam.seamarks.buoys.Buoy;
 import oseam.seamarks.buoys.BuoyLat;
@@ -64,6 +65,7 @@ public class OSeaMAction {
 	private String Os = ""; // @jve:decl-index=0: //$NON-NLS-1$
 	private String UserHome = ""; // @jve:decl-index=0: //$NON-NLS-1$
 	public boolean hasFocus = false;
+	public static String errMsg = "";
 
 	// SelectionChangedListner der in die Eventqueue von josm eingehängt wird
 	private SelectionChangedListener SmpListener = new SelectionChangedListener() {
@@ -158,7 +160,6 @@ public class OSeaMAction {
 	public JButton bM01Save = null;
 	public JButton bM01Close = null;
 	public JCheckBox cM01IconVisible = null;
-	public JTextField sM01StatusBar = null;
 
 	public boolean paintlock = false;
 
@@ -233,12 +234,14 @@ public class OSeaMAction {
 	}
 	
 	public void setQueued() {
-		System.out.println("OSeaM is queued");
+		hasFocus = true;
+		OSeaM.manager.showVisualMessage(errMsg);
 		DataSet.addSelectionListener(SmpListener);
 	}
 
 	public void setDequeued() {
-		System.out.println("OSeaM is dequeued");
+		hasFocus = false;
+		
 		DataSet.removeSelectionListener(SmpListener);
 	}
 
@@ -715,7 +718,6 @@ public class OSeaMAction {
 			pM01SeaMap.add(lM01FogMark, null);
 			pM01SeaMap.add(lM01RadarMark, null);
 			pM01SeaMap.add(getBM01Save(), null);
-			pM01SeaMap.add(getSM01StatusBar(), null);
 			pM01SeaMap.add(getBM01Close(), null);
 			pM01SeaMap.add(getCM01IconVisible(), null);
 		}
@@ -1405,14 +1407,4 @@ public class OSeaMAction {
 		}
 		return cM01IconVisible;
 	}
-
-	private JTextField getSM01StatusBar() {
-		if (sM01StatusBar == null) {
-			sM01StatusBar = new JTextField();
-			sM01StatusBar.setBounds(new Rectangle(7, 355, 385, 20));
-			sM01StatusBar.setBackground(SystemColor.activeCaptionBorder);
-		}
-		return sM01StatusBar;
-	}
-
 }

@@ -15,9 +15,6 @@ public class BuoyUkn extends Buoy {
 			return;
 		super.paintSign();
 
-		if (getErrMsg() != null)
-			dlg.sM01StatusBar.setText(getErrMsg());
-
 		setErrMsg(null);
 	}
 

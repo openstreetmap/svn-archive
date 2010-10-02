@@ -7,9 +7,9 @@ import javax.swing.JOptionPane;
 import smed.plug.ifc.SmedPluggable;
 import smed.plug.ifc.SmedPluginManager;
 import javax.swing.JPanel;
-import java.awt.GridBagLayout;
 import java.awt.Dimension;
 import javax.swing.JButton;
+
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +19,7 @@ public class SmedEx implements SmedPluggable {
 	private boolean visible = true;
 	public SmedPluginManager manager = null;
 	private int index = -1;
+	private String msg = "press button 'Hello World!' and see, how it works";
 	
     private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="78,30"
     private JButton jButton = null;
@@ -43,7 +44,7 @@ public class SmedEx implements SmedPluggable {
 
     @Override
     public JComponent getComponent() {
-
+    	manager.showVisualMessage(msg);
         return getJPanel();
     }
 
@@ -108,8 +109,8 @@ public class SmedEx implements SmedPluggable {
 
 	@Override
 	public boolean hasFocus() {
-		// TODO Auto-generated method stub
-		return false;
+		manager.showVisualMessage(msg);
+		return true;
 	}
 
 	@Override

@@ -12,8 +12,11 @@ import java.awt.Rectangle;
 
 public class SmedAbout implements SmedPluggable{
 
+	public SmedPluginManager manager = null;
+	
 	private boolean visible = true;
 	private int index = -1;
+	private String msg = "";
 	
     private JPanel jPanel = null;  //  @jve:decl-index=0:visual-constraint="43,24"
     private JLabel jLabel = null;
@@ -38,19 +41,17 @@ public class SmedAbout implements SmedPluggable{
 
     @Override
     public void setPluginManager(SmedPluginManager manager) {
-        // TODO Auto-generated method stub
-
+    	this.manager = manager;
     }
 
     @Override
     public String getInfo() {
-
         return "something about the programm";
     }
 
     @Override
     public JComponent getComponent() {
-
+    	manager.showVisualMessage(msg);
         return getJPanel();
     }
 
@@ -86,14 +87,13 @@ public class SmedAbout implements SmedPluggable{
 
 	@Override
 	public ImageIcon getIcon() {
-
 		return null;
 	}
 
 	@Override
 	public boolean hasFocus() {
-		// TODO Auto-generated method stub
-		return false;
+		manager.showVisualMessage(msg);
+		return true;
 	}
 
 	@Override

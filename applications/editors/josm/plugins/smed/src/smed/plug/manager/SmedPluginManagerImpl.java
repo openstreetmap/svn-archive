@@ -1,14 +1,14 @@
 package smed.plug.manager;
 
 import smed.plug.ifc.SmedPluginManager;
+import smed.tabs.SmedTabAction;
 
 public class SmedPluginManagerImpl implements SmedPluginManager {
-	private static String string = null;
+	private String string = null;
 	
 	@Override
 	public void showVisualMessage(String message) {
-		// TODO Auto-generated method stub
-
+		if(SmedTabAction.smedStatusBar != null) SmedTabAction.smedStatusBar.setText(message);
 	}
 
 	@Override

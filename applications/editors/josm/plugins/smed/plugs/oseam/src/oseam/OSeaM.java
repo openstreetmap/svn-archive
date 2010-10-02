@@ -11,7 +11,7 @@ import smed.plug.ifc.SmedPluginManager;
 public class OSeaM implements SmedPluggable {
 
 	private OSeaMAction osm = null;
-	public SmedPluginManager manager = null;
+	public static SmedPluginManager manager = null;
 	private int index = -1;
 	
 	@Override
@@ -59,15 +59,15 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public boolean hasFocus() {
-		osm.hasFocus = true;
 		osm.setQueued();
-		System.out.println("OSeaM has Focus");
+
 		return true;
 	}
 
 	@Override
 	public boolean lostFocus() {
 		osm.setDequeued();
+		
 		return true;
 	}
 

@@ -35,9 +35,9 @@ public class SmedTabAction extends JosmAction {
 	public static JTextField smedStatusBar = null;
 	
     public SmedTabAction() {
-        super( "Seekarten Editor", "Smed","Seekarten Editor", Shortcut.registerShortcut(
+        super( tr("Seamap Editor"), "Smed",tr("Seanap Editor"), Shortcut.registerShortcut(
                                 "tools:Semmaps",
-                                tr("Tool: {0}", "Seekarten Editor"), KeyEvent.VK_K, //$NON-NLS-1$ //$NON-NLS-2$
+                                tr("Tool: {0}", tr("Seamap Editor")), KeyEvent.VK_K, //$NON-NLS-1$ //$NON-NLS-2$
                                 Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
     }
 

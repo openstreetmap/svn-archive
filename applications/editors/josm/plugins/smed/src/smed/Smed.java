@@ -152,11 +152,4 @@ public class Smed extends Plugin{
         }
     }
 
-    /*
-    public void setPlugins(List<SmedPluggable> plugins)  {
-    	this.plugins = plugins;
-    	
-    }
-    */
-
 }

@@ -32,7 +32,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="New release" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3329" />
+	<property name="plugin.main.version" value="3514" />
 
 
 	<!--
@@ -119,7 +119,10 @@
 				<attribute name="Plugin-Icon" value="images/Smed.png"/>
 				<attribute name="Plugin-Link" value="http://openseamap.org/"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+				<attribute name="Plugin-Version" value="23455"/>
+				<!--
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+				 -->
 			</manifest>
 		</jar>
 		

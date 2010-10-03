@@ -164,6 +164,8 @@ public class SmedFile extends File{
 	 * (because under windows, they are used)
 	 */
 	private static void copyMFs(File[] plugInis) {
+		if(plugJars == null) return;
+		
 		for(int i = 0; i < plugJars.length; i++) {
 			String source = plugJars[i].getName();
 			String dest;

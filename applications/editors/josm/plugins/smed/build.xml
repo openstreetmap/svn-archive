@@ -119,7 +119,7 @@
 				<attribute name="Plugin-Icon" value="images/Smed.png"/>
 				<attribute name="Plugin-Link" value="http://openseamap.org/"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-				<attribute name="Plugin-Version" value="23455"/>
+				<attribute name="Plugin-Version" value="23456"/>
 				<!--
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
 				 -->

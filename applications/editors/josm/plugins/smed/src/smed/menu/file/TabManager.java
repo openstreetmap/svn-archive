@@ -1,5 +1,6 @@
 package smed.menu.file;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -185,7 +186,7 @@ public class TabManager extends JDialog implements ActionListener {
 			tabButtonCancel = new JButton();
 			tabButtonCancel.setBounds(new Rectangle(254, 44, 130, 30));
 			tabButtonCancel.setFont(new Font("Dialog", Font.BOLD, 12));
-			tabButtonCancel.setText("Cancel");
+			tabButtonCancel.setText(tr("Cancel"));
 			tabButtonCancel.addActionListener(this);
 			tabButtonCancel.setActionCommand("cancel");
 		}
@@ -202,7 +203,7 @@ public class TabManager extends JDialog implements ActionListener {
 			tabButtonUndo = new JButton();
 			tabButtonUndo.setBounds(new Rectangle(254, 84, 130, 30));
 			tabButtonUndo.setFont(new Font("Dialog", Font.BOLD, 12));
-			tabButtonUndo.setText("Undo");
+			tabButtonUndo.setText(tr("Undo"));
 			tabButtonUndo.addActionListener(this);
 			tabButtonUndo.setActionCommand("undo");
 		}
@@ -219,7 +220,7 @@ public class TabManager extends JDialog implements ActionListener {
 			tabButtonLoad = new JButton();
 			tabButtonLoad.setBounds(new Rectangle(186, 328, 104, 30));
 			tabButtonLoad.setFont(new Font("Dialog", Font.PLAIN, 12));
-			tabButtonLoad.setText("Load");
+			tabButtonLoad.setText(tr("Load"));
 			tabButtonLoad.addActionListener(this);
 			tabButtonLoad.setActionCommand("load");
 		}
@@ -236,7 +237,7 @@ public class TabManager extends JDialog implements ActionListener {
 			tabButtonSave = new JButton();
 			tabButtonSave.setBounds(new Rectangle(293, 328, 104, 30));
 			tabButtonSave.setFont(new Font("Dialog", Font.PLAIN, 12));
-			tabButtonSave.setText("Save");
+			tabButtonSave.setText(tr("Save"));
 			tabButtonSave.addActionListener(this);
 			tabButtonSave.setActionCommand("save");
 		}
@@ -253,7 +254,7 @@ public class TabManager extends JDialog implements ActionListener {
 			tabButtonDelete = new JButton();
 			tabButtonDelete.setBounds(new Rectangle(186, 362, 104, 30));
 			tabButtonDelete.setFont(new Font("Dialog", Font.PLAIN, 12));
-			tabButtonDelete.setText("Delete");
+			tabButtonDelete.setText(tr("Delete"));
 			tabButtonDelete.addActionListener(this);
 			tabButtonDelete.setActionCommand("delete");
 		}
@@ -270,7 +271,7 @@ public class TabManager extends JDialog implements ActionListener {
 			tabButtonVisible = new JButton();
 			tabButtonVisible.setBounds(new Rectangle(293, 362, 104, 30));
 			tabButtonVisible.setFont(new Font("Dialog", Font.PLAIN, 12));
-			tabButtonVisible.setText("invisible");
+			tabButtonVisible.setText(tr("invisible"));
 			tabButtonVisible.addActionListener(this);
 			tabButtonVisible.setActionCommand("invisible");
 		}
@@ -287,7 +288,7 @@ public class TabManager extends JDialog implements ActionListener {
 			tabButtonAll = new JButton();
 			tabButtonAll.setBounds(new Rectangle(92, 300, 72, 20));
 			tabButtonAll.setFont(new Font("Dialog", Font.PLAIN, 12));
-			tabButtonAll.setText("all");
+			tabButtonAll.setText(tr("all"));
 			tabButtonAll.addActionListener(this);
 			tabButtonAll.setActionCommand("all");
 		}
@@ -304,7 +305,7 @@ public class TabManager extends JDialog implements ActionListener {
 			tabButtonNone = new JButton();
 			tabButtonNone.setBounds(new Rectangle(166, 300, 72, 20));
 			tabButtonNone.setFont(new Font("Dialog", Font.PLAIN, 12));
-			tabButtonNone.setText("none");
+			tabButtonNone.setText(tr("none"));
 			tabButtonNone.addActionListener(this);
 			tabButtonNone.setActionCommand("none");
 		}

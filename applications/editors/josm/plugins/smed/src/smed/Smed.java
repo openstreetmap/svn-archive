@@ -7,9 +7,8 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -22,10 +21,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 import smed.io.SmedFile;
-import smed.plug.SmedPluginApp;
-import smed.plug.ifc.SmedPluggable;
 import smed.plug.util.JARFileFilter;
-import smed.plug.util.SmedPluginLoader;
 import smed.tabs.SmedTabAction;
 
 public class Smed extends Plugin{

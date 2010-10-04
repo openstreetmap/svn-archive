@@ -1,5 +1,7 @@
 package oseam;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
@@ -18,19 +20,19 @@ public class OSeaM implements SmedPluggable {
 	public JComponent getComponent() {
 		osm = new OSeaMAction();
 		osm.init();
-		manager.setString("it works realy fine");
+		manager.setString(tr("it works realy fine"));
 		return osm.getPM01SeaMap();
 	}
 
 	@Override
-	public String getInfo() {return "mapping seamarks"; }
+	public String getInfo() {return tr("mapping seamarks"); }
 
 	@Override
-	public String getName() {return "Seamarks"; }
+	public String getName() {return tr("Seamarks"); }
 
 	@Override
 	public void setPluginManager(SmedPluginManager manager) {
-		this.manager = manager;
+		OSeaM.manager = manager;
 	}
 
 	@Override

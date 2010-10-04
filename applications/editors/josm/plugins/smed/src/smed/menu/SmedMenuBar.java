@@ -1,17 +1,15 @@
 package smed.menu;
 
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
-import javax.swing.DefaultListModel;
+import java.awt.event.KeyEvent;
+import java.util.ResourceBundle;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import smed.menu.file.TabManager;
-import smed.plug.ifc.SmedPluggable;
-import smed.tabs.SmedTabbedPane;
 
 public class SmedMenuBar extends JMenuBar {
 
@@ -23,13 +21,16 @@ public class SmedMenuBar extends JMenuBar {
      JMenuBar menuBar;
      JMenu menu, submenu;
      JMenuItem menuItem;
-     private List<SmedPluggable> plugins = null;
      
      public SmedMenuBar() {
+    	ResourceBundle keyEvents = ResourceBundle.getBundle("smed.keys.Events");
+    	
         menuBar = new JMenuBar();
 
-        menu = new JMenu("File");
-        menu.setMnemonic(KeyEvent.VK_F);
+        menu = new JMenu(tr("File"));
+        // menu.setMnemonic(KeyEvent.VK_F);
+        menu.setMnemonic((Integer) keyEvents.getObject("SmedMenuBar.001"));
+        
         menu.getAccessibleContext().setAccessibleDescription(
                 "The only menu in this program that has menu items");
 

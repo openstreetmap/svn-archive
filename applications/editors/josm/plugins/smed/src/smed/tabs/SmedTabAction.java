@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import org.openstreetmap.josm.actions.JosmAction;
@@ -33,11 +32,12 @@ public class SmedTabAction extends JosmAction {
 	private boolean isOpen = false;
 	private JMenuItem osmItem =null;
 	public static JTextField smedStatusBar = null;
+	private static String editor =tr("SeaMap Editor");
 	
     public SmedTabAction() {
-        super( tr("Seamap Editor"), "Smed",tr("Seanap Editor"), Shortcut.registerShortcut(
+        super( editor, "Smed",editor, Shortcut.registerShortcut(
                                 "tools:Semmaps",
-                                tr("Tool: {0}", tr("Seamap Editor")), KeyEvent.VK_K, //$NON-NLS-1$ //$NON-NLS-2$
+                                tr("Tool: {0}", editor), KeyEvent.VK_K, //$NON-NLS-1$ //$NON-NLS-2$
                                 Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
     }
 
@@ -59,7 +59,7 @@ public class SmedTabAction extends JosmAction {
 
     protected void createAndShowTabs() {
         //Create and set up the window.
-        frame = new JFrame("TabbedPaneDemo");
+        frame = new JFrame(editor);
         smedStatusBar = new JTextField();
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setResizable(false);

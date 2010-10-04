@@ -78,7 +78,7 @@
     ** dist - creates the plugin jar
     **********************************************************
     -->
-	<target name="dist" depends="compile">
+	<target name="dist" depends="compile, revision">
 		<echo message="creating ${ant.project.name}.jar ... "/>
 
         <copy todir="${plugin.build.dir}/images">
@@ -129,6 +129,26 @@
 		<!-- install interface -->
 		<copy file="${plugin.jar}" todir="${smed_core.dist.dir}"/>
 	</target>
+	
+	<!--
+    **********************************************************
+    ** revision - extracts the current revision number for the
+    **    file build.number and stores it in the XML property
+    **    version.*
+    **********************************************************
+    -->
+	<target name="revision">
+
+		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="info"/>
+			<arg value="--xml"/>
+			<arg value="."/>
+		</exec>
+		<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+		<delete file="REVISION"/>
+	</target>
+
 	
 	<!--
     **********************************************************

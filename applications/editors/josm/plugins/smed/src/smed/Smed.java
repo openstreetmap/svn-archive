@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -21,8 +22,10 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 import smed.io.SmedFile;
+import smed.plug.ifc.SmedPluggable;
 import smed.plug.util.JARFileFilter;
 import smed.tabs.SmedTabAction;
+import smed.tabs.SmedTabbedPane;
 
 public class Smed extends Plugin{
 
@@ -144,6 +147,11 @@ public class Smed extends Plugin{
             item.setEnabled(true);
         } else {
             item.setEnabled(false);
+            List<SmedPluggable> plugins = SmedTabbedPane.getPlugins();
+
+            if(plugins != null) {
+    			for(SmedPluggable p : plugins) p.stop();
+            }
             smedTab.closeDialog();
         }
     }

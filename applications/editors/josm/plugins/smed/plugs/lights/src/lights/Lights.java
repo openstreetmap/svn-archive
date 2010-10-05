@@ -39,7 +39,10 @@ public class Lights implements SmedPluggable {
 
 	@Override
 	public boolean stop() {
-		// TODO Auto-generated method stub
+		if(sectors != null) {
+			sectors.setVisible(false);
+			sectors.dispose();
+		}
 		return false;
 	}
 
@@ -77,13 +80,15 @@ public class Lights implements SmedPluggable {
 	@Override
 	public boolean hasFocus() {
 		manager.showVisualMessage(msg);
+		if(rbFiredN != null)
+			if(rbFiredN.isSelected()) sectors.setVisible(true);
 		return true;
 	}
 
 	@Override
 	public boolean lostFocus() {
-		// TODO Auto-generated method stub
-		return false;
+		if(sectors != null) sectors.setVisible(false);
+		return true;
 	}
 
 	@Override

@@ -163,7 +163,8 @@ public class SimplifyAreaAction extends JosmAction {
      * @param w
      *            the way to simplify
      */
-    private SequenceCommand simplifyWay(final Way w) {
+    @SuppressWarnings("null")
+	private SequenceCommand simplifyWay(final Way w) {
         final double angleThreshold = Double.parseDouble(Main.pref.get("simplify-area.angle", "10.0"));
         final double distanceTreshold = Double.parseDouble(Main.pref.get("simplify-area.distance", "0.2"));
         final double areaTreshold = Double.parseDouble(Main.pref.get("simplify-area.area", "5.0"));
@@ -201,12 +202,12 @@ public class SimplifyAreaAction extends JosmAction {
                 final LatLon coord1 = n1.getCoor();
                 final LatLon coord2 = n2.getCoor();
 
-                if (isRequiredNode(w, n1) || isRequiredNode(w, n2) || computeDistance(coord1, coord2) > distanceTreshold) {
+                if (isRequiredNode(w, n1) || isRequiredNode(w, n2) || coord1.greatCircleDistance(coord2) > distanceTreshold) {
                     if (!closing) {
                         newNodes.add(n1);
                     }
                 } else {
-                    moveCommandList.add(new MoveCommand(n2, new LatLon((coord1.lat() + coord2.lat()) / 2.0, (coord1.lon() + coord2.lon()) / 2.0)));
+                    moveCommandList.add(new MoveCommand(n2, coord1.getCenter(coord2)));
                     if (closing) {
                         newNodes.remove(0);
                     }
@@ -227,11 +228,15 @@ public class SimplifyAreaAction extends JosmAction {
             final LatLon coord3 = n.getCoor();
 
             if (coord1 != null) {
+//            	System.out.print("AREA: " + computeArea(coord1, coord2, coord3) + "; ANGLE: " + computeConvectAngle(coord1, coord2, coord3));
                 if (isRequiredNode(w, prevNode) ||
-                        Math.abs(computeBearing(coord2, coord3) - computeBearing(coord1, coord2)) > angleThreshold ||
+                		!closed && i == len - 1 || // don't remove last node of the not closed way
+                		computeConvectAngle(coord1, coord2, coord3) > angleThreshold ||
                         computeArea(coord1, coord2, coord3) > areaTreshold) {
                     newNodes2.add(prevNode);
+//                	System.out.println(" ... KEEP");
                 } else {
+//                	System.out.println(" ... REMOVE");
                     coord2 = coord1; // at the end of the iteration preserve coord1
                 }
             } else if (!closed && prevNode != null) {
@@ -266,39 +271,17 @@ public class SimplifyAreaAction extends JosmAction {
     }
 
 
-    private double computeBearing(final LatLon coord1, final LatLon coord2) {
-        final double lon1 = Math.toRadians(coord1.getX());
-        final double lat1 = Math.toRadians(coord1.getY());
-
-        final double lon2 = Math.toRadians(coord2.getX());
-        final double lat2 = Math.toRadians(coord2.getY());
-
-        final double dLon = lon2 - lon1;
-        final double y = Math.sin(dLon) * Math.cos(lat2);
-        final double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-        return Math.toDegrees(Math.atan2(y, x));
+    public double computeConvectAngle(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
+    	final double angle =  Math.abs(coord2.heading(coord3) - coord1.heading(coord2));
+    	return Math.toDegrees(angle < Math.PI ? angle : 2 * Math.PI - angle);
     }
 
-
-    private double computeDistance(final LatLon coord1, final LatLon coord2) {
-        final double lon1 = Math.toRadians(coord1.getX());
-        final double lon2 = Math.toRadians(coord2.getX());
-        final double lat1 = Math.toRadians(coord1.getY());
-        final double lat2 = Math.toRadians(coord2.getY());
-
-        final double R = 6378137d; // m
-        final double dLon = lon2 - lon1;
-        final double dLat = lat2 - lat1;
-        final double a = Math.sin(dLat / 2d) * Math.sin(dLat / 2d) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2d) * Math.sin(dLon / 2d);
-        final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    }
 
 
     private double computeArea(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
-        final double a = computeDistance(coord1, coord2);
-        final double b = computeDistance(coord2, coord3);
-        final double c = computeDistance(coord3, coord1);
+        final double a = coord1.greatCircleDistance(coord2);
+        final double b = coord2.greatCircleDistance(coord3);
+        final double c = coord3.greatCircleDistance(coord1);
 
         final double p = (a + b + c) / 2.0;
 

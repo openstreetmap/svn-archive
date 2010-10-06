@@ -120,15 +120,15 @@ public class SmedAbout implements SmedPluggable {
             aboutDescription.setText("Description: ");
 
             aboutSmed = new JLabel();
-            aboutSmed.setBounds(new Rectangle(100, 80, 265, 30));
+            aboutSmed.setBounds(new Rectangle(100, 70, 265, 30));
             aboutSmed.setText("SeaMap Editor to map marks & lights");
 
             aboutAvailable = new JLabel();
-            aboutAvailable.setBounds(new Rectangle(30, 140, 141, 27));
+            aboutAvailable.setBounds(new Rectangle(30, 110, 141, 27));
             aboutAvailable.setText("available plugins:");
 
         	aboutPlugins = new JLabel();
-            aboutPlugins.setBounds(new Rectangle(58, 160, 303, 60));
+            aboutPlugins.setBounds(new Rectangle(58, 130, 303, 60));
             aboutPlugins.setText("<HTML><BODY>SeaMark Editor" +
             		"<BR>SeaLight Editor" +
             		"<BR>Hello - an example plugin" +

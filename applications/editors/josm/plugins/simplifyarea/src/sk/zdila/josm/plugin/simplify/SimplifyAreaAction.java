@@ -234,7 +234,7 @@ public class SimplifyAreaAction extends JosmAction {
                 		!closed && i == len - 1 || // don't remove last node of the not closed way
                 		computeConvectAngle(coord1, coord2, coord3) > angleThreshold ||
                         computeArea(coord1, coord2, coord3) > areaThreshold ||
-                        crossTrackError(coord1, coord2, coord3) > distanceThreshold) {
+                        Math.abs(crossTrackError(coord1, coord2, coord3)) > distanceThreshold) {
                     newNodes2.add(prevNode);
                 	System.out.println(" ... KEEP");
                 } else {

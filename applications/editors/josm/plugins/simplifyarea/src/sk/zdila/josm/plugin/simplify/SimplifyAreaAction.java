@@ -166,7 +166,6 @@ public class SimplifyAreaAction extends JosmAction {
      * @param w
      *            the way to simplify
      */
-    @SuppressWarnings("null")
 	private SequenceCommand simplifyWay(final Way w) {
         final double angleThreshold = Main.pref.getDouble("simplify-area.angle", 10);
         final double mergeThreshold = Main.pref.getDouble("simplify-area.merge", 0.2);
@@ -190,31 +189,29 @@ public class SimplifyAreaAction extends JosmAction {
             nodes.remove(size - 1); // remove end node ( = start node)
         }
 
-        {
-            // remove near nodes
-            for (int i = 0; i < size; i++) {
-                final boolean closing = closed && i == size - 1;
-                final Node n1 = closing ? nodes.get(0) : nodes.get(i);
+        // remove near nodes
+        for (int i = 0; i < size; i++) {
+            final boolean closing = closed && i == size - 1;
+            final Node n1 = closing ? nodes.get(0) : nodes.get(i);
 
-                if (newNodes.isEmpty()) {
+            if (newNodes.isEmpty()) {
+                newNodes.add(n1);
+                continue;
+            }
+
+            final Node n2 = newNodes.get(newNodes.size() - 1);
+
+            final LatLon coord1 = n1.getCoor();
+            final LatLon coord2 = n2.getCoor();
+
+            if (isRequiredNode(w, n1) || isRequiredNode(w, n2) || coord1.greatCircleDistance(coord2) > mergeThreshold) {
+                if (!closing) {
                     newNodes.add(n1);
-                    continue;
                 }
-
-                final Node n2 = newNodes.get(newNodes.size() - 1);
-
-                final LatLon coord1 = n1.getCoor();
-                final LatLon coord2 = n2.getCoor();
-
-                if (isRequiredNode(w, n1) || isRequiredNode(w, n2) || coord1.greatCircleDistance(coord2) > mergeThreshold) {
-                    if (!closing) {
-                        newNodes.add(n1);
-                    }
-                } else {
-                    moveCommandList.add(new MoveCommand(n2, coord1.getCenter(coord2)));
-                    if (closing) {
-                        newNodes.remove(0);
-                    }
+            } else {
+                moveCommandList.add(new MoveCommand(n2, coord1.getCenter(coord2)));
+                if (closing) {
+                    newNodes.remove(0);
                 }
             }
         }
@@ -232,16 +229,16 @@ public class SimplifyAreaAction extends JosmAction {
             final LatLon coord3 = n.getCoor();
 
             if (coord1 != null) {
-//            	System.out.print("AREA: " + computeArea(coord1, coord2, coord3) + "; ANGLE: " + computeConvectAngle(coord1, coord2, coord3) + "; XTE: "+crossTrackError(coord1, coord2, coord3));
+            	System.out.print("AREA: " + computeArea(coord1, coord2, coord3) + "; ANGLE: " + computeConvectAngle(coord1, coord2, coord3) + "; XTE: " + crossTrackError(coord1, coord2, coord3));
                 if (isRequiredNode(w, prevNode) ||
                 		!closed && i == len - 1 || // don't remove last node of the not closed way
                 		computeConvectAngle(coord1, coord2, coord3) > angleThreshold ||
                         computeArea(coord1, coord2, coord3) > areaThreshold ||
                         crossTrackError(coord1, coord2, coord3) > distanceThreshold) {
                     newNodes2.add(prevNode);
-//                	System.out.println(" ... KEEP");
+                	System.out.println(" ... KEEP");
                 } else {
-//                	System.out.println(" ... REMOVE");
+                	System.out.println(" ... REMOVE");
                     coord2 = coord1; // at the end of the iteration preserve coord1
                 }
             } else if (!closed && prevNode != null) {
@@ -277,13 +274,12 @@ public class SimplifyAreaAction extends JosmAction {
 
 
     public static double computeConvectAngle(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
-    	final double angle =  heading(coord2, coord3) - heading(coord1, coord2);
-    	return Math.toDegrees(Math.abs(angle_mPI_to_PI(angle)));
+    	final double angle =  Math.abs(heading(coord2, coord3) - heading(coord1, coord2));
+    	return Math.toDegrees(angle < Math.PI ? angle : 2 * Math.PI - angle);
     }
 
 
-
-    private double computeArea(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
+    public static double computeArea(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
         final double a = coord1.greatCircleDistance(coord2);
         final double b = coord2.greatCircleDistance(coord3);
         final double c = coord3.greatCircleDistance(coord1);
@@ -292,17 +288,19 @@ public class SimplifyAreaAction extends JosmAction {
 
         return Math.sqrt(p * (p - a) * (p - b) * (p - c));
     }
-    
+
+
     public static double R = 6378135;
-    
-    public static double crossTrackError(LatLon l1, LatLon l2, LatLon l3) {
-        return R*Math.asin(Math.sin(l1.greatCircleDistance(l2) / R) * Math.sin(heading(l1, l2) - heading(l1, l3)));
+
+    public static double crossTrackError(final LatLon l1, final LatLon l2, final LatLon l3) {
+        return R * Math.asin(sin(l1.greatCircleDistance(l2) / R) * sin(heading(l1, l2) - heading(l1, l3)));
     }
-    
-    public static double heading(LatLon a, LatLon b) {
+
+
+    public static double heading(final LatLon a, final LatLon b) {
         double hd = Math.atan2(sin(toRadians(a.lon() - b.lon())) * cos(toRadians(b.lat())),
-                            cos(toRadians(a.lat())) * sin(toRadians(b.lat())) -
-                              sin(toRadians(a.lat())) * cos(toRadians(b.lat())) * cos(toRadians(a.lon() - b.lon())));
+        		cos(toRadians(a.lat())) * sin(toRadians(b.lat())) -
+        		sin(toRadians(a.lat())) * cos(toRadians(b.lat())) * cos(toRadians(a.lon() - b.lon())));
         hd %= 2 * Math.PI;
         if (hd < 0) {
             hd += 2 * Math.PI;
@@ -310,16 +308,6 @@ public class SimplifyAreaAction extends JosmAction {
         return hd;
     }
 
-    public static double angle_mPI_to_PI(double a) {
-        a = a % (2 * Math.PI);
-        if (a > Math.PI) {
-            a -= 2 * Math.PI;
-        }
-        if (a <= - Math.PI) {
-            a += 2 * Math.PI;
-        }
-        return a;
-    }
 
     @Override
     protected void updateEnabledState() {

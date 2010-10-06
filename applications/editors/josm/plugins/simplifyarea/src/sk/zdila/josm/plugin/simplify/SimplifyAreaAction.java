@@ -1,6 +1,9 @@
 // License: GPL. Copyright 2007 by Immanuel Scholz and others
 package sk.zdila.josm.plugin.simplify;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
@@ -165,9 +168,10 @@ public class SimplifyAreaAction extends JosmAction {
      */
     @SuppressWarnings("null")
 	private SequenceCommand simplifyWay(final Way w) {
-        final double angleThreshold = Double.parseDouble(Main.pref.get("simplify-area.angle", "10.0"));
-        final double distanceTreshold = Double.parseDouble(Main.pref.get("simplify-area.distance", "0.2"));
-        final double areaTreshold = Double.parseDouble(Main.pref.get("simplify-area.area", "5.0"));
+        final double angleThreshold = Main.pref.getDouble("simplify-area.angle", 10);
+        final double mergeThreshold = Main.pref.getDouble("simplify-area.merge", 0.2);
+        final double areaThreshold = Main.pref.getDouble("simplify-area.area", 5.0);
+        final double distanceThreshold = Main.pref.getDouble("simplify-area.dist", 3);
 
         final List<Node> nodes = w.getNodes();
         final int size = nodes.size();
@@ -202,7 +206,7 @@ public class SimplifyAreaAction extends JosmAction {
                 final LatLon coord1 = n1.getCoor();
                 final LatLon coord2 = n2.getCoor();
 
-                if (isRequiredNode(w, n1) || isRequiredNode(w, n2) || coord1.greatCircleDistance(coord2) > distanceTreshold) {
+                if (isRequiredNode(w, n1) || isRequiredNode(w, n2) || coord1.greatCircleDistance(coord2) > mergeThreshold) {
                     if (!closing) {
                         newNodes.add(n1);
                     }
@@ -228,11 +232,12 @@ public class SimplifyAreaAction extends JosmAction {
             final LatLon coord3 = n.getCoor();
 
             if (coord1 != null) {
-//            	System.out.print("AREA: " + computeArea(coord1, coord2, coord3) + "; ANGLE: " + computeConvectAngle(coord1, coord2, coord3));
+//            	System.out.print("AREA: " + computeArea(coord1, coord2, coord3) + "; ANGLE: " + computeConvectAngle(coord1, coord2, coord3) + "; XTE: "+crossTrackError(coord1, coord2, coord3));
                 if (isRequiredNode(w, prevNode) ||
                 		!closed && i == len - 1 || // don't remove last node of the not closed way
                 		computeConvectAngle(coord1, coord2, coord3) > angleThreshold ||
-                        computeArea(coord1, coord2, coord3) > areaTreshold) {
+                        computeArea(coord1, coord2, coord3) > areaThreshold ||
+                        crossTrackError(coord1, coord2, coord3) > distanceThreshold) {
                     newNodes2.add(prevNode);
 //                	System.out.println(" ... KEEP");
                 } else {
@@ -271,9 +276,9 @@ public class SimplifyAreaAction extends JosmAction {
     }
 
 
-    public double computeConvectAngle(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
-    	final double angle =  Math.abs(coord2.heading(coord3) - coord1.heading(coord2));
-    	return Math.toDegrees(angle < Math.PI ? angle : 2 * Math.PI - angle);
+    public static double computeConvectAngle(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
+    	final double angle =  heading(coord2, coord3) - heading(coord1, coord2);
+    	return Math.toDegrees(Math.abs(angle_mPI_to_PI(angle)));
     }
 
 
@@ -287,7 +292,34 @@ public class SimplifyAreaAction extends JosmAction {
 
         return Math.sqrt(p * (p - a) * (p - b) * (p - c));
     }
+    
+    public static double R = 6378135;
+    
+    public static double crossTrackError(LatLon l1, LatLon l2, LatLon l3) {
+        return R*Math.asin(Math.sin(l1.greatCircleDistance(l2) / R) * Math.sin(heading(l1, l2) - heading(l1, l3)));
+    }
+    
+    public static double heading(LatLon a, LatLon b) {
+        double hd = Math.atan2(sin(toRadians(a.lon() - b.lon())) * cos(toRadians(b.lat())),
+                            cos(toRadians(a.lat())) * sin(toRadians(b.lat())) -
+                              sin(toRadians(a.lat())) * cos(toRadians(b.lat())) * cos(toRadians(a.lon() - b.lon())));
+        hd %= 2 * Math.PI;
+        if (hd < 0) {
+            hd += 2 * Math.PI;
+        }
+        return hd;
+    }
 
+    public static double angle_mPI_to_PI(double a) {
+        a = a % (2 * Math.PI);
+        if (a > Math.PI) {
+            a -= 2 * Math.PI;
+        }
+        if (a <= - Math.PI) {
+            a += 2 * Math.PI;
+        }
+        return a;
+    }
 
     @Override
     protected void updateEnabledState() {

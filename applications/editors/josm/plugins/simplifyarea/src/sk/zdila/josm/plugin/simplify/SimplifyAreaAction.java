@@ -269,7 +269,7 @@ public class SimplifyAreaAction extends JosmAction {
         cmds.addAll(moveCommandList);
         cmds.add(new ChangeCommand(w, newWay));
         cmds.add(new DeleteCommand(delNodes));
-        return new SequenceCommand(trn("Simplify Way (remove {0} node)", "Simplify Way (remove {0} nodes)", delNodes.size(), delNodes.size()), cmds);
+        return new SequenceCommand(trn("Simplify Area (remove {0} node)", "Simplify Area (remove {0} nodes)", delNodes.size(), delNodes.size()), cmds);
     }
 
 

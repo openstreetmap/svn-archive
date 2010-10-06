@@ -103,12 +103,12 @@ public class SmedAbout implements SmedPluggable {
     private JPanel getJPanel() {
         if (jPanel == null) {
             aboutCopyright = new JLabel();
-            aboutCopyright.setBounds(new Rectangle(125, 5, 245, 54));
+            aboutCopyright.setBounds(new Rectangle(125, 0, 245, 54));
             aboutCopyright.setText("<HTML><BODY>Copyright (c) 2009 / 2010<BR><center>by" +
             				"<BR>Werner König & Malcolm Herring</BODY></HTML>");
 
             aboutAuthors = new JLabel();
-            aboutAuthors.setBounds(new Rectangle(30, 50, 340, 30));
+            aboutAuthors.setBounds(new Rectangle(30, 40, 340, 30));
             aboutAuthors.setText("Authors: Werner König and Malclom Herring");
 
             aboutVersion = new JLabel();

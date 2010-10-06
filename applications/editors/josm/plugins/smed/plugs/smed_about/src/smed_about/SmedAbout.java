@@ -112,15 +112,15 @@ public class SmedAbout implements SmedPluggable {
             aboutAuthors.setText("Authors: Werner König and Malclom Herring");
 
             aboutVersion = new JLabel();
-            aboutVersion.setBounds(new Rectangle(30, 70, 340, 30));
+            aboutVersion.setBounds(new Rectangle(30, 50, 340, 30));
             aboutVersion.setText("Version: 23479                     Date: 05.10.2010");
 
             aboutDescription = new JLabel();
-            aboutDescription.setBounds(new Rectangle(30, 90, 340, 30));
+            aboutDescription.setBounds(new Rectangle(30, 60, 340, 30));
             aboutDescription.setText("Description: ");
 
             aboutSmed = new JLabel();
-            aboutSmed.setBounds(new Rectangle(100, 110, 265, 30));
+            aboutSmed.setBounds(new Rectangle(100, 80, 265, 30));
             aboutSmed.setText("SeaMap Editor to map marks & lights");
 
             aboutAvailable = new JLabel();

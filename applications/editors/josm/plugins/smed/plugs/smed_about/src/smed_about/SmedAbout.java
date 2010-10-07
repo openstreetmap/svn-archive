@@ -2,7 +2,6 @@ package smed_about;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 
 import smed.plug.ifc.SmedPluggable;
 import smed.plug.ifc.SmedPluginManager;
@@ -10,12 +9,12 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 import javax.swing.JLabel;
 import java.awt.Rectangle;
+import java.net.URL;
 
 public class SmedAbout implements SmedPluggable {
 
 	public SmedPluginManager manager = null;
 	
-	private boolean visible = true;
 	private int index = -1;
 	private String msg = "";
 	
@@ -31,8 +30,6 @@ public class SmedAbout implements SmedPluggable {
 	private JLabel aboutLicense = null;
 
 	private JLabel aboutGPLV3Text = null;
-
-	private JEditorPane jEditorPane = null;
 
 	private JLabel aboutGPLV3Link = null;
 
@@ -83,10 +80,13 @@ public class SmedAbout implements SmedPluggable {
      */
     private JPanel getJPanel() {
         if (jPanel == null) {
-            jLabel = new JLabel();
+            URL url = getClass().getResource("/images/oseam_56x56.png");
+            
+        	jLabel = new JLabel();
             jLabel.setBounds(new Rectangle(45, 0, 58, 58));
-            jLabel.setIcon(new ImageIcon(getClass().getResource("/images/oseam_56x56.png")));
+            if(url != null) jLabel.setIcon(new ImageIcon(url));
             jLabel.setText("");
+            
             aboutCopyright = new JLabel();
             aboutCopyright.setBounds(new Rectangle(125, 0, 245, 55));
             aboutCopyright.setText("<HTML><BODY>Copyright (c) 2009 / 2010<BR><center>by" +
@@ -167,7 +167,10 @@ public class SmedAbout implements SmedPluggable {
 
 	@Override
 	public ImageIcon getIcon() {
-		return new ImageIcon(getClass().getResource("/images/Smed.png"));
+		URL url = getClass().getResource("/images/Smed.png");
+		
+		if(url == null) return null;
+		else return new ImageIcon(url);
 	}
 
 	@Override

@@ -12,7 +12,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
 
-
 import smed.plug.ifc.SmedPluggable;
 import smed.plug.ifc.SmedPluginManager;
 
@@ -39,7 +38,7 @@ public class Lights implements SmedPluggable {
 
 	@Override
 	public boolean stop() {
-		if(sectors != null) {
+		if (sectors != null) {
 			sectors.setVisible(false);
 			sectors.dispose();
 		}
@@ -80,14 +79,16 @@ public class Lights implements SmedPluggable {
 	@Override
 	public boolean hasFocus() {
 		manager.showVisualMessage(msg);
-		if(rbFiredN != null)
-			if(rbFiredN.isSelected()) sectors.setVisible(true);
+		if (rbFiredN != null)
+			if (rbFiredN.isSelected())
+				sectors.setVisible(true);
 		return true;
 	}
 
 	@Override
 	public boolean lostFocus() {
-		if(sectors != null) sectors.setVisible(false);
+		if (sectors != null)
+			sectors.setVisible(false);
 		return true;
 	}
 
@@ -127,6 +128,9 @@ public class Lights implements SmedPluggable {
 							sectors.add(table, null);
 						}
 						sectors.setVisible(true);
+					} else if (sectors != null) {
+						sectors.setVisible(false);
+						sectors.dispose();
 					}
 				}
 			};

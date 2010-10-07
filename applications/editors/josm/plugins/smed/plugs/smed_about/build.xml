@@ -30,7 +30,7 @@
 <project name="smed_about" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="some more information added" />
+	<property name="commit.message" value="images added" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3329" />
 

@@ -1,40 +1,15 @@
 package smed_about;
 
 import javax.swing.ImageIcon;
-import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 
 import smed.plug.ifc.SmedPluggable;
 import smed.plug.ifc.SmedPluginManager;
 import javax.swing.JPanel;
-
-import java.applet.Applet;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Graphics;
-
 import javax.swing.JLabel;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLFrameHyperlinkEvent;
-
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.LinkedList;
 
 public class SmedAbout implements SmedPluggable {
 
@@ -60,6 +35,12 @@ public class SmedAbout implements SmedPluggable {
 	private JEditorPane jEditorPane = null;
 
 	private JLabel aboutGPLV3Link = null;
+
+	private JLabel aboutGPLV2Text = null;
+
+	private JLabel aboutGPLV2Link = null;
+
+	private JLabel jLabel = null;
 	
     @Override
     public boolean start() {
@@ -102,52 +83,64 @@ public class SmedAbout implements SmedPluggable {
      */
     private JPanel getJPanel() {
         if (jPanel == null) {
+            jLabel = new JLabel();
+            jLabel.setBounds(new Rectangle(45, 0, 58, 58));
+            jLabel.setIcon(new ImageIcon(getClass().getResource("/images/oseam_56x56.png")));
+            jLabel.setText("");
             aboutCopyright = new JLabel();
-            aboutCopyright.setBounds(new Rectangle(125, 0, 245, 54));
+            aboutCopyright.setBounds(new Rectangle(125, 0, 245, 55));
             aboutCopyright.setText("<HTML><BODY>Copyright (c) 2009 / 2010<BR><center>by" +
             				"<BR>Werner König & Malcolm Herring</BODY></HTML>");
 
             aboutAuthors = new JLabel();
-            aboutAuthors.setBounds(new Rectangle(30, 40, 340, 30));
+            aboutAuthors.setBounds(new Rectangle(30, 50
+            		, 340, 30));
             aboutAuthors.setText("Authors: Werner König and Malclom Herring");
 
             aboutVersion = new JLabel();
-            aboutVersion.setBounds(new Rectangle(30, 50, 340, 30));
+            aboutVersion.setBounds(new Rectangle(30, 65, 340, 30));
             aboutVersion.setText("Version: 23479                     Date: 05.10.2010");
 
             aboutDescription = new JLabel();
-            aboutDescription.setBounds(new Rectangle(30, 60, 340, 30));
+            aboutDescription.setBounds(new Rectangle(30, 80, 340, 30));
             aboutDescription.setText("Description: ");
 
             aboutSmed = new JLabel();
-            aboutSmed.setBounds(new Rectangle(100, 70, 265, 30));
+            aboutSmed.setBounds(new Rectangle(100, 95, 265, 30));
             aboutSmed.setText("SeaMap Editor to map marks & lights");
 
             aboutAvailable = new JLabel();
-            aboutAvailable.setBounds(new Rectangle(30, 90, 141, 27));
+            aboutAvailable.setBounds(new Rectangle(30, 115, 141, 27));
             aboutAvailable.setText("available plugins:");
 
         	aboutPlugins = new JLabel();
-            aboutPlugins.setBounds(new Rectangle(58, 110, 303, 60));
+            aboutPlugins.setBounds(new Rectangle(58, 135, 303, 60));
             aboutPlugins.setText("<HTML><BODY>SeaMark Editor" +
             		"<BR>SeaLight Editor" +
             		"<BR>Hello - an example plugin" +
             		"<BR>About - this tab</BODY></HTML>");
             
             aboutLicense = new JLabel();
-            aboutLicense.setBounds(new Rectangle(5, 225, 390, 70));
+            aboutLicense.setBounds(new Rectangle(5, 185, 390, 70));
             aboutLicense.setText("<HTML><BODY><U>SeaMap Editor license</U>" +
             		"<BR>SeaMapEditor, and all its integral parts, are released under" +
             		" the GNU General Public License v2 or later.</BODY></HTML>");
 
             aboutGPLV3Text = new JLabel();
-            aboutGPLV3Text.setBounds(new Rectangle(3, 280, 246, 40));
+            aboutGPLV3Text.setBounds(new Rectangle(5, 235, 246, 40));
             aboutGPLV3Text.setText("The license v3 is accessible here:");
 
             aboutGPLV3Link = new JLabel();
-            aboutGPLV3Link.setBounds(new Rectangle(5, 300, 370, 28));
-            aboutGPLV3Link.setText("http://www.gnu.org/licenses/gpl.html");
+            aboutGPLV3Link.setBounds(new Rectangle(5, 255, 370, 28));
+            aboutGPLV3Link.setText("  http://www.gnu.org/licenses/gpl.html");
 
+            aboutGPLV2Text = new JLabel();
+            aboutGPLV2Text.setBounds(new Rectangle(5, 275, 363, 28));
+            aboutGPLV2Text.setText("The GPL v2 is accessible here:");
+
+            aboutGPLV2Link = new JLabel();
+            aboutGPLV2Link.setBounds(new Rectangle(5, 290, 391, 31));
+            aboutGPLV2Link.setText("  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html");
             
             jPanel = new JPanel();
             jPanel.setLayout(null);
@@ -162,6 +155,9 @@ public class SmedAbout implements SmedPluggable {
             jPanel.add(aboutLicense, null);
             jPanel.add(aboutGPLV3Text, null);
             jPanel.add(aboutGPLV3Link, null);
+            jPanel.add(aboutGPLV2Text, null);
+            jPanel.add(aboutGPLV2Link, null);
+            jPanel.add(jLabel, null);
         }
         return jPanel;
     }
@@ -171,7 +167,7 @@ public class SmedAbout implements SmedPluggable {
 
 	@Override
 	public ImageIcon getIcon() {
-		return null;
+		return new ImageIcon(getClass().getResource("/images/Smed.png"));
 	}
 
 	@Override

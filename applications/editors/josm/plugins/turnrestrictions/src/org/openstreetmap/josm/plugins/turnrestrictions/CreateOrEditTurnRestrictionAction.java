@@ -6,9 +6,6 @@ import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import org.openstreetmap.josm.Main;
@@ -29,32 +26,7 @@ import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKey
  */
 public class CreateOrEditTurnRestrictionAction extends JosmAction {
     static private final Logger logger = Logger.getLogger(CreateOrEditTurnRestrictionAction.class.getName());
-
-    /**
-     * Installs the global key stroke with which creating/editing a turn restriction
-     * is triggered.
-     *
-     * @param keyStroke the key stroke
-     */
-    static public void install(KeyStroke keyStroke){
-        InputMap im = Main.contentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        Object actionMapKey = im.get(keyStroke);
-        if (actionMapKey != null && !actionMapKey.toString().equals("turnrestrictions:create-or-edit")) {
-            System.out.println(tr("Warning: turnrestrictions plugin replaces already existing action ''{0}'' behind shortcut ''{1}'' by action ''{2}''", actionMapKey.toString(), keyStroke.toString(), "turnrestrictions:create-or-edit"));
-        }
-        KeyStroke[] keys = im.keys();
-        if (keys != null){
-            for(KeyStroke ks: im.keys()){
-                if (im.get(ks).equals("turnrestrictions:create-or-edit")) {
-                    im.remove(ks);
-                }
-            }
-        }
-        im.put(keyStroke, "turnrestrictions:create-or-edit");
-        ActionMap am = Main.contentPane.getActionMap();
-        am.put("turnrestrictions:create-or-edit", getInstance());
-    }
-
+  
     /**
      * Installs  global key stroke configured in the preferences.
      *
@@ -67,7 +39,7 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
             System.out.println(tr("Warning: illegal value ''{0}'' for preference key ''{1}''. Falling back to default value ''shift ctrl T''.", value, PreferenceKeys.EDIT_SHORTCUT));
             key = KeyStroke.getKeyStroke("shift ctrl T");
         }
-        install(key);
+        Main.registerActionShortcut(getInstance(), key);
     }
 
     /** the singleton instance of this action */

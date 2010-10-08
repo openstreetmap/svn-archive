@@ -26,6 +26,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.plugins.turnrestrictions.CreateOrEditTurnRestrictionAction;
@@ -130,8 +131,8 @@ public class ShortcutPreferencePanel extends JPanel {
         if (cbMeta.isSelected()) modifiers |= KeyEvent.META_DOWN_MASK;      
         KeyStroke ks = KeyStroke.getKeyStroke(code, modifiers);
         
-        pref.put(PreferenceKeys.EDIT_SHORTCUT, ks.toString());      
-        CreateOrEditTurnRestrictionAction.install(ks);
+        pref.put(PreferenceKeys.EDIT_SHORTCUT, ks.toString());     
+        Main.registerActionShortcut(CreateOrEditTurnRestrictionAction.getInstance(), ks);
     }
     
     static private class VKeyComboBoxModel extends AbstractListModel implements ComboBoxModel {

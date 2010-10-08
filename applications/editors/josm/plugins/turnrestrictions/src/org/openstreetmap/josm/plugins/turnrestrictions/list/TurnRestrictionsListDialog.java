@@ -443,7 +443,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
     }
     
     /**
-     * Listens the changes of the preference {@see PreferenceKeys#ROAD_SIGNS}
+     * Listens the changes of the preference {@link PreferenceKeys#ROAD_SIGNS}
      * and refreshes the set of road icons 
      *
      */

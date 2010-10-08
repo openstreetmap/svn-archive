@@ -1,20 +1,32 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
-import org.openstreetmap.josm.fixtures.JOSMFixture;
+
+import groovy.util.GroovyTestCase;
+
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import javax.swing.DefaultListSelectionModel;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.coor.*;
 
+import org.openstreetmap.josm.plugins.turnrestrictions.fixtures.JOSMFixture;
+
 import static org.junit.Assert.*;
 import org.junit.*;
 import javax.swing.JFrame;
 
+import junit.framework.TestCase;
+import junit.framework.TestResult;
+
 /**
  * Unit test for {@see JosmSelctionListModel}
  */
-class JosmSelectionListModelTest {
+class JosmSelectionListModelTest extends GroovyTestCase {
 	final shouldFail = new GroovyTestCase().&shouldFail
+	
+	@Before
+	public void setUp() {
+		JOSMFixture.createUnitTestFixture().init()
+	}
 	
 	@Test
 	public void test_Constructor(){
@@ -61,7 +73,7 @@ class JosmSelectionListModelTest {
 		def objects = [new Node(new LatLon(1,1)), new Way(), new Relation()]	
 		model.setJOSMSelection(objects)
 		model.setSelected(objects[0..1])
-		assert model.getSelected().asList() == objects[0..1]
+		assert model.getSelected().asList() as Set == objects[0..1] as Set
 		
 		// set new selection which includes one object which is currently
         // selected in the model. Should still be selected after setting
@@ -89,7 +101,7 @@ class JosmSelectionListModelTest {
 		
 		// select two elements
 		selectionModel.setSelectionInterval(1,2)
-		assert model.getSelected().asList() == [model.getElementAt(1),model.getElementAt(2)];
+		assert model.getSelected().asList() as Set == [model.getElementAt(1),model.getElementAt(2)] as Set;
 	}
 	
 	@Test

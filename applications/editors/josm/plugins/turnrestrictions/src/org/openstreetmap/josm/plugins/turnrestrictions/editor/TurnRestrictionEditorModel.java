@@ -70,7 +70,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
     private NavigationControler navigationControler;
     
     /**
-     * Creates a model in the context of a {@see OsmDataLayer}
+     * Creates a model in the context of a {@link OsmDataLayer}
      * 
      * @param layer the layer. Must not be null.
      * @param navigationControler control to direct the user to specific UI components. Must not be null 
@@ -96,7 +96,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
      * null, to remove the way with the given role.
      * @exception IllegalArgumentException thrown if role is null
      */
-    public void setTurnRestrictionLeg(TurnRestrictionLegRole role, Way way) {
+    public void setTurnRestrictionLeg(TurnRestrictionLegRole role, Way way) throws IllegalArgumentException{
         CheckParameterUtil.ensureParameterNotNull(role, "role");
         switch(role){
         case FROM:
@@ -135,15 +135,15 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
     }   
     
     /**
-     * "Officially" a turn restriction should have exactly one member with 
-     * role {@see TurnRestrictionLegRole#FROM} and one member with role {@see TurnRestrictionLegRole#TO},
-     * both referring to an OSM {@see Way}. In order to deals with turn restrictions where these
+     * <p>"Officially" a turn restriction should have exactly one member with 
+     * role {@link TurnRestrictionLegRole#FROM FROM} and one member with role {@link TurnRestrictionLegRole#TO TO},
+     * both referring to an OSM {@link Way}. In order to deals with turn restrictions where these
      * integrity constraints are violated, this model also supports relation with multiple or no
-     * 'from' or 'to' members.
+     * 'from' or 'to' members.</p>
      * 
-     * Replies the turn restriction legs with role {@code role}. If no leg with this
+     * <p>Replies the turn restriction legs with role {@code role}. If no leg with this
      * role exists, an empty set is returned. If multiple legs exists, the set of referred
-     * primitives is returned.  
+     * primitives is returned.</p>  
      * 
      * @param role the role. Must not be null.
      * @return the set of turn restriction legs with role {@code role}. The empty set, if
@@ -259,13 +259,13 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
     }
     
     /**
-     * Sets the list of vias for the edited turn restriction.
+     * <p>Sets the list of vias for the edited turn restriction.</p>
      * 
-     * If {@code vias} is null, all vias are removed. All primitives
+     * <p>If {@code vias} is null, all vias are removed. All primitives
      * in {@code vias} must be assigned to a dataset and the dataset
-     * must be equal to the dataset of this editor model, see {@see #getDataSet()}
+     * must be equal to the dataset of this editor model, see {@link #getDataSet()}</p>
      * 
-     * null values in {@see vias} are skipped. 
+     * <p>null values in {@link vias} are skipped.</p>
      * 
      * @param vias the list of vias 
      * @throws IllegalArgumentException thrown if one of the via objects belongs to the wrong dataset 
@@ -284,14 +284,14 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
     }
     
     /**
-     * Registers this model with global event sources like {@see DatasetEventManager}
+     * Registers this model with global event sources like {@link DatasetEventManager}
      */
     public void registerAsEventListener(){
         DatasetEventManager.getInstance().addDatasetListener(this, FireMode.IN_EDT);
     }
     
     /**
-     * Removes this model as listener from global event sources like  {@see DatasetEventManager}
+     * Removes this model as listener from global event sources like  {@link DatasetEventManager}
      */
     public void unregisterAsEventListener() {
         DatasetEventManager.getInstance().removeDatasetListener(this);

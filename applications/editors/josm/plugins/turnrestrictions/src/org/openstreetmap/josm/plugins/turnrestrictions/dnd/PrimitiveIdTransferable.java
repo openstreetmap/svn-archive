@@ -12,7 +12,7 @@ import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.SimplePrimitiveId;
 
 /**
- * To be used for Drag-and-Drop of a set of {@see PrimitiveId}s between
+ * To be used for Drag-and-Drop of a set of {@link PrimitiveId}s between
  * two components. 
  *
  */
@@ -23,10 +23,10 @@ public class PrimitiveIdTransferable implements Transferable{
         new DataFlavor(Set.class, "a set of OSM primitive ids");
     
     /** 
-     * this transferable supports two flavors: (1) {@see #PRIMITIVE_ID_LIST_FLAVOR} and
-     * (2) {@see DataFlavor#stringFlavor}.
+     * this transferable supports two flavors: (1) {@link #PRIMITIVE_ID_LIST_FLAVOR} and
+     * (2) {@link DataFlavor#stringFlavor}.
      * 
-     * See also {@see #getPrimitiveIds()} and {@see #getAsString()}
+     * See also {@link #getPrimitiveIds()} and {@link #getAsString()}
      */
     static public final DataFlavor[] SUPPORTED_FLAVORS = new DataFlavor[] {
         PRIMITIVE_ID_LIST_FLAVOR,
@@ -37,7 +37,7 @@ public class PrimitiveIdTransferable implements Transferable{
     private List<PrimitiveId> ids = new ArrayList<PrimitiveId>();
     
     /**
-     * Creates a transferable from a collection of {@see PrimitiveId}s
+     * Creates a transferable from a collection of {@link PrimitiveId}s
      * 
      * @param ids
      */
@@ -49,11 +49,11 @@ public class PrimitiveIdTransferable implements Transferable{
     }
     
     /**
-     * If flavor is {@see #PRIMITIVE_ID_SET_FLAVOR}, replies a the list of
-     * transferred {@see PrimitiveId}s 
+     * <p>If flavor is {@link #PRIMITIVE_ID_SET_FLAVOR}, replies a the list of
+     * transferred {@link PrimitiveId}s</p>
      * 
-     * If flavor is {@see DataFlavor#stringFlavor}, replies a string representation
-     * of the list of transferred {@see PrimitiveId}s
+     * <p>If flavor is {@link DataFlavor#stringFlavor}, replies a string representation
+     * of the list of transferred {@link PrimitiveId}s</p>
      */
     public Object getTransferData(DataFlavor flavor)
             throws UnsupportedFlavorException, IOException {

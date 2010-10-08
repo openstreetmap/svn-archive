@@ -54,7 +54,7 @@ public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRende
     
     /**
      * Initializes the set of icons used from the preference key
-     * {@see PreferenceKeys#ROAD_SIGNS}.
+     * {@link PreferenceKeys#ROAD_SIGNS}.
      * 
      * @param prefs the JOSM preferences 
      */

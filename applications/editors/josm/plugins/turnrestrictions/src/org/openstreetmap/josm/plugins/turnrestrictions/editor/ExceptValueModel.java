@@ -44,7 +44,6 @@ public class ExceptValueModel {
     private boolean isStandard = true;
     private final Set<String> vehicleExceptions = new HashSet<String>();
     
-    
     protected void parseValue(String value) {
         if (value == null || value.trim().equals("")) value = "";
         this.value = value;

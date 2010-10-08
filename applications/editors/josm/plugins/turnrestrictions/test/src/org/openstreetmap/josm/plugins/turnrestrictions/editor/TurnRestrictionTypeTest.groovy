@@ -1,8 +1,9 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
+import groovy.util.GroovyTestCase;
 
 import static org.junit.Assert.*;
 import org.junit.*
-class TurnRestrictionTypeTest {
+class TurnRestrictionTypeTest extends GroovyTestCase{
 	
 	@Test
 	public void test_fromTagValue() {
@@ -16,5 +17,4 @@ class TurnRestrictionTypeTest {
 		type = TurnRestrictionType.fromTagValue(null)
 		assert type == null
 	}
-
 }

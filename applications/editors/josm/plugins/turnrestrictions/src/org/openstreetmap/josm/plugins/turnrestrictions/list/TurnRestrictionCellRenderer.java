@@ -36,7 +36,7 @@ import static org.openstreetmap.josm.tools.I18n.trc;
  * This is a cell renderer for turn restrictions.
  * 
  * It can be used a cell renderer in lists of turn restrictions and as cell renderer in
- * {@see JTable}s displaying turn restrictions. 
+ * {@link JTable}s displaying turn restrictions. 
  * 
  */
 public class TurnRestrictionCellRenderer extends JPanel implements ListCellRenderer, TableCellRenderer{
@@ -216,7 +216,7 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
 
     /**
      * Initializes the set of icons used from the preference key
-     * {@see PreferenceKeys#ROAD_SIGNS}.
+     * {@link PreferenceKeys#ROAD_SIGNS}.
      * 
      * @param prefs the JOSM preferences 
      */

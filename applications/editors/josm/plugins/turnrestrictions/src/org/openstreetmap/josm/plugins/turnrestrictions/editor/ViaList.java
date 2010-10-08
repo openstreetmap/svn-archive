@@ -38,10 +38,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * ViaList is a JList which displays the 'via' members of a turn restriction.
+ * <p>ViaList is a JList which displays the 'via' members of a turn restriction.</p>
  * 
- * A ViaList is connected to a {@see TurnRestrictionEditorModel} through its
- * {@code ViaListModel}. 
+ * <p>A ViaList is connected to a {@link TurnRestrictionEditorModel} through its
+ * {@link ViaListModel}.</p> 
  * 
  */
 public class ViaList extends JList{

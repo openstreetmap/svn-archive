@@ -43,7 +43,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * TurnRestrictionSelectionPopupPanel is displayed in a {@see Popup} to select whether
+ * TurnRestrictionSelectionPopupPanel is displayed in a {@link Popup} to select whether
  * the user wants to create a new turn restriction or whether he wants to edit one
  * of a list of turn restrictions.
  *
@@ -58,8 +58,6 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
     /** the table with the turn restrictions which can be edited */
     private JTable tblTurnRestrictions; 
     private OsmDataLayer layer;
-    
-    
     
     /**
      * Replies the collection of turn restrictions the primitives in {@code primitives}

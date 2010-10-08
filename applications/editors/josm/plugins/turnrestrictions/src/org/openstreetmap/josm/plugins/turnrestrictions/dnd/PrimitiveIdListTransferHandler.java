@@ -10,12 +10,12 @@ import javax.swing.TransferHandler;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
- * PrimitiveIdListTransferHandler is a transfer handler for components which 
- * provide and/or accept a list of {@see PrimitiveId} via copy/paste or
- * drag-and-drop.
+ * <p>PrimitiveIdListTransferHandler is a transfer handler for components which 
+ * provide and/or accept a list of {@link PrimitiveId} via copy/paste or
+ * drag-and-drop.</p>
  * 
- * It creates a {@see Transferable} by retrieving the list of primitive IDs
- * from a {@see PrimitiveIdListProvider}.
+ * <p>It creates a {@link Transferable} by retrieving the list of primitive IDs
+ * from a {@link PrimitiveIdListProvider}.</p>
  * 
  */
 public class PrimitiveIdListTransferHandler extends TransferHandler {
@@ -23,10 +23,10 @@ public class PrimitiveIdListTransferHandler extends TransferHandler {
     private PrimitiveIdListProvider provider;
     
     /**
-     * Replies true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
+     * Replies true if {@code transferFlavors} includes the data flavor {@link PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
 
      * @param transferFlavors an array of transferFlavors
-     * @return true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
+     * @return true if {@code transferFlavors} includes the data flavor {@link PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
      */
     public static boolean isSupportedFlavor(DataFlavor[] transferFlavors) {
         for (DataFlavor df: transferFlavors) {
@@ -45,8 +45,6 @@ public class PrimitiveIdListTransferHandler extends TransferHandler {
         CheckParameterUtil.ensureParameterNotNull(provider, "provider");
         this.provider = provider;
     }
-
-    
     
     protected Transferable createTransferable(JComponent c) {
         return new PrimitiveIdTransferable(provider.getSelectedPrimitiveIds());         

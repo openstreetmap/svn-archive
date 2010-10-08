@@ -60,13 +60,13 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     final private static Logger logger = Logger.getLogger(TurnRestrictionEditor.class.getName());
     
     /** the property name for the current turn restriction
-     * @see #setRelation(Relation)
-     * @see #getRelation()
+     * @link #setRelation(Relation)
+     * @link #getRelation()
      */
     static public final String TURN_RESTRICION_PROP = RelationEditor.class.getName() + ".turnRestriction";
 
     /** the property name for the current relation snapshot
-     * @see #getRelationSnapshot()
+     * @link #getRelationSnapshot()
      */
     static public final String TURN_RESTRICION_SNAPSHOT_PROP = RelationEditor.class.getName() + ".turnRestrictionSnapshot";
     
@@ -212,7 +212,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     * Creates a new turn restriction editor
     *
     * @param owner the component relative to which the dialog is displayed 
-    * @param layer  the {@see OsmDataLayer} in whose context a relation is edited. Must not be null.
+    * @param layer  the {@link OsmDataLayer} in whose context a relation is edited. Must not be null.
     * @throws IllegalArgumentException thrown if layer is null
     */
     public TurnRestrictionEditor(Component owner, OsmDataLayer layer) {
@@ -223,7 +223,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      * Creates a new turn restriction editor
      *
      * @param owner the component relative to which the dialog is displayed 
-     * @param layer  the {@see OsmDataLayer} in whose context a relation is edited. Must not be null.
+     * @param layer  the {@link OsmDataLayer} in whose context a relation is edited. Must not be null.
      * @param turnRestriction the relation. Can be null if a new relation is to be edited.
      * @throws IllegalArgumentException thrown if layer is null
      */
@@ -245,17 +245,17 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     }
 
     /**
-     * Sets the currently edited turn restriction. Creates a snapshot of the current
-     * state of the turn restriction. See {@see #getTurnRestrictionSnapshot()}
+     * <p>Sets the currently edited turn restriction. Creates a snapshot of the current
+     * state of the turn restriction. See {@link #getTurnRestrictionSnapshot()}</p>
      *
-     * {@code turnRestriction} can be null if a new restriction is created. A turn
+     * <p>{@code turnRestriction} can be null if a new restriction is created. A turn
      * restriction which isn't assigned to a data set is allowed too. If {@code turnRestriction}
-     * is already assigned to a dataset, the dataset of {@see #getLayer()} is required, otherwise
-     * a {@see IllegalArgumentException} is thrown.
+     * is already assigned to a dataset, the dataset of {@link #getLayer()} is required, otherwise
+     * a {@link IllegalArgumentException} is thrown.</p>
      * 
      * @param turnRestriction the turn restriction
      * @throws IllegalArgumentException thrown if {@code turnRestriction} belongs to a different dataset than
-     * that owned by the layer {@see #getLayer()}
+     * that owned by the layer {@link #getLayer()}
      */
     protected void setTurnRestriction(Relation turnRestriction) {      
         if (turnRestriction == null) {
@@ -286,10 +286,10 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     }
     
     /**
-     * Replies the {@see OsmDataLayer} in whose context this relation editor is
+     * Replies the {@link OsmDataLayer} in whose context this relation editor is
      * open
      *
-     * @return the {@see OsmDataLayer} in whose context this relation editor is
+     * @return the {@link OsmDataLayer} in whose context this relation editor is
      * open
      */
     protected OsmDataLayer getLayer() {
@@ -316,10 +316,10 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     }
     
     /**
-     * Replies true if the currently edited turn restriction has been changed elsewhere.
+     * <p>Replies true if the currently edited turn restriction has been changed elsewhere.</p>
      *
-     * In this case a turn restriction editor can't apply updates to the turn restriction
-     * directly. Rather, it has to create a conflict.
+     * <p>In this case a turn restriction editor can't apply updates to the turn restriction
+     * directly. Rather, it has to create a conflict.</p>
      *
      * @return true if the currently edited turn restriction has been changed elsewhere.
      */
@@ -468,12 +468,12 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         }
         
         /**
-         * Asks the user how to proceed if a turn restriction refers to deleted or invisible
-         * primitives.
+         * <p>Asks the user how to proceed if a turn restriction refers to deleted or invisible
+         * primitives.</p>
          * 
-         * If this method returns true the respective members should be removed and the turn
+         * <p>If this method returns true the respective members should be removed and the turn
          * restriction should be saved anyway. If it replies false, the turn restriction must not
-         * be saved.  
+         * be saved. </p>
          * 
          * @param deletedMembers the list of members referring to deleted or invisible primitives  
          * @return the confirmation 
@@ -865,12 +865,12 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     }
     
     /**
-     * Listens to changes of the preference {@see PreferenceKeys#ROAD_SIGNS}
-     * and refreshes the set of road icons.
+     * <p>Listens to changes of the preference {@link PreferenceKeys#ROAD_SIGNS}
+     * and refreshes the set of road icons.</p>
      * 
-     * Listens to changes of the preference {@see PreferenceKeys#SHOW_VIAS_IN_BASIC_EDITOR}
-     * and toggles the visibility af the list of via-objects in the Basic
-     * Editor. 
+     * <p>Listens to changes of the preference {@link PreferenceKeys#SHOW_VIAS_IN_BASIC_EDITOR}
+     * and toggles the visibility of the list of via-objects in the Basic
+     * Editor.</p>
      *
      */
     class PreferenceChangeHandler implements PreferenceChangedListener {        

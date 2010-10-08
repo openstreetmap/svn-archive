@@ -2,10 +2,19 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.junit.Assert.*;
 import org.junit.*;
+
+import groovy.util.GroovyTestCase;
+
 import java.awt.Component
+import org.openstreetmap.josm.plugins.turnrestrictions.fixtures.JOSMFixture;
 
-class TurnRestrictionTypeRendererTest {
+class TurnRestrictionTypeRendererTest extends GroovyTestCase{
 
+	@Before
+	public void setUp() {
+		JOSMFixture.createUnitTestFixture().init()			
+	}
+	
 	@Test
 	public void test_Constructor() {
 		TurnRestrictionTypeRenderer renderer = new TurnRestrictionTypeRenderer();

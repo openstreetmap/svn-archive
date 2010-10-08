@@ -23,13 +23,13 @@ import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 /**
- * This is the list model for the list of turn restrictions in the current data set.
+ * <p>This is the list model for the list of turn restrictions in the current data set.</p>
  * 
- * The model is a {@see EditLayerChangeListener}. It initializes itself from the data set of
- * the current edit layer.
+ * <p>The model is a {@link EditLayerChangeListener}. It initializes itself from the data set of
+ * the current edit layer.</p>
  * 
- * The model is a {@see DataSetListener}. It updates itself to reflect the list of turn
- * restrictions in the current data set. 
+ * <p>The model is a {@link DataSetListener}. It updates itself to reflect the list of turn
+ * restrictions in the current data set.</p> 
  *
  */
 public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListModel implements EditLayerChangeListener, DataSetListener {

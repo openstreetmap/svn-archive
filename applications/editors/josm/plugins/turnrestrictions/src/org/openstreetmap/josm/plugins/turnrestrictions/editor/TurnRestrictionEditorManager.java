@@ -28,9 +28,9 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
     static TurnRestrictionEditorManager instance;
 
     /**
-     * Replies the singleton {@see TurnRestrictionEditorManager}
+     * Replies the singleton {@link TurnRestrictionEditorManager}
      *
-     * @return the singleton {@see TurnRestrictionEditorManager}
+     * @return the singleton {@link TurnRestrictionEditorManager}
      */
     static public TurnRestrictionEditorManager getInstance() {
         if (TurnRestrictionEditorManager.instance == null) {
@@ -42,7 +42,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
 
     /**
      * Helper class for keeping the context of a turn restriction editor. A turn
-     * restriction editor is open for turn restriction in a  {@see OsmDataLayer}
+     * restriction editor is open for turn restriction in a  {@link OsmDataLayer}
      */
     static private class DialogContext {
         public final PrimitiveId primitiveId;
@@ -106,7 +106,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
     
     /**
      * Register the editor for a turn restriction managed by a
-     * {@see OsmDataLayer}.
+     * {@link OsmDataLayer}.
      *
      * @param layer the layer
      * @param relation the turn restriction
@@ -176,7 +176,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
      * @return the editor for the turn restriction managed by layer. Null, if no such editor
      * is currently open.
      *
-     * @see #isOpenInEditor(OsmDataLayer, Relation)
+     * @link #isOpenInEditor(OsmDataLayer, Relation)
      */
     public TurnRestrictionEditor getEditorForRelation(OsmDataLayer layer, Relation relation) {
         if (relation == null) return null;
@@ -200,7 +200,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
     }
 
     /**
-     * Positions an {@see TurnRestrictionEditor} centered on the screen
+     * Positions an {@link TurnRestrictionEditor} centered on the screen
      *
      * @param editor the editor
      */
@@ -215,11 +215,11 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
     }
 
     /**
-     * Replies true, if there is another open {@see TurnRestrictionEditor} whose
+     * Replies true, if there is another open {@link TurnRestrictionEditor} whose
      * upper left corner is close to <code>p</code>.
      *
      * @param p  the reference point to check
-     * @return true, if there is another open {@see TurnRestrictionEditor} whose
+     * @return true, if there is another open {@link TurnRestrictionEditor} whose
      * upper left corner is close to <code>p</code>.
      */
     protected boolean hasEditorWithCloseUpperLeftCorner(Point p) {
@@ -233,8 +233,8 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
     }
 
     /**
-     * Positions a {@see TurnRestrictionEditor} close to the center of the screen, in such
-     * a way, that it doesn't entirely cover another {@see TurnRestrictionEditor}
+     * Positions a {@link TurnRestrictionEditor} close to the center of the screen, in such
+     * a way, that it doesn't entirely cover another {@link TurnRestrictionEditor}
      *
      * @param editor
      */
@@ -253,7 +253,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
     }
 
     /**
-     * Positions a {@see TurnRestrictionEditor} on the screen. Tries to center it on the
+     * Positions a {@link TurnRestrictionEditor} on the screen. Tries to center it on the
      * screen. If it hides another instance of an editor at the same position this
      * method tries to reposition <code>editor</code> by moving it slightly down and
      * slightly to the right.

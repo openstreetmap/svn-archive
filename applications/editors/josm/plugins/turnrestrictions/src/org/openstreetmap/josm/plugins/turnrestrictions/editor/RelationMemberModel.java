@@ -9,7 +9,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * RelationMemberModel is a mutable relation member. In contrast to
- * {@see RelationMember} it doesn't keep references to the referred
+ * {@link RelationMember} it doesn't keep references to the referred
  * primitive. Internally, it only keeps their the unique id.
  *
  *

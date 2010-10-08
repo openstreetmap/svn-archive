@@ -31,9 +31,9 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     private DefaultListSelectionModel colSelectionModel;
     
     /**
-     * Creates a new model in the context of an {@see OsmDataLayer}. Internally allocates
-     * a row and a column selection model, see {@see #getRowSelectionModel()} and 
-     * {@see #getColSelectionModel()}.
+     * Creates a new model in the context of an {@link OsmDataLayer}. Internally allocates
+     * a row and a column selection model, see {@link #getRowSelectionModel()} and 
+     * {@link #getColSelectionModel()}.
      * 
      * @param layer the data layer. Must not be null.
      * @exception IllegalArgumentException thrown if layer is null
@@ -46,7 +46,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     }
 
     /**
-     *  Creates a new model in the context of an {@see OsmDataLayer}
+     *  Creates a new model in the context of an {@link OsmDataLayer}
      *  
      * @param layer layer the data layer. Must not be null.
      * @param rowSelectionModel the row selection model. Must not be null.
@@ -83,10 +83,10 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     }
     
     /**
-     * Replies the set of {@see OsmPrimitive}s with the role {@code role}. If no
+     * Replies the set of {@link OsmPrimitive}s with the role {@code role}. If no
      * such primitives exists, the empty set is returned.
      * 
-     * @return the set of {@see OsmPrimitive}s with the role {@code role}
+     * @return the set of {@link OsmPrimitive}s with the role {@code role}
      */
     protected Set<OsmPrimitive> getPrimitivesWithRole(String role) {
         HashSet<OsmPrimitive> ret = new HashSet<OsmPrimitive>();
@@ -102,10 +102,10 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     }
     
     /**
-     * Replies the list of {@see RelationMemberModel}s with the role {@code role}. If no
+     * Replies the list of {@link RelationMemberModel}s with the role {@code role}. If no
      * such primitives exists, the empty set is returned.
      * 
-     * @return the set of {@see RelationMemberModel}s with the role {@code role}
+     * @return the set of {@link RelationMemberModel}s with the role {@code role}
      */
     protected List<RelationMemberModel> getRelationMembersWithRole(String role) {
         ArrayList<RelationMemberModel> ret = new ArrayList<RelationMemberModel>();
@@ -137,20 +137,20 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     }
         
     /**
-     * Replies the set of {@see OsmPrimitive}s with the role 'from'. If no
+     * Replies the set of {@link OsmPrimitive}s with the role 'from'. If no
      * such primitives exists, the empty set is returned.
      * 
-     * @return the set of {@see OsmPrimitive}s with the role 'from'
+     * @return the set of {@link OsmPrimitive}s with the role 'from'
      */
     public Set<OsmPrimitive> getFromPrimitives() {
         return getPrimitivesWithRole("from");       
     }
     
     /**
-     * Replies the set of {@see OsmPrimitive}s with the role 'to'. If no
+     * Replies the set of {@link OsmPrimitive}s with the role 'to'. If no
      * such primitives exists, the empty set is returned.
      * 
-     * @return the set of {@see OsmPrimitive}s with the role 'from'
+     * @return the set of {@link OsmPrimitive}s with the role 'from'
      */
     public Set<OsmPrimitive> getToPrimitives() {
         return getPrimitivesWithRole("to");
@@ -174,7 +174,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
      * Sets the list of vias. Removes all 'vias' if {@code vias} is null.
      * 
      * null vias are skipped. A via must belong to the dataset of the layer in whose context
-     * this editor is working, otherwise an {@see IllegalArgumentException} is thrown.
+     * this editor is working, otherwise an {@link IllegalArgumentException} is thrown.
      * 
      * @param vias the vias.
      * @exception IllegalArgumentException thrown if a via doesn't belong to the dataset of the layer
@@ -261,10 +261,10 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     }
     
     /**
-     * Replies the set of {@see OsmPrimitive}s referred to by members in
+     * Replies the set of {@link OsmPrimitive}s referred to by members in
      * this model.
      * 
-     * @return the set of {@see OsmPrimitive}s referred to by members in
+     * @return the set of {@link OsmPrimitive}s referred to by members in
      * this model.
      */
     public Set<OsmPrimitive> getMemberPrimitives() {
@@ -403,13 +403,13 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     }
     
     /**
-     * Inserts a list of new relation members with the empty role for the primitives
+     * <p>Inserts a list of new relation members with the empty role for the primitives
      * with id in {@code ids}. Inserts the new primitives at the position of the first
-     * selected row. If no row is selected, at the end of the list. 
+     * selected row. If no row is selected, at the end of the list.</p>
      * 
-     *  null values are skipped. If there is an id for which there is no primitive in the context 
-     *  layer, if the primitive is deleted or invisible, an {@see IllegalArgumentException}
-     *  is thrown and nothing is inserted. 
+     * <p> null values are skipped. If there is an id for which there is no primitive in the context 
+     *  layer, if the primitive is deleted or invisible, an {@link IllegalArgumentException}
+     *  is thrown and nothing is inserted.</p>
      * 
      * @param ids the list of ids. Ignored if null.
      * @throws IllegalArgumentException thrown if one of the ids can't be inserted

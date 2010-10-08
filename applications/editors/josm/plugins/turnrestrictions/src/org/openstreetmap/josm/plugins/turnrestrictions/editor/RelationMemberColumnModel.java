@@ -9,8 +9,8 @@ import javax.swing.table.TableColumn;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
- * RelationMemberColumnModel is the column model for the table of relation members
- * displayed in the {@see AdvancedEditorPanel}.
+ * <strong>RelationMemberColumnModel</strong> is the column model for the table of relation members
+ * displayed in the {@link AdvancedEditorPanel}.
  */
 public class RelationMemberColumnModel extends DefaultTableColumnModel{
     protected void build() {

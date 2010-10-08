@@ -1,0 +1,18 @@
+
+This directory includes the test resources for the turnrestictions plugin.
+
+
+src/             test sources (Unit tests, functional tests)
+
+config/          configuration files for running tests
+
+                 Note: make sure this directory is on the classpath when unit tests
+                 are executed. Unit tests look for the configuration files
+                 'test-unit-env.properties'.
+                 
+data/            test data
+
+josm.home/       Some unit test have to run in the context of a running JOSM instance.
+                 This is the home directory for this JOSM instance. It includes 
+                 a preferences files with default entries. 
+

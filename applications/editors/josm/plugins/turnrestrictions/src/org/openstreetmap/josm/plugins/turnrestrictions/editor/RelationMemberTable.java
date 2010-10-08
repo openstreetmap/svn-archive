@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.MenuItem;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -285,7 +283,7 @@ public class RelationMemberTable extends JTable {
         private boolean dropAccepted = false;   
         
         /**
-         * Replies true if {@code transferFlavors} includes the data flavor {@see PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
+         * Replies true if {@code transferFlavors} includes the data flavor {@link PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
 
          * @param transferFlavors an array of transferFlavors
          * @return

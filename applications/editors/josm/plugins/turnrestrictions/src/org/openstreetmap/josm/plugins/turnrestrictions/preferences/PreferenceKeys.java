@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.preferences;
 
-import javax.swing.KeyStroke;
 
 /**
  * Defines the preference keys used for preferences of the turnrestrictions
@@ -33,7 +32,7 @@ public interface PreferenceKeys {
     
     /**
      * The shortcut which triggers creating a new or editing and existing turn
-     * restriction. The value must be parseable by {@see KeyStroke#getKeyStroke(String)}.
+     * restriction. The value must be parseable by {@link KeyStroke#getKeyStroke(String)}.
      * If missing, the default value "ctrl shift T" is assumed.
      */
     String EDIT_SHORTCUT= "turnrestrictions.edit-shortcut";

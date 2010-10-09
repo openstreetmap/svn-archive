@@ -1,19 +1,10 @@
 package org.openstreetmap.josm.plugins.videomapping;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -24,15 +15,8 @@ import javax.swing.JRadioButtonMenuItem;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.*;
 import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.*;
@@ -49,8 +33,7 @@ import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 //Here we manage properties and start the other classes
 public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
       private JMenu VMenu,VDeinterlacer;
-      private GpxData GPSTrack;
-      private List<WayPoint> ls;
+      private GpxLayer GpsLayer;
       private JosmAction VAdd,VRemove,VStart,Vbackward,Vforward,VJump,Vfaster,Vslower,Vloop;
       private JRadioButtonMenuItem VIntBob,VIntNone,VIntLinear;
       private JCheckBoxMenuItem VCenterIcon,VSubTitles;
@@ -87,7 +70,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         if (newLayer instanceof GpxLayer)
         {
             VAdd.setEnabled(true);
-            GPSTrack=((GpxLayer) newLayer).data;            
+            GpsLayer=((GpxLayer) newLayer);            
             //TODO append to GPS Layer menu
         }
         else
@@ -123,17 +106,13 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
                     if(fc.showOpenDialog(Main.main.parent)!=JFileChooser.CANCEL_OPTION)
                     {
                         saveSettings();
-                        ls=copyGPSLayer(GPSTrack);
                         enableControlMenus(true);
-                        layer = new PositionLayer(fc.getSelectedFile().getName(),ls);
+                        layer = new PositionLayer(fc.getSelectedFile(),GpsLayer);
                         Main.main.addLayer(layer);
-                        player = new GPSVideoPlayer(fc.getSelectedFile(), layer.player);
                         //TODO Check here if we can sync allready now
-                        layer.setGPSPlayer(player);
-                        layer.addObserver(player);
                         VAdd.setEnabled(false);
                         VRemove.setEnabled(true);
-                        player.setSubtitleAction(VSubTitles);
+                        layer.getVideoPlayer().setSubtitleAction(VSubTitles);
                     }
                 }
         
@@ -160,7 +139,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
                             
             }
         };
-        Vbackward = new JosmAction(tr("Jump To"), "jumpto", tr("jumps to the entered gps time"),null, false) {          
+        VJump= new JosmAction(tr("Jump To"), "jumpto", tr("jumps to the entered gps time"),null, false) {          
             public void actionPerformed(ActionEvent e) {
                 String s =JOptionPane.showInputDialog(tr("please enter GPS timecode"),"10:07:57");
                 SimpleDateFormat format= new SimpleDateFormat("hh:mm:ss");
@@ -290,6 +269,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         VMenu.add(Vfaster);
         VMenu.add(Vslower);
         VMenu.add(Vloop);
+        VMenu.add(VJump);
         VMenu.addSeparator();
         VMenu.add(VCenterIcon);
         VMenu.add(VJumpLength);
@@ -350,16 +330,5 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         Main.pref.put(VM_MRU, mru);
     }
     
-    //make a flat copy
-    private List<WayPoint> copyGPSLayer(GpxData route)
-    { 
-        ls = new LinkedList<WayPoint>();
-        for (GpxTrack trk : route.tracks) {
-            for (GpxTrackSegment segment : trk.getSegments()) {
-                ls.addAll(segment.getWayPoints());
-            }
-        }
-        Collections.sort(ls); //sort basing upon time
-        return ls;
-    }
+    
   }

@@ -1,28 +1,25 @@
 package org.openstreetmap.josm.plugins.videomapping.video;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.Time;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.videomapping.GpsPlayer;
-import org.openstreetmap.josm.plugins.videomapping.PlayerObserver;
+import org.openstreetmap.josm.plugins.videomapping.VideoObserver;
 
 //combines video and GPS playback, major control has the video player
-public class GPSVideoPlayer implements PlayerObserver{
+public class GPSVideoPlayer
+{
     Timer t;
-    TimerTask updateGPSTrack;
+    TimerTask updateGPS; //sync GPS position here
     private GpsPlayer gps;
     private SimpleVideoPlayer video;
     private JButton syncBtn;
@@ -59,7 +56,7 @@ public class GPSVideoPlayer implements PlayerObserver{
         setAsyncMode(true);
         video.addComponent(syncBtn);
         //a observer to communicate
-        SimpleVideoPlayer.addObserver(new PlayerObserver() { //TODO has o become this
+        SimpleVideoPlayer.addObserver(new VideoObserver() { //TODO has o become this
 
             public void playing(long time) {
                 //sync the GPS back
@@ -146,21 +143,16 @@ public class GPSVideoPlayer implements PlayerObserver{
         video.pause();
     }
     
-    //jumps in video to the corresponding linked time
-    public void jumpToGPSTime(Time GPSTime)
-    {
-        gps.jump(GPSTime);
-    }
-    
-    //jumps in video to the corresponding linked time
+   
+    //jumps in video to the corresponding Video time (external triggered)
     public void jumpToGPSTime(long gpsT)
     {
-        if(!synced)
+       /* if(!synced)
         {
             //when not synced we can just move the icon to the right position           
             gps.jump(new Date(gpsT));
             Main.map.mapView.repaint();
-        }
+        }*/
         video.jump(getVideoTime(gpsT));
     }
     
@@ -237,12 +229,7 @@ public class GPSVideoPlayer implements PlayerObserver{
         return video.playing();
     }
 
-    //when we clicked on the layer, here we update the video position
-    public void jumping(long time) {
-        if(synced) jumpToGPSTime(gps.getRelativeTime());
-        
-    }
-
+    
     public String getNativePlayerInfos() {
         return video.getNativePlayerInfos();
     }
@@ -257,10 +244,6 @@ public class GPSVideoPlayer implements PlayerObserver{
         
     }
 
-    public void playing(long time) {
-        // TODO Auto-generated method stub
-        
-    }
 
     public void toggleSubtitles() {
         video.toggleSubs();
@@ -276,10 +259,6 @@ public class GPSVideoPlayer implements PlayerObserver{
         subtTitleComponent=a;
     }
 
-    public void metadata(long time, boolean subtitles) {
-        // TODO Auto-generated method stub
-        
-    }
 
     
     

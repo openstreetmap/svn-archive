@@ -1,16 +1,11 @@
 package org.openstreetmap.josm.plugins.videomapping;
 
 import java.awt.Point;
-import java.io.File;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
@@ -19,8 +14,6 @@ public class GpsPlayer {
     private List<WayPoint> ls;
     private WayPoint prev,curr,next;
     private WayPoint start;
-    private Timer t;
-    private TimerTask ani; //for moving trough the list
     private boolean autoCenter;
     
 
@@ -78,7 +71,7 @@ public class GpsPlayer {
     }
     
     //select the given waypoint as center
-    public void jump(WayPoint p)
+    public void goTo(WayPoint p)
     {
         if(ls.contains(p))
         {
@@ -97,24 +90,24 @@ public class GpsPlayer {
     }
     
     //walk k waypoints forward/backward
-    public void jumpRel(int k)
+    public void move(int k)
     {
 
         if ((ls.indexOf(curr)+k>0)&&(ls.indexOf(curr)<ls.size())) //check range
         {
-            jump(ls.get(ls.indexOf(curr)+k));
+            goTo(ls.get(ls.indexOf(curr)+k));
         }
         Main.map.mapView.repaint(); //seperate modell and view logic...
     }
     
     //select the k-th waypoint
-    public void jump(int k)
+    public void goTo(int k)
     {
         if (k>0)
         {
             if ((ls.indexOf(curr)+k>0)&&(ls.indexOf(curr)<ls.size())) //check range
             {
-                jump(ls.get(k));
+                goTo(ls.get(k));
             }
             Main.map.mapView.repaint();
         }
@@ -123,9 +116,10 @@ public class GpsPlayer {
     //go to the position at the timecode e.g.g "14:00:01";
     public void jump(Time GPSAbsTime)
     {
-        jump(getWaypoint(GPSAbsTime.getTime()-start.getTime().getTime())); //TODO replace Time by Date?
+        goTo(getWaypoint(GPSAbsTime.getTime()-start.getTime().getTime())); //TODO replace Time by Date?
     }
     
+    /*
     //go to the position at 
     public void jump(Date GPSDate)
     {
@@ -136,10 +130,10 @@ public class GpsPlayer {
         s=GPSDate.getSeconds()-start.getTime().getSeconds();
         m=GPSDate.getMinutes()-start.getTime().getMinutes();
         h=GPSDate.getHours()-start.getTime().getHours();
-        diff=s*1000+m*60*1000+h*60*60*1000; //TODO ugly hack but nothing else works right
-        jump(getWaypoint(diff)); 
+        diff=s*1000+m*60*1000+h*60*60*1000; //FIXME ugly hack but nothing else works right
+        goTo(getWaypoint(diff)); 
     }
-    
+    */
     //gets only points on the line of the GPS track (between waypoints) nearby the point m
     private Point getInterpolated(Point m)
     {
@@ -201,7 +195,6 @@ public class GpsPlayer {
         int dX,dY;
         Point p;
         Point leftP,rightP;
-        Point c = Main.map.mapView.getPoint(getCurr().getEastNorth());
         Point p1 = Main.map.mapView.getPoint(getCurr().getEastNorth());
         Point p2 = getEndpoint();       
         //determine which point is what
@@ -219,10 +212,9 @@ public class GpsPlayer {
 
     //gets further infos for a point between two Waypoints
     public WayPoint getInterpolatedWaypoint(Point m)
-    {   int a,b,length,lengthSeg;
+    {   int length,lengthSeg;
         long timeSeg;
         float ratio;
-        Time base;
         Point p2;
         
         Point curr =Main.map.mapView.getPoint(getCurr().getEastNorth());
@@ -271,9 +263,7 @@ public class GpsPlayer {
     public List<WayPoint> getInterpolatedLine(int interval)
     {
         List<WayPoint> ls;
-        Point p2;
         float step;
-        int length;
         
         step=100/(float)interval;
         ls=new LinkedList<WayPoint>();
@@ -331,12 +321,13 @@ public class GpsPlayer {
         return lengthSeg;
     }
 
-    //returns time in ms relatie to startpoint
+    //returns time in ms relative to startpoint
     public long getRelativeTime()
     {
         return getRelativeTime(curr);
     }
     
+    //returns time in ms relative to startpoint
     public long getRelativeTime(WayPoint p)
     {
         return p.getTime().getTime()-start.getTime().getTime(); //TODO assumes timeintervall is constant!!!!
@@ -346,7 +337,7 @@ public class GpsPlayer {
     //jumps to a specific time
     public void jump(long relTime) {
         int pos = Math.round(relTime/1000);//TODO ugly quick hack   
-        jump(pos);
+        goTo(pos);
         //if (autoCenter) Main.map.mapView.
     }
     

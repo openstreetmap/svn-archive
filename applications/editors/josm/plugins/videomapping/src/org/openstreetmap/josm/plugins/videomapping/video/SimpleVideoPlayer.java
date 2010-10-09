@@ -15,7 +15,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.Hashtable ;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,11 +31,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.videomapping.PlayerObserver;
+import org.openstreetmap.josm.plugins.videomapping.VideoObserver;
 import static org.openstreetmap.josm.tools.I18n.*;
 
 import uk.co.caprica.vlcj.binding.LibVlc;
@@ -63,7 +64,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
     private static final Logger LOG = Logger.getLogger(MediaPlayerFactory.class);
     private int jumpLength=1000;
     private int  loopLength=6000;
-    private static Set<PlayerObserver> observers = new HashSet<PlayerObserver>(); //we have to implement our own Observer pattern
+    private static Set<VideoObserver> observers = new HashSet<VideoObserver>(); //we have to implement our own Observer pattern
     
     public SimpleVideoPlayer() {
         super();
@@ -100,7 +101,17 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
             //jump(0);
             //create updater
             ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-            executorService.scheduleAtFixedRate(new Syncer(this), 0L, 1000L, TimeUnit.MILLISECONDS);
+            executorService.scheduleAtFixedRate(new Runnable() {
+				//We have to do syncing in the main thread
+				public void run() {
+					SwingUtilities.invokeLater(new Runnable() {
+				          //here we update
+				        public void run() {
+				            if (isPlaying()) updateTime(); //if the video is seeking we get a mess
+				        }
+				      });
+				}
+			}, 0L, 1000L, TimeUnit.MILLISECONDS);
             //setDefaultCloseOperation(EXIT_ON_CLOSE);
             addWindowListener(this);
         }
@@ -133,7 +144,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
         speed.setMajorTickSpacing(100);
         speed.setPaintTicks(true);          
         speed.setOrientation(Adjustable.VERTICAL);
-        Hashtable labelTable = new Hashtable();
+        Hashtable labelTable = new Hashtable ();
         labelTable.put( new Integer( 0 ), new JLabel("1x") );
         labelTable.put( new Integer( -200 ), new JLabel("-2x") );
         labelTable.put( new Integer( 200 ), new JLabel("2x") );
@@ -243,7 +254,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
         scr.setSize(new Dimension((int)(org.width*perc), (int)(org.height*perc)));
         pack();
         //send out metadatas to all observers
-        for (PlayerObserver o : observers) {
+        for (VideoObserver o : observers) {
             o.metadata(0, hasSubtitles());
         }
     }
@@ -421,7 +432,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
         mp.setSpu(spu);
     }
 
-    public static void addObserver(PlayerObserver observer) {
+    public static void addObserver(VideoObserver observer) {
 
             observers.add(observer);
 
@@ -429,7 +440,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 
      
 
-        public static void removeObserver(PlayerObserver observer) {
+        public static void removeObserver(VideoObserver observer) {
 
             observers.remove(observer);
 
@@ -437,7 +448,7 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
 
         private static void notifyObservers(long newTime) {
 
-            for (PlayerObserver o : observers) {
+            for (VideoObserver o : observers) {
                 o.playing(newTime);
             }
 

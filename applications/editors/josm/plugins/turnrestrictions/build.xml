@@ -38,14 +38,13 @@
       ************************************************
       ** should not be necessary to change the following properties
      -->
-	<!-- <property name="josm"                   location="../../core/dist/josm-custom.jar"/> -->
-	<property name="josm"                   location="../JOSM/dist/josm-custom.jar"/> 
+	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.build.dir"       value="build"/>
 	<property name="plugin.src.dir"         value="src"/>
 	<!-- this is the directory where the plugin jar is copied to -->
 	<property name="plugin.dist.dir"        value="dist"/>
-	<property name="ant.build.javac.target" value="1.5"/>
-	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+	<property name="ant.build.javac.target" value="1.6"/>
+	<property name="plugin.jar"             value="../../dist/${ant.project.name}.jar"/>
     <property name="test.build.dir" 	    value="test/build" />
 	<!--
     **********************************************************
@@ -297,14 +296,16 @@
 	<target name="test-compile" depends="compile,test-clean" description="Compiles the test files">
 		<echo message="compiling groovy test cases for ${plugin.jar} ... "/>
 		
+		<echo message="compiling java test cases for ${plugin.jar} ... "/>
+			<javac srcdir="test/src" classpathref="test.class.path" debug="true" destdir="${test.build.dir}">	
+				<compilerarg value="-Xlint:deprecation"/>
+				<compilerarg value="-Xlint:unchecked"/>
+			</javac>
+		
 		<groovyc srcdir="test/src" destdir="${test.build.dir}" classpathref="groovyc.path">			
 		</groovyc>		
 		
-		<echo message="compiling java test cases for ${plugin.jar} ... "/>
-		<javac srcdir="test/src" classpathref="test.class.path" debug="true" destdir="${test.build.dir}">	
-			<compilerarg value="-Xlint:deprecation"/>
-			<compilerarg value="-Xlint:unchecked"/>
-		</javac>
+		
 	</target>
 	
 	<target name="test-run" depends="test-compile" description="Runs the junit tests">	

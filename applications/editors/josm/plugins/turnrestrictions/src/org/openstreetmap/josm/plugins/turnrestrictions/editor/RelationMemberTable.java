@@ -62,6 +62,7 @@ public class RelationMemberTable extends JTable {
         setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         setRowSelectionAllowed(true);
         setColumnSelectionAllowed(true);
+        setFillsViewportHeight(true); // make sure we can drag onto an empty table
 
         // register the popup menu launcher
         addMouseListener(new TablePopupLauncher());

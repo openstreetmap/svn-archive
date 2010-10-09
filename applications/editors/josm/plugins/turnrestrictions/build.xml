@@ -38,14 +38,15 @@
       ************************************************
       ** should not be necessary to change the following properties
      -->
-	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+	<!-- <property name="josm"                   location="../../core/dist/josm-custom.jar"/> -->
+	<property name="josm"                   location="../JOSM/dist/josm-custom.jar"/> 
 	<property name="plugin.build.dir"       value="build"/>
 	<property name="plugin.src.dir"         value="src"/>
 	<!-- this is the directory where the plugin jar is copied to -->
 	<property name="plugin.dist.dir"        value="dist"/>
 	<property name="ant.build.javac.target" value="1.5"/>
 	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-
+    <property name="test.build.dir" 	    value="test/build" />
 	<!--
     **********************************************************
     ** init - initializes the build
@@ -53,6 +54,7 @@
     -->
 	<target name="init">
 		<mkdir dir="${plugin.build.dir}"/>
+		<mkdir dir="${test.build.dir}"/>
 	</target>
 
 	<!--
@@ -251,5 +253,74 @@
 	</target>
 
 	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+	</target>
+
+
+	<!-- ************************************************************************************ -->
+	<!-- * Targets for compiling and running tests                                            -->
+	<!-- ************************************************************************************ -->	
+	<property name="eclipse.plugin.dir" value="C:\software\eclipse-3.6.1\plugins" />
+	
+	<path id="groovy.path">
+		<pathelement location="${eclipse.plugin.dir}/org.codehaus.groovy_1.7.5.xx-20100926-2000-e36-RC1\lib\groovy-all-1.7.5.jar"/>		
+	</path>
+
+	<path id="junit.path">
+		<pathelement location="${eclipse.plugin.dir}/org.junit_4.8.1.v4_8_1_v20100427-1100\junit.jar" />
+	</path>
+
+	<path id="test.class.path">
+		<pathelement location="${josm}"/>
+		<pathelement location="${plugin.build.dir}" />
+		<path refid="groovy.path"/>
+		<path refid="junit.path"/>
+	</path>
+	
+	<path id="groovyc.path">
+		<path refid="junit.path" />
+		<path refid="groovy.path" />
+		<pathelement location="${josm}" />
+		<pathelement location="${test.build.dir}" />
+		<pathelement location="${plugin.build.dir}" />
+		<!-- if we didn't explicitly put hamcrest on the class path, groovyc would
+		     abort and report it is missing a hamcrest class -->
+		<pathelement location="test/lib/hamcrest-all-1.2.jar" />
+	</path>
+	
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.path"/>
+	
+	<target name="test-clean">
+		<delete dir="${test.build.dir}"/>
+		<mkdir dir="${test.build.dir}"/>
+    </target>
+		
+	<target name="test-compile" depends="compile,test-clean" description="Compiles the test files">
+		<echo message="compiling groovy test cases for ${plugin.jar} ... "/>
+		
+		<groovyc srcdir="test/src" destdir="${test.build.dir}" classpathref="groovyc.path">			
+		</groovyc>		
+		
+		<echo message="compiling java test cases for ${plugin.jar} ... "/>
+		<javac srcdir="test/src" classpathref="test.class.path" debug="true" destdir="${test.build.dir}">	
+			<compilerarg value="-Xlint:deprecation"/>
+			<compilerarg value="-Xlint:unchecked"/>
+		</javac>
+	</target>
+	
+	<target name="test-run" depends="test-compile" description="Runs the junit tests">	
+		<delete dir="test/output"/>
+		<mkdir dir="test/output"/>
+
+		<junit printsummary="true" failureproperty="junit.failure">
+		      <classpath>
+		      	<path refid="groovyc.path" />
+		      	<pathelement location="test/config"/> <!-- required for test config file -->
+		      	<pathelement location="."/> <!-- required to load images from subdir 'images/' -->
+		      </classpath>
+			
+			  <test todir="test/output" name='org.openstreetmap.josm.plugins.turnrestrictions.AllUnitTests'>
+		        <formatter type="xml"/>
+			  </test>
+		</junit>
 	</target>
 </project>

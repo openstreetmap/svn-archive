@@ -16,3 +16,5 @@ josm.home/       Some unit test have to run in the context of a running JOSM ins
                  This is the home directory for this JOSM instance. It includes 
                  a preferences files with default entries. 
 
+lib/             Additional libraries used for testing
+

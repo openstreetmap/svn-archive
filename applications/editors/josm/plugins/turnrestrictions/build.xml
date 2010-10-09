@@ -30,7 +30,7 @@
 <project name="turnrestrictions" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Update main version" />
+	<property name="commit.message" value="Migration to Java6 -  making use of JTable::setFillsViewportHeight()" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3518" />
 
@@ -153,7 +153,6 @@
 		</condition>
 		<copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
 	</target>
-
 
 	<!--
 	************************** Publishing the plugin ***********************************
@@ -294,18 +293,16 @@
     </target>
 		
 	<target name="test-compile" depends="compile,test-clean" description="Compiles the test files">
-		<echo message="compiling groovy test cases for ${plugin.jar} ... "/>
 		
 		<echo message="compiling java test cases for ${plugin.jar} ... "/>
 			<javac srcdir="test/src" classpathref="test.class.path" debug="true" destdir="${test.build.dir}">	
 				<compilerarg value="-Xlint:deprecation"/>
 				<compilerarg value="-Xlint:unchecked"/>
 			</javac>
-		
+
+		<echo message="compiling groovy test cases for ${plugin.jar} ... "/>
 		<groovyc srcdir="test/src" destdir="${test.build.dir}" classpathref="groovyc.path">			
 		</groovyc>		
-		
-		
 	</target>
 	
 	<target name="test-run" depends="test-compile" description="Runs the junit tests">	

@@ -30,7 +30,7 @@
 <project name="toms" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="change classpath (see josm bug #5539)" />
+	<property name="commit.message" value="remove classpath property for now (preliminary fix for josm bug #5539)" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3329" />
 
@@ -112,7 +112,7 @@
 				<attribute name="Plugin-Link" value="http://openseamap.org/"/>
 				<attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-				<attribute name="Class-Path" value="tplug/ifc.jar"/>
+<!--				<attribute name="Class-Path" value="tplug/ifc.jar"/> -->
 			</manifest>
 		</jar>
 	</target>

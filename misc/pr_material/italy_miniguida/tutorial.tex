@@ -3,9 +3,11 @@
 % STILI:
 % - NOMI SOFTWARE = \txttt{}
 % - NOMI PROGETTI/LICENZA = \emph{}
-% - KEY = \newcommand{\key}{\underline{\textbf{}}}
-% - VALUE = \newcommand{\key}{\underline{\textit{}}}
-%
+% - KEY = \newcommand{\key}[1]{\underline{\textbf{#1}}}
+% - VALUE = \newcommand{\val}[1]{\underline{\textit{#1}}}
+% - OpenStreetMap = \newcommand{\osm}{\emph{OpenStreetMap}\xspace}
+% - GPS \newcommand{\gps}{GPS\xspace}
+% - url = \url{}
 %
 %
 %
@@ -31,7 +33,7 @@
 \definecolor{UrlColor}{rgb}{0,0.35,0}
 \usepackage[pdftitle={Introduzione ad OpenStreetMap},pdfauthor={Luca Delucchi, Maurizio Napolitano, Alessio Zanol},colorlinks=true,citecolor=UrlColor,urlcolor=UrlColor,filecolor=UrlColor,linkcolor=UrlColor]{hyperref}
 %comando per scrivere openstreetmap
-\newcommand{\osm}{\emph{OpenStreetMap\xspace}}
+\newcommand{\osm}{\emph{OpenStreetMap}\xspace}
 \newcommand{\gps}{GPS\xspace}
 \newcommand{\key}[1]{\underline{\textbf{#1}}}
 \newcommand{\val}[1]{\underline{\textit{#1}}}
@@ -46,7 +48,7 @@
 \rhead{Minitutorial Italiano di \osm}
 %opening
 \title{\begin{Large}Introduzione a \osm\end{Large}}
-\date{\small{Versione 2010}}
+\date{\small{Versione Ottobre 2010}}
 \author{Luca Delucchi, Maurizio Napolitano, Alessio Zanol}
 \begin{document}
 
@@ -78,14 +80,11 @@ L'altra caratteristica molto importante è che tutti possono contribuire arricch
 \subsection{Elementi}
 \textbf{\osm è un database}, gli elementi che possono essere inseriti (strade, negozi, ecc.), tramite alcuni software che vedremo in seguito, sono di quattro tipologie:
 \begin{itemize}
- \item \texttt{punti} (node): singoli punti
- \item \texttt{linee} (way): un insieme di punti non chiuso
- \item \texttt{aree} (polygon): un insieme di punti chiuso, solitamente con il tag area=yes
- \item \texttt{relazioni} (relation): un insieme degli elementi precedenti, per e-sempio una linea degli autobus che è composta da più strade e dalle sue fermate
+ \item \includegraphics{./Mf_node.png} \texttt{punti} (node): singoli punti
+ \item \includegraphics{./Mf_way.png} \texttt{linee} (way): un insieme di punti non chiuso
+ \item \includegraphics{./Mf_area.png} \texttt{aree} (polygon): un insieme di punti chiuso, solitamente con il tag area=yes
+ \item \includegraphics{./Mf_relation.png} \texttt{relazioni} (relation): un insieme degli elementi precedenti, per e-sempio una linea degli autobus che è composta da più strade e dalle sue fermate
 \end{itemize}
-\begin{center}
-\includegraphics{elements.png}
-\end{center}
 \subsection{Tag}
 Le \textbf{etichette (tag)} servono per descrivere le caratteristiche dei vari elementi. I \textbf{tag sono sempre composti da una coppia di nomi}. Il primo è detto \key{key}, il secondo \val{value}. Solitamente la key descrive una famiglia di caratteristiche, mentre il value va più nello specifico. Ad esempio la key \key{highway} indica la famiglia delle strade di qualsiasi tipo, dalle autostrade ai sentieri. Di seguito ne presentiamo alcuni:
 \begin{center}
@@ -102,8 +101,8 @@ Le \textbf{etichette (tag)} servono per descrivere le caratteristiche dei vari e
       & \val{unclassified} & strada del reticolo di base \\
       & \val{residential} & strada per abitazioni \\
       & \val{service} & strada di servizio \\
-      & \val{track} & strada agricole o forestali \\
-      & \val{pedestrian} & via pedonala cittadine \\
+      & \val{track} & strada agricola o forestale \\
+      & \val{pedestrian} & via pedonale cittadina \\
       & \val{footway} & sentiero \\
       & \val{cycleway} & pista ciclabile \\
       & \val{steps} & scala \\
@@ -115,7 +114,7 @@ Le \textbf{etichette (tag)} servono per descrivere le caratteristiche dei vari e
 \end{center}
 I tag non rappresentano solo un elemento, ma possono essere usati per più elementi: per esempio \key{highway} è prevalentemente associato alle linee ma, come potete vedere sopra, vi sono alcuni casi in cui è utilizzato con i nodi \key{highway}=\val{bus\_stop} o \key{highway}=\val{traffic\_signal}.
 
-I tag usati sono tantissimi e continuano ad aumentare e migliorare, permettendo di mappare qualsiasi elemento possa essere rappresentato da una coppia di coordinate geografiche. Uuna vasta lista è disponibile al link  \url{http://wiki.openstreetmap.org/wiki/Map_Features}. Inoltre è possibile controllare, discutere e votare i nuovi tag proposti qui in questa pagina \url{http://wiki.openstreetmap.org/wiki/Proposed_features}.
+I tag usati sono tantissimi e continuano ad aumentare e migliorare, permettendo di mappare qualsiasi elemento possa essere rappresentato da una coppia di coordinate geografiche. Una vasta lista è disponibile al link  \url{http://wiki.openstreetmap.org/wiki/Map_Features}. Inoltre è possibile controllare, discutere e votare i nuovi tag proposti qui in questa pagina \url{http://wiki.openstreetmap.org/wiki/Proposed_features}.
 
 Oltre ai tag per le strade, esistono molti tag per elementi puntuali, lineari e areali. Eccone alcuni:
 \begin{center}
@@ -218,7 +217,7 @@ Un'altra cosa molto importante, quando si inizia a tracciare le strade, in parti
  \includegraphics[width=0.7\columnwidth]{potlatch.png}
  \caption{\textit{L'interfaccia di \texttt{Potlatch}}}
 \end{wrapfloat}
-Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le fotoaeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \texttt{JOSM} o \texttt{Merkator}). 
+Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \texttt{JOSM} o \texttt{Merkator}). 
 
 Se non hai un \gps puoi anche usare \texttt{Walking Papers}, che permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri.
 
@@ -231,7 +230,7 @@ Come spiegato nei primi paragrafi, le tracce \gps non entrano direttamente nel d
 \end{wrapfloat}
 Supponiamo di aver a disposizione un \gps per fare una bellissima gita in montagna. Accendiamo il nostro apparecchio, attendiamo l'aggancio dei satelliti ed iniziamo la registrazione della traccia. Per il progetto è molto importante avere i punti delle tracce abbastanza ravvicinati perciò \textbf{è bene settare nelle impostazioni del vostro \gps il salvataggio i punti delle tracce con una frequenza maggiore a quella di default}. Le impostazioni più utilizzate sono quelle basate sul \textit{tempo} (questo metodo va settato in base al mezzo di locomozione: in macchina e in bici vanno bene valori inferiori a 5 secondi; a piedi, con un passo non troppo svelto, si può arrivare fino a 10) oppure sulla \textit{distanza} (in questo caso è bene non superare i 10 m, sui garmin è il minimo disponibile), per i novizi è consigliato di utilizzare la distanza poichè questo metodo crea una traccia ``più pulita'' rispetto al metodo del tempo.
 
-Il nostro percorso i-nizi su una strada forestale. È bene in questo caso appuntare questa informazione poiché nella fase di editing sarà importante per etichettarla correttamente con \key{highway}=\val{track}. Un modo semplice per te-ner nota di queste cose è utilizzare i waypoint registrabili col \gps, cioè memorizzare nel nostro caso il punto di inizio della strada forestale con un waypoint e, se il modello lo permette, asse-gnargli un nome significativo (es. inizio forestale). Se il \gps non lo permette appuntare su un pezzo di carta il codice del waypoint in questione e la sua descrizione. Allo stesso modo registreremo la fine della strada forestale con un altro waypoint, così come l'inizio del sentiero.
+Il nostro percorso i-nizia su una strada forestale. È bene in questo caso appuntare questa informazione poiché nella fase di editing sarà importante per etichettarla correttamente con \key{highway}=\val{track}. Un modo semplice per te-ner nota di queste cose è utilizzare i waypoint registrabili col \gps, cioè memorizzare nel nostro caso il punto di inizio della strada forestale con un waypoint e, se il modello lo permette, asse-gnargli un nome significativo (es. inizio forestale). Se il \gps non lo permette appuntare su un pezzo di carta il codice del waypoint in questione e la sua descrizione. Allo stesso modo registreremo la fine della strada forestale con un altro waypoint, così come l'inizio del sentiero.
 
 Sempre mediante i waypoint, è utile appuntare informazioni interessanti come il codice del sentiero o il suo nome.
 
@@ -298,8 +297,7 @@ Se hai dubbi o domande consulta le risposte alle domande frequenti \url{http://w
 \section{Contatti}
 \textbf{Il principale riferimento nazionale è la mailing list italiana:\newline \url{http://lists.openstreetmap.org/listinfo/talk-it}}
 
-Altra risorsa utile è la chat (canale irc) \#osm-it @ irc.oftc.net, che può essere raggiunta, oltre che da client irc, anche attraverso questo indirizzo web \url{https://www.mibbit.com/?server=irc.oftc.net\&channel=\%23osm-it}; \\ci puoi trovare anche nella chat (canale irc) di \emph{GFOSS.it}, la principale associazione che supporta OSM in italia. \#gfoss @ irc.eu.freenode.net 
-È possibile accedervi via web grazie al servizio \url{webchat.freenode.net}  canale \#gfoss
+Altra risorsa utile è la chat (canale irc) \#osm-it @ irc.oftc.net, che può essere raggiunta, oltre che da client irc, anche attraverso questo indirizzo web \url{https://www.mibbit.com/?server=irc.oftc.net\&channel=\%23osm-it}; ci puoi trovare anche nella chat (canale irc) di \emph{GFOSS.it}, la principale associazione che supporta OSM in Italia, l'indirizzo è \#gfoss @ irc.eu.freenode.net. Ci suò accedere anche via web tramite \url{webchat.freenode.net}  canale \#gfoss
 
 Esistono inoltre molti strumenti internazionali per svariate notizie su \osm \url{http://wiki.openstreetmap.org/wiki/Mailing_list}
 
@@ -309,7 +307,7 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 \subsection{Editor}
 \texttt{JOSM}: l'editor per \osm più utilizzato, scritto in Java ha molti tools utilissimi oltre a svariati plugin
 
-\texttt{Potlach}: editor online dal sito principale di \osm, molto comodo per la possibilità di avere le fotoaeree di Yahoo come sfondo
+\texttt{Potlach}: editor online dal sito principale di \osm, molto comodo per la possibilità di avere le foto aeree di Yahoo come sfondo
 
 \texttt{Merkator}: altro editor per \osm
 

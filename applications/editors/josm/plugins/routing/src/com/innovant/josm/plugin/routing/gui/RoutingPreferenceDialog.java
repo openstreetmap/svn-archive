@@ -28,6 +28,8 @@
 
 package com.innovant.josm.plugin.routing.gui;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -50,17 +52,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
 
 import com.innovant.josm.jrt.osm.OsmWayTypes;
-import com.innovant.josm.plugin.routing.RoutingPlugin;
 
 public class RoutingPreferenceDialog implements PreferenceSetting {
 

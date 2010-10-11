@@ -130,6 +130,7 @@ public class RoutingLayer extends Layer {
      */
     public final Node getNearestHighwayNode(Point p) {
         Node nearest = null;
+        int snapDistance = NavigatableComponent.PROP_SNAP_DISTANCE.get();
         double minDist = 0;
         for (Way w : dataLayer.data.getWays()) {
             if (w.isDeleted() || w.isIncomplete() || w.get("highway")==null) continue;
@@ -138,7 +139,7 @@ public class RoutingLayer extends Layer {
 
                 Point P = Main.map.mapView.getPoint(n);
                 double dist = p.distanceSq(P);
-                if (dist < NavigatableComponent.snapDistance) {
+                if (dist < snapDistance) {
                     if ((nearest == null) || (dist < minDist)) {
                         nearest = n;
                         minDist = dist;

@@ -256,11 +256,11 @@
 
 	<!-- ************************************************************************************ -->
 	<!-- * Targets for compiling and running tests                                            -->
-	<!-- ************************************************************************************ -->	
+	<!-- ************************************************************************************ -->
 	<property name="eclipse.plugin.dir" value="C:\software\eclipse-3.6.1\plugins" />
-	
+
 	<path id="groovy.path">
-		<pathelement location="${eclipse.plugin.dir}/org.codehaus.groovy_1.7.5.xx-20100926-2000-e36-RC1\lib\groovy-all-1.7.5.jar"/>		
+		<pathelement location="${eclipse.plugin.dir}/org.codehaus.groovy_1.7.5.xx-20100926-2000-e36-RC1\lib\groovy-all-1.7.5.jar"/>
 	</path>
 
 	<path id="junit.path">
@@ -273,7 +273,7 @@
 		<path refid="groovy.path"/>
 		<path refid="junit.path"/>
 	</path>
-	
+
 	<path id="groovyc.path">
 		<path refid="junit.path" />
 		<path refid="groovy.path" />
@@ -284,28 +284,28 @@
 		     abort and report it is missing a hamcrest class -->
 		<pathelement location="test/lib/hamcrest-all-1.2.jar" />
 	</path>
-	
-	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.path"/>
-	
+
 	<target name="test-clean">
 		<delete dir="${test.build.dir}"/>
 		<mkdir dir="${test.build.dir}"/>
     </target>
-		
+
 	<target name="test-compile" depends="compile,test-clean" description="Compiles the test files">
-		
+
+		<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.path"/>
+
 		<echo message="compiling java test cases for ${plugin.jar} ... "/>
-			<javac srcdir="test/src" classpathref="test.class.path" debug="true" destdir="${test.build.dir}">	
+			<javac srcdir="test/src" classpathref="test.class.path" debug="true" destdir="${test.build.dir}">
 				<compilerarg value="-Xlint:deprecation"/>
 				<compilerarg value="-Xlint:unchecked"/>
 			</javac>
 
 		<echo message="compiling groovy test cases for ${plugin.jar} ... "/>
-		<groovyc srcdir="test/src" destdir="${test.build.dir}" classpathref="groovyc.path">			
-		</groovyc>		
+		<groovyc srcdir="test/src" destdir="${test.build.dir}" classpathref="groovyc.path">
+		</groovyc>
 	</target>
-	
-	<target name="test-run" depends="test-compile" description="Runs the junit tests">	
+
+	<target name="test-run" depends="test-compile" description="Runs the junit tests">
 		<delete dir="test/output"/>
 		<mkdir dir="test/output"/>
 
@@ -315,7 +315,7 @@
 		      	<pathelement location="test/config"/> <!-- required for test config file -->
 		      	<pathelement location="."/> <!-- required to load images from subdir 'images/' -->
 		      </classpath>
-			
+
 			  <test todir="test/output" name='org.openstreetmap.josm.plugins.turnrestrictions.AllUnitTests'>
 		        <formatter type="xml"/>
 			  </test>

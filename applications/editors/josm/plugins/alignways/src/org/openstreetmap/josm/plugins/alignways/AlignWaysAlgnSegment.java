@@ -21,7 +21,7 @@ import org.openstreetmap.josm.gui.NavigatableComponent;
  *         reference segment. Actions it can do: - remember its selected pivot
  *         point - keeps its potential pivot point list up to date - rotate
  *         itself - paint itself and its selected pivot point
- * 
+ *
  */
 public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
@@ -87,7 +87,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
     /**
      * Returns the EastNorth of the specified pivot point pp. It always returns
      * up-to-date data from dataset. Assumes segment is not null.
-     * 
+     *
      * @param pp
      *            The pivot location
      */
@@ -134,7 +134,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
     private PivotLocations findNearbyPivot(Point clickedPoint) {
         PivotLocations nearest = PivotLocations.NONE;
-        int snapDistance = NavigatableComponent.snapDistance;
+        int snapDistance = NavigatableComponent.PROP_SNAP_DISTANCE.get();
 
         // If no alignee selected yet, there's no point to carry on
         if (segment == null)
@@ -154,7 +154,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.openstreetmap.josm.plugins.alignways.AlignWaysRefSegment#paint(java
      * .awt.Graphics2D, org.openstreetmap.josm.gui.MapView,

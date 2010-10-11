@@ -35,7 +35,7 @@
 		enter the *lowest* JOSM version this plugin is currently compatible
 		with
 	-->
-	<property name="plugin.main.version" value="3208" />
+	<property name="plugin.main.version" value="3600" />
 
 
 	<!--
@@ -227,7 +227,7 @@
 	</target>
 
 	<!--
-		** commits the plugin.jar 
+		** commits the plugin.jar
 		-->
 	<target name="commit-dist">
 		<echo>

@@ -76,7 +76,10 @@ L'altra caratteristica molto importante è che tutti possono contribuire arricch
 
 \textbf{\osm non è una copia di Google Maps} e non è quello il suo scopo, è molto di più \dots
 
-\section{La struttura del database OpenStreetMap}
+\section{Perchè \osm}
+\osm come abbiamo detto è un progetto che vuole creare una banca dati geografica libera, uno dei punti di forza è la possibilità di utilizzarla per le più svariate necessità e su  dispositivi differenti. \textbf{I dati sono disponibili in moltissimi formati}, possono essere caricati su GPS, navigatori o cellulari per sapere sempre la vostra posizione o per calcolare il percorso più breve per raggiungere una certa località; potete utilizzarli sul vostro sito per segnalare dove si trova la vostra azienda o per mostrare le vostre immagini georiferite; potete effettuare mappe cartacee a diverse scale e con diversi stili; possono essere usati come base di videogiochi; esistono in diversi formati vettoriali per essere analizzati con software GIS; per ultimo, ma forse il motivo più importante, anche se è quello per il quale si spera non debbano mai utilizzato, per salvare vite...
+
+\section{La struttura del database \osm}
 \subsection{Elementi}
 \textbf{\osm è un database}, gli elementi che possono essere inseriti (strade, negozi, ecc.), tramite alcuni software che vedremo in seguito, sono di quattro tipologie:
 \begin{itemize}
@@ -209,7 +212,7 @@ Per creare una route bisogna quindi aggiungere i tag e poi selezionare quali ele
 \section{Come posso contribuire}
 Per prima cosa dovrai iscriverti attraverso l'homepage; per iniziare a farti un'idea, puoi zoommare in un luogo mappato del quale hai una buona conoscenza e cliccare su ``Edit''; in questo modo darai un'occhiata a come sono strutturate le strade e i punti di interesse cliccandoci su ma, almeno all'inizio, se non sei sicuro di quello che fai non modificare la mappa.
 
-Quello che hai appena usato è \texttt{Potlatch}, l'editor online; però è consigliato utilizzare altri software che funzionano come programmi a se stanti. Il più usato e completo è senz'altro \texttt{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \texttt{Merkaartor} \url{http://www.merkaartor.org/}.
+Quello che hai appena usato è \texttt{Potlatch}, l'editor online; però è sconsigliato utilizzarlo perchè può causare diversi problemi; per esempio le foto aeree di yahoo spesso solo spostate dai dati reali e si rischia di effettuare errori nella connessione di strade. È preferibile utilizzare altri software che funzionano come programmi a se stanti. Il più usato e completo è senz'altro \texttt{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \texttt{Merkaartor} \url{http://www.merkaartor.org/}.
 
 Un'altra cosa molto importante, quando si inizia a tracciare le strade, in particolare con l'editor online, è verificare che le varie strade che si incrociano, non in caso di ponti, siano tra loro interconnesse da un nodo comune. Nell'editor online è possibile assicurarsi di ciò quando, sovrapponendo la linea che si sta tracciando alla strada a cui si vuole congiungere, i nodi di questa si evidenziano di blu.
 \subsection{Non ho il \gps}
@@ -219,20 +222,20 @@ Un'altra cosa molto importante, quando si inizia a tracciare le strade, in parti
 \end{wrapfloat}
 Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \texttt{JOSM} o \texttt{Merkator}). 
 
-Se non hai un \gps puoi anche usare \texttt{Walking Papers}, che permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri.
+Se non hai un \gps puoi anche usare \texttt{Walking Papers}, che permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \texttt{JOSM}
 
 \textbf{Preferisci sempre il sopralluogo di persona sul posto. Nel dubbio non mappare.}
 \subsection{Ho il \gps}
-Come spiegato nei primi paragrafi, le tracce \gps non entrano direttamente nel database di \osm. Sono però estremamente utili come base su cui poi ricalcare le way e i nodi mediante i software a di-sposizione, come \texttt{Potlatch} o \texttt{JOSM}.
+Come spiegato nei primi paragrafi, le tracce \gps non entrano direttamente nel database di \osm. Sono però estremamente utili come base su cui poi ricalcare le way e i nodi mediante i software a disposizione, come \texttt{Potlatch} o \texttt{JOSM}.
 \begin{wrapfloat}{figure}{L}{0pt}
  \includegraphics[width=0.6\columnwidth]{Josm-screenshot.png}
  \caption{\textit{L'interfaccia di JOSM}}
 \end{wrapfloat}
 Supponiamo di aver a disposizione un \gps per fare una bellissima gita in montagna. Accendiamo il nostro apparecchio, attendiamo l'aggancio dei satelliti ed iniziamo la registrazione della traccia. Per il progetto è molto importante avere i punti delle tracce abbastanza ravvicinati perciò \textbf{è bene settare nelle impostazioni del vostro \gps il salvataggio i punti delle tracce con una frequenza maggiore a quella di default}. Le impostazioni più utilizzate sono quelle basate sul \textit{tempo} (questo metodo va settato in base al mezzo di locomozione: in macchina e in bici vanno bene valori inferiori a 5 secondi; a piedi, con un passo non troppo svelto, si può arrivare fino a 10) oppure sulla \textit{distanza} (in questo caso è bene non superare i 10 m, sui garmin è il minimo disponibile), per i novizi è consigliato di utilizzare la distanza poichè questo metodo crea una traccia ``più pulita'' rispetto al metodo del tempo.
 
-Il nostro percorso i-nizia su una strada forestale. È bene in questo caso appuntare questa informazione poiché nella fase di editing sarà importante per etichettarla correttamente con \key{highway}=\val{track}. Un modo semplice per te-ner nota di queste cose è utilizzare i waypoint registrabili col \gps, cioè memorizzare nel nostro caso il punto di inizio della strada forestale con un waypoint e, se il modello lo permette, asse-gnargli un nome significativo (es. inizio forestale). Se il \gps non lo permette appuntare su un pezzo di carta il codice del waypoint in questione e la sua descrizione. Allo stesso modo registreremo la fine della strada forestale con un altro waypoint, così come l'inizio del sentiero.
+Il nostro percorso inizia su una strada forestale. È bene in questo caso appuntare questa informazione poiché nella fase di editing sarà importante per etichettarla correttamente con \key{highway}=\val{track}. Un modo semplice per tener nota di queste cose è utilizzare i waypoint registrabili col \gps, cioè memorizzare nel nostro caso il punto di inizio della strada forestale con un waypoint e, se il modello lo permette, assegnargli un nome significativo (es. inizio forestale). Se il \gps non lo permette appuntare su un pezzo di carta il codice del waypoint in questione e la sua descrizione. Allo stesso modo registreremo la fine della strada forestale con un altro waypoint, così come l'inizio del sentiero.
 
-Sempre mediante i waypoint, è utile appuntare informazioni interessanti come il codice del sentiero o il suo nome.
+Sempre mediante i waypoint, è utile appuntare informazioni interessanti co-me il codice del sentiero o il suo nome.
 
 È da precisare che il nome che si assegna ai waypoint non è fondamentale, ma serve come promemoria personale, infatti nemmeno i waypoint entrano a far parte del database di OSM, ma serviranno esclusivamente da appunti in fase di editing. Adottate quindi lo stile che più trovate utile, completo e comodo per appuntare quel che trovate.
 

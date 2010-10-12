@@ -90,6 +90,9 @@
 # Version 7.0
 # - skip nodes and skip ways performance boost by using seek in files
 #
+# Version 7.1
+# - get...Xml functions added
+#
 #
 # USAGE
 #
@@ -104,9 +107,12 @@
 # getBugs ($lon, $lat, $bugsDownDist, $bugsMaxDist)	> pos, down dist in deg, max dist in km -> html text
 # getNode ()						> ($gId, $gLon, $gLat, $gU, \@gTags) ; # in main @array = @$ref
 # getNode2 ()						> ($gId, $gLon, $gLat, $gU, \@gTags) ; # in main @array = @$ref // returns k/v as array, not string!
+# getNodeXml ()                  > ($gId, $xml) ;
 # getRelation 
 # getWay ()						> ($gId, $gU, \@gNodes, \@gTags) ; # in main @array = @$ref
 # getWay2 ()						> ($gId, $gU, \@gNodes, \@gTags) ; # in main @array = @$ref // returns k/v as array, not string!
+# getWayXml ()                  > ($gId, $xml) ;
+# getRelationXml ()                  > ($gId, $xml) ;
 # hashValue ($lon, $lat)				> $hashValue 0.1 deg
 # hashValue2 ($lon, $lat)				> $hashValue 0.01 deg
 # historyLink ($type, $key) 				> $htmlString
@@ -173,7 +179,7 @@ use Compress::Bzip2 ;		# install packet "libcompress-bzip2-perl"
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK) ;
 
-$VERSION = '7.0' ; 
+$VERSION = '7.1' ; 
 
 my $apiUrl = "http://www.openstreetmap.org/api/0.6/" ; # way/Id
 
@@ -181,7 +187,7 @@ require Exporter ;
 
 @ISA = qw ( Exporter AutoLoader ) ;
 
-@EXPORT = qw (analyzerLink getBugs getNode getNode2 getWay getWay2 getRelation crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
+@EXPORT = qw (analyzerLink getBugs getNode getNode2 getNodeXml getWay getWay2 getWayXml getRelation getRelationXml crossing historyLink hashValue hashValue2 tileNumber openOsmFile osmLink osmLinkMarkerWay osbLink mapCompareLink josmLink josmLinkDontSelect josmLinkSelectWay josmLinkSelectWays josmLinkSelectNode josmLinkSelectNodes printHTMLHeader printHTMLFoot stringTimeSpent distance angle project picLinkMapnik picLinkOsmarender stringFileInfo closeOsmFile skipNodes skipWays binSearch printProgress printNodeList printWayList printGPXHeader printGPXFoot printGPXWaypoint checkOverlap shortestDistance printHTMLTableHead printHTMLTableFoot printHTMLTableHeadings printHTMLTableRowLeft printHTMLTableRowRight printHTMLCellLeft  printHTMLCellLeftEM printHTMLCellLeftTwoValues printHTMLCellCenter printHTMLCellRight printHTMLRowStart printHTMLRowEnd printHTMLiFrameHeader APIgetWay) ;
 
 our $line ; 
 our $file ; 
@@ -440,6 +446,44 @@ sub getNode2 {
 	return ($gId, $gLon, $gLat, $gU, \@gTags) ; # in main @array = @$ref
 } # getNode2
 
+sub getNodeXml {
+   my $gId ;
+   my $xml ;
+   my $id ;
+   if($line =~ /^\s*\<node/) {
+      $xml .= $line;
+      my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+
+      if (! defined $id ) {
+         print "WARNING reading osm file, line follows (expecting id, lon, lat and user for node):\n", $line, "\n" ;
+      }
+
+      unless ($id) { next; }
+      if ( (grep (/"\s*>/, $line)) or (grep (/'\s*>/, $line)) ) {                  # more lines, get tags
+         nextLine() ;
+         while (!grep(/<\/node>/, $line)) {
+
+            $xml .= $line ;
+
+            nextLine() ;
+         }
+         $line =~ /\/node>/ ;
+         $xml .= $line;
+
+         nextLine() ;
+      }
+      else {
+         nextLine() ;
+      }
+      $gId = $id ;
+   } # node
+   else {
+      return (-1, "") ;
+   } # node
+   #print "$gId $gLon $gLat $gU\n" ;
+   return ($gId, $xml) ; # in main @array = @$ref
+} # getNodeXml
+
 
 ######
 # WAYS
@@ -552,6 +596,31 @@ sub getWay2 {
 	return ($gId, $gU, \@gNodes, \@gTags) ;
 } # getWay2
 
+sub getWayXml {
+   my $gId ;
+   my $xml ;
+   if($line =~ /^\s*\<way/) {
+      my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+
+      if (! defined $id ) { print "ERROR: $line\n" ; }
+
+      $xml = $line;
+      nextLine() ;
+      while (not($line =~ /\/way>/)) { # more way data
+         #get nodes and type
+         $xml .= $line;
+         nextLine() ;
+      }
+      $xml .= $line;
+      nextLine() ;
+      $gId = $id ;
+   }
+   else {
+      return (-1, "") ;
+   }
+   return ($gId, $xml) ;
+} # getWayXml
+
 
 ###########
 # RELATIONS
@@ -612,6 +681,32 @@ sub getRelation {
 		return (-1, -1, -1, -1) ;
 	}
 	return ($gId, $gU, \@gMembers, \@gTags) ;
+}
+
+sub getRelationXml {
+   my $gId ;
+   my $xml;
+   
+   if ($line =~ /^\s*\<relation/) {
+
+      my ($id) = ($line =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+      if (! defined $id ) { print "ERROR: $line\n" ; }
+      $xml .= $line;
+      unless ($id) { next ; }
+
+      nextLine() ;
+      while (not($line =~ /\/relation>/)) { # more data
+         $xml .= $line;
+         nextLine() ;
+      }
+      $gId = $id ;
+      $xml .= $line;
+      nextLine() ;
+   }
+   else {
+      return (-1, "") ;
+   }
+   return ($gId, $xml) ;
 }
 
 

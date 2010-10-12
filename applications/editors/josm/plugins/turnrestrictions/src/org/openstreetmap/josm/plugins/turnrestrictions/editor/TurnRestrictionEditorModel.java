@@ -68,6 +68,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
     private  RelationMemberEditorModel memberModel;
     private  IssuesModel issuesModel;
     private NavigationControler navigationControler;
+    private JosmSelectionListModel selectionModel;
     
     /**
      * Creates a model in the context of a {@link OsmDataLayer}
@@ -86,6 +87,14 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
         issuesModel = new IssuesModel(this);
         addObserver(issuesModel);
         tagEditorModel.addTableModelListener(new TagEditorModelObserver());
+        selectionModel = new JosmSelectionListModel(layer);
+    }
+    
+    /**
+     * Replies the model for the currently selected JOSM primitives
+     */
+    public JosmSelectionListModel getJosmSelectionListModel() {
+    	return selectionModel;
     }
     
     /**
@@ -210,6 +219,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
     public void apply(Relation turnRestriction) {
         CheckParameterUtil.ensureParameterNotNull(turnRestriction, "turnRestriction");      
         TagCollection tags = tagEditorModel.getTagCollection();
+        logger.info(tags.toString());
         turnRestriction.removeAll();
         tags.applyTo(turnRestriction);
         memberModel.applyTo(turnRestriction);       

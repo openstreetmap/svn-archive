@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.ListSelectionModel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
@@ -37,7 +38,7 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
     
     private final List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>();
-    private DefaultListSelectionModel selectionModel;
+    private final DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
     private OsmDataLayer layer;
 
     /**
@@ -45,14 +46,11 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
      * 
      * @param selectionModel the selection model used in the list. Must not be null.
      * @param layer the layer this model is displaying the selection from. Must not be null.
-     * @throws IllegalArgumentException thrown if {@code selectionModel} is null
      * @throws IllegalArgumentException thrown if {@code layer} is null
      */
-    public JosmSelectionListModel(OsmDataLayer layer, DefaultListSelectionModel selectionModel) {
-        CheckParameterUtil.ensureParameterNotNull(selectionModel, "selectionModel");
+    public JosmSelectionListModel(OsmDataLayer layer) throws IllegalArgumentException{
         CheckParameterUtil.ensureParameterNotNull(layer, "layer");
         this.layer = layer;
-        this.selectionModel = selectionModel;
         setJOSMSelection(layer.data.getSelected());
     }
 
@@ -117,7 +115,12 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
         }
         this.selection.addAll(selection);
         fireContentsChanged(this, 0, getSize());       
-        setSelected(sel);
+        setSelected(sel);       
+        // if the user selects exactly one primitive (i.e. a way), we automatically
+        // select it in the list of selected JOSM objects too. 
+        if (getSelected().isEmpty() && this.selection.size() == 1) {
+        	setSelected(this.selection);
+        }
     }
 
     /**
@@ -137,6 +140,10 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
             }
         }
         setSelected(sel);
+    }
+        
+    public ListSelectionModel getListSelectionModel() {
+    	return selectionModel;
     }
 
     /* ------------------------------------------------------------------------ */

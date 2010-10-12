@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -37,10 +38,13 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvider;
@@ -63,6 +67,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
     private DeleteAction actDelete;
     private CopyAction actCopy;
     private PasteAction actPaste;
+    private AcceptAction actAccept;
     private TransferHandler transferHandler;
     
     /**
@@ -80,12 +85,21 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
                 )
         );
         
+        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
+        pnlButtons.setBorder(null);
         JButton btn;
         actDelete = new DeleteAction();
-        add(btn = new JButton(actDelete), BorderLayout.EAST);
+        pnlButtons.add(btn = new JButton(actDelete));
         btn.setFocusable(false);
         btn.setText(null);
         btn.setBorder(BorderFactory.createRaisedBevelBorder());
+        
+        actAccept = new AcceptAction();
+        pnlButtons.add(btn = new JButton(actAccept));
+        btn.setFocusable(false);
+        btn.setText(null);
+        btn.setBorder(BorderFactory.createRaisedBevelBorder());
+        add(pnlButtons, BorderLayout.EAST);
                 
         // focus handling
         FocusHandler fh  = new FocusHandler();
@@ -259,6 +273,37 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
     }
     
     /**
+     * Accepts the currently selected way as turn restriction leg. Only enabled,
+     * if there is exactly one way selected 
+     */
+    class AcceptAction extends AbstractAction implements ListSelectionListener {
+    	
+    	public AcceptAction() {
+			 putValue(SHORT_DESCRIPTION, tr("Accept the currently selected way"));
+	         putValue(NAME, tr("Accept"));
+	         putValue(SMALL_ICON, ImageProvider.get("accept"));
+	         model.getJosmSelectionListModel().getListSelectionModel().addListSelectionListener(this);
+	         updateEnabledState();	         
+    	}
+    	
+    	 public void actionPerformed(ActionEvent e) {
+    		 List<Way> selWays = OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class);
+    		 if (selWays.size() != 1) return;
+    		 Way w = selWays.get(0);    		 
+             model.setTurnRestrictionLeg(role, w);            
+         }       
+         
+         public void updateEnabledState() {
+        	setEnabled(OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class).size() == 1);
+         }
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			updateEnabledState();
+		}
+    }
+    
+    /**
      * The transfer handler for Drag-and-Drop. 
      */
     class LegEditorTransferHandler extends PrimitiveIdListTransferHandler {
@@ -365,4 +410,6 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
             delegate.actionPerformed(e);            
         }
     }
+    
+     
 }

@@ -113,12 +113,12 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      * @return
      */
     protected JPanel buildJOSMSelectionPanel() {
-        pnlJosmSelection = new JosmSelectionPanel(layer);
+        pnlJosmSelection = new JosmSelectionPanel(layer,editorModel.getJosmSelectionListModel());
         return pnlJosmSelection;
     }
     
     /**
-     * Builds the panel with the editor masks (the left panel in the split pane of 
+     * Builds the panel with the editor forms (the left panel in the split pane of 
      * this dialog)
      * 
      * @return

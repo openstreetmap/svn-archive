@@ -50,6 +50,8 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     private JPanel pnlNonStandard;
     private ExceptValueModel exceptValue = new ExceptValueModel();
     
+    private StandardVehicleTypeChangeListener svtChangeListener;
+    
     private JPanel buildMessagePanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         HtmlPanel msg = new HtmlPanel();
@@ -66,7 +68,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         if (pnlStandard != null)
             return pnlStandard;
         
-        StandardVehicleTypeChangeListener changeHandler = new StandardVehicleTypeChangeListener();
+        svtChangeListener = new StandardVehicleTypeChangeListener();
         
         GridBagConstraints gc = new GridBagConstraints();
         gc.anchor = GridBagConstraints.NORTHWEST;
@@ -77,7 +79,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         pnlStandard = new JPanel(new GridBagLayout());
         JLabel lbl;
         cbPsv = new JCheckBox();
-        cbPsv.addItemListener(changeHandler);
+        cbPsv.addItemListener(svtChangeListener);
         lbl = new JLabel();
         lbl.setText(tr("Public Service Vehicles"));
         lbl.setToolTipText(tr("Public service vehicles like buses, tramways, etc."));
@@ -90,7 +92,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         pnlStandard.add(lbl, gc);
         
         cbHgv = new JCheckBox();
-        cbHgv.addItemListener(changeHandler);
+        cbHgv.addItemListener(svtChangeListener);
         lbl = new JLabel();
         lbl.setText(tr("Heavy Goods Vehicles"));
         lbl.setIcon(ImageProvider.get("vehicle", "hgv"));
@@ -103,7 +105,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         pnlStandard.add(lbl, gc);
 
         cbMotorcar = new JCheckBox();
-        cbMotorcar.addItemListener(changeHandler);
+        cbMotorcar.addItemListener(svtChangeListener);
         lbl = new JLabel();
         lbl.setText(tr("Motorcars"));
         lbl.setIcon(ImageProvider.get("vehicle", "motorcar"));
@@ -117,7 +119,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         pnlStandard.add(lbl, gc);
         
         cbBicyle = new JCheckBox();
-        cbBicyle.addItemListener(changeHandler);
+        cbBicyle.addItemListener(svtChangeListener);
         lbl = new JLabel();
         lbl.setText(tr("Bicycles"));
         lbl.setIcon(ImageProvider.get("vehicle", "bicycle"));
@@ -211,7 +213,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         bgStandardOrNonStandard.add(rbNonStandardException);
         bgStandardOrNonStandard.add(rbStandardException);
         
-        StandardNonStandardChangeHander changeHandler = new StandardNonStandardChangeHander();
+        StandardNonStandardChangeHandler changeHandler = new StandardNonStandardChangeHandler();
         rbNonStandardException.addItemListener(changeHandler);
         rbStandardException.addItemListener(changeHandler);
     }
@@ -230,10 +232,17 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     }
     
     protected void init() {
-        cbPsv.setSelected(exceptValue.isVehicleException("psv"));
-        cbBicyle.setSelected(exceptValue.isVehicleException("bicycle"));
-        cbMotorcar.setSelected(exceptValue.isVehicleException("motorcar"));
-        cbHgv.setSelected(exceptValue.isVehicleException("hgv"));
+    	try {
+    		// temporarily disable the checkbox listeners while initializing the
+    		// checkboxes with the input value
+    		this.svtChangeListener.setEnabled(false);
+	        cbPsv.setSelected(exceptValue.isVehicleException("psv"));
+	        cbBicyle.setSelected(exceptValue.isVehicleException("bicycle"));
+	        cbMotorcar.setSelected(exceptValue.isVehicleException("motorcar"));
+	        cbHgv.setSelected(exceptValue.isVehicleException("hgv"));
+    	} finally {
+    		this.svtChangeListener.setEnabled(true);
+    	}
         if (!exceptValue.isStandard()){
             rbNonStandardException.setSelected(true);
             tfNonStandardValue.setText(exceptValue.getValue());
@@ -284,7 +293,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     /* ------------------------------------------------------------------------------------ */
     /* inner classes                                                                        */
     /* ------------------------------------------------------------------------------------ */
-    class StandardNonStandardChangeHander implements ItemListener {
+    class StandardNonStandardChangeHandler implements ItemListener {
         public void itemStateChanged(ItemEvent e) {
             if (rbNonStandardException.isSelected()){
                 setEnabledNonStandardInputPanel(true);
@@ -300,11 +309,18 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     }
     
     class StandardVehicleTypeChangeListener implements ItemListener {
-        public void itemStateChanged(ItemEvent e) {
+    	private boolean enabled = true;
+    	
+    	public void setEnabled(boolean enabled){
+    		this.enabled = enabled;
+    	}
+    	
+        public void itemStateChanged(ItemEvent e) {        	
+        	if (!enabled) return;
             exceptValue.setVehicleException("bicycle", cbBicyle.isSelected());
             exceptValue.setVehicleException("hgv", cbHgv.isSelected());
             exceptValue.setVehicleException("psv", cbPsv.isSelected());
-            exceptValue.setVehicleException("motorcar", cbMotorcar.isSelected());
+            exceptValue.setVehicleException("motorcar", cbMotorcar.isSelected());            
             model.setExcept(exceptValue);
         }
     }

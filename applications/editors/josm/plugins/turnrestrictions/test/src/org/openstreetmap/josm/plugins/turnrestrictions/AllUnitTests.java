@@ -1,14 +1,12 @@
 package org.openstreetmap.josm.plugins.turnrestrictions;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.AllEditorTests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-public class AllUnitTests {
-	public static Test suite() throws Exception {
-		TestSuite suite = new TestSuite(AllUnitTests.class.getName());
-		suite.addTest(AllEditorTests.suite());
-		return suite;
-	}
-}
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+	AllEditorTests.class,
+	TurnRestrictionBuilderTest.class
+})
+public class AllUnitTests {}

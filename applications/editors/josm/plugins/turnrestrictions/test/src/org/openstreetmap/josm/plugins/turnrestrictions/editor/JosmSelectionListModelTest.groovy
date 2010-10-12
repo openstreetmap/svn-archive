@@ -32,14 +32,10 @@ class JosmSelectionListModelTest extends GroovyTestCase {
 	public void test_Constructor(){
 		DataSet ds = new DataSet()
 		OsmDataLayer layer = new OsmDataLayer(ds, "test", null)
-		JosmSelectionListModel model = new JosmSelectionListModel(layer, new DefaultListSelectionModel());		
+		JosmSelectionListModel model = new JosmSelectionListModel(layer);		
 		
 		shouldFail(IllegalArgumentException){
-			model = new JosmSelectionListModel(layer, null)
-		}
-		
-		shouldFail(IllegalArgumentException){
-			model = new JosmSelectionListModel(null, new DefaultListSelectionModel())
+			model = new JosmSelectionListModel(null)
 		}
 	}
 	
@@ -47,7 +43,7 @@ class JosmSelectionListModelTest extends GroovyTestCase {
 	public void test_setJOSMSelection() {
 		DataSet ds = new DataSet()
 		OsmDataLayer layer = new OsmDataLayer(ds, "test", null)
-		JosmSelectionListModel model = new JosmSelectionListModel(layer, new DefaultListSelectionModel());
+		JosmSelectionListModel model = new JosmSelectionListModel(layer);
 		
 		// set a selection with three objects 
 		def objects = [new Node(new LatLon(1,1)), new Way(), new Relation()]
@@ -69,7 +65,7 @@ class JosmSelectionListModelTest extends GroovyTestCase {
 	public void test_setJOSMSelection_withSelected() {
 		DataSet ds = new DataSet()
 		OsmDataLayer layer = new OsmDataLayer(ds, "test", null)
-		JosmSelectionListModel model = new JosmSelectionListModel(layer, new DefaultListSelectionModel());
+		JosmSelectionListModel model = new JosmSelectionListModel(layer);
 		def objects = [new Node(new LatLon(1,1)), new Way(), new Relation()]	
 		model.setJOSMSelection(objects)
 		model.setSelected(objects[0..1])
@@ -87,9 +83,10 @@ class JosmSelectionListModelTest extends GroovyTestCase {
 	public void test_getSelected() {
 		DataSet ds = new DataSet()
 		OsmDataLayer layer = new OsmDataLayer(ds, "test", null)
-		DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
 		
-		JosmSelectionListModel model = new JosmSelectionListModel(layer, selectionModel);
+		JosmSelectionListModel model = new JosmSelectionListModel(layer);
+		DefaultListSelectionModel selectionModel = model.getListSelectionModel()
+		
 		assert model.getSelected() != null
 		assert model.getSelected().isEmpty()
 	
@@ -108,10 +105,10 @@ class JosmSelectionListModelTest extends GroovyTestCase {
 	public void test_setSelected() {
 		DataSet ds = new DataSet()
 		OsmDataLayer layer = new OsmDataLayer(ds, "test", null)
-		DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
 		
 		// set selected with null is OK - nothing selected thereafter
-		JosmSelectionListModel model = new JosmSelectionListModel(layer, selectionModel);
+		JosmSelectionListModel model = new JosmSelectionListModel(layer);
+		DefaultListSelectionModel selectionModel = model.getListSelectionModel()
 		model.setSelected(null)
 		assert model.getSelected().isEmpty()
 		
@@ -134,15 +131,15 @@ class JosmSelectionListModelTest extends GroovyTestCase {
 	@Test 
 	public void test_editLayerChanged() {
 		DataSet ds = new DataSet()
-		DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();		
+			
 		def objects = [new Node(new LatLon(1,1)), new Way(), new Relation()]	
 		objects.each {ds.addPrimitive(it)}
 		
 		OsmDataLayer layer1 = new OsmDataLayer(ds,"layer1", null)
 		OsmDataLayer layer2 = new OsmDataLayer(new DataSet(),"layer2", null)
 		
-		JosmSelectionListModel model = new JosmSelectionListModel(layer1, selectionModel);
-		
+		JosmSelectionListModel model = new JosmSelectionListModel(layer1);
+		DefaultListSelectionModel selectionModel = model.getListSelectionModel()
 		// switch from edit layer1 to edit layer2. content of the JOSM selection 
 		// should be empty thereafter 
 		model.editLayerChanged(layer1, layer2)

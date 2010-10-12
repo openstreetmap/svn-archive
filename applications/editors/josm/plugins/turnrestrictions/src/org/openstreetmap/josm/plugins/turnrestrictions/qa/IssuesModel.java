@@ -21,12 +21,12 @@ import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionTyp
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
- * IssuesModel is a model for an observable list of {@code Issues}
- * related to turn restriction.
+ * <p>IssuesModel is a model for an observable list of {@code Issues}
+ * related to turn restriction.</p>
  * 
- * It is also an {@see Observer} to an {@see TurnRestrictionEditorModel}
+ * <p>It is also an {@link Observer} to an {@link TurnRestrictionEditorModel}
  * and populates itself with issues it derives from the current state
- * in the {@see TurnRestrictionEditorModel}.
+ * in the {@link TurnRestrictionEditorModel}.</p>
  *  
  */
 public class IssuesModel extends Observable implements Observer{
@@ -35,10 +35,6 @@ public class IssuesModel extends Observable implements Observer{
     
     /**
      * Creates the model 
-     * 
-     * {@code controler} is used in resolution actions for issues in
-     * this model to direct the user to a specific input field in one
-     * of the editor tabs in order to fix an issue. 
      * 
      * @param editorModel the editor model. Must not be null.
      * @throws IllegalArgumentException thrown if controler is null
@@ -223,16 +219,21 @@ public class IssuesModel extends Observable implements Observer{
             if (!editorModel.getVias().contains(intersect)) {
                 issues.add(new IntersectionMissingAsViaError(this, from, to, intersect));
             }
-        }
-        
-        // 'from' intersects with 'to' - should be split  
-        if (intersect != null && from.getNode(0) != intersect && from.getNode(from.getNodesCount()-1) != intersect){
-            issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.FROM, from, to, intersect));
-        }
-        // 'to' intersects with 'from' - should be split
-        if (intersect != null && to.getNode(0) != intersect && to.getNode(to.getNodesCount()-1) != intersect){
-            issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.TO, from, to, intersect));
-        }       
+            // 'from' intersects with 'to' - should be split  
+            if (from.getNode(0) != intersect && from.getNode(from.getNodesCount()-1) != intersect){
+                issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.FROM, from, to, intersect));
+            }
+            // 'to' intersects with 'from' - should be split
+            if (to.getNode(0) != intersect && to.getNode(to.getNodesCount()-1) != intersect){
+                issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.TO, from, to, intersect));
+            }                  
+        } else {
+        	if (editorModel.getVias().isEmpty() && ! from.equals(to)){
+        		// the two turn restriction legs aren't connected and we don't have configured
+        		// via objects 
+        		issues.add(new MissingViaError(this));
+        	}        	
+        }               
     }
     
     public NavigationControler getNavigationControler() {

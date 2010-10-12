@@ -53,11 +53,9 @@ public class JosmSelectionPanel extends JPanel {
      */
     protected void build(OsmDataLayer layer) {
         setLayout(new BorderLayout());
-        DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-        model = new JosmSelectionListModel(layer,selectionModel);
         lstSelection = new JList(model);
         lstSelection.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        lstSelection.setSelectionModel(selectionModel);
+        lstSelection.setSelectionModel(model.getListSelectionModel());
         lstSelection.setCellRenderer(new OsmPrimitivRenderer());
         lstSelection.setTransferHandler(transferHandler = new JosmSelectionTransferHandler(model));
         lstSelection.setDragEnabled(true);
@@ -76,8 +74,9 @@ public class JosmSelectionPanel extends JPanel {
      * @param layer the data layer. Must not be null.
      * @exception IllegalArgumentException thrown if {@code layer} is null
      */
-    public JosmSelectionPanel(OsmDataLayer layer) throws IllegalArgumentException{
+    public JosmSelectionPanel(OsmDataLayer layer, JosmSelectionListModel model) throws IllegalArgumentException{
         CheckParameterUtil.ensureParameterNotNull(layer, "layer");
+        this.model = model;
         build(layer); 
     }
     

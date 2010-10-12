@@ -1,8 +1,8 @@
 %
 % DOCUMENTAZIONE PER LA REDAZIONE DEL SEGUENTE MANUALE
 % STILI:
-% - NOMI SOFTWARE = \txttt{}
-% - NOMI PROGETTI/LICENZA = \emph{}
+% - NOMI SOFTWARE = \newcommand{\soft}[1]{\texttt{#1}}
+% - NOMI PROGETTI/LICENZA = \newcommand{\pro}[1]{\emph{#1}}
 % - KEY = \newcommand{\key}[1]{\underline{\textbf{#1}}}
 % - VALUE = \newcommand{\val}[1]{\underline{\textit{#1}}}
 % - OpenStreetMap = \newcommand{\osm}{\emph{OpenStreetMap}\xspace}
@@ -35,8 +35,10 @@
 %comando per scrivere openstreetmap
 \newcommand{\osm}{\emph{OpenStreetMap}\xspace}
 \newcommand{\gps}{GPS\xspace}
-\newcommand{\key}[1]{\underline{\textbf{#1}}}
-\newcommand{\val}[1]{\underline{\textit{#1}}}
+\newcommand{\key}[1]{\textsf{\textbf{#1}}}
+\newcommand{\val}[1]{\textsf{#1}}
+\newcommand{\soft}[1]{\texttt{#1}}
+\newcommand{\pro}[1]{\emph{#1}}
 
 \titleformat{\section}
 {\color{UrlColor}\normalfont\Large\bfseries}{\thesection}{1em}{}
@@ -68,15 +70,15 @@
 \section{Cos'è \osm}
 \osm è un progetto mondiale per la raccolta collaborativa di dati geografici da cui si possono derivare innumerevoli lavori e servizi. I risultati più evidenti sono le mappe online che però rappresentano solo la punta dell'iceberg di quel che si può ottenere da questi dati.
 
-La \textbf{caratteristica fondamentale è che i dati di \osm possiedono una licenza libera}, attualmente è attiva una doppia licenza: la \emph{Creative Commons BY SA} che è la licenza originale del progetto che verrà sostituita con la \emph{ODbL (OpenDatabaseLicense)}, una licenza che serve a coprire i database mantenendone la libertà di utilizzo. Infatti è possibile usare i dati \osm liberamente per qualsiasi scopo, anche quelli commerciali, con il solo vincolo di citare il progetto e usare la stessa licenza per eventuali dati derivati. 
+La \textbf{caratteristica fondamentale è che i dati di \osm possiedono una licenza libera}, attualmente è attiva una doppia licenza: la \pro{Creative Commons BY SA} che è la licenza originale del progetto che verrà sostituita con la \pro{ODbL (OpenDatabaseLicense)}, una licenza che serve a coprire i database mantenendone la libertà di utilizzo. Infatti è possibile usare i dati \osm liberamente per qualsiasi scopo, anche quelli commerciali, con il solo vincolo di citare il progetto e usare la stessa licenza per eventuali dati derivati. 
 
-L'altra caratteristica molto importante è che tutti possono contribuire arricchendo o correggendo i dati e, come i progetti simili (\emph{Wikipedia} e mondo del software libero ad esempio) \textbf{la comunità è l'elemento fondamentale} perché oltre a essere quella che inserisce i dati e arrichisce il progetto, ne controlla anche la qualità.
+L'altra caratteristica molto importante è che tutti possono contribuire arricchendo o correggendo i dati e, come i progetti simili (\pro{Wikipedia} e mondo del software libero ad esempio) \textbf{la comunità è l'elemento fondamentale} perché oltre a essere quella che inserisce i dati e arrichisce il progetto, ne controlla anche la qualità.
 \section{Cosa non è \osm}
 \textbf{\osm non è una raccolta di tracce \gps tra loro slegate}. Le tracce \gps sono solo utili per capire come tracciare il reticolo delle strade e per inserire i punti di interesse.
 
 \textbf{\osm non è una copia di Google Maps} e non è quello il suo scopo, è molto di più \dots
 
-\section{Perchè \osm}
+\section{Perché \osm}
 \osm come abbiamo detto è un progetto che vuole creare una banca dati geografica libera, uno dei punti di forza è la possibilità di utilizzarla per le più svariate necessità e su  dispositivi differenti. \textbf{I dati sono disponibili in moltissimi formati}, possono essere caricati su GPS, navigatori o cellulari per sapere sempre la vostra posizione o per calcolare il percorso più breve per raggiungere una certa località; potete utilizzarli sul vostro sito per segnalare dove si trova la vostra azienda o per mostrare le vostre immagini georiferite; potete effettuare mappe cartacee a diverse scale e con diversi stili; possono essere usati come base di videogiochi; esistono in diversi formati vettoriali per essere analizzati con software GIS; per ultimo, ma forse il motivo più importante, anche se è quello per il quale si spera non debbano mai utilizzato, per salvare vite...
 
 \section{La struttura del database \osm}
@@ -212,21 +214,21 @@ Per creare una route bisogna quindi aggiungere i tag e poi selezionare quali ele
 \section{Come posso contribuire}
 Per prima cosa dovrai iscriverti attraverso l'homepage; per iniziare a farti un'idea, puoi zoommare in un luogo mappato del quale hai una buona conoscenza e cliccare su ``Edit''; in questo modo darai un'occhiata a come sono strutturate le strade e i punti di interesse cliccandoci su ma, almeno all'inizio, se non sei sicuro di quello che fai non modificare la mappa.
 
-Quello che hai appena usato è \texttt{Potlatch}, l'editor online; però è sconsigliato utilizzarlo perchè può causare diversi problemi; per esempio le foto aeree di yahoo spesso solo spostate dai dati reali e si rischia di effettuare errori nella connessione di strade. È preferibile utilizzare altri software che funzionano come programmi a se stanti. Il più usato e completo è senz'altro \texttt{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \texttt{Merkaartor} \url{http://www.merkaartor.org/}.
+Quello che hai appena usato è \soft{Potlatch}, l'editor online; però è sconsigliato utilizzarlo perché può causare diversi problemi; per esempio le foto aeree di yahoo spesso solo spostate dai dati reali e si rischia di effettuare errori nella connessione di strade. È preferibile utilizzare altri software che funzionano come programmi a se stanti. Il più usato e completo è senz'altro \soft{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \soft{Merkaartor} \url{http://www.merkaartor.org/}.
 
 Un'altra cosa molto importante, quando si inizia a tracciare le strade, in particolare con l'editor online, è verificare che le varie strade che si incrociano, non in caso di ponti, siano tra loro interconnesse da un nodo comune. Nell'editor online è possibile assicurarsi di ciò quando, sovrapponendo la linea che si sta tracciando alla strada a cui si vuole congiungere, i nodi di questa si evidenziano di blu.
 \subsection{Non ho il \gps}
 \begin{wrapfloat}{figure}{R}{0pt}
  \includegraphics[width=0.7\columnwidth]{potlatch.png}
- \caption{\textit{L'interfaccia di \texttt{Potlatch}}}
+ \caption{\textit{L'interfaccia di \soft{Potlatch}}}
 \end{wrapfloat}
-Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \texttt{JOSM} o \texttt{Merkator}). 
+Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkator}). 
 
-Se non hai un \gps puoi anche usare \texttt{Walking Papers}, che permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \texttt{JOSM}
+Se non hai un \gps potresti prendere in considerazio-ne \soft{Walking Papers}, questo permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \soft{JOSM}
 
 \textbf{Preferisci sempre il sopralluogo di persona sul posto. Nel dubbio non mappare.}
 \subsection{Ho il \gps}
-Come spiegato nei primi paragrafi, le tracce \gps non entrano direttamente nel database di \osm. Sono però estremamente utili come base su cui poi ricalcare le way e i nodi mediante i software a disposizione, come \texttt{Potlatch} o \texttt{JOSM}.
+Come spiegato nei primi paragrafi, le tracce \gps non entrano direttamente nel database di \osm. Sono però estremamente utili come base su cui poi ricalcare le way e i nodi mediante i software a disposizione, come \soft{Potlatch} o \soft{JOSM}.
 \begin{wrapfloat}{figure}{L}{0pt}
  \includegraphics[width=0.6\columnwidth]{Josm-screenshot.png}
  \caption{\textit{L'interfaccia di JOSM}}
@@ -239,7 +241,7 @@ Sempre mediante i waypoint, è utile appuntare informazioni interessanti co-me i
 
 È da precisare che il nome che si assegna ai waypoint non è fondamentale, ma serve come promemoria personale, infatti nemmeno i waypoint entrano a far parte del database di OSM, ma serviranno esclusivamente da appunti in fase di editing. Adottate quindi lo stile che più trovate utile, completo e comodo per appuntare quel che trovate.
 
-Un altro metodo utilizzato è quello di sfruttare le potenzialità di un registratore digitale e \texttt{JOSM}, infatti quest'ultimo software permette di sincronizzare la vostra traccia \gps con la registrazione audio. Sono due le possibilità di utilizzo del registratore, la prima è di accendere il registratore in concomitanza dell'inizio della registrazione della traccia \gps e lasciar-lo acceso; bisogna ricordarsi di prendere un waypoint per ogni elemento registrato vocalmente in modo tale da potersi spostare facilmente da un punto ad un altro; questa metodologia può essere molto comoda quando si è alla guida di un mezzo di trasporto tipo bicicletta o automobile. L'altra possibilità è quella di accendere il registratore solo in concomitanza della mappatura di un waypoint.
+Un altro metodo utilizzato è quello di sfruttare le potenzialità di un registratore digitale e \soft{JOSM}, infatti quest'ultimo software permette di sincronizzare la vostra traccia \gps con la registrazione audio. Sono due le possibilità di utilizzo del registratore, la prima è di accendere il registratore in concomitanza dell'inizio della registrazione della traccia \gps e lasciar-lo acceso; bisogna ricordarsi di prendere un waypoint per ogni elemento registrato vocalmente in modo tale da potersi spostare facilmente da un punto ad un altro; questa metodologia può essere molto comoda quando si è alla guida di un mezzo di trasporto tipo bicicletta o automobile. L'altra possibilità è quella di accendere il registratore solo in concomitanza della mappatura di un waypoint.
 
 Ovviamente non solo le strade sono importanti per \osm: ad esempio nel nostro giro in montagna potrebbe essere interessante avere a disposizione segnavia (\key{turism}=\val{information} \& \key{information}=\val{guidepost}), bivacchi (\key{amenity}=\val{shelter}), rifugi (\key{tourism}=\val{alpine\_hut}), fontane d'acqua potabile (\key{amenity}=\val{drinking\_water}) e molto altro ancora.
 
@@ -279,16 +281,16 @@ I \textbf{mapping party sono eventi legati al progetto}, durante i quali un cert
 
 Solitamente i mapping party si tengono nel corso del weekend per cercare di far affluire più persone possibili; ricordo tra gli altri, il Mapping Party di Arezzo, il primo ufficiale in Italia, quello di Pompei, con scopi archeologici all'interno dei resti romani della nota località napoletana, M(')appare Portofino, per la sentieristica del Parco naturale regionale di Portofino, Dolomiti Mapping Party e il Graian Alps Mapping Party; anche questi ultimi due avevano un tema specifico: la montagna; il primo tra il gruppo del Brenta e il secondo, effettuato grazie al supporto del Parco Nazionale del Gran Paradiso, nella valle dell'Orco in Piemonte.
 
-Inoltre \textbf{si possono realizzare anche eventi di durata minore, i micro mapping party} (Roma, Vicenza, Trentino, Milano). In Italia abbiamo anche sperimentato, con ottimi risultati, un mapping party dilatato nei mesi: M(')appare Milano. Con il supporto della trasmissione radiofonica Mentelocale trasmessa su Radio Popolare di Milano e dell'associazione di volontariato \emph{GFOSS.it}, sono stati organizzati per tre mesi micro mapping party con cadenza bisettimanale, questo ha permesso di andare a coprire molte zone del capoluogo lombardo e di diffondere il progetto. Da due anni si tiene un evento nazionale su \osm denominato OSMit, la prima edizione si è tenuta a Trento la seconda a Genova.
+Inoltre \textbf{si possono realizzare anche eventi di durata minore, i micro mapping party} (Roma, Vicenza, Trentino, Milano). In Italia abbiamo anche sperimentato, con ottimi risultati, un mapping party dilatato nei mesi: M(')appare Milano. Con il supporto della trasmissione radiofonica Mentelocale trasmessa su Radio Popolare di Milano e dell'associazione di volontariato \pro{GFOSS.it}, sono stati organizzati per tre mesi micro mapping party con cadenza bisettimanale, questo ha permesso di andare a coprire molte zone del capoluogo lombardo e di diffondere il progetto. Da due anni si tiene un evento nazionale su \osm denominato OSMit, la prima edizione si è tenuta a Trento la seconda a Genova.
 \section{Humanitarian OpenStreetMap Team}
-L'\texttt{Humanitarian OpenStreetMap Team (HOT)} è un gruppo di OSMapper che hanno creato un ``team'' per utilizzare il progetto per scopi ``uma-nitari''.
+L'\pro{Humanitarian OpenStreetMap Team (HOT)} è un gruppo di OSMapper che hanno creato un ``team'' per utilizzare il progetto per scopi ``uma-nitari''.
 
 La prima volta che \osm è stato utilizzato per queste finalità è evvenuto alla ripresa delle ostilità tra Israele e Palestina nel 2009, la comunità si è autofinanziata per acquistare le ortofoto recenti della Striscia di Gaza in modo tale da poter digitalizzare i dati.
 
 Il caso più eclatante, invece, è stato in concomitanza di una delle più grandi catastrofi naturali negli ultimi anni, il terremoto ad Haiti. In questa occasione Google ha sovvenzionato l'acquisto delle ortofoto della situazione post terremoto, e gli utenti hanno provveduto celermente alla digitalizzazione, segnalando tra le altre cose la presenza di campi di soccorso, i ponti distrutti e altri elementi utili ai soccoritori; inoltre sono stati messi in piedi diversi servizi per fare in modo che si potessero utilizzare facilmente i dati presenti sul database aggiornati quasi in tempo reale, vi era la possibilità di trovarli in formato garmin (per gli operatori che si dovevano spostare da un posto all'altro), in formato immagine per essere stampata (per coordinare gli aiuti dai campi di soccorso) inoltre erano presenti diversi siti online che avevano creato strati informativi dedicati all'isola caraibica. Questa tragica esperienza ha mostrato al mondo come \osm possa essere utile, ha mostrato come \textit{i dati creati dal basso} sono in certi casi essenziali, non a caso erano gli unici aggiornati al post terremoto e utilizzabili durante la situazione di emergenza.
 
 Altro progetto molto interessate è riguardante uno dei più grande slum dell'Africa: Kibera.
-Questa località per i grandi vendor di dati geografici non esiste ma in realtà conta circa un milione di persone. Qui è stato realizzato un qualcosa di più complesso, alcuni componenti di \texttt{HOT} si sono recati nella ``città'' africana e hanno istruito diversi abitanti del luogo, facendo capire a cosa serve il progetto e come partecipare. Ad oggi i dati presenti sul database di \osm sono sicuramente la migliore fonte cartografica della zona.
+Questa località per i grandi vendor di dati geografici non esiste ma in realtà conta circa un milione di persone. Qui è stato realizzato un qualcosa di più complesso, alcuni componenti di \pro{HOT} si sono recati nella ``città'' africana e hanno istruito diversi abitanti del luogo, facendo capire a cosa serve il progetto e come partecipare. Ad oggi i dati presenti sul database di \osm sono sicuramente la migliore fonte cartografica della zona.
 \section{Informazioni utili}
 \textbf{\url{http://wiki.openstreetmap.org/wiki/WikiProject_Italy} è il portale principale della comunità italiana}, per vedere il lavoro a livello nazionale e contattare gli altri utenti della penisola. È molto utile contribuire sul wiki attraverso \textbf{traduzioni} di pagine già esistenti in altre lingue, che servono sempre sia ai nuovi arrivati che a quelli che non conoscono al meglio la lingua inglese (la più usata sul wiki insieme al tedesco), sia alla \textbf{creazione e al mantenimento delle pagine} in italiano oltre a quelle della vostra regione, provincia o comune.
 
@@ -300,7 +302,7 @@ Se hai dubbi o domande consulta le risposte alle domande frequenti \url{http://w
 \section{Contatti}
 \textbf{Il principale riferimento nazionale è la mailing list italiana:\newline \url{http://lists.openstreetmap.org/listinfo/talk-it}}
 
-Altra risorsa utile è la chat (canale irc) \#osm-it @ irc.oftc.net, che può essere raggiunta, oltre che da client irc, anche attraverso questo indirizzo web \url{https://www.mibbit.com/?server=irc.oftc.net\&channel=\%23osm-it}; ci puoi trovare anche nella chat (canale irc) di \emph{GFOSS.it}, la principale associazione che supporta OSM in Italia, l'indirizzo è \#gfoss @ irc.eu.freenode.net. Ci suò accedere anche via web tramite \url{webchat.freenode.net}  canale \#gfoss
+Altra risorsa utile è la chat (canale irc) \#osm-it @ irc.oftc.net, che può essere raggiunta, oltre che da client irc, anche attraverso questo indirizzo web \url{https://www.mibbit.com/?server=irc.oftc.net\&channel=\%23osm-it}; ci puoi trovare anche nella chat (canale irc) di \pro{GFOSS.it}, la principale associazione che supporta OSM in Italia, l'indirizzo è \#gfoss @ irc.eu.freenode.net. Ci suò accedere anche via web tramite \url{webchat.freenode.net}  canale \#gfoss
 
 Esistono inoltre molti strumenti internazionali per svariate notizie su \osm \url{http://wiki.openstreetmap.org/wiki/Mailing_list}
 
@@ -308,79 +310,79 @@ Esistono inoltre molti strumenti internazionali per svariate notizie su \osm \ur
 Di seguito verranno segnalati software, con diverse finalità, che hanno la possibilità di interfacciarsi con \osm.
 
 \subsection{Editor}
-\texttt{JOSM}: l'editor per \osm più utilizzato, scritto in Java ha molti tools utilissimi oltre a svariati plugin
+\soft{JOSM}: l'editor per \osm più utilizzato, scritto in Java ha molti tools utilissimi oltre a svariati plugin
 
-\texttt{Potlach}: editor online dal sito principale di \osm, molto comodo per la possibilità di avere le foto aeree di Yahoo come sfondo
+\soft{Potlach}: editor online dal sito principale di \osm, molto comodo per la possibilità di avere le foto aeree di Yahoo come sfondo
 
-\texttt{Merkator}: altro editor per \osm
+\soft{Merkator}: altro editor per \osm
 
 \subsection{Qualità}
 Di seguito sono riportati solo alcuni degli strumenti, per avere una visione completa dei programmi per mantenere alta la qualità dei dati in \osm controllate questa pagina \url{http://wiki.openstreetmap.org/wiki/IT:Quality_Assurance}
 
-\texttt{OpenStreetBugs}: uno dei primi strumenti per la qualità dei dati, permette agli utenti di segnalare bugs
+\soft{OpenStreetBugs}: uno dei primi strumenti per la qualità dei dati, permette agli utenti di segnalare bugs
 
-\texttt{QualityStreetMap}: permette di segnalare le zone completamente mappate attraverso griglie per diversi tag, copre tutta Europa
+\soft{QualityStreetMap}: permette di segnalare le zone completamente mappate attraverso griglie per diversi tag, copre tutta Europa
 
-\texttt{Keep Right}: segnala diverse tipologie di errore
+\soft{Keep Right}: segnala diverse tipologie di errore
 
 \subsection{Analisi}
-\texttt{Osmosis}: programma per gestire i dati di \osm
+\soft{Osmosis}: programma per gestire i dati di \osm
 
-\texttt{QGIS}: software GIS per l'analisi e la visualizzazione di dati geografici, si interfaccia con \osm attraverso diversi tool che permettono lo scaricamento, la modifica e l'aggiornamento del database
+\soft{QGIS}: software GIS per l'analisi e la visualizzazione di dati geografici, si interfaccia con \osm attraverso diversi tool che permettono lo scaricamento, la modifica e l'aggiornamento del database
 
-\texttt{PostgreSQL/PostGIS}: Database relazionale che con la sua estensione spaziale PostGIS può contenere i dati di \osm caricati utilizzando il software osm2pgsql
+\soft{PostgreSQL/PostGIS}: Database relazionale che con la sua estensione spaziale PostGIS può contenere i dati di \osm caricati utilizzando il software osm2pgsql
 
-\texttt{PgRouting}: Estensione di PostGIS per effettuare calcoli di routing; esiste osm2pgrouting che importa i file di \osm in PostgreSQL con le tabelle conformi al formato richiesto da PgRouting
+\soft{PgRouting}: Estensione di PostGIS per effettuare calcoli di routing; esiste osm2pgrouting che importa i file di \osm in PostgreSQL con le tabelle conformi al formato richiesto da PgRouting
 
-\texttt{Spatialite}: Estensione spaziale del database Sqlite; attraverso il mo-dulo spatialite\_osm carica file .osm; al suo interno è implementanto un ottimo algoritmo per il routing 
+\soft{Spatialite}: Estensione spaziale del database Sqlite; attraverso il mo-dulo spatialite\_osm carica file .osm; al suo interno è implementanto un ottimo algoritmo per il routing 
 
 \subsection{Rendering}
 
-\texttt{Mapnik}: software per la rappresentazione di dati geografici, può creare singole immagini o tile per la pubblicazione sul web
+\soft{Mapnik}: software per la rappresentazione di dati geografici, può creare singole immagini o tile per la pubblicazione sul web
 
-\texttt{Osmarender}: simile al precedente
+\soft{Osmarender}: simile al precedente
 
-\texttt{Maperitive}: simile al precedente, molto user friendly
+\soft{Maperitive}: simile al precedente, molto user friendly
 
-\texttt{MapOSMatic}: a differenza dei precedenti permette di stampare, con uno stile predefinito una mappa a grande scala e lo stradario
+\soft{MapOSMatic}: a differenza dei precedenti permette di stampare, con uno stile predefinito una mappa a grande scala e lo stradario
 
 \subsection{Visualizzatori}
 
-\texttt{Navit}: software per il routing con i dati di \osm, esistono versioni per diverse piattaforme, compresi cellulari
+\soft{Navit}: software per il routing con i dati di \osm, esistono versioni per diverse piattaforme, compresi cellulari
 
-\texttt{OpenLayers}: Client WebGIS che permette di visualizzare in modo molto semplice le tile di \osm
+\soft{OpenLayers}: Client WebGIS che permette di visualizzare in modo molto semplice le tile di \osm
 
-\texttt{Marble}: visualizzatore di dati geografici su modello Google Earth
+\soft{Marble}: visualizzatore di dati geografici su modello Google Earth
 
-\texttt{OSM3D}: visualizzatore 3D per i dati \osm
+\soft{OSM3D}: visualizzatore 3D per i dati \osm
 
 \subsection{GPS}
 
-\texttt{Qlandkarte}: software utilizzato soprattutto per la visualizzazione e la gestione di dati scaricati dal \gps, permette la visualizzazione come sfondo delle mappe di OSM
+\soft{Qlandkarte}: software utilizzato soprattutto per la visualizzazione e la gestione di dati scaricati dal \gps, permette la visualizzazione come sfondo delle mappe di OSM
 
-\texttt{MkGmap}: trasforma i dati in formato .osm in formato .img per Garmin
+\soft{MkGmap}: trasforma i dati in formato .osm in formato .img per Garmin
 
-\texttt{Groudtruth}: simile al precedente
+\soft{Groudtruth}: simile al precedente
 
 \subsection{Cellulari}
 \subsubsection{Android}
 
-\texttt{Vespucci}: un buon editor, non è a livello di JOSM ma è comunque uno strumento molto valido per uno smartphone
+\soft{Vespucci}: un buon editor, non è a livello di JOSM ma è comunque uno strumento molto valido per uno smartphone
 
-\texttt{OSMtracker}: editor con possibilità di mappe offline (esiste una versione anche per windows mobile)
+\soft{OSMtracker}: editor con possibilità di mappe offline (esiste una versione anche per windows mobile)
 
-\texttt{Mapdroyd}: visualizzatore di mappe offline
+\soft{Mapdroyd}: visualizzatore di mappe offline
 \subsubsection{IPhone/IPad}
 
-\texttt{Mapzen Poi Collector}: editor solamente puntuale
+\soft{Mapzen Poi Collector}: editor solamente puntuale
 
-\texttt{OSMTrack}: serve per registrare tracce
+\soft{OSMTrack}: serve per registrare tracce
 \subsubsection{N900/Maemo}
 
-\texttt{osm2go}: editor molto buono che interagisce - runtime - con il server di \osm
+\soft{osm2go}: editor molto buono che interagisce - runtime - con il server di \osm
 \subsubsection{java2me}
 
-\texttt{GpsMid}: carica mappe vettoriali di \osm e permette di creare POI e tracce
+\soft{GpsMid}: carica mappe vettoriali di \osm e permette di creare POI e tracce
 
 \section{Link}
 \subsection{Visualizzazione}
@@ -437,7 +439,7 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://walking-papers.org}: permette di stampare una mappa da utilizzare durante le ``mappature'' per segnare nuovi elementi, inoltre una volta scannerizzato il foglio con le modifiche si può inserire sul portale
 
-\url{http://download.gfoss.it/osm/}: distribuisce i file italiani di \osm in diversi formati: backup del file italiano e file .osm diviso per regioni, .img per Garmin e formato per \texttt{Navit}
+\url{http://download.gfoss.it/osm/}: distribuisce i file italiani di \osm in diversi formati: backup del file italiano e file .osm diviso per regioni, .img per Garmin e formato per \soft{Navit}
 
 \url{http://www.gfoss.it/osm/stat/}: statistiche e stradario diviso per limiti amministrativi
 

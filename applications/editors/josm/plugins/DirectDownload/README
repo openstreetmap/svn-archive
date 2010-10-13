@@ -1,0 +1,27 @@
+DirectDownload plugin for JOSM
+==============================
+
+The DirectDownload plugin enables you to directly download your GPX 
+tracks you previously uploaded on openstreetmap.org without having
+to download them manually first and then having to open the downloaded
+track using the "Open file ..." dialog.
+
+The plugin provides a new entry "Download track ..." in the file
+menu (no keyboard shortcut yet). This opens a dialog that will
+present a list of your uploaded tracks, showing the tracks timestamp
+and filename, from which you can directly pick one track to be
+downloaded into a new GPX layer.
+
+TODO
+====
+
+* keyboard shortcut?
+* properly parse track timestamp, show it in local time instead of UTC
+* progress bars 
+* sort tracks by time (what gets back from the /user/gpx_files API call
+  does not seem to be fully sorted)
+* make the table in the dialog sortable (right now when enabling auto 
+  sort on the JTable object an exception is thrown when clicking
+  column headers)
+* show track tags
+* code cleanup

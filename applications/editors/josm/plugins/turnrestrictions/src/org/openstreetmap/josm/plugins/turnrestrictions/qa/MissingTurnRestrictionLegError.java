@@ -33,13 +33,13 @@ public class MissingTurnRestrictionLegError extends Issue {
         String msg = "";
         switch(role){
         case FROM: 
-            msg = tr("An OSM way with role <tt>from</tt> is required in a turn restriction.");
+            msg = tr("A way with role <tt>from</tt> is required in a turn restriction.");
             break;
         case TO: 
-            msg = tr("An OSM way with role <tt>to</tt> is required in a turn restriction.");
+            msg = tr("A way with role <tt>to</tt> is required in a turn restriction.");
             break;
         }
-        msg += " " + tr("Please go to the Basic editor and manually choose an OSM way.");
+        msg += " " + tr("Please go to the Basic editor and manually choose a way.");
         return msg;
     }
 
@@ -48,10 +48,10 @@ public class MissingTurnRestrictionLegError extends Issue {
             putValue(NAME, tr("Add in editor"));
             switch(role){
             case FROM:
-                putValue(SHORT_DESCRIPTION, tr("Add an OSM way with role ''from''"));
+                putValue(SHORT_DESCRIPTION, tr("Add a way with role ''from''"));
                 break;
             case TO:
-                putValue(SHORT_DESCRIPTION, tr("Add an OSM way with role ''to''"));
+                putValue(SHORT_DESCRIPTION, tr("Add a way with role ''to''"));
                 break;              
             }           
         }

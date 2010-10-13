@@ -1,4 +1,7 @@
 package org.openstreetmap.josm.plugins.turnrestrictions;
+
+import java.util.Arrays;
+
 import groovy.util.GroovyTestCase;
 
 import static org.junit.Assert.*;
@@ -9,6 +12,8 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.plugins.turnrestrictions.fixtures.JOSMFixture;
 import org.openstreetmap.josm.data.coor.LatLon;
+import static org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder.*
+import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionType;
 
 class TurnRestrictionBuilderTest{
 	
@@ -32,15 +37,7 @@ class TurnRestrictionBuilderTest{
 	@Before
 	public void setUp() {
 		JOSMFixture.createUnitTestFixture().init()
-		builder = new TurnRestrictionBuilder() {
-			def double testPhi(Way w){
-				return super.phi(w)
-			}
-			
-			def double testPhi(Way w, boolean doRevert){
-				return super.phi(w,doRevert)
-			}
-		}
+		builder = new TurnRestrictionBuilder()
 	}
 
 	/**
@@ -167,8 +164,8 @@ class TurnRestrictionBuilderTest{
 	   Way w2 = new Way(2)
 	   w2.setNodes([n2,n3])
 
-	   assert builder.testPhi(w1) == Math.toRadians(90)	   
-	   assert builder.testPhi(w2) == Math.toRadians(0)
+	   assert builder.phi(w1) == Math.toRadians(90)	   
+	   assert builder.phi(w2) == Math.toRadians(0)
 	   	   
 	   Relation tr = builder.build([w1,w2,n2])
 	   
@@ -186,6 +183,9 @@ class TurnRestrictionBuilderTest{
 	    */
 	   
 	   tr = builder.build([w2,w1,n2])
+	   
+	   double a = interesectionAngle(w2, w1)
+	   println "a=" + Math.toDegrees(a)
 	   
 	   assert tr != null
 	   assert tr.get("type") == "restriction"
@@ -222,9 +222,9 @@ class TurnRestrictionBuilderTest{
 	   Way w2 = new Way(2)
 	   w2.setNodes([n3,n2])
 	   
-	   assert builder.testPhi(w1) == Math.toRadians(90)
-	   assert builder.testPhi(w2) == Math.toRadians(0)
-	   assert builder.testPhi(w2,true) == Math.toRadians(180)
+	   assert builder.phi(w1) == Math.toRadians(90)
+	   assert builder.phi(w2) == Math.toRadians(0)
+	   assert builder.phi(w2,true) == Math.toRadians(180)
 	   
 	   Relation tr = builder.build([w1,w2,n2])
 	   
@@ -236,7 +236,6 @@ class TurnRestrictionBuilderTest{
 	   assert memberWithRole(tr, "via") == n2
 	   
 	   assert tr.get("restriction") == "no_left_turn"
-	   
 	   
 	   /*
 	    * opposite order, from w2 to w1. In this case we have right turn.
@@ -347,4 +346,300 @@ class TurnRestrictionBuilderTest{
 	 
 	 assert tr.get("restriction") == "no_left_turn"
 	}
+ 
+ 
+    def Node nn(id, lat, lon) {
+		Node n = new Node(id)
+		n.setCoor(new LatLon(lat, lon))
+		return n
+    }
+	
+	def Way nw(id, Node... nodes) {
+		Way w = new Way(id)
+		w.setNodes(Arrays.asList(nodes))
+		return w
+	}
+ 
+ 	/** 
+ 	 *                              n3
+ 	 *                           (10,10)
+ 	 *                             ^
+ 	 *                             | to
+ 	 *      n1      from           |
+ 	 *    (5,5) -------------->  (5,10) n2
+ 	 */
+	 @Test
+	 public void intersectionAngle_1() {
+		 Node n1 = nn(1,5,5)
+		 Node n2 = nn(2,5,10)
+		 Node n3 = nn(3,10,10)
+		 Way from = nw(1,n1,n2)
+		 Way to = nw(2,n2,n3)
+		 
+		 double a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		 RelativeWayJoinOrientation o = TurnRestrictionBuilder.determineWayJoinOrientation(from,to)
+		 assert Math.toDegrees(a) == -90
+		 assert o == RelativeWayJoinOrientation.LEFT
+		 
+		 /*
+		  * if reversed from, the intersection angle is still -90°
+		  */
+		 from = nw(1,n2,n1)
+		 to = nw(2,n2,n3)
+		 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		 o = TurnRestrictionBuilder.determineWayJoinOrientation(from,to)
+		 assert Math.toDegrees(a) == -90
+		 assert o == RelativeWayJoinOrientation.LEFT
+
+		 /*
+		 * if reversed to, the intersection angle is still -90°
+		 */
+		 from = nw(1,n1,n2)
+		 to = nw(2,n3,n2)
+		 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		 o = TurnRestrictionBuilder.determineWayJoinOrientation(from,to)
+		 assert Math.toDegrees(a) == -90
+		 assert o == RelativeWayJoinOrientation.LEFT
+
+		 /*
+		 * if reversed both, the intersection angle is still -90°
+		 */
+		 from = nw(1,n2,n1)
+		 to = nw(2,n3,n2)
+		 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		 o = TurnRestrictionBuilder.determineWayJoinOrientation(from,to)
+		 assert Math.toDegrees(a) == -90
+		 assert o == RelativeWayJoinOrientation.LEFT
+	 }
+	 
+	 /**
+	 *      n1      from           
+	 *    (5,5) -------------->  (5,10) n2
+	 *                              |
+	 *                              | to
+	 *                              |
+	 *                              v
+	 *                            (2,10)
+	 *                              n3
+	 *    
+	 */
+	@Test
+	public void intersectionAngle_2() {
+		Node n1 = nn(1,5,5)
+		Node n2 = nn(2,5,10)
+		Node n3 = nn(3,2,10)
+		Way from = nw(1,n1,n2)
+		Way to = nw(2,n2,n3)
+		
+		double a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		assert Math.toDegrees(a) == 90
+		
+		/*
+		 * if reversed from, the intersection angle is still 90°
+		 */
+		from = nw(1,n2,n1)
+		to = nw(2,n2,n3)
+		a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		assert Math.toDegrees(a) == 90
+
+		/*
+		* if reversed to, the intersection angle is still 90°
+		*/
+		from = nw(1,n1,n2)
+		to = nw(2,n3,n2)
+		a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		assert Math.toDegrees(a) == 90
+
+		/*
+		* if reversed both, the intersection angle is still 90°
+		*/
+		from = nw(1,n2,n1)
+		to = nw(2,n3,n2)
+		a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		assert Math.toDegrees(a) == 90
+	}
+	
+	
+	/**
+	 * 
+	 *                       
+	 *             (-1,-6) (n3)
+	 *             ^
+	 *            /
+	 *           /  to
+	 *          /
+	 *      (-5, -10) n2
+    *           ^
+	*           |
+	*           | from 
+	*           |
+	*       (-10,-10) n1 
+	*/
+   @Test
+   public void intersectionAngle_3() {
+	   Node n1 = nn(1,-10,-10)
+	   Node n2 = nn(2,-5,-10)
+	   Node n3 = nn(3,-1,-6)
+	   Way from = nw(1,n1,n2)
+	   Way to = nw(2,n2,n3)
+	   
+	   double a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	   assert Math.toDegrees(a) == 45
+	   
+	   /*
+		* if reversed from, the intersection angle is still 45
+		*/
+	   from = nw(1,n2,n1)
+	   to = nw(2,n2,n3)
+	   a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	   assert Math.toDegrees(a) == 45
+
+	   /*
+	   * if reversed to, the intersection angle is still 45
+	   */
+	   from = nw(1,n1,n2)
+	   to = nw(2,n3,n2)
+	   a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	   assert Math.toDegrees(a) == 45
+
+	   /*
+	   * if reversed both, the intersection angle is still 45
+	   */
+	   from = nw(1,n2,n1)
+	   to = nw(2,n3,n2)
+	   a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	   assert Math.toDegrees(a) == 45
+   }
+   
+   /**
+   *
+   *
+   *         (-1,-14) (n3)
+   *            ^
+   *            \
+   *             \ to
+   *              \
+   *          (-5, -10) n2
+  *               ^
+  *               |
+  *               | from
+  *               |
+  *           (-10,-10) n1
+  */
+ @Test
+ public void intersectionAngle_4() {
+	 Node n1 = nn(1,-10,-10)
+	 Node n2 = nn(2,-5,-10)
+	 Node n3 = nn(3,-1,-14)
+	 Way from = nw(1,n1,n2)
+	 Way to = nw(2,n2,n3)
+	 
+	 double a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	 assert Math.toDegrees(a) == -45
+	 
+	 /*
+	  * if reversed from, the intersection angle is still -45
+	  */
+	 from = nw(1,n2,n1)
+	 to = nw(2,n2,n3)
+	 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	 assert Math.toDegrees(a) == -45
+
+	 /*
+	 * if reversed to, the intersection angle is still -45
+	 */
+	 from = nw(1,n1,n2)
+	 to = nw(2,n3,n2)
+	 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	 assert Math.toDegrees(a) == -45
+
+	 /*
+	 * if reversed both, the intersection angle is still 45
+	 */
+	 from = nw(1,n2,n1)
+	 to = nw(2,n3,n2)
+	 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	 assert Math.toDegrees(a) == -45
+ }
+ 
+ 
+	 /*
+	 *
+	 *      n21        w21        n22       w22            n23
+	 *    (10,10)-------------> (10,15) -------------- > (10,20)
+	 *                            ^
+	 *                            |
+	 *                            | w1
+	 *                            |
+	 *                          (5,15)
+	 *                            n11
+	 */
+	@Test
+	public void splitToWay() {
+		Node n11 = new Node(11);
+		n11.setCoor(new LatLon(5,15));
+		
+		Node n21 = new Node(21)
+		n21.setCoor(new LatLon(10,10))
+		Node n22 = new Node(22)
+		n22.setCoor(new LatLon(10,15))
+		Node n23 = new Node(23)
+		n23.setCoor(new LatLon(10,20))
+		
+		Way w1 = new Way(1)
+		w1.setNodes([n11,n22])
+		Way w21 = new Way(21)
+		w21.setNodes([n21,n22])
+		Way w22 = new Way(22)
+		w22.setNodes([n22,n23])
+	
+		Way adjustedTo = selectToWayAfterSplit(
+			w1,
+			w21,
+			w22,
+			TurnRestrictionType.NO_LEFT_TURN
+		)
+		
+		assert adjustedTo != null
+		assert adjustedTo == w21
+		
+		adjustedTo = selectToWayAfterSplit(
+			w1,
+			w21,
+			w22,
+			TurnRestrictionType.NO_RIGHT_TURN
+		)
+		
+		assert adjustedTo != null
+		assert adjustedTo == w22
+		
+		adjustedTo = selectToWayAfterSplit(
+			w1,
+			w21,
+			w22,
+			TurnRestrictionType.ONLY_LEFT_TURN
+		)
+		
+		assert adjustedTo != null
+		assert adjustedTo == w21
+		
+		adjustedTo = selectToWayAfterSplit(
+			w1,
+			w21,
+			w22,
+			TurnRestrictionType.ONLY_RIGHT_TURN
+		)
+		
+		assert adjustedTo != null
+		assert adjustedTo == w22
+		
+		adjustedTo = selectToWayAfterSplit(
+			w1,
+			w21,
+			w22,
+			TurnRestrictionType.NO_STRAIGHT_ON
+		)
+		
+		assert adjustedTo == null
+	}	
 }

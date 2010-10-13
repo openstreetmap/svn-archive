@@ -1,8 +1,9 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.qa;
 
+import static org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder.isInnerNode;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -13,6 +14,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.tagging.TagEditorModel;
 import org.openstreetmap.josm.gui.tagging.TagModel;
+import org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.ExceptValueModel;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditorModel;
@@ -189,16 +191,6 @@ public class IssuesModel extends Observable implements Observer{
         }       
     }
     
-    protected Node getNodeAtIntersection(Way from, Way to){
-        Set<Node> fromNodes = new HashSet<Node>(from.getNodes());
-        fromNodes.retainAll(to.getNodes());
-        if (fromNodes.size() == 1){
-            return fromNodes.iterator().next();
-        } else {
-            return null;
-        }
-    }
-    
     /**
      * Checks the 'via' members in the turn restriction
      * 
@@ -214,19 +206,18 @@ public class IssuesModel extends Observable implements Observer{
         
         Way from = (Way)fromLegs.iterator().next();
         Way to = (Way)toLegs.iterator().next();
-        Node intersect = getNodeAtIntersection(from, to);
+        Node intersect = TurnRestrictionBuilder.getUniqueCommonNode(from, to);        
         if (intersect != null){
             if (!editorModel.getVias().contains(intersect)) {
                 issues.add(new IntersectionMissingAsViaError(this, from, to, intersect));
             }
-            // 'from' intersects with 'to' - should be split  
-            if (from.getNode(0) != intersect && from.getNode(from.getNodesCount()-1) != intersect){
-                issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.FROM, from, to, intersect));
-            }
-            // 'to' intersects with 'from' - should be split
-            if (to.getNode(0) != intersect && to.getNode(to.getNodesCount()-1) != intersect){
-                issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.TO, from, to, intersect));
-            }                  
+        	if (isInnerNode(from, intersect) && isInnerNode(to, intersect)) {
+        		issues.add(new TurnRestrictionLegSplitRequiredError(this, from, to));
+        	} else if (isInnerNode(from, intersect) && ! isInnerNode(to, intersect)) {
+        		issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.FROM, from, to, intersect));
+        	} else if (!isInnerNode(from, intersect) && isInnerNode(to, intersect)) {
+        		issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.TO, from, to, intersect));
+        	}
         } else {
         	if (editorModel.getVias().isEmpty() && ! from.equals(to)){
         		// the two turn restriction legs aren't connected and we don't have configured

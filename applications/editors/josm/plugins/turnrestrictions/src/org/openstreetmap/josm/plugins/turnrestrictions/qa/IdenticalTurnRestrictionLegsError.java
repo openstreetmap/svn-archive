@@ -26,7 +26,7 @@ public class IdenticalTurnRestrictionLegsError extends Issue{
 
     @Override
     public String getText() {       
-        return tr("This turn restriction uses the OSM way <span class=\"object-name\">{0}</span> with role <tt>from</tt> <strong>and</strong> with role <tt>to</tt>. "
+        return tr("This turn restriction uses the way <span class=\"object-name\">{0}</span> with role <tt>from</tt> <strong>and</strong> with role <tt>to</tt>. "
                 + "In a turn restriction, the way with role <tt>from</tt> should be different from the way with role <tt>to</tt>, though.",
                 leg.getDisplayName(DefaultNameFormatter.getInstance())
                 );              

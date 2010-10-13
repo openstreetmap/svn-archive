@@ -42,19 +42,19 @@ public class WrongTurnRestrictionLegTypeError extends Issue {
         switch(leg.getType()){
         case NODE:
             msg = tr(
-                "This turn restriction uses the OSM node <span class=\"object-name\">{0}</span> as member with role <tt>{1}</tt>.",
+                "This turn restriction uses the node <span class=\"object-name\">{0}</span> as member with role <tt>{1}</tt>.",
                 leg.getDisplayName(DefaultNameFormatter.getInstance()),
                 role.toString()
             );
             break;
         case RELATION:
-            msg = tr("This turn restriction uses the OSM relation <span class=\"object-name\">{0}</span> as member with role <tt>{1}</tt>.",
+            msg = tr("This turn restriction uses the relation <span class=\"object-name\">{0}</span> as member with role <tt>{1}</tt>.",
                     leg.getDisplayName(DefaultNameFormatter.getInstance()),
                     role.toString()
                 );              
             break;          
         }
-        return msg + " " + tr("An OSM way is required instead.");
+        return msg + " " + tr("A way is required instead.");
     }
 
     class DeleteAction extends AbstractAction {
@@ -78,7 +78,7 @@ public class WrongTurnRestrictionLegTypeError extends Issue {
     class FixInEditorAction extends AbstractAction {
         public FixInEditorAction() {
             putValue(NAME, tr("Fix in editor"));
-            putValue(SHORT_DESCRIPTION, tr("Change to the Basic Editor and select an OSM way"));
+            putValue(SHORT_DESCRIPTION, tr("Change to the Basic Editor and select a way"));
         }
         public void actionPerformed(ActionEvent e) {
             NavigationControler controler = getIssuesModel().getNavigationControler();

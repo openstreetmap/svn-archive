@@ -83,7 +83,6 @@ public class BuoyIsol extends Buoy {
 				|| keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
 			setTopMark(true);
 		}
-
 		
 		refreshLights();
 		parseLights(keys);

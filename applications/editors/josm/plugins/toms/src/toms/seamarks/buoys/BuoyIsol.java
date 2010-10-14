@@ -84,6 +84,7 @@ public class BuoyIsol extends Buoy {
 			setTopMark(true);
 		}
 
+		
 		refreshLights();
 		parseLights(keys);
 		parseFogRadar(keys);

@@ -61,15 +61,12 @@ public class BuoyIsol extends Buoy {
 				setStyleIndex(ISOL_PILLAR);
 			else if (str.equals("spar")) //$NON-NLS-1$
 				setStyleIndex(ISOL_SPAR);
-		} else if (keys.containsKey("seamark:beacon_isolated_danger:colour")) { //$NON-NLS-1$
-			if (keys.containsKey("seamark:beacon_isolated_danger:shape")) { //$NON-NLS-1$
-				str = keys.get("seamark:beacon_isolated_danger:shape"); //$NON-NLS-1$
+		} else if (keys.containsKey("seamark:beacon_isolated_danger:shape")) { //$NON-NLS-1$
+			str = keys.get("seamark:beacon_isolated_danger:shape"); //$NON-NLS-1$
 
-				if (str.equals("tower")) //$NON-NLS-1$
-					setStyleIndex(ISOL_TOWER);
-				else
-					setStyleIndex(ISOL_BEACON);
-			} else
+			if (str.equals("tower")) //$NON-NLS-1$
+				setStyleIndex(ISOL_TOWER);
+			else 
 				setStyleIndex(ISOL_BEACON);
 		} else if (keys.containsKey("seamark:type") //$NON-NLS-1$
 				&& (keys.get("seamark:type").equals("light_float"))) { //$NON-NLS-1$ //$NON-NLS-2$

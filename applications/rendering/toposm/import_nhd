@@ -5,12 +5,8 @@ if [[ -z $TOPOSM_ENV_SET ]]; then
     exit 1
 fi
 
-# HACK: Removes transaction support for shp2pgsql
-# because a few lines in each file contain illegal characters, aborting
-# entire transactions. Better yet would be to filter out these characters
-# but that's for later...
-FILTER='s/BEGIN;//g'
-
+SETUPCMD="shp2pgsql -p -I -g way -W latin1"
+IMPORTCMD="shp2pgsql -a -g way -W latin1"
 DBCMD="psql -q -p $DB_PORT $DB_NAME $DB_USER"
 
 # NOTE: The data type for fcode and ftype is changed because, for some
@@ -20,13 +16,12 @@ DBCMD="psql -q -p $DB_PORT $DB_NAME $DB_USER"
 PREP_TABLE=1
 for SRCFILE in $NHD_DIR/nhdarhi*.shp; do
     if [ "$PREP_TABLE" ]; then 
-	    echo "Creating ${NHD_TABLE_PREFIX}_area table..."
-	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_area | $DBCMD
-	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_area_major | $DBCMD
+	    echo "Creating ${NHD_TABLE_PREFIX}_area tables..."
+	    $SETUPCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_area | $DBCMD
+	    $SETUPCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_area_major | $DBCMD
     fi
     echo "Importing $SRCFILE..."
-    shp2pgsql -a -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_area | \
-        sed "$FILTER" | $DBCMD
+    $IMPORTCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_area |  $DBCMD
     unset PREP_TABLE
 done
 echo "ALTER TABLE ${NHD_TABLE_PREFIX}_area ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD
@@ -39,12 +34,11 @@ PREP_TABLE=1
 for SRCFILE in $NHD_DIR/nhdflh??.shp; do
     if [ "$PREP_TABLE" ]; then 
 	    echo "Creating ${NHD_TABLE_PREFIX}_flowline table..."
-	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline | $DBCMD
-	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline_major | $DBCMD
+	    $SETUPCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline | $DBCMD
+	    $SETUPCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline_major | $DBCMD
     fi
     echo "Importing $SRCFILE..."
-    shp2pgsql -a -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline | \
-	    sed "$FILTER" | $DBCMD
+    $IMPORTCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_flowline | $DBCMD
     unset PREP_TABLE
 done
 echo "ALTER TABLE ${NHD_TABLE_PREFIX}_flowline ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD
@@ -56,11 +50,10 @@ PREP_TABLE=1
 for SRCFILE in $NHD_DIR/nhdpthi*.shp; do
     if [ "$PREP_TABLE" ]; then 
 	    echo "Creating ${NHD_TABLE_PREFIX}_point table..."
-	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_point | $DBCMD
+	    $SETUPCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_point | $DBCMD
     fi
     echo "Importing $SRCFILE..."
-    shp2pgsql -a -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_point | \
-	    sed "$FILTER" | $DBCMD
+    $IMPORTCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_point | $DBCMD
     unset PREP_TABLE
 done
 echo "ALTER TABLE ${NHD_TABLE_PREFIX}_point ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD
@@ -70,12 +63,11 @@ PREP_TABLE=1
 for SRCFILE in $NHD_DIR/nhdwbhi*.shp; do
     if [ "$PREP_TABLE" ]; then 
 	    echo "Creating ${NHD_TABLE_PREFIX}_waterbody table..."
-	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody | $DBCMD
-	    shp2pgsql -p -I -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody_major | $DBCMD
+	    $SETUPCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody | $DBCMD
+	    $SETUPCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody_major | $DBCMD
     fi
     echo "Importing $SRCFILE..."
-    shp2pgsql -a -g way "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody | \
-	    sed "$FILTER" | $DBCMD
+    $IMPORTCMD "$SRCFILE" ${NHD_TABLE_PREFIX}_waterbody | $DBCMD
     unset PREP_TABLE
 done
 echo "ALTER TABLE ${NHD_TABLE_PREFIX}_waterbody ALTER COLUMN fcode TYPE INT, ALTER COLUMN ftype TYPE INT" | $DBCMD

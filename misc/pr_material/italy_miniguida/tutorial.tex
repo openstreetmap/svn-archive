@@ -79,7 +79,7 @@ L'altra caratteristica molto importante è che tutti possono contribuire arricch
 \textbf{\osm non è una copia di Google Maps} e non è quello il suo scopo, è molto di più \dots
 
 \section{Perché \osm}
-\osm come abbiamo detto è un progetto che vuole creare una banca dati geografica libera, uno dei punti di forza è la possibilità di utilizzarla per le più svariate necessità e su  dispositivi differenti. \textbf{I dati sono disponibili in moltissimi formati}, possono essere caricati su GPS, navigatori o cellulari per sapere sempre la vostra posizione o per calcolare il percorso più breve per raggiungere una certa località; potete utilizzarli sul vostro sito per segnalare dove si trova la vostra azienda o per mostrare le vostre immagini georiferite; potete effettuare mappe cartacee a diverse scale e con diversi stili; possono essere usati come base di videogiochi; esistono in diversi formati vettoriali per essere analizzati con software GIS; per ultimo, ma forse il motivo più importante, anche se è quello per il quale si spera non debbano mai utilizzato, per salvare vite...
+\osm come abbiamo detto è un progetto che vuole creare una banca dati geografica libera, uno dei punti di forza è la possibilità di utilizzarla per le più svariate necessità e su  dispositivi differenti. \textbf{I dati sono disponibili in moltissimi formati}, possono essere caricati su GPS, navigatori o cellulari per sapere sempre la vostra posizione o per calcolare il percorso più breve per raggiungere una certa località; potete utilizzarli sul vostro sito per segnalare dove si trova la vostra azienda o per mostrare le vostre immagini georiferite; potete effettuare mappe cartacee a diverse scale e con diversi stili; possono essere usati come base di videogiochi; esistono in diversi formati vettoriali per essere analizzati con software GIS; per ultimo, ma forse uno dei motivi più importanti, anche se è quello per il quale si spera non debbano mai essere utilizzate, per salvare vite...
 
 \section{La struttura del database \osm}
 \subsection{Elementi}
@@ -88,10 +88,10 @@ L'altra caratteristica molto importante è che tutti possono contribuire arricch
  \item \includegraphics{./Mf_node.png} \texttt{punti} (node): singoli punti
  \item \includegraphics{./Mf_way.png} \texttt{linee} (way): un insieme di punti non chiuso
  \item \includegraphics{./Mf_area.png} \texttt{aree} (polygon): un insieme di punti chiuso, solitamente con il tag area=yes
- \item \includegraphics{./Mf_relation.png} \texttt{relazioni} (relation): un insieme degli elementi precedenti, per e-sempio una linea degli autobus che è composta da più strade e dalle sue fermate
+ \item \includegraphics{./Mf_relation.png} \texttt{relazioni} (relation): un insieme degli elementi precedenti, per esempio una linea degli autobus che è composta da più strade e dalle sue fermate
 \end{itemize}
 \subsection{Tag}
-Le \textbf{etichette (tag)} servono per descrivere le caratteristiche dei vari elementi. I \textbf{tag sono sempre composti da una coppia di nomi}. Il primo è detto \key{key}, il secondo \val{value}. Solitamente la key descrive una famiglia di caratteristiche, mentre il value va più nello specifico. Ad esempio la key \key{highway} indica la famiglia delle strade di qualsiasi tipo, dalle autostrade ai sentieri. Di seguito ne presentiamo alcuni:
+Le \textbf{etichette (tag)} servono per descrivere le caratteristiche dei vari elementi. I \textbf{tag sono sempre composti da una coppia di nomi}. Il primo è detto \key{key}, il secondo \val{value}. Solitamente la \key{key} descrive una famiglia di caratteristiche, mentre il \val{value} va più nello specifico. Ad esempio la key \key{highway} indica la famiglia delle strade di qualsiasi tipo, dalle autostrade ai sentieri. Di seguito ne presentiamo alcuni:
 \begin{center}
  \begin{tabular}{ccc}
   \toprule
@@ -119,7 +119,7 @@ Le \textbf{etichette (tag)} servono per descrivere le caratteristiche dei vari e
 \end{center}
 I tag non rappresentano solo un elemento, ma possono essere usati per più elementi: per esempio \key{highway} è prevalentemente associato alle linee ma, come potete vedere sopra, vi sono alcuni casi in cui è utilizzato con i nodi \key{highway}=\val{bus\_stop} o \key{highway}=\val{traffic\_signal}.
 
-I tag usati sono tantissimi e continuano ad aumentare e migliorare, permettendo di mappare qualsiasi elemento possa essere rappresentato da una coppia di coordinate geografiche. Una vasta lista è disponibile al link  \url{http://wiki.openstreetmap.org/wiki/Map_Features}. Inoltre è possibile controllare, discutere e votare i nuovi tag proposti qui in questa pagina \url{http://wiki.openstreetmap.org/wiki/Proposed_features}.
+I tag usati sono tantissimi e continuano ad aumentare e migliorare, permettendo di mappare qualsiasi elemento possa essere rappresentato da una coppia di coordinate geografiche. Una vasta lista è disponibile al link  \url{http://wiki.openstreetmap.org/wiki/Map_Features}. Inoltre è possibile controllare, discutere e votare i nuovi tag proposti in questa pagina \url{http://wiki.openstreetmap.org/wiki/Proposed_features}.
 
 Oltre ai tag per le strade, esistono molti tag per elementi puntuali, lineari e areali. Eccone alcuni:
 \begin{center}
@@ -178,7 +178,7 @@ Inoltre ricorda che per ciascun elemento è possibile assegnare più di un tag i
 \end{center}
 
 \subsection{Relation}
-Per quanto riguarda le relation, attualmente sono solo sei quelle ufficiali, anche se molte altre sono state proposte e già utilizzate, tipo quelle per i numeri civici. Di seguito vedremo le ufficiali e poi approfondiremo le route, che sono tra le più utilizzate.
+Per quanto riguarda le relation, attualmente sono solo sei quelle ufficiali, anche se molte altre sono state proposte e già utilizzate, tipo quelle per i numeri civici. Di seguito vedremo le ufficiali e poi approfondiremo le route, che è un tra le più importanti e usate.
 \begin{center}
  \begin{tabular}{c p{9cm}}
   \toprule
@@ -194,7 +194,7 @@ Per quanto riguarda le relation, attualmente sono solo sei quelle ufficiali, anc
 \end{tabular}
 \end{center}
 
-Di seguito vedremo come utilizzare la relation route, che è sicuramente una delle più utilizzate e importanti: serve per indicare che più way diverse fanno parte di una stessa rotta. Gli unici due campi obbligatori sono \key{type} e \key{route}; gli altri, pur non essendo richiesti, sono ugualmente importanti e, quando presenti, è bene utilizzarli.
+Di seguito vedremo la relation route: serve per indicare che più way diverse fanno parte di una stessa rotta. Gli unici due campi obbligatori sono \key{type} e \key{route}; gli altri, pur non essendo richiesti, sono ugualmente importanti e, quando presenti, è bene utilizzarli.
 \begin{center}
  \begin{tabular}{cp{9cm}}
   \toprule
@@ -214,7 +214,7 @@ Per creare una route bisogna quindi aggiungere i tag e poi selezionare quali ele
 \section{Come posso contribuire}
 Per prima cosa dovrai iscriverti attraverso l'homepage; per iniziare a farti un'idea, puoi zoommare in un luogo mappato del quale hai una buona conoscenza e cliccare su ``Edit''; in questo modo darai un'occhiata a come sono strutturate le strade e i punti di interesse cliccandoci su ma, almeno all'inizio, se non sei sicuro di quello che fai non modificare la mappa.
 
-Quello che hai appena usato è \soft{Potlatch}, l'editor online; però è sconsigliato utilizzarlo perché può causare diversi problemi; per esempio le foto aeree di yahoo spesso solo spostate dai dati reali e si rischia di effettuare errori nella connessione di strade. È preferibile utilizzare altri software che funzionano come programmi a se stanti. Il più usato e completo è senz'altro \soft{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \soft{Merkaartor} \url{http://www.merkaartor.org/}.
+Quello che hai appena usato è \soft{Potlatch}, l'editor online; però è sconsigliato utilizzarlo perché può causare diversi problemi; per esempio le foto aeree di yahoo spesso solo spostate dai dati reali inoltre si rischia di effettuare errori nella connessione di strade. È preferibile utilizzare altri software che funzionano come programmi a se stanti. Il più usa-to e completo è senza dubbio \soft{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \soft{Merkaartor} \url{http://www.merkaartor.org/}.
 
 Un'altra cosa molto importante, quando si inizia a tracciare le strade, in particolare con l'editor online, è verificare che le varie strade che si incrociano, non in caso di ponti, siano tra loro interconnesse da un nodo comune. Nell'editor online è possibile assicurarsi di ciò quando, sovrapponendo la linea che si sta tracciando alla strada a cui si vuole congiungere, i nodi di questa si evidenziano di blu.
 \subsection{Non ho il \gps}
@@ -224,11 +224,11 @@ Un'altra cosa molto importante, quando si inizia a tracciare le strade, in parti
 \end{wrapfloat}
 Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkator}). 
 
-Se non hai un \gps potresti prendere in considerazio-ne \soft{Walking Papers}, questo permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \soft{JOSM}
+Se non hai un \gps potresti prendere in considerazione \soft{Walking Papers}, questo permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \soft{JOSM}
 
 \textbf{Preferisci sempre il sopralluogo di persona sul posto. Nel dubbio non mappare.}
 \subsection{Ho il \gps}
-Come spiegato nei primi paragrafi, le tracce \gps non entrano direttamente nel database di \osm. Sono però estremamente utili come base su cui poi ricalcare le way e i nodi mediante i software a disposizione, come \soft{Potlatch} o \soft{JOSM}.
+Come spiegato nei primi paragrafi, le tracce \gps non entrano direttamente nel database di \osm. Sono però estremamente utili come base su cui ricalcare le way e i nodi mediante i software a disposizione, come \soft{Potlatch} o \soft{JOSM}.
 \begin{wrapfloat}{figure}{L}{0pt}
  \includegraphics[width=0.6\columnwidth]{Josm-screenshot.png}
  \caption{\textit{L'interfaccia di JOSM}}
@@ -237,7 +237,7 @@ Supponiamo di aver a disposizione un \gps per fare una bellissima gita in montag
 
 Il nostro percorso inizia su una strada forestale. È bene in questo caso appuntare questa informazione poiché nella fase di editing sarà importante per etichettarla correttamente con \key{highway}=\val{track}. Un modo semplice per tener nota di queste cose è utilizzare i waypoint registrabili col \gps, cioè memorizzare nel nostro caso il punto di inizio della strada forestale con un waypoint e, se il modello lo permette, assegnargli un nome significativo (es. inizio forestale). Se il \gps non lo permette appuntare su un pezzo di carta il codice del waypoint in questione e la sua descrizione. Allo stesso modo registreremo la fine della strada forestale con un altro waypoint, così come l'inizio del sentiero.
 
-Sempre mediante i waypoint, è utile appuntare informazioni interessanti co-me il codice del sentiero o il suo nome.
+Sempre mediante i waypoint, è utile appuntare informazioni interessanti come il codice del sentiero o il suo nome.
 
 È da precisare che il nome che si assegna ai waypoint non è fondamentale, ma serve come promemoria personale, infatti nemmeno i waypoint entrano a far parte del database di OSM, ma serviranno esclusivamente da appunti in fase di editing. Adottate quindi lo stile che più trovate utile, completo e comodo per appuntare quel che trovate.
 
@@ -319,7 +319,7 @@ Di seguito verranno segnalati software, con diverse finalità, che hanno la poss
 \subsection{Qualità}
 Di seguito sono riportati solo alcuni degli strumenti, per avere una visione completa dei programmi per mantenere alta la qualità dei dati in \osm controllate questa pagina \url{http://wiki.openstreetmap.org/wiki/IT:Quality_Assurance}
 
-\soft{OpenStreetBugs}: uno dei primi strumenti per la qualità dei dati, permette agli utenti di segnalare bugs
+\soft{OpenStreetBugs}: uno dei primi strumenti per la qualità dei dati, permette agli utenti di segnalare errori
 
 \soft{QualityStreetMap}: permette di segnalare le zone completamente mappate attraverso griglie per diversi tag, copre tutta Europa
 
@@ -330,11 +330,11 @@ Di seguito sono riportati solo alcuni degli strumenti, per avere una visione com
 
 \soft{QGIS}: software GIS per l'analisi e la visualizzazione di dati geografici, si interfaccia con \osm attraverso diversi tool che permettono lo scaricamento, la modifica e l'aggiornamento del database
 
-\soft{PostgreSQL/PostGIS}: Database relazionale che con la sua estensione spaziale PostGIS può contenere i dati di \osm caricati utilizzando il software osm2pgsql
+\soft{PostgreSQL/PostGIS}: database relazionale che con la sua estensione spaziale PostGIS può contenere i dati di \osm caricati utilizzando il software osm2pgsql
 
-\soft{PgRouting}: Estensione di PostGIS per effettuare calcoli di routing; esiste osm2pgrouting che importa i file di \osm in PostgreSQL con le tabelle conformi al formato richiesto da PgRouting
+\soft{PgRouting}: estensione di PostGIS per effettuare calcoli di routing; esiste osm2pgrouting che importa i file di \osm in PostgreSQL con le tabelle conformi al formato richiesto da PgRouting
 
-\soft{Spatialite}: Estensione spaziale del database Sqlite; attraverso il mo-dulo spatialite\_osm carica file .osm; al suo interno è implementanto un ottimo algoritmo per il routing 
+\soft{Spatialite}: estensione spaziale del database Sqlite; attraverso il mo-dulo spatialite\_osm carica file .osm; al suo interno è implementanto un ottimo algoritmo per il routing 
 
 \subsection{Rendering}
 
@@ -350,7 +350,7 @@ Di seguito sono riportati solo alcuni degli strumenti, per avere una visione com
 
 \soft{Navit}: software per il routing con i dati di \osm, esistono versioni per diverse piattaforme, compresi cellulari
 
-\soft{OpenLayers}: Client WebGIS che permette di visualizzare in modo molto semplice le tile di \osm
+\soft{OpenLayers}: client WebGIS che permette di visualizzare in modo molto semplice le tile di \osm
 
 \soft{Marble}: visualizzatore di dati geografici su modello Google Earth
 
@@ -421,7 +421,7 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://www.openrouteservice.org}: il servizio principale proposto è un navigatore simile a quello sopra descritto. In Germania, basandosi sul servizio strade è capace di calcolare in tempo reale il percorso migliore in base al traffico od eventuali incidenti. Il sito fornisce inoltre servizi più specifici come ad esempio il tempo di accessibilità: dato un punto sulla mappa verrà evidenziata l'area raggiungibile entro un determinato tempo dal punto considerato
 
-\url{http://www.openaddresses.org/}: Visualizza e permette di inserire indirizzi di civici
+\url{http://www.openaddresses.org/}: visualizza e permette di inserire indirizzi di civici
 
 \url{http://oobrien.com/oom/?layers=B00FFTF}: OpenOrienteeringMap, mappa libera per l'orienteering
 
@@ -443,6 +443,7 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://www.gfoss.it/osm/stat/}: statistiche e stradario diviso per limiti amministrativi
 
+\vfill
 \begin{center}\begin{small}\textbf{
 Questo documento è rilasciato con licenza 
 Creative Commons Attribuzione - Non commerciale - Condividi allo stesso modo

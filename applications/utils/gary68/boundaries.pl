@@ -50,6 +50,9 @@
 # Version 3.1
 # - command line error handling
 # 
+# Version 3.2
+# - handle rels without node properly
+# 
 
 use strict ;
 use warnings ;
@@ -64,7 +67,7 @@ use OSM::osmgraph ;
 
 
 my $program = "boundaries.pl" ;
-my $version = "3.1" ;
+my $version = "3.2" ;
 my $usage = $program . <<"END1" ;
 -help print this text
 -in= osm file name (input file, mandatory) 
@@ -1175,19 +1178,32 @@ sub drawPic {
 	my $node ;
 	my $p ; my $pt ; 
 
+	# print "draw relation $rel\n" ;
+	my $pointsGiven = 0 ;
 	foreach $p ( @{$relationPolygonsClosed{$rel}}, @{$relationPolygonsOpen{$rel}} ) {
 		foreach $pt ($p->points) {
+			$pointsGiven = 1 ;
 			if ($pt->[0] > $lonMax) { $lonMax = $pt->[0] ; }
 			if ($pt->[1] > $latMax) { $latMax = $pt->[1] ; }
 			if ($pt->[0] < $lonMin) { $lonMin = $pt->[0] ; }
 			if ($pt->[1] < $latMin) { $latMin = $pt->[1] ; }
 		}
 	}
+	if ($pointsGiven) {
+		$lonMin = $lonMin - ($buffer * ($lonMax - $lonMin)) ;
+		$latMin = $latMin - ($buffer * ($latMax - $latMin)) ;
+		$lonMax = $lonMax + ($buffer * ($lonMax - $lonMin)) ;
+		$latMax = $latMax + ($buffer * ($latMax - $latMin)) ;
+	}
+	else {
+		print "WARNING: relation $rel does not have points\n" ;
+		$lonMin = -179 ;
+		$latMin = -80 ;
+		$lonMax = 179 ;
+		$latMax = 80 ;
+	}
 
-	$lonMin = $lonMin - ($buffer * ($lonMax - $lonMin)) ;
-	$latMin = $latMin - ($buffer * ($latMax - $latMin)) ;
-	$lonMax = $lonMax + ($buffer * ($lonMax - $lonMin)) ;
-	$latMax = $latMax + ($buffer * ($latMax - $latMin)) ;
+	# print "  $picSize, $lonMin, $latMin, $lonMax, $latMax\n" ;
 
 	initGraph ($picSize, $lonMin, $latMin, $lonMax, $latMax) ;
 	

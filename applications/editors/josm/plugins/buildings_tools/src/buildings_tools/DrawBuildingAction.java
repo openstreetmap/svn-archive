@@ -77,7 +77,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 
     private static Cursor getCursor() {
         try {
-            return ImageProvider.getCursor("crosshair", null);
+            return ImageProvider.getCursor("crosshair", "building");
         } catch (Exception e) {
         }
         return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);

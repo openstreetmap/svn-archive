@@ -1,11 +1,13 @@
 #!/usr/bin/python
 import sys, os, time, threading
 import numpy
+#import Image # PIL
 from Queue import Queue
 from os import path
 from math import pi,cos,sin,log,exp,atan,ceil,floor
 from subprocess import call
 from mapnik import *
+
 
 # Check that the environment is set and import configuration
 if not 'TOPOSM_ENV_SET' in os.environ:
@@ -495,7 +497,6 @@ def render_geotiff_tile(z, x, y, ntiles, mapname):
     destTilePath = getTilePath(mapname, z, x, y, '.tif')
     finalTilePath = getTilePath(mapname, z, x, y, '.png')
     if os.path.isfile(destTilePath):
-        #print destTilePath, "exists. Skipping."
         pass
     else:
         ensureDirExists(destdir)
@@ -513,13 +514,11 @@ def render_geotiff_tile(z, x, y, ntiles, mapname):
             cmd = 'convert "%s" "%s" && rm "%s"' % (destTilePath, finalTilePath, destTilePath)
             call(cmd, shell=True)
         else:
-            #print "Empty tile"
             return False
     return True
 
 def slice_tile(z, x, y, ntiles, mapname, destSuffix = '.png'):
     srcTilePath = getTilePath(mapname, z, x, y, '.png')
-#    print 'Slicing tile ', srcTilePath,
     for dx in range(0, ntiles):
         destDir = path.join(getTileDir(mapname, z), str(x+dx))
         ensureDirExists(destDir)
@@ -532,12 +531,10 @@ def slice_tile(z, x, y, ntiles, mapname, destSuffix = '.png'):
                     (srcTilePath, SUBTILE_SIZE, SUBTILE_SIZE, offsetx, offsety,
                      path.join(destDir, str(y+dy) + destSuffix))
                 call(cmd, shell=True)
-#                print '.',
             else:
-#                print '-',
                 pass
-    #tryRemove(srcTilePath)
-#    print
+    tryRemove(srcTilePath)
+
 
 def merge_subtiles(z, x, y, mapname, suffix = '.jpg'):
     """Merges (up to) four subtiles from the next higher
@@ -558,6 +555,37 @@ def merge_subtiles(z, x, y, mapname, suffix = '.jpg'):
     destpath = getSubtilePath(mapname, z, x, y, suffix)
     cmd = cmd + ' "' + destpath + '"'
     call(cmd, shell=True)
+
+def create_jpeg_tile(z, x, y, quality):
+    print 'Creating jpeg tile at', z, x, y, '...',
+    colorreliefsrc = getSubtilePath('color-relief', z, x, y, '.jpg')
+    contourssrc = getSubtilePath('contours', z, x, y, '.png')
+    featuressrc = getSubtilePath('features', z, x, y, '.png')
+    desttile = getSubtilePath('jpeg' + str(quality), z, x, y, '.jpg')
+    if path.isfile(colorreliefsrc) and path.isfile(featuressrc):
+        ensureDirExists(path.dirname(desttile))
+
+        #tile = Image.open(colorreliefsrc)
+        #if path.isfile(contourssrc):
+        #    contours = Image.open(contourssrc)
+        #    tile.paste(contours, None)
+        #features = Image.open(featuressrc)
+        #tile.paste(features, None)
+        #ensure_dir_exists(path.dirname(desttile))
+        #tile.save(desttile, 'JPEG', quality=quality, optimize=True)
+        
+        # PIL generates internal errors opening the JPEG
+        # tiles so it's back to ImageMagick for now...
+        cmd = "convert " + colorreliefsrc;
+        if path.isfile(contourssrc):
+            cmd = cmd + " " + contourssrc + " -composite"
+        cmd = cmd + " " + featuressrc + " -composite"
+        cmd = cmd + " -quality " + str(quality) + " " + desttile
+        call(cmd, shell=True)
+        
+        print 'done.'
+    else:
+        print 'source tiles not found. skipping.', colorreliefsrc, featuressrc
 
 
 # public methods
@@ -636,4 +664,12 @@ def render_tiles_single(envLL, minz, maxz):
         for x in range(fromx, tox+1, ntiles):
             for y in range(fromy, toy+1, ntiles):
                 renderer.render('render', z, x, y)
+
+def create_jpeg_tiles(envLL, minz, maxz, quality):
+    for z in range(minz, maxz+1):
+        (fromx, fromy) = get_tile_from_ll(envLL.maxy, envLL.minx, z)
+        (tox, toy) = get_tile_from_ll(envLL.miny, envLL.maxx, z)
+        for x in range(fromx, tox+1):
+            for y in range(fromy, toy+1):
+                create_jpeg_tile(z, x, y, quality)
 

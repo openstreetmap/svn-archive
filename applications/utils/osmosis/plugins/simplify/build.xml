@@ -12,6 +12,8 @@
 
 	<path id="libs">
 		<fileset dir="libs" includes="**/*.jar"/>
+		<fileset dir="../../trunk/core/lib" includes="**/*.jar"/>
+		<fileset dir="../../trunk/areafilter/lib" includes="**/*.jar"/>
 	</path>
 
     <!-- ================================= 
@@ -23,7 +25,11 @@
 		<mkdir dir="build/classes"/>
     	
 		<!-- Compile stuff -->
-		<javac srcdir="src" destdir="build/classes" debuglevel="lines,vars,source" classpathref="libs"/>
+		<javac  destdir="build/classes" debuglevel="lines,vars,source" classpathref="libs">
+		    <src path="src/main/java"/>
+		    <src path="../../trunk/core/src"/>
+		    <src path="../../trunk/areafilter/src"/>
+        </javac>
     	
 		<!-- Copy all resource files (even if there aren't any... I'll get caught out later otherwise) -->
 		<copy todir="build/classes">

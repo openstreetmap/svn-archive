@@ -136,7 +136,7 @@ public class EditGpxLayer extends Layer {
      * @return GPXData
      */
     private GpxData toGpxData(boolean anonTime) {
-        return data.createGpxData();
+        return data.createGpxData(anonTime);
     }
 
     //context item "Convert to GPX layer"

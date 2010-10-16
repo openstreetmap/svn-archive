@@ -42,12 +42,12 @@ public class EditGpxData {
         return tracks;
     }
 
-    public GpxData createGpxData() {
+    public GpxData createGpxData(boolean anonTime) {
         GpxData result = new GpxData();
 
         for (EditGpxTrack track: tracks) {
             if (!track.isDeleted()) {
-                GpxTrack newTrack = track.createGpxTrack();
+                GpxTrack newTrack = track.createGpxTrack(anonTime);
                 if (!newTrack.getSegments().isEmpty()) {
                     result.tracks.add(newTrack);
                 }

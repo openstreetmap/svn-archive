@@ -31,7 +31,7 @@ public class EditGpxTrack {
         return attributes;
     }
 
-    public GpxTrack createGpxTrack() {
+    public GpxTrack createGpxTrack(boolean anonTime) {
 
         Collection<Collection<WayPoint>> wayPoints = new ArrayList<Collection<WayPoint>>();
 
@@ -39,6 +39,13 @@ public class EditGpxTrack {
             if (!segment.isDeleted()) {
                 List<WayPoint> points = segment.getNonDeletedWaypoints();
                 if (!points.isEmpty()) {
+                    if (anonTime) {
+                        // convert to anonymous time
+                        for (WayPoint w : points) {
+                            w.attr.put("time", "1970-00-00T00:00:00.000Z");
+                            w.setTime();
+                        }
+                    }
                     wayPoints.add(points);
                 }
             }

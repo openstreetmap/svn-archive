@@ -29,8 +29,12 @@
 -->
 <project name="epsg31287" default="dist" basedir=".">
 
+    <!-- read build.properties for local settings -->
+    <property file="build.properties" />
+    <!-- enter the SVN command file name -->
+    <property name="svn" value="svn.cmd" />
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message" />
+    <property name="commit.message" value="Initial release" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3592" />
 
@@ -123,7 +127,7 @@
     -->
     <target name="revision">
 
-        <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+        <exec append="false" output="REVISION" executable="${svn}" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
@@ -168,7 +172,7 @@
         **
         -->
     <target name="core-info">
-        <exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+        <exec append="false" output="core.info.xml" executable="${svn}" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
@@ -185,11 +189,15 @@
         -->
     <target name="commit-current">
         <echo>Commiting the plugin source with message '${commit.message}' ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+        <exec append="true" output="svn.log" executable="${svn}" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="commit"/>
             <arg value="-m '${commit.message}'"/>
             <arg value="."/>
+        	<arg value="${svn.username_arg}"/>
+        	<arg value="${svn.username}"/>
+        	<arg value="${svn.password_arg}"/>
+        	<arg value="${svn.password}"/>
         </exec>
     </target>
 
@@ -198,13 +206,13 @@
         -->
     <target name="update-current">
         <echo>Updating plugin source ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+        <exec append="true" output="svn.log" executable="${svn}" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="up"/>
             <arg value="."/>
         </exec>
         <echo>Updating ${plugin.jar} ...</echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+        <exec append="true" output="svn.log" executable="${svn}" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="up"/>
             <arg value="../dist/${plugin.jar}"/>
@@ -225,17 +233,21 @@
                         
     Now commiting ${plugin.jar} ...
     </echo>
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+        <exec append="true" output="svn.log" executable="${svn}" failifexecutionfails="false">
             <env key="LANG" value="C"/>
             <arg value="-m '${commit.message}'"/>
             <arg value="commit"/>
             <arg value="${plugin.jar}"/>
+        	<arg value="${svn.username_arg}"/>
+        	<arg value="${svn.username}"/>
+        	<arg value="${svn.password_arg}"/>
+        	<arg value="${svn.password}"/>
         </exec>
     </target>
 
     <!-- ** make sure svn is present as a command line tool ** -->
     <target name="ensure-svn-present">
-        <exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
+        <exec append="true" output="svn.log" executable="${svn}" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
             <env key="LANG" value="C" />
             <arg value="--version" />
         </exec>

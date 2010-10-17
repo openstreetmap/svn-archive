@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 import java.util.Timer;
@@ -11,6 +12,7 @@ import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.videomapping.GpsPlayer;
 import org.openstreetmap.josm.plugins.videomapping.VideoObserver;
@@ -60,7 +62,9 @@ public class GPSVideoPlayer
 
             public void playing(long time) {
                 //sync the GPS back
-                if(synced) gps.jump(getGPSTime(time));
+                if(synced) {
+                	gps.jump(getGPSTime(time));
+                }
                 
             }
 
@@ -147,12 +151,12 @@ public class GPSVideoPlayer
     //jumps in video to the corresponding Video time (external triggered)
     public void jumpToGPSTime(long gpsT)
     {
-       /* if(!synced)
+        if(!synced)
         {
             //when not synced we can just move the icon to the right position           
-            gps.jump(new Date(gpsT));
+            gps.jump(new Time(gpsT));
             Main.map.mapView.repaint();
-        }*/
+        }
         video.jump(getVideoTime(gpsT));
     }
     

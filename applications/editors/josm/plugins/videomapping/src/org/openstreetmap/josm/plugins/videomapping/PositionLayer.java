@@ -121,7 +121,6 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
     public void paint(Graphics2D g, MapView map, Bounds bound) {
         Point p;
         //TODO Source out redundant calculations
-        //TODO make icon transparent
         //draw all GPS points
         g.setColor(Color.YELLOW); //new Color(0,255,0,128)
         for(WayPoint n: ls) {
@@ -171,7 +170,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
                 p=Main.map.mapView.getPoint(iconPosition.getEastNorth());
                 icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);             
                 //g.drawString(mins.format(iconPosition.getTime()),p.x-10,p.y-10); //TODO when synced we might wan't to use a different layout
-                g.drawString(gpsTimeCode.format(iconPosition.getTime()),p.x-10,p.y-10);
+                g.drawString(gpsTimeCode.format(iconPosition.getTime()),p.x-15,p.y-15);
             }
         }
         else
@@ -179,7 +178,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
             if (gps.getCurr()!=null){
             p=Main.map.mapView.getPoint(gps.getCurr().getEastNorth());
             icon.paintIcon(null, g, p.x-icon.getIconWidth()/2, p.y-icon.getIconHeight()/2);         
-            g.drawString(gpsTimeCode.format(gps.getCurr().getTime()),p.x-10,p.y-10);
+            g.drawString(gpsTimeCode.format(gps.getCurr().getTime()),p.x-15,p.y-15);
             }
         }
     }

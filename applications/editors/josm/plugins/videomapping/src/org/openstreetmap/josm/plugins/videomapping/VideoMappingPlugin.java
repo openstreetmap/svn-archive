@@ -1,16 +1,27 @@
 package org.openstreetmap.josm.plugins.videomapping;
 
+import java.awt.BorderLayout;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.swing.Box;
+import javax.swing.InputVerifier;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.text.MaskFormatter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.*;
@@ -45,8 +56,8 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
       private final String VM_AUTOCENTER="videomapping.autocenter";
       private final String VM_JUMPLENGTH="videomapping.jumplength";
       private final String VM_LOOPLENGTH="videomapping.looplength";
-      private boolean autocenter;
       private String deinterlacer;
+      private boolean autocenter;
       private Integer jumplength,looplength;
       private String mru;
       //TODO What more to store during sessions? Size/Position
@@ -113,6 +124,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
                         VAdd.setEnabled(false);
                         VRemove.setEnabled(true);
                         layer.getVideoPlayer().setSubtitleAction(VSubTitles);
+                        player=layer.getVideoPlayer();
                     }
                 }
         
@@ -126,39 +138,20 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
         };
         
         VStart = new JosmAction(tr("Play/Pause"), "audio-playpause", tr("starts/pauses video playback"),
-                Shortcut.registerShortcut("videomapping:startstop","",KeyEvent.VK_NUMPAD5, Shortcut.GROUP_DIRECT), false) {
+                Shortcut.registerShortcut("videomapping:startstop","Video: "+tr("Play/Pause"),KeyEvent.VK_NUMPAD5, Shortcut.GROUP_DIRECT), false) {
             
             public void actionPerformed(ActionEvent e) {                                
                 if(player.playing()) player.pause(); else player.play();
             }
         };
         Vbackward = new JosmAction(tr("Backward"), "audio-prev", tr("jumps n sec back"),
-                Shortcut.registerShortcut("videomapping:backward","",KeyEvent.VK_NUMPAD4, Shortcut.GROUP_DIRECT), false) {
+                Shortcut.registerShortcut("videomapping:backward","Video: "+tr("Backward"),KeyEvent.VK_NUMPAD4, Shortcut.GROUP_DIRECT), false) {
             public void actionPerformed(ActionEvent e) {
                 player.backward();
-                            
-            }
-        };
-        VJump= new JosmAction(tr("Jump To"), "jumpto", tr("jumps to the entered gps time"),null, false) {          
-            public void actionPerformed(ActionEvent e) {
-                String s =JOptionPane.showInputDialog(tr("please enter GPS timecode"),"10:07:57");
-                SimpleDateFormat format= new SimpleDateFormat("hh:mm:ss");
-                Date t;
-                try {
-                    t = format.parse(s);
-                    if (t!=null)
-                        {                           
-                            player.jumpToGPSTime(t.getTime());
-                        }                       
-                } catch (ParseException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-                            
             }
         };
         Vforward= new JosmAction(tr("Forward"), "audio-next", tr("jumps n sec forward"),
-                Shortcut.registerShortcut("videomapping:forward","",KeyEvent.VK_NUMPAD6, Shortcut.GROUP_DIRECT), false) {
+                Shortcut.registerShortcut("videomapping:forward","Video: "+tr("Forward"),KeyEvent.VK_NUMPAD6, Shortcut.GROUP_DIRECT), false) {
             
             public void actionPerformed(ActionEvent e) {
                 player.forward();
@@ -166,7 +159,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
             }
         };
         Vfaster= new JosmAction(tr("Faster"), "audio-faster", tr("faster playback"),
-                Shortcut.registerShortcut("videomapping:faster","",KeyEvent.VK_NUMPAD8, Shortcut.GROUP_DIRECT), false) {
+                Shortcut.registerShortcut("videomapping:faster","Video: "+tr("Faster"),KeyEvent.VK_NUMPAD8, Shortcut.GROUP_DIRECT), false) {
             
             public void actionPerformed(ActionEvent e) {
                 player.faster();
@@ -174,15 +167,50 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
             }
         };
         Vslower= new JosmAction(tr("Slower"), "audio-slower", tr("slower playback"),
-                Shortcut.registerShortcut("videomapping:slower","",KeyEvent.VK_NUMPAD2, Shortcut.GROUP_DIRECT), false) {
+                Shortcut.registerShortcut("videomapping:slower","Video: "+tr("Slower"),KeyEvent.VK_NUMPAD2, Shortcut.GROUP_DIRECT), false) {
             
             public void actionPerformed(ActionEvent e) {
                 player.slower();
                             
             }
         };
+        VJump= new JosmAction(tr("Jump To"), "jumpto", tr("jumps to the entered gps time"),null, false) {          
+            public void actionPerformed(ActionEvent e) {
+            	String s;
+            	try {
+            	JOptionPane d=new JOptionPane(tr("Jump to"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+            	JFormattedTextField inp = new JFormattedTextField(new MaskFormatter("##:##:##"));
+            	inp.setText("00:00:01");
+            	inp.setInputVerifier(new InputVerifier() {					
+					@Override
+					public boolean verify(JComponent input) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+				});
+            	//TODO here we should show the GPS time range to the user
+            	if(d.showConfirmDialog(Main.main.panel,inp, tr("Jump to"),JOptionPane.OK_CANCEL_OPTION)==JOptionPane.OK_OPTION)
+            	{
+	            	s=inp.getText();
+	            	Date t;
+	                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm:ss");
+	                t = sdf.parse(s);
+	                if (t!=null)
+	                {
+	                    player.jumpToGPSTime(t.getTime());
+	                }                       
+            	}
+            	} catch (ParseException e1) {
+	                    // TODO Auto-generated catch block
+	                    e1.printStackTrace();
+	            }
+
+            }
+                            
+            
+        };
         Vloop= new JosmAction(tr("Loop"), "loop", tr("loops n sec around current position"),
-                Shortcut.registerShortcut("videomapping:loop","",KeyEvent.VK_NUMPAD7, Shortcut.GROUP_DIRECT), false) {
+                Shortcut.registerShortcut("videomapping:loop","Video: "+tr("loop"),KeyEvent.VK_NUMPAD7, Shortcut.GROUP_DIRECT), false) {
             
             public void actionPerformed(ActionEvent e) {
                 player.loop();

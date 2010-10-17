@@ -116,7 +116,10 @@ public class GpsPlayer {
     //go to the position at the timecode e.g.g "14:00:01";
     public void jump(Time GPSAbsTime)
     {
-        goTo(getWaypoint(GPSAbsTime.getTime()-start.getTime().getTime())); //TODO replace Time by Date?
+    	Date zero=start.getTime();
+    	Time starttime = new Time(zero.getHours(),zero.getMinutes(),zero.getSeconds());
+    	long diff=GPSAbsTime.getTime()-starttime.getTime();
+        goTo(getWaypoint(diff)); //TODO replace Time by Date?
     }
     
     /*
@@ -338,7 +341,7 @@ public class GpsPlayer {
     public void jump(long relTime) {
         int pos = Math.round(relTime/1000);//TODO ugly quick hack   
         goTo(pos);
-        //if (autoCenter) Main.map.mapView.
+        if (autoCenter) Main.map.mapView.zoomTo(curr.getCoor());
     }
     
     //toggles walking along the track

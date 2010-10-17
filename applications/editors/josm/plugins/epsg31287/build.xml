@@ -108,7 +108,7 @@
                 	                                        for use with WMS plugin to load geoimage.at WMS, see link for details"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/WikiProject_Austria/geoimage.at#JOSM_Plugin"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/> -->
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             	<!-- <attribute name="Plugin-Version" value="0.3"/> -->
             </manifest>
         </jar>

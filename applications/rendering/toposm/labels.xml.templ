@@ -335,10 +335,16 @@
     <StyleName>featurenames</StyleName>
     <Datasource>
 		&dbsettings; &extents;
-		<!-- HACK: postgres converts elevation m -> ft, and appends unit -->
+		<!--
+		HACK: postgres converts elevation m -> ft, and appends unit
+		NOTE: The CASE is a workaround for when 'm' is explicitly specified
+		as the unit.
+		-->
 		<Parameter name="table">
 		(SELECT way, name, "natural", aeroway, railway, landuse, leisure, 0 as way_area,
-		    CAST(round((CAST(ele as numeric) * 3.2787), 0) as varchar(10)) || ' ft' as ele_w_unit
+		    CAST(round((CAST(
+		        (CASE WHEN ele LIKE '%m' THEN substr(ele, 0, length(ele)-1) ELSE ele END)
+		    as numeric) * 3.2787), 0) as varchar(10)) || ' ft' as ele_w_unit
 		 FROM ${DB_PREFIX}_point) AS featurenames
 		</Parameter>
     </Datasource>

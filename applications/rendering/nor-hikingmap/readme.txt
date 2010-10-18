@@ -101,3 +101,7 @@ barrier=gate|lift_gate|bollard|cycle_barrier|stile|windfall
 add symbol to leisure=winter_sports, how to determine activity type?
 
 seasonal på skiforeningens kafeer
+
+piste:oneway=yes
+piste:lit=yes
+

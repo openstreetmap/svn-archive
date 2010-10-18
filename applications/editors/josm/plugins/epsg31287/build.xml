@@ -34,7 +34,7 @@
     <!-- enter the SVN command file name -->
     <property name="svn" value="svn.cmd" />
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Initial release" />
+    <property name="commit.message" value="fixed Manifest" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3592" />
 

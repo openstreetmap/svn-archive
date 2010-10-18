@@ -6,6 +6,9 @@ import os
 import pxdom
 import colorsys
 
+source_dir = './original-mapnik'
+dest_dir = './bw-mapnik'
+
 simple_colors = {
     'aliceblue': 'f0f8ff',
     'antiquewhite': 'faebd7',
@@ -185,26 +188,33 @@ def rgb_to_css(rgb):
     r,g,b=rgb
     return "#{r:02x}{g:02x}{b:02x}".format(r=int(r*255.0),g=int(g*255.0),b=int(b*255.0))
 
-savedPath = os.getcwd()
-os.chdir("original-mapnik")
+def transmogrify_file(f):
+    
+    document = pxdom.parse(os.path.join(source_dir,f), {'entities': 1})
 
-document = pxdom.parse( "osm.xml", {'entities': 1} )
+    els = document.getElementsByTagName("CssParameter")
+    #print "els=",els
+    for el in els:
+        at = el.getAttribute("name")
+        if at=="stroke" or at=="fill":
+            col=el.firstChild.nodeValue
+            bw=rgb_to_css(color_to_bw(parse_color(col)))
+            print "converted {typ} from {a} to {bw}." .format(typ=at,a=col,bw=bw)
+            el.firstChild.nodeValue=bw
 
-els = document.getElementsByTagName("CssParameter")
-#print "els=",els
-for el in els:
-    at = el.getAttribute("name")
-    if at=="stroke" or at=="fill":
-        col=el.firstChild.nodeValue
-        bw=rgb_to_css(color_to_bw(parse_color(col)))
-        print "converted {typ} from {a} to {bw}." .format(typ=at,a=col,bw=bw)
-        el.firstChild.nodeValue=bw
+    output= document.implementation.createLSOutput() 
+    output.systemId= os.path.join(dest_dir,f)
+    output.encoding= 'utf-8' 
+    serialiser= document.implementation.createLSSerializer() 
+    serialiser.write(document, output)
 
-output= document.implementation.createLSOutput() 
-output.systemId= 'file:///tmp/osmbw.xml' 
-output.encoding= 'utf-8' 
-serialiser= document.implementation.createLSSerializer() 
-serialiser.write(document, output)
+
+#savedPath = os.getcwd()
+#os.chdir("original-mapnik")
+
+transmogrify_file('osm.xml')
+#transmogrify_file('inc/entities.xml.inc')
+transmogrify_file('inc/layer-addressing.xml.inc')
 
 #print "bw=",color_to_bw(0.9,0.5,0)
 #print "bw=",color_to_bw(0,0.9,0.5)
@@ -212,4 +222,4 @@ serialiser.write(document, output)
 #print "rgb=",parse_color("#1f3")
 #print "rgb=",parse_color("yellow")
 
-os.chdir( savedPath )
+#os.chdir( savedPath )

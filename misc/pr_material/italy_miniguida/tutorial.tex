@@ -87,7 +87,7 @@ L'altra caratteristica molto importante è che tutti possono contribuire arricch
 \begin{itemize}
  \item \includegraphics{./Mf_node.png} \texttt{punti} (node): singoli punti
  \item \includegraphics{./Mf_way.png} \texttt{linee} (way): un insieme di punti non chiuso
- \item \includegraphics{./Mf_area.png} \texttt{aree} (polygon): un insieme di punti chiuso, solitamente con il tag area=yes
+ \item \includegraphics{./Mf_area.png} \texttt{aree} (polygon): un insieme di punti chiuso, solitamente con il tag \key{area}=\val{yes}
  \item \includegraphics{./Mf_relation.png} \texttt{relazioni} (relation): un insieme degli elementi precedenti, per esempio una linea degli autobus che è composta da più strade e dalle sue fermate
 \end{itemize}
 \subsection{Tag}
@@ -140,7 +140,7 @@ Oltre ai tag per le strade, esistono molti tag per elementi puntuali, lineari e 
 			& & \val{level\_crossing} & passaggio a livello \\
   \midrule
   \multirow{8}*{lineare} & \multirow{2}*{\key{aerialway}} & \val{cable\_car} & funivia \\
-			& & \val{chair\_lift} & cabinovia \\
+			& & \val{chair\_lift} & seggiovia \\
  & & & \\
 			& \multirow{2}*{\key{waterway}} & \val{river} & fiume \\
 			& & \val{canal} & canale \\
@@ -189,7 +189,7 @@ Per quanto riguarda le relation, attualmente sono solo sei quelle ufficiali, anc
    \key{boundary}	& serve per raggruppare aree e creare enclavi ed exclavi \\
    \key{route} & serve per creare dei percorsi, possono essere pedonali (per esempio sentieri montani), ciclabili, linee di trasporti pubblici ecc ecc \\
    \key{enforcement} & serve per inserire elementi per misurare e documentare le violazioni veicolari \\
-   \key{destination sign} & serve per dare informazioni sulle destinazioni agli incroci e alle svolte (molto utile per i programmi di routing \\
+   \key{destination sign} & serve per dare informazioni sulle destinazioni agli incroci e alle svolte (molto utile per i programmi di routing) \\
   \bottomrule
 \end{tabular}
 \end{center}
@@ -202,7 +202,7 @@ Di seguito vedremo la relation route: serve per indicare che più way diverse fa
   \midrule
    \key{type} & \val{route} \\
    \key{route} & \val{road} - \val{bicycle} - \val{foot} - \val{hiking} - \val{bus} - \val{ferry} - \val{canal} -\val{pilgrimage} - \val{detour} - \val{railway} - \val{tram} - \val{trolleybus} - \val{mtb (mountainbike)} - \val{roller\_skate} - \val{running} - \val{horse} - \val{parade} - \val{protest\_march (recurring)} \\
-   \key{ref} & \val{codice identificatico se presente}\\
+   \key{ref} & \val{codice identificativo se presente}\\
    \key{operator} & \val{nome dell'operatore se presente} \\
    \key{name} & \val{nome se presente} \\
    \key{symbol} & \val{simbolo se presente} \\
@@ -212,7 +212,7 @@ Di seguito vedremo la relation route: serve per indicare che più way diverse fa
 Per creare una route bisogna quindi aggiungere i tag e poi selezionare quali elementi già presenti sul database ne fanno parte.
 
 \section{Come posso contribuire}
-Per prima cosa dovrai iscriverti attraverso l'homepage; per iniziare a farti un'idea, puoi zoommare in un luogo mappato del quale hai una buona conoscenza e cliccare su ``Edit''; in questo modo darai un'occhiata a come sono strutturate le strade e i punti di interesse cliccandoci su ma, almeno all'inizio, se non sei sicuro di quello che fai non modificare la mappa.
+Per prima cosa dovrai iscriverti attraverso l'homepage \url{http://www.openstreetmap.org/}; per iniziare a farti un'idea, puoi zoommare in un luogo mappato del quale hai una buona conoscenza e cliccare su ``Edit''; in questo modo darai un'occhiata a come sono strutturate le strade e i punti di interesse cliccandoci su ma, almeno all'inizio, se non sei sicuro di quello che fai non modificare la mappa.
 
 Quello che hai appena usato è \soft{Potlatch}, l'editor online; però è sconsigliato utilizzarlo perché può causare diversi problemi; per esempio le foto aeree di Yahoo spesso solo spostate dai dati reali inoltre si rischia di effettuare errori nella connessione di strade. È preferibile utilizzare altri software che funzionano come programmi a se stanti. Il più usa-to e completo è senza dubbio \soft{JOSM}, \url{http://josm.openstreetmap.de/}, un altro, soprattutto per i non amanti di Java, si chiama \soft{Merkaartor} \url{http://www.merkaartor.org/}.
 
@@ -224,7 +224,7 @@ Un'altra cosa molto importante, quando si inizia a tracciare le strade, in parti
 \end{wrapfloat}
 Puoi collaborare alla mappatura anche se non hai il \gps, l'\textbf{importante è avere una connessione ad internet} \dots Come? Per esempio inserendo i nomi delle vie dove non sono presenti, inserendo i punti di interesse (negozi, punti turistici, fontane, servizi\dots), correggendo eventuali errori. Per molte zone si hanno le foto aeree di Yahoo in alta risoluzione, la cui licenza permette di "ricalcarle"; inoltre è stata concessa la possibilità di utilizzare le foto aeree disponibili sul Portale Cartografico Nazionale, distribute tramite servizi online WMS (Web Map Server), per derivare dati per il progetto \osm (si può fare solo con \soft{JOSM} o \soft{Merkaator}). 
 
-Se non hai un \gps potresti prendere in considerazione \soft{Walking Papers}, questo permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \soft{JOSM}
+Se non hai un \gps potresti prendere in considerazione \soft{Walking Papers}, questo permette di stampare una zona e poi segnare su questa le modifiche da fare. Ovviamente si può usare questo strumento dove sono presenti un po' di dati sul database da utilizzare come base ed è molto utile per aggiungere waypoint nei centri. Per sfruttare al meglio il foglio modificato è bene avere uno scanner per importarlo nel PC e utilizzarlo con altri software, in primis \soft{JOSM}.
 
 \textbf{Preferisci sempre il sopralluogo di persona sul posto. Nel dubbio non mappare.}
 \subsection{Ho il \gps}
@@ -233,7 +233,7 @@ Come spiegato nei primi paragrafi, le tracce \gps non entrano direttamente nel d
  \includegraphics[width=0.6\columnwidth]{Josm-screenshot.png}
  \caption{\textit{L'interfaccia di JOSM}}
 \end{wrapfloat}
-Supponiamo di aver a disposizione un \gps per fare una bellissima gita in montagna. Accendiamo il nostro apparecchio, attendiamo l'aggancio dei satelliti ed iniziamo la registrazione della traccia. Per il progetto è molto importante avere i punti delle tracce abbastanza ravvicinati perciò \textbf{è bene settare nelle impostazioni del vostro \gps il salvataggio i punti delle tracce con una frequenza maggiore a quella di default}. Le impostazioni più utilizzate sono quelle basate sul \textit{tempo} (questo metodo va settato in base al mezzo di locomozione: in macchina e in bici vanno bene valori inferiori a 5 secondi; a piedi, con un passo non troppo svelto, si può arrivare fino a 10) oppure sulla \textit{distanza} (in questo caso è bene non superare i 10 m, sui garmin è il minimo disponibile), per i novizi è consigliato di utilizzare la distanza poichè questo metodo crea una traccia ``più pulita'' rispetto al metodo del tempo.
+Supponiamo di aver a disposizione un \gps per fare una bellissima gita in montagna. Accendiamo il nostro apparecchio, attendiamo l'aggancio dei satelliti ed iniziamo la registrazione della traccia. Per il progetto è molto importante avere i punti delle tracce abbastanza ravvicinati perciò \textbf{è bene settare nelle impostazioni del vostro \gps il salvataggio i punti delle tracce con una frequenza maggiore a quella di default}. Le impostazioni più utilizzate sono quelle basate sul \textit{tempo} (questo metodo va settato in base al mezzo di locomozione: in macchina e in bici vanno bene valori inferiori a 5 secondi; a piedi, con un passo non troppo svelto, si può arrivare fino a 10) oppure sulla \textit{distanza} (in questo caso è bene non superare i 10 m, sui garmin è il minimo disponibile), per i novizi è consigliato di utilizzare la distanza poiché questo metodo crea una traccia ``più pulita'' rispetto al metodo del tempo.
 
 Il nostro percorso inizia su una strada forestale. È bene in questo caso appuntare questa informazione poiché nella fase di editing sarà importante per etichettarla correttamente con \key{highway}=\val{track}. Un modo semplice per tener nota di queste cose è utilizzare i waypoint registrabili col \gps, cioè memorizzare nel nostro caso il punto di inizio della strada forestale con un waypoint e, se il modello lo permette, assegnargli un nome significativo (es. inizio forestale). Se il \gps non lo permette appuntare su un pezzo di carta il codice del waypoint in questione e la sua descrizione. Allo stesso modo registreremo la fine della strada forestale con un altro waypoint, così come l'inizio del sentiero.
 
@@ -241,7 +241,9 @@ Sempre mediante i waypoint, è utile appuntare informazioni interessanti come il
 
 È da precisare che il nome che si assegna ai waypoint non è fondamentale, ma serve come promemoria personale, infatti nemmeno i waypoint entrano a far parte del database di OSM, ma serviranno esclusivamente da appunti in fase di editing. Adottate quindi lo stile che più trovate utile, completo e comodo per appuntare quel che trovate.
 
-Un altro metodo utilizzato è quello di sfruttare le potenzialità di un registratore digitale e \soft{JOSM}, infatti quest'ultimo software permette di sincronizzare la vostra traccia \gps con la registrazione audio. Sono due le possibilità di utilizzo del registratore, la prima è di accendere il registratore in concomitanza dell'inizio della registrazione della traccia \gps e lasciar-lo acceso; bisogna ricordarsi di prendere un waypoint per ogni elemento registrato vocalmente in modo tale da potersi spostare facilmente da un punto ad un altro; questa metodologia può essere molto comoda quando si è alla guida di un mezzo di trasporto tipo bicicletta o automobile. L'altra possibilità è quella di accendere il registratore solo in concomitanza della mappatura di un waypoint.
+Un altro metodo utilizzato è quello di sfruttare le potenzialità di un regi-stratore digitale e \soft{JOSM}, infatti quest'ultimo software permette di sincronizzare la vostra traccia \gps con la registrazione audio. Sono due le possibilità di utilizzo del registratore, la prima è di accendere il re-gistratore in concomitanza dell'inizio della regi-strazione della traccia \gps e lasciarlo acceso; bisogna ricordarsi di prendere un waypoint per ogni elemento registrato vocalmente in modo tale da potersi spostare facilmente da un punto ad un altro; questa metodologia può essere molto comoda quando si è alla guida di un mezzo di trasporto tipo bicicletta o automobile. L'altra possibilità è quella di accendere il registratore solo in concomitanza della mappatura di un waypoint.
+
+È molto utile anche la macchina fotografica, impostando l'ora del GPS nella macchina è possibile poi georiferire le immagini prodotte e avere un ulteriore strumento a supporto della vostra mappatura. Se avete un data-logger con il quale non potete vedere l'ora esatta fate una foto ad un orologio, alla partenza o al ritorno, questa vi servirà per aggiustare l'orario e georiferire correttamente le immagini
 
 Ovviamente non solo le strade sono importanti per \osm: ad esempio nel nostro giro in montagna potrebbe essere interessante avere a disposizione segnavia (\key{tourism}=\val{information} \& \key{information}=\val{guidepost}), bivacchi (\key{amenity}=\val{shelter}), rifugi (\key{tourism}=\val{alpine\_hut}), fontane d'acqua potabile (\key{amenity}=\val{drinking\_water}) e molto altro ancora.
 
@@ -277,7 +279,7 @@ In alcune zone il dettaglio e la grafica sono molto superiori ad altre alternati
  \includegraphics[width=0.55\columnwidth]{Osmit2010.JPG}
  \caption{\small{\textit{La foto di gruppo di OSMit 2010}}}
 \end{wrapfloat}
-I \textbf{mapping party sono eventi legati al progetto}, durante i quali un certo numero di OSMapper, così è chiamato chi partecipa a \osm, sceglie una zona, solitamente poco mappata oppure da completare, incomincia a pubblicizzare l'evento all'interno della comunità e all'esterno contattando enti pubblici, associazioni e media per diffondere la manifestazione. Il contatto esterno alla comunità è molto importante per cercare di coinvolgere nuove persone all'interno del progetto.
+I \textbf{mapping party sono eventi legati al progetto}, durante i quali un certo numero di OSMapper, così è chiamato chi partecipa a \osm, sceglie una zona, solitamente poco mappata oppure da completare, incomincia a pubblicizzare l'evento all'interno della comunità e all'esterno contattando enti pubblici, associa-zioni e media per diffondere la manifestazione. Il contatto esterno alla comunità è molto importante per cercare di coinvolgere nuove persone all'interno del progetto.
 
 Solitamente i mapping party si tengono nel corso del weekend per cercare di far affluire più persone possibili; ricordo tra gli altri, il Mapping Party di Arezzo, il primo ufficiale in Italia, quello di Pompei, con scopi archeologici all'interno dei resti romani della nota località napoletana, M(')appare Portofino, per la sentieristica del Parco naturale regionale di Portofino, Dolomiti Mapping Party e il Graian Alps Mapping Party; anche questi ultimi due avevano un tema specifico: la montagna; il primo tra il gruppo del Brenta e il secondo, effettuato grazie al supporto del Parco Nazionale del Gran Paradiso, nella valle dell'Orco in Piemonte.
 
@@ -285,9 +287,9 @@ Inoltre \textbf{si possono realizzare anche eventi di durata minore, i micro map
 \section{Humanitarian OpenStreetMap Team}
 L'\pro{Humanitarian OpenStreetMap Team (HOT)} è un gruppo di OSMapper che hanno creato un ``team'' per utilizzare il progetto per scopi ``uma-nitari''.
 
-La prima volta che \osm è stato utilizzato per queste finalità è evvenuto alla ripresa delle ostilità tra Israele e Palestina nel 2009, la comunità si è autofinanziata per acquistare le ortofoto recenti della Striscia di Gaza in modo tale da poter digitalizzare i dati.
+La prima volta che \osm è stato utilizzato per queste finalità è avvenuto alla ripresa delle ostilità tra Israele e Palestina nel 2009, la comunità si è autofinanziata per acquistare le ortofoto recenti della Striscia di Gaza in modo tale da poter digitalizzare i dati.
 
-Il caso più eclatante, invece, è stato in concomitanza di una delle più grandi catastrofi naturali negli ultimi anni, il terremoto ad Haiti. In questa occasione Google ha sovvenzionato l'acquisto delle ortofoto della situazione post terremoto, e gli utenti hanno provveduto celermente alla digitalizzazione, segnalando tra le altre cose la presenza di campi di soccorso, i ponti distrutti e altri elementi utili ai soccoritori; inoltre sono stati messi in piedi diversi servizi per fare in modo che si potessero utilizzare facilmente i dati presenti sul database aggiornati quasi in tempo reale, vi era la possibilità di trovarli in formato garmin (per gli operatori che si dovevano spostare da un posto all'altro), in formato immagine per essere stampata (per coordinare gli aiuti dai campi di soccorso) inoltre erano presenti diversi siti online che avevano creato strati informativi dedicati all'isola caraibica. Questa tragica esperienza ha mostrato al mondo come \osm possa essere utile, ha mostrato come \textit{i dati creati dal basso} sono in certi casi essenziali, non a caso erano gli unici aggiornati al post terremoto e utilizzabili durante la situazione di emergenza.
+Il caso più eclatante, invece, è stato in concomitanza di una delle più grandi catastrofi naturali negli ultimi anni, il terremoto ad Haiti. In questa occasione Google ha sovvenzionato l'acquisto delle ortofoto della situazione post terremoto, e gli utenti hanno provveduto celermente alla digitalizzazione, segnalando tra le altre cose la presenza di campi di soccorso, i ponti distrutti e altri elementi utili ai soccorritori; inoltre sono stati messi in piedi diversi servizi per fare in modo che si potessero utilizzare facilmente i dati presenti sul database aggiornati quasi in tempo reale, vi era la possibilità di trovarli in formato garmin (per gli operatori che si dovevano spostare da un posto all'altro), in formato immagine per essere stampata (per coordinare gli aiuti dai campi di soccorso) inoltre erano presenti diversi siti online che avevano creato strati informativi dedicati all'isola caraibica. Questa tragica esperienza ha mostrato al mondo come \osm possa essere utile, ha mostrato come \textit{i dati creati dal basso} sono in certi casi essenziali, non a caso erano gli unici aggiornati al post terremoto e utilizzabili durante la situazione di emergenza.
 
 Altro progetto molto interessate è riguardante uno dei più grande slum dell'Africa: Kibera.
 Questa località per i grandi vendor di dati geografici non esiste ma in realtà conta circa un milione di persone. Qui è stato realizzato un qualcosa di più complesso, alcuni componenti di \pro{HOT} si sono recati nella ``città'' africana e hanno istruito diversi abitanti del luogo, facendo capire a cosa serve il progetto e come partecipare. Ad oggi i dati presenti sul database di \osm sono sicuramente la migliore fonte cartografica della zona.
@@ -296,7 +298,7 @@ Questa località per i grandi vendor di dati geografici non esiste ma in realtà
 
 Esiste anche un sito in italiano che in questo momento è in fase di sviluppo \url{http://www.openstreetmap.it}; attualmente l'unica parte attiva è il blog \url{blog.openstreetmap.it}.
 
-Tieni costantemente sotto controllo anche il portale wiki internazionale \url{http://wiki.openstreetmap.org/wiki/Main_Page} che contiene sempre ottimi spunti.  La comunità più attiva è quella tedesca con una marea di volontari. In Italia il progetto è iniziato nel 2007 ed ora incomincia ad essere utilizzabile, in special modo a livello locale e non globale, poichè vi sono zone molto ben mappate e altre ancora vuote.
+Tieni costantemente sotto controllo anche il portale wiki internazionale \url{http://wiki.openstreetmap.org/wiki/Main_Page} che contiene sempre ottimi spunti.  La comunità più attiva è quella tedesca con una marea di volontari. In Italia il progetto è iniziato nel 2007 ed ora incomincia ad essere utilizzabile, in special modo a livello locale e non globale, poiché vi sono zone molto ben mappate e altre ancora vuote.
 
 Se hai dubbi o domande consulta le risposte alle domande frequenti \url{http://wiki.openstreetmap.org/index.php/It:FAQ}, altri potrebbero aver avuto il tuo stesso problema e potresti trovare la soluzione.
 \section{Contatti}
@@ -435,7 +437,7 @@ Di seguito una serie di link che rappresentano sentieristica, mountain bike:
 
 \url{http://www.cloudmade.com}: fornisce svariati servizi come ad esempio, previa registrazione, la possibilità di creare in modo semplice mappe con rendering personalizzato
 
-\url{http://www.geofabrik.de}: fornisce svariati servizi come la possibilità di scaricare i dati osm relativi ad una determinata nazione e un tool per confrontare le mappe \osm con le mappe di google. Si scoprirà come in molti casi la precisione e il dettaglio di osm siano superio-ri a googlemaps. Le mappe di google devono essere utilizzate solo come interessante confronto e non per essere copiate
+\url{http://www.geofabrik.de}: fornisce svariati servizi come la possibilità di scaricare i dati osm relativi ad una determinata nazione e un tool per confrontare le mappe \osm con le mappe di Google. Si scoprirà come in molti casi la precisione e il dettaglio di osm siano superio-ri a GoogleMaps. Le mappe di Google devono essere utilizzate solo come interessante confronto e non per essere copiate
 
 \url{http://walking-papers.org}: permette di stampare una mappa da utilizzare durante le ``mappature'' per segnare nuovi elementi, inoltre una volta scannerizzato il foglio con le modifiche si può inserire sul portale
 

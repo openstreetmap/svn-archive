@@ -104,13 +104,11 @@
         ************************************************
     -->
             <manifest>
-                <attribute name="Author" value="Fichtennadel (soskifub+josm at gmail)"/>
+                <attribute name="Author" value="Fichtennadel"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.epsg31287.Epsg31287"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="ALPHA - use at own risk - see link for docu &lt;br&gt; 
-                	                                        sets current projection to EPSG:31287 - Bessel 1841 in Lambert Conformal Conic 2SP &lt;br&gt;  
-                	                                        for use with WMS plugin to load geoimage.at WMS, see link for details"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/WikiProject_Austria/geoimage.at#JOSM_Plugin"/>
+                <attribute name="Plugin-Description" value="sets current projection to EPSG:31287 - Bessel 1841 in Lambert Conformal Conic. For use with WMS plugin to load geoimage.at WMS, see link for details"/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/epsg31287"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             	<!-- <attribute name="Plugin-Version" value="0.3"/> -->

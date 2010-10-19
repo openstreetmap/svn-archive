@@ -96,7 +96,7 @@
             <manifest>
                 <attribute name="Author" value="Oliver Wieland"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.elevation.ElevationProfilePlugin"/>
-                <attribute name="Plugin-Date" value="15.10.10"/>
+                <attribute name="Plugin-Date" value="19.10.10"/>
                 <attribute name="Plugin-Description" value="Shows the elevation profile of a GPS track in JOSM (Beta stage!)."/>
             	<attribute name="de_Plugin-Description" value="Zeigt das Höhenprofil eines Tracks (Beta-Version!)."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile"/>

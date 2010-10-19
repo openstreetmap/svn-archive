@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -202,6 +204,12 @@ public class ImportVectorAction extends JosmAction {
                     SVGLoader loader = new SVGLoader(new URI("about:blank"),true);
                     XMLReader rdr = XMLReaderFactory.createXMLReader();
                     rdr.setContentHandler(loader);
+                    rdr.setEntityResolver(new EntityResolver() {
+                                public InputSource resolveEntity(String publicId, String systemId) {
+                                    //Ignore all DTDs
+                                    return new InputSource(new ByteArrayInputStream(new byte[0]));
+                                }
+                            });
                     FileInputStream in = new FileInputStream(f);
                     try {
                         rdr.parse(new InputSource(in));

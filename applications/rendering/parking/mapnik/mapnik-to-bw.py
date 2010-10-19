@@ -159,7 +159,8 @@ simple_colors = {
 def color_to_bw(rgb):
     r,g,b=rgb
     #method 1:
-    y = 0.229*r + 0.587*g + 0.114*b
+    #y = 0.229*r + 0.587*g + 0.114*b
+    y = 0.25*r + 0.62*g + 0.13*b
     return (y,y,y)
     #method 2:
     h,l,s = colorsys.rgb_to_hls(r, g, b)
@@ -190,7 +191,11 @@ def rgb_to_css(rgb):
 
 def transmogrify_file(f):
     
-    document = pxdom.parse(os.path.join(source_dir,f), {'entities': 1})
+    #document = pxdom.parse(os.path.join(source_dir,f), {'entities': 1})
+
+    dom= pxdom.getDOMImplementation('') 
+    parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None) 
+    document = parser.parseURI(os.path.join(source_dir,f))
 
     els = document.getElementsByTagName("CssParameter")
     #print "els=",els
@@ -201,6 +206,26 @@ def transmogrify_file(f):
             bw=rgb_to_css(color_to_bw(parse_color(col)))
             print "converted {typ} from {a} to {bw}." .format(typ=at,a=col,bw=bw)
             el.firstChild.nodeValue=bw
+
+    #<Map bgcolor="---" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over" minimum_version="0.7.1">
+    els = document.getElementsByTagName("Map")
+    for el in els:
+        col = el.getAttribute("bgcolor")
+        assert(col!='')
+        assert(col!=None)
+        bw=rgb_to_css(color_to_bw(parse_color(col)))
+        print "converted {typ} from {a} to {bw}." .format(typ='bgcolor',a=col,bw=bw)
+        el.setAttribute("bgcolor",bw)
+
+    #<TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#6699cc" halo_radius="1" wrap_width="20"/>
+    els = document.getElementsByTagName("TextSymbolizer")
+    for el in els:
+        col = el.getAttribute("fill")
+        assert(col!='')
+        assert(col!=None)
+        bw=rgb_to_css(color_to_bw(parse_color(col)))
+        print "converted {typ} from {a} to {bw}." .format(typ='TS-fill',a=col,bw=bw)
+        el.setAttribute("fill",bw)
 
     output= document.implementation.createLSOutput() 
     output.systemId= os.path.join(dest_dir,f)
@@ -213,12 +238,12 @@ def transmogrify_file(f):
 #os.chdir("original-mapnik")
 
 transmogrify_file('osm.xml')
-#transmogrify_file('inc/entities.xml.inc')
-transmogrify_file('inc/layer-addressing.xml.inc')
 
 #print "bw=",color_to_bw(0.9,0.5,0)
 #print "bw=",color_to_bw(0,0.9,0.5)
-#print "rgb=",parse_color("#112233")
+#col="#7f7f7f"
+#print "rgb=",parse_color(col),color_to_bw(parse_color(col)),rgb_to_css(color_to_bw(parse_color(col)))
+
 #print "rgb=",parse_color("#1f3")
 #print "rgb=",parse_color("yellow")
 

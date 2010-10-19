@@ -12,12 +12,14 @@
         <ant antfile="build.xml" target="dist" dir="buildings_tools"/>
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
         <ant antfile="build.xml" target="dist" dir="colorscheme"/>
+        <ant antfile="build.xml" target="dist" dir="ColumbusCSV"/>
         <ant antfile="build.xml" target="dist" dir="Create_grid_of_ways"/>
         <ant antfile="build.xml" target="dist" dir="czechaddress"/>
         <ant antfile="build.xml" target="dist" dir="dataimport"/>
         <ant antfile="build.xml" target="dist" dir="DirectUpload"/>
         <ant antfile="build.xml" target="dist" dir="download_along"/>
         <ant antfile="build.xml" target="dist" dir="editgpx"/>
+        <ant antfile="build.xml" target="dist" dir="ElevationProfile"/>
         <ant antfile="build.xml" target="dist" dir="ext_tools"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>

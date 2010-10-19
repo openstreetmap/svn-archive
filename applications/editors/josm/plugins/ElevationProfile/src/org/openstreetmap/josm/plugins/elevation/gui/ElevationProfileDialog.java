@@ -37,6 +37,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
@@ -80,6 +81,8 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	private JRadioButton geoidAuto;
 	private JRadioButton geoidFixed;
 	private JTextField geoidFixedValue;
+	
+	private ElevationProfileLayer profileLayer;
 
 	/**
 	 * Default constructor
@@ -117,7 +120,7 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	public ElevationProfileDialog(String name, String iconName, String tooltip,
 			Shortcut shortcut, int preferredHeight, boolean defShow) {
 		super(name, iconName, tooltip, shortcut, preferredHeight, defShow);
-
+				
 		JPanel dataPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -275,6 +278,20 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		}
 	}
 
+	public ElevationProfileLayer getProfileLayer() {
+		return profileLayer;
+	}
+
+	public void setProfileLayer(ElevationProfileLayer profileLayer) {
+		if (this.profileLayer != profileLayer) {
+			if (this.profileLayer != null) {
+				profPanel.removeSelectionListener(this.profileLayer);
+			}
+			this.profileLayer = profileLayer;
+			profPanel.addSelectionListener(this.profileLayer);
+		}
+	}
+
 	/**
 	 * Refreshes the dialog when model data have changed.
 	 * 
@@ -398,15 +415,18 @@ public class ElevationProfileDialog extends ToggleDialog implements
 						gpxData, slices);
 				layerMap.put(newLayer, em);
 			}
-
+			
+			System.out.println("Active layer: " + newLayer.getName());
 			ElevationModel em = layerMap.get(newLayer);
 			em.setSliceSize(slices);
 			setModel(em);
+			
 		}
 	}
 
 	public void layerAdded(Layer newLayer) {
 		createLayer(newLayer);
+		System.out.println("layerAdded: " + newLayer.getName());
 	}
 
 	public void layerRemoved(Layer oldLayer) {

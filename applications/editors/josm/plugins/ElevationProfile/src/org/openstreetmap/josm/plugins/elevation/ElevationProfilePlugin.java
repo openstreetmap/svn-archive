@@ -64,7 +64,7 @@ public class ElevationProfilePlugin extends Plugin {
 		
 		if (newFrame != null) {
 			newFrame.addToggleDialog(eleProfileDlg);
-			eleProfileDlg.addModelListener(eleMode);
+			eleProfileDlg.addModelListener(eleMode);			
 		}
 		
 		if(Main.map != null){
@@ -72,6 +72,7 @@ public class ElevationProfilePlugin extends Plugin {
 
 			Main.map.mapView.addPropertyChangeListener(eleProfileDlg);
 			MapView.addLayerChangeListener(eleProfileDlg);
+			eleProfileDlg.setProfileLayer(getCurrentLayer());
 		}
 	}
 	
@@ -83,7 +84,7 @@ public class ElevationProfilePlugin extends Plugin {
 	public static ElevationProfileLayer getCurrentLayer(){
 		if(currentLayer == null){
 			currentLayer = new ElevationProfileLayer("Elevation profile");
-			Main.main.addLayer(currentLayer);
+			Main.main.addLayer(currentLayer);			
 		}
 		return currentLayer;
 	}

@@ -4,15 +4,21 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -23,7 +29,12 @@ import org.openstreetmap.josm.plugins.elevation.ElevationWayPointKind;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
 
-public class ElevationProfilePanel extends JPanel implements ComponentListener {
+/**
+ * Provides the panel showing the elevation profile.
+ * @author Oliver
+ *
+ */
+public class ElevationProfilePanel extends JPanel implements ComponentListener, MouseMotionListener {
 	/**
 	 * Serial version UID
 	 */
@@ -31,7 +42,14 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 	private IElevationProfile profile;
 	private Rectangle plotArea;
 	private IElevationProfileRenderer renderer = new DefaultElevationProfileRenderer();
+	private int selectedIndex = -1;
+	private List<IElevationProfileSelectionListener> selectionChangedListeners = new ArrayList<IElevationProfileSelectionListener>();
+	private boolean isPainting;
 
+	/**
+	 * Constructs a new ElevationProfilePanel with the given elevation profile.
+	 * @param profile The elevation profile to show in the panel.
+	 */
 	public ElevationProfilePanel(IElevationProfile profile) {
 		super();
 		this.profile = profile;
@@ -39,26 +57,111 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 		setBackground(Color.WHITE);
 		createOrUpdatePlotArea();
 		addComponentListener(this);
+		addMouseMotionListener(this);
 	}
 
+	/**
+	 * Gets the elevation profile instance.
+	 * @return
+	 */
 	public IElevationProfile getProfile() {
 		return profile;
 	}
 
+	/**
+	 * Sets the new elevation profile instance.
+	 * @param profile
+	 */
 	public void setElevationModel(IElevationProfile profile) {
-		this.profile = profile;
+		if (this.profile != profile) {
+			this.profile = profile;
+			invalidate();
+		}
 	}
 
+	/**
+	 * Gets the plot area coordinates.
+	 * @return
+	 */
 	public Rectangle getPlotArea() {
 		return plotArea;
 	}
 
+	/**
+	 * Sets the plot area coordinates.
+	 * @param plotArea
+	 */
 	public void setPlotArea(Rectangle plotArea) {
 		this.plotArea = plotArea;
 	}
+	
+	/**
+	 * Gets the selected index of the bar.	
+	 * @return
+	 */
+	public int getSelectedIndex() {
+		return selectedIndex;
+	}
 
+	/**
+	 * Sets the selected index of the bar.
+	 * @param selectedIndex
+	 */
+	public void setSelectedIndex(int selectedIndex) {
+		this.selectedIndex = selectedIndex;
+	}
+	
+	/**
+	 * Gets the selected (highlighted) way point.
+	 * @return The selected way point or null, if no way point is selected.
+	 */
+	public WayPoint getSelectedWayPoint() {
+		if (this.selectedIndex != -1 && profile != null && profile.getWayPoints() != null && profile.getWayPoints().size() > this.selectedIndex) {
+			return profile.getWayPoints().get(this.selectedIndex);
+		} else {
+			return null;			
+		}
+	}
+	
+	/**
+	 * Adds a selection listener.
+	 * @param listener The listener instance to add.
+	 */
+	public void addSelectionListener(IElevationProfileSelectionListener listener) {
+		if (listener == null) return;
+		
+		selectionChangedListeners.add(listener);
+	}
+	
+	/**
+	 * Removes a selection listener from the list.
+	 * @param listener The listener instance to remove.
+	 */
+	public void removeSelectionListener(IElevationProfileSelectionListener listener) {
+		if (listener == null) return;
+		
+		selectionChangedListeners.remove(listener);
+	}
+	
+	/**
+	 * Removes all selection listeners.
+	 */
+	public void removeAllSelectionListeners() {
+		selectionChangedListeners.clear();	
+	}
+	
+	protected void fireSelectionChanged(WayPoint selWayPoint) {
+		for (IElevationProfileSelectionListener listener : selectionChangedListeners) {
+			listener.selectedWayPointChanged(selWayPoint);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g) {
+		isPainting = true;
 		super.paint(g);
 
 		int y1 = getPlotBottom();
@@ -90,9 +193,19 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 			}
 		} finally {
 			setFont(oldFont);
+			isPainting = false;
 		}
 	}
 
+	/**
+	 * Draw a string with a specified alignment.
+	 * @param s The text to display.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param align The text alignment.
+	 * @param g The graphics context.
+	 * @return The resulting rectangle of the drawn string.
+	 */
 	private Rectangle drawAlignedString(String s, int x, int y,
 			TextAlignment align, Graphics g) {
 		FontMetrics fm = g.getFontMetrics();
@@ -114,20 +227,33 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 		return new Rectangle(x - xoff, y - yoff, w, h);
 	}
 
+	/**
+	 * Draw a string which is horizontally centered around (x,y).
+	 * @param s The text to display.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param g The graphics context.
+	 * @return The resulting rectangle of the drawn string.
+	 */
 	private void drawHCenteredString(String s, int x, int y, Graphics g) {
-		FontMetrics fm = g.getFontMetrics();
-		int xoff = fm.stringWidth(s) / 2;
-		// int yoff = (fm.getAscent() + fm.getDescent()) / 2;
-
-		g.drawString(s, x - xoff, y);
+		drawAlignedString(s, x, y, TextAlignment.Centered, g);
 	}
 
+	/**
+	 * Formats the date in a predefined manner: "21. Oct 2010, 12:10".
+	 * @param date
+	 * @return
+	 */
 	private String formatDate(Date date) {
 		Format formatter = new SimpleDateFormat("d MMM yy, HH:mm");
 
 		return formatter.format(date);
 	}
 
+	/**
+	 * Helper function to draw elevation axes.
+	 * @param g
+	 */
 	private void drawElevationLines(Graphics g) {
 		double diff = profile.getHeightDifference();
 
@@ -256,6 +382,10 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 			int eleVal = (int) WayPointHelper.getElevation(wpt);
 			Color c = renderer.getColorForWaypoint(profile, wpt,
 					ElevationWayPointKind.Plain);
+			
+			if (i == this.selectedIndex) {
+				c = renderer.getColorForWaypoint(profile, wpt, ElevationWayPointKind.Highlighted);
+			}
 			int yEle = getYForEelevation(eleVal);
 			int x = getPlotLeft() + i;
 
@@ -275,6 +405,10 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 		g.setColor(oldC);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#paintBorder(java.awt.Graphics)
+	 */
 	@Override
 	protected void paintBorder(Graphics g) {
 		super.paintBorder(g);
@@ -283,6 +417,10 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 		this.setBorder(loweredbevel);
 	}
 
+
+	/**
+	 * Determines the size of the plot area depending on the panel size.
+	 */
 	private void createOrUpdatePlotArea() {
 		Dimension caSize = getSize();
 
@@ -305,7 +443,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 	 */
 	public void componentHidden(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 	/*
@@ -317,7 +454,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 	 */
 	public void componentMoved(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 	/*
@@ -340,6 +476,28 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener {
 	public void componentShown(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		if (isPainting || arg0.isControlDown() || arg0.isAltDown() || arg0.isShiftDown()) arg0.consume();
+		
+		int x = arg0.getX();
+		int l = this.getX();
+		int pl = this.getPlotLeft();
+		int newIdx = x - l - pl;
+		
+		if (newIdx != this.selectedIndex && newIdx > 0) {
+			this.selectedIndex = newIdx;
+			this.repaint();		
+			fireSelectionChanged(getSelectedWayPoint());
+		}
 	}
 
 }

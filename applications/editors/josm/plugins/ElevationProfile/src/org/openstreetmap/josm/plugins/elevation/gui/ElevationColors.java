@@ -25,6 +25,8 @@ public class ElevationColors {
 	public static Color EPMidBlue = new Color(115, 140, 180);
 	public static Color EPLightBlue = new Color(176, 187, 208);
 	
+	public static Color EPOrange = new Color(180, 140, 115);
+	
 	public static Color EPLightBeige = new Color(235, 235, 215);
 	public static Color EPMidBeige = new Color(227, 222, 215);
 }

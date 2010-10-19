@@ -87,6 +87,8 @@ public class DefaultElevationProfileRenderer implements
 			} else {
 				return LOW_COLOR;
 			}
+		case Highlighted:
+			return Color.ORANGE;
 		case ElevationGain:
 			return Color.GREEN;
 		case ElevationLoss:
@@ -97,7 +99,7 @@ public class DefaultElevationProfileRenderer implements
 			return HIGH_COLOR;
 		case MinElevation:
 			return LOW_COLOR;
-
+		
 		case StartPoint:
 			return START_COLOR;
 		case EndPoint:
@@ -176,7 +178,16 @@ public class DefaultElevationProfileRenderer implements
 		
 		if (kind == ElevationWayPointKind.FullHour) {
 			int hour = WayPointHelper.getHourOfWayPoint(wpt);			
-			drawLabel(String.format("%d:00", hour), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g);
+			drawLabel(String.format("%02d:00", hour), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g);
+		}
+		
+		if (kind == ElevationWayPointKind.Highlighted) {
+			int eleH = (int) WayPointHelper.getElevation(wpt);
+			int hour = WayPointHelper.getHourOfWayPoint(wpt);			
+			int min = WayPointHelper.getMinuteOfWayPoint(wpt);
+			drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, r2 * 2);
+			drawLabel(String.format("%02d:%02d", hour, min), pnt.x, pnt.y - g.getFontMetrics().getHeight(), g);
+			drawLabel(String.format("%dm", eleH), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g);
 		}
 	}
 

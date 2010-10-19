@@ -40,9 +40,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  */
 public class ElevationProfileLayer extends
-		org.openstreetmap.josm.gui.layer.Layer {
+org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionListener {
 	private IElevationProfile profile;
 	private IElevationProfileRenderer renderer = new DefaultElevationProfileRenderer();
+	private WayPoint selWayPoint = null;
 
 	/**
 	 * Creates a new elevation profile layer
@@ -153,18 +154,34 @@ public class ElevationProfileLayer extends
 	public void paint(Graphics2D g, MapView mv, Bounds box) {
 		WayPoint lastWpt = null;
 		int lastEle = 0;
+		int index = 0;
 
 		if (profile != null) {
 			for (WayPoint wpt : profile.getWayPoints()) {
 				int ele = (int) WayPointHelper.getElevation(wpt);
 
-				if (lastWpt != null) {
-					int h1 = WayPointHelper.getHourOfWayPoint(wpt);
-					int h2 = WayPointHelper.getHourOfWayPoint(lastWpt);
-					if (h1 != h2) { // hour changed?
+				if (selWayPoint == null) {
+					if (lastWpt != null) {					
+						int h1 = WayPointHelper.getHourOfWayPoint(wpt);
+						int h2 = WayPointHelper.getHourOfWayPoint(lastWpt);
+						if (h1 != h2) { // hour changed?
+							renderer.renderWayPoint(g, profile, mv, wpt,
+									ElevationWayPointKind.FullHour);
+						} else { // check for elevation gain
+							if (ele > lastEle) {
+								renderer.renderWayPoint(g, profile, mv, wpt,
+										ElevationWayPointKind.ElevationGain);
+							} else {
+								renderer.renderWayPoint(g, profile, mv, wpt,
+										ElevationWayPointKind.ElevationLoss);
+							}
+						}
+					}
+				} else {
+					if (selWayPoint == wpt)  {
 						renderer.renderWayPoint(g, profile, mv, wpt,
-								ElevationWayPointKind.FullHour);
-					} else { // check for elevation gain
+							ElevationWayPointKind.Highlighted);
+					} else {
 						if (ele > lastEle) {
 							renderer.renderWayPoint(g, profile, mv, wpt,
 									ElevationWayPointKind.ElevationGain);
@@ -174,10 +191,11 @@ public class ElevationProfileLayer extends
 						}
 					}
 				}
-				
+
 				// remember for next iteration
 				lastEle = (int) WayPointHelper.getElevation(wpt);
 				lastWpt = wpt;
+				index++;
 			}
 
 			renderer.renderWayPoint(g, profile, mv, profile.getStartWayPoint(),
@@ -203,6 +221,14 @@ public class ElevationProfileLayer extends
 	@Override
 	public void visitBoundingBox(BoundingXYVisitor v) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void selectedWayPointChanged(WayPoint newWayPoint) {
+		if (selWayPoint != newWayPoint) {
+			selWayPoint = newWayPoint;
+			Main.map.repaint();
+		}
 	}
 
 }

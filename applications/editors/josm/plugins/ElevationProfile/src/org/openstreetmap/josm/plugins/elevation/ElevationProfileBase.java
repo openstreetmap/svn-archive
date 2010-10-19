@@ -442,7 +442,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 	 * @return
 	 */
 	public boolean hasElevationData() {
-		return minHeight == maxHeight;
+		return minHeight != maxHeight;
 	}
 
 	/**

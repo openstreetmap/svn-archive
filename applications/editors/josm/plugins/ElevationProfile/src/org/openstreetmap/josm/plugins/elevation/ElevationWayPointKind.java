@@ -20,11 +20,12 @@ package org.openstreetmap.josm.plugins.elevation;
  */
 public enum ElevationWayPointKind {
 	Plain, 				// Simple way point
+	Highlighted,		// Highlighted waypoint
 	StartPoint,			// First way point
 	EndPoint,			// Last way point
 	MaxElevation,		// Highest way point
 	MinElevation,		// Lowest way point 
 	ElevationGain,		// Elevation gain
 	ElevationLoss,		// Elevation loss	
-	FullHour			// Full Hour
+	FullHour			// Full Hour	
 }

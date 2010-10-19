@@ -102,11 +102,11 @@ public class Use extends ShapeElement {
 
         if (getPres(sty.setName("height"))) height = sty.getFloatValueWithUnits();
 
-        /*if (getPres(sty.setName("xlink:href")))
+        if (getPres(sty.setName("xlink:href")))
         {
             URI src = sty.getURIValue(getXMLBase());
-            href = diagram.getUniverse().getElement(src);
-        }*/
+            href = diagram.getElement(src.getFragment());
+        }
         
         //Determine use offset/scale
         refXform = new AffineTransform();

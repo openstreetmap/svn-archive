@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -16,12 +18,8 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.DiskAccessAction;
-import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
@@ -29,19 +27,19 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Mercator;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGElement;
 import com.kitfox.svg.SVGLoader;
-import com.kitfox.svg.SVGRoot;
 import com.kitfox.svg.ShapeElement;
 
 public class ImportVectorAction extends JosmAction {
@@ -68,7 +66,7 @@ public class ImportVectorAction extends JosmAction {
             @Override
             public boolean accept(File f) {
                 if (f.isDirectory())
-                    return false;
+                    return true;
                 else {
                     String name = f.getName().toLowerCase();
                     return name.endsWith(".svg");
@@ -76,7 +74,7 @@ public class ImportVectorAction extends JosmAction {
             }
             @Override
             public String getDescription() {
-                return tr("SVG images (*.svg)");
+                return tr("SVG Drawings (*.svg)");
             }
 
         });
@@ -116,6 +114,7 @@ public class ImportVectorAction extends JosmAction {
         ImportDialog dlg = new ImportDialog();
         if (dlg.getValue() != 1)
             return;
+        dlg.saveSettings();
 
         File[] files = fc.getSelectedFiles();
         
@@ -154,7 +153,7 @@ public class ImportVectorAction extends JosmAction {
         private void appendNode(double x, double y) throws IOException {
             if (currentway == null)
                 throw new IOException("Shape is started incorectly");
-            Node nd = new Node(projection.eastNorth2latlon(center.add(x*scale, y*scale)));
+            Node nd = new Node(projection.eastNorth2latlon(center.add(x*scale, -y*scale)));
             if (nd.getCoor().isOutSideWorld())
                 throw new IOException("Shape goes outside the world");
             currentway.addNode(nd);
@@ -188,8 +187,8 @@ public class ImportVectorAction extends JosmAction {
                 double dx,double dy,
                 double t) {
             return new Point2D.Double(
-                    cube(1-t)*ax+3*sqr(1-t)*t*bx+3*(1-5)*t*t*cx+t*t*t*dx,
-                    cube(1-t)*ay+3*sqr(1-t)*t*by+3*(1-5)*t*t*cy+t*t*t*dy);
+                    cube(1-t)*ax+3*sqr(1-t)*t*bx+3*(1-t)*t*t*cx+t*t*t*dx,
+                    cube(1-t)*ay+3*sqr(1-t)*t*by+3*(1-t)*t*t*cy+t*t*t*dy);
         }
 
         @Override
@@ -200,56 +199,60 @@ public class ImportVectorAction extends JosmAction {
             this.center = projection.latlon2eastNorth(center);
             try {
                 for (File f : files) {
-                    SVGLoader loader = new SVGLoader(new URI("about:blank"));
-                    SAXParserFactory.newInstance().newSAXParser().parse(f, loader);
+                    SVGLoader loader = new SVGLoader(new URI("about:blank"),true);
+                    XMLReader rdr = XMLReaderFactory.createXMLReader();
+                    rdr.setContentHandler(loader);
+                    FileInputStream in = new FileInputStream(f);
+                    try {
+                        rdr.parse(new InputSource(in));
+                    } finally {
+                        in.close();
+                    }
                 
                     SVGDiagram diagram = loader.getLoadedDiagram();
-                    SVGRoot root = diagram.getRoot();
-                    for (SVGElement el : root.getChildren(null)) {
-                        if (el instanceof ShapeElement) {
-                            ShapeElement shape = (ShapeElement)el;
-                            PathIterator it = shape.getShape().getPathIterator(null);
-                            
-                            while (!it.isDone()) {
-                                double[] coords = new double[6];
-                                switch (it.currentSegment(coords)) {
-                                case PathIterator.SEG_MOVETO:
-                                    currentway = new Way();
-                                    ways.add(currentway);
-                                    appendNode(coords[0],coords[1]);
-                                    break;
-                                case PathIterator.SEG_LINETO:
-                                    appendNode(coords[0],coords[1]);
-                                    break;
-                                case PathIterator.SEG_CLOSE:
-                                    currentway.addNode(currentway.firstNode());
-                                    break;
-                                case PathIterator.SEG_QUADTO:
-                                    double lastx = lastX;
-                                    double lasty = lastY;
-                                    for (int i = 1;i<Settings.getCurveSteps();i++) {
-                                        appendNode(interpolate_quad(lastx,lasty,coords[0],coords[1],coords[2],coords[3],(double)i/Settings.getCurveSteps()));
-                                    }
-                                    appendNode(coords[2],coords[3]);
-                                    break;
-                                case PathIterator.SEG_CUBICTO:
-                                    lastx = lastX;
-                                    lasty = lastY;
-                                    for (int i = 1;i<Settings.getCurveSteps();i++) {
-                                        appendNode(interpolate_cubic(lastx,lasty,coords[0],coords[1],coords[2],coords[3],coords[4],coords[5],(double)i/Settings.getCurveSteps()));
-                                    }
-                                    appendNode(coords[4],coords[5]);
-                                    break;
-                                }
+                    ShapeElement shape = diagram.getRoot();
+                    Rectangle2D bbox = shape.getBoundingBox();
+                    this.center = this.center.add(-bbox.getCenterX()*scale, bbox.getCenterY()*scale);
+                    PathIterator it = shape.getShape().getPathIterator(null);
+                    while (!it.isDone()) {
+                        double[] coords = new double[6];
+                        switch (it.currentSegment(coords)) {
+                        case PathIterator.SEG_MOVETO:
+                            currentway = new Way();
+                            ways.add(currentway);
+                            appendNode(coords[0],coords[1]);
+                            break;
+                        case PathIterator.SEG_LINETO:
+                            appendNode(coords[0],coords[1]);
+                            break;
+                        case PathIterator.SEG_CLOSE:
+                            currentway.addNode(currentway.firstNode());
+                            break;
+                        case PathIterator.SEG_QUADTO:
+                            double lastx = lastX;
+                            double lasty = lastY;
+                            for (int i = 1;i<Settings.getCurveSteps();i++) {
+                                appendNode(interpolate_quad(lastx,lasty,coords[0],coords[1],coords[2],coords[3],(double)i/Settings.getCurveSteps()));
                             }
-                            
-                        } 
-                        
+                            appendNode(coords[2],coords[3]);
+                            break;
+                        case PathIterator.SEG_CUBICTO:
+                            lastx = lastX;
+                            lasty = lastY;
+                            for (int i = 1;i<Settings.getCurveSteps();i++) {
+                                appendNode(interpolate_cubic(lastx,lasty,coords[0],coords[1],coords[2],coords[3],coords[4],coords[5],(double)i/Settings.getCurveSteps()));
+                            }
+                            appendNode(coords[4],coords[5]);
+                            break;
+                        }
+                        it.next();
                     }
                     if (cancelled) return;
                 }
-            } catch(ParserConfigurationException e) {
-                throw new IOException(e.getMessage(), e);
+            } catch(SAXException e) {
+                throw e;
+            } catch(IOException e) {
+                throw e;
             } catch(Exception e) {
                 throw new IOException(e);
             }

@@ -72,7 +72,7 @@ public class ImportDialog extends ExtendedDialog {
 
     public int getCurveSteps() {
         try {
-            int result = NumberFormat.getIntegerInstance().parse(tsdiv.getText()).intValue();
+            int result = NumberFormat.getIntegerInstance().parse(tsteps.getText()).intValue();
             if (result < 1)
                 return 1;
             return result;

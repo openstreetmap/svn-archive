@@ -418,6 +418,14 @@ abstract public class SVGElement implements Serializable
      */
     public void loaderEndElement(SVGLoaderHelper helper) throws SVGParseException
     {
+        try
+        {
+            build();
+        }
+        catch (SVGException se)
+        {
+            throw new SVGParseException(se);
+        }
     }
     
     public URI getXMLBase()

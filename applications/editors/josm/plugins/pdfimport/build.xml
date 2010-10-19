@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 ** This is the build file for the pdfimport plugin.
+** Same as build.xml, but uses local version of pdfclown
 **
 ** Maintaining versions
 ** ====================
@@ -31,9 +32,9 @@
 
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="adapt to latest josm" />
+	<property name="commit.message" value="Initial pdfimport version" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="3348" />
+	<property name="plugin.main.version" value="3592" />
 
 
 	<!-- compilation properties -->
@@ -43,7 +44,6 @@
 	<property name="plugin.build.dir" value="build" />
 	<property name="plugin.dist.dir" value="../../dist" />
 	<property name="plugin.name" value="${ant.project.name}" />
-	<property name="libpdfclown" value="lib/PDFClown.jar"/>	
 	<property name="plugin.jar" value="${plugin.dist.dir}/${plugin.name}.jar" />
 
 	<!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
@@ -61,10 +61,9 @@
 	<target name="compile" depends="init">
 		<echo message="creating ${plugin.jar}" />
 		<javac srcdir="src" target="1.5" destdir="build" debug="true">
-			<include name="pdfimport/**/*.java" />
+			<include name="**/*.java" />
 			<classpath>
 				<pathelement location="${josm}"/>
-				<pathelement location="${libpdfclown}"/>
 			</classpath>			
 		</javac>
 	</target>
@@ -81,15 +80,15 @@
 	</target>
 
 	<target name="dist" depends="compile,revision">
- 		<unjar dest="${plugin.build.dir}" src="${libpdfclown}"/>
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images" />
 		</copy>
+
 		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
 			<manifest>
-				<attribute name="Author" value="Viesturs" />
+				<attribute name="Author" value="extropy" />
 				<attribute name="Plugin-Class" value="pdfimport.PdfImportPlugin" />
-				<attribute name="Plugin-Description" value="Import PDF files and convert to shapes." />
+				<attribute name="Plugin-Description" value="Import PDF file and convert to ways." />
 				<attribute name="Plugin-Icon" value="images/pdf_import.png"/>
 				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />

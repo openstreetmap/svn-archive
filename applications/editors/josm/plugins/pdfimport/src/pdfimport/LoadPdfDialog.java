@@ -225,7 +225,7 @@ public class LoadPdfDialog extends JFrame {
 		}
 
 		this.loadFileButton.setEnabled(false);
-		this.loadFileButton.setText(tr("Lading..."));
+		this.loadFileButton.setText(tr("Loading..."));
 
 
 		this.runAsBackgroundTask(

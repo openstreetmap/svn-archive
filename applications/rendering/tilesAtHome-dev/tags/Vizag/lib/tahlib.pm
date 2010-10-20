@@ -31,12 +31,12 @@ sub statusMessage
 
     if ($Config->get("DateTimeString"))
     {
-        my ($s, $i, $h, $d, $m, $y) = (localtime)[0..7];
+        my ($s, $i, $h, $d, $m, $y) = map { sprintf("%02d",$_) } (localtime)[0..7];
         ++$m;
         my $Y = $y + 1900;
         $y = $y % 100; # two-digit year
 
-        $TimeString = "[".$Config->get("DateTimeString")."]";
+        $TimeString = $Config->get("DateTimeString");
         $TimeString =~ s/%H/$h/ge; # substitute %H placeholder with hours
         $TimeString =~ s/%M/$i/ge; # substitute %M placeholder with minutes
         $TimeString =~ s/%S/$s/ge; # substitute %S placeholder with seconds

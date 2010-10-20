@@ -40,7 +40,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import com.kitfox.svg.Group;
 import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGElement;
 import com.kitfox.svg.SVGLoader;
 import com.kitfox.svg.ShapeElement;
 
@@ -192,7 +194,52 @@ public class ImportVectorAction extends JosmAction {
                     cube(1-t)*ax+3*sqr(1-t)*t*bx+3*(1-t)*t*t*cx+t*t*t*dx,
                     cube(1-t)*ay+3*sqr(1-t)*t*by+3*(1-t)*t*t*cy+t*t*t*dy);
         }
-
+        
+        private void processElement(SVGElement el) throws IOException {
+            if (el instanceof Group) {
+                for (SVGElement child : ((Group)el).getChildren(null)) {
+                    processElement(child);
+                }
+            } else if (el instanceof ShapeElement) {
+                PathIterator it = ((ShapeElement)el).getShape().getPathIterator(null);
+                while (!it.isDone()) {
+                    double[] coords = new double[6];
+                    switch (it.currentSegment(coords)) {
+                    case PathIterator.SEG_MOVETO:
+                        currentway = new Way();
+                        ways.add(currentway);
+                        appendNode(coords[0],coords[1]);
+                        break;
+                    case PathIterator.SEG_LINETO:
+                        appendNode(coords[0],coords[1]);
+                        break;
+                    case PathIterator.SEG_CLOSE:
+                        if (currentway.firstNode().getCoor().equals(nodes.getLast().getCoor())) {
+                            currentway.removeNode(nodes.removeLast());
+                        }
+                        currentway.addNode(currentway.firstNode());
+                        break;
+                    case PathIterator.SEG_QUADTO:
+                        double lastx = lastX;
+                        double lasty = lastY;
+                        for (int i = 1;i<Settings.getCurveSteps();i++) {
+                            appendNode(interpolate_quad(lastx,lasty,coords[0],coords[1],coords[2],coords[3],(double)i/Settings.getCurveSteps()));
+                        }
+                        appendNode(coords[2],coords[3]);
+                        break;
+                    case PathIterator.SEG_CUBICTO:
+                        lastx = lastX;
+                        lasty = lastY;
+                        for (int i = 1;i<Settings.getCurveSteps();i++) {
+                            appendNode(interpolate_cubic(lastx,lasty,coords[0],coords[1],coords[2],coords[3],coords[4],coords[5],(double)i/Settings.getCurveSteps()));
+                        }
+                        appendNode(coords[4],coords[5]);
+                        break;
+                    }
+                    it.next();
+                }
+            }
+        }
         @Override
         protected void realRun() throws SAXException, IOException, OsmTransferException {
             LatLon center = Main.proj.eastNorth2latlon(Main.map.mapView.getCenter());
@@ -201,6 +248,7 @@ public class ImportVectorAction extends JosmAction {
             this.center = projection.latlon2eastNorth(center);
             try {
                 for (File f : files) {
+                    if (cancelled) return;
                     SVGLoader loader = new SVGLoader(new URI("about:blank"),true);
                     XMLReader rdr = XMLReaderFactory.createXMLReader();
                     rdr.setContentHandler(loader);
@@ -218,44 +266,12 @@ public class ImportVectorAction extends JosmAction {
                     }
                 
                     SVGDiagram diagram = loader.getLoadedDiagram();
-                    ShapeElement shape = diagram.getRoot();
-                    Rectangle2D bbox = shape.getBoundingBox();
+                    ShapeElement root = diagram.getRoot();
+                    if (root == null) throw new IOException("Can't find root SVG element");
+                    Rectangle2D bbox = root.getBoundingBox();
                     this.center = this.center.add(-bbox.getCenterX()*scale, bbox.getCenterY()*scale);
-                    PathIterator it = shape.getShape().getPathIterator(null);
-                    while (!it.isDone()) {
-                        double[] coords = new double[6];
-                        switch (it.currentSegment(coords)) {
-                        case PathIterator.SEG_MOVETO:
-                            currentway = new Way();
-                            ways.add(currentway);
-                            appendNode(coords[0],coords[1]);
-                            break;
-                        case PathIterator.SEG_LINETO:
-                            appendNode(coords[0],coords[1]);
-                            break;
-                        case PathIterator.SEG_CLOSE:
-                            currentway.addNode(currentway.firstNode());
-                            break;
-                        case PathIterator.SEG_QUADTO:
-                            double lastx = lastX;
-                            double lasty = lastY;
-                            for (int i = 1;i<Settings.getCurveSteps();i++) {
-                                appendNode(interpolate_quad(lastx,lasty,coords[0],coords[1],coords[2],coords[3],(double)i/Settings.getCurveSteps()));
-                            }
-                            appendNode(coords[2],coords[3]);
-                            break;
-                        case PathIterator.SEG_CUBICTO:
-                            lastx = lastX;
-                            lasty = lastY;
-                            for (int i = 1;i<Settings.getCurveSteps();i++) {
-                                appendNode(interpolate_cubic(lastx,lasty,coords[0],coords[1],coords[2],coords[3],coords[4],coords[5],(double)i/Settings.getCurveSteps()));
-                            }
-                            appendNode(coords[4],coords[5]);
-                            break;
-                        }
-                        it.next();
-                    }
-                    if (cancelled) return;
+                    
+                    processElement(root);
                 }
             } catch(SAXException e) {
                 throw e;

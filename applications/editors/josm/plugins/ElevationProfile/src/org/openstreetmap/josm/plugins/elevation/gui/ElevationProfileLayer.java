@@ -160,28 +160,13 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 			for (WayPoint wpt : profile.getWayPoints()) {
 				int ele = (int) WayPointHelper.getElevation(wpt);
 
-				if (selWayPoint == null) {
-					if (lastWpt != null) {					
-						int h1 = WayPointHelper.getHourOfWayPoint(wpt);
-						int h2 = WayPointHelper.getHourOfWayPoint(lastWpt);
-						if (h1 != h2) { // hour changed?
-							renderer.renderWayPoint(g, profile, mv, wpt,
-									ElevationWayPointKind.FullHour);
-						} else { // check for elevation gain
-							if (ele > lastEle) {
-								renderer.renderWayPoint(g, profile, mv, wpt,
-										ElevationWayPointKind.ElevationGain);
-							} else {
-								renderer.renderWayPoint(g, profile, mv, wpt,
-										ElevationWayPointKind.ElevationLoss);
-							}
-						}
-					}
-				} else {
-					if (selWayPoint == wpt)  {
+				if (lastWpt != null) {					
+					int h1 = WayPointHelper.getHourOfWayPoint(wpt);
+					int h2 = WayPointHelper.getHourOfWayPoint(lastWpt);
+					if (h1 != h2) { // hour changed?
 						renderer.renderWayPoint(g, profile, mv, wpt,
-							ElevationWayPointKind.Highlighted);
-					} else {
+								ElevationWayPointKind.FullHour);
+					} else { // check for elevation gain
 						if (ele > lastEle) {
 							renderer.renderWayPoint(g, profile, mv, wpt,
 									ElevationWayPointKind.ElevationGain);
@@ -192,16 +177,24 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 					}
 				}
 
-				// remember for next iteration
+				// remember some things for next iteration
 				lastEle = (int) WayPointHelper.getElevation(wpt);
 				lastWpt = wpt;
 				index++;
 			}
 
+			// paint selected way point, if available
+			if (selWayPoint != null) {
+				renderer.renderWayPoint(g, profile, mv, selWayPoint,
+						ElevationWayPointKind.Highlighted);
+			}
+
+			// paint start/end
 			renderer.renderWayPoint(g, profile, mv, profile.getStartWayPoint(),
 					ElevationWayPointKind.StartPoint);
 			renderer.renderWayPoint(g, profile, mv, profile.getEndWayPoint(),
 					ElevationWayPointKind.EndPoint);
+			// paint min/max
 			renderer.renderWayPoint(g, profile, mv, profile.getMaxWayPoint(),
 					ElevationWayPointKind.MaxElevation);
 			renderer.renderWayPoint(g, profile, mv, profile.getMinWayPoint(),

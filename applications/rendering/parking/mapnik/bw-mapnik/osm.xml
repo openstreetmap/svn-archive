@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map [
-<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+<!ENTITY % entities SYSTEM "bw-inc/entities.xml.inc">
 %entities;
 ]>
 <!-- This stylesheet uses features only available in mapnik builds with

@@ -37,7 +37,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
@@ -83,6 +82,7 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	private JTextField geoidFixedValue;
 	
 	private ElevationProfileLayer profileLayer;
+	private JLabel distLabel;
 
 	/**
 	 * Default constructor
@@ -132,24 +132,27 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		dataPanel.add(new JLabel(tr("")), c); // filler
 		c.gridx = 1;
 		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Lowest")), c);
+		dataPanel.add(new JLabel(tr("Min")), c);
 		c.gridx = 2;
 		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Average")), c);
+		dataPanel.add(new JLabel(tr("Avrg")), c);
 		c.gridx = 3;
 		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Highest")), c);		
+		dataPanel.add(new JLabel(tr("Max")), c);
 		c.gridx = 4;
 		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Gain ")), c);
+		dataPanel.add(new JLabel(tr("Dist")), c);
 		c.gridx = 5;
 		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Time ")), c);
+		dataPanel.add(new JLabel(tr("Gain")), c);
+		c.gridx = 6;
+		c.gridy = 0;
+		dataPanel.add(new JLabel(tr("Time")), c);
 
 		// second row
 		c.gridx = 0;
 		c.gridy = 1;
-		dataPanel.add(new JLabel(tr("Elevation")), c);
+		dataPanel.add(new JLabel(tr("Ele")), c);
 		c.gridx = 1;
 		c.gridy = 1;
 		minHeightLabel = new JLabel("0 m");
@@ -167,10 +170,15 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		
 		c.gridx = 4;
 		c.gridy = 1;
+		distLabel = new JLabel("0 km");
+		dataPanel.add(distLabel, c);
+		
+		c.gridx = 5;
+		c.gridy = 1;
 		elevationGainLabel = new JLabel("0 m");
 		dataPanel.add(elevationGainLabel, c);
 		
-		c.gridx = 5;
+		c.gridx = 6;
 		c.gridy = 1;
 		totalTimeLabel = new JLabel("0");
 		dataPanel.add(totalTimeLabel, c);
@@ -178,7 +186,7 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		// sep
 		c.gridx = 0;
 		c.gridy = 2;
-		c.gridwidth = 6;
+		c.gridwidth = 7;
 		dataPanel.add(new JSeparator(), c);
 
 		// Geoid
@@ -312,12 +320,15 @@ public class ElevationProfileDialog extends ToggleDialog implements
 			elevationGainLabel.setText(String.format("%d m", profile
 					.getGain()));
 			totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
+			distLabel.setText(String.format("%5.2f km", profile
+					.getDistance()));
 		} else {
 			minHeightLabel.setText("-");
 			maxHeightLabel.setText("-");
 			avrgHeightLabel.setText("-");
 			elevationGainLabel.setText("-");
 			totalTimeLabel.setText("-");
+			distLabel.setText("-");
 		}
 		
 		fireModelChanged();

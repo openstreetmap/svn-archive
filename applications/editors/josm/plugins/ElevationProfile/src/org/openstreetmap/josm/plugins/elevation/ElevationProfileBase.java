@@ -51,6 +51,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 	private int minHeight;
 	private int maxHeight;
 	private int avrgHeight;
+	private double dist;
 	private Date start = new Date();
 	private Date end = new Date();
 	private WayPoint[] importantWayPoints = new WayPoint[4];
@@ -61,6 +62,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 	private int sliceSize;
 	private int gain;
 	private int lastEle;
+	private WayPoint lastWayPoint;
 
 	private static boolean ignoreZeroHeight = true;
 
@@ -132,6 +134,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 		sumEle = 0;
 		gain = 0;
 		lastEle = 0;
+		dist = 0.0;
 
 		for (WayPoint wayPoint : this.wayPoints) {
 			visit(wayPoint);
@@ -330,6 +333,15 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 		return gain;
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.elevation.IElevationProfile#getDistance()
+	 */
+	@Override
+	public double getDistance() {
+		return dist / 1000.0; // dist is in meters
+	}
+
 	/**
 	 * Returns the time between start and end of the track.
 	 * @return
@@ -473,7 +485,14 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 			}
 
 			sumEle += ele;
-			lastEle = ele;
+			lastEle = ele;			
 		}
+		
+		// determine distance
+		if (lastWayPoint != null) {
+			double d = wp.getCoor().greatCircleDistance(lastWayPoint.getCoor());
+			dist += d;
+		}
+		lastWayPoint = wp;
 	}
 }

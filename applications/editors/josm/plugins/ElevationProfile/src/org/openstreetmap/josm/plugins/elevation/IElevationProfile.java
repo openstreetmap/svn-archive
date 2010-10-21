@@ -63,6 +63,11 @@ public interface IElevationProfile {
 	public abstract int getMaxHeight();
 	
 	/**
+	 * Gets the distance of the track in kilometers.
+	 */
+	public abstract double getDistance();
+	
+	/**
 	 * Gets the average elevation height of all tracks and routes.
 	 * @return
 	 */

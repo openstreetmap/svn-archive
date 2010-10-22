@@ -185,8 +185,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 				
 				drawProfile(g);
 				drawElevationLines(g);
-				drawHCenteredString(profile.getName(), getPlotHCenter(),
-						getPlotTop() + 2, g);
 			} else {
 				drawAlignedString(tr("(No elevation data)"), getPlotHCenter(),
 						getPlotVCenter(), TextAlignment.Centered, g);

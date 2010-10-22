@@ -280,6 +280,14 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	 * that the model has changed.
 	 */
 	private void updateView() {
+		if (profile == null) { // emergency exit
+			setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
+			return;
+		}
+		
+		// Show name of profile in title 
+		setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
+		
 		// TODO: Offer also ft here
 		if (profile.hasElevationData()) {
 			minHeightLabel.setText(String.format("%d m", profile.getMinHeight()));

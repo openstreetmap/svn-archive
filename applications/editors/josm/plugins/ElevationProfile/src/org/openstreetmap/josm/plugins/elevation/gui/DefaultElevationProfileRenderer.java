@@ -47,7 +47,10 @@ public class DefaultElevationProfileRenderer implements
 	/**
 	 * 
 	 */
-	private static final int REGULAR_WPT_RADIUS = 2;
+	private static final int BASIC_WPT_RADIUS = 2;
+	private static final int REGULAR_WPT_RADIUS = BASIC_WPT_RADIUS * 4;
+	private static final int BIG_WPT_RADIUS = BASIC_WPT_RADIUS * 10;
+	
 	// predefined colors
 	private static final Color HIGH_COLOR = ElevationColors.EPMidBlue;
 	private static final Color LOW_COLOR = ElevationColors.EPMidBlue;
@@ -171,10 +174,9 @@ public class DefaultElevationProfileRenderer implements
 		Point pnt = mv.getPoint(wpt.getEastNorth());
 
 		int rad = REGULAR_WPT_RADIUS;
-		int r2 = rad * 4;
 		g.setColor(c);
 		//g.drawOval(pnt.x - rad, pnt.y - rad, r2, r2);
-		drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, r2);
+		drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, rad);
 		
 		if (kind == ElevationWayPointKind.FullHour) {
 			int hour = WayPointHelper.getHourOfWayPoint(wpt);			
@@ -185,7 +187,7 @@ public class DefaultElevationProfileRenderer implements
 			int eleH = (int) WayPointHelper.getElevation(wpt);
 			int hour = WayPointHelper.getHourOfWayPoint(wpt);			
 			int min = WayPointHelper.getMinuteOfWayPoint(wpt);
-			drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, r2 * 2);
+			drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, BIG_WPT_RADIUS);
 			drawLabel(String.format("%02d:%02d", hour, min), pnt.x, pnt.y - g.getFontMetrics().getHeight(), g);
 			drawLabel(String.format("%dm", eleH), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g);
 		}
@@ -334,7 +336,7 @@ public class DefaultElevationProfileRenderer implements
 
 		Color c = getColorForWaypoint(profile, wpt, kind);
 		Point pnt = mv.getPoint(wpt.getEastNorth());
-		drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, REGULAR_WPT_RADIUS * 5);
+		drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, BIG_WPT_RADIUS);
 	}
 
 	/**

@@ -40,6 +40,7 @@ import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
 public class DefaultElevationProfileRenderer implements
 		IElevationProfileRenderer {
 
+	private static final int ROUND_RECT_RADIUS = 8;
 	/**
 	 * 
 	 */
@@ -383,20 +384,22 @@ public class DefaultElevationProfileRenderer implements
 	private void drawLabel(String s, int x, int y, Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 
-		int width = g.getFontMetrics(g.getFont()).stringWidth(s) + 5;
-		int height = g.getFont().getSize() + g.getFontMetrics().getLeading();
+		int width = g.getFontMetrics(g.getFont()).stringWidth(s) + 10;
+		int height = g.getFont().getSize() + g.getFontMetrics().getLeading() + 5;
 
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
+		
 		GradientPaint gradient = new GradientPaint(x, y, Color.WHITE, x, y
-				+ height, Color.GRAY, false);
-		g2d.setPaint(gradient);
+				+ height, Color.BLACK, false);
+		g2d.setPaint(gradient);		
 
-		Rectangle r = new Rectangle(x - (width / 2) - 2, y - (height / 2) - 1, width, height);
+		Rectangle r = new Rectangle(x - (width / 2) - 5, y - (height / 2) + 1, width, height);
 		g2d.fillRect(r.x, r.y, r.width, r.height);
 		
 		g2d.setColor(Color.BLACK);
-		g2d.drawRoundRect(r.x, r.y, r.width, r.height, 2, 2);
+		
+		g2d.drawRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS, ROUND_RECT_RADIUS);
 		g2d.drawString(s, x - width / 2, y + (height / 2) - 2);
 	}
 }

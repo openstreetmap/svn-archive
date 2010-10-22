@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -40,6 +41,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.io.OsmExporter;
 
 public class LoadPdfDialog extends JFrame {
 
@@ -66,6 +68,7 @@ public class LoadPdfDialog extends JFrame {
 	private JTextField maxXField;
 	private JButton loadFileButton;
 	private JButton showButton;
+	private JButton saveButton;
 
 	public LoadPdfDialog() {
 
@@ -87,6 +90,12 @@ public class LoadPdfDialog extends JFrame {
 		this.okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				okPressed();
+			}
+		});
+
+		this.saveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				savePressed();
 			}
 		});
 
@@ -136,6 +145,7 @@ public class LoadPdfDialog extends JFrame {
 
 		this.loadFileButton = new JButton(tr("Load file..."));
 		this.okButton = new JButton(tr("Place"));
+		this.saveButton = new JButton(tr("Save"));
 		this.showButton = new JButton(tr("Show target"));
 		this.cancelButton = new JButton(tr("Discard"));
 
@@ -205,7 +215,7 @@ public class LoadPdfDialog extends JFrame {
 		okCancelPanel.add(this.cancelButton);
 		okCancelPanel.add(this.showButton);
 		okCancelPanel.add(this.okButton);
-
+		okCancelPanel.add(this.saveButton);
 
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(okCancelPanel, BorderLayout.SOUTH);
@@ -259,6 +269,25 @@ public class LoadPdfDialog extends JFrame {
 		this.makeLayer(tr("Imported PDF: ") + this.fileName, true);
 		this.setVisible(false);
 	}
+
+	private void savePressed() {
+		boolean ok = this.loadTransformation();
+		if (!ok){
+			return;
+		}
+
+		java.io.File file = this.chooseSaveFile();
+
+		if (file == null){
+			return;
+		}
+
+		//rebuild layer with latest projection
+		this.removeLayer();
+		this.saveLayer(file);
+		this.setVisible(false);
+	}
+
 
 	private void showPressed() {
 
@@ -324,6 +353,32 @@ public class LoadPdfDialog extends JFrame {
 			@Override
 			public String getDescription() {
 				return tr("PDF files");
+			}
+		});
+		int result = fc.showOpenDialog(Main.parent);
+
+		if (result != JFileChooser.APPROVE_OPTION) {
+			return null;
+		}
+		else
+		{
+			return fc.getSelectedFile();
+		}
+	}
+
+	private java.io.File chooseSaveFile() {
+		//get file name
+		JFileChooser fc = new JFileChooser();
+		fc.setAcceptAllFileFilterUsed(true);
+		fc.setMultiSelectionEnabled(false);
+		fc.setFileFilter(new FileFilter(){
+			@Override
+			public boolean accept(java.io.File pathname) {
+				return pathname.isDirectory() || pathname.getName().endsWith(".osm");
+			}
+			@Override
+			public String getDescription() {
+				return tr("OSM files");
 			}
 		});
 		int result = fc.showOpenDialog(Main.parent);
@@ -448,4 +503,19 @@ public class LoadPdfDialog extends JFrame {
 		this.okButton.setEnabled(false);
 		this.showButton.setEnabled(false);
 	}
+
+	private void saveLayer(java.io.File file) {
+		DataSet data = builder.build(this.data, true);
+		OsmDataLayer layer = new OsmDataLayer(data, file.getName(), file);
+
+		OsmExporter exporter = new OsmExporter();
+
+		try {
+			exporter.exportData(file, layer);
+		}
+		catch(IOException e){
+			//TODO:
+		}
+	}
+
 }

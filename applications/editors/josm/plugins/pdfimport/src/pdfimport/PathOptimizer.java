@@ -9,11 +9,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class PathOptimizer {
-	
+
 	public Map<Point2D, Point2D> uniquePointMap;
-	private Map<LayerInfo, LayerContents> layerMap;
+	private final Map<LayerInfo, LayerContents> layerMap;
 	private List<LayerContents> layers;
-	
+
 	public PathOptimizer()
 	{
 		uniquePointMap = new HashMap<Point2D, Point2D>();
@@ -29,24 +29,24 @@ public class PathOptimizer {
 		else {
 			this.uniquePointMap.put(point, point);
 			return point;
-		}		
+		}
 	}
-	
+
 	public void addPath(LayerInfo info, PdfPath path)
 	{
 		LayerContents layer = this.getLayer(info);
 		layer.paths.add(path);
 	}
-		
+
 	public void addMultiPath(LayerInfo info, List<PdfPath> paths) {
 		LayerContents layer = this.getLayer(info);
 		PdfMultiPath p = new PdfMultiPath(paths);
-		layer.multiPaths.add(p);					
-	}	
-	
+		layer.multiPaths.add(p);
+	}
+
 	private LayerContents getLayer(LayerInfo info) {
 		LayerContents layer;
-		
+
 		if (this.layerMap.containsKey(info))
 		{
 			layer = this.layerMap.get(info);
@@ -62,28 +62,28 @@ public class PathOptimizer {
 
 		return layer;
 	}
-	
+
 	public void optimize()
 	{
 		for(LayerContents layer: this.layers) {
-			this.optimizeLayer(layer);			
+			this.concatenataPaths(layer);
 		}
-		
+
 		List<LayerContents> newLayers = new ArrayList<LayerContents>();
 		int nr = 0;
-		
+
 		for(LayerContents l: this.layers) {
 			List<LayerContents> splitResult = splitBySegmentKind(l);
-			
+
 			for(LayerContents ll: splitResult) {
 				ll.info.nr = nr;
 				nr ++;
 				newLayers.add(ll);
 			}
 		}
-		
+
 		this.layers = newLayers;
-		
+
 		for(LayerContents layer: this.layers) {
 			finalizeLayer(layer);
 		}
@@ -92,23 +92,23 @@ public class PathOptimizer {
 	private void finalizeLayer(LayerContents layer){
 		Set<Point2D> points = new HashSet<Point2D>();
 		layer.points = new ArrayList<Point2D>();
-		
+
 		for(PdfPath pp: layer.paths){
 			pp.layer = layer;
-			
+
 			for(Point2D point: pp.points){
 				if (!points.contains(point)) {
 					layer.points.add(point);
 					points.add(point);
 				}
-			}	
+			}
 		}
-		
+
 		for (PdfMultiPath multipath: layer.multiPaths) {
 			multipath.layer = layer;
 			for(PdfPath pp: multipath.paths){
 				pp.layer = layer;
-				
+
 				for(Point2D point: pp.points){
 					if (!points.contains(point)) {
 						layer.points.add(point);
@@ -118,93 +118,69 @@ public class PathOptimizer {
 			}
 		}
 	}
-	
+
 	/**
-	 * This method merges together paths with common end nodes. 
+	 * This method merges together paths with common end nodes.
 	 * @param layer the layer to process.
 	 */
-	private void optimizeLayer(LayerContents layer) {
+	private void concatenataPaths(LayerContents layer) {
 		Map<Point2D, PdfPath> pathEndpoints = new HashMap<Point2D, PdfPath>();
-		Set<PdfPath> mergedPaths = new HashSet<PdfPath>();		
-	
-		/*
-		//sort paths, longest first
-		List<PdfPath> sortedPaths = new ArrayList<PdfPath>();
-		
-		for(PdfPath path: layer.paths) {
-			path.calculateLength();
-			sortedPaths.add(path);
-		}
-		
-		Collections.sort(sortedPaths, new Comparator<PdfPath>(){
-			public int compare(PdfPath o1, PdfPath o2) {
+		Set<PdfPath> mergedPaths = new HashSet<PdfPath>();
 
-				if (o1.length > o2.length) {
-					return -1;
-				} else if (o1.length < o2.length) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-			
-		});
-		*/
-	
 		for(PdfPath pp: layer.paths){
-						
+
 			PdfPath path = pp;
 			boolean changed = true;
-			
+
 			while (changed && !path.isClosed()) {
 				changed  = false;
-				
-				if (pathEndpoints.containsKey(path.firstPoint())){					
+
+				if (pathEndpoints.containsKey(path.firstPoint())) {
 					PdfPath p1 = pathEndpoints.get(path.firstPoint());
 					pathEndpoints.remove(p1.firstPoint());
 					pathEndpoints.remove(p1.lastPoint());
-									
+
 					List<Point2D> newNodes = tryMergeNodeLists(path.points, p1.points);
-					path.points = newNodes;									
+					path.points = newNodes;
 					mergedPaths.add(p1);
 					changed = true;
 				}
-				
-				if (pathEndpoints.containsKey(path.lastPoint())){					
+
+				if (pathEndpoints.containsKey(path.lastPoint())) {
 					PdfPath p1 = pathEndpoints.get(path.lastPoint());
 					pathEndpoints.remove(p1.firstPoint());
 					pathEndpoints.remove(p1.lastPoint());
-									
+
 					List<Point2D> newNodes = tryMergeNodeLists(path.points, p1.points);
-					path.points = newNodes;									
+					path.points = newNodes;
 					mergedPaths.add(p1);
 					changed = true;
-				}				
-			}	
-			
+				}
+			}
+
 			if (!path.isClosed()){
 				pathEndpoints.put(path.firstPoint(), path);
 				pathEndpoints.put(path.lastPoint(), path);
 			}
 		}
-		
+
 		List<PdfPath> resultPaths = new ArrayList<PdfPath>();
-		
+
 		for(PdfPath path: layer.paths) {
 			if (!mergedPaths.contains(path)){
 				resultPaths.add(path);
 			}
 		}
-				
+
 		layer.paths = resultPaths;
 	}
-	
+
 	private List<LayerContents> splitBySegmentKind(LayerContents layer)
 	{
 		List<PdfPath> singleSegmentPaths = new ArrayList<PdfPath>();
 		List<PdfPath> multiSegmentPaths = new ArrayList<PdfPath>();
 		List<PdfPath> closedPaths = new ArrayList<PdfPath>();
-		
+
 		for(PdfPath path: layer.paths) {
 			if (path.points.size() <= 3) {
 				singleSegmentPaths.add(path);
@@ -216,17 +192,17 @@ public class PathOptimizer {
 				multiSegmentPaths.add(path);
 			}
 		}
-		
+
 		List<LayerContents> layers = new ArrayList<LayerContents>();
-		
+
 		if (multiSegmentPaths.size() > 0) {
 			LayerContents l = new LayerContents();
 			l.paths = multiSegmentPaths;
 			l.info = layer.info.copy();
-			
+
 			layers.add(l);
 		}
-		
+
 		if (singleSegmentPaths.size() > 0) {
 			LayerContents l = new LayerContents();
 			l.paths = singleSegmentPaths;
@@ -241,21 +217,21 @@ public class PathOptimizer {
 			l.multiPaths = layer.multiPaths;
 			layers.add(l);
 		}
-		
+
 		return layers;
 	}
-	
-	
+
+
 
 	private List<Point2D> tryMergeNodeLists(List<Point2D> nodes1, List<Point2D> nodes2) {
-		
+
 		boolean nodes1Closed = (nodes1.get(0) == nodes1.get(nodes1.size() - 1));
 		boolean nodes2Closed = (nodes2.get(0) == nodes2.get(nodes2.size() - 1));
-		
+
 		if (nodes1Closed || nodes2Closed) {
 			return null;
 		}
-		
+
 		if (nodes1.get(nodes1.size() - 1) == nodes2.get(0)) {
 			nodes1.remove(nodes1.size() -1);
 			nodes1.addAll(nodes2);
@@ -266,20 +242,20 @@ public class PathOptimizer {
 			for (int pos = nodes2.size() - 1; pos >= 0; pos --) {
 				nodes1.add(nodes2.get(pos));
 			}
-			
+
 			return nodes1;
-		} 
+		}
 		else if (nodes1.get(0) == nodes2.get(nodes2.size() - 1)) {
 			nodes1.remove(0);
 			nodes1.addAll(0, nodes2);
 			return nodes1;
-		} 
+		}
 		else if (nodes1.get(0) == nodes2.get(0)) {
-			nodes1.remove(0);			
+			nodes1.remove(0);
 			for (int pos = 0; pos < nodes2.size(); pos ++) {
 				nodes1.add(0, nodes2.get(pos));
 			}
-			
+
 			return nodes1;
 		} else {
 			return null;

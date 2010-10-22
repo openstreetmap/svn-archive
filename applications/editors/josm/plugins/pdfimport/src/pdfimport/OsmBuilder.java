@@ -82,7 +82,7 @@ public class OsmBuilder {
 		Map<PdfPath, Way> path2Way = new HashMap<PdfPath, Way>();
 
 		for (PdfPath path: layer.paths){
-			Way w = this.insertWay(path, point2Node, -1, full);
+			Way w = this.insertWay(path, point2Node, -1, full, false);
 			target.addPrimitive(w);
 			path2Way.put(path, w);
 		}
@@ -90,7 +90,7 @@ public class OsmBuilder {
 		int pathId = 0;
 		for (PdfMultiPath mpath: layer.multiPaths) {
 			for (PdfPath path: mpath.paths){
-				Way w = this.insertWay(path, point2Node, pathId, full);
+				Way w = this.insertWay(path, point2Node, pathId, full, true);
 				target.addPrimitive(w);
 				path2Way.put(path, w);
 			}
@@ -117,7 +117,7 @@ public class OsmBuilder {
 		}
 	}
 
-	private Way insertWay(PdfPath path, Map<Point2D, Node> point2Node, int multipathId, boolean full) {
+	private Way insertWay(PdfPath path, Map<Point2D, Node> point2Node, int multipathId, boolean full, boolean multipolygon) {
 
 		List<Node> nodes = new ArrayList<Node>(path.points.size());
 
@@ -148,7 +148,7 @@ public class OsmBuilder {
 			if (multipathId != -1){
 				keys.put("PDF_multipath", ""+ multipathId);
 			}
-			else if (path.layer.info.fill) {
+			else if (path.layer.info.fill && !multipolygon) {
 				keys.put("area", "yes");
 			}
 		}

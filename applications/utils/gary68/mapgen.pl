@@ -73,6 +73,8 @@
 # 1.07 circle around POIs
 # 1.08 create list of not drawn labels in file
 # 1.09 list of not drawn labels now derives file name from svg name
+# 1.10 -nobridge
+#      rounding error when scaling eliminated
 #
 #
 # TODO
@@ -93,11 +95,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.09 ;
-use OSM::mapgenRules 1.09 ;
+use OSM::mapgen 1.10 ;
+use OSM::mapgenRules 1.10 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.09" ;
+my $version = "1.10" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -126,6 +128,7 @@ perl mapgen.pl
 
 -oneways (add oneway arrows)
 -onewaycolor=TEXT (color for oneway arrows)
+-nobridge (don't draw bridges and tunnels - for lower scale maps)
 -halo=<FLOAT> (white halo width for point feature labels; DEFAULT=0)
 
 -grid=<integer> (number parts for grid, 0=no grid, DEFAULT=0)
@@ -223,6 +226,7 @@ my $routeIconDist = 75 ;
 my $routeIconScale = 1 ;
 my $onewayOpt = 0 ;
 my $onewayColor = "white" ;
+my $nobridgeOpt = 0 ;
 my $halo = 0 ;
 my $extPoiFileName = "" ;
 my @circles = () ;
@@ -384,6 +388,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"help"		=> \$helpOpt,		# 
 				"oneways"	=> \$onewayOpt,
 				"onewaycolor:s" => \$onewayColor,
+				"nobridge"	=> \$nobridgeOpt,
 				"place:s"	=> \$place,		# place to draw
 				"placefile:s"	=> \$placeFileName,		# file to look for places
 				"lonrad:f"	=> \$lonrad,
@@ -817,6 +822,12 @@ foreach my $wayId (keys %memWayTags) {
 	my $found = 0 ;
 	foreach (-5,-4,-3,-2,-1,0,1,2,3,4,5) { if ($layer == $_) { $found = 1 ; } }
 	if ($found == 0) { $layer = 0 ; }
+
+	if ($nobridgeOpt eq "1") {
+		$bridge = "no" ;
+		$tunnel = "no" ;
+		$layer = 0 ;
+	}
 
 	my ($test, $ruleNumber) = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;
 	if (defined $test) {

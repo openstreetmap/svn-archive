@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.09' ;
+$VERSION = '1.10' ;
 
 require Exporter ;
 
@@ -2024,8 +2024,9 @@ sub scalePoints {
 	# my $b = $a ;
 	my $b = $a / $baseDpi * $dpi ;
 
-	return int ($b) ;
+	return (int ($b*10)) / 10 ;
 }
+
 
 sub scaleBase {
 #

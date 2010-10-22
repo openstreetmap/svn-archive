@@ -40,6 +40,7 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -288,13 +289,16 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		// Show name of profile in title 
 		setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
 		
-		// TODO: Offer also ft here
 		if (profile.hasElevationData()) {
-			minHeightLabel.setText(String.format("%d m", profile.getMinHeight()));
-			maxHeightLabel.setText(String.format("%d m", profile.getMaxHeight()));
-			avrgHeightLabel.setText(String.format("%d m", profile.getAverageHeight()));
-			elevationGainLabel.setText(String.format("%d m", profile
-					.getGain()));
+			// Show elevation data
+			minHeightLabel.setText(
+					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getMinHeight()));
+			maxHeightLabel.setText(
+					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getMaxHeight()));
+			avrgHeightLabel.setText(
+					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getAverageHeight()));
+			elevationGainLabel.setText(
+					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getGain()));
 		} else { // no elevation data
 			minHeightLabel.setText("-");
 			maxHeightLabel.setText("-");
@@ -311,7 +315,7 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		double dist = profile.getDistance();
 
 		totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
-		distLabel.setText(String.format("%5.2f km", dist));
+		distLabel.setText(NavigatableComponent.getSystemOfMeasurement().getDistText(dist));
 		
 		fireModelChanged();
 		repaint();

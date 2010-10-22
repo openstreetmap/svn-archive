@@ -134,8 +134,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 		sumEle = 0;
 		gain = 0;
 		lastEle = 0;
-		dist = 0.0;
-
+		
 		for (WayPoint wayPoint : this.wayPoints) {
 			visit(wayPoint);
 		}
@@ -339,7 +338,15 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 	 */
 	@Override
 	public double getDistance() {
-		return dist / 1000.0; // dist is in meters
+		return dist; // dist is in meters
+	}
+	
+	/**
+	 * Sets the distance of the elevation profile.
+	 * @param dist
+	 */
+	protected void setDistance(double dist) {
+		this.dist = dist; 
 	}
 
 	/**
@@ -488,11 +495,11 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 			lastEle = ele;			
 		}
 		
-		// determine distance
+		/*
 		if (lastWayPoint != null) {
 			double d = wp.getCoor().greatCircleDistance(lastWayPoint.getCoor());
 			dist += d;
-		}
+		}*/
 		lastWayPoint = wp;
 	}
 }

@@ -144,6 +144,7 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 			tracks.clear();
 		}
 
+		setDistance(gpxData.length());	// get distance from GPX 
 		GpxIterator.visit(gpxData, this);
 
 		setWayPoints(tmpWaypoints, true);

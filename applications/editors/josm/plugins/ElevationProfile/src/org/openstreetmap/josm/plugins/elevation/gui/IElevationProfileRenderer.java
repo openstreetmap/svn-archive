@@ -49,4 +49,14 @@ public interface IElevationProfileRenderer {
 	 * @param kind The way point kind (see {@link ElevationWayPointKind}).	 
 	 */
 	void renderWayPoint(Graphics g, IElevationProfile profile, MapView mv, WayPoint wpt, ElevationWayPointKind kind);
+	
+	/**
+	 * Notifies the renderer that rendering starts.
+	 */
+	void beginRendering();
+	
+	/**
+	 * Notifies the renderer that rendering has been finished.
+	 */
+	void finishRendering();
 }

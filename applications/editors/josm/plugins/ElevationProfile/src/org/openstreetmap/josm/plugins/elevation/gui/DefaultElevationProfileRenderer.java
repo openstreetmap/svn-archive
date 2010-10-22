@@ -26,6 +26,8 @@ import java.awt.Shape;
 import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
@@ -44,7 +46,7 @@ public class DefaultElevationProfileRenderer implements
 	/**
 	 * 
 	 */
-	private static final int TRIANGLE_BASESIZE = 12;
+	private static final int TRIANGLE_BASESIZE = 24;
 	/**
 	 * 
 	 */
@@ -62,6 +64,8 @@ public class DefaultElevationProfileRenderer implements
 	private static final double RAD_180 = Math.PI;
 	// private static final double RAD_270 = Math.PI * 1.5;
 	private static final double RAD_90 = Math.PI * 0.5;
+	
+	private List<Rectangle> forbiddenRects = new ArrayList<Rectangle>();
 
 	/*
 	 * (non-Javadoc)
@@ -404,19 +408,49 @@ public class DefaultElevationProfileRenderer implements
 		int width = g.getFontMetrics(g.getFont()).stringWidth(s) + 10;
 		int height = g.getFont().getSize() + g.getFontMetrics().getLeading() + 5;
 
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		Rectangle r = new Rectangle(x - (width / 2), y - (height / 2), width, height);
 		
+		if (isForbiddenArea(r)) { 
+			return; // no space left, skip this label
+		}
+		
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);		
 		GradientPaint gradient = new GradientPaint(x, y, Color.WHITE, x, y
-				+ height, secondGradColor, false);
+				+ (height/2), secondGradColor, false);
 		g2d.setPaint(gradient);		
 
-		Rectangle r = new Rectangle(x - (width / 2), y - (height / 2), width, height);
+		
 		g2d.fillRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS, ROUND_RECT_RADIUS);
 		
 		g2d.setColor(Color.BLACK);
 		
 		g2d.drawRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS, ROUND_RECT_RADIUS);		
 		g2d.drawString(s, x - (width / 2) + 5, y + (height / 2) - 3);
+		
+		forbiddenRects.add(r);
+	}
+	
+	/**
+	 * Checks, if the rectangle has been 'reserved' by a previous draw action.
+	 * @param r The area to check for.
+	 * @return true; if area is already occupied by another rectangle.
+	 */
+	private boolean isForbiddenArea(Rectangle r) {
+		
+		for (Rectangle rTest : forbiddenRects) {
+			if (r.intersects(rTest)) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void beginRendering() {
+		forbiddenRects.clear();
+	}
+
+	@Override
+	public void finishRendering() {
+		// nothing to do currently		
 	}
 }

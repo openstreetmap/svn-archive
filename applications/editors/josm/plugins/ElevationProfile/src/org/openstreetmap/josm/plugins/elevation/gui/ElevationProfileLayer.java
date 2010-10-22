@@ -17,6 +17,7 @@ package org.openstreetmap.josm.plugins.elevation.gui;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Graphics2D;
+
 import javax.swing.Action;
 import javax.swing.Icon;
 
@@ -43,7 +44,7 @@ public class ElevationProfileLayer extends
 org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionListener {
 	private IElevationProfile profile;
 	private IElevationProfileRenderer renderer = new DefaultElevationProfileRenderer();
-	private WayPoint selWayPoint = null;
+	private WayPoint selWayPoint = null;	
 
 	/**
 	 * Creates a new elevation profile layer
@@ -157,6 +158,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 		int index = 0;
 
 		if (profile != null) {
+			renderer.beginRendering();
 			for (WayPoint wpt : profile.getWayPoints()) {
 				int ele = (int) WayPointHelper.getElevation(wpt);
 
@@ -206,6 +208,8 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 		} else {
 			System.err.println("Layer#paint: No profile");
 		}
+		
+		renderer.finishRendering();
 	}
 
 	/*

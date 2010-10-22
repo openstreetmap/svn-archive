@@ -19,7 +19,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -121,81 +122,48 @@ public class ElevationProfileDialog extends ToggleDialog implements
 			Shortcut shortcut, int preferredHeight, boolean defShow) {
 		super(name, iconName, tooltip, shortcut, preferredHeight, defShow);
 				
-		JPanel dataPanel = new JPanel(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.5;
+		JPanel dataPanel = new JPanel();
+		GridLayout gridLayout = new GridLayout(3, 6);
+		dataPanel.setLayout(gridLayout);
 
-		// first row
-		c.gridx = 0;
-		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("")), c); // filler
-		c.gridx = 1;
-		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Min")), c);
-		c.gridx = 2;
-		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Avrg")), c);
-		c.gridx = 3;
-		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Max")), c);
-		c.gridx = 4;
-		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Dist")), c);
-		c.gridx = 5;
-		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Gain")), c);
-		c.gridx = 6;
-		c.gridy = 0;
-		dataPanel.add(new JLabel(tr("Time")), c);
+		// first row: Headlines with bold font
+		JLabel lbl = new JLabel(tr("Min"));
+		lbl.setFont(getFont().deriveFont(Font.BOLD));
+		dataPanel.add(lbl);
+		lbl = new JLabel(tr("Avrg"));
+		lbl.setFont(getFont().deriveFont(Font.BOLD));
+		dataPanel.add(lbl);
+		lbl = new JLabel(tr("Max"));
+		lbl.setFont(getFont().deriveFont(Font.BOLD));
+		dataPanel.add(lbl);
+		lbl = new JLabel(tr("Dist"));
+		lbl.setFont(getFont().deriveFont(Font.BOLD));
+		dataPanel.add(lbl);
+		lbl = new JLabel(tr("Gain"));
+		lbl.setFont(getFont().deriveFont(Font.BOLD));
+		dataPanel.add(lbl);
+		lbl = new JLabel(tr("Time"));
+		lbl.setFont(getFont().deriveFont(Font.BOLD));
+		dataPanel.add(lbl);
 
 		// second row
-		c.gridx = 0;
-		c.gridy = 1;
-		dataPanel.add(new JLabel(tr("Ele")), c);
-		c.gridx = 1;
-		c.gridy = 1;
 		minHeightLabel = new JLabel("0 m");
-		dataPanel.add(minHeightLabel, c);
-
-		c.gridx = 2;
-		c.gridy = 1;
+		dataPanel.add(minHeightLabel);
 		avrgHeightLabel = new JLabel("0 m");
-		dataPanel.add(avrgHeightLabel, c);
-
-		c.gridx = 3;
-		c.gridy = 1;
+		dataPanel.add(avrgHeightLabel);
 		maxHeightLabel = new JLabel("0 m");
-		dataPanel.add(maxHeightLabel, c);
-		
-		c.gridx = 4;
-		c.gridy = 1;
+		dataPanel.add(maxHeightLabel);
 		distLabel = new JLabel("0 km");
-		dataPanel.add(distLabel, c);
-		
-		c.gridx = 5;
-		c.gridy = 1;
+		dataPanel.add(distLabel);
 		elevationGainLabel = new JLabel("0 m");
-		dataPanel.add(elevationGainLabel, c);
-		
-		c.gridx = 6;
-		c.gridy = 1;
+		dataPanel.add(elevationGainLabel);
 		totalTimeLabel = new JLabel("0");
-		dataPanel.add(totalTimeLabel, c);
-
-		// sep
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 7;
-		dataPanel.add(new JSeparator(), c);
+		dataPanel.add(totalTimeLabel);
 
 		// Geoid
-		JLabel geoidHead = new JLabel(tr("Geoid Correction"));
+		JLabel geoidHead = new JLabel(tr("Geoid"));
 		geoidHead.setFont(getFont().deriveFont(Font.BOLD));
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 5;
-		dataPanel.add(geoidHead, c);
+		dataPanel.add(geoidHead);
 
 		geoidNone = new JRadioButton(tr("None"));
 		// TODO: Obtain value from preferences
@@ -239,22 +207,11 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		grp.add(geoidNone);
 		grp.add(geoidFixed);
 
-		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 4;
-		dataPanel.add(geoidNone, c);
-		c.gridx = 1;
-		c.gridy = 4;
-		dataPanel.add(geoidAuto, c);
-		c.gridx = 2;
-		c.gridy = 4;
-		dataPanel.add(geoidFixed, c);
-		c.gridx = 3;
-		c.gridy = 4;
-		dataPanel.add(geoidFixedValue, c);
-		c.gridx = 4;
-		c.gridy = 4;
-		dataPanel.add(new JLabel(" m"), c);
+		dataPanel.add(geoidNone);
+		dataPanel.add(geoidAuto);
+		dataPanel.add(geoidFixed);
+		dataPanel.add(geoidFixedValue);
+		dataPanel.add(new JLabel(" m"));
 
 		add(dataPanel, BorderLayout.PAGE_END);
 		profile = new ElevationModel();
@@ -269,12 +226,22 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		if (WayPointHelper.getGeoidKind() == GeoidCorrectionKind.Fixed) {
 			geoidFixed.setSelected(true);
 		}
+		
+		dock();
 	}
 
+	/**
+	 * Gets the elevation model instance.
+	 * @return
+	 */
 	public IElevationProfile getModel() {
 		return profile;
 	}
 
+	/**
+	 * Sets the elevation model instance.
+	 * @param model The new model.
+	 */
 	public void setModel(IElevationProfile model) {
 		if (this.profile != model) {
 			if (model != null) {
@@ -286,10 +253,18 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		}
 	}
 
+	/**
+	 * Gets the associated layer instance of the elevation profile.
+	 * @return
+	 */
 	public ElevationProfileLayer getProfileLayer() {
 		return profileLayer;
 	}
 
+	/**
+	 * Sets the associated layer instance of the elevation profile.
+	 * @param profileLayer The elevation profile layer.
+	 */
 	public void setProfileLayer(ElevationProfileLayer profileLayer) {
 		if (this.profileLayer != profileLayer) {
 			if (this.profileLayer != null) {
@@ -301,35 +276,34 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	}
 
 	/**
-	 * Refreshes the dialog when model data have changed.
-	 * 
-	 * @param model
+	 * Refreshes the dialog when model data have changed and notifies clients
+	 * that the model has changed.
 	 */
 	private void updateView() {
 		// TODO: Offer also ft here
 		if (profile.hasElevationData()) {
-			long diff = profile.getTimeDifference();
-			long minutes = diff / (1000 * 60);
-			long hours = minutes / 60;
-			minutes = minutes % 60;
-			
 			minHeightLabel.setText(String.format("%d m", profile.getMinHeight()));
 			maxHeightLabel.setText(String.format("%d m", profile.getMaxHeight()));
-			avrgHeightLabel.setText(String.format("%d m", profile
-					.getAverageHeight()));
+			avrgHeightLabel.setText(String.format("%d m", profile.getAverageHeight()));
 			elevationGainLabel.setText(String.format("%d m", profile
 					.getGain()));
-			totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
-			distLabel.setText(String.format("%5.2f km", profile
-					.getDistance()));
-		} else {
+		} else { // no elevation data
 			minHeightLabel.setText("-");
 			maxHeightLabel.setText("-");
 			avrgHeightLabel.setText("-");
 			elevationGainLabel.setText("-");
-			totalTimeLabel.setText("-");
-			distLabel.setText("-");
 		}
+
+		// compute values for time and distance
+		long diff = profile.getTimeDifference();
+		long minutes = diff / (1000 * 60);
+		long hours = minutes / 60;
+		minutes = minutes % 60;
+		
+		double dist = profile.getDistance();
+
+		totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
+		distLabel.setText(String.format("%5.2f km", dist));
 		
 		fireModelChanged();
 		repaint();

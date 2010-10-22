@@ -429,8 +429,8 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 			plotArea.height = caSize.height;
 		}
 
-		plotArea.setLocation(10, 0);
-		plotArea.grow(-20, -15);
+		plotArea.setLocation(0, 0);
+		plotArea.grow(-10, -15);
 	}
 
 	/*

@@ -29,6 +29,7 @@ package org.openstreetmap.josm.plugins.osb;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -188,7 +189,13 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
                     }
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(Main.parent, e.getMessage());
+                if (e instanceof java.net.UnknownHostException) {
+                    String message = String.format(tr("Unknown Host: %s - Possibly there is no connection to the Internet.")
+                            , e.getMessage());
+                    JOptionPane.showMessageDialog(Main.parent, message);
+                } else {
+                    JOptionPane.showMessageDialog(Main.parent, e.getMessage());
+                }
                 e.printStackTrace();
             }
         }

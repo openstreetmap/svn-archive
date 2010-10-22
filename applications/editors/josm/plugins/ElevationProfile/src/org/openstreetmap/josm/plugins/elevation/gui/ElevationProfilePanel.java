@@ -271,8 +271,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 			// check bounds
 			if (yLine <= getPlotBottom() && yLine >= getPlotTop()) {
 				String txt = String.format("%dm", i);
-
-				g.setColor(Color.BLACK);
+				
 				Rectangle r = drawAlignedString(txt, getPlotHCenter(), yLine - 2,
 						TextAlignment.Right, g);
 				r.grow(2, 2);
@@ -282,7 +281,11 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 						yLine);
 				g.drawLine(r.x + r.width, yLine, getPlotRight(),
 						yLine);				
-				// Draw label
+				// Draw label with shadow
+				g.setColor(Color.WHITE);
+				drawAlignedString(txt, getPlotHCenter() + 1, yLine - 1,
+						TextAlignment.Right, g);
+				g.setColor(Color.BLACK);
 				drawAlignedString(txt, getPlotHCenter(), yLine - 2,
 						TextAlignment.Right, g);
 			}

@@ -160,12 +160,16 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 			for (WayPoint wpt : profile.getWayPoints()) {
 				int ele = (int) WayPointHelper.getElevation(wpt);
 
-				if (lastWpt != null) {					
+				if (lastWpt != null) {
+					/*
 					int h1 = WayPointHelper.getHourOfWayPoint(wpt);
 					int h2 = WayPointHelper.getHourOfWayPoint(lastWpt);
-					if (h1 != h2) { // hour changed?
+					*/
+					int ele1 = (int)(ele / 100.0);
+					int ele2 = (int)(lastEle / 100.0);
+					if (ele1 != ele2) { // hour changed?
 						renderer.renderWayPoint(g, profile, mv, wpt,
-								ElevationWayPointKind.FullHour);
+								ElevationWayPointKind.ElevationLevel);
 					} else { // check for elevation gain
 						if (ele > lastEle) {
 							renderer.renderWayPoint(g, profile, mv, wpt,

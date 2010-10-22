@@ -86,6 +86,7 @@ public class DefaultElevationProfileRenderer implements
 
 		switch (kind) {
 		case Plain:
+		case ElevationLevel:
 			if (z > profile.getAverageHeight()) {
 				return HIGH_COLOR;
 			} else {
@@ -110,7 +111,7 @@ public class DefaultElevationProfileRenderer implements
 			return END_POINT;
 		}
 
-		return null;
+		throw new RuntimeException("Unknown way point kind: " + kind);
 	}
 
 	/*
@@ -184,13 +185,18 @@ public class DefaultElevationProfileRenderer implements
 			drawLabel(String.format("%02d:00", hour), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g);
 		}
 		
+		if (kind == ElevationWayPointKind.ElevationLevel) {
+			int ele = ((int)Math.rint(WayPointHelper.getElevation(wpt) / 100.0)) * 100;						
+			drawLabel(String.format("%dm", ele), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g, c);
+		}
+		
 		if (kind == ElevationWayPointKind.Highlighted) {
 			int eleH = (int) WayPointHelper.getElevation(wpt);
 			int hour = WayPointHelper.getHourOfWayPoint(wpt);			
 			int min = WayPointHelper.getMinuteOfWayPoint(wpt);
 			drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, BIG_WPT_RADIUS);
-			drawLabel(String.format("%02d:%02d", hour, min), pnt.x, pnt.y - g.getFontMetrics().getHeight(), g);
-			drawLabel(String.format("%dm", eleH), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g);
+			drawLabel(String.format("%02d:%02d", hour, min), pnt.x, pnt.y - g.getFontMetrics().getHeight() - 5, g);
+			drawLabel(String.format("%dm", eleH), pnt.x, pnt.y + g.getFontMetrics().getHeight() + 5, g);
 		}
 	}
 
@@ -237,7 +243,7 @@ public class DefaultElevationProfileRenderer implements
 		paintRegularTriangle(g, c, td, pnt.x, pnt.y,
 				DefaultElevationProfileRenderer.TRIANGLE_BASESIZE);
 
-		drawLabel(String.format("%dm", eleH), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g);
+		drawLabel(String.format("%dm", eleH), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g, c);
 	}
 
 	/**
@@ -382,6 +388,17 @@ public class DefaultElevationProfileRenderer implements
 	 * @param g The graphics context.
 	 */
 	private void drawLabel(String s, int x, int y, Graphics g) {
+		drawLabel(s, x, y, g, Color.BLACK);
+	}
+	/**
+	 * Draws a label.
+	 * @param s The text to draw.
+	 * @param x The x coordinate of the label.
+	 * @param y The y coordinate of the label.
+	 * @param g The graphics context.
+	 * @param secondGradColor The second color of the gradient.
+	 */
+	private void drawLabel(String s, int x, int y, Graphics g, Color secondGradColor) {
 		Graphics2D g2d = (Graphics2D) g;
 
 		int width = g.getFontMetrics(g.getFont()).stringWidth(s) + 10;
@@ -391,15 +408,15 @@ public class DefaultElevationProfileRenderer implements
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		GradientPaint gradient = new GradientPaint(x, y, Color.WHITE, x, y
-				+ height, Color.BLACK, false);
+				+ height, secondGradColor, false);
 		g2d.setPaint(gradient);		
 
-		Rectangle r = new Rectangle(x - (width / 2) - 5, y - (height / 2) + 1, width, height);
-		g2d.fillRect(r.x, r.y, r.width, r.height);
+		Rectangle r = new Rectangle(x - (width / 2), y - (height / 2), width, height);
+		g2d.fillRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS, ROUND_RECT_RADIUS);
 		
 		g2d.setColor(Color.BLACK);
 		
-		g2d.drawRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS, ROUND_RECT_RADIUS);
-		g2d.drawString(s, x - width / 2, y + (height / 2) - 2);
+		g2d.drawRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS, ROUND_RECT_RADIUS);		
+		g2d.drawString(s, x - (width / 2) + 5, y + (height / 2) - 3);
 	}
 }

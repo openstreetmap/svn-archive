@@ -62,6 +62,7 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		PropertyChangeListener, LayerChangeListener, EditLayerChangeListener,
 		ComponentListener {
 
+	private static final String EMPTY_DATA_STRING = "-";
 	/**
 	 * 
 	 */
@@ -245,12 +246,10 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	 */
 	public void setModel(IElevationProfile model) {
 		if (this.profile != model) {
-			if (model != null) {
-				// System.out.println("Set model " + model);
-				this.profile = model;
-				profPanel.setElevationModel(model);
-				updateView();
-			}
+			this.profile = model;
+			profPanel.setElevationModel(model);
+			
+			updateView();
 		}
 	}
 
@@ -281,15 +280,11 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	 * that the model has changed.
 	 */
 	private void updateView() {
-		if (profile == null) { // emergency exit
-			setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
-			return;
-		}
-		
-		// Show name of profile in title 
-		setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
-		
-		if (profile.hasElevationData()) {
+		if (profile != null) {
+			// Show name of profile in title 
+			setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
+
+			if (profile.hasElevationData()) {
 			// Show elevation data
 			minHeightLabel.setText(
 					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getMinHeight()));
@@ -299,23 +294,28 @@ public class ElevationProfileDialog extends ToggleDialog implements
 					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getAverageHeight()));
 			elevationGainLabel.setText(
 					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getGain()));
-		} else { // no elevation data
-			minHeightLabel.setText("-");
-			maxHeightLabel.setText("-");
-			avrgHeightLabel.setText("-");
-			elevationGainLabel.setText("-");
+			}
+			
+			// compute values for time and distance
+			long diff = profile.getTimeDifference();
+			long minutes = diff / (1000 * 60);
+			long hours = minutes / 60;
+			minutes = minutes % 60;
+			
+			double dist = profile.getDistance();
+
+			totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
+			distLabel.setText(NavigatableComponent.getSystemOfMeasurement().getDistText(dist));
+		} else { // no elevation data, -> switch back to empty view
+			setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
+			
+			minHeightLabel.setText(EMPTY_DATA_STRING);
+			maxHeightLabel.setText(EMPTY_DATA_STRING);
+			avrgHeightLabel.setText(EMPTY_DATA_STRING);
+			elevationGainLabel.setText(EMPTY_DATA_STRING);
+			totalTimeLabel.setText(EMPTY_DATA_STRING);
+			distLabel.setText(EMPTY_DATA_STRING);
 		}
-
-		// compute values for time and distance
-		long diff = profile.getTimeDifference();
-		long minutes = diff / (1000 * 60);
-		long hours = minutes / 60;
-		minutes = minutes % 60;
-		
-		double dist = profile.getDistance();
-
-		totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
-		distLabel.setText(NavigatableComponent.getSystemOfMeasurement().getDistText(dist));
 		
 		fireModelChanged();
 		repaint();
@@ -413,7 +413,6 @@ public class ElevationProfileDialog extends ToggleDialog implements
 				layerMap.put(newLayer, em);
 			}
 			
-			System.out.println("Active layer: " + newLayer.getName());
 			ElevationModel em = layerMap.get(newLayer);
 			em.setSliceSize(slices);
 			setModel(em);
@@ -423,7 +422,6 @@ public class ElevationProfileDialog extends ToggleDialog implements
 
 	public void layerAdded(Layer newLayer) {
 		createLayer(newLayer);
-		System.out.println("layerAdded: " + newLayer.getName());
 	}
 
 	public void layerRemoved(Layer oldLayer) {
@@ -431,7 +429,10 @@ public class ElevationProfileDialog extends ToggleDialog implements
 			// TODO: Handle UI stuff properly
 			layerMap.remove(oldLayer);
 		}
-
+		if (layerMap.size() == 0) {
+			setModel(null);
+			profileLayer.setProfile(null);
+		}
 	}
 
 	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {

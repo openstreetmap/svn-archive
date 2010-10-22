@@ -157,8 +157,8 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 		int lastEle = 0;
 		int index = 0;
 
-		if (profile != null) {
-			renderer.beginRendering();
+		renderer.beginRendering();
+		if (profile != null) {			
 			for (WayPoint wpt : profile.getWayPoints()) {
 				int ele = (int) WayPointHelper.getElevation(wpt);
 
@@ -205,9 +205,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 					ElevationWayPointKind.MaxElevation);
 			renderer.renderWayPoint(g, profile, mv, profile.getMinWayPoint(),
 					ElevationWayPointKind.MinElevation);
-		} else {
-			System.err.println("Layer#paint: No profile");
-		}
+		} 
 		
 		renderer.finishRendering();
 	}

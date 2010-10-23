@@ -32,57 +32,57 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[int_tc_type]='tertiary'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-tert-casing.18.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-tert-casing.18.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <MinScaleDenominator>12500</MinScaleDenominator>
       <Filter>[int_tc_type]='residential' or [int_tc_type]='unclassified'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-casing.16.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-casing.16.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <MinScaleDenominator>12500</MinScaleDenominator>
       <Filter>[int_tc_type]='living_street'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-fill.16.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-fill.16.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[int_tc_type]='residential' or [int_tc_type]='unclassified'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-casing.18.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-casing.18.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[int_tc_type]='service'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-casing.14.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-casing.14.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[int_tc_type]='living_street'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-fill.18.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-fill.18.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[int_tc_type]='tertiary'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-tert-casing.24.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-tert-casing.24.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[int_tc_type]='residential' or [int_tc_type]='unclassified'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-casing.24.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-casing.24.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[int_tc_type]='service'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-casing.16.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-casing.16.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[int_tc_type]='living_street'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-fill.24.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-fill.24.png" allow_overlap="true"/>
     </Rule>
 </Style>
 <Style name="turning_circle-fill">
@@ -90,57 +90,57 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[int_tc_type]='tertiary'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-tert-fill.16.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-tert-fill.16.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <MinScaleDenominator>12500</MinScaleDenominator>
       <Filter>[int_tc_type]='residential' or [int_tc_type]='unclassified'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-fill.14.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-fill.14.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <MinScaleDenominator>12500</MinScaleDenominator>
       <Filter>[int_tc_type]='living_street'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-livs-fill.14.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-livs-fill.14.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[int_tc_type]='residential' or [int_tc_type]='unclassified'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-fill.16.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-fill.16.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[int_tc_type]='service'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-fill.12.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-fill.12.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[int_tc_type]='living_street'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-livs-fill.16.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-livs-fill.16.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[int_tc_type]='tertiary'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-tert-fill.22.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-tert-fill.22.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[int_tc_type]='residential' or [int_tc_type]='unclassified'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-fill.22.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-fill.22.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[int_tc_type]='service'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-uncl-fill.14.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-uncl-fill.14.png" allow_overlap="true"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[int_tc_type]='living_street'</Filter>
-      <PointSymbolizer file="bw-symbols/turning_circle-livs-fill.22.png" allow_overlap="true"/>
+      <PointSymbolizer file="symbols/turning_circle-livs-fill.22.png" allow_overlap="true"/>
     </Rule>
 </Style>
 <Style name="highway-area-casing">
@@ -276,7 +276,7 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <Filter>[landuse] = 'quarry'</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/quarry2.png"/>
+      <PolygonPatternSymbolizer file="symbols/quarry2.png"/>
       <LineSymbolizer>
         <CssParameter name="stroke">#808080</CssParameter>
 	<CssParameter name="stroke-width">0.5</CssParameter>
@@ -293,23 +293,23 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <Filter>[landuse] = 'orchard'</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/orchard.png"/>
+      <PolygonPatternSymbolizer file="symbols/orchard.png"/>
     </Rule>
     <Rule>
       <Filter>[landuse] = 'vineyard'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/vineyard.png"/>
+      <PolygonPatternSymbolizer file="symbols/vineyard.png"/>
     </Rule>
     <Rule>
       <Filter>[leisure] = 'nature_reserve'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <MinScaleDenominator>50000</MinScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/nature_reserve.png"/>
+      <PolygonPatternSymbolizer file="symbols/nature_reserve.png"/>
     </Rule>
     <Rule>
       <Filter>[leisure] = 'nature_reserve'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/nature_reserve2.png"/>
+      <PolygonPatternSymbolizer file="symbols/nature_reserve2.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
@@ -389,22 +389,22 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       
       <Filter>[military] = 'danger_area'</Filter>
-      <PolygonPatternSymbolizer file="bw-symbols/danger.png"/>
+      <PolygonPatternSymbolizer file="symbols/danger.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <Filter>([landuse] = 'cemetery' or [landuse] = 'grave_yard' or [amenity]='grave_yard') and [religion] = 'jewish'</Filter>
-      <PolygonPatternSymbolizer file="bw-symbols/cemetery_jewish.18.png"/>
+      <PolygonPatternSymbolizer file="symbols/cemetery_jewish.18.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <Filter>([landuse] = 'cemetery' or [landuse] = 'grave_yard' or [amenity]='grave_yard') and [religion] = 'christian'</Filter>
-      <PolygonPatternSymbolizer file="bw-symbols/grave_yard.png"/>
+      <PolygonPatternSymbolizer file="symbols/grave_yard.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <Filter>([landuse] = 'cemetery' or [landuse] = 'grave_yard' or [amenity]='grave_yard') and [religion] = 'INT-generic'</Filter>
-      <PolygonPatternSymbolizer file="bw-symbols/grave_yard_generic.png"/>
+      <PolygonPatternSymbolizer file="symbols/grave_yard_generic.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
@@ -424,7 +424,7 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <Filter>[tourism] = 'zoo'</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/zoo.png"/>
+      <PolygonPatternSymbolizer file="symbols/zoo.png"/>
     </Rule>
     <Rule>
       <Filter>[leisure] = 'common'</Filter>
@@ -465,7 +465,7 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <Filter>[landuse] = 'forest'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/forest.png"/>
+      <PolygonPatternSymbolizer file="symbols/forest.png"/>
     </Rule>
     <Rule>
       <Filter>[landuse]='farmyard'</Filter>
@@ -627,7 +627,7 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <Rule>
       <Filter>[natural] = 'beach'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/beach.png"/>
+      <PolygonPatternSymbolizer file="symbols/beach.png"/>
     </Rule>
     <!--Rule>
       <ElseFilter/>
@@ -5841,145 +5841,145 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <Filter>[highway] = 'motorway' and [length] = 1</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield1.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield1.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 2</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield2.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield2.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 3</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield3.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield3.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 4</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield4.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield4.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 5</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield5.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield5.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 6</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield6.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield6.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 7</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield6.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield6.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 8</Filter>
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield7.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield7.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 1</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield1.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield1.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 2</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield2.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield2.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 3</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield3.png" min_distance="24" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield3.png" min_distance="24" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 4</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield4.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield4.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 5</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield5.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield5.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 6</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield6.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield6.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 7</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield7.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield7.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 8</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield8.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield8.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 1</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield1.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield1.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 2</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield2.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield2.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 3</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield3.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield3.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 4</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield4.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield4.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 5</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield5.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield5.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 6</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield6.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield6.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 7</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield7.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield7.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 8</Filter>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield8.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield8.png" min_distance="30" spacing="750"/>
     </Rule>
 </Style>
 <Style name="roads-text">
@@ -5987,241 +5987,241 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <Filter>[highway] = 'motorway' and [length] = 1</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield1.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield1.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 2</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield2.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield2.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 3</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield3.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield3.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 4</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield4.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield4.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 5</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield5.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield5.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 6</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield6.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield6.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 7</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield6.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield6.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 8</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/mot_shield7.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/mot_shield7.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 1</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield1.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield1.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 2</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield2.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield2.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 3</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield3.png" min_distance="24" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield3.png" min_distance="24" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 4</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield4.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield4.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 5</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield5.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield5.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 6</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield6.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield6.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 7</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield7.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield7.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' and [length] = 8</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/tru_shield8.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/tru_shield8.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 1</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield1.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield1.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 2</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield2.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield2.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 3</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield3.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield3.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 4</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield4.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield4.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 5</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield5.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield5.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 6</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield6.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield6.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 7</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield7.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield7.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'primary' and [length] = 8</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/pri_shield8.png" min_distance="30" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/pri_shield8.png" min_distance="30" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'secondary' and [length] = 1) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/sec_shield1.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/sec_shield1.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'secondary' and [length] = 2) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/sec_shield2.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/sec_shield2.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'secondary' and [length] = 3) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/sec_shield3.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/sec_shield3.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'secondary' and [length] = 4) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/sec_shield4.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/sec_shield4.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'secondary' and [length] = 5) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/sec_shield5.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/sec_shield5.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'secondary' and [length] = 6) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/sec_shield6.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/sec_shield6.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'secondary' and [length] = 7) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/sec_shield7.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/sec_shield7.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'secondary' and [length] = 8) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/sec_shield8.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/sec_shield8.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'tertiary' and [length] = 1) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/ter_shield1.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/ter_shield1.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'tertiary' and [length] = 2) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/ter_shield2.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/ter_shield2.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'tertiary' and [length] = 3) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/ter_shield3.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/ter_shield3.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'tertiary' and [length] = 4) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/ter_shield4.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/ter_shield4.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'tertiary' and [length] = 5) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/ter_shield5.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/ter_shield5.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'tertiary' and [length] = 6) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/ter_shield6.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/ter_shield6.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'tertiary' and [length] = 7) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/ter_shield7.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/ter_shield7.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'tertiary' and [length] = 8) and not [bridge]='yes'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       
-      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="bw-symbols/ter_shield8.png" min_distance="40" spacing="750"/>
+      <ShieldSymbolizer name="ref" fontset_name="bold-fonts" size="10" fill="#fff" placement="line" file="symbols/ter_shield8.png" min_distance="40" spacing="750"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'unclassified' or [highway]='residential') and not [bridge]='yes'</Filter>
@@ -6328,17 +6328,17 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
       <Filter>[natural] = 'cliff'</Filter>       
-       <LinePatternSymbolizer file="bw-symbols/cliff.png"/>
+       <LinePatternSymbolizer file="symbols/cliff.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[natural] = 'cliff'</Filter>
-       <LinePatternSymbolizer file="bw-symbols/cliff2.png"/>
+       <LinePatternSymbolizer file="symbols/cliff2.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[man_made] = 'embankment'</Filter>
-       <LinePatternSymbolizer file="bw-symbols/cliff.png"/>
+       <LinePatternSymbolizer file="symbols/cliff.png"/>
     </Rule>
 </Style>
 <Style name="barriers">
@@ -6656,7 +6656,7 @@ Note: feel free to leave password, host, port, or use blank
         <CssParameter name="stroke-width">1.5</CssParameter>
         <CssParameter name="stroke-dasharray">4,2</CssParameter>
       </LineSymbolizer>
-      <PolygonPatternSymbolizer file="bw-symbols/glacier.png"/>
+      <PolygonPatternSymbolizer file="symbols/glacier.png"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'glacier'</Filter>
@@ -6666,7 +6666,7 @@ Note: feel free to leave password, host, port, or use blank
         <CssParameter name="stroke-width">1.5</CssParameter>
         <CssParameter name="stroke-dasharray">4,2</CssParameter>
       </LineSymbolizer>
-      <PolygonPatternSymbolizer file="bw-symbols/glacier2.png"/>
+      <PolygonPatternSymbolizer file="symbols/glacier2.png"/>
     </Rule>
     <Rule>
       <Filter>[waterway] = 'dock' or [waterway] = 'mill_pond' or [waterway]='canal'</Filter>
@@ -6695,17 +6695,17 @@ Note: feel free to leave password, host, port, or use blank
     <Rule>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <Filter>[natural] = 'marsh' or [natural] = 'wetland'</Filter>
-      <PolygonPatternSymbolizer file="bw-symbols/marsh.png"/>
+      <PolygonPatternSymbolizer file="symbols/marsh.png"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'mud'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
-      <PolygonPatternSymbolizer file="bw-symbols/mud.png"/>
+      <PolygonPatternSymbolizer file="symbols/mud.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <Filter>[natural] = 'scrub'</Filter>
-      <PolygonPatternSymbolizer file="bw-symbols/scrub.png"/>
+      <PolygonPatternSymbolizer file="symbols/scrub.png"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'land'</Filter>
@@ -7287,7 +7287,7 @@ Note: feel free to leave password, host, port, or use blank
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       
       <Filter>[waterway]='lock_gate'</Filter>
-      <PointSymbolizer file="bw-symbols/lock_gate.png"/>
+      <PointSymbolizer file="symbols/lock_gate.png"/>
 </Rule>
 </Style>
 <Layer name="dam" status="on" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
@@ -7975,13 +7975,13 @@ Note: feel free to leave password, host, port, or use blank
       <Filter>[aerialway] = 'cable_car' or [aerialway]='gondola' or [aerialway]='goods'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <LinePatternSymbolizer file="bw-symbols/cable_car.png"/>
+      <LinePatternSymbolizer file="symbols/cable_car.png"/>
     </Rule>
     <Rule>
       <Filter>[aerialway] = 'chair_lift' or [aerialway]='drag_lift'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       
-      <LinePatternSymbolizer file="bw-symbols/chair_lift.png"/>
+      <LinePatternSymbolizer file="symbols/chair_lift.png"/>
     </Rule>
 </Style>
 
@@ -8709,34 +8709,34 @@ Note: feel free to leave password, host, port, or use blank
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
       <Filter>[railway]='station' and not [disused]='yes'</Filter>
-      <PointSymbolizer file="bw-symbols/halt.png"/>
+      <PointSymbolizer file="symbols/halt.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
       <Filter>[railway]='station' and not [disused]='yes'</Filter>
-      <PointSymbolizer file="bw-symbols/station_small.png"/>
+      <PointSymbolizer file="symbols/station_small.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <Filter>[railway]='station' and [disused]='yes'</Filter>
-      <PointSymbolizer file="bw-symbols/station_disused.png"/>
+      <PointSymbolizer file="symbols/station_disused.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[railway]='station' and not [disused]='yes'</Filter>
-      <PointSymbolizer file="bw-symbols/station.png"/>
+      <PointSymbolizer file="symbols/station.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
       <Filter>[railway]='halt' or [railway]='tram_stop' or [aerialway]='station'</Filter>
-      <PointSymbolizer file="bw-symbols/halt.png"/>
+      <PointSymbolizer file="symbols/halt.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[railway]='halt' or [railway]='tram_stop' or [aerialway]='station'</Filter>
-      <PointSymbolizer file="bw-symbols/station_small.png"/>
+      <PointSymbolizer file="symbols/station_small.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
@@ -8834,7 +8834,7 @@ Note: feel free to leave password, host, port, or use blank
       <MaxScaleDenominator>1500000</MaxScaleDenominator>
       <MinScaleDenominator>400000</MinScaleDenominator>
       <Filter>[aeroway]='airport'</Filter>
-      <PointSymbolizer file="bw-symbols/airport.p.16.png"/>
+      <PointSymbolizer file="symbols/airport.p.16.png"/>
       <TextSymbolizer name="name" fontset_name="bold-fonts" size="8" fill="#909090" dy="-12" halo_radius="1" wrap_width="0"/>
     </Rule>
     <Rule>
@@ -8847,7 +8847,7 @@ Note: feel free to leave password, host, port, or use blank
       <MaxScaleDenominator>750000</MaxScaleDenominator>
       <MinScaleDenominator>400000</MinScaleDenominator>
       <Filter>[aeroway]='aerodrome'</Filter>
-      <PointSymbolizer file="bw-symbols/aerodrome.p.16.png"/>
+      <PointSymbolizer file="symbols/aerodrome.p.16.png"/>
       <TextSymbolizer name="name" fontset_name="oblique-fonts" size="8" fill="#909090" dy="-12" halo_radius="1" wrap_width="0"/>
     </Rule>
     <Rule>
@@ -8860,83 +8860,83 @@ Note: feel free to leave password, host, port, or use blank
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <MinScaleDenominator>12500</MinScaleDenominator>
       <Filter>[railway]='level_crossing'</Filter>
-      <PointSymbolizer file="bw-symbols/level_crossing.png"/>
+      <PointSymbolizer file="symbols/level_crossing.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[railway]='level_crossing'</Filter>
-      <PointSymbolizer file="bw-symbols/level_crossing2.png"/>
+      <PointSymbolizer file="symbols/level_crossing2.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[man_made]='lighthouse'</Filter>
-      <PointSymbolizer file="bw-symbols/lighthouse.p.20.png"/>
+      <PointSymbolizer file="symbols/lighthouse.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <Filter>[natural]='peak'</Filter>
-      <PointSymbolizer file="bw-symbols/peak.png"/>
+      <PointSymbolizer file="symbols/peak.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>400000</MaxScaleDenominator>
       <Filter>[natural]='volcano'</Filter>
-      <PointSymbolizer file="bw-symbols/volcano.png"/>
+      <PointSymbolizer file="symbols/volcano.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[natural]='cave_entrance'</Filter>
-      <PointSymbolizer file="bw-symbols/poi_cave.p.16.png"/>
+      <PointSymbolizer file="symbols/poi_cave.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <Filter>[natural]='spring'</Filter>
-      <PointSymbolizer file="bw-symbols/spring.png"/>
+      <PointSymbolizer file="symbols/spring.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[natural]='tree'</Filter>
-      <PointSymbolizer file="bw-symbols/tree.png"/>
+      <PointSymbolizer file="symbols/tree.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[natural]='tree'</Filter>
-      <PointSymbolizer file="bw-symbols/tree2.png"/>
+      <PointSymbolizer file="symbols/tree2.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[man_made]='power_wind' or ([power]='generator' and [power_source] = 'wind')</Filter>
-      <PointSymbolizer file="bw-symbols/power_wind.png"/>
+      <PointSymbolizer file="symbols/power_wind.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[man_made]='windmill'</Filter>
-      <PointSymbolizer file="bw-symbols/windmill.png"/>
+      <PointSymbolizer file="symbols/windmill.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[man_made]='mast'</Filter>
-      <PointSymbolizer file="bw-symbols/communications.p.20.png"/>
+      <PointSymbolizer file="symbols/communications.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[highway]='mini_roundabout'</Filter>
-      <PointSymbolizer file="bw-symbols/mini_round.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/mini_round.png" allow_overlap="false"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[highway]='gate' or [barrier]='gate'</Filter>
-      <PointSymbolizer file="bw-symbols/gate2.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/gate2.png" allow_overlap="false"/>
     </Rule>
     <Rule> 
  	<MaxScaleDenominator>12500</MaxScaleDenominator> 
  	<Filter>[barrier]='lift_gate'</Filter> 
- 	<PointSymbolizer file="bw-symbols/liftgate.png" allow_overlap="false"/> 
+ 	<PointSymbolizer file="symbols/liftgate.png" allow_overlap="false"/> 
     </Rule> 
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[barrier]='bollard' or [barrier]='block'</Filter>
-      <PointSymbolizer file="bw-symbols/bollard.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/bollard.png" allow_overlap="false"/>
     </Rule>
 </Style>
 
@@ -9013,328 +9013,328 @@ Note: feel free to leave password, host, port, or use blank
      <Rule>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <Filter>[tourism]='alpine_hut'</Filter>
-      <PointSymbolizer file="bw-symbols/alpinehut.p.16.png"/>
+      <PointSymbolizer file="symbols/alpinehut.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <Filter>[amenity]='shelter'</Filter>
-      <PointSymbolizer file="bw-symbols/shelter2.p.16.png"/>
+      <PointSymbolizer file="symbols/shelter2.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='atm'</Filter>
-      <PointSymbolizer file="bw-symbols/atm2.p.16.png"/>
+      <PointSymbolizer file="symbols/atm2.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='bank'</Filter>
-      <PointSymbolizer file="bw-symbols/bank2.p.16.png"/>
+      <PointSymbolizer file="symbols/bank2.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='bar'</Filter>
-      <PointSymbolizer file="bw-symbols/bar.p.20.png"/>
+      <PointSymbolizer file="symbols/bar.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='bicycle_rental'</Filter>
-      <PointSymbolizer file="bw-symbols/rental_bicycle.p.20.png"/>
+      <PointSymbolizer file="symbols/rental_bicycle.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
       <Filter>[amenity]='bus_stop' or [highway]='bus_stop'</Filter>
-      <PointSymbolizer file="bw-symbols/bus_stop_small.png"/>
+      <PointSymbolizer file="symbols/bus_stop_small.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='bus_stop' or [highway]='bus_stop'</Filter>
-      <PointSymbolizer file="bw-symbols/bus_stop.p.12.png"/>
+      <PointSymbolizer file="symbols/bus_stop.p.12.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='bus_station'</Filter>
-      <PointSymbolizer file="bw-symbols/bus_station.n.16.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/bus_station.n.16.png" allow_overlap="false"/>
     </Rule>
     <Rule>
     <MaxScaleDenominator>5000</MaxScaleDenominator>
     <Filter>[highway]='traffic_signals'</Filter>
-    <PointSymbolizer file="bw-symbols/traffic_light.png"/>
+    <PointSymbolizer file="symbols/traffic_light.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='cafe'</Filter>
-      <PointSymbolizer file="bw-symbols/cafe.p.16.png"/>
+      <PointSymbolizer file="symbols/cafe.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[tourism]='camp_site'</Filter>
-      <PointSymbolizer file="bw-symbols/camping.n.16.png"/>
+      <PointSymbolizer file="symbols/camping.n.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[highway]='ford'</Filter>
-      <PointSymbolizer file="bw-symbols/transport_ford.p.16.png"/>
+      <PointSymbolizer file="symbols/transport_ford.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[tourism]='caravan_site'</Filter>
-      <PointSymbolizer file="bw-symbols/caravan_park.p.24.png"/>
+      <PointSymbolizer file="symbols/caravan_park.p.24.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='car_sharing'</Filter>
-      <PointSymbolizer file="bw-symbols/car_share.p.16.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/car_share.p.16.png" allow_overlap="false"/>
     </Rule>
      <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='cinema'</Filter>
-      <PointSymbolizer file="bw-symbols/cinema.p.24.png"/>
+      <PointSymbolizer file="symbols/cinema.p.24.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='fire_station'</Filter>
-      <PointSymbolizer file="bw-symbols/firestation.p.16.png"/>
+      <PointSymbolizer file="symbols/firestation.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='fuel'</Filter>
-      <PointSymbolizer file="bw-symbols/fuel.p.16.png"/>
+      <PointSymbolizer file="symbols/fuel.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[tourism]='guest_house' or [tourism]='bed_and_breakfast'</Filter>
-      <PointSymbolizer file="bw-symbols/guest_house.p.16.png"/>
+      <PointSymbolizer file="symbols/guest_house.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[amenity]='hospital'</Filter>
-      <PointSymbolizer file="bw-symbols/hospital.p.16.png"/>
+      <PointSymbolizer file="symbols/hospital.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[tourism]='hostel'</Filter>
-      <PointSymbolizer file="bw-symbols/hostel.p.20.png"/>
+      <PointSymbolizer file="symbols/hostel.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[tourism]='hotel'</Filter>
-      <PointSymbolizer file="bw-symbols/hotel2.p.20.png"/>
+      <PointSymbolizer file="symbols/hotel2.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[tourism]='information'</Filter>
-      <PointSymbolizer file="bw-symbols/information.p.16.png"/>
+      <PointSymbolizer file="symbols/information.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='embassy'</Filter>
-      <PointSymbolizer file="bw-symbols/embassy.png"/>
+      <PointSymbolizer file="symbols/embassy.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='library'</Filter>
-      <PointSymbolizer file="bw-symbols/library.p.20.png"/>
+      <PointSymbolizer file="symbols/library.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[waterway]='lock' or [lock]='yes'</Filter>
-      <PointSymbolizer file="bw-symbols/lock_gate.png"/>
+      <PointSymbolizer file="symbols/lock_gate.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[man_made]='mast'</Filter>
-      <PointSymbolizer file="bw-symbols/communications.p.20.png"/>
+      <PointSymbolizer file="symbols/communications.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[tourism]='museum'</Filter>
-      <PointSymbolizer file="bw-symbols/museum.p.16.png"/>
+      <PointSymbolizer file="symbols/museum.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[amenity]='parking' and ([access] = 'public' or not [access] &lt;> '')</Filter>
-      <PointSymbolizer file="bw-symbols/parking.p.16.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/parking.p.16.png" allow_overlap="false"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <Filter>[amenity]='parking' and ([access] &lt;> '' and not [access] = 'public')</Filter>
-      <PointSymbolizer file="bw-symbols/parking_private.p.16.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/parking_private.p.16.png" allow_overlap="false"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='pharmacy'</Filter>
-      <PointSymbolizer file="bw-symbols/pharmacy.p.16.png"/>
+      <PointSymbolizer file="symbols/pharmacy.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='place_of_worship' and [religion] = 'christian'</Filter>
-      <PointSymbolizer file="bw-symbols/christian3.p.14.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/christian3.p.14.png" allow_overlap="false"/>
      </Rule>
      <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='place_of_worship' and [religion] = 'muslim'</Filter>
-      <PointSymbolizer file="bw-symbols/islamic3.p.16.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/islamic3.p.16.png" allow_overlap="false"/>
      </Rule>
      <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='place_of_worship' and [religion] = 'sikh'</Filter>
-      <PointSymbolizer file="bw-symbols/sikh3.p.16.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/sikh3.p.16.png" allow_overlap="false"/>
      </Rule>
      <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='place_of_worship' and [religion] = 'jewish'</Filter>
-      <PointSymbolizer file="bw-symbols/jewish3.p.16.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/jewish3.p.16.png" allow_overlap="false"/>
      </Rule>
      <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='place_of_worship'</Filter>
-      <PointSymbolizer file="bw-symbols/place_of_worship3.p.16.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/place_of_worship3.p.16.png" allow_overlap="false"/>
      </Rule>
      <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='police'</Filter>
-      <PointSymbolizer file="bw-symbols/police.p.16.png"/>
+      <PointSymbolizer file="symbols/police.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='post_box'</Filter>
-      <PointSymbolizer file="bw-symbols/post_box.p.16.png"/>
+      <PointSymbolizer file="symbols/post_box.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='post_office'</Filter>
-      <PointSymbolizer file="bw-symbols/post_office.p.16.png"/>
+      <PointSymbolizer file="symbols/post_office.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='pub' or [amenity]='biergarten'</Filter>
-      <PointSymbolizer file="bw-symbols/pub.p.16.png"/>
+      <PointSymbolizer file="symbols/pub.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[amenity]='recycling'</Filter>
-      <PointSymbolizer file="bw-symbols/recycling.p.16.png"/>
+      <PointSymbolizer file="symbols/recycling.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='restaurant'</Filter>
-      <PointSymbolizer file="bw-symbols/restaurant.p.16.png"/>
+      <PointSymbolizer file="symbols/restaurant.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='fast_food'</Filter>
-      <PointSymbolizer file="bw-symbols/fast_food.png"/>
+      <PointSymbolizer file="symbols/fast_food.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='telephone'</Filter>
-      <PointSymbolizer file="bw-symbols/telephone.p.16.png"/>
+      <PointSymbolizer file="symbols/telephone.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='emergency_phone'</Filter>
-      <PointSymbolizer file="bw-symbols/sosphone.png"/>
+      <PointSymbolizer file="symbols/sosphone.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='theatre'</Filter>
-      <PointSymbolizer file="bw-symbols/theatre.p.20.png"/>
+      <PointSymbolizer file="symbols/theatre.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='toilets'</Filter>
-      <PointSymbolizer file="bw-symbols/toilets.p.20.png"/>
+      <PointSymbolizer file="symbols/toilets.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator> 
       <Filter>[amenity]='drinking_water'</Filter> 
-      <PointSymbolizer file="bw-symbols/food_drinkingtap.p.20.png"/> 
+      <PointSymbolizer file="symbols/food_drinkingtap.p.20.png"/> 
     </Rule> 
     <Rule> 
       <MaxScaleDenominator>12500</MaxScaleDenominator> 
       <Filter>[amenity]='prison'</Filter> 
-      <PointSymbolizer file="bw-symbols/amenity_prison.p.20.png"/> 
+      <PointSymbolizer file="symbols/amenity_prison.p.20.png"/> 
     </Rule> 
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[tourism]='viewpoint'</Filter>
-      <PointSymbolizer file="bw-symbols/view_point.p.16.png"/>
+      <PointSymbolizer file="symbols/view_point.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[man_made]='water_tower'</Filter>
-      <PointSymbolizer file="bw-symbols/tower_water.p.20.png"/>
+      <PointSymbolizer file="symbols/tower_water.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[historic]='memorial'</Filter>
-      <PointSymbolizer file="bw-symbols/tourist_memorial.p.20.png"/>
+      <PointSymbolizer file="symbols/tourist_memorial.p.20.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[historic]='archaeological_site'</Filter>
-      <PointSymbolizer file="bw-symbols/tourist_archaeological2.glow.16.png"/>
+      <PointSymbolizer file="symbols/tourist_archaeological2.glow.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[shop]='supermarket'</Filter>
-      <PointSymbolizer file="bw-symbols/shop_supermarket.p.16.png"/>
+      <PointSymbolizer file="symbols/shop_supermarket.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='bakery'</Filter>
-      <PointSymbolizer file="bw-symbols/shop_bakery.p.16.png"/>
+      <PointSymbolizer file="symbols/shop_bakery.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='butcher'</Filter>
-      <PointSymbolizer file="bw-symbols/shop_butcher.png"/>
+      <PointSymbolizer file="symbols/shop_butcher.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='clothes' or [shop]='fashion'</Filter>
-      <PointSymbolizer file="bw-symbols/shop_clothes.p.16.png"/>
+      <PointSymbolizer file="symbols/shop_clothes.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='convenience'</Filter>
-      <PointSymbolizer file="bw-symbols/shop_convenience.p.16.png"/>
+      <PointSymbolizer file="symbols/shop_convenience.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
       <Filter>[shop]='department_store'</Filter>
-      <PointSymbolizer file="bw-symbols/department_store.p.16.png"/>
+      <PointSymbolizer file="symbols/department_store.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='doityourself'</Filter>
-      <PointSymbolizer file="bw-symbols/shop_diy.p.16.png"/>
+      <PointSymbolizer file="symbols/shop_diy.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='hairdresser'</Filter>
-      <PointSymbolizer file="bw-symbols/shop_hairdresser.p.16.png"/>
+      <PointSymbolizer file="symbols/shop_hairdresser.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='car'</Filter>
-      <PointSymbolizer file="bw-symbols/shopping_car.p.16.png"/>
+      <PointSymbolizer file="symbols/shopping_car.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='car_repair'</Filter>
-      <PointSymbolizer file="bw-symbols/shopping_car_repair.p.16.png"/>
+      <PointSymbolizer file="symbols/shopping_car_repair.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[shop]='bicycle'</Filter>
-      <PointSymbolizer file="bw-symbols/shopping_bicycle.p.16.png"/>
+      <PointSymbolizer file="symbols/shopping_bicycle.p.16.png"/>
     </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[leisure]='playground'</Filter>
-      <PointSymbolizer file="bw-symbols/playground.p.20.png"/>
+      <PointSymbolizer file="symbols/playground.p.20.png"/>
     </Rule>
 </Style>
 
@@ -9438,13 +9438,13 @@ Note: feel free to leave password, host, port, or use blank
 <Style name="power_towers">
     <Rule>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
-      <PointSymbolizer file="bw-symbols/power_tower.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/power_tower.png" allow_overlap="false"/>
     </Rule>
 </Style>
 <Style name="power_poles">
     <Rule>
       <MaxScaleDenominator>12500</MaxScaleDenominator>
-      <PointSymbolizer file="bw-symbols/power_pole.png" allow_overlap="false"/>
+      <PointSymbolizer file="symbols/power_pole.png" allow_overlap="false"/>
     </Rule>
 </Style>
 <Layer name="power_line" status="on" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">

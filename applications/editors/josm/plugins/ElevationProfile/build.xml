@@ -33,7 +33,6 @@
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="plugin.dist.dir"        value="../../dist"/>
     <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="plugin.src.zip"         value="${plugin.dist.dir}/${ant.project.name}-src.zip"/>
 
     <!--
     **********************************************************
@@ -98,7 +97,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.elevation.ElevationProfilePlugin"/>
                 <attribute name="Plugin-Date" value="24.10.10"/>
                 <attribute name="Plugin-Description" value="Shows the elevation profile and some statistical data of a GPX track."/>
-            	<attribute name="de_Plugin-Description" value="Zeigt das Höhenprofil und statistische Werte eines GPX Tracks."/>
+            	<attribute name="de_Plugin-Description" value="Zeigt das Höhenprofil und statistische Werte eines GPX-Tracks."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile"/>
                 <attribute name="Plugin-Mainversion" value="3529"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

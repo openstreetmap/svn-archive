@@ -98,17 +98,14 @@ public class UnconnectedWays extends Test
             for(Node en : s.nearbyNodes(mindist)) {
                 if (en == null)
                     continue;
-                //if("turning_circle".equals(en.get("highway")) ||
-                //        (isexit != null && isexit) || en.get("barrier") != null)
-                //    c4++;
                 if(!s.highway)
                     continue;
                 if (!endnodes_highway.contains(en))
                     continue;
-                Boolean isexit = OsmUtils.getOsmBoolean(en.get("noexit"));
-                if("turning_circle".equals(en.get("highway")) ||
-                   "bus_stop".equals(en.get("highway")) ||
-                  (isexit != null && isexit) || en.get("barrier") != null)
+                if("turning_circle".equals(en.get("highway")) 
+                    || "bus_stop".equals(en.get("highway")) 
+                    || OsmUtils.isTrue(en.get("noexit"))
+                    || en.hasKey("barrier"))
                     continue;
                 // There's a small false-positive here.  Imagine an intersection
                 // like a 't'.  If the top part of the 't' is short enough, it
@@ -212,7 +209,7 @@ public class UnconnectedWays extends Test
             this.w = w;
             String railway = w.get("railway");
             String highway = w.get("highway");
-            this.isAbandoned = "abandoned".equals(railway) || "yes".equals(w.get("disused"));
+            this.isAbandoned = "abandoned".equals(railway) || OsmUtils.isTrue(w.get("disused"));
             this.highway = (highway != null || railway != null) && !isAbandoned;
             this.isBoundary = !this.highway && "administrative".equals(w.get("boundary"));
             line = new Line2D.Double(n1.getEastNorth().east(), n1.getEastNorth().north(),
@@ -325,9 +322,10 @@ public class UnconnectedWays extends Test
         }
 
         public boolean isArea() {
-            return w.get("landuse") != null
-                || w.get("leisure") != null
-                || w.get("building") != null;
+            return w.hasKey("landuse")
+                || w.hasKey("leisure")
+                || w.hasKey("amenity")
+                || w.hasKey("building");
         }
     }
 
@@ -335,7 +333,7 @@ public class UnconnectedWays extends Test
     {
         List<MyWaySegment> ret = new ArrayList<MyWaySegment>();
         if (!w.isUsable()
-            || w.get("barrier") != null
+            || w.hasKey("barrier")
             || "cliff".equals(w.get("natural")))
             return ret;
 
@@ -359,7 +357,7 @@ public class UnconnectedWays extends Test
     {
         ways.addAll(getWaySegments(w));
         Set<Node> set = endnodes;
-        if(w.get("highway") != null || w.get("railway") != null)
+        if(w.hasKey("highway") || w.hasKey("railway"))
             set = endnodes_highway;
         addNode(w.firstNode(), set);
         addNode(w.lastNode(), set);

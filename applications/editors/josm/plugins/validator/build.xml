@@ -25,7 +25,7 @@
 	<!--
 	  ** update before publishing
 	-->
-	<property name="commit.message" value="i18n fix" />
+	<property name="commit.message" value="see JOSM # 5574 (patch by julianladisch) - do not warn for endpoint near border of amenity area" />
 	<property name="plugin.main.version" value="3408" />
 
 

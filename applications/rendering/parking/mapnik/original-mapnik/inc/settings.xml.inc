@@ -3,7 +3,7 @@ Settings for symbols, the spatial reference of your postgis tables, coastline sh
 -->
 
 <!-- use 'symbols' unless you have moved the symbols directory -->
-<!ENTITY symbols "bw-symbols">
+<!ENTITY symbols "symbols">
 
 <!-- use the '&srs900913;' entity if you have called osm2pgsql without special flags (or with -m); use '&srs4326;' if you have used -l -->
 <!ENTITY osm2pgsql_projection "&srs900913;">

@@ -18,9 +18,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -35,7 +33,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -56,7 +53,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * @author Oliver
- * 
+ * Implements a JOSM ToggleDialog to show the elevation profile. It monitors the 
+ * connection between layer and elevation profile. 
  */
 public class ElevationProfileDialog extends ToggleDialog implements
 		PropertyChangeListener, LayerChangeListener, EditLayerChangeListener,
@@ -67,25 +65,31 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	 * 
 	 */
 	private static final long serialVersionUID = -868463893732535577L;
-	private JLabel minHeightLabel;
-	private JLabel maxHeightLabel;
-
+	/* Elevation profile instance */
 	private IElevationProfile profile;
-	private ElevationProfilePanel profPanel;
+	/* GPX data */
 	private GpxLayer activeLayer = null;
 	private HashMap<GpxLayer, ElevationModel> layerMap = new HashMap<GpxLayer, ElevationModel>();
-	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
+	
+	/* UI elements */
+	private ElevationProfilePanel profPanel;
+	private JLabel minHeightLabel;
+	private JLabel maxHeightLabel;
 	private JLabel avrgHeightLabel;
 	private JLabel elevationGainLabel;
 	private JLabel totalTimeLabel;
-
+	private JLabel distLabel;
 	private JRadioButton geoidNone;
 	private JRadioButton geoidAuto;
 	private JRadioButton geoidFixed;
 	private JTextField geoidFixedValue;
+	/* Listener to the elevation model */
+	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
 	
-	private ElevationProfileLayer profileLayer;
-	private JLabel distLabel;
+	/**
+	 * Corresponding layer instance within map view.
+	 */
+	private ElevationProfileLayer profileLayer;	
 
 	/**
 	 * Default constructor
@@ -383,12 +387,19 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.MapView.LayerChangeListener#activeLayerChange(org.openstreetmap.josm.gui.layer.Layer, org.openstreetmap.josm.gui.layer.Layer)
+	 */
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
 		if (newLayer instanceof GpxLayer) {
 			setActiveLayer((GpxLayer) newLayer);
 		}
 	}
 
+	/**
+	 * Internal helper to create elevation data for a new layer.
+	 * @param newLayer The layer added by the user.
+	 */
 	private void createLayer(Layer newLayer) {
 		if (newLayer != null) {
 			if (newLayer instanceof GpxLayer) {
@@ -399,6 +410,10 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		}
 	}
 
+	/**
+	 * Internal helper to update internal cache and synchronize elevation model.
+	 * @param newLayer The layer added by the user.
+	 */
 	private void setActiveLayer(GpxLayer newLayer) {
 		if (activeLayer != newLayer) {
 			int slices = 250;
@@ -415,18 +430,22 @@ public class ElevationProfileDialog extends ToggleDialog implements
 			
 			ElevationModel em = layerMap.get(newLayer);
 			em.setSliceSize(slices);
-			setModel(em);
-			
+			setModel(em);			
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.MapView.LayerChangeListener#layerAdded(org.openstreetmap.josm.gui.layer.Layer)
+	 */
 	public void layerAdded(Layer newLayer) {
 		createLayer(newLayer);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.MapView.LayerChangeListener#layerRemoved(org.openstreetmap.josm.gui.layer.Layer)
+	 */
 	public void layerRemoved(Layer oldLayer) {
 		if (layerMap.containsKey(oldLayer)) {
-			// TODO: Handle UI stuff properly
 			layerMap.remove(oldLayer);
 		}
 		if (layerMap.size() == 0) {
@@ -435,6 +454,9 @@ public class ElevationProfileDialog extends ToggleDialog implements
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.MapView.EditLayerChangeListener#editLayerChanged(org.openstreetmap.josm.gui.layer.OsmDataLayer, org.openstreetmap.josm.gui.layer.OsmDataLayer)
+	 */
 	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
 		// Nothing to do...
 	}

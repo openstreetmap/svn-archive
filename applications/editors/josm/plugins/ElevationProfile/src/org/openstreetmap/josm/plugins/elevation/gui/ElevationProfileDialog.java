@@ -291,13 +291,13 @@ public class ElevationProfileDialog extends ToggleDialog implements
 			if (profile.hasElevationData()) {
 			// Show elevation data
 			minHeightLabel.setText(
-					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getMinHeight()));
+					WayPointHelper.getElevationText(profile.getMinHeight()));
 			maxHeightLabel.setText(
-					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getMaxHeight()));
+					WayPointHelper.getElevationText(profile.getMaxHeight()));
 			avrgHeightLabel.setText(
-					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getAverageHeight()));
+					WayPointHelper.getElevationText(profile.getAverageHeight()));
 			elevationGainLabel.setText(
-					NavigatableComponent.getSystemOfMeasurement().getDistText(profile.getGain()));
+					WayPointHelper.getElevationText(profile.getGain()));
 			}
 			
 			// compute values for time and distance

@@ -230,10 +230,10 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 * @param y The y coordinate.
 	 * @param g The graphics context.
 	 * @return The resulting rectangle of the drawn string.
-	 */
+	 
 	private void drawHCenteredString(String s, int x, int y, Graphics g) {
 		drawAlignedString(s, x, y, TextAlignment.Centered, g);
-	}
+	}*/
 
 	/**
 	 * Formats the date in a predefined manner: "21. Oct 2010, 12:10".
@@ -268,7 +268,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
 			// check bounds
 			if (yLine <= getPlotBottom() && yLine >= getPlotTop()) {
-				String txt = String.format("%dm", i);
+				String txt = WayPointHelper.getElevationText(i);
 				
 				Rectangle r = drawAlignedString(txt, getPlotHCenter(), yLine - 2,
 						TextAlignment.Right, g);

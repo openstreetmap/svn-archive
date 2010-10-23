@@ -193,15 +193,15 @@ public class DefaultElevationProfileRenderer implements
 		}
 
 		if (kind == ElevationWayPointKind.ElevationLevelGain) {
-			drawLabelWithTriangle(String.format("%dm", ele), pnt.x, pnt.y
+			drawLabelWithTriangle(WayPointHelper.getElevationText(ele), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight(), g, c, 8, 
 					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationGain),
 					TriangleDir.Up);
 		}
 		
 		if (kind == ElevationWayPointKind.ElevationLevelLoss) {
-			drawLabelWithTriangle(String.format("%dm", ele), pnt.x, pnt.y
-					+ g.getFontMetrics().getHeight(), g, c, 8, 
+			drawLabelWithTriangle(WayPointHelper.getElevationText(ele), 
+					pnt.x, pnt.y+ g.getFontMetrics().getHeight(), g, c, 8, 
 					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationLoss),
 					TriangleDir.Down);
 		}
@@ -213,7 +213,7 @@ public class DefaultElevationProfileRenderer implements
 			drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, BIG_WPT_RADIUS);
 			drawLabel(String.format("%02d:%02d", hour, min), pnt.x, pnt.y
 					- g.getFontMetrics().getHeight() - 5, g);
-			drawLabel(String.format("%dm", eleH), pnt.x, pnt.y
+			drawLabel(WayPointHelper.getElevationText(eleH), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight() + 5, g);
 		}
 	}
@@ -261,7 +261,7 @@ public class DefaultElevationProfileRenderer implements
 		drawRegularTriangle(g, c, td, pnt.x, pnt.y,
 				DefaultElevationProfileRenderer.TRIANGLE_BASESIZE);
 
-		drawLabel(String.format("%dm", eleH), pnt.x, pnt.y
+		drawLabel(WayPointHelper.getElevationText(eleH), pnt.x, pnt.y
 				+ g.getFontMetrics().getHeight(), g, c);
 	}
 

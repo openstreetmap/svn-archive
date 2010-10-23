@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
@@ -26,13 +27,32 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
  *         attributes.
  */
 public class WayPointHelper {
+	public static double METER_TO_FEET = 3.280948;
+	
+	/* Countries which use the imperial system instead of the metric system. */
+	private static String IMPERIAL_SYSTEM_COUNTRIES[] = {
+		"en_US", 	/* USA */
+		"en_CA",	/* Canada */
+		"en_GB",	/* Great Britain */
+		"en_AU",	/* Australia */
+		"en_NZ",	/* New Zealand */
+//		"de_DE",	/* for testing only */
+		"en_ZA"	/* South Africa */
+	};
+	
 	/**
 	 * The name of the elevation height of a way point.
 	 */
 	public static final String HEIGHT_ATTRIBUTE = "ele";
-
+	
+	private static UnitMode unitMode = UnitMode.NotSelected;
+		
 	private static GeoidCorrectionKind geoidKind = GeoidCorrectionKind.None;
 
+	/**
+	 * Gets the current mode of GEOID correction.
+	 * @return
+	 */
 	public static GeoidCorrectionKind getGeoidKind() {
 		return geoidKind;
 	}
@@ -40,9 +60,53 @@ public class WayPointHelper {
 	public static void setGeoidKind(GeoidCorrectionKind geoidKind) {
 		WayPointHelper.geoidKind = geoidKind;
 	}
-
+	
 	/**
-	 * Gets the elevation (Z coordinate) of a JOSM way point.
+	 * Gets the current unit mode (metric or imperial).
+	 * @return
+	 */
+	public static UnitMode getUnitMode() {
+		//TODO: Use this until /JOSM/src/org/openstreetmap/josm/gui/NavigatableComponent.java 
+		// has a an appropriate method 
+		
+		// unit mode already determined?
+		if (unitMode != UnitMode.NotSelected) {
+			return unitMode;
+		}
+		
+		// Set default
+		unitMode = UnitMode.Metric;
+		
+		// Check if user could prefer imperial system 
+		Locale l = Locale.getDefault();		
+		for (int i = 0; i < IMPERIAL_SYSTEM_COUNTRIES.length; i++) {
+			String ctry = l.toString();
+			if (IMPERIAL_SYSTEM_COUNTRIES[i].equals(ctry)) {
+				unitMode = UnitMode.Imperial;
+			}
+		}
+		
+		return unitMode;
+	}
+	
+	/**
+	 * Gets the unit string for elevation ("m" or "ft").
+	 * @return
+	 */
+	public static String getUnit() {		
+		switch (getUnitMode()) {
+		case Metric:
+			return "m";
+		case Imperial:
+			return "ft";
+		default:
+			throw new RuntimeException("Invalid or unsupported unit mode: " + unitMode);
+		}
+	}
+	
+	/**
+	 * Gets the elevation (Z coordinate) of a GPX way point in meter or feet (for
+	 * US, UK, ZA, AU, NZ and CA). 
 	 * 
 	 * @param wpt
 	 *            The way point instance.
@@ -50,6 +114,34 @@ public class WayPointHelper {
 	 *         not height attribute.
 	 */
 	public static double getElevation(WayPoint wpt) {
+		double ele = getInternalElevation(wpt);
+
+		if (getUnitMode() == UnitMode.Imperial) {
+				// translate to feet
+				return ele * METER_TO_FEET;
+		}	
+		
+		return ele;
+	}
+	
+	/**
+	 * Gets the elevation string for a given elevation, e. g "300m" or "800ft".
+	 * @param elevation
+	 * @return
+	 */
+	public static String getElevationText(int elevation) {
+		return String.format("%d %s", elevation, getUnit());
+	}
+
+	/**
+	 * Gets the elevation (Z coordinate) of a GPX way point.
+	 * 
+	 * @param wpt
+	 *            The way point instance.
+	 * @return The x coordinate or 0, if the given way point is null or contains
+	 *         not height attribute.
+	 */
+	private static double getInternalElevation(WayPoint wpt) {
 		if (wpt != null) {
 			if (!wpt.attr.containsKey(HEIGHT_ATTRIBUTE)) {
 				return 0;

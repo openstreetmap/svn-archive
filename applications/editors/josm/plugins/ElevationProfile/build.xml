@@ -104,12 +104,7 @@
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             	<attribute name="Plugin-Icon" value="images/elevation.png"/>
             </manifest>
-        </jar>
-        <!-- Zip source files -->
-        <zip destfile="${plugin.src.zip}">
-			<fileset dir="." includes="**/*.java"/>
-		    <fileset dir="." includes="build.xml,README,LICENSE"/>
-		</zip>
+        </jar>        
     </target>
 
     <!--

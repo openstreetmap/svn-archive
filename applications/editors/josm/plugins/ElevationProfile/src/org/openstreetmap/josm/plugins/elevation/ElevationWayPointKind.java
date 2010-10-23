@@ -27,6 +27,7 @@ public enum ElevationWayPointKind {
 	MinElevation,		// Lowest way point 
 	ElevationGain,		// Elevation gain
 	ElevationLoss,		// Elevation loss	
-	ElevationLevel,		// Elevation level (e. g. crossed 300m)
+	ElevationLevelGain,		// Elevation level gain (e. g. crossed 300m from lower elevation)
+	ElevationLevelLoss,		// Elevation level (e. g. crossed 300m from higher elevation)
 	FullHour			// Full Hour	
 }

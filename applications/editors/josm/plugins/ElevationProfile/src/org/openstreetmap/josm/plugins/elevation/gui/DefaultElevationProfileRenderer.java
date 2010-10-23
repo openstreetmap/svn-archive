@@ -53,7 +53,7 @@ public class DefaultElevationProfileRenderer implements
 	private static final int BASIC_WPT_RADIUS = 2;
 	private static final int REGULAR_WPT_RADIUS = BASIC_WPT_RADIUS * 4;
 	private static final int BIG_WPT_RADIUS = BASIC_WPT_RADIUS * 10;
-	
+
 	// predefined colors
 	private static final Color HIGH_COLOR = ElevationColors.EPMidBlue;
 	private static final Color LOW_COLOR = ElevationColors.EPMidBlue;
@@ -64,7 +64,7 @@ public class DefaultElevationProfileRenderer implements
 	private static final double RAD_180 = Math.PI;
 	// private static final double RAD_270 = Math.PI * 1.5;
 	private static final double RAD_90 = Math.PI * 0.5;
-	
+
 	private List<Rectangle> forbiddenRects = new ArrayList<Rectangle>();
 
 	/*
@@ -90,7 +90,8 @@ public class DefaultElevationProfileRenderer implements
 
 		switch (kind) {
 		case Plain:
-		case ElevationLevel:
+		case ElevationLevelLoss:
+		case ElevationLevelGain:
 			if (z > profile.getAverageHeight()) {
 				return HIGH_COLOR;
 			} else {
@@ -108,7 +109,7 @@ public class DefaultElevationProfileRenderer implements
 			return HIGH_COLOR;
 		case MinElevation:
 			return LOW_COLOR;
-		
+
 		case StartPoint:
 			return START_COLOR;
 		case EndPoint:
@@ -178,29 +179,42 @@ public class DefaultElevationProfileRenderer implements
 		}
 
 		Point pnt = mv.getPoint(wpt.getEastNorth());
-
+		int ele = ((int) Math.rint(WayPointHelper.getElevation(wpt) / 100.0)) * 100;
+		
 		int rad = REGULAR_WPT_RADIUS;
 		g.setColor(c);
-		//g.drawOval(pnt.x - rad, pnt.y - rad, r2, r2);
+		// g.drawOval(pnt.x - rad, pnt.y - rad, r2, r2);
 		drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, rad);
-		
+
 		if (kind == ElevationWayPointKind.FullHour) {
-			int hour = WayPointHelper.getHourOfWayPoint(wpt);			
-			drawLabel(String.format("%02d:00", hour), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g);
+			int hour = WayPointHelper.getHourOfWayPoint(wpt);
+			drawLabel(String.format("%02d:00", hour), pnt.x, pnt.y
+					+ g.getFontMetrics().getHeight(), g);
+		}
+
+		if (kind == ElevationWayPointKind.ElevationLevelGain) {
+			drawLabelWithTriangle(String.format("%dm", ele), pnt.x, pnt.y
+					+ g.getFontMetrics().getHeight(), g, c, 8, 
+					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationGain),
+					TriangleDir.Up);
 		}
 		
-		if (kind == ElevationWayPointKind.ElevationLevel) {
-			int ele = ((int)Math.rint(WayPointHelper.getElevation(wpt) / 100.0)) * 100;						
-			drawLabel(String.format("%dm", ele), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g, c);
+		if (kind == ElevationWayPointKind.ElevationLevelLoss) {
+			drawLabelWithTriangle(String.format("%dm", ele), pnt.x, pnt.y
+					+ g.getFontMetrics().getHeight(), g, c, 8, 
+					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationLoss),
+					TriangleDir.Down);
 		}
-		
+
 		if (kind == ElevationWayPointKind.Highlighted) {
 			int eleH = (int) WayPointHelper.getElevation(wpt);
-			int hour = WayPointHelper.getHourOfWayPoint(wpt);			
+			int hour = WayPointHelper.getHourOfWayPoint(wpt);
 			int min = WayPointHelper.getMinuteOfWayPoint(wpt);
 			drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, BIG_WPT_RADIUS);
-			drawLabel(String.format("%02d:%02d", hour, min), pnt.x, pnt.y - g.getFontMetrics().getHeight() - 5, g);
-			drawLabel(String.format("%dm", eleH), pnt.x, pnt.y + g.getFontMetrics().getHeight() + 5, g);
+			drawLabel(String.format("%02d:%02d", hour, min), pnt.x, pnt.y
+					- g.getFontMetrics().getHeight() - 5, g);
+			drawLabel(String.format("%dm", eleH), pnt.x, pnt.y
+					+ g.getFontMetrics().getHeight() + 5, g);
 		}
 	}
 
@@ -244,14 +258,15 @@ public class DefaultElevationProfileRenderer implements
 			return; // nothing to do
 		}
 
-		paintRegularTriangle(g, c, td, pnt.x, pnt.y,
+		drawRegularTriangle(g, c, td, pnt.x, pnt.y,
 				DefaultElevationProfileRenderer.TRIANGLE_BASESIZE);
 
-		drawLabel(String.format("%dm", eleH), pnt.x, pnt.y + g.getFontMetrics().getHeight(), g, c);
+		drawLabel(String.format("%dm", eleH), pnt.x, pnt.y
+				+ g.getFontMetrics().getHeight(), g, c);
 	}
 
 	/**
-	 * Draw a regular triangle.
+	 * Draws a regular triangle.
 	 * 
 	 * @param g
 	 *            The graphics context.
@@ -266,7 +281,7 @@ public class DefaultElevationProfileRenderer implements
 	 * @param baseLength
 	 *            The side length in pixel of the triangle.
 	 */
-	private void paintRegularTriangle(Graphics g, Color c, TriangleDir dir,
+	private void drawRegularTriangle(Graphics g, Color c, TriangleDir dir,
 			int x, int y, int baseLength) {
 		if (baseLength < 2)
 			return; // cannot render triangle
@@ -386,60 +401,133 @@ public class DefaultElevationProfileRenderer implements
 
 	/**
 	 * Draws a label.
-	 * @param s The text to draw.
-	 * @param x The x coordinate of the label.
-	 * @param y The y coordinate of the label.
-	 * @param g The graphics context.
+	 * 
+	 * @param s
+	 *            The text to draw.
+	 * @param x
+	 *            The x coordinate of the label.
+	 * @param y
+	 *            The y coordinate of the label.
+	 * @param g
+	 *            The graphics context.
 	 */
 	private void drawLabel(String s, int x, int y, Graphics g) {
-		drawLabel(s, x, y, g, Color.BLACK);
+		drawLabel(s, x, y, g, Color.GRAY);
 	}
+
 	/**
 	 * Draws a label.
-	 * @param s The text to draw.
-	 * @param x The x coordinate of the label.
-	 * @param y The y coordinate of the label.
-	 * @param g The graphics context.
-	 * @param secondGradColor The second color of the gradient.
+	 * 
+	 * @param s
+	 *            The text to draw.
+	 * @param x
+	 *            The x coordinate of the label.
+	 * @param y
+	 *            The y coordinate of the label.
+	 * @param g
+	 *            The graphics context.
+	 * @param secondGradColor
+	 *            The second color of the gradient.
 	 */
-	private void drawLabel(String s, int x, int y, Graphics g, Color secondGradColor) {
+	private void drawLabel(String s, int x, int y, Graphics g,
+			Color secondGradColor) {
 		Graphics2D g2d = (Graphics2D) g;
 
 		int width = g.getFontMetrics(g.getFont()).stringWidth(s) + 10;
+		int height = g.getFont().getSize() + g.getFontMetrics().getLeading()
+				+ 5;
+
+		Rectangle r = new Rectangle(x - (width / 2), y - (height / 2), width,
+				height);
+
+		if (isForbiddenArea(r)) {
+			return; // no space left, skip this label
+		}
+
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		GradientPaint gradient = new GradientPaint(x, y, Color.WHITE, x, y
+				+ (height / 2), secondGradColor, false);
+		g2d.setPaint(gradient);
+
+		g2d.fillRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS,
+				ROUND_RECT_RADIUS);
+
+		g2d.setColor(Color.BLACK);
+
+		g2d.drawRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS,
+				ROUND_RECT_RADIUS);
+		g2d.drawString(s, x - (width / 2) + 5, y + (height / 2) - 3);
+
+		forbiddenRects.add(r);
+	}
+
+	/**
+	 * Draws a label with an additional triangle on the left side.
+	 * 
+	 * @param s
+	 *            The text to draw.
+	 * @param x
+	 *            The x coordinate of the label.
+	 * @param y
+	 *            The y coordinate of the label.
+	 * @param g
+	 *            The graphics context.
+	 * @param secondGradColor
+	 *            The second color of the gradient.
+	 * @param baseLength
+	 *            The base length of the triangle in pixels.
+	 * @param triangleColor
+	 *            The color of the triangle.
+	 * @param triangleDir
+	 *            The direction of the triangle.
+	 */
+	private void drawLabelWithTriangle(String s, int x, int y, Graphics g,
+			Color secondGradColor, int baseLength, Color triangleColor,
+			TriangleDir triangleDir) {
+		Graphics2D g2d = (Graphics2D) g;
+
+		int width = g.getFontMetrics(g.getFont()).stringWidth(s) + 10 + baseLength + 5;
 		int height = g.getFont().getSize() + g.getFontMetrics().getLeading() + 5;
 
 		Rectangle r = new Rectangle(x - (width / 2), y - (height / 2), width, height);
-		
-		if (isForbiddenArea(r)) { 
+
+		if (isForbiddenArea(r)) {
 			return; // no space left, skip this label
 		}
-		
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);		
-		GradientPaint gradient = new GradientPaint(x, y, Color.WHITE, x, y
-				+ (height/2), secondGradColor, false);
-		g2d.setPaint(gradient);		
 
-		
-		g2d.fillRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS, ROUND_RECT_RADIUS);
-		
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		GradientPaint gradient = new GradientPaint(x, y, Color.WHITE, x, y
+				+ (height / 2), secondGradColor, false);
+		g2d.setPaint(gradient);
+
+		g2d.fillRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS,
+				ROUND_RECT_RADIUS);
+
 		g2d.setColor(Color.BLACK);
-		
-		g2d.drawRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS, ROUND_RECT_RADIUS);		
-		g2d.drawString(s, x - (width / 2) + 5, y + (height / 2) - 3);
-		
+
+		g2d.drawRoundRect(r.x, r.y, r.width, r.height, ROUND_RECT_RADIUS,
+				ROUND_RECT_RADIUS);
+		g2d.drawString(s, x - (width / 2) + 8 + baseLength, y + (height / 2) - 3);
+		drawRegularTriangle(g2d, triangleColor, triangleDir, r.x + baseLength,
+				r.y + baseLength, baseLength);
+
 		forbiddenRects.add(r);
 	}
-	
+
 	/**
 	 * Checks, if the rectangle has been 'reserved' by a previous draw action.
-	 * @param r The area to check for.
+	 * 
+	 * @param r
+	 *            The area to check for.
 	 * @return true; if area is already occupied by another rectangle.
 	 */
 	private boolean isForbiddenArea(Rectangle r) {
-		
+
 		for (Rectangle rTest : forbiddenRects) {
-			if (r.intersects(rTest)) return true;
+			if (r.intersects(rTest))
+				return true;
 		}
 		return false;
 	}
@@ -451,6 +539,6 @@ public class DefaultElevationProfileRenderer implements
 
 	@Override
 	public void finishRendering() {
-		// nothing to do currently		
+		// nothing to do currently
 	}
 }

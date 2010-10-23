@@ -169,11 +169,18 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 					*/
 					int ele1 = (int)(ele / 100.0);
 					int ele2 = (int)(lastEle / 100.0);
-					if (ele1 != ele2) { // hour changed?
-						renderer.renderWayPoint(g, profile, mv, wpt,
-								ElevationWayPointKind.ElevationLevel);
-					} else { // check for elevation gain
-						if (ele > lastEle) {
+					
+					// Check, if we passed an elevation level
+					if (ele1 != ele2 && Math.abs(ele1 - ele2) == 1) { 
+						if (ele1 > ele2) { // we went down?
+							renderer.renderWayPoint(g, profile, mv, wpt,
+								ElevationWayPointKind.ElevationLevelGain);
+						} else {
+							renderer.renderWayPoint(g, profile, mv, wpt,
+									ElevationWayPointKind.ElevationLevelLoss);
+						}
+					} else { // check for elevation gain or loss
+						if (ele > lastEle) { // we went down?
 							renderer.renderWayPoint(g, profile, mv, wpt,
 									ElevationWayPointKind.ElevationGain);
 						} else {

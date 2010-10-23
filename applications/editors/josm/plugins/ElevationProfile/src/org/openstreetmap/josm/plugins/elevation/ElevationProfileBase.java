@@ -62,8 +62,6 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 	private int sliceSize;
 	private int gain;
 	private int lastEle;
-	private WayPoint lastWayPoint;
-
 	private static boolean ignoreZeroHeight = true;
 
 	/**
@@ -494,12 +492,5 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 			sumEle += ele;
 			lastEle = ele;			
 		}
-		
-		/*
-		if (lastWayPoint != null) {
-			double d = wp.getCoor().greatCircleDistance(lastWayPoint.getCoor());
-			dist += d;
-		}*/
-		lastWayPoint = wp;
 	}
 }

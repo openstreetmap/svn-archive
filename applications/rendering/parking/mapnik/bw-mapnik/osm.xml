@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map [
-<!ENTITY % entities SYSTEM "bw-inc/entities.xml.inc">
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
 %entities;
 ]>
 <!-- This stylesheet uses features only available in mapnik builds with
@@ -6243,7 +6243,7 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <Filter>[highway] = 'secondary'</Filter>
       <MaxScaleDenominator>100000</MaxScaleDenominator>
       <MinScaleDenominator>50000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#000000" halo_radius="1" halo_fill="#fed7a5" placement="line"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="8" fill="#000000" halo_radius="1" halo_fill="#dadada" placement="line"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' or [highway] = 'primary'</Filter>
@@ -6261,12 +6261,12 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
       <Filter>[highway] = 'secondary'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" halo_radius="1" halo_fill="#fed7a5" placement="line"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="9" fill="#000000" halo_radius="1" halo_fill="#dadada" placement="line"/>
     </Rule><Rule>
       <Filter>[highway] = 'secondary'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       
-      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#000000" halo_radius="1" halo_fill="#fed7a5" placement="line"/>
+      <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#000000" halo_radius="1" halo_fill="#dadada" placement="line"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'tertiary'</Filter>
@@ -6541,35 +6541,35 @@ ls `python -c "import mapnik;print mapnik.fontscollectionpath"`-->
     <StyleName>world</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/project/o/s/m/osm/data/world_boundaries//shoreline_300</Parameter>
+      <Parameter name="file">/home/kayd/world_boundaries//shoreline_300</Parameter>
     </Datasource>
 </Layer>
 <Layer name="coast-poly" status="on" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <StyleName>coast-poly</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/project/o/s/m/osm/data/world_boundaries//processed_p</Parameter>
+      <Parameter name="file">/home/kayd/world_boundaries//processed_p</Parameter>
     </Datasource>
 </Layer>
 <Layer name="builtup" status="on" srs="+proj=merc +datum=WGS84 +over">
     <StyleName>builtup</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/project/o/s/m/osm/data/world_boundaries//builtup_area</Parameter>
+      <Parameter name="file">/home/kayd/world_boundaries//builtup_area</Parameter>
     </Datasource>
 </Layer>
 <Layer name="necountries" status="on" srs="+init=epsg:4326">
     <StyleName>necountries</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/project/o/s/m/osm/data/world_boundaries//110m_admin_0_boundary_lines_land.shp</Parameter>
+      <Parameter name="file">/home/kayd/world_boundaries//110m_admin_0_boundary_lines_land.shp</Parameter>
     </Datasource>
 </Layer>
 <Layer name="nepopulated" status="on" srs="+init=epsg:4326">
     <StyleName>nepopulated</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/project/o/s/m/osm/data/world_boundaries//10m_populated_places.shp</Parameter>
+      <Parameter name="file">/home/kayd/world_boundaries//10m_populated_places.shp</Parameter>
       <Parameter name="encoding">latin1</Parameter>
     </Datasource>
 </Layer>

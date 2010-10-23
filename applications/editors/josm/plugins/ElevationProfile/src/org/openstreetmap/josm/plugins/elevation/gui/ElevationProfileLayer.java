@@ -83,7 +83,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 	 */
 	@Override
 	public Icon getIcon() {
-		return ImageProvider.get("layer", "marker_small");
+		return ImageProvider.get("layer", "elevation_small");
 	}
 
 	/*

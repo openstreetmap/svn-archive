@@ -14,6 +14,7 @@
 
 package org.openstreetmap.josm.plugins.elevation;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -131,6 +132,40 @@ public class WayPointHelper {
 	 */
 	public static String getElevationText(int elevation) {
 		return String.format("%d %s", elevation, getUnit());
+	}
+	
+	/**
+	 * Gets the elevation string for a given elevation, e. g "300m" or "800ft".
+	 * @param elevation
+	 * @return
+	 */
+	public static String getElevationText(double elevation) {
+		return String.format("%d %s", (int)Math.round(elevation), getUnit());
+	}
+	
+	/**
+	 * Gets the elevation string for a given way point, e. g "300m" or "800ft".
+	 * @param elevation
+	 * @return
+	 */
+	public static String getElevationText(WayPoint wpt) {
+		if (wpt == null) return null;
+		
+		int elevation = (int)Math.round(WayPointHelper.getElevation(wpt));
+		return String.format("%d %s", (int)elevation, getUnit());
+	}
+	
+	/**
+	 * Get the time string for a given way point.
+	 * @param wpt
+	 * @return
+	 */
+	public static String getTimeText(WayPoint wpt) {
+		if (wpt == null) return null; 
+		
+		int hour = WayPointHelper.getHourOfWayPoint(wpt);
+		int min = WayPointHelper.getMinuteOfWayPoint(wpt);		
+		return String.format("%02d:%02d", hour, min);
 	}
 
 	/**

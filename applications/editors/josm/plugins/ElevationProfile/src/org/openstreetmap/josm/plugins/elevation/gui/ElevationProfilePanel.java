@@ -55,7 +55,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 		setBackground(Color.WHITE);
 		createOrUpdatePlotArea();
 		addComponentListener(this);
-		addMouseMotionListener(this);
+		addMouseMotionListener(this);		
 	}
 
 	/**
@@ -498,5 +498,17 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 			fireSelectionChanged(getSelectedWayPoint());
 		}
 	}
+
+	@Override
+	public String getToolTipText() {
+		WayPoint wpt = getSelectedWayPoint();
+		if (wpt != null) {
+			return  String.format("%s: %s", WayPointHelper.getTimeText(wpt), WayPointHelper.getElevationText(wpt));
+		}
+		
+		return super.getToolTipText();
+	}
+	
+	
 
 }

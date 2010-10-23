@@ -97,8 +97,8 @@
                 <attribute name="Author" value="Oliver Wieland"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.elevation.ElevationProfilePlugin"/>
                 <attribute name="Plugin-Date" value="23.10.10"/>
-                <attribute name="Plugin-Description" value="Shows the elevation profile of a GPS track in JOSM."/>
-            	<attribute name="de_Plugin-Description" value="Zeigt das Höhenprofil eines Tracks in JOSM."/>
+                <attribute name="Plugin-Description" value="Shows the elevation profile and some statistical data of a GPS track in JOSM."/>
+            	<attribute name="de_Plugin-Description" value="Zeigt das Höhenprofil und statistische Werte eines Tracks in JOSM."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile"/>
                 <attribute name="Plugin-Mainversion" value="3529"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

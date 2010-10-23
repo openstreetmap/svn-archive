@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
-	<classpathentry kind="lib" path="J:/Dokumente und Einstellungen/Oliver/Eigene Dateien/Java/JOSM/applications/editors/josm/core/dist/3529/josm-tested.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="J:/Dokumente und Einstellungen/Oliver/Eigene Dateien/Java/Josm-svn/core/dist/3529/josm-tested.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

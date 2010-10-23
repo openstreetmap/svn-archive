@@ -1,12 +1,8 @@
 README 
 ======
 
-This plugin allows to import the proprietary CSV format used by the Columbus V-900 data logger.
+This plugin shows the elevation profile of a GPX track.
 
-Two modes are supported
-a) Simple mode (default)
-b) Professional mode, logs additional GPS values like VDOP, HDOP, Fixing, ... (please refer to the manual for details)
+For detailed instructions please refer to http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile.
 
-Waypoints and tracks are transformed into the GPX format.
-
-Please report bugs to oliver-wieland@t-online.de.
+Please report bugs to oliver.wieland@online.de.

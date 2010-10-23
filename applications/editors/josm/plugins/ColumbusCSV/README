@@ -1,44 +1,8 @@
 README 
 ======
 
-PURPOSE
--------
-This plugin allows to import the proprietary CSV format used by the Columbus V-900 data logger.
+This plugin allows to import Columbus V-900 CSV files including audio markers.
 
-Two modes are supported
-a) 	Simple mode (default)
-b) 	Professional or extended mode - logs additional GPS values like VDOP, HDOP, Fixing. This can 
-	be accomplished by putting a file named config.txt onto the microSD card shipped with the V-900
-	logger. The contents of my file looks as follows:
-	
-	--- BEGIN config.txt ---
-	1,000,001,
-	notes:
-	1 Professional mode
-	000 Over-speed tag 
-	001 Spy mode timer	
-	--- END config.txt ---
-	
-	Please refer to the manual for details.
+Detailed instructions are available at http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ColumbusCSV
 
-Way points and tracks are transformed into the GPX format. Way points may be either plain position entries or
-may reference an audio file recorded during the logging session. In this case, the way point shows up with
-a flag - pressing it play the recorded audio.
-
-
-
-OPTIONS
--------
-This plugin offers some options predominately to change the import behavior. All settings are accessible via the
-JOSM preferences dialog and starts with the prefix 'columbuscsv'. 
-
-The options are
-* Show summary after import (Boolean), default: true
-* Ignore audio files (Boolean), default: false
-* Ignore hdop/vdop/pdop entries (Boolean), default: false
-* Warn on missing audio files (Boolean), default: true
-* Warn on conversion errors (Boolean), default: true
-	
-I hope that this plugin is useful.  
-
-Please report bugs to mailto:oliverwieland@me.com.
+Please report bugs to mailto:oliver.wieland@online.de.

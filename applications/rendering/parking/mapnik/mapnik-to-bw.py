@@ -217,7 +217,7 @@ def transmogrify_file(f):
         print "converted {typ} from {a} to {bw}." .format(typ='bgcolor',a=col,bw=bw)
         el.setAttribute("bgcolor",bw)
 
-    #<TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="#6699cc" halo_radius="1" wrap_width="20"/>
+    #<TextSymbolizer ... fill="#6699cc"/>
     els = document.getElementsByTagName("TextSymbolizer")
     for el in els:
         col = el.getAttribute("fill")
@@ -226,7 +226,15 @@ def transmogrify_file(f):
         bw=rgb_to_css(color_to_bw(parse_color(col)))
         print "converted {typ} from {a} to {bw}." .format(typ='TS-fill',a=col,bw=bw)
         el.setAttribute("fill",bw)
+        #<TextSymbolizer halo_fill="#fed7a5"/> (optional)
+        col = el.getAttribute("halo_fill")
+        assert(col!=None)
+        if col!='':
+            bw=rgb_to_css(color_to_bw(parse_color(col)))
+            print "converted {typ} from {a} to {bw}." .format(typ='TS-halo_fill',a=col,bw=bw)
+            el.setAttribute("halo_fill",bw)
 
+    
     output= document.implementation.createLSOutput() 
     output.systemId= os.path.join(dest_dir,f)
     output.encoding= 'utf-8' 

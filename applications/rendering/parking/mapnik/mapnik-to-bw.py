@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # by kay
 
-import os
+import os,subprocess
 #from xml.dom.minidom import parse, parseString
 import pxdom
 import colorsys
@@ -242,17 +242,29 @@ def transmogrify_file(f):
     serialiser.write(document, output)
 
 
-#savedPath = os.getcwd()
-#os.chdir("original-mapnik")
+def main():
+    #savedPath = os.getcwd()
+    #os.chdir("original-mapnik")
+    #os.chdir( savedPath )
+    source_symbols_dir = os.path.join(source_dir,"symbols")
+    dest_symbols_dir = os.path.join(dest_dir,"symbols")
+    image_files = os.listdir(source_symbols_dir)
+    image_files = [f for f in image_files if f.endswith('png')]
+    for f in image_files:
+        # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
+        sf = os.path.join(source_symbols_dir,f)
+        df = os.path.join(dest_symbols_dir,f)
+        subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
+    transmogrify_file('osm.xml')
+    #print "bw=",color_to_bw(0.9,0.5,0)
+    #print "bw=",color_to_bw(0,0.9,0.5)
+    #col="#7f7f7f"
+    #print "rgb=",parse_color(col),color_to_bw(parse_color(col)),rgb_to_css(color_to_bw(parse_color(col)))
 
-transmogrify_file('osm.xml')
+    #print "rgb=",parse_color("#1f3")
+    #print "rgb=",parse_color("yellow")
 
-#print "bw=",color_to_bw(0.9,0.5,0)
-#print "bw=",color_to_bw(0,0.9,0.5)
-#col="#7f7f7f"
-#print "rgb=",parse_color(col),color_to_bw(parse_color(col)),rgb_to_css(color_to_bw(parse_color(col)))
 
-#print "rgb=",parse_color("#1f3")
-#print "rgb=",parse_color("yellow")
 
-#os.chdir( savedPath )
+if __name__ == '__main__':
+    main()

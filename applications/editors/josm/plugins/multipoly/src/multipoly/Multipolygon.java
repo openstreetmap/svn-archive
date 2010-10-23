@@ -243,7 +243,7 @@ public class Multipolygon {
                 } else if (innerInside == Intersection.INSIDE) {
                     innerCandidates.add(innerWay);
                 }
-                else 
+                else if (innerInside == Intersection.CROSSING) 
                 {
                 	//ways intersect
                 	return null;

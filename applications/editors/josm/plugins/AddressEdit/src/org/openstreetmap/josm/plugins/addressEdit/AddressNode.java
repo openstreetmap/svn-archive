@@ -93,9 +93,42 @@ public class AddressNode extends NodeEntityBase {
 	 * @return
 	 */
 	public String getCountry() {
+		if (!TagUtils.hasAddrCountryTag(osmObject)) {
+			return MISSING_TAG;
+		}
 		return TagUtils.getAddrCountryValue(osmObject);
 	}
 	
+	
+	
+	@Override
+	public int compareTo(INodeEntity o) {
+		if (o == null || !(o instanceof AddressNode)) {
+			return -1;
+		}
+		AddressNode other = (AddressNode) o;
+		
+		int cc = 0;
+		cc = this.getCountry().compareTo(other.getCountry());
+		if ( cc  == 0) {
+			cc = this.getState().compareTo(other.getState());
+			
+			if (cc  == 0) {
+				cc = this.getCity().compareTo(other.getCity());
+				
+				if (cc  == 0) {
+					cc = this.getStreet().compareTo(other.getStreet());
+					
+					if (cc  == 0) {
+						cc = this.getHouseNumber().compareTo(other.getHouseNumber());
+					}
+				}
+			}
+		}
+		
+		return cc;
+	}
+
 	@Override
 	public String toString() {
 		return AddressNode.getFormatString(this);

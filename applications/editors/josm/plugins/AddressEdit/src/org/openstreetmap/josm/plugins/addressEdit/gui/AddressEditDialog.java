@@ -35,7 +35,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
 public class AddressEditDialog extends JFrame implements ActionListener, TreeSelectionListener {
 	private static final String CANCEL_COMMAND = "Cancel";
@@ -71,10 +71,14 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 		// TODO: Center on screen
 		setLocation(100, 100);
 
+		// TODO: Proper init, if model is null
 		if (model != null) {
 			JPanel streetPanel = new JPanel(new BorderLayout());
 			streetsTree = new JTree(new DefaultTreeModel(model.getStreetsTree()));
+			streetsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 			streetsTree.addTreeSelectionListener(this);
+			streetsTree.setCellRenderer(new StreetTreeCellRenderer());
+			
 			JScrollPane scroll1 = new JScrollPane(streetsTree);
 			streetPanel.add(scroll1, BorderLayout.CENTER);
 			streetPanel.add(new JLabel("Unresolved Addresses"), BorderLayout.NORTH);
@@ -83,6 +87,7 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 			JPanel unresolvedPanel = new JPanel(new BorderLayout());		
 			unresolvedTree = new JTree(new DefaultTreeModel(model.getUnresolvedAddressesTree()));
 			unresolvedTree.addTreeSelectionListener(this);
+			
 			JScrollPane scroll2 = new JScrollPane(unresolvedTree);
 			unresolvedPanel.add(scroll2, BorderLayout.CENTER);
 			unresolvedPanel.add(new JLabel("Unresolved Addresses"), BorderLayout.NORTH);

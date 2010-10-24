@@ -14,6 +14,7 @@
 package org.openstreetmap.josm.plugins.addressEdit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -47,6 +48,7 @@ public class StreetNode extends NodeEntityBase {
 		lazyCreateChildren();
 		
 		children.add(segment);
+		Collections.sort(children);
 	}
 	
 	private void lazyCreateChildren() {

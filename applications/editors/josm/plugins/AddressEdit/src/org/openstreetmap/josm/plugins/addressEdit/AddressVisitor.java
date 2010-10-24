@@ -29,6 +29,7 @@
 package org.openstreetmap.josm.plugins.addressEdit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -130,7 +131,10 @@ public class AddressVisitor implements Visitor {
 	}
 	
 	public List<StreetNode> getStreetList() {
-		return new ArrayList<StreetNode>(streetDict.values());
+		
+		ArrayList<StreetNode> sortedList = new ArrayList<StreetNode>(streetDict.values());
+		Collections.sort(sortedList);
+		return sortedList;
 	}
 
 	public List<AddressNode> getUnresolvedItems() {

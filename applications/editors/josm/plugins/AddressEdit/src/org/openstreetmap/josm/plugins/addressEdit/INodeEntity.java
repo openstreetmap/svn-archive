@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
-public interface INodeEntity {
+public interface INodeEntity extends Comparable<INodeEntity> {
 	/**
 	 * Gets the underlying OSM object.
 	 * @return

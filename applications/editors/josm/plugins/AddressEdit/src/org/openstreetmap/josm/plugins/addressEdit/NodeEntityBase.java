@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
-public class NodeEntityBase implements INodeEntity {
+public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	public static final String ANONYMOUS = tr("No name");
 	
 	protected OsmPrimitive osmObject;
@@ -71,6 +71,12 @@ public class NodeEntityBase implements INodeEntity {
 			return this.getClass().getName() + ": " + getName();
 		}
 		return this.getClass().getName() + ": " + ANONYMOUS;
+	}
+
+	@Override
+	public int compareTo(INodeEntity o) {
+		if (o == null || !(o instanceof NodeEntityBase)) return -1;
+		return this.getName().compareTo(o.getName());
 	}
 
 	

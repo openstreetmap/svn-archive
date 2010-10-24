@@ -189,14 +189,7 @@ def rgb_to_css(rgb):
     r,g,b=rgb
     return "#{r:02x}{g:02x}{b:02x}".format(r=int(r*255.0),g=int(g*255.0),b=int(b*255.0))
 
-def transmogrify_file(f):
-    
-    #document = pxdom.parse(os.path.join(source_dir,f), {'entities': 1})
-
-    dom= pxdom.getDOMImplementation('') 
-    parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None) 
-    document = parser.parseURI(os.path.join(source_dir,f))
-
+def dom_convert_to_grey(document):
     els = document.getElementsByTagName("CssParameter")
     #print "els=",els
     for el in els:
@@ -234,9 +227,40 @@ def transmogrify_file(f):
             print "converted {typ} from {a} to {bw}." .format(typ='TS-halo_fill',a=col,bw=bw)
             el.setAttribute("halo_fill",bw)
 
+
+def dom_strip_icons(document):
+    removeElements=[]
+    # remove <Style name="points"> and <Layer name="amenity-points">
+    els = document.getElementsByTagName("Style")
+    for el in els:
+        if el.getAttribute("name")=="points":
+            removeElements.append(el)
+    els = document.getElementsByTagName("Layer")
+    for el in els:
+        if el.getAttribute("name")=="amenity-points":
+            removeElements.append(el)
+    print removeElements
+    for el in removeElements:
+        parent = el.parentNode
+        parent.removeChild(el)
+
+def transmogrify_file(sf,dfgrey,dfnoicons):
+    dom= pxdom.getDOMImplementation('') 
+    parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None) 
+    document = parser.parseURI(sf)
+
+#    dom_convert_to_grey(document)
     
     output= document.implementation.createLSOutput() 
-    output.systemId= os.path.join(dest_dir,f)
+    output.systemId= dfgrey
+    output.encoding= 'utf-8' 
+    serialiser= document.implementation.createLSSerializer() 
+    serialiser.write(document, output)
+
+    dom_strip_icons(document)
+    
+    output= document.implementation.createLSOutput() 
+    output.systemId= dfnoicons
     output.encoding= 'utf-8' 
     serialiser= document.implementation.createLSSerializer() 
     serialiser.write(document, output)
@@ -254,8 +278,8 @@ def main():
         # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
         sf = os.path.join(source_symbols_dir,f)
         df = os.path.join(dest_symbols_dir,f)
-        subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
-    transmogrify_file('osm.xml')
+#        subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
+    transmogrify_file(os.path.join(source_dir,'osm.xml'),os.path.join(dest_dir,'osm-bw.xml'),os.path.join(dest_dir,'osm-bw-noicons.xml'))
     #print "bw=",color_to_bw(0.9,0.5,0)
     #print "bw=",color_to_bw(0,0.9,0.5)
     #col="#7f7f7f"

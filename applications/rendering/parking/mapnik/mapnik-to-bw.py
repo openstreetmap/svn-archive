@@ -249,7 +249,7 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
     parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None) 
     document = parser.parseURI(sf)
 
-#    dom_convert_to_grey(document)
+    dom_convert_to_grey(document)
     
     output= document.implementation.createLSOutput() 
     output.systemId= dfgrey
@@ -278,7 +278,7 @@ def main():
         # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
         sf = os.path.join(source_symbols_dir,f)
         df = os.path.join(dest_symbols_dir,f)
-#        subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
+        subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
     transmogrify_file(os.path.join(source_dir,'osm.xml'),os.path.join(dest_dir,'osm-bw.xml'),os.path.join(dest_dir,'osm-bw-noicons.xml'))
     #print "bw=",color_to_bw(0.9,0.5,0)
     #print "bw=",color_to_bw(0,0.9,0.5)

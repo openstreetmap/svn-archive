@@ -128,6 +128,10 @@ public class AddressVisitor implements Visitor {
 	public HashMap<String, StreetNode> getStreetDict() {
 		return streetDict;
 	}
+	
+	public List<StreetNode> getStreetList() {
+		return new ArrayList<StreetNode>(streetDict.values());
+	}
 
 	public List<AddressNode> getUnresolvedItems() {
 		return unresolvedAddresses;
@@ -172,5 +176,10 @@ public class AddressVisitor implements Visitor {
 		}
 		
 		System.out.println("Still unresolved: " + unresolvedAddresses.size() + " addresses");
+	}
+	
+	public void clearData() {
+		streetDict.clear();
+		unresolvedAddresses.clear();
 	}
 }

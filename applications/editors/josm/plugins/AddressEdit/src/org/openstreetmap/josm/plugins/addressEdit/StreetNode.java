@@ -66,6 +66,10 @@ public class StreetNode extends NodeEntityBase {
 		}
 	}
 	
+	public boolean hasAddresses() {
+		return addresses != null && addresses.size() > 0;
+	}
+	
 	public List<AddressNode> getAddresses() {
 		return addresses;
 	}

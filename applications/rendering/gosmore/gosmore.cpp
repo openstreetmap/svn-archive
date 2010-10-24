@@ -2645,9 +2645,9 @@ gint DrawExpose (void)
   char coord[64];
   if (ShowCoordinates == 1) {
     if(GpsIdle==999)
-      snprintf (coord, 63, "%9.5lf %10.5lf GPS OFF %s", LatInverse (clat), LonInverse (clon),routeSuccess?"Route":"No Route");
+      snprintf (coord, 63, "%9.5lf %10.5lf zoom=%d GPS OFF %s %sfollowing", LatInverse (clat), LonInverse (clon),zoom,routeSuccess?"Route":"No Route",DoFollowThing?"":"not ");
     else
-      snprintf (coord, 63, "%9.5lf %10.5lf GPS idle %ds %s", LatInverse (clat), LonInverse (clon),GpsIdle,routeSuccess?"Route":"No Route");
+      snprintf (coord, 63, "%9.5lf %10.5lf zoom=%d GPS idle %ds %s %sfollowing", LatInverse (clat), LonInverse (clon),zoom,GpsIdle,routeSuccess?"Route":"No Route",DoFollowThing?"":"not ");
     DrawString (0, 5, coord);
   }
   else if (ShowCoordinates == 2) {
@@ -3856,7 +3856,7 @@ DWORD WINAPI NmeaReader (LPVOID lParam)
             int now;
             now=GetTickCount();
             if(!lastgps) lastgps=now;
-            GpsIdle=(lastgps-now)/1000;
+            GpsIdle=(now-lastgps)/1000;
             lastgps=now;
 	    PostMessage (mWnd, WM_USER + 1, 0, (int) /* intptr_t */ gpsNew);
 	  }

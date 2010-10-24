@@ -2250,7 +2250,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/parking.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>10000</scale_max>
+        <scale_max>1000000</scale_max>
 	</rule>
 
 	<rule>
@@ -2306,7 +2306,7 @@ The colours can only be in hex
 		<icon annotate="true" src="vehicle/fuel.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
-        <scale_max>9000</scale_max>
+        <scale_max>900000</scale_max>
 	</rule>
 
 	<rule>
@@ -3208,7 +3208,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/camping.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>2000000</scale_max>
 	</rule>
 
 	<rule>
@@ -3216,7 +3216,7 @@ The colours can only be in hex
 		<icon annotate="true" src="accommodation/camping/caravan.png" />
 		<area colour="#e1a0a2" />
         <scale_min>1</scale_min>
-        <scale_max>20000</scale_max>
+        <scale_max>2000000</scale_max>
 	</rule>
 
 	<rule>

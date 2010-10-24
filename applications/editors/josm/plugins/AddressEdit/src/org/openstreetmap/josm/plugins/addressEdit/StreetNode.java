@@ -18,40 +18,75 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
-public class StreetNode {
-	private OsmPrimitive osmPrimitive;
-	private List<StreetNode> children;
-	private List<OsmPrimitive> addresses;
-		
+/**
+ * This class is the container for all street segments with the same name. Every street
+ * consists at least of one segment.
+ * 
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ */
+public class StreetNode extends NodeEntityBase {
+	private List<INodeEntity> children;
+	private List<AddressNode> addresses;
+			
 	/**
 	 * @param osmPrimitive
 	 */
 	public StreetNode(OsmPrimitive osmPrimitive) {
-		super();
-		this.osmPrimitive = osmPrimitive;
+		super(osmPrimitive);
 	}
 
-	public List<StreetNode> getChildren() {
+	public List<INodeEntity> getChildren() {
 		return children;
 	}
 	
-	public void AddAddress(OsmPrimitive address) {
-		LazyCreateAddresses();
-		addresses.add(address);
+	/**
+	 * Adds a street segment to the street node.
+	 * @param segment
+	 */
+	public void addStreetSegment(StreetSegmentNode segment) {
+		lazyCreateChildren();
+		
+		children.add(segment);
 	}
-
-	private void LazyCreateAddresses() {
-		if (addresses == null) {
-			addresses = new ArrayList<OsmPrimitive>();
+	
+	private void lazyCreateChildren() {
+		if (children == null) {
+			children = new ArrayList<INodeEntity>();
 		}
 	}
 	
-	public List<OsmPrimitive> getAddresses() {
+	public void addAddress(AddressNode aNode) {
+		lazyCreateAddresses();
+		addresses.add(aNode);
+	}
+
+	private void lazyCreateAddresses() {
+		if (addresses == null) {
+			addresses = new ArrayList<AddressNode>();
+		}
+	}
+	
+	public List<AddressNode> getAddresses() {
 		return addresses;
 	}
-	public void setAddresses(List<OsmPrimitive> addresses) {
+	
+	public void setAddresses(List<AddressNode> addresses) {
 		this.addresses = addresses;
 	}
 	
-	
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer(getName());
+		
+		if (children != null) {
+			sb.append(String.format(", %d segments", children.size()));
+		}
+		
+		if (addresses != null) {
+			sb.append(String.format(", %d address entries", addresses.size()));
+		}
+		
+		return sb.toString();
+	}
+
 }

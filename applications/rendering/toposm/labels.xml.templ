@@ -326,7 +326,8 @@
         &dbsettings; &extents;
         <Parameter name="table">
 		(SELECT way, name, place
-		 FROM ${DB_PREFIX}_point) AS placenames
+		 FROM ${DB_PREFIX}_point
+                 WHERE place IS NOT NULL AND name IS NOT NULL) AS placenames
 		</Parameter>
     </Datasource>
 </Layer>

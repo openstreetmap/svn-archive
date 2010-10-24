@@ -12,6 +12,12 @@ WAse = Envelope(-121, 45.4, -116.8, 47.7)
 NEdetail = Envelope(-71.5, 42, -70.5, 43)
 Stow = Envelope(-71.55, 42.40, -71.46, 42.47)
 BostonSS = Envelope(-71.2, 42.0, -70.6, 42.4)
+BostonDetail = Envelope(-71.11, 42.30, -70.99, 42.41)
+
+NEdetail1 = Envelope(-71.0, 42.0, -70.5, 42.5)
+NEdetail2 = Envelope(-71.0, 42.5, -70.5, 43.0)
+NEdetail3 = Envelope(-71.5, 42.0, -71.0, 42.5)
+NEdetail4 = Envelope(-71.5, 42.5, -71.0, 43.0)
 
 # Main US zones
 US = Envelope(-126, 24, -66, 56)

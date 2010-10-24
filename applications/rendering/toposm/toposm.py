@@ -124,6 +124,7 @@ class RenderThread:
         self.currentz = 0
         
     def init_zoomlevel(self, z):
+        self.currentz = z
         self.ntiles = NTILES[z]
         self.tilesize = getTileSize(self.ntiles, True)
         self.maps = {}

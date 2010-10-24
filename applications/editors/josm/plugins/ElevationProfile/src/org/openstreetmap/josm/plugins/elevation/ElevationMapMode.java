@@ -22,8 +22,8 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
 
 /**
- * @author Oliver
- *
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * Provides the map mode and controls visibility of the elevation profile layer/panel.
  */
 public class ElevationMapMode extends MapMode implements IElevationModelListener {
 	/**

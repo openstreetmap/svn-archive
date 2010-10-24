@@ -31,7 +31,7 @@ import org.openstreetmap.josm.io.IllegalDataException;
 
 /**
  * 
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
 public class ColumbusCSVImporter extends FileImporter {

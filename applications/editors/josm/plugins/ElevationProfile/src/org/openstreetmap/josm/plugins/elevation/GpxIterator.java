@@ -24,7 +24,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
  * Utility class to apply a visitor on GPX containers (track, route, data).
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class GpxIterator {
 	/**

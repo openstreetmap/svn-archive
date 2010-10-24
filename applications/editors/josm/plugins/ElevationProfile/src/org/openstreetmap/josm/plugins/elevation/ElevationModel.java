@@ -37,7 +37,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
  * @see ElevationProfileLeaf
  * @see IElevationModelTrackListener
  * @see IElevationModelSliceListener
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class ElevationModel extends ElevationProfileBase implements IGpxVisitor {
 	// private int sliceSize;

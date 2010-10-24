@@ -14,7 +14,6 @@
 
 package org.openstreetmap.josm.plugins.elevation;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -24,8 +23,9 @@ import java.util.Locale;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
- * @author Oliver Provides several static methods to access way point
- *         attributes.
+ * Provides methods to access way point attributes and some utility methods regarding elevation stuff (
+ * e. g. special text formats, unit conversion, geoid calc).
+ * @author Oliver Wieland <oliver.wieland@online.de> 
  */
 public class WayPointHelper {
 	public static double METER_TO_FEET = 3.280948;

@@ -37,7 +37,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * Layer class to show additional information on the elevation map, e. g. show
  * min/max elevation markers.
  * 
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
 public class ElevationProfileLayer extends

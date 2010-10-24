@@ -25,7 +25,7 @@ import org.openstreetmap.josm.plugins.elevation.gui.ElevationProfileLayer;
 
 /**
  * Plugin class for displaying an elevation profile of the tracks.
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
 public class ElevationProfilePlugin extends Plugin {

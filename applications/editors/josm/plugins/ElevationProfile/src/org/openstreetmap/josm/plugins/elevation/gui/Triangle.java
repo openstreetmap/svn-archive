@@ -25,19 +25,28 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * @author Oliver
- * 
- */
-/*
- * Class to represent a Triangle. Implementing the java.awt.Shape inteface.
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * Class to represent a triangle shape. {@see java.awt.Shape}.
  */
 public class Triangle implements Shape {
 	private Polygon poly;
 
+	/**
+	 * Copy constructor.
+	 * @param p
+	 */
 	public Triangle(Polygon p) {
+		if (p == null || p.npoints != 3) throw new RuntimeException("Given polygon was null or had invalid number of points");
 		poly = p;
 	}
 
+	/**
+	 * Creates a triangle from 3 given points. The points are used without any sanity check, so it is up to
+	 * the user that the points form a triangle.
+	 * @param p1
+	 * @param p2
+	 * @param p3
+	 */
 	public Triangle(Point p1, Point p2, Point p3) {
 		poly = new Polygon();
 		poly.addPoint(p1.x, p1.y);
@@ -45,52 +54,88 @@ public class Triangle implements Shape {
 		poly.addPoint(p3.x, p3.y);		
 	}
 
+	/**
+	 * Draws an outlined triangle.
+	 * @param g
+	 */
 	public void draw(Graphics g) {
 		g.drawPolygon(poly);
 	}
 
+	/**
+	 * Draws a filled triangle.
+	 * @param g
+	 */
 	public void fill(Graphics g) {
 		g.fillPolygon(poly);
 	}
 
-	// methods implemented from interface Shape
-
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#getBounds()
+	 */
 	public Rectangle getBounds() {
 		return poly.getBounds();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#getBounds2D()
+	 */
 	public Rectangle2D getBounds2D() {
 		return poly.getBounds2D();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#contains(double, double)
+	 */
 	public boolean contains(double x, double y) {
 		return poly.contains(x, y);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#contains(java.awt.geom.Point2D)
+	 */
 	public boolean contains(Point2D p) {
 		return poly.contains(p);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#intersects(double, double, double, double)
+	 */
 	public boolean intersects(double x, double y, double w, double h) {
 		return poly.intersects(x, y, w, h);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#intersects(java.awt.geom.Rectangle2D)
+	 */
 	public boolean intersects(Rectangle2D r) {
 		return poly.intersects(r);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#contains(double, double, double, double)
+	 */
 	public boolean contains(double x, double y, double w, double h) {
 		return poly.contains(x, y, w, h);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#contains(java.awt.geom.Rectangle2D)
+	 */
 	public boolean contains(Rectangle2D r) {
 		return poly.intersects(r);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#getPathIterator(java.awt.geom.AffineTransform)
+	 */
 	public PathIterator getPathIterator(AffineTransform at) {
 		return poly.getPathIterator(at);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.Shape#getPathIterator(java.awt.geom.AffineTransform, double)
+	 */
 	public PathIterator getPathIterator(AffineTransform at, double flatness) {
 		return poly.getPathIterator(at, flatness);
 	}

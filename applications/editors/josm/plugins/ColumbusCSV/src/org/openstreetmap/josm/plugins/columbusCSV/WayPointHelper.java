@@ -28,7 +28,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
- * @author Oliver Provides several static methods to access way point
+ * @author Oliver Wieland <oliver.wieland@online.de> Provides several static methods to access way point
  *         attributes.
  */
 public class WayPointHelper {

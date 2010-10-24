@@ -36,8 +36,8 @@ import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
 
 /**
- * @author Oliver
- * 
+ * Provides default rendering for elevation profile layer. 
+ * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class DefaultElevationProfileRenderer implements
 		IElevationProfileRenderer {
@@ -183,15 +183,16 @@ public class DefaultElevationProfileRenderer implements
 		
 		int rad = REGULAR_WPT_RADIUS;
 		g.setColor(c);
-		// g.drawOval(pnt.x - rad, pnt.y - rad, r2, r2);
 		drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, rad);
 
+		/* Paint full hour label */
 		if (kind == ElevationWayPointKind.FullHour) {
 			int hour = WayPointHelper.getHourOfWayPoint(wpt);
 			drawLabel(String.format("%02d:00", hour), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight(), g);
 		}
 
+		/* Paint label for elevation levels */
 		if (kind == ElevationWayPointKind.ElevationLevelGain) {
 			drawLabelWithTriangle(WayPointHelper.getElevationText(ele), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight(), g, c, 8, 
@@ -206,14 +207,12 @@ public class DefaultElevationProfileRenderer implements
 					TriangleDir.Down);
 		}
 
+		/* Paint cursor labels */
 		if (kind == ElevationWayPointKind.Highlighted) {
-			int eleH = (int) WayPointHelper.getElevation(wpt);
-			int hour = WayPointHelper.getHourOfWayPoint(wpt);
-			int min = WayPointHelper.getMinuteOfWayPoint(wpt);
 			drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, BIG_WPT_RADIUS);
-			drawLabel(String.format("%02d:%02d", hour, min), pnt.x, pnt.y
+			drawLabel(WayPointHelper.getTimeText(wpt), pnt.x, pnt.y
 					- g.getFontMetrics().getHeight() - 5, g);
-			drawLabel(WayPointHelper.getElevationText(eleH), pnt.x, pnt.y
+			drawLabel(WayPointHelper.getElevationText(wpt), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight() + 5, g);
 		}
 	}
@@ -344,7 +343,7 @@ public class DefaultElevationProfileRenderer implements
 	}
 
 	/**
-	 * Renders a start/end point
+	 * Renders a start/end point.
 	 * 
 	 * @param g
 	 *            The graphics context.
@@ -366,7 +365,7 @@ public class DefaultElevationProfileRenderer implements
 	}
 
 	/**
-	 * Draw a shaded sphere.
+	 * Draws a shaded sphere.
 	 * 
 	 * @param g
 	 *            The graphics context.
@@ -400,7 +399,7 @@ public class DefaultElevationProfileRenderer implements
 	}
 
 	/**
-	 * Draws a label.
+	 * Draws a label within a filled rounded rectangle with standard gradient colors.
 	 * 
 	 * @param s
 	 *            The text to draw.
@@ -416,7 +415,7 @@ public class DefaultElevationProfileRenderer implements
 	}
 
 	/**
-	 * Draws a label.
+	 * Draws a label within a filled rounded rectangle with the specified second gradient color (first color is <tt>Color.WHITE<tt>).
 	 * 
 	 * @param s
 	 *            The text to draw.
@@ -517,11 +516,11 @@ public class DefaultElevationProfileRenderer implements
 	}
 
 	/**
-	 * Checks, if the rectangle has been 'reserved' by a previous draw action.
+	 * Checks, if the rectangle has been 'reserved' by an previous draw action.
 	 * 
 	 * @param r
 	 *            The area to check for.
-	 * @return true; if area is already occupied by another rectangle.
+	 * @return true, if area is already occupied by another rectangle.
 	 */
 	private boolean isForbiddenArea(Rectangle r) {
 

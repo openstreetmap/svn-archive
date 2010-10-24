@@ -15,8 +15,8 @@
 package org.openstreetmap.josm.plugins.elevation;
 
 /**
- * @author Oliver
- *
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * Enumeration which classifies way points within an elevation profile.
  */
 public enum ElevationWayPointKind {
 	Plain, 				// Simple way point

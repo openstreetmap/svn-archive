@@ -20,8 +20,8 @@ import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
- * Interface for all GPX visitor.
- * @author Oliver
+ * Interface for all GPX visitors.
+ * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public interface IGpxVisitor extends IGpxWaypointVisitor {
 	/**

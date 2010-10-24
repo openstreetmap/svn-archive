@@ -20,8 +20,8 @@ import java.util.List;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
- * @author Oliver
- *
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * Interface for an elevation profile providing special properties/values.
  */
 public interface IElevationProfile {
 	/**

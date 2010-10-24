@@ -22,7 +22,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 /**
  * Plugin class to import Columbus V-900 CSV files into JOSM.
  * 
- * @author Oliver Wieland
+ * @author Oliver Wieland <oliver.wieland@online.de> Wieland
  * 
  */
 public class ColumbusCSVPlugin extends Plugin {

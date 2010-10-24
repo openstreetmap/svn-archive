@@ -52,7 +52,7 @@ import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  * Implements a JOSM ToggleDialog to show the elevation profile. It monitors the 
  * connection between layer and elevation profile. 
  */

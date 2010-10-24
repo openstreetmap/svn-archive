@@ -15,7 +15,7 @@
 package org.openstreetmap.josm.plugins.elevation.gui;
 
 /**
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  *
  */
 public enum TextAlignment {

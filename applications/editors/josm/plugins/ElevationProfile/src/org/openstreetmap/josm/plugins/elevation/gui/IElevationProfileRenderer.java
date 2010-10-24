@@ -28,7 +28,7 @@ import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
  * Second, the layer can simply pass the painting stuff to a renderer without taking care of
  * details. 
  * 
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  *
  */
 public interface IElevationProfileRenderer {

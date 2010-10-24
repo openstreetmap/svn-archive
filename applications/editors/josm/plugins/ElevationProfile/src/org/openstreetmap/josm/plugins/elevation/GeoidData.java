@@ -15,8 +15,8 @@
 package org.openstreetmap.josm.plugins.elevation;
 
 /**
- * Holds the geoid correction data. 
- * @author Oliver 
+ * Holds the geoid correction data. The data has been generated; usually this class does not need to change.
+ * @author Oliver Wieland <oliver.wieland@online.de> 
  */
 public class GeoidData {
 	public static final int LAT_GRID_SIZE = 180;

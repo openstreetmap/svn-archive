@@ -15,8 +15,8 @@
 package org.openstreetmap.josm.plugins.elevation;
 
 /**
- * @author Oliver
- *
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * Enumeration for available elevation correction modes. 
  */
 public enum GeoidCorrectionKind {
 	/** Elevation values remain unchanged */

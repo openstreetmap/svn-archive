@@ -28,7 +28,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 
 /**
  * Implements the preferences dialog for this plugin.
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class ColumbusCSVPreferences implements PreferenceSetting, ItemListener {
 	public static final String PREFIX = "columbuscsv.";

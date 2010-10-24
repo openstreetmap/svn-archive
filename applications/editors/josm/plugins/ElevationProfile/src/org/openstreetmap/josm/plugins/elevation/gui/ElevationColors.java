@@ -18,7 +18,7 @@ import java.awt.Color;
 
 /**
  * Contains some extra predefined colors. 
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class ElevationColors {
 	public static Color EPDarkBlue = new Color(21, 59, 99);

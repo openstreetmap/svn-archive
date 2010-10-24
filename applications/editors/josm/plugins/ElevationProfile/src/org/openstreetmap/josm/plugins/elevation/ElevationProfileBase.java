@@ -37,7 +37,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
  * 
  * {@link IElevationProfile} {@link IGpxWaypointVisitor} {@link GpxIterator}
  * 
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
 public abstract class ElevationProfileBase implements IElevationProfile,

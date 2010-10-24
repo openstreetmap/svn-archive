@@ -68,7 +68,7 @@ notes:
 001 Spy mode timer
  *  </code>
  * 
- * @author Oliver
+ * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
 public class ColumbusCSVReader {

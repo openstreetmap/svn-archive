@@ -25,8 +25,8 @@
       ************************************************
       ** should not be necessary to change the following properties
      -->
-	<property name="josm_unstable"          location="../../core/dist/josm-custom.jar"/>
-	<property name="josm"                   location="../../core/dist/3529/josm-tested.jar"/>
+	<property name="josm"          location="../../core/dist/josm-custom.jar"/>
+	<property name="josm_stable"   location="../../core/dist/3529/josm-tested.jar"/>
     <property name="plugin.build.dir"       value="build"/>
     <property name="plugin.src.dir"         value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->

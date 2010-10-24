@@ -95,11 +95,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.10 ;
-use OSM::mapgenRules 1.10 ;
+use OSM::mapgen 1.11 ;
+use OSM::mapgenRules 1.11 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.10" ;
+my $version = "1.11" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -826,7 +826,14 @@ foreach my $wayId (keys %memWayTags) {
 	if ($nobridgeOpt eq "1") {
 		$bridge = "no" ;
 		$tunnel = "no" ;
-		$layer = 0 ;
+
+		my $highway = 0 ;
+		foreach my $t ( @{$memWayTags{$wayId}} ) {
+			if ($t->[0] eq "highway") { $highway = 1 ; }
+		}
+		if ($highway == 1) {
+			$layer = 1 ; 
+		}
 	}
 
 	my ($test, $ruleNumber) = getWayRule (\@{$memWayTags{$wayId}}, \@ways, $ruleScaleSet) ;

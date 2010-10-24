@@ -13,13 +13,16 @@
  */
 package org.openstreetmap.josm.plugins.addressEdit.gui;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import static org.openstreetmap.josm.tools.I18n.tr;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,9 +31,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 
-public class AddressEditDialog extends JFrame implements ActionListener {
+public class AddressEditDialog extends JFrame implements ActionListener, TreeSelectionListener {
+	private static final String CANCEL_COMMAND = "Cancel";
+	private static final String OK_COMMAND = "Ok";
 	/**
 	 * 
 	 */
@@ -39,6 +48,15 @@ public class AddressEditDialog extends JFrame implements ActionListener {
 	private JTree unresolvedTree;
 	private JTree incompleteTree;
 	private JTree streetsTree;
+	private DefaultMutableTreeNode selStreet;
+	private DefaultMutableTreeNode selUnrAddr;
+	private DefaultMutableTreeNode selIncAddr;
+	
+	private AssignAddressToStreetAction resolveAction = new AssignAddressToStreetAction();
+	
+	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[] {
+		resolveAction	
+	};
 	
 	/**
 	 * @param arg0
@@ -56,6 +74,7 @@ public class AddressEditDialog extends JFrame implements ActionListener {
 		if (model != null) {
 			JPanel streetPanel = new JPanel(new BorderLayout());
 			streetsTree = new JTree(new DefaultTreeModel(model.getStreetsTree()));
+			streetsTree.addTreeSelectionListener(this);
 			JScrollPane scroll1 = new JScrollPane(streetsTree);
 			streetPanel.add(scroll1, BorderLayout.CENTER);
 			streetPanel.add(new JLabel("Unresolved Addresses"), BorderLayout.NORTH);
@@ -63,13 +82,20 @@ public class AddressEditDialog extends JFrame implements ActionListener {
 			
 			JPanel unresolvedPanel = new JPanel(new BorderLayout());		
 			unresolvedTree = new JTree(new DefaultTreeModel(model.getUnresolvedAddressesTree()));
+			unresolvedTree.addTreeSelectionListener(this);
 			JScrollPane scroll2 = new JScrollPane(unresolvedTree);
 			unresolvedPanel.add(scroll2, BorderLayout.CENTER);
 			unresolvedPanel.add(new JLabel("Unresolved Addresses"), BorderLayout.NORTH);
 			unresolvedPanel.setMinimumSize(new Dimension(300, 200));
 			
+			JPanel unresolvedButtons = new JPanel(new FlowLayout());
+			JButton assign = new JButton(resolveAction);
+			unresolvedButtons.add(assign);
+			unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
+			
 			JPanel incompletePanel = new JPanel(new BorderLayout());
 			incompleteTree = new JTree(new DefaultTreeModel(model.getIncompleteAddressesTree()));
+			incompleteTree.addTreeSelectionListener(this);
 			JScrollPane scroll3 = new JScrollPane(incompleteTree);
 			incompletePanel.add(scroll3, BorderLayout.CENTER);
 			incompletePanel.add(new JLabel("Incomplete Addresses"), BorderLayout.NORTH);
@@ -84,9 +110,9 @@ public class AddressEditDialog extends JFrame implements ActionListener {
 		}
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(1,10));
-		JButton ok = new JButton("Ok");
+		JButton ok = new JButton(OK_COMMAND);
 		ok.addActionListener(this);
-		JButton cancel = new JButton("Cancel");
+		JButton cancel = new JButton(CANCEL_COMMAND);
 		cancel.addActionListener(this);
 		
 		buttonPanel.add(cancel);
@@ -116,6 +142,35 @@ public class AddressEditDialog extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (OK_COMMAND.equals(e.getActionCommand())) {
+			this.setVisible(false);
+		}
 		
+		// TODO: Check, if there is some kind of undo; otherwise this button is not necessary
+		if (CANCEL_COMMAND.equals(e.getActionCommand())) {
+			this.setVisible(false);
+		}
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent event) {
+		// Updates the selection
+		if (event.getSource() == streetsTree) {
+			selStreet = (DefaultMutableTreeNode) streetsTree.getLastSelectedPathComponent();
+		}
+		
+		if (event.getSource() == unresolvedTree) {
+			selUnrAddr = (DefaultMutableTreeNode) unresolvedTree.getLastSelectedPathComponent();
+		}
+		
+		if (event.getSource() == incompleteTree) {
+			selIncAddr = (DefaultMutableTreeNode) incompleteTree.getLastSelectedPathComponent();
+		}
+		
+		AddressSelectionEvent ev = new AddressSelectionEvent(event.getSource(),
+				selStreet, selUnrAddr, selIncAddr);		
+		for (AbstractAddressEditAction action : actions) {
+			action.updateEnabledState(ev);
+		}
 	}
 }

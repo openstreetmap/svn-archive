@@ -99,8 +99,9 @@ public class AddressNode extends NodeEntityBase {
 		return TagUtils.getAddrCountryValue(osmObject);
 	}
 	
-	
-	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.addressEdit.NodeEntityBase#compareTo(org.openstreetmap.josm.plugins.addressEdit.INodeEntity)
+	 */
 	@Override
 	public int compareTo(INodeEntity o) {
 		if (o == null || !(o instanceof AddressNode)) {
@@ -134,7 +135,7 @@ public class AddressNode extends NodeEntityBase {
 		if (node == null || !node.hasName()) return;
 		
 		if (!node.getName().equals(getStreet())) {
-			setStreetName(node.getName());
+			setStreetName(node.getName());			
 			node.addAddress(this);
 			fireEntityChanged();
 		}
@@ -148,6 +149,7 @@ public class AddressNode extends NodeEntityBase {
 		if (streetName != null && streetName.length() == 0) return;
 		
 		this.osmObject.put(TagUtils.ADDR_STREET_TAG, streetName);
+		this.osmObject.setModified(true);
 	}
 	
 	/**
@@ -158,6 +160,7 @@ public class AddressNode extends NodeEntityBase {
 		if (state != null && state.length() == 0) return;
 		
 		this.osmObject.put(TagUtils.ADDR_STATE_TAG, state);
+		this.osmObject.setModified(true);
 	}
 	
 	/**
@@ -168,6 +171,7 @@ public class AddressNode extends NodeEntityBase {
 		if (country != null && country.length() == 0) return;
 		
 		this.osmObject.put(TagUtils.ADDR_COUNTRY_TAG, country);
+		this.osmObject.setModified(true);
 	}
 	
 	/**
@@ -178,6 +182,7 @@ public class AddressNode extends NodeEntityBase {
 		if (postCode != null && postCode.length() == 0) return;
 		
 		this.osmObject.put(TagUtils.ADDR_POSTCODE_TAG, postCode);
+		this.osmObject.setModified(true);
 	}
 
 	@Override

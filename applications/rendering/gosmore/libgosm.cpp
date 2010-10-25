@@ -853,7 +853,7 @@ void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
 #define MAX_BUCKETS (1<<26)
 #define IDXGROUPS 676
 #define NGROUPS 60
-#define MAX_NODES 16000000 /* Max in a group */
+#define MAX_NODES 17000000 /* Max in a group */
 #define S2GROUPS 129 // Last group is reserved for lowzoom halfSegs
 #define NGROUP(x)  ((x) / MAX_NODES % NGROUPS + IDXGROUPS)
 #define S1GROUPS NGROUPS

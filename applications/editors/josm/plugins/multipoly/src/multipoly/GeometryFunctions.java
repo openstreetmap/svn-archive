@@ -14,178 +14,209 @@ import org.openstreetmap.josm.data.osm.Node;
  *
  */
 public class GeometryFunctions {
-	public enum Intersection {INSIDE, OUTSIDE, CROSSING, EQUAL}
-	
-    /**
-     * Finds the intersection of two lines of inifinite length.
-     * @return EastNorth null if no intersection was found, the coordinates of the intersection otherwise
-     */
-    public static EastNorth getLineLineIntersection(EastNorth p1, EastNorth p2, EastNorth p3, EastNorth p4) {
+	public enum PolygonIntersection {FIRST_INSIDE_SECOND, SECOND_INSIDE_FIRST, OUTSIDE, CROSSING}
 
-        // Convert line from (point, point) form to ax+by=c
-        double a1 = p2.getY() - p1.getY();
-        double b1 = p1.getX() - p2.getX();
-        double c1 = p2.getX() * p1.getY() - p1.getX() * p2.getY();
+	/**
+	 * Finds the intersection of two lines of infinite length.
+	 * @return EastNorth null if no intersection was found, the coordinates of the intersection otherwise
+	 */
+	public static EastNorth getLineLineIntersection(EastNorth p1, EastNorth p2, EastNorth p3, EastNorth p4) {
 
-        double a2 = p4.getY() - p3.getY();
-        double b2 = p3.getX() - p4.getX();
-        double c2 = p4.getX() * p3.getY() - p3.getX() * p4.getY();
+		// Convert line from (point, point) form to ax+by=c
+		double a1 = p2.getY() - p1.getY();
+		double b1 = p1.getX() - p2.getX();
+		double c1 = p2.getX() * p1.getY() - p1.getX() * p2.getY();
 
-        // Solve the equations
-        double det = a1 * b2 - a2 * b1;
-        if (det == 0)
-            return null; // Lines are parallel
+		double a2 = p4.getY() - p3.getY();
+		double b2 = p3.getX() - p4.getX();
+		double c2 = p4.getX() * p3.getY() - p3.getX() * p4.getY();
 
-        return new EastNorth((b1 * c2 - b2 * c1) / det, (a2 * c1 - a1 * c2) / det);
-    }
+		// Solve the equations
+		double det = a1 * b2 - a2 * b1;
+		if (det == 0)
+			return null; // Lines are parallel
 
-    public static boolean segmentsParralel(EastNorth p1, EastNorth p2, EastNorth p3, EastNorth p4) {
+		return new EastNorth((b1 * c2 - b2 * c1) / det, (a2 * c1 - a1 * c2) / det);
+	}
 
-        // Convert line from (point, point) form to ax+by=c
-        double a1 = p2.getY() - p1.getY();
-        double b1 = p1.getX() - p2.getX();
+	public static boolean segmentsParralel(EastNorth p1, EastNorth p2, EastNorth p3, EastNorth p4) {
 
-        double a2 = p4.getY() - p3.getY();
-        double b2 = p3.getX() - p4.getX();
+		// Convert line from (point, point) form to ax+by=c
+		double a1 = p2.getY() - p1.getY();
+		double b1 = p1.getX() - p2.getX();
 
-        // Solve the equations
-        double det = a1 * b2 - a2 * b1;
-        return Math.abs(det) < 1e-13;
-    }
+		double a2 = p4.getY() - p3.getY();
+		double b2 = p3.getX() - p4.getX();
 
-    /**
-     * Calcualtes closest point to a line segment.
-     * @param segmentP1
-     * @param segmentP2
-     * @param point
-     * @return segmentP1 if it is the closest point, segmentP2 if it is the closest point,
-     * a new point if closest point is between segmentP1 and segmentP2.
-     */
-    public static EastNorth closestPointToSegment(EastNorth segmentP1, EastNorth segmentP2, EastNorth point) {
+		// Solve the equations
+		double det = a1 * b2 - a2 * b1;
+		return Math.abs(det) < 1e-13;
+	}
 
-        double ldx = segmentP2.getX() - segmentP1.getX();
-        double ldy = segmentP2.getY() - segmentP1.getY();
+	/**
+	 * Calculates closest point to a line segment.
+	 * @param segmentP1
+	 * @param segmentP2
+	 * @param point
+	 * @return segmentP1 if it is the closest point, segmentP2 if it is the closest point,
+	 * a new point if closest point is between segmentP1 and segmentP2.
+	 */
+	public static EastNorth closestPointToSegment(EastNorth segmentP1, EastNorth segmentP2, EastNorth point) {
 
-        if (ldx == 0 && ldy == 0) //segment zero length
-            return segmentP1;
+		double ldx = segmentP2.getX() - segmentP1.getX();
+		double ldy = segmentP2.getY() - segmentP1.getY();
 
-        double pdx = point.getX() - segmentP1.getX();
-        double pdy = point.getY() - segmentP1.getY();
+		if (ldx == 0 && ldy == 0) //segment zero length
+			return segmentP1;
 
-        double offset = (pdx * ldx + pdy * ldy) / (ldx * ldx + ldy * ldy);
+		double pdx = point.getX() - segmentP1.getX();
+		double pdy = point.getY() - segmentP1.getY();
 
-        if (offset <= 0)
-            return segmentP1;
-        else if (offset >= 1)
-            return segmentP2;
-        else
-            return new EastNorth(segmentP1.getX() + ldx * offset, segmentP1.getY() + ldy * offset);
+		double offset = (pdx * ldx + pdy * ldy) / (ldx * ldx + ldy * ldy);
 
-    }	
-	
-    /**
-     * This method tests if secondNode is clockwise to first node.
-     * @param commonNode starting point for both vectors
-     * @param firstNode first vector end node
-     * @param secondNode second vector end node
-     * @return true if first vector is clockwise before second vector.
-     */
+		if (offset <= 0)
+			return segmentP1;
+		else if (offset >= 1)
+			return segmentP2;
+		else
+			return new EastNorth(segmentP1.getX() + ldx * offset, segmentP1.getY() + ldy * offset);
 
-    public static boolean angleIsClockwise(EastNorth commonNode, EastNorth firstNode, EastNorth secondNode) {
-        double dy1 = (firstNode.getY() - commonNode.getY());
-        double dy2 = (secondNode.getY() - commonNode.getY());
-        double dx1 = (firstNode.getX() - commonNode.getX());
-        double dx2 = (secondNode.getX() - commonNode.getX());
+	}
 
-        return dy1 * dx2 - dx1 * dy2 > 0;
-    }
+	/**
+	 * This method tests if secondNode is clockwise to first node.
+	 * @param commonNode starting point for both vectors
+	 * @param firstNode first vector end node
+	 * @param secondNode second vector end node
+	 * @return true if first vector is clockwise before second vector.
+	 */
+
+	public static boolean angleIsClockwise(EastNorth commonNode, EastNorth firstNode, EastNorth secondNode) {
+		double dy1 = (firstNode.getY() - commonNode.getY());
+		double dy2 = (secondNode.getY() - commonNode.getY());
+		double dx1 = (firstNode.getX() - commonNode.getX());
+		double dx2 = (secondNode.getX() - commonNode.getX());
+
+		return dy1 * dx2 - dx1 * dy2 > 0;
+	}
 
 
-    /**
-     * Tests if two polygons instersect.
-     * @param first
-     * @param second
-     * @return Inside if second is inside first, Outside, if second is outside first, Crossing, if they cross.
-     */
-    public static Intersection polygonIntersection(List<Node> outside, List<Node> inside) {
-        Set<Node> outsideNodes = new HashSet<Node>(outside);
-        
-        boolean nodesInside = false;
-        boolean nodesOutside = false;
-        
-        for (Node insideNode : inside) {
-            if (!outsideNodes.contains(insideNode)) {
-                if (nodeInsidePolygon(insideNode, outside)) {
-                	nodesInside = true;
-                }
-                else {
-                	nodesOutside = true;
-                }
-            }
-        }
+	/**
+	 * Tests if two polygons intersect.
+	 * @param first
+	 * @param second
+	 * @return intersection kind
+	 * TODO: test segments, not only points
+	 * TODO: is O(N*M), should use sweep for better performance.
+	 */
+	public static PolygonIntersection polygonIntersection(List<Node> first, List<Node> second) {
+		Set<Node> firstSet = new HashSet<Node>(first);
+		Set<Node> secondSet = new HashSet<Node>(second);
 
-        if (nodesInside) {
-        	if (nodesOutside){
-        		return Intersection.CROSSING;
-        	}
-        	else {
-        		return Intersection.INSIDE;
-        	}
-        }
-        else {
-        	if (nodesOutside){
-        		return Intersection.OUTSIDE;
-        	}
-        	else {
-        		return Intersection.EQUAL;
-        	}
-        }
-    }
+		int nodesInsideSecond = 0;
+		int nodesOutsideSecond = 0;
+		int nodesInsideFirst = 0;
+		int nodesOutsideFirst = 0;
 
-    /**
-     * Tests if point is inside a polygon. The polygon can be self-intersecting. In such case the contains function works in xor-like manner.
-     * @param polygonNodes list of nodes from polygon path.
-     * @param point the point to test
-     * @return true if the point is inside polygon.
-     */
-    public static boolean nodeInsidePolygon(Node point, List<Node> polygonNodes) {
-        if (polygonNodes.size() < 2)
-            return false;
+		for (Node insideNode : first) {
+			if (secondSet.contains(insideNode)) {
+				continue;
+				//ignore touching nodes.
+			}
 
-        boolean inside = false;
-        Node p1, p2;
+			if (nodeInsidePolygon(insideNode, second)) {
+				nodesInsideSecond ++;
+			}
+			else {
+				nodesOutsideSecond ++;
+			}
+		}
 
-        //iterate each side of the polygon, start with the last segment
-        Node oldPoint = polygonNodes.get(polygonNodes.size() - 1);
+		for (Node insideNode : second) {
+			if (firstSet.contains(insideNode)) {
+				continue;
+				//ignore touching nodes.
+			}
 
-        for (Node newPoint : polygonNodes) {
-            //skip duplicate points
-            if (newPoint.equals(oldPoint)) {
-                continue;
-            }
+			if (nodeInsidePolygon(insideNode, first)) {
+				nodesInsideFirst ++;
+			}
+			else {
+				nodesOutsideFirst ++;
+			}
+		}
 
-            //order points so p1.lat <= p2.lat;
-            if (newPoint.getEastNorth().getY() > oldPoint.getEastNorth().getY()) {
-                p1 = oldPoint;
-                p2 = newPoint;
-            } else {
-                p1 = newPoint;
-                p2 = oldPoint;
-            }
+		if (nodesInsideFirst == 0) {
+			if (nodesInsideSecond == 0){
+				if (nodesOutsideFirst + nodesInsideSecond > 0) {
+					return PolygonIntersection.OUTSIDE;
+				}
+				else {
+					//all nodes common
+					return PolygonIntersection.CROSSING;
+				}
+			}
+			else
+			{
+				return PolygonIntersection.FIRST_INSIDE_SECOND;
+			}
+		}
+		else
+		{
+			if (nodesInsideSecond == 0) {
+				return PolygonIntersection.SECOND_INSIDE_FIRST;
+			}
+			else
+			{
+				return PolygonIntersection.CROSSING;
+			}
+		}
+	}
 
-            //test if the line is crossed and if so invert the inside flag.
-            if ((newPoint.getEastNorth().getY() < point.getEastNorth().getY()) == (point.getEastNorth().getY() <= oldPoint.getEastNorth().getY())
-                    && (point.getEastNorth().getX() - p1.getEastNorth().getX()) * (p2.getEastNorth().getY() - p1.getEastNorth().getY())
-                    < (p2.getEastNorth().getX() - p1.getEastNorth().getX()) * (point.getEastNorth().getY() - p1.getEastNorth().getY()))
-            {
-                inside = !inside;
-            }
+	/**
+	 * Tests if point is inside a polygon. The polygon can be self-intersecting. In such case the contains function works in xor-like manner.
+	 * @param polygonNodes list of nodes from polygon path.
+	 * @param point the point to test
+	 * @return true if the point is inside polygon.
+	 */
+	public static boolean nodeInsidePolygon(Node point, List<Node> polygonNodes) {
+		if (polygonNodes.size() < 2)
+			return false;
 
-            oldPoint = newPoint;
-        }
+		boolean inside = false;
+		Node p1, p2;
 
-        return inside;
-    }
+		//iterate each side of the polygon, start with the last segment
+		Node oldPoint = polygonNodes.get(polygonNodes.size() - 1);
+
+		for (Node newPoint : polygonNodes) {
+			//skip duplicate points
+			if (newPoint.equals(oldPoint)) {
+				continue;
+			}
+
+			//order points so p1.lat <= p2.lat;
+			if (newPoint.getEastNorth().getY() > oldPoint.getEastNorth().getY()) {
+				p1 = oldPoint;
+				p2 = newPoint;
+			} else {
+				p1 = newPoint;
+				p2 = oldPoint;
+			}
+
+			//test if the line is crossed and if so invert the inside flag.
+			if ((newPoint.getEastNorth().getY() < point.getEastNorth().getY()) == (point.getEastNorth().getY() <= oldPoint.getEastNorth().getY())
+					&& (point.getEastNorth().getX() - p1.getEastNorth().getX()) * (p2.getEastNorth().getY() - p1.getEastNorth().getY())
+					< (p2.getEastNorth().getX() - p1.getEastNorth().getX()) * (point.getEastNorth().getY() - p1.getEastNorth().getY()))
+			{
+				inside = !inside;
+			}
+
+			oldPoint = newPoint;
+		}
+
+		return inside;
+	}
 
 
 }

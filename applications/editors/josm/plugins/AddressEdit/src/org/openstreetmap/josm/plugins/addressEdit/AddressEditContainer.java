@@ -174,6 +174,14 @@ public class AddressEditContainer implements Visitor, DataSetListener {
 		return streetDict;
 	}
 	
+	public List<AddressNode> getUnresolvedAddresses() {
+		return unresolvedAddresses;
+	}
+
+	public List<AddressNode> getIncompleteAddresses() {
+		return incompleteAddresses;
+	}
+
 	public List<StreetNode> getStreetList() {
 		
 		ArrayList<StreetNode> sortedList = new ArrayList<StreetNode>(streetDict.values());

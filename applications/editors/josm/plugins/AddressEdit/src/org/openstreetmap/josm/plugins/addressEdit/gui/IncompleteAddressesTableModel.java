@@ -13,16 +13,18 @@
  */
 package org.openstreetmap.josm.plugins.addressEdit.gui;
 
-import javax.swing.table.DefaultTableModel;
 import static org.openstreetmap.josm.tools.I18n.tr;
+
+import javax.swing.table.DefaultTableModel;
+
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
-import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
+import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 
-public class StreetTableModel extends DefaultTableModel {
-
-	private static final int NUMBER_OF_COLUMNS = 4;
-	private static final String[] COLUMN_NAMES = new String[]{tr("Type"), tr("Name"), tr("Segments"), tr("Addresses")}; 
-	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{String.class, String.class, Integer.class, Integer.class};
+public class IncompleteAddressesTableModel extends DefaultTableModel {
+	private static final int NUMBER_OF_COLUMNS = 5;
+	private static final String[] COLUMN_NAMES = new String[]{tr("Country"), tr("State"), tr("City"), tr("Post Code"), tr("Street")}; 
+	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
+		String.class, String.class, String.class, String.class, String.class};
 	
 	/**
 	 * 
@@ -34,73 +36,60 @@ public class StreetTableModel extends DefaultTableModel {
 	/**
 	 * @param addressContainer
 	 */
-	public StreetTableModel(AddressEditContainer addressContainer) {
+	public IncompleteAddressesTableModel(AddressEditContainer addressContainer) {
 		super();
 		this.addressContainer = addressContainer;
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.swing.table.DefaultTableModel#getColumnCount()
-	 */
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
 		return NUMBER_OF_COLUMNS;
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.swing.table.DefaultTableModel#getColumnName(int)
-	 */
 	@Override
 	public String getColumnName(int column) {
 		return COLUMN_NAMES[column];
 	}
-	
-	/* (non-Javadoc)
-	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
-	 */
-	@Override
-	public Class<?> getColumnClass(int columnIndex) {
-		return COLUMN_CLASSES[columnIndex];
-	}
 
-	/* (non-Javadoc)
-	 * @see javax.swing.table.DefaultTableModel#getRowCount()
-	 */
 	@Override
 	public int getRowCount() {
-		if (addressContainer == null || addressContainer.getStreetList() == null) {
+		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
 			return 0;
 		}
-		return addressContainer.getStreetList().size();
+		return addressContainer.getUnresolvedAddresses().size();
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.swing.table.DefaultTableModel#getValueAt(int, int)
-	 */
 	@Override
 	public Object getValueAt(int row, int column) {
-		if (addressContainer == null || addressContainer.getStreetList() == null) {
+		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getStreetList().size()) {
+		if (row < 0 || row > addressContainer.getUnresolvedAddresses().size()) {
 			return null;
 		}
-		StreetNode sNode = addressContainer.getStreetList().get(row);
+		AddressNode aNode = addressContainer.getUnresolvedAddresses().get(row);
 		
 		switch (column) {
 		case 0:
-			return sNode.getType();
+			return aNode.getCountry();
 		case 1:
-			return sNode.getName();
+			return aNode.getState();
 		case 2:
-			return sNode.getNumberOfSegments();
+			return aNode.getCity();
 		case 3:
-			return sNode.getNumberOfAddresses();
+			return aNode.getPostCode();
+		case 4:
+			return aNode.getStreet();
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}
 		
+	}
+	
+	@Override
+	public Class<?> getColumnClass(int arg0) {
+		return COLUMN_CLASSES[arg0];
 	}
 
 	@Override

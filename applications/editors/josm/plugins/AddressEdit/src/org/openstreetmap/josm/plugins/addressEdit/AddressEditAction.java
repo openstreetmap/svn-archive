@@ -10,20 +10,15 @@ import java.util.Collection;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.progress.ProgressMonitor.CancelListener;
 import org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditDialog;
-import org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditModel;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class AddressEditAction extends JosmAction implements
-SelectionChangedListener, CancelListener {
+public class AddressEditAction extends JosmAction implements SelectionChangedListener {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private AddressEditModel addressModel;
-	private boolean isCanceled = false;
 	private AddressEditContainer addressEditContainer;
 
 	public AddressEditAction() {
@@ -126,10 +121,5 @@ SelectionChangedListener, CancelListener {
 		}
 
 		return result.toString();
-	}
-
-	@Override
-	public void operationCanceled() {
-		isCanceled = true;
 	}
 }

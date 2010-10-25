@@ -136,6 +136,7 @@ public class AddressNode extends NodeEntityBase {
 		if (!node.getName().equals(getStreet())) {
 			setStreetName(node.getName());
 			node.addAddress(this);
+			fireEntityChanged();
 		}
 	}
 	

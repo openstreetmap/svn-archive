@@ -31,36 +31,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
-import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
-import org.openstreetmap.josm.data.osm.event.DataSetListener;
-import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
-import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
-import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
-import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
-import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
-import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 
-public class AddressEditDialog extends JFrame implements ActionListener, TreeSelectionListener, ListSelectionListener {
+public class AddressEditDialog extends JFrame implements ActionListener, ListSelectionListener {
 	private static final String CANCEL_COMMAND = "Cancel";
 	private static final String OK_COMMAND = "Ok";
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6251676464816335631L;
-	private AddressEditContainer model;
+	private AddressEditContainer addressContainer;
 	private JTable unresolvedTable;
 	private JTable incompleteTable;
 	private JTable streetList;
@@ -78,7 +62,7 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 	public AddressEditDialog(AddressEditContainer addressEditContainer) throws HeadlessException  {
 		super(tr("Edit Addresses"));
 	
-		this.model = addressEditContainer; 
+		this.addressContainer = addressEditContainer; 
 		setLayout(new BorderLayout());
 		setSize(800,600);
 		// TODO: Center on screen
@@ -87,17 +71,17 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 		// TODO: Proper init, if model is null
 		if (addressEditContainer != null) {
 			JPanel streetPanel = new JPanel(new BorderLayout());
-			streetList = new JTable(new StreetTableModel(model));
+			streetList = new JTable(new StreetTableModel(addressContainer));
 			streetList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			streetList.getSelectionModel().addListSelectionListener(this);
 			
 			JScrollPane scroll1 = new JScrollPane(streetList);
 			streetPanel.add(scroll1, BorderLayout.CENTER);
-			streetPanel.add(new JLabel("Unresolved Addresses"), BorderLayout.NORTH);
+			streetPanel.add(new JLabel("Streets"), BorderLayout.NORTH);
 			streetPanel.setMinimumSize(new Dimension(350, 400));
 			
 			JPanel unresolvedPanel = new JPanel(new BorderLayout());		
-			unresolvedTable = new JTable(new UnresolvedAddressesTableModel(model));
+			unresolvedTable = new JTable(new UnresolvedAddressesTableModel(addressContainer));
 			unresolvedTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			unresolvedTable.getSelectionModel().addListSelectionListener(this);
 			
@@ -113,7 +97,7 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 			
 			JPanel incompletePanel = new JPanel(new BorderLayout());
 			
-			incompleteTable = new JTable(new IncompleteAddressesTableModel(model));
+			incompleteTable = new JTable(new IncompleteAddressesTableModel(addressContainer));
 			incompleteTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			incompleteTable.getSelectionModel().addListSelectionListener(this);
 			JScrollPane scroll3 = new JScrollPane(incompleteTable);
@@ -127,7 +111,6 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 			JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, streetPanel, addrSplitPane);
 			this.getContentPane().add(pane, BorderLayout.CENTER);
 		} else {
-			streetList = new JTable(new DefaultTableModel());
 			this.getContentPane().add(new JLabel(tr("(No data)")), BorderLayout.CENTER);
 		}
 		
@@ -160,25 +143,14 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 	}
 
 	@Override
-	public void valueChanged(TreeSelectionEvent event) {
-		// Updates the selection
-		if (event.getSource() == streetList) {
-			int selStr = streetList.getSelectedRow();
-			 
-		}
+	public void valueChanged(ListSelectionEvent e) {
 		
-		/*
-		AddressSelectionEvent ev = new AddressSelectionEvent(event.getSource(),
-				selStreet, selUnrAddr, selIncAddr);		
+		AddressEditSelectionEvent ev = new AddressEditSelectionEvent(e.getSource(),
+				streetList, unresolvedTable, incompleteTable, addressContainer);
+		
 		for (AbstractAddressEditAction action : actions) {
 			action.updateEnabledState(ev);
-		}*/
-	}
-
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		// TODO Auto-generated method stub
-		
+		}
 	}
 
 }

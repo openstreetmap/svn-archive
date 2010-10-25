@@ -15,12 +15,14 @@ package org.openstreetmap.josm.plugins.addressEdit;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	public static final String ANONYMOUS = tr("No name");
+	private static List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
 	
 	protected OsmPrimitive osmObject;
 	
@@ -30,6 +32,31 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	public NodeEntityBase(OsmPrimitive osmObject) {
 		super();
 		this.osmObject = osmObject;
+	}
+	
+	/**
+	 * Adds a change listener.
+	 * @param listener
+	 */
+	public static void addChangedListener(IAddressEditContainerListener listener) {
+		listeners.add(listener);
+	}
+	
+	/**
+	 * Removes a change listener.
+	 * @param listener
+	 */
+	public static void removeChangedListener(IAddressEditContainerListener listener) {
+		listeners.remove(listener);
+	}
+	
+	/**
+	 * Notifies clients that the address container changed.
+	 */
+	protected static void fireEntityChanged() {
+		for (IAddressEditContainerListener listener : listeners) {
+			listener.entityChanged();
+		}
 	}
 
 	public OsmPrimitive getOsmObject() {

@@ -13,14 +13,10 @@
  */
 package org.openstreetmap.josm.plugins.addressEdit.gui;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.tree.DefaultMutableTreeNode;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 
@@ -35,32 +31,22 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 	private static final long serialVersionUID = -6180491357232121384L;
 
 	@Override
-	public void addressEditActionPerformed(AddressSelectionEvent ev) {
-		DefaultMutableTreeNode streetNode = ev.getSelectedStreet();
-		StreetNode sNode = null;
-		AddressNode aNode = null;
+	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {		
+		StreetNode streetNode = ev.getSelectedStreet();
 		
-		if (streetNode != null) {
-			sNode = (StreetNode) streetNode.getUserObject();
+		
+		if (streetNode != null && ev.getSelectedIncompleteAddresses() != null) {
+			for (AddressNode addrNode : ev.getSelectedUnresolvedAddresses()) {
+				addrNode.assignStreet(streetNode);
+				System.out.println("Assign " + addrNode + " to " + streetNode);
+			}
 		}
-		
-		DefaultMutableTreeNode addrNode = ev.getSelectedUnresolvedAddress();
-		if (addrNode != null) {
-			aNode = (AddressNode) addrNode.getUserObject();
-		}
-		
-		if (sNode != null && aNode != null) {
-			System.out.println("Assign " + aNode + " top " + sNode);
-			
-			aNode.assignStreet(sNode);
-			addrNode.removeFromParent();			
-		}		
 	}
 
 	@Override
-	public void updateEnabledState(AddressSelectionEvent ev) {
+	public void updateEnabledState(AddressEditSelectionEvent ev) {
 		super.updateEnabledState(ev);
-		setEnabled(ev.getSelectedStreet() != null && ev.getSelectedUnresolvedAddress() != null);
+		setEnabled(ev.getSelectedStreet() != null && ev.getSelectedUnresolvedAddresses() != null);
 	}
 
 

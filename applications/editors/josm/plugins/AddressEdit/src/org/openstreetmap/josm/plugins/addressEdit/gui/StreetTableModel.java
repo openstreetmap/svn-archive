@@ -13,12 +13,12 @@
  */
 package org.openstreetmap.josm.plugins.addressEdit.gui;
 
-import javax.swing.table.DefaultTableModel;
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
 
-public class StreetTableModel extends DefaultTableModel {
+public class StreetTableModel extends AddressEditTableModel {
 
 	private static final int NUMBER_OF_COLUMNS = 4;
 	private static final String[] COLUMN_NAMES = new String[]{tr("Type"), tr("Name"), tr("Segments"), tr("Addresses")}; 
@@ -29,14 +29,11 @@ public class StreetTableModel extends DefaultTableModel {
 	 */
 	private static final long serialVersionUID = 424009321818130586L;
 
-	private AddressEditContainer addressContainer;
-
 	/**
 	 * @param addressContainer
 	 */
 	public StreetTableModel(AddressEditContainer addressContainer) {
-		super();
-		this.addressContainer = addressContainer;
+		super(addressContainer);
 	}
 
 	/* (non-Javadoc)

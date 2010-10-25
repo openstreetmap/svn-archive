@@ -58,7 +58,7 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  * 
  */
 
-public class AddressEditContainer implements Visitor, DataSetListener {
+public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener {
 	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100); 
 	private List<AddressNode> unresolvedAddresses = new ArrayList<AddressNode>(100);
 	private List<AddressNode> incompleteAddresses = new ArrayList<AddressNode>(100);
@@ -67,6 +67,13 @@ public class AddressEditContainer implements Visitor, DataSetListener {
 	
 	private List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
 	
+	/**
+	 * 
+	 */
+	public AddressEditContainer() {
+		NodeEntityBase.addChangedListener(this);
+	}
+
 	/**
 	 * Adds a change listener.
 	 * @param listener
@@ -250,6 +257,8 @@ public class AddressEditContainer implements Visitor, DataSetListener {
 			osmPrimitive.visit(this);
 		}
 		
+		resolveAddresses();
+		
 		fireContainerChanged();
 	}
 	
@@ -309,5 +318,16 @@ public class AddressEditContainer implements Visitor, DataSetListener {
 
 	@Override
 	public void wayNodesChanged(WayNodesChangedEvent event) {
+	}
+
+	@Override
+	public void containerChanged(AddressEditContainer container) {
+		
+	}
+
+	@Override
+	public void entityChanged() {
+		System.out.println("entityChanged, inavlidate... :-)");
+		invalidate();		
 	}
 }

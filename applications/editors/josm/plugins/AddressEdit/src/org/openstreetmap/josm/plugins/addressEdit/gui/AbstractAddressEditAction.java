@@ -25,7 +25,7 @@ public abstract class AbstractAddressEditAction extends AbstractAction {
 	 */
 	private static final long serialVersionUID = 3080414353417044998L;
 
-	private AddressSelectionEvent event;
+	private AddressEditSelectionEvent event;
 
 	/**
 	 * @param name
@@ -48,7 +48,7 @@ public abstract class AbstractAddressEditAction extends AbstractAction {
 	 * @param ev
 	 * @return
 	 */
-	public void updateEnabledState(AddressSelectionEvent ev) {
+	public void updateEnabledState(AddressEditSelectionEvent ev) {
 		// If the tree selection changes, we will get a new event. So this is safe.
 		this.event = ev; // save for later use.  
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractAddressEditAction extends AbstractAction {
 	 * Redirected action handler
 	 * @param ev
 	 */
-	public abstract void addressEditActionPerformed(AddressSelectionEvent ev);
+	public abstract void addressEditActionPerformed(AddressEditSelectionEvent ev);
 	
 	
 

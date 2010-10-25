@@ -30,8 +30,6 @@ package org.openstreetmap.josm.plugins.addressEdit.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import javax.swing.table.DefaultTableModel;
-
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 
@@ -41,7 +39,7 @@ import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
  * 
  */
 
-public class UnresolvedAddressesTableModel extends DefaultTableModel {
+public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	private static final int NUMBER_OF_COLUMNS = 2;
 	private static final String[] COLUMN_NAMES = new String[]{tr("Street"), tr("Complete?")}; 
@@ -51,15 +49,12 @@ public class UnresolvedAddressesTableModel extends DefaultTableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = 424009321818130586L;
-
-	private AddressEditContainer addressContainer;
-
+	
 	/**
 	 * @param addressContainer
 	 */
 	public UnresolvedAddressesTableModel(AddressEditContainer addressContainer) {
-		super();
-		this.addressContainer = addressContainer;
+		super(addressContainer);
 	}
 
 	@Override

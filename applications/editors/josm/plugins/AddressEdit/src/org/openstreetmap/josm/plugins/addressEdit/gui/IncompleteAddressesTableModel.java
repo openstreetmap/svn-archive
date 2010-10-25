@@ -15,30 +15,26 @@ package org.openstreetmap.josm.plugins.addressEdit.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import javax.swing.table.DefaultTableModel;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 
-public class IncompleteAddressesTableModel extends DefaultTableModel {
+public class IncompleteAddressesTableModel extends AddressEditTableModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5951629033395186324L;
+	
 	private static final int NUMBER_OF_COLUMNS = 5;
 	private static final String[] COLUMN_NAMES = new String[]{tr("Country"), tr("State"), tr("City"), tr("Post Code"), tr("Street")}; 
 	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
 		String.class, String.class, String.class, String.class, String.class};
 	
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 424009321818130586L;
-
-	private AddressEditContainer addressContainer;
-
-	/**
 	 * @param addressContainer
 	 */
 	public IncompleteAddressesTableModel(AddressEditContainer addressContainer) {
-		super();
-		this.addressContainer = addressContainer;
+		super(addressContainer);
 	}
 
 	@Override

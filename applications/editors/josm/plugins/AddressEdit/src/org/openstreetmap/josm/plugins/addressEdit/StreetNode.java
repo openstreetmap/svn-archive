@@ -15,8 +15,6 @@ package org.openstreetmap.josm.plugins.addressEdit;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -61,7 +59,7 @@ public class StreetNode extends NodeEntityBase {
 	
 	public void addAddress(AddressNode aNode) {
 		lazyCreateAddresses();
-		addresses.add(aNode);
+		addresses.add(aNode);		
 	}
 
 	private void lazyCreateAddresses() {

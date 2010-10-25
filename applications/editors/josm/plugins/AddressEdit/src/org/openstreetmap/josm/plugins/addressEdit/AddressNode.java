@@ -111,14 +111,11 @@ public class AddressNode extends NodeEntityBase {
 		int cc = 0;
 		cc = this.getCountry().compareTo(other.getCountry());
 		if ( cc  == 0) {
-			cc = this.getState().compareTo(other.getState());
-			
+			cc = this.getState().compareTo(other.getState());			
 			if (cc  == 0) {
-				cc = this.getCity().compareTo(other.getCity());
-				
+				cc = this.getCity().compareTo(other.getCity());				
 				if (cc  == 0) {
-					cc = this.getStreet().compareTo(other.getStreet());
-					
+					cc = this.getStreet().compareTo(other.getStreet());					
 					if (cc  == 0) {
 						cc = this.getHouseNumber().compareTo(other.getHouseNumber());
 					}
@@ -127,6 +124,59 @@ public class AddressNode extends NodeEntityBase {
 		}
 		
 		return cc;
+	}
+	
+	/**
+	 * Applies the street name from the specified street node.
+	 * @param node
+	 */
+	public void assignStreet(StreetNode node) {
+		if (node == null || !node.hasName()) return;
+		
+		if (!node.getName().equals(getStreet())) {
+			setStreetName(node.getName());
+			node.addAddress(this);
+		}
+	}
+	
+	/**
+	 * Sets the street name of the address node.
+	 * @param streetName
+	 */
+	public void setStreetName(String streetName) {
+		if (streetName != null && streetName.length() == 0) return;
+		
+		this.osmObject.put(TagUtils.ADDR_STREET_TAG, streetName);
+	}
+	
+	/**
+	 * Sets the state of the address node.
+	 * @param state
+	 */
+	public void setState(String state) {
+		if (state != null && state.length() == 0) return;
+		
+		this.osmObject.put(TagUtils.ADDR_STATE_TAG, state);
+	}
+	
+	/**
+	 * Sets the country of the address node.
+	 * @param country
+	 */
+	public void setCountry(String country) {
+		if (country != null && country.length() == 0) return;
+		
+		this.osmObject.put(TagUtils.ADDR_COUNTRY_TAG, country);
+	}
+	
+	/**
+	 * Sets the post code of the address node.
+	 * @param postCode
+	 */
+	public void setPostCode(String postCode) {
+		if (postCode != null && postCode.length() == 0) return;
+		
+		this.osmObject.put(TagUtils.ADDR_POSTCODE_TAG, postCode);
 	}
 
 	@Override

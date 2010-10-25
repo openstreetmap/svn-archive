@@ -15,6 +15,8 @@ package org.openstreetmap.josm.plugins.addressEdit;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -80,6 +82,64 @@ public class StreetNode extends NodeEntityBase {
 		this.addresses = addresses;
 	}
 	
+	/**
+	 * Gets the number of addresses associated with this street.
+	 * @return
+	 */
+	public int getNumberOfAddresses() {
+		if (addresses == null) return 0;
+		
+		return addresses.size();
+	}
+	
+	/**
+	 * Gets the number of street segments of this street.
+	 * @return
+	 */
+	public int getNumberOfSegments() {
+		if (children == null) return 0;
+		
+		int sc = 0;
+		for (INodeEntity node : children) {
+			if (node instanceof StreetSegmentNode) {
+				sc++;
+			}
+		}
+		return sc;
+	}
+	
+	/**
+	 * Gets the road type(s) of this street. If the street has different types,
+	 * they are separated by comma. 
+	 * @return
+	 */
+	public String getType() {
+		List<String> types = new ArrayList<String>();
+		
+		for (INodeEntity seg : getChildren()) {
+			OsmPrimitive osmPrim = seg.getOsmObject();
+			if (TagUtils.hasHighwayTag(osmPrim)) {
+				String val = osmPrim.get(TagUtils.HIGHWAY_TAG);
+				if (!types.contains(val)) {
+					types.add(val);
+				}
+			}
+		}
+		
+		StringBuffer sb = new StringBuffer(20);
+		for (String string : types) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			sb.append(string);
+			
+		}
+		return sb.toString();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.addressEdit.NodeEntityBase#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer(getName());

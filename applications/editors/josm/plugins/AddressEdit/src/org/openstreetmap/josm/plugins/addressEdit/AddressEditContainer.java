@@ -29,15 +29,27 @@
 package org.openstreetmap.josm.plugins.addressEdit;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListener;
+import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
+import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
+import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
 
 /**
@@ -46,11 +58,39 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  * 
  */
 
-public class AddressVisitor implements Visitor {
+public class AddressEditContainer implements Visitor, DataSetListener {
 	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100); 
 	private List<AddressNode> unresolvedAddresses = new ArrayList<AddressNode>(100);
+	private List<AddressNode> incompleteAddresses = new ArrayList<AddressNode>(100);
 	
 	private HashSet<String> tags = new HashSet<String>();
+	
+	private List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
+	
+	/**
+	 * Adds a change listener.
+	 * @param listener
+	 */
+	public void addChangedListener(IAddressEditContainerListener listener) {
+		listeners.add(listener);
+	}
+	
+	/**
+	 * Removes a change listener.
+	 * @param listener
+	 */
+	public void removeChangedListener(IAddressEditContainerListener listener) {
+		listeners.remove(listener);
+	}
+	
+	/**
+	 * Notifies clients that the address container changed.
+	 */
+	protected void fireContainerChanged() {
+		for (IAddressEditContainerListener listener : listeners) {
+			listener.containerChanged(this);
+		}
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Node)
@@ -64,6 +104,10 @@ public class AddressVisitor implements Visitor {
 		if (!assignAddressToStreet(aNode)) {
 			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
 			unresolvedAddresses.add(aNode);
+		}
+		
+		if (!aNode.isComplete()) {
+			incompleteAddresses.add(aNode);
 		}
 	}
 	
@@ -182,8 +226,80 @@ public class AddressVisitor implements Visitor {
 		System.out.println("Still unresolved: " + unresolvedAddresses.size() + " addresses");
 	}
 	
+	/**
+	 * Rebuilds the street and address lists. 
+	 */
+	public void invalidate() {
+		invalidate(Main.main.getCurrentDataSet().allPrimitives());
+	}
+	
+	public void invalidate(final Collection<? extends OsmPrimitive> osmData) {
+		if (osmData == null || osmData.isEmpty())
+			return;
+		
+		clearData();
+		for (OsmPrimitive osmPrimitive : osmData) {
+			osmPrimitive.visit(this);
+		}
+		
+		fireContainerChanged();
+	}
+	
 	public void clearData() {
 		streetDict.clear();
 		unresolvedAddresses.clear();
+	}
+	
+	/**
+	 * Connects the listener to the data set and revisits the data. This method should
+	 * be called immediately before an edit session starts.
+	 */
+	public void attachToDataSet() {
+		Main.main.getCurrentDataSet().addDataSetListener(this);
+		invalidate();
+	}
+	
+	/**
+	 * Disconnects the listener from the data set. This method should
+	 * be called immediately after an edit session has ended.
+	 */
+	public void detachFromDataSet() {
+		Main.main.getCurrentDataSet().removeDataSetListener(this);
+	}
+
+	@Override
+	public void dataChanged(DataChangedEvent event) {
+	}
+
+	@Override
+	public void nodeMoved(NodeMovedEvent event) {
+				
+	}
+
+	@Override
+	public void otherDatasetChange(AbstractDatasetChangedEvent event) {
+	}
+
+	@Override
+	public void primtivesAdded(PrimitivesAddedEvent event) {
+		invalidate();
+	}
+
+	@Override
+	public void primtivesRemoved(PrimitivesRemovedEvent event) {
+		invalidate();
+	}
+
+	@Override
+	public void relationMembersChanged(RelationMembersChangedEvent event) {
+	}
+
+	@Override
+	public void tagsChanged(TagsChangedEvent event) {
+		invalidate();		
+	}
+
+	@Override
+	public void wayNodesChanged(WayNodesChangedEvent event) {
 	}
 }

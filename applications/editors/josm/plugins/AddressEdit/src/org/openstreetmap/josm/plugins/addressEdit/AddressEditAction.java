@@ -7,12 +7,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor.CancelListener;
 import org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditDialog;
 import org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditModel;
@@ -27,6 +24,7 @@ SelectionChangedListener, CancelListener {
 	private static final long serialVersionUID = 1L;
 	private AddressEditModel addressModel;
 	private boolean isCanceled = false;
+	private AddressEditContainer addressEditContainer;
 
 	public AddressEditAction() {
 		super(tr("Address Editor"), "addressedit_24",
@@ -36,7 +34,7 @@ SelectionChangedListener, CancelListener {
 						Shortcut.GROUP_MENU, InputEvent.ALT_DOWN_MASK
 						| InputEvent.SHIFT_DOWN_MASK), false);
 		setEnabled(false);
-		DataSet.addSelectionListener(this);
+		
 	}
 
 	@Override
@@ -48,12 +46,15 @@ SelectionChangedListener, CancelListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		collectAddressesAndStreets(Main.main.getCurrentDataSet()
-				.allPrimitives());
-
-		if (addressModel != null) {
-			AddressEditDialog dlg = new AddressEditDialog(addressModel);
-			dlg.setVisible(true);
+		addressEditContainer = new AddressEditContainer();
+		if (addressEditContainer != null) {
+			addressEditContainer.attachToDataSet();
+			try {
+				AddressEditDialog dlg = new AddressEditDialog(addressEditContainer);
+				dlg.setVisible(true);
+			} finally {
+				addressEditContainer.detachFromDataSet();
+			}
 		}
 	}
 
@@ -62,37 +63,7 @@ SelectionChangedListener, CancelListener {
 		if (osmData == null || osmData.isEmpty())
 			return;
 
-		final AddressVisitor addrVisitor = new AddressVisitor();
-
-		//final PleaseWaitProgressMonitor monitor = new PleaseWaitProgressMonitor(tr("Prepare OSM data..."));
-		// int ticks = osmData.size();
-
-
-
-		try {
-			for (OsmPrimitive osm : osmData) {
-				osm.visit(addrVisitor);
-
-				if (isCanceled) {
-					addrVisitor.clearData(); // free visitor data
-					return;
-				}
-			}
-			//monitor.worked(1);
-
-			// generateTagCode(addrVisitor);
-			//monitor.setCustomText(tr("Resolving addresses..."));
-			addrVisitor.resolveAddresses();
-			//monitor.worked(1);
-
-
-		} finally {
-			//monitor.close();
-		}
-
-		addressModel = new AddressEditModel(
-				addrVisitor.getStreetList(), 
-				addrVisitor.getUnresolvedItems());
+		
 	}
 
 	@Override
@@ -108,7 +79,7 @@ SelectionChangedListener, CancelListener {
 
 	/* ----------------------------------------- */
 
-	private void generateTagCode(AddressVisitor addrVisitor) {
+	private void generateTagCode(AddressEditContainer addrVisitor) {
 		/* This code is abused to generate tag utility code */
 		for (String tag : addrVisitor.getTags()) {
 			String methodName = createMethodName(tag);

@@ -30,24 +30,40 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeSelectionModel;
 
-public class AddressEditDialog extends JFrame implements ActionListener, TreeSelectionListener {
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListener;
+import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
+import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
+import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
+
+public class AddressEditDialog extends JFrame implements ActionListener, TreeSelectionListener, ListSelectionListener {
 	private static final String CANCEL_COMMAND = "Cancel";
 	private static final String OK_COMMAND = "Ok";
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6251676464816335631L;
-	private AddressEditModel model;
+	private AddressEditContainer model;
 	private JTree unresolvedTree;
 	private JTree incompleteTree;
-	private JTree streetsTree;
+	private JTable streetList;
 	private DefaultMutableTreeNode selStreet;
 	private DefaultMutableTreeNode selUnrAddr;
 	private DefaultMutableTreeNode selIncAddr;
@@ -62,36 +78,40 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 	 * @param arg0
 	 * @throws HeadlessException
 	 */
-	public AddressEditDialog(AddressEditModel model) throws HeadlessException  {
+	public AddressEditDialog(AddressEditContainer addressEditContainer) throws HeadlessException  {
 		super(tr("Edit Addresses"));
 	
-		this.model = model; 
+		this.model = addressEditContainer; 
 		setLayout(new BorderLayout());
 		setSize(800,600);
 		// TODO: Center on screen
 		setLocation(100, 100);
-
+		
 		// TODO: Proper init, if model is null
-		if (model != null) {
+		if (addressEditContainer != null) {
 			JPanel streetPanel = new JPanel(new BorderLayout());
-			streetsTree = new JTree(new DefaultTreeModel(model.getStreetsTree()));
+			/*
+			streetsTree = new JTree(new DefaultTreeModel(addressEditContainer.getStreetsTree()));
 			streetsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 			streetsTree.addTreeSelectionListener(this);
 			streetsTree.setCellRenderer(new StreetTreeCellRenderer());
+			*/
+			streetList = new JTable(new StreetTableModel(model));
+			streetList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			
-			JScrollPane scroll1 = new JScrollPane(streetsTree);
+			JScrollPane scroll1 = new JScrollPane(streetList);
 			streetPanel.add(scroll1, BorderLayout.CENTER);
 			streetPanel.add(new JLabel("Unresolved Addresses"), BorderLayout.NORTH);
-			streetPanel.setMinimumSize(new Dimension(300, 400));
+			streetPanel.setMinimumSize(new Dimension(350, 400));
 			
 			JPanel unresolvedPanel = new JPanel(new BorderLayout());		
-			unresolvedTree = new JTree(new DefaultTreeModel(model.getUnresolvedAddressesTree()));
+			unresolvedTree = new JTree(new DefaultTreeModel(new DefaultMutableTreeNode()));
 			unresolvedTree.addTreeSelectionListener(this);
 			
 			JScrollPane scroll2 = new JScrollPane(unresolvedTree);
 			unresolvedPanel.add(scroll2, BorderLayout.CENTER);
 			unresolvedPanel.add(new JLabel("Unresolved Addresses"), BorderLayout.NORTH);
-			unresolvedPanel.setMinimumSize(new Dimension(300, 200));
+			unresolvedPanel.setMinimumSize(new Dimension(350, 200));
 			
 			JPanel unresolvedButtons = new JPanel(new FlowLayout());
 			JButton assign = new JButton(resolveAction);
@@ -99,18 +119,19 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 			unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
 			
 			JPanel incompletePanel = new JPanel(new BorderLayout());
-			incompleteTree = new JTree(new DefaultTreeModel(model.getIncompleteAddressesTree()));
+			incompleteTree = new JTree(new DefaultTreeModel(new DefaultMutableTreeNode()));
 			incompleteTree.addTreeSelectionListener(this);
 			JScrollPane scroll3 = new JScrollPane(incompleteTree);
 			incompletePanel.add(scroll3, BorderLayout.CENTER);
 			incompletePanel.add(new JLabel("Incomplete Addresses"), BorderLayout.NORTH);
-			incompletePanel.setMinimumSize(new Dimension(300, 200));
+			incompletePanel.setMinimumSize(new Dimension(350, 200));
 			
 			JSplitPane addrSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, unresolvedPanel, incompletePanel);
 			
 			JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, streetPanel, addrSplitPane);
 			this.getContentPane().add(pane, BorderLayout.CENTER);
 		} else {
+			streetList = new JTable(new DefaultTableModel());
 			this.getContentPane().add(new JLabel(tr("(No data)")), BorderLayout.CENTER);
 		}
 		
@@ -130,21 +151,6 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 	}
 
-	public AddressEditModel getModel() {
-		return model;
-	}
-
-	public void setModel(AddressEditModel model) {
-		if (this.model != model) {
-			this.model = model;
-			if (model != null) {
-				streetsTree.setModel(new DefaultTreeModel(model.getStreetsTree()));
-				unresolvedTree.setModel(new DefaultTreeModel(model.getUnresolvedAddressesTree()));
-				incompleteTree.setModel(new DefaultTreeModel(model.getIncompleteAddressesTree()));
-			}
-		}
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (OK_COMMAND.equals(e.getActionCommand())) {
@@ -160,22 +166,23 @@ public class AddressEditDialog extends JFrame implements ActionListener, TreeSel
 	@Override
 	public void valueChanged(TreeSelectionEvent event) {
 		// Updates the selection
-		if (event.getSource() == streetsTree) {
-			selStreet = (DefaultMutableTreeNode) streetsTree.getLastSelectedPathComponent();
+		if (event.getSource() == streetList) {
+			int selStr = streetList.getSelectedRow();
+			 
 		}
 		
-		if (event.getSource() == unresolvedTree) {
-			selUnrAddr = (DefaultMutableTreeNode) unresolvedTree.getLastSelectedPathComponent();
-		}
-		
-		if (event.getSource() == incompleteTree) {
-			selIncAddr = (DefaultMutableTreeNode) incompleteTree.getLastSelectedPathComponent();
-		}
-		
+		/*
 		AddressSelectionEvent ev = new AddressSelectionEvent(event.getSource(),
 				selStreet, selUnrAddr, selIncAddr);		
 		for (AbstractAddressEditAction action : actions) {
 			action.updateEnabledState(ev);
-		}
+		}*/
 	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -246,7 +246,10 @@ def dom_strip_icons(document):
 
 def transmogrify_file(sf,dfgrey,dfnoicons):
     dom= pxdom.getDOMImplementation('') 
-    parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None) 
+    parser= dom.createLSParser(dom.MODE_SYNCHRONOUS, None)
+    parser.domConfig.setParameter('entities', 0) # 1 -> exception if attribute values is set
+    #parser.domConfig.setParameter('disallow-doctype', 1)
+    parser.domConfig.setParameter('pxdom-resolve-resources', 1) # 1 -> replace &xyz; with text
     document = parser.parseURI(sf)
 
     dom_convert_to_grey(document)

@@ -117,11 +117,8 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 		JPanel buttonPanel = new JPanel(new GridLayout(1,10));
 		JButton ok = new JButton(OK_COMMAND);
 		ok.addActionListener(this);
-		JButton cancel = new JButton(CANCEL_COMMAND);
-		cancel.addActionListener(this);
-		
-		buttonPanel.add(cancel);
 		buttonPanel.add(ok);
+		
 		// Murks
 		for (int i = 0; i < 8; i++) {
 			buttonPanel.add(new JSeparator());

@@ -213,7 +213,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		if (streetName != null && streetDict.containsKey(streetName)) {
 			StreetNode sNode = streetDict.get(streetName);
 			sNode.addAddress(aNode);
-			//System.out.println("Resolved address " + aNode + ": " + sNode);
 			return true;
 		}
 		
@@ -231,14 +230,10 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			}
 		}
 		
-		System.out.println("Resolved " + resolvedAddresses.size() + " addresses");
-		
 		/* Remove all resolves nodes from unresolved list */
 		for (AddressNode resolved : resolvedAddresses) {
 			unresolvedAddresses.remove(resolved);
 		}
-		
-		System.out.println("Still unresolved: " + unresolvedAddresses.size() + " addresses");
 	}
 	
 	/**
@@ -258,6 +253,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		}
 		
 		resolveAddresses();
+		
+		Collections.sort(incompleteAddresses);
+		Collections.sort(unresolvedAddresses);
 		
 		fireContainerChanged();
 	}
@@ -327,7 +325,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
 	@Override
 	public void entityChanged() {
-		System.out.println("entityChanged, inavlidate... :-)");
 		invalidate();		
 	}
 }

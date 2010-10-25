@@ -35,12 +35,10 @@ public class AddressEditTableModel extends DefaultTableModel implements IAddress
 	@Override
 	public void containerChanged(AddressEditContainer container) {
 		fireTableDataChanged();
-		System.out.println("Fire data table changed...");
 	}
 
 	@Override
 	public void entityChanged() {
 		fireTableDataChanged();
-		System.out.println("Fire data table changed...");
 	}
 }

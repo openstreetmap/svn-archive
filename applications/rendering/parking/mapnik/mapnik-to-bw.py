@@ -6,9 +6,6 @@ import os,subprocess
 import pxdom
 import colorsys
 
-source_dir = './original-mapnik'
-dest_dir = './bw-mapnik'
-
 simple_colors = {
     'aliceblue': 'f0f8ff',
     'antiquewhite': 'faebd7',
@@ -268,13 +265,10 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
     serialiser= document.implementation.createLSSerializer() 
     serialiser.write(document, output)
 
+def strip_doctype(f):
+    subprocess.Popen(['sed','-i','2,5 d',f]) # -i means 'in place'
 
-def main():
-    #savedPath = os.getcwd()
-    #os.chdir("original-mapnik")
-    #os.chdir( savedPath )
-    source_symbols_dir = os.path.join(source_dir,"symbols")
-    dest_symbols_dir = os.path.join(dest_dir,"symbols")
+def convert_icons_to_bw(source_symbols_dir,dest_symbols_dir):
     image_files = os.listdir(source_symbols_dir)
     image_files = [f for f in image_files if f.endswith('png')]
     for f in image_files:
@@ -282,16 +276,37 @@ def main():
         sf = os.path.join(source_symbols_dir,f)
         df = os.path.join(dest_symbols_dir,f)
         subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
-    transmogrify_file(os.path.join(source_dir,'osm.xml'),os.path.join(dest_dir,'osm-bw.xml'),os.path.join(dest_dir,'osm-bw-noicons.xml'))
-    #print "bw=",color_to_bw(0.9,0.5,0)
-    #print "bw=",color_to_bw(0,0.9,0.5)
-    #col="#7f7f7f"
-    #print "rgb=",parse_color(col),color_to_bw(parse_color(col)),rgb_to_css(color_to_bw(parse_color(col)))
 
-    #print "rgb=",parse_color("#1f3")
-    #print "rgb=",parse_color("yellow")
+def main(options):
+    source_dir = options['sourcedir']
+    source_file = options['sourcefile']
+    source_symbols_dir = os.path.join(source_dir,"symbols")
+    dest_dir = options['destdir']
 
+    dest_dir_bw = os.path.join(dest_dir,"bw")
+    dest_dir_bw_symbols = os.path.join(dest_dir_bw,"symbols")
+    dest_file_bw = 'osm-bw.xml'
+    bw_file = os.path.join(dest_dir_bw,dest_file_bw)
+    if not os.path.exists(dest_dir_bw_symbols):
+        os.makedirs(dest_dir_bw_symbols)
+
+    dest_dir_bw_noicons = os.path.join(dest_dir,"bw-noicons")
+    dest_file_bw_noicons = 'osm-bw-noicons.xml'
+    dest_symbols_dir = os.path.join(dest_dir,"symbols")
+    bw_noicons_file = os.path.join(dest_dir,dest_file_bw_noicons)
+
+    convert_icons_to_bw(source_symbols_dir,dest_symbols_dir)
+    transmogrify_file(os.path.join(source_dir,'osm.xml'),bwfile,bwnoiconsfile)
+    strip_doctype(bwfile)
+    strip_doctype(bwnoiconsfile)
 
 
 if __name__ == '__main__':
-    main()
+    parser = OptionParser()
+    parser.add_option("-sd", "--sourcedir", dest="sourcedir", help="path to the source directory", default=".")
+    parser.add_option("-sf", "--sourcefile", dest="sourcefile", help="source filename, default is 'osm.xml')", default="osm.xml")
+    parser.add_option("-dd", "--destdir", dest="destdir", help="path to the destination directory, further dirs are created within. default is '/tmp'", default="/tmp")
+    (options, args) = parser.parse_args()
+    print options
+    main(options.__dict__)
+    sys.exit(0)

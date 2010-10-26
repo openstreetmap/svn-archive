@@ -204,13 +204,6 @@
         <CssParameter name="fill">#bbc</CssParameter>
       </PolygonSymbolizer>
     </Rule>
-    <Rule>
-      <Filter>[highway] = 'services'</Filter>
-      &maxscale_zoom14;
-      <PolygonSymbolizer>
-        <CssParameter name="fill">#efc8c8</CssParameter>
-      </PolygonSymbolizer>
-   </Rule>
 </Style>
 <Style name="leisure">
      <Rule>
@@ -499,7 +492,7 @@
      </PolygonSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[power] = 'station'</Filter>
+      <Filter>[power] = 'station' or [power]='generator'</Filter>
       &maxscale_zoom10;
       &minscale_zoom11;
       <PolygonSymbolizer>
@@ -507,7 +500,7 @@
      </PolygonSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[power] = 'station'</Filter>
+      <Filter>[power] = 'station' or [power]='generator'</Filter>
       &maxscale_zoom12;
       <PolygonSymbolizer>
         <CssParameter name="fill">#bbb</CssParameter>
@@ -610,6 +603,13 @@
       &maxscale_zoom13;
       <PolygonPatternSymbolizer file="&symbols;/beach.png" />
     </Rule>
+    <Rule>
+      <Filter>[highway] = 'services'</Filter>
+      &maxscale_zoom14;
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#efc8c8</CssParameter>
+      </PolygonSymbolizer>
+   </Rule>
     <!--Rule>
       <ElseFilter/>
       &maxscale_zoom10;
@@ -3365,6 +3365,8 @@
       <LineSymbolizer>
         <CssParameter name="stroke">white</CssParameter>
         <CssParameter name="stroke-width">2</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
       </LineSymbolizer>
    </Rule>
    <Rule>
@@ -6478,7 +6480,7 @@
     <StyleName>leisure</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,aeroway,amenity,landuse,leisure,man_made,military,"natural",power,tourism,name,
+      (select way,aeroway,amenity,landuse,leisure,man_made,military,"natural",power,tourism,name,highway,
        case when religion in ('christian','jewish') then religion else 'INT-generic'::text end as religion
        from &prefix;_polygon
        where landuse is not null
@@ -6487,8 +6489,9 @@
           or amenity in ('parking','university','college','school','hospital','kindergarten','grave_yard')
           or military in ('barracks','danger_area')
           or "natural" in ('field','beach','heath','mud','wood')
-          or power in ('station','sub_station')
+          or power in ('station','sub_station','generator')
           or tourism in ('attraction','camp_site','caravan_site','picnic_site','zoo')
+          or highway='services'
        order by z_order,way_area desc
       ) as leisure
       </Parameter>

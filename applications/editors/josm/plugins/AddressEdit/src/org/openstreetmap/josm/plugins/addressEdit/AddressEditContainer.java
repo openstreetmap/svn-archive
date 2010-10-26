@@ -138,6 +138,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			}
 			
 			if (sNode != null) {
+				// TODO: Check if sgemnt really belongs to the street, even if the
+				// names are the same.
 				sNode.addStreetSegment(newSegment);
 			} else {
 				throw new RuntimeException("Street node is null!");

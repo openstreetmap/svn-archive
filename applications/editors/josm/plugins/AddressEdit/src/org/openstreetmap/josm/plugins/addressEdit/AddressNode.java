@@ -13,9 +13,6 @@
  */
 package org.openstreetmap.josm.plugins.addressEdit;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class AddressNode extends NodeEntityBase {

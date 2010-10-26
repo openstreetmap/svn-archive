@@ -1,0 +1,1 @@
+python mapnik-to-bw.py -s /home/kayd/workspace/Parking/mapnik/original-mapnik -f osm.xml -d /tmp/deploy

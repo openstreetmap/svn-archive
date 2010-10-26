@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # by kay
 
-import os,subprocess
+import sys,os,subprocess
+from optparse import OptionParser
 #from xml.dom.minidom import parse, parseString
 import pxdom
 import colorsys
@@ -277,13 +278,21 @@ def convert_icons_to_bw(source_symbols_dir,dest_symbols_dir):
         df = os.path.join(dest_symbols_dir,f)
         subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
 
+def add_license_files(dirname):
+    f = open(os.path.join(dirname,"CONTACT"), 'w')
+    f.write("This style is created by kayd@toolserver.org")
+    f.close
+    f = open(os.path.join(dirname,"LICENSE"), 'w')
+    f.write("This derived work is published by the author, Kay Drangmeister, under the same license as the original OSM mapnik style sheet (found here: http://svn.openstreetmap.org/applications/rendering/mapnik)")
+    f.close
+
 def main(options):
     source_dir = options['sourcedir']
     source_file = options['sourcefile']
     source_symbols_dir = os.path.join(source_dir,"symbols")
     dest_dir = options['destdir']
 
-    dest_dir_bw = os.path.join(dest_dir,"bw")
+    dest_dir_bw = os.path.join(dest_dir,"bw-mapnik")
     dest_dir_bw_symbols = os.path.join(dest_dir_bw,"symbols")
     dest_file_bw = 'osm-bw.xml'
     bw_file = os.path.join(dest_dir_bw,dest_file_bw)
@@ -291,21 +300,25 @@ def main(options):
         os.makedirs(dest_dir_bw_symbols)
 
     dest_dir_bw_noicons = os.path.join(dest_dir,"bw-noicons")
+    dest_dir_bw_noicons_symbols = os.path.join(dest_dir_bw_noicons,"symbols")
     dest_file_bw_noicons = 'osm-bw-noicons.xml'
-    dest_symbols_dir = os.path.join(dest_dir,"symbols")
-    bw_noicons_file = os.path.join(dest_dir,dest_file_bw_noicons)
+    bw_noicons_file = os.path.join(dest_dir_bw_noicons,dest_file_bw_noicons)
+    if not os.path.exists(dest_dir_bw_noicons_symbols):
+        os.makedirs(dest_dir_bw_noicons_symbols)
 
-    convert_icons_to_bw(source_symbols_dir,dest_symbols_dir)
-    transmogrify_file(os.path.join(source_dir,'osm.xml'),bwfile,bwnoiconsfile)
-    strip_doctype(bwfile)
-    strip_doctype(bwnoiconsfile)
-
+    convert_icons_to_bw(source_symbols_dir,dest_dir_bw_symbols)
+    convert_icons_to_bw(source_symbols_dir,dest_dir_bw_noicons_symbols)
+    transmogrify_file(os.path.join(source_dir,source_file),bw_file,bw_noicons_file)
+    strip_doctype(bw_file)
+    strip_doctype(bw_noicons_file)
+    add_license_files(dest_dir_bw)
+    add_license_files(dest_dir_bw_noicons)
 
 if __name__ == '__main__':
     parser = OptionParser()
-    parser.add_option("-sd", "--sourcedir", dest="sourcedir", help="path to the source directory", default=".")
-    parser.add_option("-sf", "--sourcefile", dest="sourcefile", help="source filename, default is 'osm.xml')", default="osm.xml")
-    parser.add_option("-dd", "--destdir", dest="destdir", help="path to the destination directory, further dirs are created within. default is '/tmp'", default="/tmp")
+    parser.add_option("-s", "--sourcedir", dest="sourcedir", help="path to the source directory", default=".")
+    parser.add_option("-f", "--sourcefile", dest="sourcefile", help="source filename, default is 'osm.xml')", default="osm.xml")
+    parser.add_option("-d", "--destdir", dest="destdir", help="path to the destination directory, further dirs are created within. default is '/tmp'", default="/tmp")
     (options, args) = parser.parse_args()
     print options
     main(options.__dict__)

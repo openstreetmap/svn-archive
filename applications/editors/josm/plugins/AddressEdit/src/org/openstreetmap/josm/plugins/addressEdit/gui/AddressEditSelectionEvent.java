@@ -85,7 +85,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 		if (streetTable != null && addressContainer != null && addressContainer.getStreetList() != null) {
 			int selRows = streetTable.getSelectedRow();
 			
-			if (selRows < 0 || selRows >= addressContainer.getStreetList().size()) {
+			if (selRows < 0 || selRows >= addressContainer.getNumberOfStreets()) {
 				return null;
 			}
 			
@@ -107,7 +107,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 			
 			List<AddressNode> nodes = new ArrayList<AddressNode>();
 			for (int i = 0; i < selRows.length; i++) {
-				if (i >= 0 && i < addressContainer.getIncompleteAddresses().size()) {
+				if (i >= 0 && i < addressContainer.getNumberOfIncompleteAddresses()) {
 					nodes.add(addressContainer.getIncompleteAddresses().get(selRows[i]));
 				}
 			}
@@ -129,7 +129,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 			
 			List<AddressNode> nodes = new ArrayList<AddressNode>();
 			for (int i = 0; i < selRows.length; i++) {
-				if (i >= 0 && i < addressContainer.getUnresolvedAddresses().size()) {
+				if (i >= 0 && i < addressContainer.getNumberOfUnresolvedAddresses()) {
 					nodes.add(addressContainer.getUnresolvedAddresses().get(selRows[i]));
 				}
 			}

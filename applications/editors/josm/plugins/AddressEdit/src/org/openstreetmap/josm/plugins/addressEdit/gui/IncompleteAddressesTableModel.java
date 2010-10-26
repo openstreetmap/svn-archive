@@ -53,7 +53,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
 			return 0;
 		}
-		return addressContainer.getIncompleteAddresses().size();
+		return addressContainer.getNumberOfIncompleteAddresses();
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getIncompleteAddresses().size()) {
+		if (row < 0 || row > addressContainer.getNumberOfIncompleteAddresses()) {
 			return null;
 		}
 		AddressNode aNode = addressContainer.getIncompleteAddresses().get(row);

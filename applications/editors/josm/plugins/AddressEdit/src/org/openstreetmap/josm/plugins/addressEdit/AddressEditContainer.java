@@ -203,6 +203,30 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public HashSet<String> getTags() {
 		return tags;
 	}
+	
+	/**
+	 * Gets the number of streets in the container.
+	 * @return
+	 */
+	public int getNumberOfStreets() {
+		return streetDict != null ? streetDict.size() : 0;
+	}
+	
+	/**
+	 * Get the number of incomplete addresses.
+	 * @return
+	 */
+	public int getNumberOfIncompleteAddresses() {
+		return incompleteAddresses != null ? incompleteAddresses.size() : 0;
+	}
+	
+	/**
+	 * Gets the number of unresolved addresses.
+	 * @return
+	 */
+	public int getNumberOfUnresolvedAddresses() {
+		return unresolvedAddresses != null ? unresolvedAddresses.size() : 0;
+	}
 
 	/**
 	 * Tries to assign an address to a street.

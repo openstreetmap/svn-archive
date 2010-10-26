@@ -73,7 +73,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
 			return 0;
 		}
-		return addressContainer.getUnresolvedAddresses().size();
+		return addressContainer.getNumberOfUnresolvedAddresses();
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getUnresolvedAddresses().size()) {
+		if (row < 0 || row > addressContainer.getNumberOfUnresolvedAddresses()) {
 			return null;
 		}
 		AddressNode aNode = addressContainer.getUnresolvedAddresses().get(row);

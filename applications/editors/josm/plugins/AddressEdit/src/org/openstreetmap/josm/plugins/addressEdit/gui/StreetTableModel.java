@@ -69,7 +69,7 @@ public class StreetTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getStreetList() == null) {
 			return 0;
 		}
-		return addressContainer.getStreetList().size();
+		return addressContainer.getNumberOfStreets();
 	}
 
 	/* (non-Javadoc)
@@ -80,7 +80,7 @@ public class StreetTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getStreetList() == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getStreetList().size()) {
+		if (row < 0 || row > addressContainer.getNumberOfStreets()) {
 			return null;
 		}
 		StreetNode sNode = addressContainer.getStreetList().get(row);

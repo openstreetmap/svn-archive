@@ -267,7 +267,8 @@ def transmogrify_file(sf,dfgrey,dfnoicons):
     serialiser.write(document, output)
 
 def strip_doctype(f):
-    subprocess.Popen(['sed','-i','2,5 d',f]) # -i means 'in place'
+    p = subprocess.Popen(['sed','-i','2,5 d',f]) # -i means 'in place'
+    p.wait()
 
 def convert_icons_to_bw(source_symbols_dir,dest_symbols_dir):
     image_files = os.listdir(source_symbols_dir)
@@ -276,7 +277,8 @@ def convert_icons_to_bw(source_symbols_dir,dest_symbols_dir):
         # convert ./original-mapnik/symbols/*.png -fx '0.25*r + 0.62*g + 0.13*b' ./bw-mapnik/symbols/*.png
         sf = os.path.join(source_symbols_dir,f)
         df = os.path.join(dest_symbols_dir,f)
-        subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
+        p = subprocess.Popen(['convert',sf,'-fx','0.25*r + 0.62*g + 0.13*b',df])
+        p.wait()
 
 def add_license_files(dirname):
     f = open(os.path.join(dirname,"CONTACT"), 'w')

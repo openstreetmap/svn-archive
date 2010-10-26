@@ -50,21 +50,21 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 
 	@Override
 	public int getRowCount() {
-		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
+		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
 			return 0;
 		}
-		return addressContainer.getUnresolvedAddresses().size();
+		return addressContainer.getIncompleteAddresses().size();
 	}
 
 	@Override
 	public Object getValueAt(int row, int column) {
-		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
+		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getUnresolvedAddresses().size()) {
+		if (row < 0 || row > addressContainer.getIncompleteAddresses().size()) {
 			return null;
 		}
-		AddressNode aNode = addressContainer.getUnresolvedAddresses().get(row);
+		AddressNode aNode = addressContainer.getIncompleteAddresses().get(row);
 		
 		switch (column) {
 		case 0:

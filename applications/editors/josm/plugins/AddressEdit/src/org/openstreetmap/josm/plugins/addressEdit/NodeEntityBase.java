@@ -18,6 +18,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
@@ -87,6 +90,20 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	@Override
 	public boolean hasName() {
 		return TagUtils.hasNameTag(osmObject);
+	}
+	
+	/**
+	 * Internal helper method which changes the given property and
+	 * puts the appropriate command {@link src.org.openstreetmap.josm.command.Command}
+	 * into the undo/redo queue.
+	 * @param tag The tag to change.
+	 * @param newValue The new value for the tag.
+	 */
+	protected void setOSMTag(String tag, String newValue) {
+		Node oldNode = (Node)osmObject;
+		OsmPrimitive newNode = new Node(oldNode);
+		newNode.put(tag, newValue);
+		Main.main.undoRedo.add( new ChangeCommand(oldNode, newNode));
 	}
 
 	/* (non-Javadoc)

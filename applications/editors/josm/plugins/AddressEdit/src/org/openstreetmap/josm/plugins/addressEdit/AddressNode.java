@@ -151,7 +151,7 @@ public class AddressNode extends NodeEntityBase {
 	public void setStreetName(String streetName) {
 		if (streetName != null && streetName.length() == 0) return;
 		
-		changeAddressValue(TagUtils.ADDR_STREET_TAG, streetName);
+		setOSMTag(TagUtils.ADDR_STREET_TAG, streetName);
 	}
 
 	
@@ -162,7 +162,7 @@ public class AddressNode extends NodeEntityBase {
 	public void setState(String state) {
 		if (state != null && state.length() == 0) return;
 		
-		changeAddressValue(TagUtils.ADDR_STATE_TAG, state);
+		setOSMTag(TagUtils.ADDR_STATE_TAG, state);
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public class AddressNode extends NodeEntityBase {
 	public void setCountry(String country) {
 		if (country != null && country.length() == 0) return;
 		
-		changeAddressValue(TagUtils.ADDR_COUNTRY_TAG, country);
+		setOSMTag(TagUtils.ADDR_COUNTRY_TAG, country);
 	}
 	
 	/**
@@ -182,24 +182,9 @@ public class AddressNode extends NodeEntityBase {
 	public void setPostCode(String postCode) {
 		if (postCode != null && postCode.length() == 0) return;
 		
-		changeAddressValue(TagUtils.ADDR_POSTCODE_TAG, postCode);
+		setOSMTag(TagUtils.ADDR_POSTCODE_TAG, postCode);
 	}
 	
-	/**
-	 * Internal helper method which changes the given property and
-	 * puts the appropriate command {@link src.org.openstreetmap.josm.command.Command}
-	 * into the undo/redo queue.
-	 * @param tag The tag to change.
-	 * @param newValue The new value for the tag.
-	 */
-	private void changeAddressValue(String tag, String newValue) {
-		Node oldNode = (Node)osmObject;
-		OsmPrimitive newNode = new Node(oldNode);
-		newNode.put(tag, newValue);
-		Main.main.undoRedo.add( new ChangeCommand(oldNode, newNode));
-	}
-
-
 	@Override
 	public String toString() {
 		return AddressNode.getFormatString(this);

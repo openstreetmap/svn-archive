@@ -138,9 +138,12 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			}
 			
 			if (sNode != null) {
-				// TODO: Check if sgemnt really belongs to the street, even if the
-				// names are the same.
+				// TODO: Check if segment really belongs to the street, even if the
+				// names are the same. Then the streets should be split up...
 				sNode.addStreetSegment(newSegment);
+				if (sNode.hasDisconnectedSegments()) {
+					System.out.println("Warnig: Disconnected street: " + sNode.getName());
+				}
 			} else {
 				throw new RuntimeException("Street node is null!");
 			}

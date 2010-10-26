@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * This class is the container for all street segments with the same name. Every street
@@ -133,6 +134,29 @@ public class StreetNode extends NodeEntityBase {
 			
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Returns true, if the street node contains disconnected segments. This is usually
+	 * an indication, that the data set contains two streets with same name, but e. g. in 
+	 * different cities.
+	 * @return
+	 */
+	public boolean hasDisconnectedSegments() {
+		for (INodeEntity ne1 : children) {
+			if (!(ne1 instanceof StreetSegmentNode)) continue;
+			Way w1 = (Way)ne1.getOsmObject();
+			for (INodeEntity ne2 : children) {
+				if (!(ne2 instanceof StreetSegmentNode) || ne1 == ne2) continue;
+				
+				Way w2 = (Way)ne1.getOsmObject();
+				if (!WayUtils.areWaysConnected(w1, w2)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	/* (non-Javadoc)

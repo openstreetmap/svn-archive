@@ -287,6 +287,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public void clearData() {
 		streetDict.clear();
 		unresolvedAddresses.clear();
+		incompleteAddresses.clear();
 	}
 	
 	/**

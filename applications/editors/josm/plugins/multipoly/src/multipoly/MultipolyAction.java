@@ -73,10 +73,14 @@ public class MultipolyAction extends JosmAction {
 
     Relation relation = this.createRelation(polygon);
 
-    //open relation edit window, if set up in preferences
     if (Main.pref.getBoolean("multipoly.show-relation-editor", false)) {
+      //Open relation edit window, if set up in preferences
       RelationEditor editor = RelationEditor.getEditor(Main.main.getEditLayer(), relation, null);
       editor.setVisible(true);
+    } else {
+      //Just add the relation
+      Main.main.undoRedo.add(new AddCommand(relation));
+      Main.map.repaint();
     }
   }
 

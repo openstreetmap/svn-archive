@@ -45,6 +45,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.properties.PresetListPanel.PresetHandler;
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
@@ -56,8 +57,7 @@ import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
 public class AddressEditDialog extends JFrame implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
 	private static final String UNRESOLVED_HEADER_FMT = tr("Unresolved Addresses (%d)");
 	private static final String STREET_HEADER_FMT = tr("Streets (%d)");
-	private static final String CANCEL_COMMAND = "Cancel";
-	private static final String OK_COMMAND = "Ok";
+	private static final String OK_COMMAND = tr("Close");
 	/**
 	 * 
 	 */
@@ -118,7 +118,7 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 			unresolvedPanel.setMinimumSize(new Dimension(350, 200));
 			
 			JPanel unresolvedButtons = new JPanel(new FlowLayout());
-			JButton assign = new JButton(resolveAction);
+			SideButton assign = new SideButton(resolveAction, "assignstreet_24");															   
 			unresolvedButtons.add(assign);
 			unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
 			
@@ -142,14 +142,14 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 		JPanel buttonPanel = new JPanel(new GridLayout(1,10));
 		JButton ok = new JButton(OK_COMMAND);
 		ok.addActionListener(this);
-		buttonPanel.add(ok);
-		
-		// JMapViewer
 		
 		// Murks
 		for (int i = 0; i < 8; i++) {
 			buttonPanel.add(new JSeparator());
 		}
+
+		buttonPanel.add(ok);
+		
 		
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 	}
@@ -173,11 +173,6 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (OK_COMMAND.equals(e.getActionCommand())) {
-			this.setVisible(false);
-		}
-		
-		// TODO: Check, if there is some kind of undo; otherwise this button is not necessary
-		if (CANCEL_COMMAND.equals(e.getActionCommand())) {
 			this.setVisible(false);
 		}
 	}

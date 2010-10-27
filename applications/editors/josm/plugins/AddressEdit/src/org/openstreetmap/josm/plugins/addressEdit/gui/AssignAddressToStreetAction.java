@@ -22,7 +22,6 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 
 	public AssignAddressToStreetAction() {
 		super(tr("Assign address to street"));
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -30,12 +29,15 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 	 */
 	private static final long serialVersionUID = -6180491357232121384L;
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.addressEdit.gui.AbstractAddressEditAction#addressEditActionPerformed(org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditSelectionEvent)
+	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {		
 		StreetNode streetNode = ev.getSelectedStreet();
 		
 		
-		if (streetNode != null && ev.getSelectedIncompleteAddresses() != null) {
+		if (streetNode != null && ev.getSelectedUnresolvedAddresses() != null) {
 			for (AddressNode addrNode : ev.getSelectedUnresolvedAddresses()) {
 				addrNode.assignStreet(streetNode);
 				System.out.println("Assign " + addrNode + " to " + streetNode);
@@ -43,6 +45,9 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.addressEdit.gui.AbstractAddressEditAction#updateEnabledState(org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditSelectionEvent)
+	 */
 	@Override
 	public void updateEnabledState(AddressEditSelectionEvent ev) {
 		super.updateEnabledState(ev);

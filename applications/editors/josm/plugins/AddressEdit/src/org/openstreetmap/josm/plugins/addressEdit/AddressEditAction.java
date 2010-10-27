@@ -72,10 +72,11 @@ public class AddressEditAction extends JosmAction implements SelectionChangedLis
 		setEnabled(selection != null && !selection.isEmpty());
 	}
 
-	/* ----------------------------------------- */
+	/* This code is abused to generate tag utility code */
 
+	@SuppressWarnings("unused")
 	private void generateTagCode(AddressEditContainer addrVisitor) {
-		/* This code is abused to generate tag utility code */
+		
 		for (String tag : addrVisitor.getTags()) {
 			String methodName = createMethodName(tag);
 			System.out

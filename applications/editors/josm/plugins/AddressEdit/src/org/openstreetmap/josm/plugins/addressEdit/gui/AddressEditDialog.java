@@ -24,6 +24,7 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -33,7 +34,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -42,7 +42,10 @@ import javax.swing.event.ListSelectionListener;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.dialogs.properties.PresetListPanel.PresetHandler;
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 import org.openstreetmap.josm.plugins.addressEdit.IAddressEditContainerListener;
@@ -51,7 +54,6 @@ import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
 import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
 
 public class AddressEditDialog extends JFrame implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
-	private static final String INCOMPLETE_HEADER_FMT = tr("Incomplete Addresses (%d)");
 	private static final String UNRESOLVED_HEADER_FMT = tr("Unresolved Addresses (%d)");
 	private static final String STREET_HEADER_FMT = tr("Streets (%d)");
 	private static final String CANCEL_COMMAND = "Cancel";
@@ -62,7 +64,6 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 	private static final long serialVersionUID = 6251676464816335631L;
 	private AddressEditContainer editContainer;
 	private JTable unresolvedTable;
-	private JTable incompleteTable;
 	private JTable streetTable;
 	
 	private AssignAddressToStreetAction resolveAction = new AssignAddressToStreetAction();
@@ -71,10 +72,9 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 		resolveAction	
 	};
 	private JLabel streetLabel;
-	private JLabel incompleteAddressesLabel;
 	private JLabel unresolvedAddressesLabel;
 	private JMapViewer mapViewer;
-	private JLabel mapLabel;
+	
 	
 	/**
 	 * @param arg0
@@ -125,40 +125,16 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 			unresolvedButtons.add(assign);
 			unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
 			
-			/* Panel for incomplete addresses */
-			JPanel incompletePanel = new JPanel(new BorderLayout());			
-			incompleteTable = new JTable(new IncompleteAddressesTableModel(editContainer));
-			incompleteTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-			incompleteTable.getSelectionModel().addListSelectionListener(this);
-			JScrollPane scroll3 = new JScrollPane(incompleteTable);
-			
-			incompletePanel.add(scroll3, BorderLayout.CENTER);
-			incompleteAddressesLabel = createHeaderLabel(
-					INCOMPLETE_HEADER_FMT, editContainer.getNumberOfUnresolvedAddresses());
-			incompletePanel.add(incompleteAddressesLabel, BorderLayout.NORTH);
-			incompletePanel.setMinimumSize(new Dimension(350, 200));
-			
-			
-			
-			/* Edit panel for incomplete addresses */
-			JPanel incompleteEditPanel = new JPanel();
-			incompleteEditPanel.setMinimumSize(new Dimension(350, 300));
-
 			/* Map Panel */
 			JPanel mapPanel = new JPanel(new BorderLayout());
 			mapViewer = new JMapViewer();
 			mapPanel.add(mapViewer, BorderLayout.CENTER);
 			mapPanel.setMinimumSize(new Dimension(200, 200));
 			mapViewer.setVisible(false);
-			
-			JTabbedPane tab = new JTabbedPane();
-			tab.addTab(tr("Properties"), incompleteEditPanel);
-			tab.addTab(tr("Map"), mapPanel);
-			
+						
 			/* Combine panels */
-			JSplitPane unresSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, streetPanel, unresolvedPanel);
-			JSplitPane addrSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tab, incompletePanel);			
-			JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, unresSplitPane, addrSplitPane);
+			JSplitPane unresSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, streetPanel, unresolvedPanel);						
+			JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, unresSplitPane, mapPanel);
 			
 			this.getContentPane().add(pane, BorderLayout.CENTER);
 			//this.getContentPane().add(mapPanel, BorderLayout.SOUTH);
@@ -181,12 +157,6 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 	}
 
-	private JLabel createHeaderLabel(String text) {
-		JLabel label = new JLabel(text);
-		label.setFont(label.getFont().deriveFont(Font.BOLD));
-		return label;
-	}
-
 	private JLabel createHeaderLabel(String fmtString, int n) {
 		JLabel label = new JLabel(String.format(fmtString, n));
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
@@ -196,11 +166,9 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 	private void updateHeaders() {
 		if (editContainer != null) {
 			streetLabel.setText(String.format(STREET_HEADER_FMT, editContainer.getNumberOfStreets()));
-			incompleteAddressesLabel.setText(String.format(INCOMPLETE_HEADER_FMT, editContainer.getNumberOfIncompleteAddresses()));
 			unresolvedAddressesLabel.setText(String.format(UNRESOLVED_HEADER_FMT, editContainer.getNumberOfUnresolvedAddresses()));
 		} else {
 			streetLabel.setText(String.format(STREET_HEADER_FMT, 0));
-			incompleteAddressesLabel.setText(String.format(INCOMPLETE_HEADER_FMT, 0));
 			unresolvedAddressesLabel.setText(String.format(UNRESOLVED_HEADER_FMT, 0));
 		}
 	}
@@ -221,7 +189,7 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 	public void valueChanged(ListSelectionEvent e) {
 		
 		AddressEditSelectionEvent ev = new AddressEditSelectionEvent(e.getSource(),
-				streetTable, unresolvedTable, incompleteTable, editContainer);
+				streetTable, unresolvedTable, editContainer);
 		
 		for (AbstractAddressEditAction action : actions) {
 			action.updateEnabledState(ev);
@@ -240,14 +208,6 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 					mapViewer.addMapMarker(new MapMarkerDot(Color.GREEN, node.getCoor().lat(), node.getCoor().lon()));
 				}
 			}	
-			
-			List<AddressNode> incAddresses = ev.getSelectedIncompleteAddresses();
-			if (incAddresses != null) {
-				for (AddressNode aNode : incAddresses) {
-					Node node = (Node) aNode.getOsmObject();
-					mapViewer.addMapMarker(new MapMarkerDot(Color.RED, node.getCoor().lat(), node.getCoor().lon()));
-				}
-			}
 			
 			List<AddressNode> unrAddresses = ev.getSelectedUnresolvedAddresses();
 			if (unrAddresses != null) {
@@ -314,5 +274,28 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 		}
 		
 	}
+	
+	class IncompleteAddressPresetHandler implements PresetHandler {
+		private List<OsmPrimitive> osmPrimitives;
+		
+		/**
+		 * @param osmPrimitives
+		 */
+		public IncompleteAddressPresetHandler(List<OsmPrimitive> osmPrimitives) {
+			super();
+			this.osmPrimitives = osmPrimitives;
+		}
 
+		@Override
+		public Collection<OsmPrimitive> getSelection() {
+			// TODO Auto-generated method stub
+			return osmPrimitives;
+		}
+
+		@Override
+		public void updateTags(List<Tag> tags) {
+			
+		}
+		
+	}
 }

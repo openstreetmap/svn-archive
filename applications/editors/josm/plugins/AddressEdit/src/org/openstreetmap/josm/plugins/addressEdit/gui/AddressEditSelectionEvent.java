@@ -30,7 +30,6 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	private static final long serialVersionUID = -93034483427803409L;
 	private JTable streetTable;
 	private JTable unresolvedAddressTable;
-	private JTable incompleteAddressTable;
 	private AddressEditContainer addressContainer;
 	
 	/**
@@ -41,11 +40,10 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	 * @param incomplete The incomplete addresses table component.
 	 * @param container The address container instance holding the entities for streets and addresses.
 	 */
-	public AddressEditSelectionEvent(Object source, JTable selStreet, JTable unresolvedAddr, JTable incomplete, AddressEditContainer container) {
+	public AddressEditSelectionEvent(Object source, JTable selStreet, JTable unresolvedAddr, AddressEditContainer container) {
 		super(source, -1, "");
 		this.streetTable = selStreet;
 		this.unresolvedAddressTable = unresolvedAddr;
-		this.incompleteAddressTable = incomplete;
 		this.addressContainer = container;
 	}
 	
@@ -65,14 +63,6 @@ public class AddressEditSelectionEvent extends ActionEvent {
 		return unresolvedAddressTable;
 	}
 
-	/**
-	 * Gets the 'incomplete addresses' table component.
-	 * @return
-	 */
-	public JTable getIncompleteAddressTable() {
-		return incompleteAddressTable;
-	}
-
 	public AddressEditContainer getAddressContainer() {
 		return addressContainer;
 	}
@@ -90,28 +80,6 @@ public class AddressEditSelectionEvent extends ActionEvent {
 			}
 			
 			return addressContainer.getStreetList().get(selRows);
-		}
-		return null;
-	}
-	
-	/**
-	 * Gets the list containing the selected items of the 'incomplete addresses ' table.
-	 * @return
-	 */
-	public List<AddressNode> getSelectedIncompleteAddresses() {
-		if (incompleteAddressTable != null && 
-				addressContainer != null &&
-				addressContainer.getIncompleteAddresses() != null) {
-			
-			int[] selRows = incompleteAddressTable.getSelectedRows();
-			
-			List<AddressNode> nodes = new ArrayList<AddressNode>();
-			for (int i = 0; i < selRows.length; i++) {
-				if (i >= 0 && i < addressContainer.getNumberOfIncompleteAddresses()) {
-					nodes.add(addressContainer.getIncompleteAddresses().get(selRows[i]));
-				}
-			}
-			return nodes;
 		}
 		return null;
 	}

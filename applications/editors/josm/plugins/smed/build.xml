@@ -47,7 +47,7 @@
 	<property name="plugin.dist.dir"        value="../../dist/"/>
 	<property name="smed_core.dist.dir"     value="core/dist/"/>
 	<property name="ant.build.javac.target" value="1.5"/>
-	<property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+	<property name="plugin.jar"             value="${plugin.dist.dir}${ant.project.name}.jar"/>
 
 	<!--
     **********************************************************
@@ -147,7 +147,9 @@
 			<arg value="."/>
 		</exec>
 		<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+		<!--
 		<delete file="REVISION"/>
+		-->	
 	</target>
 
 	

@@ -54,7 +54,7 @@ use Compress::Bzip2 ;
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
 $usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\nout.white.txt and out.black.txt (white and black lists) can be given (enter one user name per line)\n" ;
-my $version = "3.2" ;
+my $version = "4.0" ;
 
 my $topMax = 10 ;
 
@@ -1081,16 +1081,16 @@ sub getNode1 {
 	my ($id, $version, $timestamp, $uid, $user, $changeset, $lat, $lon) ;
 	my @gTags = () ;
 	if($line1 =~ /^\s*\<node/) {
-		if (! grep /changeset/, $line1) { $line1 =~ s/lat=/changeset=\"0\" lat=/ ; }
-		if ( (grep /user=/, $line1) and (grep /uid=/, $line1) ) {
-			($id, $version, $timestamp, $uid, $user, $changeset, $lat, $lon) = 
-			($line1 =~ /^\s*\<node id=[\'\"](\d+)[\'\"].+version=[\'\"](\d+)[\'\"].+timestamp=[\'\"](.+)[\'\"].+uid=[\'\"](.+)[\'\"].+user=[\'\"](.+)[\'\"].+changeset=[\'\"](\d+)[\'\"].+lat=[\'\"](.+)[\'\"].+lon=[\'\"](.+)[\'\"]/) ;
-		}
-		else {
-			($id, $version, $timestamp, $changeset, $lat, $lon) = 
-			($line1 =~ /^\s*\<node id=[\'\"](\d+)[\'\"].+version=[\'\"](\d+)[\'\"].+timestamp=[\'\"](.+)[\'\"].+changeset=[\'\"](\d+)[\'\"].+lat=[\'\"](.+)[\'\"].+lon=[\'\"](.+)[\'\"]/) ;
-			$user = "unknown" ; $uid = 0 ;
-		}
+
+		($id) = ($line1 =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		($user) = ($line1 =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+		($lon) = ($line1 =~ / lon=[\'\"](.+?)[\'\"]/ ) ;
+		($lat) = ($line1 =~ / lat=[\'\"](.+?)[\'\"]/ ) ;
+		($version) = ($line1 =~ / version=[\'\"](.+?)[\'\"]/ ) ;
+		($timestamp) = ($line1 =~ / timestamp=[\'\"](.+?)[\'\"]/ ) ;
+		($uid) = ($line1 =~ / uid=[\'\"](.+?)[\'\"]/ ) ;
+		($changeset) = ($line1 =~ / changeset=[\'\"](.+?)[\'\"]/ ) ;
+
 		if (!defined $user) { $user = "unknown" ; }
 		if (!defined $uid) { $uid = 0 ; }
 
@@ -1127,20 +1127,17 @@ sub getNodeFile2 {
 	my ($id, $version, $timestamp, $uid, $user, $changeset, $lat, $lon) ;
 	my @gTags = () ;
 	if($line2 =~ /^\s*\<node/) {
-		if (! grep /changeset/, $line2) { $line2 =~ s/lat=/changeset=\"0\" lat=/ ; }
-		if ( (grep /user=/, $line2) and (grep /uid=/, $line2) ) {
-			($id, $version, $timestamp, $uid, $user, $changeset, $lat, $lon) = 
-			($line2 =~ /^\s*\<node id=[\'\"](\d+)[\'\"].+version=[\'\"](\d+)[\'\"].+timestamp=[\'\"](.+)[\'\"].+uid=[\'\"](.+)[\'\"].+user=[\'\"](.+)[\'\"].+changeset=[\'\"](\d+)[\'\"].+lat=[\'\"](.+)[\'\"].+lon=[\'\"](.+)[\'\"]/) ;
-		}
-		else {
-			($id, $version, $timestamp, $changeset, $lat, $lon) = 
-			($line2 =~ /^\s*\<node id=[\'\"](\d+)[\'\"].+version=[\'\"](\d+)[\'\"].+timestamp=[\'\"](.+)[\'\"].+changeset=[\'\"](\d+)[\'\"].+lat=[\'\"](.+)[\'\"].+lon=[\'\"](.+)[\'\"]/) ;
-			$user = "unknown" ; $uid = 0 ;
-		}
+		($id) = ($line2 =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		($user) = ($line2 =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+		($lon) = ($line2 =~ / lon=[\'\"](.+?)[\'\"]/ ) ;
+		($lat) = ($line2 =~ / lat=[\'\"](.+?)[\'\"]/ ) ;
+		($version) = ($line2 =~ / version=[\'\"](.+?)[\'\"]/ ) ;
+		($timestamp) = ($line2 =~ / timestamp=[\'\"](.+?)[\'\"]/ ) ;
+		($uid) = ($line2 =~ / uid=[\'\"](.+?)[\'\"]/ ) ;		($changeset) = ($line2 =~ / changeset=[\'\"](.+?)[\'\"]/ ) ;
 		if (!defined $user) { $user = "unknown" ; }
 		if (!defined $uid) { $uid = 0 ; }
 
-		if (!$id or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
+		if ( (! defined $id) or (! (defined ($lat))) or ( ! (defined ($lon))) ) {
 			print "WARNING reading osm file 2, line follows (expecting id, lon, lat and user for node):\n", $line2, "\n" ; 
 		}
 		else {
@@ -1175,17 +1172,13 @@ sub getWay1 {
 	my $id ; my $u ; my @tags ; my @nodes ; my $version ; my $timestamp ; my $uid ; my $changeset ;
 	if($line1 =~ /^\s*\<way/) {
 
-		if (! grep /changeset/, $line1) { $line1 =~ s/\">/\" changeset=\"0\">/ ; }
-		if ( (grep /user=/, $line1) and (grep /uid=/, $line1) ) {
-			($id, $version, $timestamp, $uid, $u, $changeset) = ($line1 =~ /^\s*\<way id=[\'\"](\d+)[\'\"].+version=[\'\"](\d+)[\'\"].+timestamp=[\'\"](.+)[\'\"].+uid=[\'\"](\d+)[\'\"].+user=[\'\"](.+)[\'\"].+changeset=[\'\"](\d+)[\'\"]>/) ;
-		}
-		else {
-			($id, $version, $timestamp, $changeset) = ($line1 =~ /^\s*\<way id=[\'\"](\d+)[\'\"].+version=[\'\"](\d+)[\'\"].+timestamp=[\'\"](.+)[\'\"].+changeset=[\'\"](\d+)[\'\"]>/) ;
-			$uid = 0 ; $u = "unknown" ;
-		}
+		($id) = ($line1 =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		($u) = ($line1 =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+		($timestamp) = ($line1 =~ / timestamp=[\'\"](.+?)[\'\"]/ ) ;
+		($version) = ($line1 =~ / version=[\'\"](.+?)[\'\"]/ ) ;
 
-		if (!$u) { $u = "unknown" ; }
-		if (!$id) { print "ERROR reading osm file1, line follows (expecting way id):\n", $line1, "\n" ; }
+		if (! defined $u) { $u = "unknown" ; }
+		if (! defined $id) { print "ERROR reading osm file1, line follows (expecting way id):\n", $line1, "\n" ; }
 		unless ($id) { next; }
 		nextLine1() ;
 		while (not($line1 =~ /\/way>/)) { # more way data
@@ -1209,16 +1202,13 @@ sub getWayFile2 {
 	my $id ; my $u ; my @tags ; my @nodes ; my $version ; my $timestamp ; my $uid ; my $changeset ;
 	if($line2 =~ /^\s*\<way/) {
 
-		if (! grep /changeset/, $line2) { $line2 =~ s/\">/\" changeset=\"0\">/ ; }
-		if ( (grep /user=/, $line2) and (grep /uid=/, $line2) ) {
-			($id, $version, $timestamp, $uid, $u, $changeset) = ($line2 =~ /^\s*\<way id=[\'\"](\d+)[\'\"].+version=[\'\"](\d+)[\'\"].+timestamp=[\'\"](.+)[\'\"].+uid=[\'\"](\d+)[\'\"].+user=[\'\"](.+)[\'\"].+changeset=[\'\"](\d+)[\'\"]>/) ;
-		}
-		else {
-			($id, $version, $timestamp, $changeset) = ($line2 =~ /^\s*\<way id=[\'\"](\d+)[\'\"].+version=[\'\"](\d+)[\'\"].+timestamp=[\'\"](.+)[\'\"].+changeset=[\'\"](\d+)[\'\"]>/) ;
-			$uid = 0 ; $u = "unknown" ;
-		}
-		if (!$u) { $u = "unknown" ; }
-		if (!$id) { print "ERROR reading osm file2, line follows (expecting way id):\n", $line1, "\n" ; }
+		($id) = ($line2 =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		($u) = ($line2 =~ / user=[\'\"](.+?)[\'\"]/ ) ;
+		($timestamp) = ($line2 =~ / timestamp=[\'\"](.+?)[\'\"]/ ) ;
+		($version) = ($line2 =~ / version=[\'\"](.+?)[\'\"]/ ) ;
+
+		if (! defined $u) { $u = "unknown" ; }
+		if (! defined $id) { print "ERROR reading osm file2, line follows (expecting way id):\n", $line1, "\n" ; }
 		unless ($id) { next; }
 		nextLine2() ;
 		while (not($line2 =~ /\/way>/)) { # more way data

@@ -87,11 +87,8 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 		this.editContainer.addChangedListener(this);
 		setLayout(new BorderLayout());
 		setSize(1024,600);
-		// TODO: Center on screen
-		setLocation(100, 100);
-
+		setLocationRelativeTo(null);
 		
-		// TODO: Proper init, if model is null
 		if (addressEditContainer != null) {
 			/* Panel for street table */
 			JPanel streetPanel = new JPanel(new BorderLayout());

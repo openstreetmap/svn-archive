@@ -49,17 +49,17 @@ public class OsmBuilder {
 	}
 
 
-	public Bounds getWorldBounds(PDFStreamProcessor data) {
+	public Bounds getWorldBounds(PathOptimizer data) {
 		LatLon min = tranformCoords(data.bounds.getMinX(), data.bounds.getMinY());
 		LatLon max = tranformCoords(data.bounds.getMaxX(), data.bounds.getMaxY());
 		return new Bounds(min, max);
 	}
 
-	public DataSet build(PDFStreamProcessor data, boolean full) {
+	public DataSet build(List<LayerContents> data, boolean full) {
 
 		DataSet result = new DataSet();
 
-		for (LayerContents layer: data.getResult()) {
+		for (LayerContents layer: data) {
 			this.addLayer(result, layer, full);
 		}
 		return result;

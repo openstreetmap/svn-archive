@@ -14,9 +14,12 @@ import it.stefanochizzolini.clown.documents.contents.objects.DrawCurve;
 import it.stefanochizzolini.clown.documents.contents.objects.DrawLine;
 import it.stefanochizzolini.clown.documents.contents.objects.DrawRectangle;
 import it.stefanochizzolini.clown.documents.contents.objects.EndPathNoOp;
+import it.stefanochizzolini.clown.documents.contents.objects.Fill;
 import it.stefanochizzolini.clown.documents.contents.objects.FillEvenOdd;
+import it.stefanochizzolini.clown.documents.contents.objects.FillStroke;
 import it.stefanochizzolini.clown.documents.contents.objects.FillStrokeEvenOdd;
 import it.stefanochizzolini.clown.documents.contents.objects.GenericOperation;
+import it.stefanochizzolini.clown.documents.contents.objects.ModifyClipPath;
 import it.stefanochizzolini.clown.documents.contents.objects.Path;
 import it.stefanochizzolini.clown.documents.contents.objects.Stroke;
 import it.stefanochizzolini.clown.documents.contents.objects.Text;
@@ -26,7 +29,6 @@ import it.stefanochizzolini.clown.objects.PdfReal;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,20 +37,19 @@ import java.util.Map;
 public class PDFStreamProcessor {
 
 	private final LayerInfo info;
-	public Rectangle2D bounds;
 	int pathNo = 0;
 
-	PathOptimizer optimizer = new PathOptimizer();
+	PathOptimizer optimizer;
 	Map<LayerInfo, LayerInfo> multipathLayers = new HashMap<LayerInfo, LayerInfo>();
 	private GraphicsState state;
 	private DeviceRGBColorSpace rgbSpace;
 	private DeviceGrayColorSpace graySpace;
 
-	public PDFStreamProcessor(Document doc) {
+	public PDFStreamProcessor(PathOptimizer target, Document doc) {
 
+		this.optimizer = target;
 		this.rgbSpace = new DeviceRGBColorSpace(doc);
 		this.graySpace = new DeviceGrayColorSpace(doc);
-
 		this.info = new LayerInfo();
 	}
 
@@ -56,11 +57,6 @@ public class PDFStreamProcessor {
 		this.rgbSpace = null;
 		this.graySpace = null;
 		this.state = null;
-		this.optimizer.optimize();
-	}
-
-	public List<LayerContents> getResult() {
-		return this.optimizer.getLayers();
 	}
 
 	public void process(ContentScanner level) {
@@ -200,11 +196,11 @@ public class PDFStreamProcessor {
 					points = new ArrayList<Point2D>(2);
 				}
 			}
-			else if (obj instanceof FillEvenOdd) {
+			else if (obj instanceof FillEvenOdd || obj instanceof Fill) {
 				this.info.fill = true;
 				this.info.stroke = false;
 			}
-			else if (obj instanceof FillStrokeEvenOdd){
+			else if (obj instanceof FillStrokeEvenOdd || obj instanceof FillStroke){
 				this.info.fill = true;
 				this.info.stroke = true;
 			}
@@ -227,6 +223,9 @@ public class PDFStreamProcessor {
 				points.add(points.get(0));
 				result.add(new PdfPath(points));
 				points = new ArrayList<Point2D>(2);
+			}
+			else if (obj instanceof ModifyClipPath) {
+				//nothign here
 			}
 			else {
 				int a = 10;
@@ -272,7 +271,13 @@ public class PDFStreamProcessor {
 
 		ColorSpace space = col.getColorSpace();
 
-		if (space instanceof DeviceRGBColorSpace) {
+		if (space == null){
+			return new Color(
+					(float)col.getComponents()[0],
+					(float)col.getComponents()[1],
+					(float)col.getComponents()[2]);
+		}
+		else if (space instanceof DeviceRGBColorSpace) {
 			return new Color(
 					(float)col.getComponents()[0],
 					(float)col.getComponents()[1],

@@ -46,7 +46,7 @@ import org.openstreetmap.josm.io.OsmExporter;
 public class LoadPdfDialog extends JFrame {
 
 	private String fileName;
-	private PDFStreamProcessor data;
+	private PathOptimizer data;
 	private final OsmBuilder builder;
 	private OsmDataLayer layer;
 
@@ -410,7 +410,7 @@ public class LoadPdfDialog extends JFrame {
 		t.start();
 	}
 
-	private PDFStreamProcessor loadPDF(String fileName) {
+	private PathOptimizer loadPDF(String fileName) {
 		File file;
 
 		try {
@@ -432,15 +432,18 @@ public class LoadPdfDialog extends JFrame {
 		Document document = file.getDocument();
 		Page page = document.getPages().get(0);
 
+		PathOptimizer data = new PathOptimizer();
+		data.bounds = page.getBox();
 
-		PDFStreamProcessor processor = new PDFStreamProcessor(document);
-		processor.bounds = page.getBox();
+		PDFStreamProcessor processor = new PDFStreamProcessor(data, document);
 		Contents c = page.getContents();
 		processor.process(new ContentScanner(c));
 		processor.finish();
 		document.delete();
 
-		return processor;
+		data.optimize();
+
+		return data;
 	}
 
 	private boolean loadTransformation() {
@@ -482,7 +485,7 @@ public class LoadPdfDialog extends JFrame {
 			return;
 		}
 
-		DataSet data = builder.build(this.data, isFinal);
+		DataSet data = builder.build(this.data.getLayers(), isFinal);
 		this.layer = new OsmDataLayer(data, name, null);
 
 		// Commit
@@ -505,7 +508,7 @@ public class LoadPdfDialog extends JFrame {
 	}
 
 	private void saveLayer(java.io.File file) {
-		DataSet data = builder.build(this.data, true);
+		DataSet data = builder.build(this.data.getLayers(), true);
 		OsmDataLayer layer = new OsmDataLayer(data, file.getName(), file);
 
 		OsmExporter exporter = new OsmExporter();

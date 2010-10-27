@@ -1,6 +1,7 @@
 package pdfimport;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ public class PathOptimizer {
 	public Map<Point2D, Point2D> uniquePointMap;
 	private final Map<LayerInfo, LayerContents> layerMap;
 	private List<LayerContents> layers;
+	public Rectangle2D bounds;
 
 	public PathOptimizer()
 	{
@@ -68,6 +70,7 @@ public class PathOptimizer {
 		for(LayerContents layer: this.layers) {
 			this.concatenataPaths(layer);
 		}
+
 
 		List<LayerContents> newLayers = new ArrayList<LayerContents>();
 		int nr = 0;

@@ -2,6 +2,7 @@ package pdfimport.pdfbox;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.util.PDFStreamEngine;
 
-import pdfimport.GraphicsProcessor;
 import pdfimport.PathOptimizer;
 
 public class PdfBoxParser extends PDFStreamEngine{
@@ -40,8 +40,9 @@ public class PdfBoxParser extends PDFStreamEngine{
 		PDRectangle pageSize = page.findMediaBox();
 		Dimension pageDimension = pageSize.createDimension();
 
-		GraphicsProcessor p = new GraphicsProcessor(target);
+		GraphicsProcessor p = new GraphicsProcessor(target, pageDimension.getHeight());
 		PageDrawer drawer = new PageDrawer();
 		drawer.drawPage(p, page, pageDimension);
+		this.target.bounds = new Rectangle2D.Double(pageSize.getLowerLeftX(), pageSize.getLowerLeftY(), pageSize.getWidth(), pageSize.getHeight());
 	}
 }

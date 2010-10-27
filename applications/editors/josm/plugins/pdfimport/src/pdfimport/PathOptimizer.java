@@ -144,6 +144,13 @@ public class PathOptimizer {
 					pathEndpoints.remove(p1.lastPoint());
 
 					List<Point2D> newNodes = tryMergeNodeLists(path.points, p1.points);
+
+					if (newNodes == null)
+					{
+						int a = 10;
+						a++;
+					}
+
 					path.points = newNodes;
 					mergedPaths.add(p1);
 					changed = true;

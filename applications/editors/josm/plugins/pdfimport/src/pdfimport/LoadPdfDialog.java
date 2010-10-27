@@ -1,12 +1,6 @@
 package pdfimport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
-import it.stefanochizzolini.clown.documents.Document;
-import it.stefanochizzolini.clown.documents.Page;
-import it.stefanochizzolini.clown.documents.contents.ContentScanner;
-import it.stefanochizzolini.clown.documents.contents.Contents;
-import it.stefanochizzolini.clown.files.File;
-import it.stefanochizzolini.clown.tokens.FileFormatException;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -17,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
@@ -42,6 +37,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.io.OsmExporter;
+
+import pdfimport.pdfbox.PdfBoxParser;
 
 public class LoadPdfDialog extends JFrame {
 
@@ -241,7 +238,7 @@ public class LoadPdfDialog extends JFrame {
 		this.runAsBackgroundTask(
 				new Runnable() {
 					public void run() {
-						data = loadPDF(fileName.getAbsolutePath());
+						data = loadPDF(fileName);
 					}
 				},
 				new ActionListener() {
@@ -410,39 +407,48 @@ public class LoadPdfDialog extends JFrame {
 		t.start();
 	}
 
-	private PathOptimizer loadPDF(String fileName) {
-		File file;
+	private PathOptimizer loadPDF(File fileName) {
+
+		PathOptimizer data = new PathOptimizer();
 
 		try {
-			file = new File(fileName);
+			PdfBoxParser parser = new PdfBoxParser(data);
+			parser.parse(fileName);
+
 		} catch (FileNotFoundException e1) {
 			JOptionPane
 			.showMessageDialog(
 					Main.parent,
 					tr("File not found."));
 			return null;
-		} catch (FileFormatException e1) {
+		} catch (it.stefanochizzolini.clown.tokens.FileFormatException e1) {
 			JOptionPane
 			.showMessageDialog(
 					Main.parent,
 					tr("Could not parse file. Not a PDF file?"));
 			return null;
+		} catch (Exception e) {
+			JOptionPane
+			.showMessageDialog(
+					Main.parent,
+					tr("Error while parsing: {0}", e.getMessage()));
+			return null;
 		}
+
+		/*
+		File file = new File(fileName);
 
 		Document document = file.getDocument();
 		Page page = document.getPages().get(0);
-
-		PathOptimizer data = new PathOptimizer();
 		data.bounds = page.getBox();
 
 		PDFStreamProcessor processor = new PDFStreamProcessor(data, document);
 		Contents c = page.getContents();
 		processor.process(new ContentScanner(c));
 		processor.finish();
-		document.delete();
+		document.delete();*/
 
 		data.optimize();
-
 		return data;
 	}
 

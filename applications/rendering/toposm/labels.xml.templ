@@ -185,33 +185,46 @@
     </Rule>
     
     <Rule>
-        &minz11; &maxz11; <!-- very large nature areas -->
+        &minz11; &maxz11;
         <Filter>
           ([natural] = 'wood' or
           [landuse] = 'conservation' or
           [landuse] = 'recreation_ground' or
 	      [leisure] = 'recreation_ground' or
           [landuse] = 'forest')
-          and [way_area] &gt; 500000
+          and [way_area] &gt; 20000000
         </Filter>
         <TextSymbolizer name="name" face_name="DejaVu Sans Oblique" size="9"
             fill="#050" dy="0" wrap_width="0"/>
     </Rule>
     <Rule>
-        &minz12; &maxz13; <!-- large nature areas -->
+        &minz12; &maxz12; <!-- large nature areas -->
         <Filter>
           ([natural] = 'wood' or
           [landuse] = 'conservation' or
           [landuse] = 'recreation_ground' or
 	      [leisure] = 'recreation_ground' or
           [landuse] = 'forest')
-          and [way_area] &gt; 50000
+          and [way_area] &gt; 2000000
+        </Filter>
+        <TextSymbolizer name="name" face_name="DejaVu Sans Oblique" size="9"
+            fill="#050" dy="0" wrap_width="0"/>
+    </Rule>
+    <Rule>
+        &minz13; &maxz13; <!-- medium nature areas -->
+        <Filter>
+          ([natural] = 'wood' or
+          [landuse] = 'conservation' or
+          [landuse] = 'recreation_ground' or
+	      [leisure] = 'recreation_ground' or
+          [landuse] = 'forest')
+          and [way_area] &gt; 200000
         </Filter>
         <TextSymbolizer name="name" face_name="DejaVu Sans Oblique" size="10"
             fill="#050" dy="0" wrap_width="0"/>
     </Rule>
     <Rule>
-        &minz14;
+        &minz14; <!-- all nature areas -->
         <Filter>
           [natural] = 'wood' or
           [landuse] = 'conservation' or

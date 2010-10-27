@@ -44,6 +44,7 @@
 	<property name="plugin.build.dir" value="build" />
 	<property name="plugin.dist.dir" value="../../dist" />
 	<property name="plugin.name" value="${ant.project.name}" />
+	<property name="libpdf" value="lib/pdfbox.jar"/>		
 	<property name="plugin.jar" value="${plugin.dist.dir}/${plugin.name}.jar" />
 
 	<!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
@@ -64,6 +65,7 @@
 			<include name="**/*.java" />
 			<classpath>
 				<pathelement location="${josm}"/>
+				<pathelement location="${libpdf}"/>				
 			</classpath>			
 		</javac>
 	</target>
@@ -80,6 +82,7 @@
 	</target>
 
 	<target name="dist" depends="compile,revision">
+		<unjar dest="${plugin.build.dir}" src="${libpdf}"/>
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images" />
 		</copy>

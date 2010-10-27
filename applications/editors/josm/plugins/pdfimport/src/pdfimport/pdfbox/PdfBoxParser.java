@@ -39,8 +39,9 @@ public class PdfBoxParser extends PDFStreamEngine{
 		PDPage page = (PDPage)allPages.get(0);
 		PDRectangle pageSize = page.findMediaBox();
 		Dimension pageDimension = pageSize.createDimension();
+		int rotation = page.getRotation();
 
-		GraphicsProcessor p = new GraphicsProcessor(target, pageDimension.getHeight());
+		GraphicsProcessor p = new GraphicsProcessor(target, rotation, pageDimension.getHeight());
 		PageDrawer drawer = new PageDrawer();
 		drawer.drawPage(p, page, pageDimension);
 		this.target.bounds = new Rectangle2D.Double(pageSize.getLowerLeftX(), pageSize.getLowerLeftY(), pageSize.getWidth(), pageSize.getHeight());

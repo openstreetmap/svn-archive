@@ -1,5 +1,6 @@
-package pdfimport;
+package pdfimport.pdfbox;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
@@ -17,52 +18,247 @@ import java.awt.RenderingHints.Key;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
 import java.awt.image.renderable.RenderableImage;
 import java.text.AttributedCharacterIterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import pdfimport.LayerInfo;
+import pdfimport.PathOptimizer;
+import pdfimport.PdfPath;
 
 public class GraphicsProcessor extends Graphics2D {
 
 	public PathOptimizer target;
+	private Shape clipShape;
+	private List<PdfPath> clipPath;
+	private final LayerInfo info = new LayerInfo();
+	int pathNo = 0;
+	private boolean complexClipShape;
+	private boolean clipAreaDrawn;
+	private final double height;
 
-	public GraphicsProcessor(PathOptimizer target)
+	private final AffineTransform transform;
+
+	public GraphicsProcessor(PathOptimizer target, int rotation, double height)
 	{
+		this.height = height;
 		this.target = target;
-
+		this.transform = new AffineTransform();
+		this.transform.rotate(Math.toRadians(rotation));
 	}
+
+	private void addPath(Shape s, boolean fill) {
+		List<PdfPath> paths = this.parsePath(s);
+		if (fill) {
+			this.info.fill = true;
+			this.info.stroke = false;
+		}
+		else {
+			this.info.fill = false;
+			this.info.stroke = true;
+		}
+
+		for (PdfPath p: paths){
+			p.nr = pathNo;
+		}
+
+		pathNo ++;
+
+		if (paths.size() > 1) {
+			this.target.addMultiPath(this.info, paths);
+		}
+		else if (paths.size() == 1) {
+			this.target.addPath(this.info, paths.get(0));
+		}
+	}
+
+
+	private List<PdfPath> parsePath(Shape s) {
+		List<PdfPath> result = new ArrayList<PdfPath>(2);
+		List<Point2D> points = new ArrayList<Point2D>(2);
+
+
+		PathIterator iter = s.getPathIterator(null);
+		double[] coords = new double[6];
+
+		while (!iter.isDone()) {
+			int type = iter.currentSegment(coords);
+
+			if (type == PathIterator.SEG_CLOSE) {
+				//close polygon
+				this.addPoint(points, points.get(0));
+				if (points.size() > 1) {
+					result.add(new PdfPath(points));
+				}
+				points = new ArrayList<Point2D>(2);
+			} else if (type == PathIterator.SEG_CUBICTO) {
+				//cubic curve
+				this.addPoint(points, this.parsePoint(coords, 4));
+			}
+			else if (type == PathIterator.SEG_LINETO) {
+				this.addPoint(points, this.parsePoint(coords, 0));
+			}
+			else if (type == PathIterator.SEG_MOVETO) {
+				//new path
+				if (points.size() > 1){
+					result.add(new PdfPath(points));
+				}
+				points = new ArrayList<Point2D>(2);
+				this.addPoint(points, this.parsePoint(coords, 0));
+			}
+			else if (type == PathIterator.SEG_QUADTO) {
+				//quadratic curve
+				this.addPoint(points, this.parsePoint(coords, 2));
+			}
+			else if (type == PathIterator.WIND_EVEN_ODD) {
+				//fill even odd
+			}
+			else if (type == PathIterator.WIND_NON_ZERO) {
+				//fill all
+			}
+			else
+			{
+				//Unexpected operation
+				int a = 10;
+				a++;
+			}
+
+			iter.next();
+		}
+
+		if (points.size() > 1 )
+		{
+			result.add(new PdfPath(points));
+		}
+
+
+
+		return result;
+	}
+
+	private void addPoint(List<Point2D> points, Point2D point) {
+		if (points.size() > 0) {
+			Point2D prevPoint = points.get(points.size() - 1);
+
+			if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY()) {
+				return;
+			}
+		}
+
+		points.add(point);
+	}
+
+	private Point2D parsePoint(double[] buffer, int offset) {
+		//invert Y.
+		Point2D point = new Point2D.Double(buffer[offset], this.height - buffer[offset + 1]);
+		Point2D dest = new Point2D.Double();
+		this.transform.transform(point, dest);
+		return this.target.getUniquePoint(dest);
+	}
+
+
+	@Override
+	public void draw(Shape s) {
+
+		if (complexClipShape)
+		{
+			if (!this.clipAreaDrawn)
+			{
+				this.addPath(this.clipShape, true);
+				this.clipAreaDrawn = true;
+			}
+		}
+		else
+		{
+			this.addPath(s, false);
+		}
+	}
+
+
+	@Override
+	public void fill(Shape s) {
+		this.addPath(s, true);
+	}
+
+	@Override
+	public boolean drawImage(Image img, AffineTransform xform, ImageObserver obs) {
+
+		if (!this.clipAreaDrawn)
+		{
+			this.addPath(this.clipShape, true);
+			this.clipAreaDrawn = true;
+		}
+		return true;
+	}
+
+
+	@Override
+	public void setClip(Shape clip) {
+		if (this.clipShape == clip)
+			return;
+
+		this.clipPath = this.parsePath(clip);
+
+		boolean complexClipPath = false;
+
+		if (clipPath.size() > 1)
+		{
+			complexClipPath = true;
+		}
+		else if (clipPath.size() == 1 && clipPath.get(0).points.size() > 5)
+		{
+			//more than 4 points.
+			complexClipPath = true;
+		}
+
+		this.complexClipShape = complexClipPath;
+		this.clipAreaDrawn = false;
+		this.clipShape = clip;
+	}
+
+	@Override
+	public void setColor(Color c) {
+		this.info.color = c;
+		this.info.fillColor = c;
+	}
+
+
+	@Override
+	public void setStroke(Stroke s) {
+		BasicStroke stroke = (BasicStroke) s;
+		this.info.width = stroke.getLineWidth();
+		this.info.dash = 0;
+
+		if (stroke.getDashArray() != null) {
+			this.info.dash = stroke.getDashArray().hashCode();
+		}
+	}
+
+
+	@Override
+	public void clip(Shape s) {
+		//TODO:
+	}
+
 
 	@Override
 	public void addRenderingHints(Map<?, ?> hints) {
 		// TODO Auto-generated method stub
-
 	}
 
-	@Override
-	public void clip(Shape s) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void draw(Shape s) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void drawGlyphVector(GlyphVector g, float x, float y) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public boolean drawImage(Image img, AffineTransform xform, ImageObserver obs) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
@@ -108,11 +304,6 @@ public class GraphicsProcessor extends Graphics2D {
 
 	}
 
-	@Override
-	public void fill(Shape s) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public Color getBackground() {
@@ -218,12 +409,6 @@ public class GraphicsProcessor extends Graphics2D {
 
 	@Override
 	public void setRenderingHints(Map<?, ?> hints) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setStroke(Stroke s) {
 		// TODO Auto-generated method stub
 
 	}
@@ -430,11 +615,6 @@ public class GraphicsProcessor extends Graphics2D {
 		return null;
 	}
 
-	@Override
-	public void setClip(Shape clip) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void setClip(int x, int y, int width, int height) {
@@ -442,11 +622,6 @@ public class GraphicsProcessor extends Graphics2D {
 
 	}
 
-	@Override
-	public void setColor(Color c) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void setFont(Font font) {

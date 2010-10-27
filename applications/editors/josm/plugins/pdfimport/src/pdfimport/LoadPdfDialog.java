@@ -421,12 +421,6 @@ public class LoadPdfDialog extends JFrame {
 					Main.parent,
 					tr("File not found."));
 			return null;
-		} catch (it.stefanochizzolini.clown.tokens.FileFormatException e1) {
-			JOptionPane
-			.showMessageDialog(
-					Main.parent,
-					tr("Could not parse file. Not a PDF file?"));
-			return null;
 		} catch (Exception e) {
 			JOptionPane
 			.showMessageDialog(

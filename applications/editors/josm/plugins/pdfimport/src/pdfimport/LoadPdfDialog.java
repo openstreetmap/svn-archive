@@ -422,6 +422,7 @@ public class LoadPdfDialog extends JFrame {
 					tr("File not found."));
 			return null;
 		} catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane
 			.showMessageDialog(
 					Main.parent,

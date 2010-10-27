@@ -53,6 +53,8 @@ public class GraphicsProcessor extends Graphics2D {
 		this.target = target;
 		this.transform = new AffineTransform();
 		this.transform.rotate(Math.toRadians(rotation));
+		this.info.color = Color.BLACK;
+		this.info.fillColor = Color.BLACK;
 	}
 
 	private void addPath(Shape s, boolean fill) {

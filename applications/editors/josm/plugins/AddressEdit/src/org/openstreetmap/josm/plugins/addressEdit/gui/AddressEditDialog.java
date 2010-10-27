@@ -28,8 +28,9 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -41,6 +42,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
@@ -54,7 +56,7 @@ import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
 import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
 import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
 
-public class AddressEditDialog extends JFrame implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
+public class AddressEditDialog extends JDialog implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
 	private static final String UNRESOLVED_HEADER_FMT = tr("Unresolved Addresses (%d)");
 	private static final String STREET_HEADER_FMT = tr("Streets (%d)");
 	private static final String OK_COMMAND = tr("Close");
@@ -81,7 +83,7 @@ public class AddressEditDialog extends JFrame implements ActionListener, ListSel
 	 * @throws HeadlessException
 	 */
 	public AddressEditDialog(AddressEditContainer addressEditContainer) throws HeadlessException  {
-		super(tr("Edit Addresses"));
+		super(JOptionPane.getFrameForComponent(Main.parent), tr("Edit Addresses"), false);
 	
 		this.editContainer = addressEditContainer; 
 		this.editContainer.addChangedListener(this);

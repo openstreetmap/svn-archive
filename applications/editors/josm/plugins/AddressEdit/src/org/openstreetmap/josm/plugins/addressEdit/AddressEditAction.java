@@ -7,6 +7,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -75,7 +76,9 @@ public class AddressEditAction extends JosmAction implements SelectionChangedLis
 	@Override
 	protected void updateEnabledState(
 			Collection<? extends OsmPrimitive> selection) {
-		setEnabled(selection != null && !selection.isEmpty());
+		// Enable button if there is either a selection or at least a data set
+		setEnabled(	selection != null && !selection.isEmpty() || 
+					(getCurrentDataSet() != null));
 	}
 
 	/* This code is abused to generate tag utility code */

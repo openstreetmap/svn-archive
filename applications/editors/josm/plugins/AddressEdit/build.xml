@@ -107,17 +107,15 @@
     **********************************************************
     -->
     <target name="revision">
-    	<!--
 		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
     	            <env key="LANG" value="C"/>
     	            <arg value="info"/>
-    	            <arg value="- -xml"/>
+    	            <arg value="--xml"/>
     	            <arg value="build.xml"/>
     	        </exec>
     	<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
     	<echo message="Revision: ${version.entry.commit.revision}"/>
     	<delete file="REVISION"/>
-    	-->
    	</target>
 
     <!--

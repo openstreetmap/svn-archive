@@ -63,6 +63,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private List<AddressNode> unresolvedAddresses = new ArrayList<AddressNode>(100);
 	private List<AddressNode> incompleteAddresses = new ArrayList<AddressNode>(100);
 	
+	private HashSet<Node> visitedNodes = new HashSet<Node>();
+	private HashSet<Way> visitedWays = new HashSet<Way>();
 	private HashSet<String> tags = new HashSet<String>();
 	
 	private List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
@@ -99,23 +101,55 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		}
 	}
 	
+	private void markNodeAsVisited(Node n) {
+		visitedNodes.add(n);
+	}
+	
+	private boolean hasBeenVisited(Node n) {
+		return visitedNodes.contains(n);
+	}
+	
+	private void markWayAsVisited(Way w) {
+		visitedWays.add(w);
+	}
+	
+	private boolean hasBeenVisited(Way w) {
+		return visitedWays.contains(w);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Node)
 	 */
 	@Override
 	public void visit(Node n) {
+		if (hasBeenVisited(n)) {
+			return;
+		}
+		
 		AddressNode aNode = NodeFactory.createNode(n);
 		
-		if (aNode == null) return;
-		
-		if (!assignAddressToStreet(aNode)) {
-			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
-			unresolvedAddresses.add(aNode);
+		if (aNode != null) {
+			if (!assignAddressToStreet(aNode)) {
+				// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
+				unresolvedAddresses.add(aNode);
+			}
+
+			if (!aNode.isComplete()) {
+				incompleteAddresses.add(aNode);
+			}
+		} else {
+			// check, if node is referred by a way
+			for (OsmPrimitive osm : n.getReferrers()) {
+				if (osm instanceof Way) {
+					Way w = (Way) osm;
+					if (!hasBeenVisited(w)) {
+						createNodeFromWay(w);
+					}
+				}
+			}
+			
 		}
-		
-		if (!aNode.isComplete()) {
-			incompleteAddresses.add(aNode);
-		}
+		markNodeAsVisited(n);
 	}
 	
 	/* (non-Javadoc)
@@ -123,8 +157,17 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	@Override
 	public void visit(Way w) {
-		if (w.isIncomplete()) return;
+		// This doesn't matter, we just need the street name 
+		//if (w.isIncomplete()) return;
 		
+		createNodeFromWay(w);
+		/*
+        for (Node n : w.getNodes()) {
+            
+        }*/
+	}
+
+	private void createNodeFromWay(Way w) {
 		StreetSegmentNode newSegment = NodeFactory.createNodeFromWay(w);
 		
 		if (newSegment != null) {
@@ -148,15 +191,19 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			}
 		}
 		
+		markWayAsVisited(w);
+		
+		// Look also into nodes for addresses (unlikely, but at least they
+		// get marked as visited).
+		for (Node n : w.getNodes()) {
+			visit(n);
+		}
+		
 		for (String key : w.keySet()) {
 			if (!tags.contains(key)) {
 				tags.add(key);
 			}
 		}
-		/*
-        for (Node n : w.getNodes()) {
-            
-        }*/
 	}
 
 	/* (non-Javadoc)
@@ -288,6 +335,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		streetDict.clear();
 		unresolvedAddresses.clear();
 		incompleteAddresses.clear();
+		visitedNodes.clear();
+		visitedWays.clear();
 	}
 	
 	/**

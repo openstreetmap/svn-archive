@@ -63,7 +63,7 @@ public class MultipolyAction extends JosmAction {
     if (selectedWays.size() < 1) {
       // Sometimes it make sense creating multipoly of only one way (so it will form outer way)
       // and then splitting the way later (so there are multiple ways forming outer way)
-      JOptionPane.showMessageDialog(Main.parent, tr("You must select at one way."));
+      JOptionPane.showMessageDialog(Main.parent, tr("You must select at least one way."));
       return;
     }
 

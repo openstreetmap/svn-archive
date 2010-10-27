@@ -9,6 +9,7 @@ import java.util.Collection;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditDialog;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -20,6 +21,7 @@ public class AddressEditAction extends JosmAction implements SelectionChangedLis
 	 */
 	private static final long serialVersionUID = 1L;
 	private AddressEditContainer addressEditContainer;
+	private Collection<? extends OsmPrimitive> newSelection;
 
 	public AddressEditAction() {
 		super(tr("Address Editor"), "addressedit_24",
@@ -30,20 +32,28 @@ public class AddressEditAction extends JosmAction implements SelectionChangedLis
 						| InputEvent.SHIFT_DOWN_MASK), false);
 		setEnabled(false);
 		
+		addressEditContainer = new AddressEditContainer();
+		DataSet.addSelectionListener(this);		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.SelectionChangedListener#selectionChanged(java.util.Collection)
+	 */
 	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-		synchronized (this) {
-			collectAddressesAndStreets(newSelection);
+		this.newSelection = newSelection;
+		if (addressEditContainer != null) {
+			addressEditContainer.invalidate(newSelection);
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		addressEditContainer = new AddressEditContainer();
+	public void actionPerformed(ActionEvent arg0) {		
 		if (addressEditContainer != null) {
-			addressEditContainer.attachToDataSet();
+			addressEditContainer.attachToDataSet(newSelection);
 			try {
 				AddressEditDialog dlg = new AddressEditDialog(addressEditContainer);
 				dlg.setVisible(true);
@@ -52,15 +62,11 @@ public class AddressEditAction extends JosmAction implements SelectionChangedLis
 			}
 		}
 	}
+	
 
-	private void collectAddressesAndStreets(
-			final Collection<? extends OsmPrimitive> osmData) {
-		if (osmData == null || osmData.isEmpty())
-			return;
-
-		
-	}
-
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.actions.JosmAction#updateEnabledState()
+	 */
 	@Override
 	protected void updateEnabledState() {
 		setEnabled(getCurrentDataSet() != null);

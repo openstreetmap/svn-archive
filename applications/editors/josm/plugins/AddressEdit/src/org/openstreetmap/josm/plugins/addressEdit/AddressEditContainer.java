@@ -129,6 +129,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		
 		if (newSegment != null) {
 			String name = newSegment.getName();
+			if (StringUtils.isNullOrEmpty(name)) return;
+			
 			StreetNode sNode = null;
 			if (streetDict.containsKey(name)) {
 				sNode = streetDict.get(name);
@@ -292,9 +294,13 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Connects the listener to the data set and revisits the data. This method should
 	 * be called immediately before an edit session starts.
 	 */
-	public void attachToDataSet() {
+	public void attachToDataSet(Collection<? extends OsmPrimitive> dataToExamine) {		
 		Main.main.getCurrentDataSet().addDataSetListener(this);
-		invalidate();
+		if (dataToExamine != null && dataToExamine.size() > 0) {
+			invalidate(dataToExamine); // use given data set (usually the current selection)
+		} else {
+			invalidate(); // use current data set
+		}
 	}
 	
 	/**

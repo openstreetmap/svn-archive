@@ -15,7 +15,6 @@ package org.openstreetmap.josm.plugins.addressEdit.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 

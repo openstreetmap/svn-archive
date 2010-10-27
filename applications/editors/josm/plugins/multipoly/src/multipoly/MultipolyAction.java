@@ -60,8 +60,10 @@ public class MultipolyAction extends JosmAction {
 
     Collection < Way > selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
 
-    if (selectedWays.size() < 2) {
-      JOptionPane.showMessageDialog(Main.parent, tr("You must select at least two ways."));
+    if (selectedWays.size() < 1) {
+      // Sometimes it make sense creating multipoly of only one way (so it will form outer way)
+      // and then splitting the way later (so there are multiple ways forming outer way)
+      JOptionPane.showMessageDialog(Main.parent, tr("You must select at one way."));
       return;
     }
 

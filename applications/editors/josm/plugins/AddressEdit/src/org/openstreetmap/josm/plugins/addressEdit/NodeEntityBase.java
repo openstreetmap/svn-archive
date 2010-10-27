@@ -81,7 +81,7 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 		if (TagUtils.hasNameTag(osmObject)) {
 			return  TagUtils.getNameValue(osmObject);
 		}
-		return ANONYMOUS;
+		return "";
 	}
 	
 	/* (non-Javadoc)

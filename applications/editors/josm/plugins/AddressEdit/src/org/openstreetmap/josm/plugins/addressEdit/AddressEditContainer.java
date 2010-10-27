@@ -281,6 +281,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	private boolean assignAddressToStreet(AddressNode aNode) {
 		String streetName = aNode.getStreet();
+		
 		if (streetName != null && streetDict.containsKey(streetName)) {
 			StreetNode sNode = streetDict.get(streetName);
 			sNode.addAddress(aNode);

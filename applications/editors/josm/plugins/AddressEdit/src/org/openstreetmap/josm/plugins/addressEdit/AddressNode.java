@@ -39,9 +39,13 @@ public class AddressNode extends NodeEntityBase {
 	 */
 	public String getStreet() {
 		if (!TagUtils.hasAddrStreetTag(osmObject)) {
-			return NodeEntityBase.ANONYMOUS;
+			return MISSING_TAG;
 		}
 		return TagUtils.getAddrStreetValue(osmObject);
+	}
+	
+	public boolean hasStreetName() {
+		return TagUtils.hasAddrStreetTag(osmObject);
 	}
 	
 	/**

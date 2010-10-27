@@ -41,9 +41,12 @@ import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 
 public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
-	private static final int NUMBER_OF_COLUMNS = 3;
-	private static final String[] COLUMN_NAMES = new String[]{tr("Street"), tr("City"), tr("Complete?")}; 
-	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{String.class, String.class, Boolean.class};
+	private static final int NUMBER_OF_COLUMNS = 5;
+	private static final String[] COLUMN_NAMES = new String[]{
+		tr("Street"), tr("Housenumber"), tr("City"), tr("Postcode"), tr("Name")};
+	
+	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
+		String.class, String.class, String.class, String.class, String.class};
 	
 	/**
 	 * 
@@ -90,9 +93,13 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		case 0:
 			return aNode.getStreet();
 		case 1:
-			return aNode.getCity();
+			return aNode.getHouseNumber();
 		case 2:
-			return aNode.isComplete();
+			return aNode.getCity();
+		case 3:
+			return aNode.getPostCode();
+		case 4:
+			return aNode.getName();
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}

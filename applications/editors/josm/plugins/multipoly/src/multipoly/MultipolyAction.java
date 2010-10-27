@@ -42,111 +42,97 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class MultipolyAction extends JosmAction {
 
-    public MultipolyAction() {
-        super(tr("Create multipolygon"), "multipoly_create",
-                tr("Create multipolygon."), Shortcut.registerShortcut(
-                        "tools:multipoly", tr("Tool: {0}",
-                                tr("Create multipolygon")), KeyEvent.VK_M,
-                        Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+  public MultipolyAction() {
+    super(tr("Create multipolygon"), "multipoly_create", tr("Create multipolygon."),
+      Shortcut.registerShortcut("tools:multipoly", tr("Tool: {0}", tr("Create multipolygon")),
+      KeyEvent.VK_M, Shortcut.GROUP_EDIT, Shortcut.SHIFT_DEFAULT), true);
+  }
+  /**
+   * The action button has been clicked
+   *
+   * @param e Action Event
+   */
+  public void actionPerformed(ActionEvent e) {
+    if (Main.main.getEditLayer() == null) {
+      JOptionPane.showMessageDialog(Main.parent, tr("No data loaded."));
+      return;
     }
 
-    /**
-     * The action button has been clicked
-     *
-     * @param e
-     *            Action Event
-     */
-    public void actionPerformed(ActionEvent e) {
-        if (Main.main.getEditLayer() == null) {
-            JOptionPane.showMessageDialog(Main.parent, tr("No data loaded."));
-            return;
-        }
-       
-        Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
-              
-        if (selectedWays.size() < 2) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("You must select at least two ways."));
-            return;
-        }
-        
-        Multipolygon polygon = this.analyzeWays(selectedWays);
-        
-        if (polygon == null) {
-        	return; //could not make multipolygon.
-        }
-        
-        Relation relation = this.createRelation(polygon); 
+    Collection < Way > selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
 
-        //open relation edit window
-        RelationEditor editor = RelationEditor.getEditor(
-        		Main.main.getEditLayer(), 
-        		relation, 
-        		null);
-        
-        editor.setVisible(true);
-    }  
-
-	/** Enable this action only if something is selected */
-    @Override
-    protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+    if (selectedWays.size() < 2) {
+      JOptionPane.showMessageDialog(Main.parent, tr("You must select at least two ways."));
+      return;
     }
 
-    /** Enable this action only if something is selected */
-    @Override
-    protected void updateEnabledState(
-            Collection<? extends OsmPrimitive> selection) {
-        setEnabled(selection != null && !selection.isEmpty());
+    Multipolygon polygon = this.analyzeWays(selectedWays);
+
+    if (polygon == null) {
+      return;                   //could not make multipolygon.
     }
-    
-    
-    /**
-     * This method analyzes ways and creates multipolygon.
-     * @param selectedWays
-     * @return null, if there was a problem with the ways.
-     */
-    private Multipolygon analyzeWays(Collection<Way> selectedWays) {
-    	
-    	Multipolygon pol = new Multipolygon();    	
-    	String error = pol.makeFromWays(selectedWays);
-    	
-    	if (error != null) {
-    		JOptionPane.showMessageDialog(Main.parent, error);
-    		return null;    		
-    	}
-    	else {
-    		return pol;
-    	}
-	}    
-    
-    
-    /**
-     * Builds a relation from polygon ways. 
-     * @param pol 
-     * @return
-     */
-    private Relation createRelation(Multipolygon pol){
-           // Create new relation
-           Relation rel = new Relation();
-           rel.put("type", "multipolygon");           
-           // Add ways to it
-           for(JoinedPolygon jway: pol.outerWays){
-        	   for(Way way: jway.ways){
-        		   rel.addMember(new RelationMember("outer", way));
-        	   }
-           }
-           
-           for(JoinedPolygon jway: pol.innerWays){
-        	   for(Way way: jway.ways){
-        		   rel.addMember(new RelationMember("inner", way));
-        	   }
-           }
-           
-           return rel;
-    }    
+
+    Relation relation = this.createRelation(polygon);
+
+    //open relation edit window, if set up in preferences
+    if (Main.pref.getBoolean("multipoly.show-relation-editor", false)) {
+      RelationEditor editor = RelationEditor.getEditor(Main.main.getEditLayer(), relation, null);
+      editor.setVisible(true);
+    }
+  }
+
+  /** Enable this action only if something is selected */
+  @Override protected void updateEnabledState() {
+    if (getCurrentDataSet() == null) {
+      setEnabled(false);
+    } else {
+      updateEnabledState(getCurrentDataSet().getSelected());
+    }
+  }
+
+  /** Enable this action only if something is selected */
+  @Override protected void updateEnabledState(Collection < ? extends OsmPrimitive > selection) {
+    setEnabled(selection != null && !selection.isEmpty());
+  }
+
+  /**
+   * This method analyzes ways and creates multipolygon.
+   * @param selectedWays
+   * @return null, if there was a problem with the ways.
+   */
+  private Multipolygon analyzeWays(Collection < Way > selectedWays) {
+
+    Multipolygon pol = new Multipolygon();
+    String error = pol.makeFromWays(selectedWays);
+
+    if (error != null) {
+      JOptionPane.showMessageDialog(Main.parent, error);
+      return null;
+    } else {
+      return pol;
+    }
+  }
+
+  /**
+   * Builds a relation from polygon ways.
+   * @param pol 
+   * @return
+   */
+  private Relation createRelation(Multipolygon pol) {
+    // Create new relation
+    Relation rel = new Relation();
+    rel.put("type", "multipolygon");
+    // Add ways to it
+    for (JoinedPolygon jway:pol.outerWays) {
+      for (Way way:jway.ways) {
+          rel.addMember(new RelationMember("outer", way));
+      }
+    }
+
+    for (JoinedPolygon jway:pol.innerWays) {
+      for (Way way:jway.ways) {
+          rel.addMember(new RelationMember("inner", way));
+      }
+    }
+    return rel;
+  }
 }

@@ -54,7 +54,7 @@ use Compress::Bzip2 ;
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
 $usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\nout.white.txt and out.black.txt (white and black lists) can be given (enter one user name per line)\n" ;
-my $version = "4.0" ;
+my $version = "4.1" ;
 
 my $topMax = 10 ;
 
@@ -1173,11 +1173,13 @@ sub getWay1 {
 	if($line1 =~ /^\s*\<way/) {
 
 		($id) = ($line1 =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		($uid) = ($line1 =~ / uid=[\'\"](.+?)[\'\"]/ ) ;
 		($u) = ($line1 =~ / user=[\'\"](.+?)[\'\"]/ ) ;
 		($timestamp) = ($line1 =~ / timestamp=[\'\"](.+?)[\'\"]/ ) ;
 		($version) = ($line1 =~ / version=[\'\"](.+?)[\'\"]/ ) ;
 
 		if (! defined $u) { $u = "unknown" ; }
+		if (! defined $uid) { $uid = 0 ; }
 		if (! defined $id) { print "ERROR reading osm file1, line follows (expecting way id):\n", $line1, "\n" ; }
 		unless ($id) { next; }
 		nextLine1() ;
@@ -1203,11 +1205,13 @@ sub getWayFile2 {
 	if($line2 =~ /^\s*\<way/) {
 
 		($id) = ($line2 =~ / id=[\'\"](.+?)[\'\"]/ ) ;
+		($uid) = ($line2 =~ / uid=[\'\"](.+?)[\'\"]/ ) ;
 		($u) = ($line2 =~ / user=[\'\"](.+?)[\'\"]/ ) ;
 		($timestamp) = ($line2 =~ / timestamp=[\'\"](.+?)[\'\"]/ ) ;
 		($version) = ($line2 =~ / version=[\'\"](.+?)[\'\"]/ ) ;
 
 		if (! defined $u) { $u = "unknown" ; }
+		if (! defined $uid) { $uid = 0 ; }
 		if (! defined $id) { print "ERROR reading osm file2, line follows (expecting way id):\n", $line1, "\n" ; }
 		unless ($id) { next; }
 		nextLine2() ;

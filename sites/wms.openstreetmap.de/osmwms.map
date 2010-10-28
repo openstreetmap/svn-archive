@@ -40,10 +40,11 @@ MAP
   LAYER
     NAME "Witten"
     METADATA
-      "wms_title"  "Luftbilder Stadtwerke Witten (2009, 10 cm)"
+      "wms_title"  "Luftbilder Stadtwerke Witten (03/2009, 10 cm)"
       "wms_extent" "7.220357 51.364269 7.438294 51.498894"
       "wms_srs"    "EPSG:4326"
       "copyright"  "© Stadtwerke Witten: OSM use only"
+      "wiki" "http://wiki.openstreetmap.org/wiki/DE:Luftbilder_Witten"
     END
     TYPE RASTER
     STATUS ON
@@ -72,7 +73,7 @@ MAP
   LAYER
     NAME "Neunkirchen"
     METADATA
-     "wms_title"  "Neunkirchen"
+     "wms_title"  "cadastral map of Neunkirchen am Sand"
      "wms_extent" "11.3 49.50 11.386 49.55"
      "wms_srs"    "EPSG:4326"
      "copyright"  "© Gem. Neunkirchen: OSM use only"
@@ -196,7 +197,7 @@ MAP
   LAYER
     NAME "Chile"
     METADATA
-      "wms_title"  "Rapideye Images from Chile"##required
+      "wms_title"  "Rapideye Images from Chile"
       "wms_extent" "-73.655740 -37.944243 -72.090433 -34.879482"
       "wms_srs"    "EPSG:4326"
       "copyright"  "© RapidEye AG: OSM use only"
@@ -221,6 +222,7 @@ MAP
       "wms_extent" "6.024531 54.805774 15.008569 47.547219"
       "wms_srs" "EPSG:4326"
       "copyright"  "© Enaikoon: released with no restrictions"
+      "wiki" "http://wiki.openstreetmap.org/wiki/Mautdaten"
     END
 
     DATA "mautknoten/mautknoten_4326"

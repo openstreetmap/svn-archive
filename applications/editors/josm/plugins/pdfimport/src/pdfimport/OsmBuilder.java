@@ -30,6 +30,9 @@ public class OsmBuilder {
 	public double minNorth = 0;
 	public double maxNorth = 10000;
 
+	private final Map<String, String> stringsMap = new HashMap<String, String>();
+
+
 	public OsmBuilder()
 	{
 	}
@@ -134,8 +137,11 @@ public class OsmBuilder {
 
 		if (full) {
 			keys.put("PDF_nr", "" + path.nr);
-			keys.put("PDF_layer", "" + path.layer.info.nr);
-			keys.put("PDF_closed", "" + path.isClosed());
+			keys.put("PDF_layer", this.getString("" + path.layer.info.nr));
+
+			if (path.isClosed()){
+				keys.put("PDF_closed", "yes");
+			}
 
 			if (path.layer.info.fill){
 				keys.put("PDF_fillColor", printColor(path.layer.info.fillColor));
@@ -159,8 +165,19 @@ public class OsmBuilder {
 		return newWay;
 	}
 
+
+	private String getString(String string) {
+		if (this.stringsMap.containsKey(string)) {
+			return this.stringsMap.get(string);
+		} else {
+			this.stringsMap.put(string, string);
+			return string;
+		}
+	}
+
 	private String printColor(Color col){
-		return "#" + Integer.toHexString(col.getRGB() & 0xffffff);
+		String s = "#" + Integer.toHexString(col.getRGB() & 0xffffff);
+		return getString(s);
 	}
 
 

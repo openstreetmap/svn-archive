@@ -20,8 +20,7 @@ import org.openstreetmap.josm.io.MirroredInputStream;
 public class WMSLayerInfo {
     ArrayList<WMSInfo> layers = new ArrayList<WMSInfo>();
     ArrayList<WMSInfo> defaultLayers = new ArrayList<WMSInfo>();
-    private final static String[] DEFAULT_LAYER_SITES = {
-    "http://svn.openstreetmap.org/applications/editors/josm/plugins/wmsplugin/sources.cfg"};
+    private final static String[] DEFAULT_LAYER_SITES = { "http://josm.openstreetmap.de/maps"};
 
     public void load() {
         layers.clear();

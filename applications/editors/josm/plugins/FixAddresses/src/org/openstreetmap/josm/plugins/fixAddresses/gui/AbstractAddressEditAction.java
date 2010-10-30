@@ -16,7 +16,7 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 
 /**
  * Base class for all address related action. An action can work as well on all addresses collected by the

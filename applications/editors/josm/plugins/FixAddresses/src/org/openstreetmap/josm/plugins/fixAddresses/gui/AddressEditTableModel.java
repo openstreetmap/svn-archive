@@ -15,9 +15,9 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
-import org.openstreetmap.josm.plugins.addressEdit.IAddressEditContainerListener;
-import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
+import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
 
 public abstract class AddressEditTableModel extends DefaultTableModel implements IAddressEditContainerListener{
 

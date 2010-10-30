@@ -15,10 +15,10 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
-import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
-import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
-import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 
 public class IncompleteAddressesTableModel extends AddressEditTableModel {
 	/**

@@ -18,9 +18,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
-import org.openstreetmap.josm.plugins.addressEdit.AddressFinderThread;
-import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressFinderThread;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 
 /**
  * Guesses address tags by picking the closest street node with a name. The same is done (some day)

@@ -19,8 +19,8 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JTable;
 
-import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
-import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
 
 public class IncompleteAddressesMouseListener implements MouseListener {
 

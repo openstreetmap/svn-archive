@@ -21,9 +21,9 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
-import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
-import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
 public class AddressEditModel {
 	private List<StreetNode> streets;

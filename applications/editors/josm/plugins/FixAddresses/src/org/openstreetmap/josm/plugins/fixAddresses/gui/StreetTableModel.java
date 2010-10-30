@@ -15,9 +15,9 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
-import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
-import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
 public class StreetTableModel extends AddressEditTableModel {
 

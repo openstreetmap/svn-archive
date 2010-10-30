@@ -19,9 +19,9 @@ import java.util.List;
 
 import javax.swing.JTable;
 
-import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
-import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
-import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
 public class AddressEditSelectionEvent extends ActionEvent {
 	/**

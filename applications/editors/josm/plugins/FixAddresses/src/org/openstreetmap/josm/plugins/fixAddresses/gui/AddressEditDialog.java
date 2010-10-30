@@ -49,12 +49,12 @@ import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.properties.PresetListPanel.PresetHandler;
-import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
-import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
-import org.openstreetmap.josm.plugins.addressEdit.IAddressEditContainerListener;
-import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
-import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
-import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
+import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 @SuppressWarnings("serial")

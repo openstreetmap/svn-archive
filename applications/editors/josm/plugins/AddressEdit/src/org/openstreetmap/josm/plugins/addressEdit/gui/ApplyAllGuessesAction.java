@@ -16,6 +16,7 @@ package org.openstreetmap.josm.plugins.addressEdit.gui;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
@@ -25,11 +26,13 @@ import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 public class ApplyAllGuessesAction extends AbstractAddressEditAction {
 
 	public ApplyAllGuessesAction() {
-		super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
+		//super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
+		super(tr("Apply all guesses"), null, "Turns all guesses into the corresponding tag values.");
 	}
 
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
+		if (ev == null || ev.getSelectedUnresolvedAddresses() == null) return;
 		// fix SELECTED items only
 		List<AddressNode> addrToFix = ev.getSelectedUnresolvedAddresses();
 		applyGuesses(addrToFix);
@@ -52,7 +55,8 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction {
 	}
 
 	private void applyGuesses(List<AddressNode> addrToFix) {
-		for (AddressNode aNode : addrToFix) {
+		List<AddressNode> addrToFixShadow = new ArrayList<AddressNode>(addrToFix);
+		for (AddressNode aNode : addrToFixShadow) {
 			aNode.applyAllGuesses();
 		}
 	}

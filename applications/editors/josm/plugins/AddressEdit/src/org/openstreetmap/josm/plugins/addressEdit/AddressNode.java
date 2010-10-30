@@ -80,6 +80,21 @@ public class AddressNode extends NodeEntityBase {
 	public boolean hasGuessedStreetName() {
 		return !StringUtils.isNullOrEmpty(guessedStreetName);
 	}
+	
+	/**
+	 * Returns true, if this instance has guesses regarding address tags.
+	 * @return
+	 */
+	public boolean hasGuesses() {
+		return hasGuessedStreetName(); // to be extended later
+	}
+	
+	/**
+	 * Applies all guessed tags for this node.
+	 */
+	public void applyAllGuesses() {
+		if (hasGuessedStreetName()) applyGuessedStreet();
+	}
 
 	/**
 	 * Gets the name of the post code associated with this address.

@@ -70,11 +70,13 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	
 	/* Actions */
 	private AssignAddressToStreetAction resolveAction = new AssignAddressToStreetAction();
+	private ApplyAllGuessesAction applyAllGuessesAction = new ApplyAllGuessesAction();
 	private GuessAddressDataAction guessAddressAction = new GuessAddressDataAction();
 	
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[] {
 		resolveAction,
-		guessAddressAction
+		guessAddressAction,
+		applyAllGuessesAction
 	};
 	private JLabel streetLabel;
 	private JLabel unresolvedAddressesLabel;
@@ -124,10 +126,12 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			unresolvedPanel.setMinimumSize(new Dimension(350, 200));
 			
 			JPanel unresolvedButtons = new JPanel(new FlowLayout());
-			SideButton assign = new SideButton(resolveAction, "assignstreet_24");															   
+			SideButton assign = new SideButton(resolveAction);															   
 			unresolvedButtons.add(assign);
-			SideButton guess = new SideButton(guessAddressAction, "guessstreets_24");															   
+			SideButton guess = new SideButton(guessAddressAction);															   
 			unresolvedButtons.add(guess);
+			SideButton applyAllGuesses = new SideButton(applyAllGuessesAction);															   
+			unresolvedButtons.add(applyAllGuesses);
 			unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
 			
 			/* Map Panel */

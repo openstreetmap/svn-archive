@@ -284,6 +284,37 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public int getNumberOfUnresolvedAddresses() {
 		return unresolvedAddresses != null ? unresolvedAddresses.size() : 0;
 	}
+	
+	/**
+	 * Gets the number of guessed tags.
+	 * @return
+	 */
+	public int getNumberOfGuesses() {
+		int sum = 0;
+				
+		for (AddressNode aNode : getAllAddressesToFix()) {
+			if (aNode.hasGuesses()) {
+				sum++;
+			}
+		}
+		return sum;
+	}
+	
+	/**
+	 * Gets all (incomplete and/or unresolved) address nodes to fix.
+	 * @return
+	 */
+	public List<AddressNode> getAllAddressesToFix() {
+		List<AddressNode> all = new ArrayList<AddressNode>(incompleteAddresses);
+
+		for (AddressNode aNode : unresolvedAddresses) {
+			if (!all.contains(aNode)) {
+				all.add(aNode);
+			}
+		}
+		
+		return all; 
+	}
 
 	/**
 	 * Tries to assign an address to a street.

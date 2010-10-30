@@ -22,7 +22,7 @@ import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
 public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 
 	public AssignAddressToStreetAction() {
-		super(tr("Assign address to street"));
+		super(tr("Assign address to street"), "assignstreet_24", "Assign the selected address(es) to the selected street.");
 	}
 
 	/**

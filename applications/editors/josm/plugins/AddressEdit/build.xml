@@ -20,7 +20,7 @@
 ** dialog. You have to check it in first.
 **
 -->
-<project name="AddressEdit" default="dist" basedir=".">
+<project name="FixAddresses" default="dist" basedir=".">
     <!--
       ************************************************
       ** should not be necessary to change the following properties
@@ -94,7 +94,7 @@
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/AddressEdit"/>
                 <attribute name="Plugin-Mainversion" value="3529"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            	<attribute name="Plugin-Icon" value="images/addressedit_large.png"/>
+            	<attribute name="Plugin-Icon" value="images/fixaddresses.png"/>
             </manifest>
         </jar>        
     </target>

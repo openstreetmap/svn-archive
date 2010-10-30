@@ -36,8 +36,7 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {		
 		StreetNode streetNode = ev.getSelectedStreet();
-		
-		
+				
 		if (streetNode != null && ev.getSelectedUnresolvedAddresses() != null) {
 			for (AddressNode addrNode : ev.getSelectedUnresolvedAddresses()) {
 				addrNode.assignStreet(streetNode);
@@ -58,6 +57,11 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 	public void updateEnabledState(AddressEditContainer container) {
 		// we only accept a selection here
 		setEnabled(false);
+	}
+
+	@Override
+	public void addressEditActionPerformed(AddressEditContainer container) {
+		// we only accept a selection: nothing to do here		
 	}
 
 

@@ -18,13 +18,20 @@ import java.awt.event.ActionEvent;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 
+/**
+ * Base class for all address related action. An action can work as well on all addresses collected by the
+ * container or on the active selection.
+ * By default, the action is disabled and the updateEnabledState(...) have to be implemented by
+ * subclasses. There are also two separate <tt>actionPerformedXX</tt> methods to do the action on
+ * container or on selection items.
+ * Most actions will work in both cases, so it is recommended to have one single method which
+ * accepts a list of addresses or streets and executes the tasks to be done by this action. 
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * 
+ */
+
+@SuppressWarnings("serial")
 public abstract class AbstractAddressEditAction extends JosmAction {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3080414353417044998L;
-
 	private AddressEditSelectionEvent event;
 	protected AddressEditContainer container;
 
@@ -113,16 +120,26 @@ public abstract class AbstractAddressEditAction extends JosmAction {
 			addressEditActionPerformed(event);	
 			event = null; // consume event
 		} else {
-			actionPerformed(arg0);
+			if (container != null) {
+				addressEditActionPerformed(container);
+			} else { // call super class hook
+				actionPerformed(arg0);
+			}
 		}
 	}
 	
 
 	/**
-	 * Redirected action handler
+	 * Redirected action handler for doing actions on a address selection.
 	 * @param ev
 	 */
 	public abstract void addressEditActionPerformed(AddressEditSelectionEvent ev);
+	
+	/**
+	 * Redirected action handler for doing actions on an address container.
+	 * @param ev
+	 */
+	public abstract void addressEditActionPerformed(AddressEditContainer container);
 	
 	
 

@@ -43,17 +43,6 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction {
 		setEnabled(container != null && container.getNumberOfGuesses() > 0);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.addressEdit.gui.AbstractAddressEditAction#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		if (container == null || container.getUnresolvedAddresses() == null) return;
-		
-		List<AddressNode> addrToFix = container.getUnresolvedAddresses();
-		applyGuesses(addrToFix);
-	}
-
 	private void applyGuesses(List<AddressNode> addrToFix) {
 		List<AddressNode> addrToFixShadow = new ArrayList<AddressNode>(addrToFix);
 		for (AddressNode aNode : addrToFixShadow) {
@@ -64,5 +53,13 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction {
 	@Override
 	protected void updateEnabledState(AddressEditSelectionEvent event) {
 		// do nothing here
+	}
+
+	@Override
+	public void addressEditActionPerformed(AddressEditContainer container) {
+		if (container == null || container.getUnresolvedAddresses() == null) return;
+		
+		List<AddressNode> addrToFix = container.getUnresolvedAddresses();
+		applyGuesses(addrToFix);		
 	}
 }

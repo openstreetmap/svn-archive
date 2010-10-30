@@ -55,15 +55,15 @@ import org.openstreetmap.josm.plugins.addressEdit.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
 import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
 import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
+import org.openstreetmap.josm.tools.ImageProvider;
 
+@SuppressWarnings("serial")
 public class AddressEditDialog extends JDialog implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
 	private static final String UNRESOLVED_HEADER_FMT = tr("Unresolved Addresses (%d)");
 	private static final String STREET_HEADER_FMT = tr("Streets (%d)");
 	private static final String OK_COMMAND = tr("Close");
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6251676464816335631L;
+	private static final String SELECT_AND_CLOSE = tr("Select and close");
+	
 	private AddressEditContainer editContainer;
 	private JTable unresolvedTable;
 	private JTable streetTable;
@@ -72,11 +72,13 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	private AssignAddressToStreetAction resolveAction = new AssignAddressToStreetAction();
 	private ApplyAllGuessesAction applyAllGuessesAction = new ApplyAllGuessesAction();
 	private GuessAddressDataAction guessAddressAction = new GuessAddressDataAction();
+	private SelectAddressesInMapAction selectAddressesInMapAction = new SelectAddressesInMapAction();
 	
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[] {
 		resolveAction,
 		guessAddressAction,
-		applyAllGuessesAction
+		applyAllGuessesAction,
+		selectAddressesInMapAction
 	};
 	private JLabel streetLabel;
 	private JLabel unresolvedAddressesLabel;
@@ -88,7 +90,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	 * @throws HeadlessException
 	 */
 	public AddressEditDialog(AddressEditContainer addressEditContainer) throws HeadlessException  {
-		super(JOptionPane.getFrameForComponent(Main.parent), tr("Edit Addresses"), false);
+		super(JOptionPane.getFrameForComponent(Main.parent), tr("Fix unresolved addresses"), false);
 	
 		this.editContainer = addressEditContainer; 
 		this.editContainer.addChangedListener(this);
@@ -134,6 +136,10 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 				unresolvedButtons.add(guess);
 				SideButton applyAllGuesses = new SideButton(applyAllGuessesAction);															   
 				unresolvedButtons.add(applyAllGuesses);
+				
+				unresolvedButtons.add(new JSeparator());
+				SideButton selectInMap = new SideButton(selectAddressesInMapAction);															   
+				unresolvedButtons.add(selectInMap);
 				unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
 			} catch (Exception e) {				
 				e.printStackTrace();
@@ -162,8 +168,10 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 		}
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(1,10));
-		JButton ok = new JButton(OK_COMMAND);
+		JButton ok = new JButton(OK_COMMAND, ImageProvider.getIfAvailable(null, "ok"));
 		ok.addActionListener(this);
+		JButton selectAndClose = new JButton(SELECT_AND_CLOSE);
+		selectAndClose.addActionListener(this);
 		
 		// Murks
 		for (int i = 0; i < 8; i++) {

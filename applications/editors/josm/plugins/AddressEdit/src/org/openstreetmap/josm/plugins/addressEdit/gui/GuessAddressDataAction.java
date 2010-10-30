@@ -23,6 +23,13 @@ import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressFinderThread;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 
+/**
+ * Guesses address tags by picking the closest street node with a name. The same is done (some day)
+ * with city, post code, state,...
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * 
+ */
+
 @SuppressWarnings("serial")
 public class GuessAddressDataAction extends AbstractAddressEditAction {
 	private static final int THREAD_COUNT = 5;
@@ -32,24 +39,47 @@ public class GuessAddressDataAction extends AbstractAddressEditAction {
 		super(tr("Guess address data"), "guessstreets_24", "Tries to guess the street name by picking the name of the closest way.");
 	}
 
-	@Override
-	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
-	}
-	
 	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.addressEdit.gui.AbstractAddressEditAction#actionPerformed(java.awt.event.ActionEvent)
+	 * @see org.openstreetmap.josm.plugins.addressEdit.gui.AbstractAddressEditAction#updateEnabledState(org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditSelectionEvent)
 	 */
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void updateEnabledState(AddressEditSelectionEvent ev) {
+		setEnabled(ev != null && ev.getUnresolvedAddressTable() != null);
+	}
+
+	@Override
+	protected void updateEnabledState(AddressEditContainer container) {
+		setEnabled(container != null && container.getNumberOfIncompleteAddresses() > 0);
+	}
+
+	@Override
+	public void addressEditActionPerformed(AddressEditContainer container) {
 		if (container == null) return;
 		if (container.getUnresolvedAddresses() == null) return;
+				
+		internalGuessAddresses(container.getIncompleteAddresses());
+	}
+
+	@Override
+	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
+		if (ev == null || ev.getSelectedUnresolvedAddresses() == null) return;
 		
+		// guess tags for selected addresses only
+		internalGuessAddresses(ev.getSelectedUnresolvedAddresses());
+	}
+	
+	/**
+	 * Internal method to start several threads guessing tag values for the given list of addresses.
+	 * @param addrNodes
+	 */
+	private void internalGuessAddresses(List<AddressNode> nodes) {
+		// setup thread pool
 		for (int i = 0; i < threads.length; i++) {
 			threads[i] = new AddressFinderThread();
 		}
-						
-		List<AddressNode> addrNodes = new ArrayList<AddressNode>();		
-		addrNodes.addAll(container.getIncompleteAddresses());
+		
+		// work on a shadowed copy
+		List<AddressNode> addrNodes = new ArrayList<AddressNode>(nodes);
 		for (AddressNode aNode : addrNodes) {
 			if (aNode.hasStreetName()) continue;
 			
@@ -75,18 +105,4 @@ public class GuessAddressDataAction extends AbstractAddressEditAction {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.addressEdit.gui.AbstractAddressEditAction#updateEnabledState(org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditSelectionEvent)
-	 */
-	@Override
-	public void updateEnabledState(AddressEditSelectionEvent ev) {
-		// do nothing here
-	}
-
-	@Override
-	protected void updateEnabledState(AddressEditContainer container) {
-		setEnabled(container != null && container.getNumberOfIncompleteAddresses() > 0);
-	}
-
-	
 }

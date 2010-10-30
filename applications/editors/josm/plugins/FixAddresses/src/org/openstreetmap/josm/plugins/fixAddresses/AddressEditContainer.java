@@ -53,7 +53,7 @@ import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
 
 /**
- *
+ * Provides a container serving streets and unresolved/incomplete addresses.
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */

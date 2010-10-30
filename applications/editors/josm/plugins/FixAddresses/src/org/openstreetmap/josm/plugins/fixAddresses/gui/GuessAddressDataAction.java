@@ -24,7 +24,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 
 /**
  * Guesses address tags by picking the closest street node with a name. The same is done (some day)
- * with city, post code, state,...
+ * with city, post code, state,... However, I strongly encourage you to check the result.
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */

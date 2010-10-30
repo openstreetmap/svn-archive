@@ -19,6 +19,12 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
+/**
+ * Assigns one or more selected addresses to a street, i. e. the name of the street is 
+ * used as value for the addr:street tag. 
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * 
+ */
 public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 
 	public AssignAddressToStreetAction() {
@@ -39,8 +45,7 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 				
 		if (streetNode != null && ev.getSelectedUnresolvedAddresses() != null) {
 			for (AddressNode addrNode : ev.getSelectedUnresolvedAddresses()) {
-				addrNode.assignStreet(streetNode);
-				System.out.println("Assign " + addrNode + " to " + streetNode);
+				addrNode.assignStreet(streetNode);				
 			}
 		}
 	}

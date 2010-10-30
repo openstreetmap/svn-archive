@@ -21,6 +21,12 @@ import java.util.List;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 
+/**
+ * Applies the guessed values for a set of addresses. 
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * 
+ */
+
 @SuppressWarnings("serial")
 public class ApplyAllGuessesAction extends AbstractAddressEditAction {
 

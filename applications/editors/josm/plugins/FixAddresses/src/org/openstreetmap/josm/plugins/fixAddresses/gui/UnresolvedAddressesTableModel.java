@@ -35,7 +35,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
 
 /**
- *
+ * Provides a table model to show unresolved addresses.
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
@@ -61,17 +61,25 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		super(addressContainer);
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#getColumnCount()
+	 */
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
 		return NUMBER_OF_COLUMNS;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#getColumnName(int)
+	 */
 	@Override
 	public String getColumnName(int column) {
 		return COLUMN_NAMES[column];
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#getRowCount()
+	 */
 	@Override
 	public int getRowCount() {
 		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
@@ -80,6 +88,9 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		return addressContainer.getNumberOfUnresolvedAddresses();
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#getValueAt(int, int)
+	 */
 	@Override
 	public Object getValueAt(int row, int column) {
 		AddressNode aNode = (AddressNode) getEntityOfRow(row);
@@ -111,17 +122,25 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+	 */
 	@Override
 	public Class<?> getColumnClass(int arg0) {
 		return COLUMN_CLASSES[arg0];
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
+	 */
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel#getEntityOfRow(int)
+	 */
 	@Override
 	public INodeEntity getEntityOfRow(int row) {
 		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {

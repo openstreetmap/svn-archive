@@ -21,6 +21,7 @@
         <ant antfile="build.xml" target="dist" dir="editgpx"/>
         <ant antfile="build.xml" target="dist" dir="ElevationProfile"/>
         <ant antfile="build.xml" target="dist" dir="ext_tools"/>
+        <ant antfile="build.xml" target="dist" dir="FixAddresses"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>

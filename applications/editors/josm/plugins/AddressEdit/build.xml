@@ -89,10 +89,10 @@
             <manifest>
                 <attribute name="Author" value="Oliver Wieland"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.addressEdit.AddressEditPlugin"/>
-                <attribute name="Plugin-Date" value="24.10.2010"/>
-                <attribute name="Plugin-Description" value="Allows comfortable editing of addresses and streets."/>            	
+                <attribute name="Plugin-Date" value="30.10.2010"/>
+                <attribute name="Plugin-Description" value="Finds and fixes invalid addresses in a comfortable way."/>            	
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/AddressEdit"/>
-                <attribute name="Plugin-Mainversion" value="3329"/>
+                <attribute name="Plugin-Mainversion" value="3529"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             	<attribute name="Plugin-Icon" value="images/addressedit_large.png"/>
             </manifest>

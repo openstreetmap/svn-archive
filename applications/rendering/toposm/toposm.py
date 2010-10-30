@@ -581,7 +581,7 @@ def create_jpeg_tile(z, x, y, quality):
         if path.isfile(contourssrc):
             cmd = cmd + " " + contourssrc + " -composite"
         cmd = cmd + " " + featuressrc + " -composite"
-        cmd = cmd + " -quality " + str(quality) + " " + desttile
+        cmd = cmd + " -quality " + str(quality) + " -strip " + desttile
         call(cmd, shell=True)
         
         print 'done.'

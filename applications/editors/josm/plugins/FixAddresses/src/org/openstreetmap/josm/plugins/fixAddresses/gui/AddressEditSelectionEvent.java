@@ -97,7 +97,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 			
 			List<AddressNode> nodes = new ArrayList<AddressNode>();
 			for (int i = 0; i < selRows.length; i++) {
-				if (i >= 0 && i < addressContainer.getNumberOfUnresolvedAddresses()) {
+				if (selRows[i] >= 0 && selRows[i] < addressContainer.getNumberOfUnresolvedAddresses()) {
 					nodes.add(addressContainer.getUnresolvedAddresses().get(selRows[i]));
 				}
 			}

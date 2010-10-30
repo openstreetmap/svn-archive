@@ -39,7 +39,7 @@
       ************************************************
       ** should not be necessary to change the following properties
      -->
-	<property name="josm" location="core/dist/josm-custom.jar" />
+	<property name="josm" location="../../core/dist/josm-custom.jar" />
 	<property name="felix"					location="core/dist/felix.jar"/>
 	<property name="plugin.build.dir" value="build/" />
 	<property name="plugin.src.dir" value="src/" />

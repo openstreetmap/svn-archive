@@ -14,7 +14,13 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.addressEdit.gui.AddressEditDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class AddressEditAction extends JosmAction implements SelectionChangedListener {
+/**
+ * Action to find and fix addresses without (valid) streets.
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * 
+ */
+
+public class FixedUnresolvedStreetsAction extends JosmAction implements SelectionChangedListener {
 
 	/**
 	 * 
@@ -23,9 +29,9 @@ public class AddressEditAction extends JosmAction implements SelectionChangedLis
 	private AddressEditContainer addressEditContainer;
 	private Collection<? extends OsmPrimitive> newSelection;
 
-	public AddressEditAction() {
-		super(tr("Address Editor"), "addressedit_24",
-				tr("Handy Address Editing Functions"), Shortcut
+	public FixedUnresolvedStreetsAction() {
+		super(tr("Fix street addresses"), "fixstreets_24",
+				tr("Find and fix addresses without (valid) streets."), Shortcut
 				.registerShortcut("tools:AddressEdit", tr("Tool: {0}",
 						tr("Address Edit")), KeyEvent.VK_A,
 						Shortcut.GROUP_MENU, InputEvent.ALT_DOWN_MASK

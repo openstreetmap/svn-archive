@@ -126,7 +126,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			JPanel unresolvedButtons = new JPanel(new FlowLayout());
 			SideButton assign = new SideButton(resolveAction, "assignstreet_24");															   
 			unresolvedButtons.add(assign);
-			SideButton guess = new SideButton(guessAddressAction);															   
+			SideButton guess = new SideButton(guessAddressAction, "guessstreets_24");															   
 			unresolvedButtons.add(guess);
 			unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
 			

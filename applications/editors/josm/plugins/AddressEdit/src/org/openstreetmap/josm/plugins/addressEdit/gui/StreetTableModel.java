@@ -16,6 +16,7 @@ package org.openstreetmap.josm.plugins.addressEdit.gui;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
+import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
 import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
 
 public class StreetTableModel extends AddressEditTableModel {
@@ -76,14 +77,12 @@ public class StreetTableModel extends AddressEditTableModel {
 	 * @see javax.swing.table.DefaultTableModel#getValueAt(int, int)
 	 */
 	@Override
-	public Object getValueAt(int row, int column) {
-		if (addressContainer == null || addressContainer.getStreetList() == null) {
+	public Object getValueAt(int row, int column) {		
+		StreetNode sNode = (StreetNode) getEntityOfRow(row);
+		
+		if (sNode == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getNumberOfStreets()) {
-			return null;
-		}
-		StreetNode sNode = addressContainer.getStreetList().get(row);
 		
 		switch (column) {
 		case 0:
@@ -104,5 +103,16 @@ public class StreetTableModel extends AddressEditTableModel {
 	public boolean isCellEditable(int row, int column) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public INodeEntity getEntityOfRow(int row) {
+		if (addressContainer == null || addressContainer.getStreetList() == null) {
+			return null;
+		}
+		if (row < 0 || row > addressContainer.getNumberOfStreets()) {
+			return null;
+		}
+		return addressContainer.getStreetList().get(row);	
 	}
 }

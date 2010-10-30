@@ -114,6 +114,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			unresolvedTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			unresolvedTable.getSelectionModel().addListSelectionListener(this);
 			unresolvedTable.getSelectionModel().addListSelectionListener(new IncompleteAddressListener());
+			unresolvedTable.addMouseListener(new IncompleteAddressesMouseListener());			
 			
 			JScrollPane scroll2 = new JScrollPane(unresolvedTable);
 			unresolvedPanel.add(scroll2, BorderLayout.CENTER);

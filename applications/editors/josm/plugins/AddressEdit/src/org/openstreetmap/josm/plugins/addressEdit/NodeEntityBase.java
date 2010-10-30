@@ -111,6 +111,7 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 		OsmPrimitive newNode = new Node(oldNode);
 		newNode.put(tag, newValue);
 		Main.main.undoRedo.add( new ChangeCommand(oldNode, newNode));
+		fireEntityChanged(this);
 	}
 
 	/* (non-Javadoc)

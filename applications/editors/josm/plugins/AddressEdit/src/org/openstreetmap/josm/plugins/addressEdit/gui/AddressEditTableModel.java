@@ -19,7 +19,7 @@ import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
 
-public class AddressEditTableModel extends DefaultTableModel implements IAddressEditContainerListener{
+public abstract class AddressEditTableModel extends DefaultTableModel implements IAddressEditContainerListener{
 
 	/**
 	 * 
@@ -42,4 +42,11 @@ public class AddressEditTableModel extends DefaultTableModel implements IAddress
 	public void entityChanged(INodeEntity entity) {
 		fireTableDataChanged();
 	}
+	
+	/**
+	 * Gets the node entity for the given row or null; if row contains no entity.
+	 * @param row The row to get the entity object for.
+	 * @return
+	 */
+	public abstract INodeEntity getEntityOfRow(int row);
 }

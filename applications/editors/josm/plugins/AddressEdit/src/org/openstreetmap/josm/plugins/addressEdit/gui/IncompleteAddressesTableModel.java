@@ -17,6 +17,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
+import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
 import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
 
 public class IncompleteAddressesTableModel extends AddressEditTableModel {
@@ -57,14 +58,12 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 	}
 
 	@Override
-	public Object getValueAt(int row, int column) {
-		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
+	public Object getValueAt(int row, int column) {		
+		AddressNode aNode = (AddressNode) getEntityOfRow(row);
+		
+		if (aNode == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getNumberOfIncompleteAddresses()) {
-			return null;
-		}
-		AddressNode aNode = addressContainer.getIncompleteAddresses().get(row);
 		
 		switch (column) {
 		case 0:
@@ -98,5 +97,16 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 	public boolean isCellEditable(int row, int column) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public INodeEntity getEntityOfRow(int row) {
+		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
+			return null;
+		}
+		if (row < 0 || row > addressContainer.getNumberOfIncompleteAddresses()) {
+			return null;
+		}
+		return addressContainer.getIncompleteAddresses().get(row);
 	}
 }

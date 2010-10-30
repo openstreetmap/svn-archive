@@ -14,7 +14,6 @@
 package org.openstreetmap.josm.plugins.addressEdit;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.plugins.addressEdit.gui.GuessAddressDataAction;
 
 public class AddressNode extends NodeEntityBase {
 	public static final String MISSING_TAG = "?";
@@ -76,6 +75,10 @@ public class AddressNode extends NodeEntityBase {
 	public void setGuessedStreetName(String guessedStreetName) {
 		this.guessedStreetName = guessedStreetName;
 		fireEntityChanged(this);
+	}
+	
+	public boolean hasGuessedStreetName() {
+		return !StringUtils.isNullOrEmpty(guessedStreetName);
 	}
 
 	/**
@@ -175,8 +178,11 @@ public class AddressNode extends NodeEntityBase {
 		}
 	}
 	
+	/**
+	 * Applies the guessed street name to the addr:street tag value.
+	 */
 	public void applyGuessedStreet() {
-		if (!StringUtils.isNullOrEmpty(getGuessedStreetName())) {
+		if (hasGuessedStreetName()) {
 			setOSMTag(TagUtils.ADDR_STREET_TAG, guessedStreetName);
 		}
 	}

@@ -32,7 +32,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
-import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
+import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
 
 /**
  *
@@ -82,21 +82,17 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	@Override
 	public Object getValueAt(int row, int column) {
-		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
+		AddressNode aNode = (AddressNode) getEntityOfRow(row);
+		
+		if (aNode == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getNumberOfUnresolvedAddresses()) {
-			return null;
-		}
-		AddressNode aNode = addressContainer.getUnresolvedAddresses().get(row);
 		
 		switch (column) {
 		case 0:
 			String guessed = aNode.getGuessedStreetName();
 			String cur = aNode.getStreet();
-			if (!StringUtils.isNullOrEmpty(guessed) && 
-					AddressNode.MISSING_TAG.equals(cur)) {
-				
+			if (aNode.hasGuessedStreetName() && AddressNode.MISSING_TAG.equals(cur)) {				
 				return "*" + guessed;
 			} else {
 				return aNode.getStreet();
@@ -124,5 +120,16 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 	public boolean isCellEditable(int row, int column) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public INodeEntity getEntityOfRow(int row) {
+		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
+			return null;
+		}
+		if (row < 0 || row > addressContainer.getNumberOfUnresolvedAddresses()) {
+			return null;
+		}
+		return addressContainer.getUnresolvedAddresses().get(row);	
 	}
 }

@@ -32,6 +32,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
+import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
 
 /**
  *
@@ -91,7 +92,15 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		
 		switch (column) {
 		case 0:
-			return aNode.getStreet();
+			String guessed = aNode.getGuessedStreetName();
+			String cur = aNode.getStreet();
+			if (!StringUtils.isNullOrEmpty(guessed) && 
+					AddressNode.MISSING_TAG.equals(cur)) {
+				
+				return "*" + guessed;
+			} else {
+				return aNode.getStreet();
+			}
 		case 1:
 			return aNode.getHouseNumber();
 		case 2:
@@ -99,7 +108,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		case 3:
 			return aNode.getPostCode();
 		case 4:
-			return aNode.getName();
+			return aNode.getName();			
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}

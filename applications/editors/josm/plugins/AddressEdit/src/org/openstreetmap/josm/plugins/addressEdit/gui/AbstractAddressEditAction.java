@@ -15,10 +15,10 @@ package org.openstreetmap.josm.plugins.addressEdit.gui;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 
-public abstract class AbstractAddressEditAction extends AbstractAction {
+public abstract class AbstractAddressEditAction extends JosmAction {
 
 	/**
 	 * 
@@ -26,13 +26,15 @@ public abstract class AbstractAddressEditAction extends AbstractAction {
 	private static final long serialVersionUID = 3080414353417044998L;
 
 	private AddressEditSelectionEvent event;
+	protected AddressEditContainer container;
 
 	/**
 	 * @param name
 	 * @param icon
 	 */
-	public AbstractAddressEditAction(String name, Icon icon) {
-		super(name, icon);
+	public AbstractAddressEditAction(String name, String iconName, String tooltip) {
+		super(name, iconName, tooltip, null, true);
+		
 		setEnabled(false);
 	}
 
@@ -40,18 +42,44 @@ public abstract class AbstractAddressEditAction extends AbstractAction {
 	 * @param name
 	 */
 	public AbstractAddressEditAction(String name) {
-		this(name, null);
+		this(name, null, "");
+	}
+	
+	/**
+	 * @return the container
+	 */
+	public AddressEditContainer getContainer() {
+		return container;
 	}
 
 	/**
-	 * Updates 'enabled' state.
+	 * @param container the container to set
+	 */
+	public void setContainer(AddressEditContainer container) {
+		this.container = container;
+		updateEnabledState(container);
+	}
+
+	/**
+	 * Updates 'enabled' state depending on the given selection event.
 	 * @param ev
 	 * @return
 	 */
 	public void updateEnabledState(AddressEditSelectionEvent ev) {
 		// If the tree selection changes, we will get a new event. So this is safe.
-		this.event = ev; // save for later use.  
+		super.updateEnabledState();
+		this.event = ev; // save for later use.
+		if (ev != null) {
+			updateEnabledState(ev);
+		}
 	}
+
+	/**
+	 * Updates 'enabled' state depending on the given address container object.
+	 * @param container The address container (maybe null).
+	 * @return
+	 */
+	protected abstract void updateEnabledState(AddressEditContainer container);
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -59,7 +87,10 @@ public abstract class AbstractAddressEditAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (event != null) { // use the event acquired previously.
-			addressEditActionPerformed(event);			
+			addressEditActionPerformed(event);	
+			event = null; // consume event
+		} else {
+			actionPerformed(arg0);
 		}
 	}
 	

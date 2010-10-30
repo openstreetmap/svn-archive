@@ -68,10 +68,13 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	private JTable unresolvedTable;
 	private JTable streetTable;
 	
+	/* Actions */
 	private AssignAddressToStreetAction resolveAction = new AssignAddressToStreetAction();
+	private GuessAddressDataAction guessAddressAction = new GuessAddressDataAction();
 	
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[] {
-		resolveAction	
+		resolveAction,
+		guessAddressAction
 	};
 	private JLabel streetLabel;
 	private JLabel unresolvedAddressesLabel;
@@ -122,6 +125,8 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			JPanel unresolvedButtons = new JPanel(new FlowLayout());
 			SideButton assign = new SideButton(resolveAction, "assignstreet_24");															   
 			unresolvedButtons.add(assign);
+			SideButton guess = new SideButton(guessAddressAction);															   
+			unresolvedButtons.add(guess);
 			unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
 			
 			/* Map Panel */
@@ -139,6 +144,10 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			//this.getContentPane().add(mapPanel, BorderLayout.SOUTH);
 		} else {
 			this.getContentPane().add(new JLabel(tr("(No data)")), BorderLayout.CENTER);
+		}
+		
+		for (int i = 0; i < actions.length; i++) {
+			actions[i].setContainer(addressEditContainer);
 		}
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(1,10));
@@ -225,10 +234,14 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	@Override
 	public void containerChanged(AddressEditContainer container) {
 		updateHeaders();
+		
+		for (int i = 0; i < actions.length; i++) {
+			actions[i].setContainer(container);
+		}
 	}
 
 	@Override
-	public void entityChanged() {
+	public void entityChanged(INodeEntity entity) {
 		updateHeaders();
 	}
 	

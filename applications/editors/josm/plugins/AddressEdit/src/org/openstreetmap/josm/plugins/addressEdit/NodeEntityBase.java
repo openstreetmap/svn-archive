@@ -38,6 +38,13 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	}
 	
 	/**
+	 * @param osmObject the osmObject to set
+	 */
+	protected void setOsmObject(OsmPrimitive osmObject) {
+		this.osmObject = osmObject;
+	}
+
+	/**
 	 * Adds a change listener.
 	 * @param listener
 	 */
@@ -56,9 +63,9 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	/**
 	 * Notifies clients that the address container changed.
 	 */
-	protected static void fireEntityChanged() {
+	protected static void fireEntityChanged(INodeEntity entity) {
 		for (IAddressEditContainerListener listener : listeners) {
-			listener.entityChanged();
+			listener.entityChanged(entity);
 		}
 	}
 

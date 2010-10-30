@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.IAddressEditContainerListener;
+import org.openstreetmap.josm.plugins.addressEdit.INodeEntity;
 
 public class AddressEditTableModel extends DefaultTableModel implements IAddressEditContainerListener{
 
@@ -38,7 +39,7 @@ public class AddressEditTableModel extends DefaultTableModel implements IAddress
 	}
 
 	@Override
-	public void entityChanged() {
+	public void entityChanged(INodeEntity entity) {
 		fireTableDataChanged();
 	}
 }

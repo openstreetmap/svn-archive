@@ -14,15 +14,25 @@
 package org.openstreetmap.josm.plugins.addressEdit;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.addressEdit.gui.GuessAddressDataAction;
 
 public class AddressNode extends NodeEntityBase {
-
-	private static final String MISSING_TAG = "?";
+	public static final String MISSING_TAG = "?";
+	
+	private String guessedStreetName;
 
 	public AddressNode(OsmPrimitive osmObject) {
 		super(osmObject);
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.addressEdit.NodeEntityBase#setOsmObject(org.openstreetmap.josm.data.osm.OsmPrimitive)
+	 */
+	@Override
+	public void setOsmObject(OsmPrimitive osmObject) {
+		super.setOsmObject(osmObject);
+	}
+	
 	/**
 	 * Checks if the underlying address node has all tags usually needed to describe an address.
 	 * @return
@@ -44,10 +54,30 @@ public class AddressNode extends NodeEntityBase {
 		return TagUtils.getAddrStreetValue(osmObject);
 	}
 	
+	/**
+	 * Returns <tt>true</tt>, if this address node has a street name.
+	 * @return
+	 */
 	public boolean hasStreetName() {
 		return TagUtils.hasAddrStreetTag(osmObject);
 	}
 	
+	/**
+	 * Returns the street name guessed by the nearest-neighbour search.
+	 * @return the guessedStreetName
+	 */
+	public String getGuessedStreetName() {
+		return guessedStreetName;
+	}
+
+	/**
+	 * @param guessedStreetName the guessedStreetName to set
+	 */
+	public void setGuessedStreetName(String guessedStreetName) {
+		this.guessedStreetName = guessedStreetName;
+		fireEntityChanged(this);
+	}
+
 	/**
 	 * Gets the name of the post code associated with this address.
 	 * @return
@@ -141,7 +171,13 @@ public class AddressNode extends NodeEntityBase {
 		if (!node.getName().equals(getStreet())) {
 			setStreetName(node.getName());			
 			node.addAddress(this);
-			fireEntityChanged();
+			fireEntityChanged(this);
+		}
+	}
+	
+	public void applyGuessedStreet() {
+		if (!StringUtils.isNullOrEmpty(getGuessedStreetName())) {
+			setOSMTag(TagUtils.ADDR_STREET_TAG, guessedStreetName);
 		}
 	}
 	
@@ -194,8 +230,14 @@ public class AddressNode extends NodeEntityBase {
 	public static String getFormatString(AddressNode node) {
 		// TODO: Add further countries here
 		// DE
-		return String.format("%s %s, %s-%s %s (%s)", 
-				node.getStreet(),
+		String guessed = node.getGuessedStreetName();
+		String sName = node.getStreet();
+		if (!StringUtils.isNullOrEmpty(guessed) && MISSING_TAG.equals(sName)) {
+			sName = String.format("(%s)", guessed);
+		}	
+		
+		return String.format("%s %s, %s-%s %s (%s) ", 
+				sName,
 				node.getHouseNumber(),
 				node.getCountry(),
 				node.getPostCode(),

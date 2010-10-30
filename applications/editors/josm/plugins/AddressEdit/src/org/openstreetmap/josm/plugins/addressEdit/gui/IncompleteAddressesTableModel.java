@@ -17,6 +17,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
+import org.openstreetmap.josm.plugins.addressEdit.StringUtils;
 
 public class IncompleteAddressesTableModel extends AddressEditTableModel {
 	/**
@@ -75,7 +76,13 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 		case 3:
 			return aNode.getPostCode();
 		case 4:
-			return aNode.getStreet();
+			if (!StringUtils.isNullOrEmpty(aNode.getGuessedStreetName()) && 
+					AddressNode.MISSING_TAG.equals(aNode.getStreet())) {
+				
+				return "(" + aNode.getGuessedStreetName() + ")";
+			} else {
+				return aNode.getStreet();
+			}
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}

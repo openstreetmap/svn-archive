@@ -15,6 +15,7 @@ package org.openstreetmap.josm.plugins.addressEdit.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import org.openstreetmap.josm.plugins.addressEdit.AddressEditContainer;
 import org.openstreetmap.josm.plugins.addressEdit.AddressNode;
 import org.openstreetmap.josm.plugins.addressEdit.StreetNode;
 
@@ -50,8 +51,13 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 	 */
 	@Override
 	public void updateEnabledState(AddressEditSelectionEvent ev) {
-		super.updateEnabledState(ev);
 		setEnabled(ev.getSelectedStreet() != null && ev.getSelectedUnresolvedAddresses() != null);
+	}
+
+	@Override
+	public void updateEnabledState(AddressEditContainer container) {
+		// we only accept a selection here
+		setEnabled(false);
 	}
 
 

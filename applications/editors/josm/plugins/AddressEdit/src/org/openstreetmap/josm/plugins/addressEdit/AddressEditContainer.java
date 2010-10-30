@@ -62,7 +62,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100); 
 	private List<AddressNode> unresolvedAddresses = new ArrayList<AddressNode>(100);
 	private List<AddressNode> incompleteAddresses = new ArrayList<AddressNode>(100);
-	
+	private HashMap<String, AddressNode> addressCache = new HashMap<String, AddressNode>();
 	private HashSet<Node> visitedNodes = new HashSet<Node>();
 	private HashSet<Way> visitedWays = new HashSet<Way>();
 	private HashSet<String> tags = new HashSet<String>();
@@ -125,8 +125,18 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		if (hasBeenVisited(n)) {
 			return;
 		}
-		
-		AddressNode aNode = NodeFactory.createNode(n);
+	
+		String aid = "" + n.getId();
+		AddressNode aNode = null;
+		if (!addressCache.containsKey(aid)) {
+			aNode = NodeFactory.createNode(n);
+			if (aNode != null) {
+				addressCache.put(aid, aNode);
+			}
+		} else {
+			aNode = addressCache.get(aid);
+			aNode.setOsmObject(n);
+		}
 		
 		if (aNode != null) {
 			if (!assignAddressToStreet(aNode)) {
@@ -403,7 +413,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 
 	@Override
-	public void entityChanged() {
+	public void entityChanged(INodeEntity entity) {
 		invalidate();		
 	}
 }

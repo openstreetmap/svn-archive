@@ -13,6 +13,7 @@
  */
 package org.openstreetmap.josm.plugins.addressEdit;
 
+
 public interface IAddressEditContainerListener {
 	/**
 	 * Notifies clients that the container has been changed.
@@ -23,5 +24,5 @@ public interface IAddressEditContainerListener {
 	/**
 	 * Notifies clients that an entity has been changed.
 	 */
-	public void entityChanged();
+	public void entityChanged(INodeEntity node);
 }

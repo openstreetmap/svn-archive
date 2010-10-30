@@ -44,7 +44,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	private static final int NUMBER_OF_COLUMNS = 5;
 	private static final String[] COLUMN_NAMES = new String[]{
-		tr("Street"), tr("Housenumber"), tr("City"), tr("Postcode"), tr("Name")};
+		tr("Street"), tr("Number"), tr("City"), tr("Postcode"), tr("Name")};
 	
 	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
 		String.class, String.class, String.class, String.class, String.class};

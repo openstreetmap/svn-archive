@@ -17,6 +17,8 @@ import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
+import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
 
 /**
  * Base class for all address related action. An action can work as well on all addresses collected by the
@@ -25,13 +27,13 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
  * subclasses. There are also two separate <tt>actionPerformedXX</tt> methods to do the action on
  * container or on selection items.
  * Most actions will work in both cases, so it is recommended to have one single method which
- * accepts a list of addresses or streets and executes the tasks to be done by this action. 
+ * accepts a list of addresses or streets and executes the tasks to be done by this action.
+ *  
  * @author Oliver Wieland <oliver.wieland@online.de>
- * 
  */
 
 @SuppressWarnings("serial")
-public abstract class AbstractAddressEditAction extends JosmAction {
+public abstract class AbstractAddressEditAction extends JosmAction implements IAddressEditContainerListener {	
 	private AddressEditSelectionEvent event;
 	protected AddressEditContainer container;
 
@@ -53,6 +55,7 @@ public abstract class AbstractAddressEditAction extends JosmAction {
 	}
 	
 	/**
+	 * Gets the current address container.
 	 * @return the container
 	 */
 	public AddressEditContainer getContainer() {
@@ -63,8 +66,14 @@ public abstract class AbstractAddressEditAction extends JosmAction {
 	 * @param container the container to set
 	 */
 	public void setContainer(AddressEditContainer container) {
+		if (container != null) { // remove old listener first
+			container.removeChangedListener(this);
+		}
 		this.container = container;
 		updateEnabledState();
+		if (container != null) {
+			container.addChangedListener(this);
+		}
 	}
 
 	/**
@@ -79,6 +88,24 @@ public abstract class AbstractAddressEditAction extends JosmAction {
 	 */
 	protected void setEvent(AddressEditSelectionEvent event) {
 		this.event = event;
+		updateEnabledState();
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if (event != null) { // use the event acquired previously.
+			addressEditActionPerformed(event);	
+			event = null; // consume event
+		} else {
+			if (container != null) {
+				addressEditActionPerformed(container);
+			} else { // call super class hook
+				actionPerformed(arg0);
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -105,29 +132,11 @@ public abstract class AbstractAddressEditAction extends JosmAction {
 	protected abstract void updateEnabledState(AddressEditContainer container);
 	
 	/**
-	 * Updates 'enabled' state depending on the given address container object.
-	 * @param container The address container (maybe null).
+	 * Updates 'enabled' state depending on the current selection.
+	 * @param container The selection event.
 	 * @return
 	 */
 	protected abstract void updateEnabledState(AddressEditSelectionEvent event);
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		if (event != null) { // use the event acquired previously.
-			addressEditActionPerformed(event);	
-			event = null; // consume event
-		} else {
-			if (container != null) {
-				addressEditActionPerformed(container);
-			} else { // call super class hook
-				actionPerformed(arg0);
-			}
-		}
-	}
-	
 
 	/**
 	 * Redirected action handler for doing actions on a address selection.
@@ -142,5 +151,19 @@ public abstract class AbstractAddressEditAction extends JosmAction {
 	public abstract void addressEditActionPerformed(AddressEditContainer container);
 	
 	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#containerChanged(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+	 */
+	@Override
+	public void containerChanged(AddressEditContainer container) {
+		updateEnabledState();
+	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.INodeEntity)
+	 */
+	@Override
+	public void entityChanged(INodeEntity node) {
+		updateEnabledState();		
+	}
 }

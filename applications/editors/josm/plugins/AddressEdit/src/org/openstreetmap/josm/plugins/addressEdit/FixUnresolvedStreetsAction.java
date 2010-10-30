@@ -20,7 +20,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * 
  */
 
-public class FixedUnresolvedStreetsAction extends JosmAction implements SelectionChangedListener {
+public class FixUnresolvedStreetsAction extends JosmAction implements SelectionChangedListener {
 
 	/**
 	 * 
@@ -29,7 +29,7 @@ public class FixedUnresolvedStreetsAction extends JosmAction implements Selectio
 	private AddressEditContainer addressEditContainer;
 	private Collection<? extends OsmPrimitive> newSelection;
 
-	public FixedUnresolvedStreetsAction() {
+	public FixUnresolvedStreetsAction() {
 		super(tr("Fix street addresses"), "fixstreets_24",
 				tr("Find and fix addresses without (valid) streets."), Shortcut
 				.registerShortcut("tools:AddressEdit", tr("Tool: {0}",

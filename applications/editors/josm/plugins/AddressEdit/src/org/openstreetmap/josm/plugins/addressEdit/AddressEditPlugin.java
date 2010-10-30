@@ -27,7 +27,7 @@ public class AddressEditPlugin extends Plugin {
 		super(info);
 		
 		// Create action for edit...
-		FixedUnresolvedStreetsAction action = new FixedUnresolvedStreetsAction();
+		FixUnresolvedStreetsAction action = new FixUnresolvedStreetsAction();
 		// ... and add it to the tools menu in main
         Main.main.menu.toolsMenu.add(action);
 	}

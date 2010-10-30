@@ -17,13 +17,13 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
-public class AddressEditPlugin extends Plugin {
+public class FixAddressesPlugin extends Plugin {
 
 	/**
 	 * Constructor for the AddressEdit plugin.
 	 * @param info Context information of the plugin.
 	 */
-	public AddressEditPlugin(PluginInformation info) {
+	public FixAddressesPlugin(PluginInformation info) {
 		super(info);
 		
 		// Create action for edit...

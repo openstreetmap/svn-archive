@@ -44,12 +44,29 @@ public class DuplicateNode extends Test{
 
     private class NodeHash implements Hash<Object, Object> {
 
+        double precision = Main.pref.getDouble("validator.duplicatenodes.precision", 0.);
+
+        private LatLon RoundCoord(Node o) {
+            return new LatLon(
+                    Math.round(o.getCoor().lat() / precision) * precision,
+                    Math.round(o.getCoor().lon() / precision) * precision
+            );
+        }
+
         @SuppressWarnings("unchecked")
         private LatLon getLatLon(Object o) {
             if (o instanceof Node) {
-                return ((Node) o).getCoor().getRoundedToOsmPrecision();
+                if (precision==0) {
+                    return ((Node) o).getCoor().getRoundedToOsmPrecision();
+                } else {
+                    return RoundCoord((Node) o);
+                }
             } else if (o instanceof List<?>) {
-                return ((List<Node>) o).get(0).getCoor().getRoundedToOsmPrecision();
+                if (precision==0) {
+                    return ((List<Node>) o).get(0).getCoor().getRoundedToOsmPrecision();
+                } else {
+                    return RoundCoord(((List<Node>) o).get(0));
+                }
             } else {
                 throw new AssertionError();
             }
@@ -67,11 +84,15 @@ public class DuplicateNode extends Test{
 
     protected static int DUPLICATE_NODE = 1;
     protected static int DUPLICATE_NODE_MIXED = 2;
-    protected static int DUPLICATE_NODE_HIGHWAY = 3;
-    protected static int DUPLICATE_NODE_RAILWAY = 3;
-    protected static int DUPLICATE_NODE_WATERWAY = 4;
-    protected static int DUPLICATE_NODE_BOUNDARY = 5;
-    protected static int DUPLICATE_NODE_POWER = 6;
+    protected static int DUPLICATE_NODE_OTHER = 3;
+    protected static int DUPLICATE_NODE_BUILDING = 10;
+    protected static int DUPLICATE_NODE_BOUNDARY = 11;
+    protected static int DUPLICATE_NODE_HIGHWAY = 12;
+    protected static int DUPLICATE_NODE_LANDUSE = 13;
+    protected static int DUPLICATE_NODE_NATURAL = 14;
+    protected static int DUPLICATE_NODE_POWER = 15;
+    protected static int DUPLICATE_NODE_RAILWAY = 16;
+    protected static int DUPLICATE_NODE_WATERWAY = 17;
 
     /** The map of potential duplicates.
      *
@@ -125,7 +146,7 @@ public class DuplicateNode extends Test{
         }
 
         Map<String,Boolean> typeMap=new HashMap<String,Boolean>();
-        String[] types = {"none", "highway", "railway", "waterway", "boundary", "power"};
+        String[] types = {"none", "highway", "railway", "waterway", "boundary", "power", "natural", "landuse", "building"};
 
 
         // check whether we have multiple nodes at the same position with
@@ -170,7 +191,7 @@ public class DuplicateNode extends Test{
                     String msg = marktr("Mixed type duplicated nodes");
                     errors.add(new TestError(
                             parentTest,
-                            Severity.ERROR,
+                            Severity.WARNING,
                             tr("Duplicated nodes"),
                             tr(msg),
                             msg,
@@ -232,12 +253,48 @@ public class DuplicateNode extends Test{
                             DUPLICATE_NODE_POWER,
                             bag.get(tagSet)
                     ));
-                } else {
+                } else if (typeMap.get("natural")) {
+                    String msg = marktr("Natural duplicated nodes");
                     errors.add(new TestError(
                             parentTest,
                             Severity.ERROR,
                             tr("Duplicated nodes"),
-                            DUPLICATE_NODE,
+                            tr(msg),
+                            msg,
+                            DUPLICATE_NODE_NATURAL,
+                            bag.get(tagSet)
+                    ));
+                } else if (typeMap.get("building")) {
+                    String msg = marktr("Building duplicated nodes");
+                    errors.add(new TestError(
+                            parentTest,
+                            Severity.ERROR,
+                            tr("Duplicated nodes"),
+                            tr(msg),
+                            msg,
+                            DUPLICATE_NODE_BUILDING,
+                            bag.get(tagSet)
+                    ));
+                } else if (typeMap.get("landuse")) {
+                    String msg = marktr("Landuse duplicated nodes");
+                    errors.add(new TestError(
+                            parentTest,
+                            Severity.ERROR,
+                            tr("Duplicated nodes"),
+                            tr(msg),
+                            msg,
+                            DUPLICATE_NODE_LANDUSE,
+                            bag.get(tagSet)
+                    ));
+                } else {
+                    String msg = marktr("Other duplicated nodes");
+                    errors.add(new TestError(
+                            parentTest,
+                            Severity.WARNING,
+                            tr("Duplicated nodes"),
+                            tr(msg),
+                            msg,
+                            DUPLICATE_NODE_OTHER,
                             bag.get(tagSet)
                     ));
 

@@ -96,7 +96,10 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Notifies clients that the address container changed.
 	 */
 	protected void fireContainerChanged() {
-		for (IAddressEditContainerListener listener : listeners) {
+		List<IAddressEditContainerListener> shadowListeners = 
+			new ArrayList<IAddressEditContainerListener>(listeners);
+		
+		for (IAddressEditContainerListener listener : shadowListeners) {
 			listener.containerChanged(this);
 		}
 	}

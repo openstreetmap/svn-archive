@@ -57,20 +57,36 @@ public abstract class AbstractAddressEditAction extends JosmAction {
 	 */
 	public void setContainer(AddressEditContainer container) {
 		this.container = container;
-		updateEnabledState(container);
+		updateEnabledState();
 	}
 
 	/**
-	 * Updates 'enabled' state depending on the given selection event.
-	 * @param ev
-	 * @return
+	 * @return the event
 	 */
-	public void updateEnabledState(AddressEditSelectionEvent ev) {
-		// If the tree selection changes, we will get a new event. So this is safe.
-		super.updateEnabledState();
-		this.event = ev; // save for later use.
-		if (ev != null) {
-			updateEnabledState(ev);
+	protected AddressEditSelectionEvent getEvent() {
+		return event;
+	}
+
+	/**
+	 * @param event the event to set
+	 */
+	protected void setEvent(AddressEditSelectionEvent event) {
+		this.event = event;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.actions.JosmAction#updateEnabledState()
+	 */
+	@Override
+	protected void updateEnabledState() {
+		if (this.event != null) {
+			updateEnabledState(this.event);
+		} else {
+			if (container != null) {
+				updateEnabledState(container);
+			} else {
+				super.updateEnabledState();
+			}
 		}
 	}
 
@@ -80,6 +96,13 @@ public abstract class AbstractAddressEditAction extends JosmAction {
 	 * @return
 	 */
 	protected abstract void updateEnabledState(AddressEditContainer container);
+	
+	/**
+	 * Updates 'enabled' state depending on the given address container object.
+	 * @param container The address container (maybe null).
+	 * @return
+	 */
+	protected abstract void updateEnabledState(AddressEditSelectionEvent event);
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

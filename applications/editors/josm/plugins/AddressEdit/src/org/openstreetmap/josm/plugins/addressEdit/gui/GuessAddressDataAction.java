@@ -29,7 +29,7 @@ public class GuessAddressDataAction extends AbstractAddressEditAction {
 	private AddressFinderThread[] threads = new AddressFinderThread[THREAD_COUNT];
 
 	public GuessAddressDataAction() {
-		super(tr("Guess address data"));
+		super(tr("Guess address data"), "guessstreets_24", "Tries to guess the street name by picking the name of the closest way.");
 	}
 
 	@Override

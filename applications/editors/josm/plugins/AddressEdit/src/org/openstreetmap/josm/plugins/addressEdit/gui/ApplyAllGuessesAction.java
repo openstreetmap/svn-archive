@@ -27,7 +27,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction {
 
 	public ApplyAllGuessesAction() {
 		//super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
-		super(tr("Apply all guesses"), null, "Turns all guesses into the corresponding tag values.");
+		super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
 	}
 
 	@Override
@@ -59,5 +59,10 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction {
 		for (AddressNode aNode : addrToFixShadow) {
 			aNode.applyAllGuesses();
 		}
+	}
+
+	@Override
+	protected void updateEnabledState(AddressEditSelectionEvent event) {
+		// do nothing here
 	}
 }

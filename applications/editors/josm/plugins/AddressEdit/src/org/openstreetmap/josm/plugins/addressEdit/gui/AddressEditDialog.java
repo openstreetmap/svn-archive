@@ -125,14 +125,20 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			unresolvedPanel.add(unresolvedAddressesLabel , BorderLayout.NORTH);
 			unresolvedPanel.setMinimumSize(new Dimension(350, 200));
 			
-			JPanel unresolvedButtons = new JPanel(new FlowLayout());
-			SideButton assign = new SideButton(resolveAction);															   
-			unresolvedButtons.add(assign);
-			SideButton guess = new SideButton(guessAddressAction);															   
-			unresolvedButtons.add(guess);
-			SideButton applyAllGuesses = new SideButton(applyAllGuessesAction);															   
-			unresolvedButtons.add(applyAllGuesses);
-			unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
+			
+			try {
+				JPanel unresolvedButtons = new JPanel(new FlowLayout());
+				SideButton assign = new SideButton(resolveAction);															   
+				unresolvedButtons.add(assign);
+				SideButton guess = new SideButton(guessAddressAction);															   
+				unresolvedButtons.add(guess);
+				SideButton applyAllGuesses = new SideButton(applyAllGuessesAction);															   
+				unresolvedButtons.add(applyAllGuesses);
+				unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
+			} catch (Exception e) {				
+				e.printStackTrace();
+			}
+			
 			
 			/* Map Panel */
 			JPanel mapPanel = new JPanel(new BorderLayout());

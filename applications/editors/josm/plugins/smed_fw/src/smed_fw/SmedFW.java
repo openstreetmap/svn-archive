@@ -1,65 +1,96 @@
 package smed_fw;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-import org.apache.felix.framework.Felix;
-import org.apache.felix.framework.util.FelixConstants;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 
-public class SmedFW extends Plugin implements BundleActivator{
+import smed_fw.io.JARFileFilter;
+import smed_fw.io.SmedFWFile;
 
-	private BundleContext context;
-	private Felix felix;
+public class SmedFW extends Plugin {
+	
+	public static final String FW_BIN_DIR				= "bin";
+	public static final String FW_SMED_JAR			= "smed_fw.jar";
+	public static final String FW_NAME				= "felix.jar";
+	public static final String FW_BUNDLE_LOCATION		= "fwplug";
 	
 	public SmedFW(PluginInformation info) {
 		super(info);
+
+        JarEntry e = null;
+        BufferedInputStream inp = null;
+        byte[] buffer = new byte[16384];
+        int len;
+
+        String eName = null;
+		String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath() + "/";
+		File fwDir = new File(pluginDirName + FW_BIN_DIR);
+
+        if(!fwDir.exists()) fwDir.mkdir();
+        
+		SmedFWFile fwplugDir = new SmedFWFile(pluginDirName + FW_BUNDLE_LOCATION);
+		if(!fwplugDir.exists()) fwplugDir.mkdir();
 		
-		init();
+		File[] jars = fwplugDir.listFiles(new JARFileFilter());
+
+		// extract framework and plugins
+		try {
+			JarFile file = new JarFile(pluginDirName  + FW_SMED_JAR);
+
+			boolean fwFound = false;
+			FileOutputStream pfos = null;
+			Enumeration<JarEntry> ent = file.entries();
+            while(ent.hasMoreElements()) {
+                e = ent.nextElement();
+                eName = e.getName();
+                
+                if(eName.endsWith(".jar")) {
+                	if(eName.equals(FW_NAME)) {
+                		pfos = new FileOutputStream(pluginDirName + FW_BIN_DIR + "/" + FW_NAME);
+                		fwFound = true;
+                	}
+                	else { 
+                		pfos = new FileOutputStream(pluginDirName + FW_BUNDLE_LOCATION + "/" + eName);
+                		fwFound = false;
+                	}
+                	if(fwFound || fwplugDir.needUpdate(jars,eName)) {
+                		BufferedOutputStream pos = new BufferedOutputStream(pfos);
+                		inp = new BufferedInputStream(file.getInputStream( e ));
+
+                		while ((len = inp.read(buffer)) > 0) pos.write(buffer, 0, len);
+                    
+                		pos.flush();
+                		pos.close();
+                		inp.close();
+                		pfos.close();
+                	}
+                }
+            }
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} 
+					
+		RunFW runFW = new RunFW();
+		runFW.init();
 		System.out.println("SmedFW (OSGi-Implementation) noch nicht weiter programmiert");
 	}
-
-	private void init() {
-		Map config = new HashMap();
-		List list = new ArrayList();
-		
-		list.add(this);
-		config.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
-		
-		// Now create an instance of the framework with
-		// our configurations properties
-		felix = new Felix(config);
-		
-		// now start Felix instance
-		try {
-			felix.start();
-		} catch (BundleException e) {
-			System.err.println("Could not generate framework: " + e);
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void start(BundleContext context) throws Exception {
-		this.context = context;
-	}
-
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		context = null;
-	}
 	
-	public Bundle[] getBundles() {
-		if(context != null) return context.getBundles();
-		
-		return null;
+	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (oldFrame == null && newFrame != null) {
+        	System.out.println("josm zeigt Karte");
+        } else {
+        	System.out.println("josm zeigt keine Karte");
+        }
 	}
 
 }

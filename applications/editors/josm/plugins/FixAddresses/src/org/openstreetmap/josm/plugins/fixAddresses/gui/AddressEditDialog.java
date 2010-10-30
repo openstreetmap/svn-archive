@@ -214,7 +214,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 				streetTable, unresolvedTable, editContainer);
 		
 		for (AbstractAddressEditAction action : actions) {
-			action.updateEnabledState(ev);
+			action.setEvent(ev);
 		}
 		
 		clearMapViewer();

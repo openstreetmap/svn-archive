@@ -93,7 +93,6 @@ public class AddressFinderThread implements Runnable, Visitor {
 				}
 				
 				if (nearestName != null) {
-					System.out.println("Picked " + nearestName + " with distance " + minDist + "m");
 					addressNode.setGuessedStreetName(nearestName);
 				}
 			} finally {

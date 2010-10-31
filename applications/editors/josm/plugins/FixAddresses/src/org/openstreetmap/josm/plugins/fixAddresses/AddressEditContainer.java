@@ -358,8 +358,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private boolean assignAddressToStreet(AddressNode aNode) {
 		String streetName = aNode.getStreet();
 		
-		if (streetName != null && streetDict.containsKey(streetName)) {
-			StreetNode sNode = streetDict.get(streetName);
+		if (streetName != null && shadowStreetDict.containsKey(streetName)) {
+			StreetNode sNode = shadowStreetDict.get(streetName);
 			sNode.addAddress(aNode);
 			return true;
 		}
@@ -372,7 +372,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	public void resolveAddresses() {
 		List<AddressNode> resolvedAddresses = new ArrayList<AddressNode>();
-		for (AddressNode node : unresolvedAddresses) {
+		for (AddressNode node : shadowUnresolvedAddresses) {
 			if (assignAddressToStreet(node)) {
 				resolvedAddresses.add(node);
 			}
@@ -380,7 +380,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		
 		/* Remove all resolves nodes from unresolved list */
 		for (AddressNode resolved : resolvedAddresses) {
-			unresolvedAddresses.remove(resolved);
+			shadowUnresolvedAddresses.remove(resolved);
 		}
 	}
 	
@@ -404,7 +404,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			resolveAddresses();
 			// sort lists
 			Collections.sort(shadowIncompleteAddresses);
-			Collections.sort(shadowIncompleteAddresses);
+			Collections.sort(shadowUnresolvedAddresses);
 
 			// put results from shadow copy into real lists
 			incompleteAddresses = new ArrayList<AddressNode>(shadowIncompleteAddresses);

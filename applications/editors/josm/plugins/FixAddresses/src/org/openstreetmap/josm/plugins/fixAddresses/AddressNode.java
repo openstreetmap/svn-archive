@@ -170,7 +170,24 @@ public class AddressNode extends NodeEntityBase {
 				if (cc  == 0) {
 					cc = this.getStreet().compareTo(other.getStreet());					
 					if (cc  == 0) {
-						cc = this.getHouseNumber().compareTo(other.getHouseNumber());
+						if (hasGuessedStreetName()) {							
+							if (other.hasStreetName()) {
+								// Compare guessed name with the real name
+								cc = this.getGuessedStreetName().compareTo(other.getStreet());
+								if (cc == 0) {
+									cc = this.getHouseNumber().compareTo(other.getHouseNumber());
+								}
+							} else if (other.hasGuessedStreetName()){
+								// Compare guessed name with the guessed name
+								cc = this.getGuessedStreetName().compareTo(other.getGuessedStreetName());
+								if (cc == 0) {
+									cc = this.getHouseNumber().compareTo(other.getHouseNumber());
+								}
+							} // else: give up
+						// No guessed name at all -> just compare the number
+						} else {
+							cc = this.getHouseNumber().compareTo(other.getHouseNumber());
+						}
 					}
 				}
 			}

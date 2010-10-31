@@ -104,9 +104,18 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getNumberOfIncompleteAddresses()) {
+		if (row < 0 || row >= addressContainer.getNumberOfIncompleteAddresses()) {
 			return null;
 		}
 		return addressContainer.getIncompleteAddresses().get(row);
+	}
+
+	@Override
+	public int getRowOfEntity(INodeEntity entity) {
+		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
+			return -1;
+		}
+		
+		return addressContainer.getIncompleteAddresses().indexOf(entity);
 	}
 }

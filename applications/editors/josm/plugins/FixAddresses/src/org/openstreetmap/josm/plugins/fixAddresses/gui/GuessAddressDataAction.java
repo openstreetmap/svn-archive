@@ -15,9 +15,9 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressFinderThread;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
@@ -46,11 +46,17 @@ public class GuessAddressDataAction extends AbstractAddressEditAction {
 		setEnabled(ev != null && ev.getUnresolvedAddressTable() != null);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AbstractAddressEditAction#updateEnabledState(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+	 */
 	@Override
 	protected void updateEnabledState(AddressEditContainer container) {
 		setEnabled(container != null && container.getNumberOfIncompleteAddresses() > 0);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AbstractAddressEditAction#addressEditActionPerformed(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditContainer container) {
 		if (container == null) return;
@@ -59,12 +65,15 @@ public class GuessAddressDataAction extends AbstractAddressEditAction {
 		internalGuessAddresses(container.getIncompleteAddresses());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AbstractAddressEditAction#addressEditActionPerformed(org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent)
+	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		if (ev == null || ev.getSelectedUnresolvedAddresses() == null) return;
 		
 		// guess tags for selected addresses only
-		internalGuessAddresses(ev.getSelectedUnresolvedAddresses());
+		internalGuessAddresses(ev.getSelectedUnresolvedAddresses());		
 	}
 	
 	/**
@@ -72,36 +81,6 @@ public class GuessAddressDataAction extends AbstractAddressEditAction {
 	 * @param addrNodes
 	 */
 	private void internalGuessAddresses(List<AddressNode> nodes) {
-		// setup thread pool
-		for (int i = 0; i < threads.length; i++) {
-			threads[i] = new AddressFinderThread();
-		}
-		
-		// work on a shadowed copy
-		List<AddressNode> addrNodes = new ArrayList<AddressNode>(nodes);
-		for (AddressNode aNode : addrNodes) {
-			if (aNode.hasStreetName()) continue;
-			
-			while(!scheduleNode(aNode)) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					return;
-				}
-			}
-		}
-		container.containerChanged(container);
+		Main.worker.submit(new AddressFinderThread(container, tr("Guess street names")));		
 	}
-
-	private boolean scheduleNode(AddressNode aNode) {
-		for (int i = 0; i < threads.length; i++) {
-			if (!threads[i].isRunning()) {
-				threads[i].setAddressNode(aNode);
-				threads[i].run();
-				return true;
-			}
-		}
-		return false;
-	}
-
 }

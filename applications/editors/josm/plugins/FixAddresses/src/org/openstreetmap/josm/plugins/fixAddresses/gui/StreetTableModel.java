@@ -110,9 +110,18 @@ public class StreetTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getStreetList() == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getNumberOfStreets()) {
+		if (row < 0 || row >= addressContainer.getNumberOfStreets()) {
 			return null;
 		}
 		return addressContainer.getStreetList().get(row);	
+	}
+	
+	@Override
+	public int getRowOfEntity(INodeEntity entity) {
+		if (addressContainer == null || addressContainer.getStreetList() == null) {
+			return -1;
+		}
+		
+		return addressContainer.getStreetList().indexOf(entity);
 	}
 }

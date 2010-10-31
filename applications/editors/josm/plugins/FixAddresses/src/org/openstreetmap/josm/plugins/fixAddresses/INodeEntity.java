@@ -15,7 +15,15 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 
 import java.util.List;
 
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+
+/**
+ * Base interface for all node entities. A node entity is a lightweight wrapper
+ * around OSM objects in order to ease up some tasks like tag handling.
+ * @author Oliver Wieland <oliver.wieland@online.de>
+ * 
+ */
 
 public interface INodeEntity extends Comparable<INodeEntity> {
 	/**
@@ -41,4 +49,12 @@ public interface INodeEntity extends Comparable<INodeEntity> {
 	 * @return
 	 */
 	public List<INodeEntity> getChildren();
+	
+	/**
+	 * Gets the coordinate of the node. If the the underlying object is a
+	 * node, it just returns the node coordinate. For ways and areas, this 
+	 * method returns the coordinate of the center (balance point). 
+	 * @return
+	 */
+	public LatLon getCoor();
 }

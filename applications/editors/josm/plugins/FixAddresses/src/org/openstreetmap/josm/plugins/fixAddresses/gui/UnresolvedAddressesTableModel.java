@@ -146,9 +146,18 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
 			return null;
 		}
-		if (row < 0 || row > addressContainer.getNumberOfUnresolvedAddresses()) {
+		if (row < 0 || row >= addressContainer.getNumberOfUnresolvedAddresses()) {
 			return null;
 		}
 		return addressContainer.getUnresolvedAddresses().get(row);	
+	}
+	
+	@Override
+	public int getRowOfEntity(INodeEntity entity) {
+		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
+			return -1;
+		}
+		
+		return addressContainer.getUnresolvedAddresses().indexOf(entity);
 	}
 }

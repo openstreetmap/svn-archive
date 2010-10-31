@@ -20,8 +20,11 @@ import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 
 public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	public static final String ANONYMOUS = tr("No name");
@@ -125,11 +128,32 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 		return this.getClass().getName() + ": " + ANONYMOUS;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(INodeEntity o) {
 		if (o == null || !(o instanceof NodeEntityBase)) return -1;
 		return this.getName().compareTo(o.getName());
 	}
 
-	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.INodeEntity#getCoor()
+	 */
+	@Override
+	public LatLon getCoor() {
+		OsmPrimitive osm = getOsmObject();
+		if (osm == null) return null;
+		
+		if (osm instanceof Node) {
+			return ((Node)osm).getCoor();
+		// way: return center
+		} else if (osm instanceof Way) {
+			Way w = (Way) osm;
+			BBox bb = w.getBBox();
+			return bb.getBottomRight().getCenter(bb.getTopLeft());
+		}
+		// relations??
+		return null;
+	}
 }

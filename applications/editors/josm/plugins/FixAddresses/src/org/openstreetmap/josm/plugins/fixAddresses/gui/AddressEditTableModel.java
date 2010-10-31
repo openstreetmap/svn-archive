@@ -35,12 +35,16 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 
 	@Override
 	public void containerChanged(AddressEditContainer container) {
-		fireTableDataChanged();
+		fireTableDataChanged(); // update model
 	}
 
 	@Override
 	public void entityChanged(INodeEntity entity) {
-		fireTableDataChanged();
+		int row = getRowOfEntity(entity);
+		if (row != -1) { // valid row? -> update model
+			System.out.println("Update row " + row);
+			fireTableRowsUpdated(row, row);
+		} // else we don't do anything
 	}
 	
 	/**
@@ -49,4 +53,11 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 	 * @return
 	 */
 	public abstract INodeEntity getEntityOfRow(int row);
+	
+	/**
+	 * Gets the row for the given node entity or -1; if the model does not contain the entity.
+	 * @param entity The entity to get the row for.
+	 * @return
+	 */
+	public abstract int getRowOfEntity(INodeEntity entity);
 }

@@ -74,7 +74,7 @@ public class AddressNode extends NodeEntityBase {
 	 */
 	public void setGuessedStreetName(String guessedStreetName) {
 		this.guessedStreetName = guessedStreetName;
-		fireEntityChanged(this);
+		//fireEntityChanged(this);
 	}
 	
 	public boolean hasGuessedStreetName() {

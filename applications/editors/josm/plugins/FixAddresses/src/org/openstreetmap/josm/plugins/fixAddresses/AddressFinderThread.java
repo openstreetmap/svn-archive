@@ -13,7 +13,12 @@
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -23,57 +28,38 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.io.OsmTransferException;
+import org.xml.sax.SAXException;
 
-public class AddressFinderThread implements Runnable, Visitor {
-	private AddressNode addressNode;
+public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
+	private AddressEditContainer container;
 	private double minDist;
 	private Node nearestNode;
-	private Node osmAddressNode;
+	private AddressNode curAddressNode;
 	private boolean isRunning = false;
 	private String nearestName = null;
 	private String currentName = null;
+	private boolean cancelled;
 	
 	/**
-	 * @param addressNode
+	 * @param AddressEditContainer
 	 */
-	public AddressFinderThread(AddressNode addressNode) {
-		super();
-		setAddressNode(addressNode);		
+	public AddressFinderThread(AddressEditContainer AddressEditContainer, String title) {
+		super(title != null ? title : tr("Searching"));
+		setAddressEditContainer(AddressEditContainer);		
 	}
 
-	public AddressFinderThread() {
-		this(null);
-	}
-
-	public void setAddressNode(AddressNode addressNode) {
+	public void setAddressEditContainer(AddressEditContainer AddressEditContainer) {
 		if (isRunning) {
 			throw new ConcurrentModificationException();
 		}
-		this.addressNode = addressNode;
-		if (addressNode != null && addressNode.getOsmObject() instanceof Node) {
-			osmAddressNode = (Node) addressNode.getOsmObject();
-		}
+		this.container = AddressEditContainer;		
 	}
 
-	public AddressNode getAddressNode() {
-		return addressNode;
+	public AddressEditContainer getAddressEditContainer() {
+		return container;
 	}
-	
-	public double getMinDist() {
-		return minDist;
-	}
-
-	public Node getNearestNode() {
-		return nearestNode;
-	}
-
-	/**
-	 * @return the nearestName
-	 */
-	public String getGuessedName() {
-		return nearestName;
-	}
-
 	/**
 	 * @return the isRunning
 	 */
@@ -81,34 +67,19 @@ public class AddressFinderThread implements Runnable, Visitor {
 		return isRunning;
 	}
 
-	@Override
-	public void run() {
-		if (Main.main.getCurrentDataSet() == null || osmAddressNode == null) return;
-
-		isRunning = true;
-		synchronized(this) {			
-			try {
-				minDist = Double.MAX_VALUE;
-				for (OsmPrimitive osmPrimitive : Main.main.getCurrentDataSet().getWays()) {
-					osmPrimitive.visit(this);
-				}
-				
-				if (nearestName != null) {
-					addressNode.setGuessedStreetName(nearestName);
-				}
-			} finally {
-				isRunning = false;
-			}
-		}
-	}
-
-
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Node)
+	 */
 	@Override
 	public void visit(Node n) {
 		if (n == null) return;
+		if (curAddressNode == null) return;
 
 		// If the coordinates are null, we are screwed anyway
-		double dist = osmAddressNode.getCoor().greatCircleDistance(n.getCoor());
+		LatLon ll = curAddressNode.getCoor();
+		if (ll == null) return;
+		
+		double dist = ll.greatCircleDistance(n.getCoor());
 		
 		if (dist < minDist) {
 			minDist = dist;
@@ -117,7 +88,9 @@ public class AddressFinderThread implements Runnable, Visitor {
 		}
 	}
 
-
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Way)
+	 */
 	@Override
 	public void visit(Way w) {
 		// skip non-streets and streets without name
@@ -127,22 +100,89 @@ public class AddressFinderThread implements Runnable, Visitor {
 		currentName = TagUtils.getNameValue(w);
 		for (Node node : w.getNodes()) {
 			visit(node);
-		}
-		
+		}		
 	}
 
-
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Relation)
+	 */
 	@Override
 	public void visit(Relation e) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do yet		
 	}
 
-
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Changeset)
+	 */
 	@Override
 	public void visit(Changeset cs) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do yet
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.PleaseWaitRunnable#cancel()
+	 */
+	@Override
+	protected void cancel() {
+		cancelled = true;		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.PleaseWaitRunnable#finish()
+	 */
+	@Override
+	protected void finish() {
+		// nothing to do yet
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.gui.PleaseWaitRunnable#realRun()
+	 */
+	@Override
+	protected void realRun() throws SAXException, IOException,
+			OsmTransferException {
+		if (Main.main.getCurrentDataSet() == null || container == null) return;
+
+		isRunning = true;
+		cancelled = false;
+		
+		progressMonitor.subTask(tr("Searching") + "...");
+		
+		try {
+			progressMonitor.setTicksCount(container.getNumberOfUnresolvedAddresses());
+			
+			List<AddressNode> shadowCopy = new ArrayList<AddressNode>(container.getUnresolvedAddresses());
+			for (AddressNode aNode : shadowCopy) {					
+				minDist = Double.MAX_VALUE;
+				curAddressNode = aNode;
+				
+				// check for cancel
+				if (cancelled) {
+					break;
+				}
+
+				// visit osm data
+				for (OsmPrimitive osmPrimitive : Main.main.getCurrentDataSet().getWays()) {
+					if (cancelled) {
+						break;
+					}
+					osmPrimitive.visit(this);
+
+				}
+				
+				// we found something
+				if (nearestName != null) {
+					progressMonitor.subTask(String.format("%s: %s (%4.1f m)", tr("Guess"), nearestName, minDist));
+					aNode.setGuessedStreetName(nearestName);
+					nearestName = null;
+				}
+				// report progress
+				progressMonitor.worked(1);				
+			}
+			// request container update
+			container.invalidate();
+		} finally {
+			isRunning = false;
+		}
+	}
 }

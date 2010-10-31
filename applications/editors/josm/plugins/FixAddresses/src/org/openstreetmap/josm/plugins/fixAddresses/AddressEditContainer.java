@@ -62,6 +62,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100); 
 	private List<AddressNode> unresolvedAddresses = new ArrayList<AddressNode>(100);
 	private List<AddressNode> incompleteAddresses = new ArrayList<AddressNode>(100);
+	
+	private HashMap<String, StreetNode> shadowStreetDict = new HashMap<String, StreetNode>(100); 
+	private List<AddressNode> shadowUnresolvedAddresses = new ArrayList<AddressNode>(100);
+	private List<AddressNode> shadowIncompleteAddresses = new ArrayList<AddressNode>(100);
+	
 	private HashMap<String, AddressNode> addressCache = new HashMap<String, AddressNode>();
 	private HashSet<Node> visitedNodes = new HashSet<Node>();
 	private HashSet<Way> visitedWays = new HashSet<Way>();
@@ -144,11 +149,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		if (aNode != null) {
 			if (!assignAddressToStreet(aNode)) {
 				// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
-				unresolvedAddresses.add(aNode);
+				shadowUnresolvedAddresses.add(aNode);
 			}
 
 			if (!aNode.isComplete()) {
-				incompleteAddresses.add(aNode);
+				shadowIncompleteAddresses.add(aNode);
 			}
 		} else {
 			// check, if node is referred by a way
@@ -180,6 +185,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
         }*/
 	}
 
+	/**
+	 * Creates the node from an OSM way instance.
+	 *
+	 * @param w the w
+	 */
 	private void createNodeFromWay(Way w) {
 		StreetSegmentNode newSegment = NodeFactory.createNodeFromWay(w);
 		
@@ -188,11 +198,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			if (StringUtils.isNullOrEmpty(name)) return;
 			
 			StreetNode sNode = null;
-			if (streetDict.containsKey(name)) {
-				sNode = streetDict.get(name);
-			} else {
+			if (shadowStreetDict.containsKey(name)) { // street exists?
+				sNode = shadowStreetDict.get(name);
+			} else { // new street name -> add to dict
 				sNode = new StreetNode(w);
-				streetDict.put(name, sNode);
+				shadowStreetDict.put(name, sNode);
 			}
 			
 			if (sNode != null) {
@@ -241,25 +251,47 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		return streetDict;
 	}
 	
+	/**
+	 * Gets the unresolved (addresses without valid street name) addresses.
+	 *
+	 * @return the unresolved addresses
+	 */
 	public List<AddressNode> getUnresolvedAddresses() {
 		return unresolvedAddresses;
 	}
 
+	/**
+	 * Gets the list with incomplete addresses.
+	 *
+	 * @return the incomplete addresses
+	 */
 	public List<AddressNode> getIncompleteAddresses() {
 		return incompleteAddresses;
 	}
 
-	public List<StreetNode> getStreetList() {
-		
+	/**
+	 * Gets the street list.
+	 *
+	 * @return the street list
+	 */
+	public List<StreetNode> getStreetList() {		
 		ArrayList<StreetNode> sortedList = new ArrayList<StreetNode>(streetDict.values());
 		Collections.sort(sortedList);
 		return sortedList;
 	}
 
+	/**
+	 * Gets all addresses without valid street.
+	 * @return
+	 */
 	public List<AddressNode> getUnresolvedItems() {
 		return unresolvedAddresses;
 	}
 
+	/**
+	 * Gets the tags used in the data layer.
+	 * @return
+	 */
 	public HashSet<String> getTags() {
 		return tags;
 	}
@@ -362,24 +394,35 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public void invalidate(final Collection<? extends OsmPrimitive> osmData) {
 		if (osmData == null || osmData.isEmpty())
 			return;
-		
-		clearData();
-		for (OsmPrimitive osmPrimitive : osmData) {
-			osmPrimitive.visit(this);
+
+		synchronized (this) {
+			clearData();
+			for (OsmPrimitive osmPrimitive : osmData) {
+				osmPrimitive.visit(this);
+			}
+
+			resolveAddresses();
+			// sort lists
+			Collections.sort(shadowIncompleteAddresses);
+			Collections.sort(shadowIncompleteAddresses);
+
+			// put results from shadow copy into real lists
+			incompleteAddresses = new ArrayList<AddressNode>(shadowIncompleteAddresses);
+			unresolvedAddresses = new ArrayList<AddressNode>(shadowUnresolvedAddresses);
+			streetDict = new HashMap<String, StreetNode>(shadowStreetDict);
+			// remove temp data
+			shadowStreetDict.clear();
+			shadowUnresolvedAddresses.clear();
+			shadowIncompleteAddresses.clear();
+			// update clients
+			fireContainerChanged();
 		}
-		
-		resolveAddresses();
-		
-		Collections.sort(incompleteAddresses);
-		Collections.sort(unresolvedAddresses);
-		
-		fireContainerChanged();
 	}
 	
 	public void clearData() {
-		streetDict.clear();
-		unresolvedAddresses.clear();
-		incompleteAddresses.clear();
+		shadowStreetDict.clear();
+		shadowUnresolvedAddresses.clear();
+		shadowIncompleteAddresses.clear();
 		visitedNodes.clear();
 		visitedWays.clear();
 	}

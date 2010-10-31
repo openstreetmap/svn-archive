@@ -30,7 +30,7 @@
 <project name="smed_fw" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="some new internationalized messages" />
+	<property name="commit.message" value="make it actual" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3514" />
 

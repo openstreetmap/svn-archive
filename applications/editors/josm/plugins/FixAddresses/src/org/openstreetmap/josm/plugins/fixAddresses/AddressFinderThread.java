@@ -171,7 +171,6 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 				// we found something
 				if (nearestName != null) {
 					progressMonitor.subTask(String.format("%s: %s (%4.1f m)", tr("Guess"), nearestName, minDist));
-					System.out.println("Guessed street: " + nearestName + " for node " + aNode);
 					aNode.setGuessedStreetName(nearestName);
 					nearestName = null;
 				} else {

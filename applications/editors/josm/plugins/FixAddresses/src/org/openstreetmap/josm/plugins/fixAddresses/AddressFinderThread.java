@@ -16,6 +16,7 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 import java.util.ConcurrentModificationException;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -104,6 +105,9 @@ public class AddressFinderThread implements Runnable, Visitor {
 
 	@Override
 	public void visit(Node n) {
+		if (n == null) return;
+
+		// If the coordinates are null, we are screwed anyway
 		double dist = osmAddressNode.getCoor().greatCircleDistance(n.getCoor());
 		
 		if (dist < minDist) {

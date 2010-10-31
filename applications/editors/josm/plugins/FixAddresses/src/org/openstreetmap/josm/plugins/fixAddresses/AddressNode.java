@@ -47,8 +47,20 @@ public class AddressNode extends NodeEntityBase {
 	 * @return
 	 */
 	public String getStreet() {
+		if (osmObject == null) return MISSING_TAG;
+		
 		if (!TagUtils.hasAddrStreetTag(osmObject)) {
-			return MISSING_TAG;
+			// check, if referrers have a street
+			for (OsmPrimitive osm : osmObject.getReferrers()) {
+				if (TagUtils.hasAddrStreetTag(osm)) {
+					String refStreetName = TagUtils.getAddrStreetValue(osm);
+				
+					if (!StringUtils.isNullOrEmpty(refStreetName)) {
+						return refStreetName;
+					}
+				}
+			}
+			return MISSING_TAG; // nothing found
 		}
 		return TagUtils.getAddrStreetValue(osmObject);
 	}

@@ -35,11 +35,15 @@ public class NodeFactory {
 	 * @param way
 	 * @return The new node instance or null; if given way is inappropriate.
 	 */
-	public static StreetSegmentNode createNodeFromWay(Way way) {
+	public static INodeEntity createNodeFromWay(Way way) {
 		if (TagUtils.hasHighwayTag(way)) {
 			return new StreetSegmentNode(way);
 		}
 		
+		// Check for building with address
+		if (way.isClosed() && TagUtils.hasBuildingTag(way)  && TagUtils.isAddress(way)) {
+			return new AddressNode(way);
+		}
 		return null;
 	}
 }

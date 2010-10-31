@@ -133,7 +133,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		if (hasBeenVisited(n)) {
 			return;
 		}
-	
+
+		// Address nodes are recycled in order to keep instance variables like guessed names
 		String aid = "" + n.getId();
 		AddressNode aNode = null;
 		if (!addressCache.containsKey(aid)) {
@@ -147,14 +148,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		}
 		
 		if (aNode != null) {
-			if (!assignAddressToStreet(aNode)) {
-				// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
-				shadowUnresolvedAddresses.add(aNode);
-			}
-
-			if (!aNode.isComplete()) {
-				shadowIncompleteAddresses.add(aNode);
-			}
+			addAndClassifyAddress(aNode);
 		} else {
 			// check, if node is referred by a way
 			for (OsmPrimitive osm : n.getReferrers()) {
@@ -168,6 +162,17 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			
 		}
 		markNodeAsVisited(n);
+	}
+
+	private void addAndClassifyAddress(AddressNode aNode) {
+		if (!assignAddressToStreet(aNode)) {
+			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
+			shadowUnresolvedAddresses.add(aNode);
+		}
+
+		if (!aNode.isComplete()) {
+			shadowIncompleteAddresses.add(aNode);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -191,28 +196,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * @param w the w
 	 */
 	private void createNodeFromWay(Way w) {
-		StreetSegmentNode newSegment = NodeFactory.createNodeFromWay(w);
+		INodeEntity ne = NodeFactory.createNodeFromWay(w);
 		
-		if (newSegment != null) {
-			String name = newSegment.getName();
-			if (StringUtils.isNullOrEmpty(name)) return;
-			
-			StreetNode sNode = null;
-			if (shadowStreetDict.containsKey(name)) { // street exists?
-				sNode = shadowStreetDict.get(name);
-			} else { // new street name -> add to dict
-				sNode = new StreetNode(w);
-				shadowStreetDict.put(name, sNode);
-			}
-			
-			if (sNode != null) {
-				// TODO: Check if segment really belongs to the street, even if the
-				// names are the same. Then the streets should be split up...
-				sNode.addStreetSegment(newSegment);
-			} else {
-				throw new RuntimeException("Street node is null!");
-			}
-		}
+		processNode(ne, w);
 		
 		markWayAsVisited(w);
 		
@@ -225,6 +211,47 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		for (String key : w.keySet()) {
 			if (!tags.contains(key)) {
 				tags.add(key);
+			}
+		}
+	}
+
+	/**
+	 * Process a entity node.
+	 *
+	 * @param ne the ne
+	 * @param w the w
+	 */
+	private void processNode(INodeEntity ne, Way w) {
+		if (ne != null) {
+			if (ne instanceof StreetSegmentNode) {
+				StreetSegmentNode newSegment = (StreetSegmentNode) ne;
+
+				if (newSegment != null) {
+					String name = newSegment.getName();
+					if (StringUtils.isNullOrEmpty(name)) return;
+
+					StreetNode sNode = null;
+					if (shadowStreetDict.containsKey(name)) { // street exists?
+						sNode = shadowStreetDict.get(name);
+					} else { // new street name -> add to dict
+						sNode = new StreetNode(w);
+						shadowStreetDict.put(name, sNode);
+					}
+
+					if (sNode != null) {
+						// TODO: Check if segment really belongs to the street, even if the
+						// names are the same. Then the streets should be split up...
+						sNode.addStreetSegment(newSegment);
+					} else {
+						throw new RuntimeException("Street node is null!");
+					}
+				}
+			}
+
+			// Node is an address 
+			if (ne instanceof AddressNode) {
+				AddressNode aNode = (AddressNode) ne;
+				addAndClassifyAddress(aNode);			
 			}
 		}
 	}

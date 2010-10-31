@@ -255,9 +255,8 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			
 			List<AddressNode> unrAddresses = ev.getSelectedUnresolvedAddresses();
 			if (unrAddresses != null) {
-				for (AddressNode aNode : unrAddresses) {
-					Node node = (Node) aNode.getOsmObject();
-					mapViewer.addMapMarker(new MapMarkerDot(Color.ORANGE, node.getCoor().lat(), node.getCoor().lon()));
+				for (AddressNode aNode : unrAddresses) {					
+					mapViewer.addMapMarker(new MapMarkerDot(Color.ORANGE, aNode.getCoor().lat(), aNode.getCoor().lon()));
 				}
 			}
 			mapViewer.setDisplayToFitMapMarkers();

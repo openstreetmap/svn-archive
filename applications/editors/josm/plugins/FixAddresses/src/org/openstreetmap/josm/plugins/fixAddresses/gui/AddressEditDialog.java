@@ -24,7 +24,8 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -39,16 +40,14 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
 
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.SideButton;
-import org.openstreetmap.josm.gui.dialogs.properties.PresetListPanel.PresetHandler;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
@@ -106,6 +105,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			streetTable = new JTable(new StreetTableModel(editContainer));
 			streetTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			streetTable.getSelectionModel().addListSelectionListener(this);
+			streetTable.addKeyListener(new JumpToEntryListener(1));
 			
 			JScrollPane scroll1 = new JScrollPane(streetTable);
 			streetPanel.add(scroll1, BorderLayout.CENTER);
@@ -324,27 +324,72 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 		
 	}
 	
-	class IncompleteAddressPresetHandler implements PresetHandler {
-		private List<OsmPrimitive> osmPrimitives;
+	/**
+	 * The listener interface for receiving key events of a table.
+	 * The class that is interested in processing a jumpToEntry
+	 * event implements this interface, and the object created
+	 * with that class is registered with a component using the
+	 * component's <code>addJumpToEntryListener<code> method. When
+	 * the jumpToEntry event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see JumpToEntryEvent
+	 */
+	class JumpToEntryListener implements KeyListener {
+		private int column; 
 		
 		/**
-		 * @param osmPrimitives
+		 * Instantiates a new jump-to-entry listener.
+		 * @param column the column of the table to use for the comparison
 		 */
-		public IncompleteAddressPresetHandler(List<OsmPrimitive> osmPrimitives) {
+		public JumpToEntryListener(int column) {
 			super();
-			this.osmPrimitives = osmPrimitives;
+			this.column = column;
 		}
 
 		@Override
-		public Collection<OsmPrimitive> getSelection() {
+		public void keyPressed(KeyEvent arg0) {
 			// TODO Auto-generated method stub
-			return osmPrimitives;
-		}
-
-		@Override
-		public void updateTags(List<Tag> tags) {
 			
 		}
-		
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			JTable table  = (JTable) arg0.getSource();
+			
+			if (table == null) return;
+			
+			TableModel model = table.getModel();
+			
+			if (model == null || model.getColumnCount() == 0) {
+				return;
+			}
+			// clip column
+			if (column < 0 || column >= model.getColumnCount()) {
+				column = 0; // use the first column				
+			}
+			
+			char firstChar = Character.toLowerCase(arg0.getKeyChar());
+
+			// visit every row and find a matching entry
+			for (int i = 0; i < model.getRowCount(); i++) {
+				Object obj = model.getValueAt(i, column);
+				if (obj != null) {
+					String s = obj.toString();
+					if (s.length() > 0 && firstChar == Character.toLowerCase(s.charAt(0))) {
+						// select entry and make it visible in the table
+						table.getSelectionModel().setSelectionInterval(i, i);
+						table.scrollRectToVisible(streetTable.getCellRect(i, 0, true));
+						return;
+					}
+				}
+			}			
+		}
 	}
 }

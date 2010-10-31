@@ -135,6 +135,9 @@ public class DefaultElevationProfileRenderer implements
 		if (mv == null || profile == null || wpt == null) {
 			System.err.println(String.format(
 					"Cannot paint: mv=%s, prof=%s, wpt=%s", mv, profile, wpt));
+			if (wpt == null) {
+				throw new RuntimeException("WPT must not be null, profile " + profile);
+			}
 			return;
 		}
 

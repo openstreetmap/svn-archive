@@ -14,8 +14,6 @@
 
 package org.openstreetmap.josm.plugins.elevation;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +77,13 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	public GpxData getGpxData() {
 		return gpxData;
 	}
+	
+	/**
+	 * @return the tracks
+	 */
+	protected List<IElevationProfile> getTracks() {
+		return tracks;
+	}
 
 	/**
 	 * Gets a flag indicating whether the associated way points contained
@@ -136,6 +141,7 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 
 		trackCounter = 0;
 
+		super.updateValues();
 		if (tracks == null) {
 			tracks = new ArrayList<IElevationProfile>();
 		} else {
@@ -147,7 +153,6 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 		setDistance(gpxData.length());	// get distance from GPX 
 		GpxIterator.visit(gpxData, this);
 
-		setWayPoints(tmpWaypoints, true);
 		// reduce data
 		setWayPoints(WayPointHelper.downsampleWayPoints(tmpWaypoints,
 				getSliceSize()), false);
@@ -159,12 +164,6 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	 */
 	public void updateElevationData() {
 		computeProfile();
-	}
-
-	public String toString() {
-		return "ElevationModel [start=" + getStart() + ", end=" + getEnd()
-				+ ", minHeight=" + getMinHeight() + ", maxHeight="
-				+ getMaxHeight() + ", wayPoints=" + numberOfWayPoints + "]";
 	}
 
 	/*
@@ -189,43 +188,40 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	public void visit(GpxTrack track, GpxTrackSegment segment, WayPoint wp) {
 		processWayPoint(wp);
 	}
-
-	public void end(GpxRoute route) {
-		String trackName = "Route#" + trackCounter;
-		addTrackOrRoute(trackName);
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.elevation.ElevationProfileBase#visit(org.openstreetmap.josm.data.gpx.WayPoint)
+	 */
+	@Override
+	public void visit(WayPoint wp) {
+		super.visit(wp);
+		processWayPoint(wp);
 	}
 
-	public void end(GpxTrack track) {
+	public void start() {
+		buffer.clear();
+	}
+
+	public void end() {
 		String trackName = "Track#" + trackCounter;
-		addTrackOrRoute(trackName);
+		addTrackOrRoute(trackName);		
 	}
-
+	
 	private void addTrackOrRoute(String trackName) {
 		if (getSliceSize() > 0) {
 			ElevationProfileNode emt = new ElevationProfileNode(trackName,
 					this, buffer, getSliceSize());
-			// System.out.println("Add track/route: " + trackName);
 			tracks.add(emt);
 		}
 		trackCounter++;
 		buffer.clear();
 	}
 
-	public void start(GpxRoute route) {
-		// buffer should be empty -> isolated way points
-		if (buffer.size() > 0) {
-			addTrackOrRoute(tr("Unknown"));
-		}
-	}
-
-	public void start(GpxTrack track) {
-		// buffer should be empty -> isolated way points
-		if (buffer.size() > 0) {
-			addTrackOrRoute(tr("Unknown"));
-		}
-	}
-
 	private void processWayPoint(WayPoint wp) {
+		if (wp == null) {
+			throw new RuntimeException("WPT must not be null!");
+		}
+		
 		buffer.add(wp);
 		tmpWaypoints.add(wp);
 		numberOfWayPoints++;

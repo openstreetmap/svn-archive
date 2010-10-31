@@ -47,7 +47,6 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.elevation.ElevationModel;
 import org.openstreetmap.josm.plugins.elevation.GeoidCorrectionKind;
 import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
-import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -66,7 +65,7 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	 */
 	private static final long serialVersionUID = -868463893732535577L;
 	/* Elevation profile instance */
-	private IElevationProfile profile;
+	private ElevationModel profile;
 	/* GPX data */
 	private GpxLayer activeLayer = null;
 	private HashMap<GpxLayer, ElevationModel> layerMap = new HashMap<GpxLayer, ElevationModel>();
@@ -240,7 +239,7 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	 * Gets the elevation model instance.
 	 * @return
 	 */
-	public IElevationProfile getModel() {
+	public ElevationModel getModel() {
 		return profile;
 	}
 
@@ -248,7 +247,7 @@ public class ElevationProfileDialog extends ToggleDialog implements
 	 * Sets the elevation model instance.
 	 * @param model The new model.
 	 */
-	public void setModel(IElevationProfile model) {
+	public void setModel(ElevationModel model) {
 		if (this.profile != model) {
 			this.profile = model;
 			profPanel.setElevationModel(model);
@@ -289,15 +288,15 @@ public class ElevationProfileDialog extends ToggleDialog implements
 			setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
 
 			if (profile.hasElevationData()) {
-			// Show elevation data
-			minHeightLabel.setText(
-					WayPointHelper.getElevationText(profile.getMinHeight()));
-			maxHeightLabel.setText(
-					WayPointHelper.getElevationText(profile.getMaxHeight()));
-			avrgHeightLabel.setText(
-					WayPointHelper.getElevationText(profile.getAverageHeight()));
-			elevationGainLabel.setText(
-					WayPointHelper.getElevationText(profile.getGain()));
+				// Show elevation data
+				minHeightLabel.setText(
+						WayPointHelper.getElevationText(profile.getMinHeight()));
+				maxHeightLabel.setText(
+						WayPointHelper.getElevationText(profile.getMaxHeight()));
+				avrgHeightLabel.setText(
+						WayPointHelper.getElevationText(profile.getAverageHeight()));
+				elevationGainLabel.setText(
+						WayPointHelper.getElevationText(profile.getGain()));
 			}
 			
 			// compute values for time and distance

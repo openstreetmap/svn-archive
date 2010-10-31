@@ -493,4 +493,10 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 			lastEle = ele;			
 		}
 	}
+	
+	public String toString() {
+		return "ElevationProfileBase [start=" + getStart() + ", end=" + getEnd()
+				+ ", minHeight=" + getMinHeight() + ", maxHeight="
+				+ getMaxHeight() + "]";
+	}
 }

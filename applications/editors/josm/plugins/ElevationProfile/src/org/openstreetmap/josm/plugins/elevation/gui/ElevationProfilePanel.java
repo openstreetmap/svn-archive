@@ -173,21 +173,24 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	@Override
 	public void paint(Graphics g) {
 		isPainting = true;
-		super.paint(g);
-
-		int y1 = getPlotBottom();
-
-		g.setColor(Color.DARK_GRAY);
-		g.drawLine(plotArea.x, plotArea.y, plotArea.x, plotArea.y
-				+ plotArea.height);
-		g.drawLine(plotArea.x, plotArea.y + plotArea.height, plotArea.x
-				+ plotArea.width, plotArea.y + plotArea.height);
-
+		
 		Font oldFont = getFont();
 		Font lFont = getFont().deriveFont(9.0f);
 		setFont(lFont);
 		try {
-			if (profile != null) {
+			super.paint(g);
+	
+			int y1 = getPlotBottom();
+	
+			g.setColor(Color.DARK_GRAY);
+			g.drawLine(plotArea.x, plotArea.y, plotArea.x, plotArea.y
+					+ plotArea.height);
+			g.drawLine(plotArea.x, plotArea.y + plotArea.height, plotArea.x
+					+ plotArea.width, plotArea.y + plotArea.height);
+	
+			
+		
+			if (profile != null && profile.hasElevationData()) {
 				drawAlignedString(formatDate(profile.getStart()), 5, y1 + 5,
 						TextAlignment.Left, g);
 				drawAlignedString(formatDate(profile.getEnd()),
@@ -266,6 +269,10 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	private void drawElevationLines(Graphics g) {
 		double diff = profile.getHeightDifference();
 
+		if (diff == 0.0) {
+			return;
+		}
+		
 		double z10 = Math.floor(Math.log10(diff));
 		double scaleUnit = Math.pow(10, z10); // scale unit, e. g. 100 for
 		// values below 1000
@@ -396,6 +403,13 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 					ElevationWayPointKind.Plain);
 			
 			if (i == this.selectedIndex) {
+				g.setColor(Color.BLACK);
+				drawAlignedString(WayPointHelper.getElevationText(eleVal), 
+						(getPlotRight() + getPlotLeft()) / 2, 
+						getPlotBottom() + 6, 
+						TextAlignment.Centered, 
+						g);
+				
 				c = renderer.getColorForWaypoint(profile, wpt, ElevationWayPointKind.Highlighted);
 			}
 			int yEle = getYForEelevation(eleVal);
@@ -406,9 +420,10 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 			
 			int geoidVal = 0;
 			switch(WayPointHelper.getGeoidKind()) {
-			case Auto: geoidVal = WayPointHelper.getGeoidCorrection(wpt); break;
-			case Fixed: // not impl
+				case Auto: geoidVal = WayPointHelper.getGeoidCorrection(wpt); break;
+				case Fixed: // not impl
 			}
+			
 			g.setColor(ElevationColors.EPLightBlue);
 			
 			int yGeoid = getYForEelevation(eleVal - geoidVal);
@@ -505,7 +520,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 		int pl = this.getPlotLeft();
 		int newIdx = x - l - pl;
 		
-		if (newIdx != this.selectedIndex && newIdx > 0) {
+		if (newIdx != this.selectedIndex && newIdx >= 0) {
 			this.selectedIndex = newIdx;
 			this.repaint();		
 			fireSelectionChanged(getSelectedWayPoint());

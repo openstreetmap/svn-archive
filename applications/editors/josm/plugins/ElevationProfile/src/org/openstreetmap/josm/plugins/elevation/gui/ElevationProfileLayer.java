@@ -161,6 +161,10 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 		if (profile != null) {			
 			for (WayPoint wpt : profile.getWayPoints()) {
 				int ele = (int) WayPointHelper.getElevation(wpt);
+				
+				if (wpt == null) {
+					throw new RuntimeException("WPT must not be null, profile " + profile);
+				}
 
 				if (lastWpt != null) {
 					/*

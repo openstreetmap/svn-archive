@@ -35,7 +35,6 @@ import org.xml.sax.SAXException;
 public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 	private AddressEditContainer container;
 	private double minDist;
-	private Node nearestNode;
 	private AddressNode curAddressNode;
 	private boolean isRunning = false;
 	private String nearestName = null;
@@ -83,7 +82,6 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 		
 		if (dist < minDist) {
 			minDist = dist;
-			nearestNode = n;
 			nearestName = currentName;
 		}
 	}

@@ -18,7 +18,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
@@ -38,6 +37,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
@@ -115,8 +115,13 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			streetLabel = createHeaderLabel(STREET_HEADER_FMT,
 					STREETS,
 					editContainer.getNumberOfStreets());
-			streetPanel.add(streetLabel, BorderLayout.NORTH);
-			streetPanel.setMinimumSize(new Dimension(350, 300));
+			
+			JPanel headerPanel = new JPanel(new GridLayout(1, 4));
+			headerPanel.setMinimumSize(new Dimension(100, 30));
+			headerPanel.add(streetLabel);
+			
+			streetPanel.add(headerPanel, BorderLayout.NORTH);
+			streetPanel.setMinimumSize(new Dimension(350, 200));
 			
 			/* Panel for unresolved addresses table */
 			JPanel unresolvedPanel = new JPanel(new BorderLayout());		
@@ -132,29 +137,34 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 					UNRESOLVED_HEADER_FMT, 
 					UNRESOLVED_ADDRESS, 
 					editContainer.getNumberOfUnresolvedAddresses());
-			unresolvedPanel.add(unresolvedAddressesLabel , BorderLayout.NORTH);
+			
+			JPanel headerPanel2 = new JPanel(new GridLayout(1, 4));
+			headerPanel2.setMinimumSize(new Dimension(100, 30));
+			headerPanel2.add(unresolvedAddressesLabel);
+			unresolvedPanel.add(headerPanel2 , BorderLayout.NORTH);
 			unresolvedPanel.setMinimumSize(new Dimension(350, 200));
 			
 			
 			try {
-				JPanel unresolvedButtons = new JPanel(new FlowLayout());
+				JPanel unresolvedButtons = new JPanel(new GridLayout(2,5, 5, 5));
 				SideButton assign = new SideButton(resolveAction);															   
 				unresolvedButtons.add(assign);
+				
 				SideButton guess = new SideButton(guessAddressAction);															   
 				unresolvedButtons.add(guess);
 				SideButton applyAllGuesses = new SideButton(applyAllGuessesAction);															   
 				unresolvedButtons.add(applyAllGuesses);
 				
-				unresolvedButtons.add(new JSeparator());
-				
 				SideButton removeAddressTags = new SideButton(removeAddressTagsAction);															   
 				unresolvedButtons.add(removeAddressTags);
 				
-				unresolvedButtons.add(new JSeparator());
+				unresolvedButtons.add(new JPanel());
 				
 				SideButton selectInMap = new SideButton(selectAddressesInMapAction);															   
 				unresolvedButtons.add(selectInMap);
-				unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);
+				headerPanel2.setMinimumSize(new Dimension(100, 70));
+				
+				unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);				
 			} catch (Exception e) {				
 				e.printStackTrace();
 			}
@@ -207,7 +217,8 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	 */
 	private JLabel createHeaderLabel(String fmtString, String title, int n) {
 		JLabel label = new JLabel(String.format(fmtString, title, n));
-		label.setFont(label.getFont().deriveFont(Font.BOLD));
+		label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 2));
+		label.setBorder(new EmptyBorder(5,2,4,5));
 		return label;
 	}
 	

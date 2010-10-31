@@ -32,7 +32,7 @@ public class SelectIncompleteAddressesAction extends JosmAction {
 	 * 
 	 */
 	public SelectIncompleteAddressesAction() {
-		super(tr("Select incomplete addresses"), null,
+		super(tr("Select incomplete addresses"), "select_invaddr_24",
 				tr("Selects all addresses with incomplete data."), null, false);	
 	}
 
@@ -51,4 +51,11 @@ public class SelectIncompleteAddressesAction extends JosmAction {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.actions.JosmAction#updateEnabledState()
+	 */
+	@Override
+	protected void updateEnabledState() {
+		setEnabled(getCurrentDataSet() != null);
+	}
 }

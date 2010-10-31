@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.videomapping.video;
 import java.awt.Adjustable;
 import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.DateTimeDateFormat;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -12,11 +13,14 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.sql.Time;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable ;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -339,7 +343,14 @@ public class SimpleVideoPlayer extends JFrame implements MediaPlayerEventListene
     {
         if(mp.isPlaying())
         {
-            setTitle(ms.format(new Date(mp.getTime())));
+        	long millis=mp.getTime();
+        	String s = String.format("%02d:%02d:%02d", //dont know why normal Java date utils doesn't format the time right
+		      TimeUnit.MILLISECONDS.toHours(millis),
+		      TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), 
+		      TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+		    );
+            //setTitle(ms.format(new Time(sec)));
+        	setTitle(s);
             syncTimeline=true;
             timeline.setValue(Math.round(mp.getPosition()*100));
             syncTimeline=false;

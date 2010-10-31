@@ -57,4 +57,16 @@ public interface INodeEntity extends Comparable<INodeEntity> {
 	 * @return
 	 */
 	public LatLon getCoor();
+	
+	/**
+	 * Adds a command listener.
+	 * @param listener
+	 */
+	public void addCommandListener(ICommandListener listener);
+	
+	/**
+	 * Removes a command listener.
+	 * @param listener
+	 */
+	public void removeCommandListener(ICommandListener listener);
 }

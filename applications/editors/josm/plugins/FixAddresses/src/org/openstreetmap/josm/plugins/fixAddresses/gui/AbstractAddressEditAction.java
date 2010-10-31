@@ -14,11 +14,18 @@
 package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
+import org.openstreetmap.josm.plugins.fixAddresses.ICommandListener;
 import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 
 /**
  * Base class for all address related action. An action can work as well on all addresses collected by the
@@ -33,9 +40,11 @@ import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
  */
 
 @SuppressWarnings("serial")
-public abstract class AbstractAddressEditAction extends JosmAction implements IAddressEditContainerListener {	
+public abstract class AbstractAddressEditAction extends JosmAction implements IAddressEditContainerListener, ICommandListener {	
 	private AddressEditSelectionEvent event;
 	protected AddressEditContainer container;
+	private List<Command> commands;
+	private String txName;
 
 	/**
 	 * @param name
@@ -165,5 +174,73 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	@Override
 	public void entityChanged(INodeEntity node) {
 		updateEnabledState();		
+	}
+	
+	/**
+	 * Begins the transaction (command sequence). Must be called by every subclass before
+	 * any modification on OSM objects starts.
+	 *
+	 * @param txName the name of the transaction (e. g. "change address tags").
+	 */
+	public void beginTransaction(String txName) {
+		if (commands != null && commands.size() > 0) {
+			throw new RuntimeException("TX has not been closed (missing finishTransaction?)");
+		}
+		
+		commands = new ArrayList<Command>();
+		if (StringUtils.isNullOrEmpty(txName)) {
+			throw new RuntimeException("Transaction must have a name");
+		}
+		this.txName = txName;
+	}
+	
+	/**
+	 * Finishes the transaction and passes the command sequence to the framework.
+	 */
+	public void finishTransaction() {
+		if (commands == null) {
+			throw new RuntimeException("No command list available. Did you forget to call beginTransaction?");
+		}
+		// execute the command
+		Main.main.undoRedo.add(new SequenceCommand(txName, commands));
+		commands.clear();
+		container.invalidate();
+	}
+	
+	/**
+	 * Begins the transaction for a single object.
+	 *
+	 * @param entity the entity
+	 */
+	public void beginObjectTransaction(INodeEntity entity) {
+		if (entity != null) {
+			entity.addCommandListener(this);
+		} else {
+			throw new RuntimeException("Entity must not be null");
+		}
+	}
+	
+	/**
+	 * Finishes the transaction for a single object.
+	 *
+	 * @param entity the entity
+	 */
+	public void finishObjectTransaction(INodeEntity entity) {
+		if (entity != null) {
+			entity.removeCommandListener(this);
+		} else {
+			throw new RuntimeException("Entity must not be null");
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.ICommandListener#commandIssued(org.openstreetmap.josm.plugins.fixAddresses.INodeEntity, org.openstreetmap.josm.command.Command)
+	 */
+	@Override
+	public void commandIssued(INodeEntity entity, Command command) {
+		if (commands == null) {
+			throw new RuntimeException("No command list available. Did you forget to call beginTransaction?");
+		}
+		commands.add(command);
 	}
 }

@@ -172,6 +172,18 @@ public class AddressNode extends NodeEntityBase {
 		return TagUtils.getAddrCountryValue(osmObject);
 	}
 	
+	/**
+	 * Removes all addresss related tags from the node or way.
+	 */
+	public void removeAllAddressTags() {
+		removeOSMTag(TagUtils.ADDR_CITY_TAG);
+		removeOSMTag(TagUtils.ADDR_COUNTRY_TAG);
+		removeOSMTag(TagUtils.ADDR_POSTCODE_TAG);
+		removeOSMTag(TagUtils.ADDR_HOUSENUMBER_TAG);
+		removeOSMTag(TagUtils.ADDR_STATE_TAG);
+		removeOSMTag(TagUtils.ADDR_STREET_TAG);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.plugins.addressEdit.NodeEntityBase#compareTo(org.openstreetmap.josm.plugins.addressEdit.INodeEntity)
 	 */

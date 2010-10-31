@@ -49,10 +49,14 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction {
 	}
 
 	private void applyGuesses(List<AddressNode> addrToFix) {
+		beginTransaction(tr("Applied guessed values"));
 		List<AddressNode> addrToFixShadow = new ArrayList<AddressNode>(addrToFix);
 		for (AddressNode aNode : addrToFixShadow) {
+			beginObjectTransaction(aNode);
 			aNode.applyAllGuesses();
+			finishObjectTransaction(aNode);
 		}
+		finishTransaction();
 	}
 
 	@Override

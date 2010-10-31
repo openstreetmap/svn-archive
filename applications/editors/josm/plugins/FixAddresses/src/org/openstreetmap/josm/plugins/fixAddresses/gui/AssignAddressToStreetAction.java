@@ -25,7 +25,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
-public class AssignAddressToStreetAction extends AbstractAddressEditAction {
+public class AssignAddressToStreetAction extends AbstractAddressEditAction  {
 
 	public AssignAddressToStreetAction() {
 		super(tr("Assign address to street"), "assignstreet_24", "Assign the selected address(es) to the selected street.");
@@ -42,12 +42,17 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction {
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {		
 		StreetNode streetNode = ev.getSelectedStreet();
-				
+						
 		if (streetNode != null && ev.getSelectedUnresolvedAddresses() != null) {
+			beginTransaction(tr("Set street name") + " '" + streetNode.getName() + "'");
 			for (AddressNode addrNode : ev.getSelectedUnresolvedAddresses()) {
-				addrNode.assignStreet(streetNode);				
+				beginObjectTransaction(addrNode);
+				addrNode.assignStreet(streetNode);
+				finishObjectTransaction(addrNode);
 			}
+			finishTransaction();
 		}
+		
 	}
 
 	/* (non-Javadoc)

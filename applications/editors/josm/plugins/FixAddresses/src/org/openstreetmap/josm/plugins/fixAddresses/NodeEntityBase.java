@@ -18,8 +18,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
@@ -28,7 +28,8 @@ import org.openstreetmap.josm.data.osm.Way;
 
 public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	public static final String ANONYMOUS = tr("No name");
-	private static List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
+	private static List<IAddressEditContainerListener> containerListeners = new ArrayList<IAddressEditContainerListener>();
+	private List<ICommandListener> cmdListeners = new ArrayList<ICommandListener>();
 	
 	protected OsmPrimitive osmObject;
 	
@@ -52,7 +53,7 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	 * @param listener
 	 */
 	public static void addChangedListener(IAddressEditContainerListener listener) {
-		listeners.add(listener);
+		containerListeners.add(listener);
 	}
 	
 	/**
@@ -60,17 +61,49 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	 * @param listener
 	 */
 	public static void removeChangedListener(IAddressEditContainerListener listener) {
-		listeners.remove(listener);
+		containerListeners.remove(listener);
 	}
 	
 	/**
 	 * Notifies clients that the address container changed.
 	 */
 	protected static void fireEntityChanged(INodeEntity entity) {
-		for (IAddressEditContainerListener listener : listeners) {
+		for (IAddressEditContainerListener listener : containerListeners) {
 			listener.entityChanged(entity);
 		}
 	}
+	
+	/**
+	 * Adds a command listener.
+	 * @param listener
+	 */
+	public void addCommandListener(ICommandListener listener) {
+		cmdListeners.add(listener);
+	}
+	
+	/**
+	 * Removes a command listener.
+	 * @param listener
+	 */
+	public void removeCommandListener(ICommandListener listener) {
+		cmdListeners.remove(listener);
+	}
+	
+	/**
+	 * Notifies clients that an entity has issued a command.
+	 *
+	 * @param source the entity that issued the command.
+	 * @param cmd the command to execute.
+	 */
+	protected void fireCommandIssued(Command cmd) {
+		if (cmdListeners.size() == 0) {
+			throw new RuntimeException("Object has no TX context: " + this);
+		}
+		
+		for (ICommandListener l : cmdListeners) {
+			l.commandIssued(this, cmd);
+		}
+	}	
 
 	public OsmPrimitive getOsmObject() {
 		return osmObject;
@@ -78,7 +111,6 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 
 	@Override
 	public List<INodeEntity> getChildren() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -108,26 +140,24 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	 * into the undo/redo queue.
 	 * @param tag The tag to change.
 	 * @param newValue The new value for the tag.
+	 * @param cmd The surrounding command sequence
 	 */
 	protected void setOSMTag(String tag, String newValue) {
-		OsmPrimitive oldObject = osmObject;
-		OsmPrimitive newObject = null;
-			
-		// I would appreciate a clone method...
-		if (oldObject instanceof Node) {
-			newObject = new Node();
-		} else if (oldObject instanceof Way) {
-			newObject = new Way();
-		}
+		if (StringUtils.isNullOrEmpty(tag)) return;
 		
-		if (newObject != null) {
-			newObject.cloneFrom(oldObject);
-			newObject.put(tag, newValue);
-			Main.main.undoRedo.add( new ChangeCommand(oldObject, newObject));
+		if (osmObject != null && osmObject.hasKey(tag)) {
+			fireCommandIssued(new ChangePropertyCommand(osmObject, tag, newValue));
 			fireEntityChanged(this);
-		} else {
-			throw new RuntimeException("Cannot modify tag for " + osmObject);
-		}
+		} 
+	}
+	
+	/**
+	 * Removes the given tag from the OSM object.
+	 *
+	 * @param tag the tag
+	 */
+	protected void removeOSMTag(String tag) {
+		setOSMTag(tag, null); // a value of null removes the tag
 	}
 
 	/* (non-Javadoc)

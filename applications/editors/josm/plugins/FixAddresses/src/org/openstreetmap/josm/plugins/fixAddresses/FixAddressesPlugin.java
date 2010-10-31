@@ -28,8 +28,10 @@ public class FixAddressesPlugin extends Plugin {
 		
 		// Create action for edit...
 		FixUnresolvedStreetsAction action = new FixUnresolvedStreetsAction();
+		SelectIncompleteAddressesAction incAddrAction = new SelectIncompleteAddressesAction();
 		// ... and add it to the tools menu in main
         Main.main.menu.toolsMenu.add(action);
+        Main.main.menu.toolsMenu.add(incAddrAction);
 	}
 
 }

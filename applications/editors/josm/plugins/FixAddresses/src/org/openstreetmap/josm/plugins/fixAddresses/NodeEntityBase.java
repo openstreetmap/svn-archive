@@ -145,9 +145,11 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	protected void setOSMTag(String tag, String newValue) {
 		if (StringUtils.isNullOrEmpty(tag)) return;
 		
-		if (osmObject != null && osmObject.hasKey(tag)) {
-			fireCommandIssued(new ChangePropertyCommand(osmObject, tag, newValue));
-			fireEntityChanged(this);
+		if (osmObject != null) {
+			if ((osmObject.hasKey(tag) && newValue == null) || newValue != null) {			
+				fireCommandIssued(new ChangePropertyCommand(osmObject, tag, newValue));
+				fireEntityChanged(this);
+			}
 		} 
 	}
 	

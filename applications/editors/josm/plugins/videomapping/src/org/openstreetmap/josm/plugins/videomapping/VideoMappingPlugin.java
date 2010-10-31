@@ -21,6 +21,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.SwingUtilities;
 import javax.swing.text.MaskFormatter;
 
 import org.openstreetmap.josm.Main;
@@ -179,7 +180,7 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
             	String s;
             	try {
             	JOptionPane d=new JOptionPane(tr("Jump to"), JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-            	JFormattedTextField inp = new JFormattedTextField(new MaskFormatter("##:##:##"));
+            	final JFormattedTextField inp = new JFormattedTextField(new MaskFormatter("##:##:##"));
             	inp.setText("00:00:01");
             	inp.setInputVerifier(new InputVerifier() {					
 					@Override
@@ -188,13 +189,17 @@ public class VideoMappingPlugin extends Plugin implements LayerChangeListener{
 						return false;
 					}
 				});
+            	SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                    	inp.requestFocus();
+                    }
+                });
             	//TODO here we should show the GPS time range to the user
             	if(d.showConfirmDialog(Main.main.panel,inp, tr("Jump to"),JOptionPane.OK_CANCEL_OPTION)==JOptionPane.OK_OPTION)
             	{
-	            	s=inp.getText();
 	            	Date t;
 	                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm:ss");
-	                t = sdf.parse(s);
+	                t = sdf.parse(inp.getText());
 	                if (t!=null)
 	                {
 	                    player.jumpToGPSTime(t.getTime());

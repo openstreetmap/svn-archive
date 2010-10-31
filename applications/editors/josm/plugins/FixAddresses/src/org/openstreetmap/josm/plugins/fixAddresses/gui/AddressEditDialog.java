@@ -59,8 +59,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 @SuppressWarnings("serial")
 public class AddressEditDialog extends JDialog implements ActionListener, ListSelectionListener, IAddressEditContainerListener {
-	private static final String UNRESOLVED_HEADER_FMT = tr("Unresolved Addresses (%d)");
-	private static final String STREET_HEADER_FMT = tr("Streets (%d)");
+	private static final String UNRESOLVED_ADDRESS = tr("Unresolved Addresses");
+	private static final String STREETS = tr("Streets");
+	private static final String UNRESOLVED_HEADER_FMT = tr("%s (%d)");
+	private static final String STREET_HEADER_FMT = tr("%s (%d)");
 	private static final String OK_COMMAND = tr("Close");
 	private static final String SELECT_AND_CLOSE = tr("Select and close");
 	
@@ -108,7 +110,9 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			JScrollPane scroll1 = new JScrollPane(streetTable);
 			streetPanel.add(scroll1, BorderLayout.CENTER);
 			
-			streetLabel = createHeaderLabel(STREET_HEADER_FMT, editContainer.getNumberOfStreets());
+			streetLabel = createHeaderLabel(STREET_HEADER_FMT,
+					STREETS,
+					editContainer.getNumberOfStreets());
 			streetPanel.add(streetLabel, BorderLayout.NORTH);
 			streetPanel.setMinimumSize(new Dimension(350, 300));
 			
@@ -123,7 +127,9 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			JScrollPane scroll2 = new JScrollPane(unresolvedTable);
 			unresolvedPanel.add(scroll2, BorderLayout.CENTER);
 			unresolvedAddressesLabel = createHeaderLabel(
-					UNRESOLVED_HEADER_FMT, editContainer.getNumberOfUnresolvedAddresses());
+					UNRESOLVED_HEADER_FMT, 
+					UNRESOLVED_ADDRESS, 
+					editContainer.getNumberOfUnresolvedAddresses());
 			unresolvedPanel.add(unresolvedAddressesLabel , BorderLayout.NORTH);
 			unresolvedPanel.setMinimumSize(new Dimension(350, 200));
 			
@@ -184,16 +190,32 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 	}
 
-	private JLabel createHeaderLabel(String fmtString, int n) {
-		JLabel label = new JLabel(String.format(fmtString, n));
+	/**
+	 * Creates a header label in the form "title (number)" with bold font. 
+	 * @param fmtString The format string having a string and a numeric placeholder.
+	 * @param title The title of the header.
+	 * @param n The number to show in the header.
+	 * @return
+	 */
+	private JLabel createHeaderLabel(String fmtString, String title, int n) {
+		JLabel label = new JLabel(String.format(fmtString, title, n));
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
 		return label;
 	}
 	
+	/**
+	 * Updates the list headings.
+	 */
 	private void updateHeaders() {
 		if (editContainer != null) {
-			streetLabel.setText(String.format(STREET_HEADER_FMT, editContainer.getNumberOfStreets()));
-			unresolvedAddressesLabel.setText(String.format(UNRESOLVED_HEADER_FMT, editContainer.getNumberOfUnresolvedAddresses()));
+			streetLabel.setText(String.format(
+					STREET_HEADER_FMT,
+					STREETS,
+					editContainer.getNumberOfStreets()));
+			unresolvedAddressesLabel.setText(
+					String.format(UNRESOLVED_HEADER_FMT,
+							UNRESOLVED_ADDRESS,
+							editContainer.getNumberOfUnresolvedAddresses()));
 		} else {
 			streetLabel.setText(String.format(STREET_HEADER_FMT, 0));
 			unresolvedAddressesLabel.setText(String.format(UNRESOLVED_HEADER_FMT, 0));
@@ -243,6 +265,9 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 		} 
 	}
 
+	/**
+	 * Removes all markers and rectangles from the map viewer.
+	 */
 	private void clearMapViewer() {
 		mapViewer.setVisible(false);
 		// remove markers and rectangles from map viewer
@@ -270,8 +295,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	 * street name given in the address.
 	 *   
 	 * @author Oliver Wieland <oliver.wieland@online.de> 
-	 */
-	
+	 */	
 	class IncompleteAddressListener implements ListSelectionListener {
 
 		@Override

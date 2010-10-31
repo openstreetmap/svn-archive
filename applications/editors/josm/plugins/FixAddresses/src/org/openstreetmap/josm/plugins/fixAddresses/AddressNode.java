@@ -48,7 +48,7 @@ public class AddressNode extends NodeEntityBase {
 	 */
 	public String getStreet() {
 		if (osmObject == null) return MISSING_TAG;
-		
+		/*
 		if (!TagUtils.hasAddrStreetTag(osmObject)) {
 			// check, if referrers have a street
 			for (OsmPrimitive osm : osmObject.getReferrers()) {
@@ -61,8 +61,17 @@ public class AddressNode extends NodeEntityBase {
 				}
 			}
 			return MISSING_TAG; // nothing found
+		}*/
+		if (!TagUtils.hasAddrStreetTag(osmObject)) {
+			return MISSING_TAG;
+		} else {
+			String sName = TagUtils.getAddrStreetValue(osmObject);
+			if (!StringUtils.isNullOrEmpty(sName)) {
+				return sName;
+			} else {
+				return MISSING_TAG;
+			}
 		}
-		return TagUtils.getAddrStreetValue(osmObject);
 	}
 	
 	/**

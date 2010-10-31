@@ -110,11 +110,24 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	 * @param newValue The new value for the tag.
 	 */
 	protected void setOSMTag(String tag, String newValue) {
-		Node oldNode = (Node)osmObject;
-		OsmPrimitive newNode = new Node(oldNode);
-		newNode.put(tag, newValue);
-		Main.main.undoRedo.add( new ChangeCommand(oldNode, newNode));
-		fireEntityChanged(this);
+		OsmPrimitive oldObject = osmObject;
+		OsmPrimitive newObject = null;
+			
+		// I would appreciate a clone method...
+		if (oldObject instanceof Node) {
+			newObject = new Node();
+		} else if (oldObject instanceof Way) {
+			newObject = new Way();
+		}
+		
+		if (newObject != null) {
+			newObject.cloneFrom(oldObject);
+			newObject.put(tag, newValue);
+			Main.main.undoRedo.add( new ChangeCommand(oldObject, newObject));
+			fireEntityChanged(this);
+		} else {
+			throw new RuntimeException("Cannot modify tag for " + osmObject);
+		}
 	}
 
 	/* (non-Javadoc)

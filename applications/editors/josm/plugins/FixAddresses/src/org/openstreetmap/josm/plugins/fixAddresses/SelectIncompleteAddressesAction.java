@@ -27,10 +27,7 @@ public class SelectIncompleteAddressesAction extends JosmAction {
 
 	
 	private AddressEditContainer addressEditContainer;
-
-	/**
-	 * 
-	 */
+	
 	public SelectIncompleteAddressesAction() {
 		super(tr("Select incomplete addresses"), "select_invaddr_24",
 				tr("Selects all addresses with incomplete data."), null, false);	

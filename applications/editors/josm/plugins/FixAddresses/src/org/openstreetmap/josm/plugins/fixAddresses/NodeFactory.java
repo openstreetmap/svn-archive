@@ -13,18 +13,31 @@
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
 
+import java.util.HashMap;
+
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class NodeFactory {
+	private static HashMap<String, AddressNode> addressCache = new HashMap<String, AddressNode>();
+	
 	/**
 	 * Creates an address node from an OSM node, if possible.
-	 * @param osm
+	 * @param node
 	 * @return
 	 */
-	public static AddressNode createNode(Node osm) {
-		if (TagUtils.isAddress(osm)) {
-			return new AddressNode(osm);
+	public static AddressNode createNode(Node node) {
+		if (TagUtils.isAddress(node)) {
+			String aid = "" + node.getId();
+			
+			AddressNode aNode = lookup(aid);
+			if (aNode == null) {
+				aNode = new AddressNode(node);
+				addressCache.put(aid, aNode);
+			} else {
+				aNode.setOsmObject(node);
+			}
+			return aNode;
 		}
 		
 		return null;
@@ -42,7 +55,24 @@ public class NodeFactory {
 		
 		// Check for building with address
 		if (way.isClosed() && TagUtils.hasBuildingTag(way)  && TagUtils.isAddress(way)) {
-			return new AddressNode(way);
+			String aid = "" + way.getId();
+			
+			AddressNode aNode = lookup(aid);
+			if (aNode == null) {
+				aNode = new AddressNode(way);
+				addressCache.put(aid, aNode);
+			} else {
+				aNode.setOsmObject(way);
+			}
+	
+			return aNode; 
+		}
+		return null;
+	}
+	
+	private static AddressNode lookup(String aid) {				
+		if (addressCache.containsKey(aid)) {
+			return addressCache.get(aid);			
 		}
 		return null;
 	}

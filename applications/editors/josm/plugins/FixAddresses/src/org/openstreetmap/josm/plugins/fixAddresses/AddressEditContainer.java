@@ -67,7 +67,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private List<AddressNode> shadowUnresolvedAddresses = new ArrayList<AddressNode>(100);
 	private List<AddressNode> shadowIncompleteAddresses = new ArrayList<AddressNode>(100);
 	
-	private HashMap<String, AddressNode> addressCache = new HashMap<String, AddressNode>();
 	private HashSet<Node> visitedNodes = new HashSet<Node>();
 	private HashSet<Way> visitedWays = new HashSet<Way>();
 	private HashSet<String> tags = new HashSet<String>();
@@ -134,22 +133,13 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			return;
 		}
 
-		// Address nodes are recycled in order to keep instance variables like guessed names
-		String aid = "" + n.getId();
 		AddressNode aNode = null;
-		if (!addressCache.containsKey(aid)) {
-			aNode = NodeFactory.createNode(n);
-			if (aNode != null) {
-				addressCache.put(aid, aNode);
-			}
-		} else {
-			aNode = addressCache.get(aid);
-			aNode.setOsmObject(n);
-		}
-		
+		// Address nodes are recycled in order to keep instance variables like guessed names
+		aNode = NodeFactory.createNode(n);
+						
 		if (aNode != null) {
 			addAndClassifyAddress(aNode);
-		} else {
+		} /*else {
 			// check, if node is referred by a way
 			for (OsmPrimitive osm : n.getReferrers()) {
 				if (osm instanceof Way) {
@@ -160,9 +150,26 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 				}
 			}
 			
-		}
+		}*/
 		markNodeAsVisited(n);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Way)
+	 */
+	@Override
+	public void visit(Way w) {
+		// This doesn't matter, we just need the street name 
+		//if (w.isIncomplete()) return;
+		
+		if (hasBeenVisited(w)) {
+			return;
+		}
+		
+		createNodeFromWay(w);
+		markWayAsVisited(w);
+	}
+
 
 	private void addAndClassifyAddress(AddressNode aNode) {
 		if (!assignAddressToStreet(aNode)) {
@@ -175,20 +182,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Way)
-	 */
-	@Override
-	public void visit(Way w) {
-		// This doesn't matter, we just need the street name 
-		//if (w.isIncomplete()) return;
-		
-		createNodeFromWay(w);
-		/*
-        for (Node n : w.getNodes()) {
-            
-        }*/
-	}
 
 	/**
 	 * Creates the node from an OSM way instance.
@@ -197,20 +190,20 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	private void createNodeFromWay(Way w) {
 		INodeEntity ne = NodeFactory.createNodeFromWay(w);
+
 		
-		processNode(ne, w);
-		
-		markWayAsVisited(w);
-		
-		// Look also into nodes for addresses (unlikely, but at least they
-		// get marked as visited).
-		for (Node n : w.getNodes()) {
-			visit(n);
-		}
-		
-		for (String key : w.keySet()) {
-			if (!tags.contains(key)) {
-				tags.add(key);
+		if (!processNode(ne, w)) {
+
+			// Look also into nodes for addresses (unlikely, but at least they
+			// get marked as visited).
+			for (Node n : w.getNodes()) {
+				visit(n);
+			}
+
+			for (String key : w.keySet()) {
+				if (!tags.contains(key)) {
+					tags.add(key);
+				}
 			}
 		}
 	}
@@ -218,17 +211,19 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	/**
 	 * Process a entity node.
 	 *
-	 * @param ne the ne
-	 * @param w the w
+	 * @param ne the entity node.
+	 * @param w the corresponding OSM way
+	 * @return true, if node has been processed
 	 */
-	private void processNode(INodeEntity ne, Way w) {
+	private boolean processNode(INodeEntity ne, Way w) {
 		if (ne != null) {
+			// Node is a street (segment)
 			if (ne instanceof StreetSegmentNode) {
 				StreetSegmentNode newSegment = (StreetSegmentNode) ne;
 
 				if (newSegment != null) {
 					String name = newSegment.getName();
-					if (StringUtils.isNullOrEmpty(name)) return;
+					if (StringUtils.isNullOrEmpty(name)) return false;
 
 					StreetNode sNode = null;
 					if (shadowStreetDict.containsKey(name)) { // street exists?
@@ -242,6 +237,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 						// TODO: Check if segment really belongs to the street, even if the
 						// names are the same. Then the streets should be split up...
 						sNode.addStreetSegment(newSegment);
+						return true;
 					} else {
 						throw new RuntimeException("Street node is null!");
 					}
@@ -251,9 +247,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			// Node is an address 
 			if (ne instanceof AddressNode) {
 				AddressNode aNode = (AddressNode) ne;
-				addAndClassifyAddress(aNode);			
+				addAndClassifyAddress(aNode);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/* (non-Javadoc)

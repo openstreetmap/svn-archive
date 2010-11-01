@@ -53,28 +53,52 @@ import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
 
 /**
- * Provides a container serving streets and unresolved/incomplete addresses.
+ * Provides a container serving streets and unresolved/incomplete addresses. It scans through a
+ * set of OSM primitives and checks for incomplete addresses (e. g. missing addr:... tags) or
+ * addresses with unknown streets ("unresolved addresses").
+ * 
+ * It listens to changes within instances of {@link INodeEntity} to notify clients on update. 
+ * 
+ * {@link AddressEditContainer} is the central class used within actions and UI models to show
+ * and alter OSM data.
+ * 
+ * {@see AbstractAddressEditAction}
+ * {@see AddressEditTableModel}
+ *  
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
 
 public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener {
-	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100); 
+	
+	/** The street dictionary collecting all streets to a set of unique street names. */
+	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100);
+	
+	/** The unresolved addresses list. */
 	private List<AddressNode> unresolvedAddresses = new ArrayList<AddressNode>(100);
+	
+	/** The incomplete addresses list. */
 	private List<AddressNode> incompleteAddresses = new ArrayList<AddressNode>(100);
 	
-	private HashMap<String, StreetNode> shadowStreetDict = new HashMap<String, StreetNode>(100); 
+	/** The shadow copy to assemble the street dict during update. */
+	private HashMap<String, StreetNode> shadowStreetDict = new HashMap<String, StreetNode>(100);
+	/** The shadow copy to assemble the unresolved addresses during update. */
 	private List<AddressNode> shadowUnresolvedAddresses = new ArrayList<AddressNode>(100);
+	/** The shadow copy to assemble the incomplete addresses during update. */
 	private List<AddressNode> shadowIncompleteAddresses = new ArrayList<AddressNode>(100);
 	
+	/** The visited nodes cache to increase iteration spped. */
 	private HashSet<Node> visitedNodes = new HashSet<Node>();
-	private HashSet<Way> visitedWays = new HashSet<Way>();
+	/** The visited ways cache to increase iteration spped. */
+	private HashSet<Way> visitedWays = new HashSet<Way>();	
+	/** The tag list used within the data area. */
 	private HashSet<String> tags = new HashSet<String>();
 	
+	/** The change listeners. */
 	private List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
 	
 	/**
-	 * 
+	 * Creates an empty container. 
 	 */
 	public AddressEditContainer() {
 		NodeEntityBase.addChangedListener(this);
@@ -108,14 +132,30 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		}
 	}
 	
+	/**
+	 * Marks an OSM node as visited.
+	 *
+	 * @param n the node to mark.
+	 */
 	private void markNodeAsVisited(Node n) {
 		visitedNodes.add(n);
 	}
 	
+	/**
+	 * Checks a node for been visited.
+	 *
+	 * @param n the n
+	 * @return true, if successful
+	 */
 	private boolean hasBeenVisited(Node n) {
 		return visitedNodes.contains(n);
 	}
 	
+	/**
+	 * Marks a way as visited.
+	 *
+	 * @param w the way to mark
+	 */
 	private void markWayAsVisited(Way w) {
 		visitedWays.add(w);
 	}
@@ -170,7 +210,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		markWayAsVisited(w);
 	}
 
-
+	/**
+	 * Adds and classify an address node according to completeness.
+	 *
+	 * @param aNode the address node to add and check
+	 */
 	private void addAndClassifyAddress(AddressNode aNode) {
 		if (!assignAddressToStreet(aNode)) {
 			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
@@ -181,12 +225,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			shadowIncompleteAddresses.add(aNode);
 		}
 	}
-	
 
 	/**
 	 * Creates the node from an OSM way instance.
 	 *
-	 * @param w the w
+	 * @param w the way to create the entity from
 	 */
 	private void createNodeFromWay(Way w) {
 		INodeEntity ne = NodeFactory.createNodeFromWay(w);
@@ -209,7 +252,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 
 	/**
-	 * Process a entity node.
+	 * Process an entity node depending on the type. A street segment is added as a child to the
+	 * corresponding street dictionary while an address is added to the incomplete/unresolved list
+	 * depending of it's properties. 
 	 *
 	 * @param ne the entity node.
 	 * @param w the corresponding OSM way
@@ -410,12 +455,17 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 	
 	/**
-	 * Rebuilds the street and address lists. 
+	 * Rebuilds the street and address lists using the current data set. 
 	 */
 	public void invalidate() {
 		invalidate(Main.main.getCurrentDataSet().allPrimitives());
 	}
 	
+	/**
+	 * Invalidate using the given data collection.
+	 *
+	 * @param osmData the collection containing the osm data to work on.
+	 */
 	public void invalidate(final Collection<? extends OsmPrimitive> osmData) {
 		if (osmData == null || osmData.isEmpty())
 			return;
@@ -444,7 +494,10 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		}
 	}
 	
-	public void clearData() {
+	/**
+	 * Clears the shadowed lists data and resets the 'visited' flag for every OSM object.
+	 */
+	private void clearData() {
 		shadowStreetDict.clear();
 		shadowUnresolvedAddresses.clear();
 		shadowIncompleteAddresses.clear();
@@ -454,7 +507,13 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	
 	/**
 	 * Connects the listener to the data set and revisits the data. This method should
-	 * be called immediately before an edit session starts.
+	 * be called immediately after an edit session finished.
+	 * 
+	 * <code>
+	 * detachFromDataSet();
+	 * //... launch dialog or whatever
+	 * attachToDataSet();
+	 * </code>
 	 */
 	public void attachToDataSet(Collection<? extends OsmPrimitive> dataToExamine) {		
 		Main.main.getCurrentDataSet().addDataSetListener(this);
@@ -467,53 +526,84 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	
 	/**
 	 * Disconnects the listener from the data set. This method should
-	 * be called immediately after an edit session has ended.
+	 * be called immediately before an edit session started in order to 
+	 * prevent updates caused by e. g. a selection change within the map view.
 	 */
 	public void detachFromDataSet() {
 		Main.main.getCurrentDataSet().removeDataSetListener(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#dataChanged(org.openstreetmap.josm.data.osm.event.DataChangedEvent)
+	 */
 	@Override
 	public void dataChanged(DataChangedEvent event) {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#nodeMoved(org.openstreetmap.josm.data.osm.event.NodeMovedEvent)
+	 */
 	@Override
 	public void nodeMoved(NodeMovedEvent event) {
 				
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#otherDatasetChange(org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent)
+	 */
 	@Override
 	public void otherDatasetChange(AbstractDatasetChangedEvent event) {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primtivesAdded(org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent)
+	 */
 	@Override
 	public void primtivesAdded(PrimitivesAddedEvent event) {
 		invalidate();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primtivesRemoved(org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent)
+	 */
 	@Override
 	public void primtivesRemoved(PrimitivesRemovedEvent event) {
 		invalidate();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#relationMembersChanged(org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent)
+	 */
 	@Override
 	public void relationMembersChanged(RelationMembersChangedEvent event) {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#tagsChanged(org.openstreetmap.josm.data.osm.event.TagsChangedEvent)
+	 */
 	@Override
 	public void tagsChanged(TagsChangedEvent event) {
 		invalidate();		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.data.osm.event.DataSetListener#wayNodesChanged(org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent)
+	 */
 	@Override
 	public void wayNodesChanged(WayNodesChangedEvent event) {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#containerChanged(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+	 */
 	@Override
 	public void containerChanged(AddressEditContainer container) {
-		
+		invalidate();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.INodeEntity)
+	 */
 	@Override
 	public void entityChanged(INodeEntity entity) {
 		invalidate();		

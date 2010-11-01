@@ -79,6 +79,9 @@ public class GuessAddressDataAction extends AbstractAddressEditAction {
 	 * @param addrNodes
 	 */
 	private void internalGuessAddresses(List<AddressNode> nodes) {
-		Main.worker.submit(new AddressFinderThread(container, tr("Guess street names")));		
+		Main.worker.submit(new AddressFinderThread(nodes, tr("Guess street names")));
+		if (container != null) {
+			container.invalidate();
+		}
 	}
 }

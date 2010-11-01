@@ -298,6 +298,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 		updateHeaders();
 		
 		for (int i = 0; i < actions.length; i++) {
+			actions[i].setEvent(null);
 			actions[i].setContainer(container);
 		}
 	}

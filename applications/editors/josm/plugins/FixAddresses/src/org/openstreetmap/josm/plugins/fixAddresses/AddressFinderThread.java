@@ -33,7 +33,7 @@ import org.openstreetmap.josm.io.OsmTransferException;
 import org.xml.sax.SAXException;
 
 public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
-	private AddressEditContainer container;
+	private List<AddressNode> addressesToGuess;
 	private double minDist;
 	private AddressNode curAddressNode;
 	private boolean isRunning = false;
@@ -42,22 +42,22 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 	private boolean cancelled;
 	
 	/**
-	 * @param AddressEditContainer
+	 * @param nodes
 	 */
-	public AddressFinderThread(AddressEditContainer AddressEditContainer, String title) {
+	public AddressFinderThread(List<AddressNode> nodes, String title) {
 		super(title != null ? title : tr("Searching"));
-		setAddressEditContainer(AddressEditContainer);		
+		setAddressEditContainer(nodes);		
 	}
 
-	public void setAddressEditContainer(AddressEditContainer AddressEditContainer) {
+	public void setAddressEditContainer(List<AddressNode> nodes) {
 		if (isRunning) {
 			throw new ConcurrentModificationException();
 		}
-		this.container = AddressEditContainer;		
+		this.addressesToGuess = nodes;		
 	}
 
-	public AddressEditContainer getAddressEditContainer() {
-		return container;
+	public List<AddressNode> getAddressEditContainer() {
+		return addressesToGuess;
 	}
 	/**
 	 * @return the isRunning
@@ -139,7 +139,7 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 	@Override
 	protected void realRun() throws SAXException, IOException,
 			OsmTransferException {
-		if (Main.main.getCurrentDataSet() == null || container == null) return;
+		if (Main.main.getCurrentDataSet() == null || addressesToGuess == null) return;
 
 		isRunning = true;
 		cancelled = false;
@@ -147,12 +147,17 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 		progressMonitor.subTask(tr("Searching") + "...");
 		
 		try {
-			progressMonitor.setTicksCount(container.getNumberOfUnresolvedAddresses());
+			progressMonitor.setTicksCount(addressesToGuess.size());
 			
-			List<AddressNode> shadowCopy = new ArrayList<AddressNode>(container.getUnresolvedAddresses());
+			List<AddressNode> shadowCopy = new ArrayList<AddressNode>(addressesToGuess);
 			for (AddressNode aNode : shadowCopy) {					
 				minDist = Double.MAX_VALUE;
 				curAddressNode = aNode;
+				
+				if (aNode.hasStreetName()) {
+					progressMonitor.worked(1);
+					continue;
+				}
 				
 				// check for cancel
 				if (cancelled) {
@@ -179,8 +184,6 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 				// report progress
 				progressMonitor.worked(1);				
 			}
-			// request container update
-			container.invalidate();
 		} finally {
 			isRunning = false;
 		}

@@ -249,6 +249,7 @@ public class AddressNode extends NodeEntityBase {
 	public void applyGuessedStreet() {
 		if (hasGuessedStreetName()) {
 			setOSMTag(TagUtils.ADDR_STREET_TAG, guessedStreetName);
+			guessedStreetName = null;
 		}
 	}
 	

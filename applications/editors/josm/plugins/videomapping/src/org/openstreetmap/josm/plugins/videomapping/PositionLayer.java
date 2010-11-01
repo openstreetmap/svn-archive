@@ -49,7 +49,7 @@ public class PositionLayer extends Layer implements MouseListener,MouseMotionLis
         ls=copyGPSLayer(GpsLayer.data); //TODO This might be outsourced to a seperated track
         gps= new GpsPlayer(ls);
         icon = new ImageIcon("images/videomapping.png");
-        gpsTimeCode= new SimpleDateFormat("hh:mm:ss");
+        gpsTimeCode= new SimpleDateFormat("hh:mm:ss");//TODO replace with DF small
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);                          
         gpsVP = new GPSVideoPlayer(video, gps);

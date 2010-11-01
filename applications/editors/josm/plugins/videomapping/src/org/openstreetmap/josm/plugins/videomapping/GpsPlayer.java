@@ -89,17 +89,6 @@ public class GpsPlayer {
         }
     }
     
-    //walk k waypoints forward/backward
-    public void move(int k)
-    {
-
-        if ((ls.indexOf(curr)+k>0)&&(ls.indexOf(curr)<ls.size())) //check range
-        {
-            goTo(ls.get(ls.indexOf(curr)+k));
-        }
-        Main.map.mapView.repaint(); //seperate modell and view logic...
-    }
-    
     //select the k-th waypoint
     public void goTo(int k)
     {
@@ -113,30 +102,25 @@ public class GpsPlayer {
         }
     }
     
+    //walk k waypoints forward/backward
+    public void move(int k)
+    {
+
+        if ((ls.indexOf(curr)+k>0)&&(ls.indexOf(curr)<ls.size())) //check range
+        {
+            goTo(ls.get(ls.indexOf(curr)+k));
+        }
+        Main.map.mapView.repaint(); //seperate modell and view logic...
+    }
     //go to the position at the timecode e.g.g "14:00:01";
-    public void jump(Time GPSAbsTime)
+    public void jump(Date GPSAbsTime)
     {
     	Date zero=start.getTime();
-    	Time starttime = new Time(zero.getHours(),zero.getMinutes(),zero.getSeconds());
+    	Date starttime = new Date(zero.getHours(),zero.getMinutes(),zero.getSeconds());
     	long diff=GPSAbsTime.getTime()-starttime.getTime();
         goTo(getWaypoint(diff)); //TODO replace Time by Date?
     }
-    
-    /*
-    //go to the position at 
-    public void jump(Date GPSDate)
-    {
-        long s,m,h,diff;
-        //calculate which waypoint is at the offset
-        System.out.println(start.getTime());
-        System.out.println(start.getTime().getHours()+":"+start.getTime().getMinutes()+":"+start.getTime().getSeconds());
-        s=GPSDate.getSeconds()-start.getTime().getSeconds();
-        m=GPSDate.getMinutes()-start.getTime().getMinutes();
-        h=GPSDate.getHours()-start.getTime().getHours();
-        diff=s*1000+m*60*1000+h*60*60*1000; //FIXME ugly hack but nothing else works right
-        goTo(getWaypoint(diff)); 
-    }
-    */
+ 
     //gets only points on the line of the GPS track (between waypoints) nearby the point m
     private Point getInterpolated(Point m)
     {
@@ -339,14 +323,14 @@ public class GpsPlayer {
     
     //jumps to a specific time
     public void jump(long relTime) {
-        int pos = Math.round(relTime/1000);//TODO ugly quick hack   
+        int pos = Math.round(relTime/1000);//TODO assumes the time is constant
         goTo(pos);
         if (autoCenter) Main.map.mapView.zoomTo(curr.getCoor());
     }
     
     //toggles walking along the track
-    public void play()
-    { /*
+    /* public void play(){
+    
         if (t==null)
         {
             //start
@@ -369,8 +353,8 @@ public class GpsPlayer {
             ani=null;
             t.cancel();
             t=null;                 
-        }*/
-    }
+        }
+    }*/
 
     public long getLength() {
         return ls.size()*1000; //FIXME this is a poor hack

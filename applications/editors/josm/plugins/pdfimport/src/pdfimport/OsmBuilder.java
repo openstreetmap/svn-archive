@@ -19,6 +19,8 @@ import org.openstreetmap.josm.data.projection.Projection;
 
 public class OsmBuilder {
 
+	enum Mode {Draft, Final, Debug};
+
 	public Projection projection = null;
 	public double minX = 0;
 	public double maxX = 1;
@@ -30,7 +32,10 @@ public class OsmBuilder {
 	public double minNorth = 0;
 	public double maxNorth = 10000;
 
-	private final Map<String, String> stringsMap = new HashMap<String, String>();
+	private String layerName;
+	private String fillName;
+	private String lineName;
+	private Mode mode;
 
 
 	public OsmBuilder()
@@ -58,19 +63,24 @@ public class OsmBuilder {
 		return new Bounds(min, max);
 	}
 
-	public DataSet build(List<LayerContents> data, boolean full) {
+	public DataSet build(List<LayerContents> data, Mode mode) {
 
+		this.mode = mode;
 		DataSet result = new DataSet();
 
 		for (LayerContents layer: data) {
-			this.addLayer(result, layer, full);
+			this.addLayer(result, layer);
 		}
 		return result;
 	}
 
 
-	private void addLayer(DataSet target, LayerContents layer, boolean full) {
+	private void addLayer(DataSet target, LayerContents layer) {
 		Map<Point2D, Node> point2Node = new HashMap<Point2D, Node>();
+
+		this.fillName = this.printColor(layer.info.fill);
+		this.lineName = this.printColor(layer.info.stroke);
+		this.layerName = "" + layer.info.nr;
 
 		//insert nodes
 		for(Point2D pt: layer.points) {
@@ -85,7 +95,7 @@ public class OsmBuilder {
 		Map<PdfPath, Way> path2Way = new HashMap<PdfPath, Way>();
 
 		for (PdfPath path: layer.paths){
-			Way w = this.insertWay(path, point2Node, -1, full, false);
+			Way w = this.insertWay(path, point2Node, -1, false);
 			target.addPrimitive(w);
 			path2Way.put(path, w);
 		}
@@ -93,14 +103,14 @@ public class OsmBuilder {
 		int pathId = 0;
 		for (PdfMultiPath mpath: layer.multiPaths) {
 			for (PdfPath path: mpath.paths){
-				Way w = this.insertWay(path, point2Node, pathId, full, true);
+				Way w = this.insertWay(path, point2Node, pathId, true);
 				target.addPrimitive(w);
 				path2Way.put(path, w);
 			}
 			pathId ++;
 		}
 
-		if (full) {
+		if (this.mode != Mode.Draft) {
 			//insert relations
 			for (PdfMultiPath mpath: layer.multiPaths) {
 				Relation rel = new Relation();
@@ -120,7 +130,7 @@ public class OsmBuilder {
 		}
 	}
 
-	private Way insertWay(PdfPath path, Map<Point2D, Node> point2Node, int multipathId, boolean full, boolean multipolygon) {
+	private Way insertWay(PdfPath path, Map<Point2D, Node> point2Node, int multipathId, boolean multipolygon) {
 
 		List<Node> nodes = new ArrayList<Node>(path.points.size());
 
@@ -135,28 +145,37 @@ public class OsmBuilder {
 
 		Map<String, String> keys = new HashMap<String, String>();
 
-		if (full) {
+		if (this.mode != Mode.Draft) {
 			keys.put("PDF_nr", "" + path.nr);
-			keys.put("PDF_layer", this.getString("" + path.layer.info.nr));
+			keys.put("PDF_layer", this.layerName);
 
 			if (path.isClosed()){
 				keys.put("PDF_closed", "yes");
 			}
 
-			if (path.layer.info.fill){
-				keys.put("PDF_fillColor", printColor(path.layer.info.fillColor));
+			if (this.fillName != null){
+				keys.put("PDF_fillColor", this.fillName);
 			}
 
-			if (path.layer.info.stroke) {
-				keys.put("PDF_lineColor", printColor(path.layer.info.color));
+			if (this.lineName != null) {
+				keys.put("PDF_lineColor", this.lineName);
 			}
 
 			if (multipathId != -1){
 				keys.put("PDF_multipath", ""+ multipathId);
 			}
-			else if (path.layer.info.fill && !multipolygon) {
+			else if (path.layer.info.fill != null && !multipolygon) {
 				keys.put("area", "yes");
 			}
+		}
+
+		if (this.mode == Mode.Debug) {
+
+			keys.put("PDF_pathLayer", ""+path.layer.info.nr);
+			keys.put("PDF_lineWidth", ""+path.layer.info.width);
+			keys.put("PDF_lineDash", ""+path.layer.info.dash);
+			keys.put("PDF_layerHash", ""+path.layer.info.hashCode());
+			keys.put("PDF_layerDivider", ""+path.layer.info.divider);
 		}
 
 		Way newWay = new Way();
@@ -166,18 +185,18 @@ public class OsmBuilder {
 	}
 
 
-	private String getString(String string) {
-		if (this.stringsMap.containsKey(string)) {
-			return this.stringsMap.get(string);
-		} else {
-			this.stringsMap.put(string, string);
-			return string;
-		}
-	}
 
 	private String printColor(Color col){
-		String s = "#" + Integer.toHexString(col.getRGB() & 0xffffff);
-		return getString(s);
+		if (col == null){
+			return null;
+		}
+
+		String s = Integer.toHexString(col.getRGB());
+		while (s.length() < 6) {
+			s = "0" + s;
+		}
+
+		return "#" + s;
 	}
 
 

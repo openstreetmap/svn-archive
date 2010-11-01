@@ -18,6 +18,7 @@ import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -66,6 +67,7 @@ public class LoadPdfDialog extends JFrame {
 	private JButton loadFileButton;
 	private JButton showButton;
 	private JButton saveButton;
+	private JCheckBox debugModeCheck;
 
 	public LoadPdfDialog() {
 
@@ -158,11 +160,16 @@ public class LoadPdfDialog extends JFrame {
 		this.maxNorthField = new JTextField(""+this.builder.maxNorth);
 		this.getMaxButton = new JButton(tr("Take X and Y from selected node"));
 
+		this.debugModeCheck = new JCheckBox(tr("Debug info"));
+
 
 		JPanel selectFilePanel = new JPanel(new GridBagLayout());
 		selectFilePanel.setBorder(BorderFactory.createTitledBorder(tr("Load file")));
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
 		selectFilePanel.add(this.loadFileButton, c);
+
+		c.gridx = 0; c.gridy = 1; c.gridwidth = 1;
+		selectFilePanel.add(this.debugModeCheck, c);
 
 		JPanel projectionPanel = new JPanel(new GridBagLayout());
 		projectionPanel.setBorder(BorderFactory.createTitledBorder(tr("Bind to coordinates")));
@@ -207,7 +214,6 @@ public class LoadPdfDialog extends JFrame {
 		c.gridx = 0; c.gridy = 10; c.gridwidth = 1;
 		projectionPanel.add(this.getMaxButton, c);
 
-
 		JPanel okCancelPanel = new JPanel(new GridLayout(1,3));
 		okCancelPanel.add(this.cancelButton);
 		okCancelPanel.add(this.showButton);
@@ -245,8 +251,9 @@ public class LoadPdfDialog extends JFrame {
 
 					public void actionPerformed(ActionEvent e) {
 						if (data!= null) {
+							OsmBuilder.Mode mode = LoadPdfDialog.this.debugModeCheck.isSelected() ? OsmBuilder.Mode.Debug: OsmBuilder.Mode.Draft;
 							LoadPdfDialog.this.fileName = fileName.getAbsolutePath();
-							LoadPdfDialog.this.makeLayer(tr("PDF file preview"), false);
+							LoadPdfDialog.this.makeLayer(tr("PDF file preview"), mode);
 							LoadPdfDialog.this.loadFileButton.setText(tr("Loaded"));
 							LoadPdfDialog.this.loadFileButton.setEnabled(true);
 						}
@@ -263,7 +270,7 @@ public class LoadPdfDialog extends JFrame {
 		}
 
 		//rebuild layer with latest projection
-		this.makeLayer(tr("Imported PDF: ") + this.fileName, true);
+		this.makeLayer(tr("Imported PDF: ") + this.fileName, OsmBuilder.Mode.Final);
 		this.setVisible(false);
 	}
 
@@ -479,14 +486,14 @@ public class LoadPdfDialog extends JFrame {
 		return true;
 	}
 
-	private void makeLayer(String name, boolean isFinal) {
+	private void makeLayer(String name, OsmBuilder.Mode mode) {
 		this.removeLayer();
 
 		if (builder == null) {
 			return;
 		}
 
-		DataSet data = builder.build(this.data.getLayers(), isFinal);
+		DataSet data = builder.build(this.data.getLayers(), mode);
 		this.layer = new OsmDataLayer(data, name, null);
 
 		// Commit
@@ -509,7 +516,7 @@ public class LoadPdfDialog extends JFrame {
 	}
 
 	private void saveLayer(java.io.File file) {
-		DataSet data = builder.build(this.data.getLayers(), true);
+		DataSet data = builder.build(this.data.getLayers(), OsmBuilder.Mode.Final);
 		OsmDataLayer layer = new OsmDataLayer(data, file.getName(), file);
 
 		OsmExporter exporter = new OsmExporter();

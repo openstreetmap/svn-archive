@@ -3,27 +3,26 @@ package pdfimport;
 import java.awt.Color;
 
 public class LayerInfo{
+	public Color fill;
+	public Color stroke;
+	public int dash;
 	public double width;
-	public Color color;
-	public Color fillColor;
-	public boolean fill;
-	public boolean stroke;
+	public int divider;
+	public boolean isGroup;
 
 	public int nr;
-	public int divider;
-	public int dash;
 
 	@Override
 	public int hashCode()
 	{
 		int code =  Double.toString(width).hashCode() ^ this.divider ^ this.dash;
 
-		if (this.fill) {
-			code ^= this.fillColor.hashCode();
+		if (this.fill != null) {
+			code ^= this.fill.hashCode();
 		}
 
-		if (this.stroke) {
-			code ^= this.color.hashCode();
+		if (this.stroke != null) {
+			code ^= this.stroke.hashCode();
 		}
 
 		return code;
@@ -33,19 +32,17 @@ public class LayerInfo{
 	public boolean equals(Object o)
 	{
 		LayerInfo l = (LayerInfo) o;
-		boolean eq =
-			this.width == l.width &&
-			this.divider == l.divider &&
-			this.fill == l.fill &&
-			this.stroke == l.stroke &&
-			this.dash == l.dash;
+		boolean eq = this.width == l.width &&
+		this.divider == l.divider &&
+		this.dash == l.dash;
 
-		if (this.fill){
-			eq &= this.fillColor.equals(l.fillColor);
+
+		if (this.fill != null){
+			eq &= this.fill.equals(l.fill);
 		}
 
-		if (this.stroke) {
-			eq &= this.color.equals(l.color);
+		if (this.stroke != null) {
+			eq &= this.stroke.equals(l.stroke);
 		}
 
 		return eq;
@@ -53,13 +50,11 @@ public class LayerInfo{
 
 	public LayerInfo copy() {
 		LayerInfo result = new LayerInfo();
-		result.color = this.color;
-		result.fillColor = this.fillColor;
-		result.width = this.width;
-		result.divider = this.divider;
 		result.fill = this.fill;
 		result.stroke = this.stroke;
 		result.dash = this.dash;
+		result.width = this.width;
+		result.divider = this.divider;
 		return result;
 	}
 

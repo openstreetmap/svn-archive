@@ -3,6 +3,7 @@ package pdfimport;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -67,27 +68,39 @@ public class PathOptimizer {
 
 	public void optimize()
 	{
+
 		for(LayerContents layer: this.layers) {
-			this.concatenataPaths(layer);
+			this.concatenatePaths(layer);
 		}
 
 
 		List<LayerContents> newLayers = new ArrayList<LayerContents>();
-		int nr = 0;
+		/*
+		for(LayerContents l: this.layers) {
+			List<LayerContents> splitResult = splitBySimilarGroups(l);
 
+			for(LayerContents ll: splitResult) {
+				newLayers.add(ll);
+			}
+		}
+		this.layers = newLayers;
+		 */
+
+
+		newLayers = new ArrayList<LayerContents>();
 		for(LayerContents l: this.layers) {
 			List<LayerContents> splitResult = splitBySegmentKind(l);
 
 			for(LayerContents ll: splitResult) {
-				ll.info.nr = nr;
-				nr ++;
 				newLayers.add(ll);
 			}
 		}
 
 		this.layers = newLayers;
-
+		int nr = 0;
 		for(LayerContents layer: this.layers) {
+			layer.info.nr = nr;
+			nr++;
 			finalizeLayer(layer);
 		}
 	}
@@ -126,7 +139,7 @@ public class PathOptimizer {
 	 * This method merges together paths with common end nodes.
 	 * @param layer the layer to process.
 	 */
-	private void concatenataPaths(LayerContents layer) {
+	private void concatenatePaths(LayerContents layer) {
 		Map<Point2D, PdfPath> pathEndpoints = new HashMap<Point2D, PdfPath>();
 		Set<PdfPath> mergedPaths = new HashSet<PdfPath>();
 
@@ -139,7 +152,13 @@ public class PathOptimizer {
 				changed  = false;
 
 				if (pathEndpoints.containsKey(path.firstPoint())) {
+
 					PdfPath p1 = pathEndpoints.get(path.firstPoint());
+
+					if (this.isSubpathOf(p1, path)){
+						continue;
+					}
+
 					pathEndpoints.remove(p1.firstPoint());
 					pathEndpoints.remove(p1.lastPoint());
 
@@ -158,6 +177,11 @@ public class PathOptimizer {
 
 				if (pathEndpoints.containsKey(path.lastPoint())) {
 					PdfPath p1 = pathEndpoints.get(path.lastPoint());
+
+					if (this.isSubpathOf(p1, path)){
+						continue;
+					}
+
 					pathEndpoints.remove(p1.firstPoint());
 					pathEndpoints.remove(p1.lastPoint());
 
@@ -183,6 +207,25 @@ public class PathOptimizer {
 		}
 
 		layer.paths = resultPaths;
+	}
+
+	/**
+	 * Tests if sub is subpath of main.
+	 * @param main
+	 * @param sub
+	 * @return
+	 */
+	private boolean isSubpathOf(PdfPath main, PdfPath sub) {
+
+		Set<Point2D> points = new HashSet<Point2D>(main.points);
+
+		for(Point2D point: sub.points) {
+			if (!points.contains(point)){
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	private List<LayerContents> splitBySegmentKind(LayerContents layer)
@@ -231,6 +274,63 @@ public class PathOptimizer {
 		return layers;
 	}
 
+	private List<LayerContents> splitBySimilarGroups(LayerContents layer) {
+		List<List<PdfPath>> subparts = new ArrayList<List<PdfPath>>();
+
+		//split into similar parts
+		for (PdfPath path: layer.paths) {
+			List<PdfPath> sublayer = null;
+
+			for(List<PdfPath> ll: subparts){
+				if (this.pathsSimilar(ll.get(0).points, path.points))
+				{
+					sublayer = ll;
+					break;
+				}
+			}
+
+			if (sublayer == null) {
+				sublayer = new ArrayList<PdfPath>();
+				subparts.add(sublayer);
+			}
+
+			sublayer.add(path);
+		}
+
+		//get groups
+		int minGroupTreshold = 10;
+
+		List<PdfPath> independantPaths = new ArrayList<PdfPath>();
+		List<LayerContents> result = new ArrayList<LayerContents>();
+
+		for(List<PdfPath> list: subparts){
+			if (list.size() >= minGroupTreshold) {
+				LayerContents l = new LayerContents();
+				l.paths = list;
+				l.info = layer.info.copy();
+				l.info.isGroup = true;
+				l.multiPaths = Collections.EMPTY_LIST;
+				result.add(l);
+			}
+			else
+			{
+				independantPaths.addAll(list);
+			}
+		}
+
+		if (independantPaths.size() > 0 || layer.multiPaths.size() > 0) {
+			LayerContents l = new LayerContents();
+			l.paths = independantPaths;
+			l.info = layer.info.copy();
+			l.info.isGroup = false;
+			l.multiPaths = layer.multiPaths;
+			result.add(l);
+		}
+
+
+		return result;
+	}
+
 
 
 	private List<Point2D> tryMergeNodeLists(List<Point2D> nodes1, List<Point2D> nodes2) {
@@ -274,6 +374,42 @@ public class PathOptimizer {
 
 	public List<LayerContents> getLayers() {
 		return this.layers;
+	}
+
+	/**
+	 * Test if paths are different only by offset.
+	 * @return
+	 */
+	private boolean pathsSimilar(List<Point2D> path1, List<Point2D> path2) {
+		if (path1.size() != path2.size()) {
+			return false;
+		}
+
+		if (path1.size() < 3) {
+			return false;
+			//cannot judge so small paths
+		}
+
+		Point2D p1 = path1.get(0);
+		Point2D p2 = path2.get(0);
+
+		double offsetX = p1.getX() - p2.getX();
+		double offsetY = p1.getY() - p2.getY();
+		double tolerance = 1e-4;
+
+		for(int pos = 0; pos < path1.size(); pos ++) {
+			p1 = path1.get(pos);
+			p2 = path2.get(pos);
+
+			double errorX = p1.getX() - p2.getX() - offsetX;
+			double errorY = p1.getY() - p2.getY() - offsetY;
+
+			if (Math.abs(errorX) + Math.abs(errorY) > tolerance){
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

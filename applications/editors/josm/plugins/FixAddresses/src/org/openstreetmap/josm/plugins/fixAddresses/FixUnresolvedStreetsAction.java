@@ -47,11 +47,8 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 	 */
 	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-		/* this changes the dialog contents, so we do nothing here
+		/* remember new selection for actionPerformed */
 		this.newSelection = newSelection;
-		if (addressEditContainer != null) {
-			addressEditContainer.invalidate(newSelection);
-		}*/
 	}
 
 	/* (non-Javadoc)

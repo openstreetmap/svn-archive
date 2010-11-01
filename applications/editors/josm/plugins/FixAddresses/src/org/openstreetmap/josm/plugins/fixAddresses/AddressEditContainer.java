@@ -71,6 +71,7 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
 
 public class AddressEditContainer implements Visitor, DataSetListener, IAddressEditContainerListener {
 	
+	private Collection<? extends OsmPrimitive> workingSet;
 	/** The street dictionary collecting all streets to a set of unique street names. */
 	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100);
 	
@@ -103,6 +104,17 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public AddressEditContainer() {
 		NodeEntityBase.addChangedListener(this);
 	}
+
+	/**
+	 * Gets the working set used by the container. This can by either the complete or just
+	 * a subset of the current data layer.
+	 *
+	 * @return the workingSet
+	 */
+	protected Collection<? extends OsmPrimitive> getWorkingSet() {
+		return workingSet;
+	}
+
 
 	/**
 	 * Adds a change listener.
@@ -145,7 +157,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Checks a node for been visited.
 	 *
 	 * @param n the n
-	 * @return true, if successful
+	 * @return true, if node has been visited
 	 */
 	private boolean hasBeenVisited(Node n) {
 		return visitedNodes.contains(n);
@@ -160,6 +172,12 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		visitedWays.add(w);
 	}
 	
+	/**
+	 * Checks a way for been visited.
+	 *
+	 * @param w the w to check
+	 * @return true, if way has been visited
+	 */
 	private boolean hasBeenVisited(Way w) {
 		return visitedWays.contains(w);
 	}
@@ -179,18 +197,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 						
 		if (aNode != null) {
 			addAndClassifyAddress(aNode);
-		} /*else {
-			// check, if node is referred by a way
-			for (OsmPrimitive osm : n.getReferrers()) {
-				if (osm instanceof Way) {
-					Way w = (Way) osm;
-					if (!hasBeenVisited(w)) {
-						createNodeFromWay(w);
-					}
-				}
-			}
-			
-		}*/
+		} 
 		markNodeAsVisited(n);
 	}
 	
@@ -233,10 +240,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	private void createNodeFromWay(Way w) {
 		INodeEntity ne = NodeFactory.createNodeFromWay(w);
-
 		
 		if (!processNode(ne, w)) {
-
 			// Look also into nodes for addresses (unlikely, but at least they
 			// get marked as visited).
 			for (Node n : w.getNodes()) {
@@ -248,7 +253,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 					tags.add(key);
 				}
 			}
-		}
+		} // else: node has been processed, no need to look deeper
 	}
 
 	/**
@@ -455,10 +460,16 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 	
 	/**
-	 * Rebuilds the street and address lists using the current data set. 
+	 * Rebuilds the street and address lists using the data set given
+	 * in  {@link AddressEditContainer#attachToDataSet(Collection)} or the 
+	 * full data set of the current data layer {@link Main#getCurrentDataSet()}. 
 	 */
 	public void invalidate() {
-		invalidate(Main.main.getCurrentDataSet().allPrimitives());
+		if (workingSet != null) {
+			invalidate(workingSet);
+		} else {
+			invalidate(Main.main.getCurrentDataSet().allPrimitives());
+		}
 	}
 	
 	/**
@@ -506,22 +517,33 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 	
 	/**
-	 * Connects the listener to the data set and revisits the data. This method should
+	 * Connects the listener to the given data set and revisits the data. This method should
 	 * be called immediately after an edit session finished.
 	 * 
+	 * If the given data set is not null, calls of {@link AddressEditContainer#invalidate()} will
+	 * only consider the data given within this set. This can be useful to keep out unimportant
+	 * areas. However, a side-effect could be that some streets are not included and leads to
+	 * false alarms regarding unresolved addresses.
+	 * 
+	 * Calling {@link AddressEditContainer#detachFromDataSet()} drops the explicit data set and uses
+	 * the full data set on subsequent updates.<p>
+	 * 
+	 * <b>Example</b><br>
 	 * <code>
+	 * attachToDataSet(osmDataSetToWorkOn); // osmDataSetToWorkOn = selected items<br>
+	 * //... launch dialog or whatever<br>
 	 * detachFromDataSet();
-	 * //... launch dialog or whatever
-	 * attachToDataSet();
 	 * </code>
+	 *
+	 * @param osmDataToWorkOn the data to examine
 	 */
-	public void attachToDataSet(Collection<? extends OsmPrimitive> dataToExamine) {		
-		Main.main.getCurrentDataSet().addDataSetListener(this);
-		if (dataToExamine != null && dataToExamine.size() > 0) {
-			invalidate(dataToExamine); // use given data set (usually the current selection)
+	public void attachToDataSet(Collection<? extends OsmPrimitive> osmDataToWorkOn) {
+		if (osmDataToWorkOn != null && !osmDataToWorkOn.isEmpty()) {			
+			workingSet = new ArrayList<OsmPrimitive>(osmDataToWorkOn);
 		} else {
-			invalidate(); // use current data set
+			detachFromDataSet(); // drop old stuff, if present
 		}
+		invalidate(); // start our investigation...
 	}
 	
 	/**
@@ -530,7 +552,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * prevent updates caused by e. g. a selection change within the map view.
 	 */
 	public void detachFromDataSet() {
-		Main.main.getCurrentDataSet().removeDataSetListener(this);
+		//Main.main.getCurrentDataSet().removeDataSetListener(this);		
+		if (workingSet != null) {
+			workingSet.clear();
+			workingSet = null;
+		}
 	}
 
 	/* (non-Javadoc)

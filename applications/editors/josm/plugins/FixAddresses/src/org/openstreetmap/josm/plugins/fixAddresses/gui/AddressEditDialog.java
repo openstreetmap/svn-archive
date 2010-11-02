@@ -271,6 +271,17 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 					mapViewer.addMapMarker(new MapMarkerDot(Color.GREEN, node.getCoor().lat(), node.getCoor().lon()));
 				}
 			}	
+			
+			// show addresses as blue marker
+			if (sNode.hasAddresses()) {
+				for (AddressNode aNode : sNode.getAddresses()) {
+					Color markerCol = Color.BLUE;
+					if (!aNode.isComplete()) {
+						markerCol = Color.RED;
+					}
+					mapViewer.addMapMarker(new MapMarkerDot(markerCol, aNode.getCoor().lat(), aNode.getCoor().lon()));
+				}
+			}
 		} 
 		
 		List<AddressNode> unrAddresses = ev.getSelectedUnresolvedAddresses();

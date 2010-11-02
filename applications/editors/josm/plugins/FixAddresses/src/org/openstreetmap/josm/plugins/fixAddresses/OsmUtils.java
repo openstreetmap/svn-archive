@@ -17,6 +17,9 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -82,5 +85,35 @@ public class OsmUtils {
 		} else { // mid point is not closer than a or b
 			return Math.min(ac, bc);
 		}
+	}
+	
+	/**
+	 * Gets the associated street name via relation of the address node, if present.
+	 *
+	 * @param addrNode the OSM node containing the address.
+	 * @return the associated street or null, if no associated street has been found.
+	 */
+	public static String getAssociatedStreet(OsmPrimitive addrNode) {
+		if (addrNode == null) {
+			return null;
+		}
+		
+		for (OsmPrimitive osm : addrNode.getReferrers()) {
+			if (osm instanceof Relation) {
+				Relation r = (Relation) osm;
+				
+				if (!TagUtils.isAssociatedStreetRelation(r)) continue;
+				
+				for (RelationMember rm : r.getMembers()) {
+					if (TagUtils.isStreetMember(rm)) {
+						OsmPrimitive street = rm.getMember();
+						if (TagUtils.hasHighwayTag(street)) {
+							return TagUtils.getNameValue(street);
+						} // TODO: Issue a warning here
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

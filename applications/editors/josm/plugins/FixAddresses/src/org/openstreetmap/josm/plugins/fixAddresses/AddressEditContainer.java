@@ -226,10 +226,20 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		if (!assignAddressToStreet(aNode)) {
 			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
 			shadowUnresolvedAddresses.add(aNode);
+			
+			if ("BaDaubringen".equals(aNode.getCity())) {
+				@SuppressWarnings("unused")
+				int x = 0;
+			}
 		}
 
 		if (!aNode.isComplete()) {
 			shadowIncompleteAddresses.add(aNode);
+			
+			if ("BaDaubringen".equals(aNode.getCity())) {
+				@SuppressWarnings("unused")
+				int x = 0;
+			}
 		}
 	}
 
@@ -450,7 +460,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		for (AddressNode node : shadowUnresolvedAddresses) {
 			if (assignAddressToStreet(node)) {
 				resolvedAddresses.add(node);
-			}
+			} 
 		}
 		
 		/* Remove all resolves nodes from unresolved list */

@@ -21,6 +21,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressFinderThread;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.IProgressMonitorFinishedListener;
 
 /**
  * Guesses address tags by picking the closest street node with a name. The same is done (some day)
@@ -30,7 +31,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
  */
 
 @SuppressWarnings("serial")
-public class GuessAddressDataAction extends AbstractAddressEditAction {
+public class GuessAddressDataAction extends AbstractAddressEditAction implements IProgressMonitorFinishedListener {
 
 	public GuessAddressDataAction() {
 		super(tr("Guess address data"), "guessstreets_24", "Tries to guess the street name by picking the name of the closest way.");
@@ -79,7 +80,13 @@ public class GuessAddressDataAction extends AbstractAddressEditAction {
 	 * @param addrNodes
 	 */
 	private void internalGuessAddresses(List<AddressNode> nodes) {
-		Main.worker.submit(new AddressFinderThread(nodes, tr("Guess street names")));
+		AddressFinderThread aft = new AddressFinderThread(nodes, tr("Guess street names"));
+		aft.addFinishListener(this);
+		Main.worker.submit(aft);
+	}
+
+	@Override
+	public void finished() {
 		if (container != null) {
 			container.invalidate();
 		}

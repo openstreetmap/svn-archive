@@ -14,6 +14,8 @@
 package org.openstreetmap.josm.plugins.fixAddresses;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 
 /**
  * Contains the tags used within OSM. FIXME: Maybe there is a class or similar
@@ -1875,6 +1877,40 @@ public final class TagUtils {
 	public static String getEmbankmentValue(OsmPrimitive osmPrimitive) {
 		return osmPrimitive != null ? osmPrimitive.get(EMBANKMENT_TAG) : null;
 	}
+	
+	// Relation support
+	
+	/**
+	 * Check if OSM relation is a 'associatedStreet' relation.
+	 * 
+	 * @param osmPrimitive
+	 *            The OSM entity to check.
+	 */
+	public static boolean isAssociatedStreetRelation(Relation rel) {
+		return rel != null && 
+			rel.hasKey(RELATION_TYPE) && 
+			ASSOCIATEDSTREET_RELATION_TYPE.equals(rel.get(RELATION_TYPE));
+	}
+	
+	/**
+	 * Checks if given relation member has role "street".
+	 *
+	 * @param relMember the relation member
+	 * @return true, if is street member
+	 */
+	public static boolean isStreetMember(RelationMember relMember) {
+		return relMember != null && STREET_RELATION_ROLE.equals(relMember.getRole());
+	}
+	
+	/**
+	 * Checks if given relation member has role "house".
+	 *
+	 * @param relMember the relation member
+	 * @return true, if is street member
+	 */
+	public static boolean isHouseMember(RelationMember relMember) {
+		return relMember != null && STREET_RELATION_ROLE.equals(relMember.getRole());
+	}
 
 	public static final String PARKING_TAG = "parking";
 	public static final String SHOP_TAG = "shop";
@@ -1967,4 +2003,12 @@ public final class TagUtils {
 	public static final String WHITEWATER_TAG = "whitewater";
 	public static final String EMBANKMENT_TAG = "embankment";
 	public static final String ADDR_HOUSENAME_TAG = "addr:housename";
+	
+	/* Relation keys */
+	
+	// Associated street: See http://wiki.openstreetmap.org/wiki/Proposed_features/De:Hausnummern
+	public static final String RELATION_TYPE = "type";
+	public static final String ASSOCIATEDSTREET_RELATION_TYPE = "associatedStreet";
+	public static final String STREET_RELATION_ROLE = "street";
+	public static final String HOUSE_RELATION_ROLE = "house";
 }

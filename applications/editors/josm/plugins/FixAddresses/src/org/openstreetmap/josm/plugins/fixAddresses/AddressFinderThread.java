@@ -34,6 +34,7 @@ import org.xml.sax.SAXException;
 
 public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 	private List<AddressNode> addressesToGuess;
+	private List<IProgressMonitorFinishedListener> finishListeners = new ArrayList<IProgressMonitorFinishedListener>();
 	private double minDist;
 	private AddressNode curAddressNode;
 	private boolean isRunning = false;
@@ -56,7 +57,7 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 		this.addressesToGuess = nodes;		
 	}
 
-	public List<AddressNode> getAddressEditContainer() {
+	public List<AddressNode> getAddressesToGuess() {
 		return addressesToGuess;
 	}
 	/**
@@ -64,6 +65,32 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 	 */
 	public boolean isRunning() {
 		return isRunning;
+	}
+	
+	/**
+	 * Adds a finish listener.
+	 *
+	 * @param l the listener to add
+	 */
+	public void addFinishListener(IProgressMonitorFinishedListener l) {
+		finishListeners.add(l);
+	}
+	
+	/**
+	 * Removes a finish listener.
+	 *
+	 * @param l the listener to remove
+	 */
+	public void removeFinishListener(IProgressMonitorFinishedListener l) {
+		finishListeners.remove(l);
+	}
+
+	protected void fireFinished() {
+		for (IProgressMonitorFinishedListener l : finishListeners) {
+			l.finished();
+		}
+		// this event is fired only once, then we disconnect all listeners
+		finishListeners.clear();
 	}
 
 	/* (non-Javadoc)
@@ -172,6 +199,8 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 				if (cancelled) {
 					break;
 				}
+				
+				progressMonitor.subTask(tr("Guess values for ") + aNode);
 
 				// visit osm data
 				for (OsmPrimitive osmPrimitive : Main.main.getCurrentDataSet().getWays()) {
@@ -185,19 +214,12 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 					}
 				}
 				
-				// we found something
-				if (nearestName != null) {
-					progressMonitor.subTask(String.format("%s: %s (%4.1f m)", tr("Guess"), nearestName, minDist));
-					aNode.setGuessedStreetName(nearestName);
-					nearestName = null;
-				} else {
-					System.out.println("Did not find a street for " + aNode);
-				}
 				// report progress
 				progressMonitor.worked(1);				
 			}
 		} finally {
 			isRunning = false;
+			fireFinished();
 		}
 	}
 	
@@ -226,9 +248,6 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 				if (dist < minDist && dist < getMaxDistance()) {
 					minDist = dist;
 					currentValue = TagUtils.getNameValue(w);				
-					
-					System.out.println(String.format("New guess (way) for tag %s (%4.2f m): %s (%s)", 
-							getTag(), minDist, currentValue, aNode.toString()));
 					aNode.setGuessedValue(getTag(), currentValue);
 				}
 			}

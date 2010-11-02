@@ -20,7 +20,10 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 public class AddressNode extends NodeEntityBase {
 	public static final String MISSING_TAG = "?";
 	
+	/** The dictionary containing guessed values. */
 	private HashMap<String, String> guessedValues = new HashMap<String, String>();
+	/** The dictionary containing indirect values. */
+	private HashMap<String, String> derivedValues = new HashMap<String, String>();
 
 	public AddressNode(OsmPrimitive osmObject) {
 		super(osmObject);
@@ -32,6 +35,11 @@ public class AddressNode extends NodeEntityBase {
 	@Override
 	public void setOsmObject(OsmPrimitive osmObject) {
 		super.setOsmObject(osmObject);
+		
+		String streetNameViaRel = OsmUtils.getAssociatedStreet(this.osmObject);
+		if (!StringUtils.isNullOrEmpty(streetNameViaRel)) {
+			setDerivedValue(TagUtils.ADDR_STREET_TAG, streetNameViaRel);
+		}
 	}
 	
 	/**
@@ -41,7 +49,8 @@ public class AddressNode extends NodeEntityBase {
 	public boolean isComplete() {
 		return 	TagUtils.hasAddrCityTag(osmObject) && TagUtils.hasAddrCountryTag(osmObject) &&
 				TagUtils.hasAddrHousenumberTag(osmObject) && TagUtils.hasAddrPostcodeTag(osmObject) &&
-				TagUtils.hasAddrStateTag(osmObject) && TagUtils.hasAddrStreetTag(osmObject);
+				TagUtils.hasAddrStateTag(osmObject) && 
+				(TagUtils.hasAddrStreetTag(osmObject) || hasDerivedValue(TagUtils.ADDR_STREET_TAG));
 	}
 	
 	/**
@@ -63,28 +72,20 @@ public class AddressNode extends NodeEntityBase {
 		if (StringUtils.isNullOrEmpty(tag)) return MISSING_TAG;
 		if (osmObject == null) return MISSING_TAG;
 		
-		if (!osmObject.hasKey(tag)) {
-			// object does not have this tag -> check for guess
-			if (hasGuessedValue(tag)) {
-				return "*" + getGuessedValue(tag);
-			} else {
-				// give up
-				return MISSING_TAG;
-			}
-		} else { // get existing tag value
-			String val = osmObject.get(tag);			
-			if (StringUtils.isNullOrEmpty(val)) {
-				// empty value -> check for guess
+		if (!osmObject.hasKey(tag) || StringUtils.isNullOrEmpty(osmObject.get(tag))) {
+			if (!hasDerivedValue(tag)) {
+				// object does not have this tag -> check for guess
 				if (hasGuessedValue(tag)) {
 					return "*" + getGuessedValue(tag);
 				} else {
-					// tag is empty and no guess available -> give up
+					// give up
 					return MISSING_TAG;
 				}
-			} else {
-				// ok, return existing tag value
-				return val;
+			} else { // ok, use derived value known via associated relation or way 
+				return getDerivedValue(tag);
 			}
+		} else { // get existing tag value
+			return osmObject.get(tag);			
 		}
 	}
 	
@@ -373,6 +374,39 @@ public class AddressNode extends NodeEntityBase {
 	public void setGuessedValue(String tag, String value) {
 		guessedValues.put(tag, value);
 	}
+	
+	/**
+	 * Checks if given tag has a derived value (value is available via a referrer).
+	 *
+	 * @param tag the tag
+	 * @return true, if tag has a derived value.
+	 */
+	private boolean hasDerivedValue(String tag) {
+		return derivedValues.containsKey(tag) && 
+			!StringUtils.isNullOrEmpty(derivedValues.get(tag));
+	}
+	
+	/**
+	 * Gets the derived value for the given tag.
+	 * @param tag The tag to get the derived value for.
+	 * @return
+	 */
+	public String getDerivedValue(String tag) {
+		if (!hasDerivedValue(tag)) {
+			return null;			
+		}
+		return derivedValues.get(tag);
+	}
+		
+	/**
+	 * Sets the value known indirectly via a referrer with the given tag.
+	 *
+	 * @param tag the tag to set the derived value for
+	 * @param value the value of the derived tag.
+	 */
+	public void setDerivedValue(String tag, String value) {
+		derivedValues.put(tag, value);
+	}	
 	
 	/**
 	 * Sets the street name of the address node.

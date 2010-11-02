@@ -15,12 +15,16 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IProgressMonitorFinishedListener;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 
-public class IncompleteAddressesTableModel extends AddressEditTableModel {
+public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	/**
 	 * 
 	 */
@@ -30,6 +34,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 	private static final String[] COLUMN_NAMES = new String[]{tr("Country"), tr("State"), tr("City"), tr("Post Code"), tr("Street")}; 
 	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
 		String.class, String.class, String.class, String.class, String.class};
+	
 	
 	/**
 	 * @param addressContainer
@@ -75,13 +80,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 		case 3:
 			return aNode.getPostCode();
 		case 4:
-			if (!StringUtils.isNullOrEmpty(aNode.getGuessedStreetName()) && 
-					AddressNode.MISSING_TAG.equals(aNode.getStreetName())) {
-				
-				return "(" + aNode.getGuessedStreetName() + ")";
-			} else {
-				return aNode.getStreetName();
-			}
+			aNode.getStreetName();			
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}

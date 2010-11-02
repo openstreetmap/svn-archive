@@ -149,12 +149,21 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 		try {
 			progressMonitor.setTicksCount(addressesToGuess.size());
 			
+			
+			
 			List<AddressNode> shadowCopy = new ArrayList<AddressNode>(addressesToGuess);
 			for (AddressNode aNode : shadowCopy) {					
 				minDist = Double.MAX_VALUE;
 				curAddressNode = aNode;
 				
-				if (aNode.hasStreetName()) {
+				// setup guessing handlers for address tags
+				GuessedValueHandler[] guessers = new GuessedValueHandler[]{
+						new GuessStreetValueHandler(TagUtils.ADDR_STREET_TAG, aNode),
+						new GuessedValueHandler(TagUtils.ADDR_POSTCODE_TAG, aNode, 500.0),
+						new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, aNode, 2000.0)
+				};
+				
+				if (!aNode.needsGuess()) { // nothing to do 
 					progressMonitor.worked(1);
 					continue;
 				}
@@ -169,8 +178,11 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 					if (cancelled) {
 						break;
 					}
-					osmPrimitive.visit(this);
-
+					
+					// guess values 
+					for (int i = 0; i < guessers.length; i++) {
+						osmPrimitive.visit(guessers[i]);
+					}
 				}
 				
 				// we found something
@@ -186,6 +198,40 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 			}
 		} finally {
 			isRunning = false;
+		}
+	}
+	
+	private class GuessStreetValueHandler extends GuessedValueHandler {
+
+		public GuessStreetValueHandler(String tag, AddressNode aNode) {
+			super(tag, aNode);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.openstreetmap.josm.plugins.fixAddresses.GuessedValueHandler#visit(org.openstreetmap.josm.data.osm.Node)
+		 */
+		@Override
+		public void visit(Node n) {
+			// do nothing
+		}
+
+		/* (non-Javadoc)
+		 * @see org.openstreetmap.josm.plugins.fixAddresses.GuessedValueHandler#visit(org.openstreetmap.josm.data.osm.Way)
+		 */
+		@Override
+		public void visit(Way w) {			
+			if (TagUtils.hasHighwayTag(w)) {
+				AddressNode aNode = getAddressNode();
+				double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
+				if (dist < minDist && dist < getMaxDistance()) {
+					minDist = dist;
+					currentValue = TagUtils.getNameValue(w);				
+					
+					System.out.println(String.format("New guess (way) for tag %s (%4.2f m): %s (%s)", 
+							getTag(), minDist, currentValue, aNode.toString()));
+					aNode.setGuessedValue(getTag(), currentValue);
+				}
+			}
 		}
 	}
 }

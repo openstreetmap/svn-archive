@@ -23,6 +23,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  * 
  */
 public final class TagUtils {
+	
 	/**
 	 * Checks if the given OSM primitive is an address node.
 	 * @return
@@ -1073,6 +1074,28 @@ public final class TagUtils {
 		return osmPrimitive != null ? osmPrimitive.get(ADDR_HOUSENUMBER_TAG)
 				: null;
 	}
+	
+	/**
+	 * Check if OSM primitive has a tag 'addr:housename'.
+	 * 
+	 * @param osmPrimitive
+	 *            The OSM entity to check.
+	 */
+	public static boolean hasAddrHousenameTag(OsmPrimitive osmPrimitive) {
+		return osmPrimitive != null ? osmPrimitive.hasKey(ADDR_HOUSENAME_TAG)
+				: false;
+	}
+
+	/**
+	 * Gets the value of tag 'addr:housename'.
+	 * 
+	 * @param osmPrimitive
+	 *            The OSM entity to check.
+	 */
+	public static String getAddrHousenameValue(OsmPrimitive osmPrimitive) {
+		return osmPrimitive != null ? osmPrimitive.get(ADDR_HOUSENAME_TAG)
+				: null;
+	}
 
 	/**
 	 * Check if OSM primitive has a tag 'area'.
@@ -1943,4 +1966,5 @@ public final class TagUtils {
 	public static final String MOTORCAR_TAG = "motorcar";
 	public static final String WHITEWATER_TAG = "whitewater";
 	public static final String EMBANKMENT_TAG = "embankment";
+	public static final String ADDR_HOUSENAME_TAG = "addr:housename";
 }

@@ -33,6 +33,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
+import org.openstreetmap.josm.plugins.fixAddresses.TagUtils;
 
 /**
  * Provides a table model to show unresolved addresses.
@@ -101,13 +103,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		
 		switch (column) {
 		case 0:
-			String guessed = aNode.getGuessedStreetName();
-			String cur = aNode.getStreetName();
-			if (aNode.hasGuessedStreetName() && AddressNode.MISSING_TAG.equals(cur)) {				
-				return "*" + guessed;
-			} else {
-				return aNode.getStreetName();
-			}
+			return aNode.getStreetName();
 		case 1:
 			return aNode.getHouseNumber();
 		case 2:
@@ -115,7 +111,12 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		case 3:
 			return aNode.getPostCode();
 		case 4:
-			return aNode.getName();			
+			String name = aNode.getName();
+			if (!StringUtils.isNullOrEmpty(name)) {
+				// TODO: Provide a getter/setter for this?
+				return TagUtils.getAddrHousenameValue(aNode.getOsmObject());
+			}
+			return "";
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}

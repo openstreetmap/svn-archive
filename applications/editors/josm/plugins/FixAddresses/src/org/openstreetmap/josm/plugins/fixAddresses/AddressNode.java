@@ -13,12 +13,14 @@
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
 
+import java.util.HashMap;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class AddressNode extends NodeEntityBase {
 	public static final String MISSING_TAG = "?";
 	
-	private String guessedStreetName;
+	private HashMap<String, String> guessedValues = new HashMap<String, String>();
 
 	public AddressNode(OsmPrimitive osmObject) {
 		super(osmObject);
@@ -47,29 +49,41 @@ public class AddressNode extends NodeEntityBase {
 	 * @return
 	 */
 	public String getStreetName() {
+		return getTagValueWithGuess(TagUtils.ADDR_STREET_TAG);
+	}
+	
+	/**
+	 * Gets the tag value with guess. If the object does not have the given tag, this mehtod looks for
+	 * an appropriate guess. If both, real value and guess, are missing, a question mark is returned.
+	 *
+	 * @param tag the tag
+	 * @return the tag value with guess
+	 */
+	private String getTagValueWithGuess(String tag) {
+		if (StringUtils.isNullOrEmpty(tag)) return MISSING_TAG;
 		if (osmObject == null) return MISSING_TAG;
-		/*
-		if (!TagUtils.hasAddrStreetTag(osmObject)) {
-			// check, if referrers have a street
-			for (OsmPrimitive osm : osmObject.getReferrers()) {
-				if (TagUtils.hasAddrStreetTag(osm)) {
-					String refStreetName = TagUtils.getAddrStreetValue(osm);
-				
-					if (!StringUtils.isNullOrEmpty(refStreetName)) {
-						return refStreetName;
-					}
-				}
-			}
-			return MISSING_TAG; // nothing found
-		}*/
-		if (!TagUtils.hasAddrStreetTag(osmObject)) {
-			return MISSING_TAG;
-		} else {
-			String sName = TagUtils.getAddrStreetValue(osmObject);
-			if (!StringUtils.isNullOrEmpty(sName)) {
-				return sName;
+		
+		if (!osmObject.hasKey(tag)) {
+			// object does not have this tag -> check for guess
+			if (hasGuessedValue(tag)) {
+				return "*" + getGuessedValue(tag);
 			} else {
+				// give up
 				return MISSING_TAG;
+			}
+		} else { // get existing tag value
+			String val = osmObject.get(tag);			
+			if (StringUtils.isNullOrEmpty(val)) {
+				// empty value -> check for guess
+				if (hasGuessedValue(tag)) {
+					return "*" + getGuessedValue(tag);
+				} else {
+					// tag is empty and no guess available -> give up
+					return MISSING_TAG;
+				}
+			} else {
+				// ok, return existing tag value
+				return val;
 			}
 		}
 	}
@@ -87,34 +101,89 @@ public class AddressNode extends NodeEntityBase {
 	 * @return the guessedStreetName
 	 */
 	public String getGuessedStreetName() {
-		return guessedStreetName;
+		return getGuessedValue(TagUtils.ADDR_STREET_TAG);
 	}
 
 	/**
 	 * @param guessedStreetName the guessedStreetName to set
 	 */
 	public void setGuessedStreetName(String guessedStreetName) {
-		this.guessedStreetName = guessedStreetName;
-		//fireEntityChanged(this);
+		setGuessedValue(TagUtils.ADDR_STREET_TAG, guessedStreetName);
 	}
 	
+	/**
+	 * Checks for a guessed street name.
+	 *
+	 * @return true, if this instance has a guessed street name.
+	 */
 	public boolean hasGuessedStreetName() {
-		return !StringUtils.isNullOrEmpty(guessedStreetName);
+		return hasGuessedValue(TagUtils.ADDR_STREET_TAG);
 	}
 	
+	/**
+	 * @return the guessedPostCode
+	 */
+	public String getGuessedPostCode() {
+		return getGuessedValue(TagUtils.ADDR_POSTCODE_TAG);
+	}
+
+	/**
+	 * @param guessedPostCode the guessedPostCode to set
+	 */
+	public void setGuessedPostCode(String guessedPostCode) {
+		setGuessedValue(TagUtils.ADDR_POSTCODE_TAG, guessedPostCode);
+	}
+	
+	/**
+	 * Checks for a guessed post code.
+	 *
+	 * @return true, if this instance has a guessed post code.
+	 */
+	public boolean hasGuessedPostCode() {
+		return hasGuessedValue(TagUtils.ADDR_POSTCODE_TAG);
+	}
+
+	/**
+	 * @return the guessedCity
+	 */
+	public String getGuessedCity() {
+		return getGuessedValue(TagUtils.ADDR_CITY_TAG);
+	}
+
+	/**
+	 * @param guessedCity the guessedCity to set
+	 */
+	public void setGuessedCity(String guessedCity) {
+		setGuessedValue(TagUtils.ADDR_CITY_TAG, guessedCity);
+	}
+
+	/**
+	 * Checks for a guessed city name.
+	 *
+	 * @return true, if this instance has a guessed city name.
+	 */
+	public boolean hasGuessedCity() {
+		return hasGuessedValue(TagUtils.ADDR_CITY_TAG);
+	}
+
 	/**
 	 * Returns true, if this instance has guesses regarding address tags.
 	 * @return
 	 */
 	public boolean hasGuesses() {
-		return hasGuessedStreetName(); // to be extended later
+		return guessedValues.size() > 0; 
 	}
 	
 	/**
 	 * Applies all guessed tags for this node.
 	 */
 	public void applyAllGuesses() {
-		if (hasGuessedStreetName()) applyGuessedStreet();
+		for (String tag : guessedValues.keySet()) {
+			String val = guessedValues.get(tag);
+			if (!StringUtils.isNullOrEmpty(val)) {
+				setOSMTag(tag, val);
+			}
+		}
 	}
 
 	/**
@@ -122,10 +191,16 @@ public class AddressNode extends NodeEntityBase {
 	 * @return
 	 */
 	public String getPostCode() {
-		if (!TagUtils.hasAddrPostcodeTag(osmObject)) {
-			return MISSING_TAG;
-		}
-		return TagUtils.getAddrPostcodeValue(osmObject);
+		return getTagValueWithGuess(TagUtils.ADDR_POSTCODE_TAG);
+	}
+	
+	/**
+	 * Checks for post code tag.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean hasPostCode() {
+		return TagUtils.hasAddrPostcodeTag(osmObject);
 	}
 	
 	/**
@@ -144,10 +219,16 @@ public class AddressNode extends NodeEntityBase {
 	 * @return
 	 */
 	public String getCity() {
-		if (!TagUtils.hasAddrCityTag(osmObject)) {
-			return MISSING_TAG;
-		}
-		return TagUtils.getAddrCityValue(osmObject);
+		return getTagValueWithGuess(TagUtils.ADDR_CITY_TAG);
+	}
+	
+	/**
+	 * Checks for city tag.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean hasCity() {
+		return TagUtils.hasAddrCityTag(osmObject);
 	}
 	
 	/**
@@ -244,13 +325,53 @@ public class AddressNode extends NodeEntityBase {
 	}
 	
 	/**
-	 * Applies the guessed street name to the addr:street tag value.
+	 * Gets the guessed value for the given tag.
+	 * @param tag The tag to get the guessed value for.
+	 * @return
 	 */
-	public void applyGuessedStreet() {
-		if (hasGuessedStreetName()) {
-			setOSMTag(TagUtils.ADDR_STREET_TAG, guessedStreetName);
-			guessedStreetName = null;
+	public String getGuessedValue(String tag) {
+		if (!hasGuessedValue(tag)) {
+			return null;			
 		}
+		return guessedValues.get(tag);
+	}
+	
+	/**
+	 * Check if this instance needs guessed values. This is the case, if the underlying OSM node
+	 * has either no street name, post code or city.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean needsGuess() {
+		return !hasStreetName() || !hasCity() || !hasPostCode();
+	}
+	
+	/**
+	 * Clears all guessed values.
+	 */
+	public void clearAllGuesses() {
+		guessedValues.clear();
+	}
+	
+	/**
+	 * Checks if given tag has a guessed value (tag exists and has a non-empty value).
+	 *
+	 * @param tag the tag
+	 * @return true, if tag has a guessed value.
+	 */
+	private boolean hasGuessedValue(String tag) {
+		return guessedValues.containsKey(tag) && 
+			!StringUtils.isNullOrEmpty(guessedValues.get(tag));
+	}
+	
+	/**
+	 * Sets the guessed value with the given tag.
+	 *
+	 * @param tag the tag to set the guess for
+	 * @param value the value of the guessed tag.
+	 */
+	public void setGuessedValue(String tag, String value) {
+		guessedValues.put(tag, value);
 	}
 	
 	/**

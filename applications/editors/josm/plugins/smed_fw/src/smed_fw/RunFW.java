@@ -16,6 +16,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 
+import smed_fw.io.JARFileFilter;
+
 public class RunFW implements BundleActivator{
 	
 	private BundleContext context;
@@ -30,7 +32,7 @@ public class RunFW implements BundleActivator{
 
 	
 		File pluginDir = Main.pref.getPluginsDirectory();
-        pluginDirName = pluginDir.getAbsolutePath();
+		pluginDirName = pluginDir.getAbsolutePath()+ "/";
 		
         
         
@@ -59,9 +61,19 @@ public class RunFW implements BundleActivator{
 	@Override
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
-		// Bundle b = context.installBundle("file:" + pluginDirName + "/bundle/de.vogella.felix.firstbundle_1.0.0.201010271606.jar");
-		Bundle b = context.installBundle("file:" + pluginDirName + "/bundle/de.vogella.felix.firstbundle_1.0.0.201010271606.jar");
-		b.start();
+		Bundle b = null;
+		// Bundle b = context.installBundle("file:" + pluginDirName + "bundle/de.vogella.felix.firstbundle_1.0.0.201010271606.jar");
+		// Bundle b = context.installBundle("file:" + pluginDirName + "bundle/de.vogella.felix.firstbundle_1.0.0.201010271606.jar");
+		// b.start();
+		File plugDir = new File(pluginDirName + SmedFW.FW_BUNDLE_LOCATION);
+		
+		File[] plugins = plugDir.listFiles(new JARFileFilter());
+		if(plugins != null) {
+			for(File p : plugins) {
+				b = context.installBundle("file:" + p.getAbsolutePath());
+				b.start();
+			}
+		}
 	}
 
 	@Override

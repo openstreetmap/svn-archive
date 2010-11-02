@@ -5,7 +5,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -31,6 +33,10 @@ public class SmedFW extends Plugin {
         BufferedInputStream inp = null;
         byte[] buffer = new byte[16384];
         int len;
+        List<String> lib = new ArrayList<String>();
+        
+        lib.add("org.apache.felix.scr-1.4.0.jar");
+        lib.add("osgi.cmpn-4.2.1.jar");
 
         String eName = null;
 		String pluginDirName = Main.pref.getPluginsDirectory().getAbsolutePath() + "/";
@@ -63,7 +69,7 @@ public class SmedFW extends Plugin {
                 		pfos = new FileOutputStream(pluginDirName + FW_BUNDLE_LOCATION + "/" + eName);
                 		fwFound = false;
                 	}
-                	if(fwFound || fwplugDir.needUpdate(jars,eName)) {
+                	if(fwFound || lib.contains(eName)|| fwplugDir.needUpdate(jars,eName)) {
                 		BufferedOutputStream pos = new BufferedOutputStream(pfos);
                 		inp = new BufferedInputStream(file.getInputStream( e ));
 

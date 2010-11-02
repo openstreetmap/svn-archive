@@ -102,11 +102,11 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		switch (column) {
 		case 0:
 			String guessed = aNode.getGuessedStreetName();
-			String cur = aNode.getStreet();
+			String cur = aNode.getStreetName();
 			if (aNode.hasGuessedStreetName() && AddressNode.MISSING_TAG.equals(cur)) {				
 				return "*" + guessed;
 			} else {
-				return aNode.getStreet();
+				return aNode.getStreetName();
 			}
 		case 1:
 			return aNode.getHouseNumber();

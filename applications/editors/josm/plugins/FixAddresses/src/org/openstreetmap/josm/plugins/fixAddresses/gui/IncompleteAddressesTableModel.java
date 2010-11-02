@@ -76,11 +76,11 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel {
 			return aNode.getPostCode();
 		case 4:
 			if (!StringUtils.isNullOrEmpty(aNode.getGuessedStreetName()) && 
-					AddressNode.MISSING_TAG.equals(aNode.getStreet())) {
+					AddressNode.MISSING_TAG.equals(aNode.getStreetName())) {
 				
 				return "(" + aNode.getGuessedStreetName() + ")";
 			} else {
-				return aNode.getStreet();
+				return aNode.getStreetName();
 			}
 		default:
 			throw new RuntimeException("Invalid column index: " + column);

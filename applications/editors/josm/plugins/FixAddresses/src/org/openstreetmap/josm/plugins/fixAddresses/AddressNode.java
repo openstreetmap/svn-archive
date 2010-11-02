@@ -46,7 +46,7 @@ public class AddressNode extends NodeEntityBase {
 	 * Gets the name of the street associated with this address.
 	 * @return
 	 */
-	public String getStreet() {
+	public String getStreetName() {
 		if (osmObject == null) return MISSING_TAG;
 		/*
 		if (!TagUtils.hasAddrStreetTag(osmObject)) {
@@ -201,12 +201,12 @@ public class AddressNode extends NodeEntityBase {
 			if (cc  == 0) {
 				cc = this.getCity().compareTo(other.getCity());				
 				if (cc  == 0) {
-					cc = this.getStreet().compareTo(other.getStreet());					
+					cc = this.getStreetName().compareTo(other.getStreetName());					
 					if (cc  == 0) {
 						if (hasGuessedStreetName()) {							
 							if (other.hasStreetName()) {
 								// Compare guessed name with the real name
-								cc = this.getGuessedStreetName().compareTo(other.getStreet());
+								cc = this.getGuessedStreetName().compareTo(other.getStreetName());
 								if (cc == 0) {
 									cc = this.getHouseNumber().compareTo(other.getHouseNumber());
 								}
@@ -236,7 +236,7 @@ public class AddressNode extends NodeEntityBase {
 	public void assignStreet(StreetNode node) {
 		if (node == null || !node.hasName()) return;
 		
-		if (!node.getName().equals(getStreet())) {
+		if (!node.getName().equals(getStreetName())) {
 			setStreetName(node.getName());			
 			node.addAddress(this);
 			fireEntityChanged(this);
@@ -303,7 +303,7 @@ public class AddressNode extends NodeEntityBase {
 		// TODO: Add further countries here
 		// DE
 		String guessed = node.getGuessedStreetName();
-		String sName = node.getStreet();
+		String sName = node.getStreetName();
 		if (!StringUtils.isNullOrEmpty(guessed) && MISSING_TAG.equals(sName)) {
 			sName = String.format("(%s)", guessed);
 		}	

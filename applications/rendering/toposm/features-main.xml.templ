@@ -1172,6 +1172,41 @@ Canals and ditches (CanalDitch) (336xx)
   </Rule>
 </Style>
 
+<Style name="power-lines">
+    <Rule>
+        &minz12; &maxz12;
+        <Filter>[power] = 'line'</Filter>
+        <LineSymbolizer>
+            <CssParameter name="stroke">black</CssParameter>
+            <CssParameter name="stroke-width">0.35</CssParameter>
+        </LineSymbolizer>
+    </Rule>
+    <Rule>
+        &minz13; &maxz13;
+        <Filter>[power] = 'line'</Filter>
+        <LineSymbolizer>
+            <CssParameter name="stroke">black</CssParameter>
+            <CssParameter name="stroke-width">0.5</CssParameter>
+        </LineSymbolizer>
+    </Rule>
+    <Rule>
+        &minz14; &maxz14;
+        <Filter>[power] = 'line'</Filter>
+        <LineSymbolizer>
+            <CssParameter name="stroke">black</CssParameter>
+            <CssParameter name="stroke-width">0.7</CssParameter>
+        </LineSymbolizer>
+    </Rule>
+    <Rule>
+        &minz15;
+        <Filter>[power] = 'line'</Filter>
+        <LineSymbolizer>
+            <CssParameter name="stroke">black</CssParameter>
+            <CssParameter name="stroke-width">1.0</CssParameter>
+        </LineSymbolizer>
+    </Rule>
+</Style>
+
 <!-- NOTE: wide fills around borders are in the area tile -->
 
 <Style name="county-borders">
@@ -1271,6 +1306,26 @@ Canals and ditches (CanalDitch) (336xx)
 	  &minz13;
       <Filter>[natural]='peak'</Filter>
       <PointSymbolizer file="&customsymbolsdir;/peak.png" type="png" width="6" height="5" />
+    </Rule>
+    <Rule>
+        &minz12; &maxz12;
+        <Filter>[power] = 'tower'</Filter>
+        <PointSymbolizer file="&customsymbolsdir;/power-tower-3px.png" type="png" allow_overlap="true"/>
+    </Rule>
+    <Rule>
+        &minz13; &maxz13;
+        <Filter>[power] = 'tower'</Filter>
+        <PointSymbolizer file="&customsymbolsdir;/power-tower-4px.png" type="png" allow_overlap="true"/>
+    </Rule>        
+    <Rule>
+        &minz14; &maxz14;
+        <Filter>[power] = 'tower'</Filter>
+        <PointSymbolizer file="&customsymbolsdir;/power-tower-5px.png" type="png" allow_overlap="true"/>
+    </Rule>
+    <Rule>
+        &minz15;
+        <Filter>[power] = 'tower'</Filter>
+        <PointSymbolizer file="&customsymbolsdir;/power-tower-6px.png" type="png" allow_overlap="true"/>
     </Rule>
 </Style>
 
@@ -1454,6 +1509,18 @@ Canals and ditches (CanalDitch) (336xx)
       </Parameter>
     </Datasource>
 </Layer>
+
+<Layer name="power-lines" status="on">
+    <StyleName>power-lines</StyleName>
+    <Datasource>
+        &dbsettings;
+        &extents;
+        <Parameter name="table">
+            (select way, power from ${DB_PREFIX}_line where power is not null) as power
+        </Parameter>
+    </Datasource>
+</Layer>
+
 
 <!--
 <Layer name="lines" status="on">

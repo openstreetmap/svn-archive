@@ -240,7 +240,7 @@ class RenderThread:
             if allFinalTopoSubtilesExist(z, x, y):
                 self.print_message('Topo exist at %d %d %d.' % (z, x, y))
             else:
-                if z == self.maxz:
+                if z == self.maxz or not allConstituentTopoSubtilesExist(z, x, y):
                     self.render_topo_tiles(z, x, y)
                     self.combine_topo_tiles(z, x, y)
                 else:
@@ -276,6 +276,10 @@ def allSubtilesExist(mapname, z, fromx, tox, fromy, toy, suffix = ".png"):
             if not subtileExists(mapname, z, x, y, suffix):
                 return False
     return True
+    
+def allConstituentTopoSubtilesExist(z, x, y):
+    ntiles = NTILES[z]
+    return allSubtilesExist('color-relief', z+1, 2*x, 2*(x+ntiles)-1, 2*y, 2*(y+ntiles)-1, '.jpg')
 
 def allFinalTopoSubtilesExist(z, x, y):
     ntiles = NTILES[z]
@@ -641,8 +645,15 @@ def render_tiles(envLL, minz, maxz):
         ntiles = NTILES[z]
         (fromx, fromy) = get_tile_from_ll(envLL.maxy, envLL.minx, z)
         (tox, toy) = get_tile_from_ll(envLL.miny, envLL.maxx, z)
-        for x in range(fromx, tox+1, ntiles):
-            for y in range(fromy, toy+1, ntiles):
+        
+        # Phil Gold: This causes all metatiles to be aligned to multiples of
+        # their zoom levels' NTILES value.  This lets me run renders with
+        # different windows into the same set of directories while reusing as
+        # much of the previous renders' work as possible.  It also lets me
+        # easily expire metatiles, since I always know which metatiles
+        # correspond to expired tiles.
+        for x in range(fromx - fromx%ntiles, tox+1, ntiles):
+            for y in range(fromy - fromy%ntiles, toy+1, ntiles):
                 queue.put(('render', z, x, y))
         # Join threads after each completed level, because
         # the color-relief layer of a lower zoom level depends

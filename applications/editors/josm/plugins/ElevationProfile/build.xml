@@ -95,7 +95,7 @@
             <manifest>
                 <attribute name="Author" value="Oliver Wieland"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.elevation.ElevationProfilePlugin"/>
-                <attribute name="Plugin-Date" value="01.11.10"/>
+                <attribute name="Plugin-Date" value="02.11.10"/>
                 <attribute name="Plugin-Description" value="Shows the elevation profile and some statistical data of a GPX track."/>
             	<attribute name="de_Plugin-Description" value="Zeigt das Höhenprofil und statistische Werte eines GPX-Tracks."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile"/>

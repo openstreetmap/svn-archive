@@ -125,7 +125,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 		if (n == 0)
 			return;
 
-		start = new Date();
+		start = new Date();		
 		end = new Date(0L);
 		this.minHeight = Integer.MAX_VALUE;
 		this.maxHeight = Integer.MIN_VALUE;
@@ -135,6 +135,20 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 		
 		for (WayPoint wayPoint : this.wayPoints) {
 			visit(wayPoint);
+		}
+		
+		if (this.minHeight == Integer.MAX_VALUE && this.maxHeight == Integer.MIN_VALUE) {
+			// file does not contain elevation data	at all
+			minHeight = 0;
+			maxHeight = 0;
+			setMinWayPoint(wayPoints.get(0));
+			setMaxWayPoint(wayPoints.get(n-1));
+		}		
+		
+		if (start.after(end) || start.equals(end)) {
+			// GPX does not contain time stamps -> use sequential order
+			setStart(wayPoints.get(0));
+			setEnd(wayPoints.get(n-1));
 		}
 		
 		avrgHeight = sumEle / n;

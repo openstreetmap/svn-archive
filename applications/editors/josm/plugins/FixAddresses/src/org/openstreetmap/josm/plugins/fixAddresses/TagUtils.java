@@ -16,6 +16,7 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Contains the tags used within OSM. FIXME: Maybe there is a class or similar
@@ -1878,6 +1879,29 @@ public final class TagUtils {
 		return osmPrimitive != null ? osmPrimitive.get(EMBANKMENT_TAG) : null;
 	}
 	
+	/**
+	 * Checks if the given street supporting housenumbers. Usually motor ways and primary roads have 
+	 * no addresses, also no paths or tracks.
+	 *
+	 * @param w the w
+	 * @return true, if is street supporting housenumbers
+	 */
+	public static boolean isStreetSupportingHousenumbers(Way w) {
+		if (w == null) return false;
+		if (!hasHighwayTag(w)) {
+			return false;
+		}
+		
+		// TODO: Should be configurable
+		String hwType = getHighwayValue(w);
+				
+		return 	HIGHWAY_RESIDENTIAL_VALUE.equals(hwType) ||
+				HIGHWAY_SECONDARY_VALUE.equals(hwType) ||
+				HIGHWAY_TERTIARY_VALUE.equals(hwType) ||
+				HIGHWAY_LIVING_STREET_VALUE.equals(hwType) ||
+				HIGHWAY_UNCLASSIFIED_VALUE.equals(hwType);
+	}
+	
 	// Relation support
 	
 	/**
@@ -2004,6 +2028,24 @@ public final class TagUtils {
 	public static final String EMBANKMENT_TAG = "embankment";
 	public static final String ADDR_HOUSENAME_TAG = "addr:housename";
 	
+	/* Highway types */
+	public static final String HIGHWAY_CYCLEWAY_VALUE = "cycleway";
+	public static final String HIGHWAY_FOOTWAY_VALUE = "footway";
+	public static final String HIGHWAY_MOTORWAY_LINK_VALUE = "motorway_link";
+	public static final String HIGHWAY_MOTORWAY_VALUE = "motorway";
+	public static final String HIGHWAY_PATH_VALUE = "path";
+	public static final String HIGHWAY_RESIDENTIAL_VALUE = "residential";
+	public static final String HIGHWAY_LIVING_STREET_VALUE = "living_street";
+	public static final String HIGHWAY_ROAD_VALUE = "road";
+	public static final String HIGHWAY_SECONDARY_VALUE = "secondary";
+	public static final String HIGHWAY_SERVICE_VALUE = "service";
+	public static final String HIGHWAY_STEPS_VALUE = "steps";
+	public static final String HIGHWAY_TERTIARY_VALUE = "tertiary";
+	public static final String HIGHWAY_TRACK_VALUE = "track";
+	public static final String HIGHWAY_TRUNK_LINK_VALUE = "trunk_link";
+	public static final String HIGHWAY_TRUNK_VALUE = "trunk";
+	public static final String HIGHWAY_UNCLASSIFIED_VALUE = "unclassified";
+
 	/* Relation keys */
 	
 	// Associated street: See http://wiki.openstreetmap.org/wiki/Proposed_features/De:Hausnummern

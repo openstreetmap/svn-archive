@@ -88,12 +88,14 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	/** The shadow copy to assemble the incomplete addresses during update. */
 	private List<AddressNode> shadowIncompleteAddresses = new ArrayList<AddressNode>(100);
 	
-	/** The visited nodes cache to increase iteration spped. */
+	/** The visited nodes cache to increase iteration speed. */
 	private HashSet<Node> visitedNodes = new HashSet<Node>();
-	/** The visited ways cache to increase iteration spped. */
+	/** The visited ways cache to increase iteration speed. */
 	private HashSet<Way> visitedWays = new HashSet<Way>();	
 	/** The tag list used within the data area. */
 	private HashSet<String> tags = new HashSet<String>();
+	/** The tag list used within the data area. */
+	private HashMap<String, String> values = new HashMap<String, String>();
 	
 	/** The change listeners. */
 	private List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
@@ -240,20 +242,10 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		if (!assignAddressToStreet(aNode)) {
 			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
 			shadowUnresolvedAddresses.add(aNode);
-			
-			if ("BaDaubringen".equals(aNode.getCity())) {
-				@SuppressWarnings("unused")
-				int x = 0;
-			}
 		}
 
 		if (!aNode.isComplete()) {
 			shadowIncompleteAddresses.add(aNode);
-			
-			if ("BaDaubringen".equals(aNode.getCity())) {
-				@SuppressWarnings("unused")
-				int x = 0;
-			}
 		}
 	}
 
@@ -275,6 +267,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			for (String key : w.keySet()) {
 				if (!tags.contains(key)) {
 					tags.add(key);
+				}
+				
+				String v = w.get(key);
+				if (!values.containsKey(v)) {
+					values.put(v, key);
 				}
 			}
 		} // else: node has been processed, no need to look deeper
@@ -394,7 +391,14 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public HashSet<String> getTags() {
 		return tags;
 	}
-	
+		
+	/**
+	 * @return the values
+	 */
+	protected HashMap<String, String> getValues() {
+		return values;
+	}
+
 	/**
 	 * Gets the number of streets in the container.
 	 * @return

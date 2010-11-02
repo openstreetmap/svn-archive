@@ -71,6 +71,7 @@ public class OsmUtils {
 		
 		double min = Math.min(Math.min(ac, mc), bc);
 		
+				
 		if (min < 5.0) { // close enough?
 			return min;
 		}

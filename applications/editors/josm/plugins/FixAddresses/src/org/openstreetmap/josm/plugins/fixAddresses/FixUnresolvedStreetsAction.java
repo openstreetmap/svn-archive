@@ -39,6 +39,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 		setEnabled(false);
 		
 		addressEditContainer = new AddressEditContainer();
+				
 		DataSet.addSelectionListener(this);		
 	}
 
@@ -59,6 +60,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 		if (addressEditContainer != null) {
 			addressEditContainer.attachToDataSet(newSelection);
 			try {
+				//generateTagCode(addressEditContainer);
 				AddressEditDialog dlg = new AddressEditDialog(addressEditContainer);
 				dlg.setVisible(true);
 			} finally {
@@ -109,6 +111,16 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 			System.out.println(String.format(
 					"public static final String %s_TAG = \"%s\";", tag
 					.toUpperCase().replaceAll(":", "_"), tag));
+		}
+				
+		for (String value : addrVisitor.getValues().keySet()) {
+			String tag = addrVisitor.getValues().get(value);
+			
+			String tags = tag.toUpperCase().replaceAll(":", "_"); 
+			String values = value.toUpperCase().replaceAll(":", "_");
+			System.out.println(String.format(
+					"public static final String %s_%s_VALUE = \"%s\";", tags, values
+					, value));
 		}
 	}
 

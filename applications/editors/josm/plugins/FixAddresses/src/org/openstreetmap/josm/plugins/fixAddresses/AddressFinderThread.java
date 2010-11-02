@@ -210,7 +210,13 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 					
 					// guess values 
 					for (int i = 0; i < guessers.length; i++) {
+						if (!guessers[i].needsGuess()) continue;
+						
 						osmPrimitive.visit(guessers[i]);
+						
+						if (guessers[i].currentValue == null && i == 0) {
+							System.err.println("Guess #" + i + " failed for " + aNode);
+						}
 					}
 				}
 				
@@ -242,7 +248,7 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 		 */
 		@Override
 		public void visit(Way w) {			
-			if (TagUtils.hasHighwayTag(w)) {
+			if (TagUtils.isStreetSupportingHousenumbers(w)) {
 				AddressNode aNode = getAddressNode();
 				double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
 				if (dist < minDist && dist < getMaxDistance()) {

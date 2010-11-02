@@ -341,10 +341,20 @@ public class AddressNode extends NodeEntityBase {
 	 * Check if this instance needs guessed values. This is the case, if the underlying OSM node
 	 * has either no street name, post code or city.
 	 *
-	 * @return true, if successful
+	 * @return true, if this instance needs at least one guessed value.
 	 */
 	public boolean needsGuess() {
-		return !hasStreetName() || !hasCity() || !hasPostCode();
+		return 	needsGuessedValue(TagUtils.ADDR_CITY_TAG) ||
+				needsGuessedValue(TagUtils.ADDR_POSTCODE_TAG) ||
+				needsGuessedValue(TagUtils.ADDR_STREET_TAG);
+	}
+	
+	/**
+	 * Check if this instance needs guessed value for a given tag.
+	 * @return true, if successful
+	 */
+	public boolean needsGuessedValue(String tag) {
+		return MISSING_TAG.equals(getTagValueWithGuess(tag));
 	}
 	
 	/**

@@ -122,6 +122,15 @@ public class GuessedValueHandler implements Visitor {
 		return currentValue;
 	}
 	
+	/**
+	 * Check if we need to visit the OSM data
+	 *
+	 * @return true, if successful
+	 */
+	public boolean needsGuess() {
+		return aNode.needsGuessedValue(tag);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.openstreetmap.josm.data.osm.visitor.Visitor#visit(org.openstreetmap.josm.data.osm.Node)
 	 */

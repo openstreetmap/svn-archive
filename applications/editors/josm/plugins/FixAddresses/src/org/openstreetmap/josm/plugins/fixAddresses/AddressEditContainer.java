@@ -145,6 +145,20 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 	
 	/**
+	 * Notifies clients that an entity within the address container changed.
+	 */
+	protected void fireEntityChanged(INodeEntity entity) {
+		if (entity == null) throw new RuntimeException("Entity must not be null");
+		
+		List<IAddressEditContainerListener> shadowListeners = 
+			new ArrayList<IAddressEditContainerListener>(listeners);
+		
+		for (IAddressEditContainerListener listener : shadowListeners) {
+			listener.entityChanged(entity);
+		}
+	}
+	
+	/**
 	 * Marks an OSM node as visited.
 	 *
 	 * @param n the node to mark.
@@ -642,6 +656,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 */
 	@Override
 	public void entityChanged(INodeEntity entity) {
-		invalidate();		
+		fireEntityChanged(entity);	
 	}
 }

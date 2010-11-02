@@ -373,6 +373,7 @@ public class AddressNode extends NodeEntityBase {
 	 */
 	public void setGuessedValue(String tag, String value) {
 		guessedValues.put(tag, value);
+		fireEntityChanged(this);
 	}
 	
 	/**
@@ -405,7 +406,7 @@ public class AddressNode extends NodeEntityBase {
 	 * @param value the value of the derived tag.
 	 */
 	public void setDerivedValue(String tag, String value) {
-		derivedValues.put(tag, value);
+		derivedValues.put(tag, value);		
 	}	
 	
 	/**

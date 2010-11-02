@@ -508,6 +508,7 @@ public class LoadPdfDialog extends JFrame {
 	private void removeLayer() {
 		if (this.layer != null) {
 			Main.main.removeLayer(this.layer);
+			this.layer.data.clear(); //saves memory
 			this.layer = null;
 		}
 

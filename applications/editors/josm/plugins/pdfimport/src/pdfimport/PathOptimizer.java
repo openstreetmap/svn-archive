@@ -12,25 +12,29 @@ import java.util.Set;
 
 public class PathOptimizer {
 
+	public List<Point2D> uniquePoints;
 	public Map<Point2D, Point2D> uniquePointMap;
 	private final Map<LayerInfo, LayerContents> layerMap;
 	private List<LayerContents> layers;
 	public Rectangle2D bounds;
+	private final double POINT_TOLERANCE = 1e-6;
 
 	public PathOptimizer()
 	{
 		uniquePointMap = new HashMap<Point2D, Point2D>();
+		uniquePoints = new ArrayList<Point2D>();
 		layerMap = new HashMap<LayerInfo, LayerContents>();
 		layers = new ArrayList<LayerContents>();
 	}
 
 	public Point2D getUniquePoint(Point2D point) {
 
-		if (this.uniquePointMap.containsKey(point)){
-			return this.uniquePointMap.get(point);
+		if (uniquePointMap.containsKey(point)){
+			return uniquePointMap.get(point);
 		}
 		else {
-			this.uniquePointMap.put(point, point);
+			uniquePointMap.put(point, point);
+			uniquePoints.add(point);
 			return point;
 		}
 	}
@@ -68,8 +72,12 @@ public class PathOptimizer {
 
 	public void optimize()
 	{
+		//fix points
+		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(uniquePoints, POINT_TOLERANCE);
+
 
 		for(LayerContents layer: this.layers) {
+			this.fixPoints(layer, pointMap);
 			this.concatenatePaths(layer);
 		}
 
@@ -105,6 +113,7 @@ public class PathOptimizer {
 		}
 	}
 
+
 	private void finalizeLayer(LayerContents layer){
 		Set<Point2D> points = new HashSet<Point2D>();
 		layer.points = new ArrayList<Point2D>();
@@ -133,6 +142,51 @@ public class PathOptimizer {
 				}
 			}
 		}
+	}
+
+	private void fixPoints(LayerContents layer, Map<Point2D, Point2D> pointMap) {
+
+		List<PdfPath> newPaths = new ArrayList<PdfPath>(layer.paths.size());
+
+		for(PdfPath path: layer.paths) {
+			List<Point2D> points = fixPoints(path.points, pointMap);
+			path.points = points;
+			if (points.size() > 2 || (!path.isClosed() && points.size() > 1)){
+
+				newPaths.add(path);
+			}
+		}
+
+		layer.paths = newPaths;
+
+		for (PdfMultiPath mp: layer.multiPaths){
+			for(PdfPath path: mp.paths) {
+				path.points = fixPoints(path.points, pointMap);
+			}
+		}
+	}
+
+
+	private List<Point2D> fixPoints(List<Point2D> points, Map<Point2D, Point2D> pointMap) {
+
+		List<Point2D> newPoints = new ArrayList<Point2D>(points.size());
+		Point2D prevPoint = null;
+
+		for(Point2D p: points){
+			Point2D pp = p;
+
+			if (pointMap.containsKey(p)){
+				pp = pointMap.get(p);
+			}
+
+			if (prevPoint != pp){
+				newPoints.add(pp);
+			}
+
+			prevPoint = pp;
+		}
+
+		return newPoints;
 	}
 
 	/**

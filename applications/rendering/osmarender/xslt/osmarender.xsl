@@ -180,12 +180,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="$minlon"/>
       </xsl:when>
       <xsl:when test="/rules/bounds">
-        <xsl:for-each select="$data/osm/bounds/@minlon">
-          <xsl:sort data-type="number" order="ascending"/>
-          <xsl:if test="position()=1">
-            <xsl:value-of select="."/>
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:value-of select="/rules/bounds/@minlon"/>
       </xsl:when>
       <xsl:when test="$data/osm/bounds">
         <xsl:for-each select="$data/osm/bounds/@minlon">

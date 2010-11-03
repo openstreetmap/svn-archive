@@ -95,11 +95,14 @@ def application(env, start_response):
 
   query_layers=''
   tilemode=0
+  REQUEST=''
   # ad QUERY items into mapscript request object
   for key, value in query.items():
     key=key.upper()
     if (key == "DEBUG"):
       debug = 1
+    if (key == "REQUEST"):
+      REQUEST = value
     if (key == "LAYERS"):
       query_layers=value
       if ("," in query_layers):
@@ -150,6 +153,8 @@ def application(env, start_response):
   clayer=map.getLayerByName("copyright")
   cclass=clayer.getClass(0)
   cclass.setText(cstring)
+  if (REQUEST == "GetCapabilities"):
+    map.removeLayer(clayer.index)
   
   # write a mapfile for debugging purposes
   if (debug):

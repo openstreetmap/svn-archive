@@ -20,8 +20,8 @@ import org.openstreetmap.josm.tools.GBC;
 
 public class ProjectionEPSG31287 implements org.openstreetmap.josm.data.projection.Projection, org.openstreetmap.josm.data.projection.ProjectionSubPrefs {
 
-    private double dx = 85.0;
-    private double dy = 45.0;
+    private double dx = 0.0;
+    private double dy = 0.0;
     private final static String projCode = "EPSG:31287";
 
     private final com.jhlabs.map.proj.Projection projection;
@@ -31,15 +31,14 @@ public class ProjectionEPSG31287 implements org.openstreetmap.josm.data.projecti
         // use use com.jhlabs.map.proj.ProjectionFactory for doing all the math
         projection = com.jhlabs.map.proj.ProjectionFactory.fromPROJ4Specification(
                 new String[] {
-                        "+proj=lcc"
-                        ,"+lat_1=49"
-                        ,"+lat_2=46"
+                		"+datum=WGS84"
+                        ,"+proj=lcc"
+                        ,"+lat_1=46.0103424"
+                        ,"+lat_2=48.988621"
                         ,"+lat_0=47.5"
-                        ,"+lon_0=13.33333333333333"
-                        ,"+x_0=400000"
-                        ,"+y_0=400000"
-                        ,"+ellps=bessel"
-                        ,"+towgs84=577.326,90.129,463.919,5.137,1.474,5.297,2.4232"
+                        ,"+lon_0=13.33616275"
+                        ,"+x_0=400268.785"
+                        ,"+y_0=400057.553"
                         ,"+units=m"
                         ,"+no_defs"
                 }

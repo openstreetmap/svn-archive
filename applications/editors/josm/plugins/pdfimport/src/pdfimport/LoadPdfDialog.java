@@ -14,6 +14,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
@@ -45,7 +46,7 @@ import pdfimport.pdfbox.PdfBoxParser;
 
 public class LoadPdfDialog extends JFrame {
 
-	private String fileName;
+	private File fileName;
 	private PathOptimizer data;
 	private final FilePlacement placement;
 	private OsmDataLayer layer;
@@ -274,31 +275,35 @@ public class LoadPdfDialog extends JFrame {
 
 
 	private void loadFilePressed() {
-		final java.io.File fileName = this.chooseFile();
+		final File newFileName = this.chooseFile();
 
-		if (fileName == null) {
+		if (newFileName == null) {
 			return;
 		}
+
+		this.removeLayer();
 
 		this.loadFileButton.setEnabled(false);
 		this.loadFileButton.setText(tr("Loading..."));
 
-
 		this.runAsBackgroundTask(
 				new Runnable() {
 					public void run() {
-						data = loadPDF(fileName);
+						data = loadPDF(newFileName);
 					}
 				},
 				new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
 						if (data!= null) {
+							LoadPdfDialog.this.placement.projection = null;
 							OsmBuilder.Mode mode = LoadPdfDialog.this.debugModeCheck.isSelected() ? OsmBuilder.Mode.Debug: OsmBuilder.Mode.Draft;
-							LoadPdfDialog.this.fileName = fileName.getAbsolutePath();
+							LoadPdfDialog.this.fileName = newFileName;
 							LoadPdfDialog.this.makeLayer(tr("PDF file preview"), mode);
 							LoadPdfDialog.this.loadFileButton.setText(tr("Loaded"));
 							LoadPdfDialog.this.loadFileButton.setEnabled(true);
+							LoadPdfDialog.this.loadPlacement();
+							LoadPdfDialog.this.setPlacement();
 						}
 					}
 				});
@@ -307,18 +312,21 @@ public class LoadPdfDialog extends JFrame {
 
 	private void okPressed() {
 
-		boolean ok = this.loadTransformation();
+		boolean ok = this.parsePlacement();
 		if (!ok){
 			return;
 		}
 
+		this.savePlacement();
+
 		//rebuild layer with latest projection
 		this.makeLayer(tr("Imported PDF: ") + this.fileName, OsmBuilder.Mode.Final);
+
 		this.setVisible(false);
 	}
 
 	private void savePressed() {
-		boolean ok = this.loadTransformation();
+		boolean ok = this.parsePlacement();
 		if (!ok){
 			return;
 		}
@@ -329,6 +337,8 @@ public class LoadPdfDialog extends JFrame {
 			return;
 		}
 
+		this.savePlacement();
+
 		//rebuild layer with latest projection
 		this.removeLayer();
 		this.saveLayer(file);
@@ -338,7 +348,7 @@ public class LoadPdfDialog extends JFrame {
 
 	private void showPressed() {
 
-		boolean ok = this.loadTransformation();
+		boolean ok = this.parsePlacement();
 		if (!ok){
 			return;
 		}
@@ -531,27 +541,12 @@ public class LoadPdfDialog extends JFrame {
 
 		data.splitLayersByPathKind();
 		data.finish();
-
-		//load saved transformation
-		File propertiesFile = new File(fileName.getAbsoluteFile()+ ".placement");
-		try {
-
-			if (propertiesFile.exists()){
-				Properties p = new Properties();
-				p.load(new FileInputStream(propertiesFile));
-				this.placement.fromProperties(p);
-				this.setTransformation();
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-
 		return data;
 	}
 
 
 
-	private boolean loadTransformation() {
+	private boolean parsePlacement() {
 		Object selectedProjection = this.projectionCombo.getSelectedItem();
 
 		if (!(selectedProjection instanceof Projection))
@@ -583,7 +578,7 @@ public class LoadPdfDialog extends JFrame {
 		return true;
 	}
 
-	private void setTransformation() {
+	private void setPlacement() {
 
 		this.projectionCombo.setSelectedItem(placement.projection);
 		this.minXField.setText(Double.toString(placement.minX));
@@ -595,6 +590,34 @@ public class LoadPdfDialog extends JFrame {
 		this.minNorthField.setText(Double.toString(placement.minNorth));
 		this.maxNorthField.setText(Double.toString(placement.maxNorth));
 	}
+
+
+	private void loadPlacement() {
+		//load saved transformation
+		File propertiesFile = new File(fileName.getAbsoluteFile()+ ".placement");
+		try {
+
+			if (propertiesFile.exists()){
+				Properties p = new Properties();
+				p.load(new FileInputStream(propertiesFile));
+				this.placement.fromProperties(p);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void savePlacement(){
+		//load saved transformation
+		File propertiesFile = new File(fileName.getAbsoluteFile()+ ".placement");
+		try {
+			Properties p = this.placement.toProperties();
+			p.store(new FileOutputStream(propertiesFile), "PDF file placement on OSM");
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 
 	private void makeLayer(String name, OsmBuilder.Mode mode) {
 		this.removeLayer();

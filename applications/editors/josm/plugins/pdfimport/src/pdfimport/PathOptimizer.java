@@ -353,7 +353,7 @@ public class PathOptimizer {
 						//closed path found
 						//remove excess segments from start of chain
 						while (lastPoint != firstPoint) {
-							PdfPath pathToRemove = pathChain.get(0);
+							PdfPath pathToRemove = pathChain.remove(0);							
 							firstPoint = pathToRemove.getOtherEnd(firstPoint);
 						}
 
@@ -378,7 +378,7 @@ public class PathOptimizer {
 					firstPath = nextPath;
 					pathChain.add(0, firstPath);
 
-					if (!pointsInPath.contains(nextPoint)) {
+					if (!pointsInPath.contains(firstPoint)) {
 						pointsInPath.add(firstPoint);
 						changed = true;
 					}
@@ -387,7 +387,7 @@ public class PathOptimizer {
 						//closed path found
 						//remove excess segments from end of chain
 						while (lastPoint != firstPoint) {
-							PdfPath pathToRemove = pathChain.get(pathChain.size() - 1);
+							PdfPath pathToRemove = pathChain.remove(pathChain.size() - 1);
 							lastPoint = pathToRemove.getOtherEnd(lastPoint);
 						}
 

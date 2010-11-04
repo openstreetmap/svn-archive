@@ -2,6 +2,7 @@ package pdfimport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,9 +12,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -44,7 +47,7 @@ public class LoadPdfDialog extends JFrame {
 
 	private String fileName;
 	private PathOptimizer data;
-	private final OsmBuilder builder;
+	private final FilePlacement placement;
 	private OsmDataLayer layer;
 
 	/**
@@ -69,10 +72,14 @@ public class LoadPdfDialog extends JFrame {
 	private JCheckBox debugModeCheck;
 	private JCheckBox mergeCloseNodesCheck;
 	private JTextField mergeCloseNodesTolerance;
+	private JCheckBox removeSmallObjectsCheck;
+	private JTextField removeSmallObjectsSize;
+	private JTextField colorFilterColor;
+	private JCheckBox colorFilterCheck;
 
 	public LoadPdfDialog() {
 
-		this.builder = new OsmBuilder();
+		this.placement = new FilePlacement();
 
 		this.buildGUI();
 		this.addListeners();
@@ -149,29 +156,50 @@ public class LoadPdfDialog extends JFrame {
 		this.showButton = new JButton(tr("Show target"));
 		this.cancelButton = new JButton(tr("Discard"));
 
-		this.minXField = new JTextField(""+this.builder.minX);
-		this.minYField = new JTextField(""+this.builder.minY);
-		this.minEastField = new JTextField(""+this.builder.minEast);
-		this.minNorthField = new JTextField(""+this.builder.minNorth);
+		this.minXField = new JTextField(""+this.placement.minX);
+		this.minYField = new JTextField(""+this.placement.minY);
+		this.minEastField = new JTextField(""+this.placement.minEast);
+		this.minNorthField = new JTextField(""+this.placement.minNorth);
 		this.getMinButton = new JButton(tr("Take X and Y from selected node"));
 
-		this.maxXField = new JTextField(""+this.builder.maxX);
-		this.maxYField = new JTextField(""+this.builder.maxY);
-		this.maxEastField = new JTextField(""+this.builder.maxEast);
-		this.maxNorthField = new JTextField(""+this.builder.maxNorth);
+		this.maxXField = new JTextField(""+this.placement.maxX);
+		this.maxYField = new JTextField(""+this.placement.maxY);
+		this.maxEastField = new JTextField(""+this.placement.maxEast);
+		this.maxNorthField = new JTextField(""+this.placement.maxNorth);
 		this.getMaxButton = new JButton(tr("Take X and Y from selected node"));
 
 		this.debugModeCheck = new JCheckBox(tr("Debug info"));
 		this.mergeCloseNodesCheck = new JCheckBox(tr("Merge close nodes"));
-		this.mergeCloseNodesTolerance = new JTextField();
+		this.mergeCloseNodesTolerance = new JTextField("1e-6");
+
+		this.removeSmallObjectsCheck = new JCheckBox(tr("Remove objects smaller than"));
+		this.removeSmallObjectsSize = new JTextField("1");
+
+		this.colorFilterCheck = new JCheckBox(tr("Only this color"));
+		this.colorFilterColor = new JTextField("#000000");
 
 		JPanel configPanel = new JPanel(new GridBagLayout());
+		configPanel.setBorder(BorderFactory.createTitledBorder(tr("Import settings")));
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
 		configPanel.add(this.mergeCloseNodesCheck, c);
-		c.gridx = 1; c.gridy = 0; c.gridwidth = 1;
+		c.gridx = 1; c.gridy = 0; c.gridwidth = 1; c.anchor = c.NORTHEAST;
+		configPanel.add(new JLabel("Tolerance :"), c);
+		c.gridx = 2; c.gridy = 0; c.gridwidth = 1; c.anchor = c.NORTHWEST;
 		configPanel.add(this.mergeCloseNodesTolerance, c);
 
-		c.gridx = 0; c.gridy = 1; c.gridwidth = 2;
+		c.gridx = 0; c.gridy = 1; c.gridwidth = 1;
+		configPanel.add(this.removeSmallObjectsCheck, c);
+		c.gridx = 1; c.gridy = 1; c.gridwidth = 1; c.anchor = c.NORTHEAST;
+		configPanel.add(new JLabel("Tolerance :"), c);
+		c.gridx = 2; c.gridy = 1; c.gridwidth = 1; c.anchor = c.NORTHWEST;
+		configPanel.add(this.removeSmallObjectsSize, c);
+
+		c.gridx = 0; c.gridy = 2; c.gridwidth = 1;
+		configPanel.add(this.colorFilterCheck, c);
+		c.gridx = 2; c.gridy = 2; c.gridwidth = 1;
+		configPanel.add(this.colorFilterColor, c);
+
+		c.gridx = 0; c.gridy = 3; c.gridwidth = 2;
 		configPanel.add(this.debugModeCheck, c);
 
 
@@ -240,7 +268,7 @@ public class LoadPdfDialog extends JFrame {
 		c.gridx = 0; c.gridy = 3; c.gridwidth = 1;
 		panel.add(okCancelPanel, c);
 
-		this.setSize(400, 400);
+		this.setSize(400, 500);
 		this.setContentPane(panel);
 	}
 
@@ -315,6 +343,8 @@ public class LoadPdfDialog extends JFrame {
 			return;
 		}
 
+		OsmBuilder builder = new OsmBuilder(this.placement);
+
 		//zoom to new location
 		Main.map.mapView.zoomTo(builder.getWorldBounds(this.data));
 		Main.map.repaint();
@@ -355,7 +385,7 @@ public class LoadPdfDialog extends JFrame {
 		}
 
 		LatLon ll = ((Node)selected.iterator().next()).getCoor();
-		return this.builder.reverseTransform(ll);
+		return this.placement.reverseTransform(ll);
 	}
 
 
@@ -452,6 +482,22 @@ public class LoadPdfDialog extends JFrame {
 			return null;
 		}
 
+		if (this.colorFilterCheck.isSelected()) {
+			try {
+				String colString = this.colorFilterColor.getText().replace("#", "");
+				Color color = new Color(Integer.parseInt(colString, 16));
+				data.filterByColor(color);
+			}
+			catch (Exception e) {
+				JOptionPane
+				.showMessageDialog(
+						Main.parent,
+						tr("Could not parse color"));
+				return null;
+			}
+		}
+
+
 		if (this.mergeCloseNodesCheck.isSelected()) {
 			try {
 				double tolerance = Double.parseDouble(this.mergeCloseNodesTolerance.getText());
@@ -466,9 +512,44 @@ public class LoadPdfDialog extends JFrame {
 			}
 		}
 
-		data.optimize();
+		data.mergeSegments();
+
+		if (this.removeSmallObjectsCheck.isSelected()) {
+			try {
+				double tolerance = Double.parseDouble(this.removeSmallObjectsSize.getText());
+				data.removeSmallObjects(tolerance);
+			}
+			catch (Exception e) {
+				JOptionPane
+				.showMessageDialog(
+						Main.parent,
+						tr("Tolerance is not a number"));
+				return null;
+			}
+		}
+
+
+		data.splitLayersByPathKind();
+		data.finish();
+
+		//load saved transformation
+		File propertiesFile = new File(fileName.getAbsoluteFile()+ ".placement");
+		try {
+
+			if (propertiesFile.exists()){
+				Properties p = new Properties();
+				p.load(new FileInputStream(propertiesFile));
+				this.placement.fromProperties(p);
+				this.setTransformation();
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 		return data;
 	}
+
+
 
 	private boolean loadTransformation() {
 		Object selectedProjection = this.projectionCombo.getSelectedItem();
@@ -479,16 +560,16 @@ public class LoadPdfDialog extends JFrame {
 			return false;
 		}
 
-		this.builder.projection = (Projection)this.projectionCombo.getSelectedItem();
+		this.placement.projection = (Projection)this.projectionCombo.getSelectedItem();
 
 		try
 		{
-			this.builder.setPdfBounds(
+			this.placement.setPdfBounds(
 					Double.parseDouble(this.minXField.getText()),
 					Double.parseDouble(this.minYField.getText()),
 					Double.parseDouble(this.maxXField.getText()),
 					Double.parseDouble(this.maxYField.getText()));
-			this.builder.setEastNorthBounds(
+			this.placement.setEastNorthBounds(
 					Double.parseDouble(this.minEastField.getText()),
 					Double.parseDouble(this.minNorthField.getText()),
 					Double.parseDouble(this.maxEastField.getText()),
@@ -502,12 +583,27 @@ public class LoadPdfDialog extends JFrame {
 		return true;
 	}
 
+	private void setTransformation() {
+
+		this.projectionCombo.setSelectedItem(placement.projection);
+		this.minXField.setText(Double.toString(placement.minX));
+		this.maxXField.setText(Double.toString(placement.maxX));
+		this.minYField.setText(Double.toString(placement.minY));
+		this.maxYField.setText(Double.toString(placement.maxY));
+		this.minEastField.setText(Double.toString(placement.minEast));
+		this.maxEastField.setText(Double.toString(placement.maxEast));
+		this.minNorthField.setText(Double.toString(placement.minNorth));
+		this.maxNorthField.setText(Double.toString(placement.maxNorth));
+	}
+
 	private void makeLayer(String name, OsmBuilder.Mode mode) {
 		this.removeLayer();
 
-		if (builder == null) {
+		if (placement == null) {
 			return;
 		}
+
+		OsmBuilder builder = new OsmBuilder(this.placement);
 
 		DataSet data = builder.build(this.data.getLayers(), mode);
 		this.layer = new OsmDataLayer(data, name, null);
@@ -533,6 +629,7 @@ public class LoadPdfDialog extends JFrame {
 	}
 
 	private void saveLayer(java.io.File file) {
+		OsmBuilder builder = new OsmBuilder(this.placement);
 		DataSet data = builder.build(this.data.getLayers(), OsmBuilder.Mode.Final);
 		OsmDataLayer layer = new OsmDataLayer(data, file.getName(), file);
 

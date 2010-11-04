@@ -1,5 +1,6 @@
 package pdfimport;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ public class PathOptimizer {
 	private final Map<LayerInfo, LayerContents> layerMap;
 	private List<LayerContents> layers;
 	public Rectangle2D bounds;
-	private final double POINT_TOLERANCE = 1e-6;
 
 	public PathOptimizer()
 	{
@@ -51,6 +51,86 @@ public class PathOptimizer {
 		layer.multiPaths.add(p);
 	}
 
+	public void filterByColor(Color color) {
+		List<LayerContents> newLayers = new ArrayList<LayerContents>();
+		for(LayerContents l: this.layers) {
+
+			boolean good = false;
+
+			if (l.info.fill != null && l.info.fill.equals(color)) {
+				good = true;
+			}
+
+			if (l.info.stroke != null && l.info.stroke.equals(color)) {
+				good = true;
+			}
+
+			if (good) {
+				newLayers.add(l);
+			}
+		}
+		this.layers = newLayers;
+	}
+
+
+
+	public void mergeNodes(double tolerance) {
+		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(uniquePoints, tolerance);
+
+		for(LayerContents layer: this.layers) {
+			this.fixPoints(layer, pointMap);
+		}
+	}
+
+	public void mergeSegments() {
+		for(LayerContents layer: this.layers) {
+			this.concatenatePaths(layer);
+		}
+	}
+
+
+	public void removeSmallObjects(double tolerance) {
+		for(LayerContents layer: this.layers) {
+			this.removeSmallObjects(layer, tolerance);
+		}
+	}
+
+	public void splitLayersBySimilarShapes(double tolerance) {
+		List<LayerContents> newLayers = new ArrayList<LayerContents>();
+		for(LayerContents l: this.layers) {
+			List<LayerContents> splitResult = splitBySimilarGroups(l);
+
+			for(LayerContents ll: splitResult) {
+				newLayers.add(ll);
+			}
+		}
+		this.layers = newLayers;
+	}
+
+	public void splitLayersByPathKind() {
+		List<LayerContents> newLayers = new ArrayList<LayerContents>();
+		for(LayerContents l: this.layers) {
+			List<LayerContents> splitResult = splitBySegmentKind(l);
+
+			for(LayerContents ll: splitResult) {
+				newLayers.add(ll);
+			}
+		}
+
+		this.layers = newLayers;
+	}
+
+
+	public void finish() {
+		int nr = 0;
+		for(LayerContents layer: this.layers) {
+			layer.info.nr = nr;
+			nr++;
+			finalizeLayer(layer);
+		}
+	}
+
+
 	private LayerContents getLayer(LayerInfo info) {
 		LayerContents layer;
 
@@ -68,49 +148,6 @@ public class PathOptimizer {
 		}
 
 		return layer;
-	}
-
-
-	public void mergeNodes(double tolerance) {
-		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(uniquePoints, POINT_TOLERANCE);
-
-		for(LayerContents layer: this.layers) {
-			this.fixPoints(layer, pointMap);
-			this.concatenatePaths(layer);
-		}
-	}
-
-	public void optimize()
-	{
-		List<LayerContents> newLayers = new ArrayList<LayerContents>();
-		/*
-		for(LayerContents l: this.layers) {
-			List<LayerContents> splitResult = splitBySimilarGroups(l);
-
-			for(LayerContents ll: splitResult) {
-				newLayers.add(ll);
-			}
-		}
-		this.layers = newLayers;
-		 */
-
-
-		newLayers = new ArrayList<LayerContents>();
-		for(LayerContents l: this.layers) {
-			List<LayerContents> splitResult = splitBySegmentKind(l);
-
-			for(LayerContents ll: splitResult) {
-				newLayers.add(ll);
-			}
-		}
-
-		this.layers = newLayers;
-		int nr = 0;
-		for(LayerContents layer: this.layers) {
-			layer.info.nr = nr;
-			nr++;
-			finalizeLayer(layer);
-		}
 	}
 
 
@@ -188,6 +225,51 @@ public class PathOptimizer {
 
 		return newPoints;
 	}
+
+
+	private void removeSmallObjects(LayerContents layer, double tolerance) {
+		List<PdfPath> newPaths = new ArrayList<PdfPath>(layer.paths.size());
+
+		for(PdfPath path: layer.paths) {
+			boolean good = getShapeSize(path) >= tolerance;
+
+			if (good) {
+				newPaths.add(path);
+			}
+		}
+
+		layer.paths = newPaths;
+
+		List<PdfMultiPath> newMPaths = new ArrayList<PdfMultiPath>(layer.multiPaths.size());
+
+		for (PdfMultiPath mp: layer.multiPaths){
+			boolean good = true;
+			for(PdfPath path: mp.paths) {
+				good &= getShapeSize(path) >= tolerance;
+			}
+
+			if (good) {
+				newMPaths.add(mp);
+			}
+		}
+
+		layer.multiPaths = newMPaths;
+	}
+
+
+	private double getShapeSize(PdfPath path) {
+
+		Rectangle2D bounds = new Rectangle2D.Double();
+		bounds.setRect(path.points.get(0).getX(), path.points.get(0).getY(), 0,0);
+
+		for(Point2D n: path.points) {
+			bounds.add(n);
+		}
+
+		return Math.max(bounds.getWidth(), bounds.getHeight());
+	}
+
+
 
 	/**
 	 * This method merges together paths with common end nodes.

@@ -8,29 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.projection.Projection;
 
 public class OsmBuilder {
 
 	enum Mode {Draft, Final, Debug};
 
-	public Projection projection = null;
-	public double minX = 0;
-	public double maxX = 1;
-	public double minY = 0;
-	public double maxY = 1;
-
-	public double minEast = 0;
-	public double maxEast = 10000;
-	public double minNorth = 0;
-	public double maxNorth = 10000;
+	private final FilePlacement placement;
 
 	private String layerName;
 	private String fillName;
@@ -38,28 +27,15 @@ public class OsmBuilder {
 	private Mode mode;
 
 
-	public OsmBuilder()
+	public OsmBuilder(FilePlacement placement)
 	{
-	}
-
-	public void setPdfBounds(double minX, double minY, double maxX, double maxY){
-		this.minX = minX;
-		this.minY = minY;
-		this.maxX = maxX;
-		this.maxY = maxY;
-	}
-
-	public void setEastNorthBounds(double minEast, double minNorth, double maxEast, double maxNorth) {
-		this.minEast = minEast;
-		this.maxEast = maxEast;
-		this.minNorth = minNorth;
-		this.maxNorth = maxNorth;
+		this.placement = placement;
 	}
 
 
 	public Bounds getWorldBounds(PathOptimizer data) {
-		LatLon min = tranformCoords(data.bounds.getMinX(), data.bounds.getMinY());
-		LatLon max = tranformCoords(data.bounds.getMaxX(), data.bounds.getMaxY());
+		LatLon min = placement.tranformCoords(data.bounds.getMinX(), data.bounds.getMinY());
+		LatLon max = placement.tranformCoords(data.bounds.getMaxX(), data.bounds.getMaxY());
 		return new Bounds(min, max);
 	}
 
@@ -85,7 +61,7 @@ public class OsmBuilder {
 		//insert nodes
 		for(Point2D pt: layer.points) {
 			Node node = new Node();
-			node.setCoor(this.tranformCoords(pt.getX(), pt.getY()));
+			node.setCoor(this.placement.tranformCoords(pt.getX(), pt.getY()));
 
 			target.addPrimitive(node);
 			point2Node.put(pt, node);
@@ -197,27 +173,5 @@ public class OsmBuilder {
 		}
 
 		return "#" + s;
-	}
-
-
-	private LatLon tranformCoords(double x, double y) {
-
-		if (this.projection == null){
-			return new LatLon(y/1000, x/1000);
-		}
-		else{
-			x = (x - this.minX) * (this.maxEast - this.minEast) / (this.maxX - this.minX)  + this.minEast;
-			y = (y - this.minY) * (this.maxNorth - this.minNorth) /  (this.maxY - this.minY) + this.minNorth;
-			return this.projection.eastNorth2latlon(new EastNorth(x, y));
-		}
-	}
-
-	public EastNorth reverseTransform(LatLon coor) {
-		if (this.projection == null){
-			return new EastNorth(coor.lon() * 1000, coor.lat() * 1000);
-		}
-		else{
-			return null;
-		}
 	}
 }

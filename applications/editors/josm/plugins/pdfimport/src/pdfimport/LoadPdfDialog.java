@@ -2,7 +2,6 @@ package pdfimport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -68,6 +67,8 @@ public class LoadPdfDialog extends JFrame {
 	private JButton showButton;
 	private JButton saveButton;
 	private JCheckBox debugModeCheck;
+	private JCheckBox mergeCloseNodesCheck;
+	private JTextField mergeCloseNodesTolerance;
 
 	public LoadPdfDialog() {
 
@@ -161,6 +162,17 @@ public class LoadPdfDialog extends JFrame {
 		this.getMaxButton = new JButton(tr("Take X and Y from selected node"));
 
 		this.debugModeCheck = new JCheckBox(tr("Debug info"));
+		this.mergeCloseNodesCheck = new JCheckBox(tr("Merge close nodes"));
+		this.mergeCloseNodesTolerance = new JTextField();
+
+		JPanel configPanel = new JPanel(new GridBagLayout());
+		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
+		configPanel.add(this.mergeCloseNodesCheck, c);
+		c.gridx = 1; c.gridy = 0; c.gridwidth = 1;
+		configPanel.add(this.mergeCloseNodesTolerance, c);
+
+		c.gridx = 0; c.gridy = 1; c.gridwidth = 2;
+		configPanel.add(this.debugModeCheck, c);
 
 
 		JPanel selectFilePanel = new JPanel(new GridBagLayout());
@@ -168,8 +180,6 @@ public class LoadPdfDialog extends JFrame {
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
 		selectFilePanel.add(this.loadFileButton, c);
 
-		c.gridx = 0; c.gridy = 1; c.gridwidth = 1;
-		selectFilePanel.add(this.debugModeCheck, c);
 
 		JPanel projectionPanel = new JPanel(new GridBagLayout());
 		projectionPanel.setBorder(BorderFactory.createTitledBorder(tr("Bind to coordinates")));
@@ -220,10 +230,15 @@ public class LoadPdfDialog extends JFrame {
 		okCancelPanel.add(this.okButton);
 		okCancelPanel.add(this.saveButton);
 
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(okCancelPanel, BorderLayout.SOUTH);
-		panel.add(projectionPanel, BorderLayout.CENTER);
-		panel.add(selectFilePanel, BorderLayout.NORTH);
+		JPanel panel = new JPanel(new GridBagLayout());
+		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
+		panel.add(configPanel, c);
+		c.gridx = 0; c.gridy = 1; c.gridwidth = 1;
+		panel.add(selectFilePanel, c);
+		c.gridx = 0; c.gridy = 2; c.gridwidth = 1;
+		panel.add(projectionPanel, c);
+		c.gridx = 0; c.gridy = 3; c.gridwidth = 1;
+		panel.add(okCancelPanel, c);
 
 		this.setSize(400, 400);
 		this.setContentPane(panel);
@@ -437,18 +452,19 @@ public class LoadPdfDialog extends JFrame {
 			return null;
 		}
 
-		/*
-		File file = new File(fileName);
-
-		Document document = file.getDocument();
-		Page page = document.getPages().get(0);
-		data.bounds = page.getBox();
-
-		PDFStreamProcessor processor = new PDFStreamProcessor(data, document);
-		Contents c = page.getContents();
-		processor.process(new ContentScanner(c));
-		processor.finish();
-		document.delete();*/
+		if (this.mergeCloseNodesCheck.isSelected()) {
+			try {
+				double tolerance = Double.parseDouble(this.mergeCloseNodesTolerance.getText());
+				data.mergeNodes(tolerance);
+			}
+			catch (Exception e) {
+				JOptionPane
+				.showMessageDialog(
+						Main.parent,
+						tr("Tolerance is not a number"));
+				return null;
+			}
+		}
 
 		data.optimize();
 		return data;

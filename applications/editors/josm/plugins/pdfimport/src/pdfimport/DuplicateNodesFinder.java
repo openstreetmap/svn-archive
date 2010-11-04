@@ -40,43 +40,40 @@ public class DuplicateNodesFinder {
 			}
 		});
 
+		//sweep from top to bottom.
 		double prevY = Double.NEGATIVE_INFINITY;
 
 		for(Point2D point: points) {
+			boolean mappedToOtherPoint = false;
+
 			if (point.getY() - prevY > tolerance){
 				sweepLine.clear();
 				//big offset, clear old points
 			} else {
 				//small offset, test against existing points (there may be more than one)
-				while (sweepLine.containsKey(point)){
+
+				while (!mappedToOtherPoint && sweepLine.containsKey(point)) {
 					//a close point found
 					Point2D closePoint = sweepLine.get(point);
 					double dy = point.getY() - closePoint.getY();
-					if (dy <= tolerance){
+					if (dy <= tolerance) {
 						//mark them as close
-						result.put(closePoint, point);
+						result.put(point, closePoint);
+						mappedToOtherPoint = true;
 					}
+					else
+					{
+						sweepLine.remove(point);
 
-					sweepLine.remove(closePoint);
+					}
 				}
 			}
 
+			if (!mappedToOtherPoint) {
+				sweepLine.put(point, point);
+			}
+
 			prevY = point.getY();
-			sweepLine.put(point, point);
-		}
-
-		//remove cascading relations
-		for(Point2D pt: points) {
-			if (!result.containsKey(pt)){
-				continue;
-			}
-
-			Point2D rep = result.get(pt);
-			while (result.containsKey(rep)){
-				rep = result.get(rep);
-			}
-
-			result.put(pt, rep);
 		}
 
 		return result;

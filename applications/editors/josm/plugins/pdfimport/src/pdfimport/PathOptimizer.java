@@ -70,18 +70,18 @@ public class PathOptimizer {
 		return layer;
 	}
 
-	public void optimize()
-	{
-		//fix points
-		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(uniquePoints, POINT_TOLERANCE);
 
+	public void mergeNodes(double tolerance) {
+		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(uniquePoints, POINT_TOLERANCE);
 
 		for(LayerContents layer: this.layers) {
 			this.fixPoints(layer, pointMap);
 			this.concatenatePaths(layer);
 		}
+	}
 
-
+	public void optimize()
+	{
 		List<LayerContents> newLayers = new ArrayList<LayerContents>();
 		/*
 		for(LayerContents l: this.layers) {
@@ -465,5 +465,6 @@ public class PathOptimizer {
 
 		return true;
 	}
+
 
 }

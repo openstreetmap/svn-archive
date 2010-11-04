@@ -48,7 +48,7 @@ my $tmpFilename = tmpnam() . ".png";
     
     ( $ville && $departement ) or pod2usage(2);
     ( ! @ARGV ) or pod2usage(2);
-    pod2usage(1) if $help;
+    pod2usage(2) if $help;
     if ( $departement =~ /^\d{1,2}$/ ) {
         $departement = sprintf ("%03d", $departement);
     }
@@ -295,9 +295,8 @@ Exemples:
    Pour faciliter le travail de superposition dans JOSM, utiliser l'option --transparence (-t) :
      cadget -v "LE BUGUE" -d 24 -t
    
-=head1 DESCRIPTION
-
-B<cadget> récupére des plans entiers du cadastre via le site.
+Pour plus d'information, voir aussi :
+http://wiki.openstreetmap.org/wiki/WikiProject_Cadastre_Français/cadget
 
 =head1 HISTORIQUE
 

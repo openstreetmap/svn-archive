@@ -52,16 +52,20 @@ public class PathOptimizer {
 	}
 
 	public void filterByColor(Color color) {
+
+		int rgb = color.getRGB() & 0xffffff;
+
 		List<LayerContents> newLayers = new ArrayList<LayerContents>();
 		for(LayerContents l: this.layers) {
 
 			boolean good = false;
 
-			if (l.info.fill != null && l.info.fill.equals(color)) {
+
+			if (l.info.fill != null && (l.info.fill.getRGB() & 0xffffff) == rgb) {
 				good = true;
 			}
 
-			if (l.info.stroke != null && l.info.stroke.equals(color)) {
+			if (l.info.stroke != null && (l.info.stroke.getRGB() & 0xffffff) == rgb) {
 				good = true;
 			}
 
@@ -276,74 +280,159 @@ public class PathOptimizer {
 	 * @param layer the layer to process.
 	 */
 	private void concatenatePaths(LayerContents layer) {
-		Map<Point2D, PdfPath> pathEndpoints = new HashMap<Point2D, PdfPath>();
+		Map<Point2D, List<PdfPath>> pathEndpoints = new HashMap<Point2D, List<PdfPath>>();
 		Set<PdfPath> mergedPaths = new HashSet<PdfPath>();
+		List<PdfPath> newPaths = new ArrayList<PdfPath>();
 
+		//fill pathEndpoints map
 		for(PdfPath pp: layer.paths){
+			if (pp.isClosed()) {
+				newPaths.add(pp);
+				continue;
+			}
 
-			PdfPath path = pp;
+			List<PdfPath> paths = pathEndpoints.get(pp.firstPoint());
+			if (paths == null){
+				paths = new ArrayList<PdfPath>(2);
+				pathEndpoints.put(pp.firstPoint(), paths);
+			}
+			paths.add(pp);
+
+			paths = pathEndpoints.get(pp.lastPoint());
+			if (paths == null){
+				paths = new ArrayList<PdfPath>(2);
+				pathEndpoints.put(pp.lastPoint(), paths);
+			}
+			paths.add(pp);
+		}
+
+		List<PdfPath> pathChain = new ArrayList<PdfPath>(2);
+		Set<Point2D> pointsInPath = new HashSet<Point2D>();
+
+		//join the paths
+		for(PdfPath pp: layer.paths) {
+
+			if (pp.isClosed() || mergedPaths.contains(pp)) {
+				continue;
+			}
+
 			boolean changed = true;
 
-			while (changed && !path.isClosed()) {
-				changed  = false;
+			PdfPath firstPath = pp;
+			PdfPath lastPath = pp;
+			Point2D firstPoint = pp.firstPoint();
+			Point2D lastPoint = pp.lastPoint();
 
-				if (pathEndpoints.containsKey(path.firstPoint())) {
 
-					PdfPath p1 = pathEndpoints.get(path.firstPoint());
+			pathChain.clear();
+			pathChain.add(pp);
+			pointsInPath.clear();
+			pointsInPath.add(firstPoint);
+			pointsInPath.add(lastPoint);
 
-					if (this.isSubpathOf(p1, path)){
-						continue;
+			//process last point
+			while (changed && firstPoint != lastPoint) {
+				changed = false;
+
+				List<PdfPath> adjacentPaths = pathEndpoints.get(lastPoint);
+				PdfPath nextPath = findNextPath(adjacentPaths, lastPath);
+
+				if (nextPath != null) {
+					Point2D nextPoint = nextPath.getOtherEnd(lastPoint);
+
+					lastPoint = nextPoint;
+					lastPath = nextPath;
+					pathChain.add(lastPath);
+
+					if (!pointsInPath.contains(lastPoint)) {
+						pointsInPath.add(lastPoint);
+						changed = true;
 					}
-
-					pathEndpoints.remove(p1.firstPoint());
-					pathEndpoints.remove(p1.lastPoint());
-
-					List<Point2D> newNodes = tryMergeNodeLists(path.points, p1.points);
-
-					if (newNodes == null)
+					else
 					{
-						int a = 10;
-						a++;
+						//closed path found
+						//remove excess segments from start of chain
+						while (lastPoint != firstPoint) {
+							PdfPath pathToRemove = pathChain.get(0);
+							firstPoint = pathToRemove.getOtherEnd(firstPoint);
+						}
+
+						changed = false;
 					}
-
-					path.points = newNodes;
-					mergedPaths.add(p1);
-					changed = true;
-				}
-
-				if (pathEndpoints.containsKey(path.lastPoint())) {
-					PdfPath p1 = pathEndpoints.get(path.lastPoint());
-
-					if (this.isSubpathOf(p1, path)){
-						continue;
-					}
-
-					pathEndpoints.remove(p1.firstPoint());
-					pathEndpoints.remove(p1.lastPoint());
-
-					List<Point2D> newNodes = tryMergeNodeLists(path.points, p1.points);
-					path.points = newNodes;
-					mergedPaths.add(p1);
-					changed = true;
 				}
 			}
 
-			if (!path.isClosed()){
-				pathEndpoints.put(path.firstPoint(), path);
-				pathEndpoints.put(path.lastPoint(), path);
+
+			//process first point
+			changed = true;
+			while (changed && firstPoint != lastPoint) {
+				changed = false;
+
+				List<PdfPath> adjacentPaths = pathEndpoints.get(firstPoint);
+				PdfPath nextPath = findNextPath(adjacentPaths, firstPath);
+
+				if (nextPath != null) {
+					Point2D nextPoint = nextPath.getOtherEnd(firstPoint);
+
+					firstPoint = nextPoint;
+					firstPath = nextPath;
+					pathChain.add(0, firstPath);
+
+					if (!pointsInPath.contains(nextPoint)) {
+						pointsInPath.add(firstPoint);
+						changed = true;
+					}
+					else
+					{
+						//closed path found
+						//remove excess segments from end of chain
+						while (lastPoint != firstPoint) {
+							PdfPath pathToRemove = pathChain.get(pathChain.size() - 1);
+							lastPoint = pathToRemove.getOtherEnd(lastPoint);
+						}
+
+						changed = false;
+					}
+				}
 			}
+
+			//construct path
+
+			//remove from map
+			for (PdfPath path: pathChain) {
+				pathEndpoints.get(path.firstPoint()).remove(path);
+				pathEndpoints.get(path.lastPoint()).remove(path);
+			}
+
+			PdfPath path = pathChain.get(0);
+
+			for (int pos = 1; pos < pathChain.size(); pos ++) {
+				path.points = tryMergeNodeLists(path.points, pathChain.get(pos).points);
+
+				if (path.points == null) {
+					throw new RuntimeException();
+				}
+
+				mergedPaths.add(pathChain.get(pos));
+			}
+
+			newPaths.add(path);
 		}
 
-		List<PdfPath> resultPaths = new ArrayList<PdfPath>();
-
-		for(PdfPath path: layer.paths) {
-			if (!mergedPaths.contains(path)){
-				resultPaths.add(path);
-			}
-		}
-
-		layer.paths = resultPaths;
+		layer.paths = newPaths;
 	}
+
+	private PdfPath findNextPath(List<PdfPath> adjacentPaths, PdfPath firstPath) {
+		for (int pos = 0; pos < adjacentPaths.size(); pos ++) {
+			PdfPath p = adjacentPaths.get(pos);
+			if (p != firstPath && !isSubpathOf(firstPath, p)){
+				return p;
+			}
+		}
+
+		return null;
+	}
+
 
 	/**
 	 * Tests if sub is subpath of main.

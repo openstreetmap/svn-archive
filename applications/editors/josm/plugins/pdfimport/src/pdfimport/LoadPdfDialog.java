@@ -77,6 +77,10 @@ public class LoadPdfDialog extends JFrame {
 	private JTextField removeSmallObjectsSize;
 	private JTextField colorFilterColor;
 	private JCheckBox colorFilterCheck;
+	private JCheckBox removeParallelSegmentsCheck;
+	private JTextField removeParallelSegmentsTolerance;
+	private JCheckBox removeLargeObjectsCheck;
+	private JTextField removeLargeObjectsSize;
 
 	public LoadPdfDialog() {
 
@@ -176,8 +180,16 @@ public class LoadPdfDialog extends JFrame {
 		this.removeSmallObjectsCheck = new JCheckBox(tr("Remove objects smaller than"));
 		this.removeSmallObjectsSize = new JTextField("1");
 
+		this.removeLargeObjectsCheck = new JCheckBox(tr("Remove objects larger than"));
+		this.removeLargeObjectsSize = new JTextField("10");
+
+
 		this.colorFilterCheck = new JCheckBox(tr("Only this color"));
 		this.colorFilterColor = new JTextField("#000000");
+
+		this.removeParallelSegmentsCheck = new JCheckBox(tr("Remove parallel lines"));
+		this.removeParallelSegmentsTolerance = new JTextField("3");
+
 
 		JPanel configPanel = new JPanel(new GridBagLayout());
 		configPanel.setBorder(BorderFactory.createTitledBorder(tr("Import settings")));
@@ -196,11 +208,25 @@ public class LoadPdfDialog extends JFrame {
 		configPanel.add(this.removeSmallObjectsSize, c);
 
 		c.gridx = 0; c.gridy = 2; c.gridwidth = 1;
+		configPanel.add(this.removeLargeObjectsCheck, c);
+		c.gridx = 1; c.gridy = 2; c.gridwidth = 1; c.anchor = c.NORTHEAST;
+		configPanel.add(new JLabel("Tolerance :"), c);
+		c.gridx = 2; c.gridy = 2; c.gridwidth = 1; c.anchor = c.NORTHWEST;
+		configPanel.add(this.removeLargeObjectsSize, c);
+
+		c.gridx = 0; c.gridy = 3; c.gridwidth = 1;
+		configPanel.add(this.removeParallelSegmentsCheck, c);
+		c.gridx = 1; c.gridy = 3; c.gridwidth = 1; c.anchor = c.NORTHEAST;
+		configPanel.add(new JLabel("Max distance :"), c);
+		c.gridx = 2; c.gridy = 3; c.gridwidth = 1; c.anchor = c.NORTHWEST;
+		configPanel.add(this.removeParallelSegmentsTolerance, c);
+
+		c.gridx = 0; c.gridy = 4; c.gridwidth = 1;
 		configPanel.add(this.colorFilterCheck, c);
-		c.gridx = 2; c.gridy = 2; c.gridwidth = 1;
+		c.gridx = 2; c.gridy = 4; c.gridwidth = 1;
 		configPanel.add(this.colorFilterColor, c);
 
-		c.gridx = 0; c.gridy = 3; c.gridwidth = 2;
+		c.gridx = 0; c.gridy = 5; c.gridwidth = 2;
 		configPanel.add(this.debugModeCheck, c);
 
 
@@ -269,7 +295,7 @@ public class LoadPdfDialog extends JFrame {
 		c.gridx = 0; c.gridy = 3; c.gridwidth = 1;
 		panel.add(okCancelPanel, c);
 
-		this.setSize(400, 500);
+		this.setSize(400, 520);
 		this.setContentPane(panel);
 	}
 
@@ -395,7 +421,8 @@ public class LoadPdfDialog extends JFrame {
 		}
 
 		LatLon ll = ((Node)selected.iterator().next()).getCoor();
-		return this.placement.reverseTransform(ll);
+		FilePlacement pl = new FilePlacement();
+		return pl.reverseTransform(ll);
 	}
 
 
@@ -508,6 +535,20 @@ public class LoadPdfDialog extends JFrame {
 		}
 
 
+		if (this.removeParallelSegmentsCheck.isSelected()) {
+			try {
+				double tolerance = Double.parseDouble(this.removeParallelSegmentsTolerance.getText());
+				data.removeParallelLines(tolerance);
+			}
+			catch (Exception e) {
+				JOptionPane
+				.showMessageDialog(
+						Main.parent,
+						tr("Max distance is not a number"));
+				return null;
+			}
+		}
+
 		if (this.mergeCloseNodesCheck.isSelected()) {
 			try {
 				double tolerance = Double.parseDouble(this.mergeCloseNodesTolerance.getText());
@@ -538,6 +579,20 @@ public class LoadPdfDialog extends JFrame {
 			}
 		}
 
+
+		if (this.removeLargeObjectsCheck.isSelected()) {
+			try {
+				double tolerance = Double.parseDouble(this.removeLargeObjectsSize.getText());
+				data.removeLargeObjects(tolerance);
+			}
+			catch (Exception e) {
+				JOptionPane
+				.showMessageDialog(
+						Main.parent,
+						tr("Tolerance is not a number"));
+				return null;
+			}
+		}
 
 		data.splitLayersByPathKind();
 		data.finish();

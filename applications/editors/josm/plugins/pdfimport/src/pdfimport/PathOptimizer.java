@@ -46,9 +46,20 @@ public class PathOptimizer {
 	}
 
 	public void addMultiPath(LayerInfo info, List<PdfPath> paths) {
+
 		LayerContents layer = this.getLayer(info);
-		PdfMultiPath p = new PdfMultiPath(paths);
-		layer.multiPaths.add(p);
+		boolean goodMultiPath = true;
+
+		for(PdfPath path: paths) {
+			goodMultiPath &= path.isClosed();
+		}
+
+		if (goodMultiPath) {
+			PdfMultiPath p = new PdfMultiPath(paths);
+			layer.multiPaths.add(p);
+		} else {
+			layer.paths.addAll(paths);
+		}
 	}
 
 	public void filterByColor(Color color) {
@@ -77,6 +88,11 @@ public class PathOptimizer {
 	}
 
 
+	public void removeParallelLines(double maxDistance){
+		for(LayerContents layer: this.layers) {
+			this.removeParallelLines(layer, maxDistance);
+		}
+	}
 
 	public void mergeNodes(double tolerance) {
 		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(uniquePoints, tolerance);
@@ -95,7 +111,14 @@ public class PathOptimizer {
 
 	public void removeSmallObjects(double tolerance) {
 		for(LayerContents layer: this.layers) {
-			this.removeSmallObjects(layer, tolerance);
+			this.removeSmallObjects(layer, tolerance, Double.POSITIVE_INFINITY);
+		}
+	}
+
+
+	public void removeLargeObjects(double tolerance) {
+		for(LayerContents layer: this.layers) {
+			this.removeSmallObjects(layer, 0.0, tolerance);
 		}
 	}
 
@@ -231,11 +254,12 @@ public class PathOptimizer {
 	}
 
 
-	private void removeSmallObjects(LayerContents layer, double tolerance) {
+	private void removeSmallObjects(LayerContents layer, double min, double max) {
 		List<PdfPath> newPaths = new ArrayList<PdfPath>(layer.paths.size());
 
 		for(PdfPath path: layer.paths) {
-			boolean good = getShapeSize(path) >= tolerance;
+			double size = getShapeSize(path);
+			boolean good = size >= min && size <= max;
 
 			if (good) {
 				newPaths.add(path);
@@ -249,7 +273,8 @@ public class PathOptimizer {
 		for (PdfMultiPath mp: layer.multiPaths){
 			boolean good = true;
 			for(PdfPath path: mp.paths) {
-				good &= getShapeSize(path) >= tolerance;
+				double size = getShapeSize(path);
+				good &= size >= min && size <= max;
 			}
 
 			if (good) {
@@ -273,6 +298,75 @@ public class PathOptimizer {
 		return Math.max(bounds.getWidth(), bounds.getHeight());
 	}
 
+
+
+	/***
+	 * This method finds parralel lines with similar distance and removes them.
+	 * @param layer
+	 */
+	private void removeParallelLines(LayerContents layer, double maxDistance) {
+		double angleTolerance = 1.0 / 180.0 * Math.PI; // 1 degree
+		int minSegments = 10;
+
+		//filter paths by direction
+		List<ParallelSegmentsFinder> angles = new ArrayList<ParallelSegmentsFinder>();
+
+		for(PdfPath path: layer.paths) {
+			if (path.points.size() != 2){
+				continue;
+			}
+
+			Point2D p1 = path.firstPoint();
+			Point2D p2 = path.lastPoint();
+			double angle = Math.atan2(p2.getX() - p1.getX(), p2.getY() - p1.getY());
+			//normalize between 0 and 180 degrees
+			while (angle < 0) angle += Math.PI;
+			while (angle > Math.PI) angle -= Math.PI;
+			boolean added = false;
+
+			for(ParallelSegmentsFinder pa: angles) {
+				if (Math.abs(pa.angle - angle) < angleTolerance){
+					pa.addPath(path, angle);
+					added = true;
+					break;
+				}
+			}
+
+			if (!added) {
+				ParallelSegmentsFinder pa = new ParallelSegmentsFinder();
+				pa.addPath(path, angle);
+				angles.add(pa);
+			}
+		}
+
+		Set<PdfPath> pathsToRemove = new HashSet<PdfPath>();
+
+		//process each direction
+		for (ParallelSegmentsFinder pa: angles){
+			if (pa.paths.size() < minSegments){
+				continue;
+			}
+
+			List<ParallelSegmentsFinder> parts = pa.splitByDistance(maxDistance);
+
+			for(ParallelSegmentsFinder part: parts) {
+				if (part.paths.size() >= minSegments){
+					pathsToRemove.addAll(part.paths);
+				}
+			}
+		}
+
+		//generate new path list
+		List<PdfPath> result = new ArrayList<PdfPath>(layer.paths.size() - pathsToRemove.size());
+
+		for(PdfPath path: layer.paths) {
+			if (!pathsToRemove.contains(path)) {
+				result.add(path);
+			}
+		}
+
+		layer.paths = result;
+	}
 
 
 	/**
@@ -353,7 +447,7 @@ public class PathOptimizer {
 						//closed path found
 						//remove excess segments from start of chain
 						while (lastPoint != firstPoint) {
-							PdfPath pathToRemove = pathChain.remove(0);							
+							PdfPath pathToRemove = pathChain.remove(0);
 							firstPoint = pathToRemove.getOtherEnd(firstPoint);
 						}
 
@@ -636,6 +730,7 @@ public class PathOptimizer {
 
 		return true;
 	}
+
 
 
 }

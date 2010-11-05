@@ -90,20 +90,29 @@ public class FilePlacement {
 
 	}
 
+	EastNorth en = new EastNorth(0, 0);
+
 	public LatLon tranformCoords(double x, double y) {
 
 		if (this.projection == null){
-			return new LatLon(y/1000, x/1000);
+			//en.setLocation(x * 1024,y * 1024);
+			//return Main.proj.eastNorth2latlon( en);
+			return new LatLon(y / 1000, x / 1000);
 		}
 		else{
+
 			x = (x - this.minX) * (this.maxEast - this.minEast) / (this.maxX - this.minX)  + this.minEast;
 			y = (y - this.minY) * (this.maxNorth - this.minNorth) /  (this.maxY - this.minY) + this.minNorth;
-			return this.projection.eastNorth2latlon(new EastNorth(x, y));
+			en.setLocation(x,y);
+			return this.projection.eastNorth2latlon(en);
 		}
 	}
 
 	public EastNorth reverseTransform(LatLon coor) {
 		if (this.projection == null){
+			//EastNorth result = this.projection.latlon2eastNorth(coor);
+			//result.setLocation(result.east() / 1024, result.north() / 1024);
+			//return result;
 			return new EastNorth(coor.lon() * 1000, coor.lat() * 1000);
 		}
 		else{

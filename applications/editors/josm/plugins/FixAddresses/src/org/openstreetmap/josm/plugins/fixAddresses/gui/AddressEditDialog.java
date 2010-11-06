@@ -52,7 +52,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
-import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -259,7 +259,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 		}
 		
 		clearMapViewer();
-		StreetNode sNode = ev.getSelectedStreet();
+		OSMStreet sNode = ev.getSelectedStreet();
 		if (sNode != null) {
 						
 			//mapViewer.addMapRectangle(new BBoxMapRectangle(bb));

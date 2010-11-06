@@ -73,7 +73,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	
 	private Collection<? extends OsmPrimitive> workingSet;
 	/** The street dictionary collecting all streets to a set of unique street names. */
-	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100);
+	private HashMap<String, OSMStreet> streetDict = new HashMap<String, OSMStreet>(100);
 	
 	/** The unresolved addresses list. */
 	private List<OSMAddress> unresolvedAddresses = new ArrayList<OSMAddress>(100);
@@ -82,7 +82,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private List<OSMAddress> incompleteAddresses = new ArrayList<OSMAddress>(100);
 	
 	/** The shadow copy to assemble the street dict during update. */
-	private HashMap<String, StreetNode> shadowStreetDict = new HashMap<String, StreetNode>(100);
+	private HashMap<String, OSMStreet> shadowStreetDict = new HashMap<String, OSMStreet>(100);
 	/** The shadow copy to assemble the unresolved addresses during update. */
 	private List<OSMAddress> shadowUnresolvedAddresses = new ArrayList<OSMAddress>(100);
 	/** The shadow copy to assemble the incomplete addresses during update. */
@@ -296,11 +296,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 					String name = newSegment.getName();
 					if (StringUtils.isNullOrEmpty(name)) return false;
 
-					StreetNode sNode = null;
+					OSMStreet sNode = null;
 					if (shadowStreetDict.containsKey(name)) { // street exists?
 						sNode = shadowStreetDict.get(name);
 					} else { // new street name -> add to dict
-						sNode = new StreetNode(w);
+						sNode = new OSMStreet(w);
 						shadowStreetDict.put(name, sNode);
 					}
 
@@ -343,7 +343,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Gets the dictionary contains the collected streets.
 	 * @return
 	 */
-	public HashMap<String, StreetNode> getStreetDict() {
+	public HashMap<String, OSMStreet> getStreetDict() {
 		return streetDict;
 	}
 	
@@ -370,8 +370,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 *
 	 * @return the street list
 	 */
-	public List<StreetNode> getStreetList() {		
-		ArrayList<StreetNode> sortedList = new ArrayList<StreetNode>(streetDict.values());
+	public List<OSMStreet> getStreetList() {		
+		ArrayList<OSMStreet> sortedList = new ArrayList<OSMStreet>(streetDict.values());
 		Collections.sort(sortedList);
 		return sortedList;
 	}
@@ -462,7 +462,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		String streetName = aNode.getStreetName();
 		
 		if (streetName != null && shadowStreetDict.containsKey(streetName)) {
-			StreetNode sNode = shadowStreetDict.get(streetName);
+			OSMStreet sNode = shadowStreetDict.get(streetName);
 			sNode.addAddress(aNode);
 			return true;
 		}
@@ -523,7 +523,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			// put results from shadow copy into real lists
 			incompleteAddresses = new ArrayList<OSMAddress>(shadowIncompleteAddresses);
 			unresolvedAddresses = new ArrayList<OSMAddress>(shadowUnresolvedAddresses);
-			streetDict = new HashMap<String, StreetNode>(shadowStreetDict);
+			streetDict = new HashMap<String, OSMStreet>(shadowStreetDict);
 			// remove temp data
 			shadowStreetDict.clear();
 			shadowUnresolvedAddresses.clear();

@@ -21,7 +21,7 @@ import javax.swing.JTable;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
-import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
 public class AddressEditSelectionEvent extends ActionEvent {
 	/**
@@ -71,7 +71,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	 * Gets the selected street of the street table.
 	 * @return
 	 */
-	public StreetNode getSelectedStreet() {
+	public OSMStreet getSelectedStreet() {
 		if (streetTable != null && addressContainer != null && addressContainer.getStreetList() != null) {
 			int selRows = streetTable.getSelectedRow();
 			

@@ -319,7 +319,7 @@ public class OSMAddress extends OSMEntityBase {
 	 * Applies the street name from the specified street node.
 	 * @param node
 	 */
-	public void assignStreet(StreetNode node) {
+	public void assignStreet(OSMStreet node) {
 		if (node == null || !node.hasName()) return;
 		
 		if (!node.getName().equals(getStreetName())) {

@@ -17,7 +17,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
-import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
 public class StreetTableModel extends AddressEditTableModel {
 
@@ -78,7 +78,7 @@ public class StreetTableModel extends AddressEditTableModel {
 	 */
 	@Override
 	public Object getValueAt(int row, int column) {		
-		StreetNode sNode = (StreetNode) getEntityOfRow(row);
+		OSMStreet sNode = (OSMStreet) getEntityOfRow(row);
 		
 		if (sNode == null) {
 			return null;

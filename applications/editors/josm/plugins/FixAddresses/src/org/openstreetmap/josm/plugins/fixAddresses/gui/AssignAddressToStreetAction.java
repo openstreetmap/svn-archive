@@ -17,7 +17,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
-import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
 /**
  * Assigns one or more selected addresses to a street, i. e. the name of the street is 
@@ -41,7 +41,7 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction  {
 	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {		
-		StreetNode streetNode = ev.getSelectedStreet();
+		OSMStreet streetNode = ev.getSelectedStreet();
 						
 		if (streetNode != null && ev.getSelectedUnresolvedAddresses() != null) {
 			beginTransaction(tr("Set street name") + " '" + streetNode.getName() + "'");

@@ -23,10 +23,10 @@ import javax.swing.tree.TreeNode;
 
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
-import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
 public class AddressEditModel {
-	private List<StreetNode> streets;
+	private List<OSMStreet> streets;
 	private List<OSMAddress> unresolvedAddresses;
 	private List<OSMAddress> incompleteAddresses = new ArrayList<OSMAddress>();
 	private DefaultMutableTreeNode streetRoot;
@@ -37,7 +37,7 @@ public class AddressEditModel {
 	 * @param streets
 	 * @param unresolvedAddresses
 	 */
-	public AddressEditModel(List<StreetNode> streets,
+	public AddressEditModel(List<OSMStreet> streets,
 			List<OSMAddress> unresolvedAddresses) {
 		super();
 		this.streets = streets;
@@ -49,7 +49,7 @@ public class AddressEditModel {
 		
 		if (streetRoot == null) {
 			streetRoot = new DefaultMutableTreeNode();
-			for (StreetNode sNode : streets) {
+			for (OSMStreet sNode : streets) {
 				DefaultMutableTreeNode treeStreetNode = new DefaultMutableTreeNode(sNode);
 				
 				DefaultMutableTreeNode segmentsNode = new DefaultMutableTreeNode(tr("Segments"));

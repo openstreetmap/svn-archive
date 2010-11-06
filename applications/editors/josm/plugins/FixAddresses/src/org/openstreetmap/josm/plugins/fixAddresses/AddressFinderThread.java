@@ -32,14 +32,19 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.xml.sax.SAXException;
 
+/**
+ * The class AddressFinderThread scans the data set to find the best guess for a missing address field.
+ * 
+ * The guessing procedure itself is implemented by defining "guessers" using the {@link GuessedValueHandler} 
+ * class. A guessed field does not modify the corresponding property of {@link AddressNode} itself, but 
+ * adds the guessed value to a shadowed field by calling {@link AddressNode#setGuessedValue(String, String)}.  
+ */
 public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 	private List<AddressNode> addressesToGuess;
 	private List<IProgressMonitorFinishedListener> finishListeners = new ArrayList<IProgressMonitorFinishedListener>();
 	private double minDist;
 	private AddressNode curAddressNode;
-	private boolean isRunning = false;
-	private String nearestName = null;
-	private String currentName = null;
+	private boolean isRunning = false;	
 	private boolean cancelled;
 	
 	/**
@@ -109,7 +114,6 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 		
 		if (dist < minDist) {
 			minDist = dist;
-			nearestName = currentName;
 		}
 	}
 
@@ -122,7 +126,6 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 		if (!TagUtils.hasHighwayTag(w)) return;		
 		if (!TagUtils.hasNameTag(w)) return;
 		
-		currentName = TagUtils.getNameValue(w);
 		for (Node node : w.getNodes()) {
 			visit(node);
 		}		

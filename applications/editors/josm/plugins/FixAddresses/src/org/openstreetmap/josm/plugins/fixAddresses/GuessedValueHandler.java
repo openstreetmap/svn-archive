@@ -23,7 +23,8 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  * GuessedValueHandler visits all nodes and ways in order to find a guessed value for a given tag.
  * The guess is determined by finding the closest way/node with the given tag. If no appropriate node
  * is found within maximum distance, no guess is made.
-
+ * 
+ * The default maximum distance is 100m.
  */
 public class GuessedValueHandler implements Visitor {
 	

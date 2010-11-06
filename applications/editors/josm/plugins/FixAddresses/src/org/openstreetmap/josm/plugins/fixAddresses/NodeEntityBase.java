@@ -26,6 +26,16 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
+/**
+ * The class NodeEntityBase provides a base implementation for the {@link INodeEntity} interface.
+ * 
+ * The implementation comprises
+ * <ol>
+ * <li>Handle change listeners
+ * <li>Links the corresponding OSM object
+ * <li>Tag handling
+ * </ol>
+ */
 public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	public static final String ANONYMOUS = tr("No name");
 	private static List<IAddressEditContainerListener> containerListeners = new ArrayList<IAddressEditContainerListener>();

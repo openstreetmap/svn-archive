@@ -17,6 +17,10 @@ import java.util.HashMap;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
+/**
+ * The class AddressNode represents a single address node of OSM. It is a lightweight 
+ * wrapper for a OSM node in order to simplify tag handling.
+ */
 public class AddressNode extends NodeEntityBase {
 	public static final String MISSING_TAG = "?";
 	

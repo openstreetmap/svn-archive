@@ -15,17 +15,14 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- * Action to find and fix addresses without (valid) streets.
- * @author Oliver Wieland <oliver.wieland@online.de>
+ * Action to find and fix addresses without (valid) streets. It launches an dialog
+ * instance of {@link AddressEditDialog}.
  * 
+ * @author Oliver Wieland <oliver.wieland@online.de>
  */
 
+@SuppressWarnings("serial")
 public class FixUnresolvedStreetsAction extends JosmAction implements SelectionChangedListener {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private AddressEditContainer addressEditContainer;
 	private Collection<? extends OsmPrimitive> newSelection;
 

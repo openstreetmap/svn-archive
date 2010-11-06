@@ -19,8 +19,8 @@ public interface ICommandListener {
 	/**
 	 * Called by a node entity if a command has been created. Clients may collect
 	 * these commands to define a sequence command.
-	 * @param entity
-	 * @param command
+	 * @param entity The entity which created/used the command.
+	 * @param command The command instance to process by the enclosing command listener.
 	 */
 	public void commandIssued(INodeEntity entity, Command command);
 }

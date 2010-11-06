@@ -17,10 +17,13 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * The Class FixAddressesPlugin is the main entry point for the plugin.
+ */
 public class FixAddressesPlugin extends Plugin {
 
 	/**
-	 * Constructor for the AddressEdit plugin.
+	 * Constructor for the AddressEdit plugin. Called by JOSM when loading the plugin.
 	 * @param info Context information of the plugin.
 	 */
 	public FixAddressesPlugin(PluginInformation info) {

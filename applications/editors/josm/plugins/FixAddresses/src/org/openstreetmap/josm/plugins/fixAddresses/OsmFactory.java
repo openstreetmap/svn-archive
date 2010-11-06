@@ -18,7 +18,7 @@ import java.util.HashMap;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
-public class NodeFactory {
+public class OsmFactory {
 	private static HashMap<String, OSMAddress> addressCache = new HashMap<String, OSMAddress>();
 	
 	/**

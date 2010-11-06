@@ -209,7 +209,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
 		OSMAddress aNode = null;
 		// Address nodes are recycled in order to keep instance variables like guessed names
-		aNode = NodeFactory.createNode(n);
+		aNode = OsmFactory.createNode(n);
 						
 		if (aNode != null) {
 			addAndClassifyAddress(aNode);
@@ -255,7 +255,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * @param w the way to create the entity from
 	 */
 	private void createNodeFromWay(Way w) {
-		IOSMEntity ne = NodeFactory.createNodeFromWay(w);
+		IOSMEntity ne = OsmFactory.createNodeFromWay(w);
 		
 		if (!processNode(ne, w)) {
 			// Look also into nodes for addresses (unlikely, but at least they

@@ -20,7 +20,7 @@ import java.util.List;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressFinderThread;
-import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IProgressMonitorFinishedListener;
 
 /**
@@ -79,7 +79,7 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	 * Internal method to start several threads guessing tag values for the given list of addresses.
 	 * @param addrNodes
 	 */
-	private void internalGuessAddresses(List<AddressNode> nodes) {
+	private void internalGuessAddresses(List<OSMAddress> nodes) {
 		AddressFinderThread aft = new AddressFinderThread(nodes, tr("Guess street names"));
 		aft.addFinishListener(this);
 		Main.worker.submit(aft);

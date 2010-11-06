@@ -21,14 +21,14 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
 public class AddressEditModel {
 	private List<StreetNode> streets;
-	private List<AddressNode> unresolvedAddresses;
-	private List<AddressNode> incompleteAddresses = new ArrayList<AddressNode>();
+	private List<OSMAddress> unresolvedAddresses;
+	private List<OSMAddress> incompleteAddresses = new ArrayList<OSMAddress>();
 	private DefaultMutableTreeNode streetRoot;
 	private DefaultMutableTreeNode unresolvedRoot;
 	private DefaultMutableTreeNode incompleteRoot;
@@ -38,7 +38,7 @@ public class AddressEditModel {
 	 * @param unresolvedAddresses
 	 */
 	public AddressEditModel(List<StreetNode> streets,
-			List<AddressNode> unresolvedAddresses) {
+			List<OSMAddress> unresolvedAddresses) {
 		super();
 		this.streets = streets;
 		this.unresolvedAddresses = unresolvedAddresses;
@@ -65,7 +65,7 @@ public class AddressEditModel {
 					DefaultMutableTreeNode addressNode = new DefaultMutableTreeNode(tr("Addresses"));
 					treeStreetNode.add(addressNode);
 					
-					for (AddressNode addr : sNode.getAddresses()) {
+					for (OSMAddress addr : sNode.getAddresses()) {
 						addressNode.add(new DefaultMutableTreeNode(addr));
 						if (!addr.isComplete()) {
 							incompleteAddresses.add(addr);
@@ -89,7 +89,7 @@ public class AddressEditModel {
 		if (unresolvedRoot == null) {
 			unresolvedRoot = new DefaultMutableTreeNode();
 			
-			for (AddressNode addr : unresolvedAddresses) {
+			for (OSMAddress addr : unresolvedAddresses) {
 				// Add address nodes				
 				unresolvedRoot.add(new DefaultMutableTreeNode(addr));
 			}
@@ -108,7 +108,7 @@ public class AddressEditModel {
 		if (incompleteRoot == null) {
 			incompleteRoot = new DefaultMutableTreeNode();
 			
-			for (AddressNode addr : incompleteAddresses) {
+			for (OSMAddress addr : incompleteAddresses) {
 				// Add address nodes				
 				incompleteRoot.add(new DefaultMutableTreeNode(addr));
 			}

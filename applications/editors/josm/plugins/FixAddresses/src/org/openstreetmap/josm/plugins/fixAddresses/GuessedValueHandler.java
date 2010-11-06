@@ -34,7 +34,7 @@ public class GuessedValueHandler implements Visitor {
 	private String tag;
 	protected double minDist;
 	protected String currentValue;
-	private AddressNode aNode;
+	private OSMAddress aNode;
 	private double maxDist = DEFAULT_MAX_DIST;
 	
 	/**
@@ -44,7 +44,7 @@ public class GuessedValueHandler implements Visitor {
 	 * @param aNode the address node to guess the values for.
 	 * @param maxDist the maximum distance for a node/way to be considered as guessed value.
 	 */
-	public GuessedValueHandler(String tag, AddressNode aNode) {
+	public GuessedValueHandler(String tag, OSMAddress aNode) {
 		this(tag, aNode, DEFAULT_MAX_DIST);
 	}
 	
@@ -55,7 +55,7 @@ public class GuessedValueHandler implements Visitor {
 	 * @param aNode the address node to guess the values for.
 	 * @param maxDist the maximum distance for a node/way to be considered as guessed value.
 	 */
-	public GuessedValueHandler(String tag, AddressNode aNode, double maxDist) {
+	public GuessedValueHandler(String tag, OSMAddress aNode, double maxDist) {
 		super();
 		
 		if (StringUtils.isNullOrEmpty(tag)) {
@@ -81,7 +81,7 @@ public class GuessedValueHandler implements Visitor {
 	 *
 	 * @return the aNode
 	 */
-	protected AddressNode getAddressNode() {
+	protected OSMAddress getAddressNode() {
 		return aNode;
 	}
 

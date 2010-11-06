@@ -24,7 +24,7 @@ import java.util.List;
 import javax.swing.JTable;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 
 /**
@@ -45,7 +45,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		if (ev == null || ev.getSelectedUnresolvedAddresses() == null) return;
 		// fix SELECTED items only
-		List<AddressNode> addrToFix = ev.getSelectedUnresolvedAddresses();
+		List<OSMAddress> addrToFix = ev.getSelectedUnresolvedAddresses();
 		applyGuesses(addrToFix);
 	}
 
@@ -54,10 +54,10 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 		setEnabled(container != null && container.getNumberOfGuesses() > 0);
 	}
 
-	private void applyGuesses(List<AddressNode> addrToFix) {
+	private void applyGuesses(List<OSMAddress> addrToFix) {
 		beginTransaction(tr("Applied guessed values"));
-		List<AddressNode> addrToFixShadow = new ArrayList<AddressNode>(addrToFix);
-		for (AddressNode aNode : addrToFixShadow) {
+		List<OSMAddress> addrToFixShadow = new ArrayList<OSMAddress>(addrToFix);
+		for (OSMAddress aNode : addrToFixShadow) {
 			beginObjectTransaction(aNode);
 			aNode.applyAllGuesses();
 			finishObjectTransaction(aNode);
@@ -74,7 +74,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 	public void addressEditActionPerformed(AddressEditContainer container) {
 		if (container == null || container.getUnresolvedAddresses() == null) return;
 		
-		List<AddressNode> addrToFix = container.getUnresolvedAddresses();
+		List<OSMAddress> addrToFix = container.getUnresolvedAddresses();
 		applyGuesses(addrToFix);		
 	}
 
@@ -87,10 +87,10 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 			if (model != null) {
 				int row = table.rowAtPoint(p);
 				IOSMEntity node = model.getEntityOfRow(row);
-				if (node instanceof AddressNode) {
+				if (node instanceof OSMAddress) {
 					beginTransaction(tr("Applied guessed values for ") + node.getOsmObject());
 					beginObjectTransaction(node);
-					AddressNode aNode = (AddressNode) node;
+					OSMAddress aNode = (OSMAddress) node;
 					if (aNode.hasGuessedStreetName()) {
 						aNode.applyAllGuesses();
 					}

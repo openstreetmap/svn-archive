@@ -76,17 +76,17 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private HashMap<String, StreetNode> streetDict = new HashMap<String, StreetNode>(100);
 	
 	/** The unresolved addresses list. */
-	private List<AddressNode> unresolvedAddresses = new ArrayList<AddressNode>(100);
+	private List<OSMAddress> unresolvedAddresses = new ArrayList<OSMAddress>(100);
 	
 	/** The incomplete addresses list. */
-	private List<AddressNode> incompleteAddresses = new ArrayList<AddressNode>(100);
+	private List<OSMAddress> incompleteAddresses = new ArrayList<OSMAddress>(100);
 	
 	/** The shadow copy to assemble the street dict during update. */
 	private HashMap<String, StreetNode> shadowStreetDict = new HashMap<String, StreetNode>(100);
 	/** The shadow copy to assemble the unresolved addresses during update. */
-	private List<AddressNode> shadowUnresolvedAddresses = new ArrayList<AddressNode>(100);
+	private List<OSMAddress> shadowUnresolvedAddresses = new ArrayList<OSMAddress>(100);
 	/** The shadow copy to assemble the incomplete addresses during update. */
-	private List<AddressNode> shadowIncompleteAddresses = new ArrayList<AddressNode>(100);
+	private List<OSMAddress> shadowIncompleteAddresses = new ArrayList<OSMAddress>(100);
 	
 	/** The visited nodes cache to increase iteration speed. */
 	private HashSet<Node> visitedNodes = new HashSet<Node>();
@@ -207,7 +207,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			return;
 		}
 
-		AddressNode aNode = null;
+		OSMAddress aNode = null;
 		// Address nodes are recycled in order to keep instance variables like guessed names
 		aNode = NodeFactory.createNode(n);
 						
@@ -238,7 +238,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 *
 	 * @param aNode the address node to add and check
 	 */
-	private void addAndClassifyAddress(AddressNode aNode) {
+	private void addAndClassifyAddress(OSMAddress aNode) {
 		if (!assignAddressToStreet(aNode)) {
 			// Assignment failed: Street is not known (yet) -> add to 'unresolved' list 
 			shadowUnresolvedAddresses.add(aNode);
@@ -316,8 +316,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			}
 
 			// Node is an address 
-			if (ne instanceof AddressNode) {
-				AddressNode aNode = (AddressNode) ne;
+			if (ne instanceof OSMAddress) {
+				OSMAddress aNode = (OSMAddress) ne;
 				addAndClassifyAddress(aNode);
 				return true;
 			}
@@ -352,7 +352,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 *
 	 * @return the unresolved addresses
 	 */
-	public List<AddressNode> getUnresolvedAddresses() {
+	public List<OSMAddress> getUnresolvedAddresses() {
 		return unresolvedAddresses;
 	}
 
@@ -361,7 +361,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 *
 	 * @return the incomplete addresses
 	 */
-	public List<AddressNode> getIncompleteAddresses() {
+	public List<OSMAddress> getIncompleteAddresses() {
 		return incompleteAddresses;
 	}
 
@@ -380,7 +380,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Gets all addresses without valid street.
 	 * @return
 	 */
-	public List<AddressNode> getUnresolvedItems() {
+	public List<OSMAddress> getUnresolvedItems() {
 		return unresolvedAddresses;
 	}
 
@@ -430,7 +430,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	public int getNumberOfGuesses() {
 		int sum = 0;
 				
-		for (AddressNode aNode : getAllAddressesToFix()) {
+		for (OSMAddress aNode : getAllAddressesToFix()) {
 			if (aNode.hasGuesses()) {
 				sum++;
 			}
@@ -442,10 +442,10 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Gets all (incomplete and/or unresolved) address nodes to fix.
 	 * @return
 	 */
-	public List<AddressNode> getAllAddressesToFix() {
-		List<AddressNode> all = new ArrayList<AddressNode>(incompleteAddresses);
+	public List<OSMAddress> getAllAddressesToFix() {
+		List<OSMAddress> all = new ArrayList<OSMAddress>(incompleteAddresses);
 
-		for (AddressNode aNode : unresolvedAddresses) {
+		for (OSMAddress aNode : unresolvedAddresses) {
 			if (!all.contains(aNode)) {
 				all.add(aNode);
 			}
@@ -458,7 +458,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Tries to assign an address to a street.
 	 * @param aNode
 	 */
-	private boolean assignAddressToStreet(AddressNode aNode) {
+	private boolean assignAddressToStreet(OSMAddress aNode) {
 		String streetName = aNode.getStreetName();
 		
 		if (streetName != null && shadowStreetDict.containsKey(streetName)) {
@@ -474,15 +474,15 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Walks through the list of unassigned addresses and tries to assign them to streets.
 	 */
 	public void resolveAddresses() {
-		List<AddressNode> resolvedAddresses = new ArrayList<AddressNode>();
-		for (AddressNode node : shadowUnresolvedAddresses) {
+		List<OSMAddress> resolvedAddresses = new ArrayList<OSMAddress>();
+		for (OSMAddress node : shadowUnresolvedAddresses) {
 			if (assignAddressToStreet(node)) {
 				resolvedAddresses.add(node);
 			} 
 		}
 		
 		/* Remove all resolves nodes from unresolved list */
-		for (AddressNode resolved : resolvedAddresses) {
+		for (OSMAddress resolved : resolvedAddresses) {
 			shadowUnresolvedAddresses.remove(resolved);
 		}
 	}
@@ -521,8 +521,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 			Collections.sort(shadowUnresolvedAddresses);
 
 			// put results from shadow copy into real lists
-			incompleteAddresses = new ArrayList<AddressNode>(shadowIncompleteAddresses);
-			unresolvedAddresses = new ArrayList<AddressNode>(shadowUnresolvedAddresses);
+			incompleteAddresses = new ArrayList<OSMAddress>(shadowIncompleteAddresses);
+			unresolvedAddresses = new ArrayList<OSMAddress>(shadowUnresolvedAddresses);
 			streetDict = new HashMap<String, StreetNode>(shadowStreetDict);
 			// remove temp data
 			shadowStreetDict.clear();

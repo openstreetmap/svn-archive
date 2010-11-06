@@ -41,7 +41,7 @@ public class SelectIncompleteAddressesAction extends JosmAction {
 		if (addressEditContainer.getIncompleteAddresses() != null) {
 			List<OsmPrimitive> osms = new ArrayList<OsmPrimitive>();
 			
-			for (AddressNode aNode : addressEditContainer.getIncompleteAddresses()) {
+			for (OSMAddress aNode : addressEditContainer.getIncompleteAddresses()) {
 				osms.add(aNode.getOsmObject());
 			}
 			getCurrentDataSet().setSelected(osms);

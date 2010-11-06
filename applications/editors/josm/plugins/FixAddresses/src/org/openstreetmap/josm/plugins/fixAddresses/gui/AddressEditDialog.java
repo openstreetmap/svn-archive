@@ -49,7 +49,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
@@ -274,7 +274,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			
 			// show addresses as blue marker
 			if (sNode.hasAddresses()) {
-				for (AddressNode aNode : sNode.getAddresses()) {
+				for (OSMAddress aNode : sNode.getAddresses()) {
 					Color markerCol = Color.BLUE;
 					if (!aNode.isComplete()) {
 						markerCol = Color.RED;
@@ -284,9 +284,9 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			}
 		} 
 		
-		List<AddressNode> unrAddresses = ev.getSelectedUnresolvedAddresses();
+		List<OSMAddress> unrAddresses = ev.getSelectedUnresolvedAddresses();
 		if (unrAddresses != null) {
-			for (AddressNode aNode : unrAddresses) {					
+			for (OSMAddress aNode : unrAddresses) {					
 				mapViewer.addMapMarker(new MapMarkerDot(Color.ORANGE, aNode.getCoor().lat(), aNode.getCoor().lon()));
 			}
 		}

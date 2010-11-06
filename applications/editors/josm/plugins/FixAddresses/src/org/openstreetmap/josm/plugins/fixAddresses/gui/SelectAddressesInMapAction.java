@@ -35,7 +35,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 
 /**
  *
@@ -86,12 +86,12 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 	 * Internal helper to select the given addresses in the map. 
 	 * @param addrToSel
 	 */
-	private void internalSelectAddresses(List<AddressNode> addrToSel) {
+	private void internalSelectAddresses(List<OSMAddress> addrToSel) {
 		if (addrToSel == null) return;
 		
 		List<OsmPrimitive> sel = new ArrayList<OsmPrimitive>();
 		
-		for (AddressNode aNode : addrToSel) {
+		for (OSMAddress aNode : addrToSel) {
 			sel.add(aNode.getOsmObject());
 		}
 

@@ -19,20 +19,20 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class NodeFactory {
-	private static HashMap<String, AddressNode> addressCache = new HashMap<String, AddressNode>();
+	private static HashMap<String, OSMAddress> addressCache = new HashMap<String, OSMAddress>();
 	
 	/**
 	 * Creates an address node from an OSM node, if possible.
 	 * @param node
 	 * @return
 	 */
-	public static AddressNode createNode(Node node) {
+	public static OSMAddress createNode(Node node) {
 		if (TagUtils.isAddress(node)) {
 			String aid = "" + node.getId();
 			
-			AddressNode aNode = lookup(aid);
+			OSMAddress aNode = lookup(aid);
 			if (aNode == null) {
-				aNode = new AddressNode(node);
+				aNode = new OSMAddress(node);
 				addressCache.put(aid, aNode);
 			} else {
 				aNode.setOsmObject(node);
@@ -57,9 +57,9 @@ public class NodeFactory {
 		if (way.isClosed() && TagUtils.hasBuildingTag(way)  && TagUtils.isAddress(way)) {
 			String aid = "" + way.getId();
 			
-			AddressNode aNode = lookup(aid);
+			OSMAddress aNode = lookup(aid);
 			if (aNode == null) {
-				aNode = new AddressNode(way);
+				aNode = new OSMAddress(way);
 				addressCache.put(aid, aNode);
 			} else {
 				aNode.setOsmObject(way);
@@ -70,7 +70,7 @@ public class NodeFactory {
 		return null;
 	}
 	
-	private static AddressNode lookup(String aid) {				
+	private static OSMAddress lookup(String aid) {				
 		if (addressCache.containsKey(aid)) {
 			return addressCache.get(aid);			
 		}

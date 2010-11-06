@@ -31,7 +31,7 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.TagUtils;
@@ -95,7 +95,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 	 */
 	@Override
 	public Object getValueAt(int row, int column) {
-		AddressNode aNode = (AddressNode) getEntityOfRow(row);
+		OSMAddress aNode = (OSMAddress) getEntityOfRow(row);
 		
 		if (aNode == null) {
 			return null;

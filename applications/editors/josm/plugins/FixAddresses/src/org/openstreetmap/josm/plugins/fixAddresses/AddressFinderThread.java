@@ -36,33 +36,33 @@ import org.xml.sax.SAXException;
  * The class AddressFinderThread scans the data set to find the best guess for a missing address field.
  * 
  * The guessing procedure itself is implemented by defining "guessers" using the {@link GuessedValueHandler} 
- * class. A guessed field does not modify the corresponding property of {@link AddressNode} itself, but 
- * adds the guessed value to a shadowed field by calling {@link AddressNode#setGuessedValue(String, String)}.  
+ * class. A guessed field does not modify the corresponding property of {@link OSMAddress} itself, but 
+ * adds the guessed value to a shadowed field by calling {@link OSMAddress#setGuessedValue(String, String)}.  
  */
 public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
-	private List<AddressNode> addressesToGuess;
+	private List<OSMAddress> addressesToGuess;
 	private List<IProgressMonitorFinishedListener> finishListeners = new ArrayList<IProgressMonitorFinishedListener>();
 	private double minDist;
-	private AddressNode curAddressNode;
+	private OSMAddress curAddressNode;
 	private boolean isRunning = false;	
 	private boolean cancelled;
 	
 	/**
 	 * @param nodes
 	 */
-	public AddressFinderThread(List<AddressNode> nodes, String title) {
+	public AddressFinderThread(List<OSMAddress> nodes, String title) {
 		super(title != null ? title : tr("Searching"));
 		setAddressEditContainer(nodes);		
 	}
 
-	public void setAddressEditContainer(List<AddressNode> nodes) {
+	public void setAddressEditContainer(List<OSMAddress> nodes) {
 		if (isRunning) {
 			throw new ConcurrentModificationException();
 		}
 		this.addressesToGuess = nodes;		
 	}
 
-	public List<AddressNode> getAddressesToGuess() {
+	public List<OSMAddress> getAddressesToGuess() {
 		return addressesToGuess;
 	}
 	/**
@@ -181,8 +181,8 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 			
 			
 			
-			List<AddressNode> shadowCopy = new ArrayList<AddressNode>(addressesToGuess);
-			for (AddressNode aNode : shadowCopy) {					
+			List<OSMAddress> shadowCopy = new ArrayList<OSMAddress>(addressesToGuess);
+			for (OSMAddress aNode : shadowCopy) {					
 				minDist = Double.MAX_VALUE;
 				curAddressNode = aNode;
 				
@@ -234,7 +234,7 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 	
 	private class GuessStreetValueHandler extends GuessedValueHandler {
 
-		public GuessStreetValueHandler(String tag, AddressNode aNode) {
+		public GuessStreetValueHandler(String tag, OSMAddress aNode) {
 			super(tag, aNode);
 		}
 
@@ -252,7 +252,7 @@ public class AddressFinderThread extends PleaseWaitRunnable implements Visitor {
 		@Override
 		public void visit(Way w) {			
 			if (TagUtils.isStreetSupportingHousenumbers(w)) {
-				AddressNode aNode = getAddressNode();
+				OSMAddress aNode = getAddressNode();
 				double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
 				if (dist < minDist && dist < getMaxDistance()) {
 					minDist = dist;

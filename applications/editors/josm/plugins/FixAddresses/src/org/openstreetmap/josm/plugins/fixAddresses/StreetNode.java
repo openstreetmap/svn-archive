@@ -27,7 +27,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  */
 public class StreetNode extends OSMEntityBase {
 	private List<IOSMEntity> children;
-	private List<AddressNode> addresses;
+	private List<OSMAddress> addresses;
 			
 	/**
 	 * @param osmPrimitive
@@ -57,14 +57,14 @@ public class StreetNode extends OSMEntityBase {
 		}
 	}
 	
-	public void addAddress(AddressNode aNode) {
+	public void addAddress(OSMAddress aNode) {
 		lazyCreateAddresses();
 		addresses.add(aNode);		
 	}
 
 	private void lazyCreateAddresses() {
 		if (addresses == null) {
-			addresses = new ArrayList<AddressNode>();
+			addresses = new ArrayList<OSMAddress>();
 		}
 	}
 	
@@ -72,11 +72,11 @@ public class StreetNode extends OSMEntityBase {
 		return addresses != null && addresses.size() > 0;
 	}
 	
-	public List<AddressNode> getAddresses() {
+	public List<OSMAddress> getAddresses() {
 		return addresses;
 	}
 	
-	public void setAddresses(List<AddressNode> addresses) {
+	public void setAddresses(List<OSMAddress> addresses) {
 		this.addresses = addresses;
 	}
 	

@@ -18,10 +18,10 @@ import java.util.HashMap;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
- * The class AddressNode represents a single address node of OSM. It is a lightweight 
+ * The class OSMAddress represents a single address node of OSM. It is a lightweight 
  * wrapper for a OSM node in order to simplify tag handling.
  */
-public class AddressNode extends OSMEntityBase {
+public class OSMAddress extends OSMEntityBase {
 	public static final String MISSING_TAG = "?";
 	
 	/** The dictionary containing guessed values. */
@@ -29,7 +29,7 @@ public class AddressNode extends OSMEntityBase {
 	/** The dictionary containing indirect values. */
 	private HashMap<String, String> derivedValues = new HashMap<String, String>();
 
-	public AddressNode(OsmPrimitive osmObject) {
+	public OSMAddress(OsmPrimitive osmObject) {
 		super(osmObject);
 	}
 	
@@ -275,10 +275,10 @@ public class AddressNode extends OSMEntityBase {
 	 */
 	@Override
 	public int compareTo(IOSMEntity o) {
-		if (o == null || !(o instanceof AddressNode)) {
+		if (o == null || !(o instanceof OSMAddress)) {
 			return -1;
 		}
-		AddressNode other = (AddressNode) o;
+		OSMAddress other = (OSMAddress) o;
 		
 		int cc = 0;
 		cc = this.getCountry().compareTo(other.getCountry());
@@ -466,10 +466,10 @@ public class AddressNode extends OSMEntityBase {
 	
 	@Override
 	public String toString() {
-		return AddressNode.getFormatString(this);
+		return OSMAddress.getFormatString(this);
 	}
 
-	public static String getFormatString(AddressNode node) {
+	public static String getFormatString(OSMAddress node) {
 		// TODO: Add further countries here
 		// DE
 		String guessed = node.getGuessedStreetName();

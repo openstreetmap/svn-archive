@@ -20,7 +20,7 @@ import java.util.List;
 import javax.swing.JTable;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
 public class AddressEditSelectionEvent extends ActionEvent {
@@ -88,14 +88,14 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	 * Gets the list containing the selected items of the 'unresolved addresses ' table.
 	 * @return
 	 */
-	public List<AddressNode> getSelectedUnresolvedAddresses() {
+	public List<OSMAddress> getSelectedUnresolvedAddresses() {
 		if (unresolvedAddressTable != null && 
 				addressContainer != null && 
 				addressContainer.getUnresolvedAddresses() != null) {
 			
 			int[] selRows = unresolvedAddressTable.getSelectedRows();
 			
-			List<AddressNode> nodes = new ArrayList<AddressNode>();
+			List<OSMAddress> nodes = new ArrayList<OSMAddress>();
 			for (int i = 0; i < selRows.length; i++) {
 				if (selRows[i] >= 0 && selRows[i] < addressContainer.getNumberOfUnresolvedAddresses()) {
 					nodes.add(addressContainer.getUnresolvedAddresses().get(selRows[i]));

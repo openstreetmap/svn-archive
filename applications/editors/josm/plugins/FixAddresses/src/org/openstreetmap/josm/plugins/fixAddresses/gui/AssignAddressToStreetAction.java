@@ -16,7 +16,7 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
 /**
@@ -45,7 +45,7 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction  {
 						
 		if (streetNode != null && ev.getSelectedUnresolvedAddresses() != null) {
 			beginTransaction(tr("Set street name") + " '" + streetNode.getName() + "'");
-			for (AddressNode addrNode : ev.getSelectedUnresolvedAddresses()) {
+			for (OSMAddress addrNode : ev.getSelectedUnresolvedAddresses()) {
 				beginObjectTransaction(addrNode);
 				addrNode.assignStreet(streetNode);
 				finishObjectTransaction(addrNode);

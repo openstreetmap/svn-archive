@@ -289,8 +289,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private boolean processNode(IOSMEntity ne, Way w) {
 		if (ne != null) {
 			// Node is a street (segment)
-			if (ne instanceof StreetSegmentNode) {
-				StreetSegmentNode newSegment = (StreetSegmentNode) ne;
+			if (ne instanceof OSMStreetSegment) {
+				OSMStreetSegment newSegment = (OSMStreetSegment) ne;
 
 				if (newSegment != null) {
 					String name = newSegment.getName();

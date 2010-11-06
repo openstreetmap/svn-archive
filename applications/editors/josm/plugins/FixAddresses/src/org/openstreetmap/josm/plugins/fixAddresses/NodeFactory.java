@@ -50,7 +50,7 @@ public class NodeFactory {
 	 */
 	public static IOSMEntity createNodeFromWay(Way way) {
 		if (TagUtils.hasHighwayTag(way)) {
-			return new StreetSegmentNode(way);
+			return new OSMStreetSegment(way);
 		}
 		
 		// Check for building with address

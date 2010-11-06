@@ -44,7 +44,7 @@ public class OSMStreet extends OSMEntityBase {
 	 * Adds a street segment to the street node.
 	 * @param segment
 	 */
-	public void addStreetSegment(StreetSegmentNode segment) {
+	public void addStreetSegment(OSMStreetSegment segment) {
 		lazyCreateChildren();
 		
 		children.add(segment);
@@ -99,7 +99,7 @@ public class OSMStreet extends OSMEntityBase {
 		
 		int sc = 0;
 		for (IOSMEntity node : children) {
-			if (node instanceof StreetSegmentNode) {
+			if (node instanceof OSMStreetSegment) {
 				sc++;
 			}
 		}

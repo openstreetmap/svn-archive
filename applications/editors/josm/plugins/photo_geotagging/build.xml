@@ -24,7 +24,7 @@
 <project name="photo_geotagging" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="remember selection of mtime (save to preference file)" />
+	<property name="commit.message" value="applied patch by ax (JOSM ticket 5602) - photo_geotagging fails to write coordinates into image header on win32" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3408" />
 

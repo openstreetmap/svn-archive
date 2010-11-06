@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -43,6 +44,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * The action to ask the user for confirmation and then do the tagging.
  */
 class GeotaggingAction extends AbstractAction implements LayerAction {
+    
     final static boolean debug = false;
     final static String KEEP_BACKUP = "plugins.photo_geotagging.keep_backup";
     final static String CHANGE_MTIME = "plugins.photo_geotagging.change-mtime";
@@ -271,7 +273,13 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
         private void chooseFilesNoBackup(File file) throws IOException {
             File fileTmp;
-            fileTmp = File.createTempFile("img", ".jpg", file.getParentFile());
+            //fileTmp = File.createTempFile("img", ".jpg", file.getParentFile());
+            // on win32, file.renameTo(fileTmp) does not work when the destination file exists 
+            // see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4017593
+            // so we cannot use createTempFile(), which would create that "existing destination file" 
+            // instead, let's use new File(), which doesn't actually create a file
+            // for getting a unique file name, we use UUID.randomUUID()
+            fileTmp = new File(file.getParentFile(), "img" + UUID.randomUUID() + ".jpg");
             if (debug) {
                 System.err.println("TMP: "+fileTmp.getAbsolutePath());
             }

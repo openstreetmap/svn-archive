@@ -25,7 +25,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  * 
  */
 
-public class StreetSegmentNode extends NodeEntityBase {
+public class StreetSegmentNode extends OSMEntityBase {
 
 	public StreetSegmentNode(OsmPrimitive osmObject) {
 		super(osmObject);

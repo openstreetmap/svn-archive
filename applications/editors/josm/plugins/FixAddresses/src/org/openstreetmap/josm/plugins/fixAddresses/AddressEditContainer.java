@@ -104,7 +104,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * Creates an empty container. 
 	 */
 	public AddressEditContainer() {
-		NodeEntityBase.addChangedListener(this);
+		OSMEntityBase.addChangedListener(this);
 	}
 
 	/**

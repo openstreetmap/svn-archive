@@ -27,7 +27,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
- * The class NodeEntityBase provides a base implementation for the {@link IOSMEntity} interface.
+ * The class OSMEntityBase provides a base implementation for the {@link IOSMEntity} interface.
  * 
  * The implementation comprises
  * <ol>
@@ -36,7 +36,7 @@ import org.openstreetmap.josm.data.osm.Way;
  * <li>Tag handling
  * </ol>
  */
-public class NodeEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
+public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	public static final String ANONYMOUS = tr("No name");
 	private static List<IAddressEditContainerListener> containerListeners = new ArrayList<IAddressEditContainerListener>();
 	private List<ICommandListener> cmdListeners = new ArrayList<ICommandListener>();
@@ -46,7 +46,7 @@ public class NodeEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	/**
 	 * @param osmObject
 	 */
-	public NodeEntityBase(OsmPrimitive osmObject) {
+	public OSMEntityBase(OsmPrimitive osmObject) {
 		super();
 		this.osmObject = osmObject;
 	}
@@ -188,7 +188,7 @@ public class NodeEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 */
 	@Override
 	public int compareTo(IOSMEntity o) {
-		if (o == null || !(o instanceof NodeEntityBase)) return -1;
+		if (o == null || !(o instanceof OSMEntityBase)) return -1;
 		return this.getName().compareTo(o.getName());
 	}
 

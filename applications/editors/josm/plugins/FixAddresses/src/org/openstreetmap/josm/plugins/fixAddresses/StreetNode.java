@@ -25,7 +25,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  * 
  * @author Oliver Wieland <oliver.wieland@online.de>
  */
-public class StreetNode extends NodeEntityBase {
+public class StreetNode extends OSMEntityBase {
 	private List<IOSMEntity> children;
 	private List<AddressNode> addresses;
 			

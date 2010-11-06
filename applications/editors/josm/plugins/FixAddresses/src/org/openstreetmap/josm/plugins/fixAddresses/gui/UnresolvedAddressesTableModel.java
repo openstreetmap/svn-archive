@@ -32,7 +32,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
-import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.TagUtils;
 
@@ -143,7 +143,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel#getEntityOfRow(int)
 	 */
 	@Override
-	public INodeEntity getEntityOfRow(int row) {
+	public IOSMEntity getEntityOfRow(int row) {
 		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
 			return null;
 		}
@@ -154,7 +154,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 	}
 	
 	@Override
-	public int getRowOfEntity(INodeEntity entity) {
+	public int getRowOfEntity(IOSMEntity entity) {
 		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
 			return -1;
 		}

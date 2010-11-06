@@ -51,7 +51,7 @@ import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
-import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -263,7 +263,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 		if (sNode != null) {
 						
 			//mapViewer.addMapRectangle(new BBoxMapRectangle(bb));
-			for (INodeEntity seg : sNode.getChildren()) {
+			for (IOSMEntity seg : sNode.getChildren()) {
 				Way way = (Way) seg.getOsmObject();
 				//BBox bb = way.getBBox();
 				
@@ -315,7 +315,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	}
 
 	@Override
-	public void entityChanged(INodeEntity entity) {
+	public void entityChanged(IOSMEntity entity) {
 		updateHeaders();
 	}
 	

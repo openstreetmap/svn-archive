@@ -26,7 +26,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  * @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class StreetNode extends NodeEntityBase {
-	private List<INodeEntity> children;
+	private List<IOSMEntity> children;
 	private List<AddressNode> addresses;
 			
 	/**
@@ -36,7 +36,7 @@ public class StreetNode extends NodeEntityBase {
 		super(osmPrimitive);
 	}
 
-	public List<INodeEntity> getChildren() {
+	public List<IOSMEntity> getChildren() {
 		return children;
 	}
 	
@@ -53,7 +53,7 @@ public class StreetNode extends NodeEntityBase {
 	
 	private void lazyCreateChildren() {
 		if (children == null) {
-			children = new ArrayList<INodeEntity>();
+			children = new ArrayList<IOSMEntity>();
 		}
 	}
 	
@@ -98,7 +98,7 @@ public class StreetNode extends NodeEntityBase {
 		if (children == null) return 0;
 		
 		int sc = 0;
-		for (INodeEntity node : children) {
+		for (IOSMEntity node : children) {
 			if (node instanceof StreetSegmentNode) {
 				sc++;
 			}
@@ -114,7 +114,7 @@ public class StreetNode extends NodeEntityBase {
 	public String getType() {
 		List<String> types = new ArrayList<String>();
 		
-		for (INodeEntity seg : getChildren()) {
+		for (IOSMEntity seg : getChildren()) {
 			OsmPrimitive osmPrim = seg.getOsmObject();
 			if (TagUtils.hasHighwayTag(osmPrim)) {
 				String val = osmPrim.get(TagUtils.HIGHWAY_TAG);

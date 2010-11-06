@@ -16,7 +16,7 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
 public class StreetTableModel extends AddressEditTableModel {
@@ -106,7 +106,7 @@ public class StreetTableModel extends AddressEditTableModel {
 	}
 
 	@Override
-	public INodeEntity getEntityOfRow(int row) {
+	public IOSMEntity getEntityOfRow(int row) {
 		if (addressContainer == null || addressContainer.getStreetList() == null) {
 			return null;
 		}
@@ -117,7 +117,7 @@ public class StreetTableModel extends AddressEditTableModel {
 	}
 	
 	@Override
-	public int getRowOfEntity(INodeEntity entity) {
+	public int getRowOfEntity(IOSMEntity entity) {
 		if (addressContainer == null || addressContainer.getStreetList() == null) {
 			return -1;
 		}

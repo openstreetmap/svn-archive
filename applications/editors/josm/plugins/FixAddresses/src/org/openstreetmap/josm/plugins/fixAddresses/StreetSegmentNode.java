@@ -32,7 +32,7 @@ public class StreetSegmentNode extends NodeEntityBase {
 	}
 
 	@Override
-	public List<INodeEntity> getChildren() {
+	public List<IOSMEntity> getChildren() {
 		return null;
 	}
 

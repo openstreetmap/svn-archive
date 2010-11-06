@@ -57,7 +57,7 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
  * set of OSM primitives and checks for incomplete addresses (e. g. missing addr:... tags) or
  * addresses with unknown streets ("unresolved addresses").
  * 
- * It listens to changes within instances of {@link INodeEntity} to notify clients on update. 
+ * It listens to changes within instances of {@link IOSMEntity} to notify clients on update. 
  * 
  * {@link AddressEditContainer} is the central class used within actions and UI models to show
  * and alter OSM data.
@@ -149,7 +149,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	/**
 	 * Notifies clients that an entity within the address container changed.
 	 */
-	protected void fireEntityChanged(INodeEntity entity) {
+	protected void fireEntityChanged(IOSMEntity entity) {
 		if (entity == null) throw new RuntimeException("Entity must not be null");
 		
 		List<IAddressEditContainerListener> shadowListeners = 
@@ -255,7 +255,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * @param w the way to create the entity from
 	 */
 	private void createNodeFromWay(Way w) {
-		INodeEntity ne = NodeFactory.createNodeFromWay(w);
+		IOSMEntity ne = NodeFactory.createNodeFromWay(w);
 		
 		if (!processNode(ne, w)) {
 			// Look also into nodes for addresses (unlikely, but at least they
@@ -286,7 +286,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	 * @param w the corresponding OSM way
 	 * @return true, if node has been processed
 	 */
-	private boolean processNode(INodeEntity ne, Way w) {
+	private boolean processNode(IOSMEntity ne, Way w) {
 		if (ne != null) {
 			// Node is a street (segment)
 			if (ne instanceof StreetSegmentNode) {
@@ -656,10 +656,10 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 
 	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.INodeEntity)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity)
 	 */
 	@Override
-	public void entityChanged(INodeEntity entity) {
+	public void entityChanged(IOSMEntity entity) {
 		fireEntityChanged(entity);	
 	}
 }

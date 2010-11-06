@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
-import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 
 public abstract class AddressEditTableModel extends DefaultTableModel implements IAddressEditContainerListener{
 
@@ -39,7 +39,7 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 	}
 
 	@Override
-	public void entityChanged(INodeEntity entity) {
+	public void entityChanged(IOSMEntity entity) {
 		int row = getRowOfEntity(entity);
 		if (row != -1) { // valid row? -> update model
 			System.out.println("Update row " + row);
@@ -52,12 +52,12 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 	 * @param row The row to get the entity object for.
 	 * @return
 	 */
-	public abstract INodeEntity getEntityOfRow(int row);
+	public abstract IOSMEntity getEntityOfRow(int row);
 	
 	/**
 	 * Gets the row for the given node entity or -1; if the model does not contain the entity.
 	 * @param entity The entity to get the row for.
 	 * @return
 	 */
-	public abstract int getRowOfEntity(INodeEntity entity);
+	public abstract int getRowOfEntity(IOSMEntity entity);
 }

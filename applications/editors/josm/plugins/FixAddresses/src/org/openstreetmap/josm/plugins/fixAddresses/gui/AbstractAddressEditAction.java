@@ -24,7 +24,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.fixAddresses.ICommandListener;
-import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 
 /**
@@ -169,10 +169,10 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	}
 
 	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.INodeEntity)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity)
 	 */
 	@Override
-	public void entityChanged(INodeEntity node) {
+	public void entityChanged(IOSMEntity node) {
 		updateEnabledState();		
 	}
 	
@@ -212,7 +212,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	 *
 	 * @param entity the entity
 	 */
-	public void beginObjectTransaction(INodeEntity entity) {
+	public void beginObjectTransaction(IOSMEntity entity) {
 		if (entity != null) {
 			entity.addCommandListener(this);
 		} else {
@@ -225,7 +225,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	 *
 	 * @param entity the entity
 	 */
-	public void finishObjectTransaction(INodeEntity entity) {
+	public void finishObjectTransaction(IOSMEntity entity) {
 		if (entity != null) {
 			entity.removeCommandListener(this);
 		} else {
@@ -234,10 +234,10 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fixAddresses.ICommandListener#commandIssued(org.openstreetmap.josm.plugins.fixAddresses.INodeEntity, org.openstreetmap.josm.command.Command)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.ICommandListener#commandIssued(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity, org.openstreetmap.josm.command.Command)
 	 */
 	@Override
-	public void commandIssued(INodeEntity entity, Command command) {
+	public void commandIssued(IOSMEntity entity, Command command) {
 		if (commands == null) {
 			throw new RuntimeException("No command list available. Did you forget to call beginTransaction?");
 		}

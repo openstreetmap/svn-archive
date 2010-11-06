@@ -24,5 +24,5 @@ public interface IAddressEditContainerListener {
 	/**
 	 * Notifies clients that an entity has been changed.
 	 */
-	public void entityChanged(INodeEntity node);
+	public void entityChanged(IOSMEntity node);
 }

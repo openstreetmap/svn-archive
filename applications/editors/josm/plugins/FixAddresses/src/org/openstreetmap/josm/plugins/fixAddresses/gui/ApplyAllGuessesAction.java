@@ -25,7 +25,7 @@ import javax.swing.JTable;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
-import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 
 /**
  * Applies the guessed values for a set of addresses. 
@@ -86,7 +86,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 			AddressEditTableModel model = (AddressEditTableModel) table.getModel();
 			if (model != null) {
 				int row = table.rowAtPoint(p);
-				INodeEntity node = model.getEntityOfRow(row);
+				IOSMEntity node = model.getEntityOfRow(row);
 				if (node instanceof AddressNode) {
 					beginTransaction(tr("Applied guessed values for ") + node.getOsmObject());
 					beginObjectTransaction(node);

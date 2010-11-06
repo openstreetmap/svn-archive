@@ -27,7 +27,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
- * The class NodeEntityBase provides a base implementation for the {@link INodeEntity} interface.
+ * The class NodeEntityBase provides a base implementation for the {@link IOSMEntity} interface.
  * 
  * The implementation comprises
  * <ol>
@@ -36,7 +36,7 @@ import org.openstreetmap.josm.data.osm.Way;
  * <li>Tag handling
  * </ol>
  */
-public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
+public class NodeEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	public static final String ANONYMOUS = tr("No name");
 	private static List<IAddressEditContainerListener> containerListeners = new ArrayList<IAddressEditContainerListener>();
 	private List<ICommandListener> cmdListeners = new ArrayList<ICommandListener>();
@@ -77,7 +77,7 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	/**
 	 * Notifies clients that the address container changed.
 	 */
-	protected static void fireEntityChanged(INodeEntity entity) {
+	protected static void fireEntityChanged(IOSMEntity entity) {
 		for (IAddressEditContainerListener listener : containerListeners) {
 			listener.entityChanged(entity);
 		}
@@ -120,7 +120,7 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	}
 
 	@Override
-	public List<INodeEntity> getChildren() {
+	public List<IOSMEntity> getChildren() {
 		return null;
 	}
 
@@ -187,13 +187,13 @@ public class NodeEntityBase implements INodeEntity, Comparable<INodeEntity> {
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
-	public int compareTo(INodeEntity o) {
+	public int compareTo(IOSMEntity o) {
 		if (o == null || !(o instanceof NodeEntityBase)) return -1;
 		return this.getName().compareTo(o.getName());
 	}
 
 	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fixAddresses.INodeEntity#getCoor()
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity#getCoor()
 	 */
 	@Override
 	public LatLon getCoor() {

@@ -48,7 +48,7 @@ public class NodeFactory {
 	 * @param way
 	 * @return The new node instance or null; if given way is inappropriate.
 	 */
-	public static INodeEntity createNodeFromWay(Way way) {
+	public static IOSMEntity createNodeFromWay(Way way) {
 		if (TagUtils.hasHighwayTag(way)) {
 			return new StreetSegmentNode(way);
 		}

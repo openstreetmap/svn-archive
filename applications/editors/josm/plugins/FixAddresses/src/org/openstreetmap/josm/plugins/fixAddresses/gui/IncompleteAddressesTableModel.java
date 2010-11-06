@@ -17,7 +17,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
-import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 
 public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	/**
@@ -94,7 +94,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	}
 
 	@Override
-	public INodeEntity getEntityOfRow(int row) {
+	public IOSMEntity getEntityOfRow(int row) {
 		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
 			return null;
 		}
@@ -105,7 +105,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	}
 
 	@Override
-	public int getRowOfEntity(INodeEntity entity) {
+	public int getRowOfEntity(IOSMEntity entity) {
 		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
 			return -1;
 		}

@@ -22,7 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressNode;
-import org.openstreetmap.josm.plugins.fixAddresses.INodeEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StreetNode;
 
 public class AddressEditModel {
@@ -56,7 +56,7 @@ public class AddressEditModel {
 				treeStreetNode.add(segmentsNode);
 				
 				// Add street segment(s)
-				for (INodeEntity child : sNode.getChildren()) {
+				for (IOSMEntity child : sNode.getChildren()) {
 					segmentsNode.add(new DefaultMutableTreeNode(child));
 				}
 				

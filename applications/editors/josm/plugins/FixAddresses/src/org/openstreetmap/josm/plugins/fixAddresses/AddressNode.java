@@ -274,7 +274,7 @@ public class AddressNode extends NodeEntityBase {
 	 * @see org.openstreetmap.josm.plugins.addressEdit.NodeEntityBase#compareTo(org.openstreetmap.josm.plugins.addressEdit.INodeEntity)
 	 */
 	@Override
-	public int compareTo(INodeEntity o) {
+	public int compareTo(IOSMEntity o) {
 		if (o == null || !(o instanceof AddressNode)) {
 			return -1;
 		}

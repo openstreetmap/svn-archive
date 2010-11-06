@@ -25,7 +25,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  * 
  */
 
-public interface INodeEntity extends Comparable<INodeEntity> {
+public interface IOSMEntity extends Comparable<IOSMEntity> {
 	/**
 	 * Gets the underlying OSM object.
 	 * @return
@@ -48,7 +48,7 @@ public interface INodeEntity extends Comparable<INodeEntity> {
 	 * Gets the children of the entity node.
 	 * @return
 	 */
-	public List<INodeEntity> getChildren();
+	public List<IOSMEntity> getChildren();
 	
 	/**
 	 * Gets the coordinate of the node. If the the underlying object is a

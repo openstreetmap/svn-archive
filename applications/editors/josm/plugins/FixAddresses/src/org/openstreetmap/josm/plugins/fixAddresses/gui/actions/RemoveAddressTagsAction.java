@@ -42,9 +42,9 @@ public class RemoveAddressTagsAction extends AbstractAddressEditAction {
 				beginObjectTransaction(aNode);
 				aNode.removeAllAddressTags();
 				finishObjectTransaction(aNode);
-			}
-			finishTransaction();		
+			}					
 		}
+		finishTransaction();
 	}
 
 	@Override

@@ -1906,12 +1906,11 @@ public final class TagUtils {
 		// TODO: Should be configurable
 		String hwType = getHighwayValue(w);
 				
-		return 	HIGHWAY_RESIDENTIAL_VALUE.equals(hwType) ||
-				HIGHWAY_SECONDARY_VALUE.equals(hwType) ||
-				HIGHWAY_TERTIARY_VALUE.equals(hwType) ||
-				HIGHWAY_SERVICE_VALUE.equals(hwType) ||
-				HIGHWAY_LIVING_STREET_VALUE.equals(hwType) ||
-				HIGHWAY_UNCLASSIFIED_VALUE.equals(hwType);
+		return 	!(TagUtils.HIGHWAY_MOTORWAY_LINK_VALUE.equals(hwType) ||
+				TagUtils.HIGHWAY_MOTORWAY_VALUE.equals(hwType) ||
+				TagUtils.HIGHWAY_FOOTWAY_VALUE.equals(hwType) ||
+				TagUtils.HIGHWAY_TRACK_VALUE.equals(hwType) 
+				);
 	}
 	
 	// Relation support

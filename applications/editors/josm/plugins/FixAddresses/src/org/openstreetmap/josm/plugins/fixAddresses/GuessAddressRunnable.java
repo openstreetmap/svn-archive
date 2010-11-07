@@ -206,19 +206,17 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 				progressMonitor.subTask(tr("Guess values for ") + aNode);
 
 				// visit osm data
-				for (OsmPrimitive osmPrimitive : Main.main.getCurrentDataSet().getWays()) {
+				for (OsmPrimitive osmPrimitive : Main.main.getCurrentDataSet().allPrimitives()) {
 					if (cancelled) {
 						break;
 					}
 					
 					// guess values 
 					for (int i = 0; i < guessers.length; i++) {
-						if (!guessers[i].needsGuess()) continue;
-						
 						osmPrimitive.visit(guessers[i]);
 						
 						if (guessers[i].currentValue == null && i == 0) {
-							System.err.println("Guess #" + i + " failed for " + aNode);
+							//System.err.println("Guess #" + i + " failed for " + aNode);
 						}
 					}
 				}
@@ -235,7 +233,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 	private class GuessStreetValueHandler extends GuessedValueHandler {
 
 		public GuessStreetValueHandler(String tag, OSMAddress aNode) {
-			super(tag, aNode);
+			super(tag, aNode, 200.0);
 		}
 
 		/* (non-Javadoc)
@@ -254,10 +252,14 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 			if (TagUtils.isStreetSupportingHousenumbers(w)) {
 				OSMAddress aNode = getAddressNode();
 				double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
+				
 				if (dist < minDist && dist < getMaxDistance()) {
+					//System.out.println(String.format("New guess %s: %4.2f m", TagUtils.getNameValue(w), dist));
 					minDist = dist;
 					currentValue = TagUtils.getNameValue(w);				
 					aNode.setGuessedValue(getTag(), currentValue);
+				} else {
+					//System.out.println(String.format("Skipped %s: %4.2f m", TagUtils.getNameValue(w), dist));
 				}
 			}
 		}

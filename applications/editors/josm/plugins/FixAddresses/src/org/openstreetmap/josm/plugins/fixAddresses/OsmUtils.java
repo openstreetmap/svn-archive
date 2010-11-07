@@ -137,6 +137,7 @@ public class OsmUtils {
 					applyDerivedValue(address, w, TagUtils.ADDR_CITY_TAG);
 					applyDerivedValue(address, w, TagUtils.ADDR_COUNTRY_TAG);
 					applyDerivedValue(address, w, TagUtils.ADDR_STREET_TAG);
+					applyDerivedValue(address, w, TagUtils.ADDR_STATE_TAG);
 					return true;
 				}
 			}

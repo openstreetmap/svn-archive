@@ -70,7 +70,7 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
-		if (ev == null || ev.getSelectedUnresolvedAddresses() == null) return;
+		if (ev == null || !ev.hasAddresses()) return;
 		
 		// guess tags for selected addresses only				
 		internalGuessAddresses(ev.getSelectedIncompleteAddresses());

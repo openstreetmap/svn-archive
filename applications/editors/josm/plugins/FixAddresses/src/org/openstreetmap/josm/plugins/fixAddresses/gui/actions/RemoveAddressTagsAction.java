@@ -29,12 +29,22 @@ public class RemoveAddressTagsAction extends AbstractAddressEditAction {
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		beginTransaction(tr("Remove address tags"));
-		for (OSMAddress aNode : ev.getSelectedUnresolvedAddresses()) {
-			beginObjectTransaction(aNode);
-			aNode.removeAllAddressTags();
-			finishObjectTransaction(aNode);
+		if (ev.hasUnresolvedAddresses()) {
+			for (OSMAddress aNode : ev.getSelectedUnresolvedAddresses()) {
+				beginObjectTransaction(aNode);
+				aNode.removeAllAddressTags();
+				finishObjectTransaction(aNode);
+			}
 		}
-		finishTransaction();		
+
+		if (ev.hasIncompleteAddresses()) {
+			for (OSMAddress aNode : ev.getSelectedIncompleteAddresses()) {
+				beginObjectTransaction(aNode);
+				aNode.removeAllAddressTags();
+				finishObjectTransaction(aNode);
+			}
+			finishTransaction();		
+		}
 	}
 
 	@Override
@@ -53,7 +63,7 @@ public class RemoveAddressTagsAction extends AbstractAddressEditAction {
 			setEnabled(false);
 		}
 		
-		setEnabled(event.getSelectedUnresolvedAddresses() != null);
+		setEnabled(event.hasAddresses());
 	}
 
 }

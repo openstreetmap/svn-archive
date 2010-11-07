@@ -92,8 +92,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 	 */
 	@Override
 	protected void updateEnabledState(AddressEditSelectionEvent event) {
-		setEnabled(event.getSelectedIncompleteAddresses() != null ||
-				event.getSelectedIncompleteAddresses() != null);
+		setEnabled(event.hasAddressesWithGuesses());
 	}
 
 	/* (non-Javadoc)
@@ -101,7 +100,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditContainer container) {
-		if (container == null || container.getUnresolvedAddresses() == null) return;
+		if (container == null || container.getNumberOfIncompleteAddresses() == 0) return;
 		
 		List<OSMAddress> addrToFix = container.getUnresolvedAddresses();
 		applyGuesses(addrToFix);		

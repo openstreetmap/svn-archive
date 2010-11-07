@@ -40,20 +40,24 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectAddressesInMapAction;
 
 @SuppressWarnings("serial")
 public class IncompleteAddressesDialog extends ToggleDialog implements DataSetListener, ListSelectionListener, IAddressEditContainerListener {
 	private static final String FIXED_DIALOG_TITLE = tr("Incomplete Addresses");
 
-
 	private AddressEditContainer container;
 
-	
 	private SelectAddressesInMapAction selectAction = new SelectAddressesInMapAction();
+	private ApplyAllGuessesAction applyGuessesAction = new ApplyAllGuessesAction();
+	private RemoveAddressTagsAction removeTagsAction = new RemoveAddressTagsAction();
 	
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[]{
-			selectAction
+			selectAction,
+			applyGuessesAction,
+			removeTagsAction
 	};
 
 
@@ -78,10 +82,12 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 		p.add(sp, BorderLayout.CENTER);
 		this.add(p);
 		
-		JPanel buttonPanel = getButtonPanel(5);
+		JPanel buttonPanel = getButtonPanel(actions.length);
 		
-		SideButton sb = new SideButton(selectAction);
-		buttonPanel.add(sb);
+		for (int i = 0; i < actions.length; i++) {
+			SideButton sb = new SideButton(actions[i]);
+			buttonPanel.add(sb);
+		}
 		
 		this.add(buttonPanel, BorderLayout.SOUTH);
 		

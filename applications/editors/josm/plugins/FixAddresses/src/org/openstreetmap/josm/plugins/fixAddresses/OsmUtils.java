@@ -132,7 +132,8 @@ public class OsmUtils {
 		for (OsmPrimitive osm : osmAddr.getReferrers()) {
 			if (osm instanceof Way) {
 				Way w = (Way) osm;
-				if (TagUtils.hasAddrInterpolationTag(w)) {					
+				if (TagUtils.hasAddrInterpolationTag(w)) {
+					System.out.println("Found interpolation for " + address);
 					applyDerivedValue(address, w, TagUtils.ADDR_POSTCODE_TAG);
 					applyDerivedValue(address, w, TagUtils.ADDR_CITY_TAG);
 					applyDerivedValue(address, w, TagUtils.ADDR_COUNTRY_TAG);

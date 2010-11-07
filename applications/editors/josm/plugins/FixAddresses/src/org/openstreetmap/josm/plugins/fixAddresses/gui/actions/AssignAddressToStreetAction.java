@@ -61,7 +61,7 @@ public class AssignAddressToStreetAction extends AbstractAddressEditAction  {
 	 */
 	@Override
 	public void updateEnabledState(AddressEditSelectionEvent ev) {
-		setEnabled(ev.getSelectedStreet() != null && ev.getSelectedUnresolvedAddresses() != null);
+		setEnabled(ev.getSelectedStreet() != null && ev.hasUnresolvedAddresses());
 	}
 
 	@Override

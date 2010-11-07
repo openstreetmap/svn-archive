@@ -424,6 +424,15 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	}
 	
 	/**
+	 * Gets the number of invalid (unresolved and/or incomplete) addresses.
+	 *
+	 * @return the number of invalid addresses
+	 */
+	public int getNumberOfInvalidAddresses() {
+		return getNumberOfIncompleteAddresses() + getNumberOfUnresolvedAddresses();
+	}
+	
+	/**
 	 * Gets the number of guessed tags.
 	 * @return
 	 */

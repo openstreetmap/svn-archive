@@ -33,6 +33,9 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	private JTable incompleteAddressTable;
 	private AddressEditContainer addressContainer;
 	
+	private List<OSMAddress> unresolvedCache;
+	private List<OSMAddress> incompleteCache;
+	
 	/**
 	 * Creates a new 'AddressEditSelectionEvent'.
 	 * @param source The event source.
@@ -99,25 +102,78 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	}
 	
 	/**
+	 * Checks for addresses.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean hasAddresses() {
+		return hasIncompleteAddresses() || hasUnresolvedAddresses();
+	}
+	
+	/**
+	 * Checks for incomplete addresses.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean hasIncompleteAddresses() {
+		return getSelectedIncompleteAddresses() != null;
+	}
+	
+	/**
+	 * Checks for unresolved addresses.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean hasUnresolvedAddresses() {
+		return getSelectedUnresolvedAddresses() != null;
+	}
+	
+	/**
+	 * Checks for addresses with guesses.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean hasAddressesWithGuesses() {
+		if (hasIncompleteAddresses()) {
+			for (OSMAddress addr : getSelectedIncompleteAddresses()) {
+				if (addr.hasGuesses()) {
+					return true;
+				}
+			}
+		}
+		
+		if (hasUnresolvedAddresses()) {
+			for (OSMAddress addr : getSelectedUnresolvedAddresses()) {
+				if (addr.hasGuesses()) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Gets the list containing the selected items of the 'unresolved addresses ' table.
 	 * @return
 	 */
 	public List<OSMAddress> getSelectedUnresolvedAddresses() {
 		if (unresolvedAddressTable != null && 
 				addressContainer != null && 
-				addressContainer.getUnresolvedAddresses() != null) {
+				unresolvedCache == null) {
 			
 			int[] selRows = unresolvedAddressTable.getSelectedRows();
 			
-			List<OSMAddress> nodes = new ArrayList<OSMAddress>();
+			unresolvedCache = new ArrayList<OSMAddress>();
 			for (int i = 0; i < selRows.length; i++) {
 				if (selRows[i] >= 0 && selRows[i] < addressContainer.getNumberOfUnresolvedAddresses()) {
-					nodes.add(addressContainer.getUnresolvedAddresses().get(selRows[i]));
+					unresolvedCache.add(addressContainer.getUnresolvedAddresses().get(selRows[i]));
 				}
 			}
-			return nodes;
+			return unresolvedCache;
+		} else {
+			return unresolvedCache;
 		}
-		return null;
 	}
 	
 	/**
@@ -128,18 +184,19 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	public List<OSMAddress> getSelectedIncompleteAddresses() {
 		if (incompleteAddressTable != null && 
 				addressContainer != null && 
-				addressContainer.getUnresolvedAddresses() != null) {
+				incompleteCache == null) {
 			
 			int[] selRows = incompleteAddressTable.getSelectedRows();
 			
-			List<OSMAddress> nodes = new ArrayList<OSMAddress>();
+			incompleteCache = new ArrayList<OSMAddress>();
 			for (int i = 0; i < selRows.length; i++) {
 				if (selRows[i] >= 0 && selRows[i] < addressContainer.getNumberOfIncompleteAddresses()) {
-					nodes.add(addressContainer.getIncompleteAddresses().get(selRows[i]));
+					incompleteCache.add(addressContainer.getIncompleteAddresses().get(selRows[i]));
 				}
 			}
-			return nodes;
+			return incompleteCache;
+		} else {
+			return incompleteCache; // equals null, if no data is present
 		}
-		return null;
 	}
 }

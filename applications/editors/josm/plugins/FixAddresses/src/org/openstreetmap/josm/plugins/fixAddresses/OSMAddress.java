@@ -23,6 +23,9 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  */
 public class OSMAddress extends OSMEntityBase {
 	public static final String MISSING_TAG = "?";
+	public static final String INTERPOLATION_TAG = "...";
+	
+	private boolean isPartOfInterpolation;
 	
 	/** The dictionary containing guessed values. */
 	private HashMap<String, String> guessedValues = new HashMap<String, String>();
@@ -40,7 +43,7 @@ public class OSMAddress extends OSMEntityBase {
 	public void setOsmObject(OsmPrimitive osmObject) {
 		super.setOsmObject(osmObject);
 		
-		OsmUtils.getValuesFromAddressInterpolation(this);
+		isPartOfInterpolation = OsmUtils.getValuesFromAddressInterpolation(this);
 		
 		String streetNameViaRel = OsmUtils.getAssociatedStreet(this.osmObject);
 		if (!StringUtils.isNullOrEmpty(streetNameViaRel)) {
@@ -53,10 +56,12 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return
 	 */
 	public boolean isComplete() {
-		return 	TagUtils.hasAddrCityTag(osmObject) && TagUtils.hasAddrCountryTag(osmObject) &&
-				TagUtils.hasAddrHousenumberTag(osmObject) && TagUtils.hasAddrPostcodeTag(osmObject) &&
-				TagUtils.hasAddrStateTag(osmObject) && 
-				(TagUtils.hasAddrStreetTag(osmObject) || hasDerivedValue(TagUtils.ADDR_STREET_TAG));
+		return 	hasCity() && 
+				hasHouseNumber() &&
+			 	hasPostCode() && 
+				hasCity() && 
+				hasState() &&
+				hasStreetName();
 	}
 	
 	/**
@@ -217,11 +222,33 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public String getHouseNumber() {
 		if (!TagUtils.hasAddrHousenumberTag(osmObject)) {
-			return MISSING_TAG;
+			if (!isPartOfInterpolation) {
+				return MISSING_TAG;
+			} else {
+				return INTERPOLATION_TAG;
+			}
 		}
 		return TagUtils.getAddrHousenumberValue(osmObject);
 	}
 	
+	/**
+	 * Checks for house number.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean hasHouseNumber() {
+		return TagUtils.hasAddrHousenumberTag(osmObject) || isPartOfInterpolation;
+	}
+		
+	/**
+	 * Checks if this address is part of a address interpolation.
+	 *
+	 * @return true, if is part of interpolation
+	 */
+	protected boolean isPartOfInterpolation() {
+		return isPartOfInterpolation;
+	}
+
 	/**
 	 * Gets the name of the city associated with this address.
 	 * @return

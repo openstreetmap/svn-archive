@@ -60,9 +60,9 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	@Override
 	public void addressEditActionPerformed(AddressEditContainer container) {
 		if (container == null) return;
-		if (container.getUnresolvedAddresses() == null) return;
+		if (container.getNumberOfUnresolvedAddresses() == 0) return;
 				
-		internalGuessAddresses(container.getIncompleteAddresses());
+		internalGuessAddresses(container.getAllAddressesToFix());
 	}
 
 	/* (non-Javadoc)
@@ -72,8 +72,9 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		if (ev == null || ev.getSelectedUnresolvedAddresses() == null) return;
 		
-		// guess tags for selected addresses only
-		internalGuessAddresses(ev.getSelectedUnresolvedAddresses());		
+		// guess tags for selected addresses only				
+		internalGuessAddresses(ev.getSelectedIncompleteAddresses());
+		internalGuessAddresses(ev.getSelectedUnresolvedAddresses());
 	}
 	
 	/**
@@ -81,6 +82,8 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	 * @param addrNodes
 	 */
 	private void internalGuessAddresses(List<OSMAddress> nodes) {
+		if (nodes == null) return;
+		
 		GuessAddressRunnable aft = new GuessAddressRunnable(nodes, tr("Guess street names"));
 		aft.addFinishListener(this);
 		Main.worker.submit(aft);

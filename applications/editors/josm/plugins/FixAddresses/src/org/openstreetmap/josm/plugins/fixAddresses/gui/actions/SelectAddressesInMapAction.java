@@ -49,7 +49,7 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 
 	public SelectAddressesInMapAction() {
 		// we simply use the existing icon :-|
-		super(tr("Select in map"), "selectall", "Selects selected addresses in the map");
+		super(tr("Select"), "selectall", "Selects selected addresses in the map");
 	}
 
 	/* (non-Javadoc)
@@ -59,9 +59,9 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		if (ev == null) return;
 		
-		if (ev.getSelectedUnresolvedAddresses() != null) {
+		if (ev.hasUnresolvedAddresses()) {
 			internalSelectAddresses(ev.getSelectedUnresolvedAddresses());
-		} else if (ev.getSelectedIncompleteAddresses() != null) {
+		} else if (ev.hasIncompleteAddresses()) {
 			internalSelectAddresses(ev.getSelectedIncompleteAddresses());
 		}
 	}
@@ -84,7 +84,7 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 	 */
 	@Override
 	protected void updateEnabledState(AddressEditSelectionEvent event) {
-		setEnabled(event != null && (event.getSelectedUnresolvedAddresses() != null || event.getSelectedIncompleteAddresses() != null));
+		setEnabled(event != null && event.hasAddresses());
 	}
 
 	/**

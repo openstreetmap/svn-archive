@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
 
 /**
  * This class is the container for all street segments with the same name. Every street
@@ -51,23 +52,39 @@ public class OSMStreet extends OSMEntityBase {
 		Collections.sort(children);
 	}
 	
+	/**
+	 * Lazy creation of children list.
+	 */
 	private void lazyCreateChildren() {
 		if (children == null) {
 			children = new ArrayList<IOSMEntity>();
 		}
 	}
 	
+	/**
+	 * Adds an associated address to the street.
+	 *
+	 * @param aNode the address node to add
+	 */
 	public void addAddress(OSMAddress aNode) {
 		lazyCreateAddresses();
 		addresses.add(aNode);		
 	}
 
+	/**
+	 * Lazy creation of address list.
+	 */
 	private void lazyCreateAddresses() {
 		if (addresses == null) {
 			addresses = new ArrayList<OSMAddress>();
 		}
 	}
 	
+	/**
+	 * Checks for addresses.
+	 *
+	 * @return true, if street has one or more associated addresses.
+	 */
 	public boolean hasAddresses() {
 		return addresses != null && addresses.size() > 0;
 	}
@@ -133,6 +150,24 @@ public class OSMStreet extends OSMEntityBase {
 			
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Checks if the attached way has an associated street relation.
+	 *
+	 * @return true, if this street has an "associatedStreet" relation.
+	 */
+	public boolean hasAssociatedStreetRelation() {
+		OsmPrimitive osm = getOsmObject();
+		for (OsmPrimitive refs : osm.getReferrers()) {
+			if (refs instanceof Relation) {
+				Relation rel = (Relation) refs;
+				if (TagUtils.isAssociatedStreetRelation(rel)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	/* (non-Javadoc)

@@ -31,46 +31,83 @@ public class ConvertToRelationAction extends AbstractAddressEditAction {
 	public ConvertToRelationAction() {
 		super(tr("Convert to relation."), "convert2rel_24", "Create relation between street and related addresses.");
 	}
+	
+	/**
+	 * Instantiates a new convert to relation action.
+	 *
+	 * @param name the name of the action
+	 * @param iconName the icon name
+	 * @param tooltip the tool tip to show on hover
+	 */
+	public ConvertToRelationAction(String name, String iconName, String tooltip) {
+		super(name, iconName, tooltip);		
+	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction#addressEditActionPerformed(org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent)
+	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		OSMStreet streetNode = ev.getSelectedStreet();
 		
 		if (streetNode != null) {
-			beginTransaction(tr("Create address relation for ") + " '" + streetNode.getName() + "'");
-			
-			Relation r = new Relation();
-			commands.add(new AddCommand(r));
-			commands.add(new ChangePropertyCommand(r, TagUtils.NAME_TAG, streetNode.getName()));
-			commands.add(new ChangePropertyCommand(r, TagUtils.RELATION_TYPE, TagUtils.ASSOCIATEDSTREET_RELATION_TYPE));
-						
-			r.addMember(new RelationMember(TagUtils.STREET_RELATION_ROLE, streetNode.getOsmObject()));
-			for (OSMAddress addrNode : streetNode.getAddresses()) {
-				beginObjectTransaction(addrNode);				
-				r.addMember(new RelationMember(TagUtils.HOUSE_RELATION_ROLE, addrNode.getOsmObject()));
-				addrNode.setStreetName(null);
-				finishObjectTransaction(addrNode);
-			}
-			finishTransaction();
+			createRelationForStreet(streetNode);
 		}
 	}
 
+	/**
+	 * Creates the 'associatedStreet' relation for a given street by adding all addresses which
+	 * matches the name of the street.
+	 *
+	 * @param streetNode the street node
+	 */
+	protected void createRelationForStreet(OSMStreet streetNode) {
+		if (streetNode == null || !streetNode.hasAddresses()) return;
+		
+		beginTransaction(tr("Create address relation for ") + " '" + streetNode.getName() + "'");
+		// Create the relation
+		Relation r = new Relation();
+		commands.add(new AddCommand(r));
+		commands.add(new ChangePropertyCommand(r, TagUtils.NAME_TAG, streetNode.getName()));
+		commands.add(new ChangePropertyCommand(r, TagUtils.RELATION_TYPE, TagUtils.ASSOCIATEDSTREET_RELATION_TYPE));
+		// add street with role 'street'
+		r.addMember(new RelationMember(TagUtils.STREET_RELATION_ROLE, streetNode.getOsmObject()));
+		
+		// add address members
+		for (OSMAddress addrNode : streetNode.getAddresses()) {
+			beginObjectTransaction(addrNode);				
+			r.addMember(new RelationMember(TagUtils.HOUSE_RELATION_ROLE, addrNode.getOsmObject()));
+			addrNode.setStreetName(null); // remove street name
+			finishObjectTransaction(addrNode);
+		}
+		finishTransaction();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction#addressEditActionPerformed(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditContainer container) {
 		// Nothing to do (yet).
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction#updateEnabledState(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+	 */
 	@Override
 	protected void updateEnabledState(AddressEditContainer container) {
 		setEnabled(false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction#updateEnabledState(org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent)
+	 */
 	@Override
 	protected void updateEnabledState(AddressEditSelectionEvent event) {
 		if (event == null) return;
 		
 		OSMStreet street = event.getSelectedStreet();
-		setEnabled(street != null && street.hasAddresses());
+		setEnabled(street != null && street.hasAddresses() && !street.hasAssociatedStreetRelation());
 	}
 
 }

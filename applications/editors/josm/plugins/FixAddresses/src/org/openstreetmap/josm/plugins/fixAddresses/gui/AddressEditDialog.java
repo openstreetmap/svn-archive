@@ -57,6 +57,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AssignAddressToStreetAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ConvertAllToRelationAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ConvertToRelationAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.GuessAddressDataAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
@@ -83,6 +84,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	private SelectAddressesInMapAction selectAddressesInMapAction = new SelectAddressesInMapAction();
 	private RemoveAddressTagsAction removeAddressTagsAction = new RemoveAddressTagsAction();
 	private ConvertToRelationAction convertToRelationAction = new ConvertToRelationAction();
+	private ConvertAllToRelationAction convertAllToRelationAction = new ConvertAllToRelationAction();
 	
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[] {
 		resolveAction,
@@ -90,7 +92,8 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 		applyAllGuessesAction,
 		selectAddressesInMapAction,
 		removeAddressTagsAction,
-		convertToRelationAction
+		convertToRelationAction,
+		convertAllToRelationAction
 	};
 	private JLabel streetLabel;
 	private JLabel unresolvedAddressesLabel;
@@ -129,9 +132,14 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			headerPanel.setMinimumSize(new Dimension(100, 30));
 			headerPanel.add(streetLabel);
 			
-			JPanel streetButtonPanel = new JPanel(new GridLayout(1, 4));
+			JPanel streetButtonPanel = new JPanel(new GridLayout(1, 3));
 			SideButton convertToRel = new SideButton(convertToRelationAction);															   
 			streetButtonPanel.add(convertToRel);
+			// SideButton convertAllToRel = new SideButton(convertAllToRelationAction);															   
+			// streetButtonPanel.add(convertAllToRel);
+			// add filler
+			streetButtonPanel.add(new JPanel());
+			streetButtonPanel.add(new JPanel());
 			
 			streetPanel.add(streetButtonPanel, BorderLayout.SOUTH);
 			streetPanel.add(headerPanel, BorderLayout.NORTH);

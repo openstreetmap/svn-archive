@@ -93,7 +93,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	 * @throws HeadlessException
 	 */
 	public AddressEditDialog(AddressEditContainer addressEditContainer) throws HeadlessException  {
-		super(JOptionPane.getFrameForComponent(Main.parent), tr("Fix unresolved addresses"), true);
+		super(JOptionPane.getFrameForComponent(Main.parent), tr("Fix unresolved addresses"), false);
 	
 		this.editContainer = addressEditContainer; 
 		this.editContainer.addChangedListener(this);

@@ -23,7 +23,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  */
 public class OSMAddress extends OSMEntityBase {
 	public static final String MISSING_TAG = "?";
-	public static final String INTERPOLATION_TAG = "...";
+	public static final String INTERPOLATION_TAG = "x..y";
 	
 	private boolean isPartOfInterpolation;
 	

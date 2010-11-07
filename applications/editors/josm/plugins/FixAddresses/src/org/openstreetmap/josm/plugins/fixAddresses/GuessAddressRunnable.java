@@ -188,8 +188,11 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 				
 				// setup guessing handlers for address tags
 				GuessedValueHandler[] guessers = new GuessedValueHandler[]{
-						new GuessStreetValueHandler(TagUtils.ADDR_STREET_TAG, aNode),
+						new GuessStreetValueHandler(TagUtils.ADDR_STREET_TAG, aNode),						
 						new GuessedValueHandler(TagUtils.ADDR_POSTCODE_TAG, aNode, 500.0),
+						new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, aNode, 5000.0),
+						new GuessedValueHandler(TagUtils.ADDR_STATE_TAG, aNode, 5000.0),
+						new GuessedValueHandler(TagUtils.ADDR_COUNTRY_TAG, aNode, 5000.0),
 						new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, aNode, 2000.0)
 				};
 				

@@ -1898,6 +1898,7 @@ public final class TagUtils {
 		return 	HIGHWAY_RESIDENTIAL_VALUE.equals(hwType) ||
 				HIGHWAY_SECONDARY_VALUE.equals(hwType) ||
 				HIGHWAY_TERTIARY_VALUE.equals(hwType) ||
+				HIGHWAY_SERVICE_VALUE.equals(hwType) ||
 				HIGHWAY_LIVING_STREET_VALUE.equals(hwType) ||
 				HIGHWAY_UNCLASSIFIED_VALUE.equals(hwType);
 	}

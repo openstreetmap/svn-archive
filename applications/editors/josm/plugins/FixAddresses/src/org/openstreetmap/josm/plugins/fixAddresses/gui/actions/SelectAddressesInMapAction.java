@@ -26,7 +26,7 @@
  */
 
 /* File created on 30.10.2010 */
-package org.openstreetmap.josm.plugins.fixAddresses.gui;
+package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -36,6 +36,7 @@ import java.util.List;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
 /**
  *

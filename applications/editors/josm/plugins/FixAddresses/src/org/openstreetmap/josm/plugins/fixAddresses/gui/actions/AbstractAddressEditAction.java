@@ -11,7 +11,7 @@
  * You should have received a copy of the GNU General Public License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openstreetmap.josm.plugins.fixAddresses.gui;
+package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener
 import org.openstreetmap.josm.plugins.fixAddresses.ICommandListener;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
 /**
  * Base class for all address related action. An action can work as well on all addresses collected by the
@@ -95,7 +96,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 	/**
 	 * @param event the event to set
 	 */
-	protected void setEvent(AddressEditSelectionEvent event) {
+	public void setEvent(AddressEditSelectionEvent event) {
 		this.event = event;
 		updateEnabledState();
 	}

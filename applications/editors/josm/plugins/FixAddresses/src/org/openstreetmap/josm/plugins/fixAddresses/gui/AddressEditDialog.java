@@ -54,6 +54,12 @@ import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AssignAddressToStreetAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.GuessAddressDataAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectAddressesInMapAction;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 @SuppressWarnings("serial")

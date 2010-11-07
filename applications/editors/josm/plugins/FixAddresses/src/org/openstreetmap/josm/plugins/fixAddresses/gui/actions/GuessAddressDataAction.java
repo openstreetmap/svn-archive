@@ -11,7 +11,7 @@
  * You should have received a copy of the GNU General Public License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openstreetmap.josm.plugins.fixAddresses.gui;
+package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -22,6 +22,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.GuessAddressRunnable;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IProgressMonitorFinishedListener;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
 /**
  * Guesses address tags by picking the closest street node with a name. The same is done (some day)

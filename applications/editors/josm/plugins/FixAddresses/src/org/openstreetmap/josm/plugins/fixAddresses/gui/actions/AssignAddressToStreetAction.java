@@ -11,13 +11,14 @@
  * You should have received a copy of the GNU General Public License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openstreetmap.josm.plugins.fixAddresses.gui;
+package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
 /**
  * Assigns one or more selected addresses to a street, i. e. the name of the street is 

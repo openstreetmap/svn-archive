@@ -28,6 +28,17 @@ import org.openstreetmap.josm.data.osm.Way;
 public final class TagUtils {
 	
 	/**
+	 * Checks if the given OSM object has a (non-empty) value for the given tag.
+	 *
+	 * @param osm the osm object to inspect.
+	 * @param tag the tag to look for.
+	 * @return true, if osm object has a non-empty value for this tag 
+	 */
+	public static boolean hasTag(OsmPrimitive osm, String tag) {
+		return osm != null && !StringUtils.isNullOrEmpty(osm.get(tag));
+	}
+	
+	/**
 	 * Checks if the given OSM primitive is an address node.
 	 * @return
 	 */

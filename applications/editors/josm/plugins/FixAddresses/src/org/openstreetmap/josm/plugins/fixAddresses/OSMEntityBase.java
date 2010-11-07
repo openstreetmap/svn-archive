@@ -25,6 +25,7 @@ import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * The class OSMEntityBase provides a base implementation for the {@link IOSMEntity} interface.
@@ -55,6 +56,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * @param osmObject the osmObject to set
 	 */
 	protected void setOsmObject(OsmPrimitive osmObject) {
+		CheckParameterUtil.ensureParameterNotNull(osmObject, "osmObject");
 		this.osmObject = osmObject;
 	}
 
@@ -63,6 +65,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * @param listener
 	 */
 	public static void addChangedListener(IAddressEditContainerListener listener) {
+		CheckParameterUtil.ensureParameterNotNull(listener, "listener");
 		containerListeners.add(listener);
 	}
 	
@@ -71,6 +74,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * @param listener
 	 */
 	public static void removeChangedListener(IAddressEditContainerListener listener) {
+		CheckParameterUtil.ensureParameterNotNull(listener, "listener");
 		containerListeners.remove(listener);
 	}
 	
@@ -78,6 +82,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * Notifies clients that the address container changed.
 	 */
 	protected static void fireEntityChanged(IOSMEntity entity) {
+		CheckParameterUtil.ensureParameterNotNull(entity, "entity");
 		for (IAddressEditContainerListener listener : containerListeners) {
 			listener.entityChanged(entity);
 		}
@@ -88,6 +93,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * @param listener
 	 */
 	public void addCommandListener(ICommandListener listener) {
+		CheckParameterUtil.ensureParameterNotNull(listener, "listener");
 		cmdListeners.add(listener);
 	}
 	
@@ -96,6 +102,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * @param listener
 	 */
 	public void removeCommandListener(ICommandListener listener) {
+		CheckParameterUtil.ensureParameterNotNull(listener, "listener");
 		cmdListeners.remove(listener);
 	}
 	
@@ -103,15 +110,16 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * Notifies clients that an entity has issued a command.
 	 *
 	 * @param source the entity that issued the command.
-	 * @param cmd the command to execute.
+	 * @param command the command to execute.
 	 */
-	protected void fireCommandIssued(Command cmd) {
+	protected void fireCommandIssued(Command command) {
+		CheckParameterUtil.ensureParameterNotNull(command, "command");
 		if (cmdListeners.size() == 0) {
 			throw new RuntimeException("Object has no TX context: " + this);
 		}
 		
 		for (ICommandListener l : cmdListeners) {
-			l.commandIssued(this, cmd);
+			l.commandIssued(this, command);
 		}
 	}	
 
@@ -153,6 +161,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * @param cmd The surrounding command sequence
 	 */
 	protected void setOSMTag(String tag, String newValue) {
+		CheckParameterUtil.ensureParameterNotNull(tag, "tag");		
 		if (StringUtils.isNullOrEmpty(tag)) return;
 		
 		if (osmObject != null) {
@@ -169,6 +178,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 * @param tag the tag
 	 */
 	protected void removeOSMTag(String tag) {
+		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
 		setOSMTag(tag, null); // a value of null removes the tag
 	}
 

@@ -117,4 +117,37 @@ public class OsmUtils {
 		}
 		return null;
 	}
+	
+	/**
+	 * Gets the tag values from an address interpolation ref, if present.
+	 *
+	 * @param address the address
+	 * @return the values from address interpolation
+	 */
+	public static boolean getValuesFromAddressInterpolation(OSMAddress address) {
+		if (address == null) return false;
+		
+		OsmPrimitive osmAddr = address.getOsmObject();
+		
+		for (OsmPrimitive osm : osmAddr.getReferrers()) {
+			if (osm instanceof Way) {
+				Way w = (Way) osm;
+				if (TagUtils.hasAddrInterpolationTag(w)) {					
+					applyDerivedValue(address, w, TagUtils.ADDR_POSTCODE_TAG);
+					applyDerivedValue(address, w, TagUtils.ADDR_CITY_TAG);
+					applyDerivedValue(address, w, TagUtils.ADDR_COUNTRY_TAG);
+					applyDerivedValue(address, w, TagUtils.ADDR_STREET_TAG);
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	private static void applyDerivedValue(OSMAddress address, Way w, String tag) {
+		if (!address.hasTag(tag) && TagUtils.hasTag(w, tag)) {						
+			address.setDerivedValue(tag, w.get(tag));
+		}
+	}
 }

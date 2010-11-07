@@ -40,6 +40,8 @@ public class OSMAddress extends OSMEntityBase {
 	public void setOsmObject(OsmPrimitive osmObject) {
 		super.setOsmObject(osmObject);
 		
+		OsmUtils.getValuesFromAddressInterpolation(this);
+		
 		String streetNameViaRel = OsmUtils.getAssociatedStreet(this.osmObject);
 		if (!StringUtils.isNullOrEmpty(streetNameViaRel)) {
 			setDerivedValue(TagUtils.ADDR_STREET_TAG, streetNameViaRel);
@@ -98,7 +100,7 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return
 	 */
 	public boolean hasStreetName() {
-		return TagUtils.hasAddrStreetTag(osmObject);
+		return TagUtils.hasAddrStreetTag(osmObject) || hasDerivedValue(TagUtils.ADDR_STREET_TAG);
 	}
 	
 	/**
@@ -186,9 +188,10 @@ public class OSMAddress extends OSMEntityBase {
 		for (String tag : guessedValues.keySet()) {
 			String val = guessedValues.get(tag);
 			if (!StringUtils.isNullOrEmpty(val)) {
-				setOSMTag(tag, val);
+				setOSMTag(tag, val);				
 			}
 		}
+		guessedValues.clear();
 	}
 
 	/**
@@ -205,7 +208,7 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return true, if successful
 	 */
 	public boolean hasPostCode() {
-		return TagUtils.hasAddrPostcodeTag(osmObject);
+		return hasTag(TagUtils.ADDR_POSTCODE_TAG);
 	}
 	
 	/**
@@ -230,10 +233,10 @@ public class OSMAddress extends OSMEntityBase {
 	/**
 	 * Checks for city tag.
 	 *
-	 * @return true, if successful
+	 * @return true, if a city tag is present or available via referrer.
 	 */
 	public boolean hasCity() {
-		return TagUtils.hasAddrCityTag(osmObject);
+		return hasTag(TagUtils.ADDR_CITY_TAG);
 	}
 	
 	/**
@@ -241,25 +244,37 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return
 	 */
 	public String getState() {
-		if (!TagUtils.hasAddrStateTag(osmObject)) {
-			return MISSING_TAG;
-		}
-		return TagUtils.getAddrStateValue(osmObject);
-	}
-
-	/**
-	 * Gets the name of the state associated with this address.
-	 * @return
-	 */
-	public String getCountry() {
-		if (!TagUtils.hasAddrCountryTag(osmObject)) {
-			return MISSING_TAG;
-		}
-		return TagUtils.getAddrCountryValue(osmObject);
+		return getTagValueWithGuess(TagUtils.ADDR_STATE_TAG);
 	}
 	
 	/**
-	 * Removes all addresss related tags from the node or way.
+	 * Checks for state tag.
+	 *
+	 * @return true, if a state tag is present or available via referrer.
+	 */
+	public boolean hasState() {
+		return hasTag(TagUtils.ADDR_STATE_TAG);
+	}
+
+	/**
+	 * Gets the name of the country associated with this address.
+	 * @return
+	 */
+	public String getCountry() {
+		return getTagValueWithGuess(TagUtils.ADDR_COUNTRY_TAG);
+	}
+	
+	/**
+	 * Checks for country tag.
+	 *
+	 * @return true, if a country tag is present or available via referrer.
+	 */
+	public boolean hasCountry() {
+		return hasTag(TagUtils.ADDR_COUNTRY_TAG);
+	}
+	
+	/**
+	 * Removes all address-related tags from the node or way.
 	 */
 	public void removeAllAddressTags() {
 		removeOSMTag(TagUtils.ADDR_CITY_TAG);
@@ -268,6 +283,18 @@ public class OSMAddress extends OSMEntityBase {
 		removeOSMTag(TagUtils.ADDR_HOUSENUMBER_TAG);
 		removeOSMTag(TagUtils.ADDR_STATE_TAG);
 		removeOSMTag(TagUtils.ADDR_STREET_TAG);
+	}
+	
+	/**
+	 * Checks if the associated OSM object has the given tag or if the tag is available via a referrer.
+	 *
+	 * @param tag the tag to look for.
+	 * @return true, if there is a value for the given tag.
+	 */
+	public boolean hasTag(String tag) {
+		if (StringUtils.isNullOrEmpty(tag)) return false;
+		
+		return TagUtils.hasTag(osmObject, tag) || hasDerivedValue(tag);
 	}
 	
 	/* (non-Javadoc)
@@ -399,6 +426,14 @@ public class OSMAddress extends OSMEntityBase {
 	private boolean hasDerivedValue(String tag) {
 		return derivedValues.containsKey(tag) && 
 			!StringUtils.isNullOrEmpty(derivedValues.get(tag));
+	}
+	
+	/**
+	 * Returns true, if this instance has derived values from any referrer.
+	 * @return
+	 */
+	public boolean hasDerivedValues() {
+		return derivedValues.size() > 0; 
 	}
 	
 	/**

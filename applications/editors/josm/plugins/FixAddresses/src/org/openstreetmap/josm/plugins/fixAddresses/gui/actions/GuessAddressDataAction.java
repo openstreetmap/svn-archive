@@ -43,7 +43,7 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	 */
 	@Override
 	public void updateEnabledState(AddressEditSelectionEvent ev) {
-		setEnabled(ev != null && ev.getUnresolvedAddressTable() != null);
+		setEnabled(ev != null && ev.hasAddresses());
 	}
 
 	/* (non-Javadoc)
@@ -51,7 +51,7 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	 */
 	@Override
 	protected void updateEnabledState(AddressEditContainer container) {
-		setEnabled(container != null && container.getNumberOfIncompleteAddresses() > 0);
+		setEnabled(container != null && container.getNumberOfInvalidAddresses() > 0);
 	}
 
 	/* (non-Javadoc)
@@ -59,9 +59,8 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditContainer container) {
-		if (container == null) return;
-		if (container.getNumberOfUnresolvedAddresses() == 0) return;
-				
+		if (container == null || container.getNumberOfInvalidAddresses() == 0) return;
+						
 		internalGuessAddresses(container.getAllAddressesToFix());
 	}
 

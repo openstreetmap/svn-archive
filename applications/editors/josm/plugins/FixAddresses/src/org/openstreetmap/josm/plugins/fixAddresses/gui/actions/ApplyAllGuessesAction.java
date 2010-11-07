@@ -43,19 +43,39 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 		super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction#addressEditActionPerformed(org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent)
+	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
-		if (ev == null || ev.getSelectedUnresolvedAddresses() == null) return;
-		// fix SELECTED items only
-		List<OSMAddress> addrToFix = ev.getSelectedUnresolvedAddresses();
-		applyGuesses(addrToFix);
+		if (ev == null) return;
+		
+		if (ev.getSelectedUnresolvedAddresses() != null) {
+			// fix SELECTED items only
+			List<OSMAddress> addrToFix = ev.getSelectedUnresolvedAddresses();
+			applyGuesses(addrToFix);
+		}
+		
+		if (ev.getSelectedIncompleteAddresses() != null) {
+			// fix SELECTED items only
+			List<OSMAddress> addrToFix = ev.getSelectedIncompleteAddresses();
+			applyGuesses(addrToFix);
+		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction#updateEnabledState(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+	 */
 	@Override
 	protected void updateEnabledState(AddressEditContainer container) {
 		setEnabled(container != null && container.getNumberOfGuesses() > 0);
 	}
 
+	/**
+	 * Apply guesses.
+	 *
+	 * @param addrToFix the addr to fix
+	 */
 	private void applyGuesses(List<OSMAddress> addrToFix) {
 		beginTransaction(tr("Applied guessed values"));
 		List<OSMAddress> addrToFixShadow = new ArrayList<OSMAddress>(addrToFix);
@@ -67,19 +87,32 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 		finishTransaction();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction#updateEnabledState(org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent)
+	 */
 	@Override
 	protected void updateEnabledState(AddressEditSelectionEvent event) {
-		// do nothing here
+		setEnabled(event.getSelectedIncompleteAddresses() != null ||
+				event.getSelectedIncompleteAddresses() != null);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction#addressEditActionPerformed(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
+	 */
 	@Override
 	public void addressEditActionPerformed(AddressEditContainer container) {
 		if (container == null || container.getUnresolvedAddresses() == null) return;
 		
 		List<OSMAddress> addrToFix = container.getUnresolvedAddresses();
 		applyGuesses(addrToFix);		
+		
+		addrToFix = container.getIncompleteAddresses();
+		applyGuesses(addrToFix);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		JTable table = (JTable)e.getSource();
@@ -93,9 +126,9 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 					beginTransaction(tr("Applied guessed values for ") + node.getOsmObject());
 					beginObjectTransaction(node);
 					OSMAddress aNode = (OSMAddress) node;
-					if (aNode.hasGuessedStreetName()) {
-						aNode.applyAllGuesses();
-					}
+										
+					aNode.applyAllGuesses();
+					
 					finishObjectTransaction(node);
 					finishTransaction();
 				}
@@ -103,27 +136,31 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 }

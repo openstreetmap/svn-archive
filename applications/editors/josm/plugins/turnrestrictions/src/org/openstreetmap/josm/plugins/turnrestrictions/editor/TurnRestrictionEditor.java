@@ -86,8 +86,6 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     
     private JosmSelectionPanel pnlJosmSelection;
     private BasicEditorPanel pnlBasicEditor;
-    private AdvancedEditorPanel pnlAdvancedEditor;
-    private IssuesView pnlIssuesView;
     private TurnRestrictionEditorModel editorModel;
     private JTabbedPane tpEditors;
     private PreferenceChangeHandler preferenceChangeHandler;
@@ -101,10 +99,13 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         JPanel pnl = new JPanel();
         pnl.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        pnl.add(new SideButton(new OKAction()));
-        pnl.add(new SideButton(new CancelAction()));
-        
-        pnl.add(new SideButton(new ContextSensitiveHelpAction(ht("/Plugins/turnrestrictions#TurnRestrictionEditor"))));
+        SideButton b;
+        pnl.add(b = new SideButton(new OKAction()));
+        b.setName("btnOK");
+        pnl.add(b = new SideButton(new CancelAction()));
+        b.setName("btnCancel");
+        pnl.add(b = new SideButton(new ContextSensitiveHelpAction(ht("/Plugins/turnrestrictions#TurnRestrictionEditor"))));
+        b.setName("btnHelp");
         return pnl;
     }
     
@@ -133,11 +134,11 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         tpEditors.setTitleAt(0, tr("Basic"));
         tpEditors.setToolTipTextAt(0, tr("Edit basic attributes of a turn restriction"));
         
-        tpEditors.add(pnlAdvancedEditor = new AdvancedEditorPanel(editorModel));
+        tpEditors.add(new AdvancedEditorPanel(editorModel));
         tpEditors.setTitleAt(1, tr("Advanced"));
         tpEditors.setToolTipTextAt(1, tr("Edit the raw tags and members of this turn restriction"));
         
-        tpEditors.add(pnlIssuesView = new IssuesView(editorModel.getIssuesModel()));
+        tpEditors.add(new IssuesView(editorModel.getIssuesModel()));
         tpEditors.setTitleAt(2, tr("Errors/Warnings"));
         tpEditors.setToolTipTextAt(2, tr("Show errors and warnings related to this turn restriction"));
         
@@ -649,7 +650,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
                 tpEditors.setSelectedIndex(2); // show the errors and warnings
                 return;
             }
-            if (getTurnRestriction() == null) {
+            if (getTurnRestriction() == null || getTurnRestriction().getDataSet() == null) {
                 applyNewTurnRestriction();
                 return;
             } 
@@ -692,7 +693,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
                 tpEditors.setSelectedIndex(2); // show the errors and warnings
                 return;
             }
-            if (getTurnRestriction() == null) {
+            if (getTurnRestriction() == null || getTurnRestriction().getDataSet() == null) {
                 // it's a new turn restriction. Try to save it and close the dialog
                 if (applyNewTurnRestriction()) {
                     setVisible(false);

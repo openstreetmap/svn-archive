@@ -30,7 +30,7 @@
 <project name="turnrestrictions" default="dist" basedir=".">
 
 	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="Migration to Java6 -  making use of JTable::setFillsViewportHeight()" />
+	<property name="commit.message" value="Fixing #5614 - JOSM Plugin turn Restrictions" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
 	<property name="plugin.main.version" value="3518" />
 
@@ -266,17 +266,26 @@
 	<path id="junit.path">
 		<pathelement location="${eclipse.plugin.dir}/org.junit_4.8.1.v4_8_1_v20100427-1100\junit.jar" />
 	</path>
+	
+	<path id="fest.library.path">
+		<fileset dir="test/lib">
+			<include name="fest-*.jar" />
+			<include name="jcp-*.jar" />
+		</fileset>
+    </path>
 
 	<path id="test.class.path">
 		<pathelement location="${josm}" />
 		<pathelement location="${plugin.build.dir}" />
 		<path refid="groovy.path" />
 		<path refid="junit.path" />
+		<path refid="fest.library.path" />
 	</path>
 
 	<path id="groovyc.path">
 		<path refid="junit.path" />
 		<path refid="groovy.path" />
+		<path refid="fest.library.path" />
 		<pathelement location="${josm}" />
 		<pathelement location="${test.build.dir}" />
 		<pathelement location="${plugin.build.dir}" />

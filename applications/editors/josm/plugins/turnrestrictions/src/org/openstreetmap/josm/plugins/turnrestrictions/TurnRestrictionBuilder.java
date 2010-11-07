@@ -1,9 +1,5 @@
 package org.openstreetmap.josm.plugins.turnrestrictions;
 
-import static org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder.determineWayJoinOrientation;
-import static org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder.isEndNode;
-import static org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder.isStartNode;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;

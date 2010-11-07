@@ -25,10 +25,10 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	 */
 	private static final long serialVersionUID = -5951629033395186324L;
 	
-	private static final int NUMBER_OF_COLUMNS = 5;
-	private static final String[] COLUMN_NAMES = new String[]{tr("Country"), tr("State"), tr("City"), tr("Post Code"), tr("Street")}; 
+	private static final int NUMBER_OF_COLUMNS = 6;
+	private static final String[] COLUMN_NAMES = new String[]{tr("Country"), tr("State"), tr("City"), tr("Post Code"), tr("Street"), tr("Number")}; 
 	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
-		String.class, String.class, String.class, String.class, String.class};
+		String.class, String.class, String.class, String.class, String.class, String.class};
 	
 	
 	/**
@@ -76,6 +76,8 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 			return aNode.getPostCode();
 		case 4:
 			return aNode.getStreetName();			
+		case 5:
+			return aNode.getHouseNumber();
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}

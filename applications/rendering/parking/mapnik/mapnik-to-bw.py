@@ -226,21 +226,28 @@ def dom_convert_to_grey(document):
             el.setAttribute("halo_fill",bw)
 
 
-def dom_strip_icons(document):
+def dom_strip_style_and_layer(document,stylename,layername):
     removeElements=[]
     # remove <Style name="points"> and <Layer name="amenity-points">
     els = document.getElementsByTagName("Style")
     for el in els:
-        if el.getAttribute("name")=="points":
+        if el.getAttribute("name")==stylename:
             removeElements.append(el)
     els = document.getElementsByTagName("Layer")
     for el in els:
-        if el.getAttribute("name")=="amenity-points":
+        if el.getAttribute("name")==layername:
             removeElements.append(el)
     print removeElements
     for el in removeElements:
         parent = el.parentNode
         parent.removeChild(el)
+
+def dom_strip_icons(document):
+    dom_strip_style_and_layer(document,"points","amenity-points")
+    dom_strip_style_and_layer(document,"power_line","power_line")
+    dom_strip_style_and_layer(document,"power_minorline","power_minorline")
+    dom_strip_style_and_layer(document,"power_towers","power_towers")
+    dom_strip_style_and_layer(document,"power_poles","power_poles")
 
 def transmogrify_file(sf,dfgrey,dfnoicons):
     dom= pxdom.getDOMImplementation('') 

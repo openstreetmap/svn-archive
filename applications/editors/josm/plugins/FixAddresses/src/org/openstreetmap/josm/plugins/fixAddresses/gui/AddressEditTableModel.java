@@ -42,7 +42,6 @@ public abstract class AddressEditTableModel extends DefaultTableModel implements
 	public void entityChanged(IOSMEntity entity) {
 		int row = getRowOfEntity(entity);
 		if (row != -1) { // valid row? -> update model
-			System.out.println("Update row " + row);
 			fireTableRowsUpdated(row, row);
 		} // else we don't do anything
 	}

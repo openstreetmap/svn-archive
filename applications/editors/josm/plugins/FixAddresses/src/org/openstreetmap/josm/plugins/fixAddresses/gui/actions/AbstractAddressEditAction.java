@@ -44,7 +44,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 public abstract class AbstractAddressEditAction extends JosmAction implements IAddressEditContainerListener, ICommandListener {	
 	private AddressEditSelectionEvent event;
 	protected AddressEditContainer container;
-	private List<Command> commands;
+	protected List<Command> commands;
 	private String txName;
 
 	/**

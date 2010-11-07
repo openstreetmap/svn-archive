@@ -57,6 +57,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AssignAddressToStreetAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ConvertToRelationAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.GuessAddressDataAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectAddressesInMapAction;
@@ -81,13 +82,15 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	private GuessAddressDataAction guessAddressAction = new GuessAddressDataAction();
 	private SelectAddressesInMapAction selectAddressesInMapAction = new SelectAddressesInMapAction();
 	private RemoveAddressTagsAction removeAddressTagsAction = new RemoveAddressTagsAction();
+	private ConvertToRelationAction convertToRelationAction = new ConvertToRelationAction();
 	
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[] {
 		resolveAction,
 		guessAddressAction,
 		applyAllGuessesAction,
 		selectAddressesInMapAction,
-		removeAddressTagsAction
+		removeAddressTagsAction,
+		convertToRelationAction
 	};
 	private JLabel streetLabel;
 	private JLabel unresolvedAddressesLabel;
@@ -126,6 +129,11 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			headerPanel.setMinimumSize(new Dimension(100, 30));
 			headerPanel.add(streetLabel);
 			
+			JPanel streetButtonPanel = new JPanel(new GridLayout(1, 4));
+			SideButton convertToRel = new SideButton(convertToRelationAction);															   
+			streetButtonPanel.add(convertToRel);
+			
+			streetPanel.add(streetButtonPanel, BorderLayout.SOUTH);
 			streetPanel.add(headerPanel, BorderLayout.NORTH);
 			streetPanel.setMinimumSize(new Dimension(350, 200));
 			

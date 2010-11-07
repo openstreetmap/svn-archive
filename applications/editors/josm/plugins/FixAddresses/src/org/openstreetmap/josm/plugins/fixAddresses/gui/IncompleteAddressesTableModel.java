@@ -75,7 +75,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 		case 3:
 			return aNode.getPostCode();
 		case 4:
-			aNode.getStreetName();			
+			return aNode.getStreetName();			
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}

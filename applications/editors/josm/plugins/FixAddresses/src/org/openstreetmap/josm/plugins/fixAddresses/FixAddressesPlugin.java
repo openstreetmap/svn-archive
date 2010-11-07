@@ -14,13 +14,17 @@
 package org.openstreetmap.josm.plugins.fixAddresses;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.IncompleteAddressesDialog;
 
 /**
  * The Class FixAddressesPlugin is the main entry point for the plugin.
  */
 public class FixAddressesPlugin extends Plugin {
+	private static IncompleteAddressesDialog incompleteAddrDlg;
 
 	/**
 	 * Constructor for the AddressEdit plugin. Called by JOSM when loading the plugin.
@@ -28,14 +32,43 @@ public class FixAddressesPlugin extends Plugin {
 	 */
 	public FixAddressesPlugin(PluginInformation info) {
 		super(info);
-		
+				
 		// Create action for edit...
-		FixUnresolvedStreetsAction action = new FixUnresolvedStreetsAction();
+		FixUnresolvedStreetsAction action = new FixUnresolvedStreetsAction();		
 		SelectIncompleteAddressesAction incAddrAction = new SelectIncompleteAddressesAction();
+		
 		// ... and add it to the tools menu in main
 		Main.main.menu.toolsMenu.addSeparator();
         Main.main.menu.toolsMenu.add(action);
         Main.main.menu.toolsMenu.add(incAddrAction);
+        
+        // Create dialog 
+        
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
+	 */
+	@Override
+	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+		// TODO Auto-generated method stub
+		super.mapFrameInitialized(oldFrame, newFrame);
+		
+		if (newFrame != null) {
+			incompleteAddrDlg = new IncompleteAddressesDialog();
+	        FixAddressesMapMode faMode = new FixAddressesMapMode(Main.map);
+			IconToggleButton faModeButton = new IconToggleButton(faMode);
+			faModeButton.setVisible(true);
+			newFrame.addToggleDialog(incompleteAddrDlg);						
+		}
+	}
+	
+	
+
+	/**
+	 * @return the incompleteAddrDlg
+	 */
+	protected static IncompleteAddressesDialog getIncompleteAddrDlg() {
+		return incompleteAddrDlg;
+	}
 }

@@ -33,10 +33,9 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 						tr("Address Edit")), KeyEvent.VK_A,
 						Shortcut.GROUP_MENU, InputEvent.ALT_DOWN_MASK
 						| InputEvent.SHIFT_DOWN_MASK), false);
-		setEnabled(false);
 		
-		addressEditContainer = new AddressEditContainer();
-				
+		setEnabled(false);		
+		addressEditContainer = new AddressEditContainer();				
 		DataSet.addSelectionListener(this);		
 	}
 

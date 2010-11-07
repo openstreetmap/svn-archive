@@ -21,9 +21,9 @@ import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
 public class StreetTableModel extends AddressEditTableModel {
 
-	private static final int NUMBER_OF_COLUMNS = 4;
-	private static final String[] COLUMN_NAMES = new String[]{tr("Type"), tr("Name"), tr("Segments"), tr("Addresses")}; 
-	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{String.class, String.class, Integer.class, Integer.class};
+	private static final int NUMBER_OF_COLUMNS = 5;
+	private static final String[] COLUMN_NAMES = new String[]{tr("Type"), tr("Name"), tr("Segments"), tr("Addresses"), tr("Relation")}; 
+	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{String.class, String.class, Integer.class, Integer.class, Boolean.class};
 	
 	/**
 	 * 
@@ -93,6 +93,8 @@ public class StreetTableModel extends AddressEditTableModel {
 			return sNode.getNumberOfSegments();
 		case 3:
 			return sNode.getNumberOfAddresses();
+		case 4:
+			return sNode.hasAssociatedStreetRelation();
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}

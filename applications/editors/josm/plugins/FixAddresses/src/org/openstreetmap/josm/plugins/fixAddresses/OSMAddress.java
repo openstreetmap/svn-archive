@@ -401,9 +401,11 @@ public class OSMAddress extends OSMEntityBase {
 	 *
 	 * @return true, if this instance needs at least one guessed value.
 	 */
-	public boolean needsGuess() {
+	public boolean needsGuess() {		
 		return 	needsGuessedValue(TagUtils.ADDR_CITY_TAG) ||
 				needsGuessedValue(TagUtils.ADDR_POSTCODE_TAG) ||
+				needsGuessedValue(TagUtils.ADDR_COUNTRY_TAG) ||
+				needsGuessedValue(TagUtils.ADDR_STATE_TAG) ||
 				needsGuessedValue(TagUtils.ADDR_STREET_TAG);
 	}
 	

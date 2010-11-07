@@ -189,8 +189,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 				unresolvedPanel.add(unresolvedButtons, BorderLayout.SOUTH);				
 			} catch (Exception e) {				
 				e.printStackTrace();
-			}
-			
+			}			
 			
 			/* Map Panel */
 			JPanel mapPanel = new JPanel(new BorderLayout());
@@ -198,6 +197,25 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			mapPanel.add(mapViewer, BorderLayout.CENTER);
 			mapPanel.setMinimumSize(new Dimension(200, 200));
 			mapViewer.setVisible(false);
+			
+			JPanel mapControl = new JPanel(new GridLayout(1, 4));
+			JLabel mapL1 = new JLabel(tr("Complete Addresses"));
+			mapL1.setForeground(Color.BLUE);
+			mapControl.add(mapL1);
+			
+			JLabel mapL2 = new JLabel(tr("Incomplete Addresses"));
+			mapL2.setForeground(Color.RED);
+			mapControl.add(mapL2);
+			
+			JLabel mapL3 = new JLabel(tr("Selected Addresses"));
+			mapL3.setForeground(Color.ORANGE);
+			mapControl.add(mapL3);
+			
+			JLabel mapL4 = new JLabel(tr("Selected Street"));
+			mapL4.setForeground(Color.GREEN);
+			mapControl.add(mapL4);
+			
+			mapPanel.add(mapControl, BorderLayout.SOUTH);
 						
 			/* Combine panels */
 			JSplitPane unresSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, streetPanel, unresolvedPanel);						

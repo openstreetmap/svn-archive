@@ -30,20 +30,22 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	private static final long serialVersionUID = -93034483427803409L;
 	private JTable streetTable;
 	private JTable unresolvedAddressTable;
+	private JTable incompleteAddressTable;
 	private AddressEditContainer addressContainer;
 	
 	/**
 	 * Creates a new 'AddressEditSelectionEvent'.
 	 * @param source The event source.
 	 * @param selStreet The street table component.
-	 * @param unresolvedAddr The unresolved addresses table component.
+	 * @param unresolvedAddresses The unresolved addresses table component.
 	 * @param incomplete The incomplete addresses table component.
 	 * @param container The address container instance holding the entities for streets and addresses.
 	 */
-	public AddressEditSelectionEvent(Object source, JTable selStreet, JTable unresolvedAddr, AddressEditContainer container) {
+	public AddressEditSelectionEvent(Object source, JTable selStreet, JTable unresolvedAddresses, JTable incompleteAddresses, AddressEditContainer container) {
 		super(source, -1, "");
 		this.streetTable = selStreet;
-		this.unresolvedAddressTable = unresolvedAddr;
+		this.unresolvedAddressTable = unresolvedAddresses;
+		this.incompleteAddressTable = incompleteAddresses;
 		this.addressContainer = container;
 	}
 	
@@ -62,7 +64,19 @@ public class AddressEditSelectionEvent extends ActionEvent {
 	public JTable getUnresolvedAddressTable() {
 		return unresolvedAddressTable;
 	}
+	
+	/**
+	 * @return the incompleteAddressTable
+	 */
+	protected JTable getIncompleteAddressTable() {
+		return incompleteAddressTable;
+	}
 
+	/**
+	 * Gets the address container.
+	 *
+	 * @return the address container
+	 */
 	public AddressEditContainer getAddressContainer() {
 		return addressContainer;
 	}
@@ -99,6 +113,29 @@ public class AddressEditSelectionEvent extends ActionEvent {
 			for (int i = 0; i < selRows.length; i++) {
 				if (selRows[i] >= 0 && selRows[i] < addressContainer.getNumberOfUnresolvedAddresses()) {
 					nodes.add(addressContainer.getUnresolvedAddresses().get(selRows[i]));
+				}
+			}
+			return nodes;
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the selected incomplete addresses.
+	 *
+	 * @return the selected incomplete addresses
+	 */
+	public List<OSMAddress> getSelectedIncompleteAddresses() {
+		if (incompleteAddressTable != null && 
+				addressContainer != null && 
+				addressContainer.getUnresolvedAddresses() != null) {
+			
+			int[] selRows = incompleteAddressTable.getSelectedRows();
+			
+			List<OSMAddress> nodes = new ArrayList<OSMAddress>();
+			for (int i = 0; i < selRows.length; i++) {
+				if (selRows[i] >= 0 && selRows[i] < addressContainer.getNumberOfIncompleteAddresses()) {
+					nodes.add(addressContainer.getIncompleteAddresses().get(selRows[i]));
 				}
 			}
 			return nodes;

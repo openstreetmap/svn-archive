@@ -112,8 +112,8 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
 		} else {
 			if (container != null) {
 				addressEditActionPerformed(container);
-			} else { // call super class hook
-				actionPerformed(arg0);
+			} else { 
+				throw new RuntimeException("AbstractAddressEditAction has no container or event");
 			}
 		}
 	}

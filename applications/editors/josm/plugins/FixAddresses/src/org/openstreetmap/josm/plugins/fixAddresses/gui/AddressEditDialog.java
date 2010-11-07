@@ -292,7 +292,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 	public void valueChanged(ListSelectionEvent e) {
 		
 		AddressEditSelectionEvent ev = new AddressEditSelectionEvent(e.getSource(),
-				streetTable, unresolvedTable, editContainer);
+				streetTable, unresolvedTable, null, editContainer);
 		
 		for (AbstractAddressEditAction action : actions) {
 			action.setEvent(ev);

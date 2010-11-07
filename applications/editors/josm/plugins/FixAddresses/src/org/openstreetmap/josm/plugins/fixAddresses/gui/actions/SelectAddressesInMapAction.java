@@ -59,12 +59,16 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 	public void addressEditActionPerformed(AddressEditSelectionEvent ev) {
 		if (ev == null) return;
 		
-		internalSelectAddresses(ev.getSelectedUnresolvedAddresses());
+		if (ev.getSelectedUnresolvedAddresses() != null) {
+			internalSelectAddresses(ev.getSelectedUnresolvedAddresses());
+		} else if (ev.getSelectedIncompleteAddresses() != null) {
+			internalSelectAddresses(ev.getSelectedIncompleteAddresses());
+		}
 	}
 
 	@Override
 	public void addressEditActionPerformed(AddressEditContainer container) {
-		internalSelectAddresses(container.getUnresolvedAddresses());		
+		// do nothing		
 	}
 
 	/* (non-Javadoc)
@@ -72,7 +76,7 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 	 */
 	@Override
 	protected void updateEnabledState(AddressEditContainer container) {
-		setEnabled(container != null && container.getNumberOfIncompleteAddresses() > 0);
+		setEnabled(false);
 	}
 
 	/* (non-Javadoc)
@@ -80,7 +84,7 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 	 */
 	@Override
 	protected void updateEnabledState(AddressEditSelectionEvent event) {
-		setEnabled(event != null && event.getSelectedUnresolvedAddresses() != null);
+		setEnabled(event != null && (event.getSelectedUnresolvedAddresses() != null || event.getSelectedIncompleteAddresses() != null));
 	}
 
 	/**

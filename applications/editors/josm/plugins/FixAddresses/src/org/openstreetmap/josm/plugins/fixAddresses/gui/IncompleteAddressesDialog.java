@@ -20,6 +20,8 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
@@ -32,31 +34,60 @@ import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
+import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectAddressesInMapAction;
 
 @SuppressWarnings("serial")
-public class IncompleteAddressesDialog extends ToggleDialog implements DataSetListener {
+public class IncompleteAddressesDialog extends ToggleDialog implements DataSetListener, ListSelectionListener, IAddressEditContainerListener {
+	private static final String FIXED_DIALOG_TITLE = tr("Incomplete Addresses");
+
+
 	private AddressEditContainer container;
 
+	
+	private SelectAddressesInMapAction selectAction = new SelectAddressesInMapAction();
+	
+	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[]{
+			selectAction
+	};
+
+
+	private JTable incompleteAddr;
+	
 	/**
-	 * @param name
-	 * @param iconName
-	 * @param tooltip
-	 * @param shortcut
-	 * @param preferredHeight
-	 * @param container
+	 * Instantiates a new "incomplete addresses" dialog.
+	 *
 	 */
 	public IncompleteAddressesDialog() {
-		super(tr("Incomplete Addresses"), "incompleteaddress_24", tr("Show incomplete addresses"), null, 150);
+		super(FIXED_DIALOG_TITLE, "incompleteaddress_24", tr("Show incomplete addresses"), null, 150);
+		
 		this.container = new AddressEditContainer();
+		container.addChangedListener(this);
 		
 		JPanel p = new JPanel(new BorderLayout());
 		
-		JTable incompleteAddr = new JTable(new IncompleteAddressesTableModel(container));
+		incompleteAddr = new JTable(new IncompleteAddressesTableModel(container));
+		incompleteAddr.getSelectionModel().addListSelectionListener(this);
+		
 		JScrollPane sp = new JScrollPane(incompleteAddr);
 		p.add(sp, BorderLayout.CENTER);
 		this.add(p);
+		
+		JPanel buttonPanel = getButtonPanel(5);
+		
+		SideButton sb = new SideButton(selectAction);
+		buttonPanel.add(sb);
+		
+		this.add(buttonPanel, BorderLayout.SOUTH);
+		
+		for (AbstractAddressEditAction action : actions) {
+			action.setContainer(container);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -122,6 +153,33 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	@Override
 	public void wayNodesChanged(WayNodesChangedEvent event) {
 		container.invalidate();		
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 */
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		AddressEditSelectionEvent event = new AddressEditSelectionEvent(e, null, null, incompleteAddr, container);
+		
+		for (AbstractAddressEditAction action : actions) {
+			action.setEvent(event);
+		}		
+	}
+
+	@Override
+	public void containerChanged(AddressEditContainer container) {
+		if (container != null && container.getNumberOfIncompleteAddresses() > 0) {
+			setTitle(String.format("%s (%d %s)", FIXED_DIALOG_TITLE, container.getNumberOfIncompleteAddresses(), tr("items")));
+		} else {
+			setTitle(String.format("%s (%s)", FIXED_DIALOG_TITLE, tr("no items")));			
+		}
+	}
+
+	@Override
+	public void entityChanged(IOSMEntity node) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

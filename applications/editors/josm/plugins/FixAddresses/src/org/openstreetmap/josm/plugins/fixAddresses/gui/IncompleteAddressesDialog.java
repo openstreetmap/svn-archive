@@ -41,6 +41,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.ApplyAllGuessesAction;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.GuessAddressDataAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.RemoveAddressTagsAction;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.SelectAddressesInMapAction;
 
@@ -51,11 +52,13 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 	private AddressEditContainer container;
 
 	private SelectAddressesInMapAction selectAction = new SelectAddressesInMapAction();
+	private GuessAddressDataAction guessDataAction = new GuessAddressDataAction();
 	private ApplyAllGuessesAction applyGuessesAction = new ApplyAllGuessesAction();
 	private RemoveAddressTagsAction removeTagsAction = new RemoveAddressTagsAction();
 	
 	private AbstractAddressEditAction[] actions = new AbstractAddressEditAction[]{
 			selectAction,
+			guessDataAction,
 			applyGuessesAction,
 			removeTagsAction
 	};

@@ -22,7 +22,8 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 @SuppressWarnings("serial")
 public class ConvertAllToRelationAction extends ConvertToRelationAction {
 	public ConvertAllToRelationAction() {
-		super(tr("Convert ALL streets."), "convert2rel_24", "Create relation between street and related addresses for ALL streets in the current layer.");
+		super(tr("Convert ALL streets."), "convert2rel_24", 
+				tr("Create relation between street and related addresses for ALL streets in the current layer."));
 	}
 	
 	@Override

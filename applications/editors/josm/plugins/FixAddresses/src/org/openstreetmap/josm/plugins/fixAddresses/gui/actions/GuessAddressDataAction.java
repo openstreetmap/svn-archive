@@ -25,17 +25,20 @@ import org.openstreetmap.josm.plugins.fixAddresses.IProgressMonitorFinishedListe
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
 /**
- * Guesses address tags by picking the closest street node with a name. The same is done (some day)
+ * Guesses address tags by picking the closest street node with a name. The same is done
  * with city, post code, state,... However, I strongly encourage you to check the result.
- * @author Oliver Wieland <oliver.wieland@online.de>
  * 
+ * @author Oliver Wieland <oliver.wieland@online.de>
  */
 
 @SuppressWarnings("serial")
 public class GuessAddressDataAction extends AbstractAddressEditAction implements IProgressMonitorFinishedListener {
 
+	/**
+	 * Instantiates a new "guess address data" action.
+	 */
 	public GuessAddressDataAction() {
-		super(tr("Guess address data"), "guessstreets_24", "Tries to guess the street name by picking the name of the closest way.");
+		super(tr("Guess address data"), "guessstreets_24", tr("Tries to guess address data by picking the name of the closest object with according tag."));
 	}
 
 	/* (non-Javadoc)
@@ -83,7 +86,8 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	private void internalGuessAddresses(List<OSMAddress> nodes) {
 		if (nodes == null) return;
 		
-		GuessAddressRunnable aft = new GuessAddressRunnable(nodes, tr("Guess street names"));
+		// Launch address guessing thread
+		GuessAddressRunnable aft = new GuessAddressRunnable(nodes, tr("Guessing address values"));
 		aft.addFinishListener(this);
 		Main.worker.submit(aft);
 	}

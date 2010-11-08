@@ -29,7 +29,8 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 public class ConvertToRelationAction extends AbstractAddressEditAction {
 
 	public ConvertToRelationAction() {
-		super(tr("Convert to relation."), "convert2rel_24", "Create relation between street and related addresses.");
+		super(tr("Convert to relation."), "convert2rel_24", 
+				tr("Create relation between street and related addresses."));
 	}
 	
 	/**

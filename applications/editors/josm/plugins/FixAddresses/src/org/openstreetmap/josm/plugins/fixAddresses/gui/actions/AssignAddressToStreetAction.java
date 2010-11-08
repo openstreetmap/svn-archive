@@ -28,8 +28,12 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
  */
 public class AssignAddressToStreetAction extends AbstractAddressEditAction  {
 
+	/**
+	 * Instantiates a new "assign address to street" action.
+	 */
 	public AssignAddressToStreetAction() {
-		super(tr("Assign address to street"), "assignstreet_24", "Assign the selected address(es) to the selected street.");
+		super(tr("Assign address to street"), "assignstreet_24", 
+				tr("Assign the selected address(es) to the selected street."));
 	}
 
 	/**

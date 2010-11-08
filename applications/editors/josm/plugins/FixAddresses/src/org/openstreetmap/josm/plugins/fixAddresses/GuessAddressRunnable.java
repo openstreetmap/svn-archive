@@ -174,6 +174,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 		isRunning = true;
 		cancelled = false;
 		
+		// Start progress monitor to guess address values
 		progressMonitor.subTask(tr("Searching") + "...");
 		
 		try {
@@ -205,7 +206,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 				if (cancelled) {
 					break;
 				}
-				
+				// Update progress monitor
 				progressMonitor.subTask(tr("Guess values for ") + aNode);
 
 				// visit osm data

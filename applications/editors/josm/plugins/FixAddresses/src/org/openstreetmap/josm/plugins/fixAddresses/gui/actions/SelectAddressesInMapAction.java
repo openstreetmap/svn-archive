@@ -47,9 +47,11 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 @SuppressWarnings("serial")
 public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 
+	/**
+	 * Instantiates a new "select addresses in map" action.
+	 */
 	public SelectAddressesInMapAction() {
-		// we simply use the existing icon :-|
-		super(tr("Select"), "selectall", "Selects selected addresses in the map");
+		super(tr("Select"), "selectall", tr("Marks selected addresses in the map"));
 	}
 
 	/* (non-Javadoc)

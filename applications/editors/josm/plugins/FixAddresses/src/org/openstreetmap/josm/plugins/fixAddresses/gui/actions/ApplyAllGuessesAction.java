@@ -38,9 +38,11 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel;
 @SuppressWarnings("serial")
 public class ApplyAllGuessesAction extends AbstractAddressEditAction implements MouseListener{
 
-	public ApplyAllGuessesAction() {
-		//super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
-		super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
+	/**
+	 * Instantiates a new "apply all guesses" action.
+	 */
+	public ApplyAllGuessesAction() {	
+		super(tr("Apply all guesses"), "applyguesses_24", tr("Turns all guesses into the corresponding tag values."));
 	}
 
 	/* (non-Javadoc)

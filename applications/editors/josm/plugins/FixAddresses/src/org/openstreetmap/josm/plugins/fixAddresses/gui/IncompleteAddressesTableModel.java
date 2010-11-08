@@ -25,30 +25,41 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	 */
 	private static final long serialVersionUID = -5951629033395186324L;
 	
-	private static final int NUMBER_OF_COLUMNS = 6;
-	private static final String[] COLUMN_NAMES = new String[]{tr("Country"), tr("State"), tr("City"), tr("Post Code"), tr("Street"), tr("Number")}; 
+	// TODO: Add "state" colum, if required
+	private static final int NUMBER_OF_COLUMNS = 5;
+	private static final String[] COLUMN_NAMES = new String[]{tr("Country"), tr("City"), tr("Postcode"), tr("Street"), tr("Number")}; 
 	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
 		String.class, String.class, String.class, String.class, String.class, String.class};
 	
 	
 	/**
-	 * @param addressContainer
+	 * Instantiates a new incomplete addresses table model.
+	 *
+	 * @param addressContainer the address container used for display
 	 */
 	public IncompleteAddressesTableModel(AddressEditContainer addressContainer) {
 		super(addressContainer);
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#getColumnCount()
+	 */
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
 		return NUMBER_OF_COLUMNS;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#getColumnName(int)
+	 */
 	@Override
 	public String getColumnName(int column) {
 		return COLUMN_NAMES[column];
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#getRowCount()
+	 */
 	@Override
 	public int getRowCount() {
 		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
@@ -57,6 +68,9 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 		return addressContainer.getNumberOfIncompleteAddresses();
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#getValueAt(int, int)
+	 */
 	@Override
 	public Object getValueAt(int row, int column) {		
 		OSMAddress aNode = (OSMAddress) getEntityOfRow(row);
@@ -69,14 +83,12 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 		case 0:
 			return aNode.getCountry();
 		case 1:
-			return aNode.getState();
-		case 2:
 			return aNode.getCity();
-		case 3:
+		case 2:
 			return aNode.getPostCode();
-		case 4:
+		case 3:
 			return aNode.getStreetName();			
-		case 5:
+		case 4:
 			return aNode.getHouseNumber();
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
@@ -84,17 +96,26 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+	 */
 	@Override
 	public Class<?> getColumnClass(int arg0) {
 		return COLUMN_CLASSES[arg0];
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
+	 */
 	@Override
 	public boolean isCellEditable(int row, int column) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel#getEntityOfRow(int)
+	 */
 	@Override
 	public IOSMEntity getEntityOfRow(int row) {
 		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {
@@ -106,6 +127,9 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 		return addressContainer.getIncompleteAddresses().get(row);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel#getRowOfEntity(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity)
+	 */
 	@Override
 	public int getRowOfEntity(IOSMEntity entity) {
 		if (addressContainer == null || addressContainer.getIncompleteAddresses() == null) {

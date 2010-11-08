@@ -14,6 +14,7 @@
 package org.openstreetmap.josm.plugins.fixAddresses;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
@@ -28,6 +29,8 @@ import org.openstreetmap.josm.tools.Pair;
  */
 public class OsmUtils {
 	private OsmUtils() {}
+	
+	private static String cachedLocale = null;
 	
 	/**
 	 * Gets the minimum distance of single coordinate to a way.
@@ -144,6 +147,20 @@ public class OsmUtils {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Gets the locale code as string.
+	 *
+	 * @return the locale
+	 */
+	public static String getLocale() {
+		// Check if user could prefer imperial system
+		if (cachedLocale == null) {
+			Locale l = Locale.getDefault();
+			cachedLocale = l.toString();
+		}
+		return cachedLocale;
 	}
 
 	private static void applyDerivedValue(OSMAddress address, Way w, String tag) {

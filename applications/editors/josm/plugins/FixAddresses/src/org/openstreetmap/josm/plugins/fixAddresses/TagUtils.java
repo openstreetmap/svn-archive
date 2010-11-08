@@ -26,6 +26,10 @@ import org.openstreetmap.josm.data.osm.Way;
  * 
  */
 public final class TagUtils {
+	private static String COUNTRIES_REQUIRE_STATE[] = {
+		"en_US", 	/* USA */
+		"en_AU"	/* Australia */
+	};
 	
 	/**
 	 * Checks if the given OSM object has a (non-empty) value for the given tag.
@@ -1945,6 +1949,25 @@ public final class TagUtils {
 	 */
 	public static boolean isHouseMember(RelationMember relMember) {
 		return relMember != null && STREET_RELATION_ROLE.equals(relMember.getRole());
+	}
+	
+	
+	
+	/**
+	 * Checks if "addr:state" tag is required.
+	 *
+	 * @return true, if is state required
+	 */
+	public static boolean isStateRequired() {
+		String loc = OsmUtils.getLocale();
+		
+		for (int i = 0; i < COUNTRIES_REQUIRE_STATE.length; i++) {			
+			if (COUNTRIES_REQUIRE_STATE[i].equals(loc)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public static final String PARKING_TAG = "parking";

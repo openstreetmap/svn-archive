@@ -56,12 +56,18 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return
 	 */
 	public boolean isComplete() {
-		return 	hasCity() && 
-				hasHouseNumber() &&
-			 	hasPostCode() && 
-				hasCity() && 
-				hasState() &&
-				hasStreetName();
+		boolean isComplete = 	hasCity() && 
+								hasHouseNumber() &&
+							 	hasPostCode() && 
+								hasCity() && 
+								hasStreetName();
+		
+		// Check, if "addr:state" is required (US and AU)
+		if (TagUtils.isStateRequired()) {
+			isComplete = isComplete && hasState();
+		}
+		
+		return isComplete;
 	}
 	
 	/**
@@ -405,7 +411,7 @@ public class OSMAddress extends OSMEntityBase {
 		return 	needsGuessedValue(TagUtils.ADDR_CITY_TAG) ||
 				needsGuessedValue(TagUtils.ADDR_POSTCODE_TAG) ||
 				needsGuessedValue(TagUtils.ADDR_COUNTRY_TAG) ||
-				needsGuessedValue(TagUtils.ADDR_STATE_TAG) ||
+				//needsGuessedValue(TagUtils.ADDR_STATE_TAG) ||
 				needsGuessedValue(TagUtils.ADDR_STREET_TAG);
 	}
 	

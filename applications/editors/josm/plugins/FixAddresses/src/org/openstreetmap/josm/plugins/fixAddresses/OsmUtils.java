@@ -22,6 +22,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Pair;
 
 /**
@@ -66,6 +67,10 @@ public class OsmUtils {
 	 * @return the double the minimum distance in m of the way and the node
 	 */
 	private static double findMinimum(LatLon a, LatLon b, LatLon c) {
+		CheckParameterUtil.ensureParameterNotNull(c, "c");
+		CheckParameterUtil.ensureParameterNotNull(b, "b");
+		CheckParameterUtil.ensureParameterNotNull(a, "a");
+		
 		LatLon mid = new LatLon((a.lat() + b.lat()) / 2, (a.lon() + b.lon()) / 2);
 		
 		double ac = a.greatCircleDistance(c);

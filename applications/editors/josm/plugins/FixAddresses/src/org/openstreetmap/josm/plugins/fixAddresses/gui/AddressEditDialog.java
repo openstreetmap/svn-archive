@@ -133,6 +133,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			headerPanel.setMinimumSize(new Dimension(100, 30));
 			headerPanel.add(streetLabel);
 			
+			/*
 			JPanel streetButtonPanel = new JPanel(new GridLayout(1, 3));
 			SideButton convertToRel = new SideButton(convertToRelationAction);															   
 			streetButtonPanel.add(convertToRel);
@@ -142,7 +143,9 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			streetButtonPanel.add(new JPanel());
 			streetButtonPanel.add(new JPanel());
 			
+			
 			streetPanel.add(streetButtonPanel, BorderLayout.SOUTH);
+			*/
 			streetPanel.add(headerPanel, BorderLayout.NORTH);
 			streetPanel.setMinimumSize(new Dimension(350, 200));
 			

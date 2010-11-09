@@ -15,21 +15,17 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.Collections;
+
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
+@SuppressWarnings("serial")
 public class StreetTableModel extends AddressEditTableModel {
-
 	private static final int NUMBER_OF_COLUMNS = 3;
 	private static final String[] COLUMN_NAMES = new String[]{tr("Type"), tr("Name"), tr("Addresses")}; 
 	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{String.class, String.class, Integer.class};
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 424009321818130586L;
-
 	/**
 	 * @param addressContainer
 	 */
@@ -125,5 +121,47 @@ public class StreetTableModel extends AddressEditTableModel {
 		}
 		
 		return addressContainer.getStreetList().indexOf(entity);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel#sortByColumn(int, boolean)
+	 */
+	@Override
+	protected void sortByColumn(int column, boolean ascending) {
+		Collections.sort(addressContainer.getStreetList(), new StreetModelSorter(column, ascending));
+	}
+	
+	/**
+	 * Internal class StreetModelSorter.
+	 */
+	class StreetModelSorter extends ColumnSorter<OSMStreet> {
+
+		public StreetModelSorter(int column, boolean asc) {
+			super(column, asc);
+		}
+
+		public int compare(OSMStreet arg0, OSMStreet arg1) {
+			if (arg0 == null || arg1 == null) return 0;
+			
+			switch (getColumn()) {
+			case 0:
+				if (arg0.getType() != null) {
+					return arg0.getType().compareTo(arg1.getType());
+				} else {
+					return arg1.hasName() ? -1 : 0;
+				}
+			case 1:
+				if (arg0.hasName()) {
+					return arg0.getName().compareTo(arg1.getName());
+				} else {
+					return arg1.hasName() ? -1 : 0;
+				}
+			case 2:
+				return new Integer(arg0.getNumberOfAddresses()).
+								compareTo(new Integer(arg1.getNumberOfAddresses()));
+			default:
+			}
+			return 0;
+		}
 	}
 }

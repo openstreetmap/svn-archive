@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.JTableHeader;
 
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
@@ -78,7 +79,10 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
 		
 		JPanel p = new JPanel(new BorderLayout());
 		
-		incompleteAddr = new JTable(new IncompleteAddressesTableModel(container));
+		IncompleteAddressesTableModel model = new IncompleteAddressesTableModel(container);
+		incompleteAddr = new JTable(model);
+	    JTableHeader header = incompleteAddr.getTableHeader();
+		header.addMouseListener(model.new ColumnListener(incompleteAddr));
 		incompleteAddr.getSelectionModel().addListSelectionListener(this);
 		
 		JScrollPane sp = new JScrollPane(incompleteAddr);

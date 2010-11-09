@@ -15,9 +15,11 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.Collections;
+
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 
 public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	/**
@@ -25,7 +27,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	 */
 	private static final long serialVersionUID = -5951629033395186324L;
 	
-	// TODO: Add "state" colum, if required
+	// TODO: Add "state" column, if required
 	private static final int NUMBER_OF_COLUMNS = 5;
 	private static final String[] COLUMN_NAMES = new String[]{tr("Country"), tr("City"), tr("Postcode"), tr("Street"), tr("Number")}; 
 	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
@@ -109,7 +111,6 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 	 */
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -137,5 +138,64 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 		}
 		
 		return addressContainer.getIncompleteAddresses().indexOf(entity);
+	}
+	
+
+	@Override
+	protected void sortByColumn(int column, boolean ascending) {
+		if (addressContainer.getNumberOfIncompleteAddresses() == 0) return;
+		
+		Collections.sort(addressContainer.getIncompleteAddresses(), 
+				new IncompleteAddressModelSorter(column, ascending));
+	}
+	
+	/**
+	 * Internal class StreetModelSorter.
+	 */
+	class IncompleteAddressModelSorter extends ColumnSorter<OSMAddress> {
+
+		/**
+		 * Instantiates a new incomplete address model sorter.
+		 *
+		 * @param column the column to sort
+		 * @param asc sort ascending
+		 */
+		public IncompleteAddressModelSorter(int column, boolean asc) {
+			super(column, asc);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel.ColumnSorter#compare(java.lang.Object, java.lang.Object)
+		 */
+		@Override
+		public int compare(OSMAddress arg0, OSMAddress arg1) {
+			int cc = 0;
+			
+			switch (getColumn()) {
+			case 0:								
+				cc=arg0.getCountry().compareTo(arg1.getCountry());
+				break;
+			case 1:
+				cc=arg0.getCity().compareTo(arg1.getCity());
+				break;
+			case 2:
+				cc=arg0.getPostCode().compareTo(arg1.getPostCode());
+				break;
+			case 3:
+				cc= arg0.getStreetName().compareTo(arg1.getStreetName());
+				break;
+			case 4:
+				cc=arg0.getHouseNumber().compareTo(arg1.getHouseNumber());
+				break;
+			default:
+				throw new RuntimeException("Invalid column index: " + getColumn());
+			}		
+			
+			if (!isAscending()) {
+				cc = -cc;
+			}
+			
+			return cc;
+		}
 	}
 }

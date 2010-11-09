@@ -30,14 +30,19 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.Collections;
+
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.TagUtils;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel.ColumnSorter;
+import org.openstreetmap.josm.plugins.fixAddresses.gui.IncompleteAddressesTableModel.IncompleteAddressModelSorter;
 
 /**
  * Provides a table model to show unresolved addresses.
+ * 
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
@@ -45,17 +50,18 @@ import org.openstreetmap.josm.plugins.fixAddresses.TagUtils;
 public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 
 	private static final int NUMBER_OF_COLUMNS = 5;
-	private static final String[] COLUMN_NAMES = new String[]{
-		tr("Street"), tr("Number"), tr("City"), tr("Postcode"), tr("Name")};
-	
-	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[]{
-		String.class, String.class, String.class, String.class, String.class};
-	
+	private static final String[] COLUMN_NAMES = new String[] { tr("Street"),
+			tr("Number"), tr("City"), tr("Postcode"), tr("Name") };
+
+	private static final Class<?>[] COLUMN_CLASSES = new Class<?>[] {
+			String.class, String.class, String.class, String.class,
+			String.class };
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 424009321818130586L;
-	
+
 	/**
 	 * @param addressContainer
 	 */
@@ -63,7 +69,9 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		super(addressContainer);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.DefaultTableModel#getColumnCount()
 	 */
 	@Override
@@ -71,7 +79,9 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		return NUMBER_OF_COLUMNS;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.DefaultTableModel#getColumnName(int)
 	 */
 	@Override
@@ -79,28 +89,33 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		return COLUMN_NAMES[column];
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.DefaultTableModel#getRowCount()
 	 */
 	@Override
 	public int getRowCount() {
-		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
+		if (addressContainer == null
+				|| addressContainer.getUnresolvedAddresses() == null) {
 			return 0;
 		}
 		return addressContainer.getNumberOfUnresolvedAddresses();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.DefaultTableModel#getValueAt(int, int)
 	 */
 	@Override
 	public Object getValueAt(int row, int column) {
 		OSMAddress aNode = (OSMAddress) getEntityOfRow(row);
-		
+
 		if (aNode == null) {
 			return null;
 		}
-		
+
 		switch (column) {
 		case 0:
 			return aNode.getStreetName();
@@ -120,10 +135,12 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}
-		
+
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 	 */
 	@Override
@@ -131,7 +148,9 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		return COLUMN_CLASSES[arg0];
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
 	 */
 	@Override
@@ -139,26 +158,93 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel#getEntityOfRow(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel
+	 * #getEntityOfRow(int)
 	 */
 	@Override
 	public IOSMEntity getEntityOfRow(int row) {
-		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
+		if (addressContainer == null
+				|| addressContainer.getUnresolvedAddresses() == null) {
 			return null;
 		}
 		if (row < 0 || row >= addressContainer.getNumberOfUnresolvedAddresses()) {
 			return null;
 		}
-		return addressContainer.getUnresolvedAddresses().get(row);	
+		return addressContainer.getUnresolvedAddresses().get(row);
 	}
-	
+
 	@Override
 	public int getRowOfEntity(IOSMEntity entity) {
-		if (addressContainer == null || addressContainer.getUnresolvedAddresses() == null) {
+		if (addressContainer == null
+				|| addressContainer.getUnresolvedAddresses() == null) {
 			return -1;
 		}
-		
+
 		return addressContainer.getUnresolvedAddresses().indexOf(entity);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel
+	 * #sortByColumn(int, boolean)
+	 */
+	@Override
+	protected void sortByColumn(int column, boolean ascending) {
+		if (addressContainer.getNumberOfUnresolvedAddresses() == 0)
+			return;
+
+		Collections.sort(addressContainer.getUnresolvedAddresses(),
+				new UnresolvedAddressModelSorter(column, ascending));
+	}
+
+	/**
+	 * Internal class StreetModelSorter.
+	 */
+	class UnresolvedAddressModelSorter extends ColumnSorter<OSMAddress> {
+
+		public UnresolvedAddressModelSorter(int column, boolean asc) {
+			super(column, asc);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel
+		 * .ColumnSorter#compare(java.lang.Object, java.lang.Object)
+		 */
+		@Override
+		public int compare(OSMAddress arg0, OSMAddress arg1) {
+			int cc = 0;
+			switch (getColumn()) {
+			case 0:
+				cc = arg0.getStreetName().compareTo(arg1.getStreetName());
+				break;
+			case 1:
+				cc = arg0.getHouseNumber().compareTo(arg1.getHouseNumber());
+				break;
+			case 2:
+				cc = arg0.getCity().compareTo(arg1.getCity());
+				break;
+			case 3:
+				cc = arg0.getPostCode().compareTo(arg1.getPostCode());
+				break;
+			default:
+				throw new RuntimeException("Invalid column index: "
+						+ getColumn());
+			}
+
+			if (!isAscending()) {
+				cc = -cc;
+			}
+
+			return cc;
+		}
 	}
 }

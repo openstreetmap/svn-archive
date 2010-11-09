@@ -33,12 +33,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.Collections;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
-import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
-import org.openstreetmap.josm.plugins.fixAddresses.TagUtils;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel.ColumnSorter;
-import org.openstreetmap.josm.plugins.fixAddresses.gui.IncompleteAddressesTableModel.IncompleteAddressModelSorter;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 
 /**
  * Provides a table model to show unresolved addresses.
@@ -126,12 +122,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		case 3:
 			return aNode.getPostCode();
 		case 4:
-			String name = aNode.getName();
-			if (!StringUtils.isNullOrEmpty(name)) {
-				// TODO: Provide a getter/setter for this?
-				return TagUtils.getAddrHousenameValue(aNode.getOsmObject());
-			}
-			return "";
+			return aNode.getName();
 		default:
 			throw new RuntimeException("Invalid column index: " + column);
 		}
@@ -234,6 +225,9 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 				break;
 			case 3:
 				cc = arg0.getPostCode().compareTo(arg1.getPostCode());
+				break;
+			case 4:
+				cc = arg0.getName().compareTo(arg1.getName());
 				break;
 			default:
 				throw new RuntimeException("Invalid column index: "

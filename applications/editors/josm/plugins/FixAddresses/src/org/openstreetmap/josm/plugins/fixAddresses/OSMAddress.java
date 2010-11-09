@@ -245,6 +245,18 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean hasHouseNumber() {
 		return TagUtils.hasAddrHousenumberTag(osmObject) || isPartOfInterpolation;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.fixAddresses.OSMEntityBase#getName()
+	 */
+	public String getName() {
+		String name = TagUtils.getNameValue(osmObject);
+		if (!StringUtils.isNullOrEmpty(name)) {
+			return TagUtils.getAddrHousenameValue(osmObject);
+		}
+		
+		return "";
+	}
 		
 	/**
 	 * Checks if this address is part of a address interpolation.

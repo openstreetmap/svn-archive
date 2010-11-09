@@ -40,6 +40,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
@@ -49,9 +50,9 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.actions.AbstractAddressEditAction;
@@ -146,12 +147,16 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			streetPanel.setMinimumSize(new Dimension(350, 200));
 			
 			/* Panel for unresolved addresses table */
-			JPanel unresolvedPanel = new JPanel(new BorderLayout());		
-			unresolvedTable = new JTable(new UnresolvedAddressesTableModel(editContainer));
+			JPanel unresolvedPanel = new JPanel(new BorderLayout());
+			UnresolvedAddressesTableModel uaModel = new UnresolvedAddressesTableModel(editContainer);
+			unresolvedTable = new JTable(uaModel);
 			unresolvedTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			unresolvedTable.getSelectionModel().addListSelectionListener(this);
 			unresolvedTable.getSelectionModel().addListSelectionListener(new IncompleteAddressListener());
-			unresolvedTable.addMouseListener(applyAllGuessesAction);			
+			unresolvedTable.addMouseListener(applyAllGuessesAction);
+			
+			JTableHeader header = unresolvedTable.getTableHeader();
+			header.addMouseListener(uaModel.new ColumnListener(unresolvedTable));
 			
 			JScrollPane scroll2 = new JScrollPane(unresolvedTable);
 			unresolvedPanel.add(scroll2, BorderLayout.CENTER);

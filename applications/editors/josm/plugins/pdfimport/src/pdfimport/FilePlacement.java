@@ -1,5 +1,9 @@
 package pdfimport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.Properties;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -17,6 +21,9 @@ public class FilePlacement {
 	public double maxEast = 10000;
 	public double minNorth = 0;
 	public double maxNorth = 10000;
+	
+	private AffineTransform transform;
+
 
 	public void setPdfBounds(double minX, double minY, double maxX, double maxY){
 		this.minX = minX;
@@ -30,7 +37,7 @@ public class FilePlacement {
 		this.maxEast = maxEast;
 		this.minNorth = minNorth;
 		this.maxNorth = maxNorth;
-	}
+	}	
 
 	public Properties toProperties() {
 		Properties p = new Properties();
@@ -90,29 +97,81 @@ public class FilePlacement {
 
 	}
 
-	EastNorth en = new EastNorth(0, 0);
+	
+	public String prepareTransform()
+	{
+		if (this.minX >= this.maxX){
+			return tr("Transform error: Min X must be smaller than max");
+		}
 
-	public LatLon tranformCoords(double x, double y) {
+		if (this.minY >= this.maxY){
+			return tr("Transform error: Min Y must be smaller than max");
+		}
+		
+		
+		if (this.minEast < this.maxEast && this.minNorth < this.maxNorth) {
+			//no rotation
+			this.transform = new AffineTransform();
+			this.transform.translate(-this.minX, -this.minY);
+			this.transform.scale(
+					(this.maxEast - this.minEast) / (this.maxX - this.minX),
+					(this.maxNorth - this.minNorth) /  (this.maxY - this.minY));
+			this.transform.translate(this.minEast, this.minNorth);
+		} else if (this.minEast < this.maxEast && this.minNorth > this.maxNorth) {
+			//need to rotate 90 degrees counterclockwise
+			//transform to 0..1, 0..1 range
+			this.transform.translate(-this.minX, -this.minY);
+			this.transform.scale(1/(this.maxX - this.minX), 1/(this.minY - this.maxY));
+			
+			//rotate -90 degs around center
+			this.transform.quadrantRotate(-1,  0.5, 0.5);
+			
+			//transform back to target range
+			this.transform.scale(
+					(this.maxEast - this.minEast),
+					(this.minNorth - this.maxNorth));
+			this.transform.translate(this.minEast, this.maxNorth);			
+		} else if (this.minEast > this.maxEast && this.minNorth < this.maxNorth) {
+			//need to rotate 90 degrees clockwise
+			//transform to 0..1, 0..1 range
+			this.transform.translate(-this.minX, -this.minY);
+			this.transform.scale(1/(this.maxX - this.minX), 1/(this.maxY - this.minY));
+			
+			//rotate 90 degs around center
+			this.transform.quadrantRotate(1, 0.5, 0.5);
+			
+			//transform back to target range
+			this.transform.scale(
+					(this.minEast - this.maxEast),
+					(this.maxNorth - this.minNorth));
+			this.transform.translate(this.maxEast, this.minNorth);			
+		}		
+		else
+		{
+			return tr("Transform error: Unsupported orientation");
+		}
+		
+		return null;
+			
+	}	
+	
+	EastNorth en = new EastNorth(0, 0);
+	Point2D src = new Point2D.Double();
+
+	public LatLon tranformCoords(Point2D pt) {
 
 		if (this.projection == null){
-			//en.setLocation(x * 1024,y * 1024);
-			//return Main.proj.eastNorth2latlon( en);
-			return new LatLon(y / 1000, x / 1000);
+			return new LatLon(pt.getY() / 1000, pt.getX() / 1000);
 		}
 		else{
-
-			x = (x - this.minX) * (this.maxEast - this.minEast) / (this.maxX - this.minX)  + this.minEast;
-			y = (y - this.minY) * (this.maxNorth - this.minNorth) /  (this.maxY - this.minY) + this.minNorth;
-			en.setLocation(x,y);
+			this.transform.transform(pt, en);
 			return this.projection.eastNorth2latlon(en);
 		}
 	}
 
 	public EastNorth reverseTransform(LatLon coor) {
 		if (this.projection == null){
-			//EastNorth result = this.projection.latlon2eastNorth(coor);
-			//result.setLocation(result.east() / 1024, result.north() / 1024);
-			//return result;
+
 			return new EastNorth(coor.lon() * 1000, coor.lat() * 1000);
 		}
 		else{

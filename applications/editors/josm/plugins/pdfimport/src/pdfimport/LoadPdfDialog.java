@@ -175,7 +175,7 @@ public class LoadPdfDialog extends JFrame {
 
 		this.debugModeCheck = new JCheckBox(tr("Debug info"));
 		this.mergeCloseNodesCheck = new JCheckBox(tr("Merge close nodes"));
-		this.mergeCloseNodesTolerance = new JTextField("1e-6");
+		this.mergeCloseNodesTolerance = new JTextField("1e-3");
 
 		this.removeSmallObjectsCheck = new JCheckBox(tr("Remove objects smaller than"));
 		this.removeSmallObjectsSize = new JTextField("1");
@@ -195,30 +195,30 @@ public class LoadPdfDialog extends JFrame {
 		configPanel.setBorder(BorderFactory.createTitledBorder(tr("Import settings")));
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
 		configPanel.add(this.mergeCloseNodesCheck, c);
-		c.gridx = 1; c.gridy = 0; c.gridwidth = 1; c.anchor = c.NORTHEAST;
+		c.gridx = 1; c.gridy = 0; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHEAST;
 		configPanel.add(new JLabel("Tolerance :"), c);
-		c.gridx = 2; c.gridy = 0; c.gridwidth = 1; c.anchor = c.NORTHWEST;
+		c.gridx = 2; c.gridy = 0; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHWEST;
 		configPanel.add(this.mergeCloseNodesTolerance, c);
 
 		c.gridx = 0; c.gridy = 1; c.gridwidth = 1;
 		configPanel.add(this.removeSmallObjectsCheck, c);
-		c.gridx = 1; c.gridy = 1; c.gridwidth = 1; c.anchor = c.NORTHEAST;
+		c.gridx = 1; c.gridy = 1; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHEAST;
 		configPanel.add(new JLabel("Tolerance :"), c);
-		c.gridx = 2; c.gridy = 1; c.gridwidth = 1; c.anchor = c.NORTHWEST;
+		c.gridx = 2; c.gridy = 1; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHWEST;
 		configPanel.add(this.removeSmallObjectsSize, c);
 
 		c.gridx = 0; c.gridy = 2; c.gridwidth = 1;
 		configPanel.add(this.removeLargeObjectsCheck, c);
-		c.gridx = 1; c.gridy = 2; c.gridwidth = 1; c.anchor = c.NORTHEAST;
+		c.gridx = 1; c.gridy = 2; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHEAST;
 		configPanel.add(new JLabel("Tolerance :"), c);
-		c.gridx = 2; c.gridy = 2; c.gridwidth = 1; c.anchor = c.NORTHWEST;
+		c.gridx = 2; c.gridy = 2; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHWEST;
 		configPanel.add(this.removeLargeObjectsSize, c);
 
 		c.gridx = 0; c.gridy = 3; c.gridwidth = 1;
 		configPanel.add(this.removeParallelSegmentsCheck, c);
-		c.gridx = 1; c.gridy = 3; c.gridwidth = 1; c.anchor = c.NORTHEAST;
+		c.gridx = 1; c.gridy = 3; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHEAST;
 		configPanel.add(new JLabel("Max distance :"), c);
-		c.gridx = 2; c.gridy = 3; c.gridwidth = 1; c.anchor = c.NORTHWEST;
+		c.gridx = 2; c.gridy = 3; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHWEST;
 		configPanel.add(this.removeParallelSegmentsTolerance, c);
 
 		c.gridx = 0; c.gridy = 4; c.gridwidth = 1;
@@ -322,10 +322,9 @@ public class LoadPdfDialog extends JFrame {
 
 					public void actionPerformed(ActionEvent e) {
 						if (data!= null) {
-							LoadPdfDialog.this.placement.projection = null;
 							OsmBuilder.Mode mode = LoadPdfDialog.this.debugModeCheck.isSelected() ? OsmBuilder.Mode.Debug: OsmBuilder.Mode.Draft;
 							LoadPdfDialog.this.fileName = newFileName;
-							LoadPdfDialog.this.makeLayer(tr("PDF file preview"), mode);
+							LoadPdfDialog.this.makeLayer(tr("PDF file preview"), new FilePlacement(), mode);
 							LoadPdfDialog.this.loadFileButton.setText(tr("Loaded"));
 							LoadPdfDialog.this.loadFileButton.setEnabled(true);
 							LoadPdfDialog.this.loadPlacement();
@@ -335,38 +334,53 @@ public class LoadPdfDialog extends JFrame {
 				});
 	}
 
+	
+	private boolean preparePlacement()
+	{
+		boolean ok = this.parsePlacement();
+		if (!ok){
+			JOptionPane.showMessageDialog(Main.parent, tr("Problems parsing placement."));
+			return false;
+		}
+		
+		String transformError = this.placement.prepareTransform();
+		if (transformError != null){
+			JOptionPane.showMessageDialog(Main.parent, transformError);			
+		}		
+
+		this.savePlacement();
+		
+		return true;
+	}
 
 	private void okPressed() {
 
-		boolean ok = this.parsePlacement();
-		if (!ok){
+		if (!preparePlacement()) {
 			return;
 		}
 
-		this.savePlacement();
-
 		//rebuild layer with latest projection
-		this.makeLayer(tr("Imported PDF: ") + this.fileName, OsmBuilder.Mode.Final);
+		this.makeLayer(tr("Imported PDF: ") + this.fileName, this.placement, OsmBuilder.Mode.Final);
 
 		this.setVisible(false);
 	}
 
 	private void savePressed() {
-		boolean ok = this.parsePlacement();
-		if (!ok){
+
+		if (!preparePlacement()) {
 			return;
-		}
+		}		
 
 		java.io.File file = this.chooseSaveFile();
 
 		if (file == null){
 			return;
-		}
-
-		this.savePlacement();
-
+		}		
+		
 		//rebuild layer with latest projection
 		this.removeLayer();
+
+
 		this.saveLayer(file);
 		this.setVisible(false);
 	}
@@ -674,14 +688,14 @@ public class LoadPdfDialog extends JFrame {
 	}
 
 
-	private void makeLayer(String name, OsmBuilder.Mode mode) {
+	private void makeLayer(String name, FilePlacement placement, OsmBuilder.Mode mode) {
 		this.removeLayer();
 
 		if (placement == null) {
 			return;
 		}
 
-		OsmBuilder builder = new OsmBuilder(this.placement);
+		OsmBuilder builder = new OsmBuilder(placement);
 
 		DataSet data = builder.build(this.data.getLayers(), mode);
 		this.layer = new OsmDataLayer(data, name, null);
@@ -706,7 +720,7 @@ public class LoadPdfDialog extends JFrame {
 		this.showButton.setEnabled(false);
 	}
 
-	private void saveLayer(java.io.File file) {
+	private void saveLayer(java.io.File file) {		
 		OsmBuilder builder = new OsmBuilder(this.placement);
 		DataSet data = builder.build(this.data.getLayers(), OsmBuilder.Mode.Final);
 		OsmDataLayer layer = new OsmDataLayer(data, file.getName(), file);

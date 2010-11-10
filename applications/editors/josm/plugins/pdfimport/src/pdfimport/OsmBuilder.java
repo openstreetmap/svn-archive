@@ -34,8 +34,8 @@ public class OsmBuilder {
 
 
 	public Bounds getWorldBounds(PathOptimizer data) {
-		LatLon min = placement.tranformCoords(data.bounds.getMinX(), data.bounds.getMinY());
-		LatLon max = placement.tranformCoords(data.bounds.getMaxX(), data.bounds.getMaxY());
+		LatLon min = placement.tranformCoords(new Point2D.Double(data.bounds.getMinX(), data.bounds.getMinY()));
+		LatLon max = placement.tranformCoords(new Point2D.Double(data.bounds.getMaxX(), data.bounds.getMaxY()));
 		return new Bounds(min, max);
 	}
 
@@ -61,7 +61,7 @@ public class OsmBuilder {
 		//insert nodes
 		for(Point2D pt: layer.points) {
 			Node node = new Node();
-			node.setCoor(this.placement.tranformCoords(pt.getX(), pt.getY()));
+			node.setCoor(this.placement.tranformCoords(pt));
 
 			target.addPrimitive(node);
 			point2Node.put(pt, node);

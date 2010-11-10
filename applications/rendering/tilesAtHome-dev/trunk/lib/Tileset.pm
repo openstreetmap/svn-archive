@@ -166,7 +166,7 @@ sub generate
 
     $self->{bbox}= bbox->new(ProjectXY($req->ZXY));
 
-    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f", $req->ZXY, $self->{bbox}->center), 1, 0);
+    ::statusMessage(sprintf("Tileset (%d,%d,%d) around %.2f,%.2f %s", $req->ZXY, $self->{bbox}->center, ($::Mode ne "xy")?sprintf("complexity %d priority %d", $req->complexity, $req->priority):""      ), 1, 0);
 
     if($req->Z >= 12)
     {

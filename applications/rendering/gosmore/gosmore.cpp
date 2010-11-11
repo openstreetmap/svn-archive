@@ -3043,18 +3043,38 @@ int UserInterface (int argc, char *argv[],
           cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180)));
       // ups (Units per second) also works as an unsigned int.
 
+      double fSegLat = shortest->shortest ?
+        shortest->shortest->nd->lat - shortest->nd->lat : 1;
+      double fSegLon = shortest->shortest ?
+        shortest->shortest->nd->lon - shortest->nd->lon : 1;
+      double fpr = (fSegLat * (flat - shortest->nd->lat) +
+                    fSegLon * (flon - shortest->nd->lon)) /
+                   (Sqr (fSegLat) + Sqr (fSegLon));
       for (; shortest; shortest = shortest->shortest) {
         wayType *w = Way (shortest->nd);
         char *name = (char*)(w + 1) + 1;
         unsigned style= StyleNr(w);
-        printf ("%lf,%lf,%c%s,%s,%.0lf,%.*s\n\r", LatInverse (shortest->nd->lat),
-          LonInverse (shortest->nd->lon), JunctionType (shortest->nd),
+        printf ("%lf,%lf,%c%s,%s,%.0lf,%.*s\n\r",
+          LatInverse (shortest->nd->lat + fSegLat * fpr),
+          LonInverse (shortest->nd->lon + fSegLon * fpr), JunctionType (shortest->nd),
           ((1 << roundaboutR) & (Way (shortest->nd))->bits) ? "r" : "",
           style < sizeof(klasTable)/sizeof(klasTable[0]) ? klasTable[style].desc :
           "(unknown-style)", ((shortest->heapIdx < 0
           ? -shortest->heapIdx : routeHeap[shortest->heapIdx].best) -
           shortest->remain) / ups,
           (int) strcspn (name, "\n"), name);
+        fpr = 0;
+        if (!shortest->shortest) {
+          ndType *final = shortest->nd + shortest->nd->other[shortest->dir];
+          double pr = ((final->lat - shortest->nd->lat) * (double)
+            (tlat - shortest->nd->lat) + (final->lon - shortest->nd->lon) *
+            (double)(tlon - shortest->nd->lon)) /
+            (Sqr (final->lat - shortest->nd->lat) +
+             Sqr (final->lon - shortest->nd->lon));
+          printf("%lf,%lf,j,(unknown-style),0,\n\r",
+      LatInverse (shortest->nd->lat + pr * (final->lat - shortest->nd->lat)),
+      LonInverse (shortest->nd->lon + pr * (final->lon - shortest->nd->lon)));
+        }
       }
     }
     return 0;

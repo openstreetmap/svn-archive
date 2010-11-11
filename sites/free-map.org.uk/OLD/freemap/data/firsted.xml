@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map>
+<Map bgcolor="transparent" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over 
++no_defs">
+ 
+	<Style name="footpath">
+	<Rule>
+	<Filter>[designation] = 'public_footpath' or [designation]='footpath' 
+	or ([foot] = 'designated' and not [horse] = 'designated')
+	</Filter>
+	<LineSymbolizer>
+	<CssParameter name="stroke">#ff0000</CssParameter>
+	<CssParameter name="stroke-width">2.0</CssParameter>
+	<CssParameter name="stroke-linejoin">round</CssParameter>
+	<CssParameter name="stroke-linecap">round</CssParameter>
+	</LineSymbolizer>
+	</Rule>
+	<Rule>
+	<Filter>[foot] = 'permissive' and not [horse] = 'permissive'</Filter> 
+	<LineSymbolizer>
+	<CssParameter name="stroke">#ff00ff</CssParameter>
+	<CssParameter name="stroke-width">2.0</CssParameter>
+	<CssParameter name="stroke-linejoin">round</CssParameter>
+	<CssParameter name="stroke-linecap">round</CssParameter>
+	</LineSymbolizer>
+	</Rule>
+	</Style>
+	<Style name="bridleway">
+	<Rule>
+	<Filter>[designation] = 'public_bridleway' or
+	[designation] ='bridleway' or [horse] = 'designated' or
+	([highway] = 'bridleway' and not [horse]='permissive')
+	</Filter>
+	<LineSymbolizer>
+	<CssParameter name="stroke">#ff0000</CssParameter>
+	<CssParameter name="stroke-width">2.0</CssParameter>
+	<CssParameter name="stroke-dasharray">6,4</CssParameter>
+	<CssParameter name="stroke-linejoin">round</CssParameter>
+	<CssParameter name="stroke-linecap">round</CssParameter>
+	</LineSymbolizer>
+    </Rule>
+	<Rule>
+	<Filter>[horse] = 'permissive'</Filter>
+	<LineSymbolizer>
+	<CssParameter name="stroke">#ff00ff</CssParameter>
+	<CssParameter name="stroke-width">2.0</CssParameter>
+	<CssParameter name="stroke-dasharray">6,4</CssParameter>
+	<CssParameter name="stroke-linejoin">round</CssParameter>
+	<CssParameter name="stroke-linecap">round</CssParameter>
+	</LineSymbolizer>
+    </Rule>
+	</Style>
+	<Style name="byway">
+	<Rule>
+	<Filter>[designation] = 'byway' or [designation] = 'restricted_byway' or
+	[designation] = 'public_byway' or [designation] = 'unknown_byway' or
+	[highway] = 'byway' or [highway] = 'restricted_byway' </Filter>
+	<LineSymbolizer>
+	<CssParameter name="stroke">#ff0000</CssParameter>
+	<CssParameter name="stroke-width">4.0</CssParameter>
+	<CssParameter name="stroke-dasharray">2,6</CssParameter>
+	<CssParameter name="stroke-linejoin">round</CssParameter>
+	<CssParameter name="stroke-linecap">round</CssParameter>
+	</LineSymbolizer>
+    </Rule>
+	</Style>
+
+  <Layer name="roads" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+    <StyleName>footpath</StyleName>
+    <StyleName>bridleway</StyleName>
+    <StyleName>byway</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="port">5432</Parameter>     
+      <Parameter name="user">www-data</Parameter>
+      <Parameter name="dbname">freemap</Parameter>
+      <Parameter name="table">(select way,highway,railway,landuse,"natural",man_made,waterway,tourism,amenity,place,name,foot,horse,motorcar,bicycle,newforest_pathtype,access,designation,char_length(name) as length from planet_osm_line where waterway IS NULL and leisure IS NULL and landuse IS NULL) as roads</Parameter>
+    </Datasource>
+   </Layer>
+
+</Map>

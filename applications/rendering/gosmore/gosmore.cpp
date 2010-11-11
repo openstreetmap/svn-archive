@@ -3073,12 +3073,12 @@ int UserInterface (int argc, char *argv[],
           double pr = ((final->lat - shortest->nd->lat) * (double)
             (tlat - shortest->nd->lat) + (final->lon - shortest->nd->lon) *
             (double)(tlon - shortest->nd->lon)) /
-            (Sqr (final->lat - shortest->nd->lat) +
-             Sqr (final->lon - shortest->nd->lon) + 1);
+            (Sqr ((double)(final->lat - shortest->nd->lat)) +
+             Sqr ((double)(final->lon - shortest->nd->lon)) + 1);
           printf("%lf,%lf,j,(unknown-style),0,fini\n\r",
       LatInverse (shortest->nd->lat + pr * (final->lat - shortest->nd->lat)),
-      LonInverse (shortest->nd->lon + pr * (final->lon - shortest->nd->lon)),
-      shortest->dir, shortest->nd->other[shortest->dir]);
+      LonInverse (shortest->nd->lon + pr * (final->lon - shortest->nd->lon)));
+//      shortest->dir, shortest->nd->other[shortest->dir]);
 //      shortest->nd->other[1-shortest->dir]);
       //final->lat - shortest->nd->lat, final->lon - shortest->nd->lon);
         }

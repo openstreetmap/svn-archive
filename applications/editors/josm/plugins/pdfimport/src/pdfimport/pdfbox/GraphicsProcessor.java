@@ -21,7 +21,7 @@ import pdfimport.PdfPath;
 public class GraphicsProcessor{
 
 	public PathOptimizer target;
-	private Shape clipShape;
+	private Shape  clipShape;
 	private List<PdfPath> clipPath;
 	private final LayerInfo info = new LayerInfo();
 	int pathNo = 0;
@@ -30,9 +30,12 @@ public class GraphicsProcessor{
 
 	private final AffineTransform transform;
 	private final ProgressMonitor monitor;
+	private final int maxPaths;
 
-	public GraphicsProcessor(PathOptimizer target, int rotation, ProgressMonitor monitor)
+
+	public GraphicsProcessor(PathOptimizer target, int rotation, int maxPaths, ProgressMonitor monitor)
 	{
+		this.maxPaths = maxPaths;
 		this.target = target;
 		this.transform = new AffineTransform();
 		this.transform.rotate(-Math.toRadians(rotation));
@@ -43,13 +46,19 @@ public class GraphicsProcessor{
 
 
 	private void addPath(Shape s, boolean closed) {
+		pathNo ++;
+		this.monitor.setCustomText(tr(" {0} objects so far", pathNo));
+
+		if (pathNo >= maxPaths) {
+			return;
+		}
+
 		List<PdfPath> paths = this.parsePath(s, closed);
 
 		for (PdfPath p: paths){
 			p.nr = pathNo;
 		}
 
-		pathNo ++;
 
 		if (paths.size() > 1) {
 			this.target.addMultiPath(this.info, paths);
@@ -59,7 +68,6 @@ public class GraphicsProcessor{
 			this.target.addPath(this.info, paths.get(0));
 		}
 
-		this.monitor.setCustomText(tr(" {0} objects so far", pathNo));
 	}
 
 
@@ -178,8 +186,8 @@ public class GraphicsProcessor{
 	}
 
 
-	public void setClip(Shape clip) {
-		if (this.clipShape == clip)
+	public void setClip(Shape  clip) {
+		if (this.shapesEqual(this.clipShape,clip))
 			return;
 
 		this.clipPath = this.parsePath(clip, true);
@@ -199,6 +207,16 @@ public class GraphicsProcessor{
 		this.complexClipShape = complexClipPath;
 		this.clipAreaDrawn = false;
 		this.clipShape = clip;
+	}
+
+
+	private boolean shapesEqual(Shape shape1, Shape shape2) {
+
+		if (shape1== null || shape2 == null){
+			return false;
+		}
+
+		return shape1.getBounds2D().equals(shape2.getBounds2D());
 	}
 
 

@@ -141,7 +141,7 @@ public class FilePlacement {
 				return tr("Transform error: Unsupported variant.");
 			}
 		} else {
-			return tr("Transform error: Unsupported variant.");
+			//all fine
 		}
 
 
@@ -153,36 +153,36 @@ public class FilePlacement {
 					(this.maxEast - this.minEast) / (this.maxX - this.minX),
 					(this.maxNorth - this.minNorth) /  (this.maxY - this.minY));
 			this.transform.translate(-this.minX, -this.minY);
-		} else if (this.minEast < this.maxEast && this.minNorth > this.maxNorth) {
+		} else if (this.minEast > this.maxEast && this.minNorth < this.maxNorth) {
 			//need to rotate 90 degrees counterclockwise
 			this.transform = new AffineTransform();
 			//transform to 0..1, 0..1 range
 			this.transform.preConcatenate(AffineTransform.getTranslateInstance(-this.minX, -this.minY));
-			this.transform.preConcatenate(AffineTransform.getScaleInstance(1/(this.maxX - this.minX), 1/(this.minY - this.maxY)));
+			this.transform.preConcatenate(AffineTransform.getScaleInstance(1/(this.maxX - this.minX), 1/(this.maxY - this.minY)));
 
-			//rotate -90 degs around center
-			this.transform.preConcatenate(AffineTransform.getQuadrantRotateInstance(-1,  0.5, 0.5));
+			//rotate -90 degs around min
+			this.transform.preConcatenate(AffineTransform.getQuadrantRotateInstance(1,  0, 0));
 
 			//transform back to target range
 			this.transform.preConcatenate(AffineTransform.getScaleInstance(
-					(this.maxEast - this.minEast),
-					(this.minNorth - this.maxNorth)));
-			this.transform.preConcatenate(AffineTransform.getTranslateInstance(this.minEast, this.maxNorth));
-		} else if (this.minEast > this.maxEast && this.minNorth < this.maxNorth) {
+					(this.minEast - this.maxEast),
+					(this.maxNorth - this.minNorth)));
+			this.transform.preConcatenate(AffineTransform.getTranslateInstance(this.minEast, this.minNorth));
+		} else if (this.minEast < this.maxEast && this.minNorth > this.maxNorth) {
 			//need to rotate 90 degrees clockwise
 			this.transform = new AffineTransform();
 			//transform to 0..1, 0..1 range
 			this.transform.preConcatenate(AffineTransform.getTranslateInstance(-this.minX, -this.minY));
 			this.transform.preConcatenate(AffineTransform.getScaleInstance(1/(this.maxX - this.minX), 1/(this.maxY - this.minY)));
 
-			//rotate 90 degs around center
-			this.transform.preConcatenate(AffineTransform.getQuadrantRotateInstance(1, 0.5, 0.5));
+			//rotate 90 degs around min
+			this.transform.preConcatenate(AffineTransform.getQuadrantRotateInstance(-1, 0, 0));
 
 			//transform back to target range
 			this.transform.preConcatenate(AffineTransform.getScaleInstance(
-					(this.minEast - this.maxEast),
-					(this.maxNorth - this.minNorth)));
-			this.transform.preConcatenate(AffineTransform.getTranslateInstance(this.maxEast, this.minNorth));
+					(this.maxEast - this.minEast),
+					(this.minNorth - this.maxNorth)));
+			this.transform.preConcatenate(AffineTransform.getTranslateInstance(this.minEast, this.minNorth));
 		}
 		else
 		{

@@ -22,7 +22,7 @@ public class PdfBoxParser extends PDFStreamEngine{
 	}
 
 	@SuppressWarnings("unchecked")
-	public void parse(File file, ProgressMonitor monitor) throws Exception
+	public void parse(File file, int maxPaths, ProgressMonitor monitor) throws Exception
 	{
 		monitor.beginTask(tr("Parsing PDF", 1));
 
@@ -46,7 +46,7 @@ public class PdfBoxParser extends PDFStreamEngine{
 			rotation = rotationVal.intValue();
 		}
 
-		GraphicsProcessor p = new GraphicsProcessor(target, rotation, monitor);
+		GraphicsProcessor p = new GraphicsProcessor(target, rotation, maxPaths, monitor);
 		PageDrawer drawer = new PageDrawer();
 		drawer.drawPage(p, page);
 		this.target.bounds = new Rectangle2D.Double(pageSize.getLowerLeftX(), pageSize.getLowerLeftY(), pageSize.getWidth(), pageSize.getHeight());

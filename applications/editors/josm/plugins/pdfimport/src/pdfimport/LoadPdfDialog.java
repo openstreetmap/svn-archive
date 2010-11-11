@@ -131,6 +131,8 @@ public class LoadPdfDialog extends JFrame{
 	protected OsmDataLayer newLayer;
 
 	private LoadProgressRenderer progressRenderer;
+	private JCheckBox limitPathCountCheck;
+	private JTextField limitPathCount;
 
 
 	public LoadPdfDialog() {
@@ -242,6 +244,8 @@ public class LoadPdfDialog extends JFrame{
 		this.removeParallelSegmentsCheck = new JCheckBox(tr("Remove parallel lines"));
 		this.removeParallelSegmentsTolerance = new JTextField("3");
 
+		this.limitPathCountCheck = new JCheckBox(tr("Take only first X paths"));
+		this.limitPathCount = new JTextField("10000");
 
 		JPanel configPanel = new JPanel(new GridBagLayout());
 		configPanel.setBorder(BorderFactory.createTitledBorder(tr("Import settings")));
@@ -273,12 +277,18 @@ public class LoadPdfDialog extends JFrame{
 		c.gridx = 2; c.gridy = 3; c.gridwidth = 1; c.anchor = GridBagConstraints.NORTHWEST;
 		configPanel.add(this.removeParallelSegmentsTolerance, c);
 
-		c.gridx = 0; c.gridy = 4; c.gridwidth = 1;
-		configPanel.add(this.colorFilterCheck, c);
+
+		c.gridx = 0; c.gridy = 4; c.gridwidth = 2;
+		configPanel.add(this.limitPathCountCheck, c);
 		c.gridx = 2; c.gridy = 4; c.gridwidth = 1;
+		configPanel.add(this.limitPathCount, c);
+
+		c.gridx = 0; c.gridy = 5; c.gridwidth = 1;
+		configPanel.add(this.colorFilterCheck, c);
+		c.gridx = 2; c.gridy = 5; c.gridwidth = 1;
 		configPanel.add(this.colorFilterColor, c);
 
-		c.gridx = 0; c.gridy = 5; c.gridwidth = 2;
+		c.gridx = 0; c.gridy = 6; c.gridwidth = 2;
 		configPanel.add(this.debugModeCheck, c);
 
 
@@ -614,6 +624,7 @@ public class LoadPdfDialog extends JFrame{
 
 		double nodesTolerance = 0.0;
 		Color color = null;
+		int maxPaths = Integer.MAX_VALUE;
 
 		if (this.mergeCloseNodesCheck.isSelected()) {
 			try {
@@ -642,6 +653,19 @@ public class LoadPdfDialog extends JFrame{
 			}
 		}
 
+		if (this.limitPathCountCheck.isSelected()) {
+			try {
+				maxPaths = Integer.parseInt(this.limitPathCount.getText());
+			}
+			catch (Exception e) {
+				JOptionPane
+				.showMessageDialog(
+						Main.parent,
+						tr("Could not parse max path count"));
+				return null;
+			}
+		}
+
 
 		monitor.setTicks(10);
 		monitor.setCustomText(tr("Parsing file"));
@@ -650,7 +674,7 @@ public class LoadPdfDialog extends JFrame{
 
 		try {
 			PdfBoxParser parser = new PdfBoxParser(data);
-			parser.parse(fileName, monitor.createSubTaskMonitor(80, false));
+			parser.parse(fileName, maxPaths, monitor.createSubTaskMonitor(80, false));
 
 		} catch (FileNotFoundException e1) {
 			JOptionPane

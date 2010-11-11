@@ -3065,15 +3065,22 @@ int UserInterface (int argc, char *argv[],
           (int) strcspn (name, "\n"), name);
         fpr = 0;
         if (!shortest->shortest) {
-          ndType *final = shortest->nd + shortest->nd->other[shortest->dir];
+          // I don't know why, but sometimes shortest->dir is wrong. But
+          // AFAIK it only happens at the first or last segment of the way,
+          // so inverting 'dir' solves the problem...
+          ndType *final = shortest->nd + shortest->nd->other[
+            (shortest->nd->other[shortest->dir] ? 0 : 1) ^ shortest->dir];
           double pr = ((final->lat - shortest->nd->lat) * (double)
             (tlat - shortest->nd->lat) + (final->lon - shortest->nd->lon) *
             (double)(tlon - shortest->nd->lon)) /
             (Sqr (final->lat - shortest->nd->lat) +
-             Sqr (final->lon - shortest->nd->lon));
-          printf("%lf,%lf,j,(unknown-style),0,\n\r",
+             Sqr (final->lon - shortest->nd->lon) + 1);
+          printf("%lf,%lf,j,(unknown-style),0,fini\n\r",
       LatInverse (shortest->nd->lat + pr * (final->lat - shortest->nd->lat)),
-      LonInverse (shortest->nd->lon + pr * (final->lon - shortest->nd->lon)));
+      LonInverse (shortest->nd->lon + pr * (final->lon - shortest->nd->lon)),
+      shortest->dir, shortest->nd->other[shortest->dir]);
+//      shortest->nd->other[1-shortest->dir]);
+      //final->lat - shortest->nd->lat, final->lon - shortest->nd->lon);
         }
       }
     }

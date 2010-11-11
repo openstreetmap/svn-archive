@@ -1,5 +1,7 @@
 package pdfimport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -7,13 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 
 public class OsmBuilder {
 
@@ -26,27 +27,39 @@ public class OsmBuilder {
 	private String lineName;
 	private Mode mode;
 
+	private ProgressMonitor monitor;
+	private int monitorPos;
+	private int monitorTotal;
 
 	public OsmBuilder(FilePlacement placement)
 	{
 		this.placement = placement;
 	}
 
+	public DataSet build(List<LayerContents> data, Mode mode, ProgressMonitor monitor) {
 
-	public Bounds getWorldBounds(PathOptimizer data) {
-		LatLon min = placement.tranformCoords(new Point2D.Double(data.bounds.getMinX(), data.bounds.getMinY()));
-		LatLon max = placement.tranformCoords(new Point2D.Double(data.bounds.getMaxX(), data.bounds.getMaxY()));
-		return new Bounds(min, max);
-	}
-
-	public DataSet build(List<LayerContents> data, Mode mode) {
-
+		this.monitor = monitor;
+		this.monitorPos = 0;
 		this.mode = mode;
 		DataSet result = new DataSet();
+
+		//count total items for progress monitor.
+		this.monitorTotal = 0;
+		for (LayerContents layer: data) {
+			this.monitorTotal += layer.paths.size();
+			for(PdfMultiPath mp: layer.multiPaths){
+				this.monitorTotal += mp.paths.size();
+			}
+		}
+
+		monitor.beginTask(tr("Building JOSM layer."), this.monitorTotal);
+
 
 		for (LayerContents layer: data) {
 			this.addLayer(result, layer);
 		}
+
+		monitor.finishTask();
 		return result;
 	}
 
@@ -107,6 +120,10 @@ public class OsmBuilder {
 	}
 
 	private Way insertWay(PdfPath path, Map<Point2D, Node> point2Node, int multipathId, boolean multipolygon) {
+
+		monitor.setExtraText(tr(" "+this.monitorPos+"/"+this.monitorTotal));
+		monitor.setTicks(this.monitorPos);
+		this.monitorPos ++;
 
 		List<Node> nodes = new ArrayList<Node>(path.points.size());
 

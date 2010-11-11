@@ -1,5 +1,7 @@
 package pdfimport.pdfbox;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Shape;
@@ -9,6 +11,8 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 
 import pdfimport.LayerInfo;
 import pdfimport.PathOptimizer;
@@ -25,14 +29,16 @@ public class GraphicsProcessor{
 	private boolean clipAreaDrawn;
 
 	private final AffineTransform transform;
+	private final ProgressMonitor monitor;
 
-	public GraphicsProcessor(PathOptimizer target, int rotation)
+	public GraphicsProcessor(PathOptimizer target, int rotation, ProgressMonitor monitor)
 	{
 		this.target = target;
 		this.transform = new AffineTransform();
 		this.transform.rotate(-Math.toRadians(rotation));
 		this.info.stroke = Color.BLACK;
 		this.info.fill = Color.BLACK;
+		this.monitor = monitor;
 	}
 
 
@@ -47,10 +53,13 @@ public class GraphicsProcessor{
 
 		if (paths.size() > 1) {
 			this.target.addMultiPath(this.info, paths);
+			this.parsePath(s, closed);
 		}
 		else if (paths.size() == 1) {
 			this.target.addPath(this.info, paths.get(0));
 		}
+
+		this.monitor.setCustomText(tr(" {0} objects so far", pathNo));
 	}
 
 

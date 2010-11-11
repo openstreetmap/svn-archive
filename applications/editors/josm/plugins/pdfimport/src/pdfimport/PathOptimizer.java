@@ -18,13 +18,18 @@ public class PathOptimizer {
 	private final Map<LayerInfo, LayerContents> layerMap;
 	private List<LayerContents> layers;
 	public Rectangle2D bounds;
+	private final double pointsTolerance;
+	private final Color color;
 
-	public PathOptimizer()
+	public PathOptimizer(double _pointsTolerance, Color _color)
 	{
+
 		uniquePointMap = new HashMap<Point2D, Point2D>();
 		uniquePoints = new ArrayList<Point2D>();
 		layerMap = new HashMap<LayerInfo, LayerContents>();
 		layers = new ArrayList<LayerContents>();
+		pointsTolerance = _pointsTolerance;
+		color = _color;
 	}
 
 	public Point2D getUniquePoint(Point2D point) {
@@ -41,15 +46,41 @@ public class PathOptimizer {
 
 	public void addPath(LayerInfo info, PdfPath path)
 	{
+		if (!isColorOK(info)){
+			return;
+		}
+
+		if (path.points.size() > 10){
+			int a = 10;
+			a++;
+		}
+
 		LayerContents layer = this.getLayer(info);
 		layer.paths.add(path);
 	}
 
 	public void addMultiPath(LayerInfo info, List<PdfPath> paths) {
 
-		LayerContents layer = this.getLayer(info);
-		boolean goodMultiPath = true;
+		if (!isColorOK(info)){
+			return;
+		}
 
+		LayerContents layer = this.getLayer(info);
+
+		//optimize the paths
+		Set<Point2D> points = new HashSet<Point2D>();
+		for(PdfPath path: paths) {
+			points.addAll(path.points);
+		}
+		LayerContents multipathLayer = new LayerContents();
+		multipathLayer.paths = paths;
+		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(points, pointsTolerance);
+		this.fixPoints(multipathLayer,pointMap);
+		this.concatenatePaths(multipathLayer);
+
+		paths = multipathLayer.paths;
+
+		boolean goodMultiPath = true;
 		for(PdfPath path: paths) {
 			goodMultiPath &= path.isClosed();
 		}
@@ -62,29 +93,24 @@ public class PathOptimizer {
 		}
 	}
 
-	public void filterByColor(Color color) {
+	private boolean isColorOK(LayerInfo info) {
+
+		if (color == null) {
+			return true;
+		}
 
 		int rgb = color.getRGB() & 0xffffff;
+		boolean good = false;
 
-		List<LayerContents> newLayers = new ArrayList<LayerContents>();
-		for(LayerContents l: this.layers) {
-
-			boolean good = false;
-
-
-			if (l.info.fill != null && (l.info.fill.getRGB() & 0xffffff) == rgb) {
-				good = true;
-			}
-
-			if (l.info.stroke != null && (l.info.stroke.getRGB() & 0xffffff) == rgb) {
-				good = true;
-			}
-
-			if (good) {
-				newLayers.add(l);
-			}
+		if (info.fill != null && (info.fill.getRGB() & 0xffffff) == rgb) {
+			good = true;
 		}
-		this.layers = newLayers;
+
+		if (info.stroke != null && (info.stroke.getRGB() & 0xffffff) == rgb) {
+			good = true;
+		}
+
+		return good;
 	}
 
 
@@ -94,8 +120,8 @@ public class PathOptimizer {
 		}
 	}
 
-	public void mergeNodes(double tolerance) {
-		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(uniquePoints, tolerance);
+	public void mergeNodes() {
+		Map<Point2D, Point2D> pointMap = DuplicateNodesFinder.findDuplicateNodes(uniquePoints, pointsTolerance);
 
 		for(LayerContents layer: this.layers) {
 			this.fixPoints(layer, pointMap);
@@ -490,14 +516,15 @@ public class PathOptimizer {
 				}
 			}
 
-			//construct path
-
 			//remove from map
 			for (PdfPath path: pathChain) {
 				pathEndpoints.get(path.firstPoint()).remove(path);
 				pathEndpoints.get(path.lastPoint()).remove(path);
+				mergedPaths.add(path);
 			}
 
+
+			//construct path
 			PdfPath path = pathChain.get(0);
 
 			for (int pos = 1; pos < pathChain.size(); pos ++) {
@@ -506,8 +533,6 @@ public class PathOptimizer {
 				if (path.points == null) {
 					throw new RuntimeException();
 				}
-
-				mergedPaths.add(pathChain.get(pos));
 			}
 
 			newPaths.add(path);

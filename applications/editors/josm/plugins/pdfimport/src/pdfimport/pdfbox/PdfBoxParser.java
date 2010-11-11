@@ -1,4 +1,5 @@
 package pdfimport.pdfbox;
+
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.geom.Rectangle2D;
@@ -9,6 +10,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.util.PDFStreamEngine;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 
 import pdfimport.PathOptimizer;
 
@@ -20,8 +22,10 @@ public class PdfBoxParser extends PDFStreamEngine{
 	}
 
 	@SuppressWarnings("unchecked")
-	public void parse(File file) throws Exception
+	public void parse(File file, ProgressMonitor monitor) throws Exception
 	{
+		monitor.beginTask(tr("Parsing PDF", 1));
+
 		PDDocument document = PDDocument.load( file);
 
 		if( document.isEncrypted() ){
@@ -42,9 +46,11 @@ public class PdfBoxParser extends PDFStreamEngine{
 			rotation = rotationVal.intValue();
 		}
 
-		GraphicsProcessor p = new GraphicsProcessor(target, rotation);
+		GraphicsProcessor p = new GraphicsProcessor(target, rotation, monitor);
 		PageDrawer drawer = new PageDrawer();
 		drawer.drawPage(p, page);
 		this.target.bounds = new Rectangle2D.Double(pageSize.getLowerLeftX(), pageSize.getLowerLeftY(), pageSize.getWidth(), pageSize.getHeight());
+
+		monitor.finishTask();
 	}
 }

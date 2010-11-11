@@ -87,6 +87,7 @@ public class PageDrawer extends PDFStreamEngine
 			PDResources resources = page.findResources();
 			processStream( page, resources, page.getContents().getStream() );
 		}
+
 		List annotations = page.getAnnotations();
 		for( int i=0; i<annotations.size(); i++ )
 		{

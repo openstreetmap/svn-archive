@@ -28,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
@@ -40,15 +41,60 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.progress.ProgressRenderer;
+import org.openstreetmap.josm.gui.progress.SwingRenderingProgressMonitor;
 import org.openstreetmap.josm.io.OsmExporter;
 
 import pdfimport.pdfbox.PdfBoxParser;
 
-public class LoadPdfDialog extends JFrame {
+public class LoadPdfDialog extends JFrame{
+
+	class LoadProgressRenderer implements ProgressRenderer{
+		private final JProgressBar pBar;
+		private String title = "";
+
+		public LoadProgressRenderer(JProgressBar pb)
+		{
+			this.pBar =pb;
+			this.pBar.setMinimum(0);
+			this.pBar.setValue(0);
+			this.pBar.setMaximum(1);
+			this.pBar.setString("");
+			this.pBar.setStringPainted(true);
+
+		}
+
+		public void setCustomText(String message) {
+			this.pBar.setString(this.title + message);
+		}
+
+		public void setIndeterminate(boolean indeterminate) {
+			this.pBar.setIndeterminate(indeterminate);
+		}
+
+		public void setMaximum(int maximum) {
+			this.pBar.setMaximum(maximum);
+		}
+
+		public void setTaskTitle(String taskTitle) {
+			this.title = taskTitle;
+			this.pBar.setString(this.title);
+		}
+
+		public void setValue(int value) {
+			this.pBar.setValue(value);
+		}
+
+		public void finish() {
+			this.pBar.setString(tr("Finished"));
+			this.pBar.setValue(this.pBar.getMaximum());
+		}
+
+	}
 
 	private File fileName;
 	private PathOptimizer data;
-	private final FilePlacement placement;
 	private OsmDataLayer layer;
 
 	/**
@@ -81,12 +127,16 @@ public class LoadPdfDialog extends JFrame {
 	private JTextField removeParallelSegmentsTolerance;
 	private JCheckBox removeLargeObjectsCheck;
 	private JTextField removeLargeObjectsSize;
+	private JProgressBar loadProgress;
+	protected OsmDataLayer newLayer;
+
+	private LoadProgressRenderer progressRenderer;
+
 
 	public LoadPdfDialog() {
-
-		this.placement = new FilePlacement();
-
 		this.buildGUI();
+		FilePlacement pl = new FilePlacement();
+		this.setPlacement(pl);
 		this.addListeners();
 		this.removeLayer();
 	}
@@ -160,17 +210,19 @@ public class LoadPdfDialog extends JFrame {
 		this.saveButton = new JButton(tr("Save"));
 		this.showButton = new JButton(tr("Show target"));
 		this.cancelButton = new JButton(tr("Discard"));
+		this.loadProgress = new JProgressBar();
+		this.progressRenderer = new LoadProgressRenderer(this.loadProgress);
 
-		this.minXField = new JTextField(""+this.placement.minX);
-		this.minYField = new JTextField(""+this.placement.minY);
-		this.minEastField = new JTextField(""+this.placement.minEast);
-		this.minNorthField = new JTextField(""+this.placement.minNorth);
+		this.minXField = new JTextField("");
+		this.minYField = new JTextField("");
+		this.minEastField = new JTextField("");
+		this.minNorthField = new JTextField("");
 		this.getMinButton = new JButton(tr("Take X and Y from selected node"));
 
-		this.maxXField = new JTextField(""+this.placement.maxX);
-		this.maxYField = new JTextField(""+this.placement.maxY);
-		this.maxEastField = new JTextField(""+this.placement.maxEast);
-		this.maxNorthField = new JTextField(""+this.placement.maxNorth);
+		this.maxXField = new JTextField("");
+		this.maxYField = new JTextField("");
+		this.maxEastField = new JTextField("");
+		this.maxNorthField = new JTextField("");
 		this.getMaxButton = new JButton(tr("Take X and Y from selected node"));
 
 		this.debugModeCheck = new JCheckBox(tr("Debug info"));
@@ -235,7 +287,6 @@ public class LoadPdfDialog extends JFrame {
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
 		selectFilePanel.add(this.loadFileButton, c);
 
-
 		JPanel projectionPanel = new JPanel(new GridBagLayout());
 		projectionPanel.setBorder(BorderFactory.createTitledBorder(tr("Bind to coordinates")));
 
@@ -279,11 +330,13 @@ public class LoadPdfDialog extends JFrame {
 		c.gridx = 0; c.gridy = 10; c.gridwidth = 1;
 		projectionPanel.add(this.getMaxButton, c);
 
+
 		JPanel okCancelPanel = new JPanel(new GridLayout(1,3));
 		okCancelPanel.add(this.cancelButton);
 		okCancelPanel.add(this.showButton);
 		okCancelPanel.add(this.okButton);
 		okCancelPanel.add(this.saveButton);
+
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
@@ -294,8 +347,11 @@ public class LoadPdfDialog extends JFrame {
 		panel.add(projectionPanel, c);
 		c.gridx = 0; c.gridy = 3; c.gridwidth = 1;
 		panel.add(okCancelPanel, c);
+		c.gridx = 0; c.gridy = 4; c.gridwidth = 1;
+		panel.add(this.loadProgress, c);
 
-		this.setSize(400, 520);
+
+		this.setSize(450, 550);
 		this.setContentPane(panel);
 	}
 
@@ -315,88 +371,128 @@ public class LoadPdfDialog extends JFrame {
 		this.runAsBackgroundTask(
 				new Runnable() {
 					public void run() {
-						data = loadPDF(newFileName);
+						//async part
+						SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
+						monitor.beginTask("Loading file", 1000);
+						data = loadPDF(newFileName, monitor.createSubTaskMonitor(500, false));
+						OsmBuilder.Mode mode = LoadPdfDialog.this.debugModeCheck.isSelected() ? OsmBuilder.Mode.Debug: OsmBuilder.Mode.Draft;
+
+						if (data!= null) {
+							LoadPdfDialog.this.newLayer = LoadPdfDialog.this.makeLayer(tr("PDF file preview"), new FilePlacement(), mode, monitor.createSubTaskMonitor(500, false));
+						}
+
+						monitor.finishTask();
+						progressRenderer.finish();
 					}
 				},
 				new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
+						//sync part
 						if (data!= null) {
-							OsmBuilder.Mode mode = LoadPdfDialog.this.debugModeCheck.isSelected() ? OsmBuilder.Mode.Debug: OsmBuilder.Mode.Draft;
-							LoadPdfDialog.this.fileName = newFileName;
-							LoadPdfDialog.this.makeLayer(tr("PDF file preview"), new FilePlacement(), mode);
+							LoadPdfDialog.this.placeLayer(newLayer, new FilePlacement());
+							fileName = newFileName;
+							newLayer = null;
 							LoadPdfDialog.this.loadFileButton.setText(tr("Loaded"));
 							LoadPdfDialog.this.loadFileButton.setEnabled(true);
-							LoadPdfDialog.this.loadPlacement();
-							LoadPdfDialog.this.setPlacement();
+							FilePlacement placement =  LoadPdfDialog.this.loadPlacement();
+							LoadPdfDialog.this.setPlacement(placement);
 						}
 					}
 				});
 	}
 
-	
-	private boolean preparePlacement()
-	{
-		boolean ok = this.parsePlacement();
-		if (!ok){
-			JOptionPane.showMessageDialog(Main.parent, tr("Problems parsing placement."));
-			return false;
-		}
-		
-		String transformError = this.placement.prepareTransform();
-		if (transformError != null){
-			JOptionPane.showMessageDialog(Main.parent, transformError);			
-		}		
 
-		this.savePlacement();
-		
-		return true;
+	private FilePlacement preparePlacement()
+	{
+		FilePlacement placement = this.parsePlacement();
+		if (placement == null){
+			return null;
+		}
+
+		String transformError = placement.prepareTransform();
+		if (transformError != null){
+			JOptionPane.showMessageDialog(Main.parent, transformError);
+			return null;
+		}
+
+		this.savePlacement(placement);
+
+		return placement;
 	}
 
 	private void okPressed() {
 
-		if (!preparePlacement()) {
+		final FilePlacement placement = preparePlacement();
+		if (placement == null) {
 			return;
 		}
 
-		//rebuild layer with latest projection
-		this.makeLayer(tr("Imported PDF: ") + this.fileName, this.placement, OsmBuilder.Mode.Final);
+		this.removeLayer();
 
-		this.setVisible(false);
+		this.runAsBackgroundTask(
+				new Runnable() {
+					public void run() {
+						//async part
+						SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
+						LoadPdfDialog.this.newLayer = LoadPdfDialog.this.makeLayer(tr("Imported PDF: ") + fileName, placement, OsmBuilder.Mode.Final, monitor);
+						progressRenderer.finish();
+					}
+				},
+				new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						//sync part
+						//rebuild layer with latest projection
+						LoadPdfDialog.this.placeLayer(newLayer, placement);
+						LoadPdfDialog.this.setVisible(false);
+					}
+				});
 	}
 
 	private void savePressed() {
 
-		if (!preparePlacement()) {
+		final FilePlacement placement = preparePlacement();
+		if (placement == null) {
 			return;
-		}		
+		}
 
-		java.io.File file = this.chooseSaveFile();
+		final java.io.File file = this.chooseSaveFile();
 
 		if (file == null){
 			return;
-		}		
-		
-		//rebuild layer with latest projection
+		}
+
 		this.removeLayer();
 
+		this.runAsBackgroundTask(
+				new Runnable() {
+					public void run() {
+						//async part
+						SwingRenderingProgressMonitor monitor = new SwingRenderingProgressMonitor(progressRenderer);
+						LoadPdfDialog.this.saveLayer(file, placement, monitor);
+						progressRenderer.finish();
+					}
+				},
+				new ActionListener() {
 
-		this.saveLayer(file);
-		this.setVisible(false);
+					public void actionPerformed(ActionEvent e) {
+						//sync part
+						LoadPdfDialog.this.setVisible(false);
+					}
+				});
 	}
 
 
 	private void showPressed() {
 
-		boolean ok = this.parsePlacement();
-		if (!ok){
+		FilePlacement placement = preparePlacement();
+		if (placement == null) {
 			return;
 		}
 
-		OsmBuilder builder = new OsmBuilder(this.placement);
-
 		//zoom to new location
-		Main.map.mapView.zoomTo(builder.getWorldBounds(this.data));
+		Main.map.mapView.zoomTo(placement.getWorldBounds(this.data));
 		Main.map.repaint();
 	}
 
@@ -510,13 +606,51 @@ public class LoadPdfDialog extends JFrame {
 		t.start();
 	}
 
-	private PathOptimizer loadPDF(File fileName) {
+	private PathOptimizer loadPDF(File fileName, ProgressMonitor monitor) {
 
-		PathOptimizer data = new PathOptimizer();
+		monitor.beginTask(tr(""), 100);
+		monitor.setTicks(0);
+		monitor.setCustomText(tr("Preparing"));
+
+		double nodesTolerance = 0.0;
+		Color color = null;
+
+		if (this.mergeCloseNodesCheck.isSelected()) {
+			try {
+				nodesTolerance = Double.parseDouble(this.mergeCloseNodesTolerance.getText());
+			}
+			catch (Exception e) {
+				JOptionPane
+				.showMessageDialog(
+						Main.parent,
+						tr("Tolerance is not a number"));
+				return null;
+			}
+		}
+
+		if (this.colorFilterCheck.isSelected()) {
+			try {
+				String colString = this.colorFilterColor.getText().replace("#", "");
+				color = new Color(Integer.parseInt(colString, 16));
+			}
+			catch (Exception e) {
+				JOptionPane
+				.showMessageDialog(
+						Main.parent,
+						tr("Could not parse color"));
+				return null;
+			}
+		}
+
+
+		monitor.setTicks(10);
+		monitor.setCustomText(tr("Parsing file"));
+
+		PathOptimizer data = new PathOptimizer(nodesTolerance, color);
 
 		try {
 			PdfBoxParser parser = new PdfBoxParser(data);
-			parser.parse(fileName);
+			parser.parse(fileName, monitor.createSubTaskMonitor(80, false));
 
 		} catch (FileNotFoundException e1) {
 			JOptionPane
@@ -533,25 +667,12 @@ public class LoadPdfDialog extends JFrame {
 			return null;
 		}
 
-		if (this.colorFilterCheck.isSelected()) {
-			try {
-				String colString = this.colorFilterColor.getText().replace("#", "");
-				Color color = new Color(Integer.parseInt(colString, 16));
-				data.filterByColor(color);
-			}
-			catch (Exception e) {
-				JOptionPane
-				.showMessageDialog(
-						Main.parent,
-						tr("Could not parse color"));
-				return null;
-			}
-		}
-
+		monitor.setTicks(80);
 
 		if (this.removeParallelSegmentsCheck.isSelected()) {
 			try {
 				double tolerance = Double.parseDouble(this.removeParallelSegmentsTolerance.getText());
+				monitor.setCustomText(tr("Removing parallel segments"));
 				data.removeParallelLines(tolerance);
 			}
 			catch (Exception e) {
@@ -563,25 +684,16 @@ public class LoadPdfDialog extends JFrame {
 			}
 		}
 
-		if (this.mergeCloseNodesCheck.isSelected()) {
-			try {
-				double tolerance = Double.parseDouble(this.mergeCloseNodesTolerance.getText());
-				data.mergeNodes(tolerance);
-			}
-			catch (Exception e) {
-				JOptionPane
-				.showMessageDialog(
-						Main.parent,
-						tr("Tolerance is not a number"));
-				return null;
-			}
-		}
-
+		monitor.setTicks(85);
+		monitor.setCustomText(tr("Joining adjacent segments"));
 		data.mergeSegments();
 
 		if (this.removeSmallObjectsCheck.isSelected()) {
 			try {
 				double tolerance = Double.parseDouble(this.removeSmallObjectsSize.getText());
+				monitor.setTicks(90);
+				monitor.setCustomText(tr("Removing small objects"));
+
 				data.removeSmallObjects(tolerance);
 			}
 			catch (Exception e) {
@@ -593,10 +705,11 @@ public class LoadPdfDialog extends JFrame {
 			}
 		}
 
-
 		if (this.removeLargeObjectsCheck.isSelected()) {
 			try {
 				double tolerance = Double.parseDouble(this.removeLargeObjectsSize.getText());
+				monitor.setTicks(90);
+				monitor.setCustomText(tr("Removing large objects"));
 				data.removeLargeObjects(tolerance);
 			}
 			catch (Exception e) {
@@ -608,32 +721,38 @@ public class LoadPdfDialog extends JFrame {
 			}
 		}
 
+		monitor.setTicks(95);
+		monitor.setCustomText(tr("Finalizing layers"));
 		data.splitLayersByPathKind();
 		data.finish();
+
+		monitor.finishTask();
 		return data;
 	}
 
 
 
-	private boolean parsePlacement() {
+	private FilePlacement parsePlacement() {
 		Object selectedProjection = this.projectionCombo.getSelectedItem();
 
 		if (!(selectedProjection instanceof Projection))
 		{
 			JOptionPane.showMessageDialog(Main.parent, tr("Please set a projection."));
-			return false;
+			return null;
 		}
 
-		this.placement.projection = (Projection)this.projectionCombo.getSelectedItem();
+		FilePlacement placement = new FilePlacement();
+
+		placement.projection = (Projection)this.projectionCombo.getSelectedItem();
 
 		try
 		{
-			this.placement.setPdfBounds(
+			placement.setPdfBounds(
 					Double.parseDouble(this.minXField.getText()),
 					Double.parseDouble(this.minYField.getText()),
 					Double.parseDouble(this.maxXField.getText()),
 					Double.parseDouble(this.maxYField.getText()));
-			this.placement.setEastNorthBounds(
+			placement.setEastNorthBounds(
 					Double.parseDouble(this.minEastField.getText()),
 					Double.parseDouble(this.minNorthField.getText()),
 					Double.parseDouble(this.maxEastField.getText()),
@@ -641,13 +760,18 @@ public class LoadPdfDialog extends JFrame {
 		}
 		catch (Exception e) {
 			JOptionPane.showMessageDialog(Main.parent, tr("Could not parse numbers. Please check."));
-			return false;
+			return null;
 		}
 
-		return true;
+		return placement;
 	}
 
-	private void setPlacement() {
+	private void setPlacement(FilePlacement placement) {
+
+		if (placement == null) {
+			//use default values.
+			placement = new FilePlacement();
+		}
 
 		this.projectionCombo.setSelectedItem(placement.projection);
 		this.minXField.setText(Double.toString(placement.minX));
@@ -661,26 +785,31 @@ public class LoadPdfDialog extends JFrame {
 	}
 
 
-	private void loadPlacement() {
+	private FilePlacement loadPlacement() {
+		FilePlacement pl = null;
 		//load saved transformation
 		File propertiesFile = new File(fileName.getAbsoluteFile()+ ".placement");
 		try {
 
 			if (propertiesFile.exists()){
+				pl = new FilePlacement();
 				Properties p = new Properties();
 				p.load(new FileInputStream(propertiesFile));
-				this.placement.fromProperties(p);
+				pl.fromProperties(p);
 			}
 		}catch (Exception e){
+			pl = null;
 			e.printStackTrace();
 		}
+
+		return pl;
 	}
 
-	private void savePlacement(){
+	private void savePlacement(FilePlacement pl){
 		//load saved transformation
 		File propertiesFile = new File(fileName.getAbsoluteFile()+ ".placement");
 		try {
-			Properties p = this.placement.toProperties();
+			Properties p = pl.toProperties();
 			p.store(new FileOutputStream(propertiesFile), "PDF file placement on OSM");
 		} catch (Exception e){
 			e.printStackTrace();
@@ -688,25 +817,24 @@ public class LoadPdfDialog extends JFrame {
 	}
 
 
-	private void makeLayer(String name, FilePlacement placement, OsmBuilder.Mode mode) {
-		this.removeLayer();
-
-		if (placement == null) {
-			return;
-		}
-
+	private OsmDataLayer makeLayer(String name, FilePlacement placement, OsmBuilder.Mode mode, ProgressMonitor monitor) {
+		monitor.beginTask(tr("Building JOSM layer"), 100);
 		OsmBuilder builder = new OsmBuilder(placement);
+		DataSet data = builder.build(this.data.getLayers(), mode, monitor.createSubTaskMonitor(50, false));
+		monitor.setTicks(50);
+		monitor.setCustomText(tr("Postprocessing layer"));
+		OsmDataLayer result = new OsmDataLayer(data, name, null);
+		result.onPostLoadFromFile();
 
-		DataSet data = builder.build(this.data.getLayers(), mode);
-		this.layer = new OsmDataLayer(data, name, null);
+		monitor.finishTask();
+		return result;
+	}
 
-		// Commit
-		this.layer.onPostLoadFromFile();
+	private void placeLayer(OsmDataLayer _layer, FilePlacement placement) {
+		this.removeLayer();
+		this.layer = _layer;
 		Main.main.addLayer(this.layer);
-		Main.map.mapView.zoomTo(builder.getWorldBounds(this.data));
-
-		this.okButton.setEnabled(true);
-		this.showButton.setEnabled(true);
+		Main.map.mapView.zoomTo(placement.getWorldBounds(this.data));
 	}
 
 	private void removeLayer() {
@@ -715,15 +843,17 @@ public class LoadPdfDialog extends JFrame {
 			this.layer.data.clear(); //saves memory
 			this.layer = null;
 		}
-
-		this.okButton.setEnabled(false);
-		this.showButton.setEnabled(false);
 	}
 
-	private void saveLayer(java.io.File file) {		
-		OsmBuilder builder = new OsmBuilder(this.placement);
-		DataSet data = builder.build(this.data.getLayers(), OsmBuilder.Mode.Final);
+	private void saveLayer(java.io.File file, FilePlacement placement, ProgressMonitor monitor) {
+		monitor.beginTask(tr("Saving to file."), 1000);
+
+		OsmBuilder builder = new OsmBuilder(placement);
+		DataSet data = builder.build(this.data.getLayers(), OsmBuilder.Mode.Final, monitor.createSubTaskMonitor(500, false));
 		OsmDataLayer layer = new OsmDataLayer(data, file.getName(), file);
+
+		monitor.setCustomText(tr(" Writing to file"));
+		monitor.setTicks(500);
 
 		OsmExporter exporter = new OsmExporter();
 
@@ -733,6 +863,8 @@ public class LoadPdfDialog extends JFrame {
 		catch(IOException e){
 			//TODO:
 		}
+
+		monitor.finishTask();
 	}
 
 }

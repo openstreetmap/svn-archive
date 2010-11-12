@@ -147,7 +147,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			streetPanel.add(streetButtonPanel, BorderLayout.SOUTH);
 			*/
 			streetPanel.add(headerPanel, BorderLayout.NORTH);
-			streetPanel.setMinimumSize(new Dimension(350, 200));
+			streetPanel.setMinimumSize(new Dimension(500, 200));
 			
 			/* Panel for unresolved addresses table */
 			JPanel unresolvedPanel = new JPanel(new BorderLayout());
@@ -172,7 +172,7 @@ public class AddressEditDialog extends JDialog implements ActionListener, ListSe
 			headerPanel2.setMinimumSize(new Dimension(100, 30));
 			headerPanel2.add(unresolvedAddressesLabel);
 			unresolvedPanel.add(headerPanel2 , BorderLayout.NORTH);
-			unresolvedPanel.setMinimumSize(new Dimension(350, 200));
+			unresolvedPanel.setMinimumSize(new Dimension(500, 200));
 			
 			
 			try {

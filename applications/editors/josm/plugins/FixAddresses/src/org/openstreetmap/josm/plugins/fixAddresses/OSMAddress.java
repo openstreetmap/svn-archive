@@ -16,6 +16,7 @@ package org.openstreetmap.josm.plugins.fixAddresses;
 import java.util.HashMap;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * The class OSMAddress represents a single address node of OSM. It is a lightweight 
@@ -29,6 +30,8 @@ public class OSMAddress extends OSMEntityBase {
 	
 	/** The dictionary containing guessed values. */
 	private HashMap<String, String> guessedValues = new HashMap<String, String>();
+	/** The dictionary containing guessed objects. */
+	private HashMap<String, OsmPrimitive> guessedObjects = new HashMap<String, OsmPrimitive>();
 	/** The dictionary containing indirect values. */
 	private HashMap<String, String> derivedValues = new HashMap<String, String>();
 
@@ -115,7 +118,7 @@ public class OSMAddress extends OSMEntityBase {
 	}
 	
 	/**
-	 * Returns the street name guessed by the nearest-neighbour search.
+	 * Returns the street name guessed by the nearest-neighbor search.
 	 * @return the guessedStreetName
 	 */
 	public String getGuessedStreetName() {
@@ -123,10 +126,13 @@ public class OSMAddress extends OSMEntityBase {
 	}
 
 	/**
+	 * Sets the guessed street name.
+	 *
 	 * @param guessedStreetName the guessedStreetName to set
+	 * @param srcObj the source object of the guess.
 	 */
-	public void setGuessedStreetName(String guessedStreetName) {
-		setGuessedValue(TagUtils.ADDR_STREET_TAG, guessedStreetName);
+	public void setGuessedStreetName(String guessedStreetName, OsmPrimitive srcObj) {
+		setGuessedValue(TagUtils.ADDR_STREET_TAG, guessedStreetName, srcObj);
 	}
 	
 	/**
@@ -146,10 +152,13 @@ public class OSMAddress extends OSMEntityBase {
 	}
 
 	/**
+	 * Sets the guessed post code.
+	 *
 	 * @param guessedPostCode the guessedPostCode to set
+	 * @param srcObj srcObj the source object of the guess
 	 */
-	public void setGuessedPostCode(String guessedPostCode) {
-		setGuessedValue(TagUtils.ADDR_POSTCODE_TAG, guessedPostCode);
+	public void setGuessedPostCode(String guessedPostCode, OsmPrimitive srcObj) {
+		setGuessedValue(TagUtils.ADDR_POSTCODE_TAG, guessedPostCode, srcObj);
 	}
 	
 	/**
@@ -169,10 +178,13 @@ public class OSMAddress extends OSMEntityBase {
 	}
 
 	/**
+	 * Sets the guessed city.
+	 *
 	 * @param guessedCity the guessedCity to set
+	 * @param srcObj the source object of the guess
 	 */
-	public void setGuessedCity(String guessedCity) {
-		setGuessedValue(TagUtils.ADDR_CITY_TAG, guessedCity);
+	public void setGuessedCity(String guessedCity, OsmPrimitive srcObj) {
+		setGuessedValue(TagUtils.ADDR_CITY_TAG, guessedCity, srcObj);
 	}
 
 	/**
@@ -202,7 +214,10 @@ public class OSMAddress extends OSMEntityBase {
 				setOSMTag(tag, val);				
 			}
 		}
+		
+		// Clear all guesses
 		guessedValues.clear();
+		guessedObjects.clear();
 	}
 
 	/**
@@ -403,14 +418,32 @@ public class OSMAddress extends OSMEntityBase {
 	
 	/**
 	 * Gets the guessed value for the given tag.
+	 *
 	 * @param tag The tag to get the guessed value for.
-	 * @return
+	 * @return the guessed value
 	 */
 	public String getGuessedValue(String tag) {
+		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
+		
 		if (!hasGuessedValue(tag)) {
 			return null;			
 		}
 		return guessedValues.get(tag);
+	}
+	
+	/**
+	 * Gets the guessed object.
+	 *
+	 * @param tag the guessed tag
+	 * @return the object which has been selected for the guess
+	 */
+	public OsmPrimitive getGuessedObject(String tag) {
+		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
+		
+		if (guessedObjects.containsKey(tag)) {
+			return guessedObjects.get(tag);
+		}
+		return null;
 	}
 	
 	/**
@@ -449,6 +482,8 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return true, if tag has a guessed value.
 	 */
 	private boolean hasGuessedValue(String tag) {
+		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
+		
 		return guessedValues.containsKey(tag) && 
 			!StringUtils.isNullOrEmpty(guessedValues.get(tag));
 	}
@@ -459,8 +494,13 @@ public class OSMAddress extends OSMEntityBase {
 	 * @param tag the tag to set the guess for
 	 * @param value the value of the guessed tag.
 	 */
-	public void setGuessedValue(String tag, String value) {
+	public void setGuessedValue(String tag, String value, OsmPrimitive osm) {
+		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
+		CheckParameterUtil.ensureParameterNotNull(value, "value");
+		CheckParameterUtil.ensureParameterNotNull(osm, "osm");
+		
 		guessedValues.put(tag, value);
+		guessedObjects.put(tag, osm);
 		fireEntityChanged(this);
 	}
 	
@@ -471,6 +511,8 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return true, if tag has a derived value.
 	 */
 	private boolean hasDerivedValue(String tag) {
+		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
+		
 		return derivedValues.containsKey(tag) && 
 			!StringUtils.isNullOrEmpty(derivedValues.get(tag));
 	}

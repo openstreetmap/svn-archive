@@ -47,14 +47,23 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 	private boolean isRunning = false;	
 	private boolean cancelled;
 	
+	
 	/**
-	 * @param nodes
+	 * Instantiates a new guess address runnable.
+	 *
+	 * @param addresses the addresses to guess the values for
+	 * @param title the title of progress monitor
 	 */
-	public GuessAddressRunnable(List<OSMAddress> nodes, String title) {
+	public GuessAddressRunnable(List<OSMAddress> addresses, String title) {
 		super(title != null ? title : tr("Searching"));
-		setAddressEditContainer(nodes);		
+		setAddressEditContainer(addresses);		
 	}
 
+	/**
+	 * Sets the address edit container.
+	 *
+	 * @param nodes the new address edit container
+	 */
 	public void setAddressEditContainer(List<OSMAddress> nodes) {
 		if (isRunning) {
 			throw new ConcurrentModificationException();
@@ -62,6 +71,11 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 		this.addressesToGuess = nodes;		
 	}
 
+	/**
+	 * Gets the addresses to guess.
+	 *
+	 * @return the addresses to guess
+	 */
 	public List<OSMAddress> getAddressesToGuess() {
 		return addressesToGuess;
 	}
@@ -90,6 +104,9 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 		finishListeners.remove(l);
 	}
 
+	/**
+	 * Fires the 'finished' event after the thread has done his work.
+	 */
 	protected void fireFinished() {
 		for (IProgressMonitorFinishedListener l : finishListeners) {
 			l.finished();
@@ -261,7 +278,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable implements Visitor 
 					//System.out.println(String.format("New guess %s: %4.2f m", TagUtils.getNameValue(w), dist));
 					minDist = dist;
 					currentValue = TagUtils.getNameValue(w);				
-					aNode.setGuessedValue(getTag(), currentValue);
+					aNode.setGuessedValue(getTag(), currentValue, w);
 				} else {
 					//System.out.println(String.format("Skipped %s: %4.2f m", TagUtils.getNameValue(w), dist));
 				}

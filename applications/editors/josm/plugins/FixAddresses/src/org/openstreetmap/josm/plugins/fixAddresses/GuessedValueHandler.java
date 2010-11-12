@@ -142,7 +142,7 @@ public class GuessedValueHandler implements Visitor {
 			if (dist < minDist && dist < maxDist) {
 				minDist = dist;
 				currentValue = n.get(tag);			
-				aNode.setGuessedValue(tag, currentValue);
+				aNode.setGuessedValue(tag, currentValue, n);
 			}
 		}
 	}
@@ -157,7 +157,7 @@ public class GuessedValueHandler implements Visitor {
 			if (dist < minDist && dist < maxDist) {
 				minDist = dist;
 				currentValue = w.get(tag);				
-				aNode.setGuessedValue(tag, currentValue);
+				aNode.setGuessedValue(tag, currentValue, w);
 			}
 		}
 	}

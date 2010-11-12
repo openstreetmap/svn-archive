@@ -1908,13 +1908,16 @@ public final class TagUtils {
 		}
 		
 		// TODO: Should be configurable
+					
+		/* Allow everything until this can be configured */
+		return true;
+		/*
 		String hwType = getHighwayValue(w);
-				
 		return 	!(TagUtils.HIGHWAY_MOTORWAY_LINK_VALUE.equals(hwType) ||
 				TagUtils.HIGHWAY_MOTORWAY_VALUE.equals(hwType) ||
 				TagUtils.HIGHWAY_FOOTWAY_VALUE.equals(hwType) ||
 				TagUtils.HIGHWAY_TRACK_VALUE.equals(hwType) 
-				);
+				);*/
 	}
 	
 	// Relation support

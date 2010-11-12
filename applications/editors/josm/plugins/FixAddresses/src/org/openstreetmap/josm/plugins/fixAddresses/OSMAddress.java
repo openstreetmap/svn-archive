@@ -13,6 +13,7 @@
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -447,6 +448,17 @@ public class OSMAddress extends OSMEntityBase {
 	}
 	
 	/**
+	 * Gets all guessed objects or an empty list, if no guesses have been made yet.
+	 *
+	 * @return the guessed objects.
+	 */
+	public Collection<OsmPrimitive> getGuessedObjects() {
+		if (guessedObjects == null) return null;
+		
+		return guessedObjects.values();
+	}
+	
+	/**
 	 * Check if this instance needs guessed values. This is the case, if the underlying OSM node
 	 * has either no street name, post code or city.
 	 *
@@ -496,12 +508,12 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	public void setGuessedValue(String tag, String value, OsmPrimitive osm) {
 		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
-		CheckParameterUtil.ensureParameterNotNull(value, "value");
-		CheckParameterUtil.ensureParameterNotNull(osm, "osm");
-		
-		guessedValues.put(tag, value);
-		guessedObjects.put(tag, osm);
-		fireEntityChanged(this);
+
+		if (value != null && osm != null) {
+			guessedValues.put(tag, value);
+			guessedObjects.put(tag, osm);
+			fireEntityChanged(this);
+		}
 	}
 	
 	/**

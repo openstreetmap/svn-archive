@@ -25,6 +25,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.IncompleteAddressesDialog
  */
 public class FixAddressesPlugin extends Plugin {
 	private static IncompleteAddressesDialog incompleteAddrDlg;
+	private static FixAddressesPreferences preferences; 
 
 	/**
 	 * Constructor for the AddressEdit plugin. Called by JOSM when loading the plugin.
@@ -33,17 +34,17 @@ public class FixAddressesPlugin extends Plugin {
 	public FixAddressesPlugin(PluginInformation info) {
 		super(info);
 				
-		// Create action for edit...
+		// Create actions...
 		FixUnresolvedStreetsAction action = new FixUnresolvedStreetsAction();		
 		SelectIncompleteAddressesAction incAddrAction = new SelectIncompleteAddressesAction();
 		
-		// ... and add it to the tools menu in main
+		// ... and add them to the tools menu in main
 		Main.main.menu.toolsMenu.addSeparator();
         Main.main.menu.toolsMenu.add(action);
         Main.main.menu.toolsMenu.add(incAddrAction);
         
-        // Create dialog 
-        
+        // create preferences instance
+        preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();        
 	}
 
 	/* (non-Javadoc)
@@ -70,5 +71,14 @@ public class FixAddressesPlugin extends Plugin {
 	 */
 	protected static IncompleteAddressesDialog getIncompleteAddrDlg() {
 		return incompleteAddrDlg;
+	}
+	
+	/**
+	 * Gets the preferences instance for this plugin.
+	 *
+	 * @return the preferences
+	 */
+	public static FixAddressesPreferences getPreferences() {
+		return preferences;
 	}
 }

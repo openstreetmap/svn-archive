@@ -35,6 +35,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
+import org.openstreetmap.josm.plugins.fixAddresses.FixAddressesPlugin;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 
@@ -101,6 +102,13 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 		getCurrentDataSet().clearSelection();
 		for (OSMAddress aNode : addrToSel) {
 			sel.add(aNode.getOsmObject());
+			
+			// Select also guessed objects, if wished
+			if (FixAddressesPlugin.getPreferences().isSelectGuessedObjects()) {
+				for (OsmPrimitive osmPrimitive : aNode.getGuessedObjects()) {
+					sel.add(osmPrimitive);
+				}
+			}
 		}
 
 		getCurrentDataSet().setSelected(sel);

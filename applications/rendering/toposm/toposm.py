@@ -627,6 +627,12 @@ def prepare_data(envLL, minz, maxz):
     print 'Converting meters to feet...'
     cmd = 'echo "UPDATE %s SET height_ft = CAST(height * 3.28085 AS INT) WHERE height_ft IS NULL;" | psql -q "%s"' % (CONTOURS_TABLE, DATABASE)
     call(cmd, shell=True)
+    # NOTE: This removes a LOT of artifacts around shorelines. Unfortunately,
+    # it also removes any legitimate 0ft contours (which may exist around
+    # areas below sea-level). TODO: Find a better workaround...
+    print 'Removing sea-level contours...'
+    cmd = 'echo "DELETE FROM %s WHERE height = 0;" | psql -q "%s"' % (CONTOURS_TABLE, DATABASE)
+    call(cmd, shell=True)
     print 'Done.'
 
 def render_tiles(envLL, minz, maxz):

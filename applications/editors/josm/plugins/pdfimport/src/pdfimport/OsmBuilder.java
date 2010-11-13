@@ -121,8 +121,10 @@ public class OsmBuilder {
 
 	private Way insertWay(PdfPath path, Map<Point2D, Node> point2Node, int multipathId, boolean multipolygon) {
 
-		monitor.setExtraText(tr(" "+this.monitorPos+"/"+this.monitorTotal));
-		monitor.setTicks(this.monitorPos);
+		if (this.monitorPos % 100 == 0) {
+			monitor.setExtraText(tr(" "+this.monitorPos+"/"+this.monitorTotal));
+			monitor.setTicks(this.monitorPos);
+		}
 		this.monitorPos ++;
 
 		List<Node> nodes = new ArrayList<Node>(path.points.size());
@@ -184,7 +186,7 @@ public class OsmBuilder {
 			return null;
 		}
 
-		String s = Integer.toHexString(col.getRGB());
+		String s = Integer.toHexString(col.getRGB() & 0xffffff);
 		while (s.length() < 6) {
 			s = "0" + s;
 		}

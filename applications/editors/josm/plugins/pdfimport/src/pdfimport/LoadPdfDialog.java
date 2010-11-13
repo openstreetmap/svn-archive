@@ -133,6 +133,9 @@ public class LoadPdfDialog extends JFrame{
 	private LoadProgressRenderer progressRenderer;
 	private JCheckBox limitPathCountCheck;
 	private JTextField limitPathCount;
+	private JCheckBox splitOnColorChangeCheck;
+	private JCheckBox splitOnShapeClosedCheck;
+	private JCheckBox splitOnSingleSegmentCheck;
 
 
 	public LoadPdfDialog() {
@@ -247,6 +250,10 @@ public class LoadPdfDialog extends JFrame{
 		this.limitPathCountCheck = new JCheckBox(tr("Take only first X paths"));
 		this.limitPathCount = new JTextField("10000");
 
+		this.splitOnColorChangeCheck = new JCheckBox(tr("Color/width change"));
+		this.splitOnShapeClosedCheck = new JCheckBox(tr("Shape closed"));
+		this.splitOnSingleSegmentCheck = new JCheckBox(tr("Single segments"));
+
 		JPanel configPanel = new JPanel(new GridBagLayout());
 		configPanel.setBorder(BorderFactory.createTitledBorder(tr("Import settings")));
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
@@ -292,10 +299,15 @@ public class LoadPdfDialog extends JFrame{
 		configPanel.add(this.debugModeCheck, c);
 
 
-		JPanel selectFilePanel = new JPanel(new GridBagLayout());
-		selectFilePanel.setBorder(BorderFactory.createTitledBorder(tr("Load file")));
-		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
-		selectFilePanel.add(this.loadFileButton, c);
+		c.gridx = 0; c.gridy = 7; c.gridwidth = 1;
+		configPanel.add(new JLabel(tr("Introduce separate layers for:")), c);
+		c.gridx = 1; c.gridy = 7; c.gridwidth = 1;
+		configPanel.add(this.splitOnShapeClosedCheck, c);
+		c.gridx = 2; c.gridy = 7; c.gridwidth = 1;
+		configPanel.add(this.splitOnSingleSegmentCheck, c);
+		c.gridx = 1; c.gridy = 8; c.gridwidth = 1;
+		configPanel.add(this.splitOnColorChangeCheck, c);
+
 
 		JPanel projectionPanel = new JPanel(new GridBagLayout());
 		projectionPanel.setBorder(BorderFactory.createTitledBorder(tr("Bind to coordinates")));
@@ -352,7 +364,7 @@ public class LoadPdfDialog extends JFrame{
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
 		panel.add(configPanel, c);
 		c.gridx = 0; c.gridy = 1; c.gridwidth = 1;
-		panel.add(selectFilePanel, c);
+		panel.add(loadFileButton, c);
 		c.gridx = 0; c.gridy = 2; c.gridwidth = 1;
 		panel.add(projectionPanel, c);
 		c.gridx = 0; c.gridy = 3; c.gridwidth = 1;
@@ -551,6 +563,7 @@ public class LoadPdfDialog extends JFrame{
 		JFileChooser fc = new JFileChooser();
 		fc.setAcceptAllFileFilterUsed(false);
 		fc.setMultiSelectionEnabled(false);
+		fc.setSelectedFile(this.fileName);
 		fc.setFileFilter(new FileFilter(){
 			@Override
 			public boolean accept(java.io.File pathname) {
@@ -670,7 +683,7 @@ public class LoadPdfDialog extends JFrame{
 		monitor.setTicks(10);
 		monitor.setCustomText(tr("Parsing file"));
 
-		PathOptimizer data = new PathOptimizer(nodesTolerance, color);
+		PathOptimizer data = new PathOptimizer(nodesTolerance, color, this.splitOnColorChangeCheck.isSelected());
 
 		try {
 			PdfBoxParser parser = new PdfBoxParser(data);
@@ -706,6 +719,12 @@ public class LoadPdfDialog extends JFrame{
 						tr("Max distance is not a number"));
 				return null;
 			}
+		}
+
+		if (nodesTolerance > 0.0) {
+			monitor.setTicks(83);
+			monitor.setCustomText(tr("Joining nodes"));
+			data.mergeNodes();
 		}
 
 		monitor.setTicks(85);
@@ -747,7 +766,7 @@ public class LoadPdfDialog extends JFrame{
 
 		monitor.setTicks(95);
 		monitor.setCustomText(tr("Finalizing layers"));
-		data.splitLayersByPathKind();
+		data.splitLayersByPathKind(this.splitOnShapeClosedCheck.isSelected(), this.splitOnSingleSegmentCheck.isSelected());
 		data.finish();
 
 		monitor.finishTask();

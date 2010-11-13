@@ -47,7 +47,10 @@ public class GraphicsProcessor{
 
 	private void addPath(Shape s, boolean closed) {
 		pathNo ++;
-		this.monitor.setCustomText(tr(" {0} objects so far", pathNo));
+
+		if (pathNo % 100 == 0) {
+			this.monitor.setCustomText(tr(" {0} objects so far", pathNo));
+		}
 
 		if (pathNo >= maxPaths) {
 			return;

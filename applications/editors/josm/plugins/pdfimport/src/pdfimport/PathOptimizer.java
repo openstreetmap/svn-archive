@@ -20,16 +20,19 @@ public class PathOptimizer {
 	public Rectangle2D bounds;
 	private final double pointsTolerance;
 	private final Color color;
+	boolean splitOnColorChange;
 
-	public PathOptimizer(double _pointsTolerance, Color _color)
+	LayerContents prevLayer = null;
+
+	public PathOptimizer(double _pointsTolerance, Color _color, boolean _splitOnColorChange)
 	{
-
 		uniquePointMap = new HashMap<Point2D, Point2D>();
 		uniquePoints = new ArrayList<Point2D>();
 		layerMap = new HashMap<LayerInfo, LayerContents>();
 		layers = new ArrayList<LayerContents>();
 		pointsTolerance = _pointsTolerance;
 		color = _color;
+		splitOnColorChange = _splitOnColorChange;
 	}
 
 	public Point2D getUniquePoint(Point2D point) {
@@ -160,10 +163,10 @@ public class PathOptimizer {
 		this.layers = newLayers;
 	}
 
-	public void splitLayersByPathKind() {
+	public void splitLayersByPathKind(boolean closed, boolean single) {
 		List<LayerContents> newLayers = new ArrayList<LayerContents>();
 		for(LayerContents l: this.layers) {
-			List<LayerContents> splitResult = splitBySegmentKind(l);
+			List<LayerContents> splitResult = splitBySegmentKind(l, closed, single);
 
 			for(LayerContents ll: splitResult) {
 				newLayers.add(ll);
@@ -185,13 +188,19 @@ public class PathOptimizer {
 
 
 	private LayerContents getLayer(LayerInfo info) {
-		LayerContents layer;
+
+		LayerContents layer = null;
 
 		if (this.layerMap.containsKey(info))
 		{
 			layer = this.layerMap.get(info);
+
+			if (layer != this.prevLayer && this.splitOnColorChange) {
+				layer = null;
+			}
 		}
-		else
+
+		if (layer == null)
 		{
 			layer = new LayerContents();
 			layer.info = info.copy();
@@ -200,6 +209,7 @@ public class PathOptimizer {
 			this.layers.add(layer);
 		}
 
+		this.prevLayer = layer;
 		return layer;
 	}
 
@@ -572,21 +582,25 @@ public class PathOptimizer {
 		return true;
 	}
 
-	private List<LayerContents> splitBySegmentKind(LayerContents layer)
+	private List<LayerContents> splitBySegmentKind(LayerContents layer, boolean closed, boolean single)
 	{
+		if (!closed && !single) {
+			return Collections.singletonList(layer);
+		}
+
 		List<PdfPath> singleSegmentPaths = new ArrayList<PdfPath>();
 		List<PdfPath> multiSegmentPaths = new ArrayList<PdfPath>();
 		List<PdfPath> closedPaths = new ArrayList<PdfPath>();
 
 		for(PdfPath path: layer.paths) {
-			if (path.points.size() <= 3) {
+			if (path.points.size() <= 3 && single) {
 				singleSegmentPaths.add(path);
 			}
-			else if (path.isClosed()) {
-				closedPaths.add(path);
+			else if (!path.isClosed() && closed) {
+				multiSegmentPaths.add(path);
 			}
 			else {
-				multiSegmentPaths.add(path);
+				closedPaths.add(path);
 			}
 		}
 

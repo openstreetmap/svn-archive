@@ -338,10 +338,20 @@
     <Datasource>
         &dbsettings; &extents;
         <Parameter name="table">
-		(SELECT way, name, place
-		 FROM ${DB_PREFIX}_point
-                 WHERE place IS NOT NULL AND name IS NOT NULL) AS placenames
-		</Parameter>
+            (SELECT way, name, place,
+                    CASE WHEN place = 'city' THEN 2
+                         WHEN place = 'town' THEN 4
+                         WHEN place = 'suburb' THEN 5
+                         WHEN place = 'village' THEN 6
+                         WHEN place = 'hamlet' THEN 7
+                         WHEN place = 'island' THEN 8
+                         WHEN place = 'locality' THEN 9
+                         ELSE 10
+                     END AS place_order
+             FROM ${DB_PREFIX}_point
+             WHERE place IS NOT NULL AND name IS NOT NULL
+             ORDER BY place_order) AS placenames
+        </Parameter>
     </Datasource>
 </Layer>
 

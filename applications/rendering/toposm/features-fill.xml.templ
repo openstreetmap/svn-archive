@@ -73,7 +73,7 @@ Canals and ditches (CanalDitch) (336xx)
 
   <Rule>
 	&minz14;
-	&maxz15;
+	&maxz14;
     <Filter>([highway] = 'motorway' or [highway] = 'trunk') and [bridge] = 'yes' and [pass] = 1
     </Filter>
     <LineSymbolizer>
@@ -82,7 +82,7 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   <Rule>
-	&minz16;
+	&minz15;
     <Filter>([highway] = 'motorway' or [highway] = 'trunk') and [bridge] = 'yes' and [pass] = 1
     </Filter>
     <LineSymbolizer>
@@ -92,7 +92,7 @@ Canals and ditches (CanalDitch) (336xx)
   </Rule>
   <Rule>
 	&minz14;
-	&maxz15;
+	&maxz14;
     <Filter>([highway] = 'primary') and [bridge] = 'yes' and [pass] = 1</Filter>
     <LineSymbolizer>
 		<CssParameter name="stroke-width">7.5</CssParameter>
@@ -100,7 +100,7 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   <Rule>
-	&minz16;
+	&minz15;
     <Filter>([highway] = 'primary') and [bridge] = 'yes' and [pass] = 1</Filter>
     <LineSymbolizer>
 		<CssParameter name="stroke-width">13</CssParameter>
@@ -318,6 +318,16 @@ Canals and ditches (CanalDitch) (336xx)
   </Rule>
   
   <!-- Primary -->
+  <Rule>
+      &minz10;
+      &maxz11;
+      <Filter>[highway] = 'primary' and [tunnel] = 'yes'</Filter>
+      <LineSymbolizer>
+          <CssParameter name="stroke">&primarycolortunnel;</CssParameter>
+          <CssParameter name="stroke-width">1.5</CssParameter>
+          &rounded;
+      </LineSymbolizer>
+  </Rule>
   <Rule>
   	&minz12;
   	&maxz14;
@@ -628,7 +638,7 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   <Rule>
-	&minz13;
+	&minz16;
   	<Filter>[highway] = 'trunk_link' and [tunnel] = 'yes'</Filter>
   	<LineSymbolizer>
        <CssParameter name="stroke">&trunkcolortunnel;</CssParameter>
@@ -647,7 +657,7 @@ Canals and ditches (CanalDitch) (336xx)
     </LineSymbolizer>
   </Rule>
   <Rule>
-	&minz13;
+	&minz16;
   	<Filter>[highway] = 'trunk_link' and not [tunnel] = 'yes'</Filter>
   	<LineSymbolizer>
        <CssParameter name="stroke">&trunkcolor;</CssParameter>

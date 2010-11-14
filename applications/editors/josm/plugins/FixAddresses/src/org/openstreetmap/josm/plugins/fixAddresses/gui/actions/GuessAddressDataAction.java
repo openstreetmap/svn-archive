@@ -38,7 +38,7 @@ public class GuessAddressDataAction extends AbstractAddressEditAction implements
 	 * Instantiates a new "guess address data" action.
 	 */
 	public GuessAddressDataAction() {
-		super(tr("Guess address data"), "guessstreets_24", tr("Tries to guess address data by picking the name of the closest object with according tag."));
+		super(tr("Guess"), "guessstreets_24", tr("Tries to guess address data by picking the name of the closest object with according tag."));
 	}
 
 	/* (non-Javadoc)

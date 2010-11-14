@@ -23,7 +23,7 @@ import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent
 public class RemoveAddressTagsAction extends AbstractAddressEditAction {
 
 	public RemoveAddressTagsAction() {
-		super(tr("Remove address tags"), "removeaddrtags_24", tr("Removes address related tags from the object."));
+		super(tr("Remove"), "removeaddrtags_24", tr("Removes address related tags from the object."));
 	}
 
 	@Override

@@ -136,7 +136,7 @@ public class PostalCodeChecker {
 		for (int i = 0; i < countries.length; i++) {
 			System.out.println("//postalCodePatternMap.put(\"" + countries[i] + "\", \"[0-9]{5}\");");
 		}
-		*/
+		
 		String x = "A9999AAA";
 		
 		if (x.matches("[A-Z]{1}[0-9]{4}[A-Z]{3}")) {
@@ -155,7 +155,7 @@ public class PostalCodeChecker {
 			if (!xxx[i].matches("[A-Z]{1,2}[0-9]{1,2}[A-Z]? [0-9]{1}[A-Z]{2}")) {
 				System.err.println(xxx[i]);
 			}
-		}
+		}*/
 		// see http://userpage.chemie.fu-berlin.de/diverse/doc/ISO_3166.html for country codes
 		// 
 		
@@ -299,7 +299,7 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("LK", "[0-9]{5}");
 		//postalCodePatternMap.put("LR", "[0-9]{5}");
 		//postalCodePatternMap.put("LS", "[0-9]{5}");
-		//postalCodePatternMap.put("LT", "[0-9]{5}");
+		postalCodePatternMap.put("LT", "[0-9]{5}");
 		postalCodePatternMap.put("LU", "[0-9]{4}");
 		postalCodePatternMap.put("LV", "[0-9]{4}");
 		//postalCodePatternMap.put("LY", "[0-9]{5}");
@@ -323,7 +323,7 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("MU", "[0-9]{5}");
 		//postalCodePatternMap.put("MV", "[0-9]{5}");
 		//postalCodePatternMap.put("MW", "[0-9]{5}");
-		//postalCodePatternMap.put("MX", "[0-9]{5}");
+		postalCodePatternMap.put("MX", "[0-9]{5}"); // Mexico
 		//postalCodePatternMap.put("MY", "[0-9]{5}");
 		//postalCodePatternMap.put("MZ", "[0-9]{5}");
 		//postalCodePatternMap.put("NA", "[0-9]{5}");
@@ -357,7 +357,7 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("RE", "[0-9]{5}");
 		postalCodePatternMap.put("RO", "[0-9]{6}");
 		//postalCodePatternMap.put("RS", "[0-9]{5}");
-		//postalCodePatternMap.put("RU", "[0-9]{5}");
+		postalCodePatternMap.put("RU", "[0-9]{6}");
 		//postalCodePatternMap.put("RW", "[0-9]{5}");
 		//postalCodePatternMap.put("SA", "[0-9]{5}");
 		//postalCodePatternMap.put("SB", "[0-9]{5}");
@@ -389,7 +389,7 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("TM", "[0-9]{5}");
 		//postalCodePatternMap.put("TN", "[0-9]{5}");
 		//postalCodePatternMap.put("TO", "[0-9]{5}");
-		postalCodePatternMap.put("TR", "[0-9]{5}");
+		postalCodePatternMap.put("TR", "[0-9]{5}"); // turky
 		//postalCodePatternMap.put("TT", "[0-9]{5}");
 		//postalCodePatternMap.put("TV", "[0-9]{5}");
 		//postalCodePatternMap.put("TW", "[0-9]{5}");

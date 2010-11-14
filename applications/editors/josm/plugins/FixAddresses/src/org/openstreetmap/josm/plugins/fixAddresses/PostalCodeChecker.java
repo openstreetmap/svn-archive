@@ -38,12 +38,12 @@ public class PostalCodeChecker {
 	public static boolean hasValidPostalCode(OSMAddress address) {
 		CheckParameterUtil.ensureParameterNotNull(address, "address");
 		
-		if (address.hasPostCode()) {
+		if (address.hasPostalCode()) {
 			return false; // no postal code available
 		}
 		
 		String ctry = getCountry(address);
-		String postalCode = address.getPostCode();
+		String postalCode = address.getPostalCode();
 		
 		return hasValidPostalCode(ctry, postalCode);
 	}

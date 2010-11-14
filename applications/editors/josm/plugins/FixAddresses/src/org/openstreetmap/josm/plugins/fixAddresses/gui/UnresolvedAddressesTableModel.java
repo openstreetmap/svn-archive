@@ -120,7 +120,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 		case 2:
 			return aNode.getCity();
 		case 3:
-			return aNode.getPostCode();
+			return aNode.getPostalCode();
 		case 4:
 			return aNode.getName();
 		default:
@@ -224,7 +224,7 @@ public class UnresolvedAddressesTableModel extends AddressEditTableModel {
 				cc = arg0.getCity().compareTo(arg1.getCity());
 				break;
 			case 3:
-				cc = arg0.getPostCode().compareTo(arg1.getPostCode());
+				cc = arg0.getPostalCode().compareTo(arg1.getPostalCode());
 				break;
 			case 4:
 				cc = arg0.getName().compareTo(arg1.getName());

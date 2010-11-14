@@ -64,7 +64,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean isComplete() {
 		boolean isComplete = 	hasCity() && 
 								hasHouseNumber() &&
-							 	(hasPostCode() && PostalCodeChecker.hasValidPostalCode(this)) && 
+							 	(hasPostalCode() && PostalCodeChecker.hasValidPostalCode(this)) && 
 								hasCity() && 
 								hasStreetName();
 		
@@ -150,7 +150,7 @@ public class OSMAddress extends OSMEntityBase {
 	/**
 	 * @return the guessedPostCode
 	 */
-	public String getGuessedPostCode() {
+	public String getGuessedPostalCode() {
 		return getGuessedValue(TagUtils.ADDR_POSTCODE_TAG);
 	}
 
@@ -160,7 +160,7 @@ public class OSMAddress extends OSMEntityBase {
 	 * @param guessedPostCode the guessedPostCode to set
 	 * @param srcObj srcObj the source object of the guess
 	 */
-	public void setGuessedPostCode(String guessedPostCode, OsmPrimitive srcObj) {
+	public void setGuessedPostalCode(String guessedPostCode, OsmPrimitive srcObj) {
 		setGuessedValue(TagUtils.ADDR_POSTCODE_TAG, guessedPostCode, srcObj);
 	}
 	
@@ -169,7 +169,7 @@ public class OSMAddress extends OSMEntityBase {
 	 *
 	 * @return true, if this instance has a guessed post code.
 	 */
-	public boolean hasGuessedPostCode() {
+	public boolean hasGuessedPostalCode() {
 		return hasGuessedValue(TagUtils.ADDR_POSTCODE_TAG);
 	}
 
@@ -227,7 +227,7 @@ public class OSMAddress extends OSMEntityBase {
 	 * Gets the name of the post code associated with this address.
 	 * @return
 	 */
-	public String getPostCode() {
+	public String getPostalCode() {
 		String pc = getTagValueWithGuess(TagUtils.ADDR_POSTCODE_TAG);
 		
 		
@@ -251,7 +251,7 @@ public class OSMAddress extends OSMEntityBase {
 	 *
 	 * @return true, if successful
 	 */
-	public boolean hasPostCode() {
+	public boolean hasPostalCode() {
 		return hasTag(TagUtils.ADDR_POSTCODE_TAG);
 	}
 	
@@ -644,7 +644,7 @@ public class OSMAddress extends OSMEntityBase {
 				sName,
 				node.getHouseNumber(),
 				node.getCountry(),
-				node.getPostCode(),
+				node.getPostalCode(),
 				node.getCity(),
 				node.getState());
 	}

@@ -87,7 +87,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 		case 1:
 			return aNode.getCity();
 		case 2:
-			return aNode.getPostCode();
+			return aNode.getPostalCode();
 		case 3:
 			return aNode.getStreetName();			
 		case 4:
@@ -179,7 +179,7 @@ public class IncompleteAddressesTableModel extends AddressEditTableModel  {
 				cc=arg0.getCity().compareTo(arg1.getCity());
 				break;
 			case 2:
-				cc=arg0.getPostCode().compareTo(arg1.getPostCode());
+				cc=arg0.getPostalCode().compareTo(arg1.getPostalCode());
 				break;
 			case 3:
 				cc= arg0.getStreetName().compareTo(arg1.getStreetName());

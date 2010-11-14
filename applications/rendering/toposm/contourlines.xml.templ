@@ -36,7 +36,14 @@
   </Rule>
   -->
   <Rule>
-  	&minz12; &maxz13;
+  	&minz11; &maxz12;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&contourcolor;</CssParameter>
+      <CssParameter name="stroke-width">0.2</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+  	&minz13; &maxz13;
     <LineSymbolizer>
       <CssParameter name="stroke">&contourcolor;</CssParameter>
       <CssParameter name="stroke-width">0.4</CssParameter>
@@ -53,11 +60,10 @@
 
 <Style name="minor">
   <Rule>
-  	&minz12; &maxz13;
+  	&minz13; &maxz13;
     <LineSymbolizer>
       <CssParameter name="stroke">&contourcolor;</CssParameter>
       <CssParameter name="stroke-width">0.2</CssParameter>
-      &rounded;
     </LineSymbolizer>
   </Rule>
   <Rule>

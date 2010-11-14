@@ -27,7 +27,8 @@ BORDER_WIDTH = int(os.environ['BORDER_WIDTH'])
 ERRORLOG = os.environ['ERROR_LOG']
 
 # constants
-CONTOUR_INTERVAL = 15.24 # 50 ft in meters
+#CONTOUR_INTERVAL = 15.24 # 50 ft in meters
+CONTOUR_INTERVAL = 7.62 # 25 ft in meters
 MAPNIK_LAYERS = ['watermask', 'area', 'areansh', 'contourlines', 'contourlabels',
                  'features-main', 'features-fill', 'labels', 'labels-nohalo']
 OSM_SRS = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 ' + \

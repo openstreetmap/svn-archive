@@ -27,7 +27,7 @@
 <project name="wmsplugin" default="dist" basedir=".">
 
 
-	<property name="commit.message" value="fixed josm bug 4671 - wms url for sicily has changed" />
+	<property name="commit.message" value="Add getDx() and getDy() methods to WMSLayer to enable other plugins to determine WMS layer shift, see #5565" />
 	<property name="plugin.main.version" value="3530" />
 
 	<property name="josm" location="../../core/dist/josm-custom.jar" />

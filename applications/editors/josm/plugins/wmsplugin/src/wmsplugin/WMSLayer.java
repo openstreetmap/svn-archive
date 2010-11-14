@@ -264,6 +264,14 @@ public class WMSLayer extends Layer implements PreferenceChangedListener {
         this.dy += dy;
     }
 
+    public double getDx() {
+        return dx;
+    }
+
+    public double getDy() {
+        return dy;
+    }
+
     public int getImageXIndex(double coord) {
         return (int)Math.floor( ((coord - dx) * info.pixelPerDegree) / imageSize);
     }

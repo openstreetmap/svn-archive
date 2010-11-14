@@ -44,7 +44,7 @@ public class FixAddressesPlugin extends Plugin {
         Main.main.menu.toolsMenu.add(incAddrAction);
         
         // create preferences instance
-        preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();        
+        preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();
 	}
 
 	/* (non-Javadoc)

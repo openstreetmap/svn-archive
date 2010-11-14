@@ -64,7 +64,7 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean isComplete() {
 		boolean isComplete = 	hasCity() && 
 								hasHouseNumber() &&
-							 	hasPostCode() && 
+							 	(hasPostCode() && PostalCodeChecker.hasValidPostalCode(this)) && 
 								hasCity() && 
 								hasStreetName();
 		
@@ -228,7 +228,22 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return
 	 */
 	public String getPostCode() {
-		return getTagValueWithGuess(TagUtils.ADDR_POSTCODE_TAG);
+		String pc = getTagValueWithGuess(TagUtils.ADDR_POSTCODE_TAG);
+		
+		
+		if (!MISSING_TAG.equals(pc) && !PostalCodeChecker.hasValidPostalCode(getCountry(), pc)) {
+			pc = "(!)" + pc;
+		}
+		return pc;
+	}
+	
+	/**
+	 * Checks if this instance has a valid postal code.
+	 *
+	 * @return true, if successful
+	 */
+	public boolean hasValidPostalCode() {
+		return PostalCodeChecker.hasValidPostalCode(this);
 	}
 	
 	/**

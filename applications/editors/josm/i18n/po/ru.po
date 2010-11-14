@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the josm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2007.
 #
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:634
 msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-06 21:53+0100\n"
-"PO-Revision-Date: 2010-10-31 15:36+0000\n"
+"POT-Creation-Date: 2010-11-14 18:24+0100\n"
+"PO-Revision-Date: 2010-11-06 23:45+0000\n"
 "Last-Translator: Upliner <xvmv@mail.ru>\n"
 "Language-Team: Koptev Oleg <koptev.oleg@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-11-06 20:16+0000\n"
+"X-Launchpad-Export-Date: 2010-11-14 16:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-Language: Russian\n"
@@ -310,7 +311,7 @@ msgstr "Нажмите, чтобы продолжить и открыть {0} б
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:189
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:287
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:87
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:740
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:741
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:101
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:176
@@ -436,7 +437,7 @@ msgstr "Переместить выделенные точки так, чтоб�
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:53
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeft.java:51
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:40
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:47
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:50
 #: ../plugins/pdfimport/src/pdfimport/PdfImportAction.java:21
 #: ../plugins/reverter/src/reverter/RevertChangesetAction.java:28
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:45
@@ -588,6 +589,7 @@ msgstr "Закрывает открытые пакеты правок"
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:26
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:89
 #: ../plugins/importvec/src/org/openstreetmap/josm/plugins/importvec/ImportVectorAction.java:53
+#: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:19
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:64
 #, java-format
 msgid "File: {0}"
@@ -702,7 +704,7 @@ msgstr ""
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:132
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:257
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:100
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:753
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:754
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:260
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:278
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:62
@@ -1002,9 +1004,8 @@ msgid "Assemble new polygons"
 msgstr "Объединить новые полигоны"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:506
-#, fuzzy
 msgid "Delete relations"
-msgstr "Удалить отношение {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:511
 msgid "Delete Ways that are not part of an inner multipolygon"
@@ -1670,8 +1671,8 @@ msgstr "Не возможно переименовать файл ''{0}''"
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:72
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:284
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:78
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:527
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:677
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:535
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:685
 msgid "Error"
 msgstr "Ошибка"
 
@@ -1701,7 +1702,7 @@ msgstr "Изменить направление линий"
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:29
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersTableColumnModel.java:62
 #: ../core/src/org/openstreetmap/josm/gui/layer/Layer.java:286
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:160
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:215
 #: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:1340
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:240
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1406
@@ -1817,7 +1818,7 @@ msgstr "Скопировать в буфер и закрыть"
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserDialog.java:130
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:969
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:237
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:65
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:74
 #: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:1313
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1382
 msgid "Close"
@@ -2636,7 +2637,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:329
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:159
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:198
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:783
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/SelectAddressesInMapAction.java:55
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:784
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:108
 msgid "Select"
 msgstr "Выбор"
@@ -3212,7 +3214,7 @@ msgstr "Циклические зависимости"
 #: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:87
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:301
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:87
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:686
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:687
 #: build/specialmessages.java:58
 msgid "OK"
 msgstr "OK"
@@ -3937,13 +3939,13 @@ msgstr ""
 msgid "A primitive with ID = 0 cannot be invisible."
 msgstr "Элемент с id=0 не может быть невидимым"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1348
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1373
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
 msgstr "Невозможно слияние, потому что часть элементов новые, а часть нет"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1350
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1375
 #, java-format
 msgid ""
 "Cannot merge primitives with different ids. This id is {0}, the other is {1}"
@@ -4273,7 +4275,7 @@ msgstr "землепользование"
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:154
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:363
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:460
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:806
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:811
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:272
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:416
 #, java-format
@@ -4660,7 +4662,7 @@ msgid "Restore"
 msgstr "Восстановить"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:162
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:217
 msgid "Discard"
 msgstr "Отклонить"
 
@@ -4864,15 +4866,15 @@ msgstr "слоя нет в списке."
 msgid "Layer ''{0}'' must be in list of layers"
 msgstr "Слой ''{0}'' должен быть в списке слоёв"
 
-#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1168
+#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1172
 msgid "Metric"
 msgstr "Метрическая система"
 
-#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1169
+#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1173
 msgid "Chinese"
 msgstr "Китайский"
 
-#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1170
+#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1174
 msgid "Imperial"
 msgstr "Английская система мер"
 
@@ -5622,7 +5624,7 @@ msgstr "Применить улаженные конфликты"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:145
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1201
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:131
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:643
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:644
 msgid "Apply"
 msgstr "Применить"
 
@@ -5717,7 +5719,7 @@ msgstr[1] "{0} тега"
 msgstr[2] "{0} тегов"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:461
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:802
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:807
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:273
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:421
 #, java-format
@@ -5728,7 +5730,7 @@ msgstr[1] "{0} линии"
 msgstr[2] "{0} линий"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:462
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:810
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:815
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:426
 #, java-format
 msgid "{0} relation"
@@ -6349,12 +6351,12 @@ msgid "Download members"
 msgstr "Скачать участников"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:524
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:855
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:860
 msgid "Download incomplete members of selected relations"
 msgstr "Докачать с сервера участников выбранных отношений"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:526
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:857
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:862
 msgid "Download incomplete members"
 msgstr "Докачать участников"
 
@@ -6416,16 +6418,16 @@ msgstr "Выделение"
 msgid "Sel.: Rel.:{0} / Ways:{1} / Nodes:{2}"
 msgstr "Яч.: Связ.:{0} / Линий:{1} / Точек:{2}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:820
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:825
 #, java-format
 msgid "Selection: {0}"
 msgstr "Выбор: {0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:892
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:897
 msgid "Get detailed information on the internal state of the objects."
 msgstr "Получить подробную информацию о внутреннем состоянии объектов."
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:893
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:898
 msgid "Inspect"
 msgstr "Проверить"
 
@@ -7623,8 +7625,8 @@ msgstr "ID"
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:21
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:138
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:71
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:25
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:157
 #: build/specialmessages.java:57 build/trans_presets.java:89
 #: build/trans_presets.java:127 build/trans_presets.java:169
@@ -8160,7 +8162,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:51
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:172
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:133
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
 msgid "Basic"
 msgstr "Основной"
 
@@ -8179,7 +8181,7 @@ msgstr "Запросить пакеты правок с URL сервера"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:57
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:136
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:137
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:138
 msgid "Advanced"
 msgstr "Расширенный"
 
@@ -8412,7 +8414,7 @@ msgstr "Скачать участников отношений"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:331
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:477
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1172
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:614
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:615
 msgid "Conflict in data"
 msgid_plural "Conflicts in data"
 msgstr[0] "Конфликт в данных"
@@ -8668,7 +8670,7 @@ msgstr ""
 "был открыт. Они были удалены из списка участников отношений."
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1153
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:595
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:596
 msgid "Yes, create a conflict and close"
 msgstr "Да, создать конфликт и закрыть"
 
@@ -8677,7 +8679,7 @@ msgid "Click to create a conflict and close this relation editor"
 msgstr "Щёлкните, чтобы создать конфликт и закрыть этот редактор отношений"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1159
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:601
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:602
 msgid "No, continue editing"
 msgstr "Нет, продолжить редактирование"
 
@@ -8707,17 +8709,17 @@ msgstr ""
 "<br>Пожалуйста, уладьте этот конфликт, прежде чем продолжать.</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1199
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:641
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:642
 msgid "Apply the current updates"
 msgstr "Записать внесённые изменения"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1232
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:684
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:685
 msgid "Apply the updates and close the dialog"
 msgstr "Применить обновления и закрыть диалог"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1267
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:738
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:739
 msgid "Cancel the updates and close the dialog"
 msgstr "Отменить обновления и закрыть диалог"
 
@@ -8792,7 +8794,7 @@ msgstr ""
 "относятся к текущему слою"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTable.java:191
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:809
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:810
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:388
 msgid "Zoom to"
 msgstr "Приблизить"
@@ -9146,7 +9148,7 @@ msgstr "Запрос на сервер имён ..."
 #. item "Nature/Wood" combo "Type"
 #. item "Nature/Forest" combo "Type"
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:440
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:25
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: build/specialmessages.java:71 build/trans_presets.java:431
 #: build/trans_presets.java:720 build/trans_presets.java:729
 #: build/trans_presets.java:1121 build/trans_presets.java:1400
@@ -13346,19 +13348,17 @@ msgid "Shortcut"
 msgstr "Горячая клвиша"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:123
-#, fuzzy
 msgid "Active styles:"
-msgstr "Активные стили"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:144
-#, fuzzy, java-format
+#, java-format
 msgid "Available styles (from {0}):"
-msgstr "Доступные стили (из {0})"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:173
-#, fuzzy
 msgid "Icon paths:"
-msgstr "Пути к пиктораммам"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:429
 #, java-format
@@ -16350,9 +16350,8 @@ msgid "No GPX layer selected. Cannot upload a trace."
 msgstr "Слой GPX не выбран. Не удается загрузить трек на сервер."
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:198
-#, fuzzy
 msgid "Uploading trace ..."
-msgstr "Загрузка данных на сервер ..."
+msgstr ""
 
 #. Set progress dialog to indeterminate while connecting
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:209
@@ -16458,81 +16457,103 @@ msgstr ""
 msgid "(No elevation data)"
 msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixUnresolvedStreetsAction.java:30
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixAddressesMapMode.java:28
 #, fuzzy
+msgid "Fix adresses"
+msgstr "Адреса"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixAddressesMapMode.java:29
+#, fuzzy
+msgid "Show dialog with incomplete addresses"
+msgstr "Вставить без неполных участников"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixUnresolvedStreetsAction.java:30
 msgid "Fix street addresses"
-msgstr "Ввести адреса"
+msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixUnresolvedStreetsAction.java:31
 msgid "Find and fix addresses without (valid) streets."
 msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixUnresolvedStreetsAction.java:33
-#, fuzzy
 msgid "Address Edit"
-msgstr "Использовать диалог адреса"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:54
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:177
-#, fuzzy
+#. Start progress monitor to guess address values
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:58
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:195
 msgid "Searching"
-msgstr "Поиск"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:206
-#, fuzzy
+#. Update progress monitor
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:227
 msgid "Guess values for "
-msgstr "Новое значение для {0}"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMEntityBase.java:40
-#, fuzzy
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMEntityBase.java:41
 msgid "No name"
-msgstr "без имени"
+msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/SelectIncompleteAddressesAction.java:32
-#, fuzzy
 msgid "Select incomplete addresses"
-msgstr "Удалить неполных участников?"
+msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/SelectIncompleteAddressesAction.java:33
 msgid "Selects all addresses with incomplete data."
 msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:61
-#, fuzzy
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:70
 msgid "Unresolved Addresses"
-msgstr "Ввести адреса"
+msgstr ""
 
 #. group "Highways/Streets"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:62
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:71
 #: build/trans_presets.java:80
 msgid "Streets"
 msgstr "Улицы"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:63
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:64
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:72
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:73
 msgid "%s (%d)"
 msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:66
-#, fuzzy
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:75
 msgid "Select and close"
-msgstr "Выдлить в слое"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:96
-#, fuzzy
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:109
 msgid "Fix unresolved addresses"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:210
+#, fuzzy
+msgid "Complete Addresses"
+msgstr "Адреса"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:214
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:51
+#, fuzzy
+msgid "Incomplete Addresses"
 msgstr "Ввести адреса"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:187
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:218
+#, fuzzy
+msgid "Selected Addresses"
+msgstr "Адреса"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:222
+#, fuzzy
+msgid "Selected Street"
+msgstr "Удалён:"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:235
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:48
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:87
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:106
-#, fuzzy
 msgid "(No data)"
-msgstr "Без даты"
+msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:55
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:25
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:153
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:120
 msgid "Segments"
@@ -16541,104 +16562,140 @@ msgstr "Сегменты"
 #. Add address nodes
 #. item "Annotation/Addresses"
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:65
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:25
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: build/trans_presets.java:3985
 msgid "Addresses"
 msgstr "Адреса"
 
-#. super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/ApplyAllGuessesAction.java:41
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:75
 #, fuzzy
-msgid "Apply all guesses"
-msgstr "Применить изменения"
+msgid "Show incomplete addresses"
+msgstr "Докачать участников"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/ApplyAllGuessesAction.java:58
-msgid "Applied guessed values"
-msgstr ""
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/ApplyAllGuessesAction.java:91
-msgid "Applied guessed values for "
-msgstr ""
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AssignAddressToStreetAction.java:31
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:186
 #, fuzzy
-msgid "Assign address to street"
-msgstr "Связанная улица"
+msgid "items"
+msgstr "Элемент"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AssignAddressToStreetAction.java:47
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:188
 #, fuzzy
-msgid "Set street name"
-msgstr "Улица"
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/GuessAddressDataAction.java:37
-#, fuzzy
-msgid "Guess address data"
-msgstr "Использовать диалог адреса"
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/GuessAddressDataAction.java:83
-#, fuzzy
-msgid "Guess street names"
-msgstr "Улица"
+msgid "no items"
+msgstr "проблем нет"
 
 #. item "Places/Country"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
 #: build/trans_presets.java:3627
 msgid "Country"
 msgstr "Страна"
 
-#. item "Places/State"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
-#: build/trans_presets.java:3634
-msgid "State"
-msgstr "Штат"
-
 #. <separator/>
 #. item "Places/City"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: build/trans_presets.java:3656
 msgid "City"
 msgstr "Город (более 100 000)"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
-#, fuzzy
-msgid "Post Code"
-msgstr "Почтовый индекс:"
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
+msgid "Postcode"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:432
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:155
 msgid "Street"
 msgstr "Улица"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/RemoveAddressTagsAction.java:25
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/RemoveAddressTagsAction.java:30
-#, fuzzy
-msgid "Remove address tags"
-msgstr "Удалить из набора данных"
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/RemoveAddressTagsAction.java:25
-#, fuzzy
-msgid "Removes address related tags from the object."
-msgstr "Удалить выбранные пакеты правок из локального кэша"
-
-#. we simply use the existing icon :-|
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/SelectAddressesInMapAction.java:51
-#, fuzzy
-msgid "Select in map"
-msgstr "Выборка пуста"
-
 #. item "Waypoints/Motorway Junction" text "Number"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: build/trans_presets.java:666
 msgid "Number"
 msgstr "Номер"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:45
+msgid "Apply all guesses"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:45
+msgid "Turns all guesses into the corresponding tag values."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:82
+msgid "Applied guessed values"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:127
+msgid "Applied guessed values for "
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/AssignAddressToStreetAction.java:35
+msgid "Assign address to street"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/AssignAddressToStreetAction.java:36
 #, fuzzy
-msgid "Postcode"
-msgstr "Почтовый индекс"
+msgid "Assign the selected address(es) to the selected street."
+msgstr "Выделенная линия не содержит все выделенные точки"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/AssignAddressToStreetAction.java:52
+msgid "Set street name"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertAllToRelationAction.java:25
+msgid "Convert ALL streets."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertAllToRelationAction.java:26
+msgid ""
+"Create relation between street and related addresses for ALL streets in the "
+"current layer."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertToRelationAction.java:32
+#, fuzzy
+msgid "Convert to relation."
+msgstr "Преобразовать в мультиполигон."
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertToRelationAction.java:33
+msgid "Create relation between street and related addresses."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertToRelationAction.java:68
+#, fuzzy
+msgid "Create address relation for "
+msgstr "Создать новое отношение"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/GuessAddressDataAction.java:41
+msgid "Guess address data"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/GuessAddressDataAction.java:41
+msgid ""
+"Tries to guess address data by picking the name of the closest object with "
+"according tag."
+msgstr ""
+
+#. Launch address guessing thread
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/GuessAddressDataAction.java:90
+#, fuzzy
+msgid "Guessing address values"
+msgstr "Адрес здания"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/RemoveAddressTagsAction.java:26
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/RemoveAddressTagsAction.java:31
+msgid "Remove address tags"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/RemoveAddressTagsAction.java:26
+msgid "Removes address related tags from the object."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/SelectAddressesInMapAction.java:55
+msgid "Marks selected addresses in the map"
+msgstr ""
 
 #: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/ImageLayer.java:314
 msgid "Layer Properties"
@@ -18214,14 +18271,14 @@ msgstr "Невозможно дублировать неупорядоченну
 
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:120
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:90
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:57
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:60
 msgid "No data loaded."
 msgstr "Никаких данных не загружено"
 
 #. Sometimes it make sense creating multipoly of only one way (so it will form outer way)
 #. and then splitting the way later (so there are multiple ways forming outer way)
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:126
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:66
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:69
 msgid "You must select at least one way."
 msgstr "Выберите хотя бы одну линию"
 
@@ -19092,13 +19149,14 @@ msgstr "Одна из выделенных линий уже является ч
 
 #. Commit
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:118
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:46
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:47
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:49
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:50
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:104
 #: ../plugins/multipoly/src/multipoly/MultipolyPlugin.java:21
 msgid "Create multipolygon"
 msgstr "Создать мультиполигон"
 
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:46
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:49
 msgid "Create multipolygon."
 msgstr "Создать мультиполигон."
 
@@ -19321,145 +19379,256 @@ msgstr ""
 msgid "Firefox executable"
 msgstr "исполняемый файл Firefox"
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:158
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:105
+msgid "Transform error: Min X must be smaller than max"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:109
+msgid "Transform error: Min Y must be smaller than max"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:115
+msgid "Transform error: Points too close"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:128
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:141
+msgid "Transform error: Unsupported variant."
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:189
+msgid "Transform error: Unsupported orientation"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:90
+#, fuzzy
+msgid "Finished"
+msgstr "Закончено вычерчивание"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:213
 msgid "Load file..."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:159
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:214
 msgid "Place"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:161
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:216
 msgid "Show target"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:168
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:174
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:225
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:231
 msgid "Take X and Y from selected node"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:176
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:233
 msgid "Debug info"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:177
-#, fuzzy
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:234
 msgid "Merge close nodes"
-msgstr "Объединить точки объектов"
+msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:180
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:237
 msgid "Remove objects smaller than"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:183
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:240
 msgid "Remove objects larger than"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:187
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:244
 msgid "Only this color"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:190
-#, fuzzy
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:247
 msgid "Remove parallel lines"
-msgstr "Удалить узлы маршрутизации"
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:195
-#, fuzzy
-msgid "Import settings"
-msgstr "Импорт изображений"
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:234
-msgid "Load file"
-msgstr ""
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:240
-msgid "Bind to coordinates"
-msgstr ""
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:243
-msgid "Projection:"
-msgstr ""
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:248
-msgid "Bottom left (min) corner:"
 msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:250
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:268
-msgid "PDF X and Y"
+msgid "Take only first X paths"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:252
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:270
-msgid "East and North"
-msgstr "Восток и Север"
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:253
+#, fuzzy
+msgid "Color/width change"
+msgstr "Закрытие пакета правок"
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:266
-msgid "Top right (max) corner:"
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:254
+#, fuzzy
+msgid "Shape closed"
+msgstr "Пакет правок закрыт"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:255
+#, fuzzy
+msgid "Single segments"
+msgstr "Отдельные элементы"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:258
+msgid "Import settings"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:303
+msgid "Introduce separate layers for:"
 msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:313
+msgid "Bind to coordinates"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:316
+msgid "Projection:"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:321
+msgid "Bottom left (min) corner:"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:323
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:341
+msgid "PDF X and Y"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:325
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:343
+msgid "East and North"
+msgstr "Восток и Север"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:339
+msgid "Top right (max) corner:"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:391
 msgid "Loading..."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:328
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:403
 msgid "PDF file preview"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:329
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:418
 msgid "Loaded"
 msgstr ""
 
-#. rebuild layer with latest projection
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:349
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:460
 msgid "Imported PDF: "
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:419
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:551
 msgid "Please select exactly one node."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:441
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:574
 msgid "PDF files"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:467
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:600
 msgid "OSM files"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:511
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:636
+#, fuzzy
+msgid "Preparing"
+msgstr "Подготовка..."
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:650
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:746
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:762
+msgid "Tolerance is not a number"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:664
+msgid "Could not parse color"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:677
+#, fuzzy
+msgid "Could not parse max path count"
+msgstr "Невозможно разобрать список слоев WMS."
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:684
+#, fuzzy
+msgid "Parsing file"
+msgstr "Проезд на парковке"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:696
 msgid "File not found."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:518
-#, fuzzy, java-format
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:703
+#, java-format
 msgid "Error while parsing: {0}"
-msgstr "Ошибка разбора {0}"
+msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:532
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:712
 #, fuzzy
-msgid "Could not parse color"
-msgstr "Невозможно разобрать список слоев WMS."
+msgid "Removing parallel segments"
+msgstr "Удаление нежелательных модулей..."
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:547
-#, fuzzy
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:719
 msgid "Max distance is not a number"
-msgstr "{0} не число"
+msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:561
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:577
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:592
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:726
+msgid "Joining nodes"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:731
 #, fuzzy
-msgid "Tolerance is not a number"
-msgstr "{0} не число"
+msgid "Joining adjacent segments"
+msgstr "внутренний сегмент"
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:609
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:738
+#, fuzzy
+msgid "Removing small objects"
+msgstr "все объекты"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:755
+#, fuzzy
+msgid "Removing large objects"
+msgstr "Удаление повторяющихся точек..."
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:768
+#, fuzzy
+msgid "Finalizing layers"
+msgstr "Walking Papers"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:783
 msgid "Please set a projection."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:629
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:805
 msgid "Could not parse numbers. Please check."
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:864
+#, fuzzy
+msgid "Building JOSM layer"
+msgstr "Адрес здания"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:868
+#, fuzzy
+msgid "Postprocessing layer"
+msgstr "Приблизиться в слое"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:892
+#, fuzzy
+msgid "Saving to file."
+msgstr "Сохранить выделенный файл."
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:898
+#, fuzzy
+msgid " Writing to file"
+msgstr "Потерян аудио файл"
+
+#: ../plugins/pdfimport/src/pdfimport/OsmBuilder.java:55
+#, fuzzy
+msgid "Building JOSM layer."
+msgstr "Адрес здания"
+
+#: ../plugins/pdfimport/src/pdfimport/OsmBuilder.java:125
+msgid " "
 msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/PdfImportAction.java:19
@@ -19479,12 +19648,21 @@ msgstr ""
 msgid "Import PDf file"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:28
-#, fuzzy
-msgid "Encrypted documents not supported."
-msgstr "Элемент типа {0} не поддерживается."
+#: ../plugins/pdfimport/src/pdfimport/pdfbox/GraphicsProcessor.java:52
+#, fuzzy, java-format
+msgid " {0} objects so far"
+msgstr "Добавить {0} объект:"
 
-#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:34
+#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:27
+#, fuzzy
+msgid "Parsing PDF"
+msgstr "Место разъезда"
+
+#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:32
+msgid "Encrypted documents not supported."
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:38
 msgid "The PDF file must have exactly one page."
 msgstr ""
 
@@ -19873,6 +20051,12 @@ msgstr ""
 "Модуль Дистанционного управления запросил предоставить возможность "
 "отправлять версию протокола. Это позволит веб-сайтам определять какую версию "
 "JOSM вы используете."
+
+#: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:17
+#: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:19
+#, fuzzy
+msgid "Restart JOSM"
+msgstr "Перезапустить"
 
 #: ../plugins/reverter/src/reverter/ChangesetIdQuery.java:25
 msgid "Revert changeset fully"
@@ -20580,40 +20764,40 @@ msgstr "Передвинуть выделенных участников отн�
 msgid "Move the selected relation members up by one position"
 msgstr "Передвинуть выделенных участников отношения вверх на одну позицию"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:135
 msgid "Edit basic attributes of a turn restriction"
 msgstr "Править основные атрибуты ограничения на поворот"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:138
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:139
 msgid "Edit the raw tags and members of this turn restriction"
 msgstr "Править необработанные теги и участников этого ограничения на поворот"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Errors/Warnings"
 msgstr "Ошибки/Предупреждения"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:143
 msgid "Show errors and warnings related to this turn restriction"
 msgstr ""
 "Показать ошибки и предупреждения, относящиеся к даннному ограничению на "
 "поворот"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:280
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:281
 #, java-format
 msgid "Create a new turn restriction in layer ''{0}''"
 msgstr "Создать новое ограничение на поворот в слое ''{0}''"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:282
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:283
 #, java-format
 msgid "Edit a new turn restriction in layer ''{0}''"
 msgstr "Править новое ограничение на поворот в слое ''{0}''"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:284
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:285
 #, java-format
 msgid "Edit turn restriction ''{0}'' in layer ''{1}''"
 msgstr "Править ограничение на поворот ''{0}'' в слое ''{1}''"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:398
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:399
 #, java-format
 msgid ""
 "There is still an unresolved error or warning identified for this turn "
@@ -20631,32 +20815,32 @@ msgstr[2] ""
 "Присутствует {0} ошибок или предупреждений для данного ограничения на "
 "поворот. Рекомендуется сначала решить эти вопросы."
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:406
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:407
 msgid "Do you want to save anyway?"
 msgstr "Вы хотите сохранить в любом случае?"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:409
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:410
 msgid "Yes, save anyway"
 msgstr "Да, в любом случае"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:411
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:412
 msgid "Save the turn restriction despite of errors and/or warnings"
 msgstr ""
 "Сохранить ограничение на поворот, несмотря на ошибки и/или предупреждения"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:415
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:416
 msgid "No, resolve issues first"
 msgstr "Нет, сначала решить вопросы"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:417
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:418
 msgid "Cancel saving and start resolving pending issues first"
 msgstr "Отменить сохранение и сначала приступить к решению отложенных вопросов"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:425
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:426
 msgid "Pending errors and warnings"
 msgstr "Отложенные ошибки и предупреждения"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:484
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:485
 #, java-format
 msgid ""
 "This turn restriction refers to an object which was deleted outside of this "
@@ -20674,7 +20858,7 @@ msgstr[2] ""
 "Это ограничение на поворот относится к  {0} объектам, которые были удалены "
 "за пределами этого редактора ограничения на поворот:"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:497
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:498
 msgid ""
 "Updates to this turn restriction can''t be saved unless deleted members are "
 "removed.<br>How to you want to proceed?"
@@ -20682,30 +20866,30 @@ msgstr ""
 "Обновления в этом ограничении на поворот не могут быть сохранены, пока "
 "удалённые участники не будут убраны.<br>Каково будет ваше решение?"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:502
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:504
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:503
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:505
 msgid "Remove deleted members and save"
 msgstr "Убрать удалённых участников и сохранить"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:508
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:510
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:509
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:511
 msgid "Cancel and return to editor"
 msgstr "Отменить и вернуться в редактор"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:518
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:519
 msgid "Deleted members in turn restriction"
 msgstr "Удалённые участники в ограничении на поворот"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:597
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:598
 msgid "Create a conflict and close this turn restriction editor"
 msgstr "Создать конфликт и закрыть редактор этого ограничения на поворот"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:603
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:604
 msgid "Return to the turn restriction editor and resume editing"
 msgstr ""
 "Вернуться в редактор ограничения на поворот и продолжить редактирование"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:610
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:611
 msgid ""
 "<html>This turn restriction has been changed outside of the editor.<br>You "
 "cannot apply your changes and continue editing.<br><br>Do you want to create "
@@ -20715,7 +20899,7 @@ msgstr ""
 "не сможете применить ваши изменения и не сможете продолжать редактирование."
 "<br><br>Вы согласны создать конфликт и закрыть редактор?</html>"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:627
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:628
 #, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for object<br>''{1}''.<br>Please "
@@ -20725,25 +20909,25 @@ msgstr ""
 "<br>Пожалуйста, сначала уладьте этот конфликт, затем попытайтесь снова.</"
 "html>"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:633
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:634
 msgid "Already participating in a conflict"
 msgstr "Уже участвуют в конфликте"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:754
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:755
 msgid "Delete this turn restriction"
 msgstr "Удалить это ограничение на поворот"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:784
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:785
 msgid "Select this turn restriction"
 msgstr "Выбрать это ограничение на поворот"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:810
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:811
 msgid "Activate the layer this turn restriction belongs to and zoom to it"
 msgstr ""
 "Активировать слой, которому принадлежит это ограничение на поворот и "
 "приблизиться к нему"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:844
 #, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
@@ -20751,7 +20935,7 @@ msgstr[0] "{0} предупреждение"
 msgstr[1] "{0} предупреждения"
 msgstr[2] "{0} предупреждений"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:848
 #, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
@@ -20759,7 +20943,7 @@ msgstr[0] "{0} ошибка"
 msgstr[1] "{0} ошибки"
 msgstr[2] "{0} ошибок"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:861
 msgid "no issues"
 msgstr "проблем нет"
 
@@ -21648,24 +21832,20 @@ msgid "Power duplicated nodes"
 msgstr "Продублированные точки объектов энергетики"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:257
-#, fuzzy
 msgid "Natural duplicated nodes"
-msgstr "Продублированные точки водных путей"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:268
-#, fuzzy
 msgid "Building duplicated nodes"
-msgstr "Продублированные точки границ"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:279
-#, fuzzy
 msgid "Landuse duplicated nodes"
-msgstr "Продублированные точки объектов энергетики"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:290
-#, fuzzy
 msgid "Other duplicated nodes"
-msgstr "Продублированные точки объектов энергетики"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:319
 msgid "Nodes at same position"
@@ -22885,64 +23065,64 @@ msgstr "Да, выбрать изображения"
 msgid "Invalid URL?"
 msgstr "Ошибочная ссылка?"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:520
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:528
 msgid "Download visible tiles"
 msgstr "Скачать видимые квадраты карты"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:526
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:534
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 "Запрошенная область слишком велика. Пожалуйста, увеличьте масштаб, или "
 "измените разрешение"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:538
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:546
 msgid "Change resolution"
 msgstr "Изменить разрешение"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:551
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:559
 msgid "Reload erroneous tiles"
 msgstr "Загрузить заново ошибочные квадраты карты"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:572
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:580
 msgid "Alpha channel"
 msgstr "Альфа канал"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:600
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:608
 msgid "Save WMS layer to file"
 msgstr "Сохранить слой WMS в файл"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:604
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:612
 msgid "Save WMS layer"
 msgstr "Сохранить WMS слой"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:628
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:636
 msgid "Load WMS layer from file"
 msgstr "Загрузить слой WMS из файла"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:632
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:640
 msgid "Load WMS layer"
 msgstr "Загрузить WMS слой"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:643
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:651
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr ""
 "Неподдерживаемый формат версии WMS файла; обнаружено {0}, ожидалось {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:644
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:652
 msgid "File Format Error"
 msgstr "Ошибка формата файла"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:676
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:684
 msgid "Error loading file"
 msgstr "Ошибка при загрузке файла"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:690
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:698
 msgid "Set WMS Bookmark"
 msgstr "Установить закладку WMS"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:700
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:708
 msgid "Automatic downloading"
 msgstr "Автоматическое скачивание"
 
@@ -23698,18 +23878,23 @@ msgstr ""
 msgid "Let other applications send commands to JOSM."
 msgstr "Разрешить другим приложениям посылать команды в JOSM."
 
-#. Plugin reverter
+#. Plugin restart
 #: build/trans_plugins.java:92
+msgid "Adds &quot;Restart JOSM&quot; item to File menu."
+msgstr ""
+
+#. Plugin reverter
+#: build/trans_plugins.java:94
 msgid "Plugin for reverting changesets"
 msgstr "Модуль для отката пакетов правок"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:94
+#: build/trans_plugins.java:96
 msgid "Use rgis.spb.ru image as overlay"
 msgstr ""
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:96
+#: build/trans_plugins.java:98
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -23720,7 +23905,7 @@ msgstr ""
 "окна свойств. Заготовка пока есть только для Германии."
 
 #. Plugin routes
-#: build/trans_plugins.java:98
+#: build/trans_plugins.java:100
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -23729,12 +23914,12 @@ msgstr ""
 "быть определены в файле routes.xml в папке модулей"
 
 #. Plugin routing
-#: build/trans_plugins.java:100
+#: build/trans_plugins.java:102
 msgid "Provides routing capabilities."
 msgstr "Предоставляет возможности маршрутизации."
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:102
+#: build/trans_plugins.java:104
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -23744,7 +23929,7 @@ msgstr ""
 "Также удаляет близкорасположенные точки."
 
 #. Plugin slippymap
-#: build/trans_plugins.java:104
+#: build/trans_plugins.java:106
 msgid ""
 "Displays a slippy map grid in JOSM. Can load tiles from slippy map as "
 "background and request updates."
@@ -23754,22 +23939,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:106 build/trans_plugins.java:108
+#: build/trans_plugins.java:108 build/trans_plugins.java:110
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr ""
 
 #. Plugin surveyor
-#: build/trans_plugins.java:110
+#: build/trans_plugins.java:112
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "Позволяет добавлять метки/точки в текущей GPS позиции."
 
 #. Plugin tageditor
-#: build/trans_plugins.java:112
+#: build/trans_plugins.java:114
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "Показывает окно для редактирования тегов в табличной сетке."
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:114
+#: build/trans_plugins.java:116
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -23780,18 +23965,18 @@ msgstr ""
 "всплывающем окне). Вы можете запустить JAR-файл в автономном режиме."
 
 #. Plugin terracer
-#: build/trans_plugins.java:116
+#: build/trans_plugins.java:118
 msgid "Make terraced houses out of single blocks."
 msgstr "Сделать ряд домов вдоль улицы из одного блока."
 
 #. Plugin toms
-#: build/trans_plugins.java:118
+#: build/trans_plugins.java:120
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr ""
 "Создание и редактирование навигационных знаков (seamarks) для OpenSeaMap"
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:120
+#: build/trans_plugins.java:122
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
@@ -23801,7 +23986,7 @@ msgstr ""
 "клавиша для перетягивания карты."
 
 #. Plugin Tracer
-#: build/trans_plugins.java:122
+#: build/trans_plugins.java:124
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
@@ -23810,7 +23995,7 @@ msgstr ""
 "TracerServer (.NET или Mono)."
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:124
+#: build/trans_plugins.java:126
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
@@ -23819,12 +24004,12 @@ msgstr ""
 "на поворот в базу данных OpenStreetMap."
 
 #. Plugin undelete
-#: build/trans_plugins.java:126
+#: build/trans_plugins.java:128
 msgid "Allows undeleting object from OSM database"
 msgstr "Позволяет восстанавливать объекты, удаленные из базы данных OSM"
 
 #. Plugin validator
-#: build/trans_plugins.java:128
+#: build/trans_plugins.java:130
 msgid ""
 "An OSM data validator. It checks for problems in data, and provides fixes "
 "for the common ones. Spellcheck integrated for tag names."
@@ -23834,7 +24019,7 @@ msgstr ""
 "правописание имён тегов."
 
 #. Plugin videomapping
-#: build/trans_plugins.java:130
+#: build/trans_plugins.java:132
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -23845,7 +24030,7 @@ msgstr ""
 "нанесения приметных объектов."
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:132
+#: build/trans_plugins.java:134
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -23854,22 +24039,22 @@ msgstr ""
 "org. Этот модуль пока еще совершенствуется и может плохо работать."
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:134
+#: build/trans_plugins.java:136
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "Быстрое скачивание вдоль большого набора связанных линий"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:136
+#: build/trans_plugins.java:138
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr "Поиск по путевым точкам, импортированным из файлов gpx."
 
 #. Plugin wayselector
-#: build/trans_plugins.java:138
+#: build/trans_plugins.java:140
 msgid "Select a sequence of non-branching connected ways"
 msgstr "Выделить последовательность неветвящихся соединённых линий"
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:140
+#: build/trans_plugins.java:142
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
@@ -23879,7 +24064,7 @@ msgstr ""
 "сервер полученный трек!)"
 
 #. Plugin wmsplugin
-#: build/trans_plugins.java:142
+#: build/trans_plugins.java:144
 msgid ""
 "Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)."
 msgstr ""
@@ -33392,6 +33577,11 @@ msgstr "Свойства континента"
 msgid "Edit Country"
 msgstr "Свойства страны"
 
+#. item "Places/State"
+#: build/trans_presets.java:3634
+msgid "State"
+msgstr "Штат"
+
 #. item "Places/State" label "Edit State"
 #: build/trans_presets.java:3635
 msgid "Edit State"
@@ -38800,24 +38990,6 @@ msgstr "PCN 2006 — Италия"
 msgid "SPOTMaps (France)"
 msgstr "SPOTMaps (Франция)"
 
-#~ msgid "Adjust opacity of the layer."
-#~ msgstr "Настроить непрозрачность слоя"
-
-#~ msgid "Opacity"
-#~ msgstr "Непрозрачность"
-
-#~ msgid "No username provided."
-#~ msgstr "Нет имени пользователя"
-
-#~ msgid "No password provided."
-#~ msgstr "Нет пароля"
-
-#~ msgid "Unknown"
-#~ msgstr "Неизвестно"
-
-#~ msgid "You must select at least two ways."
-#~ msgstr "Вы должны выделить, как минимум, две линии."
-
 #~ msgid "No data imported."
 #~ msgstr "Данные не импортированы"
 
@@ -39131,9 +39303,6 @@ msgstr "SPOTMaps (Франция)"
 
 #~ msgid "Plugin requires JOSM update: {0}."
 #~ msgstr "Для работы модуля нужна более новая версия JOSM: {0}."
-
-#~ msgid "Preparing..."
-#~ msgstr "Подготовка..."
 
 #~ msgid "Transfer aborted due to error (will wait for 5 seconds):"
 #~ msgstr "Передача прервана из-за ошибки (повторная попытка через 5 с):"
@@ -39566,6 +39735,12 @@ msgstr "SPOTMaps (Франция)"
 
 #~ msgid "Selected makes your trace public in openstreetmap.org"
 #~ msgstr "Выбор сделает ваш трэк общественным на сайте openstreetmap.org"
+
+#~ msgid "No password provided."
+#~ msgstr "Нет пароля"
+
+#~ msgid "No username provided."
+#~ msgstr "Нет имени пользователя"
 
 #~ msgid "Images with no exif position"
 #~ msgstr "Изображения без координат в заголовках Exif"
@@ -40558,12 +40733,6 @@ msgstr "SPOTMaps (Франция)"
 #~ msgid "Updates the currently selected primitives from the server"
 #~ msgstr "Обновить выделенные элементы с сервера"
 
-#~ msgid "The selected way does not contain the selected node."
-#~ msgid_plural "The selected way does not contain all the selected nodes."
-#~ msgstr[0] "Выделенная линия не содержит все выделенные точки"
-#~ msgstr[1] "Выбранная линия не содержит выбранных точек"
-#~ msgstr[2] "Выделенная линия не содержит все выбранные точки"
-
 #~ msgid "Found {0} matches of {1} in GPX track {2}"
 #~ msgstr "Надено {0} совпадений из {1} в GPX треке {2}"
 
@@ -40635,6 +40804,9 @@ msgstr "SPOTMaps (Франция)"
 
 #~ msgid "Multipolygon must consist only of closed ways."
 #~ msgstr "Мультиполигон должен состоять только из замкнутых линий."
+
+#~ msgid "You must select at least two ways."
+#~ msgstr "Вы должны выделить, как минимум, две линии."
 
 #~ msgid "Failed to read command. Exiting help browser. Exception was:"
 #~ msgstr ""
@@ -41193,3 +41365,12 @@ msgstr "SPOTMaps (Франция)"
 
 #~ msgid "Add relation"
 #~ msgstr "Добавить отношение"
+
+#~ msgid "Adjust opacity of the layer."
+#~ msgstr "Настроить непрозрачность слоя"
+
+#~ msgid "Opacity"
+#~ msgstr "Непрозрачность"
+
+#~ msgid "Unknown"
+#~ msgstr "Неизвестно"

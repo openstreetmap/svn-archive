@@ -3,19 +3,20 @@
 # This file is distributed under the same license as the josm package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:634
 msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-06 21:53+0100\n"
-"PO-Revision-Date: 2010-10-11 01:45+0000\n"
-"Last-Translator: bastik <Unknown>\n"
+"POT-Creation-Date: 2010-11-14 18:24+0100\n"
+"PO-Revision-Date: 2010-11-14 12:01+0000\n"
+"Last-Translator: mmyfl <Unknown>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-11-06 20:12+0000\n"
+"X-Launchpad-Export-Date: 2010-11-14 16:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -304,7 +305,7 @@ msgstr "请点击继续来开启 {0} 个浏览器窗口"
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:189
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:287
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:87
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:740
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:741
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:101
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:176
@@ -426,7 +427,7 @@ msgstr "将选取的节点移动到圆内。"
 #: ../plugins/lakewalker/src/org/openstreetmap/josm/plugins/lakewalker/LakewalkerAction.java:53
 #: ../plugins/michigan_left/src/MichiganLeft/MichiganLeft.java:51
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:40
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:47
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:50
 #: ../plugins/pdfimport/src/pdfimport/PdfImportAction.java:21
 #: ../plugins/reverter/src/reverter/RevertChangesetAction.java:28
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:45
@@ -577,6 +578,7 @@ msgstr "关闭开放的更改组合"
 #: ../core/src/org/openstreetmap/josm/actions/SaveAsAction.java:26
 #: ../core/src/org/openstreetmap/josm/actions/UploadAction.java:89
 #: ../plugins/importvec/src/org/openstreetmap/josm/plugins/importvec/ImportVectorAction.java:53
+#: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:19
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:64
 #, java-format
 msgid "File: {0}"
@@ -624,7 +626,7 @@ msgstr "以这些路径目前的方向是不能组合的。是否要将它们中
 msgid ""
 "Could not combine ways (They could not be merged into a single string of "
 "nodes)"
-msgstr "不能组合路径（它们无法合并为单一的节点串）"
+msgstr "不能组合路径(它们无法合并为单一的节点串)"
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:239
 #, java-format
@@ -633,7 +635,7 @@ msgstr "合并 {0} 条路径"
 
 #: ../core/src/org/openstreetmap/josm/actions/CombineWayAction.java:252
 msgid "Please select at least two ways to combine."
-msgstr "请选择至少两个以上的路径来合并"
+msgstr "请选择至少两个以上的路径来合并。"
 
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:27
 #: ../core/src/org/openstreetmap/josm/actions/CopyAction.java:29
@@ -686,7 +688,7 @@ msgstr "请正确的选择二或三个节点，或一条只有二或三个节点
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:132
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:257
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:100
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:753
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:754
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:260
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:278
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:62
@@ -967,7 +969,7 @@ msgstr "找不到交叉点。没有东西变更。"
 #. FIXME: this is dirty hack
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:385
 msgid "Reverting changes"
-msgstr ""
+msgstr "还原更改"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:437
 msgid "Removed duplicate nodes"
@@ -979,12 +981,11 @@ msgstr "在所有的交叉点加入节点"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:500
 msgid "Assemble new polygons"
-msgstr ""
+msgstr "组装新的多边形"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:506
-#, fuzzy
 msgid "Delete relations"
-msgstr "删除关系 {0}"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:511
 msgid "Delete Ways that are not part of an inner multipolygon"
@@ -1006,7 +1007,7 @@ msgstr "修正标签冲突"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:850
 msgid "Split ways into fragments"
-msgstr ""
+msgstr "将路径分割为片段"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:1238
 msgid "Sorry. Cannot handle multipolygon relations with multiple outer ways."
@@ -1609,8 +1610,8 @@ msgstr "无法重命名文件 \"{0}\""
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/Presets.java:72
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/OSMValidatorPlugin.java:284
 #: ../plugins/waydownloader/src/org/openstreetmap/josm/plugins/waydownloader/WayDownloaderPlugin.java:78
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:527
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:677
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:535
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:685
 msgid "Error"
 msgstr "错误"
 
@@ -1640,7 +1641,7 @@ msgstr "反转路径"
 #: ../core/src/org/openstreetmap/josm/actions/SaveAction.java:29
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersTableColumnModel.java:62
 #: ../core/src/org/openstreetmap/josm/gui/layer/Layer.java:286
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:160
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:215
 #: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:1340
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:240
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1406
@@ -1750,7 +1751,7 @@ msgstr "复制到剪贴板并关闭"
 #: ../core/src/org/openstreetmap/josm/gui/history/HistoryBrowserDialog.java:130
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:969
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:237
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:65
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:74
 #: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:1313
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1382
 msgid "Close"
@@ -2180,7 +2181,7 @@ msgstr "跳回。"
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioSlowerAction.java:15
 #, java-format
 msgid "Audio: {0}"
-msgstr "音效：{0}"
+msgstr "音效: {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFasterAction.java:14
 #: ../core/src/org/openstreetmap/josm/actions/audio/AudioFasterAction.java:15
@@ -2512,7 +2513,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:329
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:159
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPresetSearchDialog.java:198
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:783
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/SelectAddressesInMapAction.java:55
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:784
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/ValidatorDialog.java:108
 msgid "Select"
 msgstr "选择"
@@ -2672,19 +2674,20 @@ msgstr "所有的对象"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:162
 msgid "Also include incomplete and deleted objects in search."
-msgstr "查找也包含不完整和已删除的对象。"
+msgstr "也查找不完整和已删除的对象。"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:163
 msgid "regular expression"
-msgstr "正则表示式"
+msgstr "正则表达式"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:179
 msgid "<b>Baker Street</b> - ''Baker'' and ''Street'' in any key or name."
-msgstr "<b>Baker Street</b> - \"Baker\" 和 \"Street\" 出现在何设定键或名称中。"
+msgstr ""
+"<b>Baker Street</b> - \"Baker\" 和 \"Street\" 出现在任何设定键或名称中。"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:180
 msgid "<b>\"Baker Street\"</b> - ''Baker Street'' in any key or name."
-msgstr "<b>\"Baker Street\"</b> - \"Baker Street\" 出现在何设定键或名称中。"
+msgstr "<b>\"Baker Street\"</b> - \"Baker Street\" 出现在任何设定键或名称中。"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:181
 msgid "<b>name:Bak</b> - ''Bak'' anywhere in the name."
@@ -2708,7 +2711,7 @@ msgstr "<b>-name:Bak</b> - 名称中没有 \"Bak\"。"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:185
 msgid "<b>oneway?</b> - oneway=yes, true, 1 or on"
-msgstr "<b>是否为单行道?</b> - oneway=yes, true, 1 或on"
+msgstr "<b>是否为单行道?</b> - oneway=yes, true, 1 或 on"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:186
 msgid "<b>foot:</b> - key=foot set to any value."
@@ -2722,12 +2725,12 @@ msgstr "<u>特殊的目标：</u>"
 msgid ""
 "<b>type:</b> - type of the object (<b>node</b>, <b>way</b>, <b>relation</b>)"
 msgstr ""
-"<b>类型：</b> - 对象的类型(<b>节点(node)</b>, <b>路径(way)</b>, <b>关系"
+"<b>类型:</b> - 对象的类型(<b>节点(node)</b>, <b>路径(way)</b>, <b>关系"
 "(relation)</b> )"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:189
 msgid "<b>user:</b>... - all objects changed by user"
-msgstr "<b>用户：</b>... - 所有由某用户改变的对象"
+msgstr "<b>用户:</b>... - 所有由某用户改变的对象"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:190
 msgid "<b>user:anonymous</b> - all objects changed by anonymous users"
@@ -2735,74 +2738,74 @@ msgstr "<b>user:anonymous</b> - 所有对象是由匿名用户所改变的"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:191
 msgid "<b>id:</b>... - object with given ID (0 for new objects)"
-msgstr "<b>id:</b>... - 以此为ID 的对象(0 为新的对象)"
+msgstr "<b>id:</b>... - 以此为 ID 的对象(0 为新的对象)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:192
 msgid ""
 "<b>version:</b>... - object with given version (0 objects without an "
 "assigned version)"
-msgstr "<b>版本：</b>... - 查看这个版本的对象(未指定版本则为0 个对象)"
+msgstr "<b>版本:</b>... - 查看这个版本的对象(未指定版本则为 0 个对象)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:193
 msgid ""
 "<b>changeset:</b>... - object with given changeset id (0 objects without "
 "assigned changeset)"
 msgstr ""
-"<b>更改组合：</b>... - 查看这个更改组合id 的对象(未指定更改组合则为0 个对象)"
+"<b>更改组合:</b>... - 查看这个更改组合 id 的对象(未指定更改组合则为 0 个对象)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:194
 msgid ""
 "<b>nodes:</b>... - object with given number of nodes (nodes:count or nodes:"
 "min-max)"
-msgstr "<b>节点：</b>... - 有指定数量的节点的对象(nodes:count 或nodes:min-max)"
+msgstr "<b>节点:</b>... - 有指定数量的节点的对象(nodes:count 或 nodes:min-max)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:195
 msgid ""
 "<b>tags:</b>... - object with given number of tags (tags:count or tags:min-"
 "max)"
-msgstr "<b>tags:</b>... - 以此数字为标签的对象(tags:count 或tags:min-max)"
+msgstr "<b>tags:</b>... - 以此数字为标签的对象(tags:count 或 tags:min-max)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:196
 msgid "<b>role:</b>... - object with given role in a relation"
-msgstr "<b>角色：</b>... - 在关系中指定角色的对象"
+msgstr "<b>role:</b>... - 在关系中指定角色的对象"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:197
 msgid ""
 "<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
 "12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
 msgstr ""
-"<b>时间戳记：</b>... - 有此时间戳记的对象 (<b>2009-11-12T14:51:09Z</b>，"
+"<b>timestamp:</b>... - 有此时间戳记的对象 (<b>2009-11-12T14:51:09Z</b>, "
 "<b>2009-11-12</b > 或 <b>T14:51</b> ...)"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:198
 msgid "<b>modified</b> - all changed objects"
-msgstr "<b>修改过</b> - 所有改变过的对象"
+msgstr "<b>modified</b> - 所有修改过的对象"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:199
 msgid "<b>selected</b> - all selected objects"
-msgstr "<b>选取的</b> - 所有选取的对象"
+msgstr "<b>selected</b> - 所有选取的对象"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid "<b>incomplete</b> - all incomplete objects"
-msgstr "<b>不完整</b> - 所有不完整的对象"
+msgstr "<b>incomplete</b> - 所有不完整的对象"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>untagged</b> - all untagged objects"
-msgstr "<b>未标签的</b> - 所有未标签的对象"
+msgstr "<b>untagged</b> - 所有无标签的对象"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:202
 msgid ""
 "<b>child <i>expr</i></b> - all children of objects matching the expression"
-msgstr "<b>child <i>expr</i></b> - 所有对象的子项符合正则表示式的"
+msgstr "<b>child <i>expr</i></b> - 所有对象的子项符合正则表达式的"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:203
 msgid ""
 "<b>parent <i>expr</i></b> - all parents of objects matching the expression"
-msgstr "<b>parent <i>expr</i></b> - 所有对象父项符合正则表示式的"
+msgstr "<b>parent <i>expr</i></b> - 所有对象父项符合正则表达式的"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:204
 msgid "Use <b>|</b> or <b>OR</b> to combine with logical or"
-msgstr "使用<b>|</b> 或<b>OR</b> 做逻辑或运算"
+msgstr "使用<b>|</b> 或 <b>OR</b> 做逻辑或运算"
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:205
 msgid "Use <b>\"</b> to quote operators (e.g. if key contains <b>:</b>)"
@@ -2818,7 +2821,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:207
 msgid "Use <b>(</b> and <b>)</b> to group expressions"
-msgstr "使用<b>(</b> 和<b>)</b> 将正则表示式群组起来"
+msgstr "使用<b>(</b> 和 <b>)</b> 将正则表达式群组起来"
 
 #. Strings in JFileChooser
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:217
@@ -2914,7 +2917,7 @@ msgid ""
 "\n"
 "{2}"
 msgstr ""
-"正则表示式 \"{0}\" 在 {1} 处解析错误，完整的错误信息：\n"
+"正则表达式 \"{0}\" 在 {1} 处解析错误，完整的错误信息：\n"
 "\n"
 "{2}"
 
@@ -2925,7 +2928,7 @@ msgid ""
 "\n"
 "{1}"
 msgstr ""
-"正则表示式 \"{0}\" 有解析错误，完整的错误信息：\n"
+"正则表达式 \"{0}\" 有解析错误，完整的错误信息：\n"
 "\n"
 "{1}"
 
@@ -3057,7 +3060,7 @@ msgstr "循环相依性"
 #: ../plugins/roadsigns/src/org/openstreetmap/josm/plugins/roadsigns/RoadSignInputDialog.java:87
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/TagEditorDialog.java:301
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:87
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:686
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:687
 #: build/specialmessages.java:58
 msgid "OK"
 msgstr "确定"
@@ -3733,13 +3736,13 @@ msgstr "不能将更改组合 ID > 0 指派给新的原型。更改组合 ID 的
 msgid "A primitive with ID = 0 cannot be invisible."
 msgstr "ID = 0 的原型不能为不可视。"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1348
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1373
 msgid ""
 "Cannot merge because either of the participating primitives is new and the "
 "other is not"
 msgstr "不能合并，因为参与的原型是新的但其他的却不是"
 
-#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1350
+#: ../core/src/org/openstreetmap/josm/data/osm/OsmPrimitive.java:1375
 #, java-format
 msgid ""
 "Cannot merge primitives with different ids. This id is {0}, the other is {1}"
@@ -3806,19 +3809,19 @@ msgstr "已选取"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:15
 msgid "Relation: selected"
-msgstr "关系：已选取"
+msgstr "关系: 已选取"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:16
 msgid "Node: standard"
-msgstr "节点：标准"
+msgstr "节点: 标准"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:17
 msgid "Node: connection"
-msgstr "节点：连接"
+msgstr "节点: 连接"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:18
 msgid "Node: tagged"
-msgstr "节点：已标签"
+msgstr "节点: 已标签"
 
 #. teal
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:21
@@ -4055,7 +4058,7 @@ msgstr "土地利用"
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:154
 #: ../core/src/org/openstreetmap/josm/gui/DefaultNameFormatter.java:363
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:460
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:806
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:811
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:272
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:416
 #, java-format
@@ -4428,7 +4431,7 @@ msgid "Restore"
 msgstr "恢复"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:162
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:217
 msgid "Discard"
 msgstr "丢弃"
 
@@ -4513,7 +4516,7 @@ msgstr "预设组合(P)"
 #: ../plugins/openvisible/src/at/dallermassl/josm/plugin/openvisible/OpenVisibleAction.java:50
 #, java-format
 msgid "Menu: {0}"
-msgstr "菜单：{0}"
+msgstr "菜单: {0}"
 
 #: ../core/src/org/openstreetmap/josm/gui/MainMenu.java:324
 msgid "Audio"
@@ -4622,15 +4625,15 @@ msgstr "图层不在清单中。"
 msgid "Layer ''{0}'' must be in list of layers"
 msgstr "图层 \"{0}\" 必须在图层的清单中"
 
-#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1168
+#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1172
 msgid "Metric"
 msgstr "公制"
 
-#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1169
+#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1173
 msgid "Chinese"
 msgstr "中文"
 
-#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1170
+#: ../core/src/org/openstreetmap/josm/gui/NavigatableComponent.java:1174
 msgid "Imperial"
 msgstr "英制"
 
@@ -4733,7 +4736,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/bbox/TileSelectionBBoxChooser.java:234
 msgid "Zoom level:"
-msgstr "缩放等级："
+msgstr "缩放等级:"
 
 #: ../core/src/org/openstreetmap/josm/gui/bbox/TileSelectionBBoxChooser.java:256
 msgid "from tile"
@@ -4750,22 +4753,25 @@ msgid ""
 "adresses in the format <i>zoom,x,y</i> or <i>zoom;x;y</i> are valid too.</"
 "html>"
 msgstr ""
+"<html>或者您可以以格式 <i>缩放等级/x/y</i> 为一个简单的拼贴输入一个<strong>拼"
+"贴地址</strong>,例如 <i>15/256/223</i>。以格式 <i>zoom,x,y</i> 或 <i>zoom;x;"
+"y</i> 输入拼贴地址也可以。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/bbox/TileSelectionBBoxChooser.java:450
 msgid "Tile address:"
-msgstr "拼贴位址："
+msgstr "拼贴地址："
 
 #: ../core/src/org/openstreetmap/josm/gui/bbox/TileSelectionBBoxChooser.java:499
 msgid "Apply the tile address"
-msgstr "应用这个拼贴位址"
+msgstr "应用这个拼贴地址"
 
 #: ../core/src/org/openstreetmap/josm/gui/bbox/TileSelectionBBoxChooser.java:558
 msgid "Please enter a tile address"
-msgstr "请输入拼贴位址"
+msgstr "请输入拼贴地址"
 
 #: ../core/src/org/openstreetmap/josm/gui/bbox/TileSelectionBBoxChooser.java:560
 msgid "The current value isn''t a valid tile address"
-msgstr "目前的数值不是有效的拼贴位址"
+msgstr "目前的数值不是有效的拼贴地址"
 
 #: ../core/src/org/openstreetmap/josm/gui/bbox/TileSelectionBBoxChooser.java:606
 msgid "Please enter a tile index"
@@ -5329,7 +5335,7 @@ msgstr "接受已调解的冲突"
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/RelationMemberConflictResolver.java:145
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1201
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:131
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:643
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:644
 msgid "Apply"
 msgstr "接受"
 
@@ -5422,7 +5428,7 @@ msgid_plural "{0} tags"
 msgstr[0] "{0} 标签"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:461
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:802
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:807
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:273
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:421
 #, java-format
@@ -5431,7 +5437,7 @@ msgid_plural "{0} ways"
 msgstr[0] "{0} 路径"
 
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/PasteTagsConflictResolverDialog.java:462
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:810
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:815
 #: ../core/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:426
 #, java-format
 msgid "{0} relation"
@@ -6034,12 +6040,12 @@ msgid "Download members"
 msgstr "下载成员"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:524
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:855
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:860
 msgid "Download incomplete members of selected relations"
 msgstr "下载已选取关系的不完整成员"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:526
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:857
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:862
 msgid "Download incomplete members"
 msgstr "下载不完整的成员"
 
@@ -6101,16 +6107,16 @@ msgstr "选择区域"
 msgid "Sel.: Rel.:{0} / Ways:{1} / Nodes:{2}"
 msgstr "选择: 关系:{0} / 路径:{1} / 节点:{2}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:820
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:825
 #, java-format
 msgid "Selection: {0}"
 msgstr "选择区域：{0}"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:892
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:897
 msgid "Get detailed information on the internal state of the objects."
 msgstr "取得对象内部状态的详细信息。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:893
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:898
 msgid "Inspect"
 msgstr "检查"
 
@@ -7291,8 +7297,8 @@ msgstr "ID"
 #: ../core/src/org/openstreetmap/josm/gui/history/TagTableColumnModel.java:21
 #: ../core/src/org/openstreetmap/josm/gui/layer/GpxLayer.java:138
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:71
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:25
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:157
 #: build/specialmessages.java:57 build/trans_presets.java:89
 #: build/trans_presets.java:127 build/trans_presets.java:169
@@ -7803,7 +7809,7 @@ msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:51
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:172
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:133
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
 msgid "Basic"
 msgstr "基本"
 
@@ -7821,7 +7827,7 @@ msgstr "从服务器 URL 查询更改组合"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:57
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:136
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:137
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:138
 msgid "Advanced"
 msgstr "进阶"
 
@@ -8043,7 +8049,7 @@ msgstr "下载关系成员"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:331
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ChildRelationBrowser.java:477
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1172
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:614
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:615
 msgid "Conflict in data"
 msgid_plural "Conflicts in data"
 msgstr[0] "数据中有冲突"
@@ -8270,7 +8276,7 @@ msgstr ""
 "它们已经从关系成员清单删除了。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1153
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:595
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:596
 msgid "Yes, create a conflict and close"
 msgstr "是，建立冲突并关闭"
 
@@ -8279,7 +8285,7 @@ msgid "Click to create a conflict and close this relation editor"
 msgstr "点击以建立冲突项目并关闭这个关系编辑器"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1159
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:601
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:602
 msgid "No, continue editing"
 msgstr "否，继续编辑"
 
@@ -8306,17 +8312,17 @@ msgstr ""
 "试一次。</html>\""
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1199
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:641
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:642
 msgid "Apply the current updates"
 msgstr "应用目前的更新"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1232
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:684
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:685
 msgid "Apply the updates and close the dialog"
 msgstr "应用更新并关闭此对话框"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1267
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:738
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:739
 msgid "Cancel the updates and close the dialog"
 msgstr "取消更新并关闭此对话框"
 
@@ -8387,7 +8393,7 @@ msgid ""
 msgstr "从剪贴板中的成员不能被添加，因为它们被不包括在当前图层"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/MemberTable.java:191
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:809
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:810
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/list/TurnRestrictionsListDialog.java:388
 msgid "Zoom to"
 msgstr "缩放至"
@@ -8727,7 +8733,7 @@ msgstr "查询名称服务器..."
 #. item "Nature/Wood" combo "Type"
 #. item "Nature/Forest" combo "Type"
 #: ../core/src/org/openstreetmap/josm/gui/download/PlaceSelection.java:440
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:25
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: build/specialmessages.java:71 build/trans_presets.java:431
 #: build/trans_presets.java:720 build/trans_presets.java:729
 #: build/trans_presets.java:1121 build/trans_presets.java:1400
@@ -11224,7 +11230,7 @@ msgid ""
 "authorization process,<br>i.e. semi-automatic or manual authorization.</html>"
 msgstr ""
 "<html>从 OSM 服务器自动取得 OAuth 存取记号的<br>程序失败了。<br><br>请再试一"
-"次或选择别种授权程序，<br>例如：半自动成手动授权。</html>"
+"次或选择别种授权程序，<br>例如：半自动或手动授权。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:458
 #: ../core/src/org/openstreetmap/josm/gui/oauth/FullyAutomaticAuthorizationUI.java:474
@@ -11504,7 +11510,7 @@ msgstr ""
 "<html>JOSM 成功的取回要求记号。JOSM 现在会在外部浏览器中开启验证网页。请以您"
 "的 OSM 用户名称和密码登入并按照指示授权给要求记号。接着切换回这个对话框并点"
 "击 <strong>{0}</strong><br><br>如果执行外部浏览器失败，您可以复制下列验证 "
-"URL 并将它贴到浏览器的位址列中。</html>"
+"URL 并将它贴到浏览器的地址列中。</html>"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:275
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:349
@@ -11851,7 +11857,7 @@ msgstr "颜色"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:138
 #, java-format
 msgid "Paint style {0}: {1}"
-msgstr "绘画样式 {0}：{1}"
+msgstr "绘画样式 {0}: {1}"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:155
 msgid "Choose"
@@ -12261,18 +12267,18 @@ msgstr "地图绘制样式"
 msgid "The following plugin has been downloaded <strong>successfully</strong>:"
 msgid_plural ""
 "The following {0} plugins have been downloaded <strong>successfully</strong>:"
-msgstr[0] "下列 {0} 插件已<strong>成功的</strong>下载："
+msgstr[0] "下列 {0} 个插件已<strong>成功的</strong>下载:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:86
 #, java-format
 msgid "Downloading the following plugin has <strong>failed</strong>:"
 msgid_plural ""
 "Downloading the following {0} plugins has <strong>failed</strong>:"
-msgstr[0] "下载以下 {0} 插件<strong>失败</strong>："
+msgstr[0] "下载以下 {0} 个插件<strong>失败</strong>:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:121
 msgid "Search:"
-msgstr "查找："
+msgstr "查找:"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:126
 msgid "Enter a search expression"
@@ -12280,7 +12286,7 @@ msgstr "请输入查找词句"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:172
 msgid "Plugin update policy"
-msgstr "插件更新原则"
+msgstr "插件更新规则"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:194
 msgid "Accept the new plugin sites and close the dialog"
@@ -12402,6 +12408,13 @@ msgid ""
 "that Ctrl+Shift+; and Ctrl+: actually is the same thing on an US keyboard.</"
 "p>"
 msgstr ""
+"<p>你可能会注意到，在下一页上的按键选择列表中，列出了 Java 所知道的存在于所有"
+"键盘上的按键，不仅仅是真正存在于你键盘上的按键。请只选择对应你键盘上的真正按"
+"键的值。如果你的键盘上没有\"复制\"键(PC 键盘上没有，但 Sun 键盘上有)，那么就"
+"不要使用它。也有列出的对应于你键盘上的快捷键的\"按键\"(例如 \":\"/冒号)，也请"
+"不要使用他们，使用基本按键代替(\";\"/美式键盘上的分号，\".\"/德式键盘上的句"
+"号，等等)。不这样做可能会导致冲突，因为没有办法让 JOSM 知道，在美式键盘按 "
+"Ctrl+Shift+; 和 Ctrl+: 实际上是在做同样的事情。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:178
 msgid "<h1>Modifier Groups</h1>"
@@ -12423,7 +12436,7 @@ msgstr ""
 msgid ""
 "<p>The pseudo-modifier ''disabled'' will disable the shortcut when "
 "encountered.</p>"
-msgstr ""
+msgstr "<p>伪修饰键\"已停用\"将在遇到问题时禁用快捷键。</p>"
 
 #. scroll up
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PrefJPanel.java:186
@@ -12611,19 +12624,17 @@ msgid "Shortcut"
 msgstr "快捷键"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:123
-#, fuzzy
 msgid "Active styles:"
-msgstr "使用中样式"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:144
-#, fuzzy, java-format
+#, java-format
 msgid "Available styles (from {0}):"
-msgstr "可用的样式 (来自 {0})"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:173
-#, fuzzy
 msgid "Icon paths:"
-msgstr "图示路径"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:429
 #, java-format
@@ -14326,7 +14337,7 @@ msgstr "无法连接到 osm 服务器。请检查您的互联网网络连接。"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerReader.java:114
 msgid "Reading error text failed."
-msgstr ""
+msgstr "读取错误文本失败。"
 
 #: ../core/src/org/openstreetmap/josm/io/OsmServerUserInfoReader.java:38
 msgid "XML tag <user> is missing."
@@ -14471,7 +14482,7 @@ msgid ""
 "You updated your JOSM software.<br>To prevent problems the plugins should be "
 "updated as well.<br><br>Update plugins now?"
 msgstr ""
-"您已经更新了 JOSM 软体。<br>为了避免问题也应该更新插件。<br><br>是否立即更新?"
+"您已经更新了 JOSM 软件。<br>为了避免问题也应该更新插件。<br><br>是否立即更新?"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:183
 #, java-format
@@ -14688,7 +14699,7 @@ msgstr "是否停用此插件?"
 msgid ""
 "The plugin has been removed from the configuration. Please restart JOSM to "
 "unload the plugin."
-msgstr "该插件已从组态中删除。请重新启动 JOSM 以卸载插件。"
+msgstr "该插件已从配置中删除。请重新启动 JOSM 以卸载插件。"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:942
 msgid "Plugin information"
@@ -14713,7 +14724,7 @@ msgstr "插件文件 \"{0}\" 没有包含 Manifest。"
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:161
 #, java-format
 msgid "Invalid URL ''{0}'' in plugin {1}"
-msgstr ""
+msgstr "插件 {1} 中的无效 URL \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginInformation.java:245
 msgid "More info..."
@@ -14843,7 +14854,7 @@ msgid ""
 "You should also update your plugins. If neither of those help please file a "
 "bug report in our bugtracker using this link:"
 msgstr ""
-"您也应该更新您的插件。如果这些都没有帮助，请在以下连结的错误追踪程序回复错"
+"您也应该更新您的插件。如果这些都没有帮助，请在以下链接中的错误追踪程序回复错"
 "误："
 
 #: ../core/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:137
@@ -15075,8 +15086,8 @@ msgid ""
 "check the server''s address ''{0}'' for typos."
 msgstr ""
 "OSM 服务器 \"{0}\" 不知道您尝试读取、<br>更新或删除的对象。可能是各个对象不在"
-"<br>服务器上或是您使用无效的 URL 存取<br>它。请小心检查服务器位址 \"{0}\" 以"
-"免打错字。"
+"<br>服务器上或是您使用无效的 URL 存取<br>它。请小心检查服务器地中海 \"{0}\" "
+"以免打错字。"
 
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:415
 #, java-format
@@ -15297,39 +15308,39 @@ msgstr "建立路径的格线"
 
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DirectDownload.java:48
 msgid "Download Track ..."
-msgstr ""
+msgstr "下载轨迹..."
 
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DirectDownload.java:48
 msgid "Download GPX track from openstreetmap.org"
-msgstr ""
+msgstr "从 openstreetmap.org 下载 GPX 轨迹"
 
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DirectDownload.java:84
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DownloadDataGui.java:149
 #, java-format
 msgid "Invalid URL {0}"
-msgstr ""
+msgstr "无效 URL {0}"
 
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DirectDownload.java:86
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DownloadDataGui.java:151
 #, java-format
 msgid "Error fetching URL {0}"
-msgstr ""
+msgstr "错误的提取 URL {0}"
 
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DirectDownload.java:88
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DownloadDataGui.java:153
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DownloadDataGui.java:155
 #, java-format
 msgid "Error parsing data from URL {0}"
-msgstr ""
+msgstr "来自 URL {0} 的错误解析数据"
 
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DownloadDataGui.java:64
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DownloadDataGui.java:65
 msgid "Download Track"
-msgstr ""
+msgstr "下载轨迹"
 
 #: ../plugins/DirectDownload/src/org/openstreetmap/josm/plugins/directdownload/DownloadDataGui.java:213
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:55
 msgid "Private (only shared as anonymous, unordered points)"
@@ -15402,9 +15413,8 @@ msgid "No GPX layer selected. Cannot upload a trace."
 msgstr "没有选取 GPX 图层。不能上传轨迹。"
 
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:198
-#, fuzzy
 msgid "Uploading trace ..."
-msgstr "正在上传数据 ..."
+msgstr ""
 
 #. Set progress dialog to indeterminate while connecting
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:209
@@ -15446,7 +15456,7 @@ msgstr "上传轨迹至 openstreetmap.org"
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/ElevationMapMode.java:38
 msgid "Shows elevation profile"
-msgstr ""
+msgstr "显示高度轮廓"
 
 #. Show name of profile in title
 #. no elevation data, -> switch back to empty view
@@ -15454,16 +15464,16 @@ msgstr ""
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:288
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:313
 msgid "Elevation Profile"
-msgstr ""
+msgstr "高度轮廓"
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:98
 msgid "Open the elevation profile window."
-msgstr ""
+msgstr "打开高度轮廓窗口。"
 
 #. first row: Headlines with bold font
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:135
 msgid "Min"
-msgstr ""
+msgstr "最小"
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:138
 msgid "Avrg"
@@ -15471,7 +15481,7 @@ msgstr ""
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:141
 msgid "Max"
-msgstr ""
+msgstr "最大"
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:144
 msgid "Dist"
@@ -15492,99 +15502,121 @@ msgstr ""
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:185
 msgid "Automatic"
-msgstr ""
+msgstr "自动"
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:195
 msgid "Fixed value"
-msgstr ""
+msgstr "固定值"
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileLayer.java:118
 msgid "Elevation profile for track '"
-msgstr ""
+msgstr "来自轨迹的高度轮廓"
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileLayer.java:120
 msgid "Elevation profile"
-msgstr ""
+msgstr "高度轮廓"
 
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfilePanel.java:203
 msgid "(No elevation data)"
-msgstr ""
+msgstr "(没有高度数据)"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixAddressesMapMode.java:28
+#, fuzzy
+msgid "Fix adresses"
+msgstr "地址"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixAddressesMapMode.java:29
+#, fuzzy
+msgid "Show dialog with incomplete addresses"
+msgstr "粘贴时不包含不完整的成员"
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixUnresolvedStreetsAction.java:30
-#, fuzzy
 msgid "Fix street addresses"
-msgstr "输入地址"
+msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixUnresolvedStreetsAction.java:31
 msgid "Find and fix addresses without (valid) streets."
 msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/FixUnresolvedStreetsAction.java:33
-#, fuzzy
 msgid "Address Edit"
-msgstr "使用地址对话框"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:54
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:177
-#, fuzzy
+#. Start progress monitor to guess address values
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:58
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:195
 msgid "Searching"
-msgstr "查找"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:206
-#, fuzzy
+#. Update progress monitor
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/GuessAddressRunnable.java:227
 msgid "Guess values for "
-msgstr "{0} 的新数值"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMEntityBase.java:40
-#, fuzzy
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/OSMEntityBase.java:41
 msgid "No name"
-msgstr "没有名称"
+msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/SelectIncompleteAddressesAction.java:32
-#, fuzzy
 msgid "Select incomplete addresses"
-msgstr "是否删除不完整的成员？"
+msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/SelectIncompleteAddressesAction.java:33
 msgid "Selects all addresses with incomplete data."
 msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:61
-#, fuzzy
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:70
 msgid "Unresolved Addresses"
-msgstr "输入地址"
+msgstr ""
 
 #. group "Highways/Streets"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:62
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:71
 #: build/trans_presets.java:80
 msgid "Streets"
 msgstr "街道"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:63
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:64
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:72
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:73
 msgid "%s (%d)"
 msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:66
-#, fuzzy
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:75
 msgid "Select and close"
-msgstr "在图层中选择"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:96
-#, fuzzy
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:109
 msgid "Fix unresolved addresses"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:210
+#, fuzzy
+msgid "Complete Addresses"
+msgstr "地址"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:214
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:51
+#, fuzzy
+msgid "Incomplete Addresses"
 msgstr "输入地址"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:187
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:218
+#, fuzzy
+msgid "Selected Addresses"
+msgstr "地址"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:222
+#, fuzzy
+msgid "Selected Street"
+msgstr "删除的状态："
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:235
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:48
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:87
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:106
-#, fuzzy
 msgid "(No data)"
-msgstr "没有日期"
+msgstr ""
 
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:55
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:25
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:153
 #: ../plugins/terracer/src/terracer/HouseNumberInputHandler.java:120
 msgid "Segments"
@@ -15593,140 +15625,178 @@ msgstr "区段"
 #. Add address nodes
 #. item "Annotation/Addresses"
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditModel.java:65
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:25
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: build/trans_presets.java:3985
 msgid "Addresses"
 msgstr "地址"
 
-#. super(tr("Apply all guesses"), "applyguesses_24", "Turns all guesses into the corresponding tag values.");
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/ApplyAllGuessesAction.java:41
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:75
 #, fuzzy
-msgid "Apply all guesses"
-msgstr "应用变更"
+msgid "Show incomplete addresses"
+msgstr "下载不完整的成员"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/ApplyAllGuessesAction.java:58
-msgid "Applied guessed values"
-msgstr ""
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/ApplyAllGuessesAction.java:91
-msgid "Applied guessed values for "
-msgstr ""
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AssignAddressToStreetAction.java:31
-msgid "Assign address to street"
-msgstr ""
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AssignAddressToStreetAction.java:47
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:186
 #, fuzzy
-msgid "Set street name"
-msgstr "街道名称"
+msgid "items"
+msgstr "项目"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/GuessAddressDataAction.java:37
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesDialog.java:188
 #, fuzzy
-msgid "Guess address data"
-msgstr "使用地址对话框"
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/GuessAddressDataAction.java:83
-#, fuzzy
-msgid "Guess street names"
-msgstr "街道名称"
+msgid "no items"
+msgstr "没有问题"
 
 #. item "Places/Country"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
 #: build/trans_presets.java:3627
 msgid "Country"
 msgstr "国家"
 
-#. item "Places/State"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
-#: build/trans_presets.java:3634
-msgid "State"
-msgstr "省/州"
-
 #. <separator/>
 #. item "Places/City"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: build/trans_presets.java:3656
 msgid "City"
 msgstr "市"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
-#, fuzzy
-msgid "Post Code"
-msgstr "邮递区号："
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
+msgid "Postcode"
+msgstr ""
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:29
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
 #: ../plugins/cadastre-fr/src/cadastre_fr/Address.java:432
 #: ../plugins/terracer/src/terracer/HouseNumberInputDialog.java:155
 msgid "Street"
 msgstr "街"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/RemoveAddressTagsAction.java:25
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/RemoveAddressTagsAction.java:30
-msgid "Remove address tags"
-msgstr ""
-
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/RemoveAddressTagsAction.java:25
-#, fuzzy
-msgid "Removes address related tags from the object."
-msgstr "从本地缓存中删除选取的更改组合"
-
-#. we simply use the existing icon :-|
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/SelectAddressesInMapAction.java:51
-#, fuzzy
-msgid "Select in map"
-msgstr "选择区域是空的"
-
 #. item "Waypoints/Motorway Junction" text "Number"
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/IncompleteAddressesTableModel.java:32
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: build/trans_presets.java:666
 msgid "Number"
 msgstr "编号"
 
-#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:49
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:45
+msgid "Apply all guesses"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:45
+msgid "Turns all guesses into the corresponding tag values."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:82
+msgid "Applied guessed values"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ApplyAllGuessesAction.java:127
+msgid "Applied guessed values for "
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/AssignAddressToStreetAction.java:35
+msgid "Assign address to street"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/AssignAddressToStreetAction.java:36
 #, fuzzy
-msgid "Postcode"
-msgstr "邮政编号"
+msgid "Assign the selected address(es) to the selected street."
+msgstr "清除选取的角色或删除选取的成员"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/AssignAddressToStreetAction.java:52
+msgid "Set street name"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertAllToRelationAction.java:25
+msgid "Convert ALL streets."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertAllToRelationAction.java:26
+msgid ""
+"Create relation between street and related addresses for ALL streets in the "
+"current layer."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertToRelationAction.java:32
+#, fuzzy
+msgid "Convert to relation."
+msgstr "转换为多重多边形。"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertToRelationAction.java:33
+msgid "Create relation between street and related addresses."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/ConvertToRelationAction.java:68
+#, fuzzy
+msgid "Create address relation for "
+msgstr "建立新的关系"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/GuessAddressDataAction.java:41
+msgid "Guess address data"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/GuessAddressDataAction.java:41
+msgid ""
+"Tries to guess address data by picking the name of the closest object with "
+"according tag."
+msgstr ""
+
+#. Launch address guessing thread
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/GuessAddressDataAction.java:90
+#, fuzzy
+msgid "Guessing address values"
+msgstr "建筑地址"
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/RemoveAddressTagsAction.java:26
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/RemoveAddressTagsAction.java:31
+msgid "Remove address tags"
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/RemoveAddressTagsAction.java:26
+msgid "Removes address related tags from the object."
+msgstr ""
+
+#: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/actions/SelectAddressesInMapAction.java:55
+msgid "Marks selected addresses in the map"
+msgstr ""
 
 #: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/ImageLayer.java:314
 msgid "Layer Properties"
-msgstr ""
+msgstr "图层属性"
 
 #: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/LoadImageAction.java:35
 msgid "Import image"
-msgstr ""
+msgstr "导入图像"
 
 #: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/LoadImageAction.java:35
 msgid "Import georeferenced image"
-msgstr ""
+msgstr "导入地理参照图像"
 
 #: ../plugins/ImportImagePlugin/src/org/openstreetmap/josm/plugins/ImportImagePlugin/LoadImageAction.java:55
 msgid "Error while creating image layer: "
-msgstr ""
+msgstr "创建图层时发生错误: "
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:67
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:71
 msgid "Edit opening hours"
-msgstr ""
+msgstr "编辑开放时间"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:69
 msgid "Edit time-tag of selected element in a graphical interface"
-msgstr ""
+msgstr "在图形界面中编辑选定元素的时间标签"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:124
 msgid "Change properties of 1 object"
-msgstr ""
+msgstr "改变 1 个对象的属性"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:133
 #, java-format
 msgid "You have {0} Elements selected. But you can edit only one element!"
-msgstr ""
+msgstr "您已经选择了 {0} 个元素。但是你只能编辑一个元素!"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/OhePlugin.java:242
 msgid "Choose key"
-msgstr ""
+msgstr "选择属性键"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/gui/OheDialogPanel.java:54
 #, java-format
@@ -15740,15 +15810,15 @@ msgstr ""
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/gui/OheDialogPanel.java:133
 #, java-format
 msgid "Info: {0}"
-msgstr ""
+msgstr "信息: {0}"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/gui/OheDialogPanel.java:135
 msgid "Correct the value manually and than press Enter."
-msgstr ""
+msgstr "手动修改数值, 然后按回车"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/gui/OheDialogPanel.java:138
 msgid "Error in timeformat"
-msgstr ""
+msgstr "错误的时间格式"
 
 #: ../plugins/OpeningHoursEditor/src/org/openstreetmap/josm/plugins/ohe/gui/TimeRect.java:191
 msgid "open end"
@@ -15765,11 +15835,11 @@ msgstr "地址编排规则"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationAction.java:25
 msgid "Handy Address Interpolation Functions"
-msgstr ""
+msgstr "简便的地址编排函数"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationAction.java:34
 msgid "Define Address Interpolation"
-msgstr "定义地址插值"
+msgstr "已定义的地址编排规则"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:107
 msgid "Odd"
@@ -15841,23 +15911,23 @@ msgstr "将关联 {0} 个额外的房屋号码节点"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:460
 msgid "City:"
-msgstr "城市："
+msgstr "城市:"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:461
 msgid "State:"
-msgstr "状态："
+msgstr "状态:"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:462
 msgid "Post Code:"
-msgstr "邮递区号："
+msgstr "邮政编码:"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:463
 msgid "Country:"
-msgstr "国家："
+msgstr "国家:"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:464
 msgid "Full Address:"
-msgstr "完整地址："
+msgstr "完整地址:"
 
 #: ../plugins/addrinterpolation/src/org/openstreetmap/josm/plugins/AddrInterpolation/AddrInterpolationDialog.java:499
 msgid "Optional Information:"
@@ -16031,13 +16101,13 @@ msgid ""
 "\n"
 msgstr ""
 "<html>\n"
-"<p style=\"font-family: sans-serif; font-weight: bold;\">AlignWays会帮助您对"
+"<p style=\"font-family: sans-serif; font-weight: bold;\">AlignWays 会帮助您对"
 "齐两个\n"
 "路径区段。举例来说，当您在描绘建筑物的\n"
 "轮廓而且希望它的边缘和街道或道路平行\n"
 "时会很有帮助。<br>\n"
 "<br>\n"
-"在您开始前有些密诀可能有所帮助：\n"
+"在您开始前有些技巧可能有所帮助：\n"
 "</p>\n"
 "</html>\n"
 "\n"
@@ -16143,11 +16213,11 @@ msgstr "建筑地址"
 
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:44
 msgid "House number:"
-msgstr "门牌号码："
+msgstr "门牌号码:"
 
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:45
 msgid "Street Name:"
-msgstr "街道名称："
+msgstr "街道名称:"
 
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:49
 msgid "Increment"
@@ -16159,7 +16229,7 @@ msgstr "递减"
 
 #: ../plugins/buildings_tools/src/buildings_tools/AddressDialog.java:52
 msgid "Numbers:"
-msgstr "号码："
+msgstr "号码:"
 
 #: ../plugins/buildings_tools/src/buildings_tools/AdvancedSettingsDialog.java:22
 msgid "Big buildings mode"
@@ -16175,7 +16245,7 @@ msgstr "高级设置"
 
 #: ../plugins/buildings_tools/src/buildings_tools/AdvancedSettingsDialog.java:33
 msgid "Buildings tags:"
-msgstr ""
+msgstr "建筑物标签:"
 
 #: ../plugins/buildings_tools/src/buildings_tools/Building.java:234
 msgid "Cannot place building outside of the world."
@@ -16198,7 +16268,7 @@ msgstr "使用地址对话框"
 
 #: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:28
 msgid "Auto-select building"
-msgstr ""
+msgstr "自动选择建筑物"
 
 #: ../plugins/buildings_tools/src/buildings_tools/BuildingSizeDialog.java:45
 msgid "Buildings width:"
@@ -16219,11 +16289,11 @@ msgstr "绘制建筑物"
 
 #: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:379
 msgid "Point on the corner of the building to start drawing"
-msgstr ""
+msgstr "点击建筑物的一角以开始绘制"
 
 #: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:381
 msgid "Point on opposite end of the building"
-msgstr ""
+msgstr "点击建筑物的另一端"
 
 #: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:383
 msgid "Set width of the building"
@@ -16432,7 +16502,7 @@ msgstr "先在清单中选取一个 WMS 图层。"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:47
 msgid "Don't use relation for addresses (but \"addr:street\" on elements)."
-msgstr ""
+msgstr "不要为地址使用关系(但为元素使用 \"addr:street\")"
 
 #. <icon annotate="true" src="misc/deprecated.png"/>
 #. <scale_min>1</scale_min>
@@ -16562,7 +16632,7 @@ msgstr "节"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:79
 msgid "commune"
-msgstr ""
+msgstr "合作社"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:84
 msgid "Enable automatic caching."
@@ -16589,7 +16659,7 @@ msgstr "法国 cadastre WMS"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:109
 msgid "<html>Value of key \"source\" when autosourcing is enabled</html>"
-msgstr "<html>当自动来源啓用时设定键 \"source\" 的数值</html>"
+msgstr "<html>当自动来源启用时设定键 \"source\" 的数值</html>"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/CadastrePreferenceSetting.java:110
 msgid "Source"
@@ -17196,14 +17266,14 @@ msgstr "不能重制未排序的路径。"
 
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:120
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:90
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:57
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:60
 msgid "No data loaded."
 msgstr "没有载入数据。"
 
 #. Sometimes it make sense creating multipoly of only one way (so it will form outer way)
 #. and then splitting the way later (so there are multiple ways forming outer way)
 #: ../plugins/duplicateway/src/org/openstreetmap/josm/plugins/duplicateway/DuplicateWayAction.java:126
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:66
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:69
 msgid "You must select at least one way."
 msgstr "您必须选择至少一条路径。"
 
@@ -18052,13 +18122,14 @@ msgstr "选取的路径中之一已经是另一个多重多边形的一部分。
 
 #. Commit
 #: ../plugins/multipoly-convert/src/converttomultipoly/MultipolyAction.java:118
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:46
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:47
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:49
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:50
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:104
 #: ../plugins/multipoly/src/multipoly/MultipolyPlugin.java:21
 msgid "Create multipolygon"
 msgstr "建立多重多边形"
 
-#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:46
+#: ../plugins/multipoly/src/multipoly/MultipolyAction.java:49
 msgid "Create multipolygon."
 msgstr "建立多重多边形。"
 
@@ -18273,145 +18344,256 @@ msgstr "找不到 Firefox。请在偏好设定的地图设定页面设定 firefo
 msgid "Firefox executable"
 msgstr "Firefox 可执行档"
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:158
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:105
+msgid "Transform error: Min X must be smaller than max"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:109
+msgid "Transform error: Min Y must be smaller than max"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:115
+msgid "Transform error: Points too close"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:128
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:141
+msgid "Transform error: Unsupported variant."
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/FilePlacement.java:189
+msgid "Transform error: Unsupported orientation"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:90
+#, fuzzy
+msgid "Finished"
+msgstr "结束绘制。"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:213
 msgid "Load file..."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:159
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:214
 msgid "Place"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:161
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:216
 msgid "Show target"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:168
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:174
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:225
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:231
 msgid "Take X and Y from selected node"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:176
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:233
 msgid "Debug info"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:177
-#, fuzzy
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:234
 msgid "Merge close nodes"
-msgstr "合并对象节点"
+msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:180
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:237
 msgid "Remove objects smaller than"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:183
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:240
 msgid "Remove objects larger than"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:187
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:244
 msgid "Only this color"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:190
-#, fuzzy
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:247
 msgid "Remove parallel lines"
-msgstr "删除重复节点"
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:195
-#, fuzzy
-msgid "Import settings"
-msgstr "输入图片"
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:234
-msgid "Load file"
-msgstr ""
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:240
-msgid "Bind to coordinates"
-msgstr ""
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:243
-msgid "Projection:"
-msgstr ""
-
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:248
-msgid "Bottom left (min) corner:"
 msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:250
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:268
-msgid "PDF X and Y"
+msgid "Take only first X paths"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:252
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:270
-msgid "East and North"
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:253
+#, fuzzy
+msgid "Color/width change"
+msgstr "正在关闭更改组合"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:254
+#, fuzzy
+msgid "Shape closed"
+msgstr "更改组合已关闭"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:255
+#, fuzzy
+msgid "Single segments"
+msgstr "单一元件"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:258
+msgid "Import settings"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:266
-msgid "Top right (max) corner:"
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:303
+msgid "Introduce separate layers for:"
 msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:313
+msgid "Bind to coordinates"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:316
+msgid "Projection:"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:321
+msgid "Bottom left (min) corner:"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:323
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:341
+msgid "PDF X and Y"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:325
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:343
+msgid "East and North"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:339
+msgid "Top right (max) corner:"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:391
 msgid "Loading..."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:328
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:403
 msgid "PDF file preview"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:329
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:418
 msgid "Loaded"
 msgstr ""
 
-#. rebuild layer with latest projection
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:349
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:460
 msgid "Imported PDF: "
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:419
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:551
 msgid "Please select exactly one node."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:441
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:574
 msgid "PDF files"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:467
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:600
 msgid "OSM files"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:511
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:636
+#, fuzzy
+msgid "Preparing"
+msgstr "停车场"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:650
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:746
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:762
+msgid "Tolerance is not a number"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:664
+msgid "Could not parse color"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:677
+#, fuzzy
+msgid "Could not parse max path count"
+msgstr "无法解析 WMS 图层列表。"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:684
+#, fuzzy
+msgid "Parsing file"
+msgstr "停车场通道"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:696
 msgid "File not found."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:518
-#, fuzzy, java-format
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:703
+#, java-format
 msgid "Error while parsing: {0}"
-msgstr "当解析 {0} 时发生错误。"
+msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:532
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:712
 #, fuzzy
-msgid "Could not parse color"
-msgstr "无法解析 WMS 图层列表。"
+msgid "Removing parallel segments"
+msgstr "正在删除废弃的插件..."
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:547
-#, fuzzy
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:719
 msgid "Max distance is not a number"
-msgstr "{0} 并不是数字"
+msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:561
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:577
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:592
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:726
+msgid "Joining nodes"
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:731
 #, fuzzy
-msgid "Tolerance is not a number"
-msgstr "{0} 并不是数字"
+msgid "Joining adjacent segments"
+msgstr "内围"
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:609
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:738
+#, fuzzy
+msgid "Removing small objects"
+msgstr "所有的对象"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:755
+#, fuzzy
+msgid "Removing large objects"
+msgstr "正在删除重复的节点..."
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:768
+#, fuzzy
+msgid "Finalizing layers"
+msgstr "Walking Papers"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:783
 msgid "Please set a projection."
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:629
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:805
 msgid "Could not parse numbers. Please check."
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:864
+#, fuzzy
+msgid "Building JOSM layer"
+msgstr "建筑地址"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:868
+#, fuzzy
+msgid "Postprocessing layer"
+msgstr "拉近到图层"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:892
+#, fuzzy
+msgid "Saving to file."
+msgstr "保存选取的文件。"
+
+#: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:898
+#, fuzzy
+msgid " Writing to file"
+msgstr "没有可选择的"
+
+#: ../plugins/pdfimport/src/pdfimport/OsmBuilder.java:55
+#, fuzzy
+msgid "Building JOSM layer."
+msgstr "建筑地址"
+
+#: ../plugins/pdfimport/src/pdfimport/OsmBuilder.java:125
+msgid " "
 msgstr ""
 
 #: ../plugins/pdfimport/src/pdfimport/PdfImportAction.java:19
@@ -18431,12 +18613,21 @@ msgstr ""
 msgid "Import PDf file"
 msgstr ""
 
-#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:28
-#, fuzzy
-msgid "Encrypted documents not supported."
-msgstr "类型 {0} 的元件已支持。"
+#: ../plugins/pdfimport/src/pdfimport/pdfbox/GraphicsProcessor.java:52
+#, fuzzy, java-format
+msgid " {0} objects so far"
+msgstr "{0} 个对象要加入："
 
-#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:34
+#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:27
+#, fuzzy
+msgid "Parsing PDF"
+msgstr "让车处"
+
+#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:32
+msgid "Encrypted documents not supported."
+msgstr ""
+
+#: ../plugins/pdfimport/src/pdfimport/pdfbox/PdfBoxParser.java:38
 msgid "The PDF file must have exactly one page."
 msgstr ""
 
@@ -18816,6 +19007,12 @@ msgid ""
 "Remote Control has been asked to report its protocol version. This enables "
 "web sites to detect a running JOSM."
 msgstr ""
+
+#: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:17
+#: ../plugins/restart/src/josmrestartplugin/RestartJosmAction.java:19
+#, fuzzy
+msgid "Restart JOSM"
+msgstr "重新启动"
 
 #: ../plugins/reverter/src/reverter/ChangesetIdQuery.java:25
 msgid "Revert changeset fully"
@@ -19516,38 +19713,38 @@ msgstr "将选取的关系成员下移一个位置"
 msgid "Move the selected relation members up by one position"
 msgstr "将选取的关系成员上移一个位置"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:134
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:135
 msgid "Edit basic attributes of a turn restriction"
 msgstr "编辑转弯限制的基本属性"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:138
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:139
 msgid "Edit the raw tags and members of this turn restriction"
 msgstr "编辑这个转弯限制的原始标签和成员"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:141
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
 msgid "Errors/Warnings"
 msgstr "错误/警告"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:142
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:143
 msgid "Show errors and warnings related to this turn restriction"
 msgstr "显示与这个转弯限制相关的错误和警告"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:280
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:281
 #, java-format
 msgid "Create a new turn restriction in layer ''{0}''"
 msgstr "在图层 \"{0}\" 中建立新的转弯限制"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:282
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:283
 #, java-format
 msgid "Edit a new turn restriction in layer ''{0}''"
 msgstr "在图层 \"{0}\" 中编辑新的转弯限制"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:284
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:285
 #, java-format
 msgid "Edit turn restriction ''{0}'' in layer ''{1}''"
 msgstr "在图层 \"{1}\" 中编辑转弯限制 \"{0}\""
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:398
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:399
 #, java-format
 msgid ""
 "There is still an unresolved error or warning identified for this turn "
@@ -19557,31 +19754,31 @@ msgid_plural ""
 "restriction. You are recommended to resolve these issues first."
 msgstr[0] "这个转弯限制仍有 {0} 未调解的错误或警告。建议您先调解这些问题。"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:406
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:407
 msgid "Do you want to save anyway?"
 msgstr "您要强制保存吗?"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:409
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:410
 msgid "Yes, save anyway"
 msgstr "是，强制保存"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:411
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:412
 msgid "Save the turn restriction despite of errors and/or warnings"
 msgstr "保存这个转弯限制，不管错误和/或警告"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:415
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:416
 msgid "No, resolve issues first"
 msgstr "不，先调解冲突"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:417
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:418
 msgid "Cancel saving and start resolving pending issues first"
 msgstr "取消保存并先开始调解待解决的问题"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:425
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:426
 msgid "Pending errors and warnings"
 msgstr "未决的错误和警告"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:484
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:485
 #, java-format
 msgid ""
 "This turn restriction refers to an object which was deleted outside of this "
@@ -19591,36 +19788,36 @@ msgid_plural ""
 "restriction editor:"
 msgstr[0] "这个转弯限制参照到 {0} 已在这个转弯限制编辑器之外被删除："
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:497
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:498
 msgid ""
 "Updates to this turn restriction can''t be saved unless deleted members are "
 "removed.<br>How to you want to proceed?"
 msgstr ""
 "除非先删除已删除的成员否则不能保存对这个转弯限制的更新。<br>您想要如何处理?"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:502
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:504
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:503
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:505
 msgid "Remove deleted members and save"
 msgstr "删除已删除成员并保存"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:508
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:510
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:509
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:511
 msgid "Cancel and return to editor"
 msgstr "取消并回到编辑器"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:518
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:519
 msgid "Deleted members in turn restriction"
 msgstr "转弯限制中已删除的成员"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:597
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:598
 msgid "Create a conflict and close this turn restriction editor"
 msgstr "建立冲突项目并关闭这个转弯限制编辑器"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:603
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:604
 msgid "Return to the turn restriction editor and resume editing"
 msgstr "返回转弯限制编辑器并继续编辑"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:610
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:611
 msgid ""
 "<html>This turn restriction has been changed outside of the editor.<br>You "
 "cannot apply your changes and continue editing.<br><br>Do you want to create "
@@ -19629,7 +19826,7 @@ msgstr ""
 "<html>这个转弯限制已经在编辑器之外被改变了。<br>您不能应用您的变更并继续编"
 "辑。<br><br>您是否要建立一个冲突并关闭这个编辑器?</html>"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:627
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:628
 #, java-format
 msgid ""
 "<html>Layer ''{0}'' already has a conflict for object<br>''{1}''.<br>Please "
@@ -19638,35 +19835,35 @@ msgstr ""
 "html>图层 \"{0}\" 已经有冲突于对象<br>\"{1}\"。<br>请先调解这个冲突，然后再试"
 "一次。</html>"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:633
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:634
 msgid "Already participating in a conflict"
 msgstr "已经加入冲突中"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:754
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:755
 msgid "Delete this turn restriction"
 msgstr "删除这个转弯限制"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:784
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:785
 msgid "Select this turn restriction"
 msgstr "选择这个转弯限制"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:810
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:811
 msgid "Activate the layer this turn restriction belongs to and zoom to it"
 msgstr "使用这个转弯限制所属的图层并缩放到它的大小"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:843
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:844
 #, java-format
 msgid "{0} warning"
 msgid_plural "{0} warnings"
 msgstr[0] "{0} 个警告"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:847
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:848
 #, java-format
 msgid "{0} error"
 msgid_plural "{0} errors"
 msgstr[0] "{0} 个错误"
 
-#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:860
+#: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:861
 msgid "no issues"
 msgstr "没有问题"
 
@@ -19685,11 +19882,11 @@ msgstr "从转弯限制删除"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:282
 msgid "Accept the currently selected way"
-msgstr ""
+msgstr "接受当前选择的路径"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:283
 msgid "Accept"
-msgstr ""
+msgstr "接受"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionLegEditor.java:399
 msgid "Paste from the clipboard"
@@ -19713,7 +19910,7 @@ msgstr "禁止左转"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:13
 msgid "No U-Turn"
-msgstr "禁止廻转"
+msgstr "禁止掉头"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionType.java:14
 msgid "No Straight On"
@@ -19734,7 +19931,7 @@ msgstr "只可直行"
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionTypeRenderer.java:34
 #, java-format
 msgid "Warning: failed to load icon for turn restriction type ''{0}''"
-msgstr "警告：无法加载转弯限制类型 ''{0}'' 的图标"
+msgstr "警告：无法加载转弯限制类型 \"{0}\" 的图标"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionTypeRenderer.java:75
 msgid "please select a turn restriction type"
@@ -19965,6 +20162,9 @@ msgid ""
 "turn restriction, the way with role <tt>from</tt> should be different from "
 "the way with role <tt>to</tt>, though."
 msgstr ""
+"这个转弯限制使用路径 <span class=\"object-name\">{0}</span> 作为元素 <tt>出发"
+"</tt> <strong>和</strong> 元素 <tt>到达</tt>。虽然在一个转弯限制中, 作为元素 "
+"<tt>出发</tt> 的路径应和作为元素 <tt>到达</tt> 的路径不同。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/IdenticalTurnRestrictionLegsError.java:37
 msgid "Delete ''from''"
@@ -20051,15 +20251,15 @@ msgstr "转弯限制必须宣告限制的种类。请在基本编辑器中选择
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:36
 msgid "A way with role <tt>from</tt> is required in a turn restriction."
-msgstr ""
+msgstr "一个转弯限制需要一条作为元素 <tt>出发</tt> 的路径。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:39
 msgid "A way with role <tt>to</tt> is required in a turn restriction."
-msgstr ""
+msgstr "一个转弯限制需要一条作为元素 <tt>到达</tt> 的路径。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:42
 msgid "Please go to the Basic editor and manually choose a way."
-msgstr ""
+msgstr "请转到基本编辑器, 然后手动选择一条路径。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:48
 msgid "Add in editor"
@@ -20067,27 +20267,27 @@ msgstr "在编辑器中加入"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:51
 msgid "Add a way with role ''from''"
-msgstr ""
+msgstr "添加一条作为元素 <tt>出发</tt> 的路径"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingTurnRestrictionLegError.java:54
 msgid "Add a way with role ''to''"
-msgstr ""
+msgstr "添加一条作为元素 <tt>到达</tt> 的路径"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingViaError.java:24
 msgid ""
 "The two ways participating in the turn restriction <strong>aren''t connected."
 "</strong>"
-msgstr ""
+msgstr "两条参与转弯限制的路径<strong>没有被连接</strong>。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingViaError.java:26
 msgid ""
 "Make sure you add one or more via objects (nodes or ways) to the turn "
 "restriction."
-msgstr ""
+msgstr "确保你为转弯限制添加了一个或多个经过对象(节点或路径)。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MissingViaError.java:33
 msgid "Go to the Advanced Editor and add via objects"
-msgstr ""
+msgstr "转到高级编辑器, 然后添加一个经过对象。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:37
 #, java-format
@@ -20095,7 +20295,7 @@ msgid ""
 "A turn restriction requires exactly one way with role <tt>from</tt>. This "
 "turn restriction has {0} ways in this role. Please remove {1} of them."
 msgstr ""
-"一个转弯限制只需要一个带有角色 <tt>from</tt> 的路径。这个转弯限制有 {0} 个路"
+"一个转弯限制只需要一个带有角色 <tt>出发</tt> 的路径。这个转弯限制有 {0} 个路"
 "径有此标签。请删除其中的 {1} 个。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:44
@@ -20104,8 +20304,8 @@ msgid ""
 "A turn restriction requires exactly one way with role <tt>to</tt>. This turn "
 "restriction has {0} ways in this role. Please remove {1} of them."
 msgstr ""
-"一个转弯限制只需要一个带有角色 <tt>to</tt> 的路径。这个转弯限制有 {0} 个路径"
-"有此标签。请删除其中的 {1} 个。"
+"一个转弯限制只需要一个带有角色 <tt>到达</tt> 的路径。这个转弯限制有 {0} 个路"
+"径有此标签。请删除其中的 {1} 个。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:57
 msgid "Go to the Advanced Editor and remove the members"
@@ -20171,7 +20371,7 @@ msgstr "立即切割"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/TurnRestrictionLegSplitRequiredError.java:128
 msgid "Split the ways"
-msgstr ""
+msgstr "切割路径"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:45
 #, java-format
@@ -20179,6 +20379,8 @@ msgid ""
 "This turn restriction uses the node <span class=\"object-name\">{0}</span> "
 "as member with role <tt>{1}</tt>."
 msgstr ""
+"这个转弯限制使用节点 <span class=\"object-name\">{0}</span> 作为有角色 <tt>"
+"{1}</tt> 的成员。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:51
 #, java-format
@@ -20186,6 +20388,8 @@ msgid ""
 "This turn restriction uses the relation <span class=\"object-name\">{0}</"
 "span> as member with role <tt>{1}</tt>."
 msgstr ""
+"这个转弯限制使用关系 <span class=\"object-name\">{0}</span> 作为有角色 <tt>"
+"{1}</tt> 的成员。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:57
 msgid "A way is required instead."
@@ -20197,7 +20401,7 @@ msgstr "从转弯限制删除成员"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/WrongTurnRestrictionLegTypeError.java:81
 msgid "Change to the Basic Editor and select a way"
-msgstr ""
+msgstr "转到基本编辑器并选择一条路径"
 
 #: ../plugins/undelete/src/org/openstreetmap/josm/plugins/undelete/Undelete.java:64
 msgid "Undelete object..."
@@ -20520,24 +20724,20 @@ msgid "Power duplicated nodes"
 msgstr "重复的电线节点"
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:257
-#, fuzzy
 msgid "Natural duplicated nodes"
-msgstr "重复的水路节点"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:268
-#, fuzzy
 msgid "Building duplicated nodes"
-msgstr "重复的边境节点"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:279
-#, fuzzy
 msgid "Landuse duplicated nodes"
-msgstr "重复的电线节点"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:290
-#, fuzzy
 msgid "Other duplicated nodes"
-msgstr "重复的电线节点"
+msgstr ""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:319
 msgid "Nodes at same position"
@@ -21168,7 +21368,7 @@ msgstr "有键 \"watch\""
 #. translation note: don't translate quoted words
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedNode.java:99
 msgid "Has key ''source''"
-msgstr "有键 “source\""
+msgstr "有键 \"source\""
 
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/UntaggedWay.java:62
 msgid "Untagged, empty and one node ways."
@@ -21230,7 +21430,7 @@ msgstr "{0}, ..."
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:81
 #, java-format
 msgid "{0} {1}% of GPS track"
-msgstr ""
+msgstr "{0} {1}% GPS 轨迹"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/PositionLayer.java:103
 msgid "Shows current position in the video"
@@ -21264,7 +21464,7 @@ msgstr "开始/暂停播放视频"
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:148
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:149
 msgid "Backward"
-msgstr ""
+msgstr "后退"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:148
 msgid "jumps n sec back"
@@ -21273,7 +21473,7 @@ msgstr "跳至后 n 秒"
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:154
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:155
 msgid "Forward"
-msgstr ""
+msgstr "前进"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:154
 msgid "jumps n sec forward"
@@ -21282,7 +21482,7 @@ msgstr "跳至前 n 秒"
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:162
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:163
 msgid "Faster"
-msgstr ""
+msgstr "加速"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:162
 msgid "faster playback"
@@ -21291,15 +21491,15 @@ msgstr "加速播放"
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:170
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:171
 msgid "Slower"
-msgstr ""
+msgstr "慢速"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:170
 msgid "slower playback"
-msgstr "减速播放"
+msgstr "慢速播放"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:178
 msgid "Jump To"
-msgstr ""
+msgstr "跳至"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:178
 msgid "jumps to the entered gps time"
@@ -21309,11 +21509,11 @@ msgstr ""
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:182
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:198
 msgid "Jump to"
-msgstr ""
+msgstr "跳至"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:217
 msgid "Loop"
-msgstr ""
+msgstr "循环"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:217
 msgid "loops n sec around current position"
@@ -21345,11 +21545,11 @@ msgstr "在视频中显示字幕"
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:246
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
 msgid "Jump length"
-msgstr ""
+msgstr "跳转长度"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:246
 msgid "Set the length of a jump"
-msgstr ""
+msgstr "设定跳转的长度"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:250
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:261
@@ -21359,7 +21559,7 @@ msgstr ""
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:257
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:261
 msgid "Loop length"
-msgstr ""
+msgstr "循环长度"
 
 #: ../plugins/videomapping/src/org/openstreetmap/josm/plugins/videomapping/VideoMappingPlugin.java:257
 msgid "Set the length around a looppoint"
@@ -21588,7 +21788,7 @@ msgstr "从多种服务下载修正的图片"
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:71
 #, java-format
 msgid "WMS: {0}"
-msgstr "WMS：{0}"
+msgstr "WMS: {0}"
 
 #. This service serves the purpose of "just this once" without forcing the user
 #. to commit the link to the preferences
@@ -21608,7 +21808,7 @@ msgstr "参观首页"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:145
 msgid "WMS URL or Image ID:"
-msgstr "WMS URL 或图片 ID："
+msgstr "WMS URL 或图片 ID:"
 
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:149
 #: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
@@ -21720,61 +21920,61 @@ msgstr "是，抓取图片"
 msgid "Invalid URL?"
 msgstr "无效的 URL?"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:520
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:528
 msgid "Download visible tiles"
 msgstr "下载可见的拼贴"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:526
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:534
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr "要求的区域太大。请拉近一点，或是改变解析度"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:538
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:546
 msgid "Change resolution"
 msgstr "改变解析度"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:551
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:559
 msgid "Reload erroneous tiles"
 msgstr "重新载入错误的拼贴"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:572
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:580
 msgid "Alpha channel"
 msgstr "透明色版"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:600
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:608
 msgid "Save WMS layer to file"
 msgstr "将 WMS 图层保存为文件"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:604
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:612
 msgid "Save WMS layer"
 msgstr "保存 WMS 图层"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:628
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:636
 msgid "Load WMS layer from file"
 msgstr "从文件载入 WMS 图层"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:632
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:640
 msgid "Load WMS layer"
 msgstr "载入 WMS 图层"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:643
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:651
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "不支持的 WMS 文件版本；发现 {0}，应为 {1}"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:644
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:652
 msgid "File Format Error"
 msgstr "文件格式错误"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:676
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:684
 msgid "Error loading file"
 msgstr "载入文件有错误"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:690
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:698
 msgid "Set WMS Bookmark"
 msgstr "设定 WMS 书签"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:700
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:708
 msgid "Automatic downloading"
 msgstr "自动下载"
 
@@ -21861,12 +22061,12 @@ msgstr "同时连接"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:201
 msgid "Allow remote control (reqires remotecontrol plugin)"
-msgstr ""
+msgstr "允许远程控制(需要 remotecontrol 插件)"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
 msgctxt "layer"
 msgid "Zoom"
-msgstr ""
+msgstr "缩放"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:325
 msgid "Menu Name (Default)"
@@ -21893,7 +22093,7 @@ msgstr "远程控制已要求从以下 URL 加载 WMS 图层:"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:46
 msgid "Remote WMS"
-msgstr ""
+msgstr "远程 WMS"
 
 #: ../plugins/wmsplugin/src/wmsplugin/io/WMSLayerExporter.java:11
 #: ../plugins/wmsplugin/src/wmsplugin/io/WMSLayerImporter.java:10
@@ -22305,7 +22505,7 @@ msgstr "允许直接将多种文件格式输入 JOSM。"
 #. Plugin DirectDownload
 #: build/trans_plugins.java:20
 msgid "Download your GPX tracks from openstreetmap.org"
-msgstr ""
+msgstr "从 openstreetmap.org 下载你的轨迹"
 
 #. Plugin DirectUpload
 #: build/trans_plugins.java:22
@@ -22387,7 +22587,7 @@ msgstr ""
 #. Plugin importvec
 #: build/trans_plugins.java:52
 msgid "Import vector graphics (SVG)"
-msgstr ""
+msgstr "导入矢量图形(SVG)"
 
 #. Plugin irsrectify
 #: build/trans_plugins.java:54
@@ -22445,7 +22645,7 @@ msgstr ""
 #. Plugin OpeningHoursEditor
 #: build/trans_plugins.java:70
 msgid "extended options for editing opening_hours"
-msgstr ""
+msgstr "扩展 opening_hours 的编辑选项"
 
 #. Plugin openlayers
 #: build/trans_plugins.java:72
@@ -22455,7 +22655,7 @@ msgstr "显示 OpenLayers 背景图片"
 #. Plugin openstreetbugs
 #: build/trans_plugins.java:74
 msgid "Imports issues from OpenStreetBugs"
-msgstr "输入OpenStreetBugs 的议题"
+msgstr "导入 OpenStreetBugs 的议题"
 
 #. Plugin openvisible
 #: build/trans_plugins.java:76
@@ -22472,7 +22672,7 @@ msgstr "执行 FireFox 将目前可见的画面显示为很好的 SVG 图片。"
 #. Plugin pdfimport
 #: build/trans_plugins.java:80
 msgid "Import PDF file and convert to ways."
-msgstr ""
+msgstr "导入 PDF 文件并转换为路径。"
 
 #. Plugin photo_geotagging
 #: build/trans_plugins.java:82
@@ -22505,18 +22705,23 @@ msgstr "这个插件简化了大众运输路线的制图与编辑。"
 msgid "Let other applications send commands to JOSM."
 msgstr "让其他的应用程序传送指令给 JOSM。"
 
-#. Plugin reverter
+#. Plugin restart
 #: build/trans_plugins.java:92
+msgid "Adds &quot;Restart JOSM&quot; item to File menu."
+msgstr ""
+
+#. Plugin reverter
+#: build/trans_plugins.java:94
 msgid "Plugin for reverting changesets"
 msgstr "还原更改组合的插件"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:94
+#: build/trans_plugins.java:96
 msgid "Use rgis.spb.ru image as overlay"
 msgstr ""
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:96
+#: build/trans_plugins.java:98
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -22524,7 +22729,7 @@ msgid ""
 msgstr ""
 
 #. Plugin routes
-#: build/trans_plugins.java:98
+#: build/trans_plugins.java:100
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -22533,19 +22738,19 @@ msgstr ""
 "routes.xml 文件"
 
 #. Plugin routing
-#: build/trans_plugins.java:100
+#: build/trans_plugins.java:102
 msgid "Provides routing capabilities."
 msgstr "提供路线规画的功能。"
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:102
+#: build/trans_plugins.java:104
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
 msgstr ""
 
 #. Plugin slippymap
-#: build/trans_plugins.java:104
+#: build/trans_plugins.java:106
 msgid ""
 "Displays a slippy map grid in JOSM. Can load tiles from slippy map as "
 "background and request updates."
@@ -22554,22 +22759,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:106 build/trans_plugins.java:108
+#: build/trans_plugins.java:108 build/trans_plugins.java:110
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr ""
 
 #. Plugin surveyor
-#: build/trans_plugins.java:110
+#: build/trans_plugins.java:112
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "允许在目前的 gps 位置加入标记/节点。"
 
 #. Plugin tageditor
-#: build/trans_plugins.java:112
+#: build/trans_plugins.java:114
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "提供在表格线中编辑标签的对话框。"
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:114
+#: build/trans_plugins.java:116
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -22579,31 +22784,31 @@ msgstr ""
 "速预览对话框)。您也可以单独以 jar-文件的方式启动。"
 
 #. Plugin terracer
-#: build/trans_plugins.java:116
+#: build/trans_plugins.java:118
 msgid "Make terraced houses out of single blocks."
 msgstr "让连栋房屋能超出单一区块。"
 
 #. Plugin toms
-#: build/trans_plugins.java:118
+#: build/trans_plugins.java:120
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr "为 OpenSeaMap 创建和编辑航标"
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:120
+#: build/trans_plugins.java:122
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr "提供辅助按钮以便使用于单键滑键(触控笔)。目前加入单键移动地图。"
 
 #. Plugin Tracer
-#: build/trans_plugins.java:122
+#: build/trans_plugins.java:124
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr "从捷克地籍图描出建筑物。需要有执行 TracerServer (.NET 或 Mono)。"
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:124
+#: build/trans_plugins.java:126
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
@@ -22611,12 +22816,12 @@ msgstr ""
 "turnrestrictions 插件允许将转弯限制的维护信息输入到 OpenStreetMap 数据库中。"
 
 #. Plugin undelete
-#: build/trans_plugins.java:126
+#: build/trans_plugins.java:128
 msgid "Allows undeleting object from OSM database"
-msgstr "允许从 OSM 数据库中取消对象的删除"
+msgstr "允许从 OSM 数据库中取消删除的对象"
 
 #. Plugin validator
-#: build/trans_plugins.java:128
+#: build/trans_plugins.java:130
 msgid ""
 "An OSM data validator. It checks for problems in data, and provides fixes "
 "for the common ones. Spellcheck integrated for tag names."
@@ -22625,7 +22830,7 @@ msgstr ""
 "签名称的拼写检查。"
 
 #. Plugin videomapping
-#: build/trans_plugins.java:130
+#: build/trans_plugins.java:132
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -22635,7 +22840,7 @@ msgstr ""
 "来辨识可见的对象。"
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:132
+#: build/trans_plugins.java:134
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -22644,29 +22849,29 @@ msgstr ""
 "段，因此可能有许多程序错误存在。"
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:134
+#: build/trans_plugins.java:136
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "方便的下载一整组互相联结的路径"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:136
+#: build/trans_plugins.java:138
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr "为从 GPX 文件导入的路点开启搜索功能。"
 
 #. Plugin wayselector
-#: build/trans_plugins.java:138
+#: build/trans_plugins.java:140
 msgid "Select a sequence of non-branching connected ways"
 msgstr "选择一整列无分支的路径"
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:140
+#: build/trans_plugins.java:142
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
 msgstr "在航照图上将一辆赛车从 A 点开到 B 点，不管 cacti。"
 
 #. Plugin wmsplugin
-#: build/trans_plugins.java:142
+#: build/trans_plugins.java:144
 msgid ""
 "Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)."
 msgstr "显示地理参照图片作为 JOSM 的背景(WMS 服务器、Yahoo...)。"
@@ -25356,13 +25561,13 @@ msgstr "编辑水坝"
 #. item "Water/Water/Groyne"
 #: build/trans_presets.java:1062
 msgid "Groyne"
-msgstr ""
+msgstr "防波堤"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:man_made%3Dgroyne" />
 #. item "Water/Water/Groyne" label "Edit Groyne"
 #: build/trans_presets.java:1064
 msgid "Edit Groyne"
-msgstr ""
+msgstr "编辑防波堤"
 
 #. <space />
 #. <key key="man_made" value="groyne" />
@@ -25835,14 +26040,14 @@ msgstr "类型"
 #: build/trans_presets.java:1265 build/trans_presets.java:1277
 #: build/trans_presets.java:1289 build/trans_presets.java:1318
 msgid "yard"
-msgstr ""
+msgstr "干线"
 
 #: build/trans_presets.java:1217 build/trans_presets.java:1229
 #: build/trans_presets.java:1241 build/trans_presets.java:1253
 #: build/trans_presets.java:1265 build/trans_presets.java:1277
 #: build/trans_presets.java:1289 build/trans_presets.java:1318
 msgid "siding"
-msgstr ""
+msgstr "侧线"
 
 #: build/trans_presets.java:1217 build/trans_presets.java:1229
 #: build/trans_presets.java:1241 build/trans_presets.java:1253
@@ -26739,18 +26944,18 @@ msgstr ""
 #. item "Car/Charging Station"
 #: build/trans_presets.java:1440
 msgid "Charging Station"
-msgstr ""
+msgstr "充电站"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=fuel"/>
 #. item "Car/Charging Station" label "Edit Charging Station (for electric cars)"
 #: build/trans_presets.java:1442
 msgid "Edit Charging Station (for electric cars)"
-msgstr ""
+msgstr "编辑充电站(为电动车)"
 
 #. item "Car/Charging Station" text "Amperage"
 #: build/trans_presets.java:1446
 msgid "Amperage"
-msgstr ""
+msgstr "安培数"
 
 #. item "Car/Wash"
 #: build/trans_presets.java:1448
@@ -27002,7 +27207,7 @@ msgstr "编辑摩托车商店"
 
 #: build/trans_presets.java:1520
 msgid "independent"
-msgstr ""
+msgstr "个体"
 
 #. item "Motorcycle/Motorcycle Dealer" label "Services:"
 #: build/trans_presets.java:1523
@@ -27017,22 +27222,22 @@ msgstr "减价"
 #: build/trans_presets.java:1524
 msgctxt "motorcycle"
 msgid "yes"
-msgstr ""
+msgstr "有"
 
 #: build/trans_presets.java:1524
 msgctxt "motorcycle"
 msgid "brand"
-msgstr ""
+msgstr "品牌"
 
 #: build/trans_presets.java:1524
 msgctxt "motorcycle"
 msgid "used"
-msgstr ""
+msgstr "二手"
 
 #: build/trans_presets.java:1524
 msgctxt "motorcycle"
 msgid "no"
-msgstr ""
+msgstr "无"
 
 #: build/trans_presets.java:1525 build/trans_presets.java:1526
 #: build/trans_presets.java:1528 build/trans_presets.java:1529
@@ -27041,24 +27246,24 @@ msgstr "品牌"
 
 #: build/trans_presets.java:1526 build/trans_presets.java:1528
 msgid "oldtimer"
-msgstr ""
+msgstr "过时的"
 
 #. item "Motorcycle/Motorcycle Dealer" combo "Safety inspection"
 #: build/trans_presets.java:1527
 msgid "Safety inspection"
-msgstr ""
+msgstr "安全检查"
 
 #: build/trans_presets.java:1527
 msgid "DEKRA"
-msgstr ""
+msgstr "德国机动车监督协会"
 
 #: build/trans_presets.java:1527
 msgid "GTÜ"
-msgstr ""
+msgstr "德国技术检验协会"
 
 #: build/trans_presets.java:1527
 msgid "MOT"
-msgstr ""
+msgstr "旧车性能检测"
 
 #: build/trans_presets.java:1527
 msgid "TÜV"
@@ -27258,12 +27463,12 @@ msgstr "编辑公交车月台"
 #. item "Public Transport/Ticket Machine"
 #: build/trans_presets.java:1648
 msgid "Ticket Machine"
-msgstr ""
+msgstr "自动售票机"
 
 #. item "Public Transport/Ticket Machine" text "Reference Number"
 #: build/trans_presets.java:1654
 msgid "Reference Number"
-msgstr ""
+msgstr "编号"
 
 #. item "Public Transport/Ticket Machine" check "Coins"
 #. item "Facilities/Telephone" check "Coins"
@@ -27309,7 +27514,7 @@ msgstr "信用卡"
 #. item "Vending machine" check "Account or loyalty cards"
 #: build/trans_presets.java:1660 build/trans_presets.java:3583
 msgid "Account or loyalty cards"
-msgstr ""
+msgstr "帐号或会员卡"
 
 #. item "Taxi"
 #: build/trans_presets.java:1663
@@ -27449,12 +27654,12 @@ msgstr "编辑登机口"
 #. group "Facilities"
 #: build/trans_presets.java:1742 build/trans_presets.java:2419
 msgid "Facilities"
-msgstr ""
+msgstr "公共场所"
 
 #. group "Facilities/Accommodation"
 #: build/trans_presets.java:1743
 msgid "Accommodation"
-msgstr ""
+msgstr "住宿"
 
 #. item "Facilities/Accommodation/Hotel"
 #. <!--action class="SetNodeAction" params="amenity=fuel"/-->
@@ -27725,26 +27930,26 @@ msgstr "编辑拖车营地"
 #. item "Facilities/Accommodation/Caravan Site" text "Number of places"
 #: build/trans_presets.java:1861
 msgid "Number of places"
-msgstr ""
+msgstr "营地编码"
 
 #. item "Facilities/Accommodation/Caravan Site" combo "Requires a fee"
 #: build/trans_presets.java:1862
 msgid "Requires a fee"
-msgstr ""
+msgstr "需要费用"
 
 #: build/trans_presets.java:1862
 msgid "interval"
-msgstr ""
+msgstr "时间分段"
 
 #. item "Facilities/Accommodation/Caravan Site" check "Power supply"
 #: build/trans_presets.java:1863
 msgid "Power supply"
-msgstr ""
+msgstr "电源"
 
 #. item "Facilities/Accommodation/Caravan Site" check "Tents allowed"
 #: build/trans_presets.java:1864
 msgid "Tents allowed"
-msgstr ""
+msgstr "允许帐篷"
 
 #. item "Facilities/Accommodation/Camping Site"
 #: build/trans_presets.java:1871
@@ -27787,7 +27992,7 @@ msgstr "烹调风格"
 
 #: build/trans_presets.java:1896 build/trans_presets.java:1917
 msgid "italian"
-msgstr "意大利文"
+msgstr "意式"
 
 #: build/trans_presets.java:1896 build/trans_presets.java:1917
 msgid "chinese"
@@ -27811,11 +28016,11 @@ msgstr "德式"
 
 #: build/trans_presets.java:1896 build/trans_presets.java:1917
 msgid "indian"
-msgstr "印度料理"
+msgstr "印式"
 
 #: build/trans_presets.java:1896 build/trans_presets.java:1917
 msgid "regional"
-msgstr "地方料理"
+msgstr "本地"
 
 #: build/trans_presets.java:1896 build/trans_presets.java:1917
 msgid "kebab"
@@ -27823,7 +28028,7 @@ msgstr "土耳其烤肉"
 
 #: build/trans_presets.java:1896 build/trans_presets.java:1917
 msgid "turkish"
-msgstr "土耳其料理"
+msgstr "土耳其式"
 
 #: build/trans_presets.java:1896 build/trans_presets.java:1917
 msgid "asian"
@@ -27902,7 +28107,7 @@ msgstr "编辑咖啡厅"
 
 #: build/trans_presets.java:1953
 msgid "ice_cream"
-msgstr ""
+msgstr "冰激凌"
 
 #. item "Food+Drinks/Pub"
 #: build/trans_presets.java:1966
@@ -27976,7 +28181,7 @@ msgstr "编辑景点"
 #. item "Tourism/Viewpoint" check "Look-Out Tower"
 #: build/trans_presets.java:2046
 msgid "Look-Out Tower"
-msgstr ""
+msgstr "眺望塔"
 
 #. <separator/>
 #. item "Tourism/Information Office"
@@ -27992,11 +28197,11 @@ msgstr "地图"
 #. item "Tourism/Map" combo "Detail Grade"
 #: build/trans_presets.java:2061
 msgid "Detail Grade"
-msgstr ""
+msgstr "详细等级"
 
 #: build/trans_presets.java:2061
 msgid "topo"
-msgstr ""
+msgstr "场所"
 
 #. <roles>
 #. item "Relations/Associated street" role "street"
@@ -28040,16 +28245,16 @@ msgstr "街"
 
 #: build/trans_presets.java:2061
 msgid "scheme"
-msgstr ""
+msgstr "设计图"
 
 #. item "Tourism/Map" combo "Shown Area"
 #: build/trans_presets.java:2062
 msgid "Shown Area"
-msgstr ""
+msgstr "显示区域"
 
 #: build/trans_presets.java:2062
 msgid "site"
-msgstr "站点"
+msgstr "地点"
 
 #: build/trans_presets.java:2062
 msgid "city"
@@ -28057,7 +28262,7 @@ msgstr "城市"
 
 #: build/trans_presets.java:2062
 msgid "region"
-msgstr ""
+msgstr "地区"
 
 #. item "Tourism/Map" text "Closer Description"
 #. item "Tourism/Information Board" text "Closer Description"
@@ -28065,7 +28270,7 @@ msgstr ""
 #: build/trans_presets.java:2063 build/trans_presets.java:2079
 #: build/trans_presets.java:2124
 msgid "Closer Description"
-msgstr ""
+msgstr "贴切描述"
 
 #. <space />
 #. item "Tourism/Map" label "Routes shown for:"
@@ -28073,7 +28278,7 @@ msgstr ""
 #. item "Tourism/Guidepost" label "Routes shown for:"
 #: build/trans_presets.java:2065 build/trans_presets.java:2088
 msgid "Routes shown for:"
-msgstr ""
+msgstr "显示的线路为了:"
 
 #. item "Tourism/Map" check "Hiking"
 #. item "Tourism/Guidepost" check "Hiking"
@@ -28093,7 +28298,7 @@ msgstr "自行车"
 #. item "Tourism/Guidepost" check "Mountainbiking"
 #: build/trans_presets.java:2068 build/trans_presets.java:2091
 msgid "Mountainbiking"
-msgstr ""
+msgstr "山地自行车"
 
 #. item "Tourism/Map" check "Skiing"
 #. item "Tourism/Guidepost" check "Skiing"
@@ -28107,13 +28312,13 @@ msgstr "滑雪"
 #. item "Tourism/Guidepost" check "Riding"
 #: build/trans_presets.java:2070 build/trans_presets.java:2094
 msgid "Riding"
-msgstr ""
+msgstr "骑行"
 
 #. item "Tourism/Map" label "... other transportation modes possible"
 #. item "Tourism/Guidepost" label "... other transportation modes possible"
 #: build/trans_presets.java:2071 build/trans_presets.java:2095
 msgid "... other transportation modes possible"
-msgstr ""
+msgstr "... 其他运输方式也可被接受"
 
 #. item "Tourism/Information Board"
 #: build/trans_presets.java:2073
@@ -28123,7 +28328,7 @@ msgstr "信息板"
 #. item "Tourism/Information Board" combo "Board Content"
 #: build/trans_presets.java:2078
 msgid "Board Content"
-msgstr ""
+msgstr "信息板内容"
 
 #: build/trans_presets.java:2078
 msgid "notice"
@@ -28234,7 +28439,7 @@ msgstr "编辑水上乐园"
 #. item "Leisure/Sauna"
 #: build/trans_presets.java:2155
 msgid "Sauna"
-msgstr ""
+msgstr "桑拿"
 
 #. item "Leisure/Sauna" label "Edit Sauna"
 #. <space />
@@ -28242,7 +28447,7 @@ msgstr ""
 #. item "Leisure/Sauna" label "Edit Sauna"
 #: build/trans_presets.java:2156 build/trans_presets.java:2159
 msgid "Edit Sauna"
-msgstr ""
+msgstr "编辑桑拿"
 
 #: build/trans_presets.java:2164 build/trans_presets.java:2274
 #: build/trans_presets.java:2382 build/trans_presets.java:3195
@@ -28289,13 +28494,13 @@ msgstr "壁炉"
 #. item "Leisure/Public Grill"
 #: build/trans_presets.java:2180
 msgid "Public Grill"
-msgstr ""
+msgstr "公共烧烤区"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dbbq" />
 #. item "Leisure/Public Grill" label "Edit Public Grill"
 #: build/trans_presets.java:2182
 msgid "Edit Public Grill"
-msgstr ""
+msgstr "编辑公共烧烤区"
 
 #. item "Leisure/Public Grill" combo "Covered"
 #: build/trans_presets.java:2186
@@ -28306,15 +28511,15 @@ msgstr ""
 #: build/trans_presets.java:2187
 msgctxt "grill"
 msgid "Fuel"
-msgstr ""
+msgstr "燃料"
 
 #: build/trans_presets.java:2187
 msgid "charcoal"
-msgstr ""
+msgstr "木炭"
 
 #: build/trans_presets.java:2187
 msgid "electric"
-msgstr ""
+msgstr "电"
 
 #. item "Leisure/Fishing"
 #: build/trans_presets.java:2189
@@ -28329,7 +28534,7 @@ msgstr "编辑钓鱼场"
 #. group "Culture"
 #: build/trans_presets.java:2195
 msgid "Culture"
-msgstr ""
+msgstr "文化"
 
 #. item "Culture/Museum"
 #: build/trans_presets.java:2196
@@ -28442,7 +28647,7 @@ msgstr "犹太教"
 #: build/trans_presets.java:2238 build/trans_presets.java:3900
 #: build/trans_presets.java:3909
 msgid "muslim"
-msgstr "回教"
+msgstr "伊斯兰教"
 
 #: build/trans_presets.java:2238 build/trans_presets.java:3900
 #: build/trans_presets.java:3909
@@ -28452,7 +28657,7 @@ msgstr "锡克教"
 #: build/trans_presets.java:2238 build/trans_presets.java:3900
 #: build/trans_presets.java:3909
 msgid "spiritualist"
-msgstr ""
+msgstr "巫术"
 
 #: build/trans_presets.java:2238 build/trans_presets.java:3900
 #: build/trans_presets.java:3909
@@ -28462,7 +28667,7 @@ msgstr "道教"
 #: build/trans_presets.java:2238 build/trans_presets.java:3900
 #: build/trans_presets.java:3909
 msgid "unitarian"
-msgstr ""
+msgstr "神体一位派基督教"
 
 #: build/trans_presets.java:2238 build/trans_presets.java:3900
 #: build/trans_presets.java:3909
@@ -28495,17 +28700,17 @@ msgstr "天主教"
 #: build/trans_presets.java:2239 build/trans_presets.java:3901
 #: build/trans_presets.java:3910
 msgid "evangelical"
-msgstr "福音派教会"
+msgstr "福音派"
 
 #: build/trans_presets.java:2239 build/trans_presets.java:3901
 #: build/trans_presets.java:3910
 msgid "jehovahs_witness"
-msgstr ""
+msgstr "耶和华见证"
 
 #: build/trans_presets.java:2239 build/trans_presets.java:3901
 #: build/trans_presets.java:3910
 msgid "lutheran"
-msgstr "路德教派"
+msgstr "路德派"
 
 #: build/trans_presets.java:2239 build/trans_presets.java:3901
 #: build/trans_presets.java:3910
@@ -28525,12 +28730,12 @@ msgstr "东正教"
 #: build/trans_presets.java:2239 build/trans_presets.java:3901
 #: build/trans_presets.java:3910
 msgid "pentecostal"
-msgstr "圣灵降临教派"
+msgstr "圣灵降临派"
 
 #: build/trans_presets.java:2239 build/trans_presets.java:3901
 #: build/trans_presets.java:3910
 msgid "presbyterian"
-msgstr "长老派教会"
+msgstr "长老派"
 
 #: build/trans_presets.java:2239 build/trans_presets.java:3901
 #: build/trans_presets.java:3910
@@ -28555,21 +28760,21 @@ msgstr "逊尼派"
 #. item "Culture/Recording Studio"
 #: build/trans_presets.java:2242
 msgid "Recording Studio"
-msgstr ""
+msgstr "录音室"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dstudio" />
 #. item "Culture/Recording Studio" label "Edit Studio"
 #: build/trans_presets.java:2244
 msgid "Edit Studio"
-msgstr ""
+msgstr "编辑录音室"
 
 #: build/trans_presets.java:2249
 msgid "audio"
-msgstr ""
+msgstr "音频"
 
 #: build/trans_presets.java:2249
 msgid "video"
-msgstr ""
+msgstr "视频"
 
 #. group "Public Building"
 #. item "Public Building/Public Building"
@@ -28599,7 +28804,7 @@ msgstr "编辑县市政府/公所"
 #. item "Public Building/Community Centre" label "Community Centre"
 #: build/trans_presets.java:2267 build/trans_presets.java:2269
 msgid "Community Centre"
-msgstr ""
+msgstr "社区中心"
 
 #. item "Public Building/Embassy"
 #: build/trans_presets.java:2276
@@ -28675,7 +28880,7 @@ msgstr "编辑邮局"
 #. group "Education"
 #: build/trans_presets.java:2319
 msgid "Education"
-msgstr ""
+msgstr "教育"
 
 #. item "Education/Kindergarten"
 #: build/trans_presets.java:2320
@@ -28723,18 +28928,18 @@ msgstr "编辑学院"
 #. item "Education/Driving School"
 #: build/trans_presets.java:2343
 msgid "Driving School"
-msgstr ""
+msgstr "驾校"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Proposed_features/driving_school" />
 #. item "Education/Driving School" label "Edit Driving School"
 #: build/trans_presets.java:2345
 msgid "Edit Driving School"
-msgstr ""
+msgstr "编辑驾校"
 
 #. item "Education/Driving School" text "License Classes"
 #: build/trans_presets.java:2350
 msgid "License Classes"
-msgstr ""
+msgstr "许可类型"
 
 #. group "Health"
 #: build/trans_presets.java:2353
@@ -28782,13 +28987,13 @@ msgstr "配药"
 #. item "Health/Hearing Aids"
 #: build/trans_presets.java:2375
 msgid "Hearing Aids"
-msgstr ""
+msgstr "助听器"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dhearing_aids"/>
 #. item "Health/Hearing Aids" label "Edit Hearing Aids"
 #: build/trans_presets.java:2377
 msgid "Edit Hearing Aids"
-msgstr ""
+msgstr "编辑助听器"
 
 #. item "Health/Hospital"
 #: build/trans_presets.java:2384
@@ -28804,13 +29009,13 @@ msgstr "编辑医院"
 #. item "Health/Baby Hatch"
 #: build/trans_presets.java:2390
 msgid "Baby Hatch"
-msgstr "弃婴保护舱"
+msgstr "婴儿保育箱"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=baby_hatch" />
 #. item "Health/Baby Hatch" label "Edit Baby Hatch"
 #: build/trans_presets.java:2392
 msgid "Edit Baby Hatch"
-msgstr "编辑弃婴保护舱"
+msgstr "编辑婴儿保育箱"
 
 #. item "Health/Emergency Access Point"
 #: build/trans_presets.java:2397
@@ -28829,12 +29034,12 @@ msgstr "编辑紧急连络点"
 #. item "Health/Emergency Access Point" text "Point Number"
 #: build/trans_presets.java:2403
 msgid "Point Number"
-msgstr ""
+msgstr "地点编号"
 
 #. item "Health/Emergency Access Point" text "Point Name"
 #: build/trans_presets.java:2404
 msgid "Point Name"
-msgstr ""
+msgstr "地点名"
 
 #. item "Health/Emergency Access Point" label "(Use international code, like +12-345-67890)"
 #: build/trans_presets.java:2407
@@ -28861,7 +29066,7 @@ msgstr "厕所"
 
 #: build/trans_presets.java:2427
 msgid "limited"
-msgstr ""
+msgstr "有限"
 
 #. item "Facilities/Toilets" text "Note"
 #. item "Vending machine" text "Note"
@@ -28894,14 +29099,14 @@ msgstr "电话卡"
 #. item "Facilities/Clock"
 #: build/trans_presets.java:2448
 msgid "Clock"
-msgstr ""
+msgstr "时钟"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=clock"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:amenity=clock" />
 #. item "Facilities/Clock" label "Edit Clock"
 #: build/trans_presets.java:2451
 msgid "Edit Clock"
-msgstr ""
+msgstr "编辑时钟"
 
 #. <key key="amenity" value="clock" />
 #. <optional>
@@ -28909,28 +29114,28 @@ msgstr ""
 #. item "Man Made/Man Made/Measurement Station" combo "Display"
 #: build/trans_presets.java:2454 build/trans_presets.java:3006
 msgid "Display"
-msgstr ""
+msgstr "显示"
 
 #: build/trans_presets.java:2454 build/trans_presets.java:3006
 msgid "analog"
-msgstr ""
+msgstr "模拟"
 
 #: build/trans_presets.java:2454 build/trans_presets.java:3006
 msgid "digital"
-msgstr ""
+msgstr "数字"
 
 #: build/trans_presets.java:2454
 msgid "sundial"
-msgstr ""
+msgstr "日晷"
 
 #: build/trans_presets.java:2454
 msgid "unorthodox"
-msgstr ""
+msgstr "非标"
 
 #. item "Facilities/Clock" combo "Support"
 #: build/trans_presets.java:2455
 msgid "Support"
-msgstr ""
+msgstr "支撑"
 
 #: build/trans_presets.java:2455
 msgid "pole"
@@ -28938,48 +29143,48 @@ msgstr "杆"
 
 #: build/trans_presets.java:2455
 msgid "wall_mounted"
-msgstr ""
+msgstr "壁挂式"
 
 #: build/trans_presets.java:2455
 msgid "billboard"
-msgstr ""
+msgstr "告示牌"
 
 #. item "Facilities/Clock" combo "Visibility/readability"
 #: build/trans_presets.java:2456
 msgid "Visibility/readability"
-msgstr ""
+msgstr "可见性/可读性"
 
 #: build/trans_presets.java:2456
 msgid "(up to 5m)"
-msgstr ""
+msgstr "(高至5米)"
 
 #: build/trans_presets.java:2456
 msgid "(up to 20m)"
-msgstr ""
+msgstr "(高至20米)"
 
 #: build/trans_presets.java:2456
 msgid "(more than 20m)"
-msgstr ""
+msgstr "(高于20米)"
 
 #. item "Facilities/Clock" check "Shows current date"
 #: build/trans_presets.java:2457
 msgid "Shows current date"
-msgstr ""
+msgstr "显示当前日期"
 
 #. item "Facilities/Clock" check "Shows temperature"
 #: build/trans_presets.java:2458
 msgid "Shows temperature"
-msgstr ""
+msgstr "显示温度"
 
 #. item "Facilities/Clock" check "Shows barometric pressure"
 #: build/trans_presets.java:2459
 msgid "Shows barometric pressure"
-msgstr ""
+msgstr "显示气压"
 
 #. item "Facilities/Clock" check "Shows humidity"
 #: build/trans_presets.java:2460
 msgid "Shows humidity"
-msgstr ""
+msgstr "显示湿度"
 
 #. </optional>
 #. item "Facilities/Recycling"
@@ -28992,7 +29197,7 @@ msgstr "资源回收"
 #. item "Facilities/Recycling" label "Edit Recycling station"
 #: build/trans_presets.java:2466
 msgid "Edit Recycling station"
-msgstr "资源回收站"
+msgstr "编辑资源回收站"
 
 #. <key key="amenity" value="recycling" />
 #. item "Facilities/Recycling" check "Batteries"
@@ -29023,20 +29228,20 @@ msgstr "废金属"
 #. item "Facilities/Waste Basket"
 #: build/trans_presets.java:2475
 msgid "Waste Basket"
-msgstr "废纸篓"
+msgstr "垃圾桶"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dwaste_basket" />
 #. item "Facilities/Waste Basket" label "Edit Waste Basket"
 #: build/trans_presets.java:2477
 msgid "Edit Waste Basket"
-msgstr "编辑废纸篓"
+msgstr "编辑垃圾桶"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity=bench" />
 #. <key key="amenity" value="bench" />
 #. item "Facilities/Bench" combo "Backrest"
 #: build/trans_presets.java:2484
 msgid "Backrest"
-msgstr ""
+msgstr "靠背"
 
 #. item "Facilities/Bench" combo "Material"
 #: build/trans_presets.java:2485
@@ -29895,12 +30100,12 @@ msgstr ""
 #: build/trans_presets.java:2528 build/trans_presets.java:2537
 #: build/trans_presets.java:2546 build/trans_presets.java:2555
 msgid "rugby_league"
-msgstr ""
+msgstr "橄榄球联赛"
 
 #: build/trans_presets.java:2528 build/trans_presets.java:2537
 #: build/trans_presets.java:2546 build/trans_presets.java:2555
 msgid "rugby_union"
-msgstr ""
+msgstr "橄榄球联盟"
 
 #: build/trans_presets.java:2528 build/trans_presets.java:2537
 #: build/trans_presets.java:2546 build/trans_presets.java:2555
@@ -29910,7 +30115,7 @@ msgstr "射击"
 #: build/trans_presets.java:2528 build/trans_presets.java:2537
 #: build/trans_presets.java:2546 build/trans_presets.java:2555
 msgid "skateboard"
-msgstr ""
+msgstr "滑板"
 
 #: build/trans_presets.java:2528 build/trans_presets.java:2537
 #: build/trans_presets.java:2546 build/trans_presets.java:2555
@@ -30452,24 +30657,24 @@ msgstr "编辑篮球"
 #. item "Sport (Ball)/Volleyball"
 #: build/trans_presets.java:2727
 msgid "Volleyball"
-msgstr ""
+msgstr "排球"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:sport%3Dvolleyball" />
 #. item "Sport (Ball)/Volleyball" label "Edit Volleyball"
 #: build/trans_presets.java:2729
 msgid "Edit Volleyball"
-msgstr ""
+msgstr "编辑排球"
 
 #. item "Sport (Ball)/Beachvolleyball"
 #: build/trans_presets.java:2736
 msgid "Beachvolleyball"
-msgstr ""
+msgstr "沙滩排球"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:sport%3Dbeachvolleyball" />
 #. item "Sport (Ball)/Beachvolleyball" label "Edit Beachvolleyball"
 #: build/trans_presets.java:2738
 msgid "Edit Beachvolleyball"
-msgstr ""
+msgstr "编辑沙滩排球"
 
 #. item "Sport (Ball)/Golf"
 #: build/trans_presets.java:2745
@@ -30711,13 +30916,13 @@ msgstr "编辑作品"
 #. item "Man Made/Man Made/Chimney"
 #: build/trans_presets.java:2877
 msgid "Chimney"
-msgstr ""
+msgstr "烟囱"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Proposed_features/Chimney" />
 #. item "Man Made/Man Made/Chimney" label "Edit Chimney"
 #: build/trans_presets.java:2879
 msgid "Edit Chimney"
-msgstr ""
+msgstr "编辑烟囱"
 
 #. item "Man Made/Man Made/Windmill"
 #: build/trans_presets.java:2886
@@ -30776,17 +30981,17 @@ msgstr "位置"
 #: build/trans_presets.java:2904
 msgctxt "pipeline"
 msgid "underground"
-msgstr ""
+msgstr "地下"
 
 #: build/trans_presets.java:2904
 msgctxt "pipeline"
 msgid "underwater"
-msgstr ""
+msgstr "水下"
 
 #: build/trans_presets.java:2904
 msgctxt "pipeline"
 msgid "overground"
-msgstr ""
+msgstr "地上"
 
 #. item "Man Made/Man Made/Crane"
 #: build/trans_presets.java:2906
@@ -30802,46 +31007,46 @@ msgstr "编辑起重机"
 #. item "Man Made/Man Made/Mineshaft"
 #: build/trans_presets.java:2912
 msgid "Mineshaft"
-msgstr ""
+msgstr "竖井"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:man_made%3Dmineshaft"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:man_made%3Dmineshaft" />
 #. item "Man Made/Man Made/Mineshaft" label "Edit Mineshaft"
 #: build/trans_presets.java:2915
 msgid "Edit Mineshaft"
-msgstr ""
+msgstr "编辑竖井"
 
 #. item "Man Made/Man Made/Mineshaft" combo "Function"
 #: build/trans_presets.java:2918
 msgid "Function"
-msgstr ""
+msgstr "功能"
 
 #: build/trans_presets.java:2918
 msgid "winding"
-msgstr ""
+msgstr "通风"
 
 #: build/trans_presets.java:2918
 msgid "air"
-msgstr ""
+msgstr "空气"
 
 #. item "Man Made/Man Made/Mineshaft" text "Depth in meters"
 #: build/trans_presets.java:2919
 msgid "Depth in meters"
-msgstr ""
+msgstr "深度(米)"
 
 #. item "Man Made/Man Made/Mineshaft" combo "Resource"
 #. item "Man Made/Man Made/Adit" combo "Resource"
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "Resource"
-msgstr ""
+msgstr "资源"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "aggregate"
-msgstr ""
+msgstr "多种"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "bauxite"
-msgstr ""
+msgstr "矾土"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 #: build/trans_presets.java:3029
@@ -30850,86 +31055,86 @@ msgstr "燃媒"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "copper"
-msgstr ""
+msgstr "铜"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "dimension_stone"
-msgstr ""
+msgstr "石材"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "gold"
-msgstr ""
+msgstr "金"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "ilmenite"
-msgstr ""
+msgstr "钛铁矿"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "iron_ore"
-msgstr ""
+msgstr "铁矿"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "lead"
-msgstr ""
+msgstr "铅"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "limestone"
-msgstr ""
+msgstr "石灰石"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "nickel"
-msgstr ""
+msgstr "镍"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "rutile"
-msgstr ""
+msgstr "金红石"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "salt"
-msgstr ""
+msgstr "石盐"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "silver"
-msgstr ""
+msgstr "银"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "tin"
-msgstr ""
+msgstr "锡"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "zinc"
-msgstr ""
+msgstr "锌"
 
 #: build/trans_presets.java:2921 build/trans_presets.java:2932
 msgid "zircon"
-msgstr ""
+msgstr "锆石"
 
 #. item "Man Made/Man Made/Mineshaft" combo "Visible Headframe"
 #: build/trans_presets.java:2922
 msgid "Visible Headframe"
-msgstr ""
+msgstr "可见井架"
 
 #. item "Man Made/Man Made/Mineshaft" check "Disused"
 #. item "Man Made/Man Made/Adit" check "Disused"
 #: build/trans_presets.java:2923 build/trans_presets.java:2933
 msgid "Disused"
-msgstr ""
+msgstr "废弃"
 
 #. item "Man Made/Man Made/Adit"
 #: build/trans_presets.java:2925
 msgid "Adit"
-msgstr ""
+msgstr "坑道"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:man_made%3Dadit" />
 #. item "Man Made/Man Made/Adit" label "Edit Adit"
 #: build/trans_presets.java:2927
 msgid "Edit Adit"
-msgstr ""
+msgstr "编辑坑道"
 
 #. item "Man Made/Man Made/Adit" text "Length in meters"
 #: build/trans_presets.java:2930
 msgid "Length in meters"
-msgstr ""
+msgstr "长度(米)"
 
 #. <separator/>
 #. item "Man Made/Man Made/Water Tower"
@@ -30945,13 +31150,13 @@ msgstr "编辑贮水塔"
 #. item "Man Made/Man Made/Water Works"
 #: build/trans_presets.java:2941
 msgid "Water Works"
-msgstr ""
+msgstr "水务"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:man_made%3Dwater_works" />
 #. item "Man Made/Man Made/Water Works" label "Edit Water Works"
 #: build/trans_presets.java:2943
 msgid "Edit Water Works"
-msgstr ""
+msgstr "编辑水务"
 
 #. item "Man Made/Man Made/Wastewater Plant"
 #: build/trans_presets.java:2949
@@ -30969,13 +31174,13 @@ msgstr "编辑污水处理厂"
 #. item "Man Made/Man Made/Watermill"
 #: build/trans_presets.java:2957
 msgid "Watermill"
-msgstr ""
+msgstr "使用水车的磨坊"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:man_made%3Dwatermill" />
 #. item "Man Made/Man Made/Watermill" label "Edit Watermill"
 #: build/trans_presets.java:2959
 msgid "Edit Watermill"
-msgstr ""
+msgstr "编辑水磨"
 
 #. item "Man Made/Man Made/Fountain"
 #: build/trans_presets.java:2964
@@ -30992,13 +31197,13 @@ msgstr "编辑喷泉"
 #. item "Man Made/Man Made/Water Well"
 #: build/trans_presets.java:2971
 msgid "Water Well"
-msgstr ""
+msgstr "水井"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:man_made%3Dwater_well" />
 #. item "Man Made/Man Made/Water Well" label "Edit Water Well"
 #: build/trans_presets.java:2973
 msgid "Edit Water Well"
-msgstr ""
+msgstr "编辑水井"
 
 #. <separator/>
 #. item "Man Made/Man Made/Lighthouse"
@@ -31021,73 +31226,73 @@ msgstr "编辑灯标"
 #. item "Man Made/Man Made/Street Lamp"
 #: build/trans_presets.java:2990
 msgid "Street Lamp"
-msgstr ""
+msgstr "路灯"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:highway%3Dstreet_lamp" />
 #. item "Man Made/Man Made/Street Lamp" label "Edit Street Lamp"
 #: build/trans_presets.java:2992
 msgid "Edit Street Lamp"
-msgstr ""
+msgstr "编辑路灯"
 
 #. <space />
 #. <key key="highway" value="street_lamp" />
 #. item "Man Made/Man Made/Street Lamp" combo "Operation times"
 #: build/trans_presets.java:2995
 msgid "Operation times"
-msgstr ""
+msgstr "工作时间"
 
 #: build/trans_presets.java:2995
 msgid "Mo-Fr 22:00-05:00"
-msgstr ""
+msgstr "周一-周五 22:00-05:00"
 
 #. item "Man Made/Man Made/Measurement Station"
 #: build/trans_presets.java:2997
 msgid "Measurement Station"
-msgstr ""
+msgstr "测量站"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Proposed_features/measurement_station" />
 #. item "Man Made/Man Made/Measurement Station" label "Edit Measurement Station"
 #: build/trans_presets.java:2999
 msgid "Edit Measurement Station"
-msgstr ""
+msgstr "编辑测量站"
 
 #. item "Man Made/Man Made/Measurement Station" combo "Measurement"
 #: build/trans_presets.java:3004
 msgid "Measurement"
-msgstr ""
+msgstr "测量"
 
 #: build/trans_presets.java:3004
 msgid "particulate_matter"
-msgstr ""
+msgstr "颗粒物"
 
 #: build/trans_presets.java:3004
 msgid "seismic"
-msgstr ""
+msgstr "地震"
 
 #: build/trans_presets.java:3004
 msgid "water_level"
-msgstr ""
+msgstr "水位"
 
 #: build/trans_presets.java:3004
 msgid "weather"
-msgstr ""
+msgstr "天气"
 
 #. item "Man Made/Man Made/Measurement Station" combo "Recording"
 #: build/trans_presets.java:3005
 msgid "Recording"
-msgstr ""
+msgstr "记录"
 
 #: build/trans_presets.java:3005
 msgid "manually"
-msgstr ""
+msgstr "手动"
 
 #: build/trans_presets.java:3005
 msgid "automated"
-msgstr ""
+msgstr "自动"
 
 #: build/trans_presets.java:3005
 msgid "remote"
-msgstr ""
+msgstr "远程"
 
 #. item "Man Made/Man Made/Survey Point"
 #: build/trans_presets.java:3008
@@ -31126,7 +31331,7 @@ msgstr "公共"
 #. group "Power"
 #: build/trans_presets.java:3022
 msgid "Power"
-msgstr ""
+msgstr "电力"
 
 #. item "Power/Power Generator"
 #: build/trans_presets.java:3023
@@ -31194,14 +31399,14 @@ msgstr "电线编号"
 #. item "Power/Cable Distribution Cabinet"
 #: build/trans_presets.java:3049
 msgid "Cable Distribution Cabinet"
-msgstr ""
+msgstr "电缆配电柜"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:power%3Dcable_distribution_cabinet"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:power%3Dcable_distribution_cabinet" />
 #. item "Power/Cable Distribution Cabinet" label "Edit Cable Distribution Cabinet"
 #: build/trans_presets.java:3052
 msgid "Edit Cable Distribution Cabinet"
-msgstr ""
+msgstr "编辑电缆配电柜"
 
 #. <separator/>
 #. item "Power/Power Tower"
@@ -31227,20 +31432,20 @@ msgstr "塔编号"
 #. item "Power/Pole"
 #: build/trans_presets.java:3067
 msgid "Pole"
-msgstr ""
+msgstr "电竿"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:power%3Dpole"
 #. de.href="http://wiki.openstreetmap.org/wiki/DE:Tag:power%3Dpole" />
 #. item "Power/Pole" label "Edit Power Pole"
 #: build/trans_presets.java:3070
 msgid "Edit Power Pole"
-msgstr ""
+msgstr "编辑电竿"
 
 #. <key key="power" value="tower" />
 #. item "Power/Pole" text "Pole reference"
 #: build/trans_presets.java:3072
 msgid "Pole reference"
-msgstr ""
+msgstr "竿编号"
 
 #. item "Power/Power Line"
 #: build/trans_presets.java:3074
@@ -31476,58 +31681,58 @@ msgstr "编辑肉店"
 #. item "Shops/Food/Seafood"
 #: build/trans_presets.java:3188
 msgid "Seafood"
-msgstr ""
+msgstr "海鲜"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dseafood"/>
 #. item "Shops/Food/Seafood" label "Edit Seafood"
 #: build/trans_presets.java:3190
 msgid "Edit Seafood"
-msgstr ""
+msgstr "编辑海鲜"
 
 #. item "Shops/Food/Deli (Fine Food)"
 #: build/trans_presets.java:3197
 msgid "Deli (Fine Food)"
-msgstr ""
+msgstr "熟食店(美食)"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Ddeli"/>
 #. item "Shops/Food/Deli (Fine Food)" label "Edit Deli (Fine Food)"
 #: build/trans_presets.java:3199
 msgid "Edit Deli (Fine Food)"
-msgstr ""
+msgstr "编辑熟食店(美食)"
 
 #. item "Shops/Food/Confectionery"
 #: build/trans_presets.java:3206
 msgid "Confectionery"
-msgstr ""
+msgstr "糖果"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dconfectionery" />
 #. item "Shops/Food/Confectionery" label "Edit Confectionery"
 #: build/trans_presets.java:3208
 msgid "Edit Confectionery"
-msgstr ""
+msgstr "编辑糖果"
 
 #. <separator/>
 #. item "Shops/Food/Marketplace"
 #: build/trans_presets.java:3214
 msgid "Marketplace"
-msgstr ""
+msgstr "市场"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dmarketplace" />
 #. item "Shops/Food/Marketplace" label "Edit Marketplace"
 #: build/trans_presets.java:3216
 msgid "Edit Marketplace"
-msgstr ""
+msgstr "编辑市场"
 
 #. item "Shops/Food/Greengrocer"
 #: build/trans_presets.java:3223
 msgid "Greengrocer"
-msgstr ""
+msgstr "蔬菜水果店"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dgreengrocer"/>
 #. item "Shops/Food/Greengrocer" label "Edit Greengrocer"
 #: build/trans_presets.java:3225
 msgid "Edit Greengrocer"
-msgstr ""
+msgstr "编辑蔬菜水果店"
 
 #. item "Shops/Food/Organic"
 #: build/trans_presets.java:3232
@@ -31569,13 +31774,13 @@ msgstr "服装店"
 #. item "Clothes/Boutique"
 #: build/trans_presets.java:3260
 msgid "Boutique"
-msgstr ""
+msgstr "时装"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dboutique"/>
 #. item "Clothes/Boutique" label "Edit Boutique"
 #: build/trans_presets.java:3262
 msgid "Edit Boutique"
-msgstr ""
+msgstr "编辑时装店"
 
 #. item "Clothes/Shoes"
 #: build/trans_presets.java:3269
@@ -31639,18 +31844,18 @@ msgstr "编辑制衣店"
 #. item "Clothes/Fabric"
 #: build/trans_presets.java:3309
 msgid "Fabric"
-msgstr ""
+msgstr "布"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dfabric"/>
 #. item "Clothes/Fabric" label "Edit Fabric"
 #: build/trans_presets.java:3311
 msgid "Edit Fabric"
-msgstr ""
+msgstr "编辑布店"
 
 #. group "Electronic"
 #: build/trans_presets.java:3319
 msgid "Electronic"
-msgstr ""
+msgstr "电器"
 
 #. item "Electronic/Computer"
 #: build/trans_presets.java:3320
@@ -31675,24 +31880,24 @@ msgstr "编辑电子材料行"
 #. item "Electronic/Mobile Phone"
 #: build/trans_presets.java:3332
 msgid "Mobile Phone"
-msgstr ""
+msgstr "手机"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dmobile_phone"/>
 #. item "Electronic/Mobile Phone" label "Edit Mobile Phone"
 #: build/trans_presets.java:3334
 msgid "Edit Mobile Phone"
-msgstr ""
+msgstr "编辑手机"
 
 #. item "Electronic/Vacuum Cleaner"
 #: build/trans_presets.java:3341
 msgid "Vacuum Cleaner"
-msgstr ""
+msgstr "吸尘器"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dvacuum_cleaner"/>
 #. item "Electronic/Vacuum Cleaner" label "Edit Vacuum Cleaner"
 #: build/trans_presets.java:3343
 msgid "Edit Vacuum Cleaner"
-msgstr ""
+msgstr "编辑吸尘器"
 
 #. item "Electronic/Hifi"
 #: build/trans_presets.java:3350
@@ -31756,24 +31961,24 @@ msgstr "编辑自动提款机"
 #. item "Other/Department Store"
 #: build/trans_presets.java:3388
 msgid "Department Store"
-msgstr ""
+msgstr "百货商店"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Ddepartment_store"/>
 #. item "Other/Department Store" label "Edit Department Store"
 #: build/trans_presets.java:3390
 msgid "Edit Department Store"
-msgstr ""
+msgstr "编辑百货商店"
 
 #. item "Other/Mall"
 #: build/trans_presets.java:3397
 msgid "Mall"
-msgstr ""
+msgstr "购物中心"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dmall"/>
 #. item "Other/Mall" label "Edit Mall"
 #: build/trans_presets.java:3399
 msgid "Edit Mall"
-msgstr ""
+msgstr "编辑购物中心"
 
 #. <separator/>
 #. item "Other/Chemist"
@@ -31809,24 +32014,24 @@ msgstr "编辑眼镜店"
 #. item "Other/Jewelry"
 #: build/trans_presets.java:3425
 msgid "Jewelry"
-msgstr ""
+msgstr "首饰"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Djewelry"/>
 #. item "Other/Jewelry" label "Edit Jewelry"
 #: build/trans_presets.java:3427
 msgid "Edit Jewelry"
-msgstr ""
+msgstr "编辑首饰"
 
 #. item "Other/Erotic"
 #: build/trans_presets.java:3434
 msgid "Erotic"
-msgstr ""
+msgstr "情色"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Derotic"/>
 #. item "Other/Erotic" label "Edit Erotic"
 #: build/trans_presets.java:3436
 msgid "Edit Erotic"
-msgstr ""
+msgstr "编辑情色"
 
 #. <separator/>
 #. item "Other/Florist"
@@ -31877,13 +32082,13 @@ msgstr "编辑硬件商店"
 #. item "Other/Paint"
 #: build/trans_presets.java:3473
 msgid "Paint"
-msgstr ""
+msgstr "油漆"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dpaint"/>
 #. item "Other/Paint" label "Edit Paint"
 #: build/trans_presets.java:3475
 msgid "Edit Paint"
-msgstr ""
+msgstr "编辑油漆"
 
 #. <separator/>
 #. item "Other/Furniture"
@@ -31899,35 +32104,35 @@ msgstr "编辑家俱店"
 #. item "Other/Kitchen"
 #: build/trans_presets.java:3489
 msgid "Kitchen"
-msgstr ""
+msgstr "炊具"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dkitchen"/>
 #. item "Other/Kitchen" label "Edit Kitchen"
 #: build/trans_presets.java:3491
 msgid "Edit Kitchen"
-msgstr ""
+msgstr "编辑炊具"
 
 #. item "Other/Curtain"
 #: build/trans_presets.java:3498
 msgid "Curtain"
-msgstr ""
+msgstr "窗帘"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dcurtain"/>
 #. item "Other/Curtain" label "Edit Curtain"
 #: build/trans_presets.java:3500
 msgid "Edit Curtain"
-msgstr ""
+msgstr "编辑窗帘"
 
 #. item "Other/Frame"
 #: build/trans_presets.java:3507
 msgid "Frame"
-msgstr ""
+msgstr "框架"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dframe"/>
 #. item "Other/Frame" label "Edit Frames"
 #: build/trans_presets.java:3509
 msgid "Edit Frames"
-msgstr ""
+msgstr "编辑框架"
 
 #. <separator/>
 #. item "Other/Stationery"
@@ -31943,13 +32148,13 @@ msgstr "编辑文具店"
 #. item "Other/Copyshop"
 #: build/trans_presets.java:3523
 msgid "Copyshop"
-msgstr ""
+msgstr "复印店"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dcopyshop"/>
 #. item "Other/Copyshop" label "Edit Copyshop"
 #: build/trans_presets.java:3525
 msgid "Edit Copyshop"
-msgstr ""
+msgstr "编辑复印店"
 
 #. item "Other/Book Store"
 #: build/trans_presets.java:3532
@@ -31975,13 +32180,13 @@ msgstr "编辑旅行社"
 #. item "Other/Musical Instrument"
 #: build/trans_presets.java:3545
 msgid "Musical Instrument"
-msgstr ""
+msgstr "乐器"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dmusical_instrument"/>
 #. item "Other/Musical Instrument" label "Edit Musical Instruments"
 #: build/trans_presets.java:3547
 msgid "Edit Musical Instruments"
-msgstr ""
+msgstr "编辑乐器"
 
 #. item "Other/Toys"
 #: build/trans_presets.java:3554
@@ -31996,13 +32201,13 @@ msgstr "编辑玩具店"
 #. item "Other/Variety Store"
 #: build/trans_presets.java:3560
 msgid "Variety Store"
-msgstr ""
+msgstr "杂货店"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:shop%3Dvariety_store"/>
 #. item "Other/Variety Store" label "Edit Variety Store"
 #: build/trans_presets.java:3562
 msgid "Edit Variety Store"
-msgstr ""
+msgstr "编辑杂货店"
 
 #. item "Vending machine"
 #: build/trans_presets.java:3570
@@ -32079,11 +32284,11 @@ msgstr "电话券"
 
 #: build/trans_presets.java:3574
 msgid "vouchers"
-msgstr ""
+msgstr "券"
 
 #: build/trans_presets.java:3574
 msgid "bicycle_tube"
-msgstr ""
+msgstr "自行车内胎"
 
 #: build/trans_presets.java:3574
 msgid "condoms"
@@ -32091,11 +32296,11 @@ msgstr "保险套"
 
 #: build/trans_presets.java:3574
 msgid "tampons"
-msgstr ""
+msgstr "棉球"
 
 #: build/trans_presets.java:3574
 msgid "excrement_bags"
-msgstr ""
+msgstr "粪袋"
 
 #. group "Geography"
 #: build/trans_presets.java:3586 build/trans_presets.java:3703
@@ -32176,6 +32381,11 @@ msgstr "编辑大洲"
 #: build/trans_presets.java:3628
 msgid "Edit Country"
 msgstr "编辑国家"
+
+#. item "Places/State"
+#: build/trans_presets.java:3634
+msgid "State"
+msgstr "省/州"
 
 #. item "Places/State" label "Edit State"
 #: build/trans_presets.java:3635
@@ -32489,13 +32699,13 @@ msgstr "编辑葡萄园"
 #. item "Land use/Greenhouse Horticulture"
 #: build/trans_presets.java:3837
 msgid "Greenhouse Horticulture"
-msgstr ""
+msgstr "温室园艺"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Tag:landuse%3Dgreenhouse_horticulture" />
 #. item "Land use/Greenhouse Horticulture" label "Edit Greenhouse Horticulture"
 #: build/trans_presets.java:3839
 msgid "Edit Greenhouse Horticulture"
-msgstr ""
+msgstr "编辑温室园艺"
 
 #. item "Land use/Allotments"
 #: build/trans_presets.java:3845
@@ -32637,13 +32847,13 @@ msgstr "编辑工业用地"
 #. item "Land use/Garages"
 #: build/trans_presets.java:3930
 msgid "Garages"
-msgstr ""
+msgstr "车库"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/DE:Tag:landuse%3Dgarages" />
 #. item "Land use/Garages" label "Edit Garages"
 #: build/trans_presets.java:3932
 msgid "Edit Garages"
-msgstr ""
+msgstr "编辑车库"
 
 #. item "Land use/Railway land"
 #: build/trans_presets.java:3938
@@ -33170,20 +33380,20 @@ msgstr ""
 #. item "Relations/Route network"
 #: build/trans_presets.java:4093
 msgid "Route network"
-msgstr ""
+msgstr "线路网络"
 
 #. <link href="http://wiki.openstreetmap.org/wiki/Relations/Proposed/Network"/>
 #. item "Relations/Route network" label "Edit route network"
 #: build/trans_presets.java:4095
 msgid "Edit route network"
-msgstr ""
+msgstr "编辑线路网络"
 
 #. </optional>
 #. <roles>
 #. item "Relations/Route network" role "member"
 #: build/trans_presets.java:4103
 msgid "member"
-msgstr ""
+msgstr "成员"
 
 #. </roles>
 #. item "Relations/Associated street"
@@ -33200,7 +33410,7 @@ msgstr ""
 #. item "Relations/Associated street" role "house"
 #: build/trans_presets.java:4113
 msgid "house"
-msgstr ""
+msgstr "房"
 
 #. <?xml version="1.0" encoding="UTF-8"?>
 #. <rules xmlns="http://josm.openstreetmap.de/mappaint-style-1.0"
@@ -37584,155 +37794,11 @@ msgstr ""
 msgid "SPOTMaps (France)"
 msgstr ""
 
-#~ msgid "No username provided."
-#~ msgstr "没有提供用户名称。"
-
 #~ msgid "No password provided."
 #~ msgstr "没有提供密码。"
 
 #~ msgid "You must select at least two ways."
 #~ msgstr "您必须选择至少两条路径。"
 
-#~ msgid "Solve Conflicts"
-#~ msgstr "解决冲突"
-
-#~ msgid "Fix relations"
-#~ msgstr "修正关系"
-
-#~ msgid "Joined self-overlapping area"
-#~ msgstr "已连结自我重叠的区域"
-
-#~ msgid "Enter values for all conflicts."
-#~ msgstr "为所有冲突的项目输入值。"
-
-#~ msgid "Join Areas: Remove Short Ways"
-#~ msgstr "连结区域:移除短路径"
-
-#~ msgid "Closed Way"
-#~ msgstr "封闭的路径"
-
-#~ msgid "The selected way does not contain the selected node."
-#~ msgid_plural "The selected way does not contain all the selected nodes."
-#~ msgstr[0] "选取的路径未包含选取的节点。"
-
-#~ msgid "Error: Unexpected line ''{0}'' in bookmark list from server"
-#~ msgstr "错误：服务器的书签清单中有未预期的行 \"{0}\""
-
-#~ msgid ""
-#~ "Error: Illegal double value ''{0}'' on line ''{1}'' in bookmark list from "
-#~ "server"
-#~ msgstr "错误：服务器的书签清单的 \"{1}\" 行有不合格的double 数值 \"{0}\""
-
-#~ msgid "Degrees Minutes Seconds"
-#~ msgstr "度-分-秒格式"
-
-#~ msgid "Missing merge target for object with id {0}"
-#~ msgstr "缺少 id {0} 对象的合并目标"
-
-#~ msgid "<html>Could not write bookmark.<br>{0}</html>"
-#~ msgstr "<html>无法写入书签。<br>{0}</html>"
-
-#~ msgid "Enter an upload comment (min. 3 characters)"
-#~ msgstr "请输入上传备注(最小3 个字节)"
-
-#~ msgid "Please enter a comment for this upload changeset (min. 3 characters)"
-#~ msgstr "请输入这个上传更改组合的注解 (最少 3 个字节)"
-
-#~ msgid "Keep backup files"
-#~ msgstr "保留备份文件"
-
-#~ msgid "Malformed sentences: "
-#~ msgstr "格式不良的段落： "
-
-#~ msgid "Checksum errors: "
-#~ msgstr "Checksum 错误: "
-
-#~ msgid "Unknown sentences: "
-#~ msgstr "不明的段落： "
-
-#~ msgid ""
-#~ "You cannot align connected segments.\n"
-#~ "Please select two segments that don''t share any nodes."
-#~ msgstr ""
-#~ "您不能对齐相互连接的区段。\n"
-#~ "请选取两个没有共用任何节点的区段。"
-
-#~ msgid ""
-#~ "<html>\n"
-#~ "<div style=\"font-family:sans-serif\">\n"
-#~ "<ul>\n"
-#~ "  <li><b>Align the segments.</b> Press <b><i><span style=\"color:green"
-#~ "\">Shift-A</span></i></b>. Alternatively you''ll find the command in the "
-#~ "<b>Tools</b>\n"
-#~ " menu or may want to place the action on the <b>toolbar</b>.\n"
-#~ "  </li>\n"
-#~ "</ul>\n"
-#~ "</div>\n"
-#~ "</html>\n"
-#~ "\n"
-#~ msgstr ""
-#~ "<html>\n"
-#~ "<div style=\"font-family:sans-serif\">\n"
-#~ "<ul>\n"
-#~ "  <li><b>对齐区段。</b> 请按 <b><i><span style=\"color:green\">Shift-A</"
-#~ "span></i></b>。另外您可以在<b>工具</b>菜单找到这个指令\n"
-#~ "，也可以把这个动作放置到<b>工具列</b>上。\n"
-#~ "  </li>\n"
-#~ "</ul>\n"
-#~ "</div>\n"
-#~ "</html>\n"
-#~ "\n"
-
-#~ msgid "Multipolygon must consist only of closed ways."
-#~ msgstr "多重多边形必须由封闭的路径组成。"
-
-#~ msgid "Enter a menu name and WMS URL"
-#~ msgstr "输入菜单名称和 WMS URL"
-
-#~ msgid "Waterway Point"
-#~ msgstr "水路点"
-
-#~ msgid "Travel"
-#~ msgstr "旅游"
-
-#~ msgid "Man-Made"
-#~ msgstr "人造"
-
-#~ msgid ""
-#~ "Failed to load bookmarks from ''{0}'' for security reasons. Exception "
-#~ "was: {1}"
-#~ msgstr "基于安全性的理由无法从 \"{0}\" 载入书签。例外为：{1}"
-
-#~ msgid "Building tag:"
-#~ msgstr "建筑物标签:"
-
-#~ msgid ""
-#~ "Warning: turnrestrictions plugin replaces already existing action ''{0}'' "
-#~ "behind shortcut ''{1}'' by action ''{2}''"
-#~ msgstr ""
-#~ "警告：turnrestrictions 插件将快捷键 \"{1}\" 原本的动作 \"{0}\" 替换成动作 "
-#~ "\"{2}\""
-
-#~ msgid "standard"
-#~ msgstr "标准"
-
-#~ msgid "play/pause"
-#~ msgstr "播放/暂停"
-
-#~ msgid "faster"
-#~ msgstr "加速"
-
-#~ msgid "forward"
-#~ msgstr "前进"
-
-#~ msgid "slower"
-#~ msgstr "减速"
-
-#~ msgid "any substance"
-#~ msgstr "任何物质"
-
-#~ msgid "tower"
-#~ msgstr "塔"
-
-#~ msgid "Only up to two areas can be joined at the moment."
-#~ msgstr "目前只能连接两个区域。"
+#~ msgid "No username provided."
+#~ msgstr "没有提供用户名称。"

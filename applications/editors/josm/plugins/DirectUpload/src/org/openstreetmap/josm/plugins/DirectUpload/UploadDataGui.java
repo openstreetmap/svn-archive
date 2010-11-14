@@ -19,38 +19,34 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.JMultilineLabel;
-import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
-import org.openstreetmap.josm.gui.layer.GpxLayer;
-import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.io.GpxWriter;
-import org.openstreetmap.josm.tools.Base64;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.UrlLabel;
 
 /**
  *
- * @author  subhodip, xeen
+ * @author  subhodip, xeen, ax
  */
 public class UploadDataGui extends ExtendedDialog {
+    
     /**
      * This enum contains the possible values for the visibility field and their
      * explanation. Provides some methods for easier handling.
@@ -86,19 +82,14 @@ public class UploadDataGui extends ExtendedDialog {
         }
     }
 
-
-    // User for log in when uploading trace
-    private String username = Main.pref.get("osm-server.username");
-    private String password = Main.pref.get("osm-server.password");
-
     // Fields are declared here for easy access
     // Do not remove the space in JMultilineLabel. Otherwise the label will be empty
     // as we don't know its contents yet and therefore have a height of 0. This will
     // lead to unnecessary scrollbars.
     private JMultilineLabel OutputDisplay = new JMultilineLabel(" ");
-    private JTextField descriptionField = new JTextField(50);
-    private JTextField tagsField = new JTextField(50);
-    private JComboBox visibilityCombo = new JComboBox();
+    private HistoryComboBox descriptionField;
+    private HistoryComboBox tagsField;
+    private JComboBox visibilityCombo;
 
     // Constants used when generating upload request
     private static final String API_VERSION = "0.6";
@@ -106,12 +97,8 @@ public class UploadDataGui extends ExtendedDialog {
     private static final String LINE_END = "\r\n";
     private static final String uploadTraceText = tr("Upload Trace");
 
-    // Filename and current date. Date will be used as fallback if filename not available
-    private String datename = new SimpleDateFormat("yyMMddHHmmss").format(new Date());
-    private String filename = "";
-
     private boolean cancelled = false;
-
+    
     public UploadDataGui() {
         // Initalizes ExtendedDialog
         super(Main.parent,
@@ -120,12 +107,13 @@ public class UploadDataGui extends ExtendedDialog {
                 true
         );
         JPanel content = initComponents();
-        autoSelectTrace();
+        GpxData gpxData = UploadOsmConnection.getInstance().autoSelectTrace();
+        initTitleAndDescriptionFromGpxData(gpxData);    // this is changing some dialog elements, so it (probably) must be before the following  
         setContent(content);
         setButtonIcons(new String[] { "uploadtrace.png", "cancel.png" });
         setupDialog();
 
-        buttons.get(0).setEnabled(!checkForGPXLayer());
+        buttons.get(0).setEnabled(gpxData != null);
     }
 
     /**
@@ -133,18 +121,39 @@ public class UploadDataGui extends ExtendedDialog {
      * @return JPanel with components
      */
     private JPanel initComponents() {
+        // visibilty
         JLabel visibilityLabel = new JLabel(tr("Visibility"));
         visibilityLabel.setToolTipText(tr("Defines the visibility of your trace for other OSM users."));
+        
+        visibilityCombo = new JComboBox();
+        visibilityCombo.setEditable(false);
         for(visibility v : visibility.values()) {
             visibilityCombo.addItem(v.description);
         }
+        visibilityCombo.setSelectedItem(visibility.valueOf(Main.pref.get("directupload.visibility.last-used", visibility.PRIVATE.name())).description);
         UrlLabel visiUrl = new UrlLabel(tr("http://wiki.openstreetmap.org/wiki/Visibility_of_GPS_traces"), tr("(What does that mean?)"));
 
+        // description
         JLabel descriptionLabel = new JLabel(tr("Description"));
+        descriptionField = new HistoryComboBox();
         descriptionField.setToolTipText(tr("Please enter Description about your trace."));
+        
+        List<String> descHistory = new LinkedList<String>(Main.pref.getCollection("directupload.description.history", new LinkedList<String>()));
+        // we have to reverse the history, because ComboBoxHistory will reverse it againin addElement()
+        // XXX this should be handled in HistoryComboBox
+        Collections.reverse(descHistory);
+        descriptionField.setPossibleItems(descHistory);
 
+        // tags
         JLabel tagsLabel = new JLabel(tr("Tags (comma delimited)"));
+        tagsField = new HistoryComboBox();
         tagsField.setToolTipText(tr("Please enter tags about your trace."));
+
+        List<String> tagsHistory = new LinkedList<String>(Main.pref.getCollection("directupload.tags.history", new LinkedList<String>()));
+        // we have to reverse the history, because ComboBoxHistory will reverse it againin addElement()
+        // XXX this should be handled in HistoryComboBox
+        Collections.reverse(tagsHistory);
+        tagsField.setPossibleItems(tagsHistory);
 
         JPanel p = new JPanel(new GridBagLayout());
 
@@ -164,36 +173,18 @@ public class UploadDataGui extends ExtendedDialog {
         return p;
     }
 
-    /**
-     * This function will automatically select a GPX layer if it's the only one.
-     * If a GPX layer is found, its filename will be parsed and displayed
-     */
-    private void autoSelectTrace() {
-        // If no GPX layer is selected, select one for the user if there is only one GPX layer
-        if(Main.map != null && Main.map.mapView != null) {
-            MapView mv=Main.map.mapView;
-            if(!(mv.getActiveLayer() instanceof GpxLayer)) {
-                Layer lastLayer=null;
-                int layerCount=0;
-                for (Layer l : mv.getAllLayers()) {
-                    if(l instanceof GpxLayer) {
-                        lastLayer = l;
-                        layerCount++;
-                    }
-                }
-                if(layerCount == 1) mv.setActiveLayer(lastLayer);
-            }
-
-            if(mv.getActiveLayer() instanceof GpxLayer) {
-                GpxData data=((GpxLayer)Main.map.mapView.getActiveLayer()).data;
-                try {
-                    filename = data.storageFile.getName()
-                                    .replaceAll("[&?/\\\\]"," ").replaceAll("(\\.[^.]*)$","");
-                } catch(Exception e) { }
-                descriptionField.setText(getFilename());
-                OutputDisplay.setText(tr("Selected track: {0}", getFilename()));
-            }
-        }
+    private void initTitleAndDescriptionFromGpxData(GpxData gpxData) {
+      String description, title;
+      try {
+          description = gpxData.storageFile.getName().replaceAll("[&?/\\\\]"," ").replaceAll("(\\.[^.]*)$","");
+          title = tr("Selected track: {0}", gpxData.storageFile.getName());
+      }
+      catch(Exception e) {
+          description = new SimpleDateFormat("yyMMddHHmmss").format(new Date()); 
+          title = tr("No GPX layer selected. Cannot upload a trace.");
+      }
+      OutputDisplay.setText(title);
+      descriptionField.setText(description);
     }
 
     /**
@@ -204,53 +195,54 @@ public class UploadDataGui extends ExtendedDialog {
      * @param GpxData The GPX Data to upload
      */
     private void upload(String description, String tags, String visi, GpxData gpxData, ProgressMonitor progressMonitor) throws IOException {
-        progressMonitor.beginTask(null);
+        progressMonitor.beginTask(tr("Uploading trace ..."));
         try {
-            if(checkForErrors(username, password, description, gpxData))
+            if (checkForErrors(description, gpxData)) {
                 return;
+            }
 
             // Clean description/tags from disallowed chars
-            description = description.replaceAll("[&?/\\\\]"," ");
-            tags = tags.replaceAll("[&?/\\\\.;]"," ");
+            description = description.replaceAll("[&?/\\\\]", " ");
+            tags = tags.replaceAll("[&?/\\\\.;]", " ");
 
             // Set progress dialog to indeterminate while connecting
             progressMonitor.indeterminateSubTask(tr("Connecting..."));
 
-            try {
-                // Generate data for upload
-                ByteArrayOutputStream baos  = new ByteArrayOutputStream();
-                writeGpxFile(baos, "file", gpxData);
-                writeField(baos, "description", description);
-                writeField(baos, "tags", (tags != null && tags.length() > 0) ? tags : "");
-                writeField(baos, "visibility", visi);
-                writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
+            // Generate data for upload
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            writeGpxFile(baos, "file", gpxData);
+            writeField(baos, "description", description);
+            writeField(baos, "tags", (tags != null && tags.length() > 0) ? tags : "");
+            writeField(baos, "visibility", visi);
+            writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
 
-                ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-                HttpURLConnection conn = setupConnection(baos.size());
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            HttpURLConnection conn = setupConnection(baos.size());
 
-                progressMonitor.setTicksCount(baos.size());
-                progressMonitor.subTask(null);
+            progressMonitor.setTicksCount(baos.size());
+            progressMonitor.subTask(null);
 
-                try {
-                    flushToServer(bais, conn.getOutputStream(), progressMonitor);
-                } catch(Exception e) {}
+            flushToServer(bais, conn.getOutputStream(), progressMonitor);
 
-                if(cancelled) {
-                    conn.disconnect();
-                    OutputDisplay.setText(tr("Upload cancelled"));
-                    buttons.get(0).setEnabled(true);
-                    cancelled = false;
-                } else {
-                    boolean success = finishUpConnection(conn);
-                    buttons.get(0).setEnabled(!success);
-                    if(success)
-                        buttons.get(1).setText(tr("Close"));
-                }
-            } catch(Exception e) {
-                OutputDisplay.setText(tr("Error while uploading"));
-                e.printStackTrace();
+            if (cancelled) {
+                conn.disconnect();
+                OutputDisplay.setText(tr("Upload cancelled"));
+                buttons.get(0).setEnabled(true);
+                cancelled = false;
             }
-        } finally {
+            else {
+                boolean success = finishUpConnection(conn);
+                buttons.get(0).setEnabled(!success);
+                if (success) {
+                    buttons.get(1).setText(tr("Close"));
+                }
+            }
+        }
+        catch (Exception e) {
+            OutputDisplay.setText(tr("Error while uploading"));
+            e.printStackTrace();
+        }
+        finally {
             progressMonitor.finishTask();
         }
     }
@@ -262,10 +254,6 @@ public class UploadDataGui extends ExtendedDialog {
      * @return HttpURLConnection The set up conenction
      */
     private HttpURLConnection setupConnection(int contentLength) throws Exception {
-        // Encode username and password
-        CharsetEncoder encoder = Charset.forName("UTF-8").newEncoder();
-        String auth = username + ":" + password;
-        ByteBuffer bytes = encoder.encode(CharBuffer.wrap(auth));
 
         // Upload URL
         URL url = new URL("http://www.openstreetmap.org/api/" + API_VERSION + "/gpx/create");
@@ -276,7 +264,10 @@ public class UploadDataGui extends ExtendedDialog {
         c.setConnectTimeout(15000);
         c.setRequestMethod("POST");
         c.setDoOutput(true);
-        c.addRequestProperty("Authorization", "Basic " + Base64.encode(bytes));
+        // unfortunately, addAuth() is protected, so we need to subclass OsmConnection 
+        // XXX make addAuth public. 
+        UploadOsmConnection.getInstance().addAuthHack(c);
+
         c.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
         c.addRequestProperty("Connection", "close"); // counterpart of keep-alive
         c.addRequestProperty("Expect", "");
@@ -366,14 +357,11 @@ public class UploadDataGui extends ExtendedDialog {
     /**
      * Checks for common errors and displays them in OutputDisplay if it finds any.
      * Returns whether errors have been found or not.
-     * @param String OSM username
-     * @param String OSM password
      * @param String GPX track description
      * @param GpxData the GPX data to upload
      * @return boolean true if errors have been found
      */
-    private boolean checkForErrors(String username, String password,
-                                   String description, GpxData gpxData) {
+    private boolean checkForErrors(String description, GpxData gpxData) {
         String errors="";
         if(description == null || description.length() == 0)
             errors += tr("No description provided. Please provide some description.");
@@ -381,48 +369,37 @@ public class UploadDataGui extends ExtendedDialog {
         if(gpxData == null)
             errors += tr("No GPX layer selected. Cannot upload a trace.");
 
-        if(username == null || username.length() == 0)
-            errors += tr("No username provided.");
-
-        if(password == null || password.length() == 0)
-            errors += tr("No password provided.");
-
         OutputDisplay.setText(errors);
         return errors.length() > 0;
     }
 
     /**
-     * Checks if a GPX layer is selected and returns the result. Also writes an error
-     * message to OutputDisplay if result is false.
-     * @return boolean True, if /no/ GPX layer is selected
-     */
-    private boolean checkForGPXLayer() {
-        if(Main.map == null
-                || Main.map.mapView == null
-                || Main.map.mapView.getActiveLayer() == null
-                || !(Main.map.mapView.getActiveLayer() instanceof GpxLayer)) {
-            OutputDisplay.setText(tr("No GPX layer selected. Cannot upload a trace."));
-            return true;
-        }
-        return false;
-    }
-
-
-    /**
      * This creates the uploadTask that does the actual work and hands it to the main.worker to be executed.
      */
     private void setupUpload() {
-        if(checkForGPXLayer()) return;
+        final GpxData gpxData = UploadOsmConnection.getInstance().autoSelectTrace();
+        if (gpxData == null) {
+            return;
+        }
 
         // Disable Upload button so users can't just upload that track again
         buttons.get(0).setEnabled(false);
+        
+        // save history
+        Main.pref.put("directupload.visibility.last-used", visibility.desc2visi(visibilityCombo.getSelectedItem().toString()).name());
+        
+        descriptionField.addCurrentItemToHistory();
+        Main.pref.putCollection("directupload.description.history", descriptionField.getHistory());
+
+        tagsField.addCurrentItemToHistory();
+        Main.pref.putCollection("directupload.tags.history", tagsField.getHistory());
 
         PleaseWaitRunnable uploadTask = new PleaseWaitRunnable(tr("Uploading GPX Track")){
             @Override protected void realRun() throws IOException {
                   upload(descriptionField.getText(),
                          tagsField.getText(),
                          visibility.desc2visi(visibilityCombo.getSelectedItem()).toString(),
-                         ((GpxLayer)Main.map.mapView.getActiveLayer()).data,
+                         gpxData,
                          progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false)
                   );
             }
@@ -459,7 +436,7 @@ public class UploadDataGui extends ExtendedDialog {
     private void writeGpxFile(ByteArrayOutputStream baos, String name, GpxData gpxData) throws IOException {
         writeBoundary(baos);
         writeString(baos, "Content-Disposition: form-data; name=\"" + name + "\"; ");
-        writeString(baos, "filename=\"" + getFilename() + ".gpx" + "\"");
+        writeString(baos, "filename=\"" + gpxData.storageFile.getName() + "\"");
         writeLineEnd(baos);
         writeString(baos, "Content-Type: application/octet-stream");
         writeLineEnd(baos);
@@ -494,15 +471,6 @@ public class UploadDataGui extends ExtendedDialog {
     private void writeBoundary(ByteArrayOutputStream baos) {
         writeString(baos, "--" + BOUNDARY);
         writeLineEnd(baos);
-    }
-
-    /**
-     * Returns the filename of the GPX file to be upload. If not available, returns current date
-     * as an alternative
-     * @param String
-     */
-    private String getFilename() {
-       return filename.equals("") ? datename : filename;
     }
 
     /**

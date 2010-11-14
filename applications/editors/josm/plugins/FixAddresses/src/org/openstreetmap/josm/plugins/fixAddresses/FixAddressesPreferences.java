@@ -17,6 +17,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceSettingFactory;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 
+// TODO: Implement
 public class FixAddressesPreferences implements PreferenceSetting {
 	private boolean selectGuessedObjects = false;
 
@@ -41,7 +42,7 @@ public class FixAddressesPreferences implements PreferenceSetting {
 	/**
 	 * Checks if option "select guessed objects" is set. If yes, every selection
 	 * includes also the objects used for guessing the address tags.
-	 * Otherwise only the teh address itself is selected.
+	 * Otherwise only the address itself is selected.
 	 *
 	 * @return the selectGuessedObjects
 	 */

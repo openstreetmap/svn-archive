@@ -27,7 +27,13 @@ public class OSMAddress extends OSMEntityBase {
 	public static final String MISSING_TAG = "?";
 	public static final String INTERPOLATION_TAG = "x..y";
 	
-	private boolean isPartOfInterpolation;
+	
+	/** True, if address is part of an address interpolation. */ 
+	private boolean isPartOfInterpolation;	
+	/**
+	 * True, if address has derived values from an associated street relation. 
+	 */
+	private boolean isPartOfAssocStreetRel;
 	
 	/** The dictionary containing guessed values. */
 	private HashMap<String, String> guessedValues = new HashMap<String, String>();
@@ -47,12 +53,8 @@ public class OSMAddress extends OSMEntityBase {
 	public void setOsmObject(OsmPrimitive osmObject) {
 		super.setOsmObject(osmObject);
 		
-		isPartOfInterpolation = OsmUtils.getValuesFromAddressInterpolation(this);
-		
-		String streetNameViaRel = OsmUtils.getAssociatedStreet(this.osmObject);
-		if (!StringUtils.isNullOrEmpty(streetNameViaRel)) {
-			setDerivedValue(TagUtils.ADDR_STREET_TAG, streetNameViaRel);
-		}
+		isPartOfInterpolation = OsmUtils.getValuesFromAddressInterpolation(this);		
+		isPartOfAssocStreetRel = OsmUtils.getValuesFromRelation(this);
 	}
 	
 	/**
@@ -115,7 +117,7 @@ public class OSMAddress extends OSMEntityBase {
 	 * @return
 	 */
 	public boolean hasStreetName() {
-		return TagUtils.hasAddrStreetTag(osmObject) || hasDerivedValue(TagUtils.ADDR_STREET_TAG);
+		return hasTag(TagUtils.ADDR_STREET_TAG);
 	}
 	
 	/**
@@ -281,6 +283,15 @@ public class OSMAddress extends OSMEntityBase {
 	 */
 	protected boolean isPartOfInterpolation() {
 		return isPartOfInterpolation;
+	}
+	
+	/**
+	 * Checks if this address is part of an 'associated street' relation.
+	 *
+	 * @return true, if is part of interpolation
+	 */
+	protected boolean isPartOfRelation() {
+		return isPartOfAssocStreetRel;
 	}
 
 	/**

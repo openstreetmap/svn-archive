@@ -99,13 +99,16 @@ public class OsmUtils {
 	/**
 	 * Gets the associated street name via relation of the address node, if present.
 	 *
-	 * @param addrNode the OSM node containing the address.
-	 * @return the associated street or null, if no associated street has been found.
+	 * @param address the address
+	 * @return true, if an associated street has been found.
 	 */
-	public static String getAssociatedStreet(OsmPrimitive addrNode) {
-		if (addrNode == null) {
-			return null;
+	public static boolean getValuesFromRelation(OSMAddress address) {
+		if (address == null) {
+			return false;
 		}
+		
+		boolean hasValuesFromRel = false; /* true, if we applied some address props from the relation */
+		OsmPrimitive addrNode = address.getOsmObject();
 		
 		for (OsmPrimitive osm : addrNode.getReferrers()) {
 			if (osm instanceof Relation) {
@@ -117,13 +120,32 @@ public class OsmUtils {
 					if (TagUtils.isStreetMember(rm)) {
 						OsmPrimitive street = rm.getMember();
 						if (TagUtils.hasHighwayTag(street)) {
-							return TagUtils.getNameValue(street);
-						} // TODO: Issue a warning here
+							String streetName = TagUtils.getNameValue(street);
+							if (!StringUtils.isNullOrEmpty(streetName)) {
+								address.setDerivedValue(TagUtils.ADDR_STREET_TAG, streetName);
+								hasValuesFromRel = true;
+								break;
+							}
+						} // TODO: Issue a warning here						
 					}
+				}
+				
+				// Check for other address properties
+				if (TagUtils.hasAddrCityTag(r)) { // city
+					address.setDerivedValue(TagUtils.ADDR_CITY_TAG, TagUtils.getAddrCityValue(r));
+					hasValuesFromRel = true;
+				}
+				if (TagUtils.hasAddrCountryTag(r)) { // country
+					address.setDerivedValue(TagUtils.ADDR_COUNTRY_TAG, TagUtils.getAddrCountryValue(r));
+					hasValuesFromRel = true;
+				}
+				if (TagUtils.hasAddrPostcodeTag(r)) { // postcode
+					address.setDerivedValue(TagUtils.ADDR_POSTCODE_TAG, TagUtils.getAddrPostcodeValue(r));
+					hasValuesFromRel = true;
 				}
 			}
 		}
-		return null;
+		return hasValuesFromRel;
 	}
 	
 	/**

@@ -38,7 +38,7 @@ public class PostalCodeChecker {
 	public static boolean hasValidPostalCode(OSMAddress address) {
 		CheckParameterUtil.ensureParameterNotNull(address, "address");
 		
-		if (address.hasPostalCode()) {
+		if (!address.hasPostalCode()) {
 			return false; // no postal code available
 		}
 		
@@ -196,7 +196,7 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("BW", "[0-9]{5}");
 		//postalCodePatternMap.put("BY", "[0-9]{5}");
 		//postalCodePatternMap.put("BZ", "[0-9]{5}");
-		//postalCodePatternMap.put("CA", "[0-9]{5}");
+		postalCodePatternMap.put("CA", "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]"); // Canada A9A 9A9
 		//postalCodePatternMap.put("CC", "[0-9]{5}");
 		//postalCodePatternMap.put("CD", "[0-9]{5}");
 		//postalCodePatternMap.put("CF", "[0-9]{5}");
@@ -397,7 +397,7 @@ public class PostalCodeChecker {
 		postalCodePatternMap.put("UA", "[0-9]{5}");
 		//postalCodePatternMap.put("UG", "[0-9]{5}");
 		//postalCodePatternMap.put("UM", "[0-9]{5}");
-		postalCodePatternMap.put("US", "[0-9]{5}");
+		postalCodePatternMap.put("US", "([A-Z]{2} )?[0-9]{5}"); // support "99999" and "IL 99999"
 		//postalCodePatternMap.put("UY", "[0-9]{5}");
 		//postalCodePatternMap.put("UZ", "[0-9]{5}");
 		//postalCodePatternMap.put("VA", "[0-9]{5}");

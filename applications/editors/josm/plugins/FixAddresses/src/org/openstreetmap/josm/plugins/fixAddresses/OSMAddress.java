@@ -64,7 +64,8 @@ public class OSMAddress extends OSMEntityBase {
 	public boolean isComplete() {
 		boolean isComplete = 	hasCity() && 
 								hasHouseNumber() &&
-							 	(hasPostalCode() && PostalCodeChecker.hasValidPostalCode(this)) && 
+							 	(hasPostalCode() && 
+							 	PostalCodeChecker.hasValidPostalCode(this)) && 
 								hasCity() && 
 								hasStreetName();
 		

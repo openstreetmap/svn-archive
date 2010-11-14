@@ -14,6 +14,7 @@ Stow = Envelope(-71.55, 42.40, -71.46, 42.47)
 BostonSS = Envelope(-71.2, 42.0, -70.6, 42.4)
 BostonDetail = Envelope(-71.11, 42.30, -70.99, 42.41)
 COdetail = Envelope(-105.1, 38.7, -104.7, 39.0)
+COminor = Envelope(-105.0, 38.8, -104.8, 38.95)
 
 NEdetail1 = Envelope(-71.0, 42.0, -70.5, 42.5)
 NEdetail2 = Envelope(-71.0, 42.5, -70.5, 43.0)

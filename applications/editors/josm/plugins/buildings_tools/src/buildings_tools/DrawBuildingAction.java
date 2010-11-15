@@ -53,11 +53,12 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
     private Mode mode = Mode.None;
     private Mode nextMode = Mode.None;
 
-    private Color selectedColor;
+    private final Color selectedColor;
     private Point drawStartPos;
     private Point mousePos;
     private boolean isCtrlDown;
     private boolean isShiftDown;
+    private boolean isAltDown;
 
     Building building = new Building();
 
@@ -95,6 +96,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         try {
             // We invoke this to prevent strange things from happening
             EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     // Don't change cursor when mode has changed already
                     if (!(Main.map.mapMode instanceof DrawBuildingAction))
@@ -107,19 +109,21 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         }
     }
 
-    private static void showAddrDialog(Way w) {
+    private void showAddrDialog(Way w) {
         AddressDialog dlg = new AddressDialog();
-        int answer = dlg.getValue();
-        if (answer == 1) {
-            dlg.saveValues();
-            String tmp;
-            tmp = dlg.getHouseNum();
-            if (tmp != null && tmp != "")
-                w.put("addr:housenumber", tmp);
-            tmp = dlg.getStreetName();
-            if (tmp != null && tmp != "")
-                w.put("addr:street", tmp);
+        if (!isAltDown) {
+            dlg.showDialog();
+            if (dlg.getValue() != 1)
+                return;
         }
+        dlg.saveValues();
+        String tmp;
+        tmp = dlg.getHouseNum();
+        if (tmp != null && tmp != "")
+            w.put("addr:housenumber", tmp);
+        tmp = dlg.getStreetName();
+        if (tmp != null && tmp != "")
+            w.put("addr:street", tmp);
     }
 
     @Override
@@ -168,6 +172,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         updateStatusLine();
     }
 
+    @Override
     public void eventDispatched(AWTEvent arg0) {
         if (!(arg0 instanceof KeyEvent))
             return;
@@ -183,6 +188,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
             if (mode != Mode.None)
                 Main.map.mapView.repaint();
         }
+        isAltDown = (modifiers & KeyEvent.ALT_DOWN_MASK) != 0;
 
         if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
             if (mode != Mode.None)
@@ -238,6 +244,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
             mousePos = e.getPoint();
             isCtrlDown = e.isControlDown();
             isShiftDown = e.isShiftDown();
+            isAltDown = e.isAltDown();
         }
         if (mode == Mode.None) {
             nextMode = Mode.None;
@@ -254,6 +261,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
             throw new AssertionError("Invalid drawing mode");
     }
 
+    @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
         if (mode == Mode.None)
             return;
@@ -452,6 +460,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         updCursor();
     }
 
+    @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         updateSnap(newSelection);
     }

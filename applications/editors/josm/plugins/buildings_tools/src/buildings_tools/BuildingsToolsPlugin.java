@@ -16,6 +16,7 @@ public class BuildingsToolsPlugin extends Plugin {
     public static EastNorth latlon2eastNorth(LatLon p) {
         return proj.latlon2eastNorth(p);
     }
+
     public static LatLon eastNorth2latlon(EastNorth p) {
         return proj.eastNorth2latlon(p);
     }
@@ -25,8 +26,10 @@ public class BuildingsToolsPlugin extends Plugin {
         Main.main.menu.editMenu.addSeparator();
         MainMenu.add(Main.main.menu.editMenu, new BuildingSizeAction());
     }
-    @Override public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if (oldFrame==null && newFrame!=null) {
+
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (oldFrame == null && newFrame != null) {
             Main.map.addMapMode(new IconToggleButton(new DrawBuildingAction(Main.map)));
         }
     }

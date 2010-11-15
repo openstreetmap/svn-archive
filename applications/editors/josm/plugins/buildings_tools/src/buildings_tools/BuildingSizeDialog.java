@@ -2,9 +2,6 @@ package buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
@@ -13,37 +10,21 @@ import java.text.ParseException;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.tools.GBC;
 
 @SuppressWarnings("serial")
-public class BuildingSizeDialog extends ExtendedDialog {
+public class BuildingSizeDialog extends MyDialog {
     private JFormattedTextField twidth = new JFormattedTextField(NumberFormat.getInstance());
     private JFormattedTextField tlenstep = new JFormattedTextField(NumberFormat.getInstance());
     private JCheckBox caddr = new JCheckBox(tr("Use Address dialog"));
     private JCheckBox cAutoSelect = new JCheckBox(tr("Auto-select building"));
 
-    static void addLabelled(JPanel panel, String str, Component c) {
-        JLabel label = new JLabel(str);
-        panel.add(label, GBC.std());
-        label.setLabelFor(c);
-        panel.add(c, GBC.eol().fill(GBC.HORIZONTAL));
-    }
-
     public BuildingSizeDialog() {
-        super(Main.parent, tr("Set buildings size"),
-                new String[] { tr("OK"), tr("Cancel") },
-                true);
-        contentInsets = new Insets(15, 15, 5, 15);
-        setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        super(tr("Set buildings size"));
 
-        final JPanel panel = new JPanel(new GridBagLayout());
-        addLabelled(panel, tr("Buildings width:"), twidth);
-        addLabelled(panel, tr("Length step:"), tlenstep);
+        addLabelled(tr("Buildings width:"), twidth);
+        addLabelled(tr("Length step:"), tlenstep);
         panel.add(caddr, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(cAutoSelect, GBC.eol().fill(GBC.HORIZONTAL));
 
@@ -64,9 +45,8 @@ public class BuildingSizeDialog extends ExtendedDialog {
         });
         panel.add(bAdv, GBC.eol().insets(0, 5, 0, 0).anchor(GBC.EAST));
 
-        setContent(panel);
         setupDialog();
-        setVisible(true);
+        showDialog();
     }
 
     public double width() {

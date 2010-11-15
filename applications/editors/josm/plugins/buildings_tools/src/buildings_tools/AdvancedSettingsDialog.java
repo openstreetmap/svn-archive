@@ -2,34 +2,24 @@ package buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.util.Map.Entry;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.tagging.TagEditorModel;
 import org.openstreetmap.josm.gui.tagging.TagEditorPanel;
 import org.openstreetmap.josm.tools.GBC;
 
-public class AdvancedSettingsDialog extends ExtendedDialog {
-    private TagEditorModel tagsModel = new TagEditorModel();
+public class AdvancedSettingsDialog extends MyDialog {
+    private final TagEditorModel tagsModel = new TagEditorModel();
 
-    private JCheckBox cBigMode = new JCheckBox(tr("Big buildings mode"));
-    private JCheckBox cSoftCur = new JCheckBox(tr("Rotate crosshair"));
+    private final JCheckBox cBigMode = new JCheckBox(tr("Big buildings mode"));
+    private final JCheckBox cSoftCur = new JCheckBox(tr("Rotate crosshair"));
 
     public AdvancedSettingsDialog() {
-        super(Main.parent, tr("Advanced settings"),
-                new String[] { tr("OK"), tr("Cancel") },
-                true);
-        contentInsets = new Insets(15, 15, 5, 15);
-        setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        super(tr("Advanced settings"));
 
-        final JPanel panel = new JPanel(new GridBagLayout());
         panel.add(new JLabel(tr("Buildings tags:")), GBC.eol().fill(GBC.HORIZONTAL));
 
         for (Entry<String, String> entry : ToolSettings.getTags().entrySet()) {
@@ -43,10 +33,8 @@ public class AdvancedSettingsDialog extends ExtendedDialog {
         cBigMode.setSelected(ToolSettings.isBBMode());
         cSoftCur.setSelected(ToolSettings.isSoftCursor());
 
-        setContent(panel);
-
         setupDialog();
-        setVisible(true);
+        showDialog();
     }
 
     public boolean isBBMode() {

@@ -8,10 +8,6 @@ X=$3
 Y=$4
 SIZE=$5
 
-# Gamma values for hillshade highlight and shadows
-LIGHT_GAMMA=0.9
-DARK_GAMMA=1.0
-
 echo "Combining color-relief tile at $Z $X $Y..."
 
 # * Multiplies/screens hillshade over colormap tile.
@@ -30,13 +26,13 @@ if [ ! -f "$COLORRELTILE" ] ; then
     	\( \
     		"$COLORMAPTILE" -modulate 120 \
     		"$AREATILE" -compose Over -composite \
-    		\( "$HILLSHADETILE" -level 70,93%,$LIGHT_GAMMA +level 0%,80% \) \
+    		\( "$HILLSHADETILE" -level 70,95% +level 0%,80% \) \
     		-compose screen -composite \
-    		\( "$HILLSHADETILE" -level 0,75%,$DARK_GAMMA +level 40%,100% \) \
-    		-compose multiply -composite \
+    		\( "$HILLSHADETILE" -level 0,75% +level 40%,100% \) \
+    		-compose multiply -composite -modulate 92 \
     	\) \
     	"$WATERMASKTILE" -compose Src_over -composite \
-    	-quality 90 "$COLORRELTILE"
+    	-quality 92 "$COLORRELTILE"
 else
     echo "Color-relief tile at $Z $X $Y exists."
 fi

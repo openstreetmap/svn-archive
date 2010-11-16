@@ -312,7 +312,7 @@ Options:
    --departement    Le numéro du département, par exemple "24"
    --feuille        (optionel) Le nom de la feuille à récupérer spécifiquement, par exemple "C3067000AB01"
    --agrandissement (optionel) le facteur d'agrandissement, 0.08 par défaut. Valeurs empiriques raisonnables: 0.08 à 0.5
-   --repertoire     (optionel) répertoire dans lequel sauvegarde les tuiles et le résultat final
+   --repertoire     (optionel) répertoire dans lequel sauvegarder les tuiles et le résultat final
    --gardertuiles   (optionel) permet de garder les fichiers PNG correspondant aux tuiles (effacées par défaut)
    --transparence   (optionel) transforme la feuille finale pour un affichage blanc sur transparent (au lieu de noir sur blanc)
    --norognagne     (optionel) désactive le rognage automatique des bords blancs

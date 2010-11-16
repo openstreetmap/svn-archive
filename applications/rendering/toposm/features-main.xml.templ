@@ -1173,6 +1173,7 @@ Canals and ditches (CanalDitch) (336xx)
 </Style>
 
 <Style name="power-lines">
+    <!--
     <Rule>
         &minz12; &maxz12;
         <Filter>[power] = 'line'</Filter>
@@ -1181,6 +1182,7 @@ Canals and ditches (CanalDitch) (336xx)
             <CssParameter name="stroke-width">0.35</CssParameter>
         </LineSymbolizer>
     </Rule>
+    -->
     <Rule>
         &minz13; &maxz13;
         <Filter>[power] = 'line'</Filter>
@@ -1307,20 +1309,22 @@ Canals and ditches (CanalDitch) (336xx)
       <Filter>[natural]='peak'</Filter>
       <PointSymbolizer file="&customsymbolsdir;/peak.png" type="png" width="6" height="5" />
     </Rule>
+    <!--
     <Rule>
         &minz12; &maxz12;
         <Filter>[power] = 'tower'</Filter>
         <PointSymbolizer file="&customsymbolsdir;/power-tower-3px.png" type="png" allow_overlap="true"/>
     </Rule>
+    -->
     <Rule>
         &minz13; &maxz13;
         <Filter>[power] = 'tower'</Filter>
-        <PointSymbolizer file="&customsymbolsdir;/power-tower-4px.png" type="png" allow_overlap="true"/>
+        <PointSymbolizer file="&customsymbolsdir;/power-tower-3px.png" type="png" allow_overlap="true"/>
     </Rule>        
     <Rule>
         &minz14; &maxz14;
         <Filter>[power] = 'tower'</Filter>
-        <PointSymbolizer file="&customsymbolsdir;/power-tower-5px.png" type="png" allow_overlap="true"/>
+        <PointSymbolizer file="&customsymbolsdir;/power-tower-4px.png" type="png" allow_overlap="true"/>
     </Rule>
     <Rule>
         &minz15;

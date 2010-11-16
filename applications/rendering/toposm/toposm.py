@@ -514,7 +514,6 @@ def render_geotiff_tile(z, x, y, ntiles, mapname):
             for slice in nedSlices:
                 cmd = cmd + '"' + slice + '" '
             cmd = cmd + '"' + destTilePath + '"'
-            print cmd
             call(cmd, shell=True)
             # convert to png and remove tif (to conserve space)
             cmd = 'convert "%s" "%s" && rm "%s"' % (destTilePath, finalTilePath, destTilePath)

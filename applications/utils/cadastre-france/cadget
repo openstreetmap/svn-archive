@@ -128,8 +128,8 @@ $response->is_error && die "Erreur de communication: " . $response->message;
 my @feuilles;
 {
     my %feuilles;
-    while ( $response->{_content} =~ m/afficherCarteFeuille\.do\?f=([0-9A-Za-z]+)/g ) {
-        $feuilles{$1}++;
+    while ( $response->{_content} =~ m/(afficherCarteFeuille|afficherCarteTa)\.do\?f=([0-9A-Za-z_]+)/g ) {
+        $feuilles{$2}++;
     }
     @feuilles = keys(%feuilles);
 }
@@ -336,6 +336,9 @@ Pour plus d'information, voir aussi :
 http://wiki.openstreetmap.org/wiki/WikiProject_Cadastre_Français/cadget
 
 =head1 HISTORIQUE
+
+2010-11-16
+  Ajout du support des tableaux d'assemblage
 
 2010-11-04 (2)
   Support des proxy via la variable d'environnment http_proxy

@@ -305,6 +305,13 @@ public class OheEditor extends JPanel implements MouseListener,
             minute1 = (int) Math.floor(evt.getY()
                     / (getMinuteHeight() * TimeRect.minuteResterize))
                     * TimeRect.minuteResterize;
+            
+            // ensure that the new time is in a valid range
+            day1 = Math.max(day1, 0);
+            day1 = Math.min(day1, 6);
+            minute1 = Math.max(minute1, 0);
+            minute1 = Math.min(minute1, 24 * 60);
+            
             repaint();
         }
     }

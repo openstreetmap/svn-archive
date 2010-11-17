@@ -101,7 +101,7 @@
 	<target name="revision">
 
 		<!-- extract the SVN revision information for file build.number -->
-		<exec append="false" output="REVISION" executable="echo" failifexecutionfails="false">
+		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
 			<env key="LANG" value="C"/>
 			<arg value="info"/>
 			<arg value="--xml"/>

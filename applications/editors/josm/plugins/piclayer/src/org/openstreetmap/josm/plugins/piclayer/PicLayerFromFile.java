@@ -40,6 +40,19 @@ public class PicLayerFromFile extends PicLayerAbstract {
         m_file = file;
         // Generate tooltip text
         m_tooltiptext = m_file.getAbsolutePath();
+        
+        // Set the name of the layer as the base name of the file
+        setName(m_file.getName());
+        System.out.println( "name="+m_file.getName() );
+    }
+
+    protected String getFilePath() {
+        return m_file.getAbsolutePath();
+    }
+
+    public File getDefaultCalPath() {
+        File calFile = new File(m_file + CalibrationFileFilter.EXTENSION);
+        return calFile;
     }
 
     @Override

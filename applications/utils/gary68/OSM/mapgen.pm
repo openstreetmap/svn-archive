@@ -44,7 +44,7 @@ use Geo::Proj4 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.11' ;
+$VERSION = '1.12' ;
 
 require Exporter ;
 
@@ -1504,6 +1504,7 @@ sub fitsPaper {
 	push @sizes, ["A4", 21, 29.7] ;
 	push @sizes, ["A5", 14.8, 21] ;
 	push @sizes, ["A6", 10.5, 14.8] ;
+	push @sizes, ["A7", 7.4, 10.5] ;
 	push @sizes, ["none", 0, 0] ;
 
 	foreach my $size (@sizes) {

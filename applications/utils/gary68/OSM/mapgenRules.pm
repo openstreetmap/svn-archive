@@ -24,7 +24,7 @@ use OSM::mapgen 1.11 ;
 
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 
-$VERSION = '1.11' ;
+$VERSION = '1.12' ;
 
 require Exporter ;
 

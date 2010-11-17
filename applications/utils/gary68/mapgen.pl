@@ -75,10 +75,14 @@
 # 1.09 list of not drawn labels now derives file name from svg name
 # 1.10 -nobridge
 #      rounding error when scaling eliminated
+# 1.12 clip box parameter order changed to standard (left, bottom, right, top)
+#      -nolabel option
 #
 #
 # TODO
 # ------------------
+# order of parameters clip and area selection
+# -noname
 # [ ] reading rule check for right number of keys and values ! else ERROR
 # grid distance in meters
 # -viewpng -viewpdf -viewsvg
@@ -95,11 +99,11 @@ use warnings ;
 use Math::Polygon ;
 use Getopt::Long ;
 use OSM::osm ;
-use OSM::mapgen 1.11 ;
-use OSM::mapgenRules 1.11 ;
+use OSM::mapgen 1.12 ;
+use OSM::mapgenRules 1.12 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.11" ;
+my $version = "1.12 BETA" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;
@@ -115,7 +119,7 @@ perl mapgen.pl
 -bgcolor=TEXT (color for background)
 -size=<integer> (in pixels for x axis, DEFAULT=1024)
 -clip=<integer> (percent data to be clipped on each side, 0=no clipping, DEFAULT=0)
--clipbbox=<float>,<float>,<float>,<float> (left, right, bottom, top of bbox for clipping map out of data - more precise than -clip; overrides -clip!)
+-clipbbox=<float>,<float>,<float>,<float> (left, bottom, right, top of bbox for clipping map out of data - more precise than -clip; overrides -clip!)
 -pad=<INTEGER> (percent of white space around data in osm file, DEFAULT=0)
 
 -place=TEXT (Place to draw automatically; quotation marks can be used if necessary; node id can also be given; OSMOSIS REQUIRED!)
@@ -129,6 +133,7 @@ perl mapgen.pl
 -oneways (add oneway arrows)
 -onewaycolor=TEXT (color for oneway arrows)
 -nobridge (don't draw bridges and tunnels - for lower scale maps)
+-nolabel (label ways and nodes without label with "NO LABEL")
 -halo=<FLOAT> (white halo width for point feature labels; DEFAULT=0)
 
 -grid=<integer> (number parts for grid, 0=no grid, DEFAULT=0)
@@ -227,6 +232,7 @@ my $routeIconScale = 1 ;
 my $onewayOpt = 0 ;
 my $onewayColor = "white" ;
 my $nobridgeOpt = 0 ;
+my $nolabelOpt = 0 ;
 my $halo = 0 ;
 my $extPoiFileName = "" ;
 my @circles = () ;
@@ -389,6 +395,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"oneways"	=> \$onewayOpt,
 				"onewaycolor:s" => \$onewayColor,
 				"nobridge"	=> \$nobridgeOpt,
+				"nolabel"	=> \$nolabelOpt,
 				"place:s"	=> \$place,		# place to draw
 				"placefile:s"	=> \$placeFileName,		# file to look for places
 				"lonrad:f"	=> \$lonrad,
@@ -499,6 +506,7 @@ print "png       = $pngOpt\n\n" ;
 
 print "multionly = $multiOnly " ;
 print "verbose   = $verbose " ;
+print "nolabel   = $nolabelOpt " ;
 print "ra        = $ra\n\n" ;
 
 $time0 = time() ;
@@ -650,8 +658,8 @@ foreach my $key (keys %lon) {
 
 # clip picture if desired
 if ($clipbbox ne "") {
-	my ($bbLeft, $bbRight, $bbBottom, $bbTop) = ($clipbbox =~ /([\d\-\.]+),([\d\-\.]+),([\d\-\.]+),([\d\-\.]+)/ ) ;
-	# print "$bbLeft, $bbRight, $bbBottom, $bbTop\n" ;
+	my ($bbLeft, $bbBottom, $bbRight, $bbTop) = ($clipbbox =~ /([\d\-\.]+),([\d\-\.]+),([\d\-\.]+),([\d\-\.]+)/ ) ;
+	# print "$bbLeft, $bbBottom, $bbRight, $bbTop\n" ;
 	if (($bbLeft > $lonMax) or ($bbLeft < $lonMin)) { die ("ERROR -clipbox left parameter outside data.") ; }
 	if (($bbRight > $lonMax) or ($bbRight < $lonMin)) { die ("ERROR -clipbox right parameter outside data.") ; }
 	if (($bbBottom > $latMax) or ($bbBottom < $latMin)) { die ("ERROR -clipbox bottom parameter outside data.") ; }
@@ -730,6 +738,10 @@ foreach my $wayId (sort {$a <=> $b} keys %memWayTags) {
 					# LABELS
 					my $name = "" ; my $ref1 ;
 					($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
+					if ( ($test->[$wayIndexLabel] ne "none") and 
+						($nolabelOpt eq "1") and 
+						($name eq "") ) { $name = "NO LABEL" ; }
+
 					if ($name ne "") {
 						my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 						placeLabelAndIcon ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt, $halo) ;
@@ -749,6 +761,11 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 			# LABELS
 			my $name = "" ; my $ref1 ;
 			($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
+
+			if ( ($test->[$wayIndexLabel] ne "none") and 
+				($nolabelOpt eq "1") and 
+				($name eq "") ) { $name = "NO LABEL" ; }
+
 			if ($name ne "") {
 				my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 				placeLabelAndIcon ($x,$y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt, $halo) ;
@@ -794,6 +811,9 @@ foreach my $nodeId (keys %memNodeTags) {
 			my $name = "" ; my $ref1 ;
 			($name, $ref1) = createLabel (\@{$memNodeTags{$nodeId}}, $test->[$nodeIndexLabel], $lon{$nodeId}, $lat{$nodeId}) ;
 			my @names = @$ref1 ;
+
+			if ( ($nolabelOpt eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
+
 			placeLabelAndIcon ($lon{$nodeId}, $lat{$nodeId}, 0, $test->[$nodeIndexThickness], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $ppc, 
 				$test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $allowIconMoveOpt, $halo) ;
 		}
@@ -860,6 +880,9 @@ foreach my $wayId (keys %memWayTags) {
 				my $name = "" ; my $ref1 ;
 				($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel],0, 0) ;
 				my @names = @$ref1 ;
+
+				if ( ($nolabelOpt eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
+
 				if ($name ne "") { 
 					addWayLabel ($wayId, $name, $ruleNumber) ; 
 				}

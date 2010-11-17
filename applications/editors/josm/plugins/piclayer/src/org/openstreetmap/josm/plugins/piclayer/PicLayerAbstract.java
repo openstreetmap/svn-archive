@@ -41,6 +41,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -155,6 +156,8 @@ public abstract class PicLayerAbstract extends Layer
                 SeparatorLayerAction.INSTANCE,
                 new SavePictureCalibrationAction(this),
                 new LoadPictureCalibrationAction(this),
+                SeparatorLayerAction.INSTANCE,
+                new RenameLayerAction(null,this)
         };
     }
 

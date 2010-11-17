@@ -103,7 +103,7 @@ use OSM::mapgen 1.12 ;
 use OSM::mapgenRules 1.12 ;
 
 my $programName = "mapgen.pl" ;
-my $version = "1.12 BETA" ;
+my $version = "1.12" ;
 
 my $projection = "merc" ;
 # my $ellipsoid = "clrk66" ;

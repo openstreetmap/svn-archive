@@ -99,7 +99,16 @@
     **********************************************************
     -->
 	<target name="revision">
+
+		<!-- extract the SVN revision information for file build.number -->
+		<exec append="false" output="REVISION" executable="echo" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="info"/>
+			<arg value="--xml"/>
+			<arg value="."/>
+		</exec>
 		<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+		<delete file="REVISION"/>
 	</target>
 
 	<!--

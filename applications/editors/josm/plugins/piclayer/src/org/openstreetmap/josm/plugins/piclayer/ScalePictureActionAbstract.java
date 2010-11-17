@@ -84,7 +84,14 @@ public abstract class ScalePictureActionAbstract extends MapMode implements Mous
     public void mouseDragged(MouseEvent e) {
         // Scale the picture
         if(mb_dragging) {
-            doTheScale( ( e.getY() - m_prevY ) / 500.0 );
+            double factor;
+            if ( ( e.getModifiersEx() & e.SHIFT_DOWN_MASK ) != 0 ) {
+                factor = Main.pref.getDouble("piclayer.scalefactors.high_precision", 4000);
+            }
+            else {
+                factor = Main.pref.getDouble("piclayer.scalefactors.low_precision", 400);
+            }            
+            doTheScale( ( e.getY() - m_prevY ) / factor );
             m_prevY = e.getY();
             Main.map.mapView.repaint();
         }

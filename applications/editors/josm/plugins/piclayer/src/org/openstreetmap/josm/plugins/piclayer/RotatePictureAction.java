@@ -86,8 +86,14 @@ public class RotatePictureAction extends MapMode implements MouseListener, Mouse
     public void mouseDragged(MouseEvent e) {
         // Rotate the picture
         if(mb_dragging) {
-            // TODO: Magic number
-            m_currentLayer.rotatePictureBy( ( e.getY() - m_prevY ) / 10.0 );
+            double factor;
+            if ( ( e.getModifiersEx() & e.SHIFT_DOWN_MASK ) != 0 ) {
+                factor = Main.pref.getDouble("piclayer.rotatefactors.high_precision", 100.0);
+            }
+            else {
+                factor = Main.pref.getDouble("piclayer.rotatefactors.low_precision", 10.0 );
+            }            
+            m_currentLayer.rotatePictureBy( ( e.getY() - m_prevY ) / factor );
             m_prevY = e.getY();
             Main.map.mapView.repaint();
         }

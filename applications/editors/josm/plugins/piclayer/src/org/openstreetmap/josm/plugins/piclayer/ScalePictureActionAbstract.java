@@ -86,12 +86,12 @@ public abstract class ScalePictureActionAbstract extends MapMode implements Mous
         if(mb_dragging) {
             double factor;
             if ( ( e.getModifiersEx() & e.SHIFT_DOWN_MASK ) != 0 ) {
-                factor = Main.pref.getDouble("piclayer.scalefactors.high_precision", 4000);
+                factor = Main.pref.getDouble("piclayer.scalefactors.high_precision", 1.0001);
             }
             else {
-                factor = Main.pref.getDouble("piclayer.scalefactors.low_precision", 400);
+                factor = Main.pref.getDouble("piclayer.scalefactors.low_precision", 1.015);
             }            
-            doTheScale( ( e.getY() - m_prevY ) / factor );
+            doTheScale( Math.pow(factor, m_prevY - e.getY() ) );
             m_prevY = e.getY();
             Main.map.mapView.repaint();
         }

@@ -30,6 +30,10 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -70,7 +74,7 @@ public abstract class PicLayerAbstract extends Layer
     private double m_scalex = 1.0;
     private double m_scaley = 1.0;
     // The scale that was set on the map during image creation
-    private double m_initial_scale = 0;
+    private double m_initial_scale = 1.0;
     // Layer icon
     private Icon m_layericon = null;
 
@@ -102,6 +106,24 @@ public abstract class PicLayerAbstract extends Layer
      * initial parameters. Throws exception if something fails.
      */
     public void initialize() throws IOException {
+        // First, we initialize the calibration, so that createImage() can rely on it
+        
+        // If the map does not exist - we're screwed. We should not get into this situation in the first place!
+        if ( Main.map != null && Main.map.mapView != null ) {
+            // Geographical position of the image
+            // getCenter() documentation claims it returns a clone, but this is not in line with the code,
+            // which actually returns the same object upon subsequent calls. This messes things up
+            // when we loading several pictures and associated cal's in one go.
+            // So as a workaround, copy the object manually :
+            // TODO: not sure about this code below, probably there is a better way to clone the objects
+            EastNorth center = Main.map.mapView.getCenter();
+            m_initial_position = new EastNorth(center.east(), center.north());
+            m_position = new EastNorth(center.east(), center.north());
+            // Initial scale at which the image was loaded
+            m_initial_scale = Main.map.mapView.getDist100Pixel();
+        } else {
+            throw new IOException(tr("Could not find the map object."));
+        }
 
         // Create image
         Image image = createImage();
@@ -112,16 +134,6 @@ public abstract class PicLayerAbstract extends Layer
         m_image = new BufferedImage( image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB );
         Graphics g = m_image.getGraphics();
         g.drawImage( image, 0, 0, null );
-
-        // If the map does not exist - we're screwed. We should not get into this situation in the first place!
-        if ( Main.map != null && Main.map.mapView != null ) {
-            // Geographical position of the image
-            m_initial_position = m_position = Main.map.mapView.getCenter();
-            // Initial scale at which the image was loaded
-            m_initial_scale = Main.map.mapView.getDist100Pixel();
-        } else {
-            throw new IOException(tr("Could not find the map object."));
-        }
     }
 
     /**
@@ -230,11 +242,11 @@ public abstract class PicLayerAbstract extends Layer
     }
 
     /**
-     * Scales the picture. Scaled in... don't know but works ok :)
+     * Scales the picture. scalex and scaley will multiply the current factor
      */
     public void scalePictureBy( double scalex, double scaley ) {
-        m_scalex += scalex;
-        m_scaley += scaley;
+        m_scalex *= scalex;
+        m_scaley *= scaley;
     }
 
     /**
@@ -267,9 +279,40 @@ public abstract class PicLayerAbstract extends Layer
     }
 
     @Override
+    /**
+     * Computes the (rough) bounding box.
+     * We ignore the rotation, the resulting bounding box contains any possible
+     * rotation.
+     */
     public void visitBoundingBox(BoundingXYVisitor arg0) {
-        // TODO Auto-generated method stub
+        if ( m_image == null )
+            return;
+        String projcode = Main.proj.toCode();
 
+        // TODO: bounding box only supported when coordinates are in meters
+        // The reason for that is that this .cal think makes us a hard time. 
+        // The position is stored as a raw data (can be either in degrees or 
+        // in meters, depending on the projection used at creation), but the 
+        // initial scale is in m/100pix
+        // So for now, we support the bounding box only when everything is in meters
+        if ( projcode.equals("EPSG:3857") || projcode.equals("EPSG:4326") )
+            return;
+            
+        EastNorth center = m_position;
+        double w = m_image.getWidth(null);
+        double h = m_image.getHeight(null);
+        double diag_pix = Math.sqrt(w*w+h*h);
+        
+        // m_initial_scale is a the scale (unit: m/100pix) at creation time
+        double diag_m = (diag_pix/100) * m_initial_scale;
+        
+        double factor = Math.max(m_scalex, m_scaley);
+        double offset = factor * diag_m / 2.0;
+
+        EastNorth topleft = center.add(-offset, -offset);
+        EastNorth bottomright = center.add(offset, offset);
+        arg0.visit(topleft);
+        arg0.visit(bottomright);
     }
 
     /**
@@ -286,6 +329,17 @@ public abstract class PicLayerAbstract extends Layer
         props.put(SCALEX, "" + m_scalex);
         props.put(SCALEY, "" + m_scaley);
         props.put(ANGLE, "" + m_angle);
+    }
+
+    /**
+     * Loads calibration data from file
+     * @param file The file to read from
+     * @return
+     */
+    public void loadCalibration(File file) throws IOException {
+        Properties props = new Properties();
+        props.load(new FileInputStream(file));
+        loadCalibration(props);
     }
 
     /**

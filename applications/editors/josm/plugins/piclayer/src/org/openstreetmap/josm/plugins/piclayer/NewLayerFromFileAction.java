@@ -32,12 +32,15 @@ import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.gui.layer.Layer;
 
 /**
- * Action responsible for creation of a new layer based on
- * an image file.
+ * Action responsible for creation of new layers based on image files.
  */
 public class NewLayerFromFileAction extends JosmAction {
+
+    String m_lastdirprefname = "piclayer.lastdir";
 
     /**
      * Provides filtering of only image files.
@@ -79,28 +82,51 @@ public class NewLayerFromFileAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0) {
 
         // Choose a file
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser(Main.pref.get(m_lastdirprefname));
         fc.setAcceptAllFileFilterUsed( false );
         fc.setFileFilter( new ImageFileFilter() );
+        fc.setMultiSelectionEnabled(true); 
         int result = fc.showOpenDialog( Main.parent );
 
         // Create a layer?
         if ( result == JFileChooser.APPROVE_OPTION ) {
-            // Create layer from file
-            PicLayerFromFile layer = new PicLayerFromFile( fc.getSelectedFile() );
-            // Add layer only if successfully initialized
-            try {
-                layer.initialize();
+            // The first loaded layer will be placed at the top of any other layer of the same class,
+            // or at the bottom of the stack if there is no such layer yet
+            // The next layers we load will be placed one after the other after this first layer
+            int newLayerPos = Main.map.mapView.getAllLayers().size();
+            for(Layer l : Main.map.mapView.getLayersOfType(PicLayerFromFile.class)) {
+                int pos = Main.map.mapView.getLayerPos(l);
+                if (pos < newLayerPos) newLayerPos = pos;
             }
-            catch (IOException e) {
-                // Failed
-                System.out.println( "NewLayerFromFileAction::actionPerformed - " + e.getMessage() );
-                JOptionPane.showMessageDialog(null, e.getMessage() );
-                return;
-            }
-            // Add layer
-            Main.main.addLayer( layer );
-        }
 
+            for(File file : fc.getSelectedFiles() ) {
+                // TODO: we need a progress bar here, it can take quite some time
+                
+                // Create layer from file
+                PicLayerFromFile layer = new PicLayerFromFile( file );
+                // Add layer only if successfully initialized
+                try {
+                    layer.initialize();
+                }
+                catch (IOException e) {
+                    // Failed
+                    System.out.println( "NewLayerFromFileAction::actionPerformed - " + e.getMessage() );
+                    JOptionPane.showMessageDialog(null, e.getMessage() );
+                    return;
+                }
+                Main.pref.put(m_lastdirprefname, file.getParent());
+        
+                Main.main.addLayer( layer );
+                Main.map.mapView.moveLayer(layer, newLayerPos++);
+                
+                if ( fc.getSelectedFiles().length == 1 && Main.pref.getInteger("piclayer.zoom-on-load", 1) != 0 ) {
+                    // if we are loading a single picture file, zoom on it, so that the user can see something
+                    BoundingXYVisitor v = new BoundingXYVisitor();
+                    layer.visitBoundingBox(v);
+                    Main.map.mapView.recalculateCenterScale(v);
+                }
+
+            }
+        }
     }
 }

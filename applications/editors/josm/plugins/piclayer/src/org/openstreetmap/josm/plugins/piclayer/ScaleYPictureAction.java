@@ -43,6 +43,6 @@ public class ScaleYPictureAction extends ScalePictureActionAbstract
     }
 
     public void doTheScale( double scale ) {
-            m_currentLayer.scalePictureBy( 0.0, scale );
+            m_currentLayer.scalePictureBy( 1.0, scale );
         }
 }

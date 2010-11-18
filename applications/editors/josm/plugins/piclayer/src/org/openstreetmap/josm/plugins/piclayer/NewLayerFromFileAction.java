@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -49,22 +50,26 @@ public class NewLayerFromFileAction extends JosmAction {
 
         @Override
         public boolean accept(File f) {
+            if ( f.isDirectory() )
+                return true;
 
-            String ext3 = ( f.getName().length() > 4 ) ?  f.getName().substring( f.getName().length() - 4 ).toLowerCase() : "";
-            String ext4 = ( f.getName().length() > 5 ) ?  f.getName().substring( f.getName().length() - 5 ).toLowerCase() : "";
+            String fileExtension = f.getName().substring(f.getName().lastIndexOf('.')+1);
+            String[] supportedExtensions = ImageIO.getReaderFormatNames();
 
-            // TODO: check what is supported by Java :)
-            return ( f.isDirectory()
-                ||  ext3.equals( ".jpg" )
-                ||  ext4.equals( ".jpeg" )
-                ||  ext3.equals( ".png" )
-                );
+            // Unfortunately, getReaderFormatNames does not always return ALL extensions in 
+            // both lower and upper case, so we can not do a search in the array
+            for (String e: supportedExtensions)
+                if ( e.toLowerCase().equals(fileExtension) ) {
+                    return true;
+                }
+                    
+            return false;
         }
 
 
         @Override
         public String getDescription() {
-            return tr("Image files");
+            return tr("Supported image files");
         }
 
     }

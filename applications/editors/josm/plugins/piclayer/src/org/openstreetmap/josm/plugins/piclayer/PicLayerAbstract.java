@@ -128,7 +128,7 @@ public abstract class PicLayerAbstract extends Layer
         // Create image
         Image image = createImage();
         if ( image == null ) {
-            throw new IOException(tr("Image not created properly."));
+            throw new IOException(tr("PicLayer failed to load or import the image."));
         }
         // Convert to Buffered Image - not sure if this is the right way...
         m_image = new BufferedImage( image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB );

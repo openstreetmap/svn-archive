@@ -169,10 +169,10 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("AN", "[0-9]{5}");
 		//postalCodePatternMap.put("AO", "[0-9]{5}");
 		//postalCodePatternMap.put("AQ", "[0-9]{5}");
-		postalCodePatternMap.put("AR", "[A-Z]{1}[0-9]{4}[A-Z]{3}");
+		postalCodePatternMap.put("AR", "[A-Z]{1}[0-9]{4}[A-Z]{3}"); // Argentina
 		//postalCodePatternMap.put("AS", "[0-9]{5}");
-		postalCodePatternMap.put("AT", "[0-9]{4}");
-		postalCodePatternMap.put("AU", "[0-9]{4}");
+		postalCodePatternMap.put("AT", "[0-9]{4}"); // Austria
+		postalCodePatternMap.put("AU", "[0-9]{4}"); // Australia
 		//postalCodePatternMap.put("AW", "[0-9]{5}");
 		//postalCodePatternMap.put("AX", "[0-9]{5}");
 		//postalCodePatternMap.put("AZ", "[0-9]{5}");
@@ -201,12 +201,12 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("CD", "[0-9]{5}");
 		//postalCodePatternMap.put("CF", "[0-9]{5}");
 		//postalCodePatternMap.put("CG", "[0-9]{5}");
-		postalCodePatternMap.put("CH", "[0-9]{4}");
+		postalCodePatternMap.put("CH", "[0-9]{4}"); // Switzerland
 		//postalCodePatternMap.put("CI", "[0-9]{5}");
 		//postalCodePatternMap.put("CK", "[0-9]{5}");
 		//postalCodePatternMap.put("CL", "[0-9]{5}");
 		//postalCodePatternMap.put("CM", "[0-9]{5}");
-		postalCodePatternMap.put("CN", "[0-9]{6}");
+		postalCodePatternMap.put("CN", "[0-9]{6}"); // China
 		//postalCodePatternMap.put("CO", "[0-9]{5}");
 		//postalCodePatternMap.put("CR", "[0-9]{5}");
 		//postalCodePatternMap.put("CS", "[0-9]{5}");
@@ -215,14 +215,14 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("CX", "[0-9]{5}");
 		//postalCodePatternMap.put("CY", "[0-9]{5}");
 		postalCodePatternMap.put("CZ", "[0-9]{3} [0-9]{2}"); // Czech: 999-99
-		postalCodePatternMap.put("DE", "[0-9]{5}");
+		postalCodePatternMap.put("DE", "[0-9]{5}"); // Germany
 		//postalCodePatternMap.put("DJ", "[0-9]{5}");
-		postalCodePatternMap.put("DK", "[0-9]{4}");
+		postalCodePatternMap.put("DK", "[0-9]{4}"); // Denmark
 		//postalCodePatternMap.put("DM", "[0-9]{5}");
 		//postalCodePatternMap.put("DO", "[0-9]{5}");
 		//postalCodePatternMap.put("DZ", "[0-9]{5}");
 		//postalCodePatternMap.put("EC", "[0-9]{5}");
-		postalCodePatternMap.put("EE", "[0-9]{5}");
+		postalCodePatternMap.put("EE", "[0-9]{5}"); // Estonia
 		//postalCodePatternMap.put("EG", "[0-9]{5}");
 		//postalCodePatternMap.put("EH", "[0-9]{5}");
 		//postalCodePatternMap.put("ER", "[0-9]{5}");
@@ -233,16 +233,8 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("FK", "[0-9]{5}");
 		//postalCodePatternMap.put("FM", "[0-9]{5}");
 		//postalCodePatternMap.put("FO", "[0-9]{5}");
-		postalCodePatternMap.put("FR", "[0-9]{5}");
+		postalCodePatternMap.put("FR", "[0-9]{5}"); // France
 		//postalCodePatternMap.put("GA", "[0-9]{5}");
-		/*
-		A9  9AA
-		A99 9AA
-		A9A 9AA
-		AA9 9AA
-		AA99 9AA
-		AA9A 9AA
-		*/
 		postalCodePatternMap.put("GB", "[A-Z]{1,2}[0-9]{1,2}[A-Z]? [0-9]{1}[A-Z]{2}"); // UK
 		//postalCodePatternMap.put("GD", "[0-9]{5}");
 		//postalCodePatternMap.put("GE", "[0-9]{5}");
@@ -255,7 +247,7 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("GN", "[0-9]{5}");
 		//postalCodePatternMap.put("GP", "[0-9]{5}");
 		//postalCodePatternMap.put("GQ", "[0-9]{5}");
-		postalCodePatternMap.put("GR", "[0-9]{5}");
+		postalCodePatternMap.put("GR", "[0-9]{5}"); // Greece
 		//postalCodePatternMap.put("GS", "[0-9]{5}");
 		//postalCodePatternMap.put("GT", "[0-9]{5}");
 		//postalCodePatternMap.put("GU", "[0-9]{5}");
@@ -264,9 +256,9 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("HK", "[0-9]{5}");
 		//postalCodePatternMap.put("HM", "[0-9]{5}");
 		//postalCodePatternMap.put("HN", "[0-9]{5}");
-		postalCodePatternMap.put("HR", "[0-9]{5}"); // croatia (Hrvatska)
+		postalCodePatternMap.put("HR", "[0-9]{5}"); // Croatia (Hrvatska)
 		//postalCodePatternMap.put("HT", "[0-9]{5}");
-		postalCodePatternMap.put("HU", "[0-9]{4}");
+		postalCodePatternMap.put("HU", "[0-9]{4}"); // Hungary
 		//postalCodePatternMap.put("ID", "[0-9]{5}");
 		//postalCodePatternMap.put("IE", "[0-9]{5}");
 		postalCodePatternMap.put("IL", "[0-9]{5}");
@@ -275,8 +267,8 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("IO", "[0-9]{5}");
 		//postalCodePatternMap.put("IQ", "[0-9]{5}");
 		//postalCodePatternMap.put("IR", "[0-9]{5}");
-		postalCodePatternMap.put("IS", "[0-9]{3}");
-		postalCodePatternMap.put("IT", "[0-9]{5}");
+		postalCodePatternMap.put("IS", "[0-9]{3}"); // Iceland
+		postalCodePatternMap.put("IT", "[0-9]{5}"); // Italy
 		//postalCodePatternMap.put("JE", "[0-9]{5}");
 		//postalCodePatternMap.put("JM", "[0-9]{5}");
 		//postalCodePatternMap.put("JO", "[0-9]{5}");
@@ -301,7 +293,7 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("LS", "[0-9]{5}");
 		postalCodePatternMap.put("LT", "[0-9]{5}");
 		postalCodePatternMap.put("LU", "[0-9]{4}");
-		postalCodePatternMap.put("LV", "[0-9]{4}");
+		postalCodePatternMap.put("LV", "[0-9]{4}"); // Latvia
 		//postalCodePatternMap.put("LY", "[0-9]{5}");
 		//postalCodePatternMap.put("MA", "[0-9]{5}");
 		//postalCodePatternMap.put("MC", "[0-9]{5}");
@@ -332,7 +324,7 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("NF", "[0-9]{5}");
 		//postalCodePatternMap.put("NG", "[0-9]{5}");
 		//postalCodePatternMap.put("NI", "[0-9]{5}");
-		postalCodePatternMap.put("NL", "[0-9]{4} [A-Z]{2}");
+		postalCodePatternMap.put("NL", "[0-9]{4} [A-Z]{2}"); // Dutch
 		postalCodePatternMap.put("NO", "[0-9]{4}"); // Norway
 		//postalCodePatternMap.put("NP", "[0-9]{5}");
 		//postalCodePatternMap.put("NR", "[0-9]{5}");
@@ -345,31 +337,31 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("PG", "[0-9]{5}");
 		//postalCodePatternMap.put("PH", "[0-9]{5}");
 		//postalCodePatternMap.put("PK", "[0-9]{5}");
-		postalCodePatternMap.put("PL", "[0-9]{2}-[0-9]{3}");
+		postalCodePatternMap.put("PL", "[0-9]{2}-[0-9]{3}"); // Poland
 		//postalCodePatternMap.put("PM", "[0-9]{5}");
 		//postalCodePatternMap.put("PN", "[0-9]{5}");
 		//postalCodePatternMap.put("PR", "[0-9]{5}");
 		//postalCodePatternMap.put("PS", "[0-9]{5}");
-		postalCodePatternMap.put("PT", "[0-9]{4}-[0-9]{3}");
+		postalCodePatternMap.put("PT", "[0-9]{4}-[0-9]{3}"); // Portugal
 		//postalCodePatternMap.put("PW", "[0-9]{5}");
 		//postalCodePatternMap.put("PY", "[0-9]{5}");
 		//postalCodePatternMap.put("QA", "[0-9]{5}");
 		//postalCodePatternMap.put("RE", "[0-9]{5}");
-		postalCodePatternMap.put("RO", "[0-9]{6}");
+		postalCodePatternMap.put("RO", "[0-9]{6}"); // Romania
 		//postalCodePatternMap.put("RS", "[0-9]{5}");
-		postalCodePatternMap.put("RU", "[0-9]{6}");
+		postalCodePatternMap.put("RU", "[0-9]{6}"); // Russia
 		//postalCodePatternMap.put("RW", "[0-9]{5}");
 		//postalCodePatternMap.put("SA", "[0-9]{5}");
 		//postalCodePatternMap.put("SB", "[0-9]{5}");
 		//postalCodePatternMap.put("SC", "[0-9]{5}");
 		//postalCodePatternMap.put("SD", "[0-9]{5}");
-		postalCodePatternMap.put("SE", "[0-9]{3} [0-9]{2}"); // sweden: 999-99
+		postalCodePatternMap.put("SE", "[0-9]{3} [0-9]{2}"); // Sweden: 999-99
 		//postalCodePatternMap.put("SG", "[0-9]{5}");
 		//postalCodePatternMap.put("SH", "[0-9]{5}");
 		postalCodePatternMap.put("SI", "[0-9]{4}");
 		//postalCodePatternMap.put("SJ", "[0-9]{5}");
 		postalCodePatternMap.put("SK", "[0-9]{3} [0-9]{2}"); // Slovakia: 999-99
-		postalCodePatternMap.put("SL", "[0-9]{4}");
+		postalCodePatternMap.put("SL", "[0-9]{4}"); // Slowenia
 		postalCodePatternMap.put("SM", "[0-9]{5}"); // san marino -> Italy
 		//postalCodePatternMap.put("SN", "[0-9]{5}");
 		//postalCodePatternMap.put("SO", "[0-9]{5}");
@@ -389,15 +381,15 @@ public class PostalCodeChecker {
 		//postalCodePatternMap.put("TM", "[0-9]{5}");
 		//postalCodePatternMap.put("TN", "[0-9]{5}");
 		//postalCodePatternMap.put("TO", "[0-9]{5}");
-		postalCodePatternMap.put("TR", "[0-9]{5}"); // turky
+		postalCodePatternMap.put("TR", "[0-9]{5}"); // turkye
 		//postalCodePatternMap.put("TT", "[0-9]{5}");
 		//postalCodePatternMap.put("TV", "[0-9]{5}");
 		//postalCodePatternMap.put("TW", "[0-9]{5}");
 		//postalCodePatternMap.put("TZ", "[0-9]{5}");
-		postalCodePatternMap.put("UA", "[0-9]{5}");
+		postalCodePatternMap.put("UA", "[0-9]{5}"); // Ukraine
 		//postalCodePatternMap.put("UG", "[0-9]{5}");
 		//postalCodePatternMap.put("UM", "[0-9]{5}");
-		postalCodePatternMap.put("US", "([A-Z]{2} )?[0-9]{5}"); // support "99999" and "IL 99999"
+		postalCodePatternMap.put("US", "([A-Z]{2} )?[0-9]{5}"); // USA: support "99999" and "IL 99999"
 		//postalCodePatternMap.put("UY", "[0-9]{5}");
 		//postalCodePatternMap.put("UZ", "[0-9]{5}");
 		//postalCodePatternMap.put("VA", "[0-9]{5}");

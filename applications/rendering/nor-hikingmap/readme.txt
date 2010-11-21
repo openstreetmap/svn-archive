@@ -82,25 +82,26 @@ to hikingmap.xml and/or pistemap.xml
 TODO
 ====
 
-split hiking symbols into layers to control presentation
-text: place=locality|farm|isolated_dwelling|island|islet|suburb
+barrier=gate|lift_gate|bollard|cycle_barrier|block|chain
+barrier=toll_booth
+barrier=stile|kissing_gate|windfall
+
+natural=stone
+or ([leisure]='picnic_table' and [fireplace]='yes')  == amenity=bbq
+
 text: water/bay/wetland in blue text
+text: place=locality|farm|isolated_dwelling|island|islet|suburb
+
 regional hiking routes network=iwn/nwn/rwn at zoom=10-11
 
 leisure=track, highway=raceway
 clay pigeon, pistol
 sport=* symbols from zoom 17
 "selvplukk": landuse=orchard,service=self,trees=strawberry_plants
-natural=stone
-leisure=picnic_table and fireplace=yes as amenity=bbq
-  <!-- or ([leisure]='picnic_table' and [fireplace]='yes') -->
 man_made=pier
 highway=turning_circle or (highway=* and area=yes)
-barrier=gate|lift_gate|bollard|cycle_barrier|stile|windfall
 
 add symbol to leisure=winter_sports, how to determine activity type?
-
-seasonal på skiforeningens kafeer
 
 piste:oneway=yes
 piste:lit=yes

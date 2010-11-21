@@ -1,6 +1,8 @@
 
 package harbour;
 
+import harbour.dialogs.HarbourAction;
+
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
@@ -11,6 +13,7 @@ public class Harbour implements SmedPluggable {
 	
 	private int index = -1;
 	private String msg = "";
+	private HarbourAction harbour = null;
 	private SmedPluginManager manager = null;
 
 	@Override
@@ -71,7 +74,9 @@ public class Harbour implements SmedPluggable {
 	@Override
 	public JComponent getComponent() {
 		manager.showVisualMessage(msg);
-		return null;
+		harbour = new HarbourAction();
+		
+		return harbour.getHarbourPanel();
 	}
 
 	@Override

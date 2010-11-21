@@ -354,8 +354,10 @@ Options:
 Pour connaitre les noms exactes des villes et feuilles, faire une recherche sur http://www.cadastre.gouv.fr
 
 Exemples:
+
    Pour télécharger les feuilles de "LE BUGUE" en Dordogne avec une précision faible:
      cadget --ville "LE BUGUE" --departement 24
+
    Ou en plus court : 
      cadget -v "LE BUGUE" -d 24
 

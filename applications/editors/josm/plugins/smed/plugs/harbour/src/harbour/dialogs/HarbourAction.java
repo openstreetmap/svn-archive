@@ -1,11 +1,11 @@
 package harbour.dialogs;
 
+import harbour.panels.*;
+
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import javax.swing.JButton;
-import javax.swing.BorderFactory;
-import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -15,7 +15,6 @@ import javax.swing.ImageIcon;
 public class HarbourAction {
 
 	private JPanel harbourPanel = null;  //  @jve:decl-index=0:visual-constraint="68,31"
-	private JPanel comArea = null;
 	private JButton comButton = null;
 	private JButton restButton = null;
 	private JButton servButton = null;
@@ -29,8 +28,8 @@ public class HarbourAction {
 	private JTextField setTextField = null;
 	private JButton forButton = null;
 	private JButton fastforButton = null;
-	private JLabel jLabel = null;
-	private JButton queraButton = null;
+	private JLabel queryLabel = null;
+	private JButton queryButton = null;
 	private JButton changequeryButton = null;
 	private JComboBox typComboBox = null;
 	private JLabel typeLabel = null;
@@ -40,6 +39,34 @@ public class HarbourAction {
 	private JLabel noLabel1 = null;
 	private JLabel regLabel = null;
 	private JTextField regTextField = null;
+	private PanelGeneral panelGeneral = null;
+	private PanelLimits panelLimits = null;
+	private PanelServices panelServices = null;
+	private PanelEnv panelEnv = null;
+	private PanelRelations panelRelations = null;
+	
+	public HarbourAction() {
+		panelGeneral= new PanelGeneral();
+		panelGeneral.setBounds(new Rectangle(2, 56, 330, 270));
+		panelGeneral.setVisible(true);
+		
+		panelLimits = new PanelLimits();
+		panelLimits.setBounds(new Rectangle(2, 56, 330, 270));
+		panelLimits.setVisible(false);
+		
+		panelServices = new PanelServices();
+		panelServices.setBounds(new Rectangle(2, 56, 330, 270));
+		panelServices.setVisible(false);
+		
+		panelEnv = new PanelEnv();
+		panelEnv.setBounds(new Rectangle(2, 56, 330, 270));
+		panelEnv.setVisible(false);
+		
+		panelRelations = new PanelRelations();
+		panelRelations.setBounds(new Rectangle(2, 56, 330, 270));
+		panelRelations.setVisible(false);
+	}
+	
 	/**
 	 * This method initializes harbourPanel	
 	 * 	
@@ -59,10 +86,10 @@ public class HarbourAction {
 			typeLabel = new JLabel();
 			typeLabel.setBounds(new Rectangle(289, 5, 43, 20));
 			typeLabel.setText("Type:");
-			jLabel = new JLabel();
-			jLabel.setBounds(new Rectangle(212, 334, 80, 15));
-			jLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-			jLabel.setText("Suche nach:");
+			queryLabel = new JLabel();
+			queryLabel.setBounds(new Rectangle(212, 334, 80, 15));
+			queryLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+			queryLabel.setText("Suche nach:");
 			setLabel = new JLabel();
 			setLabel.setBounds(new Rectangle(2, 330, 68, 21));
 			setLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -73,12 +100,16 @@ public class HarbourAction {
 			harbourPanel = new JPanel();
 			harbourPanel.setLayout(null);
 			harbourPanel.setSize(new Dimension(400, 360));
-			harbourPanel.add(getComArea(), null);
-			harbourPanel.add(getComButton(), null);
+			harbourPanel.add(panelGeneral,    null);
+			harbourPanel.add(panelLimits,     null);
+			harbourPanel.add(panelServices,   null);
+			harbourPanel.add(panelEnv,        null);
+			harbourPanel.add(panelRelations,  null);
+			harbourPanel.add(getComButton(),  null);
 			harbourPanel.add(getRestButton(), null);
 			harbourPanel.add(getServButton(), null);
-			harbourPanel.add(getEnvButton(), null);
-			harbourPanel.add(getRelButton(), null);
+			harbourPanel.add(getEnvButton(),  null);
+			harbourPanel.add(getRelButton(),  null);
 			harbourPanel.add(getNameTextField(), null);
 			harbourPanel.add(getFastbackButton(), null);
 			harbourPanel.add(nameLabel, null);
@@ -87,8 +118,8 @@ public class HarbourAction {
 			harbourPanel.add(getSetTextField(), null);
 			harbourPanel.add(getForButton(), null);
 			harbourPanel.add(getFastforButton(), null);
-			harbourPanel.add(jLabel, null);
-			harbourPanel.add(getQueraButton(), null);
+			harbourPanel.add(queryLabel, null);
+			harbourPanel.add(getQueryButton(), null);
 			harbourPanel.add(getChangequeryButton(), null);
 			harbourPanel.add(getTypComboBox(), null);
 			harbourPanel.add(typeLabel, null);
@@ -102,20 +133,6 @@ public class HarbourAction {
 		return harbourPanel;
 	}
 
-	/**
-	 * This method initializes comArea	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getComArea() {
-		if (comArea == null) {
-			comArea = new JPanel();
-			comArea.setLayout(null);
-			comArea.setBounds(new Rectangle(2, 56, 330, 270));
-			comArea.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-		}
-		return comArea;
-	}
 
 	/**
 	 * This method initializes comButton	
@@ -129,6 +146,15 @@ public class HarbourAction {
 			comButton.setText("");
 			comButton.setIcon(new ImageIcon(getClass().getResource("/images/Windrose.png")));
 			comButton.setToolTipText("Allgemeines");
+			comButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					panelLimits.setVisible(false);
+					panelServices.setVisible(false);
+					panelEnv.setVisible(false);
+					panelRelations.setVisible(false);
+					panelGeneral.setVisible(true);
+				}
+			});
 		}
 		return comButton;
 	}
@@ -142,8 +168,17 @@ public class HarbourAction {
 		if (restButton == null) {
 			restButton = new JButton();
 			restButton.setBounds(new Rectangle(340, 111, 50, 50));
-			restButton.setIcon(new ImageIcon(getClass().getResource("/images/Zeichen_264.png")));
+			restButton.setIcon(new ImageIcon(getClass().getResource("/images/Schranken.png")));
 			restButton.setToolTipText("Einfahrtbeschränkungen");
+			restButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					panelGeneral.setVisible(false);
+					panelServices.setVisible(false);
+					panelEnv.setVisible(false);
+					panelRelations.setVisible(false);
+					panelLimits.setVisible(true);
+				}
+			});
 		}
 		return restButton;
 	}
@@ -159,6 +194,15 @@ public class HarbourAction {
 			servButton.setBounds(new Rectangle(340, 166, 50, 50));
 			servButton.setIcon(new ImageIcon(getClass().getResource("/images/Kran.png")));
 			servButton.setToolTipText("Dienste");
+			servButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					panelGeneral.setVisible(false);
+					panelLimits.setVisible(false);
+					panelEnv.setVisible(false);
+					panelRelations.setVisible(false);
+					panelServices.setVisible(true);
+				}
+			});
 		}
 		return servButton;
 	}
@@ -172,7 +216,17 @@ public class HarbourAction {
 		if (envButton == null) {
 			envButton = new JButton();
 			envButton.setBounds(new Rectangle(340, 221, 50, 50));
+			envButton.setIcon(new ImageIcon(getClass().getResource("/images/Env.png")));
 			envButton.setToolTipText("Umgebung");
+			envButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					panelGeneral.setVisible(false);
+					panelLimits.setVisible(false);
+					panelServices.setVisible(false);
+					panelRelations.setVisible(false);
+					panelEnv.setVisible(true);	
+				}
+			});
 		}
 		return envButton;
 	}
@@ -186,7 +240,17 @@ public class HarbourAction {
 		if (relButton == null) {
 			relButton = new JButton();
 			relButton.setBounds(new Rectangle(340, 276, 50, 50));
+			relButton.setIcon(new ImageIcon(getClass().getResource("/images/Relationen.png")));
 			relButton.setToolTipText("Relationen");
+			relButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					panelGeneral.setVisible(false);
+					panelLimits.setVisible(false);
+					panelServices.setVisible(false);
+					panelEnv.setVisible(false);
+					panelRelations.setVisible(true);
+				}
+			});
 		}
 		return relButton;
 	}
@@ -271,19 +335,19 @@ public class HarbourAction {
 	}
 
 	/**
-	 * This method initializes queraButton	
+	 * This method initializes queryButton	
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getQueraButton() {
-		if (queraButton == null) {
-			queraButton = new JButton();
-			queraButton.setBounds(new Rectangle(292, 330, 80, 20));
-			queraButton.setFont(new Font("Dialog", Font.PLAIN, 12));
-			queraButton.setToolTipText("");
-			queraButton.setText("Hafen");
+	private JButton getQueryButton() {
+		if (queryButton == null) {
+			queryButton = new JButton();
+			queryButton.setBounds(new Rectangle(292, 330, 80, 20));
+			queryButton.setFont(new Font("Dialog", Font.PLAIN, 12));
+			queryButton.setToolTipText("");
+			queryButton.setText("Hafen");
 		}
-		return queraButton;
+		return queryButton;
 	}
 
 	/**

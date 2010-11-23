@@ -275,28 +275,8 @@ public class SlippyMapPreferences
         }
     }
 
-    public static class NearMap extends OsmTileSource.AbstractOsmTileSource {
-        public NearMap() {
-            super("NearMap Australia", "http://www.nearmap.com/maps/hl=en&nml=Vert&");
-        }
-
-        @Override
-        public int getMaxZoom() {
-            return 21;
-        }
-
-        @Override
-        public String getTilePath(int zoom, int tilex, int tiley) {
-            return "z=" + zoom + "&x=" + tilex + "&y=" + tiley;
-        }
-
-        public TileUpdate getTileUpdate() {
-            return TileUpdate.IfNoneMatch;
-        }
-    }
-
-    public static class BingMaps extends OsmTileSource.AbstractOsmTileSource {
-        public BingMaps() {
+    public static class BingAerial extends OsmTileSource.AbstractOsmTileSource {
+        public BingAerial() {
             super("Bing Aerial Maps", "http://ecn.t2.tiles.virtualearth.net/tiles/");
         }
 
@@ -306,9 +286,14 @@ public class SlippyMapPreferences
         }
         
         @Override
-        public String getTileUrl(int zoom, int tilex, int tiley) {
+        public String getExtension() {
+            return("jpeg");
+        }
+
+        @Override
+        public String getTilePath(int zoom, int tilex, int tiley) {
             String quadtree = computeQuadTree(zoom, tilex, tiley);
-            return "http://ecn.t2.tiles.virtualearth.net/tiles/a" + quadtree + ".jpeg?g=587&mkt=en-us&n=z";
+            return "/tiles/a" + quadtree + "." + getExtension() + "?g=587";
         }
 
         public TileUpdate getTileUpdate() {
@@ -317,9 +302,9 @@ public class SlippyMapPreferences
     }
 
     private static String computeQuadTree(int zoom, int tilex, int tiley) {
-        String k = "";
+        StringBuilder k = new StringBuilder();
         for(int i = zoom; i > 0; i--) {
-            int digit = 0;
+            char digit = 48;
             int mask = 1 << (i - 1);
             if ((tilex & mask) != 0) {
                 digit += 1;
@@ -327,16 +312,11 @@ public class SlippyMapPreferences
             if ((tiley & mask) != 0) {
                 digit += 2;
             }
-            k += String.valueOf(digit);
+            k.append(digit);
         }
-        return k;
+        return k.toString();
     }
     
-    public static void main(String[] args) {
-        System.out.println("Expected: 021333011020221201");
-        System.out.println("Actual:   " + computeQuadTree(18, 62985, 94388));
-    }
-
     public static class HaitiImagery extends OsmTileSource.AbstractOsmTileSource {
         public HaitiImagery() {
             super("HaitiImagery", "http://gravitystorm.dev.openstreetmap.org/imagery/haiti");
@@ -440,11 +420,11 @@ public class SlippyMapPreferences
         sources.add(new OsmTileSource.Mapnik());
         sources.add(new OsmTileSource.CycleMap());
         sources.add(new OsmTileSource.TilesAtHome());
+        sources.add(new BingAerial());
         sources.add(new Coastline());
         sources.add(new FreeMapySkPokus());
         sources.add(new FreeMapySk());
         sources.add(new NearMap());
-        sources.add(new BingMaps());
         sources.add(new HaitiImagery());
         sources.addAll(getCustomSources());
         // Probably need to either add these or let users add them somehow

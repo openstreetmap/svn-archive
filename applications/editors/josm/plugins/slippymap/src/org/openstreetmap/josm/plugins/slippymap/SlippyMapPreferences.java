@@ -295,6 +295,47 @@ public class SlippyMapPreferences
         }
     }
 
+    public static class BingMaps extends OsmTileSource.AbstractOsmTileSource {
+        public BingMaps() {
+            super("Bing Aerial Maps", "http://ecn.t2.tiles.virtualearth.net/tiles/");
+        }
+
+        @Override
+        public int getMaxZoom() {
+            return 22;
+        }
+        
+        @Override
+        public String getTileUrl(int zoom, int tilex, int tiley) {
+            String quadtree = computeQuadTree(zoom, tilex, tiley);
+            return "http://ecn.t2.tiles.virtualearth.net/tiles/a" + quadtree + ".jpeg?g=587&mkt=en-us&n=z";
+        }
+
+        public TileUpdate getTileUpdate() {
+            return TileUpdate.IfNoneMatch;
+        }
+    }
+
+    private static String computeQuadTree(int zoom, int tilex, int tiley) {
+        String k = "";
+        for(int i = zoom; i > 0; i--) {
+            int digit = 0;
+            int mask = 1 << (i - 1);
+            if ((tilex & mask) != 0) {
+                digit += 1;
+            }
+            if ((tiley & mask) != 0) {
+                digit += 2;
+            }
+            k += String.valueOf(digit);
+        }
+        return k;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("Expected: 021333011020221201");
+        System.out.println("Actual:   " + computeQuadTree(18, 62985, 94388));
+    }
 
     public static class HaitiImagery extends OsmTileSource.AbstractOsmTileSource {
         public HaitiImagery() {
@@ -403,6 +444,7 @@ public class SlippyMapPreferences
         sources.add(new FreeMapySkPokus());
         sources.add(new FreeMapySk());
         sources.add(new NearMap());
+        sources.add(new BingMaps());
         sources.add(new HaitiImagery());
         sources.addAll(getCustomSources());
         // Probably need to either add these or let users add them somehow

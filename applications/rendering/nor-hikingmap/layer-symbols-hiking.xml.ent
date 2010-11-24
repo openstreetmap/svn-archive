@@ -16,7 +16,7 @@
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>[barrier]='gate' or [barrier]='lift_gate' or [barrier]='bollard' or [barrier]='cycle_barrier' or [barrier]='block or [barrier]='chain'</Filter>
+    <Filter>[barrier]='gate' or [barrier]='lift_gate' or [barrier]='bollard' or [barrier]='cycle_barrier' or [barrier]='block' or [barrier]='chain'</Filter>
     <PointSymbolizer file="&symbols;/gate.png"/>
   </Rule>
   <Rule>

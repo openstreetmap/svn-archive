@@ -360,7 +360,7 @@
   <StyleName>symbols-text</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,amenity,tourism,"natural",railway,building,name,operator,service,access,information,hiking,ski,'no'::text as point
+    (select way,amenity,tourism,"natural",railway,building,name,operator,service,access,information,hiking,ski,ele,'no'::text as point
      from &prefix;_polygon
      where amenity in ('cafe','place_of_worship','parking')
         or tourism in ('cabin','guest_house','alpine_hut','hostel','hotel','basic_hut','wilderness_hut')

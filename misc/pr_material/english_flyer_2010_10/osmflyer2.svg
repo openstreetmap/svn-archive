@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1119.6851"
+   height="442.91336"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docbase="/home/fred/flyer"
+   sodipodi:docname="osmflyer2.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/var/svn/svn.geofabrik.de/dokumente/flyer/osmflyer-a7-english/osmflyer2.png"
+   inkscape:export-xdpi="149.96161"
+   inkscape:export-ydpi="149.96161">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       id="perspective4128"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4141"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective2893"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3079"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#e1f3fa"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.6361744"
+     inkscape:cx="840.1418"
+     inkscape:cy="221.45668"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     width="316mm"
+     height="125mm"
+     units="mm"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:guide-points="true"
+     inkscape:window-width="1600"
+     inkscape:window-height="1125"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     showgrid="false">
+    <sodipodi:guide
+       orientation="vertical"
+       position="0"
+       id="guide2160" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="17.716535"
+       id="guide2162" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="35.433071"
+       id="guide2164" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="297.6378"
+       id="guide2166" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="559.84252"
+       id="guide2168" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="822.04724"
+       id="guide2170" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="1101.9685"
+       id="guide2174" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="1119.685"
+       id="guide2176" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="1084.252"
+       id="guide2178" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="0"
+       id="guide2182" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="17.716535"
+       id="guide2184" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="35.433071"
+       id="guide2186" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="407.48031"
+       id="guide2188" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="425.19685"
+       id="guide2190" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="442.91339"
+       id="guide2192" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="378"
+       id="guide3395" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="283.46457"
+       id="guide3533" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="312.20143,247.68345"
+       id="guide3535" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="545.66929"
+       id="guide3537" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="574.01575"
+       id="guide3539" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="807.87402"
+       id="guide3541" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="836.22047"
+       id="guide3543" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="1070.0787"
+       id="guide3545" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="49.606299"
+       id="guide3547" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="393.30709"
+       id="guide3549" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="49.606299"
+       id="guide3708" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="361.41732"
+       id="guide3712" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g2882"
+       transform="translate(2.1290574,-1.3649181)"
+       style="opacity:1">
+      <path
+         transform="translate(0,1.5076969)"
+         d="M 68.25,167.3125 C 67.086151,167.32214 66.342024,167.45872 66.03125,167.4375 C 63.521931,167.26709 61.072835,168.25566 59.384943,170.12026 C 57.697051,171.98487 56.956408,174.51998 57.375,177 L 84.96875,337.96875 C 85.397456,340.50079 86.98568,342.68663 89.261404,343.87663 C 91.537129,345.06663 94.238435,345.12384 96.5625,344.03125 C 104.83262,340.1538 108.3759,332.0286 109.59375,325.5 L 109.65625,325.5 C 109.71594,325.26515 109.72551,325.01734 109.78125,324.78125 C 111.32689,318.23463 111.44041,311.39802 111.78125,305.3125 C 112.40118,304.43248 112.97531,303.36052 113.25,301.5 C 113.27802,301.30291 113.29887,301.10486 113.3125,300.90625 L 114.3125,287.21875 C 114.32419,287.13558 114.33461,287.05224 114.34375,286.96875 C 115.15722,268.23752 115.60448,240.7651 114.46875,224.78125 C 114.44759,224.44567 114.40584,224.11171 114.34375,223.78125 C 113.96013,221.82757 113.35242,218.92252 111.4375,215.9375 C 109.52258,212.95248 106.36045,210.34239 102.5,208.625 C 101.9883,208.39391 101.45426,208.2159 100.90625,208.09375 L 95.3125,206.875 C 89.75736,201.28411 85.983668,197.72811 83.5625,182.84375 L 83.5625,180.28125 C 83.560876,179.45451 83.434452,178.63275 83.1875,177.84375 C 81.670183,172.98366 76.886892,168.76956 72.96875,167.875 C 71.009679,167.42772 69.413849,167.30286 68.25,167.3125 z"
+         id="path2491"
+         style="fill:#00ff00;fill-rule:evenodd;stroke:none;stroke-width:0.03543307000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         inkscape:original="M 65.46875 175.625 L 93.0625 336.59375 C 98.82077 333.89398 100.78207 328.99935 101.6875 323.46875 C 103.18391 317.58149 103.1653 309.25224 103.75 301.90625 C 104.42789 301.53609 105.04503 300.85415 105.125 300.3125 L 106.125 286.625 C 106.92857 268.12163 107.35596 240.50012 106.28125 225.375 C 105.6069 221.94071 104.62896 218.55963 99.15625 216.125 L 91.15625 214.375 C 84.870811 207.80163 78.281277 202.30521 75.34375 183.71875 L 75.34375 180.28125 C 73.528239 174.46602 69.201632 175.87986 65.46875 175.625 z "
+         inkscape:radius="8.2134409"
+         sodipodi:type="inkscape:offset" />
+      <path
+         sodipodi:nodetypes="ccccccccccc"
+         id="path2883"
+         d="M 65.47285,177.13715 C 69.205729,177.39202 73.512646,175.98218 75.328157,181.79741 L 75.328157,185.23531 C 78.265683,203.82178 84.857047,209.29742 91.142486,215.87079 L 99.164247,217.62794 C 104.63696,220.06257 105.59489,223.43778 106.26924,226.87207 C 107.34395,241.99718 106.92001,269.63967 106.11644,288.14304 L 105.12327,301.81824 C 105.0433,302.3599 104.426,303.05243 103.74811,303.42259 C 103.16341,310.76858 103.18178,319.07949 101.68537,324.96675 C 100.77994,330.49735 98.810699,335.40738 93.052429,338.10715 L 65.47285,177.13715 z"
+         style="fill:#ff0000;fill-rule:evenodd;stroke:none;stroke-width:0.03543307000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <image
+       y="17.716814"
+       x="-0.48681641"
+       id="image2895"
+       height="407.48001"
+       width="1120.6587"
+       sodipodi:absref="/home/soeren/svn-geofabrik-de/dokumente/flyer/osmflyer-a7-english/background.png"
+       xlink:href="background.png" />
+    <flowRoot
+       inkscape:export-ydpi="400.01047"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-filename="/tmp/2.png"
+       transform="translate(538.22925,-9.369603)"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed"
+       id="flowRoot2702"
+       xml:space="preserve"><flowRegion
+         id="flowRegion2704"><rect
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed"
+           y="88.272079"
+           x="35.687172"
+           height="305.03497"
+           width="233.45358"
+           id="rect2706" /></flowRegion><flowPara
+         id="flowPara2716">The map data for OpenStreetMap is collected in various ways. The most common method is recording tracks from journeys using a GPS device or perhaps a modern mobile phone. The GPS receiver stores the current position every second and produces a breadcrumb track of your route.</flowPara></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="90.608963"
+       y="11.9238"
+       id="text2200"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><tspan
+         sodipodi:role="line"
+         id="tspan2202"
+         x="90.608963"
+         y="11.9238">reverse of title page</tspan></text>
+    <g
+       id="g2899">
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2204"
+         d="M 35.433071,-2.9404297e-05 L 35.433071,17.716511"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2206"
+         d="M 17.716535,35.433051 L 0,35.433051"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2208"
+         d="M 17.716535,407.48029 L 0,407.48029"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2210"
+         d="M 35.433071,425.19683 L 35.433071,442.91336"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2212"
+         d="M 1084.252,425.19683 L 1084.252,442.91336"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2214"
+         d="M 1119.685,407.48029 L 1101.9685,407.48029"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2216"
+         d="M 1119.685,35.433051 L 1101.9685,35.433051"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2218"
+         d="M 1084.252,-2.9404297e-05 L 1084.252,17.716511"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2220"
+         d="M 822.04724,-2.9404297e-05 L 822.04724,17.716511"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2222"
+         d="M 559.84252,-2.9404297e-05 L 559.84252,17.716511"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2224"
+         d="M 297.6378,-2.9404297e-05 L 297.6378,17.716511"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2226"
+         d="M 297.6378,425.19683 L 297.6378,442.91336"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2228"
+         d="M 559.84252,425.19683 L 559.84252,442.91336"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="path2230"
+         d="M 822.04724,425.19683 L 822.04724,442.91336"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
+       x="48.7943"
+       y="64.801361"
+       id="text3391"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><tspan
+         sodipodi:role="line"
+         id="tspan2496">Why a free world map?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:FrobisherCondExtrabold"
+       x="574.01575"
+       y="64.913361"
+       id="text3397"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><tspan
+         sodipodi:role="line"
+         id="tspan3399"
+         x="574.01575"
+         y="64.913361">How does OpenStreetMap work?</tspan></text>
+    <image
+       y="50.047478"
+       x="312.67041"
+       id="image2533"
+       height="342.72073"
+       width="232.48326"
+       sodipodi:absref="/home/soeren/svn-geofabrik-de/dokumente/flyer/osmflyer-a7-english/new_york.png"
+       xlink:href="new_york.png" />
+    <path
+       style="fill:#40406d;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1004.2351,144.06597 L 1032.0711,168.44733 L 1059.0401,144.06597 L 1004.2351,144.06597 z"
+       id="path4208"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <path
+       style="fill:#40406d;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1004.2351,274.36229 L 1032.0711,298.74365 L 1059.0401,274.36229 L 1004.2351,274.36229 z"
+       id="path4212"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <g
+       id="g3125"
+       transform="translate(0,1.847744e-6)">
+      <image
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         xlink:href="finish.png"
+         sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/finish.png"
+         width="232.80351"
+         height="83.299873"
+         id="image4117"
+         x="836.75079"
+         y="309.41058" />
+      <rect
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         y="309.40656"
+         x="836.74927"
+         height="83.371567"
+         width="232.79932"
+         id="rect10224"
+         style="fill:none;fill-opacity:1;stroke:#40406d;stroke-width:1.06299222;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3121"
+       transform="translate(0,-0.8289509)">
+      <image
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         xlink:href="editnodes.png"
+         sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/editnodes.png"
+         width="232.7762"
+         height="84.520927"
+         id="image4203"
+         x="836.75079"
+         y="179.95253" />
+      <rect
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         y="179.93919"
+         x="836.74609"
+         height="84.589142"
+         width="232.80357"
+         id="rect10226"
+         style="fill:none;fill-opacity:1;stroke:#40406d;stroke-width:1.0629921;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g3117"
+       transform="translate(0,5.7220459e-6)">
+      <image
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         xlink:href="gpstrack.png"
+         sodipodi:absref="/home/fred/projects/aktiv/osm/flyer/gpstrack.png"
+         width="232.83626"
+         height="83.211388"
+         id="image4160"
+         x="836.68451"
+         y="50.158695" />
+      <rect
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         y="50.134598"
+         x="836.75214"
+         height="83.268471"
+         width="232.79942"
+         id="rect10228"
+         style="fill:none;fill-opacity:1;stroke:#40406d;stroke-width:1.0629921;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#40406d;stroke-width:1.06299198;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3266"
+       width="232.40906"
+       height="342.6344"
+       x="312.73471"
+       y="50.141323"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2732"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed"
+       transform="translate(538.22925,154.24942)"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><flowRegion
+         id="flowRegion2734"><rect
+           id="rect2736"
+           width="233.45358"
+           height="305.03497"
+           x="35.687172"
+           y="88.272079"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara2738">While the GPS logs the current position, the person doing the survey (the <flowSpan
+   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed"
+   id="flowSpan2881">mapper</flowSpan>) notes down relevant information like street names, important features, and other things they would like to see on the map. Mappers use a notepad, a dictaphone, or a digital camera to collect that information. Later at the computer, the mapper draws lines on top of the GPS tracks and augments the new data with the other information noted down. The results are then uploaded to the project database, and soon after, the new data is visible for anyone on the map.</flowPara></flowRoot>    <flowRoot
+       inkscape:export-ydpi="400.01047"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-filename="/tmp/2.png"
+       transform="translate(800.44497,54.418506)"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
+       id="flowRoot2740"
+       xml:space="preserve"><flowRegion
+         id="flowRegion2742"><rect
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
+           y="88.272079"
+           x="35.687172"
+           height="305.03497"
+           width="233.45358"
+           id="rect2744" /></flowRegion><flowPara
+         id="flowPara3740">The mapper draws lines on top of the</flowPara><flowPara
+         id="flowPara4083">GPS track and adds the collected data</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2752"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
+       transform="translate(800.44497,183.46633)"
+       inkscape:export-filename="/tmp/2.png"
+       inkscape:export-xdpi="400.01047"
+       inkscape:export-ydpi="400.01047"><flowRegion
+         id="flowRegion2754"><rect
+           id="rect2756"
+           width="233.45358"
+           height="305.03497"
+           x="35.687172"
+           y="88.272079"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara2758">The server accepts the new data and</flowPara><flowPara
+         id="flowPara3742">renders new map images.</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3687"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed"
+       transform="translate(0,-391.80731)"><flowRegion
+         id="flowRegion3689"><rect
+           id="rect3691"
+           width="234.08263"
+           height="93.205223"
+           x="49.505726"
+           y="470.72214"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara2502">The OpenStreetMap project was started because many maps you think of as free are actually subject to legal or technical restrictions, holding back people from using them in creative or unexpected ways. In a flyer like this we would not be allowed to print them, for example. Plus, they are often neither current nor complete.</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3719"
+       style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed"
+       transform="translate(0,-102.98413)"><flowRegion
+         id="flowRegion3721"><rect
+           id="rect3723"
+           width="234.08263"
+           height="94.733177"
+           x="49.505726"
+           y="455.74817"
+           style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed" /></flowRegion><flowPara
+         id="flowPara3725">With our own data we become independent of commercial providers. Just like Wikipedia, everybody can take part. JOIN US TODAY!</flowPara></flowRoot>    <g
+       id="g4173">
+      <text
+         inkscape:export-ydpi="400.01047"
+         inkscape:export-xdpi="400.01047"
+         inkscape:export-filename="/tmp/2.png"
+         id="text4046"
+         y="212.17514"
+         x="677.72424"
+         style="font-size:30.97386551px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           y="212.17514"
+           x="677.72424"
+           id="tspan4048"
+           sodipodi:role="line">+</tspan></text>
+      <image
+         xlink:href="wintec2.png"
+         sodipodi:absref="/home/soeren/svn-geofabrik-de/dokumente/flyer/osmflyer-a7-english/wintec2.png"
+         width="52.545418"
+         height="63.691414"
+         id="image4130"
+         x="608.61969"
+         y="170.61986" />
+      <image
+         xlink:href="notebook.png"
+         sodipodi:absref="/home/soeren/svn-geofabrik-de/dokumente/flyer/osmflyer-a7-english/notebook.png"
+         width="52.574051"
+         height="67.575905"
+         id="image4143"
+         x="720.23743"
+         y="170.54617" />
+    </g>
+    <flowRoot
+       transform="matrix(1,0,0,0.9955533,-2.5887619,-299.33285)"
+       style="font-size:11.02453899px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed"
+       id="flowRoot2729"
+       xml:space="preserve"><flowRegion
+         id="flowRegion2731"><rect
+           style="font-size:11.02453899px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed;-inkscape-font-specification:FrobisherCondensed"
+           y="470.72214"
+           x="49.505726"
+           height="194.58696"
+           width="236.54761"
+           id="rect2733" /></flowRegion><flowPara
+         id="flowPara2530">              Unlike other map providers, OpenStreetMap </flowPara><flowPara
+         id="flowPara2536">               gives you the map data, not just the map</flowPara><flowPara
+         id="flowPara2560">                  images that have been created from it.</flowPara><flowPara
+         id="flowPara2538">                           Once you have the actual data, you </flowPara><flowPara
+         id="flowPara2542">                           can use it to create your own maps or </flowPara><flowPara
+         id="flowPara2566">                           copy it onto a variety of devices, for </flowPara><flowPara
+         id="flowPara2570">                           example in the form of cycling or </flowPara><flowPara
+         id="flowPara2572">                           hiking maps for Garmin GPS units </flowPara><flowPara
+         id="flowPara2574">                           or navigation applications for the </flowPara><flowPara
+         id="flowPara2546">                          iPhone. To provide that essential map </flowPara><flowPara
+         id="flowPara2548">                         data to OpenStreetMap, people like you</flowPara><flowPara
+         id="flowPara2591">                        and me are surveying the planet and </flowPara><flowPara
+         id="flowPara2554">                      sharing our results.</flowPara></flowRoot>    <image
+       y="175.51164"
+       x="49.6063"
+       id="image3081"
+       height="165.13284"
+       width="59.426788"
+       sodipodi:absref="/home/soeren/svn-geofabrik-de/dokumente/flyer/osmflyer-a7-english/garmin.png"
+       xlink:href="garmin.png" />
+  </g>
+</svg>

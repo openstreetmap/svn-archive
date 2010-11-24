@@ -288,7 +288,7 @@
         or highway='bus_stop'
         or railway in ('station','halt','tram_stop')
         or waterway='waterfall'
-        or barrier in ('gate','lift_gate','bollard','cycle_barrier','block,'chain')
+        or barrier in ('gate','lift_gate','bollard','cycle_barrier','block','chain')
         or leisure in ('picnic_table')
         or building in ('cabin','lean_to')
     ) as symbols</Parameter>

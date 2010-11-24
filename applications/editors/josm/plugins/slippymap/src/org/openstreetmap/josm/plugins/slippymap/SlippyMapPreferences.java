@@ -420,11 +420,11 @@ public class SlippyMapPreferences
         sources.add(new OsmTileSource.Mapnik());
         sources.add(new OsmTileSource.CycleMap());
         sources.add(new OsmTileSource.TilesAtHome());
-        sources.add(new BingAerial());
+	// *PLEASE* do not enable BingAerial until we have legal approval.
+        //sources.add(new BingAerial());
         sources.add(new Coastline());
         sources.add(new FreeMapySkPokus());
         sources.add(new FreeMapySk());
-        sources.add(new NearMap());
         sources.add(new HaitiImagery());
         sources.addAll(getCustomSources());
         // Probably need to either add these or let users add them somehow

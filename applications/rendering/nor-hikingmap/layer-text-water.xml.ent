@@ -1,26 +1,26 @@
 <Style name="water_text">
   <Rule>
-    <Filter>&water_area; and [way_area] &gt;= 4000000</Filter>
+    <Filter>[way_area] &gt;= 4000000</Filter>
     &maxscale_zoom12;
     <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="&waterline-color;" halo_radius="1" wrap_width="20"/>
   </Rule>
   <Rule>
-    <Filter>&water_area; and [way_area] &gt;= 700000 and [way_area] &lt; 4000000</Filter>
+    <Filter>[way_area] &gt;= 700000 and [way_area] &lt; 4000000</Filter>
     &maxscale_zoom13;
     <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="&waterline-color;" halo_radius="1" wrap_width="20"/>
   </Rule>
   <Rule>
-    <Filter>&water_area; and [way_area] &gt;= 120000 and [way_area] &lt; 700000</Filter>
+    <Filter>[way_area] &gt;= 120000 and [way_area] &lt; 700000</Filter>
     &maxscale_zoom14;
     <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="&waterline-color;" halo_radius="1" wrap_width="20"/>
   </Rule>
   <Rule>
-    <Filter>&water_area; and [way_area] &gt;= 20000 and [way_area] &lt; 120000</Filter>
+    <Filter>[way_area] &gt;= 20000 and [way_area] &lt; 120000</Filter>
     &maxscale_zoom15;
     <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="&waterline-color;" halo_radius="1" wrap_width="20"/>
   </Rule>
   <Rule>
-    <Filter>&water_area; and [way_area] &lt;= 20000</Filter>
+    <Filter>[way_area] &lt;= 20000</Filter>
     &maxscale_zoom16;
     <TextSymbolizer name="name" fontset_name="book-fonts" size="10" fill="&waterline-color;" halo_radius="1" wrap_width="20"/>
   </Rule>

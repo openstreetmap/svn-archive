@@ -82,6 +82,7 @@ to hikingmap.xml and/or pistemap.xml
 TODO
 ====
 
+text: natural=wetland
 text: place=locality|farm|isolated_dwelling|island|islet|suburb
 
 barrier=stile|kissing_gate

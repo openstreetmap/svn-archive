@@ -295,6 +295,7 @@
   </Datasource>
 </Layer>
 
+&layer-text-water;
 &layer-areatext;
 &layer-placenames;
 </Map>

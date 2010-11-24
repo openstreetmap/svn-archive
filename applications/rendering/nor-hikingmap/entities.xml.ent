@@ -8,6 +8,7 @@
 <!ENTITY layer-powerlines SYSTEM "layer-powerlines.xml.ent">
 <!ENTITY layer-symbols-hiking SYSTEM "layer-symbols-hiking.xml.ent">
 <!ENTITY layer-symbols-facilities SYSTEM "layer-symbols-facilities.xml.ent">
+<!ENTITY layer-text-water SYSTEM "layer-text-water.xml.ent">
 <!ENTITY layer-areatext SYSTEM "layer-areanames.xml.ent">
 
 <!ENTITY white "#FFF">

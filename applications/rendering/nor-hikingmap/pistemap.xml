@@ -10,8 +10,8 @@
 <!ENTITY roadcore-color "#FFF"><!-- roads core, parking, pitch, yard -->
 <!ENTITY urbanarea-color "#CCC"><!-- residential, industrial -->
 <!ENTITY regulatedarea-color "#CCC"><!-- construction, landfill, quarry -->
-<!ENTITY water-color "#0077AD"><!-- water -->
-<!ENTITY waterline-color "#0077AD"><!-- stream, shoreline -->
+<!ENTITY water-color "#0076AD"><!-- water -->
+<!ENTITY waterline-color "#006594"><!-- stream, shoreline -->
 <!ENTITY naturearea-color "#007D33">
 <!ENTITY trail-color "#DDD"><!-- path, track, footway, cycleway -->
 <!ENTITY nordic-color "#F90025"><!-- piste:type=nordic, route=ski -->

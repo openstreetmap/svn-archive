@@ -262,10 +262,10 @@
   </Rule>
   <Rule>
     <Filter>[natural] = 'peak'</Filter>
-    &maxscale_zoom13;
+    &maxscale_zoom14;
     &minscale_zoom16;
     <TextSymbolizer name="name" fontset_name="book-fonts" size="10"
-      fill="&grey50;" dy="5" halo_radius="1"/>
+      fill="black" dy="5" halo_radius="1"/>
   </Rule>
   <Rule>
     <Filter>[natural] = 'peak' and not [name] != ''</Filter>

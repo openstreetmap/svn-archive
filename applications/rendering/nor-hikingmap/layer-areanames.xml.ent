@@ -28,6 +28,8 @@
       (select way,way_area,name
        from &prefix;_polygon
        where name is not null
+         and "natural" not in ('water','lake','pond','bay','wetland','glacier')
+         and landuse not in ('reservoir','basin','water')
          and (waterway is null or waterway &lt;&gt; 'riverbank')
        order by z_order,way_area desc
       ) as text

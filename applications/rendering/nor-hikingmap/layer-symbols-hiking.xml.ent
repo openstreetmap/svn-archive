@@ -261,6 +261,33 @@
       fill="black" dy="9" halo_radius="1"/>
   </Rule>
   <Rule>
+    <Filter>[natural] = 'peak'</Filter>
+    &maxscale_zoom13;
+    &minscale_zoom16;
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="10"
+      fill="&grey50;" dy="5" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    <Filter>[natural] = 'peak' and not [name] != ''</Filter>
+    &maxscale_zoom14;
+    &minscale_zoom16;
+    <TextSymbolizer name="ele" fontset_name="oblique-fonts" size="9"
+      fill="&grey50;" dy="6" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    <Filter>[natural] = 'peak' and [name] != ''</Filter>
+    &maxscale_zoom14;
+    &minscale_zoom16;
+    <TextSymbolizer name="ele" fontset_name="oblique-fonts" size="9"
+      fill="&grey50;" dy="16" halo_radius="1"/>
+  </Rule>
+  <Rule>
+    <Filter>[natural] = 'cave_entrance'</Filter>
+    &maxscale_zoom16;
+    <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
+      fill="black" dy="9" halo_radius="1" wrap_width="20" />
+  </Rule>
+  <Rule>
     &maxscale_zoom17;
     <Filter>[tourism]='information' and [information]='guidepost'</Filter>
     <TextSymbolizer name="name" fontset_name="book-fonts" size="8"
@@ -318,12 +345,12 @@
   <StyleName>symbols-text</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,amenity,tourism,"natural",railway,building,name,operator,service,access,information,hiking,ski,'yes'::text as point
+    (select way,amenity,tourism,"natural",railway,building,name,operator,service,access,information,hiking,ski,ele,'yes'::text as point
      from &prefix;_point
      where amenity in ('cafe','place_of_worship','parking')
         or tourism in ('information','cabin','guest_house','alpine_hut','hostel','hotel','basic_hut','wilderness_hut')
         or building='cabin'
-        or "natural"='beach'
+        or "natural" in ('peak','beach','cave_entrance')
         or railway in ('station','halt','tram_stop')
     ) as text</Parameter>
     &datasource-settings;

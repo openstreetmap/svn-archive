@@ -82,13 +82,11 @@ to hikingmap.xml and/or pistemap.xml
 TODO
 ====
 
-text: natural=wetland
 text: place=locality|farm|isolated_dwelling|island|islet|suburb
 
 barrier=stile|kissing_gate
 barrier=toll_booth
 man_made=pier
-highway=turning_circle or (highway=* and area=yes)
 
 regional hiking routes network=iwn/nwn/rwn at zoom=10-11
 

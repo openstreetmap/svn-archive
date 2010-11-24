@@ -15,9 +15,19 @@
     <PointSymbolizer file="&symbols;/cairn.png"/>
   </Rule>
   <Rule>
+    &maxscale_zoom16;
+    <Filter>[barrier]='gate' or [barrier]='gate' or [barrier]='lift_gate' or [barrier]='bollard' or [barrier]='cycle_barrier' or [barrier]='block or [barrier]='chain'</Filter>
+    <PointSymbolizer file="&symbols;/gate.png"/>
+  </Rule>
+  <Rule>
     &maxscale_zoom14;
     <Filter>[natural]='tree'</Filter>
     <PointSymbolizer file="&symbols;/tree.png"/>
+  </Rule>
+  <Rule>
+    &maxscale_zoom15;
+    <Filter>[natural]='stone'</Filter>
+    <PointSymbolizer file="&symbols;/stone.png"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
@@ -273,11 +283,12 @@
         or amenity in ('shelter','cafe','bbq','place_of_worship','parking','bus_station','hunting_stand')
         or historic in ('monument','memorial','ruins','archaeological_site','yes')
         or tourism in ('viewpoint','information','cabin','guest_house','alpine_hut','hostel','hotel','lean_to','picnic_site','basic_hut','wilderness_hut')
-        or "natural" in ('peak','cave_entrance','tree','beach')
+        or "natural" in ('peak','cave_entrance','tree','stone','beach')
         or (power='generator' and power_source='wind')
         or highway='bus_stop'
         or railway in ('station','halt','tram_stop')
         or waterway='waterfall'
+        or barrier in ('gate','lift_gate','bollard','cycle_barrier','block,'chain')
         or leisure in ('picnic_table')
         or building in ('cabin','lean_to')
     ) as symbols</Parameter>

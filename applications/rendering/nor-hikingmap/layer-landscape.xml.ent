@@ -112,7 +112,7 @@
     </LineSymbolizer>
   </Rule>
   <Rule>
-    <Filter>[leisure] = 'track'</Filter>
+    <Filter>[leisure]='track' or [highway]='raceway'</Filter>
     &maxscale_zoom12;
      <LineSymbolizer>
       <CssParameter name="stroke">&black;</CssParameter>
@@ -276,7 +276,7 @@
         or leisure is not null
         or aeroway in ('apron','aerodrome')
         or amenity in ('parking','university','college','school','hospital','grave_yard')
-        or highway in ('pedestrian','services','turning_circle')
+        or highway in ('pedestrian','services','turning_circle','raceway')
         or military in ('barracks','danger_area')
         or "natural" in ('field','beach','heath','mud','wood','scrub','meadow','crop','grass','grassland')
         or power in ('station','sub_station')

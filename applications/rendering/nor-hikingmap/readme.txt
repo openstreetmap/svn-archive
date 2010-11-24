@@ -4,7 +4,7 @@ Norwegian hiking map
 
 Mapnik style sheets that implements conventions often seen in
 Norwegian hiking and nordic skiing maps. The separate style sheets
-for winter and summer, that feature different colour schemes.
+for winter and summer features different colour schemes.
 
 The summer map is a hiking map and includes support for these tags:
 
@@ -20,10 +20,11 @@ piste:difficulty=*
 piste:grooming=*
 
 Additionally, hiking related POIs are shown from lower zoom levels.
-Examples are trailhead parking lots "utfartsparkering";
-amenity=parking with hiking=yes, sports chapels;
-amenity=place_of_worship with hiking=yes, serviced and unlocked cabins
-and emergency shelters, lean-tos and viewpoints.
+Examples are
+trailhead parking lots "utfartsparkering"; amenity=parking with hiking=yes,
+sports chapels; amenity=place_of_worship with hiking=yes,
+serviced and unlocked cabins and emergency shelters,
+lean-tos and viewpoints.
 
 The style sheets are modular, making reuse and customization easier.
 
@@ -68,12 +69,14 @@ legal restrictions on reuse of these data sets are unclear.
 Installation and usage
 ======================
 
-The style sheets have been tested with Mapnik 0.7.1 and 0.6.
+The style sheets require Mapnik 0.7.1.
+
 Assume the inc folder from the standard OSM Mapnik style sheet.
 It is suggested to create a symlink to a checkout of this.
 
-Import OSM data using the custom osm2pgsql style
-hiking.osm2pgsql.style
+Import OSM data using an osm2pgsql style file where
+`importadditions.osm2pgsql.style` are appended to checkout of
+http://svn.openstreetmap.org/applications/utils/export/osm2pgsql/default.style
 
 Point your generate_tiles.py script or mod_tile config
 to hikingmap.xml and/or pistemap.xml
@@ -90,7 +93,6 @@ man_made=pier
 
 regional hiking routes network=iwn/nwn/rwn at zoom=10-11
 
-[amenity]='bbq' or ([leisure]='picnic_table' and [fireplace]='yes')
 shooting range types: clay pigeon, pistol
 sport=* symbols from zoom 17
 add symbol to leisure=winter_sports, how to determine activity type?

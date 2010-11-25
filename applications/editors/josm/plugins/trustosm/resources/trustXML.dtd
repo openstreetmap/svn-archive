@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DTD for XML Format to store PGPSignatures and OSM-Object references-->
+
+<!-- ROOT-ELEMENT -->
+<!ELEMENT trustcollection (trustitem)*>
+<!ATTLIST trustcollection version CDATA #IMPLIED creator CDATA #IMPLIED >
+
+<!-- A trustitem stores all signatures that are referenced to a specific OSM-Object -->
+<!ELEMENT trustitem (signatures)*>
+<!-- a trustitem needs the referenced OSM-ID and the API-Type of that OSM-Object to find it faster in the OSM-DB -->
+<!ATTLIST trustitem 
+osmid	CDATA	#REQUIRED
+type	CDATA	#REQUIRED
+>
+
+<!-- signatures are available for simple tags or geometry objects -->
+<!ELEMENT signatures (tags|geometry)*>
+
+<!-- tags contain all signed keys with their signature -->
+<!ELEMENT tags (key)*>
+
+<!-- every different value for a specified key gets its own openpgp tag -->
+<!ELEMENT key (openpgp)*>
+<!ATTLIST key k CDATA #REQUIRED >
+
+<!-- geometry contains all signed nodes with their signature -->
+<!ELEMENT geometry (node)*>
+
+<!-- every node gets its own openpgp tag -->
+<!ELEMENT node (openpgp)*>
+<!ATTLIST node id CDATA #REQUIRED >
+
+
+<!-- the openpgp tag is a clearsigned OpenPGP message -->
+<!ELEMENT openpgp (#PCDATA)*>

@@ -1,0 +1,5 @@
+README 
+======
+
+This plugin uses PGP to digital sign OSM data.
+It is used to systematically check the osm data and helps users to trust in it.

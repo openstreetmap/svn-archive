@@ -103,8 +103,6 @@
                 <attribute name="Plugin-Class" value="josmrestartplugin.RestartPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Adds &quot;Restart JOSM&quot; item to File menu."/>
-                <attribute name="Plugin-Icon" value=""/>
-                <attribute name="Plugin-Link" value=""/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

@@ -9,10 +9,12 @@ use warnings ;
 
 use OSM::osm ;
 
-my $version = 1.0 ;
+my $version = 2.0 ;
 
 my %users  ;
 $users{"Oberförster"} = 1 ;
+$users{"Michael Wittmann"} = 1 ;
+$users{"Forstwald"} = 1 ;
 $users{"pfoten-weg"} = 1 ;
 $users{"pfoten_weg_!_"} = 1 ;
 $users{"greatmaster"} = 1 ;
@@ -26,6 +28,7 @@ $users{"asmtb"} = 1 ;
 
 my %lastNodeUser = () ;
 my %lastWayUser = () ;
+my %lastRelationUser = () ;
 
 my $fileName1 ;
 my $fileName2 ;
@@ -56,16 +59,22 @@ my $htmlFile ;
 
 my %memNodeTags2 = () ;
 my %memWayTags2 = () ;
+my %memRelationTags2 = () ;
+my %memRelationMembers2Count = () ;
 
 my $editedNodes = 0 ;
 my $editedWays = 0 ;
+my $editedRelations = 0 ;
 my $changedNodes = 0 ;
 my $changedWays = 0 ;
+my $changedRelations = 0 ;
 
 my %changedNodesUser = () ;
 my %changedWaysUser = () ;
+my %changedRelationsUser = () ;
 
 my @ways = () ;
+my @relations = () ;
 my %neededNodes = () ;
 my $line = 0 ;
 
@@ -165,9 +174,45 @@ while ($wayId != -1) {
 	}
 }
 
-closeOsmFile () ;
-
 print "ways last edited by defined users: $editedWays\n" ;
+
+
+print "  - relations\n" ;
+
+($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
+if ($relationId != -1) {
+	@relationMembers = @$aRef1 ;
+	@relationTags = @$aRef2 ;
+}
+while ($relationId != -1) {
+
+	if (! defined $relationUser) {
+		print "user undefined\n" ;
+		$relationUser = "unknown" ;
+	}
+
+	if ($relationUser eq "") {
+		print "user empty\n" ;
+		$relationUser = "unknown" ;
+	}
+
+	if (defined $users{$relationUser}) {
+		@{$memRelationTags2{$relationId}} = @relationTags ;
+		$memRelationMembers2Count{$relationId} = scalar @relationMembers ;
+		$lastRelationUser{$relationId} = $relationUser ;
+		$editedRelations++
+	}
+	
+	($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
+	if ($relationId != -1) {
+		@relationMembers = @$aRef1 ;
+		@relationTags = @$aRef2 ;
+	}
+}
+
+print "relations last edited by defined users: $editedRelations\n" ;
+
+closeOsmFile () ;
 
 
 print "reading osm file 1...\n" ;
@@ -250,9 +295,60 @@ while ($wayId != -1) {
 	}
 }
 
-closeOsmFile () ;
-
 print "ways CHANGED by users: $changedWays\n" ;
+
+print "  - relations\n" ;
+($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
+if ($relationId != -1) {
+	@relationMembers = @$aRef1 ;
+	@relationTags = @$aRef2 ;
+}
+while ($relationId != -1) {
+
+	if (! defined $relationUser) {
+		print "user undefined\n" ;
+		$relationUser = "unknown" ;
+	}
+
+	if ($relationUser eq "") {
+		print "user empty\n" ;
+		$relationUser = "unknown" ;
+	}
+
+	if (defined $memRelationTags2{$relationId}) {
+		if ($relationUser ne $lastRelationUser{$relationId}) {
+
+			my $memberChange = 0 ; my $memberChanges = "" ;
+			my $numMembers = scalar @relationMembers ;
+			if ($memRelationMembers2Count{$relationId} != $numMembers) {
+				$memberChange = 1 ;
+				$memberChanges = " MEMBERS: $numMembers -> $memRelationMembers2Count{$relationId}" ;
+			}
+
+
+			my ($result, $changes) = compareTags (\@relationTags, $memRelationTags2{$relationId}) ;
+			if ($result or $memberChange) {
+				$line++ ;
+
+				writeFile ("relation", $relationId, $lastRelationUser{$relationId}, $changes . $memberChanges, $line) ;
+				push @relations, [$relationId, $lastRelationUser{$relationId}, $changes . $memberChanges, $line] ;
+
+				$changedRelations++ ;
+				$changedRelationsUser{$lastRelationUser{$relationId}}++ ;
+			}
+		}
+	}
+	
+	($relationId, $relationUser, $aRef1, $aRef2) = getRelation () ;
+	if ($relationId != -1) {
+		@relationMembers = @$aRef1 ;
+		@relationTags = @$aRef2 ;
+	}
+}
+
+print "relations CHANGED by users: $changedRelations\n" ;
+
+closeOsmFile () ;
 
 print "get needed nodes from file 2...\n" ;
 
@@ -284,6 +380,14 @@ foreach my $way (@ways) {
 	printHTMLLine ("way", $wayId, $wayUser, $changes, $lon{$node}, $lat{$node}, $line) ;
 }
 
+foreach my $relation (@relations) {
+	my $relationId = $relation->[0] ;	
+	my $relationUser = $relation->[1] ;	
+	my $changes = $relation->[2] ;	
+	my $line = $relation->[3] ;	
+	printHTMLLine ("relation", $relationId, $relationUser, $changes, 0, 0, $line) ;
+}
+
 
 
 print $htmlFile "</table>\n" ;
@@ -301,6 +405,11 @@ foreach my $u (sort keys %changedNodesUser) {
 print "\nChanged ways per User:\n" ;
 foreach my $u (sort keys %changedWaysUser) {
 	printf "%-25s %6d\n", $u, $changedWaysUser{$u} ;
+}
+
+print "\nChanged relations per User:\n" ;
+foreach my $u (sort keys %changedRelationsUser) {
+	printf "%-25s %6d\n", $u, $changedRelationsUser{$u} ;
 }
 
 
@@ -365,6 +474,9 @@ sub printHTMLLine {
 	}
 	if ($object eq "node") {
 		print $htmlFile "<td>", josmLinkSelectNode ($lon, $lat, 0.001, $id), "</td>\n" ;
+	}
+	if ($object eq "relation") {
+		print $htmlFile "<td>n/a</td>\n" ;
 	}
 	print $htmlFile "<td>$changes</th>\n" ;
 	print $htmlFile "</tr>\n" ;

@@ -1,0 +1,13 @@
+This is a simple command-line application to break OSM ways into segments
+at joins with other ways. It has been designed with the requirements of
+Freemap (free-map.org.uk) in mind; consequently it is aimed at segmentising
+low-density OSM highway data such as rural footpaths. It might not be
+suitable for other use cases. 
+
+It is licenced under the GNU GPL version 2.
+
+Usage: segmentise OSMfile. Writes to standard output.
+
+Requirements: expat 2 is required for the XML parsing. On Debian/Ubuntu
+systems, you should simply be able to apt-get the dev package.
+

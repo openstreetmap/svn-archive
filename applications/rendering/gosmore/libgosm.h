@@ -476,7 +476,7 @@ int GosmInit (void *d, long size);
 
 // *** EVERYTHING AFTER THIS POINT IS NOT IN THE WINDOWS BUILDS ***
 
-#ifndef _WIN32
+#ifndef _WIN32_WCE
 
 void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile);
 

@@ -797,9 +797,7 @@ int GosmInit (void *d, long size)
   return ndBase && hashTable && *(int*) gosmData == pakHead;
 }
 
-// *** EVERYTHING AFTER THIS POINT IS NOT IN THE WINDOWS BUILDS ***
-
-#ifndef _WIN32
+#ifndef _WIN32_WCE
 
 void CalculateInvSpeeds (styleStruct *srec, int styleCnt)
 {
@@ -847,8 +845,33 @@ void GosmLoadAltStyle(const char* elemstylefile, const char* iconscsvfile) {
 /*--------------------------------- Rebuild code ---------------------------*/
 // These defines are only used during rebuild
 
-#include <sys/mman.h>
 #include <libxml/xmlreader.h>
+#ifndef _WIN32
+#include <sys/mman.h>
+#else
+#define PROT_READ  0x1                       /* Page can be read.  */
+#define PROT_WRITE 0x2                       /* Page can be written.  */
+#define MAP_SHARED 0x01                      /* Share changes.  */
+
+void *mmap (void *ptr, long size, long prot, long type, long handle, long offset)
+{
+  HANDLE file_h, map_h;
+
+  file_h = (HANDLE)_get_osfhandle(handle);
+  map_h  = CreateFileMapping(file_h, 0, PAGE_READWRITE, 0, 0, 0);
+  if (!map_h) return (char *)(-1L);
+  ptr = (void *) MapViewOfFile(map_h, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+
+  CloseHandle(map_h);
+  return ptr;
+}
+
+long munmap (void *ptr, long size)
+{
+  return UnmapViewOfFile (ptr) ? 0 : -1;
+}
+                                               
+#endif
 
 #define MAX_BUCKETS (1<<26)
 #define IDXGROUPS 676
@@ -950,7 +973,7 @@ int LoadElemstyles(/* in */ const char *elemstylesfname,
    //------------------------- elemstyle.xml : --------------------------
     int ruleCnt = 0, styleCnt = firstElemStyle;
     // zero-out elemstyle-to-stylestruct mappings
-    FILE *icons_csv = fopen (iconsfname, "r");
+    FILE *icons_csv = fopen (iconsfname, "rb");
     xmlTextReaderPtr sXml = xmlNewTextReaderFilename (elemstylesfname);
     if (!sXml || !icons_csv) {
       fprintf (stderr, "Either icons.csv or elemstyles.xml not found\n");
@@ -1522,7 +1545,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   int ndStart;
   wayType *master = NULL;
   if (strcmp(masterpakfile,"")) {
-    if (!(masterf = fopen64 (masterpakfile, "r")) ||
+    if (!(masterf = fopen64 (masterpakfile, "rb")) ||
 	fseek (masterf, -sizeof (ndStart), SEEK_END) != 0 ||
 	fread (&ndStart, sizeof (ndStart), 1, masterf) != 1 ||
 	(long)(master = (wayType *)mmap (NULL, ndStart, PROT_READ,
@@ -1533,17 +1556,17 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     }
   }
   
-  if (!(pak = fopen64 (pakfile, "w+"))) {
+  if (!(pak = fopen64 (pakfile, "w+b"))) {
     fprintf (stderr, "Cannot create %s\n",pakfile);
     return 2;
   }
   FWRITE (&pakHead, sizeof (pakHead), 1, pak);
 
   //------------------------ elemstylesfile : -----------------------------
-  styleStruct srec[2 << STYLE_BITS];
-  elemstyleMapping eMap[2 << STYLE_BITS];
-  memset (&srec, 0, sizeof (srec));
-  memset (&eMap, 0, sizeof (eMap));
+  styleStruct *srec =
+    (styleStruct*) calloc ((2 << STYLE_BITS), sizeof (*srec));
+  elemstyleMapping *eMap =
+    (elemstyleMapping*) calloc ((2 << STYLE_BITS), sizeof (*eMap));
   
   int elemCnt = LoadElemstyles(elemstylefile, iconscsvfile,
 				srec, eMap), styleCnt = elemCnt;
@@ -1556,8 +1579,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   for (int i = 0; i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
     sprintf (groupName[i], "%c%c%d.tmp", i / 26 % 26 + 'a', i % 26 + 'a',
 	     i / 26 / 26);
-    if (i < S2GROUP (0) && !(groupf[i] = fopen64 (groupName[i], "w+"))) {
-      fprintf (stderr, "Cannot create temporary file.\n"
+    if (i < S2GROUP (0) && !(groupf[i] = fopen64 (groupName[i], "w+b"))) {
+      perror ("Cannot create temporary file.\n"
 	       "Possibly too many open files, in which case you must run "
 	       "ulimit -n or recompile\n");
       return 9;
@@ -1628,7 +1651,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   }
   
   char *relationTable;
-  FILE *relationTableFile = fopen ("relations.tbl", "r");
+  FILE *relationTableFile = fopen ("relations.tbl", "rb");
   if (!relationTableFile || fseek (relationTableFile, 0, SEEK_END) != 0 ||
       (relationTable = (char*) mmap (NULL, ftell (relationTableFile), PROT_READ,
         MAP_SHARED, fileno (relationTableFile), 0)) == (char*)-1) {
@@ -1967,7 +1990,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   
   for (int i = 0; i < IDXGROUPS; i++) fclose (groupf[i]);
   for (int i = S2GROUP (0); i < PAIRGROUP2 (0) + PAIRGROUPS2; i++) {
-    assert (groupf[i] = fopen64 (groupName[i], "w+"));
+    assert (groupf[i] = fopen64 (groupName[i], "w+b"));
   } // Avoid exceeding ulimit
   
   nodeType *nodes = (nodeType *) malloc (sizeof (*nodes) * MAX_NODES);
@@ -2224,7 +2247,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   }
   
   REBUILDWATCH (for (int i = 0; i < IDXGROUPS; i++)) {
-    assert (groupf[i] = fopen64 (groupName[i], "r+"));
+    assert (groupf[i] = fopen64 (groupName[i], "r+b"));
     fseek (groupf[i], 0, SEEK_END);
     int fsize = ftell (groupf[i]);
     if (fsize > 0) {
@@ -2249,7 +2272,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 	  bucketsMin1 + (bucketsMin1 >> 7) + 3, pak);
 	  
   CalculateInvSpeeds (srec, styleCnt);
-  FWRITE (&srec, sizeof (srec[0]), styleCnt, pak);
+  FWRITE (srec, sizeof (srec[0]), styleCnt, pak);
   FWRITE (&styleCnt, sizeof(styleCnt), 1, pak); // File ends with these
   FWRITE (&bucketsMin1, sizeof (bucketsMin1), 1, pak); // 3 variables
   FWRITE (&ndStart, sizeof (ndStart), 1, pak); /* for ndBase */
@@ -2356,7 +2379,7 @@ int SortRelations (void)
     }
   }
   #ifdef MKDENSITY_CSV
-  FILE *df = fopen ("density.csv", "w");
+  FILE *df = fopen ("density.csv", "wb");
   for (lat = 1023; lat >= 0; lat--) {
     for (lon = 0; lon < 1024; lon++) {
       fprintf (df, "%d%c", cnt[lat * 1024 + lon], lon == 1023 ? '\n' : ' ');
@@ -2367,7 +2390,7 @@ int SortRelations (void)
   while (rStart < member.size ()) member[rStart++].tags = s->c_str ();
   qsort (&member[0], member.size (), sizeof (member[0]),
          (int (*)(const void *, const void *)) MemberCmp);
-  FILE *idx = fopen ("relations.tbl", "w");
+  FILE *idx = fopen ("relations.tbl", "wb");
   for (unsigned i = 0; i < member.size (); i++) {
     fprintf (idx, "%c%d%c%s%c", member[i].type, member[i].ref, '\0', member[i].role, '\0');
     for (const char *ptr = member[i].tags; *ptr; ptr += strcspn (ptr, "\n") + 1) {

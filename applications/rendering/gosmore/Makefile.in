@@ -38,14 +38,15 @@ XMLFLAGS=`pkg-config --cflags libxml-2.0 || echo -I /usr/include/libxml2` \
   `pkg-config --libs libxml-2.0 || echo -l xml2 -lm`
 ARCH=arm-mingw32ce-
 else
-# To compile with mingw, install MSYS and mingw, and then download
-# the "all-in-one bundle" from http://www.gtk.org/download-windows.html
-# and unzip it to C:\msys\1.0.
-EXTRAC=-mms-bitfields -mno-cygwin -mwindows \
+
+EXTRAC=-Ilibxml2-2.7.8/include \
   `pkg-config --cflags gtk+-2.0 || echo -D NOGTK`
-EXTRAL=`pkg-config --libs gtk+-2.0`
+
+EXTRAL=`pkg-config --libs gtk+-2.0` \
+
 EXE=.exe
-W32LIBS=-lwsock32 -lwinmm
+W32LIBS=-Llibxml2-2.7.8/.libs -lxml2 -lwsock32 -lwinmm  -lgdi32
+
 endif
 
 all: gosmore$(EXE)
@@ -70,8 +71,8 @@ $(ARCH)gosmore.exe:	gosmore.cpp libgosm.cpp gosmore.rsc resource.h \
 		${ARCH}g++ ${CFLAGS} ${EXTRAC} -c libgosm.cpp
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ConvertUTF.c
 		${ARCH}gcc ${CFLAGS} ${EXTRAC} -c ceglue.c
-		${ARCH}g++ -static ${CFLAGS} ${EXTRAC} -o $@ \
-		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc $(W32LIBS)
+		${ARCH}g++ -static ${EXTRAL} \
+		  gosmore.o libgosm.o ceglue.o ConvertUTF.o gosmore.rsc $(W32LIBS)  -o $@
 
 tagcmp.o:	tagcmp.l
 

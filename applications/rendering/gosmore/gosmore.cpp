@@ -1,6 +1,6 @@
 /* Copyright 2010 Nic Roets as detailed in the README file. */
 /* Written by Nic Roets with contribution(s) from Dave Hansen, Ted Mielczarek
-   David Dean, Pablo D'Angelo and Dmitry.
+   David Dean, Pablo D'Angelo, Dmitry and Adrian Test.
    Thanks to
    * Sven Geggus, Frederick Ramm, Johnny Rose Carlsen and Lambertus for hosting,
    * Stephan Rossig, Simon Wood, David Dean, Lambertus and many others for testing,
@@ -2645,9 +2645,9 @@ gint DrawExpose (void)
   char coord[64];
   if (ShowCoordinates == 1) {
     if(GpsIdle==999)
-      snprintf (coord, 63, "%9.5lf %10.5lf zoom=%d GPS OFF %s %sfollowing", LatInverse (clat), LonInverse (clon),zoom,routeSuccess?"Route":"No Route",DoFollowThing?"":"not ");
+      snprintf (coord, 63, "%9.5lf %10.5lf zoom=%d GPS OFF %s %sfollowing", LatInverse (clat), LonInverse (clon),zoom,routeSuccess?"Route":"No Route",FollowGPSr?"":"not ");
     else
-      snprintf (coord, 63, "%9.5lf %10.5lf zoom=%d GPS idle %ds %s %sfollowing", LatInverse (clat), LonInverse (clon),zoom,GpsIdle,routeSuccess?"Route":"No Route",DoFollowThing?"":"not ");
+      snprintf (coord, 63, "%9.5lf %10.5lf zoom=%d GPS idle %ds %s %sfollowing", LatInverse (clat), LonInverse (clon),zoom,GpsIdle,routeSuccess?"Route":"No Route",FollowGPSr?"":"not ");
     DrawString (0, 5, coord);
   }
   else if (ShowCoordinates == 2) {
@@ -3916,6 +3916,7 @@ void XmlOut (FILE *newWayFile, const char *k, const char *v)
   }
 }
 
+
 extern "C" {
 int WINAPI WinMain(
     HINSTANCE  hInstance,	  // handle of current instance
@@ -3928,6 +3929,13 @@ int WINAPI WinMain(
     int  nCmdShow)	          // show state of window
 {
   if(hPrevInstance) return(FALSE);
+  #ifndef _WIN32_WCE
+  if (strncmp (lpszCmdLine, "rebuild", 7) == 0) {
+    int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
+    _setmaxstdio (1024); // Try to prevent 'Too many open files'
+    RebuildPak("gosmore.pak", "elemstyles.xml", "icons.csv", "", bbox);
+  }
+  #endif
   hInst = hInstance;
   gDisplayOff = FALSE;
   wchar_t argv0[80];

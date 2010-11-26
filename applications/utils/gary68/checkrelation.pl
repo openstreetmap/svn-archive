@@ -33,6 +33,8 @@
 #
 # version 1.5 ignore list implemented
 #
+# version 2.0 memory optimization
+#
 
 
 use strict ;
@@ -47,7 +49,7 @@ use OSM::osmgraph 2.1 ;
 
 my $program = "checkrelation.pl" ;
 my $usage = $program . " <mode> file.osm baseDir baseName [borderName]\nmode=[M|Re|Ro|B|P]\nM=multipolygon, Re=restriction, Ro=route, B=boundary P=picture" ;
-my $version = "1.5" ;
+my $version = "2.0" ;
 
 my @restrictions = qw (no_right_turn no_left_turn no_u_turn no_straight_on only_right_turn only_left_turn only_straight_on) ;
 my @typesChecked = qw (restriction multipolygon boundary route) ; 
@@ -141,6 +143,14 @@ if (!$borderFileName)
 	$borderFileName = "" ;
 }
 
+
+my %neededTypes = () ;
+if (grep /Re/, $mode) { $neededTypes{"restriction"} = 1 ; }
+if (grep /Ro/, $mode) { $neededTypes{"route"} = 1 ; }
+if (grep /B/, $mode) { $neededTypes{"boundary"} = 1 ; }
+if (grep /M/, $mode) { $neededTypes{"multipolygon"} = 1 ; }
+
+
 $htmlName = $baseDirName . "/" . $baseName . ".htm" ;
 $gpxName = $baseDirName . "/" . $baseName . ".gpx" ;
 
@@ -168,21 +178,33 @@ if ($relationId != -1) {
 }
 
 while ($relationId != -1) {
-	$relationCount++ ;	
-	$members += scalar (@relationMembers) ;
 
-	my $i ;
-	for ($i=0; $i<scalar (@relationMembers); $i++) {
-		#print "${$relationMembers[$i]}[0] ${$relationMembers[$i]}[1] ${$relationMembers[$i]}[2]\n" ; # type, id, role
-		if (${$relationMembers[$i]}[0] eq "way") { push @neededWays, ${$relationMembers[$i]}[1] ; }
-		if (${$relationMembers[$i]}[0] eq "node") { push @neededNodes, ${$relationMembers[$i]}[1] ; }
+	# type ?
+	my $type = "" ;
+	foreach my $t (@relationTags) {
+		if ($t->[0] eq "type") { $type = $t->[1] ; }
+		if ($t->[0] eq "restriction") { $type = "restriction" ; }
 	}
 
-	if (scalar (@relationTags) > 0) {
-		for ($i=0; $i<scalar (@relationTags); $i++) {
-			#print "${$relationTags[$i]}[0] = ${$relationTags[$i]}[1]\n" ; 
-			if ( ${$relationTags[$i]}[0] eq "type") { $typehash{   ${$relationTags[$i]}[1]     } = 1 ; }
+	if (defined $neededTypes{$type}) {
+
+		$relationCount++ ;	
+		$members += scalar (@relationMembers) ;
+
+		my $i ;
+		for ($i=0; $i<scalar (@relationMembers); $i++) {
+			#print "${$relationMembers[$i]}[0] ${$relationMembers[$i]}[1] ${$relationMembers[$i]}[2]\n" ; # type, id, role
+			if (${$relationMembers[$i]}[0] eq "way") { push @neededWays, ${$relationMembers[$i]}[1] ; }
+			if (${$relationMembers[$i]}[0] eq "node") { push @neededNodes, ${$relationMembers[$i]}[1] ; }
 		}
+
+		if (scalar (@relationTags) > 0) {
+			for ($i=0; $i<scalar (@relationTags); $i++) {
+				#print "${$relationTags[$i]}[0] = ${$relationTags[$i]}[1]\n" ; 
+				if ( ${$relationTags[$i]}[0] eq "type") { $typehash{   ${$relationTags[$i]}[1]     } = 1 ; }
+			}
+		}
+
 	}
 
 	#next
@@ -193,6 +215,10 @@ while ($relationId != -1) {
 	}
 }
 
+print "relation count: $relationCount\n" ;
+my $nw = scalar @neededWays ;
+print "needed ways: $nw\n" ;
+
 closeOsmFile () ;
 
 # parse ways for nodes
@@ -200,6 +226,7 @@ print "parsing ways...\n" ;
 openOsmFile ($osmName) ;
 print "- skipping nodes...\n" ;
 skipNodes() ;
+print "- checking...\n" ;
 
 @neededWays = sort { $a <=> $b } @neededWays ;
 
@@ -233,6 +260,9 @@ while ($wayId != -1) {
 }
 
 closeOsmFile () ;
+
+my $nn = scalar @neededNodes ;
+print "needed nodes: $nn\n" ;
 
 
 # parse nodes for position and places

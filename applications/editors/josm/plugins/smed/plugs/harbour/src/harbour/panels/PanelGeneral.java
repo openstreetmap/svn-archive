@@ -1,21 +1,19 @@
 package harbour.panels;
 
+import harbour.widgets.Sheltergram;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import javax.swing.JButton;
 import java.awt.Rectangle;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
-import java.awt.Label;
 import javax.swing.JCheckBox;
 import java.awt.Cursor;
-import java.awt.GridBagLayout;
-import javax.swing.ImageIcon;
 
 public class PanelGeneral extends JPanel {
 
@@ -43,8 +41,10 @@ public class PanelGeneral extends JPanel {
 	private JCheckBox usualCheckBox = null;
 	private JCheckBox desCheckBox = null;
 	private JCheckBox jCheckBox1 = null;
-	private JLabel shelterLabel = null;
 	private JLabel tshelterLabel = null;
+	private JPanel shelterPanel = null;
+	private JLabel sizeLabel = null;
+	private JLabel typeLabel = null;
 	public PanelGeneral() {
 		super();
 		initialize();
@@ -57,12 +57,17 @@ public class PanelGeneral extends JPanel {
 	 * 
 	 */
 	private void initialize() {
+        typeLabel = new JLabel();
+        typeLabel.setBounds(new Rectangle(270, 2, 43, 20));
+        typeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+        typeLabel.setText("Type");
+        sizeLabel = new JLabel();
+        sizeLabel.setBounds(new Rectangle(210, 2, 34, 20));
+        sizeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+        sizeLabel.setText("Size");
         tshelterLabel = new JLabel();
-        tshelterLabel.setBounds(new Rectangle(252, 145, 50, 20));
+        tshelterLabel.setBounds(new Rectangle(246, 144, 50, 20));
         tshelterLabel.setText("Schutz");
-        shelterLabel = new JLabel();
-        shelterLabel.setBounds(new Rectangle(235, 167, 80, 80));
-        shelterLabel.setIcon(new ImageIcon(getClass().getResource("/images/shelter.png")));
         qLabel = new JLabel();
         qLabel.setBounds(new Rectangle(50, 205, 85, 20));
         qLabel.setText("Quarantäne");
@@ -75,14 +80,14 @@ public class PanelGeneral extends JPanel {
         chartLabel = new JLabel();
         chartLabel.setBounds(new Rectangle(210, 50, 35, 20));
         chartLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        chartLabel.setText("Chart");
+        chartLabel.setText("Karte");
         pubLabel = new JLabel();
         pubLabel.setBounds(new Rectangle(53, 50, 70, 20));
         pubLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
         pubLabel.setText("Publication");
         harborLabel = new JLabel();
-        harborLabel.setBounds(new Rectangle(148, 2, 160, 20));
-        harborLabel.setText("Harbor : Size       Type");
+        harborLabel.setBounds(new Rectangle(148, 2, 55, 20));
+        harborLabel.setText("Harbor:");
         lonLabel = new JLabel();
         lonLabel.setBounds(new Rectangle(100, 25, 23, 20));
         lonLabel.setText("Lon");
@@ -122,8 +127,10 @@ public class PanelGeneral extends JPanel {
         this.add(getUsualCheckBox(), null);
         this.add(getDesCheckBox(), null);
         this.add(getJCheckBox1(), null);
-        this.add(shelterLabel, null);
         this.add(tshelterLabel, null);
+        this.add(getShelterPanel(), null);
+        this.add(sizeLabel, null);
+        this.add(typeLabel, null);
 	}
 
 
@@ -281,7 +288,7 @@ public class PanelGeneral extends JPanel {
 	private JCheckBox getJCheckBox2() {
 		if (jCheckBox2 == null) {
 			jCheckBox2 = new JCheckBox();
-			jCheckBox2.setBounds(new Rectangle(125, 117, 110, 21));
+			jCheckBox2.setBounds(new Rectangle(125, 117, 70, 21));
 			jCheckBox2.setFont(new Font("Dialog", Font.PLAIN, 12));
 			jCheckBox2.setText("ratsam");
 		}
@@ -300,7 +307,7 @@ public class PanelGeneral extends JPanel {
 			tugCheckBox = new JCheckBox();
 			tugCheckBox.setBounds(new Rectangle(5, 160, 121, 20));
 			tugCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
-			tugCheckBox.setText("Rettungsdienst");
+			tugCheckBox.setText("Bergungsschiff");
 		}
 		return tugCheckBox;
 	}
@@ -371,6 +378,21 @@ public class PanelGeneral extends JPanel {
 			jCheckBox1.setText("anderes");
 		}
 		return jCheckBox1;
+	}
+
+
+
+	/**
+	 * This method initializes shelterPanel	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getShelterPanel() {
+		if (shelterPanel == null) {
+			shelterPanel = new Sheltergram();
+			shelterPanel.setBounds(new Rectangle(232, 170, 75, 75));
+		}
+		return shelterPanel;
 	}
 
 }

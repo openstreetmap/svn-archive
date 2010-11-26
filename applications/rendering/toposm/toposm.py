@@ -591,7 +591,7 @@ def create_jpeg_tile(z, x, y, quality):
         print 'done.'
     else:
         print 'source tiles not found. skipping.', colorreliefsrc, featuressrc
-
+ 
 
 # public methods
 
@@ -690,4 +690,13 @@ def create_jpeg_tiles(envLL, minz, maxz, quality):
         for x in range(fromx, tox+1):
             for y in range(fromy, toy+1):
                 create_jpeg_tile(z, x, y, quality)
+
+def prepare_areas(areas, minz, maxz):
+    for envLL in areas:
+        prepare_data(envLL, minz, maxz)
+
+def render_areas(areas, minz, maxz):
+    for envLL in areas:
+        render_tiles(envLL, minz, maxz)
+        create_jpeg_tiles(envLL, minz, maxz, 90)
 

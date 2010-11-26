@@ -10,6 +10,7 @@ SIZE=$5
 
 # * Cuts "halos" from contour lines around contour labels
 # * Adds contour labels on top
+# * Optimizes PNG tile
 CONTOURSDESTDIR="$ROOTTILEDIR/contours/$Z"
 CONTOURSTILE="$CONTOURSDESTDIR/s${X}_${Y}.png"
 CONTOURLINESTILE="$ROOTTILEDIR/contourlines/$Z/s${X}_${Y}.png"
@@ -24,6 +25,7 @@ if [ ! -f "$CONTOURSTILE" ] ; then
     	"$CONTOURLINESTILE" -compose Src_Out -composite \
 	    "$CONTOURLABELSTILE" -compose Over -composite \
 	    -colors 256 -quality 90 -depth 8 "$CONTOURSTILE"
+	optipng -q "$CONTOURSTILE"
 else
     echo "Contours tile at $Z $X $Y exists."
 fi
@@ -34,6 +36,7 @@ rm "$CONTOURLINESTILE"
 # * Cuts out halos for labels
 # * Adds features-fill
 # * Adds labels
+# * Optimizes PNG tile
 FEATURESDESTDIR="$ROOTTILEDIR/features/$Z"
 FEATURESTILE="$FEATURESDESTDIR/s${X}_${Y}.png"
 FEATURESMAINTILE="$ROOTTILEDIR/features-main/$Z/s${X}_${Y}.png"
@@ -54,6 +57,7 @@ if [ ! -f "$FEATURESTILE" ] ; then
 	    "$LABELSTILE" -compose Over -composite \
 	    "$LABELSNOHALOTILE" -compose Over -composite \
 	    "$FEATURESTILE"
+	optipng -q "$FEATURESTILE"
 else
     echo "Features tile at $X $Y $Z exists."
 fi

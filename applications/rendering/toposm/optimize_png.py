@@ -1,6 +1,10 @@
 #!/usr/bin/python
 import sys, os, glob, subprocess
 
+# NOTE: This script is mostly obsolete, since the
+# combine-mapnik-tiles script runs the optimizer as each
+# tile is rendered.
+
 def optimize(filename):
 	print "  Optimizing: ", filename
 	command = "optipng -q " + filename

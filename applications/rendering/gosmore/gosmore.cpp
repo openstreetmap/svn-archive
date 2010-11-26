@@ -3038,10 +3038,10 @@ int UserInterface (int argc, char *argv[],
     else {
       if (!routeSuccess) printf ("Jump\n\r");
       styleStruct *firstS = Style (Way (shortest->nd));
-      //printf ("avespeed %lf maxspeed %lf\n", firstS->aveSpeed[Vehicle],
-      //  firstS->invSpeed[Vehicle]
+//      printf ("firstspeed %lf maxspeed %lf\n", firstS->aveSpeed[Vehicle],
+//        firstS->aveSpeed[Vehicle] * firstS->invSpeed[Vehicle]);
       double ups = firstS->invSpeed[Vehicle] / 3.6
-          / firstS->aveSpeed[Vehicle] / (20000 / 2147483648.0) /
+          * firstS->aveSpeed[Vehicle] / 20000000 * 2147483648.0 /
           cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180));
       // ups (Units per second) also works as an unsigned int.
 
@@ -3052,6 +3052,7 @@ int UserInterface (int argc, char *argv[],
       double fpr = (fSegLat * (flat - shortest->nd->lat) +
                     fSegLon * (flon - shortest->nd->lon)) /
                    (Sqr (fSegLat) + Sqr (fSegLon));
+      fpr = fpr > 1 ? 1 : fpr < 0 ? 0 : fpr; // Clamp to [0,1]
       for (; shortest; shortest = shortest->shortest) {
         wayType *w = Way (shortest->nd);
         char *name = (char*)(w + 1) + 1;
@@ -3077,6 +3078,7 @@ int UserInterface (int argc, char *argv[],
             (double)(tlon - shortest->nd->lon)) /
             (Sqr ((double)(final->lat - shortest->nd->lat)) +
              Sqr ((double)(final->lon - shortest->nd->lon)) + 1);
+          pr = pr > 1 ? 1 : pr < 0 ? 0 : pr; // Clamp to [0,1]
           printf("%lf,%lf,j,(unknown-style),0,fini\n\r",
       LatInverse (shortest->nd->lat + pr * (final->lat - shortest->nd->lat)),
       LonInverse (shortest->nd->lon + pr * (final->lon - shortest->nd->lon)));

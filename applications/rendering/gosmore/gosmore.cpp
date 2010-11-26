@@ -3929,13 +3929,6 @@ int WINAPI WinMain(
     int  nCmdShow)	          // show state of window
 {
   if(hPrevInstance) return(FALSE);
-  #ifndef _WIN32_WCE
-  if (strncmp (lpszCmdLine, "rebuild", 7) == 0) {
-    int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
-    _setmaxstdio (1024); // Try to prevent 'Too many open files'
-    RebuildPak("gosmore.pak", "elemstyles.xml", "icons.csv", "", bbox);
-  }
-  #endif
   hInst = hInstance;
   gDisplayOff = FALSE;
   wchar_t argv0[80];
@@ -3946,6 +3939,20 @@ int WINAPI WinMain(
   ConvertUTF16toUTF8 ((const UTF16 **) &sStart, sStart + wcslen (argv0),
     &tStart, tStart + sizeof (docPrefix), lenientConversion);
   *tStart = '\0';
+  #ifndef _WIN32_WCE
+  if (strncmp (lpszCmdLine, "rebuild", 7) == 0) {
+    int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
+    _setmaxstdio (1024); // Try to prevent 'Too many open files'
+    RebuildPak("gosmore.pak", "elemstyles.xml", "icons.csv", "", bbox);
+  }
+  else if (lpszCmdLine[0] != '\0') {
+    chdir (docPrefix);
+    char cmdl[200];
+    sprintf (cmdl, "start cmd /C \"7z -so e %s | gosmore rebuild\"", lpszCmdLine);
+    system (cmdl);
+    return 0;
+  }
+  #endif
   #if 0
   GetModuleFileName (NULL, docPrefix, sizeof (docPrefix));
   if (strrchr (docPrefix, '\\')) *strrchr (docPrefix, '\\') = '\0';

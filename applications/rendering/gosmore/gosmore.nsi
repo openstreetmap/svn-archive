@@ -15,6 +15,11 @@ UninstPage instfiles
 Section "Gosmore"
   SetOutPath $INSTDIR
   File "gosmore.exe"
+  File "elemstyles.xml"
+  File "icons.csv"
+  File "libgcc_s_dw2-1.dll"
+  File "libstdc++-6.dll"
+  File "libxml2-2.dll"
   File "default.pak"
   File "gosmore.opt"
   File "keepleft.wav"

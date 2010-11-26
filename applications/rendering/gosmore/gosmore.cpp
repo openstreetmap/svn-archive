@@ -3038,9 +3038,11 @@ int UserInterface (int argc, char *argv[],
     else {
       if (!routeSuccess) printf ("Jump\n\r");
       styleStruct *firstS = Style (Way (shortest->nd));
-      double ups = lrint (3.6 / firstS->invSpeed[Vehicle]
+      //printf ("avespeed %lf maxspeed %lf\n", firstS->aveSpeed[Vehicle],
+      //  firstS->invSpeed[Vehicle]
+      double ups = firstS->invSpeed[Vehicle] / 3.6
           / firstS->aveSpeed[Vehicle] / (20000 / 2147483648.0) /
-          cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180)));
+          cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180));
       // ups (Units per second) also works as an unsigned int.
 
       double fSegLat = shortest->shortest ?

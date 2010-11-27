@@ -54,8 +54,8 @@ void Parser::startElement(void *d, const XML_Char* element,
         else    
         {    
 			cout.precision(8);
-            cout << "<node id='"<<curID<<"' lat='"<<lat<<"' lon='"
-                    <<lon<<"'>" << endl;
+            cout << "<node id=\""<<curID<<"\" lat=\""<<lat<<"\" lon=\""
+                    <<lon<<"\">" << endl;
         }
     }
     else if (!strcmp(element, "way"))
@@ -104,22 +104,42 @@ void Parser::startElement(void *d, const XML_Char* element,
     }
     else if (!strcmp(element, "tag"))
     {
-        std::string key = "", value = "";
-
-        for (int count = 0; attrs[count]; count += 2)
-        {
-            if (!strcmp(attrs[count], "k"))
-                key = attrs[count + 1];
-            if (!strcmp(attrs[count], "v"))
-                value = attrs[count + 1];
-
-        }
 
         // write out tags (for node and way) in second run
         if(!initialRun)
         {
+        	std::string key = "", value = "";
+
+        	for (int count = 0; attrs[count]; count += 2)
+        	{
+            	if (!strcmp(attrs[count], "k"))
+                	key = attrs[count + 1];
+            	if (!strcmp(attrs[count], "v"))
+                	value = attrs[count + 1];
+
+        	}
+
+			int idx=value.find("&");
+			while(idx>=0)
+			{
+				value=value.replace(idx,1,"&amp;");
+				idx=value.find("&",idx+1);
+			}
+			idx=value.find("\"");
+			while(idx>=0)
+			{
+				value=value.replace(idx,1,"&quot;");
+				idx=value.find("\"",idx);
+			}
+			idx=value.find("'");
+			while(idx>=0)
+			{
+				value=value.replace(idx,1,"&apos;");
+				idx=value.find("'");
+			}
+
             if(inNode)
-                cout<<"<tag k='"<<key<<"' v='"<<value<<"' />"<<endl;
+                cout<<"<tag k=\""<<key<<"\" v=\""<<value<<"\" />"<<endl;
             else if (inWay) // save as might be applied multiple times
             {
                 curWay.tags[key] = value;
@@ -141,20 +161,20 @@ void Parser::endElement(void *d, const XML_Char* element)
         inWay = false;
         if(!initialRun)
         {
-            cout << "<way id='"<<wayCount++<<"'>\n";
+            cout << "<way id=\""<<wayCount++<<"\">\n";
             for(int i=0; i<curWay.nds.size(); i++)
             {
-                cout<<"<nd ref='"<<curWay.nds[i]<<"' />" << endl;
+                cout<<"<nd ref=\""<<curWay.nds[i]<<"\" />" << endl;
 
-                // split the way if it's a node in more than 1 way and not
+                // split the way if it\"s a node in more than 1 way and not
                 // the end nodes
                 if(i && i!=curWay.nds.size()-1 &&
                     nodes[curWay.nds[i]] && nodes[curWay.nds[i]]->count >= 2)
                 {
                     writeCurrentTags(curWay.tags);//write the tags for the way
                     cout << "</way>\n";
-                    cout << "<way id='"<<wayCount++<<"'>\n";
-                    cout<<"<nd ref='"<<curWay.nds[i]<<"' />" << endl;
+                    cout << "<way id=\""<<wayCount++<<"\">\n";
+                    cout<<"<nd ref=\""<<curWay.nds[i]<<"\" />" << endl;
                 }
             }
             writeCurrentTags(curWay.tags);
@@ -182,7 +202,7 @@ void Parser::writeCurrentTags(std::map<std::string,std::string>& tags)
     std::map<std::string,std::string>::iterator i=tags.begin();
     while(i != tags.end())
     {
-        cout<<"<tag k='" << i->first << "' v='"<<i->second<<"' />"<<endl;
+        cout<<"<tag k=\"" << i->first << "\" v=\""<<i->second<<"\" />"<<endl;
         i++;
     }
 }

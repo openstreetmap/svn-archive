@@ -1,6 +1,8 @@
 package harbour.panels;
 
 import harbour.widgets.LightTile;
+import harbour.widgets.TextFieldEx;
+import harbour.widgets.TristateCheckBox;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -29,33 +31,14 @@ public class PanelLimits extends JPanel {
 	private JTextField tideTextField = null;
 	private JLabel mLabel = null;
 	private JComboBox allComboBox = null;
-	private JLabel olLabel = null;
-	private JComboBox olComboBox = null;
 	private JLabel grLabel = null;
-	private JComboBox turnComboBox = null;
-	private JLabel turnLabel = null;
 	private JButton grButton = null;
-	private JComboBox impComboBox = null;
-	private JLabel impLabel = null;
-	private JComboBox usComboBox = null;
-	private JLabel usLabel = null;
-	private JComboBox etaComboBox = null;
-	private JLabel etaLabel = null;
-	private JTextField sizeTextField = null;
-	private JLabel sizeLabel = null;
-	private JRadioButton sizRadioButton = null;
-	private JTextField chTextField = null;
-	private JLabel chLabel = null;
-	private JRadioButton chRadioButton = null;
-	private JTextField tieTextField = null;
-	private JLabel tieLabel = null;
-	private JRadioButton tieRadioButton = null;
-	private JTextField cargoTextField = null;
-	private JLabel cargoLabel = null;
-	private JRadioButton cargoRadioButton = null;
-	private JTextField oilTextField = null;
-	private JLabel oilLabel = null;
-	private JRadioButton oilRadioButton = null;
+	private JCheckBox olCheckBox = null;
+	private JCheckBox turnCheckBox = null;
+	private JCheckBox impCheckBox = null;
+	private JCheckBox usCheckBox = null;
+	private JCheckBox etaCheckBox = null;
+	private JPanel jPanel = null;
 	public PanelLimits() {
 		super();
 		initialize();
@@ -66,56 +49,16 @@ public class PanelLimits extends JPanel {
 	 * 
 	 */
 	private void initialize() {
-		oilLabel = new JLabel();
-		oilLabel.setBounds(new Rectangle(215, 189, 65, 16));
-		oilLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		oilLabel.setText("Oelterminal");
-		cargoLabel = new JLabel();
-		cargoLabel.setBounds(new Rectangle(215, 165, 80, 16));
-		cargoLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		cargoLabel.setText("Frachtanleger");
-		tieLabel = new JLabel();
-		tieLabel.setBounds(new Rectangle(215, 142, 63, 16));
-		tieLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		tieLabel.setText("Ankerplatz");
-		chLabel = new JLabel();
-		chLabel.setBounds(new Rectangle(215, 119, 50, 16));
-		chLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		chLabel.setText("Channel");
-		sizeLabel = new JLabel();
-        sizeLabel.setBounds(new Rectangle(215, 96, 85, 16));
-        sizeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        sizeLabel.setText("Schiffsgroesse");
-        etaLabel = new JLabel();
-        etaLabel.setBounds(new Rectangle(55, 189, 80, 16));
-        etaLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        etaLabel.setText("ETA Nachricht");
-        usLabel = new JLabel();
-        usLabel.setBounds(new Rectangle(55, 167, 80, 13));
-        usLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        usLabel.setText("US.Vertretung");
-        impLabel = new JLabel();
-        impLabel.setBounds(new Rectangle(55, 143, 55, 16));
-        impLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        impLabel.setText("Zollhafen");
-        turnLabel = new JLabel();
-        turnLabel.setBounds(new Rectangle(55, 121, 64, 16));
-        turnLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        turnLabel.setText("Wendeplatz");
         grLabel = new JLabel();
-        grLabel.setBounds(new Rectangle(215, 222, 70, 16));
+        grLabel.setBounds(new Rectangle(215, 222, 80, 16));
         grLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
         grLabel.setText("Ankergrund");
-        olLabel = new JLabel();
-        olLabel.setBounds(new Rectangle(55, 96, 90, 16));
-        olLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-        olLabel.setText("Overhead Limits");
         mLabel = new JLabel();
         mLabel.setBounds(new Rectangle(30, 49, 20, 20));
         mLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
         mLabel.setText("m");
         limLabel = new JLabel();
-        limLabel.setBounds(new Rectangle(80, 2, 160, 20));
+        limLabel.setBounds(new Rectangle(80, 2, 195, 20));
         limLabel.setText("Einfahrtsbeschraenkungen");
         this.setSize(new Dimension(330, 270));
         this.setLayout(null);
@@ -129,33 +72,14 @@ public class PanelLimits extends JPanel {
         this.add(getTideTextField(), null);
         this.add(mLabel, null);
         this.add(getAllComboBox(), null);
-        this.add(olLabel, null);
-        this.add(getOlComboBox(), null);
         this.add(grLabel, null);
-        this.add(getTurnComboBox(), null);
-        this.add(turnLabel, null);
         this.add(getGrButton(), null);
-        this.add(getImpComboBox(), null);
-        this.add(impLabel, null);
-        this.add(getUsComboBox(), null);
-        this.add(usLabel, null);
-        this.add(getEtaComboBox(), null);
-        this.add(etaLabel, null);
-        this.add(getSizeTextField(), null);
-        this.add(sizeLabel, null);
-        this.add(getSizRadioButton(), null);
-        this.add(getChTextField(), null);
-        this.add(chLabel, null);
-        this.add(getChRadioButton(), null);
-        this.add(getTieTextField(), null);
-        this.add(tieLabel, null);
-        this.add(getTieRadioButton(), null);
-        this.add(getCargoTextField(), null);
-        this.add(cargoLabel, null);
-        this.add(getCargoRadioButton(), null);
-        this.add(getOilTextField(), null);
-        this.add(oilLabel, null);
-        this.add(getOilRadioButton(), null);
+        this.add(getOlCheckBox(), null);
+        this.add(getTurnCheckBox(), null);
+        this.add(getImpCheckBox(), null);
+        this.add(getUsCheckBox(), null);
+        this.add(getEtaCheckBox(), null);
+        this.add(getJPanel(), null);
 	}
 
 	/**
@@ -181,7 +105,7 @@ public class PanelLimits extends JPanel {
 	private JCheckBox getSwellCheckBox1() {
 		if (swellCheckBox1 == null) {
 			swellCheckBox1 = new JCheckBox();
-			swellCheckBox1.setBounds(new Rectangle(86, 23, 76, 20));
+			swellCheckBox1.setBounds(new Rectangle(86, 23, 85, 20));
 			swellCheckBox1.setFont(new Font("Dialog", Font.PLAIN, 12));
 			swellCheckBox1.setText("Seegang");
 		}
@@ -239,35 +163,9 @@ public class PanelLimits extends JPanel {
 	private JComboBox getAllComboBox() {
 		if (allComboBox == null) {
 			allComboBox = new JComboBox();
-			allComboBox.setBounds(new Rectangle(125, 70, 200, 20));
+			allComboBox.setBounds(new Rectangle(135, 70, 190, 20));
 		}
 		return allComboBox;
-	}
-
-	/**
-	 * This method initializes olComboBox	
-	 * 	
-	 * @return javax.swing.JComboBox	
-	 */
-	private JComboBox getOlComboBox() {
-		if (olComboBox == null) {
-			olComboBox = new JComboBox();
-			olComboBox.setBounds(new Rectangle(2, 95, 50, 20));
-		}
-		return olComboBox;
-	}
-
-	/**
-	 * This method initializes turnComboBox	
-	 * 	
-	 * @return javax.swing.JComboBox	
-	 */
-	private JComboBox getTurnComboBox() {
-		if (turnComboBox == null) {
-			turnComboBox = new JComboBox();
-			turnComboBox.setBounds(new Rectangle(2, 118, 50, 20));
-		}
-		return turnComboBox;
 	}
 
 	/**
@@ -285,171 +183,91 @@ public class PanelLimits extends JPanel {
 	}
 
 	/**
-	 * This method initializes impComboBox	
+	 * This method initializes olCheckBox	
 	 * 	
-	 * @return javax.swing.JComboBox	
+	 * @return javax.swing.JCheckBox	
 	 */
-	private JComboBox getImpComboBox() {
-		if (impComboBox == null) {
-			impComboBox = new JComboBox();
-			impComboBox.setBounds(new Rectangle(2, 141, 50, 20));
+	private JCheckBox getOlCheckBox() {
+		if (olCheckBox == null) {
+			olCheckBox = new TristateCheckBox();
+			olCheckBox.setBounds(new Rectangle(2, 95, 133, 20));
+			olCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
+			olCheckBox.setText("Overhead Limits");
 		}
-		return impComboBox;
+		return olCheckBox;
 	}
 
 	/**
-	 * This method initializes usComboBox	
+	 * This method initializes turnCheckBox	
 	 * 	
-	 * @return javax.swing.JComboBox	
+	 * @return javax.swing.JCheckBox	
 	 */
-	private JComboBox getUsComboBox() {
-		if (usComboBox == null) {
-			usComboBox = new JComboBox();
-			usComboBox.setBounds(new Rectangle(2, 164, 50, 20));
+	private JCheckBox getTurnCheckBox() {
+		if (turnCheckBox == null) {
+			turnCheckBox = new TristateCheckBox();
+			turnCheckBox.setBounds(new Rectangle(2, 118, 105, 20));
+			turnCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
+			turnCheckBox.setText("Wendeplatz");
 		}
-		return usComboBox;
+		return turnCheckBox;
 	}
 
 	/**
-	 * This method initializes etaComboBox	
+	 * This method initializes impCheckBox	
 	 * 	
-	 * @return javax.swing.JComboBox	
+	 * @return javax.swing.JCheckBox	
 	 */
-	private JComboBox getEtaComboBox() {
-		if (etaComboBox == null) {
-			etaComboBox = new JComboBox();
-			etaComboBox.setBounds(new Rectangle(2, 187, 50, 20));
+	private JCheckBox getImpCheckBox() {
+		if (impCheckBox == null) {
+			impCheckBox = new TristateCheckBox();
+			impCheckBox.setBounds(new Rectangle(2, 141, 95, 20));
+			impCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
+			impCheckBox.setText("Zollhafen");
 		}
-		return etaComboBox;
+		return impCheckBox;
 	}
 
 	/**
-	 * This method initializes sizeTextField	
+	 * This method initializes usCheckBox	
 	 * 	
-	 * @return javax.swing.JTextField	
+	 * @return javax.swing.JCheckBox	
 	 */
-	private JTextField getSizeTextField() {
-		if (sizeTextField == null) {
-			sizeTextField = new JTextField();
-			sizeTextField.setBounds(new Rectangle(150, 95, 65, 20));
+	private JCheckBox getUsCheckBox() {
+		if (usCheckBox == null) {
+			usCheckBox = new TristateCheckBox();
+			usCheckBox.setBounds(new Rectangle(2, 164, 125, 20));
+			usCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
+			usCheckBox.setText("US. Vertretung");
 		}
-		return sizeTextField;
+		return usCheckBox;
 	}
 
 	/**
-	 * This method initializes sizRadioButton	
+	 * This method initializes etaCheckBox	
 	 * 	
-	 * @return javax.swing.JRadioButton	
+	 * @return javax.swing.JCheckBox	
 	 */
-	private JRadioButton getSizRadioButton() {
-		if (sizRadioButton == null) {
-			sizRadioButton = new JRadioButton();
-			sizRadioButton.setBounds(new Rectangle(305, 95, 20, 20));
+	private JCheckBox getEtaCheckBox() {
+		if (etaCheckBox == null) {
+			etaCheckBox = new TristateCheckBox();
+			etaCheckBox.setBounds(new Rectangle(2, 187, 120, 20));
+			etaCheckBox.setText("ETA Nachricht");
+			etaCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
 		}
-		return sizRadioButton;
+		return etaCheckBox;
 	}
 
 	/**
-	 * This method initializes chTextField	
+	 * This method initializes jPanel	
 	 * 	
-	 * @return javax.swing.JTextField	
+	 * @return javax.swing.JPanel	
 	 */
-	private JTextField getChTextField() {
-		if (chTextField == null) {
-			chTextField = new JTextField();
-			chTextField.setBounds(new Rectangle(150, 118, 65, 20));
+	private JPanel getJPanel() {
+		if (jPanel == null) {
+			jPanel = new TextFieldEx();
+			jPanel.setLayout(null);
+			jPanel.setBounds(new Rectangle(135, 95, 190, 112));
 		}
-		return chTextField;
-	}
-
-	/**
-	 * This method initializes chRadioButton	
-	 * 	
-	 * @return javax.swing.JRadioButton	
-	 */
-	private JRadioButton getChRadioButton() {
-		if (chRadioButton == null) {
-			chRadioButton = new JRadioButton();
-			chRadioButton.setBounds(new Rectangle(305, 118, 20, 20));
-		}
-		return chRadioButton;
-	}
-
-	/**
-	 * This method initializes tieTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */
-	private JTextField getTieTextField() {
-		if (tieTextField == null) {
-			tieTextField = new JTextField();
-			tieTextField.setBounds(new Rectangle(150, 141, 65, 20));
-		}
-		return tieTextField;
-	}
-
-	/**
-	 * This method initializes tieRadioButton	
-	 * 	
-	 * @return javax.swing.JRadioButton	
-	 */
-	private JRadioButton getTieRadioButton() {
-		if (tieRadioButton == null) {
-			tieRadioButton = new JRadioButton();
-			tieRadioButton.setBounds(new Rectangle(305, 141, 20, 20));
-		}
-		return tieRadioButton;
-	}
-
-	/**
-	 * This method initializes cargoTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */
-	private JTextField getCargoTextField() {
-		if (cargoTextField == null) {
-			cargoTextField = new JTextField();
-			cargoTextField.setBounds(new Rectangle(150, 164, 65, 20));
-		}
-		return cargoTextField;
-	}
-
-	/**
-	 * This method initializes cargoRadioButton	
-	 * 	
-	 * @return javax.swing.JRadioButton	
-	 */
-	private JRadioButton getCargoRadioButton() {
-		if (cargoRadioButton == null) {
-			cargoRadioButton = new JRadioButton();
-			cargoRadioButton.setBounds(new Rectangle(305, 164, 20, 20));
-		}
-		return cargoRadioButton;
-	}
-
-	/**
-	 * This method initializes oilTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */
-	private JTextField getOilTextField() {
-		if (oilTextField == null) {
-			oilTextField = new JTextField();
-			oilTextField.setBounds(new Rectangle(150, 187, 65, 20));
-		}
-		return oilTextField;
-	}
-
-	/**
-	 * This method initializes oilRadioButton	
-	 * 	
-	 * @return javax.swing.JRadioButton	
-	 */
-	private JRadioButton getOilRadioButton() {
-		if (oilRadioButton == null) {
-			oilRadioButton = new JRadioButton();
-			oilRadioButton.setBounds(new Rectangle(305, 188, 20, 20));
-		}
-		return oilRadioButton;
+		return jPanel;
 	}
 }

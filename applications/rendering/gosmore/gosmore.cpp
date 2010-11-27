@@ -1088,8 +1088,6 @@ void HitButton (int b)
   if (returnToMap) option = mapMode;
 }
 
-int firstDrag[2] = { -1, -1 }, lastDrag[2], pressTime;
-
 #ifndef NOGTK
 struct wayPointStruct {
   int lat, lon;
@@ -1169,7 +1167,8 @@ int UpdateWayPoints (GtkWidget *, GdkEvent *, gpointer *)
   return FALSE;
 }
 
-gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
+//gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
+/*
 {
   if ((option == mapMode || option == optionMode) &&
           (event->state & GDK_BUTTON1_MASK)) {
@@ -1185,7 +1184,7 @@ gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
     }
   }
   return FALSE;
-}
+}*/
 
 GtkWidget *bar;
 int UpdateProcessFunction(void */*userData*/, double t, double d,
@@ -1411,7 +1410,7 @@ void GeoSearch (const char *key)
   else GosmSearch (clon, clat, key);
 }
 
-int HandleKeyboard (GdkEventButton *event)
+int HandleKeyboard (int event, int ex, int ey)
 { // Some WinCE devices, like the Mio Moov 200 does not have an input method
   // and any call to activate it or set the text on an EDIT or STATIC (label)
   // control will crash the application. So under WinCE we default to our
@@ -1436,7 +1435,7 @@ int HandleKeyboard (GdkEventButton *event)
     for (int j = 0; kbLayout[i][j] != '\0'; j++) {
       int hb = draw->allocation.width / strlen (kbLayout[0]) / 2, ys = 16;
       int x = (2 * j + (i & 1)) * hb, y = draw->allocation.height - (3 - i) * ys * 2;
-      if (event && event->y >= y && event->y < y + ys + ys && event->x < x + hb + hb) {
+      if (event && ey >= y && ey < y + ys + ys && ex < x + hb + hb) {
         if (kbLayout[i][j] != '$') searchStr += kbLayout[i][j];
         else if (searchStr.length () > 0) searchStr.erase (searchStr.length () - 1, 1);
         logprintf ("'%s'\n", searchStr.c_str());
@@ -1462,29 +1461,52 @@ int HandleKeyboard (GdkEventButton *event)
   return FALSE;
 }
 
-int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
-{
-  static int lastRelease = 0;
-  int w = draw->allocation.width, h = draw->allocation.height;
+static int lastRelease = 0, oldx = -1, oldy, pressTime = -1;
 
+int MouseEv (int x, int y, int evTime, int button, int click)
+{
   // Anything that covers more than 3 pixels in either direction is a drag.
-  int isDrag = DebounceDrag
-        ? firstDrag[0] >= 0 && (lastRelease + 100 > (int) event->time ||
-                                  pressTime + 100 < (int) event->time)
-        : firstDrag[0] >= 0 && (abs((int)(firstDrag[0] - event->x)) > 3 ||
-                                abs((int)(firstDrag[1] - event->y)) > 3);
-  
+  gtk_widget_queue_clear (draw); 
+  int w = draw->allocation.width, h = draw->allocation.height;
+  int isDrag = //DebounceDrag ?
+        pressTime >= 0 && (lastRelease + 200 > evTime ||
+                                pressTime + 200 < evTime);
+//        : pressTime >= 0 && (abs((int)(firstDrag[0] - event->x)) > 3 ||
+//                                abs((int)(firstDrag[1] - event->y)) > 3;
   // logprintf("Click (isDrag = %d): firstDrag = %d,%d; event = %d,%d\n",
   // 	    isDrag, firstDrag[0], firstDrag[1], event->x, event->y);
+  if (pressTime == -1) pressTime = evTime;
+  if (click) pressTime = -1;
+  if (click) lastRelease = evTime;
+  if (isDrag) {
+    if (option == optionMode) {
+      listYOffset = max (0, listYOffset + (int)lrint (oldy - y));
+    }
+    if (option == mapMode) {
+      int lon = clon + lrint (zoom / w *
+        (cosAzimuth * (Display3D ? 0 : oldx - x) - sinAzimuth * (y - oldy)));
+      int lat = clat + lrint (zoom / w *
+        (cosAzimuth * (y - oldy + sinAzimuth * (Display3D ? 0 : oldx - x))));
+      if (Display3D) {
+        double newa = atan2 (sinAzimuth, cosAzimuth) - (oldx-x) * M_PI / 580;
+        cosAzimuth = cos (newa);
+        sinAzimuth = sin (newa);
+      }
+      SetLocation (lon, lat);
+    }
+  }
+  oldx = x;
+  oldy = y;
+  if (!click || isDrag) return 0;
 
   if (ButtonSize <= 0) ButtonSize = 4;
-  int b = (draw->allocation.height - lrint (event->y)) / (ButtonSize * 20);
+  int b = (draw->allocation.height - lrint (y)) / (ButtonSize * 20);
   if (objectAddRow >= 0) {
     int perRow = (w - ButtonSize * 20) / ADD_WIDTH;
-    if (event->x < w - ButtonSize * 20) {
+    if (x < w - ButtonSize * 20) {
       #ifdef NOGTK
-      newWays[newWayCnt].klas = objectAddRow + event->x / ADD_WIDTH +
-                                event->y / ADD_HEIGHT * perRow;
+      newWays[newWayCnt].klas = objectAddRow + x / ADD_WIDTH +
+                                y / ADD_HEIGHT * perRow;
       SipShowIM (SIPF_ON);
       if (DialogBox (hInst, MAKEINTRESOURCE (IDD_SETTAGS), NULL,
           (DLGPROC) DlgSetTagsProc)) {} //DialogBox (hInst,
@@ -1493,20 +1515,17 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       #endif
       objectAddRow = -1;
     }
-    else objectAddRow = int (event->y) * (restriction_no_right_turn / perRow
-                                  + 2) / draw->allocation.height * perRow;
+    else objectAddRow = y * (restriction_no_right_turn / perRow + 2) /
+                              draw->allocation.height * perRow;
   }
-  else if (event->x > w - ButtonSize * 20 && b <
+  else if (x > w - ButtonSize * 20 && b <
       (Layout >
        (MenuKey == 0 || option != mapMode ? 0 : 1) ? 3 : 0)) HitButton (b);
   else if (option == optionMode) {
-    if (isDrag) {
-      listYOffset = max (0, listYOffset + (int)lrint (firstDrag[1]-event->y));
-    }
-    else {
+    if (1) {
       for (int best = 9999, i = 0; i < mapMode; i++) {
-        int d = lrint (fabs (ListXY (i, FALSE) - event->x) +
-                       fabs (ListXY (i, TRUE) - event->y));
+        int d = lrint (fabs (ListXY (i, FALSE) - x) +
+                       fabs (ListXY (i, TRUE) - y));
         if (d < best) {
           best = d;
           option = i;
@@ -1591,8 +1610,8 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
     }
   }
   else if (option == searchMode) {
-    int row = event->y / SearchSpacing;
-    if (!HandleKeyboard (event) && row < searchCnt && gosmSstr[row]) {
+    int row = y / SearchSpacing;
+    if (!HandleKeyboard (TRUE, x, y) && row < searchCnt && gosmSstr[row]) {
       SetLocation (gosmSway[row]->clon, gosmSway[row]->clat);
       zoom = gosmSway[row]->dlat + gosmSway[row]->dlon + (1 << 15);
       if (zoom <= (1 << 15)) zoom = Style (gosmSway[row])->scaleMax;
@@ -1609,16 +1628,12 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       return RouteTest (NULL /*widget*/, event, NULL /*para*/);
     }
     #endif
-    int perpixel = zoom / w, dx = event->x - w / 2, dy = h / 2 - event->y;
-    if (isDrag) {
-      dx = firstDrag[0] - event->x;
-      dy = event->y - firstDrag[1];
-    }
+    int perpixel = zoom / w, dx = x - w / 2, dy = h / 2 - y;
     int lon = clon + lrint (perpixel *
       (cosAzimuth * (Display3D ? 0 : dx) - sinAzimuth * dy));
     int lat = clat + lrint (perpixel *
       (cosAzimuth * dy + sinAzimuth * (Display3D ? 0 : dx)));
-    if (event->button == 1) {
+    if (button == 1) {
       if (Display3D) {
         double newa = atan2 (sinAzimuth, cosAzimuth) - dx * M_PI / 580;
         cosAzimuth = cos (newa);
@@ -1635,7 +1650,7 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
       FollowGPSr = 0;
     }
-    else if (event->button == 2) {
+    else if (button == 2) {
       flon = lon;
       flat = lat;
       GosmFreeRoute ();
@@ -1647,9 +1662,6 @@ int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
       CallRoute (TRUE, 0, 0);
     }
   }
-  firstDrag[0] = -1;
-  lastRelease = event->time;
-  gtk_widget_queue_clear (draw); 
   return FALSE;
 }
 
@@ -2439,8 +2451,8 @@ gint DrawExpose (void)
       }
     }
     #endif
-    text2B.pop ();
-    while (!text2B.empty ()) {
+    for (text2B.pop (); !text2B.empty ();  text2B.pop ()) {
+      if (pressTime != -1) continue; // Don't render text while dragging
       text2Brendered *t = &text2B.top();
       #ifdef PANGO_VERSION
       PangoRectangle rect;
@@ -2509,7 +2521,6 @@ gint DrawExpose (void)
         if (zoom / clip.width > 20) break;
         while (*txt != '\0' && *txt++ != '\n') {}
       }
-      text2B.pop ();
     }
     for (deque<tsItem>::iterator i = tsList.begin (); i != tsList.end (); i++) {
       int x, y, j;
@@ -2576,7 +2587,7 @@ gint DrawExpose (void)
       gdk_draw_line (draw->window, mygc, 0, y + SearchSpacing / 2,
         clip.width, y + SearchSpacing / 2);
     }
-    HandleKeyboard (NULL);
+    HandleKeyboard (FALSE, 0, 0);
   }
   else if (option == optionMode) {
     for (int i = 0; i < wayPointIconNum; i++) {
@@ -2671,6 +2682,17 @@ gint DrawExpose (void)
 }
 
 #ifndef NOGTK
+gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
+{
+  if (event->state & GDK_BUTTON1_MASK) MouseEv
+          (event->x, event->y, event->time, 1, FALSE);
+}
+
+int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
+{
+  MouseEv (event->x, event->y, event->time, event->button, TRUE);
+}
+
 GtkWidget *searchW;
 
 int ToggleSearchResults (void)
@@ -3038,11 +3060,9 @@ int UserInterface (int argc, char *argv[],
     else {
       if (!routeSuccess) printf ("Jump\n\r");
       styleStruct *firstS = Style (Way (shortest->nd));
-//      printf ("firstspeed %lf maxspeed %lf\n", firstS->aveSpeed[Vehicle],
-//        firstS->aveSpeed[Vehicle] * firstS->invSpeed[Vehicle]);
-      double ups = firstS->invSpeed[Vehicle] / 3.6
-          * firstS->aveSpeed[Vehicle] / 20000000 * 2147483648.0 /
-          cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180));
+      double ups = lrint (3.6 / firstS->invSpeed[Vehicle]
+          / firstS->aveSpeed[Vehicle] / (20000 / 2147483648.0) /
+          cos (LatInverse (flat / 2 + tlat / 2) * (M_PI / 180)));
       // ups (Units per second) also works as an unsigned int.
 
       double fSegLat = shortest->shortest ?
@@ -3052,7 +3072,6 @@ int UserInterface (int argc, char *argv[],
       double fpr = (fSegLat * (flat - shortest->nd->lat) +
                     fSegLon * (flon - shortest->nd->lon)) /
                    (Sqr (fSegLat) + Sqr (fSegLon));
-      fpr = fpr > 1 ? 1 : fpr < 0 ? 0 : fpr; // Clamp to [0,1]
       for (; shortest; shortest = shortest->shortest) {
         wayType *w = Way (shortest->nd);
         char *name = (char*)(w + 1) + 1;
@@ -3078,7 +3097,6 @@ int UserInterface (int argc, char *argv[],
             (double)(tlon - shortest->nd->lon)) /
             (Sqr ((double)(final->lat - shortest->nd->lat)) +
              Sqr ((double)(final->lon - shortest->nd->lon)) + 1);
-          pr = pr > 1 ? 1 : pr < 0 ? 0 : pr; // Clamp to [0,1]
           printf("%lf,%lf,j,(unknown-style),0,fini\n\r",
       LatInverse (shortest->nd->lat + pr * (final->lat - shortest->nd->lat)),
       LonInverse (shortest->nd->lon + pr * (final->lon - shortest->nd->lon)));
@@ -3601,7 +3619,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
        } while (0);
        break;
     case WM_LBUTTONDOWN:
-      pressTime = GetTickCount ();
+      //pressTime = GetTickCount ();
       SetCapture (hWnd);
       break;
     case WM_LBUTTONUP:
@@ -3611,12 +3629,9 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         gDisplayOff = FALSE;
         break;
       }
-      GdkEventButton ev;
-      if ((ev.y = HIWORD (lParam) - topBar) > 0) {
-        ev.x = LOWORD (lParam);
-        ev.time = GetTickCount ();
-        ev.button = 1;
-        Click (NULL, &ev, NULL);
+      if (1) {
+        MouseEv ((short) LOWORD (lParam), (short) HIWORD (lParam) - topBar,
+          GetTickCount (), 1, TRUE);
         if (option == LayoutNum) {
           if (Keyboard) MoveWindow(hwndEdit, Layout > 1 ? 8 : 140,
             Layout != 1 ? 5 : -25,
@@ -3633,11 +3648,15 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
       else if (!Keyboard && LOWORD (lParam) > (Layout > 1 ? 8 : 140)) {
         option = option == searchMode ? mapMode : searchMode;
       }
-      firstDrag[0] = -1;
       InvalidateRect (hWnd, NULL, FALSE);
       break;
     case WM_MOUSEMOVE:
       if (wParam & MK_LBUTTON) {
+        MouseEv ((short) LOWORD (lParam), (short) HIWORD (lParam) - topBar,
+                 GetTickCount (), 1, FALSE);
+        InvalidateRect (hWnd, NULL, FALSE);
+      }
+/*      if (wParam & MK_LBUTTON) {
         if (firstDrag[0] >= 0) {
           HDC wdc = GetDC (hWnd);
           int wadj = lastDrag[0] - LOWORD (lParam);
@@ -3651,7 +3670,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd,UINT message,
         lastDrag[0] = LOWORD (lParam);
         lastDrag[1] = HIWORD (lParam) - topBar;
         if (firstDrag[0] < 0) memcpy (firstDrag, lastDrag, sizeof (firstDrag));
-      }
+      }*/
       break;
     case WM_MOUSEWHEEL:
       do {

@@ -14,12 +14,18 @@ orig:
         primary: #ec989a
         secondary: #fed7a5
 	tertiary; ffffb3
+        wood: #aed1a0
+	danger: #ffc0cb
 
 halfway to background:
         trunk: #cce5c9
         primary: #efc4c1
         secondary: #f8e3c7
 	tertiary; f9f7ce
+	wood: #d0e0c4
+	danger: #f9d8da
+
+        danger fcccd2
 -->
 
 <Map bgcolor="#b5d0d0" srs="&srs900913;" minimum_version="0.6.1"> 
@@ -211,7 +217,7 @@ halfway to background:
     </Rule>
     <Rule>
       &maxscale_zoom9;
-      &minscale_zoom10;
+      &minscale_zoom12;
       <Filter>[military] = 'danger_area'</Filter>
       <PolygonSymbolizer>
         <CssParameter name="fill">pink</CssParameter>
@@ -219,10 +225,21 @@ halfway to background:
       </PolygonSymbolizer>
     </Rule>
     <Rule>
-      &maxscale_zoom11;
+      &maxscale_zoom13;
       &minscale_zoom18;
       <Filter>[military] = 'danger_area'</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#fcccd2</CssParameter>
+        <CssParameter name="fill-opacity">0.3</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">red</CssParameter>
+        <CssParameter name="stroke-width">1</CssParameter>
+        <CssParameter name="stroke-opacity">1</CssParameter>
+      </LineSymbolizer>
+	<!--
       <PolygonPatternSymbolizer file="&symbols;/danger.png" type="png" width="30" height="30"/>
+	-->
     </Rule>
      <Rule>
       &maxscale_zoom14;
@@ -388,7 +405,7 @@ halfway to background:
       <Filter>[natural] = 'wood' or [landuse] = 'wood'</Filter>
       &maxscale_zoom9;
       <PolygonSymbolizer>
-        <CssParameter name="fill">#aed1a0</CssParameter>
+        <CssParameter name="fill">#d0e0c4</CssParameter>
      </PolygonSymbolizer>
     </Rule>
      <Rule>
@@ -715,8 +732,8 @@ halfway to background:
     </Rule>
     <Rule>
       <Filter>[military] = 'danger_area'</Filter>
-      &maxscale_zoom12;
-      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="pink" halo_radius="1" wrap_width="10"/>
+      &maxscale_zoom13;
+      <TextSymbolizer name="name" fontset_name="bold-fonts" size="9" fill="red" halo_radius="1" wrap_width="10"/>
     </Rule>
     <Rule>
       <Filter>[aeroway] = 'gate'</Filter>
@@ -3299,7 +3316,7 @@ halfway to background:
 <Style name='paths-overlay'>
     <Rule>
 	  <!--byways -->
-      <Filter>([highway] = 'byway' or [highway] = 'restricted_byway' or [designation] = 'byway' or [designation] = 'public_byway' or [designation] = 'restricted_byway') and not [tunnel]='yes'</Filter>
+      <Filter>([designation] = 'byway' or [designation] = 'public_byway' or [designation] = 'restricted_byway' or [designation] = 'byway_open_to_all_traffic' or [designation] = 'unknown_byway') and not [tunnel]='yes'</Filter>
       &maxscale_zoom13;
       <LineSymbolizer>
         <CssParameter name="stroke">#ff0000</CssParameter>
@@ -3309,7 +3326,7 @@ halfway to background:
     </Rule>  
     <Rule>
 	  <!--public bridleways -->
-      <Filter>(([highway] = 'bridleway' and not [horse] = 'permissive') or [designation] = 'public_bridleway') and not [tunnel]='yes'</Filter>
+      <Filter>([designation] = 'public_bridleway' or [designation] = 'bridleway') and not [tunnel]='yes'</Filter>
       &maxscale_zoom13;
       <LineSymbolizer>
         <CssParameter name="stroke">#c06000</CssParameter>
@@ -3319,7 +3336,7 @@ halfway to background:
     </Rule>  
     <Rule>
 	 <!-- public footpaths -->
-      <Filter>([designation] = 'public_footpath' or ([foot] = 'designated' and not [horse] = 'designated')) and not [tunnel]='yes'</Filter>
+      <Filter>([designation] = 'public_footpath' or [designation] = 'footpath') and not [tunnel]='yes'</Filter>
       &maxscale_zoom13;
       <LineSymbolizer>
         <CssParameter name="stroke">#00ff00</CssParameter>
@@ -3329,7 +3346,7 @@ halfway to background:
     </Rule>   
     <Rule>
 	  <!--permissive bridleways -->
-      <Filter>[horse] = 'permissive' and not [tunnel]='yes'</Filter>
+      <Filter>([horse] = 'permissive' or [designation] = 'permissive_bridleway') and not [tunnel]='yes'</Filter>
       &maxscale_zoom13;
       <LineSymbolizer>
         <CssParameter name="stroke">#ff8000</CssParameter>
@@ -3339,7 +3356,7 @@ halfway to background:
     </Rule>  
     <Rule>
 	 <!-- permissive footpaths -->
-      <Filter>([foot] = 'permissive' and not [horse] = 'permissive') and not [tunnel]='yes'</Filter>
+      <Filter>(([foot] = 'permissive' and not [horse] = 'permissive') or [designation] = 'permissive_footpath') and not [tunnel]='yes'</Filter>
       &maxscale_zoom13;
       <LineSymbolizer>
         <CssParameter name="stroke">#00ffff</CssParameter>
@@ -5467,15 +5484,15 @@ halfway to background:
 </Style>
 <Style name="barriers">
     <Rule>
-      &maxscale_zoom16;
+      &maxscale_zoom14;
       <Filter>[natural]='hedge' or [barrier] = 'hedge'</Filter>
       <LineSymbolizer>
-        <CssParameter name="stroke">#aed1a0</CssParameter>
+        <CssParameter name="stroke">#d0e0c4</CssParameter>
         <CssParameter name="stroke-width">3</CssParameter>
       </LineSymbolizer>
     </Rule>
     <Rule>
-      &maxscale_zoom16;
+      &maxscale_zoom14;
       <Filter>[barrier] &lt;&gt; '' and not [barrier] = 'hedge'</Filter>
       <LineSymbolizer>
         <CssParameter name="stroke">black</CssParameter>
@@ -5747,7 +5764,7 @@ halfway to background:
                 <Parameter name="host">localhost</Parameter>
                 <Parameter name="port">5432</Parameter>
                 <Parameter name="user">gis</Parameter>
-                <Parameter name="password">password</Parameter>
+                <Parameter name="password">pwd</Parameter>
                 <Parameter name="dbname">nickw</Parameter>
                 <Parameter name="estimate_extent">false</Parameter>
                 <Parameter name="table">(select way,height from contours WHERE height::integer % 10 = 0 AND height::integer % 50 != 0 AND height::integer % 100 != 0) as "contours-10"</Parameter>
@@ -5762,7 +5779,7 @@ halfway to background:
                 <Parameter name="host">localhost</Parameter>
                 <Parameter name="port">5432</Parameter>
                 <Parameter name="user">gis</Parameter>
-                <Parameter name="password">password</Parameter>
+                <Parameter name="password">pwd</Parameter>
                 <Parameter name="dbname">nickw</Parameter>
                 <Parameter name="estimate_extent">false</Parameter>
                 <Parameter name="table">(select way,height from contours WHERE height::integer % 50 = 0 AND height::integer % 100 != 0) as "contours-50"</Parameter>
@@ -5777,7 +5794,7 @@ halfway to background:
                 <Parameter name="host">localhost</Parameter>
                 <Parameter name="port">5432</Parameter>
                 <Parameter name="user">gis</Parameter>
-                <Parameter name="password">password</Parameter>
+                <Parameter name="password">pwd</Parameter>
                 <Parameter name="dbname">nickw</Parameter>
                 <Parameter name="estimate_extent">false</Parameter>
                 <Parameter name="table">(select way,height from contours WHERE height::integer % 100 = 0) as "contours-100"</Parameter>

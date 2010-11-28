@@ -14,11 +14,14 @@ import javax.swing.JLabel;
 import java.awt.Rectangle;
 import javax.swing.JCheckBox;
 import java.awt.Font;
+
+import javax.swing.Icon;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import java.awt.Button;
 
 
 public class PanelLimits extends JPanel {
@@ -38,7 +41,7 @@ public class PanelLimits extends JPanel {
 	private JCheckBox impCheckBox = null;
 	private JCheckBox usCheckBox = null;
 	private JCheckBox etaCheckBox = null;
-	private JPanel jPanel = null;
+	private JPanel exPanel = null;
 	public PanelLimits() {
 		super();
 		initialize();
@@ -79,7 +82,7 @@ public class PanelLimits extends JPanel {
         this.add(getImpCheckBox(), null);
         this.add(getUsCheckBox(), null);
         this.add(getEtaCheckBox(), null);
-        this.add(getJPanel(), null);
+        this.add(getExPanel(), null);
 	}
 
 	/**
@@ -175,9 +178,13 @@ public class PanelLimits extends JPanel {
 	 */
 	private JButton getGrButton() {
 		if (grButton == null) {
-			grButton = new LightTile("");
+			Icon grey   = new ImageIcon(getClass().getResource("/images/anker_grey.png"));
+			Icon green  = new ImageIcon(getClass().getResource("/images/anker_green.png"));
+			Icon yellow = new ImageIcon(getClass().getResource("/images/anker_yellow.png"));
+			Icon red    = new ImageIcon(getClass().getResource("/images/anker_red.png"));
+			
+			grButton = new LightTile(grey, green, yellow, red);
 			grButton.setBounds(new Rectangle(164, 220, 50, 20));
-			grButton.setIcon(new ImageIcon(getClass().getResource("/images/anker.png")));
 		}
 		return grButton;
 	}
@@ -258,16 +265,16 @@ public class PanelLimits extends JPanel {
 	}
 
 	/**
-	 * This method initializes jPanel	
+	 * This method initializes exPanel	
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	private JPanel getJPanel() {
-		if (jPanel == null) {
-			jPanel = new TextFieldEx();
-			jPanel.setLayout(null);
-			jPanel.setBounds(new Rectangle(135, 95, 190, 112));
+	private JPanel getExPanel() {
+		if (exPanel == null) {
+			exPanel = new TextFieldEx();
+			exPanel.setLayout(null);
+			exPanel.setBounds(new Rectangle(135, 95, 190, 112));
 		}
-		return jPanel;
+		return exPanel;
 	}
 }

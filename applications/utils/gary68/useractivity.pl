@@ -41,6 +41,9 @@
 # Version 3.2
 # - Uids added 
 # 
+# Version 4.2
+# - display cities
+#
 
 use strict ;
 use warnings ;
@@ -54,7 +57,7 @@ use Compress::Bzip2 ;
 my $program = "useractivity.pl" ;
 my $usage = $program . " file1.osm file2.osm out.htm Mode [numTopUsers] [picSize] (Mode = [N|P|D|S], picSize x in pixels)\n" ;
 $usage .= "N = normal\nP = with picture\nPD = with detailed picture\nPS/PDS = also write SVG file\nout.white.txt and out.black.txt (white and black lists) can be given (enter one user name per line)\n" ;
-my $version = "4.1" ;
+my $version = "4.2" ;
 
 my $topMax = 10 ;
 
@@ -97,6 +100,8 @@ my $name1 ; my $name2 ; my $ref1 ; my $ref2 ; my $class1 ; my $class2 ;
 my %white ; my %black ; my %blackActive ; my %blackUid ; my %whiteUid ; my %blackUidActive ;
 my %activeUid ;
 
+my @cities = () ;
+
 my $objectProcessed = 0 ; # 0=node, 1=way
 
 ###############
@@ -130,6 +135,8 @@ print stringFileInfo ($osm2Name), "\n\n"  ;
 
 initLocaltime() ;
 print "local time: $localDay $localMonth $localYear\n" ;
+
+populateCities() ;
 
 if (grep /P/, $mode) { initializeMap() ; }
 
@@ -1019,6 +1026,11 @@ sub initializeMap {
 	}
 	closeOsm2File() ;
 
+	foreach my $c (@cities) {
+		drawNodeDot ($c->[1], $c->[2], "black", 2) ;
+		drawTextPos ($c->[1], $c->[2], 0, 0, $c->[0], "black", 3) ;
+	}
+
 	print "done.\n" ;
 }
 
@@ -1466,3 +1478,96 @@ sub getBlackListData {
 		if (defined $blackUid{$id}) { $blackUidActive{$id} = 1 ; }
 	}
 }
+
+sub populateCities {
+push @cities, ["Erlangen", 11.0037436, 49.598038] ;
+push @cities, ["München", 11.5754815, 48.1372719] ;
+push @cities, ["Hildesheim", 9.9523243, 52.1527898] ;
+push @cities, ["Chemnitz", 12.9252977, 50.8322608] ;
+push @cities, ["Hamburg", 10.000654, 53.5503414] ;
+push @cities, ["Köln", 6.9569468, 50.9412323] ;
+push @cities, ["Bremen", 8.80727, 53.0757681] ;
+push @cities, ["Herne", 7.2196765, 51.5377786] ;
+push @cities, ["Bayreuth", 11.5763079, 49.9427202] ;
+push @cities, ["Schwerin", 11.4148038, 53.6288297] ;
+push @cities, ["Kiel", 10.1371858, 54.3216753] ;
+push @cities, ["Dortmund", 7.4651736, 51.5113709] ;
+push @cities, ["Hannover", 9.7385632, 52.3744809] ;
+push @cities, ["Lübeck", 10.6847384, 53.8664436] ;
+push @cities, ["Rostock", 12.1287241, 54.0924328] ;
+push @cities, ["Konstanz", 9.1751732, 47.6589856] ;
+push @cities, ["Bamberg", 10.8876283, 49.892691] ;
+push @cities, ["Würzburg", 9.9329662, 49.79245] ;
+push @cities, ["Moers", 6.6352091, 51.4504762] ;
+push @cities, ["Bonn", 7.0999274, 50.7344839] ;
+push @cities, ["Leverkusen", 7.0175786, 51.049718] ;
+push @cities, ["Heilbronn", 9.2186549, 49.1422908] ;
+push @cities, ["Essen", 7.012273, 51.4552058] ;
+push @cities, ["Frankfurt am Main", 8.6805975, 50.1432793] ;
+push @cities, ["Ulm", 9.9910464, 48.398312] ;
+push @cities, ["Saarbrücken", 6.996567, 49.2350486] ;
+push @cities, ["Siegen", 8.0153315, 50.8705296] ;
+push @cities, ["Neuss", 6.6900832, 51.1958431] ;
+push @cities, ["Cottbus", 14.3391578, 51.7596392] ;
+push @cities, ["Braunschweig", 10.5251064, 52.2643004] ;
+push @cities, ["Recklinghausen", 7.2007542, 51.6118188] ;
+push @cities, ["Wolfsburg", 10.7861682, 52.4205588] ;
+push @cities, ["Halle (Saale)", 11.970473, 51.4820941] ;
+push @cities, ["Trier", 6.6402058, 49.7557338] ;
+push @cities, ["Reutlingen", 9.2105667, 48.4963326] ;
+push @cities, ["Oberhausen", 6.859351, 51.4980457] ;
+push @cities, ["Mülheim an der Ruhr", 6.8787875, 51.4283922] ;
+push @cities, ["Magdeburg", 11.6399609, 52.1315889] ;
+push @cities, ["Stuttgart", 9.1829087, 48.7763496] ;
+push @cities, ["Salzgitter", 10.3489635, 52.1480205] ;
+push @cities, ["Bottrop", 6.9292036, 51.5215805] ;
+push @cities, ["Wiesbaden", 8.2499998, 50.0832999] ;
+push @cities, ["Bielefeld", 8.5313701, 52.0191887] ;
+push @cities, ["Erfurt", 11.033629, 50.9774188] ;
+push @cities, ["Aachen", 6.0816445, 50.7742933] ;
+push @cities, ["Pforzheim", 8.7029532, 48.8908846] ;
+push @cities, ["Aschaffenburg", 9.14917, 49.9739] ;
+push @cities, ["Krefeld", 6.5592502, 51.3340369] ;
+push @cities, ["Gelsenkirchen", 7.0711688, 51.5431133] ;
+push @cities, ["Duisburg", 6.7497693, 51.4334338] ;
+push @cities, ["Osnabrück", 8.0499998, 52.2667002] ;
+push @cities, ["Heidelberg", 8.6948125, 49.4093608] ;
+push @cities, ["Mannheim", 8.4672976, 49.4897239] ;
+push @cities, ["Mönchengladbach", 6.4419995, 51.1910666] ;
+push @cities, ["Remscheid", 7.194881, 51.1796081] ;
+push @cities, ["Landau in der Pfalz", 8.1132884, 49.2075151] ;
+push @cities, ["Solingen", 7.08333, 51.1833] ;
+push @cities, ["Potsdam", 13.0666999, 52.4] ;
+push @cities, ["Speyer", 8.4336151, 49.3165553] ;
+push @cities, ["Darmstadt", 8.6511775, 49.8727746] ;
+push @cities, ["Dresden", 13.7381437, 51.0493286] ;
+push @cities, ["Augsburg", 10.8837144, 48.3665283] ;
+push @cities, ["Jena", 11.5833091, 50.9331401] ;
+push @cities, ["Gera", 12.0799792, 50.8760398] ;
+push @cities, ["Wuppertal", 7.1832976, 51.2666575] ;
+push @cities, ["Freiburg im Breisgau", 7.8646903, 47.9949985] ;
+push @cities, ["Kaiserslautern", 7.7689951, 49.4432174] ;
+push @cities, ["Bochum", 7.2166699, 51.4833001] ;
+push @cities, ["Koblenz", 7.5943348, 50.3532028] ;
+push @cities, ["Berlin", 13.3888548, 52.5170397] ;
+push @cities, ["Hagen", 7.4610436, 51.3573015] ;
+push @cities, ["Leipzig", 12.3746816, 51.3405087] ;
+push @cities, ["Hamm", 7.8108895, 51.67894] ;
+push @cities, ["Paderborn", 8.752653, 51.7177044] ;
+push @cities, ["Göttingen", 9.934507, 51.5336849] ;
+push @cities, ["Mainz", 8.2710237, 49.9999952] ;
+push @cities, ["Karlsruhe", 8.4044366, 49.0140679] ;
+push @cities, ["Regensburg", 12.0956268, 49.0159295] ;
+push @cities, ["Ludwigshafen", 8.4396699, 49.4792564] ;
+push @cities, ["Kempten", 10.3169236, 47.7264273] ;
+push @cities, ["Düsseldorf", 6.7637565, 51.2235376] ;
+push @cities, ["Witten", 7.335124, 51.4370171] ;
+push @cities, ["Kassel", 9.4770164, 51.3092659] ;
+push @cities, ["Münster", 7.6251879, 51.9625101] ;
+push @cities, ["Oldenburg", 8.2146017, 53.1389753] ;
+push @cities, ["Nürnberg", 11.0773238, 49.4538501] ;
+push @cities, ["Fürth", 10.9896011, 49.477271] ;
+push @cities, ["Ingolstadt", 11.4317222, 48.7659636] ;
+push @cities, ["Bremerhaven", 8.5865508, 53.5522265] ;
+}
+

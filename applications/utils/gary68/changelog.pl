@@ -15,6 +15,7 @@ my %users  ;
 $users{"Oberförster"} = 1 ;
 $users{"Michael Wittmann"} = 1 ;
 $users{"Forstwald"} = 1 ;
+$users{"forstwald"} = 1 ;
 $users{"pfoten-weg"} = 1 ;
 $users{"pfoten_weg_!_"} = 1 ;
 $users{"greatmaster"} = 1 ;
@@ -23,6 +24,9 @@ $users{"leck_mich_alle_am_arsch"} = 1 ;
 $users{"hasse_osm_korinthenkacker"} = 1 ;
 $users{"Ich_hasse_doitsche_OSM-Korinthenkacker"} = 1 ;
 $users{"Kraftfahrstraßen"} = 1 ;
+$users{"lmaa-du-osm-korinthenkacker"} = 1 ;
+$users{"gerd95"} = 1 ;
+$users{"keinname"} = 1 ;
 $users{"asmtb"} = 1 ;
 #$users{""} = 1 ;
 

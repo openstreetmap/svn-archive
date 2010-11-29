@@ -13,48 +13,68 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JRadioButton;
 
-public class TextFieldEx extends JPanel {
+public class SizePanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
 	private ButtonGroup buttons = new ButtonGroup();
-	private JTextField sizeTextField = null;
+	public  TextFieldEx sizeTextField = null;
 	private JLabel sizeLabel = null;
 	private JRadioButton sizeRadioButton = null;
-	private JTextField chTextField = null;
+	private TextFieldEx chTextField = null;
 	private JLabel chLabel = null;
 	private JRadioButton chRadioButton = null;
-	private JTextField tieTextField = null;
+	private TextFieldEx tieTextField = null;
 	private JLabel tieLabel = null;
 	private JRadioButton tieRadioButton = null;
-	private JTextField cargoTextField = null;
+	private TextFieldEx cargoTextField = null;
 	private JLabel cargoLabel = null;
 	private JRadioButton cargoRadioButton = null;
-
-	private JTextField oilTextField = null;
-
+	private TextFieldEx oilTextField = null;
 	private JLabel oilLabel = null;
-
 	private JRadioButton oilRadioButton = null;
 	
 	private JComboBox comboBox = null;
-	private Ssize sizeType = VS_SIZE;  //  @jve:decl-index=0:
-	public JTextField selTextField = null;
+	private Cat catType = VS_SIZE;  //  @jve:decl-index=0:
+	public TextFieldEx selTextField = null;
 
 	// Enumarations
-	public static class Ssize {private Ssize() {} }
-	public final static Ssize VS_SIZE = new Ssize();  //  @jve:decl-index=0:
-	public final static Ssize AN_SIZE = new Ssize();  //  @jve:decl-index=0:
+	public static class Cat {private Cat() {} }
+	public final static Cat VS_SIZE = new Cat();  //  @jve:decl-index=0:
+	public final static Cat AN_SIZE = new Cat();  //  @jve:decl-index=0:
 	
-	public final static int NOT_SELECTED = 0;
-	public final static int LARGE        = 1;
-	public final static int MEDIUM       = 2;
-	public final static int UNKNOWN      = 3;
+	public final static int NOT_SELECTED =  0;
+	public final static int UNKNOWN      =  3;
+	
+	public final static int CAT_UNKNOWN  = 17;
+	public final static int FEET         =  0;
+	public final static int METER        =  1;
+	
+	public int units = METER;
+	public String[][] anSize = {{"> 76ft"," > 23.2m"},
+								{"71-75ft","21.6-22.9m"},
+								{"66-70ft","20.1-21.3m"},
+								{"61-65ft","18.6-19.8m"},
+								{"56-60ft","17.1-18.2m"},
+								{"51-55ft","15.5-16.0m"},
+								{"46-50ft","14.0-15.2m"},
+								{"41-45ft","12.5-13.7m"},
+								{"36-40ft","11.0-12.2m"},
+								{"31-35ft"," 9.4-10.0m"},
+								{"26-30ft"," 7.9- 9.1m"},
+								{"21-25ft"," 6.4- 7.6m"},
+								{"16-20ft"," 4.9- 6.1m"},
+								{"11-15ft"," 3.4- 4.6m"},
+								{" 6-10ft"," 1.8- 3.0m"},
+								{" 0- 5ft"," 0.0- 1.5m"}};
+
+	public String[][] vsSize = {{"> 500ft lang","> 152m lang"},
+								{"bis 500ft lang","bis 152m lang"}};
 	
 	/**
 	 * This is the default constructor
 	 */
-	public TextFieldEx() {
+	public SizePanel() {
 		super();
 	}
 
@@ -77,9 +97,9 @@ public class TextFieldEx extends JPanel {
 		tieLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 		tieLabel.setText("Ankerplatz");
 		chLabel = new JLabel();
-		chLabel.setBounds(new Rectangle(75, 25, 60, 15));
+		chLabel.setBounds(new Rectangle(75, 25, 75, 15));
 		chLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		chLabel.setText("Channel");
+		chLabel.setText("Fahrwasser");
 		sizeLabel = new JLabel();
 		sizeLabel.setBounds(new Rectangle(75, 2, 95, 15));
 		sizeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -119,7 +139,7 @@ public class TextFieldEx extends JPanel {
 	 */
 	private JTextField getSizeTextField() {
 		if (sizeTextField == null) {
-			sizeTextField = new JTextField();
+			sizeTextField = new TextFieldEx(new Bounds(NOT_SELECTED, UNKNOWN), vsSize);
 			sizeTextField.setBounds(new Rectangle(0, 0, 75, 20));
 			sizeTextField.setEditable(false);
 		}
@@ -140,10 +160,12 @@ public class TextFieldEx extends JPanel {
 			
 			sizeRadioButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					sizeType = VS_SIZE;
+					catType = VS_SIZE;
+					selTextField.setIndex(comboBox.getSelectedIndex(), true);
 					selTextField = sizeTextField ;
 					comboBox.removeAllItems();
 					setComboBoxSize();
+					comboBox.setSelectedIndex(selTextField.index);
 				}
 			});
 		}
@@ -158,7 +180,7 @@ public class TextFieldEx extends JPanel {
 	 */
 	private JTextField getChTextField() {
 		if (chTextField == null) {
-			chTextField = new JTextField();
+			chTextField = new TextFieldEx(new Bounds(NOT_SELECTED, CAT_UNKNOWN), anSize);
 			chTextField.setBounds(new Rectangle(0, 23, 75, 20));
 		}
 		return chTextField;
@@ -175,10 +197,12 @@ public class TextFieldEx extends JPanel {
 			chRadioButton.setBounds(new Rectangle(170, 23, 20, 20));
 			chRadioButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					sizeType = AN_SIZE;
+					catType = AN_SIZE;
+					selTextField.setIndex(comboBox.getSelectedIndex(), true);
 					selTextField = chTextField ;
 					comboBox.removeAllItems();
 					setAnchorageSize();
+					comboBox.setSelectedIndex(selTextField.index);
 				}
 			});
 		}
@@ -193,7 +217,7 @@ public class TextFieldEx extends JPanel {
 	 */
 	private JTextField getTieTextField() {
 		if (tieTextField == null) {
-			tieTextField = new JTextField();
+			tieTextField = new TextFieldEx(new Bounds(NOT_SELECTED, CAT_UNKNOWN), anSize);
 			tieTextField.setBounds(new Rectangle(0, 46, 75, 20));
 		}
 		return tieTextField;
@@ -210,10 +234,12 @@ public class TextFieldEx extends JPanel {
 			tieRadioButton.setBounds(new Rectangle(170, 46, 20, 20));
 			tieRadioButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					sizeType = AN_SIZE;
+					catType = AN_SIZE;
+					selTextField.setIndex(comboBox.getSelectedIndex(), true);
 					selTextField = tieTextField;
 					comboBox.removeAllItems();
 					setAnchorageSize();
+					comboBox.setSelectedIndex(selTextField.index);
 				}
 			});
 		}
@@ -227,7 +253,7 @@ public class TextFieldEx extends JPanel {
 	 */
 	private JTextField getCargoTextField() {
 		if (cargoTextField == null) {
-			cargoTextField = new JTextField();
+			cargoTextField = new TextFieldEx(new Bounds(NOT_SELECTED, CAT_UNKNOWN), anSize);
 			cargoTextField.setBounds(new Rectangle(0, 69, 75, 20));
 		}
 		return cargoTextField;
@@ -244,10 +270,12 @@ public class TextFieldEx extends JPanel {
 			cargoRadioButton.setBounds(new Rectangle(170, 69, 20, 20));
 			cargoRadioButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					sizeType = AN_SIZE;
+					catType = AN_SIZE;
+					selTextField.setIndex(comboBox.getSelectedIndex(), true);
 					selTextField = cargoTextField;
 					comboBox.removeAllItems();
 					setAnchorageSize();
+					comboBox.setSelectedIndex(selTextField.index);
 				}
 			});
 		}
@@ -261,7 +289,7 @@ public class TextFieldEx extends JPanel {
 	 */
 	private JTextField getOilTextField() {
 		if (oilTextField == null) {
-			oilTextField = new JTextField();
+			oilTextField = new TextFieldEx(new Bounds(NOT_SELECTED, CAT_UNKNOWN), anSize);
 			oilTextField.setBounds(new Rectangle(0, 92, 75, 20));
 		}
 		return oilTextField;
@@ -278,10 +306,12 @@ public class TextFieldEx extends JPanel {
 			oilRadioButton.setBounds(new Rectangle(170, 92, 20, 20));
 			oilRadioButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					sizeType = AN_SIZE;
+					catType = AN_SIZE;
+					selTextField.setIndex(comboBox.getSelectedIndex(), true);
 					selTextField = oilTextField;
 					comboBox.removeAllItems();
-					setAnchorageSize();					
+					setAnchorageSize();
+					comboBox.setSelectedIndex(selTextField.index);
 				}
 			});
 		}
@@ -294,33 +324,89 @@ public class TextFieldEx extends JPanel {
 
 	private void setComboBoxSize() {
 		comboBox.addItem("* Waehle Groesse ...");
-		comboBox.addItem("> 500 ft lang");
-		comboBox.addItem("bis 500 ft lang");
+		comboBox.addItem(vsSize[0][units]);
+		comboBox.addItem(vsSize[1][units]);
 		comboBox.addItem("Unbekannt");
 	}
 
+	
 	private void setAnchorageSize() {
 		comboBox.addItem("* Waehle Groesse ...");
-		comboBox.addItem("A > 76 ft       > 23.2m");
-		comboBox.addItem("B 71-75ft      21.6-22.9m");
-		comboBox.addItem("C 66-70ft      20.1-21.3m");
-		comboBox.addItem("D 61-65ft      18.6-19.8m");
-		comboBox.addItem("E 56-60ft      17.1-18.2m");
-		comboBox.addItem("F 51-55ft      15.5-16.0m");
-		comboBox.addItem("G 46-50ft      14.0-15.2m");
-		comboBox.addItem("H 41-45ft      12.5-13.7m");
-		comboBox.addItem("J 36-40ft      11.0-12.2m");
-		comboBox.addItem("K 31-35ft       9.4-10.0m");
-		comboBox.addItem("L 26-30ft       7.9- 9.1m");
-		comboBox.addItem("M 21-25ft       6.4- 7.6m");
-		comboBox.addItem("N 16-20ft       4.9- 6.1m");
-		comboBox.addItem("O 11-15ft       3.4- 4.6m");
-		comboBox.addItem("P  6-10ft       1.8- 3.0m");
-		comboBox.addItem("Q  0- 5ft       0.0- 1.5m");
-		comboBox.addItem("U Unbekannt    Unbekannt");
+		
+		for(int i = 0; i < 16; i++) {
+			comboBox.addItem(anSize[i][units]);
+		}
+		
+		comboBox.addItem("Unbekannt");
 	}
 	
-	public Ssize getSizeType() {
-		return sizeType;
+	public Cat getCatType() {
+		return catType;
+	}
+	
+	public void changeUnits() {
+		int i;
+		
+		selTextField.setIndex(comboBox.getSelectedIndex(),true);
+		comboBox.removeAllItems();
+		
+		if(catType == AN_SIZE ) setAnchorageSize();
+		else setComboBoxSize();
+		
+		comboBox.setSelectedIndex(selTextField.index);
+
+		sizeTextField.setUnits(units);
+		chTextField.setUnits(units);
+		tieTextField.setUnits(units);
+		cargoTextField.setUnits(units);
+		oilTextField.setUnits(units);
+		// comboBox.setSelectedIndex(i);
+	}
+	
+	public class TextFieldEx extends JTextField {
+
+		private int index;
+		private int units;
+		private Bounds bounds;
+		private String [][] str;
+		
+		public TextFieldEx(Bounds b,String[][] s) {
+			super();
+			
+			index = 0;
+			bounds = b;
+			units = METER;
+			str = s;
+			setText("");
+		}
+		
+		public void setIndex(int i, boolean upd) {
+			if(upd) this.index = i;
+			
+			if(i == bounds.getBottom()) setText("");
+			if(i > bounds.getBottom() && i < bounds.getTop()) setText(str[i-1][units]);
+			if(i == bounds.getTop()) setText("unbekannt");
+
+		}
+		
+		private void setUnits(int u) {
+			units = u;
+			setIndex(index, false);
+		}
+
+	}
+	
+	public class Bounds {
+		
+		private int bottom;
+		private int top;
+		
+		private Bounds(int b,int t) {
+			bottom = b;
+			top    = t;
+		}
+		
+		private int getTop()	{ return top; }
+		private int getBottom() { return bottom; }
 	}
 }

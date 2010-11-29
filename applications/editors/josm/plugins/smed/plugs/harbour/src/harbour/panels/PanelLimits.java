@@ -2,6 +2,7 @@ package harbour.panels;
 
 import harbour.widgets.LightTile;
 import harbour.widgets.TextFieldEx;
+import harbour.widgets.TextFieldEx.Ssize;
 import harbour.widgets.TristateCheckBox;
 
 import javax.swing.BorderFactory;
@@ -42,6 +43,7 @@ public class PanelLimits extends JPanel {
 	private JCheckBox usCheckBox = null;
 	private JCheckBox etaCheckBox = null;
 	private JPanel exPanel = null;
+	
 	public PanelLimits() {
 		super();
 		initialize();
@@ -74,7 +76,6 @@ public class PanelLimits extends JPanel {
         this.add(getOtherCheckBox(), null);
         this.add(getTideTextField(), null);
         this.add(mLabel, null);
-        this.add(getAllComboBox(), null);
         this.add(grLabel, null);
         this.add(getGrButton(), null);
         this.add(getOlCheckBox(), null);
@@ -82,6 +83,7 @@ public class PanelLimits extends JPanel {
         this.add(getImpCheckBox(), null);
         this.add(getUsCheckBox(), null);
         this.add(getEtaCheckBox(), null);
+        this.add(getAllComboBox(), null);
         this.add(getExPanel(), null);
 	}
 
@@ -167,6 +169,34 @@ public class PanelLimits extends JPanel {
 		if (allComboBox == null) {
 			allComboBox = new JComboBox();
 			allComboBox.setBounds(new Rectangle(135, 70, 190, 20));
+			allComboBox.setFont(new Font("Dialog", Font.PLAIN, 12));
+			allComboBox.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					int type = allComboBox.getSelectedIndex();
+					Ssize sType = ((TextFieldEx) exPanel).getSizeType();
+					if(sType == TextFieldEx.VS_SIZE ) {
+						switch (type) {
+							case TextFieldEx.NOT_SELECTED:
+								if(((TextFieldEx) exPanel).selTextField != null ) ((TextFieldEx) exPanel).selTextField.setText("");
+								break;
+
+							case TextFieldEx.LARGE:
+								((TextFieldEx) exPanel).selTextField.setText("> 500ft");
+								break;
+								
+							case TextFieldEx.MEDIUM:
+								((TextFieldEx) exPanel).selTextField.setText("bis 500ft");
+								break;
+								
+							case TextFieldEx.UNKNOWN:
+								((TextFieldEx) exPanel).selTextField.setText("unbekannt");
+								break;
+								
+						}
+
+					}
+				}
+			});
 		}
 		return allComboBox;
 	}
@@ -274,6 +304,8 @@ public class PanelLimits extends JPanel {
 			exPanel = new TextFieldEx();
 			exPanel.setLayout(null);
 			exPanel.setBounds(new Rectangle(135, 95, 190, 112));
+			((TextFieldEx) exPanel).setComboBox(allComboBox);
+			((TextFieldEx) exPanel).initialize();
 		}
 		return exPanel;
 	}

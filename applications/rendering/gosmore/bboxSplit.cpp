@@ -176,7 +176,9 @@ int main (int argc, char *argv[])
           olevel = level;
         }
       } // If it's /> or </..>
-      else if (*ptr == '<') tipe[level++] = ptr[1];
+      else if (*ptr == '<') {
+        if (ptr[1] != '!') tipe[level++] = ptr[1];
+      }
       // The tests for 'level' is not necessary for valid OSM-XML
       else if (level == 3 && strncasecmp (ptr, "id=", 3) == 0) {
         id = atoi (ptr[3] == '\'' || ptr[3] == '\"' ? ptr + 4 : ptr + 3);

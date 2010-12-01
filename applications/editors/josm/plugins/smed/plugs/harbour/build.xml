@@ -89,7 +89,7 @@
         </copy>
 
 		<copy todir="${plugin.build.dir}/images">
-			<fileset dir="images"/>
+			<fileset dir="src/images"/>
 		</copy>
 		<copy todir="${plugin.build.dir}/harbour/msg">
 			<fileset dir="${plugin.src.dir}/harbour/msg"/>

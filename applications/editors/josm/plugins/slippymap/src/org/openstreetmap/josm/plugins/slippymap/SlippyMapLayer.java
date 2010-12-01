@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.slippymap;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -103,6 +104,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     private JPopupMenu tileOptionMenu;
     JCheckBoxMenuItem autoZoomPopup;
     Tile showMetadataTile;
+    private Image attrImage;
+    private Font attrFont = Font.decode("Arial-10");
 
     void redraw()
     {
@@ -114,6 +117,16 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     {
         int origZoom = currentZoomLevel;
         tileSource = SlippyMapPreferences.getMapSource();
+        boolean requireAttr = tileSource.requiresAttribution();
+        if(requireAttr) {
+            attrImage = tileSource.getAttributionImage();
+            if(attrImage == null) {
+                System.out.println("Attribution image was null.");
+            } else {
+                System.out.println("Got an attribution image " + attrImage.getHeight(this) + "x" + attrImage.getWidth(this));
+            }
+        }
+        
         // The minimum should also take care of integer parsing
         // errors which would leave us with a zoom of -1 otherwise
         if (tileSource.getMaxZoom() < currentZoomLevel)
@@ -816,6 +829,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             // probably still initializing
             return;
         }
+
         if (lastTopLeft != null && lastBotRight != null && topLeft.equalsEpsilon(lastTopLeft)
                 && botRight.equalsEpsilon(lastBotRight) && bufferImage != null
                 && mv.getWidth() == bufferImage.getWidth(null) && mv.getHeight() == bufferImage.getHeight(null)
@@ -907,6 +921,21 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
         for (Tile t : ts.allTiles()) {
             this.paintTileText(ts, t, g, mv, currentZoomLevel, t);
         }
+
+        if (tileSource.requiresAttribution()) {
+            // Draw attribution
+            g.setColor(Color.white);
+            Font font = g.getFont();
+            g.setFont(attrFont);
+            g.drawString(tileSource.getAttributionText(currentZoomLevel, topLeft, botRight), 5 + attrImage.getWidth(this) + 2, mv.getHeight() - 5);
+            g.setFont(font);
+            
+            // Draw attribution logo
+            if(attrImage != null) {
+                g.drawImage(attrImage, 5, mv.getHeight() - attrImage.getHeight(this) - 5, this);
+            }
+        }
+
         oldg.drawImage(bufferImage, 0, 0, null);
 
         if (autoZoomEnabled() && lastImageScale != null) {

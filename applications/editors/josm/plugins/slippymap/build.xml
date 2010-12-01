@@ -26,8 +26,8 @@
 -->
 <project name="slippymap" default="dist" basedir=".">
 
-	<property name="commit.message" value="Added haiti imagery tile source" />
-	<property name="plugin.main.version" value="3602" />
+	<property name="commit.message" value="publish the bing imagery support (was added by yellowbkpk); change bing attribution link temporarily to comply with ToU" />
+	<property name="plugin.main.version" value="3687" />
 
 	<property name="josm"                   location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.dist.dir"        value="../../dist"/>

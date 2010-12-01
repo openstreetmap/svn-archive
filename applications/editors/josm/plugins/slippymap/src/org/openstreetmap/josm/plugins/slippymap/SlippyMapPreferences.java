@@ -406,7 +406,10 @@ public class SlippyMapPreferences
         }
         
         public String getAttributionLinkURL() {
-            return "http://bing.com/maps";
+            //return "http://bing.com/maps"
+            // FIXME: I've set attributionLinkURL temporarily to ToU URL to comply with bing ToU 
+            // (the requirement is that we have such a link at the bottom of the window)
+            return "http://go.microsoft.com/?linkid=9710837"; 
         }
         
         public String getTermsOfUseURL() {

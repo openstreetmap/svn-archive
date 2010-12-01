@@ -13,6 +13,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.net.URI;
@@ -108,8 +109,10 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     JCheckBoxMenuItem autoZoomPopup;
     Tile showMetadataTile;
     private Image attrImage;
-    private Rectangle attrImageBounds;
-    private Font attrFont = Font.decode("Arial-10");
+    private String attrTermsUrl;
+    private Rectangle attrImageBounds, attrToUBounds;
+    private static Font ATTR_FONT = Font.decode("Arial 10");
+    private static Font ATTR_LINK_FONT = Font.decode("Arial Underline 10");
 
     void redraw()
     {
@@ -129,6 +132,8 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             } else {
                 System.out.println("Got an attribution image " + attrImage.getHeight(this) + "x" + attrImage.getWidth(this));
             }
+            
+            attrTermsUrl = tileSource.getTermsOfUseURL();
         }
         
         // The minimum should also take care of integer parsing
@@ -263,10 +268,23 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                             clickedTile = getTileForPixelpos(e.getX(), e.getY());
                             tileOptionMenu.show(e.getComponent(), e.getX(), e.getY());
                         } else if (e.getButton() == MouseEvent.BUTTON1) {
-                            if(attrImageBounds.contains(e.getPoint()) && tileSource.requiresAttribution()) {
+                            if(!tileSource.requiresAttribution()) {
+                                return;
+                            }
+                            
+                            if(attrImageBounds.contains(e.getPoint())) {
                                 try {
                                     java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
                                     desktop.browse(new URI(tileSource.getAttributionLinkURL()));
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                } catch (URISyntaxException e1) {
+                                    e1.printStackTrace();
+                                }
+                            } else if(attrToUBounds.contains(e.getPoint())) {
+                                try {
+                                    java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                                    desktop.browse(new URI(tileSource.getTermsOfUseURL()));
                                 } catch (IOException e1) {
                                     e1.printStackTrace();
                                 } catch (URISyntaxException e1) {
@@ -941,17 +959,35 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             // Draw attribution
             g.setColor(Color.white);
             Font font = g.getFont();
-            g.setFont(attrFont);
-            g.drawString(tileSource.getAttributionText(currentZoomLevel, topLeft, botRight), 5 + attrImage.getWidth(this) + 2, mv.getHeight() - 5);
-            g.setFont(font);
+            g.setFont(ATTR_LINK_FONT);
+            
+            // Draw terms of use text
+            Rectangle2D termsStringBounds = g.getFontMetrics().getStringBounds("Background Terms of Use", g);
+            int textHeight = (int) termsStringBounds.getHeight() - 5;
+            int textWidth = (int) termsStringBounds.getWidth();
+            int termsTextY = mv.getHeight() - textHeight;
+            if(attrTermsUrl != null) {
+                int x = 2;
+                int y = mv.getHeight() - textHeight;
+                attrToUBounds = new Rectangle(x, y, textWidth, textHeight);
+                g.drawString("Background Terms of Use", x, y);
+            }
             
             // Draw attribution logo
+            int imgWidth = attrImage.getWidth(this);
             if(attrImage != null) {
-                int x = 5;
-                int y = mv.getHeight() - attrImage.getHeight(this) - 5;
-                attrImageBounds = new Rectangle(x, y, attrImage.getWidth(this), attrImage.getHeight(this));
+                int x = 2;
+                int height = attrImage.getHeight(this);
+                int y = termsTextY - height;
+                attrImageBounds = new Rectangle(x, y, imgWidth, height);
                 g.drawImage(attrImage, x, y, this);
             }
+            
+            String attributionText = tileSource.getAttributionText(currentZoomLevel, topLeft, botRight);
+            Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
+            g.drawString(attributionText, mv.getWidth() - (int) stringBounds.getWidth(), mv.getHeight() - textHeight);
+            
+            g.setFont(font);
         }
 
         oldg.drawImage(bufferImage, 0, 0, null);

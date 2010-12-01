@@ -409,6 +409,10 @@ public class SlippyMapPreferences
             return "http://bing.com/maps";
         }
         
+        public String getTermsOfUseURL() {
+            return "http://opengeodata.org/microsoft-imagery-details";
+        }
+        
         public String getAttributionText(int zoom, LatLon topLeft, LatLon botRight) {
             Bounds windowBounds = new Bounds(topLeft, botRight);
             StringBuilder a = new StringBuilder();

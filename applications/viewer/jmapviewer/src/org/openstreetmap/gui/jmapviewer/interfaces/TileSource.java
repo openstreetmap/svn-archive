@@ -112,4 +112,14 @@ public interface TileSource {
      * @return The URL for the attribution image. Null if no image should be displayed.
      */
     public Image getAttributionImage();
+
+    /**
+     * @return The URL to open when the user clicks the attribution image.
+     */
+    public String getAttributionLinkURL();
+
+    /**
+     * @return The URL to open when the user clicks the attribution "Terms of Use" text.
+     */
+    public String getTermsOfUseURL();
 }

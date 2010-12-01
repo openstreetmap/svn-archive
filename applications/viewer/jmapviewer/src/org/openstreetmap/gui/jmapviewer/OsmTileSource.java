@@ -87,6 +87,14 @@ public class OsmTileSource {
         public String getAttributionText(int zoom, LatLon topLeft, LatLon botRight) {
             return "CC-BY-SA OpenStreetMap and Contributors";
         }
+
+        public String getAttributionLinkURL() {
+            return "http://openstreetmap.org/";
+        }
+
+        public String getTermsOfUseURL() {
+            return "http://openstreetmap.org/";
+        }
     }
 
     public static class Mapnik extends AbstractOsmTileSource {

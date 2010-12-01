@@ -81,7 +81,7 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
     }
 
     @Override public void mouseDragged(MouseEvent e) {
-        if (adjustingLayer == null) return;
+        if (adjustingLayer == null || prevEastNorth == null) return;
         EastNorth eastNorth =
             Main.map.mapView.getEastNorth(e.getX(),e.getY());
         adjustingLayer.displace(

@@ -36,7 +36,7 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
     private ImageryLayer adjustingLayer;
 
     public ImageryAdjustAction(MapFrame mapFrame) {
-        super(tr("Adjust imagery"), "adjustwms",
+        super(tr("Adjust imagery"), "adjustimg",
                 tr("Adjust the position of the selected imagery layer"), mapFrame,
                 ImageProvider.getCursor("normal", "move"));
     }

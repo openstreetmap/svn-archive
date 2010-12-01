@@ -12,7 +12,7 @@ public class AddImageryLayerAction extends JosmAction {
     private final ImageryInfo info;
 
     public AddImageryLayerAction(ImageryInfo info) {
-        super(info.getMenuName(), "wmsmenu", tr("Add imagery layer {0}",info.getName()), null, false);
+        super(info.getMenuName(), "imagery_menu", tr("Add imagery layer {0}",info.getName()), null, false);
         putValue("toolbar", "imagery_" + info.getToolbarName());
         this.info = info;
     }

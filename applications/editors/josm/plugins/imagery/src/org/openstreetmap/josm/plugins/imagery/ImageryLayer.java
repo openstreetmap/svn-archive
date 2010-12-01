@@ -13,7 +13,8 @@ import org.openstreetmap.josm.plugins.imagery.tms.TMSLayer;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSLayer;
 
 public abstract class ImageryLayer extends Layer {
-
+    protected static final Icon icon =
+        new ImageIcon(Toolkit.getDefaultToolkit().createImage(ImageryPlugin.class.getResource("/images/imagery_small.png")));
     protected MapView mv;
 
     protected double dx = 0.0;
@@ -41,9 +42,6 @@ public abstract class ImageryLayer extends Layer {
     public double getDy() {
         return dy;
     }
-
-    protected static final Icon icon =
-        new ImageIcon(Toolkit.getDefaultToolkit().createImage(ImageryPlugin.class.getResource("/images/wms_small.png")));
 
     @Override
     public Icon getIcon() {

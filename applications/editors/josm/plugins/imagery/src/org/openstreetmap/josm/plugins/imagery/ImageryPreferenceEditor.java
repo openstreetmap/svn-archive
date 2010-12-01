@@ -51,7 +51,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
 
     @Override
     public void addGui(final PreferenceTabbedPane gui) {
-        JPanel p = gui.createPreferenceTab("wms", tr("Imagery Preferences"), tr("Modify list of imagery layers displayed in the Imagery menu"));
+        JPanel p = gui.createPreferenceTab("imagery", tr("Imagery Preferences"), tr("Modify list of imagery layers displayed in the Imagery menu"));
 
         model = new ImageryLayerTableModel();
         final JTable list = new JTable(model) {

@@ -14,6 +14,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.ImageObserver;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -105,6 +108,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     JCheckBoxMenuItem autoZoomPopup;
     Tile showMetadataTile;
     private Image attrImage;
+    private Rectangle attrImageBounds;
     private Font attrFont = Font.decode("Arial-10");
 
     void redraw()
@@ -255,10 +259,21 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
                 Main.map.mapView.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        if (e.getButton() != MouseEvent.BUTTON3)
-                            return;
-                        clickedTile = getTileForPixelpos(e.getX(), e.getY());
-                        tileOptionMenu.show(e.getComponent(), e.getX(), e.getY());
+                        if (e.getButton() == MouseEvent.BUTTON3) {
+                            clickedTile = getTileForPixelpos(e.getX(), e.getY());
+                            tileOptionMenu.show(e.getComponent(), e.getX(), e.getY());
+                        } else if (e.getButton() == MouseEvent.BUTTON1) {
+                            if(attrImageBounds.contains(e.getPoint()) && tileSource.requiresAttribution()) {
+                                try {
+                                    java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                                    desktop.browse(new URI(tileSource.getAttributionLinkURL()));
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                } catch (URISyntaxException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        }
                     }
                 });
 
@@ -932,7 +947,10 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             
             // Draw attribution logo
             if(attrImage != null) {
-                g.drawImage(attrImage, 5, mv.getHeight() - attrImage.getHeight(this) - 5, this);
+                int x = 5;
+                int y = mv.getHeight() - attrImage.getHeight(this) - 5;
+                attrImageBounds = new Rectangle(x, y, attrImage.getWidth(this), attrImage.getHeight(this));
+                g.drawImage(attrImage, x, y, this);
             }
         }
 

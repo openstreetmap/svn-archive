@@ -405,6 +405,10 @@ public class SlippyMapPreferences
             return ImageProvider.get("bing_maps").getImage();
         }
         
+        public String getAttributionLinkURL() {
+            return "http://bing.com/maps";
+        }
+        
         public String getAttributionText(int zoom, LatLon topLeft, LatLon botRight) {
             Bounds windowBounds = new Bounds(topLeft, botRight);
             StringBuilder a = new StringBuilder();
@@ -417,7 +421,6 @@ public class SlippyMapPreferences
                             && windowBounds.getMin().lat() > attrBounds.getMax().lat()) {
                         a.append(attr.attribution);
                         a.append(" ");
-                    } else {
                     }
                 }
             }

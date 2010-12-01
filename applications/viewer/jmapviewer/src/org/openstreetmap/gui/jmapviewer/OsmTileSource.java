@@ -1,6 +1,11 @@
 package org.openstreetmap.gui.jmapviewer;
 
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+import org.openstreetmap.josm.data.coor.LatLon;
 
 public class OsmTileSource {
 
@@ -10,10 +15,21 @@ public class OsmTileSource {
     public static abstract class AbstractOsmTileSource implements TileSource {
         protected String NAME;
         protected String BASE_URL;
-        public AbstractOsmTileSource(String name, String base_url)
+        protected String ATTR_IMG_URL;
+        protected boolean REQUIRES_ATTRIBUTION = true;
+
+        public AbstractOsmTileSource(String name, String base_url) {
+            this(name, base_url, null);
+        }
+
+        public AbstractOsmTileSource(String name, String base_url, String attr_img_url)
         {
             NAME = name;
             BASE_URL = base_url;
+            ATTR_IMG_URL = attr_img_url;
+            if(ATTR_IMG_URL == null) {
+                REQUIRES_ATTRIBUTION = false;
+            }
         }
 
         public String getName() {
@@ -55,6 +71,21 @@ public class OsmTileSource {
 
         public int getTileSize() {
             return 256;
+        }
+
+        public Image getAttributionImage() {
+            if(ATTR_IMG_URL != null)
+                return new ImageIcon(ATTR_IMG_URL).getImage();
+            else
+                return null;
+        }
+
+        public boolean requiresAttribution() {
+            return REQUIRES_ATTRIBUTION;
+        }
+
+        public String getAttributionText(int zoom, LatLon topLeft, LatLon botRight) {
+            return "CC-BY-SA OpenStreetMap and Contributors";
         }
     }
 

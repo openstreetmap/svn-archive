@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeSet;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.MirroredInputStream;
@@ -32,55 +30,6 @@ public class ImageryLayerInfo {
             layers.add(new ImageryInfo(c));
         }
 
-        { /* REMOVE following old block in spring 2011 */
-            defaults = new LinkedList<String>(defaults);
-            Map<String,String> prefs = Main.pref.getAllPrefix("imagery.layers.default.");
-            for(String s : prefs.keySet()) {
-                Main.pref.put(s, null);
-                defaults.add(s.substring(18));
-            }
-            prefs = Main.pref.getAllPrefix("imagery.layers.url.");
-            for(String s : prefs.keySet()) {
-                Main.pref.put(s, null);
-            }
-            TreeSet<String> keys = new TreeSet<String>(prefs.keySet());
-
-            // And then the names+urls of imagery layers
-            int prefid = 0;
-            String name = null;
-            String url = null;
-            String cookies = null;
-            double pixelPerDegree = 0.0;
-            int lastid = -1;
-            for (String key : keys) {
-                String[] elements = key.split("\\.");
-                if (elements.length != 4) continue;
-                try {
-                    prefid = Integer.parseInt(elements[2]);
-                } catch(NumberFormatException e) {
-                    continue;
-                }
-                if (prefid != lastid) {
-                    name = url = cookies = null; pixelPerDegree = 0.0; lastid = prefid;
-                }
-                if (elements[3].equals("name")) {
-                    name = prefs.get(key);
-                    int codeIndex = name.indexOf("#PPD=");
-                    if (codeIndex != -1) {
-                        pixelPerDegree = Double.valueOf(name.substring(codeIndex+5));
-                        name = name.substring(0, codeIndex);
-                    }
-                }
-                else if (elements[3].equals("url"))
-                {
-                    url = prefs.get(key);
-                }
-                else if (elements[3].equals("cookies"))
-                    cookies = prefs.get(key);
-                if (name != null && url != null)
-                    layers.add(new ImageryInfo(name, url, cookies, pixelPerDegree));
-            }
-        }
         ArrayList<String> defaultsSave = new ArrayList<String>();
         for(String source : Main.pref.getCollection("imagery.layers.sites", Arrays.asList(DEFAULT_LAYER_SITES)))
         {

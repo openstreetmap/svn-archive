@@ -32,9 +32,9 @@ public class TristateCheckBox extends JCheckBox {
 	
 	private TristateDecorator model;
 	
-	Icon d = new ImageIcon(getClass().getResource("/images/qm.png"));
-	Icon s = new ImageIcon(getClass().getResource("/images/cm.png"));
-	Icon n = new ImageIcon(getClass().getResource("/images/xm.png"));
+	Icon d = new ImageIcon(getClass().getResource("/images/qm_12x12.png"));
+	Icon s = new ImageIcon(getClass().getResource("/images/cm_12x12.png"));
+	Icon n = new ImageIcon(getClass().getResource("/images/xm_12x12.png"));
 	
 	@SuppressWarnings("serial")
 	public TristateCheckBox(String text, Icon icon, State initial) {

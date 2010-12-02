@@ -97,7 +97,7 @@ public class SizePanel extends JPanel {
 		tieLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 		tieLabel.setText("Ankerplatz");
 		chLabel = new JLabel();
-		chLabel.setBounds(new Rectangle(75, 25, 75, 15));
+		chLabel.setBounds(new Rectangle(75, 25, 70, 15));
 		chLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 		chLabel.setText("Fahrwasser");
 		sizeLabel = new JLabel();

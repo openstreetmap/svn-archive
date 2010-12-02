@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.ImageIcon;
+import javax.swing.JToggleButton;
 
 public class HarbourAction {
 
@@ -29,8 +30,6 @@ public class HarbourAction {
 	private JButton forButton = null;
 	private JButton fastforButton = null;
 	private JLabel queryLabel = null;
-	private JButton queryButton = null;
-	private JButton changequeryButton = null;
 	private JComboBox typComboBox = null;
 	private JLabel typeLabel = null;
 	private JComboBox countryComboBox = null;
@@ -44,7 +43,9 @@ public class HarbourAction {
 	private PanelServices panelServices = null;
 	private PanelEnv panelEnv = null;
 	private PanelRelations panelRelations = null;
-	
+	private JComboBox queryComboBox = null;
+	private JButton queryjButton = null;
+	private JToggleButton chartButton = null;
 	public HarbourAction() {
 		panelGeneral= new PanelGeneral();
 		panelGeneral.setBounds(new Rectangle(2, 56, 330, 270));
@@ -75,23 +76,23 @@ public class HarbourAction {
 	public JPanel getHarbourPanel() {
 		if (harbourPanel == null) {
 			regLabel = new JLabel();
-			regLabel.setBounds(new Rectangle(100, 32, 54, 20));
+			regLabel.setBounds(new Rectangle(90, 32, 45, 20));
 			regLabel.setText("Region:");
 			noLabel1 = new JLabel();
-			noLabel1.setBounds(new Rectangle(232, 32, 26, 20));
+			noLabel1.setBounds(new Rectangle(200, 32, 26, 20));
 			noLabel1.setText("Nr.:");
 			countryLabel = new JLabel();
-			countryLabel.setBounds(new Rectangle(2, 32, 40, 20));
+			countryLabel.setBounds(new Rectangle(2, 32, 32, 20));
 			countryLabel.setText("Land:");
 			typeLabel = new JLabel();
-			typeLabel.setBounds(new Rectangle(289, 5, 43, 20));
+			typeLabel.setBounds(new Rectangle(289, 32, 30, 20));
 			typeLabel.setText("Type:");
 			queryLabel = new JLabel();
-			queryLabel.setBounds(new Rectangle(212, 334, 80, 15));
+			queryLabel.setBounds(new Rectangle(201, 334, 72, 15));
 			queryLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 			queryLabel.setText("Suche nach:");
 			setLabel = new JLabel();
-			setLabel.setBounds(new Rectangle(2, 330, 68, 21));
+			setLabel.setBounds(new Rectangle(2, 330, 60, 21));
 			setLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 			setLabel.setText("Datensatz:");
 			nameLabel = new JLabel();
@@ -119,8 +120,6 @@ public class HarbourAction {
 			harbourPanel.add(getForButton(), null);
 			harbourPanel.add(getFastforButton(), null);
 			harbourPanel.add(queryLabel, null);
-			harbourPanel.add(getQueryButton(), null);
-			harbourPanel.add(getChangequeryButton(), null);
 			harbourPanel.add(getTypComboBox(), null);
 			harbourPanel.add(typeLabel, null);
 			harbourPanel.add(getCountryComboBox(), null);
@@ -129,6 +128,9 @@ public class HarbourAction {
 			harbourPanel.add(noLabel1, null);
 			harbourPanel.add(regLabel, null);
 			harbourPanel.add(getRegTextField(), null);
+			harbourPanel.add(getQueryComboBox(), null);
+			harbourPanel.add(getQueryjButton(), null);
+			harbourPanel.add(getChartButton(), null);
 		}
 		return harbourPanel;
 	}
@@ -153,6 +155,7 @@ public class HarbourAction {
 					panelEnv.setVisible(false);
 					panelRelations.setVisible(false);
 					panelGeneral.setVisible(true);
+					chartButton.setEnabled(false);
 				}
 			});
 		}
@@ -177,6 +180,7 @@ public class HarbourAction {
 					panelEnv.setVisible(false);
 					panelRelations.setVisible(false);
 					panelLimits.setVisible(true);
+					chartButton.setEnabled(false);
 				}
 			});
 		}
@@ -201,6 +205,7 @@ public class HarbourAction {
 					panelEnv.setVisible(false);
 					panelRelations.setVisible(false);
 					panelServices.setVisible(true);
+					chartButton.setEnabled(false);
 				}
 			});
 		}
@@ -224,7 +229,8 @@ public class HarbourAction {
 					panelLimits.setVisible(false);
 					panelServices.setVisible(false);
 					panelRelations.setVisible(false);
-					panelEnv.setVisible(true);	
+					panelEnv.setVisible(true);
+					chartButton.setEnabled(true);
 				}
 			});
 		}
@@ -249,6 +255,7 @@ public class HarbourAction {
 					panelServices.setVisible(false);
 					panelEnv.setVisible(false);
 					panelRelations.setVisible(true);
+					chartButton.setEnabled(true);
 				}
 			});
 		}
@@ -263,7 +270,7 @@ public class HarbourAction {
 	private JTextField getNameTextField() {
 		if (nameTextField == null) {
 			nameTextField = new JTextField();
-			nameTextField.setBounds(new Rectangle(92, 2, 185, 25));
+			nameTextField.setBounds(new Rectangle(88, 2, 196, 25));
 		}
 		return nameTextField;
 	}
@@ -276,7 +283,7 @@ public class HarbourAction {
 	private JButton getFastbackButton() {
 		if (fastbackButton == null) {
 			fastbackButton = new JButton();
-			fastbackButton.setBounds(new Rectangle(70, 330, 20, 20));
+			fastbackButton.setBounds(new Rectangle(62, 330, 20, 20));
 		}
 		return fastbackButton;
 	}
@@ -289,7 +296,7 @@ public class HarbourAction {
 	private JButton getBackButton() {
 		if (backButton == null) {
 			backButton = new JButton();
-			backButton.setBounds(new Rectangle(89, 330, 20, 20));
+			backButton.setBounds(new Rectangle(81, 330, 20, 20));
 		}
 		return backButton;
 	}
@@ -302,7 +309,7 @@ public class HarbourAction {
 	private JTextField getSetTextField() {
 		if (setTextField == null) {
 			setTextField = new JTextField();
-			setTextField.setBounds(new Rectangle(109, 329, 60, 23));
+			setTextField.setBounds(new Rectangle(101, 329, 60, 23));
 			setTextField.setText("");
 		}
 		return setTextField;
@@ -316,7 +323,7 @@ public class HarbourAction {
 	private JButton getForButton() {
 		if (forButton == null) {
 			forButton = new JButton();
-			forButton.setBounds(new Rectangle(168, 330, 20, 20));
+			forButton.setBounds(new Rectangle(160, 330, 20, 20));
 		}
 		return forButton;
 	}
@@ -329,38 +336,9 @@ public class HarbourAction {
 	private JButton getFastforButton() {
 		if (fastforButton == null) {
 			fastforButton = new JButton();
-			fastforButton.setBounds(new Rectangle(187, 330, 20, 20));
+			fastforButton.setBounds(new Rectangle(179, 330, 20, 20));
 		}
 		return fastforButton;
-	}
-
-	/**
-	 * This method initializes queryButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getQueryButton() {
-		if (queryButton == null) {
-			queryButton = new JButton();
-			queryButton.setBounds(new Rectangle(292, 330, 80, 20));
-			queryButton.setFont(new Font("Dialog", Font.PLAIN, 12));
-			queryButton.setToolTipText("");
-			queryButton.setText("Hafen");
-		}
-		return queryButton;
-	}
-
-	/**
-	 * This method initializes changequeryButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getChangequeryButton() {
-		if (changequeryButton == null) {
-			changequeryButton = new JButton();
-			changequeryButton.setBounds(new Rectangle(371, 330, 20, 20));
-		}
-		return changequeryButton;
 	}
 
 	/**
@@ -371,7 +349,7 @@ public class HarbourAction {
 	private JComboBox getTypComboBox() {
 		if (typComboBox == null) {
 			typComboBox = new JComboBox();
-			typComboBox.setBounds(new Rectangle(335, 3, 60, 25));
+			typComboBox.setBounds(new Rectangle(323, 28, 72, 25));
 		}
 		return typComboBox;
 	}
@@ -384,7 +362,7 @@ public class HarbourAction {
 	private JComboBox getCountryComboBox() {
 		if (countryComboBox == null) {
 			countryComboBox = new JComboBox();
-			countryComboBox.setBounds(new Rectangle(44, 29, 50, 25));
+			countryComboBox.setBounds(new Rectangle(36, 29, 50, 25));
 		}
 		return countryComboBox;
 	}
@@ -397,7 +375,7 @@ public class HarbourAction {
 	private JTextField getNoTextField() {
 		if (noTextField == null) {
 			noTextField = new JTextField();
-			noTextField.setBounds(new Rectangle(262, 29, 70, 25));
+			noTextField.setBounds(new Rectangle(225, 29, 60, 25));
 			noTextField.setText("");
 		}
 		return noTextField;
@@ -411,9 +389,55 @@ public class HarbourAction {
 	private JTextField getRegTextField() {
 		if (regTextField == null) {
 			regTextField = new JTextField();
-			regTextField.setBounds(new Rectangle(158, 29, 70, 25));
+			regTextField.setBounds(new Rectangle(135, 29, 60, 25));
 		}
 		return regTextField;
+	}
+
+	/**
+	 * This method initializes queryComboBox	
+	 * 	
+	 * @return javax.swing.JComboBox	
+	 */
+	private JComboBox getQueryComboBox() {
+		if (queryComboBox == null) {
+			queryComboBox = new JComboBox();
+			queryComboBox.addItem("Hafen");
+			queryComboBox.addItem("Land");
+			queryComboBox.addItem("Nummer");
+			queryComboBox.addItem("Region");
+			queryComboBox.addItem("Type");
+			queryComboBox.addItem("Query");
+			queryComboBox.setBounds(new Rectangle(272, 331, 86, 20));
+		}
+		return queryComboBox;
+	}
+
+	/**
+	 * This method initializes queryjButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getQueryjButton() {
+		if (queryjButton == null) {
+			queryjButton = new JButton();
+			queryjButton.setBounds(new Rectangle(364, 330, 28, 20));
+		}
+		return queryjButton;
+	}
+
+	/**
+	 * This method initializes chartButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JToggleButton getChartButton() {
+		if (chartButton == null) {
+			chartButton = new JToggleButton();
+			chartButton.setBounds(new Rectangle(365, 5, 28, 18));
+			chartButton.setEnabled(false);
+		}
+		return chartButton;
 	}
 
 }

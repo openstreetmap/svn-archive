@@ -58,7 +58,7 @@ public class PanelLimits extends JPanel {
 	 */
 	private void initialize() {
         unitLabel = new JLabel();
-        unitLabel.setBounds(new Rectangle(235, 53, 50, 20));
+        unitLabel.setBounds(new Rectangle(241, 53, 43, 20));
         unitLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
         unitLabel.setText("Einheit:");
         grLabel = new JLabel();

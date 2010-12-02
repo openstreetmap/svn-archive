@@ -104,7 +104,6 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
         setBackgroundLayer(true); /* set global background variable */
         initializeImages();
         this.info = new ImageryInfo(info);
-        mv = Main.map.mapView;
         if(this.info.getPixelPerDegree() == 0.0)
             this.info.setPixelPerDegree(getPPD());
         resolution = mv.getDist100PixelText();

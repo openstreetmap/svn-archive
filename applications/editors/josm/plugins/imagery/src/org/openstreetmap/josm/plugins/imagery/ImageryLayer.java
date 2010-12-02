@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -22,6 +23,7 @@ public abstract class ImageryLayer extends Layer {
 
     public ImageryLayer(String name) {
         super(name);
+        mv = Main.map.mapView;
     }
 
 

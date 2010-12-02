@@ -52,8 +52,8 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
-import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.ImageryLayer;
+import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 
 /**
  * Class that displays a slippy map layer.
@@ -133,9 +133,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         Main.map.repaint();
     }
 
-    private void setTileStorage(TileSource tileSource)
+    private void initTileSource(TileSource tileSource)
     {
-        int origZoom = currentZoomLevel;
         this.tileSource = tileSource;
         boolean requireAttr = tileSource.requiresAttribution();
         if(requireAttr) {
@@ -149,17 +148,11 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
             attrTermsUrl = tileSource.getTermsOfUseURL();
         }
 
-        // The minimum should also take care of integer parsing
-        // errors which would leave us with a zoom of -1 otherwise
+        currentZoomLevel = getBestZoom();
         if (tileSource.getMaxZoom() < currentZoomLevel)
             currentZoomLevel = tileSource.getMaxZoom();
         if (tileSource.getMinZoom() > currentZoomLevel)
             currentZoomLevel = tileSource.getMinZoom();
-        if (currentZoomLevel != origZoom) {
-            out("changed currentZoomLevel loading new tile store from " + origZoom + " to " + currentZoomLevel);
-            out("tileSource.getMinZoom(): " + tileSource.getMinZoom());
-            out("tileSource.getMaxZoom(): " + tileSource.getMaxZoom());
-        }
         clearTileCache();
         //tileloader = new OsmTileLoader(this);
         tileLoader = new OsmFileCacheTileLoader(this);
@@ -171,6 +164,16 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         needRedraw = true;
     }
 
+    private double getPPDeg() {
+        return mv.getWidth()/(mv.getLatLon(mv.getWidth(), mv.getHeight()/2).lon()-mv.getLatLon(0, mv.getHeight()/2).lon());
+    }
+
+    private int getBestZoom() {
+        double ret = Math.log(getPPDeg()*360/tileSource.getTileSize())/Math.log(2);
+        System.out.println("Detected best zoom " + ret);
+        return (int)Math.round(ret);
+    }
+
     @SuppressWarnings("serial")
     public TMSLayer(ImageryInfo info) {
         super(info.getName());
@@ -178,16 +181,13 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         setBackgroundLayer(true);
         this.setVisible(true);
 
-        currentZoomLevel = TMSPreferences.getMinZoomLvl(null); //FIXME: detect current zoom level
-
         if (info.getImageryType() == ImageryType.TMS) {
-            setTileStorage(new TMSTileSource(info.getName(),info.getURL()));
+            initTileSource(new TMSTileSource(info.getName(),info.getURL()));
         } else if (info.getImageryType() == ImageryType.BING) {
-            setTileStorage(new BingAerialTileSource());
+            initTileSource(new BingAerialTileSource());
         } else throw new AssertionError();
 
         tileOptionMenu = new JPopupMenu();
-
 
         autoZoom = TMSPreferences.PROP_DEFAULT_AUTOZOOM.get();
         autoZoomPopup = new JCheckBoxMenuItem();
@@ -782,13 +782,16 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         }
     }
 
-    public Point pixelPos(LatLon ll) {
+    private Point pixelPos(LatLon ll) {
         return Main.map.mapView.getPoint(Main.proj.latlon2eastNorth(ll).add(getDx(), getDy()));
     }
-    public Point pixelPos(Tile t) {
+    private Point pixelPos(Tile t) {
         double lon = tileXToLon(t.getXtile(), t.getZoom());
         LatLon tmpLL = new LatLon(tileYToLat(t.getYtile(), t.getZoom()), lon);
         return pixelPos(tmpLL);
+    }
+    private LatLon getShiftedLatLon(EastNorth en) {
+        return Main.proj.eastNorth2latlon(en.add(-getDx(), -getDy()));
     }
     private class TileSet {
         int z12x0, z12x1, z12y0, z12y1;
@@ -799,8 +802,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
          * Create a TileSet by EastNorth bbox taking a layer shift in account
          */
         TileSet(EastNorth topLeft, EastNorth botRight, int zoom) {
-            this(Main.proj.eastNorth2latlon(topLeft.add(-getDx(), -getDy())),
-                 Main.proj.eastNorth2latlon(botRight.add(-getDx(), -getDy())),zoom);
+            this(getShiftedLatLon(topLeft), getShiftedLatLon(botRight),zoom);
         }
 
         /**
@@ -1038,7 +1040,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
             g.setFont(ATTR_FONT);
             String attributionText = tileSource.getAttributionText(currentZoomLevel,
-                    Main.proj.eastNorth2latlon(topLeft), Main.proj.eastNorth2latlon(botRight));
+                    getShiftedLatLon(topLeft), getShiftedLatLon(botRight));
             Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
             {
                 int x = mv.getWidth() - (int) stringBounds.getWidth();

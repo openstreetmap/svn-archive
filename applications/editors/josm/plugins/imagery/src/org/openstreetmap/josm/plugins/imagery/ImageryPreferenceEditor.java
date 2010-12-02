@@ -3,9 +3,11 @@ package org.openstreetmap.josm.plugins.imagery;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trc;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -14,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -24,6 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
@@ -49,10 +53,8 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
     WMSAdapter wmsAdapter = ImageryPlugin.wmsAdapter;
     ImageryPlugin plugin = ImageryPlugin.instance;
 
-    @Override
-    public void addGui(final PreferenceTabbedPane gui) {
-        JPanel p = gui.createPreferenceTab("imagery", tr("Imagery Preferences"), tr("Modify list of imagery layers displayed in the Imagery menu"));
-
+    public JPanel buildImageryProvidersPanel(final PreferenceTabbedPane gui) {
+        final JPanel p = new JPanel(new GridBagLayout());
         model = new ImageryLayerTableModel();
         final JTable list = new JTable(model) {
             @Override
@@ -167,6 +169,13 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         // Add default item list
         p.add(scrolldef, GBC.eol().insets(0, 5, 0, 0).fill(GridBagConstraints.BOTH));
 
+        return p;
+    }
+
+    public Component buildSettingsPanel() {
+        final JPanel p = new JPanel(new GridBagLayout());
+        p.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
         browser = new JComboBox(new String[] {
                 "webkit-image {0}",
                 "gnome-web-photo --mode=photo --format=png {0} /dev/stdout",
@@ -174,11 +183,11 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
                 "webkit-image-gtk {0}"});
         browser.setEditable(true);
         browser.setSelectedItem(Main.pref.get("wmsplugin.browser", "webkit-image {0}"));
-        p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+        p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
         p.add(browser);
 
         // Overlap
-        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
 
         overlapCheckBox = new JCheckBox(tr("Overlap tiles"), wmsAdapter.PROP_OVERLAP.get());
         JLabel labelEast = new JLabel(tr("% of east:"));
@@ -196,20 +205,34 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         p.add(overlapPanel);
 
         // Simultaneous connections
-        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
         JLabel labelSimConn = new JLabel(tr("Simultaneous connections"));
         spinSimConn = new JSpinner(new SpinnerNumberModel(wmsAdapter.PROP_SIMULTANEOUS_CONNECTIONS.get(), 1, 30, 1));
         JPanel overlapPanelSimConn = new JPanel(new FlowLayout());
         overlapPanelSimConn.add(labelSimConn);
         overlapPanelSimConn.add(spinSimConn);
-        p.add(overlapPanelSimConn, GBC.eol().fill(GridBagConstraints.HORIZONTAL));
+        p.add(overlapPanelSimConn, GBC.eol().fill(GBC.HORIZONTAL).anchor(GBC.NORTHWEST));
 
         allowRemoteControl = Main.pref.getBoolean("wmsplugin.remotecontrol", true);
         remoteCheckBox = new JCheckBox(tr("Allow remote control (reqires remotecontrol plugin)"), allowRemoteControl);
         JPanel remotePanel = new JPanel(new FlowLayout());
         remotePanel.add(remoteCheckBox);
 
-        p.add(remotePanel);
+        p.add(remotePanel,GBC.eol().fill(GBC.HORIZONTAL).anchor(GBC.NORTHWEST));
+
+        p.add(new JPanel(),GBC.eol().fill(GBC.BOTH));
+        return new JScrollPane(p);
+    }
+
+    @Override
+    public void addGui(final PreferenceTabbedPane gui) {
+        JPanel p = gui.createPreferenceTab("imagery", tr("Imagery Preferences"), tr("Modify list of imagery layers displayed in the Imagery menu"));
+        JTabbedPane pane = new JTabbedPane();
+        pane.add(buildImageryProvidersPanel(gui));
+        pane.add(buildSettingsPanel());
+        pane.setTitleAt(0, tr("Imagery providers"));
+        pane.setTitleAt(1, tr("Settings"));
+        p.add(pane,GBC.std().fill(GBC.BOTH));
     }
 
     @Override

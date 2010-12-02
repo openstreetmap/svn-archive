@@ -21,7 +21,7 @@ public class ImageryLayerInfo {
     ArrayList<ImageryInfo> layers = new ArrayList<ImageryInfo>();
     ArrayList<ImageryInfo> defaultLayers = new ArrayList<ImageryInfo>();
     private final static String[] DEFAULT_LAYER_SITES
-        = { "http://svn.openstreetmap.org/applications/editors/josm/plugins/imagery/sources.cfg"};
+        = { "http://josm.openstreetmap.de/maps"};
 
     public void load() {
         layers.clear();

@@ -42,6 +42,7 @@ public class OSeaMAction {
 
 	private JPanel oseamPanel = null;
 	private JButton chanButton = null;
+	private JButton hazButton = null;
 	
 	public OSeaMAction() {
 		
@@ -64,6 +65,7 @@ public class OSeaMAction {
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
 			oseamPanel.add(getChanButton(),  null);
+			oseamPanel.add(getHazButton(),  null);
 		}
 		return oseamPanel;
 	}
@@ -86,6 +88,26 @@ public class OSeaMAction {
 			});
 		}
 		return chanButton;
+	}
+
+	private JButton getHazButton() {
+		if (hazButton == null) {
+			hazButton = new JButton();
+			hazButton.setBounds(new Rectangle(340, 111, 50, 50));
+			hazButton.setText("");
+			hazButton.setIcon(new ImageIcon(getClass().getResource("/images/Haz.png")));
+			hazButton.setToolTipText("Danger Marks");
+			hazButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+/*					panelLimits.setVisible(false);
+					panelServices.setVisible(false);
+					panelEnv.setVisible(false);
+					panelRelations.setVisible(false);
+					panelGeneral.setVisible(true);
+*/				}
+			});
+		}
+		return hazButton;
 	}
 
 }

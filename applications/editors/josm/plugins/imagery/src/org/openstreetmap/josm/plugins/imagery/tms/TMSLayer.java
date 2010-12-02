@@ -13,12 +13,14 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +43,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
@@ -101,8 +104,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
      */
     public int currentZoomLevel;
 
-    LatLon lastTopLeft;
-    LatLon lastBotRight;
+    EastNorth lastTopLeft;
+    EastNorth lastBotRight;
     private Image bufferImage;
     private Tile clickedTile;
     private boolean needRedraw;
@@ -113,8 +116,13 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     private Image attrImage;
     private String attrTermsUrl;
     private Rectangle attrImageBounds, attrToUBounds;
-    private static Font ATTR_FONT = Font.decode("Arial 10");
-    private static Font ATTR_LINK_FONT = Font.decode("Arial Underline 10");
+    private static final Font ATTR_FONT = new Font("Arial", Font.PLAIN, 10);
+    private static final Font ATTR_LINK_FONT;
+    static {
+        HashMap<TextAttribute, Integer> aUnderline = new HashMap<TextAttribute, Integer>();
+        aUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        ATTR_LINK_FONT = ATTR_FONT.deriveFont(aUnderline);
+    }
 
     protected boolean autoZoom;
     protected boolean autoLoad;
@@ -478,8 +486,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
     void loadAllTiles(boolean force) {
         MapView mv = Main.map.mapView;
-        LatLon topLeft = mv.getLatLon(0, 0);
-        LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
+        EastNorth topLeft = mv.getEastNorth(0, 0);
+        EastNorth botRight = mv.getEastNorth(mv.getWidth(), mv.getHeight());
 
         TileSet ts = new TileSet(topLeft, botRight, currentZoomLevel);
 
@@ -787,8 +795,20 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         int zoom;
         int tileMax = -1;
 
+        /**
+         * Create a TileSet by EastNorth bbox taking a layer shift in account
+         */
+        TileSet(EastNorth topLeft, EastNorth botRight, int zoom) {
+            this(Main.proj.eastNorth2latlon(topLeft.add(-getDx(), -getDy())),
+                 Main.proj.eastNorth2latlon(botRight.add(-getDx(), -getDy())),zoom);
+        }
+
+        /**
+         * Create a TileSet by known LatLon bbox without layer shift correction
+         */
         TileSet(LatLon topLeft, LatLon botRight, int zoom) {
             this.zoom = zoom;
+
             z12x0 = lonToTileX(topLeft.lon(),  zoom);
             z12y0 = latToTileY(topLeft.lat(),  zoom);
             z12x1 = lonToTileX(botRight.lon(), zoom);
@@ -859,8 +879,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         void loadAllTiles(boolean force)
         {
             List<Tile> tiles = this.allTiles(true);
-            boolean autoload = TMSLayer.this.autoLoad;
-            if (!autoload && !force)
+            if (!autoLoad && !force)
                return;
             int nr_queued = 0;
             for (Tile t : tiles) {
@@ -885,18 +904,18 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         //long start = System.currentTimeMillis();
-        LatLon topLeft = mv.getLatLon(0, 0);
-        LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
+        EastNorth topLeft = mv.getEastNorth(0, 0);
+        EastNorth botRight = mv.getEastNorth(mv.getWidth(), mv.getHeight());
         Graphics2D oldg = g;
 
-        if (botRight.lon() == 0.0 || botRight.lat() == 0) {
+        if (botRight.east() == 0.0 || botRight.north() == 0) {
             Main.debug("still initializing??");
             // probably still initializing
             return;
         }
 
-        if (lastTopLeft != null && lastBotRight != null && topLeft.equalsEpsilon(lastTopLeft)
-                && botRight.equalsEpsilon(lastBotRight) && bufferImage != null
+        if (lastTopLeft != null && lastBotRight != null && topLeft.equals(lastTopLeft)
+                && botRight.equals(lastBotRight) && bufferImage != null
                 && mv.getWidth() == bufferImage.getWidth(null) && mv.getHeight() == bufferImage.getHeight(null)
                 && !needRedraw) {
 
@@ -989,7 +1008,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
         if (tileSource.requiresAttribution()) {
             // Draw attribution
-            g.setColor(Color.white);
+            g.setColor(Color.black);
             Font font = g.getFont();
             g.setFont(ATTR_LINK_FONT);
 
@@ -1010,12 +1029,14 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
             if(attrImage != null) {
                 int x = 2;
                 int height = attrImage.getHeight(this);
-                int y = termsTextY - height;
+                int y = termsTextY - height - textHeight - 5;
                 attrImageBounds = new Rectangle(x, y, imgWidth, height);
                 g.drawImage(attrImage, x, y, this);
             }
 
-            String attributionText = tileSource.getAttributionText(currentZoomLevel, topLeft, botRight);
+            g.setFont(ATTR_FONT);
+            String attributionText = tileSource.getAttributionText(currentZoomLevel,
+                    Main.proj.eastNorth2latlon(topLeft), Main.proj.eastNorth2latlon(botRight));
             Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
             g.drawString(attributionText, mv.getWidth() - (int) stringBounds.getWidth(), mv.getHeight() - textHeight);
 
@@ -1061,8 +1082,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
             out("getTileForPixelpos("+px+", "+py+")");
         MapView mv = Main.map.mapView;
         Point clicked = new Point(px, py);
-        LatLon topLeft = mv.getLatLon(0, 0);
-        LatLon botRight = mv.getLatLon(mv.getWidth(), mv.getHeight());
+        EastNorth topLeft = mv.getEastNorth(0, 0);
+        EastNorth botRight = mv.getEastNorth(mv.getWidth(), mv.getHeight());
         int z = currentZoomLevel;
         TileSet ts = new TileSet(topLeft, botRight, z);
 

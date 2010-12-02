@@ -13,12 +13,14 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,8 +113,13 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
     private Image attrImage;
     private String attrTermsUrl;
     private Rectangle attrImageBounds, attrToUBounds;
-    private static Font ATTR_FONT = Font.decode("Arial 10");
-    private static Font ATTR_LINK_FONT = Font.decode("Arial Underline 10");
+    private static final Font ATTR_FONT = new Font("Arial", Font.PLAIN, 10);
+    private static final Font ATTR_LINK_FONT;
+    static {
+        HashMap<TextAttribute, Integer> aUnderline = new HashMap<TextAttribute, Integer>();
+        aUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        ATTR_LINK_FONT = ATTR_FONT.deriveFont(aUnderline);
+    }
 
     void redraw()
     {
@@ -978,11 +985,12 @@ public class SlippyMapLayer extends Layer implements ImageObserver,
             if(attrImage != null) {
                 int x = 2;
                 int height = attrImage.getHeight(this);
-                int y = termsTextY - height;
+                int y = termsTextY - height - textHeight - 5;
                 attrImageBounds = new Rectangle(x, y, imgWidth, height);
                 g.drawImage(attrImage, x, y, this);
             }
             
+            g.setFont(ATTR_FONT);
             String attributionText = tileSource.getAttributionText(currentZoomLevel, topLeft, botRight);
             Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
             g.drawString(attributionText, mv.getWidth() - (int) stringBounds.getWidth(), mv.getHeight() - textHeight);

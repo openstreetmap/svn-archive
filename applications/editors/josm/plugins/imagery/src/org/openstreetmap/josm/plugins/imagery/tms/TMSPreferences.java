@@ -58,8 +58,8 @@ public class TMSPreferences
             System.err.println("maxZoomLvl shouldnt be more than minZoomLvl! Setting to minZoomLvl.");
             maxZoomLvl = PROP_MIN_ZOOM_LVL.get();
         }
-        if (ts != null && ts.getMaxZoom() < PROP_MIN_ZOOM_LVL.get()) {
-            System.err.println("decreasing maxZoomLvl to match new tile source");
+        if (ts != null && ts.getMaxZoom() < maxZoomLvl) {
+            System.err.println("decreasing maxZoomLvl to match tile source");
             maxZoomLvl = ts.getMaxZoom();
         }
         return maxZoomLvl;
@@ -85,8 +85,8 @@ public class TMSPreferences
             System.err.println("minZoomLvl shouldnt be more than maxZoomLvl! Setting to maxZoomLvl.");
             minZoomLvl = getMaxZoomLvl(ts);
         }
-        if (ts != null && ts.getMinZoom() > PROP_MIN_ZOOM_LVL.get()) {
-            System.err.println("increasomg minZoomLvl to match new tile source");
+        if (ts != null && ts.getMinZoom() > minZoomLvl) {
+            System.err.println("increasomg minZoomLvl to match tile source");
             minZoomLvl = ts.getMinZoom();
         }
         return minZoomLvl;

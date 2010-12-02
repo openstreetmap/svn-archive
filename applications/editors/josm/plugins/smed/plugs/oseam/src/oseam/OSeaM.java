@@ -1,39 +1,19 @@
 package oseam;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
+import oseam.dialogs.OSeaMAction;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-
-import oseam.dialogs.OSeaMAction;
 
 import smed.plug.ifc.SmedPluggable;
 import smed.plug.ifc.SmedPluginManager;
 
 public class OSeaM implements SmedPluggable {
-
-	private OSeaMAction osm = null;
-	public static SmedPluginManager manager = null;
-	private int index = -1;
 	
-	@Override
-	public JComponent getComponent() {
-		osm = new OSeaMAction();
-		osm.init();
-		manager.setString(tr("it works realy fine"));
-		return osm.getPM01SeaMap();
-	}
-
-	@Override
-	public String getInfo() {return tr("mapping seamarks"); }
-
-	@Override
-	public String getName() {return tr("Seamarks"); }
-
-	@Override
-	public void setPluginManager(SmedPluginManager manager) {
-		OSeaM.manager = manager;
-	}
+	private int index = -1;
+	private String msg = "";
+	private OSeaMAction oseam = null;
+	private SmedPluginManager manager = null;
 
 	@Override
 	public boolean start() {
@@ -43,41 +23,64 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public boolean stop() {
-		osm.closePanel();
-		return true;
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean hasFocus() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean lostFocus() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getIndex() {
+		return index;
+	}
+
+	@Override
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	@Override
+	public String getName() {
+		return "OSeaM";
 	}
 
 	@Override
 	public String getFileName() {
 		return "OSeaM.jar";
-	
 	}
 
 	@Override
 	public ImageIcon getIcon() {
-
-		return new ImageIcon(getClass().getResource("/images/Smp.png"));
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public boolean hasFocus() {
-		osm.setQueued();
-
-		return true;
+	public String getInfo() {
+		return "Seamark editor";
 	}
 
 	@Override
-	public boolean lostFocus() {
-		osm.setDequeued();
+	public JComponent getComponent() {
+		manager.showVisualMessage(msg);
+		oseam = new OSeaMAction();
 		
-		return true;
+		return oseam.getOSeaMPanel();
 	}
 
 	@Override
-	public int getIndex() { return index; }
-
-	@Override
-	public void setIndex(int index) { this.index = index; }
-
+	public void setPluginManager(SmedPluginManager manager) {
+		this.manager = manager;
+	}
 
 }

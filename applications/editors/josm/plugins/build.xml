@@ -28,6 +28,7 @@
         <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
         <ant antfile="build.xml" target="dist" dir="livegps"/>
+    	<ant antfile="build.xml" target="dist" dir="mapdust"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
         <ant antfile="build.xml" target="dist" dir="michigan_left"/>
         <ant antfile="build.xml" target="dist" dir="multipoly"/>
@@ -95,6 +96,7 @@
         <ant antfile="build.xml" target="clean" dir="irsrectify"/>
         <ant antfile="build.xml" target="clean" dir="lakewalker"/>
         <ant antfile="build.xml" target="clean" dir="livegps"/>
+        <ant antfile="build.xml" target="clean" dir="mapdust"/>
         <ant antfile="build.xml" target="clean" dir="measurement"/>
         <ant antfile="build.xml" target="clean" dir="michigan_left"/>
         <ant antfile="build.xml" target="clean" dir="multipoly"/>

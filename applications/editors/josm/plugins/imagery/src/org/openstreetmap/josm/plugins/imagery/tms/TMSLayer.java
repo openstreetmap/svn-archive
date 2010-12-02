@@ -1008,7 +1008,6 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
         if (tileSource.requiresAttribution()) {
             // Draw attribution
-            g.setColor(Color.black);
             Font font = g.getFont();
             g.setFont(ATTR_LINK_FONT);
 
@@ -1021,6 +1020,9 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                 int x = 2;
                 int y = mv.getHeight() - textHeight;
                 attrToUBounds = new Rectangle(x, y, textWidth, textHeight);
+                g.setColor(Color.black);
+                g.drawString("Background Terms of Use", x+1, y+1);
+                g.setColor(Color.white);
                 g.drawString("Background Terms of Use", x, y);
             }
 
@@ -1038,7 +1040,14 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
             String attributionText = tileSource.getAttributionText(currentZoomLevel,
                     Main.proj.eastNorth2latlon(topLeft), Main.proj.eastNorth2latlon(botRight));
             Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
-            g.drawString(attributionText, mv.getWidth() - (int) stringBounds.getWidth(), mv.getHeight() - textHeight);
+            {
+                int x = mv.getWidth() - (int) stringBounds.getWidth();
+                int y = mv.getHeight() - textHeight;
+                g.setColor(Color.black);
+                g.drawString(attributionText, x+1, y+1);
+                g.setColor(Color.white);
+                g.drawString(attributionText, x, y);
+            }
 
             g.setFont(font);
         }

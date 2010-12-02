@@ -167,7 +167,7 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
                 new String[] { tr("Start adjusting"),tr("Cancel") }
         );
         diag.setContent(pnl);
-        diag.setButtonIcons(new String[] { "mapmode/adjustwms", "cancel" });
+        diag.setButtonIcons(new String[] { "mapmode/adjustimg", "cancel" });
         diag.showDialog();
         int decision = diag.getValue();
         if (decision != 1)

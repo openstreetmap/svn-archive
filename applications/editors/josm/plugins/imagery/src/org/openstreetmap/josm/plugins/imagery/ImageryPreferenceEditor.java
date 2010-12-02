@@ -6,6 +6,7 @@ import static org.openstreetmap.josm.tools.I18n.trc;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -26,6 +27,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -36,6 +39,7 @@ import javax.swing.table.TableColumnModel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.plugins.imagery.tms.TMSPreferences;
 import org.openstreetmap.josm.plugins.imagery.wms.AddWMSLayerPanel;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSAdapter;
 import org.openstreetmap.josm.tools.GBC;
@@ -53,7 +57,15 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
     WMSAdapter wmsAdapter = ImageryPlugin.wmsAdapter;
     ImageryPlugin plugin = ImageryPlugin.instance;
 
-    public JPanel buildImageryProvidersPanel(final PreferenceTabbedPane gui) {
+    //TMS settings controls
+    private JCheckBox autozoomActive = new JCheckBox();
+    private JCheckBox autoloadTiles = new JCheckBox();
+    private JSpinner maxZoomLvl;
+    private JSpinner minZoomLvl = new JSpinner();
+    private JSlider fadeBackground = new JSlider(0, 100);
+
+
+    private JPanel buildImageryProvidersPanel(final PreferenceTabbedPane gui) {
         final JPanel p = new JPanel(new GridBagLayout());
         model = new ImageryLayerTableModel();
         final JTable list = new JTable(model) {
@@ -172,10 +184,8 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         return p;
     }
 
-    public Component buildSettingsPanel() {
-        final JPanel p = new JPanel(new GridBagLayout());
-        p.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
+    private JPanel buildWMSSettingsPanel() {
+        final JPanel pnlW = new JPanel(new GridBagLayout());
         browser = new JComboBox(new String[] {
                 "webkit-image {0}",
                 "gnome-web-photo --mode=photo --format=png {0} /dev/stdout",
@@ -183,11 +193,11 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
                 "webkit-image-gtk {0}"});
         browser.setEditable(true);
         browser.setSelectedItem(Main.pref.get("wmsplugin.browser", "webkit-image {0}"));
-        p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
-        p.add(browser);
+        pnlW.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
+        pnlW.add(browser);
 
         // Overlap
-        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
+        pnlW.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
 
         overlapCheckBox = new JCheckBox(tr("Overlap tiles"), wmsAdapter.PROP_OVERLAP.get());
         JLabel labelEast = new JLabel(tr("% of east:"));
@@ -202,23 +212,77 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         overlapPanel.add(labelNorth);
         overlapPanel.add(spinNorth);
 
-        p.add(overlapPanel);
+        pnlW.add(overlapPanel);
 
         // Simultaneous connections
-        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
+        pnlW.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
         JLabel labelSimConn = new JLabel(tr("Simultaneous connections"));
         spinSimConn = new JSpinner(new SpinnerNumberModel(wmsAdapter.PROP_SIMULTANEOUS_CONNECTIONS.get(), 1, 30, 1));
-        JPanel overlapPanelSimConn = new JPanel(new FlowLayout());
+        JPanel overlapPanelSimConn = new JPanel(new FlowLayout(FlowLayout.LEFT));
         overlapPanelSimConn.add(labelSimConn);
         overlapPanelSimConn.add(spinSimConn);
-        p.add(overlapPanelSimConn, GBC.eol().fill(GBC.HORIZONTAL).anchor(GBC.NORTHWEST));
+        pnlW.add(overlapPanelSimConn, GBC.eol().fill(GBC.HORIZONTAL));
 
         allowRemoteControl = Main.pref.getBoolean("wmsplugin.remotecontrol", true);
         remoteCheckBox = new JCheckBox(tr("Allow remote control (reqires remotecontrol plugin)"), allowRemoteControl);
-        JPanel remotePanel = new JPanel(new FlowLayout());
+        JPanel remotePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         remotePanel.add(remoteCheckBox);
 
-        p.add(remotePanel,GBC.eol().fill(GBC.HORIZONTAL).anchor(GBC.NORTHWEST));
+        pnlW.add(remotePanel,GBC.eol().fill(GBC.HORIZONTAL));
+        return pnlW;
+    }
+
+    private JPanel buildTMSSettingsPanel() {
+        JPanel tmsTab = new JPanel(new GridBagLayout());
+        minZoomLvl = new JSpinner(new SpinnerNumberModel(TMSPreferences.DEFAULT_MIN_ZOOM, TMSPreferences.MIN_ZOOM, TMSPreferences.MAX_ZOOM, 1));
+        maxZoomLvl = new JSpinner(new SpinnerNumberModel(TMSPreferences.DEFAULT_MAX_ZOOM, TMSPreferences.MIN_ZOOM, TMSPreferences.MAX_ZOOM, 1));
+
+        tmsTab.add(new JLabel(tr("Auto zoom by default: ")), GBC.std());
+        tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        tmsTab.add(autozoomActive, GBC.eol().fill(GBC.HORIZONTAL));
+
+        tmsTab.add(new JLabel(tr("Autoload tiles by default: ")), GBC.std());
+        tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        tmsTab.add(autoloadTiles, GBC.eol().fill(GBC.HORIZONTAL));
+
+        tmsTab.add(new JLabel(tr("Min zoom lvl: ")), GBC.std());
+        tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        tmsTab.add(this.minZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
+
+        tmsTab.add(new JLabel(tr("Max zoom lvl: ")), GBC.std());
+        tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        tmsTab.add(this.maxZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
+
+        tmsTab.add(new JLabel(tr("Fade background: ")), GBC.std());
+        tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        tmsTab.add(this.fadeBackground, GBC.eol().fill(GBC.HORIZONTAL));
+
+        tmsTab.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
+
+        this.autozoomActive.setSelected(TMSPreferences.PROP_DEFAULT_AUTOZOOM.get());
+        this.autoloadTiles.setSelected(TMSPreferences.PROP_DEFAULT_AUTOLOAD.get());
+        this.maxZoomLvl.setValue(TMSPreferences.getMaxZoomLvl(null));
+        this.minZoomLvl.setValue(TMSPreferences.getMinZoomLvl(null));
+        this.fadeBackground.setValue(TMSPreferences.PROP_FADE_BACKGROUND.get());
+        return tmsTab;
+    }
+
+    private Component buildSettingsPanel() {
+        // TODO: make some settings common for WMS and TMS
+        final JPanel p = new JPanel(new GridBagLayout());
+        p.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        final JLabel lblW = new JLabel(tr("WMS Settings"));
+        lblW.setFont(lblW.getFont().deriveFont(Font.BOLD));
+        p.add(lblW);
+        p.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 0));
+        p.add(buildWMSSettingsPanel(),GBC.eol().insets(20,5,0,0));
+
+        final JLabel lblT = new JLabel(tr("TMS Settings"));
+        lblT.setFont(lblT.getFont().deriveFont(Font.BOLD));
+        p.add(lblT);
+        p.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 0));
+        p.add(buildTMSSettingsPanel(),GBC.eol().insets(20,5,0,0));
 
         p.add(new JPanel(),GBC.eol().fill(GBC.BOTH));
         return new JScrollPane(p);
@@ -249,6 +313,13 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
 
         Main.pref.put("wmsplugin.remotecontrol", String.valueOf(allowRemoteControl));
+
+        TMSPreferences.PROP_DEFAULT_AUTOZOOM.put(this.autozoomActive.isSelected());
+        TMSPreferences.PROP_DEFAULT_AUTOLOAD.put(this.autoloadTiles.isSelected());
+        TMSPreferences.setMaxZoomLvl((Integer)this.maxZoomLvl.getValue());
+        TMSPreferences.setMinZoomLvl((Integer)this.minZoomLvl.getValue());
+        TMSPreferences.PROP_FADE_BACKGROUND.put(this.fadeBackground.getValue());
+
         return false;
     }
 

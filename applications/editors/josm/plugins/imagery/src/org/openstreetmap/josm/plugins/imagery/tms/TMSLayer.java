@@ -108,6 +108,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     private boolean needRedraw;
     private JPopupMenu tileOptionMenu;
     JCheckBoxMenuItem autoZoomPopup;
+    JCheckBoxMenuItem autoLoadPopup;
     Tile showMetadataTile;
     private Image attrImage;
     private String attrTermsUrl;
@@ -115,8 +116,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     private static Font ATTR_FONT = Font.decode("Arial 10");
     private static Font ATTR_LINK_FONT = Font.decode("Arial Underline 10");
 
-    protected boolean autoZoom = true;
-    protected boolean autoLoad = true;
+    protected boolean autoZoom;
+    protected boolean autoLoad;
 
     void redraw()
     {
@@ -169,7 +170,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         setBackgroundLayer(true);
         this.setVisible(true);
 
-        currentZoomLevel = 0; //FIXME: detect current zoom level
+        currentZoomLevel = TMSPreferences.getMinZoomLvl(null); //FIXME: detect current zoom level
+
         if (info.getImageryType() == ImageryType.TMS) {
             setTileStorage(new TMSTileSource(info.getName(),info.getURL()));
         } else if (info.getImageryType() == ImageryType.BING) {
@@ -178,6 +180,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
         tileOptionMenu = new JPopupMenu();
 
+
+        autoZoom = TMSPreferences.PROP_DEFAULT_AUTOZOOM.get();
         autoZoomPopup = new JCheckBoxMenuItem();
         autoZoomPopup.setAction(new AbstractAction(tr("Auto Zoom")) {
             @Override
@@ -187,6 +191,17 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         });
         autoZoomPopup.setSelected(autoZoom);
         tileOptionMenu.add(autoZoomPopup);
+
+        autoLoad = TMSPreferences.PROP_DEFAULT_AUTOLOAD.get();
+        autoLoadPopup = new JCheckBoxMenuItem();
+        autoLoadPopup.setAction(new AbstractAction(tr("Auto load tiles")) {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                autoLoad= !autoLoad;
+            }
+        });
+        autoLoadPopup.setSelected(autoLoad);
+        tileOptionMenu.add(autoLoadPopup);
 
         tileOptionMenu.add(new JMenuItem(new AbstractAction(tr("Load Tile")) {
             @Override
@@ -347,12 +362,12 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
     int getMaxZoomLvl()
     {
-        return tileSource.getMaxZoom();
+        return TMSPreferences.getMaxZoomLvl(tileSource);
     }
 
     int getMinZoomLvl()
     {
-        return tileSource.getMinZoom();
+        return TMSPreferences.getMinZoomLvl(tileSource);
     }
 
     /**
@@ -658,6 +673,14 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                         img_x_offset, img_y_offset,
                         img_x_end, img_y_end,
                         this);
+        float fadeBackground = TMSPreferences.getFadeBackground();
+        if (fadeBackground != 0f) {
+            // dimm by painting opaque rect...
+            // TODO: make fade color configurable and implement same feature for WMS layers
+            g.setColor(new Color(1f, 1f, 1f, fadeBackground));
+            g.fillRect(target.x, target.y,
+                       target.width, target.height);
+        }
     }
     Double lastImageScale = null;
     // This function is called for several zoom levels, not just
@@ -702,6 +725,15 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         Point p = pixelPos(t);
         int texty = p.y + 2 + fontHeight;
 
+        if (TMSPreferences.PROP_DRAW_DEBUG.get()) {
+            g.drawString("x=" + t.getXtile() + " y=" + t.getYtile() + " z=" + zoom + "", p.x + 2, texty);
+            texty += 1 + fontHeight;
+            if ((t.getXtile() % 32 == 0) && (t.getYtile() % 32 == 0)) {
+                g.drawString("x=" + t.getXtile() / 32 + " y=" + t.getYtile() / 32 + " z=7", p.x + 2, texty);
+                texty += 1 + fontHeight;
+            }
+        }// end of if draw debug
+
         if (tile == showMetadataTile) {
             String md = tile.toString();
             if (md != null) {
@@ -714,6 +746,31 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         if (!tile.isLoaded()) {
             g.drawString(tr("image " + tileStatus), p.x + 2, texty);
             texty += 1 + fontHeight;
+        }
+
+        int xCursor = -1;
+        int yCursor = -1;
+        if (TMSPreferences.PROP_DRAW_DEBUG.get()) {
+            if (yCursor < t.getYtile()) {
+                if (t.getYtile() % 32 == 31) {
+                    g.fillRect(0, p.y - 1, mv.getWidth(), 3);
+                } else {
+                    g.drawLine(0, p.y, mv.getWidth(), p.y);
+                }
+                yCursor = t.getYtile();
+            }
+            // This draws the vertical lines for the entire
+            // column. Only draw them for the top tile in
+            // the column.
+            if (xCursor < t.getXtile()) {
+                if (t.getXtile() % 32 == 0) {
+                    // level 7 tile boundary
+                    g.fillRect(p.x - 1, 0, 3, mv.getHeight());
+                } else {
+                    g.drawLine(p.x, 0, p.x, mv.getHeight());
+                }
+                xCursor = t.getXtile();
+            }
         }
     }
 

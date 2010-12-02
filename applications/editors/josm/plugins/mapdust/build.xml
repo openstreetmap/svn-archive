@@ -65,7 +65,7 @@
 	</target>
 
 	<!-- creates the .jar file of the plugin -->
-	<target name="dist" depends="compile">
+	<target name="dist" depends="compile,revision">
 		<echo message="creating ${ant.project.name}.jar ... " />
 		<copy todir="${plugin.build.dir}">
 			<fileset dir="conf" />

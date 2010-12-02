@@ -1,5 +1,7 @@
 package oseam;
 
+import java.net.URL;
+
 import oseam.dialogs.OSeaMAction;
 
 import javax.swing.ImageIcon;
@@ -51,7 +53,7 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public String getName() {
-		return "OSeaM";
+		return "Seamarks";
 	}
 
 	@Override
@@ -61,8 +63,9 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public ImageIcon getIcon() {
-		// TODO Auto-generated method stub
-		return null;
+		URL url = getClass().getResource("/images/Smp.png");
+		if(url == null) return null;
+		else return new ImageIcon(url);
 	}
 
 	@Override

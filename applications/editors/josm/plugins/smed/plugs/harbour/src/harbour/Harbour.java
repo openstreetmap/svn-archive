@@ -1,6 +1,8 @@
 
 package harbour;
 
+import java.net.URL;
+
 import harbour.dialogs.HarbourAction;
 
 import javax.swing.ImageIcon;
@@ -62,8 +64,9 @@ public class Harbour implements SmedPluggable {
 
 	@Override
 	public ImageIcon getIcon() {
-		// TODO Auto-generated method stub
-		return null;
+		URL url = getClass().getResource("/images/Hbr.png");
+		if(url == null) return null;
+		else return new ImageIcon(url);
 	}
 
 	@Override

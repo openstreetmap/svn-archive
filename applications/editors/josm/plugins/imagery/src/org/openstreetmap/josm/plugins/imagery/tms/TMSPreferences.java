@@ -18,7 +18,7 @@ public class TMSPreferences
 
     public static final int MAX_ZOOM = 30;
     public static final int MIN_ZOOM = 2;
-    public static final int DEFAULT_MAX_ZOOM = 20;
+    public static final int DEFAULT_MAX_ZOOM = 18;
     public static final int DEFAULT_MIN_ZOOM = 2;
 
     public static final BooleanProperty PROP_DEFAULT_AUTOZOOM = new BooleanProperty(PREFERENCE_PREFIX + ".default_autozoom", true);

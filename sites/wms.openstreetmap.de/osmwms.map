@@ -38,6 +38,24 @@ MAP
   END
 
   LAYER
+    NAME "Radolfzell"
+    METADATA
+      "wms_title"  "Luftbilder Radolfzell (5.06.2010, 7 cm)"
+      "wms_extent" "8.901518 47.715411 9.065091 47.816186"
+      "wms_srs"    "EPSG:4326"
+      "copyright"  "© Stadt Radolfzell: OSM use only"
+      "wiki" "http://wiki.openstreetmap.org/wiki/Luftbilder_Radolfzell"
+    END
+    TYPE RASTER
+    STATUS ON
+    DATA "radolfzell/radolfzell-4326.img"
+    PROJECTION
+      "init=epsg:4326"
+    END
+  END
+
+
+  LAYER
     NAME "Witten"
     METADATA
       "wms_title"  "Luftbilder Stadtwerke Witten (03/2009, 10 cm)"

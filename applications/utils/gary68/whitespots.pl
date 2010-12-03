@@ -30,9 +30,10 @@ use Time::localtime;
 
 my $program = "whitespots.pl" ;
 my $usage = $program . " file.osm out.htm" ;
-my $version = "1.0" ;
+my $version = "2.0" ;
 
-my $maxDist = 0.2 ;
+my $maxDist = 0.3 ;
+my $limit = 1000 ;
 
 my $wayId ; 
 my $wayUser ; my @wayNodes ; my @wayTags ;
@@ -228,7 +229,6 @@ foreach my $p (keys %placeName) {
 
 @result = sort { $a->[1] <=> $b->[1] } @result ;
 
-my $limit = 500 ;
 if ($#result > $limit) { @result = @result[0..$limit] ; }
 print "result list limited to $limit entries.\n" ;
 

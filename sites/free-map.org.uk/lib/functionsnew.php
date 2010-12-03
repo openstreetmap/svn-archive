@@ -104,11 +104,15 @@ function check_all_params_supplied ($params, $expected)
 	return true;
 }
 
-function clean_input ($inp)
+function clean_input ($inp,$db='mysql')
 {
 	$cleaned = array();
 	foreach ($inp as $k=>$v)
-		$cleaned[$k] = htmlentities(mysql_real_escape_string($inp[$k]));
+	{
+		$cleaned[$k] = ($db=='pgsql') ?pg_escape_string($inp[$k]) :
+				mysql_real_escape_string($inp[$k]);
+		$cleaned[$k] = htmlentities($cleaned[$k]);
+	}
 	return $cleaned;
 }
 

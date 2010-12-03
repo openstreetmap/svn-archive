@@ -177,7 +177,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
     @SuppressWarnings("serial")
     public TMSLayer(ImageryInfo info) {
-        super(info.getName());
+        super(info);
 
         setBackgroundLayer(true);
         this.setVisible(true);
@@ -190,7 +190,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
             }
         } else if (info.getImageryType() == ImageryType.BING) {
             initTileSource(new BingAerialTileSource());
-        } else throw new AssertionError();
+        } else throw new IllegalStateException("cannot create TMSLayer with non-TMS ImageryInfo");
 
         tileOptionMenu = new JPopupMenu();
 
@@ -379,7 +379,11 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
     int getMaxZoomLvl()
     {
-        return TMSPreferences.getMaxZoomLvl(tileSource);
+        if (info.getMaxZoom() != 0) {
+            return TMSPreferences.checkMaxZoomLvl(info.getMaxZoom(), tileSource);
+        } else {
+            return TMSPreferences.getMaxZoomLvl(tileSource);
+        }
     }
 
     int getMinZoomLvl()

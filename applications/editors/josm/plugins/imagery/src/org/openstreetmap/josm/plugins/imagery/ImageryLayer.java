@@ -16,14 +16,17 @@ import org.openstreetmap.josm.plugins.imagery.wms.WMSLayer;
 public abstract class ImageryLayer extends Layer {
     protected static final Icon icon =
         new ImageIcon(Toolkit.getDefaultToolkit().createImage(ImageryPlugin.class.getResource("/images/imagery_small.png")));
+
+    protected ImageryInfo info;
     protected MapView mv;
 
     protected double dx = 0.0;
     protected double dy = 0.0;
 
-    public ImageryLayer(String name) {
-        super(name);
-        mv = Main.map.mapView;
+    public ImageryLayer(ImageryInfo info) {
+        super(info.getName());
+        this.info = info;
+        this.mv = Main.map.mapView;
     }
 
 
@@ -43,6 +46,10 @@ public abstract class ImageryLayer extends Layer {
 
     public double getDy() {
         return dy;
+    }
+
+    public ImageryInfo getInfo() {
+        return info;
     }
 
     @Override

@@ -30,11 +30,11 @@ public class WMSAdapter {
     }
 
     public Grabber getGrabber(MapView mv, WMSLayer layer){
-        if(layer.info.getImageryType() == ImageryType.HTML)
+        if(layer.getInfo().getImageryType() == ImageryType.HTML)
             return new HTMLGrabber(mv, layer, cache);
-        else if(layer.info.getImageryType() == ImageryType.WMS)
+        else if(layer.getInfo().getImageryType() == ImageryType.WMS)
             return new WMSGrabber(mv, layer, cache);
-        else throw new AssertionError();
+        else throw new IllegalStateException("WMSAdapter.getGrabber() called for non-WMS layer type");
     }
 
 }

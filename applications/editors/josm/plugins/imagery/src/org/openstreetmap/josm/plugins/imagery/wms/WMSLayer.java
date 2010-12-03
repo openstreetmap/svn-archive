@@ -68,7 +68,6 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
     protected final int serializeFormatVersion = 5;
     protected boolean autoDownloadEnabled = true;
     protected boolean settingsChanged;
-    protected ImageryInfo info;
 
     // Image index boundary for current view
     private volatile int bminx;
@@ -100,7 +99,7 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
     }
 
     public WMSLayer(ImageryInfo info) {
-        super(info.getName());
+        super(info);
         setBackgroundLayer(true); /* set global background variable */
         initializeImages();
         this.info = new ImageryInfo(info);

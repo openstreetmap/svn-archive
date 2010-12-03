@@ -311,7 +311,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
     private void addSettingsSection(final JPanel p, String name, JPanel section) {
         final JLabel lbl = new JLabel(name);
         lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
-        p.add(lbl);
+        p.add(lbl,GBC.std());
         p.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 0));
         p.add(section,GBC.eol().insets(20,5,0,5));
     }

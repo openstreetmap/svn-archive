@@ -9,13 +9,24 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.JComboBox;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
-public class HarbourAction {
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
-	private JPanel harbourPanel = null;  //  @jve:decl-index=0:visual-constraint="68,31"
+public class HarbourAction implements PropertyChangeListener, LayerChangeListener, EditLayerChangeListener, ComponentListener {
+
+	private JPanel harbourPanel = null;
 	private JButton comButton = null;
 	private JButton restButton = null;
 	private JButton servButton = null;
@@ -46,10 +57,13 @@ public class HarbourAction {
 	private JComboBox queryComboBox = null;
 	private JButton queryjButton = null;
 	private JToggleButton chartButton = null;
+	private JPanel curPanel = null;
+	
 	public HarbourAction() {
 		panelGeneral= new PanelGeneral();
 		panelGeneral.setBounds(new Rectangle(2, 56, 330, 270));
 		panelGeneral.setVisible(true);
+		curPanel = panelGeneral;
 		
 		panelLimits = new PanelLimits();
 		panelLimits.setBounds(new Rectangle(2, 56, 330, 270));
@@ -76,23 +90,23 @@ public class HarbourAction {
 	public JPanel getHarbourPanel() {
 		if (harbourPanel == null) {
 			regLabel = new JLabel();
-			regLabel.setBounds(new Rectangle(90, 32, 45, 20));
+			regLabel.setBounds(new Rectangle(93, 32, 54, 20));
 			regLabel.setText("Region:");
 			noLabel1 = new JLabel();
-			noLabel1.setBounds(new Rectangle(200, 32, 26, 20));
+			noLabel1.setBounds(new Rectangle(205, 32, 26, 20));
 			noLabel1.setText("Nr.:");
 			countryLabel = new JLabel();
-			countryLabel.setBounds(new Rectangle(2, 32, 32, 20));
+			countryLabel.setBounds(new Rectangle(2, 32, 40, 20));
 			countryLabel.setText("Land:");
 			typeLabel = new JLabel();
-			typeLabel.setBounds(new Rectangle(289, 32, 30, 20));
+			typeLabel.setBounds(new Rectangle(289, 32, 39, 20));
 			typeLabel.setText("Type:");
 			queryLabel = new JLabel();
-			queryLabel.setBounds(new Rectangle(201, 334, 72, 15));
+			queryLabel.setBounds(new Rectangle(201, 334, 78, 15));
 			queryLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 			queryLabel.setText("Suche nach:");
 			setLabel = new JLabel();
-			setLabel.setBounds(new Rectangle(2, 330, 60, 21));
+			setLabel.setBounds(new Rectangle(2, 330, 67, 21));
 			setLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 			setLabel.setText("Datensatz:");
 			nameLabel = new JLabel();
@@ -156,6 +170,7 @@ public class HarbourAction {
 					panelRelations.setVisible(false);
 					panelGeneral.setVisible(true);
 					chartButton.setEnabled(false);
+					curPanel = panelGeneral;
 				}
 			});
 		}
@@ -181,6 +196,7 @@ public class HarbourAction {
 					panelRelations.setVisible(false);
 					panelLimits.setVisible(true);
 					chartButton.setEnabled(false);
+					curPanel = panelLimits;
 				}
 			});
 		}
@@ -206,6 +222,7 @@ public class HarbourAction {
 					panelRelations.setVisible(false);
 					panelServices.setVisible(true);
 					chartButton.setEnabled(false);
+					curPanel = panelServices;
 				}
 			});
 		}
@@ -231,6 +248,7 @@ public class HarbourAction {
 					panelRelations.setVisible(false);
 					panelEnv.setVisible(true);
 					chartButton.setEnabled(true);
+					curPanel = panelEnv;
 				}
 			});
 		}
@@ -256,6 +274,7 @@ public class HarbourAction {
 					panelEnv.setVisible(false);
 					panelRelations.setVisible(true);
 					chartButton.setEnabled(true);
+					curPanel = panelRelations;
 				}
 			});
 		}
@@ -283,7 +302,7 @@ public class HarbourAction {
 	private JButton getFastbackButton() {
 		if (fastbackButton == null) {
 			fastbackButton = new JButton();
-			fastbackButton.setBounds(new Rectangle(62, 330, 20, 20));
+			fastbackButton.setBounds(new Rectangle(72, 330, 20, 20));
 		}
 		return fastbackButton;
 	}
@@ -296,7 +315,7 @@ public class HarbourAction {
 	private JButton getBackButton() {
 		if (backButton == null) {
 			backButton = new JButton();
-			backButton.setBounds(new Rectangle(81, 330, 20, 20));
+			backButton.setBounds(new Rectangle(90, 330, 20, 20));
 		}
 		return backButton;
 	}
@@ -309,7 +328,7 @@ public class HarbourAction {
 	private JTextField getSetTextField() {
 		if (setTextField == null) {
 			setTextField = new JTextField();
-			setTextField.setBounds(new Rectangle(101, 329, 60, 23));
+			setTextField.setBounds(new Rectangle(110, 329, 51, 23));
 			setTextField.setText("");
 		}
 		return setTextField;
@@ -349,7 +368,7 @@ public class HarbourAction {
 	private JComboBox getTypComboBox() {
 		if (typComboBox == null) {
 			typComboBox = new JComboBox();
-			typComboBox.setBounds(new Rectangle(323, 28, 72, 25));
+			typComboBox.setBounds(new Rectangle(328, 28, 69, 25));
 		}
 		return typComboBox;
 	}
@@ -362,7 +381,7 @@ public class HarbourAction {
 	private JComboBox getCountryComboBox() {
 		if (countryComboBox == null) {
 			countryComboBox = new JComboBox();
-			countryComboBox.setBounds(new Rectangle(36, 29, 50, 25));
+			countryComboBox.setBounds(new Rectangle(42, 29, 50, 25));
 		}
 		return countryComboBox;
 	}
@@ -375,7 +394,7 @@ public class HarbourAction {
 	private JTextField getNoTextField() {
 		if (noTextField == null) {
 			noTextField = new JTextField();
-			noTextField.setBounds(new Rectangle(225, 29, 60, 25));
+			noTextField.setBounds(new Rectangle(230, 29, 60, 25));
 			noTextField.setText("");
 		}
 		return noTextField;
@@ -389,7 +408,7 @@ public class HarbourAction {
 	private JTextField getRegTextField() {
 		if (regTextField == null) {
 			regTextField = new JTextField();
-			regTextField.setBounds(new Rectangle(135, 29, 60, 25));
+			regTextField.setBounds(new Rectangle(145, 29, 60, 25));
 		}
 		return regTextField;
 	}
@@ -408,7 +427,7 @@ public class HarbourAction {
 			queryComboBox.addItem("Region");
 			queryComboBox.addItem("Type");
 			queryComboBox.addItem("Query");
-			queryComboBox.setBounds(new Rectangle(272, 331, 86, 20));
+			queryComboBox.setBounds(new Rectangle(279, 331, 86, 20));
 		}
 		return queryComboBox;
 	}
@@ -421,7 +440,7 @@ public class HarbourAction {
 	private JButton getQueryjButton() {
 		if (queryjButton == null) {
 			queryjButton = new JButton();
-			queryjButton.setBounds(new Rectangle(364, 330, 28, 20));
+			queryjButton.setBounds(new Rectangle(364, 331, 28, 20));
 		}
 		return queryjButton;
 	}
@@ -434,10 +453,55 @@ public class HarbourAction {
 	private JToggleButton getChartButton() {
 		if (chartButton == null) {
 			chartButton = new JToggleButton();
-			chartButton.setBounds(new Rectangle(365, 5, 28, 18));
+			chartButton.setBounds(new Rectangle(367, 5, 28, 18));
 			chartButton.setEnabled(false);
 		}
 		return chartButton;
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(curPanel == panelEnv) System.out.println("Start HarbourAction.propertyChange");
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+		if(curPanel == panelEnv) System.out.println("Start HarbourAction.componentHidden");
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+		if(curPanel == panelEnv) System.out.println("Start HarbourAction.componentMoved");
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+		if(curPanel == panelEnv) System.out.println("Start HarbourAction.componentResized");
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {
+		if(curPanel == panelEnv) System.out.println("Start HarbourAction.componentShown");
+	}
+
+	@Override
+	public void activeLayerChange(Layer arg0, Layer arg1) {
+		if(curPanel == panelEnv) System.out.println("Start HarbourAction.activeLayerChange");
+	}
+
+	@Override
+	public void layerAdded(Layer arg0) {
+		if(curPanel == panelEnv) System.out.println("Start HarbourAction.layerAdded");
+	}
+
+	@Override
+	public void layerRemoved(Layer arg0) {
+		if(curPanel == panelServices) System.out.println("Start HarbourAction.layerRemoved");
+	}
+
+	@Override
+	public void editLayerChanged(OsmDataLayer arg0, OsmDataLayer arg1) {
+		System.out.println("Start HarbourAction.editLayerChanged");
 	}
 
 }

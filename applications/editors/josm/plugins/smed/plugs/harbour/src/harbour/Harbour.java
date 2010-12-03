@@ -8,6 +8,9 @@ import harbour.dialogs.HarbourAction;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MapView;
+
 import smed.plug.ifc.SmedPluggable;
 import smed.plug.ifc.SmedPluginManager;
 
@@ -20,7 +23,6 @@ public class Harbour implements SmedPluggable {
 
 	@Override
 	public boolean start() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -32,14 +34,16 @@ public class Harbour implements SmedPluggable {
 
 	@Override
 	public boolean hasFocus() {
-		// TODO Auto-generated method stub
-		return false;
+		Main.map.mapView.addPropertyChangeListener(harbour);
+		MapView.addLayerChangeListener(harbour);
+		return true;
 	}
 
 	@Override
 	public boolean lostFocus() {
-		// TODO Auto-generated method stub
-		return false;
+		Main.map.mapView.removePropertyChangeListener(harbour);
+		MapView.removeLayerChangeListener(harbour);
+		return true;
 	}
 
 	@Override

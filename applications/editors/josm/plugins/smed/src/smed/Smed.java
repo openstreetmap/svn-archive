@@ -154,6 +154,13 @@ public class Smed extends Plugin{
             }
             smedTab.closeDialog();
         }
+        
+        if(Main.map != null) {
+        	// von SmedTabbedPane nach hier verlagert, damit sicher ist Main.map != null
+        	SmedPluggable p = SmedTabbedPane.getCurPlugin();
+        	
+        	if(p != null) p.hasFocus();        	
+        }
     }
 
 }

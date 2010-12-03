@@ -33,6 +33,7 @@ public class SmedTabbedPane extends JPanel {
 	static private JTabbedPane tabbedPane = null;
 	private SmedPluginManager manager = null;
 	private int activeIndex = -1;
+	static private SmedPluggable curPlugin = null;
 	
     public SmedTabbedPane() {
         // super(new GridLayout(1, 1));
@@ -63,7 +64,7 @@ public class SmedTabbedPane extends JPanel {
             			tabbedPane.addTab(p.getName(),icon, panel, p.getInfo());
             			tabbedPane.setMnemonicAt(i, KeyEvent.VK_1 + i);
             			if(i == 0) { 
-            				p.hasFocus();
+            				curPlugin = p;
             				activeIndex = 0;
             			}
             			p.setIndex(i);
@@ -93,7 +94,10 @@ public class SmedTabbedPane extends JPanel {
 						
 						activeIndex = pane.getSelectedIndex();
 						for(SmedPluggable p : plugins) {
-							if(p.getIndex() == activeIndex) p.hasFocus();
+							if(p.getIndex() == activeIndex) { 
+								p.hasFocus();
+								curPlugin = p;
+							}
 						}
 					}
             	});
@@ -107,4 +111,5 @@ public class SmedTabbedPane extends JPanel {
     
     public static List<SmedPluggable> getPlugins() { return plugins; }
     public static JTabbedPane getTabbedPane() { return tabbedPane; }
+    public static SmedPluggable getCurPlugin() { return curPlugin; }
 }

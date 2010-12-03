@@ -32,7 +32,6 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public boolean hasFocus() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

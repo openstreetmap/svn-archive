@@ -52,9 +52,9 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
-import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.ImageryLayer;
 import org.openstreetmap.josm.plugins.imagery.ImageryPreferences;
+import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 
 /**
  * Class that displays a slippy map layer.
@@ -150,10 +150,10 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         }
 
         currentZoomLevel = getBestZoom();
-        if (tileSource.getMaxZoom() < currentZoomLevel)
-            currentZoomLevel = tileSource.getMaxZoom();
-        if (tileSource.getMinZoom() > currentZoomLevel)
-            currentZoomLevel = tileSource.getMinZoom();
+        if (currentZoomLevel > getMaxZoomLvl())
+            currentZoomLevel = getMaxZoomLvl();
+        if (currentZoomLevel < getMinZoomLvl())
+            currentZoomLevel = getMinZoomLvl();
         clearTileCache();
         //tileloader = new OsmTileLoader(this);
         tileLoader = new OsmFileCacheTileLoader(this);

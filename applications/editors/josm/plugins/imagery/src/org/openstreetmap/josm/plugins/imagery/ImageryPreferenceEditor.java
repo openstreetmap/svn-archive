@@ -453,10 +453,15 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
             case 1:
                 info.setURL((String)o);
             case 2:
-                if(info.imageryType == ImageryType.WMS)
-                    info.pixelPerDegree = Double.parseDouble((String) o);
-                else
-                    info.maxZoom = Integer.parseInt((String) o);
+                info.pixelPerDegree = 0;
+                info.maxZoom = 0;
+                try {
+                    if(info.imageryType == ImageryType.WMS)
+                        info.pixelPerDegree = Double.parseDouble((String) o);
+                    else
+                        info.maxZoom = Integer.parseInt((String) o);
+                } catch (NumberFormatException e) {
+                }
             }
         }
 

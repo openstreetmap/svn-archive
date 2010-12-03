@@ -307,146 +307,6 @@ function get_high_level ($tags)
 	return "unknown"; 
 }
 
-// find the nearest highway (by ID) to a latlon
-// note need to be connected to the PGSQL database first
-// 50 seems bit low, up to 100. Difficult to tell with these Mercatastic 
-// units TBH....
-function get_nearest_highway($lat,$lon,$fulldetails=false,$mindist=100)
-{
-	$id=0;
-	$nearest_pt=0;
-	$merc=ll_to_merc($lat,$lon);
-	$q=("SELECT osm_id, AsText(way),  ".
-                "Distance(GeomFromText('POINT($merc[e] $merc[n]".
-				")',4326),way) as dist FROM ".
-                "planet_osm_line WHERE Distance(GeomFromText('POINT(".
-				"$merc[e] $merc[n])',".
-                "4326),way)<$mindist AND highway != '' ORDER BY dist LIMIT 1");
-	$result=pg_query($q);
-
-	if($row=pg_fetch_array($result,null,PGSQL_ASSOC))
-	{
-		$id=$row['osm_id'];
-		if($fulldetails==true)
-		{
-			$m=array();
-			preg_match("/LINESTRING\((.+)\)/",$row['astext'],$m);
-			$points = explode(",", $m[1]);
-			$shortest=99999999;
-			for($count=0; $count<count($points); $count++)
-			{
-				$p=explode(" ",$points[$count]);
-				$len=line_length($merc['e'],$merc['n'],$p[0],$p[1]);
-				if($len<$shortest)
-				{
-					$shortest=$len;
-					$nearest_pt = $count;
-				}
-			}
-		}
-	}
-	pg_free_result($result);
-	return array($id,$nearest_pt);
-}
-
-function get_way_segment($x,$y,$mindist=100)
-{
-	$q=("SELECT osm_id, AsText(way),  ".
-			"line_locate_point(way,PointFromText('POINT($x $y)',4326))".
-			"AS posn ".
-                "FROM planet_osm_line WHERE Distance(GeomFromText('POINT(".
-				"$x $y)',".
-                "4326),way)<$mindist AND highway != '' ORDER BY ".
-				"Distance(GeomFromText('POINT($x $y)',4326),way) LIMIT 1");
-	$result=pg_query($q);
-
-	if(!($row=pg_fetch_array($result,null,PGSQL_ASSOC)))
-		return null;
-	$way=$row['osm_id'];
-	$posn=$row['posn'];
-	$prev_before=1;
-	$prev_after=1;
-
-	$w=get_annotated_way($way);
-
-	// Find all intersecting ways along the nearest way, and their 
-	// distances along the way
-	$q = "SELECT t2.highway,t2.osm_id as wayid,".
-		"line_locate_point(t1.way,intersection(t1.way,t2.way)) as posn,".
-		"astext(intersection(t1.way,t2.way)) as intn ".
-		"from planet_osm_line t1, planet_osm_line t2 ".
-		"where intersects(t1.way,t2.way) ".
-		"and GeometryType(intersection(t1.way,t2.way))='POINT' ".
-		"and t1.highway!='' and t2.highway!='' and ".
-		"t1.osm_id=$way and t2.osm_id != $way";
-	$result=pg_query($q);
-	$before_point=null;
-	$after_point=null;
-
-	// Find the two intersections enclosing the supplied point
-	// this seems a bit cumbersome - is there a better way to do this?
-	$count=0;
-	while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
-	{
-		$before=$posn-$row['posn'];
-		$after=$row['posn']-$posn;
-		if($before<$prev_before && $before>=0)
-		{
-			$prev_before=$before;
-			$before_point=$row['intn'];
-		}
-		if($after<$prev_after && $after>=0)
-		{
-			$prev_after=$after;
-			$after_point=$row['intn'];
-		}
-	}
-
-	// return null if we couldn't find two intersections enclosing 
-	// the supplied point
-	if($before_point==null || $after_point==null)
-		return null;
-
-	preg_match("/POINT\((.+)\)/",$before_point,$m);
-	$before_point=$m[1];
-	preg_match("/POINT\((.+)\)/",$after_point,$m);
-	$after_point=$m[1];
-
-	
-	$index_start=-1;
-	$index_end=-1;
-	for($count=0; $count<count($w['points']); $count++)
-	{
-		if($w['points'][$count]==$before_point)
-		{
-			$index_start=$count;
-		}
-		if($w['points'][$count]==$after_point)
-		{
-			$index_end=$count;
-		}
-	}
-
-	$segment=array();
-	$tags=array("osm_id","highway","foot","horse","description");
-	foreach($tags as $tag)
-	{
-		if(isset($w[$tag]))
-			$segment[$tag]=$w[$tag];
-	}
-	$segment['startpoint']=$index_start;
-	$segment['endpoint']=$index_end;
-	$segment['points']=array();
-	$segment['annotations']=array();
-	for($count=$index_start; $count<=$index_end; $count++)
-		$segment['points'][] = $w['points'][$count];
-	foreach($w['annotations'] as $a)
-	{
-		if($a['point']>=$index_start && $a['point']<=$index_end)
-			$segment['annotations'][] = $a;
-	}
-	return $segment;
-}
 
 function get_photo($id,$width,$height)
 {
@@ -476,206 +336,127 @@ function get_photo($id,$width,$height)
 	return true;
 }
 
-// get the annotations along a way 
-function get_annotations($way,$photos_only=false)
-{
-	$annotations=array();
-	$result=pg_query("SELECT * FROM freemap_markers WHERE way=$way ".
-						"ORDER BY point");
-	while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
-	{
-		if($photos_only==false ||
-			file_exists("/home/www-data/uploads/photos/$row[id].jpg"))
-		{
-			$annotations[]=$row;
-		}
-	}
-
-	return $annotations;
-}
-
-function get_annotated_way($id,$start=null,$end=null,$do_annotations=true)
+function get_annotated_way($id,$do_annotations=true)
 {
 	$way=null;
 	$q=
 			("SELECT osm_id, name,".
-			"AsText(way),foot,horse,highway,description ".
+			"AsText(way),foot,horse,highway,designation ".
             "FROM ".
             "planet_osm_line WHERE osm_id=$id");
 	$result=pg_query($q);
-
 	$row=pg_fetch_array($result,null,PGSQL_ASSOC);
-	if($row)
-	{
-				$way=array();
-				$tags = array("osm_id",
-							 "name","description","highway","foot","horse");
-				foreach($tags as $tag)
-				{
-					if($row[$tag]!='')
-						$way[$tag] = $row[$tag];
-				}
-				$way['points'] = array();
-                preg_match("/LINESTRING\((.+)\)/",$row['astext'],$m);
-                $points = explode(",", $m[1]);
-				$start1 = ($start===null) ? 0 : $start;
-				$end1 = ($end===null) ? count($points)-1 :  $end;
-				$step = ($end1<$start1) ? -1 : 1;  
-				for($count=$start1; $count!=$end1+$step; $count+=$step)
-					$way['points'][] = $points[$count];
-				if($do_annotations==true)
-					$way['annotations']=get_way_annotations($id,$start1,$end1);
+	if(!$row)
+		return null;
+	return do_get_annotated_way($row,$do_annotations);
+}
 
-	}
+function do_get_annotated_way($row,$do_annotations=true)
+{
+		$way=array();
+		$way["annotations"] = array();
+		$tags = array("osm_id",
+					 "name","highway","foot","horse",
+					 "designation");
+		foreach($tags as $tag)
+		{
+			if($row[$tag]!='')
+				$way[$tag] = $row[$tag];
+		}
+		$way['points'] = array();
+		preg_match("/LINESTRING\((.+)\)/",$row['astext'],$m);
+		$points = explode(",", $m[1]);
+		$start1 = ($start===null) ? 0 : $start;
+		$end1 = ($end===null) ? count($points)-1 :  $end;
+		$step = ($end1<$start1) ? -1 : 1;  
+		for($count=$start1; $count!=$end1+$step; $count+=$step)
+			$way['points'][] = $points[$count];
+		if($do_annotations==true)
+		{
+			$result2=pg_query
+				("SELECT * FROM annotations WHERE wayid=$row[osm_id] ORDER BY annotationid");
+			while($row2=pg_fetch_array($result2,NULL,PGSQL_ASSOC))
+				$way["annotations"][] = $row2;
+		}
+
 	return $way;
 }
 
-function get_way_annotations($id,$start=null,$end=null)
-{
-	$q = "SELECT * FROM freemap_markers WHERE way=$id";
-
-	if ($start!==null && $end!==null)
-	{
-		$q .= " AND point BETWEEN ".min($start,$end)." AND ".
-		 	max($start,$end). " ORDER BY point";
-		if($start>$end)
-			$q .=" DESC";
-	}
-	else
-	{
-		$q .= " ORDER BY point";
-	}
-
-	$annotations = array();
-	$result2=pg_query($q);
-	while($row2=pg_fetch_array($result2,null,PGSQL_ASSOC))
-	{
-		$annotations[] = $row2;
-	}
-	return $annotations;
-}
 
 function annotated_way_to_xml($way)
 {
-	echo "<way>\n";
-	echo "<osm_id>$way[osm_id]</osm_id>\n";
-	$tags = array("name","description","highway","foot","horse",
-					"startpoint","endpoint");
-	foreach($tags as $tag)
-	{
-		if($way[$tag])
-			echo "<$tag>$way[$tag]</$tag>\n";
-	}
-	foreach ($way['points'] as $point)
-		echo "<point>$point</point>\n";
+echo "<way>\n";
+echo "<osm_id>$way[osm_id]</osm_id>\n";
+$tags = array("name","highway","foot","horse",
+			"designation");
+foreach($tags as $tag)
+{
+if($way[$tag])
+	echo "<$tag>$way[$tag]</$tag>\n";
+}
+foreach ($way['points'] as $point)
+echo "<point>$point</point>\n";
 
-	way_annotations_to_xml($way['annotations']);
-	echo "</way>\n";
+way_annotations_to_xml($way['annotations']);
+echo "</way>\n";
 }
 
 function way_annotations_to_xml($annotations)
 {
-	foreach($annotations as $annotation)
-	{
-		echo "<annotation>\n";
-		echo "<id>$annotation[id]</id>\n";
-		echo "<type>$annotation[type]</type>\n";
-		echo "<description>$annotation[description]</description>\n";
-		echo "<lat>$annotation[lat]</lat>\n<lon>$annotation[lon]</lon>\n";
-		if(file_exists("/var/www-data/uploads/photos/$annotation[id].png"))
-		{
-			echo "<link>http://www.free-map.org.uk/freemap/api/markers.php".
-				 "?action=getPhoto&id=$annotation[id]</link>\n";
-		}
-		echo "</annotation>\n";
-	}
+foreach($annotations as $annotation)
+{
+echo "<annotation id='$annotation[annotationid]' seg='$annotation[seg]' wayid='$annotation[wayid]' x='$annotation[x]' y='$annotation[y]'>$annotation[text]</annotation>\n";
+}
 }
 
-function annotated_way_to_html($way)
-{
-	?>
-	<html>
-	<head>
-	<title><?php echo $wr["title"]; ?></title>
-	<link rel='stylesheet' type='text/css' href='/freemap/css/freemap2.css' />
-	<script type='text/javascript' src='/freemap/javascript/basicmap.js'>
-	</script>
-	<script type='text/javascript' 
-	src='http://www.openlayers.org/api/2.5/OpenLayers.js'> </script>
-	<script type='text/javascript' src='/freemap/javascript/lib/converter.js'>
-	</script>
-	<script type='text/javascript' src='/freemap/javascript/lib/get_osm_url.js'>
-	</script>
-	<script type='text/javascript' 
-	src='/freemap/javascript/prototype/prototype.js'>
-	</script>
-	</head>
-	<?php
-	echo "<body onload='loadWay($way[osm_id])'>\n";
-	echo "<h1>$way[osm_id]</h1>\n";
-	$tags = array("name","description","highway","foot","horse");
-	echo "<ul>\n";
-	foreach($tags as $tag)
-	{
-		if($way[$tag])
-			echo "<li>$tag : $way[$tag]</li>\n";
-	}
-	echo "</ul>\n";
-	echo "<ol>\n";
-	foreach($way['annotations'] as $annotation)
-		echo "<li>$annotation[description]</li>\n";
-	echo "</ol>\n";
-	echo "<div id='map'></div>\n";
-	echo "</body></html>\n";
-}
 
 function render_tiles($im,$lat,$lon,$zoom,$width,$height)
 {
-            $nTileCols = 2+floor($width/256);
-            $nTileRows = 2+floor($height/256);
-        	$topLeftX = lonToX($lon,$zoom)-$width/2;
-        	$topLeftY = latToY($lat,$zoom)-$height/2;
-        	$topLeftXTile = floor($topLeftX/256);
-        	$topLeftYTile = floor($topLeftY/256);
-			$curY = -$topLeftY%256;
-            for($row=0; $row<$nTileRows; $row++)
-            {        
-                $curX = -$topLeftX%256;
-                for($col=0; $col<$nTileCols; $col++)
-                {
-                    if($curX<$width && $curY<$height &&
-                        $curX>-256 && $curY>-256)
-                    {    
-						$filename="http://www.free-map.org.uk/".
-							"cgi-bin/render2?x=".
-							($topLeftXTile+$col).
-							"&y=".
-							($topLeftYTile+$row).
-							"&z=".$zoom;
-                        $tile=ImageCreateFromPNG($filename);
-						ImageCopy($im,$tile,$curX,$curY,0,0,256,256);
-                    }
-                    
-                    $curX+=256;
-                }
-                $curY+=256;
-            }
+	$nTileCols = 2+floor($width/256);
+	$nTileRows = 2+floor($height/256);
+	$topLeftX = lonToX($lon,$zoom)-$width/2;
+	$topLeftY = latToY($lat,$zoom)-$height/2;
+	$topLeftXTile = floor($topLeftX/256);
+	$topLeftYTile = floor($topLeftY/256);
+	$curY = -$topLeftY%256;
+	for($row=0; $row<$nTileRows; $row++)
+	{        
+		$curX = -$topLeftX%256;
+		for($col=0; $col<$nTileCols; $col++)
+		{
+			if($curX<$width && $curY<$height &&
+				$curX>-256 && $curY>-256)
+			{    
+				$filename="http://www.free-map.org.uk/".
+					"cgi-bin/render2?x=".
+					($topLeftXTile+$col).
+					"&y=".
+					($topLeftYTile+$row).
+					"&z=".$zoom;
+				$tile=ImageCreateFromPNG($filename);
+				ImageCopy($im,$tile,$curX,$curY,0,0,256,256);
+			}
+			
+			$curX+=256;
+		}
+		$curY+=256;
+	}
 }
 
 function lonToX($lon,$zoom)
 {
 
-        return round  (0.5+floor( (pow(2,$zoom+8)*($lon+180)) / 360));
+return round  (0.5+floor( (pow(2,$zoom+8)*($lon+180)) / 360));
 }
 
 function latToY($lat,$zoom)
 {
-		
-        $f = sin((M_PI/180)*$lat);
-        
-        $y = round(0.5+floor
-            (pow(2,$zoom+7) + 0.5*log((1+$f)/(1-$f)) *
-                                 (-pow(2,$zoom+8)/(2*M_PI))));
-        return $y;
+
+$f = sin((M_PI/180)*$lat);
+
+$y = round(0.5+floor
+	(pow(2,$zoom+7) + 0.5*log((1+$f)/(1-$f)) *
+						 (-pow(2,$zoom+8)/(2*M_PI))));
+return $y;
 } 
 ?>

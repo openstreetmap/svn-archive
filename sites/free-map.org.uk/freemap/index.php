@@ -1,24 +1,25 @@
 <?php
 
-require_once('inc.php');
 require_once('/home/www-data/private/defines.php');
 
 session_start();
 
 $lat = (isset($_GET['lat'])) ? $_GET['lat']:
-	((isset($_COOKIE['lat'])) ? $_COOKIE['lat'] : 51.05); 
-	
+    ((isset($_COOKIE['lat'])) ? $_COOKIE['lat'] : 51.05); 
+    
 $lon = (isset($_GET['lon'])) ? $_GET['lon']:
-	((isset($_COOKIE['lon'])) ? $_COOKIE['lon'] : -0.72); 
+    ((isset($_COOKIE['lon'])) ? $_COOKIE['lon'] : -0.72); 
 
 $zoom = (isset($_GET['zoom'])) ? $_GET['zoom']:
-	((isset($_COOKIE['zoom'])) ? $_COOKIE['zoom'] : 14); 
-	
+    ((isset($_COOKIE['zoom'])) ? $_COOKIE['zoom'] : 14); 
+    
 
 $modes = array (
-					array ("Normal", "MODE_NORMAL"),
-					array ("Distance", "MODE_DISTANCE")
-				);
+                    array ("Normal", "MODE_NORMAL"),
+                    array ("Distance", "MODE_DISTANCE"),
+                    array ("Route", "MODE_ROUTE"),
+					array ("Annotate", "MODE_ANNOTATE")
+                );
 ?>
 
 <html>
@@ -28,14 +29,16 @@ $modes = array (
 
 <script type='text/javascript'>
 
+var freemap;
 var lat=<?php echo $lat; ?>;
 var lon=<?php echo $lon; ?>;
 var zoom=<?php echo $zoom;?>;
+var loggedin = <?php echo isset($_SESSION['gatekeeper'])?"true":"false";?>;
 
 <?php
 for($i=0; $i<count($modes); $i++)
 {
-	echo "var {$modes[$i][1]} = $i;\n";
+    echo "var {$modes[$i][1]} = $i;\n";
 }
 ?>
 
@@ -46,6 +49,8 @@ for($i=0; $i<count($modes); $i++)
 
 <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"> 
 </script>
+
+<script src="../javascript/prototype.js"></script>
 
 <script src="js/main.js"> </script>
 
@@ -62,9 +67,13 @@ for($i=0; $i<count($modes); $i++)
 <?php
 for($i=0; $i<count($modes); $i++)
 {
-	if($i)
-		echo " | ";
-	echo "<span id='mode$i' onclick='setMode($i)'>{$modes[$i][0]}</span>";
+    if($modes[$i][0]!==null)
+    {
+        if($i)
+            echo " | ";
+        echo "<span id='mode$i' onclick='freemap.setMode($i)'>".
+			"{$modes[$i][0]}</span>";
+    }
 }
 ?>
 </div>
@@ -76,3 +85,100 @@ for($i=0; $i<count($modes); $i++)
 
 </body>
 </html>
+
+<?php
+function write_sidebar($homepage=false)
+{
+?>
+	<div id='sidebar'>
+
+	<div class='titlebox'>
+	<img src='/freemap/images/freemap_small.png' alt='freemap_small' /><br/>
+	</div>
+
+	<p>The new Freemap, now with tiles hosted by
+	<a href='http://www.sucs.org'>Swansea University Computer Society</a>.
+	Data CC-by-SA from 
+	<a href='http://www.openstreetmap.org'>OpenStreetMap</a> </p>
+
+	<?php
+	write_login();
+	?>
+
+	<div>
+	<?php
+	write_searchbar();
+	write_milometer();
+	?>
+	<a id='osmedit' href='http://www.openstreetmap.org/edit.html'>
+	Edit in OSM</a>
+	</div>
+
+
+
+	<div id='loading'>
+	<img src='/freemap/images/ajax-loader.gif' 
+	alt='Loading...' id='ajaxloader' />
+	</div>
+
+	<div id='editpanel'></div>
+	<div id='infopanel'></div>
+	<div id="status"> </div>
+
+
+	</div>
+	<?php
+}
+
+function write_searchbar()
+{
+?>
+<input id="q" /> 
+<input type='button' id='searchBtn' value='Search'/><br/>
+<?php
+}
+
+function write_milometer()
+{
+?>
+<div id='distdiv'>
+<span id='milometer'>
+<span id='distUnits'>000</span>.<span id='distTenths'>0</span>
+</span>
+<select id='units'>
+<option>miles</option>
+<option>km</option>
+</select>
+<input type='button' value='Reset' id='resetDist' />
+
+</div>
+<?php
+}
+
+function write_login()
+{
+	echo "<div id='logindiv'>";
+
+	if(!isset($_SESSION['gatekeeper']))
+	{
+		echo "<form method='post' action='user.php?action=login&redirect=".
+			htmlentities($_SERVER['PHP_SELF'])."'>\n";
+		?>
+		<label for="username">Username</label> <br/>
+		<input name="username" id="username" /> <br/>
+		<label for="password">Password</label> <br/>
+		<input name="password" id="password" type="password" /> <br/>
+		<input type='submit' value='go' id='loginbtn'/>
+		</form>
+		<?php
+		echo "<a href='/freemap/user.php?action=signup'>Sign up</a>";
+	}
+	else
+	{
+		echo "<em>Logged in as $_SESSION[gatekeeper]</em>\n";
+		echo "<a href='user.php?action=logout&redirect=".
+			htmlentities($_SERVER['PHP_SELF'])."'>Log out</a>\n";
+	}
+	echo "</div>";
+}
+?>

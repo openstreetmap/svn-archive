@@ -3,6 +3,7 @@ package oseam;
 import java.net.URL;
 
 import oseam.dialogs.OSeaMAction;
+import oseam.Messages;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;

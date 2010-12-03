@@ -66,8 +66,8 @@ public class OSeaMAction {
 			oseamPanel = new JPanel();
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
-			oseamPanel.add(getHazButton(),  null);
 			oseamPanel.add(getChanButton(),  null);
+			oseamPanel.add(getHazButton(),  null);
 			oseamPanel.add(getSpecButton(),  null);
 			oseamPanel.add(getLightButton(),  null);
 		}
@@ -79,7 +79,7 @@ public class OSeaMAction {
 			chanButton = new JButton();
 			chanButton.setBounds(new Rectangle(340, 56, 50, 50));
 			chanButton.setText("");
-			chanButton.setIcon(new ImageIcon(getClass().getResource("/images/Chan.png")));
+			chanButton.setIcon(new ImageIcon(getClass().getResource(Messages.getString("ChanButton"))));
 			chanButton.setToolTipText("Channel Marks");
 			chanButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -99,7 +99,7 @@ public class OSeaMAction {
 			hazButton = new JButton();
 			hazButton.setBounds(new Rectangle(340, 111, 50, 50));
 			hazButton.setText("");
-			hazButton.setIcon(new ImageIcon(getClass().getResource("/images/Haz.png")));
+			hazButton.setIcon(new ImageIcon(getClass().getResource(Messages.getString("HazButton"))));
 			hazButton.setToolTipText("Danger Marks");
 			hazButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -119,7 +119,7 @@ public class OSeaMAction {
 			specButton = new JButton();
 			specButton.setBounds(new Rectangle(340, 166, 50, 50));
 			specButton.setText("");
-			specButton.setIcon(new ImageIcon(getClass().getResource("/images/Spec.png")));
+			specButton.setIcon(new ImageIcon(getClass().getResource(Messages.getString("SpecButton"))));
 			specButton.setToolTipText("Special Marks");
 			specButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -139,7 +139,7 @@ public class OSeaMAction {
 			lightButton = new JButton();
 			lightButton.setBounds(new Rectangle(340, 221, 50, 50));
 			lightButton.setText("");
-			lightButton.setIcon(new ImageIcon(getClass().getResource("/images/Lights.png")));
+			lightButton.setIcon(new ImageIcon(getClass().getResource(Messages.getString("LightsButton"))));
 			lightButton.setToolTipText("Light Marks");
 			lightButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {

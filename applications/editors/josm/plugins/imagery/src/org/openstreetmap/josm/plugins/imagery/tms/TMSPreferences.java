@@ -37,7 +37,7 @@ public class TMSPreferences
             System.err.println("maxZoomLvl shouldnt be more than minZoomLvl! Setting to minZoomLvl.");
             maxZoomLvl = PROP_MIN_ZOOM_LVL.get();
         }
-        if (ts != null && ts.getMaxZoom() != 0) {
+        if (ts != null && ts.getMaxZoom() != 0 && ts.getMaxZoom() < maxZoomLvl) {
             maxZoomLvl = ts.getMaxZoom();
         }
         return maxZoomLvl;

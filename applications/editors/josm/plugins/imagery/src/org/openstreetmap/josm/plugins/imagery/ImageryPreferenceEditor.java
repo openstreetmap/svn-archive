@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.imagery;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trc;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -21,6 +22,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -43,12 +45,19 @@ import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.tms.TMSPreferences;
 import org.openstreetmap.josm.plugins.imagery.wms.AddWMSLayerPanel;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSAdapter;
+import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.GBC;
 
 public class ImageryPreferenceEditor implements PreferenceSetting {
     private ImageryLayerTableModel model;
     private JComboBox browser;
 
+    // Common settings
+    private Color colFadeColor;
+    private JButton btnFadeColor;
+    private JSlider fadeAmount = new JSlider(0, 100);
+
+    // WMS Settings
     JCheckBox overlapCheckBox;
     JSpinner spinEast;
     JSpinner spinNorth;
@@ -61,9 +70,8 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
     //TMS settings controls
     private JCheckBox autozoomActive = new JCheckBox();
     private JCheckBox autoloadTiles = new JCheckBox();
+    private JSpinner minZoomLvl;
     private JSpinner maxZoomLvl;
-    private JSpinner minZoomLvl = new JSpinner();
-    private JSlider fadeBackground = new JSlider(0, 100);
 
 
     private JPanel buildImageryProvidersPanel(final PreferenceTabbedPane gui) {
@@ -185,8 +193,45 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         return p;
     }
 
+    private JPanel buildCommonSettingsPanel(final PreferenceTabbedPane gui) {
+        final JPanel p = new JPanel(new GridBagLayout());
+
+        this.colFadeColor = ImageryPreferences.getFadeColor();
+        this.btnFadeColor = new JButton();
+        this.btnFadeColor.setBackground(colFadeColor);
+        this.btnFadeColor.setText(ColorHelper.color2html(colFadeColor));
+
+        this.btnFadeColor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JColorChooser chooser = new JColorChooser(colFadeColor);
+                int answer = JOptionPane.showConfirmDialog(
+                        gui, chooser,
+                        tr("Choose a color for {0}", tr("imagery fade")),
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE);
+                if (answer == JOptionPane.OK_OPTION) {
+                    colFadeColor = chooser.getColor();
+                    btnFadeColor.setBackground(colFadeColor);
+                    btnFadeColor.setText(ColorHelper.color2html(colFadeColor));
+                }
+            }
+        });
+
+        p.add(new JLabel(tr("Fade Color: ")), GBC.std());
+        p.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        p.add(this.btnFadeColor, GBC.eol().fill(GBC.HORIZONTAL));
+
+        p.add(new JLabel(tr("Fade amount: ")), GBC.std());
+        p.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        p.add(this.fadeAmount, GBC.eol().fill(GBC.HORIZONTAL));
+
+        this.fadeAmount.setValue(ImageryPreferences.PROP_FADE_AMOUNT.get());
+        return p;
+    }
+
     private JPanel buildWMSSettingsPanel() {
-        final JPanel pnlW = new JPanel(new GridBagLayout());
+        final JPanel p = new JPanel(new GridBagLayout());
         browser = new JComboBox(new String[] {
                 "webkit-image {0}",
                 "gnome-web-photo --mode=photo --format=png {0} /dev/stdout",
@@ -194,11 +239,11 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
                 "webkit-image-gtk {0}"});
         browser.setEditable(true);
         browser.setSelectedItem(Main.pref.get("wmsplugin.browser", "webkit-image {0}"));
-        pnlW.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
-        pnlW.add(browser);
+        p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
+        p.add(browser);
 
         // Overlap
-        pnlW.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
 
         overlapCheckBox = new JCheckBox(tr("Overlap tiles"), wmsAdapter.PROP_OVERLAP.get());
         JLabel labelEast = new JLabel(tr("% of east:"));
@@ -213,24 +258,24 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         overlapPanel.add(labelNorth);
         overlapPanel.add(spinNorth);
 
-        pnlW.add(overlapPanel);
+        p.add(overlapPanel);
 
         // Simultaneous connections
-        pnlW.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
+        p.add(Box.createHorizontalGlue(), GBC.eol().fill(GBC.HORIZONTAL));
         JLabel labelSimConn = new JLabel(tr("Simultaneous connections"));
         spinSimConn = new JSpinner(new SpinnerNumberModel(wmsAdapter.PROP_SIMULTANEOUS_CONNECTIONS.get(), 1, 30, 1));
         JPanel overlapPanelSimConn = new JPanel(new FlowLayout(FlowLayout.LEFT));
         overlapPanelSimConn.add(labelSimConn);
         overlapPanelSimConn.add(spinSimConn);
-        pnlW.add(overlapPanelSimConn, GBC.eol().fill(GBC.HORIZONTAL));
+        p.add(overlapPanelSimConn, GBC.eol().fill(GBC.HORIZONTAL));
 
         allowRemoteControl = Main.pref.getBoolean("wmsplugin.remotecontrol", true);
         remoteCheckBox = new JCheckBox(tr("Allow remote control (reqires remotecontrol plugin)"), allowRemoteControl);
         JPanel remotePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         remotePanel.add(remoteCheckBox);
 
-        pnlW.add(remotePanel,GBC.eol().fill(GBC.HORIZONTAL));
-        return pnlW;
+        p.add(remotePanel,GBC.eol().fill(GBC.HORIZONTAL));
+        return p;
     }
 
     private JPanel buildTMSSettingsPanel() {
@@ -254,36 +299,30 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         tmsTab.add(this.maxZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
 
-        tmsTab.add(new JLabel(tr("Fade background: ")), GBC.std());
-        tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
-        tmsTab.add(this.fadeBackground, GBC.eol().fill(GBC.HORIZONTAL));
-
         tmsTab.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
 
         this.autozoomActive.setSelected(TMSPreferences.PROP_DEFAULT_AUTOZOOM.get());
         this.autoloadTiles.setSelected(TMSPreferences.PROP_DEFAULT_AUTOLOAD.get());
         this.maxZoomLvl.setValue(TMSPreferences.getMaxZoomLvl(null));
         this.minZoomLvl.setValue(TMSPreferences.getMinZoomLvl(null));
-        this.fadeBackground.setValue(TMSPreferences.PROP_FADE_BACKGROUND.get());
         return tmsTab;
     }
 
-    private Component buildSettingsPanel() {
-        // TODO: make some settings common for WMS and TMS
+    private void addSettingsSection(final JPanel p, String name, JPanel section) {
+        final JLabel lbl = new JLabel(name);
+        lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
+        p.add(lbl);
+        p.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 0));
+        p.add(section,GBC.eol().insets(20,5,0,5));
+    }
+
+    private Component buildSettingsPanel(final PreferenceTabbedPane gui) {
         final JPanel p = new JPanel(new GridBagLayout());
         p.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-        final JLabel lblW = new JLabel(tr("WMS Settings"));
-        lblW.setFont(lblW.getFont().deriveFont(Font.BOLD));
-        p.add(lblW);
-        p.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 0));
-        p.add(buildWMSSettingsPanel(),GBC.eol().insets(20,5,0,0));
-
-        final JLabel lblT = new JLabel(tr("TMS Settings"));
-        lblT.setFont(lblT.getFont().deriveFont(Font.BOLD));
-        p.add(lblT);
-        p.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 0));
-        p.add(buildTMSSettingsPanel(),GBC.eol().insets(20,5,0,0));
+        addSettingsSection(p, tr("Common Settings"), buildCommonSettingsPanel(gui));
+        addSettingsSection(p, tr("WMS Settings"), buildWMSSettingsPanel());
+        addSettingsSection(p, tr("TMS Settings"), buildTMSSettingsPanel());
 
         p.add(new JPanel(),GBC.eol().fill(GBC.BOTH));
         return new JScrollPane(p);
@@ -294,7 +333,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         JPanel p = gui.createPreferenceTab("imagery", tr("Imagery Preferences"), tr("Modify list of imagery layers displayed in the Imagery menu"));
         JTabbedPane pane = new JTabbedPane();
         pane.add(buildImageryProvidersPanel(gui));
-        pane.add(buildSettingsPanel());
+        pane.add(buildSettingsPanel(gui));
         pane.setTitleAt(0, tr("Imagery providers"));
         pane.setTitleAt(1, tr("Settings"));
         p.add(pane,GBC.std().fill(GBC.BOTH));
@@ -319,7 +358,9 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         TMSPreferences.PROP_DEFAULT_AUTOLOAD.put(this.autoloadTiles.isSelected());
         TMSPreferences.setMaxZoomLvl((Integer)this.maxZoomLvl.getValue());
         TMSPreferences.setMinZoomLvl((Integer)this.minZoomLvl.getValue());
-        TMSPreferences.PROP_FADE_BACKGROUND.put(this.fadeBackground.getValue());
+
+        ImageryPreferences.PROP_FADE_AMOUNT.put(this.fadeAmount.getValue());
+        ImageryPreferences.setFadeColor(this.colFadeColor);
 
         return false;
     }

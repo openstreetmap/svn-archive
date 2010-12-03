@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.NavigatableComponent;
+import org.openstreetmap.josm.plugins.imagery.ImageryPreferences;
 
 public class GeorefImage implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,6 +33,8 @@ public class GeorefImage implements Serializable {
     private int xIndex;
     private int yIndex;
 
+    private static final Color transparentColor = new Color(0,0,0,0);
+    private Color fadeColor = transparentColor;
 
     public EastNorth getMin() {
         return layer.getEastNorth(xIndex, yIndex);
@@ -121,11 +124,20 @@ public class GeorefImage implements Serializable {
         if(width == 0 || height == 0)
             return false;
 
+        // TODO: implement per-layer fade color
+        Color newFadeColor;
+        if (ImageryPreferences.PROP_FADE_AMOUNT.get() == 0)
+            newFadeColor = transparentColor;
+        else
+            newFadeColor = ImageryPreferences.getFadeColorWithAlpha();
+
         BufferedImage img = reImg == null?null:reImg.get();
-        if(img != null && img.getWidth() == width && img.getHeight() == height) {
+        if(img != null && img.getWidth() == width && img.getHeight() == height && fadeColor.equals(newFadeColor)) {
             g.drawImage(img, x, y, null);
             return true;
         }
+
+        fadeColor = newFadeColor;
 
         boolean alphaChannel = WMSLayer.PROP_ALPHA_CHANNEL.get() && getImage().getTransparency() != Transparency.OPAQUE;
 
@@ -142,7 +154,7 @@ public class GeorefImage implements Serializable {
             // traditional rendering is as fast at these zoom levels, so it's no loss.
             // Also prevent caching if we're out of memory soon
             if(width > 2000 || height > 2000 || width*height*multipl > freeMem) {
-                fallbackDraw(g, getImage(), x, y, width, height);
+                fallbackDraw(g, getImage(), x, y, width, height, alphaChannel);
             } else {
                 // We haven't got a saved resized copy, so resize and cache it
                 img = new BufferedImage(width, height, alphaChannel?BufferedImage.TYPE_INT_ARGB:BufferedImage.TYPE_3BYTE_BGR);
@@ -150,22 +162,35 @@ public class GeorefImage implements Serializable {
                         0, 0, width, height, // dest
                         0, 0, getImage().getWidth(null), getImage().getHeight(null), // src
                         null);
+                if (!alphaChannel) {
+                    drawFadeRect(img.getGraphics(), 0, 0, width, height);
+                }
                 img.getGraphics().dispose();
                 g.drawImage(img, x, y, null);
                 reImg = new SoftReference<BufferedImage>(img);
             }
         } catch(Exception e) {
-            fallbackDraw(g, getImage(), x, y, width, height);
+            fallbackDraw(g, getImage(), x, y, width, height, alphaChannel);
         }
         return true;
     }
 
-    private void fallbackDraw(Graphics g, Image img, int x, int y, int width, int height) {
+    private void fallbackDraw(Graphics g, Image img, int x, int y, int width, int height, boolean alphaChannel) {
         flushedResizedCachedInstance();
         g.drawImage(
                 img, x, y, x + width, y + height,
                 0, 0, img.getWidth(null), img.getHeight(null),
                 null);
+        if (!alphaChannel) { //FIXME: fading for layers with alpha channel currently is not supported
+            drawFadeRect(g, x, y, width, height);
+        }
+    }
+
+    private void drawFadeRect(Graphics g, int x, int y, int width, int height) {
+        if (fadeColor != transparentColor) {
+            g.setColor(fadeColor);
+            g.fillRect(x, y, width, height);
+        }
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {

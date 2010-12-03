@@ -52,8 +52,9 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
-import org.openstreetmap.josm.plugins.imagery.ImageryLayer;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
+import org.openstreetmap.josm.plugins.imagery.ImageryLayer;
+import org.openstreetmap.josm.plugins.imagery.ImageryPreferences;
 
 /**
  * Class that displays a slippy map layer.
@@ -689,11 +690,9 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                         img_x_offset, img_y_offset,
                         img_x_end, img_y_end,
                         this);
-        float fadeBackground = TMSPreferences.getFadeBackground();
-        if (fadeBackground != 0f) {
+        if (ImageryPreferences.PROP_FADE_AMOUNT.get() != 0) {
             // dimm by painting opaque rect...
-            // TODO: make fade color configurable and implement same feature for WMS layers
-            g.setColor(new Color(1f, 1f, 1f, fadeBackground));
+            g.setColor(ImageryPreferences.getFadeColorWithAlpha());
             g.fillRect(target.x, target.y,
                        target.width, target.height);
         }

@@ -25,28 +25,7 @@ public class TMSPreferences
     public static final BooleanProperty PROP_DEFAULT_AUTOLOAD = new BooleanProperty(PREFERENCE_PREFIX + ".default_autoload", true);
     public static final IntegerProperty PROP_MIN_ZOOM_LVL = new IntegerProperty(PREFERENCE_PREFIX + ".min_zoom_lvl", DEFAULT_MIN_ZOOM);
     public static final IntegerProperty PROP_MAX_ZOOM_LVL = new IntegerProperty(PREFERENCE_PREFIX + ".max_zoom_lvl", DEFAULT_MAX_ZOOM);
-    public static final IntegerProperty PROP_FADE_BACKGROUND = new IntegerProperty(PREFERENCE_PREFIX + ".fade_background", 0);
     public static final BooleanProperty PROP_DRAW_DEBUG = new BooleanProperty(PREFERENCE_PREFIX + ".draw_debug", false);
-
-    public static void setFadeBackground(float fadeBackground) {
-        PROP_FADE_BACKGROUND.put(Math.round(fadeBackground*100));
-    }
-
-    /**
-     *
-     * @return  number between 0 and 1, inclusive
-     */
-    public static float getFadeBackground() {
-        float parsed = (PROP_FADE_BACKGROUND.get())/100.0f;
-        if(parsed < 0f) {
-            parsed = 0f;
-        } else {
-            if(parsed > 1f) {
-                parsed = 1f;
-            }
-        }
-        return parsed;
-    }
 
     static int checkMaxZoomLvl(int maxZoomLvl, TileSource ts)
     {

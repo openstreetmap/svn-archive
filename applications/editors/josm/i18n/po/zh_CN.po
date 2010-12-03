@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-26 20:32+0100\n"
-"PO-Revision-Date: 2010-11-25 02:57+0000\n"
+"POT-Creation-Date: 2010-12-03 17:09+0100\n"
+"PO-Revision-Date: 2010-11-27 13:16+0000\n"
 "Last-Translator: mmyfl <Unknown>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-11-26 19:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 13:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -48,8 +48,8 @@ msgstr "忽略格式不良的文件 URL: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:69
 #: ../core/src/org/openstreetmap/josm/actions/MergeNodesAction.java:182
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:114
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:117
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:143
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:123
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:149
 #: ../core/src/org/openstreetmap/josm/actions/OrthogonalizeAction.java:128
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:68
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:102
@@ -69,7 +69,7 @@ msgstr "忽略格式不良的文件 URL: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:117
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:361
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:244
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:420
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:422
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:522
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:605
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:708
@@ -93,6 +93,8 @@ msgstr "忽略格式不良的文件 URL: \"{0}\""
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:560
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:51
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:662
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSGrabber.java:130
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:157
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/OsbUploadHook.java:53
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:145
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:85
@@ -130,8 +132,8 @@ msgstr "显示 关于 画面"
 #: ../core/src/org/openstreetmap/josm/actions/AboutAction.java:60
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:69
 #: ../core/src/org/openstreetmap/josm/gui/GettingStarted.java:103
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:84
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:225
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:82
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:223
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:797
 #: ../core/src/org/openstreetmap/josm/gui/MapView.java:799
 #: ../core/src/org/openstreetmap/josm/gui/SplashScreen.java:60
@@ -253,9 +255,9 @@ msgstr "请点击继续来开启 {0} 个浏览器窗口"
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:113
 #: ../core/src/org/openstreetmap/josm/actions/SaveActionBase.java:205
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:117
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:220
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:222
 #: ../core/src/org/openstreetmap/josm/corrector/TagCorrector.java:52
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:260
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
 #: ../core/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:48
 #: ../core/src/org/openstreetmap/josm/gui/actionsupport/DeleteFromRelationConfirmationDialog.java:363
 #: ../core/src/org/openstreetmap/josm/gui/conflict/tags/CombinePrimitiveResolverDialog.java:345
@@ -300,6 +302,8 @@ msgstr "请点击继续来开启 {0} 个浏览器窗口"
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:1304
 #: ../plugins/grid/src/grid/GridLayer.java:162
 #: ../plugins/grid/src/grid/GridLayer.java:199
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:167
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:153
 #: ../plugins/importvec/src/org/openstreetmap/josm/plugins/importvec/ImportDialog.java:25
 #: ../plugins/importvec/src/org/openstreetmap/josm/plugins/importvec/ImportVectorAction.java:100
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/dialogs/TextInputDialog.java:151
@@ -337,7 +341,7 @@ msgstr "选择目标图层"
 
 #: ../core/src/org/openstreetmap/josm/actions/AbstractMergeAction.java:67
 #: ../core/src/org/openstreetmap/josm/actions/MergeLayerAction.java:20
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:518
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:528
 msgid "Merge"
 msgstr "合并"
 
@@ -480,6 +484,7 @@ msgstr "请至少选择 4 个节点。"
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:926
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:955
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:43
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:155
 #: ../plugins/utilsplugin2/src/utilsplugin2/AddIntersectionsAction.java:40
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:689
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:711
@@ -692,13 +697,14 @@ msgstr "请正确的选择二或三个节点，或一条只有二或三个节点
 #: ../core/src/org/openstreetmap/josm/command/DeleteCommand.java:386
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:643
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:112
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:299
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:309
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:977
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1055
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/GeoImageLayer.java:647
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:509
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:96
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:130
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:132
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:257
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:100
@@ -835,7 +841,7 @@ msgstr "下载参照到已选取原型中之一的原型"
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:19
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateAction.java:21
 #: ../core/src/org/openstreetmap/josm/actions/DuplicateLayerAction.java:21
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:572
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:582
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:1445
 msgid "Duplicate"
 msgstr "制作副本"
@@ -947,8 +953,8 @@ msgid "Please select at least one closed way that should be joined."
 msgstr "请选择至少一个要连结的封闭路径。"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:327
-#, java-format
-msgid "\"{0}\" is not closed and therefore cannot be joined."
+#, fuzzy
+msgid "One of the selected ways is not closed and therefore cannot be joined."
 msgstr "\"{0}\" 尚未封闭因此不能连结。"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:340
@@ -970,6 +976,7 @@ msgid "Are you really sure to continue?"
 msgstr "您确定要继续吗？"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:345
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:527
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:377
 msgid "Please abort if you are not sure"
 msgstr "如果不确定请放弃"
@@ -1257,43 +1264,43 @@ msgstr "打开..."
 msgid "Open a file."
 msgstr "打开一个文件。"
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:82
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:89
 msgid "Opening files"
 msgstr "正在打开文件"
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:101
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:107
 #, java-format
 msgid "Cannot open {0} file with the file importer ''{1}''."
 msgid_plural "Cannot open {0} files with the file importer ''{1}''."
 msgstr[0] "不能以文件处理程序 \"{1}\" 打开 {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:128
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:134
 #, java-format
 msgid "Cannot open {0} file because no suitable file importer is available."
 msgid_plural ""
 "Cannot open {0} files because no suitable file importer is available."
 msgstr[0] "不能开启文件 {0}，因为没有合适的文件处理程可用。"
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:181
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:187
 #, java-format
 msgid "<html>Cannot open directory ''{0}''.<br>Please select a file.</html>"
 msgstr "<html>不能开启目录 \"{0}\"。<br>请选择一个文件。</html>"
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:182
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:188
 msgid "Open file"
 msgstr "打开文件"
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:236
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:242
 msgid "Opening 1 file..."
 msgstr "正在开启 1 个文件..."
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:238
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:244
 #, java-format
 msgid "Opening {0} file..."
 msgid_plural "Opening {0} files..."
 msgstr[0] "正在开启 {0} 个文件..."
 
-#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:246
+#: ../core/src/org/openstreetmap/josm/actions/OpenFileAction.java:254
 #, java-format
 msgid "Opening file ''{0}'' ..."
 msgstr "正在开启文件 \"{0}\" ..."
@@ -1558,8 +1565,8 @@ msgstr "无法重命名文件 \"{0}\""
 
 #: ../core/src/org/openstreetmap/josm/actions/RenameLayerAction.java:95
 #: ../core/src/org/openstreetmap/josm/actions/UnGlueAction.java:133
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:329
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:372
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:331
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:374
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:401
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:412
 #: ../core/src/org/openstreetmap/josm/data/Preferences.java:435
@@ -1570,7 +1577,7 @@ msgstr "无法重命名文件 \"{0}\""
 #: ../core/src/org/openstreetmap/josm/gui/BookmarkList.java:170
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:46
 #: ../core/src/org/openstreetmap/josm/gui/ExceptionDialogUtil.java:61
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:335
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:325
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/ParentRelationLoadingTask.java:134
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:403
 #: ../core/src/org/openstreetmap/josm/gui/download/DownloadDialog.java:416
@@ -1591,7 +1598,7 @@ msgstr "无法重命名文件 \"{0}\""
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:830
 #: ../core/src/org/openstreetmap/josm/gui/tagging/TaggingPreset.java:840
 #: ../core/src/org/openstreetmap/josm/io/FileImporter.java:64
-#: ../core/src/org/openstreetmap/josm/io/FileImporter.java:78
+#: ../core/src/org/openstreetmap/josm/io/FileImporter.java:80
 #: ../core/src/org/openstreetmap/josm/io/GpxExporter.java:176
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:90
 #: ../core/src/org/openstreetmap/josm/io/OsmExporter.java:105
@@ -1612,6 +1619,23 @@ msgstr "无法重命名文件 \"{0}\""
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLoadFromCache.java:70
 #: ../plugins/epsg31287/src/org/openstreetmap/josm/plugins/epsg31287/Epsg31287.java:74
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:969
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:506
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:663
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:166
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteActionList.java:84
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteAddBug.java:141
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteAddBug.java:152
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteCloseBug.java:137
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteCloseBug.java:147
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteCommentBug.java:135
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteCommentBug.java:145
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteInvalidateBug.java:139
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteInvalidateBug.java:150
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteReOpenBug.java:143
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteReOpenBug.java:156
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteWorkOffline.java:110
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustBugDetailsPanel.java:153
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustHelpPanel.java:94
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/CloseAction.java:65
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/api/EditAction.java:70
 #: ../plugins/photo_geotagging/src/org/openstreetmap/josm/plugins/photo_geotagging/GeotaggingAction.java:230
@@ -1656,7 +1680,6 @@ msgstr "反转路径"
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersTableColumnModel.java:62
 #: ../core/src/org/openstreetmap/josm/gui/layer/Layer.java:286
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:215
-#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:1340
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:240
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1406
 #: build/specialmessages.java:65
@@ -1766,7 +1789,6 @@ msgstr "复制到剪贴板并关闭"
 #: ../core/src/org/openstreetmap/josm/gui/layer/geoimage/CorrelateGpxWithImages.java:969
 #: ../plugins/DirectUpload/src/org/openstreetmap/josm/plugins/DirectUpload/UploadDataGui.java:237
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/AddressEditDialog.java:74
-#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:1313
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1382
 msgid "Close"
 msgstr "关闭"
@@ -1790,6 +1812,7 @@ msgid "Delete nodes outside of downloaded data regions"
 msgstr "删除在已下载数据区域外的节点"
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:71
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:226
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:73
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:239
 msgid "No, abort"
@@ -2536,7 +2559,7 @@ msgid ""
 "its normal."
 msgstr "拖曳一个路径来制作矩形。按 Ctrl 后拖曳并以平常的方式移动一个区段。"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:347
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:346
 msgid "Extrude Way"
 msgstr "推出路径"
 
@@ -2672,79 +2695,79 @@ msgstr "<问号>"
 msgid "<end-of-file>"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:112
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:113
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:114
 msgid "Search..."
 msgstr "查找..."
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:112
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:113
 msgid "Search for objects."
 msgstr "查找对象。"
 
 #. -- prepare the combo box with the search expressions
 #.
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:137
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:138
 msgid "Please enter a filter string."
 msgstr "请输入过滤条件字串。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:137
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:138
 msgid "Please enter a search string."
 msgstr "请输入查找字串。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:142
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:143
 msgid "Enter the search expression"
 msgstr "请输入查找语词"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:150
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:152
 msgid "replace selection"
 msgstr "取代选择区域"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:151
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:153
 msgid "add to selection"
 msgstr "加入至选择区域"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:152
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:154
 msgid "remove from selection"
 msgstr "从选择区域删除"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:153
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:155
 msgid "find in selection"
 msgstr "在选择区域中寻找"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:160
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:162
 msgid "case sensitive"
 msgstr "区分大小写"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:161
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:163
 msgid "all objects"
 msgstr "所有的对象"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:162
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:164
 msgid "Also include incomplete and deleted objects in search."
 msgstr "也查找不完整和已删除的对象。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:163
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:165
 msgid "regular expression"
 msgstr "正则表达式"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:179
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:181
 msgid "<b>Baker Street</b> - ''Baker'' and ''Street'' in any key or name."
 msgstr ""
 "<b>Baker Street</b> - \"Baker\" 和 \"Street\" 出现在任何设定键或名称中。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:180
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:182
 msgid "<b>\"Baker Street\"</b> - ''Baker Street'' in any key or name."
 msgstr "<b>\"Baker Street\"</b> - \"Baker Street\" 出现在任何设定键或名称中。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:181
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:183
 msgid "<b>name:Bak</b> - ''Bak'' anywhere in the name."
 msgstr "<b>name:Bak</b> - \"Bak\" 出现在名称中的任何地方。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:182
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:184
 msgid "<b>type=route</b> - key ''type'' with value exactly ''route''."
 msgstr "<b>type=route</b> - 含有设定键 \"type\" 为 \"route\" 者。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:183
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:185
 msgid ""
 "<b>type=*</b> - key ''type'' with any value. Try also <b>*=value</b>, "
 "<b>type=</b>, <b>*=*</b>, <b>*=</b>"
@@ -2752,48 +2775,48 @@ msgstr ""
 "<b>type=*</b> - 设定键 \"type\" 为任何数值。也可以使用 <b>*=value</b>、"
 "<b>type=</b>、<b>*=*</b>、<b>*=</b>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:184
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:186
 msgid "<b>-name:Bak</b> - not ''Bak'' in the name."
 msgstr "<b>-name:Bak</b> - 名称中没有 \"Bak\"。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:185
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:187
 msgid "<b>oneway?</b> - oneway=yes, true, 1 or on"
 msgstr "<b>是否为单行道?</b> - oneway=yes, true, 1 或 on"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:186
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:188
 msgid "<b>foot:</b> - key=foot set to any value."
 msgstr "<b>foot:</b> - key=foot 设定为任何数值。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:187
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:189
 msgid "<u>Special targets:</u>"
 msgstr "<u>特殊的目标：</u>"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:188
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:190
 msgid ""
 "<b>type:</b> - type of the object (<b>node</b>, <b>way</b>, <b>relation</b>)"
 msgstr ""
 "<b>type:</b> - 对象的类型(<b>节点(node)</b>, <b>路径(way)</b>, <b>关系"
 "(relation)</b> )"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:189
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:191
 msgid "<b>user:</b>... - all objects changed by user"
 msgstr "<b>user:</b>... - 所有由某用户改变的对象"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:190
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:192
 msgid "<b>user:anonymous</b> - all objects changed by anonymous users"
 msgstr "<b>user:anonymous</b> - 所有对象是由匿名用户所改变的"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:191
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:193
 msgid "<b>id:</b>... - object with given ID (0 for new objects)"
 msgstr "<b>id:</b>... - 以此为 ID 的对象(0 为新的对象)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:192
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:194
 msgid ""
 "<b>version:</b>... - object with given version (0 objects without an "
 "assigned version)"
 msgstr "<b>version:</b>... - 查看这个版本的对象(未指定版本则为 0 个对象)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:193
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:195
 msgid ""
 "<b>changeset:</b>... - object with given changeset id (0 objects without "
 "assigned changeset)"
@@ -2801,24 +2824,24 @@ msgstr ""
 "<b>changeset:</b>... - 查看这个更改组合 id 的对象(未指定更改组合则为 0 个对"
 "象)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:194
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:196
 msgid ""
 "<b>nodes:</b>... - object with given number of nodes (nodes:count or nodes:"
 "min-max)"
 msgstr ""
 "<b>nodes:</b>... - 有指定数量的节点的对象(nodes:count 或 nodes:min-max)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:195
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:197
 msgid ""
 "<b>tags:</b>... - object with given number of tags (tags:count or tags:min-"
 "max)"
 msgstr "<b>tags:</b>... - 以此数字为标签的对象(tags:count 或 tags:min-max)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:196
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:198
 msgid "<b>role:</b>... - object with given role in a relation"
 msgstr "<b>role:</b>... - 在关系中指定角色的对象"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:197
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:199
 msgid ""
 "<b>timestamp:</b>... -  objects with this timestamp (<b>2009-11-"
 "12T14:51:09Z</b>, <b>2009-11-12</b> or <b>T14:51</b> ...)"
@@ -2826,41 +2849,41 @@ msgstr ""
 "<b>timestamp:</b>... - 有此时间戳记的对象 (<b>2009-11-12T14:51:09Z</b>, "
 "<b>2009-11-12</b > 或 <b>T14:51</b> ...)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:198
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
 msgid "<b>modified</b> - all changed objects"
 msgstr "<b>modified</b> - 所有修改过的对象"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:199
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
 msgid "<b>selected</b> - all selected objects"
 msgstr "<b>selected</b> - 所有选取的对象"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:200
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:202
 msgid "<b>incomplete</b> - all incomplete objects"
 msgstr "<b>incomplete</b> - 所有不完整的对象"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:201
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:203
 msgid "<b>untagged</b> - all untagged objects"
 msgstr "<b>untagged</b> - 所有无标签的对象"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:202
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:204
 msgid ""
 "<b>child <i>expr</i></b> - all children of objects matching the expression"
 msgstr "<b>child <i>expr</i></b> - 所有对象的子项符合正则表达式的"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:203
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:205
 msgid ""
 "<b>parent <i>expr</i></b> - all parents of objects matching the expression"
 msgstr "<b>parent <i>expr</i></b> - 所有对象父项符合正则表达式的"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:204
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:206
 msgid "Use <b>|</b> or <b>OR</b> to combine with logical or"
 msgstr "使用 <b>|</b> 或 <b>OR</b> 做逻辑或运算"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:205
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:207
 msgid "Use <b>\"</b> to quote operators (e.g. if key contains <b>:</b>)"
 msgstr "使用 <b>\"</b> 将运算子包起来 (例如:当键值包含 <b>:</b>)"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:206
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:208
 msgid ""
 "Within quoted strings the <b>\"</b> and <b>\\</b> characters need to be "
 "escaped by a preceding <b>\\</b> (e.g. <b>\\\"</b> and <b>\\\\</b>)."
@@ -2868,12 +2891,12 @@ msgstr ""
 "有引号的字串 <b>\"</b> 和 <b>\\</b> 字节需要在前头加上 <b>\\</b> (例如 <b>\\"
 "\" </b> 和 <b>\\\\</b>)。"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:207
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:209
 msgid "Use <b>(</b> and <b>)</b> to group expressions"
 msgstr "使用 <b>(</b> 和 <b>)</b> 将正则表达式群组起来"
 
 #. Strings in JFileChooser
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:217
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:219
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:66
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/preset/ui/TabularPresetSelector.java:53
@@ -2882,20 +2905,20 @@ msgstr "使用 <b>(</b> 和 <b>)</b> 将正则表达式群组起来"
 msgid "Filter"
 msgstr "过滤条件"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:217
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:219
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:303
 msgid "Search"
 msgstr "查找"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:219
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:221
 msgid "Submit filter"
 msgstr "送出过滤条件"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:219
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:221
 msgid "Start Search"
 msgstr "开始查找"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:231
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:233
 #, java-format
 msgid ""
 "Search expression is not valid: \n"
@@ -2906,55 +2929,55 @@ msgstr ""
 "\n"
 " {0}"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:232
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:234
 msgid "Invalid search expression"
 msgstr "无效的搜索表达式"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:408
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:410
 #, java-format
 msgid "No match found for ''{0}''"
 msgstr "找不到 \"{0}\" 的符合项"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:410
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:412
 #, java-format
 msgid "Nothing added to selection by searching for ''{0}''"
 msgstr "查找 \"{0}\" 的结果没有任何项目可加入选择区域"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:412
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:414
 #, java-format
 msgid "Nothing removed from selection by searching for ''{0}''"
 msgstr "查找 \"{0}\" 的结果没有任何项目可自选择区域删除"
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:414
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:416
 #, java-format
 msgid "Nothing found in selection by searching for ''{0}''"
 msgstr "在选择区域中查找不到 \"{0}\""
 
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:424
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:426
 #, java-format
 msgid "Found {0} matches"
 msgstr "找到 {0} 个符合项"
 
 #. case sensitive
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:457
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:459
 msgctxt "search"
 msgid "CS"
 msgstr "CS"
 
 #. case insensitive
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:458
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:460
 msgctxt "search"
 msgid "CI"
 msgstr "CI"
 
 #. regex search
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:460
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:462
 msgctxt "search"
 msgid "RX"
 msgstr "RX"
 
 #. all elements
-#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:462
+#: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:464
 msgctxt "search"
 msgid "A"
 msgstr "A"
@@ -3347,7 +3370,7 @@ msgstr "在关系 {0} 设定 \"modified\" 旗标"
 msgid "Set the ''modified'' flag for relation {0}"
 msgstr "在关系 {0} 设定 \"modified\" 旗标"
 
-#: ../core/src/org/openstreetmap/josm/command/MoveCommand.java:130
+#: ../core/src/org/openstreetmap/josm/command/MoveCommand.java:134
 #, java-format
 msgid "Move {0} node"
 msgid_plural "Move {0} nodes"
@@ -3503,36 +3526,36 @@ msgstr "关系中的角色参照到"
 msgid "Automatic tag correction"
 msgstr "自动修正标签"
 
-#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:74
-#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:78
+#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:84
+#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:88
 #, java-format
 msgid "Unable to create directory {0}, autosave will be disabled"
 msgstr "无法创建目录 {0}，自动保存将被禁用"
 
-#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:140
+#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:149
 #, java-format
 msgid "Unable to create file {0}, other filename will be used"
 msgstr "无法创建目录 {0}，将使用其他文件名"
 
-#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:145
+#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:154
 #, java-format
 msgid "IOError while creating file, autosave will be skipped: {0}"
 msgstr "创建文件时发生 IO 错误，将跳过自动保存：{0}"
 
-#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:167
+#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:176
 #, java-format
 msgid "Unable to delete old backup file {0}"
 msgstr "无法删除旧的备份文件 {0}"
 
-#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:230
+#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:239
 #, java-format
 msgid "Error while creating backup of removed layer: {0}"
 msgstr "创建删除图层的备份时发生错误：{0}"
 
-#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:277
-#, java-format
-msgid "Unable to read autosaved osm data ({0}) - {1}"
-msgstr "无法读取 OSM 自动保存的数据 ({0}) - {1}"
+#: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:269
+#, fuzzy
+msgid "Restoring files"
+msgstr "正在打开文件"
 
 #: ../core/src/org/openstreetmap/josm/data/Bounds.java:75
 #: ../core/src/org/openstreetmap/josm/data/Bounds.java:79
@@ -3672,14 +3695,14 @@ msgstr "十进位经纬度"
 #.
 #: ../core/src/org/openstreetmap/josm/data/coor/CoordinateFormat.java:20
 msgid "deg° min'' sec\""
-msgstr "度° 分\" 秒\""
+msgstr "度°分'' 秒\""
 
 #. *
 #. * the nautical format
 #.
 #: ../core/src/org/openstreetmap/josm/data/coor/CoordinateFormat.java:25
 msgid "deg° min'' (Nautical)"
-msgstr "度° 分\" (航海)"
+msgstr "度°分'' (航海)"
 
 #. *
 #. * coordinates East/North
@@ -3883,7 +3906,7 @@ msgstr "节点: 已标签"
 #. teal
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:21
 msgid "untagged way"
-msgstr "未上标签的路径"
+msgstr "没有标签的路径"
 
 #. dark green
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:22
@@ -3904,7 +3927,7 @@ msgstr "突显"
 #. lighteal
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:26
 msgid "untagged"
-msgstr "未上标签的"
+msgstr "没有标签的"
 
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:27
 msgid "text"
@@ -3913,6 +3936,10 @@ msgstr "文字"
 #: ../core/src/org/openstreetmap/josm/data/osm/visitor/paint/PaintColors.java:28
 msgid "areatext"
 msgstr "区域文字"
+
+#: ../core/src/org/openstreetmap/josm/data/projection/Epsg3008.java:29
+msgid "SWEREF99 13 30 / EPSG:3008 (Sweden)"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/projection/Epsg4326.java:26
 msgid "WGS84 Geographic"
@@ -4224,22 +4251,22 @@ msgstr "重复的电线节点"
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:259
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:257
 msgid "Natural duplicated nodes"
-msgstr ""
+msgstr "重复的自然节点"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:270
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:268
 msgid "Building duplicated nodes"
-msgstr ""
+msgstr "重复的建筑节点"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:281
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:279
 msgid "Landuse duplicated nodes"
-msgstr ""
+msgstr "重复的土地利用节点"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:292
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:290
 msgid "Other duplicated nodes"
-msgstr ""
+msgstr "重复的其他节点"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/DuplicateNode.java:320
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/DuplicateNode.java:319
@@ -4677,6 +4704,7 @@ msgstr "使用复杂的规则验证属性数值。"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:128
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:471
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:83
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:114
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:106
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:652
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:87
@@ -4723,6 +4751,7 @@ msgstr "请选择要编辑的列。"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:648
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:225
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:136
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:138
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:711
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:107
@@ -4843,7 +4872,7 @@ msgstr "非法的正则表达式 \"{0}\""
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:35
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TurnrestrictionTest.java:35
 msgid "Turnrestriction"
-msgstr "Turnrestriction"
+msgstr "转弯限制"
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TurnrestrictionTest.java:35
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TurnrestrictionTest.java:36
@@ -5452,71 +5481,71 @@ msgstr "用户名"
 msgid "Password"
 msgstr "密码"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:85
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:83
 msgid "usage"
 msgstr "用法"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:87
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:85
 msgid "options"
 msgstr "选项"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:88
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:86
 msgid "Show this help"
 msgstr "显示此说明信息"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:89
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:87
 msgid "Standard unix geometry argument"
 msgstr "标准 unix 几何引数"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:90
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:88
 msgid "Download the bounding box"
 msgstr "下载此绑定方块"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:91
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:89
 msgid "Download the location at the url (with lat=x&lon=y&zoom=z)"
 msgstr "于此 url 下载位置(具有 lat=x&lon=y&zoom=z)"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:92
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:90
 msgid "Open a file (any file type that can be opened with File/Open)"
 msgstr "开启文件(任何可以使用文件/开启来开启的文件类型)"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:93
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:91
 msgid "Download the bounding box as raw gps"
 msgstr "下载绑定方块做为原始 gps"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:94
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:92
 msgid "Download the location at the url (with lat=x&lon=y&zoom=z) as raw gps"
 msgstr "将url (lat=x&lon=y&zoom=z) 的位置下载为原始 gps"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:95
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:93
 msgid "Select with the given search"
 msgstr "选取指定的查找"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:96
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:94
 msgid "Launch in maximized mode"
 msgstr "以最大化模式启动"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:97
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:95
 msgid "Reset the preferences to default"
 msgstr "重设偏好设定为预设值"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:98
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:96
 msgid "Set the language"
 msgstr "设定语言"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:99
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:97
 msgid "options provided as Java system properties"
 msgstr "选项提供为 Java 系统属性"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:100
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:98
 msgid "/PATH/TO/JOSM/FOLDER/         "
 msgstr "/PATH/TO/JOSM/FOLDER/         "
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:100
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:98
 msgid "Change the folder for all user settings"
 msgstr "改变所有用户设定值的文件夹"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:101
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:99
 msgid ""
 "note: For some tasks, JOSM needs a lot of memory. It can be necessary to add "
 "the following\n"
@@ -5526,77 +5555,77 @@ msgstr ""
 "注意：在某些工作中，JOSM 需要大量的内存。因此有必要加入下列\n"
 "      Java 选项以 MB 来指定分配到内存的最大容量"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:104
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:102
 msgid "examples"
 msgstr "范例"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:111
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:109
 msgid ""
 "Parameters --download, --downloadgps, and --selection are processed in this "
 "order."
 msgstr "参数 --download, --downloadgps 和 --selection 会以这个顺序处理。"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:112
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:110
 msgid "Make sure you load some data if you use --selection."
 msgstr "如果您使用 --selection 请确定已载入某些数据。"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:200
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:198
 msgid "Initializing"
 msgstr "初始化"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:206
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:204
 msgid "Updating plugins..."
 msgstr "正在更新插件..."
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:211
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:209
 msgid "Installing updated plugins"
 msgstr "正在安装更新的插件"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:215
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:213
 msgid "Loading early plugins"
 msgstr "载入较早的插件"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:219
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:217
 msgid "Setting defaults"
 msgstr "设定预设值"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:224
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:222
 msgid "Creating main GUI"
 msgstr "建立主窗口中"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:231
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:229
 msgid "Loading plugins"
 msgstr "正在载入插件"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:258
 msgid "Unsaved osm data"
 msgstr "未保存的 OSM 数据"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:260
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
 msgid "Restore"
 msgstr "恢复"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:260
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:259
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:217
 msgid "Discard"
 msgstr "丢弃"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:263
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:262
 #, java-format
 msgid "JOSM found {0} unsaved osm data layer. "
 msgid_plural "JOSM found {0} unsaved osm data layers. "
 msgstr[0] "JOSM 发现 {0} 个未保存的 OSM 数据图层。 "
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:265
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:264
 msgid "It looks like JOSM crashed last time. Do you like to restore the data?"
 msgstr "看来 JOSM 上次似乎是崩溃了。你想恢复数据吗?"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:305
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:295
 #, java-format
 msgid "Preference setting {0} has been removed since it is no longer used."
 msgstr "偏好设定 {0} 已经被删除，因为它已不再使用了。"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:318
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:308
 #, java-format
 msgid ""
 "<h2>JOSM requires Java version 6.</h2>Detected Java version: {0}.<br>You can "
@@ -5606,11 +5635,11 @@ msgstr ""
 "<h2>JOSM 需要 Java 版本 6。<h2>检测到 Java 版本: {0}。<br>你可以<ul><li>升级 "
 "Java (JRE) 或</li><li>使用较旧版本的 (兼容 Java 5)  JOSM。</li></ul>更多信息:"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:333
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:323
 msgid "Exit JOSM"
 msgstr "退出 JOSM"
 
-#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:334
+#: ../core/src/org/openstreetmap/josm/gui/MainApplication.java:324
 msgid "Continue, try anyway"
 msgstr "强制继续"
 
@@ -6296,7 +6325,7 @@ msgstr "参照于："
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:295
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:307
 #: ../core/src/org/openstreetmap/josm/gui/conflict/pair/properties/PropertiesMerger.java:316
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferences.java:247
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferences.java:261
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/editor/PresetItemListCellRenderer.java:23
 msgid "(none)"
 msgstr "(没有)"
@@ -6769,7 +6798,7 @@ msgstr "开启所有指令的清单(复原缓冲区)。"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:115
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/FilterDialog.java:67
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:70
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:166
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:163
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/RelationListDialog.java:91
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:167
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/UserListDialog.java:66
@@ -6777,6 +6806,7 @@ msgstr "开启所有指令的清单(复原缓冲区)。"
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/properties/PropertiesDialog.java:541
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageWayPointDialog.java:190
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:46
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:115
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
 #: ../plugins/openstreetbugs/src/org/openstreetmap/josm/plugins/osb/gui/OsbDialog.java:116
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingDialog.java:69
@@ -7030,7 +7060,7 @@ msgstr "显示选取对象的历史记录。"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/InspectPrimitiveDialog.java:43
 msgid "Advanced object info"
-msgstr "进阶的对象信息"
+msgstr "高级的对象信息"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/LatLonDialog.java:92
 msgid ""
@@ -7067,66 +7097,66 @@ msgstr "关闭此对话框并建立新的节点"
 msgid "Close the dialog, do not create a new node"
 msgstr "关闭此对话框，不要建立新的节点"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:165
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:166
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:162
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:163
 msgid "Layers"
 msgstr "图层"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:165
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:162
 msgid "Open a list of all loaded layers."
 msgstr "开启所有载入图层的清单。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:298
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:308
 msgid "Delete the selected layers."
 msgstr "删除选取的图层。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:379
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:1237
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:389
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:1246
 msgid "Show/Hide"
 msgstr "显示/隐藏"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:392
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:402
 msgid "Toggle visible state of the selected layer."
 msgstr "切换选取的图层可见性状态。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:449
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:459
 #: ../core/src/org/openstreetmap/josm/gui/preferences/StyleSourceEditor.java:511
 msgid "Activate"
 msgstr "使用"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:455
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:465
 msgid "Activate the selected layer"
 msgstr "使用选取的图层"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:524
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:534
 msgid "Merge this layer into another layer"
 msgstr "将这个图层合并至另一个图层"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:578
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:588
 msgid "Duplicate this layer"
 msgstr "重制这个图层"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:649
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:659
 msgid "this layer is the active layer"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:649
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:659
 msgid "this layer is not currently active (click to activate)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:664
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:674
 msgid "layer is currently visible (click to hide layer)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:664
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:674
 msgid "layer is currently hidden (click to show layer)"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:728
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:737
 msgid "Move the selected layer one row up."
 msgstr "将选取的图层上移一列。"
 
-#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:749
+#: ../core/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:758
 msgid "Move the selected layer one row down."
 msgstr "将选取的图层下移一列。"
 
@@ -9051,7 +9081,7 @@ msgstr "从服务器 URL 查询更改组合"
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:136
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/TurnRestrictionEditor.java:138
 msgid "Advanced"
-msgstr "进阶"
+msgstr "高级"
 
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/query/ChangesetQueryDialog.java:58
 msgid "Use a custom changeset query"
@@ -9980,6 +10010,7 @@ msgstr "类型"
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:140
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:281
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:408
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:171
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:86
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/ac/AutoCompletionListRenderer.java:117
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyTreeTableModel.java:33
@@ -10868,6 +10899,7 @@ msgid "Initializing relations to update ..."
 msgstr "正在初始化要更新的关系 ..."
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:124
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:338
 #: ../plugins/public_transport/src/public_transport/GTFSImporterDialog.java:83
 #: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:85
 msgid "Settings"
@@ -10892,7 +10924,7 @@ msgstr "管理开放的更改组合并选择要上传的更改组合"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:137
 msgid "Configure advanced settings"
-msgstr "设定进阶设定值"
+msgstr "设定高级设定值"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:178
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:494
@@ -10928,10 +10960,10 @@ msgid ""
 ">to understand what is going on!<br /><br />If you spend a minute now to "
 "explain your change, you will make life<br />easier for many other mappers."
 msgstr ""
-"你的上传注解是<i>空</i>的，或者<i>非常短</i>。<br /><br />这在技术上是允许"
-"的，但请你考虑一下其他的用户，<br />当他们需要一个有意义的更改组合注释，以"
-"<br />决定下一步动作时，他们的感受!<br /><br />如果你现在花几分钟来解释一下你"
-"的更改组合，就可以大大方便其他的编辑者。"
+"您的上传备注是<i>空的</i>，或是<i>太过简短</i>。<br /><br />这在技术上是允许"
+"的，但是请考虑到很多使用者<br />在观看他们区域的变更时，都是依据有意义的变更"
+"组合备注<br />来了解发生了什么事!<br /><br />如果您现在花一点时间说明您的变"
+"更，就可以让其他<br />众多制图者更好做事。"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:388
 msgid "Return to the previous dialog to enter a more descriptive comment"
@@ -11034,7 +11066,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadParameterSummaryPanel.java:94
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadParameterSummaryPanel.java:102
 msgid "advanced configuration"
-msgstr "进阶的组态"
+msgstr "高级的组态"
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadParameterSummaryPanel.java:98
 #, java-format
@@ -12513,7 +12545,7 @@ msgstr "存取记号"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/ManualAuthorizationUI.java:119
 msgid "Advanced OAuth parameters"
-msgstr "进阶的 OAuth 参数"
+msgstr "高级的 OAuth 参数"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/ManualAuthorizationUI.java:121
 msgid "Enter the OAuth Access Token"
@@ -12521,7 +12553,7 @@ msgstr "输入 OAuth 存取记号"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/ManualAuthorizationUI.java:122
 msgid "Enter advanced OAuth properties"
-msgstr "输入进阶的 OAuth 属性"
+msgstr "输入高级的 OAuth 属性"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/ManualAuthorizationUI.java:139
 #, java-format
@@ -12705,7 +12737,7 @@ msgstr "<html>从 \"{0}\" 取回 OAuth 要求记号失败。</html>"
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:130
 #: ../core/src/org/openstreetmap/josm/gui/preferences/server/OAuthAuthenticationPreferencesPanel.java:83
 msgid "Display Advanced OAuth Parameters"
-msgstr "显示进阶的 OAuth 参数"
+msgstr "显示高级的 OAuth 参数"
 
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:166
 #: ../core/src/org/openstreetmap/josm/gui/oauth/SemiAutomaticAuthorizationUI.java:369
@@ -12994,19 +13026,19 @@ msgstr "依据每个输入的音效 WAV 文件修改的时间在轨迹上的位�
 msgid ""
 "The number of seconds to jump forward or back when the relevant button is "
 "pressed"
-msgstr "当按下相对的加速快转或倒转时的秒数"
+msgstr "当按下相对的加速快进或倒退时的秒数"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:94
 msgid "Forward/back time (seconds)"
-msgstr "快转/倒转时间(秒)"
+msgstr "快进/倒退时间(秒)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:98
 msgid "The amount by which the speed is multiplied for fast forwarding"
-msgstr "快速快转时速度的倍数"
+msgstr "快进时速度的倍数"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:99
 msgid "Fast forward multiplier"
-msgstr "高速快转倍数"
+msgstr "快进倍数"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AudioPreference.java:103
 msgid ""
@@ -13087,6 +13119,7 @@ msgid "Choose"
 msgstr "选择"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:162
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:210
 #, java-format
 msgid "Choose a color for {0}"
 msgstr "选择 {0} 的颜色"
@@ -13121,31 +13154,31 @@ msgid "Local files"
 msgstr "仅本地文件"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:38
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:63
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:64
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:173
 msgid "None"
-msgstr "从不"
+msgstr "没有"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:42
 msgid "Force lines if no segments imported."
-msgstr "如果没有输入区段时强制绘出的线条。"
+msgstr "如果没有输入区段时强制绘出线条。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:43
 msgid "Draw large GPS points."
 msgstr "绘出大型 GPS 点。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:44
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:159
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:160
 msgid "Draw a circle form HDOP value."
-msgstr "从 HDOP 数值绘制圆形。"
+msgstr "从水平稀释精度(HDOP)数值绘制圆形。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:46
 msgid "Velocity (red = slow, green = fast)"
-msgstr "速率(红 = 慢，绿 = 快)"
+msgstr "速度(红 = 慢，绿 = 快)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:47
 msgid "Dilution of Position (red = high, green = low, if available)"
-msgstr "位置的准确误差(红 = 高，绿 = 低，如果可用的话)"
+msgstr "位置的稀疏度(红 = 高，绿 = 低，如果可用的话)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:48
 msgid "Single Color (can be customized for named layers)"
@@ -13231,7 +13264,7 @@ msgstr "步行"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:50
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:51
 msgid "Draw Direction Arrows"
-msgstr "绘出方向箭头"
+msgstr "绘制方向箭头"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:52
 msgid "Fast drawing (looks uglier)"
@@ -13239,13 +13272,13 @@ msgstr "快速绘制(看起来较丑)"
 
 #. only interesting directions
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:54
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:243
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:244
 msgid "Only interesting direction hints (e.g. with oneway tag)."
-msgstr "只有重要的方向提示(例如单行道标签)。"
+msgstr "只提示重要的方向(例如单行道标签)。"
 
 #. only on the head of a way
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:55
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:249
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:250
 msgid "Only on the head of a way."
 msgstr "只在路径的开头。"
 
@@ -13267,157 +13300,167 @@ msgstr "将未使用的图层以其他颜色绘制"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:60
 msgid "Smooth map graphics (antialiasing)"
-msgstr "平滑化地图图片(反锯齿)"
+msgstr "平滑地图图片(反锯齿)"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:61
 msgid "Create markers when reading GPX."
 msgstr "读取 GPX 时建立标记。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:62
+msgid "Draw only outlines of areas"
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:63
 msgid "Auto"
 msgstr "自动"
 
 #. gpx data field name
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:62
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:63
 msgctxt "gpx_field"
 msgid "Name"
 msgstr "名称"
 
 #. gpx data field name
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:63
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:64
 msgctxt "gpx_field"
 msgid "Desc(ription)"
 msgstr "描述"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:63
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:64
 msgid "Both"
-msgstr "两者"
+msgstr "都要"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:72
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:73
 msgid ""
 "Automatically make a marker layer from any waypoints when opening a GPX "
 "layer."
 msgstr "开启 GPX 图层时自动从任何航点制作标记图层。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:92
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:93
 msgid "Draw lines between raw GPS points"
 msgstr "在原始 GPS 点之间绘出线条"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:114
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:115
 msgid ""
 "Maximum length (in meters) to draw lines for local files. Set to ''-1'' to "
 "draw all lines."
 msgstr "绘出本地文件线条的最大长度(公尺)。设为 \"-1\" 则绘出所有的线条。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:116
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:117
 msgid "Maximum length for local files (meters)"
 msgstr "本地文件最大长度(公尺)"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:121
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:122
 msgid ""
 "Maximum length (in meters) to draw lines. Set to ''-1'' to draw all lines."
 msgstr "绘出线条的最大长度(公尺)。设为 \"-1\" 则绘出所有的线条。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:123
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:124
 msgid "Maximum length (meters)"
 msgstr "最大长度(公尺)"
 
 #. forceRawGpsLines
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:127
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:128
 msgid ""
 "Force drawing of lines if the imported data contain no line information."
 msgstr "如果输入的数据不含线条信息，仍强制绘出线条。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:139
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:140
 msgid "Draw direction arrows for lines, connecting GPS points."
 msgstr "绘出线条的方向箭头，连接 GPS 点。"
 
 #. drawGpsArrowsFast
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:145
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:146
 msgid "Draw the direction arrows using table lookups instead of complex math."
 msgstr "使用表格查询的方式绘制方向箭头而非复杂的数学运算。"
 
 #. drawGpsArrowsMinDist
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:151
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:152
 msgid ""
 "Do not draw arrows if they are not at least this distance away from the last "
 "one."
 msgstr "如果没有距离最后一个至少这个距离就不要绘出箭头。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:154
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:155
 msgid "Minimum distance (pixels)"
 msgstr "最小距离(像素)"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:164
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:165
 msgid "Draw larger dots for the GPS points."
 msgstr "将 GPS 点以较大的点绘制。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:191
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:192
 msgid ""
 "All points and track segments will have the same color. Can be customized in "
 "Layer Manager."
 msgstr "所有的点和轨迹区段都使用同样的颜色。可以在图层管理程序自定义。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:192
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:193
 msgid "Colors points and track segments by velocity."
 msgstr "依速度来为点和轨迹区段上色。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:193
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:194
 msgid ""
 "Colors points and track segments by dilution of position (HDOP). Your "
 "capture device needs to log that information."
 msgstr "为地点精度 (HDOP) 的点和轨迹区段上色。您的捕捉装置需要能记录这项信息。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:198
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:199
 msgid "Allows to tune the track coloring for different average speeds."
 msgstr "允许依不同的平均速度调整轨迹颜色。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:203
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:204
 msgid "Track and Point Coloring"
 msgstr "轨迹与点的颜色"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:213
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:214
 msgid "Allows to change the labelling of track waypoints."
 msgstr "允许改变轨迹的标签。"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:214
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:215
 msgid "Waypoint labelling"
 msgstr "路点标签"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:220
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:221
 msgid "GPS Points"
 msgstr "GPS 点"
 
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:238
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:239
 msgid "Draw direction hints for way segments."
 msgstr "绘出路径区段的方向提示。"
 
 #. segment order number
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:255
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:256
 msgid "Draw the order numbers of all segments within their way."
 msgstr "绘出所有区段在其路径中的顺序编号。"
 
 #. antialiasing
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:260
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:261
 msgid "Apply antialiasing to the map view resulting in a smoother appearance."
 msgstr "在地图查看应用平滑化以产生较平滑的外观。"
 
 #. downloaded area
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:265
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:266
 msgid "Draw the boundaries of data loaded from the server."
 msgstr "绘出从服务器下载数据的边界。"
 
 #. virtual nodes
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:270
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:271
 msgid "Draw virtual nodes in select mode for easy way modification."
 msgstr "为了容易修改路径在选择模式中绘出虚拟节点。"
 
 #. background layers in inactive color
-#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:275
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:276
 msgid "Draw the inactive data layers in a different color."
 msgstr "将未使用的数据图层以不同的颜色绘制。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:282
+msgid ""
+"This option suppresses the filling of areas, overriding anything specified "
+"in the selected style."
+msgstr ""
+
+#: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:288
 msgid "OSM Data"
 msgstr "OSM 数据"
 
@@ -13471,11 +13514,11 @@ msgstr "预设值(自动决定)"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/MapPaintPreference.java:37
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:138
 msgid "Enable built-in defaults"
-msgstr "启用内建预设值"
+msgstr "启用内置预设值"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/MapPaintPreference.java:39
 msgid "Enable built-in icon defaults"
-msgstr "启用内建图示预设值"
+msgstr "启用内置图示预设值"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/MapPaintPreference.java:65
 msgid "Used style"
@@ -13784,7 +13827,7 @@ msgstr "您必须重新启动 JOSM 才能让某些设定值生效。"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ProjectionPreference.java:137
 msgid "Projection method"
-msgstr "投影方法"
+msgstr "投影法"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ProjectionPreference.java:140
 msgid "Projection code"
@@ -14014,7 +14057,7 @@ msgstr "排序预设组合菜单"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/TaggingPresetPreference.java:148
 msgid "Tagging Presets"
-msgstr "加上预先组合标签"
+msgstr "添加预设组合标签"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ToolbarPreferences.java:270
 msgid "Actions"
@@ -14734,12 +14777,12 @@ msgstr "未预期的名称为 \"{0}\" 的 XML 元素"
 msgid "Could not export ''{0}''."
 msgstr "无法输出 \"{0}\"。"
 
-#: ../core/src/org/openstreetmap/josm/io/FileImporter.java:41
+#: ../core/src/org/openstreetmap/josm/io/FileImporter.java:40
 #, java-format
 msgid "Could not import ''{0}''."
 msgstr "无法输入 \"{0}\"。"
 
-#: ../core/src/org/openstreetmap/josm/io/FileImporter.java:49
+#: ../core/src/org/openstreetmap/josm/io/FileImporter.java:47
 msgid "Could not import files."
 msgstr "无法输入文件。"
 
@@ -14748,7 +14791,7 @@ msgstr "无法输入文件。"
 msgid "<html>Could not read file ''{0}''.<br>Error is:<br>{1}</html>"
 msgstr "<html>无法读取文件 \"{0}\"。<br>错误为：<br>{1}</html>"
 
-#: ../core/src/org/openstreetmap/josm/io/FileImporter.java:77
+#: ../core/src/org/openstreetmap/josm/io/FileImporter.java:79
 #, java-format
 msgid "<html>Could not read files.<br>Error is:<br>{0}</html>"
 msgstr "<html>无法读取文件。<br>错误为：<br>{0}</html>"
@@ -14878,12 +14921,12 @@ msgstr "寻找图片文件"
 msgid "No image files found."
 msgstr "找不到图片文件。"
 
-#: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:59
+#: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:68
 #, java-format
 msgid "Failed to open input stream for resource ''{0}''"
 msgstr "开启资源 \"{0}\" 的输入串流失败"
 
-#: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:105
+#: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:114
 #, java-format
 msgid ""
 "Warning: failed to open file with extension ''{2}'' and namepart ''{3}'' in "
@@ -15748,7 +15791,7 @@ msgstr "插件 {0} 发生错误"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:75
 msgid "integrated into main program"
-msgstr ""
+msgstr "集成到主程序"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:81
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:82
@@ -15756,7 +15799,7 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:88
 #, java-format
 msgid "replaced by {0} plugin"
-msgstr ""
+msgstr "被 {0} 插件替换"
 
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:128
 msgid "The following plugin is no longer necessary and has been deactivated:"
@@ -18357,6 +18400,8 @@ msgstr ""
 "请先选择它们中的一个，然后重试"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:93
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:235
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:98
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:106
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:243
 msgid "Blank Layer"
@@ -18846,6 +18891,600 @@ msgstr "格线图层："
 msgid "Add grid"
 msgstr "加入格线"
 
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/AddImageryLayerAction.java:15
+#, fuzzy, java-format
+msgid "Add imagery layer {0}"
+msgstr "加入新的图层"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:39
+msgid "Adjust imagery"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:40
+#, fuzzy
+msgid "Adjust the position of the selected imagery layer"
+msgstr "调整选取的 WMS 图层的位置"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:161
+#, fuzzy
+msgid "Please select the imagery layer to adjust."
+msgstr "请选择要调整的 WMS 图层。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:166
+#, fuzzy
+msgid "Select imagery layer"
+msgstr "选择目标图层"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:167
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:176
+msgid "Start adjusting"
+msgstr "开始调整"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:186
+#, fuzzy
+msgid "There are currently no imagery layer to adjust."
+msgstr "目前没有 WMS 图层要调整。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:187
+#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:196
+msgid "No layers to adjust"
+msgstr "没有要调整的图层"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:149
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:154
+msgid "Could not initialize remote control."
+msgstr "无法初始化远程控制。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:154
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:159
+#, java-format
+msgid "Remote control plugin is not compatible with {0}."
+msgstr "远程控制插件与 {0} 不兼容。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:160
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:165
+#, java-format
+msgid ""
+"{0} will work but remote control for this plugin is disabled.\n"
+"You should update the plugins."
+msgstr ""
+"{0} 将工作，但这个插件的远程控制功能将被禁用。\n"
+"你应该更新插件。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:163
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:168
+#, java-format
+msgid ""
+"Current version of \"{1}\": {2}, internal version {3}. Need version {4}, "
+"internal version {5}.\n"
+"If updating the plugins does not help report a bug for \"{0}\"."
+msgstr ""
+"当前版本 \"{1}\": {2}，内部版本 {3}。需要版本 {4}，内部版本 {5}。\n"
+"如果升级插件没有改善，请报告程序错误到 \"{0}\"。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:175
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:180
+#, java-format
+msgid "{0}: Problem with remote control"
+msgstr "{0}: 远程控制有问题"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:222
+#, fuzzy
+msgid "Imagery"
+msgstr "图像"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:235
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:243
+msgid "Open a blank WMS layer to load data from a file"
+msgstr "开启空白 WMS 图层以便自文件载入数据"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:122
+#, fuzzy
+msgid "Add Imagery URL"
+msgstr "添加 WMS URL"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:145
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:116
+msgid "Copy Selected Default(s)"
+msgstr "复制已选取的预设值"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:154
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:124
+msgid "Please select at least one row to copy."
+msgstr "请选择至少一列来复制。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:210
+#, fuzzy
+msgid "imagery fade"
+msgstr "图片 "
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:221
+msgid "Fade Color: "
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:225
+#, fuzzy
+msgid "Fade amount: "
+msgstr "淡化背景: "
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:242
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:170
+msgid "Downloader:"
+msgstr "下载器："
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:248
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:176
+msgid "Overlap tiles"
+msgstr "重叠拼贴"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:249
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:177
+msgid "% of east:"
+msgstr "% 东："
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:250
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:178
+msgid "% of north:"
+msgstr "% 北："
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:265
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:193
+msgid "Simultaneous connections"
+msgstr "同时连接"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:273
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:201
+msgid "Allow remote control (reqires remotecontrol plugin)"
+msgstr "允许远程控制(需要 remotecontrol 插件)"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:286
+#, fuzzy
+msgid "Auto zoom by default: "
+msgstr "自动缩放: "
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:290
+#, fuzzy
+msgid "Autoload tiles by default: "
+msgstr "自动载入拼贴: "
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:294
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:66
+msgid "Min zoom lvl: "
+msgstr "最小缩放等级: "
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:298
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:70
+msgid "Max zoom lvl: "
+msgstr "最大缩放等级: "
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:323
+#, fuzzy
+msgid "Common Settings"
+msgstr "连接设定值"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:324
+#, fuzzy
+msgid "WMS Settings"
+msgstr "地图设定值"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:325
+#, fuzzy
+msgid "TMS Settings"
+msgstr "地图设定值"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:333
+#, fuzzy
+msgid "Imagery Preferences"
+msgstr "首选项"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:333
+#, fuzzy
+msgid "Modify list of imagery layers displayed in the Imagery menu"
+msgstr "修改在 WMS 插件菜单中显示的 WMS 服务器清单"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:337
+#, fuzzy
+msgid "Imagery providers"
+msgstr "照片文件"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:408
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:81
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:81
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
+msgid "Menu Name"
+msgstr "菜单名称"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:408
+#, fuzzy
+msgid "Imagery URL"
+msgstr "图像"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:408
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
+msgctxt "layer"
+msgid "Zoom"
+msgstr "缩放"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:475
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:325
+msgid "Menu Name (Default)"
+msgstr "菜单名称(预设值)"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:475
+#, fuzzy
+msgid "Imagery URL (Default)"
+msgstr "WMS URL(预设值)"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:518
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:368
+#, java-format
+msgid "EULA license URL not available: {0}"
+msgstr "EULA 授权 URL 无法使用: {0}"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:533
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:383
+#, java-format
+msgid "Malformed URL for the EULA licence: {0}"
+msgstr "EULA 授权的 URL 格式错误: {0}"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:199
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:176
+msgid "Auto Zoom"
+msgstr "自动缩放"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:210
+#, fuzzy
+msgid "Auto load tiles"
+msgstr "自动载入拼贴"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:219
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:185
+msgid "Load Tile"
+msgstr "载入拼贴"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:230
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:195
+msgid "Show Tile Info"
+msgstr "显示拼贴信息"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:253
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:217
+msgid "Load All Tiles"
+msgstr "载入所有拼贴"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:263
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:226
+msgid "Increase zoom"
+msgstr "增加缩放"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:272
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:234
+msgid "Decrease zoom"
+msgstr "减少缩放"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:283
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:244
+msgid "Snap to tile size"
+msgstr "贴紧拼贴大小"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:300
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:260
+msgid "Flush Tile Cache"
+msgstr "清除拼贴缓存"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:766
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:720
+msgid "image "
+msgstr "图片 "
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:77
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:77
+msgid "Unnamed WMS Layer"
+msgstr "未命名的 WMS 图层"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:83
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:83
+msgid "Service URL"
+msgstr "服务 URL"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:88
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:88
+msgid "Get Layers"
+msgstr "获取图层"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:126
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:124
+msgid ""
+"That layer does not support any of JOSM's projections,\n"
+"so you can not use it. This message will not show again."
+msgstr ""
+"那个图层不支持任何 JOSM 的投影法，\n"
+"因此您不能使用它。这个信息不会再显示。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:128
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:164
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:225
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:247
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:265
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:126
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:161
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:222
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:244
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:262
+msgid "WMS Error"
+msgstr "WMS 错误"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:153
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:161
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:151
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:158
+msgid "Show Bounds"
+msgstr "显示边界"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:163
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:160
+msgid "No bounding box was found for this layer."
+msgstr "找不到这个图层的绑定方块。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:171
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:168
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
+msgid "WMS URL"
+msgstr "WMS URL"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:224
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:221
+msgid "Could not parse WMS layer list."
+msgstr "无法解析 WMS 图层列表。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:246
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:243
+msgid "Invalid service URL."
+msgstr "无效的服务 URL。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:264
+#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:261
+msgid "Could not retrieve WMS layer list."
+msgstr "无法得到 WMS 图层列表。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/GeorefImage.java:79
+#: ../plugins/wmsplugin/src/wmsplugin/GeorefImage.java:76
+msgid "Exception occurred"
+msgstr "发生例外"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/GeorefImage.java:93
+#: ../plugins/wmsplugin/src/wmsplugin/GeorefImage.java:90
+msgid "Not in cache"
+msgstr "不在缓存中"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:68
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:72
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:67
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:71
+msgid "Rectified Image..."
+msgstr "修正的图片..."
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:70
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:69
+msgid "Download Rectified Images From Various Services"
+msgstr "从多种服务下载修正的图片"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:72
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:71
+#, java-format
+msgid "WMS: {0}"
+msgstr "WMS: {0}"
+
+#. This service serves the purpose of "just this once" without forcing the user
+#. to commit the link to the preferences
+#. Clipboard content gets trimmed, so matching whitespace only ensures that this
+#. service will never be selected automatically.
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:108
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:107
+msgid "Custom WMS Link"
+msgstr "自定义 WMS 连结"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:114
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:112
+msgid "Supported Rectifier Services:"
+msgstr "支持的修正器服务："
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:138
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:136
+msgid "Visit Homepage"
+msgstr "参观首页"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:147
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:145
+msgid "WMS URL or Image ID:"
+msgstr "WMS URL 或图片 ID:"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:151
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:153
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:149
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
+msgid "Add Rectified Image"
+msgstr "加入修正的图片"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:203
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:201
+msgid ""
+"Couldn't match the entered link or id to the selected service. Please try "
+"again."
+msgstr "无法将整个连结或 id 与选取的服务进行比对。请再试一次。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/Map_Rectifier_WMSmenuAction.java:204
+#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:202
+msgid "No valid WMS URL or id"
+msgstr "没有有效的 WMS URL 或 id"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSGrabber.java:104
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:105
+#, java-format
+msgid ""
+"Warning: The base URL ''{0}'' for a WMS service doesn't have a trailing '&' "
+"or a trailing '?'."
+msgstr "警告：WMS 服务基础 URL \"{0}\"  没有以 '&' 或 '?' 结尾。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSGrabber.java:105
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:106
+msgid ""
+"Warning: Fetching WMS tiles is likely to fail. Please check you preference "
+"settings."
+msgstr "警告：取回 WMS 拼贴似乎失败了。请检查您的偏好设定值。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSGrabber.java:106
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:107
+#, java-format
+msgid "Warning: The complete URL is ''{0}''."
+msgstr "警告：完整 URL 为 \"{0}\"。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSGrabber.java:127
+#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:128
+#, java-format
+msgid ""
+"The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
+"This may lead to wrong coordinates."
+msgstr ""
+"URL 中的投影 \"{0}\" 与目前的投影 \"{1}\" 不符。\n"
+"这可能会导致错误的坐标。"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:116
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:125
+#, java-format
+msgid "Warning: WMS layer deactivated because of malformed base url ''{0}''"
+msgstr "警告：WMS 图层已停用，因为基础 URL \"{0}\" 出现异常"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:118
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:127
+msgid "(deactivated)"
+msgstr "(不使用)"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:168
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:181
+#, java-format
+msgid "WMS layer ({0}), automatically downloading in zoom {1}"
+msgstr "WMS 图层 ({0})，于缩放 {1} 自动下载"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:170
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:183
+#, java-format
+msgid "WMS layer ({0}), downloading in zoom {1}"
+msgstr "WMS 图层 ({0})，于缩放 {1} 下载"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:217
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:230
+#, java-format
+msgid ""
+"<html>The base URL<br>''{0}''<br>for this WMS layer does neither end with a "
+"''&'' nor with a ''?''.<br>This is likely to lead to invalid WMS request. "
+"You should check your<br>preference settings.<br>Do you want to fetch WMS "
+"tiles anyway?"
+msgstr ""
+"<html>这个 WMS 图层的基础 URL<br>\"{0}\"<br>的结尾不能是 \"&\" 或 \"?\" 。"
+"<br>这可能会导致无效的 WMS 要求。您应该检查您的<br>偏好设定值。<br>是否要强制"
+"取回 WMS 拼贴?\""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:225
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:238
+msgid "Yes, fetch images"
+msgstr "是，抓取图片"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:231
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:244
+msgid "Invalid URL?"
+msgstr "无效的 URL?"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:498
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:528
+msgid "Download visible tiles"
+msgstr "下载可见的拼贴"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:505
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:534
+msgid ""
+"The requested area is too big. Please zoom in a little, or change resolution"
+msgstr "要求的区域太大。请拉近一点，或是改变解析度"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:517
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:546
+msgid "Change resolution"
+msgstr "改变解析度"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:531
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:559
+msgid "Reload erroneous tiles"
+msgstr "重新载入错误的拼贴"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:553
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:580
+msgid "Alpha channel"
+msgstr "透明色版"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:584
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:608
+msgid "Save WMS layer to file"
+msgstr "将 WMS 图层保存为文件"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:589
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:612
+msgid "Save WMS layer"
+msgstr "保存 WMS 图层"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:613
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:636
+msgid "Load WMS layer from file"
+msgstr "从文件载入 WMS 图层"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:618
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:640
+msgid "Load WMS layer"
+msgstr "载入 WMS 图层"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:629
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:651
+#, java-format
+msgid "Unsupported WMS file version; found {0}, expected {1}"
+msgstr "不支持的 WMS 文件版本；发现 {0}，应为 {1}"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:630
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:652
+msgid "File Format Error"
+msgstr "文件格式错误"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:662
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:684
+msgid "Error loading file"
+msgstr "载入文件有错误"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:676
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:698
+msgid "Set WMS Bookmark"
+msgstr "设定 WMS 书签"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:687
+#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:708
+msgid "Automatic downloading"
+msgstr "自动下载"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSRemoteHandler.java:22
+#: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:21
+msgid ""
+"Remote Control has been asked to load a WMS layer from the following URL:"
+msgstr "远程控制已要求从以下 URL 加载 WMS 图层:"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSRemoteHandler.java:47
+#: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:46
+msgid "Remote WMS"
+msgstr "远程 WMS"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/io/WMSLayerExporter.java:11
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/io/WMSLayerImporter.java:11
+#: ../plugins/wmsplugin/src/wmsplugin/io/WMSLayerExporter.java:11
+#: ../plugins/wmsplugin/src/wmsplugin/io/WMSLayerImporter.java:10
+msgid "WMS Files (*.wms)"
+msgstr "WMS 文件 (*.wms)"
+
 #: ../plugins/imagewaypoint/src/org/insignificant/josm/plugins/imagewaypoint/ImageEntry.java:56
 msgid "Normal"
 msgstr "一般"
@@ -19289,6 +19928,38 @@ msgstr "持续将 LiveGPS 图层置中到目前的位置。"
 #: ../plugins/livegps/src/livegps/LiveGpsPlugin.java:120
 msgid "LiveGPS"
 msgstr "LiveGPS"
+
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:115
+msgid "Open MapDust"
+msgstr ""
+
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteAddBug.java:107
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteCloseBug.java:109
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteCommentBug.java:108
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteInvalidateBug.java:111
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteReOpenBug.java:111
+#, fuzzy
+msgid "Missing input data"
+msgstr "遗失用户识别"
+
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustPanel.java:137
+#, fuzzy
+msgid "Add comment"
+msgstr "加入评论"
+
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustPanel.java:143
+#, fuzzy
+msgid "Close bug"
+msgstr "关闭： "
+
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustPanel.java:149
+#, fuzzy
+msgid "Invalidate bug"
+msgstr "无效的日期"
+
+#: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustPanel.java:155
+msgid "Re-open bug"
+msgstr ""
 
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:66
 #: ../plugins/measurement/src/org/openstreetmap/josm/plugins/measurement/MeasurementDialog.java:67
@@ -20537,45 +21208,9 @@ msgid "Simplify Area (remove {0} node)"
 msgid_plural "Simplify Area (remove {0} nodes)"
 msgstr[0] "简化区域(移除 {0} 个节点)"
 
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:136
+#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:165
 msgid "Slippy Map"
 msgstr "快速地图"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:147
-msgid "Auto Zoom"
-msgstr "自动缩放"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:156
-msgid "Load Tile"
-msgstr "载入拼贴"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:166
-msgid "Show Tile Info"
-msgstr "显示拼贴信息"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:188
-msgid "Load All Tiles"
-msgstr "载入所有拼贴"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:197
-msgid "Increase zoom"
-msgstr "增加缩放"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:205
-msgid "Decrease zoom"
-msgstr "减少缩放"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:215
-msgid "Snap to tile size"
-msgstr "贴紧拼贴大小"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:231
-msgid "Flush Tile Cache"
-msgstr "清除拼贴缓存"
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:667
-msgid "image "
-msgstr "图片 "
 
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:36
 msgid "autozoom"
@@ -20606,34 +21241,13 @@ msgstr "自动缩放: "
 msgid "Autoload Tiles: "
 msgstr "自动载入拼贴: "
 
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:66
-msgid "Min zoom lvl: "
-msgstr "最小缩放等级: "
-
-#: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:70
-msgid "Max zoom lvl: "
-msgstr "最大缩放等级: "
-
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:74
 msgid "Fade background: "
 msgstr "淡化背景: "
 
-#: ../plugins/smed/plugs/oseam/src/oseam/OSeaM.java:23
-msgid "it works realy fine"
-msgstr ""
-
-#: ../plugins/smed/plugs/oseam/src/oseam/OSeaM.java:28
-msgid "mapping seamarks"
-msgstr ""
-
-#: ../plugins/smed/plugs/oseam/src/oseam/OSeaM.java:31
-msgid "Seamarks"
-msgstr ""
-
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:58
-#, fuzzy
 msgid "Online Help"
-msgstr "险升/降坡"
+msgstr ""
 
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:223
 msgid "Load"
@@ -20920,34 +21534,28 @@ msgid "Tracer building"
 msgstr "描出建筑物"
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/TrustOSMplugin.java:246
-#, fuzzy
 msgid "GPG"
-msgstr "GPX"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/ExportSigsAction.java:18
-#, fuzzy
 msgid "Export sigs..."
-msgstr "输入中..."
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/ExportSigsAction.java:18
-#, fuzzy
 msgid "Export all signatures to XML file."
-msgstr "输出数据到 GPX..."
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/ExportSigsAction.java:19
-#, fuzzy
 msgid "Export sigs to XML..."
-msgstr "输出到 GPX..."
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/ExportSigsAction.java:34
-#, fuzzy
 msgid "Save Signatures file"
-msgstr "保存 OSM 文件"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/GetMissingDataAction.java:24
-#, fuzzy
 msgid "Download OSM"
-msgstr "下载"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/GetMissingDataAction.java:24
 msgid ""
@@ -20955,9 +21563,8 @@ msgid ""
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/GetMissingDataAction.java:25
-#, fuzzy
 msgid "Download referenced osm objects..."
-msgstr "下载对象..."
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/GetMissingDataAction.java:43
 #, java-format
@@ -20972,14 +21579,12 @@ msgid ""
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/actions/GetMissingDataAction.java:45
-#, fuzzy
 msgid "Load objects from server"
-msgstr "重新载入服务器的历史记录"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/DownloadSignedOsmDataTask.java:38
-#, fuzzy
 msgid "Download signed data"
-msgstr "正在下载数据"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyGenerationTask.java:18
 msgid ""
@@ -20988,55 +21593,46 @@ msgid ""
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyTreeTableModel.java:37
-#, fuzzy
 msgid "UID"
-msgstr "ID"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyTreeTableModel.java:37
-#, fuzzy
 msgid "KeyID"
-msgstr "设定键"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyTreeTableModel.java:37
 msgid "OSM-Cert"
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyTreeTableModel.java:37
-#, fuzzy
 msgid "Signed"
-msgstr "指定"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyTreeTableModel.java:64
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyTreeTableModel.java:82
-#, fuzzy
 msgid "Unknown"
-msgstr "不明"
+msgstr "未知"
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:128
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:129
-#, fuzzy
 msgid "Object signatures"
-msgstr "对象历史记录"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:128
-#, fuzzy
 msgid "Open object signing window."
-msgstr "开启选择区域清单视窗。"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:233
-#, fuzzy
 msgid "Check"
-msgstr "时钟"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:234
-#, fuzzy
 msgid "Check all available signatures for selected object."
-msgstr "正在检查被删除对象的上层项目"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:237
-#, fuzzy
 msgid "Sign"
-msgstr "路标 {0}"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustDialog.java:238
 msgid "Digital sign selected Tags, if you believe they are correct."
@@ -21051,9 +21647,8 @@ msgid "Sorry, there are no Signatures for the selected Attribute."
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:54
-#, fuzzy
 msgid "No Signature found"
-msgstr "没有发现问题"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:57
 #, java-format
@@ -21084,14 +21679,12 @@ msgid "Ok"
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:130
-#, fuzzy
 msgid "Signature Info"
-msgstr "迷你高尔夫"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:166
-#, fuzzy
 msgid "Key Signatures"
-msgstr "自然"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/dialogs/TrustSignaturesDialog.java:222
 #, java-format
@@ -21112,9 +21705,8 @@ msgstr ""
 
 #. TODO Auto-generated method stub
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/preferences/TrustPreferenceEditor.java:32
-#, fuzzy
 msgid "Trust OSM Settings"
-msgstr "地图设定值"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/preferences/TrustPreferenceEditor.java:32
 msgid "Change GPG and privacy settings of the trustosm plugin."
@@ -21133,19 +21725,16 @@ msgid "GnuPG"
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/preferences/TrustPreferenceEditor.java:66
-#, fuzzy
 msgid "Privacy"
-msgstr "一级道路(Primary)"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigExporter.java:26
-#, fuzzy
 msgid "Signature Files"
-msgstr "迷你高尔夫"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigImporter.java:27
-#, fuzzy
 msgid "OSM Signature Files"
-msgstr "OSM 服务器文件"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigReader.java:98
 #, java-format
@@ -21153,19 +21742,16 @@ msgid "Only digits allowed in osmid: ''{0}''."
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigReader.java:157
-#, fuzzy
 msgid "Could not parse OpenPGP message."
-msgstr "无法解析数值。请检查。"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigReader.java:220
-#, fuzzy
 msgid "Prepare stuff..."
-msgstr "准备 OSM 数据..."
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/io/SigReader.java:221
-#, fuzzy
 msgid "Parsing Signature data..."
-msgstr "正在分析 OSM 数据..."
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:173
 msgid "Select a signing key from your keyring-file:"
@@ -21176,19 +21762,16 @@ msgid "Don't ask again for the key"
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:196
-#, fuzzy
 msgid "Use a random key from this list"
-msgstr "使用从清单选取的配置。"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:202
-#, fuzzy
 msgid "Create new Key"
-msgstr "建立新的节点。"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:235
-#, fuzzy
 msgid "Select a Key to sign"
-msgstr "选择关系"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:365
 #, java-format
@@ -21203,19 +21786,16 @@ msgid "Signing canceled!"
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:549
-#, fuzzy
 msgid "never"
-msgstr "还原"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:555
-#, fuzzy
 msgid "Primary user-ID: "
-msgstr "第一修饰键："
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:555
-#, fuzzy
 msgid "Key-ID: "
-msgstr "按键："
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:555
 msgid "Fingerprint: "
@@ -21226,19 +21806,16 @@ msgid "Algorithm: "
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:555
-#, fuzzy
 msgid "Strength in bit: "
-msgstr "长度(米)"
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:555
-#, fuzzy
 msgid "Creation date: "
-msgstr "建立： "
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:555
-#, fuzzy
 msgid "Expiration date: "
-msgstr "工作时间"
+msgstr ""
 
 #. rows, cols
 #. initX, initY
@@ -21254,14 +21831,12 @@ msgid "PGP-Key details"
 msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:649
-#, fuzzy
 msgid "User-ID:"
-msgstr "用户 ID："
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:649
-#, fuzzy
 msgid "Select algorithm:"
-msgstr "选择其一："
+msgstr ""
 
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:649
 msgid "Choose Bitlength (Strength):"
@@ -21279,9 +21854,8 @@ msgstr ""
 #. initX, initY
 #. xPad, yPad
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/util/TrustGPG.java:669
-#, fuzzy
 msgid "Create a new signing key"
-msgstr "建立新的关系"
+msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/CreateOrEditTurnRestrictionAction.java:39
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/ShortcutPreferencePanel.java:112
@@ -21746,7 +22320,7 @@ msgid ""
 "disabled, editing of via-objects is possible in the Advanced Editor only."
 msgstr ""
 "基本编辑器可以选择性显示转弯限制的经过对象清单。如果启用，就可以在基本编辑器"
-"中编辑它们。如果停用，就只能在进阶编辑器中编辑经过对象。"
+"中编辑它们。如果停用，就只能在高级编辑器中编辑经过对象。"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/preferences/PreferencesPanel.java:60
 msgid "Display and edit list of via-objects in the Basic Editor"
@@ -21964,7 +22538,7 @@ msgstr ""
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/MultipleTurnRestrictionLegError.java:57
 msgid "Go to the Advanced Editor and remove the members"
-msgstr "转到进阶编辑器并删除成员"
+msgstr "转到高级编辑器并删除成员"
 
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/qa/NonStandardExceptWarning.java:25
 #, java-format
@@ -22452,122 +23026,6 @@ msgstr "路径选择"
 msgid "Select non-branching sequences of ways"
 msgstr "选择无分支的路径序列"
 
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:77
-msgid "Unnamed WMS Layer"
-msgstr "未命名的 WMS 图层"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:81
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
-msgid "Menu Name"
-msgstr "菜单名称"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:83
-msgid "Service URL"
-msgstr "服务 URL"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:88
-msgid "Get Layers"
-msgstr "获取图层"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:124
-msgid ""
-"That layer does not support any of JOSM's projections,\n"
-"so you can not use it. This message will not show again."
-msgstr ""
-"那个图层不支持任何 JOSM 的投影法，\n"
-"因此您不能使用它。这个信息不会再显示。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:126
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:161
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:222
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:244
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:262
-msgid "WMS Error"
-msgstr "WMS 错误"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:151
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:158
-msgid "Show Bounds"
-msgstr "显示边界"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:160
-msgid "No bounding box was found for this layer."
-msgstr "找不到这个图层的绑定方块。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:168
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
-msgid "WMS URL"
-msgstr "WMS URL"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:221
-msgid "Could not parse WMS layer list."
-msgstr "无法解析 WMS 图层列表。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:243
-msgid "Invalid service URL."
-msgstr "无效的服务 URL。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:261
-msgid "Could not retrieve WMS layer list."
-msgstr "无法得到 WMS 图层列表。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/GeorefImage.java:76
-msgid "Exception occurred"
-msgstr "发生例外"
-
-#: ../plugins/wmsplugin/src/wmsplugin/GeorefImage.java:90
-msgid "Not in cache"
-msgstr "不在缓存中"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:67
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:71
-msgid "Rectified Image..."
-msgstr "修正的图片..."
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:69
-msgid "Download Rectified Images From Various Services"
-msgstr "从多种服务下载修正的图片"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:71
-#, java-format
-msgid "WMS: {0}"
-msgstr "WMS: {0}"
-
-#. This service serves the purpose of "just this once" without forcing the user
-#. to commit the link to the preferences
-#. Clipboard content gets trimmed, so matching whitespace only ensures that this
-#. service will never be selected automatically.
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:107
-msgid "Custom WMS Link"
-msgstr "自定义 WMS 连结"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:112
-msgid "Supported Rectifier Services:"
-msgstr "支持的修正器服务："
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:136
-msgid "Visit Homepage"
-msgstr "参观首页"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:145
-msgid "WMS URL or Image ID:"
-msgstr "WMS URL 或图片 ID:"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:149
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:151
-msgid "Add Rectified Image"
-msgstr "加入修正的图片"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:201
-msgid ""
-"Couldn't match the entered link or id to the selected service. Please try "
-"again."
-msgstr "无法将整个连结或 id 与选取的服务进行比对。请再试一次。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/Map_Rectifier_WMSmenuAction.java:202
-msgid "No valid WMS URL or id"
-msgstr "没有有效的 WMS URL 或 id"
-
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:42
 msgid "Adjust the position of the selected WMS layer"
 msgstr "调整选取的 WMS 图层的位置"
@@ -22580,187 +23038,18 @@ msgstr "请选择要调整的 WMS 图层。"
 msgid "Select WMS layer"
 msgstr "选择 WMS 图层"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:176
-msgid "Start adjusting"
-msgstr "开始调整"
-
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:195
 msgid "There are currently no WMS layer to adjust."
 msgstr "目前没有 WMS 图层要调整。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:196
-msgid "No layers to adjust"
-msgstr "没有要调整的图层"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSDownloadAction.java:15
 #, java-format
 msgid "Download WMS tile from {0}"
 msgstr "从 {0} 下载 WMS 拼贴"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:105
-#, java-format
-msgid ""
-"Warning: The base URL ''{0}'' for a WMS service doesn't have a trailing '&' "
-"or a trailing '?'."
-msgstr "警告：WMS 服务基础 URL \"{0}\"  没有以 '&' 或 '?' 结尾。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:106
-msgid ""
-"Warning: Fetching WMS tiles is likely to fail. Please check you preference "
-"settings."
-msgstr "警告：取回 WMS 拼贴似乎失败了。请检查您的偏好设定值。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:107
-#, java-format
-msgid "Warning: The complete URL is ''{0}''."
-msgstr "警告：完整 URL 为 \"{0}\"。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSGrabber.java:128
-#, java-format
-msgid ""
-"The projection ''{0}'' in URL and current projection ''{1}'' mismatch.\n"
-"This may lead to wrong coordinates."
-msgstr ""
-"URL 中的投影 \"{0}\" 与目前的投影 \"{1}\" 不符。\n"
-"这可能会导致错误的坐标。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:125
-#, java-format
-msgid "Warning: WMS layer deactivated because of malformed base url ''{0}''"
-msgstr "警告：WMS 图层已停用，因为基础 URL \"{0}\" 出现异常"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:127
-msgid "(deactivated)"
-msgstr "(不使用)"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:181
-#, java-format
-msgid "WMS layer ({0}), automatically downloading in zoom {1}"
-msgstr "WMS 图层 ({0})，于缩放 {1} 自动下载"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:183
-#, java-format
-msgid "WMS layer ({0}), downloading in zoom {1}"
-msgstr "WMS 图层 ({0})，于缩放 {1} 下载"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:230
-#, java-format
-msgid ""
-"<html>The base URL<br>''{0}''<br>for this WMS layer does neither end with a "
-"''&'' nor with a ''?''.<br>This is likely to lead to invalid WMS request. "
-"You should check your<br>preference settings.<br>Do you want to fetch WMS "
-"tiles anyway?"
-msgstr ""
-"<html>这个 WMS 图层的基础 URL<br>\"{0}\"<br>的结尾不能是 \"&\" 或 \"?\" 。"
-"<br>这可能会导致无效的 WMS 要求。您应该检查您的<br>偏好设定值。<br>是否要强制"
-"取回 WMS 拼贴?\""
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:238
-msgid "Yes, fetch images"
-msgstr "是，抓取图片"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:244
-msgid "Invalid URL?"
-msgstr "无效的 URL?"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:528
-msgid "Download visible tiles"
-msgstr "下载可见的拼贴"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:534
-msgid ""
-"The requested area is too big. Please zoom in a little, or change resolution"
-msgstr "要求的区域太大。请拉近一点，或是改变解析度"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:546
-msgid "Change resolution"
-msgstr "改变解析度"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:559
-msgid "Reload erroneous tiles"
-msgstr "重新载入错误的拼贴"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:580
-msgid "Alpha channel"
-msgstr "透明色版"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:608
-msgid "Save WMS layer to file"
-msgstr "将 WMS 图层保存为文件"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:612
-msgid "Save WMS layer"
-msgstr "保存 WMS 图层"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:636
-msgid "Load WMS layer from file"
-msgstr "从文件载入 WMS 图层"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:640
-msgid "Load WMS layer"
-msgstr "载入 WMS 图层"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:651
-#, java-format
-msgid "Unsupported WMS file version; found {0}, expected {1}"
-msgstr "不支持的 WMS 文件版本；发现 {0}，应为 {1}"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:652
-msgid "File Format Error"
-msgstr "文件格式错误"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:684
-msgid "Error loading file"
-msgstr "载入文件有错误"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:698
-msgid "Set WMS Bookmark"
-msgstr "设定 WMS 书签"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:708
-msgid "Automatic downloading"
-msgstr "自动下载"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:154
-msgid "Could not initialize remote control."
-msgstr "无法初始化远程控制。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:159
-#, java-format
-msgid "Remote control plugin is not compatible with {0}."
-msgstr "远程控制插件与 {0} 不兼容。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:165
-#, java-format
-msgid ""
-"{0} will work but remote control for this plugin is disabled.\n"
-"You should update the plugins."
-msgstr ""
-"{0} 将工作，但这个插件的远程控制功能将被禁用。\n"
-"你应该更新插件。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:168
-#, java-format
-msgid ""
-"Current version of \"{1}\": {2}, internal version {3}. Need version {4}, "
-"internal version {5}.\n"
-"If updating the plugins does not help report a bug for \"{0}\"."
-msgstr ""
-"当前版本 \"{1}\": {2}，内部版本 {3}。需要版本 {4}，内部版本 {5}。\n"
-"如果升级插件没有改善，请报告程序错误到 \"{0}\"。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:180
-#, java-format
-msgid "{0}: Problem with remote control"
-msgstr "{0}: 远程控制有问题"
-
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:230
 msgid "WMS"
 msgstr "WMS"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:243
-msgid "Open a blank WMS layer to load data from a file"
-msgstr "开启空白 WMS 图层以便自文件载入数据"
 
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:50
 msgid "WMS Plugin Preferences"
@@ -22774,74 +23063,9 @@ msgstr "修改在 WMS 插件菜单中显示的 WMS 服务器清单"
 msgid "Add WMS URL"
 msgstr "添加 WMS URL"
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:116
-msgid "Copy Selected Default(s)"
-msgstr "复制已选取的预设值"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:124
-msgid "Please select at least one row to copy."
-msgstr "请选择至少一列来复制。"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:170
-msgid "Downloader:"
-msgstr "下载器："
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:176
-msgid "Overlap tiles"
-msgstr "重叠拼贴"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:177
-msgid "% of east:"
-msgstr "% 东："
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:178
-msgid "% of north:"
-msgstr "% 北："
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:193
-msgid "Simultaneous connections"
-msgstr "同时连接"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:201
-msgid "Allow remote control (reqires remotecontrol plugin)"
-msgstr "允许远程控制(需要 remotecontrol 插件)"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
-msgctxt "layer"
-msgid "Zoom"
-msgstr "缩放"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:325
-msgid "Menu Name (Default)"
-msgstr "菜单名称(预设值)"
-
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:325
 msgid "WMS URL (Default)"
 msgstr "WMS URL(预设值)"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:368
-#, java-format
-msgid "EULA license URL not available: {0}"
-msgstr "EULA 授权 URL 无法使用: {0}"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:383
-#, java-format
-msgid "Malformed URL for the EULA licence: {0}"
-msgstr "EULA 授权的 URL 格式错误: {0}"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:21
-msgid ""
-"Remote Control has been asked to load a WMS layer from the following URL:"
-msgstr "远程控制已要求从以下 URL 加载 WMS 图层:"
-
-#: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:46
-msgid "Remote WMS"
-msgstr "远程 WMS"
-
-#: ../plugins/wmsplugin/src/wmsplugin/io/WMSLayerExporter.java:11
-#: ../plugins/wmsplugin/src/wmsplugin/io/WMSLayerImporter.java:10
-msgid "WMS Files (*.wms)"
-msgstr "WMS 文件 (*.wms)"
 
 #. *
 #. This file can be used to add some special messages to the translation,
@@ -23312,8 +23536,13 @@ msgstr "以路线图显示视觉化路线信息"
 msgid "Provide a background layer that displays a map grid"
 msgstr "提供显示地图格线的背景图层"
 
-#. Plugin ImageWayPoint
+#. Plugin imagery
 #: build/trans_plugins.java:46
+msgid "Experimental union of SlippyMap plugin and WMSPlugin"
+msgstr ""
+
+#. Plugin ImageWayPoint
+#: build/trans_plugins.java:48
 msgid ""
 "Another plugin to match images to the waypoints in a GPX file. A match is "
 "made when the 'name', 'cmt' or 'desc' attribute of a waypoint tag matches "
@@ -23323,33 +23552,34 @@ msgstr ""
 "\"name\"、\"cmt\" 或 \"desc\" 属性与图片的文件名称相符时就是配对成功。"
 
 #. Plugin ImportImagePlugin
-#: build/trans_plugins.java:48 build/trans_plugins.java:50
+#: build/trans_plugins.java:50 build/trans_plugins.java:52
 msgid "Plugin for importing spatial referenced images"
 msgstr "用来导入空间参照图片的外挂程式"
 
 #. Plugin importvec
-#: build/trans_plugins.java:52
+#: build/trans_plugins.java:54
 msgid "Import vector graphics (SVG)"
 msgstr "导入矢量图形(SVG)"
 
 #. Plugin irsrectify
-#: build/trans_plugins.java:54
+#: build/trans_plugins.java:56
 msgid "A helper for IRS satellite adjustment."
 msgstr "IRS 卫星调整协助程序"
 
 #. Plugin lakewalker
-#: build/trans_plugins.java:56
+#: build/trans_plugins.java:58
 msgid "Helps vectorizing WMS images."
 msgstr "帮助将 WMS 图片矢量化。"
 
 #. Plugin livegps
-#: build/trans_plugins.java:58
+#: build/trans_plugins.java:60
 msgid ""
 "Support live GPS input (moving dot) through a connection to gpsd server."
 msgstr "支持透过连接到 gpsd 服务器的即时 GPS 输入(移动点)。"
 
+#. File ../plugins/mapdust/build.xml had no data
 #. Plugin measurement
-#: build/trans_plugins.java:60
+#: build/trans_plugins.java:63
 msgid ""
 "Provide a measurement dialog and a layer to measure length and angle of "
 "segments, area surrounded by a (simple) closed way and create measurement "
@@ -23359,24 +23589,24 @@ msgstr ""
 "建立测量路径(也可以从 gps 图层输入)。"
 
 #. Plugin michigan_left
-#: build/trans_plugins.java:62
+#: build/trans_plugins.java:65
 msgid "Adds no left turn for sets of 4 or 5 ways"
 msgstr "为 4 或 5 条路径加入禁止左转"
 
 #. Plugin multipoly-convert
-#: build/trans_plugins.java:64
+#: build/trans_plugins.java:67
 msgid "Simply convert an area to a multipolygon."
 msgstr "简单地把区域转换为多重多边形。"
 
 #. Plugin multipoly
-#: build/trans_plugins.java:66
+#: build/trans_plugins.java:69
 msgid ""
 "Create multipolygons by one click, much easier than standard way with "
 "relation editor."
 msgstr "点一下就可以建立多重多边形，比标准使用关系编辑器的方式更加容易。"
 
 #. Plugin nearclick
-#: build/trans_plugins.java:68
+#: build/trans_plugins.java:71
 msgid ""
 "Simulates a click when you do a small and short drag. This is useful for "
 "tablet pens, when you have problems just clicking the tablet without the "
@@ -23386,39 +23616,39 @@ msgstr ""
 "题时只要点击面板而不需移动鼠标(一般性 Java - 平板电脑问题)。"
 
 #. Plugin OpeningHoursEditor
-#: build/trans_plugins.java:70
+#: build/trans_plugins.java:73
 msgid "extended options for editing opening_hours"
 msgstr "扩展 opening_hours 的编辑选项"
 
 #. Plugin openlayers
-#: build/trans_plugins.java:72
+#: build/trans_plugins.java:75
 msgid "Displays an OpenLayers background image"
 msgstr "显示 OpenLayers 背景图片"
 
 #. Plugin openstreetbugs
-#: build/trans_plugins.java:74
+#: build/trans_plugins.java:77
 msgid "Imports issues from OpenStreetBugs"
 msgstr "导入 OpenStreetBugs 的议题"
 
 #. Plugin openvisible
-#: build/trans_plugins.java:76
+#: build/trans_plugins.java:79
 msgid ""
 "Allows opening gpx/osm files that intersect the currently visible screen area"
 msgstr "允许开启与目前可视屏幕区域交集的 gpx/osm 文件"
 
 #. Plugin osmarender
-#: build/trans_plugins.java:78
+#: build/trans_plugins.java:81
 msgid ""
 "Launches FireFox to display the current visible screen as a nice SVG image."
 msgstr "执行 FireFox 将目前可见的画面显示为很好的 SVG 图片。"
 
 #. Plugin pdfimport
-#: build/trans_plugins.java:80
+#: build/trans_plugins.java:83
 msgid "Import PDF file and convert to ways."
 msgstr "导入 PDF 文件并转换为路径。"
 
 #. Plugin photo_geotagging
-#: build/trans_plugins.java:82
+#: build/trans_plugins.java:85
 msgid ""
 "Write gps position info to the image file header. Run this feature from the "
 "right click menu of the image layer."
@@ -23426,45 +23656,45 @@ msgstr ""
 "将 gps 地点信息写入图片档的档头。在图片图层按右键菜单就可以执行这项功能。"
 
 #. Plugin PicLayer
-#: build/trans_plugins.java:84
+#: build/trans_plugins.java:87
 msgid ""
 "This plugin allows to display any picture as a background in the editor and "
 "align it with the map."
 msgstr "这个插件允许显示任何图片做为编辑器的背景并将它对齐地图。"
 
 #. Plugin plastic_laf
-#: build/trans_plugins.java:86
+#: build/trans_plugins.java:89
 msgid "The great JGoodies Plastic Look and Feel."
 msgstr "超棒的 JGoodies 塑胶外观与感觉。"
 
 #. Plugin public_transport
-#: build/trans_plugins.java:88
+#: build/trans_plugins.java:91
 msgid ""
 "This plugin simplifies the mapping and editing of public transport routes."
 msgstr "这个插件简化了大众运输路线的制图与编辑。"
 
 #. Plugin remotecontrol
-#: build/trans_plugins.java:90
+#: build/trans_plugins.java:93
 msgid "Let other applications send commands to JOSM."
 msgstr "让其他的应用程序传送指令给 JOSM。"
 
 #. Plugin restart
-#: build/trans_plugins.java:92
+#: build/trans_plugins.java:95
 msgid "Adds &quot;Restart JOSM&quot; item to File menu."
 msgstr ""
 
 #. Plugin reverter
-#: build/trans_plugins.java:94
+#: build/trans_plugins.java:97
 msgid "Plugin for reverting changesets"
 msgstr "还原更改组合的插件"
 
 #. Plugin rgisopen
-#: build/trans_plugins.java:96
+#: build/trans_plugins.java:99
 msgid "Use rgis.spb.ru image as overlay"
 msgstr "使用 rgis.spb.ru 图片做为覆盖"
 
 #. Plugin RoadSigns
-#: build/trans_plugins.java:98
+#: build/trans_plugins.java:101
 msgid ""
 "Plugin for tagging of objects based on a selection of road signs. The dialog "
 "can be opened by clicking a small icon in the upper right corner of the "
@@ -23474,7 +23704,7 @@ msgstr ""
 "小图标来开启。可用的国家预设组合: 德国。"
 
 #. Plugin routes
-#: build/trans_plugins.java:100
+#: build/trans_plugins.java:103
 msgid ""
 "Renders routes (bus, hiking trails, bicycle routes, ..). Route types must be "
 "defined in routes.xml file in plugin directory"
@@ -23483,12 +23713,12 @@ msgstr ""
 "routes.xml 文件"
 
 #. Plugin routing
-#: build/trans_plugins.java:102
+#: build/trans_plugins.java:105
 msgid "Provides routing capabilities."
 msgstr "提供路线规画的功能。"
 
 #. Plugin SimplifyArea
-#: build/trans_plugins.java:104
+#: build/trans_plugins.java:107
 msgid ""
 "Simplify area by removing nodes on very obtuse angles. This can be "
 "constrained by maximum removed area size. Also average nearby nodes."
@@ -23497,7 +23727,7 @@ msgstr ""
 "时也会平均化附近的节点。"
 
 #. Plugin slippymap
-#: build/trans_plugins.java:106
+#: build/trans_plugins.java:109
 msgid ""
 "Displays a slippy map grid in JOSM. Can load tiles from slippy map as "
 "background and request updates."
@@ -23506,22 +23736,22 @@ msgstr ""
 
 #. Plugin smed
 #. Plugin smed_fw
-#: build/trans_plugins.java:108 build/trans_plugins.java:110
+#: build/trans_plugins.java:111 build/trans_plugins.java:113
 msgid "Create and edit seamaps for OpenSeaMap"
 msgstr "建立并编辑 OpenSeaMap 海图"
 
 #. Plugin surveyor
-#: build/trans_plugins.java:112
+#: build/trans_plugins.java:115
 msgid "Allow adding markers/nodes on current gps positions."
 msgstr "允许在目前的 gps 位置加入标记/节点。"
 
 #. Plugin tageditor
-#: build/trans_plugins.java:114
+#: build/trans_plugins.java:117
 msgid "Provides a dialog for editing tags in a tabular grid."
 msgstr "提供在表格线中编辑标签的对话框。"
 
 #. Plugin tagging-preset-tester
-#: build/trans_plugins.java:116
+#: build/trans_plugins.java:119
 msgid ""
 "Adds a tagging preset tester to the help menu, which helps you developing of "
 "tagging presets (quick preview of the dialog that will popup). You can start "
@@ -23531,36 +23761,36 @@ msgstr ""
 "速预览对话框)。您也可以单独以 jar-文件的方式启动。"
 
 #. Plugin terracer
-#: build/trans_plugins.java:118
+#: build/trans_plugins.java:121
 msgid "Make terraced houses out of single blocks."
 msgstr "让连栋房屋能超出单一区块。"
 
 #. Plugin toms
-#: build/trans_plugins.java:120
+#: build/trans_plugins.java:123
 msgid "Create and edit seamarks for OpenSeaMap"
 msgstr "建立并编辑 OpenSeaMap 海上航标"
 
 #. Plugin touchscreenhelper
-#: build/trans_plugins.java:122
+#: build/trans_plugins.java:125
 msgid ""
 "Provides helper buttons to allow working with single button mouse (stylus). "
 "Currently adds only one button to slip the map."
 msgstr "提供辅助按钮以便使用于单键滑键(触控笔)。目前加入单键移动地图。"
 
 #. Plugin Tracer
-#: build/trans_plugins.java:124
+#: build/trans_plugins.java:127
 msgid ""
 "Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) "
 "to be running."
 msgstr "从捷克地籍图描出建筑物。需要有执行 TracerServer (.NET 或 Mono)。"
 
 #. Plugin trustosm
-#: build/trans_plugins.java:126
+#: build/trans_plugins.java:129
 msgid "Plugin to digital sign OSM-Data"
 msgstr ""
 
 #. Plugin turnrestrictions
-#: build/trans_plugins.java:128
+#: build/trans_plugins.java:131
 msgid ""
 "The turnrestrictions plugin allows to enter maintain information about turn "
 "restrictions in the OpenStreetMap database."
@@ -23568,17 +23798,17 @@ msgstr ""
 "turnrestrictions 插件允许将转弯限制的维护信息输入到 OpenStreetMap 数据库中。"
 
 #. Plugin undelete
-#: build/trans_plugins.java:130
+#: build/trans_plugins.java:133
 msgid "Allows undeleting object from OSM database"
 msgstr "允许从 OSM 数据库中取消删除的对象"
 
 #. Plugin utilsplugin2
-#: build/trans_plugins.java:132
+#: build/trans_plugins.java:135
 msgid "Several utilities that make your life easier."
 msgstr ""
 
 #. Plugin validator
-#: build/trans_plugins.java:134
+#: build/trans_plugins.java:137
 msgid ""
 "An OSM data validator. It checks for problems in data, and provides fixes "
 "for the common ones. Spellcheck integrated for tag names."
@@ -23587,7 +23817,7 @@ msgstr ""
 "签名称的拼写检查。"
 
 #. Plugin videomapping
-#: build/trans_plugins.java:136
+#: build/trans_plugins.java:139
 msgid ""
 "(This Plugin is currently work in progress!!!) Links and syncs a "
 "georeferenced video against a GPS track, to use it for identify visible "
@@ -23597,7 +23827,7 @@ msgstr ""
 "来辨识可见的对象。"
 
 #. Plugin walkingpapers
-#: build/trans_plugins.java:138
+#: build/trans_plugins.java:141
 msgid ""
 "Supports downloading tiled, scanned maps from walking-papers.org. This "
 "plugin is still under early development and may be buggy."
@@ -23606,29 +23836,29 @@ msgstr ""
 "段，因此可能有许多程序错误存在。"
 
 #. Plugin waydownloader
-#: build/trans_plugins.java:140
+#: build/trans_plugins.java:143
 msgid "Easy downloading along a long set of interconnected ways"
 msgstr "方便的下载一整组互相联结的路径"
 
 #. Plugin waypoint_search
-#: build/trans_plugins.java:142
+#: build/trans_plugins.java:145
 msgid "Enables searching for waypoint imported from gpx file."
 msgstr "为从 GPX 文件导入的路点开启搜索功能。"
 
 #. Plugin wayselector
-#: build/trans_plugins.java:144
+#: build/trans_plugins.java:147
 msgid "Select a sequence of non-branching connected ways"
 msgstr "选择一整列无分支的路径"
 
 #. Plugin wms-turbo-challenge2
-#: build/trans_plugins.java:146
+#: build/trans_plugins.java:149
 msgid ""
 "Drive a race car from point A to point B over aerial imagery, leave cacti "
 "behind."
 msgstr "在航照图上将一辆赛车从 A 点开到 B 点，不管 cacti。"
 
 #. Plugin wmsplugin
-#: build/trans_plugins.java:148
+#: build/trans_plugins.java:151
 msgid ""
 "Display georeferenced images as background in JOSM (WMS servers, Yahoo, ...)."
 msgstr "显示地理参照图片作为 JOSM 的背景(WMS 服务器、Yahoo...)。"
@@ -27212,14 +27442,12 @@ msgid "BP"
 msgstr "英国石油 (BP)"
 
 #: build/trans_presets.java:1417
-#, fuzzy
 msgid "Chevron"
-msgstr "他们的版本"
+msgstr ""
 
 #: build/trans_presets.java:1417
-#, fuzzy
 msgid "Citgo"
-msgstr "市"
+msgstr ""
 
 #: build/trans_presets.java:1417
 msgid "Esso"
@@ -27230,14 +27458,12 @@ msgid "Exxon"
 msgstr ""
 
 #: build/trans_presets.java:1417
-#, fuzzy
 msgid "Gulf"
-msgstr "高尔夫"
+msgstr ""
 
 #: build/trans_presets.java:1417
-#, fuzzy
 msgid "Mobil"
-msgstr "石油"
+msgstr ""
 
 #: build/trans_presets.java:1417
 msgid "OMV"
@@ -27248,9 +27474,8 @@ msgid "Petro-Canada"
 msgstr ""
 
 #: build/trans_presets.java:1417
-#, fuzzy
 msgid "Pioneer"
-msgstr "渡头"
+msgstr ""
 
 #: build/trans_presets.java:1417
 msgid "Q8"
@@ -31094,7 +31319,7 @@ msgstr "容易"
 
 #: build/trans_presets.java:2661
 msgid "advanced"
-msgstr "进阶"
+msgstr "高级"
 
 #: build/trans_presets.java:2661
 msgid "expert"
@@ -37447,6 +37672,9 @@ msgstr ""
 #: build/trans_wms.java:55
 msgid "SPOTMaps (France)"
 msgstr ""
+
+#~ msgid "Unable to read autosaved osm data ({0}) - {1}"
+#~ msgstr "无法读取 OSM 自动保存的数据 ({0}) - {1}"
 
 #~ msgid "Enter the coordinates for the new node."
 #~ msgstr "输入新节点的座标"

@@ -30,6 +30,7 @@ public class ImageryInfo implements Comparable<ImageryInfo> {
     String eulaAcceptanceRequired = null;
     ImageryType imageryType = ImageryType.WMS;
     double pixelPerDegree = 0.0;
+    int maxZoom = 0;
 
     public ImageryInfo(String name) {
         this.name=name;
@@ -65,7 +66,11 @@ public class ImageryInfo implements Comparable<ImageryInfo> {
         String e4 = null;
         if(url != null && !url.isEmpty()) e2 = getFullURL();
         if(cookies != null && !cookies.isEmpty()) e3 = cookies;
-        if(pixelPerDegree != 0.0) e4 = String.valueOf(pixelPerDegree);
+        if(imageryType == ImageryType.WMS) {
+            if(pixelPerDegree != 0.0) e4 = String.valueOf(pixelPerDegree);
+        } else {
+            if(maxZoom != 0) e4 = String.valueOf(maxZoom);
+        }
         if(e4 != null && e3 == null) e3 = "";
         if(e3 != null && e2 == null) e2 = "";
 
@@ -82,7 +87,8 @@ public class ImageryInfo implements Comparable<ImageryInfo> {
         this.name=array.get(0);
         if(array.size() >= 2) setURL(array.get(1));
         if(array.size() >= 3) this.cookies=array.get(2);
-        if(array.size() >= 4) this.pixelPerDegree=Double.valueOf(array.get(3));
+        if(imageryType == ImageryType.WMS && array.size() >= 4) this.pixelPerDegree=Double.valueOf(array.get(3));
+        if(imageryType == ImageryType.TMS && array.size() >= 4) this.maxZoom=Integer.valueOf(array.get(3));
     }
 
     public ImageryInfo(ImageryInfo i) {
@@ -147,6 +153,10 @@ public class ImageryInfo implements Comparable<ImageryInfo> {
         return this.pixelPerDegree;
     }
 
+    public int getMaxZoom() {
+        return this.maxZoom;
+    }
+
     public String getFullURL() {
         return imageryType.getUrlString() + ":" + url;
     }
@@ -164,6 +174,8 @@ public class ImageryInfo implements Comparable<ImageryInfo> {
         String res = name;
         if(pixelPerDegree != 0.0)
             res += " ("+pixelPerDegree+")";
+        else if(maxZoom != 0)
+            res += " (z"+maxZoom+")";
         return res;
     }
 

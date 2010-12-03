@@ -182,7 +182,11 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         this.setVisible(true);
 
         if (info.getImageryType() == ImageryType.TMS) {
-            initTileSource(new TMSTileSource(info.getName(),info.getURL()));
+            if(isUrlWithPatterns(info.getURL())) {
+                initTileSource(new TemplatedTMSTileSource(info.getName(), info.getURL(), info.getMaxZoom()));
+            } else {
+                initTileSource(new TMSTileSource(info.getName(),info.getURL(), info.getMaxZoom()));
+            }
         } else if (info.getImageryType() == ImageryType.BING) {
             initTileSource(new BingAerialTileSource());
         } else throw new AssertionError();
@@ -357,6 +361,10 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                 });
             }
         });
+    }
+
+    public static boolean isUrlWithPatterns(String url) {
+        return url != null && url.contains("{") && url.contains("}");
     }
 
     void zoomChanged()

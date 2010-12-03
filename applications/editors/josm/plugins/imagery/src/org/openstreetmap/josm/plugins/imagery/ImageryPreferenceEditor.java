@@ -39,6 +39,7 @@ import javax.swing.table.TableColumnModel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.tms.TMSPreferences;
 import org.openstreetmap.josm.plugins.imagery.wms.AddWMSLayerPanel;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSAdapter;
@@ -72,7 +73,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
             @Override
             public String getToolTipText(MouseEvent e) {
                 java.awt.Point p = e.getPoint();
-                return (String) model.getValueAt(rowAtPoint(p), columnAtPoint(p));
+                return model.getValueAt(rowAtPoint(p), columnAtPoint(p)).toString();
             }
         };
         JScrollPane scroll = new JScrollPane(list);
@@ -396,7 +397,8 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
             case 1:
                 return info.getFullURL();
             case 2:
-                return info.pixelPerDegree == 0.0 ? "" : info.pixelPerDegree;
+                return (info.imageryType == ImageryType.WMS) ? (info.pixelPerDegree == 0.0 ? "" : info.pixelPerDegree)
+                                                             : (info.maxZoom == 0 ? "" : info.maxZoom);
             }
             return null;
         }
@@ -409,12 +411,17 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
                 info.name = (String) o;
             case 1:
                 info.setURL((String)o);
+            case 2:
+                if(info.imageryType == ImageryType.WMS)
+                    info.pixelPerDegree = Double.parseDouble((String) o);
+                else
+                    info.maxZoom = Integer.parseInt((String) o);
             }
         }
 
         @Override
         public boolean isCellEditable(int row, int column) {
-            return (column != 2);
+            return true;
         }
     }
 

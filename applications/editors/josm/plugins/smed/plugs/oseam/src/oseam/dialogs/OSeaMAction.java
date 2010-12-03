@@ -37,7 +37,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import oseam.Messages;
 import oseam.OSeaM;
 
-
 public class OSeaMAction {
 
 	private JPanel oseamPanel = null;
@@ -45,9 +44,9 @@ public class OSeaMAction {
 	private JButton hazButton = null;
 	private JButton specButton = null;
 	private JButton lightButton = null;
-	
+
 	public OSeaMAction() {
-		
+
 		String str = Main.pref.get("mappaint.style.sources");
 		if (!str.contains("dev.openseamap.org")) {
 			if (!str.isEmpty())
@@ -66,11 +65,11 @@ public class OSeaMAction {
 			oseamPanel = new JPanel();
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
-//System.out.println("file=" + Messages.getString("ChanButton"));
-			oseamPanel.add(getChanButton(),  null);
-			oseamPanel.add(getHazButton(),  null);
-			oseamPanel.add(getSpecButton(),  null);
-			oseamPanel.add(getLightButton(),  null);
+			// System.out.println("file=" + Messages.getString("ChanButton"));
+			oseamPanel.add(getChanButton(), null);
+			oseamPanel.add(getHazButton(), null);
+			oseamPanel.add(getSpecButton(), null);
+			oseamPanel.add(getLightButton(), null);
 		}
 		return oseamPanel;
 	}
@@ -78,18 +77,20 @@ public class OSeaMAction {
 	private JButton getChanButton() {
 		if (chanButton == null) {
 			chanButton = new JButton();
-			chanButton.setBounds(new Rectangle(340, 56, 50, 50));
+			chanButton.setBounds(new Rectangle(5, 5, 50, 50));
 			chanButton.setText("");
-			chanButton.setIcon(new ImageIcon(getClass().getResource(Messages.getString("ChanButton"))));
-			chanButton.setToolTipText("Channel Marks");
+			chanButton.setIcon(new ImageIcon(getClass().getResource(
+					Messages.getString("ChanButton"))));
+			chanButton.setToolTipText(Messages.getString("ChanTip"));
 			chanButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-/*					panelLimits.setVisible(false);
-					panelServices.setVisible(false);
-					panelEnv.setVisible(false);
-					panelRelations.setVisible(false);
-					panelGeneral.setVisible(true);
-*/				}
+					/*
+					 * panelLimits.setVisible(false);
+					 * panelServices.setVisible(false);
+					 * panelEnv.setVisible(false);
+					 * panelRelations.setVisible(false);
+					 * panelGeneral.setVisible(true);
+					 */}
 			});
 		}
 		return chanButton;
@@ -98,18 +99,20 @@ public class OSeaMAction {
 	private JButton getHazButton() {
 		if (hazButton == null) {
 			hazButton = new JButton();
-			hazButton.setBounds(new Rectangle(340, 111, 50, 50));
+			hazButton.setBounds(new Rectangle(60, 5, 50, 50));
 			hazButton.setText("");
-			hazButton.setIcon(new ImageIcon(getClass().getResource(Messages.getString("HazButton"))));
-			hazButton.setToolTipText("Danger Marks");
+			hazButton.setIcon(new ImageIcon(getClass().getResource(
+					Messages.getString("HazButton"))));
+			hazButton.setToolTipText(Messages.getString("HazTip"));
 			hazButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-/*					panelLimits.setVisible(false);
-					panelServices.setVisible(false);
-					panelEnv.setVisible(false);
-					panelRelations.setVisible(false);
-					panelGeneral.setVisible(true);
-*/				}
+					/*
+					 * panelLimits.setVisible(false);
+					 * panelServices.setVisible(false);
+					 * panelEnv.setVisible(false);
+					 * panelRelations.setVisible(false);
+					 * panelGeneral.setVisible(true);
+					 */}
 			});
 		}
 		return hazButton;
@@ -118,18 +121,20 @@ public class OSeaMAction {
 	private JButton getSpecButton() {
 		if (specButton == null) {
 			specButton = new JButton();
-			specButton.setBounds(new Rectangle(340, 166, 50, 50));
+			specButton.setBounds(new Rectangle(115, 5, 50, 50));
 			specButton.setText("");
-			specButton.setIcon(new ImageIcon(getClass().getResource(Messages.getString("SpecButton"))));
-			specButton.setToolTipText("Special Marks");
+			specButton.setIcon(new ImageIcon(getClass().getResource(
+					Messages.getString("SpecButton"))));
+			specButton.setToolTipText(Messages.getString("SpecTip"));
 			specButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-/*					panelLimits.setVisible(false);
-					panelServices.setVisible(false);
-					panelEnv.setVisible(false);
-					panelRelations.setVisible(false);
-					panelGeneral.setVisible(true);
-*/				}
+					/*
+					 * panelLimits.setVisible(false);
+					 * panelServices.setVisible(false);
+					 * panelEnv.setVisible(false);
+					 * panelRelations.setVisible(false);
+					 * panelGeneral.setVisible(true);
+					 */}
 			});
 		}
 		return specButton;
@@ -138,18 +143,20 @@ public class OSeaMAction {
 	private JButton getLightButton() {
 		if (lightButton == null) {
 			lightButton = new JButton();
-			lightButton.setBounds(new Rectangle(340, 221, 50, 50));
+			lightButton.setBounds(new Rectangle(170, 5, 50, 50));
 			lightButton.setText("");
-			lightButton.setIcon(new ImageIcon(getClass().getResource(Messages.getString("LightsButton"))));
-			lightButton.setToolTipText("Light Marks");
+			lightButton.setIcon(new ImageIcon(getClass().getResource(
+					Messages.getString("LightsButton"))));
+			lightButton.setToolTipText(Messages.getString("LightsTip"));
 			lightButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-/*					panelLimits.setVisible(false);
-					panelServices.setVisible(false);
-					panelEnv.setVisible(false);
-					panelRelations.setVisible(false);
-					panelGeneral.setVisible(true);
-*/				}
+					/*
+					 * panelLimits.setVisible(false);
+					 * panelServices.setVisible(false);
+					 * panelEnv.setVisible(false);
+					 * panelRelations.setVisible(false);
+					 * panelGeneral.setVisible(true);
+					 */}
 			});
 		}
 		return lightButton;

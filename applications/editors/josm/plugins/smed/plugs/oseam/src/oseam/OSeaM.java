@@ -71,7 +71,7 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public String getInfo() {
-		return "Seamark editor";
+		return Messages.getString("TabInfo");
 	}
 
 	@Override

@@ -66,6 +66,7 @@ public class OSeaMAction {
 			oseamPanel = new JPanel();
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
+//System.out.println("file=" + Messages.getString("ChanButton"));
 			oseamPanel.add(getChanButton(),  null);
 			oseamPanel.add(getHazButton(),  null);
 			oseamPanel.add(getSpecButton(),  null);

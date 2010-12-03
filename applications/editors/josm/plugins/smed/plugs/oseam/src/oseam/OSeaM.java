@@ -54,7 +54,7 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public String getName() {
-		return "Seamarks";
+		return Messages.getString("TabName");
 	}
 
 	@Override

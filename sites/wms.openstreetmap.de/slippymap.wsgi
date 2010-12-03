@@ -13,7 +13,7 @@ mapfile='/osm/wms/osmwms.map'
 
 import re,cgi,mapscript,os
 
-def genHTML(template,layername,bounds):
+def genHTML(template,layername,bounds,zoom):
   templ = open(template,'r')
   tdata = templ.read()
   templ.close()
@@ -23,6 +23,10 @@ def genHTML(template,layername,bounds):
   
   p = re.compile('%BOUNDS%')
   tdata = p.sub(bounds,tdata)
+  
+  p = re.compile('numZoomLevels:[0-9]+')
+  zoom = 'numZoomLevels:' + zoom;
+  tdata = p.sub(zoom,tdata)
   return tdata
   
 def application(environ, start_response):
@@ -35,7 +39,11 @@ def application(environ, start_response):
    output = ('<html><body>&quot;<b>%s</b>&quot; is not a valid layername!</html></body>' % layername)
   else:
    bounds=layer.metadata.get('wms_extent').replace(' ',',')
-   output=genHTML(template,layername,bounds)       
+   try:
+     zoom=layer.metadata.get('zoomlevels')
+   except:
+     zoom=19
+   output=genHTML(template,layername,bounds,zoom)       
 
   response_headers = [('Content-type', 'text/html'),
                       ('Content-Length', str(len(output)))]

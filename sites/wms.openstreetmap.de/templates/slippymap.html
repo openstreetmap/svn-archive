@@ -69,7 +69,7 @@ function drawmap() {
     });
 
     var layer_wms = new OpenLayers.Layer.XYZ( 'WMS',
-    'http://wms.openstreetmap.de/tms/%LAYERNAME%/${z}/${x}/${y}.png');
+    'http://wms.openstreetmap.de/tms/%LAYERNAME%/${z}/${x}/${y}.png',{numZoomLevels:19});
 
     map.addLayers([layer_wms]);
 

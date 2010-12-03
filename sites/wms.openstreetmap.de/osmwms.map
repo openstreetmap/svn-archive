@@ -45,6 +45,7 @@ MAP
       "wms_srs"    "EPSG:4326"
       "copyright"  "© Stadt Radolfzell: OSM use only"
       "wiki" "http://wiki.openstreetmap.org/wiki/Luftbilder_Radolfzell"
+      "zoomlevels" "22"
     END
     TYPE RASTER
     STATUS ON

@@ -34,15 +34,15 @@ public class Harbour implements SmedPluggable {
 
 	@Override
 	public boolean hasFocus() {
-		Main.map.mapView.addPropertyChangeListener(harbour);
-		MapView.addLayerChangeListener(harbour);
+//		Main.map.mapView.addPropertyChangeListener(harbour);
+//		MapView.addLayerChangeListener(harbour);
 		return true;
 	}
 
 	@Override
 	public boolean lostFocus() {
-		Main.map.mapView.removePropertyChangeListener(harbour);
-		MapView.removeLayerChangeListener(harbour);
+//		Main.map.mapView.removePropertyChangeListener(harbour);
+//		MapView.removeLayerChangeListener(harbour);
 		return true;
 	}
 

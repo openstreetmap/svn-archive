@@ -175,6 +175,7 @@
 				<os family="windows"/>
 			</and>
 		</condition>
+		<delete dir="${josm.plugins.dir}/splug"/>
 		<copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
 	</target>
 	

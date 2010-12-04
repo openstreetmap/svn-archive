@@ -438,8 +438,9 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
             case 2:
                 return (info.imageryType == ImageryType.WMS) ? (info.pixelPerDegree == 0.0 ? "" : info.pixelPerDegree)
                                                              : (info.maxZoom == 0 ? "" : info.maxZoom);
+            default:
+                throw new ArrayIndexOutOfBoundsException();
             }
-            return null;
         }
 
         @Override
@@ -448,8 +449,10 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
             switch (column) {
             case 0:
                 info.name = (String) o;
+                break;
             case 1:
                 info.setURL((String)o);
+                break;
             case 2:
                 info.pixelPerDegree = 0;
                 info.maxZoom = 0;
@@ -460,6 +463,9 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
                         info.maxZoom = Integer.parseInt((String) o);
                 } catch (NumberFormatException e) {
                 }
+                break;
+            default:
+                throw new ArrayIndexOutOfBoundsException();
             }
         }
 

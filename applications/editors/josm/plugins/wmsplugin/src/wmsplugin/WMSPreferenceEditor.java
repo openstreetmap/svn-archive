@@ -305,8 +305,10 @@ public class WMSPreferenceEditor implements PreferenceSetting {
             switch (column) {
             case 0:
                 info.name = (String) o;
+                break;
             case 1:
                 info.setURL((String)o);
+                break;
             }
         }
 

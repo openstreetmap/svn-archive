@@ -39,7 +39,6 @@ public class ImageryPlugin extends Plugin {
     public static WMSAdapter wmsAdapter = new WMSAdapter();
 
     public ImageryLayerInfo info = new ImageryLayerInfo();
-
     // remember state of menu item to restore on changed preferences
     private boolean menuEnabled = false;
 
@@ -204,6 +203,7 @@ public class ImageryPlugin extends Plugin {
         super(info);
         instance = this;
         this.info.load();
+        OffsetBookmark.loadBookmarks();
         refreshMenu();
         initRemoteControl();
     }

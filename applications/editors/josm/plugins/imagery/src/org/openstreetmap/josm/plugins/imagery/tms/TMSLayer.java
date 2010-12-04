@@ -160,8 +160,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     }
 
     @Override
-    public void displace(double dx, double dy) {
-        super.displace(dx, dy);
+    public void setOffset(double dx, double dy) {
+        super.setOffset(dx, dy);
         needRedraw = true;
     }
 
@@ -1137,6 +1137,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                 LayerListDialog.getInstance().createDeleteLayerAction(),
                 SeparatorLayerAction.INSTANCE,
                 // color,
+                getOffsetAction(),
                 new RenameLayerAction(this.getAssociatedFile(), this),
                 SeparatorLayerAction.INSTANCE,
                 new LayerListPopup.InfoAction(this) };

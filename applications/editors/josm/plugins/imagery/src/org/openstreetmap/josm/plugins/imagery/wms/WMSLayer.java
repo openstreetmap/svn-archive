@@ -29,9 +29,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
-import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
@@ -41,9 +41,9 @@ import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
-import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.ImageryLayer;
 import org.openstreetmap.josm.plugins.imagery.ImageryPlugin;
+import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.wms.GeorefImage.State;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -68,6 +68,7 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
     protected final int serializeFormatVersion = 5;
     protected boolean autoDownloadEnabled = true;
     protected boolean settingsChanged;
+    protected ImageryInfo info;
 
     // Image index boundary for current view
     private volatile int bminx;
@@ -241,8 +242,8 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
     }
 
     @Override
-    public void displace(double dx, double dy) {
-        super.displace(dx, dy);
+    public void setOffset(double dx, double dy) {
+        super.setOffset(dx, dy);
         settingsChanged = true;
     }
 
@@ -356,6 +357,7 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
                 LayerListDialog.getInstance().createShowHideLayerAction(),
                 LayerListDialog.getInstance().createDeleteLayerAction(),
                 SeparatorLayerAction.INSTANCE,
+                getOffsetAction(),
                 new LoadWmsAction(),
                 new SaveWmsAction(),
                 new BookmarkWmsAction(),

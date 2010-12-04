@@ -23,6 +23,4 @@ public class ImageryPreferences {
     public static void setFadeColor(Color color) {
         Main.pref.putColor("imagery.fade", color);
     }
-
-
 }

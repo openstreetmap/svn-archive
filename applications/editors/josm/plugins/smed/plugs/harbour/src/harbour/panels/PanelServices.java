@@ -151,15 +151,12 @@ public class PanelServices extends JPanel {
 		loadLabel.setText("Laden / Entladen");
 		airLabel = new JLabel();
 		airLabel.setBounds(new Rectangle(215, 26, 20, 20));
-		// airLabel.setText("JLabel");
 		airLabel.setIcon(new ImageIcon(getClass().getResource("/images/Airplane_20x19.png")));
 		infraLabel = new JLabel();
 		infraLabel.setBounds(new Rectangle(5, 26, 20, 20));
-		// infraLabel.setText("JLabel");
 		infraLabel.setIcon(new ImageIcon(getClass().getResource("/images/Bahn_20x16.png")));
 		raPicLabel = new JLabel();
 		raPicLabel.setBounds(new Rectangle(5, 2, 20, 20));
-		// raPicLabel.setText("\"\"");
 		raPicLabel.setIcon(new ImageIcon(getClass().getResource("/images/Telefon_14x20.png")));
 		this.setSize(330, 270);
 		this.setLayout(null);

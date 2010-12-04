@@ -1,5 +1,6 @@
 package harbour.dialogs;
 
+import harbour.layers.LayerHarbour;
 import harbour.panels.*;
 
 import javax.swing.JPanel;
@@ -58,6 +59,7 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 	private JButton queryjButton = null;
 	private JToggleButton chartButton = null;
 	private JPanel curPanel = null;
+	private static LayerHarbour curLayer = new LayerHarbour("Harbour");
 	
 	public HarbourAction() {
 		panelGeneral= new PanelGeneral();
@@ -145,6 +147,8 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 			harbourPanel.add(getQueryComboBox(), null);
 			harbourPanel.add(getQueryjButton(), null);
 			harbourPanel.add(getChartButton(), null);
+			
+			comButton.setEnabled(false);
 		}
 		return harbourPanel;
 	}
@@ -170,6 +174,14 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					panelRelations.setVisible(false);
 					panelGeneral.setVisible(true);
 					chartButton.setEnabled(false);
+					
+					comButton.setEnabled(false);
+					restButton.setEnabled(true);
+					servButton.setEnabled(true);
+					envButton.setEnabled(true);
+					relButton.setEnabled(true);
+					
+					Main.main.removeLayer(curLayer);
 					curPanel = panelGeneral;
 				}
 			});
@@ -196,6 +208,14 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					panelRelations.setVisible(false);
 					panelLimits.setVisible(true);
 					chartButton.setEnabled(false);
+					
+					comButton.setEnabled(true);
+					restButton.setEnabled(false);
+					servButton.setEnabled(true);
+					envButton.setEnabled(true);
+					relButton.setEnabled(true);
+					
+					Main.main.removeLayer(curLayer);
 					curPanel = panelLimits;
 				}
 			});
@@ -222,6 +242,15 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					panelRelations.setVisible(false);
 					panelServices.setVisible(true);
 					chartButton.setEnabled(false);
+					
+					comButton.setEnabled(true);
+					restButton.setEnabled(true);
+					servButton.setEnabled(false);
+					envButton.setEnabled(true);
+					relButton.setEnabled(true);
+					
+					
+					Main.main.removeLayer(curLayer);
 					curPanel = panelServices;
 				}
 			});
@@ -248,6 +277,14 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					panelRelations.setVisible(false);
 					panelEnv.setVisible(true);
 					chartButton.setEnabled(true);
+					
+					comButton.setEnabled(true);
+					restButton.setEnabled(true);
+					servButton.setEnabled(true);
+					envButton.setEnabled(false);
+					relButton.setEnabled(true);
+
+					Main.main.addLayer(curLayer);
 					curPanel = panelEnv;
 				}
 			});
@@ -274,6 +311,14 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 					panelEnv.setVisible(false);
 					panelRelations.setVisible(true);
 					chartButton.setEnabled(true);
+					
+					comButton.setEnabled(true);
+					restButton.setEnabled(true);
+					servButton.setEnabled(true);
+					envButton.setEnabled(true);
+					relButton.setEnabled(false);
+					
+					Main.main.removeLayer(curLayer);
 					curPanel = panelRelations;
 				}
 			});

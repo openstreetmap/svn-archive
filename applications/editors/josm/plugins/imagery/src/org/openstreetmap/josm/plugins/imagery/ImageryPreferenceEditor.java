@@ -56,14 +56,14 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
     private Color colFadeColor;
     private JButton btnFadeColor;
     private JSlider fadeAmount = new JSlider(0, 100);
+    private JCheckBox remoteCheckBox;
+    boolean allowRemoteControl = true;
 
     // WMS Settings
     JCheckBox overlapCheckBox;
     JSpinner spinEast;
     JSpinner spinNorth;
     JSpinner spinSimConn;
-    JCheckBox remoteCheckBox;
-    boolean allowRemoteControl = true;
     WMSAdapter wmsAdapter = ImageryPlugin.wmsAdapter;
     ImageryPlugin plugin = ImageryPlugin.instance;
 
@@ -225,8 +225,12 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         p.add(new JLabel(tr("Fade amount: ")), GBC.std());
         p.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         p.add(this.fadeAmount, GBC.eol().fill(GBC.HORIZONTAL));
-
         this.fadeAmount.setValue(ImageryPreferences.PROP_FADE_AMOUNT.get());
+
+        allowRemoteControl = ImageryPreferences.PROP_REMOTE_CONTROL.get();
+        remoteCheckBox = new JCheckBox(tr("Allow remote control (reqires remotecontrol plugin)"), allowRemoteControl);
+        p.add(remoteCheckBox,GBC.eol().fill(GBC.HORIZONTAL));
+
         return p;
     }
 
@@ -269,12 +273,6 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         overlapPanelSimConn.add(spinSimConn);
         p.add(overlapPanelSimConn, GBC.eol().fill(GBC.HORIZONTAL));
 
-        allowRemoteControl = Main.pref.getBoolean("wmsplugin.remotecontrol", true);
-        remoteCheckBox = new JCheckBox(tr("Allow remote control (reqires remotecontrol plugin)"), allowRemoteControl);
-        JPanel remotePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        remotePanel.add(remoteCheckBox);
-
-        p.add(remotePanel,GBC.eol().fill(GBC.HORIZONTAL));
         return p;
     }
 
@@ -313,7 +311,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
         p.add(lbl,GBC.std());
         p.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(5, 0, 0, 0));
-        p.add(section,GBC.eol().insets(20,5,0,5));
+        p.add(section,GBC.eol().insets(20,5,0,10));
     }
 
     private Component buildSettingsPanel(final PreferenceTabbedPane gui) {
@@ -352,13 +350,13 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
 
         Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
 
-        Main.pref.put("wmsplugin.remotecontrol", String.valueOf(allowRemoteControl));
 
         TMSPreferences.PROP_DEFAULT_AUTOZOOM.put(this.autozoomActive.isSelected());
         TMSPreferences.PROP_DEFAULT_AUTOLOAD.put(this.autoloadTiles.isSelected());
         TMSPreferences.setMaxZoomLvl((Integer)this.maxZoomLvl.getValue());
         TMSPreferences.setMinZoomLvl((Integer)this.minZoomLvl.getValue());
 
+        ImageryPreferences.PROP_REMOTE_CONTROL.put(allowRemoteControl);
         ImageryPreferences.PROP_FADE_AMOUNT.put(this.fadeAmount.getValue());
         ImageryPreferences.setFadeColor(this.colFadeColor);
 

@@ -3,10 +3,12 @@ package org.openstreetmap.josm.plugins.imagery;
 import java.awt.Color;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
 
 public class ImageryPreferences {
 
+    public static final BooleanProperty PROP_REMOTE_CONTROL = new BooleanProperty("imagery.remotecontrol", true);
     public static final IntegerProperty PROP_FADE_AMOUNT = new IntegerProperty("imagery.fade_amount", 0);
 
     public static Color getFadeColor() {

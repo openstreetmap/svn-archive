@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.imagery.wms;
+package org.openstreetmap.josm.plugins.imagery;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -8,18 +8,17 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
 import org.openstreetmap.josm.plugins.remotecontrol.PermissionPrefWithDefault;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandler;
 import org.openstreetmap.josm.plugins.remotecontrol.RequestHandlerErrorException;
 
-public class WMSRemoteHandler extends RequestHandler {
+public class ImageryRemoteHandler extends RequestHandler {
 
-    public static final String command = "wms";
+    public static final String command = "imagery";
 
     @Override
     public String getPermissionMessage() {
-        return tr("Remote Control has been asked to load a WMS layer from the following URL:") +
+        return tr("Remote Control has been asked to load an imagery layer from the following URL:") +
         "<br>" + args.get("url");
     }
 
@@ -27,9 +26,9 @@ public class WMSRemoteHandler extends RequestHandler {
     public PermissionPrefWithDefault getPermissionPref()
     {
         return new PermissionPrefWithDefault(
-                "wmsplugin.remotecontrol",
+                "imagery.remotecontrol",
                 true,
-        "RemoteControl: WMS forbidden by preferences");
+        "RemoteControl: Imagery forbidden by preferences");
     }
 
     @Override
@@ -40,15 +39,17 @@ public class WMSRemoteHandler extends RequestHandler {
 
     @Override
     protected void handleRequest() throws RequestHandlerErrorException {
+        if (Main.map == null) //Avoid exception when creating ImageryLayer with null MapFrame
+            throw new RequestHandlerErrorException();
         String url = args.get("url");
         String title = args.get("title");
         if((title == null) || (title.length() == 0))
         {
-            title = tr("Remote WMS");
+            title = tr("Remote imagery");
         }
         String cookies = args.get("cookies");
-        WMSLayer wmsLayer = new WMSLayer(new ImageryInfo(title, url, cookies));
-        Main.main.addLayer(wmsLayer);
+        ImageryLayer imgLayer = ImageryLayer.create(new ImageryInfo(title, url, cookies));
+        Main.main.addLayer(imgLayer);
 
     }
 

@@ -28,7 +28,6 @@ import org.openstreetmap.josm.plugins.PluginProxy;
 import org.openstreetmap.josm.plugins.imagery.wms.Map_Rectifier_WMSmenuAction;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSAdapter;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSLayer;
-import org.openstreetmap.josm.plugins.imagery.wms.WMSRemoteHandler;
 import org.openstreetmap.josm.plugins.imagery.wms.io.WMSLayerExporter;
 import org.openstreetmap.josm.plugins.imagery.wms.io.WMSLayerImporter;
 
@@ -123,7 +122,7 @@ public class ImageryPlugin extends Plugin {
                     method = plugin.getClass().getMethod("addRequestHandler", String.class, Class.class);
                     // replace command and class when you copy this to some other plug-in
                     // for compatibility with old remotecontrol add leading "/"
-                    method.invoke(plugin, "/" + WMSRemoteHandler.command, WMSRemoteHandler.class);
+                    method.invoke(plugin, "/" + ImageryRemoteHandler.command, ImageryRemoteHandler.class);
                     remoteControlInitialized = true;
                 }
             } catch (SecurityException e) {

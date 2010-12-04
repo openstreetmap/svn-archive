@@ -322,12 +322,12 @@ SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\remotecontrol.jar"
 SectionEnd
 
-Section $(JOSM_SEC_VALIDATOR_PLUGIN) SecValidatorPlugin
+Section $(JOSM_SEC_TURNRESTRICTIONS_PLUGIN) SecTurnrestrictionsPlugin
 ;-------------------------------------------
 SectionIn 1 2
 SetShellVarContext current
 SetOutPath $APPDATA\JOSM\plugins
-File "..\dist\validator.jar"
+File "..\dist\turnrestrictions.jar"
 SectionEnd
 
 Section $(JOSM_SEC_WMS_PLUGIN) SecWMSPlugin
@@ -397,7 +397,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "openstreetbugsremotecontrolvalidatorwmsplugin"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "openstreetbugsturnrestrictionsvalidatorwmsplugin"
 SectionEnd
 
 
@@ -457,14 +457,12 @@ Section /o "un.$(un.JOSM_SEC_PERSONAL_SETTINGS)" un.SecPersonalSettings
 ;-------------------------------------------
 SectionIn 2
 SetShellVarContext current
-Delete "$APPDATA\JOSM\plugins\agpifoj\*.*"
-RMDir "$APPDATA\JOSM\plugins\agpifoj"
+Delete "$APPDATA\JOSM\plugins\turnrestrictions\*.*"
+RMDir "$APPDATA\JOSM\plugins\turnrestrictions"
 Delete "$APPDATA\JOSM\plugins\openstreetbugs\*.*"
 RMDir "$APPDATA\JOSM\plugins\openstreetbugs"
 Delete "$APPDATA\JOSM\plugins\remotecontrol\*.*"
 RMDir "$APPDATA\JOSM\plugins\remotecontrol"
-Delete "$APPDATA\JOSM\plugins\validator\*.*"
-RMDir "$APPDATA\JOSM\plugins\validator"
 Delete "$APPDATA\JOSM\plugins\wmsplugin\*.*"
 RMDir "$APPDATA\JOSM\plugins\wmsplugin"
 Delete "$APPDATA\JOSM\plugins\*.*"

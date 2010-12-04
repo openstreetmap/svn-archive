@@ -25,7 +25,7 @@ def genHTML(template,layername,bounds,zoom):
   tdata = p.sub(bounds,tdata)
   
   p = re.compile('numZoomLevels:[0-9]+')
-  zoom = 'numZoomLevels:' + zoom;
+  zoom = 'numZoomLevels:' + zoom
   tdata = p.sub(zoom,tdata)
   return tdata
   
@@ -39,10 +39,11 @@ def application(environ, start_response):
    output = ('<html><body>&quot;<b>%s</b>&quot; is not a valid layername!</html></body>' % layername)
   else:
    bounds=layer.metadata.get('wms_extent').replace(' ',',')
-   try:
-     zoom=layer.metadata.get('zoomlevels')
-   except:
-     zoom=19
+  
+   zoom = layer.metadata.get('zoomlevels')
+   if zoom is None:
+    zoom = '19'
+    
    output=genHTML(template,layername,bounds,zoom)       
 
   response_headers = [('Content-type', 'text/html'),

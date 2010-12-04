@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 #
-# Version 2.0
 #
 #
 
@@ -30,7 +29,13 @@ use Time::localtime;
 
 my $program = "whitespots.pl" ;
 my $usage = $program . " file.osm out.htm" ;
-my $version = "2.0" ;
+my $version = "2.1" ;
+
+my %excludes = () ;
+$excludes{"locality"} = 1 ;
+$excludes{"farm"} = 1 ;
+$excludes{"region"} = 1 ;
+$excludes{"island"} = 1 ;
 
 my $maxDist = 0.3 ;
 my $limit = 1000 ;
@@ -103,7 +108,10 @@ while ($nodeId != -1) {
 	if ($nodeLat < $minLat) {$minLat = $nodeLat ; }
 
 	foreach my $t (@nodeTags) {
-		if ($t->[0] eq "place") { $place = 1 ; $type = $t->[1] ; }
+		if ( ($t->[0] eq "place") and ( ! defined $excludes{$t->[1]}) ) { 
+			$place = 1 ; 
+			$type = $t->[1] ; 
+		}
 		if ($t->[0] eq "name") { $name = $t->[1] ; }
 	}
 
@@ -237,6 +245,8 @@ print "result list limited to $limit entries.\n" ;
 $time1 = time () ;
 
 
+my @excludeArray = keys %excludes ;
+
 ##################
 # PRINT HTML INFOS
 ##################
@@ -251,6 +261,7 @@ print $html "<H2>Statistics</H2>\n" ;
 print $html "<p>", stringFileInfo ($osmName), "</p>\n" ;
 print $html "<p>Max dist from place for nodes $maxDist</p>\n" ;
 print $html "<p>Limit result list to $limit</p>\n" ;
+print $html "<p>Excluded place types: @excludeArray</p>\n" ;
 
 print $html "<H2>Data</H2>\n" ;
 print $html "<table border=\"1\">\n";

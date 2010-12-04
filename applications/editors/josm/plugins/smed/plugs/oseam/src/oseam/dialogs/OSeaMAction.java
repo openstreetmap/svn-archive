@@ -2,6 +2,7 @@ package oseam.dialogs;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,6 +42,7 @@ import oseam.OSeaM;
 public class OSeaMAction {
 
 	private JPanel oseamPanel = null;
+
 	private ButtonGroup typeButtons = null;
 	private JRadioButton chanButton = null;
 	private JRadioButton hazButton = null;
@@ -66,6 +69,7 @@ public class OSeaMAction {
 			oseamPanel = new JPanel();
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
+
 			oseamPanel.add(getChanButton(), null);
 			oseamPanel.add(getHazButton(), null);
 			oseamPanel.add(getSpecButton(), null);

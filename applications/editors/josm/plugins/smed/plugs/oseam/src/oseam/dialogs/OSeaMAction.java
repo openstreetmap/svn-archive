@@ -40,10 +40,11 @@ import oseam.OSeaM;
 public class OSeaMAction {
 
 	private JPanel oseamPanel = null;
-	private JButton chanButton = null;
-	private JButton hazButton = null;
-	private JButton specButton = null;
-	private JButton lightButton = null;
+	private ButtonGroup typeButtons = null;
+	private JRadioButton chanButton = null;
+	private JRadioButton hazButton = null;
+	private JRadioButton specButton = null;
+	private JRadioButton lightButton = null;
 
 	public OSeaMAction() {
 
@@ -65,99 +66,68 @@ public class OSeaMAction {
 			oseamPanel = new JPanel();
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
-			// System.out.println("file=" + Messages.getString("ChanButton"));
 			oseamPanel.add(getChanButton(), null);
 			oseamPanel.add(getHazButton(), null);
 			oseamPanel.add(getSpecButton(), null);
 			oseamPanel.add(getLightButton(), null);
+			typeButtons = new ButtonGroup();
+			typeButtons.add(chanButton);
+			typeButtons.add(hazButton);
+			typeButtons.add(specButton);
+			typeButtons.add(lightButton);
+			ActionListener alType = new ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+//System.out.println("pressed: " + chanButton.isSelected() + " " + hazButton.isSelected() + " " + specButton.isSelected() + " " + lightButton.isSelected());
+				}
+			};
+			chanButton.addActionListener(alType);
+			hazButton.addActionListener(alType);
+			specButton.addActionListener(alType);
+			lightButton.addActionListener(alType);
 		}
 		return oseamPanel;
 	}
 
-	private JButton getChanButton() {
+	private JRadioButton getChanButton() {
 		if (chanButton == null) {
-			chanButton = new JButton();
-			chanButton.setBounds(new Rectangle(5, 5, 50, 50));
-			chanButton.setText("");
-			chanButton.setIcon(new ImageIcon(getClass().getResource(
+			chanButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("ChanButton"))));
+			chanButton.setBounds(new Rectangle(5, 0, 105, 40));
+			chanButton.setBorderPainted(true);
 			chanButton.setToolTipText(Messages.getString("ChanTip"));
-			chanButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					/*
-					 * panelLimits.setVisible(false);
-					 * panelServices.setVisible(false);
-					 * panelEnv.setVisible(false);
-					 * panelRelations.setVisible(false);
-					 * panelGeneral.setVisible(true);
-					 */}
-			});
 		}
 		return chanButton;
 	}
 
-	private JButton getHazButton() {
+	private JRadioButton getHazButton() {
 		if (hazButton == null) {
-			hazButton = new JButton();
-			hazButton.setBounds(new Rectangle(60, 5, 50, 50));
-			hazButton.setText("");
-			hazButton.setIcon(new ImageIcon(getClass().getResource(
+			hazButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("HazButton"))));
+			hazButton.setBounds(new Rectangle(5, 40, 105, 40));
+			hazButton.setBorderPainted(true);
 			hazButton.setToolTipText(Messages.getString("HazTip"));
-			hazButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					/*
-					 * panelLimits.setVisible(false);
-					 * panelServices.setVisible(false);
-					 * panelEnv.setVisible(false);
-					 * panelRelations.setVisible(false);
-					 * panelGeneral.setVisible(true);
-					 */}
-			});
 		}
 		return hazButton;
 	}
 
-	private JButton getSpecButton() {
+	private JRadioButton getSpecButton() {
 		if (specButton == null) {
-			specButton = new JButton();
-			specButton.setBounds(new Rectangle(115, 5, 50, 50));
-			specButton.setText("");
-			specButton.setIcon(new ImageIcon(getClass().getResource(
+			specButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("SpecButton"))));
+			specButton.setBounds(new Rectangle(5, 80, 105, 40));
+			specButton.setBorderPainted(true);
 			specButton.setToolTipText(Messages.getString("SpecTip"));
-			specButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					/*
-					 * panelLimits.setVisible(false);
-					 * panelServices.setVisible(false);
-					 * panelEnv.setVisible(false);
-					 * panelRelations.setVisible(false);
-					 * panelGeneral.setVisible(true);
-					 */}
-			});
 		}
 		return specButton;
 	}
 
-	private JButton getLightButton() {
+	private JRadioButton getLightButton() {
 		if (lightButton == null) {
-			lightButton = new JButton();
-			lightButton.setBounds(new Rectangle(170, 5, 50, 50));
-			lightButton.setText("");
-			lightButton.setIcon(new ImageIcon(getClass().getResource(
+			lightButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("LightsButton"))));
+			lightButton.setBounds(new Rectangle(5, 120, 105, 40));
+			lightButton.setBorderPainted(true);
 			lightButton.setToolTipText(Messages.getString("LightsTip"));
-			lightButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					/*
-					 * panelLimits.setVisible(false);
-					 * panelServices.setVisible(false);
-					 * panelEnv.setVisible(false);
-					 * panelRelations.setVisible(false);
-					 * panelGeneral.setVisible(true);
-					 */}
-			});
 		}
 		return lightButton;
 	}

@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="50"
-   height="50"
+   width="100"
+   height="40"
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="Lights.svg"
+   sodipodi:docname="LightsButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/Lights.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -1114,7 +1114,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.879394"
-     inkscape:cx="14.574065"
+     inkscape:cx="58.263162"
      inkscape:cy="14.533528"
      inkscape:document-units="px"
      inkscape:current-layer="g3309"
@@ -1150,7 +1150,7 @@
      inkscape:label="Graphics"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-1002.3622)"
+     transform="translate(0,-1012.3622)"
      style="display:inline">
     <g
        transform="matrix(0.24,0,0,0.24,-10.987692,996.88709)"
@@ -1236,37 +1236,37 @@
        transform="translate(0,1002.3622)" />
   </g>
   <g
-     transform="translate(0,-1002.3622)"
+     transform="translate(0,-1012.3622)"
      id="g3309"
      inkscape:groupmode="layer"
      inkscape:label="Text EN"
-     style="display:none">
+     style="display:inline">
     <text
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
        sodipodi:linespacing="100%"
        id="text3311"
-       y="1011.8578"
-       x="24.777712"
+       y="1034.9227"
+       x="74.696091"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d400d4;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
        xml:space="preserve"><tspan
-         y="1011.8578"
-         x="24.777712"
+         y="1034.9227"
+         x="74.696091"
          id="tspan3313"
          sodipodi:role="line">Lights</tspan></text>
   </g>
   <g
-     style="display:inline"
+     style="display:none"
      inkscape:label="Text DE"
      inkscape:groupmode="layer"
      id="g3341"
-     transform="translate(0,-1002.3622)">
+     transform="translate(0,-1012.3622)">
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d400d4;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="25.030249"
-       y="1011.8579"
+       x="74.948616"
+       y="1036.1016"
        id="text3343"
        sodipodi:linespacing="100%"
        inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
@@ -1274,7 +1274,7 @@
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3345"
-         x="25.030249"
-         y="1011.8579">Deutsch</tspan></text>
+         x="74.948616"
+         y="1036.1016">Deutsch</tspan></text>
   </g>
 </svg>

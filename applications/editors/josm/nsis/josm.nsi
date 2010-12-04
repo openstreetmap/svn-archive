@@ -397,7 +397,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "openstreetbugsturnrestrictionsvalidatorwmsplugin"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "openstreetbugsremotecontrolturnrestrictionswmsplugin"
 SectionEnd
 
 
@@ -493,7 +493,7 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecOpenStreetBugsPlugin} $(JOSM_SECDESC_OPENSTREETBUGS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecRemoteControlPlugin} $(JOSM_SECDESC_REMOTECONTROL_PLUGIN)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} $(JOSM_SECDESC_VALIDATOR_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecTurnrestrictionsPlugin} $(JOSM_SEC_TURNRESTRICTIONS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} $(JOSM_SECDESC_WMS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} $(JOSM_SECDESC_STARTMENU)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} $(JOSM_SECDESC_DESKTOP_ICON)

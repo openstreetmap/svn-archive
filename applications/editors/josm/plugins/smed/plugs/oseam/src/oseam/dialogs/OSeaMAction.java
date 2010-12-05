@@ -81,6 +81,10 @@ public class OSeaMAction {
 			typeButtons.add(lightButton);
 			ActionListener alType = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					chanButton.setEnabled(!chanButton.isSelected());
+					hazButton.setEnabled(!hazButton.isSelected());
+					specButton.setEnabled(!specButton.isSelected());
+					lightButton.setEnabled(!lightButton.isSelected());
 //System.out.println("pressed: " + chanButton.isSelected() + " " + hazButton.isSelected() + " " + specButton.isSelected() + " " + lightButton.isSelected());
 				}
 			};
@@ -97,7 +101,6 @@ public class OSeaMAction {
 			chanButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("ChanButton"))));
 			chanButton.setBounds(new Rectangle(5, 0, 105, 40));
-			chanButton.setBorderPainted(true);
 			chanButton.setToolTipText(Messages.getString("ChanTip"));
 		}
 		return chanButton;
@@ -108,7 +111,6 @@ public class OSeaMAction {
 			hazButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("HazButton"))));
 			hazButton.setBounds(new Rectangle(5, 40, 105, 40));
-			hazButton.setBorderPainted(true);
 			hazButton.setToolTipText(Messages.getString("HazTip"));
 		}
 		return hazButton;
@@ -119,7 +121,6 @@ public class OSeaMAction {
 			specButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("SpecButton"))));
 			specButton.setBounds(new Rectangle(5, 80, 105, 40));
-			specButton.setBorderPainted(true);
 			specButton.setToolTipText(Messages.getString("SpecTip"));
 		}
 		return specButton;
@@ -130,7 +131,6 @@ public class OSeaMAction {
 			lightButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("LightsButton"))));
 			lightButton.setBounds(new Rectangle(5, 120, 105, 40));
-			lightButton.setBorderPainted(true);
 			lightButton.setToolTipText(Messages.getString("LightsTip"));
 		}
 		return lightButton;

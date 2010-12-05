@@ -29,13 +29,19 @@ public class PanelChan extends JPanel {
 	private JRadioButton prefPortButton = null;
 	private JRadioButton prefStbdButton = null;
 	private JRadioButton safeWaterButton = null;
+	private PanelPort panelPort = null;
+	
 	public PanelChan() {
 		super();
+		panelPort= new PanelPort();
+		panelPort.setBounds(new Rectangle(105, 0, 185, 160));
+		panelPort.setVisible(false);
 		initialize();
 	}
 
 	private void initialize() {
          this.setLayout(null);
+         this.add(panelPort, null);
          this.add(getPortButton(), null);
          this.add(getStbdButton(), null);
          this.add(getPrefPortButton(), null);
@@ -51,10 +57,10 @@ public class PanelChan extends JPanel {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (portButton.isSelected()) {
 						portButton.setEnabled(false);
-//						panelPort.setVisible(true);
+						panelPort.setVisible(true);
 					} else { 
 						portButton.setEnabled(true);
-//						panelPort.setVisible(false);
+						panelPort.setVisible(false);
 					}
 					stbdButton.setEnabled(!stbdButton.isSelected());
 					prefPortButton.setEnabled(!prefPortButton.isSelected());

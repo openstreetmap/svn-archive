@@ -49,6 +49,12 @@ public class OSeaMAction {
 
 	private JPanel oseamPanel = null;
 
+	private JLabel shapeIcon = null;
+	private JLabel lightIcon = null;
+	private JLabel topIcon = null;
+	private JLabel reflIcon = null;
+	private JLabel raconIcon = null;
+	private JLabel fogIcon = null;
 	private ButtonGroup typeButtons = null;
 	private JRadioButton chanButton = null;
 	private JRadioButton hazButton = null;
@@ -70,7 +76,7 @@ public class OSeaMAction {
 			Main.pref.put("color.background", "#606060");
 
 		panelChan= new PanelChan();
-		panelChan.setBounds(new Rectangle(110, 0, 290, 160));
+		panelChan.setBounds(new Rectangle(105, 0, 295, 160));
 		panelChan.setVisible(false);
 	}
 
@@ -79,6 +85,26 @@ public class OSeaMAction {
 			oseamPanel = new JPanel();
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
+
+			shapeIcon = new JLabel();
+			shapeIcon.setBounds(new Rectangle(270, 160, 125, 155));
+	        shapeIcon.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+			oseamPanel.add(shapeIcon, null);
+			lightIcon = new JLabel();
+			lightIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			oseamPanel.add(lightIcon, null);
+			topIcon = new JLabel();
+			topIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			oseamPanel.add(topIcon, null);
+			reflIcon = new JLabel();
+			reflIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			oseamPanel.add(reflIcon, null);
+			raconIcon = new JLabel();
+			raconIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			oseamPanel.add(raconIcon, null);
+			fogIcon = new JLabel();
+			fogIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			oseamPanel.add(fogIcon, null);
 
 			oseamPanel.add(getChanButton(), null);
 			oseamPanel.add(getHazButton(), null);
@@ -117,7 +143,7 @@ public class OSeaMAction {
 		if (chanButton == null) {
 			chanButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("ChanButton"))));
-			chanButton.setBounds(new Rectangle(5, 0, 105, 40));
+			chanButton.setBounds(new Rectangle(0, 0, 105, 40));
 			chanButton.setToolTipText(Messages.getString("ChanTip"));
 		}
 		return chanButton;
@@ -127,7 +153,7 @@ public class OSeaMAction {
 		if (hazButton == null) {
 			hazButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("HazButton"))));
-			hazButton.setBounds(new Rectangle(5, 40, 105, 40));
+			hazButton.setBounds(new Rectangle(0, 40, 105, 40));
 			hazButton.setToolTipText(Messages.getString("HazTip"));
 		}
 		return hazButton;
@@ -137,7 +163,7 @@ public class OSeaMAction {
 		if (specButton == null) {
 			specButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("SpecButton"))));
-			specButton.setBounds(new Rectangle(5, 80, 105, 40));
+			specButton.setBounds(new Rectangle(0, 80, 105, 40));
 			specButton.setToolTipText(Messages.getString("SpecTip"));
 		}
 		return specButton;
@@ -147,7 +173,7 @@ public class OSeaMAction {
 		if (lightButton == null) {
 			lightButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("LightsButton"))));
-			lightButton.setBounds(new Rectangle(5, 120, 105, 40));
+			lightButton.setBounds(new Rectangle(0, 120, 105, 40));
 			lightButton.setToolTipText(Messages.getString("LightsTip"));
 		}
 		return lightButton;

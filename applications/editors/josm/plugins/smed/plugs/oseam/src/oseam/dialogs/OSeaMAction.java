@@ -2,16 +2,20 @@ package oseam.dialogs;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import oseam.panels.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,6 +39,8 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 
 import oseam.Messages;
 import oseam.OSeaM;
@@ -48,6 +54,7 @@ public class OSeaMAction {
 	private JRadioButton hazButton = null;
 	private JRadioButton specButton = null;
 	private JRadioButton lightButton = null;
+	private PanelChan panelChan = null;
 
 	public OSeaMAction() {
 
@@ -62,6 +69,9 @@ public class OSeaMAction {
 		if (str.equals("#000000") || str.isEmpty())
 			Main.pref.put("color.background", "#606060");
 
+		panelChan= new PanelChan();
+		panelChan.setBounds(new Rectangle(110, 0, 290, 160));
+		panelChan.setVisible(false);
 	}
 
 	public JPanel getOSeaMPanel() {
@@ -74,6 +84,7 @@ public class OSeaMAction {
 			oseamPanel.add(getHazButton(), null);
 			oseamPanel.add(getSpecButton(), null);
 			oseamPanel.add(getLightButton(), null);
+			oseamPanel.add(panelChan, null);
 			typeButtons = new ButtonGroup();
 			typeButtons.add(chanButton);
 			typeButtons.add(hazButton);
@@ -81,7 +92,13 @@ public class OSeaMAction {
 			typeButtons.add(lightButton);
 			ActionListener alType = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					chanButton.setEnabled(!chanButton.isSelected());
+					if (chanButton.isSelected()) {
+						chanButton.setEnabled(false);
+						panelChan.setVisible(true);
+					} else { 
+						chanButton.setEnabled(true);
+						panelChan.setVisible(false);
+					}
 					hazButton.setEnabled(!hazButton.isSelected());
 					specButton.setEnabled(!specButton.isSelected());
 					lightButton.setEnabled(!lightButton.isSelected());

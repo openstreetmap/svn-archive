@@ -30,18 +30,38 @@ public class PanelChan extends JPanel {
 	private JRadioButton prefStbdButton = null;
 	private JRadioButton safeWaterButton = null;
 	private PanelPort panelPort = null;
+	private PanelStbd panelStbd = null;
+	private PanelPrefPort panelPrefPort = null;
+	private PanelPrefStbd panelPrefStbd = null;
+	private PanelSafeWater panelSafeWater = null;
 	
 	public PanelChan() {
 		super();
-		panelPort= new PanelPort();
+		panelPort = new PanelPort();
 		panelPort.setBounds(new Rectangle(105, 0, 185, 160));
 		panelPort.setVisible(false);
+		panelStbd = new PanelStbd();
+		panelStbd.setBounds(new Rectangle(105, 0, 185, 160));
+		panelStbd.setVisible(false);
+		panelPrefPort = new PanelPrefPort();
+		panelPrefPort.setBounds(new Rectangle(105, 0, 185, 160));
+		panelPrefPort.setVisible(false);
+		panelPrefStbd = new PanelPrefStbd();
+		panelPrefStbd.setBounds(new Rectangle(105, 0, 185, 160));
+		panelPrefStbd.setVisible(false);
+		panelSafeWater = new PanelSafeWater();
+		panelSafeWater.setBounds(new Rectangle(105, 0, 185, 160));
+		panelSafeWater.setVisible(false);
 		initialize();
 	}
 
 	private void initialize() {
          this.setLayout(null);
          this.add(panelPort, null);
+         this.add(panelStbd, null);
+         this.add(panelPrefPort, null);
+         this.add(panelPrefStbd, null);
+         this.add(panelSafeWater, null);
          this.add(getPortButton(), null);
          this.add(getStbdButton(), null);
          this.add(getPrefPortButton(), null);
@@ -62,10 +82,34 @@ public class PanelChan extends JPanel {
 						portButton.setEnabled(true);
 						panelPort.setVisible(false);
 					}
-					stbdButton.setEnabled(!stbdButton.isSelected());
-					prefPortButton.setEnabled(!prefPortButton.isSelected());
-					prefStbdButton.setEnabled(!prefStbdButton.isSelected());
-					safeWaterButton.setEnabled(!safeWaterButton.isSelected());
+					if (stbdButton.isSelected()) {
+						stbdButton.setEnabled(false);
+						panelStbd.setVisible(true);
+					} else { 
+						stbdButton.setEnabled(true);
+						panelStbd.setVisible(false);
+					}
+					if (prefPortButton.isSelected()) {
+						prefPortButton.setEnabled(false);
+						panelPrefPort.setVisible(true);
+					} else { 
+						prefPortButton.setEnabled(true);
+						panelPrefPort.setVisible(false);
+					}
+					if (prefStbdButton.isSelected()) {
+						prefStbdButton.setEnabled(false);
+						panelPrefStbd.setVisible(true);
+					} else { 
+						prefStbdButton.setEnabled(true);
+						panelPrefStbd.setVisible(false);
+					}
+					if (safeWaterButton.isSelected()) {
+						safeWaterButton.setEnabled(false);
+						panelSafeWater.setVisible(true);
+					} else { 
+						safeWaterButton.setEnabled(true);
+						panelSafeWater.setVisible(false);
+					}
 				}
 			};
 			portButton.addActionListener(alCat);

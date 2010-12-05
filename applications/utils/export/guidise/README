@@ -1,0 +1,41 @@
+guidise: A tool to assign a globally unique 64-bit ID to nodes and ways.
+
+Why? Sites which make use of OSM data, such as Freemap, might wish to
+add extra information to specific OSM features. This could include,
+for example, pub reviews or annotations along ways, e.g. directions 
+along a footpath. Problem is that every time the local database is
+reloaded with OSM data, there is the risk that the OSM ID might change.
+
+guidise is an effort to prevent this: by assigning a geographically
+based globally unique (hopefully) identifier to each way, the hope is
+that this identifier will be preserved.
+
+For nodes the GUID is composed of a combination of its position on
+earth in tens of metres (16 bits for easting, 17 for northing), and the 
+feature type (8 bits). Currently only cities, towns, villages, 
+hamlets, pubs, peaks and restaurants are given GUIDs.
+
+For ways, the GUID is composed of a combination of the position of
+its westernmost point (16 bits for easting, 17 for northing again;
+4 bits for bearing from westernmost to easternmost point (a 16-point
+scale, 0=E, 1=ENE, 2=NE, 3=NNE etc) and 8 bits for the length of the
+way in tenths of kilometres.
+
+Note that the number of bits have been chosen so that it will
+(hopefully) give unique IDs in the UK. More bits would obviously be
+needed for it to work globally.
+
+The chances of globally unique IDs should be significantly enhanced if this
+tool is used in conjunction with the segmentise tool (breaks OSM ways into
+"segments", really just smaller ways, at junctions, also available from SVN
+under the "utils/export" directory).
+
+It is licenced under the GNU GPL version 2, and uses ccoord, a C++
+library for converting OSGB<->latlong, itself based on Jonathan Stott's
+JCoord library (www.jstott.me.uk/jcoord).
+
+Usage: guidise OSMfile. Writes to standard output.
+
+Requirements: expat 2 is required for the XML parsing. On Debian/Ubuntu
+systems, you should simply be able to apt-get the dev package.
+

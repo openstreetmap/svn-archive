@@ -220,7 +220,7 @@
 <Style name="symbols-winter">
   <Rule>
     &maxscale_zoom13;
-    <Filter>[piste:type]='playground' or [leisure]='ski_playground'</Filter>
+    <Filter>[leisure]='ski_playground'</Filter>
     <PointSymbolizer file="&symbols;/skiplayground.png"
        type="png" width="15" height="15"
        allow_overlap="false"/>
@@ -274,7 +274,7 @@
     <Parameter name="table">
     (select *
     from &prefix;_point
-    where sport is not null
+    where sport in ('biathlon','ski_jump_take_off')
        or landuse='winter_sports'
        or leisure='ski_playground'
     ) as symbols</Parameter>
@@ -289,7 +289,6 @@
     from &prefix;_polygon
     where sport is not null
        or landuse='winter_sports'
-       or "piste:type"='playground'
        or leisure='ski_playground'
     ) as symbols</Parameter>
     &datasource-settings;

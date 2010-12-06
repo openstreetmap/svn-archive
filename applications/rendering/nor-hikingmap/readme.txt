@@ -92,12 +92,11 @@ barrier=stile|kissing_gate
 barrier=toll_booth
 
 piste:type= sled, skitour, sleigh, snow_park
+sport=* symbols from zoom 17
 
 
 regional hiking routes network=iwn/nwn/rwn at zoom=10-11
 shooting range types: clay pigeon, pistol
-sport=* symbols from zoom 17
-add symbol to leisure=winter_sports, how to determine activity type?
 piste:oneway=yes
 piste:lit=yes
-
+[piste:type]='playground' or [leisure]='ski_playground'

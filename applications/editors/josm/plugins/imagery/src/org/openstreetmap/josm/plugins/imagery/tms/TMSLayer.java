@@ -52,9 +52,9 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
+import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.ImageryLayer;
 import org.openstreetmap.josm.plugins.imagery.ImageryPreferences;
-import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 
 /**
  * Class that displays a slippy map layer.
@@ -84,6 +84,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         needRedraw = true;
         Main.map.repaint(100);
         tileRequestsOutstanding.remove(tile);
+        if (sharpenLevel != 0) tile.setImage(sharpenImage(tile.getImage()));
         if (debug)
             out("tileLoadingFinished() tile: " + tile + " success: " + success);
     }

@@ -9,9 +9,9 @@ import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
+import org.openstreetmap.josm.plugins.imagery.ImageryPlugin;
 
 public class HTMLGrabber extends WMSGrabber {
     HTMLGrabber(MapView mv, WMSLayer layer, CacheFiles cache) {
@@ -26,7 +26,7 @@ public class HTMLGrabber extends WMSGrabber {
 
         ArrayList<String> cmdParams = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(MessageFormat.format(
-                Main.pref.get("wmsplugin.browser", "webkit-image {0}"), urlstring));
+                ImageryPlugin.wmsAdapter.PROP_BROWSER.get(), urlstring));
         while( st.hasMoreTokens() )
             cmdParams.add(st.nextToken());
 

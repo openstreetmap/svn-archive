@@ -56,7 +56,7 @@ public class ImageryPlugin extends Plugin {
 
     /** RemoteControlPlugin older than this SVN revision is not compatible */
     final int REMOTECONTROL_MIN_REVISION = 22734;
-    /** WMSPlugin needs this specific API major version of RemoteControlPlugin */
+    /** Imagery Plugin needs this specific API major version of RemoteControlPlugin */
     final int REMOTECONTROL_NEED_API_MAJOR = 1;
     /** All API minor versions starting from this should be compatible */
     final int REMOTECONTROL_MIN_API_MINOR = 0;

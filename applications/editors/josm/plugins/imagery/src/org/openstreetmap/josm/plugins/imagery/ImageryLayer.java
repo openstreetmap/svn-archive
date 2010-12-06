@@ -7,6 +7,10 @@ import java.awt.Component;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -40,10 +44,13 @@ public abstract class ImageryLayer extends Layer {
     protected double dx = 0.0;
     protected double dy = 0.0;
 
+    protected int sharpenLevel;
+
     public ImageryLayer(ImageryInfo info) {
         super(info.getName());
         this.info = info;
         this.mv = Main.map.mapView;
+        this.sharpenLevel = ImageryPreferences.PROP_SHARPEN_LEVEL.get();
     }
 
     public double getPPD(){
@@ -174,4 +181,19 @@ public abstract class ImageryLayer extends Layer {
         return new OffsetAction();
     }
 
+    public BufferedImage sharpenImage(BufferedImage img) {
+        if (sharpenLevel <= 0) return img;
+        int width = img.getWidth(null);
+        int height = img.getHeight(null);
+        BufferedImage tmp = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        tmp.getGraphics().drawImage(img, 0, 0, null);
+        Kernel kernel;
+        if (sharpenLevel == 1) {
+            kernel = new Kernel(2, 2, new float[] { 4, -1, -1, -1});
+        } else {
+            kernel = new Kernel(3, 3, new float[] { -1, -1, -1, -1, 9, -1, -1, -1, -1});
+        }
+        BufferedImageOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        return op.filter(tmp, null);
+    }
 }

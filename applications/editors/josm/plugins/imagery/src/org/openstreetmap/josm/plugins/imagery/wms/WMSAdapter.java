@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.imagery.wms;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
+import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
@@ -13,10 +14,11 @@ import org.openstreetmap.josm.plugins.imagery.wms.io.WMSLayerImporter;
 public class WMSAdapter {
     CacheFiles cache = new CacheFiles("wmsplugin");
 
-    public final IntegerProperty PROP_SIMULTANEOUS_CONNECTIONS = new IntegerProperty("wmsplugin.simultaneousConnections", 3);
-    public final BooleanProperty PROP_OVERLAP = new BooleanProperty("wmsplugin.url.overlap", false);
-    public final IntegerProperty PROP_OVERLAP_EAST = new IntegerProperty("wmsplugin.url.overlapEast", 14);
-    public final IntegerProperty PROP_OVERLAP_NORTH = new IntegerProperty("wmsplugin.url.overlapNorth", 4);
+    public final StringProperty PROP_BROWSER = new StringProperty("imagery.wms.browser", "webkit-image {0}");
+    public final IntegerProperty PROP_SIMULTANEOUS_CONNECTIONS = new IntegerProperty("imagery.wms.simultaneousConnections", 3);
+    public final BooleanProperty PROP_OVERLAP = new BooleanProperty("imagery.wms.overlap", false);
+    public final IntegerProperty PROP_OVERLAP_EAST = new IntegerProperty("imagery.wms.overlapEast", 14);
+    public final IntegerProperty PROP_OVERLAP_NORTH = new IntegerProperty("imagery.wms.overlapNorth", 4);
 
     protected void initExporterAndImporter() {
         ExtensionFileFilter.exporters.add(new WMSLayerExporter());

@@ -53,7 +53,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class WMSLayer extends ImageryLayer implements PreferenceChangedListener {
 
-    public static final BooleanProperty PROP_ALPHA_CHANNEL = new BooleanProperty("wmsplugin.alpha_channel", true);
+    public static final BooleanProperty PROP_ALPHA_CHANNEL = new BooleanProperty("imagery.wms.alpha_channel", true);
     WMSAdapter plugin = ImageryPlugin.wmsAdapter;
 
     public int messageNum = 5; //limit for messages per layer

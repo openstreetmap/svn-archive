@@ -37,12 +37,16 @@ import org.openstreetmap.josm.tools.GBC;
 public class ImageryPreferenceEditor implements PreferenceSetting {
     ImageryProvidersPanel imageryProviders;
 
+    WMSAdapter wmsAdapter = ImageryPlugin.wmsAdapter;
+    ImageryPlugin plugin = ImageryPlugin.instance;
+
     // Common settings
     private Color colFadeColor;
     private JButton btnFadeColor;
     private JSlider fadeAmount = new JSlider(0, 100);
     private JCheckBox remoteCheckBox;
-    boolean allowRemoteControl = true;
+    private JComboBox sharpen;
+    private boolean allowRemoteControl = true;
 
     // WMS Settings
     private JComboBox browser;
@@ -50,8 +54,6 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
     JSpinner spinEast;
     JSpinner spinNorth;
     JSpinner spinSimConn;
-    WMSAdapter wmsAdapter = ImageryPlugin.wmsAdapter;
-    ImageryPlugin plugin = ImageryPlugin.instance;
 
     //TMS settings controls
     private JCheckBox autozoomActive = new JCheckBox();
@@ -97,6 +99,15 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         remoteCheckBox = new JCheckBox(tr("Allow remote control (reqires remotecontrol plugin)"), allowRemoteControl);
         p.add(remoteCheckBox,GBC.eol().fill(GBC.HORIZONTAL));
 
+        this.sharpen = new JComboBox(new String[] {
+                tr("None"),
+                tr("Soft"),
+                tr("Strong")});
+        p.add(new JLabel(tr("Sharpen (requires layer re-add): ")));
+        p.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        p.add(this.sharpen, GBC.std().fill(GBC.HORIZONTAL));
+        this.sharpen.setSelectedIndex(ImageryPreferences.PROP_SHARPEN_LEVEL.get());
+
         return p;
     }
 
@@ -108,7 +119,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
                 "gnome-web-photo-fixed {0}",
                 "webkit-image-gtk {0}"});
         browser.setEditable(true);
-        browser.setSelectedItem(Main.pref.get("wmsplugin.browser", "webkit-image {0}"));
+        browser.setSelectedItem(wmsAdapter.PROP_BROWSER.get());
         p.add(new JLabel(tr("Downloader:")), GBC.eol().fill(GBC.HORIZONTAL));
         p.add(browser);
 
@@ -218,17 +229,17 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         wmsAdapter.PROP_SIMULTANEOUS_CONNECTIONS.put((Integer) spinSimConn.getModel().getValue());
         allowRemoteControl = remoteCheckBox.getModel().isSelected();
 
-        Main.pref.put("wmsplugin.browser", browser.getEditor().getItem().toString());
-
+        Main.pref.put("imagery.wms.browser", browser.getEditor().getItem().toString());
 
         TMSPreferences.PROP_DEFAULT_AUTOZOOM.put(this.autozoomActive.isSelected());
         TMSPreferences.PROP_DEFAULT_AUTOLOAD.put(this.autoloadTiles.isSelected());
         TMSPreferences.setMaxZoomLvl((Integer)this.maxZoomLvl.getValue());
         TMSPreferences.setMinZoomLvl((Integer)this.minZoomLvl.getValue());
 
-        ImageryPreferences.PROP_REMOTE_CONTROL.put(allowRemoteControl);
         ImageryPreferences.PROP_FADE_AMOUNT.put(this.fadeAmount.getValue());
         ImageryPreferences.setFadeColor(this.colFadeColor);
+        ImageryPreferences.PROP_REMOTE_CONTROL.put(allowRemoteControl);
+        ImageryPreferences.PROP_SHARPEN_LEVEL.put(sharpen.getSelectedIndex());
 
         return false;
     }

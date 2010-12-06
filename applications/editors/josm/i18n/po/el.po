@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: josm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-03 17:09+0100\n"
+"POT-Creation-Date: 2010-12-06 21:09+0100\n"
 "PO-Revision-Date: 2010-11-27 01:36+0000\n"
 "Last-Translator: bastik <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-12-03 13:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-06 19:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. FIXME why is help not a JosmAction?
@@ -68,7 +68,7 @@ msgstr "Αγνοήθηκε κακοσχηματισμένο URL αρχείου:\
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:100
 #: ../core/src/org/openstreetmap/josm/actions/UploadSelectionAction.java:117
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:361
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:244
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:254
 #: ../core/src/org/openstreetmap/josm/actions/search/SearchAction.java:422
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/changeset/ChangesetCacheManager.java:522
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/relation/GenericRelationEditor.java:605
@@ -479,7 +479,7 @@ msgstr "Παρακαλώ επιλέξτε τουλάχιστον τέσσερε�
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:926
 #: ../core/src/org/openstreetmap/josm/plugins/PluginHandler.java:955
 #: ../plugins/ColumbusCSV/src/org/openstreetmap/josm/plugins/columbusCSV/ColumbusCSVUtils.java:43
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:155
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:118
 #: ../plugins/utilsplugin2/src/utilsplugin2/AddIntersectionsAction.java:40
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:689
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:711
@@ -703,7 +703,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:145
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:509
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:96
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:130
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:93
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:63
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:132
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:257
 #: ../plugins/turnrestrictions/src/org/openstreetmap/josm/plugins/turnrestrictions/editor/RelationMemberTable.java:100
@@ -955,9 +956,8 @@ msgid "Please select at least one closed way that should be joined."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:327
-#, fuzzy
 msgid "One of the selected ways is not closed and therefore cannot be joined."
-msgstr "Η \"{0}\" δεν είναι κλειστή και γι'αυτό δεν μπορεί να ενωθεί."
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:340
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:80
@@ -983,8 +983,8 @@ msgid "Are you really sure to continue?"
 msgstr "Σίγουρα να συνεχίσω;"
 
 #: ../core/src/org/openstreetmap/josm/actions/JoinAreasAction.java:345
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:527
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:377
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:291
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:379
 msgid "Please abort if you are not sure"
 msgstr "Παρακαλώ ακυρώστε αν δεν είστε σίγουροι"
 
@@ -1240,7 +1240,7 @@ msgid "Moves Objects {0}"
 msgstr "Μεταφέρει αντικείμενα {0}"
 
 #: ../core/src/org/openstreetmap/josm/actions/MoveAction.java:113
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:243
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:253
 msgid "Cannot move objects outside of the world."
 msgstr "Δεν μπορείτε να μετακινήσετε αντικείμενα εκτός κόσμου."
 
@@ -1622,8 +1622,8 @@ msgstr "Αδυναμία μετονομασίας αρχείου ''{0}''"
 #: ../plugins/cadastre-fr/src/cadastre_fr/MenuActionLoadFromCache.java:70
 #: ../plugins/epsg31287/src/org/openstreetmap/josm/plugins/epsg31287/Epsg31287.java:74
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:969
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:506
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:663
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:508
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:665
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/MapdustPlugin.java:166
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteActionList.java:84
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/action/execute/ExecuteAddBug.java:141
@@ -1683,6 +1683,7 @@ msgstr "Αντιστροφή Διαδρομών"
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersTableColumnModel.java:62
 #: ../core/src/org/openstreetmap/josm/gui/layer/Layer.java:286
 #: ../plugins/pdfimport/src/pdfimport/LoadPdfDialog.java:215
+#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:199
 #: ../plugins/smed/src/smed/menu/file/TabManager.java:240
 #: ../plugins/toms/src/toms/dialogs/SmpDialogAction.java:1406
 #: build/specialmessages.java:65
@@ -1819,7 +1820,7 @@ msgid "Delete nodes outside of downloaded data regions"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/SimplifyWayAction.java:71
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:226
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:227
 #: ../plugins/simplifyarea/src/sk/zdila/josm/plugin/simplify/SimplifyAreaAction.java:73
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:239
 msgid "No, abort"
@@ -2474,7 +2475,7 @@ msgstr "Διαγραφή κόμβων ή διαδρομών."
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:98
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/DrawAction.java:94
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ExtrudeAction.java:109
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:109
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:115
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:45
 #: ../plugins/alignways/src/org/openstreetmap/josm/plugins/alignways/AlignWaysMode.java:42
 #: ../plugins/buildings_tools/src/buildings_tools/DrawBuildingAction.java:68
@@ -2597,8 +2598,8 @@ msgid ""
 "+release to synchronize audio at that point."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:108
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:109
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:114
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:115
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ChangesetDialog.java:299
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:312
 #: ../core/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:346
@@ -2612,30 +2613,31 @@ msgstr ""
 msgid "Select"
 msgstr "Επιλέξτε"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:108
-msgid "Select, move and rotate objects"
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:114
+#, fuzzy
+msgid "Select, move, scale and rotate objects"
 msgstr "Επιλέξτε, μετακινήστε και περιστρέψτε αντικείμενα"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:205
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:215
 #, java-format
 msgid "Add and move a virtual new node to way"
 msgid_plural "Add and move a virtual new node to {0} ways"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:519
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:552
 msgid "Move elements"
 msgstr "Μετακίνηση στοιχείων"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:520
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:553
 msgid "Move them"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:520
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:553
 msgid "Undo move"
 msgstr "Αναίρεση μετακίνησης"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:522
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:555
 #, java-format
 msgid ""
 "You moved more than {0} elements. Moving a large number of elements is often "
@@ -2646,27 +2648,32 @@ msgstr ""
 "στοιχείων συχνά είναι λάθος.\n"
 "Σίγουρα να μετακινηθούν;"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:676
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:709
 msgid "Release the mouse button to select the objects in the rectangle."
 msgstr ""
 "Αφήστε το πλήκτρο του ποντικιού για να επιλέξετε τα αντικείμενα μέσα στο "
 "τετράγωνο"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:678
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:711
 msgid ""
 "Release the mouse button to stop moving. Ctrl to merge with nearest node."
 msgstr ""
 "Αφήστε το πλήκτρο του ποντικιού για να σταματήσετε να κινήστε. Ctrl για "
 "συγχώνευση με το πλησιέστερο κόμβο."
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:680
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:713
 msgid "Release the mouse button to stop rotating."
 msgstr "Αφήστε το πλήκτρο του ποντικιού για να σταματήσετε την περιστροφή"
 
-#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:682
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:715
+#, fuzzy
+msgid "Release the mouse button to stop scaling."
+msgstr "Αφήστε το πλήκτρο του ποντικιού για να σταματήσετε την περιστροφή"
+
+#: ../core/src/org/openstreetmap/josm/actions/mapmode/SelectAction.java:717
 msgid ""
 "Move objects by dragging; Shift to add to selection (Ctrl to toggle); Shift-"
-"Ctrl to rotate selected; or change selection"
+"Ctrl to rotate selected; Alt-Ctrl to scale selected; or change selection"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:44
@@ -3414,12 +3421,19 @@ msgstr ""
 msgid "Resolve conflicts in member list of relation {0}"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/command/RotateCommand.java:139
+#: ../core/src/org/openstreetmap/josm/command/RotateCommand.java:105
 #, java-format
 msgid "Rotate {0} node"
 msgid_plural "Rotate {0} nodes"
 msgstr[0] "Περιστροφή {0} κόμβου"
 msgstr[1] "Περιστροφή {0} κόμβων"
+
+#: ../core/src/org/openstreetmap/josm/command/ScaleCommand.java:82
+#, fuzzy, java-format
+msgid "Scale {0} node"
+msgid_plural "Scale {0} nodes"
+msgstr[0] "Διαγραφή {0} κόμβου"
+msgstr[1] "Διαγραφή {0} κόμβων"
 
 #: ../core/src/org/openstreetmap/josm/command/SequenceCommand.java:93
 msgid "Sequence"
@@ -3439,6 +3453,13 @@ msgstr "Επίλυση {0} διενέξεων ετικετών στη διαδρ
 #, java-format
 msgid "Resolve {0} tag conflicts in relation {1}"
 msgstr "Επίλυση {0} διενέξεων ετικετών στη σχέση {1}"
+
+#: ../core/src/org/openstreetmap/josm/command/TransformNodesCommand.java:126
+#, fuzzy, java-format
+msgid "Transform {0} node"
+msgid_plural "Transform {0} nodes"
+msgstr[0] "Μετακίνηση {0} κόμβου"
+msgstr[1] "Μετακίνηση {0} κόμβων"
 
 #: ../core/src/org/openstreetmap/josm/command/UndeletePrimitivesCommand.java:65
 #, java-format
@@ -3561,9 +3582,8 @@ msgid "Error while creating backup of removed layer: {0}"
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/AutosaveTask.java:269
-#, fuzzy
 msgid "Restoring files"
-msgstr "Άνοιγμα αρχείων"
+msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/data/Bounds.java:75
 #: ../core/src/org/openstreetmap/josm/data/Bounds.java:79
@@ -4147,27 +4167,27 @@ msgid_plural "objects"
 msgstr[0] "αντικείμενο"
 msgstr[1] "αντικείμενα"
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:44
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:45
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:42
 msgid "Coastlines."
 msgstr "Ακτογραμμές."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:45
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:46
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:43
 msgid "This test checks that coastlines are correct."
 msgstr "Αυτή η δοκιμή ελέγχει ότι οι ακτογραμμές είναι σωστές."
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:126
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:163
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:121
 msgid "Unconnected coastline"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:159
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:192
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:151
 msgid "Unordered coastline"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:163
+#: ../core/src/org/openstreetmap/josm/data/validation/tests/Coastlines.java:196
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/Coastlines.java:155
 msgid "Reversed coastline"
 msgstr ""
@@ -4710,7 +4730,8 @@ msgstr ""
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:128
 #: ../core/src/org/openstreetmap/josm/gui/preferences/PluginPreference.java:471
 #: ../plugins/colorscheme/src/at/dallermassl/josm/plugin/colorscheme/ColorSchemePreference.java:83
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:114
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:77
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:53
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:106
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:652
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:87
@@ -4757,7 +4778,8 @@ msgstr "Παρακαλώ επιλέξτε την γραμμή για επεξε�
 
 #: ../core/src/org/openstreetmap/josm/data/validation/tests/TagChecker.java:648
 #: ../core/src/org/openstreetmap/josm/gui/preferences/AdvancedPreference.java:225
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:136
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:99
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:69
 #: ../plugins/routing/src/com/innovant/josm/plugin/routing/gui/RoutingPreferenceDialog.java:138
 #: ../plugins/validator/src/org/openstreetmap/josm/plugins/validator/tests/TagChecker.java:711
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:107
@@ -8549,6 +8571,7 @@ msgstr ""
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/StreetTableModel.java:27
 #: ../plugins/FixAddresses/src/org/openstreetmap/josm/plugins/fixAddresses/gui/UnresolvedAddressesTableModel.java:50
 #: ../plugins/gpxfilter/src/gpxfilter/EGpxLayer.java:157
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
 #: build/specialmessages.java:57 build/trans_presets.java:89
 #: build/trans_presets.java:127 build/trans_presets.java:169
 #: build/trans_presets.java:209 build/trans_presets.java:230
@@ -9983,7 +10006,7 @@ msgstr "Τύπος"
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:140
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:281
 #: ../core/src/org/openstreetmap/josm/tools/ExceptionUtil.java:408
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:171
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:169
 #: ../plugins/livegps/src/livegps/LiveGpsDialog.java:86
 #: ../plugins/tageditor/src/org/openstreetmap/josm/plugins/tageditor/ac/AutoCompletionListRenderer.java:117
 #: ../plugins/trustosm/src/org/openstreetmap/josm/plugins/trustosm/gui/KeyTreeTableModel.java:33
@@ -10788,6 +10811,7 @@ msgstr ""
 #. item "Water/Water/River" combo "Layer"
 #. item "Transport/Railway/Bus Guideway" combo "Layer"
 #: ../core/src/org/openstreetmap/josm/gui/io/SaveLayersTableColumnModel.java:20
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
 #: build/trans_presets.java:90 build/trans_presets.java:108
 #: build/trans_presets.java:128 build/trans_presets.java:148
 #: build/trans_presets.java:170 build/trans_presets.java:188
@@ -10842,7 +10866,7 @@ msgid "Initializing relations to update ..."
 msgstr ""
 
 #: ../core/src/org/openstreetmap/josm/gui/io/UploadDialog.java:124
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:338
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:215
 #: ../plugins/public_transport/src/public_transport/GTFSImporterDialog.java:83
 #: ../plugins/public_transport/src/public_transport/StopImporterDialog.java:85
 msgid "Settings"
@@ -13000,7 +13024,7 @@ msgid "Choose"
 msgstr "Επιλέξτε"
 
 #: ../core/src/org/openstreetmap/josm/gui/preferences/ColorPreference.java:162
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:210
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:78
 #, java-format
 msgid "Choose a color for {0}"
 msgstr "Επιλέξτε ένα χρώμα για {0}"
@@ -13037,6 +13061,7 @@ msgstr "Τοπικά αρχεία"
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:38
 #: ../core/src/org/openstreetmap/josm/gui/preferences/DrawingPreference.java:64
 #: ../plugins/ElevationProfile/src/org/openstreetmap/josm/plugins/elevation/gui/ElevationProfileDialog.java:173
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:103
 msgid "None"
 msgstr "Κανένα"
 
@@ -14761,12 +14786,12 @@ msgstr ""
 msgid "No image files found."
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:68
+#: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:70
 #, java-format
 msgid "Failed to open input stream for resource ''{0}''"
 msgstr ""
 
-#: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:114
+#: ../core/src/org/openstreetmap/josm/io/MirroredInputStream.java:116
 #, java-format
 msgid ""
 "Warning: failed to open file with extension ''{2}'' and namepart ''{3}'' in "
@@ -18103,8 +18128,8 @@ msgstr ""
 "Επιλέξτε ένα από αυτά πρώτα και μετά ξαναπροσπαθήστε"
 
 #: ../plugins/cadastre-fr/src/cadastre_fr/WMSLayer.java:93
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:235
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:98
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:99
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:106
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:243
 msgid "Blank Layer"
@@ -18388,6 +18413,7 @@ msgid "Edit tool"
 msgstr ""
 
 #: ../plugins/ext_tools/src/ext_tools/preferences/EditToolDialog.java:54
+#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:192
 msgid "Name:"
 msgstr ""
 
@@ -18589,28 +18615,25 @@ msgid "Add grid"
 msgstr "Προσθήκη πλέγματος"
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/AddImageryLayerAction.java:15
-#, fuzzy, java-format
+#, java-format
 msgid "Add imagery layer {0}"
-msgstr "Προσθήκη νέου επιπέδου"
+msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:39
 msgid "Adjust imagery"
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:40
-#, fuzzy
 msgid "Adjust the position of the selected imagery layer"
-msgstr "Ρύθμιση της θέσης του επιλεγμένου επιπέδου WMS"
+msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:161
-#, fuzzy
 msgid "Please select the imagery layer to adjust."
-msgstr "Παρακαλώ επιλέξτε το επίπεδο στόχο."
+msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:166
-#, fuzzy
 msgid "Select imagery layer"
-msgstr "Επιλέξτε το επίπεδο στόχο"
+msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:167
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:176
@@ -18618,27 +18641,46 @@ msgid "Start adjusting"
 msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:186
-#, fuzzy
 msgid "There are currently no imagery layer to adjust."
-msgstr "Συγχώνευση τρέχοντως επιπέδου σε άλλο επίπεδο"
+msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryAdjustAction.java:187
 #: ../plugins/wmsplugin/src/wmsplugin/WMSAdjustAction.java:196
 msgid "No layers to adjust"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:149
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:128
+#, fuzzy
+msgid "Bookmark name: "
+msgstr "Σελιδοδείκτες"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:133
+#, fuzzy
+msgid "(save current)"
+msgstr "Αποθήκευση τρεχόντων δεδομένων."
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:140
+msgid "Add offset bookmark"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryLayer.java:157
+#, fuzzy
+msgctxt "layer"
+msgid "Offset"
+msgstr "Μετατόπιση:"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:147
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:154
 msgid "Could not initialize remote control."
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:154
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:152
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:159
 #, java-format
 msgid "Remote control plugin is not compatible with {0}."
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:160
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:158
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:165
 #, java-format
 msgid ""
@@ -18646,7 +18688,7 @@ msgid ""
 "You should update the plugins."
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:163
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:161
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:168
 #, java-format
 msgid ""
@@ -18655,215 +18697,252 @@ msgid ""
 "If updating the plugins does not help report a bug for \"{0}\"."
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:175
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:173
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:180
 #, java-format
 msgid "{0}: Problem with remote control"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:222
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:221
 msgid "Imagery"
-msgstr "Εικόνα"
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:235
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPlugin.java:234
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPlugin.java:243
 msgid "Open a blank WMS layer to load data from a file"
 msgstr "Άνοιγμα ενός κενού επιπέδου WMS για φόρτωση δεδομένων από ένα αρχείο"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:122
-msgid "Add Imagery URL"
-msgstr ""
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:145
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:116
-msgid "Copy Selected Default(s)"
-msgstr ""
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:154
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:124
-msgid "Please select at least one row to copy."
-msgstr ""
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:210
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:78
 msgid "imagery fade"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:221
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:89
 msgid "Fade Color: "
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:225
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:93
 msgid "Fade amount: "
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:242
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:170
-msgid "Downloader:"
-msgstr ""
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:248
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:176
-msgid "Overlap tiles"
-msgstr "Επικάλυψη πλακιδίων"
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:249
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:177
-msgid "% of east:"
-msgstr ""
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:250
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:178
-msgid "% of north:"
-msgstr ""
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:265
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:193
-msgid "Simultaneous connections"
-msgstr ""
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:273
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:99
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:201
 msgid "Allow remote control (reqires remotecontrol plugin)"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:286
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:104
 #, fuzzy
+msgid "Soft"
+msgstr "Άθλημα"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:105
+#, fuzzy
+msgid "Strong"
+msgstr "συμβολοσειρά"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:106
+msgid "Sharpen (requires layer re-add): "
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:123
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:170
+msgid "Downloader:"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:129
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:176
+msgid "Overlap tiles"
+msgstr "Επικάλυψη πλακιδίων"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:130
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:177
+msgid "% of east:"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:131
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:178
+msgid "% of north:"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:146
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:193
+msgid "Simultaneous connections"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:161
 msgid "Auto zoom by default: "
-msgstr "Αυτόματο ζουμ: "
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:290
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:165
 msgid "Autoload tiles by default: "
-msgstr "Αυτόματη φόρτωση Πλακιδίων: "
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:294
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:169
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:66
 msgid "Min zoom lvl: "
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:298
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:173
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:70
 msgid "Max zoom lvl: "
 msgstr "Μέγιστο επίπεδο ζούμ: "
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:323
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:198
 msgid "Common Settings"
-msgstr "Ρυθμίσεις σύνδεσης"
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:324
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:199
 msgid "WMS Settings"
-msgstr "Ρυθμίσεις Χάρτη"
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:325
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:200
 msgid "TMS Settings"
-msgstr "Ρυθμίσεις Χάρτη"
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:333
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:208
 msgid "Imagery Preferences"
-msgstr "Προτιμήσεις"
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:333
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:208
 msgid "Modify list of imagery layers displayed in the Imagery menu"
 msgstr ""
-"Τροποποίηση της λίστας διακομιστών WMS που εμφανίζεται στο μενού του "
-"πρόσθετου WMS"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:337
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:214
 msgid "Imagery providers"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:408
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:216
+#, fuzzy
+msgid "Offset bookmarks"
+msgstr "Σελιδοδείκτες"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:85
+msgid "Add Imagery URL"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:108
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:116
+msgid "Copy Selected Default(s)"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:117
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:124
+msgid "Please select at least one row to copy."
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:162
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/AddWMSLayerPanel.java:81
 #: ../plugins/wmsplugin/src/wmsplugin/AddWMSLayerPanel.java:81
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
 msgid "Menu Name"
 msgstr "Όνομα μενού"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:408
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:162
 msgid "Imagery URL"
-msgstr "Εικόνα"
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:408
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:162
 #: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:264
 msgctxt "layer"
 msgid "Zoom"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:475
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:325
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:239
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:327
 msgid "Menu Name (Default)"
 msgstr "Όνομα Μενού (Προκαθορισμένο)"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:475
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:239
 msgid "Imagery URL (Default)"
-msgstr "WMS URL (Προκαθορισμένο)"
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:518
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:368
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:282
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:370
 #, java-format
 msgid "EULA license URL not available: {0}"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryPreferenceEditor.java:533
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:383
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryProvidersPanel.java:297
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:385
 #, java-format
 msgid "Malformed URL for the EULA licence: {0}"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:199
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryRemoteHandler.java:21
+msgid ""
+"Remote Control has been asked to load an imagery layer from the following "
+"URL:"
+msgstr ""
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/ImageryRemoteHandler.java:48
+#, fuzzy
+msgid "Remote imagery"
+msgstr "Περιστροφή εικόνας δεξιά"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmark.java:44
+#, fuzzy, java-format
+msgid "Projection ''{0}'' not found"
+msgstr "Μέθοδος προβολής"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
+#, fuzzy
+msgid "Projection"
+msgstr "Προβολή Χάρτη"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
+#, fuzzy
+msgid "Easting"
+msgstr "συμβολοσειρά"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/OffsetBookmarksPanel.java:86
+#, fuzzy
+msgid "Northing"
+msgstr "Τίποτα"
+
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:204
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:176
 msgid "Auto Zoom"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:210
-#, fuzzy
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:215
 msgid "Auto load tiles"
-msgstr "αυτόματη φόρτωση πλακιδίων"
+msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:219
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:224
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:185
 msgid "Load Tile"
 msgstr "Φόρτωση πλακιδίου"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:230
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:235
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:195
 msgid "Show Tile Info"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:253
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:258
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:217
 msgid "Load All Tiles"
 msgstr "Φόρτωση όλων των πλακιδίων"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:263
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:268
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:226
 msgid "Increase zoom"
 msgstr "Άυξηση ζουμ"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:272
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:277
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:234
 msgid "Decrease zoom"
 msgstr "Μείωση ζουμ"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:283
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:288
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:244
 msgid "Snap to tile size"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:300
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:305
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:260
 msgid "Flush Tile Cache"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:766
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/tms/TMSLayer.java:792
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapLayer.java:720
 msgid "image "
 msgstr ""
@@ -19036,30 +19115,30 @@ msgid ""
 "This may lead to wrong coordinates."
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:116
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:117
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:125
 #, java-format
 msgid "Warning: WMS layer deactivated because of malformed base url ''{0}''"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:118
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:119
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:127
 msgid "(deactivated)"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:168
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:169
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:181
 #, java-format
 msgid "WMS layer ({0}), automatically downloading in zoom {1}"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:170
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:171
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:183
 #, java-format
 msgid "WMS layer ({0}), downloading in zoom {1}"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:217
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:218
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:230
 #, java-format
 msgid ""
@@ -19069,99 +19148,88 @@ msgid ""
 "tiles anyway?"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:225
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:226
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:238
 msgid "Yes, fetch images"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:231
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:232
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:244
 msgid "Invalid URL?"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:498
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:500
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:528
 msgid "Download visible tiles"
 msgstr "Λήψη εμφανών πλακιδίων"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:505
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:507
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:534
 msgid ""
 "The requested area is too big. Please zoom in a little, or change resolution"
 msgstr ""
 "Η ζητούμενη περιοχή είναι πολύ μεγάλη. Παρακαλώ κάντε ζουμ, ή αλλάξτε ανάλυση"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:517
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:519
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:546
 msgid "Change resolution"
 msgstr "Αλλαγή ανάλυσης"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:531
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:533
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:559
 msgid "Reload erroneous tiles"
 msgstr "Ανανέωση λανθασμένων πλακιδίων"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:553
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:555
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:580
 msgid "Alpha channel"
 msgstr "Κανάλι άλφα"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:584
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:586
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:608
 msgid "Save WMS layer to file"
 msgstr "Αποθ'ηκευση επιπέδου WMS σε αρχείο"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:589
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:591
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:612
 msgid "Save WMS layer"
 msgstr "Αποθήκευση επιπέδου WMS"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:613
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:615
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:636
 msgid "Load WMS layer from file"
 msgstr "Φόρτωση επιπέδου WMS από αρχείο"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:618
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:620
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:640
 msgid "Load WMS layer"
 msgstr "Φόρτωση επιπέδου WMS"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:629
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:631
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:651
 #, java-format
 msgid "Unsupported WMS file version; found {0}, expected {1}"
 msgstr "Μη υποστηριζόμενη έκδοση αρχείου WMS΄ βρέθηκε {0}, αναμενόταν {1}"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:630
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:632
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:652
 msgid "File Format Error"
 msgstr "Σφάλμα μορφής αρχείου"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:662
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:664
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:684
 msgid "Error loading file"
 msgstr "Σφάλμα φόρτωσης αρχείου"
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:676
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:678
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:698
 msgid "Set WMS Bookmark"
 msgstr ""
 
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:687
+#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSLayer.java:689
 #: ../plugins/wmsplugin/src/wmsplugin/WMSLayer.java:708
 msgid "Automatic downloading"
 msgstr "Αυτόματη λήψη"
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSRemoteHandler.java:22
-#: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:21
-msgid ""
-"Remote Control has been asked to load a WMS layer from the following URL:"
-msgstr ""
-
-#: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/WMSRemoteHandler.java:47
-#: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:46
-msgid "Remote WMS"
-msgstr ""
 
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/io/WMSLayerExporter.java:11
 #: ../plugins/imagery/src/org/openstreetmap/josm/plugins/imagery/wms/io/WMSLayerImporter.java:11
@@ -19632,19 +19700,16 @@ msgid "Missing input data"
 msgstr ""
 
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustPanel.java:137
-#, fuzzy
 msgid "Add comment"
-msgstr "Προσθήκη σχολίου"
+msgstr ""
 
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustPanel.java:143
-#, fuzzy
 msgid "Close bug"
-msgstr "Κλείσιμο"
+msgstr ""
 
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustPanel.java:149
-#, fuzzy
 msgid "Invalidate bug"
-msgstr "Μη έγκυρη ημερομηνία"
+msgstr ""
 
 #: ../plugins/mapdust/src/org/openstreetmap/josm/plugins/mapdust/gui/component/panel/MapdustPanel.java:155
 msgid "Re-open bug"
@@ -20930,6 +20995,25 @@ msgstr "Αυτόματη φόρτωση Πλακιδίων: "
 #: ../plugins/slippymap/src/org/openstreetmap/josm/plugins/slippymap/SlippyMapPreferenceSetting.java:74
 msgid "Fade background: "
 msgstr ""
+
+#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:250
+#, fuzzy
+msgid "Topmarks"
+msgstr "Σελιδοδείκτες"
+
+#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:260
+msgid "Fog signals"
+msgstr ""
+
+#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:270
+#, fuzzy
+msgid "Radar"
+msgstr "Σιδηρικά"
+
+#: ../plugins/smed/plugs/oseam/src/oseam/dialogs/OSeaMAction.java:280
+#, fuzzy
+msgid "Lights"
+msgstr "Φάρος"
 
 #: ../plugins/smed/src/smed/menu/SmedMenuBar.java:58
 msgid "Online Help"
@@ -22711,9 +22795,18 @@ msgstr ""
 msgid "Add WMS URL"
 msgstr ""
 
-#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:325
+#: ../plugins/wmsplugin/src/wmsplugin/WMSPreferenceEditor.java:327
 msgid "WMS URL (Default)"
 msgstr "WMS URL (Προκαθορισμένο)"
+
+#: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:21
+msgid ""
+"Remote Control has been asked to load a WMS layer from the following URL:"
+msgstr ""
+
+#: ../plugins/wmsplugin/src/wmsplugin/WMSRemoteHandler.java:46
+msgid "Remote WMS"
+msgstr ""
 
 #. *
 #. This file can be used to add some special messages to the translation,

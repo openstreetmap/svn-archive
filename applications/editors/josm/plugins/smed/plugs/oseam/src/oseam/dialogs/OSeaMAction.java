@@ -62,7 +62,12 @@ public class OSeaMAction {
 	private JRadioButton chanButton = null;
 	private JRadioButton hazButton = null;
 	private JRadioButton specButton = null;
-	private JRadioButton lightButton = null;
+	private JRadioButton lightsButton = null;
+	private ButtonGroup miscButtons = null;
+	private JRadioButton topButton = null;
+	private JRadioButton fogButton = null;
+	private JRadioButton radarButton = null;
+	private JRadioButton litButton = null;
 	private PanelChan panelChan = null;
 	private PanelHaz panelHaz = null;
 	private PanelSpec panelSpec = null;
@@ -120,7 +125,7 @@ public class OSeaMAction {
 			oseamPanel.add(getChanButton(), null);
 			oseamPanel.add(getHazButton(), null);
 			oseamPanel.add(getSpecButton(), null);
-			oseamPanel.add(getLightButton(), null);
+			oseamPanel.add(getLightsButton(), null);
 			oseamPanel.add(panelChan, null);
 			oseamPanel.add(panelHaz, null);
 			oseamPanel.add(panelSpec, null);
@@ -128,7 +133,7 @@ public class OSeaMAction {
 			typeButtons.add(chanButton);
 			typeButtons.add(hazButton);
 			typeButtons.add(specButton);
-			typeButtons.add(lightButton);
+			typeButtons.add(lightsButton);
 			ActionListener alType = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (chanButton.isSelected()) {
@@ -152,14 +157,35 @@ public class OSeaMAction {
 						specButton.setEnabled(true);
 						panelSpec.setVisible(false);
 					}
-					lightButton.setEnabled(!lightButton.isSelected());
-//System.out.println("pressed: " + chanButton.isSelected() + " " + hazButton.isSelected() + " " + specButton.isSelected() + " " + lightButton.isSelected());
+					lightsButton.setEnabled(!lightsButton.isSelected());
 				}
 			};
 			chanButton.addActionListener(alType);
 			hazButton.addActionListener(alType);
 			specButton.addActionListener(alType);
-			lightButton.addActionListener(alType);
+			lightsButton.addActionListener(alType);
+			
+			oseamPanel.add(getTopButton(), null);
+			oseamPanel.add(getFogButton(), null);
+			oseamPanel.add(getRadarButton(), null);
+			oseamPanel.add(getLitButton(), null);
+			miscButtons = new ButtonGroup();
+			miscButtons.add(topButton);
+			miscButtons.add(fogButton);
+			miscButtons.add(radarButton);
+			miscButtons.add(litButton);
+			ActionListener alMisc = new ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					topButton.setEnabled(!topButton.isSelected());
+					fogButton.setEnabled(!fogButton.isSelected());
+					radarButton.setEnabled(!radarButton.isSelected());
+					litButton.setEnabled(!litButton.isSelected());
+				}
+			};
+			topButton.addActionListener(alMisc);
+			fogButton.addActionListener(alMisc);
+			radarButton.addActionListener(alMisc);
+			litButton.addActionListener(alMisc);
 			
 			nameLabel = new JLabel();
 			nameLabel.setBounds(new Rectangle(5, 325, 60, 20));
@@ -206,14 +232,54 @@ public class OSeaMAction {
 		return specButton;
 	}
 
-	private JRadioButton getLightButton() {
-		if (lightButton == null) {
-			lightButton = new JRadioButton(new ImageIcon(getClass().getResource(
+	private JRadioButton getLightsButton() {
+		if (lightsButton == null) {
+			lightsButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					Messages.getString("LightsButton"))));
-			lightButton.setBounds(new Rectangle(0, 120, 105, 40));
-			lightButton.setToolTipText(Messages.getString("LightsTip"));
+			lightsButton.setBounds(new Rectangle(0, 120, 105, 40));
+			lightsButton.setToolTipText(Messages.getString("LightsTip"));
 		}
-		return lightButton;
+		return lightsButton;
+	}
+
+	private JRadioButton getTopButton() {
+		if (topButton == null) {
+			topButton = new JRadioButton(new ImageIcon(getClass().getResource(
+					"/images/TopButton.png")));
+			topButton.setBounds(new Rectangle(0, 165, 40, 40));
+			topButton.setToolTipText(tr("Topmarks"));
+		}
+		return topButton;
+	}
+
+	private JRadioButton getFogButton() {
+		if (fogButton == null) {
+			fogButton = new JRadioButton(new ImageIcon(getClass().getResource(
+					"/images/FogButton.png")));
+			fogButton.setBounds(new Rectangle(0, 200, 40, 40));
+			fogButton.setToolTipText(tr("Fog signals"));
+		}
+		return fogButton;
+	}
+
+	private JRadioButton getRadarButton() {
+		if (radarButton == null) {
+			radarButton = new JRadioButton(new ImageIcon(getClass().getResource(
+					"/images/RadarButton.png")));
+			radarButton.setBounds(new Rectangle(0, 235, 40, 40));
+			radarButton.setToolTipText(tr("Radar"));
+		}
+		return radarButton;
+	}
+
+	private JRadioButton getLitButton() {
+		if (litButton == null) {
+			litButton = new JRadioButton(new ImageIcon(getClass().getResource(
+					"/images/LitButton.png")));
+			litButton.setBounds(new Rectangle(0, 270, 40, 40));
+			litButton.setToolTipText(tr("Lights"));
+		}
+		return litButton;
 	}
 
 }

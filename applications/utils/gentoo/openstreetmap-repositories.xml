@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
+<repositories xmlns="" version="1.0">
+  <repo quality="experimental" status="unofficial">
+    <name>openstreetmap</name>
+    <description>OpenStreetMap related software.</description>
+    <homepage>http://wiki.openstreetmap.org/wiki/Gentoo</homepage>
+    <owner type="project">
+      <email>openstreetmap-ascii64-lorenz.kiefner.de</email>
+      <name>Lorenz</name>
+    </owner>
+    <source type="svn">http://svn.openstreetmap.org/applications/utils/gentoo</source>
+  </repo>
+</repositories>

@@ -9,7 +9,11 @@ use warnings ;
 
 use OSM::osm ;
 
-my $version = 1.0 ;
+my $version = 1.1 ;
+
+my @allowedREF = qw (motorway motorway_link trunk trunk_link primary primary_link secondary secondary_link tertiary unclassified) ;
+my %allowedREFHash = () ;
+foreach my $a (@allowedREF) { $allowedREFHash{$a} = 1 ; }
 
 my %users  ;
 
@@ -85,7 +89,7 @@ while ($wayId != -1) {
 
 		my $ref ; my $refPresent = 0 ; my $refUsed = "" ; my $highway = 0 ; my $invalidRefPresent = 0 ;
 		foreach my $t (@wayTags) {
-			if ($t->[0] eq "highway") { $highway = 1 ; }
+			if ( ($t->[0] eq "highway") and (defined $allowedREFHash{$t->[1]}) ) { $highway = 1 ; }
 			if ($t->[0] eq "ref") {
 				$refPresent = 1 ;
 				$refUsed = $t->[1] ;
@@ -130,7 +134,7 @@ close ($txtFile) ;
 
 sub writeFile {
 	my ($object, $id, $user, $comment, $line) = @_ ;
-	print $txtFile "$object,$id,$user,$comment,$line\n" ;
+	print $txtFile "$object,$id,$user,$comment          ,$line\n" ;
 }
 
 sub compareTags {

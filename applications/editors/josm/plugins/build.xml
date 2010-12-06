@@ -135,7 +135,7 @@
         <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
         <ant antfile="build.xml" target="clean" dir="slippymap"/>
         <ant antfile="build.xml" target="clean" dir="smed"/>
-        <ant antfile="build.xml" target="clean" dir="smed_bfw"/>
+        <!--<ant antfile="build.xml" target="clean" dir="smed_bfw"/>-->
         <ant antfile="build.xml" target="clean" dir="smed_fw"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="tageditor"/>

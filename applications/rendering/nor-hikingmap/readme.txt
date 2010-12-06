@@ -86,13 +86,15 @@ TODO
 ====
 
 text: place=locality|farm|isolated_dwelling|island|islet|suburb
+railway=platform or waterway=dam or man_made=pier
 
 barrier=stile|kissing_gate
 barrier=toll_booth
-man_made=pier
+
+piste:type= sled, skitour, sleigh, snow_park
+
 
 regional hiking routes network=iwn/nwn/rwn at zoom=10-11
-
 shooting range types: clay pigeon, pistol
 sport=* symbols from zoom 17
 add symbol to leisure=winter_sports, how to determine activity type?

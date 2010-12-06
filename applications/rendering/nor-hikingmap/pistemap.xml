@@ -276,7 +276,6 @@
     from &prefix;_point
     where sport is not null
        or landuse='winter_sports'
-       or "piste:type"='playground'
        or leisure='ski_playground'
     ) as symbols</Parameter>
     &datasource-settings;

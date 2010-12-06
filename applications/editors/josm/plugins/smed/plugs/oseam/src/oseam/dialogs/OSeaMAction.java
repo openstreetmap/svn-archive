@@ -53,7 +53,7 @@ public class OSeaMAction {
 	private JLabel lightIcon = null;
 	private JLabel topIcon = null;
 	private JLabel reflIcon = null;
-	private JLabel raconIcon = null;
+	private JLabel radarIcon = null;
 	private JLabel fogIcon = null;
 	private JLabel nameLabel = null;
 	private JTextField nameBox = null;
@@ -102,24 +102,23 @@ public class OSeaMAction {
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
 
-			shapeIcon = new JLabel();
-			shapeIcon.setBounds(new Rectangle(270, 160, 125, 155));
-	        shapeIcon.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+			shapeIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Cardinal_Pillar_South.png")));
+			shapeIcon.setBounds(new Rectangle(265, 165, 130, 185));
 			oseamPanel.add(shapeIcon, null);
-			lightIcon = new JLabel();
-			lightIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			lightIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+			lightIcon.setBounds(new Rectangle(265, 165, 125, 185));
 			oseamPanel.add(lightIcon, null);
 			topIcon = new JLabel();
-			topIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			topIcon.setBounds(new Rectangle(265, 165, 125, 185));
 			oseamPanel.add(topIcon, null);
-			reflIcon = new JLabel();
-			reflIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			reflIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")));
+			reflIcon.setBounds(new Rectangle(265, 165, 125, 185));
 			oseamPanel.add(reflIcon, null);
-			raconIcon = new JLabel();
-			raconIcon.setBounds(new Rectangle(270, 160, 125, 155));
-			oseamPanel.add(raconIcon, null);
-			fogIcon = new JLabel();
-			fogIcon.setBounds(new Rectangle(270, 160, 125, 155));
+			radarIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+			radarIcon.setBounds(new Rectangle(265, 165, 130, 185));
+			oseamPanel.add(radarIcon, null);
+			fogIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
+			fogIcon.setBounds(new Rectangle(265, 165, 125, 185));
 			oseamPanel.add(fogIcon, null);
 
 			oseamPanel.add(getChanButton(), null);
@@ -188,14 +187,14 @@ public class OSeaMAction {
 			litButton.addActionListener(alMisc);
 			
 			nameLabel = new JLabel();
-			nameLabel.setBounds(new Rectangle(5, 325, 60, 20));
+			nameLabel.setBounds(new Rectangle(5, 327, 60, 20));
 			nameLabel.setText(tr("Name:"));
 			oseamPanel.add(nameLabel, null);
 			nameBox = new JTextField();
-			nameBox.setBounds(new Rectangle(60, 320, 200, 30));
+			nameBox.setBounds(new Rectangle(60, 325, 200, 25));
 			oseamPanel.add(nameBox, null);
 			saveButton = new JButton();
-			saveButton.setBounds(new Rectangle(285, 320, 100, 30));
+			saveButton.setBounds(new Rectangle(285, 325, 100, 25));
 			saveButton.setText(tr("Save"));
 			oseamPanel.add(saveButton, null);
 		}

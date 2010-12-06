@@ -1,5 +1,7 @@
 package oseam.panels;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
@@ -34,6 +36,17 @@ public class PanelSpec extends JPanel {
 	private JRadioButton floatButton = null;
 	private JRadioButton beaconButton = null;
 	private JRadioButton towerButton = null;
+	private JLabel colourLabel = null;
+	private ButtonGroup colourButtons = null;
+	private JRadioButton whiteButton = null;
+	private JRadioButton redButton = null;
+	private JRadioButton orangeButton = null;
+	private JRadioButton amberButton = null;
+	private JRadioButton yellowButton = null;
+	private JRadioButton greenButton = null;
+	private JRadioButton blueButton = null;
+	private JRadioButton violetButton = null;
+	private JRadioButton blackButton = null;
 
 	public PanelSpec() {
 		super();
@@ -88,6 +101,52 @@ public class PanelSpec extends JPanel {
 		floatButton.addActionListener(alShape);
 		beaconButton.addActionListener(alShape);
 		towerButton.addActionListener(alShape);
+
+		colourLabel = new JLabel();
+		colourLabel.setBounds(new Rectangle(30, 5, 60, 20));
+		colourLabel.setText(tr("Colour:"));
+		this.add(colourLabel, null);
+		this.add(getWhiteButton(), null);
+		this.add(getRedButton(), null);
+		this.add(getOrangeButton(), null);
+		this.add(getAmberButton(), null);
+		this.add(getYellowButton(), null);
+		this.add(getGreenButton(), null);
+		this.add(getBlueButton(), null);
+		this.add(getVioletButton(), null);
+		this.add(getBlackButton(), null);
+		colourButtons = new ButtonGroup();
+		colourButtons.add(whiteButton);
+		colourButtons.add(redButton);
+		colourButtons.add(orangeButton);
+		colourButtons.add(amberButton);
+		colourButtons.add(yellowButton);
+		colourButtons.add(greenButton);
+		colourButtons.add(blueButton);
+		colourButtons.add(violetButton);
+		colourButtons.add(blackButton);
+		ActionListener alColour = new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				whiteButton.setEnabled(!whiteButton.isSelected());
+				redButton.setEnabled(!redButton.isSelected());
+				orangeButton.setEnabled(!orangeButton.isSelected());
+				amberButton.setEnabled(!amberButton.isSelected());
+				yellowButton.setEnabled(!yellowButton.isSelected());
+				greenButton.setEnabled(!greenButton.isSelected());
+				blueButton.setEnabled(!blueButton.isSelected());
+				violetButton.setEnabled(!violetButton.isSelected());
+				blackButton.setEnabled(!blackButton.isSelected());
+			}
+		};
+		whiteButton.addActionListener(alColour);
+		redButton.addActionListener(alColour);
+		orangeButton.addActionListener(alColour);
+		amberButton.addActionListener(alColour);
+		yellowButton.addActionListener(alColour);
+		greenButton.addActionListener(alColour);
+		blueButton.addActionListener(alColour);
+		violetButton.addActionListener(alColour);
+		blackButton.addActionListener(alColour);
 	}
 
 	private JRadioButton getPillarButton() {
@@ -178,6 +237,87 @@ public class PanelSpec extends JPanel {
 			towerButton.setBounds(new Rectangle(195, 128, 90, 32));
 		}
 		return towerButton;
+	}
+
+	private JRadioButton getWhiteButton() {
+		if (whiteButton == null) {
+			whiteButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/WhiteButton.png")));
+			whiteButton.setBounds(new Rectangle(4, 32, 33, 32));
+			whiteButton.setToolTipText(tr("White"));
+		}
+		return whiteButton;
+	}
+
+	private JRadioButton getRedButton() {
+		if (redButton == null) {
+			redButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RedButton.png")));
+			redButton.setBounds(new Rectangle(37, 32, 33, 32));
+			redButton.setToolTipText(tr("Red"));
+		}
+		return redButton;
+	}
+
+	private JRadioButton getOrangeButton() {
+		if (orangeButton == null) {
+			orangeButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OrangeButton.png")));
+			orangeButton.setBounds(new Rectangle(70, 32, 33, 32));
+			orangeButton.setToolTipText(tr("Orange"));
+		}
+		return orangeButton;
+	}
+
+	private JRadioButton getAmberButton() {
+		if (amberButton == null) {
+			amberButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/AmberButton.png")));
+			amberButton.setBounds(new Rectangle(4, 64, 33, 32));
+			amberButton.setToolTipText(tr("Amber"));
+		}
+		return amberButton;
+	}
+
+	private JRadioButton getYellowButton() {
+		if (yellowButton == null) {
+			yellowButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/YellowButton.png")));
+			yellowButton.setBounds(new Rectangle(37, 64, 33, 32));
+			yellowButton.setToolTipText(tr("Yellow"));
+		}
+		return yellowButton;
+	}
+
+	private JRadioButton getGreenButton() {
+		if (greenButton == null) {
+			greenButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/GreenButton.png")));
+			greenButton.setBounds(new Rectangle(70, 64, 33, 32));
+			greenButton.setToolTipText(tr("Green"));
+		}
+		return greenButton;
+	}
+
+	private JRadioButton getBlueButton() {
+		if (blueButton == null) {
+			blueButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BlueButton.png")));
+			blueButton.setBounds(new Rectangle(4, 96, 33, 32));
+			blueButton.setToolTipText(tr("Blue"));
+		}
+		return blueButton;
+	}
+
+	private JRadioButton getVioletButton() {
+		if (violetButton == null) {
+			violetButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/VioletButton.png")));
+			violetButton.setBounds(new Rectangle(37, 96, 33, 32));
+			violetButton.setToolTipText(tr("Violet"));
+		}
+		return violetButton;
+	}
+
+	private JRadioButton getBlackButton() {
+		if (blackButton == null) {
+			blackButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BlackButton.png")));
+			blackButton.setBounds(new Rectangle(70, 96, 33, 32));
+			blackButton.setToolTipText(tr("Black"));
+		}
+		return blackButton;
 	}
 
 }

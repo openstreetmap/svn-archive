@@ -3,6 +3,9 @@ package org.openstreetmap.josm.plugins.imagery.tms;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 import org.openstreetmap.josm.data.preferences.IntegerProperty;
+import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
+import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
+import org.openstreetmap.josm.plugins.imagery.ImageryPreferences;
 
 /**
  * Preferences for Slippy Map Tiles
@@ -26,6 +29,7 @@ public class TMSPreferences
     public static final IntegerProperty PROP_MIN_ZOOM_LVL = new IntegerProperty(PREFERENCE_PREFIX + ".min_zoom_lvl", DEFAULT_MIN_ZOOM);
     public static final IntegerProperty PROP_MAX_ZOOM_LVL = new IntegerProperty(PREFERENCE_PREFIX + ".max_zoom_lvl", DEFAULT_MAX_ZOOM);
     public static final BooleanProperty PROP_DRAW_DEBUG = new BooleanProperty(PREFERENCE_PREFIX + ".draw_debug", false);
+    public static final BooleanProperty PROP_ADD_TO_SLIPPYMAP_CHOOSER = new BooleanProperty(PREFERENCE_PREFIX + ".add_to_slippymap_chooser", true);
 
     static int checkMaxZoomLvl(int maxZoomLvl, TileSource ts)
     {
@@ -78,5 +82,18 @@ public class TMSPreferences
     public static void setMinZoomLvl(int minZoomLvl) {
         minZoomLvl = checkMinZoomLvl(minZoomLvl, null);
         PROP_MIN_ZOOM_LVL.put(minZoomLvl);
+    }
+
+    public static TileSource getTileSource(ImageryInfo info) {
+        if (info.getImageryType() == ImageryType.TMS) {
+            if(ImageryPreferences.isUrlWithPatterns(info.getURL())) {
+                return new TemplatedTMSTileSource(info.getName(), info.getURL(), info.getMaxZoom());
+            } else {
+                return new TMSTileSource(info.getName(),info.getURL(), info.getMaxZoom());
+            }
+        } else if (info.getImageryType() == ImageryType.BING) {
+            return new BingAerialTileSource();
+        }
+        return null;
     }
 }

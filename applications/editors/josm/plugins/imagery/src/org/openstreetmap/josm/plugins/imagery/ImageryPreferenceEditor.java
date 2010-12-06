@@ -60,6 +60,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
     private JCheckBox autoloadTiles = new JCheckBox();
     private JSpinner minZoomLvl;
     private JSpinner maxZoomLvl;
+    private JCheckBox addToSlippyMapChosser = new JCheckBox();
 
     private JPanel buildCommonSettingsPanel(final PreferenceTabbedPane gui) {
         final JPanel p = new JPanel(new GridBagLayout());
@@ -155,6 +156,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
 
     private JPanel buildTMSSettingsPanel() {
         JPanel tmsTab = new JPanel(new GridBagLayout());
+
         minZoomLvl = new JSpinner(new SpinnerNumberModel(TMSPreferences.DEFAULT_MIN_ZOOM, TMSPreferences.MIN_ZOOM, TMSPreferences.MAX_ZOOM, 1));
         maxZoomLvl = new JSpinner(new SpinnerNumberModel(TMSPreferences.DEFAULT_MAX_ZOOM, TMSPreferences.MIN_ZOOM, TMSPreferences.MAX_ZOOM, 1));
 
@@ -174,10 +176,13 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
         tmsTab.add(this.maxZoomLvl, GBC.eol().fill(GBC.HORIZONTAL));
 
-        tmsTab.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
+        tmsTab.add(new JLabel(tr("Add to slippymap chooser: ")), GBC.std());
+        tmsTab.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        tmsTab.add(addToSlippyMapChosser, GBC.eol().fill(GBC.HORIZONTAL));
 
         this.autozoomActive.setSelected(TMSPreferences.PROP_DEFAULT_AUTOZOOM.get());
         this.autoloadTiles.setSelected(TMSPreferences.PROP_DEFAULT_AUTOLOAD.get());
+        this.addToSlippyMapChosser.setSelected(TMSPreferences.PROP_ADD_TO_SLIPPYMAP_CHOOSER.get());
         this.maxZoomLvl.setValue(TMSPreferences.getMaxZoomLvl(null));
         this.minZoomLvl.setValue(TMSPreferences.getMinZoomLvl(null));
         return tmsTab;
@@ -219,6 +224,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
 
     @Override
     public boolean ok() {
+        boolean restartRequired = false;
         plugin.info.save();
         plugin.refreshMenu();
         OffsetBookmark.saveBookmarks();
@@ -231,6 +237,9 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
 
         Main.pref.put("imagery.wms.browser", browser.getEditor().getItem().toString());
 
+        if (TMSPreferences.PROP_ADD_TO_SLIPPYMAP_CHOOSER.get() != this.addToSlippyMapChosser.isSelected())
+            restartRequired = true;
+        TMSPreferences.PROP_ADD_TO_SLIPPYMAP_CHOOSER.put(this.addToSlippyMapChosser.isSelected());
         TMSPreferences.PROP_DEFAULT_AUTOZOOM.put(this.autozoomActive.isSelected());
         TMSPreferences.PROP_DEFAULT_AUTOLOAD.put(this.autoloadTiles.isSelected());
         TMSPreferences.setMaxZoomLvl((Integer)this.maxZoomLvl.getValue());
@@ -241,7 +250,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         ImageryPreferences.PROP_REMOTE_CONTROL.put(allowRemoteControl);
         ImageryPreferences.PROP_SHARPEN_LEVEL.put(sharpen.getSelectedIndex());
 
-        return false;
+        return restartRequired;
     }
 
     /**

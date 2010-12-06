@@ -52,7 +52,6 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
-import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.ImageryLayer;
 import org.openstreetmap.josm.plugins.imagery.ImageryPreferences;
 
@@ -183,15 +182,10 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         setBackgroundLayer(true);
         this.setVisible(true);
 
-        if (info.getImageryType() == ImageryType.TMS) {
-            if(isUrlWithPatterns(info.getURL())) {
-                initTileSource(new TemplatedTMSTileSource(info.getName(), info.getURL(), info.getMaxZoom()));
-            } else {
-                initTileSource(new TMSTileSource(info.getName(),info.getURL(), info.getMaxZoom()));
-            }
-        } else if (info.getImageryType() == ImageryType.BING) {
-            initTileSource(new BingAerialTileSource());
-        } else throw new IllegalStateException("cannot create TMSLayer with non-TMS ImageryInfo");
+        TileSource source = TMSPreferences.getTileSource(info);
+        if (source == null)
+            throw new IllegalStateException("cannot create TMSLayer with non-TMS ImageryInfo");
+        initTileSource(source);
 
         tileOptionMenu = new JPopupMenu();
 
@@ -363,10 +357,6 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                 });
             }
         });
-    }
-
-    public static boolean isUrlWithPatterns(String url) {
-        return url != null && url.contains("{") && url.contains("}");
     }
 
     void zoomChanged()

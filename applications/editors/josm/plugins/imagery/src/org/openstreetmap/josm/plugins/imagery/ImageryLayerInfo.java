@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.MirroredInputStream;
@@ -100,5 +101,9 @@ public class ImageryLayerInfo {
             coll.add(info.getInfoArray());
         }
         Main.pref.putArray("imagery.layers", coll);
+    }
+
+    public List<ImageryInfo> getLayers() {
+        return Collections.unmodifiableList(layers);
     }
 }

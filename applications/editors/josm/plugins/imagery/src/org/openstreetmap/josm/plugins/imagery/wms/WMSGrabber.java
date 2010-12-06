@@ -30,13 +30,11 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.io.ProgressInputStream;
+import org.openstreetmap.josm.plugins.imagery.ImageryPreferences;
 import org.openstreetmap.josm.plugins.imagery.wms.GeorefImage.State;
 
 
 public class WMSGrabber extends Grabber {
-    public static boolean isUrlWithPatterns(String url) {
-        return url != null && url.contains("{") && url.contains("}");
-    }
 
     protected String baseURL;
     private final boolean urlWithPatterns;
@@ -45,7 +43,7 @@ public class WMSGrabber extends Grabber {
         super(mv, layer, cache);
         this.baseURL = layer.getInfo().getURL();
         /* URL containing placeholders? */
-        urlWithPatterns = isUrlWithPatterns(baseURL);
+        urlWithPatterns = ImageryPreferences.isUrlWithPatterns(baseURL);
     }
 
     @Override

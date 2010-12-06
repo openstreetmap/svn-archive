@@ -20,11 +20,13 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.bbox.SlippyMapBBoxChooser;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginHandler;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.PluginProxy;
+import org.openstreetmap.josm.plugins.imagery.tms.TMSTileSourceProvider;
 import org.openstreetmap.josm.plugins.imagery.wms.Map_Rectifier_WMSmenuAction;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSAdapter;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSLayer;
@@ -206,6 +208,7 @@ public class ImageryPlugin extends Plugin {
         OffsetBookmark.loadBookmarks();
         refreshMenu();
         initRemoteControl();
+        SlippyMapBBoxChooser.addTileSourceProvider(new TMSTileSourceProvider());
     }
 
     public void addLayer(ImageryInfo info) {

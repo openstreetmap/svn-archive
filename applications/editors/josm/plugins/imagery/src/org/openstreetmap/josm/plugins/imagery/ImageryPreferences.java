@@ -23,4 +23,8 @@ public class ImageryPreferences {
     public static void setFadeColor(Color color) {
         Main.pref.putColor("imagery.fade", color);
     }
+
+    public static boolean isUrlWithPatterns(String url) {
+        return url != null && url.contains("{") && url.contains("}");
+    }
 }

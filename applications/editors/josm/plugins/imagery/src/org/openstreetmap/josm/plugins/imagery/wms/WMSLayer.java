@@ -29,9 +29,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
@@ -41,9 +41,10 @@ import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.CacheFiles;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo;
+import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.ImageryLayer;
 import org.openstreetmap.josm.plugins.imagery.ImageryPlugin;
-import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
+import org.openstreetmap.josm.plugins.imagery.ImageryPreferences;
 import org.openstreetmap.josm.plugins.imagery.wms.GeorefImage.State;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -111,7 +112,7 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
         if(info.getURL() != null) {
             WMSGrabber.getProjection(info.getURL(), true);
             startGrabberThreads();
-            if(info.getImageryType() == ImageryType.WMS && !WMSGrabber.isUrlWithPatterns(info.getURL())) {
+            if(info.getImageryType() == ImageryType.WMS && !ImageryPreferences.isUrlWithPatterns(info.getURL())) {
                 if (!(info.getURL().endsWith("&") || info.getURL().endsWith("?"))) {
                     if (!confirmMalformedUrl(info.getURL())) {
                         System.out.println(tr("Warning: WMS layer deactivated because of malformed base url ''{0}''", info.getURL()));

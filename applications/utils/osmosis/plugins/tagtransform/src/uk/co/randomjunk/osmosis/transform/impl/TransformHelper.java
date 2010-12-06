@@ -30,7 +30,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.lifecycle.Completable;
 import org.openstreetmap.osmosis.core.task.common.Task;
-import org.openstreetmap.osmosis.core.xml.common.XmlTimestampFormat;
+import org.openstreetmap.osmosis.xml.common.XmlTimestampFormat;
 
 import uk.co.randomjunk.osmosis.transform.Match;
 import uk.co.randomjunk.osmosis.transform.Output;

@@ -29,7 +29,7 @@ use Time::localtime;
 
 my $program = "whitespots.pl" ;
 my $usage = $program . " file.osm out.htm" ;
-my $version = "2.1" ;
+my $version = "2.2" ;
 
 my %excludes = () ;
 $excludes{"locality"} = 1 ;
@@ -39,6 +39,7 @@ $excludes{"island"} = 1 ;
 
 my $maxDist = 0.3 ;
 my $limit = 1000 ;
+my $highwayNodeLimit = 15 ;
 
 my $wayId ; 
 my $wayUser ; my @wayNodes ; my @wayTags ;
@@ -260,6 +261,7 @@ print $html "<p>Version ", $version, "</p>\n" ;
 print $html "<H2>Statistics</H2>\n" ;
 print $html "<p>", stringFileInfo ($osmName), "</p>\n" ;
 print $html "<p>Max dist from place for nodes $maxDist</p>\n" ;
+print $html "<p>Highway node limit to qualify for \"white spot\": $highwayNodeLimit</p>\n" ;
 print $html "<p>Limit result list to $limit</p>\n" ;
 print $html "<p>Excluded place types: @excludeArray</p>\n" ;
 
@@ -286,18 +288,21 @@ foreach my $res (@result) {
 	my $type = $placeType{$node} ;
 	my $nodes = scalar (keys %{$placeNodes{$node}}) ;
 
-	print $html "<tr>\n" ;
-	print $html "<td>", $nodeCount, "</td>\n" ;
-	print $html "<td>", $nodes, "</td>\n" ;
-	print $html "<td>", $name, "</td>\n" ;
-	print $html "<td>", $type, "</td>\n" ;
-	print $html "<td>", historyLink ("node", $node), "</td>\n" ;
-	print $html "<td>", osmLink ($lon{$node}, $lat{$node}, 16) , "<br>\n" ;
-	print $html osbLink ($lon{$node}, $lat{$node}, 16) , "<br>\n" ;
-	print $html mapCompareLink ($lon{$node}, $lat{$node}, 16) , "</td>\n" ;
-	print $html "<td>", josmLinkSelectNode ($lon{$node}, $lat{$node}, 0.01, $node), "</td>\n" ;
-	print $html "<td>", picLinkMapnik ($lon{$node}, $lat{$node}, 15), "</td>\n" ;
-	print $html "</tr>\n" ;
+	if ($nodeCount <= $highwayNodeLimit) {
+		$i++ ;
+		print $html "<tr>\n" ;
+		print $html "<td>", $nodeCount, "</td>\n" ;
+		print $html "<td>", $nodes, "</td>\n" ;
+		print $html "<td>", $name, "</td>\n" ;
+		print $html "<td>", $type, "</td>\n" ;
+		print $html "<td>", historyLink ("node", $node), "</td>\n" ;
+		print $html "<td>", osmLink ($lon{$node}, $lat{$node}, 16) , "<br>\n" ;
+		print $html osbLink ($lon{$node}, $lat{$node}, 16) , "<br>\n" ;
+		print $html mapCompareLink ($lon{$node}, $lat{$node}, 16) , "</td>\n" ;
+		print $html "<td>", josmLinkSelectNode ($lon{$node}, $lat{$node}, 0.01, $node), "</td>\n" ;
+		print $html "<td>", picLinkMapnik ($lon{$node}, $lat{$node}, 15), "</td>\n" ;
+		print $html "</tr>\n" ;
+	}
 }
 
 print $html "</table>\n" ;
@@ -308,6 +313,7 @@ print $html "</table>\n" ;
 # FINISH
 ########
 
+print $html "<p>$i places listed</p>\n" ;
 print $html "<p>", stringTimeSpent ($time1-$time0), "</p>\n" ;
 printHTMLFoot ($html) ;
 

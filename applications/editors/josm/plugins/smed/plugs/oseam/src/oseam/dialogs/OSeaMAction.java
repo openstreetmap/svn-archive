@@ -55,12 +55,17 @@ public class OSeaMAction {
 	private JLabel reflIcon = null;
 	private JLabel raconIcon = null;
 	private JLabel fogIcon = null;
+	private JLabel nameLabel = null;
+	private JTextField nameBox = null;
+	private JButton saveButton = null;
 	private ButtonGroup typeButtons = null;
 	private JRadioButton chanButton = null;
 	private JRadioButton hazButton = null;
 	private JRadioButton specButton = null;
 	private JRadioButton lightButton = null;
 	private PanelChan panelChan = null;
+	private PanelHaz panelHaz = null;
+	private PanelSpec panelSpec = null;
 
 	public OSeaMAction() {
 
@@ -78,6 +83,12 @@ public class OSeaMAction {
 		panelChan= new PanelChan();
 		panelChan.setBounds(new Rectangle(105, 0, 295, 160));
 		panelChan.setVisible(false);
+		panelHaz= new PanelHaz();
+		panelHaz.setBounds(new Rectangle(105, 0, 295, 160));
+		panelHaz.setVisible(false);
+		panelSpec= new PanelSpec();
+		panelSpec.setBounds(new Rectangle(105, 0, 295, 160));
+		panelSpec.setVisible(false);
 	}
 
 	public JPanel getOSeaMPanel() {
@@ -111,6 +122,8 @@ public class OSeaMAction {
 			oseamPanel.add(getSpecButton(), null);
 			oseamPanel.add(getLightButton(), null);
 			oseamPanel.add(panelChan, null);
+			oseamPanel.add(panelHaz, null);
+			oseamPanel.add(panelSpec, null);
 			typeButtons = new ButtonGroup();
 			typeButtons.add(chanButton);
 			typeButtons.add(hazButton);
@@ -125,8 +138,20 @@ public class OSeaMAction {
 						chanButton.setEnabled(true);
 						panelChan.setVisible(false);
 					}
-					hazButton.setEnabled(!hazButton.isSelected());
-					specButton.setEnabled(!specButton.isSelected());
+					if (hazButton.isSelected()) {
+						hazButton.setEnabled(false);
+						panelHaz.setVisible(true);
+					} else { 
+						hazButton.setEnabled(true);
+						panelHaz.setVisible(false);
+					}
+					if (specButton.isSelected()) {
+						specButton.setEnabled(false);
+						panelSpec.setVisible(true);
+					} else { 
+						specButton.setEnabled(true);
+						panelSpec.setVisible(false);
+					}
 					lightButton.setEnabled(!lightButton.isSelected());
 //System.out.println("pressed: " + chanButton.isSelected() + " " + hazButton.isSelected() + " " + specButton.isSelected() + " " + lightButton.isSelected());
 				}
@@ -135,6 +160,18 @@ public class OSeaMAction {
 			hazButton.addActionListener(alType);
 			specButton.addActionListener(alType);
 			lightButton.addActionListener(alType);
+			
+			nameLabel = new JLabel();
+			nameLabel.setBounds(new Rectangle(5, 325, 60, 20));
+			nameLabel.setText(tr("Name:"));
+			oseamPanel.add(nameLabel, null);
+			nameBox = new JTextField();
+			nameBox.setBounds(new Rectangle(60, 320, 200, 30));
+			oseamPanel.add(nameBox, null);
+			saveButton = new JButton();
+			saveButton.setBounds(new Rectangle(285, 320, 100, 30));
+			saveButton.setText(tr("Save"));
+			oseamPanel.add(saveButton, null);
 		}
 		return oseamPanel;
 	}

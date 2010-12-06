@@ -9,7 +9,7 @@ use warnings ;
 
 use OSM::osm ;
 
-my $version = 1.1 ;
+my $version = 1.2 ;
 
 my @allowedREF = qw (motorway motorway_link trunk trunk_link primary primary_link secondary secondary_link tertiary unclassified) ;
 my %allowedREFHash = () ;
@@ -93,6 +93,8 @@ while ($wayId != -1) {
 			if ($t->[0] eq "ref") {
 				$refPresent = 1 ;
 				$refUsed = $t->[1] ;
+				$refUsed =~ s/neu//ig ;
+				$refUsed =~ s/alt//ig ;
 				my @refs ;
 				if (grep /;/, $refUsed) { 
 					@refs = split /;/, $refUsed ; 
@@ -100,11 +102,15 @@ while ($wayId != -1) {
 				else {
 					if (grep /,/, $refUsed) { @refs = split /,/, $refUsed ; }
 					else {
-						@refs = ($refUsed) ;
+						if (grep /\//, $refUsed) { @refs = split /\//, $refUsed ; }
+						else {
+							@refs = ($refUsed) ;
+						}
+
 					}
 				}
 				foreach my $r (@refs) {
-					($ref) = ( $r =~ /^(\s*[a-z]+\s*[0-9]+\s*[a-z]?)$/i ) ;
+					($ref) = ( $r =~ /^(\s*[a-zäöüÄÖÜ]+\s*[0-9]+\s*[a-z]?\s*)$/i ) ;
 					if (!defined $ref) { $invalidRefPresent = 1 ; }
 				}
 			}

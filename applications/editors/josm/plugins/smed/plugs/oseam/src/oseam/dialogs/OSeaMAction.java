@@ -71,6 +71,7 @@ public class OSeaMAction {
 	private PanelChan panelChan = null;
 	private PanelHaz panelHaz = null;
 	private PanelSpec panelSpec = null;
+	private PanelLights panelLights = null;
 
 	public OSeaMAction() {
 
@@ -94,6 +95,9 @@ public class OSeaMAction {
 		panelSpec= new PanelSpec();
 		panelSpec.setBounds(new Rectangle(105, 0, 295, 160));
 		panelSpec.setVisible(false);
+		panelLights= new PanelLights();
+		panelLights.setBounds(new Rectangle(105, 0, 295, 160));
+		panelLights.setVisible(false);
 	}
 
 	public JPanel getOSeaMPanel() {
@@ -128,6 +132,7 @@ public class OSeaMAction {
 			oseamPanel.add(panelChan, null);
 			oseamPanel.add(panelHaz, null);
 			oseamPanel.add(panelSpec, null);
+			oseamPanel.add(panelLights, null);
 			typeButtons = new ButtonGroup();
 			typeButtons.add(chanButton);
 			typeButtons.add(hazButton);
@@ -156,7 +161,13 @@ public class OSeaMAction {
 						specButton.setEnabled(true);
 						panelSpec.setVisible(false);
 					}
-					lightsButton.setEnabled(!lightsButton.isSelected());
+					if (lightsButton.isSelected()) {
+						lightsButton.setEnabled(false);
+						panelLights.setVisible(true);
+					} else { 
+						lightsButton.setEnabled(true);
+						panelLights.setVisible(false);
+					}
 				}
 			};
 			chanButton.addActionListener(alType);

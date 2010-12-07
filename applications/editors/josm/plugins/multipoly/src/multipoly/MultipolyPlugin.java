@@ -1,3 +1,4 @@
+// License: GPL.
 package multipoly;
 
 import static org.openstreetmap.josm.tools.I18n.tr;

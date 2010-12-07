@@ -9,7 +9,7 @@ use warnings ;
 
 use OSM::osm ;
 
-my $version = 1.2 ;
+my $version = 1.3 ;
 
 my @allowedREF = qw (motorway motorway_link trunk trunk_link primary primary_link secondary secondary_link tertiary unclassified) ;
 my %allowedREFHash = () ;
@@ -50,11 +50,33 @@ my $problems = 0 ;
 $fileName = shift ;
 $txtFileName = shift ;
 
+my $html ;
+my $htmlName ;
 
 
-open ($txtFile, ">", $txtFileName) ;
+open ($txtFile, ">", $txtFileName) or die ("ERROR: couldn't open outfile $txtFileName\n") ;
 
+$htmlName = $txtFileName ;
+$htmlName =~ s/\.txt/\.htm/i ;
 
+open ($html, ">", $htmlName)  or die ("ERROR: couldn't open outfile $htmlName\n");
+printHTMLiFrameHeader ($html, "errors by Gary68") ;
+
+print $html "<H1>Errors by Gary68</H1>\n" ;
+print $html "<p>Version ", $version, "</p>\n" ;
+print $html "<H2>Statistics</H2>\n" ;
+print $html "<p>", stringFileInfo ($fileName), "</p>\n" ;
+
+print $html "<H2>Data</H2>\n" ;
+print $html "<table border=\"1\">\n";
+print $html "<tr>\n" ;
+print $html "<th>Line</th>\n" ;
+print $html "<th>Object</th>\n" ;
+print $html "<th>OSM link</th>\n" ;
+print $html "<th>History link</th>\n" ;
+print $html "<th>User</th>\n" ;
+print $html "<th>Comment</th>\n" ;
+print $html "</tr>\n" ;
 
 
 print "reading osm file...\n" ;
@@ -117,7 +139,7 @@ while ($wayId != -1) {
 		}
 		if ($refPresent and ($invalidRefPresent) and $highway) {
 			$problems++ ;
-			writeFile ("way", $wayId, $wayUser, "UNCOMMON REF: $refUsed", $problems) ;
+			writeFiles ("way", $wayId, $wayUser, "UNCOMMON REF: $refUsed", $problems) ;
 		}
 
 #	}
@@ -129,54 +151,51 @@ while ($wayId != -1) {
 	}
 }
 
-print "problems found: $problems\n" ;
-
 closeOsmFile () ;
 
+print $html "</table>\n" ;
+
+
+print "problems found: $problems\n" ;
+
+print $html "<P>problems found: $problems</P>\n" ;
+
+
+printHTMLFoot ($html) ;
+
+
 close ($txtFile) ;
+close ($html) ;
 
 
 # -----------------------------------------------------
 
-sub writeFile {
+sub writeFiles {
 	my ($object, $id, $user, $comment, $line) = @_ ;
-	print $txtFile "$object,$id,$user,$comment          ,$line\n" ;
+	# print $txtFile "$object,$id,$user,$comment,$line\n" ;
+
+	my $text = sprintf "%s,%d,%s," , $object,$id,$user ;
+	# printf $txtFile "%s,%d,%s, %-80s %-5d\n", $object,$id,$user,$comment,$line ;
+	printf $txtFile "%-50s %-80s %-5d\n", $text, $comment,$line ;
+
+	print $html "<tr>\n" ;
+	print $html "<td>$line</td>\n" ;
+	print $html "<td>$object</td>\n" ;
+	print $html "<td>", objectLink($object, $id) , "</td>\n" ;
+	print $html "<td>", historyLink ($object, $id), "</td>\n" ;
+	print $html "<td>$user</td>\n" ;
+	print $html "<td>$comment</td>\n" ;
+	print $html "</tr>\n" ;
+
 }
 
-sub compareTags {
-	my ($ref1, $ref2) = @_ ;
-	my @tags1 = @$ref1 ;
-	my @tags2 = @$ref2 ;
-	my %t1 = () ; my %t2 = () ;
+# ----------------------------------------------------------------
 
-	my $changed = 0 ;
-	my $changes = "" ;
+sub objectLink {
+	my $obj = shift ;
+	my $id = shift ;
 
-	foreach my $tag (@tags1) { $t1{$tag->[0]} = $tag->[1] ; }
-	foreach my $tag (@tags2) { $t2{$tag->[0]} = $tag->[1] ; }
+	my $link = "<A HREF=\"http://www.openstreetmap.org/?$obj=$id\">$id</A>" ;
 
-	foreach my $t (keys %t1) {
-		if (!defined $t2{$t}) {
-			# deleted tag
-			$changes .= "DELETED TAG $t:$t1{$t} " ;
-			$changed = 1 ;
-		}
-		else {
-			if ($t1{$t} ne $t2{$t}) {
-				# changed
-				$changes .= "CHANGED TAG $t: $t1{$t} -> $t2{$t} " ;
-				$changed = 1 ;
-			}
-		}
-	}
-	
-	foreach my $t (keys %t2) {
-		if (!defined $t1{$t}) {
-			# new tag
-			$changes .= "NEW TAG $t:$t2{$t} " ;
-			$changed = 1 ;
-		}
-	}
-
-	return ($changed, $changes) ;
+	return $link ;
 }

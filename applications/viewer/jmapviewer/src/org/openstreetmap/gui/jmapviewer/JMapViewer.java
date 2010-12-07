@@ -2,14 +2,19 @@ package org.openstreetmap.gui.jmapviewer;
 
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +31,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
  * 
@@ -73,6 +79,18 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     protected JButton zoomOutButton;
 
     private TileSource tileSource;
+
+    // Attribution
+    private Image attrImage;
+    private String attrTermsUrl;
+    public static final Font ATTR_FONT = new Font("Arial", Font.PLAIN, 10);
+    public static final Font ATTR_LINK_FONT;
+
+    static {
+        HashMap<TextAttribute, Integer> aUnderline = new HashMap<TextAttribute, Integer>();
+        aUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        ATTR_LINK_FONT = ATTR_FONT.deriveFont(aUnderline);
+    }
 
     /**
      * Creates a standard {@link JMapViewer} instance that can be controlled via
@@ -210,10 +228,12 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         try {
             int oldZoom = this.zoom;
             this.zoom = zoom;
-            if (oldZoom != zoom)
+            if (oldZoom != zoom) {
                 zoomChanged(oldZoom);
-            if (zoomSlider.getValue() != zoom)
+            }
+            if (zoomSlider.getValue() != zoom) {
                 zoomSlider.setValue(zoom);
+            }
         } finally {
             setIgnoreRepaint(false);
             repaint();
@@ -267,9 +287,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * visible.
      */
     public void setDisplayToFitMapRectangle() {
-        if (mapRectangleList == null || mapRectangleList.size() == 0) {
+        if (mapRectangleList == null || mapRectangleList.size() == 0)
             return;
-        }
         int x_min = Integer.MAX_VALUE;
         int y_min = Integer.MAX_VALUE;
         int x_max = Integer.MIN_VALUE;
@@ -501,6 +520,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
                 paintMarker(g, marker);
             }
         }
+        paintAttribution(g);
     }
 
     /**
@@ -512,7 +532,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
             marker.paint(g, p);
         }
     }
-    
+
     /**
      * Moves the visible map pane.
      * 
@@ -675,8 +695,17 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         zoomSlider.setMinimum(tileSource.getMinZoom());
         zoomSlider.setMaximum(tileSource.getMaxZoom());
         tileController.cancelOutstandingJobs();
-        if (zoom > tileSource.getMaxZoom())
+        if (zoom > tileSource.getMaxZoom()) {
             setZoom(tileSource.getMaxZoom());
+        }
+        boolean requireAttr = tileSource.requiresAttribution();
+        if (requireAttr) {
+            attrImage = tileSource.getAttributionImage();
+            attrTermsUrl = tileSource.getTermsOfUseURL();
+        } else {
+            attrImage = null;
+            attrTermsUrl = null;
+        }
         repaint();
     }
 
@@ -713,5 +742,50 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
 
     public void setTileLoader(TileLoader loader) {
         tileController.setTileLoader(loader);
+    }
+
+    private void paintAttribution(Graphics g) {
+        if (!tileSource.requiresAttribution()) return;
+        // Draw attribution
+        Font font = g.getFont();
+        g.setFont(ATTR_LINK_FONT);
+
+        Rectangle2D termsStringBounds = g.getFontMetrics().getStringBounds("Background Terms of Use", g);
+        int textHeight = (int) termsStringBounds.getHeight() - 5;
+        int termsTextY = getHeight() - textHeight;
+        if (attrTermsUrl != null) {
+            int x = 2;
+            int y = getHeight() - textHeight;
+            g.setColor(Color.black);
+            g.drawString("Background Terms of Use", x + 1, y + 1);
+            g.setColor(Color.white);
+            g.drawString("Background Terms of Use", x, y);
+        }
+
+        // Draw attribution logo
+        if (attrImage != null) {
+            int x = 2;
+            int height = attrImage.getHeight(null);
+            int y = termsTextY - height - textHeight - 5;
+            g.drawImage(attrImage, x, y, null);
+        }
+
+        g.setFont(ATTR_FONT);
+        Coordinate topLeft = getPosition(0,0);
+        Coordinate bottomRight = getPosition(getWidth(),getHeight());
+        String attributionText = tileSource.getAttributionText(zoom,
+                new LatLon(topLeft.getLat(),topLeft.getLon()),
+                new LatLon(bottomRight.getLat(),bottomRight.getLon()));
+        Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
+        {
+            int x = getWidth() - (int) stringBounds.getWidth();
+            int y = getHeight() - textHeight;
+            g.setColor(Color.black);
+            g.drawString(attributionText, x + 1, y + 1);
+            g.setColor(Color.white);
+            g.drawString(attributionText, x, y);
+        }
+
+        g.setFont(font);
     }
 }

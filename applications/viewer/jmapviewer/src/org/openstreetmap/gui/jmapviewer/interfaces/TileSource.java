@@ -100,6 +100,7 @@ public interface TileSource {
      */
     public boolean requiresAttribution();
 
+    // FIXME: JMapViewer shouldn't reference JOSM classes.
     /**
      * @param zoom The optional zoom level for the view.
      * @param botRight The bottom right of the bounding box for attribution.

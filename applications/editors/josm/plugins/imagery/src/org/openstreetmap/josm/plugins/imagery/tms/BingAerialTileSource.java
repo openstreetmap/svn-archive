@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.gui.jmapviewer.OsmTileSource;
@@ -25,6 +24,18 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
 
     public BingAerialTileSource() {
         super("Bing Aerial Maps", "http://ecn.t2.tiles.virtualearth.net/tiles/");
+
+        if (attributions == null) {
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    attributions = loadAttributionText();
+                    System.err.println("Added " + attributions.size() + " attributions.");
+                }
+            });
+            t.setDaemon(true);
+            t.run();
+        }
     }
 
     class Attribution {
@@ -104,7 +115,7 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
             System.err.println("Could not parse Bing aerials attribution metadata.");
             e.printStackTrace();
         }
-        return Collections.emptyList();
+        return null;
     }
 
     @Override
@@ -154,8 +165,8 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
     @Override
     public String getAttributionText(int zoom, LatLon topLeft, LatLon botRight) {
         if (attributions == null) {
-            attributions = loadAttributionText();
-            System.err.println("Added " + attributions.size() + " attributions.");
+            // TODO: don't show Bing tiles until attribution data is loaded
+            return "";
         }
         Bounds windowBounds = new Bounds(topLeft, botRight);
         StringBuilder a = new StringBuilder();

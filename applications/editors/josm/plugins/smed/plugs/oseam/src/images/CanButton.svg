@@ -10,15 +10,16 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="85"
+   width="30"
    height="32"
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="SparButton.svg"
+   sodipodi:docname="CanButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/SparButton_de.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   style="display:inline">
   <defs
      id="defs4">
     <linearGradient
@@ -73,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.85012407,0,0,0.80093987,-0.00835747,209.47939)" />
+       gradientTransform="matrix(0.29904784,0,0,0.80515289,0.04684593,205.12988)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -2164,7 +2165,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.313708"
-     inkscape:cx="31.399999"
+     inkscape:cx="20.705008"
      inkscape:cy="9.8235431"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -2192,7 +2193,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2203,14 +2204,14 @@
      transform="translate(0,-1020.3622)"
      style="display:inline">
     <rect
-       y="1020.5671"
-       x="0.20497282"
-       height="31.590054"
-       width="84.59008"
+       y="1020.484"
+       x="0.12188905"
+       height="31.756222"
+       width="29.756222"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.40994564;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.24377809;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
     <g
-       transform="matrix(0.2,0,0,0.2,-17.25724,1012.0626)"
+       transform="matrix(0.2,0,0,0.2,-14.870755,1011.8858)"
        style="display:inline"
        inkscape:label="Can Buoy"
        id="layer2">
@@ -2220,47 +2221,5 @@
          id="path90440-0"
          style="fill:#000407;fill-opacity:1;fill-rule:evenodd;stroke:none" />
     </g>
-  </g>
-  <g
-     transform="translate(0,-1020.3622)"
-     id="g2900"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:inline">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       sodipodi:linespacing="100%"
-       id="text2908"
-       y="1038.6128"
-       x="52.833485"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1038.6128"
-         x="52.833485"
-         id="tspan2910"
-         sodipodi:role="line">Can Buoy</tspan></text>
-  </g>
-  <g
-     style="display:none"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g2912"
-     transform="translate(0,-1020.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="52.94833"
-       y="1039.3102"
-       id="text2914"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan2916"
-         x="52.94833"
-         y="1039.3102">Stumpftonne</tspan></text>
   </g>
 </svg>

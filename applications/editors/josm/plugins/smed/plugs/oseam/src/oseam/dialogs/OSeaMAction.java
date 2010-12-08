@@ -86,17 +86,17 @@ public class OSeaMAction {
 		if (str.equals("#000000") || str.isEmpty())
 			Main.pref.put("color.background", "#606060");
 
-		panelChan= new PanelChan();
-		panelChan.setBounds(new Rectangle(105, 0, 295, 160));
+		panelChan = new PanelChan();
+		panelChan.setBounds(new Rectangle(65, 0, 335, 160));
 		panelChan.setVisible(false);
-		panelHaz= new PanelHaz();
-		panelHaz.setBounds(new Rectangle(105, 0, 295, 160));
+		panelHaz = new PanelHaz();
+		panelHaz.setBounds(new Rectangle(65, 0, 335, 160));
 		panelHaz.setVisible(false);
-		panelSpec= new PanelSpec();
-		panelSpec.setBounds(new Rectangle(105, 0, 295, 160));
+		panelSpec = new PanelSpec();
+		panelSpec.setBounds(new Rectangle(65, 0, 335, 160));
 		panelSpec.setVisible(false);
-		panelLights= new PanelLights();
-		panelLights.setBounds(new Rectangle(105, 0, 295, 160));
+		panelLights = new PanelLights();
+		panelLights.setBounds(new Rectangle(65, 0, 335, 160));
 		panelLights.setVisible(false);
 	}
 
@@ -106,22 +106,27 @@ public class OSeaMAction {
 			oseamPanel.setLayout(null);
 			oseamPanel.setSize(new Dimension(400, 360));
 
-			shapeIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Cardinal_Pillar_South.png")));
+			shapeIcon = new JLabel(new ImageIcon(getClass().getResource(
+					"/images/Cardinal_Pillar_South.png")));
 			shapeIcon.setBounds(new Rectangle(265, 165, 130, 185));
 			oseamPanel.add(shapeIcon, null);
-			lightIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Light_White_120.png")));
+			lightIcon = new JLabel(new ImageIcon(getClass().getResource(
+					"/images/Light_White_120.png")));
 			lightIcon.setBounds(new Rectangle(265, 165, 125, 185));
 			oseamPanel.add(lightIcon, null);
 			topIcon = new JLabel();
 			topIcon.setBounds(new Rectangle(265, 165, 125, 185));
 			oseamPanel.add(topIcon, null);
-			reflIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Radar_Reflector_355.png")));
+			reflIcon = new JLabel(new ImageIcon(getClass().getResource(
+					"/images/Radar_Reflector_355.png")));
 			reflIcon.setBounds(new Rectangle(265, 165, 125, 185));
 			oseamPanel.add(reflIcon, null);
-			radarIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Radar_Station.png")));
+			radarIcon = new JLabel(new ImageIcon(getClass().getResource(
+					"/images/Radar_Station.png")));
 			radarIcon.setBounds(new Rectangle(265, 165, 130, 185));
 			oseamPanel.add(radarIcon, null);
-			fogIcon = new JLabel(new ImageIcon(getClass().getResource("/images/Fog_Signal.png")));
+			fogIcon = new JLabel(new ImageIcon(getClass().getResource(
+					"/images/Fog_Signal.png")));
 			fogIcon.setBounds(new Rectangle(265, 165, 125, 185));
 			oseamPanel.add(fogIcon, null);
 
@@ -143,28 +148,28 @@ public class OSeaMAction {
 					if (chanButton.isSelected()) {
 						chanButton.setEnabled(false);
 						panelChan.setVisible(true);
-					} else { 
+					} else {
 						chanButton.setEnabled(true);
 						panelChan.setVisible(false);
 					}
 					if (hazButton.isSelected()) {
 						hazButton.setEnabled(false);
 						panelHaz.setVisible(true);
-					} else { 
+					} else {
 						hazButton.setEnabled(true);
 						panelHaz.setVisible(false);
 					}
 					if (specButton.isSelected()) {
 						specButton.setEnabled(false);
 						panelSpec.setVisible(true);
-					} else { 
+					} else {
 						specButton.setEnabled(true);
 						panelSpec.setVisible(false);
 					}
 					if (lightsButton.isSelected()) {
 						lightsButton.setEnabled(false);
 						panelLights.setVisible(true);
-					} else { 
+					} else {
 						lightsButton.setEnabled(true);
 						panelLights.setVisible(false);
 					}
@@ -174,7 +179,7 @@ public class OSeaMAction {
 			hazButton.addActionListener(alType);
 			specButton.addActionListener(alType);
 			lightsButton.addActionListener(alType);
-			
+
 			oseamPanel.add(getTopButton(), null);
 			oseamPanel.add(getFogButton(), null);
 			oseamPanel.add(getRadarButton(), null);
@@ -196,7 +201,7 @@ public class OSeaMAction {
 			fogButton.addActionListener(alMisc);
 			radarButton.addActionListener(alMisc);
 			litButton.addActionListener(alMisc);
-			
+
 			nameLabel = new JLabel();
 			nameLabel.setBounds(new Rectangle(5, 327, 60, 20));
 			nameLabel.setText(tr("Name:"));
@@ -215,8 +220,8 @@ public class OSeaMAction {
 	private JRadioButton getChanButton() {
 		if (chanButton == null) {
 			chanButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("ChanButton"))));
-			chanButton.setBounds(new Rectangle(0, 0, 105, 40));
+					"/images/ChanButton.png")));
+			chanButton.setBounds(new Rectangle(0, 0, 65, 40));
 			chanButton.setToolTipText(Messages.getString("ChanTip"));
 		}
 		return chanButton;
@@ -225,8 +230,8 @@ public class OSeaMAction {
 	private JRadioButton getHazButton() {
 		if (hazButton == null) {
 			hazButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("HazButton"))));
-			hazButton.setBounds(new Rectangle(0, 40, 105, 40));
+					"/images/HazButton.png")));
+			hazButton.setBounds(new Rectangle(0, 40, 65, 40));
 			hazButton.setToolTipText(Messages.getString("HazTip"));
 		}
 		return hazButton;
@@ -235,8 +240,8 @@ public class OSeaMAction {
 	private JRadioButton getSpecButton() {
 		if (specButton == null) {
 			specButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("SpecButton"))));
-			specButton.setBounds(new Rectangle(0, 80, 105, 40));
+					"/images/SpecButton.png")));
+			specButton.setBounds(new Rectangle(0, 80, 65, 40));
 			specButton.setToolTipText(Messages.getString("SpecTip"));
 		}
 		return specButton;
@@ -245,8 +250,8 @@ public class OSeaMAction {
 	private JRadioButton getLightsButton() {
 		if (lightsButton == null) {
 			lightsButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("LightsButton"))));
-			lightsButton.setBounds(new Rectangle(0, 120, 105, 40));
+					"/images/LightsButton.png")));
+			lightsButton.setBounds(new Rectangle(0, 120, 65, 40));
 			lightsButton.setToolTipText(Messages.getString("LightsTip"));
 		}
 		return lightsButton;
@@ -274,8 +279,8 @@ public class OSeaMAction {
 
 	private JRadioButton getRadarButton() {
 		if (radarButton == null) {
-			radarButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/RadarButton.png")));
+			radarButton = new JRadioButton(new ImageIcon(getClass()
+					.getResource("/images/RadarButton.png")));
 			radarButton.setBounds(new Rectangle(0, 235, 40, 40));
 			radarButton.setToolTipText(tr("Radar"));
 		}

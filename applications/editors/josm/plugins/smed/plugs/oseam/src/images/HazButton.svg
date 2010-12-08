@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
+   width="60"
    height="40"
    id="svg2"
    version="1.1"
@@ -53,7 +53,8 @@
        y1="1012.3622"
        x2="50.000004"
        y2="1052.3623"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59911932,0,0,1.0028484,0.04403199,-2.9405696)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -62,9 +63,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.4000001"
-     inkscape:cx="35.592347"
-     inkscape:cy="26.914183"
+     inkscape:zoom="16.8"
+     inkscape:cx="21.187585"
+     inkscape:cy="17.390374"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -102,30 +103,30 @@
      transform="translate(0,-1012.3622)"
      style="display:inline">
     <rect
-       style="fill:url(#linearGradient5451);fill-opacity:1;stroke:#000000;stroke-width:0.50033444000000005;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:url(#linearGradient5451);fill-opacity:1;stroke:#000000;stroke-width:0.38782403;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect4923"
-       width="99.499672"
-       height="39.499664"
-       x="0.25016722"
-       y="1012.6124" />
+       width="59.612175"
+       height="39.612175"
+       x="0.19391201"
+       y="1012.5562" />
     <path
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.89626366px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 3.8469414,1037.9498 6.6655346,-9.7763 6.652487,9.7464 -13.3180216,0.03 0,-10e-5 z"
+       d="m 5.8707509,1035.926 6.6655351,-9.7763 6.652487,9.7464 -13.3180221,0.03 0,-10e-5 z"
        id="path3623"
        sodipodi:nodetypes="ccccc" />
     <path
        sodipodi:nodetypes="ccccc"
        id="path3687"
-       d="m 3.8469414,1048.9617 6.6655346,-9.7763 6.652487,9.7464 -13.3180216,0.03 0,-10e-5 z"
+       d="m 5.8707509,1046.9379 6.6655351,-9.7763 6.652487,9.7464 -13.3180221,0.03 0,-1e-4 z"
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.89626366px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
        sodipodi:nodetypes="ccccc"
        id="path3689"
-       d="m 46.212583,1038.8283 -6.665535,9.7763 -6.652487,-9.7464 13.318022,-0.03 0,10e-5 z"
+       d="m 54.12925,1036.864 -6.665535,9.7763 -6.652487,-9.7464 13.318022,-0.03 0,10e-5 z"
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.89626366px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.89626366px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 46.212583,1027.8164 -6.665535,9.7763 -6.652487,-9.7464 13.318022,-0.03 0,10e-5 z"
+       d="m 54.12925,1025.8521 -6.665535,9.7763 -6.652487,-9.7464 13.318022,-0.03 0,10e-5 z"
        id="path3691"
        sodipodi:nodetypes="ccccc" />
     <path
@@ -136,11 +137,11 @@
        sodipodi:cy="18.154762"
        sodipodi:rx="4.6130953"
        sodipodi:ry="4.5833335"
-       d="m 30.238095,18.154762 c 0,2.531305 -2.065353,4.583334 -4.613095,4.583334 -2.547742,0 -4.613095,-2.052029 -4.613095,-4.583334 0,-2.531305 2.065353,-4.583333 4.613095,-4.583333 2.547742,0 4.613095,2.052028 4.613095,4.583333 z"
-       transform="matrix(0.97349799,0,0,0.97981954,0.06898993,1004.5888)" />
+       d="m 30.238095,18.154762 a 4.6130953,4.5833335 0 1 1 -9.22619,0 4.6130953,4.5833335 0 1 1 9.22619,0 z"
+       transform="matrix(0.97349799,0,0,0.97981954,5.0094661,1004.6483)" />
     <path
-       transform="matrix(0.97349799,0,0,0.97981954,0.03922803,1014.4995)"
-       d="m 30.238095,18.154762 c 0,2.531305 -2.065353,4.583334 -4.613095,4.583334 -2.547742,0 -4.613095,-2.052029 -4.613095,-4.583334 0,-2.531305 2.065353,-4.583333 4.613095,-4.583333 2.547742,0 4.613095,2.052028 4.613095,4.583333 z"
+       transform="matrix(0.97349799,0,0,0.97981954,4.9797042,1014.559)"
+       d="m 30.238095,18.154762 a 4.6130953,4.5833335 0 1 1 -9.22619,0 4.6130953,4.5833335 0 1 1 9.22619,0 z"
        sodipodi:ry="4.5833335"
        sodipodi:rx="4.6130953"
        sodipodi:cy="18.154762"
@@ -148,47 +149,5 @@
        id="path3695"
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1"
        sodipodi:type="arc" />
-  </g>
-  <g
-     transform="translate(0,-1012.3622)"
-     id="g3612"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:inline">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       sodipodi:linespacing="100%"
-       id="text3614"
-       y="1034.9376"
-       x="74.596611"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d40000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1034.9376"
-         x="74.596611"
-         id="tspan3616"
-         sodipodi:role="line">Danger</tspan></text>
-  </g>
-  <g
-     style="display:none"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g3636"
-     transform="translate(0,-1012.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d40000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="74.953758"
-       y="1035.9681"
-       id="text3638"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan3640"
-         x="74.953758"
-         y="1035.9681">Deutsch</tspan></text>
   </g>
 </svg>

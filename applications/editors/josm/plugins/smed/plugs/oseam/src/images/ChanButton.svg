@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
+   width="60"
    height="40"
    id="svg2"
    version="1.1"
@@ -18,7 +18,8 @@
    sodipodi:docname="ChanButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/ChanSelected_de.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   style="display:inline">
   <defs
      id="defs4">
     <linearGradient
@@ -72,7 +73,8 @@
        y1="1012.4216"
        x2="50.002548"
        y2="1052.3596"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59912248,0,0,1.004396,0.04234889,-4.5667837)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -90,9 +92,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.4000001"
-     inkscape:cx="38.780951"
-     inkscape:cy="9.8235431"
+     inkscape:zoom="16.8"
+     inkscape:cx="24.376189"
+     inkscape:cy="24.109257"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -119,7 +121,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -130,25 +132,25 @@
      transform="translate(0,-1012.3622)"
      style="display:inline">
     <rect
-       y="1012.67"
-       x="0.2509402"
-       height="39.441231"
-       width="99.50322"
+       y="1012.5549"
+       x="0.1926928"
+       height="39.614613"
+       width="59.614613"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.49680412;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.3853856;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
     <rect
        style="fill:#d40000;fill-opacity:1;stroke:#000000;stroke-width:0.78358072;stroke-opacity:1"
        id="rect2818"
        width="15.230652"
        height="20.156683"
-       x="2.435905"
-       y="1029.7506"
+       x="4.4597144"
+       y="1027.8458"
        inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <path
        style="fill:#00d400;fill-opacity:1;stroke:#000000;stroke-width:0.83645499px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 27.395597,1049.9172 20.258116,0 -10.165811,-19.7086 -10.092305,19.7086 z"
+       d="m 34.95512,1047.953 20.258116,0 -10.165811,-19.7086 -10.092305,19.7086 z"
        id="path2820"
        sodipodi:nodetypes="cccc"
        inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
@@ -163,51 +165,9 @@
        sodipodi:rx="10.684524"
        sodipodi:ry="9.6428576"
        d="m 36.190476,11.369047 a 10.684524,9.6428576 0 1 1 -21.369047,0 10.684524,9.6428576 0 1 1 21.369047,0 z"
-       transform="matrix(0.7128465,0,0,0.78804359,6.7216642,1013.3063)"
+       transform="matrix(0.7128465,0,0,0.78804359,11.900236,1015.3897)"
        inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
-  </g>
-  <g
-     transform="translate(0,-1012.3622)"
-     id="g2900"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:none">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       sodipodi:linespacing="100%"
-       id="text2908"
-       y="1036.0173"
-       x="75.191849"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1036.0173"
-         x="75.191849"
-         id="tspan2910"
-         sodipodi:role="line">Channel</tspan></text>
-  </g>
-  <g
-     style="display:none"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g2912"
-     transform="translate(0,-1012.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="75.037933"
-       y="1036.1263"
-       id="text2914"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan2916"
-         x="75.037933"
-         y="1036.1263">Deutsch</tspan></text>
   </g>
 </svg>

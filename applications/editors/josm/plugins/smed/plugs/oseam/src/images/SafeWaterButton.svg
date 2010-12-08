@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
+   width="50"
    height="32"
    id="svg2"
    version="1.1"
@@ -18,7 +18,8 @@
    sodipodi:docname="SafeWaterButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/StbdBButton.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   style="display:inline">
   <defs
      id="defs4">
     <linearGradient
@@ -73,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0005258,0,0,0.80006404,-0.02882728,210.3836)" />
+       gradientTransform="matrix(0.49933407,0,0,0.8033559,0.03202457,206.98513)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -1435,11 +1436,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.4000001"
-     inkscape:cx="66.757141"
+     inkscape:zoom="16.8"
+     inkscape:cx="42.82857"
      inkscape:cy="9.8235431"
      inkscape:document-units="px"
-     inkscape:current-layer="g2912"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:showpageshadow="false"
      inkscape:snap-grids="false"
@@ -1464,7 +1465,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1475,17 +1476,17 @@
      transform="translate(0,-1020.3622)"
      style="display:inline">
     <rect
-       y="1020.5844"
-       x="0.22224484"
-       height="31.55551"
-       width="99.555534"
+       y="1020.5195"
+       x="0.15732755"
+       height="31.685345"
+       width="49.685345"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.44448969;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.3146551;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
     <g
        id="g3742"
        inkscape:label="Sphere Buoy 2 Band"
        style="display:inline"
-       transform="matrix(0.4,0,0,0.4,-36.489128,963.1695)">
+       transform="matrix(0.4,0,0,0.4,-36.667702,963.10996)">
       <g
          id="g3752">
         <g
@@ -1498,7 +1499,7 @@
              sodipodi:cy="143"
              sodipodi:rx="24.4375"
              sodipodi:ry="23.625"
-             d="m 129.32694,154.256 a 24.4375,23.625 0 1 1 42.90025,0.12552"
+             d="m 129.32694,154.256 c -6.43031,-11.47162 -2.0237,-25.81069 9.84245,-32.02721 11.86614,-6.21652 26.69836,-1.95641 33.12867,9.51521 3.96093,7.06626 3.93423,15.59456 -0.0709,22.63752"
              transform="matrix(1.1867088,0,0,1.2275216,-24.073718,10.69257)"
              sodipodi:start="2.6449863"
              sodipodi:end="6.7858445"
@@ -1528,47 +1529,5 @@
          d="m 131.69204,196.69844 c -0.91765,-2.03256 -1.57153,-4.19407 -1.92397,-6.35998 -0.2636,-1.61996 -0.28449,-1.91465 -0.28568,-4.03125 -0.001,-2.12722 0.0288,-2.56178 0.28649,-4.15625 1.09498,-6.77433 4.92751,-12.87418 10.54363,-16.78125 5.36899,-3.73515 11.837,-5.27161 18.26246,-4.33822 1.0047,0.14594 2.81658,0.53607 2.98917,0.64361 0.0646,0.0403 -0.8782,2.92458 -4.27441,13.07626 -2.39653,7.16353 -4.36371,13.03259 -4.3715,13.04235 -0.008,0.01 -0.15067,-0.0128 -0.31751,-0.0502 -0.64095,-0.14364 -1.70832,-0.24877 -2.52575,-0.24877 -4.45866,0 -8.52271,2.32877 -10.79808,6.1875 -0.52034,0.88243 -1.09117,2.26791 -1.31327,3.1875 l -0.0528,0.21875 -3.014,0.0162 -3.01401,0.0162 -0.19074,-0.42247 0,0 z"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.0625;stroke-opacity:1" />
     </g>
-  </g>
-  <g
-     transform="translate(0,-1020.3622)"
-     id="g5112"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:inline">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/SafeWaterButton.png"
-       sodipodi:linespacing="100%"
-       id="text5114"
-       y="1039.2218"
-       x="69.918892"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1039.2218"
-         x="69.918892"
-         id="tspan5116"
-         sodipodi:role="line">Safe Water</tspan></text>
-  </g>
-  <g
-     style="display:none"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g2912"
-     transform="translate(0,-1020.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="69.918892"
-       y="1039.2218"
-       id="text2914"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/SafeWaterButton.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan2916"
-         x="69.918892"
-         y="1039.2218">Fahrwasser</tspan></text>
   </g>
 </svg>

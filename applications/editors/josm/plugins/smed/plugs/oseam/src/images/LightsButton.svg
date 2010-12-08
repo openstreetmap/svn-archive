@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
+   width="60"
    height="40"
    id="svg2"
    version="1.1"
@@ -18,7 +18,8 @@
    sodipodi:docname="LightsButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/Lights.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   style="display:inline">
   <defs
      id="defs4">
     <linearGradient
@@ -1130,7 +1131,8 @@
        y1="1012.3622"
        x2="50.000011"
        y2="1052.3622"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59911867,0,0,1.0028502,0.04406036,-2.9424675)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1140,7 +1142,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.879394"
-     inkscape:cx="42.605798"
+     inkscape:cx="32.420093"
      inkscape:cy="14.533528"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -1168,7 +1170,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1179,17 +1181,17 @@
      transform="translate(0,-1012.3622)"
      style="display:inline">
     <rect
-       style="fill:url(#linearGradient4900);fill-opacity:1;stroke:#000000;stroke-width:0.50065404000000002;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:url(#linearGradient4900);fill-opacity:1;stroke:#000000;stroke-width:0.38807189;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect4370"
-       width="99.499367"
-       height="39.499348"
-       x="0.25032702"
-       y="1012.6125"
+       width="59.611927"
+       height="39.611931"
+       x="0.19403595"
+       y="1012.5562"
        inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/LightsButton.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <g
-       transform="matrix(0.24,0,0,0.24,-10.987692,996.88709)"
+       transform="matrix(0.24,0,0,0.24,-5.9369293,995.96112)"
        style="display:inline"
        inkscape:label="Lighthouse"
        id="layer1-9">
@@ -1220,7 +1222,7 @@
       </g>
     </g>
     <g
-       transform="matrix(0.2127411,0,0,0.2127411,-6.8819505,1009.8674)"
+       transform="matrix(0.2127411,0,0,0.2127411,-1.8311878,1008.9414)"
        style="display:inline"
        inkscape:label="Light"
        id="layer4">
@@ -1242,8 +1244,8 @@
        sodipodi:cy="33.57143"
        sodipodi:rx="20.863094"
        sodipodi:ry="18.571428"
-       d="m 5.1814965,31.127108 c 0.7396451,-4.958864 3.69536,-9.442424 8.1979955,-12.43564"
-       transform="matrix(1.0723689,0,0,1.2014911,-2.6752478,994.94309)"
+       d="M 5.1814965,31.127108 A 20.863094,18.571428 0 0 1 13.379492,18.691468"
+       transform="matrix(1.0723689,0,0,1.2014911,2.3755149,994.01712)"
        sodipodi:start="3.273593"
        sodipodi:end="4.0709386"
        sodipodi:open="true" />
@@ -1251,8 +1253,8 @@
        sodipodi:open="true"
        sodipodi:end="6.1495533"
        sodipodi:start="5.3457358"
-       transform="matrix(1.0723689,0,0,1.2014911,-2.6752478,995.00261)"
-       d="m 38.210829,18.601908 c 4.567507,2.985326 7.574378,7.496041 8.329355,12.495165"
+       transform="matrix(1.0723689,0,0,1.2014911,2.3755149,994.07664)"
+       d="m 38.210829,18.601908 a 20.863094,18.571428 0 0 1 8.329355,12.495165"
        sodipodi:ry="18.571428"
        sodipodi:rx="20.863094"
        sodipodi:cy="33.57143"
@@ -1262,55 +1264,11 @@
        sodipodi:type="arc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1, 0.5;stroke-dashoffset:0"
-       d="M 3.8095238,30.089286 25,33.035714 12.232143,15.803571"
-       id="path6137"
-       transform="translate(0,1002.3622)" />
+       d="m 8.8602865,1031.5255 21.1904765,2.9465 -12.767857,-17.2322"
+       id="path6137" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1, 0.5;stroke-dashoffset:0"
-       d="M 37.738095,15.77381 25.029762,33.035714 46.25,30.14881"
-       id="path6139"
-       transform="translate(0,1002.3622)" />
-  </g>
-  <g
-     transform="translate(0,-1012.3622)"
-     id="g3309"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:inline">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       sodipodi:linespacing="100%"
-       id="text3311"
-       y="1034.9227"
-       x="74.696091"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d400d4;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1034.9227"
-         x="74.696091"
-         id="tspan3313"
-         sodipodi:role="line">Lights</tspan></text>
-  </g>
-  <g
-     style="display:none"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g3341"
-     transform="translate(0,-1012.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d400d4;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="74.948616"
-       y="1036.1016"
-       id="text3343"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan3345"
-         x="74.948616"
-         y="1036.1016">Deutsch</tspan></text>
+       d="m 42.788858,1017.2101 -12.708333,17.2619 21.220238,-2.8869"
+       id="path6139" />
   </g>
 </svg>

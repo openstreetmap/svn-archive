@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
+   width="50"
    height="32"
    id="svg2"
    version="1.1"
@@ -18,7 +18,8 @@
    sodipodi:docname="PortButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/ChanSelected_de.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   style="display:inline">
   <defs
      id="defs4">
     <linearGradient
@@ -73,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0005258,0,0,0.80006404,-0.02882728,210.3836)" />
+       gradientTransform="matrix(0.49933407,0,0,0.8033559,0.03202457,206.98513)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -224,8 +225,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.4000001"
-     inkscape:cx="52.590475"
+     inkscape:zoom="16.8"
+     inkscape:cx="34.316666"
      inkscape:cy="9.8235431"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -264,68 +265,34 @@
      transform="translate(0,-1020.3622)"
      style="display:inline">
     <rect
-       y="1020.5844"
-       x="0.22224484"
-       height="31.55551"
-       width="99.555534"
+       y="1020.5195"
+       x="0.15732755"
+       height="31.685345"
+       width="49.685345"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.44448969;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.3146551;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
     <g
-       transform="matrix(0.4,0,0,0.4,-35.183297,987.5179)"
-       style="display:inline"
+       id="g4583"
        inkscape:label="Can Buoy"
-       id="layer2">
+       style="display:inline"
+       transform="matrix(0.4,0,0,0.4,-35.302345,987.57742)">
       <path
-         sodipodi:nodetypes="ccccccsccccccccccccsccccsssc"
+         style="fill:#000407;fill-opacity:1;fill-rule:evenodd;stroke:none"
+         id="path4585"
          d="m 159.42774,100.24471 -28.0625,-8.843749 -15.21875,45.749999 -7.96875,0 0,5.65625 29.6875,0 c 1.28732,5.53295 6.23327,9.65624 12.15625,9.65625 5.92495,0 10.87095,-4.12052 12.15625,-9.65625 l 29.84375,0 0,-0.0625 0,-5.59375 -7.6875,0 9,-26.1875 -29.9375,-9.4375 -3.96875,-1.28125 z m -23.03125,-0.21875 47.15625,15.96875 -7.21875,21.15625 -14.15625,0 c -1.2853,-5.53573 -6.2313,-9.65625 -12.15625,-9.65625 -5.92298,1e-5 -10.86893,4.1233 -12.15625,9.65625 l -13.71875,0 12.25,-37.125 z m 13.625,32.4375 c 4.14,0 7.5,3.36 7.5,7.5 0,4.14 -3.36,7.5 -7.5,7.5 -4.14,0 -7.5,-3.36 -7.5,-7.5 0,-4.14 3.36,-7.5 7.5,-7.5 z"
-         id="path90440-0"
-         style="fill:#000407;fill-opacity:1;fill-rule:evenodd;stroke:none" />
+         sodipodi:nodetypes="ccccccsccccccccccccsccccsssc" />
       <path
-         id="path5425"
+         style="fill:none;stroke:none"
          d="m 124.32232,136.85297 c 0.0705,-0.25633 12.07363,-36.64911 12.10443,-36.69999 0.0376,-0.062 46.76232,15.7838 46.87864,15.89804 0.0674,0.0662 -1.32108,4.31971 -3.4386,10.53421 l -3.55161,10.42324 -7.02801,0.0321 -7.028,0.0321 -0.33601,-1.02728 c -1.3281,-4.06036 -4.55016,-7.05123 -8.89652,-8.25817 -0.63411,-0.17609 -1.27824,-0.22542 -2.98547,-0.22867 -1.91208,-0.004 -2.30554,0.0315 -3.23427,0.28884 -4.16097,1.15294 -7.41617,4.26055 -8.71659,8.32137 l -0.28881,0.90186 -6.76954,0 c -6.38706,0 -6.76615,-0.0123 -6.70964,-0.21769 z"
-         style="fill:none;fill-opacity:1;stroke:none" />
+         id="path4587" />
     </g>
-  </g>
-  <g
-     transform="translate(0,-1020.3622)"
-     id="g2900"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:inline">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       sodipodi:linespacing="100%"
-       id="text2908"
-       y="1039.2316"
-       x="69.71566"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1039.2316"
-         x="69.71566"
-         id="tspan2910"
-         sodipodi:role="line">Port</tspan></text>
-  </g>
-  <g
-     style="display:none"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g2912"
-     transform="translate(0,-1020.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="69.918892"
-       y="1039.2218"
-       id="text2914"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan2916"
-         x="69.918892"
-         y="1039.2218">Backbord</tspan></text>
+    <path
+       style="fill:none;stroke:none;display:inline"
+       d="m 14.422078,1042.3289 c 0.01915,-0.05 1.109749,-3.3512 2.423555,-7.3363 1.313807,-3.9851 2.409845,-7.2683 2.43564,-7.296 0.0258,-0.028 3.940293,1.2686 8.698884,2.8808 4.758592,1.6121 8.977121,3.041 9.37451,3.1754 l 0.722524,0.2442 -1.43681,4.2111 -1.436811,4.211 -2.80025,3e-4 -2.80025,2e-4 -0.104614,-0.3422 c -0.398763,-1.3047 -1.319165,-2.375 -2.57709,-2.9971 -0.822194,-0.4065 -1.529033,-0.5546 -2.432081,-0.5094 -1.307369,0.065 -2.25776,0.4652 -3.198313,1.3452 -0.676155,0.6326 -1.085705,1.2687 -1.356487,2.1069 l -0.128143,0.3966 -2.70954,0 c -2.403176,0 -2.705603,-0.01 -2.674724,-0.091 z"
+       id="path4589" />
+    <path
+       style="fill:#d40000;fill-opacity:1;stroke:none;display:inline"
+       d="m 14.422078,1042.3289 c 0.01915,-0.05 1.109749,-3.3512 2.423555,-7.3363 1.313807,-3.9851 2.409845,-7.2683 2.43564,-7.296 0.0258,-0.028 3.940293,1.2686 8.698884,2.8808 4.758592,1.6121 8.977121,3.041 9.37451,3.1754 l 0.722524,0.2442 -1.43681,4.2111 -1.436811,4.211 -2.80025,3e-4 -2.80025,2e-4 -0.104614,-0.3422 c -0.398763,-1.3047 -1.319165,-2.375 -2.57709,-2.9971 -0.822194,-0.4065 -1.529033,-0.5546 -2.432081,-0.5094 -1.307369,0.065 -2.25776,0.4652 -3.198313,1.3452 -0.676155,0.6326 -1.085705,1.2687 -1.356487,2.1069 l -0.128143,0.3966 -2.70954,0 c -2.403176,0 -2.705603,-0.01 -2.674724,-0.091 z"
+       id="path4591" />
   </g>
 </svg>

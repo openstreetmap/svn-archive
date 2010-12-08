@@ -10,15 +10,16 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
+   width="50"
    height="32"
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="PrefPortAButton.svg"
+   sodipodi:docname="PrefPortButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/ChanSelected_de.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   style="display:inline">
   <defs
      id="defs4">
     <linearGradient
@@ -73,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0005258,0,0,0.80006404,-0.02882728,210.3836)" />
+       gradientTransform="matrix(0.49933407,0,0,0.8033559,0.03202457,206.98513)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -357,8 +358,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.4000001"
-     inkscape:cx="48.772324"
+     inkscape:zoom="16.8"
+     inkscape:cx="30.498515"
      inkscape:cy="9.8235431"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -386,7 +387,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -397,22 +398,23 @@
      transform="translate(0,-1020.3622)"
      style="display:inline">
     <rect
-       y="1020.5844"
-       x="0.22224484"
-       height="31.55551"
-       width="99.555534"
+       y="1020.5195"
+       x="0.15732755"
+       height="31.685345"
+       width="49.685345"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.44448969;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.3146551;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
     <g
-       transform="matrix(0.4,0,0,0.4,-35.302351,987.74352)"
+       transform="matrix(0.4,0,0,0.4,-35.302351,987.50542)"
        id="g4867"
        inkscape:label="Can Buoy 3 Band"
        style="display:inline">
       <path
          style="fill:#000407;fill-opacity:1;fill-rule:evenodd;stroke:none"
+         d="m 22.3125,3.78125 -6.09375,18.28125 -3.1875,0 0,2.28125 11.875,0 c 0.514928,2.21318 2.505808,3.843746 4.875,3.84375 2.36998,0 4.32963,-1.629458 4.84375,-3.84375 l 11.9375,0 0,-0.03125 0,-2.25 -3.0625,0 L 47.09375,11.59375 35.125,7.8125 33.53125,7.3125 22.3125,3.78125 z m 2,3.4375 18.875,6.40625 -2.90625,8.4375 -5.65625,0 c -0.51412,-2.214292 -2.47377,-3.84375 -4.84375,-3.84375 -2.369192,4e-6 -4.360072,1.63057 -4.875,3.84375 l -5.5,0 4.90625,-14.84375 z m 5.46875,12.96875 c 1.656,0 3,1.344 3,3 0,1.656 -1.344,3 -3,3 -1.656,0 -3,-1.344 -3,-3 0,-1.656 1.344,-3 3,-3 z"
+         transform="matrix(2.5,0,0,2.5,75.607067,81.993125)"
          id="path4869"
-         d="m 159.42775,100.27581 -28.0625,-8.84375 -15.21875,45.75 -7.96875,0 0,5.65625 29.6875,0 c 1.28732,5.53295 6.23327,9.65624 12.15625,9.65625 5.92495,0 10.87095,-4.12052 12.15625,-9.65625 l 29.84375,0 0,-0.0625 0,-5.59375 -7.6875,0 9,-26.1875 -29.9375,-9.4375 -3.96875,-1.28125 z m -23.03125,-0.21875 47.15625,15.96875 -7.21875,21.15625 -14.15625,0 c -1.2853,-5.53573 -6.2313,-9.65625 -12.15625,-9.65625 -5.92298,10e-6 -10.86893,4.1233 -12.15625,9.65625 l -13.71875,0 12.25,-37.125 z m 13.625,32.4375 c 4.14,0 7.5,3.36 7.5,7.5 0,4.14 -3.36,7.5 -7.5,7.5 -4.14,0 -7.5,-3.36 -7.5,-7.5 0,-4.14 3.36,-7.5 7.5,-7.5 z"
-         sodipodi:nodetypes="ccccccsccccccccccccsccccsssc" />
+         sodipodi:nodetypes="cccccscccccccccccccsccccsssc" />
       <rect
          transform="matrix(0.94832365,0.31730466,-0.31730466,0.94832365,0,0)"
          y="69.82708"
@@ -432,79 +434,27 @@
       <path
          id="path5563"
          d="m 165.46613,128.93882 c -6.60225,-2.21512 -17.10346,-5.73888 -23.33602,-7.83058 l -11.33192,-3.80309 1.11599,-3.44304 c 0.61379,-1.89367 1.12847,-3.45785 1.14374,-3.47596 0.0308,-0.0365 46.85669,15.62169 46.92707,15.69207 0.0849,0.0849 -2.26697,6.83654 -2.39036,6.86221 -0.0684,0.0142 -5.52624,-1.78649 -12.1285,-4.00161 z"
-         style="fill:none;fill-opacity:1;stroke:none" />
+         style="fill:none;stroke:none" />
       <path
          id="path5565"
          d="m 156.82069,117.41803 c -12.86242,-4.3118 -23.40489,-7.85574 -23.42771,-7.87543 -0.0314,-0.0271 2.94008,-9.18881 3.03531,-9.35852 0.0348,-0.062 46.76082,15.78383 46.8757,15.89662 0.10724,0.10529 -2.90186,9.21699 -3.03487,9.18972 -0.0342,-0.007 -10.586,-3.54059 -23.44843,-7.85239 z"
-         style="fill:none;fill-opacity:1;stroke:none" />
+         style="fill:none;stroke:none" />
       <path
          id="path5567"
          d="m 124.31343,136.92639 c 0.2045,-0.89172 6.16125,-18.60894 6.25727,-18.61109 0.0699,-0.002 10.62849,3.5098 23.46354,7.80303 l 23.33646,7.80588 -0.52097,1.55768 -0.52097,1.55768 -7.03479,0.0321 -7.03479,0.0321 -0.33601,-1.02728 c -1.3281,-4.06036 -4.55016,-7.05123 -8.89652,-8.25817 -0.63411,-0.17609 -1.27824,-0.22542 -2.98547,-0.22867 -1.91208,-0.004 -2.30554,0.0315 -3.23427,0.28884 -4.16097,1.15294 -7.41617,4.26055 -8.71659,8.32137 l -0.28881,0.90186 -6.76415,0 c -5.75635,0 -6.75816,-0.0261 -6.72393,-0.17537 z"
-         style="fill:none;fill-opacity:1;stroke:none" />
+         style="fill:none;stroke:none" />
     </g>
-  </g>
-  <g
-     transform="translate(0,-1020.3622)"
-     id="g2900"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:none">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       sodipodi:linespacing="100%"
-       id="text2908"
-       y="1045.184"
-       x="69.71566"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1045.184"
-         x="69.71566"
-         id="tspan2910"
-         sodipodi:role="line">Port</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="48.452381"
-       y="1033.1956"
-       id="text5305"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5307"
-         x="48.452381"
-         y="1033.1956">Preferred</tspan></text>
-  </g>
-  <g
-     style="display:inline"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g2912"
-     transform="translate(0,-1020.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="70.037941"
-       y="1045.2932"
-       id="text2914"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan2916"
-         x="70.037941"
-         y="1045.2932">Backbord</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="70.35714"
-       y="1032.3622"
-       id="text5330"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5332"
-         x="70.35714"
-         y="1032.3622">Abzweigung</tspan></text>
+    <path
+       style="fill:#00d400;fill-opacity:1;stroke:none;display:inline"
+       d="m 26.385419,1037.5663 c -5.107143,-1.7139 -9.305738,-3.1244 -9.330213,-3.1344 -0.02447,-0.01 0.162794,-0.6414 0.416152,-1.4031 0.367029,-1.1033 0.478901,-1.3776 0.550451,-1.3496 0.04939,0.019 4.201408,1.41 9.226705,3.0905 5.025298,1.6805 9.209201,3.0836 9.297563,3.1179 l 0.160658,0.062 -0.465749,1.3544 c -0.256162,0.7448 -0.489172,1.3596 -0.517801,1.3662 -0.02863,0.01 -4.230623,-1.3905 -9.337766,-3.1044 z"
+       id="path5502" />
+    <path
+       style="fill:#d40000;fill-opacity:1;stroke:none;display:inline"
+       d="m 27.3891,1034.4533 -9.353463,-3.1367 0.604244,-1.8396 c 0.332334,-1.0118 0.631965,-1.8489 0.665845,-1.8602 0.05292,-0.018 18.597067,6.2468 18.723812,6.3251 0.02542,0.016 -0.204817,0.7577 -0.511636,1.649 -0.705594,2.0495 -0.690347,2.008 -0.73652,2.0032 -0.02135,0 -4.247878,-1.4156 -9.392282,-3.1408 l 0,0 z"
+       id="path5504" />
+    <path
+       style="fill:#d40000;fill-opacity:1;stroke:none;display:inline"
+       d="m 14.392817,1042.3458 c 7.95e-4,-0.01 0.559484,-1.703 1.241533,-3.7655 0.900042,-2.7217 1.262812,-3.7457 1.322959,-3.7342 0.04558,0.01 4.264003,1.4136 9.374273,3.122 l 9.291401,3.1063 -0.212369,0.6428 -0.212369,0.6429 -2.802898,0 -2.802898,0 -0.07887,-0.3078 c -0.04338,-0.1692 -0.194403,-0.5385 -0.33561,-0.8206 -1.147805,-2.2928 -3.884882,-3.3245 -6.324255,-2.3838 -1.304455,0.5031 -2.433864,1.6815 -2.879297,3.0043 l -0.161002,0.4781 -2.711022,0.015 c -1.491061,0.01 -2.710371,0.01 -2.709576,0 l 0,0 z"
+       id="path6016" />
   </g>
 </svg>

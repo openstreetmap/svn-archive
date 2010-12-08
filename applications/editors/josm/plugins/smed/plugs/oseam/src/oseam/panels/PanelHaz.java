@@ -100,8 +100,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getNothButton() {
 		if (northButton == null) {
 			northButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource(Messages.getString("NorthButton"))));
-			northButton.setBounds(new Rectangle(0, 0, 105, 32));
+					.getResource("/images/CardNButton.png")));
+			northButton.setBounds(new Rectangle(0, 0, 55, 32));
 			northButton.setToolTipText(Messages.getString("NorthTip"));
 		}
 		return northButton;
@@ -110,8 +110,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getSouthButton() {
 		if (southButton == null) {
 			southButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource(Messages.getString("SouthButton"))));
-			southButton.setBounds(new Rectangle(0, 32, 105, 32));
+					.getResource("/images/CardSButton.png")));
+			southButton.setBounds(new Rectangle(0, 32, 55, 32));
 			southButton.setToolTipText(Messages.getString("SouthTip"));
 		}
 		return southButton;
@@ -120,8 +120,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getEastButton() {
 		if (eastButton == null) {
 			eastButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("EastButton"))));
-			eastButton.setBounds(new Rectangle(0, 64, 105, 32));
+					"/images/CardEButton.png")));
+			eastButton.setBounds(new Rectangle(0, 64, 55, 32));
 			eastButton.setToolTipText(Messages.getString("EastTip"));
 		}
 		return eastButton;
@@ -130,8 +130,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getWestButton() {
 		if (westButton == null) {
 			westButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("WestButton"))));
-			westButton.setBounds(new Rectangle(0, 96, 105, 32));
+					"/images/CardWButton.png")));
+			westButton.setBounds(new Rectangle(0, 96, 55, 32));
 			westButton.setToolTipText(Messages.getString("WestTip"));
 		}
 		return westButton;
@@ -140,8 +140,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getIsolButton() {
 		if (isolButton == null) {
 			isolButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("IsolButton"))));
-			isolButton.setBounds(new Rectangle(0, 128, 105, 32));
+					"/images/IsolButton.png")));
+			isolButton.setBounds(new Rectangle(0, 128, 55, 32));
 			isolButton.setToolTipText(Messages.getString("IsolTip"));
 		}
 		return isolButton;
@@ -150,8 +150,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getPillarButton() {
 		if (pillarButton == null) {
 			pillarButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource(Messages.getString("PillarButton"))));
-			pillarButton.setBounds(new Rectangle(105, 0, 90, 32));
+					.getResource("/images/PillarButton.png")));
+			pillarButton.setBounds(new Rectangle(55, 0, 90, 32));
 		}
 		return pillarButton;
 	}
@@ -159,8 +159,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getSparButton() {
 		if (sparButton == null) {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("SparButton"))));
-			sparButton.setBounds(new Rectangle(105, 32, 90, 32));
+					"/images/SparButton.png")));
+			sparButton.setBounds(new Rectangle(55, 32, 90, 32));
 		}
 		return sparButton;
 	}
@@ -168,8 +168,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getFloatButton() {
 		if (floatButton == null) {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource(Messages.getString("FloatButton"))));
-			floatButton.setBounds(new Rectangle(105, 64, 90, 32));
+					.getResource("/images/FloatButton.png")));
+			floatButton.setBounds(new Rectangle(55, 64, 90, 32));
 		}
 		return floatButton;
 	}
@@ -177,8 +177,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getBeaconButton() {
 		if (beaconButton == null) {
 			beaconButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource(Messages.getString("BeaconButton"))));
-			beaconButton.setBounds(new Rectangle(105, 96, 90, 32));
+					.getResource("/images/BeaconButton.png")));
+			beaconButton.setBounds(new Rectangle(55, 96, 90, 32));
 		}
 		return beaconButton;
 	}
@@ -186,8 +186,8 @@ public class PanelHaz extends JPanel {
 	private JRadioButton getTowerButton() {
 		if (towerButton == null) {
 			towerButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource(Messages.getString("TowerButton"))));
-			towerButton.setBounds(new Rectangle(105, 128, 90, 32));
+					.getResource("/images/TowerButton.png")));
+			towerButton.setBounds(new Rectangle(55, 128, 90, 32));
 		}
 		return towerButton;
 	}

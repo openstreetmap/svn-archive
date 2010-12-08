@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100"
+   width="50"
    height="32"
    id="svg2"
    version="1.1"
@@ -18,7 +18,8 @@
    sodipodi:docname="StbdButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/StbdButton_de.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   style="display:inline">
   <defs
      id="defs4">
     <linearGradient
@@ -73,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0005258,0,0,0.80006404,-0.02882728,210.3836)" />
+       gradientTransform="matrix(0.49933407,0,0,0.8033559,0.03202457,206.98513)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -385,8 +386,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.4000001"
-     inkscape:cx="45.685713"
+     inkscape:zoom="16.8"
+     inkscape:cx="27.411904"
      inkscape:cy="9.8235431"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -414,7 +415,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -425,17 +426,17 @@
      transform="translate(0,-1020.3622)"
      style="display:inline">
     <rect
-       y="1020.5844"
-       x="0.22224484"
-       height="31.55551"
-       width="99.555534"
+       y="1020.5195"
+       x="0.15732755"
+       height="31.685345"
+       width="49.685345"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.44448969;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.3146551;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
     <g
        id="g3653"
        inkscape:label="Cone Buoy"
        style="display:inline"
-       transform="matrix(0.4,0,0,0.4,-35.061383,987.35311)">
+       transform="matrix(0.4,0,0,0.4,-35.061383,986.93644)">
       <g
          id="g3678">
         <path
@@ -474,49 +475,7 @@
          transform="translate(0,-60)"
          id="path6674"
          d="m 123.24968,196.95735 c 0,-0.0806 0.27384,-1.14582 0.60854,-2.36703 2.86668,-10.45969 9.27626,-19.26664 18.30656,-25.15377 6.02729,-3.92937 12.37122,-6.0733 20.35428,-6.87874 l 0.99723,-0.10061 1.71218,1.6204 c 8.30262,7.85759 13.23843,19.10617 13.4058,30.55152 l 0.0349,2.38649 -8.16113,0.0459 -8.16113,0.046 -0.30173,-0.92984 c -0.81943,-2.52529 -2.80031,-5.13489 -5.03868,-6.63791 -5.6791,-3.81343 -13.40367,-2.2805 -17.36975,3.44698 -0.5736,0.82835 -1.70928,3.35371 -1.71245,3.8079 -0.002,0.28962 -0.47018,0.30936 -7.33839,0.30936 -4.03493,0 -7.33623,-0.066 -7.33623,-0.14665 z"
-         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.17677668999999999;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+         style="fill:#00d400;fill-opacity:1;stroke:#000000;stroke-width:0.17677669;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     </g>
-  </g>
-  <g
-     transform="translate(0,-1020.3622)"
-     id="g2900"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:inline">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/PortAButton_de.png"
-       sodipodi:linespacing="100%"
-       id="text2908"
-       y="1039.2316"
-       x="69.71566"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1039.2316"
-         x="69.71566"
-         id="tspan2910"
-         sodipodi:role="line">Starboard</tspan></text>
-  </g>
-  <g
-     style="display:none"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g2912"
-     transform="translate(0,-1020.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="69.918892"
-       y="1039.2218"
-       id="text2914"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan2916"
-         x="69.918892"
-         y="1039.2218">Steuerbord</tspan></text>
   </g>
 </svg>

@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="85"
+   width="30"
    height="32"
    id="svg2"
    version="1.1"
@@ -18,7 +18,8 @@
    sodipodi:docname="BeaconButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/SuperButton_de.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   style="display:inline">
   <defs
      id="defs4">
     <linearGradient
@@ -73,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.85012407,0,0,0.80093987,-0.00835747,209.47939)" />
+       gradientTransform="matrix(0.29904784,0,0,0.80515289,0.04684593,205.12988)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -4033,7 +4034,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.313708"
-     inkscape:cx="31.399999"
+     inkscape:cx="20.705008"
      inkscape:cy="9.8235431"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -4072,14 +4073,14 @@
      transform="translate(0,-1020.3622)"
      style="display:inline">
     <rect
-       y="1020.5671"
-       x="0.20497282"
-       height="31.590054"
-       width="84.59008"
+       y="1020.484"
+       x="0.12188905"
+       height="31.756222"
+       width="29.756222"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.40994564;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.24377809;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
     <g
-       transform="matrix(0.2,0,0,0.2,-16.983919,1018.3964)"
+       transform="matrix(0.2,0,0,0.2,-14.950987,1018.4848)"
        style="display:inline"
        inkscape:label="Beacon"
        id="layer1-6">
@@ -4088,47 +4089,5 @@
          d="m 141.35378,46.286264 0,64.750006 c -1.70454,1.6489 -2.94669,3.77114 -3.5,6.15625 l -8.4375,0 -0.125,5.65625 8.5625,0 c 1.28732,5.53295 6.23327,9.65624 12.15625,9.65625 5.92495,0 10.87095,-4.12052 12.15625,-9.65625 l 8.3125,-0.0312 0,-5.65625 -8.3125,0.0312 c -0.58668,-2.52896 -1.94655,-4.75116 -3.8125,-6.4375 l 0,-64.468756 -6.375,0 -4.25,0 -6.375,0 z m 4.0625,4.03125 8.96875,0 0,57.687506 -8.96875,0 0,-57.687506 z m 4.59375,62.187506 c 4.14,0 7.5,3.36 7.5,7.5 0,4.14 -3.36,7.5 -7.5,7.5 -4.14,0 -7.5,-3.36 -7.5,-7.5 0,-4.14 3.36,-7.5 7.5,-7.5 z"
          style="fill:#000407;fill-opacity:1;fill-rule:evenodd;stroke:none;display:inline" />
     </g>
-  </g>
-  <g
-     transform="translate(0,-1020.3622)"
-     id="g2900"
-     inkscape:groupmode="layer"
-     inkscape:label="Text EN"
-     style="display:inline">
-    <text
-       inkscape:export-ydpi="90"
-       inkscape:export-xdpi="90"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       sodipodi:linespacing="100%"
-       id="text2908"
-       y="1038.6128"
-       x="52.833485"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       xml:space="preserve"><tspan
-         y="1038.6128"
-         x="52.833485"
-         id="tspan2910"
-         sodipodi:role="line">Beacon</tspan></text>
-  </g>
-  <g
-     style="display:none"
-     inkscape:label="Text DE"
-     inkscape:groupmode="layer"
-     id="g2912"
-     transform="translate(0,-1020.3622)">
-    <text
-       xml:space="preserve"
-       style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="52.94833"
-       y="1039.3102"
-       id="text2914"
-       sodipodi:linespacing="100%"
-       inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan4557"
-         x="52.94833"
-         y="1039.3102">Spiere</tspan></text>
   </g>
 </svg>

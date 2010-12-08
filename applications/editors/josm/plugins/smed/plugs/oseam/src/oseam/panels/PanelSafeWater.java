@@ -29,47 +29,47 @@ public class PanelSafeWater extends JPanel {
 	private JRadioButton sphereButton = null;
 	private JRadioButton barrelButton = null;
 	private JRadioButton floatButton = null;
-	
+
 	public PanelSafeWater() {
 		super();
 		initialize();
 	}
 
 	private void initialize() {
-         this.setLayout(null);
-         this.add(getPillarButton(), null);
-         this.add(getSparButton(), null);
-         this.add(getSphereButton(), null);
-         this.add(getBarrelButton(), null);
-         this.add(getFloatButton(), null);
-         
-         shapeButtons = new ButtonGroup();
-         shapeButtons.add(pillarButton);
-         shapeButtons.add(sparButton);
-         shapeButtons.add(sphereButton);
-         shapeButtons.add(barrelButton);
-         shapeButtons.add(floatButton);
-			ActionListener alShape = new ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					pillarButton.setEnabled(!pillarButton.isSelected());
-					sparButton.setEnabled(!sparButton.isSelected());
-					sphereButton.setEnabled(!sphereButton.isSelected());
-					barrelButton.setEnabled(!barrelButton.isSelected());
-					floatButton.setEnabled(!floatButton.isSelected());
-				}
-			};
-			pillarButton.addActionListener(alShape);
-			sparButton.addActionListener(alShape);
-			sphereButton.addActionListener(alShape);
-			barrelButton.addActionListener(alShape);
-			floatButton.addActionListener(alShape);
+		this.setLayout(null);
+		this.add(getPillarButton(), null);
+		this.add(getSparButton(), null);
+		this.add(getSphereButton(), null);
+		this.add(getBarrelButton(), null);
+		this.add(getFloatButton(), null);
+
+		shapeButtons = new ButtonGroup();
+		shapeButtons.add(pillarButton);
+		shapeButtons.add(sparButton);
+		shapeButtons.add(sphereButton);
+		shapeButtons.add(barrelButton);
+		shapeButtons.add(floatButton);
+		ActionListener alShape = new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				pillarButton.setEnabled(!pillarButton.isSelected());
+				sparButton.setEnabled(!sparButton.isSelected());
+				sphereButton.setEnabled(!sphereButton.isSelected());
+				barrelButton.setEnabled(!barrelButton.isSelected());
+				floatButton.setEnabled(!floatButton.isSelected());
+			}
+		};
+		pillarButton.addActionListener(alShape);
+		sparButton.addActionListener(alShape);
+		sphereButton.addActionListener(alShape);
+		barrelButton.addActionListener(alShape);
+		floatButton.addActionListener(alShape);
 	}
 
 	private JRadioButton getPillarButton() {
 		if (pillarButton == null) {
-			pillarButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("PillarButton"))));
-			pillarButton.setBounds(new Rectangle(0, 0, 90, 32));
+			pillarButton = new JRadioButton(new ImageIcon(getClass()
+					.getResource("/images/PillarButton.png")));
+			pillarButton.setBounds(new Rectangle(0, 0, 35, 32));
 		}
 		return pillarButton;
 	}
@@ -77,35 +77,35 @@ public class PanelSafeWater extends JPanel {
 	private JRadioButton getSparButton() {
 		if (sparButton == null) {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("SparButton"))));
-			sparButton.setBounds(new Rectangle(0, 32, 90, 32));
+					"/images/SparButton.png")));
+			sparButton.setBounds(new Rectangle(0, 32, 35, 32));
 		}
 		return sparButton;
 	}
 
 	private JRadioButton getSphereButton() {
 		if (sphereButton == null) {
-			sphereButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("SphereButton"))));
-			sphereButton.setBounds(new Rectangle(0, 64, 90, 32));
+			sphereButton = new JRadioButton(new ImageIcon(getClass()
+					.getResource("/images/SphereButton.png")));
+			sphereButton.setBounds(new Rectangle(0, 64, 35, 32));
 		}
 		return sphereButton;
 	}
 
 	private JRadioButton getBarrelButton() {
 		if (barrelButton == null) {
-			barrelButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("BarrelButton"))));
-			barrelButton.setBounds(new Rectangle(0, 96, 90, 32));
+			barrelButton = new JRadioButton(new ImageIcon(getClass()
+					.getResource("/images/BarrelButton.png")));
+			barrelButton.setBounds(new Rectangle(0, 96, 35, 32));
 		}
 		return barrelButton;
 	}
 
 	private JRadioButton getFloatButton() {
 		if (floatButton == null) {
-			floatButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					Messages.getString("FloatButton"))));
-			floatButton.setBounds(new Rectangle(0, 128, 90, 32));
+			floatButton = new JRadioButton(new ImageIcon(getClass()
+					.getResource("/images/FloatButton.png")));
+			floatButton.setBounds(new Rectangle(0, 128, 35, 32));
 		}
 		return floatButton;
 	}

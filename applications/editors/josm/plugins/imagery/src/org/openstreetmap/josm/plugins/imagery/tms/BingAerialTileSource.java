@@ -25,9 +25,6 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
 
     public BingAerialTileSource() {
         super("Bing Aerial Maps", "http://ecn.t2.tiles.virtualearth.net/tiles/");
-
-        attributions = loadAttributionText();
-        System.err.println("Added " + attributions.size() + " attributions.");
     }
 
     class Attribution {
@@ -156,6 +153,10 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
 
     @Override
     public String getAttributionText(int zoom, LatLon topLeft, LatLon botRight) {
+        if (attributions == null) {
+            attributions = loadAttributionText();
+            System.err.println("Added " + attributions.size() + " attributions.");
+        }
         Bounds windowBounds = new Bounds(topLeft, botRight);
         StringBuilder a = new StringBuilder();
         for (Attribution attr : attributions) {

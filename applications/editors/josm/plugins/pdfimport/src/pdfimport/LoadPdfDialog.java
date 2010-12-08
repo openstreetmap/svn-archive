@@ -136,6 +136,7 @@ public class LoadPdfDialog extends JFrame{
 	private JCheckBox splitOnColorChangeCheck;
 	private JCheckBox splitOnShapeClosedCheck;
 	private JCheckBox splitOnSingleSegmentCheck;
+	private JCheckBox splitOnOrthogonalCheck;
 
 
 	public LoadPdfDialog() {
@@ -253,6 +254,7 @@ public class LoadPdfDialog extends JFrame{
 		this.splitOnColorChangeCheck = new JCheckBox(tr("Color/width change"));
 		this.splitOnShapeClosedCheck = new JCheckBox(tr("Shape closed"));
 		this.splitOnSingleSegmentCheck = new JCheckBox(tr("Single segments"));
+		this.splitOnOrthogonalCheck = new JCheckBox(tr("Orthogonal shapes"));
 
 		JPanel configPanel = new JPanel(new GridBagLayout());
 		configPanel.setBorder(BorderFactory.createTitledBorder(tr("Import settings")));
@@ -307,6 +309,8 @@ public class LoadPdfDialog extends JFrame{
 		configPanel.add(this.splitOnSingleSegmentCheck, c);
 		c.gridx = 1; c.gridy = 8; c.gridwidth = 1;
 		configPanel.add(this.splitOnColorChangeCheck, c);
+		c.gridx = 2; c.gridy = 8; c.gridwidth = 1;
+		configPanel.add(this.splitOnOrthogonalCheck, c);
 
 
 		JPanel projectionPanel = new JPanel(new GridBagLayout());
@@ -766,7 +770,7 @@ public class LoadPdfDialog extends JFrame{
 
 		monitor.setTicks(95);
 		monitor.setCustomText(tr("Finalizing layers"));
-		data.splitLayersByPathKind(this.splitOnShapeClosedCheck.isSelected(), this.splitOnSingleSegmentCheck.isSelected());
+		data.splitLayersByPathKind(this.splitOnShapeClosedCheck.isSelected(), this.splitOnSingleSegmentCheck.isSelected(), this.splitOnOrthogonalCheck.isSelected());
 		data.finish();
 
 		monitor.finishTask();

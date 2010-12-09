@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.bbox.SlippyMapBBoxChooser;
@@ -256,8 +255,6 @@ public class ImageryPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame==null && newFrame!=null) {
             setEnabledAll(true);
-            Main.map.addMapMode(new IconToggleButton
-                    (new ImageryAdjustAction(Main.map)));
         } else if (oldFrame!=null && newFrame==null ) {
             setEnabledAll(false);
         }

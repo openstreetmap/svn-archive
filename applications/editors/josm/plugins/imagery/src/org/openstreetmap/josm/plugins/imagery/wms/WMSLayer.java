@@ -358,7 +358,7 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
                 LayerListDialog.getInstance().createShowHideLayerAction(),
                 LayerListDialog.getInstance().createDeleteLayerAction(),
                 SeparatorLayerAction.INSTANCE,
-                getOffsetAction(),
+                new OffsetAction(),
                 new LoadWmsAction(),
                 new SaveWmsAction(),
                 new BookmarkWmsAction(),

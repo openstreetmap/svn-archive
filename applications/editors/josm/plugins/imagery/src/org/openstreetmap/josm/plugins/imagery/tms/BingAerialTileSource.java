@@ -30,11 +30,10 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
                 @Override
                 public void run() {
                     attributions = loadAttributionText();
-                    System.err.println("Added " + attributions.size() + " attributions.");
                 }
             });
             t.setDaemon(true);
-            t.run();
+            t.start();
         }
     }
 
@@ -108,6 +107,7 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
             AttrHandler handler = new AttrHandler();
             parser.setContentHandler(handler);
             parser.parse(new InputSource(stream));
+            System.err.println("Added " + handler.attributions.size() + " attributions.");
             return handler.attributions;
         } catch (IOException e) {
             System.err.println("Could not open Bing aerials attribution metadata.");

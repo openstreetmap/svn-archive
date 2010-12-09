@@ -2,78 +2,77 @@ package org.openstreetmap.josm.plugins.imagery;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.List;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.ExtendedDialog;
-import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 
 public class ImageryAdjustAction extends MapMode implements MouseListener, MouseMotionListener{
+    static ImageryOffsetDialog offsetDialog;
+    static Cursor cursor = ImageProvider.getCursor("normal", "move");
 
+    double oldDx, oldDy;
     boolean mouseDown;
     EastNorth prevEastNorth;
-    private ImageryLayer adjustingLayer;
+    private ImageryLayer layer;
 
-    public ImageryAdjustAction(MapFrame mapFrame) {
-        super(tr("Adjust imagery"), "adjustimg",
-                tr("Adjust the position of the selected imagery layer"), mapFrame,
-                ImageProvider.getCursor("normal", "move"));
+    public ImageryAdjustAction(ImageryLayer layer) {
+        super(tr("New offset"), "adjustimg",
+                tr("Adjust the position of the selected imagery layer"), Main.map,
+                cursor);
+        this.layer = layer;
     }
 
     @Override public void enterMode() {
         super.enterMode();
-        if (!hasLayersToAdjust()) {
-            warnNoImageryLayers();
+        if (layer == null)
             return;
-        }
-        List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
-        if (imageryLayers.size() == 1) {
-            adjustingLayer = imageryLayers.get(0);
-        } else {
-            adjustingLayer = (ImageryLayer)askAdjustLayer(Main.map.mapView.getLayersOfType(ImageryLayer.class));
-        }
-        if (adjustingLayer == null)
-            return;
-        if (!adjustingLayer.isVisible()) {
-            adjustingLayer.setVisible(true);
+        if (!layer.isVisible()) {
+            layer.setVisible(true);
         }
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
+        oldDx = layer.dx;
+        oldDy = layer.dy;
+        offsetDialog = new ImageryOffsetDialog();
+        offsetDialog.setVisible(true);
     }
 
     @Override public void exitMode() {
         super.exitMode();
+        if (offsetDialog != null) {
+            layer.setOffset(oldDx, oldDy);
+            offsetDialog.setVisible(false);
+            offsetDialog = null;
+        }
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
-        adjustingLayer = null;
     }
 
     @Override public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
 
-        if (adjustingLayer.isVisible()) {
+        if (layer.isVisible()) {
             prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
                 Main.map.mapView.setCursor
                 (Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -81,15 +80,16 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
     }
 
     @Override public void mouseDragged(MouseEvent e) {
-        if (adjustingLayer == null || prevEastNorth == null) return;
+        if (layer == null || prevEastNorth == null) return;
         EastNorth eastNorth =
             Main.map.mapView.getEastNorth(e.getX(),e.getY());
-        adjustingLayer.displace(
-                eastNorth.east()-prevEastNorth.east(),
-                eastNorth.north()-prevEastNorth.north()
-        );
+        double dx = layer.getDx()+eastNorth.east()-prevEastNorth.east();
+        double dy = layer.getDy()+eastNorth.north()-prevEastNorth.north();
+        if (offsetDialog != null) {
+            offsetDialog.easting.setValue(dx);
+            offsetDialog.northing.setValue(dy);
+        }
         prevEastNorth = eastNorth;
-        Main.map.mapView.repaint();
     }
 
     @Override public void mouseReleased(MouseEvent e) {
@@ -99,109 +99,63 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void actionPerformed(ActionEvent e) {
+        if (offsetDialog != null || layer == null)
+            return;
+        super.actionPerformed(e);
     }
 
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-    }
-
-    @Override public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override public boolean layerIsSupported(Layer l) {
-        return hasLayersToAdjust();
-    }
-
-    /**
-     * the list cell renderer used to render layer list entries
-     *
-     */
-    static public class LayerListCellRenderer extends DefaultListCellRenderer {
-
-        protected boolean isActiveLayer(Layer layer) {
-            if (Main.map == null)
-                return false;
-            if (Main.map.mapView == null)
-                return false;
-            return Main.map.mapView.getActiveLayer() == layer;
+    class ImageryOffsetDialog extends ExtendedDialog implements PropertyChangeListener {
+        public final JFormattedTextField easting = new JFormattedTextField(new DecimalFormat("0.0000E0"));
+        public final JFormattedTextField northing = new JFormattedTextField(new DecimalFormat("0.0000E0"));
+        JTextField tBookmarkName = new JTextField();
+        public ImageryOffsetDialog() {
+            super(Main.parent,
+                    tr("Adjust imagery offset"),
+                    new String[] { tr("OK"),tr("Cancel") },
+                    false);
+            setButtonIcons(new String[] { "mapmode/adjustimg", "cancel" });
+            contentInsets = new Insets(15, 15, 5, 15);
+            JPanel pnl = new JPanel();
+            pnl.setLayout(new GridBagLayout());
+            pnl.add(new JLabel(tr("Easting") + ": "),GBC.std());
+            pnl.add(easting,GBC.std().fill(GBC.HORIZONTAL).insets(0, 0, 5, 0));
+            pnl.add(new JLabel(tr("Northing") + ": "),GBC.std());
+            pnl.add(northing,GBC.eol());
+            pnl.add(new JLabel(tr("Bookmark name: ")),GBC.eol().insets(0,5,0,0));
+            pnl.add(tBookmarkName,GBC.eol().fill(GBC.HORIZONTAL));
+            easting.setColumns(8);
+            northing.setColumns(8);
+            easting.setValue(layer.getDx());
+            northing.setValue(layer.getDy());
+            easting.addPropertyChangeListener("value",this);
+            northing.addPropertyChangeListener("value",this);
+            setContent(pnl);
+            setupDialog();
         }
 
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-                boolean cellHasFocus) {
-            Layer layer = (Layer) value;
-            JLabel label = (JLabel) super.getListCellRendererComponent(list, layer.getName(), index, isSelected,
-                    cellHasFocus);
-            Icon icon = layer.getIcon();
-            label.setIcon(icon);
-            label.setToolTipText(layer.getToolTipText());
-            return label;
+        public void propertyChange(PropertyChangeEvent evt) {
+            layer.setOffset(((Number)easting.getValue()).doubleValue(), ((Number)northing.getValue()).doubleValue());
+            Main.map.repaint();
         }
-    }
 
-    /**
-     * Prompts the user with a list of imagery layers which can be adjusted
-     *
-     * @param adjustableLayers the list of adjustable layers
-     * @return  the selected layer; null, if no layer was selected
-     */
-    protected Layer askAdjustLayer(List<? extends Layer> adjustableLayers) {
-        JComboBox layerList = new JComboBox();
-        layerList.setRenderer(new LayerListCellRenderer());
-        layerList.setModel(new DefaultComboBoxModel(adjustableLayers.toArray()));
-        layerList.setSelectedIndex(0);
-
-        JPanel pnl = new JPanel();
-        pnl.setLayout(new GridBagLayout());
-        pnl.add(new JLabel(tr("Please select the imagery layer to adjust.")), GBC.eol());
-        pnl.add(layerList, GBC.eol());
-
-        ExtendedDialog diag = new ExtendedDialog(
-                Main.parent,
-                tr("Select imagery layer"),
-                new String[] { tr("Start adjusting"),tr("Cancel") }
-        );
-        diag.setContent(pnl);
-        diag.setButtonIcons(new String[] { "mapmode/adjustimg", "cancel" });
-        diag.showDialog();
-        int decision = diag.getValue();
-        if (decision != 1)
-            return null;
-        Layer adjustLayer = (Layer) layerList.getSelectedItem();
-        return adjustLayer;
-    }
-
-    /**
-     * Displays a warning message if there are no imagery layers to adjust
-     *
-     */
-    protected void warnNoImageryLayers() {
-        JOptionPane.showMessageDialog(
-                Main.parent,
-                tr("There are currently no imagery layer to adjust."),
-                tr("No layers to adjust"),
-                JOptionPane.WARNING_MESSAGE
-        );
-    }
-
-    /**
-     * Replies true if there is at least one WMS layer
-     *
-     * @return true if there is at least one WMS layer
-     */
-    protected boolean hasLayersToAdjust() {
-        if (Main.map == null) return false;
-        if (Main.map.mapView == null) return false;
-        return ! Main.map.mapView.getLayersOfType(ImageryLayer.class).isEmpty();
-    }
-
-    @Override
-    protected void updateEnabledState() {
-        setEnabled(hasLayersToAdjust());
+        @Override
+        protected void buttonAction(int buttonIndex, ActionEvent evt) {
+            super.buttonAction(buttonIndex, evt);
+            offsetDialog = null;
+            if (buttonIndex == 2) {
+                layer.setOffset(oldDx, oldDy);
+            } else if (tBookmarkName.getText() != null && !"".equals(tBookmarkName.getText())) {
+                OffsetBookmark b = new OffsetBookmark(
+                        Main.proj,layer.getInfo().getName(),
+                        tBookmarkName.getText(),
+                        layer.getDx(),layer.getDy());
+                OffsetBookmark.allBookmarks.add(b);
+                OffsetBookmark.saveBookmarks();
+            }
+            Main.map.selectSelectTool(false);
+        }
     }
 }

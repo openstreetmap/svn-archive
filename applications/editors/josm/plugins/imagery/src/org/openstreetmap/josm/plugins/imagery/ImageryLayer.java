@@ -1,28 +1,24 @@
 package org.openstreetmap.josm.plugins.imagery;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trc;
 
 import java.awt.Component;
-import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.ProjectionBounds;
@@ -31,7 +27,6 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.imagery.ImageryInfo.ImageryType;
 import org.openstreetmap.josm.plugins.imagery.tms.TMSLayer;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSLayer;
-import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public abstract class ImageryLayer extends Layer {
@@ -120,35 +115,7 @@ public abstract class ImageryLayer extends Layer {
         }
     }
 
-    class NewBookmarkAction extends AbstractAction {
-        private class BookmarkNamePanel extends JPanel {
-            public JTextField text = new JTextField();
-            public BookmarkNamePanel() {
-                super(new GridBagLayout());
-                add(new JLabel(tr("Bookmark name: ")),GBC.eol());
-                add(text,GBC.eol().fill(GBC.HORIZONTAL));
-            }
-        }
-        public NewBookmarkAction() {
-            super(tr("(save current)"));
-        }
-        @Override
-        public void actionPerformed(ActionEvent arg0) {
-            BookmarkNamePanel p = new BookmarkNamePanel();
-            int answer = JOptionPane.showConfirmDialog(
-                    Main.parent, p,
-                    tr("Add offset bookmark"),
-                    JOptionPane.OK_CANCEL_OPTION);
-            if (answer == JOptionPane.OK_OPTION) {
-                OffsetBookmark b =
-                    new OffsetBookmark(Main.proj,info.getName(),p.text.getText(),getDx(),getDy());
-                OffsetBookmark.allBookmarks.add(b);
-                OffsetBookmark.saveBookmarks();
-            }
-        }
-    }
-
-    class OffsetAction extends AbstractAction implements LayerAction {
+    public class OffsetAction extends AbstractAction implements LayerAction {
         @Override
         public void actionPerformed(ActionEvent e) {
         }
@@ -156,18 +123,8 @@ public abstract class ImageryLayer extends Layer {
         public Component createMenuComponent() {
             JMenu menu = new JMenu(trc("layer", "Offset"));
             menu.setIcon(ImageProvider.get("mapmode", "adjustimg"));
-            boolean haveCurrent = false;
-            for (OffsetBookmark b : OffsetBookmark.allBookmarks) {
-                if (!b.isUsable(ImageryLayer.this)) continue;
-                JCheckBoxMenuItem item = new JCheckBoxMenuItem(new ApplyOffsetAction(b));
-                if (b.dx == dx && b.dy == dy) {
-                    item.setSelected(true);
-                    haveCurrent = true;
-                }
+            for (Component item : getOffsetMenu()) {
                 menu.add(item);
-            }
-            if (!haveCurrent) {
-                menu.insert(new NewBookmarkAction(), 0);
             }
             return menu;
         }
@@ -177,8 +134,21 @@ public abstract class ImageryLayer extends Layer {
         }
     }
 
-    public Action getOffsetAction() {
-        return new OffsetAction();
+    public List<Component> getOffsetMenu() {
+        List<Component> result = new ArrayList<Component>();
+        result.add(new JMenuItem(new ImageryAdjustAction(this)));
+        if (OffsetBookmark.allBookmarks.isEmpty()) return result;
+
+        result.add(new JSeparator(JSeparator.HORIZONTAL));
+        for (OffsetBookmark b : OffsetBookmark.allBookmarks) {
+            if (!b.isUsable(this)) continue;
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(new ApplyOffsetAction(b));
+            if (b.dx == dx && b.dy == dy) {
+                item.setSelected(true);
+            }
+            result.add(item);
+        }
+        return result;
     }
 
     public BufferedImage sharpenImage(BufferedImage img) {

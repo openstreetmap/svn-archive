@@ -1128,7 +1128,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                 LayerListDialog.getInstance().createDeleteLayerAction(),
                 SeparatorLayerAction.INSTANCE,
                 // color,
-                getOffsetAction(),
+                new OffsetAction(),
                 new RenameLayerAction(this.getAssociatedFile(), this),
                 SeparatorLayerAction.INSTANCE,
                 new LayerListPopup.InfoAction(this) };

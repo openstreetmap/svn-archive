@@ -80,7 +80,9 @@ function init() {
 
     var selF = new OpenLayers.Control.SelectFeature
         (freemap.layerAnnotations,
-            { clickFeature: function(f){ alert(f.text); } }
+            { clickFeature: function(f) {freemap.displayPopup(f.text,
+                    new OpenLayers.LonLat(f.geometry.x,f.geometry.y),
+                    200,200);}} 
             );
     selF.hover=false;
     freemap.map.addControl(selF);
@@ -123,7 +125,7 @@ var Freemap = Class.create ( {
 
             if(this.mode==MODE_ROUTE)
             {
-				this.routeReset();
+                this.routeReset();
                 var newroute=document.createElement("span");
                 newroute.id = 'newroute';
                 newroute.innerHTML = 'New route';
@@ -166,7 +168,7 @@ var Freemap = Class.create ( {
         this.dragging=false;
         var ll = this.map.getCenter().transform
             (this.map.getProjectionObject(),this.wgs84);
-        $('osmedit').href='http://www.openstreetthis.map.org/edit.html?lat='+
+        $('osmedit').href='http://www.openstreetmap.org/edit.html?lat='+
             ll.lat+'&lon='+ll.lon+'&zoom='+this.map.getZoom();
     },
 
@@ -176,9 +178,9 @@ var Freemap = Class.create ( {
         if(this.mode==MODE_ROUTE || this.mode == MODE_NORMAL || 
             this.mode == MODE_ANNOTATE)
         {
+            var what=(this.mode==MODE_ROUTE) ?  "ways":"both";
             var p= 'action=get&x='+this.lookupPos.lon+ '&y='+this.lookupPos.lat+
-                        '&what=both&n=1';
-
+                        '&what='+what+'&n=1';
             // use Ajax.Request to allow us to pass arbitrary data (lookup pos)
             // to the callback
             new Ajax.Request('/freemap/search.php',
@@ -193,30 +195,44 @@ var Freemap = Class.create ( {
 
     lookupCallback: function(xmlHTTP)
     {
-        //alert(xmlHTTP.responseText);
+        this.selNode=null;
         this.lookupPos = xmlHTTP.request.options.lookupPos;
            var nodes = xmlHTTP.responseXML.getElementsByTagName("node");
+        var ways=null;
+        var description="";
         if(this.mode!=MODE_ROUTE && nodes && nodes.length==1)
         {
             var name=nodes[0].getElementsByTagName("name")[0].
                 firstChild.nodeValue;
             var type=nodes[0].getElementsByTagName("type")[0].
                     firstChild.nodeValue;
-            var html = "<h1>"+name+"</h1><p>" +type+"</p>";
+            
+            description=(nodes[0].getElementsByTagName("description").length>0)
+            ?  nodes[0].getElementsByTagName("description")[0].
+                    firstChild.nodeValue: "";
+            var html = "<h1>"+name+"</h1><p>" +name+ " is a <em>"+type+
+                "</em></p><p>"+description+"</p>";
 
-            if(this.popup)
-                this.map.removePopup(this.popup);
+            if(this.mode!=MODE_ANNOTATE)
+            {
+                if(this.popup)
+                {
+                    this.map.removePopup(this.popup);
+                }
 
-            this.popup = new OpenLayers.Popup
-            (
-                null,
-                this.lookupPos,    
-                new OpenLayers.Size(200,200),
-                html,
-                true
-            );
-            this.popup.closeOnMove=true;
-            this.map.addPopup(this.popup);
+                this.popup = new OpenLayers.Popup
+                (
+                    null,
+                    this.lookupPos,    
+                    new OpenLayers.Size(200,200),
+                    html,
+                    true
+                );
+                this.popup.closeOnMove=true;
+                this.map.addPopup(this.popup);
+            }
+            this.selNode = nodes[0].getElementsByTagName("osm_id")[0].
+                firstChild.nodeValue;
         }
         else
         {
@@ -229,10 +245,15 @@ var Freemap = Class.create ( {
                     firstChild.nodeValue;
                 var id=ways[0].getElementsByTagName("osm_id")[0].
                     firstChild.nodeValue;
+                var annwayid=ways[0].getElementsByTagName("annwayid")[0].
+                    firstChild.nodeValue;
                 var html = "<h1>Way "+id+"</h1><p>Designation : "+des+"<br />"+
-                    "Highway : " + hwy +"</p>";
+                    "Highway : " + hwy +"</p><p>Annwayid: "+annwayid+"</p>";
                 if(this.popup)
+                {
                     this.map.removePopup(this.popup);
+                    this.popup = null;
+                }
 
                 if(this.mode!=MODE_ROUTE && this.mode!=MODE_ANNOTATE)
                 {
@@ -262,34 +283,31 @@ var Freemap = Class.create ( {
                 {
                     var xy=pts[i].firstChild.nodeValue.split(" ");
                     g.addPoint(new OpenLayers.Geometry.Point(xy[0],xy[1]));
-                    if(annotations && annotations.length)
+                }
+
+                if(annotations && annotations.length)
+                {
+                    j=0;
+                    while(j<annotations.length)
                     {
-                        j=0;
-                        while(j<annotations.length &&
-                            annotations[j].getAttribute("seg")!=i)
-                        {
-                            j++;
-                        }
-                        while(j<annotations.length &&
-                            annotations[j].getAttribute("seg")==i)
-                        {
-                            var pt=new OpenLayers.Geometry.Point
+                        var pt=new OpenLayers.Geometry.Point
                                 (annotations[j].getAttribute("x"),
                                 annotations[j].getAttribute("y") );
-                            pt.annotationId = annotations[j].
-                                    getAttribute("id");
-                            g.addPoint(pt);
-                            var annotationFeature = new
+                        pt.annotationId = parseInt(annotations[j].
+                                    getAttribute("id"));
+                        var s = getInsertSegment(pt,g);
+                        g.addPoint(pt,s[0]+1);
+                        var annotationFeature = new
                                 OpenLayers.Feature.Vector();
-                            annotationFeature.geometry=pt;
-                            annotationFeature.text=
+                        annotationFeature.geometry=pt;
+                        annotationFeature.text=
                                 annotations[j].firstChild.nodeValue;
-                            this.layerAnnotations.
+                        this.layerAnnotations.
                                 addFeatures(annotationFeature);
-                            j++;
-                        }
+                        j++;
                     }    
                 }
+
                 g.dir=compassDirection(wayDirection(g));
                 f.geometry = g;
                 f.fid = id;
@@ -301,17 +319,24 @@ var Freemap = Class.create ( {
                     (document.getElementById('units').value=="miles"?0.6214:1)*
                     f.geometry.getGeodesicLength
                         (this.map.getProjectionObject()));
-                if (this.mode==MODE_ANNOTATE) 
-                {
-                    if(loggedin)
-                    {
-                        var oppdir = 
-                            oppositeDirection
-                                (this.selectedWays[0].geometry.dir);
-                        var html="<strong>Please enter the annotation:"+
+            }
+        }
+        if (this.mode==MODE_ANNOTATE) 
+        {
+            if(loggedin)
+            {
+                var html="<strong>Please enter the annotation:"+
                             "</strong>"+
                             "<br />"+
-                            "<textarea id='annotationText'></textarea><br />"+
+                            "<textarea id='annotationText'>"+description+
+                            "</textarea><br />";
+
+                if(ways)
+                {
+                    var oppdir = 
+                            oppositeDirection
+                                (this.selectedWays[0].geometry.dir);
+                    html +=
                             "Which direction of "+
                             "travel does this apply to? <br /> "+
                             "<select id='direction'>"+
@@ -320,12 +345,16 @@ var Freemap = Class.create ( {
                                 this.selectedWays[0].geometry.dir+
                             "</option>"+
                             "<option value='-1'>"+oppdir+"</option>"+
-                            "</select><br />"+
+                            "</select><br />";
+                }
+
+                html +=
                             "<input type='button' id='annotationBtn' "+ 
                             "value='go' />";
-                        if(this.popup)
-                            this.map.removePopup(this.popup);
-                        this.popup = new OpenLayers.Popup
+                if(this.popup)
+                    this.map.removePopup(this.popup);
+
+                this.popup = new OpenLayers.Popup
                         (
                             null,
                             this.lookupPos,    
@@ -335,12 +364,10 @@ var Freemap = Class.create ( {
                         );
                         this.map.addPopup(this.popup);
                         $('annotationBtn').onclick=this.doAnnotate.bind(this);
-                    }
-                    else
-                    {
-                        alert('Need to be logged in to annotate.');
-                    }
-                }
+            }
+            else
+            {
+                alert('Need to be logged in to annotate.');
             }
         }
     },
@@ -462,12 +489,14 @@ var Freemap = Class.create ( {
 
     doAnnotate:function()
     {
-        if(this.selectedWays.length==1)
+        var dir=(this.selNode!==null) ? null:$('direction').value;
+        if(this.selNode!==null || this.selectedWays.length==1)
         {
             this.insertAnnotation(new OpenLayers.Geometry.Point
                     (this.lookupPos.lon, this.lookupPos.lat),
-                    this.selectedWays[0],$('annotationText').value,
-                    $('direction').value);
+                    (this.selNode===null)?
+                    this.selectedWays[0]:this.selNode,$('annotationText').value,
+                    dir);
             this.map.removePopup(this.popup);
         }
         else
@@ -483,60 +512,50 @@ var Freemap = Class.create ( {
 
     insertAnnotation:function(pt,f,text,dir)
     {
-        var segPt1, segPt2;
-        var  newComponents, curDist, lowestDist, nearestSeg;
-        var lastAnnotationId=0, annotationId;
-
-
-        lowestDist=100; // annotations must be no more than 100m from the way
-        nearestSeg = -1;
-        nearestRealSeg = -1;
-                
-        var rte=f.geometry;
-        var realSeg=-1;
-        for(var seg=0; seg<rte.components.length-1; seg++)
+        if(this.selNode===null)
         {
-            segPt1 = rte.components[seg];
-            segPt2 = rte.components[seg+1];
+            var s = getInsertSegment(pt,f.geometry);
 
-            if(segPt1.annotationId)
-                lastAnnotationId = segPt1.annotationId;
-            else
-                realSeg++;
+            if(s[0]<0)
+                return;
 
-            curDist = distp(pt.x,pt.y,
-                segPt1.x,segPt1.y,
-                segPt2.x,segPt2.y);
-            if(curDist < lowestDist)
-            {
-                lowestDist = curDist;
-                nearestRealSeg = realSeg;
-                nearestSeg = seg;
-                annotationId = lastAnnotationId+1;
-            }
-        }
-
-        if(nearestSeg<0)
-            return;
-
-        // do server update
-        var rqst = new Ajax.Request
-                ('/freemap/annotation.php?wayid='
-                +f.fid+'&annotationId='+annotationId+
-                '&seg='+nearestRealSeg+'&text='+text+'&x='+pt.x+'&y='+pt.y+
+            var rqst = new Ajax.Request
+                ('/freemap/annotation.php?what=way&id='
+                +f.fid+'&annotationId='+s[1]+
+                '&text='+text+'&x='+pt.x+'&y='+pt.y+
                 '&dir='+dir,
                     { method: 'get',
-                         seg:nearestSeg,
-                          aId:annotationId,
+                         seg:s[0],
+                         aId:s[1],
                          point:pt,
                          feature:f,
                           onSuccess: this.insertAnnotationResponse.bind(this),
                           onFailure: this.failCallback.bind(this) }
                   );
+        }
+        else
+        {
+
+            var url='/freemap/annotation.php?what=node&id='+
+                this.selNode+'&text='+text;
+            alert('sending to:  ' +url);
+            var rqst=new Ajax.Request
+                (url,
+                    {
+                        method:'get',
+                        onSuccess:function(xmlHTTP)
+                        { 
+                            alert('added successfully.'); 
+                        },
+                        onFailure: this.failCallback.bind(this)
+                    });
+
+        }
     },
 
     insertAnnotationResponse:function(xmlHTTP)
     {
+        alert('response from inserting annotation: ' + xmlHTTP.responseText);
         var nearestSeg=xmlHTTP.request.options.seg;
         var annotationId = xmlHTTP.request.options.aId;
         var newComponents = new Array();
@@ -546,7 +565,6 @@ var Freemap = Class.create ( {
         {
             newComponents.push(f.geometry.components[newpt]);
         }
-        // Now create a NEW geometry
         pt.annotationId=annotationId;
         newComponents.push (pt);
         for(var newpt=nearestSeg+1; newpt<f.geometry.components.length; 
@@ -561,7 +579,24 @@ var Freemap = Class.create ( {
         annotationFeature.geometry = pt;
         this.layerSelWays.drawFeature(f);
         this.layerAnnotations.addFeatures(annotationFeature);
-    }
+    },
+
+    displayPopup:function(text,pos,w,h)
+    {
+        if(this.popup)
+            this.map.removePopup(this.popup);
+        this.popup = new OpenLayers.Popup
+        (
+            null,
+            pos,    
+            new OpenLayers.Size(w,h),
+            text,
+            true
+        );
+        this.map.addPopup(this.popup);
+    },
+
+
 
 } );
 
@@ -640,3 +675,34 @@ function calcDistance (pos1,pos2)
     return d;
 }
 
+function    getInsertSegment(pt,rte)
+{
+            var segPt1, segPt2;
+            var  newComponents, curDist, lowestDist, nearestSeg;
+            var lastAnnotationId=0, annotationId=0;
+
+            // annotations must be no more than 100m from the way
+            lowestDist=100; 
+            nearestSeg = -1;
+                
+            for(var seg=0; seg<rte.components.length-1; seg++)
+            {
+                segPt1 = rte.components[seg];
+                segPt2 = rte.components[seg+1];
+
+                if(segPt1.annotationId)
+                    lastAnnotationId = segPt1.annotationId;
+
+                curDist = distp(pt.x,pt.y,
+                    segPt1.x,segPt1.y,
+                    segPt2.x,segPt2.y);
+                if(curDist < lowestDist)
+                {
+                    lowestDist = curDist;
+                    nearestSeg = seg;
+                    annotationId = lastAnnotationId+1;
+                }
+            }
+
+        return [nearestSeg,annotationId];
+}

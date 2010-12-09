@@ -10,7 +10,7 @@ require_once('freemap_functions.php');
 // format = (x1 y1,x2 y2,x3 y3,...,xn yn)
 
 $conn=pg_connect("dbname=gis user=gis");
-$cleaned = clean_input($_REQUEST);
+$cleaned = clean_input($_REQUEST,'pgsql');
 
 
 switch($_REQUEST['action'])
@@ -45,18 +45,7 @@ switch($_REQUEST['action'])
             while($row=pg_fetch_array($result,null,PGSQL_ASSOC))
             {
                 $foundnode=true;
-                // Only output known types-these are defined in get_high_level()
-                $highlevel = get_high_level($row);
-                if($highlevel!="unknown")
-                {
-                    echo "<node>\n";
-                    echo "<type>$highlevel</type>\n";
-                    if($row['name']!="")
-                        echo "<name>$row[name]</name>\n";
-                    echo "<osm_id>$row[osm_id]</osm_id>\n";
-
-                    echo "</node>\n";
-                }
+				node_to_xml($row);
             }
             pg_free_result($result);
         }
@@ -64,7 +53,7 @@ switch($_REQUEST['action'])
         if(($foundnode==false && $what=="both") || $what=="ways")
         {
 			$q=("SELECT osm_id, name,highway,designation,".
-				"foot,horse,bicycle,AsText(way), ".
+				"foot,horse,bicycle,fmap_bearing,AsText(way), ".
                 "Distance(GeomFromText('POINT($x $y)',900913),way) as dist ".
 				"FROM ".
                 "planet_osm_line WHERE Distance(GeomFromText('POINT($x $y)',".

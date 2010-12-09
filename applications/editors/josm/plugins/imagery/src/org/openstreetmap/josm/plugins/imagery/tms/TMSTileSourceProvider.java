@@ -19,7 +19,7 @@ public class TMSTileSourceProvider implements TileSourceProvider {
     static {
         // Urls that already exist in the slippymap chooser
         existingSlippyMapUrls.add("http://tile.openstreetmap.org/");
-        existingSlippyMapUrls.add("http://tah.openstreetmap.org/Tiles/");
+        existingSlippyMapUrls.add("http://tah.openstreetmap.org/Tiles/tile/");
         existingSlippyMapUrls.add("http://tile.opencyclemap.org/cycle/");
     }
 

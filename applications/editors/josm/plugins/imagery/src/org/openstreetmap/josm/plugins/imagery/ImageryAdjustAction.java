@@ -37,7 +37,7 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
 
     public ImageryAdjustAction(ImageryLayer layer) {
         super(tr("New offset"), "adjustimg",
-                tr("Adjust the position of the selected imagery layer"), Main.map,
+                tr("Adjust the position of this imagery layer"), Main.map,
                 cursor);
         this.layer = layer;
     }
@@ -85,10 +85,11 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
             Main.map.mapView.getEastNorth(e.getX(),e.getY());
         double dx = layer.getDx()+eastNorth.east()-prevEastNorth.east();
         double dy = layer.getDy()+eastNorth.north()-prevEastNorth.north();
+        layer.setOffset(dx, dy);
         if (offsetDialog != null) {
-            offsetDialog.easting.setValue(dx);
-            offsetDialog.northing.setValue(dy);
+            offsetDialog.updateOffset();
         }
+        Main.map.repaint();
         prevEastNorth = eastNorth;
     }
 
@@ -107,15 +108,16 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
 
 
     class ImageryOffsetDialog extends ExtendedDialog implements PropertyChangeListener {
-        public final JFormattedTextField easting = new JFormattedTextField(new DecimalFormat("0.0000E0"));
-        public final JFormattedTextField northing = new JFormattedTextField(new DecimalFormat("0.0000E0"));
+        public final JFormattedTextField easting = new JFormattedTextField(new DecimalFormat("0.00000E0"));
+        public final JFormattedTextField northing = new JFormattedTextField(new DecimalFormat("0.00000E0"));
         JTextField tBookmarkName = new JTextField();
+        private boolean ignoreListener;
         public ImageryOffsetDialog() {
             super(Main.parent,
                     tr("Adjust imagery offset"),
                     new String[] { tr("OK"),tr("Cancel") },
                     false);
-            setButtonIcons(new String[] { "mapmode/adjustimg", "cancel" });
+            setButtonIcons(new String[] { "ok", "cancel" });
             contentInsets = new Insets(15, 15, 5, 15);
             JPanel pnl = new JPanel();
             pnl.setLayout(new GridBagLayout());
@@ -137,8 +139,16 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
+            if (ignoreListener) return;
             layer.setOffset(((Number)easting.getValue()).doubleValue(), ((Number)northing.getValue()).doubleValue());
             Main.map.repaint();
+        }
+
+        public void updateOffset() {
+            ignoreListener = true;
+            easting.setValue(layer.getDx());
+            northing.setValue(layer.getDy());
+            ignoreListener = false;
         }
 
         @Override
@@ -155,6 +165,7 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
                 OffsetBookmark.allBookmarks.add(b);
                 OffsetBookmark.saveBookmarks();
             }
+            ImageryPlugin.instance.refreshOffsetMenu();
             Main.map.selectSelectTool(false);
         }
     }

@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.imagery;
 import static org.openstreetmap.josm.tools.I18n.trc;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -109,9 +110,18 @@ public abstract class ImageryLayer extends Layer {
         }
 
         @Override
-        public void actionPerformed(ActionEvent arg0) {
+        public void actionPerformed(ActionEvent ev) {
             setOffset(b.dx, b.dy);
             Main.map.repaint();
+            if (!(ev.getSource() instanceof Component)) return;
+            Component source = (Component)ev.getSource();
+            if (!(source.getParent() instanceof Container)) return;
+            Container m = source.getParent();
+            for (Component c : m.getComponents()) {
+                if (c instanceof JCheckBoxMenuItem && c != source) {
+                    ((JCheckBoxMenuItem)c).setSelected(false);
+                }
+            }
         }
     }
 

@@ -227,6 +227,7 @@ public class ImageryPreferenceEditor implements PreferenceSetting {
         boolean restartRequired = false;
         plugin.info.save();
         plugin.refreshMenu();
+        plugin.refreshOffsetMenu();
         OffsetBookmark.saveBookmarks();
 
         wmsAdapter.PROP_OVERLAP.put(overlapCheckBox.getModel().isSelected());

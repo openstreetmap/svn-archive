@@ -3,12 +3,15 @@ package org.openstreetmap.josm.plugins.imagery;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trc;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -19,7 +22,10 @@ import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.bbox.SlippyMapBBoxChooser;
+import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginHandler;
@@ -31,10 +37,12 @@ import org.openstreetmap.josm.plugins.imagery.wms.WMSAdapter;
 import org.openstreetmap.josm.plugins.imagery.wms.WMSLayer;
 import org.openstreetmap.josm.plugins.imagery.wms.io.WMSLayerExporter;
 import org.openstreetmap.josm.plugins.imagery.wms.io.WMSLayerImporter;
+import org.openstreetmap.josm.tools.ImageProvider;
 
-public class ImageryPlugin extends Plugin {
+public class ImageryPlugin extends Plugin implements LayerChangeListener {
 
     JMenu imageryJMenu;
+    JMenu offsetJMenu = new JMenu(trc("layer","Offset"));
 
     public static ImageryPlugin instance;
     public static WMSAdapter wmsAdapter = new WMSAdapter();
@@ -208,6 +216,10 @@ public class ImageryPlugin extends Plugin {
         refreshMenu();
         initRemoteControl();
         SlippyMapBBoxChooser.addTileSourceProvider(new TMSTileSourceProvider());
+
+        offsetJMenu.setIcon(ImageProvider.get("imagery_menu"));
+        refreshOffsetMenu();
+        MapView.addLayerChangeListener(this);
     }
 
     public void addLayer(ImageryInfo info) {
@@ -232,6 +244,8 @@ public class ImageryPlugin extends Plugin {
         imageryJMenu.add(new JMenuItem(new Map_Rectifier_WMSmenuAction()));
 
         imageryJMenu.addSeparator();
+        imageryJMenu.add(offsetJMenu);
+        imageryJMenu.addSeparator();
         imageryJMenu.add(new JMenuItem(new
                 JosmAction(tr("Blank Layer"), "blankmenu", tr("Open a blank WMS layer to load data from a file"), null, false) {
             @Override
@@ -240,6 +254,34 @@ public class ImageryPlugin extends Plugin {
             }
         }));
         setEnabledAll(menuEnabled);
+    }
+
+    public void refreshOffsetMenu() {
+        offsetJMenu.removeAll();
+        if (Main.map == null || Main.map.mapView == null) {
+            offsetJMenu.setEnabled(false);
+            return;
+        }
+        List<ImageryLayer> layers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+        if (layers.isEmpty()) {
+            offsetJMenu.setEnabled(false);
+            return;
+        }
+        offsetJMenu.setEnabled(true);
+        if (layers.size() == 1) {
+            for (Component c : layers.get(0).getOffsetMenu()) {
+                offsetJMenu.add(c);
+            }
+            return;
+        }
+        for (ImageryLayer layer : layers) {
+            JMenu subMenu = new JMenu(layer.getName());
+            subMenu.setIcon(layer.getIcon());
+            for (Component c : layer.getOffsetMenu()) {
+                subMenu.add(c);
+            }
+            offsetJMenu.add(subMenu);
+        }
     }
 
     private void setEnabledAll(boolean isEnabled) {
@@ -258,6 +300,7 @@ public class ImageryPlugin extends Plugin {
         } else if (oldFrame!=null && newFrame==null ) {
             setEnabledAll(false);
         }
+        refreshOffsetMenu();
     }
 
     @Override
@@ -269,5 +312,23 @@ public class ImageryPlugin extends Plugin {
     public String getPluginDir()
     {
         return new File(Main.pref.getPluginsDirectory(), "imagery").getPath();
+    }
+
+    @Override
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    }
+
+    @Override
+    public void layerAdded(Layer newLayer) {
+        if (newLayer instanceof ImageryLayer) {
+            refreshOffsetMenu();
+        }
+    }
+
+    @Override
+    public void layerRemoved(Layer oldLayer) {
+        if (oldLayer instanceof ImageryLayer) {
+            refreshOffsetMenu();
+        }
     }
 }

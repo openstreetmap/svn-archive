@@ -59,29 +59,36 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 	private JButton queryjButton = null;
 	private JToggleButton chartButton = null;
 	private JPanel curPanel = null;
+	private PanelSearchPois panelSearchPois = null;
 	private static LayerHarbour curLayer = new LayerHarbour("Harbour");
 	
 	public HarbourAction() {
+		Rectangle rect = new Rectangle(2, 56, 330, 270);
+		
 		panelGeneral= new PanelGeneral();
-		panelGeneral.setBounds(new Rectangle(2, 56, 330, 270));
+		panelGeneral.setBounds(rect);
 		panelGeneral.setVisible(true);
 		curPanel = panelGeneral;
 		
 		panelLimits = new PanelLimits();
-		panelLimits.setBounds(new Rectangle(2, 56, 330, 270));
+		panelLimits.setBounds(rect);
 		panelLimits.setVisible(false);
 		
 		panelServices = new PanelServices();
-		panelServices.setBounds(new Rectangle(2, 56, 330, 270));
+		panelServices.setBounds(rect);
 		panelServices.setVisible(false);
 		
 		panelEnv = new PanelEnv();
-		panelEnv.setBounds(new Rectangle(2, 56, 330, 270));
+		panelEnv.setBounds(rect);
 		panelEnv.setVisible(false);
 		
 		panelRelations = new PanelRelations();
-		panelRelations.setBounds(new Rectangle(2, 56, 330, 270));
+		panelRelations.setBounds(rect);
 		panelRelations.setVisible(false);
+		
+		panelSearchPois = new PanelSearchPois();
+		panelSearchPois.setBounds(rect);
+		panelSearchPois.setVisible(false);
 	}
 	
 	/**
@@ -122,6 +129,7 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 			harbourPanel.add(panelServices,   null);
 			harbourPanel.add(panelEnv,        null);
 			harbourPanel.add(panelRelations,  null);
+			harbourPanel.add(panelSearchPois, null);
 			harbourPanel.add(getComButton(),  null);
 			harbourPanel.add(getRestButton(), null);
 			harbourPanel.add(getServButton(), null);
@@ -499,7 +507,36 @@ public class HarbourAction implements PropertyChangeListener, LayerChangeListene
 		if (chartButton == null) {
 			chartButton = new JToggleButton();
 			chartButton.setBounds(new Rectangle(367, 5, 28, 18));
+			chartButton.setSelected(false);
 			chartButton.setEnabled(false);
+			chartButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					comButton.setEnabled(false);
+					if(chartButton.isSelected()) {
+						comButton.setEnabled(false);
+						restButton.setEnabled(false);
+						servButton.setEnabled(false);
+						envButton.setEnabled(false);
+						relButton.setEnabled(false);
+						
+						if(curPanel == panelEnv) { 
+							panelEnv.setVisible(false);
+							panelSearchPois.setVisible(true);
+						} else if(curPanel == panelRelations) panelRelations.setVisible(false);
+					} else {
+						comButton.setEnabled(true);
+						restButton.setEnabled(true);
+						servButton.setEnabled(true);
+						envButton.setEnabled(true);
+						relButton.setEnabled(true);
+						
+						if(curPanel == panelEnv) {
+							panelEnv.setVisible(true);
+							panelSearchPois.setVisible(false);
+						} else if(curPanel == panelRelations) panelRelations.setVisible(true);
+					}
+				}
+			});
 		}
 		return chartButton;
 	}

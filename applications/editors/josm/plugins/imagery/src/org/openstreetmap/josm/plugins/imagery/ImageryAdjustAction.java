@@ -34,6 +34,7 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
     boolean mouseDown;
     EastNorth prevEastNorth;
     private ImageryLayer layer;
+    private MapMode oldMapMode;
 
     public ImageryAdjustAction(ImageryLayer layer) {
         super(tr("New offset"), "adjustimg",
@@ -101,8 +102,9 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (offsetDialog != null || layer == null)
+        if (offsetDialog != null || layer == null || Main.map == null)
             return;
+        oldMapMode = Main.map.mapMode;
         super.actionPerformed(e);
     }
 
@@ -155,7 +157,7 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
         protected void buttonAction(int buttonIndex, ActionEvent evt) {
             super.buttonAction(buttonIndex, evt);
             offsetDialog = null;
-            if (buttonIndex == 2) {
+            if (buttonIndex == 1) {
                 layer.setOffset(oldDx, oldDy);
             } else if (tBookmarkName.getText() != null && !"".equals(tBookmarkName.getText())) {
                 OffsetBookmark b = new OffsetBookmark(
@@ -166,7 +168,13 @@ public class ImageryAdjustAction extends MapMode implements MouseListener, Mouse
                 OffsetBookmark.saveBookmarks();
             }
             ImageryPlugin.instance.refreshOffsetMenu();
-            Main.map.selectSelectTool(false);
+            if (Main.map == null) return;
+            if (oldMapMode != null) {
+                Main.map.selectMapMode(oldMapMode);
+                oldMapMode = null;
+            } else {
+                Main.map.selectSelectTool(false);
+            }
         }
     }
 }

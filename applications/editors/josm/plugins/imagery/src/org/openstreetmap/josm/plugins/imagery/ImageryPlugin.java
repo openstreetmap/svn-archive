@@ -217,7 +217,7 @@ public class ImageryPlugin extends Plugin implements LayerChangeListener {
         initRemoteControl();
         SlippyMapBBoxChooser.addTileSourceProvider(new TMSTileSourceProvider());
 
-        offsetJMenu.setIcon(ImageProvider.get("imagery_menu"));
+        offsetJMenu.setIcon(ImageProvider.get("mapmode/adjustimg"));
         refreshOffsetMenu();
         MapView.addLayerChangeListener(this);
     }

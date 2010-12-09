@@ -152,6 +152,7 @@ public class PanelHaz extends JPanel {
 			pillarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PillarButton.png")));
 			pillarButton.setBounds(new Rectangle(55, 0, 90, 32));
+			pillarButton.setToolTipText(Messages.getString("PillarTip"));
 		}
 		return pillarButton;
 	}
@@ -161,6 +162,7 @@ public class PanelHaz extends JPanel {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/SparButton.png")));
 			sparButton.setBounds(new Rectangle(55, 32, 90, 32));
+			sparButton.setToolTipText(Messages.getString("SparTip"));
 		}
 		return sparButton;
 	}
@@ -170,6 +172,7 @@ public class PanelHaz extends JPanel {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/FloatButton.png")));
 			floatButton.setBounds(new Rectangle(55, 64, 90, 32));
+			floatButton.setToolTipText(Messages.getString("FloatTip"));
 		}
 		return floatButton;
 	}
@@ -179,6 +182,7 @@ public class PanelHaz extends JPanel {
 			beaconButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BeaconButton.png")));
 			beaconButton.setBounds(new Rectangle(55, 96, 90, 32));
+			beaconButton.setToolTipText(Messages.getString("BeaconTip"));
 		}
 		return beaconButton;
 	}
@@ -188,6 +192,7 @@ public class PanelHaz extends JPanel {
 			towerButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/TowerButton.png")));
 			towerButton.setBounds(new Rectangle(55, 128, 90, 32));
+			towerButton.setToolTipText(Messages.getString("TowerTip"));
 		}
 		return towerButton;
 	}

@@ -10,12 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="32"
-   height="32"
+   width="30"
+   height="30"
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="RadarButton.svg"
+   sodipodi:docname="BlackButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/FogButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
@@ -2895,8 +2895,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.313708"
-     inkscape:cx="-5.039281"
-     inkscape:cy="14.585448"
+     inkscape:cx="-21.391126"
+     inkscape:cy="15.827314"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -2923,7 +2923,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2931,14 +2931,28 @@
      inkscape:label="Graphics"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-1020.3622)"
+     transform="translate(0,-1022.3622)"
      style="display:inline">
-    <rect
-       y="1020.488"
-       x="0.12588699"
-       height="31.748224"
-       width="31.748226"
-       id="rect3618"
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.25177398000000001;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path9522"
+       sodipodi:cx="14.584078"
+       sodipodi:cy="14.664621"
+       sodipodi:rx="14.672466"
+       sodipodi:ry="14.628272"
+       d="m 29.256544,14.664621 a 14.672466,14.628272 0 1 1 -29.34493244,0 14.672466,14.628272 0 1 1 29.34493244,0 z"
+       transform="matrix(0.98858377,0,0,0.99157043,0.58241737,1022.8211)" />
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
+       x="10.69499"
+       y="1041.9324"
+       id="text9524"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan9526"
+         x="10.69499"
+         y="1041.9324">B</tspan></text>
   </g>
 </svg>

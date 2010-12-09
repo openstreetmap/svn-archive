@@ -69,6 +69,7 @@ public class PanelLights extends JPanel {
 			houseButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LighthouseButton.png")));
 			houseButton.setBounds(new Rectangle(0, 0, 35, 32));
+			houseButton.setToolTipText(Messages.getString("LighthouseTip"));
 		}
 		return houseButton;
 	}
@@ -78,6 +79,7 @@ public class PanelLights extends JPanel {
 			majorButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LightMajorButton.png")));
 			majorButton.setBounds(new Rectangle(0, 32, 35, 32));
+			majorButton.setToolTipText(Messages.getString("MajorLightTip"));
 		}
 		return majorButton;
 	}
@@ -87,6 +89,7 @@ public class PanelLights extends JPanel {
 			minorButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LightMinorButton.png")));
 			minorButton.setBounds(new Rectangle(0, 64, 35, 32));
+			minorButton.setToolTipText(Messages.getString("MinorLightTip"));
 		}
 		return minorButton;
 	}
@@ -96,6 +99,7 @@ public class PanelLights extends JPanel {
 			vesselButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LightVesselButton.png")));
 			vesselButton.setBounds(new Rectangle(0, 96, 35, 32));
+			vesselButton.setToolTipText(Messages.getString("LightVesselTip"));
 		}
 		return vesselButton;
 	}
@@ -105,6 +109,7 @@ public class PanelLights extends JPanel {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LightFloatButton.png")));
 			floatButton.setBounds(new Rectangle(0, 128, 35, 32));
+			floatButton.setToolTipText(Messages.getString("LightFloatTip"));
 		}
 		return floatButton;
 	}

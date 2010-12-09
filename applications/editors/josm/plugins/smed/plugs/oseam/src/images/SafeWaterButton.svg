@@ -74,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.49933407,0,0,0.8033559,0.03202457,206.98513)" />
+       gradientTransform="matrix(0.49251421,0,0,0.80352693,0.37303504,206.46592)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -1428,6 +1428,16 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 160 : 1"
        sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3606"
+       id="linearGradient10516"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.49262,0,0,0.78641747,0.36774549,224.47224)"
+       x1="50.002548"
+       y1="1012.4216"
+       x2="50.002548"
+       y2="1052.3596" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1437,7 +1447,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="16.8"
-     inkscape:cx="42.82857"
+     inkscape:cx="31.816665"
      inkscape:cy="9.8235431"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -1476,12 +1486,14 @@
      transform="translate(0,-1020.3622)"
      style="display:inline">
     <rect
-       y="1020.5195"
-       x="0.15732755"
-       height="31.685345"
-       width="49.685345"
+       y="1020.8536"
+       x="0.49136364"
+       height="31.017273"
+       width="49.017273"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.3146551;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient10516);fill-opacity:1;stroke:#000000;stroke-width:0.98272729;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+       rx="4.9327693"
+       ry="4.8945775" />
     <g
        id="g3742"
        inkscape:label="Sphere Buoy 2 Band"

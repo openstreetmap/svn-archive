@@ -100,6 +100,7 @@ public class PanelPrefPort extends JPanel {
 			regionAButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/RegionAButton.png")));
 			regionAButton.setBounds(new Rectangle(0, 0, 35, 30));
+			regionAButton.setToolTipText(Messages.getString("RegionATip"));
 		}
 		return regionAButton;
 	}
@@ -109,6 +110,7 @@ public class PanelPrefPort extends JPanel {
 			regionBButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/RegionBButton.png")));
 			regionBButton.setBounds(new Rectangle(0, 30, 35, 30));
+			regionBButton.setToolTipText(Messages.getString("RegionBTip"));
 		}
 		return regionBButton;
 	}
@@ -118,6 +120,7 @@ public class PanelPrefPort extends JPanel {
 			pillarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PillarButton.png")));
 			pillarButton.setBounds(new Rectangle(0, 64, 35, 32));
+			pillarButton.setToolTipText(Messages.getString("PillarTip"));
 		}
 		return pillarButton;
 	}
@@ -127,6 +130,7 @@ public class PanelPrefPort extends JPanel {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/SparButton.png")));
 			sparButton.setBounds(new Rectangle(0, 96, 35, 32));
+			sparButton.setToolTipText(Messages.getString("SparTip"));
 		}
 		return sparButton;
 	}
@@ -136,6 +140,7 @@ public class PanelPrefPort extends JPanel {
 			canButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/CanButton.png")));
 			canButton.setBounds(new Rectangle(0, 128, 35, 32));
+			canButton.setToolTipText(Messages.getString("CanTip"));
 		}
 		return canButton;
 	}
@@ -145,6 +150,7 @@ public class PanelPrefPort extends JPanel {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/FloatButton.png")));
 			floatButton.setBounds(new Rectangle(35, 0, 35, 32));
+			floatButton.setToolTipText(Messages.getString("FloatTip"));
 		}
 		return floatButton;
 	}
@@ -154,6 +160,7 @@ public class PanelPrefPort extends JPanel {
 			beaconButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BeaconButton.png")));
 			beaconButton.setBounds(new Rectangle(35, 32, 35, 32));
+			beaconButton.setToolTipText(Messages.getString("BeaconTip"));
 		}
 		return beaconButton;
 	}
@@ -163,6 +170,7 @@ public class PanelPrefPort extends JPanel {
 			towerButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/TowerButton.png")));
 			towerButton.setBounds(new Rectangle(35, 64, 35, 32));
+			towerButton.setToolTipText(Messages.getString("TowerTip"));
 		}
 		return towerButton;
 	}

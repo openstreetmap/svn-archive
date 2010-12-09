@@ -74,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.59912248,0,0,1.004396,0.04234889,-4.5667837)" />
+       gradientTransform="matrix(0.5930728,0,0,0.98913378,0.3448493,11.189869)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -93,7 +93,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="16.8"
-     inkscape:cx="24.376189"
+     inkscape:cx="25.269046"
      inkscape:cy="24.109257"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -132,12 +132,14 @@
      transform="translate(0,-1012.3622)"
      style="display:inline">
     <rect
-       y="1012.5549"
-       x="0.1926928"
-       height="39.614613"
-       width="59.614613"
+       y="1012.856"
+       x="0.49367511"
+       height="39.01265"
+       width="59.01265"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.3853856;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.98735023;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+       rx="4.9495125"
+       ry="4.9240227" />
     <rect
        style="fill:#d40000;fill-opacity:1;stroke:#000000;stroke-width:0.78358072;stroke-opacity:1"
        id="rect2818"
@@ -164,7 +166,7 @@
        sodipodi:cy="11.369047"
        sodipodi:rx="10.684524"
        sodipodi:ry="9.6428576"
-       d="m 36.190476,11.369047 a 10.684524,9.6428576 0 1 1 -21.369047,0 10.684524,9.6428576 0 1 1 21.369047,0 z"
+       d="m 36.190476,11.369047 c 0,5.325603 -4.783624,9.642858 -10.684523,9.642858 -5.9009,0 -10.684524,-4.317255 -10.684524,-9.642858 0,-5.325603 4.783624,-9.6428574 10.684524,-9.6428574 5.900899,0 10.684523,4.3172544 10.684523,9.6428574 z"
        transform="matrix(0.7128465,0,0,0.78804359,11.900236,1015.3897)"
        inkscape:export-filename="/Users/mherring/boatsw/oseam/openseamap/josm/icons/Chan.png"
        inkscape:export-xdpi="90"

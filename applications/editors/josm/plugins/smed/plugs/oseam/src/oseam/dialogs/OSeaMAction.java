@@ -261,8 +261,8 @@ public class OSeaMAction {
 		if (topButton == null) {
 			topButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/TopButton.png")));
-			topButton.setBounds(new Rectangle(0, 165, 40, 40));
-			topButton.setToolTipText(tr("Topmarks"));
+			topButton.setBounds(new Rectangle(0, 165, 36, 32));
+			topButton.setToolTipText(Messages.getString("TopmarksTip"));
 		}
 		return topButton;
 	}
@@ -271,8 +271,8 @@ public class OSeaMAction {
 		if (fogButton == null) {
 			fogButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/FogButton.png")));
-			fogButton.setBounds(new Rectangle(0, 200, 40, 40));
-			fogButton.setToolTipText(tr("Fog signals"));
+			fogButton.setBounds(new Rectangle(0, 200, 36, 32));
+			fogButton.setToolTipText(Messages.getString("FogSignalsTip"));
 		}
 		return fogButton;
 	}
@@ -281,8 +281,8 @@ public class OSeaMAction {
 		if (radarButton == null) {
 			radarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/RadarButton.png")));
-			radarButton.setBounds(new Rectangle(0, 235, 40, 40));
-			radarButton.setToolTipText(tr("Radar"));
+			radarButton.setBounds(new Rectangle(0, 235, 36, 32));
+			radarButton.setToolTipText(Messages.getString("RadarTip"));
 		}
 		return radarButton;
 	}
@@ -291,8 +291,8 @@ public class OSeaMAction {
 		if (litButton == null) {
 			litButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/LitButton.png")));
-			litButton.setBounds(new Rectangle(0, 270, 40, 40));
-			litButton.setToolTipText(tr("Lights"));
+			litButton.setBounds(new Rectangle(0, 270, 36, 32));
+			litButton.setToolTipText(Messages.getString("LitTip"));
 		}
 		return litButton;
 	}

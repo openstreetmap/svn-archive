@@ -1132,7 +1132,7 @@
        x2="50.000011"
        y2="1052.3622"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.59911867,0,0,1.0028502,0.04406036,-2.9424675)" />
+       gradientTransform="matrix(0.59309517,0,0,0.98767692,0.34523459,12.721869)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1142,7 +1142,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.879394"
-     inkscape:cx="32.420093"
+     inkscape:cx="16.846908"
      inkscape:cy="14.533528"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -1181,15 +1181,17 @@
      transform="translate(0,-1012.3622)"
      style="display:inline">
     <rect
-       style="fill:url(#linearGradient4900);fill-opacity:1;stroke:#000000;stroke-width:0.38807189;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:url(#linearGradient4900);fill-opacity:1;stroke:#000000;stroke-width:0.9874047;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect4370"
-       width="59.611927"
-       height="39.611931"
-       x="0.19403595"
-       y="1012.5562"
+       width="59.012596"
+       height="39.012596"
+       x="0.49370235"
+       y="1012.8558"
        inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/LightsButton.png"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
+       inkscape:export-ydpi="90"
+       rx="4.9497304"
+       ry="4.9243493" />
     <g
        transform="matrix(0.24,0,0,0.24,-5.9369293,995.96112)"
        style="display:inline"
@@ -1244,7 +1246,7 @@
        sodipodi:cy="33.57143"
        sodipodi:rx="20.863094"
        sodipodi:ry="18.571428"
-       d="M 5.1814965,31.127108 A 20.863094,18.571428 0 0 1 13.379492,18.691468"
+       d="m 5.1814965,31.127108 c 0.7396451,-4.958864 3.69536,-9.442424 8.1979955,-12.43564"
        transform="matrix(1.0723689,0,0,1.2014911,2.3755149,994.01712)"
        sodipodi:start="3.273593"
        sodipodi:end="4.0709386"
@@ -1254,7 +1256,7 @@
        sodipodi:end="6.1495533"
        sodipodi:start="5.3457358"
        transform="matrix(1.0723689,0,0,1.2014911,2.3755149,994.07664)"
-       d="m 38.210829,18.601908 a 20.863094,18.571428 0 0 1 8.329355,12.495165"
+       d="m 38.210829,18.601908 c 4.567507,2.985326 7.574378,7.496041 8.329355,12.495165"
        sodipodi:ry="18.571428"
        sodipodi:rx="20.863094"
        sodipodi:cy="33.57143"

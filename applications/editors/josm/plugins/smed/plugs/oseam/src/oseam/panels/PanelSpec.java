@@ -154,6 +154,7 @@ public class PanelSpec extends JPanel {
 			pillarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PillarButton.png")));
 			pillarButton.setBounds(new Rectangle(105, 0, 35, 32));
+			pillarButton.setToolTipText(Messages.getString("PillarTip"));
 		}
 		return pillarButton;
 	}
@@ -163,6 +164,7 @@ public class PanelSpec extends JPanel {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/SparButton.png")));
 			sparButton.setBounds(new Rectangle(105, 32, 35, 32));
+			sparButton.setToolTipText(Messages.getString("SparTip"));
 		}
 		return sparButton;
 	}
@@ -172,6 +174,7 @@ public class PanelSpec extends JPanel {
 			canButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/CanButton.png")));
 			canButton.setBounds(new Rectangle(105, 64, 35, 32));
+			canButton.setToolTipText(Messages.getString("CanTip"));
 		}
 		return canButton;
 	}
@@ -181,6 +184,7 @@ public class PanelSpec extends JPanel {
 			coneButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/ConeButton.png")));
 			coneButton.setBounds(new Rectangle(105, 96, 35, 32));
+			coneButton.setToolTipText(Messages.getString("ConeTip"));
 		}
 		return coneButton;
 	}
@@ -190,6 +194,7 @@ public class PanelSpec extends JPanel {
 			sphereButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/SphereButton.png")));
 			sphereButton.setBounds(new Rectangle(105, 128, 35, 32));
+			sphereButton.setToolTipText(Messages.getString("SphereTip"));
 		}
 		return sphereButton;
 	}
@@ -199,6 +204,7 @@ public class PanelSpec extends JPanel {
 			barrelButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BarrelButton.png")));
 			barrelButton.setBounds(new Rectangle(140, 0, 35, 32));
+			barrelButton.setToolTipText(Messages.getString("BarrelTip"));
 		}
 		return barrelButton;
 	}
@@ -208,6 +214,7 @@ public class PanelSpec extends JPanel {
 			superButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/SuperButton.png")));
 			superButton.setBounds(new Rectangle(140, 32, 35, 32));
+			superButton.setToolTipText(Messages.getString("SuperTip"));
 		}
 		return superButton;
 	}
@@ -217,6 +224,7 @@ public class PanelSpec extends JPanel {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/FloatButton.png")));
 			floatButton.setBounds(new Rectangle(140, 64, 35, 32));
+			floatButton.setToolTipText(Messages.getString("FloatTip"));
 		}
 		return floatButton;
 	}
@@ -226,6 +234,7 @@ public class PanelSpec extends JPanel {
 			beaconButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BeaconButton.png")));
 			beaconButton.setBounds(new Rectangle(140, 96, 35, 32));
+			beaconButton.setToolTipText(Messages.getString("BeaconTip"));
 		}
 		return beaconButton;
 	}
@@ -235,6 +244,7 @@ public class PanelSpec extends JPanel {
 			towerButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/TowerButton.png")));
 			towerButton.setBounds(new Rectangle(140, 128, 35, 32));
+			towerButton.setToolTipText(Messages.getString("TowerTip"));
 		}
 		return towerButton;
 	}
@@ -243,7 +253,7 @@ public class PanelSpec extends JPanel {
 		if (whiteButton == null) {
 			whiteButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/WhiteButton.png")));
-			whiteButton.setBounds(new Rectangle(4, 32, 33, 32));
+			whiteButton.setBounds(new Rectangle(0, 32, 34, 32));
 			whiteButton.setToolTipText(tr("White"));
 		}
 		return whiteButton;
@@ -253,7 +263,7 @@ public class PanelSpec extends JPanel {
 		if (redButton == null) {
 			redButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/RedButton.png")));
-			redButton.setBounds(new Rectangle(37, 32, 33, 32));
+			redButton.setBounds(new Rectangle(34, 32, 34, 32));
 			redButton.setToolTipText(tr("Red"));
 		}
 		return redButton;
@@ -263,7 +273,7 @@ public class PanelSpec extends JPanel {
 		if (orangeButton == null) {
 			orangeButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/OrangeButton.png")));
-			orangeButton.setBounds(new Rectangle(70, 32, 33, 32));
+			orangeButton.setBounds(new Rectangle(68, 32, 34, 32));
 			orangeButton.setToolTipText(tr("Orange"));
 		}
 		return orangeButton;
@@ -273,7 +283,7 @@ public class PanelSpec extends JPanel {
 		if (amberButton == null) {
 			amberButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/AmberButton.png")));
-			amberButton.setBounds(new Rectangle(4, 64, 33, 32));
+			amberButton.setBounds(new Rectangle(0, 64, 34, 32));
 			amberButton.setToolTipText(tr("Amber"));
 		}
 		return amberButton;
@@ -283,7 +293,7 @@ public class PanelSpec extends JPanel {
 		if (yellowButton == null) {
 			yellowButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/YellowButton.png")));
-			yellowButton.setBounds(new Rectangle(37, 64, 33, 32));
+			yellowButton.setBounds(new Rectangle(34, 64, 34, 32));
 			yellowButton.setToolTipText(tr("Yellow"));
 		}
 		return yellowButton;
@@ -293,7 +303,7 @@ public class PanelSpec extends JPanel {
 		if (greenButton == null) {
 			greenButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/GreenButton.png")));
-			greenButton.setBounds(new Rectangle(70, 64, 33, 32));
+			greenButton.setBounds(new Rectangle(68, 64, 34, 32));
 			greenButton.setToolTipText(tr("Green"));
 		}
 		return greenButton;
@@ -303,7 +313,7 @@ public class PanelSpec extends JPanel {
 		if (blueButton == null) {
 			blueButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/BlueButton.png")));
-			blueButton.setBounds(new Rectangle(4, 96, 33, 32));
+			blueButton.setBounds(new Rectangle(0, 96, 34, 32));
 			blueButton.setToolTipText(tr("Blue"));
 		}
 		return blueButton;
@@ -313,7 +323,7 @@ public class PanelSpec extends JPanel {
 		if (violetButton == null) {
 			violetButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/VioletButton.png")));
-			violetButton.setBounds(new Rectangle(37, 96, 33, 32));
+			violetButton.setBounds(new Rectangle(34, 96, 34, 32));
 			violetButton.setToolTipText(tr("Violet"));
 		}
 		return violetButton;
@@ -323,7 +333,7 @@ public class PanelSpec extends JPanel {
 		if (blackButton == null) {
 			blackButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BlackButton.png")));
-			blackButton.setBounds(new Rectangle(70, 96, 33, 32));
+			blackButton.setBounds(new Rectangle(68, 96, 34, 32));
 			blackButton.setToolTipText(tr("Black"));
 		}
 		return blackButton;

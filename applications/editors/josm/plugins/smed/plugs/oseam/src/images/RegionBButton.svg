@@ -15,13 +15,25 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="RegionBButton.svg"
+   sodipodi:docname="RegionAButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/RegionAButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    style="display:inline">
   <defs
      id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4910">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="0"
+         id="stop4912" />
+      <stop
+         style="stop-color:#80a4c4;stop-opacity:1"
+         offset="1"
+         id="stop4914" />
+    </linearGradient>
     <linearGradient
        id="linearGradient3638"
        inkscape:collect="always">
@@ -4347,6 +4359,17 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 160 : 1"
        sodipodi:type="inkscape:persp3d" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4910"
+       id="radialGradient4916"
+       cx="14.959728"
+       cy="9.6885777"
+       fx="14.959728"
+       fy="9.6885777"
+       r="15.476156"
+       gradientTransform="matrix(1,0,0,1.0042834,0,-0.06432913)"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -4356,8 +4379,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="22.627417"
-     inkscape:cx="31.04714"
-     inkscape:cy="12.778874"
+     inkscape:cx="21.059257"
+     inkscape:cy="12.663493"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -4384,7 +4407,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -4394,24 +4417,38 @@
      id="layer1"
      transform="translate(0,-1022.3622)"
      style="display:inline">
+    <path
+       sodipodi:type="arc"
+       style="fill:url(#radialGradient4916);stroke:#000000;stroke-opacity:1;stroke-width:1.03285581000000004;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
+       id="path4136"
+       sodipodi:cx="14.959728"
+       sodipodi:cy="15.018175"
+       sodipodi:rx="14.959728"
+       sodipodi:ry="15.026019"
+       d="m 29.919456,15.018175 a 14.959728,15.026019 0 1 1 -29.919456,0 14.959728,15.026019 0 1 1 29.919456,0 z"
+       transform="matrix(0.97033215,0,0,0.9660513,0.48409468,1022.8539)" />
     <rect
-       y="1022.48"
-       x="0.11801904"
-       height="29.763964"
-       width="29.763962"
-       id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.23603809;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
-    <rect
-       style="fill:#00d400;fill-opacity:1;stroke:#000000;stroke-width:0.97859073;stroke-opacity:1"
+       style="fill:#00d400;fill-opacity:1;stroke:#000000;stroke-width:0.97859072999999996;stroke-opacity:1"
        id="rect3456"
        width="8.021409"
        height="10.021409"
-       x="6.3552532"
-       y="1032.415" />
+       x="6.0900879"
+       y="1033.9176" />
     <path
-       style="fill:#d40000;fill-opacity:1;stroke:#000000;stroke-width:0.87779164px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 15.82888,1042.487 5.123931,-10.1665 4.898626,10.1665 -10.022557,0 z"
+       style="fill:#d40000;fill-opacity:1;stroke:#000000;stroke-width:0.87779163999999998px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 15.917269,1043.9896 5.123931,-10.1665 4.898626,10.1665 -10.022557,0 z"
        id="path3458"
        sodipodi:nodetypes="cccc" />
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
+       x="11.092738"
+       y="1032.3422"
+       id="text4918"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4920"
+         x="11.092738"
+         y="1032.3422">B</tspan></text>
   </g>
 </svg>

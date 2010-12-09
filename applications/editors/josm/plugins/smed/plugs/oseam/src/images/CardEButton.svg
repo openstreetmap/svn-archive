@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="60"
+   width="50"
    height="32"
    id="svg2"
    version="1.1"
@@ -74,7 +74,7 @@
        x2="50.002548"
        y2="1052.3596"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.59953219,0,0,0.80259616,0.02186308,207.76946)" />
+       gradientTransform="matrix(0.49345889,0,0,0.78853394,0.32579679,222.28719)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3638"
@@ -226,7 +226,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="23.758788"
-     inkscape:cx="29.158592"
+     inkscape:cx="21.372"
      inkscape:cy="14.585448"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -265,21 +265,23 @@
      transform="translate(0,-1020.3622)"
      style="display:inline">
     <rect
-       y="1020.5345"
-       x="0.1723098"
-       height="31.65538"
-       width="59.65538"
+       y="1020.8117"
+       x="0.44962546"
+       height="31.10075"
+       width="49.10075"
        id="rect3618"
-       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.3446196;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+       style="fill:url(#linearGradient3612);fill-opacity:1;stroke:#000000;stroke-width:0.89925092;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+       rx="4.1153665"
+       ry="4.9123955" />
     <path
        style="fill:#000000;fill-opacity:1;stroke:none"
-       d="m 37.576781,1036.9239 -14.983929,-0.042 7.449875,10.5224 7.534054,-10.4803 z"
+       d="M 32.483929,1036.9239 17.5,1036.8819 l 7.449875,10.5224 7.534054,-10.4803 z"
        id="path2871"
        sodipodi:nodetypes="cccc" />
     <path
        sodipodi:nodetypes="cccc"
        id="path3645"
-       d="m 22.592852,1035.9137 14.983929,0 -7.491965,-10.5224 -7.491964,10.5224 z"
+       d="m 17.5,1035.9137 14.983929,0 -7.491965,-10.5224 L 17.5,1035.9137 z"
        style="fill:#000000;fill-opacity:1;stroke:none" />
   </g>
 </svg>

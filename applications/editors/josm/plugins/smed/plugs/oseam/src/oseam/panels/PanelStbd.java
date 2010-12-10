@@ -104,7 +104,7 @@ public class PanelStbd extends JPanel {
 		if (regionAButton == null) {
 			regionAButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/RegionAButton.png")));
-			regionAButton.setBounds(new Rectangle(0, 0, 35, 30));
+			regionAButton.setBounds(new Rectangle(10, 45, 35, 30));
 			regionAButton.setToolTipText(Messages.getString("RegionATip"));
 		}
 		return regionAButton;
@@ -114,7 +114,7 @@ public class PanelStbd extends JPanel {
 		if (regionBButton == null) {
 			regionBButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/RegionBButton.png")));
-			regionBButton.setBounds(new Rectangle(0, 30, 35, 30));
+			regionBButton.setBounds(new Rectangle(10, 82, 35, 30));
 			regionBButton.setToolTipText(Messages.getString("RegionBTip"));
 		}
 		return regionBButton;
@@ -124,7 +124,7 @@ public class PanelStbd extends JPanel {
 		if (pillarButton == null) {
 			pillarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PillarButton.png")));
-			pillarButton.setBounds(new Rectangle(0, 64, 35, 32));
+			pillarButton.setBounds(new Rectangle(50, 0, 35, 32));
 			pillarButton.setToolTipText(Messages.getString("PillarTip"));
 		}
 		return pillarButton;
@@ -134,7 +134,7 @@ public class PanelStbd extends JPanel {
 		if (sparButton == null) {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/SparButton.png")));
-			sparButton.setBounds(new Rectangle(0, 96, 35, 32));
+			sparButton.setBounds(new Rectangle(50, 32, 35, 32));
 			sparButton.setToolTipText(Messages.getString("SparTip"));
 		}
 		return sparButton;
@@ -144,7 +144,7 @@ public class PanelStbd extends JPanel {
 		if (coneButton == null) {
 			coneButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/ConeButton.png")));
-			coneButton.setBounds(new Rectangle(0, 128, 35, 32));
+			coneButton.setBounds(new Rectangle(50, 64, 35, 32));
 			coneButton.setToolTipText(Messages.getString("ConeTip"));
 		}
 		return coneButton;
@@ -154,7 +154,7 @@ public class PanelStbd extends JPanel {
 		if (floatButton == null) {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/FloatButton.png")));
-			floatButton.setBounds(new Rectangle(35, 0, 35, 32));
+			floatButton.setBounds(new Rectangle(50, 96, 35, 32));
 			floatButton.setToolTipText(Messages.getString("FloatTip"));
 		}
 		return floatButton;
@@ -164,7 +164,7 @@ public class PanelStbd extends JPanel {
 		if (beaconButton == null) {
 			beaconButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BeaconButton.png")));
-			beaconButton.setBounds(new Rectangle(35, 32, 35, 32));
+			beaconButton.setBounds(new Rectangle(50, 128, 35, 32));
 			beaconButton.setToolTipText(Messages.getString("BeaconTip"));
 		}
 		return beaconButton;
@@ -174,7 +174,7 @@ public class PanelStbd extends JPanel {
 		if (towerButton == null) {
 			towerButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/TowerButton.png")));
-			towerButton.setBounds(new Rectangle(35, 64, 35, 32));
+			towerButton.setBounds(new Rectangle(85, 0, 35, 32));
 			towerButton.setToolTipText(Messages.getString("TowerTip"));
 		}
 		return towerButton;
@@ -184,7 +184,7 @@ public class PanelStbd extends JPanel {
 		if (perchButton == null) {
 			perchButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PerchSButton.png")));
-			perchButton.setBounds(new Rectangle(35, 96, 35, 32));
+			perchButton.setBounds(new Rectangle(85, 32, 35, 32));
 			perchButton.setToolTipText(Messages.getString("PerchTip"));
 		}
 		return perchButton;

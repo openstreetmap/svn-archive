@@ -69,7 +69,7 @@ public class PanelSafeWater extends JPanel {
 		if (pillarButton == null) {
 			pillarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PillarButton.png")));
-			pillarButton.setBounds(new Rectangle(0, 0, 35, 32));
+			pillarButton.setBounds(new Rectangle(50, 0, 35, 32));
 			pillarButton.setToolTipText(Messages.getString("PillarTip"));
 		}
 		return pillarButton;
@@ -79,7 +79,7 @@ public class PanelSafeWater extends JPanel {
 		if (sparButton == null) {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/SparButton.png")));
-			sparButton.setBounds(new Rectangle(0, 32, 35, 32));
+			sparButton.setBounds(new Rectangle(50, 32, 35, 32));
 			sparButton.setToolTipText(Messages.getString("SparTip"));
 		}
 		return sparButton;
@@ -89,7 +89,7 @@ public class PanelSafeWater extends JPanel {
 		if (sphereButton == null) {
 			sphereButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/SphereButton.png")));
-			sphereButton.setBounds(new Rectangle(0, 64, 35, 32));
+			sphereButton.setBounds(new Rectangle(50, 64, 35, 32));
 			sphereButton.setToolTipText(Messages.getString("SphereTip"));
 		}
 		return sphereButton;
@@ -99,7 +99,7 @@ public class PanelSafeWater extends JPanel {
 		if (barrelButton == null) {
 			barrelButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BarrelButton.png")));
-			barrelButton.setBounds(new Rectangle(0, 96, 35, 32));
+			barrelButton.setBounds(new Rectangle(50, 96, 35, 32));
 			barrelButton.setToolTipText(Messages.getString("BarrelTip"));
 		}
 		return barrelButton;
@@ -109,7 +109,7 @@ public class PanelSafeWater extends JPanel {
 		if (floatButton == null) {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/FloatButton.png")));
-			floatButton.setBounds(new Rectangle(0, 128, 35, 32));
+			floatButton.setBounds(new Rectangle(50, 128, 35, 32));
 			floatButton.setToolTipText(Messages.getString("FloatTip"));
 		}
 		return floatButton;

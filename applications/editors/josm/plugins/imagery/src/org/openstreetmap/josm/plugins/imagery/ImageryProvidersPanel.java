@@ -192,8 +192,9 @@ public class ImageryProvidersPanel extends JPanel {
             case 1:
                 return info.getFullURL();
             case 2:
-                return (info.imageryType == ImageryType.WMS) ? (info.pixelPerDegree == 0.0 ? "" : info.pixelPerDegree)
-                                                             : (info.maxZoom == 0 ? "" : info.maxZoom);
+                return (info.imageryType == ImageryType.WMS || info.imageryType == ImageryType.HTML) ?
+                        (info.pixelPerDegree == 0.0 ? "" : info.pixelPerDegree) :
+                            (info.maxZoom == 0 ? "" : info.maxZoom);
             default:
                 throw new ArrayIndexOutOfBoundsException();
             }
@@ -213,7 +214,7 @@ public class ImageryProvidersPanel extends JPanel {
                 info.pixelPerDegree = 0;
                 info.maxZoom = 0;
                 try {
-                    if(info.imageryType == ImageryType.WMS)
+                    if(info.imageryType == ImageryType.WMS || info.imageryType == ImageryType.HTML)
                         info.pixelPerDegree = Double.parseDouble((String) o);
                     else
                         info.maxZoom = Integer.parseInt((String) o);

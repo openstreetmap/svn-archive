@@ -138,7 +138,6 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
         return autoDownloadEnabled;
     }
 
-
     @Override
     public void destroy() {
         cancelGrabberThreads(false);
@@ -165,18 +164,15 @@ public class WMSLayer extends ImageryLayer implements PreferenceChangedListener 
         }
     }
 
+    @Override public ImageryInfo getInfo() {
+        return info;
+    }
+
     @Override public String getToolTipText() {
         if(autoDownloadEnabled)
             return tr("WMS layer ({0}), automatically downloading in zoom {1}", getName(), resolution);
         else
             return tr("WMS layer ({0}), downloading in zoom {1}", getName(), resolution);
-    }
-
-    @Override public boolean isMergable(Layer other) {
-        return false;
-    }
-
-    @Override public void mergeFrom(Layer from) {
     }
 
     private int modulo (int a, int b) {

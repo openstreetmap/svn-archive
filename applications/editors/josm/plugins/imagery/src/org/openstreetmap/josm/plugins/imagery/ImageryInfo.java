@@ -66,7 +66,7 @@ public class ImageryInfo implements Comparable<ImageryInfo> {
         String e4 = null;
         if(url != null && !url.isEmpty()) e2 = getFullURL();
         if(cookies != null && !cookies.isEmpty()) e3 = cookies;
-        if(imageryType == ImageryType.WMS) {
+        if(imageryType == ImageryType.WMS || imageryType == ImageryType.HTML) {
             if(pixelPerDegree != 0.0) e4 = String.valueOf(pixelPerDegree);
         } else {
             if(maxZoom != 0) e4 = String.valueOf(maxZoom);
@@ -87,8 +87,13 @@ public class ImageryInfo implements Comparable<ImageryInfo> {
         this.name=array.get(0);
         if(array.size() >= 2) setURL(array.get(1));
         if(array.size() >= 3) this.cookies=array.get(2);
-        if(imageryType == ImageryType.WMS && array.size() >= 4) this.pixelPerDegree=Double.valueOf(array.get(3));
-        if(imageryType == ImageryType.TMS && array.size() >= 4) this.maxZoom=Integer.valueOf(array.get(3));
+        if(array.size() >= 4) {
+            if (imageryType == ImageryType.WMS || imageryType == ImageryType.HTML) {
+                this.pixelPerDegree=Double.valueOf(array.get(3));
+            } else {
+                this.maxZoom=Integer.valueOf(array.get(3));
+            }
+        }
     }
 
     public ImageryInfo(ImageryInfo i) {

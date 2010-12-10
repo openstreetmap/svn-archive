@@ -80,7 +80,6 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     public synchronized void tileLoadingFinished(Tile tile, boolean success)
     {
         tile.setLoaded(true);
-        needRedraw = true;
         Main.map.repaint(100);
         tileRequestsOutstanding.remove(tile);
         if (sharpenLevel != 0) tile.setImage(sharpenImage(tile.getImage()));
@@ -105,11 +104,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
      */
     public int currentZoomLevel;
 
-    EastNorth lastTopLeft;
-    EastNorth lastBotRight;
-    private Image bufferImage;
     private Tile clickedTile;
-    private boolean needRedraw;
     private JPopupMenu tileOptionMenu;
     JCheckBoxMenuItem autoZoomPopup;
     JCheckBoxMenuItem autoLoadPopup;
@@ -130,7 +125,6 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
     void redraw()
     {
-        needRedraw = true;
         Main.map.repaint();
     }
 
@@ -157,12 +151,6 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         clearTileCache();
         //tileloader = new OsmTileLoader(this);
         tileLoader = new OsmFileCacheTileLoader(this);
-    }
-
-    @Override
-    public void setOffset(double dx, double dy) {
-        super.setOffset(dx, dy);
-        needRedraw = true;
     }
 
     private double getPPDeg() {
@@ -363,7 +351,6 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     {
         if (debug)
             out("zoomChanged(): " + currentZoomLevel);
-        needRedraw = true;
         jobDispatcher.cancelOutstandingJobs();
         tileRequestsOutstanding.clear();
     }
@@ -512,7 +499,6 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     @Override
     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
         boolean done = ((infoflags & (ERROR | FRAMEBITS | ALLBITS)) != 0);
-        needRedraw = true;
         if (debug)
             out("imageUpdate() done: " + done + " calling repaint");
         Main.map.repaint(done ? 0 : 100);
@@ -753,7 +739,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         }
 
         String tileStatus = tile.getStatus();
-        if (!tile.isLoaded()) {
+        if (!tile.isLoaded() && TMSPreferences.PROP_DRAW_DEBUG.get()) {
             g.drawString(tr("image " + tileStatus), p.x + 2, texty);
             texty += 1 + fontHeight;
         }
@@ -910,30 +896,12 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         //long start = System.currentTimeMillis();
         EastNorth topLeft = mv.getEastNorth(0, 0);
         EastNorth botRight = mv.getEastNorth(mv.getWidth(), mv.getHeight());
-        Graphics2D oldg = g;
 
         if (botRight.east() == 0.0 || botRight.north() == 0) {
             Main.debug("still initializing??");
             // probably still initializing
             return;
         }
-
-        if (lastTopLeft != null && lastBotRight != null && topLeft.equals(lastTopLeft)
-                && botRight.equals(lastBotRight) && bufferImage != null
-                && mv.getWidth() == bufferImage.getWidth(null) && mv.getHeight() == bufferImage.getHeight(null)
-                && !needRedraw) {
-
-            if (debug)
-                out("drawing buffered image");
-            g.drawImage(bufferImage, 0, 0, null);
-            return;
-        }
-
-        needRedraw = false;
-        lastTopLeft = topLeft;
-        lastBotRight = botRight;
-        bufferImage = mv.createImage(mv.getWidth(), mv.getHeight());
-        g = (Graphics2D) bufferImage.getGraphics();
 
         int zoom = currentZoomLevel;
         TileSet ts = new TileSet(topLeft, botRight, zoom);
@@ -943,7 +911,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                 if (debug)
                     out("too many tiles, decreasing zoom from " + currentZoomLevel);
                 if (decreaseZoomLevel())
-                    this.paint(oldg, mv, bounds);
+                    this.paint(g, mv, bounds);
                 return;
             }
             if (zoomIncreaseAllowed() && ts.tooSmall()) {
@@ -963,7 +931,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                 boolean tmp = az_disable;
                 az_disable = true;
                 if (increaseZoomLevel())
-                     this.paint(oldg, mv, bounds);
+                     this.paint(g, mv, bounds);
                 az_disable = tmp;
                 return;
             }
@@ -1056,8 +1024,6 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
             g.setFont(font);
         }
 
-        oldg.drawImage(bufferImage, 0, 0, null);
-
         if (autoZoomEnabled() && lastImageScale != null) {
             // If each source image pixel is being stretched into > 3
             // drawn pixels, zoom in... getting too pixelated
@@ -1065,24 +1031,24 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
                 if (debug)
                     out("autozoom increase: scale: " + lastImageScale);
                 increaseZoomLevel();
-                this.paint(oldg, mv, bounds);
+                this.paint(g, mv, bounds);
             // If each source image pixel is being squished into > 0.32
             // of a drawn pixels, zoom out.
             } else if ((lastImageScale < 0.45) && (lastImageScale > 0) && zoomDecreaseAllowed()) {
                 if (debug)
                     out("autozoom decrease: scale: " + lastImageScale);
                 decreaseZoomLevel();
-                this.paint(oldg, mv, bounds);
+                this.paint(g, mv, bounds);
             }
         }
         //g.drawString("currentZoomLevel=" + currentZoomLevel, 120, 120);
-        oldg.setColor(Color.black);
+        g.setColor(Color.black);
         if (ts.insane()) {
-            oldg.drawString("zoom in to load any tiles", 120, 120);
+            g.drawString("zoom in to load any tiles", 120, 120);
         } else if (ts.tooLarge()) {
-            oldg.drawString("zoom in to load more tiles", 120, 120);
+            g.drawString("zoom in to load more tiles", 120, 120);
         } else if (ts.tooSmall()) {
-            oldg.drawString("increase zoom level to see more detail", 120, 120);
+            g.drawString("increase zoom level to see more detail", 120, 120);
         }
     }// end of paint method
 

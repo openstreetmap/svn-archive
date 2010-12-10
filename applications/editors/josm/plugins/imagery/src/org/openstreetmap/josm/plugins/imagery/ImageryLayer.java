@@ -1,9 +1,13 @@
 package org.openstreetmap.josm.plugins.imagery;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trc;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -175,5 +179,14 @@ public abstract class ImageryLayer extends Layer {
         }
         BufferedImageOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
         return op.filter(tmp, null);
+    }
+
+    public void drawErrorTile(BufferedImage img) {
+        Graphics g = img.getGraphics();
+        g.setColor(Color.RED);
+        g.fillRect(0, 0, img.getWidth(), img.getHeight());
+        g.setFont(g.getFont().deriveFont(Font.PLAIN).deriveFont(36.0f));
+        g.setColor(Color.BLACK);
+        g.drawString(tr("ERROR"), 30, img.getHeight()/2);
     }
 }

@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.net.URI;
@@ -79,11 +80,16 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     @Override
     public synchronized void tileLoadingFinished(Tile tile, boolean success)
     {
+        if (!success) {
+            BufferedImage img = new BufferedImage(tileSource.getTileSize(),tileSource.getTileSize(), BufferedImage.TYPE_INT_RGB);
+            drawErrorTile(img);
+            tile.setImage(img);
+        }
         tile.setLoaded(true);
         needRedraw = true;
         Main.map.repaint(100);
         tileRequestsOutstanding.remove(tile);
-        if (sharpenLevel != 0) tile.setImage(sharpenImage(tile.getImage()));
+        if (sharpenLevel != 0 && success) tile.setImage(sharpenImage(tile.getImage()));
         if (debug)
             out("tileLoadingFinished() tile: " + tile + " success: " + success);
     }

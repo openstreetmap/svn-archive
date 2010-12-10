@@ -71,12 +71,7 @@ public class GeorefImage implements Serializable {
         case FAILED:
         {
             BufferedImage img = createImage();
-            Graphics g = img.getGraphics();
-            g.setColor(Color.RED);
-            g.fillRect(0, 0, img.getWidth(), img.getHeight());
-            g.setFont(g.getFont().deriveFont(Font.PLAIN).deriveFont(36.0f));
-            g.setColor(Color.BLACK);
-            g.drawString(tr("Exception occurred"), 10, img.getHeight()/2);
+            layer.drawErrorTile(img);
             this.image = img;
             break;
         }

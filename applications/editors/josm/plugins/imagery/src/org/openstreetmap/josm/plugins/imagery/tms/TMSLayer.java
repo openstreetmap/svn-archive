@@ -80,6 +80,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     public synchronized void tileLoadingFinished(Tile tile, boolean success)
     {
         tile.setLoaded(true);
+        needRedraw = true;
         Main.map.repaint(100);
         tileRequestsOutstanding.remove(tile);
         if (sharpenLevel != 0) tile.setImage(sharpenImage(tile.getImage()));
@@ -105,6 +106,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     public int currentZoomLevel;
 
     private Tile clickedTile;
+    private boolean needRedraw;
     private JPopupMenu tileOptionMenu;
     JCheckBoxMenuItem autoZoomPopup;
     JCheckBoxMenuItem autoLoadPopup;
@@ -125,6 +127,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
     void redraw()
     {
+        needRedraw = true;
         Main.map.repaint();
     }
 
@@ -151,6 +154,12 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
         clearTileCache();
         //tileloader = new OsmTileLoader(this);
         tileLoader = new OsmFileCacheTileLoader(this);
+    }
+
+    @Override
+    public void setOffset(double dx, double dy) {
+        super.setOffset(dx, dy);
+        needRedraw = true;
     }
 
     private double getPPDeg() {
@@ -351,6 +360,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     {
         if (debug)
             out("zoomChanged(): " + currentZoomLevel);
+        needRedraw = true;
         jobDispatcher.cancelOutstandingJobs();
         tileRequestsOutstanding.clear();
     }
@@ -499,6 +509,7 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
     @Override
     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
         boolean done = ((infoflags & (ERROR | FRAMEBITS | ALLBITS)) != 0);
+        needRedraw = true;
         if (debug)
             out("imageUpdate() done: " + done + " calling repaint");
         Main.map.repaint(done ? 0 : 100);
@@ -903,6 +914,8 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
             return;
         }
 
+        needRedraw = false;
+
         int zoom = currentZoomLevel;
         TileSet ts = new TileSet(topLeft, botRight, zoom);
 
@@ -1107,6 +1120,11 @@ public class TMSLayer extends ImageryLayer implements ImageObserver, TileLoaderL
 
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
+    }
+
+    @Override
+    public boolean isChanged() {
+        return needRedraw;
     }
 
     private int latToTileY(double lat, int zoom) {

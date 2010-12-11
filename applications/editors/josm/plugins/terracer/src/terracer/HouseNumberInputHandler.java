@@ -27,6 +27,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.Node;
 
 /**
  * The Class HouseNumberInputHandler contains all the logic
@@ -41,6 +42,7 @@ import org.openstreetmap.josm.actions.JosmAction;
  public class HouseNumberInputHandler extends JosmAction implements ActionListener, FocusListener, ItemListener {
     private TerracerAction terracerAction;
     private Way outline, street;
+    private Node init;
     private Relation associatedStreet;
     public HouseNumberInputDialog dialog;
 
@@ -49,15 +51,17 @@ import org.openstreetmap.josm.actions.JosmAction;
      *
      * @param terracerAction the terracer action
      * @param outline the closed, quadrilateral way to terrace.
+     * @param init The node that hints at which side to start the numbering
      * @param street the street, the buildings belong to (may be null)
      * @param associatedStreet a relation where we can add the houses (may be null)
      * @param title the title
      */
     public HouseNumberInputHandler(final TerracerAction terracerAction,
-            final Way outline, final Way street, final Relation associatedStreet,
+            final Way outline, final Node init, final Way street, final Relation associatedStreet,
             final String title) {
         this.terracerAction = terracerAction;
         this.outline = outline;
+        this.init = init;
         this.street = street;
         this.associatedStreet = associatedStreet;
 
@@ -271,12 +275,13 @@ import org.openstreetmap.josm.actions.JosmAction;
         // OK or Cancel button-actions
         if (e.getSource() instanceof JButton) {
             JButton button = (JButton) e.getSource();
-            if ("OK".equals(button.getActionCommand()) & button.isEnabled()) {
+            if (tr("OK").equals(button.getActionCommand()) & button.isEnabled()) {
                 if (validateInput()) {
                     saveValues();
 
                     terracerAction.terraceBuilding(
                         outline,
+                        init,
                         street,
                         associatedStreet,
                         segments(),

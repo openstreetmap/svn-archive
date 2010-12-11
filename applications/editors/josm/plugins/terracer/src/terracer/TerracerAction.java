@@ -15,7 +15,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,13 +28,13 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -73,10 +72,10 @@ public final class TerracerAction extends JosmAction {
      * calls to terraceBuilding(), which does all the real work.
      */
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> sel = Main.main.getCurrentDataSet()
-                .getSelected();
+        Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
         Way outline = null;
         Way street = null;
+        Node init = null;
 
         class InvalidUserInputException extends Exception {
             InvalidUserInputException(String message) {
@@ -88,33 +87,29 @@ public final class TerracerAction extends JosmAction {
         }
 
         try {
-            if (sel.size() == 2) {
-                Iterator<OsmPrimitive> it = sel.iterator();
-                OsmPrimitive prim1 = it.next();
-                OsmPrimitive prim2 = it.next();
-                if (!(prim1 instanceof Way && prim2 instanceof Way))
-                    throw new InvalidUserInputException();
-                Way way1 = (Way) prim1;
-                Way way2 = (Way) prim2;
-                if (way2.get("highway") != null) {
-                    street = way2;
-                    outline = way1;
-                } else if (way1.get("highway") != null) {
-                    street = way1;
-                    outline = way2;
-                } else
-                    throw new InvalidUserInputException();
-                if (street.get("name") == null)
-                    throw new InvalidUserInputException();
-
-            } else if (sel.size() == 1) {
-                OsmPrimitive prim = sel.iterator().next();
-
-                if (!(prim instanceof Way))
-                    throw new InvalidUserInputException();
-
-                outline = (Way)prim;
-            } else
+            for (OsmPrimitive osm : sel) {
+                if (osm instanceof Node) {
+                    if (init != null)
+                        throw new InvalidUserInputException();
+                    init = (Node) osm;
+                } else if (osm instanceof Way) {
+                    if (osm.hasKey("highway")) {
+                        if (street != null)
+                            throw new InvalidUserInputException();
+                        street = (Way) osm;
+                        if (!street.hasKey("name"))
+                            throw new InvalidUserInputException();
+                    } else {
+                        if (outline != null)
+                            throw new InvalidUserInputException();
+                        outline = (Way) osm;
+                    }
+                }
+            }
+            if (outline == null)
+                throw new InvalidUserInputException();
+            
+            if (init != null && !init.getReferrers().contains(outline))
                 throw new InvalidUserInputException();
 
             if (outline.getNodesCount() < 5)
@@ -123,8 +118,12 @@ public final class TerracerAction extends JosmAction {
             if (!outline.isClosed())
                 throw new InvalidUserInputException();
         } catch (InvalidUserInputException ex) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("Select a single, closed way of at least four nodes."));
+            new ExtendedDialog(Main.parent, tr("Invalid selection"), new String[] {"OK"})
+                .setButtonIcons(new String[] {"ok"}).setIcon(JOptionPane.INFORMATION_MESSAGE)
+                .setContent(tr("Select a single, closed way of at least four nodes. " +
+                    "(Optionally you can also select a street for the addr:street tag " +
+                    "and a node to mark the start of numbering.)"))
+                .showDialog();
             return;
         }
 
@@ -148,7 +147,7 @@ public final class TerracerAction extends JosmAction {
 
         String title = trn("Change {0} object", "Change {0} objects", sel.size(), sel.size());
         // show input dialog.
-        new HouseNumberInputHandler(this, outline, street, associatedStreet, title);
+        new HouseNumberInputHandler(this, outline, init, street, associatedStreet, title);
     }
 
     public Integer getNumber(String number) {
@@ -168,6 +167,7 @@ public final class TerracerAction extends JosmAction {
      * closed, quadrilateral ways and left in the selection.
      *
      * @param outline The closed, quadrilateral way to terrace.
+     * @param init The node that hints at which side to start the numbering
      * @param street The street, the buildings belong to (may be null)
      * @param associatedStreet
      * @param From
@@ -177,6 +177,7 @@ public final class TerracerAction extends JosmAction {
      * @param deleteOutline If the outline way should be deleted, when done
      */
     public void terraceBuilding(Way outline,
+                Node init,
                 Way street,
                 Relation associatedStreet,
                 Integer segments,
@@ -216,12 +217,20 @@ public final class TerracerAction extends JosmAction {
             // now find which is the longest side connecting the first node
             Pair<Way, Way> interp = findFrontAndBack(outline);
 
+            boolean swap = false;
+            if (init != null) {
+                if (interp.a.lastNode().equals(init) || interp.b.lastNode().equals(init)) {
+                    swap = true;
+                }
+            }
+
             final double frontLength = wayLength(interp.a);
             final double backLength = wayLength(interp.b);
 
             for (int i = 0; i <= nb; ++i) {
-                new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i / nb);
-                new_nodes[1][i] = interpolateAlong(interp.b, backLength * i / nb);
+                int i_dir = swap ? nb - i : i;
+                new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i_dir / nb);
+                new_nodes[1][i] = interpolateAlong(interp.b, backLength * i_dir / nb);
                 this.commands.add(new AddCommand(new_nodes[0][i]));
                 this.commands.add(new AddCommand(new_nodes[1][i]));
             }
@@ -229,9 +238,6 @@ public final class TerracerAction extends JosmAction {
             // assemble new quadrilateral, closed ways
             for (int i = 0; i < nb; ++i) {
                 Way terr = new Way();
-                // Using Way.nodes.add rather than Way.addNode because the latter
-                // doesn't
-                // exist in older versions of JOSM.
                 terr.addNode(new_nodes[0][i]);
                 terr.addNode(new_nodes[0][i + 1]);
                 terr.addNode(new_nodes[1][i + 1]);

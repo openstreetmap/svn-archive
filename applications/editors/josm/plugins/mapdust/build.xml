@@ -4,7 +4,6 @@
 	<!-- properties -->
 	<property name="commit.message" value="MapDust bug reporter plugin" />
 	<property name="plugin.main.version" value="3592" />
-	<property name="josm.dir" value="../../core/dist/" />
 	<property name="plugin.build.dir" value="build/classes" />
 	<property name="apidoc.dir" value="build/doc" />
 	<property name="plugin.src.dir" value="src" />
@@ -17,7 +16,7 @@
 	<!-- classpath -->
 	<path id="classpath">
 		<fileset dir="${plugin.lib.dir}" includes="**/*.jar" />
-		<fileset dir="${josm.dir}" includes="josm-custom.jar" />
+		<pathelement path="${josm}"/>
 	</path>
 
 	<!-- clean the build -->

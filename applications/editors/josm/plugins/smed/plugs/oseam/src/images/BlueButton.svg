@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="30"
-   height="30"
+   width="50"
+   height="16"
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
@@ -2894,8 +2894,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313708"
-     inkscape:cx="-9.8990353"
+     inkscape:zoom="14.49"
+     inkscape:cx="25"
      inkscape:cy="16.53442"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -2931,28 +2931,27 @@
      inkscape:label="Graphics"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-1022.3622)"
+     transform="translate(0,-1036.3622)"
      style="display:inline">
-    <path
-       sodipodi:type="arc"
-       style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="path10913"
-       sodipodi:cx="14.584078"
-       sodipodi:cy="14.664621"
-       sodipodi:rx="14.672466"
-       sodipodi:ry="14.71666"
-       d="m 29.256544,14.664621 a 14.672466,14.71666 0 1 1 -29.34493244,0 14.672466,14.71666 0 1 1 29.34493244,0 z"
-       transform="matrix(0.98868191,0,0,0.98571295,0.5809862,1022.9071)" />
+    <rect
+       style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:0.93325316999999997;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect7776"
+       width="49.06675"
+       height="15.066747"
+       x="0.46662658"
+       y="1036.8289"
+       rx="4.7773395"
+       ry="4.557775" />
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="6.0987964"
-       y="1041.4021"
+       x="16.036686"
+       y="1048.5793"
        id="text10915"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan10917"
-         x="6.0987964"
-         y="1041.4021">Bu</tspan></text>
+         x="16.036686"
+         y="1048.5793">Bu</tspan></text>
   </g>
 </svg>

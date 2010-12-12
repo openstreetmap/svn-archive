@@ -166,31 +166,31 @@ public class OSeaMAction {
 			ActionListener alType = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (chanButton.isSelected()) {
-						chanButton.setEnabled(false);
+				        chanButton.setBorderPainted(true);
 						panelChan.setVisible(true);
 					} else {
-						chanButton.setEnabled(true);
+				        chanButton.setBorderPainted(false);
 						panelChan.setVisible(false);
 					}
 					if (hazButton.isSelected()) {
-						hazButton.setEnabled(false);
+				        hazButton.setBorderPainted(true);
 						panelHaz.setVisible(true);
 					} else {
-						hazButton.setEnabled(true);
+				        hazButton.setBorderPainted(false);
 						panelHaz.setVisible(false);
 					}
 					if (specButton.isSelected()) {
-						specButton.setEnabled(false);
+				        specButton.setBorderPainted(true);
 						panelSpec.setVisible(true);
 					} else {
-						specButton.setEnabled(true);
+				        specButton.setBorderPainted(false);
 						panelSpec.setVisible(false);
 					}
 					if (lightsButton.isSelected()) {
-						lightsButton.setEnabled(false);
+				        lightsButton.setBorderPainted(true);
 						panelLights.setVisible(true);
 					} else {
-						lightsButton.setEnabled(true);
+				        lightsButton.setBorderPainted(false);
 						panelLights.setVisible(false);
 					}
 				}
@@ -212,31 +212,31 @@ public class OSeaMAction {
 			ActionListener alMisc = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (topButton.isSelected()) {
-						topButton.setEnabled(false);
+						topButton.setBorderPainted(true);
 						panelTop.setVisible(true);
 					} else {
-						topButton.setEnabled(true);
+						topButton.setBorderPainted(false);
 						panelTop.setVisible(false);
 					}
 					if (fogButton.isSelected()) {
-						fogButton.setEnabled(false);
+						fogButton.setBorderPainted(true);
 						panelFog.setVisible(true);
 					} else {
-						fogButton.setEnabled(true);
+						fogButton.setBorderPainted(false);
 						panelFog.setVisible(false);
 					}
 					if (radarButton.isSelected()) {
-						radarButton.setEnabled(false);
+						radarButton.setBorderPainted(true);
 						panelRadar.setVisible(true);
 					} else {
-						radarButton.setEnabled(true);
+						radarButton.setBorderPainted(false);
 						panelRadar.setVisible(false);
 					}
 					if (litButton.isSelected()) {
-						litButton.setEnabled(false);
+						litButton.setBorderPainted(true);
 						panelLit.setVisible(true);
 					} else {
-						litButton.setEnabled(true);
+						litButton.setBorderPainted(false);
 						panelLit.setVisible(false);
 					}
 				}
@@ -265,7 +265,8 @@ public class OSeaMAction {
 		if (chanButton == null) {
 			chanButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/ChanButton.png")));
-			chanButton.setBounds(new Rectangle(0, 0, 65, 40));
+			chanButton.setBounds(new Rectangle(0, 0, 62, 40));
+	        chanButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			chanButton.setToolTipText(Messages.getString("ChanTip"));
 		}
 		return chanButton;
@@ -275,7 +276,8 @@ public class OSeaMAction {
 		if (hazButton == null) {
 			hazButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/HazButton.png")));
-			hazButton.setBounds(new Rectangle(0, 40, 65, 40));
+			hazButton.setBounds(new Rectangle(0, 40, 62, 40));
+	        hazButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			hazButton.setToolTipText(Messages.getString("HazTip"));
 		}
 		return hazButton;
@@ -285,7 +287,8 @@ public class OSeaMAction {
 		if (specButton == null) {
 			specButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/SpecButton.png")));
-			specButton.setBounds(new Rectangle(0, 80, 65, 40));
+			specButton.setBounds(new Rectangle(0, 80, 62, 40));
+	        specButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			specButton.setToolTipText(Messages.getString("SpecTip"));
 		}
 		return specButton;
@@ -295,7 +298,8 @@ public class OSeaMAction {
 		if (lightsButton == null) {
 			lightsButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/LightsButton.png")));
-			lightsButton.setBounds(new Rectangle(0, 120, 65, 40));
+			lightsButton.setBounds(new Rectangle(0, 120, 62, 40));
+	        lightsButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			lightsButton.setToolTipText(Messages.getString("LightsTip"));
 		}
 		return lightsButton;
@@ -305,7 +309,8 @@ public class OSeaMAction {
 		if (topButton == null) {
 			topButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/TopButton.png")));
-			topButton.setBounds(new Rectangle(0, 165, 36, 32));
+			topButton.setBounds(new Rectangle(0, 165, 34, 32));
+	        topButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			topButton.setToolTipText(Messages.getString("TopmarksTip"));
 		}
 		return topButton;
@@ -315,7 +320,8 @@ public class OSeaMAction {
 		if (fogButton == null) {
 			fogButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/FogButton.png")));
-			fogButton.setBounds(new Rectangle(0, 200, 36, 32));
+			fogButton.setBounds(new Rectangle(0, 200, 34, 32));
+	        fogButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			fogButton.setToolTipText(Messages.getString("FogSignalsTip"));
 		}
 		return fogButton;
@@ -325,7 +331,8 @@ public class OSeaMAction {
 		if (radarButton == null) {
 			radarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/RadarButton.png")));
-			radarButton.setBounds(new Rectangle(0, 235, 36, 32));
+			radarButton.setBounds(new Rectangle(0, 235, 34, 32));
+	        radarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			radarButton.setToolTipText(Messages.getString("RadarTip"));
 		}
 		return radarButton;
@@ -335,7 +342,8 @@ public class OSeaMAction {
 		if (litButton == null) {
 			litButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/LitButton.png")));
-			litButton.setBounds(new Rectangle(0, 270, 36, 32));
+			litButton.setBounds(new Rectangle(0, 270, 34, 32));
+	        litButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			litButton.setToolTipText(Messages.getString("LitTip"));
 		}
 		return litButton;

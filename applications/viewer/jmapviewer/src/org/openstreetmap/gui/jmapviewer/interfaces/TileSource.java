@@ -2,8 +2,8 @@ package org.openstreetmap.gui.jmapviewer.interfaces;
 
 import java.awt.Image;
 
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
-import org.openstreetmap.josm.data.coor.LatLon;
 
 //License: GPL. Copyright 2008 by Jan Peter Stotz
 
@@ -100,14 +100,13 @@ public interface TileSource {
      */
     public boolean requiresAttribution();
 
-    // FIXME: JMapViewer shouldn't reference JOSM classes.
     /**
      * @param zoom The optional zoom level for the view.
      * @param botRight The bottom right of the bounding box for attribution.
      * @param topLeft The top left of the bounding box for attribution.
      * @return Attribution text for the image source.
      */
-    public String getAttributionText(int zoom, LatLon topLeft, LatLon botRight);
+    public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight);
 
     /**
      * @return The URL for the attribution image. Null if no image should be displayed.

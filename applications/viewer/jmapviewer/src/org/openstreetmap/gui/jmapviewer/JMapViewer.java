@@ -31,7 +31,6 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
  * 
@@ -773,9 +772,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         g.setFont(ATTR_FONT);
         Coordinate topLeft = getPosition(0,0);
         Coordinate bottomRight = getPosition(getWidth(),getHeight());
-        String attributionText = tileSource.getAttributionText(zoom,
-                new LatLon(topLeft.getLat(),topLeft.getLon()),
-                new LatLon(bottomRight.getLat(),bottomRight.getLon()));
+        String attributionText = tileSource.getAttributionText(zoom, topLeft, bottomRight);
         Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(attributionText, g);
         {
             int x = getWidth() - (int) stringBounds.getWidth();

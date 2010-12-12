@@ -5,7 +5,6 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.josm.data.coor.LatLon;
 
 public class OsmTileSource {
 
@@ -84,7 +83,7 @@ public class OsmTileSource {
             return REQUIRES_ATTRIBUTION;
         }
 
-        public String getAttributionText(int zoom, LatLon topLeft, LatLon botRight) {
+        public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
             return "CC-BY-SA OpenStreetMap and Contributors";
         }
 

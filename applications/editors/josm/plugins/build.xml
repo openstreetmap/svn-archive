@@ -7,9 +7,6 @@
     <target name="build" depends="dist"></target>
     <target name="dist" depends="compile">
         <mkdir dir="../dist"/>
-        <!-- must be before other plugins using it -->
-        <ant antfile="build.xml" target="dist" dir="remotecontrol"/>
-
         <ant antfile="build.xml" target="dist" dir="addrinterpolation"/>
         <ant antfile="build.xml" target="dist" dir="alignways"/>
         <ant antfile="build.xml" target="dist" dir="buildings_tools"/>
@@ -30,7 +27,6 @@
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
-        <ant antfile="build.xml" target="dist" dir="imagery"/>
         <ant antfile="build.xml" target="dist" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="dist" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="dist" dir="importvec"/>
@@ -57,7 +53,6 @@
         <ant antfile="build.xml" target="dist" dir="routes"/>
         <ant antfile="build.xml" target="dist" dir="routing"/>
         <ant antfile="build.xml" target="dist" dir="simplifyarea"/>
-        <ant antfile="build.xml" target="dist" dir="slippymap"/>
         <ant antfile="build.xml" target="dist" dir="smed"/>
         <ant antfile="build.xml" target="dist" dir="smed_fw"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
@@ -75,7 +70,6 @@
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
         <ant antfile="build.xml" target="dist" dir="waypoint_search"/>
         <ant antfile="build.xml" target="dist" dir="wayselector"/>
-        <ant antfile="build.xml" target="dist" dir="wmsplugin"/>
         <ant antfile="build.xml" target="dist" dir="wms-turbo-challenge2"/>
         <!-- behind wms plugin! -->
         <ant antfile="build.xml" target="dist" dir="irsrectify"/>
@@ -103,7 +97,6 @@
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="gpxfilter"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>
-        <ant antfile="build.xml" target="clean" dir="imagery"/>
         <ant antfile="build.xml" target="clean" dir="imagewaypoint"/>
         <ant antfile="build.xml" target="clean" dir="ImportImagePlugin"/>
         <ant antfile="build.xml" target="clean" dir="importvec"/>
@@ -125,7 +118,6 @@
         <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
         <ant antfile="build.xml" target="clean" dir="public_transport"/>
-        <ant antfile="build.xml" target="clean" dir="remotecontrol"/>
         <ant antfile="build.xml" target="clean" dir="restart"/>
         <ant antfile="build.xml" target="clean" dir="reverter"/>
         <ant antfile="build.xml" target="clean" dir="rgisopen"/>
@@ -133,7 +125,6 @@
         <ant antfile="build.xml" target="clean" dir="routes"/>
         <ant antfile="build.xml" target="clean" dir="routing"/>
         <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
-        <ant antfile="build.xml" target="clean" dir="slippymap"/>
         <ant antfile="build.xml" target="clean" dir="smed"/>
         <!--<ant antfile="build.xml" target="clean" dir="smed_bfw"/>-->
         <ant antfile="build.xml" target="clean" dir="smed_fw"/>
@@ -153,7 +144,6 @@
         <ant antfile="build.xml" target="clean" dir="waydownloader"/>
         <ant antfile="build.xml" target="clean" dir="waypoint_search"/>
         <ant antfile="build.xml" target="clean" dir="wayselector"/>
-        <ant antfile="build.xml" target="clean" dir="wmsplugin"/>
         <ant antfile="build.xml" target="clean" dir="wms-turbo-challenge2"/>
     </target>
     <target name="clean_install"></target>

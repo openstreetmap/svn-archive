@@ -72,6 +72,10 @@ public class OSeaMAction {
 	private PanelHaz panelHaz = null;
 	private PanelSpec panelSpec = null;
 	private PanelLights panelLights = null;
+	private PanelTop panelTop = null;
+	private PanelFog panelFog = null;
+	private PanelRadar panelRadar = null;
+	private PanelLit panelLit = null;
 
 	public OSeaMAction() {
 
@@ -98,6 +102,18 @@ public class OSeaMAction {
 		panelLights = new PanelLights();
 		panelLights.setBounds(new Rectangle(65, 0, 335, 160));
 		panelLights.setVisible(false);
+		panelTop = new PanelTop();
+		panelTop.setBounds(new Rectangle(40, 165, 220, 155));
+		panelTop.setVisible(false);
+		panelFog = new PanelFog();
+		panelFog.setBounds(new Rectangle(40, 165, 220, 155));
+		panelFog.setVisible(false);
+		panelRadar = new PanelRadar();
+		panelRadar.setBounds(new Rectangle(40, 165, 220, 155));
+		panelRadar.setVisible(false);
+		panelLit = new PanelLit();
+		panelLit.setBounds(new Rectangle(40, 165, 220, 155));
+		panelLit.setVisible(false);
 	}
 
 	public JPanel getOSeaMPanel() {
@@ -138,6 +154,10 @@ public class OSeaMAction {
 			oseamPanel.add(panelHaz, null);
 			oseamPanel.add(panelSpec, null);
 			oseamPanel.add(panelLights, null);
+			oseamPanel.add(panelTop, null);
+			oseamPanel.add(panelFog, null);
+			oseamPanel.add(panelRadar, null);
+			oseamPanel.add(panelLit, null);
 			typeButtons = new ButtonGroup();
 			typeButtons.add(chanButton);
 			typeButtons.add(hazButton);
@@ -191,10 +211,34 @@ public class OSeaMAction {
 			miscButtons.add(litButton);
 			ActionListener alMisc = new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					topButton.setEnabled(!topButton.isSelected());
-					fogButton.setEnabled(!fogButton.isSelected());
-					radarButton.setEnabled(!radarButton.isSelected());
-					litButton.setEnabled(!litButton.isSelected());
+					if (topButton.isSelected()) {
+						topButton.setEnabled(false);
+						panelTop.setVisible(true);
+					} else {
+						topButton.setEnabled(true);
+						panelTop.setVisible(false);
+					}
+					if (fogButton.isSelected()) {
+						fogButton.setEnabled(false);
+						panelFog.setVisible(true);
+					} else {
+						fogButton.setEnabled(true);
+						panelFog.setVisible(false);
+					}
+					if (radarButton.isSelected()) {
+						radarButton.setEnabled(false);
+						panelRadar.setVisible(true);
+					} else {
+						radarButton.setEnabled(true);
+						panelRadar.setVisible(false);
+					}
+					if (litButton.isSelected()) {
+						litButton.setEnabled(false);
+						panelLit.setVisible(true);
+					} else {
+						litButton.setEnabled(true);
+						panelLit.setVisible(false);
+					}
 				}
 			};
 			topButton.addActionListener(alMisc);

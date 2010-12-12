@@ -76,38 +76,38 @@ public class PanelChan extends JPanel {
 		ActionListener alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (portButton.isSelected()) {
-					portButton.setEnabled(false);
+					portButton.setBorderPainted(true);
 					panelPort.setVisible(true);
 				} else {
-					portButton.setEnabled(true);
+					portButton.setBorderPainted(false);
 					panelPort.setVisible(false);
 				}
 				if (stbdButton.isSelected()) {
-					stbdButton.setEnabled(false);
+					stbdButton.setBorderPainted(true);
 					panelStbd.setVisible(true);
 				} else {
-					stbdButton.setEnabled(true);
+					stbdButton.setBorderPainted(false);
 					panelStbd.setVisible(false);
 				}
 				if (prefPortButton.isSelected()) {
-					prefPortButton.setEnabled(false);
+					prefPortButton.setBorderPainted(true);
 					panelPrefPort.setVisible(true);
 				} else {
-					prefPortButton.setEnabled(true);
+					prefPortButton.setBorderPainted(false);
 					panelPrefPort.setVisible(false);
 				}
 				if (prefStbdButton.isSelected()) {
-					prefStbdButton.setEnabled(false);
+					prefStbdButton.setBorderPainted(true);
 					panelPrefStbd.setVisible(true);
 				} else {
-					prefStbdButton.setEnabled(true);
+					prefStbdButton.setBorderPainted(false);
 					panelPrefStbd.setVisible(false);
 				}
 				if (safeWaterButton.isSelected()) {
-					safeWaterButton.setEnabled(false);
+					safeWaterButton.setBorderPainted(true);
 					panelSafeWater.setVisible(true);
 				} else {
-					safeWaterButton.setEnabled(true);
+					safeWaterButton.setBorderPainted(false);
 					panelSafeWater.setVisible(false);
 				}
 			}
@@ -123,7 +123,8 @@ public class PanelChan extends JPanel {
 		if (portButton == null) {
 			portButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/PortButton.png")));
-			portButton.setBounds(new Rectangle(0, 0, 55, 32));
+			portButton.setBounds(new Rectangle(0, 0, 52, 32));
+			portButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			portButton.setToolTipText(Messages.getString("PortTip"));
 		}
 		return portButton;
@@ -133,7 +134,8 @@ public class PanelChan extends JPanel {
 		if (stbdButton == null) {
 			stbdButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/StbdButton.png")));
-			stbdButton.setBounds(new Rectangle(0, 32, 55, 32));
+			stbdButton.setBounds(new Rectangle(0, 32, 52, 32));
+			stbdButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			stbdButton.setToolTipText(Messages.getString("StbdTip"));
 		}
 		return stbdButton;
@@ -143,7 +145,8 @@ public class PanelChan extends JPanel {
 		if (prefPortButton == null) {
 			prefPortButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PrefPortButton.png")));
-			prefPortButton.setBounds(new Rectangle(0, 64, 55, 32));
+			prefPortButton.setBounds(new Rectangle(0, 64, 52, 32));
+			prefPortButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			prefPortButton.setToolTipText(Messages.getString("PrefPortTip"));
 		}
 		return prefPortButton;
@@ -153,7 +156,8 @@ public class PanelChan extends JPanel {
 		if (prefStbdButton == null) {
 			prefStbdButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PrefStbdButton.png")));
-			prefStbdButton.setBounds(new Rectangle(0, 96, 55, 32));
+			prefStbdButton.setBounds(new Rectangle(0, 96, 52, 32));
+			prefStbdButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			prefStbdButton.setToolTipText(Messages.getString("PrefStbdTip"));
 		}
 		return prefStbdButton;
@@ -163,7 +167,8 @@ public class PanelChan extends JPanel {
 		if (safeWaterButton == null) {
 			safeWaterButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/SafeWaterButton.png")));
-			safeWaterButton.setBounds(new Rectangle(0, 128, 55, 32));
+			safeWaterButton.setBounds(new Rectangle(0, 128, 52, 32));
+	        safeWaterButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			safeWaterButton.setToolTipText(Messages.getString("SafeWaterTip"));
 		}
 		return safeWaterButton;

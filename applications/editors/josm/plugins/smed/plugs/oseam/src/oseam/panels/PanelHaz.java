@@ -57,11 +57,11 @@ public class PanelHaz extends JPanel {
 		catButtons.add(isolButton);
 		ActionListener alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				northButton.setEnabled(!northButton.isSelected());
-				southButton.setEnabled(!southButton.isSelected());
-				eastButton.setEnabled(!eastButton.isSelected());
-				westButton.setEnabled(!westButton.isSelected());
-				isolButton.setEnabled(!isolButton.isSelected());
+				northButton.setBorderPainted(northButton.isSelected());
+				southButton.setBorderPainted(southButton.isSelected());
+				eastButton.setBorderPainted(eastButton.isSelected());
+				westButton.setBorderPainted(westButton.isSelected());
+				isolButton.setBorderPainted(isolButton.isSelected());
 			}
 		};
 		northButton.addActionListener(alCat);
@@ -83,11 +83,11 @@ public class PanelHaz extends JPanel {
 		shapeButtons.add(towerButton);
 		ActionListener alShape = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				pillarButton.setEnabled(!pillarButton.isSelected());
-				sparButton.setEnabled(!sparButton.isSelected());
-				floatButton.setEnabled(!floatButton.isSelected());
-				beaconButton.setEnabled(!beaconButton.isSelected());
-				towerButton.setEnabled(!towerButton.isSelected());
+				pillarButton.setBorderPainted(pillarButton.isSelected());
+				sparButton.setBorderPainted(sparButton.isSelected());
+				floatButton.setBorderPainted(floatButton.isSelected());
+				beaconButton.setBorderPainted(beaconButton.isSelected());
+				towerButton.setBorderPainted(towerButton.isSelected());
 			}
 		};
 		pillarButton.addActionListener(alShape);
@@ -101,7 +101,8 @@ public class PanelHaz extends JPanel {
 		if (northButton == null) {
 			northButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/CardNButton.png")));
-			northButton.setBounds(new Rectangle(0, 0, 55, 32));
+			northButton.setBounds(new Rectangle(0, 0, 52, 32));
+	        northButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			northButton.setToolTipText(Messages.getString("NorthTip"));
 		}
 		return northButton;
@@ -111,7 +112,8 @@ public class PanelHaz extends JPanel {
 		if (southButton == null) {
 			southButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/CardSButton.png")));
-			southButton.setBounds(new Rectangle(0, 32, 55, 32));
+			southButton.setBounds(new Rectangle(0, 32, 52, 32));
+	        southButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			southButton.setToolTipText(Messages.getString("SouthTip"));
 		}
 		return southButton;
@@ -121,7 +123,8 @@ public class PanelHaz extends JPanel {
 		if (eastButton == null) {
 			eastButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/CardEButton.png")));
-			eastButton.setBounds(new Rectangle(0, 64, 55, 32));
+			eastButton.setBounds(new Rectangle(0, 64, 52, 32));
+	        eastButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			eastButton.setToolTipText(Messages.getString("EastTip"));
 		}
 		return eastButton;
@@ -131,7 +134,8 @@ public class PanelHaz extends JPanel {
 		if (westButton == null) {
 			westButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/CardWButton.png")));
-			westButton.setBounds(new Rectangle(0, 96, 55, 32));
+			westButton.setBounds(new Rectangle(0, 96, 52, 32));
+	        westButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			westButton.setToolTipText(Messages.getString("WestTip"));
 		}
 		return westButton;
@@ -141,7 +145,8 @@ public class PanelHaz extends JPanel {
 		if (isolButton == null) {
 			isolButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/IsolButton.png")));
-			isolButton.setBounds(new Rectangle(0, 128, 55, 32));
+			isolButton.setBounds(new Rectangle(0, 128, 52, 32));
+	        isolButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			isolButton.setToolTipText(Messages.getString("IsolTip"));
 		}
 		return isolButton;
@@ -151,7 +156,8 @@ public class PanelHaz extends JPanel {
 		if (pillarButton == null) {
 			pillarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PillarButton.png")));
-			pillarButton.setBounds(new Rectangle(55, 0, 90, 32));
+			pillarButton.setBounds(new Rectangle(55, 0, 34, 32));
+	        pillarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			pillarButton.setToolTipText(Messages.getString("PillarTip"));
 		}
 		return pillarButton;
@@ -161,7 +167,8 @@ public class PanelHaz extends JPanel {
 		if (sparButton == null) {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/SparButton.png")));
-			sparButton.setBounds(new Rectangle(55, 32, 90, 32));
+			sparButton.setBounds(new Rectangle(55, 32, 34, 32));
+	        sparButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			sparButton.setToolTipText(Messages.getString("SparTip"));
 		}
 		return sparButton;
@@ -171,7 +178,8 @@ public class PanelHaz extends JPanel {
 		if (floatButton == null) {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/FloatButton.png")));
-			floatButton.setBounds(new Rectangle(55, 64, 90, 32));
+			floatButton.setBounds(new Rectangle(55, 64, 34, 32));
+	        floatButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			floatButton.setToolTipText(Messages.getString("FloatTip"));
 		}
 		return floatButton;
@@ -181,7 +189,8 @@ public class PanelHaz extends JPanel {
 		if (beaconButton == null) {
 			beaconButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BeaconButton.png")));
-			beaconButton.setBounds(new Rectangle(55, 96, 90, 32));
+			beaconButton.setBounds(new Rectangle(55, 96, 34, 32));
+	        beaconButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			beaconButton.setToolTipText(Messages.getString("BeaconTip"));
 		}
 		return beaconButton;
@@ -191,7 +200,8 @@ public class PanelHaz extends JPanel {
 		if (towerButton == null) {
 			towerButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/TowerButton.png")));
-			towerButton.setBounds(new Rectangle(55, 128, 90, 32));
+			towerButton.setBounds(new Rectangle(55, 128, 34, 32));
+	        towerButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			towerButton.setToolTipText(Messages.getString("TowerTip"));
 		}
 		return towerButton;

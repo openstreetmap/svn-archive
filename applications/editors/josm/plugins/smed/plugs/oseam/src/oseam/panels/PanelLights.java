@@ -50,11 +50,11 @@ public class PanelLights extends JPanel {
 		catButtons.add(floatButton);
 		ActionListener alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				houseButton.setEnabled(!houseButton.isSelected());
-				majorButton.setEnabled(!majorButton.isSelected());
-				minorButton.setEnabled(!minorButton.isSelected());
-				vesselButton.setEnabled(!vesselButton.isSelected());
-				floatButton.setEnabled(!floatButton.isSelected());
+				houseButton.setBorderPainted(houseButton.isSelected());
+				majorButton.setBorderPainted(majorButton.isSelected());
+				minorButton.setBorderPainted(minorButton.isSelected());
+				vesselButton.setBorderPainted(vesselButton.isSelected());
+				floatButton.setBorderPainted(floatButton.isSelected());
 			}
 		};
 		houseButton.addActionListener(alCat);
@@ -68,7 +68,8 @@ public class PanelLights extends JPanel {
 		if (houseButton == null) {
 			houseButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LighthouseButton.png")));
-			houseButton.setBounds(new Rectangle(0, 0, 35, 32));
+			houseButton.setBounds(new Rectangle(0, 0, 34, 32));
+	        houseButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			houseButton.setToolTipText(Messages.getString("LighthouseTip"));
 		}
 		return houseButton;
@@ -78,7 +79,8 @@ public class PanelLights extends JPanel {
 		if (majorButton == null) {
 			majorButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LightMajorButton.png")));
-			majorButton.setBounds(new Rectangle(0, 32, 35, 32));
+			majorButton.setBounds(new Rectangle(0, 32, 34, 32));
+	        majorButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			majorButton.setToolTipText(Messages.getString("MajorLightTip"));
 		}
 		return majorButton;
@@ -88,7 +90,8 @@ public class PanelLights extends JPanel {
 		if (minorButton == null) {
 			minorButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LightMinorButton.png")));
-			minorButton.setBounds(new Rectangle(0, 64, 35, 32));
+			minorButton.setBounds(new Rectangle(0, 64, 34, 32));
+	        minorButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			minorButton.setToolTipText(Messages.getString("MinorLightTip"));
 		}
 		return minorButton;
@@ -98,7 +101,8 @@ public class PanelLights extends JPanel {
 		if (vesselButton == null) {
 			vesselButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LightVesselButton.png")));
-			vesselButton.setBounds(new Rectangle(0, 96, 35, 32));
+			vesselButton.setBounds(new Rectangle(0, 96, 34, 32));
+	        vesselButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			vesselButton.setToolTipText(Messages.getString("LightVesselTip"));
 		}
 		return vesselButton;
@@ -108,7 +112,8 @@ public class PanelLights extends JPanel {
 		if (floatButton == null) {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/LightFloatButton.png")));
-			floatButton.setBounds(new Rectangle(0, 128, 35, 32));
+			floatButton.setBounds(new Rectangle(0, 128, 34, 32));
+	        floatButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			floatButton.setToolTipText(Messages.getString("LightFloatTip"));
 		}
 		return floatButton;

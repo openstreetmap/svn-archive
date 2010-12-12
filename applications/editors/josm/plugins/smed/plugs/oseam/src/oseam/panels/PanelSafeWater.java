@@ -51,11 +51,11 @@ public class PanelSafeWater extends JPanel {
 		shapeButtons.add(floatButton);
 		ActionListener alShape = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				pillarButton.setEnabled(!pillarButton.isSelected());
-				sparButton.setEnabled(!sparButton.isSelected());
-				sphereButton.setEnabled(!sphereButton.isSelected());
-				barrelButton.setEnabled(!barrelButton.isSelected());
-				floatButton.setEnabled(!floatButton.isSelected());
+				pillarButton.setBorderPainted(pillarButton.isSelected());
+				sparButton.setBorderPainted(sparButton.isSelected());
+				sphereButton.setBorderPainted(sphereButton.isSelected());
+				barrelButton.setBorderPainted(barrelButton.isSelected());
+				floatButton.setBorderPainted(floatButton.isSelected());
 			}
 		};
 		pillarButton.addActionListener(alShape);
@@ -69,7 +69,8 @@ public class PanelSafeWater extends JPanel {
 		if (pillarButton == null) {
 			pillarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/PillarButton.png")));
-			pillarButton.setBounds(new Rectangle(0, 0, 35, 32));
+			pillarButton.setBounds(new Rectangle(0, 0, 34, 32));
+	        pillarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			pillarButton.setToolTipText(Messages.getString("PillarTip"));
 		}
 		return pillarButton;
@@ -79,7 +80,8 @@ public class PanelSafeWater extends JPanel {
 		if (sparButton == null) {
 			sparButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/SparButton.png")));
-			sparButton.setBounds(new Rectangle(0, 32, 35, 32));
+			sparButton.setBounds(new Rectangle(0, 32, 34, 32));
+	        sparButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			sparButton.setToolTipText(Messages.getString("SparTip"));
 		}
 		return sparButton;
@@ -89,7 +91,8 @@ public class PanelSafeWater extends JPanel {
 		if (sphereButton == null) {
 			sphereButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/SphereButton.png")));
-			sphereButton.setBounds(new Rectangle(0, 64, 35, 32));
+			sphereButton.setBounds(new Rectangle(0, 64, 34, 32));
+	        sphereButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			sphereButton.setToolTipText(Messages.getString("SphereTip"));
 		}
 		return sphereButton;
@@ -99,7 +102,8 @@ public class PanelSafeWater extends JPanel {
 		if (barrelButton == null) {
 			barrelButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/BarrelButton.png")));
-			barrelButton.setBounds(new Rectangle(0, 96, 35, 32));
+			barrelButton.setBounds(new Rectangle(0, 96, 34, 32));
+	        barrelButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			barrelButton.setToolTipText(Messages.getString("BarrelTip"));
 		}
 		return barrelButton;
@@ -109,7 +113,8 @@ public class PanelSafeWater extends JPanel {
 		if (floatButton == null) {
 			floatButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/FloatButton.png")));
-			floatButton.setBounds(new Rectangle(0, 128, 35, 32));
+			floatButton.setBounds(new Rectangle(0, 128, 34, 32));
+	        floatButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			floatButton.setToolTipText(Messages.getString("FloatTip"));
 		}
 		return floatButton;

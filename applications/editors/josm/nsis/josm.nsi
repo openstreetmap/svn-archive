@@ -314,14 +314,6 @@ SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\openstreetbugs.jar"
 SectionEnd
 
-Section $(JOSM_SEC_REMOTECONTROL_PLUGIN) SecRemoteControlPlugin
-;-------------------------------------------
-SectionIn 1 2
-SetShellVarContext current
-SetOutPath $APPDATA\JOSM\plugins
-File "..\dist\remotecontrol.jar"
-SectionEnd
-
 Section $(JOSM_SEC_TURNRESTRICTIONS_PLUGIN) SecTurnrestrictionsPlugin
 ;-------------------------------------------
 SectionIn 1 2
@@ -330,12 +322,10 @@ SetOutPath $APPDATA\JOSM\plugins
 File "..\dist\turnrestrictions.jar"
 SectionEnd
 
-Section $(JOSM_SEC_WMS_PLUGIN) SecWMSPlugin
+Section $(JOSM_SEC_WMS) SecWMS
 ;-------------------------------------------
 SectionIn 1 2
 SetShellVarContext current
-SetOutPath $APPDATA\JOSM\plugins
-File "..\dist\wmsplugin.jar"
 SetOutPath $INSTDIR\imageformats
 File "webkit-image\imageformats\qjpeg4.dll"
 SetOutPath $INSTDIR
@@ -397,7 +387,7 @@ SectionIn 1 2
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 !include LogicLib.nsh
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "openstreetbugsremotecontrolturnrestrictionswmsplugin"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "openstreetbugsturnrestrictions"
 SectionEnd
 
 
@@ -463,6 +453,8 @@ Delete "$APPDATA\JOSM\plugins\openstreetbugs\*.*"
 RMDir "$APPDATA\JOSM\plugins\openstreetbugs"
 Delete "$APPDATA\JOSM\plugins\remotecontrol\*.*"
 RMDir "$APPDATA\JOSM\plugins\remotecontrol"
+Delete "$APPDATA\JOSM\plugins\validator\*.*"
+RMDir "$APPDATA\JOSM\plugins\validator"
 Delete "$APPDATA\JOSM\plugins\wmsplugin\*.*"
 RMDir "$APPDATA\JOSM\plugins\wmsplugin"
 Delete "$APPDATA\JOSM\plugins\*.*"
@@ -492,9 +484,8 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} $(JOSM_SECDESC_JOSM)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecOpenStreetBugsPlugin} $(JOSM_SECDESC_OPENSTREETBUGS_PLUGIN)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecRemoteControlPlugin} $(JOSM_SECDESC_REMOTECONTROL_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecTurnrestrictionsPlugin} $(JOSM_SECDESC_TURNRESTRICTIONS_PLUGIN)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} $(JOSM_SECDESC_WMS_PLUGIN)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecWMS} $(JOSM_SECDESC_WMS)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} $(JOSM_SECDESC_STARTMENU)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} $(JOSM_SECDESC_DESKTOP_ICON)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecQuickLaunchIcon} $(JOSM_SECDESC_QUICKLAUNCH_ICON) 

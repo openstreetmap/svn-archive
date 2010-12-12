@@ -15,6 +15,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.awt.event.ActionEvent;
 import java.util.TreeSet;
 
@@ -26,6 +28,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ExtendedDialog;
@@ -54,7 +57,9 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     final static String INTERPOLATION = "plugins.terracer.interpolation";
 
     final private Way street;
+    final private String streetName;
     final private boolean relationExists;
+    final ArrayList<Node> housenumbers;
 
     protected static final String DEFAULT_MESSAGE = tr("Enter housenumbers or amount of segments");
     private static final long serialVersionUID = 1L;
@@ -64,6 +69,8 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     JTextField lo;
     private JLabel hiLabel;
     JTextField hi;
+    private JLabel numbersLabel;
+    JTextField numbers;
     private JLabel streetLabel;
     AutoCompletingComboBox streetComboBox;
     private JLabel segmentsLabel;
@@ -79,9 +86,13 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     /**
      * @param street If street is not null, we assume, the name of the street to be fixed
      * and just show a label. If street is null, we show a ComboBox/InputField.
+     * @param streetName the name of the street, derived from either the
+     *        street line or the house numbers which are guaranteed to have the
+     *        same name attached (may be null)
      * @param relationExists If the buildings can be added to an existing relation or not.
+     * @param housenumbers a list of house numbers in this outline (may be empty)
      */
-    public HouseNumberInputDialog(HouseNumberInputHandler handler, Way street, boolean relationExists) {
+    public HouseNumberInputDialog(HouseNumberInputHandler handler, Way street, String streetName, boolean relationExists, ArrayList<Node> housenumbers) {
         super(Main.parent,
                 tr("Terrace a house"),
                 new String[] { tr("OK"), tr("Cancel")},
@@ -89,7 +100,9 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         );
         this.inputHandler = handler;
         this.street = street;
+        this.streetName = streetName;
         this.relationExists = relationExists;
+        this.housenumbers = housenumbers;
         handler.dialog = this;
         JPanel content = getInputPanel();
         setContent(content);
@@ -161,6 +174,9 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             loLabel.setToolTipText(tr("Lowest housenumber of the terraced house"));
             hiLabel = new JLabel();
             hiLabel.setText(tr("Highest Number"));
+            numbersLabel = new JLabel();
+            numbersLabel.setText(tr("List of Numbers"));
+            loLabel.setPreferredSize(new Dimension(111, 16));
             final String txt = relationExists ? tr("add to existing associatedStreet relation") : tr("create an associatedStreet relation");
 
             handleRelationCheckBox = new JCheckBox(txt, Main.pref.getBoolean(HANDLE_RELATION, true));
@@ -176,18 +192,35 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             inputPanel.add(getLo(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
             inputPanel.add(hiLabel, GBC.std().insets(3,3,0,0));
             inputPanel.add(getHi(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
+            inputPanel.add(numbersLabel, GBC.std().insets(3,3,0,0));
+            inputPanel.add(getNumbers(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
             inputPanel.add(interpolationLabel, GBC.std().insets(3,3,0,0));
             inputPanel.add(getInterpolation(), GBC.eol().insets(5,3,0,0));
             inputPanel.add(segmentsLabel, GBC.std().insets(3,3,0,0));
             inputPanel.add(getSegments(), GBC.eol().fill(GBC.HORIZONTAL).insets(5,3,0,0));
-            if (street == null) {
+            if (streetName == null) {
                 inputPanel.add(streetLabel, GBC.std().insets(3,3,0,0));
                 inputPanel.add(getStreet(), GBC.eol().insets(5,3,0,0));
             } else {
-                inputPanel.add(new JLabel(tr("Street name: ")+"\""+street.get("name")+"\""), GBC.eol().insets(3,3,0,0));
+                inputPanel.add(new JLabel(tr("Street name: ")+"\""+streetName+"\""), GBC.eol().insets(3,3,0,0));
             }
             inputPanel.add(handleRelationCheckBox, GBC.eol().insets(3,3,0,0));
             inputPanel.add(deleteOutlineCheckBox, GBC.eol().insets(3,3,0,0));
+            
+            if (numbers.isVisible())
+            {
+                loLabel.setVisible(false);
+                lo.setVisible(false);
+                lo.setEnabled(false);
+                hiLabel.setVisible(false);
+                hi.setVisible(false);
+                hi.setEnabled(false);
+                interpolationLabel.setVisible(false);
+                interpolation.setVisible(false);
+                interpolation.setEnabled(false);
+                segments.setText(String.valueOf(housenumbers.size()));
+                segments.setEditable(false);
+            }
         }
         return inputPanel;
     }
@@ -224,6 +257,33 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             hi.setText("");
         }
         return hi;
+    }
+    
+    /**
+     * This method initializes numbers
+     *
+     * @return javax.swing.JTextField
+     */
+    private JTextField getNumbers() {
+        if (numbers == null) {
+            numbers = new JTextField();
+            
+            Iterator<Node> it = housenumbers.iterator();
+            StringBuilder s = new StringBuilder(256);
+            if (it.hasNext()) {
+                s.append(it.next().get("addr:housenumber"));
+                while (it.hasNext())
+                    s.append(';').append(it.next().get("addr:housenumber"));
+            }
+            else {
+                numbersLabel.setVisible(false);
+                numbers.setVisible(false);
+            }
+            
+            numbers.setText(s.toString());
+            numbers.setEditable(false);
+        }
+        return numbers;
     }
 
     /**

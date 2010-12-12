@@ -31,7 +31,7 @@
     <property name="ant.build.javac.target" value="1.5"/>
 
 
-    <property name="commit.message" value="select a single node to fix the direction of numbering (Merkaartor style)" />
+    <property name="commit.message" value="applied #j5729 (patch by robome) - make terracing with existing address nodes easier" />
     <property name="plugin.main.version" value="3711" />
 
 

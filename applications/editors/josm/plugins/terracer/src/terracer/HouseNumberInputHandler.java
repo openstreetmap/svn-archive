@@ -18,12 +18,14 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -39,11 +41,13 @@ import org.openstreetmap.josm.data.osm.Node;
  *
  * @author casualwalker
  */
- public class HouseNumberInputHandler extends JosmAction implements ActionListener, FocusListener, ItemListener {
+public class HouseNumberInputHandler extends JosmAction implements ActionListener, FocusListener, ItemListener {
     private TerracerAction terracerAction;
     private Way outline, street;
+    private String streetName;
     private Node init;
     private Relation associatedStreet;
+    private ArrayList<Node> housenumbers;
     public HouseNumberInputDialog dialog;
 
     /**
@@ -53,20 +57,28 @@ import org.openstreetmap.josm.data.osm.Node;
      * @param outline the closed, quadrilateral way to terrace.
      * @param init The node that hints at which side to start the numbering
      * @param street the street, the buildings belong to (may be null)
+     * @param streetName the name of the street, derived from either the street line or
+     *            the house numbers which are guaranteed to have the same name
+     *            attached (may be null)
      * @param associatedStreet a relation where we can add the houses (may be null)
+     * @param housenumbers a list of house number nodes in this outline (may be empty)
      * @param title the title
      */
     public HouseNumberInputHandler(final TerracerAction terracerAction,
-            final Way outline, final Node init, final Way street, final Relation associatedStreet,
-            final String title) {
+            final Way outline, final Node init, final Way street, final String streetName,
+            final Relation associatedStreet,
+            final ArrayList<Node> housenumbers, final String title) {
         this.terracerAction = terracerAction;
         this.outline = outline;
         this.init = init;
         this.street = street;
+        this.streetName = streetName;
         this.associatedStreet = associatedStreet;
+        this.housenumbers = housenumbers;
 
         // This dialog is started modal
-        this.dialog = new HouseNumberInputDialog(this, street, associatedStreet != null);
+        this.dialog = new HouseNumberInputDialog(this, street, streetName,
+                associatedStreet != null, housenumbers);
 
         // We're done
     }
@@ -83,16 +95,16 @@ import org.openstreetmap.josm.data.osm.Node;
      */
     private static JButton getButton(Container root, String caption) {
         Component children[] = root.getComponents();
-         for (Component child : children) {
+        for (Component child : children) {
             JButton b;
             if (child instanceof JButton) {
                 b = (JButton) child;
                 if (caption.equals(b.getText())) return b;
             } else if (child instanceof Container) {
-                  b = getButton((Container)child, caption);
-                  if (b != null) return b;
-             }
-         }
+                b = getButton((Container) child, caption);
+                if (b != null) return b;
+            }
+        }
         return null;
     }
 
@@ -111,7 +123,8 @@ import org.openstreetmap.josm.data.osm.Node;
         isOk = isOk && checkSegmentsFromHousenumber(message);
         isOk = isOk && checkSegments(message);
 
-        // Allow non numeric characters for the low number as long as there is no high number of the segmentcount is 1
+        // Allow non numeric characters for the low number as long as there is
+        // no high number of the segmentcount is 1
         if (dialog.hi.getText().length() > 0 | segments() > 1) {
             isOk = isOk
                     && checkNumberStringField(dialog.lo, tr("Lowest number"),
@@ -138,10 +151,12 @@ import org.openstreetmap.josm.data.osm.Node;
             if (okButton != null)
                 okButton.setEnabled(false);
 
-            // For some reason the messageLabel doesn't want to show up, so a MessageDialog is shown instead. Someone more knowledgeable might fix this.
+            // For some reason the messageLabel doesn't want to show up, so a
+            // MessageDialog is shown instead. Someone more knowledgeable might fix this.
             dialog.messageLabel.setForeground(Color.red);
             dialog.messageLabel.setText(message.toString());
-            //JOptionPane.showMessageDialog(null, message.toString(), tr("Error"), JOptionPane.ERROR_MESSAGE);
+            // JOptionPane.showMessageDialog(null, message.toString(),
+            // tr("Error"), JOptionPane.ERROR_MESSAGE);
 
             return false;
         }
@@ -179,24 +194,26 @@ import org.openstreetmap.josm.data.osm.Node;
      * @return true, if successful
      */
     private boolean checkSegmentsFromHousenumber(final StringBuffer message) {
-        dialog.segments.setEditable(true);
+        if (!dialog.numbers.isVisible()) {
+            dialog.segments.setEditable(true);
 
-        if (numberFrom() != null && numberTo() != null) {
+            if (numberFrom() != null && numberTo() != null) {
+                int segments = numberTo().intValue() - numberFrom().intValue();
 
-            int segments = numberTo().intValue() - numberFrom().intValue();
+                if (segments % stepSize() != 0) {
+                    appendMessageNewLine(message);
+                    message
+                            .append(tr("Housenumbers do not match odd/even setting"));
+                    return false;
+                }
 
-            if (segments % stepSize() != 0) {
-                appendMessageNewLine(message);
-                message.append(tr("Housenumbers do not match odd/even setting"));
-                return false;
+                int steps = segments / stepSize();
+                steps++; // difference 0 means 1 building, see
+                // TerracerActon.terraceBuilding
+                dialog.segments.setText(String.valueOf(steps));
+                dialog.segments.setEditable(false);
+
             }
-
-            int steps = segments / stepSize();
-            steps++; // difference 0 means 1 building, see
-            // TerracerActon.terraceBuilding
-            dialog.segments.setText(String.valueOf(steps));
-            dialog.segments.setEditable(false);
-
         }
         return true;
     }
@@ -260,7 +277,9 @@ import org.openstreetmap.josm.data.osm.Node;
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
      * Called when the user selects from a pulldown selection
      */
@@ -268,7 +287,9 @@ import org.openstreetmap.josm.data.osm.Node;
         validateInput();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(final ActionEvent e) {
@@ -288,6 +309,7 @@ import org.openstreetmap.josm.data.osm.Node;
                         dialog.lo.getText(),
                         dialog.hi.getText(),
                         stepSize(),
+                        housenumbers,
                         streetName(),
                         doHandleRelation(),
                         doDeleteOutline());
@@ -356,11 +378,11 @@ import org.openstreetmap.josm.data.osm.Node;
     /**
      * Gets the street name.
      *
-     * @return the  street name or null, if not set / invalid.
+     * @return the street name or null, if not set / invalid.
      */
     public String streetName() {
-        if (street != null)
-            return null;
+        if (streetName != null)
+            return streetName;
 
         Object selected = dialog.streetComboBox.getSelectedItem();
         if (selected == null) {
@@ -386,11 +408,10 @@ import org.openstreetmap.josm.data.osm.Node;
         if (this.dialog.handleRelationCheckBox == null) {
             JOptionPane.showMessageDialog(null, "checkbox", "alert", JOptionPane.ERROR_MESSAGE);
             return true;
-        }  else {
+        } else {
             return this.dialog.handleRelationCheckBox.isSelected();
         }
     }
-
 
     /**
      * Whether the user likes to delete the outline way.
@@ -399,14 +420,18 @@ import org.openstreetmap.josm.data.osm.Node;
         return dialog.deleteOutlineCheckBox.isSelected();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
      */
     public void focusGained(FocusEvent e) {
         // Empty, but placeholder is required
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
      */
     public void focusLost(FocusEvent e) {

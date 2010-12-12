@@ -15,8 +15,15 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
@@ -28,6 +35,7 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -75,47 +83,85 @@ public final class TerracerAction extends JosmAction {
         Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
         Way outline = null;
         Way street = null;
+        String streetname = null;
+        ArrayList<Node> housenumbers = new ArrayList<Node>();
         Node init = null;
 
         class InvalidUserInputException extends Exception {
             InvalidUserInputException(String message) {
                 super(message);
             }
+
             InvalidUserInputException() {
                 super();
             }
         }
 
         try {
-            for (OsmPrimitive osm : sel) {
-                if (osm instanceof Node) {
-                    if (init != null)
-                        throw new InvalidUserInputException();
-                    init = (Node) osm;
-                } else if (osm instanceof Way) {
-                    if (osm.hasKey("highway")) {
-                        if (street != null)
-                            throw new InvalidUserInputException();
-                        street = (Way) osm;
-                        if (!street.hasKey("name"))
-                            throw new InvalidUserInputException();
-                    } else {
+            if (sel.size() == 1) {
+                OsmPrimitive prim = sel.iterator().next();
+
+                if (!(prim instanceof Way))
+                    throw new InvalidUserInputException();
+
+                outline = (Way) prim;
+            } else if (sel.size() > 1) {
+                List<Way> ways = OsmPrimitive.getFilteredList(sel, Way.class);
+                Iterator<Way> wit = ways.iterator();
+                while (wit.hasNext()) {
+                    Way way = wit.next();
+                    if (way.hasKey("building")) {
                         if (outline != null)
+                            // already have a building
                             throw new InvalidUserInputException();
-                        outline = (Way) osm;
+                        outline = way;
+                    } else if (way.hasKey("highway")) {
+                        if (street != null)
+                            // already have a street
+                            throw new InvalidUserInputException();
+                        street = way;
+
+                        if ((streetname = street.get("name")) == null)
+                            throw new InvalidUserInputException();
+                    } else
+                        throw new InvalidUserInputException();
+                }
+
+                if (outline == null)
+                    throw new InvalidUserInputException();
+
+                List<Node> nodes = OsmPrimitive.getFilteredList(sel, Node.class);
+                Iterator<Node> nit = nodes.iterator();
+                // Actually this should test if the selected address nodes lie
+                // within the selected outline. Any ideas how to do this?
+                while (nit.hasNext()) {
+                    Node node = nit.next();
+                    if (node.hasKey("addr:housenumber")) {
+                        String nodesstreetname = node.get("addr:street");
+                        // if a node has a street name if must be equal
+                        // to the one of the other address nodes
+                        if (nodesstreetname != null) {
+                            if (streetname == null)
+                                streetname = nodesstreetname;
+                            else if (!nodesstreetname.equals(streetname))
+                                throw new InvalidUserInputException();
+                        }
+
+                        housenumbers.add(node);
+                    } else {
+                        // A given node might not be an address node but then
+                        // it has to be part of the building to help getting
+                        // the number direction right.
+                        if (!outline.containsNode(node) || init != null)
+                            throw new InvalidUserInputException();
+                        init = node;
                     }
                 }
+
+                Collections.sort(housenumbers, new HousenumberNodeComparator());
             }
-            if (outline == null)
-                throw new InvalidUserInputException();
-            
-            if (init != null && !init.getReferrers().contains(outline))
-                throw new InvalidUserInputException();
 
-            if (outline.getNodesCount() < 5)
-                throw new InvalidUserInputException();
-
-            if (!outline.isClosed())
+            if (outline == null || !outline.isClosed() || outline.getNodesCount() < 5)
                 throw new InvalidUserInputException();
         } catch (InvalidUserInputException ex) {
             new ExtendedDialog(Main.parent, tr("Invalid selection"), new String[] {"OK"})
@@ -127,7 +173,7 @@ public final class TerracerAction extends JosmAction {
             return;
         }
 
-        // If we have a street, try to find a associatedStreet relation that could be reused.
+        // If we have a street, try to find an associatedStreet relation that could be reused.
         Relation associatedStreet = null;
         if (street != null) {
             outer:for (OsmPrimitive osm : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
@@ -145,9 +191,31 @@ public final class TerracerAction extends JosmAction {
             }
         }
 
-        String title = trn("Change {0} object", "Change {0} objects", sel.size(), sel.size());
-        // show input dialog.
-        new HouseNumberInputHandler(this, outline, init, street, associatedStreet, title);
+        if (housenumbers.size() == 1) {
+            // Special case of one outline and one address node.
+            // Don't open the dialogue, just copy the node keys
+            // to the outline, set building just in case it isn't there
+            // and remove the node.
+            Collection<Command> commands = new LinkedList<Command>();
+            Way newOutline = new Way(outline);
+            for (Entry<String, String> entry : housenumbers.get(0).getKeys()
+                    .entrySet()) {
+                newOutline.put(entry.getKey(), entry.getValue());
+            }
+            newOutline.put("building", "yes");
+            commands.add(new ChangeCommand(outline, newOutline));
+            commands.add(DeleteCommand.delete(Main.main.getEditLayer(),
+                    housenumbers, true, true));
+            Main.main.undoRedo
+                    .add(new SequenceCommand(tr("Terrace"), commands));
+            Main.main.getCurrentDataSet().setSelected(newOutline);
+        } else {
+            String title = trn("Change {0} object", "Change {0} objects", sel
+                    .size(), sel.size());
+            // show input dialog.
+            new HouseNumberInputHandler(this, outline, init, street, streetname,
+                    associatedStreet, housenumbers, title);
+        }
     }
 
     public Integer getNumber(String number) {
@@ -155,6 +223,43 @@ public final class TerracerAction extends JosmAction {
             return Integer.parseInt(number);
         } catch (NumberFormatException ex) {
             return null;
+        }
+    }
+
+    /**
+     * Sorts the house number nodes according their numbers only
+     * 
+     * @param house
+     *            number nodes
+     */
+    class HousenumberNodeComparator implements Comparator<Node> {
+        private final Pattern pat = Pattern.compile("^([0-9]+)");
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public int compare(Node node1, Node node2) {
+            // It's necessary to strip off trailing non-numbers so we can
+            // compare the numbers itself numerically since string comparison
+            // doesn't work for numbers with different number of digits,
+            // e.g. 9 is higher than 11
+            String node1String = node1.get("addr:housenumber");
+            String node2String = node2.get("addr:housenumber");
+            Matcher mat = pat.matcher(node1String);
+            if (mat.find()) {
+                Integer node1Int = Integer.valueOf(mat.group(1));
+                mat = pat.matcher(node2String);
+                if (mat.find()) {
+                    Integer node2Int = Integer.valueOf(mat.group(1));
+
+                    return node1Int.compareTo(node2Int);
+                }
+            }
+
+            return node1String.compareTo(node2String);
         }
     }
 
@@ -170,11 +275,17 @@ public final class TerracerAction extends JosmAction {
      * @param init The node that hints at which side to start the numbering
      * @param street The street, the buildings belong to (may be null)
      * @param associatedStreet
-     * @param From
-     * @param To
-     * @param streetName the name of a street (may be null). Used if not null and street is null.
-     * @param handleRelations If the user likes to add a relation or extend an existing relation
-     * @param deleteOutline If the outline way should be deleted, when done
+     * @param segments The number of segments to generate
+     * @param From Starting housenumber
+     * @param To Ending housenumber
+     * @param step The step width to use
+     * @param housenumbers List of housenumbers to use. From and To are ignored
+     *        if this is set.
+     * @param streetName the name of the street, derived from the street line
+     *        or the house numbers (may be null)
+     * @param handleRelations If the user likes to add a relation or extend an
+     *        existing relation
+     * @param deleteOutline If the outline way should be deleted when done
      */
     public void terraceBuilding(Way outline,
                 Node init,
@@ -184,25 +295,43 @@ public final class TerracerAction extends JosmAction {
                 String From,
                 String To,
                 int step,
+                ArrayList<Node> housenumbers,
                 String streetName,
                 boolean handleRelations,
                 boolean deleteOutline) {
         final int nb;
-
-        Integer to, from;
-        to = getNumber(To);
-        from = getNumber(From);
-        if (to != null && from != null) {
-            nb = 1 + (to.intValue() - from.intValue()) / step;
-        } else if (segments != null) {
-            nb = segments.intValue();
+        Integer to = null, from = null;
+        if (housenumbers.isEmpty()) {
+            to = getNumber(To);
+            from = getNumber(From);
+            if (to != null && from != null) {
+                nb = 1 + (to.intValue() - from.intValue()) / step;
+            } else if (segments != null) {
+                nb = segments.intValue();
+            } else {
+                // if we get here, there is is a bug in the input validation.
+                throw new TerracerRuntimeException(
+                        "Could not determine segments from parameters, this is a bug. "
+                                + "Parameters were: segments " + segments
+                                + " from " + from + " to " + to + " step "
+                                + step);
+            }
         } else {
-            // if we get here, there is is a bug in the input validation.
-            throw new TerracerRuntimeException(
-                    "Could not determine segments from parameters, this is a bug. "
-                            + "Parameters were: segments " + segments
-                            + " from " + from + " to " + to + " step " + step);
+            nb = housenumbers.size();
         }
+
+        // now find which is the longest side connecting the first node
+        Pair<Way, Way> interp = findFrontAndBack(outline);
+
+        boolean swap = false;
+        if (init != null) {
+            if (interp.a.lastNode().equals(init) || interp.b.lastNode().equals(init)) {
+                swap = true;
+            }
+        }
+
+        final double frontLength = wayLength(interp.a);
+        final double backLength = wayLength(interp.b);
 
         // new nodes array to hold all intermediate nodes
         Node[][] new_nodes = new Node[2][nb + 1];
@@ -210,23 +339,7 @@ public final class TerracerAction extends JosmAction {
         this.commands = new LinkedList<Command>();
         Collection<Way> ways = new LinkedList<Way>();
 
-        // Should this building be terraced (i.e. is there more then one section?)
         if (nb > 1) {
-            // create intermediate nodes by interpolating.
-
-            // now find which is the longest side connecting the first node
-            Pair<Way, Way> interp = findFrontAndBack(outline);
-
-            boolean swap = false;
-            if (init != null) {
-                if (interp.a.lastNode().equals(init) || interp.b.lastNode().equals(init)) {
-                    swap = true;
-                }
-            }
-
-            final double frontLength = wayLength(interp.a);
-            final double backLength = wayLength(interp.b);
-
             for (int i = 0; i <= nb; ++i) {
                 int i_dir = swap ? nb - i : i;
                 new_nodes[0][i] = interpolateAlong(interp.a, frontLength * i_dir / nb);
@@ -248,10 +361,19 @@ public final class TerracerAction extends JosmAction {
                 TagCollection.from(outline).applyTo(terr);
 
                 String number = null;
-                if (from != null) {
-                    number = Integer.toString(from + i * step);
+                Set<Entry<String, String>> additionalKeys = null;
+                if (housenumbers.isEmpty()) {
+                    if (from != null) {
+                        // only, if the user has specified house numbers
+                        number = Integer.toString(from + i * step);
+                    }
+                } else {
+                    number = housenumbers.get(i).get("addr:housenumber");
+                    additionalKeys = housenumbers.get(i).getKeys().entrySet();
                 }
-                terr = addressBuilding(terr, street, streetName, number);
+
+                terr = addressBuilding(terr, street, streetName, number,
+                        additionalKeys);
 
                 ways.add(terr);
                 this.commands.add(new AddCommand(terr));
@@ -261,9 +383,9 @@ public final class TerracerAction extends JosmAction {
                 this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(outline), true, true));
             }
         } else {
-            // Single section, just add the address details
+            // Single building, just add the address details
             Way newOutline;
-            newOutline = addressBuilding(outline, street, streetName, From);
+            newOutline = addressBuilding(outline, street, streetName, From, null);
             ways.add(newOutline);
             this.commands.add(new ChangeCommand(outline, newOutline));
         }
@@ -282,8 +404,7 @@ public final class TerracerAction extends JosmAction {
                     associatedStreet.addMember(new RelationMember("house", w));
                 }
                 this.commands.add(new AddCommand(associatedStreet));
-            }
-            else { // relation exists already - add new members
+            } else { // relation exists already - add new members
                 Relation newAssociatedStreet = new Relation(associatedStreet);
                 for (Way w : ways) {
                     newAssociatedStreet.addMember(new RelationMember("house", w));
@@ -291,6 +412,14 @@ public final class TerracerAction extends JosmAction {
                 this.commands.add(new ChangeCommand(associatedStreet, newAssociatedStreet));
             }
         }
+
+        // Remove the address node since their tags have been incorporated into
+        // the terraces.
+        // Or should removing them also be an option?
+        if (!housenumbers.isEmpty())
+            commands.add(DeleteCommand.delete(Main.main.getEditLayer(),
+                    housenumbers, true, true));
+
         Main.main.undoRedo.add(new SequenceCommand(tr("Terrace"), commands));
         if (nb > 1) {
             // Select the new building outlines (for quick reversing)
@@ -308,13 +437,21 @@ public final class TerracerAction extends JosmAction {
      * @param street The street, the buildings belong to (may be null)
      * @param streetName the name of a street (may be null). Used if not null and street is null.
      * @param number The house number
+     * @param additionalKeys More keys to be copied onto the new outline
      * @return the way with added address details
      */
-    private Way addressBuilding(Way outline, Way street, String streetName, String number) {
+    private Way addressBuilding(Way outline, Way street, String streetName,
+            String number, Set<Entry<String, String>> additionalKeys) {
         Way changedOutline = outline;
         if (number != null) {
             // only, if the user has specified house numbers
             this.commands.add(new ChangePropertyCommand(changedOutline, "addr:housenumber", number));
+        }
+        if (additionalKeys != null) {
+            for (Entry<String, String> entry : additionalKeys) {
+                this.commands.add(new ChangePropertyCommand(changedOutline,
+                        entry.getKey(), entry.getValue()));
+            }
         }
         changedOutline.put("building", "yes");
         if (street != null) {
@@ -342,8 +479,8 @@ public final class TerracerAction extends JosmAction {
         for (int i = 0; i < pairs.size(); ++i) {
             Pair<Node,Node> p = pairs.get(i);
             final double seg_length = p.a.getCoor().greatCircleDistance(p.b.getCoor());
-            if (l <= seg_length ||
-                    i == pairs.size() - 1) {    // be generous on the last segment (numerical roudoff can lead to a small overshoot)
+            if (l <= seg_length || i == pairs.size() - 1) {
+                // be generous on the last segment (numerical roudoff can lead to a small overshoot)
                 return interpolateNode(p.a, p.b, l / seg_length);
             } else {
                 l -= seg_length;
@@ -441,7 +578,7 @@ public final class TerracerAction extends JosmAction {
      * return the modulus in the range [0, n)
      */
     private int positiveModulus(int a, int n) {
-        if (n <=0)
+        if (n <= 0)
             throw new IllegalArgumentException();
         int res = a % n;
         if (res < 0) {

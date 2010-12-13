@@ -217,7 +217,7 @@
   </Rule>
 
   <Rule>
-    <Filter>[piste:type]='hike' and not &tunnel;</Filter>
+    <Filter>[piste:type]='hike'</Filter>
     &maxscale_zoom12;
     &minscale_zoom13;
     <LineSymbolizer>
@@ -229,7 +229,7 @@
     </LineSymbolizer>
   </Rule>
   <Rule>
-    <Filter>[piste:type]='hike' and not &tunnel;</Filter>
+    <Filter>[piste:type]='hike'</Filter>
     &maxscale_zoom13;
     <LineSymbolizer>
       <CssParameter name="stroke">&wintertrail-color;</CssParameter>

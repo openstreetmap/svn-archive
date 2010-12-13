@@ -22,12 +22,18 @@ import java.awt.event.ActionListener;
 
 public class PanelLit extends JPanel {
 
+	private PanelCol panelCol = null;
+
 	public PanelLit() {
 		super();
+		panelCol = new PanelCol();
+		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		initialize();
 	}
 
 	private void initialize() {
 		this.setLayout(null);
+		this.add(panelCol, null);
+		panelCol.blackButton.setVisible(false);
 	}
 }

@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="50"
+   width="30"
    height="16"
    id="svg2"
    version="1.1"
@@ -2894,7 +2894,7 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313708"
+     inkscape:zoom="22.627416"
      inkscape:cx="25.896642"
      inkscape:cy="15.827314"
      inkscape:document-units="px"
@@ -2934,24 +2934,24 @@
      transform="translate(0,-1036.3622)"
      style="display:inline">
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.93155312999999995;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.72447377;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect6844"
-       width="49.068447"
-       height="15.068447"
-       x="0.46577656"
-       y="1036.8279"
-       rx="4.8357673"
-       ry="4.4863157" />
+       width="29.275526"
+       height="15.275527"
+       x="0.36223689"
+       y="1036.7244"
+       rx="5"
+       ry="5" />
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="20.417709"
-       y="1048.7383"
+       x="10.297243"
+       y="1048.6941"
        id="text9524"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan9526"
-         x="20.417709"
-         y="1048.7383">B</tspan></text>
+         x="10.297243"
+         y="1048.6941">B</tspan></text>
   </g>
 </svg>

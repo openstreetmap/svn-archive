@@ -103,16 +103,16 @@ public class OSeaMAction {
 		panelLights.setBounds(new Rectangle(65, 0, 335, 160));
 		panelLights.setVisible(false);
 		panelTop = new PanelTop();
-		panelTop.setBounds(new Rectangle(40, 165, 220, 155));
+		panelTop.setBounds(new Rectangle(40, 165, 220, 160));
 		panelTop.setVisible(false);
 		panelFog = new PanelFog();
-		panelFog.setBounds(new Rectangle(40, 165, 220, 155));
+		panelFog.setBounds(new Rectangle(40, 165, 220, 160));
 		panelFog.setVisible(false);
 		panelRadar = new PanelRadar();
-		panelRadar.setBounds(new Rectangle(40, 165, 220, 155));
+		panelRadar.setBounds(new Rectangle(40, 165, 220, 160));
 		panelRadar.setVisible(false);
 		panelLit = new PanelLit();
-		panelLit.setBounds(new Rectangle(40, 165, 220, 155));
+		panelLit.setBounds(new Rectangle(40, 165, 220, 160));
 		panelLit.setVisible(false);
 	}
 
@@ -124,26 +124,26 @@ public class OSeaMAction {
 
 			shapeIcon = new JLabel(new ImageIcon(getClass().getResource(
 					"/images/Cardinal_Pillar_South.png")));
-			shapeIcon.setBounds(new Rectangle(265, 165, 130, 185));
+			shapeIcon.setBounds(new Rectangle(265, 170, 130, 185));
 			oseamPanel.add(shapeIcon, null);
 			lightIcon = new JLabel(new ImageIcon(getClass().getResource(
 					"/images/Light_White_120.png")));
-			lightIcon.setBounds(new Rectangle(265, 165, 125, 185));
+			lightIcon.setBounds(new Rectangle(265, 170, 125, 185));
 			oseamPanel.add(lightIcon, null);
 			topIcon = new JLabel();
-			topIcon.setBounds(new Rectangle(265, 165, 125, 185));
+			topIcon.setBounds(new Rectangle(265, 170, 125, 185));
 			oseamPanel.add(topIcon, null);
 			reflIcon = new JLabel(new ImageIcon(getClass().getResource(
 					"/images/Radar_Reflector_355.png")));
-			reflIcon.setBounds(new Rectangle(265, 165, 125, 185));
+			reflIcon.setBounds(new Rectangle(265, 170, 125, 185));
 			oseamPanel.add(reflIcon, null);
 			radarIcon = new JLabel(new ImageIcon(getClass().getResource(
 					"/images/Radar_Station.png")));
-			radarIcon.setBounds(new Rectangle(265, 165, 130, 185));
+			radarIcon.setBounds(new Rectangle(265, 170, 130, 185));
 			oseamPanel.add(radarIcon, null);
 			fogIcon = new JLabel(new ImageIcon(getClass().getResource(
 					"/images/Fog_Signal.png")));
-			fogIcon.setBounds(new Rectangle(265, 165, 125, 185));
+			fogIcon.setBounds(new Rectangle(265, 170, 125, 185));
 			oseamPanel.add(fogIcon, null);
 
 			oseamPanel.add(getChanButton(), null);
@@ -247,14 +247,14 @@ public class OSeaMAction {
 			litButton.addActionListener(alMisc);
 
 			nameLabel = new JLabel();
-			nameLabel.setBounds(new Rectangle(5, 327, 60, 20));
+			nameLabel.setBounds(new Rectangle(5, 329, 60, 20));
 			nameLabel.setText(tr("Name:"));
 			oseamPanel.add(nameLabel, null);
 			nameBox = new JTextField();
-			nameBox.setBounds(new Rectangle(60, 325, 200, 25));
+			nameBox.setBounds(new Rectangle(60, 330, 200, 20));
 			oseamPanel.add(nameBox, null);
 			saveButton = new JButton();
-			saveButton.setBounds(new Rectangle(285, 325, 100, 25));
+			saveButton.setBounds(new Rectangle(285, 330, 100, 20));
 			saveButton.setText(tr("Save"));
 			oseamPanel.add(saveButton, null);
 		}
@@ -320,7 +320,7 @@ public class OSeaMAction {
 		if (fogButton == null) {
 			fogButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/FogButton.png")));
-			fogButton.setBounds(new Rectangle(0, 200, 34, 32));
+			fogButton.setBounds(new Rectangle(0, 205, 34, 32));
 	        fogButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			fogButton.setToolTipText(Messages.getString("FogSignalsTip"));
 		}
@@ -331,7 +331,7 @@ public class OSeaMAction {
 		if (radarButton == null) {
 			radarButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/RadarButton.png")));
-			radarButton.setBounds(new Rectangle(0, 235, 34, 32));
+			radarButton.setBounds(new Rectangle(0, 245, 34, 32));
 	        radarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			radarButton.setToolTipText(Messages.getString("RadarTip"));
 		}
@@ -342,7 +342,7 @@ public class OSeaMAction {
 		if (litButton == null) {
 			litButton = new JRadioButton(new ImageIcon(getClass().getResource(
 					"/images/LitButton.png")));
-			litButton.setBounds(new Rectangle(0, 270, 34, 32));
+			litButton.setBounds(new Rectangle(0, 285, 34, 32));
 	        litButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
 			litButton.setToolTipText(Messages.getString("LitTip"));
 		}

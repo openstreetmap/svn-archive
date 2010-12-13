@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="50"
+   width="30"
    height="16"
    id="svg2"
    version="1.1"
@@ -2894,9 +2894,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="14.49"
+     inkscape:zoom="20.491955"
      inkscape:cx="25"
-     inkscape:cy="16.53442"
+     inkscape:cy="-1.0334503"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -2934,24 +2934,24 @@
      transform="translate(0,-1036.3622)"
      style="display:inline">
     <rect
-       style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:0.93325316999999997;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:0.72580141;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect7776"
-       width="49.06675"
-       height="15.066747"
-       x="0.46662658"
-       y="1036.8289"
-       rx="4.7773395"
-       ry="4.557775" />
+       width="29.274199"
+       height="15.274198"
+       x="0.3629007"
+       y="1036.7252"
+       rx="5"
+       ry="5" />
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="16.036686"
-       y="1048.5793"
+       x="6.1303592"
+       y="1048.6282"
        id="text10915"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan10917"
-         x="16.036686"
-         y="1048.5793">Bu</tspan></text>
+         x="6.1303592"
+         y="1048.6282">Bu</tspan></text>
   </g>
 </svg>

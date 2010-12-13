@@ -23,16 +23,20 @@ import java.awt.event.ActionListener;
 
 public class PanelTop extends JPanel {
 
+	private PanelCol panelCol = null;
 	private ButtonGroup topButtons = null;
 	private JRadioButton noTopButton = null;
 
 	public PanelTop() {
 		super();
+		panelCol = new PanelCol();
+		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
 		initialize();
 	}
 
 	private void initialize() {
 		this.setLayout(null);
+		this.add(panelCol, null);
 		this.add(getNoTopButton(), null);
 		topButtons = new ButtonGroup();
 		topButtons.add(noTopButton);
@@ -42,7 +46,7 @@ public class PanelTop extends JPanel {
 		if (noTopButton == null) {
 			noTopButton = new JRadioButton(new ImageIcon(getClass()
 					.getResource("/images/NoTopButton.png")));
-			noTopButton.setBounds(new Rectangle(5, 5, 30, 30));
+			noTopButton.setBounds(new Rectangle(40, 5, 30, 30));
 			noTopButton.setToolTipText(Messages.getString("NorthTip"));
 		}
 		return noTopButton;

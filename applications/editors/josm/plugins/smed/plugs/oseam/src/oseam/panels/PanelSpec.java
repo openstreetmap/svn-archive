@@ -36,26 +36,19 @@ public class PanelSpec extends JPanel {
 	private JRadioButton floatButton = null;
 	private JRadioButton beaconButton = null;
 	private JRadioButton towerButton = null;
-	private JLabel colourLabel = null;
-	private ButtonGroup colourButtons = null;
-	private JRadioButton whiteButton = null;
-	private JRadioButton redButton = null;
-	private JRadioButton orangeButton = null;
-	private JRadioButton amberButton = null;
-	private JRadioButton yellowButton = null;
-	private JRadioButton greenButton = null;
-	private JRadioButton blueButton = null;
-	private JRadioButton violetButton = null;
-	private JRadioButton blackButton = null;
+	private PanelCol panelCol = null;
 
 	public PanelSpec() {
 		super();
+		panelCol = new PanelCol();
+		panelCol.setBounds(new Rectangle(9, 0, 34, 160));
 		initialize();
 	}
 
 	private void initialize() {
 		this.setLayout(null);
 
+		this.add(panelCol, null);
 		this.add(getPillarButton(), null);
 		this.add(getSparButton(), null);
 		this.add(getCanButton(), null);
@@ -102,51 +95,6 @@ public class PanelSpec extends JPanel {
 		beaconButton.addActionListener(alShape);
 		towerButton.addActionListener(alShape);
 
-		colourLabel = new JLabel();
-		colourLabel.setBounds(new Rectangle(2, -2, 60, 20));
-		colourLabel.setText(tr("Colour:"));
-		this.add(colourLabel, null);
-		this.add(getWhiteButton(), null);
-		this.add(getRedButton(), null);
-		this.add(getOrangeButton(), null);
-		this.add(getAmberButton(), null);
-		this.add(getYellowButton(), null);
-		this.add(getGreenButton(), null);
-		this.add(getBlueButton(), null);
-		this.add(getVioletButton(), null);
-		this.add(getBlackButton(), null);
-		colourButtons = new ButtonGroup();
-		colourButtons.add(whiteButton);
-		colourButtons.add(redButton);
-		colourButtons.add(orangeButton);
-		colourButtons.add(amberButton);
-		colourButtons.add(yellowButton);
-		colourButtons.add(greenButton);
-		colourButtons.add(blueButton);
-		colourButtons.add(violetButton);
-		colourButtons.add(blackButton);
-		ActionListener alColour = new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				whiteButton.setBorderPainted(whiteButton.isSelected());
-				redButton.setBorderPainted(redButton.isSelected());
-				orangeButton.setBorderPainted(orangeButton.isSelected());
-				amberButton.setBorderPainted(amberButton.isSelected());
-				yellowButton.setBorderPainted(yellowButton.isSelected());
-				greenButton.setBorderPainted(greenButton.isSelected());
-				blueButton.setBorderPainted(blueButton.isSelected());
-				violetButton.setBorderPainted(violetButton.isSelected());
-				blackButton.setBorderPainted(blackButton.isSelected());
-			}
-		};
-		whiteButton.addActionListener(alColour);
-		redButton.addActionListener(alColour);
-		orangeButton.addActionListener(alColour);
-		amberButton.addActionListener(alColour);
-		yellowButton.addActionListener(alColour);
-		greenButton.addActionListener(alColour);
-		blueButton.addActionListener(alColour);
-		violetButton.addActionListener(alColour);
-		blackButton.addActionListener(alColour);
 	}
 
 	private JRadioButton getPillarButton() {
@@ -257,105 +205,6 @@ public class PanelSpec extends JPanel {
 			towerButton.setToolTipText(Messages.getString("TowerTip"));
 		}
 		return towerButton;
-	}
-
-	private JRadioButton getWhiteButton() {
-		if (whiteButton == null) {
-			whiteButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/WhiteButton.png")));
-			whiteButton.setBounds(new Rectangle(0, 16, 52, 16));
-	        whiteButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			whiteButton.setToolTipText(tr("White"));
-		}
-		return whiteButton;
-	}
-
-	private JRadioButton getRedButton() {
-		if (redButton == null) {
-			redButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/RedButton.png")));
-			redButton.setBounds(new Rectangle(0, 32, 52, 16));
-	        redButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			redButton.setToolTipText(tr("Red"));
-		}
-		return redButton;
-	}
-
-	private JRadioButton getOrangeButton() {
-		if (orangeButton == null) {
-			orangeButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/OrangeButton.png")));
-			orangeButton.setBounds(new Rectangle(0, 48, 52, 16));
-	        orangeButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			orangeButton.setToolTipText(tr("Orange"));
-		}
-		return orangeButton;
-	}
-
-	private JRadioButton getAmberButton() {
-		if (amberButton == null) {
-			amberButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/AmberButton.png")));
-			amberButton.setBounds(new Rectangle(0, 64, 52, 16));
-	        amberButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			amberButton.setToolTipText(tr("Amber"));
-		}
-		return amberButton;
-	}
-
-	private JRadioButton getYellowButton() {
-		if (yellowButton == null) {
-			yellowButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/YellowButton.png")));
-			yellowButton.setBounds(new Rectangle(0, 80, 52, 16));
-	        yellowButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			yellowButton.setToolTipText(tr("Yellow"));
-		}
-		return yellowButton;
-	}
-
-	private JRadioButton getGreenButton() {
-		if (greenButton == null) {
-			greenButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/GreenButton.png")));
-			greenButton.setBounds(new Rectangle(0, 96, 52, 16));
-	        greenButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			greenButton.setToolTipText(tr("Green"));
-		}
-		return greenButton;
-	}
-
-	private JRadioButton getBlueButton() {
-		if (blueButton == null) {
-			blueButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/BlueButton.png")));
-			blueButton.setBounds(new Rectangle(0, 112, 52, 16));
-	        blueButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			blueButton.setToolTipText(tr("Blue"));
-		}
-		return blueButton;
-	}
-
-	private JRadioButton getVioletButton() {
-		if (violetButton == null) {
-			violetButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/VioletButton.png")));
-			violetButton.setBounds(new Rectangle(0, 128, 52, 16));
-	        violetButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			violetButton.setToolTipText(tr("Violet"));
-		}
-		return violetButton;
-	}
-
-	private JRadioButton getBlackButton() {
-		if (blackButton == null) {
-			blackButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/BlackButton.png")));
-			blackButton.setBounds(new Rectangle(0, 144, 52, 16));
-	        blackButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			blackButton.setToolTipText(tr("Black"));
-		}
-		return blackButton;
 	}
 
 }

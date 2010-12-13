@@ -15,8 +15,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="GreenButton.svg"
-   inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/YellowButton.png"
+   sodipodi:docname="OrangeButton.svg"
+   inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OrangeButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    style="display:inline">
@@ -2895,8 +2895,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="22.627416"
-     inkscape:cx="29.432176"
-     inkscape:cy="14.943429"
+     inkscape:cx="12.878574"
+     inkscape:cy="0.97807068"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -2923,7 +2923,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2934,24 +2934,27 @@
      transform="translate(0,-1036.3622)"
      style="display:inline">
     <rect
-       style="fill:#00ff00;fill-opacity:1;stroke:#000000;stroke-width:0.75399208;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="rect8708"
-       width="29.246008"
-       height="15.246007"
-       x="0.37699604"
-       y="1036.7391"
+       style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:0.75058466000000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect9640"
+       width="29.249414"
+       height="15.249415"
+       x="0.37529233"
+       y="1036.7375"
        rx="5"
-       ry="5" />
+       ry="5"
+       inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OffButton.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="10.208854"
-       y="1048.7825"
-       id="text12306"
+       x="11.092738"
+       y="1047.6777"
+       id="text13697"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         id="tspan12308"
-         x="10.208854"
-         y="1048.7825">G</tspan></text>
+         id="tspan13699"
+         x="11.092738"
+         y="1047.6777">x</tspan></text>
   </g>
 </svg>

@@ -184,7 +184,7 @@
     </LineSymbolizer>
   </Rule>
 
-<!-- Expert orange #FF8040 -->
+  <!-- Expert orange #FF8040 -->
 
   <Rule>
     <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'freeride'</Filter>
@@ -198,15 +198,6 @@
   </Rule>
   <Rule>
     <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'freeride'</Filter>
-    &maxscale_zoom15;
-    <LineSymbolizer>
-      <CssParameter name="stroke">#F6E760</CssParameter>
-      <CssParameter name="stroke-width">7.5</CssParameter>
-      <CssParameter name="stroke-opacity">0.65</CssParameter>
-    </LineSymbolizer>
-  </Rule>
-  <Rule>
-    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'freeride'</Filter>
     &maxscale_zoom14;
     &minscale_zoom14;
     <LineSymbolizer>
@@ -215,9 +206,18 @@
       <CssParameter name="stroke-opacity">0.65</CssParameter>
     </LineSymbolizer>
   </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'downhill' and [piste:difficulty] = 'freeride'</Filter>
+    &maxscale_zoom15;
+    <LineSymbolizer>
+      <CssParameter name="stroke">#F6E760</CssParameter>
+      <CssParameter name="stroke-width">7.5</CssParameter>
+      <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
 
   <Rule>
-    <Filter>[piste:type]='hike'</Filter>
+    <Filter>[piste:type] = 'hike'</Filter>
     &maxscale_zoom12;
     &minscale_zoom13;
     <LineSymbolizer>
@@ -229,8 +229,8 @@
     </LineSymbolizer>
   </Rule>
   <Rule>
-    <Filter>[piste:type]='hike'</Filter>
-    &maxscale_zoom13;
+    <Filter>[piste:type] = 'hike'</Filter>
+    &maxscale_zoom14;
     <LineSymbolizer>
       <CssParameter name="stroke">&wintertrail-color;</CssParameter>
       <CssParameter name="stroke-linejoin">round</CssParameter>

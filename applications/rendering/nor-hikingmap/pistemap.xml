@@ -15,6 +15,7 @@
 <!ENTITY naturearea-color "#007D33">
 <!ENTITY trail-color "#DDD"><!-- path, track, footway, cycleway -->
 <!ENTITY nordic-color "#F90025"><!-- piste:type=nordic, route=ski -->
+<!ENTITY wintertrail-color "#444"><!-- piste:type=hike -->
 
 %sharedentities;
 %entities;
@@ -215,6 +216,30 @@
     </LineSymbolizer>
   </Rule>
 
+  <Rule>
+    <Filter>[piste:type]='hike' and not &tunnel;</Filter>
+    &maxscale_zoom12;
+    &minscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&wintertrail-color;</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+      <CssParameter name="stroke-width">0.4</CssParameter>
+      <CssParameter name="stroke-dasharray">2,1</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type]='hike' and not &tunnel;</Filter>
+    &maxscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&wintertrail-color;</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
+      <CssParameter name="stroke-width">0.75</CssParameter>
+      <CssParameter name="stroke-dasharray">4,2</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+
 </Style>
 
 <Style name="symbols-winter">
@@ -254,7 +279,7 @@
       <Parameter name="table">
       (select way,"piste:type","piste:grooming","piste:difficulty",route,lit
        from &prefix;_line
-       where "piste:type" in ('nordic','downhill')
+       where "piste:type" in ('nordic','downhill','hike')
           or "piste:grooming" is not null
           or route='ski'
       ) as skiing

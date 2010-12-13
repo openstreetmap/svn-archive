@@ -224,9 +224,6 @@ public class MapdustGUI extends ToggleDialog implements
             mainPanel.add(tabbedPane, BorderLayout.CENTER);
             add(mainPanel, BorderLayout.CENTER);
         }
-        /* invalidate and repaint */
-        invalidate();
-        repaint();
     }
 
     /**

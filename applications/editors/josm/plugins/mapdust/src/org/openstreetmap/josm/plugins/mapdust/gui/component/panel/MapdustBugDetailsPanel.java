@@ -33,6 +33,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.net.URI;
 import java.text.DateFormat;
 import java.util.Locale;
 import javax.swing.JEditorPane;
@@ -45,6 +46,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.util.Configuration;
+import org.openstreetmap.josm.tools.OpenBrowser;
 
 
 /**
@@ -135,8 +137,6 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
     @Override
     public void hyperlinkUpdate(HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-            java.net.URI uri;
             String bugDetailsUrl = null;
             if (bug != null) {
                 String mapdustSite =
@@ -145,10 +145,10 @@ public class MapdustBugDetailsPanel extends JPanel implements HyperlinkListener 
             }
             if (bugDetailsUrl != null) {
                 try {
-                    uri = new java.net.URI(bugDetailsUrl);
-                    desktop.browse(uri);
+                    OpenBrowser.displayUrl(new URI(bugDetailsUrl));
                 } catch (Exception e) {
-                    String errorMessage = "Error opening the MapDust wiki page";
+                    String errorMessage = "Error opening the MapDust bug ";
+                    errorMessage += "details page";
                     JOptionPane.showMessageDialog(Main.parent,
                             tr(errorMessage), tr("Error"),
                             JOptionPane.ERROR_MESSAGE);

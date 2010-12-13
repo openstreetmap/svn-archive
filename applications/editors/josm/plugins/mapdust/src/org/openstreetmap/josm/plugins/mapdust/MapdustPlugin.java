@@ -41,7 +41,6 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -67,8 +66,8 @@ import org.openstreetmap.josm.tools.Shortcut;
  * 
  */
 public class MapdustPlugin extends Plugin implements LayerChangeListener,
-        MouseListener, MapdustRefreshObserver, MapdustBugObserver,
-        MapdustInitialUpdateObserver {
+        ZoomChangeListener, MouseListener, MapdustRefreshObserver,
+        MapdustBugObserver, MapdustInitialUpdateObserver {
     
     /** The graphical user interface of the plugin */
     private MapdustGUI mapdustGUI;
@@ -91,11 +90,6 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                 MapdustPluginState.ONLINE.getValue());
         Main.pref.put("mapdust.nickname", null);
         Main.pref.put("mapdust.modify", false);
-        MapView.addLayerChangeListener(this);
-        if (Main.map != null && Main.map.mapView != null) {
-            Main.map.mapView.addMouseListener(this);
-            MapView.addLayerChangeListener(this);
-        }
     }
     
     /**
@@ -121,15 +115,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             mapdustGUI.setBounds(newMapFrame.getBounds());
             mapdustGUI.addObserver(this);
             newMapFrame.addToggleDialog(mapdustGUI);
-            NavigatableComponent
-                    .addZoomChangeListener(new ZoomChangeListener() {
-                        
-                        @Override
-                        public void zoomChanged() {
-                            updateData();
-                        }
-                    });
             MapView.addLayerChangeListener(this);
+            MapView.addZoomChangeListener(this);
             Main.map.mapView.addMouseListener(this);
         }
     }
@@ -151,9 +138,9 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                     /* show message if there is not bug in the given area */
                     if (this.mapdustBugList == null
                             || this.mapdustBugList.size() == 0) {
-                        String waringMessage = "There is no MapDust bug in ";
-                        waringMessage += "your visible area.";
-                        JOptionPane.showMessageDialog(Main.parent, 
+                        String waringMessage = "There is no MapDust bug ";
+                        waringMessage += "in your visible area.";
+                        JOptionPane.showMessageDialog(Main.parent,
                                 tr(waringMessage), tr("Warning"),
                                 JOptionPane.WARNING_MESSAGE);
                     }
@@ -220,6 +207,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         if (layer instanceof MapdustLayer) {
             /* remove the layer */
             MapView.removeLayerChangeListener(this);
+            MapView.removeZoomChangeListener(this);
             Main.map.mapView.removeLayer(layer);
             Main.map.remove(mapdustGUI);
             if (mapdustGUI != null) {
@@ -293,12 +281,11 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         mapdustGUI.update(mapdustBugList, this);
         if (mapdustLayer == null) {
             /* create and add the layer */
-            Main.map.mapView.removeAll();
-            mapdustLayer =
-                    new MapdustLayer("MapDust", mapdustGUI, mapdustBugList);
+            mapdustLayer = new MapdustLayer("MapDust", mapdustGUI, mapdustBugList);
             Main.main.addLayer(mapdustLayer);
             Main.map.mapView.moveLayer(mapdustLayer, 0);
             MapView.addLayerChangeListener(this);
+            MapView.addZoomChangeListener(this);
         } else {
             /* re-set the properties */
             mapdustLayer.destroy();
@@ -310,6 +297,19 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         Main.map.mapView.invalidate();
         Main.map.repaint();
         Main.map.mapView.repaint();
+    }
+    
+    /**
+     * Returns the bounds of the current map view.
+     * 
+     * @return A <code>Bounds</code> object
+     */
+    private Bounds getBounds() {
+        MapView mapView = Main.map.mapView;
+        Bounds bounds =
+                new Bounds(mapView.getLatLon(0, mapView.getHeight()),
+                        mapView.getLatLon(mapView.getWidth(), 0));
+        return bounds;
     }
     
     /**
@@ -328,6 +328,11 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                 }
             });
         }
+    }
+    
+    @Override
+    public void zoomChanged() {
+        updateData();
     }
     
     /**
@@ -382,10 +387,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     private List<MapdustBug> getMapdustBugs()
             throws MapdustServiceHandlerException {
         /* get the bounding box */
-        MapView mapView = Main.map.mapView;
-        Bounds bounds =
-                new Bounds(mapView.getLatLon(0, mapView.getHeight()),
-                        mapView.getLatLon(mapView.getWidth(), 0));
+        Bounds bounds = getBounds();
         Double minLon = bounds.getMin().lon();
         Double minLat = bounds.getMin().lat();
         Double maxLon = bounds.getMax().lon();
@@ -470,8 +472,6 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     }
     
     /**
-     * Returns the list of MapDust bugs
-     * 
      * @return the mapdustBugList
      */
     public List<MapdustBug> getMapdustBugList() {
@@ -479,11 +479,10 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     }
     
     /**
-     * Sets the list of MapDust bugs
-     * 
      * @param mapdustBugList the mapdustBugList to set
      */
     public void setMapdustBugList(List<MapdustBug> mapdustBugList) {
         this.mapdustBugList = mapdustBugList;
     }
+    
 }

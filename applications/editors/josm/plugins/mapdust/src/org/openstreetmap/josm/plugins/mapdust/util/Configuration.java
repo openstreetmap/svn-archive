@@ -55,6 +55,9 @@ public class Configuration {
     /** The MapDust bug details url */
     private String mapdustBugDetailsUrl;
 
+    /** The MapDust wiki url */
+    private String mapdustWiki;
+    
     /**
      * Returns the only instance of this singleton object type.
      *
@@ -92,6 +95,13 @@ public class Configuration {
             throw new MissingResourceException("Could not read mapdust.site ",
                     "", "mapdust");
         }
+        
+        try {
+            mapdustWiki = properties.getString("mapdust.wiki");
+        } catch (RuntimeException e) {
+            throw new MissingResourceException("Could not read mapdust.wikis ",
+                    "", "mapdust");
+        }
     }
 
     /**
@@ -121,4 +131,12 @@ public class Configuration {
         return mapdustBugDetailsUrl;
     }
 
+    /**
+     * Returns the MapDust wiki URL
+     *
+     * @return the mapdustWiki
+     */
+    public String getMapdustWiki() {
+        return mapdustWiki;
+    }
 }

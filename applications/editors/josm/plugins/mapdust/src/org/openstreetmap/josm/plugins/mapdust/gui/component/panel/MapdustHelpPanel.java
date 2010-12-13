@@ -32,6 +32,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.net.URI;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -41,18 +42,20 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
+import org.openstreetmap.josm.tools.OpenBrowser;
+import org.openstreetmap.josm.plugins.mapdust.util.Configuration;
 
 
 /**
  * Defines the JPanel which displays the Help.
- *
+ * 
  * @author Bea
  */
 public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
-
+    
     /** The serial version UID */
     private static final long serialVersionUID = 1L;
-
+    
     /**
      * Builds a <code>MapdustDescriptionPanel</code> object
      */
@@ -77,24 +80,19 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
         cmpDescription.setPreferredSize(new Dimension(100, 100));
         add(cmpDescription, BorderLayout.CENTER);
     }
-
+    
     @Override
     public void hyperlinkUpdate(HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-            String url =
-                    "http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust";
-            java.net.URI uri;
+            String url = Configuration.getInstance().getMapdustWiki();
             try {
-                uri = new java.net.URI(url);
-                desktop.browse(uri);
+                OpenBrowser.displayUrl(new URI(url));
             } catch (Exception e) {
                 String errorMessage = "Error opening the MapDust wiki page";
                 JOptionPane.showMessageDialog(Main.parent, tr(errorMessage),
                         tr("Error"), JOptionPane.ERROR_MESSAGE);
             }
-
         }
     }
-
+    
 }

@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="OrangeButton.svg"
+   sodipodi:docname="OffButton.svg"
    inkscape:export-filename="/Users/mherring/boatsw/oseam/josm/plugins/smed/plugs/oseam/src/images/OrangeButton.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
@@ -2895,7 +2895,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="22.627416"
-     inkscape:cx="12.878574"
+     inkscape:cx="4.7026515"
      inkscape:cy="0.97807068"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -2923,7 +2923,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2934,7 +2934,7 @@
      transform="translate(0,-1036.3622)"
      style="display:inline">
     <rect
-       style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:0.75058466000000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#80a4c4;fill-opacity:1;stroke:#000000;stroke-width:0.75058466000000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect9640"
        width="29.249414"
        height="15.249415"

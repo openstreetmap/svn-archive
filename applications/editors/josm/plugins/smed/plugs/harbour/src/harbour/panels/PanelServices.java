@@ -1,9 +1,9 @@
 package harbour.panels;
 
+import harbour.widgets.CraneTable;
 import harbour.widgets.TristateCheckBox;
 
 import java.awt.Color;
-import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -11,8 +11,8 @@ import javax.swing.JLabel;
 import java.awt.Rectangle;
 import javax.swing.JCheckBox;
 import java.awt.Font;
-import javax.swing.JComboBox;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
 
 public class PanelServices extends JPanel {
 
@@ -31,28 +31,8 @@ public class PanelServices extends JPanel {
 	private TristateCheckBox kaiCheckBox = null;
 	private TristateCheckBox ancCheckBox = null;
 	private JLabel moorLabel = null;
-	private JLabel craneLabel = null;
-	private JLabel hLabel = null;
-	private JLabel fLabel = null;
-	private JLabel zLabel = null;
-	private JLabel nLabel = null;
 	private TristateCheckBox slipCheckBox = null;
-	private JLabel fixLabel = null;
-	private TristateCheckBox hfCheckBox = null;
-	private TristateCheckBox ffCheckBox = null;
-	private TristateCheckBox zfCheckBox = null;
-	private TristateCheckBox nfCheckBox = null;
 	private TristateCheckBox dockCheckBox = null;
-	private JLabel mobLabel = null;
-	private TristateCheckBox hmCheckBox = null;
-	private TristateCheckBox fmCheckBox = null;
-	private TristateCheckBox zmCheckBox = null;
-	private TristateCheckBox nmCheckBox = null;
-	private JLabel schwLabel = null;
-	private TristateCheckBox hsCheckBox = null;
-	private TristateCheckBox fsCheckBox = null;
-	private TristateCheckBox zsCheckBox = null;
-	private TristateCheckBox nsCheckBox = null;
 	private JLabel DLLabel = null;
 	private TristateCheckBox anbCheckBox = null;
 	private TristateCheckBox repCheckBox = null;
@@ -77,6 +57,7 @@ public class PanelServices extends JPanel {
 	private TristateCheckBox mmCheckBox = null;
 	private TristateCheckBox imCheckBox = null;
 	private TristateCheckBox bmCheckBox = null;
+	private CraneTable craneScrollPane = null;
 	/**
 	 * This is the default constructor
 	 */
@@ -103,7 +84,7 @@ public class PanelServices extends JPanel {
 		recLabel = new JLabel();
 		recLabel.setBounds(new Rectangle(187, 165, 90, 20));
 		recLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		recLabel.setText("Entsorgungen:");
+		recLabel.setText("Entsorgung:");
 		servLabel = new JLabel();
 		servLabel.setBounds(new Rectangle(1, 185, 45, 20));
 		servLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -111,39 +92,8 @@ public class PanelServices extends JPanel {
 		DLLabel = new JLabel();
 		DLLabel.setBounds(new Rectangle(3, 165, 147, 20));
 		DLLabel.setText("weitere Dienstleistungen");
-		schwLabel = new JLabel();
-		schwLabel.setBounds(new Rectangle(5, 142, 40, 16));
-		schwLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		schwLabel.setText("  schw.");
-		mobLabel = new JLabel();
-		mobLabel.setBounds(new Rectangle(5, 126, 40, 16));
-		mobLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		mobLabel.setText("  mobil");
-		fixLabel = new JLabel();
-		fixLabel.setBounds(new Rectangle(5, 110, 40, 16));
-		fixLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		fixLabel.setText("     fest");
-		nLabel = new JLabel();
-		nLabel.setBounds(new Rectangle(200, 90, 38, 20));
-		nLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		nLabel.setText("  0-25t");
-		zLabel = new JLabel();
-		zLabel.setBounds(new Rectangle(150, 90, 45, 20));
-		zLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		zLabel.setText(" 25-50t");
-		fLabel = new JLabel();
-		fLabel.setBounds(new Rectangle(100, 90, 45, 20));
-		fLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		fLabel.setText("50-100t");
-		hLabel = new JLabel();
-		hLabel.setBounds(new Rectangle(50, 90, 45, 20));
-		hLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-		hLabel.setText("  >100t");
-		craneLabel = new JLabel();
-		craneLabel.setBounds(new Rectangle(5, 90, 42, 20));
-		craneLabel.setText("    Kran");
 		moorLabel = new JLabel();
-		moorLabel.setBounds(new Rectangle(145, 50, 65, 16));
+		moorLabel.setBounds(new Rectangle(145, 50, 70, 16));
 		moorLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
 		moorLabel.setText("Ankerplatz:");
 		loadLabel = new JLabel();
@@ -175,28 +125,8 @@ public class PanelServices extends JPanel {
 		this.add(getKaiCheckBox(), null);
 		this.add(getAncCheckBox(), null);
 		this.add(moorLabel, null);
-		this.add(craneLabel, null);
-		this.add(hLabel, null);
-		this.add(fLabel, null);
-		this.add(zLabel, null);
-		this.add(nLabel, null);
 		this.add(getSlipCheckBox(), null);
-		this.add(fixLabel, null);
-		this.add(getHfCheckBox(), null);
-		this.add(getFfCheckBox(), null);
-		this.add(getZfCheckBox(), null);
-		this.add(getNfCheckBox(), null);
 		this.add(getDockCheckBox(), null);
-		this.add(mobLabel, null);
-		this.add(getHmCheckBox(), null);
-		this.add(getFmCheckBox(), null);
-		this.add(getZmCheckBox(), null);
-		this.add(getNmCheckBox(), null);
-		this.add(schwLabel, null);
-		this.add(getHsCheckBox(), null);
-		this.add(getFsCheckBox(), null);
-		this.add(getZsCheckBox(), null);
-		this.add(getNsCheckBox(), null);
 		this.add(DLLabel, null);
 		this.add(getAnbCheckBox(), null);
 		this.add(getRepCheckBox(), null);
@@ -221,6 +151,7 @@ public class PanelServices extends JPanel {
 		this.add(getMmCheckBox(), null);
 		this.add(getImCheckBox(), null);
 		this.add(getBmCheckBox(), null);
+		this.add(getCraneScrollPane(), null);
 	}
 
 	/**
@@ -306,7 +237,7 @@ public class PanelServices extends JPanel {
 	private TristateCheckBox getRailCheckBox() {
 		if (railCheckBox == null) {
 			railCheckBox = new TristateCheckBox();
-			railCheckBox.setBounds(new Rectangle(98, 26, 72, 20));
+			railCheckBox.setBounds(new Rectangle(98, 26, 80, 20));
 			railCheckBox.setFont(new Font("Dialog", Font.PLAIN, 12));
 			railCheckBox.setText("Bahnhof");
 		}
@@ -374,58 +305,6 @@ public class PanelServices extends JPanel {
 	}
 
 	/**
-	 * This method initializes hfCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private JCheckBox getHfCheckBox() {
-		if (hfCheckBox == null) {
-			hfCheckBox = new TristateCheckBox();
-			hfCheckBox.setBounds(new Rectangle(60, 108, 20, 20));
-		}
-		return hfCheckBox;
-	}
-
-	/**
-	 * This method initializes ffCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getFfCheckBox() {
-		if (ffCheckBox == null) {
-			ffCheckBox = new TristateCheckBox();
-			ffCheckBox.setBounds(new Rectangle(110, 108, 20, 20));
-		}
-		return ffCheckBox;
-	}
-
-	/**
-	 * This method initializes zfCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getZfCheckBox() {
-		if (zfCheckBox == null) {
-			zfCheckBox = new TristateCheckBox();
-			zfCheckBox.setBounds(new Rectangle(160, 108, 20, 20));
-		}
-		return zfCheckBox;
-	}
-
-	/**
-	 * This method initializes nfCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getNfCheckBox() {
-		if (nfCheckBox == null) {
-			nfCheckBox = new TristateCheckBox();
-			nfCheckBox.setBounds(new Rectangle(210, 108, 20, 20));
-		}
-		return nfCheckBox;
-	}
-
-	/**
 	 * This method initializes dockCheckBox	
 	 * 	
 	 * @return javax.swing.JCheckBox	
@@ -438,110 +317,6 @@ public class PanelServices extends JPanel {
 			dockCheckBox.setText("Dock");
 		}
 		return dockCheckBox;
-	}
-
-	/**
-	 * This method initializes hmCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getHmCheckBox() {
-		if (hmCheckBox == null) {
-			hmCheckBox = new TristateCheckBox();
-			hmCheckBox.setBounds(new Rectangle(60, 124, 20, 20));
-		}
-		return hmCheckBox;
-	}
-
-	/**
-	 * This method initializes fmCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getFmCheckBox() {
-		if (fmCheckBox == null) {
-			fmCheckBox = new TristateCheckBox();
-			fmCheckBox.setBounds(new Rectangle(110, 124, 20, 20));
-		}
-		return fmCheckBox;
-	}
-
-	/**
-	 * This method initializes zmCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getZmCheckBox() {
-		if (zmCheckBox == null) {
-			zmCheckBox = new TristateCheckBox();
-			zmCheckBox.setBounds(new Rectangle(160, 124, 20, 20));
-		}
-		return zmCheckBox;
-	}
-
-	/**
-	 * This method initializes nmCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getNmCheckBox() {
-		if (nmCheckBox == null) {
-			nmCheckBox = new TristateCheckBox();
-			nmCheckBox.setBounds(new Rectangle(210, 124, 20, 20));
-		}
-		return nmCheckBox;
-	}
-
-	/**
-	 * This method initializes hsCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getHsCheckBox() {
-		if (hsCheckBox == null) {
-			hsCheckBox = new TristateCheckBox();
-			hsCheckBox.setBounds(new Rectangle(60, 140, 20, 20));
-		}
-		return hsCheckBox;
-	}
-
-	/**
-	 * This method initializes fsCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getFsCheckBox() {
-		if (fsCheckBox == null) {
-			fsCheckBox = new TristateCheckBox();
-			fsCheckBox.setBounds(new Rectangle(110, 140, 20, 20));
-		}
-		return fsCheckBox;
-	}
-
-	/**
-	 * This method initializes zsCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getZsCheckBox() {
-		if (zsCheckBox == null) {
-			zsCheckBox = new TristateCheckBox();
-			zsCheckBox.setBounds(new Rectangle(160, 140, 21, 21));
-		}
-		return zsCheckBox;
-	}
-
-	/**
-	 * This method initializes nsCheckBox	
-	 * 	
-	 * @return javax.swing.JCheckBox	
-	 */
-	private TristateCheckBox getNsCheckBox() {
-		if (nsCheckBox == null) {
-			nsCheckBox = new TristateCheckBox();
-			nsCheckBox.setBounds(new Rectangle(210, 140, 21, 21));
-		}
-		return nsCheckBox;
 	}
 
 	/**
@@ -828,6 +603,19 @@ public class PanelServices extends JPanel {
 			bmCheckBox.setText("Beach");
 		}
 		return bmCheckBox;
+	}
+
+	/**
+	 * This method initializes craneScrollPane	
+	 * 	
+	 * @return javax.swing.JScrollPane	
+	 */
+	private CraneTable getCraneScrollPane() {
+		if (craneScrollPane == null) {
+			craneScrollPane = new CraneTable();
+			craneScrollPane.setBounds(new Rectangle(3, 90, 207, 66));
+		}
+		return craneScrollPane;
 	}
 
 }

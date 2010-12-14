@@ -2,6 +2,7 @@ package harbour.widgets;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -31,6 +32,7 @@ public class TristateCheckBox extends JCheckBox {
 	public static final State DONT_CARE = new State();
 	
 	private TristateDecorator model;
+	private TristateCheckBox box;
 	
 	Icon d = new ImageIcon(getClass().getResource("/images/qm_12x12.png"));
 	Icon s = new ImageIcon(getClass().getResource("/images/cm_12x12.png"));
@@ -40,11 +42,19 @@ public class TristateCheckBox extends JCheckBox {
 	public TristateCheckBox(String text, Icon icon, State initial) {
 		super(text,icon);
 		
+		box = this;
+		
 		// add a listener for when the mouse is pressed
 		super.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				grabFocus();
 				model.nextState();
+				
+				fireItemStateChanged(new ItemEvent(box,
+						ItemEvent.ITEM_STATE_CHANGED,
+						box,
+						box.isSelected() ?  ItemEvent.SELECTED : ItemEvent.DESELECTED));
+				
 				if(model.getState() == NOT_SELECTED) setIcon(n);
 				if(model.getState() == DONT_CARE) setIcon(d);
 				if(model.getState() == SELECTED) setIcon(s);
@@ -69,8 +79,7 @@ public class TristateCheckBox extends JCheckBox {
 		// set the model to the adapted model
 		model = new TristateDecorator(getModel());
 		setModel(model);
-		setState(DONT_CARE);
-		setIcon(d);
+		setState(initial);
 	}
 	
 	public TristateCheckBox(String text, State initial) {
@@ -92,7 +101,18 @@ public class TristateCheckBox extends JCheckBox {
 	 * Set the new state to either SELECTED, NOT_SELECTED or
 	 * DONT_CARE. If state == null, it is treated as DONT_CARE
 	 */
-	public void setState(State state) { model.setState(state); }
+	public void setState(State state) {
+		if(state == NOT_SELECTED)	setIcon(n);
+		if(state == DONT_CARE) 	setIcon(d);
+		if(state == SELECTED) 	setIcon(s);
+		
+		fireItemStateChanged(new ItemEvent(this,
+				ItemEvent.ITEM_STATE_CHANGED,
+				this,
+				this.isSelected() ?  ItemEvent.SELECTED : ItemEvent.DESELECTED));
+		
+		model.setState(state);
+		}
 	
 	/**
 	 * Return the current state, which is determined by the
@@ -112,7 +132,7 @@ public class TristateCheckBox extends JCheckBox {
 	 * "decorating" the original model with a more powerful model
 	 */
 	private class TristateDecorator implements ButtonModel {
-		
+
 		private final ButtonModel other;
 		
 		private TristateDecorator(ButtonModel other) {

@@ -1,17 +1,17 @@
 package harbour.panels;
 
-import java.awt.Color;
-import java.awt.GridBagLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+
+import java.awt.Color;
 import java.awt.Rectangle;
 
 public class PanelEnv extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel envLabel = null;
+	
 
 	/**
 	 * This is the default constructor
@@ -36,5 +36,4 @@ public class PanelEnv extends JPanel {
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		this.add(envLabel, null);
 	}
-
 }

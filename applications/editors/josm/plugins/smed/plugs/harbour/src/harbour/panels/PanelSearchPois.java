@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JComboBox;
+import harbour.models.SearchTableModel;
 
 public class PanelSearchPois extends JPanel {
 
@@ -24,7 +25,7 @@ public class PanelSearchPois extends JPanel {
 	private JScrollPane jScrollPane = null;
 	private JTable jTable = null;
 	private JLabel layerLabel = null;
-	private JComboBox jComboBox = null;
+	private JComboBox layerComboBox = null;
 
 	/**
 	 * This is the default constructor
@@ -61,7 +62,7 @@ public class PanelSearchPois extends JPanel {
 		this.add(getJButton(), null);
 		this.add(getJScrollPane(), null);
 		this.add(layerLabel, null);
-		this.add(getJComboBox(), null);
+		this.add(getLayerComboBox(), null);
 	}
 
 	/**
@@ -113,21 +114,22 @@ public class PanelSearchPois extends JPanel {
 	private JTable getJTable() {
 		if (jTable == null) {
 			jTable = new JTable();
+			jTable.setModel(new SearchTableModel());
 		}
 		return jTable;
 	}
 
 	/**
-	 * This method initializes jComboBox	
+	 * This method initializes layerComboBox	
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	private JComboBox getJComboBox() {
-		if (jComboBox == null) {
-			jComboBox = new JComboBox();
-			jComboBox.setBounds(new Rectangle(70, 5, 250, 20));
+	private JComboBox getLayerComboBox() {
+		if (layerComboBox == null) {
+			layerComboBox = new JComboBox();
+			layerComboBox.setBounds(new Rectangle(70, 5, 250, 20));
 		}
-		return jComboBox;
+		return layerComboBox;
 	}
 
 }

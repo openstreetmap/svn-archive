@@ -2,11 +2,12 @@ package harbour.panels;
 
 import java.awt.Color;
 import java.awt.GridBagLayout;
+import java.awt.Rectangle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import java.awt.Rectangle;
+import java.awt.Dimension;
 
 public class PanelRelations extends JPanel {
 
@@ -30,10 +31,10 @@ public class PanelRelations extends JPanel {
 		relLabel = new JLabel();
 		relLabel.setBounds(new Rectangle(101, 18, 120, 36));
 		relLabel.setText("Relationen");
+		
 		this.setSize(330, 270);
 		this.setLayout(null);
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		this.add(relLabel, null);
 	}
-
 }

@@ -62,7 +62,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
         } catch (SecurityException e) {
             log.log(Level.WARNING,
                     "Failed to access system property ''java.io.tmpdir'' for security reasons. Exception was: "
-                            + e.toString());
+                    + e.toString());
             throw e; // rethrow
         }
         try {
@@ -72,8 +72,9 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 String subDirName = "JMapViewerTiles";
                 // On Linux/Unix systems we do not have a per user tmp directory.
                 // Therefore we add the user name for getting a unique dir name.
-                if (userName != null && userName.length() > 0)
+                if (userName != null && userName.length() > 0) {
                     subDirName += "_" + userName;
+                }
                 cacheDir = new File(tempDir, subDirName);
             }
             log.finest("Tile cache directory: " + cacheDir);
@@ -207,6 +208,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader {
                 }
             } catch (Exception e) {
                 tile.setImage(Tile.ERROR_IMAGE);
+                tile.error = true;
                 listener.tileLoadingFinished(tile, false);
                 if (input == null) {
                     System.err.println("failed loading " + zoom + "/" + tilex + "/" + tiley + " " + e.getMessage());

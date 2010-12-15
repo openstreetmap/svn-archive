@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 
@@ -18,20 +21,18 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
     private static String API_KEY = "Arzdiw4nlOJzRwOz__qailc8NiR31Tt51dN2D7cm57NrnceZnCpgOkmJhNpGoppU";
-    private static List<Attribution> attributions;
+    private static Future<List<Attribution>> attributions;
 
     public BingAerialTileSource() {
         super("Bing Aerial Maps", "http://ecn.t2.tiles.virtualearth.net/tiles/");
 
         if (attributions == null) {
-            Thread t = new Thread(new Runnable() {
+            attributions = Executors.newSingleThreadExecutor().submit(new Callable<List<Attribution>>() {
                 @Override
-                public void run() {
-                    attributions = loadAttributionText();
+                public List<Attribution> call() throws Exception {
+                    return loadAttributionText();
                 }
             });
-            t.setDaemon(true);
-            t.start();
         }
     }
 
@@ -129,9 +130,15 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
     }
 
     @Override
-    public String getTilePath(int zoom, int tilex, int tiley) {
-        String quadtree = computeQuadTree(zoom, tilex, tiley);
-        return "/tiles/a" + quadtree + "." + getExtension() + "?g=587";
+    public String getTilePath(int zoom, int tilex, int tiley) throws IOException {
+        try {
+            if (attributions.get() == null)
+                throw new IOException("Cannot load Bing attribution");
+            String quadtree = computeQuadTree(zoom, tilex, tiley);
+            return "/tiles/a" + quadtree + "." + getExtension() + "?g=587";
+        } catch (Exception e) {
+            throw new IOException("Cannot load Bing attribution", e);
+        }
     }
 
     @Override
@@ -168,22 +175,28 @@ public class BingAerialTileSource extends OsmTileSource.AbstractOsmTileSource {
 
     @Override
     public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
-        if (attributions == null)
-            // TODO: don't show Bing tiles until attribution data is loaded
-            return "";
-        StringBuilder a = new StringBuilder();
-        for (Attribution attr : attributions) {
-            if(zoom <= attr.maxZoom && zoom >= attr.minZoom) {
-                if(topLeft.getLon() < attr.max.getLon()
-                        && botRight.getLon() > attr.min.getLon()
-                        && topLeft.getLat() > attr.min.getLat()
-                        && botRight.getLat() < attr.max.getLat()) {
-                    a.append(attr.attribution);
-                    a.append(" ");
+        try {
+            if (!attributions.isDone())
+                return "Loading Bing attribution data...";
+            if (attributions.get() == null)
+                return "Error loading Bing attribution data";
+            StringBuilder a = new StringBuilder();
+            for (Attribution attr : attributions.get()) {
+                if(zoom <= attr.maxZoom && zoom >= attr.minZoom) {
+                    if(topLeft.getLon() < attr.max.getLon()
+                            && botRight.getLon() > attr.min.getLon()
+                            && topLeft.getLat() > attr.min.getLat()
+                            && botRight.getLat() < attr.max.getLat()) {
+                        a.append(attr.attribution);
+                        a.append(" ");
+                    }
                 }
             }
+            return a.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return a.toString();
+        return "Error loading Bing attribution data";
     }
 
     static String computeQuadTree(int zoom, int tilex, int tiley) {

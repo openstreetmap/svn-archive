@@ -1,6 +1,7 @@
 package org.openstreetmap.gui.jmapviewer;
 
 import java.awt.Image;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 
@@ -47,7 +48,10 @@ public class OsmTileSource {
             return "png";
         }
 
-        public String getTilePath(int zoom, int tilex, int tiley) {
+        /**
+         * @throws IOException when subclass cannot return the tile URL
+         */
+        public String getTilePath(int zoom, int tilex, int tiley) throws IOException {
             return "/" + zoom + "/" + tilex + "/" + tiley + "." + getExtension();
         }
 
@@ -55,7 +59,7 @@ public class OsmTileSource {
             return this.BASE_URL;
         }
 
-        public String getTileUrl(int zoom, int tilex, int tiley) {
+        public String getTileUrl(int zoom, int tilex, int tiley) throws IOException {
             return this.getBaseUrl() + getTilePath(zoom, tilex, tiley);
         }
 

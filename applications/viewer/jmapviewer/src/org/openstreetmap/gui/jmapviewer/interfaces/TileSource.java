@@ -1,6 +1,7 @@
 package org.openstreetmap.gui.jmapviewer.interfaces;
 
 import java.awt.Image;
+import java.io.IOException;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
@@ -79,7 +80,7 @@ public interface TileSource {
      * @param tiley
      * @return fully qualified url for downloading the specified tile image
      */
-    public String getTileUrl(int zoom, int tilex, int tiley);
+    public String getTileUrl(int zoom, int tilex, int tiley) throws IOException;
 
     /**
      * Specifies the tile image type. For tiles rendered by Mapnik or

@@ -183,7 +183,7 @@ public class Tile {
         this.loaded = loaded;
     }
 
-    public String getUrl() {
+    public String getUrl() throws IOException {
         return source.getTileUrl(zoom, xtile, ytile);
     }
 
@@ -253,14 +253,14 @@ public class Tile {
 
     public String getStatus() {
         String status = "new";
+        if (this.error) {
+            status = "error";
+        }
         if (this.loading) {
             status = "loading";
         }
         if (this.loaded) {
             status = "loaded";
-        }
-        if (this.error) {
-            status = "error";
         }
         return status;
     }

@@ -1,7 +1,7 @@
 
 <Style name="buildings">
   <Rule>
-    <Filter>[building]='yes' or [building]='house' or [building]='apartments' or [building]='block' or [building]='terrace' or [building]='semi' or [building]='detached' or [building]='barn' or [building]='shed' or [historic]='castle' or [building]='castle' or [building]='palace'</Filter>
+    <Filter>([building]='yes' and [amenity]='') or [building]='house' or [building]='apartments' or [building]='block' or [building]='terrace' or [building]='semi' or [building]='detached' or [building]='barn' or [building]='shed' or [historic]='castle' or [building]='castle' or [building]='palace' or [military]='barracks'</Filter>
     &maxscale_zoom13;
     <PolygonSymbolizer>
       <CssParameter name="fill">#9a5f21</CssParameter>
@@ -15,7 +15,7 @@
     </PolygonSymbolizer>
   </Rule>
   <Rule>
-    <Filter>[leisure]='sports_centre' or [leisure]='stadium' or [building]='stadium' or [building]='office' or [building]='store' or [building]='factory' or [building]='glasshouse' or [building]='warehouse' or [building]='brewery' or [aeroway]='terminal' or [railway]='station' or [building]='train_station' or [amenity]='townhall' or [building]='city_hall' or [building]='hall' or [building]='church' or [amenity]='place_of_worship'</Filter>
+    <Filter>([building]='yes' and [amenity]!='') or [leisure]='sports_centre' or [leisure]='stadium' or [building]='stadium' or [building]='office' or [building]='commercial' or [building]='store' or [building]='manufacture' or [building]='factory' or [building]='glasshouse' or [building]='warehouse' or [building]='hangar' or [building]='brewery' or [aeroway]='terminal' or [railway]='station' or [building]='train_station' or [amenity]='townhall' or [building]='public' or [building]='city_hall' or [building]='hall' or [building]='church' or [amenity]='place_of_worship'</Filter>
     &maxscale_zoom13;
     <PolygonSymbolizer>
       <CssParameter name="fill">#5a87de</CssParameter>
@@ -27,12 +27,13 @@
   <StyleName>buildings</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,building,leisure,railway,amenity,aeroway,landuse,historic from &prefix;_polygon
+    (select way,building,leisure,railway,amenity,aeroway,landuse,historic,military from &prefix;_polygon
      where building is not null
         or landuse='building'
         or leisure in ('sports_centre','stadium')
         or historic='castle'
         or amenity in ('place_of_worship','townhall')
+        or military='barracks'
         or railway='station'
         or aeroway='terminal'
      order by z_order,way_area desc) as buildings

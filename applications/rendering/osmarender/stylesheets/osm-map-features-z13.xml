@@ -962,7 +962,17 @@
 										<line class="railway-aba-2-core railway-aba-2-core-color railway-2-core" smart-linecap="no" />
 									</rule>
 									<rule e="way" k="railway" v="rail">
-										<line class="railway-rail-2-core railway-rail-2-core-color railway-2-core" smart-linecap="no" />
+										<rule e="way" k="service" v="spur|yard|siding">
+											<line class="railway-yard-2-core railway-yard-2-core-color railway-2-core" smart-linecap="no" />
+										</rule>
+										<else>
+											<rule e="way" k="usage" v="main">
+												<line class="railway-main-2-core railway-rail-2-core-color railway-2-core" smart-linecap="no" />
+											</rule>
+											<else>
+												<line class="railway-rail-2-core railway-rail-2-core-color railway-2-core" smart-linecap="no" />
+											</else>
+										</else>
 									</rule>
 									<rule e="way" k="railway" v="narrow_gauge">
 										<line class="railway-narrow-2-core railway-narrow-2-core-color railway-2-core" smart-linecap="no" />
@@ -1142,8 +1152,14 @@
 									<line class="railway-aba-2-core railway-aba-2-core-color railway-2-core railway-aba-tunnel-core tunnel"  smart-linecap="no" />
 								</rule>
 								<rule e="way" k="railway" v="rail">
-									<line class="railway-rail-casing railway-rail-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-rail-2-core"/>
-									<line class="railway-rail-2-core railway-rail-2-core-color railway-2-core railway-rail-tunnel-core tunnel"  smart-linecap="no" />
+									<rule e="way" k="service" v="spur|yard|siding">
+										<line class="railway-yard-casing railway-yard-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-yard-2-core"/>
+										<line class="railway-yard-2-core railway-yard-2-core-color railway-2-core railway-yard-tunnel-core tunnel"  smart-linecap="no" />
+									</rule>
+									<else>
+										<line class="railway-rail-casing railway-rail-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-rail-2-core"/>
+										<line class="railway-rail-2-core railway-rail-2-core-color railway-2-core railway-rail-tunnel-core tunnel"  smart-linecap="no" />
+									</else>
 								</rule>
 								<rule e="way" k="railway" v="narrow_gauge">
 									<line class="railway-narrow-casing railway-narrow-casing-color railway-casing tunnel-casing tunnel" mask-class="tunnel-core railway-narrow-2-core"/>
@@ -1552,8 +1568,10 @@
 			stroke-width: 8px;
 			}
 
-			.railway-rail-casing                    { stroke-width: 4.9px; }
-			.railway-rail-2-core                    { stroke-width: 3.7px; }
+			.railway-main-casing                    { stroke-width: 4.9px; }
+			.railway-main-2-core                    { stroke-width: 3.7px; }
+			.railway-rail-casing                    { stroke-width: 3.9px; }
+			.railway-rail-2-core                    { stroke-width: 2.7px; }
 			.railway-rail-casing-color              { stroke: #404040; }
 			.railway-rail-2-core-color              { stroke: #404040; }
 			.railway-rail-tunnel-core               { stroke-opacity: 0.1; }

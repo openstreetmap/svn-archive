@@ -7,6 +7,9 @@ use strict;
 
 my $item = "";
 my $group;
+my $combo_n;
+my @combo_values;
+my $combo_idx;
 my $comment = 0;
 
 # This is a simple conversion and in no way a complete XML parser
@@ -103,6 +106,8 @@ while(my $line = <>)
   elsif($line =~ /<combo.*\s+text=(".*?").*\s+display_values="(.*?)"/)
   {
     my ($n,$vals) = ($1,$2);
+    $combo_n = $n;
+    $combo_idx = 0;
     my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
     if($line =~ /text_context=(".*?")/)
     {
@@ -112,16 +117,20 @@ while(my $line = <>)
     {
       print "/* item $item combo $n */ tr($n);";
     }
-    foreach my $val (split ",",$vals)
-    {
-      next if $val =~ /^[0-9-]+$/; # search for non-numbers
-      print $vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");";
+    $vals =~ s/\\,/\x91/g;
+    @combo_values = split ",",$vals;
+    for (my $i=0; $i<@combo_values; ++$i) {
+      $combo_values[$i] =~ s/\x91/,/g;
+      next if $combo_values[$i] =~ /^[0-9-]+$/; # search for non-numbers
+      print $vctx ? " trc($vctx, \"$combo_values[$i]\");" : " tr(\"$combo_values[$i]\");";
     }
     print "\n";
   }
   elsif($line =~ /<combo.*\s+text=(".*?").*\s+values="(.*?)"/)
   {
     my ($n,$vals) = ($1,$2);
+    $combo_n = $n;
+    $combo_idx = 0;
     my $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
     if($line =~ /text_context=(".*?")/)
     {
@@ -131,12 +140,19 @@ while(my $line = <>)
     {
       print "/* item $item combo $n */ tr($n);";
     }
-    foreach my $val (split ",",$vals)
+    @combo_values = split ",",$vals;
+    foreach my $val (@combo_values)
     {
       next if $val =~ /^[0-9-]+$/; # search for non-numbers
       print $vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");";
     }
     print "\n";
+  }
+  elsif($line =~ /<short_description>(.*?)<\/short_description>/)
+  {
+    my $n = $1;
+    print "/* item $item combo $combo_n item \"$combo_values[$combo_idx]\" short description */ tr(\"$n\");\n";
+    $combo_idx++;
   }
   elsif($line =~ /<\/group>/)
   {
@@ -147,6 +163,11 @@ while(my $line = <>)
   {
     $item = "";
     print "\n";
+  }
+  elsif($line =~ /<\/combo/)
+  {
+    $combo_n = "";
+    $combo_idx = 0;
   }
   elsif(!$line)
   {

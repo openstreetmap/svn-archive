@@ -12,12 +12,13 @@
   <StyleName>buildings</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,building,leisure,railway,amenity,aeroway,landuse,historic from &prefix;_polygon
+    (select way,building,leisure,railway,amenity,aeroway,landuse,historic,military from &prefix;_polygon
      where building is not null
         or landuse='building'
         or leisure in ('sports_centre','stadium')
         or historic='castle'
         or amenity in ('place_of_worship','townhall')
+        or military='barracks'
         or railway='station'
         or aeroway='terminal'
      order by z_order,way_area desc) as buildings

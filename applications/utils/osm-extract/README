@@ -14,7 +14,10 @@ The planetosm-extract-area.pl and planetosm-extract-tags.pl scripts
 extract a rectangular area and/or items based on certain tag values.
 
 "osmcut" is a program to cut an OSM file into several pieces of identical
-size (identical in terms of degrees covered, not file size).
+size (identical in terms of degrees covered, not file size). 
+
+history-excerpt.pl is a script that allows you to cut out a bounding
+box from the full history planet file.
 
 PLEASE EXPAND AND CHANGE THIS README IF YOU MAKE CHANGES!
 

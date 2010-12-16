@@ -192,7 +192,7 @@
 		<rule e="way" k="waterway" v="ditch">
 			<line class="waterway-casing waterway-ditch-casing" width-scale-factor="1" honor-width="yes" minimum-width="0.1" maximum-width="10"/>
 		</rule>
-		<rule e="way" k="tunnel" v="yes">
+		<rule e="way" k="tunnel|culvert" v="yes|culvert">
 			<rule e="way" k="waterway" v="river">
 				<line class="waterway-core waterway-river-tunnel-core" width-scale-factor="1" honor-width="yes" minimum-width="2" maximum-width="100"/>
 			</rule>

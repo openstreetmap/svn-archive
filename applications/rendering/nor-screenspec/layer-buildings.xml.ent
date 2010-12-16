@@ -1,12 +1,14 @@
 
 <Style name="buildings">
+  <!-- Residences -->
   <Rule>
-    <Filter>([building]='yes' and [amenity]='') or [building]='house' or [building]='apartments' or [building]='block' or [building]='terrace' or [building]='semi' or [building]='detached' or [building]='barn' or [building]='shed' or [historic]='castle' or [building]='castle' or [building]='palace' or [military]='barracks'</Filter>
+    <Filter>([building]='yes' and not ([amenity]!='' or [shop]!='')) or [building]='house' or [building]='apartments' or [building]='block' or [building]='terrace' or [building]='terraced' or [building]='semi' or [building]='detached' or [building]='barn' or [building]='shed' or [historic]='castle' or [building]='castle' or [building]='palace' or [military]='barracks' or [building]='undefined'</Filter>
     &maxscale_zoom13;
     <PolygonSymbolizer>
       <CssParameter name="fill">#9a5f21</CssParameter>
     </PolygonSymbolizer>
   </Rule>
+  <!-- Temporary residences, summer houses -->
   <Rule>
     <Filter>[building]='cabin' or [building]='hut' or [building]='pavilion'</Filter>
     &maxscale_zoom13;
@@ -14,8 +16,9 @@
       <CssParameter name="fill">#d68723</CssParameter>
     </PolygonSymbolizer>
   </Rule>
+  <!-- Industrial, commercial, office and public buildings -->
   <Rule>
-    <Filter>([building]='yes' and [amenity]!='') or [leisure]='sports_centre' or [leisure]='stadium' or [building]='stadium' or [building]='office' or [building]='commercial' or [building]='store' or [building]='manufacture' or [building]='factory' or [building]='glasshouse' or [building]='warehouse' or [building]='hangar' or [building]='brewery' or [aeroway]='terminal' or [railway]='station' or [building]='train_station' or [amenity]='townhall' or [building]='public' or [building]='city_hall' or [building]='hall' or [building]='church' or [amenity]='place_of_worship'</Filter>
+    <Filter>([building]='yes' and ([amenity]!='' or [shop]!='')) or [building]='office' or [building]='commercial' or [building]='store' or [building]='manufacture' or [building]='factory' or [building]='glasshouse' or [building]='warehouse' or [building]='hangar' or [building]='garage' or [building]='brewery' or [aeroway]='terminal' or [railway]='station' or [building]='train_station' or [amenity]='townhall' or [building]='public' or [building]='city_hall' or [building]='hall' or [building]='church' or [amenity]='place_of_worship' or [leisure]='sports_centre' or [leisure]='stadium' or [building]='stadium' or [building]='club_house'</Filter>
     &maxscale_zoom13;
     <PolygonSymbolizer>
       <CssParameter name="fill">#5a87de</CssParameter>
@@ -27,7 +30,7 @@
   <StyleName>buildings</StyleName>
   <Datasource>
     <Parameter name="table">
-    (select way,building,leisure,railway,amenity,aeroway,landuse,historic,military from &prefix;_polygon
+    (select way,building,leisure,railway,amenity,shop,aeroway,landuse,historic,military from &prefix;_polygon
      where building is not null
         or landuse='building'
         or leisure in ('sports_centre','stadium')

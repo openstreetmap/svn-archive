@@ -44,41 +44,42 @@ import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 
 import oseam.Messages;
 import oseam.OSeaM;
+import oseam.seamarks.SeaMark;
 
 public class OSeaMAction {
 
-	private JPanel oseamPanel = null;
+	private OSeaMAction dia = null;
+	private PanelMain panelMain = null;
 
-	private JLabel shapeIcon = null;
-	private JLabel lightIcon = null;
-	private JLabel topIcon = null;
-	private JLabel reflIcon = null;
-	private JLabel radarIcon = null;
-	private JLabel fogIcon = null;
-	private JLabel nameLabel = null;
-	private JTextField nameBox = null;
-	private JButton saveButton = null;
-	private ButtonGroup typeButtons = null;
-	private JRadioButton chanButton = null;
-	private JRadioButton hazButton = null;
-	private JRadioButton specButton = null;
-	private JRadioButton lightsButton = null;
-	private ButtonGroup miscButtons = null;
-	private JRadioButton topButton = null;
-	private JRadioButton fogButton = null;
-	private JRadioButton radarButton = null;
-	private JRadioButton litButton = null;
-	private PanelChan panelChan = null;
-	private PanelHaz panelHaz = null;
-	private PanelSpec panelSpec = null;
-	private PanelLights panelLights = null;
-	private PanelTop panelTop = null;
-	private PanelFog panelFog = null;
-	private PanelRadar panelRadar = null;
-	private PanelLit panelLit = null;
+	private SeaMark mark = null;
+	private Collection<? extends OsmPrimitive> Selection = null;
+	private OsmPrimitive SelNode = null;
+
+	public SelectionChangedListener SmpListener = new SelectionChangedListener() {
+		public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+			Node node;
+			Selection = newSelection;
+
+System.out.println("SmpListener");
+			for (OsmPrimitive osm : Selection) {
+				if (osm instanceof Node) {
+					node = (Node) osm;
+					if (Selection.size() == 1)
+						if (node.compareTo(SelNode) != 0) {
+							SelNode = node;
+System.out.println(node);
+//							parseSeaMark();
+//							mark.paintSign();
+						}
+				}
+			}
+			Selection = null;
+		}
+	};
 
 	public OSeaMAction() {
 
+		dia = this;
 		String str = Main.pref.get("mappaint.style.sources");
 		if (!str.contains("dev.openseamap.org")) {
 			if (!str.isEmpty())
@@ -89,264 +90,183 @@ public class OSeaMAction {
 		str = Main.pref.get("color.background");
 		if (str.equals("#000000") || str.isEmpty())
 			Main.pref.put("color.background", "#606060");
-
-		panelChan = new PanelChan();
-		panelChan.setBounds(new Rectangle(65, 0, 335, 160));
-		panelChan.setVisible(false);
-		panelHaz = new PanelHaz();
-		panelHaz.setBounds(new Rectangle(65, 0, 335, 160));
-		panelHaz.setVisible(false);
-		panelSpec = new PanelSpec();
-		panelSpec.setBounds(new Rectangle(65, 0, 335, 160));
-		panelSpec.setVisible(false);
-		panelLights = new PanelLights();
-		panelLights.setBounds(new Rectangle(65, 0, 335, 160));
-		panelLights.setVisible(false);
-		panelTop = new PanelTop();
-		panelTop.setBounds(new Rectangle(40, 165, 220, 160));
-		panelTop.setVisible(false);
-		panelFog = new PanelFog();
-		panelFog.setBounds(new Rectangle(40, 165, 220, 160));
-		panelFog.setVisible(false);
-		panelRadar = new PanelRadar();
-		panelRadar.setBounds(new Rectangle(40, 165, 220, 160));
-		panelRadar.setVisible(false);
-		panelLit = new PanelLit();
-		panelLit.setBounds(new Rectangle(40, 165, 220, 160));
-		panelLit.setVisible(false);
+System.out.println("newOSeaMAction");
 	}
 
 	public JPanel getOSeaMPanel() {
-		if (oseamPanel == null) {
-			oseamPanel = new JPanel();
-			oseamPanel.setLayout(null);
-			oseamPanel.setSize(new Dimension(400, 360));
+		if (panelMain == null) {
+			panelMain = new PanelMain();
+			panelMain.setLayout(null);
+			panelMain.setSize(new Dimension(400, 360));
+		}
+		return panelMain;
+	}
+/*
+	private void parseSeaMark() {
 
-			shapeIcon = new JLabel(new ImageIcon(getClass().getResource(
-					"/images/Cardinal_Pillar_South.png")));
-			shapeIcon.setBounds(new Rectangle(265, 170, 130, 185));
-			oseamPanel.add(shapeIcon, null);
-			lightIcon = new JLabel(new ImageIcon(getClass().getResource(
-					"/images/Light_White_120.png")));
-			lightIcon.setBounds(new Rectangle(265, 170, 125, 185));
-			oseamPanel.add(lightIcon, null);
-			topIcon = new JLabel();
-			topIcon.setBounds(new Rectangle(265, 170, 125, 185));
-			oseamPanel.add(topIcon, null);
-			reflIcon = new JLabel(new ImageIcon(getClass().getResource(
-					"/images/Radar_Reflector_355.png")));
-			reflIcon.setBounds(new Rectangle(265, 170, 125, 185));
-			oseamPanel.add(reflIcon, null);
-			radarIcon = new JLabel(new ImageIcon(getClass().getResource(
-					"/images/Radar_Station.png")));
-			radarIcon.setBounds(new Rectangle(265, 170, 130, 185));
-			oseamPanel.add(radarIcon, null);
-			fogIcon = new JLabel(new ImageIcon(getClass().getResource(
-					"/images/Fog_Signal.png")));
-			fogIcon.setBounds(new Rectangle(265, 170, 125, 185));
-			oseamPanel.add(fogIcon, null);
+		int nodes = 0;
+		Node node = null;
+		Collection<Node> selection = null;
+		Map<String, String> keys;
+		DataSet ds;
 
-			oseamPanel.add(getChanButton(), null);
-			oseamPanel.add(getHazButton(), null);
-			oseamPanel.add(getSpecButton(), null);
-			oseamPanel.add(getLightsButton(), null);
-			oseamPanel.add(panelChan, null);
-			oseamPanel.add(panelHaz, null);
-			oseamPanel.add(panelSpec, null);
-			oseamPanel.add(panelLights, null);
-			oseamPanel.add(panelTop, null);
-			oseamPanel.add(panelFog, null);
-			oseamPanel.add(panelRadar, null);
-			oseamPanel.add(panelLit, null);
-			typeButtons = new ButtonGroup();
-			typeButtons.add(chanButton);
-			typeButtons.add(hazButton);
-			typeButtons.add(specButton);
-			typeButtons.add(lightsButton);
-			ActionListener alType = new ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (chanButton.isSelected()) {
-				        chanButton.setBorderPainted(true);
-						panelChan.setVisible(true);
-					} else {
-				        chanButton.setBorderPainted(false);
-						panelChan.setVisible(false);
-					}
-					if (hazButton.isSelected()) {
-				        hazButton.setBorderPainted(true);
-						panelHaz.setVisible(true);
-					} else {
-				        hazButton.setBorderPainted(false);
-						panelHaz.setVisible(false);
-					}
-					if (specButton.isSelected()) {
-				        specButton.setBorderPainted(true);
-						panelSpec.setVisible(true);
-					} else {
-				        specButton.setBorderPainted(false);
-						panelSpec.setVisible(false);
-					}
-					if (lightsButton.isSelected()) {
-				        lightsButton.setBorderPainted(true);
-						panelLights.setVisible(true);
-					} else {
-				        lightsButton.setBorderPainted(false);
-						panelLights.setVisible(false);
-					}
+		ds = Main.main.getCurrentDataSet();
+
+		if (ds == null) {
+			mark = new MarkUkn(this, Messages.getString("SmpDialogAction.26"));
+			mark.setNode(null);
+			return;
+		}
+
+		selection = ds.getSelectedNodes();
+		nodes = selection.size();
+
+		if (nodes == 0) {
+			mark = new MarkUkn(this, Messages.getString("SmpDialogAction.27"));
+			mark.setNode(null);
+			return;
+		}
+
+		if (nodes > 1) {
+			mark = new MarkUkn(this, Messages.getString("SmpDialogAction.28"));
+			mark.setNode(null);
+			return;
+		}
+
+		Iterator<Node> it = selection.iterator();
+		node = it.next();
+
+		cM01IconVisible.setEnabled(true);
+		cM01IconVisible.setIcon(new ImageIcon(getClass().getResource(
+				"/images/Auge.png"))); //$NON-NLS-1$
+
+		cbM01TypeOfMark.setEnabled(true);
+
+		String type = "";
+		String str = "";
+
+		keys = node.getKeys();
+
+		if (keys.containsKey("seamark:type"))
+			type = keys.get("seamark:type");
+		
+		if (type.equals("buoy_lateral") || type.equals("beacon_lateral")) {
+			mark = new MarkLat(this, node);
+			return;
+
+		} else if (type.equals("buoy_cardinal") || type.equals("beacon_cardinal")) {
+			mark = new MarkCard(this, node);
+			return;
+
+		} else if (type.equals("buoy_safe_water") || type.equals("beacon_safe_water")) {
+			mark = new MarkSaw(this, node);
+			return;
+
+		} else if (type.equals("buoy_special_purpose") || type.equals("beacon_special_purpose")) {
+			mark = new MarkSpec(this, node);
+			return;
+
+		} else if (type.equals("buoy_isolated_danger") || type.equals("beacon_isolated_danger")) {
+			mark = new MarkIsol(this, node);
+			return;
+
+		} else if (type.equals("landmark") || type.equals("light_vessel")
+				|| type.equals("light_major") || type.equals("light_minor")) {
+			mark = new MarkNota(this, node);
+			return;
+
+		} else if (type.equals("light_float")) {
+			if (keys.containsKey("seamark:light_float:colour")) {
+				str = keys.get("seamark:light_float:colour");
+				if (str.equals("red") || str.equals("green")
+						|| str.equals("red;green;red") || str.equals("green;red;green")) {
+					mark = new MarkLat(this, node);
+					return;
+				} else if (str.equals("black;yellow")
+						|| str.equals("black;yellow;black") || str.equals("yellow;black")
+						|| str.equals("yellow;black;yellow")) {
+					mark = new MarkCard(this, node);
+					return;
+				} else if (str.equals("black;red;black")) {
+					mark = new MarkIsol(this, node);
+					return;
+				} else if (str.equals("red;white")) {
+					mark = new MarkSaw(this, node);
+					return;
+				} else if (str.equals("yellow")) {
+					mark = new MarkSpec(this, node);
+					return;
 				}
-			};
-			chanButton.addActionListener(alType);
-			hazButton.addActionListener(alType);
-			specButton.addActionListener(alType);
-			lightsButton.addActionListener(alType);
-
-			oseamPanel.add(getTopButton(), null);
-			oseamPanel.add(getFogButton(), null);
-			oseamPanel.add(getRadarButton(), null);
-			oseamPanel.add(getLitButton(), null);
-			miscButtons = new ButtonGroup();
-			miscButtons.add(topButton);
-			miscButtons.add(fogButton);
-			miscButtons.add(radarButton);
-			miscButtons.add(litButton);
-			ActionListener alMisc = new ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (topButton.isSelected()) {
-						topButton.setBorderPainted(true);
-						panelTop.setVisible(true);
-					} else {
-						topButton.setBorderPainted(false);
-						panelTop.setVisible(false);
-					}
-					if (fogButton.isSelected()) {
-						fogButton.setBorderPainted(true);
-						panelFog.setVisible(true);
-					} else {
-						fogButton.setBorderPainted(false);
-						panelFog.setVisible(false);
-					}
-					if (radarButton.isSelected()) {
-						radarButton.setBorderPainted(true);
-						panelRadar.setVisible(true);
-					} else {
-						radarButton.setBorderPainted(false);
-						panelRadar.setVisible(false);
-					}
-					if (litButton.isSelected()) {
-						litButton.setBorderPainted(true);
-						panelLit.setVisible(true);
-					} else {
-						litButton.setBorderPainted(false);
-						panelLit.setVisible(false);
-					}
+			} else if (keys.containsKey("seamark:light_float:topmark:shape")) {
+				str = keys.get("seamark:light_float:topmark:shape");
+				if (str.equals("cylinder") || str.equals("cone, point up")) {
+					mark = new MarkLat(this, node);
+					return;
 				}
-			};
-			topButton.addActionListener(alMisc);
-			fogButton.addActionListener(alMisc);
-			radarButton.addActionListener(alMisc);
-			litButton.addActionListener(alMisc);
-
-			nameLabel = new JLabel();
-			nameLabel.setBounds(new Rectangle(5, 329, 60, 20));
-			nameLabel.setText(tr("Name:"));
-			oseamPanel.add(nameLabel, null);
-			nameBox = new JTextField();
-			nameBox.setBounds(new Rectangle(60, 330, 200, 20));
-			oseamPanel.add(nameBox, null);
-			saveButton = new JButton();
-			saveButton.setBounds(new Rectangle(285, 330, 100, 20));
-			saveButton.setText(tr("Save"));
-			oseamPanel.add(saveButton, null);
+			} else if (keys.containsKey("seamark:light_float:topmark:colour")) {
+				str = keys.get("seamark:light_float:topmark:colour");
+				if (str.equals("red") || str.equals("green")) {
+					mark = new MarkLat(this, node);
+					return;
+				}
+			}
 		}
-		return oseamPanel;
-	}
 
-	private JRadioButton getChanButton() {
-		if (chanButton == null) {
-			chanButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/ChanButton.png")));
-			chanButton.setBounds(new Rectangle(0, 0, 62, 40));
-	        chanButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			chanButton.setToolTipText(Messages.getString("ChanTip"));
+		if (keys.containsKey("buoy_lateral:category") || keys.containsKey("beacon_lateral:category")) {
+			mark = new MarkLat(this, node);
+			return;
+		} else if (keys.containsKey("buoy_cardinal:category") || keys.containsKey("beacon_cardinal:category")) {
+			mark = new MarkCard(this, node);
+			return;
+		} else if (keys.containsKey("buoy_isolated_danger:category") || keys.containsKey("beacon_isolated_danger:category")) {
+			mark = new MarkIsol(this, node);
+			return;
+		} else if (keys.containsKey("buoy_safe_water:category") || keys.containsKey("beacon_safe_water:category")) {
+			mark = new MarkSaw(this, node);
+			return;
+		} else if (keys.containsKey("buoy_special_purpose:category") || keys.containsKey("beacon_special_purpose:category")) {
+			mark = new MarkSpec(this, node);
+			return;
 		}
-		return chanButton;
-	}
 
-	private JRadioButton getHazButton() {
-		if (hazButton == null) {
-			hazButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/HazButton.png")));
-			hazButton.setBounds(new Rectangle(0, 40, 62, 40));
-	        hazButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			hazButton.setToolTipText(Messages.getString("HazTip"));
+		if (keys.containsKey("buoy_lateral:shape") || keys.containsKey("beacon_lateral:shape")) {
+			mark = new MarkLat(this, node);
+			return;
+		} else if (keys.containsKey("buoy_cardinal:shape") || keys.containsKey("beacon_cardinal:shape")) {
+			mark = new MarkCard(this, node);
+			return;
+		} else if (keys.containsKey("buoy_isolated_danger:shape") || keys.containsKey("beacon_isolated_danger:shape")) {
+			mark = new MarkIsol(this, node);
+			return;
+		} else if (keys.containsKey("buoy_safe_water:shape") || keys.containsKey("beacon_safe_water:shape")) {
+			mark = new MarkSaw(this, node);
+			return;
+		} else if (keys.containsKey("buoy_special_purpose:shape") || keys.containsKey("beacon_special_purpose:shape")) {
+			mark = new MarkSpec(this, node);
+			return;
 		}
-		return hazButton;
-	}
 
-	private JRadioButton getSpecButton() {
-		if (specButton == null) {
-			specButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/SpecButton.png")));
-			specButton.setBounds(new Rectangle(0, 80, 62, 40));
-	        specButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			specButton.setToolTipText(Messages.getString("SpecTip"));
+		if (keys.containsKey("buoy_lateral:colour") || keys.containsKey("beacon_lateral:colour")) {
+			mark = new MarkLat(this, node);
+			return;
+		} else if (keys.containsKey("buoy_cardinal:colour") || keys.containsKey("beacon_cardinal:colour")) {
+			mark = new MarkCard(this, node);
+			return;
+		} else if (keys.containsKey("buoy_isolated_danger:colour") || keys.containsKey("beacon_isolated_danger:colour")) {
+			mark = new MarkIsol(this, node);
+			return;
+		} else if (keys.containsKey("buoy_safe_water:colour") || keys.containsKey("beacon_safe_water:colour")) {
+			mark = new MarkSaw(this, node);
+			return;
+		} else if (keys.containsKey("buoy_special_purpose:colour") || keys.containsKey("beacon_special_purpose:colour")) {
+			mark = new MarkSpec(this, node);
+			return;
 		}
-		return specButton;
-	}
 
-	private JRadioButton getLightsButton() {
-		if (lightsButton == null) {
-			lightsButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/LightsButton.png")));
-			lightsButton.setBounds(new Rectangle(0, 120, 62, 40));
-	        lightsButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			lightsButton.setToolTipText(Messages.getString("LightsTip"));
-		}
-		return lightsButton;
+		mark = new MarkUkn(this, Messages.getString("SmpDialogAction.91"));
+		mark.setNode(node);
+		mark.paintSign();
+		return;
 	}
-
-	private JRadioButton getTopButton() {
-		if (topButton == null) {
-			topButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/TopButton.png")));
-			topButton.setBounds(new Rectangle(0, 165, 34, 32));
-	        topButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			topButton.setToolTipText(Messages.getString("TopmarksTip"));
-		}
-		return topButton;
-	}
-
-	private JRadioButton getFogButton() {
-		if (fogButton == null) {
-			fogButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/FogButton.png")));
-			fogButton.setBounds(new Rectangle(0, 205, 34, 32));
-	        fogButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			fogButton.setToolTipText(Messages.getString("FogSignalsTip"));
-		}
-		return fogButton;
-	}
-
-	private JRadioButton getRadarButton() {
-		if (radarButton == null) {
-			radarButton = new JRadioButton(new ImageIcon(getClass()
-					.getResource("/images/RadarButton.png")));
-			radarButton.setBounds(new Rectangle(0, 245, 34, 32));
-	        radarButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			radarButton.setToolTipText(Messages.getString("RadarTip"));
-		}
-		return radarButton;
-	}
-
-	private JRadioButton getLitButton() {
-		if (litButton == null) {
-			litButton = new JRadioButton(new ImageIcon(getClass().getResource(
-					"/images/LitButton.png")));
-			litButton.setBounds(new Rectangle(0, 285, 34, 32));
-	        litButton.setBorder(BorderFactory.createLineBorder(Color.magenta, 2));
-			litButton.setToolTipText(Messages.getString("LitTip"));
-		}
-		return litButton;
-	}
-
+*/
 }

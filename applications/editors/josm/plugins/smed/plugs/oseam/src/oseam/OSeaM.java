@@ -8,6 +8,8 @@ import oseam.Messages;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
+import org.openstreetmap.josm.data.osm.DataSet;
+
 import smed.plug.ifc.SmedPluggable;
 import smed.plug.ifc.SmedPluginManager;
 
@@ -21,23 +23,28 @@ public class OSeaM implements SmedPluggable {
 	@Override
 	public boolean start() {
 		// TODO Auto-generated method stub
+System.out.println("start");
 		return false;
 	}
 
 	@Override
 	public boolean stop() {
-		// TODO Auto-generated method stub
+		DataSet.removeSelectionListener(oseam.SmpListener);
+System.out.println("stop");
 		return false;
 	}
 
 	@Override
 	public boolean hasFocus() {
+System.out.println("hasFocus");
+		DataSet.addSelectionListener(oseam.SmpListener);
 		return false;
 	}
 
 	@Override
 	public boolean lostFocus() {
-		// TODO Auto-generated method stub
+		DataSet.removeSelectionListener(oseam.SmpListener);
+System.out.println("lostFocus");
 		return false;
 	}
 

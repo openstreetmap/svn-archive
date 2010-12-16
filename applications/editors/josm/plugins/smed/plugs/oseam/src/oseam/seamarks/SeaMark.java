@@ -6,6 +6,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
 
+import oseam.dialogs.OSeaMAction;
+
 abstract public class SeaMark {
 
 	/**
@@ -139,11 +141,39 @@ abstract public class SeaMark {
 	 * Variables
 	 */
 
-	public abstract void setLightColour();
+	protected OSeaMAction dlg = null;
 
-	public abstract void paintSign();
+	public OSeaMAction getDlg() {
+		return dlg;
+	}
 
-	public abstract void saveSign();
+	public void setDlg(OSeaMAction dlg) {
+		this.dlg = dlg;
+	}
+
+	protected SeaMark(OSeaMAction dia) {
+		dlg = dia;
+	}
+
+	private Node Node = null;
+
+	public Node getNode() {
+		return Node;
+	}
+
+	public void setNode(Node node) {
+		Node = node;
+	}
+
+	private boolean Region = false;
+
+	public boolean getRegion() {
+		return Region;
+	}
+
+	public void setRegion(boolean region) {
+		Region = region;
+	}
 
 	private int Colour = UNKNOWN_COLOUR;
 
@@ -179,6 +209,26 @@ abstract public class SeaMark {
 		Name = name;
 	}
 
+	private int MarkIndex = 0;
+
+	public int getMarkIndex() {
+		return MarkIndex;
+	}
+
+	public void setMarkIndex(int buoyIndex) {
+		MarkIndex = buoyIndex;
+	}
+
+	private int StyleIndex = 0;
+
+	public int getStyleIndex() {
+		return StyleIndex;
+	}
+
+	public void setStyleIndex(int styleIndex) {
+		StyleIndex = styleIndex;
+	}
+
 	private boolean valid = true;
 
 	public boolean isValid() {
@@ -189,6 +239,32 @@ abstract public class SeaMark {
 		this.valid = valid;
 
 	}
+
+	private int SectorIndex = 0;
+
+	public int getSectorIndex() {
+		return SectorIndex;
+	}
+
+	public void setSectorIndex(int sector) {
+		SectorIndex = sector;
+	}
+
+	private String[] LightColour = new String[10];
+
+	public String getLightColour() {
+		if (LightColour[SectorIndex] == null)
+			return (LightColour[0]);
+		return LightColour[SectorIndex];
+	}
+
+	public void setLightColour(String lightColour) {
+		LightColour[SectorIndex] = lightColour;
+	}
+
+	public abstract void paintSign();
+
+	public abstract void saveSign();
 
 	protected void delSeaMarkKeys(Node node) {
 		Iterator<String> it = node.getKeys().keySet().iterator();

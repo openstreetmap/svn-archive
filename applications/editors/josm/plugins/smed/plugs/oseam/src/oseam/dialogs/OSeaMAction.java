@@ -101,7 +101,7 @@ System.out.println("newOSeaMAction");
 		}
 		return panelMain;
 	}
-/*
+
 	private void parseSeaMark() {
 
 		int nodes = 0;
@@ -111,7 +111,7 @@ System.out.println("newOSeaMAction");
 		DataSet ds;
 
 		ds = Main.main.getCurrentDataSet();
-
+/*
 		if (ds == null) {
 			mark = new MarkUkn(this, Messages.getString("SmpDialogAction.26"));
 			mark.setNode(null);
@@ -267,6 +267,6 @@ System.out.println("newOSeaMAction");
 		mark.setNode(node);
 		mark.paintSign();
 		return;
-	}
-*/
+*/	}
+
 }

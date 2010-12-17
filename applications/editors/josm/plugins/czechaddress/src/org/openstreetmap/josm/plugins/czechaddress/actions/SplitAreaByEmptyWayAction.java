@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
@@ -53,15 +54,14 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
 
         Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
-        Collection<Way> newSelection = Main.main.getCurrentDataSet().getSelectedWays();
+        Collection<Way> newSelection = new LinkedList(Main.main.getCurrentDataSet().getSelectedWays());
 
-        for (OsmPrimitive prim : selectedWays) {
-            if (!((Way) prim).isClosed()) continue;
-                Way area = (Way) prim;
+        for (Way area : selectedWays) {
+            if (! area.isClosed()) continue;
 
             for (OsmPrimitive prim2 : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
                 if (!(prim2 instanceof Way)) continue;
-                if (prim2.equals(prim))      continue;
+                if (prim2.equals(area))      continue;
                 Way border = (Way) prim2;
                 if (border.getNodes().size() == 0)   continue;
                 if (border.keySet().size() > 0) continue;

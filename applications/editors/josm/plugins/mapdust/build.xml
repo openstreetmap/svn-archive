@@ -4,6 +4,7 @@
 	<!-- properties -->
 	<property name="commit.message" value="MapDust bug reporter plugin" />
 	<property name="plugin.main.version" value="3592" />
+	<property name="josm.dir" value="../../core/dist/" />
 	<property name="plugin.build.dir" value="build/classes" />
 	<property name="apidoc.dir" value="build/doc" />
 	<property name="plugin.src.dir" value="src" />
@@ -16,7 +17,7 @@
 	<!-- classpath -->
 	<path id="classpath">
 		<fileset dir="${plugin.lib.dir}" includes="**/*.jar" />
-		<pathelement path="${josm}"/>
+		<fileset dir="${josm.dir}" includes="josm-custom.jar" />
 	</path>
 
 	<!-- clean the build -->
@@ -33,7 +34,9 @@
 	<!-- compiles the sources -->
 	<target name="compile" depends="init">
 		<echo message="compiling sources for  ${plugin.jar} ... " />
-		<javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}" includeantruntime="true" target="1.5" source="1.5">
+		<javac srcdir="src" classpathref="classpath" debug="true" 
+			destdir="${plugin.build.dir}" includeantruntime="true" target="1.5"
+			source="1.5">
 			<compilerarg value="-Xlint:deprecation" />
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
@@ -42,7 +45,8 @@
 	<!-- creates the javadocs -->
 	<target name="javadoc">
 		<mkdir dir="${apidoc.dir}" />
-		<javadoc destdir="${apidoc.dir}" source="1.6" classpathref="classpath" windowtitle="MapDust plugin API">
+		<javadoc destdir="${apidoc.dir}" source="1.6" classpathref="classpath" 
+			windowtitle="MapDust plugin API">
 			<link href="http://java.sun.com/javase/6/docs/api/" />
 			<link href="http://docs.jboss.org/hibernate/stable/core/api/" />
 			<packageset dir="${plugin.src.dir}">
@@ -53,13 +57,15 @@
 
 	<!-- revision -->
 	<target name="revision">
-		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+		<exec append="false" output="REVISION" executable="svn" 
+			failifexecutionfails="false">
 			<env key="LANG" value="C" />
 			<arg value="info" />
 			<arg value="--xml" />
 			<arg value="." />
 		</exec>
-		<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true" />
+		<xmlproperty file="REVISION" prefix="version" keepRoot="false" 
+			collapseAttributes="true" />
 		<delete file="REVISION" />
 	</target>
 
@@ -82,15 +88,21 @@
 			<zipfileset src="lib/gson-1.5.jar" includes="**/*.class" />
 			<manifest>
 				<attribute name="Author" value="Beata Jancso" />
-				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin" />
+				<attribute name="Plugin-Class" 
+					value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
-				<attribute name="Plugin-Description" value="The MapDust Plug-In shows the MapDust bug reports 
-					on the map. You can create, close, invalidate, re-open and 
-					comment bug reports by using this plugin." />
-				<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust" />
-				<attribute name="Plugin-Mainversion" value="${plugin.main.version}" />
-				<attribute name="Plugin-Version" value="${version.entry.commit.revision}" />
-				<attribute name="Plugin-Icon" value="images/dialogs/mapdust_icon25.png" />
+				<attribute name="Plugin-Description" 
+					value="The MapDust Plug-In shows the MapDust bug reports on 
+					the map. You can create, close,invalidate, re-open and comment 
+					bug reports by using this plugin." />
+				<attribute name="Plugin-Link" 
+					value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust" />
+				<attribute name="Plugin-Mainversion" 
+					value="${plugin.main.version}" />
+				<attribute name="Plugin-Version" 
+					value="${version.entry.commit.revision}" />
+				<attribute name="Plugin-Icon" 
+					value="images/dialogs/mapdust_icon25.png" />
 			</manifest>
 		</jar>
 	</target>
@@ -98,7 +110,8 @@
 	<!-- installs the plugin  -->
 	<target name="install" depends="dist">
 		<property environment="env" />
-		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" 
+			else="${user.home}/.josm/plugins">
 			<and>
 				<os family="windows" />
 			</and>
@@ -108,13 +121,15 @@
 
 	<!-- displays the information about the core josm -->
 	<target name="core-info">
-		<exec append="false" output="core.info.xml" executable="svn" failifexecutionfails="false">
+		<exec append="false" output="core.info.xml" executable="svn" 
+			failifexecutionfails="false">
 			<env key="LANG" value="C" />
 			<arg value="info" />
 			<arg value="--xml" />
 			<arg value="../../core" />
 		</exec>
-		<xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" collapseAttributes="true" />
+		<xmlproperty file="core.info.xml" prefix="coreversion" keepRoot="true" 
+			collapseAttributes="true" />
 		<echo>Building against core revision ${coreversion.info.entry.revision}.</echo>
 		<echo>Plugin-Mainversion is set to ${plugin.main.version}.</echo>
 		<delete file="core.info.xml" />
@@ -123,7 +138,8 @@
 	<!-- commits the current sources -->
 	<target name="commit-current">
 		<echo>Commiting the plugin source with message '${commit.message}' ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		<exec append="true" output="svn.log" executable="svn" 
+			failifexecutionfails="false">
 			<env key="LANG" value="C" />
 			<arg value="commit" />
 			<arg value="-m '${commit.message}'" />
@@ -134,13 +150,15 @@
 	<!-- updates the plugin -->
 	<target name="update-current">
 		<echo>Updating plugin source ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		<exec append="true" output="svn.log" executable="svn" 
+			failifexecutionfails="false">
 			<env key="LANG" value="C" />
 			<arg value="up" />
 			<arg value="." />
 		</exec>
 		<echo>Updating ${plugin.jar} ...</echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		<exec append="true" output="svn.log" executable="svn" 
+			failifexecutionfails="false">
 			<env key="LANG" value="C" />
 			<arg value="up" />
 			<arg value="../dist/${plugin.jar}" />
@@ -159,7 +177,8 @@
                         
     Now commiting ${plugin.jar} ...
     </echo>
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false">
+		<exec append="true" output="svn.log" executable="svn" 
+			failifexecutionfails="false">
 			<env key="LANG" value="C" />
 			<arg value="-m '${commit.message}'" />
 			<arg value="commit" />
@@ -169,11 +188,14 @@
 
 	<!-- ** make sure svn is present as a command line tool ** -->
 	<target name="ensure-svn-present">
-		<exec append="true" output="svn.log" executable="svn" failifexecutionfails="false" failonerror="false" resultproperty="svn.exit.code">
+		<exec append="true" output="svn.log" executable="svn"
+			failifexecutionfails="false" failonerror="false" 
+			resultproperty="svn.exit.code">
 			<env key="LANG" value="C" />
 			<arg value="--version" />
 		</exec>
-		<fail message="Fatal: command 'svn --version' failed. Please make sure svn is installed on your system.">
+		<fail message="Fatal: command 'svn --version' failed. Please make sure 
+			svn is installed on your system.">
 			<!-- return code not set at all? Most likely svn isn't installed -->
 			<condition>
 				<not>
@@ -181,7 +203,8 @@
 				</not>
 			</condition>
 		</fail>
-		<fail message="Fatal: command 'svn --version' failed. Please make sure a working copy of svn is installed on your system.">
+		<fail message="Fatal: command 'svn --version' failed. Please make sure 
+			a working copy of svn is installed on your system.">
 			<!-- error code from SVN? Most likely svn is not what we are looking on this system -->
 			<condition>
 				<isfailure code="${svn.exit.code}" />
@@ -190,6 +213,7 @@
 	</target>
 
 	<!-- publish the plugin -->
-	<target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+	<target name="publish" depends="ensure-svn-present,core-info,commit-current,
+		update-current,clean,dist,commit-dist">
 	</target>
 </project>

@@ -13,6 +13,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem unglueRelation;
     JMenuItem addIntersections;
     JMenuItem splitObject;
+    JMenuItem selectWayNodes;
 
     public UtilsPlugin2(PluginInformation info) {
         super(info);
@@ -20,14 +21,15 @@ public class UtilsPlugin2 extends Plugin {
         unglueRelation = MainMenu.add(Main.main.menu.toolsMenu, new UnGlueRelationAction());
         addIntersections = MainMenu.add(Main.main.menu.toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(Main.main.menu.toolsMenu, new SplitObjectAction());
+        selectWayNodes = MainMenu.add(Main.main.menu.toolsMenu, new SelectWayNodesAction());
     }
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if (oldFrame == null && newFrame != null) {
-            unglueRelation.setEnabled(true);
-            addIntersections.setEnabled(true);
-            splitObject.setEnabled(true);
-        }
+        boolean enabled = newFrame != null;
+        unglueRelation.setEnabled(enabled);
+        addIntersections.setEnabled(enabled);
+        splitObject.setEnabled(enabled);
+        selectWayNodes.setEnabled(enabled);
     }
 }

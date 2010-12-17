@@ -30,7 +30,7 @@
 <project name="utilsplugin2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message" />
+    <property name="commit.message" value="Add selectWayNodes action by vetinari (see #j5745)" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="3650" />
 

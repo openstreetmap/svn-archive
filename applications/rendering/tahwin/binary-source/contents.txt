@@ -15,3 +15,23 @@ extract files flat into mentioned subdirectories
   source http://subversion.tigris.org/files/documents/15/47914/svn-win32-1.6.6.zip
   cmd-line client for SVN
 
+\batik\
+  source http://www.apache.org/dist/xmlgraphics/batik/batik-1.7.zip
+  source xercesImpl.jar from http://www.apache.org/dist/xerces/j/Xerces-J-bin.2.11.0.zip
+  source NOTICE (as NOTICE-XERCES) from http://www.apache.org/dist/xerces/j/Xerces-J-bin.2.11.0.zip
+  remove subdir doc and samples
+  Apache Batik and Xerces Java
+
+\xmlstarlet\
+  source http://sourceforge.net/projects/xmlstar/files/xmlstarlet/1.0.3/xmlstarlet-1.0.3-win32.zip/download
+  XML Starlet
+  
+\optipng\
+  source http://prdownloads.sourceforge.net/optipng/optipng-0.6.4-exe.zip?download
+  
+\pngcrush\
+  source http://sourceforge.net/projects/pmt/files/pngcrush-executables/1.7.9/pngcrush-1.7.9-win32.zip/download
+    
+\zip\
+  source http://sourceforge.net/projects/sevenzip/files/7-Zip/9.20/7za920.zip/download  
+    

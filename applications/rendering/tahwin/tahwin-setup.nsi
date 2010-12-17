@@ -46,16 +46,15 @@ InstallDir C:\TilesAtHome
 ; InstType      klappt damit die Umschaltung zwischen 32bit und 64 bit?
 LicenseForceSelection checkbox
 Name "Tiles@Home for Windows"
-!define VERSION 1.0.1.1
+!define VERSION 1.0.1.2
 OutFile "tahwin-setup_${VERSION}.exe"
 RequestExecutionLevel admin
 ShowInstDetails show
 ShowUninstDetails show
 XPStyle on
 
-; SetCompressor /SOLID /FINAL lzma
+SetCompressor /SOLID /FINAL lzma
 
-; VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "A test comment"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Tiles@Home for Windows"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Tiles@Home for Windows setup"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "download and install all components needed to run Tiles@Home on a windows system."
@@ -80,12 +79,11 @@ VIProductVersion "${VERSION}"
   Call fileDownload
 !macroend
 
-;http://javadl.sun.com/webapps/download/AutoDL?BundleId=33890&/jre-6u16-windows-i586.exe
-;http://javadl.sun.com/webapps/download/AutoDL?BundleId=33892&/jre-6u16-windows-x64.exe
-
 ; use script http://nsis.sourceforge.net/Java_Runtime_Environment_Dynamic_Installer for java runtime detection and installation
 !define JRE_VERSION "1.6"
-!define JRE_URL "http://javadl.sun.com/webapps/download/AutoDL?BundleId=33890"
+; to get download link, browse http://java.com/en/download/manual.jsp 
+; http://javadl.sun.com/webapps/download/AutoDL?BundleId=44457   JRE-6u23 
+!define JRE_URL "http://javadl.sun.com/webapps/download/AutoDL?BundleId=44457"
 !include "JREDyna.nsh"
 
 VAR HTTPPROXY
@@ -144,6 +142,18 @@ Section "Core Components" SecCoreComponents
   SetOutPath $INSTDIR\svn
   File /r /x .svn binary-source\svn\*.*
 
+  SetOutPath $INSTDIR\xmlstarlet
+  File /r /x .svn binary-source\xmlstarlet\*.*
+
+  SetOutPath $INSTDIR\optipng
+  File /r /x .svn binary-source\optipng\*.*
+
+  SetOutPath $INSTDIR\pngcrush
+  File /r /x .svn binary-source\pngcrush\*.*
+
+  SetOutPath $INSTDIR\zip
+  File /r /x .svn binary-source\zip\*.*
+
   SetOutPath $INSTDIR
 
   StrCpy $TAHDL "$EXEDIR\tahwin-setup"
@@ -154,25 +164,7 @@ Section "Core Components" SecCoreComponents
   ;Font installer need local repository of fonts... so I can't download before
   ;NSISdl::download http://surfnet.dl.sourceforge.net/sourceforge/dejavu/dejavu-fonts-ttf-2.25.zip $INSTDIR\binary-source\fonts
   ;goto xmlstarlet_done
-                                                                                                                                        
-  ${FileDownload} "$TAHDL" "http://kent.dl.sourceforge.net/sourceforge/sevenzip"        "7za458.zip"                                    "147ba99dd4c107afd7589c27491548dd"
-    RMDir /r "$INSTDIR\zip"                                                                                                             
-    ZipDLL::extractall $TAHDL\$0 $INSTDIR\zip                                                                                           
-                                                                                                                                        
-  ${FileDownload} "$TAHDL" "http://surfnet.dl.sourceforge.net/sourceforge/pmt"          "pngcrush-1.6.4-win32.zip"                      "8f737107b7974392d6967200f1a5fc95"
-    RMDir /r "$INSTDIR\pngcrush"                                                                                                        
-    ZipDLL::extractall $TAHDL\$0 $INSTDIR\pngcrush                                                                                      
-    Rename $INSTDIR\pngcrush\pngcrush-1.5.10-win32.exe $INSTDIR\pngcrush\pngcrush.exe                                                   
-
-  ${FileDownload} "$TAHDL" "http://kent.dl.sourceforge.net/sourceforge/optipng"			"optipng-0.6-exe.zip"							"dc3461eb125b7cfce333e2fa810f138b"
-  	RMDir /r "$INSTDIR\optipng"                                                     	                                				
-  	ZipDLL::extractall $TAHDL\$0 $INSTDIR\optipng                                   	                                				
-                                                                                                                                                                                                
-  ${FileDownload} "$TAHDL" "http://kent.dl.sourceforge.net/sourceforge/xmlstar"         "xmlstarlet-1.0.1-win32.zip"                    "c1ca1e9e999ee6b15a0ba954258be353"
-    RMDir /r "$INSTDIR\xmlstarlet"                                                                                                      
-    ZipDLL::extractall $TAHDL\$0 $INSTDIR                                                                                               
-    Rename $INSTDIR\xmlstarlet-1.0.1 $INSTDIR\xmlstarlet                                                                                
-                                                                                                                                        
+                                                                                                                                                                                                                                                                                
 ; !!BATIK  ${FileDownload} "$TAHDL" "http://inkscape.modevia.com/win32"                         "inkscape-0.46.win32.7z"                        "ff2d2c7950a7747c77b19ac7cf2a7c6a"
 ; !!BATIK   RMDir /r "$INSTDIR\inkscape"
 ; !!BATIK   nsExec::ExecToLog '"$INSTDIR\zip\7za" "x" "-o$INSTDIR" "$TAHDL\$0"'
@@ -181,10 +173,12 @@ Section "Core Components" SecCoreComponents
 ; !!BATIK   RMDir /r "$INSTDIR\packaging"
 ; !!BATIK   RMDir /r "$INSTDIR\src"
 
-  ${FileDownload} "$TAHDL" "http://downloads.activestate.com/ActivePerl/releases/5.10.1.1007"   "ActivePerl-5.10.1.1007-MSWin32-x86-291969.zip" "5a04b59785b5a792382484e646cdaf2c"
+
+  ; Activestate does not allow redistribution of their software. So download is needed 
+  ${FileDownload} "$TAHDL" "http://downloads.activestate.com/ActivePerl/releases/5.10.1.1008"   "ActivePerl-5.10.1.1008-MSWin32-x86-294165.zip" "c090aaae8e689592f58235e0c705c685"
     RMDir /r "$INSTDIR\perl"
     ZipDLL::extractall $TAHDL\$0 $INSTDIR\tmp
-    Rename $INSTDIR\tmp\ActivePerl-5.10.1.1007-MSWin32-x86-291969\perl $INSTDIR\perl
+    Rename $INSTDIR\tmp\ActivePerl-5.10.1.1008-MSWin32-x86-294165\perl $INSTDIR\perl
     RMDir /r $INSTDIR\tmp
     ${StrRep} $0 "$INSTDIR\perl" "\" "\\"
     nsExec::ExecToLog '"$INSTDIR\perl\bin\wperl.exe" "$INSTDIR\perl\bin\reloc_perl" "$0"'
@@ -334,20 +328,8 @@ Section "Batik Renderer" SecBatik
 
   call DownloadAndInstallJREIfNecessary
 
-  SetOutPath $INSTDIR
-
-  StrCpy $TAHDL "$EXEDIR\tahwin-setup"
-  CreateDirectory $TAHDL
-
-  ${fileDownload} "$TAHDL" "http://www.apache.org/dist/xmlgraphics/batik" "batik-1.7.zip" "2c2fd523607993dbcef8b5961fba0550"
-  RMDir /r "$INSTDIR\batik"
-  ZipDLL::extractall $TAHDL\$0 $INSTDIR
-  Rename $INSTDIR\batik-1.7 $INSTDIR\batik
-
-  ${fileDownload} "$TAHDL" "http://www.apache.org/dist/xerces/j" "Xerces-J-bin.2.10.0.zip" "8DA14A7B2848EFF131B7CC10668887E8"
-  ZipDLL::extractfile $TAHDL\$0 $INSTDIR\batik "xerces-2_10_0\xercesImpl.jar"
-  Rename "$INSTDIR\batik\xerces-2_10_0\xercesImpl.jar" "$INSTDIR\batik\xercesImpl.jar"
-  RMDir "$INSTDIR\batik\xerces-2_10_0"
+  SetOutPath $INSTDIR\batik
+  File /r /x .svn binary-source\batik\*.*
   
 SectionEnd
 

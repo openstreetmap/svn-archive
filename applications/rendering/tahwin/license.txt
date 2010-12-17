@@ -1,5 +1,5 @@
 This installer is provided AS-IS and is released under GPL.
-For the installed componentes refer to the documentation of the components
+For the installed components refer to the documentation of the components
 regarding their license.
 
 

@@ -46,7 +46,7 @@ public class SelectWayNodesAction extends JosmAction {
      */
     public SelectWayNodesAction() {
         super(tr("Select Way Nodes"),"selectwaynodes" , tr("Select all nodes of a selected way."),
-                Shortcut.registerShortcut("tools:selectwaynodes", tr("Tool: {0}", tr("Select Way Nodes")), KeyEvent.VK_N, Shortcut.GROUP_EDIT), true);
+                Shortcut.registerShortcut("tools:selectwaynodes", tr("Tool: {0}", tr("Select Way Nodes")), KeyEvent.VK_N, Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT),
         putValue("help", ht("/Action/SelectWayNodes"));
     }
 

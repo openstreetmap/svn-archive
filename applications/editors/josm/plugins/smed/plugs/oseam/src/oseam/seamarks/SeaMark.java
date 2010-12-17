@@ -10,100 +10,20 @@ import oseam.dialogs.OSeaMAction;
 
 abstract public class SeaMark {
 
-	/**
-	 * CONSTANTS
-	 */
+	public enum Type {UNKNOWN_TYPE, LATERAL, CARDINAL, SAFE_WATER, ISOLATED_DANGER, SPECIAL_PURPOSE, LIGHT}
 
-	/**
-	 * Colours
-	 */
+	public enum Cat {UNKNOWN_CAT, PORT_HAND, STARBOARD_HAND, PREF_PORT_HAND, PREF_STARBOARD_HAND, CARD_NORTH, CARD_EAST, CARD_SOUTH, CARD_WEST, LIGHT_HOUSE, LIGHT_MAJOR, LIGHT_MINOR, LIGHT_VESSEL}
 
-	public final static int UNKNOWN_COLOUR = 0;
-	public final static int RED = 1;
-	public final static int GREEN = 2;
-	public final static int RED_GREEN_RED = 3;
-	public final static int GREEN_RED_GREEN = 4;
-	public final static int RED_WHITE = 5;
-	public final static int BLACK_YELLOW = 6;
-	public final static int BLACK_YELLOW_BLACK = 7;
-	public final static int YELLOW_BLACK = 8;
-	public final static int YELLOW_BLACK_YELLOW = 9;
-	public final static int BLACK_RED_BLACK = 10;
-	public final static int YELLOW = 11;
-	public final static int WHITE_LIGHT = 1;
-	public final static int RED_LIGHT = 2;
-	public final static int GREEN_LIGHT = 3;
-
-	/**
-	 * Types - correspond to TypeIndex
-	 */
-	public final static int UNKNOWN_TYPE = 0;
-	public final static int LATERAL = 1;
-	public final static int CARDINAL = 2;
-	public final static int SAFE_WATER = 3;
-	public final static int ISOLATED_DANGER = 4;
-	public final static int SPECIAL_PURPOSE = 5;
-	public final static int LIGHT = 6;
-
-	/**
-	 * Categories - correspond to CatIndex
-	 */
-	public final static int UNKNOWN_CAT = 0;
-	public final static int PORT_HAND = 1;
-	public final static int STARBOARD_HAND = 2;
-	public final static int PREF_PORT_HAND = 3;
-	public final static int PREF_STARBOARD_HAND = 4;
-	public final static int CARD_NORTH = 1;
-	public final static int CARD_EAST = 2;
-	public final static int CARD_SOUTH = 3;
-	public final static int CARD_WEST = 4;
-	public final static int LIGHT_HOUSE = 1;
-	public final static int LIGHT_MAJOR = 2;
-	public final static int LIGHT_MINOR = 3;
-	public final static int LIGHT_VESSEL = 4;
-
-	/**
-	 * Regions
-	 */
 	public final static boolean IALA_A = false;
 	public final static boolean IALA_B = true;
 
-	/**
-	 * Shapes - correspond to StyleIndex
-	 */
-	public final static int UNKNOWN_SHAPE = 0;
-	public final static int LAT_CAN = 1;
-	public final static int LAT_CONE = 1;
-	public final static int LAT_PILLAR = 2;
-	public final static int LAT_SPAR = 3;
-	public final static int LAT_BEACON = 4;
-	public final static int LAT_TOWER = 5;
-	public final static int LAT_FLOAT = 6;
-	public final static int LAT_PERCH = 7;
-	public final static int CARD_PILLAR = 1;
-	public final static int CARD_SPAR = 2;
-	public final static int CARD_BEACON = 3;
-	public final static int CARD_TOWER = 4;
-	public final static int CARD_FLOAT = 5;
-	public final static int SAFE_PILLAR = 1;
-	public final static int SAFE_SPAR = 2;
-	public final static int SAFE_SPHERE = 3;
-	public final static int SAFE_BEACON = 4;
-	public final static int SAFE_FLOAT = 5;
-	public final static int ISOL_PILLAR = 1;
-	public final static int ISOL_SPAR = 2;
-	public final static int ISOL_BEACON = 3;
-	public final static int ISOL_TOWER = 4;
-	public final static int ISOL_FLOAT = 5;
-	public final static int SPEC_PILLAR = 1;
-	public final static int SPEC_CAN = 2;
-	public final static int SPEC_CONE = 3;
-	public final static int SPEC_SPAR = 4;
-	public final static int SPEC_BEACON = 5;
-	public final static int SPEC_TOWER = 6;
-	public final static int SPEC_FLOAT = 7;
-	public final static int SPEC_SPHERE = 8;
-	public final static int SPEC_BARREL = 9;
+	public enum Styl {UNKNOWN_SHAPE, PILLAR, SPAR, CAN, CONE, SPHERE, BARREL, FLOAT, SUPER, BEACON, TOWER, STAKE, PERCH}
+
+	public enum Col {UNKNOWN_COLOUR, RED, GREEN, RED_GREEN_RED, GREEN_RED_GREEN, RED_WHITE, BLACK_YELLOW, BLACK_YELLOW_BLACK, YELLOW_BLACK, YELLOW_BLACK_YELLOW, BLACK_RED_BLACK, YELLOW}
+	
+	public final static int WHITE_LIGHT = 1;
+	public final static int RED_LIGHT = 2;
+	public final static int GREEN_LIGHT = 3;
 
 	/**
 	 * Topmark Shapes - correspond to TopMarkIndex
@@ -147,86 +67,82 @@ abstract public class SeaMark {
 		return dlg;
 	}
 
-	public void setDlg(OSeaMAction dlg) {
-		this.dlg = dlg;
+	public void setDlg(OSeaMAction dia) {
+		this.dlg = dia;
 	}
 
 	protected SeaMark(OSeaMAction dia) {
 		dlg = dia;
 	}
 
-	private Node Node = null;
+	private Node node = null;
 
 	public Node getNode() {
-		return Node;
+		return node;
 	}
 
-	public void setNode(Node node) {
-		Node = node;
+	public void setNode(Node nod) {
+		node = nod;
 	}
 
-	private boolean Region = false;
+	private boolean region = false;
 
 	public boolean getRegion() {
-		return Region;
+		return region;
 	}
 
-	public void setRegion(boolean region) {
-		Region = region;
+	public void setRegion(boolean reg) {
+		region = reg;
 	}
 
-	private int Colour = UNKNOWN_COLOUR;
+	private Col colour = Col.UNKNOWN_COLOUR;
 
-	public int getColour() {
-		return Colour;
+	public Col getColour() {
+		return colour;
 	}
 
-	public void setColour(int colour) {
-		if (colour < UNKNOWN_COLOUR || colour > RED_WHITE) {
-			return;
-		}
-		Colour = colour;
-
+	public void setColour(Col col) {
+		colour = col;
 	}
 
-	private String ErrMsg = null;
+	private String errMsg = null;
 
 	public String getErrMsg() {
-		return ErrMsg;
+		return errMsg;
 	}
 
-	public void setErrMsg(String errMsg) {
-		ErrMsg = errMsg;
+	public void setErrMsg(String msg) {
+		errMsg = msg;
 	}
 
-	private String Name;
+	private String name;
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
-	public void setName(String name) {
-		Name = name;
+	public void setName(String nam) {
+		name = nam;
 	}
 
-	private int MarkIndex = 0;
+	private Cat category = Cat.UNKNOWN_CAT;
 
-	public int getMarkIndex() {
-		return MarkIndex;
+	public Cat getCategory() {
+		return category;
 	}
 
-	public void setMarkIndex(int buoyIndex) {
-		MarkIndex = buoyIndex;
+	public void setCategory(Cat cat) {
+		category = cat;
 	}
 
-	private int StyleIndex = 0;
+	private Styl shape = Styl.UNKNOWN_SHAPE;
 
-	public int getStyleIndex() {
-		return StyleIndex;
+	public Styl getShape() {
+		return shape;
 	}
 
-	public void setStyleIndex(int styleIndex) {
-		StyleIndex = styleIndex;
+	public void setShape(Styl styl) {
+		shape = styl;
 	}
 
 	private boolean valid = true;

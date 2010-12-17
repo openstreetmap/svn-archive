@@ -4,52 +4,33 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import oseam.panels.*;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 
 import oseam.Messages;
-import oseam.OSeaM;
 import oseam.seamarks.SeaMark;
+import oseam.seamarks.MarkCard;
+import oseam.seamarks.MarkIsol;
+import oseam.seamarks.MarkLat;
+import oseam.seamarks.MarkLight;
+import oseam.seamarks.MarkSpec;
+import oseam.seamarks.MarkUkn;
+import oseam.seamarks.MarkSaw;
 
 public class OSeaMAction {
 
 	private OSeaMAction dia = null;
-	private PanelMain panelMain = null;
+	public PanelMain panelMain = null;
 
 	private SeaMark mark = null;
 	private Collection<? extends OsmPrimitive> Selection = null;
@@ -68,8 +49,8 @@ System.out.println("SmpListener");
 						if (node.compareTo(SelNode) != 0) {
 							SelNode = node;
 System.out.println(node);
-//							parseSeaMark();
-//							mark.paintSign();
+							parseSeaMark();
+							mark.paintSign();
 						}
 				}
 			}
@@ -111,9 +92,9 @@ System.out.println("newOSeaMAction");
 		DataSet ds;
 
 		ds = Main.main.getCurrentDataSet();
-/*
+
 		if (ds == null) {
-			mark = new MarkUkn(this, Messages.getString("SmpDialogAction.26"));
+			mark = new MarkUkn(this, tr("Active layer contains no OSM data"));
 			mark.setNode(null);
 			return;
 		}
@@ -122,25 +103,19 @@ System.out.println("newOSeaMAction");
 		nodes = selection.size();
 
 		if (nodes == 0) {
-			mark = new MarkUkn(this, Messages.getString("SmpDialogAction.27"));
+			mark = new MarkUkn(this, tr("Please select a node"));
 			mark.setNode(null);
 			return;
 		}
 
 		if (nodes > 1) {
-			mark = new MarkUkn(this, Messages.getString("SmpDialogAction.28"));
+			mark = new MarkUkn(this, tr("Please select only one node"));
 			mark.setNode(null);
 			return;
 		}
 
 		Iterator<Node> it = selection.iterator();
 		node = it.next();
-
-		cM01IconVisible.setEnabled(true);
-		cM01IconVisible.setIcon(new ImageIcon(getClass().getResource(
-				"/images/Auge.png"))); //$NON-NLS-1$
-
-		cbM01TypeOfMark.setEnabled(true);
 
 		String type = "";
 		String str = "";
@@ -172,7 +147,7 @@ System.out.println("newOSeaMAction");
 
 		} else if (type.equals("landmark") || type.equals("light_vessel")
 				|| type.equals("light_major") || type.equals("light_minor")) {
-			mark = new MarkNota(this, node);
+			mark = new MarkLight(this, node);
 			return;
 
 		} else if (type.equals("light_float")) {
@@ -267,6 +242,6 @@ System.out.println("newOSeaMAction");
 		mark.setNode(node);
 		mark.paintSign();
 		return;
-*/	}
+	}
 
 }

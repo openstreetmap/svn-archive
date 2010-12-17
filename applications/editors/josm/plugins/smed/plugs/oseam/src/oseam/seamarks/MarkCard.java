@@ -2,13 +2,8 @@ package oseam.seamarks;
 
 import java.util.Map;
 
-import javax.swing.ImageIcon;
-
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
 
-import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
 
@@ -21,111 +16,104 @@ public class MarkCard extends SeaMark {
 		Map<String, String> keys;
 		keys = node.getKeys();
 		setNode(node);
-/*
-		dlg.cbM01TypeOfMark.setSelectedIndex(CARDINAL);
+		
+		if (!dlg.panelMain.hazButton.isSelected())
+			dlg.panelMain.hazButton.doClick();
 
-		dlg.cbM01CatOfMark.removeAllItems();
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.158")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.159")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.160")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.161")); //$NON-NLS-1$
+		if (keys.containsKey("name"))
+			setName(keys.get("name"));
 
-		dlg.cbM01CatOfMark.setEnabled(true);
-		dlg.cbM01CatOfMark.setVisible(true);
-		dlg.lM01CatOfMark.setVisible(true);
+		if (keys.containsKey("seamark:name"))
+			setName(keys.get("seamark:name"));
 
-		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.setVisible(true);
-		dlg.lM01StyleOfMark.setVisible(true);
-*/
-		setRegion(Main.pref.get("tomsplugin.IALA").equals("B")); //$NON-NLS-1$ //$NON-NLS-2$
-		if (keys.containsKey("name")) //$NON-NLS-1$
-			setName(keys.get("name")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_cardinal:name"))
+			setName(keys.get("seamark:buoy_cardinal:name"));
+		else if (keys.containsKey("seamark:beacon_cardinal:name"))
+			setName(keys.get("seamark:beacon_cardinal:name"));
+		else if (keys.containsKey("seamark:light_float:name"))
+			setName(keys.get("seamark:light_float:name"));
 
-		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:name")); //$NON-NLS-1$
+		String cat = "";
+		String col = "";
 
-		if (keys.containsKey("seamark:buoy_cardinal:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:buoy_cardinal:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_cardinal:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:beacon_cardinal:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_float:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:light_float:name")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_cardinal:category"))
+			cat = keys.get("seamark:buoy_cardinal:category");
+		else if (keys.containsKey("seamark:beacon_cardinal:category"))
+			cat = keys.get("seamark:beacon_cardinal:category");
 
-		String cat = ""; //$NON-NLS-1$
-		String col = ""; //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_cardinal:colour"))
+			col = keys.get("seamark:buoy_cardinal:colour");
+		else if (keys.containsKey("seamark:beacon_cardinal:colour"))
+			col = keys.get("seamark:beacon_cardinal:colour");
+		else if (keys.containsKey("seamark:light_float:colour"))
+			col = keys.get("seamark:light_float:colour");
 
-		if (keys.containsKey("seamark:buoy_cardinal:category")) //$NON-NLS-1$
-			cat = keys.get("seamark:buoy_cardinal:category"); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_cardinal:category")) //$NON-NLS-1$
-			cat = keys.get("seamark:beacon_cardinal:category"); //$NON-NLS-1$
-
-		if (keys.containsKey("seamark:buoy_cardinal:colour")) //$NON-NLS-1$
-			col = keys.get("seamark:buoy_cardinal:colour"); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_cardinal:colour")) //$NON-NLS-1$
-			col = keys.get("seamark:beacon_cardinal:colour"); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_float:colour")) //$NON-NLS-1$
-			col = keys.get("seamark:light_float:colour"); //$NON-NLS-1$
-
-		if (cat.isEmpty()) { //$NON-NLS-1$
-			if (col.equals("black;yellow")) { //$NON-NLS-1$
-				setMarkIndex(CARD_NORTH);
-				setColour(BLACK_YELLOW);
-			} else if (col.equals("black;yellow;black")) { //$NON-NLS-1$
-				setMarkIndex(CARD_EAST);
-				setColour(BLACK_YELLOW_BLACK);
-			} else if (col.equals("yellow;black")) { //$NON-NLS-1$
-				setMarkIndex(CARD_SOUTH);
-				setColour(YELLOW_BLACK);
-			} else if (col.equals("yellow;black;yellow")) { //$NON-NLS-1$
-				setMarkIndex(CARD_WEST);
-				setColour(YELLOW_BLACK_YELLOW);
+		if (cat.isEmpty()) {
+			if (col.equals("black;yellow")) {
+				dlg.panelMain.panelHaz.northButton.doClick();
+				setCategory(Cat.CARD_NORTH);
+				setColour(Col.BLACK_YELLOW);
+			} else if (col.equals("black;yellow;black")) {
+				dlg.panelMain.panelHaz.eastButton.doClick();
+				setCategory(Cat.CARD_EAST);
+				setColour(Col.BLACK_YELLOW_BLACK);
+			} else if (col.equals("yellow;black")) {
+				dlg.panelMain.panelHaz.southButton.doClick();
+				setCategory(Cat.CARD_SOUTH);
+				setColour(Col.YELLOW_BLACK);
+			} else if (col.equals("yellow;black;yellow")) {
+				dlg.panelMain.panelHaz.westButton.doClick();
+				setCategory(Cat.CARD_WEST);
+				setColour(Col.YELLOW_BLACK_YELLOW);
 			}
-		} else if (cat.equals("north")) { //$NON-NLS-1$
-			setMarkIndex(CARD_NORTH);
-			setColour(BLACK_YELLOW);
-		} else if (cat.equals("east")) { //$NON-NLS-1$
-			setMarkIndex(CARD_EAST);
-			setColour(BLACK_YELLOW_BLACK);
-		} else if (cat.equals("south")) { //$NON-NLS-1$
-			setMarkIndex(CARD_SOUTH);
-			setColour(YELLOW_BLACK);
-		} else if (cat.equals("west")) { //$NON-NLS-1$
-			setMarkIndex(CARD_WEST);
-			setColour(YELLOW_BLACK_YELLOW);
+		} else if (cat.equals("north")) {
+			dlg.panelMain.panelHaz.northButton.doClick();
+			setCategory(Cat.CARD_NORTH);
+			setColour(Col.BLACK_YELLOW);
+		} else if (cat.equals("east")) {
+			dlg.panelMain.panelHaz.eastButton.doClick();
+			setCategory(Cat.CARD_EAST);
+			setColour(Col.BLACK_YELLOW_BLACK);
+		} else if (cat.equals("south")) {
+			dlg.panelMain.panelHaz.southButton.doClick();
+			setCategory(Cat.CARD_SOUTH);
+			setColour(Col.YELLOW_BLACK);
+		} else if (cat.equals("west")) {
+			dlg.panelMain.panelHaz.westButton.doClick();
+			setCategory(Cat.CARD_WEST);
+			setColour(Col.YELLOW_BLACK_YELLOW);
 		}
 
-		if (keys.containsKey("seamark:buoy_cardinal:shape")) { //$NON-NLS-1$
-			str = keys.get("seamark:buoy_cardinal:shape"); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_cardinal:shape")) {
+			str = keys.get("seamark:buoy_cardinal:shape");
 
-			if (str.equals("pillar")) //$NON-NLS-1$
-				setStyleIndex(CARD_PILLAR);
-			else if (str.equals("spar")) //$NON-NLS-1$
-				setStyleIndex(CARD_SPAR);
-		} else if (keys.containsKey("seamark:beacon_cardinal:colour")) { //$NON-NLS-1$
-			if (keys.containsKey("seamark:beacon_cardinal:shape")) { //$NON-NLS-1$
-				str = keys.get("seamark:beacon_cardinal:shape"); //$NON-NLS-1$
+			if (str.equals("pillar")) {
+				dlg.panelMain.panelHaz.pillarButton.doClick();
+				setShape(Styl.PILLAR);
+			} else if (str.equals("spar")) {
+				dlg.panelMain.panelHaz.sparButton.doClick();
+				setShape(Styl.SPAR);
+			}
+		} else if (keys.containsKey("seamark:beacon_cardinal:colour")) {
+			if (keys.containsKey("seamark:beacon_cardinal:shape")) {
+				str = keys.get("seamark:beacon_cardinal:shape");
 
-				if (str.equals("tower")) //$NON-NLS-1$
-					setStyleIndex(CARD_TOWER);
-				else
-					setStyleIndex(CARD_BEACON);
-			} else
-				setStyleIndex(CARD_BEACON);
-		} else if (keys.containsKey("seamark:type") //$NON-NLS-1$
-				&& (keys.get("seamark:type").equals("light_float"))) { //$NON-NLS-1$ //$NON-NLS-2$
-			setStyleIndex(CARD_FLOAT);
+				if (str.equals("tower")) {
+					setShape(Styl.TOWER);
+					dlg.panelMain.panelHaz.towerButton.doClick();
+				} else {
+					dlg.panelMain.panelHaz.beaconButton.doClick();
+					setShape(Styl.BEACON);
+				}
+			} else {
+				dlg.panelMain.panelHaz.beaconButton.doClick();
+				setShape(Styl.BEACON);
+			}
+		} else if (keys.containsKey("seamark:type")
+				&& (keys.get("seamark:type").equals("light_float"))) {
+			dlg.panelMain.panelHaz.floatButton.doClick();
+			setShape(Styl.FLOAT);
 		}
-
-//		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
-//			setStyleIndex(0);
 
 //		refreshLights();
 //		parseLights(keys);

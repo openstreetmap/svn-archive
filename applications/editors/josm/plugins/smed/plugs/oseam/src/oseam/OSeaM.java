@@ -24,28 +24,28 @@ public class OSeaM implements SmedPluggable {
 	public boolean start() {
 		// TODO Auto-generated method stub
 System.out.println("start");
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean stop() {
 		DataSet.removeSelectionListener(oseam.SmpListener);
 System.out.println("stop");
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean hasFocus() {
 System.out.println("hasFocus");
 		DataSet.addSelectionListener(oseam.SmpListener);
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean lostFocus() {
 		DataSet.removeSelectionListener(oseam.SmpListener);
 System.out.println("lostFocus");
-		return false;
+		return true;
 	}
 
 	@Override

@@ -24,18 +24,18 @@ import java.awt.event.ActionListener;
 public class PanelHaz extends JPanel {
 
 	private ButtonGroup catButtons = null;
-	private JRadioButton northButton = null;
-	private JRadioButton southButton = null;
-	private JRadioButton eastButton = null;
-	private JRadioButton westButton = null;
-	private JRadioButton isolButton = null;
+	public JRadioButton northButton = null;
+	public JRadioButton southButton = null;
+	public JRadioButton eastButton = null;
+	public JRadioButton westButton = null;
+	public JRadioButton isolButton = null;
 
 	private ButtonGroup shapeButtons = null;
-	private JRadioButton pillarButton = null;
-	private JRadioButton sparButton = null;
-	private JRadioButton floatButton = null;
-	private JRadioButton beaconButton = null;
-	private JRadioButton towerButton = null;
+	public JRadioButton pillarButton = null;
+	public JRadioButton sparButton = null;
+	public JRadioButton floatButton = null;
+	public JRadioButton beaconButton = null;
+	public JRadioButton towerButton = null;
 
 	public PanelHaz() {
 		super();

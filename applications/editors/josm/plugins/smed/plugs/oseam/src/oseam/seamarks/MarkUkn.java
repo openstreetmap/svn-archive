@@ -1,9 +1,5 @@
 package oseam.seamarks;
 
-import javax.swing.ImageIcon;
-
-import org.openstreetmap.josm.Main;
-
 import oseam.dialogs.OSeaMAction;
 
 public class MarkUkn extends SeaMark {

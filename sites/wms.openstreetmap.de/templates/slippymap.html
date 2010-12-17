@@ -76,7 +76,9 @@ function drawmap() {
     // zoom to WMS extend
     wmsextend = new OpenLayers.Bounds(%BOUNDS%);
     wmsextend.transform(proj4326, projmerc)
-    map.zoomToExtent(wmsextend);
+    if (!map.getCenter()) {
+      map.zoomToExtent(wmsextend);
+    }
 };
 
 //]]>

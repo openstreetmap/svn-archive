@@ -17,12 +17,18 @@ import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
+import oseam.dialogs.OSeaMAction;
+import oseam.panels.PanelMain;
+import oseam.seamarks.SeaMark.Cat;
+import oseam.seamarks.SeaMark.Col;
+import oseam.seamarks.SeaMark.Styl;
 
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelHaz extends JPanel {
 
+	private OSeaMAction dlg;
 	private ButtonGroup catButtons = null;
 	public JRadioButton northButton = null;
 	public JRadioButton southButton = null;
@@ -37,12 +43,8 @@ public class PanelHaz extends JPanel {
 	public JRadioButton beaconButton = null;
 	public JRadioButton towerButton = null;
 
-	public PanelHaz() {
-		super();
-		initialize();
-	}
-
-	private void initialize() {
+	public PanelHaz(OSeaMAction dia) {
+		dlg = dia;
 		this.setLayout(null);
 		this.add(getNothButton(), null);
 		this.add(getSouthButton(), null);
@@ -57,10 +59,34 @@ public class PanelHaz extends JPanel {
 		catButtons.add(isolButton);
 		ActionListener alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				northButton.setBorderPainted(northButton.isSelected());
-				southButton.setBorderPainted(southButton.isSelected());
-				eastButton.setBorderPainted(eastButton.isSelected());
-				westButton.setBorderPainted(westButton.isSelected());
+				if (northButton.isSelected()) {
+					northButton.setBorderPainted(true);
+					dlg.mark.setCategory(Cat.CARD_NORTH);
+					dlg.mark.setColour(Col.BLACK_YELLOW);
+				} else {
+					northButton.setBorderPainted(false);
+				}
+				if (southButton.isSelected()) {
+					southButton.setBorderPainted(true);
+					dlg.mark.setCategory(Cat.CARD_SOUTH);
+					dlg.mark.setColour(Col.YELLOW_BLACK);
+				} else {
+					southButton.setBorderPainted(false);
+				}
+				if (eastButton.isSelected()) {
+					eastButton.setBorderPainted(true);
+					dlg.mark.setCategory(Cat.CARD_EAST);
+					dlg.mark.setColour(Col.BLACK_YELLOW_BLACK);
+				} else {
+					eastButton.setBorderPainted(false);
+				}
+				if (westButton.isSelected()) {
+					westButton.setBorderPainted(true);
+					dlg.mark.setCategory(Cat.CARD_WEST);
+					dlg.mark.setColour(Col.YELLOW_BLACK_YELLOW);
+				} else {
+					westButton.setBorderPainted(false);
+				}
 				isolButton.setBorderPainted(isolButton.isSelected());
 			}
 		};
@@ -83,11 +109,36 @@ public class PanelHaz extends JPanel {
 		shapeButtons.add(towerButton);
 		ActionListener alShape = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				pillarButton.setBorderPainted(pillarButton.isSelected());
-				sparButton.setBorderPainted(sparButton.isSelected());
-				floatButton.setBorderPainted(floatButton.isSelected());
-				beaconButton.setBorderPainted(beaconButton.isSelected());
-				towerButton.setBorderPainted(towerButton.isSelected());
+				if (pillarButton.isSelected()) {
+				pillarButton.setBorderPainted(true);
+				dlg.mark.setShape(Styl.PILLAR);
+				} else {
+					pillarButton.setBorderPainted(false);
+				}
+				if (sparButton.isSelected()) {
+				sparButton.setBorderPainted(true);
+				dlg.mark.setShape(Styl.SPAR);
+				} else {
+					sparButton.setBorderPainted(false);
+				}
+				if (floatButton.isSelected()) {
+				floatButton.setBorderPainted(true);
+				dlg.mark.setShape(Styl.FLOAT);
+				} else {
+					floatButton.setBorderPainted(false);
+				}
+				if (beaconButton.isSelected()) {
+				beaconButton.setBorderPainted(true);
+				dlg.mark.setShape(Styl.BEACON);
+				} else {
+					beaconButton.setBorderPainted(false);
+				}
+				if (towerButton.isSelected()) {
+				towerButton.setBorderPainted(true);
+				dlg.mark.setShape(Styl.TOWER);
+				} else {
+					towerButton.setBorderPainted(false);
+				}
 			}
 		};
 		pillarButton.addActionListener(alShape);

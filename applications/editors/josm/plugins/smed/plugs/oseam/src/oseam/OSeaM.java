@@ -23,20 +23,17 @@ public class OSeaM implements SmedPluggable {
 	@Override
 	public boolean start() {
 		// TODO Auto-generated method stub
-System.out.println("start");
 		return true;
 	}
 
 	@Override
 	public boolean stop() {
 		DataSet.removeSelectionListener(oseam.SmpListener);
-System.out.println("stop");
 		return true;
 	}
 
 	@Override
 	public boolean hasFocus() {
-System.out.println("hasFocus");
 		DataSet.addSelectionListener(oseam.SmpListener);
 		return true;
 	}
@@ -44,7 +41,6 @@ System.out.println("hasFocus");
 	@Override
 	public boolean lostFocus() {
 		DataSet.removeSelectionListener(oseam.SmpListener);
-System.out.println("lostFocus");
 		return true;
 	}
 
@@ -85,7 +81,7 @@ System.out.println("lostFocus");
 	@Override
 	public JComponent getComponent() {
 		manager.showVisualMessage(msg);
-		oseam = new OSeaMAction();
+		oseam = new OSeaMAction(manager);
 
 		return oseam.getOSeaMPanel();
 	}

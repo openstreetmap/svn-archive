@@ -2,52 +2,26 @@ package oseam.panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import oseam.panels.*;
-
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeListener;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-
 import oseam.Messages;
-import oseam.OSeaM;
+import oseam.dialogs.OSeaMAction;
 
 public class PanelMain extends JPanel {
 
-	private JLabel shapeIcon = null;
+	private OSeaMAction dlg;
+	public JLabel shapeIcon = null;
 	private JLabel lightIcon = null;
 	private JLabel topIcon = null;
 	private JLabel reflIcon = null;
@@ -56,16 +30,18 @@ public class PanelMain extends JPanel {
 	private JLabel nameLabel = null;
 	private JTextField nameBox = null;
 	private JButton saveButton = null;
-	private ButtonGroup typeButtons = null;
+	public ButtonGroup typeButtons = null;
 	public JRadioButton chanButton = null;
 	public JRadioButton hazButton = null;
 	public JRadioButton specButton = null;
 	public JRadioButton lightsButton = null;
+	private ActionListener alType;
 	private ButtonGroup miscButtons = null;
 	private JRadioButton topButton = null;
 	private JRadioButton fogButton = null;
 	private JRadioButton radarButton = null;
 	private JRadioButton litButton = null;
+	private ActionListener alMisc;
 	public PanelChan panelChan = null;
 	public PanelHaz panelHaz = null;
 	public PanelSpec panelSpec = null;
@@ -75,12 +51,13 @@ public class PanelMain extends JPanel {
 	private PanelRadar panelRadar = null;
 	private PanelLit panelLit = null;
 
-	public PanelMain() {
+	public PanelMain(OSeaMAction dia) {
 
+		dlg = dia;
 		panelChan = new PanelChan();
 		panelChan.setBounds(new Rectangle(65, 0, 335, 160));
 		panelChan.setVisible(false);
-		panelHaz = new PanelHaz();
+		panelHaz = new PanelHaz(dia);
 		panelHaz.setBounds(new Rectangle(65, 0, 335, 160));
 		panelHaz.setVisible(false);
 		panelSpec = new PanelSpec();
@@ -102,27 +79,22 @@ public class PanelMain extends JPanel {
 		panelLit.setBounds(new Rectangle(40, 165, 220, 160));
 		panelLit.setVisible(false);
 
-		shapeIcon = new JLabel(new ImageIcon(getClass().getResource(
-				"/images/Cardinal_Pillar_South.png")));
+		shapeIcon = new JLabel();
 		shapeIcon.setBounds(new Rectangle(265, 170, 130, 185));
 		this.add(shapeIcon, null);
-		lightIcon = new JLabel(new ImageIcon(getClass().getResource(
-				"/images/Light_White_120.png")));
+		lightIcon = new JLabel();
 		lightIcon.setBounds(new Rectangle(265, 170, 125, 185));
 		this.add(lightIcon, null);
 		topIcon = new JLabel();
 		topIcon.setBounds(new Rectangle(265, 170, 125, 185));
 		this.add(topIcon, null);
-		reflIcon = new JLabel(new ImageIcon(getClass().getResource(
-				"/images/Radar_Reflector_355.png")));
+		reflIcon = new JLabel();
 		reflIcon.setBounds(new Rectangle(265, 170, 125, 185));
 		this.add(reflIcon, null);
-		radarIcon = new JLabel(new ImageIcon(getClass().getResource(
-				"/images/Radar_Station.png")));
+		radarIcon = new JLabel();
 		radarIcon.setBounds(new Rectangle(265, 170, 130, 185));
 		this.add(radarIcon, null);
-		fogIcon = new JLabel(new ImageIcon(getClass().getResource(
-				"/images/Fog_Signal.png")));
+		fogIcon = new JLabel();
 		fogIcon.setBounds(new Rectangle(265, 170, 125, 185));
 		this.add(fogIcon, null);
 
@@ -143,8 +115,10 @@ public class PanelMain extends JPanel {
 		typeButtons.add(hazButton);
 		typeButtons.add(specButton);
 		typeButtons.add(lightsButton);
-		ActionListener alType = new ActionListener() {
+		alType = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (dlg.mark == null)
+					typeButtons.clearSelection();
 				if (chanButton.isSelected()) {
 					chanButton.setBorderPainted(true);
 					panelChan.setVisible(true);
@@ -189,8 +163,10 @@ public class PanelMain extends JPanel {
 		miscButtons.add(fogButton);
 		miscButtons.add(radarButton);
 		miscButtons.add(litButton);
-		ActionListener alMisc = new ActionListener() {
+		alMisc = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (dlg.mark == null)
+					miscButtons.clearSelection();
 				if (topButton.isSelected()) {
 					topButton.setBorderPainted(true);
 					panelTop.setVisible(true);
@@ -237,6 +213,13 @@ public class PanelMain extends JPanel {
 		saveButton.setBounds(new Rectangle(285, 330, 100, 20));
 		saveButton.setText(tr("Save"));
 		this.add(saveButton, null);
+	}
+
+	public void clearSelections() {
+		typeButtons.clearSelection();
+		alType.actionPerformed(null);
+		miscButtons.clearSelection();
+		alMisc.actionPerformed(null);
 	}
 
 	private JRadioButton getChanButton() {

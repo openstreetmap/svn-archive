@@ -151,9 +151,8 @@ abstract public class SeaMark {
 		return valid;
 	}
 
-	public void setValid(boolean valid) {
-		this.valid = valid;
-
+	public void setValid(boolean val) {
+		valid = val;
 	}
 
 	private int SectorIndex = 0;

@@ -115,6 +115,8 @@ public class OSeaMAction {
 			mark = new MarkUkn(this, null);
 			return;
 		}
+		
+		mark = null;
 
 		Iterator<Node> it = selection.iterator();
 		node = it.next();
@@ -126,36 +128,23 @@ public class OSeaMAction {
 
 		if (keys.containsKey("seamark:type"))
 			type = keys.get("seamark:type");
-
 		if (type.equals("buoy_lateral") || type.equals("beacon_lateral")) {
 			mark = new MarkLat(this, node);
-			return;
-
 		} else if (type.equals("buoy_cardinal")
 				|| type.equals("beacon_cardinal")) {
 			mark = new MarkCard(this, node);
-			return;
-
 		} else if (type.equals("buoy_safe_water")
 				|| type.equals("beacon_safe_water")) {
 			mark = new MarkSaw(this, node);
-			return;
-
 		} else if (type.equals("buoy_special_purpose")
 				|| type.equals("beacon_special_purpose")) {
 			mark = new MarkSpec(this, node);
-			return;
-
 		} else if (type.equals("buoy_isolated_danger")
 				|| type.equals("beacon_isolated_danger")) {
 			mark = new MarkIsol(this, node);
-			return;
-
 		} else if (type.equals("landmark") || type.equals("light_vessel")
 				|| type.equals("light_major") || type.equals("light_minor")) {
 			mark = new MarkLight(this, node);
-			return;
-
 		} else if (type.equals("light_float")) {
 			if (keys.containsKey("seamark:light_float:colour")) {
 				str = keys.get("seamark:light_float:colour");
@@ -163,107 +152,81 @@ public class OSeaMAction {
 						|| str.equals("red;green;red")
 						|| str.equals("green;red;green")) {
 					mark = new MarkLat(this, node);
-					return;
 				} else if (str.equals("black;yellow")
 						|| str.equals("black;yellow;black")
 						|| str.equals("yellow;black")
 						|| str.equals("yellow;black;yellow")) {
 					mark = new MarkCard(this, node);
-					return;
 				} else if (str.equals("black;red;black")) {
 					mark = new MarkIsol(this, node);
-					return;
 				} else if (str.equals("red;white")) {
 					mark = new MarkSaw(this, node);
-					return;
 				} else if (str.equals("yellow")) {
 					mark = new MarkSpec(this, node);
-					return;
 				}
 			} else if (keys.containsKey("seamark:light_float:topmark:shape")) {
 				str = keys.get("seamark:light_float:topmark:shape");
 				if (str.equals("cylinder") || str.equals("cone, point up")) {
 					mark = new MarkLat(this, node);
-					return;
 				}
 			} else if (keys.containsKey("seamark:light_float:topmark:colour")) {
 				str = keys.get("seamark:light_float:topmark:colour");
 				if (str.equals("red") || str.equals("green")) {
 					mark = new MarkLat(this, node);
-					return;
 				}
 			}
-		}
-
-		if (keys.containsKey("buoy_lateral:category")
+		} else if (keys.containsKey("buoy_lateral:category")
 				|| keys.containsKey("beacon_lateral:category")) {
 			mark = new MarkLat(this, node);
-			return;
 		} else if (keys.containsKey("buoy_cardinal:category")
 				|| keys.containsKey("beacon_cardinal:category")) {
 			mark = new MarkCard(this, node);
-			return;
 		} else if (keys.containsKey("buoy_isolated_danger:category")
 				|| keys.containsKey("beacon_isolated_danger:category")) {
 			mark = new MarkIsol(this, node);
-			return;
 		} else if (keys.containsKey("buoy_safe_water:category")
 				|| keys.containsKey("beacon_safe_water:category")) {
 			mark = new MarkSaw(this, node);
-			return;
 		} else if (keys.containsKey("buoy_special_purpose:category")
 				|| keys.containsKey("beacon_special_purpose:category")) {
 			mark = new MarkSpec(this, node);
-			return;
-		}
-
-		if (keys.containsKey("buoy_lateral:shape")
+		} else if (keys.containsKey("buoy_lateral:shape")
 				|| keys.containsKey("beacon_lateral:shape")) {
 			mark = new MarkLat(this, node);
-			return;
 		} else if (keys.containsKey("buoy_cardinal:shape")
 				|| keys.containsKey("beacon_cardinal:shape")) {
 			mark = new MarkCard(this, node);
-			return;
 		} else if (keys.containsKey("buoy_isolated_danger:shape")
 				|| keys.containsKey("beacon_isolated_danger:shape")) {
 			mark = new MarkIsol(this, node);
-			return;
 		} else if (keys.containsKey("buoy_safe_water:shape")
 				|| keys.containsKey("beacon_safe_water:shape")) {
 			mark = new MarkSaw(this, node);
-			return;
 		} else if (keys.containsKey("buoy_special_purpose:shape")
 				|| keys.containsKey("beacon_special_purpose:shape")) {
 			mark = new MarkSpec(this, node);
-			return;
-		}
-
-		if (keys.containsKey("buoy_lateral:colour")
+		} else if (keys.containsKey("buoy_lateral:colour")
 				|| keys.containsKey("beacon_lateral:colour")) {
 			mark = new MarkLat(this, node);
-			return;
 		} else if (keys.containsKey("buoy_cardinal:colour")
 				|| keys.containsKey("beacon_cardinal:colour")) {
 			mark = new MarkCard(this, node);
-			return;
 		} else if (keys.containsKey("buoy_isolated_danger:colour")
 				|| keys.containsKey("beacon_isolated_danger:colour")) {
 			mark = new MarkIsol(this, node);
-			return;
 		} else if (keys.containsKey("buoy_safe_water:colour")
 				|| keys.containsKey("beacon_safe_water:colour")) {
 			mark = new MarkSaw(this, node);
-			return;
 		} else if (keys.containsKey("buoy_special_purpose:colour")
 				|| keys.containsKey("beacon_special_purpose:colour")) {
 			mark = new MarkSpec(this, node);
-			return;
 		}
-
-		manager.showVisualMessage(tr("No seamark recognised at this node"));
-		mark = new MarkUkn(this, node);
-		return;
+		
+		if (mark == null) {
+			manager.showVisualMessage(tr("No seamark recognised at this node"));
+			mark = new MarkUkn(this, node);
+		} else {
+			mark.parseMark();
+		}
 	}
-
 }

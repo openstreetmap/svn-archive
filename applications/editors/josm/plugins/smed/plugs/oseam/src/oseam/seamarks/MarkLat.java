@@ -8,12 +8,14 @@ import oseam.dialogs.OSeaMAction;
 
 public class MarkLat extends SeaMark {
 	public MarkLat(OSeaMAction dia, Node node) {
-		super(dia);
+		super(dia, node);
+	}
+	
+	public void parseMark() {
 
 		String str;
 		Map<String, String> keys;
-		keys = node.getKeys();
-		setNode(node);
+		keys = getNode().getKeys();
 /*
 		dlg.cbM01TypeOfMark.setSelectedIndex(LATERAL);
 

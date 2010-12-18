@@ -9,12 +9,14 @@ import oseam.seamarks.SeaMark;
 
 public class MarkSpec extends SeaMark {
 	public MarkSpec(OSeaMAction dia, Node node) {
-		super(dia);
+		super(dia, node);
+	}
+	
+	public void parseMark() {
 
 		String str;
 		Map<String, String> keys;
-		keys = node.getKeys();
-		setNode(node);
+		keys = getNode().getKeys();
 
 /*		dlg.cbM01TypeOfMark.setSelectedIndex(SPECIAL_PURPOSE);
 

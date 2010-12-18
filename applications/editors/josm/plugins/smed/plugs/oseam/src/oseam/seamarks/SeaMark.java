@@ -68,11 +68,12 @@ abstract public class SeaMark {
 	}
 
 	public void setDlg(OSeaMAction dia) {
-		this.dlg = dia;
+		dlg = dia;
 	}
 
-	protected SeaMark(OSeaMAction dia) {
+	protected SeaMark(OSeaMAction dia, Node node) {
 		dlg = dia;
+		this.node = node;
 	}
 
 	private Node node = null;
@@ -177,6 +178,8 @@ abstract public class SeaMark {
 		LightColour[SectorIndex] = lightColour;
 	}
 
+	public abstract void parseMark();
+	
 	public abstract void paintSign();
 
 	public abstract void saveSign();

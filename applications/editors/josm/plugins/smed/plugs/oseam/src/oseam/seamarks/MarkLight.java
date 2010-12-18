@@ -9,11 +9,13 @@ import oseam.seamarks.SeaMark;
 
 public class MarkLight extends SeaMark {
 	public MarkLight(OSeaMAction dia, Node node) {
-		super(dia);
+		super(dia, node);
+	}
+	
+	public void parseMark() {
 
 		Map<String, String> keys;
-		keys = node.getKeys();
-		setNode(node);
+		keys = getNode().getKeys();
 
 /*		dlg.cbM01TypeOfMark.setSelectedIndex(LIGHT);
 

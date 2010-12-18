@@ -1,25 +1,17 @@
 package oseam.seamarks;
 
-import java.util.Map;
-
-import javax.swing.ButtonGroup;
-
 import org.openstreetmap.josm.data.osm.Node;
 
 import oseam.dialogs.OSeaMAction;
 
 public class MarkUkn extends SeaMark {
 	public MarkUkn(OSeaMAction dia, Node node) {
-		super(dia);
-
-		String str;
-		Map<String, String> keys;
-		keys = node.getKeys();
-		setNode(node);
-
+		super(dia, node);
 		dlg.panelMain.clearSelections();
 	}
 
+	public void parseMark() {}
+	
 	public void paintSign() {
 /*		if (dlg.paintlock)
 			return;

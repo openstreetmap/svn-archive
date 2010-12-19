@@ -94,8 +94,11 @@ function get_annotated_way($id,$do_annotations=true)
     return do_get_annotated_way($row,$do_annotations);
 }
 
-function do_get_annotated_way($row,$do_annotations=true)
+function do_get_annotated_way($row,$do_annotations=true,$start=0,$end=1)
 {
+		$lower=($start<$end) ? $start:$end;
+		$higher=($lower==$start) ? $end:$start;
+
         $way=array();
         $way["annotations"] = array();
         $tags = array("osm_id",
@@ -106,19 +109,39 @@ function do_get_annotated_way($row,$do_annotations=true)
             if($row[$tag]!='')
                 $way[$tag] = $row[$tag];
         }
-        $way['points'] = array();
-        preg_match("/LINESTRING\((.+)\)/",$row['astext'],$m);
-        $way['points'] = explode(",", $m[1]);
+		if($lower>0 || $higher<1)
+		{
+			$result = pg_query
+			("SELECT AsText(line_substring(way,$lower,$higher)) ".
+			"FROM planet_osm_line WHERE osm_id=$way[osm_id]");
+			$row2 = pg_fetch_array($result,null,PGSQL_ASSOC);
+        	$way['points'] = array();
+        	preg_match("/LINESTRING\((.+)\)/",$row2['astext'],$m);
+			$way['points']=explode(",", $m[1]);
+		}
+		else
+		{
+        	preg_match("/LINESTRING\((.+)\)/",$row['astext'],$m);
+        	$way['points'] = explode(",", $m[1]);
+		}
         if($do_annotations==true)
         {
             $way['annwayid']=find_annotated_way($way);
             if($way['annwayid']>0)
             {
                 $result2=pg_query
-                ("SELECT * FROM annotations WHERE wayid=$way[annwayid] ".
-                "ORDER BY annotationid");
+                ("SELECT ann.wayid,AsText(ann.xy),ann.text ".
+				"FROM planet_osm_line pol,annotations ann ".
+				"WHERE ann.wayid=$way[annwayid] AND pol.osm_id=$way[osm_id] ".
+				"AND line_locate_point(pol.way,ann.xy) BETWEEN ".
+				"$lower AND $higher ".
+                "ORDER BY line_locate_point(pol.way,ann.xy)");
                 while($row2=pg_fetch_array($result2,NULL,PGSQL_ASSOC))
+				{
+        			$a = preg_match ("/POINT\((.+)\)/",$row2['astext'],$m);
+        			list($row2['x'],$row2['y'])= explode(" ",$m[1]);
                     $way["annotations"][] = $row2;
+				}
             }
         }
 
@@ -179,6 +202,31 @@ function way_annotations_to_xml($annotations,$reverse=false)
     }
 }
 
+function get_ways_by_point($x,$y,$dist=100,$n=0,$snap=false)
+{
+	$ways=array();
+	$q=("SELECT osm_id, name,highway,designation,".
+				"foot,horse,fmap_bearing,AsText(way), ".
+				"line_locate_point(way,PointFromText('POINT($x $y)',900913)) ".
+				"as posn,".
+                "Distance(GeomFromText('POINT($x $y)',900913),way) as dist ".
+				"FROM ".
+                "planet_osm_line WHERE Distance(GeomFromText('POINT($x $y)',".
+                "900913),way) < $dist AND highway != '' ");
+
+	$q .= "ORDER BY dist";
+
+	if($n>0)
+		$q .= " LIMIT $n";
+	$result2=pg_query($q);
+
+	while($row=pg_fetch_array($result2,null,PGSQL_ASSOC))
+		$ways[] = $row;
+
+	pg_free_result($result2);
+	return $ways;
+}
+
 function node_to_xml($row)
 {
     $highlevel=get_high_level($row);
@@ -203,6 +251,68 @@ function node_to_xml($row)
         }
         echo "</node>\n";
     }
+}
+
+function get_annotation_id($way,$x,$y)
+{
+	// get position along the way of point x,y
+	$q=("SELECT  line_locate_point(way,PointFromText('POINT($x $y)',900913)) ".
+			"AS posn FROM planet_osm_line WHERE osm_id=$way[osm_id]");
+
+	$result=pg_query($q);
+	$row=pg_fetch_array($result,null,PGSQL_ASSOC);
+	if($row)
+	{
+
+		// find annotations along this way
+		$result2=pg_query
+			("SELECT ann.annotationid,".
+			"line_locate_point(pol.way,ann.xy) AS posn ".
+			"FROM planet_osm_line pol, annotations ann ".
+			"WHERE pol.osm_id=$way[osm_id] AND ann.wayid=$way[annwayid] ".
+			"ORDER BY line_locate_point(pol.way,ann.xy)");
+		while($row2=pg_fetch_array($result2,null,PGSQL_ASSOC))
+		{
+			if($row2['posn'] > $row['posn'])
+			{
+				return $row2['annotationid'];
+			}
+		}
+		return  pg_numrows($result2) + 1;
+	}
+	return 0;
+}
+
+function get_route($id)
+{
+	$result=pg_query("SELECT AsText(route) FROM routes WHERE id=$id");
+	$row=pg_fetch_array($result,null,PGSQL_ASSOC);
+	if($row)
+	{
+		$m=array();
+        preg_match("/LINESTRING\((.+)\)/",$row['astext'],$m);
+		return $m[1];
+	}
+	return null; 
+}
+
+function get_route_annotations($id)
+{
+	$annotations=array();
+	$result2=pg_query
+		("SELECT AsText(ann.xy),ann.text,ann.annotationid,".
+		"line_locate_point(rte.route,ann.xy) AS posn FROM routes rte,".
+		"annotations ann WHERE rte.id=$id AND ".
+		"Distance(ann.xy,rte.route) < 100 ".
+		"ORDER BY line_locate_point(rte.route,ann.xy)");
+
+	while($row=pg_fetch_array($result2,null,PGSQL_ASSOC))
+	{
+        $a = preg_match ("/POINT\((.+)\)/",$row['astext'],$m);
+        list($row['x'],$row['y'])= explode(" ",$m[1]);
+		$annotations[] = $row;
+	}
+	return $annotations;
 }
 
 function lonToX($lon,$zoom)

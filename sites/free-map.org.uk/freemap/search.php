@@ -13,9 +13,9 @@ $conn=pg_connect("dbname=gis user=gis");
 $cleaned = clean_input($_REQUEST,'pgsql');
 
 
-switch($_REQUEST['action'])
+switch($_REQUEST['type'])
 {
-    case 'get':
+    case 'byCoord':
         $x = $cleaned["x"];
         $y = $cleaned["y"];
         $dist = (isset($_REQUEST['dist'])) ? $cleaned['dist']: 100;
@@ -52,29 +52,19 @@ switch($_REQUEST['action'])
 
         if(($foundnode==false && $what=="both") || $what=="ways")
         {
-			$q=("SELECT osm_id, name,highway,designation,".
-				"foot,horse,bicycle,fmap_bearing,AsText(way), ".
-                "Distance(GeomFromText('POINT($x $y)',900913),way) as dist ".
-				"FROM ".
-                "planet_osm_line WHERE Distance(GeomFromText('POINT($x $y)',".
-                "900913),way) < $dist AND highway != '' ORDER BY dist");
+			$rows=get_ways_by_point($x,$y,$dist,$n);
 
-			if($n>0)
-				$q .= " LIMIT $n";
-            $result2=pg_query($q);
-
-            while($row=pg_fetch_array($result2,null,PGSQL_ASSOC))
+			foreach($rows as $row)
             {
 				$way=do_get_annotated_way($row);
 				annotated_way_to_xml($way);
             }
-            pg_free_result($result2);
         }
         echo "</osmdata>";
 
         break;
 
-    case 'search':
+    case 'byName':
         $query = $cleaned['q'];
         header("Content-type: text/xml");
 
@@ -106,12 +96,6 @@ switch($_REQUEST['action'])
         }
         echo "</osmdata>";
         pg_free_result($result);
-        break;
-
-    case 'getById':
-        $way=get_annotated_way($cleaned['osm_id']);
-        header("Content-type: text/xml");
-        annotated_way_to_xml($way);
         break;
 }
     

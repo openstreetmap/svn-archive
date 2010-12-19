@@ -4,6 +4,8 @@ require_once('/home/www-data/private/defines.php');
 
 session_start();
 
+$conn=pg_connect("dbname=gis user=gis");
+
 $lat = (isset($_GET['lat'])) ? $_GET['lat']:
     ((isset($_COOKIE['lat'])) ? $_COOKIE['lat'] : 51.05); 
     
@@ -15,10 +17,12 @@ $zoom = (isset($_GET['zoom'])) ? $_GET['zoom']:
     
 
 $modes = array (
-                    array ("Normal", "MODE_NORMAL"),
-                    array ("Distance", "MODE_DISTANCE"),
-                    array ("Route", "MODE_ROUTE"),
-					array ("Annotate", "MODE_ANNOTATE")
+                    array ("Normal", "MODE_NORMAL",true),
+                    array ("Distance", "MODE_DISTANCE",true),
+                    array ("Route", "MODE_ROUTE",
+							isset($_SESSION['gatekeeper']) ? true:false),
+					array ("Annotate", "MODE_ANNOTATE",
+							isset($_SESSION['gatekeeper']) ? true:false)
                 );
 ?>
 
@@ -33,7 +37,6 @@ var freemap;
 var lat=<?php echo $lat; ?>;
 var lon=<?php echo $lon; ?>;
 var zoom=<?php echo $zoom;?>;
-var loggedin = <?php echo isset($_SESSION['gatekeeper'])?"true":"false";?>;
 
 <?php
 for($i=0; $i<count($modes); $i++)
@@ -67,7 +70,7 @@ for($i=0; $i<count($modes); $i++)
 <?php
 for($i=0; $i<count($modes); $i++)
 {
-    if($modes[$i][0]!==null)
+    if($modes[$i][2]===true)
     {
         if($i)
             echo " | ";
@@ -82,6 +85,11 @@ for($i=0; $i<count($modes); $i++)
 
 </div>
 
+<?php
+
+pg_close($conn);
+
+?>
 
 </body>
 </html>
@@ -99,7 +107,8 @@ function write_sidebar($homepage=false)
 	<p>The new Freemap, now with tiles hosted by
 	<a href='http://www.sucs.org'>Swansea University Computer Society</a>.
 	Data CC-by-SA from 
-	<a href='http://www.openstreetmap.org'>OpenStreetMap</a> </p>
+	<a href='http://www.openstreetmap.org'>OpenStreetMap</a>.
+	<a href='about.html'>More info...</a></p>
 
 	<?php
 	write_login();
@@ -175,7 +184,9 @@ function write_login()
 	}
 	else
 	{
-		echo "<em>Logged in as $_SESSION[gatekeeper]</em>\n";
+		$result=pg_query("SELECT * FROM users WHERE id=$_SESSION[gatekeeper]");
+		$row=pg_fetch_array($result,null,PGSQL_ASSOC);
+		echo "<em>Logged in as $row[username]</em>\n";
 		echo "<a href='user.php?action=logout&redirect=".
 			htmlentities($_SERVER['PHP_SELF'])."'>Log out</a>\n";
 	}

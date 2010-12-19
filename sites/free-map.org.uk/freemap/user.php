@@ -22,8 +22,7 @@ switch($cleaned["action"])
             $row=pg_fetch_array($result,null,PGSQL_ASSOC);
             if($row)
             {
-                $_SESSION["gatekeeper"] = $cleaned["username"];
-                pg_close($conn);
+                $_SESSION["gatekeeper"] = $row["id"];
                 $qs="";
                 foreach ($cleaned as $k=>$v)
                 {
@@ -145,7 +144,8 @@ switch($cleaned["action"])
                 ?>
                 <h1>Sign up</h1>
                 <p>Signing up and creating an account will allow you to annotate
-                paths.</p>
+                paths and create walking routes (walking route functionality
+				not yet complete).</p>
                 <?php
             }
             ?>
@@ -200,7 +200,7 @@ switch($cleaned["action"])
             <?php
         }
         else if (get_user_level($_SESSION['gatekeeper'],'users','isadmin',
-                'username','pgsql') != 1)
+                'id','pgsql') != 1)
         {
             echo "Stop trying to delete other people's accounts!!!!!";
         }

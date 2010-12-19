@@ -1,6 +1,6 @@
 
 
-//Initialise the 'map' object
+// Initialise the 'map' object
 function init() {
  
     freemap=new Freemap();
@@ -80,13 +80,26 @@ function init() {
 
     var selF = new OpenLayers.Control.SelectFeature
         (freemap.layerAnnotations,
-            { clickFeature: function(f) {freemap.displayPopup(f.text,
-                    new OpenLayers.LonLat(f.geometry.x,f.geometry.y),
-                    200,200);}} 
-            );
-    selF.hover=false;
+            { onSelect: function(f) 
+                {
+                    freemap.displayPopup(f.text,
+                        new OpenLayers.LonLat(f.geometry.x,f.geometry.y),
+                            200,200,true);
+                } 
+            });
     freemap.map.addControl(selF);
     selF.activate();
+
+    var hOptions = { callbacks:
+            { done:freemap.routeDrawn.bind(freemap) }
+                    };
+
+    freemap.drawF = new OpenLayers.Control.DrawFeature
+        (freemap.layerSelWays,OpenLayers.Handler.Path, hOptions);
+
+
+    freemap.map.addControl(freemap.drawF);
+    freemap.setMode(MODE_NORMAL);
 }
 
 
@@ -101,20 +114,17 @@ var Freemap = Class.create ( {
         this.lookupPos=null;
         this.dragging = false;
         this.navControl = null;
-        this.mode = 0;
         this.dist = 0;
         this.lastPos = null;
+        this.mode=null;
     },
 
     setMode : function(m)
     { 
-        if(this.mode==MODE_ROUTE) 
-        { 
-            $('menubar').removeChild($('newroute'));
-        }
+        if(this.mode !== null)
+            $('mode'+this.mode).setAttribute('class','deactivated');
 
-        $('mode'+this.mode).setAttribute('class','deactivated');
-        if($('mode'+this.mode))
+        if($('mode'+m))
         {
             this.mode=m;
             $('mode'+this.mode).setAttribute('class','activated');
@@ -125,17 +135,76 @@ var Freemap = Class.create ( {
 
             if(this.mode==MODE_ROUTE)
             {
-                this.routeReset();
-                var newroute=document.createElement("span");
-                newroute.id = 'newroute';
-                newroute.innerHTML = 'New route';
-                newroute.onclick =  this.routeReset.bind(this);
-                $('menubar').appendChild(newroute);
+                this.drawF.activate();
+            }
+            else
+            {
+                this.drawF.deactivate();
             }
         }
         else
         {
             alert('No mode ' +m);
+        }
+    },
+
+    routeDrawn:function(g) 
+    { 
+        this.csvroute="";
+        for(var i=0; i<g.components.length; i++)
+        {
+            if(i>0)
+                this.csvroute+=",";
+            this.csvroute+=g.components[i].x+" " +g.components[i].y;
+        }
+        var html = "<p>Select what to do with your route:</p>" +
+                    "<p><select id='routeaction'>"+
+                    "<option value='test'>Test (not for users)</option>"+
+                    "<option value='getxml'>Route as XML</option>"+
+                    "<option value='add'>Save to database</option>"+
+                    "</select>"+
+                    "</p>"+
+                    "<input type='button' id='routeactionbtn' value='Go' />";
+        this.displayCentredPopup(html,0.25);
+        $('routeactionbtn').onclick=this.routeSend.bind(this);
+    },
+
+    routeSend:function()
+    {
+        var qs;
+        if($('routeaction').value.substr(0,3)=='get')
+        {
+            qs='action=get&format='+$('routeaction').value.substr(3);
+            this.map.removePopup(this.popup);
+            this.popup=null;
+            window.location='/freemap/route.php?'+qs+'&route='+this.csvroute;
+        }
+        else if ($('routeaction').value=='test')
+        {
+            qs='action=get&format=xml';
+            new Ajax.Request
+            ("/freemap/route.php",
+                { method : 'GET',
+                parameters: qs+'&route=' + this.csvroute,
+                onComplete: function(xmlHTTP) { alert(xmlHTTP.responseText); }
+                }
+            );
+            this.map.removePopup(this.popup);
+            this.popup=null;
+        }
+        else if ($('routeaction').value=='add')
+        {
+            qs='action=add';
+            
+            new Ajax.Request
+            ("/freemap/route.php",
+                { method : 'GET',
+                parameters: qs+'&route=' + this.csvroute,
+                onComplete: function(xmlHTTP) { alert(xmlHTTP.responseText); }
+                }
+            );
+            this.map.removePopup(this.popup);
+            this.popup=null;
         }
     },
 
@@ -170,17 +239,26 @@ var Freemap = Class.create ( {
             (this.map.getProjectionObject(),this.wgs84);
         $('osmedit').href='http://www.openstreetmap.org/edit.html?lat='+
             ll.lat+'&lon='+ll.lon+'&zoom='+this.map.getZoom();
+		var expiry = new Date();
+		expiry.setTime(expiry.getTime() + (1000*60*60*24*365));
+        document.cookie='lat='+ll.lat+'; expires=' + expiry.toGMTString();
+        document.cookie='lon='+ll.lon+'; expires=' + expiry.toGMTString();
+        document.cookie='zoom='+this.map.getZoom()+'; expires=' + 
+			expiry.toGMTString();
     },
 
     clickHandler:function(e)
     {
         this.lookupPos = this.map.getLonLatFromViewPortPx(e.xy);
-        if(this.mode==MODE_ROUTE || this.mode == MODE_NORMAL || 
-            this.mode == MODE_ANNOTATE)
+
+        // find distance equivalent to 8 pixels (so get a hit within 8px) 
+        var dist=this.map.getResolution() * 8;
+
+        if(this.mode == MODE_NORMAL || this.mode==MODE_ANNOTATE)
         {
-            var what=(this.mode==MODE_ROUTE) ?  "ways":"both";
-            var p= 'action=get&x='+this.lookupPos.lon+ '&y='+this.lookupPos.lat+
-                        '&what='+what+'&n=1';
+            var what="both";
+            var p= 'type=byCoord&x='+this.lookupPos.lon+ 
+                    '&y='+this.lookupPos.lat+'&what='+what+'&n=1&dist='+dist;
             // use Ajax.Request to allow us to pass arbitrary data (lookup pos)
             // to the callback
             new Ajax.Request('/freemap/search.php',
@@ -215,21 +293,7 @@ var Freemap = Class.create ( {
 
             if(this.mode!=MODE_ANNOTATE)
             {
-                if(this.popup)
-                {
-                    this.map.removePopup(this.popup);
-                }
-
-                this.popup = new OpenLayers.Popup
-                (
-                    null,
-                    this.lookupPos,    
-                    new OpenLayers.Size(200,200),
-                    html,
-                    true
-                );
-                this.popup.closeOnMove=true;
-                this.map.addPopup(this.popup);
+                this.displayPopup (html, this.lookupPos,200,200,true);
             }
             this.selNode = nodes[0].getElementsByTagName("osm_id")[0].
                 firstChild.nodeValue;
@@ -257,22 +321,10 @@ var Freemap = Class.create ( {
 
                 if(this.mode!=MODE_ROUTE && this.mode!=MODE_ANNOTATE)
                 {
-                    this.popup = new OpenLayers.Popup
-                    (
-                        null,
-                        this.lookupPos,    
-                        new OpenLayers.Size(200,200),
-                        html,
-                        true
-                    );
-                    this.popup.closeOnMove=true;
-                    this.map.addPopup(this.popup);
+                    this.displayPopup(html,this.lookupPos,200,200,true);
                 }
 
-                if(this.mode!=MODE_ROUTE)
-                {
-                    this.routeReset();
-                }
+                this.routeReset();
             
                 var pts = ways[0].getElementsByTagName("point");
                 var annotations = ways[0].getElementsByTagName("annotation");
@@ -323,8 +375,6 @@ var Freemap = Class.create ( {
         }
         if (this.mode==MODE_ANNOTATE) 
         {
-            if(loggedin)
-            {
                 var html="<strong>Please enter the annotation:"+
                             "</strong>"+
                             "<br />"+
@@ -347,28 +397,12 @@ var Freemap = Class.create ( {
                             "<option value='-1'>"+oppdir+"</option>"+
                             "</select><br />";
                 }
-
+        
                 html +=
                             "<input type='button' id='annotationBtn' "+ 
                             "value='go' />";
-                if(this.popup)
-                    this.map.removePopup(this.popup);
-
-                this.popup = new OpenLayers.Popup
-                        (
-                            null,
-                            this.lookupPos,    
-                            new OpenLayers.Size(400,400),
-                            html,
-                            true
-                        );
-                        this.map.addPopup(this.popup);
-                        $('annotationBtn').onclick=this.doAnnotate.bind(this);
-            }
-            else
-            {
-                alert('Need to be logged in to annotate.');
-            }
+                this.displayCentredPopup(html,0.5);
+                $('annotationBtn').onclick=this.doAnnotate.bind(this);
         }
     },
 
@@ -435,7 +469,7 @@ var Freemap = Class.create ( {
     search : function()
     {
         //alert('search not working yet! Try again soon.');
-        OpenLayers.loadURL('/freemap/search.php?action=search&q='+$('q').value,
+        OpenLayers.loadURL('/freemap/search.php?type=byName&q='+$('q').value,
              null, this,this.searchCallback,this.failCallback); 
     },
 
@@ -519,14 +553,17 @@ var Freemap = Class.create ( {
             if(s[0]<0)
                 return;
 
+            alert('details: id=' + f.fid+' text='+text+
+            'x='+pt.x+' y='+pt.y+' dir=' + dir);
+
             var rqst = new Ajax.Request
-                ('/freemap/annotation.php?what=way&id='
-                +f.fid+'&annotationId='+s[1]+
-                '&text='+text+'&x='+pt.x+'&y='+pt.y+
+                ('/freemap/way.php?action=annotate&id='
+                +f.fid+'&text='+text+'&x='+pt.x+'&y='+pt.y+
                 '&dir='+dir,
                     { method: 'get',
                          seg:s[0],
                          aId:s[1],
+                         aText: text,
                          point:pt,
                          feature:f,
                           onSuccess: this.insertAnnotationResponse.bind(this),
@@ -536,7 +573,7 @@ var Freemap = Class.create ( {
         else
         {
 
-            var url='/freemap/annotation.php?what=node&id='+
+            var url='/freemap/node.php?action=annotate&id='+
                 this.selNode+'&text='+text;
             alert('sending to:  ' +url);
             var rqst=new Ajax.Request
@@ -577,15 +614,27 @@ var Freemap = Class.create ( {
         f.geometry.components = newComponents;
         var annotationFeature=new OpenLayers.Feature.Vector();
         annotationFeature.geometry = pt;
+        annotationFeature.text = xmlHTTP.request.options.aText;
         this.layerSelWays.drawFeature(f);
         this.layerAnnotations.addFeatures(annotationFeature);
     },
 
-    displayPopup:function(text,pos,w,h)
+    displayPopup:function(text,pos,w,h,fc)
     {
         if(this.popup)
             this.map.removePopup(this.popup);
-        this.popup = new OpenLayers.Popup
+        this.popup = (fc===true) ?
+        new OpenLayers.Popup.FramedCloud
+        (
+            null,
+            pos,    
+            new OpenLayers.Size(w,h),
+            text,
+            null,
+            true
+        )
+        :
+        new OpenLayers.Popup
         (
             null,
             pos,    
@@ -596,8 +645,18 @@ var Freemap = Class.create ( {
         this.map.addPopup(this.popup);
     },
 
-
-
+    displayCentredPopup:function(html,relsize)
+    {
+        this.displayPopup(html,
+                this.map.getLonLatFromViewPortPx(
+                    new OpenLayers.Pixel(
+                    this.map.getSize().w*0.5-
+                    this.map.getSize().w*relsize*0.5,
+                    this.map.getSize().h*0.5-
+                    this.map.getSize().h*relsize*0.5)),
+                this.map.getSize().w*relsize,this.map.getSize().h*relsize,
+                false);
+    }
 } );
 
 function calcdist (x1,y1,x2,y2)

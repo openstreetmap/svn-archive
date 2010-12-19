@@ -15,6 +15,7 @@
 <!ENTITY naturearea-color "#007D33">
 <!ENTITY trail-color "#DDD"><!-- path, track, footway, cycleway -->
 <!ENTITY nordic-color "#F90025"><!-- piste:type=nordic, route=ski -->
+<!ENTITY sled-color "#CDABDE"><!-- piste:type=sled -->
 <!ENTITY wintertrail-color "#444"><!-- piste:type=hike -->
 
 %sharedentities;
@@ -213,6 +214,26 @@
       <CssParameter name="stroke">#F6E760</CssParameter>
       <CssParameter name="stroke-width">7.5</CssParameter>
       <CssParameter name="stroke-opacity">0.65</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+
+  <Rule>
+    <Filter>[piste:type] = 'sled'</Filter>
+    &maxscale_zoom11;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&sled-color;</CssParameter>
+      <CssParameter name="stroke-width">2</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+  <Rule>
+    <Filter>[piste:type] = 'sled' and [lit]='yes'</Filter>
+    &maxscale_zoom13;
+    <LineSymbolizer>
+      <CssParameter name="stroke">&sled-color;</CssParameter>
+      <CssParameter name="stroke-width">6</CssParameter>
+      <CssParameter name="stroke-dasharray">1,21</CssParameter>
+      <CssParameter name="stroke-linejoin">round</CssParameter>
+      <CssParameter name="stroke-linecap">round</CssParameter>
     </LineSymbolizer>
   </Rule>
 

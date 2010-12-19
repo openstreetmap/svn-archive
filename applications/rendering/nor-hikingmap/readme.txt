@@ -91,7 +91,7 @@ railway=platform or waterway=dam or man_made=pier
 barrier=stile|kissing_gate
 barrier=toll_booth
 
-piste:type= sled, skitour, sleigh, snow_park
+piste:type= sleigh (no:hundekjøring), snow_park (no:terrengpark)
 sport=* symbols from zoom 17
 
 

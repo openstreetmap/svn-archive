@@ -28,12 +28,13 @@ public class PanelLit extends JPanel {
 		super();
 		panelCol = new PanelCol();
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 		this.add(panelCol, null);
 		panelCol.blackButton.setVisible(false);
 	}
+
+	public void clearSelections() {
+		
+	}
+
 }

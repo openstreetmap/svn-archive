@@ -36,10 +36,6 @@ public class PanelPrefStbd extends JPanel {
 
 	public PanelPrefStbd() {
 		super();
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 		this.add(getRegionAButton(), null);
 		this.add(getRegionBButton(), null);
@@ -85,6 +81,10 @@ public class PanelPrefStbd extends JPanel {
 		floatButton.addActionListener(alShape);
 		beaconButton.addActionListener(alShape);
 		towerButton.addActionListener(alShape);
+	}
+
+	public void clearSelections() {
+		
 	}
 
 	private JRadioButton getRegionAButton() {

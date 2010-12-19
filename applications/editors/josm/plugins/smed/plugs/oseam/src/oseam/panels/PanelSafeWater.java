@@ -32,10 +32,6 @@ public class PanelSafeWater extends JPanel {
 
 	public PanelSafeWater() {
 		super();
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 		this.add(getPillarButton(), null);
 		this.add(getSparButton(), null);
@@ -63,6 +59,10 @@ public class PanelSafeWater extends JPanel {
 		sphereButton.addActionListener(alShape);
 		barrelButton.addActionListener(alShape);
 		floatButton.addActionListener(alShape);
+	}
+
+	public void clearSelections() {
+		
 	}
 
 	private JRadioButton getPillarButton() {

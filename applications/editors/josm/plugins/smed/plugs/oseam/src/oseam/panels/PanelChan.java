@@ -29,6 +29,7 @@ public class PanelChan extends JPanel {
 	private JRadioButton prefPortButton = null;
 	private JRadioButton prefStbdButton = null;
 	private JRadioButton safeWaterButton = null;
+	private ActionListener alCat = null;
 	private PanelPort panelPort = null;
 	private PanelStbd panelStbd = null;
 	private PanelPrefPort panelPrefPort = null;
@@ -36,7 +37,6 @@ public class PanelChan extends JPanel {
 	private PanelSafeWater panelSafeWater = null;
 
 	public PanelChan() {
-		super();
 		panelPort = new PanelPort();
 		panelPort.setBounds(new Rectangle(55, 0, 225, 160));
 		panelPort.setVisible(false);
@@ -52,10 +52,6 @@ public class PanelChan extends JPanel {
 		panelSafeWater = new PanelSafeWater();
 		panelSafeWater.setBounds(new Rectangle(55, 0, 225, 160));
 		panelSafeWater.setVisible(false);
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 		this.add(panelPort, null);
 		this.add(panelStbd, null);
@@ -73,7 +69,7 @@ public class PanelChan extends JPanel {
 		catButtons.add(prefPortButton);
 		catButtons.add(prefStbdButton);
 		catButtons.add(safeWaterButton);
-		ActionListener alCat = new ActionListener() {
+		alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (portButton.isSelected()) {
 					portButton.setBorderPainted(true);
@@ -117,6 +113,16 @@ public class PanelChan extends JPanel {
 		prefPortButton.addActionListener(alCat);
 		prefStbdButton.addActionListener(alCat);
 		safeWaterButton.addActionListener(alCat);
+	}
+
+	public void clearSelections() {
+		catButtons.clearSelection();
+		alCat.actionPerformed(null);
+		panelPort.clearSelections();
+		panelStbd.clearSelections();
+		panelPrefPort.clearSelections();
+		panelPrefStbd.clearSelections();
+		panelSafeWater.clearSelections();
 	}
 
 	private JRadioButton getPortButton() {

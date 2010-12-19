@@ -36,13 +36,10 @@ public class PanelCol extends JPanel {
 	public JRadioButton blueButton = null;
 	public JRadioButton violetButton = null;
 	public JRadioButton blackButton = null;
+	private ActionListener alColour = null;
 
 	public PanelCol() {
 		super();
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 
 		this.add(getOffButton(), null);
@@ -66,7 +63,7 @@ public class PanelCol extends JPanel {
 		colourButtons.add(blueButton);
 		colourButtons.add(violetButton);
 		colourButtons.add(blackButton);
-		ActionListener alColour = new ActionListener() {
+		alColour = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				offButton.setBorderPainted(offButton.isSelected());
 				whiteButton.setBorderPainted(whiteButton.isSelected());
@@ -90,6 +87,11 @@ public class PanelCol extends JPanel {
 		blueButton.addActionListener(alColour);
 		violetButton.addActionListener(alColour);
 		blackButton.addActionListener(alColour);
+	}
+
+	public void clearSelections() {
+		colourButtons.clearSelection();
+		alColour.actionPerformed(null);
 	}
 
 	private JRadioButton getOffButton() {

@@ -24,33 +24,30 @@ import java.awt.event.ActionListener;
 
 public class PanelTop extends JPanel {
 
-	private PanelCol panelCol = null;
+	public PanelCol panelCol = null;
 	private ButtonGroup topButtons = null;
-	private JRadioButton noTopButton = null;
-	private JRadioButton canTopButton = null;
-	private JRadioButton coneTopButton = null;
-	private JRadioButton sphereTopButton = null;
-	private JRadioButton XTopButton = null;
-	private JRadioButton northTopButton = null;
-	private JRadioButton southTopButton = null;
-	private JRadioButton eastTopButton = null;
-	private JRadioButton westTopButton = null;
-	private JRadioButton spheres2TopButton = null;
-	private JRadioButton boardDayButton = null;
-	private JRadioButton diamondDayButton = null;
-	private JRadioButton triangleDayButton = null;
-	private JRadioButton triangleInvDayButton = null;
-	private JRadioButton squareDayButton = null;
-	private JRadioButton mooringTopButton = null;
+	public JRadioButton noTopButton = null;
+	public JRadioButton canTopButton = null;
+	public JRadioButton coneTopButton = null;
+	public JRadioButton sphereTopButton = null;
+	public JRadioButton XTopButton = null;
+	public JRadioButton northTopButton = null;
+	public JRadioButton southTopButton = null;
+	public JRadioButton eastTopButton = null;
+	public JRadioButton westTopButton = null;
+	public JRadioButton spheres2TopButton = null;
+	public JRadioButton boardDayButton = null;
+	public JRadioButton diamondDayButton = null;
+	public JRadioButton triangleDayButton = null;
+	public JRadioButton triangleInvDayButton = null;
+	public JRadioButton squareDayButton = null;
+	public JRadioButton mooringTopButton = null;
+	ActionListener alTop = null;
 
 	public PanelTop() {
 		super();
 		panelCol = new PanelCol();
 		panelCol.setBounds(new Rectangle(0, 0, 34, 160));
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 		this.add(panelCol, null);
 		this.add(getNoTopButton(), null);
@@ -86,7 +83,7 @@ public class PanelTop extends JPanel {
 		topButtons.add(triangleInvDayButton);
 		topButtons.add(squareDayButton);
 		topButtons.add(mooringTopButton);
-		ActionListener alTop = new ActionListener() {
+		alTop = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				noTopButton.setBorderPainted(noTopButton.isSelected());
 				canTopButton.setBorderPainted(canTopButton.isSelected());
@@ -122,6 +119,12 @@ public class PanelTop extends JPanel {
 		triangleInvDayButton.addActionListener(alTop);
 		squareDayButton.addActionListener(alTop);
 		mooringTopButton.addActionListener(alTop);
+	}
+
+	public void clearSelections() {
+		topButtons.clearSelection();
+		alTop.actionPerformed(null);
+		panelCol.clearSelections();
 	}
 
 	private JRadioButton getNoTopButton() {

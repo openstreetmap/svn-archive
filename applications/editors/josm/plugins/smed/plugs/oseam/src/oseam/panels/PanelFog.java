@@ -22,13 +22,13 @@ import java.awt.event.ActionListener;
 
 public class PanelFog extends JPanel {
 
-
 	public PanelFog() {
 		super();
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 	}
+
+	public void clearSelections() {
+		
+	}
+
 }

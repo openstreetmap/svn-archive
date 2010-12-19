@@ -37,10 +37,6 @@ public class PanelPort extends JPanel {
 
 	public PanelPort() {
 		super();
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 		this.add(getRegionAButton(), null);
 		this.add(getRegionBButton(), null);
@@ -90,6 +86,10 @@ public class PanelPort extends JPanel {
 		beaconButton.addActionListener(alShape);
 		towerButton.addActionListener(alShape);
 		perchButton.addActionListener(alShape);
+	}
+
+	public void clearSelections() {
+		
 	}
 
 	private JRadioButton getRegionAButton() {

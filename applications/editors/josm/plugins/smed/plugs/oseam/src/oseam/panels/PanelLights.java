@@ -32,10 +32,6 @@ public class PanelLights extends JPanel {
 
 	public PanelLights() {
 		super();
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 		this.add(getHouseButton(), null);
 		this.add(getMajorButton(), null);
@@ -62,6 +58,10 @@ public class PanelLights extends JPanel {
 		minorButton.addActionListener(alCat);
 		vesselButton.addActionListener(alCat);
 		floatButton.addActionListener(alCat);
+	}
+
+	public void clearSelections() {
+		
 	}
 
 	private JRadioButton getHouseButton() {

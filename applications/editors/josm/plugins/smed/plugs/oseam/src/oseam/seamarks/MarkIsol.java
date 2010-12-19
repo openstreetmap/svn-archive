@@ -6,6 +6,8 @@ import org.openstreetmap.josm.data.osm.Node;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
+import oseam.seamarks.SeaMark.Cat;
+import oseam.seamarks.SeaMark.Styl;
 
 public class MarkIsol extends SeaMark {
 	public MarkIsol(OSeaMAction dia, Node node) {
@@ -17,90 +19,62 @@ public class MarkIsol extends SeaMark {
 		String str;
 		Map<String, String> keys;
 		keys = getNode().getKeys();
-/*
-		dlg.cbM01TypeOfMark.setSelectedIndex(ISOLATED_DANGER);
 
-		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.setVisible(true);
-		dlg.lM01StyleOfMark.setVisible(true);
+		if (!dlg.panelMain.hazButton.isSelected())
+			dlg.panelMain.hazButton.doClick();
 
-		setBuoyIndex(ISOLATED_DANGER);
-		setColour(SeaMark.BLACK_RED_BLACK);
-		setLightColour("W"); //$NON-NLS-1$
-		setTopMark(true);
-		setRegion(Main.pref.get("tomsplugin.IALA").equals("B")); //$NON-NLS-1$ //$NON-NLS-2$
+		if (keys.containsKey("name"))
+			setName(keys.get("name"));
 
-		if (keys.containsKey("name")) //$NON-NLS-1$
-			setName(keys.get("name")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:name"))
+			setName(keys.get("seamark:name"));
 
-		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:name")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_isolated_danger:name"))
+			setName(keys.get("seamark:buoy_isolated_danger:name"));
+		else if (keys.containsKey("seamark:beacon_isolated_danger:name"))
+			setName(keys.get("seamark:beacon_isolated_danger:name"));
+		else if (keys.containsKey("seamark:light_float:name"))
+			setName(keys.get("seamark:light_float:name"));
 
-		if (keys.containsKey("seamark:buoy_isolated_danger:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:buoy_isolated_danger:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_isolated_danger:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:beacon_isolated_danger:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_float:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:light_float:name")); //$NON-NLS-1$
+		dlg.panelMain.panelHaz.isolButton.doClick();
 
-		if (keys.containsKey("seamark:buoy_isolated_danger:shape")) { //$NON-NLS-1$
-			str = keys.get("seamark:buoy_isolated_danger:shape"); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_isolated_danger:shape")) {
+			str = keys.get("seamark:buoy_isolated_danger:shape");
 
-			if (str.equals("pillar")) //$NON-NLS-1$
-				setStyleIndex(ISOL_PILLAR);
-			else if (str.equals("spar")) //$NON-NLS-1$
-				setStyleIndex(ISOL_SPAR);
-		} else if (keys.containsKey("seamark:beacon_isolated_danger:shape")) { //$NON-NLS-1$
-				str = keys.get("seamark:beacon_isolated_danger:shape"); //$NON-NLS-1$
-
-				if (str.equals("tower")) //$NON-NLS-1$
-					setStyleIndex(ISOL_TOWER);
-				else 
-					setStyleIndex(ISOL_BEACON);
-		} else if (keys.containsKey("seamark:type") //$NON-NLS-1$
-				&& (keys.get("seamark:type").equals("light_float"))) { //$NON-NLS-1$ //$NON-NLS-2$
-			setStyleIndex(ISOL_FLOAT);
+			if (str.equals("pillar")) {
+				dlg.panelMain.panelHaz.pillarButton.doClick();
+			} else if (str.equals("spar")) {
+				dlg.panelMain.panelHaz.sparButton.doClick();
+			}
+		} else if (keys.containsKey("seamark:beacon_isolated_danger:shape")) {
+				str = keys.get("seamark:beacon_isolated_danger:shape");
+				if (str.equals("tower")) {
+					dlg.panelMain.panelHaz.towerButton.doClick();
+				} else {
+					dlg.panelMain.panelHaz.beaconButton.doClick();
+				}
+		} else if (keys.containsKey("seamark:type")
+				&& (keys.get("seamark:type").equals("light_float"))) {
+			dlg.panelMain.panelHaz.floatButton.doClick();
 		}
 
-		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
-			setStyleIndex(0);
-		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
-
-		if (keys.containsKey("seamark:topmark:shape") //$NON-NLS-1$
-				|| keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
-			setTopMark(true);
-		}
-		
-		refreshLights();
 		parseLights(keys);
 		parseFogRadar(keys);
 
-		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
-		dlg.tfM01Name.setText(getName());
-		dlg.cM01TopMark.setSelected(hasTopMark());
-*/	}
-/*
-	public void refreshLights() {
-		dlg.cbM01Kennung.removeAllItems();
-		dlg.cbM01Kennung.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01Kennung.addItem("Fl(2)"); //$NON-NLS-1$
-		dlg.cbM01Kennung.setSelectedIndex(0);
+//		dlg.cbM01StyleOfMark.setSelectedIndex(getStyleIndex());
+//		dlg.tfM01Name.setText(getName());
+//		dlg.cM01TopMark.setSelected(hasTopMark());
 	}
 
 	public boolean isValid() {
-		return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
+		return (getCategory() != Cat.UNKNOWN_CAT)
+				&& (getShape() != Styl.UNKNOWN_SHAPE);
 	}
 
 	public void setLightColour() {
-		super.setLightColour("W"); //$NON-NLS-1$
+		super.setLightColour("W");
 	}
-*/
+
 	public void paintSign() {
 /*		if (dlg.paintlock)
 			return;

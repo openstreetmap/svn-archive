@@ -25,10 +25,11 @@ public class PanelRadar extends JPanel {
 
 	public PanelRadar() {
 		super();
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 	}
+
+	public void clearSelections() {
+		
+	}
+
 }

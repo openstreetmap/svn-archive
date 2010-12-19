@@ -28,28 +28,28 @@ public class PanelMain extends JPanel {
 	private JLabel radarIcon = null;
 	private JLabel fogIcon = null;
 	private JLabel nameLabel = null;
-	private JTextField nameBox = null;
+	public JTextField nameBox = null;
 	private JButton saveButton = null;
 	public ButtonGroup typeButtons = null;
 	public JRadioButton chanButton = null;
 	public JRadioButton hazButton = null;
 	public JRadioButton specButton = null;
 	public JRadioButton lightsButton = null;
-	private ActionListener alType;
+	private ActionListener alType = null;
 	private ButtonGroup miscButtons = null;
-	private JRadioButton topButton = null;
-	private JRadioButton fogButton = null;
-	private JRadioButton radarButton = null;
-	private JRadioButton litButton = null;
-	private ActionListener alMisc;
+	public JRadioButton topButton = null;
+	public JRadioButton fogButton = null;
+	public JRadioButton radarButton = null;
+	public JRadioButton litButton = null;
+	private ActionListener alMisc = null;
 	public PanelChan panelChan = null;
 	public PanelHaz panelHaz = null;
 	public PanelSpec panelSpec = null;
 	public PanelLights panelLights = null;
-	private PanelTop panelTop = null;
-	private PanelFog panelFog = null;
-	private PanelRadar panelRadar = null;
-	private PanelLit panelLit = null;
+	public PanelTop panelTop = null;
+	public PanelFog panelFog = null;
+	public PanelRadar panelRadar = null;
+	public PanelLit panelLit = null;
 
 	public PanelMain(OSeaMAction dia) {
 
@@ -220,6 +220,20 @@ public class PanelMain extends JPanel {
 		alType.actionPerformed(null);
 		miscButtons.clearSelection();
 		alMisc.actionPerformed(null);
+		shapeIcon.setIcon(null);
+		lightIcon.setIcon(null);
+		topIcon.setIcon(null);
+		reflIcon.setIcon(null);
+		radarIcon.setIcon(null);
+		fogIcon.setIcon(null);
+		panelChan.clearSelections();
+		panelHaz.clearSelections();
+		panelSpec.clearSelections();
+		panelLights.clearSelections();
+		panelTop.clearSelections();
+		panelFog.clearSelections();
+		panelRadar.clearSelections();
+		panelLit.clearSelections();
 	}
 
 	private JRadioButton getChanButton() {

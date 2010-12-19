@@ -31,7 +31,6 @@ import smed.plug.ifc.SmedPluginManager;
 public class OSeaMAction {
 
 	private SmedPluginManager manager;
-	private OSeaMAction dia = null;
 	public PanelMain panelMain = null;
 
 	public SeaMark mark = null;
@@ -62,7 +61,6 @@ public class OSeaMAction {
 	public OSeaMAction(SmedPluginManager mngr) {
 
 		manager = mngr;
-		dia = this;
 		String str = Main.pref.get("mappaint.style.sources");
 		if (!str.contains("dev.openseamap.org")) {
 			if (!str.isEmpty())
@@ -96,7 +94,7 @@ public class OSeaMAction {
 
 		manager.showVisualMessage("");
 		if (ds == null) {
-			manager.showVisualMessage(tr("Active layer contains no OSM data"));
+			manager.showVisualMessage(Messages.getString("NoData"));
 			mark = new MarkUkn(this, null);
 			return;
 		}
@@ -105,13 +103,13 @@ public class OSeaMAction {
 		nodes = selection.size();
 
 		if (nodes == 0) {
-			manager.showVisualMessage(tr("Please select a node"));
+			manager.showVisualMessage(Messages.getString("SelectNode"));
 			mark = new MarkUkn(this, null);
 			return;
 		}
 
 		if (nodes > 1) {
-			manager.showVisualMessage(tr("Please select only one node"));
+			manager.showVisualMessage(Messages.getString("OneNode"));
 			mark = new MarkUkn(this, null);
 			return;
 		}

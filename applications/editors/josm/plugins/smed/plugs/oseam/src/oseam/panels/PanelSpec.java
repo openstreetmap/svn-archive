@@ -42,10 +42,6 @@ public class PanelSpec extends JPanel {
 		super();
 		panelCol = new PanelCol();
 		panelCol.setBounds(new Rectangle(9, 0, 34, 160));
-		initialize();
-	}
-
-	private void initialize() {
 		this.setLayout(null);
 
 		this.add(panelCol, null);
@@ -95,6 +91,10 @@ public class PanelSpec extends JPanel {
 		beaconButton.addActionListener(alShape);
 		towerButton.addActionListener(alShape);
 
+	}
+
+	public void clearSelections() {
+		
 	}
 
 	private JRadioButton getPillarButton() {

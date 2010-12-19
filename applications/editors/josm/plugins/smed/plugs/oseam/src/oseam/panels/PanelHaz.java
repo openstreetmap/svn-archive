@@ -4,26 +4,18 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.Font;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 
 import oseam.Messages;
 import oseam.dialogs.OSeaMAction;
-import oseam.panels.PanelMain;
 import oseam.seamarks.SeaMark.Cat;
 import oseam.seamarks.SeaMark.Col;
 import oseam.seamarks.SeaMark.Styl;
 
-import java.awt.Cursor;
 import java.awt.event.ActionListener;
 
 public class PanelHaz extends JPanel {
@@ -35,6 +27,7 @@ public class PanelHaz extends JPanel {
 	public JRadioButton eastButton = null;
 	public JRadioButton westButton = null;
 	public JRadioButton isolButton = null;
+	private ActionListener alCat = null;
 
 	private ButtonGroup shapeButtons = null;
 	public JRadioButton pillarButton = null;
@@ -42,6 +35,7 @@ public class PanelHaz extends JPanel {
 	public JRadioButton floatButton = null;
 	public JRadioButton beaconButton = null;
 	public JRadioButton towerButton = null;
+	private ActionListener alShape = null;
 
 	public PanelHaz(OSeaMAction dia) {
 		dlg = dia;
@@ -57,12 +51,14 @@ public class PanelHaz extends JPanel {
 		catButtons.add(eastButton);
 		catButtons.add(westButton);
 		catButtons.add(isolButton);
-		ActionListener alCat = new ActionListener() {
+		alCat = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (northButton.isSelected()) {
 					northButton.setBorderPainted(true);
 					dlg.mark.setCategory(Cat.CARD_NORTH);
 					dlg.mark.setColour(Col.BLACK_YELLOW);
+					dlg.panelMain.panelTop.northTopButton.doClick();
+					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				} else {
 					northButton.setBorderPainted(false);
 				}
@@ -70,6 +66,8 @@ public class PanelHaz extends JPanel {
 					southButton.setBorderPainted(true);
 					dlg.mark.setCategory(Cat.CARD_SOUTH);
 					dlg.mark.setColour(Col.YELLOW_BLACK);
+					dlg.panelMain.panelTop.southTopButton.doClick();
+					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				} else {
 					southButton.setBorderPainted(false);
 				}
@@ -77,6 +75,8 @@ public class PanelHaz extends JPanel {
 					eastButton.setBorderPainted(true);
 					dlg.mark.setCategory(Cat.CARD_EAST);
 					dlg.mark.setColour(Col.BLACK_YELLOW_BLACK);
+					dlg.panelMain.panelTop.eastTopButton.doClick();
+					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				} else {
 					eastButton.setBorderPainted(false);
 				}
@@ -84,6 +84,8 @@ public class PanelHaz extends JPanel {
 					westButton.setBorderPainted(true);
 					dlg.mark.setCategory(Cat.CARD_WEST);
 					dlg.mark.setColour(Col.YELLOW_BLACK_YELLOW);
+					dlg.panelMain.panelTop.westTopButton.doClick();
+					dlg.panelMain.panelTop.panelCol.blackButton.doClick();
 				} else {
 					westButton.setBorderPainted(false);
 				}
@@ -107,7 +109,7 @@ public class PanelHaz extends JPanel {
 		shapeButtons.add(floatButton);
 		shapeButtons.add(beaconButton);
 		shapeButtons.add(towerButton);
-		ActionListener alShape = new ActionListener() {
+		alShape = new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				if (pillarButton.isSelected()) {
 				pillarButton.setBorderPainted(true);
@@ -146,6 +148,13 @@ public class PanelHaz extends JPanel {
 		floatButton.addActionListener(alShape);
 		beaconButton.addActionListener(alShape);
 		towerButton.addActionListener(alShape);
+	}
+
+	public void clearSelections() {
+		catButtons.clearSelection();
+		alCat.actionPerformed(null);
+		shapeButtons.clearSelection();
+		alShape.actionPerformed(null);
 	}
 
 	private JRadioButton getNothButton() {

@@ -2,6 +2,8 @@ package oseam.seamarks;
 
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
@@ -81,57 +83,25 @@ public class MarkIsol extends SeaMark {
 			return;
 
 		super.paintSign();
-
-		dlg.sM01StatusBar.setText(getErrMsg());
-
+*/
 		if (isValid()) {
-			dlg.tfM01Name.setEnabled(true);
-			dlg.tfM01Name.setText(getName());
-			dlg.cM01TopMark.setVisible(true);
-			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setVisible(true);
-			dlg.cM01Fog.setVisible(true);
-			dlg.cM01Fired.setVisible(true);
-			if (!isSectored()) {
-				dlg.cbM01Colour.setVisible(false);
-				dlg.lM01Colour.setVisible(false);
-			}
-			dlg.rbM01Fired1.setVisible(false);
-			dlg.rbM01FiredN.setVisible(false);
-			dlg.lM01Height.setVisible(false);
-			dlg.tfM01Height.setVisible(false);
-			dlg.lM01Range.setVisible(false);
-			dlg.tfM01Range.setVisible(false);
-
-			if (isFired()) {
-				switch (getStyleIndex()) {
-				case ISOL_BEACON:
-				case ISOL_TOWER:
-					dlg.lM01Height.setVisible(true);
-					dlg.tfM01Height.setVisible(true);
-					dlg.lM01Range.setVisible(true);
-					dlg.tfM01Range.setVisible(true);
-					break;
-				default:
-				}
-			}
 
 			String image = "/images/Cardinal";
 
-			switch (getStyleIndex()) {
-			case ISOL_PILLAR:
+			switch (getShape()) {
+			case PILLAR:
 				image += "_Pillar_Single";
 				break;
-			case ISOL_SPAR:
+			case SPAR:
 				image += "_Spar_Single";
 				break;
-			case ISOL_BEACON:
+			case BEACON:
 				image += "_Beacon_Single";
 				break;
-			case ISOL_TOWER:
+			case TOWER:
 				image += "_Tower_Single";
 				break;
-			case ISOL_FLOAT:
+			case FLOAT:
 				image += "_Float_Single";
 				break;
 			default:
@@ -139,19 +109,12 @@ public class MarkIsol extends SeaMark {
 
 			if (!image.equals("/images/Cardinal")) {
 				image += ".png";
-				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass()
+						.getResource(image)));
 			} else
-				dlg.lM01Icon.setIcon(null);
-		} else {
-			dlg.tfM01Name.setEnabled(false);
-			dlg.tfM01Name.setText("");
-			dlg.cM01TopMark.setVisible(false);
-			dlg.cM01Radar.setVisible(false);
-			dlg.cM01Racon.setVisible(false);
-			dlg.cM01Fog.setVisible(false);
-			dlg.cM01Fired.setVisible(false);
+				dlg.panelMain.shapeIcon.setIcon(null);
 		}
-*/	}
+	}
 
 	public void saveSign() {
 		Node node = getNode();

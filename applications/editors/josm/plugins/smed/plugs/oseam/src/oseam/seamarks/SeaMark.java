@@ -163,6 +163,16 @@ abstract public class SeaMark {
 		valid = val;
 	}
 
+	private boolean TopMark = false;
+
+	public boolean hasTopMark() {
+		return TopMark;
+	}
+
+	public void setTopMark(boolean topMark) {
+		TopMark = topMark;
+	}
+
 	private boolean Radar = false;
 
 	public boolean hasRadar() {

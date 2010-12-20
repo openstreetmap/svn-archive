@@ -115,30 +115,6 @@ public class MarkCard extends SeaMark {
 		if (dlg.paintlock) return; super.paintSign();
 		 */
 		if (isValid()) {
-			/*
-			dlg.tfM01Name.setEnabled(true); dlg.tfM01Name.setText(getName());
-			dlg.cM01TopMark.setSelected(true);
-			dlg.cM01TopMark.setVisible(true);
-			dlg.cM01TopMark.setEnabled(false);
-			dlg.cM01Radar.setVisible(true); dlg.cM01Racon.setVisible(true);
-			dlg.cM01Fog.setVisible(true); dlg.cM01Fired.setEnabled(true);
-			dlg.cM01Fired.setVisible(true); dlg.tfM01Group.setVisible(false);
-			dlg.lM01Group.setVisible(false); if (!isSectored()) {
-			dlg.cbM01Colour.setVisible(false);
-			dlg.lM01Colour.setVisible(false); }
-			dlg.rbM01Fired1.setVisible(false);
-			dlg.rbM01FiredN.setVisible(false);
-			dlg.lM01Height.setVisible(false);
-			dlg.tfM01Height.setVisible(false);
-			dlg.lM01Range.setVisible(false);
-			dlg.tfM01Range.setVisible(false);
-			
-			if (isFired()) { switch (getStyleIndex()) { case CARD_BEACON:
-			case CARD_TOWER: case CARD_FLOAT:
-			dlg.lM01Height.setVisible(true);
-			dlg.tfM01Height.setVisible(true); dlg.lM01Range.setVisible(true);
-			dlg.tfM01Range.setVisible(true); break; default: } }
-			 */
 			String image = "/images/Cardinal";
 			switch (getShape()) {
 			case PILLAR:

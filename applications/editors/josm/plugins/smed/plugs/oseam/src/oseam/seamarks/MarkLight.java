@@ -2,6 +2,8 @@ package oseam.seamarks;
 
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
 import org.openstreetmap.josm.data.osm.Node;
 
 import oseam.dialogs.OSeaMAction;
@@ -69,46 +71,34 @@ public class MarkLight extends SeaMark {
 /*		if (dlg.paintlock)
 			return;
 		super.paintSign();
-
-		dlg.sM01StatusBar.setText(getErrMsg());
-
+*/
 		if (isValid()) {
-			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setVisible(true);
-			dlg.cM01Fog.setVisible(true);
 
-			dlg.rbM01Fired1.setVisible(true);
-			dlg.rbM01FiredN.setVisible(true);
-			dlg.lM01Height.setVisible(true);
-			dlg.tfM01Height.setVisible(true);
-			dlg.lM01Range.setVisible(true);
-			dlg.tfM01Range.setVisible(true);
-
-			switch (getBuoyIndex()) {
-			case SeaMark.LIGHT_HOUSE:
-				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
+			switch (getCategory()) {
+			case LIGHT_HOUSE:
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
 						"/images/Light_House.png")));
 				break;
 
-			case SeaMark.LIGHT_MAJOR:
-				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
+			case LIGHT_MAJOR:
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
 						"/images/Light_Major.png")));
 				break;
 
-			case SeaMark.LIGHT_MINOR:
-				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
+			case LIGHT_MINOR:
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
 						"/images/Light_Minor.png")));
 				break;
 
-			case SeaMark.LIGHT_VESSEL:
-				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
+			case LIGHT_VESSEL:
+				dlg.panelMain.shapeIcon.setIcon(new ImageIcon(getClass().getResource(
 						"/images/Major_Float.png")));
 				break;
 
 			default:
 			}
 		}
-*/	}
+	}
 
 	public void saveSign() {
 		Node node = getNode();

@@ -2,12 +2,16 @@ package oseam.seamarks;
 
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
+import oseam.seamarks.SeaMark.Cat;
+import oseam.seamarks.SeaMark.Styl;
 
 public class MarkSpec extends SeaMark {
 	public MarkSpec(OSeaMAction dia, Node node) {
@@ -48,29 +52,29 @@ public class MarkSpec extends SeaMark {
 			str = keys.get("seamark:buoy_special_purpose:shape");
 
 			if (str.equals("pillar"))
-				setStyleIndex(SPEC_PILLAR);
+				setStyleIndex(PILLAR);
 			else if (str.equals("can"))
-				setStyleIndex(SPEC_CAN);
+				setStyleIndex(CAN);
 			else if (str.equals("conical"))
-				setStyleIndex(SPEC_CONE);
+				setStyleIndex(CONE);
 			else if (str.equals("spar"))
-				setStyleIndex(SPEC_SPAR);
+				setStyleIndex(SPAR);
 			else if (str.equals("sphere"))
-				setStyleIndex(SPEC_SPHERE);
+				setStyleIndex(SPHERE);
 			else if (str.equals("barrel"))
-				setStyleIndex(SPEC_BARREL);
+				setStyleIndex(BARREL);
 		}
 
 		if (keys.containsKey("seamark:beacon_special_purpose:shape")) {
 			str = keys.get("seamark:beacon_special_purpose:shape");
 			if (str.equals("tower"))
-				setStyleIndex(SPEC_TOWER);
+				setStyleIndex(TOWER);
 			else
-				setStyleIndex(SPEC_BEACON);
+				setStyleIndex(BEACON);
 		}
 
 		if (keys.containsKey("seamark:light_float:colour")) {
-			setStyleIndex(SPEC_FLOAT);
+			setStyleIndex(FLOAT);
 		}
 
 		if ((keys.containsKey("seamark:type") && keys.get("seamark:type").equals(
@@ -79,12 +83,12 @@ public class MarkSpec extends SeaMark {
 				|| keys.containsKey("seamark:beacon_special_purpose:shape")) {
 			if (keys.containsKey("seamark:beacon_special_purpose:shape")
 					&& keys.get("seamark:beacon_special_purpose:shape").equals("tower"))
-				setStyleIndex(SPEC_TOWER);
+				setStyleIndex(TOWER);
 			else
-				setStyleIndex(SPEC_BEACON);
+				setStyleIndex(BEACON);
 		} else if (keys.containsKey("seamark:light_float:colour")
 				&& keys.get("seamark:light_float:colour").equals("yellow"))
-			setStyleIndex(SPEC_FLOAT);
+			setStyleIndex(FLOAT);
 
 		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
 			setStyleIndex(0);
@@ -107,7 +111,6 @@ public class MarkSpec extends SeaMark {
 			}
 		}
 
-		refreshLights();
 		parseLights(keys);
 		parseFogRadar(keys);
 
@@ -115,106 +118,51 @@ public class MarkSpec extends SeaMark {
 		dlg.tfM01Name.setText(getName());
 		dlg.cM01TopMark.setSelected(hasTopMark());
 */	}
-/*
-	public void refreshLights() {
-		super.refreshLights();
-
-		switch (getStyleIndex()) {
-		case SPEC_BARREL:
-			dlg.cM01Fired.setSelected(false);
-			dlg.cM01Fired.setEnabled(false);
-			dlg.cM01TopMark.setEnabled(true);
-			break;
-		default:
-			dlg.cM01Fired.setEnabled(true);
-			dlg.cM01TopMark.setEnabled(true);
-		}
-	}
 
 	public boolean isValid() {
-		return (getBuoyIndex() > 0) && (getStyleIndex() > 0);
+		return (getCategory() != Cat.UNKNOWN_CAT)
+				&& (getShape() != Styl.UNKNOWN_SHAPE);
 	}
 
 	public void setLightColour() {
 		super.setLightColour("W");
 	}
-*/
+
 	public void paintSign() {
 /*		if (dlg.paintlock)
 			return;
 		super.paintSign();
-
-		dlg.sM01StatusBar.setText(getErrMsg());
-
+*/
 		if (isValid()) {
-			dlg.tfM01Name.setEnabled(true);
-			dlg.tfM01Name.setText(getName());
-			dlg.cM01Radar.setVisible(true);
-			dlg.cM01Racon.setVisible(true);
-			dlg.cM01TopMark.setEnabled(true);
-			dlg.cM01TopMark.setVisible(true);
-			if (hasTopMark()) {
-				dlg.cbM01TopMark.setEnabled(true);
-				dlg.cbM01TopMark.setVisible(true);
-			} else {
-				dlg.cbM01TopMark.setVisible(false);
-			}
-			dlg.cM01Fog.setVisible(true);
-			dlg.cM01Fired.setVisible(true);
-			dlg.cM01Fired.setEnabled(true);
-			if (!isSectored()) {
-				dlg.cbM01Colour.setVisible(false);
-				dlg.lM01Colour.setVisible(false);
-			}
-			dlg.rbM01Fired1.setVisible(false);
-			dlg.rbM01FiredN.setVisible(false);
-			dlg.lM01Height.setVisible(false);
-			dlg.tfM01Height.setVisible(false);
-			dlg.lM01Range.setVisible(false);
-			dlg.tfM01Range.setVisible(false);
-
-			if (isFired()) {
-				switch (getStyleIndex()) {
-				case SPEC_FLOAT:
-				case SPEC_BEACON:
-				case SPEC_TOWER:
-					dlg.lM01Height.setVisible(true);
-					dlg.tfM01Height.setVisible(true);
-					dlg.lM01Range.setVisible(true);
-					dlg.tfM01Range.setVisible(true);
-					break;
-				default:
-				}
-			}
 
 			String image = "/images/Special_Purpose";
 
-			switch (getStyleIndex()) {
-			case SPEC_PILLAR:
+			switch (getShape()) {
+			case PILLAR:
 				image += "_Pillar";
 				break;
-			case SPEC_CAN:
+			case CAN:
 				image += "_Can";
 				break;
-			case SPEC_CONE:
+			case CONE:
 				image += "_Cone";
 				break;
-			case SPEC_SPAR:
+			case SPAR:
 				image += "_Spar";
 				break;
-			case SPEC_SPHERE:
+			case SPHERE:
 				image += "_Sphere";
 				break;
-			case SPEC_BARREL:
+			case BARREL:
 				image += "_Barrel";
 				break;
-			case SPEC_FLOAT:
+			case FLOAT:
 				image += "_Float";
 				break;
-			case SPEC_BEACON:
+			case BEACON:
 				image += "_Beacon";
 				break;
-			case SPEC_TOWER:
+			case TOWER:
 				image += "_Tower";
 				break;
 			default:
@@ -222,12 +170,13 @@ public class MarkSpec extends SeaMark {
 
 			if (!image.equals("/images/Special_Purpose")) {
 				image += ".png";
-				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
-				if (hasTopMark()) {
+				dlg.panelMain.topIcon.setIcon(new ImageIcon(getClass()
+						.getResource(image)));
+/*				if (hasTopMark()) {
 					image = "";
-					switch (getStyleIndex()) {
-					case SPEC_PILLAR:
-					case SPEC_SPAR:
+					switch (getShape()) {
+					case PILLAR:
+					case SPAR:
 						switch (getTopMarkIndex()) {
 						case TOP_YELLOW_X:
 							image = "/images/Top_X_Yellow_Buoy.png";
@@ -243,10 +192,10 @@ public class MarkSpec extends SeaMark {
 							break;
 						}
 						break;
-					case SPEC_CAN:
-					case SPEC_CONE:
-					case SPEC_SPHERE:
-					case SPEC_BARREL:
+					case CAN:
+					case CONE:
+					case SPHERE:
+					case BARREL:
 						switch (getTopMarkIndex()) {
 						case TOP_YELLOW_X:
 							image = "/images/Top_X_Yellow_Buoy_Small.png";
@@ -262,8 +211,8 @@ public class MarkSpec extends SeaMark {
 							break;
 						}
 						break;
-					case SPEC_BEACON:
-					case SPEC_TOWER:
+					case BEACON:
+					case TOWER:
 						switch (getTopMarkIndex()) {
 						case TOP_YELLOW_X:
 							image = "/images/Top_X_Yellow_Beacon.png";
@@ -279,7 +228,7 @@ public class MarkSpec extends SeaMark {
 							break;
 						}
 						break;
-					case SPEC_FLOAT:
+					case FLOAT:
 						switch (getTopMarkIndex()) {
 						case TOP_YELLOW_X:
 							image = "/images/Top_X_Yellow_Float.png";
@@ -299,10 +248,10 @@ public class MarkSpec extends SeaMark {
 					if (!image.isEmpty())
 						dlg.lM06Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 				}
-			} else
-				dlg.lM01Icon.setIcon(null);
+*/			} else
+				dlg.panelMain.shapeIcon.setIcon(null);
 		}
-*/	}
+	}
 
 	public void saveSign() {
 		Node node = getNode();

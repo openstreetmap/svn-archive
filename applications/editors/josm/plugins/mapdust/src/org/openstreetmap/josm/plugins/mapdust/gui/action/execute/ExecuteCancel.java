@@ -64,6 +64,7 @@ public class ExecuteCancel extends MapdustExecuteAction {
         setMapdustGUI(mapdustGUI);
     }
 
+
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event != null) {
@@ -115,10 +116,13 @@ public class ExecuteCancel extends MapdustExecuteAction {
                 btnPanel.getBtnInvalidateBugReport().setSelected(false);
                 btnPanel.getBtnReOpenBugReport().setSelected(false);
             }
-            /* dispose dialog */
-            Main.pref.put("mapdust.modify", false);
-            getDialog().dispose();
         }
-    }
 
+        Main.pref.put("mapdust.addBug", true);
+        Main.pref.put("mapdust.modify", false);
+        /* dispose dialog */
+        getDialog().setVisible(false);
+        getDialog().dispose();
+    }
+    
 }

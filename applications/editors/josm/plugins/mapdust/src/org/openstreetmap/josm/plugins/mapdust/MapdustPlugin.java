@@ -78,6 +78,9 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     /** The list of <code>MapdustBug</code> objects */
     private List<MapdustBug> mapdustBugList;
     
+    /** Flag indicating if the list of bugs was empty or not */
+    private boolean wasEmpty;
+    
     /**
      * Builds a new <code>MapDustPlugin</code> object based on the given
      * arguments.
@@ -105,8 +108,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             MapView.removeLayerChangeListener(this);
         } else {
             /* add MapDust dialog window */
-            Shortcut shortcut = Shortcut.registerShortcut("mapdust",
-                    tr("Toggle: {0}", tr("Open MapDust")), KeyEvent.VK_0, 
+            Shortcut shortcut = Shortcut.registerShortcut("mapdust", 
+                    tr("Toggle: {0}", tr("Open MapDust")), KeyEvent.VK_0,
                     Shortcut.GROUP_MENU, Shortcut.SHIFT_DEFAULT);
             String name = "MapDust bug reports";
             String tooltip = "Activates the MapDust bug reporter plugin";
@@ -115,8 +118,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             mapdustGUI.setBounds(newMapFrame.getBounds());
             mapdustGUI.addObserver(this);
             newMapFrame.addToggleDialog(mapdustGUI);
-            MapView.addLayerChangeListener(this);
             MapView.addZoomChangeListener(this);
+            MapView.addLayerChangeListener(this);
             Main.map.mapView.addMouseListener(this);
         }
     }
@@ -134,15 +137,18 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                 this.mapdustBugList = getMapdustBugs();
                 if (getMapdustGUI().isDialogShowing()) {
                     /* updates the views */
-                    updateView();
-                    /* show message if there is not bug in the given area */
-                    if (this.mapdustBugList == null
-                            || this.mapdustBugList.size() == 0) {
-                        String waringMessage = "There is no MapDust bug ";
-                        waringMessage += "in your visible area.";
+                    if ((this.mapdustBugList == null || this.mapdustBugList
+                            .size() == 0) && !wasEmpty) {
+                        updateView();
+                        String waringMessage = "There is no MapDust bug in ";
+                        waringMessage += "your visible area.";
                         JOptionPane.showMessageDialog(Main.parent,
                                 tr(waringMessage), tr("Warning"),
                                 JOptionPane.WARNING_MESSAGE);
+                        wasEmpty = true;
+                    } else {
+                        updateView();
+                        wasEmpty = false;
                     }
                 }
             } catch (MapdustServiceHandlerException e) {
@@ -214,6 +220,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                 mapdustGUI.update(null, this);
             }
             mapdustLayer = null;
+            wasEmpty = false;
         }
     }
     
@@ -222,41 +229,49 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         if (mapdustLayer != null && mapdustLayer.isVisible()
                 && Main.map.mapView.getActiveLayer() == getMapdustLayer()) {
             /* show add bug dialog */
-            if (event.getClickCount() == 2) {
-                mapdustGUI.getPanel().getBtnPanel().getBtnWorkOffline()
-                        .setEnabled(false);
-                mapdustGUI.getPanel().getBtnPanel().getBtnRefresh()
-                        .setEnabled(false);
-                mapdustGUI.getPanel().getBtnPanel().getBtnAddComment()
-                        .setEnabled(false);
-                mapdustGUI.getPanel().getBtnPanel().getBtnFixBugReport()
-                        .setEnabled(false);
-                mapdustGUI.getPanel().getBtnPanel().getBtnInvalidateBugReport()
-                        .setEnabled(false);
-                mapdustGUI.getPanel().getBtnPanel().getBtnReOpenBugReport()
-                        .setEnabled(false);
-                Main.pref.put("mapdust.modify", true);
-                MapdustBug selectedBug = mapdustGUI.getPanel().getSelectedBug();
-                if (selectedBug != null) {
-                    Main.pref.put("selectedBug.status", selectedBug.getStatus()
-                            .getValue());
+            if (event.getButton() == MouseEvent.BUTTON3
+                    && event.getClickCount() == 2) {
+                String mapdustAddBug = Main.pref.get("mapdust.addBug");
+                boolean addBug = Boolean.parseBoolean(mapdustAddBug);
+                if (!addBug) {
+                    mapdustGUI.getPanel().getBtnPanel().getBtnWorkOffline()
+                            .setEnabled(false);
+                    mapdustGUI.getPanel().getBtnPanel().getBtnRefresh()
+                            .setEnabled(false);
+                    mapdustGUI.getPanel().getBtnPanel().getBtnAddComment()
+                            .setEnabled(false);
+                    mapdustGUI.getPanel().getBtnPanel().getBtnFixBugReport()
+                            .setEnabled(false);
+                    mapdustGUI.getPanel().getBtnPanel()
+                            .getBtnInvalidateBugReport().setEnabled(false);
+                    mapdustGUI.getPanel().getBtnPanel().getBtnReOpenBugReport()
+                            .setEnabled(false);
+                    Main.pref.put("mapdust.modify", true);
+                    MapdustBug selectedBug =
+                            mapdustGUI.getPanel().getSelectedBug();
+                    if (selectedBug != null) {
+                        Main.pref.put("selectedBug.status", selectedBug
+                                .getStatus().getValue());
+                    } else {
+                        Main.pref.put("selectedBug.status", "create");
+                    }
+                    String title = "Create bug report";
+                    String iconName = "dialogs/open.png";
+                    String messageText =
+                            "In order to create a new bug report you";
+                    messageText += " need to provide your nickname and a brief";
+                    messageText += " description for the bug.";
+                    Point point = event.getPoint();
+                    CreateIssueDialog dialog =
+                            new CreateIssueDialog(tr(title), iconName,
+                                    tr(messageText), point, this);
+                    dialog.setLocationRelativeTo(null);
+                    dialog.getContentPane().setPreferredSize(dialog.getSize());
+                    dialog.pack();
+                    dialog.setVisible(true);
                 } else {
-                    Main.pref.put("selectedBug.status", "create");
+                    Main.pref.put("mapdust.addBug", false);
                 }
-                String title = "Create bug report";
-                String iconName = "dialogs/open.png";
-                String messageText = "In order to create a new bug report you";
-                messageText += " need to provide your nickname and a brief";
-                messageText += " description for the bug.";
-                Point point = event.getPoint();
-                CreateIssueDialog dialog =
-                        new CreateIssueDialog(tr(title), iconName,
-                                tr(messageText), point, this);
-                dialog.setLocationRelativeTo(null);
-                dialog.getContentPane().setPreferredSize(dialog.getSize());
-                dialog.pack();
-                dialog.setVisible(true);
-                return;
             }
             if (event.getButton() == MouseEvent.BUTTON1) {
                 /* allow click on the bug icon on the map */
@@ -279,11 +294,15 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     private void updateView() {
         /* update the dialog with the new data */
         mapdustGUI.update(mapdustBugList, this);
+        mapdustGUI.revalidate();
         if (mapdustLayer == null) {
             /* create and add the layer */
-            mapdustLayer = new MapdustLayer("MapDust", mapdustGUI, mapdustBugList);
+            mapdustLayer =
+                    new MapdustLayer("MapDust", mapdustGUI, mapdustBugList);
             Main.main.addLayer(mapdustLayer);
             Main.map.mapView.moveLayer(mapdustLayer, 0);
+            ;
+            Main.map.mapView.addMouseListener(this);
             MapView.addLayerChangeListener(this);
             MapView.addZoomChangeListener(this);
         } else {
@@ -294,22 +313,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             mapdustLayer.setBugSelected(null);
         }
         /* repaint */
-        Main.map.mapView.invalidate();
+        Main.map.mapView.revalidate();
         Main.map.repaint();
-        Main.map.mapView.repaint();
-    }
-    
-    /**
-     * Returns the bounds of the current map view.
-     * 
-     * @return A <code>Bounds</code> object
-     */
-    private Bounds getBounds() {
-        MapView mapView = Main.map.mapView;
-        Bounds bounds =
-                new Bounds(mapView.getLatLon(0, mapView.getHeight()),
-                        mapView.getLatLon(mapView.getWidth(), 0));
-        return bounds;
     }
     
     /**
@@ -319,17 +324,13 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     @Override
     public void initialUpdate() {
         if (containsOsmDataLayer()) {
-            Main.worker.execute(new Runnable() {
-                
-                @Override
-                public void run() {
-                    updateData();
-                    
-                }
-            });
+            updateData();
         }
     }
     
+    /**
+     * If the zoom was changed, download the bugs from the current map view.
+     */
     @Override
     public void zoomChanged() {
         updateData();
@@ -387,7 +388,10 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     private List<MapdustBug> getMapdustBugs()
             throws MapdustServiceHandlerException {
         /* get the bounding box */
-        Bounds bounds = getBounds();
+        MapView mapView = Main.map.mapView;
+        Bounds bounds =
+                new Bounds(mapView.getLatLon(0, mapView.getHeight()),
+                        mapView.getLatLon(mapView.getWidth(), 0));
         Double minLon = bounds.getMin().lon();
         Double minLat = bounds.getMin().lat();
         Double maxLon = bounds.getMax().lon();
@@ -424,13 +428,17 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     }
     
     @Override
-    public void mouseEntered(MouseEvent arg0) {}
+    public void mouseEntered(MouseEvent event) {
+
+    }
     
     @Override
     public void mouseExited(MouseEvent arg0) {}
     
     @Override
-    public void mousePressed(MouseEvent arg0) {}
+    public void mousePressed(MouseEvent event) {
+
+    }
     
     @Override
     public void mouseReleased(MouseEvent arg0) {}
@@ -472,6 +480,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     }
     
     /**
+     * Returns the list of <code>MapdustBug</code> objects
+     * 
      * @return the mapdustBugList
      */
     public List<MapdustBug> getMapdustBugList() {
@@ -479,6 +489,8 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     }
     
     /**
+     * Sets the list of <code>MapdustBug</code> objects
+     * 
      * @param mapdustBugList the mapdustBugList to set
      */
     public void setMapdustBugList(List<MapdustBug> mapdustBugList) {

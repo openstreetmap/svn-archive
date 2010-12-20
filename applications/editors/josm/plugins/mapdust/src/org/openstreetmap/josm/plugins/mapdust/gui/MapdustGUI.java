@@ -55,51 +55,51 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * This class is the main graphical user interface class.
- *
+ * 
  * @author Bea
  */
 public class MapdustGUI extends ToggleDialog implements
         MapdustActionListObserver, MapdustBugDetailsObservable,
         MapdustInitialUpdateObservable {
-
+    
     /** The serial version UID */
     private static final long serialVersionUID = 1L;
-
+    
     /** The list of MapDust bug details observers */
     private final ArrayList<MapdustBugDetailsObserver> bugDetailsObservers =
             new ArrayList<MapdustBugDetailsObserver>();
-
+    
     /** The list of MapDust initial update observers */
     private final ArrayList<MapdustInitialUpdateObserver> initialUpdateObservers =
             new ArrayList<MapdustInitialUpdateObserver>();
-
+    
     /** The <code>MapdustPanel</code> object */
     private MapdustPanel panel;
-
+    
     /** The <code>MapdustActionPanel</code> object */
     private MapdustActionPanel queuePanel;
-
+    
     /** The <code>JTabbedPanel</code> object */
     private JTabbedPane tabbedPane;
-
+    
     /** The <code>MapdustPlugin</code> plugin */
     private MapdustPlugin mapdustPlugin;
-
+    
     /** The <code>MapdustBugPropertiesPanel</code> */
     private final MapdustBugPropertiesPanel detailsPanel;
-
+    
     /** The <code>JPanel</code> */
     private JPanel mainPanel;
-
+    
     /**
      * Flag indicating if the MapDust data was downloaded and the view was
      * updated
      */
     private boolean initialUpdate = false;
-
+    
     /**
      * Builds a <code>MapdustGUi</code> based on the given parameters.
-     *
+     * 
      * @param name The name of the GUI
      * @param iconName The name of the icon
      * @param tooltip The tool tip
@@ -148,11 +148,11 @@ public class MapdustGUI extends ToggleDialog implements
             queuePanel = null;
         }
     }
-
+    
     /**
      * Updates the MapDust GUI with the given list of <code>MapdustBug</code>
      * objects.
-     *
+     * 
      * @param mapdustBugs The list of <code>MapdustBug</code> objects
      * @param mapdustPlugin The <code>MapdustPlugin</code> object
      */
@@ -177,11 +177,11 @@ public class MapdustGUI extends ToggleDialog implements
             }
             /* add panels with updated data */
             panel = new MapdustPanel(mapdustBugs, "Bug reports", mapdustPlugin);
-            panel.addObserver(detailsPanel);
             MapdustBug selectedBug =
                     (mapdustBugs != null && mapdustBugs.size() > 0) ? mapdustBugs
                             .get(0) : null;
             notifyObservers(selectedBug);
+            panel.addObserver(detailsPanel);
             mainPanel = new JPanel();
             mainPanel.setAutoscrolls(true);
             mainPanel.setLayout(new BorderLayout());
@@ -209,10 +209,9 @@ public class MapdustGUI extends ToggleDialog implements
             /* add panels with updated data */
             tabbedPane = new JTabbedPane();
             queuePanel = new MapdustActionPanel(list, "Offline Contribution",
-                            mapdustPlugin);
+                    mapdustPlugin);
             panel = new MapdustPanel(mapdustBugs, "Bug reports (offline)",
-                            mapdustPlugin);
-            panel.addObserver(detailsPanel);
+                    mapdustPlugin);
             mainPanel = new JPanel();
             mainPanel.setAutoscrolls(true);
             mainPanel.setLayout(new BorderLayout());
@@ -225,10 +224,10 @@ public class MapdustGUI extends ToggleDialog implements
             add(mainPanel, BorderLayout.CENTER);
         }
     }
-
+    
     /**
      * Adds the given <code>MapdustAction</code> object to the list of actions.
-     *
+     * 
      * @param action The <code>MapdustAction</code> object
      */
     @Override
@@ -237,7 +236,7 @@ public class MapdustGUI extends ToggleDialog implements
         List<MapdustAction> list = queuePanel.getActionList();
         List<MapdustBug> mapdustBugs = panel.getMapdustBugsList();
         mapdustBugs = modifyBug(mapdustBugs, action.getMapdustBug());
-
+        
         /* remove panels */
         mainPanel.remove(detailsPanel);
         tabbedPane.remove(panel);
@@ -259,17 +258,15 @@ public class MapdustGUI extends ToggleDialog implements
         tabbedPane.add(queuePanel);
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         add(mainPanel, BorderLayout.CENTER);
-        /* invalidate and repaint */
-        invalidate();
-        repaint();
+        revalidate();
     }
-
+    
     /**
      * Shows the MapDust main dialog. In the case if the plugin was not updated
      * with the new MapDust data, or the data was not downloaded; it will also
      * download the MapDust data from the current view, and update the plugin
      * with the new data.
-     *
+     * 
      */
     @Override
     public void showDialog() {
@@ -280,12 +277,12 @@ public class MapdustGUI extends ToggleDialog implements
             initialUpdate = true;
         }
     }
-
+    
     /**
      * Modifies the given <code>MapdustBug</code> in the given list of
      * <code>MapdustBug</code> objects. Returns the list of bugs containing the
      * modified bug.
-     *
+     * 
      * @param mapdustBugs The list of <code>MapdustBug</code> objects
      * @param modifiedBug The <code>MapdustBug</code> object
      * @return the modified list
@@ -307,10 +304,10 @@ public class MapdustGUI extends ToggleDialog implements
         }
         return mapdustBugs;
     }
-
+    
     /**
      * Adds a new MapDust bug details observer to the list of observers.
-     *
+     * 
      * @param observer The <code>MapdustBugDetailsObserver</code> object
      */
     @Override
@@ -319,10 +316,10 @@ public class MapdustGUI extends ToggleDialog implements
             this.bugDetailsObservers.add(observer);
         }
     }
-
+    
     /**
      * Adds a new MapDust initial update observer to the list of observers.
-     *
+     * 
      * @param observer The <code>MapdustInitialUpdateObserver</code> object
      */
     @Override
@@ -331,31 +328,31 @@ public class MapdustGUI extends ToggleDialog implements
             this.initialUpdateObservers.add(observer);
         }
     }
-
+    
     /**
      * Removes the given MapDust bug details observer from the list of
      * observers.
-     *
+     * 
      * @param observer The <code>MapdustBugDetailsObserver</code> object
      */
     @Override
     public void removeObserver(MapdustBugDetailsObserver observer) {
         this.bugDetailsObservers.remove(observer);
-
+        
     }
-
+    
     /**
      * Removes the given MapDust initial update observer from the list of
      * observers.
-     *
+     * 
      * @param observer The <code>MapdustInitialUpdateObserver</code> object
      */
     @Override
     public void removeObserver(MapdustInitialUpdateObserver observer) {
         this.initialUpdateObservers.remove(observer);
-
+        
     }
-
+    
     /**
      * Notifies the <code>MapdustBugDetailsObserver</code> objects observing the
      * given <code>MapdustBug</code> object.
@@ -368,7 +365,7 @@ public class MapdustGUI extends ToggleDialog implements
             (elements.next()).showDetails(mapdustBug);
         }
     }
-
+    
     /**
      * Notifies the <code>MapdustInitialUpdateObserver</code> objects waiting
      * for the initial download, and update of plugin.
@@ -381,23 +378,23 @@ public class MapdustGUI extends ToggleDialog implements
             (elements.next()).initialUpdate();
         }
     }
-
+    
     /**
      * Returns the <code>MapdustPanel</code> object
-     *
+     * 
      * @return the panel
      */
     public MapdustPanel getPanel() {
         return panel;
     }
-
+    
     /**
      * Returns the <code>MapdustActionPanel</code> object
-     *
+     * 
      * @return the queuePanel
      */
     public MapdustActionPanel getQueuePanel() {
         return queuePanel;
     }
-
+    
 }

@@ -3,6 +3,8 @@ package oseam.seamarks;
 import java.util.Map;
 
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
@@ -18,69 +20,50 @@ public class MarkSpec extends SeaMark {
 		Map<String, String> keys;
 		keys = getNode().getKeys();
 
-/*		dlg.cbM01TypeOfMark.setSelectedIndex(SPECIAL_PURPOSE);
+		if (!dlg.panelMain.specButton.isSelected())
+			dlg.panelMain.specButton.doClick();
 
-		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.02")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.03")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.08")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.09")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.setVisible(true);
-		dlg.lM01StyleOfMark.setVisible(true);
+		if (keys.containsKey("name"))
+			setName(keys.get("name"));
 
-		dlg.cbM01TopMark.removeAllItems();
-		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.212"));
-		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.210")); //$NON-NLS-1$
-		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.211")); //$NON-NLS-1$
-		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.214")); //$NON-NLS-1$
-		dlg.cbM01TopMark.addItem(Messages.getString("SmpDialogAction.215")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:name"))
+			setName(keys.get("seamark:name"));
 
+		if (keys.containsKey("seamark:buoy_special_purpose:name"))
+			setName(keys.get("seamark:buoy_special_purpose:name"));
+		else if (keys.containsKey("seamark:beacon_special_purpose:name"))
+			setName(keys.get("seamark:beacon_special_purpose:name"));
+		else if (keys.containsKey("seamark:light_float:name"))
+			setName(keys.get("seamark:light_float:name"));
+
+/*
 		dlg.cM01TopMark.setEnabled(true);
 
 		setBuoyIndex(SPECIAL_PURPOSE);
 		setColour(SeaMark.YELLOW);
-		setLightColour("W"); //$NON-NLS-1$
-		setRegion(Main.pref.get("tomsplugin.IALA").equals("B")); //$NON-NLS-1$ //$NON-NLS-2$
+		setLightColour("W");
+		setRegion(Main.pref.get("tomsplugin.IALA").equals("B"));
 
-		if (keys.containsKey("name")) //$NON-NLS-1$
-			setName(keys.get("name")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_special_purpose:shape")) {
+			str = keys.get("seamark:buoy_special_purpose:shape");
 
-		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:name")); //$NON-NLS-1$
-
-		if (keys.containsKey("seamark:buoy_special_purpose:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:buoy_special_purpose:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_special_purpose:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:beacon_special_purpose:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_float:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:light_float:name")); //$NON-NLS-1$
-
-		if (keys.containsKey("seamark:buoy_special_purpose:shape")) { //$NON-NLS-1$
-			str = keys.get("seamark:buoy_special_purpose:shape"); //$NON-NLS-1$
-
-			if (str.equals("pillar")) //$NON-NLS-1$
+			if (str.equals("pillar"))
 				setStyleIndex(SPEC_PILLAR);
-			else if (str.equals("can")) //$NON-NLS-1$
+			else if (str.equals("can"))
 				setStyleIndex(SPEC_CAN);
-			else if (str.equals("conical")) //$NON-NLS-1$
+			else if (str.equals("conical"))
 				setStyleIndex(SPEC_CONE);
-			else if (str.equals("spar")) //$NON-NLS-1$
+			else if (str.equals("spar"))
 				setStyleIndex(SPEC_SPAR);
-			else if (str.equals("sphere")) //$NON-NLS-1$
+			else if (str.equals("sphere"))
 				setStyleIndex(SPEC_SPHERE);
-			else if (str.equals("barrel")) //$NON-NLS-1$
+			else if (str.equals("barrel"))
 				setStyleIndex(SPEC_BARREL);
 		}
 
-		if (keys.containsKey("seamark:beacon_special_purpose:shape")) { //$NON-NLS-1$
-			str = keys.get("seamark:beacon_special_purpose:shape"); //$NON-NLS-1$
-			if (str.equals("tower")) //$NON-NLS-1$
+		if (keys.containsKey("seamark:beacon_special_purpose:shape")) {
+			str = keys.get("seamark:beacon_special_purpose:shape");
+			if (str.equals("tower"))
 				setStyleIndex(SPEC_TOWER);
 			else
 				setStyleIndex(SPEC_BEACON);
@@ -90,36 +73,36 @@ public class MarkSpec extends SeaMark {
 			setStyleIndex(SPEC_FLOAT);
 		}
 
-		if ((keys.containsKey("seamark:type") && keys.get("seamark:type").equals( //$NON-NLS-1$ //$NON-NLS-2$
-				"beacon_special_purpose")) //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_special_purpose:colour") //$NON-NLS-1$
-				|| keys.containsKey("seamark:beacon_special_purpose:shape")) { //$NON-NLS-1$
-			if (keys.containsKey("seamark:beacon_special_purpose:shape") //$NON-NLS-1$
-					&& keys.get("seamark:beacon_special_purpose:shape").equals("tower")) //$NON-NLS-1$ //$NON-NLS-2$
+		if ((keys.containsKey("seamark:type") && keys.get("seamark:type").equals(
+				"beacon_special_purpose"))
+				|| keys.containsKey("seamark:beacon_special_purpose:colour")
+				|| keys.containsKey("seamark:beacon_special_purpose:shape")) {
+			if (keys.containsKey("seamark:beacon_special_purpose:shape")
+					&& keys.get("seamark:beacon_special_purpose:shape").equals("tower"))
 				setStyleIndex(SPEC_TOWER);
 			else
 				setStyleIndex(SPEC_BEACON);
-		} else if (keys.containsKey("seamark:light_float:colour") //$NON-NLS-1$
-				&& keys.get("seamark:light_float:colour").equals("yellow")) //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (keys.containsKey("seamark:light_float:colour")
+				&& keys.get("seamark:light_float:colour").equals("yellow"))
 			setStyleIndex(SPEC_FLOAT);
 
 		if (getStyleIndex() >= dlg.cbM01StyleOfMark.getItemCount())
 			setStyleIndex(0);
 
 		keys = node.getKeys();
-		if (keys.containsKey("seamark:topmark:shape")) { //$NON-NLS-1$
-			str = keys.get("seamark:topmark:shape"); //$NON-NLS-1$
+		if (keys.containsKey("seamark:topmark:shape")) {
+			str = keys.get("seamark:topmark:shape");
 			setTopMark(true);
-			if (str.equals("x-shape")) { //$NON-NLS-1$
-				if (keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
+			if (str.equals("x-shape")) {
+				if (keys.containsKey("seamark:topmark:colour")) {
 					if (keys.get("seamark:topmark:colour").equals("red"))
 						setTopMarkIndex(TOP_RED_X);
 					else
 						setTopMarkIndex(TOP_YELLOW_X);
 				}
-			} else if (str.equals("cone, point up")) { //$NON-NLS-1$
+			} else if (str.equals("cone, point up")) {
 					setTopMarkIndex(TOP_YELLOW_CONE);
-			} else if (str.equals("cylinder")) { //$NON-NLS-1$
+			} else if (str.equals("cylinder")) {
 				setTopMarkIndex(TOP_YELLOW_CAN);
 			}
 		}
@@ -153,7 +136,7 @@ public class MarkSpec extends SeaMark {
 	}
 
 	public void setLightColour() {
-		super.setLightColour("W"); //$NON-NLS-1$
+		super.setLightColour("W");
 	}
 */
 	public void paintSign() {
@@ -204,41 +187,41 @@ public class MarkSpec extends SeaMark {
 				}
 			}
 
-			String image = "/images/Special_Purpose"; //$NON-NLS-1$
+			String image = "/images/Special_Purpose";
 
 			switch (getStyleIndex()) {
 			case SPEC_PILLAR:
-				image += "_Pillar"; //$NON-NLS-1$
+				image += "_Pillar";
 				break;
 			case SPEC_CAN:
-				image += "_Can"; //$NON-NLS-1$
+				image += "_Can";
 				break;
 			case SPEC_CONE:
-				image += "_Cone"; //$NON-NLS-1$
+				image += "_Cone";
 				break;
 			case SPEC_SPAR:
-				image += "_Spar"; //$NON-NLS-1$
+				image += "_Spar";
 				break;
 			case SPEC_SPHERE:
-				image += "_Sphere"; //$NON-NLS-1$
+				image += "_Sphere";
 				break;
 			case SPEC_BARREL:
-				image += "_Barrel"; //$NON-NLS-1$
+				image += "_Barrel";
 				break;
 			case SPEC_FLOAT:
-				image += "_Float"; //$NON-NLS-1$
+				image += "_Float";
 				break;
 			case SPEC_BEACON:
-				image += "_Beacon"; //$NON-NLS-1$
+				image += "_Beacon";
 				break;
 			case SPEC_TOWER:
-				image += "_Tower"; //$NON-NLS-1$
+				image += "_Tower";
 				break;
 			default:
 			}
 
-			if (!image.equals("/images/Special_Purpose")) { //$NON-NLS-1$
-				image += ".png"; //$NON-NLS-1$
+			if (!image.equals("/images/Special_Purpose")) {
+				image += ".png";
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 				if (hasTopMark()) {
 					image = "";
@@ -247,16 +230,16 @@ public class MarkSpec extends SeaMark {
 					case SPEC_SPAR:
 						switch (getTopMarkIndex()) {
 						case TOP_YELLOW_X:
-							image = "/images/Top_X_Yellow_Buoy.png"; //$NON-NLS-1$
+							image = "/images/Top_X_Yellow_Buoy.png";
 							break;
 						case TOP_RED_X:
-							image = "/images/Top_X_Red_Buoy.png"; //$NON-NLS-1$
+							image = "/images/Top_X_Red_Buoy.png";
 							break;
 						case TOP_YELLOW_CAN:
-							image = "/images/Top_Can_Yellow_Buoy.png"; //$NON-NLS-1$
+							image = "/images/Top_Can_Yellow_Buoy.png";
 							break;
 						case TOP_YELLOW_CONE:
-							image = "/images/Top_Cone_Yellow_Buoy.png"; //$NON-NLS-1$
+							image = "/images/Top_Cone_Yellow_Buoy.png";
 							break;
 						}
 						break;
@@ -266,16 +249,16 @@ public class MarkSpec extends SeaMark {
 					case SPEC_BARREL:
 						switch (getTopMarkIndex()) {
 						case TOP_YELLOW_X:
-							image = "/images/Top_X_Yellow_Buoy_Small.png"; //$NON-NLS-1$
+							image = "/images/Top_X_Yellow_Buoy_Small.png";
 							break;
 						case TOP_RED_X:
-							image = "/images/Top_X_Red_Buoy_Small.png"; //$NON-NLS-1$
+							image = "/images/Top_X_Red_Buoy_Small.png";
 							break;
 						case TOP_YELLOW_CAN:
-							image = "/images/Top_Can_Yellow_Buoy_Small.png"; //$NON-NLS-1$
+							image = "/images/Top_Can_Yellow_Buoy_Small.png";
 							break;
 						case TOP_YELLOW_CONE:
-							image = "/images/Top_Cone_Yellow_Buoy_Small.png"; //$NON-NLS-1$
+							image = "/images/Top_Cone_Yellow_Buoy_Small.png";
 							break;
 						}
 						break;
@@ -283,32 +266,32 @@ public class MarkSpec extends SeaMark {
 					case SPEC_TOWER:
 						switch (getTopMarkIndex()) {
 						case TOP_YELLOW_X:
-							image = "/images/Top_X_Yellow_Beacon.png"; //$NON-NLS-1$
+							image = "/images/Top_X_Yellow_Beacon.png";
 							break;
 						case TOP_RED_X:
-							image = "/images/Top_X_Red_Beacon.png"; //$NON-NLS-1$
+							image = "/images/Top_X_Red_Beacon.png";
 							break;
 						case TOP_YELLOW_CAN:
-							image = "/images/Top_Can_Yellow_Beacon.png"; //$NON-NLS-1$
+							image = "/images/Top_Can_Yellow_Beacon.png";
 							break;
 						case TOP_YELLOW_CONE:
-							image = "/images/Top_Cone_Yellow_Beacon.png"; //$NON-NLS-1$
+							image = "/images/Top_Cone_Yellow_Beacon.png";
 							break;
 						}
 						break;
 					case SPEC_FLOAT:
 						switch (getTopMarkIndex()) {
 						case TOP_YELLOW_X:
-							image = "/images/Top_X_Yellow_Float.png"; //$NON-NLS-1$
+							image = "/images/Top_X_Yellow_Float.png";
 							break;
 						case TOP_RED_X:
-							image = "/images/Top_X_Red_Float.png"; //$NON-NLS-1$
+							image = "/images/Top_X_Red_Float.png";
 							break;
 						case TOP_YELLOW_CAN:
-							image = "/images/Top_Can_Yellow_Float.png"; //$NON-NLS-1$
+							image = "/images/Top_Can_Yellow_Float.png";
 							break;
 						case TOP_YELLOW_CONE:
-							image = "/images/Top_Cone_Yellow_Float.png"; //$NON-NLS-1$
+							image = "/images/Top_Cone_Yellow_Float.png";
 							break;
 						}
 						break;
@@ -322,89 +305,89 @@ public class MarkSpec extends SeaMark {
 */	}
 
 	public void saveSign() {
-/*		Node node = getNode();
+		Node node = getNode();
 
 		if (node == null) {
 			return;
 		}
 
-		switch (getStyleIndex()) {
-		case SPEC_PILLAR:
-			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
+		switch (getShape()) {
+		case PILLAR:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:shape", "pillar")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:shape", "pillar"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
-		case SPEC_SPAR:
-			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
+		case SPAR:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:shape", "spar")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:shape", "spar"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
-		case SPEC_CAN:
-			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
+		case CAN:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:shape", "can")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:shape", "can"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
-		case SPEC_CONE:
-			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
+		case CONE:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:shape", "conical")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:shape", "conical"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
-		case SPEC_SPHERE:
-			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
+		case SPHERE:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:shape", "sphere")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:shape", "sphere"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
-		case SPEC_BARREL:
-			super.saveSign("buoy_special_purpose"); //$NON-NLS-1$
+		case BARREL:
+			super.saveSign("buoy_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:shape", "barrel")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:shape", "barrel"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_special_purpose:colour", "yellow"));
 			break;
-		case SPEC_FLOAT:
-			super.saveSign("light_float"); //$NON-NLS-1$
+		case FLOAT:
+			super.saveSign("light_float");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:light_float:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:light_float:colour", "yellow"));
 			break;
-		case SPEC_BEACON:
-			super.saveSign("beacon_special_purpose"); //$NON-NLS-1$
+		case BEACON:
+			super.saveSign("beacon_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:beacon_special_purpose:colour", "yellow"));
 			break;
-		case SPEC_TOWER:
-			super.saveSign("beacon_special_purpose"); //$NON-NLS-1$
+		case TOWER:
+			super.saveSign("beacon_special_purpose");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_special_purpose:shape", "tower")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:beacon_special_purpose:shape", "tower"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_special_purpose:colour", "yellow")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:beacon_special_purpose:colour", "yellow"));
 			break;
 		default:
 		}
-		switch (getTopMarkIndex()) {
+/*		switch (getTopMarkIndex()) {
 		case TOP_YELLOW_X:
-			saveTopMarkData("x-shape", "yellow"); //$NON-NLS-1$ //$NON-NLS-2$
+			saveTopMarkData("x-shape", "yellow");
 			break;
 		case TOP_RED_X:
-			saveTopMarkData("x-shape", "red"); //$NON-NLS-1$ //$NON-NLS-2$
+			saveTopMarkData("x-shape", "red");
 			break;
 		case TOP_YELLOW_CAN:
-			saveTopMarkData("cylinder", "yellow"); //$NON-NLS-1$ //$NON-NLS-2$
+			saveTopMarkData("cylinder", "yellow");
 			break;
 		case TOP_YELLOW_CONE:
-			saveTopMarkData("cone, point up", "yellow"); //$NON-NLS-1$ //$NON-NLS-2$
+			saveTopMarkData("cone, point up", "yellow");
 			break;
 		}
-		saveLightData(); //$NON-NLS-1$
+*/		saveLightData();
 		saveRadarFogData();
-*/	}
+	}
 }

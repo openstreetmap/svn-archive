@@ -22,12 +22,12 @@ public class PanelMain extends JPanel {
 
 	private OSeaMAction dlg;
 	public JLabel shapeIcon = null;
-	private JLabel lightIcon = null;
-	private JLabel topIcon = null;
-	private JLabel reflIcon = null;
-	private JLabel radarIcon = null;
-	private JLabel fogIcon = null;
-	private JLabel nameLabel = null;
+	public JLabel lightIcon = null;
+	public JLabel topIcon = null;
+	public JLabel reflIcon = null;
+	public JLabel radarIcon = null;
+	public JLabel fogIcon = null;
+	public JLabel nameLabel = null;
 	public JTextField nameBox = null;
 	private JButton saveButton = null;
 	public ButtonGroup typeButtons = null;

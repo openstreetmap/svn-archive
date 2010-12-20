@@ -3,6 +3,8 @@ package oseam.seamarks;
 import java.util.Map;
 
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.dialogs.OSeaMAction;
 
@@ -16,83 +18,63 @@ public class MarkLat extends SeaMark {
 		String str;
 		Map<String, String> keys;
 		keys = getNode().getKeys();
-/*
-		dlg.cbM01TypeOfMark.setSelectedIndex(LATERAL);
 
-		dlg.cbM01CatOfMark.removeAllItems();
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.152")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.153")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.154")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.155")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.156")); //$NON-NLS-1$
+		if (!dlg.panelMain.chanButton.isSelected())
+			dlg.panelMain.chanButton.doClick();
 
-		dlg.rbM01RegionA.setEnabled(true);
-		dlg.rbM01RegionB.setEnabled(true);
-		dlg.cbM01CatOfMark.setEnabled(true);
-		dlg.cbM01CatOfMark.setVisible(true);
-		dlg.lM01CatOfMark.setVisible(true);
+		if (keys.containsKey("name"))
+			setName(keys.get("name"));
 
-		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.212")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
-		dlg.cbM01StyleOfMark.setEnabled(true);
+		if (keys.containsKey("seamark:name"))
+			setName(keys.get("seamark:name"));
 
-		if (keys.containsKey("name")) //$NON-NLS-1$
-			setName(keys.get("name")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_lateral:name"))
+			setName(keys.get("seamark:buoy_lateral:name"));
+		else if (keys.containsKey("seamark:beacon_lateral:name"))
+			setName(keys.get("seamark:beacon_lateral:name"));
+		else if (keys.containsKey("seamark:light_float:name"))
+			setName(keys.get("seamark:light_float:name"));
 
-		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:name")); //$NON-NLS-1$
+		String cat = "";
+		String col = "";
+		String top = "";
 
-		if (keys.containsKey("seamark:buoy_lateral:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:buoy_lateral:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_lateral:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:beacon_lateral:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_float:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:light_float:name")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_lateral:category"))
+			cat = keys.get("seamark:buoy_lateral:category");
+		else if (keys.containsKey("seamark:beacon_lateral:category"))
+			cat = keys.get("seamark:beacon_lateral:category");
 
-		String cat = ""; //$NON-NLS-1$
-		String col = ""; //$NON-NLS-1$
-		String top = ""; //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_lateral:colour"))
+			col = keys.get("seamark:buoy_lateral:colour");
+		else if (keys.containsKey("seamark:beacon_lateral:colour"))
+			col = keys.get("seamark:beacon_lateral:colour");
+		else if (keys.containsKey("seamark:light_float:colour"))
+			col = keys.get("seamark:light_float:colour");
 
-		if (keys.containsKey("seamark:buoy_lateral:category")) //$NON-NLS-1$
-			cat = keys.get("seamark:buoy_lateral:category"); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_lateral:category")) //$NON-NLS-1$
-			cat = keys.get("seamark:beacon_lateral:category"); //$NON-NLS-1$
-
-		if (keys.containsKey("seamark:buoy_lateral:colour")) //$NON-NLS-1$
-			col = keys.get("seamark:buoy_lateral:colour"); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:beacon_lateral:colour")) //$NON-NLS-1$
-			col = keys.get("seamark:beacon_lateral:colour"); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_float:colour")) //$NON-NLS-1$
-			col = keys.get("seamark:light_float:colour"); //$NON-NLS-1$
-
-		if (getStyleIndex() != LAT_PERCH) {
-			if (keys.containsKey("seamark:topmark:shape")) { //$NON-NLS-1$
-				top = keys.get("seamark:topmark:shape"); //$NON-NLS-1$
-				setTopMark(true);
+		if (getShape() != Styl.PERCH) {
+			if (keys.containsKey("seamark:topmark:shape")) {
+				top = keys.get("seamark:topmark:shape");
+//				setTopMark(true);
 			}
-			if (keys.containsKey("seamark:topmark:colour")) { //$NON-NLS-1$
+			if (keys.containsKey("seamark:topmark:colour")) {
 				if (col.isEmpty()) col = keys.get("seamark:topmark:colour");
-				setTopMark(true);
+//				setTopMark(true);
 			}
 		}
 		
 		if (col.isEmpty()) {
-			if (keys.containsKey("seamark:light:colour")) //$NON-NLS-1$
-				col = keys.get("seamark:light:colour"); //$NON-NLS-1$
+			if (keys.containsKey("seamark:light:colour"))
+				col = keys.get("seamark:light:colour");
 		}
 
-		if (cat.isEmpty()) { //$NON-NLS-1$
-			if (col.equals("red")) { //$NON-NLS-1$
+		/*
+		if (cat.isEmpty()) {
+			if (col.equals("red")) {
 				setColour(RED);
-				if (top.equals("cylinder")) { //$NON-NLS-1$
+				if (top.equals("cylinder")) {
 					setBuoyIndex(PORT_HAND);
 					setRegion(IALA_A);
-				} else if (top.equals("cone, point up")) { //$NON-NLS-1$
+				} else if (top.equals("cone, point up")) {
 					setBuoyIndex(STARBOARD_HAND);
 					setRegion(IALA_B);
 				} else {
@@ -101,12 +83,12 @@ public class MarkLat extends SeaMark {
 					else
 						setBuoyIndex(STARBOARD_HAND);
 				}
-			} else if (col.equals("green")) { //$NON-NLS-1$
+			} else if (col.equals("green")) {
 				setColour(GREEN);
-				if (top.equals("cone, point up")) { //$NON-NLS-1$
+				if (top.equals("cone, point up")) {
 					setBuoyIndex(STARBOARD_HAND);
 					setRegion(IALA_A);
-				} else if (top.equals("cylinder")) { //$NON-NLS-1$
+				} else if (top.equals("cylinder")) {
 					setBuoyIndex(PORT_HAND);
 					setRegion(IALA_B);
 				} else {
@@ -115,12 +97,12 @@ public class MarkLat extends SeaMark {
 					else
 						setBuoyIndex(PORT_HAND);
 				}
-			} else if (col.equals("red;green;red")) { //$NON-NLS-1$
+			} else if (col.equals("red;green;red")) {
 				setColour(RED_GREEN_RED);
-				if (top.equals("cylinder")) { //$NON-NLS-1$
+				if (top.equals("cylinder")) {
 					setBuoyIndex(PREF_PORT_HAND);
 					setRegion(IALA_A);
-				} else if (top.equals("cone, point up")) { //$NON-NLS-1$
+				} else if (top.equals("cone, point up")) {
 					setBuoyIndex(PREF_STARBOARD_HAND);
 					setRegion(IALA_B);
 				} else {
@@ -129,12 +111,12 @@ public class MarkLat extends SeaMark {
 					else
 						setBuoyIndex(PREF_STARBOARD_HAND);
 				}
-			} else if (col.equals("green;red;green")) { //$NON-NLS-1$
+			} else if (col.equals("green;red;green")) {
 				setColour(GREEN_RED_GREEN);
-				if (top.equals("cone, point up")) { //$NON-NLS-1$
+				if (top.equals("cone, point up")) {
 					setBuoyIndex(PREF_STARBOARD_HAND);
 					setRegion(IALA_A);
-				} else if (top.equals("cylinder")) { //$NON-NLS-1$
+				} else if (top.equals("cylinder")) {
 					setBuoyIndex(PREF_PORT_HAND);
 					setRegion(IALA_B);
 				} else {
@@ -144,14 +126,14 @@ public class MarkLat extends SeaMark {
 						setBuoyIndex(PREF_PORT_HAND);
 				}
 			}
-		} else if (cat.equals("port")) { //$NON-NLS-1$
+		} else if (cat.equals("port")) {
 
 			setBuoyIndex(PORT_HAND);
 
-			if (col.equals("red")) { //$NON-NLS-1$
+			if (col.equals("red")) {
 				setRegion(IALA_A);
 				setColour(RED);
-			} else if (col.equals("green")) { //$NON-NLS-1$
+			} else if (col.equals("green")) {
 				setRegion(IALA_B);
 				setColour(GREEN);
 			} else {
@@ -160,14 +142,14 @@ public class MarkLat extends SeaMark {
 				else
 					setColour(GREEN);
 			}
-		} else if (cat.equals("starboard")) { //$NON-NLS-1$
+		} else if (cat.equals("starboard")) {
 
 			setBuoyIndex(STARBOARD_HAND);
 
-			if (col.equals("green")) { //$NON-NLS-1$
+			if (col.equals("green")) {
 				setRegion(IALA_A);
 				setColour(GREEN);
-			} else if (col.equals("red")) { //$NON-NLS-1$
+			} else if (col.equals("red")) {
 				setRegion(IALA_B);
 				setColour(RED);
 			} else {
@@ -176,14 +158,14 @@ public class MarkLat extends SeaMark {
 				else
 					setColour(RED);
 			}
-		} else if (cat.equals("preferred_channel_port")) { //$NON-NLS-1$
+		} else if (cat.equals("preferred_channel_port")) {
 
 			setBuoyIndex(PREF_PORT_HAND);
 
-			if (col.equals("red;green;red")) { //$NON-NLS-1$
+			if (col.equals("red;green;red")) {
 				setRegion(IALA_A);
 				setColour(RED_GREEN_RED);
-			} else if (col.equals("green;red;green")) { //$NON-NLS-1$
+			} else if (col.equals("green;red;green")) {
 				setRegion(IALA_B);
 				setColour(GREEN_RED_GREEN);
 			} else {
@@ -193,14 +175,14 @@ public class MarkLat extends SeaMark {
 					setColour(GREEN_RED_GREEN);
 			}
 
-		} else if (cat.equals("preferred_channel_starboard")) { //$NON-NLS-1$
+		} else if (cat.equals("preferred_channel_starboard")) {
 
 			setBuoyIndex(PREF_STARBOARD_HAND);
 
-			if (col.equals("green;red;green")) { //$NON-NLS-1$
+			if (col.equals("green;red;green")) {
 				setRegion(IALA_A);
 				setColour(GREEN_RED_GREEN);
-			} else if (col.equals("red;green;red")) { //$NON-NLS-1$
+			} else if (col.equals("red;green;red")) {
 				setRegion(IALA_B);
 				setColour(RED_GREEN_RED);
 			} else {
@@ -211,59 +193,59 @@ public class MarkLat extends SeaMark {
 			}
 		}
 
-		if (keys.containsKey("seamark:buoy_lateral:shape")) { //$NON-NLS-1$
-			str = keys.get("seamark:buoy_lateral:shape"); //$NON-NLS-1$
+		if (keys.containsKey("seamark:buoy_lateral:shape")) {
+			str = keys.get("seamark:buoy_lateral:shape");
 
 			switch (getBuoyIndex()) {
 			case PORT_HAND:
-				if (str.equals("can")) //$NON-NLS-1$
+				if (str.equals("can"))
 					setStyleIndex(LAT_CAN);
-				else if (str.equals("pillar")) //$NON-NLS-1$
+				else if (str.equals("pillar"))
 					setStyleIndex(LAT_PILLAR);
-				else if (str.equals("spar")) //$NON-NLS-1$
+				else if (str.equals("spar"))
 					setStyleIndex(LAT_SPAR);
 				break;
 
 			case PREF_PORT_HAND:
-				if (str.equals("can")) //$NON-NLS-1$
+				if (str.equals("can"))
 					setStyleIndex(LAT_CAN);
-				else if (str.equals("pillar")) //$NON-NLS-1$
+				else if (str.equals("pillar"))
 					setStyleIndex(LAT_PILLAR);
-				else if (str.equals("spar")) //$NON-NLS-1$
+				else if (str.equals("spar"))
 					setStyleIndex(LAT_SPAR);
 				break;
 
 			case STARBOARD_HAND:
-				if (str.equals("conical")) //$NON-NLS-1$
+				if (str.equals("conical"))
 					setStyleIndex(LAT_CONE);
-				else if (str.equals("pillar")) //$NON-NLS-1$
+				else if (str.equals("pillar"))
 					setStyleIndex(LAT_PILLAR);
-				else if (str.equals("spar")) //$NON-NLS-1$
+				else if (str.equals("spar"))
 					setStyleIndex(LAT_SPAR);
 				break;
 
 			case PREF_STARBOARD_HAND:
-				if (str.equals("conical")) //$NON-NLS-1$
+				if (str.equals("conical"))
 					setStyleIndex(LAT_CONE);
-				else if (str.equals("pillar")) //$NON-NLS-1$
+				else if (str.equals("pillar"))
 					setStyleIndex(LAT_PILLAR);
-				else if (str.equals("spar")) //$NON-NLS-1$
+				else if (str.equals("spar"))
 					setStyleIndex(LAT_SPAR);
 				break;
 			}
-		} else if (keys.containsKey("seamark:beacon_lateral:shape")) { //$NON-NLS-1$
-			str = keys.get("seamark:beacon_lateral:shape"); //$NON-NLS-1$
-			if (str.equals("tower")) //$NON-NLS-1$
+		} else if (keys.containsKey("seamark:beacon_lateral:shape")) {
+			str = keys.get("seamark:beacon_lateral:shape");
+			if (str.equals("tower"))
 				setStyleIndex(LAT_TOWER);
-			else if (str.equals("perch")) //$NON-NLS-1$
+			else if (str.equals("perch"))
 				setStyleIndex(LAT_PERCH);
 			else
 				setStyleIndex(LAT_BEACON);
-		} else if (keys.containsKey("seamark:type") //$NON-NLS-1$
-				&& (keys.get("seamark:type").equals("beacon_lateral"))) { //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (keys.containsKey("seamark:type")
+				&& (keys.get("seamark:type").equals("beacon_lateral"))) {
 			setStyleIndex(LAT_BEACON);
-		} else if (keys.containsKey("seamark:type") //$NON-NLS-1$
-				&& (keys.get("seamark:type").equals("light_float"))) { //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (keys.containsKey("seamark:type")
+				&& (keys.get("seamark:type").equals("light_float"))) {
 			setStyleIndex(LAT_FLOAT);
 		}
 
@@ -284,42 +266,42 @@ public class MarkLat extends SeaMark {
 		int style = getStyleIndex();
 
 		dlg.cbM01StyleOfMark.removeAllItems();
-		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.213")); //$NON-NLS-1$
+		dlg.cbM01StyleOfMark.addItem(Messages.getString("SmpDialogAction.213"));
 
 		switch (type) {
 		case PORT_HAND:
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.02")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.10")); //$NON-NLS-1$
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.02"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.10"));
 			break;
 		case STARBOARD_HAND:
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.03")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.10")); //$NON-NLS-1$
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.03"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.10"));
 			break;
 		case PREF_PORT_HAND:
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.02")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.02"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07"));
 			break;
 		case PREF_STARBOARD_HAND:
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.03")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06")); //$NON-NLS-1$
-			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07")); //$NON-NLS-1$
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.03"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.01"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.04"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.05"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.06"));
+			dlg.cbM01StyleOfMark.addItem(Messages.getString("Buoy.07"));
 			break;
 		}
 
@@ -342,14 +324,14 @@ public class MarkLat extends SeaMark {
 	public void setLightColour() {
 		if (getRegion() == IALA_A) {
 			if (getBuoyIndex() == PORT_HAND || getBuoyIndex() == PREF_PORT_HAND)
-				super.setLightColour("R"); //$NON-NLS-1$
+				super.setLightColour("R");
 			else
-				super.setLightColour("G"); //$NON-NLS-1$
+				super.setLightColour("G");
 		} else {
 			if (getBuoyIndex() == PORT_HAND || getBuoyIndex() == PREF_PORT_HAND)
-				super.setLightColour("G"); //$NON-NLS-1$
+				super.setLightColour("G");
 			else
-				super.setLightColour("R"); //$NON-NLS-1$
+				super.setLightColour("R");
 		}
 	}
 */
@@ -410,57 +392,57 @@ public class MarkLat extends SeaMark {
 				}
 			}
 
-			String image = "/images/Lateral"; //$NON-NLS-1$
+			String image = "/images/Lateral";
 
 			switch (getBuoyIndex()) {
 			case PORT_HAND:
 				if (region == IALA_A)
 					switch (style) {
 					case LAT_CAN:
-						image += "_Can_Red"; //$NON-NLS-1$
+						image += "_Can_Red";
 						break;
 					case LAT_PILLAR:
-						image += "_Pillar_Red"; //$NON-NLS-1$
+						image += "_Pillar_Red";
 						break;
 					case LAT_SPAR:
-						image += "_Spar_Red"; //$NON-NLS-1$
+						image += "_Spar_Red";
 						break;
 					case LAT_BEACON:
-						image += "_Beacon_Red"; //$NON-NLS-1$
+						image += "_Beacon_Red";
 						break;
 					case LAT_TOWER:
-						image += "_Tower_Red"; //$NON-NLS-1$
+						image += "_Tower_Red";
 						break;
 					case LAT_FLOAT:
-						image += "_Float_Red"; //$NON-NLS-1$
+						image += "_Float_Red";
 						break;
 					case LAT_PERCH:
-						image += "_Perch_Port"; //$NON-NLS-1$
+						image += "_Perch_Port";
 						break;
 					default:
 					}
 				else
 					switch (style) {
 					case LAT_CAN:
-						image += "_Can_Green"; //$NON-NLS-1$
+						image += "_Can_Green";
 						break;
 					case LAT_PILLAR:
-						image += "_Pillar_Green"; //$NON-NLS-1$
+						image += "_Pillar_Green";
 						break;
 					case LAT_SPAR:
-						image += "_Spar_Green"; //$NON-NLS-1$
+						image += "_Spar_Green";
 						break;
 					case LAT_BEACON:
-						image += "_Beacon_Green"; //$NON-NLS-1$
+						image += "_Beacon_Green";
 						break;
 					case LAT_TOWER:
-						image += "_Tower_Green"; //$NON-NLS-1$
+						image += "_Tower_Green";
 						break;
 					case LAT_FLOAT:
-						image += "_Float_Green"; //$NON-NLS-1$
+						image += "_Float_Green";
 						break;
 					case LAT_PERCH:
-						image += "_Perch_Port"; //$NON-NLS-1$
+						image += "_Perch_Port";
 						break;
 					default:
 					}
@@ -470,50 +452,50 @@ public class MarkLat extends SeaMark {
 				if (region == IALA_A)
 					switch (style) {
 					case LAT_CONE:
-						image += "_Cone_Green"; //$NON-NLS-1$
+						image += "_Cone_Green";
 						break;
 					case LAT_PILLAR:
-						image += "_Pillar_Green"; //$NON-NLS-1$
+						image += "_Pillar_Green";
 						break;
 					case LAT_SPAR:
-						image += "_Spar_Green"; //$NON-NLS-1$
+						image += "_Spar_Green";
 						break;
 					case LAT_BEACON:
-						image += "_Beacon_Green"; //$NON-NLS-1$
+						image += "_Beacon_Green";
 						break;
 					case LAT_TOWER:
-						image += "_Tower_Green"; //$NON-NLS-1$
+						image += "_Tower_Green";
 						break;
 					case LAT_FLOAT:
-						image += "_Float_Green"; //$NON-NLS-1$
+						image += "_Float_Green";
 						break;
 					case LAT_PERCH:
-						image += "_Perch_Starboard"; //$NON-NLS-1$
+						image += "_Perch_Starboard";
 						break;
 					default:
 					}
 				else
 					switch (style) {
 					case LAT_CONE:
-						image += "_Cone_Red"; //$NON-NLS-1$
+						image += "_Cone_Red";
 						break;
 					case LAT_PILLAR:
-						image += "_Pillar_Red"; //$NON-NLS-1$
+						image += "_Pillar_Red";
 						break;
 					case LAT_SPAR:
-						image += "_Spar_Red"; //$NON-NLS-1$
+						image += "_Spar_Red";
 						break;
 					case LAT_BEACON:
-						image += "_Beacon_Red"; //$NON-NLS-1$
+						image += "_Beacon_Red";
 						break;
 					case LAT_TOWER:
-						image += "_Tower_Red"; //$NON-NLS-1$
+						image += "_Tower_Red";
 						break;
 					case LAT_FLOAT:
-						image += "_Float_Red"; //$NON-NLS-1$
+						image += "_Float_Red";
 						break;
 					case LAT_PERCH:
-						image += "_Perch_Starboard"; //$NON-NLS-1$
+						image += "_Perch_Starboard";
 						break;
 					default:
 					}
@@ -523,44 +505,44 @@ public class MarkLat extends SeaMark {
 				if (region == IALA_A)
 					switch (style) {
 					case LAT_CAN:
-						image += "_Can_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Can_Red_Green_Red";
 						break;
 					case LAT_PILLAR:
-						image += "_Pillar_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Pillar_Red_Green_Red";
 						break;
 					case LAT_SPAR:
-						image += "_Spar_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Spar_Red_Green_Red";
 						break;
 					case LAT_BEACON:
-						image += "_Beacon_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Beacon_Red_Green_Red";
 						break;
 					case LAT_TOWER:
-						image += "_Tower_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Tower_Red_Green_Red";
 						break;
 					case LAT_FLOAT:
-						image += "_Float_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Float_Red_Green_Red";
 						break;
 					default:
 					}
 				else
 					switch (style) {
 					case LAT_CAN:
-						image += "_Can_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Can_Green_Red_Green";
 						break;
 					case LAT_PILLAR:
-						image += "_Pillar_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Pillar_Green_Red_Green";
 						break;
 					case LAT_SPAR:
-						image += "_Spar_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Spar_Green_Red_Green";
 						break;
 					case LAT_BEACON:
-						image += "_Beacon_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Beacon_Green_Red_Green";
 						break;
 					case LAT_TOWER:
-						image += "_Tower_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Tower_Green_Red_Green";
 						break;
 					case LAT_FLOAT:
-						image += "_Float_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Float_Green_Red_Green";
 						break;
 					default:
 					}
@@ -570,44 +552,44 @@ public class MarkLat extends SeaMark {
 				if (region == IALA_A)
 					switch (style) {
 					case LAT_CONE:
-						image += "_Cone_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Cone_Green_Red_Green";
 						break;
 					case LAT_PILLAR:
-						image += "_Pillar_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Pillar_Green_Red_Green";
 						break;
 					case LAT_SPAR:
-						image += "_Spar_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Spar_Green_Red_Green";
 						break;
 					case LAT_BEACON:
-						image += "_Beacon_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Beacon_Green_Red_Green";
 						break;
 					case LAT_TOWER:
-						image += "_Tower_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Tower_Green_Red_Green";
 						break;
 					case LAT_FLOAT:
-						image += "_Float_Green_Red_Green"; //$NON-NLS-1$
+						image += "_Float_Green_Red_Green";
 						break;
 					default:
 					}
 				else
 					switch (style) {
 					case LAT_CONE:
-						image += "_Cone_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Cone_Red_Green_Red";
 						break;
 					case LAT_PILLAR:
-						image += "_Pillar_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Pillar_Red_Green_Red";
 						break;
 					case LAT_SPAR:
-						image += "_Spar_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Spar_Red_Green_Red";
 						break;
 					case LAT_BEACON:
-						image += "_Beacon_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Beacon_Red_Green_Red";
 						break;
 					case LAT_TOWER:
-						image += "_Tower_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Tower_Red_Green_Red";
 						break;
 					case LAT_FLOAT:
-						image += "_Float_Red_Green_Red"; //$NON-NLS-1$
+						image += "_Float_Red_Green_Red";
 						break;
 					default:
 					}
@@ -616,9 +598,9 @@ public class MarkLat extends SeaMark {
 			default:
 			}
 
-			if (!image.equals("/images/Lateral")) { //$NON-NLS-1$
+			if (!image.equals("/images/Lateral")) {
 
-				image += ".png"; //$NON-NLS-1$
+				image += ".png";
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 
 				if (hasTopMark()) {
@@ -629,35 +611,35 @@ public class MarkLat extends SeaMark {
 						if (region == IALA_A)
 							switch (style) {
 							case LAT_CAN:
-								image = "/images/Top_Can_Red_Buoy_Small.png"; //$NON-NLS-1$
+								image = "/images/Top_Can_Red_Buoy_Small.png";
 								break;
 							case LAT_PILLAR:
 							case LAT_SPAR:
-								image = "/images/Top_Can_Red_Buoy.png"; //$NON-NLS-1$
+								image = "/images/Top_Can_Red_Buoy.png";
 								break;
 							case LAT_BEACON:
 							case LAT_TOWER:
-								image = "/images/Top_Can_Red_Beacon.png"; //$NON-NLS-1$
+								image = "/images/Top_Can_Red_Beacon.png";
 								break;
 							case LAT_FLOAT:
-								image = "/images/Top_Can_Red_Float.png"; //$NON-NLS-1$
+								image = "/images/Top_Can_Red_Float.png";
 								break;
 							}
 						else
 							switch (style) {
 							case LAT_CAN:
-								image = "/images/Top_Can_Green_Buoy_Small.png"; //$NON-NLS-1$
+								image = "/images/Top_Can_Green_Buoy_Small.png";
 								break;
 							case LAT_PILLAR:
 							case LAT_SPAR:
-								image = "/images/Top_Can_Green_Buoy.png"; //$NON-NLS-1$
+								image = "/images/Top_Can_Green_Buoy.png";
 								break;
 							case LAT_BEACON:
 							case LAT_TOWER:
-								image = "/images/Top_Can_Green_Beacon.png"; //$NON-NLS-1$
+								image = "/images/Top_Can_Green_Beacon.png";
 								break;
 							case LAT_FLOAT:
-								image = "/images/Top_Can_Green_Float.png"; //$NON-NLS-1$
+								image = "/images/Top_Can_Green_Float.png";
 								break;
 							}
 						break;
@@ -667,35 +649,35 @@ public class MarkLat extends SeaMark {
 						if (region == IALA_A)
 							switch (style) {
 							case LAT_CONE:
-								image = "/images/Top_Cone_Green_Buoy_Small.png"; //$NON-NLS-1$
+								image = "/images/Top_Cone_Green_Buoy_Small.png";
 								break;
 							case LAT_PILLAR:
 							case LAT_SPAR:
-								image = "/images/Top_Cone_Green_Buoy.png"; //$NON-NLS-1$
+								image = "/images/Top_Cone_Green_Buoy.png";
 								break;
 							case LAT_BEACON:
 							case LAT_TOWER:
-								image = "/images/Top_Cone_Green_Beacon.png"; //$NON-NLS-1$
+								image = "/images/Top_Cone_Green_Beacon.png";
 								break;
 							case LAT_FLOAT:
-								image = "/images/Top_Cone_Green_Float.png"; //$NON-NLS-1$
+								image = "/images/Top_Cone_Green_Float.png";
 								break;
 							}
 						else
 							switch (style) {
 							case LAT_CONE:
-								image = "/images/Top_Cone_Red_Buoy_Small.png"; //$NON-NLS-1$
+								image = "/images/Top_Cone_Red_Buoy_Small.png";
 								break;
 							case LAT_PILLAR:
 							case LAT_SPAR:
-								image = "/images/Top_Cone_Red_Buoy.png"; //$NON-NLS-1$
+								image = "/images/Top_Cone_Red_Buoy.png";
 								break;
 							case LAT_BEACON:
 							case LAT_TOWER:
-								image = "/images/Top_Cone_Red_Beacon.png"; //$NON-NLS-1$
+								image = "/images/Top_Cone_Red_Beacon.png";
 								break;
 							case LAT_FLOAT:
-								image = "/images/Top_Cone_Red_Float.png"; //$NON-NLS-1$
+								image = "/images/Top_Cone_Red_Float.png";
 								break;
 							}
 						break;
@@ -709,350 +691,350 @@ public class MarkLat extends SeaMark {
 */	}
 
 	public void saveSign() {
-/*		Node node = getNode();
+		Node node = getNode();
 
 		if (node == null) {
 			return;
 		}
 
-		int cat = getBuoyIndex();
-		String shape = ""; //$NON-NLS-1$
-		String colour = ""; //$NON-NLS-1$
+		Cat cat = getCategory();
+		String shape = "";
+		String colour = "";
 
 		switch (cat) {
 
 		case PORT_HAND:
-			switch (getStyleIndex()) {
-			case LAT_CAN:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			switch (getShape()) {
+			case CAN:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "can")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "can"));
 				break;
-			case LAT_PILLAR:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			case PILLAR:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "pillar")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "pillar"));
 				break;
-			case LAT_SPAR:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			case SPAR:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "spar")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "spar"));
 				break;
-			case LAT_BEACON:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case BEACON:
+				super.saveSign("beacon_lateral");
 				break;
-			case LAT_TOWER:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case TOWER:
+				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "tower")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:shape", "tower"));
 				break;
-			case LAT_FLOAT:
-				super.saveSign("light_float"); //$NON-NLS-1$
+			case FLOAT:
+				super.saveSign("light_float");
 				break;
-			case LAT_PERCH:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case PERCH:
+				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "perch")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:shape", "perch"));
 				break;
 			default:
 			}
-			switch (getStyleIndex()) {
-			case LAT_CAN:
-			case LAT_PILLAR:
-			case LAT_SPAR:
+			switch (getShape()) {
+			case CAN:
+			case PILLAR:
+			case SPAR:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:category", "port")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:category", "port"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:buoy_lateral:colour", "red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:buoy_lateral:colour", "red"));
+					colour = "red";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:buoy_lateral:colour", "green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:buoy_lateral:colour", "green"));
+					colour = "green";
 				}
 				break;
-			case LAT_PERCH:
+			case PERCH:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:category", "port")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:category", "port"));
 				break;
-			case LAT_BEACON:
-			case LAT_TOWER:
+			case BEACON:
+			case TOWER:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:category", "port")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:category", "port"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:beacon_lateral:colour", "red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:beacon_lateral:colour", "red"));
+					colour = "red";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:beacon_lateral:colour", "green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:beacon_lateral:colour", "green"));
+					colour = "green";
 				}
 				break;
-			case LAT_FLOAT:
+			case FLOAT:
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:light_float:colour", "red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:light_float:colour", "red"));
+					colour = "red";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:light_float:colour", "green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:light_float:colour", "green"));
+					colour = "green";
 				}
 				break;
 			}
-			shape = "cylinder"; //$NON-NLS-1$
+			shape = "cylinder";
 			break;
 
 		case PREF_PORT_HAND:
-			switch (getStyleIndex()) {
-			case LAT_CAN:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			switch (getShape()) {
+			case CAN:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "can")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "can"));
 				break;
-			case LAT_PILLAR:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			case PILLAR:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "pillar")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "pillar"));
 				break;
-			case LAT_SPAR:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			case SPAR:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "spar")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "spar"));
 				break;
-			case LAT_BEACON:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case BEACON:
+				super.saveSign("beacon_lateral");
 				break;
-			case LAT_TOWER:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case TOWER:
+				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "tower")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:shape", "tower"));
 				break;
-			case LAT_FLOAT:
-				super.saveSign("light_float"); //$NON-NLS-1$
+			case FLOAT:
+				super.saveSign("light_float");
 				break;
 			default:
 			}
-			switch (getStyleIndex()) {
-			case LAT_CAN:
-			case LAT_PILLAR:
-			case LAT_SPAR:
+			switch (getShape()) {
+			case CAN:
+			case PILLAR:
+			case SPAR:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:category", "preferred_channel_port")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:category", "preferred_channel_port"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:colour_pattern", "horizontal stripes"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:buoy_lateral:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:buoy_lateral:colour", "red;green;red"));
+					colour = "red";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:buoy_lateral:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:buoy_lateral:colour", "green;red;green"));
+					colour = "green";
 				}
 				break;
-			case LAT_BEACON:
-			case LAT_TOWER:
+			case BEACON:
+			case TOWER:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:category", "preferred_channel_port")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:category", "preferred_channel_port"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:colour_pattern", "horizontal stripes"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:beacon_lateral:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:beacon_lateral:colour", "red;green;red"));
+					colour = "red";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:beacon_lateral:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:beacon_lateral:colour", "green;red;green"));
+					colour = "green";
 				}
 				break;
-			case LAT_FLOAT:
+			case FLOAT:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:light_float:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:light_float:colour_pattern", "horizontal stripes"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:light_float:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:light_float:colour", "red;green;red"));
+					colour = "red";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:light_float:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:light_float:colour", "green;red;green"));
+					colour = "green";
 				}
 				break;
 			}
-			shape = "cylinder"; //$NON-NLS-1$
+			shape = "cylinder";
 			break;
 
 		case STARBOARD_HAND:
-			switch (getStyleIndex()) {
-			case LAT_CONE:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			switch (getShape()) {
+			case CONE:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "conical")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "conical"));
 				break;
-			case LAT_PILLAR:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			case PILLAR:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "pillar")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "pillar"));
 				break;
-			case LAT_SPAR:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			case SPAR:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "spar")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "spar"));
 				break;
-			case LAT_BEACON:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case BEACON:
+				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "stake")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:shape", "stake"));
 				break;
-			case LAT_TOWER:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case TOWER:
+				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "tower")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:shape", "tower"));
 				break;
-			case LAT_FLOAT:
-				super.saveSign("light_float"); //$NON-NLS-1$
+			case FLOAT:
+				super.saveSign("light_float");
 				break;
-			case LAT_PERCH:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case PERCH:
+				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "perch")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:shape", "perch"));
 				break;
 			default:
 			}
-			switch (getStyleIndex()) {
-			case LAT_CAN:
-			case LAT_PILLAR:
-			case LAT_SPAR:
+			switch (getShape()) {
+			case CAN:
+			case PILLAR:
+			case SPAR:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:category", "starboard")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:category", "starboard"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:buoy_lateral:colour", "green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:buoy_lateral:colour", "green"));
+					colour = "green";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:buoy_lateral:colour", "red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:buoy_lateral:colour", "red"));
+					colour = "red";
 				}
 				break;
-			case LAT_BEACON:
-			case LAT_TOWER:
+			case BEACON:
+			case TOWER:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:category", "starboard")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:category", "starboard"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:beacon_lateral:colour", "green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:beacon_lateral:colour", "green"));
+					colour = "green";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:beacon_lateral:colour", "red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:beacon_lateral:colour", "red"));
+					colour = "red";
 				}
 				break;
-			case LAT_FLOAT:
+			case FLOAT:
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:light_float:colour", "green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:light_float:colour", "green"));
+					colour = "green";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:light_float:colour", "red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:light_float:colour", "red"));
+					colour = "red";
 				}
 				break;
-			case LAT_PERCH:
+			case PERCH:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:category", "starboard")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:category", "starboard"));
 				break;
 			}
-			shape = "cone, point up"; //$NON-NLS-1$
+			shape = "cone, point up";
 			break;
 
 		case PREF_STARBOARD_HAND:
-			switch (getStyleIndex()) {
-			case LAT_CONE:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			switch (getShape()) {
+			case CONE:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "conical")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "conical"));
 				break;
-			case LAT_PILLAR:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			case PILLAR:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "pillar")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "pillar"));
 				break;
-			case LAT_SPAR:
-				super.saveSign("buoy_lateral"); //$NON-NLS-1$
+			case SPAR:
+				super.saveSign("buoy_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:shape", "spar")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:shape", "spar"));
 				break;
-			case LAT_BEACON:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case BEACON:
+				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "stake")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:shape", "stake"));
 				break;
-			case LAT_TOWER:
-				super.saveSign("beacon_lateral"); //$NON-NLS-1$
+			case TOWER:
+				super.saveSign("beacon_lateral");
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:shape", "tower")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:shape", "tower"));
 				break;
-			case LAT_FLOAT:
-				super.saveSign("light_float"); //$NON-NLS-1$
+			case FLOAT:
+				super.saveSign("light_float");
 				break;
 			default:
 			}
-			switch (getStyleIndex()) {
-			case LAT_CAN:
-			case LAT_PILLAR:
-			case LAT_SPAR:
+			switch (getShape()) {
+			case CAN:
+			case PILLAR:
+			case SPAR:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:category", "preferred_channel_starboard")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:category", "preferred_channel_starboard"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:buoy_lateral:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:buoy_lateral:colour_pattern", "horizontal stripes"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:buoy_lateral:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:buoy_lateral:colour", "green;red;green"));
+					colour = "green";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:buoy_lateral:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:buoy_lateral:colour", "red;green;red"));
+					colour = "red";
 				}
 				break;
-			case LAT_BEACON:
-			case LAT_TOWER:
+			case BEACON:
+			case TOWER:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:category", "preferred_channel_starboard")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:category", "preferred_channel_starboard"));
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:beacon_lateral:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:beacon_lateral:colour_pattern", "horizontal stripes"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:beacon_lateral:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:beacon_lateral:colour", "green;red;green"));
+					colour = "green";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:beacon_lateral:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:beacon_lateral:colour", "red;green;red"));
+					colour = "red";
 				}
 				break;
-			case LAT_FLOAT:
+			case FLOAT:
 				Main.main.undoRedo.add(new ChangePropertyCommand(node,
-						"seamark:light_float:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+						"seamark:light_float:colour_pattern", "horizontal stripes"));
 				if (getRegion() == IALA_A) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:light_float:colour", "green;red;green")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "green"; //$NON-NLS-1$
+							"seamark:light_float:colour", "green;red;green"));
+					colour = "green";
 				} else {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node,
-							"seamark:light_float:colour", "red;green;red")); //$NON-NLS-1$ //$NON-NLS-2$
-					colour = "red"; //$NON-NLS-1$
+							"seamark:light_float:colour", "red;green;red"));
+					colour = "red";
 				}
 				break;
 			}
-			shape = "cone, point up"; //$NON-NLS-1$
+			shape = "cone, point up";
 			break;
 
 		default:
@@ -1061,6 +1043,6 @@ public class MarkLat extends SeaMark {
 		saveLightData();
 		saveRadarFogData();
 
-		Main.pref.put("tomsplugin.IALA", getRegion() ? "B" : "A"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-*/	}
+		Main.pref.put("tomsplugin.IALA", getRegion() ? "B" : "A");
+	}
 }

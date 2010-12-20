@@ -28,19 +28,19 @@ public class OSeaM implements SmedPluggable {
 
 	@Override
 	public boolean stop() {
-		DataSet.removeSelectionListener(oseam.SmpListener);
+//		DataSet.removeSelectionListener(oseam.SmpListener);
 		return true;
 	}
 
 	@Override
 	public boolean hasFocus() {
-		DataSet.addSelectionListener(oseam.SmpListener);
+//		DataSet.addSelectionListener(oseam.SmpListener);
 		return true;
 	}
 
 	@Override
 	public boolean lostFocus() {
-		DataSet.removeSelectionListener(oseam.SmpListener);
+//		DataSet.removeSelectionListener(oseam.SmpListener);
 		return true;
 	}
 

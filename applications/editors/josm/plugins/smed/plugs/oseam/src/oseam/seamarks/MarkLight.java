@@ -17,38 +17,29 @@ public class MarkLight extends SeaMark {
 		Map<String, String> keys;
 		keys = getNode().getKeys();
 
-/*		dlg.cbM01TypeOfMark.setSelectedIndex(LIGHT);
+		if (!dlg.panelMain.lightsButton.isSelected())
+			dlg.panelMain.lightsButton.doClick();
 
-		dlg.cbM01CatOfMark.setEnabled(true);
-		dlg.cbM01CatOfMark.setVisible(true);
-		dlg.lM01CatOfMark.setVisible(true);
+		if (keys.containsKey("name"))
+			setName(keys.get("name"));
 
-		dlg.cbM01CatOfMark.removeAllItems();
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.157")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.206")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.207")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.208")); //$NON-NLS-1$
-		dlg.cbM01CatOfMark.addItem(Messages.getString("SmpDialogAction.209")); //$NON-NLS-1$
+		if (keys.containsKey("seamark:name"))
+			setName(keys.get("seamark:name"));
 
-		setRegion(Main.pref.get("tomsplugin.IALA").equals("B")); //$NON-NLS-1$ //$NON-NLS-2$
+		if (keys.containsKey("seamark:landmark:name"))
+			setName(keys.get("seamark:landmark:name"));
+		else if (keys.containsKey("seamark:light_major:name"))
+			setName(keys.get("seamark:light_major:name"));
+		else if (keys.containsKey("seamark:light_minor:name"))
+			setName(keys.get("seamark:light_minor:name"));
+		else if (keys.containsKey("seamark:light_vessel:name"))
+			setName(keys.get("seamark:light_vessel:name"));
+		else if (keys.containsKey("seamark:light_float:name"))
+			setName(keys.get("seamark:light_float:name"));
 
-		if (keys.containsKey("name")) //$NON-NLS-1$
-			setName(keys.get("name")); //$NON-NLS-1$
-
-		if (keys.containsKey("seamark:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:name")); //$NON-NLS-1$
-
-		if (keys.containsKey("seamark:landmark:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:landmark:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_major:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:light_major:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_minor:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:light_minor:name")); //$NON-NLS-1$
-		else if (keys.containsKey("seamark:light_vessel:name")) //$NON-NLS-1$
-			setName(keys.get("seamark:light_vessel:name")); //$NON-NLS-1$
-
-		if (keys.containsKey("seamark:type")) { //$NON-NLS-1$
-			String type = keys.get("seamark:type"); //$NON-NLS-1$
+		/*
+		if (keys.containsKey("seamark:type")) {
+			String type = keys.get("seamark:type");
 			if (type.equals("landmark"))
 				setBuoyIndex(LIGHT_HOUSE);
 			else if (type.equals("light_major"))
@@ -59,7 +50,6 @@ public class MarkLight extends SeaMark {
 				setBuoyIndex(LIGHT_VESSEL);
 		}
 
-		refreshLights();
 		parseLights(keys);
 		parseFogRadar(keys);
 		setTopMark(false);
@@ -97,22 +87,22 @@ public class MarkLight extends SeaMark {
 			switch (getBuoyIndex()) {
 			case SeaMark.LIGHT_HOUSE:
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_House.png"))); //$NON-NLS-1$
+						"/images/Light_House.png")));
 				break;
 
 			case SeaMark.LIGHT_MAJOR:
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Major.png"))); //$NON-NLS-1$
+						"/images/Light_Major.png")));
 				break;
 
 			case SeaMark.LIGHT_MINOR:
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Light_Minor.png"))); //$NON-NLS-1$
+						"/images/Light_Minor.png")));
 				break;
 
 			case SeaMark.LIGHT_VESSEL:
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(
-						"/images/Major_Float.png"))); //$NON-NLS-1$
+						"/images/Major_Float.png")));
 				break;
 
 			default:
@@ -121,30 +111,30 @@ public class MarkLight extends SeaMark {
 */	}
 
 	public void saveSign() {
-/*		Node node = getNode();
+		Node node = getNode();
 
 		if (node == null) {
 			return;
 		}
 
-		switch (getBuoyIndex()) {
+		switch (getCategory()) {
 		case LIGHT_HOUSE:
-			super.saveSign("landmark"); //$NON-NLS-1$
+			super.saveSign("landmark");
 			break;
 		case LIGHT_MAJOR:
-			super.saveSign("light_major"); //$NON-NLS-1$
+			super.saveSign("light_major");
 			break;
 		case LIGHT_MINOR:
-			super.saveSign("light_minor"); //$NON-NLS-1$
+			super.saveSign("light_minor");
 			break;
 		case LIGHT_VESSEL:
-			super.saveSign("light_vessel"); //$NON-NLS-1$
+			super.saveSign("light_vessel");
 			break;
 		default:
 		}
-		saveLightData(); //$NON-NLS-1$
+		saveLightData();
 		saveRadarFogData();
-*/	}
+	}
 
 	public void setLightColour() {
 	}

@@ -38,28 +38,33 @@ public class OSeaMAction {
 	private OsmPrimitive SelNode = null;
 
 	public SelectionChangedListener SmpListener = new SelectionChangedListener() {
-		public void selectionChanged(
-				Collection<? extends OsmPrimitive> newSelection) {
-			Node node;
+		public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+			Node node = null;
 			Selection = newSelection;
 
+//System.out.println(newSelection);
 			for (OsmPrimitive osm : Selection) {
 				if (osm instanceof Node) {
 					node = (Node) osm;
-					if (Selection.size() == 1)
+					if (Selection.size() == 1) {
 						if (node.compareTo(SelNode) != 0) {
 							SelNode = node;
 							parseSeaMark();
 							mark.paintSign();
 						}
+					}
 				}
 			}
-			Selection = null;
+			if (node == null) {
+				panelMain.clearSelections();
+				SelNode = null;
+			}
 		}
 	};
 
 	public OSeaMAction(SmedPluginManager mngr) {
 
+		DataSet.addSelectionListener(SmpListener);
 		manager = mngr;
 		String str = Main.pref.get("mappaint.style.sources");
 		if (!str.contains("dev.openseamap.org")) {

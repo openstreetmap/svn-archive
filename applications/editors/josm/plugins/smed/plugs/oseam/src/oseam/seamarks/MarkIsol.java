@@ -2,12 +2,12 @@ package oseam.seamarks;
 
 import java.util.Map;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.data.osm.Node;
 
 import oseam.dialogs.OSeaMAction;
 import oseam.seamarks.SeaMark;
-import oseam.seamarks.SeaMark.Cat;
-import oseam.seamarks.SeaMark.Styl;
 
 public class MarkIsol extends SeaMark {
 	public MarkIsol(OSeaMAction dia, Node node) {
@@ -23,6 +23,9 @@ public class MarkIsol extends SeaMark {
 		if (!dlg.panelMain.hazButton.isSelected())
 			dlg.panelMain.hazButton.doClick();
 
+		if (!dlg.panelMain.panelHaz.isolButton.isSelected())
+			dlg.panelMain.panelHaz.isolButton.doClick();
+
 		if (keys.containsKey("name"))
 			setName(keys.get("name"));
 
@@ -35,8 +38,6 @@ public class MarkIsol extends SeaMark {
 			setName(keys.get("seamark:beacon_isolated_danger:name"));
 		else if (keys.containsKey("seamark:light_float:name"))
 			setName(keys.get("seamark:light_float:name"));
-
-		dlg.panelMain.panelHaz.isolButton.doClick();
 
 		if (keys.containsKey("seamark:buoy_isolated_danger:shape")) {
 			str = keys.get("seamark:buoy_isolated_danger:shape");
@@ -115,35 +116,35 @@ public class MarkIsol extends SeaMark {
 				}
 			}
 
-			String image = "/images/Cardinal"; //$NON-NLS-1$
+			String image = "/images/Cardinal";
 
 			switch (getStyleIndex()) {
 			case ISOL_PILLAR:
-				image += "_Pillar_Single"; //$NON-NLS-1$
+				image += "_Pillar_Single";
 				break;
 			case ISOL_SPAR:
-				image += "_Spar_Single"; //$NON-NLS-1$
+				image += "_Spar_Single";
 				break;
 			case ISOL_BEACON:
-				image += "_Beacon_Single"; //$NON-NLS-1$
+				image += "_Beacon_Single";
 				break;
 			case ISOL_TOWER:
-				image += "_Tower_Single"; //$NON-NLS-1$
+				image += "_Tower_Single";
 				break;
 			case ISOL_FLOAT:
-				image += "_Float_Single"; //$NON-NLS-1$
+				image += "_Float_Single";
 				break;
 			default:
 			}
 
-			if (!image.equals("/images/Cardinal")) { //$NON-NLS-1$
-				image += ".png"; //$NON-NLS-1$
+			if (!image.equals("/images/Cardinal")) {
+				image += ".png";
 				dlg.lM01Icon.setIcon(new ImageIcon(getClass().getResource(image)));
 			} else
 				dlg.lM01Icon.setIcon(null);
 		} else {
 			dlg.tfM01Name.setEnabled(false);
-			dlg.tfM01Name.setText(""); //$NON-NLS-1$
+			dlg.tfM01Name.setText("");
 			dlg.cM01TopMark.setVisible(false);
 			dlg.cM01Radar.setVisible(false);
 			dlg.cM01Racon.setVisible(false);
@@ -153,63 +154,63 @@ public class MarkIsol extends SeaMark {
 */	}
 
 	public void saveSign() {
-/*		Node node = getNode();
+		Node node = getNode();
 
 		if (node == null) {
 			return;
 		}
 
-		switch (getStyleIndex()) {
-		case ISOL_PILLAR:
-			super.saveSign("buoy_isolated_danger"); //$NON-NLS-1$
+		switch (getShape()) {
+		case PILLAR:
+			super.saveSign("buoy_isolated_danger");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_isolated_danger:shape", "pillar")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_isolated_danger:shape", "pillar"));
 			break;
-		case ISOL_SPAR:
-			super.saveSign("buoy_isolated_danger"); //$NON-NLS-1$
+		case SPAR:
+			super.saveSign("buoy_isolated_danger");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_isolated_danger:shape", "spar")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_isolated_danger:shape", "spar"));
 			break;
-		case ISOL_BEACON:
-			super.saveSign("beacon_isolated_danger"); //$NON-NLS-1$
+		case BEACON:
+			super.saveSign("beacon_isolated_danger");
 			break;
-		case ISOL_TOWER:
-			super.saveSign("beacon_isolated_danger"); //$NON-NLS-1$
+		case TOWER:
+			super.saveSign("beacon_isolated_danger");
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_isolated_danger:shape", "tower")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:beacon_isolated_danger:shape", "tower"));
 			break;
-		case ISOL_FLOAT:
-			super.saveSign("light_float"); //$NON-NLS-1$
+		case FLOAT:
+			super.saveSign("light_float");
 			break;
 		default:
 		}
 
-		switch (getStyleIndex()) {
-		case ISOL_PILLAR:
-		case ISOL_SPAR:
+		switch (getShape()) {
+		case PILLAR:
+		case SPAR:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_isolated_danger:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_isolated_danger:colour_pattern", "horizontal stripes"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:buoy_isolated_danger:colour", "black;red;black")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:buoy_isolated_danger:colour", "black;red;black"));
 			break;
-		case ISOL_BEACON:
-		case ISOL_TOWER:
+		case BEACON:
+		case TOWER:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_isolated_danger:colour_pattern", //$NON-NLS-1$
-					"horizontal stripes")); //$NON-NLS-1$
+					"seamark:beacon_isolated_danger:colour_pattern",
+					"horizontal stripes"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:beacon_isolated_danger:colour", "black;red;black")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:beacon_isolated_danger:colour", "black;red;black"));
 			break;
-		case ISOL_FLOAT:
+		case FLOAT:
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:light_float:colour_pattern", "horizontal stripes")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:light_float:colour_pattern", "horizontal stripes"));
 			Main.main.undoRedo.add(new ChangePropertyCommand(node,
-					"seamark:light_float:colour", "black;red;black")); //$NON-NLS-1$ //$NON-NLS-2$
+					"seamark:light_float:colour", "black;red;black"));
 			break;
 		}
 
-		saveTopMarkData("2 spheres", "black"); //$NON-NLS-1$ //$NON-NLS-2$
-		saveLightData(); //$NON-NLS-1$
+		saveTopMarkData("2 spheres", "black");
+		saveLightData();
 		saveRadarFogData();
-*/	}
+	}
 }

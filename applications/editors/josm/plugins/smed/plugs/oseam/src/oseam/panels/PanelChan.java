@@ -24,17 +24,17 @@ import java.awt.event.ActionListener;
 public class PanelChan extends JPanel {
 
 	private ButtonGroup catButtons = null;
-	private JRadioButton portButton = null;
-	private JRadioButton stbdButton = null;
-	private JRadioButton prefPortButton = null;
-	private JRadioButton prefStbdButton = null;
-	private JRadioButton safeWaterButton = null;
+	public JRadioButton portButton = null;
+	public JRadioButton stbdButton = null;
+	public JRadioButton prefPortButton = null;
+	public JRadioButton prefStbdButton = null;
+	public JRadioButton safeWaterButton = null;
 	private ActionListener alCat = null;
-	private PanelPort panelPort = null;
-	private PanelStbd panelStbd = null;
-	private PanelPrefPort panelPrefPort = null;
-	private PanelPrefStbd panelPrefStbd = null;
-	private PanelSafeWater panelSafeWater = null;
+	public PanelPort panelPort = null;
+	public PanelStbd panelStbd = null;
+	public PanelPrefPort panelPrefPort = null;
+	public PanelPrefStbd panelPrefStbd = null;
+	public PanelSafeWater panelSafeWater = null;
 
 	public PanelChan() {
 		panelPort = new PanelPort();
